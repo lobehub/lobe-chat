@@ -1,41 +1,23 @@
-import { session as electronSession } from 'electron';
-import http, { IncomingMessage } from 'node:http';
+import {
+  ProxyTRPCRequestParams,
+  ProxyTRPCRequestResult,
+} from '@lobechat/electron-client-ipc/src/types/proxyTRPCRequest';
+import { Buffer } from 'node:buffer';
+import http, { IncomingMessage, OutgoingHttpHeaders } from 'node:http';
 import https from 'node:https';
-import { Socket } from 'node:net';
-import { pipeline } from 'node:stream/promises';
 import { URL } from 'node:url';
 
 import { createLogger } from '@/utils/logger';
-import {
-  CustomRequestHandler,
-  ReadableServerResponse,
-  createRequest as createNodeRequestFromElectronRequest,
-} from '@/utils/next-electron-rsc';
 
 import RemoteServerConfigCtr from './RemoteServerConfigCtr';
-import { ControllerModule } from './index';
-
-const trpcProxyPath = ['/trpc/lambda', '/trpc/tools', '/trpc/async'];
+import { ControllerModule, ipcClientEvent } from './index';
 
 // Create logger
 const logger = createLogger('controllers:RemoteServerSyncCtr');
 
-// --- Helper function to create a dummy socket ---
-// createRequest requires a socket, even if we don't directly use its connection features here.
-const createDummySocket = (): Socket => {
-  const socket = new Socket();
-  // Prevent potential errors if methods are called unexpectedly
-  // @ts-ignore
-  socket.end = () => {};
-  // @ts-ignore
-  socket.destroy = () => {};
-  socket.write = () => true;
-  return socket;
-};
-
 /**
  * Remote Server Sync Controller
- * For handling data synchronization with remote servers, including intercepting and processing tRPC requests
+ * For handling data synchronization with remote servers via IPC.
  */
 export default class RemoteServerSyncCtr extends ControllerModule {
   /**
@@ -46,216 +28,268 @@ export default class RemoteServerSyncCtr extends ControllerModule {
   }
 
   /**
-   * Request interceptor unregister function
-   */
-  private unregisterRequestHandler?: () => void;
-
-  /**
-   * Controller initialization
+   * Controller initialization - No specific logic needed here now for request handling
    */
   afterAppReady() {
-    logger.info('Initializing remote server sync controller');
-    this.registerApiRequestHandler();
+    logger.info('RemoteServerSyncCtr initialized (IPC based)');
+    // No need to register protocol handler anymore
   }
 
   /**
-   * Register tRPC request handler using utilities from next-electron-rsc
+   * Helper function to perform the actual request forwarding to the remote server.
+   * Accepts arguments from IPC and returns response details.
    */
-  registerApiRequestHandler() {
-    // If already registered, unregister the old handler first
-    if (this.unregisterRequestHandler) {
-      this.unregisterRequestHandler();
-      this.unregisterRequestHandler = undefined;
+  private async forwardRequest(args: {
+    accessToken: string | null;
+    body?: string | ArrayBuffer;
+    headers: Record<string, string>;
+    method: string;
+    remoteServerUrl: string;
+    urlPath: string; // Pass the base URL
+  }): Promise<{
+    // Node headers type
+    body: Buffer;
+    headers: Record<string, string | string[] | undefined>;
+    status: number;
+    statusText: string; // Return body as Buffer
+  }> {
+    const {
+      urlPath,
+      method,
+      headers: originalHeaders,
+      body: requestBody,
+      accessToken,
+      remoteServerUrl,
+    } = args;
+
+    if (!accessToken) {
+      logger.error('No access token provided for forwarding');
+      return {
+        body: Buffer.from(''),
+        headers: {},
+        status: 401,
+        statusText: 'Authentication required, missing token',
+      };
     }
 
-    logger.info('Registering tRPC request handler using next-electron-rsc utils');
+    // 1. Determine target URL and prepare request options
+    const targetUrl = new URL(urlPath, remoteServerUrl); // Combine base URL and path
 
-    // Create request handler
-    const handler: CustomRequestHandler = async (originalElectronRequest) => {
-      try {
-        // Check if it's a tRPC request
-        const isApiRequest = trpcProxyPath.some((path) =>
-          originalElectronRequest.url.includes(path),
-        );
-        if (!isApiRequest) return null; // Not an Api request
+    logger.debug(`Forwarding request via IPC: ${method} ${urlPath} -> ${targetUrl.toString()}`);
 
-        // Get remote server configuration
-        const config = await this.remoteServerConfigCtr.getRemoteServerConfig();
-        if (!config.active || !config.remoteServerUrl) return null;
+    // Prepare headers, cloning and adding Authorization
+    const requestHeaders: OutgoingHttpHeaders = { ...originalHeaders }; // Use OutgoingHttpHeaders
+    requestHeaders['Authorization'] = `Bearer ${accessToken}`;
 
-        // --- Helper function to perform the actual request forwarding ---
-        const forwardRequest = async (
-          electronRequest: Request,
-          accessToken: string | null,
-        ): Promise<Response> => {
-          if (!accessToken) {
-            logger.error('No access token provided for forwarding');
-            // Indicate authentication required, similar to how we handle refresh failure later
-            return new Response('Authentication required, missing token', { status: 401 });
-          }
+    // Let node handle Host, Content-Length etc. Remove potentially problematic headers
+    delete requestHeaders['host'];
+    delete requestHeaders['connection']; // Often causes issues
+    // delete requestHeaders['content-length']; // Let node handle it based on body
 
-          // 1. Create Node.js compatible request and response objects
-          const dummySocket = createDummySocket();
-          // We need the session to potentially read cookies if createNodeRequestFromElectronRequest uses it
-          const session = electronSession.defaultSession;
-          const nodeReq: IncomingMessage = await createNodeRequestFromElectronRequest({
-            request: electronRequest,
-            session,
-            socket: dummySocket,
-          });
-          const nodeRes = new ReadableServerResponse(nodeReq); // Use the class from next-electron-rsc
-
-          // 2. Determine target URL and prepare request options for node:http/https
-          const originalUrl = new URL(electronRequest.url); // Use the original electron request URL
-          const targetUrl = new URL(
-            originalUrl.pathname + originalUrl.search,
-            config.remoteServerUrl,
-          );
-
-          logger.debug(
-            `Forwarding tRPC request: ${electronRequest.url} -> ${targetUrl.toString()}`,
-          );
-
-          const requestOptions: http.RequestOptions = {
-            headers: { ...nodeReq.headers }, // Use headers parsed by createRequest
-            hostname: targetUrl.hostname,
-            method: nodeReq.method,
-            path: targetUrl.pathname + targetUrl.search,
-            port: targetUrl.port || (targetUrl.protocol === 'https:' ? 443 : 80),
-            protocol: targetUrl.protocol,
-          };
-          // Add/Override Authorization header
-          requestOptions.headers['Authorization'] = `Bearer ${accessToken}`;
-          // Let node handle Host, Content-Length etc. Remove if present from createRequest
-          delete requestOptions.headers['host'];
-          // delete requestOptions.headers['content-length']; // Node calculates this
-
-          const requester = targetUrl.protocol === 'https:' ? https : http;
-
-          // 3. Make the request and pipe response back via ReadableServerResponse
-          return new Promise<Response>((resolve, reject) => {
-            const clientReq = requester.request(requestOptions, (clientRes) => {
-              // Handle 401 specifically before piping
-              if (clientRes.statusCode === 401) {
-                logger.warn('Received 401 response from forwarded request');
-                resolve(
-                  new Response(null, {
-                    // eslint-disable-next-line no-undef
-                    headers: clientRes.headers as HeadersInit,
-                    status: 401,
-                    statusText: clientRes.statusMessage,
-                  }),
-                );
-                clientRes.resume(); // Consume data
-                return;
-              }
-
-              // Set status and headers on our ReadableServerResponse
-              nodeRes.writeHead(
-                clientRes.statusCode || 200,
-                clientRes.statusMessage || 'OK',
-                clientRes.headers,
-              );
-
-              // Resolve the main promise *immediately* with the Response object from nodeRes.
-              // This Response contains the headers and the ReadableStream for the body.
-              resolve(nodeRes.getResponse());
-
-              // Start the pipeline to pipe the actual body data into the Response's stream.
-              // Run this in the background; its completion doesn't affect the resolved promise.
-              pipeline(clientRes, nodeRes)
-                .then(() => {
-                  logger.debug(`Response pipeline finished for ${targetUrl.toString()}`);
-                })
-                .catch((pipeError) => {
-                  // Error occurred *during* body streaming, after headers were sent.
-                  logger.error('Error piping response body:', pipeError);
-                  // The Response object is already returned. Attempt to signal error on the stream.
-                  nodeRes.destroy(pipeError); // Destroy the ServerResponse, which should signal the stream consumer
-                });
-            });
-
-            clientReq.on('error', (error) => {
-              logger.error('Error forwarding request:', error);
-              reject(new Response(`Error forwarding request: ${error.message}`, { status: 502 }));
-            });
-
-            // Pipe the request body (from the IncomingMessage generated by createRequest)
-            // Note: createRequest already pushes the body data into the IncomingMessage stream
-            pipeline(nodeReq, clientReq).catch((pipeError) => {
-              logger.error('Error piping request body to target:', pipeError);
-              clientReq.destroy(pipeError);
-              reject(new Response('Error processing request body', { status: 500 }));
-            });
-          });
-        };
-        // --- End of helper function ---
-
-        // Get initial token
-        let token = await this.remoteServerConfigCtr.getAccessToken();
-        let response: Response | null = null;
-
-        // Try initial request
-        if (token) {
-          response = await forwardRequest(originalElectronRequest, token);
-        } else {
-          logger.warn('No initial access token found');
-          // Simulate a 401 to trigger refresh logic centrally
-          response = new Response('Authentication required, missing initial token', {
-            status: 401,
-          });
-        }
-
-        // Handle 401: Refresh token and retry if necessary
-        if (response.status === 401) {
-          logger.info('Attempting token refresh due to missing token or 401 response');
-          const refreshed = await this.refreshTokenIfNeeded();
-
-          if (refreshed) {
-            const newToken = await this.remoteServerConfigCtr.getAccessToken();
-            if (newToken) {
-              logger.info('Token refreshed successfully, retrying request');
-              // IMPORTANT: Retry with the *original* Electron request object
-              response = await forwardRequest(originalElectronRequest, newToken);
-            } else {
-              logger.error('Token refresh reported success, but failed to retrieve new token');
-              // Return the 401 response we generated or received
-            }
-          } else {
-            logger.error('Token refresh failed');
-            // Return the 401 response
-          }
-        }
-
-        // Return the final response
-        return response;
-      } catch (error) {
-        logger.error('Unhandled error processing tRPC request:', error);
-        if (error instanceof Response) {
-          return error; // Return the Response object created in case of error
-        }
-        // Ensure a Response object is always returned
-        return new Response(`Internal Server Error: ${error.message || 'Unknown error'}`, {
-          status: 500,
-        });
-      }
+    const requestOptions: https.RequestOptions | http.RequestOptions = {
+      // Use union type
+      headers: requestHeaders,
+      hostname: targetUrl.hostname,
+      method: method,
+      path: targetUrl.pathname + targetUrl.search,
+      port: targetUrl.port || (targetUrl.protocol === 'https:' ? 443 : 80),
+      protocol: targetUrl.protocol,
+      // agent: false, // Consider for keep-alive issues if they arise
     };
 
-    // Register request handler
-    this.unregisterRequestHandler = this.app.registerRequestHandler(handler);
+    const requester = targetUrl.protocol === 'https:' ? https : http;
+
+    // 2. Make the request and capture response
+    return new Promise((resolve) => {
+      const clientReq = requester.request(requestOptions, (clientRes: IncomingMessage) => {
+        const chunks: Buffer[] = [];
+        clientRes.on('data', (chunk) => {
+          chunks.push(chunk);
+        });
+
+        clientRes.on('end', () => {
+          const responseBody = Buffer.concat(chunks);
+          logger.debug(`Received response from ${targetUrl.toString()}: ${clientRes.statusCode}`);
+          resolve({
+            // These are IncomingHttpHeaders
+            body: responseBody,
+
+            headers: clientRes.headers,
+
+            status: clientRes.statusCode || 500,
+            statusText: clientRes.statusMessage || 'Unknown Status',
+          });
+        });
+
+        clientRes.on('error', (error) => {
+          // Error during response streaming
+          logger.error(`Error reading response stream from ${targetUrl.toString()}:`, error);
+          // Rejecting might be better, but we need to resolve the outer promise for proxyTRPCRequest
+          resolve({
+            body: Buffer.from(`Error reading response stream: ${error.message}`),
+            headers: {},
+
+            status: 502,
+            // Bad Gateway
+            statusText: 'Error reading response stream',
+          });
+        });
+      });
+
+      clientReq.on('error', (error) => {
+        logger.error(`Error forwarding request to ${targetUrl.toString()}:`, error);
+        // Reject or resolve with error status for the outer promise
+        resolve({
+          body: Buffer.from(`Error forwarding request: ${error.message}`),
+          headers: {},
+
+          status: 502,
+          // Bad Gateway
+          statusText: 'Error forwarding request',
+        });
+      });
+
+      // 3. Send request body if present
+      if (requestBody) {
+        if (typeof requestBody === 'string') {
+          clientReq.write(requestBody, 'utf8'); // Specify encoding for strings
+        } else if (requestBody instanceof ArrayBuffer) {
+          clientReq.write(Buffer.from(requestBody)); // Convert ArrayBuffer to Buffer
+        } else {
+          // Should not happen based on type, but handle defensively
+          logger.warn('Unsupported request body type received:', typeof requestBody);
+        }
+      }
+
+      clientReq.end(); // Finalize the request
+    });
   }
 
   /**
-   * Refresh token if needed (same as previous version)
+   * Handles the 'proxy-trpc-request' IPC call from the renderer process.
+   * This method should be invoked by the ipcMain.handle setup in your main process entry point.
+   */
+  @ipcClientEvent('proxyTRPCRequest')
+  public async proxyTRPCRequest(args: ProxyTRPCRequestParams): Promise<ProxyTRPCRequestResult> {
+    logger.debug('Received proxyTRPCRequest IPC call:', {
+      method: args.method,
+      urlPath: args.urlPath,
+    });
+
+    try {
+      const config = await this.remoteServerConfigCtr.getRemoteServerConfig();
+      if (!config.active || !config.remoteServerUrl) {
+        logger.warn('Remote server sync not active or configured. Rejecting proxy request.');
+        return {
+          body: Buffer.from('Remote server sync not active or configured').buffer,
+          headers: {},
+
+          status: 503,
+          // Service Unavailable
+          statusText: 'Remote server sync not active or configured', // Return ArrayBuffer
+        };
+      }
+
+      // Get initial token
+      let token = await this.remoteServerConfigCtr.getAccessToken();
+      let response = await this.forwardRequest({
+        ...args,
+        accessToken: token,
+        remoteServerUrl: config.remoteServerUrl,
+      });
+
+      // Handle 401: Refresh token and retry if necessary
+      if (response.status === 401) {
+        logger.info('Attempting token refresh due to 401 response from forwarded request');
+        const refreshed = await this.refreshTokenIfNeeded(); // Ensure this doesn't interfere with parallel requests
+
+        if (refreshed) {
+          const newToken = await this.remoteServerConfigCtr.getAccessToken();
+          if (newToken) {
+            logger.info('Token refreshed successfully, retrying request');
+            response = await this.forwardRequest({
+              ...args,
+              accessToken: newToken,
+              remoteServerUrl: config.remoteServerUrl,
+            });
+          } else {
+            logger.error('Token refresh reported success, but failed to retrieve new token');
+            // Keep the original 401 response
+          }
+        } else {
+          logger.error('Token refresh failed');
+          // Keep the original 401 response
+        }
+      }
+
+      // Convert headers and body to format defined in IPC event
+      const responseHeaders: Record<string, string> = {};
+      for (const [key, value] of Object.entries(response.headers)) {
+        if (value !== undefined) {
+          responseHeaders[key.toLowerCase()] = Array.isArray(value) ? value.join(', ') : value;
+        }
+      }
+
+      // Return the final response, ensuring body is serializable (string or ArrayBuffer)
+      const responseBody = response.body; // Buffer
+
+      // IMPORTANT: Check IPC limits. Large bodies might fail. Consider chunking if needed.
+      // Convert Buffer to ArrayBuffer for IPC
+      const finalBody = responseBody.buffer.slice(
+        responseBody.byteOffset,
+        responseBody.byteOffset + responseBody.byteLength,
+      );
+
+      return {
+        body: finalBody,
+        headers: responseHeaders,
+        status: response.status,
+        statusText: response.statusText, // Return ArrayBuffer
+      };
+    } catch (error) {
+      logger.error('Unhandled error processing proxyTRPCRequest:', error);
+      // Ensure a serializable error response is returned
+      return {
+        body: Buffer.from(
+          `Internal Server Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        ).buffer,
+        headers: {},
+        status: 500,
+        statusText: 'Internal Server Error during proxy', // Return ArrayBuffer
+      };
+    }
+  }
+
+  /**
+   * Refresh token if needed (same as previous version - needs careful review for concurrent calls)
    * @returns Whether token refresh was successful
    */
   private async refreshTokenIfNeeded(): Promise<boolean> {
-    // Debounce refresh logic
+    // Debounce refresh logic - IMPORTANT: This simple debounce might not be sufficient
+    // if multiple requests hit 401 concurrently *before* the first refresh completes.
+    // A more robust locking mechanism might be needed.
     if (this.remoteServerConfigCtr.isTokenRefreshing()) {
-      logger.debug('Token refresh already in progress, waiting briefly...');
-      await new Promise((resolve) => {
-        setTimeout(resolve, 1500);
+      logger.debug('Token refresh already in progress, waiting...');
+      // Wait for the ongoing refresh to complete (or timeout)
+      // This requires isTokenRefreshing() to be reliable and eventually become false.
+      // Consider using an event emitter or a shared promise for waiting.
+      // Simple timeout might lead to race conditions.
+      await new Promise<void>((resolve) => {
+        const checkInterval = setInterval(async () => {
+          if (!this.remoteServerConfigCtr.isTokenRefreshing()) {
+            clearInterval(checkInterval);
+            resolve();
+          }
+        }, 200);
+        // Timeout to prevent infinite waiting
+        setTimeout(() => {
+          clearInterval(checkInterval);
+          logger.warn('Timeout waiting for token refresh to complete.');
+          resolve(); // Resolve anyway after timeout
+        }, 5000); // 5 second timeout
       });
+
+      // After waiting, check if we now have a token
       return !!(await this.remoteServerConfigCtr.getAccessToken());
     }
 
@@ -284,5 +318,13 @@ export default class RemoteServerSyncCtr extends ControllerModule {
     } finally {
       this.remoteServerConfigCtr.setTokenRefreshing(false);
     }
+  }
+
+  /**
+   * Clean up resources - No protocol handler to unregister anymore
+   */
+  destroy() {
+    logger.info('Destroying RemoteServerSyncCtr');
+    // Nothing specific to clean up here regarding request handling now
   }
 }

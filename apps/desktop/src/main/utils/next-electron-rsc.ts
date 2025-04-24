@@ -353,7 +353,7 @@ export function createHandler({
     process.on('SIGTERM', () => closeSocket);
     process.on('SIGINT', () => closeSocket);
 
-    if (!registerProtocolHandle) {
+    if (!isDev && !registerProtocolHandle) {
       logger.debug(
         `Registering HTTP protocol handler in ${isDev ? 'development' : 'production'} mode`,
       );

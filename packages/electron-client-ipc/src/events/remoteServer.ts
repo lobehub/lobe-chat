@@ -1,4 +1,5 @@
 import { DataSyncConfig } from '../types/dataSync';
+import { ProxyTRPCRequestParams, ProxyTRPCRequestResult } from '../types/proxyTRPCRequest';
 
 /**
  * 远程服务器配置相关的事件
@@ -6,6 +7,12 @@ import { DataSyncConfig } from '../types/dataSync';
 export interface RemoteServerDispatchEvents {
   clearRemoteServerConfig: () => boolean;
   getRemoteServerConfig: () => DataSyncConfig;
+  /**
+   * Proxy a tRPC request to the remote server.
+   * @param args - Request arguments.
+   * @returns Promise resolving with the response details.
+   */
+  proxyTRPCRequest: (args: ProxyTRPCRequestParams) => ProxyTRPCRequestResult;
   refreshAccessToken: () => {
     error?: string;
     success: boolean;
