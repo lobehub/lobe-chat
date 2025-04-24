@@ -70,8 +70,10 @@ export default class RemoteServerSyncCtr extends ControllerModule {
       remoteServerUrl,
     } = args;
 
+    const logPrefix = `[ForwardRequest ${method} ${urlPath}]`; // Add prefix for easier correlation
+
     if (!accessToken) {
-      logger.error('No access token provided for forwarding');
+      logger.error(`${logPrefix} No access token provided`); // Enhanced log
       return {
         body: Buffer.from(''),
         headers: {},
@@ -83,7 +85,7 @@ export default class RemoteServerSyncCtr extends ControllerModule {
     // 1. Determine target URL and prepare request options
     const targetUrl = new URL(urlPath, remoteServerUrl); // Combine base URL and path
 
-    logger.debug(`Forwarding request via IPC: ${method} ${urlPath} -> ${targetUrl.toString()}`);
+    logger.debug(`${logPrefix} Forwarding to ${targetUrl.toString()}`); // Enhanced log
 
     // Prepare headers, cloning and adding Authorization
     const requestHeaders: OutgoingHttpHeaders = { ...originalHeaders }; // Use OutgoingHttpHeaders
@@ -117,7 +119,9 @@ export default class RemoteServerSyncCtr extends ControllerModule {
 
         clientRes.on('end', () => {
           const responseBody = Buffer.concat(chunks);
-          logger.debug(`Received response from ${targetUrl.toString()}: ${clientRes.statusCode}`);
+          logger.debug(
+            `${logPrefix} Received response from ${targetUrl.toString()}: ${clientRes.statusCode}`,
+          ); // Enhanced log
           resolve({
             // These are IncomingHttpHeaders
             body: responseBody,
@@ -131,7 +135,10 @@ export default class RemoteServerSyncCtr extends ControllerModule {
 
         clientRes.on('error', (error) => {
           // Error during response streaming
-          logger.error(`Error reading response stream from ${targetUrl.toString()}:`, error);
+          logger.error(
+            `${logPrefix} Error reading response stream from ${targetUrl.toString()}:`,
+            error,
+          ); // Enhanced log
           // Rejecting might be better, but we need to resolve the outer promise for proxyTRPCRequest
           resolve({
             body: Buffer.from(`Error reading response stream: ${error.message}`),
@@ -145,7 +152,7 @@ export default class RemoteServerSyncCtr extends ControllerModule {
       });
 
       clientReq.on('error', (error) => {
-        logger.error(`Error forwarding request to ${targetUrl.toString()}:`, error);
+        logger.error(`${logPrefix} Error forwarding request to ${targetUrl.toString()}:`, error); // Enhanced log
         // Reject or resolve with error status for the outer promise
         resolve({
           body: Buffer.from(`Error forwarding request: ${error.message}`),
@@ -165,7 +172,7 @@ export default class RemoteServerSyncCtr extends ControllerModule {
           clientReq.write(Buffer.from(requestBody)); // Convert ArrayBuffer to Buffer
         } else {
           // Should not happen based on type, but handle defensively
-          logger.warn('Unsupported request body type received:', typeof requestBody);
+          logger.warn(`${logPrefix} Unsupported request body type received:`, typeof requestBody); // Enhanced log
         }
       }
 
@@ -180,14 +187,19 @@ export default class RemoteServerSyncCtr extends ControllerModule {
   @ipcClientEvent('proxyTRPCRequest')
   public async proxyTRPCRequest(args: ProxyTRPCRequestParams): Promise<ProxyTRPCRequestResult> {
     logger.debug('Received proxyTRPCRequest IPC call:', {
+      headers: args.headers,
       method: args.method,
-      urlPath: args.urlPath,
+      urlPath: args.urlPath, // Log headers too for context
     });
+
+    const logPrefix = `[ProxyTRPC ${args.method} ${args.urlPath}]`; // Prefix for this specific request
 
     try {
       const config = await this.remoteServerConfigCtr.getRemoteServerConfig();
       if (!config.active || !config.remoteServerUrl) {
-        logger.warn('Remote server sync not active or configured. Rejecting proxy request.');
+        logger.warn(
+          `${logPrefix} Remote server sync not active or configured. Rejecting proxy request.`,
+        ); // Enhanced log
         return {
           body: Buffer.from('Remote server sync not active or configured').buffer,
           headers: {},
@@ -200,6 +212,11 @@ export default class RemoteServerSyncCtr extends ControllerModule {
 
       // Get initial token
       let token = await this.remoteServerConfigCtr.getAccessToken();
+      logger.debug(
+        `${logPrefix} Initial token check: ${token ? 'Token exists' : 'No token found'}`,
+      ); // Added log
+
+      logger.info(`${logPrefix} Attempting to forward request...`); // Added log
       let response = await this.forwardRequest({
         ...args,
         accessToken: token,
@@ -208,24 +225,26 @@ export default class RemoteServerSyncCtr extends ControllerModule {
 
       // Handle 401: Refresh token and retry if necessary
       if (response.status === 401) {
-        logger.info('Attempting token refresh due to 401 response from forwarded request');
-        const refreshed = await this.refreshTokenIfNeeded(); // Ensure this doesn't interfere with parallel requests
+        logger.info(`${logPrefix} Received 401 from forwarded request. Attempting token refresh.`); // Enhanced log
+        const refreshed = await this.refreshTokenIfNeeded(logPrefix); // Pass prefix for context
 
         if (refreshed) {
           const newToken = await this.remoteServerConfigCtr.getAccessToken();
           if (newToken) {
-            logger.info('Token refreshed successfully, retrying request');
+            logger.info(`${logPrefix} Token refreshed successfully, retrying the request.`); // Enhanced log
             response = await this.forwardRequest({
               ...args,
               accessToken: newToken,
               remoteServerUrl: config.remoteServerUrl,
             });
           } else {
-            logger.error('Token refresh reported success, but failed to retrieve new token');
+            logger.error(
+              `${logPrefix} Token refresh reported success, but failed to retrieve new token. Keeping original 401 response.`,
+            ); // Enhanced log
             // Keep the original 401 response
           }
         } else {
-          logger.error('Token refresh failed');
+          logger.error(`${logPrefix} Token refresh failed. Keeping original 401 response.`); // Enhanced log
           // Keep the original 401 response
         }
       }
@@ -248,6 +267,7 @@ export default class RemoteServerSyncCtr extends ControllerModule {
         responseBody.byteOffset + responseBody.byteLength,
       );
 
+      logger.debug(`${logPrefix} Forwarding successful. Status: ${response.status}`); // Added log
       return {
         body: finalBody as ArrayBuffer,
         headers: responseHeaders,
@@ -255,7 +275,7 @@ export default class RemoteServerSyncCtr extends ControllerModule {
         statusText: response.statusText, // Return ArrayBuffer
       };
     } catch (error) {
-      logger.error('Unhandled error processing proxyTRPCRequest:', error);
+      logger.error(`${logPrefix} Unhandled error processing proxyTRPCRequest:`, error); // Enhanced log
       // Ensure a serializable error response is returned
       return {
         body: Buffer.from(
@@ -269,62 +289,28 @@ export default class RemoteServerSyncCtr extends ControllerModule {
   }
 
   /**
-   * Refresh token if needed (same as previous version - needs careful review for concurrent calls)
+   * Attempts to refresh the access token by calling the RemoteServerConfigCtr.
    * @returns Whether token refresh was successful
    */
-  private async refreshTokenIfNeeded(): Promise<boolean> {
-    // Debounce refresh logic - IMPORTANT: This simple debounce might not be sufficient
-    // if multiple requests hit 401 concurrently *before* the first refresh completes.
-    // A more robust locking mechanism might be needed.
-    if (this.remoteServerConfigCtr.isTokenRefreshing()) {
-      logger.debug('Token refresh already in progress, waiting...');
-      // Wait for the ongoing refresh to complete (or timeout)
-      // This requires isTokenRefreshing() to be reliable and eventually become false.
-      // Consider using an event emitter or a shared promise for waiting.
-      // Simple timeout might lead to race conditions.
-      await new Promise<void>((resolve) => {
-        const checkInterval = setInterval(async () => {
-          if (!this.remoteServerConfigCtr.isTokenRefreshing()) {
-            clearInterval(checkInterval);
-            resolve();
-          }
-        }, 200);
-        // Timeout to prevent infinite waiting
-        setTimeout(() => {
-          clearInterval(checkInterval);
-          logger.warn('Timeout waiting for token refresh to complete.');
-          resolve(); // Resolve anyway after timeout
-        }, 5000); // 5 second timeout
-      });
-
-      // After waiting, check if we now have a token
-      return !!(await this.remoteServerConfigCtr.getAccessToken());
-    }
-
-    this.remoteServerConfigCtr.setTokenRefreshing(true);
+  private async refreshTokenIfNeeded(callerLogPrefix: string = '[RefreshToken]'): Promise<boolean> {
+    // Added prefix parameter
+    const logPrefix = `${callerLogPrefix} [RefreshTrigger]`; // Updated prefix
+    logger.debug(`${logPrefix} Entered refreshTokenIfNeeded.`);
 
     try {
-      const config = await this.remoteServerConfigCtr.getRemoteServerConfig();
-      if (!config.active) {
-        logger.debug('Remote server not active, skipping token refresh');
-        return false;
-      }
-
-      logger.info('Attempting to refresh access token');
+      logger.info(`${logPrefix} Triggering refreshAccessToken in RemoteServerConfigCtr.`);
       const result = await this.remoteServerConfigCtr.refreshAccessToken();
 
       if (result.success) {
-        logger.info('Token refresh successful');
+        logger.info(`${logPrefix} refreshAccessToken call completed successfully.`);
         return true;
       } else {
-        logger.error(`Token refresh failed: ${result.error}`);
+        logger.error(`${logPrefix} refreshAccessToken call failed: ${result.error}`);
         return false;
       }
     } catch (error) {
-      logger.error('Exception during token refresh:', error);
+      logger.error(`${logPrefix} Exception occurred while calling refreshAccessToken:`, error);
       return false;
-    } finally {
-      this.remoteServerConfigCtr.setTokenRefreshing(false);
     }
   }
 

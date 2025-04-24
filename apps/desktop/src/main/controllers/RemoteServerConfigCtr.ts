@@ -16,6 +16,11 @@ const logger = createLogger('controllers:RemoteServerConfigCtr');
  */
 export default class RemoteServerConfigCtr extends ControllerModule {
   /**
+   * Key used to store encrypted tokens in electron-store.
+   */
+  private readonly encryptedTokensKey = 'encryptedTokens';
+
+  /**
    * Get remote server configuration
    */
   @ipcClientEvent('getRemoteServerConfig')
@@ -68,15 +73,16 @@ export default class RemoteServerConfigCtr extends ControllerModule {
 
   /**
    * Encrypted tokens
-   * Tokens are only stored in memory, not persisted to storage
+   * Stored in memory for quick access, loaded from persistent storage on init.
    */
   private encryptedAccessToken?: string;
   private encryptedRefreshToken?: string;
 
   /**
-   * Whether token refresh is in progress
+   * Promise representing the ongoing token refresh operation.
+   * Used to prevent concurrent refreshes and allow callers to wait.
    */
-  private isRefreshing = false;
+  private refreshPromise: Promise<{ error?: string; success: boolean }> | null = null;
 
   /**
    * Encrypt and store tokens
@@ -91,6 +97,11 @@ export default class RemoteServerConfigCtr extends ControllerModule {
       logger.warn('Safe storage not available, storing tokens unencrypted');
       this.encryptedAccessToken = accessToken;
       this.encryptedRefreshToken = refreshToken;
+      // Persist unencrypted tokens (consider security implications)
+      this.app.storeManager.set(this.encryptedTokensKey, {
+        accessToken: this.encryptedAccessToken,
+        refreshToken: this.encryptedRefreshToken,
+      });
       return;
     }
 
@@ -103,21 +114,35 @@ export default class RemoteServerConfigCtr extends ControllerModule {
     this.encryptedRefreshToken = Buffer.from(safeStorage.encryptString(refreshToken)).toString(
       'base64',
     );
+
+    // Persist encrypted tokens
+    logger.debug(`Persisting encrypted tokens to store key: ${this.encryptedTokensKey}`);
+    this.app.storeManager.set(this.encryptedTokensKey, {
+      accessToken: this.encryptedAccessToken,
+      refreshToken: this.encryptedRefreshToken,
+    });
   }
 
   /**
    * Get decrypted access token
    */
   async getAccessToken(): Promise<string | null> {
-    logger.debug('Getting access token');
+    // Try loading from memory first
     if (!this.encryptedAccessToken) {
-      logger.debug('No access token stored');
+      logger.debug('Access token not in memory, trying to load from store...');
+      this.loadTokensFromStore(); // Attempt to load from persistent storage
+    }
+
+    if (!this.encryptedAccessToken) {
+      logger.debug('No access token found in memory or store.');
       return null;
     }
 
     // If platform doesn't support secure storage, return stored token
     if (!safeStorage.isEncryptionAvailable()) {
-      logger.debug('Safe storage not available, returning unencrypted token');
+      logger.debug(
+        'Safe storage not available, returning potentially unencrypted token from memory/store',
+      );
       return this.encryptedAccessToken;
     }
 
@@ -136,15 +161,22 @@ export default class RemoteServerConfigCtr extends ControllerModule {
    * Get decrypted refresh token
    */
   async getRefreshToken(): Promise<string | null> {
-    logger.debug('Getting refresh token');
+    // Try loading from memory first
     if (!this.encryptedRefreshToken) {
-      logger.debug('No refresh token stored');
+      logger.debug('Refresh token not in memory, trying to load from store...');
+      this.loadTokensFromStore(); // Attempt to load from persistent storage
+    }
+
+    if (!this.encryptedRefreshToken) {
+      logger.debug('No refresh token found in memory or store.');
       return null;
     }
 
     // If platform doesn't support secure storage, return stored token
     if (!safeStorage.isEncryptionAvailable()) {
-      logger.debug('Safe storage not available, returning unencrypted token');
+      logger.debug(
+        'Safe storage not available, returning potentially unencrypted token from memory/store',
+      );
       return this.encryptedRefreshToken;
     }
 
@@ -166,52 +198,51 @@ export default class RemoteServerConfigCtr extends ControllerModule {
     logger.info('Clearing access and refresh tokens');
     this.encryptedAccessToken = undefined;
     this.encryptedRefreshToken = undefined;
-  }
-
-  /**
-   * Get refresh status
-   */
-  isTokenRefreshing() {
-    return this.isRefreshing;
-  }
-
-  /**
-   * Set refresh status
-   */
-  setTokenRefreshing(status: boolean) {
-    logger.debug(`Setting token refresh status: ${status}`);
-    this.isRefreshing = status;
+    // Also clear from persistent storage
+    logger.debug(`Deleting tokens from store key: ${this.encryptedTokensKey}`);
+    this.app.storeManager.delete(this.encryptedTokensKey);
   }
 
   /**
    * 刷新访问令牌
    * 使用存储的刷新令牌获取新的访问令牌
+   * Handles concurrent requests by returning the existing refresh promise if one is in progress.
    */
   @ipcClientEvent('refreshAccessToken')
-  async refreshAccessToken() {
+  async refreshAccessToken(): Promise<{ error?: string; success: boolean }> {
+    // If a refresh is already in progress, return the existing promise
+    if (this.refreshPromise) {
+      logger.debug('Token refresh already in progress, returning existing promise.');
+      return this.refreshPromise;
+    }
+
+    // Start a new refresh operation
+    logger.info('Initiating new token refresh operation.');
+    this.refreshPromise = this.performTokenRefresh();
+
+    // Return the promise so callers can wait
+    return this.refreshPromise;
+  }
+
+  /**
+   * Performs the actual token refresh logic.
+   * This method is called by refreshAccessToken and wrapped in a promise.
+   */
+  private async performTokenRefresh(): Promise<{ error?: string; success: boolean }> {
     try {
-      logger.info('刷新访问令牌');
-
-      // 检查是否已在刷新
-      if (this.isTokenRefreshing()) {
-        logger.warn('令牌刷新已在进行中');
-        return { error: '令牌刷新已在进行中', success: false };
-      }
-
-      // 标记为正在刷新
-      this.setTokenRefreshing(true);
-
       // 获取配置信息
       const config = await this.getRemoteServerConfig();
 
       if (!config.remoteServerUrl || !config.active) {
-        throw new Error('远程服务器未激活');
+        logger.warn('Remote server not active or configured, skipping refresh.');
+        return { error: '远程服务器未激活或未配置', success: false };
       }
 
       // 获取刷新令牌
       const refreshToken = await this.getRefreshToken();
       if (!refreshToken) {
-        throw new Error('没有可用的刷新令牌');
+        logger.error('No refresh token available for refresh operation.');
+        return { error: '没有可用的刷新令牌', success: false };
       }
 
       // 构造刷新请求
@@ -224,7 +255,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
         refresh_token: refreshToken,
       });
 
-      logger.debug('发送令牌刷新请求');
+      logger.debug(`Sending token refresh request to ${tokenUrl.toString()}`);
 
       // 发送请求
       const response = await fetch(tokenUrl.toString(), {
@@ -238,47 +269,58 @@ export default class RemoteServerConfigCtr extends ControllerModule {
       if (!response.ok) {
         // 尝试解析错误响应
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          `刷新令牌失败: ${response.status} ${response.statusText} ${
-            errorData.error_description || errorData.error || ''
-          }`,
-        );
+        const errorMessage = `刷新令牌失败: ${response.status} ${response.statusText} ${
+          errorData.error_description || errorData.error || ''
+        }`.trim();
+        logger.error(errorMessage, errorData);
+        return { error: errorMessage, success: false };
       }
 
       // 解析响应
       const data = await response.json();
 
-      // 确保响应包含必要的字段
-      if (!data.access_token) {
-        throw new Error('无效的令牌响应: 缺少必需字段');
+      // 检查响应中是否包含必要令牌
+      if (!data.access_token || !data.refresh_token) {
+        logger.error('Refresh response missing access_token or refresh_token', data);
+        return { error: '刷新响应中缺少令牌', success: false };
       }
 
-      logger.info('成功获取新的访问令牌');
-
       // 保存新令牌
-      await this.saveTokens(
-        data.access_token,
-        data.refresh_token || refreshToken, // 如果没有新的刷新令牌，使用旧的
-      );
+      logger.info('Token refresh successful, saving new tokens.');
+      await this.saveTokens(data.access_token, data.refresh_token);
 
       return { success: true };
     } catch (error) {
-      logger.error('刷新令牌失败:', error);
-
-      // 刷新失败，清除令牌并禁用远程服务器
-      await this.clearTokens();
-      const config = await this.getRemoteServerConfig();
-
-      await this.setRemoteServerConfig({
-        active: false,
-        remoteServerUrl: config.remoteServerUrl || '',
-        storageMode: 'local',
-      });
-
-      return { error: error.message, success: false };
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      logger.error('Exception during token refresh operation:', errorMessage, error);
+      return { error: `刷新令牌时发生异常: ${errorMessage}`, success: false };
     } finally {
-      // 标记为不再刷新
-      this.setTokenRefreshing(false);
+      // Ensure the promise reference is cleared once the operation completes
+      logger.debug('Clearing the refresh promise reference.');
+      this.refreshPromise = null;
     }
+  }
+
+  /**
+   * Load encrypted tokens from persistent storage (electron-store) into memory.
+   * This should be called during initialization or if memory tokens are missing.
+   */
+  private loadTokensFromStore() {
+    logger.debug(`Attempting to load tokens from store key: ${this.encryptedTokensKey}`);
+    const storedTokens = this.app.storeManager.get(this.encryptedTokensKey);
+
+    if (storedTokens && storedTokens.accessToken && storedTokens.refreshToken) {
+      logger.info('Successfully loaded tokens from store into memory.');
+      this.encryptedAccessToken = storedTokens.accessToken;
+      this.encryptedRefreshToken = storedTokens.refreshToken;
+    } else {
+      logger.debug('No valid tokens found in store.');
+    }
+  }
+
+  // Initialize by loading tokens from store when the controller is ready
+  // We might need a dedicated lifecycle method if constructor is too early for storeManager
+  afterAppReady() {
+    this.loadTokensFromStore();
   }
 }
