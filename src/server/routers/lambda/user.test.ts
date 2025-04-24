@@ -26,6 +26,7 @@ vi.mock('@/database/models/session');
 vi.mock('@/database/models/user');
 vi.mock('@/libs/next-auth/adapter');
 vi.mock('@/server/modules/KeyVaultsEncrypt');
+vi.mock('@/server/modules/S3');
 vi.mock('@/server/services/user');
 vi.mock('@/const/auth', () => ({
   enableClerk: true,
