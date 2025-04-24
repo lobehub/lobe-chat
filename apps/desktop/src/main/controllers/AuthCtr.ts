@@ -161,87 +161,23 @@ export default class AuthCtr extends ControllerModule {
   async refreshAccessToken() {
     logger.info('Starting to refresh access token');
     try {
-      // Check if already refreshing
-      if (this.remoteServerConfigCtr.isTokenRefreshing()) {
-        logger.warn('Token refresh already in progress');
-        return { error: 'Token refresh already in progress', success: false };
+      // Call the centralized refresh logic in RemoteServerConfigCtr
+      const result = await this.remoteServerConfigCtr.refreshAccessToken();
+
+      if (result.success) {
+        logger.info('Token refresh successful via AuthCtr call.');
+        // Notify render process that token has been refreshed
+        this.broadcastTokenRefreshed();
+        return { success: true };
+      } else {
+        // Throw an error to be caught by the catch block below
+        // This maintains the existing behavior of clearing tokens on failure
+        logger.error(`Token refresh failed via AuthCtr call: ${result.error}`);
+        throw new Error(result.error || 'Token refresh failed');
       }
-
-      // Mark as refreshing
-      this.remoteServerConfigCtr.setTokenRefreshing(true);
-      logger.debug('Marking as refreshing token');
-
-      // Get configuration information
-      const config = await this.remoteServerConfigCtr.getRemoteServerConfig();
-      logger.debug(
-        `Getting remote server configuration: url=${config.remoteServerUrl}, storageMode=${config.storageMode}`,
-      );
-
-      if (!config.remoteServerUrl || !config.active) {
-        logger.error('Remote server not active');
-        throw new Error('Remote server not active');
-      }
-
-      // Get refresh token
-      const refreshToken = await this.remoteServerConfigCtr.getRefreshToken();
-      if (!refreshToken) {
-        logger.error('No refresh token available');
-        throw new Error('No refresh token available');
-      }
-      logger.debug('Successfully retrieved refresh token');
-
-      // Construct refresh request
-      const tokenUrl = new URL('/oidc/token', config.remoteServerUrl);
-
-      // Construct request body
-      const body = querystring.stringify({
-        client_id: 'lobehub-desktop',
-        grant_type: 'refresh_token',
-        refresh_token: refreshToken,
-      });
-
-      logger.debug(`Sending token refresh request to ${tokenUrl.toString()}`);
-      // Send request
-      const response = await fetch(tokenUrl.toString(), {
-        body,
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        method: 'POST',
-      });
-
-      if (!response.ok) {
-        // Try parsing the error response
-        const errorData = await response.json().catch(() => ({}));
-        const errorMessage = `Failed to refresh token: ${response.status} ${response.statusText} ${errorData.error_description || errorData.error || ''}`;
-        logger.error(errorMessage);
-        throw new Error(errorMessage);
-      }
-
-      // Parse response
-      const data = await response.json();
-      logger.debug('Successfully received token refresh response');
-
-      // Ensure response contains necessary fields
-      if (!data.access_token) {
-        logger.error('Invalid token response: missing access_token');
-        throw new Error('Invalid token response: missing required fields');
-      }
-
-      // Save new tokens
-      logger.debug('Starting to save new tokens');
-      await this.remoteServerConfigCtr.saveTokens(
-        data.access_token,
-        data.refresh_token || refreshToken, // Use old refresh token if no new one is provided
-      );
-      logger.info('Successfully refreshed and saved tokens');
-
-      // Notify render process that token has been refreshed
-      this.broadcastTokenRefreshed();
-
-      return { success: true };
     } catch (error) {
-      logger.error('Token refresh operation failed:', error);
+      // Keep the existing logic to clear tokens and require re-auth on failure
+      logger.error('Token refresh operation failed via AuthCtr, initiating cleanup:', error);
 
       // Refresh failed, clear tokens and disable remote server
       logger.warn('Refresh failed, clearing tokens and disabling remote server');
@@ -252,10 +188,6 @@ export default class AuthCtr extends ControllerModule {
       this.broadcastAuthorizationRequired();
 
       return { error: error.message, success: false };
-    } finally {
-      // Mark as no longer refreshing
-      this.remoteServerConfigCtr.setTokenRefreshing(false);
-      logger.debug('Marking as no longer refreshing token');
     }
   }
 
