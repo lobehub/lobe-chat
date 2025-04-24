@@ -1,3 +1,4 @@
+import { StorageMode, StorageModeEnum } from '@lobechat/electron-client-ipc';
 import { Input } from '@lobehub/ui';
 import { LobeHub } from '@lobehub/ui/brand';
 import { Button } from 'antd';
@@ -8,8 +9,9 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { useElectronStore } from '@/store/electron';
+import { electronSyncSelectors } from '@/store/electron/selectors';
 
-import { AccessOption, Option } from './Option';
+import { Option } from './Option';
 
 const useStyles = createStyles(({ token, css }) => {
   return {
@@ -78,12 +80,15 @@ interface ConnectionModeProps {
 const ConnectionMode = memo<ConnectionModeProps>(({ setIsOpen, setWaiting }) => {
   const { styles } = useStyles();
   const { t } = useTranslation(['electron', 'common']);
-  const [selectedOption, setSelectedOption] = useState<AccessOption>();
-  const [selfHostedUrl, setSelfHostedUrl] = useState('');
   const [urlError, setUrlError] = useState<string | undefined>();
 
   const connect = useElectronStore((s) => s.connectRemoteServer);
   const disconnect = useElectronStore((s) => s.disconnectRemoteServer);
+  const storageMode = useElectronStore(electronSyncSelectors.storageMode);
+  const remoteServerUrl = useElectronStore(electronSyncSelectors.remoteServerUrl);
+
+  const [selectedOption, setSelectedOption] = useState<StorageMode>(storageMode);
+  const [selfHostedUrl, setSelfHostedUrl] = useState(remoteServerUrl);
 
   const validateUrl = useCallback((url: string) => {
     if (!url) {
@@ -100,9 +105,9 @@ const ConnectionMode = memo<ConnectionModeProps>(({ setIsOpen, setWaiting }) => 
     }
   }, []);
 
-  const handleSelectOption = (option: AccessOption) => {
+  const handleSelectOption = (option: StorageMode) => {
     setSelectedOption(option);
-    if (option !== 'self-hosted') {
+    if (option !== StorageModeEnum.SelfHost) {
       setUrlError(undefined);
     } else {
       setUrlError(validateUrl(selfHostedUrl));
@@ -110,7 +115,7 @@ const ConnectionMode = memo<ConnectionModeProps>(({ setIsOpen, setWaiting }) => 
   };
 
   const handleContinue = async () => {
-    if (selectedOption === 'self-hosted') {
+    if (selectedOption === StorageModeEnum.SelfHost) {
       const error = validateUrl(selfHostedUrl);
       setUrlError(error);
       if (error) {
@@ -118,7 +123,7 @@ const ConnectionMode = memo<ConnectionModeProps>(({ setIsOpen, setWaiting }) => 
       }
     }
 
-    if (selectedOption === 'local') {
+    if (selectedOption === StorageModeEnum.Local) {
       await disconnect();
       setIsOpen(false);
       return;
@@ -126,11 +131,7 @@ const ConnectionMode = memo<ConnectionModeProps>(({ setIsOpen, setWaiting }) => 
 
     // try to connect
     setWaiting(true);
-    await connect(
-      selectedOption === 'self-hosted'
-        ? { isSelfHosted: true, serverUrl: selfHostedUrl }
-        : { isSelfHosted: false },
-    );
+    await connect({ remoteServerUrl: selfHostedUrl, storageMode: selectedOption });
   };
 
   return (
@@ -145,7 +146,7 @@ const ConnectionMode = memo<ConnectionModeProps>(({ setIsOpen, setWaiting }) => 
             <div className={styles.groupTitle}>{t('sync.mode.cloudSync')}</div>
             <div
               className={styles.selfHostedText}
-              onClick={() => handleSelectOption('self-hosted')}
+              onClick={() => handleSelectOption(StorageModeEnum.SelfHost)}
             >
               {t('sync.mode.useSelfHosted')}
             </div>
@@ -156,18 +157,18 @@ const ConnectionMode = memo<ConnectionModeProps>(({ setIsOpen, setWaiting }) => 
             isSelected={selectedOption === 'cloud'}
             label={t('sync.lobehubCloud.title')}
             onClick={handleSelectOption}
-            value="cloud"
+            value={StorageModeEnum.Cloud}
           />
-          {selectedOption === 'self-hosted' && (
+          {selectedOption === StorageModeEnum.SelfHost && (
             <Option
               description={t('sync.selfHosted.description')}
               icon={Server}
-              isSelected={selectedOption === 'self-hosted'}
+              isSelected={selectedOption === StorageModeEnum.SelfHost}
               label={t('sync.selfHosted.title')}
               onClick={handleSelectOption}
-              value="self-hosted"
+              value={StorageModeEnum.SelfHost}
             >
-              {selectedOption === 'self-hosted' && (
+              {selectedOption === StorageModeEnum.SelfHost && (
                 <>
                   <Input
                     autoFocus
@@ -195,10 +196,10 @@ const ConnectionMode = memo<ConnectionModeProps>(({ setIsOpen, setWaiting }) => 
           <Option
             description={t('sync.local.description')}
             icon={ComputerIcon}
-            isSelected={selectedOption === 'local'}
+            isSelected={selectedOption === StorageModeEnum.Local}
             label={t('sync.local.title')}
             onClick={handleSelectOption}
-            value="local"
+            value={StorageModeEnum.Local}
           />
         </Flexbox>
       </Flexbox>
@@ -206,7 +207,8 @@ const ConnectionMode = memo<ConnectionModeProps>(({ setIsOpen, setWaiting }) => 
       <Button
         className={styles.continueButton}
         disabled={
-          !selectedOption || (selectedOption === 'self-hosted' && (!!urlError || !selfHostedUrl))
+          !selectedOption ||
+          (selectedOption === StorageModeEnum.SelfHost && (!!urlError || !selfHostedUrl))
         }
         onClick={handleContinue}
         size="large"

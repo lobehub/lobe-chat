@@ -1,11 +1,11 @@
-import { RemoteServerConfig } from '../types/remoteServer';
+import { DataSyncConfig } from '../types/dataSync';
 
 /**
  * 远程服务器配置相关的事件
  */
 export interface RemoteServerDispatchEvents {
   clearRemoteServerConfig: () => boolean;
-  getRemoteServerConfig: () => RemoteServerConfig;
+  getRemoteServerConfig: () => DataSyncConfig;
   refreshAccessToken: () => {
     error?: string;
     success: boolean;
@@ -14,7 +14,7 @@ export interface RemoteServerDispatchEvents {
     error?: string;
     success: boolean;
   };
-  setRemoteServerConfig: (config: RemoteServerConfig) => boolean;
+  setRemoteServerConfig: (config: DataSyncConfig) => boolean;
 }
 
 /**

@@ -40,14 +40,6 @@ export default class AuthCtr extends ControllerModule {
   async requestAuthorization(serverUrl: string) {
     logger.info(`Requesting OAuth authorization, server URL: ${serverUrl}`);
     try {
-      // First, update the server URL configuration
-      logger.debug('Setting remote server configuration');
-      await this.remoteServerConfigCtr.setRemoteServerConfig({
-        // Set to true after successful authorization
-        active: false,
-        remoteServerUrl: serverUrl,
-      });
-
       // Generate PKCE parameters
       logger.debug('Generating PKCE parameters');
       const codeVerifier = this.generateCodeVerifier();
@@ -69,7 +61,7 @@ export default class AuthCtr extends ControllerModule {
         prompt: 'consent',
         redirect_uri: 'com.lobehub.desktop://auth/callback',
         response_type: 'code',
-        scope: 'openid profile email offline_access sync:read sync:write',
+        scope: 'profile email offline_access',
         state: this.authRequestState,
       });
 
@@ -182,7 +174,7 @@ export default class AuthCtr extends ControllerModule {
       // Get configuration information
       const config = await this.remoteServerConfigCtr.getRemoteServerConfig();
       logger.debug(
-        `Getting remote server configuration: url=${config.remoteServerUrl}, active=${config.active}`,
+        `Getting remote server configuration: url=${config.remoteServerUrl}, storageMode=${config.storageMode}`,
       );
 
       if (!config.remoteServerUrl || !config.active) {
@@ -254,13 +246,7 @@ export default class AuthCtr extends ControllerModule {
       // Refresh failed, clear tokens and disable remote server
       logger.warn('Refresh failed, clearing tokens and disabling remote server');
       await this.remoteServerConfigCtr.clearTokens();
-      const currentConfig = await this.remoteServerConfigCtr
-        .getRemoteServerConfig()
-        .catch(() => ({ remoteServerUrl: '' })); // Handle potential error getting config
-      await this.remoteServerConfigCtr.setRemoteServerConfig({
-        active: false,
-        remoteServerUrl: currentConfig.remoteServerUrl || '',
-      });
+      await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
 
       // Notify render process that re-authorization is required
       this.broadcastAuthorizationRequired();
@@ -362,10 +348,7 @@ export default class AuthCtr extends ControllerModule {
 
       // Set server to active state
       logger.debug(`Setting remote server to active state: ${serverUrl}`);
-      await this.remoteServerConfigCtr.setRemoteServerConfig({
-        active: true,
-        remoteServerUrl: serverUrl,
-      });
+      await this.remoteServerConfigCtr.setRemoteServerConfig({ active: true });
 
       return { success: true };
     } catch (error) {

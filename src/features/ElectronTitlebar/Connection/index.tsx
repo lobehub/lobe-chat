@@ -2,8 +2,8 @@ import { Drawer } from 'antd';
 import { createStyles } from 'antd-style';
 import { useState } from 'react';
 
-import Mode from './Mode';
-import Sync from './Sync';
+import ConnectionMode from './ConnectionMode';
+import RemoteStatus from './RemoteStatus';
 import WaitingOAuth from './Waiting';
 
 const useStyles = createStyles(({ css }) => {
@@ -26,7 +26,7 @@ const Connection = () => {
 
   return (
     <>
-      <Sync
+      <RemoteStatus
         onClick={() => {
           setIsOpen(true);
         }}
@@ -47,7 +47,7 @@ const Connection = () => {
         {isWaiting ? (
           <WaitingOAuth setIsOpen={setIsOpen} setWaiting={setWaiting} />
         ) : (
-          <Mode setIsOpen={setIsOpen} setWaiting={setWaiting} />
+          <ConnectionMode setIsOpen={setIsOpen} setWaiting={setWaiting} />
         )}
       </Drawer>
     </>

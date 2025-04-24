@@ -1,4 +1,4 @@
-import { RemoteServerConfig } from '@lobechat/electron-client-ipc';
+import { DataSyncConfig } from '@lobechat/electron-client-ipc';
 import { safeStorage } from 'electron';
 import querystring from 'node:querystring';
 import { URL } from 'node:url';
@@ -23,11 +23,12 @@ export default class RemoteServerConfigCtr extends ControllerModule {
     logger.debug('Getting remote server configuration');
     const { storeManager } = this.app;
 
-    const config: RemoteServerConfig = storeManager.get('remoteServerConfig');
+    const config: DataSyncConfig = storeManager.get('dataSyncConfig');
 
     logger.debug(
-      `Remote server config: active=${config.active}, url=${config.remoteServerUrl}, isSelfHosted=${config.isSelfHosted}`,
+      `Remote server config: active=${config.active}, storageMode=${config.storageMode}, url=${config.remoteServerUrl}`,
     );
+
     return config;
   }
 
@@ -35,14 +36,15 @@ export default class RemoteServerConfigCtr extends ControllerModule {
    * Set remote server configuration
    */
   @ipcClientEvent('setRemoteServerConfig')
-  async setRemoteServerConfig(config: RemoteServerConfig) {
+  async setRemoteServerConfig(config: Partial<DataSyncConfig>) {
     logger.info(
-      `Setting remote server config: active=${config.active}, url=${config.remoteServerUrl}`,
+      `Setting remote server storageMode: active=${config.active}, storageMode=${config.storageMode}, url=${config.remoteServerUrl}`,
     );
     const { storeManager } = this.app;
+    const prev: DataSyncConfig = storeManager.get('dataSyncConfig');
 
     // Save configuration
-    storeManager.set('remoteServerConfig', config);
+    storeManager.set('dataSyncConfig', { ...prev, ...config });
 
     return true;
   }
@@ -56,7 +58,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
     const { storeManager } = this.app;
 
     // Clear instance configuration
-    storeManager.set('remoteServerConfig', { active: false });
+    storeManager.set('dataSyncConfig', { storageMode: 'local' });
 
     // Clear tokens (if any)
     await this.clearTokens();
@@ -269,8 +271,8 @@ export default class RemoteServerConfigCtr extends ControllerModule {
 
       await this.setRemoteServerConfig({
         active: false,
-        isSelfHosted: !!config.remoteServerUrl,
         remoteServerUrl: config.remoteServerUrl || '',
+        storageMode: 'local',
       });
 
       return { error: error.message, success: false };

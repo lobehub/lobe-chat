@@ -1,8 +1,8 @@
-import { RemoteServerConfig } from '@lobechat/electron-client-ipc';
+import { DataSyncConfig } from '@lobechat/electron-client-ipc';
 
 export interface ElectronMainStore {
+  dataSyncConfig: DataSyncConfig;
   locale: string;
-  remoteServerConfig: RemoteServerConfig;
   shortcuts: Record<string, string>;
   storagePath: string;
 }

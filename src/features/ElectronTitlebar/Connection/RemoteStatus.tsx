@@ -9,13 +9,13 @@ import { electronSyncSelectors } from '@/store/electron/selectors';
 interface SyncProps {
   onClick: () => void;
 }
-const Sync = memo<SyncProps>(({ onClick }) => {
+const RemoteStatus = memo<SyncProps>(({ onClick }) => {
   const { t } = useTranslation('electron');
 
   const [isIniting, isSyncActive, useRemoteServerConfig] = useElectronStore((s) => [
     !s.isInitRemoteServerConfig,
     electronSyncSelectors.isSyncActive(s),
-    s.useRemoteServerConfig,
+    s.useDataSyncConfig,
   ]);
 
   // 使用useSWR获取远程服务器配置
@@ -39,4 +39,4 @@ const Sync = memo<SyncProps>(({ onClick }) => {
   );
 });
 
-export default Sync;
+export default RemoteStatus;

@@ -4,6 +4,7 @@ import React, { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { autoUpdateService } from '@/services/electron/autoUpdate';
+import { formatSpeed } from '@/utils/format';
 
 export const UpdateModal = memo(() => {
   const { t } = useTranslation(['electron', 'common']);
@@ -175,7 +176,7 @@ export const UpdateModal = memo(() => {
           <div style={{ fontSize: 12, marginTop: 8, textAlign: 'center' }}>
             {t('updater.downloadingUpdateDesc', { percent })}
             {progress && progress.bytesPerSecond > 0 && (
-              <span> ({(progress.bytesPerSecond / 1024 / 1024).toFixed(2)} MB/s)</span>
+              <span>{formatSpeed(progress.bytesPerSecond)}</span>
             )}
           </div>
         </div>

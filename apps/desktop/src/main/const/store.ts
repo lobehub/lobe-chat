@@ -14,10 +14,8 @@ export const STORE_NAME = 'lobehub-settings';
  * 存储默认值
  */
 export const STORE_DEFAULTS: ElectronMainStore = {
+  dataSyncConfig: { storageMode: 'local' },
   locale: 'auto',
-  remoteServerConfig: {
-    active: false,
-  },
   shortcuts: DEFAULT_SHORTCUTS_CONFIG,
   storagePath: appStorageDir,
 };

@@ -1,4 +1,5 @@
 import { CheckCircleFilled } from '@ant-design/icons';
+import { StorageModeEnum } from '@lobechat/electron-client-ipc';
 import { createStyles } from 'antd-style';
 import { ComponentType, ReactNode } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -55,17 +56,14 @@ const useStyles = createStyles(({ token, css }) => ({
   `,
 }));
 
-// 定义选项类型
-export type AccessOption = 'cloud' | 'self-hosted' | 'local';
-
 export interface OptionProps {
   children?: ReactNode;
   description: string;
   icon: ComponentType<any>;
   isSelected: boolean;
   label: string;
-  onClick: (value: AccessOption) => void;
-  value: AccessOption; // For self-hosted input
+  onClick: (value: StorageModeEnum) => void;
+  value: StorageModeEnum; // For self-hosted input
 }
 
 export const Option = ({
