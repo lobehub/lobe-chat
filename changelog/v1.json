@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "fixes": ["Fix hydration error."]
+    },
+    "date": "2025-04-24",
+    "version": "1.82.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix openai tools calling."]
+    },
+    "date": "2025-04-24",
+    "version": "1.82.3"
+  },
+  {
+    "children": {
       "improvements": ["Improve stdio mcp form, Update the id of some OpenAI models in OpenRouter."]
     },
     "date": "2025-04-23",
