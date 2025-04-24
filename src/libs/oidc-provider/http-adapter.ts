@@ -235,8 +235,10 @@ export const createContextForInteractionDetails = async (
   const baseUrl = appEnv.APP_URL!;
   log('Using base URL: %s', baseUrl);
 
-  // 从baseUrl提取主机名用于headers
-  const hostName = new URL(baseUrl).host;
+  // 从baseUrl提取主机名和端口(如果有的话)用于headers
+  const parsedUrl = new URL(baseUrl);
+  const hostName = parsedUrl.host; // host 已经包含了端口号(如果存在)
+  log('Using host with port (if any): %s', hostName);
 
   // 1. 获取真实的 Cookies
   const cookieStore = await cookies();
@@ -254,8 +256,13 @@ export const createContextForInteractionDetails = async (
     log('Warning: Interaction session cookie not found: %s', interactionCookieName);
   }
 
-  // 2. 构建包含真实 Cookie 的 Headers
-  const headers = new Headers({ host: hostName });
+  // 2. 构建包含真实 Cookie 的 Headers，确保包含端口号
+  const headers = new Headers({
+    'host': hostName,
+    // 添加协议相关信息，帮助正确解析端口
+    'x-forwarded-proto': parsedUrl.protocol.replace(':', ''),
+  });
+
   const cookieString = Object.entries(realCookies)
     .map(([name, value]) => `${name}=${value}`)
     .join('; ');
