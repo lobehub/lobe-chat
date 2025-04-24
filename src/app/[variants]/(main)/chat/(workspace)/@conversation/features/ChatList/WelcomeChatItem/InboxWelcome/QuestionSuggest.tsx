@@ -16,11 +16,8 @@ import { useChatStore } from '@/store/chat';
 
 const useStyles = createStyles(({ css, token, responsive }) => ({
   card: css`
-    cursor: pointer;
-
     padding-block: 12px;
     padding-inline: 24px;
-    border: 1px solid ${token.colorFillTertiary};
     border-radius: 48px;
 
     color: ${token.colorText};
@@ -92,6 +89,7 @@ const QuestionSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
                 updateInputMessage(text);
                 sendMessage({ isWelcomeQuestion: true });
               }}
+              variant={'outlined'}
             >
               {t(text)}
             </Block>

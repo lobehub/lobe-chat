@@ -27,7 +27,7 @@ const useStyles = createStyles(({ css, token, responsive }) => ({
     height: 100%;
     min-height: 110px;
     padding: 16px;
-    border: 1px solid ${token.colorFillTertiary};
+    border-radius: ${token.borderRadiusLG}px;
 
     background: ${token.colorBgContainer};
 
@@ -107,9 +107,9 @@ const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
                   key={item.identifier}
                   prefetch={false}
                 >
-                  <Block className={styles.card} clickable gap={8} horizontal>
+                  <Block className={styles.card} clickable gap={12} horizontal variant={'outlined'}>
                     <Avatar avatar={item.meta.avatar} style={{ flex: 'none' }} />
-                    <Flexbox gap={mobile ? 2 : 8} style={{ overflow: 'hidden', width: '100%' }}>
+                    <Flexbox gap={2} style={{ overflow: 'hidden', width: '100%' }}>
                       <Paragraph className={styles.cardTitle} ellipsis={{ rows: 1 }}>
                         {item.meta.title}
                       </Paragraph>
