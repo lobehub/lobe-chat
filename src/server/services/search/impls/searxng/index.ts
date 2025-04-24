@@ -27,8 +27,12 @@ export class SearXNGImpl implements SearchServiceImpl {
     try {
       let costTime = 0;
       const startAt = Date.now();
+      // Replace "it" with "general" in search categories to improve search results
+      const categories = Array.from(
+        new Set(params?.searchCategories?.map((c) => (c === 'it' ? 'general' : c))),
+      );
       const data = await client.search(query, {
-        categories: params?.searchCategories,
+        categories: categories,
         engines: params?.searchEngines,
         time_range: params?.searchTimeRange,
       });

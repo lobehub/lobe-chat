@@ -22,5 +22,24 @@ describe('SearXNGImpl', () => {
       // Assert
       expect(results.results.length).toEqual(43);
     });
+
+    it('应该将搜索类别"it"替换为"general"', async () => {
+      const mockSearch = vi
+        .spyOn(SearXNGClient.prototype, 'search')
+        .mockResolvedValueOnce(hetongxue);
+
+      const searchImpl = new SearXNGImpl();
+      await searchImpl.query('test query', {
+        searchCategories: ['it', 'images', 'it'],
+      });
+
+      // Assert search was called with correct categories
+      expect(mockSearch).toHaveBeenCalledWith(
+        'test query',
+        expect.objectContaining({
+          categories: ['general', 'images'],
+        }),
+      );
+    });
   });
 });
