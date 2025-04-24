@@ -42,7 +42,6 @@ const AutoGenerateInput = memo<AutoGenerateInputProps>(
                 marginRight: -4,
               }}
               title={!canAutoGenerate ? t('autoGenerateTooltipDisabled') : t('autoGenerate')}
-              variant={'filled'}
             />
           )
         }

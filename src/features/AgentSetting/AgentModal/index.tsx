@@ -7,10 +7,10 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
+import ModelSelect from '@/features/ModelSelect';
 import { useProviderName } from '@/hooks/useProviderName';
 
 import { selectors, useStore } from '../store';
-import ModelSelect from './ModelSelect';
 
 const AgentModal = memo(() => {
   const { t } = useTranslation('setting');
@@ -26,7 +26,7 @@ const AgentModal = memo(() => {
         children: <ModelSelect />,
         desc: t('settingModel.model.desc', { provider: providerName }),
         label: t('settingModel.model.title'),
-        name: 'model',
+        name: '_modalConfig',
         tag: 'model',
       },
       {
@@ -114,10 +114,22 @@ const AgentModal = memo(() => {
         />
       }
       form={form}
-      initialValues={config}
+      initialValues={{
+        ...config,
+        _modalConfig: {
+          model: config.model,
+          provider: config.provider,
+        },
+      }}
       items={[model]}
       itemsType={'group'}
-      onFinish={updateConfig}
+      onFinish={({ _modalConfig, ...rest }) => {
+        updateConfig({
+          model: _modalConfig?.model,
+          provider: _modalConfig?.provider,
+          ...rest,
+        });
+      }}
       variant={'borderless'}
       {...FORM_STYLE}
     />

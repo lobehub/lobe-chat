@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Block } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { shuffle } from 'lodash-es';
 import { ArrowRight } from 'lucide-react';
@@ -20,15 +20,12 @@ const useStyles = createStyles(({ css, token, responsive }) => ({
 
     padding-block: 12px;
     padding-inline: 24px;
+    border: 1px solid ${token.colorFillTertiary};
     border-radius: 48px;
 
     color: ${token.colorText};
 
     background: ${token.colorBgContainer};
-
-    &:hover {
-      background: ${token.colorBgElevated};
-    }
 
     ${responsive.mobile} {
       padding-block: 8px;
@@ -84,9 +81,10 @@ const QuestionSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
         {qa.slice(0, mobile ? 2 : 5).map((item) => {
           const text = t(`guide.qa.${item}` as any, { appName: BRANDING_NAME });
           return (
-            <Flexbox
+            <Block
               align={'center'}
               className={styles.card}
+              clickable
               gap={8}
               horizontal
               key={item}
@@ -96,7 +94,7 @@ const QuestionSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
               }}
             >
               {t(text)}
-            </Flexbox>
+            </Block>
           );
         })}
       </Flexbox>

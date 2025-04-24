@@ -16,7 +16,7 @@ const SubmitAgentButton = memo<{ modal?: boolean }>(({ modal }) => {
   return (
     <>
       {modal ? (
-        <Button block icon={Share2} onClick={() => setIsModalOpen(true)}>
+        <Button block icon={Share2} onClick={() => setIsModalOpen(true)} variant={'filled'}>
           {t('submitAgentModal.tooltips')}
         </Button>
       ) : (

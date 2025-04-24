@@ -1,9 +1,7 @@
 'use client';
 
-import { Form, type FormGroupItemType, type FormItemProps, Icon, Tooltip } from '@lobehub/ui';
-import { GradientButton } from '@lobehub/ui/awesome';
+import { Button, Form, type FormGroupItemType, type FormItemProps, Tooltip } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
-import { isString } from 'lodash-es';
 import { Wand2 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -39,7 +37,6 @@ const AgentMeta = memo(() => {
       Render: AutoGenerateInput,
       key: 'title',
       label: t('settingAgent.name.title'),
-      onChange: (value: string) => updateMeta({ title: value }),
       placeholder: t('settingAgent.name.placeholder'),
     },
     {
@@ -47,7 +44,6 @@ const AgentMeta = memo(() => {
       desc: t('settingAgent.description.desc'),
       key: 'description',
       label: t('settingAgent.description.title'),
-      onChange: (value: string) => updateMeta({ description: value }),
       placeholder: t('settingAgent.description.placeholder'),
     },
     {
@@ -55,7 +51,6 @@ const AgentMeta = memo(() => {
       desc: t('settingAgent.tag.desc'),
       key: 'tags',
       label: t('settingAgent.tag.title'),
-      onChange: (e: any) => updateMeta({ tags: isString(e) ? e.split(',') : e }),
       placeholder: t('settingAgent.tag.placeholder'),
     },
   ];
@@ -109,22 +104,22 @@ const AgentMeta = memo(() => {
             : t('autoGenerateTooltip', { ns: 'common' })
         }
       >
-        <GradientButton
+        <Button
           disabled={!hasSystemRole}
-          glow={false}
-          icon={<Icon icon={Wand2} />}
+          icon={Wand2}
+          iconPosition={'end'}
+          iconProps={{
+            size: 12,
+          }}
           loading={Object.values(loadingState as any).some((i) => !!i)}
           onClick={(e: any) => {
             e.stopPropagation();
             autocompleteAllMeta(true);
           }}
-          style={{
-            fontSize: 14,
-            height: 36,
-          }}
+          size={'small'}
         >
           {t('autoGenerate', { ns: 'common' })}
-        </GradientButton>
+        </Button>
       </Tooltip>
     ),
     title: t('settingAgent.title'),

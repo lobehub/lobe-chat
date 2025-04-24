@@ -27,33 +27,37 @@ const AutoGenerateAvatar = memo<AutoGenerateAvatarProps>(
     const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
 
     return (
-      <Flexbox padding={8}>
-        <div style={{ opacity: loading ? 0.6 : undefined }}>
-          <EmojiPicker
-            background={background || theme.colorFillTertiary}
-            locale={locale}
-            onChange={onChange}
-            size={64}
-            style={{
-              border: `1px solid ${theme.colorBorder}`,
-            }}
-            value={value}
-          />
-        </div>
+      <Flexbox
+        align={'center'}
+        gap={2}
+        horizontal
+        padding={6}
+        style={{
+          background: theme.colorBgContainer,
+          border: `1px solid ${theme.colorBorderSecondary}`,
+          borderRadius: 32,
+          minHeight: 60,
+          minWidth: 86,
+        }}
+      >
+        <EmojiPicker
+          background={background || theme.colorFillTertiary}
+          locale={locale}
+          onChange={onChange}
+          size={48}
+          style={{
+            background: theme.colorFillTertiary,
+            opacity: loading ? 0.6 : undefined,
+          }}
+          value={value}
+        />
         <ActionIcon
           disabled={!canAutoGenerate}
-          glass
           icon={Wand2}
           loading={loading}
           onClick={onGenerate}
           size="small"
-          style={{
-            bottom: 4,
-            insetInlineEnd: 4,
-            position: 'absolute',
-          }}
           title={!canAutoGenerate ? t('autoGenerateTooltipDisabled') : t('autoGenerate')}
-          variant={'filled'}
         />
       </Flexbox>
     );

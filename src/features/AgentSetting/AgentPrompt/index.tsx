@@ -3,43 +3,18 @@
 import { Button, Form } from '@lobehub/ui';
 import { EditableMessage } from '@lobehub/ui/chat';
 import { Skeleton } from 'antd';
-import { createStyles } from 'antd-style';
+import { PenLineIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
+import Tokens from '@/features/AgentSetting/AgentPrompt/TokenTag';
 
 import { useStore } from '../store';
 
-export const useStyles = createStyles(({ css, token, responsive }) => ({
-  container: css`
-    position: relative;
-    width: 100%;
-    border-radius: ${token.borderRadiusLG}px;
-    background: ${token.colorFillSecondary};
-  `,
-  content: css`
-    z-index: 2;
-    padding: 8px;
-    border-radius: ${token.borderRadiusLG - 1}px;
-    background: ${token.colorBgContainer};
-  `,
-  markdown: css`
-    border: unset;
-  `,
-  wrapper: css`
-    width: 100%;
-    ${responsive.mobile} {
-      padding-block: 8px;
-      padding-inline: 4px;
-    }
-  `,
-}));
-
-const AgentPrompt = memo<{ modal?: boolean }>(({ modal }) => {
+const AgentPrompt = memo(() => {
   const { t } = useTranslation('setting');
-  const { styles } = useStyles();
+
   const [editing, setEditing] = useState(false);
   const [loading, systemRole, updateConfig] = useStore((s) => [
     s.loading,
@@ -47,77 +22,15 @@ const AgentPrompt = memo<{ modal?: boolean }>(({ modal }) => {
     s.setAgentConfig,
   ]);
 
-  if (loading) {
-    if (modal)
-      return (
-        <Form
-          items={[
-            {
-              children: (
-                <>
-                  <div style={{ height: 24 }} />
-                  <Skeleton active title={false} />
-                </>
-              ),
-              title: t('settingAgent.prompt.title'),
-            },
-          ]}
-          itemsType={'group'}
-          variant={'borderless'}
-          {...FORM_STYLE}
-        />
-      );
-
-    return (
-      <div className={styles.wrapper}>
-        <Flexbox className={styles.container} padding={4}>
-          <Flexbox horizontal justify={'space-between'} paddingBlock={8} paddingInline={12}>
-            <h1 style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 4 }}>
-              {t('settingAgent.prompt.title')}
-            </h1>
-          </Flexbox>
-          <Flexbox
-            align={'center'}
-            className={styles.content}
-            flex={1}
-            gap={16}
-            horizontal
-            justify={'space-between'}
-            padding={12}
-            wrap={'wrap'}
-          >
-            <Skeleton active style={{ paddingTop: 12 }} title={false} />
-          </Flexbox>
-        </Flexbox>
-      </div>
-    );
-  }
-
-  const content = (
-    <EditableMessage
-      classNames={{
-        markdown: styles.markdown,
-      }}
-      editButtonSize={'small'}
-      editing={editing}
-      height={'auto'}
-      onChange={(e) => {
-        updateConfig({ systemRole: e });
-      }}
-      onEditingChange={setEditing}
-      placeholder={t('settingAgent.prompt.placeholder')}
-      showEditWhenEmpty
-      text={{
-        cancel: t('cancel', { ns: 'common' }),
-        confirm: t('ok', { ns: 'common' }),
-      }}
-      value={systemRole}
-      variant={'borderless'}
-    />
-  );
+  if (loading) return <Skeleton active title={false} />;
 
   const editButton = !editing && !!systemRole && (
     <Button
+      icon={PenLineIcon}
+      iconPosition={'end'}
+      iconProps={{
+        size: 12,
+      }}
       onClick={(e) => {
         e.stopPropagation();
         setEditing(true);
@@ -129,50 +42,42 @@ const AgentPrompt = memo<{ modal?: boolean }>(({ modal }) => {
     </Button>
   );
 
-  if (modal)
-    return (
-      <Form
-        items={[
-          {
-            children: (
-              <>
-                <div style={{ height: 24 }} />
-                {content}
-              </>
-            ),
-            extra: editButton,
-            title: t('settingAgent.prompt.title'),
-          },
-        ]}
-        itemsType={'group'}
-        variant={'borderless'}
-        {...FORM_STYLE}
-      />
-    );
-
   return (
-    <div className={styles.wrapper}>
-      <Flexbox className={styles.container} padding={4}>
-        <Flexbox horizontal justify={'space-between'} paddingBlock={8} paddingInline={12}>
-          <h1 style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 4 }}>
-            {t('settingAgent.prompt.title')}
-          </h1>
-          {editButton}
-        </Flexbox>
-        <Flexbox
-          align={'center'}
-          className={styles.content}
-          flex={1}
-          gap={16}
-          horizontal
-          justify={'space-between'}
-          padding={12}
-          wrap={'wrap'}
-        >
-          {content}
-        </Flexbox>
-      </Flexbox>
-    </div>
+    <Form
+      items={[
+        {
+          children: (
+            <>
+              <EditableMessage
+                editing={editing}
+                height={'auto'}
+                markdownProps={{
+                  variant: 'chat',
+                }}
+                onChange={(e) => {
+                  updateConfig({ systemRole: e });
+                }}
+                onEditingChange={setEditing}
+                placeholder={t('settingAgent.prompt.placeholder')}
+                showEditWhenEmpty
+                text={{
+                  cancel: t('cancel', { ns: 'common' }),
+                  confirm: t('ok', { ns: 'common' }),
+                }}
+                value={systemRole}
+                variant={'borderless'}
+              />
+              {!editing && !!systemRole && <Tokens value={systemRole} />}
+            </>
+          ),
+          extra: editButton,
+          title: t('settingAgent.prompt.title'),
+        },
+      ]}
+      itemsType={'group'}
+      variant={'borderless'}
+      {...FORM_STYLE}
+    />
   );
 });
 

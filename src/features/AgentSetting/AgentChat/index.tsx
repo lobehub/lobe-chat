@@ -104,6 +104,10 @@ const AgentChat = memo(() => {
     <Form
       footer={
         <Form.SubmitFooter
+          onReset={(a, b) => {
+            console.log(config);
+            console.log(a, b);
+          }}
           texts={{
             reset: t('submitFooter.reset'),
             submit: t('settingChat.submit'),

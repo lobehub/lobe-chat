@@ -11,12 +11,15 @@ export interface AutoGenerateInputProps extends SelectProps {
 }
 
 const AutoGenerateSelect = memo<AutoGenerateInputProps>(
-  ({ loading, onGenerate, value, canAutoGenerate, ...props }) => {
+  ({ loading, onGenerate, value, canAutoGenerate, onChange, ...props }) => {
     const { t } = useTranslation('common');
 
     return (
       <Select
         mode="tags"
+        onChange={(v) => {
+          onChange?.(isString(v) ? v.split(',') : v);
+        }}
         open={false}
         style={{ width: '100%' }}
         suffixIcon={
@@ -31,7 +34,6 @@ const AutoGenerateSelect = memo<AutoGenerateInputProps>(
                 marginRight: -4,
               }}
               title={!canAutoGenerate ? t('autoGenerateTooltipDisabled') : t('autoGenerate')}
-              variant={'filled'}
             />
           )
         }

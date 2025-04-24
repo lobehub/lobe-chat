@@ -21,6 +21,7 @@ interface ModelOption {
 }
 
 interface ModelSelectProps {
+  defaultValue?: { model: string; provider?: string };
   onChange?: (props: { model: string; provider: string }) => void;
   showAbility?: boolean;
   value?: { model: string; provider?: string };
@@ -60,6 +61,7 @@ const ModelSelect = memo<ModelSelectProps>(({ value, onChange, showAbility = tru
 
   return (
     <Select
+      defaultValue={`${value?.provider}/${value?.model}`}
       onChange={(value, option) => {
         const model = value.split('/').slice(1).join('/');
         onChange?.({ model, provider: (option as unknown as ModelOption).provider });
