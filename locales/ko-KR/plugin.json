@@ -7,6 +7,7 @@
     "payload": "페이로드",
     "pluginState": "플러그인 상태",
     "response": "응답",
+    "title": "플러그인 세부정보",
     "tool_call": "도구 호출"
   },
   "detailModal": {
@@ -47,10 +48,16 @@
     },
     "mcp": {
       "args": {
-        "label": "명령 매개변수"
+        "desc": "STDIO 명령에 전달할 매개변수 목록, 일반적으로 여기에서 MCP 서버 이름을 입력합니다",
+        "label": "명령 매개변수",
+        "placeholder": "예: mcp-hello-world",
+        "required": "시작 매개변수를 입력하세요"
       },
       "command": {
-        "label": "명령"
+        "desc": "MCP STDIO 서버를 시작하는 실행 파일 또는 스크립트",
+        "label": "명령",
+        "placeholder": "예: npx / uv / docker 등",
+        "required": "시작 명령어를 입력하세요"
       },
       "endpoint": {
         "desc": "당신의 MCP 스트리밍 HTTP 서버 주소를 입력하세요",
@@ -60,15 +67,29 @@
         "desc": "당신의 MCP 플러그인에 이름을 지정하세요, 영어 문자 사용 필요",
         "invalid": "영어 문자, 숫자, - 및 _ 기호만 입력할 수 있습니다",
         "label": "MCP 플러그인 이름",
-        "placeholder": "예: my-mcp-plugin"
+        "placeholder": "예: my-mcp-plugin",
+        "required": "MCP 서비스 식별자를 입력하세요"
       },
+      "previewManifest": "플러그인 설명 파일 미리보기",
+      "testConnection": "연결 테스트",
+      "testConnectionTip": "연결 테스트가 성공해야 MCP 플러그인을 정상적으로 사용할 수 있습니다",
       "type": {
         "desc": "MCP 플러그인의 통신 방식을 선택하세요, 웹 버전은 스트리밍 HTTP만 지원합니다",
-        "label": "MCP 플러그인 유형"
+        "httpFeature1": "웹 버전과 데스크톱 버전 호환",
+        "httpFeature2": "원격 MCP 서버에 연결, 추가 설치 및 구성 필요 없음",
+        "httpShortDesc": "스트리밍 HTTP 기반 통신 프로토콜",
+        "label": "MCP 플러그인 유형",
+        "stdioFeature1": "더 낮은 통신 지연, 로컬 실행에 적합",
+        "stdioFeature2": "로컬에 MCP 서버를 설치하고 실행해야 함",
+        "stdioNotAvailable": "STDIO 모드는 데스크톱 버전에서만 사용 가능",
+        "stdioShortDesc": "표준 입력 및 출력을 기반으로 한 통신 프로토콜",
+        "title": "MCP 플러그인 유형"
       },
       "url": {
         "desc": "MCP 서버의 스트리밍 HTTP 주소를 입력하세요. /sse로 끝나지 않습니다.",
-        "label": "HTTP 엔드포인트 URL"
+        "invalid": "유효한 URL 주소를 입력하세요",
+        "label": "HTTP 엔드포인트 URL",
+        "required": "MCP 서비스 URL을 입력하세요"
       }
     },
     "meta": {
@@ -96,12 +117,14 @@
         "label": "식별자",
         "pattenErrorMessage": "영문자, 숫자, - 및 _만 입력할 수 있습니다."
       },
+      "lobe": "{{appName}} 플러그인",
       "manifest": {
         "desc": "{{appName}}는 이 링크를 통해 플러그인을 설치합니다.",
         "label": "Manifest 파일 URL",
         "preview": "Manifest 미리보기",
         "refresh": "새로 고침"
       },
+      "openai": "OpenAI 플러그인",
       "title": {
         "desc": "플러그인 제목",
         "label": "제목",
@@ -143,6 +166,7 @@
     "noManifest": "설명 파일이 없습니다",
     "openAPIInvalid": "OpenAPI 파싱에 실패했습니다. 오류: \n\n {{error}}",
     "reinstallError": "플러그인 {{name}} 다시 설치 중 오류가 발생했습니다.",
+    "testConnectionFailed": "매니페스트를 가져오는 데 실패했습니다: {{error}}",
     "urlError": "이 링크는 JSON 형식의 내용을 반환하지 않습니다. 유효한 링크인지 확인하세요."
   },
   "inspector": {
@@ -221,5 +245,6 @@
     },
     "title": "플러그인 스토어"
   },
+  "unknownError": "알 수 없는 오류",
   "unknownPlugin": "알 수 없는 플러그인"
 }

@@ -7,6 +7,7 @@
     "payload": "eklenti yükü",
     "pluginState": "Eklenti Durumu",
     "response": "Yanıt",
+    "title": "Eklenti Detayları",
     "tool_call": "aracı çağrı"
   },
   "detailModal": {
@@ -50,12 +51,13 @@
         "desc": "STDIO komutuna iletilecek parametreler listesi",
         "label": "Komut Parametreleri",
         "placeholder": "Örneğin: --port 8080 --debug",
-        "tooltip": "Parametreleri girdikten sonra Enter'a basın veya virgül/boşluk ile ayırın"
+        "required": "Lütfen başlatma parametrelerini girin"
       },
       "command": {
         "desc": "MCP STDIO eklentisini başlatmak için kullanılacak yürütülebilir dosya veya betik",
         "label": "Komut",
-        "placeholder": "Örneğin: python main.py veya /path/to/executable"
+        "placeholder": "Örneğin: python main.py veya /path/to/executable",
+        "required": "Lütfen başlatma komutunu girin"
       },
       "endpoint": {
         "desc": "MCP Streamable HTTP Sunucunuzun adresini girin",
@@ -65,15 +67,29 @@
         "desc": "MCP eklentiniz için bir ad belirleyin, İngilizce karakterler kullanmalısınız",
         "invalid": "Sadece İngilizce karakterler, rakamlar, - ve _ bu iki sembolü girebilirsiniz",
         "label": "MCP Eklenti Adı",
-        "placeholder": "Örneğin: my-mcp-plugin"
+        "placeholder": "Örneğin: my-mcp-plugin",
+        "required": "Lütfen MCP hizmet tanımlayıcısını girin"
       },
+      "previewManifest": "Eklenti tanım dosyasını önizle",
+      "testConnection": "Bağlantıyı test et",
+      "testConnectionTip": "Bağlantı başarılı olduktan sonra MCP eklentisi normal şekilde kullanılabilir",
       "type": {
         "desc": "MCP eklentisinin iletişim yöntemini seçin, web sürümü yalnızca Streamable HTTP'yi destekler",
-        "label": "MCP Eklenti Türü"
+        "httpFeature1": "Web ve masaüstü sürümü ile uyumlu",
+        "httpFeature2": "Ekstra kurulum ve yapılandırma gerektirmeden uzak MCP sunucusuna bağlanma",
+        "httpShortDesc": "Akış tabanlı HTTP iletişim protokolü",
+        "label": "MCP Eklenti Türü",
+        "stdioFeature1": "Daha düşük iletişim gecikmesi, yerel çalıştırma için uygundur",
+        "stdioFeature2": "Yerel olarak MCP sunucusunun kurulması ve çalıştırılması gerekir",
+        "stdioNotAvailable": "STDIO modu yalnızca masaüstü sürümünde mevcuttur",
+        "stdioShortDesc": "Standart giriş çıkış tabanlı iletişim protokolü",
+        "title": "MCP Eklenti Türü"
       },
       "url": {
         "desc": "MCP Sunucu Akış HTTP adresinizi girin, /sse ile bitmemelidir",
-        "label": "HTTP Endpoint URL"
+        "invalid": "Lütfen geçerli bir URL adresi girin",
+        "label": "HTTP Endpoint URL",
+        "required": "Lütfen MCP hizmet URL'sini girin"
       }
     },
     "meta": {
@@ -101,12 +117,14 @@
         "label": "Tanımlayıcı",
         "pattenErrorMessage": "Sadece İngilizce karakterler, sayılar, - ve _ kullanılabilir"
       },
+      "lobe": "{{appName}} eklentisi",
       "manifest": {
         "desc": "{{appName}} bu bağlantı aracılığıyla eklentiyi yükleyecektir.",
         "label": "Eklenti Tanım Dosyası (Manifest) URL'si",
         "preview": "Manifesti Önizle",
         "refresh": "Yenile"
       },
+      "openai": "OpenAI eklentisi",
       "title": {
         "desc": "Eklenti başlığı",
         "label": "Başlık",
@@ -148,6 +166,7 @@
     "noManifest": "Manifest dosyası mevcut değil",
     "openAPIInvalid": "OpenAPI ayrıştırma hatası, hata: \n\n {{error}}",
     "reinstallError": "{{name}} eklentisi yenilenemedi",
+    "testConnectionFailed": "Manifest alınamadı: {{error}}",
     "urlError": "Bağlantı JSON formatında içerik döndürmedi. Lütfen geçerli bir bağlantı olduğundan emin olun"
   },
   "inspector": {
@@ -226,5 +245,6 @@
     },
     "title": "Eklenti Mağazası"
   },
+  "unknownError": "Bilinmeyen hata",
   "unknownPlugin": "Bilinmeyen eklenti"
 }

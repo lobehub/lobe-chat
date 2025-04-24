@@ -7,6 +7,7 @@
     "payload": "بار افزونه",
     "pluginState": "وضعیت افزونه",
     "response": "نتیجه بازگشتی",
+    "title": "جزئیات افزونه",
     "tool_call": "درخواست فراخوانی ابزار"
   },
   "detailModal": {
@@ -50,12 +51,13 @@
         "desc": "لیست پارامترهای منتقل شده به دستور STDIO",
         "label": "پارامترهای دستور",
         "placeholder": "برای مثال: --port 8080 --debug",
-        "tooltip": "پس از وارد کردن پارامترها، Enter را بزنید یا از ویرگول/فاصله استفاده کنید"
+        "required": "لطفاً پارامترهای راه‌اندازی را وارد کنید"
       },
       "command": {
         "desc": "فایل اجرایی یا اسکریپتی که برای راه‌اندازی افزونه MCP STDIO استفاده می‌شود",
         "label": "دستور",
-        "placeholder": "برای مثال: python main.py یا /path/to/executable"
+        "placeholder": "برای مثال: python main.py یا /path/to/executable",
+        "required": "لطفاً دستور راه‌اندازی را وارد کنید"
       },
       "endpoint": {
         "desc": "آدرس سرور HTTP Streamable MCP خود را وارد کنید",
@@ -65,15 +67,29 @@
         "desc": "برای افزونه MCP خود یک نام مشخص کنید، باید از کاراکترهای انگلیسی استفاده کنید",
         "invalid": "فقط می‌توانید از کاراکترهای انگلیسی، اعداد، - و _ استفاده کنید",
         "label": "نام افزونه MCP",
-        "placeholder": "برای مثال: my-mcp-plugin"
+        "placeholder": "برای مثال: my-mcp-plugin",
+        "required": "لطفاً شناسه سرویس MCP را وارد کنید"
       },
+      "previewManifest": "پیش‌نمایش فایل توصیف افزونه",
+      "testConnection": "آزمایش اتصال",
+      "testConnectionTip": "پس از موفقیت‌آمیز بودن آزمایش اتصال، افزونه MCP می‌تواند به‌طور عادی استفاده شود",
       "type": {
         "desc": "روش ارتباط افزونه MCP را انتخاب کنید، نسخه وب فقط از HTTP Streamable پشتیبانی می‌کند",
-        "label": "نوع افزونه MCP"
+        "httpFeature1": "سازگاری با نسخه وب و دسکتاپ",
+        "httpFeature2": "اتصال به سرور MCP از راه دور، بدون نیاز به نصب و پیکربندی اضافی",
+        "httpShortDesc": "پروتکل ارتباطی مبتنی بر HTTP جریانی",
+        "label": "نوع افزونه MCP",
+        "stdioFeature1": "تاخیر ارتباطی کمتر، مناسب برای اجراهای محلی",
+        "stdioFeature2": "نیاز به نصب و اجرای سرور MCP به صورت محلی",
+        "stdioNotAvailable": "حالت STDIO فقط در نسخه دسکتاپ در دسترس است",
+        "stdioShortDesc": "پروتکل ارتباطی مبتنی بر ورودی و خروجی استاندارد",
+        "title": "نوع افزونه MCP"
       },
       "url": {
         "desc": "آدرس HTTP قابل پخش سرور MCP خود را وارد کنید، که با /sse پایان نمی‌یابد",
-        "label": "آدرس URL نقطه پایانی HTTP"
+        "invalid": "لطفاً یک آدرس URL معتبر وارد کنید",
+        "label": "آدرس URL نقطه پایانی HTTP",
+        "required": "لطفاً URL سرویس MCP را وارد کنید"
       }
     },
     "meta": {
@@ -101,12 +117,14 @@
         "label": "شناسه",
         "pattenErrorMessage": "فقط می‌توانید از حروف انگلیسی، اعداد، - و _ استفاده کنید"
       },
+      "lobe": "افزونه {{appName}}",
       "manifest": {
         "desc": "{{appName}} از طریق این لینک افزونه را نصب خواهد کرد",
         "label": "URL فایل توضیحات افزونه (Manifest)",
         "preview": "پیش‌نمایش Manifest",
         "refresh": "تازه‌سازی"
       },
+      "openai": "افزونه OpenAI",
       "title": {
         "desc": "عنوان افزونه",
         "label": "عنوان",
@@ -148,6 +166,7 @@
     "noManifest": "فایل توصیفی وجود ندارد.",
     "openAPIInvalid": "تجزیه OpenAPI ناموفق بود، خطا: \n\n {{error}}",
     "reinstallError": "بروزرسانی افزونه {{name}} ناموفق بود.",
+    "testConnectionFailed": "دریافت Manifest ناموفق بود: {{error}}",
     "urlError": "این لینک محتوای JSON بازنگرداند، لطفاً از معتبر بودن لینک اطمینان حاصل کنید."
   },
   "inspector": {
@@ -226,5 +245,6 @@
     },
     "title": "فروشگاه افزونه‌ها"
   },
+  "unknownError": "خطای ناشناخته",
   "unknownPlugin": "افزونه ناشناخته"
 }

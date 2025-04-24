@@ -7,6 +7,7 @@
     "payload": "ペイロード",
     "pluginState": "プラグインの状態",
     "response": "レスポンス",
+    "title": "プラグインの詳細",
     "tool_call": "ツール呼び出し"
   },
   "detailModal": {
@@ -50,12 +51,13 @@
         "desc": "STDIO コマンドに渡すパラメータのリスト",
         "label": "コマンドパラメータ",
         "placeholder": "例：--port 8080 --debug",
-        "tooltip": "パラメータを入力したら、Enter キーを押すか、カンマ/スペースで区切ってください"
+        "required": "起動パラメータを入力してください"
       },
       "command": {
         "desc": "MCP STDIO プラグインを起動するための実行可能ファイルまたはスクリプト",
         "label": "コマンド",
-        "placeholder": "例：python main.py または /path/to/executable"
+        "placeholder": "例：python main.py または /path/to/executable",
+        "required": "起動コマンドを入力してください"
       },
       "endpoint": {
         "desc": "あなたの MCP Streamable HTTP サーバーのアドレスを入力してください",
@@ -65,15 +67,29 @@
         "desc": "あなたの MCP プラグインに名前を指定してください。英字を使用する必要があります",
         "invalid": "英字、数字、- および _ のみを入力できます",
         "label": "MCP プラグイン名",
-        "placeholder": "例：my-mcp-plugin"
+        "placeholder": "例：my-mcp-plugin",
+        "required": "MCP サービス識別子を入力してください"
       },
+      "previewManifest": "プラグインの説明ファイルをプレビュー",
+      "testConnection": "接続をテスト",
+      "testConnectionTip": "接続テストが成功した後、MCP プラグインは正常に使用できます",
       "type": {
         "desc": "MCP プラグインの通信方式を選択してください。ウェブ版は Streamable HTTP のみをサポートしています",
-        "label": "MCP プラグインタイプ"
+        "httpFeature1": "ウェブ版とデスクトップ版の互換性",
+        "httpFeature2": "追加のインストールや設定なしでリモートMCPサーバーに接続",
+        "httpShortDesc": "ストリーミングHTTPに基づく通信プロトコル",
+        "label": "MCP プラグインタイプ",
+        "stdioFeature1": "通信遅延が少なく、ローカル実行に適している",
+        "stdioFeature2": "ローカルにMCPサーバーをインストールして実行する必要がある",
+        "stdioNotAvailable": "STDIOモードはデスクトップ版でのみ利用可能",
+        "stdioShortDesc": "標準入力出力に基づく通信プロトコル",
+        "title": "MCPプラグインタイプ"
       },
       "url": {
         "desc": "あなたのMCPサーバーストリーミングHTTPアドレスを入力してください。/sseで終わることはありません",
-        "label": "HTTP エンドポイント URL"
+        "invalid": "有効な URL アドレスを入力してください",
+        "label": "HTTP エンドポイント URL",
+        "required": "MCP サービスの URL を入力してください"
       }
     },
     "meta": {
@@ -101,12 +117,14 @@
         "label": "識別子",
         "pattenErrorMessage": "英数字、-、_ のみ入力できます"
       },
+      "lobe": "{{appName}} プラグイン",
       "manifest": {
         "desc": "{{appName}}はこのリンクを通じてプラグインをインストールします",
         "label": "プラグイン記述ファイル (Manifest) URL",
         "preview": "マニフェストのプレビュー",
         "refresh": "更新"
       },
+      "openai": "OpenAI プラグイン",
       "title": {
         "desc": "プラグインのタイトル",
         "label": "タイトル",
@@ -148,6 +166,7 @@
     "noManifest": "マニフェストが存在しません",
     "openAPIInvalid": "OpenAPIの解析に失敗しました。エラー: \n\n {{error}}",
     "reinstallError": "プラグイン{{name}}の再インストールに失敗しました",
+    "testConnectionFailed": "マニフェストの取得に失敗しました: {{error}}",
     "urlError": "このリンクはJSON形式のコンテンツを返していません。有効なリンクであることを確認してください"
   },
   "inspector": {
@@ -226,5 +245,6 @@
     },
     "title": "プラグインストア"
   },
+  "unknownError": "未知のエラー",
   "unknownPlugin": "未知のプラグイン"
 }

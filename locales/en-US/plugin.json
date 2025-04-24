@@ -7,6 +7,7 @@
     "payload": "plugin payload",
     "pluginState": "Plugin State",
     "response": "Response",
+    "title": "Plugin Details",
     "tool_call": "tool call request"
   },
   "detailModal": {
@@ -47,10 +48,16 @@
     },
     "mcp": {
       "args": {
-        "label": "Command Parameters"
+        "desc": "A list of parameters passed to the STDIO command, typically enter the MCP server name here",
+        "label": "Command Parameters",
+        "placeholder": "For example: mcp-hello-world",
+        "required": "Please enter the startup parameters"
       },
       "command": {
-        "label": "Command"
+        "desc": "The executable file or script used to start the MCP STDIO Server",
+        "label": "Command",
+        "placeholder": "For example: npx / uv / docker, etc.",
+        "required": "Please enter the startup command"
       },
       "endpoint": {
         "desc": "Enter the address of your MCP Streamable HTTP Server",
@@ -60,15 +67,29 @@
         "desc": "Specify a name for your MCP plugin, using English characters",
         "invalid": "Only English letters, numbers, - and _ are allowed",
         "label": "MCP Plugin Name",
-        "placeholder": "e.g., my-mcp-plugin"
+        "placeholder": "e.g., my-mcp-plugin",
+        "required": "Please enter the MCP service identifier"
       },
+      "previewManifest": "Preview Plugin Description File",
+      "testConnection": "Test Connection",
+      "testConnectionTip": "The MCP plugin can only be used normally after a successful connection test",
       "type": {
         "desc": "Select the communication method for the MCP plugin; the web version only supports Streamable HTTP",
-        "label": "MCP Plugin Type"
+        "httpFeature1": "Compatible with both web and desktop versions",
+        "httpFeature2": "Connect to a remote MCP server without additional installation or configuration",
+        "httpShortDesc": "A streaming HTTP-based communication protocol",
+        "label": "MCP Plugin Type",
+        "stdioFeature1": "Lower communication latency, suitable for local execution",
+        "stdioFeature2": "Requires local installation and running of the MCP server",
+        "stdioNotAvailable": "STDIO mode is only available in the desktop version",
+        "stdioShortDesc": "A communication protocol based on standard input and output",
+        "title": "MCP Plugin Type"
       },
       "url": {
         "desc": "Enter your MCP Server Streamable HTTP address, which should not end with /sse",
-        "label": "HTTP Endpoint URL"
+        "invalid": "Please enter a valid URL",
+        "label": "HTTP Endpoint URL",
+        "required": "Please enter the MCP service URL"
       }
     },
     "meta": {
@@ -96,12 +117,14 @@
         "label": "Identifier",
         "pattenErrorMessage": "Only alphanumeric characters, hyphen -, and underscore _ are allowed"
       },
+      "lobe": "{{appName}} Plugin",
       "manifest": {
         "desc": "{{appName}} will install the plugin through this link.",
         "label": "Plugin Description (Manifest) URL",
         "preview": "Preview Manifest",
         "refresh": "Refresh"
       },
+      "openai": "OpenAI Plugin",
       "title": {
         "desc": "The title of the plugin",
         "label": "Title",
@@ -143,6 +166,7 @@
     "noManifest": "Manifest file does not exist",
     "openAPIInvalid": "OpenAPI parsing failed. Error: \n\n {{error}}",
     "reinstallError": "Failed to refresh plugin {{name}}",
+    "testConnectionFailed": "Failed to retrieve Manifest: {{error}}",
     "urlError": "The link did not return content in JSON format. Please ensure it is a valid link."
   },
   "inspector": {
@@ -221,5 +245,6 @@
     },
     "title": "Plugin Store"
   },
+  "unknownError": "Unknown error",
   "unknownPlugin": "Unknown plugin"
 }

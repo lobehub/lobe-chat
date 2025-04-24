@@ -1,4 +1,5 @@
 import { LobeChatPluginApi, LobeChatPluginManifest, PluginSchema } from '@lobehub/chat-plugin-sdk';
+import { McpError } from '@modelcontextprotocol/sdk/types.js';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 
@@ -61,6 +62,12 @@ class MCPService {
 
       return result;
     } catch (error) {
+      if (error instanceof McpError) {
+        const mcpError = error as McpError;
+
+        return mcpError.message;
+      }
+
       console.error(`Error calling tool "${toolName}" for params %O:`, params, error);
       // Propagate a TRPCError
       throw new TRPCError({
