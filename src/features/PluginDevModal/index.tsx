@@ -36,10 +36,14 @@ const DevModal = memo<DevModalProps>(
       form.setFieldsValue(value);
     }, []);
 
+    useEffect(() => {
+      if (mode === 'create' && !open) form.resetFields();
+    }, [open]);
+
     const buttonStyle = mobile ? { flex: 1 } : { margin: 0 };
 
     const footer = (
-      <Flexbox flex={1} gap={12} horizontal justify={'flex-end'}>
+      <Flexbox flex={1} gap={12} horizontal justify={'space-between'}>
         {isEditMode ? (
           <Popconfirm
             arrow={false}
@@ -60,25 +64,29 @@ const DevModal = memo<DevModalProps>(
               {t('delete', { ns: 'common' })}
             </Button>
           </Popconfirm>
-        ) : null}
-        <Button
-          onClick={() => {
-            onOpenChange(false);
-          }}
-          style={buttonStyle}
-        >
-          {t('cancel', { ns: 'common' })}
-        </Button>
-        <Button
-          loading={submitting}
-          onClick={() => {
-            form.submit();
-          }}
-          style={buttonStyle}
-          type={'primary'}
-        >
-          {t(isEditMode ? 'dev.update' : 'dev.save')}
-        </Button>
+        ) : (
+          <div />
+        )}
+        <Flexbox gap={12} horizontal>
+          <Button
+            onClick={() => {
+              onOpenChange(false);
+            }}
+            style={buttonStyle}
+          >
+            {t('cancel', { ns: 'common' })}
+          </Button>
+          <Button
+            loading={submitting}
+            onClick={() => {
+              form.submit();
+            }}
+            style={buttonStyle}
+            type={'primary'}
+          >
+            {t(isEditMode ? 'dev.update' : 'dev.save')}
+          </Button>
+        </Flexbox>
       </Flexbox>
     );
 
@@ -100,6 +108,7 @@ const DevModal = memo<DevModalProps>(
       >
         <Modal
           allowFullscreen
+          destroyOnClose
           footer={footer}
           okText={t('dev.save')}
           onCancel={(e) => {
@@ -166,10 +175,10 @@ const DevModal = memo<DevModalProps>(
                   showIcon
                   type={'info'}
                 />
-                <UrlManifestForm form={form} isEditMode={mode === 'edit'} />
+                <UrlManifestForm form={form} isEditMode={isEditMode} />
               </>
             )}
-            {configMode === 'mcp' && <MCPManifestForm form={form} />}
+            {configMode === 'mcp' && <MCPManifestForm form={form} isEditMode={isEditMode} />}
             <PluginPreview form={form} />
           </Flexbox>
         </Modal>
