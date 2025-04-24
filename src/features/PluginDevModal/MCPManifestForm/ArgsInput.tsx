@@ -12,7 +12,7 @@ const ArgsInput = memo<ArgsInputProps>(({ value, onChange, ...res }) => {
       onChange={(e) => {
         onChange?.([e.target.value]);
       }}
-      value={value?.[0]}
+      value={value?.join(' ')}
       {...res}
     />
   );

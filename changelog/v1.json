@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve stdio mcp form, Update the id of some OpenAI models in OpenRouter."]
+    },
+    "date": "2025-04-23",
+    "version": "1.82.2"
+  },
+  {
+    "children": {
       "improvements": ["Improve mcp server type select and fix refresh mcp manifest issue."]
     },
     "date": "2025-04-23",

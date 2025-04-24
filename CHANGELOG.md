@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.82.2](https://github.com/lobehub/lobe-chat/compare/v1.82.1...v1.82.2)
+
+<sup>Released on **2025-04-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve stdio mcp form, Update the id of some OpenAI models in OpenRouter.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve stdio mcp form, closes [#7529](https://github.com/lobehub/lobe-chat/issues/7529) ([832b7c3](https://github.com/lobehub/lobe-chat/commit/832b7c3))
+- **misc**: Update the id of some OpenAI models in OpenRouter, closes [#7524](https://github.com/lobehub/lobe-chat/issues/7524) ([39a3f5b](https://github.com/lobehub/lobe-chat/commit/39a3f5b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.82.1](https://github.com/lobehub/lobe-chat/compare/v1.82.0...v1.82.1)
 
 <sup>Released on **2025-04-23**</sup>
