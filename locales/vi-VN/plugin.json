@@ -7,6 +7,7 @@
     "payload": "Dữ liệu cắm",
     "pluginState": "Trạng thái plugin",
     "response": "Kết quả trả về",
+    "title": "Chi tiết plugin",
     "tool_call": "Yêu cầu công cụ"
   },
   "detailModal": {
@@ -47,10 +48,16 @@
     },
     "mcp": {
       "args": {
-        "label": "Tham số lệnh"
+        "desc": "Danh sách tham số được truyền cho lệnh STDIO, thường nhập tên máy chủ MCP ở đây",
+        "label": "Tham số lệnh",
+        "placeholder": "Ví dụ: mcp-hello-world",
+        "required": "Vui lòng nhập tham số khởi động"
       },
       "command": {
-        "label": "Lệnh"
+        "desc": "Tập tin thực thi hoặc kịch bản dùng để khởi động Máy chủ MCP STDIO",
+        "label": "Lệnh",
+        "placeholder": "Ví dụ: npx / uv / docker v.v.",
+        "required": "Vui lòng nhập lệnh khởi động"
       },
       "endpoint": {
         "desc": "Nhập địa chỉ của máy chủ HTTP Streamable MCP của bạn",
@@ -60,15 +67,29 @@
         "desc": "Chỉ định một tên cho plugin MCP của bạn, cần sử dụng ký tự tiếng Anh",
         "invalid": "Chỉ có thể nhập ký tự tiếng Anh, số, và hai ký hiệu - và _",
         "label": "Tên plugin MCP",
-        "placeholder": "Ví dụ: my-mcp-plugin"
+        "placeholder": "Ví dụ: my-mcp-plugin",
+        "required": "Vui lòng nhập định danh dịch vụ MCP"
       },
+      "previewManifest": "Xem trước tệp mô tả plugin",
+      "testConnection": "Kiểm tra kết nối",
+      "testConnectionTip": "Chỉ sau khi kiểm tra kết nối thành công, plugin MCP mới có thể được sử dụng bình thường",
       "type": {
         "desc": "Chọn phương thức giao tiếp của plugin MCP, phiên bản web chỉ hỗ trợ Streamable HTTP",
-        "label": "Loại plugin MCP"
+        "httpFeature1": "Tương thích với phiên bản web và desktop",
+        "httpFeature2": "Kết nối với máy chủ MCP từ xa, không cần cài đặt cấu hình thêm",
+        "httpShortDesc": "Giao thức truyền thông dựa trên HTTP theo dòng",
+        "label": "Loại plugin MCP",
+        "stdioFeature1": "Độ trễ truyền thông thấp hơn, phù hợp cho thực thi cục bộ",
+        "stdioFeature2": "Cần cài đặt và chạy máy chủ MCP cục bộ",
+        "stdioNotAvailable": "Chế độ STDIO chỉ khả dụng trên phiên bản desktop",
+        "stdioShortDesc": "Giao thức truyền thông dựa trên đầu vào và đầu ra tiêu chuẩn",
+        "title": "Loại plugin MCP"
       },
       "url": {
         "desc": "Nhập địa chỉ HTTP Streamable của máy chủ MCP của bạn, không kết thúc bằng /sse",
-        "label": "URL Điểm cuối HTTP"
+        "invalid": "Vui lòng nhập địa chỉ URL hợp lệ",
+        "label": "URL Điểm cuối HTTP",
+        "required": "Vui lòng nhập URL dịch vụ MCP"
       }
     },
     "meta": {
@@ -96,12 +117,14 @@
         "label": "Định danh",
         "pattenErrorMessage": "Chỉ có thể nhập ký tự tiếng Anh, số, - và _"
       },
+      "lobe": "Plugin {{appName}}",
       "manifest": {
         "desc": "{{appName}} sẽ cài đặt plugin qua liên kết này",
         "label": "Tệp mô tả plugin (Manifest) URL",
         "preview": "Xem trước Manifest",
         "refresh": "Làm mới"
       },
+      "openai": "Plugin OpenAI",
       "title": {
         "desc": "Tiêu đề plugin",
         "label": "Tiêu đề",
@@ -143,6 +166,7 @@
     "noManifest": "Tệp mô tả không tồn tại",
     "openAPIInvalid": "OpenAPI phân tích thất bại, lỗi: \n\n {{error}}",
     "reinstallError": "Làm mới plugin {{name}} thất bại",
+    "testConnectionFailed": "Lấy Manifest thất bại: {{error}}",
     "urlError": "Liên kết này không trả về nội dung dạng JSON, vui lòng đảm bảo rằng đó là một liên kết hợp lệ"
   },
   "inspector": {
@@ -221,5 +245,6 @@
     },
     "title": "Cửa hàng plugin"
   },
+  "unknownError": "Lỗi không xác định",
   "unknownPlugin": "Plugin không xác định"
 }

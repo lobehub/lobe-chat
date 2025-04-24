@@ -7,6 +7,7 @@
     "payload": "charge du plugin",
     "pluginState": "État du plugin",
     "response": "Réponse",
+    "title": "Détails du plugin",
     "tool_call": "demande d'appel d'outil"
   },
   "detailModal": {
@@ -50,12 +51,13 @@
         "desc": "Liste des paramètres à passer à la commande STDIO",
         "label": "Paramètres de commande",
         "placeholder": "Par exemple : --port 8080 --debug",
-        "tooltip": "Appuyez sur Entrée après avoir saisi les paramètres ou utilisez une virgule/un espace pour les séparer"
+        "required": "Veuillez entrer les paramètres de démarrage"
       },
       "command": {
         "desc": "Fichier exécutable ou script utilisé pour démarrer le plugin MCP STDIO",
         "label": "Commande",
-        "placeholder": "Par exemple : python main.py ou /path/to/executable"
+        "placeholder": "Par exemple : python main.py ou /path/to/executable",
+        "required": "Veuillez entrer la commande de démarrage"
       },
       "endpoint": {
         "desc": "Entrez l'adresse de votre serveur HTTP Streamable MCP",
@@ -65,15 +67,29 @@
         "desc": "Donnez un nom à votre plugin MCP, en utilisant des caractères anglais",
         "invalid": "Vous ne pouvez entrer que des caractères anglais, des chiffres, - et _",
         "label": "Nom du plugin MCP",
-        "placeholder": "Par exemple : my-mcp-plugin"
+        "placeholder": "Par exemple : my-mcp-plugin",
+        "required": "Veuillez entrer l'identifiant du service MCP"
       },
+      "previewManifest": "Aperçu du fichier de description du plugin",
+      "testConnection": "Tester la connexion",
+      "testConnectionTip": "Le plugin MCP ne peut être utilisé normalement qu'après un test de connexion réussi",
       "type": {
         "desc": "Choisissez le mode de communication du plugin MCP, la version web ne prend en charge que le HTTP Streamable",
-        "label": "Type de plugin MCP"
+        "httpFeature1": "Compatible avec la version web et de bureau",
+        "httpFeature2": "Connexion à un serveur MCP distant, sans installation ni configuration supplémentaires",
+        "httpShortDesc": "Protocole de communication basé sur HTTP en continu",
+        "label": "Type de plugin MCP",
+        "stdioFeature1": "Latence de communication réduite, adapté à l'exécution locale",
+        "stdioFeature2": "Nécessite l'installation et l'exécution d'un serveur MCP local",
+        "stdioNotAvailable": "Le mode STDIO n'est disponible que dans la version de bureau",
+        "stdioShortDesc": "Protocole de communication basé sur l'entrée/sortie standard",
+        "title": "Type de plugin MCP"
       },
       "url": {
         "desc": "Entrez l'adresse HTTP Streamable de votre serveur MCP, sans terminer par /sse",
-        "label": "URL de l'endpoint HTTP"
+        "invalid": "Veuillez entrer une URL valide",
+        "label": "URL de l'endpoint HTTP",
+        "required": "Veuillez entrer l'URL du service MCP"
       }
     },
     "meta": {
@@ -101,12 +117,14 @@
         "label": "Identifiant",
         "pattenErrorMessage": "Seuls les caractères alphanumériques, - et _ sont autorisés"
       },
+      "lobe": "Plugin {{appName}}",
       "manifest": {
         "desc": "{{appName}} sera installé via ce lien pour ajouter le plugin.",
         "label": "URL du fichier de description du plugin (Manifest)",
         "preview": "Aperçu du Manifest",
         "refresh": "Actualiser"
       },
+      "openai": "Plugin OpenAI",
       "title": {
         "desc": "Titre du plugin",
         "label": "Titre",
@@ -148,6 +166,7 @@
     "noManifest": "Aucun fichier de description trouvé",
     "openAPIInvalid": "Échec d'analyse de l'OpenAPI, erreur : \n\n {{error}}",
     "reinstallError": "Échec de la mise à jour du plugin {{name}}",
+    "testConnectionFailed": "Échec de l'obtention du Manifest : {{error}}",
     "urlError": "Ce lien ne renvoie pas de contenu au format JSON. Veuillez vous assurer qu'il s'agit d'un lien valide."
   },
   "inspector": {
@@ -226,5 +245,6 @@
     },
     "title": "Boutique de plugins"
   },
+  "unknownError": "Erreur inconnue",
   "unknownPlugin": "Plugin inconnu"
 }
