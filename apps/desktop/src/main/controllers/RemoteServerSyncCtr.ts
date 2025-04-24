@@ -21,10 +21,18 @@ const logger = createLogger('controllers:RemoteServerSyncCtr');
  */
 export default class RemoteServerSyncCtr extends ControllerModule {
   /**
+   * Cached instance of RemoteServerConfigCtr
+   */
+  private _remoteServerConfigCtrInstance: RemoteServerConfigCtr | null = null;
+
+  /**
    * Remote server configuration controller
    */
   private get remoteServerConfigCtr() {
-    return this.app.getController(RemoteServerConfigCtr);
+    if (!this._remoteServerConfigCtrInstance) {
+      this._remoteServerConfigCtrInstance = this.app.getController(RemoteServerConfigCtr);
+    }
+    return this._remoteServerConfigCtrInstance;
   }
 
   /**
@@ -241,7 +249,7 @@ export default class RemoteServerSyncCtr extends ControllerModule {
       );
 
       return {
-        body: finalBody,
+        body: finalBody as ArrayBuffer,
         headers: responseHeaders,
         status: response.status,
         statusText: response.statusText, // Return ArrayBuffer
