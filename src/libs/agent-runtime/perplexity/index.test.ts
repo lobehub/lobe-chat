@@ -225,7 +225,10 @@ describe('LobePerplexityAI', () => {
         stream.push(decoder.decode(value));
       }
 
-      expect(stream).toEqual(
+      // Slice out speed chunk
+      const noSpeedStream = stream.slice(0, -3);
+
+      expect(noSpeedStream).toEqual(
         [
           'id: 506d64fb-e7f2-4d94-b80f-158369e9446d',
           'event: text',

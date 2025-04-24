@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import PluginDetailModal from '@/features/PluginDetailModal';
+import { useAgentStore } from '@/store/agent';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors, pluginStoreSelectors } from '@/store/tool/selectors';
@@ -31,6 +32,7 @@ const Actions = memo<ActionsProps>(({ identifier, type }) => {
   const { t } = useTranslation('plugin');
   const [open, setOpen] = useState(false);
   const plugin = useToolStore(pluginSelectors.getToolManifestById(identifier));
+  const togglePlugin = useAgentStore((s) => s.togglePlugin);
   const { modal } = App.useApp();
   const [tab, setTab] = useState('info');
   const hasSettings = pluginHelpers.isSettingSchemaNonEmpty(plugin?.settings);
@@ -89,8 +91,9 @@ const Actions = memo<ActionsProps>(({ identifier, type }) => {
         ) : (
           <Button
             loading={installing}
-            onClick={() => {
-              installPlugin(identifier);
+            onClick={async () => {
+              await installPlugin(identifier);
+              await togglePlugin(identifier);
             }}
             size={mobile ? 'small' : undefined}
             type={'primary'}

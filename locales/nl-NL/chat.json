@@ -119,6 +119,16 @@
       "outputText": "Tekstuitvoer",
       "outputTitle": "Uitvoerdetails",
       "reasoning": "Diep nadenken",
+      "speed": {
+        "tps": {
+          "title": "TPS",
+          "tooltip": "Tokens Per Second, TPS. Dit verwijst naar de gemiddelde snelheid van AI-gegenereerde inhoud (Token/seconde), die begint te tellen vanaf het moment dat het eerste Token is ontvangen."
+        },
+        "ttft": {
+          "title": "TTFT",
+          "tooltip": "Time To First Token, TTFT. Dit verwijst naar de tijdsduur van het moment dat u een bericht verzendt tot het moment dat de client het eerste Token ontvangt."
+        }
+      },
       "title": "Genereren van details",
       "total": "Totaal verbruik"
     }

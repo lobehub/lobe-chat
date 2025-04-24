@@ -12,6 +12,10 @@ class AutoUpdateService {
   installLater = async () => {
     return dispatch('installLater');
   };
+
+  downloadUpdate() {
+    return dispatch('downloadUpdate');
+  }
 }
 
 export const autoUpdateService = new AutoUpdateService();
