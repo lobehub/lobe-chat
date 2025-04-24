@@ -24,7 +24,13 @@ const Usage = memo<UsageProps>(({ model, metadata, provider }) => {
   const { styles } = useStyles();
 
   return (
-    <Flexbox align={'center'} className={styles.container} horizontal justify={'space-between'}>
+    <Flexbox
+      align={'center'}
+      className={styles.container}
+      gap={12}
+      horizontal
+      justify={'space-between'}
+    >
       <Center gap={4} horizontal style={{ fontSize: 12 }}>
         <ModelIcon model={model as string} type={'mono'} />
         {model}

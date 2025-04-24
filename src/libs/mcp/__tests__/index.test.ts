@@ -36,10 +36,10 @@ describe('MCPClient', () => {
       const result = await mcpClient.listTools();
 
       // Check exact length if no other tools are expected
-      expect(result.tools).toHaveLength(3);
+      expect(result).toHaveLength(3);
 
       // Expect the tools defined in mock-sdk-server.ts
-      expect(result.tools).toMatchSnapshot();
+      expect(result).toMatchSnapshot();
     });
 
     it('should call the "echo" tool via stdio', async () => {

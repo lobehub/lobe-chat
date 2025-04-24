@@ -5,6 +5,7 @@ import { forwardRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DevModal from '@/features/PluginDevModal';
+import { useAgentStore } from '@/store/agent';
 import { useToolStore } from '@/store/tool';
 
 const AddPluginButton = forwardRef<HTMLButtonElement>((props, ref) => {
@@ -15,6 +16,7 @@ const AddPluginButton = forwardRef<HTMLButtonElement>((props, ref) => {
     s.installCustomPlugin,
     s.updateNewCustomPlugin,
   ]);
+  const togglePlugin = useAgentStore((s) => s.togglePlugin);
 
   return (
     <div
@@ -26,7 +28,7 @@ const AddPluginButton = forwardRef<HTMLButtonElement>((props, ref) => {
         onOpenChange={setModal}
         onSave={async (devPlugin) => {
           await installCustomPlugin(devPlugin);
-          // toggleAgentPlugin(devPlugin.identifier);
+          await togglePlugin(devPlugin.identifier);
         }}
         onValueChange={updateNewDevPlugin}
         open={showModal}

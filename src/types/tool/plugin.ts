@@ -9,6 +9,15 @@ export interface CustomPluginParams {
   enableSettings?: boolean;
   manifestMode?: 'local' | 'url';
   manifestUrl?: string;
+  /**
+   * 临时方案，后续需要做一次大重构
+   */
+  mcp?: {
+    args?: string[];
+    command?: string;
+    type: 'http' | 'stdio';
+    url?: string;
+  };
   useProxy?: boolean;
 }
 
