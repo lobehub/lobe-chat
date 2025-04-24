@@ -44,6 +44,11 @@ export default class Browser {
   options: BrowserWindowOpts;
 
   /**
+   * Key for storing window state in storeManager
+   */
+  private readonly windowStateKey: string;
+
+  /**
    * Method to expose window externally
    */
   get browserWindow() {
@@ -61,6 +66,7 @@ export default class Browser {
     this.app = application;
     this.identifier = options.identifier;
     this.options = options;
+    this.windowStateKey = `windowSize_${this.identifier}`;
 
     // Initialization
     this.retrieveOrInitialize();
@@ -166,14 +172,28 @@ export default class Browser {
 
     const { path, title, width, height, devTools, showOnInit, ...res } = this.options;
 
+    // Load window state
+    const savedState = this.app.storeManager.get(this.windowStateKey as any) as
+      | { height?: number; width?: number }
+      | undefined; // Keep type for now, but only use w/h
     logger.info(`Creating new BrowserWindow instance: ${this.identifier}`);
     logger.debug(`[${this.identifier}] Options for new window: ${JSON.stringify(this.options)}`);
+    logger.debug(
+      `[${this.identifier}] Saved window state (only size used): ${JSON.stringify(savedState)}`,
+    );
+
     const browserWindow = new BrowserWindow({
       ...res,
-      height,
+
+      height: savedState?.height || height,
+
       show: false,
+
+      // Always create hidden first
       title,
+
       transparent: true,
+
       webPreferences: {
         // Context isolation environment
         // https://www.electronjs.org/docs/tutorial/context-isolation
@@ -181,7 +201,10 @@ export default class Browser {
         preload: join(preloadDir, 'index.js'),
         // devTools: isDev,
       },
-      width,
+      // Use saved state if available, otherwise use options. Do not set x/y
+      // x: savedState?.x, // Don't restore x
+      // y: savedState?.y, // Don't restore y
+      width: savedState?.width || width,
     });
 
     this._browserWindow = browserWindow;
@@ -234,6 +257,17 @@ export default class Browser {
       // If in application quitting process, allow window to be closed
       if (this.app.isQuiting) {
         logger.debug(`[${this.identifier}] App is quitting, allowing window to close naturally.`);
+        // Save state before quitting
+        try {
+          const { width, height } = browserWindow.getBounds(); // Get only width and height
+          const sizeState = { height, width };
+          logger.debug(
+            `[${this.identifier}] Saving window size on quit: ${JSON.stringify(sizeState)}`,
+          );
+          this.app.storeManager.set(this.windowStateKey as any, sizeState); // Save only size
+        } catch (error) {
+          logger.error(`[${this.identifier}] Failed to save window state on quit:`, error);
+        }
         // Need to clean up intercept handler
         this.stopInterceptHandler?.();
         return;
@@ -244,12 +278,31 @@ export default class Browser {
         logger.debug(
           `[${this.identifier}] keepAlive is true, preventing default close and hiding window.`,
         );
+        // Optionally save state when hiding if desired, but primary save is on actual close/quit
+        // try {
+        //   const bounds = browserWindow.getBounds();
+        //   logger.debug(`[${this.identifier}] Saving window state on hide: ${JSON.stringify(bounds)}`);
+        //   this.app.storeManager.set(this.windowStateKey, bounds);
+        // } catch (error) {
+        //   logger.error(`[${this.identifier}] Failed to save window state on hide:`, error);
+        // }
         e.preventDefault();
         browserWindow.hide();
       } else {
+        // Window is actually closing (not keepAlive)
         logger.debug(
-          `[${this.identifier}] keepAlive is false, allowing window to close. Cleaning up intercept handler.`,
+          `[${this.identifier}] keepAlive is false, allowing window to close. Saving size...`, // Updated log message
         );
+        try {
+          const { width, height } = browserWindow.getBounds(); // Get only width and height
+          const sizeState = { height, width };
+          logger.debug(
+            `[${this.identifier}] Saving window size on close: ${JSON.stringify(sizeState)}`,
+          );
+          this.app.storeManager.set(this.windowStateKey as any, sizeState); // Save only size
+        } catch (error) {
+          logger.error(`[${this.identifier}] Failed to save window state on close:`, error);
+        }
         // Need to clean up intercept handler
         this.stopInterceptHandler?.();
       }
