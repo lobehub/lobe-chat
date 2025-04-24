@@ -900,7 +900,6 @@ describe('OpenAIStream', () => {
           `data: {"inputTextTokens":333,"outputTextTokens":26,"totalInputTokens":333,"totalOutputTokens":26,"totalTokens":359}\n`,
         ].map((i) => `${i}\n`),
       );
-
     });
   });
 
