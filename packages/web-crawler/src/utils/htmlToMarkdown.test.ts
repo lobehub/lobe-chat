@@ -25,7 +25,9 @@ const list: TestItem[] = [
 describe('htmlToMarkdown', () => {
   list.forEach((item) => {
     it(`should transform ${item.file} to markdown`, () => {
-      const html = readFileSync(path.join(__dirname, `./html/${item.file}`), { encoding: 'utf8' });
+      const html = readFileSync(path.join(__dirname, `./fixtures/html/${item.file}`), {
+        encoding: 'utf8',
+      });
 
       const data = htmlToMarkdown(html, { url: item.url, filterOptions: item.filterOptions || {} });
 
