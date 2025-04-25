@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.82.6](https://github.com/lobehub/lobe-chat/compare/v1.82.5...v1.82.6)
+
+<sup>Released on **2025-04-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Improve stability of Cloudflare Workers AI.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Improve stability of Cloudflare Workers AI, closes [#7450](https://github.com/lobehub/lobe-chat/issues/7450) ([3e81e56](https://github.com/lobehub/lobe-chat/commit/3e81e56))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.82.5](https://github.com/lobehub/lobe-chat/compare/v1.82.4...v1.82.5)
 
 <sup>Released on **2025-04-24**</sup>

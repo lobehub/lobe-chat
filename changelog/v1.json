@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Improve stability of Cloudflare Workers AI."]
+    },
+    "date": "2025-04-24",
+    "version": "1.82.6"
+  },
+  {
+    "children": {
       "fixes": ["Countries-and-timezones return invalid timezone."],
       "improvements": [
         "Add avatar for server database upload to S3, removing SSO dependency for avatar management."
