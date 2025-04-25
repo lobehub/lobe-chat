@@ -31,23 +31,22 @@ const AutoGenerateAvatar = memo<AutoGenerateAvatarProps>(
         align={'center'}
         gap={2}
         horizontal
-        padding={6}
+        padding={2}
         style={{
           background: theme.colorBgContainer,
           border: `1px solid ${theme.colorBorderSecondary}`,
           borderRadius: 32,
-          minHeight: 60,
-          minWidth: 86,
+          paddingRight: 8,
         }}
       >
         <EmojiPicker
           background={background || theme.colorFillTertiary}
+          loading={loading}
           locale={locale}
           onChange={onChange}
           size={48}
           style={{
             background: theme.colorFillTertiary,
-            opacity: loading ? 0.6 : undefined,
           }}
           value={value}
         />
