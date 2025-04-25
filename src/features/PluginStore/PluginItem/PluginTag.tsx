@@ -17,8 +17,9 @@ const PluginTag = memo<PluginTagProps>(({ showIcon = true, author, type, showTex
 
   return (
     <Tag
-      color={isCustom ? 'warning' : isOfficial ? 'success' : 'info'}
+      color={isCustom ? 'warning' : isOfficial ? 'success' : undefined}
       icon={showIcon && <Icon icon={isCustom ? Package : isOfficial ? BadgeCheck : CircleUser} />}
+      size={'small'}
     >
       {showText && (author || t(isCustom ? 'store.customPlugin' : 'store.communityPlugin'))}
     </Tag>
