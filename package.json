@@ -146,7 +146,7 @@
     "@lobehub/chat-plugins-gateway": "^1.9.0",
     "@lobehub/icons": "https://pkg.pr.new/lobehub/lobe-icons/@lobehub/icons@b4873ef",
     "@lobehub/tts": "https://pkg.pr.new/lobehub/lobe-tts/@lobehub/tts@2b7c611",
-    "@lobehub/ui": "https://pkg.pr.new/lobehub/lobe-ui/@lobehub/ui@49b147f",
+    "@lobehub/ui": "https://pkg.pr.new/lobehub/lobe-ui/@lobehub/ui@9d37c9e",
     "@modelcontextprotocol/sdk": "^1.10.1",
     "@neondatabase/serverless": "^1.0.0",
     "@next/third-parties": "^15.3.0",
