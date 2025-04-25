@@ -153,6 +153,7 @@ const DevModal = memo<DevModalProps>(
                 },
               ]}
               value={configMode}
+              variant={'filled'}
             />
 
             {configMode === 'url' && (

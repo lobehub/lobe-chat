@@ -109,9 +109,7 @@ const ShareButton = memo<ShareButtonProps>(({ meta, ...rest }) => {
             {meta.hashtags && (
               <Flexbox align={'center'} gap={4} horizontal justify={'center'} wrap={'wrap'}>
                 {meta.hashtags.map((tag, index) => (
-                  <Tag key={index} style={{ margin: 0 }}>
-                    {startCase(tag).trim()}
-                  </Tag>
+                  <Tag key={index}>{startCase(tag).trim()}</Tag>
                 ))}
               </Flexbox>
             )}

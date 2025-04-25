@@ -63,6 +63,7 @@ const InvalidAccessCode = memo<InvalidAccessCodeProps>(({ id, provider }) => {
           }
           style={{ width: '100%' }}
           value={mode}
+          variant={'filled'}
         />
       )}
 

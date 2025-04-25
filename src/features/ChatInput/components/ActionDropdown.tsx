@@ -26,7 +26,7 @@ interface ActionDropdownProps extends DropdownProps {
 }
 
 const ActionDropdown = memo<ActionDropdownProps>(
-  ({ menu, maxHeight, minWidth, maxWidth, children, placement, ...rest }) => {
+  ({ menu, maxHeight, minWidth, maxWidth, children, placement = 'top', ...rest }) => {
     const { cx, styles } = useStyles();
     const isMobile = useIsMobile();
 

@@ -1,5 +1,6 @@
 import { MCP } from '@lobehub/icons';
 import { Avatar } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import { CSSProperties, memo } from 'react';
 
 interface PluginAvatarProps {
@@ -9,9 +10,15 @@ interface PluginAvatarProps {
   style?: CSSProperties;
 }
 
-const PluginAvatar = memo<PluginAvatarProps>(({ avatar, style, size, alt }) => {
+const PluginAvatar = memo<PluginAvatarProps>(({ avatar, style, size = 40, alt }) => {
+  const theme = useTheme();
   return avatar === 'MCP_AVATAR' ? (
-    <MCP.Avatar size={size ? size * 0.8 : 36} />
+    <div
+      className={`${theme.prefixCls}-avatar`}
+      style={{ flex: 'none', overflow: 'hidden', ...style }}
+    >
+      <MCP.Avatar size={size} />
+    </div>
   ) : (
     <Avatar
       alt={alt}

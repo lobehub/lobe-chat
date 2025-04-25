@@ -133,9 +133,7 @@ const PluginCard = memo<PluginCardProps>(
           <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
             {showCategory && categoryItem ? (
               <Link href={urlJoin('/discover/plugins', categoryItem.key)}>
-                <Tag icon={categoryItem.icon} style={{ margin: 0 }}>
-                  {categoryItem.label}
-                </Tag>
+                <Tag icon={categoryItem.icon}>{categoryItem.label}</Tag>
               </Link>
             ) : (
               tags
@@ -148,7 +146,7 @@ const PluginCard = memo<PluginCardProps>(
                   });
                   return (
                     <Link href={url} key={index}>
-                      <Tag style={{ margin: 0 }}>{startCase(tag).trim()}</Tag>
+                      <Tag>{startCase(tag).trim()}</Tag>
                     </Link>
                   );
                 })

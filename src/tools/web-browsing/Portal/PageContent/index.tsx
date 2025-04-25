@@ -200,6 +200,7 @@ const PageContent = memo<PageContentProps>(({ result }) => {
                 { label: t('search.crawPages.detail.raw'), value: DisplayType.Raw },
               ]}
               value={display}
+              variant={'filled'}
             />
             <CopyButton content={content} />
           </Flexbox>

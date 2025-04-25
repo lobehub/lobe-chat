@@ -46,6 +46,7 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
           ]}
           style={{ flex: 1 }}
           value={listType}
+          variant={'filled'}
         />
         {listType === 'all' ? <OnlineList /> : <InstalledPluginList />}
       </Flexbox>

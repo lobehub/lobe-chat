@@ -10,6 +10,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import PluginStore from '@/features/PluginStore';
+import PluginAvatar from '@/features/PluginStore/PluginItem/PluginAvatar';
 import PluginTag from '@/features/PluginStore/PluginItem/PluginTag';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -45,7 +46,7 @@ const AgentPlugin = memo(() => {
     const isCustomPlugin = type === 'customPlugin';
 
     return {
-      avatar: <Avatar avatar={pluginHelpers.getPluginAvatar(meta)} style={{ flex: 'none' }} />,
+      avatar: <PluginAvatar avatar={pluginHelpers.getPluginAvatar(meta)} size={40} />,
       children: isCustomPlugin ? (
         <LocalPluginItem id={identifier} />
       ) : (
@@ -68,7 +69,7 @@ const AgentPlugin = memo(() => {
   const deprecatedList = userEnabledPlugins
     .filter((pluginId) => !installedPlugins.some((p) => p.identifier === pluginId))
     .map((id) => ({
-      avatar: <Avatar avatar={'♻️'} />,
+      avatar: <Avatar avatar={'♻️'} size={40} />,
       children: (
         <Switch
           checked={true}
@@ -80,9 +81,7 @@ const AgentPlugin = memo(() => {
       label: (
         <Flexbox align={'center'} gap={8} horizontal>
           {id}
-          <Tag bordered={false} color={'red'}>
-            {t('plugin.installStatus.deprecated')}
-          </Tag>
+          <Tag color={'red'}>{t('plugin.installStatus.deprecated')}</Tag>
         </Flexbox>
       ),
       minWidth: undefined,

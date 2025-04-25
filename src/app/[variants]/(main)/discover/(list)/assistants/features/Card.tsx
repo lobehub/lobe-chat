@@ -180,7 +180,7 @@ const AssistantCard = memo<AssistantCardProps>(
                   });
                   return (
                     <Link href={url} key={index}>
-                      <Tag style={{ margin: 0 }}>{startCase(tag).trim()}</Tag>
+                      <Tag>{startCase(tag).trim()}</Tag>
                     </Link>
                   );
                 })

@@ -103,9 +103,7 @@ const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
               })}
               key={tag}
             >
-              <Tag key={tag} style={{ margin: 0 }}>
-                {startCase(tag).trim()}
-              </Tag>
+              <Tag key={tag}>{startCase(tag).trim()}</Tag>
             </Link>
           ))}
         </Flexbox>

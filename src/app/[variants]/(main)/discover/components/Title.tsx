@@ -53,9 +53,7 @@ const Title = memo<TitleProps>(({ tag, children, moreLink, more }) => {
       {tag ? (
         <Flexbox align={'center'} gap={8} horizontal>
           {title}
-          <Tag bordered={false} className={styles.tag}>
-            {tag}
-          </Tag>
+          <Tag className={styles.tag}>{tag}</Tag>
         </Flexbox>
       ) : (
         title

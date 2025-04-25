@@ -18,7 +18,7 @@ const Search = memo(() => {
   const [isLoading] = useAgentStore((s) => [agentSelectors.isAgentConfigLoading(s)]);
   const isAgentEnableSearch = useAgentEnableSearch();
 
-  if (isLoading) return <ActionIcon icon={GlobOffIcon} loading />;
+  if (isLoading) return <ActionIcon disabled icon={GlobOffIcon} />;
 
   return (
     !isDeprecatedEdition && (

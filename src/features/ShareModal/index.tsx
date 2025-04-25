@@ -55,6 +55,7 @@ const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
           options={options}
           style={{ width: '100%' }}
           value={tab}
+          variant={'filled'}
         />
         {tab === Tab.Screenshot && <ShareImage mobile={isMobile} />}
         {tab === Tab.Text && <ShareText />}

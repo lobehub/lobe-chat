@@ -52,6 +52,7 @@ const FilePreview = () => {
             },
           ]}
           value={tab}
+          variant={'filled'}
         />
       )}
 
