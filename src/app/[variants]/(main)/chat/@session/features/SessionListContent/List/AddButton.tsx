@@ -23,7 +23,7 @@ const AddButton = memo<{ groupId?: string }>(({ groupId }) => {
       style={{
         marginTop: 8,
       }}
-      variant={'outlined'}
+      variant={'filled'}
     >
       {t('newAgent')}
     </Button>

@@ -21,13 +21,13 @@ interface ModelOption {
   value: string;
 }
 
-interface ModelSelectProps {
+interface ModelSelectProps extends SelectProps {
   onChange?: (props: WorkingModel) => void;
   showAbility?: boolean;
   value?: WorkingModel;
 }
 
-const ModelSelect = memo<ModelSelectProps>(({ value, onChange }) => {
+const ModelSelect = memo<ModelSelectProps>(({ value, onChange, ...rest }) => {
   const enabledList = useEnabledChatModels();
 
   const { styles } = useStyles();
@@ -78,6 +78,7 @@ const ModelSelect = memo<ModelSelectProps>(({ value, onChange }) => {
       popupMatchSelectWidth={false}
       value={`${value?.provider}/${value?.model}`}
       variant={'filled'}
+      {...rest}
     />
   );
 });

@@ -22,7 +22,7 @@ const Tools = memo(() => {
   return (
     enablePlugins && (
       <Suspense fallback={<ActionIcon icon={LucideLoader2} spin />}>
-        <DropdownMenu>
+        <DropdownMenu disabled={!enableFC}>
           <ActionIcon
             disabled={!enableFC}
             icon={Blocks}

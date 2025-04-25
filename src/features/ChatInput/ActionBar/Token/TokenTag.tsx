@@ -1,6 +1,5 @@
 import { Tooltip } from '@lobehub/ui';
 import { TokenTag } from '@lobehub/ui/chat';
-import { Popover } from 'antd';
 import { useTheme } from 'antd-style';
 import numeral from 'numeral';
 import { memo, useMemo } from 'react';
@@ -17,6 +16,7 @@ import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 
+import ActionPopover from '../../components/ActionPopover';
 import TokenProgress from './TokenProgress';
 
 interface TokenTagProps {
@@ -157,7 +157,7 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
   );
 
   return (
-    <Popover arrow={false} content={content} placement={'top'} trigger={['hover', 'click']}>
+    <ActionPopover content={content}>
       <TokenTag
         maxValue={maxTokens}
         mode={'used'}
@@ -169,7 +169,7 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
         }}
         value={totalToken}
       />
-    </Popover>
+    </ActionPopover>
   );
 });
 

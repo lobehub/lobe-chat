@@ -196,11 +196,8 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
     <Flexbox align={'center'} gap={32} horizontal justify={'space-between'}>
       <Flexbox align={'center'} gap={8} horizontal>
         <ModelIcon model={model.id} size={20} />
-        <Typography.Paragraph ellipsis={false} style={{ marginBottom: 0 }}>
-          {model.displayName || model.id}
-        </Typography.Paragraph>
+        <Typography.Text ellipsis={false}>{model.displayName || model.id}</Typography.Text>
       </Flexbox>
-
       {showInfoTag && <ModelInfoTags {...model} />}
     </Flexbox>
   );
