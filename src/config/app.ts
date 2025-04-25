@@ -42,6 +42,7 @@ export const getAppConfig = () => {
 
       DEFAULT_AGENT_CONFIG: z.string(),
       SYSTEM_AGENT: z.string().optional(),
+      AGENTS_INDEX_GITHUB: z.string().optional(),
 
       PLUGINS_INDEX_URL: z.string().url(),
       PLUGIN_SETTINGS: z.string().optional(),
@@ -64,6 +65,8 @@ export const getAppConfig = () => {
       NEXT_PUBLIC_ENABLE_SENTRY: !!process.env.NEXT_PUBLIC_SENTRY_DSN,
 
       ACCESS_CODES: ACCESS_CODES as any,
+
+      AGENTS_INDEX_GITHUB: process.env.AGENTS_INDEX_GITHUB || '',
 
       AGENTS_INDEX_URL: !!process.env.AGENTS_INDEX_URL
         ? process.env.AGENTS_INDEX_URL
