@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Pwa-install cause mobile infinity scroll."]
+    },
+    "date": "2025-04-25",
+    "version": "1.82.7"
+  },
+  {
+    "children": {
       "fixes": ["Improve stability of Cloudflare Workers AI."]
     },
     "date": "2025-04-24",
