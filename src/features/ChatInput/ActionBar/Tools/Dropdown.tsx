@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import PluginStore from '@/features/PluginStore';
+import PluginAvatar from '@/features/PluginStore/PluginItem/PluginAvatar';
 import { useCheckPluginsIsInstalled } from '@/hooks/useCheckPluginsIsInstalled';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { useWorkspaceModal } from '@/hooks/useWorkspaceModal';
@@ -67,7 +68,7 @@ const DropdownMenu = memo<PropsWithChildren>(({ children }) => {
       children: [
         ...list.map((item) => ({
           icon: item.meta?.avatar ? (
-            <Avatar avatar={pluginHelpers.getPluginAvatar(item.meta)} size={24} />
+            <PluginAvatar avatar={pluginHelpers.getPluginAvatar(item.meta)} size={24} />
           ) : (
             <Icon icon={ToyBrick} size={{ fontSize: 16 }} style={{ padding: 4 }} />
           ),

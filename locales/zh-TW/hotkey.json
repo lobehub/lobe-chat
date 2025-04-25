@@ -3,6 +3,10 @@
     "desc": "將當前輸入內容添加為使用者消息，但不觸發生成",
     "title": "添加一條使用者消息"
   },
+  "clearCurrentMessages": {
+    "desc": "清空當前會話的消息和上傳的檔案",
+    "title": "清空會話消息"
+  },
   "editMessage": {
     "desc": "通過按住 Alt 並雙擊消息進入編輯模式",
     "title": "編輯消息"

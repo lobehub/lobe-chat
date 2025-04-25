@@ -17,16 +17,52 @@
     "statusDisconnected": "연결되지 않음",
     "urlRequired": "서버 주소를 입력하세요"
   },
+  "sync": {
+    "continue": "계속",
+    "inCloud": "현재 클라우드 동기화를 사용 중",
+    "inLocalStorage": "현재 로컬 저장소를 사용 중",
+    "isIniting": "초기화 중...",
+    "lobehubCloud": {
+      "description": "공식에서 제공하는 클라우드 버전",
+      "title": "로브허브 클라우드"
+    },
+    "local": {
+      "description": "로컬 데이터베이스를 사용하며, 완전히 오프라인에서 사용 가능",
+      "title": "로컬 데이터베이스"
+    },
+    "mode": {
+      "cloudSync": "클라우드 동기화",
+      "localStorage": "로컬 저장소",
+      "title": "연결 모드 선택",
+      "useSelfHosted": "자체 호스팅 인스턴스 사용?"
+    },
+    "selfHosted": {
+      "description": "자체 배포된 커뮤니티 버전",
+      "title": "자체 호스팅 인스턴스"
+    }
+  },
   "updater": {
+    "checkingUpdate": "새 버전 확인",
+    "checkingUpdateDesc": "버전 정보를 가져오는 중...",
+    "downloadNewVersion": "새 버전 다운로드",
     "downloadingUpdate": "업데이트 다운로드 중",
     "downloadingUpdateDesc": "업데이트가 다운로드 중입니다. 잠시 기다려 주세요...",
+    "installLater": "다음 시작 시 업데이트",
+    "isLatestVersion": "현재 최신 버전입니다",
+    "isLatestVersionDesc": "훌륭합니다! 사용 중인 버전 {{version}}은 최신 버전입니다.",
     "later": "나중에 업데이트",
     "newVersionAvailable": "새 버전 사용 가능",
     "newVersionAvailableDesc": "새 버전 {{version}}이 발견되었습니다. 지금 다운로드 하시겠습니까?",
-    "restartAndInstall": "재시작 및 설치",
+    "restartAndInstall": "업데이트 설치 및 재시작",
     "updateError": "업데이트 오류",
     "updateReady": "업데이트 준비 완료",
-    "updateReadyDesc": "Lobe Chat {{version}}이 다운로드 완료되었습니다. 앱을 재시작하면 설치가 완료됩니다.",
+    "updateReadyDesc": "새 버전 {{version}}이 다운로드 완료되었습니다. 애플리케이션을 재시작하면 설치가 완료됩니다.",
     "upgradeNow": "지금 업데이트"
+  },
+  "waitingOAuth": {
+    "cancel": "취소",
+    "description": "브라우저에서 인증 페이지가 열렸습니다. 브라우저에서 인증을 완료하세요.",
+    "helpText": "브라우저가 자동으로 열리지 않으면, 취소를 클릭한 후 다시 시도하세요.",
+    "title": "인증 연결 대기 중"
   }
 }

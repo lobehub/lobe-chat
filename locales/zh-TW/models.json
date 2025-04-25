@@ -983,6 +983,9 @@
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Experimental 是 Google 最新的實驗性多模態AI模型，與歷史版本相比有一定的質量提升，特別是對於世界知識、代碼和長上下文。"
   },
+  "gemini-2.5-flash-preview-04-17": {
+    "description": "Gemini 2.5 Flash Preview 是 Google 性價比最高的模型，提供全面的功能。"
+  },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro 實驗版是 Google 最先進的思維模型，能夠對代碼、數學和 STEM 領域的複雜問題進行推理，還能利用長上下文來分析大型數據集、代碼庫和文檔。"
   },

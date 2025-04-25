@@ -1,6 +1,100 @@
 [
   {
     "children": {
+      "fixes": ["Pwa-install cause mobile infinity scroll."]
+    },
+    "date": "2025-04-25",
+    "version": "1.82.7"
+  },
+  {
+    "children": {
+      "fixes": ["Improve stability of Cloudflare Workers AI."]
+    },
+    "date": "2025-04-24",
+    "version": "1.82.6"
+  },
+  {
+    "children": {
+      "fixes": ["Countries-and-timezones return invalid timezone."],
+      "improvements": [
+        "Add avatar for server database upload to S3, removing SSO dependency for avatar management."
+      ]
+    },
+    "date": "2025-04-24",
+    "version": "1.82.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix hydration error."]
+    },
+    "date": "2025-04-24",
+    "version": "1.82.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix openai tools calling."]
+    },
+    "date": "2025-04-24",
+    "version": "1.82.3"
+  },
+  {
+    "children": {
+      "improvements": ["Improve stdio mcp form, Update the id of some OpenAI models in OpenRouter."]
+    },
+    "date": "2025-04-23",
+    "version": "1.82.2"
+  },
+  {
+    "children": {
+      "improvements": ["Improve mcp server type select and fix refresh mcp manifest issue."]
+    },
+    "date": "2025-04-23",
+    "version": "1.82.1"
+  },
+  {
+    "children": {
+      "features": ["Support Streamable HTTP MCP server."]
+    },
+    "date": "2025-04-22",
+    "version": "1.82.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix search prompt."]
+    },
+    "date": "2025-04-21",
+    "version": "1.81.9"
+  },
+  {
+    "children": {
+      "improvements": ["Show token generate performance."]
+    },
+    "date": "2025-04-21",
+    "version": "1.81.8"
+  },
+  {
+    "children": {
+      "fixes": ["Together.ai fetch model list."]
+    },
+    "date": "2025-04-21",
+    "version": "1.81.7"
+  },
+  {
+    "children": {
+      "improvements": ["Add hotkey for clear chat messages."]
+    },
+    "date": "2025-04-21",
+    "version": "1.81.6"
+  },
+  {
+    "children": {
+      "fixes": ["Lock nextauth to beta.25."]
+    },
+    "date": "2025-04-20",
+    "version": "1.81.5"
+  },
+  {
+    "children": {
       "fixes": ["Gemini error Tool use with function calling is unsupported."],
       "improvements": ["Support update tool calling params and trigger again."]
     },

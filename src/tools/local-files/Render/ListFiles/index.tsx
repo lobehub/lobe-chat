@@ -1,12 +1,10 @@
 import { ListLocalFileParams } from '@lobechat/electron-client-ipc';
-import { ActionIcon } from '@lobehub/ui';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import { FolderOpen } from 'lucide-react';
 import React, { memo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import FileIcon from '@/components/FileIcon';
 import { localFileService } from '@/services/electron/localFileService';
 import { LocalFileListState } from '@/tools/local-files/type';
 import { ChatMessagePluginError } from '@/types/message';
@@ -20,8 +18,21 @@ const useStyles = createStyles(({ css, token, cx }) => ({
     opacity: 1;
     transition: opacity 0.2s ${token.motionEaseInOut};
   `),
+  container: css`
+    cursor: pointer;
+
+    padding-block: 2px;
+    padding-inline: 4px;
+    border-radius: 4px;
+
+    color: ${token.colorTextSecondary};
+
+    :hover {
+      color: ${token.colorText};
+      background: ${token.colorFillTertiary};
+    }
+  `,
   path: css`
-    padding-inline-start: 8px;
     color: ${token.colorTextSecondary};
   `,
 }));
@@ -34,25 +45,21 @@ interface ListFilesProps {
 }
 
 const ListFiles = memo<ListFilesProps>(({ messageId, pluginError, args, pluginState }) => {
-  const { t } = useTranslation('tool');
-
   const { styles } = useStyles();
   return (
     <>
-      <Flexbox gap={8} horizontal>
+      <Flexbox
+        className={styles.container}
+        gap={8}
+        horizontal
+        onClick={() => {
+          localFileService.openLocalFolder({ isDirectory: true, path: args.path });
+        }}
+      >
+        <FileIcon fileName={args.path} isDirectory size={22} variant={'pure'} />
         <Typography.Text className={styles.path} ellipsis>
           {args.path}
         </Typography.Text>
-        <Flexbox className={styles.actions} gap={8} horizontal style={{ marginLeft: 8 }}>
-          <ActionIcon
-            icon={FolderOpen}
-            onClick={() => {
-              localFileService.openLocalFolder({ isDirectory: true, path: args.path });
-            }}
-            size="small"
-            title={t('localFiles.openFolder')}
-          />
-        </Flexbox>
       </Flexbox>
       <SearchResult
         listResults={pluginState?.listResults}

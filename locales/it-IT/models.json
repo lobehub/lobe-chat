@@ -983,6 +983,9 @@
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Experimental è il più recente modello AI multimodale sperimentale di Google, con un miglioramento della qualità rispetto alle versioni precedenti, in particolare per quanto riguarda la conoscenza del mondo, il codice e i contesti lunghi."
   },
+  "gemini-2.5-flash-preview-04-17": {
+    "description": "Gemini 2.5 Flash Preview è il modello più conveniente di Google, che offre funzionalità complete."
+  },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental è il modello di pensiero più avanzato di Google, in grado di ragionare su problemi complessi in codice, matematica e nei campi STEM, e di analizzare grandi set di dati, codebase e documenti utilizzando contesti lunghi."
   },

@@ -17,16 +17,52 @@
     "statusDisconnected": "Niet verbonden",
     "urlRequired": "Voer het serveradres in"
   },
+  "sync": {
+    "continue": "Doorgaan",
+    "inCloud": "Momenteel gebruik makend van cloud synchronisatie",
+    "inLocalStorage": "Momenteel gebruik makend van lokale opslag",
+    "isIniting": "Bezig met initialiseren...",
+    "lobehubCloud": {
+      "description": "De door de officiële instantie aangeboden cloudversie",
+      "title": "LobeHub Cloud"
+    },
+    "local": {
+      "description": "Gebruik makend van een lokale database, volledig offline beschikbaar",
+      "title": "Lokale database"
+    },
+    "mode": {
+      "cloudSync": "Cloud synchronisatie",
+      "localStorage": "Lokale opslag",
+      "title": "Kies je verbindingsmodus",
+      "useSelfHosted": "Gebruik je een zelfgehoste instantie?"
+    },
+    "selfHosted": {
+      "description": "Gemeenschapsversie die zelf is geïmplementeerd",
+      "title": "Zelfgehoste instantie"
+    }
+  },
   "updater": {
+    "checkingUpdate": "Controleer op updates",
+    "checkingUpdateDesc": "Bezig met het ophalen van versie-informatie...",
+    "downloadNewVersion": "Download nieuwe versie",
     "downloadingUpdate": "Update aan het downloaden",
     "downloadingUpdateDesc": "De update wordt gedownload, even geduld...",
+    "installLater": "Bij de volgende opstarten bijwerken",
+    "isLatestVersion": "Je hebt de nieuwste versie",
+    "isLatestVersionDesc": "Geweldig, de versie {{version}} die je gebruikt is de meest recente versie.",
     "later": "Later bijwerken",
     "newVersionAvailable": "Nieuwe versie beschikbaar",
     "newVersionAvailableDesc": "Nieuwe versie {{version}} gevonden, wilt u deze nu downloaden?",
-    "restartAndInstall": "Herstarten en installeren",
+    "restartAndInstall": "Installeer de update en herstart",
     "updateError": "Updatefout",
     "updateReady": "Update gereed",
-    "updateReadyDesc": "Lobe Chat {{version}} is gedownload, herstart de applicatie om de installatie te voltooien.",
+    "updateReadyDesc": "Nieuwe versie {{version}} is gedownload, herstart de applicatie om de installatie te voltooien.",
     "upgradeNow": "Nu bijwerken"
+  },
+  "waitingOAuth": {
+    "cancel": "Annuleren",
+    "description": "De browser heeft de autorisatiepagina geopend, voltooi de autorisatie in de browser",
+    "helpText": "Als de browser niet automatisch opent, klik dan op annuleren en probeer het opnieuw",
+    "title": "Wachten op autorisatieverbinding"
   }
 }

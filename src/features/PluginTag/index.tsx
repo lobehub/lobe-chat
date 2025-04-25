@@ -1,12 +1,14 @@
 'use client';
 
-import { Avatar, Icon, Tag } from '@lobehub/ui';
+import { Icon, Tag } from '@lobehub/ui';
 import type { MenuProps } from 'antd';
 import { Dropdown } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { LucideToyBrick } from 'lucide-react';
 import { memo } from 'react';
+import { Center } from 'react-layout-kit';
 
+import Avatar from '@/features/PluginStore/PluginItem/PluginAvatar';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
@@ -30,7 +32,11 @@ const PluginTag = memo<PluginTagProps>(({ plugins }) => {
     const avatar = isDeprecated ? '♻️' : pluginHelpers.getPluginAvatar(item?.meta);
 
     return {
-      icon: <Avatar avatar={avatar} size={24} style={{ marginLeft: -6, marginRight: 2 }} />,
+      icon: (
+        <Center style={{ minWidth: 24 }}>
+          <Avatar avatar={avatar} size={24} />
+        </Center>
+      ),
       key: id,
       label: (
         <PluginStatus

@@ -983,6 +983,9 @@
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Deneysel, Google'ın en son deneysel çok modlu AI modelidir ve önceki sürümlere göre belirli bir kalite artışı sağlamaktadır, özellikle dünya bilgisi, kod ve uzun bağlam için."
   },
+  "gemini-2.5-flash-preview-04-17": {
+    "description": "Gemini 2.5 Flash Önizleme, Google'ın en iyi fiyat-performans oranına sahip modelidir ve kapsamlı özellikler sunar."
+  },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Deneysel, Google'ın en gelişmiş düşünce modeli olup, kod, matematik ve STEM alanlarındaki karmaşık sorunları akıl yürütebilmektedir. Ayrıca, uzun bağlamları kullanarak büyük veri setlerini, kod havuzlarını ve belgeleri analiz edebilir."
   },

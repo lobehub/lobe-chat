@@ -17,16 +17,52 @@
     "statusDisconnected": "Nicht verbunden",
     "urlRequired": "Bitte geben Sie die Serveradresse ein"
   },
+  "sync": {
+    "continue": "Fortfahren",
+    "inCloud": "Aktuell Cloud-Synchronisierung verwenden",
+    "inLocalStorage": "Aktuell lokale Speicherung verwenden",
+    "isIniting": "Wird initialisiert...",
+    "lobehubCloud": {
+      "description": "Offizielle Cloud-Version",
+      "title": "LobeHub Cloud"
+    },
+    "local": {
+      "description": "Verwendet lokale Datenbank, vollständig offline verfügbar",
+      "title": "Lokale Datenbank"
+    },
+    "mode": {
+      "cloudSync": "Cloud-Synchronisierung",
+      "localStorage": "Lokale Speicherung",
+      "title": "Wählen Sie Ihren Verbindungsmodus",
+      "useSelfHosted": "Selbstgehostete Instanz verwenden?"
+    },
+    "selfHosted": {
+      "description": "Community-Version, die selbst bereitgestellt wird",
+      "title": "Selbstgehostete Instanz"
+    }
+  },
   "updater": {
+    "checkingUpdate": "Überprüfen auf Updates",
+    "checkingUpdateDesc": "Versioninformationen werden abgerufen...",
+    "downloadNewVersion": "Neue Version herunterladen",
     "downloadingUpdate": "Update wird heruntergeladen",
     "downloadingUpdateDesc": "Das Update wird heruntergeladen, bitte warten...",
+    "installLater": "Beim nächsten Start aktualisieren",
+    "isLatestVersion": "Sie verwenden bereits die neueste Version",
+    "isLatestVersionDesc": "Fantastisch, die verwendete Version {{version}} ist die aktuellste Version.",
     "later": "Später aktualisieren",
     "newVersionAvailable": "Neue Version verfügbar",
     "newVersionAvailableDesc": "Eine neue Version {{version}} wurde gefunden, möchten Sie jetzt herunterladen?",
-    "restartAndInstall": "Neustarten und installieren",
+    "restartAndInstall": "Update installieren und neu starten",
     "updateError": "Update-Fehler",
     "updateReady": "Update ist bereit",
-    "updateReadyDesc": "Lobe Chat {{version}} wurde heruntergeladen, starten Sie die Anwendung neu, um die Installation abzuschließen.",
+    "updateReadyDesc": "Die neue Version {{version}} wurde heruntergeladen, die Installation wird nach dem Neustart der Anwendung abgeschlossen.",
     "upgradeNow": "Jetzt aktualisieren"
+  },
+  "waitingOAuth": {
+    "cancel": "Abbrechen",
+    "description": "Der Browser hat die Autorisierungsseite geöffnet, bitte schließen Sie die Autorisierung im Browser ab",
+    "helpText": "Wenn der Browser nicht automatisch geöffnet wurde, klicken Sie bitte auf Abbrechen und versuchen Sie es erneut",
+    "title": "Warten auf Autorisierungsverbindung"
   }
 }

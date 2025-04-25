@@ -1,8 +1,12 @@
 import { FC, ReactNode } from 'react';
 
-export interface MarkdownElementProps {
+export interface MarkdownElementProps<T = any> {
   children: ReactNode;
   id: string;
+  node: {
+    properties: T;
+  };
+  tagName: string;
   type: string;
 }
 

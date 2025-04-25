@@ -17,16 +17,52 @@
     "statusDisconnected": "غير متصل",
     "urlRequired": "يرجى إدخال عنوان الخادم"
   },
+  "sync": {
+    "continue": "استمر",
+    "inCloud": "تستخدم حاليًا المزامنة السحابية",
+    "inLocalStorage": "تستخدم حاليًا التخزين المحلي",
+    "isIniting": "جارٍ التهيئة...",
+    "lobehubCloud": {
+      "description": "الإصدار السحابي المقدم رسميًا",
+      "title": "LobeHub Cloud"
+    },
+    "local": {
+      "description": "استخدام قاعدة بيانات محلية، متاحة بالكامل دون اتصال",
+      "title": "قاعدة بيانات محلية"
+    },
+    "mode": {
+      "cloudSync": "مزامنة سحابية",
+      "localStorage": "تخزين محلي",
+      "title": "اختر وضع الاتصال الخاص بك",
+      "useSelfHosted": "استخدام نسخة مستضافة ذاتيًا؟"
+    },
+    "selfHosted": {
+      "description": "نسخة المجتمع التي تم نشرها ذاتيًا",
+      "title": "نسخة مستضافة ذاتيًا"
+    }
+  },
   "updater": {
+    "checkingUpdate": "التحقق من وجود تحديثات",
+    "checkingUpdateDesc": "جارٍ الحصول على معلومات الإصدار...",
+    "downloadNewVersion": "تحميل إصدار جديد",
     "downloadingUpdate": "جارٍ تنزيل التحديث",
     "downloadingUpdateDesc": "يتم تنزيل التحديث، يرجى الانتظار...",
+    "installLater": "تحديث عند بدء التشغيل التالي",
+    "isLatestVersion": "الإصدار الحالي هو الأحدث",
+    "isLatestVersionDesc": "رائع، الإصدار {{version}} الذي تستخدمه هو أحدث إصدار متاح.",
     "later": "تحديث لاحقًا",
     "newVersionAvailable": "يتوفر إصدار جديد",
     "newVersionAvailableDesc": "تم العثور على إصدار جديد {{version}}، هل ترغب في التنزيل الآن؟",
-    "restartAndInstall": "إعادة التشغيل والتثبيت",
+    "restartAndInstall": "تثبيت التحديث وإعادة التشغيل",
     "updateError": "خطأ في التحديث",
     "updateReady": "التحديث جاهز",
-    "updateReadyDesc": "تم تنزيل Lobe Chat {{version}} بنجاح، سيتم التثبيت بعد إعادة تشغيل التطبيق.",
+    "updateReadyDesc": "تم تنزيل الإصدار الجديد {{version}}، يمكنك إكمال التثبيت بعد إعادة تشغيل التطبيق.",
     "upgradeNow": "تحديث الآن"
+  },
+  "waitingOAuth": {
+    "cancel": "إلغاء",
+    "description": "تم فتح صفحة التفويض في المتصفح، يرجى إكمال التفويض في المتصفح",
+    "helpText": "إذا لم يفتح المتصفح تلقائيًا، يرجى النقر على إلغاء ثم المحاولة مرة أخرى",
+    "title": "انتظار الاتصال بالتفويض"
   }
 }

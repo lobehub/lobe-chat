@@ -983,6 +983,9 @@
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Experimental là mô hình AI đa phương tiện thử nghiệm mới nhất của Google, có sự cải thiện chất lượng nhất định so với các phiên bản trước, đặc biệt là về kiến thức thế giới, mã và ngữ cảnh dài."
   },
+  "gemini-2.5-flash-preview-04-17": {
+    "description": "Gemini 2.5 Flash Preview là mô hình có giá trị tốt nhất của Google, cung cấp đầy đủ các tính năng."
+  },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận về mã, toán học và các vấn đề phức tạp trong lĩnh vực STEM, đồng thời có thể phân tích các tập dữ liệu lớn, kho mã và tài liệu bằng cách sử dụng ngữ cảnh dài."
   },

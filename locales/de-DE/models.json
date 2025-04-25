@@ -983,6 +983,9 @@
   "gemini-2.0-pro-exp-02-05": {
     "description": "Gemini 2.0 Pro Experimental ist Googles neuestes experimentelles multimodales KI-Modell, das im Vergleich zu früheren Versionen eine gewisse Qualitätsverbesserung aufweist, insbesondere in Bezug auf Weltwissen, Code und lange Kontexte."
   },
+  "gemini-2.5-flash-preview-04-17": {
+    "description": "Gemini 2.5 Flash Preview ist das kosteneffizienteste Modell von Google und bietet umfassende Funktionen."
+  },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental ist Googles fortschrittlichstes Denkmodell, das in der Lage ist, komplexe Probleme in den Bereichen Code, Mathematik und STEM zu analysieren. Es kann auch lange Kontexte nutzen, um große Datensätze, Codebasen und Dokumente zu analysieren."
   },
