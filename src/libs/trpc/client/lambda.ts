@@ -19,7 +19,6 @@ const links = [
         if (res) return res;
       }
 
-      console.log('[lambda] Using standard fetch for request:', input);
       const response = await fetch(input, init);
 
       if (response.ok) return response;
