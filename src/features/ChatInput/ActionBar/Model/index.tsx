@@ -14,10 +14,10 @@ import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import ActionPopover from '../../components/ActionPopover';
 import ControlsForm from './ControlsForm';
 
-const useStyles = createStyles(({ css, token, isDarkMode, cx }) => ({
+const useStyles = createStyles(({ css, token, cx }) => ({
   container: css`
     border-radius: 20px;
-    background: ${isDarkMode ? token.colorFillSecondary : token.colorFillTertiary};
+    background: ${token.colorFillTertiary};
   `,
   icon: cx(
     'model-switch',
