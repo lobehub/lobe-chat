@@ -3,6 +3,7 @@ import crypto from 'node:crypto';
 import querystring from 'node:querystring';
 import { URL } from 'node:url';
 
+import { name } from '@/../../package.json';
 import { createLogger } from '@/utils/logger';
 
 import RemoteServerConfigCtr from './RemoteServerConfigCtr';
@@ -11,6 +12,7 @@ import { ControllerModule, ipcClientEvent } from './index';
 // Create logger
 const logger = createLogger('controllers:AuthCtr');
 
+const protocolPrefix = `com.lobehub.${name}`;
 /**
  * Authentication Controller
  * Used to implement the OAuth authorization flow
@@ -59,7 +61,7 @@ export default class AuthCtr extends ControllerModule {
         code_challenge: codeChallenge,
         code_challenge_method: 'S256',
         prompt: 'consent',
-        redirect_uri: 'com.lobehub.desktop://auth/callback',
+        redirect_uri: `${protocolPrefix}://auth/callback`,
         response_type: 'code',
         scope: 'profile email offline_access',
         state: this.authRequestState,
@@ -195,9 +197,8 @@ export default class AuthCtr extends ControllerModule {
    * Register custom protocol handler
    */
   private registerProtocolHandler() {
-    logger.info('Registering custom protocol handler com.lobehub.desktop://');
-    // Use app.setAsDefaultProtocolClient on Windows and Linux
-    app.setAsDefaultProtocolClient('com.lobehub.desktop');
+    logger.info(`Registering custom protocol handler ${protocolPrefix}://`);
+    app.setAsDefaultProtocolClient(protocolPrefix);
 
     // Register custom protocol handler
     if (process.platform === 'darwin') {
@@ -213,7 +214,7 @@ export default class AuthCtr extends ControllerModule {
       logger.debug('Registering second-instance event handler for Windows/Linux');
       app.on('second-instance', (event, commandLine) => {
         // Find the URL from command line arguments
-        const url = commandLine.find((arg) => arg.startsWith('com.lobehub.desktop://'));
+        const url = commandLine.find((arg) => arg.startsWith(`${protocolPrefix}://`));
         if (url) {
           logger.info(`Found URL from second-instance command line arguments: ${url}`);
           this.handleAuthCallback(url);
@@ -223,7 +224,7 @@ export default class AuthCtr extends ControllerModule {
       });
     }
 
-    logger.info('Registered com.lobehub.desktop:// custom protocol handler');
+    logger.info(`Registered ${protocolPrefix}:// custom protocol handler`);
   }
 
   /**
@@ -241,7 +242,7 @@ export default class AuthCtr extends ControllerModule {
         code,
         code_verifier: codeVerifier,
         grant_type: 'authorization_code',
-        redirect_uri: 'com.lobehub.desktop://auth/callback',
+        redirect_uri: `${protocolPrefix}://auth/callback`,
       });
 
       logger.debug('Sending token exchange request');
