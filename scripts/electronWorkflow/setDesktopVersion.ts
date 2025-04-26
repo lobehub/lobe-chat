@@ -82,14 +82,14 @@ function updatePackageJson() {
         break;
       }
       case 'beta': {
-        packageJson.productName = 'LobeHub Beta'; // Or 'LobeHub-Beta' if preferred
+        packageJson.productName = 'LobeHub-Beta'; // Or 'LobeHub-Beta' if preferred
         packageJson.name = 'lobehub-desktop-beta'; // Or 'lobehub-desktop' if preferred
         console.log('🧪 Setting as Beta version.');
         updateAppIcon('beta');
         break;
       }
       case 'nightly': {
-        packageJson.productName = 'LobeHub Nightly'; // Or 'LobeHub-Nightly'
+        packageJson.productName = 'LobeHub-Nightly'; // Or 'LobeHub-Nightly'
         packageJson.name = 'lobehub-desktop-nightly'; // Or 'lobehub-desktop-nightly'
         console.log('🌙 Setting as Nightly version.');
         updateAppIcon('nightly');
