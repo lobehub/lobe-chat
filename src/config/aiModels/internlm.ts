@@ -40,7 +40,7 @@ const internlmChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768,
     description:
-      '我们最新发布多模态大模型，具备更强的图文理解能力、长时序图片理解能力，性能比肩顶尖闭源模型',
+      '我们最新发布多模态大模型，具备更强的图文理解能力、长时序图片理解能力，性能比肩顶尖闭源模型。默认指向我们最新发布的 InternVL 系列模型，当前指向 internvl3-78b。',
     displayName: 'InternVL3',
     enabled: true,
     id: 'internvl3-latest',
@@ -56,7 +56,7 @@ const internlmChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768,
     description:
-      '我们仍在维护的 InternVL2.5 版本，具备优异且稳定的性能',
+      '我们仍在维护的 InternVL2.5 版本，具备优异且稳定的性能。默认指向我们最新发布的 InternVL2.5 系列模型，当前指向 internvl2.5-78b。',
     displayName: 'InternVL2.5',
     id: 'internvl2.5-latest',
     pricing: {
