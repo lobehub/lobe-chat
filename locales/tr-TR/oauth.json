@@ -33,6 +33,22 @@
     "subTitle": "Uygulamaya LobeChat hesabınıza erişim izni vermeyi reddettiniz",
     "title": "Yetkilendirme reddedildi"
   },
+  "handoff": {
+    "desc": {
+      "processing": "Uygulama yetkilendirmeyi işliyor, bir sonraki sayfaya geçmek üzere...",
+      "success": "Masaüstü uygulaması açılmaya çalışıldı. Uygulama otomatik olarak açılmazsa, lütfen manuel olarak geçiş yapın. Bu tarayıcı penceresini daha sonra kapatabilirsiniz."
+    },
+    "title": {
+      "processing": "Yetkilendirme işleniyor...",
+      "success": "Yetkilendirme tamamlandı"
+    }
+  },
+  "login": {
+    "button": "Giriş Yap",
+    "description": "Uygulama {{clientName}} hesabınızı kullanmak için giriş talep ediyor",
+    "title": "{{clientName}} Girişi",
+    "userWelcome": "Hoş geldiniz, "
+  },
   "success": {
     "subTitle": "Uygulamaya LobeChat hesabınıza erişim izni verdiniz, bu sayfayı kapatabilirsiniz",
     "title": "Yetkilendirme başarılı"

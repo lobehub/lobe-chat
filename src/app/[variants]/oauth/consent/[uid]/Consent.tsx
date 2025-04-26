@@ -1,15 +1,12 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
 import { Button, Card, Divider, Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import { Link2Icon, ServerIcon } from 'lucide-react';
-import Image from 'next/image';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { ProductLogo } from '@/components/Branding';
+import OAuthApplicationLogo from './components/OAuthApplicationLogo';
 
 interface ClientProps {
   clientId: string;
@@ -129,42 +126,11 @@ const ConsentClient = memo<ClientProps>(
     return (
       <Center className={styles.container} gap={16}>
         <Flexbox gap={40}>
-          {clientMetadata.isFirstParty ? (
-            <Flexbox align={'center'} gap={12} horizontal justify={'center'}>
-              <Image
-                alt={clientDisplayName}
-                height={64}
-                src={clientMetadata.logo!}
-                unoptimized
-                width={64}
-              />
-            </Flexbox>
-          ) : (
-            <Flexbox align={'center'} gap={12} horizontal justify={'center'}>
-              <div className={styles.icon}>
-                {clientMetadata?.logo ? (
-                  <Image
-                    alt={clientDisplayName}
-                    height={56}
-                    src={clientMetadata?.logo}
-                    unoptimized
-                    width={56}
-                  />
-                ) : (
-                  <Icon icon={ServerIcon} />
-                )}
-              </div>
-              <div className={styles.connectorLine} />
-              <Center className={styles.connector}>
-                <Icon icon={Link2Icon} style={{ color: theme.colorTextSecondary, fontSize: 20 }} />
-              </Center>
-              <div className={styles.connectorLine} />
-              <div className={styles.lobeIcon}>
-                <ProductLogo height={48} style={{ objectFit: 'cover' }} width={48} />
-              </div>
-            </Flexbox>
-          )}
-
+          <OAuthApplicationLogo
+            clientDisplayName={clientDisplayName}
+            isFirstParty={clientMetadata.isFirstParty}
+            logoUrl={clientMetadata.logo}
+          />
           <Title className={styles.title} level={3}>
             {t('consent.title', { clientName: clientDisplayName })}
           </Title>

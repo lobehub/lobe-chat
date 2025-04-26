@@ -1673,9 +1673,6 @@
   "o3-mini": {
     "description": "o3-mini là mô hình suy diễn nhỏ gọn mới nhất của chúng tôi, cung cấp trí thông minh cao với chi phí và độ trễ tương tự như o1-mini."
   },
-  "o3-mini-high": {
-    "description": "o3-mini phiên bản cao cấp, cung cấp trí thông minh cao dưới cùng chi phí và mục tiêu độ trễ như o1-mini."
-  },
   "o4-mini": {
     "description": "o4-mini là mô hình nhỏ gọn mới nhất trong dòng o của chúng tôi. Nó được tối ưu hóa cho suy luận nhanh chóng và hiệu quả, thể hiện hiệu suất và hiệu quả cao trong các nhiệm vụ mã hóa và hình ảnh."
   },
@@ -1694,6 +1691,15 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B là một mô hình chuyên gia thưa thớt, sử dụng nhiều tham số để tăng tốc độ suy luận, phù hợp cho việc xử lý đa ngôn ngữ và sinh mã."
   },
+  "openai/gpt-4.1": {
+    "description": "GPT-4.1 là mô hình hàng đầu của chúng tôi cho các nhiệm vụ phức tạp. Nó rất phù hợp để giải quyết vấn đề xuyên lĩnh vực."
+  },
+  "openai/gpt-4.1-mini": {
+    "description": "GPT-4.1 mini cung cấp sự cân bằng giữa trí tuệ, tốc độ và chi phí, khiến nó trở thành một mô hình hấp dẫn cho nhiều trường hợp sử dụng."
+  },
+  "openai/gpt-4.1-nano": {
+    "description": "GPT-4.1 nano là mô hình GPT-4.1 nhanh nhất và tiết kiệm chi phí nhất."
+  },
   "openai/gpt-4o": {
     "description": "ChatGPT-4o là một mô hình động, cập nhật theo thời gian để giữ phiên bản mới nhất. Nó kết hợp khả năng hiểu và tạo ngôn ngữ mạnh mẽ, phù hợp với các tình huống ứng dụng quy mô lớn, bao gồm dịch vụ khách hàng, giáo dục và hỗ trợ kỹ thuật."
   },
@@ -1705,6 +1711,15 @@
   },
   "openai/o1-preview": {
     "description": "o1 là mô hình suy diễn mới của OpenAI, phù hợp cho các nhiệm vụ phức tạp cần kiến thức tổng quát rộng rãi. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."
+  },
+  "openai/o3": {
+    "description": "o3 là một mô hình mạnh mẽ toàn diện, thể hiện xuất sắc trong nhiều lĩnh vực. Nó thiết lập tiêu chuẩn mới cho các nhiệm vụ toán học, khoa học, lập trình và suy luận hình ảnh. Nó cũng giỏi trong việc viết kỹ thuật và tuân thủ hướng dẫn. Người dùng có thể sử dụng nó để phân tích văn bản, mã và hình ảnh, giải quyết các vấn đề phức tạp nhiều bước."
+  },
+  "openai/o3-mini": {
+    "description": "o3-mini cung cấp trí tuệ cao với cùng chi phí và mục tiêu độ trễ như o1-mini."
+  },
+  "openai/o3-mini-high": {
+    "description": "o3-mini phiên bản cao cấp về suy luận, cung cấp trí tuệ cao với cùng chi phí và mục tiêu độ trễ như o1-mini."
   },
   "openai/o4-mini": {
     "description": "o4-mini được tối ưu hóa cho suy luận nhanh chóng và hiệu quả, thể hiện hiệu suất và hiệu quả cao trong các nhiệm vụ mã hóa và hình ảnh."
