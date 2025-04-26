@@ -1,6 +1,6 @@
 import { ElectronIpcClient } from '@lobechat/electron-server-ipc';
 
-import { name } from '@/../apps/desktop/package.json';
+import packageJSON from '@/../apps/desktop/package.json';
 
 class LobeHubElectronIpcClient extends ElectronIpcClient {
   // 获取数据库路径
@@ -35,4 +35,4 @@ class LobeHubElectronIpcClient extends ElectronIpcClient {
   };
 }
 
-export const electronIpcClient = new LobeHubElectronIpcClient(name);
+export const electronIpcClient = new LobeHubElectronIpcClient(packageJSON.name);
