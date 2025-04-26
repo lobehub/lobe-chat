@@ -1673,9 +1673,6 @@
   "o3-mini": {
     "description": "o3-mini to nasz najnowszy mały model wnioskowania, który oferuje wysoką inteligencję przy tych samych kosztach i celach opóźnienia co o1-mini."
   },
-  "o3-mini-high": {
-    "description": "o3-mini w wersji o wysokim poziomie wnioskowania, oferujący wysoką inteligencję przy tych samych kosztach i celach opóźnienia co o1-mini."
-  },
   "o4-mini": {
     "description": "o4-mini to nasz najnowszy mały model z serii o. Został zoptymalizowany do szybkiego i efektywnego wnioskowania, osiągając wysoką wydajność i efektywność w zadaniach kodowania i wizualnych."
   },
@@ -1694,6 +1691,15 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B to model rzadkiego eksperta, który wykorzystuje wiele parametrów do zwiększenia prędkości wnioskowania, odpowiedni do przetwarzania zadań wielojęzycznych i generowania kodu."
   },
+  "openai/gpt-4.1": {
+    "description": "GPT-4.1 to nasz flagowy model do złożonych zadań. Idealnie nadaje się do rozwiązywania problemów w różnych dziedzinach."
+  },
+  "openai/gpt-4.1-mini": {
+    "description": "GPT-4.1 mini oferuje równowagę między inteligencją, szybkością a kosztami, co czyni go atrakcyjnym modelem w wielu zastosowaniach."
+  },
+  "openai/gpt-4.1-nano": {
+    "description": "GPT-4.1 nano to najszybszy i najbardziej opłacalny model GPT-4.1."
+  },
   "openai/gpt-4o": {
     "description": "ChatGPT-4o to dynamiczny model, który jest na bieżąco aktualizowany, aby utrzymać najnowszą wersję. Łączy potężne zdolności rozumienia i generowania języka, idealny do zastosowań na dużą skalę, w tym obsługi klienta, edukacji i wsparcia technicznego."
   },
@@ -1705,6 +1711,15 @@
   },
   "openai/o1-preview": {
     "description": "o1 to nowy model wnioskowania OpenAI, odpowiedni do złożonych zadań wymagających szerokiej wiedzy ogólnej. Model ten ma kontekst 128K i datę graniczną wiedzy z października 2023 roku."
+  },
+  "openai/o3": {
+    "description": "o3 to wszechstronny i potężny model, który osiąga doskonałe wyniki w wielu dziedzinach. Ustanawia nowe standardy w zadaniach związanych z matematyką, nauką, programowaniem i rozumowaniem wizualnym. Doskonale radzi sobie również z pisaniem technicznym i przestrzeganiem instrukcji. Użytkownicy mogą go wykorzystać do analizy tekstów, kodu i obrazów, rozwiązując złożone problemy wieloetapowe."
+  },
+  "openai/o3-mini": {
+    "description": "o3-mini oferuje wysoką inteligencję przy tych samych kosztach i celach opóźnienia co o1-mini."
+  },
+  "openai/o3-mini-high": {
+    "description": "o3-mini w wersji o wysokim poziomie rozumowania, oferujący wysoką inteligencję przy tych samych kosztach i celach opóźnienia co o1-mini."
   },
   "openai/o4-mini": {
     "description": "o4-mini zoptymalizowany do szybkiego i efektywnego wnioskowania, osiągający wysoką wydajność i efektywność w zadaniach kodowania i wizualnych."
