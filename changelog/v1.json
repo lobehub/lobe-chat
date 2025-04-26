@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve oidc OAuth workflow."]
+    },
+    "date": "2025-04-26",
+    "version": "1.82.9"
+  },
+  {
+    "children": {
       "improvements": ["Improve categories selection via SearXNG."],
       "fixes": ["Fix oidc redirect urls."]
     },
