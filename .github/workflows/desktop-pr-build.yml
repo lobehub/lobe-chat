@@ -9,6 +9,9 @@ concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
 
+# Add default permissions
+permissions: read-all
+
 env:
   PR_TAG_PREFIX: pr- # PR 构建版本的前缀标识
 
@@ -171,6 +174,10 @@ jobs:
     needs: [build, version]
     name: Publish PR Build
     runs-on: ubuntu-latest
+    # Grant write permissions for creating release and commenting on PR
+    permissions:
+      contents: write
+      pull-requests: write
     outputs:
       artifact_path: ${{ steps.set_path.outputs.path }}
     steps:
