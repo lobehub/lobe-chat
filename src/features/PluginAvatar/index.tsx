@@ -1,9 +1,10 @@
-import { Avatar, Icon } from '@lobehub/ui';
+import { Icon } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { LucideToyBrick } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import Avatar from '@/features/PluginStore/PluginItem/PluginAvatar';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 

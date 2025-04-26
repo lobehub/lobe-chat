@@ -1,12 +1,15 @@
 import {
   ListLocalFileParams,
   LocalFileItem,
+  LocalMoveFilesResultItem,
   LocalReadFileParams,
   LocalReadFileResult,
   LocalReadFilesParams,
   LocalSearchFilesParams,
+  MoveLocalFilesParams,
   OpenLocalFileParams,
   OpenLocalFolderParams,
+  RenameLocalFileParams,
   dispatch,
 } from '@lobechat/electron-client-ipc';
 
@@ -33,6 +36,22 @@ class LocalFileService {
 
   async openLocalFolder(params: OpenLocalFolderParams) {
     return dispatch('openLocalFolder', params);
+  }
+
+  async moveLocalFiles(params: MoveLocalFilesParams): Promise<LocalMoveFilesResultItem[]> {
+    return dispatch('moveLocalFiles', params);
+  }
+
+  async renameLocalFile(params: RenameLocalFileParams) {
+    return dispatch('renameLocalFile', params);
+  }
+
+  async openLocalFileOrFolder(path: string, isDirectory: boolean) {
+    if (isDirectory) {
+      return this.openLocalFolder({ isDirectory, path });
+    } else {
+      return this.openLocalFile({ path });
+    }
   }
 }
 

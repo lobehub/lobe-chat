@@ -235,8 +235,10 @@ export const createContextForInteractionDetails = async (
   const baseUrl = appEnv.APP_URL!;
   log('Using base URL: %s', baseUrl);
 
-  // 从baseUrl提取主机名用于headers
-  const hostName = new URL(baseUrl).host;
+  // 从baseUrl提取主机名和协议用于headers
+  const parsedUrl = new URL(baseUrl);
+  const hostName = parsedUrl.host;
+  const protocol = parsedUrl.protocol.replace(':', '');
 
   // 1. 获取真实的 Cookies
   const cookieStore = await cookies();
@@ -255,7 +257,11 @@ export const createContextForInteractionDetails = async (
   }
 
   // 2. 构建包含真实 Cookie 的 Headers
-  const headers = new Headers({ host: hostName });
+  const headers = new Headers({
+    'host': hostName,
+    'x-forwarded-host': hostName,
+    'x-forwarded-proto': protocol,
+  });
   const cookieString = Object.entries(realCookies)
     .map(([name, value]) => `${name}=${value}`)
     .join('; ');

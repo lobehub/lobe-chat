@@ -368,7 +368,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     payload?: ChatStreamPayload,
   ): GoogleFunctionCallTool[] | undefined {
     // 目前 Tools (例如 googleSearch) 无法与其他 FunctionCall 同时使用
-    if (payload?.messages?.some(m => m.tool_calls?.length)) {
+    if (payload?.messages?.some((m) => m.tool_calls?.length)) {
       return; // 若历史消息中已有 function calling，则不再注入任何 Tools
     }
     if (payload?.enabledSearch) {

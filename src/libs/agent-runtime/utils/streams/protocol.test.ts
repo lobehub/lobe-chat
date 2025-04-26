@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { createSSEDataExtractor } from './protocol';
+import { createSSEDataExtractor, createTokenSpeedCalculator } from './protocol';
 
 describe('createSSEDataExtractor', () => {
   // Helper function to convert string to Uint8Array
@@ -133,5 +133,71 @@ describe('createSSEDataExtractor', () => {
       const results = await processChunk(transformer, stringToUint8Array(chunks.join('')));
       expect(results).matchSnapshot();
     });
+  });
+});
+
+describe('createTokenSpeedCalculator', async () => {
+  // Mock the param from caller - 1000 to avoid div 0
+  const inputStartAt = Date.now() - 1000;
+
+  // Helper function to process chunks through transformer
+  const processChunk = async (transformer: TransformStream, chunk: any) => {
+    const results: any[] = [];
+    const readable = new ReadableStream({
+      start(controller) {
+        controller.enqueue(chunk);
+        controller.close();
+      },
+    });
+
+    const writable = new WritableStream({
+      write(chunk) {
+        results.push(chunk);
+      },
+    });
+
+    await readable.pipeThrough(transformer).pipeTo(writable);
+
+    return results;
+  };
+
+  it('should calculate token speed correctly', async () => {
+    const chunks = [
+      { data: '', id: 'chatcmpl-BKO1bogylHvMaYfETjTAzrCguYwZy', type: 'text' },
+      { data: 'hi', id: 'chatcmpl-BKO1bogylHvMaYfETjTAzrCguYwZy', type: 'text' },
+      { data: 'stop', id: 'chatcmpl-BKO1bogylHvMaYfETjTAzrCguYwZy', type: 'stop' },
+      {
+        data: {
+          inputTextTokens: 9,
+          outputTextTokens: 1,
+          totalInputTokens: 9,
+          totalOutputTokens: 1,
+          totalTokens: 10,
+        },
+        id: 'chatcmpl-BKO1bogylHvMaYfETjTAzrCguYwZy',
+        type: 'usage',
+      },
+    ];
+
+    const transformer = createTokenSpeedCalculator((v) => v, { inputStartAt });
+    const results = await processChunk(transformer, chunks);
+    expect(results).toHaveLength(chunks.length + 1);
+    const speedChunk = results.slice(-1)[0];
+    expect(speedChunk.id).toBe('output_speed');
+    expect(speedChunk.type).toBe('speed');
+    expect(speedChunk.data.tps).not.toBeNaN();
+    expect(speedChunk.data.ttft).not.toBeNaN();
+  });
+
+  it('should not calculate token speed if no usage', async () => {
+    const chunks = [
+      { data: '', id: 'chatcmpl-BKO1bogylHvMaYfETjTAzrCguYwZy', type: 'text' },
+      { data: 'hi', id: 'chatcmpl-BKO1bogylHvMaYfETjTAzrCguYwZy', type: 'text' },
+      { data: 'stop', id: 'chatcmpl-BKO1bogylHvMaYfETjTAzrCguYwZy', type: 'stop' },
+    ];
+
+    const transformer = createTokenSpeedCalculator((v) => v, { inputStartAt });
+    const results = await processChunk(transformer, chunks);
+    expect(results).toHaveLength(chunks.length);
   });
 });

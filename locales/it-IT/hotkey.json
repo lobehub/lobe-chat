@@ -3,6 +3,10 @@
     "desc": "Aggiungi il contenuto attuale come messaggio utente, senza attivare la generazione",
     "title": "Aggiungi un messaggio utente"
   },
+  "clearCurrentMessages": {
+    "desc": "Cancella i messaggi e i file caricati della conversazione attuale",
+    "title": "Cancella messaggi della conversazione"
+  },
   "editMessage": {
     "desc": "Entra in modalità di modifica tenendo premuto Alt e facendo doppio clic sul messaggio",
     "title": "Modifica messaggio"
