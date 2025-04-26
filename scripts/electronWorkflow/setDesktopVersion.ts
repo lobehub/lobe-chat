@@ -38,6 +38,7 @@ function updateAppIcon(type: 'beta' | 'nightly') {
     const iconMappings = [
       { ext: '.png', source: `icon-${iconSuffix}.png`, target: 'icon.png' },
       { ext: '.icns', source: `Icon-${iconSuffix}.icns`, target: 'Icon.icns' },
+      { ext: '.ico', source: `icon-${iconSuffix}.ico`, target: 'icon.ico' },
     ];
 
     for (const mapping of iconMappings) {
