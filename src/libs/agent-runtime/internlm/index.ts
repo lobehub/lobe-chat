@@ -23,6 +23,14 @@ export const LobeInternLMAI = LobeOpenAICompatibleFactory({
   models: async ({ client }) => {
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
+    const functionCallKeywords = [
+      'internlm',
+    ]
+
+    const visionKeywords = [
+      'internvl',
+    ]
+
     const modelsPage = await client.models.list() as any;
     const modelList: InternLMModelCard[] = modelsPage.data;
 
@@ -35,14 +43,16 @@ export const LobeInternLMAI = LobeOpenAICompatibleFactory({
           displayName: knownModel?.displayName ?? undefined,
           enabled: knownModel?.enabled || false,
           functionCall:
-            knownModel?.abilities?.functionCall
+            functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+            || knownModel?.abilities?.functionCall
             || false,
           id: model.id,
           reasoning:
             knownModel?.abilities?.reasoning
             || false,
           vision:
-            knownModel?.abilities?.vision
+            visionKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
+            || knownModel?.abilities?.vision
             || false,
         };
       })
