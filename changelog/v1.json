@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "improvements": ["Improve categories selection via SearXNG."],
+      "fixes": ["Fix oidc redirect urls."]
+    },
+    "date": "2025-04-26",
+    "version": "1.82.8"
+  },
+  {
+    "children": {
       "fixes": ["Pwa-install cause mobile infinity scroll."]
     },
     "date": "2025-04-25",
