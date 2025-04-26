@@ -17,7 +17,7 @@ export interface RemoteServerDispatchEvents {
     error?: string;
     success: boolean;
   };
-  requestAuthorization: (serverUrl: string) => {
+  requestAuthorization: (config: DataSyncConfig) => {
     error?: string;
     success: boolean;
   };

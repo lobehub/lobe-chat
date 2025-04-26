@@ -15,6 +15,7 @@ export default defineConfig({
     // 这里是关键：在构建时进行文本替换
     define: {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.OFFICIAL_CLOUD_SERVER': JSON.stringify(process.env.OFFICIAL_CLOUD_SERVER),
       'process.env.UPDATE_CHANNEL': JSON.stringify(process.env.UPDATE_CHANNEL),
     },
     plugins: [externalizeDepsPlugin({})],

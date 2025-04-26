@@ -25,8 +25,8 @@ class RemoteServerService {
   /**
    * 请求授权
    */
-  requestAuthorization = async (serverUrl: string) => {
-    return dispatch('requestAuthorization', serverUrl);
+  requestAuthorization = async (config: DataSyncConfig) => {
+    return dispatch('requestAuthorization', config);
   };
 
   /**

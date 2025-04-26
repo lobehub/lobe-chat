@@ -17,6 +17,7 @@ export interface ElectronRemoteServerAction {
   refreshServerConfig: () => Promise<void>;
   refreshUserData: () => Promise<void>;
   useDataSyncConfig: () => SWRResponse;
+  useRefreshDataWhenActive: (active?: boolean) => SWRResponse;
 }
 
 const REMOTE_SERVER_CONFIG_KEY = 'electron:getRemoteServerConfig';
@@ -41,7 +42,7 @@ export const remoteSyncSlice: StateCreator<
       }
 
       // 请求授权
-      const result = await remoteServerService.requestAuthorization(values.remoteServerUrl);
+      const result = await remoteServerService.requestAuthorization(values);
 
       if (!result.success) {
         console.error('请求授权失败:', result.error);
@@ -109,12 +110,13 @@ export const remoteSyncSlice: StateCreator<
       {
         onSuccess: (data) => {
           set({ dataSyncConfig: data, isInitRemoteServerConfig: true });
-
-          // 数据模式不一致的情况下，需要刷新用户配置
-          if (data.active) {
-            get().refreshUserData();
-          }
         },
       },
     ),
+  useRefreshDataWhenActive: (active) =>
+    useSWR(['refreshDataWhenActive', active], async () => {
+      if (!active) return;
+
+      await get().refreshUserData();
+    }),
 });

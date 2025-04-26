@@ -3,6 +3,7 @@ import { safeStorage } from 'electron';
 import querystring from 'node:querystring';
 import { URL } from 'node:url';
 
+import { OFFICIAL_CLOUD_SERVER } from '@/const/env';
 import { createLogger } from '@/utils/logger';
 
 import { ControllerModule, ipcClientEvent } from './index';
@@ -246,7 +247,9 @@ export default class RemoteServerConfigCtr extends ControllerModule {
       }
 
       // 构造刷新请求
-      const tokenUrl = new URL('/oidc/token', config.remoteServerUrl);
+      const remoteUrl = await this.getRemoteServerUrl(config);
+
+      const tokenUrl = new URL('/oidc/token', remoteUrl);
 
       // 构造请求体
       const body = querystring.stringify({
@@ -322,5 +325,11 @@ export default class RemoteServerConfigCtr extends ControllerModule {
   // We might need a dedicated lifecycle method if constructor is too early for storeManager
   afterAppReady() {
     this.loadTokensFromStore();
+  }
+
+  async getRemoteServerUrl(config?: DataSyncConfig) {
+    const dataConfig = config ? config : await this.getRemoteServerConfig();
+
+    return dataConfig.storageMode === 'cloud' ? OFFICIAL_CLOUD_SERVER : dataConfig.remoteServerUrl;
   }
 }

@@ -1,3 +1,4 @@
+import { DataSyncConfig } from '@lobechat/electron-client-ipc';
 import { BrowserWindow, app, shell } from 'electron';
 import crypto from 'node:crypto';
 import querystring from 'node:querystring';
@@ -39,8 +40,12 @@ export default class AuthCtr extends ControllerModule {
    * Request OAuth authorization
    */
   @ipcClientEvent('requestAuthorization')
-  async requestAuthorization(serverUrl: string) {
-    logger.info(`Requesting OAuth authorization, server URL: ${serverUrl}`);
+  async requestAuthorization(config: DataSyncConfig) {
+    const remoteUrl = await this.remoteServerConfigCtr.getRemoteServerUrl(config);
+
+    logger.info(
+      `Requesting OAuth authorization, storageMode:${config.storageMode} server URL: ${remoteUrl}`,
+    );
     try {
       // Generate PKCE parameters
       logger.debug('Generating PKCE parameters');
@@ -53,7 +58,7 @@ export default class AuthCtr extends ControllerModule {
       logger.debug(`Generated state parameter: ${this.authRequestState}`);
 
       // Construct authorization URL
-      const authUrl = new URL('/oidc/auth', serverUrl);
+      const authUrl = new URL('/oidc/auth', remoteUrl);
 
       // Add query parameters
       authUrl.search = querystring.stringify({
@@ -128,7 +133,7 @@ export default class AuthCtr extends ControllerModule {
 
       // Exchange authorization code for token
       logger.debug('Starting to exchange authorization code for token');
-      const result = await this.exchangeCodeForToken(config.remoteServerUrl, code, codeVerifier);
+      const result = await this.exchangeCodeForToken(code, codeVerifier);
 
       if (result.success) {
         logger.info('Authorization successful');
@@ -230,10 +235,11 @@ export default class AuthCtr extends ControllerModule {
   /**
    * Exchange authorization code for token
    */
-  private async exchangeCodeForToken(serverUrl: string, code: string, codeVerifier: string) {
+  private async exchangeCodeForToken(code: string, codeVerifier: string) {
+    const remoteUrl = await this.remoteServerConfigCtr.getRemoteServerUrl();
     logger.info('Starting to exchange authorization code for token');
     try {
-      const tokenUrl = new URL('/oidc/token', serverUrl);
+      const tokenUrl = new URL('/oidc/token', remoteUrl);
       logger.debug(`Constructed token exchange URL: ${tokenUrl.toString()}`);
 
       // Construct request body
@@ -280,7 +286,7 @@ export default class AuthCtr extends ControllerModule {
       logger.info('Successfully saved exchanged tokens');
 
       // Set server to active state
-      logger.debug(`Setting remote server to active state: ${serverUrl}`);
+      logger.debug(`Setting remote server to active state: ${remoteUrl}`);
       await this.remoteServerConfigCtr.setRemoteServerConfig({ active: true });
 
       return { success: true };

@@ -196,7 +196,7 @@ export default class RemoteServerSyncCtr extends ControllerModule {
 
     try {
       const config = await this.remoteServerConfigCtr.getRemoteServerConfig();
-      if (!config.active || !config.remoteServerUrl) {
+      if (!config.active || (config.storageMode === 'selfHost' && !config.remoteServerUrl)) {
         logger.warn(
           `${logPrefix} Remote server sync not active or configured. Rejecting proxy request.`,
         ); // Enhanced log
@@ -209,6 +209,7 @@ export default class RemoteServerSyncCtr extends ControllerModule {
           statusText: 'Remote server sync not active or configured', // Return ArrayBuffer
         };
       }
+      const remoteServerUrl = await this.remoteServerConfigCtr.getRemoteServerUrl();
 
       // Get initial token
       let token = await this.remoteServerConfigCtr.getAccessToken();
@@ -217,11 +218,7 @@ export default class RemoteServerSyncCtr extends ControllerModule {
       ); // Added log
 
       logger.info(`${logPrefix} Attempting to forward request...`); // Added log
-      let response = await this.forwardRequest({
-        ...args,
-        accessToken: token,
-        remoteServerUrl: config.remoteServerUrl,
-      });
+      let response = await this.forwardRequest({ ...args, accessToken: token, remoteServerUrl });
 
       // Handle 401: Refresh token and retry if necessary
       if (response.status === 401) {
@@ -235,7 +232,7 @@ export default class RemoteServerSyncCtr extends ControllerModule {
             response = await this.forwardRequest({
               ...args,
               accessToken: newToken,
-              remoteServerUrl: config.remoteServerUrl,
+              remoteServerUrl,
             });
           } else {
             logger.error(
