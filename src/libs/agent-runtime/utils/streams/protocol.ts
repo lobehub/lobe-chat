@@ -298,7 +298,11 @@ export const TOKEN_SPEED_CHUNK_ID = 'output_speed';
  */
 export const createTokenSpeedCalculator = (
   transformer: (chunk: any, stack: StreamContext) => StreamProtocolChunk | StreamProtocolChunk[],
-  { streamStack, inputStartAt }: { inputStartAt?: number; streamStack?: StreamContext } = {},
+  {
+    inputStartAt,
+    outputThinking = true,
+    streamStack,
+  }: { inputStartAt?: number; outputThinking?: boolean; streamStack?: StreamContext } = {},
 ) => {
   let outputStartAt: number | undefined;
 
@@ -308,7 +312,9 @@ export const createTokenSpeedCalculator = (
     if (!outputStartAt && chunk.type === 'text') outputStartAt = Date.now();
     // if the chunk is the stop chunk, set as output finish
     if (inputStartAt && outputStartAt && chunk.type === 'usage') {
-      const outputTokens = chunk.data?.totalOutputTokens || chunk.data?.outputTextTokens;
+      const totalOutputTokens = chunk.data?.totalOutputTokens || chunk.data?.outputTextTokens;
+      const reasoningTokens = chunk.data?.outputReasoningTokens || 0;
+      const outputTokens = outputThinking ? totalOutputTokens : totalOutputTokens - reasoningTokens;
       result.push({
         data: {
           tps: (outputTokens / (Date.now() - outputStartAt)) * 1000,

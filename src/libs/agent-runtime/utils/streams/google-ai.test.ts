@@ -34,10 +34,12 @@ describe('GoogleGenerativeAIStream', () => {
     const onCompletionMock = vi.fn();
 
     const protocolStream = GoogleGenerativeAIStream(mockGoogleStream, {
-      onStart: onStartMock,
-      onText: onTextMock,
-      onToolsCalling: onToolCallMock,
-      onCompletion: onCompletionMock,
+      callbacks: {
+        onStart: onStartMock,
+        onText: onTextMock,
+        onToolsCalling: onToolCallMock,
+        onCompletion: onCompletionMock,
+      },
     });
 
     const decoder = new TextDecoder();
