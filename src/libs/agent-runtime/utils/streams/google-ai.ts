@@ -24,7 +24,7 @@ const transformGoogleGenerativeAIStream = (
   const usage = chunk.usageMetadata;
   const usageChunks: StreamProtocolChunk[] = [];
   if (candidate?.finishReason && usage) {
-    const outputReasoningTokens = (usage as any).thoughtsTokenCount || 0;
+    const outputReasoningTokens = (usage as any).thoughtsTokenCount || undefined;
     const totalOutputTokens = (usage.candidatesTokenCount ?? 0) + (outputReasoningTokens ?? 0);
 
     usageChunks.push(
