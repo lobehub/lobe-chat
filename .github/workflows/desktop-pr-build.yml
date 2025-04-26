@@ -115,7 +115,7 @@ jobs:
 
       # 设置 package.json 的版本号
       - name: Set package version
-        run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }} true
+        run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }} nightly
 
       # macOS 构建处理
       - name: Build artifact on macOS

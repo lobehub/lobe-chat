@@ -9,9 +9,6 @@ concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
 
-env:
-  PR_TAG_PREFIX: pr- # PR 构建版本的前缀标识
-
 jobs:
   test:
     name: Code quality check
@@ -82,7 +79,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        # 暂时先支持 macOS
+        os: [macos-latest]
+    #        os: [macos-latest, windows-latest, ubuntu-latest]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -107,7 +106,7 @@ jobs:
 
       # 设置 package.json 的版本号
       - name: Set package version
-        run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }} false
+        run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }} beta
 
       # macOS 构建处理
       - name: Build artifact on macOS
@@ -145,17 +144,12 @@ jobs:
         with:
           name: release-${{ matrix.os }}
           path: |
-            apps/desktop/release/nightly*
             apps/desktop/release/latest*
             apps/desktop/release/*.dmg*
             apps/desktop/release/*.zip*
             apps/desktop/release/*.exe*
             apps/desktop/release/*.AppImage
           retention-days: 5
-
-      - name: Log build info
-        run: |
-          echo "🔄 Is PR Build: ${{ needs.version.outputs.is_pr_build }}"
 
   # 正式版发布 job
   publish-release:
@@ -183,7 +177,6 @@ jobs:
         with:
           tag_name: ${{ github.event.release.tag_name }}
           files: |
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/nightly*
             ${{ needs.prepare-artifacts.outputs.artifact_path }}/latest*
             ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.dmg*
             ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.zip*
