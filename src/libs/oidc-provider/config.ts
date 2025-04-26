@@ -14,9 +14,17 @@ export const defaultClients: ClientMetadata[] = [
     logo_uri: 'https://hub-apac-1.lobeobjects.space/lobehub-desktop-icon.png',
 
     // 桌面端注册的自定义协议回调（使用反向域名格式）
-    post_logout_redirect_uris: ['com.lobehub.desktop://auth/logout/callback'],
+    post_logout_redirect_uris: [
+      'com.lobehub.lobehub-desktop-dev://auth/logout/callback',
+      'com.lobehub.lobehub-desktop-nightly://auth/logout/callback',
+      'com.lobehub.lobehub-desktop://auth/logout/callback',
+    ],
 
-    redirect_uris: ['com.lobehub.desktop://auth/callback', 'https://oauthdebugger.com/debug'],
+    redirect_uris: [
+      'com.lobehub.lobehub-desktop-dev://auth/callback',
+      'com.lobehub.lobehub-desktop-nightly://auth/callback',
+      'com.lobehub.lobehub-desktop://auth/logout/callback',
+    ],
 
     // 支持授权码获取令牌和刷新令牌
     response_types: ['code'],
