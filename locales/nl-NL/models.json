@@ -1673,9 +1673,6 @@
   "o3-mini": {
     "description": "o3-mini is ons nieuwste kleine inferentiemodel dat hoge intelligentie biedt met dezelfde kosten- en vertragingdoelen als o1-mini."
   },
-  "o3-mini-high": {
-    "description": "o3-mini high inference level versie, biedt hoge intelligentie met dezelfde kosten- en vertragingdoelen als o1-mini."
-  },
   "o4-mini": {
     "description": "o4-mini is ons nieuwste compacte model uit de o-serie. Het is geoptimaliseerd voor snelle en efficiënte inferentie, met een hoge efficiëntie en prestaties in codering en visuele taken."
   },
@@ -1694,6 +1691,15 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B is een spaarzaam expertmodel dat meerdere parameters benut om de inferentiesnelheid te verhogen, geschikt voor het verwerken van meertalige en codegeneratietaken."
   },
+  "openai/gpt-4.1": {
+    "description": "GPT-4.1 is ons vlaggenschipmodel voor complexe taken. Het is zeer geschikt voor het oplossen van problemen over verschillende domeinen."
+  },
+  "openai/gpt-4.1-mini": {
+    "description": "GPT-4.1 mini biedt een balans tussen intelligentie, snelheid en kosten, waardoor het een aantrekkelijke keuze is voor veel gebruiksscenario's."
+  },
+  "openai/gpt-4.1-nano": {
+    "description": "GPT-4.1 nano is het snelste en meest kosteneffectieve GPT-4.1 model."
+  },
   "openai/gpt-4o": {
     "description": "ChatGPT-4o is een dynamisch model dat in realtime wordt bijgewerkt om de meest actuele versie te behouden. Het combineert krachtige taalbegrip- en generatiecapaciteiten, geschikt voor grootschalige toepassingsscenario's, waaronder klantenservice, onderwijs en technische ondersteuning."
   },
@@ -1705,6 +1711,15 @@
   },
   "openai/o1-preview": {
     "description": "o1 is het nieuwe redeneermodel van OpenAI, geschikt voor complexe taken die uitgebreide algemene kennis vereisen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
+  },
+  "openai/o3": {
+    "description": "o3 is een krachtige, veelzijdige model dat uitblinkt in verschillende domeinen. Het stelt nieuwe normen voor wiskunde, wetenschap, programmeren en visuele redeneertaken. Het is ook bedreven in technische schrijfvaardigheid en het opvolgen van instructies. Gebruikers kunnen het gebruiken om teksten, code en afbeeldingen te analyseren en complexe problemen met meerdere stappen op te lossen."
+  },
+  "openai/o3-mini": {
+    "description": "o3-mini biedt hoge intelligentie met dezelfde kosten- en vertragingdoelen als o1-mini."
+  },
+  "openai/o3-mini-high": {
+    "description": "o3-mini high is een versie met een hoog redeneerniveau die hoge intelligentie biedt met dezelfde kosten- en vertragingdoelen als o1-mini."
   },
   "openai/o4-mini": {
     "description": "o4-mini is geoptimaliseerd voor snelle en efficiënte inferentie, met hoge efficiëntie en prestaties in codering en visuele taken."
