@@ -11,6 +11,7 @@ import {
   StreamToolCallChunkData,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
+  createTokenSpeedCalculator,
   generateToolCallId,
 } from './protocol';
 
@@ -117,13 +118,25 @@ const transformGoogleGenerativeAIStream = (
   };
 };
 
+export interface GoogleAIStreamOptions {
+  callbacks?: ChatStreamCallbacks;
+  inputStartAt?: number;
+}
+
 export const GoogleGenerativeAIStream = (
   rawStream: ReadableStream<EnhancedGenerateContentResponse>,
-  callbacks?: ChatStreamCallbacks,
+  { callbacks, inputStartAt }: GoogleAIStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: 'chat_' + nanoid() };
 
   return rawStream
-    .pipeThrough(createSSEProtocolTransformer(transformGoogleGenerativeAIStream, streamStack))
+    .pipeThrough(
+      createTokenSpeedCalculator(transformGoogleGenerativeAIStream, {
+        inputStartAt,
+        outputThinking: false,
+        streamStack,
+      }),
+    )
+    .pipeThrough(createSSEProtocolTransformer((c) => c, streamStack))
     .pipeThrough(createCallbacksTransformer(callbacks));
 };
