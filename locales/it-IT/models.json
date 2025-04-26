@@ -1673,9 +1673,6 @@
   "o3-mini": {
     "description": "o3-mini è il nostro ultimo modello di inferenza compatto, che offre un'intelligenza elevata con gli stessi obiettivi di costo e latenza di o1-mini."
   },
-  "o3-mini-high": {
-    "description": "Versione ad alta capacità di inferenza di o3-mini, che offre un'intelligenza elevata con costi e obiettivi di latenza simili a quelli di o1-mini."
-  },
   "o4-mini": {
     "description": "o4-mini è il nostro ultimo modello della serie o in formato ridotto. È ottimizzato per un'inferenza rapida ed efficace, mostrando un'elevata efficienza e prestazioni in compiti di codifica e visivi."
   },
@@ -1694,6 +1691,15 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B è un modello di esperti sparsi, che utilizza più parametri per aumentare la velocità di ragionamento, adatto per gestire compiti di generazione di linguaggio e codice multilingue."
   },
+  "openai/gpt-4.1": {
+    "description": "GPT-4.1 è il nostro modello di punta per compiti complessi. È particolarmente adatto per risolvere problemi trasversali."
+  },
+  "openai/gpt-4.1-mini": {
+    "description": "GPT-4.1 mini offre un equilibrio tra intelligenza, velocità e costo, rendendolo un modello attraente per molti casi d'uso."
+  },
+  "openai/gpt-4.1-nano": {
+    "description": "GPT-4.1 nano è il modello GPT-4.1 più veloce e conveniente."
+  },
   "openai/gpt-4o": {
     "description": "ChatGPT-4o è un modello dinamico, aggiornato in tempo reale per mantenere la versione più recente. Combina potenti capacità di comprensione e generazione del linguaggio, adatto a scenari di applicazione su larga scala, tra cui assistenza clienti, istruzione e supporto tecnico."
   },
@@ -1705,6 +1711,15 @@
   },
   "openai/o1-preview": {
     "description": "o1 è il nuovo modello di inferenza di OpenAI, adatto a compiti complessi che richiedono una vasta conoscenza generale. Questo modello ha un contesto di 128K e una data di cutoff della conoscenza di ottobre 2023."
+  },
+  "openai/o3": {
+    "description": "o3 è un modello potente e versatile, che si distingue in diversi ambiti. Stabilisce nuovi standard per compiti di matematica, scienza, programmazione e ragionamento visivo. È anche abile nella scrittura tecnica e nel seguire istruzioni. Gli utenti possono utilizzarlo per analizzare testi, codici e immagini, risolvendo problemi complessi in più passaggi."
+  },
+  "openai/o3-mini": {
+    "description": "o3-mini offre alta intelligenza mantenendo gli stessi obiettivi di costo e latenza di o1-mini."
+  },
+  "openai/o3-mini-high": {
+    "description": "o3-mini alta versione di ragionamento, offre alta intelligenza mantenendo gli stessi obiettivi di costo e latenza di o1-mini."
   },
   "openai/o4-mini": {
     "description": "o4-mini è ottimizzato per un'inferenza rapida ed efficace, mostrando un'elevata efficienza e prestazioni in compiti di codifica e visivi."

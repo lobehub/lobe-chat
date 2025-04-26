@@ -34,6 +34,22 @@ const oauth = {
     subTitle: '您已拒绝授权应用访问您的 LobeChat 账户',
     title: '授权被拒绝',
   },
+  handoff: {
+    desc: {
+      processing: '应用正在处理授权，即将跳转下一个页面...',
+      success: '已尝试打开桌面应用。如果应用未自动打开，请手动切换。您可以稍后关闭此浏览器窗口。',
+    },
+    title: {
+      processing: '授权处理中...',
+      success: '授权已完成',
+    },
+  },
+  login: {
+    button: '确认登录',
+    description: '应用 {{clientName}} 申请使用您的账户进行登录',
+    title: '登录 {{clientName}}',
+    userWelcome: '欢迎回来，',
+  },
   success: {
     subTitle: '您已成功授权应用访问您的 LobeChat 账户，可以关闭该页面了',
     title: '授权成功',

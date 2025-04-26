@@ -1673,9 +1673,6 @@
   "o3-mini": {
     "description": "o3-mini, aynı maliyet ve gecikme hedefleriyle yüksek zeka sunan en yeni küçük ölçekli çıkarım modelimizdir."
   },
-  "o3-mini-high": {
-    "description": "o3-mini yüksek çıkarım seviyesinde, o1-mini ile aynı maliyet ve gecikme hedefleri altında yüksek zeka sunar."
-  },
   "o4-mini": {
     "description": "o4-mini, en yeni küçük o serisi modelimizdir. Hızlı ve etkili çıkarım için optimize edilmiştir ve kodlama ile görsel görevlerde son derece yüksek verimlilik ve performans sergiler."
   },
@@ -1694,6 +1691,15 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B, birden fazla parametre kullanarak akıl yürütme hızını artıran seyrek uzman modelidir, çok dilli ve kod üretim görevlerini işlemek için uygundur."
   },
+  "openai/gpt-4.1": {
+    "description": "GPT-4.1, karmaşık görevler için kullandığımız amiral gemisi modelidir. Farklı alanlarda sorun çözmek için son derece uygundur."
+  },
+  "openai/gpt-4.1-mini": {
+    "description": "GPT-4.1 mini, zeka, hız ve maliyet arasında bir denge sunarak birçok kullanım durumu için çekici bir model haline getirir."
+  },
+  "openai/gpt-4.1-nano": {
+    "description": "GPT-4.1 nano, en hızlı ve en maliyet etkin GPT-4.1 modelidir."
+  },
   "openai/gpt-4o": {
     "description": "ChatGPT-4o, güncel en son sürümü korumak için gerçek zamanlı olarak güncellenen dinamik bir modeldir. Güçlü dil anlama ve üretme yeteneklerini birleştirir, müşteri hizmetleri, eğitim ve teknik destek gibi büyük ölçekli uygulama senaryoları için uygundur."
   },
@@ -1705,6 +1711,15 @@
   },
   "openai/o1-preview": {
     "description": "o1, OpenAI'nin geniş genel bilgiye ihtiyaç duyan karmaşık görevler için uygun yeni bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."
+  },
+  "openai/o3": {
+    "description": "o3, birçok alanda mükemmel performans sergileyen güçlü bir modeldir. Matematik, bilim, programlama ve görsel akıl yürütme görevleri için yeni bir standart belirler. Ayrıca teknik yazım ve talimat takibi konusunda da uzmandır. Kullanıcılar, metin, kod ve görüntüleri analiz ederek çok adımlı karmaşık problemleri çözebilir."
+  },
+  "openai/o3-mini": {
+    "description": "o3-mini, o1-mini ile aynı maliyet ve gecikme hedefleri altında yüksek zeka sunar."
+  },
+  "openai/o3-mini-high": {
+    "description": "o3-mini yüksek akıl yürütme seviyesi, o1-mini ile aynı maliyet ve gecikme hedefleri altında yüksek zeka sunar."
   },
   "openai/o4-mini": {
     "description": "o4-mini, hızlı ve etkili çıkarım için optimize edilmiştir ve kodlama ile görsel görevlerde son derece yüksek verimlilik ve performans sergiler."

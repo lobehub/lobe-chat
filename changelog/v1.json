@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Support ernie-x1 & ernie-4.5 series from Wenxin."]
+    },
+    "date": "2025-04-26",
+    "version": "1.82.10"
+  },
+  {
+    "children": {
+      "improvements": ["Improve oidc OAuth workflow."]
+    },
+    "date": "2025-04-26",
+    "version": "1.82.9"
+  },
+  {
+    "children": {
       "improvements": ["Improve categories selection via SearXNG."],
       "fixes": ["Fix oidc redirect urls."]
     },
