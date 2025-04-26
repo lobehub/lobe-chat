@@ -7,8 +7,8 @@ import {
   SiPython,
 } from '@icons-pack/react-simple-icons';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
-import { Alert, FormItem, Icon } from '@lobehub/ui';
-import { AutoComplete, Button, Form, FormInstance, Input } from 'antd';
+import { Alert, AutoComplete, Button, FormItem, Icon, Input } from '@lobehub/ui';
+import { Form, FormInstance } from 'antd';
 import { FileCode } from 'lucide-react';
 import { ChangeEvent, FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';

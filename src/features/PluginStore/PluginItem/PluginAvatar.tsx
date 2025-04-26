@@ -13,12 +13,11 @@ interface PluginAvatarProps {
 const PluginAvatar = memo<PluginAvatarProps>(({ avatar, style, size = 40, alt }) => {
   const theme = useTheme();
   return avatar === 'MCP_AVATAR' ? (
-    <div
+    <MCP.Avatar
       className={`${theme.prefixCls}-avatar`}
+      size={size}
       style={{ flex: 'none', overflow: 'hidden', ...style }}
-    >
-      <MCP.Avatar size={size} />
-    </div>
+    />
   ) : (
     <Avatar
       alt={alt}

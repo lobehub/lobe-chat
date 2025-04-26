@@ -1,5 +1,6 @@
 import { ActionIcon } from '@lobehub/ui';
-import { GlobOffIcon } from '@lobehub/ui/icons';
+import { GlobeOffIcon } from '@lobehub/ui/icons';
+import { useTheme } from 'antd-style';
 import { Globe } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,8 +18,9 @@ const Search = memo(() => {
   const [loading, setLoading] = useState(false);
   const [isLoading] = useAgentStore((s) => [agentSelectors.isAgentConfigLoading(s)]);
   const isAgentEnableSearch = useAgentEnableSearch();
+  const theme = useTheme();
 
-  if (isLoading) return <ActionIcon disabled icon={GlobOffIcon} />;
+  if (isLoading) return <ActionIcon disabled icon={GlobeOffIcon} />;
 
   return (
     !isDeprecatedEdition && (
@@ -34,7 +36,8 @@ const Search = memo(() => {
         }}
       >
         <ActionIcon
-          icon={isAgentEnableSearch ? Globe : GlobOffIcon}
+          color={isAgentEnableSearch ? theme.colorInfo : undefined}
+          icon={isAgentEnableSearch ? Globe : GlobeOffIcon}
           loading={loading}
           title={t('search.title')}
           tooltipProps={{

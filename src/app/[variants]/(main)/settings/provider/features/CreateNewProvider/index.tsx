@@ -118,7 +118,7 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open }) => {
       rules: [{ message: t('createNewAiProvider.sdkType.required'), required: true }],
     },
     {
-      children: <Input allowClear placeholder={'https://xxxx-proxy.com/v1'} variant={'filled'} />,
+      children: <Input allowClear placeholder={'https://xxxx-proxy.com/v1'} />,
       label: t('createNewAiProvider.proxyUrl.title'),
       minWidth: 400,
       name: [KeyVaultsConfigKey, LLMProviderBaseUrlKey],

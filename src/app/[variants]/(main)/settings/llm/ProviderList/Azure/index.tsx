@@ -1,7 +1,6 @@
 'use client';
 
-import { Input, InputPassword, Markdown } from '@lobehub/ui';
-import { AutoComplete } from 'antd';
+import { AutoComplete, Input, InputPassword, Markdown } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { useTranslation } from 'react-i18next';
 

@@ -1,5 +1,5 @@
 import { Block, Icon } from '@lobehub/ui';
-import { GlobOffIcon } from '@lobehub/ui/icons';
+import { GlobeOffIcon } from '@lobehub/ui/icons';
 import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
 import { LucideIcon, SparkleIcon } from 'lucide-react';
@@ -115,7 +115,7 @@ const AINetworkSettings = memo<AINetworkSettingsProps>(({ setLoading }) => {
   const options: NetworkOption[] = [
     {
       description: t('search.mode.off.desc'),
-      icon: GlobOffIcon,
+      icon: GlobeOffIcon,
       label: t('search.mode.off.title'),
       value: 'off',
     },

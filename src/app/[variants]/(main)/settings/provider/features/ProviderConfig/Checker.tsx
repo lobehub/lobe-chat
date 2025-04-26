@@ -3,7 +3,6 @@
 import { CheckCircleFilled } from '@ant-design/icons';
 import { ModelIcon } from '@lobehub/icons';
 import { Alert, Button, Highlighter, Icon, Select } from '@lobehub/ui';
-import { Space } from 'antd';
 import { useTheme } from 'antd-style';
 import { Loader2Icon } from 'lucide-react';
 import { ReactNode, memo, useState } from 'react';
@@ -126,7 +125,7 @@ const Checker = memo<ConnectionCheckerProps>(
 
     return (
       <Flexbox gap={8}>
-        <Space.Compact block>
+        <Flexbox gap={8} horizontal>
           <Select
             listItemHeight={36}
             onSelect={async (value) => {
@@ -152,7 +151,7 @@ const Checker = memo<ConnectionCheckerProps>(
           <Button disabled={isProviderConfigUpdating} loading={loading} onClick={checkConnection}>
             {t('llm.checker.button')}
           </Button>
-        </Space.Compact>
+        </Flexbox>
 
         {pass && (
           <Flexbox gap={4} horizontal>
