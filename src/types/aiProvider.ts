@@ -27,6 +27,7 @@ export const AiProviderSDKEnum = {
   Huggingface: 'huggingface',
   Ollama: 'ollama',
   Openai: 'openai',
+  Qwen: 'qwen',
   Volcengine: 'volcengine',
 } as const;
 
