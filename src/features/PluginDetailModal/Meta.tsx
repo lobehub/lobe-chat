@@ -1,10 +1,12 @@
-import { Avatar, Tag } from '@lobehub/ui';
+import { Block, Tag } from '@lobehub/ui';
+import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { startCase } from 'lodash-es';
 import { memo } from 'react';
-import { Center } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 
+import PluginAvatar from '@/features/PluginAvatar';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
@@ -14,12 +16,10 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   desc: css`
     color: ${token.colorTextDescription};
-    text-align: center;
   `,
   title: css`
-    font-size: 20px;
-    font-weight: 600;
-    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
   `,
 }));
 
@@ -27,30 +27,34 @@ const Meta = memo<{
   id: string;
 }>(({ id }) => {
   const pluginMeta = useToolStore(pluginSelectors.getPluginMetaById(id), isEqual);
-  const { styles, theme } = useStyles();
+  const { styles } = useStyles();
+
+  const desc = pluginHelpers.getPluginDesc(pluginMeta);
 
   return (
-    <Center gap={16}>
-      <Avatar
-        animation
-        avatar={pluginHelpers.getPluginAvatar(pluginMeta)}
-        background={theme.colorFillTertiary}
-        className={styles.avatar}
-        size={100}
-      />
-
-      <div className={styles.title}>{pluginHelpers.getPluginTitle(pluginMeta)}</div>
-      {(pluginMeta?.tags as string[])?.length > 0 && (
-        <Center gap={6} horizontal style={{ flexWrap: 'wrap' }}>
-          {(pluginHelpers.getPluginTags(pluginMeta) as string[]).map((tag: string, index) => (
-            <Tag key={index} style={{ margin: 0 }}>
-              {startCase(tag).trim()}
-            </Tag>
-          ))}
-        </Center>
+    <Block gap={16} padding={16} variant={'filled'}>
+      <Flexbox align={'center'} gap={16} horizontal>
+        <PluginAvatar identifier={id} size={56} />
+        <Flexbox gap={4}>
+          <div className={styles.title}>{pluginHelpers.getPluginTitle(pluginMeta)}</div>
+          {(pluginMeta?.tags as string[])?.length > 0 && (
+            <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
+              {(pluginHelpers.getPluginTags(pluginMeta) as string[]).map((tag: string, index) => (
+                <Tag key={index} style={{ margin: 0 }}>
+                  {startCase(tag).trim()}
+                </Tag>
+              ))}
+            </Flexbox>
+          )}
+        </Flexbox>
+      </Flexbox>
+      {desc && (
+        <>
+          <Divider dashed style={{ margin: 0 }} />
+          <div className={styles.desc}>{pluginHelpers.getPluginDesc(pluginMeta)}</div>
+        </>
       )}
-      <div className={styles.desc}>{pluginHelpers.getPluginDesc(pluginMeta)}</div>
-    </Center>
+    </Block>
   );
 });
 

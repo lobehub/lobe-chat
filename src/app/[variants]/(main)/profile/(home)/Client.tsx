@@ -50,14 +50,12 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
       {
         children: <Input disabled />,
         label: t('profile.username'),
-        minWidth: undefined,
         name: 'username',
       },
       {
         children: <Input disabled />,
         hidden: !isLoginWithNextAuth || !userProfile?.email,
         label: t('profile.email'),
-        minWidth: undefined,
         name: 'email',
       },
       {
