@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 
 dotenv.config();
 
-const updateChannel = process.env.UPDATE_CHANNEL || 'stable';
+const updateChannel = process.env.UPDATE_CHANNEL;
 console.log(`[electron-vite.config.ts] Detected UPDATE_CHANNEL: ${updateChannel}`); // 添加日志确认
 
 export default defineConfig({
