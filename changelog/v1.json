@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix desktop beta redirect uris."]
+    },
+    "date": "2025-04-27",
+    "version": "1.83.5"
+  },
+  {
+    "children": {
       "fixes": ["Fix cloud connection issue."]
     },
     "date": "2025-04-27",
