@@ -131,7 +131,6 @@ const ConnectionMode = memo<ConnectionModeProps>(({ setIsOpen, setWaiting }) => 
 
     // try to connect
     setWaiting(true);
-    console.log('selectedOption:', selectedOption);
     await connect({ remoteServerUrl: selfHostedUrl, storageMode: selectedOption });
   };
 
