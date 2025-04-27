@@ -1,3 +1,4 @@
+import { EnhancedGenerateContentResponse } from '@google/generative-ai';
 import { describe, expect, it, vi } from 'vitest';
 
 import * as uuidModule from '@/utils/uuid';
@@ -103,10 +104,12 @@ describe('VertexAIStream', () => {
     const onCompletionMock = vi.fn();
 
     const protocolStream = VertexAIStream(mockGoogleStream, {
-      onStart: onStartMock,
-      onText: onTextMock,
-      onToolsCalling: onToolCallMock,
-      onCompletion: onCompletionMock,
+      callbacks: {
+        onStart: onStartMock,
+        onText: onTextMock,
+        onToolsCalling: onToolCallMock,
+        onCompletion: onCompletionMock,
+      },
     });
 
     const decoder = new TextDecoder();
@@ -136,63 +139,21 @@ describe('VertexAIStream', () => {
 
   it('tool_calls', async () => {
     vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
-    const rawChunks = [
-      {
-        candidates: [
-          {
-            content: {
-              role: 'model',
-              parts: [
-                {
-                  functionCall: {
-                    name: 'realtime-weather____fetchCurrentWeather',
-                    args: { city: '杭州' },
-                  },
-                },
-              ],
-            },
-            finishReason: 'STOP',
-            safetyRatings: [
-              {
-                category: 'HARM_CATERY_HATE_SPEECH',
-                probability: 'NEGLIGIBLE',
-                probabilityScore: 0.09814453,
-                severity: 'HARM_SEVERITY_NEGLIGIBLE',
-                severityScore: 0.07470703,
-              },
-              {
-                category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
-                probability: 'NEGLIGIBLE',
-                probabilityScore: 0.1484375,
-                severity: 'HARM_SEVERITY_NEGLIGIBLE',
-                severityScore: 0.15136719,
-              },
-              {
-                category: 'HARM_CATEGORY_HARASSMENT',
-                probability: 'NEGLIGIBLE',
-                probabilityScore: 0.11279297,
-                severity: 'HARM_SEVERITY_NEGLIGIBLE',
-                severityScore: 0.10107422,
-              },
-              {
-                category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-                probability: 'NEGLIGIBLE',
-                probabilityScore: 0.048828125,
-                severity: 'HARM_SEVERITY_NEGLIGIBLE',
-                severityScore: 0.05493164,
-              },
-            ],
-            index: 0,
-          },
-        ],
-        usageMetadata: { promptTokenCount: 95, candidatesTokenCount: 9, totalTokenCount: 104 },
-        modelVersion: 'gemini-1.5-flash-001',
-      },
-    ];
+
+    const mockGenerateContentResponse = (text: string, functionCalls?: any[]) =>
+      ({
+        text: () => text,
+        functionCall: () => functionCalls?.[0],
+        functionCalls: () => functionCalls,
+      }) as EnhancedGenerateContentResponse;
 
     const mockGoogleStream = new ReadableStream({
       start(controller) {
-        rawChunks.forEach((chunk) => controller.enqueue(chunk));
+        controller.enqueue(
+          mockGenerateContentResponse('', [
+            { name: 'realtime-weather____fetchCurrentWeather', args: { city: '杭州' } },
+          ]),
+        );
 
         controller.close();
       },
@@ -204,10 +165,12 @@ describe('VertexAIStream', () => {
     const onCompletionMock = vi.fn();
 
     const protocolStream = VertexAIStream(mockGoogleStream, {
-      onStart: onStartMock,
-      onText: onTextMock,
-      onToolsCalling: onToolCallMock,
-      onCompletion: onCompletionMock,
+      callbacks: {
+        onStart: onStartMock,
+        onText: onTextMock,
+        onToolsCalling: onToolCallMock,
+        onCompletion: onCompletionMock,
+      },
     });
 
     const decoder = new TextDecoder();
@@ -228,5 +191,95 @@ describe('VertexAIStream', () => {
     expect(onStartMock).toHaveBeenCalledTimes(1);
     expect(onToolCallMock).toHaveBeenCalledTimes(1);
     expect(onCompletionMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('should handle stop with content', async () => {
+    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
+    const data = [
+      {
+        candidates: [
+          {
+            content: { parts: [{ text: '234' }], role: 'model' },
+            safetyRatings: [
+              { category: 'HARM_CATEGORY_HATE_SPEECH', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_HARASSMENT', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', probability: 'NEGLIGIBLE' },
+            ],
+          },
+        ],
+        text: () => '234',
+        usageMetadata: {
+          promptTokenCount: 20,
+          totalTokenCount: 20,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 20 }],
+        },
+        modelVersion: 'gemini-2.0-flash-exp-image-generation',
+      },
+      {
+        text: () => '567890\n',
+        candidates: [
+          {
+            content: { parts: [{ text: '567890\n' }], role: 'model' },
+            finishReason: 'STOP',
+            safetyRatings: [
+              { category: 'HARM_CATEGORY_HATE_SPEECH', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_HARASSMENT', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', probability: 'NEGLIGIBLE' },
+            ],
+          },
+        ],
+        usageMetadata: {
+          promptTokenCount: 19,
+          candidatesTokenCount: 11,
+          totalTokenCount: 30,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 19 }],
+          candidatesTokensDetails: [{ modality: 'TEXT', tokenCount: 11 }],
+        },
+        modelVersion: 'gemini-2.0-flash-exp-image-generation',
+      },
+    ];
+
+    const mockGoogleStream = new ReadableStream({
+      start(controller) {
+        data.forEach((item) => {
+          controller.enqueue(item);
+        });
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = VertexAIStream(mockGoogleStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual(
+      [
+        'id: chat_1',
+        'event: text',
+        'data: "234"\n',
+
+        'id: chat_1',
+        'event: text',
+        `data: "567890\\n"\n`,
+        // stop
+        'id: chat_1',
+        'event: stop',
+        `data: "STOP"\n`,
+        // usage
+        'id: chat_1',
+        'event: usage',
+        `data: {"inputTextTokens":19,"totalInputTokens":19,"totalOutputTokens":11,"totalTokens":30}\n`,
+      ].map((i) => i + '\n'),
+    );
   });
 });
