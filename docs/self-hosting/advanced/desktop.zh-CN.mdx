@@ -38,14 +38,7 @@ LobeChat 桌面端可以与您自托管的 LobeChat 实例连接，以便您可�
 
 #### OIDC 环境变量配置
 
-您需要在自托管实例中添加以下环境变量：
-
-```bash
-ENABLE_OIDC=1
-OIDC_JWKS_KEY=xxx
-```
-
-其中 `OIDC_JWKS_KEY` 需要通过以下方式生成：
+您需要在自托管实例中添加以下`ENABLE_OIDC` 和 `OIDC_JWKS_KEY` 这两个环境变量，你可以点击下方按钮一键生成：
 
 <OIDCJWKs />
 
@@ -54,7 +47,7 @@ OIDC_JWKS_KEY=xxx
 如果您使用一键部署方式（如 Vercel、Railway 等平台）部署 LobeChat，您需要：
 
 1. 将上述环境变量添加到部署平台的环境变量配置中
-2. 对于 Vercel 部署，请确保 `APP_URL` 环境变量设置为您当前配置的 URL，这对于正确处理认证回调至关重要
+2. 对于 Vercel 部署，请确保 `APP_URL` 环境变量设置为你的域名 URL，这对于正确处理认证回调至关重要
 
 ### 连接步骤
 
@@ -90,9 +83,7 @@ proxy_busy_buffers_size 32k;
 
 **解决方案：**
 
-- 如果您使用第三方认证服务（如 Clerk），请在认证服务的配置中添加桌面端的回调 URL
-- 更新到最新版本的桌面端（1.83.6 或更高）
-- 对于 Vercel 部署，检查 `APP_URL` 环境变量是否与您访问的 URL 一致
+检查 `APP_URL` 环境变量是否与您访问的 URL 一致
 
 ### macOS 启动卡住或闪退
 
@@ -101,7 +92,7 @@ proxy_busy_buffers_size 32k;
 **解决方案：**
 
 - 检查您是否下载了正确的 macOS 架构版本：
-  - 对于 Apple Silicon (M1/M2/M3) Mac，应使用 `arm64` 版本
+  - 对于 Apple Silicon (M3/M4 等) Mac，应使用 `arm64` 版本
   - 对于 Intel Mac，应使用 `x64` 版本
 - 文件名示例：
   - Apple Silicon: `LobeHub-Beta-1.83.6-arm64.dmg` 或 `LobeHub-Beta-1.83.6-arm64-mac.zip`
