@@ -112,7 +112,7 @@ jobs:
       # macOS 构建处理
       - name: Build artifact on macOS
         if: runner.os == 'macOS'
-        run: npm run desktop:build -- --publish never
+        run: npm run desktop:build
         env:
           UPDATE_CHANNEL: 'stable'
           APP_URL: http://localhost:3015
@@ -134,7 +134,7 @@ jobs:
       # 非 macOS 平台构建处理
       - name: Build artifact on other platforms
         if: runner.os != 'macOS'
-        run: npm run desktop:build -- --publish never
+        run: npm run desktop:build
         env:
           UPDATE_CHANNEL: 'stable'
           APP_URL: http://localhost:3015
@@ -185,10 +185,10 @@ jobs:
         with:
           tag_name: ${{ github.event.release.tag_name }}
           files: |
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/latest*
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.dmg*
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.zip*
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.exe*
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.AppImage
+            release/latest*
+            release/*.dmg*
+            release/*.zip*
+            release/*.exe*
+            release/*.AppImage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
