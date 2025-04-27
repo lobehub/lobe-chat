@@ -6,7 +6,8 @@ import { AIChatModelCard } from '@/types/aiModel';
 const groqChatModels: AIChatModelCard[] = [
   {
     contextWindowTokens: 131_072,
-    description: 'Compound-beta 是一个复合 AI 系统，由 GroqCloud 中已经支持的多个开放可用的模型提供支持，可以智能地、有选择地使用工具来回答用户查询。',
+    description:
+      'Compound-beta 是一个复合 AI 系统，由 GroqCloud 中已经支持的多个开放可用的模型提供支持，可以智能地、有选择地使用工具来回答用户查询。',
     displayName: 'Compound Beta',
     enabled: true,
     id: 'compound-beta',
@@ -15,7 +16,8 @@ const groqChatModels: AIChatModelCard[] = [
   },
   {
     contextWindowTokens: 131_072,
-    description: 'Compound-beta-mini 是一个复合 AI 系统，由 GroqCloud 中已经支持的公开可用模型提供支持，可以智能地、有选择地使用工具来回答用户查询。',
+    description:
+      'Compound-beta-mini 是一个复合 AI 系统，由 GroqCloud 中已经支持的公开可用模型提供支持，可以智能地、有选择地使用工具来回答用户查询。',
     displayName: 'Compound Beta Mini',
     id: 'compound-beta-mini',
     maxOutput: 8192,
@@ -104,7 +106,8 @@ const groqChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     contextWindowTokens: 131_072,
-    description: 'Llama 3.1 8B 是一款高效能模型，提供了快速的文本生成能力，非常适合需要大规模效率和成本效益的应用场景。',
+    description:
+      'Llama 3.1 8B 是一款高效能模型，提供了快速的文本生成能力，非常适合需要大规模效率和成本效益的应用场景。',
     displayName: 'Llama 3.1 8B Instant',
     id: 'llama-3.1-8b-instant',
     maxOutput: 8192,
@@ -119,7 +122,8 @@ const groqChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     contextWindowTokens: 131_072,
-    description: 'Meta Llama 3.3 多语言大语言模型 ( LLM ) 是 70B（文本输入/文本输出）中的预训练和指令调整生成模型。 Llama 3.3 指令调整的纯文本模型针对多语言对话用例进行了优化，并且在常见行业基准上优于许多可用的开源和封闭式聊天模型。',
+    description:
+      'Meta Llama 3.3 多语言大语言模型 ( LLM ) 是 70B（文本输入/文本输出）中的预训练和指令调整生成模型。 Llama 3.3 指令调整的纯文本模型针对多语言对话用例进行了优化，并且在常见行业基准上优于许多可用的开源和封闭式聊天模型。',
     displayName: 'Llama 3.3 70B Versatile',
     id: 'llama-3.3-70b-versatile',
     maxOutput: 32_768,

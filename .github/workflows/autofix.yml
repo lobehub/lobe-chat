@@ -1,0 +1,33 @@
+name: autofix.ci
+
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: ${{ secrets.BUN_VERSION }}
+
+      - name: Install deps
+        run: bun i
+
+      - name: Autofix
+        run: bun run autofix
+
+      - uses: autofix-ci/action@551dded8c6cc8a1054039c8bc0b8b48c51dfc6ef
+        with:
+          commit-message: '🎨 chore: autofix.ci apply automated fixes'

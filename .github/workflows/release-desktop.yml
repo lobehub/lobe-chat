@@ -1,9 +1,9 @@
 name: Release Desktop
 
 on:
-#  uncomment when official desktop version released
-#  release:
-#    types: [published] # 发布 release 时触发构建
+  #  uncomment when official desktop version released
+  #  release:
+  #    types: [published] # 发布 release 时触发构建
   pull_request:
     types: [synchronize, labeled, unlabeled] # PR 更新或标签变化时触发
 

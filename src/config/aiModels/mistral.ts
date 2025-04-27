@@ -56,7 +56,8 @@ const mistralChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     contextWindowTokens: 256_000,
-    description: 'Codestral 是我们最先进的编码语言模型，第二个版本于2025年1月发布，专门从事低延迟、高频任务如中间填充（RST）、代码纠正和测试生成。',
+    description:
+      'Codestral 是我们最先进的编码语言模型，第二个版本于2025年1月发布，专门从事低延迟、高频任务如中间填充（RST）、代码纠正和测试生成。',
     displayName: 'Codestral',
     id: 'codestral-latest',
     pricing: {

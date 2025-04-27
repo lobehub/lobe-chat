@@ -9,8 +9,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { INBOX_SESSION_ID } from '@/const/session';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import { useStore } from '../store';
 import { SessionLoadingState } from '../store/initialState';

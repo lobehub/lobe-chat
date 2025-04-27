@@ -37,7 +37,8 @@ const novitaChatModels: AIChatModelCard[] = [
   },
   {
     contextWindowTokens: 32_768,
-    description: 'Llama 3.1 70B Instruct 专为高质量对话而设计，在人类评估中表现突出，特别适合高交互场景。',
+    description:
+      'Llama 3.1 70B Instruct 专为高质量对话而设计，在人类评估中表现突出，特别适合高交互场景。',
     displayName: 'Llama 3.1 70B Instruct',
     id: 'meta-llama/llama-3.1-70b-instruct',
     pricing: {
@@ -390,7 +391,7 @@ const novitaChatModels: AIChatModelCard[] = [
     },
     type: 'chat',
   },
-    {
+  {
     abilities: {
       reasoning: true,
     },
@@ -404,7 +405,6 @@ const novitaChatModels: AIChatModelCard[] = [
     },
     type: 'chat',
   },
-
 ];
 
 export const allModels = [...novitaChatModels];

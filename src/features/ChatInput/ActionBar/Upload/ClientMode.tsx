@@ -4,11 +4,11 @@ import { FileUp, LucideImage } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useModelSupportFiles } from '@/hooks/useModelSupportFiles';
+import { useModelSupportVision } from '@/hooks/useModelSupportVision';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useFileStore } from '@/store/file';
-import { useModelSupportFiles } from "@/hooks/useModelSupportFiles";
-import { useModelSupportVision } from "@/hooks/useModelSupportVision";
 
 const FileUpload = memo(() => {
   const { t } = useTranslation('chat');

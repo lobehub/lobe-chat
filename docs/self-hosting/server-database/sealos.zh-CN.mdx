@@ -31,41 +31,39 @@ tags:
 在开始部署之前，您需要完成以下配置：
 
 <Steps>
-
   ### 部署 Logto 服务
-  
-  点击下方按钮部署一个 Logto 服务：
-  
-  [![](https://raw.githubusercontent.com/labring-actions/templates/main/Deploy-on-Sealos.svg)](https://template.hzh.sealos.run/deploy?templateName=logto)
-  
-  > Logto 是一个开源的身份与访问管理（IAM）平台，是 Auth0 的开源替代方案，旨在帮助开发者快速构建安全、可扩展的登录注册系统和用户身份体系。
-  
-  部署完成后，等待应用的所有组件状态都变成“运行中”，点击应用的【详情】按钮，进入应用详情页面。
-  
-  ![Logto 应用详情页面部署完成状态](https://raw.githubusercontent.com/labring-actions/templates/main/template/lobe-chat-db/images/logto-app-deployment-status-sealos.png)
-  
-  点击 3002 端口对应的公网地址，即可使用公网域名访问 Logto 服务。
-  
-  ![Logto 服务公网地址](https://raw.githubusercontent.com/labring-actions/templates/main/template/lobe-chat-db/images/logto-public-address.png)
-  
-  ### 创建 Application
-  
-  注册一个管理员账号，然后点击左侧的 `Applications` 菜单，进入应用列表页面。再点击右上角的 `Create application` 按钮创建应用。
-  
-  ![Logto 应用列表页面](https://raw.githubusercontent.com/labring-actions/templates/main/template/lobe-chat-db/images/logto-application-list.png)
-  
-  选择 `Next.js (App Router)` 作为框架，然后点击 `Start building` 按钮。
-  
-  ![Logto 创建应用页面](https://raw.githubusercontent.com/labring-actions/templates/main/template/lobe-chat-db/images/logto-create-application.png)
-  
-  在弹窗中填写应用的名称为 `Lobe Chat`，然后点击 `Create application` 按钮。接下来啥也不用填，直接点击底部的 `Finish and done` 按钮就创建完成了。
-  
-  ![Logto 创建应用完成页面](https://raw.githubusercontent.com/labring-actions/templates/main/template/lobe-chat-db/images/logto-create-application-done.png)
-  
-  在 `Lobe Chat` 应用中找到以下三个参数，后面部署 Lobe Chat 数据库版时需要用到。
-  
-  ![Logto 应用详情页面](https://raw.githubusercontent.com/labring-actions/templates/main/template/lobe-chat-db/images/logto-app-detail.png)
 
+  点击下方按钮部署一个 Logto 服务：
+
+  [![](https://raw.githubusercontent.com/labring-actions/templates/main/Deploy-on-Sealos.svg)](https://template.hzh.sealos.run/deploy?templateName=logto)
+
+  > Logto 是一个开源的身份与访问管理（IAM）平台，是 Auth0 的开源替代方案，旨在帮助开发者快速构建安全、可扩展的登录注册系统和用户身份体系。
+
+  部署完成后，等待应用的所有组件状态都变成 “运行中”，点击应用的【详情】按钮，进入应用详情页面。
+
+  ![Logto 应用详情页面部署完成状态](https://raw.githubusercontent.com/labring-actions/templates/main/template/lobe-chat-db/images/logto-app-deployment-status-sealos.png)
+
+  点击 3002 端口对应的公网地址，即可使用公网域名访问 Logto 服务。
+
+  ![Logto 服务公网地址](https://raw.githubusercontent.com/labring-actions/templates/main/template/lobe-chat-db/images/logto-public-address.png)
+
+  ### 创建 Application
+
+  注册一个管理员账号，然后点击左侧的 `Applications` 菜单，进入应用列表页面。再点击右上角的 `Create application` 按钮创建应用。
+
+  ![Logto 应用列表页面](https://raw.githubusercontent.com/labring-actions/templates/main/template/lobe-chat-db/images/logto-application-list.png)
+
+  选择 `Next.js (App Router)` 作为框架，然后点击 `Start building` 按钮。
+
+  ![Logto 创建应用页面](https://raw.githubusercontent.com/labring-actions/templates/main/template/lobe-chat-db/images/logto-create-application.png)
+
+  在弹窗中填写应用的名称为 `Lobe Chat`，然后点击 `Create application` 按钮。接下来啥也不用填，直接点击底部的 `Finish and done` 按钮就创建完成了。
+
+  ![Logto 创建应用完成页面](https://raw.githubusercontent.com/labring-actions/templates/main/template/lobe-chat-db/images/logto-create-application-done.png)
+
+  在 `Lobe Chat` 应用中找到以下三个参数，后面部署 Lobe Chat 数据库版时需要用到。
+
+  ![Logto 应用详情页面](https://raw.githubusercontent.com/labring-actions/templates/main/template/lobe-chat-db/images/logto-app-detail.png)
 </Steps>
 
 ## 部署 Lobe Chat 数据库版
@@ -80,7 +78,7 @@ tags:
 - `AUTH_LOGTO_SECRET`：Logto 应用的 App Secret
 - `AUTH_LOGTO_ISSUER`：Logto 应用的 Issuer endpoint
 
-点击【部署】按钮，部署完成后，等待应用的所有组件状态都变成“运行中”，点击应用的【详情】按钮，进入应用详情页面。
+点击【部署】按钮，部署完成后，等待应用的所有组件状态都变成 “运行中”，点击应用的【详情】按钮，进入应用详情页面。
 
 ![Lobe Chat 数据库版部署完成页面](https://raw.githubusercontent.com/labring-actions/templates/main/template/lobe-chat-db/images/lobe-chat-db-deployment-done.png)
 

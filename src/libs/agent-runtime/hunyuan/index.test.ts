@@ -31,73 +31,73 @@ beforeEach(() => {
 describe('LobeHunyuanAI', () => {
   describe('chat', () => {
     it('should with search citations', async () => {
-const data = [
+      const data = [
         {
-          id: "939fbdb8dbb9b4c5944cbbe687c977c2",
-          object: "chat.completion.chunk",
+          id: '939fbdb8dbb9b4c5944cbbe687c977c2',
+          object: 'chat.completion.chunk',
           created: 1741000456,
-          model: "hunyuan-turbo",
-          system_fingerprint: "",
+          model: 'hunyuan-turbo',
+          system_fingerprint: '',
           choices: [
             {
               index: 0,
-              delta: { role: "assistant", content: "为您" },
-              finish_reason: null
-            }
+              delta: { role: 'assistant', content: '为您' },
+              finish_reason: null,
+            },
           ],
-          note: "以上内容为AI生成，不代表开发者立场，请勿删除或修改本标记",
+          note: '以上内容为AI生成，不代表开发者立场，请勿删除或修改本标记',
           search_info: {
             search_results: [
               {
                 index: 1,
-                title: "公务员考试时政热点【2025年3月3日】_公务员考试网_华图教育",
-                url: "http://www.huatu.com/2025/0303/2803685.html",
-                icon: "https://hunyuan-img-1251316161.cos.ap-guangzhou.myqcloud.com/%2Fpublic/img/63ce96deffe0119827f12deaa5ffe7ef.jpg",
-                text: "华图教育官网"
+                title: '公务员考试时政热点【2025年3月3日】_公务员考试网_华图教育',
+                url: 'http://www.huatu.com/2025/0303/2803685.html',
+                icon: 'https://hunyuan-img-1251316161.cos.ap-guangzhou.myqcloud.com/%2Fpublic/img/63ce96deffe0119827f12deaa5ffe7ef.jpg',
+                text: '华图教育官网',
               },
               {
                 index: 2,
-                title: "外交部新闻（2025年3月3日）",
-                url: "https://view.inews.qq.com/a/20250303A02NLC00?scene=qqsearch",
-                icon: "https://hunyuan-img-1251316161.cos.ap-guangzhou.myqcloud.com/%2Fpublic/img/00ce40298870d1accb7920d641152722.jpg",
-                text: "腾讯网"
-              }
-            ]
-          }
+                title: '外交部新闻（2025年3月3日）',
+                url: 'https://view.inews.qq.com/a/20250303A02NLC00?scene=qqsearch',
+                icon: 'https://hunyuan-img-1251316161.cos.ap-guangzhou.myqcloud.com/%2Fpublic/img/00ce40298870d1accb7920d641152722.jpg',
+                text: '腾讯网',
+              },
+            ],
+          },
         },
         {
-          id: "939fbdb8dbb9b4c5944cbbe687c977c2",
-          object: "chat.completion.chunk",
+          id: '939fbdb8dbb9b4c5944cbbe687c977c2',
+          object: 'chat.completion.chunk',
           created: 1741000456,
-          model: "hunyuan-turbo",
-          system_fingerprint: "",
+          model: 'hunyuan-turbo',
+          system_fingerprint: '',
           choices: [
             {
               index: 0,
-              delta: { role: "assistant", content: "找到" },
-              finish_reason: null
-            }
+              delta: { role: 'assistant', content: '找到' },
+              finish_reason: null,
+            },
           ],
-          note: "以上内容为AI生成，不代表开发者立场，请勿删除或修改本标记",
+          note: '以上内容为AI生成，不代表开发者立场，请勿删除或修改本标记',
           search_info: {
             search_results: [
               {
                 index: 1,
-                title: "公务员考试时政热点【2025年3月3日】_公务员考试网_华图教育",
-                url: "http://www.huatu.com/2025/0303/2803685.html",
-                icon: "https://hunyuan-img-1251316161.cos.ap-guangzhou.myqcloud.com/%2Fpublic/img/63ce96deffe0119827f12deaa5ffe7ef.jpg",
-                text: "华图教育官网"
+                title: '公务员考试时政热点【2025年3月3日】_公务员考试网_华图教育',
+                url: 'http://www.huatu.com/2025/0303/2803685.html',
+                icon: 'https://hunyuan-img-1251316161.cos.ap-guangzhou.myqcloud.com/%2Fpublic/img/63ce96deffe0119827f12deaa5ffe7ef.jpg',
+                text: '华图教育官网',
               },
               {
                 index: 2,
-                title: "外交部新闻（2025年3月3日）",
-                url: "https://view.inews.qq.com/a/20250303A02NLC00?scene=qqsearch",
-                icon: "https://hunyuan-img-1251316161.cos.ap-guangzhou.myqcloud.com/%2Fpublic/img/00ce40298870d1accb7920d641152722.jpg",
-                text: "腾讯网"
-              }
-            ]
-          }
-        }
+                title: '外交部新闻（2025年3月3日）',
+                url: 'https://view.inews.qq.com/a/20250303A02NLC00?scene=qqsearch',
+                icon: 'https://hunyuan-img-1251316161.cos.ap-guangzhou.myqcloud.com/%2Fpublic/img/00ce40298870d1accb7920d641152722.jpg',
+                text: '腾讯网',
+              },
+            ],
+          },
+        },
       ];
 
       const mockStream = new ReadableStream({
