@@ -39,6 +39,7 @@ const transformGoogleGenerativeAIStream = (
             (i: any) => i.modality === 'TEXT',
           )?.tokenCount,
           outputReasoningTokens,
+          outputTextTokens: totalOutputTokens - (outputReasoningTokens ?? 0),
           totalInputTokens: usage.promptTokenCount,
           totalOutputTokens,
           totalTokens: usage.totalTokenCount,

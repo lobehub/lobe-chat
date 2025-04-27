@@ -233,7 +233,7 @@ describe('VertexAIStream', () => {
       'data: "STOP"\n\n',
       'id: chat_1\n',
       'event: usage\n',
-      'data: {"totalInputTokens":95,"totalOutputTokens":9,"totalTokens":104}\n\n',
+      'data: {"outputTextTokens":9,"totalInputTokens":95,"totalOutputTokens":9,"totalTokens":104}\n\n',
     ]);
 
     expect(onStartMock).toHaveBeenCalledTimes(1);
@@ -326,7 +326,7 @@ describe('VertexAIStream', () => {
         // usage
         'id: chat_1',
         'event: usage',
-        `data: {"inputTextTokens":19,"totalInputTokens":19,"totalOutputTokens":11,"totalTokens":30}\n`,
+        `data: {"inputTextTokens":19,"outputTextTokens":11,"totalInputTokens":19,"totalOutputTokens":11,"totalTokens":30}\n`,
       ].map((i) => i + '\n'),
     );
   });

@@ -3,7 +3,7 @@ import { EnhancedGenerateContentResponse, GenerateContentResponse } from '@googl
 import { ModelTokensUsage } from '@/types/message';
 import { nanoid } from '@/utils/uuid';
 
-import { GoogleAIStreamOptions } from './google-ai';
+import { type GoogleAIStreamOptions } from './google-ai';
 import {
   StreamContext,
   StreamProtocolChunk,
@@ -37,6 +37,7 @@ const transformVertexAIStream = (
             (i: any) => i.modality === 'TEXT',
           )?.tokenCount,
           outputReasoningTokens,
+          outputTextTokens: totalOutputTokens - (outputReasoningTokens ?? 0),
           totalInputTokens: usage.promptTokenCount,
           totalOutputTokens,
           totalTokens: usage.totalTokenCount,
