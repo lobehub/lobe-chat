@@ -44,9 +44,6 @@ const transformVertexAIStream = (
   }
 
   const candidates = chunk.candidates;
-
-  const text = chunk.text?.();
-
   if (!candidates)
     return {
       data: '',
@@ -84,7 +81,7 @@ const transformVertexAIStream = (
     if (item.finishReason) {
       if (chunk.usageMetadata) {
         return [
-          !!text ? { data: text, id: context?.id, type: 'text' } : undefined,
+          !!part.text ? { data: part.text, id: context?.id, type: 'text' } : undefined,
           ...usageChunks,
         ].filter(Boolean) as StreamProtocolChunk[];
       }
