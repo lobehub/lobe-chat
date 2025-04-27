@@ -28,7 +28,7 @@ const Inbox = memo(() => {
       }}
     >
       <ListItem
-        actions={<ChevronRight />}
+        actions={<ChevronRight onClick={() => switchSession(INBOX_SESSION_ID)}/>}
         active={activeId === INBOX_SESSION_ID}
         avatar={DEFAULT_INBOX_AVATAR}
         title={t('inbox.title')}
