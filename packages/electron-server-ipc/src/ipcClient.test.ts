@@ -12,6 +12,7 @@ vi.mock('node:net');
 vi.mock('node:os');
 vi.mock('node:path');
 
+const appId = 'lobehub';
 describe('ElectronIpcClient', () => {
   // Mock data
   const mockTempDir = '/mock/temp/dir';
@@ -54,7 +55,7 @@ describe('ElectronIpcClient', () => {
       vi.mocked(fs.readFileSync).mockReturnValue(JSON.stringify(mockSocketInfo));
 
       // Execute
-      new ElectronIpcClient();
+      new ElectronIpcClient(appId);
 
       // Verify
       expect(fs.existsSync).toHaveBeenCalledWith(mockSocketInfoPath);
@@ -66,7 +67,7 @@ describe('ElectronIpcClient', () => {
       vi.mocked(fs.existsSync).mockReturnValue(false);
 
       // Execute
-      new ElectronIpcClient();
+      new ElectronIpcClient(appId);
 
       // Verify
       expect(fs.existsSync).toHaveBeenCalledWith(mockSocketInfoPath);
@@ -75,7 +76,7 @@ describe('ElectronIpcClient', () => {
       // Test platform-specific behavior
       const originalPlatform = process.platform;
       Object.defineProperty(process, 'platform', { value: 'win32' });
-      new ElectronIpcClient();
+      new ElectronIpcClient(appId);
       Object.defineProperty(process, 'platform', { value: originalPlatform });
     });
 
@@ -86,7 +87,7 @@ describe('ElectronIpcClient', () => {
       });
 
       // Execute
-      new ElectronIpcClient();
+      new ElectronIpcClient(appId);
 
       // Verify
       expect(console.error).toHaveBeenCalledWith(
@@ -103,7 +104,7 @@ describe('ElectronIpcClient', () => {
       // Setup a client with a known socket path
       vi.mocked(fs.existsSync).mockReturnValue(true);
       vi.mocked(fs.readFileSync).mockReturnValue(JSON.stringify(mockSocketInfo));
-      client = new ElectronIpcClient();
+      client = new ElectronIpcClient(appId);
 
       // Reset socket mocks for each test
       mockSocket.on.mockReset();
@@ -170,7 +171,7 @@ describe('ElectronIpcClient', () => {
       // Setup a client with a known socket path
       vi.mocked(fs.existsSync).mockReturnValue(true);
       vi.mocked(fs.readFileSync).mockReturnValue(JSON.stringify(mockSocketInfo));
-      client = new ElectronIpcClient();
+      client = new ElectronIpcClient(appId);
 
       // Setup socket.on
       mockSocket.on.mockImplementation((event, callback) => {

@@ -40,9 +40,6 @@ export const getServerGlobalConfig = async () => {
         enabled: isDesktop ? true : undefined,
         fetchOnClient: isDesktop ? false : !process.env.OLLAMA_PROXY_URL,
       },
-      openai: {
-        enabled: isDesktop ? false : undefined,
-      },
       qwen: {
         withDeploymentName: true,
       },
