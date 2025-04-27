@@ -28,6 +28,10 @@ export const useStyles = createStyles(({ css, token, prefixCls, isDarkMode, resp
         margin-block-start: 0;
         padding: 16px;
       }
+
+      .${prefixCls}-modal-confirm-paragraph {
+        max-width: 100%;
+      }
     `,
     wrap: css`
       overflow: hidden auto;

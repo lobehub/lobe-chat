@@ -1,7 +1,7 @@
 import { DownloadOutlined } from '@ant-design/icons';
 import { UpdateInfo, useWatchBroadcast } from '@lobechat/electron-client-ipc';
-import { Icon } from '@lobehub/ui';
-import { Badge, Button, Popover, Progress, Tooltip, theme } from 'antd';
+import { Button, Icon } from '@lobehub/ui';
+import { Badge, Popover, Progress, Tooltip, theme } from 'antd';
 import { createStyles } from 'antd-style';
 import { Download } from 'lucide-react';
 import React, { useState } from 'react';

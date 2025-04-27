@@ -1,8 +1,8 @@
 'use client';
 
 import { useWatchBroadcast } from '@lobechat/electron-client-ipc';
-import { Icon } from '@lobehub/ui';
-import { Button, Typography } from 'antd';
+import { Button, Icon } from '@lobehub/ui';
+import { Typography } from 'antd';
 import { createStyles, cx, keyframes } from 'antd-style';
 import { WifiIcon } from 'lucide-react';
 import { memo } from 'react';
