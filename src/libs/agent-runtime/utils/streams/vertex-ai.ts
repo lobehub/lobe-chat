@@ -22,6 +22,9 @@ const transformVertexAIStream = (
   const usage = chunk.usageMetadata;
   const usageChunks: StreamProtocolChunk[] = [];
   if (candidate?.finishReason && usage) {
+    const outputReasoningTokens = (usage as any).thoughtsTokenCount || undefined;
+    const totalOutputTokens = (usage.candidatesTokenCount ?? 0) + (outputReasoningTokens ?? 0);
+
     usageChunks.push(
       { data: candidate.finishReason, id: context?.id, type: 'stop' },
       {
@@ -33,8 +36,9 @@ const transformVertexAIStream = (
           inputTextTokens: (usage as any).promptTokensDetails?.find(
             (i: any) => i.modality === 'TEXT',
           )?.tokenCount,
+          outputReasoningTokens,
           totalInputTokens: usage.promptTokenCount,
-          totalOutputTokens: usage.candidatesTokenCount,
+          totalOutputTokens,
           totalTokens: usage.totalTokenCount,
         } as ModelTokensUsage,
         id: context?.id,
