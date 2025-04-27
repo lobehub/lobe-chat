@@ -43,6 +43,9 @@ export const getServerGlobalConfig = async () => {
       openai: {
         enabled: isDesktop ? false : undefined,
       },
+      qwen: {
+        withDeploymentName: true,
+      },
       tencentcloud: {
         enabledKey: 'ENABLED_TENCENT_CLOUD',
         modelListKey: 'TENCENT_CLOUD_MODEL_LIST',
