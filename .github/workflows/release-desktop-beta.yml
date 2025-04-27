@@ -1,4 +1,4 @@
-name: Release Desktop
+name: Release Desktop Beta
 
 on:
   release:
@@ -67,14 +67,12 @@ jobs:
           version="${{ github.event.release.tag_name }}"
           version="${version#v}"
           echo "version=${version}" >> $GITHUB_OUTPUT
-          echo "is_pr_build=false" >> $GITHUB_OUTPUT
           echo "📦 Release Version: ${version}"
 
       # 输出版本信息总结，方便在 GitHub Actions 界面查看
       - name: Version Summary
         run: |
           echo "🚦 Release Version: ${{ steps.set_version.outputs.version }}"
-          echo "🔄 Is PR Build: ${{ steps.set_version.outputs.is_pr_build }}"
 
   build:
     needs: [version, test]
@@ -114,7 +112,7 @@ jobs:
       # macOS 构建处理
       - name: Build artifact on macOS
         if: runner.os == 'macOS'
-        run: npm run desktop:build
+        run: npm run desktop:build -- --publish never
         env:
           UPDATE_CHANNEL: 'stable'
           APP_URL: http://localhost:3015
@@ -136,7 +134,7 @@ jobs:
       # 非 macOS 平台构建处理
       - name: Build artifact on other platforms
         if: runner.os != 'macOS'
-        run: npm run desktop:build
+        run: npm run desktop:build -- --publish never
         env:
           UPDATE_CHANNEL: 'stable'
           APP_URL: http://localhost:3015
@@ -161,7 +159,7 @@ jobs:
   # 正式版发布 job
   publish-release:
     needs: [build, version]
-    name: Prepare Artifacts
+    name: Publish Beta Release
     runs-on: ubuntu-latest
     # Grant write permission to contents for uploading release assets
     permissions:
