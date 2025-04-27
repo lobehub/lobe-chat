@@ -1,4 +1,4 @@
-import { EnhancedGenerateContentResponse } from '@google/generative-ai';
+import { EnhancedGenerateContentResponse, GenerateContentResponse } from '@google/generative-ai';
 
 import { ModelTokensUsage } from '@/types/message';
 import { nanoid } from '@/utils/uuid';
@@ -14,7 +14,7 @@ import {
 } from './protocol';
 
 const transformVertexAIStream = (
-  chunk: EnhancedGenerateContentResponse,
+  chunk: GenerateContentResponse,
   context: StreamContext,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
   // maybe need another structure to add support for multiple choices
