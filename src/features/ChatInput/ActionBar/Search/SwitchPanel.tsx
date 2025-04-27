@@ -1,11 +1,11 @@
-import { Block, Icon } from '@lobehub/ui';
+import { Icon } from '@lobehub/ui';
 import { GlobeOffIcon } from '@lobehub/ui/icons';
 import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
 import { LucideIcon, SparkleIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/slices/chat';
@@ -27,6 +27,11 @@ const useStyles = createStyles(({ css, token }) => ({
   description: css`
     font-size: 12px;
     color: ${token.colorTextDescription};
+  `,
+  icon: css`
+    border: 1px solid ${token.colorBorderSecondary};
+    border-radius: ${token.borderRadius}px;
+    background: ${token.colorBgElevated};
   `,
   option: css`
     cursor: pointer;
@@ -78,16 +83,9 @@ const Item = memo<NetworkOption>(({ value, description, icon, label, setLoading 
         setLoading?.(false);
       }}
     >
-      <Block
-        align={'center'}
-        flex={'none'}
-        height={32}
-        justify={'center'}
-        variant={'outlined'}
-        width={32}
-      >
+      <Center className={styles.icon} flex={'none'} height={32} width={32}>
         <Icon icon={icon} />
-      </Block>
+      </Center>
       <Flexbox flex={1}>
         <div className={styles.title}>{label}</div>
         <div className={styles.description}>{description}</div>
