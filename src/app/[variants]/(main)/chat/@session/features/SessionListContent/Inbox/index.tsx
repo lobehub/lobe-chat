@@ -8,6 +8,7 @@ import { SESSION_CHAT_URL } from '@/const/url';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
+import { ChevronRight} from "lucide-react";
 
 import ListItem from '../ListItem';
 
@@ -27,6 +28,7 @@ const Inbox = memo(() => {
       }}
     >
       <ListItem
+        actions={<ChevronRight />}
         active={activeId === INBOX_SESSION_ID}
         avatar={DEFAULT_INBOX_AVATAR}
         title={t('inbox.title')}
