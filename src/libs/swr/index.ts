@@ -28,9 +28,9 @@ export const useClientDataSWR: SWRHook = (key, fetch, config) =>
     // we need to set it to 0.
     dedupingInterval: 0,
     focusThrottleInterval:
-      // desktop 3s
+      // desktop 1.5s
       isDesktop
-        ? 3000
+        ? 1500
         : // web 300s
           5 * 60 * 1000,
     refreshWhenOffline: false,
