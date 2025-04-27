@@ -1,5 +1,7 @@
 import useSWR, { SWRHook } from 'swr';
 
+import { isDesktop } from '@/const/version';
+
 /**
  * This type of request method is relatively flexible data, which will be triggered on the first time
  *
@@ -25,7 +27,12 @@ export const useClientDataSWR: SWRHook = (key, fetch, config) =>
     // Cause issue like this: https://github.com/lobehub/lobe-chat/issues/532
     // we need to set it to 0.
     dedupingInterval: 0,
-    focusThrottleInterval: 5 * 60 * 1000,
+    focusThrottleInterval:
+      // desktop 3s
+      isDesktop
+        ? 3000
+        : // web 300s
+          5 * 60 * 1000,
     refreshWhenOffline: false,
     revalidateOnFocus: true,
     revalidateOnReconnect: true,
