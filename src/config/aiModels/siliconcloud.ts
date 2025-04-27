@@ -90,7 +90,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 65_536,
@@ -125,7 +124,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 65_536,
