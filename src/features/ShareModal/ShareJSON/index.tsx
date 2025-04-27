@@ -34,6 +34,7 @@ const ShareImage = memo(() => {
     {
       children: <Switch />,
       label: t('shareModal.withSystemRole'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'withSystemRole',
       valuePropName: 'checked',
@@ -41,6 +42,7 @@ const ShareImage = memo(() => {
     {
       children: <Switch />,
       label: t('shareModal.includeTool'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'includeTool',
       valuePropName: 'checked',

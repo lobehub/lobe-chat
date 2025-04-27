@@ -2,6 +2,7 @@ import { Skeleton } from 'antd';
 import { Suspense, memo } from 'react';
 
 import { ChatSettingsTabs } from '@/store/global/initialState';
+import { useServerConfigStore } from '@/store/serverConfig';
 
 import AgentSettingsContent from './AgentSettingsContent';
 import { AgentSettingsProvider } from './AgentSettingsProvider';
@@ -12,12 +13,15 @@ export interface AgentSettingsProps extends StoreUpdaterProps {
 }
 
 const AgentSettings = memo<AgentSettingsProps>(({ tab = ChatSettingsTabs.Meta, ...rest }) => {
-  const loadingSkeleton = <Skeleton active paragraph={{ rows: 6 }} title={false} />;
+  const isMobile = useServerConfigStore((s) => s.isMobile);
+  const loadingSkeleton = (
+    <Skeleton active paragraph={{ rows: 6 }} style={{ padding: isMobile ? 16 : 0 }} title={false} />
+  );
 
   return (
     <AgentSettingsProvider {...rest}>
       <Suspense fallback={loadingSkeleton}>
-        <AgentSettingsContent tab={tab} />
+        <AgentSettingsContent loadingSkeleton={loadingSkeleton} tab={tab} />
       </Suspense>
     </AgentSettingsProvider>
   );

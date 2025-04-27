@@ -67,6 +67,7 @@ const ControlsForm = memo(() => {
         </span>
       ),
       label: t('extendParams.enableReasoning.title'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'enableReasoning',
     },

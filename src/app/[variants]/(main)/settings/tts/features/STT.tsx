@@ -32,6 +32,7 @@ const STT = memo(() => {
         children: <Switch />,
         desc: t('settingTTS.sttAutoStop.desc'),
         label: t('settingTTS.sttAutoStop.title'),
+        layout: 'horizontal',
         minWidth: undefined,
         name: [TTS_SETTING_KEY, 'sttAutoStop'],
         valuePropName: 'checked',

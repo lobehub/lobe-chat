@@ -59,6 +59,7 @@ const AgentPlugin = memo(() => {
           <PluginTag author={author} type={type} />
         </Flexbox>
       ),
+      layout: 'horizontal',
       minWidth: undefined,
     };
   });
@@ -84,6 +85,7 @@ const AgentPlugin = memo(() => {
           <Tag color={'red'}>{t('plugin.installStatus.deprecated')}</Tag>
         </Flexbox>
       ),
+      layout: 'horizontal',
       minWidth: undefined,
       tag: id,
     }));

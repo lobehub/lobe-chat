@@ -35,6 +35,7 @@ const ShareText = memo(() => {
     {
       children: <Switch />,
       label: t('shareModal.withSystemRole'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'withSystemRole',
       valuePropName: 'checked',
@@ -42,6 +43,7 @@ const ShareText = memo(() => {
     {
       children: <Switch />,
       label: t('shareModal.withRole'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'withRole',
       valuePropName: 'checked',
@@ -49,6 +51,7 @@ const ShareText = memo(() => {
     {
       children: <Switch />,
       label: t('shareModal.includeUser'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'includeUser',
       valuePropName: 'checked',
@@ -56,6 +59,7 @@ const ShareText = memo(() => {
     {
       children: <Switch />,
       label: t('shareModal.includeTool'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'includeTool',
       valuePropName: 'checked',

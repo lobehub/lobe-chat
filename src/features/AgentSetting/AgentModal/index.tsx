@@ -60,6 +60,7 @@ const AgentModal = memo(() => {
       {
         children: <Switch />,
         label: t('settingModel.enableMaxTokens.title'),
+        layout: 'horizontal',
         minWidth: undefined,
         name: ['chatConfig', 'enableMaxTokens'],
         valuePropName: 'checked',
@@ -76,6 +77,7 @@ const AgentModal = memo(() => {
       {
         children: <Switch />,
         label: t('settingModel.enableReasoningEffort.title'),
+        layout: 'horizontal',
         minWidth: undefined,
         name: ['chatConfig', 'enableReasoningEffort'],
         valuePropName: 'checked',

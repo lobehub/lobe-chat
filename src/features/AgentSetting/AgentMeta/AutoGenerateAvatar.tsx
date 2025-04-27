@@ -29,6 +29,7 @@ const AutoGenerateAvatar = memo<AutoGenerateAvatarProps>(
     return (
       <Flexbox
         align={'center'}
+        flex={'none'}
         gap={2}
         horizontal
         padding={2}
@@ -37,6 +38,7 @@ const AutoGenerateAvatar = memo<AutoGenerateAvatarProps>(
           border: `1px solid ${theme.colorBorderSecondary}`,
           borderRadius: 32,
           paddingRight: 8,
+          width: 'fit-content',
         }}
       >
         <EmojiPicker

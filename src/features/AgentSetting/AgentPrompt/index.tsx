@@ -2,27 +2,22 @@
 
 import { Button, Form } from '@lobehub/ui';
 import { EditableMessage } from '@lobehub/ui/chat';
-import { Skeleton } from 'antd';
 import { PenLineIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import Tokens from '@/features/AgentSetting/AgentPrompt/TokenTag';
+import { useServerConfigStore } from '@/store/serverConfig';
 
 import { useStore } from '../store';
 
 const AgentPrompt = memo(() => {
   const { t } = useTranslation('setting');
-
+  const isMobile = useServerConfigStore((s) => s.isMobile);
   const [editing, setEditing] = useState(false);
-  const [loading, systemRole, updateConfig] = useStore((s) => [
-    s.loading,
-    s.config.systemRole,
-    s.setAgentConfig,
-  ]);
-
-  if (loading) return <Skeleton active title={false} />;
+  const [systemRole, updateConfig] = useStore((s) => [s.config.systemRole, s.setAgentConfig]);
 
   const editButton = !editing && !!systemRole && (
     <Button
@@ -47,7 +42,7 @@ const AgentPrompt = memo(() => {
       items={[
         {
           children: (
-            <>
+            <Flexbox paddingBlock={isMobile ? 16 : 0}>
               <EditableMessage
                 editing={editing}
                 height={'auto'}
@@ -68,7 +63,7 @@ const AgentPrompt = memo(() => {
                 variant={'borderless'}
               />
               {!editing && !!systemRole && <Tokens value={systemRole} />}
-            </>
+            </Flexbox>
           ),
           extra: editButton,
           title: t('settingAgent.prompt.title'),

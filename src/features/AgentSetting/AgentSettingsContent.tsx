@@ -1,5 +1,4 @@
-import { Skeleton } from 'antd';
-import { memo } from 'react';
+import { ReactNode, memo } from 'react';
 
 import { useStore } from '@/features/AgentSetting/store';
 import { ChatSettingsTabs } from '@/store/global/initialState';
@@ -14,14 +13,13 @@ import AgentPrompt from './AgentPrompt';
 import AgentTTS from './AgentTTS';
 
 export interface AgentSettingsContentProps {
+  loadingSkeleton: ReactNode;
   tab: ChatSettingsTabs;
 }
 
-const AgentSettingsContent = memo<AgentSettingsContentProps>(({ tab }) => {
+const AgentSettingsContent = memo<AgentSettingsContentProps>(({ tab, loadingSkeleton }) => {
   const loading = useStore((s) => s.loading);
   const { enablePlugins } = useServerConfigStore(featureFlagsSelectors);
-
-  const loadingSkeleton = <Skeleton active paragraph={{ rows: 6 }} title={false} />;
 
   if (loading) return loadingSkeleton;
 

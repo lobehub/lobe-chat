@@ -47,6 +47,7 @@ const AgentTTS = memo(() => {
         desc: t('settingTTS.showAllLocaleVoice.desc'),
         hidden: config.ttsService === 'openai',
         label: t('settingTTS.showAllLocaleVoice.title'),
+        layout: 'horizontal',
         minWidth: undefined,
         name: [TTS_SETTING_KEY, 'showAllLocaleVoice'],
         valuePropName: 'checked',

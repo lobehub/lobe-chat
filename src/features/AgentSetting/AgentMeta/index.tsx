@@ -85,6 +85,7 @@ const AgentMeta = memo(() => {
           />
         ),
         label: t('settingAgent.avatar.title'),
+        layout: 'horizontal',
         minWidth: undefined,
         name: 'avatar',
       },

@@ -41,6 +41,7 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
     {
       children: <Switch />,
       label: t('shareModal.withSystemRole'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'withSystemRole',
       valuePropName: 'checked',
@@ -48,6 +49,7 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
     {
       children: <Switch />,
       label: t('shareModal.withBackground'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'withBackground',
       valuePropName: 'checked',
@@ -55,6 +57,7 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
     {
       children: <Switch />,
       label: t('shareModal.withFooter'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'withFooter',
       valuePropName: 'checked',

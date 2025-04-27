@@ -61,6 +61,7 @@ const AgentChat = memo(() => {
         children: <Switch />,
         desc: t('settingChat.enableAutoCreateTopic.desc'),
         label: t('settingChat.enableAutoCreateTopic.title'),
+        layout: 'horizontal',
         minWidth: undefined,
         name: 'enableAutoCreateTopic',
         valuePropName: 'checked',
@@ -76,6 +77,7 @@ const AgentChat = memo(() => {
       {
         children: <Switch />,
         label: t('settingChat.enableHistoryCount.title'),
+        layout: 'horizontal',
         minWidth: undefined,
         name: 'enableHistoryCount',
         valuePropName: 'checked',
@@ -92,6 +94,7 @@ const AgentChat = memo(() => {
         children: <Switch />,
         hidden: !config.enableHistoryCount,
         label: t('settingChat.enableCompressHistory.title'),
+        layout: 'horizontal',
         minWidth: undefined,
         name: 'enableCompressHistory',
         valuePropName: 'checked',

@@ -9,6 +9,7 @@ import { rgba } from 'polished';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { MOBILE_TABBAR_HEIGHT } from '@/const/layoutTokens';
 import { useActiveTabKey } from '@/hooks/useActiveTabKey';
 import { SidebarTabKey } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -72,7 +73,14 @@ const NavBar = memo(() => {
     [t],
   );
 
-  return <TabBar activeKey={activeKey} className={styles.container} items={items} />;
+  return (
+    <TabBar
+      activeKey={activeKey}
+      className={styles.container}
+      height={MOBILE_TABBAR_HEIGHT}
+      items={items}
+    />
+  );
 });
 
 NavBar.displayName = 'NavBar';
