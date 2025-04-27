@@ -1,0 +1,32 @@
+{
+  "actions": {
+    "add": "Toevoegen",
+    "back": "Terug",
+    "cancel": "Annuleren",
+    "close": "Sluiten",
+    "confirm": "Bevestigen",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "more": "Meer",
+    "next": "Volgende stap",
+    "ok": "OK",
+    "previous": "Vorige stap",
+    "refresh": "Vernieuwen",
+    "remove": "Verwijderen",
+    "retry": "Opnieuw proberen",
+    "save": "Opslaan",
+    "search": "Zoeken",
+    "submit": "Indienen"
+  },
+  "app": {
+    "description": "Jouw AI-assistent samenwerkingsplatform",
+    "name": "LobeHub"
+  },
+  "status": {
+    "error": "Fout",
+    "info": "Informatie",
+    "loading": "Laden",
+    "success": "Succes",
+    "warning": "Waarschuwing"
+  }
+}
