@@ -134,7 +134,7 @@ jobs:
       # 非 macOS 平台构建处理
       - name: Build artifact on other platforms
         if: runner.os != 'macOS'
-        run: npm run desktop:build -- --publish never
+        run: npm run desktop:build
         env:
           UPDATE_CHANNEL: 'stable'
           APP_URL: http://localhost:3015
