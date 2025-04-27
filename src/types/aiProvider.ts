@@ -19,9 +19,6 @@ export const AiProviderSDKEnum = {
   AzureAI: 'azureai',
   Bedrock: 'bedrock',
   Cloudflare: 'cloudflare',
-  /**
-   * @deprecated
-   */
   Google: 'google',
   Huggingface: 'huggingface',
   Ollama: 'ollama',
