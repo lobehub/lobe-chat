@@ -2,6 +2,48 @@
 
 # Changelog
 
+### [Version 1.83.1](https://github.com/lobehub/lobe-chat/compare/v1.83.0...v1.83.1)
+
+<sup>Released on **2025-04-27**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.83.0](https://github.com/lobehub/lobe-chat/compare/v1.82.10...v1.83.0)
+
+<sup>Released on **2025-04-27**</sup>
+
+#### ✨ Features
+
+- **misc**: Support desktop release framework and workflow.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support desktop release framework and workflow, closes [#6474](https://github.com/lobehub/lobe-chat/issues/6474) ([ed97363](https://github.com/lobehub/lobe-chat/commit/ed97363))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.82.10](https://github.com/lobehub/lobe-chat/compare/v1.82.9...v1.82.10)
 
 <sup>Released on **2025-04-26**</sup>

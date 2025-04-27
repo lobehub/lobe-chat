@@ -1,5 +1,17 @@
 [
   {
+    "children": {},
+    "date": "2025-04-27",
+    "version": "1.83.1"
+  },
+  {
+    "children": {
+      "features": ["Support desktop release framework and workflow."]
+    },
+    "date": "2025-04-27",
+    "version": "1.83.0"
+  },
+  {
     "children": {
       "improvements": ["Support ernie-x1 & ernie-4.5 series from Wenxin."]
     },
