@@ -119,6 +119,16 @@
       "outputText": "텍스트 출력",
       "outputTitle": "출력 세부사항",
       "reasoning": "심층 사고",
+      "speed": {
+        "tps": {
+          "title": "TPS",
+          "tooltip": "초당 토큰 수(TPS). AI가 생성한 콘텐츠의 평균 속도(토큰/초)를 나타내며, 첫 번째 토큰을 수신한 후부터 계산됩니다."
+        },
+        "ttft": {
+          "title": "TTFT",
+          "tooltip": "첫 번째 토큰까지의 시간(Time To First Token, TTFT). 메시지를 전송한 시점부터 클라이언트가 첫 번째 토큰을 수신할 때까지의 시간 간격을 나타냅니다."
+        }
+      },
       "title": "생성 세부사항",
       "total": "총 소모"
     }

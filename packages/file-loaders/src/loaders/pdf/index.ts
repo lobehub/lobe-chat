@@ -11,8 +11,6 @@ export class PdfLoader implements FileLoaderInterface {
   private pdfInstance: PDFDocumentProxy | null = null;
 
   private async getPDFFile(filePath: string) {
-    if (!!this.pdfInstance) return this.pdfInstance;
-
     const dataBuffer = await readFile(filePath);
 
     const loadingTask = pdfjsLib.getDocument({
@@ -22,11 +20,7 @@ export class PdfLoader implements FileLoaderInterface {
       worker: undefined, // Attempt to use system fonts
     });
 
-    const pdf: PDFDocumentProxy = await loadingTask.promise;
-
-    this.pdfInstance = pdf;
-
-    return pdf;
+    return await loadingTask.promise;
   }
 
   async loadPages(filePath: string): Promise<DocumentPage[]> {

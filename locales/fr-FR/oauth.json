@@ -33,6 +33,22 @@
     "subTitle": "Vous avez refusé d'autoriser l'application à accéder à votre compte LobeChat",
     "title": "Autorisation refusée"
   },
+  "handoff": {
+    "desc": {
+      "processing": "L'application est en train de traiter l'autorisation, vous serez redirigé vers la prochaine page...",
+      "success": "Une tentative d'ouverture de l'application de bureau a été effectuée. Si l'application ne s'ouvre pas automatiquement, veuillez changer manuellement. Vous pouvez fermer cette fenêtre de navigateur plus tard."
+    },
+    "title": {
+      "processing": "Traitement de l'autorisation...",
+      "success": "Autorisation terminée"
+    }
+  },
+  "login": {
+    "button": "Confirmer la connexion",
+    "description": "L'application {{clientName}} demande à utiliser votre compte pour se connecter",
+    "title": "Connexion à {{clientName}}",
+    "userWelcome": "Bienvenue de nouveau, "
+  },
   "success": {
     "subTitle": "Vous avez réussi à autoriser l'application à accéder à votre compte LobeChat, vous pouvez fermer cette page",
     "title": "Autorisation réussie"

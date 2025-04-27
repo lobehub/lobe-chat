@@ -119,6 +119,16 @@
       "outputText": "Output testo",
       "outputTitle": "Dettagli output",
       "reasoning": "Ragionamento profondo",
+      "speed": {
+        "tps": {
+          "title": "TPS",
+          "tooltip": "Token Per Second, TPS. Indica la velocità media di generazione dei contenuti da parte dell'AI (Token/secondo), calcolata a partire dalla ricezione del primo Token."
+        },
+        "ttft": {
+          "title": "TTFT",
+          "tooltip": "Time To First Token, TTFT. Indica l'intervallo di tempo che intercorre tra l'invio del messaggio e la ricezione del primo Token da parte del client."
+        }
+      },
       "title": "Dettagli generati",
       "total": "Totale consumato"
     }

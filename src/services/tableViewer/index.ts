@@ -1,3 +1,6 @@
-import { ClientService } from './client';
+import { isDesktop } from '@/const/version';
 
-export const tableViewerService = new ClientService();
+import { ClientService } from './client';
+import { DesktopService } from './desktop';
+
+export const tableViewerService = isDesktop ? new DesktopService() : new ClientService();

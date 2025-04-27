@@ -113,6 +113,18 @@ export async function POST(request: NextRequest) {
     const internalRedirectUrlString = await oidcService.getInteractionResult(uid, result);
     log('OIDC Provider internal redirect URL string: %s', internalRedirectUrlString);
 
+    // // Construct the handoff URL
+    // const handoffUrl = new URL('/oauth/handoff', request.nextUrl.origin);
+    // // Set the original redirect URL as the 'target' query parameter (URL encoded)
+    // handoffUrl.searchParams.set('target', internalRedirectUrlString);
+    //
+    // log('Redirecting to handoff page: %s', handoffUrl.toString());
+    // // Redirect to the handoff page
+    // return NextResponse.redirect(handoffUrl.toString(), {
+    //   headers: request.headers, // Keep original headers if necessary
+    //   status: 303,
+    // });
+
     return NextResponse.redirect(internalRedirectUrlString, {
       headers: request.headers,
       status: 303,

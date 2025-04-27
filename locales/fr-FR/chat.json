@@ -119,6 +119,16 @@
       "outputText": "Sortie texte",
       "outputTitle": "Détails de la sortie",
       "reasoning": "Raisonnement approfondi",
+      "speed": {
+        "tps": {
+          "title": "TPS",
+          "tooltip": "Tokens Par Seconde, TPS. Indique la vitesse moyenne de génération de contenu par l'IA (Token/seconde), calculée à partir de la réception du premier Token."
+        },
+        "ttft": {
+          "title": "TTFT",
+          "tooltip": "Temps Jusqu'au Premier Token, TTFT. Indique l'intervalle de temps entre l'envoi de votre message et la réception du premier Token par le client."
+        }
+      },
       "title": "Détails de génération",
       "total": "Total consommé"
     }

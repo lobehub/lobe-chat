@@ -46,6 +46,9 @@ const useStyles = createStyles(({ css, token, cx }) => ({
   header: css`
     cursor: pointer;
   `,
+  lineCount: css`
+    color: ${token.colorTextQuaternary};
+  `,
   meta: css`
     font-size: 12px;
     color: ${token.colorTextTertiary};
@@ -70,7 +73,6 @@ const useStyles = createStyles(({ css, token, cx }) => ({
     background: ${token.colorFillQuaternary};
   `,
   previewText: css`
-    font-family: ${token.fontFamilyCode};
     font-size: 12px;
     line-height: 1.6;
     word-break: break-all;
@@ -84,14 +86,7 @@ interface ReadFileViewProps extends LocalReadFileResult {
 }
 
 const ReadFileView = memo<ReadFileViewProps>(
-  ({
-    filename,
-    path,
-    fileType,
-    charCount,
-    lineCount, // Assuming the 250 is total lines?
-    content, // The actual content preview
-  }) => {
+  ({ filename, path, fileType, charCount, content, totalLineCount, totalCharCount, loc }) => {
     const { t } = useTranslation('tool');
     const { styles } = useStyles();
     const [isExpanded, setIsExpanded] = useState(false);
@@ -115,6 +110,7 @@ const ReadFileView = memo<ReadFileViewProps>(
         <Flexbox
           align={'center'}
           className={styles.header}
+          gap={12}
           horizontal
           justify={'space-between'}
           onClick={handleToggleExpand}
@@ -126,7 +122,7 @@ const ReadFileView = memo<ReadFileViewProps>(
                 {filename}
               </Typography.Text>
               {/* Actions on Hover */}
-              <Flexbox className={styles.actions} gap={8} horizontal style={{ marginLeft: 8 }}>
+              <Flexbox className={styles.actions} gap={2} horizontal style={{ marginLeft: 8 }}>
                 <ActionIcon
                   icon={ExternalLink}
                   onClick={handleOpenFile}
@@ -143,16 +139,26 @@ const ReadFileView = memo<ReadFileViewProps>(
             </Flexbox>
           </Flexbox>
           <Flexbox align={'center'} className={styles.meta} gap={8} horizontal>
-            <Flexbox align={'center'} gap={4} horizontal>
-              <Icon icon={Asterisk} size={'small'} />
-              <span>{charCount}</span>
-            </Flexbox>
+            {isExpanded && (
+              <Flexbox align={'center'} gap={4} horizontal>
+                <Icon icon={Asterisk} size={'small'} />
+                <span>
+                  {charCount} / <span className={styles.lineCount}>{totalCharCount}</span>
+                </span>
+              </Flexbox>
+            )}
             <Flexbox align={'center'} gap={4} horizontal>
               <Icon icon={AlignLeft} size={'small'} />
-              <span>
-                {content?.split('\n').length || 0} / {lineCount}
-              </span>
-              {/* Display preview lines / total lines */}
+              {isExpanded ? (
+                <span>
+                  L{loc?.[0]}-{loc?.[1]} /{' '}
+                  <span className={styles.lineCount}>{totalLineCount}</span>
+                </span>
+              ) : (
+                <span>
+                  L{loc?.[0]}-{loc?.[1]}
+                </span>
+              )}
             </Flexbox>
             <ActionIcon
               active={isExpanded}
@@ -160,7 +166,6 @@ const ReadFileView = memo<ReadFileViewProps>(
               onClick={handleToggleExpand}
               size="small"
               style={{
-                marginLeft: 8,
                 transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
                 transition: 'transform 0.2s',
               }}
@@ -173,19 +178,14 @@ const ReadFileView = memo<ReadFileViewProps>(
           {path}
         </Typography.Text>
 
-        {/* Content Preview (Collapsible) */}
         {isExpanded && (
-          <Flexbox className={styles.previewBox}>
+          <Flexbox className={styles.previewBox} style={{ maxHeight: 240, overflow: 'auto' }}>
             {fileType === 'md' ? (
-              <Markdown style={{ maxHeight: 240, overflow: 'auto' }}>{content}</Markdown>
+              <Markdown>{content}</Markdown>
             ) : (
-              <Typography.Paragraph
-                className={styles.previewText}
-                ellipsis={{ expandable: true, rows: 10, symbol: t('localFiles.read.more') }}
-                style={{ maxHeight: 240, overflow: 'auto' }}
-              >
+              <div className={styles.previewText} style={{ width: '100%' }}>
                 {content}
-              </Typography.Paragraph>
+              </div>
             )}
           </Flexbox>
         )}

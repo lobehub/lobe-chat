@@ -1,0 +1,72 @@
+{
+  "name": "lobehub-desktop-dev",
+  "version": "0.0.10",
+  "description": "LobeHub Desktop Application",
+  "homepage": "https://lobehub.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lobehub/lobe-chat.git"
+  },
+  "author": "LobeHub",
+  "main": "./dist/main/index.js",
+  "scripts": {
+    "build": "npm run typecheck && electron-vite build",
+    "build-local": "npm run build && electron-builder --dir --config electron-builder.js  --c.mac.notarize=false -c.mac.identity=null --c.asar=false",
+    "build:linux": "npm run build && electron-builder --linux --config electron-builder.js  --publish never",
+    "build:mac": "npm run build && electron-builder --mac --config electron-builder.js  --publish never",
+    "build:win": "npm run build && electron-builder --win --config electron-builder.js  --publish never",
+    "electron:dev": "electron-vite dev",
+    "electron:run-unpack": "electron .",
+    "format": "prettier --write ",
+    "i18n": "bun run scripts/i18nWorkflow/index.ts && lobe-i18n",
+    "postinstall": "electron-builder install-app-deps",
+    "install-isolated": "pnpm install",
+    "lint": "eslint --cache ",
+    "pg-server": "bun run scripts/pglite-server.ts",
+    "start": "electron-vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "electron-updater": "^6.6.2",
+    "get-port-please": "^3.1.2",
+    "pdfjs-dist": "4.8.69"
+  },
+  "devDependencies": {
+    "@electron-toolkit/eslint-config-prettier": "^3.0.0",
+    "@electron-toolkit/eslint-config-ts": "^3.0.0",
+    "@electron-toolkit/preload": "^3.0.1",
+    "@electron-toolkit/tsconfig": "^1.0.1",
+    "@electron-toolkit/utils": "^4.0.0",
+    "@lobechat/electron-client-ipc": "workspace:*",
+    "@lobechat/electron-server-ipc": "workspace:*",
+    "@lobechat/file-loaders": "workspace:*",
+    "@lobehub/i18n-cli": "^1.20.3",
+    "@types/lodash": "^4.17.0",
+    "@types/resolve": "^1.20.6",
+    "@types/semver": "^7.7.0",
+    "@types/set-cookie-parser": "^2.4.10",
+    "consola": "^3.1.0",
+    "cookie": "^1.0.2",
+    "electron": "^35.2.0",
+    "electron-builder": "^26.0.12",
+    "electron-is": "^3.0.0",
+    "electron-log": "^5.3.3",
+    "electron-store": "^8.2.0",
+    "electron-vite": "^3.0.0",
+    "execa": "^9.5.2",
+    "just-diff": "^6.0.2",
+    "lodash": "^4.17.21",
+    "pglite-server": "^0.1.4",
+    "resolve": "^1.22.8",
+    "semver": "^7.5.4",
+    "set-cookie-parser": "^2.7.1",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3",
+    "vite": "^6.2.5"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron"
+    ]
+  }
+}
