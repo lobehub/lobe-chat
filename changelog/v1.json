@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix desktop cloud sync issue."]
+    },
+    "date": "2025-04-27",
+    "version": "1.83.6"
+  },
+  {
+    "children": {
       "fixes": ["Fix desktop beta redirect uris."]
     },
     "date": "2025-04-27",
