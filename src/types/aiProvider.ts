@@ -22,7 +22,6 @@ export const AiProviderSDKEnum = {
   /**
    * @deprecated
    */
-  Doubao: 'doubao',
   Google: 'google',
   Huggingface: 'huggingface',
   Ollama: 'ollama',

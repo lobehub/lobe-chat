@@ -35,7 +35,6 @@ export enum ModelProvider {
   /**
    * @deprecated
    */
-  Doubao = 'doubao',
   FireworksAI = 'fireworksai',
   GiteeAI = 'giteeai',
   Github = 'github',
