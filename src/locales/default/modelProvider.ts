@@ -342,4 +342,8 @@ export default {
   zhipu: {
     title: '智谱',
   },
+  pollinations: {
+    description: 'Pollinations.AI 提供免费的、无需注册的 AI 图像和文本生成 API，无需 API 密钥即可使用。',
+    title: 'Pollinations.AI',
+  },
 };
