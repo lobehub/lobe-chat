@@ -190,9 +190,6 @@ export const searchSlice: StateCreator<
 
     await get().internal_updateMessageContent(id, JSON.stringify(searchContent));
 
-    // 如果没搜索到结果，那么不触发 ai 总结
-    if (searchContent.length === 0) return;
-
     // 如果 aiSummary 为 true，则会自动触发总结
     return aiSummary;
   },
