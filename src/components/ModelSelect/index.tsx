@@ -21,6 +21,8 @@ import { AiProviderSourceType } from '@/types/aiProvider';
 import { ChatModelCard } from '@/types/llm';
 import { formatTokenNumber } from '@/utils/format';
 
+export const TAG_CLASSNAME = 'lobe-model-info-tags';
+
 const useStyles = createStyles(({ css, token }) => ({
   tag: css`
     cursor: default;
@@ -60,6 +62,7 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
 
     return (
       <Flexbox
+        className={TAG_CLASSNAME}
         direction={directionReverse ? 'horizontal-reverse' : 'horizontal'}
         gap={4}
         width={'fit-content'}
@@ -165,10 +168,16 @@ interface ModelItemRenderProps extends ChatModelCard {
 
 export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true, ...model }) => {
   return (
-    <Flexbox align={'center'} gap={32} horizontal justify={'space-between'}>
-      <Flexbox align={'center'} gap={8} horizontal>
+    <Flexbox
+      align={'center'}
+      gap={32}
+      horizontal
+      justify={'space-between'}
+      style={{ overflow: 'hidden', position: 'relative' }}
+    >
+      <Flexbox align={'center'} gap={8} horizontal style={{ overflow: 'hidden' }}>
         <ModelIcon model={model.id} size={20} />
-        <Typography.Text ellipsis={false}>{model.displayName || model.id}</Typography.Text>
+        <Typography.Text ellipsis>{model.displayName || model.id}</Typography.Text>
       </Flexbox>
       {showInfoTag && <ModelInfoTags {...model} />}
     </Flexbox>
