@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "fixes": ["Fix cloud connection issue."]
+    },
+    "date": "2025-04-27",
+    "version": "1.83.4"
+  },
+  {
     "children": {},
     "date": "2025-04-27",
     "version": "1.83.3"
