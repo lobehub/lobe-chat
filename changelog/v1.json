@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Fix doubao-1-5-thinking-pro-vision endpoint calling."]
+    },
+    "date": "2025-04-27",
+    "version": "1.83.7"
+  },
+  {
+    "children": {
       "fixes": ["Fix desktop cloud sync issue."]
     },
     "date": "2025-04-27",
