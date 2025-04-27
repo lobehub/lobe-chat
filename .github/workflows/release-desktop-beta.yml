@@ -185,10 +185,10 @@ jobs:
         with:
           tag_name: ${{ github.event.release.tag_name }}
           files: |
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/latest*
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.dmg*
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.zip*
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.exe*
-            ${{ needs.prepare-artifacts.outputs.artifact_path }}/*.AppImage
+            release/latest*
+            release/*.dmg*
+            release/*.zip*
+            release/*.exe*
+            release/*.AppImage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
