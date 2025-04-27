@@ -1671,10 +1671,7 @@
     "description": "o3 是一款全能强大的模型，在多个领域表现出色。它为数学、科学、编程和视觉推理任务树立了新标杆。它也擅长技术写作和指令遵循。用户可利用它分析文本、代码和图像，解决多步骤的复杂问题。"
   },
   "o3-mini": {
-    "description": "o3-mini 在与 o1-mini 相同的成本和延迟目标下提供高智能。"
-  },
-  "o3-mini-high": {
-    "description": "o3-mini 高推理等级版，在与 o1-mini 相同的成本和延迟目标下提供高智能。"
+    "description": "o3-mini 是我们最新的小型推理模型，在与 o1-mini 相同的成本和延迟目标下提供高智能。"
   },
   "o4-mini": {
     "description": "o4-mini 是我们最新的小型 o 系列模型。 它专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。"
@@ -1694,6 +1691,15 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B是一个稀疏专家模型，利用多个参数提高推理速度，适合处理多语言和代码生成任务。"
   },
+  "openai/gpt-4.1": {
+    "description": "GPT-4.1 是我们用于复杂任务的旗舰模型。它非常适合跨领域解决问题。"
+  },
+  "openai/gpt-4.1-mini": {
+    "description": "GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。"
+  },
+  "openai/gpt-4.1-nano": {
+    "description": "GPT-4.1 nano 是最快，最具成本效益的GPT-4.1模型。"
+  },
   "openai/gpt-4o": {
     "description": "ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。"
   },
@@ -1705,6 +1711,15 @@
   },
   "openai/o1-preview": {
     "description": "o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。"
+  },
+  "openai/o3": {
+    "description": "o3 是一款全能强大的模型，在多个领域表现出色。它为数学、科学、编程和视觉推理任务树立了新标杆。它也擅长技术写作和指令遵循。用户可利用它分析文本、代码和图像，解决多步骤的复杂问题。"
+  },
+  "openai/o3-mini": {
+    "description": "o3-mini 在与 o1-mini 相同的成本和延迟目标下提供高智能。"
+  },
+  "openai/o3-mini-high": {
+    "description": "o3-mini 高推理等级版，在与 o1-mini 相同的成本和延迟目标下提供高智能。"
   },
   "openai/o4-mini": {
     "description": "o4-mini 专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。"
