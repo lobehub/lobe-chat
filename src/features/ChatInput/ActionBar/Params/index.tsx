@@ -22,7 +22,7 @@ const Params = memo(() => {
     >
       <ActionIcon
         icon={SlidersHorizontal}
-        title={popoverOpen ? undefined : t('settingModel.params.title')}
+        title={t('settingModel.params.title')}
         tooltipProps={{
           placement: 'bottom',
         }}
