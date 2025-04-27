@@ -118,7 +118,7 @@ export default class AuthCtr extends ControllerModule {
       const config = await this.remoteServerConfigCtr.getRemoteServerConfig();
       logger.debug(`Getting remote server configuration: url=${config.remoteServerUrl}`);
 
-      if (!config.remoteServerUrl) {
+      if (config.storageMode === 'selfHost' && !config.remoteServerUrl) {
         logger.error('Server URL not configured');
         throw new Error('No server URL configured');
       }
