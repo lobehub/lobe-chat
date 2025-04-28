@@ -60,6 +60,7 @@ const Common = memo(() => {
         ),
         desc: t('danger.reset.desc'),
         label: t('danger.reset.title'),
+        layout: 'horizontal',
         minWidth: undefined,
       },
     ],

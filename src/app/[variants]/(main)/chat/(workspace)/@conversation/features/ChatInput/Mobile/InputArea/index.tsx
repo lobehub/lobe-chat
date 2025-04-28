@@ -27,8 +27,9 @@ const useStyles = createStyles(({ css, token }) => {
       position: absolute;
       inset-inline-start: 14px;
     `,
-    expandTextArea: css`
+    textarea: css`
       flex: 1;
+      transition: none !important;
     `,
   };
 });
@@ -114,7 +115,7 @@ const MobileChatInputArea = forwardRef<TextAreaRef, MobileChatInputAreaProps>(
           >
             <TextArea
               autoSize={expand ? false : { maxRows: 6, minRows: 0 }}
-              className={cx(expand && styles.expandTextArea)}
+              className={styles.textarea}
               onBlur={(e) => {
                 onInput?.(e.target.value);
                 setIsFocused(false);
