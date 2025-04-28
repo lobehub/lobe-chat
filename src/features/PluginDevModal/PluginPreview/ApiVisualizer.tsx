@@ -5,6 +5,7 @@ import { Input, Space, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -92,6 +93,7 @@ interface ApiItemProps {
 const ApiItem = memo<ApiItemProps>(({ api }) => {
   const { styles, theme } = useStyles();
   const [expanded, setExpanded] = useState(false);
+  const { t } = useTranslation('plugin');
 
   const params = Object.entries(api.parameters.properties || {});
   return (
@@ -112,10 +114,10 @@ const ApiItem = memo<ApiItemProps>(({ api }) => {
           style={{ background: theme.colorFillQuaternary, borderRadius: 6 }}
         >
           {params.length === 0 ? (
-            <div className={styles.params}>this tool have no parameters</div>
+            <div className={styles.params}>{t('dev.preview.api.noParams')}</div>
           ) : (
             <>
-              <div className={styles.params}>Parameters:</div>
+              <div className={styles.params}>{t('dev.preview.api.params')}</div>
               <Space direction="vertical" style={{ width: '100%' }}>
                 {params.map(([name, param]) => {
                   const isRequired = api.parameters.required?.includes(name);
@@ -146,6 +148,7 @@ interface ApiVisualizerProps {
 const ApiVisualizer = memo<ApiVisualizerProps>(({ apis = [] }) => {
   const { styles } = useStyles();
   const [searchQuery, setSearchQuery] = useState('');
+  const { t } = useTranslation('plugin');
 
   const filteredApis = apis.filter(
     (api) =>
@@ -158,7 +161,7 @@ const ApiVisualizer = memo<ApiVisualizerProps>(({ apis = [] }) => {
       <div className={styles.searchWrapper}>
         <Input.Search
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search Tools..."
+          placeholder={t('dev.preview.api.searchPlaceholder')}
           value={searchQuery}
         />
       </div>
@@ -167,7 +170,7 @@ const ApiVisualizer = memo<ApiVisualizerProps>(({ apis = [] }) => {
         {filteredApis.length > 0 ? (
           filteredApis.map((api, index) => <ApiItem api={api} key={index} />)
         ) : (
-          <div className={styles.emptyState}>No APIs found matching your search criteria</div>
+          <div className={styles.emptyState}>{t('dev.preview.api.noResults')}</div>
         )}
       </Space>
     </Flexbox>

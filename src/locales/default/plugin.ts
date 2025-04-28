@@ -156,8 +156,18 @@ export default {
       schema: 'Schema',
     },
     preview: {
+      api: {
+        noParams: '该工具没有参数',
+        noResults: '未找到符合搜索条件的 API',
+        params: '参数:',
+        searchPlaceholder: '搜索工具...',
+      },
       card: '预览插件展示效果',
       desc: '预览插件描述',
+      empty: {
+        desc: '完成配置后，将能够在此处预览插件支持的工具能力',
+        title: '配置插件后开始预览',
+      },
       title: '插件名称预览',
     },
     save: '安装插件',

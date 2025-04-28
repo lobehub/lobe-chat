@@ -1,4 +1,5 @@
 {
+  "confirm": "確定",
   "debug": {
     "arguments": "參數",
     "function_call": "函式呼叫",
@@ -80,6 +81,13 @@
         "required": "請輸入 MCP 服務標識符"
       },
       "previewManifest": "預覽插件描述文件",
+      "quickImport": "快速匯入 JSON 配置",
+      "quickImportError": {
+        "empty": "輸入內容不能為空",
+        "invalidJson": "無效的 JSON 格式",
+        "invalidStructure": "JSON 格式無效"
+      },
+      "stdioNotSupported": "當前環境不支持 stdio 類型的 MCP 插件",
       "testConnection": "測試連接",
       "testConnectionTip": "測試連接成功後 MCP 插件才可以被正常使用",
       "type": {
@@ -147,8 +155,18 @@
       "schema": "Schema"
     },
     "preview": {
+      "api": {
+        "noParams": "該工具沒有參數",
+        "noResults": "未找到符合搜索條件的 API",
+        "params": "參數：",
+        "searchPlaceholder": "搜索工具..."
+      },
       "card": "外掛顯示預覽",
       "desc": "外掛描述預覽",
+      "empty": {
+        "desc": "完成配置後，將能夠在此處預覽插件支持的工具能力",
+        "title": "配置插件後開始預覽"
+      },
       "title": "外掛名稱預覽"
     },
     "save": "安裝插件",

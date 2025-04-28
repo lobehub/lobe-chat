@@ -1,4 +1,5 @@
 {
+  "confirm": "확인",
   "debug": {
     "arguments": "함수 호출 인수",
     "function_call": "함수 호출",
@@ -80,6 +81,13 @@
         "required": "MCP 서비스 식별자를 입력하세요"
       },
       "previewManifest": "플러그인 설명 파일 미리보기",
+      "quickImport": "JSON 구성 빠른 가져오기",
+      "quickImportError": {
+        "empty": "입력 내용이 비어 있을 수 없습니다",
+        "invalidJson": "유효하지 않은 JSON 형식입니다",
+        "invalidStructure": "JSON 형식이 유효하지 않습니다"
+      },
+      "stdioNotSupported": "현재 환경에서는 stdio 유형의 MCP 플러그인이 지원되지 않습니다",
       "testConnection": "연결 테스트",
       "testConnectionTip": "연결 테스트가 성공해야 MCP 플러그인을 정상적으로 사용할 수 있습니다",
       "type": {
@@ -147,8 +155,18 @@
       "schema": "스키마"
     },
     "preview": {
+      "api": {
+        "noParams": "이 도구에는 매개변수가 없습니다",
+        "noResults": "검색 조건에 맞는 API를 찾을 수 없습니다",
+        "params": "매개변수:",
+        "searchPlaceholder": "도구 검색..."
+      },
       "card": "플러그인 미리보기",
       "desc": "플러그인 설명 미리보기",
+      "empty": {
+        "desc": "구성을 완료한 후, 이곳에서 플러그인이 지원하는 도구 기능을 미리 볼 수 있습니다",
+        "title": "플러그인 구성 후 미리보기 시작"
+      },
       "title": "플러그인 이름 미리보기"
     },
     "save": "플러그인 설치",

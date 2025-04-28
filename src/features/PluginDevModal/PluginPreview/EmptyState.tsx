@@ -2,6 +2,7 @@ import { Icon } from '@lobehub/ui';
 import { Space, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { Puzzle } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const { Title, Paragraph } = Typography;
 
@@ -58,6 +59,7 @@ const useStyles = createStyles(({ token, css }) => ({
 
 export default function PluginEmptyState() {
   const { styles } = useStyles();
+  const { t } = useTranslation('plugin');
 
   return (
     <div className={styles.container}>
@@ -65,11 +67,9 @@ export default function PluginEmptyState() {
         <Icon icon={Puzzle} size={32} />
       </div>
       <Title className={styles.title} level={4}>
-        配置插件后开始预览
+        {t('dev.preview.empty.title')}
       </Title>
-      <Paragraph className={styles.description}>
-        完成配置后，将能够在此处预览插件支持的工具能力
-      </Paragraph>
+      <Paragraph className={styles.description}>{t('dev.preview.empty.desc')}</Paragraph>
       <Space align="center" direction="vertical" style={{ marginTop: 24 }}>
         <div className={styles.line} style={{ width: 128 }} />
         <div className={styles.line} style={{ width: 96 }} />
