@@ -191,14 +191,16 @@ We have implemented support for the following model service providers:
 - **[Bedrock](https://lobechat.com/discover/provider/bedrock)**: Bedrock is a service provided by Amazon AWS, focusing on delivering advanced AI language and visual models for enterprises. Its model family includes Anthropic's Claude series, Meta's Llama 3.1 series, and more, offering a range of options from lightweight to high-performance, supporting tasks such as text generation, conversation, and image processing for businesses of varying scales and needs.
 - **[Google](https://lobechat.com/discover/provider/google)**: Google's Gemini series represents its most advanced, versatile AI models, developed by Google DeepMind, designed for multimodal capabilities, supporting seamless understanding and processing of text, code, images, audio, and video. Suitable for various environments from data centers to mobile devices, it significantly enhances the efficiency and applicability of AI models.
 - **[DeepSeek](https://lobechat.com/discover/provider/deepseek)**: DeepSeek is a company focused on AI technology research and application, with its latest model DeepSeek-V2.5 integrating general dialogue and code processing capabilities, achieving significant improvements in human preference alignment, writing tasks, and instruction following.
+- **[PPIO](https://lobechat.com/discover/provider/ppio)**: PPIO supports stable and cost-efficient open-source LLM APIs, such as DeepSeek, Llama, Qwen etc.
 - **[HuggingFace](https://lobechat.com/discover/provider/huggingface)**: The HuggingFace Inference API provides a fast and free way for you to explore thousands of models for various tasks. Whether you are prototyping for a new application or experimenting with the capabilities of machine learning, this API gives you instant access to high-performance models across multiple domains.
 - **[OpenRouter](https://lobechat.com/discover/provider/openrouter)**: OpenRouter is a service platform providing access to various cutting-edge large model interfaces, supporting OpenAI, Anthropic, LLaMA, and more, suitable for diverse development and application needs. Users can flexibly choose the optimal model and pricing based on their requirements, enhancing the AI experience.
 - **[Cloudflare Workers AI](https://lobechat.com/discover/provider/cloudflare)**: Run serverless GPU-powered machine learning models on Cloudflare's global network.
+
+<details><summary><kbd>See more providers (+30)</kbd></summary>
+
 - **[GitHub](https://lobechat.com/discover/provider/github)**: With GitHub Models, developers can become AI engineers and leverage the industry's leading AI models.
-
-<details><summary><kbd>See more providers (+26)</kbd></summary>
-
 - **[Novita](https://lobechat.com/discover/provider/novita)**: Novita AI is a platform providing a variety of large language models and AI image generation API services, flexible, reliable, and cost-effective. It supports the latest open-source models like Llama3 and Mistral, offering a comprehensive, user-friendly, and auto-scaling API solution for generative AI application development, suitable for the rapid growth of AI startups.
+- **[PPIO](https://lobechat.com/discover/provider/ppio)**: PPIO supports stable and cost-efficient open-source LLM APIs, such as DeepSeek, Llama, Qwen etc.
 - **[Together AI](https://lobechat.com/discover/provider/togetherai)**: Together AI is dedicated to achieving leading performance through innovative AI models, offering extensive customization capabilities, including rapid scaling support and intuitive deployment processes to meet various enterprise needs.
 - **[Fireworks AI](https://lobechat.com/discover/provider/fireworksai)**: Fireworks AI is a leading provider of advanced language model services, focusing on functional calling and multimodal processing. Its latest model, Firefunction V2, is based on Llama-3, optimized for function calling, conversation, and instruction following. The visual language model FireLLaVA-13B supports mixed input of images and text. Other notable models include the Llama series and Mixtral series, providing efficient multilingual instruction following and generation support.
 - **[Groq](https://lobechat.com/discover/provider/groq)**: Groq's LPU inference engine has excelled in the latest independent large language model (LLM) benchmarks, redefining the standards for AI solutions with its remarkable speed and efficiency. Groq represents instant inference speed, demonstrating strong performance in cloud-based deployments.
@@ -224,10 +226,12 @@ We have implemented support for the following model service providers:
 - **[Gitee AI](https://lobechat.com/discover/provider/giteeai)**: Gitee AI's Serverless API provides AI developers with an out of the box large model inference API service.
 - **[Taichu](https://lobechat.com/discover/provider/taichu)**: The Institute of Automation, Chinese Academy of Sciences, and Wuhan Artificial Intelligence Research Institute have launched a new generation of multimodal large models, supporting comprehensive question-answering tasks such as multi-turn Q\&A, text creation, image generation, 3D understanding, and signal analysis, with stronger cognitive, understanding, and creative abilities, providing a new interactive experience.
 - **[360 AI](https://lobechat.com/discover/provider/ai360)**: 360 AI is an AI model and service platform launched by 360 Company, offering various advanced natural language processing models, including 360GPT2 Pro, 360GPT Pro, 360GPT Turbo, and 360GPT Turbo Responsibility 8K. These models combine large-scale parameters and multimodal capabilities, widely applied in text generation, semantic understanding, dialogue systems, and code generation. With flexible pricing strategies, 360 AI meets diverse user needs, supports developer integration, and promotes the innovation and development of intelligent applications.
+- **[Search1API](https://lobechat.com/discover/provider/search1api)**: Search1API provides access to the DeepSeek series of models that can connect to the internet as needed, including standard and fast versions, supporting a variety of model sizes.
+- **[InfiniAI](https://lobechat.com/discover/provider/infiniai)**: Provides high-performance, easy-to-use, and secure large model services for application developers, covering the entire process from large model development to service deployment.
 
 </details>
 
-> 📊 Total providers: [<kbd>**36**</kbd>](https://lobechat.com/discover/providers)
+> 📊 Total providers: [<kbd>**40**</kbd>](https://lobechat.com/discover/providers)
 
  <!-- PROVIDER LIST -->
 
@@ -324,12 +328,12 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 
 | Recent Submits                                                                                                               | Description                                                                                                             |
 | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2025-03-23**</sup>        | Analyze stocks and get comprehensive real-time investment data and analytics.<br/>`stock`                               |
 | [Web](https://lobechat.com/discover/plugin/web)<br/><sup>By **Proghit** on **2025-01-24**</sup>                              | Smart web search that reads and analyzes pages to deliver comprehensive answers from Google results.<br/>`web` `search` |
 | [MintbaseSearch](https://lobechat.com/discover/plugin/mintbasesearch)<br/><sup>By **mintbase** on **2024-12-31**</sup>       | Find any NFT data on the NEAR Protocol.<br/>`crypto` `nft`                                                              |
 | [Bing_websearch](https://lobechat.com/discover/plugin/Bingsearch-identifier)<br/><sup>By **FineHow** on **2024-12-22**</sup> | Search for information from the internet base BingApi<br/>`bingsearch`                                                  |
-| [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2024-12-22**</sup>        | Analyze stocks and get comprehensive real-time investment data and analytics.<br/>`stock`                               |
 
-> 📊 Total plugins: [<kbd>**48**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**45**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -363,12 +367,12 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 | Recent Submits                                                                                                                                                                                        | Description                                                                                                                                                      |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [学术论文综述专家](https://lobechat.com/discover/assistant/academic-paper-overview)<br/><sup>By **[arvinxx](https://github.com/arvinxx)** on **2025-03-11**</sup>                                     | 擅长高质量文献检索与分析的学术研究助手<br/>`学术研究` `文献检索` `数据分析` `信息提取` `咨询`                                                                    |
 | [Cron Expression Assistant](https://lobechat.com/discover/assistant/crontab-generate)<br/><sup>By **[edgesider](https://github.com/edgesider)** on **2025-02-17**</sup>                               | Crontab Expression Generator<br/>`crontab` `time-expression` `trigger-time` `generator` `technical-assistance`                                                   |
 | [Xiao Zhi French Translation Assistant](https://lobechat.com/discover/assistant/xiao-zhi-french-translation-asst-v-1)<br/><sup>By **[WeR-Best](https://github.com/WeR-Best)** on **2025-02-10**</sup> | A friendly, professional, and empathetic AI assistant for French translation<br/>`ai-assistant` `french-translation` `cross-cultural-communication` `creativity` |
-| [Language Charm Learning Mentor](https://lobechat.com/discover/assistant/bad-language-helper)<br/><sup>By **[Guducat](https://github.com/Guducat)** on **2025-02-06**</sup>                           | Specializes in teaching the charm of language and witty responses<br/>`language-learning` `dialogue-examples`                                                    |
-| [Astrology Researcher](https://lobechat.com/discover/assistant/fate-researcher)<br/><sup>By **[Jack980506](https://github.com/Jack980506)** on **2025-02-06**</sup>                                   | Expert in BaZi astrology<br/>`astrology` `ba-zi` `traditional-culture`                                                                                           |
+| [Investment Assistant](https://lobechat.com/discover/assistant/graham-investmentassi)<br/><sup>By **[farsightlin](https://github.com/farsightlin)** on **2025-02-06**</sup>                           | Helps users calculate the data needed for valuation<br/>`investment` `valuation` `financial-analysis` `calculator`                                               |
 
-> 📊 Total agents: [<kbd>**487**</kbd> ](https://lobechat.com/discover/assistants)
+> 📊 Total agents: [<kbd>**488**</kbd> ](https://lobechat.com/discover/assistants)
 
  <!-- AGENT LIST -->
 
@@ -560,25 +564,22 @@ If you have deployed your own project following the one-click deployment steps i
 
 We provide a Docker image for deploying the LobeChat service on your own private device. Use the following command to start the LobeChat service:
 
+1. create a folder to for storage files
+
 ```fish
-$ docker run -d -p 3210:3210 \
-  -e OPENAI_API_KEY=sk-xxxx \
-  -e ACCESS_CODE=lobe66 \
-  --name lobe-chat \
-  lobehub/lobe-chat
+$ mkdir lobe-chat-db && cd lobe-chat-db
 ```
 
-> \[!TIP]
->
-> If you need to use the OpenAI service through a proxy, you can configure the proxy address using the `OPENAI_PROXY_URL` environment variable:
+2. init the LobeChat infrastructure
 
 ```fish
-$ docker run -d -p 3210:3210 \
-  -e OPENAI_API_KEY=sk-xxxx \
-  -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
-  -e ACCESS_CODE=lobe66 \
-  --name lobe-chat \
-  lobehub/lobe-chat
+bash <(curl -fsSL https://lobe.li/setup.sh)
+```
+
+3. Start the LobeChat service
+
+```fish
+docker compose up -d
 ```
 
 > \[!NOTE]
@@ -671,7 +672,7 @@ If you would like to learn more details, please feel free to look at our [📘 D
 
 ## 🤝 Contributing
 
-Contributions of all types are more than welcome; if you are interested in contributing code, feel free to check out our GitHub [Issues][github-issues-link] and [Projects][github-project-link] to get stuck in to show us what you’re made of.
+Contributions of all types are more than welcome; if you are interested in contributing code, feel free to check out our GitHub [Issues][github-issues-link] and [Projects][github-project-link] to get stuck in to show us what you're made of.
 
 > \[!TIP]
 >
@@ -761,7 +762,7 @@ Every bit counts and your one-time donation sparkles in our galaxy of support! Y
 
 </details>
 
-Copyright © 2024 [LobeHub][profile-link]. <br />
+Copyright © 2025 [LobeHub][profile-link]. <br />
 This project is [Apache 2.0](./LICENSE) licensed.
 
 <!-- LINK GROUP -->
@@ -793,15 +794,15 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [discord-link]: https://discord.gg/AYFPHvv2jT
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
-[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat
-[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square
-[docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat
-[docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square&sort=semver
-[docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat
-[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square
+[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
+[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square&sort=semver
+[docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
+[docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat-database?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square&sort=semver
+[docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
+[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat-database?color=369eff&labelColor=black&style=flat-square&sort=semver
 [docs]: https://lobehub.com/docs/usage/start
 [docs-dev-guide]: https://github.com/lobehub/lobe-chat/wiki/index
-[docs-docker]: https://lobehub.com/docs/self-hosting/platform/docker
+[docs-docker]: https://lobehub.com/docs/self-hosting/server-database/docker-compose
 [docs-env-var]: https://lobehub.com/docs/self-hosting/environment-variables
 [docs-feat-agent]: https://lobehub.com/docs/usage/features/agent-market
 [docs-feat-artifacts]: https://lobehub.com/docs/usage/features/artifacts
@@ -892,7 +893,7 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [profile-link]: https://github.com/lobehub
 [share-linkedin-link]: https://linkedin.com/feed
 [share-linkedin-shield]: https://img.shields.io/badge/-share%20on%20linkedin-black?labelColor=black&logo=linkedin&logoColor=white&style=flat-square
-[share-mastodon-link]: https://mastodon.social/share?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source,%20extensible%20(Function%20Calling),%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT/LLM%20web%20application.%20https://github.com/lobehub/lobe-chat%20#chatbot%20#chatGPT%20#openAI
+[share-mastodon-link]: https://mastodon.social/share?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source,%20extensible%20%28Function%20Calling%29,%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20https://github.com/lobehub/lobe-chat%20#chatbot%20#chatGPT%20#openAI
 [share-mastodon-shield]: https://img.shields.io/badge/-share%20on%20mastodon-black?labelColor=black&logo=mastodon&logoColor=white&style=flat-square
 [share-reddit-link]: https://www.reddit.com/submit?title=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20LobeChat%20-%20An%20open-source%2C%20extensible%20%28Function%20Calling%29%2C%20high-performance%20chatbot%20framework.%20It%20supports%20one-click%20free%20deployment%20of%20your%20private%20ChatGPT%2FLLM%20web%20application.%20%23chatbot%20%23chatGPT%20%23openAI&url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat
 [share-reddit-shield]: https://img.shields.io/badge/-share%20on%20reddit-black?labelColor=black&logo=reddit&logoColor=white&style=flat-square

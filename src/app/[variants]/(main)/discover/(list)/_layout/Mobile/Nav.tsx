@@ -46,7 +46,7 @@ const Nav = memo(() => {
           color={theme.colorText}
           icon={MenuIcon}
           onClick={() => setOpen(true)}
-          size={{ blockSize: 32, fontSize: 18 }}
+          size={{ blockSize: 32, size: 18 }}
         />
         {activeItem?.label}
       </Flexbox>
@@ -74,6 +74,7 @@ const Nav = memo(() => {
         zIndex={10}
       >
         <Menu
+          compact
           items={items}
           onClick={({ key }) => {
             if (key === DiscoverTab.Home) {
@@ -84,7 +85,6 @@ const Nav = memo(() => {
           }}
           selectable
           selectedKeys={[activeKey]}
-          variant={'compact'}
         />
       </Drawer>
     </>

@@ -1,6 +1,6 @@
 'use client';
 
-import { TabsNav } from '@lobehub/ui';
+import { Tabs } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -40,8 +40,9 @@ const MetadataViewer = memo(() => {
       <Header
         style={{ paddingInlineStart: 0 }}
         title={
-          <TabsNav
+          <Tabs
             activeKey={active}
+            compact
             items={[
               {
                 key: Tab.Og,
@@ -58,7 +59,6 @@ const MetadataViewer = memo(() => {
             ]}
             onChange={(v) => setActive(v as Tab)}
             style={{ margin: 16 }}
-            variant={'compact'}
           />
         }
       />

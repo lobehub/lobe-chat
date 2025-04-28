@@ -6,6 +6,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import Loader from '@/components/CircleLoader';
 import PluginAvatar from '@/features/PluginAvatar';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
@@ -13,8 +14,6 @@ import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { shinyTextStylish } from '@/styles/loading';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
-
-import Loader from './Loader';
 
 export const useStyles = createStyles(({ css, token }) => ({
   apiName: css`
@@ -57,7 +56,7 @@ const ToolTitle = memo<ToolTitleProps>(({ identifier, messageId, index, apiName,
   if (identifier === WebBrowsingManifest.identifier) {
     return (
       <Flexbox align={'center'} className={isLoading ? styles.shinyText : ''} gap={4} horizontal>
-        {isLoading ? <Loader /> : <Icon icon={Globe} size={{ fontSize: 13 }} />}
+        {isLoading ? <Loader /> : <Icon icon={Globe} size={13} />}
         <div>{t('search.title')}</div>/<span className={styles.apiName}>{apiName}</span>
       </Flexbox>
     );

@@ -1,6 +1,4 @@
-import { Form, Tag } from '@lobehub/ui';
-import type { FormItemProps } from '@lobehub/ui/es/Form/components/FormItem';
-import { createStyles } from 'antd-style';
+import { Form, type FormItemProps, Tag } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { debounce } from 'lodash-es';
 import { memo } from 'react';
@@ -17,20 +15,10 @@ import {
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 
-const useStyles = createStyles(({ css }) => ({
-  container: css`
-    .ant-form-group {
-      padding-inline: 0;
-      background: transparent;
-    }
-  `,
-}));
-
 interface ParamsControlsProps {
   setUpdating: (updating: boolean) => void;
 }
 const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
-  const { styles } = useStyles();
   const { t } = useTranslation('setting');
 
   const updateAgentConfig = useAgentStore((s) => s.updateAgentConfig);
@@ -42,7 +30,7 @@ const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
       children: <Temperature />,
       desc: <Tag>temperature</Tag>,
       label: (
-        <Flexbox gap={8} horizontal>
+        <Flexbox align={'center'} gap={8} horizontal justify={'space-between'}>
           {t('settingModel.temperature.title')}
           <InfoTooltip title={t('settingModel.temperature.desc')} />
         </Flexbox>
@@ -86,7 +74,6 @@ const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
 
   return (
     <Form
-      className={styles.container}
       initialValues={config}
       itemMinWidth={200}
       items={items}
@@ -96,9 +83,8 @@ const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
         await updateAgentConfig(values);
         setUpdating(false);
       }, 500)}
-      size={'small'}
       style={{ fontSize: 12 }}
-      variant={'pure'}
+      variant={'borderless'}
     />
   );
 });

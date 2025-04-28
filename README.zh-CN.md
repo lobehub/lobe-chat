@@ -191,14 +191,16 @@ LobeChat 支持文件上传与知识库功能，你可以上传文件、图片�
 - **[Bedrock](https://lobechat.com/discover/provider/bedrock)**: Bedrock 是亚马逊 AWS 提供的一项服务，专注于为企业提供先进的 AI 语言模型和视觉模型。其模型家族包括 Anthropic 的 Claude 系列、Meta 的 Llama 3.1 系列等，涵盖从轻量级到高性能的多种选择，支持文本生成、对话、图像处理等多种任务，适用于不同规模和需求的企业应用。
 - **[Google](https://lobechat.com/discover/provider/google)**: Google 的 Gemini 系列是其最先进、通用的 AI 模型，由 Google DeepMind 打造，专为多模态设计，支持文本、代码、图像、音频和视频的无缝理解与处理。适用于从数据中心到移动设备的多种环境，极大提升了 AI 模型的效率与应用广泛性。
 - **[DeepSeek](https://lobechat.com/discover/provider/deepseek)**: DeepSeek 是一家专注于人工智能技术研究和应用的公司，其最新模型 DeepSeek-V3 多项评测成绩超越 Qwen2.5-72B 和 Llama-3.1-405B 等开源模型，性能对齐领军闭源模型 GPT-4o 与 Claude-3.5-Sonnet。
+- **[PPIO](https://lobechat.com/discover/provider/ppio)**: PPIO 派欧云提供稳定、高性价比的开源模型 API 服务，支持 DeepSeek 全系列、Llama、Qwen 等行业领先大模型。
 - **[HuggingFace](https://lobechat.com/discover/provider/huggingface)**: HuggingFace Inference API 提供了一种快速且免费的方式，让您可以探索成千上万种模型，适用于各种任务。无论您是在为新应用程序进行原型设计，还是在尝试机器学习的功能，这个 API 都能让您即时访问多个领域的高性能模型。
 - **[OpenRouter](https://lobechat.com/discover/provider/openrouter)**: OpenRouter 是一个提供多种前沿大模型接口的服务平台，支持 OpenAI、Anthropic、LLaMA 及更多，适合多样化的开发和应用需求。用户可根据自身需求灵活选择最优的模型和价格，助力 AI 体验的提升。
 - **[Cloudflare Workers AI](https://lobechat.com/discover/provider/cloudflare)**: 在 Cloudflare 的全球网络上运行由无服务器 GPU 驱动的机器学习模型。
+
+<details><summary><kbd>See more providers (+30)</kbd></summary>
+
 - **[GitHub](https://lobechat.com/discover/provider/github)**: 通过 GitHub 模型，开发人员可以成为 AI 工程师，并使用行业领先的 AI 模型进行构建。
-
-<details><summary><kbd>See more providers (+26)</kbd></summary>
-
 - **[Novita](https://lobechat.com/discover/provider/novita)**: Novita AI 是一个提供多种大语言模型与 AI 图像生成的 API 服务的平台，灵活、可靠且具有成本效益。它支持 Llama3、Mistral 等最新的开源模型，并为生成式 AI 应用开发提供了全面、用户友好且自动扩展的 API 解决方案，适合 AI 初创公司的快速发展。
+- **[PPIO](https://lobechat.com/discover/provider/ppio)**: PPIO 派欧云提供稳定、高性价比的开源模型 API 服务，支持 DeepSeek 全系列、Llama、Qwen 等行业领先大模型。
 - **[Together AI](https://lobechat.com/discover/provider/togetherai)**: Together AI 致力于通过创新的 AI 模型实现领先的性能，提供广泛的自定义能力，包括快速扩展支持和直观的部署流程，满足企业的各种需求。
 - **[Fireworks AI](https://lobechat.com/discover/provider/fireworksai)**: Fireworks AI 是一家领先的高级语言模型服务商，专注于功能调用和多模态处理。其最新模型 Firefunction V2 基于 Llama-3，优化用于函数调用、对话及指令跟随。视觉语言模型 FireLLaVA-13B 支持图像和文本混合输入。其他 notable 模型包括 Llama 系列和 Mixtral 系列，提供高效的多语言指令跟随与生成支持。
 - **[Groq](https://lobechat.com/discover/provider/groq)**: Groq 的 LPU 推理引擎在最新的独立大语言模型（LLM）基准测试中表现卓越，以其惊人的速度和效率重新定义了 AI 解决方案的标准。Groq 是一种即时推理速度的代表，在基于云的部署中展现了良好的性能。
@@ -224,10 +226,12 @@ LobeChat 支持文件上传与知识库功能，你可以上传文件、图片�
 - **[Gitee AI](https://lobechat.com/discover/provider/giteeai)**: Gitee AI 的 Serverless API 为 AI 开发者提供开箱即用的大模型推理 API 服务。
 - **[Taichu](https://lobechat.com/discover/provider/taichu)**: 中科院自动化研究所和武汉人工智能研究院推出新一代多模态大模型，支持多轮问答、文本创作、图像生成、3D 理解、信号分析等全面问答任务，拥有更强的认知、理解、创作能力，带来全新互动体验。
 - **[360 AI](https://lobechat.com/discover/provider/ai360)**: 360 AI 是 360 公司推出的 AI 模型和服务平台，提供多种先进的自然语言处理模型，包括 360GPT2 Pro、360GPT Pro、360GPT Turbo 和 360GPT Turbo Responsibility 8K。这些模型结合了大规模参数和多模态能力，广泛应用于文本生成、语义理解、对话系统与代码生成等领域。通过灵活的定价策略，360 AI 满足多样化用户需求，支持开发者集成，推动智能化应用的革新和发展。
+- **[Search1API](https://lobechat.com/discover/provider/search1api)**: Search1API 提供可根据需要自行联网的 DeepSeek 系列模型的访问，包括标准版和快速版本，支持多种参数规模的模型选择。
+- **[InfiniAI](https://lobechat.com/discover/provider/infiniai)**: 为应用开发者提供高性能、易上手、安全可靠的大模型服务，覆盖从大模型开发到大模型服务化部署的全流程。
 
 </details>
 
-> 📊 Total providers: [<kbd>**36**</kbd>](https://lobechat.com/discover/providers)
+> 📊 Total providers: [<kbd>**40**</kbd>](https://lobechat.com/discover/providers)
 
  <!-- PROVIDER LIST -->
 
@@ -317,12 +321,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                                   | 描述                                                                               |
 | -------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2025-03-23**</sup>      | 分析股票并获取全面的实时投资数据和分析。<br/>`股票`                                |
 | [网页](https://lobechat.com/discover/plugin/web)<br/><sup>By **Proghit** on **2025-01-24**</sup>                           | 智能网页搜索，读取和分析页面，以提供来自 Google 结果的全面答案。<br/>`网页` `搜索` |
 | [MintbaseSearch](https://lobechat.com/discover/plugin/mintbasesearch)<br/><sup>By **mintbase** on **2024-12-31**</sup>     | 在 NEAR 协议上查找任何 NFT 数据。<br/>`加密货币` `nft`                             |
 | [必应网页搜索](https://lobechat.com/discover/plugin/Bingsearch-identifier)<br/><sup>By **FineHow** on **2024-12-22**</sup> | 通过 BingApi 搜索互联网上的信息<br/>`bingsearch`                                   |
-| [PortfolioMeta](https://lobechat.com/discover/plugin/StockData)<br/><sup>By **portfoliometa** on **2024-12-22**</sup>      | 分析股票并获取全面的实时投资数据和分析。<br/>`股票`                                |
 
-> 📊 Total plugins: [<kbd>**48**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**45**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -350,14 +354,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                         | 描述                                                                                   |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| [Cron 表达式助手](https://lobechat.com/discover/assistant/crontab-generate)<br/><sup>By **[edgesider](https://github.com/edgesider)** on **2025-02-17**</sup>                    | Crontab 表达式生成<br/>`crontab` `时间表达` `触发时间` `生成器` `技术辅助`             |
-| [小智法语翻译助手](https://lobechat.com/discover/assistant/xiao-zhi-french-translation-asst-v-1)<br/><sup>By **[WeR-Best](https://github.com/WeR-Best)** on **2025-02-10**</sup> | 友好、专业、富有同理心的法语翻译 AI 助手<br/>`ai助手` `法语翻译` `跨文化交流` `创造力` |
-| [语言魅力学习导师](https://lobechat.com/discover/assistant/bad-language-helper)<br/><sup>By **[Guducat](https://github.com/Guducat)** on **2025-02-06**</sup>                    | 擅长教学语言的魅力与花样回复<br/>`语言学习` `对话示例`                                 |
-| [命理研究员](https://lobechat.com/discover/assistant/fate-researcher)<br/><sup>By **[Jack980506](https://github.com/Jack980506)** on **2025-02-06**</sup>                        | 精通八字命<br/>`命理学` `八字` `传统文化`                                              |
+| 最近新增                                                                                                                                                                         | 描述                                                                                          |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| [学术论文综述专家](https://lobechat.com/discover/assistant/academic-paper-overview)<br/><sup>By **[arvinxx](https://github.com/arvinxx)** on **2025-03-11**</sup>                | 擅长高质量文献检索与分析的学术研究助手<br/>`学术研究` `文献检索` `数据分析` `信息提取` `咨询` |
+| [Cron 表达式助手](https://lobechat.com/discover/assistant/crontab-generate)<br/><sup>By **[edgesider](https://github.com/edgesider)** on **2025-02-17**</sup>                    | Crontab 表达式生成<br/>`crontab` `时间表达` `触发时间` `生成器` `技术辅助`                    |
+| [小智法语翻译助手](https://lobechat.com/discover/assistant/xiao-zhi-french-translation-asst-v-1)<br/><sup>By **[WeR-Best](https://github.com/WeR-Best)** on **2025-02-10**</sup> | 友好、专业、富有同理心的法语翻译 AI 助手<br/>`ai助手` `法语翻译` `跨文化交流` `创造力`        |
+| [投资小助手](https://lobechat.com/discover/assistant/graham-investmentassi)<br/><sup>By **[farsightlin](https://github.com/farsightlin)** on **2025-02-06**</sup>                | 帮助用户计算估值所需的一些数据<br/>`投资` `估值` `财务分析` `计算器`                          |
 
-> 📊 Total agents: [<kbd>**487**</kbd> ](https://lobechat.com/discover/assistants)
+> 📊 Total agents: [<kbd>**488**</kbd> ](https://lobechat.com/discover/assistants)
 
  <!-- AGENT LIST -->
 
@@ -540,27 +544,24 @@ LobeChat 提供了 Vercel 的 自托管版本 和 [Docker 镜像][docker-release
 [![][docker-size-shield]][docker-size-link]
 [![][docker-pulls-shield]][docker-pulls-link]
 
-我们提供了 Docker 镜像，供你在自己的私有设备上部署 LobeChat 服务。使用以下命令即可使用一键启动 LobeChat 服务：
+We provide a Docker image for deploying the LobeChat service on your own private device. Use the following command to start the LobeChat service:
+
+1. create a folder to for storage files
 
 ```fish
-$ docker run -d -p 3210:3210 \
-  -e OPENAI_API_KEY=sk-xxxx \
-  -e ACCESS_CODE=lobe66 \
-  --name lobe-chat \
-  lobehub/lobe-chat
+$ mkdir lobe-chat-db && cd lobe-chat-db
 ```
 
-> \[!TIP]
->
-> 如果你需要通过代理使用 OpenAI 服务，你可以使用 `OPENAI_PROXY_URL` 环境变量来配置代理地址：
+2. 启动一键脚本
 
 ```fish
-$ docker run -d -p 3210:3210 \
-  -e OPENAI_API_KEY=sk-xxxx \
-  -e OPENAI_PROXY_URL=https://api-proxy.com/v1 \
-  -e ACCESS_CODE=lobe66 \
-  --name lobe-chat \
-  lobehub/lobe-chat
+bash <(curl -fsSL https://lobe.li/setup.sh) -l zh_CN
+```
+
+3. 启动 LobeChat
+
+```fish
+docker compose up -d
 ```
 
 > \[!NOTE]
@@ -783,7 +784,7 @@ $ pnpm run dev
 
 </details>
 
-Copyright © 2023 [LobeHub][profile-link]. <br />
+Copyright © 2025 [LobeHub][profile-link]. <br />
 This project is [Apache 2.0](./LICENSE) licensed.
 
 <!-- LINK GROUP -->
@@ -813,15 +814,15 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [discord-link]: https://discord.gg/AYFPHvv2jT
 [discord-shield]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]: https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
-[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat
-[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square
-[docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat
-[docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square
-[docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat
-[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square
+[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
+[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat?color=45cc11&labelColor=black&style=flat-square&sort=semver
+[docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
+[docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat-database?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square&sort=semver
+[docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
+[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat-database?color=369eff&labelColor=black&style=flat-square&sort=semver
 [docs]: https://lobehub.com/zh/docs/usage/start
 [docs-dev-guide]: https://github.com/lobehub/lobe-chat/wiki/index
-[docs-docker]: https://lobehub.com/docs/self-hosting/platform/docker
+[docs-docker]: https://lobehub.com/zh/docs/self-hosting/server-database/docker-compose
 [docs-env-var]: https://lobehub.com/docs/self-hosting/environment-variables
 [docs-feat-agent]: https://lobehub.com/docs/usage/features/agent-market
 [docs-feat-artifacts]: https://lobehub.com/docs/usage/features/artifacts

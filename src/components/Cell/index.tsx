@@ -42,10 +42,10 @@ const Cell = memo<CellProps>(({ label, icon, onClick, type }) => {
       padding={16}
     >
       <Flexbox align={'center'} gap={12} horizontal>
-        {icon && <Icon color={theme.colorPrimaryBorder} icon={icon} size={{ fontSize: 20 }} />}
+        {icon && <Icon color={theme.colorPrimaryBorder} icon={icon} size={{ size: 20 }} />}
         {label}
       </Flexbox>
-      <Icon color={theme.colorBorder} icon={ChevronRight} size={{ fontSize: 16 }} />
+      <Icon color={theme.colorBorder} icon={ChevronRight} size={{ size: 16 }} />
     </Flexbox>
   );
 });

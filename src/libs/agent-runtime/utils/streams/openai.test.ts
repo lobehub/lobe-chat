@@ -44,14 +44,12 @@ describe('OpenAIStream', () => {
 
     const onStartMock = vi.fn();
     const onTextMock = vi.fn();
-    const onTokenMock = vi.fn();
     const onCompletionMock = vi.fn();
 
     const protocolStream = OpenAIStream(mockOpenAIStream, {
       callbacks: {
         onStart: onStartMock,
         onText: onTextMock,
-        onToken: onTokenMock,
         onCompletion: onCompletionMock,
       },
     });
@@ -77,9 +75,8 @@ describe('OpenAIStream', () => {
     ]);
 
     expect(onStartMock).toHaveBeenCalledTimes(1);
-    expect(onTextMock).toHaveBeenNthCalledWith(1, '"Hello"');
-    expect(onTextMock).toHaveBeenNthCalledWith(2, '" world!"');
-    expect(onTokenMock).toHaveBeenCalledTimes(2);
+    expect(onTextMock).toHaveBeenNthCalledWith(1, 'Hello');
+    expect(onTextMock).toHaveBeenNthCalledWith(2, ' world!');
     expect(onCompletionMock).toHaveBeenCalledTimes(1);
   });
 
@@ -195,7 +192,7 @@ describe('OpenAIStream', () => {
 
     const protocolStream = OpenAIStream(mockOpenAIStream, {
       callbacks: {
-        onToolCall: onToolCallMock,
+        onToolsCalling: onToolCallMock,
       },
     });
 
@@ -348,6 +345,200 @@ describe('OpenAIStream', () => {
     ]);
   });
 
+  describe('token usage', () => {
+    it('should streaming token usage', async () => {
+      const data = [
+        {
+          id: 'chatcmpl-B7CcnaeK3jqWBMOhxg7SSKFwlk7dC',
+          object: 'chat.completion.chunk',
+          created: 1741056525,
+          model: 'gpt-4o-mini-2024-07-18',
+          choices: [{ index: 0, delta: { role: 'assistant', content: '' } }],
+          service_tier: 'default',
+          system_fingerprint: 'fp_06737a9306',
+        },
+        {
+          id: 'chatcmpl-B7CcnaeK3jqWBMOhxg7SSKFwlk7dC',
+          object: 'chat.completion.chunk',
+          created: 1741056525,
+          model: 'gpt-4o-mini-2024-07-18',
+          choices: [{ index: 0, delta: { content: '你好！' } }],
+          service_tier: 'default',
+          system_fingerprint: 'fp_06737a9306',
+        },
+        {
+          id: 'chatcmpl-B7CcnaeK3jqWBMOhxg7SSKFwlk7dC',
+          object: 'chat.completion.chunk',
+          created: 1741056525,
+          model: 'gpt-4o-mini-2024-07-18',
+          choices: [{ index: 0, delta: {}, finish_reason: 'stop' }],
+          service_tier: 'default',
+          system_fingerprint: 'fp_06737a9306',
+        },
+        {
+          id: 'chatcmpl-B7CcnaeK3jqWBMOhxg7SSKFwlk7dC',
+          object: 'chat.completion.chunk',
+          created: 1741056525,
+          model: 'gpt-4o-mini-2024-07-18',
+          choices: [],
+          service_tier: 'default',
+          system_fingerprint: 'fp_06737a9306',
+          usage: {
+            prompt_tokens: 1646,
+            completion_tokens: 11,
+            total_tokens: 1657,
+            prompt_tokens_details: { audio_tokens: 0, cached_tokens: 0 },
+            completion_tokens_details: {
+              accepted_prediction_tokens: 0,
+              audio_tokens: 0,
+              reasoning_tokens: 0,
+              rejected_prediction_tokens: 0,
+            },
+          },
+        },
+      ];
+
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          data.forEach((chunk) => {
+            controller.enqueue(chunk);
+          });
+
+          controller.close();
+        },
+      });
+
+      const protocolStream = OpenAIStream(mockOpenAIStream);
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks).toEqual(
+        [
+          'id: chatcmpl-B7CcnaeK3jqWBMOhxg7SSKFwlk7dC',
+          'event: text',
+          `data: ""\n`,
+          'id: chatcmpl-B7CcnaeK3jqWBMOhxg7SSKFwlk7dC',
+          'event: text',
+          `data: "你好！"\n`,
+          'id: chatcmpl-B7CcnaeK3jqWBMOhxg7SSKFwlk7dC',
+          'event: stop',
+          `data: "stop"\n`,
+          'id: chatcmpl-B7CcnaeK3jqWBMOhxg7SSKFwlk7dC',
+          'event: usage',
+          `data: {"inputCacheMissTokens":1646,"inputTextTokens":1646,"outputTextTokens":11,"totalInputTokens":1646,"totalOutputTokens":11,"totalTokens":1657}\n`,
+        ].map((i) => `${i}\n`),
+      );
+    });
+
+    it('should streaming litellm token usage', async () => {
+      const data = [
+        {
+          id: 'chatcmpl-c1f6a6a6-fcf8-463a-96bf-cf634d3e98a5',
+          created: 1741188058,
+          model: 'gpt-4o-mini',
+          object: 'chat.completion.chunk',
+          system_fingerprint: 'fp_06737a9306',
+          choices: [{ index: 0, delta: { content: ' #' } }],
+          stream_options: { include_usage: true },
+        },
+        {
+          id: 'chatcmpl-c1f6a6a6-fcf8-463a-96bf-cf634d3e98a5',
+          created: 1741188068,
+          model: 'gpt-4o-mini',
+          object: 'chat.completion.chunk',
+          system_fingerprint: 'fp_06737a9306',
+          choices: [{ index: 0, delta: { content: '.' } }],
+          stream_options: { include_usage: true },
+        },
+        {
+          id: 'chatcmpl-c1f6a6a6-fcf8-463a-96bf-cf634d3e98a5',
+          created: 1741188068,
+          model: 'gpt-4o-mini',
+          object: 'chat.completion.chunk',
+          system_fingerprint: 'fp_06737a9306',
+          choices: [{ finish_reason: 'stop', index: 0, delta: {} }],
+          stream_options: { include_usage: true },
+        },
+        {
+          id: 'chatcmpl-c1f6a6a6-fcf8-463a-96bf-cf634d3e98a5',
+          created: 1741188068,
+          model: 'gpt-4o-mini',
+          object: 'chat.completion.chunk',
+          system_fingerprint: 'fp_06737a9306',
+          choices: [{ index: 0, delta: {} }],
+          stream_options: { include_usage: true },
+        },
+        {
+          id: 'chatcmpl-c1f6a6a6-fcf8-463a-96bf-cf634d3e98a5',
+          created: 1741188068,
+          model: 'gpt-4o-mini',
+          object: 'chat.completion.chunk',
+          system_fingerprint: 'fp_06737a9306',
+          choices: [{ index: 0, delta: {} }],
+          stream_options: { include_usage: true },
+          usage: {
+            completion_tokens: 1720,
+            prompt_tokens: 1797,
+            total_tokens: 3517,
+            completion_tokens_details: {
+              accepted_prediction_tokens: 0,
+              audio_tokens: 0,
+              reasoning_tokens: 0,
+              rejected_prediction_tokens: 0,
+            },
+            prompt_tokens_details: { audio_tokens: 0, cached_tokens: 0 },
+          },
+        },
+      ];
+
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          data.forEach((chunk) => {
+            controller.enqueue(chunk);
+          });
+
+          controller.close();
+        },
+      });
+
+      const protocolStream = OpenAIStream(mockOpenAIStream);
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks).toEqual(
+        [
+          'id: chatcmpl-c1f6a6a6-fcf8-463a-96bf-cf634d3e98a5',
+          'event: text',
+          `data: " #"\n`,
+          'id: chatcmpl-c1f6a6a6-fcf8-463a-96bf-cf634d3e98a5',
+          'event: text',
+          `data: "."\n`,
+          'id: chatcmpl-c1f6a6a6-fcf8-463a-96bf-cf634d3e98a5',
+          'event: stop',
+          `data: "stop"\n`,
+          'id: chatcmpl-c1f6a6a6-fcf8-463a-96bf-cf634d3e98a5',
+          'event: data',
+          `data: {"delta":{},"id":"chatcmpl-c1f6a6a6-fcf8-463a-96bf-cf634d3e98a5","index":0}\n`,
+          'id: chatcmpl-c1f6a6a6-fcf8-463a-96bf-cf634d3e98a5',
+          'event: usage',
+          `data: {"inputCacheMissTokens":1797,"inputTextTokens":1797,"outputTextTokens":1720,"totalInputTokens":1797,"totalOutputTokens":1720,"totalTokens":3517}\n`,
+        ].map((i) => `${i}\n`),
+      );
+    });
+  });
+
   describe('Tools Calling', () => {
     it('should handle OpenAI official tool calls', async () => {
       const mockOpenAIStream = new ReadableStream({
@@ -384,7 +575,7 @@ describe('OpenAIStream', () => {
 
       const protocolStream = OpenAIStream(mockOpenAIStream, {
         callbacks: {
-          onToolCall: onToolCallMock,
+          onToolsCalling: onToolCallMock,
         },
       });
 
@@ -517,7 +708,7 @@ describe('OpenAIStream', () => {
 
       const protocolStream = OpenAIStream(mockOpenAIStream, {
         callbacks: {
-          onToolCall: onToolCallMock,
+          onToolsCalling: onToolCallMock,
         },
       });
 
@@ -550,6 +741,165 @@ describe('OpenAIStream', () => {
       );
 
       expect(onToolCallMock).toHaveBeenCalledTimes(2);
+    });
+
+    it('should handle vLLM tools Calling', async () => {
+      const streamData = [
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1745385918,
+          model: 'Qwen/Qwen2.5-7B-Instruct-1M',
+          choices: [
+            {
+              index: 0,
+              delta: {
+                tool_calls: [
+                  {
+                    id: 'chatcmpl-tool-ca9bc139abc449388c6457d5decc949b',
+                    type: 'function',
+                    index: 0,
+                    function: { name: 'BingBS____BingSearch' },
+                  },
+                ],
+              },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1745385918,
+          model: 'Qwen/Qwen2.5-7B-Instruct-1M',
+          choices: [
+            {
+              index: 0,
+              delta: { tool_calls: [{ index: 0, function: { arguments: '{"query": "' } }] },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1745385918,
+          model: 'Qwen/Qwen2.5-7B-Instruct-1M',
+          choices: [
+            {
+              index: 0,
+              delta: { tool_calls: [{ index: 0, function: { arguments: '最近' } }] },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1745385918,
+          model: 'Qwen/Qwen2.5-7B-Instruct-1M',
+          choices: [
+            {
+              index: 0,
+              delta: { tool_calls: [{ index: 0, function: { arguments: '新闻' } }] },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1745385918,
+          model: 'Qwen/Qwen2.5-7B-Instruct-1M',
+          choices: [
+            {
+              index: 0,
+              delta: { tool_calls: [{ index: 0, function: { arguments: '"}' } }] },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1745385918,
+          model: 'Qwen/Qwen2.5-7B-Instruct-1M',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '' },
+              logprobs: null,
+              finish_reason: 'tool_calls',
+              stop_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1745385918,
+          model: 'Qwen/Qwen2.5-7B-Instruct-1M',
+          choices: [],
+          usage: { prompt_tokens: 333, total_tokens: 359, completion_tokens: 26 },
+        },
+      ];
+
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          streamData.forEach((data) => {
+            controller.enqueue(data);
+          });
+
+          controller.close();
+        },
+      });
+
+      const onToolCallMock = vi.fn();
+
+      const protocolStream = OpenAIStream(mockOpenAIStream, {
+        callbacks: {
+          onToolsCalling: onToolCallMock,
+        },
+      });
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks).toEqual(
+        [
+          'id: 1',
+          'event: tool_calls',
+          `data: [{"function":{"arguments":"","name":"BingBS____BingSearch"},"id":"chatcmpl-tool-ca9bc139abc449388c6457d5decc949b","index":0,"type":"function"}]\n`,
+          'id: 1',
+          'event: tool_calls',
+          `data: [{"function":{"arguments":"{\\"query\\": \\"","name":null},"id":"chatcmpl-tool-ca9bc139abc449388c6457d5decc949b","index":0,"type":"function"}]\n`,
+          'id: 1',
+          'event: tool_calls',
+          `data: [{"function":{"arguments":"最近","name":null},"id":"chatcmpl-tool-ca9bc139abc449388c6457d5decc949b","index":0,"type":"function"}]\n`,
+          'id: 1',
+          'event: tool_calls',
+          `data: [{"function":{"arguments":"新闻","name":null},"id":"chatcmpl-tool-ca9bc139abc449388c6457d5decc949b","index":0,"type":"function"}]\n`,
+          'id: 1',
+          'event: tool_calls',
+          `data: [{"function":{"arguments":"\\"}","name":null},"id":"chatcmpl-tool-ca9bc139abc449388c6457d5decc949b","index":0,"type":"function"}]\n`,
+          'id: 1',
+          'event: stop',
+          `data: "tool_calls"\n`,
+          'id: 1',
+          'event: usage',
+          `data: {"inputTextTokens":333,"outputTextTokens":26,"totalInputTokens":333,"totalOutputTokens":26,"totalTokens":359}\n`,
+        ].map((i) => `${i}\n`),
+      );
     });
   });
 
@@ -749,8 +1099,8 @@ describe('OpenAIStream', () => {
           'event: text',
           `data: "帮助。"\n`,
           'id: 1',
-          'event: stop',
-          `data: "stop"\n`,
+          'event: usage',
+          `data: {"inputCacheMissTokens":6,"inputTextTokens":6,"outputReasoningTokens":70,"outputTextTokens":34,"totalInputTokens":6,"totalOutputTokens":104,"totalTokens":110}\n`,
         ].map((i) => `${i}\n`),
       );
     });
@@ -968,8 +1318,8 @@ describe('OpenAIStream', () => {
           'event: text',
           `data: "帮助。"\n`,
           'id: 1',
-          'event: stop',
-          `data: "stop"\n`,
+          'event: usage',
+          `data: {"inputCacheMissTokens":6,"inputTextTokens":6,"outputReasoningTokens":70,"outputTextTokens":34,"totalInputTokens":6,"totalOutputTokens":104,"totalTokens":110}\n`,
         ].map((i) => `${i}\n`),
       );
     });
@@ -1169,8 +1519,8 @@ describe('OpenAIStream', () => {
           'event: text',
           `data: "帮助。"\n`,
           'id: 1',
-          'event: stop',
-          `data: "stop"\n`,
+          'event: usage',
+          `data: {"inputCacheMissTokens":6,"inputTextTokens":6,"outputReasoningTokens":70,"outputTextTokens":34,"totalInputTokens":6,"totalOutputTokens":104,"totalTokens":110}\n`,
         ].map((i) => `${i}\n`),
       );
     });
@@ -1370,8 +1720,8 @@ describe('OpenAIStream', () => {
           'event: text',
           `data: "帮助。"\n`,
           'id: 1',
-          'event: stop',
-          `data: "stop"\n`,
+          'event: usage',
+          `data: {"inputCacheMissTokens":6,"inputTextTokens":6,"outputReasoningTokens":70,"outputTextTokens":34,"totalInputTokens":6,"totalOutputTokens":104,"totalTokens":110}\n`,
         ].map((i) => `${i}\n`),
       );
     });
@@ -1571,8 +1921,8 @@ describe('OpenAIStream', () => {
           'event: text',
           `data: "帮助。"\n`,
           'id: 1',
-          'event: stop',
-          `data: "stop"\n`,
+          'event: usage',
+          `data: {"inputCacheMissTokens":6,"inputTextTokens":6,"outputReasoningTokens":70,"outputTextTokens":34,"totalInputTokens":6,"totalOutputTokens":104,"totalTokens":110}\n`,
         ].map((i) => `${i}\n`),
       );
     });

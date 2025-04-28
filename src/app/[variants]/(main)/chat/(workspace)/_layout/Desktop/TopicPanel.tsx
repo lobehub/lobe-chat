@@ -18,11 +18,10 @@ const useStyles = createStyles(({ css, token }) => ({
     height: 100% !important;
   `,
   drawer: css`
-    z-index: 10;
-    background: ${token.colorBgLayout};
+    z-index: 20;
   `,
   header: css`
-    border-block-end: 1px solid ${token.colorBorder};
+    border-block-end: 1px solid ${token.colorBorderSecondary};
   `,
 }));
 
@@ -49,31 +48,29 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
   }, [lg, cacheExpand]);
 
   return (
-    !showPortal && (
-      <DraggablePanel
-        className={styles.drawer}
-        classNames={{
-          content: styles.content,
+    <DraggablePanel
+      className={styles.drawer}
+      classNames={{
+        content: styles.content,
+      }}
+      expand={showTopic && !showPortal}
+      minWidth={CHAT_SIDEBAR_WIDTH}
+      mode={md ? 'fixed' : 'float'}
+      onExpandChange={handleExpand}
+      placement={'right'}
+      showHandleWideArea={false}
+    >
+      <DraggablePanelContainer
+        style={{
+          flex: 'none',
+          height: '100%',
+          maxHeight: '100vh',
+          minWidth: CHAT_SIDEBAR_WIDTH,
         }}
-        expand={showTopic}
-        minWidth={CHAT_SIDEBAR_WIDTH}
-        mode={md ? 'fixed' : 'float'}
-        onExpandChange={handleExpand}
-        placement={'right'}
-        showHandlerWideArea={false}
       >
-        <DraggablePanelContainer
-          style={{
-            flex: 'none',
-            height: '100%',
-            maxHeight: '100vh',
-            minWidth: CHAT_SIDEBAR_WIDTH,
-          }}
-        >
-          {children}
-        </DraggablePanelContainer>
-      </DraggablePanel>
-    )
+        {children}
+      </DraggablePanelContainer>
+    </DraggablePanel>
   );
 });
 

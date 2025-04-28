@@ -15,7 +15,7 @@ import { useClientDataSWR } from '@/libs/swr';
 import { topicService } from '@/services/topic';
 import { TopicRankItem } from '@/types/topic';
 
-export const TopicsRank = memo(() => {
+export const TopicsRank = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation('auth');
   const theme = useTheme();
@@ -31,13 +31,12 @@ export const TopicsRank = memo(() => {
       query: {
         session: item.sessionId || INBOX_SESSION_ID,
         topic: item.id,
+        ...(mobile ? { showMobileWorkspace: true } : {}),
       },
       url: '/chat',
     });
     return {
-      icon: (
-        <Icon color={theme.colorTextDescription} icon={MessageSquareIcon} size={{ fontSize: 16 }} />
-      ),
+      icon: <Icon color={theme.colorTextDescription} icon={MessageSquareIcon} size={16} />,
       link,
       name: (
         <Link href={link} style={{ color: 'inherit' }}>
@@ -56,13 +55,13 @@ export const TopicsRank = memo(() => {
             <ActionIcon
               icon={MaximizeIcon}
               onClick={() => setOpen(true)}
-              size={{ blockSize: 28, fontSize: 20 }}
+              size={{ blockSize: 28, size: 20 }}
             />
           )
         }
         style={FORM_STYLE.style}
         title={t('stats.topicsRank.title')}
-        variant={'pure'}
+        variant={'borderless'}
       >
         <Flexbox paddingBlock={16}>
           <BarList

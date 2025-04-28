@@ -1,8 +1,8 @@
-import { Icon } from '@lobehub/ui';
-import { Dropdown } from 'antd';
+import { ActionIcon, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import type { ItemType } from 'antd/es/menu/interface';
-import { LucideArrowRight } from 'lucide-react';
+import { LucideArrowRight, LucideBolt } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { PropsWithChildren, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,10 +10,11 @@ import { Flexbox } from 'react-layout-kit';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
 import { isDeprecatedEdition } from '@/const/version';
+import ActionDropdown from '@/features/ChatInput/components/ActionDropdown';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { EnabledProviderWithModels } from '@/types/aiProvider';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
@@ -47,11 +48,8 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
     agentSelectors.currentAgentModelProvider(s),
     s.updateAgentConfig,
   ]);
-
-  const isMobile = useIsMobile();
-
+  const { showLLM } = useServerConfigStore(featureFlagsSelectors);
   const router = useRouter();
-
   const enabledList = useEnabledChatModels();
 
   const items = useMemo<ItemType[]>(() => {
@@ -86,37 +84,68 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
       return items;
     };
 
+    if (enabledList.length === 0)
+      return [
+        {
+          key: `no-provider`,
+          label: (
+            <Flexbox gap={8} horizontal style={{ color: theme.colorTextTertiary }}>
+              {t('ModelSwitchPanel.emptyProvider')}
+              <Icon icon={LucideArrowRight} />
+            </Flexbox>
+          ),
+          onClick: () => {
+            router.push(isDeprecatedEdition ? '/settings/llm' : `/settings/provider`);
+          },
+        },
+      ];
+
     // otherwise show with provider group
     return enabledList.map((provider) => ({
       children: getModelItems(provider),
       key: provider.id,
       label: (
-        <ProviderItemRender
-          logo={provider.logo}
-          name={provider.name}
-          provider={provider.id}
-          source={provider.source}
-        />
+        <Flexbox horizontal justify="space-between">
+          <ProviderItemRender
+            logo={provider.logo}
+            name={provider.name}
+            provider={provider.id}
+            source={provider.source}
+          />
+          {showLLM && (
+            <Link
+              href={isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${provider.id}`}
+            >
+              <ActionIcon
+                icon={LucideBolt}
+                size={'small'}
+                title={t('ModelSwitchPanel.goToSettings')}
+              />
+            </Link>
+          )}
+        </Flexbox>
       ),
       type: 'group',
     }));
   }, [enabledList]);
 
   return (
-    <Dropdown
+    <ActionDropdown
       menu={{
         activeKey: menuKey(provider, model),
         className: styles.menu,
         items,
+        // 不加限高就会导致面板超长，顶部的内容会被隐藏
+        // https://github.com/user-attachments/assets/9c043c47-42c5-46ef-b5c1-bee89376f042
         style: {
           maxHeight: 500,
           overflowY: 'scroll',
         },
       }}
-      placement={isMobile ? 'top' : 'topLeft'}
+      placement={'topLeft'}
     >
       <div className={styles.tag}>{children}</div>
-    </Dropdown>
+    </ActionDropdown>
   );
 });
 

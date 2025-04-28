@@ -3,7 +3,6 @@
 import { DraggablePanel, DraggablePanelContainer, type DraggablePanelProps } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { rgba } from 'polished';
 import { PropsWithChildren, memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -17,7 +16,7 @@ import { chatPortalSelectors, portalThreadSelectors } from '@/store/chat/selecto
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
-const useStyles = createStyles(({ css, token, isDarkMode }) => ({
+const useStyles = createStyles(({ css, token }) => ({
   content: css`
     display: flex;
     flex-direction: column;
@@ -25,27 +24,21 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   `,
   drawer: css`
     z-index: 10;
+    height: 100%;
     background: ${token.colorBgLayout};
-  `,
-  header: css`
-    border-block-end: 1px solid ${token.colorBorder};
   `,
   panel: css`
     overflow: hidden;
     height: 100%;
-    background: ${isDarkMode ? rgba(token.colorBgElevated, 0.8) : token.colorBgElevated};
-  `,
-
-  thread: css`
-    background: ${token.colorBgLayout};
+    background: ${token.colorBgContainerSecondary};
   `,
 }));
 
 const PortalPanel = memo(({ children }: PropsWithChildren) => {
-  const { styles, cx } = useStyles();
+  const { styles } = useStyles();
   const { md = true } = useResponsive();
 
-  const [showInspector, showToolUI, showArtifactUI, showThread] = useChatStore((s) => [
+  const [showPortal, showToolUI, showArtifactUI, showThread] = useChatStore((s) => [
     chatPortalSelectors.showPortal(s),
     chatPortalSelectors.showPluginUI(s),
     chatPortalSelectors.showArtifactUI(s),
@@ -71,38 +64,38 @@ const PortalPanel = memo(({ children }: PropsWithChildren) => {
   };
 
   return (
-    showInspector && (
-      <DraggablePanel
-        className={styles.drawer}
-        classNames={{
-          content: styles.content,
+    <DraggablePanel
+      className={styles.drawer}
+      classNames={{
+        content: styles.content,
+      }}
+      defaultSize={{ width: tmpWidth }}
+      expand={showPortal}
+      maxWidth={CHAT_PORTAL_MAX_WIDTH}
+      minWidth={
+        showArtifactUI || showToolUI || showThread ? CHAT_PORTAL_TOOL_UI_WIDTH : CHAT_PORTAL_WIDTH
+      }
+      mode={md ? 'fixed' : 'float'}
+      onSizeChange={handleSizeChange}
+      placement={'right'}
+      showHandleWhenCollapsed={false}
+      showHandleWideArea={false}
+      size={{ height: '100%', width: portalWidth }}
+      styles={{
+        handle: { display: 'none' },
+      }}
+    >
+      <DraggablePanelContainer
+        style={{
+          flex: 'none',
+          height: '100%',
+          maxHeight: '100vh',
+          minWidth: CHAT_PORTAL_WIDTH,
         }}
-        defaultSize={{ width: tmpWidth }}
-        expand
-        hanlderStyle={{ display: 'none' }}
-        maxWidth={CHAT_PORTAL_MAX_WIDTH}
-        minWidth={
-          showArtifactUI || showToolUI || showThread ? CHAT_PORTAL_TOOL_UI_WIDTH : CHAT_PORTAL_WIDTH
-        }
-        mode={md ? 'fixed' : 'float'}
-        onSizeChange={handleSizeChange}
-        placement={'right'}
-        showHandlerWhenUnexpand={false}
-        showHandlerWideArea={false}
-        size={{ height: '100%', width: portalWidth }}
       >
-        <DraggablePanelContainer
-          style={{
-            flex: 'none',
-            height: '100%',
-            maxHeight: '100vh',
-            minWidth: CHAT_PORTAL_WIDTH,
-          }}
-        >
-          <Flexbox className={cx(styles.panel, showThread && styles.thread)}>{children}</Flexbox>
-        </DraggablePanelContainer>
-      </DraggablePanel>
-    )
+        <Flexbox className={styles.panel}>{children}</Flexbox>
+      </DraggablePanelContainer>
+    </DraggablePanel>
   );
 });
 

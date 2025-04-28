@@ -1,10 +1,12 @@
-import { Form, type FormItemProps } from '@lobehub/ui';
-import { Button, Segmented, Switch } from 'antd';
+import { Button, Form, type FormItemProps, Segmented } from '@lobehub/ui';
+import { Switch } from 'antd';
+import { CopyIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { useImgToClipboard } from '@/hooks/useImgToClipboard';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { ImageType, imageTypeOptions, useScreenshot } from '@/hooks/useScreenshot';
 import { useSessionStore } from '@/store/session';
@@ -32,11 +34,14 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
     title: currentAgentTitle,
     width: mobile ? 720 : undefined,
   });
-
+  const { loading: copyLoading, onCopy } = useImgToClipboard({
+    width: mobile ? 720 : undefined,
+  });
   const settings: FormItemProps[] = [
     {
       children: <Switch />,
       label: t('shareModal.withSystemRole'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'withSystemRole',
       valuePropName: 'checked',
@@ -44,6 +49,7 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
     {
       children: <Switch />,
       label: t('shareModal.withBackground'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'withBackground',
       valuePropName: 'checked',
@@ -51,6 +57,7 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
     {
       children: <Switch />,
       label: t('shareModal.withFooter'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'withFooter',
       valuePropName: 'checked',
@@ -66,22 +73,28 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
   const isMobile = useIsMobile();
 
   const button = (
-    <Button
-      block
-      loading={loading}
-      onClick={onDownload}
-      size={isMobile ? undefined : 'large'}
-      type={'primary'}
-    >
-      {t('shareModal.download')}
-    </Button>
+    <>
+      <Button
+        block
+        icon={CopyIcon}
+        loading={copyLoading}
+        onClick={() => onCopy()}
+        size={isMobile ? undefined : 'large'}
+        type={'primary'}
+      >
+        {t('copy', { ns: 'common' })}
+      </Button>
+      <Button block loading={loading} onClick={onDownload} size={isMobile ? undefined : 'large'}>
+        {t('shareModal.download')}
+      </Button>
+    </>
   );
 
   return (
     <>
       <Flexbox className={styles.body} gap={16} horizontal={!isMobile}>
         <Preview title={title} {...fieldValue} />
-        <Flexbox className={styles.sidebar} gap={16}>
+        <Flexbox className={styles.sidebar} gap={12}>
           <Form
             initialValues={DEFAULT_FIELD_VALUE}
             items={settings}

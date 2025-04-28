@@ -44,9 +44,10 @@ ARG NEXT_PUBLIC_POSTHOG_KEY
 ARG NEXT_PUBLIC_ANALYTICS_UMAMI
 ARG NEXT_PUBLIC_UMAMI_SCRIPT_URL
 ARG NEXT_PUBLIC_UMAMI_WEBSITE_ID
+ARG FEATURE_FLAGS
 
-ENV NEXT_PUBLIC_BASE_PATH="${NEXT_PUBLIC_BASE_PATH}"
-
+ENV NEXT_PUBLIC_BASE_PATH="${NEXT_PUBLIC_BASE_PATH}" \
+    FEATURE_FLAGS="${FEATURE_FLAGS}"
 # Sentry
 ENV NEXT_PUBLIC_SENTRY_DSN="${NEXT_PUBLIC_SENTRY_DSN}" \
     SENTRY_ORG="" \
@@ -67,8 +68,9 @@ ENV NODE_OPTIONS="--max-old-space-size=8192"
 
 WORKDIR /app
 
-COPY package.json ./
+COPY package.json pnpm-workspace.yaml ./
 COPY .npmrc ./
+COPY packages ./packages
 
 RUN \
     # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
@@ -86,10 +88,7 @@ RUN \
     # Use pnpm for corepack
     && corepack use $(sed -n 's/.*"packageManager": "\(.*\)".*/\1/p' package.json) \
     # Install the dependencies
-    && pnpm i \
-    # Add sharp dependencies
-    && mkdir -p /deps \
-    && pnpm add sharp --prefix /deps
+    && pnpm i
 
 COPY . .
 
@@ -101,13 +100,9 @@ FROM busybox:latest AS app
 
 COPY --from=base /distroless/ /
 
-COPY --from=builder /app/public /app/public
-
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder /app/.next/standalone /app/
-COPY --from=builder /app/.next/static /app/.next/static
-COPY --from=builder /deps/node_modules/.pnpm /app/node_modules/.pnpm
 
 # Copy server launcher
 COPY --from=builder /app/scripts/serverLauncher/startServer.js /app/startServer.js
@@ -163,6 +158,8 @@ ENV \
     BAICHUAN_API_KEY="" BAICHUAN_MODEL_LIST="" \
     # Cloudflare
     CLOUDFLARE_API_KEY="" CLOUDFLARE_BASE_URL_OR_ACCOUNT_ID="" CLOUDFLARE_MODEL_LIST="" \
+    # Cohere
+    COHERE_API_KEY="" COHERE_MODEL_LIST="" COHERE_PROXY_URL="" \
     # DeepSeek
     DEEPSEEK_API_KEY="" DEEPSEEK_MODEL_LIST="" \
     # Fireworks AI
@@ -203,10 +200,14 @@ ENV \
     OPENROUTER_API_KEY="" OPENROUTER_MODEL_LIST="" \
     # Perplexity
     PERPLEXITY_API_KEY="" PERPLEXITY_MODEL_LIST="" PERPLEXITY_PROXY_URL="" \
+    # PPIO
+    PPIO_API_KEY="" PPIO_MODEL_LIST="" \
     # Qwen
     QWEN_API_KEY="" QWEN_MODEL_LIST="" QWEN_PROXY_URL="" \
     # SambaNova
     SAMBANOVA_API_KEY="" SAMBANOVA_MODEL_LIST="" \
+    # Search1API
+    SEARCH1API_API_KEY="" SEARCH1API_MODEL_LIST="" \
     # SenseNova
     SENSENOVA_API_KEY="" SENSENOVA_MODEL_LIST="" \
     # SiliconCloud
@@ -227,12 +228,16 @@ ENV \
     WENXIN_API_KEY="" WENXIN_MODEL_LIST="" \
     # xAI
     XAI_API_KEY="" XAI_MODEL_LIST="" XAI_PROXY_URL="" \
+    # Xinference
+    XINFERENCE_API_KEY="" XINFERENCE_MODEL_LIST="" XINFERENCE_PROXY_URL="" \
     # 01.AI
     ZEROONE_API_KEY="" ZEROONE_MODEL_LIST="" \
     # Zhipu
     ZHIPU_API_KEY="" ZHIPU_MODEL_LIST="" \
     # Tencent Cloud
-    TENCENT_CLOUD_API_KEY="" TENCENT_CLOUD_MODEL_LIST=""
+    TENCENT_CLOUD_API_KEY="" TENCENT_CLOUD_MODEL_LIST="" \
+    # Infini-AI
+    INFINIAI_API_KEY="" INFINIAI_MODEL_LIST=""
 
 USER nextjs
 

@@ -4,7 +4,7 @@ import { ConfigProvider, Menu, MenuProps } from 'antd';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
 
-export const ICON_SIZE = { fontSize: '1.25em' };
+export const ICON_SIZE = { size: '1.25em' };
 
 const CategoryMenu = memo<MenuProps>(({ style, ...rest }) => {
   const theme = useTheme();

@@ -1,21 +1,21 @@
 'use client';
 
 import { ActionIcon } from '@lobehub/ui';
-import { MobileNavBar } from '@lobehub/ui/mobile';
+import { ChatHeader } from '@lobehub/ui/mobile';
 import { useTheme } from 'antd-style';
 import { Moon, Sun } from 'lucide-react';
 import { memo } from 'react';
 
 import { MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
-import { useUserStore } from '@/store/user';
+import { useGlobalStore } from '@/store/global';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
 
 const Header = memo(() => {
   const theme = useTheme();
-  const switchThemeMode = useUserStore((s) => s.switchThemeMode);
+  const switchThemeMode = useGlobalStore((s) => s.switchThemeMode);
 
   return (
-    <MobileNavBar
+    <ChatHeader
       right={
         <ActionIcon
           icon={theme.isDarkMode ? Moon : Sun}

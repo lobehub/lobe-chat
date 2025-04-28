@@ -5,9 +5,9 @@ import {
   ChartColumnBig,
   Delete,
   FileMinus,
-  Pickaxe,
   LucideIcon,
   MessageSquareText,
+  Pickaxe,
   Thermometer,
 } from 'lucide-react';
 import { memo } from 'react';
@@ -106,7 +106,7 @@ const ParameterList = memo<ParameterListProps>(({ data }) => {
           key: item.key,
           label: (
             <Flexbox align={'center'} gap={8} horizontal>
-              <Icon icon={item.icon} size={{ fontSize: 16 }} />
+              <Icon icon={item.icon} size={16} />
               {item.label}
               <Tag>{item.key}</Tag>
             </Flexbox>

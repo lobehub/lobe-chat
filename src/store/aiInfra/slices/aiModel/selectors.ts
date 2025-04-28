@@ -22,7 +22,11 @@ const filteredAiProviderModelList = (s: AIProviderStoreState) => {
 };
 
 const totalAiProviderModelList = (s: AIProviderStoreState) => s.aiProviderModelList.length;
+
 const isEmptyAiProviderModelList = (s: AIProviderStoreState) => totalAiProviderModelList(s) === 0;
+
+const getModelCard = (model: string, provider: string) => (s: AIProviderStoreState) =>
+  s.builtinAiModelList.find((item) => item.id === model && item.providerId === provider);
 
 const hasRemoteModels = (s: AIProviderStoreState) =>
   s.aiProviderModelList.some((m) => m.source === AiModelSourceEnum.Remote);
@@ -43,6 +47,12 @@ const isModelSupportToolUse = (id: string, provider: string) => (s: AIProviderSt
   const model = getEnabledModelById(id, provider)(s);
 
   return model?.abilities?.functionCall;
+};
+
+const isModelSupportFiles = (id: string, provider: string) => (s: AIProviderStoreState) => {
+  const model = getEnabledModelById(id, provider)(s);
+
+  return model?.abilities?.files;
 };
 
 const isModelSupportVision = (id: string, provider: string) => (s: AIProviderStoreState) => {
@@ -113,6 +123,7 @@ export const aiModelSelectors = {
   filteredAiProviderModelList,
   getAiModelById,
   getEnabledModelById,
+  getModelCard,
   hasRemoteModels,
   isEmptyAiProviderModelList,
   isModelEnabled,
@@ -121,6 +132,7 @@ export const aiModelSelectors = {
   isModelHasContextWindowToken,
   isModelHasExtendParams,
   isModelLoading,
+  isModelSupportFiles,
   isModelSupportReasoning,
   isModelSupportToolUse,
   isModelSupportVision,

@@ -1,1 +1,1 @@
-export { serverDB } from './core/db';
+export { getServerDB, serverDB } from '../core/db-adaptor';

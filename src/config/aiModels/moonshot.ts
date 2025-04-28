@@ -1,5 +1,6 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
+// https://platform.moonshot.cn/docs/pricing/chat
 const moonshotChatModels: AIChatModelCard[] = [
   {
     abilities: {
@@ -16,8 +17,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     pricing: {
       cachedInput: 1,
       currency: 'CNY',
-      input: 60,
-      output: 60,
+      input: 10,
+      output: 30,
     },
     releasedAt: '2025-02-17',
     settings: {
@@ -31,14 +32,13 @@ const moonshotChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 131_072,
-    description:
-      'Moonshot V1 Auto 可以根据当前上下文占用的 Tokens 数量来选择合适的模型',
+    description: 'Moonshot V1 Auto 可以根据当前上下文占用的 Tokens 数量来选择合适的模型',
     displayName: 'Moonshot V1 Auto',
     id: 'moonshot-v1-auto',
     pricing: {
       currency: 'CNY',
-      input: 60,
-      output: 60,
+      input: 10,
+      output: 30,
     },
     settings: {
       searchImpl: 'params',
@@ -57,8 +57,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-8k',
     pricing: {
       currency: 'CNY',
-      input: 12,
-      output: 12,
+      input: 2,
+      output: 10,
     },
     settings: {
       searchImpl: 'params',
@@ -77,8 +77,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-32k',
     pricing: {
       currency: 'CNY',
-      input: 24,
-      output: 24,
+      input: 5,
+      output: 20,
     },
     settings: {
       searchImpl: 'params',
@@ -97,8 +97,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-128k',
     pricing: {
       currency: 'CNY',
-      input: 60,
-      output: 60,
+      input: 10,
+      output: 30,
     },
     settings: {
       searchImpl: 'params',
@@ -118,8 +118,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-8k-vision-preview',
     pricing: {
       currency: 'CNY',
-      input: 12,
-      output: 12,
+      input: 2,
+      output: 10,
     },
     releasedAt: '2025-01-14',
     settings: {
@@ -140,8 +140,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-32k-vision-preview',
     pricing: {
       currency: 'CNY',
-      input: 24,
-      output: 24,
+      input: 5,
+      output: 20,
     },
     releasedAt: '2025-01-14',
     settings: {
@@ -162,8 +162,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-128k-vision-preview',
     pricing: {
       currency: 'CNY',
-      input: 60,
-      output: 60,
+      input: 10,
+      output: 30,
     },
     releasedAt: '2025-01-14',
     settings: {

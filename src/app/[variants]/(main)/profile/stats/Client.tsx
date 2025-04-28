@@ -31,7 +31,7 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
           <ShareButton />
         </Flexbox>
       )}
-      <FormGroup style={FORM_STYLE.style} title={t('tab.stats')} variant={'pure'}>
+      <FormGroup style={FORM_STYLE.style} title={t('tab.stats')} variant={'borderless'}>
         <Grid maxItemWidth={150} paddingBlock={16} rows={4}>
           <TotalAssistants mobile={mobile} />
           <TotalTopics mobile={mobile} />
@@ -42,8 +42,8 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
       <AiHeatmaps mobile={mobile} />
       <Grid gap={mobile ? 0 : 48} rows={3}>
         <ModelsRank />
-        <AssistantsRank />
-        <TopicsRank />
+        <AssistantsRank mobile={mobile} />
+        <TopicsRank mobile={mobile} />
       </Grid>
     </Flexbox>
   );

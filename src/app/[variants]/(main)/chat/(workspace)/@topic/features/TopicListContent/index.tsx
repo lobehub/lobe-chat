@@ -1,8 +1,7 @@
 'use client';
 
-import { EmptyCard } from '@lobehub/ui';
+import { GuideCard } from '@lobehub/ui';
 import { useThemeMode } from 'antd-style';
-import isEqual from 'fast-deep-equal';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -18,6 +17,7 @@ import { TopicDisplayMode } from '@/types/topic';
 import { SkeletonList } from '../SkeletonList';
 import ByTimeMode from './ByTimeMode';
 import FlatMode from './FlatMode';
+import SearchResult from './SearchResult';
 
 const TopicListContent = memo(() => {
   const { t } = useTranslation('topic');
@@ -26,7 +26,10 @@ const TopicListContent = memo(() => {
     s.topicsInit,
     topicSelectors.currentTopicLength(s),
   ]);
-  const activeTopicList = useChatStore(topicSelectors.displayTopics, isEqual);
+  const [isUndefinedTopics, isInSearchMode] = useChatStore((s) => [
+    topicSelectors.isUndefinedTopics(s),
+    topicSelectors.isInSearchMode(s),
+  ]);
 
   const [visible, updateGuideState, topicDisplayMode] = useUserStore((s) => [
     s.preference.guide?.topic,
@@ -36,23 +39,25 @@ const TopicListContent = memo(() => {
 
   useFetchTopics();
 
+  if (isInSearchMode) return <SearchResult />;
+
   // first time loading or has no data
-  if (!topicsInit || !activeTopicList) return <SkeletonList />;
+  if (!topicsInit || isUndefinedTopics) return <SkeletonList />;
 
   return (
     <>
       {topicLength === 0 && visible && (
         <Flexbox paddingInline={8}>
-          <EmptyCard
+          <GuideCard
             alt={t('guide.desc')}
             cover={imageUrl(`empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`)}
-            desc={t('guide.desc')}
-            height={120}
-            imageProps={{
+            coverProps={{
               priority: true,
             }}
-            onVisibleChange={(visible) => {
-              updateGuideState({ topic: visible });
+            desc={t('guide.desc')}
+            height={120}
+            onClose={() => {
+              updateGuideState({ topic: false });
             }}
             style={{ flex: 'none', marginBottom: 12 }}
             title={t('guide.title')}

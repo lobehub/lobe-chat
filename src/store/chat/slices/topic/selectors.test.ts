@@ -76,11 +76,13 @@ describe('topicSelectors', () => {
       const topics = topicSelectors.displayTopics(state);
       expect(topics).toEqual(topicMaps.test);
     });
+  });
 
+  describe('searchTopics', () => {
     it('should return search topics if searching', () => {
       const searchTopics = [{ id: 'search1', name: 'Search 1' }];
-      const state = merge(initialStore, { isSearchingTopic: true, searchTopics });
-      const topics = topicSelectors.displayTopics(state);
+      const state = merge(initialStore, { inSearchingMode: true, searchTopics });
+      const topics = topicSelectors.searchTopics(state);
       expect(topics).toEqual(searchTopics);
     });
   });

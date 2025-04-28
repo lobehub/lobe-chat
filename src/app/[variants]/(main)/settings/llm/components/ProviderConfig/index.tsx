@@ -1,8 +1,16 @@
 'use client';
 
 import { ProviderCombine } from '@lobehub/icons';
-import { Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from '@lobehub/ui';
-import { Input, Switch } from 'antd';
+import {
+  Form,
+  type FormGroupItemType,
+  type FormItemProps,
+  Icon,
+  Input,
+  InputPassword,
+  Tooltip,
+} from '@lobehub/ui';
+import { Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { debounce } from 'lodash-es';
 import { LockIcon } from 'lucide-react';
@@ -146,7 +154,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
       : (apiKeyItems ?? [
           {
             children: (
-              <Input.Password
+              <InputPassword
                 autoComplete={'new-password'}
                 placeholder={t(`llm.apiKey.placeholder`, { name })}
               />
@@ -236,7 +244,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
 
     /* ↑ cloud slot ↑ */
 
-    const model: ItemGroup = {
+    const model: FormGroupItemType = {
       children: formItems,
 
       defaultActive: canDeactivate ? enabled : undefined,

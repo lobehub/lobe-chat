@@ -6,9 +6,8 @@ import { CSSProperties, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { ModelInfoTags } from '@/components/ModelSelect';
 import { DiscoverModelItem } from '@/types/discover';
-
-import ModelFeatureTags from '../../../features/ModelFeatureTags';
 
 const { Paragraph, Title } = Typography;
 
@@ -74,7 +73,7 @@ export interface ModelCardProps extends DiscoverModelItem {
 }
 
 const ModelCard = memo<ModelCardProps>(({ className, meta, identifier, style, href }) => {
-  const { description, title, functionCall, vision, contextWindowTokens } = meta;
+  const { description, title } = meta;
   const { t } = useTranslation('models');
   const { cx, styles } = useStyles();
 
@@ -109,12 +108,7 @@ const ModelCard = memo<ModelCardProps>(({ className, meta, identifier, style, hr
               {t(`${identifier}.description`)}
             </Paragraph>
           )}
-
-          <ModelFeatureTags
-            functionCall={functionCall}
-            tokens={contextWindowTokens}
-            vision={vision}
-          />
+          <ModelInfoTags directionReverse {...meta} />
         </Flexbox>
       </Flexbox>
     </Link>

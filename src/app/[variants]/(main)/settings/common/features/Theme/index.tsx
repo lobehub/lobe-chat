@@ -1,7 +1,7 @@
 'use client';
 
-import { Form, type ItemGroup, SelectWithImg, SliderWithInput } from '@lobehub/ui';
-import { Select } from 'antd';
+import { Form, type FormGroupItemType, ImageSelect, SliderWithInput } from '@lobehub/ui';
+import { Select } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { memo } from 'react';
@@ -12,20 +12,20 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { imageUrl } from '@/const/url';
 import { Locales, localeOptions } from '@/locales/resources';
 import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
-import { settingsSelectors, userGeneralSettingsSelectors } from '@/store/user/selectors';
+import { settingsSelectors } from '@/store/user/selectors';
 
 import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from './ThemeSwatches';
-
-type SettingItemGroup = ItemGroup;
 
 const Theme = memo(() => {
   const { t } = useTranslation('setting');
 
   const [form] = Form.useForm();
   const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
-  const themeMode = useUserStore(userGeneralSettingsSelectors.currentThemeMode);
-  const [setThemeMode, setSettings] = useUserStore((s) => [s.switchThemeMode, s.setSettings]);
+  const themeMode = useGlobalStore(systemStatusSelectors.themeMode);
+  const [setSettings] = useUserStore((s) => [s.setSettings]);
+  const [setThemeMode] = useGlobalStore((s) => [s.switchThemeMode]);
 
   useSyncSettings(form);
   const [switchLocale] = useGlobalStore((s) => [s.switchLocale]);
@@ -34,11 +34,11 @@ const Theme = memo(() => {
     switchLocale(value);
   };
 
-  const theme: SettingItemGroup = {
+  const theme: FormGroupItemType = {
     children: [
       {
         children: (
-          <SelectWithImg
+          <ImageSelect
             height={60}
             onChange={setThemeMode}
             options={[
@@ -137,7 +137,7 @@ const Theme = memo(() => {
       items={[theme]}
       itemsType={'group'}
       onValuesChange={setSettings}
-      variant={'pure'}
+      variant={'borderless'}
       {...FORM_STYLE}
     />
   );

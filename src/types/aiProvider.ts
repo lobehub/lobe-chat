@@ -32,37 +32,6 @@ export const AiProviderSDKEnum = {
 
 export type AiProviderSDKType = (typeof AiProviderSDKEnum)[keyof typeof AiProviderSDKEnum];
 
-// create
-export const CreateAiProviderSchema = z.object({
-  config: z.object({}).passthrough().optional(),
-  description: z.string().optional(),
-  id: z.string(),
-  keyVaults: z.any().optional(),
-  logo: z.string().optional(),
-  name: z.string(),
-  sdkType: z.enum(['openai', 'anthropic']).optional(),
-  source: z.enum(['builtin', 'custom']),
-  // checkModel: z.string().optional(),
-  // homeUrl: z.string().optional(),
-  // modelsUrl: z.string().optional(),
-});
-
-export type CreateAiProviderParams = z.infer<typeof CreateAiProviderSchema>;
-
-// List Query
-
-export interface AiProviderListItem {
-  description?: string;
-  enabled: boolean;
-  id: string;
-  logo?: string;
-  name?: string;
-  sort?: number;
-  source: AiProviderSourceType;
-}
-
-// Detail Query
-
 export interface AiProviderSettings {
   /**
    * whether provider show browser request option by default
@@ -114,6 +83,65 @@ export interface AiProviderSettings {
    */
   smoothing?: SmoothingParams;
 }
+
+const AiProviderSettingsSchema = z.object({
+  defaultShowBrowserRequest: z.boolean().optional(),
+  disableBrowserRequest: z.boolean().optional(),
+  modelEditable: z.boolean().optional(),
+  proxyUrl: z
+    .object({
+      desc: z.string().optional(),
+      placeholder: z.string(),
+      title: z.string().optional(),
+    })
+    .or(z.literal(false))
+    .optional(),
+  sdkType: z.enum(['anthropic', 'openai', 'ollama']).optional(),
+  searchMode: z.enum(['params', 'internal']).optional(),
+  showAddNewModel: z.boolean().optional(),
+  showApiKey: z.boolean().optional(),
+  showChecker: z.boolean().optional(),
+  showDeployName: z.boolean().optional(),
+  showModelFetcher: z.boolean().optional(),
+  smoothing: z
+    .object({
+      text: z.boolean().optional(),
+      toolsCalling: z.boolean().optional(),
+    })
+    .optional(),
+});
+
+// create
+export const CreateAiProviderSchema = z.object({
+  config: z.object({}).passthrough().optional(),
+  description: z.string().optional(),
+  id: z.string(),
+  keyVaults: z.any().optional(),
+  logo: z.string().optional(),
+  name: z.string(),
+  sdkType: z.enum(['openai', 'anthropic']).optional(),
+  settings: AiProviderSettingsSchema.optional(),
+  source: z.enum(['builtin', 'custom']),
+  // checkModel: z.string().optional(),
+  // homeUrl: z.string().optional(),
+  // modelsUrl: z.string().optional(),
+});
+
+export type CreateAiProviderParams = z.infer<typeof CreateAiProviderSchema>;
+
+// List Query
+
+export interface AiProviderListItem {
+  description?: string;
+  enabled: boolean;
+  id: string;
+  logo?: string;
+  name?: string;
+  sort?: number;
+  source: AiProviderSourceType;
+}
+
+// Detail Query
 
 export interface AiProviderCard {
   /**
@@ -174,6 +202,7 @@ export const UpdateAiProviderSchema = z.object({
   logo: z.string().nullable().optional(),
   name: z.string(),
   sdkType: z.enum(['openai', 'anthropic']).optional(),
+  settings: AiProviderSettingsSchema.optional(),
 });
 
 export type UpdateAiProviderParams = z.infer<typeof UpdateAiProviderSchema>;

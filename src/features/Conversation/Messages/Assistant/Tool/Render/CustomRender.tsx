@@ -1,17 +1,27 @@
-import { Icon } from '@lobehub/ui';
-import { ConfigProvider, Empty } from 'antd';
-import { useTheme } from 'antd-style';
-import { LucideSquareArrowLeft, LucideSquareArrowRight } from 'lucide-react';
-import { memo, useContext, useEffect } from 'react';
+import { ActionIcon } from '@lobehub/ui';
+import { App } from 'antd';
+import { Edit3Icon, PlayCircleIcon } from 'lucide-react';
+import { parse } from 'partial-json';
+import { memo, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 
 import PluginRender from '@/features/PluginsUI/Render';
 import { useChatStore } from '@/store/chat';
-import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
+import { chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 
 import Arguments from './Arguments';
+import KeyValueEditor from './KeyValueEditor';
+
+const safeParseJson = (str: string): Record<string, any> => {
+  try {
+    const obj = parse(str);
+    return typeof obj === 'object' && obj !== null ? obj : {};
+  } catch {
+    return {};
+  }
+};
 
 interface CustomRenderProps extends ChatMessage {
   requestArgs?: string;
@@ -30,39 +40,43 @@ const CustomRender = memo<CustomRenderProps>(
     setShowPluginRender,
     pluginError,
   }) => {
-    const [loading, isMessageToolUIOpen] = useChatStore((s) => [
-      chatSelectors.isPluginApiInvoking(id)(s),
-      chatPortalSelectors.isPluginUIOpen(id)(s),
+    const { t } = useTranslation(['tool', 'common']);
+    const [loading] = useChatStore((s) => [chatSelectors.isPluginApiInvoking(id)(s)]);
+    const [isEditing, setIsEditing] = useState(false);
+    const { message } = App.useApp();
+    const [updatePluginArguments, reInvokeToolMessage] = useChatStore((s) => [
+      s.updatePluginArguments,
+      s.reInvokeToolMessage,
     ]);
-    const { direction } = useContext(ConfigProvider.ConfigContext);
-    const { t } = useTranslation('plugin');
+    const handleCancel = useCallback(() => {
+      setIsEditing(false);
+    }, []);
 
-    const theme = useTheme();
+    const handleFinish = useCallback(
+      async (editedObject: Record<string, any>) => {
+        if (!id) return;
+
+        try {
+          const newArgsString = JSON.stringify(editedObject, null, 2);
+
+          if (newArgsString !== requestArgs) {
+            await updatePluginArguments(id, editedObject, true);
+            await reInvokeToolMessage(id);
+          }
+          setIsEditing(false);
+        } catch (error) {
+          console.error('Error stringifying arguments:', error);
+          message.error(t('updateArgs.stringifyError'));
+        }
+      },
+      [requestArgs, id],
+    );
 
     useEffect(() => {
       if (!plugin?.type || loading) return;
 
-      setShowPluginRender(plugin?.type !== 'default');
+      setShowPluginRender(!['default', 'mcp'].includes(plugin?.type));
     }, [plugin?.type, loading]);
-
-    if (isMessageToolUIOpen)
-      return (
-        <Center paddingBlock={8} style={{ background: theme.colorFillQuaternary, borderRadius: 4 }}>
-          <Empty
-            description={t('showInPortal')}
-            image={
-              <Icon
-                color={theme.colorTextQuaternary}
-                icon={direction === 'rtl' ? LucideSquareArrowLeft : LucideSquareArrowRight}
-                size={'large'}
-              />
-            }
-            styles={{
-              image: { height: 24 },
-            }}
-          />
-        </Center>
-      );
 
     if (loading) return <Arguments arguments={requestArgs} shine />;
 
@@ -80,12 +94,42 @@ const CustomRender = memo<CustomRenderProps>(
             pluginState={pluginState}
             type={plugin?.type}
           />
+        ) : isEditing ? (
+          <KeyValueEditor
+            initialValue={safeParseJson(requestArgs || '')}
+            onCancel={handleCancel}
+            onFinish={handleFinish}
+          />
         ) : (
-          <Arguments arguments={requestArgs} />
+          <Arguments
+            actions={
+              <>
+                <ActionIcon
+                  icon={Edit3Icon}
+                  onClick={() => {
+                    setIsEditing(true);
+                  }}
+                  size={'small'}
+                  title={t('edit', { ns: 'common' })}
+                />
+                <ActionIcon
+                  icon={PlayCircleIcon}
+                  onClick={async () => {
+                    await reInvokeToolMessage(id);
+                  }}
+                  size={'small'}
+                  title={t('run', { ns: 'common' })}
+                />
+              </>
+            }
+            arguments={requestArgs}
+          />
         )}
       </Flexbox>
     );
   },
 );
+
+CustomRender.displayName = 'CustomRender';
 
 export default CustomRender;

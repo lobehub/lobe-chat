@@ -1,15 +1,13 @@
 'use client';
 
-import { ActionIcon, Avatar } from '@lobehub/ui';
-import { ChatHeaderTitle } from '@lobehub/ui/chat';
+import { Avatar } from '@lobehub/ui';
 import { Skeleton } from 'antd';
-import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { createStyles } from 'antd-style';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 import { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useGlobalStore } from '@/store/global';
@@ -17,19 +15,41 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
+import TogglePanelButton from '../../../../features/TogglePanelButton';
 import Tags from './Tags';
 
-const Main = memo(() => {
-  const { t } = useTranslation('chat');
+const useStyles = createStyles(({ css }) => ({
+  container: css`
+    position: relative;
+    overflow: hidden;
+    flex: 1;
+    max-width: 100%;
+  `,
+  tag: css`
+    flex: none;
+    align-items: baseline;
+  `,
+  title: css`
+    overflow: hidden;
 
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  `,
+}));
+
+const Main = memo<{ className?: string }>(({ className }) => {
+  const { t } = useTranslation(['chat', 'hotkey']);
+  const { styles } = useStyles();
   useInitAgentConfig();
   const [isPinned] = useQueryState('pinned', parseAsBoolean);
 
-  const [init, isInbox, title, description, avatar, backgroundColor] = useSessionStore((s) => [
+  const [init, isInbox, title, avatar, backgroundColor] = useSessionStore((s) => [
     sessionSelectors.isSomeSessionActive(s),
     sessionSelectors.isInboxSession(s),
     sessionMetaSelectors.currentAgentTitle(s),
-    sessionMetaSelectors.currentAgentDescription(s),
     sessionMetaSelectors.currentAgentAvatar(s),
     sessionMetaSelectors.currentAgentBackgroundColor(s),
   ]);
@@ -37,62 +57,40 @@ const Main = memo(() => {
   const openChatSettings = useOpenChatSettings();
 
   const displayTitle = isInbox ? t('inbox.title') : title;
-  const displayDesc = isInbox ? t('inbox.desc') : description;
   const showSessionPanel = useGlobalStore(systemStatusSelectors.showSessionPanel);
-  const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
 
-  return !init ? (
-    <Flexbox gap={4} horizontal>
-      {!isPinned && (
-        <ActionIcon
-          aria-label={t('agents')}
-          icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
-          onClick={() => {
-            updateSystemStatus({
-              sessionsWidth: showSessionPanel ? 0 : 320,
-              showSessionPanel: !showSessionPanel,
-            });
-          }}
-          size={DESKTOP_HEADER_ICON_SIZE}
-          title={t('agents')}
+  if (!init)
+    return (
+      <Flexbox align={'center'} className={className} gap={8} horizontal>
+        {!isPinned && !showSessionPanel && <TogglePanelButton />}
+        <Skeleton
+          active
+          avatar={{ shape: 'circle', size: 28 }}
+          paragraph={false}
+          title={{ style: { margin: 0, marginTop: 4 }, width: 200 }}
         />
-      )}
-      <Skeleton
-        active
-        avatar={{ shape: 'circle', size: 'default' }}
-        paragraph={false}
-        title={{ style: { margin: 0, marginTop: 8 }, width: 200 }}
-      />
-    </Flexbox>
-  ) : (
-    <Flexbox align={'center'} gap={4} horizontal>
-      {!isPinned && (
-        <ActionIcon
-          aria-label={t('agents')}
-          icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
-          onClick={() => {
-            updateSystemStatus({
-              sessionsWidth: showSessionPanel ? 0 : 320,
-              showSessionPanel: !showSessionPanel,
-            });
-          }}
-          size={DESKTOP_HEADER_ICON_SIZE}
-          title={t('agents')}
-        />
-      )}
+      </Flexbox>
+    );
+
+  return (
+    <Flexbox align={'center'} className={className} gap={12} horizontal>
+      {!isPinned && !showSessionPanel && <TogglePanelButton />}
       <Avatar
         avatar={avatar}
         background={backgroundColor}
         onClick={() => openChatSettings()}
-        size={40}
+        size={32}
         title={title}
       />
-      <ChatHeaderTitle desc={displayDesc} tag={<Tags />} title={displayTitle} />
+      <Flexbox align={'center'} className={styles.container} gap={8} horizontal>
+        <div className={styles.title}>{displayTitle}</div>
+        <Tags />
+      </Flexbox>
     </Flexbox>
   );
 });
 
-export default () => (
+export default memo<{ className?: string }>(({ className }) => (
   <Suspense
     fallback={
       <Skeleton
@@ -103,6 +101,6 @@ export default () => (
       />
     }
   >
-    <Main />
+    <Main className={className} />
   </Suspense>
-);
+));

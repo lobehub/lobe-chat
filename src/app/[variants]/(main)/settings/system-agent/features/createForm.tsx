@@ -1,8 +1,7 @@
 'use client';
 
-import { Form, Icon, type ItemGroup } from '@lobehub/ui';
-import type { FormItemProps } from '@lobehub/ui/es/Form/components/FormItem';
-import { Form as AntForm, Button, Switch } from 'antd';
+import { Button, Form, type FormGroupItemType, type FormItemProps } from '@lobehub/ui';
+import { Form as AntForm, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { PencilIcon } from 'lucide-react';
 import { memo } from 'react';
@@ -16,8 +15,6 @@ import { settingsSelectors } from '@/store/user/selectors';
 import { type UserSystemAgentConfigKey } from '@/types/user/settings';
 
 import { useSyncSystemAgent } from './useSync';
-
-type SettingItemGroup = ItemGroup;
 
 interface SystemAgentFormProps {
   allowCustomPrompt?: boolean;
@@ -36,7 +33,7 @@ const SystemAgentForm = memo(
     const [form] = AntForm.useForm();
     const value = settings[systemAgentKey];
 
-    const systemAgentSettings: SettingItemGroup = {
+    const systemAgentSettings: FormGroupItemType = {
       children: [
         {
           children: (
@@ -65,7 +62,7 @@ const SystemAgentForm = memo(
           ) : (
             <Button
               block
-              icon={<Icon icon={PencilIcon} />}
+              icon={PencilIcon}
               onClick={async () => {
                 await updateSystemAgent(systemAgentKey, { customPrompt: defaultPrompt });
               }}

@@ -1,14 +1,15 @@
-import { Avatar, Tooltip } from '@lobehub/ui';
+import { Tooltip } from '@lobehub/ui';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import PluginTag from '@/features/PluginStore/PluginItem/PluginTag';
 import { InstallPluginMeta } from '@/types/tool/plugin';
 
 import Actions from './Action';
+import PluginAvatar from './PluginAvatar';
+import PluginTag from './PluginTag';
 
 const { Paragraph } = Typography;
 
@@ -51,7 +52,7 @@ const PluginItem = memo<InstallPluginMeta>(({ identifier, homepage, author, type
         horizontal
         style={{ overflow: 'hidden', position: 'relative' }}
       >
-        <Avatar avatar={meta.avatar} style={{ flex: 'none', overflow: 'hidden' }} />
+        <PluginAvatar avatar={meta.avatar} />
         <Flexbox flex={1} gap={4} style={{ overflow: 'hidden', position: 'relative' }}>
           <Flexbox align={'center'} gap={8} horizontal>
             <Tooltip title={identifier}>

@@ -4,28 +4,32 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { message } from '@/components/AntdStaticMethods';
 import { LOBE_CHAT_CLOUD } from '@/const/branding';
-import { isServerMode } from '@/const/version';
+import { isDesktop, isServerMode } from '@/const/version';
 import { fileService } from '@/services/file';
 import { uploadService } from '@/services/upload';
+import { getElectronStoreState } from '@/store/electron';
+import { electronSyncSelectors } from '@/store/electron/selectors';
 import { FileMetadata, UploadFileItem } from '@/types/files';
 
 import { FileStore } from '../../store';
 
+type OnStatusUpdate = (
+  data:
+    | {
+        id: string;
+        type: 'updateFile';
+        value: Partial<UploadFileItem>;
+      }
+    | {
+        id: string;
+        type: 'removeFile';
+      },
+) => void;
+
 interface UploadWithProgressParams {
   file: File;
   knowledgeBaseId?: string;
-  onStatusUpdate?: (
-    data:
-      | {
-          id: string;
-          type: 'updateFile';
-          value: Partial<UploadFileItem>;
-        }
-      | {
-          id: string;
-          type: 'removeFile';
-        },
-  ) => void;
+  onStatusUpdate?: OnStatusUpdate;
   /**
    * Optional flag to indicate whether to skip the file type check.
    * When set to `true`, any file type checks will be bypassed.
@@ -35,11 +39,19 @@ interface UploadWithProgressParams {
 }
 
 interface UploadWithProgressResult {
+  filename?: string;
   id: string;
   url: string;
 }
 
 export interface FileUploadAction {
+  uploadBase64FileWithProgress: (
+    base64: string,
+    params?: {
+      onStatusUpdate?: OnStatusUpdate;
+    },
+  ) => Promise<UploadWithProgressResult | undefined>;
+
   uploadWithProgress: (
     params: UploadWithProgressParams,
   ) => Promise<UploadWithProgressResult | undefined>;
@@ -51,6 +63,19 @@ export const createFileUploadSlice: StateCreator<
   [],
   FileUploadAction
 > = () => ({
+  uploadBase64FileWithProgress: async (base64) => {
+    const { metadata, fileType, size, hash } = await uploadService.uploadBase64ToS3(base64);
+
+    const res = await fileService.createFile({
+      fileType,
+      hash,
+      metadata,
+      name: metadata.filename,
+      size: size,
+      url: metadata.path,
+    });
+    return { ...res, filename: metadata.filename };
+  },
   uploadWithProgress: async ({ file, onStatusUpdate, knowledgeBaseId, skipCheckFileType }) => {
     const fileArrayBuffer = await file.arrayBuffer();
 
@@ -71,8 +96,14 @@ export const createFileUploadSlice: StateCreator<
     }
     // 2. if file don't exist, need upload files
     else {
-      // if is server mode, upload to server s3, or upload to client s3
-      if (isServerMode) {
+      // only if not enable sync
+      const state = getElectronStoreState();
+      const isSyncActive = electronSyncSelectors.isSyncActive(state);
+
+      if (isDesktop && !isSyncActive) {
+        metadata = await uploadService.uploadToDesktop(file);
+      } else if (isServerMode) {
+        // if is server mode, upload to server s3, or upload to client s3
         metadata = await uploadService.uploadWithProgress(file, {
           onProgress: (status, upload) => {
             onStatusUpdate?.({
@@ -135,6 +166,6 @@ export const createFileUploadSlice: StateCreator<
       },
     });
 
-    return data;
+    return { ...data, filename: file.name };
   },
 });

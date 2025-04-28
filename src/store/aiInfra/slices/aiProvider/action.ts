@@ -3,7 +3,7 @@ import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
-import { isDeprecatedEdition } from '@/const/version';
+import { isDeprecatedEdition, isDesktop, isUsePgliteDB } from '@/const/version';
 import { useClientDataSWR } from '@/libs/swr';
 import { aiProviderService } from '@/services/aiProvider';
 import { AiInfraStore } from '@/store/aiInfra/store';
@@ -184,7 +184,8 @@ export const createAiProviderSlice: StateCreator<
         };
       },
       {
-        onSuccess: (data) => {
+        focusThrottleInterval: isDesktop || isUsePgliteDB ? 100 : undefined,
+        onSuccess: async (data) => {
           if (!data) return;
 
           const getModelListByType = (providerId: string, type: string) => {
@@ -206,10 +207,12 @@ export const createAiProviderSlice: StateCreator<
             children: getModelListByType(provider.id, 'chat'),
             name: provider.name || provider.id,
           }));
+          const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
           set(
             {
               aiProviderRuntimeConfig: data.runtimeConfig,
+              builtinAiModelList: LOBE_DEFAULT_MODEL_LIST,
               enabledAiModels: data.enabledAiModels,
               enabledAiProviders: data.enabledAiProviders,
               enabledChatModelList,

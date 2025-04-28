@@ -1,6 +1,8 @@
 'use client';
 
-import { ChatList, Icon, MobileChatInputArea, MobileChatSendButton } from '@lobehub/ui';
+import { Icon } from '@lobehub/ui';
+import { ChatList } from '@lobehub/ui/chat';
+import { ChatInputArea, ChatSendButton } from '@lobehub/ui/mobile';
 import { useTheme } from 'antd-style';
 import { BotMessageSquare, LoaderCircle } from 'lucide-react';
 import { memo } from 'react';
@@ -80,6 +82,9 @@ const ConversationExample = memo<ConversationExampleProps>(({ data }) => {
                 updateAt: 1_686_437_950_084,
               },
             ]}
+            renderActions={{
+              default: () => null,
+            }}
             renderMessages={{
               default: ({ id, editableContent }) => <div id={id}>{editableContent}</div>,
             }}
@@ -88,9 +93,9 @@ const ConversationExample = memo<ConversationExampleProps>(({ data }) => {
       )}
       <Flexbox flex={'none'}>
         {data?.examples && data.examples?.length > 0 && <TopicList data={data?.examples} />}
-        <MobileChatInputArea
+        <ChatInputArea
           style={{ background: 'none', border: 'none' }}
-          textAreaRightAddons={<MobileChatSendButton />}
+          textAreaRightAddons={<ChatSendButton />}
         />
       </Flexbox>
     </HighlightBlock>

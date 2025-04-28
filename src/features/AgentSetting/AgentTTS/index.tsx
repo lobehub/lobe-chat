@@ -1,9 +1,9 @@
 'use client';
 
 import { VoiceList } from '@lobehub/tts';
-import { Form, ItemGroup } from '@lobehub/ui';
-import { Select, Switch } from 'antd';
-import { debounce } from 'lodash-es';
+import { Form, type FormGroupItemType, Select } from '@lobehub/ui';
+import { Switch } from 'antd';
+import isEqual from 'fast-deep-equal';
 import { Mic } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,8 +12,7 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 
-import { useStore } from '../store';
-import { useAgentSyncSettings } from '../useSyncAgemtSettings';
+import { selectors, useStore } from '../store';
 import SelectWithTTSPreview from './SelectWithTTSPreview';
 import { ttsOptions } from './options';
 
@@ -27,20 +26,15 @@ const AgentTTS = memo(() => {
     const locale = globalGeneralSelectors.currentLanguage(s);
     return (all?: boolean) => new VoiceList(all ? undefined : locale);
   });
-  const [showAllLocaleVoice, ttsService, updateConfig] = useStore((s) => [
-    s.config.tts?.showAllLocaleVoice,
-    s.config.tts?.ttsService,
-    s.setAgentConfig,
-  ]);
-
-  useAgentSyncSettings(form);
+  const config = useStore(selectors.currentTtsConfig, isEqual);
+  const updateConfig = useStore((s) => s.setAgentConfig);
 
   const { edgeVoiceOptions, microsoftVoiceOptions } = useMemo(
-    () => voiceList(showAllLocaleVoice),
-    [showAllLocaleVoice],
+    () => voiceList(config.showAllLocaleVoice),
+    [config.showAllLocaleVoice],
   );
 
-  const tts: ItemGroup = {
+  const tts: FormGroupItemType = {
     children: [
       {
         children: <Select options={ttsOptions} />,
@@ -51,8 +45,9 @@ const AgentTTS = memo(() => {
       {
         children: <Switch />,
         desc: t('settingTTS.showAllLocaleVoice.desc'),
-        hidden: ttsService === 'openai',
+        hidden: config.ttsService === 'openai',
         label: t('settingTTS.showAllLocaleVoice.title'),
+        layout: 'horizontal',
         minWidth: undefined,
         name: [TTS_SETTING_KEY, 'showAllLocaleVoice'],
         valuePropName: 'checked',
@@ -60,7 +55,7 @@ const AgentTTS = memo(() => {
       {
         children: <SelectWithTTSPreview options={openaiVoiceOptions} server={'openai'} />,
         desc: t('settingTTS.voice.desc'),
-        hidden: ttsService !== 'openai',
+        hidden: config.ttsService !== 'openai',
         label: t('settingTTS.voice.title'),
         name: [TTS_SETTING_KEY, 'voice', 'openai'],
       },
@@ -68,7 +63,7 @@ const AgentTTS = memo(() => {
         children: <SelectWithTTSPreview options={edgeVoiceOptions} server={'edge'} />,
         desc: t('settingTTS.voice.desc'),
         divider: false,
-        hidden: ttsService !== 'edge',
+        hidden: config.ttsService !== 'edge',
         label: t('settingTTS.voice.title'),
         name: [TTS_SETTING_KEY, 'voice', 'edge'],
       },
@@ -76,7 +71,7 @@ const AgentTTS = memo(() => {
         children: <SelectWithTTSPreview options={microsoftVoiceOptions} server={'microsoft'} />,
         desc: t('settingTTS.voice.desc'),
         divider: false,
-        hidden: ttsService !== 'microsoft',
+        hidden: config.ttsService !== 'microsoft',
         label: t('settingTTS.voice.title'),
         name: [TTS_SETTING_KEY, 'voice', 'microsoft'],
       },
@@ -100,20 +95,24 @@ const AgentTTS = memo(() => {
 
   return (
     <Form
+      footer={
+        <Form.SubmitFooter
+          texts={{
+            reset: t('submitFooter.reset'),
+            submit: t('settingTTS.submit'),
+            unSaved: t('submitFooter.unSaved'),
+            unSavedWarning: t('submitFooter.unSavedWarning'),
+          }}
+        />
+      }
       form={form}
       initialValues={{
-        [TTS_SETTING_KEY]: {
-          voice: {
-            edge: edgeVoiceOptions?.[0].value,
-            microsoft: microsoftVoiceOptions?.[0].value,
-            openai: openaiVoiceOptions?.[0].value,
-          },
-        },
+        [TTS_SETTING_KEY]: config,
       }}
       items={[tts]}
       itemsType={'group'}
-      onValuesChange={debounce(updateConfig, 100)}
-      variant={'pure'}
+      onFinish={updateConfig}
+      variant={'borderless'}
       {...FORM_STYLE}
     />
   );

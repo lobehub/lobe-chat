@@ -1,70 +1,45 @@
-import { DisconnectOutlined } from '@ant-design/icons';
 import { Icon } from '@lobehub/ui';
-import { Divider, Typography } from 'antd';
+import { GlobeOffIcon } from '@lobehub/ui/icons';
+import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
-import { CheckIcon, SparklesIcon } from 'lucide-react';
-import { ReactNode, memo } from 'react';
+import { LucideIcon, SparkleIcon } from 'lucide-react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/slices/chat';
+import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/slices/chat';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { SearchMode } from '@/types/search';
 
+import FCSearchModel from './FCSearchModel';
 import ModelBuiltinSearch from './ModelBuiltinSearch';
 
-const { Text } = Typography;
-
-interface NetworkOption {
-  description: string;
-  disable?: boolean;
-  icon: ReactNode;
-  label: string;
-  value: SearchMode;
-}
-
 const useStyles = createStyles(({ css, token }) => ({
+  active: css`
+    background: ${token.colorFillTertiary};
+  `,
   check: css`
     margin-inline-start: 12px;
     font-size: 16px;
     color: ${token.colorPrimary};
   `,
-  content: css`
-    flex: 1;
-    width: 230px;
-  `,
   description: css`
     font-size: 12px;
-    color: ${token.colorTextSecondary};
+    color: ${token.colorTextDescription};
   `,
-  disable: css`
-    cursor: not-allowed;
-    opacity: 0.45;
-  `,
-  iconWrapper: css`
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-
-    font-size: 16px;
-
-    background: ${token.colorFillQuaternary};
+  icon: css`
+    border: 1px solid ${token.colorBorderSecondary};
+    border-radius: ${token.borderRadius}px;
+    background: ${token.colorBgElevated};
   `,
   option: css`
     cursor: pointer;
 
-    align-items: center;
-
     width: 100%;
     padding-block: 8px;
-    padding-inline: 12px;
-    border-radius: 8px;
+    padding-inline: 8px;
+    border-radius: ${token.borderRadius}px;
 
     transition: background-color 0.2s;
 
@@ -73,47 +48,57 @@ const useStyles = createStyles(({ css, token }) => ({
     }
   `,
   title: css`
-    margin-block-end: 2px;
     font-size: 14px;
     font-weight: 500;
     color: ${token.colorText};
   `,
 }));
 
-const Item = memo<NetworkOption>(({ value, description, icon, label, disable }) => {
-  const { t } = useTranslation('chat');
-  const { styles } = useStyles();
+interface NetworkOption {
+  description: string;
+  disable?: boolean;
+  icon: LucideIcon;
+  label: string;
+  setLoading?: (loading: boolean) => void;
+  value: SearchMode;
+}
+
+const Item = memo<NetworkOption>(({ value, description, icon, label, setLoading }) => {
+  const { cx, styles } = useStyles();
   const [mode, updateAgentChatConfig] = useAgentStore((s) => [
-    agentSelectors.agentSearchMode(s),
+    agentChatConfigSelectors.agentSearchMode(s),
     s.updateAgentChatConfig,
   ]);
 
   return (
     <Flexbox
-      className={styles.option}
-      gap={24}
+      align={'flex-start'}
+      className={cx(styles.option, mode === value && styles.active)}
+      gap={12}
       horizontal
       key={value}
-      onClick={() => updateAgentChatConfig({ searchMode: value })}
+      onClick={async () => {
+        setLoading?.(true);
+        await updateAgentChatConfig({ searchMode: value });
+        setLoading?.(false);
+      }}
     >
-      <Flexbox className={disable ? styles.disable : ''} gap={8} horizontal>
-        <div className={styles.iconWrapper}>{icon}</div>
-        <div className={styles.content}>
-          <div className={styles.title}>{label}</div>
-          <Text className={styles.description} type="secondary">
-            {disable ? t('search.mode.disable') : description}
-          </Text>
-        </div>
+      <Center className={styles.icon} flex={'none'} height={32} width={32}>
+        <Icon icon={icon} />
+      </Center>
+      <Flexbox flex={1}>
+        <div className={styles.title}>{label}</div>
+        <div className={styles.description}>{description}</div>
       </Flexbox>
-      {mode === value && <Icon className={styles.check} icon={CheckIcon} />}
     </Flexbox>
   );
 });
 
 interface AINetworkSettingsProps {
-  providerSearch?: boolean;
+  setLoading?: (loading: boolean) => void;
 }
-const AINetworkSettings = memo<AINetworkSettingsProps>(() => {
+
+const AINetworkSettings = memo<AINetworkSettingsProps>(({ setLoading }) => {
   const { t } = useTranslation('chat');
   const [model, provider] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
@@ -128,38 +113,28 @@ const AINetworkSettings = memo<AINetworkSettingsProps>(() => {
   const options: NetworkOption[] = [
     {
       description: t('search.mode.off.desc'),
-      icon: <DisconnectOutlined />,
+      icon: GlobeOffIcon,
       label: t('search.mode.off.title'),
       value: 'off',
     },
-    // 等应用层联网功能做好以后再开启
-    // {
-    //   description: t('search.mode.on.desc'),
-    //   icon: <WifiOutlined />,
-    //   label: t('search.mode.on.title'),
-    //   value: 'on',
-    // },
     {
       description: t('search.mode.auto.desc'),
-      disable: !supportFC,
-      icon: <Icon icon={SparklesIcon} />,
+      icon: SparkleIcon,
       label: t('search.mode.auto.title'),
       value: 'auto',
     },
   ];
 
-  return (
-    <Flexbox gap={8}>
-      {options.map((option) => (
-        <Item {...option} key={option.value} />
-      ))}
+  const showDivider = isModelHasBuiltinSearchConfig || !supportFC;
 
-      {isModelHasBuiltinSearchConfig && (
-        <>
-          <Divider style={{ margin: 0, paddingInline: 12 }} />
-          <ModelBuiltinSearch />
-        </>
-      )}
+  return (
+    <Flexbox gap={4}>
+      {options.map((option) => (
+        <Item setLoading={setLoading} {...option} key={option.value} />
+      ))}
+      {showDivider && <Divider style={{ margin: 0 }} />}
+      {isModelHasBuiltinSearchConfig && <ModelBuiltinSearch />}
+      {!supportFC && <FCSearchModel setLoading={setLoading} />}
     </Flexbox>
   );
 });

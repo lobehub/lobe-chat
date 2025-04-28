@@ -9,6 +9,7 @@ import { LangChainLoaderType } from '@/libs/langchain/types';
 import { CodeLoader } from './code';
 import { CsVLoader } from './csv';
 import { DocxLoader } from './docx';
+import { EPubLoader } from './epub';
 import { LatexLoader } from './latex';
 import { MarkdownLoader } from './markdown';
 import { PdfLoader } from './pdf';
@@ -64,6 +65,10 @@ export class ChunkingLoader {
           return await CsVLoader(fileBlob);
         }
 
+        case 'epub': {
+          return await EPubLoader(content);
+        }
+
         default: {
           throw new Error(
             `Unsupported file type [${type}], please check your file is supported, or create report issue here: https://github.com/lobehub/lobe-chat/discussions/3550`,
@@ -98,6 +103,10 @@ export class ChunkingLoader {
 
     if (filename.endsWith('csv')) {
       return 'csv';
+    }
+
+    if (filename.endsWith('epub')) {
+      return 'epub';
     }
 
     const ext = filename.split('.').pop();

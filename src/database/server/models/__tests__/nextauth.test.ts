@@ -8,6 +8,7 @@ import type {
 import { eq } from 'drizzle-orm/expressions';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { getTestDBInstance } from '@/database/core/dbForTest';
 import {
   nextauthAccounts,
   nextauthAuthenticators,
@@ -15,10 +16,11 @@ import {
   nextauthVerificationTokens,
   users,
 } from '@/database/schemas';
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { LobeChatDatabase } from '@/database/type';
 import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 
 let serverDB = await getTestDBInstance();
+
 let nextAuthAdapter = LobeNextAuthDbAdapter(serverDB);
 
 const userId = 'user-db';

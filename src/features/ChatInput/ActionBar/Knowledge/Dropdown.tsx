@@ -1,12 +1,8 @@
-import { Icon } from '@lobehub/ui';
-import { Dropdown } from 'antd';
-import { createStyles } from 'antd-style';
-import type { ItemType } from 'antd/es/menu/interface';
+import { DropdownProps, Icon, ItemType } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { ArrowRight, LibraryBig } from 'lucide-react';
 import { PropsWithChildren, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
 import RepoIcon from '@/components/RepoIcon';
@@ -14,28 +10,15 @@ import { AssignKnowledgeBaseModal } from '@/features/KnowledgeBaseModal';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 
+import ActionDropdown from '../../components/ActionDropdown';
 import ListItem from './ListItem';
-
-const useStyles = createStyles(({ css, prefixCls }) => ({
-  knowledgeBase: css``,
-  menu: css`
-    &.${prefixCls}-dropdown-menu {
-      padding-block: 8px;
-    }
-
-    .${prefixCls}-dropdown-menu-item-group-list .${prefixCls}-dropdown-menu-item {
-      padding: 0;
-      padding-inline-start: 8px;
-      border-radius: 4px;
-    }
-  `,
-}));
 
 const DropdownMenu = memo<PropsWithChildren>(({ children }) => {
   const { t } = useTranslation('chat');
 
-  const { styles } = useStyles();
   const [open, setOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   const files = useAgentStore(agentSelectors.currentAgentFiles, isEqual);
   const knowledgeBases = useAgentStore(agentSelectors.currentAgentKnowledgeBases, isEqual);
 
@@ -100,58 +83,45 @@ const DropdownMenu = memo<PropsWithChildren>(({ children }) => {
             />
           ),
         })),
-        {
-          icon: (
-            <Icon
-              icon={LibraryBig}
-              size={{ fontSize: 16 }}
-              style={{ marginInlineEnd: 0, paddingInlineStart: 4 }}
-            />
-          ),
-          key: 'knowledge-base-store',
-          label: (
-            <Flexbox gap={40} horizontal justify={'space-between'} padding={'8px 12px'}>
-              {t('knowledgeBase.viewMore')} <Icon icon={ArrowRight} />
-            </Flexbox>
-          ),
-          onClick: (e) => {
-            e.domEvent.stopPropagation();
-            setOpen(true);
-          },
-        },
       ],
-      className: styles.knowledgeBase,
       key: 'relativeFilesOrKnowledgeBases',
-      label: (
-        <Flexbox horizontal justify={'space-between'}>
-          {t('knowledgeBase.relativeFilesOrKnowledgeBases')}
-          {/*<Link href={'/files'}>{t('knowledgeBase.more')}</Link>*/}
-        </Flexbox>
-      ),
+      label: t('knowledgeBase.relativeFilesOrKnowledgeBases'),
       type: 'group',
+    },
+    {
+      type: 'divider',
+    },
+    {
+      extra: <Icon icon={ArrowRight} />,
+      icon: LibraryBig,
+      key: 'knowledge-base-store',
+      label: t('knowledgeBase.viewMore'),
+      onClick: () => {
+        setDropdownOpen(false);
+        setOpen(true);
+      },
     },
   ];
 
+  const handleOpenChange: DropdownProps['onOpenChange'] = (nextOpen, info) => {
+    if (info.source === 'trigger' || nextOpen) {
+      setDropdownOpen(nextOpen);
+    }
+  };
+
   return (
     <>
-      <Dropdown
-        arrow={false}
+      <ActionDropdown
+        maxHeight={500}
         menu={{
-          className: styles.menu,
           items,
-          onClick: (e) => {
-            e.domEvent.preventDefault();
-          },
-          style: {
-            maxHeight: 500,
-            overflowY: 'scroll',
-          },
         }}
-        placement={'top'}
-        trigger={['click']}
+        minWidth={240}
+        onOpenChange={handleOpenChange}
+        open={dropdownOpen}
       >
         {children}
-      </Dropdown>
+      </ActionDropdown>
       <AssignKnowledgeBaseModal open={open} setOpen={setOpen} />
     </>
   );

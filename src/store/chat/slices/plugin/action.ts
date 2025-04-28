@@ -8,6 +8,7 @@ import { StateCreator } from 'zustand/vanilla';
 import { LOADING_FLAT } from '@/const/message';
 import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { chatService } from '@/services/chat';
+import { mcpService } from '@/services/mcp';
 import { messageService } from '@/services/message';
 import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
@@ -41,6 +42,7 @@ export interface ChatPluginAction {
   invokeBuiltinTool: (id: string, payload: ChatToolPayload) => Promise<void>;
   invokeDefaultTypePlugin: (id: string, payload: any) => Promise<string | undefined>;
   invokeMarkdownTypePlugin: (id: string, payload: ChatToolPayload) => Promise<void>;
+  invokeMCPTypePlugin: (id: string, payload: ChatToolPayload) => Promise<string | undefined>;
 
   invokeStandaloneTypePlugin: (id: string, payload: ChatToolPayload) => Promise<void>;
 
@@ -50,15 +52,16 @@ export interface ChatPluginAction {
     traceId?: string;
     threadId?: string;
     inPortalThread?: boolean;
+    inSearchWorkflow?: boolean;
   }) => Promise<void>;
   summaryPluginContent: (id: string) => Promise<void>;
 
   triggerToolCalls: (
     id: string,
-    params?: { threadId?: string; inPortalThread?: boolean },
+    params?: { threadId?: string; inPortalThread?: boolean; inSearchWorkflow?: boolean },
   ) => Promise<void>;
   updatePluginState: (id: string, value: any) => Promise<void>;
-  updatePluginArguments: <T = any>(id: string, value: T) => Promise<void>;
+  updatePluginArguments: <T = any>(id: string, value: T, replace?: boolean) => Promise<void>;
 
   internal_addToolToAssistantMessage: (id: string, tool: ChatToolPayload) => Promise<void>;
   internal_removeToolToAssistantMessage: (id: string, tool_call_id?: string) => Promise<void>;
@@ -209,7 +212,7 @@ export const chatPlugin: StateCreator<
     await get().internal_invokeDifferentTypePlugin(id, payload);
   },
 
-  triggerAIMessage: async ({ parentId, traceId, threadId, inPortalThread }) => {
+  triggerAIMessage: async ({ parentId, traceId, threadId, inPortalThread, inSearchWorkflow }) => {
     const { internal_coreProcessMessage } = get();
 
     const chats = inPortalThread
@@ -220,6 +223,7 @@ export const chatPlugin: StateCreator<
       traceId,
       threadId,
       inPortalThread,
+      inSearchWorkflow,
     });
   },
 
@@ -245,7 +249,7 @@ export const chatPlugin: StateCreator<
     );
   },
 
-  triggerToolCalls: async (assistantId, { threadId, inPortalThread } = {}) => {
+  triggerToolCalls: async (assistantId, { threadId, inPortalThread, inSearchWorkflow } = {}) => {
     const message = chatSelectors.getMessageById(assistantId)(get());
     if (!message || !message.tools) return;
 
@@ -264,11 +268,12 @@ export const chatPlugin: StateCreator<
       };
 
       const id = await get().internal_createMessage(toolMessage);
+      if (!id) return;
 
       // trigger the plugin call
       const data = await get().internal_invokeDifferentTypePlugin(id, payload);
 
-      if ((payload.type === 'default' || payload.type === 'builtin') && data) {
+      if (data && !['markdown', 'standalone'].includes(payload.type)) {
         shouldCreateMessage = true;
         latestToolId = id;
       }
@@ -281,7 +286,7 @@ export const chatPlugin: StateCreator<
 
     const traceId = chatSelectors.getTraceIdByMessageId(latestToolId)(get());
 
-    await get().triggerAIMessage({ traceId, threadId, inPortalThread });
+    await get().triggerAIMessage({ traceId, threadId, inPortalThread, inSearchWorkflow });
   },
   updatePluginState: async (id, value) => {
     const { refreshMessages } = get();
@@ -293,7 +298,7 @@ export const chatPlugin: StateCreator<
     await refreshMessages();
   },
 
-  updatePluginArguments: async (id, value) => {
+  updatePluginArguments: async (id, value, replace = false) => {
     const { refreshMessages } = get();
     const toolMessage = chatSelectors.getMessageById(id)(get());
     if (!toolMessage || !toolMessage?.tool_call_id) return;
@@ -302,7 +307,7 @@ export const chatPlugin: StateCreator<
 
     const prevArguments = toolMessage?.plugin?.arguments;
     const prevJson = safeParseJSON(prevArguments || '');
-    const nextValue = merge(prevJson || {}, value);
+    const nextValue = replace ? (value as any) : merge(prevJson || {}, value);
     if (isEqual(prevJson, nextValue)) return;
 
     // optimistic update
@@ -325,7 +330,9 @@ export const chatPlugin: StateCreator<
 
     const updateAssistantMessage = async () => {
       if (!assistantMessage) return;
-      await messageService.updateMessage(assistantMessage!.id, { tools: assistantMessage?.tools });
+      await messageService.updateMessage(assistantMessage!.id, {
+        tools: assistantMessage?.tools,
+      });
     };
 
     await Promise.all([
@@ -435,10 +442,50 @@ export const chatPlugin: StateCreator<
         return await get().invokeBuiltinTool(id, payload);
       }
 
+      // @ts-ignore
+      case 'mcp': {
+        return await get().invokeMCPTypePlugin(id, payload);
+      }
+
       default: {
         return await get().invokeDefaultTypePlugin(id, payload);
       }
     }
+  },
+  invokeMCPTypePlugin: async (id, payload) => {
+    const { internal_updateMessageContent, refreshMessages, internal_togglePluginApiCalling } =
+      get();
+    let data: string = '';
+
+    try {
+      const abortController = internal_togglePluginApiCalling(
+        true,
+        id,
+        n('fetchPlugin/start') as string,
+      );
+
+      const result = await mcpService.invokeMcpToolCall(payload, {
+        signal: abortController?.signal,
+      });
+      if (!!result) data = result;
+    } catch (error) {
+      console.log(error);
+      const err = error as Error;
+
+      // ignore the aborted request error
+      if (!err.message.includes('The user aborted a request.')) {
+        await messageService.updateMessageError(id, error as any);
+        await refreshMessages();
+      }
+    }
+
+    internal_togglePluginApiCalling(false, id, n('fetchPlugin/end') as string);
+    // 如果报错则结束了
+    if (!data) return;
+
+    await internal_updateMessageContent(id, data);
+
+    return data;
   },
 
   internal_togglePluginApiCalling: (loading, id, action) => {

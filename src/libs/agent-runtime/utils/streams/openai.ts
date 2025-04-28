@@ -5,6 +5,7 @@ import { ChatMessageError, CitationItem } from '@/types/message';
 
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
 import { ChatStreamCallbacks } from '../../types';
+import { convertUsage } from '../usageConverter';
 import {
   FIRST_CHUNK_ERROR_KEY,
   StreamContext,
@@ -15,6 +16,7 @@ import {
   createCallbacksTransformer,
   createFirstErrorHandleTransformer,
   createSSEProtocolTransformer,
+  createTokenSpeedCalculator,
   generateToolCallId,
 } from './protocol';
 
@@ -41,11 +43,16 @@ export const transformOpenAIStream = (
     // maybe need another structure to add support for multiple choices
     const item = chunk.choices[0];
     if (!item) {
+      if (chunk.usage) {
+        const usage = chunk.usage;
+        return { data: convertUsage(usage), id: chunk.id, type: 'usage' };
+      }
+
       return { data: chunk, id: chunk.id, type: 'data' };
     }
 
-    // tools calling
-    if (typeof item.delta?.tool_calls === 'object' && item.delta.tool_calls?.length > 0) {
+    if (item && typeof item.delta?.tool_calls === 'object' && item.delta.tool_calls?.length > 0) {
+      // tools calling
       const tool_calls = item.delta.tool_calls.filter(
         (value) => value.index >= 0 || typeof value.index === 'undefined',
       );
@@ -63,7 +70,7 @@ export const transformOpenAIStream = (
 
             return {
               function: {
-                arguments: value.function?.arguments ?? '{}',
+                arguments: value.function?.arguments ?? '',
                 name: value.function?.name ?? null,
               },
               id:
@@ -97,6 +104,11 @@ export const transformOpenAIStream = (
         return { data: item.delta.content, id: chunk.id, type: 'text' };
       }
 
+      if (chunk.usage) {
+        const usage = chunk.usage;
+        return { data: convertUsage(usage), id: chunk.id, type: 'usage' };
+      }
+
       return { data: item.finish_reason, id: chunk.id, type: 'stop' };
     }
 
@@ -127,19 +139,35 @@ export const transformOpenAIStream = (
       }
 
       if (typeof content === 'string') {
-        // in Perplexity api, the citation is in every chunk, but we only need to return it once
+        if (!streamContext?.returnedCitation) {
+          const citations =
+            // in Perplexity api, the citation is in every chunk, but we only need to return it once
+            ('citations' in chunk && chunk.citations) ||
+            // in Hunyuan api, the citation is in every chunk
+            ('search_info' in chunk && (chunk.search_info as any)?.search_results) ||
+            // in Wenxin api, the citation is in the first and last chunk
+            ('search_results' in chunk && chunk.search_results);
 
-        if ('citations' in chunk && !!chunk.citations && !streamContext?.returnedPplxCitation) {
-          streamContext.returnedPplxCitation = true;
+          if (citations) {
+            streamContext.returnedCitation = true;
 
-          const citations = (chunk.citations as any[]).map((item) =>
-            typeof item === 'string' ? ({ title: item, url: item } as CitationItem) : item,
-          );
-
-          return [
-            { data: { citations }, id: chunk.id, type: 'grounding' },
-            { data: content, id: chunk.id, type: 'text' },
-          ];
+            return [
+              {
+                data: {
+                  citations: (citations as any[]).map(
+                    (item) =>
+                      ({
+                        title: typeof item === 'string' ? item : item.title,
+                        url: typeof item === 'string' ? item : item.url,
+                      }) as CitationItem,
+                  ),
+                },
+                id: chunk.id,
+                type: 'grounding',
+              },
+              { data: content, id: chunk.id, type: 'text' },
+            ];
+          }
         }
 
         return { data: content, id: chunk.id, type: 'text' };
@@ -149,6 +177,12 @@ export const transformOpenAIStream = (
     // 无内容情况
     if (item.delta && item.delta.content === null) {
       return { data: item.delta, id: chunk.id, type: 'data' };
+    }
+
+    // litellm 的返回结果中，存在 delta 为空，但是有 usage 的情况
+    if (chunk.usage) {
+      const usage = chunk.usage;
+      return { data: convertUsage(usage), id: chunk.id, type: 'usage' };
     }
 
     // 其余情况下，返回 delta 和 index
@@ -185,12 +219,13 @@ export interface OpenAIStreamOptions {
     name: string;
   }) => ILobeAgentRuntimeErrorType | undefined;
   callbacks?: ChatStreamCallbacks;
+  inputStartAt?: number;
   provider?: string;
 }
 
 export const OpenAIStream = (
   stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
-  { callbacks, provider, bizErrorTypeTransformer }: OpenAIStreamOptions = {},
+  { callbacks, provider, bizErrorTypeTransformer, inputStartAt }: OpenAIStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: '' };
 
@@ -203,7 +238,8 @@ export const OpenAIStream = (
       // provider like huggingface or minimax will return error in the stream,
       // so in the first Transformer, we need to handle the error
       .pipeThrough(createFirstErrorHandleTransformer(bizErrorTypeTransformer, provider))
-      .pipeThrough(createSSEProtocolTransformer(transformOpenAIStream, streamStack))
+      .pipeThrough(createTokenSpeedCalculator(transformOpenAIStream, { inputStartAt, streamStack }))
+      .pipeThrough(createSSEProtocolTransformer((c) => c, streamStack))
       .pipeThrough(createCallbacksTransformer(callbacks))
   );
 };

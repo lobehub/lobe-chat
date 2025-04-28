@@ -68,7 +68,6 @@ export interface ChatStreamPayload {
    */
   n?: number;
   /**
-   * @deprecated
    * 开启的插件列表
    */
   plugins?: string[];
