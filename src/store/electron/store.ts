@@ -32,3 +32,5 @@ export const useElectronStore = createWithEqualityFn<ElectronStore>()(
   devtools(createStore),
   shallow,
 );
+
+export const getElectronStoreState = () => useElectronStore.getState();

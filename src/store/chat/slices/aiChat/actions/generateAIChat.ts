@@ -602,13 +602,22 @@ export const generateAIChat: StateCreator<
           }
         }
 
-        if (toolCalls && toolCalls.length > 0) {
+        let parsedToolCalls = toolCalls;
+        if (parsedToolCalls && parsedToolCalls.length > 0) {
           internal_toggleToolCallingStreaming(messageId, undefined);
+          parsedToolCalls = parsedToolCalls.map((item) => ({
+            ...item,
+            function: {
+              ...item.function,
+              arguments: !!item.function.arguments ? item.function.arguments : '{}',
+            },
+          }));
+          isFunctionCall = true;
         }
 
         // update the content after fetch result
         await internal_updateMessageContent(messageId, content, {
-          toolCalls,
+          toolCalls: parsedToolCalls,
           reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
           search: !!grounding?.citations ? grounding : undefined,
           imageList: finalImages.length > 0 ? finalImages : undefined,

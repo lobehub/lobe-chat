@@ -17,7 +17,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       'Doubao-1.5全新深度思考模型，在数学、编程、科学推理等专业领域及创意写作等通用任务中表现突出，在AIME 2024、Codeforces、GPQA等多项权威基准上达到或接近业界第一梯队水平。支持128k上下文窗口，16k输出。',
     displayName: 'Doubao 1.5 Thinking Pro',
     enabled: true,
-    id: 'Doubao-1.5-thinking-pro',
+    id: 'doubao-1.5-thinking-pro',
     maxOutput: 16_000,
     pricing: {
       currency: 'CNY',
