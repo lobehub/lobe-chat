@@ -18,6 +18,17 @@ export const LobeOpenAI = LobeOpenAICompatibleFactory({
         return pruneReasoningPayload(payload) as any;
       }
 
+      if (model.includes('-search-')) {
+        return {
+          ...payload,
+          frequency_penalty: undefined,
+          presence_penalty: undefined,
+          stream: payload.stream ?? true,
+          temperature: undefined,
+          top_p: undefined,
+        };
+      }
+
       return { ...payload, stream: payload.stream ?? true };
     },
   },

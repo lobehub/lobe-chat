@@ -15,7 +15,7 @@ const useStyles = createStyles(({ token, css }) => ({
     position: relative;
     flex: none;
     height: 54px;
-    background: ${token.colorBgContainer};
+    background: ${token.colorBgLayout};
   `,
   title: css`
     font-size: 18px;
@@ -52,6 +52,11 @@ const Header = memo<HeaderProps>(({ children, getContainer, title }) => {
             }
           />
         }
+        styles={{
+          left: {
+            padding: 0,
+          },
+        }}
       />
       <Drawer
         getContainer={getContainer}
@@ -61,7 +66,7 @@ const Header = memo<HeaderProps>(({ children, getContainer, title }) => {
         placement={'left'}
         rootStyle={{ position: 'absolute' }}
         style={{
-          background: theme.colorBgContainer,
+          background: theme.colorBgLayout,
           borderRight: `1px solid ${theme.colorSplit}`,
         }}
         styles={{

@@ -10,7 +10,7 @@ const Layout = ({ children }: PropsWithChildren) => {
   return (
     <>
       <NProgress />
-      <Flexbox horizontal width={'100%'}>
+      <Flexbox height={'100%'} horizontal width={'100%'}>
         <AgentMenu />
         <SettingContainer>{children}</SettingContainer>
       </Flexbox>
