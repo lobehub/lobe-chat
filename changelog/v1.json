@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix cloud data sync."]
+    },
+    "date": "2025-04-28",
+    "version": "1.83.8"
+  },
+  {
+    "children": {
       "improvements": ["Fix doubao-1-5-thinking-pro-vision endpoint calling."]
     },
     "date": "2025-04-27",
