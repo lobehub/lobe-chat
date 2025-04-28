@@ -71,12 +71,6 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3, Derin Arayış şirketi tarafından geliştirilen bir MoE modelidir. DeepSeek-V3, birçok değerlendirmede Qwen2.5-72B ve Llama-3.1-405B gibi diğer açık kaynak modelleri geride bırakmış ve performans açısından dünya çapında en iyi kapalı kaynak model olan GPT-4o ve Claude-3.5-Sonnet ile eşit seviyededir."
   },
-  "Doubao-1.5-thinking-pro": {
-    "description": "Doubao-1.5, yeni derin düşünme modelidir, matematik, programlama, bilimsel çıkarım gibi uzmanlık alanlarında ve yaratıcı yazım gibi genel görevlerde mükemmel performans sergilemektedir, AIME 2024, Codeforces, GPQA gibi birçok otoriter ölçekte endüstri lideri seviyesine ulaşmakta veya yaklaşmaktadır. 128k bağlam penceresi ve 16k çıktı destekler."
-  },
-  "Doubao-1.5-thinking-pro-vision": {
-    "description": "Doubao-1.5, yeni derin düşünme modelidir, matematik, programlama, bilimsel çıkarım gibi uzmanlık alanlarında ve yaratıcı yazım gibi genel görevlerde mükemmel performans sergilemektedir, AIME 2024, Codeforces, GPQA gibi birçok otoriter ölçekte endüstri lideri seviyesine ulaşmakta veya yaklaşmaktadır. 128k bağlam penceresi ve 16k çıktı destekler."
-  },
   "Doubao-1.5-vision-pro": {
     "description": "Doubao-1.5-vision-pro, yeni güncellenmiş çok modlu büyük modeldir, herhangi bir çözünürlük ve aşırı en-boy oranı görüntü tanıma desteği sunar, görsel çıkarım, belge tanıma, detay bilgisi anlama ve talimat takibi yeteneklerini artırır."
   },
@@ -853,6 +847,12 @@
   },
   "doubao-1.5-pro-32k": {
     "description": "Doubao-1.5-pro, tamamen yeni nesil ana model, performansı tamamen yükseltilmiş olup, bilgi, kod, akıl yürütme gibi alanlarda mükemmel bir performans sergilemektedir."
+  },
+  "doubao-1.5-thinking-pro": {
+    "description": "Doubao-1.5, tamamen yeni bir derin düşünme modeli, matematik, programlama, bilimsel akıl yürütme gibi uzmanlık alanlarında ve yaratıcı yazım gibi genel görevlerde olağanüstü performans sergilemektedir. AIME 2024, Codeforces, GPQA gibi birçok saygın ölçekte sektörün en üst seviyelerine ulaşmakta veya bunlara yakın bir performans göstermektedir. 128k bağlam penceresi ve 16k çıktı desteği sunmaktadır."
+  },
+  "doubao-1.5-thinking-pro-vision": {
+    "description": "Doubao-1.5, tamamen yeni bir derin düşünme modeli, matematik, programlama, bilimsel akıl yürütme gibi uzmanlık alanlarında ve yaratıcı yazım gibi genel görevlerde olağanüstü performans sergilemektedir. AIME 2024, Codeforces, GPQA gibi birçok saygın ölçekte sektörün en üst seviyelerine ulaşmakta veya bunlara yakın bir performans göstermektedir. 128k bağlam penceresi ve 16k çıktı desteği sunmaktadır."
   },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite, yeni güncellenmiş çok modlu büyük modeldir, herhangi bir çözünürlük ve aşırı en-boy oranı görüntü tanıma desteği sunar, görsel çıkarım, belge tanıma, detay bilgisi anlama ve talimat takibi yeteneklerini artırır. 128k bağlam penceresi destekler, çıktı uzunluğu maksimum 16k token destekler."

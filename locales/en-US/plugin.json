@@ -48,7 +48,7 @@
     },
     "mcp": {
       "args": {
-        "desc": "A list of parameters passed to the STDIO command, typically enter the MCP server name here",
+        "desc": "A list of parameters to be passed to the execution command, typically the MCP server name or the path to the startup script.",
         "label": "Command Parameters",
         "placeholder": "For example: mcp-hello-world",
         "required": "Please enter the startup parameters"
@@ -62,6 +62,15 @@
       "endpoint": {
         "desc": "Enter the address of your MCP Streamable HTTP Server",
         "label": "MCP Endpoint URL"
+      },
+      "env": {
+        "add": "Add a new line",
+        "desc": "Enter the environment variables required for your MCP Server",
+        "duplicateKeyError": "Field keys must be unique",
+        "formValidationFailed": "Form validation failed, please check the parameter format",
+        "keyRequired": "Field key cannot be empty",
+        "label": "MCP Server Environment Variables",
+        "stringifyError": "Unable to serialize parameters, please check the parameter format"
       },
       "identifier": {
         "desc": "Specify a name for your MCP plugin, using English characters",

@@ -71,12 +71,6 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 ist ein von der DeepSeek Company entwickeltes MoE-Modell. Die Ergebnisse von DeepSeek-V3 übertreffen die anderer Open-Source-Modelle wie Qwen2.5-72B und Llama-3.1-405B und stehen in der Leistung auf Augenhöhe mit den weltweit führenden Closed-Source-Modellen GPT-4o und Claude-3.5-Sonnet."
   },
-  "Doubao-1.5-thinking-pro": {
-    "description": "Doubao-1.5 ist ein neues tiefes Denkmodell, das in den Fachbereichen Mathematik, Programmierung, wissenschaftlicher Schlussfolgerung und kreativen Schreibaufgaben herausragende Leistungen zeigt und in mehreren renommierten Benchmarks wie AIME 2024, Codeforces und GPQA die Spitzenposition erreicht oder nahe kommt. Es unterstützt ein Kontextfenster von 128k und eine Ausgabe von 16k."
-  },
-  "Doubao-1.5-thinking-pro-vision": {
-    "description": "Doubao-1.5 ist ein neues tiefes Denkmodell, das in den Fachbereichen Mathematik, Programmierung, wissenschaftlicher Schlussfolgerung und kreativen Schreibaufgaben herausragende Leistungen zeigt und in mehreren renommierten Benchmarks wie AIME 2024, Codeforces und GPQA die Spitzenposition erreicht oder nahe kommt. Es unterstützt ein Kontextfenster von 128k und eine Ausgabe von 16k."
-  },
   "Doubao-1.5-vision-pro": {
     "description": "Doubao-1.5-vision-pro ist ein neu verbessertes multimodales großes Modell, das beliebige Auflösungen und extreme Seitenverhältnisse bei der Bilderkennung unterstützt und die Fähigkeiten in visueller Schlussfolgerung, Dokumentenerkennung, Detailverständnis und Befolgung von Anweisungen verbessert."
   },
@@ -853,6 +847,12 @@
   },
   "doubao-1.5-pro-32k": {
     "description": "Doubao-1.5-pro ist das neueste Hauptmodell der nächsten Generation, dessen Leistung umfassend verbessert wurde und das in den Bereichen Wissen, Code, Schlussfolgerungen usw. herausragende Leistungen zeigt."
+  },
+  "doubao-1.5-thinking-pro": {
+    "description": "Das Doubao-1.5 Modell für tiefes Denken ist neu und zeichnet sich in Fachbereichen wie Mathematik, Programmierung und wissenschaftlichem Denken sowie in allgemeinen Aufgaben wie kreativem Schreiben aus. Es erreicht oder nähert sich in mehreren renommierten Benchmarks wie AIME 2024, Codeforces und GPQA dem Spitzenlevel der Branche. Es unterstützt ein Kontextfenster von 128k und eine Ausgabe von 16k."
+  },
+  "doubao-1.5-thinking-pro-vision": {
+    "description": "Das Doubao-1.5 Modell für tiefes Denken ist neu und zeichnet sich in Fachbereichen wie Mathematik, Programmierung und wissenschaftlichem Denken sowie in allgemeinen Aufgaben wie kreativem Schreiben aus. Es erreicht oder nähert sich in mehreren renommierten Benchmarks wie AIME 2024, Codeforces und GPQA dem Spitzenlevel der Branche. Es unterstützt ein Kontextfenster von 128k und eine Ausgabe von 16k."
   },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite ist ein neu verbessertes multimodales großes Modell, das beliebige Auflösungen und extreme Seitenverhältnisse bei der Bilderkennung unterstützt und die Fähigkeiten in visueller Schlussfolgerung, Dokumentenerkennung, Detailverständnis und Befolgung von Anweisungen verbessert. Es unterstützt ein Kontextfenster von 128k und eine maximale Ausgabelänge von 16k Tokens."

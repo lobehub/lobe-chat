@@ -71,12 +71,6 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 là một mô hình MoE do công ty DeepSeek tự phát triển. Nhiều kết quả đánh giá của DeepSeek-V3 đã vượt qua các mô hình mã nguồn mở khác như Qwen2.5-72B và Llama-3.1-405B, và về hiệu suất không thua kém các mô hình đóng nguồn hàng đầu thế giới như GPT-4o và Claude-3.5-Sonnet."
   },
-  "Doubao-1.5-thinking-pro": {
-    "description": "Doubao-1.5 là mô hình suy nghĩ sâu mới, thể hiện xuất sắc trong các lĩnh vực chuyên môn như toán học, lập trình, suy luận khoa học và các nhiệm vụ chung như viết sáng tạo, đạt hoặc gần đạt mức hàng đầu trong nhiều tiêu chuẩn uy tín như AIME 2024, Codeforces, GPQA. Hỗ trợ cửa sổ ngữ cảnh 128k, đầu ra 16k."
-  },
-  "Doubao-1.5-thinking-pro-vision": {
-    "description": "Doubao-1.5 là mô hình suy nghĩ sâu mới, thể hiện xuất sắc trong các lĩnh vực chuyên môn như toán học, lập trình, suy luận khoa học và các nhiệm vụ chung như viết sáng tạo, đạt hoặc gần đạt mức hàng đầu trong nhiều tiêu chuẩn uy tín như AIME 2024, Codeforces, GPQA. Hỗ trợ cửa sổ ngữ cảnh 128k, đầu ra 16k."
-  },
   "Doubao-1.5-vision-pro": {
     "description": "Doubao-1.5-vision-pro là mô hình đa phương tiện lớn được nâng cấp mới, hỗ trợ nhận diện hình ảnh với bất kỳ độ phân giải nào và tỷ lệ dài rộng cực đoan, tăng cường khả năng suy luận hình ảnh, nhận diện tài liệu, hiểu thông tin chi tiết và tuân thủ hướng dẫn."
   },
@@ -853,6 +847,12 @@
   },
   "doubao-1.5-pro-32k": {
     "description": "Doubao-1.5-pro là mô hình chủ lực thế hệ mới, hiệu suất được nâng cấp toàn diện, thể hiện xuất sắc trong các lĩnh vực kiến thức, mã nguồn, suy luận, và nhiều hơn nữa."
+  },
+  "doubao-1.5-thinking-pro": {
+    "description": "Mô hình tư duy sâu mới Doubao-1.5, nổi bật trong các lĩnh vực chuyên môn như toán học, lập trình, suy luận khoa học và các nhiệm vụ viết sáng tạo, đạt hoặc gần đạt trình độ hàng đầu trong ngành trên nhiều tiêu chuẩn uy tín như AIME 2024, Codeforces, GPQA. Hỗ trợ cửa sổ ngữ cảnh 128k, đầu ra 16k."
+  },
+  "doubao-1.5-thinking-pro-vision": {
+    "description": "Mô hình tư duy sâu mới Doubao-1.5, nổi bật trong các lĩnh vực chuyên môn như toán học, lập trình, suy luận khoa học và các nhiệm vụ viết sáng tạo, đạt hoặc gần đạt trình độ hàng đầu trong ngành trên nhiều tiêu chuẩn uy tín như AIME 2024, Codeforces, GPQA. Hỗ trợ cửa sổ ngữ cảnh 128k, đầu ra 16k."
   },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite là mô hình đa phương tiện lớn được nâng cấp mới, hỗ trợ nhận diện hình ảnh với bất kỳ độ phân giải nào và tỷ lệ dài rộng cực đoan, tăng cường khả năng suy luận hình ảnh, nhận diện tài liệu, hiểu thông tin chi tiết và tuân thủ hướng dẫn. Hỗ trợ cửa sổ ngữ cảnh 128k, độ dài đầu ra tối đa 16k tokens."

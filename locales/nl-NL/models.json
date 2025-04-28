@@ -71,12 +71,6 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 is een MoE-model dat zelf is ontwikkeld door DeepSeek Company. De prestaties van DeepSeek-V3 overtreffen die van andere open-source modellen zoals Qwen2.5-72B en Llama-3.1-405B, en presteert op het gebied van prestaties gelijkwaardig aan de wereldtop gesloten modellen zoals GPT-4o en Claude-3.5-Sonnet."
   },
-  "Doubao-1.5-thinking-pro": {
-    "description": "Doubao-1.5 is een nieuw diep denkmodel dat uitblinkt in wiskunde, programmeren, wetenschappelijke redenering en creatieve schrijfopdrachten, en heeft in verschillende autoritaire benchmarks zoals AIME 2024, Codeforces, GPQA het niveau van de top in de industrie bereikt of benaderd. Ondersteunt een contextvenster van 128k en 16k output."
-  },
-  "Doubao-1.5-thinking-pro-vision": {
-    "description": "Doubao-1.5 is een nieuw diep denkmodel dat uitblinkt in wiskunde, programmeren, wetenschappelijke redenering en creatieve schrijfopdrachten, en heeft in verschillende autoritaire benchmarks zoals AIME 2024, Codeforces, GPQA het niveau van de top in de industrie bereikt of benaderd. Ondersteunt een contextvenster van 128k en 16k output."
-  },
   "Doubao-1.5-vision-pro": {
     "description": "Doubao-1.5-vision-pro is een nieuw geüpgradede multimodale groot model, dat ondersteuning biedt voor beeldherkenning met willekeurige resoluties en extreme beeldverhoudingen, en de visuele redenering, documentherkenning, begrip van gedetailleerde informatie en het volgen van instructies verbetert."
   },
@@ -853,6 +847,12 @@
   },
   "doubao-1.5-pro-32k": {
     "description": "Doubao-1.5-pro is de nieuwste generatie hoofdmachine, met algehele prestatie-upgrades en uitstekende prestaties op het gebied van kennis, code, redenering, enz."
+  },
+  "doubao-1.5-thinking-pro": {
+    "description": "Doubao-1.5 is een gloednieuw diepdenkend model dat uitblinkt in professionele gebieden zoals wiskunde, programmeren en wetenschappelijk redeneren, evenals in algemene taken zoals creatief schrijven. Het heeft op verschillende prestigieuze benchmarks zoals AIME 2024, Codeforces en GPQA niveaus bereikt die gelijk zijn aan of dicht bij de top van de industrie liggen. Ondersteunt een contextvenster van 128k en een output van 16k."
+  },
+  "doubao-1.5-thinking-pro-vision": {
+    "description": "Doubao-1.5 is een gloednieuw diepdenkend model dat uitblinkt in professionele gebieden zoals wiskunde, programmeren en wetenschappelijk redeneren, evenals in algemene taken zoals creatief schrijven. Het heeft op verschillende prestigieuze benchmarks zoals AIME 2024, Codeforces en GPQA niveaus bereikt die gelijk zijn aan of dicht bij de top van de industrie liggen. Ondersteunt een contextvenster van 128k en een output van 16k."
   },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite is een nieuw geüpgradede multimodale groot model, dat ondersteuning biedt voor beeldherkenning met willekeurige resoluties en extreme beeldverhoudingen, en de visuele redenering, documentherkenning, begrip van gedetailleerde informatie en het volgen van instructies verbetert. Ondersteunt een contextvenster van 128k en een maximale outputlengte van 16k tokens."

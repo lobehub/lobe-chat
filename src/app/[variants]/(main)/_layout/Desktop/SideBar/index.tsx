@@ -32,9 +32,17 @@ const Nav = memo(() => {
   return (
     !inZenMode && (
       <SideNav
-        avatar={<Avatar />}
-        bottomActions={<BottomActions />}
-        className={electronStylish.nodrag}
+        avatar={
+          <div className={electronStylish.nodrag}>
+            <Avatar />
+          </div>
+        }
+        bottomActions={
+          <div className={electronStylish.nodrag}>
+            <BottomActions />
+          </div>
+        }
+        className={electronStylish.draggable}
         style={{
           height: '100%',
           zIndex: 100,
@@ -44,8 +52,10 @@ const Nav = memo(() => {
         }}
         topActions={
           <Suspense>
-            <Top />
-            {showPinList && <PinList />}
+            <div className={electronStylish.nodrag}>
+              <Top />
+              {showPinList && <PinList />}
+            </div>
           </Suspense>
         }
       />

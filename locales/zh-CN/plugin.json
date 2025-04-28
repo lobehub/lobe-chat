@@ -48,7 +48,7 @@
     },
     "mcp": {
       "args": {
-        "desc": "传递给 STDIO 命令的参数列表，一般在这里输入 MCP 服务器名称",
+        "desc": "传递给执行命令的参数列表，一般在这里输入 MCP 服务器名称，或启动脚本路径",
         "label": "命令参数",
         "placeholder": "例如：mcp-hello-world",
         "required": "请输入启动参数"
@@ -62,6 +62,15 @@
       "endpoint": {
         "desc": "输入你的 MCP Streamable HTTP Server 的地址",
         "label": "MCP Endpoint URL"
+      },
+      "env": {
+        "add": "新增一行",
+        "desc": "输入你的 MCP Server 所需要的环境变量",
+        "duplicateKeyError": "字段键必须唯一",
+        "formValidationFailed": "表单验证失败，请检查参数格式",
+        "keyRequired": "字段键不能为空",
+        "label": "MCP Server 环境变量",
+        "stringifyError": "无法序列化参数，请检查参数格式"
       },
       "identifier": {
         "desc": "为你的 MCP 插件指定一个名称，需要使用英文字符",
