@@ -64,6 +64,7 @@ const AdvancedActions = () => {
           </DataImporter>
         ),
         label: t('storage.actions.import.title'),
+        layout: 'horizontal',
         minWidth: undefined,
       },
       {
@@ -78,6 +79,7 @@ const AdvancedActions = () => {
           </Button>
         ),
         label: t('storage.actions.export.title'),
+        layout: 'horizontal',
         minWidth: undefined,
       },
       {
@@ -88,6 +90,7 @@ const AdvancedActions = () => {
         ),
         desc: t('danger.clear.desc'),
         label: t('danger.clear.title'),
+        layout: 'horizontal',
         minWidth: undefined,
       },
     ],

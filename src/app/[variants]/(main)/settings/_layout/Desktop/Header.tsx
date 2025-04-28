@@ -52,6 +52,11 @@ const Header = memo<HeaderProps>(({ children, getContainer, title }) => {
             }
           />
         }
+        styles={{
+          left: {
+            padding: 0,
+          },
+        }}
       />
       <Drawer
         getContainer={getContainer}
