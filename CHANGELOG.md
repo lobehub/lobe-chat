@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.83.8](https://github.com/lobehub/lobe-chat/compare/v1.83.7...v1.83.8)
+
+<sup>Released on **2025-04-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix cloud data sync.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix cloud data sync, closes [#7600](https://github.com/lobehub/lobe-chat/issues/7600) ([1214544](https://github.com/lobehub/lobe-chat/commit/1214544))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.83.7](https://github.com/lobehub/lobe-chat/compare/v1.83.6...v1.83.7)
 
 <sup>Released on **2025-04-27**</sup>
