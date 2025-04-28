@@ -309,7 +309,9 @@ export const createTokenSpeedCalculator = (
   const process = (chunk: StreamProtocolChunk) => {
     let result = [chunk];
     // if the chunk is the first text chunk, set as output start
-    if (!outputStartAt && chunk.type === 'text') outputStartAt = Date.now();
+    if (!outputStartAt && (chunk.type === 'text' || chunk.type === 'reasoning')) {
+      outputStartAt = Date.now();
+    }
     // if the chunk is the stop chunk, set as output finish
     if (inputStartAt && outputStartAt && chunk.type === 'usage') {
       const totalOutputTokens = chunk.data?.totalOutputTokens || chunk.data?.outputTextTokens;
