@@ -12,17 +12,14 @@ interface SyncProps {
 const RemoteStatus = memo<SyncProps>(({ onClick }) => {
   const { t } = useTranslation('electron');
 
-  const [isIniting, isSyncActive, useRemoteServerConfig, useRefreshDataWhenActive] =
-    useElectronStore((s) => [
-      !s.isInitRemoteServerConfig,
-      electronSyncSelectors.isSyncActive(s),
-      s.useDataSyncConfig,
-      s.useRefreshDataWhenActive,
-    ]);
+  const [isIniting, isSyncActive, useRemoteServerConfig] = useElectronStore((s) => [
+    !s.isInitRemoteServerConfig,
+    electronSyncSelectors.isSyncActive(s),
+    s.useDataSyncConfig,
+  ]);
 
   // 使用useSWR获取远程服务器配置
   useRemoteServerConfig();
-  useRefreshDataWhenActive(isSyncActive);
 
   return (
     <ActionIcon
