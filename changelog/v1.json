@@ -1,5 +1,14 @@
 [
   {
+    "children": {
+      "fixes": [
+        "Fix mcp server stdio spawn ENOENT in electron bundle, Fix mobile agent settings and textarea scroll, Remove gpt-4o-search-preview unsupported parameters."
+      ]
+    },
+    "date": "2025-04-28",
+    "version": "1.84.3"
+  },
+  {
     "children": {},
     "date": "2025-04-28",
     "version": "1.84.2"
