@@ -150,6 +150,7 @@
       "title": "Cor de fundo"
     },
     "description": {
+      "desc": "Uma breve introdução ao seu assistente, não como uma definição de personagem",
       "placeholder": "Digite a descrição do assistente",
       "title": "Descrição do assistente"
     },
@@ -161,7 +162,9 @@
       "placeholder": "Digite a palavra de prompt do papel",
       "title": "Configuração do papel"
     },
+    "submit": "Atualizar informações do assistente",
     "tag": {
+      "desc": "As etiquetas do assistente serão exibidas no mercado de assistentes",
       "placeholder": "Digite a etiqueta",
       "title": "Etiqueta"
     },
@@ -206,6 +209,7 @@
       "placeholder": "O modelo de pré-processamento {{text}} será substituído pela entrada em tempo real",
       "title": "Pré-processamento de entrada do usuário"
     },
+    "submit": "Atualizar preferências de chat",
     "title": "Configurações de chat"
   },
   "settingModel": {
@@ -243,6 +247,7 @@
       },
       "title": "Intensidade de raciocínio"
     },
+    "submit": "Atualizar configurações do modelo",
     "temperature": {
       "desc": "Quanto maior o valor, mais criativas e imaginativas serão as respostas; quanto menor o valor, mais rigorosas serão as respostas",
       "title": "Atividade Criativa",
@@ -319,6 +324,7 @@
       "desc": "Onde 'browser' é o serviço nativo de reconhecimento de fala do navegador",
       "title": "Serviço de reconhecimento de fala"
     },
+    "submit": "Atualizar serviço de voz",
     "title": "Serviço de fala",
     "tts": "Configurações de síntese de fala",
     "ttsService": {
@@ -396,6 +402,12 @@
     "placeholder": "Insira o identificador único do assistente, como por exemplo, desenvolvimento-web",
     "tooltips": "Compartilhar no mercado de assistentes"
   },
+  "submitFooter": {
+    "reset": "Redefinir",
+    "submit": "Salvar",
+    "unSaved": "Alterações não salvas",
+    "unSavedWarning": "Atualmente há alterações não salvas"
+  },
   "sync": {
     "device": {
       "deviceName": {
@@ -447,6 +459,7 @@
       "placeholder": "Digite a palavra-chave personalizada",
       "title": "Palavra-chave personalizada"
     },
+    "helpInfo": "Ao criar um novo assistente, as configurações padrão do assistente serão usadas como valores predefinidos.",
     "historyCompress": {
       "label": "Modelo de Histórico de Conversa",
       "modelDesc": "Especifica o modelo usado para comprimir o histórico de conversa",

@@ -1,7 +1,7 @@
 import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-const CategoryContainer = memo<PropsWithChildren<{ top?: number }>>(({ children, top = 64 }) => {
+const CategoryContainer = memo<PropsWithChildren<{ top?: number }>>(({ children, top = 52 }) => {
   return (
     <Flexbox
       as={'aside'}

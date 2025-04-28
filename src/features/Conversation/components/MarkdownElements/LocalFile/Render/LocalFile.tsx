@@ -54,7 +54,7 @@ const LocalFile = ({
       onClick={handleClick}
       style={{ display: 'inline-flex', verticalAlign: 'middle' }}
     >
-      <FileIcon fileName={name} isDirectory={isDirectory} size={22} variant={'pure'} />
+      <FileIcon fileName={name} isDirectory={isDirectory} size={22} variant={'raw'} />
       <Flexbox align={'baseline'} gap={4} horizontal style={{ overflow: 'hidden', width: '100%' }}>
         <div className={styles.title}>{name}</div>
       </Flexbox>

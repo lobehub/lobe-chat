@@ -1,21 +1,9 @@
-import { Button, Form, Input, Select } from 'antd';
-import { css, cx } from 'antd-style';
+import { Button, Form, Input, Select, TextArea } from '@lobehub/ui';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 import { CreateNewEvalEvaluation } from '@/types/eval';
-
-const formItem = css`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-
-  .ant-form-item {
-    margin-block-end: 0;
-  }
-`;
 
 interface CreateFormProps {
   knowledgeBaseId: string;
@@ -49,44 +37,52 @@ const CreateForm = memo<CreateFormProps>(({ onClose, onCreate, knowledgeBaseId }
   };
 
   return (
-    <Flexbox gap={8}>
-      <Form className={cx(formItem)} onFinish={onFinish}>
-        <Form.Item
-          name={'name'}
-          rules={[{ message: t('evaluation.addEvaluation.name.required'), required: true }]}
-        >
-          <Input autoFocus placeholder={t('evaluation.addEvaluation.name.placeholder')} />
-        </Form.Item>
-        <Form.Item name={'description'}>
-          <Input.TextArea
-            placeholder={t('evaluation.addEvaluation.description.placeholder')}
-            style={{ minHeight: 120 }}
-          />
-        </Form.Item>
-        <Form.Item
-          name={'datasetId'}
-          rules={[{ message: t('evaluation.addEvaluation.datasetId.required'), required: true }]}
-        >
-          <Select
-            loading={isLoading}
-            options={data?.map((item) => ({
-              label: item.name,
-              value: item.id,
-            }))}
-            placeholder={t('evaluation.addEvaluation.datasetId.placeholder')}
-          />
-        </Form.Item>
-        <Button
-          block
-          htmlType={'submit'}
-          loading={loading}
-          style={{ marginTop: 16 }}
-          type={'primary'}
-        >
+    <Form
+      footer={
+        <Button block htmlType={'submit'} loading={loading} type={'primary'}>
           {t('evaluation.addEvaluation.confirm')}
         </Button>
-      </Form>
-    </Flexbox>
+      }
+      gap={16}
+      items={[
+        {
+          children: (
+            <Input autoFocus placeholder={t('evaluation.addEvaluation.name.placeholder')} />
+          ),
+          label: t('evaluation.addEvaluation.name.placeholder'),
+          name: 'name',
+          rules: [{ message: t('evaluation.addEvaluation.name.required'), required: true }],
+        },
+        {
+          children: (
+            <TextArea
+              placeholder={t('evaluation.addEvaluation.description.placeholder')}
+              style={{ minHeight: 120 }}
+            />
+          ),
+          label: t('evaluation.addEvaluation.description.placeholder'),
+          name: 'description',
+        },
+        {
+          children: (
+            <Select
+              loading={isLoading}
+              options={data?.map((item) => ({
+                label: item.name,
+                value: item.id,
+              }))}
+              placeholder={t('evaluation.addEvaluation.datasetId.placeholder')}
+            />
+          ),
+          label: t('evaluation.addEvaluation.datasetId.placeholder'),
+          name: 'datasetId',
+          rules: [{ message: t('evaluation.addEvaluation.datasetId.required'), required: true }],
+        },
+      ]}
+      itemsType={'flat'}
+      layout={'vertical'}
+      onFinish={onFinish}
+    />
   );
 });
 

@@ -1,5 +1,5 @@
-import { Icon } from '@lobehub/ui';
-import { App, Button, Checkbox, Skeleton } from 'antd';
+import { Button, Icon } from '@lobehub/ui';
+import { App, Checkbox, Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { BookMinusIcon, BookPlusIcon, FileBoxIcon, Trash2Icon } from 'lucide-react';
 import { rgba } from 'polished';
@@ -74,7 +74,7 @@ const MultiSelectActions = memo<MultiSelectActionsProps>(
             {isInKnowledgeBase ? (
               <>
                 <Button
-                  icon={<Icon icon={BookMinusIcon} />}
+                  icon={BookMinusIcon}
                   onClick={() => {
                     modal.confirm({
                       okButtonProps: {
@@ -94,36 +94,43 @@ const MultiSelectActions = memo<MultiSelectActionsProps>(
                   {t('FileManager.actions.removeFromKnowledgeBase')}
                 </Button>
                 <Button
+                  color={'default'}
                   icon={<Icon icon={BookPlusIcon} />}
                   onClick={() => {
                     onActionClick('addToOtherKnowledgeBase');
                   }}
                   size={'small'}
+                  variant={'filled'}
                 >
                   {t('FileManager.actions.addToOtherKnowledgeBase')}
                 </Button>
               </>
             ) : (
               <Button
+                color={'default'}
                 icon={<Icon icon={BookPlusIcon} />}
                 onClick={() => {
                   onActionClick('addToKnowledgeBase');
                 }}
                 size={'small'}
+                variant={'filled'}
               >
                 {t('FileManager.actions.addToKnowledgeBase')}
               </Button>
             )}
             <Button
+              color={'default'}
               icon={<Icon icon={FileBoxIcon} />}
               onClick={async () => {
                 await onActionClick('batchChunking');
               }}
               size={'small'}
+              variant={'filled'}
             >
               {t('FileManager.actions.batchChunking')}
             </Button>
             <Button
+              color={'danger'}
               danger
               icon={<Icon icon={Trash2Icon} />}
               onClick={async () => {
@@ -139,6 +146,7 @@ const MultiSelectActions = memo<MultiSelectActionsProps>(
                 });
               }}
               size={'small'}
+              variant={'filled'}
             >
               {t('batchDelete', { ns: 'common' })}
             </Button>

@@ -1,5 +1,14 @@
-import { ActionIcon, Avatar, CopyButton, Icon, Input, Modal, Tag } from '@lobehub/ui';
-import { Button, ButtonProps, Skeleton, Typography } from 'antd';
+import {
+  ActionIcon,
+  Avatar,
+  Button,
+  ButtonProps,
+  CopyButton,
+  Input,
+  Modal,
+  Tag,
+} from '@lobehub/ui';
+import { Skeleton, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { startCase } from 'lodash-es';
 import { LinkIcon, Share2Icon } from 'lucide-react';
@@ -100,9 +109,7 @@ const ShareButton = memo<ShareButtonProps>(({ meta, ...rest }) => {
             {meta.hashtags && (
               <Flexbox align={'center'} gap={4} horizontal justify={'center'} wrap={'wrap'}>
                 {meta.hashtags.map((tag, index) => (
-                  <Tag key={index} style={{ margin: 0 }}>
-                    {startCase(tag).trim()}
-                  </Tag>
+                  <Tag key={index}>{startCase(tag).trim()}</Tag>
                 ))}
               </Flexbox>
             )}
@@ -115,20 +122,20 @@ const ShareButton = memo<ShareButtonProps>(({ meta, ...rest }) => {
               <ActionIcon
                 className={styles.icon}
                 icon={item.icon as any}
-                size={{ blockSize: 36, borderRadius: 18, fontSize: 16 }}
+                size={{ blockSize: 36, borderRadius: 18, size: 16 }}
                 title={item.title}
               />
             </Link>
           ))}
         </Flexbox>
         <Flexbox align={'center'} gap={8} horizontal width={'100%'}>
-          <Input type={'block'} value={meta.url} />
+          <Input value={meta.url} variant={'filled'} />
           <CopyButton
             className={styles.copy}
             color={theme.colorBgLayout}
             content={meta.url}
             icon={LinkIcon}
-            size={{ blockSize: 36, fontSize: 16 }}
+            size={{ blockSize: 36, size: 16 }}
           />
         </Flexbox>
       </Center>
@@ -139,12 +146,7 @@ const ShareButton = memo<ShareButtonProps>(({ meta, ...rest }) => {
 
   return (
     <>
-      <Button
-        icon={<Icon icon={Share2Icon} />}
-        onClick={() => setOpen(true)}
-        size={'large'}
-        {...rest}
-      />
+      <Button icon={Share2Icon} onClick={() => setOpen(true)} size={'large'} {...rest} />
       <Modal
         footer={null}
         onCancel={() => setOpen(false)}

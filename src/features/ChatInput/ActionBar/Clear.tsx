@@ -49,12 +49,14 @@ const Clear = memo(() => {
     >
       <ActionIcon
         icon={Eraser}
-        placement={'bottom'}
-        styles={{
-          root: { maxWidth: 'none' },
-        }}
         title={actionTitle}
-        tooltipHotkey={hotkey}
+        tooltipProps={{
+          hotkey,
+          placement: 'bottom',
+          styles: {
+            root: { maxWidth: 'none' },
+          },
+        }}
       />
     </Popconfirm>
   );

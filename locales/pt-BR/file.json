@@ -71,6 +71,9 @@
     "websites": "Sites"
   },
   "title": "Arquivos",
+  "toggleLeftPanel": {
+    "title": "Mostrar/Ocultar painel esquerdo"
+  },
   "uploadDock": {
     "body": {
       "collapse": "Recolher",

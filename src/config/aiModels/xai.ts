@@ -1,4 +1,5 @@
 import { AIChatModelCard } from '@/types/aiModel';
+
 // https://docs.x.ai/docs/models
 const xaiChatModels: AIChatModelCard[] = [
   {
@@ -6,7 +7,8 @@ const xaiChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     contextWindowTokens: 131_072,
-    description: '旗舰级模型，擅长数据提取、编程和文本摘要等企业级应用，拥有金融、医疗、法律和科学等领域的深厚知识。',
+    description:
+      '旗舰级模型，擅长数据提取、编程和文本摘要等企业级应用，拥有金融、医疗、法律和科学等领域的深厚知识。',
     displayName: 'Grok 3 Beta',
     enabled: true,
     id: 'grok-3-beta',
@@ -22,7 +24,8 @@ const xaiChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     contextWindowTokens: 131_072,
-    description: '旗舰级模型，擅长数据提取、编程和文本摘要等企业级应用，拥有金融、医疗、法律和科学等领域的深厚知识。',
+    description:
+      '旗舰级模型，擅长数据提取、编程和文本摘要等企业级应用，拥有金融、医疗、法律和科学等领域的深厚知识。',
     displayName: 'Grok 3 Beta (Fast mode)',
     id: 'grok-3-fast-beta',
     pricing: {
@@ -38,7 +41,8 @@ const xaiChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 131_072,
-    description: '轻量级模型，回话前会先思考。运行快速、智能，适用于不需要深层领域知识的逻辑任务，并能获取原始的思维轨迹。',
+    description:
+      '轻量级模型，回话前会先思考。运行快速、智能，适用于不需要深层领域知识的逻辑任务，并能获取原始的思维轨迹。',
     displayName: 'Grok 3 Mini Beta',
     enabled: true,
     id: 'grok-3-mini-beta',
@@ -55,7 +59,8 @@ const xaiChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 131_072,
-    description: '轻量级模型，回话前会先思考。运行快速、智能，适用于不需要深层领域知识的逻辑任务，并能获取原始的思维轨迹。',
+    description:
+      '轻量级模型，回话前会先思考。运行快速、智能，适用于不需要深层领域知识的逻辑任务，并能获取原始的思维轨迹。',
     displayName: 'Grok 3 Mini Beta (Fast mode)',
     id: 'grok-3-mini-fast-beta',
     pricing: {

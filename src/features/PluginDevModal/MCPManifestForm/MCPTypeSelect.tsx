@@ -65,7 +65,7 @@ const useStyles = createStyles(({ token, css }) => ({
   disabled: css`
     cursor: not-allowed;
     border-color: ${token.colorBorder};
-    opacity: 0.6;
+    opacity: 0.5;
     background-color: ${token.colorBgContainerDisabled};
 
     &:hover {
@@ -88,11 +88,11 @@ const useStyles = createStyles(({ token, css }) => ({
 
 // Helper component for feature list items (moved from MCPManifestForm)
 const FeatureItem = memo(({ children }: { children: React.ReactNode }) => {
-  const { styles } = useStyles();
+  const { styles, theme } = useStyles();
   return (
     <div className={styles.featureItem}>
       <Center className={styles.featureIcon}>
-        <CheckIcon size={16} />
+        <CheckIcon color={theme.colorSuccess} size={16} />
       </Center>
       <div className={styles.featureText}>{children}</div>
     </div>

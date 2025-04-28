@@ -13,12 +13,16 @@ const log = debug('electron-server-ipc:server');
 export class ElectronIPCServer {
   private server: net.Server;
   private socketPath: string;
+  private appId: string;
   private eventHandler: ElectronIPCEventHandler;
 
-  constructor(eventHandler: ElectronIPCEventHandler) {
+  constructor(appId: string, eventHandler: ElectronIPCEventHandler) {
+    this.appId = appId;
     const isWindows = process.platform === 'win32';
     // 创建唯一的套接字路径，避免冲突
-    this.socketPath = isWindows ? WINDOW_PIPE_FILE : path.join(os.tmpdir(), SOCK_FILE);
+    this.socketPath = isWindows
+      ? WINDOW_PIPE_FILE(appId)
+      : path.join(os.tmpdir(), SOCK_FILE(appId));
 
     // 如果是 Unix 套接字，确保文件不存在
     if (!isWindows && fs.existsSync(this.socketPath)) {
@@ -47,7 +51,7 @@ export class ElectronIPCServer {
 
         // 将套接字路径写入临时文件，供 Next.js 服务端读取
         const tempDir = os.tmpdir();
-        const socketInfoPath = path.join(tempDir, SOCK_INFO_FILE);
+        const socketInfoPath = path.join(tempDir, SOCK_INFO_FILE(this.appId));
         log('Writing socket info to: %s', socketInfoPath);
         fs.writeFileSync(socketInfoPath, JSON.stringify({ socketPath: this.socketPath }), 'utf8');
 

@@ -29,15 +29,27 @@ const Layout = memo(({ children, mobile }: ProviderMenuProps) => {
 
   useFetchAiProviderList();
 
-  const width = mobile ? undefined : 260;
+  const width = mobile ? undefined : 280;
   return (
-    <Flexbox style={{ minWidth: width, overflow: mobile ? undefined : 'scroll' }} width={width}>
+    <Flexbox
+      style={{
+        background: theme.colorBgLayout,
+        borderRight: `1px solid ${theme.colorBorderSecondary}`,
+        minWidth: width,
+        overflow: mobile ? undefined : 'scroll',
+      }}
+      width={width}
+    >
       <Flexbox
         gap={8}
         horizontal
         justify={'space-between'}
         padding={'16px 12px 12px'}
-        style={{ background: theme.colorBgLayout, position: 'sticky', top: 0, zIndex: 50 }}
+        style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 50,
+        }}
         width={'100%'}
       >
         <SearchBar
@@ -45,8 +57,8 @@ const Layout = memo(({ children, mobile }: ProviderMenuProps) => {
           onChange={(e) => useAiInfraStore.setState({ providerSearchKeyword: e.target.value })}
           placeholder={t('menu.searchProviders')}
           style={{ width: '100%' }}
-          type={'block'}
           value={providerSearchKeyword}
+          variant={'filled'}
         />
         <AddNew />
       </Flexbox>

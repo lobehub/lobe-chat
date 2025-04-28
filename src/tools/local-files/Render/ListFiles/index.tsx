@@ -56,7 +56,7 @@ const ListFiles = memo<ListFilesProps>(({ messageId, pluginError, args, pluginSt
           localFileService.openLocalFolder({ isDirectory: true, path: args.path });
         }}
       >
-        <FileIcon fileName={args.path} isDirectory size={22} variant={'pure'} />
+        <FileIcon fileName={args.path} isDirectory size={22} variant={'raw'} />
         <Typography.Text className={styles.path} ellipsis>
           {args.path}
         </Typography.Text>

@@ -3,10 +3,12 @@ import { z } from 'zod';
 import { v4 as uuidv4 } from 'uuid'; // 需要添加此导入
 
 import { enableClerk } from '@/const/auth';
+import { isDesktop } from '@/const/version';
 import { MessageModel } from '@/database/models/message';
 import { SessionModel } from '@/database/models/session';
 import { UserModel, UserNotFoundError } from '@/database/models/user';
 import { ClerkAuth } from '@/libs/clerk-auth';
+import { pino } from '@/libs/logger';
 import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
@@ -50,33 +52,46 @@ export const userRouter = router({
       try {
         state = await ctx.userModel.getUserState(KeyVaultsGateKeeper.getUserKeyVaults);
       } catch (error) {
-        if (enableClerk && error instanceof UserNotFoundError) {
-          const user = await ctx.clerkAuth.getCurrentUser();
-          if (user) {
-            const userService = new UserService();
+        // user not create yet
+        if (error instanceof UserNotFoundError) {
+          // if in clerk auth mode
+          if (enableClerk) {
+            const user = await ctx.clerkAuth.getCurrentUser();
+            if (user) {
+              const userService = new UserService();
 
-            await userService.createUser(user.id, {
-              created_at: user.createdAt,
-              email_addresses: user.emailAddresses.map((e) => ({
-                email_address: e.emailAddress,
-                id: e.id,
-              })),
-              first_name: user.firstName,
-              id: user.id,
-              image_url: user.imageUrl,
-              last_name: user.lastName,
-              phone_numbers: user.phoneNumbers.map((e) => ({
-                id: e.id,
-                phone_number: e.phoneNumber,
-              })),
-              primary_email_address_id: user.primaryEmailAddressId,
-              primary_phone_number_id: user.primaryPhoneNumberId,
-              username: user.username,
-            } as UserJSON);
+              await userService.createUser(user.id, {
+                created_at: user.createdAt,
+                email_addresses: user.emailAddresses.map((e) => ({
+                  email_address: e.emailAddress,
+                  id: e.id,
+                })),
+                first_name: user.firstName,
+                id: user.id,
+                image_url: user.imageUrl,
+                last_name: user.lastName,
+                phone_numbers: user.phoneNumbers.map((e) => ({
+                  id: e.id,
+                  phone_number: e.phoneNumber,
+                })),
+                primary_email_address_id: user.primaryEmailAddressId,
+                primary_phone_number_id: user.primaryPhoneNumberId,
+                username: user.username,
+              } as UserJSON);
 
+              continue;
+            }
+          }
+
+          // if in desktop mode, make sure desktop user exist
+          else if (isDesktop) {
+            await UserModel.makeSureUserExist(ctx.serverDB, ctx.userId);
+            pino.info('create desktop user');
             continue;
           }
         }
+
+        console.error('getUserState:', error);
         throw error;
       }
     }

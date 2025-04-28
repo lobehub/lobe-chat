@@ -1,5 +1,5 @@
-import { ActionIcon, Hotkey, Icon, Tooltip } from '@lobehub/ui';
-import { Button, Popconfirm } from 'antd';
+import { ActionIcon, Button, Hotkey, Tooltip } from '@lobehub/ui';
+import { Popconfirm } from 'antd';
 import { LucideGalleryVerticalEnd, LucideMessageSquarePlus } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -55,12 +55,7 @@ const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
   } else {
     return (
       <Tooltip hotkey={hotkey} title={desc}>
-        <Button
-          aria-label={desc}
-          icon={<Icon icon={icon} />}
-          loading={isValidating}
-          onClick={() => mutate()}
-        />
+        <Button aria-label={desc} icon={icon} loading={isValidating} onClick={() => mutate()} />
       </Tooltip>
     );
   }

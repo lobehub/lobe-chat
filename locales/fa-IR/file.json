@@ -71,6 +71,9 @@
     "websites": "وب‌سایت‌ها"
   },
   "title": "فایل",
+  "toggleLeftPanel": {
+    "title": "نمایش/پنهان کردن پانل سمت چپ"
+  },
   "uploadDock": {
     "body": {
       "collapse": "بستن",

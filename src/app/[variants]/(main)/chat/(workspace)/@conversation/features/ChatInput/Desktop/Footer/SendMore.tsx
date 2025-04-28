@@ -1,5 +1,4 @@
-import { Hotkey, Icon } from '@lobehub/ui';
-import { Button, Dropdown } from 'antd';
+import { Button, Dropdown, Hotkey, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { BotMessageSquare, LucideCheck, LucideChevronDown, MessageSquarePlus } from 'lucide-react';
 import { memo } from 'react';
@@ -93,7 +92,7 @@ const SendMore = memo<SendMoreProps>(({ disabled, isMac }) => {
       <Button
         aria-label={t('input.more')}
         className={styles.arrow}
-        icon={<Icon icon={LucideChevronDown} />}
+        icon={LucideChevronDown}
         type={'primary'}
       />
     </Dropdown>

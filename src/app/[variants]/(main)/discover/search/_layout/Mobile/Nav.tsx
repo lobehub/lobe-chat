@@ -1,6 +1,6 @@
 'use client';
 
-import { TabsNav } from '@lobehub/ui';
+import { Tabs } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -35,8 +35,9 @@ const Nav = memo(() => {
 
   return (
     <Flexbox style={{ paddingInline: 16 }}>
-      <TabsNav
+      <Tabs
         activeKey={activeKey}
+        compact
         items={items
           .filter((item: any) => item?.key !== DiscoverTab.Home)
           .map((item: any) => ({
@@ -47,7 +48,6 @@ const Nav = memo(() => {
               </div>
             ),
           }))}
-        variant={'compact'}
       />
     </Flexbox>
   );

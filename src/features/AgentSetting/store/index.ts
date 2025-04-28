@@ -14,3 +14,5 @@ export type { State } from './initialState';
 export const createStore = () => createWithEqualityFn(subscribeWithSelector(store), shallow);
 
 export const { useStore, useStoreApi, Provider } = createContext<StoreApiWithSelector<Store>>();
+
+export { selectors } from './selectors';

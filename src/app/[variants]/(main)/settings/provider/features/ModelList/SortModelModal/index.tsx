@@ -1,5 +1,5 @@
-import { Modal, SortableList } from '@lobehub/ui';
-import { App, Button } from 'antd';
+import { Button, Modal, SortableList } from '@lobehub/ui';
+import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,7 +1,7 @@
 'use client';
 
-import { Form, type ItemGroup } from '@lobehub/ui';
-import { App, Button, Input } from 'antd';
+import { Button, Form, type FormGroupItemType, InputPassword } from '@lobehub/ui';
+import { App } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,8 +13,6 @@ import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
-
-type SettingItemGroup = ItemGroup;
 
 const Common = memo(() => {
   const { t } = useTranslation('setting');
@@ -40,11 +38,11 @@ const Common = memo(() => {
     });
   }, []);
 
-  const system: SettingItemGroup = {
+  const system: FormGroupItemType = {
     children: [
       {
         children: (
-          <Input.Password
+          <InputPassword
             autoComplete={'new-password'}
             placeholder={t('settingSystem.accessCode.placeholder')}
           />
@@ -56,7 +54,7 @@ const Common = memo(() => {
       },
       {
         children: (
-          <Button danger onClick={handleReset} type="primary">
+          <Button danger onClick={handleReset} type={'primary'}>
             {t('danger.reset.action')}
           </Button>
         ),
@@ -77,7 +75,7 @@ const Common = memo(() => {
       items={[system]}
       itemsType={'group'}
       onValuesChange={setSettings}
-      variant={'pure'}
+      variant={'borderless'}
       {...FORM_STYLE}
     />
   );

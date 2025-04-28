@@ -1,5 +1,5 @@
-import { Alert, Icon, Modal } from '@lobehub/ui';
-import { App, Button, Form, Popconfirm, Segmented, Tag } from 'antd';
+import { Alert, Button, Icon, Modal, Segmented, Tag } from '@lobehub/ui';
+import { App, Form, Popconfirm } from 'antd';
 import { useResponsive } from 'antd-style';
 import { MoveUpRight } from 'lucide-react';
 import { memo, useEffect, useState } from 'react';
@@ -153,6 +153,7 @@ const DevModal = memo<DevModalProps>(
                 },
               ]}
               value={configMode}
+              variant={'filled'}
             />
 
             {configMode === 'url' && (

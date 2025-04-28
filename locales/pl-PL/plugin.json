@@ -48,7 +48,7 @@
     },
     "mcp": {
       "args": {
-        "desc": "Lista argumentów przekazywanych do polecenia STDIO, zazwyczaj wpisz tutaj nazwę serwera MCP",
+        "desc": "Lista argumentów przekazywanych do polecenia wykonawczego, zazwyczaj wpisz tutaj nazwę serwera MCP lub ścieżkę do skryptu uruchamiającego",
         "label": "Argumenty polecenia",
         "placeholder": "Na przykład: mcp-hello-world",
         "required": "Proszę wprowadzić parametry uruchomienia"
@@ -62,6 +62,15 @@
       "endpoint": {
         "desc": "Wprowadź adres swojego serwera MCP Streamable HTTP",
         "label": "URL punktu końcowego MCP"
+      },
+      "env": {
+        "add": "Dodaj nowy wiersz",
+        "desc": "Wprowadź zmienne środowiskowe wymagane przez Twój serwer MCP",
+        "duplicateKeyError": "Klucz pola musi być unikalny",
+        "formValidationFailed": "Walidacja formularza nie powiodła się, sprawdź format argumentów",
+        "keyRequired": "Klucz pola nie może być pusty",
+        "label": "Zmienne środowiskowe serwera MCP",
+        "stringifyError": "Nie można zserializować argumentów, sprawdź format argumentów"
       },
       "identifier": {
         "desc": "Nadaj nazwę swojej wtyczce MCP, używając znaków angielskich",

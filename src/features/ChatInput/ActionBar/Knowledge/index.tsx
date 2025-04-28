@@ -28,20 +28,24 @@ const Knowledge = memo(() => {
     return null;
   }
 
-  const content = (
-    <DropdownMenu>
-      <ActionIcon
-        disable={!enableKnowledge}
-        icon={LibraryBig}
-        placement={'bottom'}
-        title={
-          enableKnowledge
-            ? t('knowledgeBase.title')
-            : t('knowledgeBase.disabled', { cloud: LOBE_CHAT_CLOUD })
-        }
-      />
-    </DropdownMenu>
+  const icon = (
+    <ActionIcon
+      disabled={!enableKnowledge}
+      icon={LibraryBig}
+      title={
+        enableKnowledge
+          ? t('knowledgeBase.title')
+          : t('knowledgeBase.disabled', { cloud: LOBE_CHAT_CLOUD })
+      }
+      tooltipProps={{
+        placement: 'bottom',
+      }}
+    />
   );
+
+  if (!enableKnowledge) return icon;
+
+  const content = <DropdownMenu>{icon}</DropdownMenu>;
 
   return (
     <Suspense fallback={<ActionIcon icon={LucideLoader2} spin />}>

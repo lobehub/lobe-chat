@@ -1,6 +1,7 @@
 'use client';
 
-import { App, Button, Skeleton } from 'antd';
+import { Button } from '@lobehub/ui';
+import { App, Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -48,7 +48,7 @@
     },
     "mcp": {
       "args": {
-        "desc": "Liste der Parameter, die an den STDIO-Befehl übergeben werden, normalerweise hier den MCP-Servernamen eingeben",
+        "desc": "Liste der Parameter, die an den auszuführenden Befehl übergeben werden, normalerweise hier den MCP-Servernamen oder den Pfad zum Startskript eingeben",
         "label": "Befehlsparameter",
         "placeholder": "Zum Beispiel: mcp-hello-world",
         "required": "Bitte geben Sie die Startparameter ein"
@@ -62,6 +62,15 @@
       "endpoint": {
         "desc": "Geben Sie die Adresse Ihres MCP Streamable HTTP Servers ein",
         "label": "MCP Endpoint-URL"
+      },
+      "env": {
+        "add": "Neue Zeile hinzufügen",
+        "desc": "Geben Sie die Umgebungsvariablen ein, die Ihr MCP-Server benötigt",
+        "duplicateKeyError": "Feldschlüssel müssen eindeutig sein",
+        "formValidationFailed": "Formularvalidierung fehlgeschlagen, bitte überprüfen Sie das Parameterformat",
+        "keyRequired": "Feldschlüssel darf nicht leer sein",
+        "label": "MCP-Server-Umgebungsvariablen",
+        "stringifyError": "Parameter können nicht serialisiert werden, bitte überprüfen Sie das Parameterformat"
       },
       "identifier": {
         "desc": "Geben Sie Ihrem MCP-Plugin einen Namen, der englische Zeichen verwenden muss",

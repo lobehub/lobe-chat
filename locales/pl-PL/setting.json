@@ -150,6 +150,7 @@
       "title": "Kolor tła"
     },
     "description": {
+      "desc": "Krótki opis twojego asystenta, nie jako ustawienie postaci",
       "placeholder": "Proszę wprowadzić opis asystenta",
       "title": "Opis asystenta"
     },
@@ -161,7 +162,9 @@
       "placeholder": "Proszę wprowadzić słowo kluczowe dla roli Prompt",
       "title": "Ustawienia roli"
     },
+    "submit": "Zaktualizuj informacje o asystencie",
     "tag": {
+      "desc": "Tagi asystenta będą wyświetlane na rynku asystentów",
       "placeholder": "Proszę wprowadzić tag",
       "title": "Tag"
     },
@@ -206,6 +209,7 @@
       "placeholder": "Szablon wejściowy {{text}} zostanie zastąpiony rzeczywistą wiadomością",
       "title": "Szablon wejściowy"
     },
+    "submit": "Zaktualizuj preferencje czatu",
     "title": "Ustawienia czatu"
   },
   "settingModel": {
@@ -243,6 +247,7 @@
       },
       "title": "Intensywność rozumowania"
     },
+    "submit": "Zaktualizuj ustawienia modelu",
     "temperature": {
       "desc": "Im większa wartość, tym bardziej kreatywne i wyobrażeniowe będą odpowiedzi; im mniejsza wartość, tym bardziej rygorystyczne odpowiedzi",
       "title": "Aktywność kreatywna",
@@ -319,6 +324,7 @@
       "desc": "Dla przeglądarki używana jest wbudowana usługa rozpoznawania mowy",
       "title": "Usługa rozpoznawania mowy"
     },
+    "submit": "Zaktualizuj usługę głosową",
     "title": "Usługi mowy",
     "tts": "Ustawienia syntezy mowy",
     "ttsService": {
@@ -396,6 +402,12 @@
     "placeholder": "Wprowadź identyfikator asystenta, musi być unikalny, na przykład web-development",
     "tooltips": "Udostępnij na rynku asystentów"
   },
+  "submitFooter": {
+    "reset": "Resetuj",
+    "submit": "Zapisz",
+    "unSaved": "Nie zapisane zmiany",
+    "unSavedWarning": "Obecnie są niezapisane zmiany"
+  },
   "sync": {
     "device": {
       "deviceName": {
@@ -447,6 +459,7 @@
       "placeholder": "Wprowadź niestandardowe słowo podpowiedzi",
       "title": "Niestandardowe słowo podpowiedzi"
     },
+    "helpInfo": "Podczas tworzenia nowego asystenta, domyślne ustawienia asystenta będą używane jako wartości wstępne.",
     "historyCompress": {
       "label": "Model historii rozmów",
       "modelDesc": "Model używany do kompresji historii rozmów",

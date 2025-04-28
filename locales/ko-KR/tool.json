@@ -54,7 +54,16 @@
       "title": "검색 엔진："
     },
     "searchResult": "검색 수：",
-    "searchTimeRange": "시간 범위:",
+    "searchTimeRange": {
+      "title": "시간 범위：",
+      "value": {
+        "anytime": "시간 제한 없음",
+        "day": "하루 이내",
+        "month": "한 달 이내",
+        "week": "일주일 이내",
+        "year": "일년 이내"
+      }
+    },
     "summary": "요약",
     "summaryTooltip": "현재 내용 요약",
     "viewMoreResults": "{{results}}개의 결과 더 보기"
