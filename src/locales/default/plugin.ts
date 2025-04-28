@@ -1,4 +1,5 @@
 export default {
+  confirm: '确定',
   debug: {
     arguments: '调用参数',
     function_call: '函数调用',
@@ -80,6 +81,13 @@ export default {
         required: '请输入 MCP 服务标识符',
       },
       previewManifest: '预览插件描述文件',
+      quickImport: '快速导入 JSON 配置',
+      quickImportError: {
+        empty: '输入内容不能为空',
+        invalidJson: '无效的 JSON 格式',
+        invalidStructure: 'JSON 格式无效',
+      },
+      stdioNotSupported: '当前环境不支持 stdio 类型的 MCP 插件',
       testConnection: '测试连接',
       testConnectionTip: '测试连接成功后 MCP 插件才可以被正常使用',
       type: {
