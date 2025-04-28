@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-04-28",
+    "version": "1.84.2"
+  },
+  {
     "children": {
       "improvements": ["Improve hotkey for delete messages."]
     },
