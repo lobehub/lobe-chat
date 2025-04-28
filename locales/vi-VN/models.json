@@ -887,6 +887,15 @@
   "ernie-4.5-8k-preview": {
     "description": "Mô hình lớn văn tâm 4.5 là thế hệ mới của mô hình nền tảng đa phương tiện tự phát triển của Baidu, đạt được tối ưu hóa hợp tác thông qua mô hình hóa đa phương tiện, có khả năng hiểu đa phương tiện xuất sắc; có khả năng ngôn ngữ tinh vi hơn, khả năng hiểu, tạo ra, logic và ghi nhớ được cải thiện toàn diện, giảm ảo giác, khả năng suy luận logic và mã được nâng cao rõ rệt."
   },
+  "ernie-4.5-turbo-128k": {
+    "description": "Wenxin 4.5 Turbo có sự cải thiện rõ rệt trong việc giảm ảo giác, suy luận logic và khả năng lập trình. So với Wenxin 4.5, tốc độ nhanh hơn và giá cả thấp hơn. Khả năng của mô hình được nâng cao toàn diện, đáp ứng tốt hơn cho việc xử lý đối thoại dài với nhiều vòng và nhiệm vụ hiểu biết hỏi đáp tài liệu dài."
+  },
+  "ernie-4.5-turbo-32k": {
+    "description": "Wenxin 4.5 Turbo cũng có sự cải thiện rõ rệt trong việc giảm ảo giác, suy luận logic và khả năng lập trình. So với Wenxin 4.5, tốc độ nhanh hơn và giá cả thấp hơn. Khả năng sáng tác văn bản, hỏi đáp kiến thức được nâng cao đáng kể. Độ dài đầu ra và độ trễ câu hoàn chỉnh so với ERNIE 4.5 có sự gia tăng."
+  },
+  "ernie-4.5-turbo-vl-32k": {
+    "description": "Phiên bản hoàn toàn mới của mô hình lớn Wenxin, khả năng hiểu, sáng tác, dịch thuật và lập trình được cải thiện đáng kể, lần đầu tiên hỗ trợ độ dài ngữ cảnh 32K, độ trễ của token đầu tiên giảm đáng kể."
+  },
   "ernie-char-8k": {
     "description": "Mô hình ngôn ngữ lớn theo ngữ cảnh tự phát triển của Baidu, phù hợp cho các ứng dụng như NPC trong trò chơi, đối thoại dịch vụ khách hàng, và vai trò trong đối thoại, có phong cách nhân vật rõ ràng và nhất quán, khả năng tuân theo lệnh mạnh mẽ, hiệu suất suy luận tốt hơn."
   },
@@ -911,8 +920,14 @@
   "ernie-tiny-8k": {
     "description": "ERNIE Tiny là mô hình ngôn ngữ lớn hiệu suất siêu cao tự phát triển của Baidu, có chi phí triển khai và tinh chỉnh thấp nhất trong dòng sản phẩm văn tâm."
   },
+  "ernie-x1-32k": {
+    "description": "Có khả năng hiểu, lập kế hoạch, phản ánh và tiến hóa mạnh mẽ hơn. Là một mô hình tư duy sâu sắc toàn diện hơn, Wenxin X1 kết hợp độ chính xác, sự sáng tạo và văn phong, thể hiện xuất sắc trong các lĩnh vực như hỏi đáp kiến thức tiếng Trung, sáng tác văn học, viết tài liệu, đối thoại hàng ngày, suy luận logic, tính toán phức tạp và gọi công cụ."
+  },
   "ernie-x1-32k-preview": {
     "description": "Mô hình lớn Wenxin X1 có khả năng hiểu, lập kế hoạch, phản ánh và tiến hóa mạnh mẽ hơn. Là một mô hình tư duy sâu sắc toàn diện hơn, Wenxin X1 kết hợp độ chính xác, sự sáng tạo và văn phong, đặc biệt xuất sắc trong các lĩnh vực như hỏi đáp kiến thức tiếng Trung, sáng tác văn học, viết tài liệu, đối thoại hàng ngày, suy luận logic, tính toán phức tạp và gọi công cụ."
+  },
+  "ernie-x1-turbo-32k": {
+    "description": "So với ERNIE-X1-32K, mô hình này có hiệu suất và hiệu quả tốt hơn."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) cung cấp hiệu suất ổn định và có thể điều chỉnh, là lựa chọn lý tưởng cho các giải pháp nhiệm vụ phức tạp."

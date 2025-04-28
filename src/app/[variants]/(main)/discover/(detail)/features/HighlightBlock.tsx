@@ -70,7 +70,7 @@ const HighlightBlock = memo<HighlightBlockProps>(({ avatar, title, icon, childre
         horizontal
         padding={16}
       >
-        <Icon icon={icon} size={{ fontSize: 20 }} style={{ zIndex: 1 }} />
+        <Icon icon={icon} size={20} style={{ zIndex: 1 }} />
         <h2 style={{ fontSize: 16, fontWeight: 'bold', margin: 0, zIndex: 1 }}>{title}</h2>
         <CardBanner avatar={avatar} className={styles.background} size={mobile ? 64 : 512} />
       </Flexbox>

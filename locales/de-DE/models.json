@@ -887,6 +887,15 @@
   "ernie-4.5-8k-preview": {
     "description": "Das ERNIE 4.5 Modell ist ein neu entwickeltes, natives multimodales Basis-Modell von Baidu, das durch die gemeinsame Modellierung mehrerer Modalitäten eine synergistische Optimierung erreicht und über hervorragende multimodale Verständnisfähigkeiten verfügt; es bietet verbesserte Sprachfähigkeiten, umfassende Verbesserungen in Verständnis, Generierung, Logik und Gedächtnis, sowie signifikante Verbesserungen in der Vermeidung von Halluzinationen, logischen Schlussfolgerungen und Programmierfähigkeiten."
   },
+  "ernie-4.5-turbo-128k": {
+    "description": "Wenxin 4.5 Turbo hat deutliche Verbesserungen in den Bereichen Halluzinationen reduzieren, logisches Denken und Programmierfähigkeiten. Im Vergleich zu Wenxin 4.5 ist es schneller und kostengünstiger. Die Modellfähigkeiten wurden umfassend verbessert, um besser mit mehrstufigen, langen historischen Dialogen und der Beantwortung von Fragen zu langen Dokumenten umzugehen."
+  },
+  "ernie-4.5-turbo-32k": {
+    "description": "Wenxin 4.5 Turbo hat deutliche Verbesserungen in den Bereichen Halluzinationen reduzieren, logisches Denken und Programmierfähigkeiten. Im Vergleich zu Wenxin 4.5 ist es schneller und kostengünstiger. Die Fähigkeiten in der Textkreation und Wissensfragen haben sich erheblich verbessert. Die Ausgabelänge und die Verzögerung bei vollständigen Sätzen sind im Vergleich zu ERNIE 4.5 gestiegen."
+  },
+  "ernie-4.5-turbo-vl-32k": {
+    "description": "Die neueste Version des Wenxin Yi Yan Modells hat signifikante Verbesserungen in den Bereichen Bildverständnis, Kreation, Übersetzung und Programmierung. Es unterstützt erstmals eine Kontextlänge von 32K, und die Verzögerung beim ersten Token wurde erheblich reduziert."
+  },
   "ernie-char-8k": {
     "description": "Das von Baidu entwickelte große Sprachmodell für vertikale Szenarien eignet sich für Anwendungen wie NPCs in Spielen, Kundenservice-Dialoge und Rollenspiele, mit einem klareren und konsistenteren Charakterstil, einer stärkeren Befolgung von Anweisungen und besserer Inferenzleistung."
   },
@@ -911,8 +920,14 @@
   "ernie-tiny-8k": {
     "description": "ERNIE Tiny ist ein hochleistungsfähiges großes Sprachmodell, dessen Bereitstellungs- und Feinabstimmungskosten die niedrigsten unter den Wenshin-Modellen sind."
   },
+  "ernie-x1-32k": {
+    "description": "Verfügt über stärkere Fähigkeiten in Verständnis, Planung, Reflexion und Evolution. Als umfassenderes tiefes Denkmodell kombiniert Wenxin X1 Genauigkeit, Kreativität und Ausdruckskraft und zeigt herausragende Leistungen in den Bereichen chinesische Wissensfragen, literarische Kreation, Textverfassung, alltägliche Gespräche, logisches Denken, komplexe Berechnungen und Werkzeugnutzung."
+  },
   "ernie-x1-32k-preview": {
     "description": "Das große Modell ERNIE X1 verfügt über verbesserte Fähigkeiten in Verständnis, Planung, Reflexion und Evolution. Als umfassenderes tiefes Denkmodell kombiniert ERNIE X1 Genauigkeit, Kreativität und Ausdruckskraft und zeigt herausragende Leistungen in den Bereichen chinesische Wissensabfragen, literarisches Schaffen, Textverfassung, alltägliche Gespräche, logisches Denken, komplexe Berechnungen und Werkzeugnutzung."
+  },
+  "ernie-x1-turbo-32k": {
+    "description": "Im Vergleich zu ERNIE-X1-32K bietet dieses Modell bessere Leistung und Effizienz."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) bietet stabile und anpassbare Leistung und ist die ideale Wahl für Lösungen komplexer Aufgaben."

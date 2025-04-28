@@ -1,12 +1,13 @@
 'use client';
 
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import { SortableList } from '@lobehub/ui';
-import { Button, Empty, Input } from 'antd';
+import { ActionIcon, Button, Input, SortableList } from '@lobehub/ui';
+import { Empty, Space } from 'antd';
 import { createStyles } from 'antd-style';
+import { PlusIcon, Trash } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import useMergeState from 'use-merge-value';
 
 import { useStore } from '../store';
 import { selectors } from '../store/selectors';
@@ -17,10 +18,8 @@ const useStyles = createStyles(({ css, token }) => ({
     margin-inline: 0;
   `,
   questionItemContainer: css`
-    margin-block-end: 8px;
-    padding-block: 2px;
-    padding-inline: 10px 0;
-    background: ${token.colorBgContainer};
+    padding-block: 8px;
+    padding-inline-end: 8px;
   `,
   questionItemContent: css`
     flex: 1;
@@ -37,7 +36,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
 interface QuestionItem {
   content: string;
-  id: number;
+  id: string | number;
 }
 
 const OpeningQuestions = memo(() => {
@@ -47,12 +46,19 @@ const OpeningQuestions = memo(() => {
 
   const openingQuestions = useStore(selectors.openingQuestions);
   const updateConfig = useStore((s) => s.setAgentConfig);
-  const setQuestions = useCallback(
-    (questions: string[]) => {
-      updateConfig({ openingQuestions: questions });
-    },
-    [updateConfig],
-  );
+
+  // 乐观更新，不然会抖
+  const [questions, setQuestions] = useMergeState(openingQuestions, {
+    onChange: (questions: string[]) => updateConfig({ openingQuestions: questions }),
+    value: openingQuestions,
+  });
+
+  const items: QuestionItem[] = useMemo(() => {
+    return questions.map((item, index) => ({
+      content: item,
+      id: item || index,
+    }));
+  }, [questions]);
 
   const addQuestion = useCallback(() => {
     if (!questionInput.trim()) return;
@@ -79,34 +85,25 @@ const OpeningQuestions = memo(() => {
     [setQuestions],
   );
 
-  const items: QuestionItem[] = useMemo(() => {
-    return openingQuestions.map((item, index) => ({
-      content: item,
-      id: index,
-    }));
-  }, [openingQuestions]);
-
   const isRepeat = openingQuestions.includes(questionInput.trim());
 
   return (
     <Flexbox gap={8}>
       <Flexbox gap={4}>
-        <Input
-          addonAfter={
-            <Button
-              // don't allow repeat
-              disabled={openingQuestions.includes(questionInput.trim())}
-              icon={<PlusOutlined />}
-              onClick={addQuestion}
-              size="small"
-              type="text"
-            />
-          }
-          onChange={(e) => setQuestionInput(e.target.value)}
-          onPressEnter={addQuestion}
-          placeholder={t('settingOpening.openingQuestions.placeholder')}
-          value={questionInput}
-        />
+        <Space.Compact>
+          <Input
+            onChange={(e) => setQuestionInput(e.target.value)}
+            onPressEnter={addQuestion}
+            placeholder={t('settingOpening.openingQuestions.placeholder')}
+            value={questionInput}
+          />
+          <Button
+            // don't allow repeat
+            disabled={openingQuestions.includes(questionInput.trim())}
+            icon={PlusIcon}
+            onClick={addQuestion}
+          />
+        </Space.Compact>
 
         {isRepeat && (
           <p className={styles.repeatError}>{t('settingOpening.openingQuestions.repeat')}</p>
@@ -119,13 +116,17 @@ const OpeningQuestions = memo(() => {
             items={items}
             onChange={handleSortEnd}
             renderItem={(item) => (
-              <SortableList.Item className={styles.questionItemContainer} id={item.id}>
+              <SortableList.Item
+                className={styles.questionItemContainer}
+                id={item.id}
+                variant={'filled'}
+              >
                 <SortableList.DragHandle />
                 <div className={styles.questionItemContent}>{item.content}</div>
-                <Button
-                  icon={<DeleteOutlined />}
+                <ActionIcon
+                  icon={Trash}
                   onClick={() => removeQuestion(item.content)}
-                  type="text"
+                  size={'small'}
                 />
               </SortableList.Item>
             )}
@@ -134,6 +135,7 @@ const OpeningQuestions = memo(() => {
           <Empty
             className={styles.empty}
             description={t('settingOpening.openingQuestions.empty')}
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
           />
         )}
       </div>

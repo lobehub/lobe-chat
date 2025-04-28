@@ -27,7 +27,7 @@ interface AddFilesToKnowledgeBaseModalProps {
 export const useAddFilesToKnowledgeBaseModal = createModal<AddFilesToKnowledgeBaseModalProps>(
   (instance, params) => ({
     content: (
-      <Flexbox paddingInline={16} style={{ marginBlock: 24 }}>
+      <Flexbox padding={16}>
         <SelectForm
           fileIds={params?.fileIds || []}
           knowledgeBaseId={params?.knowledgeBaseId}

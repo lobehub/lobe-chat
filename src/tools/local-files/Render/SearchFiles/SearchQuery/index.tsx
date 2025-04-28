@@ -1,6 +1,5 @@
 import { LocalSearchFilesParams } from '@lobechat/electron-client-ipc';
-import { ActionIcon, Icon } from '@lobehub/ui';
-import { Button, Input, Space } from 'antd';
+import { ActionIcon, Button, Icon, SearchBar } from '@lobehub/ui';
 import { SearchIcon, XIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -36,13 +35,13 @@ const SearchQueryView = memo<SearchQueryViewProps>(({ messageId, args, pluginSta
 
   return editing ? (
     <Flexbox align={'center'} flex={1} gap={8} height={32} horizontal>
-      <Space.Compact style={{ width: '100%' }}>
-        <Input
+      <Flexbox gap={8}>
+        <SearchBar
           autoFocus
           onChange={(e) => {
             setQuery(e.target.value);
           }}
-          onPressEnter={updateAndSearch}
+          onSearch={updateAndSearch}
           placeholder={t('search.searchBar.placeholder')}
           style={{ minWidth: 400 }}
           value={query}
@@ -56,7 +55,7 @@ const SearchQueryView = memo<SearchQueryViewProps>(({ messageId, args, pluginSta
         >
           {t('search.searchBar.button')}
         </Button>
-      </Space.Compact>
+      </Flexbox>
       <ActionIcon icon={XIcon} onClick={() => setEditing(false)} />
     </Flexbox>
   ) : (

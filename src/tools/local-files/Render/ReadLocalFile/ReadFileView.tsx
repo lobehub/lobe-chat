@@ -116,7 +116,7 @@ const ReadFileView = memo<ReadFileViewProps>(
           onClick={handleToggleExpand}
         >
           <Flexbox align={'center'} flex={1} gap={0} horizontal style={{ overflow: 'hidden' }}>
-            <FileIcon fileName={filename} fileType={fileType} size={24} variant={'pure'} />
+            <FileIcon fileName={filename} fileType={fileType} size={24} variant={'raw'} />
             <Flexbox horizontal>
               <Typography.Text className={styles.fileName} ellipsis>
                 {filename}

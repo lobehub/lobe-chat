@@ -887,6 +887,15 @@
   "ernie-4.5-8k-preview": {
     "description": "Het Wenxin grote model 4.5 is een nieuwe generatie native multimodale basisgrootte model, ontwikkeld door Baidu, dat samenwerking optimaliseert door meerdere modaliteiten gezamenlijk te modelleren, met uitstekende multimodale begripcapaciteiten; het heeft verbeterde taalvaardigheden, met verbeteringen in begrip, generatie, logica en geheugen, en significante verbeteringen in hallucinatie, logische redenering en codecapaciteiten."
   },
+  "ernie-4.5-turbo-128k": {
+    "description": "Wenxin 4.5 Turbo heeft duidelijke verbeteringen in het verminderen van hallucinaties, logische redenering en codevaardigheden. In vergelijking met Wenxin 4.5 is het sneller en goedkoper. De modelcapaciteiten zijn aanzienlijk verbeterd, waardoor het beter voldoet aan de verwerking van meerdaagse lange historische gesprekken en taken voor het begrijpen van lange documenten."
+  },
+  "ernie-4.5-turbo-32k": {
+    "description": "Wenxin 4.5 Turbo heeft duidelijke verbeteringen in het verminderen van hallucinaties, logische redenering en codevaardigheden. In vergelijking met Wenxin 4.5 is het sneller en goedkoper. De capaciteiten voor tekstcreatie en kennisvragen zijn aanzienlijk verbeterd. De uitvoerlengte en de vertraging bij volledige zinnen zijn in vergelijking met ERNIE 4.5 toegenomen."
+  },
+  "ernie-4.5-turbo-vl-32k": {
+    "description": "De gloednieuwe versie van het Wenxin Yiyan grote model heeft aanzienlijke verbeteringen in beeldbegrip, creatie, vertaling en code. Het ondersteunt voor het eerst een contextlengte van 32K, en de vertraging bij de eerste token is aanzienlijk verminderd."
+  },
   "ernie-char-8k": {
     "description": "Een door Baidu ontwikkeld groot taalmodel voor verticale scenario's, geschikt voor toepassingen zoals game NPC's, klantenservice dialoog, en rollenspellen, met een duidelijkere en consistentere karakterstijl, sterkere instructievolgcapaciteiten en betere inferentieprestaties."
   },
@@ -911,8 +920,14 @@
   "ernie-tiny-8k": {
     "description": "ERNIE Tiny is een ultra-presterend groot taalmodel dat de laagste implementatie- en afstemmingskosten heeft binnen de Wenxin modelreeks."
   },
+  "ernie-x1-32k": {
+    "description": "Beschikt over sterkere capaciteiten in begrip, planning, reflectie en evolutie. Als een diepgaand denkmodel met een breder scala aan vaardigheden, combineert Wenxin X1 nauwkeurigheid, creativiteit en stijl, en excelleert het in Chinese kennisvragen, literaire creatie, tekstschrijven, dagelijkse gesprekken, logische redenering, complexe berekeningen en het aanroepen van tools."
+  },
   "ernie-x1-32k-preview": {
     "description": "Het Wenxin grote model X1 heeft sterkere capaciteiten in begrip, planning, reflectie en evolutie. Als een dieper denkmodel met bredere mogelijkheden, combineert Wenxin X1 nauwkeurigheid, creativiteit en stijl, en excelleert in Chinese kennisvragen, literaire creatie, tekstschrijven, dagelijkse gesprekken, logische redenering, complexe berekeningen en het aanroepen van tools."
+  },
+  "ernie-x1-turbo-32k": {
+    "description": "In vergelijking met ERNIE-X1-32K biedt dit model betere prestaties en effectiviteit."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) biedt stabiele en afstelbare prestaties, ideaal voor oplossingen voor complexe taken."

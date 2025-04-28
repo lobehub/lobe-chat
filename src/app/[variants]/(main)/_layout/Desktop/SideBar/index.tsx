@@ -1,6 +1,7 @@
 'use client';
 
 import { SideNav } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 import { Suspense, memo } from 'react';
 
@@ -24,36 +25,27 @@ const Top = () => {
 };
 
 const Nav = memo(() => {
+  const theme = useTheme();
   const inZenMode = useGlobalStore(systemStatusSelectors.inZenMode);
   const { showPinList } = useServerConfigStore(featureFlagsSelectors);
 
   return (
     !inZenMode && (
       <SideNav
-        avatar={
-          <div className={electronStylish.nodrag}>
-            <Avatar />
-          </div>
-        }
-        bottomActions={
-          <div className={electronStylish.nodrag}>
-            <BottomActions />
-          </div>
-        }
-        className={electronStylish.draggable}
+        avatar={<Avatar />}
+        bottomActions={<BottomActions />}
+        className={electronStylish.nodrag}
         style={{
           height: '100%',
           zIndex: 100,
           ...(isDesktop
             ? { background: 'transparent', borderInlineEnd: 0, paddingBlockStart: 8 }
-            : {}),
+            : { background: theme.colorBgLayout }),
         }}
         topActions={
           <Suspense>
-            <div className={electronStylish.nodrag}>
-              <Top />
-              {showPinList && <PinList />}
-            </div>
+            <Top />
+            {showPinList && <PinList />}
           </Suspense>
         }
       />

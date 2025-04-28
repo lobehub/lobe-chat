@@ -1,7 +1,8 @@
 'use client';
 
-import { Tag } from 'antd';
-import { useResponsive } from 'antd-style';
+import { Tag } from '@lobehub/ui';
+import { useResponsive, useTheme } from 'antd-style';
+import { usePathname } from 'next/navigation';
 import { memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -16,18 +17,23 @@ import { LayoutProps } from '../type';
 import Header from './Header';
 import SideBar from './SideBar';
 
+const SKIP_PATHS = ['/settings/provider', '/settings/agent'];
+
 const Layout = memo<LayoutProps>(({ children, category }) => {
   const ref = useRef<any>(null);
   const { md = true } = useResponsive();
   const { t } = useTranslation('setting');
   const activeKey = useActiveSettingsKey();
+  const theme = useTheme();
+  const pathname = usePathname();
+  const isSkip = SKIP_PATHS.some((path) => pathname.startsWith(path));
 
   return (
     <Flexbox
       height={'100%'}
       horizontal={md}
       ref={ref}
-      style={{ position: 'relative' }}
+      style={{ background: theme.colorBgContainer, position: 'relative' }}
       width={'100%'}
     >
       {md ? (
@@ -45,7 +51,7 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
           {category}
         </Header>
       )}
-      <SettingContainer addonAfter={<Footer />}>{children}</SettingContainer>
+      {isSkip ? children : <SettingContainer addonAfter={<Footer />}>{children}</SettingContainer>}
       <InitClientDB />
     </Flexbox>
   );

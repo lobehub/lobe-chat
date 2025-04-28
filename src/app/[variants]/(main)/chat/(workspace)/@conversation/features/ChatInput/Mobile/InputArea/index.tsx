@@ -1,4 +1,5 @@
-import { ActionIcon, MobileSafeArea, TextArea } from '@lobehub/ui';
+import { ActionIcon, TextArea } from '@lobehub/ui';
+import { SafeArea } from '@lobehub/ui/mobile';
 import { useSize } from 'ahooks';
 import { createStyles } from 'antd-style';
 import { TextAreaRef } from 'antd/es/input/TextArea';
@@ -100,7 +101,7 @@ const MobileChatInputArea = forwardRef<TextAreaRef, MobileChatInputAreaProps>(
               className={styles.expandButton}
               icon={expand ? ChevronDown : ChevronUp}
               onClick={() => setExpand?.(!expand)}
-              size={{ blockSize: 24, borderRadius: '50%', fontSize: 14 }}
+              size={{ blockSize: 24, borderRadius: '50%', size: 14 }}
               style={expand ? { top: 6 } : {}}
             />
           )}
@@ -137,15 +138,15 @@ const MobileChatInputArea = forwardRef<TextAreaRef, MobileChatInputAreaProps>(
               placeholder={t('sendPlaceholder')}
               ref={ref}
               style={{ height: 36, paddingBlock: 6 }}
-              type={expand ? 'pure' : 'block'}
               value={value}
+              variant={expand ? 'borderless' : 'filled'}
             />
           </InnerContainer>
         </Flexbox>
         {bottomAddons && (
           <Flexbox style={showAddons ? {} : { display: 'none' }}>{bottomAddons}</Flexbox>
         )}
-        {safeArea && !isFocused && <MobileSafeArea position={'bottom'} />}
+        {safeArea && !isFocused && <SafeArea position={'bottom'} />}
       </Flexbox>
     );
   },

@@ -1,7 +1,7 @@
 'use client';
 
-import { Avatar } from '@lobehub/ui';
-import { Button, Card, Skeleton, Typography } from 'antd';
+import { Avatar, Button } from '@lobehub/ui';
+import { Card, Skeleton, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';

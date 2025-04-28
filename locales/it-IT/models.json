@@ -887,6 +887,15 @@
   "ernie-4.5-8k-preview": {
     "description": "Il modello di grandi dimensioni Wenxin 4.5 è una nuova generazione di modello di base multimodale sviluppato autonomamente da Baidu, realizzato attraverso la modellazione congiunta di più modalità per ottenere un'ottimizzazione collaborativa, con eccellenti capacità di comprensione multimodale; presenta capacità linguistiche più avanzate, con miglioramenti significativi nella comprensione, generazione, logica e memoria, riducendo le illusioni e migliorando il ragionamento logico e le capacità di codifica."
   },
+  "ernie-4.5-turbo-128k": {
+    "description": "ERNIE 4.5 Turbo ha mostrato miglioramenti significativi nella riduzione delle allucinazioni, nel ragionamento logico e nelle capacità di codifica. Rispetto a ERNIE 4.5, è più veloce e più economico. Le capacità del modello sono state ampliate per soddisfare meglio le esigenze di gestione di conversazioni lunghe e storiche e di domande e risposte su documenti lunghi."
+  },
+  "ernie-4.5-turbo-32k": {
+    "description": "ERNIE 4.5 Turbo ha mostrato miglioramenti significativi nella riduzione delle allucinazioni, nel ragionamento logico e nelle capacità di codifica. Rispetto a ERNIE 4.5, è più veloce e più economico. Le capacità di creazione di testi e domande e risposte sono notevolmente migliorate. La lunghezza dell'output e il ritardo delle frasi complete sono aumentati rispetto a ERNIE 4.5."
+  },
+  "ernie-4.5-turbo-vl-32k": {
+    "description": "Nuova versione del modello ERNIE, con capacità significativamente migliorate nella comprensione, creazione, traduzione e codifica delle immagini, supportando per la prima volta una lunghezza di contesto di 32K, con un ritardo del primo token notevolmente ridotto."
+  },
   "ernie-char-8k": {
     "description": "Un modello di linguaggio di grandi dimensioni sviluppato internamente da Baidu, adatto per scenari di applicazione come NPC nei giochi, dialoghi di assistenza clienti e interpretazione di ruoli nei dialoghi, con uno stile di personaggio più distintivo e coerente, capacità di seguire istruzioni più forti e prestazioni di inferenza migliori."
   },
@@ -911,8 +920,14 @@
   "ernie-tiny-8k": {
     "description": "ERNIE Tiny è un modello di linguaggio di grandi dimensioni ad alte prestazioni sviluppato internamente da Baidu, con i costi di distribuzione e messa a punto più bassi della serie Wencin."
   },
+  "ernie-x1-32k": {
+    "description": "Possiede una comprensione, pianificazione, riflessione e capacità evolutive superiori. Come modello di pensiero profondo più completo, ERNIE-X1 combina accuratezza, creatività e stile, eccellendo in domande e risposte in cinese, creazione letteraria, scrittura di documenti, conversazioni quotidiane, ragionamento logico, calcoli complessi e utilizzo di strumenti."
+  },
   "ernie-x1-32k-preview": {
     "description": "Il grande modello Wénxīn X1 possiede una comprensione, pianificazione, riflessione e capacità evolutive superiori. Come modello di pensiero profondo più completo, Wénxīn X1 combina precisione, creatività e stile, eccellendo in domande e risposte in cinese, creazione letteraria, scrittura di documenti, conversazioni quotidiane, ragionamento logico, calcoli complessi e invocazione di strumenti."
+  },
+  "ernie-x1-turbo-32k": {
+    "description": "Rispetto a ERNIE-X1-32K, il modello offre prestazioni e risultati migliori."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) offre prestazioni stabili e ottimizzabili, è la scelta ideale per soluzioni a compiti complessi."

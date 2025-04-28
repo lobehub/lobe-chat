@@ -1,61 +1,50 @@
 import { ActionIcon } from '@lobehub/ui';
-import { Popover } from 'antd';
+import { GlobeOffIcon } from '@lobehub/ui/icons';
 import { useTheme } from 'antd-style';
 import { Globe } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { isDeprecatedEdition } from '@/const/version';
 import { useAgentEnableSearch } from '@/hooks/useAgentEnableSearch';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 
+import ActionPopover from '../../components/ActionPopover';
 import AINetworkSettings from './SwitchPanel';
 
 const Search = memo(() => {
   const { t } = useTranslation('chat');
+  const [loading, setLoading] = useState(false);
   const [isLoading] = useAgentStore((s) => [agentSelectors.isAgentConfigLoading(s)]);
   const isAgentEnableSearch = useAgentEnableSearch();
-
-  const isMobile = useIsMobile();
-
   const theme = useTheme();
 
-  if (isLoading) return null;
-  // <ActionIcon
-  //   icon={Globe}
-  //   placement={'bottom'}
-  //   style={{
-  //     cursor: 'not-allowed',
-  //   }}
-  // />
+  if (isLoading) return <ActionIcon disabled icon={GlobeOffIcon} />;
 
   return (
     !isDeprecatedEdition && (
-      <Flexbox>
-        <Popover
-          arrow={false}
-          content={<AINetworkSettings />}
-          styles={{
-            body: {
-              minWidth: isMobile ? undefined : 200,
-              padding: 4,
-              width: isMobile ? '100vw' : undefined,
-            },
+      <ActionPopover
+        content={<AINetworkSettings setLoading={setLoading} />}
+        maxWidth={320}
+        minWidth={320}
+        placement={'topLeft'}
+        styles={{
+          body: {
+            padding: 4,
+          },
+        }}
+      >
+        <ActionIcon
+          color={isAgentEnableSearch ? theme.colorInfo : undefined}
+          icon={isAgentEnableSearch ? Globe : GlobeOffIcon}
+          loading={loading}
+          title={t('search.title')}
+          tooltipProps={{
+            placement: 'bottom',
           }}
-        >
-          <ActionIcon
-            color={
-              isAgentEnableSearch ? (theme.isDarkMode ? theme.cyan7 : theme.cyan10) : undefined
-            }
-            icon={Globe}
-            placement={'bottom'}
-            title={t('search.title')}
-          />
-        </Popover>
-      </Flexbox>
+        />
+      </ActionPopover>
     )
   );
 });

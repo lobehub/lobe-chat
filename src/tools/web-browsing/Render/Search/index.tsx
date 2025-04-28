@@ -28,7 +28,7 @@ const Search = memo<SearchProps>(({ messageId, searchQuery, searchResponse, plug
       <Alert
         extra={
           <Flexbox>
-            <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
+            <Highlighter actionIconSize={'small'} language={'json'} variant={'borderless'}>
               {JSON.stringify(pluginError.body?.data || pluginError.body, null, 2)}
             </Highlighter>
           </Flexbox>

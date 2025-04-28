@@ -1,5 +1,5 @@
 import { ProviderIcon } from '@lobehub/icons';
-import { Button } from 'antd';
+import { Button } from '@lobehub/ui';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';

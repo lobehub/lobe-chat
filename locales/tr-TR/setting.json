@@ -150,6 +150,7 @@
       "title": "Arka Plan Rengi"
     },
     "description": {
+      "desc": "Asistanınızı basitçe tanıtın, karakter ayarı olarak kullanılmaz",
       "placeholder": "Asistan açıklamasını girin",
       "title": "Asistan Açıklaması"
     },
@@ -161,7 +162,9 @@
       "placeholder": "Prompt girin",
       "title": "Rol Ayarı"
     },
+    "submit": "Asistan bilgilerini güncelle",
     "tag": {
+      "desc": "Asistan etiketleri, asistan pazarında gösterilecektir",
       "placeholder": "Etiket girin",
       "title": "Etiket"
     },
@@ -206,6 +209,7 @@
       "placeholder": "Ön işleme şablonu {{text}}, gerçek zamanlı giriş bilgileri ile değiştirilir",
       "title": "Kullanıcı Girişi Ön İşleme"
     },
+    "submit": "Sohbet tercihlerini güncelle",
     "title": "Sohbet Ayarları"
   },
   "settingModel": {
@@ -243,6 +247,7 @@
       },
       "title": "Akıl yürütme yoğunluğu"
     },
+    "submit": "Model ayarlarını güncelle",
     "temperature": {
       "desc": "Değer ne kadar büyükse, cevap o kadar yaratıcı ve hayal gücü dolu olur; değer ne kadar küçükse, cevap o kadar titizdir.",
       "title": "Yaratıcılık Aktifliği",
@@ -319,6 +324,7 @@
       "desc": "'Tarayıcı' yerel konuşmadan metin hizmeti olduğundan",
       "title": "Konuşmadan Metin Hizmeti"
     },
+    "submit": "Ses hizmetini güncelle",
     "title": "Konuşma Hizmeti",
     "tts": "Metin Seslendirme Ayarlar",
     "ttsService": {
@@ -396,6 +402,12 @@
     "placeholder": "Asistan için benzersiz bir kimlik girin, örneğin web-geliştirme",
     "tooltips": "Asistan pazarına paylaşın"
   },
+  "submitFooter": {
+    "reset": "Sıfırla",
+    "submit": "Kaydet",
+    "unSaved": "Kaydedilmemiş değişiklikler",
+    "unSavedWarning": "Şu anda kaydedilmemiş değişiklikler var"
+  },
   "sync": {
     "device": {
       "deviceName": {
@@ -447,6 +459,7 @@
       "placeholder": "Lütfen özel ipucu kelimelerini girin",
       "title": "Özel İpucu"
     },
+    "helpInfo": "Yeni bir asistan oluşturduğunuzda, varsayılan asistan ayarları ön ayar olarak kullanılacaktır.",
     "historyCompress": {
       "label": "Oturum Geçmişi Modeli",
       "modelDesc": "Oturum geçmişini sıkıştırmak için kullanılan modeli belirtin",

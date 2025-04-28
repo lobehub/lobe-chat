@@ -887,6 +887,15 @@
   "ernie-4.5-8k-preview": {
     "description": "Wenxin büyük modeli 4.5, Baidu tarafından geliştirilen yeni nesil yerel çok modlu temel büyük modeldir. Birden fazla modun birleşik modellemesi ile işbirlikçi optimizasyon sağlar, çok modlu anlama yeteneği mükemmeldir; dil yetenekleri, anlama, üretim, mantık ve hafıza yetenekleri önemli ölçüde geliştirilmiştir, yanılsamaları ortadan kaldırma, mantıksal akıl yürütme ve kod yetenekleri belirgin şekilde artmıştır."
   },
+  "ernie-4.5-turbo-128k": {
+    "description": "Wenxin 4.5 Turbo, yanılsamaları giderme, mantıksal akıl yürütme ve kodlama yetenekleri gibi alanlarda belirgin bir artış göstermektedir. Wenxin 4.5 ile karşılaştırıldığında, daha hızlı ve daha düşük maliyetlidir. Modelin yetenekleri genel olarak artırılmıştır, çoklu uzun geçmiş diyalog işleme ve uzun belgeleri anlama görevlerini daha iyi karşılamaktadır."
+  },
+  "ernie-4.5-turbo-32k": {
+    "description": "Wenxin 4.5 Turbo, yanılsamaları giderme, mantıksal akıl yürütme ve kodlama yetenekleri gibi alanlarda belirgin bir artış göstermektedir. Wenxin 4.5 ile karşılaştırıldığında, daha hızlı ve daha düşük maliyetlidir. Metin yaratma, bilgi sorgulama gibi yeteneklerde belirgin bir artış sağlanmıştır. Çıktı uzunluğu ve tam cümle gecikmesi, ERNIE 4.5'e kıyasla artmıştır."
+  },
+  "ernie-4.5-turbo-vl-32k": {
+    "description": "Wenxin Yiyan büyük modelinin yeni versiyonu, görüntü anlama, yaratma, çeviri, kodlama gibi yeteneklerde belirgin bir artış göstermektedir, ilk kez 32K bağlam uzunluğunu desteklemekte ve ilk token gecikmesi belirgin şekilde azaltılmıştır."
+  },
   "ernie-char-8k": {
     "description": "Baidu tarafından geliştirilen dikey senaryo büyük dil modeli, oyun NPC'leri, müşteri hizmetleri diyalogları, diyalog karakter rolü gibi uygulama senaryolarına uygundur, karakter tarzı daha belirgin ve tutarlıdır, talimat takibi yeteneği daha güçlü, çıkarım performansı daha iyidir."
   },
@@ -911,8 +920,14 @@
   "ernie-tiny-8k": {
     "description": "ERNIE Tiny, Baidu tarafından geliştirilen ultra yüksek performanslı büyük dil modelidir, dağıtım ve ince ayar maliyetleri Wenxin serisi modelleri arasında en düşüktür."
   },
+  "ernie-x1-32k": {
+    "description": "Daha güçlü anlama, planlama, düşünme ve evrim yeteneklerine sahiptir. Daha kapsamlı bir derin düşünme modeli olarak, Wenxin X1, doğru, yaratıcı ve edebi bir şekilde, Çince bilgi sorgulama, edebi yaratım, metin yazımı, günlük diyalog, mantıksal akıl yürütme, karmaşık hesaplamalar ve araç çağırma gibi alanlarda özellikle başarılıdır."
+  },
   "ernie-x1-32k-preview": {
     "description": "Wenxin Büyük Model X1, daha güçlü anlama, planlama, düşünme ve evrim yeteneklerine sahiptir. Daha kapsamlı bir derin düşünme modeli olarak, Wenxin X1, doğru, yaratıcı ve edebi bir üslup sunarak, Çince bilgi sorgulama, edebi yaratım, metin yazımı, günlük diyalog, mantıksal akıl yürütme, karmaşık hesaplamalar ve araç çağırma gibi alanlarda özellikle başarılıdır."
+  },
+  "ernie-x1-turbo-32k": {
+    "description": "ERNIE-X1-32K ile karşılaştırıldığında, modelin etkisi ve performansı daha iyidir."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning), kararlı ve ayarlanabilir bir performans sunar, karmaşık görev çözümleri için ideal bir seçimdir."
