@@ -17,8 +17,6 @@ const useStyles = createStyles(({ token, css }) => ({
     width: 100%;
     height: 100%;
     padding: ${token.paddingLG}px;
-    border: 1px dashed ${token.colorBorderSecondary};
-    border-radius: ${token.borderRadiusLG}px;
   `,
   description: css`
     max-width: 320px;
