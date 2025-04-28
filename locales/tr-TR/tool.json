@@ -54,7 +54,16 @@
       "title": "Arama Motoru:"
     },
     "searchResult": "Arama sayısı:",
-    "searchTimeRange": "Zaman aralığı:",
+    "searchTimeRange": {
+      "title": "Zaman Aralığı:",
+      "value": {
+        "anytime": "Herhangi bir zaman",
+        "day": "Bir gün içinde",
+        "month": "Bir ay içinde",
+        "week": "Bir hafta içinde",
+        "year": "Bir yıl içinde"
+      }
+    },
     "summary": "Özet",
     "summaryTooltip": "Mevcut içeriği özetle",
     "viewMoreResults": "Daha fazla {{results}} sonuç görüntüle"

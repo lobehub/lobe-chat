@@ -27,13 +27,13 @@ const iconComponents: { [key: string]: React.ElementType } = {
 
 /**
  * Get the auth icons component for the given id
- * @param id 
+ * @param id
  * @param size default is 36
- * @returns 
+ * @returns
  */
 const AuthIcons = (id: string, size = 36) => {
   const IconComponent = iconComponents[id] || iconComponents.default;
-  return <IconComponent size={size}/>;
+  return <IconComponent size={size} />;
 };
 
 export default AuthIcons;

@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon, Avatar, Grid } from '@lobehub/ui';
+import { ActionIcon, Avatar, Block, Grid } from '@lobehub/ui';
 import { Skeleton, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { RefreshCw } from 'lucide-react';
@@ -27,15 +27,9 @@ const useStyles = createStyles(({ css, token, responsive }) => ({
     height: 100%;
     min-height: 110px;
     padding: 16px;
-    border-radius: ${token.borderRadius}px;
-
-    color: ${token.colorText};
+    border-radius: ${token.borderRadiusLG}px;
 
     background: ${token.colorBgContainer};
-
-    &:hover {
-      background: ${token.colorBgElevated};
-    }
 
     ${responsive.mobile} {
       min-height: 72px;
@@ -78,9 +72,9 @@ const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
   const agentLength = mobile ? 2 : 4;
 
   const loadingCards = Array.from({ length: agentLength }).map((_, index) => (
-    <Flexbox className={styles.card} key={index}>
+    <Block className={styles.card} key={index}>
       <Skeleton active avatar paragraph={{ rows: 2 }} title={false} />
-    </Flexbox>
+    </Block>
   ));
 
   const handleRefresh = () => {
@@ -98,7 +92,7 @@ const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
         <ActionIcon
           icon={RefreshCw}
           onClick={handleRefresh}
-          size={{ blockSize: 24, fontSize: 14 }}
+          size={{ blockSize: 24, size: 14 }}
           title={t('guide.agents.replaceBtn')}
         />
       </Flexbox>
@@ -113,9 +107,9 @@ const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
                   key={item.identifier}
                   prefetch={false}
                 >
-                  <Flexbox className={styles.card} gap={8} horizontal>
+                  <Block className={styles.card} clickable gap={12} horizontal variant={'outlined'}>
                     <Avatar avatar={item.meta.avatar} style={{ flex: 'none' }} />
-                    <Flexbox gap={mobile ? 2 : 8} style={{ overflow: 'hidden', width: '100%' }}>
+                    <Flexbox gap={2} style={{ overflow: 'hidden', width: '100%' }}>
                       <Paragraph className={styles.cardTitle} ellipsis={{ rows: 1 }}>
                         {item.meta.title}
                       </Paragraph>
@@ -123,7 +117,7 @@ const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
                         {item.meta.description}
                       </Paragraph>
                     </Flexbox>
-                  </Flexbox>
+                  </Block>
                 </Link>
               ))}
       </Grid>

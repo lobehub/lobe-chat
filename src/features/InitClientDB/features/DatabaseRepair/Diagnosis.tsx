@@ -1,5 +1,5 @@
-import { Highlighter } from '@lobehub/ui';
-import { Card, List, Popover, Tag } from 'antd';
+import { Highlighter, Tag } from '@lobehub/ui';
+import { Card, List, Popover } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import isEqual from 'fast-deep-equal';

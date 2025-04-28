@@ -1,4 +1,4 @@
-import { Tag } from 'antd';
+import { Tag } from '@lobehub/ui';
 import { Bot, Brain, Cloudy, Info, Mic2, Settings2, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';

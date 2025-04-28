@@ -1,8 +1,8 @@
+import type { ChatModelCard } from '@/types/llm';
+
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 import { PPIOModelCard } from './type';
-
-import type { ChatModelCard } from '@/types/llm';
 
 export const LobePPIOAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.ppinfra.com/v3/openai',
@@ -17,32 +17,37 @@ export const LobePPIOAI = LobeOpenAICompatibleFactory({
   models: async ({ client }) => {
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-    const reasoningKeywords = [
-      'deepseek-r1',
-    ];
+    const reasoningKeywords = ['deepseek-r1'];
 
-    const modelsPage = await client.models.list() as any;
+    const modelsPage = (await client.models.list()) as any;
     const modelList: PPIOModelCard[] = modelsPage.data;
 
     return modelList
       .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.toLowerCase() === m.id.toLowerCase());
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+          (m) => model.id.toLowerCase() === m.id.toLowerCase(),
+        );
 
         return {
           contextWindowTokens: model.context_size,
           description: model.description,
-          displayName: model.display_name?.replace("（", " (").replace("）", ")").replace("\t", "") || model.title || model.id,
+          displayName:
+            model.display_name?.replace(/[\t（）]/g, (match) =>
+              match === '（' ? ' (' : match === '）' ? ')' : '',
+            ) ||
+            model.title ||
+            model.id,
           enabled: knownModel?.enabled || false,
           functionCall: knownModel?.abilities?.functionCall || false,
           id: model.id,
           reasoning:
-            reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
-            || knownModel?.abilities?.reasoning
-            || false,
+            reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
+            knownModel?.abilities?.reasoning ||
+            false,
           vision:
-            model.description.toLowerCase().includes('视觉')
-            || knownModel?.abilities?.vision
-            || false,
+            model.description.toLowerCase().includes('视觉') ||
+            knownModel?.abilities?.vision ||
+            false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

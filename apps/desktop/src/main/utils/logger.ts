@@ -24,8 +24,9 @@ export const createLogger = (namespace: string) => {
     },
     info: (message, ...args) => {
       if (process.env.NODE_ENV === 'production') {
-        electronLog.info(message, ...args);
+        electronLog.info(`[${namespace}]`, message, ...args);
       }
+
       debugLogger(`INFO: ${message}`, ...args);
     },
     verbose: (message, ...args) => {

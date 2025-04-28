@@ -1,5 +1,5 @@
-import { Input } from 'antd';
-import { InputRef, InputProps as Props } from 'antd/es/input/Input';
+import { Input, InputProps as Props } from '@lobehub/ui';
+import { InputRef } from 'antd/es/input/Input';
 import { memo, useEffect, useRef, useState } from 'react';
 
 interface FormInputProps extends Omit<Props, 'onChange'> {

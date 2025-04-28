@@ -48,7 +48,7 @@
     },
     "mcp": {
       "args": {
-        "desc": "Lijst van parameters die aan het STDIO-commando worden doorgegeven",
+        "desc": "Een lijst met parameters die aan het uitvoeringscommando worden doorgegeven, meestal hier de naam van de MCP-server of het pad naar het opstartscript invoeren.",
         "label": "Commando-parameters",
         "placeholder": "Bijvoorbeeld: --port 8080 --debug",
         "required": "Voer de opstartparameters in"
@@ -62,6 +62,15 @@
       "endpoint": {
         "desc": "Voer het adres van je MCP Streamable HTTP Server in",
         "label": "MCP Endpoint URL"
+      },
+      "env": {
+        "add": "Een regel toevoegen",
+        "desc": "Voer de omgevingsvariabelen in die nodig zijn voor jouw MCP-server",
+        "duplicateKeyError": "Veldsleutels moeten uniek zijn",
+        "formValidationFailed": "Formuliervalidatie is mislukt, controleer het parameterformaat",
+        "keyRequired": "Veldsleutel mag niet leeg zijn",
+        "label": "Omgevingsvariabelen voor MCP-server",
+        "stringifyError": "Kan parameters niet serialiseren, controleer het parameterformaat"
       },
       "identifier": {
         "desc": "Geef je MCP-plugin een naam, gebruik Engelse karakters",

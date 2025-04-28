@@ -48,7 +48,7 @@
     },
     "mcp": {
       "args": {
-        "desc": "傳遞給 STDIO 命令的參數列表",
+        "desc": "傳遞給執行命令的參數列表，一般在這裡輸入 MCP 伺服器名稱，或啟動腳本路徑",
         "label": "命令參數",
         "placeholder": "例如：--port 8080 --debug",
         "required": "請輸入啟動參數"
@@ -62,6 +62,15 @@
       "endpoint": {
         "desc": "輸入你的 MCP Streamable HTTP Server 的地址",
         "label": "MCP Endpoint URL"
+      },
+      "env": {
+        "add": "新增一行",
+        "desc": "輸入你的 MCP Server 所需要的環境變數",
+        "duplicateKeyError": "欄位鍵必須唯一",
+        "formValidationFailed": "表單驗證失敗，請檢查參數格式",
+        "keyRequired": "欄位鍵不能為空",
+        "label": "MCP Server 環境變數",
+        "stringifyError": "無法序列化參數，請檢查參數格式"
       },
       "identifier": {
         "desc": "為你的 MCP 插件指定一個名稱，需要使用英文字符",

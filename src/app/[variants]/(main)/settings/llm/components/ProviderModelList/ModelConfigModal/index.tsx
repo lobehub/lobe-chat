@@ -1,5 +1,5 @@
-import { Modal } from '@lobehub/ui';
-import { Button, FormInstance } from 'antd';
+import { Button, Modal } from '@lobehub/ui';
+import { FormInstance } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -44,7 +44,6 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
         <Button key="cancel" onClick={closeModal}>
           {tc('cancel')}
         </Button>,
-
         <Button
           key="ok"
           onClick={() => {

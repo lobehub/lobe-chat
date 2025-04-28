@@ -1,5 +1,4 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
-import { Button, Dropdown } from 'antd';
+import { ActionIcon, Button, Dropdown, Icon } from '@lobehub/ui';
 import { InfoIcon, MoreVerticalIcon, Trash2 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

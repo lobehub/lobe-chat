@@ -11,7 +11,6 @@ import ProviderDetail from '../[id]';
 const providerKey = ModelProvider.Doubao;
 
 const useProviderCard = (): ProviderItem => {
-
   // Get the first model card's deployment name as the check model
   const checkModel = useUserStore((s) => {
     const chatModelCards = modelProviderSelectors.getModelCardsById(providerKey)(s);
@@ -32,9 +31,9 @@ const useProviderCard = (): ProviderItem => {
 };
 
 const Page = () => {
-    const card = useProviderCard();
-  
-    return <ProviderDetail {...card} />;
-  };
-  
-  export default Page;
+  const card = useProviderCard();
+
+  return <ProviderDetail {...card} />;
+};
+
+export default Page;

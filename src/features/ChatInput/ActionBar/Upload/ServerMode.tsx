@@ -1,5 +1,5 @@
-import { ActionIcon, Icon, Tooltip } from '@lobehub/ui';
-import { Dropdown, MenuProps, Upload } from 'antd';
+import { ActionIcon, MenuProps, Tooltip } from '@lobehub/ui';
+import { Upload } from 'antd';
 import { css, cx } from 'antd-style';
 import { FileUp, FolderUp, ImageUp, Paperclip } from 'lucide-react';
 import { memo } from 'react';
@@ -9,6 +9,8 @@ import { useModelSupportVision } from '@/hooks/useModelSupportVision';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useFileStore } from '@/store/file';
+
+import ActionDropdown from '../../components/ActionDropdown';
 
 const hotArea = css`
   &::before {
@@ -32,7 +34,7 @@ const FileUpload = memo(() => {
   const items: MenuProps['items'] = [
     {
       disabled: !canUploadImage,
-      icon: <Icon icon={ImageUp} style={{ fontSize: '16px' }} />,
+      icon: ImageUp,
       key: 'upload-image',
       label: canUploadImage ? (
         <Upload
@@ -54,7 +56,7 @@ const FileUpload = memo(() => {
       ),
     },
     {
-      icon: <Icon icon={FileUp} style={{ fontSize: '16px' }} />,
+      icon: FileUp,
       key: 'upload-file',
       label: (
         <Upload
@@ -73,7 +75,7 @@ const FileUpload = memo(() => {
       ),
     },
     {
-      icon: <Icon icon={FolderUp} style={{ fontSize: '16px' }} />,
+      icon: FolderUp,
       key: 'upload-folder',
       label: (
         <Upload
@@ -95,9 +97,15 @@ const FileUpload = memo(() => {
   ];
 
   return (
-    <Dropdown menu={{ items }} placement="top">
-      <ActionIcon icon={Paperclip} placement={'bottom'} title={t('upload.action.tooltip')} />
-    </Dropdown>
+    <ActionDropdown menu={{ items }}>
+      <ActionIcon
+        icon={Paperclip}
+        title={t('upload.action.tooltip')}
+        tooltipProps={{
+          placement: 'bottom',
+        }}
+      />
+    </ActionDropdown>
   );
 });
 

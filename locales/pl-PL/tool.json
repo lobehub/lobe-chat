@@ -54,7 +54,16 @@
       "title": "Silnik wyszukiwania:"
     },
     "searchResult": "Liczba wyników:",
-    "searchTimeRange": "Zakres czasu:",
+    "searchTimeRange": {
+      "title": "Zakres czasu:",
+      "value": {
+        "anytime": "Bez ograniczeń czasowych",
+        "day": "W ciągu jednego dnia",
+        "month": "W ciągu jednego miesiąca",
+        "week": "W ciągu jednego tygodnia",
+        "year": "W ciągu jednego roku"
+      }
+    },
     "summary": "Podsumowanie",
     "summaryTooltip": "Podsumuj bieżącą treść",
     "viewMoreResults": "Zobacz więcej {{results}} wyników"

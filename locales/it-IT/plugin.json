@@ -48,7 +48,7 @@
     },
     "mcp": {
       "args": {
-        "desc": "Elenco dei parametri da passare al comando STDIO",
+        "desc": "Elenco di parametri da passare al comando di esecuzione, di solito qui si inserisce il nome del server MCP o il percorso dello script di avvio",
         "label": "Parametri del comando",
         "placeholder": "Ad esempio: --port 8080 --debug",
         "required": "Inserisci i parametri di avvio"
@@ -62,6 +62,15 @@
       "endpoint": {
         "desc": "Inserisci l'indirizzo del tuo server HTTP Streamable MCP",
         "label": "URL Endpoint MCP"
+      },
+      "env": {
+        "add": "Aggiungi una riga",
+        "desc": "Inserisci le variabili d'ambiente necessarie per il tuo server MCP",
+        "duplicateKeyError": "La chiave del campo deve essere unica",
+        "formValidationFailed": "La convalida del modulo è fallita, controlla il formato dei parametri",
+        "keyRequired": "La chiave del campo non può essere vuota",
+        "label": "Variabili d'ambiente del server MCP",
+        "stringifyError": "Impossibile serializzare i parametri, controlla il formato dei parametri"
       },
       "identifier": {
         "desc": "Assegna un nome al tuo plugin MCP, deve utilizzare caratteri inglesi",

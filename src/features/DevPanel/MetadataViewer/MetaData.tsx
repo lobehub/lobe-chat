@@ -1,5 +1,4 @@
-import { Form } from '@lobehub/ui';
-import { Input } from 'antd';
+import { Form, Input, TextArea } from '@lobehub/ui';
 import { memo } from 'react';
 
 import { useHead, useTitle } from './useHead';
@@ -17,12 +16,12 @@ const MetaData = memo(() => {
           label: `Title (${title.length})`,
         },
         {
-          children: <Input.TextArea rows={2} value={description} variant={'filled'} />,
+          children: <TextArea rows={2} value={description} variant={'filled'} />,
           label: `Description (${description.length})`,
         },
       ]}
       itemsType={'flat'}
-      variant={'pure'}
+      variant={'borderless'}
     />
   );
 });

@@ -57,8 +57,7 @@ const openrouterChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 200_000,
-    description:
-      'o4-mini 专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。',
+    description: 'o4-mini 专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。',
     displayName: 'o4-mini',
     id: 'openai/o4-mini',
     maxOutput: 100_000,
@@ -76,8 +75,7 @@ const openrouterChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 1_047_576,
-    description:
-      'GPT-4.1 是我们用于复杂任务的旗舰模型。它非常适合跨领域解决问题。',
+    description: 'GPT-4.1 是我们用于复杂任务的旗舰模型。它非常适合跨领域解决问题。',
     displayName: 'GPT-4.1',
     id: 'openai/gpt-4.1',
     maxOutput: 32_768,
@@ -114,8 +112,7 @@ const openrouterChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 1_047_576,
-    description:
-      'GPT-4.1 nano 是最快，最具成本效益的GPT-4.1模型。',
+    description: 'GPT-4.1 nano 是最快，最具成本效益的GPT-4.1模型。',
     displayName: 'GPT-4.1 nano',
     id: 'openai/gpt-4.1-nano',
     maxOutput: 32_768,
@@ -133,8 +130,7 @@ const openrouterChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 200_000,
-    description:
-      'o3-mini 高推理等级版，在与 o1-mini 相同的成本和延迟目标下提供高智能。',
+    description: 'o3-mini 高推理等级版，在与 o1-mini 相同的成本和延迟目标下提供高智能。',
     displayName: 'o3-mini (high)',
     id: 'openai/o3-mini-high',
     maxOutput: 100_000,
@@ -152,8 +148,7 @@ const openrouterChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 200_000,
-    description:
-      'o3-mini 在与 o1-mini 相同的成本和延迟目标下提供高智能。',
+    description: 'o3-mini 在与 o1-mini 相同的成本和延迟目标下提供高智能。',
     displayName: 'o3-mini',
     id: 'openai/o3-mini',
     maxOutput: 100_000,

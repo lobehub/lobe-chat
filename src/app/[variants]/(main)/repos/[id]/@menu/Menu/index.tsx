@@ -50,13 +50,13 @@ const FileMenu = memo<{ id: string }>(({ id }) => {
   return (
     <Flexbox>
       <Menu
+        compact
         items={items}
         onClick={({ key }) => {
           setActiveKey(key);
         }}
         selectable
         selectedKeys={[activeKey]}
-        variant={'compact'}
       />
     </Flexbox>
   );

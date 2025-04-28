@@ -48,7 +48,7 @@
     },
     "mcp": {
       "args": {
-        "desc": "STDIO komutuna iletilecek parametreler listesi",
+        "desc": "Komutları yürütmek için geçilecek parametreler listesi, genellikle burada MCP sunucu adını veya başlatma betiği yolunu girin.",
         "label": "Komut Parametreleri",
         "placeholder": "Örneğin: --port 8080 --debug",
         "required": "Lütfen başlatma parametrelerini girin"
@@ -62,6 +62,15 @@
       "endpoint": {
         "desc": "MCP Streamable HTTP Sunucunuzun adresini girin",
         "label": "MCP Endpoint URL"
+      },
+      "env": {
+        "add": "Yeni bir satır ekle",
+        "desc": "MCP Sunucunuzun ihtiyaç duyduğu ortam değişkenlerini girin",
+        "duplicateKeyError": "Alan anahtarları benzersiz olmalıdır",
+        "formValidationFailed": "Form doğrulaması başarısız oldu, lütfen parametre formatını kontrol edin",
+        "keyRequired": "Alan anahtarı boş olamaz",
+        "label": "MCP Sunucu Ortam Değişkeni",
+        "stringifyError": "Parametreleri serileştirmek mümkün değil, lütfen parametre formatını kontrol edin"
       },
       "identifier": {
         "desc": "MCP eklentiniz için bir ad belirleyin, İngilizce karakterler kullanmalısınız",

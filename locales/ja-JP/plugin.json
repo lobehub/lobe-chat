@@ -48,7 +48,7 @@
     },
     "mcp": {
       "args": {
-        "desc": "STDIO コマンドに渡すパラメータのリスト",
+        "desc": "実行コマンドに渡すパラメータのリスト。通常、ここにMCPサーバー名または起動スクリプトのパスを入力します。",
         "label": "コマンドパラメータ",
         "placeholder": "例：--port 8080 --debug",
         "required": "起動パラメータを入力してください"
@@ -62,6 +62,15 @@
       "endpoint": {
         "desc": "あなたの MCP Streamable HTTP サーバーのアドレスを入力してください",
         "label": "MCP エンドポイント URL"
+      },
+      "env": {
+        "add": "行を追加",
+        "desc": "MCPサーバーに必要な環境変数を入力してください",
+        "duplicateKeyError": "フィールドキーは一意でなければなりません",
+        "formValidationFailed": "フォームの検証に失敗しました。パラメータの形式を確認してください",
+        "keyRequired": "フィールドキーは空にできません",
+        "label": "MCPサーバー環境変数",
+        "stringifyError": "パラメータをシリアライズできません。パラメータの形式を確認してください"
       },
       "identifier": {
         "desc": "あなたの MCP プラグインに名前を指定してください。英字を使用する必要があります",

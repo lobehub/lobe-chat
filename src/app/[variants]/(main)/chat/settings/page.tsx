@@ -1,19 +1,13 @@
 'use client';
 
-import { TabsNav } from '@lobehub/ui';
+import { Tabs } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageTitle from '@/components/PageTitle';
 import { INBOX_SESSION_ID } from '@/const/session';
-import { AgentSettingsProvider } from '@/features/AgentSetting';
-import AgentChat from '@/features/AgentSetting/AgentChat';
-import AgentMeta from '@/features/AgentSetting/AgentMeta';
-import AgentModal from '@/features/AgentSetting/AgentModal';
-import AgentPlugin from '@/features/AgentSetting/AgentPlugin';
-import AgentPrompt from '@/features/AgentSetting/AgentPrompt';
-import AgentTTS from '@/features/AgentSetting/AgentTTS';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
@@ -22,9 +16,12 @@ import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfi
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 
+import AgentSettings from '../../../../../features/AgentSetting/AgentSettings';
+
 const EditPage = memo(() => {
   const { t } = useTranslation('setting');
   const [tab, setTab] = useState(ChatSettingsTabs.Prompt);
+  const theme = useTheme();
 
   const [id, updateAgentMeta, title] = useSessionStore((s) => [
     s.activeId,
@@ -44,8 +41,8 @@ const EditPage = memo(() => {
   return (
     <>
       <PageTitle title={t('header.sessionWithName', { name: title })} />
-
-      <TabsNav
+      <Tabs
+        compact
         items={[
           {
             key: ChatSettingsTabs.Prompt,
@@ -73,23 +70,19 @@ const EditPage = memo(() => {
           }) as any,
         ]}
         onChange={(value) => setTab(value as ChatSettingsTabs)}
-        variant={'compact'}
+        style={{
+          borderBottom: `1px solid ${theme.colorBorderSecondary}`,
+        }}
       />
-      <AgentSettingsProvider
+      <AgentSettings
         config={config}
         id={id}
         loading={isLoading}
         meta={meta}
         onConfigChange={updateAgentConfig}
         onMetaChange={updateAgentMeta}
-      >
-        {tab === ChatSettingsTabs.Prompt && <AgentPrompt modal />}
-        {tab === ChatSettingsTabs.Meta && <AgentMeta />}
-        {tab === ChatSettingsTabs.Chat && <AgentChat />}
-        {tab === ChatSettingsTabs.Modal && <AgentModal />}
-        {tab === ChatSettingsTabs.TTS && <AgentTTS />}
-        {tab === ChatSettingsTabs.Plugin && <AgentPlugin />}
-      </AgentSettingsProvider>
+        tab={tab}
+      />
     </>
   );
 });

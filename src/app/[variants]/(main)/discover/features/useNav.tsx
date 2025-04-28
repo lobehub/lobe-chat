@@ -9,11 +9,12 @@ import type { MenuProps } from '@/components/Menu';
 import { useDiscoverTab } from '@/hooks/useDiscoverTab';
 import { DiscoverTab } from '@/types/discover';
 
+const ICON_SIZE = 16;
+
 export const useNav = () => {
   const pathname = usePathname();
   const type = useDiscoverTab();
   const { t } = useTranslation('discover');
-  const iconSize = { fontSize: 16 };
 
   const activeKey = useMemo(() => {
     for (const value of Object.values(DiscoverTab)) {
@@ -29,27 +30,27 @@ export const useNav = () => {
   const items: MenuProps['items'] = useMemo(
     () => [
       {
-        icon: <Icon icon={House} size={iconSize} />,
+        icon: <Icon icon={House} size={ICON_SIZE} />,
         key: DiscoverTab.Home,
         label: t('tab.home'),
       },
       {
-        icon: <Icon icon={Bot} size={iconSize} />,
+        icon: <Icon icon={Bot} size={ICON_SIZE} />,
         key: DiscoverTab.Assistants,
         label: t('tab.assistants'),
       },
       {
-        icon: <Icon icon={Puzzle} size={iconSize} />,
+        icon: <Icon icon={Puzzle} size={ICON_SIZE} />,
         key: DiscoverTab.Plugins,
         label: t('tab.plugins'),
       },
       {
-        icon: <Icon icon={Brain} size={iconSize} />,
+        icon: <Icon icon={Brain} size={ICON_SIZE} />,
         key: DiscoverTab.Models,
         label: t('tab.models'),
       },
       {
-        icon: <Icon icon={BrainCircuit} size={iconSize} />,
+        icon: <Icon icon={BrainCircuit} size={ICON_SIZE} />,
         key: DiscoverTab.Providers,
         label: t('tab.providers'),
       },

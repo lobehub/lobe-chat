@@ -1,7 +1,7 @@
 'use client';
 
-import { ActionIcon, Icon } from '@lobehub/ui';
-import { Button, Divider, Typography } from 'antd';
+import { ActionIcon, Button } from '@lobehub/ui';
+import { Divider, Typography } from 'antd';
 import { useTheme } from 'antd-style';
 import { ArrowLeftIcon, DownloadIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -32,7 +32,7 @@ const Header = memo<HeaderProps>(({ filename, url }) => {
     >
       <Flexbox align={'baseline'} horizontal>
         <Button
-          icon={<Icon icon={ArrowLeftIcon} />}
+          icon={ArrowLeftIcon}
           onClick={() => {
             router.push('/files');
           }}

@@ -74,11 +74,7 @@ const GroupItem = memo<SessionGroupItem>(({ id, name }) => {
           }}
           onEditingChange={(e) => setEditing(e)}
           showEditIcon={false}
-          size={'small'}
-          style={{
-            height: 28,
-          }}
-          type={'pure'}
+          style={{ height: 28 }}
           value={name}
         />
       )}

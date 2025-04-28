@@ -1,5 +1,5 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
-import { App, Dropdown, DropdownProps, MenuProps } from 'antd';
+import { ActionIcon, Dropdown, type DropdownProps, Icon, type MenuProps } from '@lobehub/ui';
+import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import { MoreVertical, PencilLine, Plus, Settings2, Trash } from 'lucide-react';
 import { memo, useMemo } from 'react';
@@ -131,7 +131,7 @@ const Actions = memo<ActionsProps>(
           onClick={(e) => {
             e.stopPropagation();
           }}
-          size={{ blockSize: 22, fontSize: 16 }}
+          size={{ blockSize: 22, size: 16 }}
           style={{ background: isMobile ? 'transparent' : '', marginRight: -8 }}
         />
       </Dropdown>

@@ -41,8 +41,8 @@ const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) 
           initialItemCount={24}
           itemContent={(_, item) => (
             <Card
+              compact
               showCategory
-              variant={'compact'}
               {...item}
               href={urlJoin('/discover/plugin/', item.identifier)}
               key={item.identifier}
@@ -77,8 +77,8 @@ const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) 
             initialItemCount={12}
             itemContent={(_, item) => (
               <Card
+                compact
                 showCategory={!category}
-                variant={'compact'}
                 {...item}
                 href={urlJoin('/discover/plugin/', item.identifier)}
                 key={item.identifier}

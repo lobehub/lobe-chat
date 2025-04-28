@@ -1,6 +1,6 @@
 'use client';
 
-import { Drawer, Grid, TabsNav } from '@lobehub/ui';
+import { Drawer, Grid, Tabs } from '@lobehub/ui';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -32,8 +32,9 @@ const HotkeyHelperPanel = memo(() => {
         title: { paddingBlock: 0 },
       }}
       title={
-        <TabsNav
+        <Tabs
           activeKey={active}
+          compact
           items={[
             {
               key: HotkeyGroupEnum.Essential,
@@ -45,7 +46,6 @@ const HotkeyHelperPanel = memo(() => {
             },
           ]}
           onChange={(key) => setActive(key as HotkeyGroupId)}
-          variant={'compact'}
         />
       }
     >

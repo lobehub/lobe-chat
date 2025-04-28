@@ -150,6 +150,7 @@
       "title": "Color de fondo"
     },
     "description": {
+      "desc": "Una breve introducción a tu asistente, no como una configuración de personaje",
       "placeholder": "Ingresa la descripción del asistente",
       "title": "Descripción del asistente"
     },
@@ -161,7 +162,9 @@
       "placeholder": "Ingresa la palabra de aviso del rol",
       "title": "Configuración del rol"
     },
+    "submit": "Actualizar información del asistente",
     "tag": {
+      "desc": "Las etiquetas del asistente se mostrarán en el mercado de asistentes",
       "placeholder": "Ingresa la etiqueta",
       "title": "Etiqueta"
     },
@@ -206,6 +209,7 @@
       "placeholder": "La plantilla de preprocesamiento {{text}} se reemplazará por la información de entrada en tiempo real",
       "title": "Preprocesamiento de entrada del usuario"
     },
+    "submit": "Actualizar preferencias de chat",
     "title": "Configuración de chat"
   },
   "settingModel": {
@@ -243,6 +247,7 @@
       },
       "title": "Intensidad de razonamiento"
     },
+    "submit": "Actualizar configuración del modelo",
     "temperature": {
       "desc": "Cuanto mayor sea el valor, más creativas e imaginativas serán las respuestas; cuanto menor sea el valor, más rigurosas serán las respuestas",
       "title": "Nivel de creatividad",
@@ -319,6 +324,7 @@
       "desc": "El servicio de reconocimiento de voz, donde el navegador es el servicio nativo de reconocimiento de voz del navegador",
       "title": "Servicio de reconocimiento de voz"
     },
+    "submit": "Actualizar servicio de voz",
     "title": "Servicio de voz",
     "tts": "Configuración de síntesis de voz",
     "ttsService": {
@@ -396,6 +402,12 @@
     "placeholder": "Ingrese el identificador único del asistente, por ejemplo desarrollo-web",
     "tooltips": "Compartir en el mercado de asistentes"
   },
+  "submitFooter": {
+    "reset": "Restablecer",
+    "submit": "Guardar",
+    "unSaved": "Cambios no guardados",
+    "unSavedWarning": "Actualmente hay cambios no guardados"
+  },
   "sync": {
     "device": {
       "deviceName": {
@@ -447,6 +459,7 @@
       "placeholder": "Introduce la palabra clave personalizada",
       "title": "Palabra clave personalizada"
     },
+    "helpInfo": "Al crear un nuevo asistente, se utilizarán los ajustes predeterminados del asistente como valores predeterminados.",
     "historyCompress": {
       "label": "Modelo de historial de conversación",
       "modelDesc": "Especifica el modelo utilizado para comprimir el historial de conversación",

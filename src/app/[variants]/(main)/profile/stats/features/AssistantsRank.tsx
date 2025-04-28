@@ -68,13 +68,13 @@ export const AssistantsRank = memo<{ mobile?: boolean }>(({ mobile }) => {
             <ActionIcon
               icon={MaximizeIcon}
               onClick={() => setOpen(true)}
-              size={{ blockSize: 28, fontSize: 20 }}
+              size={{ blockSize: 28, size: 20 }}
             />
           )
         }
         style={FORM_STYLE.style}
         title={t('stats.assistantsRank.title')}
-        variant={'pure'}
+        variant={'borderless'}
       >
         <Flexbox paddingBlock={16}>
           <BarList

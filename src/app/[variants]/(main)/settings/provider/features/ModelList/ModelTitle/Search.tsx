@@ -1,7 +1,5 @@
-import { Icon } from '@lobehub/ui';
-import { Input, InputProps } from 'antd';
-import { SearchIcon } from 'lucide-react';
-import { memo, useState } from 'react';
+import { InputProps, SearchBar } from '@lobehub/ui';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface SearchProps {
@@ -12,24 +10,14 @@ interface SearchProps {
 
 const Search = memo<SearchProps>(({ value, onChange, variant }) => {
   const { t } = useTranslation('modelProvider');
-  const [keyword, setValue] = useState<string>(value);
 
   return (
-    <Input
+    <SearchBar
       allowClear
-      onBlur={() => {
-        onChange(keyword);
-      }}
-      onChange={(e) => {
-        setValue(e.target.value);
-      }}
-      onPressEnter={() => {
-        onChange(keyword);
-      }}
+      defaultValue={value}
+      onSearch={(keyword) => onChange(keyword)}
       placeholder={t('providerModels.list.search')}
-      prefix={<Icon icon={SearchIcon} />}
       size={'small'}
-      value={keyword}
       variant={variant}
     />
   );

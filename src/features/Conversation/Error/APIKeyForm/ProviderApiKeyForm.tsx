@@ -1,5 +1,4 @@
-import { Icon } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Button, Icon } from '@lobehub/ui';
 import { Loader2Icon, Network } from 'lucide-react';
 import { ReactNode, memo, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';

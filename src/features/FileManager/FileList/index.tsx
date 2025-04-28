@@ -90,7 +90,7 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
           total={data?.length}
           totalFileIds={data?.map((item) => item.id) || []}
         />
-        <Flexbox align={'center'} className={styles.header} horizontal>
+        <Flexbox align={'center'} className={styles.header} horizontal paddingInline={8}>
           <Flexbox className={styles.headerItem} flex={1} style={{ paddingInline: 32 }}>
             {t('FileManager.title.title')}
           </Flexbox>

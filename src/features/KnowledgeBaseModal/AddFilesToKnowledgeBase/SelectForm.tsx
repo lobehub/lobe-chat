@@ -1,6 +1,5 @@
-import { MaterialFileTypeIcon } from '@lobehub/ui';
-import { App, Button, Form, Select } from 'antd';
-import { createStyles } from 'antd-style';
+import { Block, Button, Form, MaterialFileTypeIcon, Select } from '@lobehub/ui';
+import { App } from 'antd';
 import Link from 'next/link';
 import { memo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -8,25 +7,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import RepoIcon from '@/components/RepoIcon';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
-
-const useStyles = createStyles(({ css, token }) => ({
-  files: css`
-    height: 48px;
-    padding-block: 4px;
-    padding-inline: 8px;
-    border: 1px solid ${token.colorSplit};
-    border-radius: 6px;
-  `,
-  formItem: css`
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-
-    .ant-form-item {
-      margin-block-end: 0;
-    }
-  `,
-}));
 
 interface CreateFormProps {
   fileIds: string[];
@@ -36,7 +16,6 @@ interface CreateFormProps {
 
 const SelectForm = memo<CreateFormProps>(({ onClose, knowledgeBaseId, fileIds }) => {
   const { t } = useTranslation('knowledgeBase');
-  const { styles } = useStyles();
   const [loading, setLoading] = useState(false);
 
   const { message } = App.useApp();
@@ -67,47 +46,51 @@ const SelectForm = memo<CreateFormProps>(({ onClose, knowledgeBaseId, fileIds })
   };
 
   return (
-    <Flexbox gap={24}>
-      <Flexbox align={'center'} className={styles.files} gap={8} horizontal>
-        <MaterialFileTypeIcon filename={''} size={32} />
-        {t('addToKnowledgeBase.totalFiles', { count: fileIds.length })}
-      </Flexbox>
-      <Form className={styles.formItem} layout={'vertical'} onFinish={onFinish}>
-        <Form.Item
-          label={t('addToKnowledgeBase.id.title')}
-          name={'id'}
-          required={false}
-          rules={[{ message: t('addToKnowledgeBase.id.required'), required: true }]}
-        >
-          <Select
-            autoFocus
-            loading={isLoading}
-            options={(data || [])
-              .filter((item) => item.id !== knowledgeBaseId)
-              .map((item) => ({
-                label: (
-                  <Flexbox gap={8} horizontal>
-                    <RepoIcon />
-                    {item.name}
-                  </Flexbox>
-                ),
-                value: item.id,
-              }))}
-            placeholder={t('addToKnowledgeBase.id.placeholder')}
-          />
-        </Form.Item>
-
-        <Button
-          block
-          htmlType={'submit'}
-          loading={loading}
-          style={{ marginTop: 16 }}
-          type={'primary'}
-        >
+    <Form
+      footer={
+        <Button block htmlType={'submit'} loading={loading} type={'primary'}>
           {t('addToKnowledgeBase.confirm')}
         </Button>
-      </Form>
-    </Flexbox>
+      }
+      gap={16}
+      items={[
+        {
+          children: (
+            <Block align={'center'} gap={8} horizontal padding={16} variant={'filled'}>
+              <MaterialFileTypeIcon filename={''} size={32} />
+              {t('addToKnowledgeBase.totalFiles', { count: fileIds.length })}
+            </Block>
+          ),
+          noStyle: true,
+        },
+        {
+          children: (
+            <Select
+              autoFocus
+              loading={isLoading}
+              options={(data || [])
+                .filter((item) => item.id !== knowledgeBaseId)
+                .map((item) => ({
+                  label: (
+                    <Flexbox gap={8} horizontal>
+                      <RepoIcon />
+                      {item.name}
+                    </Flexbox>
+                  ),
+                  value: item.id,
+                }))}
+              placeholder={t('addToKnowledgeBase.id.placeholder')}
+            />
+          ),
+          label: t('addToKnowledgeBase.id.title'),
+          name: 'id',
+          rules: [{ message: t('addToKnowledgeBase.id.required'), required: true }],
+        },
+      ]}
+      itemsType={'flat'}
+      layout={'vertical'}
+      onFinish={onFinish}
+    />
   );
 });
 

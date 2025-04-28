@@ -62,7 +62,8 @@ const zhipuChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 32_000,
-    description: 'GLM-Z1 系列具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。最大上下文长度为32K。',
+    description:
+      'GLM-Z1 系列具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。最大上下文长度为32K。',
     displayName: 'GLM-Z1-Flash',
     enabled: true,
     id: 'glm-z1-flash',
@@ -167,7 +168,7 @@ const zhipuChatModels: AIChatModelCard[] = [
     description: 'GLM-4-AirX 提供 GLM-4-Air 的高效版本，推理速度可达其2.6倍。',
     displayName: 'GLM-4-AirX',
     id: 'glm-4-airx',
-     maxOutput: 4000,
+    maxOutput: 4000,
     pricing: {
       currency: 'CNY',
       input: 10,

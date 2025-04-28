@@ -1,5 +1,4 @@
-import { Icon } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Button, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { BrainIcon, LucideRefreshCcwDot, PlusIcon } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -67,7 +66,7 @@ const EmptyState = memo<{ provider: string }>(({ provider }) => {
 
       <Flexbox gap={8} horizontal>
         <Button
-          icon={<Icon icon={PlusIcon} />}
+          icon={PlusIcon}
           onClick={() => {
             setShowModal(true);
           }}

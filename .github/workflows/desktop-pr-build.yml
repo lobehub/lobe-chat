@@ -75,7 +75,7 @@ jobs:
           # PR 构建：在基础版本号上添加 PR 信息
           pr_number="${{ github.event.pull_request.number }}"
           ci_build_number="${{ github.run_number }}" # CI 构建编号
-          version="${base_version}-nightly.pr${pr_number}.${ci_build_number}"
+          version="0.0.0-nightly.pr${pr_number}.${ci_build_number}"
           echo "version=${version}" >> $GITHUB_OUTPUT
           echo "📦 Release Version: ${version} (based on base version ${base_version})"
 

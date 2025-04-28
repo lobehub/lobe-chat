@@ -1,5 +1,4 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
-import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import type { ItemType } from 'antd/es/menu/interface';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
@@ -11,8 +10,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
 import { isDeprecatedEdition } from '@/const/version';
+import ActionDropdown from '@/features/ChatInput/components/ActionDropdown';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -49,12 +48,8 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
     agentSelectors.currentAgentModelProvider(s),
     s.updateAgentConfig,
   ]);
-
   const { showLLM } = useServerConfigStore(featureFlagsSelectors);
-  const isMobile = useIsMobile();
-
   const router = useRouter();
-
   const enabledList = useEnabledChatModels();
 
   const items = useMemo<ItemType[]>(() => {
@@ -135,20 +130,22 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
   }, [enabledList]);
 
   return (
-    <Dropdown
+    <ActionDropdown
       menu={{
         activeKey: menuKey(provider, model),
         className: styles.menu,
         items,
+        // 不加限高就会导致面板超长，顶部的内容会被隐藏
+        // https://github.com/user-attachments/assets/9c043c47-42c5-46ef-b5c1-bee89376f042
         style: {
           maxHeight: 500,
           overflowY: 'scroll',
         },
       }}
-      placement={isMobile ? 'top' : 'topLeft'}
+      placement={'topLeft'}
     >
       <div className={styles.tag}>{children}</div>
-    </Dropdown>
+    </ActionDropdown>
   );
 });
 
