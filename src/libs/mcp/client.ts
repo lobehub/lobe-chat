@@ -27,7 +27,6 @@ export class MCPClient {
       }
       case 'stdio': {
         log('Using Stdio transport with command: %s and args: %O', params.command, params.args);
-        log('Stdio PATH env:', process.env.PATH);
 
         this.transport = new StdioClientTransport({
           args: params.args,
