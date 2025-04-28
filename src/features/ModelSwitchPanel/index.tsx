@@ -135,6 +135,12 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
         activeKey: menuKey(provider, model),
         className: styles.menu,
         items,
+        // 不加限高就会导致面板超长，顶部的内容会被隐藏
+        // https://github.com/user-attachments/assets/9c043c47-42c5-46ef-b5c1-bee89376f042
+        style: {
+          maxHeight: 500,
+          overflowY: 'scroll',
+        },
       }}
       placement={'topLeft'}
     >
