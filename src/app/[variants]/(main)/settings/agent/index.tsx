@@ -10,6 +10,7 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { AgentSettings } from '@/features/AgentSetting';
 import { useCategory } from '@/features/AgentSetting/AgentCategory/useCategory';
 import { ChatSettingsTabs } from '@/store/global/initialState';
+import { useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 
@@ -23,18 +24,21 @@ const Page = memo(() => {
   const [updateAgent] = useUserStore((s) => [s.updateDefaultAgent]);
   const isUserStateInit = useUserStore((s) => s.isUserStateInit);
   const theme = useTheme();
+  const mobile = useServerConfigStore((s) => s.isMobile);
 
   return (
     <>
-      <Tabs
-        activeKey={tab}
-        compact
-        items={cateItems as any}
-        onChange={(value) => setTab(value as ChatSettingsTabs)}
-        style={{
-          borderBottom: `1px solid ${theme.colorBorderSecondary}`,
-        }}
-      />
+      {mobile && (
+        <Tabs
+          activeKey={tab}
+          compact
+          items={cateItems as any}
+          onChange={(value) => setTab(value as ChatSettingsTabs)}
+          style={{
+            borderBottom: `1px solid ${theme.colorBorderSecondary}`,
+          }}
+        />
+      )}
       <AgentSettings
         config={config}
         id={INBOX_SESSION_ID}
