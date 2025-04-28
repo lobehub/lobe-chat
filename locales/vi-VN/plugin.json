@@ -1,4 +1,5 @@
 {
+  "confirm": "Xác nhận",
   "debug": {
     "arguments": "Tham số gọi",
     "function_call": "Gọi hàm",
@@ -80,6 +81,13 @@
         "required": "Vui lòng nhập định danh dịch vụ MCP"
       },
       "previewManifest": "Xem trước tệp mô tả plugin",
+      "quickImport": "Nhập khẩu nhanh cấu hình JSON",
+      "quickImportError": {
+        "empty": "Nội dung nhập vào không được để trống",
+        "invalidJson": "Định dạng JSON không hợp lệ",
+        "invalidStructure": "Định dạng JSON không hợp lệ"
+      },
+      "stdioNotSupported": "Môi trường hiện tại không hỗ trợ plugin MCP loại stdio",
       "testConnection": "Kiểm tra kết nối",
       "testConnectionTip": "Chỉ sau khi kiểm tra kết nối thành công, plugin MCP mới có thể được sử dụng bình thường",
       "type": {
@@ -147,8 +155,18 @@
       "schema": "Schema"
     },
     "preview": {
+      "api": {
+        "noParams": "Công cụ này không có tham số",
+        "noResults": "Không tìm thấy API nào phù hợp với điều kiện tìm kiếm",
+        "params": "Tham số:",
+        "searchPlaceholder": "Tìm kiếm công cụ..."
+      },
       "card": "Xem trước hiệu ứng plugin",
       "desc": "Xem trước mô tả plugin",
+      "empty": {
+        "desc": "Sau khi hoàn thành cấu hình, bạn sẽ có thể xem trước khả năng của các công cụ hỗ trợ plugin tại đây",
+        "title": "Bắt đầu xem trước sau khi cấu hình plugin"
+      },
       "title": "Xem trước tên plugin"
     },
     "save": "Cài đặt plugin",

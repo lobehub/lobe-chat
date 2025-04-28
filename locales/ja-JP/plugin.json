@@ -1,4 +1,5 @@
 {
+  "confirm": "確認",
   "debug": {
     "arguments": "引数",
     "function_call": "関数呼び出し",
@@ -80,6 +81,13 @@
         "required": "MCP サービス識別子を入力してください"
       },
       "previewManifest": "プラグインの説明ファイルをプレビュー",
+      "quickImport": "JSON 設定を迅速にインポート",
+      "quickImportError": {
+        "empty": "入力内容は空にできません",
+        "invalidJson": "無効な JSON 形式です",
+        "invalidStructure": "JSON 形式が無効です"
+      },
+      "stdioNotSupported": "現在の環境では stdio タイプの MCP プラグインはサポートされていません",
       "testConnection": "接続をテスト",
       "testConnectionTip": "接続テストが成功した後、MCP プラグインは正常に使用できます",
       "type": {
@@ -147,8 +155,18 @@
       "schema": "スキーマ"
     },
     "preview": {
+      "api": {
+        "noParams": "このツールにはパラメータがありません",
+        "noResults": "検索条件に一致する API が見つかりませんでした",
+        "params": "パラメータ:",
+        "searchPlaceholder": "ツールを検索..."
+      },
       "card": "プラグインのプレビュー表示",
       "desc": "プラグインの説明のプレビュー",
+      "empty": {
+        "desc": "設定が完了すると、ここでプラグインがサポートするツールの機能をプレビューできます",
+        "title": "プラグインを設定した後にプレビューを開始"
+      },
       "title": "プラグイン名のプレビュー"
     },
     "save": "プラグインを保存",

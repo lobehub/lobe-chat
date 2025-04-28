@@ -1,4 +1,5 @@
 {
+  "confirm": "Bevestigen",
   "debug": {
     "arguments": "Argumenten",
     "function_call": "Functieoproep",
@@ -80,6 +81,13 @@
         "required": "Voer de MCP service-identificator in"
       },
       "previewManifest": "Voorbeeld van het plugin beschrijvingsbestand",
+      "quickImport": "Snelle import van JSON-configuratie",
+      "quickImportError": {
+        "empty": "Invoerveld mag niet leeg zijn",
+        "invalidJson": "Ongeldig JSON-formaat",
+        "invalidStructure": "Ongeldige JSON-structuur"
+      },
+      "stdioNotSupported": "De huidige omgeving ondersteunt geen stdio-type MCP-plug-ins",
       "testConnection": "Test verbinding",
       "testConnectionTip": "De MCP plugin kan pas normaal worden gebruikt na een succesvolle verbindingstest",
       "type": {
@@ -147,8 +155,18 @@
       "schema": "Schema"
     },
     "preview": {
+      "api": {
+        "noParams": "Deze tool heeft geen parameters",
+        "noResults": "Geen API's gevonden die aan de zoekcriteria voldoen",
+        "params": "Parameters:",
+        "searchPlaceholder": "Zoek tool..."
+      },
       "card": "Voorbeeld van plug-inweergave",
       "desc": "Voorbeeld van plug-inbeschrijving",
+      "empty": {
+        "desc": "Na configuratie kunt u hier de mogelijkheden van de ondersteunde tools van de plug-in bekijken",
+        "title": "Begin met het bekijken na het configureren van de plug-in"
+      },
       "title": "Voorbeeld van plug-innaam"
     },
     "save": "Installeer plug-in",

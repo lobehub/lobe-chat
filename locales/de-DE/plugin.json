@@ -1,4 +1,5 @@
 {
+  "confirm": "Bestätigen",
   "debug": {
     "arguments": "Argumente",
     "function_call": "Funktionsaufruf",
@@ -80,6 +81,13 @@
         "required": "Bitte geben Sie die MCP-Dienstkennung ein"
       },
       "previewManifest": "Vorschau auf die Plugin-Beschreibungsdatei",
+      "quickImport": "Schnellimport von JSON-Konfiguration",
+      "quickImportError": {
+        "empty": "Eingabefeld darf nicht leer sein",
+        "invalidJson": "Ungültiges JSON-Format",
+        "invalidStructure": "JSON-Format ist ungültig"
+      },
+      "stdioNotSupported": "Die aktuelle Umgebung unterstützt keine stdio-Typ MCP-Plugins",
       "testConnection": "Verbindung testen",
       "testConnectionTip": "Die MCP-Plugins können erst nach erfolgreichem Test der Verbindung normal verwendet werden",
       "type": {
@@ -147,8 +155,18 @@
       "schema": "Schema"
     },
     "preview": {
+      "api": {
+        "noParams": "Dieses Tool hat keine Parameter",
+        "noResults": "Keine API gefunden, die den Suchkriterien entspricht",
+        "params": "Parameter:",
+        "searchPlaceholder": "Werkzeug suchen..."
+      },
       "card": "Vorschau der Plugin-Anzeige",
       "desc": "Vorschau der Plugin-Beschreibung",
+      "empty": {
+        "desc": "Nach der Konfiguration können Sie hier die unterstützten Funktionen des Plugins anzeigen",
+        "title": "Vorschau starten nach Plugin-Konfiguration"
+      },
       "title": "Vorschau des Plugin-Namens"
     },
     "save": "Plugin installieren",

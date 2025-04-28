@@ -1,4 +1,5 @@
 {
+  "confirm": "Confirmar",
   "debug": {
     "arguments": "Argumentos de llamada",
     "function_call": "Llamada a función",
@@ -80,6 +81,13 @@
         "required": "Por favor, introduce el identificador del servicio MCP"
       },
       "previewManifest": "Previsualizar el archivo de descripción del complemento",
+      "quickImport": "Importar configuración JSON rápidamente",
+      "quickImportError": {
+        "empty": "El contenido de entrada no puede estar vacío",
+        "invalidJson": "Formato JSON no válido",
+        "invalidStructure": "Estructura JSON no válida"
+      },
+      "stdioNotSupported": "El entorno actual no admite el plugin MCP de tipo stdio",
       "testConnection": "Probar conexión",
       "testConnectionTip": "El complemento MCP solo se puede utilizar correctamente después de que la prueba de conexión sea exitosa",
       "type": {
@@ -147,8 +155,18 @@
       "schema": "Esquema"
     },
     "preview": {
+      "api": {
+        "noParams": "Esta herramienta no tiene parámetros",
+        "noResults": "No se encontraron API que cumplan con los criterios de búsqueda",
+        "params": "Parámetros:",
+        "searchPlaceholder": "Buscar herramienta..."
+      },
       "card": "Vista previa del efecto del complemento",
       "desc": "Vista previa de la descripción del complemento",
+      "empty": {
+        "desc": "Una vez completada la configuración, podrá previsualizar las capacidades de las herramientas soportadas por el plugin aquí",
+        "title": "Comience a previsualizar después de configurar el plugin"
+      },
       "title": "Vista previa del nombre del complemento"
     },
     "save": "Instalar complemento",
