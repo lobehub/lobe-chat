@@ -23,7 +23,10 @@ interface OptionRenderProps {
   removed?: boolean;
 }
 const OptionRender = memo<OptionRenderProps>(({ displayName, id, provider, isAzure, removed }) => {
-  const model = useUserStore((s) => modelProviderSelectors.getModelCardById(id)(s), isEqual);
+  const model = useUserStore(
+    (s) => modelProviderSelectors.getModelCardById(id, provider)(s),
+    isEqual,
+  );
   const { t } = useTranslation('components');
   const theme = useTheme();
   // if there is isCustom, it means it is a user defined custom model
