@@ -8,16 +8,25 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import ManifestPreviewer from '@/components/ManifestPreviewer';
-import ApiVisualizer from '@/features/PluginDevModal/ApiVisualizer';
 import PluginAvatar from '@/features/PluginStore/PluginItem/PluginAvatar';
 import PluginTag from '@/features/PluginStore/PluginItem/PluginTag';
 import { pluginHelpers } from '@/store/tool';
+
+import ApiVisualizer from './ApiVisualizer';
+import PluginEmptyState from './EmptyState';
 
 const PluginPreview = memo<{ form: FormInstance }>(({ form }) => {
   const { t } = useTranslation('plugin');
   const theme = useTheme();
   const manifest: LobeChatPluginManifest = AForm.useWatch(['manifest'], form);
   const meta = manifest?.meta;
+
+  if (!manifest)
+    return (
+      <Flexbox flex={2} height={'100%'} style={{ background: theme.colorBgLayout }}>
+        <PluginEmptyState />
+      </Flexbox>
+    );
 
   return (
     <Flexbox
