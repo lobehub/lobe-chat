@@ -29,7 +29,7 @@ export const remoteSyncSlice: StateCreator<
   ElectronRemoteServerAction
 > = (set, get) => ({
   connectRemoteServer: async (values) => {
-    if (!values.remoteServerUrl) return;
+    if (values.storageMode === 'selfHost' && !values.remoteServerUrl) return;
 
     set({ isConnectingServer: true });
     try {

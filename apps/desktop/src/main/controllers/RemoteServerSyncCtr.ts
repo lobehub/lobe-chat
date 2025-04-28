@@ -70,7 +70,8 @@ export default class RemoteServerSyncCtr extends ControllerModule {
       remoteServerUrl,
     } = args;
 
-    const logPrefix = `[ForwardRequest ${method} ${urlPath}]`; // Add prefix for easier correlation
+    const pathname = new URL(urlPath, remoteServerUrl).pathname; // Extract pathname from URL
+    const logPrefix = `[ForwardRequest ${method} ${pathname}]`; // Add prefix for easier correlation
 
     if (!accessToken) {
       logger.error(`${logPrefix} No access token provided`); // Enhanced log
@@ -85,7 +86,7 @@ export default class RemoteServerSyncCtr extends ControllerModule {
     // 1. Determine target URL and prepare request options
     const targetUrl = new URL(urlPath, remoteServerUrl); // Combine base URL and path
 
-    logger.debug(`${logPrefix} Forwarding to ${targetUrl.toString()}`); // Enhanced log
+    logger.debug(`${logPrefix} Forwarding to ${targetUrl.pathname.toString()}`); // Enhanced log
 
     // Prepare headers, cloning and adding Authorization
     const requestHeaders: OutgoingHttpHeaders = { ...originalHeaders }; // Use OutgoingHttpHeaders
