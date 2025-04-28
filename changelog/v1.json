@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve hotkey for delete messages."]
+    },
+    "date": "2025-04-28",
+    "version": "1.84.1"
+  },
+  {
+    "children": {
       "features": ["Upgrade to lobe ui v2 with better design style."]
     },
     "date": "2025-04-28",
