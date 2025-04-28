@@ -1673,9 +1673,6 @@
   "o3-mini": {
     "description": "o3-mini is our latest small inference model that delivers high intelligence while maintaining the same cost and latency targets as o1-mini."
   },
-  "o3-mini-high": {
-    "description": "o3-mini high inference level version provides high intelligence under the same cost and latency targets as o1-mini."
-  },
   "o4-mini": {
     "description": "o4-mini is our latest small model in the o series. It is optimized for fast and efficient inference, demonstrating high efficiency and performance in coding and visual tasks."
   },
@@ -1694,6 +1691,15 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B is a sparse expert model that leverages multiple parameters to enhance reasoning speed, suitable for handling multilingual and code generation tasks."
   },
+  "openai/gpt-4.1": {
+    "description": "GPT-4.1 is our flagship model for complex tasks. It is particularly well-suited for cross-domain problem solving."
+  },
+  "openai/gpt-4.1-mini": {
+    "description": "GPT-4.1 mini strikes a balance between intelligence, speed, and cost, making it an attractive model for many use cases."
+  },
+  "openai/gpt-4.1-nano": {
+    "description": "GPT-4.1 nano is the fastest and most cost-effective version of the GPT-4.1 model."
+  },
   "openai/gpt-4o": {
     "description": "ChatGPT-4o is a dynamic model that updates in real-time to maintain the latest version. It combines powerful language understanding and generation capabilities, suitable for large-scale application scenarios, including customer service, education, and technical support."
   },
@@ -1705,6 +1711,15 @@
   },
   "openai/o1-preview": {
     "description": "o1 is OpenAI's new reasoning model, suitable for complex tasks that require extensive general knowledge. This model features a 128K context and has a knowledge cutoff date of October 2023."
+  },
+  "openai/o3": {
+    "description": "O3 is a versatile and powerful model that excels in multiple domains. It sets a new benchmark for tasks in mathematics, science, programming, and visual reasoning. It is also proficient in technical writing and following instructions. Users can leverage it to analyze text, code, and images, solving complex problems that require multiple steps."
+  },
+  "openai/o3-mini": {
+    "description": "O3-mini delivers high intelligence at the same cost and latency targets as o1-mini."
+  },
+  "openai/o3-mini-high": {
+    "description": "O3-mini high inference level version provides high intelligence at the same cost and latency targets as o1-mini."
   },
   "openai/o4-mini": {
     "description": "o4-mini is optimized for fast and efficient inference, demonstrating high efficiency and performance in coding and visual tasks."

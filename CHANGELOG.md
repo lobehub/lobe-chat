@@ -2,6 +2,292 @@
 
 # Changelog
 
+### [Version 1.83.8](https://github.com/lobehub/lobe-chat/compare/v1.83.7...v1.83.8)
+
+<sup>Released on **2025-04-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix cloud data sync.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix cloud data sync, closes [#7600](https://github.com/lobehub/lobe-chat/issues/7600) ([1214544](https://github.com/lobehub/lobe-chat/commit/1214544))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.83.7](https://github.com/lobehub/lobe-chat/compare/v1.83.6...v1.83.7)
+
+<sup>Released on **2025-04-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix `doubao-1-5-thinking-pro-vision` endpoint calling.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix `doubao-1-5-thinking-pro-vision` endpoint calling, closes [#7478](https://github.com/lobehub/lobe-chat/issues/7478) ([a52f7d6](https://github.com/lobehub/lobe-chat/commit/a52f7d6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.83.6](https://github.com/lobehub/lobe-chat/compare/v1.83.5...v1.83.6)
+
+<sup>Released on **2025-04-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix desktop cloud sync issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix desktop cloud sync issue, closes [#7591](https://github.com/lobehub/lobe-chat/issues/7591) ([1e68777](https://github.com/lobehub/lobe-chat/commit/1e68777))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.83.5](https://github.com/lobehub/lobe-chat/compare/v1.83.4...v1.83.5)
+
+<sup>Released on **2025-04-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix desktop beta redirect uris.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix desktop beta redirect uris, closes [#7589](https://github.com/lobehub/lobe-chat/issues/7589) ([9efdbf3](https://github.com/lobehub/lobe-chat/commit/9efdbf3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.83.4](https://github.com/lobehub/lobe-chat/compare/v1.83.3...v1.83.4)
+
+<sup>Released on **2025-04-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix cloud connection issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix cloud connection issue, closes [#7588](https://github.com/lobehub/lobe-chat/issues/7588) ([f572f57](https://github.com/lobehub/lobe-chat/commit/f572f57))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.83.3](https://github.com/lobehub/lobe-chat/compare/v1.83.2...v1.83.3)
+
+<sup>Released on **2025-04-27**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.83.2](https://github.com/lobehub/lobe-chat/compare/v1.83.1...v1.83.2)
+
+<sup>Released on **2025-04-27**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.83.1](https://github.com/lobehub/lobe-chat/compare/v1.83.0...v1.83.1)
+
+<sup>Released on **2025-04-27**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.83.0](https://github.com/lobehub/lobe-chat/compare/v1.82.10...v1.83.0)
+
+<sup>Released on **2025-04-27**</sup>
+
+#### ✨ Features
+
+- **misc**: Support desktop release framework and workflow.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support desktop release framework and workflow, closes [#6474](https://github.com/lobehub/lobe-chat/issues/6474) ([ed97363](https://github.com/lobehub/lobe-chat/commit/ed97363))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.82.10](https://github.com/lobehub/lobe-chat/compare/v1.82.9...v1.82.10)
+
+<sup>Released on **2025-04-26**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support `ernie-x1` & `ernie-4.5` series from Wenxin.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support `ernie-x1` & `ernie-4.5` series from Wenxin, closes [#7504](https://github.com/lobehub/lobe-chat/issues/7504) ([9a4150c](https://github.com/lobehub/lobe-chat/commit/9a4150c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.82.9](https://github.com/lobehub/lobe-chat/compare/v1.82.8...v1.82.9)
+
+<sup>Released on **2025-04-26**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve oidc OAuth workflow.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve oidc OAuth workflow, closes [#7563](https://github.com/lobehub/lobe-chat/issues/7563) ([ccbe0af](https://github.com/lobehub/lobe-chat/commit/ccbe0af))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.82.8](https://github.com/lobehub/lobe-chat/compare/v1.82.7...v1.82.8)
+
+<sup>Released on **2025-04-26**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Improve categories selection via SearXNG.
+
+#### 🐛 Bug Fixes
+
+- **http-adapter**: Extract protocol from base URL and add headers.
+- **misc**: Fix oidc redirect urls.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Improve categories selection via SearXNG, closes [#7550](https://github.com/lobehub/lobe-chat/issues/7550) ([ac0dcd9](https://github.com/lobehub/lobe-chat/commit/ac0dcd9))
+
+#### What's fixed
+
+- **http-adapter**: Extract protocol from base URL and add headers, closes [#7545](https://github.com/lobehub/lobe-chat/issues/7545) ([327fd9e](https://github.com/lobehub/lobe-chat/commit/327fd9e))
+- **misc**: Fix oidc redirect urls, closes [#7558](https://github.com/lobehub/lobe-chat/issues/7558) ([3013a00](https://github.com/lobehub/lobe-chat/commit/3013a00))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.82.7](https://github.com/lobehub/lobe-chat/compare/v1.82.6...v1.82.7)
 
 <sup>Released on **2025-04-25**</sup>

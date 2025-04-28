@@ -7,9 +7,43 @@ const wenxinChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 32_768,
     description:
+      '与ERNIE-X1-32K相比，模型效果和性能更好。',
+    displayName: 'ERNIE X1 Turbo 32K',
+    enabled: true,
+    id: 'ernie-x1-turbo-32k',
+    pricing: {
+      currency: 'CNY',
+      input: 1,
+      output: 4,
+    },
+    releasedAt: '2025-04-24',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      '具备更强的理解、规划、反思、进化能力。作为能力更全面的深度思考模型，文心X1兼备准确、创意和文采，在中文知识问答、文学创作、文稿写作、日常对话、逻辑推理、复杂计算及工具调用等方面表现尤为出色。',
+    displayName: 'ERNIE X1 32K',
+    id: 'ernie-x1-32k',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 8,
+    },
+    releasedAt: '2025-04-15',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
       '文心大模型X1具备更强的理解、规划、反思、进化能力。作为能力更全面的深度思考模型，文心X1兼备准确、创意和文采，在中文知识问答、文学创作、文稿写作、日常对话、逻辑推理、复杂计算及工具调用等方面表现尤为出色。',
     displayName: 'ERNIE X1 32K Preview',
-    enabled: true,
     id: 'ernie-x1-32k-preview',
     pricing: {
       currency: 'CNY',
@@ -21,14 +55,73 @@ const wenxinChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
       search: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      '文心4.5 Turbo在去幻觉、逻辑推理和代码能力等方面也有着明显增强。对比文心4.5，速度更快、价格更低。模型能力全面提升，更好满足多轮长历史对话处理、长文档理解问答任务。',
+    displayName: 'ERNIE 4.5 Turbo 128K',
+    enabled: true,
+    id: 'ernie-4.5-turbo-128k',
+    pricing: {
+      currency: 'CNY',
+      input: 0.8,
+      output: 3.2,
+    },
+    releasedAt: '2025-04-24',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      '文心4.5 Turbo在去幻觉、逻辑推理和代码能力等方面也有着明显增强。对比文心4.5，速度更快、价格更低。文本创作、知识问答等能力提升显著。输出长度及整句时延相较ERNIE 4.5有所增加。',
+    displayName: 'ERNIE 4.5 Turbo 32K',
+    id: 'ernie-4.5-turbo-32k',
+    pricing: {
+      currency: 'CNY',
+      input: 0.8,
+      output: 3.2,
+    },
+    releasedAt: '2025-04-24',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      '文心一言大模型全新版本，图片理解、创作、翻译、代码等能力显著提升，首次支持32K上下文长度，首Token时延显著降低。',
+    displayName: 'ERNIE 4.5 Turbo VL 32K',
+    enabled: true,
+    id: 'ernie-4.5-turbo-vl-32k',
+    pricing: {
+      currency: 'CNY',
+      input: 3,
+      output: 9,
+    },
+    releasedAt: '2025-04-24',
+    type: 'chat',
+  },
+  {
+    abilities: {
       vision: true,
     },
     contextWindowTokens: 8192,
     description:
       '文心大模型4.5是百度自主研发的新一代原生多模态基础大模型，通过多个模态联合建模实现协同优化，多模态理解能力优秀；具备更精进的语言能力，理解、生成、逻辑、记忆能力全面提升，去幻觉、逻辑推理、代码能力显著提升。',
     displayName: 'ERNIE 4.5 8K Preview',
-    enabled: true,
     id: 'ernie-4.5-8k-preview',
     pricing: {
       currency: 'CNY',
@@ -36,9 +129,6 @@ const wenxinChatModels: AIChatModelCard[] = [
       output: 16,
     },
     releasedAt: '2025-03-16',
-    settings: {
-      searchImpl: 'params',
-    },
     type: 'chat',
   },
   {
@@ -50,7 +140,6 @@ const wenxinChatModels: AIChatModelCard[] = [
     description:
       '百度自研的旗舰级超大规模⼤语⾔模型，相较ERNIE 3.5实现了模型能力全面升级，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。',
     displayName: 'ERNIE 4.0 8K',
-    enabled: true,
     id: 'ernie-4.0-8k-latest',
     pricing: {
       currency: 'CNY',
@@ -91,7 +180,6 @@ const wenxinChatModels: AIChatModelCard[] = [
     description:
       '百度自研的旗舰级超大规模⼤语⾔模型，综合效果表现出色，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。相较于ERNIE 4.0在性能表现上更优秀',
     displayName: 'ERNIE 4.0 Turbo 8K',
-    enabled: true,
     id: 'ernie-4.0-turbo-8k-latest',
     pricing: {
       currency: 'CNY',
@@ -112,7 +200,6 @@ const wenxinChatModels: AIChatModelCard[] = [
     description:
       '百度自研的旗舰级超大规模⼤语⾔模型，综合效果表现出色，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。相较于ERNIE 4.0在性能表现上更优秀',
     displayName: 'ERNIE 4.0 Turbo 128K',
-    enabled: true,
     id: 'ernie-4.0-turbo-128k',
     pricing: {
       currency: 'CNY',

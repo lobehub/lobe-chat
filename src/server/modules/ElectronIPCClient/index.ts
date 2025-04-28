@@ -1,5 +1,7 @@
 import { ElectronIpcClient } from '@lobechat/electron-server-ipc';
 
+import packageJSON from '@/../apps/desktop/package.json';
+
 class LobeHubElectronIpcClient extends ElectronIpcClient {
   // 获取数据库路径
   getDatabasePath = async (): Promise<string> => {
@@ -33,4 +35,4 @@ class LobeHubElectronIpcClient extends ElectronIpcClient {
   };
 }
 
-export const electronIpcClient = new LobeHubElectronIpcClient();
+export const electronIpcClient = new LobeHubElectronIpcClient(packageJSON.name);

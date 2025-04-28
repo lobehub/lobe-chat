@@ -4,9 +4,11 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { message } from '@/components/AntdStaticMethods';
 import { LOBE_CHAT_CLOUD } from '@/const/branding';
-import { isServerMode } from '@/const/version';
+import { isDesktop, isServerMode } from '@/const/version';
 import { fileService } from '@/services/file';
 import { uploadService } from '@/services/upload';
+import { getElectronStoreState } from '@/store/electron';
+import { electronSyncSelectors } from '@/store/electron/selectors';
 import { FileMetadata, UploadFileItem } from '@/types/files';
 
 import { FileStore } from '../../store';
@@ -94,8 +96,14 @@ export const createFileUploadSlice: StateCreator<
     }
     // 2. if file don't exist, need upload files
     else {
-      // if is server mode, upload to server s3, or upload to client s3
-      if (isServerMode) {
+      // only if not enable sync
+      const state = getElectronStoreState();
+      const isSyncActive = electronSyncSelectors.isSyncActive(state);
+
+      if (isDesktop && !isSyncActive) {
+        metadata = await uploadService.uploadToDesktop(file);
+      } else if (isServerMode) {
+        // if is server mode, upload to server s3, or upload to client s3
         metadata = await uploadService.uploadWithProgress(file, {
           onProgress: (status, upload) => {
             onStatusUpdate?.({
