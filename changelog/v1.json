@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Upgrade to lobe ui v2 with better design style."]
+    },
+    "date": "2025-04-28",
+    "version": "1.84.0"
+  },
+  {
+    "children": {
       "fixes": ["Fix cloud data sync."]
     },
     "date": "2025-04-28",
