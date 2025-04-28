@@ -48,7 +48,7 @@
     },
     "mcp": {
       "args": {
-        "desc": "Lista de parámetros a pasar al comando STDIO",
+        "desc": "Lista de parámetros que se pasan al comando de ejecución, generalmente aquí se ingresa el nombre del servidor MCP o la ruta del script de inicio",
         "label": "Parámetros del comando",
         "placeholder": "Por ejemplo: --port 8080 --debug",
         "required": "Por favor, introduce los parámetros de inicio"
@@ -62,6 +62,15 @@
       "endpoint": {
         "desc": "Ingresa la dirección de tu servidor HTTP Streamable MCP",
         "label": "URL del Endpoint MCP"
+      },
+      "env": {
+        "add": "Agregar una línea",
+        "desc": "Ingresa las variables de entorno necesarias para tu servidor MCP",
+        "duplicateKeyError": "La clave del campo debe ser única",
+        "formValidationFailed": "La validación del formulario falló, por favor verifica el formato de los parámetros",
+        "keyRequired": "La clave del campo no puede estar vacía",
+        "label": "Variables de entorno del servidor MCP",
+        "stringifyError": "No se puede serializar el parámetro, por favor verifica el formato de los parámetros"
       },
       "identifier": {
         "desc": "Especifica un nombre para tu complemento MCP, debe usar caracteres en inglés",

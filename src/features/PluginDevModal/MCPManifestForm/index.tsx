@@ -21,6 +21,7 @@ import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
 import ArgsInput from './ArgsInput';
+import EnvEditor from './EnvEditor';
 import MCPTypeSelect from './MCPTypeSelect';
 import { parseMcpInput } from './utils';
 
@@ -51,6 +52,7 @@ const STDIO_COMMAND_OPTIONS: {
 const HTTP_URL_KEY = ['customParams', 'mcp', 'url'];
 const STDIO_COMMAND = ['customParams', 'mcp', 'command'];
 const STDIO_ARGS = ['customParams', 'mcp', 'args'];
+const STDIO_ENV = ['customParams', 'mcp', 'env'];
 const MCP_TYPE = ['customParams', 'mcp', 'type'];
 
 const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
@@ -199,6 +201,7 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
                   },
                 },
           ]}
+          tag={'identifier'}
         >
           <Input
             onChange={handleIdentifierChange}
@@ -215,6 +218,7 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
               { message: t('dev.mcp.url.required'), required: true },
               { message: t('dev.mcp.url.invalid'), type: 'url' },
             ]}
+            tag={'url'}
           >
             <Input placeholder="https://mcp.higress.ai/mcp-github/xxxxx" />
           </FormItem>
@@ -227,6 +231,7 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
               label={t('dev.mcp.command.label')}
               name={STDIO_COMMAND}
               rules={[{ message: t('dev.mcp.command.required'), required: true }]}
+              tag={'command'}
             >
               <AutoComplete
                 options={STDIO_COMMAND_OPTIONS.map(({ value, icon: Icon, color }) => ({
@@ -246,8 +251,17 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
               label={t('dev.mcp.args.label')}
               name={STDIO_ARGS}
               rules={[{ message: t('dev.mcp.args.required'), required: true }]}
+              tag={'args'}
             >
               <ArgsInput placeholder={t('dev.mcp.args.placeholder')} />
+            </FormItem>
+            <FormItem
+              extra={t('dev.mcp.env.desc')}
+              label={t('dev.mcp.env.label')}
+              name={STDIO_ENV}
+              tag={'env'}
+            >
+              <EnvEditor />
             </FormItem>
           </>
         )}

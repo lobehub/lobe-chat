@@ -48,7 +48,7 @@
     },
     "mcp": {
       "args": {
-        "desc": "Danh sách tham số được truyền cho lệnh STDIO, thường nhập tên máy chủ MCP ở đây",
+        "desc": "Danh sách các tham số được truyền cho lệnh thực thi, thường nhập tên máy chủ MCP hoặc đường dẫn đến tập lệnh khởi động",
         "label": "Tham số lệnh",
         "placeholder": "Ví dụ: mcp-hello-world",
         "required": "Vui lòng nhập tham số khởi động"
@@ -62,6 +62,15 @@
       "endpoint": {
         "desc": "Nhập địa chỉ của máy chủ HTTP Streamable MCP của bạn",
         "label": "URL Điểm cuối MCP"
+      },
+      "env": {
+        "add": "Thêm một dòng",
+        "desc": "Nhập các biến môi trường cần thiết cho máy chủ MCP của bạn",
+        "duplicateKeyError": "Khóa trường phải là duy nhất",
+        "formValidationFailed": "Xác thực biểu mẫu không thành công, vui lòng kiểm tra định dạng tham số",
+        "keyRequired": "Khóa trường không được để trống",
+        "label": "Biến môi trường máy chủ MCP",
+        "stringifyError": "Không thể tuần tự hóa tham số, vui lòng kiểm tra định dạng tham số"
       },
       "identifier": {
         "desc": "Chỉ định một tên cho plugin MCP của bạn, cần sử dụng ký tự tiếng Anh",
