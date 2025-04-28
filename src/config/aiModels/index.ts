@@ -32,6 +32,7 @@ import { default as openai } from './openai';
 import { default as openrouter } from './openrouter';
 import { default as perplexity } from './perplexity';
 import { default as ppio } from './ppio';
+import { default as qiniu } from './qiniu';
 import { default as qwen } from './qwen';
 import { default as sambanova } from './sambanova';
 import { default as search1api } from './search1api';
@@ -104,6 +105,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   openrouter,
   perplexity,
   ppio,
+  qiniu,
   qwen,
   sambanova,
   search1api,
@@ -157,6 +159,7 @@ export { default as openai } from './openai';
 export { default as openrouter } from './openrouter';
 export { default as perplexity } from './perplexity';
 export { default as ppio } from './ppio';
+export { default as qiniu } from './qiniu';
 export { default as qwen } from './qwen';
 export { default as sambanova } from './sambanova';
 export { default as search1api } from './search1api';
