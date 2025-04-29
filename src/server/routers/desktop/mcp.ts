@@ -8,6 +8,12 @@ import { mcpService } from '@/server/services/mcp';
 const stdioParamsSchema = z.object({
   args: z.array(z.string()).optional().default([]),
   command: z.string().min(1),
+  metadata: z
+    .object({
+      avatar: z.string().optional(),
+      description: z.string().optional(),
+    })
+    .optional(),
   name: z.string().min(1),
   type: z.literal('stdio').default('stdio'),
 });
@@ -16,7 +22,10 @@ const mcpProcedure = isServerMode ? authedProcedure : passwordProcedure;
 
 export const mcpRouter = router({
   getStdioMcpServerManifest: mcpProcedure.input(stdioParamsSchema).query(async ({ input }) => {
-    return await mcpService.getStdioMcpServerManifest(input.name, input.command, input.args);
+    return await mcpService.getStdioMcpServerManifest(
+      { args: input.args, command: input.command, name: input.name },
+      input.metadata,
+    );
   }),
 
   /* eslint-disable sort-keys-fix/sort-keys-fix */

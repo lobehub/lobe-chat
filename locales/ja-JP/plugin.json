@@ -54,11 +54,19 @@
         "placeholder": "例：--port 8080 --debug",
         "required": "起動パラメータを入力してください"
       },
+      "avatar": {
+        "label": "プラグインアイコン"
+      },
       "command": {
         "desc": "MCP STDIO プラグインを起動するための実行可能ファイルまたはスクリプト",
         "label": "コマンド",
         "placeholder": "例：python main.py または /path/to/executable",
         "required": "起動コマンドを入力してください"
+      },
+      "desc": {
+        "desc": "プラグインの説明を追加",
+        "label": "プラグインの説明",
+        "placeholder": "このプラグインの使用方法やシーンなどの情報を補足してください"
       },
       "endpoint": {
         "desc": "あなたの MCP Streamable HTTP サーバーのアドレスを入力してください",

@@ -54,11 +54,19 @@
         "placeholder": "Örneğin: --port 8080 --debug",
         "required": "Lütfen başlatma parametrelerini girin"
       },
+      "avatar": {
+        "label": "Eklenti İkonu"
+      },
       "command": {
         "desc": "MCP STDIO eklentisini başlatmak için kullanılacak yürütülebilir dosya veya betik",
         "label": "Komut",
         "placeholder": "Örneğin: python main.py veya /path/to/executable",
         "required": "Lütfen başlatma komutunu girin"
+      },
+      "desc": {
+        "desc": "Eklentinin açıklama bilgisi ekleyin",
+        "label": "Eklenti Açıklaması",
+        "placeholder": "Bu eklentinin kullanım talimatları ve senaryoları gibi bilgileri ekleyin"
       },
       "endpoint": {
         "desc": "MCP Streamable HTTP Sunucunuzun adresini girin",
