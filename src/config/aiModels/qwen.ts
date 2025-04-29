@@ -196,6 +196,9 @@ const qwenChatModels: AIChatModelCard[] = [
       reasoning: true,
       search: true,
     },
+    config: {
+      deploymentName: 'qwq-plus-latest', // expired on 2025-09-02
+    },
     contextWindowTokens: 131_072,
     description:
       '基于 Qwen2.5 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平。',
@@ -220,6 +223,9 @@ const qwenChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
       search: true,
+    },
+    config: {
+      deploymentName: 'qwen-turbo-2025-04-28', // expired on 2025-10-26
     },
     contextWindowTokens: 1_000_000,
     description: '通义千问超大规模语言模型，支持中文、英文等不同语言输入。',
@@ -246,6 +252,9 @@ const qwenChatModels: AIChatModelCard[] = [
       reasoning: true,
       search: true,
     },
+    config: {
+      deploymentName: 'qwen-plus-2025-04-28', // expired on 2025-10-26
+    },
     contextWindowTokens: 131_072,
     description: '通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入。',
     displayName: 'Qwen Plus',
@@ -270,6 +279,9 @@ const qwenChatModels: AIChatModelCard[] = [
       functionCall: true,
       search: true,
     },
+    config: {
+      deploymentName: 'qwen-max-2025-01-25', 
+    },
     contextWindowTokens: 32_768,
     description:
       '通义千问千亿级别超大规模语言模型，支持中文、英文等不同语言输入，当前通义千问2.5产品版本背后的API模型。',
@@ -291,6 +303,9 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+    },
+    config: {
+      deploymentName: 'qwen-long-latest', 
     },
     contextWindowTokens: 1_000_000,
     description:
@@ -347,7 +362,10 @@ const qwenChatModels: AIChatModelCard[] = [
     abilities: {
       vision: true,
     },
-    contextWindowTokens: 32_000,
+    config: {
+      deploymentName: 'qwen-vl-plus-2025-01-25', 
+    },
+    contextWindowTokens: 128_000,
     description:
       '通义千问大规模视觉语言模型增强版。大幅提升细节识别能力和文字识别能力，支持超百万像素分辨率和任意长宽比规格的图像。',
     displayName: 'Qwen VL Plus',
@@ -364,6 +382,9 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       vision: true,
+    },
+    config: {
+      deploymentName: 'qwen-vl-max-2025-04-08', 
     },
     contextWindowTokens: 32_768,
     description:
