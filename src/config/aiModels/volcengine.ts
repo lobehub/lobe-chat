@@ -34,7 +34,6 @@ const doubaoChatModels: AIChatModelCard[] = [
     },
     config: {
       deploymentName: 'doubao-1-5-thinking-pro-m-250415',
-      deploymentName: 'doubao-1-5-thinking-pro-m-250415',
     },
     contextWindowTokens: 131_072,
     description:
