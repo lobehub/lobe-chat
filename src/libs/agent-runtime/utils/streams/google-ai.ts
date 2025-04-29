@@ -145,11 +145,7 @@ export const GoogleGenerativeAIStream = (
 
   return rawStream
     .pipeThrough(
-      createTokenSpeedCalculator(transformGoogleGenerativeAIStream, {
-        inputStartAt,
-        outputThinking: false,
-        streamStack,
-      }),
+      createTokenSpeedCalculator(transformGoogleGenerativeAIStream, { inputStartAt, streamStack }),
     )
     .pipeThrough(createSSEProtocolTransformer((c) => c, streamStack))
     .pipeThrough(createCallbacksTransformer(callbacks));

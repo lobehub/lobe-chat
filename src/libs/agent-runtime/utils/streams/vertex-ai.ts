@@ -114,13 +114,7 @@ export const VertexAIStream = (
   const streamStack: StreamContext = { id: 'chat_' + nanoid() };
 
   return rawStream
-    .pipeThrough(
-      createTokenSpeedCalculator(transformVertexAIStream, {
-        inputStartAt,
-        outputThinking: false,
-        streamStack,
-      }),
-    )
+    .pipeThrough(createTokenSpeedCalculator(transformVertexAIStream, { inputStartAt, streamStack }))
     .pipeThrough(createSSEProtocolTransformer((c) => c, streamStack))
     .pipeThrough(createCallbacksTransformer(callbacks));
 };
