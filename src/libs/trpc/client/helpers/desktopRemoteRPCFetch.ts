@@ -11,7 +11,7 @@ const log = debug('lobe-lambda:desktopRemoteRPCFetch');
 // eslint-disable-next-line no-undef
 export const desktopRemoteRPCFetch = async (input: string, init?: RequestInit) => {
   const isSyncActive = electronSyncSelectors.isSyncActive(getElectronStoreState());
-  log('isDesktop:', isDesktop, 'isSyncActive:', isSyncActive);
+  log('isSyncActive:', isSyncActive);
 
   if (isSyncActive) {
     log('Using IPC proxy for tRPC request');
