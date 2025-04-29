@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import type { MenuProps } from '@/components/Menu';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { ChatSettingsTabs } from '@/store/global/initialState';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
 interface UseCategoryOptions {
@@ -15,18 +16,19 @@ interface UseCategoryOptions {
 
 export const useCategory = ({ mobile }: UseCategoryOptions = {}) => {
   const { t } = useTranslation('setting');
-  const iconSize = mobile ? { fontSize: 20 } : undefined;
+  const iconSize = mobile ? 20 : undefined;
   const id = useSessionStore((s) => s.activeId);
   const isInbox = id === INBOX_SESSION_ID;
+  const { enablePlugins } = useServerConfigStore(featureFlagsSelectors);
 
   const cateItems: MenuProps['items'] = useMemo(
     () =>
       [
-        (!isInbox && {
+        !isInbox && {
           icon: <Icon icon={UserCircle} size={iconSize} />,
           key: ChatSettingsTabs.Meta,
           label: t('agentTab.meta'),
-        }) as MenuItemType,
+        },
         {
           icon: <Icon icon={Bot} size={iconSize} />,
           key: ChatSettingsTabs.Prompt,
@@ -52,13 +54,13 @@ export const useCategory = ({ mobile }: UseCategoryOptions = {}) => {
           key: ChatSettingsTabs.TTS,
           label: t('agentTab.tts'),
         },
-        {
+        enablePlugins && {
           icon: <Icon icon={Blocks} size={iconSize} />,
           key: ChatSettingsTabs.Plugin,
           label: t('agentTab.plugin'),
         },
-      ].filter(Boolean),
-    [t, isInbox],
+      ].filter(Boolean) as MenuProps['items'],
+    [t, isInbox, enablePlugins],
   );
 
   return cateItems;

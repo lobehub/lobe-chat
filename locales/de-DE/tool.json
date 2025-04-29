@@ -54,7 +54,16 @@
       "title": "Suchmaschine:"
     },
     "searchResult": "Anzahl der Suchergebnisse:",
-    "searchTimeRange": "Zeitspanne:",
+    "searchTimeRange": {
+      "title": "Zeitspanne:",
+      "value": {
+        "anytime": "Keine Zeitbeschränkung",
+        "day": "Innerhalb eines Tages",
+        "month": "Innerhalb eines Monats",
+        "week": "Innerhalb einer Woche",
+        "year": "Innerhalb eines Jahres"
+      }
+    },
     "summary": "Zusammenfassung",
     "summaryTooltip": "Aktuellen Inhalt zusammenfassen",
     "viewMoreResults": "Weitere {{results}} Ergebnisse anzeigen"

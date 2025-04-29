@@ -1,5 +1,5 @@
 import { ActionIcon } from '@lobehub/ui';
-import { MobileNavBarTitle } from '@lobehub/ui/mobile';
+import { ChatHeader } from '@lobehub/ui/mobile';
 import { useTheme } from 'antd-style';
 import { ChevronDown } from 'lucide-react';
 import { memo } from 'react';
@@ -28,14 +28,14 @@ const ChatHeaderTitle = memo(() => {
   const displayTitle = isInbox ? t('inbox.title') : title;
 
   return (
-    <MobileNavBarTitle
+    <ChatHeader.Title
       desc={
         <Flexbox align={'center'} gap={4} horizontal onClick={() => toggleConfig()}>
           <span>{topic?.title || t('title', { ns: 'topic' })}</span>
           <ActionIcon
             active
             icon={ChevronDown}
-            size={{ blockSize: 14, borderRadius: '50%', fontSize: 12 }}
+            size={{ blockSize: 14, borderRadius: '50%', size: 12 }}
             style={{
               background: theme.colorFillSecondary,
               color: theme.colorTextDescription,

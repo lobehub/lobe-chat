@@ -1,6 +1,6 @@
 'use client';
 
-import { Input, Select } from 'antd';
+import { InputPassword, Select } from '@lobehub/ui';
 import { useTranslation } from 'react-i18next';
 
 import { BedrockProviderCard } from '@/config/modelProviders';
@@ -19,7 +19,7 @@ export const useBedrockProvider = (): ProviderItem => {
     apiKeyItems: [
       {
         children: (
-          <Input.Password
+          <InputPassword
             autoComplete={'new-password'}
             placeholder={t(`${providerKey}.accessKeyId.placeholder`)}
           />
@@ -30,7 +30,7 @@ export const useBedrockProvider = (): ProviderItem => {
       },
       {
         children: (
-          <Input.Password
+          <InputPassword
             autoComplete={'new-password'}
             placeholder={t(`${providerKey}.secretAccessKey.placeholder`)}
           />
@@ -41,7 +41,7 @@ export const useBedrockProvider = (): ProviderItem => {
       },
       {
         children: (
-          <Input.Password
+          <InputPassword
             autoComplete={'new-password'}
             placeholder={t(`${providerKey}.sessionToken.placeholder`)}
           />

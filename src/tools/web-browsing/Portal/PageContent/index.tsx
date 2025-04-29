@@ -1,5 +1,5 @@
-import { Alert, CopyButton, Highlighter, Icon, Markdown } from '@lobehub/ui';
-import { Descriptions, Segmented, Typography } from 'antd';
+import { Alert, CopyButton, Highlighter, Icon, Markdown, Segmented } from '@lobehub/ui';
+import { Descriptions, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
@@ -80,6 +80,11 @@ const useStyles = createStyles(({ token, css }) => {
   };
 });
 
+enum DisplayType {
+  Raw = 'raw',
+  Render = 'render',
+}
+
 interface PageContentProps {
   messageId: string;
   result?: CrawlResult;
@@ -88,7 +93,7 @@ interface PageContentProps {
 const PageContent = memo<PageContentProps>(({ result }) => {
   const { t } = useTranslation('plugin');
   const { styles } = useStyles();
-  const [display, setDisplay] = useState('render');
+  const [display, setDisplay] = useState<DisplayType>(DisplayType.Render);
 
   if (!result || !result.data) return undefined;
 
@@ -189,12 +194,13 @@ const PageContent = memo<PageContentProps>(({ result }) => {
         <Flexbox gap={12} paddingBlock={'0 12px'}>
           <Flexbox horizontal justify={'space-between'}>
             <Segmented
-              onChange={(value) => setDisplay(value)}
+              onChange={(value) => setDisplay(value as DisplayType)}
               options={[
-                { label: t('search.crawPages.detail.preview'), value: 'render' },
-                { label: t('search.crawPages.detail.raw'), value: 'raw' },
+                { label: t('search.crawPages.detail.preview'), value: DisplayType.Render },
+                { label: t('search.crawPages.detail.raw'), value: DisplayType.Raw },
               ]}
               value={display}
+              variant={'filled'}
             />
             <CopyButton content={content} />
           </Flexbox>
@@ -203,10 +209,10 @@ const PageContent = memo<PageContentProps>(({ result }) => {
               message={t('search.crawPages.detail.tooLong', {
                 characters: CRAWL_CONTENT_LIMITED_COUNT,
               })}
-              variant={'pure'}
+              variant={'borderless'}
             />
           )}
-          {display === 'render' ? (
+          {display === DisplayType.Render ? (
             <Markdown variant={'chat'}>{content}</Markdown>
           ) : (
             <div style={{ paddingBlock: '0 12px' }}>

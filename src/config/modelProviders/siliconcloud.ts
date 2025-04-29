@@ -24,7 +24,8 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'deepseek-ai/DeepSeek-V3',
-      pricing: { // 2.9 涨价
+      pricing: {
+        // 2.9 涨价
         currency: 'CNY',
         input: 1,
         output: 2,
@@ -57,79 +58,79 @@ const SiliconCloud: ModelProviderCard = {
     },
     {
       contextWindowTokens: 32_768,
-      description: 
-        "DeepSeek-R1-Distill-Llama-70B 是基于 Llama-3.3-70B-Instruct 经过蒸馏训练得到的模型。该模型是 DeepSeek-R1 系列的一部分，通过使用 DeepSeek-R1 生成的样本进行微调，在数学、编程和推理等多个领域展现出优秀的性能。模型在 AIME 2024、MATH-500、GPQA Diamond 等多个基准测试中都取得了优异的成绩，显示出强大的推理能力。",
-      displayName: "DeepSeek R1 Distill Llama 70B",
+      description:
+        'DeepSeek-R1-Distill-Llama-70B 是基于 Llama-3.3-70B-Instruct 经过蒸馏训练得到的模型。该模型是 DeepSeek-R1 系列的一部分，通过使用 DeepSeek-R1 生成的样本进行微调，在数学、编程和推理等多个领域展现出优秀的性能。模型在 AIME 2024、MATH-500、GPQA Diamond 等多个基准测试中都取得了优异的成绩，显示出强大的推理能力。',
+      displayName: 'DeepSeek R1 Distill Llama 70B',
       enabled: true,
-      id: "deepseek-ai/DeepSeek-R1-Distill-Llama-70B",
+      id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
       pricing: {
-        currency: "CNY",
+        currency: 'CNY',
         input: 4.13,
-        output: 4.13  
+        output: 4.13,
       },
     },
     {
       contextWindowTokens: 32_768,
-      description: 
-        "DeepSeek-R1-Distill-Qwen-32B 是基于 Qwen2.5-32B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，在数学、编程和推理等多个领域展现出卓越的性能。在 AIME 2024、MATH-500、GPQA Diamond 等多个基准测试中都取得了优异成绩，其中在 MATH-500 上达到了 94.3% 的准确率，展现出强大的数学推理能力。",
-      displayName: "DeepSeek R1 Distill Qwen 32B",
+      description:
+        'DeepSeek-R1-Distill-Qwen-32B 是基于 Qwen2.5-32B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，在数学、编程和推理等多个领域展现出卓越的性能。在 AIME 2024、MATH-500、GPQA Diamond 等多个基准测试中都取得了优异成绩，其中在 MATH-500 上达到了 94.3% 的准确率，展现出强大的数学推理能力。',
+      displayName: 'DeepSeek R1 Distill Qwen 32B',
       enabled: true,
-      id: "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+      id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
       pricing: {
-        currency: "CNY",
+        currency: 'CNY',
         input: 1.26,
-        output: 1.26
+        output: 1.26,
       },
     },
     {
       contextWindowTokens: 32_768,
-      description: 
-        "DeepSeek-R1-Distill-Qwen-14B 是基于 Qwen2.5-14B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，展现出优秀的推理能力。在多个基准测试中表现出色，其中在 MATH-500 上达到了 93.9% 的准确率，在 AIME 2024 上达到了 69.7% 的通过率，在 CodeForces 上获得了 1481 的评分，显示出在数学和编程领域的强大实力。",
-      displayName: "DeepSeek R1 Distill Qwen 14B",
+      description:
+        'DeepSeek-R1-Distill-Qwen-14B 是基于 Qwen2.5-14B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，展现出优秀的推理能力。在多个基准测试中表现出色，其中在 MATH-500 上达到了 93.9% 的准确率，在 AIME 2024 上达到了 69.7% 的通过率，在 CodeForces 上获得了 1481 的评分，显示出在数学和编程领域的强大实力。',
+      displayName: 'DeepSeek R1 Distill Qwen 14B',
       enabled: true,
-      id: "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+      id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
       pricing: {
-        currency: "CNY",
+        currency: 'CNY',
         input: 0.7,
-        output: 0.7
+        output: 0.7,
       },
     },
     {
       contextWindowTokens: 32_768,
-      description: 
-        "DeepSeek-R1-Distill-Llama-8B 是基于 Llama-3.1-8B 开发的蒸馏模型。该模型使用 DeepSeek-R1 生成的样本进行微调，展现出优秀的推理能力。在多个基准测试中表现不俗，其中在 MATH-500 上达到了 89.1% 的准确率，在 AIME 2024 上达到了 50.4% 的通过率，在 CodeForces 上获得了 1205 的评分，作为 8B 规模的模型展示了较强的数学和编程能力。",
-      displayName: "DeepSeek R1 Distill Llama 8B (Free)",
+      description:
+        'DeepSeek-R1-Distill-Llama-8B 是基于 Llama-3.1-8B 开发的蒸馏模型。该模型使用 DeepSeek-R1 生成的样本进行微调，展现出优秀的推理能力。在多个基准测试中表现不俗，其中在 MATH-500 上达到了 89.1% 的准确率，在 AIME 2024 上达到了 50.4% 的通过率，在 CodeForces 上获得了 1205 的评分，作为 8B 规模的模型展示了较强的数学和编程能力。',
+      displayName: 'DeepSeek R1 Distill Llama 8B (Free)',
       enabled: true,
-      id: "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+      id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B',
       pricing: {
-        currency: "CNY",
+        currency: 'CNY',
         input: 0,
-        output: 0
+        output: 0,
       },
     },
     {
       contextWindowTokens: 32_768,
-      description: 
-        "DeepSeek-R1-Distill-Qwen-7B 是基于 Qwen2.5-Math-7B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，展现出优秀的推理能力。在多个基准测试中表现出色，其中在 MATH-500 上达到了 92.8% 的准确率，在 AIME 2024 上达到了 55.5% 的通过率，在 CodeForces 上获得了 1189 的评分，作为 7B 规模的模型展示了较强的数学和编程能力。",
-      displayName: "DeepSeek R1 Distill Qwen 7B (Free)",
+      description:
+        'DeepSeek-R1-Distill-Qwen-7B 是基于 Qwen2.5-Math-7B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，展现出优秀的推理能力。在多个基准测试中表现出色，其中在 MATH-500 上达到了 92.8% 的准确率，在 AIME 2024 上达到了 55.5% 的通过率，在 CodeForces 上获得了 1189 的评分，作为 7B 规模的模型展示了较强的数学和编程能力。',
+      displayName: 'DeepSeek R1 Distill Qwen 7B (Free)',
       enabled: true,
-      id: "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+      id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B',
       pricing: {
-        currency: "CNY",
+        currency: 'CNY',
         input: 0,
-        output: 0
+        output: 0,
       },
     },
     {
       contextWindowTokens: 32_768,
-      description: 
-        "DeepSeek-R1-Distill-Qwen-1.5B 是基于 Qwen2.5-Math-1.5B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，在多个基准测试中展现出不错的性能。作为一个轻量级模型，在 MATH-500 上达到了 83.9% 的准确率，在 AIME 2024 上达到了 28.9% 的通过率，在 CodeForces 上获得了 954 的评分，显示出超出其参数规模的推理能力。",
-      displayName: "DeepSeek-R1-Distill-Qwen-1.5B (Free)",
-      id: "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+      description:
+        'DeepSeek-R1-Distill-Qwen-1.5B 是基于 Qwen2.5-Math-1.5B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，在多个基准测试中展现出不错的性能。作为一个轻量级模型，在 MATH-500 上达到了 83.9% 的准确率，在 AIME 2024 上达到了 28.9% 的通过率，在 CodeForces 上获得了 954 的评分，显示出超出其参数规模的推理能力。',
+      displayName: 'DeepSeek-R1-Distill-Qwen-1.5B (Free)',
+      id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B',
       pricing: {
-        currency: "CNY",
+        currency: 'CNY',
         input: 0,
-        output: 0
+        output: 0,
       },
     },
     {

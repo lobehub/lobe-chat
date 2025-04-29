@@ -150,6 +150,7 @@
       "title": "Hintergrundfarbe"
     },
     "description": {
+      "desc": "Eine kurze Einführung in deinen Assistenten, nicht als Rolleneinstellung",
       "placeholder": "Bitte geben Sie eine Assistentenbeschreibung ein",
       "title": "Assistentenbeschreibung"
     },
@@ -161,7 +162,9 @@
       "placeholder": "Bitte geben Sie das Rollen-Prompt-Wort ein",
       "title": "Rollen-Einstellung"
     },
+    "submit": "Assistenteninformationen aktualisieren",
     "tag": {
+      "desc": "Die Assistenten-Tags werden im Assistentenmarkt angezeigt",
       "placeholder": "Bitte geben Sie ein Tag ein",
       "title": "Tag"
     },
@@ -206,6 +209,7 @@
       "placeholder": "Vorlagen-{{text}} werden durch Echtzeit-Eingabeinformationen ersetzt",
       "title": "Benutzereingabe-Vorverarbeitung"
     },
+    "submit": "Chat-Präferenzen aktualisieren",
     "title": "Chat-Einstellungen"
   },
   "settingModel": {
@@ -243,6 +247,7 @@
       },
       "title": "Schlussfolgerungsintensität"
     },
+    "submit": "Modell-Einstellungen aktualisieren",
     "temperature": {
       "desc": "Je höher der Wert, desto kreativer und einfallsreicher die Antworten; je niedriger der Wert, desto strenger die Antworten",
       "title": "Kreativitätsgrad",
@@ -319,6 +324,7 @@
       "desc": "Browser ist ein nativer Spracherkennungsdienst des Browsers",
       "title": "Spracherkennungsdienst"
     },
+    "submit": "Sprachdienst aktualisieren",
     "title": "Sprachdienste",
     "tts": "Sprachsynthese-Einstellungen",
     "ttsService": {
@@ -396,6 +402,12 @@
     "placeholder": "Geben Sie die Kennung des Assistenten ein, die eindeutig sein muss, z. B. Web-Entwicklung",
     "tooltips": "Auf dem Assistentenmarkt teilen"
   },
+  "submitFooter": {
+    "reset": "Zurücksetzen",
+    "submit": "Speichern",
+    "unSaved": "Nicht gespeicherte Änderungen",
+    "unSavedWarning": "Es gibt derzeit nicht gespeicherte Änderungen"
+  },
   "sync": {
     "device": {
       "deviceName": {
@@ -447,6 +459,7 @@
       "placeholder": "Bitte benutzerdefinierte Eingabe eingeben",
       "title": "Benutzerdefinierte Eingabe"
     },
+    "helpInfo": "Beim Erstellen eines neuen Assistenten werden die Standardassistenteneinstellungen als Voreinstellungen verwendet.",
     "historyCompress": {
       "label": "Gesprächshistorienmodell",
       "modelDesc": "Das Modell, das zur Komprimierung der Gesprächshistorie verwendet wird",

@@ -1,11 +1,11 @@
 import { ActionIconGroup } from '@lobehub/ui';
-import { ActionsBarProps } from '@lobehub/ui/es/chat/ChatList/ActionsBar';
+import type { ChatActionsBarProps } from '@lobehub/ui/chat';
 import { memo } from 'react';
 
 import { useChatListActionsBar } from '../hooks/useChatListActionsBar';
 
-export const ErrorActionsBar = memo<ActionsBarProps>(({ onActionClick }) => {
+export const ErrorActionsBar = memo<ChatActionsBarProps>(({ onActionClick }) => {
   const { regenerate, del } = useChatListActionsBar();
 
-  return <ActionIconGroup items={[regenerate, del]} onActionClick={onActionClick} type="ghost" />;
+  return <ActionIconGroup items={[regenerate, del]} onActionClick={onActionClick} />;
 });

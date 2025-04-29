@@ -1,6 +1,7 @@
 import { ElectronIPCEventHandler, ElectronIPCServer } from '@lobechat/electron-server-ipc';
 import { Session, app, ipcMain, protocol } from 'electron';
 import { macOS, windows } from 'electron-is';
+import os from 'node:os';
 import { join } from 'node:path';
 
 import { name } from '@/../../package.json';
@@ -54,6 +55,13 @@ export class App {
   }
 
   constructor() {
+    logger.info('----------------------------------------------');
+    // Log system information
+    logger.info(`  OS: ${os.platform()} (${os.arch()})`);
+    logger.info(` CPU: ${os.cpus().length} cores`);
+    logger.info(` RAM: ${Math.round(os.totalmem() / 1024 / 1024 / 1024)} GB`);
+    logger.info(`PATH: ${app.getAppPath()}`);
+    logger.info(` lng: ${app.getLocale()}`);
     logger.info('----------------------------------------------');
     logger.info('Starting LobeHub...');
 

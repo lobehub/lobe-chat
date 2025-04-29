@@ -25,7 +25,7 @@ const UploadStatus = memo<UploadStateProps>(({ status, size, uploadState }) => {
     case 'pending': {
       return (
         <Flexbox align={'center'} gap={4} horizontal>
-          <Icon icon={Loader2Icon} size={{ fontSize: 12 }} spin />
+          <Icon icon={Loader2Icon} size={12} spin />
           <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
             {t('upload.preview.status.pending')}
           </Typography.Text>

@@ -191,7 +191,7 @@ const giteeaiChatModels: AIChatModelCard[] = [
     id: 'Yi-34B-Chat',
     type: 'chat',
   },
-/*
+  /*
     // not compatible with OpenAI SDK
   {
     description:

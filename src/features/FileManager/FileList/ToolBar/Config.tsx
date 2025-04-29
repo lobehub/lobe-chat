@@ -13,14 +13,15 @@ const Config = memo<ConfigProps>(({ config, onConfigChange }) => {
 
   return (
     <Flexbox
-      gap={6}
+      align={'center'}
+      gap={8}
       horizontal
       onClick={() => {
         onConfigChange({ showFilesInKnowledgeBase: !config.showFilesInKnowledgeBase });
       }}
     >
-      <Switch size={'small'} value={config.showFilesInKnowledgeBase} />
       {t('FileManager.config.showFilesInKnowledgeBase')}
+      <Switch size={'small'} value={config.showFilesInKnowledgeBase} />
     </Flexbox>
   );
 });

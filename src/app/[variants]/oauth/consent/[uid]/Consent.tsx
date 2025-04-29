@@ -1,8 +1,9 @@
 'use client';
 
-import { Button, Card, Divider, Typography } from 'antd';
+import { Button } from '@lobehub/ui';
+import { Card, Divider, Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 

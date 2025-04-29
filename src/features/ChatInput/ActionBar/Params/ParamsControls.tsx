@@ -1,6 +1,4 @@
-import { Form, Tag } from '@lobehub/ui';
-import type { FormItemProps } from '@lobehub/ui/es/Form/components/FormItem';
-import { createStyles } from 'antd-style';
+import { Form, type FormItemProps, Tag } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { debounce } from 'lodash-es';
 import { memo } from 'react';
@@ -16,42 +14,32 @@ import {
 } from '@/features/ModelParamsControl';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-
-const useStyles = createStyles(({ css }) => ({
-  container: css`
-    .ant-form-group {
-      padding-inline: 0;
-      background: transparent;
-    }
-  `,
-}));
+import { useServerConfigStore } from '@/store/serverConfig';
 
 interface ParamsControlsProps {
   setUpdating: (updating: boolean) => void;
 }
 const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
-  const { styles } = useStyles();
   const { t } = useTranslation('setting');
-
+  const mobile = useServerConfigStore((s) => s.isMobile);
   const updateAgentConfig = useAgentStore((s) => s.updateAgentConfig);
 
   const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
 
-  const items: FormItemProps[] = [
+  let items: FormItemProps[] = [
     {
       children: <Temperature />,
-      desc: <Tag>temperature</Tag>,
       label: (
-        <Flexbox gap={8} horizontal>
+        <Flexbox align={'center'} gap={8} horizontal justify={'space-between'}>
           {t('settingModel.temperature.title')}
           <InfoTooltip title={t('settingModel.temperature.desc')} />
         </Flexbox>
       ),
       name: ['params', 'temperature'],
+      tag: 'temperature',
     },
     {
       children: <TopP />,
-      desc: <Tag>top_p</Tag>,
       label: (
         <Flexbox gap={8} horizontal>
           {t('settingModel.topP.title')}
@@ -59,10 +47,10 @@ const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
         </Flexbox>
       ),
       name: ['params', 'top_p'],
+      tag: 'top_p',
     },
     {
       children: <PresencePenalty />,
-      desc: <Tag>presence_penalty</Tag>,
       label: (
         <Flexbox gap={8} horizontal>
           {t('settingModel.presencePenalty.title')}
@@ -70,10 +58,10 @@ const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
         </Flexbox>
       ),
       name: ['params', 'presence_penalty'],
+      tag: 'presence_penalty',
     },
     {
       children: <FrequencyPenalty />,
-      desc: <Tag>frequency_penalty</Tag>,
       label: (
         <Flexbox gap={8} horizontal>
           {t('settingModel.frequencyPenalty.title')}
@@ -81,24 +69,32 @@ const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
         </Flexbox>
       ),
       name: ['params', 'frequency_penalty'],
+      tag: 'frequency_penalty',
     },
   ];
 
   return (
     <Form
-      className={styles.container}
       initialValues={config}
       itemMinWidth={200}
-      items={items}
+      items={
+        mobile ? items : items.map(({ tag, ...item }) => ({ ...item, desc: <Tag>{tag}</Tag> }))
+      }
       itemsType={'flat'}
       onValuesChange={debounce(async (values) => {
         setUpdating(true);
         await updateAgentConfig(values);
         setUpdating(false);
       }, 500)}
-      size={'small'}
       style={{ fontSize: 12 }}
-      variant={'pure'}
+      styles={{
+        group: {
+          background: 'transparent',
+          paddingBottom: mobile ? 16 : 0,
+          paddingInline: 0,
+        },
+      }}
+      variant={'borderless'}
     />
   );
 });

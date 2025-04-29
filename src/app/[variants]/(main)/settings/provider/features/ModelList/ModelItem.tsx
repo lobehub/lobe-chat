@@ -26,7 +26,7 @@ export const useStyles = createStyles(({ css, token, cx }) => {
     config,
     container: css`
       position: relative;
-      border-radius: 12px;
+      border-radius: ${token.borderRadiusLG}px;
       transition: all 200ms ease-in-out;
 
       &:hover {

@@ -1,7 +1,6 @@
 import { StorageMode, StorageModeEnum } from '@lobechat/electron-client-ipc';
-import { Input } from '@lobehub/ui';
+import { Button, Input } from '@lobehub/ui';
 import { LobeHub } from '@lobehub/ui/brand';
-import { Button } from 'antd';
 import { createStyles } from 'antd-style';
 import { ComputerIcon, Server } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';

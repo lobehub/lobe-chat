@@ -107,6 +107,4 @@ export const useRegisterChatHotkeys = () => {
     enableScope(HotkeyScopeEnum.Chat);
     return () => disableScope(HotkeyScopeEnum.Chat);
   }, []);
-
-  return null;
 };

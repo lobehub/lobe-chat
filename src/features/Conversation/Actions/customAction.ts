@@ -1,4 +1,4 @@
-import { ActionIconGroupItems } from '@lobehub/ui/es/ActionIconGroup';
+import type { ActionIconGroupItemType } from '@lobehub/ui';
 import { css, cx } from 'antd-style';
 import { LanguagesIcon, Play } from 'lucide-react';
 import { useMemo } from 'react';
@@ -25,13 +25,13 @@ export const useCustomActions = () => {
     key: 'translate',
     label: t('translate.action'),
     popupClassName: cx(translateStyle),
-  } as ActionIconGroupItems;
+  } as ActionIconGroupItemType;
 
   const tts = {
     icon: Play,
     key: 'tts',
     label: t('tts.action'),
-  } as ActionIconGroupItems;
+  } as ActionIconGroupItemType;
 
   return useMemo(() => ({ translate, tts }), []);
 };

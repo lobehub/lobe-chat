@@ -1,5 +1,6 @@
 import { ModelTag } from '@lobehub/icons';
-import { Avatar, ChatHeaderTitle, Markdown } from '@lobehub/ui';
+import { Avatar, Markdown } from '@lobehub/ui';
+import { ChatHeaderTitle } from '@lobehub/ui/chat';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';

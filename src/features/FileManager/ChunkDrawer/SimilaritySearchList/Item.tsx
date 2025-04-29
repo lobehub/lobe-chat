@@ -1,4 +1,4 @@
-import { Tag } from 'antd';
+import { Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
