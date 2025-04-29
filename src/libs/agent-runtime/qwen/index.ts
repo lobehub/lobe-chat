@@ -28,7 +28,10 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
 
       return {
         ...rest,
-        ...(thinking != null && { enable_thinking: thinking.type === 'enabled' }),
+        ...( ['qwen3','qwen-turbo','qwen-plus']
+          .some(keyword => model.toLowerCase().includes(keyword))
+        ? { enable_thinking: thinking !== undefined ? thinking.type === 'enabled' : false }
+        : {}),
         frequency_penalty: undefined,
         model,
         presence_penalty: QwenLegacyModels.has(model)
@@ -71,11 +74,11 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
   models: async ({ client }) => {
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-    const functionCallKeywords = ['qwen-max', 'qwen-plus', 'qwen-turbo', 'qwen2.5'];
+    const functionCallKeywords = ['qwen-max', 'qwen-plus', 'qwen-turbo', 'qwen-long', 'qwen1.5', 'qwen2', 'qwen2.5', 'qwen3'];
 
     const visionKeywords = ['qvq', 'vl'];
 
-    const reasoningKeywords = ['qvq', 'qwq', 'deepseek-r1'];
+    const reasoningKeywords = ['qvq', 'qwq', 'deepseek-r1', 'qwen3'];
 
     const modelsPage = (await client.models.list()) as any;
     const modelList: QwenModelCard[] = modelsPage.data;

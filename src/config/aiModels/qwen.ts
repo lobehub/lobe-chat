@@ -1,6 +1,6 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
-// https://help.aliyun.com/zh/model-studio/developer-reference/use-qwen-by-calling-api#e1fada1a719u7
+// https://help.aliyun.com/zh/model-studio/models?spm=a2c4g.11186623
 
 const qwenChatModels: AIChatModelCard[] = [
   {
@@ -16,9 +16,9 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwen3-235b-a22b',
     maxOutput: 8192,
     organization: 'Qwen',
-    pricing: { // Non-thinking mode pricing
+    pricing: { // Thinking mode pricing
       currency: 'CNY',
-      input: 4,
+      input: 40,
       output: 12,
     },
     releasedAt: '2025-04-28',
@@ -40,9 +40,9 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwen3-32b',
     maxOutput: 8192,
     organization: 'Qwen',
-    pricing: { // Non-thinking mode pricing
+    pricing: { // Thinking mode pricing
       currency: 'CNY',
-      input: 2,
+      input: 20,
       output: 8,
     },
     releasedAt: '2025-04-28',
@@ -59,14 +59,14 @@ const qwenChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description:
       'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
-    displayName: 'Qwen3 30B',
+    displayName: 'Qwen3 30B A3B',
     enabled: true,
     id: 'qwen3-30b-a3b',
     maxOutput: 8192,
     organization: 'Qwen',
-    pricing: { // Non-thinking mode pricing
+    pricing: { // Thinking mode pricing
       currency: 'CNY',
-      input: 1.5,
+      input: 15,
       output: 6,
     },
     releasedAt: '2025-04-28',
@@ -87,9 +87,9 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwen3-14b',
     maxOutput: 8192,
     organization: 'Qwen',
-    pricing: { // Non-thinking mode pricing
+    pricing: { // Thinking mode pricing
       currency: 'CNY',
-      input: 1,
+      input: 10,
       output: 4,
     },
     releasedAt: '2025-04-28',
@@ -110,9 +110,9 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwen3-8b',
     maxOutput: 8192,
     organization: 'Qwen',
-    pricing: { // Non-thinking mode pricing
+    pricing: { // Thinking mode pricing
       currency: 'CNY',
-      input: 0.5,
+      input: 5,
       output: 2,
     },
     releasedAt: '2025-04-28',
@@ -133,9 +133,9 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwen3-4b',
     maxOutput: 8192,
     organization: 'Qwen',
-    pricing: { // Non-thinking mode pricing
+    pricing: { // Thinking mode pricing
       currency: 'CNY',
-      input: 0.3,
+      input: 3,
       output: 1.2,
     },
     releasedAt: '2025-04-28',
@@ -156,9 +156,9 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwen3-1.7b',
     maxOutput: 8192,
     organization: 'Qwen',
-    pricing: { // Non-thinking mode pricing (assuming 0 input cost)
+    pricing: { // Thinking mode pricing
       currency: 'CNY',
-      input: 0.3,
+      input: 3,
       output: 1.2,
     },
     releasedAt: '2025-04-28',
@@ -179,9 +179,9 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwen3-0.6b',
     maxOutput: 8192,
     organization: 'Qwen',
-    pricing: { // Non-thinking mode pricing (assuming 0 input cost)
+    pricing: { // Thinking mode pricing
       currency: 'CNY',
-      input: 0.3,
+      input: 3,
       output: 1.2,
     },
     releasedAt: '2025-04-28',
@@ -231,7 +231,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 0.3,
-      output: 0.6,
+      output: 6, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -256,7 +256,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 0.8,
-      output: 2,
+      output: 16, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -296,7 +296,6 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       '通义千问超大规模语言模型，支持长文本上下文，以及基于长文档、多文档等多个场景的对话功能。',
     displayName: 'Qwen Long',
-    enabled: true,
     id: 'qwen-long',
     maxOutput: 6000,
     organization: 'Qwen',
