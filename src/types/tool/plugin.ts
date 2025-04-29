@@ -22,6 +22,7 @@ export interface CustomPluginParams {
    */
   mcp?: {
     args?: string[];
+    env?: Record<string, string>;
     command?: string;
     type: 'http' | 'stdio';
     url?: string;

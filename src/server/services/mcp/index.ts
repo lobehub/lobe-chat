@@ -119,7 +119,11 @@ class MCPService {
       // }
 
       const client = new MCPClient(params);
-      await client.initialize(); // Initialization logic should be within MCPClient
+      await client.initialize({
+        onProgress: (progress) => {
+          log(`New client initializing... ${progress.progress}/${progress.total}`);
+        },
+      }); // Initialization logic should be within MCPClient
       this.clients.set(key, client);
       log(`New client initialized and cached for key: ${key}`);
       return client;
@@ -129,7 +133,7 @@ class MCPService {
       throw new TRPCError({
         cause: error,
         code: 'INTERNAL_SERVER_ERROR',
-        message: `Failed to initialize MCP client: ${(error as Error).message}`,
+        message: `Failed to initialize MCP client, reason: ${(error as Error).message}`,
       });
     }
   }
@@ -181,6 +185,7 @@ class MCPService {
     const tools = await this.listTools({
       args: params.args,
       command: params.command,
+      env: params.env,
       name: params.name,
       type: 'stdio',
     });
