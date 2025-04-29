@@ -8,7 +8,7 @@ import {
 } from '@icons-pack/react-simple-icons';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { Alert, AutoComplete, FormItem, Input, TextArea } from '@lobehub/ui';
-import { Button, Form, FormInstance } from 'antd';
+import { Button, Divider, Form, FormInstance } from 'antd';
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -52,6 +52,7 @@ const STDIO_COMMAND = ['customParams', 'mcp', 'command'];
 const STDIO_ARGS = ['customParams', 'mcp', 'args'];
 const STDIO_ENV = ['customParams', 'mcp', 'env'];
 const MCP_TYPE = ['customParams', 'mcp', 'type'];
+const DESC_TYPE = ['customParams', 'description'];
 
 const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
   const { t } = useTranslation('plugin');
@@ -150,16 +151,24 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
       const values = form.getFieldsValue();
       const id = values.identifier;
       const mcp = values.customParams?.mcp;
+      const description = values.customParams?.description;
+      const avatar = values.customParams?.avatar;
 
       let data: LobeChatPluginManifest;
 
       if (mcp.type === 'http') {
         if (!mcp.url) throw new Error(t('dev.mcp.url.required'));
-        data = await mcpService.getStreamableMcpServerManifest(id, mcp.url);
+        data = await mcpService.getStreamableMcpServerManifest(id, mcp.url, {
+          avatar,
+          description,
+        });
       } else if (mcp.type === 'stdio') {
         if (!mcp.command) throw new Error(t('dev.mcp.command.required'));
         if (!mcp.args) throw new Error(t('dev.mcp.args.required'));
-        data = await mcpService.getStdioMcpServerManifest(id, mcp.command, mcp.args);
+        data = await mcpService.getStdioMcpServerManifest(id, mcp.command, mcp.args, {
+          avatar,
+          description,
+        });
       } else {
         throw new Error('Invalid MCP type'); // Internal error
       }
@@ -253,7 +262,6 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
           >
             <MCPTypeSelect />
           </Form.Item>
-
           <FormItem
             desc={t('dev.mcp.identifier.desc')}
             label={t('dev.mcp.identifier.label')}
@@ -281,7 +289,6 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
           >
             <Input placeholder={t('dev.mcp.identifier.placeholder')} />
           </FormItem>
-
           {mcpType === 'http' && (
             <FormItem
               desc={t('dev.mcp.url.desc')}
@@ -296,7 +303,6 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
               <Input placeholder="https://mcp.higress.ai/mcp-github/xxxxx" />
             </FormItem>
           )}
-
           {mcpType === 'stdio' && (
             <>
               <FormItem
@@ -349,7 +355,6 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
               </Button>
             </Flexbox>
           </FormItem>
-
           {connectionError && (
             <Alert
               closable
@@ -361,6 +366,22 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
             />
           )}
           <FormItem name={'manifest'} noStyle />
+          <Divider />
+          <FormItem
+            desc={t('dev.mcp.desc.desc')}
+            label={t('dev.mcp.desc.label')}
+            name={DESC_TYPE}
+            tag={'description'}
+          >
+            <Input placeholder={t('dev.mcp.desc.placeholder')} />
+          </FormItem>
+          <FormItem
+            label={t('dev.mcp.avatar.label')}
+            name={['customParams', 'avatar']}
+            tag={'avatar'}
+          >
+            <Input placeholder={'https://plugin-avatar.com'} />
+          </FormItem>
         </Flexbox>
       </Form>
     </>

@@ -54,11 +54,19 @@
         "placeholder": "例如：--port 8080 --debug",
         "required": "請輸入啟動參數"
       },
+      "avatar": {
+        "label": "插件圖示"
+      },
       "command": {
         "desc": "用於啟動 MCP STDIO 插件的可執行文件或腳本",
         "label": "命令",
         "placeholder": "例如：python main.py 或 /path/to/executable",
         "required": "請輸入啟動命令"
+      },
+      "desc": {
+        "desc": "添加插件的描述說明",
+        "label": "插件描述",
+        "placeholder": "補充該插件的使用說明和場景等資訊"
       },
       "endpoint": {
         "desc": "輸入你的 MCP Streamable HTTP Server 的地址",

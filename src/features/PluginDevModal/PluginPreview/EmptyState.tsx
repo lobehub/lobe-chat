@@ -11,6 +11,7 @@ const useStyles = createStyles(({ token, css }) => ({
   container: css`
     display: flex;
     flex-direction: column;
+    gap: 12px;
     align-items: center;
     justify-content: center;
 
@@ -19,7 +20,6 @@ const useStyles = createStyles(({ token, css }) => ({
     padding: ${token.paddingLG}px;
   `,
   description: css`
-    max-width: 320px;
     color: ${token.colorTextSecondary};
     text-align: center;
   `,
@@ -30,7 +30,6 @@ const useStyles = createStyles(({ token, css }) => ({
 
     width: 64px;
     height: 64px;
-    margin-block-end: ${token.marginMD}px;
     border-radius: 50%;
 
     background-color: ${token.colorPrimaryBg};
@@ -68,7 +67,7 @@ export default function PluginEmptyState() {
         {t('dev.preview.empty.title')}
       </Title>
       <Paragraph className={styles.description}>{t('dev.preview.empty.desc')}</Paragraph>
-      <Space align="center" direction="vertical" style={{ marginTop: 24 }}>
+      <Space align="center" direction="vertical">
         <div className={styles.line} style={{ width: 128 }} />
         <div className={styles.line} style={{ width: 96 }} />
         <div className={styles.line} style={{ width: 48 }} />

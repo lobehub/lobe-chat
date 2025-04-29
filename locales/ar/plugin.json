@@ -54,11 +54,19 @@
         "placeholder": "على سبيل المثال: --port 8080 --debug",
         "required": "يرجى إدخال معلمات التشغيل"
       },
+      "avatar": {
+        "label": "أيقونة الإضافة"
+      },
       "command": {
         "desc": "الملف القابل للتنفيذ أو البرنامج النصي المستخدم لبدء ملحق MCP STDIO",
         "label": "الأمر",
         "placeholder": "على سبيل المثال: python main.py أو /path/to/executable",
         "required": "يرجى إدخال أمر التشغيل"
+      },
+      "desc": {
+        "desc": "أضف وصفًا للإضافة",
+        "label": "وصف الإضافة",
+        "placeholder": "أضف معلومات حول كيفية استخدام هذه الإضافة وسيناريوهاتها وغيرها"
       },
       "endpoint": {
         "desc": "أدخل عنوان خادم MCP Streamable HTTP الخاص بك",
