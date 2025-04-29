@@ -341,7 +341,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
     ): Promise<Embeddings[]> {
       try {
         const res = await this.client.embeddings.create(
-          { ...payload, user: options?.user },
+          { ...payload, user: options?.user, encoding_format: 'float' },
           { headers: options?.headers, signal: options?.signal },
         );
 
