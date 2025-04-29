@@ -19,7 +19,7 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
   `,
 }));
 
-interface ActionDropdownProps extends DropdownProps {
+export interface ActionDropdownProps extends DropdownProps {
   maxHeight?: number;
   maxWidth?: number;
   minWidth?: number;

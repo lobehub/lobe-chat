@@ -1,16 +1,17 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
+import { ActionIcon, Drawer, Icon, Menu } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import type { ItemType } from 'antd/es/menu/interface';
-import { LucideArrowRight, LucideBolt } from 'lucide-react';
+import { Loader2Icon, LucideArrowRight, LucideBolt } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { PropsWithChildren, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import useMergeState from 'use-merge-value';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
 import { isDeprecatedEdition } from '@/const/version';
-import ActionDropdown from '@/features/ChatInput/components/ActionDropdown';
+import ActionDropdown from '@/features/ChatInput/ActionBar/components/ActionDropdown';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
@@ -40,9 +41,21 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
 
 const menuKey = (provider: string, model: string) => `${provider}-${model}`;
 
-const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
+const ModelSwitchPanel = memo<
+  PropsWithChildren<{
+    onOpenChange?: (open: boolean) => void;
+    open?: boolean;
+    setUpdating?: (updating: boolean) => void;
+    updating?: boolean;
+  }>
+>(({ children, updating, setUpdating, onOpenChange, open }) => {
   const { t } = useTranslation('components');
+  const [show, setShow] = useMergeState(false, {
+    onChange: onOpenChange,
+    value: open,
+  });
   const { styles, theme } = useStyles();
+  const mobile = useServerConfigStore((s) => s.isMobile);
   const [model, provider, updateAgentConfig] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
     agentSelectors.currentAgentModelProvider(s),
@@ -57,8 +70,10 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
       const items = provider.children.map((model) => ({
         key: menuKey(provider.id, model.id),
         label: <ModelItemRender {...model} {...model.abilities} />,
-        onClick: () => {
-          updateAgentConfig({ model: model.id, provider: provider.id });
+        onClick: async () => {
+          setUpdating?.(true);
+          await updateAgentConfig({ model: model.id, provider: provider.id });
+          setUpdating?.(false);
         },
       }));
 
@@ -129,6 +144,39 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
     }));
   }, [enabledList]);
 
+  const icon = (
+    <div className={styles.tag} onClick={() => setShow(true)}>
+      {children}
+    </div>
+  );
+
+  if (mobile)
+    return (
+      <>
+        {icon}
+        <Drawer
+          extra={updating && <Icon icon={Loader2Icon} spin />}
+          height={'66vh'}
+          onClose={() => setShow(false)}
+          open={show}
+          placement={'bottom'}
+          styles={{
+            body: {
+              paddingInline: 0,
+            },
+          }}
+          title={t('ModelSwitchPanel.title')}
+        >
+          <Menu
+            activeKey={menuKey(provider, model)}
+            className={styles.menu}
+            items={items}
+            mode={'inline'}
+          />
+        </Drawer>
+      </>
+    );
+
   return (
     <ActionDropdown
       menu={{
@@ -142,9 +190,11 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
           overflowY: 'scroll',
         },
       }}
+      onOpenChange={setShow}
+      open={show}
       placement={'topLeft'}
     >
-      <div className={styles.tag}>{children}</div>
+      {icon}
     </ActionDropdown>
   );
 });

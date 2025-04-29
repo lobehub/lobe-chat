@@ -21,7 +21,8 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
   `,
 }));
 
-interface ActionPopoverProps extends Omit<PopoverProps, 'title'> {
+export interface ActionPopoverProps extends Omit<PopoverProps, 'title' | 'content'> {
+  content?: ReactNode;
   extra?: ReactNode;
   loading?: boolean;
   maxHeight?: number;
