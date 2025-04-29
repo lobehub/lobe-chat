@@ -37,8 +37,8 @@ const History = memo(() => {
         content: <Controls setUpdating={setUpdating} updating={updating} />,
         minWidth: 240,
       }}
+      showTooltip={false}
       title={title}
-      trigger={['click']}
     />
   );
 });

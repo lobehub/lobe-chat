@@ -15,11 +15,24 @@ interface ActionProps extends Omit<ActionIconProps, 'popover'> {
   onOpenChange?: (open: boolean) => void;
   open?: boolean;
   popover?: ActionPopoverProps;
+  showTooltip?: boolean;
   trigger?: ActionDropdownProps['trigger'];
 }
 
 const Action = memo<ActionProps>(
-  ({ loading, icon, title, dropdown, popover, open, onOpenChange, trigger, disabled, ...rest }) => {
+  ({
+    showTooltip,
+    loading,
+    icon,
+    title,
+    dropdown,
+    popover,
+    open,
+    onOpenChange,
+    trigger,
+    disabled,
+    ...rest
+  }) => {
     const [show, setShow] = useMergeState(false, {
       onChange: onOpenChange,
       value: open,
@@ -31,7 +44,7 @@ const Action = memo<ActionProps>(
         icon={icon}
         loading={loading}
         onClick={() => setShow(true)}
-        title={mobile ? undefined : title}
+        title={!showTooltip || mobile ? undefined : title}
         tooltipProps={{
           placement: 'bottom',
         }}

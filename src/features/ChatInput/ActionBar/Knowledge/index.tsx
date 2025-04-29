@@ -46,8 +46,8 @@ const Knowledge = memo(() => {
       }}
       icon={LibraryBig}
       loading={updating}
+      showTooltip={false}
       title={t('knowledgeBase.title')}
-      trigger={['click']}
     />
   );
 

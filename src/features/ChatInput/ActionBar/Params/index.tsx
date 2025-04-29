@@ -22,8 +22,8 @@ const Params = memo(() => {
       popover={{
         content: <Controls setUpdating={setUpdating} updating={updating} />,
       }}
+      showTooltip={false}
       title={t('settingModel.params.title')}
-      trigger={['click']}
     />
   );
 });

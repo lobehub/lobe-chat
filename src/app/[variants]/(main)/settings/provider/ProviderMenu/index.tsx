@@ -46,6 +46,7 @@ const Layout = memo(({ children, mobile }: ProviderMenuProps) => {
         justify={'space-between'}
         padding={'16px 12px 12px'}
         style={{
+          background: theme.colorBgLayout,
           position: 'sticky',
           top: 0,
           zIndex: 50,

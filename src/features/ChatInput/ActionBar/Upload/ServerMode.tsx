@@ -102,8 +102,8 @@ const FileUpload = memo(() => {
         menu: { items },
       }}
       icon={Paperclip}
+      showTooltip={false}
       title={t('upload.action.tooltip')}
-      trigger={['click']}
     />
   );
 });

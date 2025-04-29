@@ -95,9 +95,9 @@ const ModelSwitch = memo(() => {
             minWidth: 350,
             placement: 'topLeft',
           }}
+          showTooltip={false}
           style={{ borderRadius: 20, marginInlineStart: -4 }}
           title={t('extendParams.title')}
-          trigger={['click']}
         />
       )}
     </Flexbox>

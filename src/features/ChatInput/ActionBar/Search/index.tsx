@@ -38,8 +38,8 @@ const Search = memo(() => {
           },
         },
       }}
+      showTooltip={false}
       title={t('search.title')}
-      trigger={['click']}
     />
   );
 });

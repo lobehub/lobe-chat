@@ -36,8 +36,8 @@ const Tools = memo(() => {
         }}
         icon={Blocks}
         loading={updating}
+        showTooltip={false}
         title={t('tools.title')}
-        trigger={['click']}
       />
       <PluginStore open={modalOpen} setOpen={setModalOpen} />
     </Suspense>
