@@ -1,3 +1,5 @@
+version: '3.9'
+
 name: lobe-chat-database
 services:
   network-service:
@@ -5,10 +7,10 @@ services:
     container_name: lobe-network
     restart: always
     ports:
-      - '${MINIO_PORT}:${MINIO_PORT}' # MinIO API
-      - '9001:9001' # MinIO Console
-      - '${CASDOOR_PORT}:${CASDOOR_PORT}' # Casdoor
-      - '${LOBE_PORT}:3210' # LobeChat
+      - "${MINIO_PORT}:${MINIO_PORT}"  # MinIO API
+      - "9001:9001"                    # MinIO Console
+      - "${CASDOOR_PORT}:${CASDOOR_PORT}"  # Casdoor
+      - "${LOBE_PORT}:3210"                # LobeChat
     command: tail -f /dev/null
     networks:
       - lobe-network
@@ -17,14 +19,14 @@ services:
     image: pgvector/pgvector:pg17
     container_name: lobe-postgres
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
-      - './data:/var/lib/postgresql/data'
+      - ./data:/var/lib/postgresql/data
     environment:
-      - 'POSTGRES_DB=${LOBE_DB_NAME}'
-      - 'POSTGRES_PASSWORD=${POSTGRES_PASSWORD}'
+      - POSTGRES_DB=${LOBE_DB_NAME}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -35,11 +37,11 @@ services:
   minio:
     image: minio/minio
     container_name: lobe-minio
-    network_mode: 'service:network-service'
+    network_mode: "service:network-service"
     volumes:
-      - './s3_data:/etc/minio/data'
+      - ./s3_data:/etc/minio/data
     environment:
-      - 'MINIO_API_CORS_ALLOW_ORIGIN=*'
+      - MINIO_API_CORS_ALLOW_ORIGIN=*
     env_file:
       - .env
     restart: always
@@ -58,21 +60,20 @@ services:
         wait \$MINIO_PID
       "
 
-# version lock ref: https://github.com/lobehub/lobe-chat/pull/7331
   casdoor:
     image: casbin/casdoor:v1.843.0
     container_name: lobe-casdoor
     entrypoint: /bin/sh -c './server --createDatabase=true'
-    network_mode: 'service:network-service'
+    network_mode: "service:network-service"
     depends_on:
       postgresql:
         condition: service_healthy
     environment:
       httpport: ${CASDOOR_PORT}
-      RUNNING_IN_DOCKER: 'true'
-      driverName: 'postgres'
-      dataSourceName: 'user=postgres password=${POSTGRES_PASSWORD} host=postgresql port=5432 sslmode=disable dbname=casdoor'
-      runmode: 'dev'
+      RUNNING_IN_DOCKER: "true"
+      driverName: "postgres"
+      dataSourceName: "user=postgres password=${POSTGRES_PASSWORD} host=postgresql port=5432 sslmode=disable dbname=casdoor"
+      runmode: "dev"
     volumes:
       - ./init_data.json:/init_data.json
     env_file:
@@ -82,9 +83,9 @@ services:
     image: searxng/searxng
     container_name: lobe-searxng
     volumes:
-      - './searxng-settings.yml:/etc/searxng/settings.yml'
+      - ./searxng-settings.yml:/etc/searxng/settings.yml
     environment:
-      - 'SEARXNG_SETTINGS_FILE=/etc/searxng/settings.yml'
+      - SEARXNG_SETTINGS_FILE=/etc/searxng/settings.yml
     restart: always
     networks:
       - lobe-network
@@ -94,7 +95,7 @@ services:
   lobe:
     image: lobehub/lobe-chat-database
     container_name: lobe-chat
-    network_mode: 'service:network-service'
+    network_mode: "service:network-service"
     depends_on:
       postgresql:
         condition: service_healthy
@@ -104,20 +105,19 @@ services:
         condition: service_started
       casdoor:
         condition: service_started
-
     environment:
-      - 'NEXT_AUTH_SSO_PROVIDERS=casdoor'
-      - 'KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ='
-      - 'NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg'
-      - 'DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}'
-      - 'S3_BUCKET=${MINIO_LOBE_BUCKET}'
-      - 'S3_ENABLE_PATH_STYLE=1'
-      - 'S3_ACCESS_KEY=${MINIO_ROOT_USER}'
-      - 'S3_ACCESS_KEY_ID=${MINIO_ROOT_USER}'
-      - 'S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}'
-      - 'LLM_VISION_IMAGE_USE_BASE64=1'
-      - 'S3_SET_ACL=0'
-      - 'SEARXNG_URL=http://searxng:8080'
+      - NEXT_AUTH_SSO_PROVIDERS=casdoor
+      - KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ=
+      - NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}
+      - S3_BUCKET=${MINIO_LOBE_BUCKET}
+      - S3_ENABLE_PATH_STYLE=1
+      - S3_ACCESS_KEY=${MINIO_ROOT_USER}
+      - S3_ACCESS_KEY_ID=${MINIO_ROOT_USER}
+      - S3_SECRET_ACCESS_KEY=${MINIO_ROOT_PASSWORD}
+      - LLM_VISION_IMAGE_USE_BASE64=1
+      - S3_SET_ACL=0
+      - SEARXNG_URL=http://searxng:8080
     env_file:
       - .env
     restart: always
@@ -126,39 +126,25 @@ services:
         /bin/node /app/startServer.js &
         LOBE_PID=\$!
         sleep 3
-        if [ $(wget --timeout=5 --spider --server-response ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration 2>&1 | grep -c 'HTTP/1.1 200 OK') -eq 0 ]; then
-          echo '⚠️Warining: Unable to fetch OIDC configuration from Casdoor'
-          echo 'Request URL: ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration'
-          echo 'Read more at: https://lobehub.com/docs/self-hosting/server-database/docker-compose#necessary-configuration'
-          echo ''
-          echo '⚠️注意：无法从 Casdoor 获取 OIDC 配置'
-          echo '请求 URL: ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration'
-          echo '了解更多：https://lobehub.com/zh/docs/self-hosting/server-database/docker-compose#necessary-configuration'
-          echo ''
-        else
-          if ! wget -O - --timeout=5 ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration 2>&1 | grep 'issuer' | grep ${AUTH_CASDOOR_ISSUER}; then
-            printf '❌Error: The Auth issuer is conflict, Issuer in OIDC configuration is: %s' \$(wget -O - --timeout=5 ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration 2>&1 | grep -E 'issuer.*' | awk -F '\"' '{print \$4}')
-            echo ' , but the issuer in .env file is: ${AUTH_CASDOOR_ISSUER} '
-            echo 'Request URL: ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration'
-            echo 'Read more at: https://lobehub.com/docs/self-hosting/server-database/docker-compose#necessary-configuration'
-            echo ''
-            printf '❌错误：Auth 的 issuer 冲突，OIDC 配置中的 issuer 是：%s' \$(wget -O - --timeout=5 ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration 2>&1 | grep -E 'issuer.*' | awk -F '\"' '{print \$4}')
-            echo ' , 但 .env 文件中的 issuer 是：${AUTH_CASDOOR_ISSUER} '
-            echo '请求 URL: ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration'
-            echo '了解更多：https://lobehub.com/zh/docs/self-hosting/server-database/docker-compose#necessary-configuration'
-            echo ''
+
+        check_oidc() {
+          local oidc_url=${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration
+          if ! wget --timeout=5 --spider --server-response \$oidc_url 2>&1 | grep -q 'HTTP/1.1 200 OK'; then
+            echo '⚠️ Warning: Unable to fetch OIDC configuration from Casdoor'
+          elif ! wget -O - --timeout=5 \$oidc_url 2>&1 | grep 'issuer' | grep -q ${AUTH_CASDOOR_ISSUER}; then
+            echo '❌ Error: Auth issuer conflict'
           fi
-        fi
-        if [ $(wget --timeout=5 --spider --server-response ${S3_ENDPOINT}/minio/health/live 2>&1 | grep -c 'HTTP/1.1 200 OK') -eq 0 ]; then
-          echo '⚠️Warining: Unable to fetch MinIO health status'
-          echo 'Request URL: ${S3_ENDPOINT}/minio/health/live'
-          echo 'Read more at: https://lobehub.com/docs/self-hosting/server-database/docker-compose#necessary-configuration'
-          echo ''
-          echo '⚠️注意：无法获取 MinIO 健康状态'
-          echo '请求 URL: ${S3_ENDPOINT}/minio/health/live'
-          echo '了解更多：https://lobehub.com/zh/docs/self-hosting/server-database/docker-compose#necessary-configuration'
-          echo ''
-        fi
+        }
+
+        check_minio() {
+          local minio_url=${S3_ENDPOINT}/minio/health/live
+          if ! wget --timeout=5 --spider --server-response \$minio_url 2>&1 | grep -q 'HTTP/1.1 200 OK'; then
+            echo '⚠️ Warning: Unable to fetch MinIO health status'
+          fi
+        }
+
+        check_oidc
+        check_minio
         wait \$LOBE_PID
       "
 
