@@ -54,11 +54,19 @@
         "placeholder": "Por ejemplo: --port 8080 --debug",
         "required": "Por favor, introduce los parámetros de inicio"
       },
+      "avatar": {
+        "label": "Icono del complemento"
+      },
       "command": {
         "desc": "Archivo ejecutable o script para iniciar el complemento MCP STDIO",
         "label": "Comando",
         "placeholder": "Por ejemplo: python main.py o /ruta/al/ejecutable",
         "required": "Por favor, introduce el comando de inicio"
+      },
+      "desc": {
+        "desc": "Descripción del complemento",
+        "label": "Descripción del complemento",
+        "placeholder": "Proporcione información sobre el uso y los escenarios de este complemento"
       },
       "endpoint": {
         "desc": "Ingresa la dirección de tu servidor HTTP Streamable MCP",

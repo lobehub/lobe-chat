@@ -54,11 +54,19 @@
         "placeholder": "Например: --port 8080 --debug",
         "required": "Пожалуйста, введите параметры запуска"
       },
+      "avatar": {
+        "label": "Иконка плагина"
+      },
       "command": {
         "desc": "Исполняемый файл или скрипт для запуска плагина MCP STDIO",
         "label": "Команда",
         "placeholder": "Например: python main.py или /path/to/executable",
         "required": "Пожалуйста, введите команду запуска"
+      },
+      "desc": {
+        "desc": "Добавьте описание плагина",
+        "label": "Описание плагина",
+        "placeholder": "Дополните информацию о использовании и сценариях данного плагина"
       },
       "endpoint": {
         "desc": "Введите адрес вашего MCP Streamable HTTP Server",
