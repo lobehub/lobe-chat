@@ -1,10 +1,8 @@
-import { Avatar, Icon } from '@lobehub/ui';
-import { Dropdown } from 'antd';
-import { createStyles } from 'antd-style';
-import type { ItemType } from 'antd/es/menu/interface';
+import { Avatar, DropdownProps, Icon, ItemType } from '@lobehub/ui';
+import { Checkbox } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { ArrowRight, Store, ToyBrick } from 'lucide-react';
-import { PropsWithChildren, memo } from 'react';
+import { PropsWithChildren, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -19,27 +17,20 @@ import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfi
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { builtinToolSelectors, pluginSelectors } from '@/store/tool/selectors';
 
+import ActionDropdown from '../../components/ActionDropdown';
 import ToolItem from './ToolItem';
 
-const useStyles = createStyles(({ css, prefixCls }) => ({
-  menu: css`
-    &.${prefixCls}-dropdown-menu {
-      padding-block: 8px;
-    }
-
-    .${prefixCls}-dropdown-menu-item-group-list .${prefixCls}-dropdown-menu-item {
-      padding: 0;
-      border-radius: 4px;
-    }
-  `,
-}));
-
-const DropdownMenu = memo<PropsWithChildren>(({ children }) => {
+const DropdownMenu = memo<PropsWithChildren<{ disabled?: boolean }>>(({ children, disabled }) => {
   const { t } = useTranslation('setting');
   const list = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
   const { showDalle } = useServerConfigStore(featureFlagsSelectors);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [open, setOpen] = useWorkspaceModal();
+  const [checked, togglePlugin] = useAgentStore((s) => [
+    agentSelectors.currentAgentPlugins(s),
+    s.togglePlugin,
+  ]);
   const builtinList = useToolStore(builtinToolSelectors.metaList(showDalle), isEqual);
-
   const enablePluginCount = useAgentStore(
     (s) =>
       agentSelectors
@@ -47,54 +38,50 @@ const DropdownMenu = memo<PropsWithChildren>(({ children }) => {
         .filter((i) => !builtinList.some((b) => b.identifier === i)).length,
   );
 
-  const [open, setOpen] = useWorkspaceModal();
-  const { styles } = useStyles();
-
   const items: ItemType[] = [
-    (builtinList.length !== 0 && {
+    {
       children: builtinList.map((item) => ({
-        icon: <Avatar avatar={item.meta.avatar} size={24} />,
-        key: item.identifier,
-        label: (
-          <ToolItem identifier={item.identifier} label={item.meta?.title || item.identifier} />
+        extra: (
+          <Checkbox
+            checked={checked.includes(item.identifier)}
+            onClick={(e) => {
+              e.stopPropagation();
+              togglePlugin(item.identifier);
+            }}
+          />
         ),
+        icon: <Avatar avatar={item.meta.avatar} size={20} style={{ flex: 'none' }} />,
+        key: item.identifier,
+        label: <ToolItem identifier={item.identifier} label={item.meta?.title} />,
+        onClick: () => togglePlugin(item.identifier),
       })),
 
       key: 'builtins',
       label: t('tools.builtins.groupName'),
       type: 'group',
-    }) as ItemType,
+    },
     {
-      children: [
-        ...list.map((item) => ({
-          icon: item.meta?.avatar ? (
-            <PluginAvatar avatar={pluginHelpers.getPluginAvatar(item.meta)} size={24} />
-          ) : (
-            <Icon icon={ToyBrick} size={{ fontSize: 16 }} style={{ padding: 4 }} />
-          ),
-          key: item.identifier,
-          label: (
-            <ToolItem
-              identifier={item.identifier}
-              label={pluginHelpers.getPluginTitle(item?.meta) || item.identifier}
-            />
-          ),
-        })),
-        {
-          icon: <Icon icon={Store} size={{ fontSize: 16 }} style={{ padding: 4 }} />,
-
-          key: 'plugin-store',
-          label: (
-            <Flexbox gap={40} horizontal justify={'space-between'} padding={'8px 12px'}>
-              {t('tools.plugins.store')} <Icon icon={ArrowRight} />
-            </Flexbox>
-          ),
-          onClick: (e) => {
-            e.domEvent.stopPropagation();
-            setOpen(true);
-          },
-        },
-      ],
+      children: list.map((item) => ({
+        extra: (
+          <Checkbox
+            checked={checked.includes(item.identifier)}
+            onClick={(e) => {
+              e.stopPropagation();
+              togglePlugin(item.identifier);
+            }}
+          />
+        ),
+        icon: item.meta?.avatar ? (
+          <PluginAvatar avatar={pluginHelpers.getPluginAvatar(item.meta)} size={20} />
+        ) : (
+          <Icon icon={ToyBrick} size={20} />
+        ),
+        key: item.identifier,
+        label: (
+          <ToolItem identifier={item.identifier} label={pluginHelpers.getPluginTitle(item?.meta)} />
+        ),
+        onClick: () => togglePlugin(item.identifier),
+      })),
       key: 'plugins',
       label: (
         <Flexbox align={'center'} gap={40} horizontal justify={'space-between'}>
@@ -107,8 +94,21 @@ const DropdownMenu = memo<PropsWithChildren>(({ children }) => {
         </Flexbox>
       ),
       type: 'group',
-    } as ItemType,
-  ].filter(Boolean);
+    },
+    {
+      type: 'divider',
+    },
+    {
+      extra: <Icon icon={ArrowRight} />,
+      icon: Store,
+      key: 'plugin-store',
+      label: t('tools.plugins.store'),
+      onClick: () => {
+        setDropdownOpen(false);
+        setOpen(true);
+      },
+    },
+  ];
 
   const plugins = useAgentStore((s) => agentSelectors.currentAgentPlugins(s));
 
@@ -118,26 +118,24 @@ const DropdownMenu = memo<PropsWithChildren>(({ children }) => {
   useFetchInstalledPlugins();
   useCheckPluginsIsInstalled(plugins);
 
+  const handleOpenChange: DropdownProps['onOpenChange'] = (nextOpen, info) => {
+    if (info.source === 'trigger' || nextOpen) {
+      setDropdownOpen(nextOpen);
+    }
+  };
+
   return (
     <>
-      <Dropdown
-        arrow={false}
-        menu={{
-          className: styles.menu,
-          items,
-          onClick: (e) => {
-            e.domEvent.preventDefault();
-          },
-          style: {
-            maxHeight: 500,
-            overflowY: 'scroll',
-          },
-        }}
-        placement={'top'}
-        trigger={['click']}
+      <ActionDropdown
+        disabled={disabled}
+        maxHeight={500}
+        menu={{ items }}
+        minWidth={240}
+        onOpenChange={handleOpenChange}
+        open={dropdownOpen}
       >
         {children}
-      </Dropdown>
+      </ActionDropdown>
       <PluginStore open={open} setOpen={setOpen} />
     </>
   );

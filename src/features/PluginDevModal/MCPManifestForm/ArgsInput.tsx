@@ -1,4 +1,4 @@
-import { Input, InputProps } from 'antd';
+import { Input, type InputProps } from '@lobehub/ui';
 import { memo } from 'react';
 
 interface ArgsInputProps extends Omit<InputProps, 'value' | 'onChange'> {

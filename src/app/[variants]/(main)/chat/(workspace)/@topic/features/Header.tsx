@@ -1,7 +1,7 @@
 'use client';
 
-import { ActionIcon, Icon } from '@lobehub/ui';
-import { App, Dropdown, MenuProps } from 'antd';
+import { ActionIcon, Dropdown, Icon, type MenuProps } from '@lobehub/ui';
+import { App } from 'antd';
 import type { ItemType } from 'antd/es/menu/interface';
 import { LucideCheck, MoreHorizontal, Search, Trash } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';

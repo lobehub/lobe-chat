@@ -1,7 +1,7 @@
 'use client';
 
 import { ActionIcon } from '@lobehub/ui';
-import { MobileNavBar } from '@lobehub/ui/mobile';
+import { ChatHeader } from '@lobehub/ui/mobile';
 import { MessageSquarePlus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
@@ -21,7 +21,7 @@ const Header = memo(() => {
   const { enableWebrtc, showCreateSession } = useServerConfigStore(featureFlagsSelectors);
 
   return (
-    <MobileNavBar
+    <ChatHeader
       left={
         <Flexbox align={'center'} gap={8} horizontal style={{ marginLeft: 8 }}>
           <UserAvatar onClick={() => router.push('/me')} size={32} />

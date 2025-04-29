@@ -78,9 +78,19 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
         avatarBackground={avatarBackground}
         date={updateAt?.valueOf()}
         description={description}
+        key={id}
         loading={loading}
         pin={pin}
         showAction={open}
+        styles={{
+          container: {
+            gap: 12,
+          },
+          content: {
+            gap: 6,
+            maskImage: `linear-gradient(90deg, #000 90%, transparent)`,
+          },
+        }}
         title={title}
       />
       <CreateGroupModal

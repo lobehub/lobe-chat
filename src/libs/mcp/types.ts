@@ -17,9 +17,10 @@ interface HttpMCPClientParams {
   url: string;
 }
 
-interface StdioMCPParams {
+export interface StdioMCPParams {
   args: string[];
   command: string;
+  env?: Record<string, string>;
   name: string;
   type: 'stdio';
 }

@@ -1,5 +1,5 @@
-import { Icon, Tooltip } from '@lobehub/ui';
-import { Button, Checkbox } from 'antd';
+import { Button, Tooltip } from '@lobehub/ui';
+import { Checkbox } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -35,6 +35,7 @@ const useStyles = createStyles(({ css, token, cx, isDarkMode }) => {
       cursor: pointer;
       margin-inline: 24px;
       border-block-end: 1px solid ${isDarkMode ? token.colorSplit : rgba(token.colorSplit, 0.06)};
+      border-radius: ${token.borderRadius}px;
 
       &:hover {
         background: ${token.colorFillTertiary};
@@ -121,6 +122,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
         className={cx(styles.container, selected && styles.selected)}
         height={64}
         horizontal
+        paddingInline={8}
       >
         <Flexbox
           align={'center'}
@@ -173,7 +175,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
                 >
                   <Button
                     disabled={!isSupportedForChunking}
-                    icon={<Icon icon={FileBoxIcon} />}
+                    icon={FileBoxIcon}
                     loading={isCreatingFileParseTask}
                     onClick={() => {
                       parseFiles([id]);

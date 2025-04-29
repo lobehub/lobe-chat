@@ -1,4 +1,4 @@
-import { ImageGallery } from '@lobehub/ui';
+import { PreviewGroup } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -20,11 +20,11 @@ const Files = memo(() => {
         padding={'4px 8px 8px'}
         style={{ overflow: 'scroll', width: '100%' }}
       >
-        <ImageGallery>
+        <PreviewGroup>
           {list.map((i) => (
             <FileItem {...i} key={i.id} loading={i.status === 'pending'} />
           ))}
-        </ImageGallery>
+        </PreviewGroup>
       </Flexbox>
     </Flexbox>
   );

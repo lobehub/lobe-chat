@@ -1,4 +1,5 @@
 export default {
+  confirm: '确定',
   debug: {
     arguments: '调用参数',
     function_call: '函数调用',
@@ -48,10 +49,13 @@ export default {
     },
     mcp: {
       args: {
-        desc: '传递给 STDIO 命令的参数列表，一般在这里输入 MCP 服务器名称',
+        desc: '传递给执行命令的参数列表，一般在这里输入 MCP 服务器名称，或启动脚本路径',
         label: '命令参数',
         placeholder: '例如：mcp-hello-world',
         required: '请输入启动参数',
+      },
+      avatar: {
+        label: '插件图标',
       },
       command: {
         desc: '用于启动 MCP STDIO Server 的可执行文件或脚本',
@@ -59,9 +63,23 @@ export default {
         placeholder: '例如：npx / uv / docker 等',
         required: '请输入启动命令',
       },
+      desc: {
+        desc: '添加插件的描述说明',
+        label: '插件描述',
+        placeholder: '补充该插件的使用说明和场景等信息',
+      },
       endpoint: {
         desc: '输入你的 MCP Streamable HTTP Server 的地址',
         label: 'MCP Endpoint URL',
+      },
+      env: {
+        add: '新增一行',
+        desc: '输入你的 MCP Server 所需要的环境变量',
+        duplicateKeyError: '字段键必须唯一',
+        formValidationFailed: '表单验证失败，请检查参数格式',
+        keyRequired: '字段键不能为空',
+        label: 'MCP Server 环境变量',
+        stringifyError: '无法序列化参数，请检查参数格式',
       },
       identifier: {
         desc: '为你的 MCP 插件指定一个名称，需要使用英文字符',
@@ -71,6 +89,13 @@ export default {
         required: '请输入 MCP 服务标识符',
       },
       previewManifest: '预览插件描述文件',
+      quickImport: '快速导入 JSON 配置',
+      quickImportError: {
+        empty: '输入内容不能为空',
+        invalidJson: '无效的 JSON 格式',
+        invalidStructure: 'JSON 格式无效',
+      },
+      stdioNotSupported: '当前环境不支持 stdio 类型的 MCP 插件',
       testConnection: '测试连接',
       testConnectionTip: '测试连接成功后 MCP 插件才可以被正常使用',
       type: {
@@ -139,8 +164,18 @@ export default {
       schema: 'Schema',
     },
     preview: {
+      api: {
+        noParams: '该工具没有参数',
+        noResults: '未找到符合搜索条件的 API',
+        params: '参数:',
+        searchPlaceholder: '搜索工具...',
+      },
       card: '预览插件展示效果',
       desc: '预览插件描述',
+      empty: {
+        desc: '完成配置后，将能够在此处预览插件支持的工具能力',
+        title: '配置插件后开始预览',
+      },
       title: '插件名称预览',
     },
     save: '安装插件',

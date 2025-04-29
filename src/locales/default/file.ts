@@ -72,6 +72,9 @@ export default {
     websites: '网页',
   },
   title: '文件',
+  toggleLeftPanel: {
+    title: '显示/隐藏左侧面板',
+  },
   uploadDock: {
     body: {
       collapse: '收起',

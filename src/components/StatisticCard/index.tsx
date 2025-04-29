@@ -153,7 +153,7 @@ const useStyles = createStyles(
       border-radius: ${token.borderRadius}px;
       background: ${token.colorFillSecondary};
     `,
-    pure: css`
+    raw: css`
       border: none !important;
       background: transparent !important;
     `,
@@ -162,20 +162,20 @@ const useStyles = createStyles(
 
 interface StatisticCardProps extends AntdStatisticCardProps {
   highlight?: string;
-  variant?: 'pure' | 'card';
+  variant?: 'raw' | 'card';
 }
 
 const StatisticCard = memo<StatisticCardProps>(
   ({ title, className, highlight, variant, loading, extra, ...rest }) => {
     const { cx, styles } = useStyles(highlight);
     const { mobile } = useResponsive();
-    const isPure = variant === 'pure';
+    const isPure = variant === 'raw';
     return (
       <AntdStatisticCard
         bordered={!mobile}
         className={cx(
           styles.container,
-          isPure ? styles.pure : styles.card,
+          isPure ? styles.raw : styles.card,
           highlight && styles.highlight,
           className,
         )}

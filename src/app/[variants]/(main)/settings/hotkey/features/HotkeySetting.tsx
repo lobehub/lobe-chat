@@ -1,6 +1,6 @@
 'use client';
 
-import { Form, HotkeyInput, type ItemGroup } from '@lobehub/ui';
+import { Form, type FormGroupItemType, HotkeyInput } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,8 +19,6 @@ const filterByDesktop = (item: HotkeyItem) => {
   // is not desktop, filter out desktop only items
   if (!isDesktop) return !item.isDesktop;
 };
-
-type SettingItemGroup = ItemGroup;
 
 const HOTKEY_SETTING_KEY = 'hotkey';
 
@@ -59,14 +57,14 @@ const HotkeySetting = memo(() => {
     };
   };
 
-  const essential: SettingItemGroup = {
+  const essential: FormGroupItemType = {
     children: HOTKEYS_REGISTRATION.filter((item) => item.group === HotkeyGroupEnum.Essential)
       .filter((item) => filterByDesktop(item))
       .map((item) => mapHotkeyItem(item)),
     title: t('hotkey.group.essential'),
   };
 
-  const conversation: SettingItemGroup = {
+  const conversation: FormGroupItemType = {
     children: HOTKEYS_REGISTRATION.filter((item) => item.group === HotkeyGroupEnum.Conversation)
       .filter((item) => filterByDesktop(item))
       .map((item) => mapHotkeyItem(item)),
@@ -80,7 +78,7 @@ const HotkeySetting = memo(() => {
       items={[essential, conversation]}
       itemsType={'group'}
       onValuesChange={setSettings}
-      variant={'pure'}
+      variant={'borderless'}
       {...FORM_STYLE}
     />
   );

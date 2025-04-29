@@ -1,7 +1,7 @@
 'use client';
 
 import { ModelIcon } from '@lobehub/icons';
-import { Button } from 'antd';
+import { Button } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import Link from 'next/link';
@@ -9,9 +9,9 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { ModelInfoTags } from '@/components/ModelSelect';
 import { DiscoverModelItem } from '@/types/discover';
 
-import ModelFeatureTags from '../../../../features/ModelFeatureTags';
 import Back from '../../../features/Back';
 
 export const useStyles = createStyles(({ css, token }) => ({
@@ -79,11 +79,7 @@ const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
         )}
       </Flexbox>
       {data.meta.description && <div>{t(`${identifier}.description`, { ns: 'models' })}</div>}
-      <ModelFeatureTags
-        functionCall={data.meta.functionCall}
-        tokens={data.meta.contextWindowTokens}
-        vision={data.meta.vision}
-      />
+      <ModelInfoTags directionReverse {...data.meta} />
     </Flexbox>
   );
 });
