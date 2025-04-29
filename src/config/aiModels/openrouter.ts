@@ -1,5 +1,5 @@
 import { AIChatModelCard } from '@/types/aiModel';
-
+// https://openrouter.ai/docs/api-reference/list-available-models
 const openrouterChatModels: AIChatModelCard[] = [
   {
     contextWindowTokens: 128_000,
@@ -8,6 +8,182 @@ const openrouterChatModels: AIChatModelCard[] = [
     displayName: 'Auto (best for prompt)',
     enabled: true,
     id: 'openrouter/auto',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 40_960,
+    description:
+      'Qwen3 是 Qwen 大型语言模型系列的最新一代，具有密集和专家混合 (MoE) 架构，在推理、多语言支持和高级代理任务方面表现出色。其在复杂推理的思考模式和高效对话的非思考模式之间无缝切换的独特能力确保了多功能、高质量的性能。\n\nQwen3 显著优于 QwQ 和 Qwen2.5 等先前模型，提供卓越的数学、编码、常识推理、创意写作和交互式对话能力。Qwen3-30B-A3B 变体包含 305 亿个参数（33 亿个激活参数）、48 层、128 个专家（每个任务激活 8 个），并支持高达 131K 令牌上下文（使用 YaRN），为开源模型树立了新标准。',
+    displayName: 'Qwen3 30B A3B (Free)',
+    id: 'qwen/qwen3-30b-a3b:free',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 40_960,
+    description:
+      'Qwen3 是 Qwen 大型语言模型系列的最新一代，具有密集和专家混合 (MoE) 架构，在推理、多语言支持和高级代理任务方面表现出色。其在复杂推理的思考模式和高效对话的非思考模式之间无缝切换的独特能力确保了多功能、高质量的性能。\n\nQwen3 显著优于 QwQ 和 Qwen2.5 等先前模型，提供卓越的数学、编码、常识推理、创意写作和交互式对话能力。Qwen3-30B-A3B 变体包含 305 亿个参数（33 亿个激活参数）、48 层、128 个专家（每个任务激活 8 个），并支持高达 131K 令牌上下文（使用 YaRN），为开源模型树立了新标准。',
+    displayName: 'Qwen3 30B A3B',
+    id: 'qwen/qwen3-30b-a3b',
+    maxOutput: 40_960,
+    pricing: {
+      input: 0.1,
+      output: 0.3,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 40_960,
+    description:
+      'Qwen3-8B 是 Qwen3 系列中一个密集的 82 亿参数因果语言模型，专为推理密集型任务和高效对话而设计。它支持在用于数学、编码和逻辑推理的“思考”模式与用于一般对话的“非思考”模式之间无缝切换。该模型经过微调，可用于指令遵循、代理集成、创意写作以及跨 100 多种语言和方言的多语言使用。它原生支持 32K 令牌上下文窗口，并可通过 YaRN 扩展到 131K 令牌。',
+    displayName: 'Qwen3 8B (Free)',
+    id: 'qwen/qwen3-8b:free',
+    maxOutput: 40_960,
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 40_960,
+    description:
+      'Qwen3-14B 是 Qwen3 系列中一个密集的 148 亿参数因果语言模型，专为复杂推理和高效对话而设计。它支持在用于数学、编程和逻辑推理等任务的“思考”模式与用于通用对话的“非思考”模式之间无缝切换。该模型经过微调，可用于指令遵循、代理工具使用、创意写作以及跨 100 多种语言和方言的多语言任务。它原生处理 32K 令牌上下文，并可使用基于 YaRN 的扩展扩展到 131K 令牌。',
+    displayName: 'Qwen3 14B (Free)',
+    id: 'qwen/qwen3-14b:free',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 40_960,
+    description:
+      'Qwen3-14B 是 Qwen3 系列中一个密集的 148 亿参数因果语言模型，专为复杂推理和高效对话而设计。它支持在用于数学、编程和逻辑推理等任务的“思考”模式与用于通用对话的“非思考”模式之间无缝切换。该模型经过微调，可用于指令遵循、代理工具使用、创意写作以及跨 100 多种语言和方言的多语言任务。它原生处理 32K 令牌上下文，并可使用基于 YaRN 的扩展扩展到 131K 令牌。',
+    displayName: 'Qwen3 14B',
+    id: 'qwen/qwen3-14b',
+    maxOutput: 40_960,
+    pricing: {
+      input: 0.08,
+      output: 0.24,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 40_960,
+    description:
+      'Qwen3-32B 是 Qwen3 系列中一个密集的 328 亿参数因果语言模型，针对复杂推理和高效对话进行了优化。它支持在用于数学、编码和逻辑推理等任务的“思考”模式与用于更快、通用对话的“非思考”模式之间无缝切换。该模型在指令遵循、代理工具使用、创意写作以及跨 100 多种语言和方言的多语言任务中表现出强大的性能。它原生处理 32K 令牌上下文，并可使用基于 YaRN 的扩展扩展到 131K 令牌。',
+    displayName: 'Qwen3 32B (Free)',
+    id: 'qwen/qwen3-32b:free',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 40_960,
+    description:
+      'Qwen3-32B 是 Qwen3 系列中一个密集的 328 亿参数因果语言模型，针对复杂推理和高效对话进行了优化。它支持在用于数学、编码和逻辑推理等任务的“思考”模式与用于更快、通用对话的“非思考”模式之间无缝切换。该模型在指令遵循、代理工具使用、创意写作以及跨 100 多种语言和方言的多语言任务中表现出强大的性能。它原生处理 32K 令牌上下文，并可使用基于 YaRN 的扩展扩展到 131K 令牌。',
+    displayName: 'Qwen3 32B',
+    id: 'qwen/qwen3-32b',
+    pricing: {
+      input: 0.1,
+      output: 0.3,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 40_960,
+    description:
+      'Qwen3-235B-A22B 是由 Qwen 开发的 235B 参数专家混合 (MoE) 模型，每次前向传递激活 22B 参数。它支持在用于复杂推理、数学和代码任务的“思考”模式与用于一般对话效率的“非思考”模式之间无缝切换。该模型展示了强大的推理能力、多语言支持（100 多种语言和方言）、高级指令遵循和代理工具调用能力。它原生处理 32K 令牌上下文窗口，并使用基于 YaRN 的扩展扩展到 131K 令牌。',
+    displayName: 'Qwen3 235B A22B (Free)',
+    id: 'qwen/qwen3-235b-a22b:free',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 40_960,
+    description:
+      'Qwen3-235B-A22B 是由 Qwen 开发的 235B 参数专家混合 (MoE) 模型，每次前向传递激活 22B 参数。它支持在用于复杂推理、数学和代码任务的“思考”模式与用于一般对话效率的“非思考”模式之间无缝切换。该模型展示了强大的推理能力、多语言支持（100 多种语言和方言）、高级指令遵循和代理工具调用能力。它原生处理 32K 令牌上下文窗口，并使用基于 YaRN 的扩展扩展到 131K 令牌。',
+    displayName: 'Qwen3 235B A22B',
+    id: 'qwen/qwen3-235b-a22b',
+    maxOutput: 40_960,
+    pricing: {
+      input: 0.2,
+      output: 0.6,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 163_840,
+    description:
+      'DeepSeek-R1T-Chimera 通过合并 DeepSeek-R1 和 DeepSeek-V3 (0324) 创建，结合了 R1 的推理能力和 V3 的令牌效率改进。它基于 DeepSeek-MoE Transformer 架构，并针对通用文本生成任务进行了优化。\n\n该模型合并了两个源模型的预训练权重，以平衡推理、效率和指令遵循任务的性能。它根据 MIT 许可证发布，旨在用于研究和商业用途。',
+    displayName: 'DeepSeek R1T Chimera (Free)',
+    id: 'tngtech/deepseek-r1t-chimera:free',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_000,
+    description:
+      'THUDM: GLM Z1 Rumination 32B 是 GLM-4-Z1 系列中的 32B 参数深度推理模型，针对需要长时间思考的复杂、开放式任务进行了优化。它建立在 glm-4-32b-0414 的基础上，增加了额外的强化学习阶段和多阶段对齐策略，引入了旨在模拟扩展认知处理的“反思”能力。这包括迭代推理、多跳分析和工具增强的工作流程，例如搜索、检索和引文感知合成。\n\n该模型在研究式写作、比较分析和复杂问答方面表现出色。它支持用于搜索和导航原语（`search`、`click`、`open`、`finish`）的函数调用，从而可以在代理式管道中使用。反思行为由具有基于规则的奖励塑造和延迟决策机制的多轮循环控制，并以 OpenAI 内部对齐堆栈等深度研究框架为基准。此变体适用于需要深度而非速度的场景。',
+    displayName: 'GLM Z1 Rumination 32B',
+    id: 'thudm/glm-z1-rumination-32b',
+    pricing: {
+      input: 0.24,
+      output: 0.24,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_000,
+    description:
+      'GLM-Z1-9B-0414 是由 THUDM 开发的 GLM-4 系列中的 9B 参数语言模型。它采用了最初应用于更大 GLM-Z1 模型的技术，包括扩展强化学习、成对排名对齐以及对数学、代码和逻辑等推理密集型任务的训练。尽管其规模较小，但它在通用推理任务上表现出强大的性能，并在其权重级别中优于许多开源模型。',
+    displayName: 'GLM Z1 9B (Free)',
+    id: 'thudm/glm-z1-9b:free',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 32_000,
+    description:
+      'GLM-4-9B-0414 是 THUDM 开发的 GLM-4 系列中的 90 亿参数语言模型。GLM-4-9B-0414 使用与其较大的 32B 对应模型相同的强化学习和对齐策略进行训练，相对于其规模实现了高性能，使其适用于仍需要强大语言理解和生成能力的资源受限部署。',
+    displayName: 'GLM 4 9B (Free)',
+    id: 'thudm/glm-4-9b:free',
     type: 'chat',
   },
   {
