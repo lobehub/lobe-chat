@@ -54,11 +54,19 @@
         "placeholder": "예: mcp-hello-world",
         "required": "시작 매개변수를 입력하세요"
       },
+      "avatar": {
+        "label": "플러그인 아이콘"
+      },
       "command": {
         "desc": "MCP STDIO 서버를 시작하는 실행 파일 또는 스크립트",
         "label": "명령",
         "placeholder": "예: npx / uv / docker 등",
         "required": "시작 명령어를 입력하세요"
+      },
+      "desc": {
+        "desc": "플러그인에 대한 설명 추가",
+        "label": "플러그인 설명",
+        "placeholder": "이 플러그인의 사용 설명 및 상황 등의 정보를 추가하세요"
       },
       "endpoint": {
         "desc": "당신의 MCP 스트리밍 HTTP 서버 주소를 입력하세요",

@@ -54,11 +54,19 @@
         "placeholder": "Например: --port 8080 --debug",
         "required": "Моля, въведете параметри за стартиране"
       },
+      "avatar": {
+        "label": "Икона на плъгин"
+      },
       "command": {
         "desc": "Изпълним файл или скрипт за стартиране на MCP STDIO плъгин",
         "label": "Команда",
         "placeholder": "Например: python main.py или /path/to/executable",
         "required": "Моля, въведете команда за стартиране"
+      },
+      "desc": {
+        "desc": "Добавете описание на плъгина",
+        "label": "Описание на плъгина",
+        "placeholder": "Допълнителна информация за използването на плъгина и контекста му"
       },
       "endpoint": {
         "desc": "Въведете адреса на вашия MCP Streamable HTTP Server",

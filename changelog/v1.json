@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add Qwen3 models."]
+    },
+    "date": "2025-04-29",
+    "version": "1.84.5"
+  },
+  {
+    "children": {
       "improvements": ["Improve stdio mcp server install experience."]
     },
     "date": "2025-04-28",

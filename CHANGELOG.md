@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.84.5](https://github.com/lobehub/lobe-chat/compare/v1.84.4...v1.84.5)
+
+<sup>Released on **2025-04-29**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Qwen3 models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Qwen3 models, closes [#7628](https://github.com/lobehub/lobe-chat/issues/7628) ([da05f51](https://github.com/lobehub/lobe-chat/commit/da05f51))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.84.4](https://github.com/lobehub/lobe-chat/compare/v1.84.3...v1.84.4)
 
 <sup>Released on **2025-04-28**</sup>
