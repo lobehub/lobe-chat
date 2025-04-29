@@ -5,6 +5,7 @@ import { AIChatModelCard } from '@/types/aiModel';
 const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
@@ -20,14 +21,12 @@ const qwenChatModels: AIChatModelCard[] = [
       input: 4,
       output: 12,
     },
-    releasedAt: '2025-04-29',
-    settings: {
-      searchImpl: 'params',
-    },
+    releasedAt: '2025-04-28',
     type: 'chat',
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
@@ -43,14 +42,12 @@ const qwenChatModels: AIChatModelCard[] = [
       input: 2,
       output: 8,
     },
-    releasedAt: '2025-04-29',
-    settings: {
-      searchImpl: 'params',
-    },
+    releasedAt: '2025-04-28',
     type: 'chat',
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
@@ -66,14 +63,12 @@ const qwenChatModels: AIChatModelCard[] = [
       input: 1.5,
       output: 6,
     },
-    releasedAt: '2025-04-29',
-    settings: {
-      searchImpl: 'params',
-    },
+    releasedAt: '2025-04-28',
     type: 'chat',
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
@@ -88,14 +83,12 @@ const qwenChatModels: AIChatModelCard[] = [
       input: 1,
       output: 4,
     },
-    releasedAt: '2025-04-29',
-    settings: {
-      searchImpl: 'params',
-    },
+    releasedAt: '2025-04-28',
     type: 'chat',
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
@@ -110,14 +103,12 @@ const qwenChatModels: AIChatModelCard[] = [
       input: 0.5,
       output: 2,
     },
-    releasedAt: '2025-04-29',
-    settings: {
-      searchImpl: 'params',
-    },
+    releasedAt: '2025-04-28',
     type: 'chat',
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
@@ -132,14 +123,12 @@ const qwenChatModels: AIChatModelCard[] = [
       input: 0.3,
       output: 1.2,
     },
-    releasedAt: '2025-04-29',
-    settings: {
-      searchImpl: 'params',
-    },
+    releasedAt: '2025-04-28',
     type: 'chat',
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 32_768,
@@ -154,14 +143,12 @@ const qwenChatModels: AIChatModelCard[] = [
       input: 0.3,
       output: 1.2,
     },
-    releasedAt: '2025-04-29',
-    settings: {
-      searchImpl: 'params',
-    },
+    releasedAt: '2025-04-28',
     type: 'chat',
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 32_768,
@@ -176,15 +163,14 @@ const qwenChatModels: AIChatModelCard[] = [
       input: 0.3,
       output: 1.2,
     },
-    releasedAt: '2025-04-29',
-    settings: {
-      searchImpl: 'params',
-    },
+    releasedAt: '2025-04-28',
     type: 'chat',
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 131_072,
     description:
@@ -208,6 +194,7 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
       search: true,
     },
     contextWindowTokens: 1_000_000,
@@ -222,6 +209,7 @@ const qwenChatModels: AIChatModelCard[] = [
       input: 0.3,
       output: 0.6,
     },
+    releasedAt: '2025-04-28',
     settings: {
       searchImpl: 'params',
     },
@@ -230,6 +218,7 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
       search: true,
     },
     contextWindowTokens: 131_072,
@@ -244,6 +233,7 @@ const qwenChatModels: AIChatModelCard[] = [
       input: 0.8,
       output: 2,
     },
+    releasedAt: '2025-04-28',
     settings: {
       searchImpl: 'params',
     },
@@ -442,6 +432,7 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 131_072,
     description:
@@ -456,6 +447,9 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 6,
     },
     releasedAt: '2025-03-06',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
