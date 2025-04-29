@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "fixes": ["Fix custom provider and knowledge base crash."]
+    },
+    "date": "2025-04-29",
+    "version": "1.84.7"
+  },
+  {
+    "children": {
+      "improvements": ["Fix OpenRouter models config, improve mcp stdio custom field."]
+    },
+    "date": "2025-04-29",
+    "version": "1.84.6"
+  },
+  {
+    "children": {
       "improvements": ["Add Qwen3 models."]
     },
     "date": "2025-04-29",
