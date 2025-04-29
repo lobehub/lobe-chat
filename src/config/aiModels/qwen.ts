@@ -1,6 +1,6 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
-// https://help.aliyun.com/zh/model-studio/developer-reference/use-qwen-by-calling-api#e1fada1a719u7
+// https://help.aliyun.com/zh/model-studio/models?spm=a2c4g.11186623
 
 const qwenChatModels: AIChatModelCard[] = [
   {
@@ -19,7 +19,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 4,
-      output: 12, // Non-thinking mode pricing
+      output: 40, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -43,7 +43,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 2,
-      output: 8, // Non-thinking mode pricing
+      output: 20, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -67,7 +67,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 1.5,
-      output: 6, // Non-thinking mode pricing
+      output: 15, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -90,7 +90,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 1,
-      output: 4, // Non-thinking mode pricing
+      output: 10, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -113,7 +113,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 0.5,
-      output: 2, // Non-thinking mode pricing
+      output: 5, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -136,7 +136,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 0.3,
-      output: 1.2, // Non-thinking mode pricing
+      output: 3, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -159,7 +159,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 0.3,
-      output: 1.2, // Non-thinking mode pricing
+      output: 3, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -182,7 +182,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 0.3,
-      output: 1.2, // Non-thinking mode pricing
+      output: 3, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -231,7 +231,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 0.3,
-      output: 0.6,
+      output: 6, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -256,7 +256,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 0.8,
-      output: 2,
+      output: 16, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
