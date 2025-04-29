@@ -9,6 +9,185 @@ const qwenChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 131_072,
     description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 235B A22B',
+    enabled: true,
+    id: 'qwen3-235b-a22b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: { // Non-thinking mode pricing
+      currency: 'CNY',
+      input: 4,
+      output: 12,
+    },
+    releasedAt: '2025-04-29',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 32B',
+    enabled: true,
+    id: 'qwen3-32b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: { // Non-thinking mode pricing
+      currency: 'CNY',
+      input: 2,
+      output: 8,
+    },
+    releasedAt: '2025-04-29',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 30B',
+    enabled: true,
+    id: 'qwen3-30b-a3b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: { // Non-thinking mode pricing
+      currency: 'CNY',
+      input: 1.5,
+      output: 6,
+    },
+    releasedAt: '2025-04-29',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 14B',
+    id: 'qwen3-14b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: { // Non-thinking mode pricing
+      currency: 'CNY',
+      input: 1,
+      output: 4,
+    },
+    releasedAt: '2025-04-29',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 8B',
+    id: 'qwen3-8b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: { // Non-thinking mode pricing
+      currency: 'CNY',
+      input: 0.5,
+      output: 2,
+    },
+    releasedAt: '2025-04-29',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 4B',
+    id: 'qwen3-4b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: { // Non-thinking mode pricing
+      currency: 'CNY',
+      input: 0.3,
+      output: 1.2,
+    },
+    releasedAt: '2025-04-29',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 1.7B',
+    id: 'qwen3-1.7b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: { // Non-thinking mode pricing (assuming 0 input cost)
+      currency: 'CNY',
+      input: 0.3,
+      output: 1.2,
+    },
+    releasedAt: '2025-04-29',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 0.6B',
+    id: 'qwen3-0.6b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: { // Non-thinking mode pricing (assuming 0 input cost)
+      currency: 'CNY',
+      input: 0.3,
+      output: 1.2,
+    },
+    releasedAt: '2025-04-29',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
       '基于 Qwen2.5 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平。',
     displayName: 'QwQ Plus',
     enabled: true,
