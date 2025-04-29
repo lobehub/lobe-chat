@@ -1,5 +1,5 @@
-import { ActionIcon, Icon, copyToClipboard } from '@lobehub/ui';
-import { App, Dropdown } from 'antd';
+import { ActionIcon, Dropdown, Icon, copyToClipboard } from '@lobehub/ui';
+import { App } from 'antd';
 import { ItemType } from 'antd/es/menu/interface';
 import {
   BookMinusIcon,

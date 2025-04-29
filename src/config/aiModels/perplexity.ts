@@ -7,8 +7,7 @@ const perplexityChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 127_072,
-    description:
-      'Deep Research 进行全面的专家级研究，并将其综合成可访问、可作的报告。',
+    description: 'Deep Research 进行全面的专家级研究，并将其综合成可访问、可作的报告。',
     displayName: 'Sonar Deep Research',
     enabled: true,
     id: 'sonar-deep-research',

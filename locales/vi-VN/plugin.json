@@ -1,4 +1,5 @@
 {
+  "confirm": "Xác nhận",
   "debug": {
     "arguments": "Tham số gọi",
     "function_call": "Gọi hàm",
@@ -48,10 +49,13 @@
     },
     "mcp": {
       "args": {
-        "desc": "Danh sách tham số được truyền cho lệnh STDIO, thường nhập tên máy chủ MCP ở đây",
+        "desc": "Danh sách các tham số được truyền cho lệnh thực thi, thường nhập tên máy chủ MCP hoặc đường dẫn đến tập lệnh khởi động",
         "label": "Tham số lệnh",
         "placeholder": "Ví dụ: mcp-hello-world",
         "required": "Vui lòng nhập tham số khởi động"
+      },
+      "avatar": {
+        "label": "Biểu tượng tiện ích"
       },
       "command": {
         "desc": "Tập tin thực thi hoặc kịch bản dùng để khởi động Máy chủ MCP STDIO",
@@ -59,9 +63,23 @@
         "placeholder": "Ví dụ: npx / uv / docker v.v.",
         "required": "Vui lòng nhập lệnh khởi động"
       },
+      "desc": {
+        "desc": "Mô tả về tiện ích",
+        "label": "Mô tả tiện ích",
+        "placeholder": "Bổ sung thông tin về cách sử dụng và các tình huống của tiện ích này"
+      },
       "endpoint": {
         "desc": "Nhập địa chỉ của máy chủ HTTP Streamable MCP của bạn",
         "label": "URL Điểm cuối MCP"
+      },
+      "env": {
+        "add": "Thêm một dòng",
+        "desc": "Nhập các biến môi trường cần thiết cho máy chủ MCP của bạn",
+        "duplicateKeyError": "Khóa trường phải là duy nhất",
+        "formValidationFailed": "Xác thực biểu mẫu không thành công, vui lòng kiểm tra định dạng tham số",
+        "keyRequired": "Khóa trường không được để trống",
+        "label": "Biến môi trường máy chủ MCP",
+        "stringifyError": "Không thể tuần tự hóa tham số, vui lòng kiểm tra định dạng tham số"
       },
       "identifier": {
         "desc": "Chỉ định một tên cho plugin MCP của bạn, cần sử dụng ký tự tiếng Anh",
@@ -71,6 +89,13 @@
         "required": "Vui lòng nhập định danh dịch vụ MCP"
       },
       "previewManifest": "Xem trước tệp mô tả plugin",
+      "quickImport": "Nhập khẩu nhanh cấu hình JSON",
+      "quickImportError": {
+        "empty": "Nội dung nhập vào không được để trống",
+        "invalidJson": "Định dạng JSON không hợp lệ",
+        "invalidStructure": "Định dạng JSON không hợp lệ"
+      },
+      "stdioNotSupported": "Môi trường hiện tại không hỗ trợ plugin MCP loại stdio",
       "testConnection": "Kiểm tra kết nối",
       "testConnectionTip": "Chỉ sau khi kiểm tra kết nối thành công, plugin MCP mới có thể được sử dụng bình thường",
       "type": {
@@ -138,8 +163,18 @@
       "schema": "Schema"
     },
     "preview": {
+      "api": {
+        "noParams": "Công cụ này không có tham số",
+        "noResults": "Không tìm thấy API nào phù hợp với điều kiện tìm kiếm",
+        "params": "Tham số:",
+        "searchPlaceholder": "Tìm kiếm công cụ..."
+      },
       "card": "Xem trước hiệu ứng plugin",
       "desc": "Xem trước mô tả plugin",
+      "empty": {
+        "desc": "Sau khi hoàn thành cấu hình, bạn sẽ có thể xem trước khả năng của các công cụ hỗ trợ plugin tại đây",
+        "title": "Bắt đầu xem trước sau khi cấu hình plugin"
+      },
       "title": "Xem trước tên plugin"
     },
     "save": "Cài đặt plugin",

@@ -1,4 +1,4 @@
-import { ActionEvent, ActionIconGroup, type ActionIconGroupProps } from '@lobehub/ui';
+import { ActionIconGroup, type ActionIconGroupEvent, type ActionIconGroupProps } from '@lobehub/ui';
 import { App } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo, use, useCallback } from 'react';
@@ -19,9 +19,10 @@ const ActionsBar = memo<ActionsBarProps>((props) => {
 
   return (
     <ActionIconGroup
-      dropdownMenu={[edit, copy, regenerate, divider, del]}
       items={[regenerate, edit]}
-      type="ghost"
+      menu={{
+        items: [edit, copy, regenerate, divider, del],
+      }}
       {...props}
     />
   );
@@ -63,7 +64,7 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
   const virtuosoRef = use(VirtuosoContext);
 
   const handleActionClick = useCallback(
-    async (action: ActionEvent) => {
+    async (action: ActionIconGroupEvent) => {
       switch (action.key) {
         case 'edit': {
           toggleMessageEditing(id, true);

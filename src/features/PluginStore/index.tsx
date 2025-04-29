@@ -1,5 +1,4 @@
-import { Modal } from '@lobehub/ui';
-import { Segmented } from 'antd';
+import { Modal, Segmented } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -47,6 +46,7 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
           ]}
           style={{ flex: 1 }}
           value={listType}
+          variant={'filled'}
         />
         {listType === 'all' ? <OnlineList /> : <InstalledPluginList />}
       </Flexbox>

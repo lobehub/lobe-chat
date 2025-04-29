@@ -251,6 +251,12 @@ export class MacOSMenu extends BaseMenuPlatform implements IMenuPlatform {
             },
             label: '更新缓存目录',
           },
+          {
+            click: () => {
+              this.app.storeManager.openInEditor();
+            },
+            label: '打开 Settings 配置文件',
+          },
           { type: 'separator' },
           {
             label: '自动更新测试模拟',

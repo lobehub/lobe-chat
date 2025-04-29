@@ -4,17 +4,22 @@ dotenv.config();
 
 const packageJSON = require('./package.json');
 
-const channel = process.env.UPDATE_CHANNEL || 'stable';
+const channel = process.env.UPDATE_CHANNEL;
 
 console.log(`🚄 Build Version ${packageJSON.version}, Channel: ${channel}`);
 
 const isNightly = channel === 'nightly';
+const isBeta = channel === 'beta';
 /**
  * @type {import('electron-builder').Configuration}
  * @see https://www.electron.build/configuration
  */
 const config = {
-  appId: isNightly ? 'com.lobehub.lobehub-desktop-nightly' : 'com.lobehub.lobehub-desktop',
+  appId: isNightly
+    ? 'com.lobehub.lobehub-desktop-nightly'
+    : isBeta
+      ? 'com.lobehub.lobehub-desktop-beta'
+      : 'com.lobehub.lobehub-desktop',
   appImage: {
     artifactName: '${productName}-${version}.${ext}',
   },
@@ -63,10 +68,14 @@ const config = {
     gatekeeperAssess: false,
     hardenedRuntime: true,
     notarize: true,
-    target: [
-      { arch: ['x64', 'arm64'], target: 'dmg' },
-      { arch: ['x64', 'arm64'], target: 'zip' },
-    ],
+    target:
+      // 降低构建时间，nightly 只打 arm64
+      isNightly
+        ? [{ arch: ['arm64'], target: 'dmg' }]
+        : [
+            { arch: ['x64', 'arm64'], target: 'dmg' },
+            { arch: ['x64', 'arm64'], target: 'zip' },
+          ],
   },
   npmRebuild: true,
   nsis: {

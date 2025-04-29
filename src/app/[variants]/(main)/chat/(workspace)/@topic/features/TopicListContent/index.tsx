@@ -1,6 +1,6 @@
 'use client';
 
-import { EmptyCard } from '@lobehub/ui';
+import { GuideCard } from '@lobehub/ui';
 import { useThemeMode } from 'antd-style';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -48,16 +48,16 @@ const TopicListContent = memo(() => {
     <>
       {topicLength === 0 && visible && (
         <Flexbox paddingInline={8}>
-          <EmptyCard
+          <GuideCard
             alt={t('guide.desc')}
             cover={imageUrl(`empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`)}
-            desc={t('guide.desc')}
-            height={120}
-            imageProps={{
+            coverProps={{
               priority: true,
             }}
-            onVisibleChange={(visible) => {
-              updateGuideState({ topic: visible });
+            desc={t('guide.desc')}
+            height={120}
+            onClose={() => {
+              updateGuideState({ topic: false });
             }}
             style={{ flex: 'none', marginBottom: 12 }}
             title={t('guide.title')}

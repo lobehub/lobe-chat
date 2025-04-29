@@ -1,5 +1,8 @@
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+import {
+  StdioClientTransport,
+  getDefaultEnvironment,
+} from '@modelcontextprotocol/sdk/client/stdio.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.d.ts';
 import debug from 'debug';
@@ -24,9 +27,14 @@ export class MCPClient {
       }
       case 'stdio': {
         log('Using Stdio transport with command: %s and args: %O', params.command, params.args);
+
         this.transport = new StdioClientTransport({
           args: params.args,
           command: params.command,
+          env: {
+            ...getDefaultEnvironment(),
+            ...params.env,
+          },
         });
         break;
       }

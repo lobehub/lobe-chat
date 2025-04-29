@@ -1,6 +1,6 @@
 import { AudioPlayer } from '@lobehub/tts/react';
-import { Alert, Highlighter } from '@lobehub/ui';
-import { Button, RefSelectProps, Select, SelectProps } from 'antd';
+import { Alert, Button, Highlighter, Select, SelectProps } from '@lobehub/ui';
+import { RefSelectProps } from 'antd';
 import { useTheme } from 'antd-style';
 import { forwardRef, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -79,8 +79,11 @@ const SelectWithTTSPreview = forwardRef<RefSelectProps, SelectWithTTSPreviewProp
             allowPause={false}
             audio={audio}
             buttonActive
-            buttonSize={{ blockSize: 36, fontSize: 16 }}
-            buttonStyle={{ border: `1px solid ${theme.colorBorder}` }}
+            buttonSize={{ blockSize: 36, size: 16 }}
+            buttonStyle={{
+              background: theme.colorBgContainer,
+              border: `1px solid ${theme.colorBorder}`,
+            }}
             isLoading={isGlobalLoading}
             onInitPlay={start}
             onLoadingStop={stop}
@@ -101,7 +104,7 @@ const SelectWithTTSPreview = forwardRef<RefSelectProps, SelectWithTTSPreviewProp
             closable
             extra={
               error.body && (
-                <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
+                <Highlighter actionIconSize={'small'} language={'json'} variant={'borderless'}>
                   {JSON.stringify(error.body, null, 2)}
                 </Highlighter>
               )

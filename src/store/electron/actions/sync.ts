@@ -17,7 +17,6 @@ export interface ElectronRemoteServerAction {
   refreshServerConfig: () => Promise<void>;
   refreshUserData: () => Promise<void>;
   useDataSyncConfig: () => SWRResponse;
-  useRefreshDataWhenActive: (active?: boolean) => SWRResponse;
 }
 
 const REMOTE_SERVER_CONFIG_KEY = 'electron:getRemoteServerConfig';
@@ -29,7 +28,7 @@ export const remoteSyncSlice: StateCreator<
   ElectronRemoteServerAction
 > = (set, get) => ({
   connectRemoteServer: async (values) => {
-    if (!values.remoteServerUrl) return;
+    if (values.storageMode === 'selfHost' && !values.remoteServerUrl) return;
 
     set({ isConnectingServer: true });
     try {
@@ -109,14 +108,12 @@ export const remoteSyncSlice: StateCreator<
       },
       {
         onSuccess: (data) => {
+          if (!isEqual(data, get().dataSyncConfig)) {
+            get().refreshUserData();
+          }
+
           set({ dataSyncConfig: data, isInitRemoteServerConfig: true });
         },
       },
     ),
-  useRefreshDataWhenActive: (active) =>
-    useSWR(['refreshDataWhenActive', active], async () => {
-      if (!active) return;
-
-      await get().refreshUserData();
-    }),
 });

@@ -33,6 +33,9 @@ export const getServerGlobalConfig = async () => {
         enabledKey: 'ENABLED_GITEE_AI',
         modelListKey: 'GITEE_AI_MODEL_LIST',
       },
+      lmstudio: {
+        fetchOnClient: isDesktop ? false : undefined,
+      },
       /* ↓ cloud slot ↓ */
 
       /* ↑ cloud slot ↑ */

@@ -1,4 +1,5 @@
 {
+  "confirm": "Confirmar",
   "debug": {
     "arguments": "Argumentos de llamada",
     "function_call": "Llamada a función",
@@ -48,10 +49,13 @@
     },
     "mcp": {
       "args": {
-        "desc": "Lista de parámetros a pasar al comando STDIO",
+        "desc": "Lista de parámetros que se pasan al comando de ejecución, generalmente aquí se ingresa el nombre del servidor MCP o la ruta del script de inicio",
         "label": "Parámetros del comando",
         "placeholder": "Por ejemplo: --port 8080 --debug",
         "required": "Por favor, introduce los parámetros de inicio"
+      },
+      "avatar": {
+        "label": "Icono del complemento"
       },
       "command": {
         "desc": "Archivo ejecutable o script para iniciar el complemento MCP STDIO",
@@ -59,9 +63,23 @@
         "placeholder": "Por ejemplo: python main.py o /ruta/al/ejecutable",
         "required": "Por favor, introduce el comando de inicio"
       },
+      "desc": {
+        "desc": "Descripción del complemento",
+        "label": "Descripción del complemento",
+        "placeholder": "Proporcione información sobre el uso y los escenarios de este complemento"
+      },
       "endpoint": {
         "desc": "Ingresa la dirección de tu servidor HTTP Streamable MCP",
         "label": "URL del Endpoint MCP"
+      },
+      "env": {
+        "add": "Agregar una línea",
+        "desc": "Ingresa las variables de entorno necesarias para tu servidor MCP",
+        "duplicateKeyError": "La clave del campo debe ser única",
+        "formValidationFailed": "La validación del formulario falló, por favor verifica el formato de los parámetros",
+        "keyRequired": "La clave del campo no puede estar vacía",
+        "label": "Variables de entorno del servidor MCP",
+        "stringifyError": "No se puede serializar el parámetro, por favor verifica el formato de los parámetros"
       },
       "identifier": {
         "desc": "Especifica un nombre para tu complemento MCP, debe usar caracteres en inglés",
@@ -71,6 +89,13 @@
         "required": "Por favor, introduce el identificador del servicio MCP"
       },
       "previewManifest": "Previsualizar el archivo de descripción del complemento",
+      "quickImport": "Importar configuración JSON rápidamente",
+      "quickImportError": {
+        "empty": "El contenido de entrada no puede estar vacío",
+        "invalidJson": "Formato JSON no válido",
+        "invalidStructure": "Estructura JSON no válida"
+      },
+      "stdioNotSupported": "El entorno actual no admite el plugin MCP de tipo stdio",
       "testConnection": "Probar conexión",
       "testConnectionTip": "El complemento MCP solo se puede utilizar correctamente después de que la prueba de conexión sea exitosa",
       "type": {
@@ -138,8 +163,18 @@
       "schema": "Esquema"
     },
     "preview": {
+      "api": {
+        "noParams": "Esta herramienta no tiene parámetros",
+        "noResults": "No se encontraron API que cumplan con los criterios de búsqueda",
+        "params": "Parámetros:",
+        "searchPlaceholder": "Buscar herramienta..."
+      },
       "card": "Vista previa del efecto del complemento",
       "desc": "Vista previa de la descripción del complemento",
+      "empty": {
+        "desc": "Una vez completada la configuración, podrá previsualizar las capacidades de las herramientas soportadas por el plugin aquí",
+        "title": "Comience a previsualizar después de configurar el plugin"
+      },
       "title": "Vista previa del nombre del complemento"
     },
     "save": "Instalar complemento",

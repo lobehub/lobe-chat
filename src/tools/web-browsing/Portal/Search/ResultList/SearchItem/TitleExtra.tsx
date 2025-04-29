@@ -1,5 +1,5 @@
-import { Tooltip } from '@lobehub/ui';
-import { Tag, Typography } from 'antd';
+import { Tag, Tooltip } from '@lobehub/ui';
+import { Typography } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';

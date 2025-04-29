@@ -150,6 +150,7 @@
       "title": "Couleur de fond"
     },
     "description": {
+      "desc": "Une brève introduction à votre assistant, sans être une caractéristique de personnage",
       "placeholder": "Veuillez saisir la description de l'agent",
       "title": "Description de l'agent"
     },
@@ -161,7 +162,9 @@
       "placeholder": "Veuillez saisir le mot de prompt du rôle",
       "title": "Paramètre du rôle"
     },
+    "submit": "Mettre à jour les informations de l'assistant",
     "tag": {
+      "desc": "Les étiquettes de l'assistant seront affichées sur le marché des assistants",
       "placeholder": "Veuillez saisir l'étiquette",
       "title": "Étiquette"
     },
@@ -206,6 +209,7 @@
       "placeholder": "Le modèle de prétraitement {{text}} sera remplacé par les informations d'entrée en temps réel",
       "title": "Modèle de prétraitement de l'entrée utilisateur"
     },
+    "submit": "Mettre à jour les préférences de chat",
     "title": "Paramètres de chat"
   },
   "settingModel": {
@@ -243,6 +247,7 @@
       },
       "title": "Intensité de raisonnement"
     },
+    "submit": "Mettre à jour les paramètres du modèle",
     "temperature": {
       "desc": "Plus la valeur est élevée, plus les réponses sont créatives et imaginatives ; plus la valeur est basse, plus les réponses sont rigoureuses",
       "title": "Niveau de créativité",
@@ -319,6 +324,7 @@
       "desc": "Le service de reconnaissance vocale, où 'browser' est le service natif de reconnaissance vocale du navigateur",
       "title": "Service de reconnaissance vocale"
     },
+    "submit": "Mettre à jour le service vocal",
     "title": "Services vocaux",
     "tts": "Paramètres de synthèse vocale",
     "ttsService": {
@@ -396,6 +402,12 @@
     "placeholder": "Veuillez entrer l'identifiant de l'agent, qui doit être unique, par exemple développement-web",
     "tooltips": "Partager sur le marché des agents"
   },
+  "submitFooter": {
+    "reset": "Réinitialiser",
+    "submit": "Enregistrer",
+    "unSaved": "Modifications non enregistrées",
+    "unSavedWarning": "Il y a actuellement des modifications non enregistrées"
+  },
   "sync": {
     "device": {
       "deviceName": {
@@ -447,6 +459,7 @@
       "placeholder": "Veuillez entrer le mot-clé personnalisé",
       "title": "Mot-clé personnalisé"
     },
+    "helpInfo": "Lors de la création d'un nouvel assistant, les paramètres par défaut de l'assistant seront utilisés comme valeurs par défaut.",
     "historyCompress": {
       "label": "Modèle d'historique de conversation",
       "modelDesc": "Modèle utilisé pour compresser l'historique des conversations",
