@@ -1,8 +1,8 @@
-import { RemoteServerConfig } from '@lobechat/electron-client-ipc';
+import { DataSyncConfig } from '@lobechat/electron-client-ipc';
+import isEqual from 'fast-deep-equal';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
-import { INBOX_SESSION_ID } from '@/const/session';
 import { remoteServerService } from '@/services/electron/remoteServer';
 
 import { initialState } from '../initialState';
@@ -12,11 +12,11 @@ import type { ElectronStore } from '../store';
  * 设置操作
  */
 export interface ElectronRemoteServerAction {
-  connectRemoteServer: (params: { isSelfHosted: boolean; serverUrl?: string }) => Promise<void>;
+  connectRemoteServer: (params: DataSyncConfig) => Promise<void>;
   disconnectRemoteServer: () => Promise<void>;
   refreshServerConfig: () => Promise<void>;
   refreshUserData: () => Promise<void>;
-  useRemoteServerConfig: () => SWRResponse;
+  useDataSyncConfig: () => SWRResponse;
 }
 
 const REMOTE_SERVER_CONFIG_KEY = 'electron:getRemoteServerConfig';
@@ -28,7 +28,7 @@ export const remoteSyncSlice: StateCreator<
   ElectronRemoteServerAction
 > = (set, get) => ({
   connectRemoteServer: async (values) => {
-    if (!values.serverUrl) return;
+    if (values.storageMode === 'selfHost' && !values.remoteServerUrl) return;
 
     set({ isConnectingServer: true });
     try {
@@ -36,12 +36,12 @@ export const remoteSyncSlice: StateCreator<
       const config = await remoteServerService.getRemoteServerConfig();
 
       // 如果已经激活，需要先清除
-      if (config.active) {
-        await remoteServerService.clearRemoteServerConfig();
+      if (!isEqual(config, values)) {
+        await remoteServerService.setRemoteServerConfig({ ...values, active: false });
       }
 
       // 请求授权
-      const result = await remoteServerService.requestAuthorization(values.serverUrl);
+      const result = await remoteServerService.requestAuthorization(values);
 
       if (!result.success) {
         console.error('请求授权失败:', result.error);
@@ -65,9 +65,9 @@ export const remoteSyncSlice: StateCreator<
   disconnectRemoteServer: async () => {
     set({ isConnectingServer: false });
     try {
-      await remoteServerService.clearRemoteServerConfig();
+      await remoteServerService.setRemoteServerConfig({ active: false, storageMode: 'local' });
       // 更新表单URL为空
-      set({ remoteServerConfig: initialState.remoteServerConfig });
+      set({ dataSyncConfig: initialState.dataSyncConfig });
       // 刷新状态
       await get().refreshServerConfig();
     } catch (error) {
@@ -93,11 +93,10 @@ export const remoteSyncSlice: StateCreator<
     await getChatStoreState().refreshMessages();
     await getChatStoreState().refreshTopic();
     await getUserStoreState().refreshUserState();
-    getSessionStoreState().switchSession(INBOX_SESSION_ID);
   },
 
-  useRemoteServerConfig: () =>
-    useSWR<RemoteServerConfig>(
+  useDataSyncConfig: () =>
+    useSWR<DataSyncConfig>(
       REMOTE_SERVER_CONFIG_KEY,
       async () => {
         try {
@@ -109,12 +108,11 @@ export const remoteSyncSlice: StateCreator<
       },
       {
         onSuccess: (data) => {
-          console.log('remote server config:', data);
-          set({ isInitRemoteServerConfig: true, remoteServerConfig: data });
-
-          if (data.active) {
+          if (!isEqual(data, get().dataSyncConfig)) {
             get().refreshUserData();
           }
+
+          set({ dataSyncConfig: data, isInitRemoteServerConfig: true });
         },
       },
     ),

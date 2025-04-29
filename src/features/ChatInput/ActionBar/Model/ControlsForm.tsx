@@ -67,6 +67,7 @@ const ControlsForm = memo(() => {
         </span>
       ),
       label: t('extendParams.enableReasoning.title'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'enableReasoning',
     },
@@ -97,7 +98,7 @@ const ControlsForm = memo(() => {
       }}
       size={'small'}
       style={{ fontSize: 12 }}
-      variant={'pure'}
+      variant={'borderless'}
     />
   );
 });

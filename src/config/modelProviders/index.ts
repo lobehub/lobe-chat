@@ -155,7 +155,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   TaichuProvider,
   Ai360Provider,
   Search1APIProvider,
-  InfiniAIProvider
+  InfiniAIProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {

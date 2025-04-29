@@ -48,7 +48,7 @@ const UrlManifestForm = memo<{ form: FormInstance; isEditMode: boolean }>(
     return (
       <Form form={form} layout={'vertical'}>
         <FormItem
-          extra={
+          desc={
             <Flexbox horizontal justify={'space-between'} style={{ marginTop: 8 }}>
               {t('dev.meta.manifest.desc', { appName: BRANDING_NAME })}
               {manifest && (

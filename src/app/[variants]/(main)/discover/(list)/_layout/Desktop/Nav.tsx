@@ -1,12 +1,11 @@
 'use client';
 
-import { ChatHeader } from '@lobehub/ui/chat';
-import { Button } from 'antd';
+import { Tabs } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { rgba } from 'polished';
 import { memo, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { useQueryRoute } from '@/hooks/useQueryRoute';
@@ -16,27 +15,25 @@ import { MAX_WIDTH } from '../../../features/const';
 import { useNav } from '../../../features/useNav';
 import { useScroll } from './useScroll';
 
-export const useStyles = createStyles(({ css, token }) => ({
-  activeNavItem: css`
-    background: ${token.colorFillTertiary};
-  `,
-  container: css`
-    position: absolute;
-    z-index: 9;
-    inset-block-start: 64px;
-    inset-inline: 0 0;
+export const useStyles = createStyles(({ cx, stylish, css, token }) => ({
+  container: cx(
+    stylish.blur,
+    css`
+      position: absolute;
+      z-index: 9;
+      inset-block-start: 52px;
+      inset-inline: 0 0;
 
-    height: auto;
-    padding-block: 4px;
-    border-color: transparent;
+      padding-block: 4px;
+      border-block-end: 1px solid ${token.colorBorderSecondary};
 
-    transition: all 0.3s ${token.motionEaseInOut};
-  `,
+      background: ${rgba(token.colorBgContainerSecondary, 0.9)};
+
+      transition: all 0.3s ${token.motionEaseInOut};
+    `,
+  ),
   hide: css`
     transform: translateY(-150%);
-  `,
-  navItem: css`
-    font-weight: 500;
   `,
 }));
 
@@ -60,58 +57,37 @@ const Nav = memo(() => {
   const isHome = pathname === '/discover';
   const isProviders = pathname === '/discover/providers';
 
-  const navBar = items
-    .map((item: any) => {
-      const isActive = item.key === activeKey;
-
-      const href = item.key === DiscoverTab.Home ? '/discover' : urlJoin('/discover', item.key);
-
-      return (
-        <Link
-          href={href}
-          key={item.key}
-          onClick={(e) => {
-            e.preventDefault();
-            router.push(href);
-          }}
-        >
-          <Button
-            className={cx(styles.navItem, isActive && styles.activeNavItem)}
-            icon={item.icon}
-            type={'text'}
-          >
-            {item.label}
-          </Button>
-        </Link>
-      );
-    })
-    .filter(Boolean);
-
   return (
-    <ChatHeader
-      className={cx(styles.container, hide && styles.hide)}
-      styles={{
-        center: {
-          flex: 'none',
-          justifyContent: 'space-between',
+    <Center className={cx(styles.container, hide && styles.hide)} height={46}>
+      <Flexbox
+        style={{
           maxWidth: MAX_WIDTH,
           width: '100%',
-        },
-        left: { flex: 1 },
-        right: { flex: 1 },
-      }}
-    >
-      <Flexbox align={'center'} gap={4} horizontal>
-        {navBar}
-      </Flexbox>
-      {!isHome && !isProviders && (
+        }}
+      >
         <Flexbox align={'center'} gap={4} horizontal>
-          {/* ↓ cloud slot ↓ */}
-
-          {/* ↑ cloud slot ↑ */}
+          <Tabs
+            activeKey={activeKey}
+            compact
+            items={items as any}
+            onChange={(key) => {
+              const href = key === DiscoverTab.Home ? '/discover' : urlJoin('/discover', key);
+              router.push(href);
+            }}
+            style={{
+              fontWeight: 500,
+            }}
+          />
         </Flexbox>
-      )}
-    </ChatHeader>
+        {!isHome && !isProviders && (
+          <Flexbox align={'center'} gap={4} horizontal>
+            {/* ↓ cloud slot ↓ */}
+
+            {/* ↑ cloud slot ↑ */}
+          </Flexbox>
+        )}
+      </Flexbox>
+    </Center>
   );
 });
 

@@ -1,40 +1,33 @@
 'use client';
 
-import { useResponsive } from 'antd-style';
-import { usePathname } from 'next/navigation';
+import { useResponsive, useTheme } from 'antd-style';
 import { PropsWithChildren, ReactNode, memo } from 'react';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 interface SettingContainerProps extends FlexboxProps {
   addonAfter?: ReactNode;
   addonBefore?: ReactNode;
-
   maxWidth?: number;
+  variant?: 'default' | 'secondary';
 }
 const SettingContainer = memo<PropsWithChildren<SettingContainerProps>>(
-  ({
-    id = 'lobe-desktop-scroll-container',
-    maxWidth = 1024,
-    children,
-    addonAfter,
-    addonBefore,
-    style,
-    ...rest
-  }) => {
+  ({ variant, maxWidth = 1024, children, addonAfter, addonBefore, style, ...rest }) => {
     const { mobile = false } = useResponsive();
-    const pathname = usePathname();
 
-    const isProviderPath = pathname.startsWith('/settings/provider');
+    const theme = useTheme();
 
-    return isProviderPath ? (
-      children
-    ) : (
+    return (
       <Flexbox
         align={'center'}
         height={'100%'}
-        id={id}
         paddingBlock={mobile ? undefined : 32}
-        style={{ overflowX: 'hidden', overflowY: 'auto', ...style }}
+        style={{
+          background:
+            variant === 'secondary' ? theme.colorBgContainerSecondary : theme.colorBgContainer,
+          overflowX: 'hidden',
+          overflowY: 'auto',
+          ...style,
+        }}
         width={'100%'}
         {...rest}
       >

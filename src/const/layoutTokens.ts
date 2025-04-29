@@ -1,4 +1,4 @@
-import type { FormProps } from '@lobehub/ui';
+import type { ActionIconProps, FormProps } from '@lobehub/ui';
 
 export const HEADER_HEIGHT = 64;
 export const MOBILE_NABBAR_HEIGHT = 44;
@@ -19,8 +19,8 @@ export const FORM_STYLE: FormProps = {
   itemMinWidth: 'max(30%,240px)',
   style: { maxWidth: MAX_WIDTH, width: '100%' },
 };
-export const MOBILE_HEADER_ICON_SIZE = { blockSize: 36, fontSize: 22 };
-export const DESKTOP_HEADER_ICON_SIZE = { blockSize: 32, fontSize: 20 };
+export const MOBILE_HEADER_ICON_SIZE: ActionIconProps['size'] = { blockSize: 36, size: 22 };
+export const DESKTOP_HEADER_ICON_SIZE: ActionIconProps['size'] = { blockSize: 36, size: 22 };
 export const HEADER_ICON_SIZE = (mobile?: boolean) =>
   mobile ? MOBILE_HEADER_ICON_SIZE : DESKTOP_HEADER_ICON_SIZE;
 export const PWA_INSTALL_ID = 'pwa-install';

@@ -1,7 +1,7 @@
+import type { ChatModelCard } from '@/types/llm';
+
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
-
-import type { ChatModelCard } from '@/types/llm';
 
 export interface FireworksAIModelCard {
   context_length: number;
@@ -18,30 +18,27 @@ export const LobeFireworksAI = LobeOpenAICompatibleFactory({
   models: async ({ client }) => {
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-    const reasoningKeywords = [
-      'deepseek-r1',
-      'qwq',
-    ];
+    const reasoningKeywords = ['deepseek-r1', 'qwq'];
 
-    const modelsPage = await client.models.list() as any;
+    const modelsPage = (await client.models.list()) as any;
     const modelList: FireworksAIModelCard[] = modelsPage.data;
 
     return modelList
       .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.toLowerCase() === m.id.toLowerCase());
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+          (m) => model.id.toLowerCase() === m.id.toLowerCase(),
+        );
 
         return {
           contextWindowTokens: model.context_length,
           displayName: knownModel?.displayName ?? undefined,
           enabled: knownModel?.enabled || false,
-          functionCall:
-            model.supports_tools
-            || model.id.toLowerCase().includes('function'),
+          functionCall: model.supports_tools || model.id.toLowerCase().includes('function'),
           id: model.id,
           reasoning:
-            reasoningKeywords.some(keyword => model.id.toLowerCase().includes(keyword))
-            || knownModel?.abilities?.reasoning
-            || false,
+            reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
+            knownModel?.abilities?.reasoning ||
+            false,
           vision: model.supports_image_input,
         };
       })

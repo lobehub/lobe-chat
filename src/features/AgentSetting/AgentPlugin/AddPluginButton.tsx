@@ -1,5 +1,4 @@
-import { Icon } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Button } from '@lobehub/ui';
 import { PackagePlus } from 'lucide-react';
 import { forwardRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -33,7 +32,7 @@ const AddPluginButton = forwardRef<HTMLButtonElement>((props, ref) => {
         open={showModal}
       />
       <Button
-        icon={<Icon icon={PackagePlus} />}
+        icon={PackagePlus}
         onClick={() => {
           setModal(true);
         }}

@@ -1,7 +1,7 @@
 'use client';
 
-import { Form, type ItemGroup, SelectWithImg, SliderWithInput } from '@lobehub/ui';
-import { Select } from 'antd';
+import { Form, type FormGroupItemType, ImageSelect, SliderWithInput } from '@lobehub/ui';
+import { Select } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { memo } from 'react';
@@ -17,8 +17,6 @@ import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 
 import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from './ThemeSwatches';
-
-type SettingItemGroup = ItemGroup;
 
 const Theme = memo(() => {
   const { t } = useTranslation('setting');
@@ -36,11 +34,11 @@ const Theme = memo(() => {
     switchLocale(value);
   };
 
-  const theme: SettingItemGroup = {
+  const theme: FormGroupItemType = {
     children: [
       {
         children: (
-          <SelectWithImg
+          <ImageSelect
             height={60}
             onChange={setThemeMode}
             options={[
@@ -139,7 +137,7 @@ const Theme = memo(() => {
       items={[theme]}
       itemsType={'group'}
       onValuesChange={setSettings}
-      variant={'pure'}
+      variant={'borderless'}
       {...FORM_STYLE}
     />
   );

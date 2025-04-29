@@ -76,7 +76,7 @@ const FileItem = memo<FileItemProps>(
           fileType={type}
           isDirectory={isDirectory}
           size={16}
-          variant={'pure'}
+          variant={'raw'}
         />
         <Flexbox
           align={'baseline'}

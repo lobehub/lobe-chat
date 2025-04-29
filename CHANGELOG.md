@@ -2,6 +2,334 @@
 
 # Changelog
 
+### [Version 1.84.4](https://github.com/lobehub/lobe-chat/compare/v1.84.3...v1.84.4)
+
+<sup>Released on **2025-04-28**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve stdio mcp server install experience.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve stdio mcp server install experience, closes [#7621](https://github.com/lobehub/lobe-chat/issues/7621) ([177f7c2](https://github.com/lobehub/lobe-chat/commit/177f7c2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.84.3](https://github.com/lobehub/lobe-chat/compare/v1.84.2...v1.84.3)
+
+<sup>Released on **2025-04-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix mcp server stdio spawn ENOENT in electron bundle, Fix mobile agent settings and textarea scroll, Remove `gpt-4o-search-preview` unsupported parameters.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix mcp server stdio spawn ENOENT in electron bundle, closes [#7616](https://github.com/lobehub/lobe-chat/issues/7616) ([e85d59b](https://github.com/lobehub/lobe-chat/commit/e85d59b))
+- **misc**: Fix mobile agent settings and textarea scroll, closes [#7618](https://github.com/lobehub/lobe-chat/issues/7618) ([c45f2b0](https://github.com/lobehub/lobe-chat/commit/c45f2b0))
+- **misc**: Remove `gpt-4o-search-preview` unsupported parameters, closes [#7586](https://github.com/lobehub/lobe-chat/issues/7586) ([d2060ca](https://github.com/lobehub/lobe-chat/commit/d2060ca))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.84.2](https://github.com/lobehub/lobe-chat/compare/v1.84.1...v1.84.2)
+
+<sup>Released on **2025-04-28**</sup>
+
+#### 💄 Styles
+
+- **mcp**: Support stdio env params.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **mcp**: Support stdio env params, closes [#7613](https://github.com/lobehub/lobe-chat/issues/7613) ([14ce360](https://github.com/lobehub/lobe-chat/commit/14ce360))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.84.1](https://github.com/lobehub/lobe-chat/compare/v1.84.0...v1.84.1)
+
+<sup>Released on **2025-04-28**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve hotkey for delete messages.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve hotkey for delete messages, closes [#7599](https://github.com/lobehub/lobe-chat/issues/7599) ([af848fc](https://github.com/lobehub/lobe-chat/commit/af848fc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.84.0](https://github.com/lobehub/lobe-chat/compare/v1.83.8...v1.84.0)
+
+<sup>Released on **2025-04-28**</sup>
+
+#### ✨ Features
+
+- **misc**: Upgrade to lobe ui v2 with better design style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Upgrade to lobe ui v2 with better design style, closes [#7238](https://github.com/lobehub/lobe-chat/issues/7238) ([6913f70](https://github.com/lobehub/lobe-chat/commit/6913f70))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.83.8](https://github.com/lobehub/lobe-chat/compare/v1.83.7...v1.83.8)
+
+<sup>Released on **2025-04-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix cloud data sync.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix cloud data sync, closes [#7600](https://github.com/lobehub/lobe-chat/issues/7600) ([1214544](https://github.com/lobehub/lobe-chat/commit/1214544))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.83.7](https://github.com/lobehub/lobe-chat/compare/v1.83.6...v1.83.7)
+
+<sup>Released on **2025-04-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix `doubao-1-5-thinking-pro-vision` endpoint calling.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix `doubao-1-5-thinking-pro-vision` endpoint calling, closes [#7478](https://github.com/lobehub/lobe-chat/issues/7478) ([a52f7d6](https://github.com/lobehub/lobe-chat/commit/a52f7d6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.83.6](https://github.com/lobehub/lobe-chat/compare/v1.83.5...v1.83.6)
+
+<sup>Released on **2025-04-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix desktop cloud sync issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix desktop cloud sync issue, closes [#7591](https://github.com/lobehub/lobe-chat/issues/7591) ([1e68777](https://github.com/lobehub/lobe-chat/commit/1e68777))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.83.5](https://github.com/lobehub/lobe-chat/compare/v1.83.4...v1.83.5)
+
+<sup>Released on **2025-04-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix desktop beta redirect uris.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix desktop beta redirect uris, closes [#7589](https://github.com/lobehub/lobe-chat/issues/7589) ([9efdbf3](https://github.com/lobehub/lobe-chat/commit/9efdbf3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.83.4](https://github.com/lobehub/lobe-chat/compare/v1.83.3...v1.83.4)
+
+<sup>Released on **2025-04-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix cloud connection issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix cloud connection issue, closes [#7588](https://github.com/lobehub/lobe-chat/issues/7588) ([f572f57](https://github.com/lobehub/lobe-chat/commit/f572f57))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.83.3](https://github.com/lobehub/lobe-chat/compare/v1.83.2...v1.83.3)
+
+<sup>Released on **2025-04-27**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.83.2](https://github.com/lobehub/lobe-chat/compare/v1.83.1...v1.83.2)
+
+<sup>Released on **2025-04-27**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.83.1](https://github.com/lobehub/lobe-chat/compare/v1.83.0...v1.83.1)
+
+<sup>Released on **2025-04-27**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.83.0](https://github.com/lobehub/lobe-chat/compare/v1.82.10...v1.83.0)
+
+<sup>Released on **2025-04-27**</sup>
+
+#### ✨ Features
+
+- **misc**: Support desktop release framework and workflow.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support desktop release framework and workflow, closes [#6474](https://github.com/lobehub/lobe-chat/issues/6474) ([ed97363](https://github.com/lobehub/lobe-chat/commit/ed97363))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.82.10](https://github.com/lobehub/lobe-chat/compare/v1.82.9...v1.82.10)
 
 <sup>Released on **2025-04-26**</sup>

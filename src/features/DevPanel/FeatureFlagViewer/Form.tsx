@@ -78,7 +78,7 @@ const FeatureFlagForm = memo<{ flags: any }>(({ flags }) => {
           })}
           itemsType={'flat'}
           onValuesChange={(_, v) => setData(v)}
-          variant={'pure'}
+          variant={'borderless'}
         />
       </Flexbox>
       <Highlighter

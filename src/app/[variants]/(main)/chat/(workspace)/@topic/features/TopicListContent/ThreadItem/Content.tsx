@@ -1,5 +1,5 @@
-import { ActionIcon, EditableText, Icon } from '@lobehub/ui';
-import { App, Dropdown, type MenuProps, Typography } from 'antd';
+import { ActionIcon, Dropdown, EditableText, Icon, type MenuProps } from '@lobehub/ui';
+import { App, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { MoreVertical, PencilLine, Trash } from 'lucide-react';
 import { memo, useMemo } from 'react';
@@ -128,11 +128,7 @@ const Content = memo<TopicContentProps>(({ id, title, active, showMore }) => {
           }}
           onEditingChange={toggleEditing}
           showEditIcon={false}
-          size={'small'}
-          style={{
-            height: 28,
-          }}
-          type={'pure'}
+          style={{ height: 28 }}
           value={title}
         />
       )}

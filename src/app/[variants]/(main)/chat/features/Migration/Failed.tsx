@@ -1,5 +1,5 @@
-import { Alert, Highlighter, Icon } from '@lobehub/ui';
-import { Button, Popconfirm, Result } from 'antd';
+import { Alert, Button, Highlighter, Icon } from '@lobehub/ui';
+import { Popconfirm, Result } from 'antd';
 import { useTheme } from 'antd-style';
 import { createStore, del, get, set } from 'idb-keyval';
 import { ShieldAlert } from 'lucide-react';
@@ -44,7 +44,7 @@ const Failed = memo<FailedProps>(({ error, state, setUpgradeStatus, setError, up
           {!!error && (
             <Alert
               extra={
-                <Highlighter copyButtonSize={'small'} language={'json'}>
+                <Highlighter actionIconSize={'small'} language={'json'}>
                   {JSON.stringify(error)}
                 </Highlighter>
               }

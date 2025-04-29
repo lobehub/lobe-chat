@@ -1,7 +1,7 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
-import { Button, Result, Table } from 'antd';
+import { Button, Icon } from '@lobehub/ui';
+import { Result, Table } from 'antd';
 import { createStyles } from 'antd-style';
 import { CheckCircle } from 'lucide-react';
 import React, { memo } from 'react';

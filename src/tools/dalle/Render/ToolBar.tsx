@@ -1,4 +1,5 @@
-import { Button, Checkbox } from 'antd';
+import { Button } from '@lobehub/ui';
+import { Checkbox } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
