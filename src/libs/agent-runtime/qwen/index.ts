@@ -24,10 +24,11 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { model, presence_penalty, temperature, top_p, enabledSearch, ...rest } = payload;
+      const { model, presence_penalty, temperature, thinking, top_p, enabledSearch, ...rest } = payload;
 
       return {
         ...rest,
+        ...(thinking != null && { enable_thinking: thinking.type === 'enabled' }),
         frequency_penalty: undefined,
         model,
         presence_penalty: QwenLegacyModels.has(model)

@@ -22,6 +22,9 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 12,
     },
     releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -43,6 +46,9 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 8,
     },
     releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -64,6 +70,9 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 6,
     },
     releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -84,6 +93,9 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 4,
     },
     releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -104,6 +116,9 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 2,
     },
     releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -124,6 +139,9 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 1.2,
     },
     releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -144,6 +162,9 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 1.2,
     },
     releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -164,6 +185,9 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 1.2,
     },
     releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -211,6 +235,7 @@ const qwenChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-04-28',
     settings: {
+      extendParams: ['enableReasoning'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -235,6 +260,7 @@ const qwenChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-04-28',
     settings: {
+      extendParams: ['enableReasoning'],
       searchImpl: 'params',
     },
     type: 'chat',
