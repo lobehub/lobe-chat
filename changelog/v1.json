@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix stdio mcp server env issue."]
+    },
+    "date": "2025-04-29",
+    "version": "1.84.8"
+  },
+  {
+    "children": {
       "fixes": ["Fix custom provider and knowledge base crash."]
     },
     "date": "2025-04-29",

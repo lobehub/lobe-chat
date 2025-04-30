@@ -1,3 +1,4 @@
+import debug from 'debug';
 import { z } from 'zod';
 
 import { isServerMode } from '@/const/version';
@@ -5,9 +6,12 @@ import { passwordProcedure } from '@/libs/trpc/edge';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { mcpService } from '@/server/services/mcp';
 
+const log = debug('lobe-mcp:router');
+
 const stdioParamsSchema = z.object({
   args: z.array(z.string()).optional().default([]),
   command: z.string().min(1),
+  env: z.any().optional(),
   metadata: z
     .object({
       avatar: z.string().optional(),
@@ -22,10 +26,9 @@ const mcpProcedure = isServerMode ? authedProcedure : passwordProcedure;
 
 export const mcpRouter = router({
   getStdioMcpServerManifest: mcpProcedure.input(stdioParamsSchema).query(async ({ input }) => {
-    return await mcpService.getStdioMcpServerManifest(
-      { args: input.args, command: input.command, name: input.name },
-      input.metadata,
-    );
+    log('getStdioMcpServerManifest input: %O', input);
+
+    return await mcpService.getStdioMcpServerManifest(input, input.metadata);
   }),
 
   /* eslint-disable sort-keys-fix/sort-keys-fix */

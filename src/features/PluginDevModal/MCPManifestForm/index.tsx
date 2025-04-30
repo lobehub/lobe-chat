@@ -165,10 +165,10 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
       } else if (mcp.type === 'stdio') {
         if (!mcp.command) throw new Error(t('dev.mcp.command.required'));
         if (!mcp.args) throw new Error(t('dev.mcp.args.required'));
-        data = await mcpService.getStdioMcpServerManifest(id, mcp.command, mcp.args, {
-          avatar,
-          description,
-        });
+        data = await mcpService.getStdioMcpServerManifest(
+          { ...mcp, name: id },
+          { avatar, description },
+        );
       } else {
         throw new Error('Invalid MCP type'); // Internal error
       }

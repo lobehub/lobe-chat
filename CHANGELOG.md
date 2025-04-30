@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.84.8](https://github.com/lobehub/lobe-chat/compare/v1.84.7...v1.84.8)
+
+<sup>Released on **2025-04-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix stdio mcp server env issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix stdio mcp server env issue, closes [#7648](https://github.com/lobehub/lobe-chat/issues/7648) ([bad222a](https://github.com/lobehub/lobe-chat/commit/bad222a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.84.7](https://github.com/lobehub/lobe-chat/compare/v1.84.6...v1.84.7)
 
 <sup>Released on **2025-04-29**</sup>
