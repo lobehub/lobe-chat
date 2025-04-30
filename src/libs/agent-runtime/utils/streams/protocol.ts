@@ -308,8 +308,13 @@ export const createTokenSpeedCalculator = (
     // if the chunk is the first text or reasoning chunk, set as output start
     if (!outputStartAt && (chunk.type === 'text' || chunk.type === 'reasoning')) {
       outputStartAt = Date.now();
-      outputThinking = chunk.type === 'reasoning';
     }
+
+    /**
+     * 部分 provider 在正式输出 reasoning 前，可能会先输出 content 为空字符串的 chunk，
+     * 其中 reasoning 可能为 null，会导致判断是否输出思考内容错误，所以过滤掉 null 或者空字符串。
+     * 也可能是某些特殊 token，所以不修改 outputStartAt 的逻辑。
+     */
     if (
       outputThinking === undefined &&
       (chunk.type === 'text' || chunk.type === 'reasoning') &&
