@@ -24,14 +24,16 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { model, presence_penalty, temperature, thinking, top_p, enabledSearch, ...rest } = payload;
+      const { model, presence_penalty, temperature, thinking, top_p, enabledSearch, ...rest } =
+        payload;
 
       return {
         ...rest,
-        ...( ['qwen3','qwen-turbo','qwen-plus']
-          .some(keyword => model.toLowerCase().includes(keyword))
-        ? { enable_thinking: thinking !== undefined ? thinking.type === 'enabled' : false }
-        : {}),
+        ...(['qwen3', 'qwen-turbo', 'qwen-plus'].some((keyword) =>
+          model.toLowerCase().includes(keyword),
+        )
+          ? { enable_thinking: thinking !== undefined ? thinking.type === 'enabled' : false }
+          : {}),
         frequency_penalty: undefined,
         model,
         presence_penalty: QwenLegacyModels.has(model)
@@ -66,7 +68,10 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
         }),
       } as any;
     },
-    handleStream: QwenAIStream,
+    handleStream: (stream, callbacks) => {
+      const inputStartAt = Date.now();
+      return QwenAIStream(stream, callbacks, inputStartAt);
+    },
   },
   debug: {
     chatCompletion: () => process.env.DEBUG_QWEN_CHAT_COMPLETION === '1',
@@ -74,7 +79,16 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
   models: async ({ client }) => {
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-    const functionCallKeywords = ['qwen-max', 'qwen-plus', 'qwen-turbo', 'qwen-long', 'qwen1.5', 'qwen2', 'qwen2.5', 'qwen3'];
+    const functionCallKeywords = [
+      'qwen-max',
+      'qwen-plus',
+      'qwen-turbo',
+      'qwen-long',
+      'qwen1.5',
+      'qwen2',
+      'qwen2.5',
+      'qwen3',
+    ];
 
     const visionKeywords = ['qvq', 'vl'];
 
