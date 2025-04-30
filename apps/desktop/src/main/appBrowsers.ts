@@ -18,7 +18,6 @@ export const appBrowsers = {
     titleBarStyle: 'hidden',
     vibrancy: 'under-window',
     width: 1200,
-    devTools: true,
   },
   devtools: {
     autoHideMenuBar: true,
