@@ -15,17 +15,14 @@ class ElectronSystemService {
   }
 
   async closeWindow(): Promise<void> {
-    // Calls the underlying IPC function to get data from the main process
     return dispatch('closeWindow');
   }
 
   async maximizeWindow(): Promise<void> {
-    // Calls the underlying IPC function to get data from the main process
     return dispatch('maximizeWindow');
   }
 
   async minimizeWindow(): Promise<void> {
-    // Calls the underlying IPC function to get data from the main process
     return dispatch('minimizeWindow');
   }
 

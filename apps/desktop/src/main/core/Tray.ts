@@ -1,10 +1,17 @@
 import { MainBroadcastEventKey, MainBroadcastParams } from '@lobechat/electron-client-ipc';
-import { Menu, Tray as ElectronTray, app, nativeImage } from 'electron';
+import {
+  DisplayBalloonOptions,
+  Tray as ElectronTray,
+  Menu,
+  MenuItemConstructorOptions,
+  app,
+  nativeImage,
+} from 'electron';
 import { join } from 'node:path';
 
+import { resourcesDir } from '@/const/dir';
 import { createLogger } from '@/utils/logger';
 
-import { resourcesDir } from '../const/dir';
 import type { App } from './App';
 
 // 创建日志记录器
@@ -12,14 +19,14 @@ const logger = createLogger('core:Tray');
 
 export interface TrayOptions {
   /**
-   * 托盘标识符
-   */
-  identifier: string;
-  
-  /**
    * 托盘图标路径（相对于资源目录）
    */
   iconPath: string;
+
+  /**
+   * 托盘标识符
+   */
+  identifier: string;
 
   /**
    * 托盘提示文本
@@ -88,7 +95,7 @@ export default class Tray {
     try {
       const icon = nativeImage.createFromPath(iconFile);
       this._tray = new ElectronTray(icon);
-      
+
       // 设置工具提示
       if (tooltip) {
         logger.debug(`[${this.identifier}] 设置提示文本: ${tooltip}`);
@@ -116,25 +123,25 @@ export default class Tray {
    * 设置托盘上下文菜单
    * @param template 菜单模板，如果未提供则使用默认模板
    */
-  setContextMenu(template?: Electron.MenuItemConstructorOptions[]) {
+  setContextMenu(template?: MenuItemConstructorOptions[]) {
     logger.debug(`[${this.identifier}] 设置托盘上下文菜单`);
-    
+
     // 如果未提供模板，使用默认菜单
-    const defaultTemplate: Electron.MenuItemConstructorOptions[] = template || [
+    const defaultTemplate: MenuItemConstructorOptions[] = template || [
       {
-        label: '显示主窗口',
         click: () => {
           logger.debug(`[${this.identifier}] 菜单项 "显示主窗口" 被点击`);
           this.app.browserManager.showMainWindow();
         },
+        label: '显示主窗口',
       },
       { type: 'separator' },
       {
-        label: '退出',
         click: () => {
           logger.debug(`[${this.identifier}] 菜单项 "退出" 被点击`);
           app.quit();
         },
+        label: '退出',
       },
     ];
 
@@ -149,7 +156,7 @@ export default class Tray {
   onClick() {
     logger.debug(`[${this.identifier}] 处理托盘点击事件`);
     const mainWindow = this.app.browserManager.getMainWindow();
-    
+
     if (mainWindow) {
       if (mainWindow.browserWindow.isVisible() && mainWindow.browserWindow.isFocused()) {
         logger.debug(`[${this.identifier}] 主窗口已可见且聚焦，现在隐藏它`);
@@ -193,7 +200,7 @@ export default class Tray {
    * 显示气泡通知（仅在 Windows 上支持）
    * @param options 气泡选项
    */
-  displayBalloon(options: Electron.DisplayBalloonOptions) {
+  displayBalloon(options: DisplayBalloonOptions) {
     if (process.platform === 'win32' && this._tray) {
       logger.debug(`[${this.identifier}] 显示气泡通知: ${JSON.stringify(options)}`);
       this._tray.displayBalloon(options);
@@ -221,4 +228,4 @@ export default class Tray {
       this._tray = undefined;
     }
   }
-} 
+}

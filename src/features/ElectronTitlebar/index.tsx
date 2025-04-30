@@ -11,7 +11,6 @@ import { UpdateModal } from './UpdateModal';
 import { UpdateNotification } from './UpdateNotification';
 import WinControl from './WinControl';
 import { TITLE_BAR_HEIGHT } from './const';
-import { Square } from 'lucide-react';
 
 const isMac = isMacOS();
 
@@ -39,8 +38,12 @@ const TitleBar = memo(() => {
           <UpdateNotification />
           <Connection />
         </Flexbox>
-        <Divider type={'vertical'} />
-        {!isMac && <WinControl />}
+        {isMac && (
+          <>
+            <Divider type={'vertical'} />
+            <WinControl />
+          </>
+        )}
       </Flexbox>
       <UpdateModal />
     </Flexbox>

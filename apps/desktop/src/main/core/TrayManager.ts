@@ -1,5 +1,6 @@
 import { MainBroadcastEventKey, MainBroadcastParams } from '@lobechat/electron-client-ipc';
 
+import { name } from '@/../../package.json';
 import { createLogger } from '@/utils/logger';
 
 import type { App } from './App';
@@ -35,7 +36,7 @@ export default class TrayManager {
    */
   initializeTrays() {
     logger.debug('初始化应用托盘');
-    
+
     // 初始化主托盘
     this.initializeMainTray();
   }
@@ -52,13 +53,11 @@ export default class TrayManager {
    */
   initializeMainTray() {
     logger.debug('初始化主托盘');
-    const tray = this.retrieveOrInitialize({
-      identifier: 'main',
-      iconPath: 'icon.ico', // 使用应用图标，需要确保资源目录中有此文件
-      tooltip: 'LobeChat', // 可以使用 app.getName() 或本地化字符串
+    return this.retrieveOrInitialize({
+      iconPath: 'tray-icon.png',
+      identifier: 'main', // 使用应用图标，需要确保资源目录中有此文件
+      tooltip: name, // 可以使用 app.getName() 或本地化字符串
     });
-    
-    return tray;
   }
 
   /**
@@ -129,4 +128,4 @@ export default class TrayManager {
     });
     this.trays.clear();
   }
-} 
+}
