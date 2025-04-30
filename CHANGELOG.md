@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.84.9](https://github.com/lobehub/lobe-chat/compare/v1.84.8...v1.84.9)
+
+<sup>Released on **2025-04-30**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Embeddings Format Issue with OpenAI API when using Ollama.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Embeddings Format Issue with OpenAI API when using Ollama, closes [#7641](https://github.com/lobehub/lobe-chat/issues/7641) ([649fd82](https://github.com/lobehub/lobe-chat/commit/649fd82))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.84.8](https://github.com/lobehub/lobe-chat/compare/v1.84.7...v1.84.8)
 
 <sup>Released on **2025-04-29**</sup>
