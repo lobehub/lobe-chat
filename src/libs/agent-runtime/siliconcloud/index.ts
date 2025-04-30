@@ -40,8 +40,17 @@ export const LobeSiliconCloudAI = LobeOpenAICompatibleFactory({
       };
     },
     handlePayload: (payload) => {
+      const { model, thinking, ...rest } = payload;
+
       return {
-        ...payload,
+        ...rest,
+        ...( ['qwen3'].some(keyword => model.toLowerCase().includes(keyword))
+          ? { 
+            enable_thinking: thinking !== undefined ? thinking.type === 'enabled' : false,
+            thinking_budget: thinking?.budget_tokens === 0 ? 0 : (thinking?.budget_tokens || undefined),
+          }
+          : {}),
+        model,
         stream: !payload.tools,
       } as any;
     },
