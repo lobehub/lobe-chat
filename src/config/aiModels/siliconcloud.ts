@@ -5,13 +5,101 @@ import { AIChatModelCard } from '@/types/aiModel';
 const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 32B',
+    id: 'Qwen/Qwen3-32B',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.5,
+      output: 2,
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 30B A3B',
+    id: 'Qwen/Qwen3-30B-A3B',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.35,
+      output: 1.4,
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 14B',
+    id: 'Qwen/Qwen3-14B',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.25,
+      output: 1,
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 8B',
+    enabled: true,
+    id: 'Qwen/Qwen3-8B',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       reasoning: true,
     },
     contextWindowTokens: 32_768,
     description:
       'GLM-Z1-Rumination-32B-0414 是一个具有沉思能力的深度推理模型（与 OpenAI 的 Deep Research 对标）。与典型的深度思考模型不同，沉思模型采用更长时间的深度思考来解决更开放和复杂的问题。',
     displayName: 'GLM-Z1-Rumination 32B 0414',
-    enabled: true,
     id: 'THUDM/GLM-Z1-Rumination-32B-0414',
     pricing: {
       currency: 'CNY',
@@ -28,7 +116,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'GLM-Z1-32B-0414 是一个具有深度思考能力的推理模型。该模型基于 GLM-4-32B-0414 通过冷启动和扩展强化学习开发，并在数学、代码和逻辑任务上进行了进一步训练。与基础模型相比，GLM-Z1-32B-0414 显著提升了数学能力和解决复杂任务的能力。',
     displayName: 'GLM-Z1 32B 0414',
-    enabled: true,
     id: 'THUDM/GLM-Z1-32B-0414',
     pricing: {
       currency: 'CNY',
@@ -59,7 +146,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'GLM-4-32B-0414 是 GLM 系列的新一代开源模型，拥有 320 亿参数。该模型性能可与 OpenAI 的 GPT 系列和 DeepSeek 的 V3/R1 系列相媲美。',
     displayName: 'GLM-4 32B 0414',
-    enabled: true,
     id: 'THUDM/GLM-4-32B-0414',
     pricing: {
       currency: 'CNY',
@@ -91,7 +177,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'DeepSeek-R1 是一款强化学习（RL）驱动的推理模型，解决了模型中的重复性和可读性问题。在 RL 之前，DeepSeek-R1 引入了冷启动数据，进一步优化了推理性能。它在数学、代码和推理任务中与 OpenAI-o1 表现相当，并且通过精心设计的训练方法，提升了整体效果。',
     displayName: 'DeepSeek R1',
-    enabled: true,
     id: 'deepseek-ai/DeepSeek-R1',
     pricing: {
       currency: 'CNY',
@@ -108,7 +193,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。',
     displayName: 'DeepSeek V3',
-    enabled: true,
     id: 'deepseek-ai/DeepSeek-V3',
     pricing: {
       currency: 'CNY',
@@ -303,7 +387,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'QVQ-72B-Preview 是由 Qwen 团队开发的专注于视觉推理能力的研究型模型，其在复杂场景理解和解决视觉相关的数学问题方面具有独特优势。',
     displayName: 'QVQ 72B Preview',
-    enabled: true,
     id: 'Qwen/QVQ-72B-Preview',
     pricing: {
       currency: 'CNY',
@@ -320,7 +403,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'QwQ 是 Qwen 系列的推理模型。与传统的指令调优模型相比，QwQ 具备思考和推理能力，能够在下游任务中实现显著增强的性能，尤其是在解决困难问题方面。QwQ-32B 是中型推理模型，能够在与最先进的推理模型（如 DeepSeek-R1、o1-mini）的对比中取得有竞争力的性能。该模型采用 RoPE、SwiGLU、RMSNorm 和 Attention QKV bias 等技术，具有 64 层网络结构和 40 个 Q 注意力头（GQA 架构中 KV 为 8 个）。',
     displayName: 'QwQ 32B',
-    enabled: true,
     id: 'Qwen/QwQ-32B',
     pricing: {
       currency: 'CNY',
