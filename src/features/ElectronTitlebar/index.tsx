@@ -38,7 +38,7 @@ const TitleBar = memo(() => {
           <UpdateNotification />
           <Connection />
         </Flexbox>
-        {isMac && (
+        {!isMac && (
           <>
             <Divider type={'vertical'} />
             <WinControl />
