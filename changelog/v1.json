@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Embeddings Format Issue with OpenAI API when using Ollama."]
+    },
+    "date": "2025-04-30",
+    "version": "1.84.9"
+  },
+  {
+    "children": {
       "fixes": ["Fix stdio mcp server env issue."]
     },
     "date": "2025-04-29",
