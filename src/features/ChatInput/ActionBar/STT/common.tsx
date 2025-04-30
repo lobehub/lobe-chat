@@ -116,6 +116,7 @@ const CommonSTT = memo<{
           tooltipProps={{
             placement: 'bottom',
           }}
+          variant={mobile ? 'outlined' : 'borderless'}
         />
       </Dropdown>
     );

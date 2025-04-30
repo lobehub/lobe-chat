@@ -1841,6 +1841,33 @@
   "qwen/qwen2.5-coder-7b-instruct": {
     "description": "Mô hình mã mạnh mẽ cỡ trung, hỗ trợ độ dài ngữ cảnh 32K, xuất sắc trong lập trình đa ngôn ngữ."
   },
+  "qwen/qwen3-14b": {
+    "description": "Qwen3-14B là một mô hình ngôn ngữ nguyên nhân dày đặc với 14,8 tỷ tham số trong dòng Qwen3, được thiết kế cho suy luận phức tạp và đối thoại hiệu quả. Nó hỗ trợ chuyển đổi liền mạch giữa chế độ \"suy nghĩ\" cho các nhiệm vụ như toán học, lập trình và suy luận logic với chế độ \"không suy nghĩ\" cho đối thoại thông thường. Mô hình này đã được tinh chỉnh để sử dụng cho việc tuân theo chỉ dẫn, sử dụng công cụ đại lý, viết sáng tạo và các nhiệm vụ đa ngôn ngữ trên hơn 100 ngôn ngữ và phương ngữ. Nó xử lý ngữ cảnh 32K token một cách tự nhiên và có thể mở rộng lên 131K token bằng cách sử dụng mở rộng dựa trên YaRN."
+  },
+  "qwen/qwen3-14b:free": {
+    "description": "Qwen3-14B là một mô hình ngôn ngữ nguyên nhân dày đặc với 14,8 tỷ tham số trong dòng Qwen3, được thiết kế cho suy luận phức tạp và đối thoại hiệu quả. Nó hỗ trợ chuyển đổi liền mạch giữa chế độ \"suy nghĩ\" cho các nhiệm vụ như toán học, lập trình và suy luận logic với chế độ \"không suy nghĩ\" cho đối thoại thông thường. Mô hình này đã được tinh chỉnh để sử dụng cho việc tuân theo chỉ dẫn, sử dụng công cụ đại lý, viết sáng tạo và các nhiệm vụ đa ngôn ngữ trên hơn 100 ngôn ngữ và phương ngữ. Nó xử lý ngữ cảnh 32K token một cách tự nhiên và có thể mở rộng lên 131K token bằng cách sử dụng mở rộng dựa trên YaRN."
+  },
+  "qwen/qwen3-235b-a22b": {
+    "description": "Qwen3-235B-A22B là mô hình hỗn hợp chuyên gia (MoE) với 235B tham số được phát triển bởi Qwen, kích hoạt 22B tham số mỗi lần truyền tiến. Nó hỗ trợ chuyển đổi liền mạch giữa chế độ \"suy nghĩ\" cho suy luận phức tạp, toán học và các nhiệm vụ mã với chế độ \"không suy nghĩ\" cho hiệu suất đối thoại thông thường. Mô hình này thể hiện khả năng suy luận mạnh mẽ, hỗ trợ đa ngôn ngữ (hơn 100 ngôn ngữ và phương ngữ), tuân theo chỉ dẫn nâng cao và khả năng gọi công cụ đại lý. Nó xử lý cửa sổ ngữ cảnh 32K token một cách tự nhiên và có thể mở rộng lên 131K token bằng cách sử dụng mở rộng dựa trên YaRN."
+  },
+  "qwen/qwen3-235b-a22b:free": {
+    "description": "Qwen3-235B-A22B là mô hình hỗn hợp chuyên gia (MoE) với 235B tham số được phát triển bởi Qwen, kích hoạt 22B tham số mỗi lần truyền tiến. Nó hỗ trợ chuyển đổi liền mạch giữa chế độ \"suy nghĩ\" cho suy luận phức tạp, toán học và các nhiệm vụ mã với chế độ \"không suy nghĩ\" cho hiệu suất đối thoại thông thường. Mô hình này thể hiện khả năng suy luận mạnh mẽ, hỗ trợ đa ngôn ngữ (hơn 100 ngôn ngữ và phương ngữ), tuân theo chỉ dẫn nâng cao và khả năng gọi công cụ đại lý. Nó xử lý cửa sổ ngữ cảnh 32K token một cách tự nhiên và có thể mở rộng lên 131K token bằng cách sử dụng mở rộng dựa trên YaRN."
+  },
+  "qwen/qwen3-30b-a3b": {
+    "description": "Qwen3 là thế hệ mới nhất trong dòng mô hình ngôn ngữ lớn Qwen, với kiến trúc hỗn hợp chuyên gia (MoE) dày đặc, thể hiện xuất sắc trong suy luận, hỗ trợ đa ngôn ngữ và các nhiệm vụ đại lý nâng cao. Khả năng chuyển đổi liền mạch giữa chế độ suy nghĩ cho suy luận phức tạp và chế độ không suy nghĩ cho đối thoại hiệu quả đảm bảo hiệu suất đa chức năng và chất lượng cao.\n\nQwen3 vượt trội hơn hẳn các mô hình trước như QwQ và Qwen2.5, cung cấp khả năng toán học, lập trình, suy luận thông thường, viết sáng tạo và đối thoại tương tác xuất sắc. Biến thể Qwen3-30B-A3B chứa 30,5 tỷ tham số (3,3 tỷ tham số kích hoạt), 48 lớp, 128 chuyên gia (mỗi nhiệm vụ kích hoạt 8), và hỗ trợ ngữ cảnh lên đến 131K token (sử dụng YaRN), thiết lập tiêu chuẩn mới cho các mô hình mã nguồn mở."
+  },
+  "qwen/qwen3-30b-a3b:free": {
+    "description": "Qwen3 là thế hệ mới nhất trong dòng mô hình ngôn ngữ lớn Qwen, với kiến trúc hỗn hợp chuyên gia (MoE) dày đặc, thể hiện xuất sắc trong suy luận, hỗ trợ đa ngôn ngữ và các nhiệm vụ đại lý nâng cao. Khả năng chuyển đổi liền mạch giữa chế độ suy nghĩ cho suy luận phức tạp và chế độ không suy nghĩ cho đối thoại hiệu quả đảm bảo hiệu suất đa chức năng và chất lượng cao.\n\nQwen3 vượt trội hơn hẳn các mô hình trước như QwQ và Qwen2.5, cung cấp khả năng toán học, lập trình, suy luận thông thường, viết sáng tạo và đối thoại tương tác xuất sắc. Biến thể Qwen3-30B-A3B chứa 30,5 tỷ tham số (3,3 tỷ tham số kích hoạt), 48 lớp, 128 chuyên gia (mỗi nhiệm vụ kích hoạt 8), và hỗ trợ ngữ cảnh lên đến 131K token (sử dụng YaRN), thiết lập tiêu chuẩn mới cho các mô hình mã nguồn mở."
+  },
+  "qwen/qwen3-32b": {
+    "description": "Qwen3-32B là một mô hình ngôn ngữ nguyên nhân dày đặc với 32,8 tỷ tham số trong dòng Qwen3, được tối ưu hóa cho suy luận phức tạp và đối thoại hiệu quả. Nó hỗ trợ chuyển đổi liền mạch giữa chế độ \"suy nghĩ\" cho các nhiệm vụ như toán học, lập trình và suy luận logic với chế độ \"không suy nghĩ\" cho đối thoại nhanh hơn và thông thường. Mô hình này thể hiện hiệu suất mạnh mẽ trong việc tuân theo chỉ dẫn, sử dụng công cụ đại lý, viết sáng tạo và các nhiệm vụ đa ngôn ngữ trên hơn 100 ngôn ngữ và phương ngữ. Nó xử lý ngữ cảnh 32K token một cách tự nhiên và có thể mở rộng lên 131K token bằng cách sử dụng mở rộng dựa trên YaRN."
+  },
+  "qwen/qwen3-32b:free": {
+    "description": "Qwen3-32B là một mô hình ngôn ngữ nguyên nhân dày đặc với 32,8 tỷ tham số trong dòng Qwen3, được tối ưu hóa cho suy luận phức tạp và đối thoại hiệu quả. Nó hỗ trợ chuyển đổi liền mạch giữa chế độ \"suy nghĩ\" cho các nhiệm vụ như toán học, lập trình và suy luận logic với chế độ \"không suy nghĩ\" cho đối thoại nhanh hơn và thông thường. Mô hình này thể hiện hiệu suất mạnh mẽ trong việc tuân theo chỉ dẫn, sử dụng công cụ đại lý, viết sáng tạo và các nhiệm vụ đa ngôn ngữ trên hơn 100 ngôn ngữ và phương ngữ. Nó xử lý ngữ cảnh 32K token một cách tự nhiên và có thể mở rộng lên 131K token bằng cách sử dụng mở rộng dựa trên YaRN."
+  },
+  "qwen/qwen3-8b:free": {
+    "description": "Qwen3-8B là một mô hình ngôn ngữ nguyên nhân dày đặc với 8,2 tỷ tham số trong dòng Qwen3, được thiết kế cho các nhiệm vụ yêu cầu suy luận dày đặc và đối thoại hiệu quả. Nó hỗ trợ chuyển đổi liền mạch giữa chế độ \"suy nghĩ\" cho toán học, lập trình và suy luận logic với chế độ \"không suy nghĩ\" cho đối thoại thông thường. Mô hình này đã được tinh chỉnh để sử dụng cho việc tuân theo chỉ dẫn, tích hợp đại lý, viết sáng tạo và sử dụng đa ngôn ngữ trên hơn 100 ngôn ngữ và phương ngữ. Nó hỗ trợ cửa sổ ngữ cảnh 32K token và có thể mở rộng lên 131K token thông qua YaRN."
+  },
   "qwen2": {
     "description": "Qwen2 là mô hình ngôn ngữ quy mô lớn thế hệ mới của Alibaba, hỗ trợ các nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
   },
@@ -1924,6 +1951,30 @@
   },
   "qwen2:72b": {
     "description": "Qwen2 là mô hình ngôn ngữ quy mô lớn thế hệ mới của Alibaba, hỗ trợ các nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
+  },
+  "qwen3-0.6b": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "qwen3-1.7b": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "qwen3-14b": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "qwen3-235b-a22b": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "qwen3-30b-a3b": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "qwen3-32b": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "qwen3-4b": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "qwen3-8b": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
   },
   "qwq": {
     "description": "QwQ là một mô hình nghiên cứu thử nghiệm, tập trung vào việc nâng cao khả năng suy luận của AI."
@@ -2026,6 +2077,18 @@
   },
   "thudm/glm-4-9b-chat": {
     "description": "Phiên bản mã nguồn mở của thế hệ mô hình tiền huấn luyện GLM-4 mới nhất được phát hành bởi Zhiyu AI."
+  },
+  "thudm/glm-4-9b:free": {
+    "description": "GLM-4-9B-0414 là mô hình ngôn ngữ 9 tỷ tham số trong dòng GLM-4 được phát triển bởi THUDM. GLM-4-9B-0414 sử dụng cùng một chiến lược học tăng cường và căn chỉnh như mô hình tương ứng lớn hơn 32B, đạt được hiệu suất cao so với quy mô của nó, khiến nó phù hợp cho các triển khai hạn chế tài nguyên nhưng vẫn cần khả năng hiểu và tạo ngôn ngữ mạnh mẽ."
+  },
+  "thudm/glm-z1-9b:free": {
+    "description": "GLM-Z1-9B-0414 là mô hình ngôn ngữ 9B trong dòng GLM-4 được phát triển bởi THUDM. Nó áp dụng các kỹ thuật ban đầu được sử dụng cho mô hình GLM-Z1 lớn hơn, bao gồm học tăng cường mở rộng, căn chỉnh xếp hạng cặp và đào tạo cho các nhiệm vụ yêu cầu suy luận dày đặc như toán học, mã và logic. Mặc dù quy mô nhỏ hơn, nhưng nó thể hiện hiệu suất mạnh mẽ trong các nhiệm vụ suy luận tổng quát và vượt trội hơn nhiều mô hình mã nguồn mở ở cấp độ trọng số của nó."
+  },
+  "thudm/glm-z1-rumination-32b": {
+    "description": "THUDM: GLM Z1 Rumination 32B là mô hình suy luận sâu với 32B tham số trong dòng GLM-4-Z1, được tối ưu hóa cho các nhiệm vụ phức tạp, mở cần suy nghĩ lâu dài. Nó được xây dựng trên nền tảng glm-4-32b-0414, tăng cường thêm giai đoạn học tăng cường và chiến lược căn chỉnh đa giai đoạn, giới thiệu khả năng \"phản tư\" nhằm mô phỏng quá trình xử lý nhận thức mở rộng. Điều này bao gồm suy luận lặp đi lặp lại, phân tích đa bước và quy trình làm việc tăng cường công cụ như tìm kiếm, truy xuất và tổng hợp nhận thức trích dẫn.\n\nMô hình này thể hiện xuất sắc trong viết nghiên cứu, phân tích so sánh và câu hỏi phức tạp. Nó hỗ trợ gọi hàm cho các nguyên ngữ tìm kiếm và điều hướng (`search`, `click`, `open`, `finish`), cho phép sử dụng trong quy trình đại lý. Hành vi phản tư được hình thành bởi các phần thưởng dựa trên quy tắc và cơ chế quyết định trì hoãn trong kiểm soát vòng lặp đa vòng, và được chuẩn hóa theo các khung nghiên cứu sâu như ngăn xếp căn chỉnh nội bộ của OpenAI. Biến thể này phù hợp cho các tình huống cần độ sâu hơn là tốc độ."
+  },
+  "tngtech/deepseek-r1t-chimera:free": {
+    "description": "DeepSeek-R1T-Chimera được tạo ra bằng cách kết hợp DeepSeek-R1 và DeepSeek-V3 (0324), kết hợp khả năng suy luận của R1 và cải tiến hiệu quả token của V3. Nó dựa trên kiến trúc DeepSeek-MoE Transformer và được tối ưu hóa cho các nhiệm vụ tạo văn bản tổng quát.\n\nMô hình này kết hợp trọng số tiền huấn luyện của hai mô hình nguồn để cân bằng hiệu suất trong suy luận, hiệu quả và các nhiệm vụ tuân theo chỉ dẫn. Nó được phát hành theo giấy phép MIT, nhằm mục đích sử dụng cho nghiên cứu và thương mại."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) cung cấp khả năng tính toán nâng cao thông qua chiến lược và kiến trúc mô hình hiệu quả."
