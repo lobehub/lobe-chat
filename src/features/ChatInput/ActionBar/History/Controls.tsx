@@ -60,6 +60,11 @@ const Controls = memo<ControlsProps>(({ updating, setUpdating }) => {
         await updateAgentConfig(values);
         setUpdating(false);
       }, 500)}
+      styles={{
+        group: {
+          background: 'transparent',
+        },
+      }}
     />
   );
 });

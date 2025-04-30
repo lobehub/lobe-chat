@@ -1,7 +1,7 @@
 'use client';
 
-import { ActionIcon, type ActionIconProps, Drawer, Icon, Menu } from '@lobehub/ui';
-import { Loader2Icon } from 'lucide-react';
+import { ActionIcon, type ActionIconProps } from '@lobehub/ui';
+import { isUndefined } from 'lodash-es';
 import { memo } from 'react';
 import useMergeState from 'use-merge-value';
 
@@ -44,7 +44,9 @@ const Action = memo<ActionProps>(
         icon={icon}
         loading={loading}
         onClick={() => setShow(true)}
-        title={!showTooltip || mobile ? undefined : title}
+        title={
+          isUndefined(showTooltip) ? (mobile ? undefined : title) : showTooltip ? title : undefined
+        }
         tooltipProps={{
           placement: 'bottom',
         }}
@@ -54,39 +56,29 @@ const Action = memo<ActionProps>(
 
     if (disabled) return iconNode;
 
-    if (mobile)
-      return (
-        <>
-          {iconNode}
-          <Drawer
-            extra={loading && <Icon icon={Loader2Icon} spin />}
-            height={'auto'}
-            onClose={() => setShow(false)}
-            open={show}
-            placement={'bottom'}
-            styles={{
-              body: {
-                paddingInline: 0,
-                ...popover?.styles?.body,
-              },
-            }}
-            title={title}
-          >
-            {dropdown?.menu && <Menu mode={'inline'} {...dropdown?.menu} />}
-            {popover && popover?.content}
-          </Drawer>
-        </>
-      );
-
     if (dropdown)
       return (
-        <ActionDropdown onOpenChange={setShow} open={show} trigger={trigger} {...dropdown}>
+        <ActionDropdown
+          onOpenChange={setShow}
+          open={show}
+          trigger={trigger}
+          {...dropdown}
+          minWidth={mobile ? '100%' : dropdown.minWidth}
+          placement={mobile ? 'top' : dropdown.placement}
+        >
           {iconNode}
         </ActionDropdown>
       );
     if (popover)
       return (
-        <ActionPopover onOpenChange={setShow} open={show} trigger={trigger} {...popover}>
+        <ActionPopover
+          onOpenChange={setShow}
+          open={show}
+          trigger={trigger}
+          {...popover}
+          minWidth={mobile ? '100%' : popover.minWidth}
+          placement={mobile ? 'top' : popover.placement}
+        >
           {iconNode}
         </ActionPopover>
       );

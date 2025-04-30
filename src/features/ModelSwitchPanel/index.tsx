@@ -1,13 +1,12 @@
-import { ActionIcon, Drawer, Icon, Menu } from '@lobehub/ui';
+import { ActionIcon, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import type { ItemType } from 'antd/es/menu/interface';
-import { Loader2Icon, LucideArrowRight, LucideBolt } from 'lucide-react';
+import { LucideArrowRight, LucideBolt } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { PropsWithChildren, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import useMergeState from 'use-merge-value';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
 import { isDeprecatedEdition } from '@/const/version';
@@ -48,14 +47,9 @@ const ModelSwitchPanel = memo<
     setUpdating?: (updating: boolean) => void;
     updating?: boolean;
   }>
->(({ children, updating, setUpdating, onOpenChange, open }) => {
+>(({ children, setUpdating, onOpenChange, open }) => {
   const { t } = useTranslation('components');
-  const [show, setShow] = useMergeState(false, {
-    onChange: onOpenChange,
-    value: open,
-  });
   const { styles, theme } = useStyles();
-  const mobile = useServerConfigStore((s) => s.isMobile);
   const [model, provider, updateAgentConfig] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
     agentSelectors.currentAgentModelProvider(s),
@@ -144,38 +138,7 @@ const ModelSwitchPanel = memo<
     }));
   }, [enabledList]);
 
-  const icon = (
-    <div className={styles.tag} onClick={() => setShow(true)}>
-      {children}
-    </div>
-  );
-
-  if (mobile)
-    return (
-      <>
-        {icon}
-        <Drawer
-          extra={updating && <Icon icon={Loader2Icon} spin />}
-          height={'66vh'}
-          onClose={() => setShow(false)}
-          open={show}
-          placement={'bottom'}
-          styles={{
-            body: {
-              paddingInline: 0,
-            },
-          }}
-          title={t('ModelSwitchPanel.title')}
-        >
-          <Menu
-            activeKey={menuKey(provider, model)}
-            className={styles.menu}
-            items={items}
-            mode={'inline'}
-          />
-        </Drawer>
-      </>
-    );
+  const icon = <div className={styles.tag}>{children}</div>;
 
   return (
     <ActionDropdown
@@ -190,8 +153,8 @@ const ModelSwitchPanel = memo<
           overflowY: 'scroll',
         },
       }}
-      onOpenChange={setShow}
-      open={show}
+      onOpenChange={onOpenChange}
+      open={open}
       placement={'topLeft'}
     >
       {icon}

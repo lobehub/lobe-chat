@@ -24,7 +24,8 @@ const Tools = memo(() => {
   const enableFC = useModelSupportToolUse(model, provider);
 
   if (!enablePlugins) return null;
-  if (!enableFC) return <Action disabled icon={Blocks} title={t('tools.disabled')} />;
+  if (!enableFC)
+    return <Action disabled icon={Blocks} showTooltip={true} title={t('tools.disabled')} />;
 
   return (
     <Suspense fallback={<Action disabled icon={Blocks} title={t('tools.title')} />}>

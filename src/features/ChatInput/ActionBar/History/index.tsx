@@ -20,14 +20,14 @@ const History = memo(() => {
     ];
   });
 
+  if (isLoading) return <Action disabled icon={TimerOff} />;
+
   const title = t(
     enableHistoryCount
       ? 'settingChat.enableHistoryCount.limited'
       : 'settingChat.enableHistoryCount.unlimited',
     { number: historyCount || 0 },
   );
-
-  if (isLoading) return <Action disabled icon={TimerOff} />;
 
   return (
     <Action

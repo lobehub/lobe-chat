@@ -33,6 +33,7 @@ const Knowledge = memo(() => {
       <Action
         disabled
         icon={LibraryBig}
+        showTooltip={true}
         title={t('knowledgeBase.disabled', { cloud: LOBE_CHAT_CLOUD })}
       />
     );

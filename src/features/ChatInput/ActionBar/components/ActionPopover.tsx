@@ -25,9 +25,9 @@ export interface ActionPopoverProps extends Omit<PopoverProps, 'title' | 'conten
   content?: ReactNode;
   extra?: ReactNode;
   loading?: boolean;
-  maxHeight?: number;
-  maxWidth?: number;
-  minWidth?: number;
+  maxHeight?: number | string;
+  maxWidth?: number | string;
+  minWidth?: number | string;
   title?: ReactNode;
 }
 
