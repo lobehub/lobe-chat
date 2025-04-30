@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "improvements": [
+        "Add Gemini 2.5 Pro Experimental model, Add siliconflow Qwen3 & support thinking params, Arrange model tags neatly, Update mobile style and fix issues problem, update ollama checker."
+      ]
+    },
+    "date": "2025-04-30",
+    "version": "1.84.10"
+  },
+  {
+    "children": {
       "fixes": ["Embeddings Format Issue with OpenAI API when using Ollama."]
     },
     "date": "2025-04-30",
