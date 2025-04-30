@@ -18,6 +18,7 @@ import { IoCContainer } from './IoCContainer';
 import MenuManager from './MenuManager';
 import { ShortcutManager } from './ShortcutManager';
 import { StoreManager } from './StoreManager';
+import TrayManager from './TrayManager';
 import { UpdaterManager } from './UpdaterManager';
 
 const logger = createLogger('core:App');
@@ -38,6 +39,7 @@ export class App {
   storeManager: StoreManager;
   updaterManager: UpdaterManager;
   shortcutManager: ShortcutManager;
+  trayManager: TrayManager;
 
   /**
    * whether app is in quiting
@@ -92,6 +94,7 @@ export class App {
     this.menuManager = new MenuManager(this);
     this.updaterManager = new UpdaterManager(this);
     this.shortcutManager = new ShortcutManager(this);
+    this.trayManager = new TrayManager(this);
 
     // register the schema to interceptor url
     // it should register before app ready
@@ -129,6 +132,11 @@ export class App {
     this.shortcutManager.initialize();
 
     this.browserManager.initializeBrowsers();
+
+    // Initialize tray manager
+    if (process.platform === 'win32') {
+      this.trayManager.initializeTrays();
+    }
 
     // Initialize updater manager
     await this.updaterManager.initialize();
@@ -370,7 +378,13 @@ export class App {
 
   // 新增 before-quit 处理函数
   private handleBeforeQuit = () => {
-    this.isQuiting = true; // 首先设置标志
+    logger.info('Application is preparing to quit');
+    this.isQuiting = true;
+
+    // 销毁托盘
+    if (process.platform === 'win32') {
+      this.trayManager.destroyAll();
+    }
 
     // 执行清理操作
     this.unregisterAllRequestHandlers();
