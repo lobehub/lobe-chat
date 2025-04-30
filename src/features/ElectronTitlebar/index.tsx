@@ -11,6 +11,7 @@ import { UpdateModal } from './UpdateModal';
 import { UpdateNotification } from './UpdateNotification';
 import WinControl from './WinControl';
 import { TITLE_BAR_HEIGHT } from './const';
+import { Square } from 'lucide-react';
 
 const isMac = isMacOS();
 

@@ -1,7 +1,8 @@
-import { CloseOutlined, MinusOutlined } from '@ant-design/icons';
+import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import type { FC } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { Minus, Square, XIcon } from 'lucide-react';
+
+import { electronSystemService } from '@/services/electron/system';
 
 import { TITLE_BAR_HEIGHT } from '../const';
 
@@ -14,6 +15,9 @@ const useStyles = createStyles(({ css, cx, token }) => {
     min-height: ${TITLE_BAR_HEIGHT}px;
     transition: all ease-in-out 100ms;
     -webkit-app-region: no-drag;
+
+    color: ${token.colorTextSecondary};
+
     &:hover {
       background: ${token.colorFillTertiary};
     }
@@ -39,34 +43,42 @@ const useStyles = createStyles(({ css, cx, token }) => {
       `,
     ),
     container: css`
+      display: flex;
       cursor: pointer;
     `,
     icon,
   };
 });
 
-export interface IControlProps {
-  maximizable?: boolean;
-  minimizable?: boolean;
-  onClose?: () => void;
-  onMaximize?: () => void;
-  onMinimize?: () => void;
-}
-
-const WinControl: FC<IControlProps> = ({ minimizable, onMinimize, onClose }) => {
+const WinControl = () => {
   const { styles } = useStyles();
   return (
-    <Flexbox className={styles.container}>
-      {minimizable ? (
-        <div className={styles.icon} onClick={onMinimize}>
-          <MinusOutlined twoToneColor={'#506478'} />
-        </div>
-      ) : null}
-
-      <div className={styles.close} onClick={onClose}>
-        <CloseOutlined twoToneColor={'#506478'} />
+    <div className={styles.container}>
+      <div
+        className={styles.icon}
+        onClick={() => {
+          electronSystemService.minimizeWindow();
+        }}
+      >
+        <Icon icon={Minus} style={{ fontSize: 18 }} />
       </div>
-    </Flexbox>
+      <div
+        className={styles.icon}
+        onClick={() => {
+          electronSystemService.maximizeWindow();
+        }}
+      >
+        <Icon icon={Square} />
+      </div>
+      <div
+        className={styles.close}
+        onClick={() => {
+          electronSystemService.closeWindow();
+        }}
+      >
+        <Icon icon={XIcon} style={{ fontSize: 18 }} />
+      </div>
+    </div>
   );
 };
 

@@ -1,4 +1,5 @@
 import { MainBroadcastEventKey, MainBroadcastParams } from '@lobechat/electron-client-ipc';
+import { WebContents } from 'electron';
 
 import { createLogger } from '@/utils/logger';
 
@@ -14,6 +15,8 @@ export default class BrowserManager {
   app: App;
 
   browsers: Map<AppBrowsersIdentifiers, Browser> = new Map();
+
+  private webContentsMap = new Map<WebContents, AppBrowsersIdentifiers>();
 
   constructor(app: App) {
     logger.debug('Initializing BrowserManager');
@@ -147,8 +150,40 @@ export default class BrowserManager {
     logger.debug(`Creating new browser: ${options.identifier}`);
     browser = new Browser(options, this.app);
 
-    this.browsers.set(options.identifier as AppBrowsersIdentifiers, browser);
+    const identifier = options.identifier as AppBrowsersIdentifiers;
+    this.browsers.set(identifier, browser);
+
+    // 记录 WebContents 和 identifier 的映射
+    this.webContentsMap.set(browser.browserWindow.webContents, identifier);
+
+    // 当窗口关闭时清理映射
+    browser.browserWindow.on('closed', () => {
+      this.webContentsMap.delete(browser.browserWindow.webContents);
+    });
 
     return browser;
+  }
+
+  closeWindow(identifier: string) {
+    const browser = this.browsers.get(identifier as AppBrowsersIdentifiers);
+    browser?.close();
+  }
+
+  minimizeWindow(identifier: string) {
+    const browser = this.browsers.get(identifier as AppBrowsersIdentifiers);
+    browser?.browserWindow.minimize();
+  }
+
+  maximizeWindow(identifier: string) {
+    const browser = this.browsers.get(identifier as AppBrowsersIdentifiers);
+    if (browser.browserWindow.isMaximized()) {
+      browser?.browserWindow.unmaximize();
+    } else {
+      browser?.browserWindow.maximize();
+    }
+  }
+
+  getIdentifierByWebContents(webContents: WebContents): AppBrowsersIdentifiers | null {
+    return this.webContentsMap.get(webContents) || null;
   }
 }

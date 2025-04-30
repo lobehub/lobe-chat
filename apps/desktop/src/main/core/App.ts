@@ -9,6 +9,7 @@ import { buildDir, nextStandaloneDir } from '@/const/dir';
 import { isDev } from '@/const/env';
 import { IControlModule } from '@/controllers';
 import { IServiceModule } from '@/services';
+import { IpcClientEventSender } from '@/types/ipcClientEvent';
 import { createLogger } from '@/utils/logger';
 import { CustomRequestHandler, createHandler } from '@/utils/next-electron-rsc';
 
@@ -348,9 +349,13 @@ export class App {
     this.ipcClientEventMap.forEach((eventInfo, key) => {
       const { controller, methodName } = eventInfo;
 
-      ipcMain.handle(key, async (e, ...data) => {
+      ipcMain.handle(key, async (e, data) => {
+        // 从 WebContents 获取对应的 BrowserWindow id
+        const senderIdentifier = this.browserManager.getIdentifierByWebContents(e.sender);
         try {
-          return await controller[methodName](...data);
+          return await controller[methodName](data, {
+            identifier: senderIdentifier,
+          } as IpcClientEventSender);
         } catch (error) {
           logger.error(`Error handling IPC event ${key}:`, error);
           return { error: error.message };

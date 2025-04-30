@@ -14,6 +14,21 @@ class ElectronSystemService {
     return dispatch('getDesktopAppState');
   }
 
+  async closeWindow(): Promise<void> {
+    // Calls the underlying IPC function to get data from the main process
+    return dispatch('closeWindow');
+  }
+
+  async maximizeWindow(): Promise<void> {
+    // Calls the underlying IPC function to get data from the main process
+    return dispatch('maximizeWindow');
+  }
+
+  async minimizeWindow(): Promise<void> {
+    // Calls the underlying IPC function to get data from the main process
+    return dispatch('minimizeWindow');
+  }
+
   // Add other system-related service methods here if needed in the future
 }
 
