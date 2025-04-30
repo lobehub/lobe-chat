@@ -16,7 +16,7 @@ import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 
-import ActionPopover from '../../components/ActionPopover';
+import ActionPopover from '../components/ActionPopover';
 import TokenProgress from './TokenProgress';
 
 interface TokenTagProps {
