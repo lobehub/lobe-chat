@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 
 dotenv.config();
 
+const isDev = process.env.NODE_ENV === 'development';
 const updateChannel = process.env.UPDATE_CHANNEL;
 console.log(`[electron-vite.config.ts] Detected UPDATE_CHANNEL: ${updateChannel}`); // 添加日志确认
 
@@ -11,6 +12,7 @@ export default defineConfig({
   main: {
     build: {
       outDir: 'dist/main',
+      sourcemap: isDev,
     },
     // 这里是关键：在构建时进行文本替换
     define: {
@@ -29,6 +31,7 @@ export default defineConfig({
   preload: {
     build: {
       outDir: 'dist/preload',
+      sourcemap: isDev,
     },
     plugins: [externalizeDepsPlugin({})],
     resolve: {
