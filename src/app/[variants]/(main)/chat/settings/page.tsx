@@ -38,6 +38,7 @@ const EditPage = memo(() => {
     <>
       <PageTitle title={t('header.sessionWithName', { name: title })} />
       <Tabs
+        activeKey={tab}
         compact
         items={cateItems as any}
         onChange={(value) => setTab(value as ChatSettingsTabs)}

@@ -9,9 +9,10 @@ import { Center } from 'react-layout-kit';
 import FormAction from '@/components/FormAction';
 import { useChatStore } from '@/store/chat';
 
-import { ErrorActionContainer } from '../style';
+import { ErrorActionContainer } from '../Conversation/Error/style';
 
-const OllamaDesktopSetupGuide = memo<{ id: string }>(({ id }) => {
+// TODO: 优化 Ollama setup 的流程，isDesktop 模式下可以直接做到端到端检测
+const OllamaDesktopSetupGuide = memo<{ id?: string }>(({ id }) => {
   const theme = useTheme();
   const { t } = useTranslation('components');
 
@@ -35,24 +36,28 @@ const OllamaDesktopSetupGuide = memo<{ id: string }>(({ id }) => {
           }
           title={t('OllamaSetupGuide.install.title')}
         />
-        <Button
-          block
-          onClick={() => {
-            delAndRegenerateMessage(id);
-          }}
-          style={{ marginTop: 8 }}
-          type={'primary'}
-        >
-          {t('OllamaSetupGuide.action.start')}
-        </Button>
-        <Button
-          block
-          onClick={() => {
-            deleteMessage(id);
-          }}
-        >
-          {t('OllamaSetupGuide.action.close')}
-        </Button>
+        {id && (
+          <>
+            <Button
+              block
+              onClick={() => {
+                delAndRegenerateMessage(id);
+              }}
+              style={{ marginTop: 8 }}
+              type={'primary'}
+            >
+              {t('OllamaSetupGuide.action.start')}
+            </Button>
+            <Button
+              block
+              onClick={() => {
+                deleteMessage(id);
+              }}
+            >
+              {t('OllamaSetupGuide.action.close')}
+            </Button>
+          </>
+        )}
       </Center>
     </ErrorActionContainer>
   );

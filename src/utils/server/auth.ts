@@ -1,4 +1,6 @@
 import { enableClerk, enableNextAuth } from '@/const/auth';
+import { DESKTOP_USER_ID } from '@/const/desktop';
+import { isDesktop } from '@/const/version';
 
 export const getUserAuth = async () => {
   if (enableClerk) {
@@ -17,6 +19,10 @@ export const getUserAuth = async () => {
     const userId = session?.user.id;
 
     return { nextAuth: session, userId };
+  }
+
+  if (isDesktop) {
+    return { userId: DESKTOP_USER_ID };
   }
 
   throw new Error('Auth method is not enabled');
