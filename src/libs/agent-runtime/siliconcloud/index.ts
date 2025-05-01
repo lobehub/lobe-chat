@@ -58,7 +58,6 @@ export const LobeSiliconCloudAI = LobeOpenAICompatibleFactory({
         max_tokens:
           max_tokens === undefined ? undefined : Math.min(Math.max(max_tokens, 1), 16_384),
         model,
-        // stream: !payload.tools,
       } as any;
     },
   },
