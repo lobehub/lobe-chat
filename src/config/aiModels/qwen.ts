@@ -351,11 +351,11 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwen2.5-omni-7b',
     maxOutput: 2048,
     organization: 'Qwen',
-    // pricing: {
-    //   currency: 'CNY',
-    //   input: 0,
-    //   output: 0,
-    // },
+    pricing: {
+      currency: 'CNY',
+      input: 2, // use image input price
+      output: 6,
+    },
     type: 'chat',
   },
   {
@@ -404,6 +404,9 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       vision: true,
+    },
+    config: {
+      deploymentName: 'qwen-vl-ocr-2025-04-13', 
     },
     contextWindowTokens: 34_096,
     description:
@@ -521,11 +524,14 @@ const qwenChatModels: AIChatModelCard[] = [
       reasoning: true,
       vision: true,
     },
+    config: {
+      deploymentName: 'qvq-max-latest', 
+    },
     contextWindowTokens: 122_880,
     description:
       '通义千问QVQ视觉推理模型，支持视觉输入及思维链输出，在数学、编程、视觉分析、创作以及通用任务上都表现了更强的能力。',
     displayName: 'QVQ Max',
-    id: 'qvq-max', // Unsupported model `qvq-max-latest` for OpenAI compatibility mode
+    id: 'qvq-max-latest',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -602,8 +608,8 @@ const qwenChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 3.5,
-      output: 7,
+      input: 2,
+      output: 6,
     },
     type: 'chat',
   },
@@ -687,46 +693,28 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     contextWindowTokens: 131_072,
     description: '通义千问代码模型开源版。',
+    displayName: 'Qwen2.5 Coder 14B',
+    id: 'qwen2.5-coder-14b-instruct',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 6,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 131_072,
+    description: '通义千问代码模型开源版。',
     displayName: 'Qwen2.5 Coder 32B',
     id: 'qwen2.5-coder-32b-instruct',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 3.5,
-      output: 7,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      vision: true,
-    },
-    contextWindowTokens: 8000,
-    description: '以 Qwen-7B 语言模型初始化，添加图像模型，图像输入分辨率为448的预训练模型。',
-    displayName: 'Qwen VL',
-    id: 'qwen-vl-v1',
-    organization: 'Qwen',
-    pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      vision: true,
-    },
-    contextWindowTokens: 8000,
-    description: '通义千问VL支持灵活的交互方式，包括多图、多轮问答、创作等能力的模型。',
-    displayName: 'Qwen VL Chat',
-    id: 'qwen-vl-chat-v1',
-    organization: 'Qwen',
-    pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
+      input: 2,
+      output: 6,
     },
     type: 'chat',
   },
