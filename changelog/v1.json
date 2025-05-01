@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Fix style issues."]
+    },
+    "date": "2025-05-01",
+    "version": "1.84.13"
+  },
+  {
+    "children": {
       "improvements": ["Support Qwen3 thinking_budget param."]
     },
     "date": "2025-04-30",
