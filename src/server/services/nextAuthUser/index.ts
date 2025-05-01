@@ -1,7 +1,8 @@
+import { eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 
 import { UserModel } from '@/database/models/user';
-import { UserItem } from '@/database/schemas';
+import { UserItem, nextauthSessions } from '@/database/schemas';
 import { serverDB } from '@/database/server';
 import { pino } from '@/libs/logger';
 import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
@@ -39,7 +40,36 @@ export class NextAuthUserService {
       pino.warn(
         `[${provider}]: Webhooks handler user "${JSON.stringify({ provider, providerAccountId })}" update for "${JSON.stringify(data)}", but no user was found by the providerAccountId.`,
       );
+      return NextResponse.json({ message: 'user not found', success: false }, { status: 200 });
     }
     return NextResponse.json({ message: 'user updated', success: true }, { status: 200 });
+  };
+
+  invokeSession = async ({
+    providerAccountId,
+    provider,
+  }: {
+    provider: string;
+    providerAccountId: string;
+  }) => {
+    // 1. Find User by account
+    // @ts-expect-error: Already impl in `LobeNextauthDbAdapter`
+    const user = await this.adapter.getUserByAccount({
+      provider,
+      providerAccountId,
+    });
+    // 2. If found, Invalidate user session
+    if (user?.id) {
+      await serverDB.delete(nextauthSessions).where(eq(nextauthSessions.userId, user.id));
+      pino.info(
+        `Invoke user session "${JSON.stringify({ provider, providerAccountId })}" due to webhook`,
+      );
+    } else {
+      pino.warn(
+        `[${provider}]: Webhooks handler user "${JSON.stringify({ provider, providerAccountId })}" session invoke, but no user was found by the providerAccountId.`,
+      );
+      return NextResponse.json({ message: 'user not found', success: false }, { status: 200 });
+    }
+    return NextResponse.json({ message: 'session invoked', success: true }, { status: 200 });
   };
 }
