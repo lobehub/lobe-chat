@@ -163,10 +163,7 @@ export const getAuthConfig = () => {
       NEXT_AUTH_SSO_PROVIDERS: z.string().optional().default('auth0'),
       NEXT_AUTH_DEBUG: z.boolean().optional().default(false),
       NEXT_AUTH_SSO_ENABLE_REFRESH_TOKEN: z.boolean().optional().default(false),
-      NEXT_AUTH_SSO_REFRESH_TOKEN_INTERVAL: z
-        .number()
-        .optional()
-        .default(24 * 60 * 60),
+      NEXT_AUTH_SSO_REFRESH_TOKEN_INTERVAL: z.number().optional(),
 
       // Auth0
       AUTH0_CLIENT_ID: z.string().optional(),
