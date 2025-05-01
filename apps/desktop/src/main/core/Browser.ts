@@ -55,6 +55,12 @@ export default class Browser {
     return this.retrieveOrInitialize();
   }
 
+  get webContents() {
+    if (this._browserWindow.isDestroyed()) return null;
+
+    return this._browserWindow.webContents;
+  }
+
   /**
    * Method to construct BrowserWindows object
    * @param options
