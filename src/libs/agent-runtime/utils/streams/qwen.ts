@@ -113,6 +113,10 @@ export const transformQwenStream = (
 interface QwenAIStreamOptions {
   callbacks?: ChatStreamCallbacks;
   inputStartAt?: number;
+  onCompletion?: () => void;
+  onStart?: () => void;
+  onText?: (text: string) => void;
+  onToolsCalling?: (tools: any) => void;
 }
 
 export const QwenAIStream = (
