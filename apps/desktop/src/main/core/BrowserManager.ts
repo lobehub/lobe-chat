@@ -157,8 +157,8 @@ export default class BrowserManager {
     this.webContentsMap.set(browser.browserWindow.webContents, identifier);
 
     // 当窗口关闭时清理映射
-    browser.browserWindow.on('closed', () => {
-      this.webContentsMap.delete(browser.browserWindow.webContents);
+    browser.browserWindow.on('close', () => {
+      if (browser.webContents) this.webContentsMap.delete(browser.webContents);
     });
 
     return browser;
