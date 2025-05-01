@@ -1,6 +1,34 @@
 [
   {
     "children": {
+      "improvements": ["Add windows control and tray."]
+    },
+    "date": "2025-05-01",
+    "version": "1.84.14"
+  },
+  {
+    "children": {
+      "improvements": ["Fix style issues."]
+    },
+    "date": "2025-05-01",
+    "version": "1.84.13"
+  },
+  {
+    "children": {
+      "improvements": ["Support Qwen3 thinking_budget param."]
+    },
+    "date": "2025-04-30",
+    "version": "1.84.12"
+  },
+  {
+    "children": {
+      "improvements": ["Allow copy/edit when generate error."]
+    },
+    "date": "2025-04-30",
+    "version": "1.84.11"
+  },
+  {
+    "children": {
       "improvements": [
         "Add Gemini 2.5 Pro Experimental model, Add siliconflow Qwen3 & support thinking params, Arrange model tags neatly, Update mobile style and fix issues problem, update ollama checker."
       ]

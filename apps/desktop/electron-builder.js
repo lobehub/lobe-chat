@@ -79,10 +79,10 @@ const config = {
   },
   npmRebuild: true,
   nsis: {
+    allowToChangeInstallationDirectory: true,
     artifactName: '${productName}-${version}-setup.${ext}',
     createDesktopShortcut: 'always',
-    // allowToChangeInstallationDirectory: true,
-    // oneClick: false,
+    oneClick: false,
     shortcutName: '${productName}',
     uninstallDisplayName: '${productName}',
   },

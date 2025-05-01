@@ -30,7 +30,10 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
         ...rest,
         ...( ['qwen3','qwen-turbo','qwen-plus']
           .some(keyword => model.toLowerCase().includes(keyword))
-          ? { enable_thinking: thinking !== undefined ? thinking.type === 'enabled' : false }
+          ? { 
+            enable_thinking: thinking !== undefined ? thinking.type === 'enabled' : false,
+            thinking_budget: thinking?.budget_tokens === 0 ? 0 : (thinking?.budget_tokens || undefined),
+          }
           : {}),
         frequency_penalty: undefined,
         model,
