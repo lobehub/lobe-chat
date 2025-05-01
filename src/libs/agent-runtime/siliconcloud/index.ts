@@ -58,7 +58,6 @@ export const LobeSiliconCloudAI = LobeOpenAICompatibleFactory({
         max_tokens:
           max_tokens === undefined ? undefined : Math.min(Math.max(max_tokens, 1), 16_384),
         model,
-        stream: !payload.tools,
       } as any;
     },
   },
@@ -73,6 +72,7 @@ export const LobeSiliconCloudAI = LobeOpenAICompatibleFactory({
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
     const functionCallKeywords = [
+      'qwen/qwen3',
       'qwen/qwen2.5',
       'thudm/glm-4',
       'deepseek-ai/deepseek',
@@ -89,7 +89,12 @@ export const LobeSiliconCloudAI = LobeOpenAICompatibleFactory({
       'deepseek-ai/deepseek-vl',
     ];
 
-    const reasoningKeywords = ['deepseek-ai/deepseek-r1', 'qwen/qvq', 'qwen/qwq'];
+    const reasoningKeywords = [
+      'deepseek-ai/deepseek-r1', 
+      'qwen/qvq', 
+      'qwen/qwq',
+      'qwen/qwen3',
+    ];
 
     const modelsPage = (await client.models.list()) as any;
     const modelList: SiliconCloudModelCard[] = modelsPage.data;
