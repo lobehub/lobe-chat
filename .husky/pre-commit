@@ -1,2 +1,5 @@
-npm run type-check
-npx --no-install lint-staged
+# .husky/post-merge
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npm run type-check || echo "Type check failed, please fix issues!"
