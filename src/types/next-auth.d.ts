@@ -1,4 +1,8 @@
 import { type DefaultSession } from 'next-auth';
+// eslint-disable-next-line unused-imports/no-unused-imports , @typescript-eslint/no-unused-vars
+import { JWT } from 'next-auth/jwt';
+
+// The IDE need to import this to get the type inference
 
 declare module 'next-auth' {
   /**
@@ -29,8 +33,17 @@ declare module 'next-auth/jwt' {
     access_token?: string;
     error?: 'RefreshTokenError';
     expires_at?: number;
+    /**
+     * The issuer while user logined
+     */
     iss?: string;
+    /**
+     * The provider name
+     */
     provider?: string;
+    /**
+     * The id from the provider
+     */
     providerAccountId?: string;
     refresh_token?: string;
     userId?: string;
