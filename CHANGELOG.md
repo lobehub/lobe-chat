@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.84.14](https://github.com/lobehub/lobe-chat/compare/v1.84.13...v1.84.14)
+
+<sup>Released on **2025-05-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add windows control and tray.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add windows control and tray, closes [#7665](https://github.com/lobehub/lobe-chat/issues/7665) ([c5f3d13](https://github.com/lobehub/lobe-chat/commit/c5f3d13))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.84.13](https://github.com/lobehub/lobe-chat/compare/v1.84.12...v1.84.13)
 
 <sup>Released on **2025-05-01**</sup>
