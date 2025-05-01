@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add windows control and tray."]
+    },
+    "date": "2025-05-01",
+    "version": "1.84.14"
+  },
+  {
+    "children": {
       "improvements": ["Fix style issues."]
     },
     "date": "2025-05-01",

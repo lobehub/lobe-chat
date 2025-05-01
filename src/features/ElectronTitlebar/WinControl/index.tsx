@@ -11,16 +11,20 @@ const useStyles = createStyles(({ css, cx, token }) => {
     display: flex;
     align-items: center;
     justify-content: center;
+
     width: 64px;
     min-height: ${TITLE_BAR_HEIGHT}px;
-    transition: all ease-in-out 100ms;
-    -webkit-app-region: no-drag;
 
     color: ${token.colorTextSecondary};
+
+    transition: all ease-in-out 100ms;
+
+    -webkit-app-region: no-drag;
 
     &:hover {
       background: ${token.colorFillTertiary};
     }
+
     &:active {
       background: ${token.colorFillSecondary};
     }
@@ -31,20 +35,22 @@ const useStyles = createStyles(({ css, cx, token }) => {
       css`
         &:hover {
           color: ${token.colorTextLightSolid};
+
           /* win11 的色值，亮暗色均不变 */
           background: #d33328;
         }
 
         &:active {
           color: ${token.colorTextLightSolid};
+
           /* win11 的色值 */
           background: #8b2b25;
         }
       `,
     ),
     container: css`
-      display: flex;
       cursor: pointer;
+      display: flex;
     `,
     icon,
   };
