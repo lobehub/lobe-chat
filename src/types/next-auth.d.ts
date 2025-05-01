@@ -13,21 +13,26 @@ declare module 'next-auth' {
   interface User {
     providerAccountId?: string;
   }
+  interface Profile {
+    id?: string; // providerAccountId
+    iss?: string; // issuer
+  }
   /**
    * More types can be extends here
    * ref: https://authjs.dev/getting-started/typescript
    */
 }
 
-declare module '@auth/core/jwt' {
+declare module 'next-auth/jwt' {
   /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
   interface JWT {
     access_token?: string;
     error?: 'RefreshTokenError';
-    expires?: number;
+    expires_at?: number;
     iss?: string;
     provider?: string;
+    providerAccountId?: string;
     refresh_token?: string;
-    userId: string;
+    userId?: string;
   }
 }
