@@ -65,6 +65,7 @@ beforeEach(() => {
   vi.mock('@/const/version', () => ({
     isServerMode: false,
     isDeprecatedEdition: true,
+    isDesktop: false,
   }));
 });
 
@@ -878,6 +879,7 @@ describe('ChatService', () => {
         vi.doMock('@/const/version', () => ({
           isServerMode: true,
           isDeprecatedEdition: false,
+          isDesktop: false,
         }));
 
         // 需要在修改模拟后重新导入相关模块
@@ -965,6 +967,7 @@ describe('ChatService', () => {
         vi.doMock('@/const/version', () => ({
           isServerMode: true,
           isDeprecatedEdition: true,
+          isDesktop: false,
         }));
 
         // 需要在修改模拟后重新导入相关模块

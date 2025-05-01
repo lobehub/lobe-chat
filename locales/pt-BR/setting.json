@@ -6,6 +6,7 @@
     "chat": "Preferências de bate-papo",
     "meta": "Informações do assistente",
     "modal": "Configurações do modelo",
+    "opening": "Configuração de Abertura",
     "plugin": "Configurações do plug-in",
     "prompt": "Configuração de personagem",
     "tts": "Serviço de voz"
@@ -41,6 +42,17 @@
     "sessionDesc": "Configurações de personagem e preferências de sessão.",
     "sessionWithName": "Configurações de Sessão · {{name}}",
     "title": "Configurações"
+  },
+  "hotkey": {
+    "conflicts": "Conflito com teclas de atalho existentes",
+    "group": {
+      "conversation": "Conversa",
+      "essential": "Essencial"
+    },
+    "invalidCombination": "A combinação de teclas de atalho deve incluir pelo menos uma tecla modificadora (Ctrl, Alt, Shift) e uma tecla comum",
+    "record": "Pressione a tecla para gravar o atalho",
+    "reset": "Redefinir para os atalhos padrão",
+    "title": "Atalhos"
   },
   "llm": {
     "aesGcm": "Suas chaves, endereço do agente, etc., serão criptografados usando o algoritmo de criptografia <1>AES-GCM</1>",
@@ -138,6 +150,7 @@
       "title": "Cor de fundo"
     },
     "description": {
+      "desc": "Uma breve introdução ao seu assistente, não como uma definição de personagem",
       "placeholder": "Digite a descrição do assistente",
       "title": "Descrição do assistente"
     },
@@ -149,7 +162,9 @@
       "placeholder": "Digite a palavra de prompt do papel",
       "title": "Configuração do papel"
     },
+    "submit": "Atualizar informações do assistente",
     "tag": {
+      "desc": "As etiquetas do assistente serão exibidas no mercado de assistentes",
       "placeholder": "Digite a etiqueta",
       "title": "Etiqueta"
     },
@@ -194,6 +209,7 @@
       "placeholder": "O modelo de pré-processamento {{text}} será substituído pela entrada em tempo real",
       "title": "Pré-processamento de entrada do usuário"
     },
+    "submit": "Atualizar preferências de chat",
     "title": "Configurações de chat"
   },
   "settingModel": {
@@ -231,6 +247,7 @@
       },
       "title": "Intensidade de raciocínio"
     },
+    "submit": "Atualizar configurações do modelo",
     "temperature": {
       "desc": "Quanto maior o valor, mais criativas e imaginativas serão as respostas; quanto menor o valor, mais rigorosas serão as respostas",
       "title": "Atividade Criativa",
@@ -241,6 +258,21 @@
       "desc": "Quantas possibilidades considerar; quanto maior o valor, mais respostas possíveis serão aceitas; quanto menor o valor, mais se tende a escolher a resposta mais provável. Não é recomendado alterar junto com a atividade criativa",
       "title": "Abertura Mental"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "Mensagem de abertura exibida ao iniciar a conversa, usada para apresentar as funcionalidades do assistente",
+      "placeholder": "Olá, eu sou o Assistente Personalizado, você pode começar a conversar comigo imediatamente ou ir para Configurações do Assistente para completar minhas informações.",
+      "title": "Mensagem de Abertura"
+    },
+    "openingQuestions": {
+      "desc": "Perguntas orientadoras exibidas no início da conversa",
+      "empty": "Nenhuma pergunta disponível",
+      "placeholder": "Digite uma pergunta",
+      "repeat": "A pergunta já existe",
+      "title": "Perguntas de Abertura"
+    },
+    "title": "Configuração de Abertura"
   },
   "settingPlugin": {
     "title": "Lista de plugins"
@@ -292,6 +324,7 @@
       "desc": "Onde 'browser' é o serviço nativo de reconhecimento de fala do navegador",
       "title": "Serviço de reconhecimento de fala"
     },
+    "submit": "Atualizar serviço de voz",
     "title": "Serviço de fala",
     "tts": "Configurações de síntese de fala",
     "ttsService": {
@@ -335,12 +368,45 @@
     },
     "title": "Configurações de Tema"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Exportar",
+        "exportType": {
+          "agent": "Exportar configurações do assistente",
+          "agentWithMessage": "Exportar assistente e mensagens",
+          "all": "Exportar configurações globais e todos os dados do assistente",
+          "allAgent": "Exportar todas as configurações do assistente",
+          "allAgentWithMessage": "Exportar todos os assistentes e mensagens",
+          "globalSetting": "Exportar configurações globais"
+        },
+        "title": "Exportar dados"
+      },
+      "import": {
+        "button": "Importar",
+        "title": "Importar dados"
+      },
+      "title": "Operações Avançadas"
+    },
+    "desc": "Uso de armazenamento no navegador atual",
+    "embeddings": {
+      "used": "Armazenamento de vetores"
+    },
+    "title": "Armazenamento de Dados",
+    "used": "Uso de armazenamento"
+  },
   "submitAgentModal": {
     "button": "Enviar Assistente",
     "identifier": "Identificador do assistente",
     "metaMiss": "Por favor, complete as informações do assistente antes de enviar, incluindo nome, descrição e etiqueta",
     "placeholder": "Insira o identificador único do assistente, como por exemplo, desenvolvimento-web",
     "tooltips": "Compartilhar no mercado de assistentes"
+  },
+  "submitFooter": {
+    "reset": "Redefinir",
+    "submit": "Salvar",
+    "unSaved": "Alterações não salvas",
+    "unSavedWarning": "Atualmente há alterações não salvas"
   },
   "sync": {
     "device": {
@@ -393,6 +459,7 @@
       "placeholder": "Digite a palavra-chave personalizada",
       "title": "Palavra-chave personalizada"
     },
+    "helpInfo": "Ao criar um novo assistente, as configurações padrão do assistente serão usadas como valores predefinidos.",
     "historyCompress": {
       "label": "Modelo de Histórico de Conversa",
       "modelDesc": "Especifica o modelo usado para comprimir o histórico de conversa",
@@ -425,8 +492,10 @@
     "agent": "Assistente Padrão",
     "common": "Configurações Comuns",
     "experiment": "Experimento",
+    "hotkey": "Atalhos",
     "llm": "Modelo de Linguagem",
     "provider": "Fornecedor de IA",
+    "storage": "Armazenamento de Dados",
     "sync": "Sincronização na nuvem",
     "system-agent": "Assistente do Sistema",
     "tts": "Serviço de Voz"

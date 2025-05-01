@@ -119,6 +119,16 @@
       "outputText": "Wyjście tekstowe",
       "outputTitle": "Szczegóły wyjścia",
       "reasoning": "Głębokie myślenie",
+      "speed": {
+        "tps": {
+          "title": "TPS",
+          "tooltip": "Tokeny na sekundę, TPS. Oznacza średnią prędkość generowania treści przez AI (Tokeny/sekundę), obliczaną od momentu otrzymania pierwszego Tokena."
+        },
+        "ttft": {
+          "title": "TTFT",
+          "tooltip": "Czas do pierwszego tokena, TTFT. Oznacza czas od momentu wysłania wiadomości do momentu, w którym klient otrzymuje pierwszy Token."
+        }
+      },
       "title": "Szczegóły generacji",
       "total": "Całkowite zużycie"
     }

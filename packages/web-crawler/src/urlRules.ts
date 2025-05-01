@@ -11,11 +11,27 @@ export const crawUrlRules: CrawlUrlRule[] = [
     impls: ['search1api'],
     urlPattern: 'https://sogou.com/link(.*)',
   },
+  // YouTube 链接，使用 search1api，格式化 markdown，且可以返回字幕内容
+  {
+    impls: ['search1api'],
+    urlPattern: 'https://www.youtube.com/watch(.*)',
+  },
+  // Reddit 链接，使用 search1api，格式化 markdown，包含标题、作者、互动数量、具体评论内容等
+  {
+    impls: ['search1api'],
+    urlPattern: 'https://www.reddit.com/r/(.*)/comments/(.*)',
+  },
+  // 微信公众号有爬虫防护，优先使用 search1api，jina 作为兜底（目前 jina 爬取会被风控）
+  {
+    impls: ['search1api', 'jina'],
+    urlPattern: 'https://mp.weixin.qq.com(.*)',
+  },
   // github 源码解析
   {
     filterOptions: {
       enableReadability: false,
     },
+    impls: ['naive', 'jina'],
     urlPattern: 'https://github.com/([^/]+)/([^/]+)/blob/([^/]+)/(.*)',
     urlTransform: 'https://github.com/$1/$2/raw/refs/heads/$3/$4',
   },
@@ -23,6 +39,7 @@ export const crawUrlRules: CrawlUrlRule[] = [
     filterOptions: {
       enableReadability: false,
     },
+    impls: ['naive', 'jina'],
     // GitHub discussion
     urlPattern: 'https://github.com/(.*)/discussions/(.*)',
   },
@@ -45,11 +62,6 @@ export const crawUrlRules: CrawlUrlRule[] = [
     impls: ['jina'],
     urlPattern: 'https://zhihu.com(.*)',
   },
-  // 微信公众号有爬虫防护，使用 jina
-  {
-    impls: ['jina'],
-    urlPattern: 'https://mp.weixin.qq.com(.*)',
-  },
   {
     // Medium 文章转换为 Scribe.rip
     urlPattern: 'https://medium.com/(.*)',
@@ -69,9 +81,9 @@ export const crawUrlRules: CrawlUrlRule[] = [
       enableReadability: false,
       pureText: true,
     },
+    impls: ['naive'],
     urlPattern: 'https://www.qiumiwu.com/standings/(.*)',
   },
-
   // mozilla use jina
   {
     impls: ['jina'],

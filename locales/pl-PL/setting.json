@@ -6,6 +6,7 @@
     "chat": "Preferencje czatu",
     "meta": "Informacje o asystencie",
     "modal": "Ustawienia modalne",
+    "opening": "Ustawienia otwarcia",
     "plugin": "Ustawienia wtyczki",
     "prompt": "Ustawienia roli",
     "tts": "Usługi głosowe"
@@ -41,6 +42,17 @@
     "sessionDesc": "Ustawienia postaci i preferencje sesji.",
     "sessionWithName": "Ustawienia sesji · {{name}}",
     "title": "Ustawienia"
+  },
+  "hotkey": {
+    "conflicts": "Kolizja z istniejącymi skrótami klawiszowymi",
+    "group": {
+      "conversation": "Rozmowa",
+      "essential": "Podstawowy"
+    },
+    "invalidCombination": "Skrót klawiszowy musi zawierać przynajmniej jeden klawisz modyfikujący (Ctrl, Alt, Shift) oraz jeden klawisz zwykły",
+    "record": "Naciśnij klawisz, aby nagrać skrót klawiszowy",
+    "reset": "Przywróć domyślne skróty klawiszowe",
+    "title": "Skróty klawiszowe"
   },
   "llm": {
     "aesGcm": "Twój klucz, adres proxy i inne będą szyfrowane za pomocą algorytmu szyfrowania <1>AES-GCM</1>",
@@ -138,6 +150,7 @@
       "title": "Kolor tła"
     },
     "description": {
+      "desc": "Krótki opis twojego asystenta, nie jako ustawienie postaci",
       "placeholder": "Proszę wprowadzić opis asystenta",
       "title": "Opis asystenta"
     },
@@ -149,7 +162,9 @@
       "placeholder": "Proszę wprowadzić słowo kluczowe dla roli Prompt",
       "title": "Ustawienia roli"
     },
+    "submit": "Zaktualizuj informacje o asystencie",
     "tag": {
+      "desc": "Tagi asystenta będą wyświetlane na rynku asystentów",
       "placeholder": "Proszę wprowadzić tag",
       "title": "Tag"
     },
@@ -194,6 +209,7 @@
       "placeholder": "Szablon wejściowy {{text}} zostanie zastąpiony rzeczywistą wiadomością",
       "title": "Szablon wejściowy"
     },
+    "submit": "Zaktualizuj preferencje czatu",
     "title": "Ustawienia czatu"
   },
   "settingModel": {
@@ -231,6 +247,7 @@
       },
       "title": "Intensywność rozumowania"
     },
+    "submit": "Zaktualizuj ustawienia modelu",
     "temperature": {
       "desc": "Im większa wartość, tym bardziej kreatywne i wyobrażeniowe będą odpowiedzi; im mniejsza wartość, tym bardziej rygorystyczne odpowiedzi",
       "title": "Aktywność kreatywna",
@@ -241,6 +258,21 @@
       "desc": "Ile możliwości należy rozważyć, im większa wartość, tym więcej możliwych odpowiedzi; im mniejsza wartość, tym większa tendencja do wyboru najbardziej prawdopodobnej odpowiedzi. Nie zaleca się jednoczesnej zmiany z aktywnością kreatywną",
       "title": "Otwartość myślenia"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "Wiadomość powitalna wyświetlana przy otwarciu rozmowy, służąca do przedstawienia funkcji asystenta",
+      "placeholder": "Cześć, jestem dostosowanym asystentem, możesz od razu rozpocząć rozmowę lub przejść do ustawień asystenta, aby uzupełnić moje informacje.",
+      "title": "Wiadomość powitalna"
+    },
+    "openingQuestions": {
+      "desc": "Pytania wprowadzające wyświetlane na początku rozmowy",
+      "empty": "Brak pytań",
+      "placeholder": "Wprowadź pytanie",
+      "repeat": "Pytanie już istnieje",
+      "title": "Pytania powitalne"
+    },
+    "title": "Ustawienia otwarcia"
   },
   "settingPlugin": {
     "title": "Lista wtyczek"
@@ -292,6 +324,7 @@
       "desc": "Dla przeglądarki używana jest wbudowana usługa rozpoznawania mowy",
       "title": "Usługa rozpoznawania mowy"
     },
+    "submit": "Zaktualizuj usługę głosową",
     "title": "Usługi mowy",
     "tts": "Ustawienia syntezy mowy",
     "ttsService": {
@@ -335,12 +368,45 @@
     },
     "title": "Ustawienia motywu"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Eksportuj",
+        "exportType": {
+          "agent": "Eksportuj ustawienia agenta",
+          "agentWithMessage": "Eksportuj ustawienia agenta i wiadomości",
+          "all": "Eksportuj globalne ustawienia i wszystkie dane agenta",
+          "allAgent": "Eksportuj wszystkie ustawienia agenta",
+          "allAgentWithMessage": "Eksportuj wszystkie agentów i wiadomości",
+          "globalSetting": "Eksportuj globalne ustawienia"
+        },
+        "title": "Eksportuj dane"
+      },
+      "import": {
+        "button": "Importuj",
+        "title": "Importuj dane"
+      },
+      "title": "Zaawansowane operacje"
+    },
+    "desc": "Aktualne zużycie pamięci w przeglądarce",
+    "embeddings": {
+      "used": "Przechowywanie wektorów"
+    },
+    "title": "Przechowywanie danych",
+    "used": "Zużycie pamięci"
+  },
   "submitAgentModal": {
     "button": "Prześlij asystenta",
     "identifier": "Identyfikator asystenta",
     "metaMiss": "Proszę uzupełnić informacje o asystencie przed przesłaniem, należy podać nazwę, opis i tagi",
     "placeholder": "Wprowadź identyfikator asystenta, musi być unikalny, na przykład web-development",
     "tooltips": "Udostępnij na rynku asystentów"
+  },
+  "submitFooter": {
+    "reset": "Resetuj",
+    "submit": "Zapisz",
+    "unSaved": "Nie zapisane zmiany",
+    "unSavedWarning": "Obecnie są niezapisane zmiany"
   },
   "sync": {
     "device": {
@@ -393,6 +459,7 @@
       "placeholder": "Wprowadź niestandardowe słowo podpowiedzi",
       "title": "Niestandardowe słowo podpowiedzi"
     },
+    "helpInfo": "Podczas tworzenia nowego asystenta, domyślne ustawienia asystenta będą używane jako wartości wstępne.",
     "historyCompress": {
       "label": "Model historii rozmów",
       "modelDesc": "Model używany do kompresji historii rozmów",
@@ -425,8 +492,10 @@
     "agent": "Domyślny asystent",
     "common": "Ustawienia ogólne",
     "experiment": "Eksperyment",
+    "hotkey": "Skróty klawiszowe",
     "llm": "Model językowy",
     "provider": "Dostawca usług AI",
+    "storage": "Przechowywanie danych",
     "sync": "Synchronizacja w chmurze",
     "system-agent": "System Agent",
     "tts": "Usługa głosowa"

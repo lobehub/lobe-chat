@@ -56,6 +56,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     try {
       const anthropicPayload = await this.buildAnthropicPayload(payload);
+      const inputStartAt = Date.now();
 
       if (this.isDebug()) {
         console.log('[requestPayload]');
@@ -63,7 +64,11 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       }
 
       const response = await this.client.messages.create(
-        { ...anthropicPayload, stream: true },
+        {
+          ...anthropicPayload,
+          metadata: options?.user ? { user_id: options?.user } : undefined,
+          stream: true,
+        },
         {
           signal: options?.signal,
         },
@@ -75,9 +80,12 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
         debugStream(debug.toReadableStream()).catch(console.error);
       }
 
-      return StreamingResponse(AnthropicStream(prod, options?.callback), {
-        headers: options?.headers,
-      });
+      return StreamingResponse(
+        AnthropicStream(prod, { callbacks: options?.callback, inputStartAt }),
+        {
+          headers: options?.headers,
+        },
+      );
     } catch (error) {
       throw this.handleError(error);
     }

@@ -6,6 +6,7 @@ import Casdoor from './casdoor';
 import CloudflareZeroTrust from './cloudflare-zero-trust';
 import GenericOIDC from './generic-oidc';
 import Github from './github';
+import Keycloak from './keycloak';
 import Logto from './logto';
 import MicrosoftEntraID from './microsoft-entra-id';
 import Okta from './okta';
@@ -25,5 +26,6 @@ export const ssoProviders = [
   Casdoor,
   MicrosoftEntraID,
   WeChat,
+  Keycloak,
   Okta,
 ];

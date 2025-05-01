@@ -1,6 +1,6 @@
 'use client';
 
-import { MobileNavBar } from '@lobehub/ui/mobile';
+import { ChatHeader } from '@lobehub/ui/mobile';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import urlJoin from 'url-join';
@@ -15,8 +15,7 @@ const Header = memo(() => {
   const type = useDiscoverTab();
 
   return (
-    <MobileNavBar
-      contentStyles={{ center: { display: 'none' }, left: { flex: 'none' } }}
+    <ChatHeader
       onBackClick={() => router.push(urlJoin('/discover', type as string))}
       right={<StoreSearchBar autoFocus={false} mobile style={{ width: '100%' }} />}
       showBackButton
@@ -24,6 +23,7 @@ const Header = memo(() => {
         ...mobileHeaderSticky,
         overflow: 'unset',
       }}
+      styles={{ center: { display: 'none' }, left: { flex: 'none' } }}
     />
   );
 });

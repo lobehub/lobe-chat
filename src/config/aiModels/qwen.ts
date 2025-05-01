@@ -1,14 +1,204 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
-// https://help.aliyun.com/zh/model-studio/developer-reference/use-qwen-by-calling-api#e1fada1a719u7
+// https://help.aliyun.com/zh/model-studio/models?spm=a2c4g.11186623
 
 const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
-    description: '基于 Qwen2.5 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平。',
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 235B A22B',
+    enabled: true,
+    id: 'qwen3-235b-a22b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 4,
+      output: 40, // Thinking mode pricing
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 32B',
+    enabled: true,
+    id: 'qwen3-32b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 20, // Thinking mode pricing
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 30B',
+    enabled: true,
+    id: 'qwen3-30b-a3b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 1.5,
+      output: 15, // Thinking mode pricing
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 14B',
+    id: 'qwen3-14b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 1,
+      output: 10, // Thinking mode pricing
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 8B',
+    id: 'qwen3-8b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.5,
+      output: 5, // Thinking mode pricing
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 4B',
+    id: 'qwen3-4b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.3,
+      output: 3, // Thinking mode pricing
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 1.7B',
+    id: 'qwen3-1.7b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.3,
+      output: 3, // Thinking mode pricing
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 0.6B',
+    id: 'qwen3-0.6b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.3,
+      output: 3, // Thinking mode pricing
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      '基于 Qwen2.5 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平。',
     displayName: 'QwQ Plus',
     enabled: true,
     id: 'qwq-plus-latest',
@@ -16,8 +206,8 @@ const qwenChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      input: 1.6,
+      output: 4,
     },
     releasedAt: '2025-03-06',
     settings: {
@@ -28,6 +218,7 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
       search: true,
     },
     contextWindowTokens: 1_000_000,
@@ -40,9 +231,11 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 0.3,
-      output: 0.6,
+      output: 6, // Thinking mode pricing
     },
+    releasedAt: '2025-04-28',
     settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -50,6 +243,7 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
       search: true,
     },
     contextWindowTokens: 131_072,
@@ -62,9 +256,11 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 0.8,
-      output: 2,
+      output: 16, // Thinking mode pricing
     },
+    releasedAt: '2025-04-28',
     settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -116,7 +312,8 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 32_768,
-    description: 'Qwen-Omni 系列模型支持输入多种模态的数据，包括视频、音频、图片、文本，并输出音频与文本。',
+    description:
+      'Qwen-Omni 系列模型支持输入多种模态的数据，包括视频、音频、图片、文本，并输出音频与文本。',
     displayName: 'Qwen Omni Turbo',
     enabled: true,
     id: 'qwen-omni-turbo-latest',
@@ -133,11 +330,28 @@ const qwenChatModels: AIChatModelCard[] = [
     abilities: {
       vision: true,
     },
+    contextWindowTokens: 32_768,
+    description:
+      'Qwen-Omni 系列模型支持输入多种模态的数据，包括视频、音频、图片、文本，并输出音频与文本。',
+    displayName: 'Qwen2.5 Omni 7B',
+    id: 'qwen2.5-omni-7b',
+    maxOutput: 2048,
+    organization: 'Qwen',
+    // pricing: {
+    //   currency: 'CNY',
+    //   input: 0,
+    //   output: 0,
+    // },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
     contextWindowTokens: 32_000,
     description:
       '通义千问大规模视觉语言模型增强版。大幅提升细节识别能力和文字识别能力，支持超百万像素分辨率和任意长宽比规格的图像。',
     displayName: 'Qwen VL Plus',
-    enabled: true,
     id: 'qwen-vl-plus-latest',
     maxOutput: 2048,
     organization: 'Qwen',
@@ -244,19 +458,24 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 131_072,
-    description: '基于 Qwen2.5-32B 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平，各指标均显著超过同样基于 Qwen2.5-32B 的 DeepSeek-R1-Distill-Qwen-32B。',
+    description:
+      '基于 Qwen2.5-32B 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平，各指标均显著超过同样基于 Qwen2.5-32B 的 DeepSeek-R1-Distill-Qwen-32B。',
     displayName: 'QwQ 32B',
     id: 'qwq-32b',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
+      input: 2,
+      output: 6,
     },
     releasedAt: '2025-03-06',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
@@ -275,6 +494,26 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 6,
     },
     releasedAt: '2024-11-28',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 122_880,
+    description:
+      '通义千问QVQ视觉推理模型，支持视觉输入及思维链输出，在数学、编程、视觉分析、创作以及通用任务上都表现了更强的能力。',
+    displayName: 'QVQ Max',
+    id: 'qvq-max', // Unsupported model `qvq-max-latest` for OpenAI compatibility mode
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 8,
+      output: 32,
+    },
+    releasedAt: '2025-03-25',
     type: 'chat',
   },
   {
@@ -480,7 +719,7 @@ const qwenChatModels: AIChatModelCard[] = [
       '指令跟随、数学、解题、代码整体提升，万物识别能力提升，支持多样格式直接精准定位视觉元素，支持对长视频文件（最长10分钟）进行理解和秒级别的事件时刻定位，能理解时间先后和快慢，基于解析和定位能力支持操控OS或Mobile的Agent，关键信息抽取能力和Json格式输出能力强，此版本为72B版本，本系列能力最强的版本。',
     displayName: 'Qwen2.5 VL 72B',
     id: 'qwen2.5-vl-72b-instruct',
-    maxOutput: 2048,
+    maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
@@ -496,10 +735,29 @@ const qwenChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 131_072,
     description:
+      'Qwen2.5VL系列模型，在math和学科问题解答达到了接近Qwen2.5VL-72B的水平，回复风格面向人类偏好进行大幅调整，尤其是数学、逻辑推理、知识问答等客观类query，模型回复详实程度和格式清晰度明显改善。此版本为32B版本。',
+    displayName: 'Qwen2.5 VL 32B',
+    id: 'qwen2.5-vl-32b-instruct',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 8,
+      output: 24,
+    },
+    releasedAt: '2025-03-24',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
       '指令跟随、数学、解题、代码整体提升，万物识别能力提升，支持多样格式直接精准定位视觉元素，支持对长视频文件（最长10分钟）进行理解和秒级别的事件时刻定位，能理解时间先后和快慢，基于解析和定位能力支持操控OS或Mobile的Agent，关键信息抽取能力和Json格式输出能力强，此版本为72B版本，本系列能力最强的版本。',
     displayName: 'Qwen2.5 VL 7B',
     id: 'qwen2.5-vl-7b-instruct',
-    maxOutput: 2048,
+    maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',

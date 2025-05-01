@@ -1,7 +1,14 @@
 'use client';
 
 import { ProviderCombine } from '@lobehub/icons';
-import { Avatar, Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from '@lobehub/ui';
+import {
+  Avatar,
+  Form,
+  type FormGroupItemType,
+  type FormItemProps,
+  Icon,
+  Tooltip,
+} from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
 import { Skeleton, Switch } from 'antd';
 import { createStyles } from 'antd-style';
@@ -16,7 +23,7 @@ import { z } from 'zod';
 import { FormInput, FormPassword } from '@/components/FormInput';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { AES_GCM_URL, BASE_PROVIDER_DOC_URL } from '@/const/url';
-import { isServerMode } from '@/const/version';
+import { isDesktop, isServerMode } from '@/const/version';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import {
   AiProviderDetailItem,
@@ -244,12 +251,14 @@ const ProviderConfig = memo<ProviderConfigProps>(
 
     /*
      * Conditions to show Client Fetch Switch
+     * 0. is not desktop app
      * 1. provider is not disabled browser request
      * 2. provider show browser request by default
      * 3. Provider allow to edit endpoint and the value of endpoint is not empty
      * 4. There is an apikey provided by user
      */
     const showClientFetch =
+      !isDesktop &&
       !disableBrowserRequest &&
       (defaultShowBrowserRequest ||
         (showEndpoint && isProviderEndpointNotEmpty) ||
@@ -290,7 +299,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
     ].filter(Boolean) as FormItemProps[];
 
     const logoUrl = data?.logo ?? logo;
-    const model: ItemGroup = {
+    const model: FormGroupItemType = {
       children: configItems,
 
       defaultActive: true,
@@ -351,7 +360,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
         onValuesChange={(_, values) => {
           debouncedUpdate(id, values);
         }}
-        variant={'pure'}
+        variant={'borderless'}
         {...FORM_STYLE}
       />
     );

@@ -88,9 +88,14 @@
     "emptyModel": "没有启用的模型，请前往设置开启",
     "emptyProvider": "没有启用的服务商，请前往设置开启",
     "goToSettings": "前往设置",
-    "provider": "服务商"
+    "provider": "服务商",
+    "title": "模型"
   },
   "OllamaSetupGuide": {
+    "action": {
+      "close": "关闭提示",
+      "start": "已安装并运行，开始对话"
+    },
     "cors": {
       "description": "因浏览器安全限制，你需要为 Ollama 进行跨域配置后方可正常使用。",
       "linux": {

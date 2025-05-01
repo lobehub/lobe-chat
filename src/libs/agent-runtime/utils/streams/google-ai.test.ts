@@ -30,15 +30,13 @@ describe('GoogleGenerativeAIStream', () => {
 
     const onStartMock = vi.fn();
     const onTextMock = vi.fn();
-    const onTokenMock = vi.fn();
     const onToolCallMock = vi.fn();
     const onCompletionMock = vi.fn();
 
     const protocolStream = GoogleGenerativeAIStream(mockGoogleStream, {
       onStart: onStartMock,
       onText: onTextMock,
-      onToken: onTokenMock,
-      onToolCall: onToolCallMock,
+      onToolsCalling: onToolCallMock,
       onCompletion: onCompletionMock,
     });
 
@@ -68,9 +66,8 @@ describe('GoogleGenerativeAIStream', () => {
     ]);
 
     expect(onStartMock).toHaveBeenCalledTimes(1);
-    expect(onTextMock).toHaveBeenNthCalledWith(1, '"Hello"');
-    expect(onTextMock).toHaveBeenNthCalledWith(2, '" world!"');
-    expect(onTokenMock).toHaveBeenCalledTimes(2);
+    expect(onTextMock).toHaveBeenNthCalledWith(1, 'Hello');
+    expect(onTextMock).toHaveBeenNthCalledWith(2, ' world!');
     expect(onToolCallMock).toHaveBeenCalledTimes(1);
     expect(onCompletionMock).toHaveBeenCalledTimes(1);
   });

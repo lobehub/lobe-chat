@@ -34,7 +34,7 @@ const Warning = memo(() => {
         message={t('settingModel.temperature.warning')}
         style={{ fontSize: 12 }}
         type={'warning'}
-        variant={'pure'}
+        variant={'borderless'}
       />
     )
   );

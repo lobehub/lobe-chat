@@ -9,12 +9,12 @@ import { LangChainLoaderType } from '@/libs/langchain/types';
 import { CodeLoader } from './code';
 import { CsVLoader } from './csv';
 import { DocxLoader } from './docx';
+import { EPubLoader } from './epub';
 import { LatexLoader } from './latex';
 import { MarkdownLoader } from './markdown';
 import { PdfLoader } from './pdf';
 import { PPTXLoader } from './pptx';
 import { TextLoader } from './txt';
-import { EPubLoader } from './epub';
 
 class LangChainError extends Error {
   constructor(message: string) {

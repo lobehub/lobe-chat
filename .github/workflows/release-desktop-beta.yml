@@ -1,0 +1,192 @@
+name: Release Desktop Beta
+
+on:
+  release:
+    types: [published] # 发布 release 时触发构建
+
+# 确保同一时间只运行一个相同的 workflow，取消正在进行的旧的运行
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+# Add default permissions
+permissions: read-all
+
+jobs:
+  test:
+    name: Code quality check
+    # 添加 PR label 触发条件，只有添加了 Build Desktop 标签的 PR 才会触发构建
+    runs-on: ubuntu-latest # 只在 ubuntu 上运行一次检查
+    steps:
+      - name: Checkout base
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Install deps
+        run: pnpm install
+
+      - name: Lint
+        run: pnpm run lint
+
+  version:
+    name: Determine version
+    runs-on: ubuntu-latest
+    outputs:
+      # 输出版本信息，供后续 job 使用
+      version: ${{ steps.set_version.outputs.version }}
+      is_pr_build: ${{ steps.set_version.outputs.is_pr_build }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # 主要逻辑：确定构建版本号
+      - name: Set version
+        id: set_version
+        run: |
+          # 从 apps/desktop/package.json 读取基础版本号
+          base_version=$(node -p "require('./apps/desktop/package.json').version")
+
+          # Release 事件直接使用 release tag 作为版本号，去掉可能的 v 前缀
+          version="${{ github.event.release.tag_name }}"
+          version="${version#v}"
+          echo "version=${version}" >> $GITHUB_OUTPUT
+          echo "📦 Release Version: ${version}"
+
+      # 输出版本信息总结，方便在 GitHub Actions 界面查看
+      - name: Version Summary
+        run: |
+          echo "🚦 Release Version: ${{ steps.set_version.outputs.version }}"
+
+  build:
+    needs: [version, test]
+    name: Build Desktop App
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        # 暂时先支持 macOS
+        os: [macos-latest]
+    #        os: [macos-latest, windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      # node-linker=hoisted 模式将可以确保 asar 压缩可用
+      - name: Install deps
+        run: pnpm install --node-linker=hoisted
+
+      - name: Install deps on Desktop
+        run: npm run install-isolated --prefix=./apps/desktop
+
+      # 设置 package.json 的版本号
+      - name: Set package version
+        run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }} beta
+
+      # macOS 构建处理
+      - name: Build artifact on macOS
+        if: runner.os == 'macOS'
+        run: npm run desktop:build
+        env:
+          APP_URL: http://localhost:3015
+          DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
+          # 默认添加一个加密 SECRET
+          KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
+          # macOS 签名和公证配置
+          CSC_LINK: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
+          CSC_KEY_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          # allow provisionally
+          CSC_FOR_PULL_REQUEST: true
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+
+          NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_BETA_DESKTOP_PROJECT_ID }}
+          NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_BETA_DESKTOP_BASE_URL }}
+
+      # 非 macOS 平台构建处理
+      - name: Build artifact on other platforms
+        if: runner.os != 'macOS'
+        run: npm run desktop:build
+        env:
+          APP_URL: http://localhost:3015
+          DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
+          KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
+          NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_BETA_DESKTOP_PROJECT_ID }}
+          NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_BETA_DESKTOP_BASE_URL }}
+
+      # 上传构建产物，移除了 zip 相关部分
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ matrix.os }}
+          path: |
+            apps/desktop/release/latest*
+            apps/desktop/release/*.dmg*
+            apps/desktop/release/*.zip*
+            apps/desktop/release/*.exe*
+            apps/desktop/release/*.AppImage
+          retention-days: 5
+
+  # 正式版发布 job
+  publish-release:
+    needs: [build, version]
+    name: Publish Beta Release
+    runs-on: ubuntu-latest
+    # Grant write permission to contents for uploading release assets
+    permissions:
+      contents: write
+    outputs:
+      artifact_path: ${{ steps.set_path.outputs.path }}
+    steps:
+      # 下载所有平台的构建产物
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release
+          pattern: release-*
+          merge-multiple: true
+
+      # 列出所有构建产物
+      - name: List artifacts
+        run: ls -R release
+
+      # 将构建产物上传到现有 release
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.release.tag_name }}
+          files: |
+            release/latest*
+            release/*.dmg*
+            release/*.zip*
+            release/*.exe*
+            release/*.AppImage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

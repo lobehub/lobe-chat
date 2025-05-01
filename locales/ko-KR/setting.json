@@ -6,6 +6,7 @@
     "chat": "채팅 환경",
     "meta": "도우미 정보",
     "modal": "모델 설정",
+    "opening": "오프닝 설정",
     "plugin": "플러그인 설정",
     "prompt": "역할 설정",
     "tts": "음성 서비스"
@@ -41,6 +42,17 @@
     "sessionDesc": "캐릭터 설정 및 세션 환경 설정.",
     "sessionWithName": "세션 설정 · {{name}}",
     "title": "설정"
+  },
+  "hotkey": {
+    "conflicts": "기존 단축키와 충돌",
+    "group": {
+      "conversation": "대화",
+      "essential": "기본"
+    },
+    "invalidCombination": "단축키는 최소한 하나의 수정 키(Ctrl, Alt, Shift)와 하나의 일반 키를 포함해야 합니다",
+    "record": "단축키를 녹음하려면 키를 누르세요",
+    "reset": "기본 단축키로 재설정",
+    "title": "단축키"
   },
   "llm": {
     "aesGcm": "귀하의 키 및 프록시 주소는 <1>AES-GCM</1> 암호화 알고리즘을 사용하여 암호화됩니다",
@@ -138,6 +150,7 @@
       "title": "배경색"
     },
     "description": {
+      "desc": "당신의 도우미를 간단히 소개합니다. 역할 설정으로 사용되지 않습니다.",
       "placeholder": "도우미 설명을 입력하세요",
       "title": "도우미 설명"
     },
@@ -149,7 +162,9 @@
       "placeholder": "역할 프롬프트 단어를 입력하세요",
       "title": "역할 설정"
     },
+    "submit": "도우미 정보 업데이트",
     "tag": {
+      "desc": "도우미 태그는 도우미 마켓에서 표시됩니다.",
       "placeholder": "태그를 입력하세요",
       "title": "태그"
     },
@@ -194,6 +209,7 @@
       "placeholder": "입력 템플릿 {{text}}은 실시간 입력 정보로 대체됩니다",
       "title": "사용자 입력 전처리"
     },
+    "submit": "채팅 선호도 업데이트",
     "title": "채팅 설정"
   },
   "settingModel": {
@@ -231,6 +247,7 @@
       },
       "title": "추론 강도"
     },
+    "submit": "모델 설정 업데이트",
     "temperature": {
       "desc": "값이 클수록 답변이 더 창의적이고 상상력이 풍부해지며, 값이 작을수록 답변이 더 엄격해집니다.",
       "title": "창의성 활성화",
@@ -241,6 +258,21 @@
       "desc": "얼마나 많은 가능성을 고려할지, 값이 클수록 더 많은 가능성 있는 답변을 수용하고, 값이 작을수록 가장 가능성이 높은 답변을 선택하는 경향이 있습니다. 창의성 활성화와 함께 변경하는 것은 권장하지 않습니다.",
       "title": "사고 개방성"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "대화 시작 시 표시되는 오프닝 메시지로, 어시스턴트의 기능을 소개합니다.",
+      "placeholder": "안녕하세요, 저는 맞춤형 어시스턴트입니다. 지금 바로 저와 대화를 시작하시거나, 어시스턴트 설정으로 가서 제 정보를 완성할 수 있습니다.",
+      "title": "오프닝 메시지"
+    },
+    "openingQuestions": {
+      "desc": "대화 시작 시 표시되는 안내 질문",
+      "empty": "질문이 없습니다",
+      "placeholder": "질문을 입력하세요",
+      "repeat": "질문이 이미 존재합니다",
+      "title": "오프닝 질문"
+    },
+    "title": "오프닝 설정"
   },
   "settingPlugin": {
     "title": "플러그인 목록"
@@ -292,6 +324,7 @@
       "desc": "브라우저는 기본 음성 인식 서비스입니다",
       "title": "음성 인식 서비스"
     },
+    "submit": "음성 서비스 업데이트",
     "title": "음성 서비스",
     "tts": "음성 합성 설정",
     "ttsService": {
@@ -335,12 +368,45 @@
     },
     "title": "테마 설정"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "내보내기",
+        "exportType": {
+          "agent": "도우미 설정 내보내기",
+          "agentWithMessage": "도우미와 메시지 내보내기",
+          "all": "전체 설정 및 모든 도우미 데이터 내보내기",
+          "allAgent": "모든 도우미 설정 내보내기",
+          "allAgentWithMessage": "모든 도우미와 메시지 내보내기",
+          "globalSetting": "전체 설정 내보내기"
+        },
+        "title": "데이터 내보내기"
+      },
+      "import": {
+        "button": "가져오기",
+        "title": "데이터 가져오기"
+      },
+      "title": "고급 작업"
+    },
+    "desc": "현재 브라우저의 저장 용량",
+    "embeddings": {
+      "used": "벡터 저장소"
+    },
+    "title": "데이터 저장소",
+    "used": "저장 용량"
+  },
   "submitAgentModal": {
     "button": "에이전트 제출",
     "identifier": "에이전트 식별자",
     "metaMiss": "에이전트 정보를 입력한 후 제출하십시오. 이름, 설명 및 태그를 포함해야 합니다.",
     "placeholder": "에이전트 식별자를 입력하세요. 고유해야 하며, 예: 웹 개발",
     "tooltips": "에이전트 마켓에 공유"
+  },
+  "submitFooter": {
+    "reset": "초기화",
+    "submit": "저장",
+    "unSaved": "저장되지 않은 변경 사항",
+    "unSavedWarning": "현재 저장되지 않은 변경 사항이 있습니다."
   },
   "sync": {
     "device": {
@@ -393,6 +459,7 @@
       "placeholder": "사용자 정의 프롬프트 입력",
       "title": "사용자 정의 프롬프트"
     },
+    "helpInfo": "새 도우미를 생성할 때 기본 도우미 설정이 기본값으로 사용됩니다.",
     "historyCompress": {
       "label": "대화 기록 모델",
       "modelDesc": "대화 기록 압축에 사용되는 모델을 지정합니다",
@@ -425,8 +492,10 @@
     "agent": "기본 에이전트",
     "common": "일반 설정",
     "experiment": "실험",
+    "hotkey": "단축키",
     "llm": "언어 모델",
     "provider": "AI 서비스 제공자",
+    "storage": "데이터 저장소",
     "sync": "클라우드 동기화",
     "system-agent": "시스템 도우미",
     "tts": "음성 서비스"

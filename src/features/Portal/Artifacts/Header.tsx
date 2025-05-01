@@ -1,5 +1,5 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
-import { ConfigProvider, Segmented, Typography } from 'antd';
+import { ActionIcon, Icon, Segmented } from '@lobehub/ui';
+import { ConfigProvider, Typography } from 'antd';
 import { cx } from 'antd-style';
 import { ArrowLeft, CodeIcon, EyeIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
+import { ArtifactDisplayMode } from '@/store/chat/slices/portal/initialState';
 import { oneLineEllipsis } from '@/styles';
 import { ArtifactType } from '@/types/artifact';
 
@@ -52,16 +53,20 @@ const Header = () => {
       >
         {showSwitch && (
           <Segmented
-            onChange={(value: 'code' | 'preview') => {
-              useChatStore.setState({ portalArtifactDisplayMode: value });
+            onChange={(value) => {
+              useChatStore.setState({ portalArtifactDisplayMode: value as ArtifactDisplayMode });
             }}
             options={[
               {
                 icon: <Icon icon={EyeIcon} />,
                 label: t('artifacts.display.preview'),
-                value: 'preview',
+                value: ArtifactDisplayMode.Preview,
               },
-              { icon: <Icon icon={CodeIcon} />, label: t('artifacts.display.code'), value: 'code' },
+              {
+                icon: <Icon icon={CodeIcon} />,
+                label: t('artifacts.display.code'),
+                value: ArtifactDisplayMode.Code,
+              },
             ]}
             size={'small'}
             value={displayMode}

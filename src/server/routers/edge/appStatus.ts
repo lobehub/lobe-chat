@@ -1,3 +1,3 @@
-import { router } from '@/libs/trpc';
+import { router } from '@/libs/trpc/edge';
 
 export const appStatusRouter = router({});

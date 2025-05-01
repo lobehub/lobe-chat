@@ -7,23 +7,37 @@ import { systemPrompt } from './systemRole';
 export const WebBrowsingApiName = {
   crawlMultiPages: 'crawlMultiPages',
   crawlSinglePage: 'crawlSinglePage',
-  searchWithSearXNG: 'searchWithSearXNG',
+  search: 'search',
 };
 
 export const WebBrowsingManifest: BuiltinToolManifest = {
   api: [
     {
       description:
-        'A meta search engine. Useful for when you need to answer questions about current events. Input should be a search query. Output is a JSON array of the query results',
-      name: WebBrowsingApiName.searchWithSearXNG,
+        'a search service. Useful for when you need to answer questions about current events. Input should be a search query. Output is a JSON array of the query results',
+      name: WebBrowsingApiName.search,
       parameters: {
         properties: {
           query: {
             description: 'The search query',
             type: 'string',
           },
+          searchCategories: {
+            description: 'The search categories you can set:',
+            items: {
+              enum: [
+                'general',
+                'images',
+                'news',
+                'science',
+                'videos',
+              ],
+              type: 'string',
+            },
+            type: 'array',
+          },
           searchEngines: {
-            description: 'The search engine you can use:',
+            description: 'The search engines you can use:',
             items: {
               enum: [
                 'google',
@@ -48,6 +62,11 @@ export const WebBrowsingManifest: BuiltinToolManifest = {
               type: 'string',
             },
             type: 'array',
+          },
+          searchTimeRange: {
+            description: 'The time range you can set:',
+            enum: ['anytime', 'day', 'week', 'month', 'year'],
+            type: 'string',
           },
         },
         required: ['query'],
@@ -77,7 +96,7 @@ export const WebBrowsingManifest: BuiltinToolManifest = {
         properties: {
           urls: {
             items: {
-              description: 'The url need to be crawled',
+              description: 'The urls need to be crawled',
               type: 'string',
             },
             type: 'array',

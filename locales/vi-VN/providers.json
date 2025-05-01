@@ -23,6 +23,9 @@
   "cloudflare": {
     "description": "Chạy các mô hình học máy được hỗ trợ bởi GPU không máy chủ trên mạng lưới toàn cầu của Cloudflare."
   },
+  "cohere": {
+    "description": "Cohere mang đến cho bạn các mô hình đa ngôn ngữ tiên tiến nhất, tính năng tìm kiếm hiện đại và không gian làm việc AI được thiết kế riêng cho các doanh nghiệp hiện đại - tất cả đều được tích hợp trong một nền tảng an toàn."
+  },
   "deepseek": {
     "description": "DeepSeek là một công ty tập trung vào nghiên cứu và ứng dụng công nghệ trí tuệ nhân tạo, mô hình mới nhất của họ, DeepSeek-V2.5, kết hợp khả năng đối thoại chung và xử lý mã, đồng thời đạt được sự cải thiện đáng kể trong việc căn chỉnh sở thích của con người, nhiệm vụ viết và tuân theo chỉ dẫn."
   },
@@ -52,6 +55,9 @@
   },
   "hunyuan": {
     "description": "Mô hình ngôn ngữ lớn được phát triển bởi Tencent, có khả năng sáng tạo tiếng Trung mạnh mẽ, khả năng suy luận logic trong các ngữ cảnh phức tạp, và khả năng thực hiện nhiệm vụ đáng tin cậy."
+  },
+  "infiniai": {
+    "description": "Cung cấp dịch vụ mô hình lớn hiệu suất cao, dễ sử dụng và an toàn cho nhà phát triển ứng dụng, bao gồm toàn bộ quy trình từ phát triển mô hình lớn đến triển khai dịch vụ mô hình lớn."
   },
   "internlm": {
     "description": "Tổ chức mã nguồn mở chuyên nghiên cứu và phát triển công cụ cho mô hình lớn. Cung cấp nền tảng mã nguồn mở hiệu quả, dễ sử dụng cho tất cả các nhà phát triển AI, giúp tiếp cận công nghệ mô hình lớn và thuật toán tiên tiến nhất."
@@ -98,6 +104,9 @@
   "sambanova": {
     "description": "SambaNova Cloud cho phép các nhà phát triển dễ dàng sử dụng các mô hình mã nguồn mở tốt nhất và tận hưởng tốc độ suy diễn nhanh nhất."
   },
+  "search1api": {
+    "description": "Search1API cung cấp quyền truy cập vào các mô hình DeepSeek có thể tự kết nối theo nhu cầu, bao gồm phiên bản tiêu chuẩn và phiên bản nhanh, hỗ trợ lựa chọn mô hình với nhiều quy mô tham số khác nhau."
+  },
   "sensenova": {
     "description": "SenseTime luôn đổi mới, dựa vào nền tảng mạnh mẽ của SenseTime để cung cấp dịch vụ mô hình lớn toàn diện, hiệu quả và dễ sử dụng."
   },
@@ -136,6 +145,9 @@
   },
   "xai": {
     "description": "xAI là một công ty cam kết xây dựng trí tuệ nhân tạo để tăng tốc khám phá khoa học của nhân loại. Sứ mệnh của chúng tôi là thúc đẩy sự hiểu biết chung của chúng ta về vũ trụ."
+  },
+  "xinference": {
+    "description": "Xorbits Inference (Xinference) là một nền tảng mã nguồn mở, được thiết kế để đơn giản hóa việc chạy và tích hợp các mô hình AI khác nhau. Với Xinference, bạn có thể chạy suy luận trên bất kỳ mô hình LLM mã nguồn mở, mô hình nhúng và mô hình đa phương thức nào trong môi trường đám mây hoặc cục bộ, và tạo ra các ứng dụng AI mạnh mẽ."
   },
   "zeroone": {
     "description": "01.AI tập trung vào công nghệ trí tuệ nhân tạo trong kỷ nguyên AI 2.0, thúc đẩy mạnh mẽ sự đổi mới và ứng dụng của \"người + trí tuệ nhân tạo\", sử dụng các mô hình mạnh mẽ và công nghệ AI tiên tiến để nâng cao năng suất của con người và thực hiện sự trao quyền công nghệ."
