@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Siliconflow requests with tools no longer force non-streaming."]
+    },
+    "date": "2025-05-01",
+    "version": "1.84.15"
+  },
+  {
+    "children": {
       "improvements": ["Add windows control and tray."]
     },
     "date": "2025-05-01",
