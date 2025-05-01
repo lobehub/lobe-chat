@@ -24,16 +24,19 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { model, presence_penalty, temperature, thinking, top_p, enabledSearch, ...rest } = payload;
+      const { model, presence_penalty, temperature, thinking, top_p, enabledSearch, ...rest } =
+        payload;
 
       return {
         ...rest,
-        ...( ['qwen3','qwen-turbo','qwen-plus']
-          .some(keyword => model.toLowerCase().includes(keyword))
-          ? { 
-            enable_thinking: thinking !== undefined ? thinking.type === 'enabled' : false,
-            thinking_budget: thinking?.budget_tokens === 0 ? 0 : (thinking?.budget_tokens || undefined),
-          }
+        ...(['qwen3', 'qwen-turbo', 'qwen-plus'].some((keyword) =>
+          model.toLowerCase().includes(keyword),
+        )
+          ? {
+              enable_thinking: thinking !== undefined ? thinking.type === 'enabled' : false,
+              thinking_budget:
+                thinking?.budget_tokens === 0 ? 0 : thinking?.budget_tokens || undefined,
+            }
           : {}),
         frequency_penalty: undefined,
         model,
@@ -70,8 +73,10 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
       } as any;
     },
     handleStream: (stream, callbacks) => {
-      const inputStartAt = Date.now();
-      return QwenAIStream(stream, callbacks, inputStartAt);
+      return QwenAIStream(stream, {
+        callbacks: callbacks,
+        inputStartAt: Date.now(),
+      });
     },
   },
   debug: {

@@ -110,11 +110,16 @@ export const transformQwenStream = (
   };
 };
 
+interface QwenAIStreamOptions {
+  callbacks?: ChatStreamCallbacks;
+  inputStartAt?: number;
+}
+
 export const QwenAIStream = (
   stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
-  callbacks?: ChatStreamCallbacks,
-  inputStartAt?: number,
+  options?: QwenAIStreamOptions,
 ) => {
+  const { callbacks, inputStartAt } = options || {};
   const streamContext: StreamContext = { id: '' };
   const readableStream =
     stream instanceof ReadableStream ? stream : convertIterableToStream(stream);
