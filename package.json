@@ -163,6 +163,7 @@
     "@vercel/edge-config": "^1.4.0",
     "@vercel/functions": "^2.0.0",
     "@vercel/speed-insights": "^1.2.0",
+    "@xterm/xterm": "^5.5.0",
     "ahooks": "^3.8.4",
     "ai": "^3.4.33",
     "antd": "^5.24.6",
