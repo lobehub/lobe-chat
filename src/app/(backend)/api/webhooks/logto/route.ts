@@ -35,12 +35,16 @@ export const POST = async (req: Request): Promise<NextResponse> => {
         },
       );
     }
-
-    default: {
-      pino.warn(
-        `${req.url} received event type "${event}", but no handler is defined for this type`,
-      );
-      return NextResponse.json({ error: `unrecognised payload type: ${event}` }, { status: 400 });
+    case 'User.SuspensionStatus.Updated': {
+      if (data?.isSuspended) {
+        return nextAuthUserService.invokeSession({
+          provider: 'logto',
+          providerAccountId: data.id,
+        });
+      }
+      break;
     }
   }
+  pino.warn(`${req.url} received event type "${event}", but no handler is defined for this type`);
+  return NextResponse.json({ error: `unrecognised payload type: ${event}` }, { status: 400 });
 };
