@@ -16,17 +16,18 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useServerConfigStore } from '@/store/serverConfig';
 
-interface ParamsControlsProps {
+interface ControlsProps {
   setUpdating: (updating: boolean) => void;
+  updating: boolean;
 }
-const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
+const Controls = memo<ControlsProps>(({ setUpdating }) => {
   const { t } = useTranslation('setting');
   const mobile = useServerConfigStore((s) => s.isMobile);
   const updateAgentConfig = useAgentStore((s) => s.updateAgentConfig);
 
   const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
 
-  let items: FormItemProps[] = [
+  const items: FormItemProps[] = [
     {
       children: <Temperature />,
       label: (
@@ -78,7 +79,9 @@ const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
       initialValues={config}
       itemMinWidth={200}
       items={
-        mobile ? items : items.map(({ tag, ...item }) => ({ ...item, desc: <Tag>{tag}</Tag> }))
+        mobile
+          ? items
+          : items.map(({ tag, ...item }) => ({ ...item, desc: <Tag size={'small'}>{tag}</Tag> }))
       }
       itemsType={'flat'}
       onValuesChange={debounce(async (values) => {
@@ -86,17 +89,14 @@ const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
         await updateAgentConfig(values);
         setUpdating(false);
       }, 500)}
-      style={{ fontSize: 12 }}
       styles={{
         group: {
           background: 'transparent',
-          paddingBottom: mobile ? 16 : 0,
-          paddingInline: 0,
+          paddingBottom: 12,
         },
       }}
-      variant={'borderless'}
     />
   );
 });
 
-export default ParamsControls;
+export default Controls;

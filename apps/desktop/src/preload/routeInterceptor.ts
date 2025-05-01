@@ -34,12 +34,23 @@ export const setupRouteInterceptors = function () {
         try {
           const url = new URL(link.href);
 
+          // 检查是否为外部链接
+          if (url.origin !== window.location.origin) {
+            console.log(`[preload] Intercepted external link click:`, url.href);
+            // 阻止默认的链接跳转行为
+            e.preventDefault();
+            e.stopPropagation();
+            // 调用主进程处理外部链接
+            await invoke('openExternalLink', url.href);
+            return false; // 明确阻止后续处理
+          }
+
+          // 如果不是外部链接，则继续处理内部路由拦截逻辑
           // 使用共享配置检查是否需要拦截
           const matchedRoute = findMatchingRoute(url.pathname);
 
-          // 如果是需要拦截的路径，立即阻止默认行为
+          // 如果是需要拦截的路径
           if (matchedRoute) {
-            // 检查当前页面是否已经在目标路径下，如果是则不拦截
             const currentPath = window.location.pathname;
             const isAlreadyInTargetPage = currentPath.startsWith(matchedRoute.pathPrefix);
 
@@ -55,7 +66,18 @@ export const setupRouteInterceptors = function () {
             return false;
           }
         } catch (err) {
-          console.error('[preload] Link interception error:', err);
+          // 处理可能的 URL 解析错误或其他问题
+          // 例如 mailto:, tel: 等协议会导致 new URL() 抛出错误
+          if (err instanceof TypeError && err.message.includes('Invalid URL')) {
+            console.log(
+              '[preload] Non-HTTP link clicked, allowing default browser behavior:',
+              link.href,
+            );
+            // 对于非 HTTP/HTTPS 链接，允许浏览器默认处理
+            // 不需要 e.preventDefault() 或 invoke
+          } else {
+            console.error('[preload] Link interception error:', err);
+          }
         }
       }
     },

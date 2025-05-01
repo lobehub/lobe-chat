@@ -1,11 +1,200 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
-// https://help.aliyun.com/zh/model-studio/developer-reference/use-qwen-by-calling-api#e1fada1a719u7
+// https://help.aliyun.com/zh/model-studio/models?spm=a2c4g.11186623
 
 const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 235B A22B',
+    enabled: true,
+    id: 'qwen3-235b-a22b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 4,
+      output: 40, // Thinking mode pricing
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 32B',
+    enabled: true,
+    id: 'qwen3-32b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 20, // Thinking mode pricing
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 30B',
+    enabled: true,
+    id: 'qwen3-30b-a3b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 1.5,
+      output: 15, // Thinking mode pricing
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 14B',
+    id: 'qwen3-14b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 1,
+      output: 10, // Thinking mode pricing
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 8B',
+    id: 'qwen3-8b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.5,
+      output: 5, // Thinking mode pricing
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 4B',
+    id: 'qwen3-4b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.3,
+      output: 3, // Thinking mode pricing
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 1.7B',
+    id: 'qwen3-1.7b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.3,
+      output: 3, // Thinking mode pricing
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 0.6B',
+    id: 'qwen3-0.6b',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.3,
+      output: 3, // Thinking mode pricing
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
     },
     contextWindowTokens: 131_072,
     description:
@@ -29,6 +218,7 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
       search: true,
     },
     contextWindowTokens: 1_000_000,
@@ -41,9 +231,11 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 0.3,
-      output: 0.6,
+      output: 6, // Thinking mode pricing
     },
+    releasedAt: '2025-04-28',
     settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -51,6 +243,7 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
       search: true,
     },
     contextWindowTokens: 131_072,
@@ -63,9 +256,11 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 0.8,
-      output: 2,
+      output: 16, // Thinking mode pricing
     },
+    releasedAt: '2025-04-28',
     settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -263,6 +458,7 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 131_072,
     description:
@@ -277,6 +473,9 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 6,
     },
     releasedAt: '2025-03-06',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {

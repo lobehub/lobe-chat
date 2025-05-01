@@ -54,11 +54,19 @@
         "placeholder": "Na przykład: mcp-hello-world",
         "required": "Proszę wprowadzić parametry uruchomienia"
       },
+      "avatar": {
+        "label": "Ikona wtyczki"
+      },
       "command": {
         "desc": "Wykonywalny plik lub skrypt do uruchomienia serwera MCP STDIO",
         "label": "Polecenie",
         "placeholder": "Na przykład: npx / uv / docker itp.",
         "required": "Proszę wprowadzić polecenie uruchomienia"
+      },
+      "desc": {
+        "desc": "Opis dodawanej wtyczki",
+        "label": "Opis wtyczki",
+        "placeholder": "Uzupełnij informacje o użyciu i scenariuszach tej wtyczki"
       },
       "endpoint": {
         "desc": "Wprowadź adres swojego serwera MCP Streamable HTTP",

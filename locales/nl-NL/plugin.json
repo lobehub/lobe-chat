@@ -54,11 +54,19 @@
         "placeholder": "Bijvoorbeeld: --port 8080 --debug",
         "required": "Voer de opstartparameters in"
       },
+      "avatar": {
+        "label": "Plugin-icoon"
+      },
       "command": {
         "desc": "Uitvoerbaar bestand of script om de MCP STDIO-plugin te starten",
         "label": "Commando",
         "placeholder": "Bijvoorbeeld: python main.py of /path/to/executable",
         "required": "Voer het opstartcommando in"
+      },
+      "desc": {
+        "desc": "Voeg een beschrijving van de plugin toe",
+        "label": "Plugin-beschrijving",
+        "placeholder": "Vul informatie in over het gebruik en de scenario's van deze plugin"
       },
       "endpoint": {
         "desc": "Voer het adres van je MCP Streamable HTTP Server in",

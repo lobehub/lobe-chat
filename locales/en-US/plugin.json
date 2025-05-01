@@ -54,11 +54,19 @@
         "placeholder": "For example: mcp-hello-world",
         "required": "Please enter the startup parameters"
       },
+      "avatar": {
+        "label": "Plugin Icon"
+      },
       "command": {
         "desc": "The executable file or script used to start the MCP STDIO Server",
         "label": "Command",
         "placeholder": "For example: npx / uv / docker, etc.",
         "required": "Please enter the startup command"
+      },
+      "desc": {
+        "desc": "Add a description for the plugin",
+        "label": "Plugin Description",
+        "placeholder": "Provide usage instructions and context for this plugin"
       },
       "endpoint": {
         "desc": "Enter the address of your MCP Streamable HTTP Server",

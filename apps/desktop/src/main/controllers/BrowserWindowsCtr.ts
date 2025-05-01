@@ -2,6 +2,7 @@ import { InterceptRouteParams } from '@lobechat/electron-client-ipc';
 import { extractSubPath, findMatchingRoute } from '~common/routes';
 
 import { AppBrowsersIdentifiers, BrowsersIdentifiers } from '@/appBrowsers';
+import { IpcClientEventSender } from '@/types/ipcClientEvent';
 
 import { ControllerModule, ipcClientEvent, shortcut } from './index';
 
@@ -24,6 +25,21 @@ export default class BrowserWindowsCtr extends ControllerModule {
       console.error('[BrowserWindowsCtr] Failed to open settings window:', error);
       return { error: error.message, success: false };
     }
+  }
+
+  @ipcClientEvent('closeWindow')
+  closeWindow(data: undefined, sender: IpcClientEventSender) {
+    this.app.browserManager.closeWindow(sender.identifier);
+  }
+
+  @ipcClientEvent('minimizeWindow')
+  minimizeWindow(data: undefined, sender: IpcClientEventSender) {
+    this.app.browserManager.minimizeWindow(sender.identifier);
+  }
+
+  @ipcClientEvent('maximizeWindow')
+  maximizeWindow(data: undefined, sender: IpcClientEventSender) {
+    this.app.browserManager.maximizeWindow(sender.identifier);
   }
 
   /**

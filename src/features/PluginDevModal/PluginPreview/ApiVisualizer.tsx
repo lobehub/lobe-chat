@@ -1,7 +1,7 @@
 'use client';
 
 import { Block, Icon, Tag } from '@lobehub/ui';
-import { Input, Space, Typography } from 'antd';
+import { Input, Space } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -9,13 +9,21 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css, token }) => ({
+  apiDesc: css`
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+
+    font-size: 12px;
+    color: ${token.colorTextTertiary};
+  `,
   apiHeader: css`
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: space-between;
   `,
-
   apiTitle: css`
     font-family: ${token.fontFamilyCode};
   `,
@@ -99,9 +107,9 @@ const ApiItem = memo<ApiItemProps>(({ api }) => {
   return (
     <Block gap={8} padding={16}>
       <div className={styles.apiHeader} onClick={() => setExpanded(!expanded)}>
-        <Flexbox gap={4}>
+        <Flexbox gap={8}>
           <div className={styles.apiTitle}>{api.name}</div>
-          <Typography.Text type="secondary">{api.description}</Typography.Text>
+          <div className={styles.apiDesc}>{api.description}</div>
         </Flexbox>
 
         <Icon icon={expanded ? ChevronDown : ChevronRight} />

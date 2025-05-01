@@ -54,11 +54,19 @@
         "placeholder": "Ví dụ: mcp-hello-world",
         "required": "Vui lòng nhập tham số khởi động"
       },
+      "avatar": {
+        "label": "Biểu tượng tiện ích"
+      },
       "command": {
         "desc": "Tập tin thực thi hoặc kịch bản dùng để khởi động Máy chủ MCP STDIO",
         "label": "Lệnh",
         "placeholder": "Ví dụ: npx / uv / docker v.v.",
         "required": "Vui lòng nhập lệnh khởi động"
+      },
+      "desc": {
+        "desc": "Mô tả về tiện ích",
+        "label": "Mô tả tiện ích",
+        "placeholder": "Bổ sung thông tin về cách sử dụng và các tình huống của tiện ích này"
       },
       "endpoint": {
         "desc": "Nhập địa chỉ của máy chủ HTTP Streamable MCP của bạn",
