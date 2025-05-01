@@ -184,12 +184,11 @@ export default class Browser {
 
     const browserWindow = new BrowserWindow({
       ...res,
-
       height: savedState?.height || height,
 
+      // Always create hidden first
       show: false,
 
-      // Always create hidden first
       title,
 
       transparent: true,
@@ -199,11 +198,7 @@ export default class Browser {
         // https://www.electronjs.org/docs/tutorial/context-isolation
         contextIsolation: true,
         preload: join(preloadDir, 'index.js'),
-        // devTools: isDev,
       },
-      // Use saved state if available, otherwise use options. Do not set x/y
-      // x: savedState?.x, // Don't restore x
-      // y: savedState?.y, // Don't restore y
       width: savedState?.width || width,
     });
 
@@ -215,6 +210,7 @@ export default class Browser {
       session: browserWindow.webContents.session,
     });
 
+    console.log('platform:',process.platform);
     // Windows 11 can use this new API
     if (process.platform === 'win32' && browserWindow.setBackgroundMaterial) {
       logger.debug(`[${this.identifier}] Setting window background material for Windows 11`);
