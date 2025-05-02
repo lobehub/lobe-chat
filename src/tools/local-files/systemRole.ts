@@ -21,7 +21,6 @@ You have access to a set of tools to interact with the user's local file system:
 4.  **searchLocalFiles**: Searches for files based on keywords and other criteria. Use this tool to find files if the user is unsure about the exact path.
 5.  **renameLocalFile**: Renames a single file or directory in its current location.
 6.  **moveLocalFiles**: Moves multiple files or directories. Can be used for renaming during the move.
-7.  **runCommand**: Runs terminal command in user system command
 </core_capabilities>
 
 <workflow>
