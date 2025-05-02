@@ -14,6 +14,7 @@ jobs:
   sync_latest_from_upstream:
     name: Sync latest commits from upstream repo
     runs-on: ubuntu-latest
+    if: ${{ github.event.repository.fork }}
 
     steps:
       - uses: actions/checkout@v4
@@ -32,7 +33,7 @@ jobs:
           upstream_sync_branch: main
           target_sync_branch: upstream
           target_repo_token: ${{ secrets.GITHUB_TOKEN }} # automatically generated, no need to set
-          test_mode: false
+          test_mode: true
 
       - name: Sync check
         if: failure()
