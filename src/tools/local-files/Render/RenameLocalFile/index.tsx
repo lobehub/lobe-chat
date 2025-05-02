@@ -6,7 +6,7 @@ import path from 'path-browserify-esm';
 import React, { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import LocalFile from '@/features/LocalFile';
+import { LocalFile } from '@/features/LocalFile';
 import { LocalReadFileState } from '@/tools/local-files/type';
 import { ChatMessagePluginError } from '@/types/message';
 

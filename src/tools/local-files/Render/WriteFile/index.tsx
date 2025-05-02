@@ -6,7 +6,7 @@ import path from 'path-browserify-esm';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import LocalFile from '@/features/LocalFile';
+import { LocalFile, LocalFolder } from '@/features/LocalFile';
 import { ChatMessagePluginError } from '@/types/message';
 
 interface WriteFileProps {
@@ -22,7 +22,7 @@ const WriteFile = memo<WriteFileProps>(({ args }) => {
 
   return (
     <Flexbox horizontal>
-      <LocalFile isDirectory name={dir} path={dir} />
+      <LocalFolder path={dir} />
       <Icon icon={ChevronRight} />
       <LocalFile name={base} path={args.path} />
     </Flexbox>

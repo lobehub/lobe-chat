@@ -1,7 +1,7 @@
 import isEqual from 'fast-deep-equal';
 import React, { memo } from 'react';
 
-import LocalFile from '@/features/LocalFile';
+import { LocalFile } from '@/features/LocalFile';
 
 import { MarkdownElementProps } from '../../type';
 
