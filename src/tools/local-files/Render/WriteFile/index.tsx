@@ -29,4 +29,4 @@ const WriteFile = memo<WriteFileProps>(({ args }) => {
   );
 });
 
-export default memo(WriteFile);
+export default WriteFile;

@@ -7,7 +7,6 @@ export const LocalFilesApiName = {
   moveLocalFiles: 'moveLocalFiles',
   readLocalFile: 'readLocalFile',
   renameLocalFile: 'renameLocalFile',
-  runCommand: 'runCommand',
   searchLocalFiles: 'searchLocalFiles',
   writeLocalFile: 'writeLocalFile',
 };
@@ -193,20 +192,6 @@ export const LocalFilesManifest: BuiltinToolManifest = {
           },
         },
         required: ['path', 'content'],
-        type: 'object',
-      },
-    },
-    {
-      description: '',
-      name: 'runCommand',
-      parameters: {
-        properties: {
-          command: {
-            description: 'The file path to write to',
-            type: 'string',
-          },
-        },
-        required: ['command'],
         type: 'object',
       },
     },
