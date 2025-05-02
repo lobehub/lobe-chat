@@ -31,17 +31,17 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const LocalFile = ({
-  name,
-  path,
-  isDirectory,
-}: {
-  isDirectory: boolean;
+interface LocalFileProps {
+  isDirectory?: boolean;
   name: string;
-  path: string;
-}) => {
+  path?: string;
+}
+
+const LocalFile = ({ name, path, isDirectory = false }: LocalFileProps) => {
   const { styles } = useStyles();
   const handleClick = () => {
+    if (!path) return;
+
     localFileService.openLocalFileOrFolder(path, isDirectory);
   };
 
