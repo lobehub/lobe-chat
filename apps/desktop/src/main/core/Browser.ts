@@ -55,6 +55,12 @@ export default class Browser {
     return this.retrieveOrInitialize();
   }
 
+  get webContents() {
+    if (this._browserWindow.isDestroyed()) return null;
+
+    return this._browserWindow.webContents;
+  }
+
   /**
    * Method to construct BrowserWindows object
    * @param options
@@ -210,7 +216,6 @@ export default class Browser {
       session: browserWindow.webContents.session,
     });
 
-    console.log('platform:',process.platform);
     // Windows 11 can use this new API
     if (process.platform === 'win32' && browserWindow.setBackgroundMaterial) {
       logger.debug(`[${this.identifier}] Setting window background material for Windows 11`);
