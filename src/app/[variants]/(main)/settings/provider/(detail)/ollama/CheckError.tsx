@@ -44,7 +44,7 @@ const CheckError = ({
 
   const errorMessage = errorBody.error?.message;
 
-  if (error?.type === 'OllamaServiceUnavailable') return <OllamaSetupGuide container={false} />;
+  if (error?.type === 'OllamaServiceUnavailable') return <OllamaSetupGuide />;
 
   // error of not pull the model
   const unresolvedModel = errorMessage?.match(UNRESOLVED_MODEL_REGEXP)?.[1];

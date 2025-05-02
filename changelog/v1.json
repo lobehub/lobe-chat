@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix desktop quiting with reopen window."]
+    },
+    "date": "2025-05-02",
+    "version": "1.84.16"
+  },
+  {
+    "children": {
       "fixes": ["Siliconflow requests with tools no longer force non-streaming."]
     },
     "date": "2025-05-01",
