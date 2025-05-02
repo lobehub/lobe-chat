@@ -44,7 +44,7 @@ export default class LocalFileCtr extends ControllerModule {
    */
   @ipcClientEvent('searchLocalFiles')
   async handleLocalFilesSearch(params: LocalSearchFilesParams): Promise<FileResult[]> {
-    logger.debug('接收到文件搜索请求:', { keywords: params.keywords });
+    logger.debug('Received file search request:', { keywords: params.keywords });
 
     const options: Omit<SearchOptions, 'keywords'> = {
       limit: 30,
@@ -52,10 +52,10 @@ export default class LocalFileCtr extends ControllerModule {
 
     try {
       const results = await this.searchService.search(params.keywords, options);
-      logger.debug('文件搜索完成', { count: results.length });
+      logger.debug('File search completed', { count: results.length });
       return results;
     } catch (error) {
-      logger.error('文件搜索失败:', error);
+      logger.error('File search failed:', error);
       return [];
     }
   }
@@ -65,14 +65,14 @@ export default class LocalFileCtr extends ControllerModule {
     error?: string;
     success: boolean;
   }> {
-    logger.debug('尝试打开文件:', { filePath });
+    logger.debug('Attempting to open file:', { filePath });
 
     try {
       await shell.openPath(filePath);
-      logger.debug('文件打开成功:', { filePath });
+      logger.debug('File opened successfully:', { filePath });
       return { success: true };
     } catch (error) {
-      logger.error(`打开文件失败 ${filePath}:`, error);
+      logger.error(`Failed to open file ${filePath}:`, error);
       return { error: (error as Error).message, success: false };
     }
   }
@@ -83,39 +83,39 @@ export default class LocalFileCtr extends ControllerModule {
     success: boolean;
   }> {
     const folderPath = isDirectory ? targetPath : path.dirname(targetPath);
-    logger.debug('尝试打开文件夹:', { folderPath, isDirectory, targetPath });
+    logger.debug('Attempting to open folder:', { folderPath, isDirectory, targetPath });
 
     try {
       await shell.openPath(folderPath);
-      logger.debug('文件夹打开成功:', { folderPath });
+      logger.debug('Folder opened successfully:', { folderPath });
       return { success: true };
     } catch (error) {
-      logger.error(`打开文件夹失败 ${folderPath}:`, error);
+      logger.error(`Failed to open folder ${folderPath}:`, error);
       return { error: (error as Error).message, success: false };
     }
   }
 
   @ipcClientEvent('readLocalFiles')
   async readFiles({ paths }: LocalReadFilesParams): Promise<LocalReadFileResult[]> {
-    logger.debug('开始批量读取文件:', { count: paths.length });
+    logger.debug('Starting batch file reading:', { count: paths.length });
 
     const results: LocalReadFileResult[] = [];
 
     for (const filePath of paths) {
       // 初始化结果对象
-      logger.debug('读取单个文件:', { filePath });
+      logger.debug('Reading single file:', { filePath });
       const result = await this.readFile({ path: filePath });
       results.push(result);
     }
 
-    logger.debug('批量文件读取完成', { count: results.length });
+    logger.debug('Batch file reading completed', { count: results.length });
     return results;
   }
 
   @ipcClientEvent('readLocalFile')
   async readFile({ path: filePath, loc }: LocalReadFileParams): Promise<LocalReadFileResult> {
     const effectiveLoc = loc ?? [0, 200];
-    logger.debug('开始读取文件:', { filePath, loc: effectiveLoc });
+    logger.debug('Starting to read file:', { filePath, loc: effectiveLoc });
 
     try {
       const fileDocument = await loadFile(filePath);
@@ -131,7 +131,7 @@ export default class LocalFileCtr extends ControllerModule {
       const charCount = content.length;
       const lineCount = selectedLines.length;
 
-      logger.debug('文件读取成功:', {
+      logger.debug('File read successfully:', {
         filePath,
         selectedLineCount: lineCount,
         totalCharCount,
@@ -160,7 +160,7 @@ export default class LocalFileCtr extends ControllerModule {
       try {
         const stats = await statPromise(filePath);
         if (stats.isDirectory()) {
-          logger.warn('尝试读取目录内容:', { filePath });
+          logger.warn('Attempted to read directory content:', { filePath });
           result.content = 'This is a directory and cannot be read as plain text.';
           result.charCount = 0;
           result.lineCount = 0;
@@ -169,12 +169,12 @@ export default class LocalFileCtr extends ControllerModule {
           result.totalLineCount = 0;
         }
       } catch (statError) {
-        logger.error(`获取文件状态失败 ${filePath}:`, statError);
+        logger.error(`Failed to get file status ${filePath}:`, statError);
       }
 
       return result;
     } catch (error) {
-      logger.error(`读取文件失败 ${filePath}:`, error);
+      logger.error(`Failed to read file ${filePath}:`, error);
       const errorMessage = (error as Error).message;
       return {
         charCount: 0,
@@ -193,17 +193,20 @@ export default class LocalFileCtr extends ControllerModule {
 
   @ipcClientEvent('listLocalFiles')
   async listLocalFiles({ path: dirPath }: ListLocalFileParams): Promise<FileResult[]> {
-    logger.debug('列出目录内容:', { dirPath });
+    logger.debug('Listing directory contents:', { dirPath });
 
     const results: FileResult[] = [];
     try {
       const entries = await readdirPromise(dirPath);
-      logger.debug('目录项获取成功:', { dirPath, entriesCount: entries.length });
+      logger.debug('Directory entries retrieved successfully:', {
+        dirPath,
+        entriesCount: entries.length,
+      });
 
       for (const entry of entries) {
         // Skip specific system files based on the ignore list
         if (SYSTEM_FILES_TO_IGNORE.includes(entry)) {
-          logger.debug('忽略系统文件:', { fileName: entry });
+          logger.debug('Ignoring system file:', { fileName: entry });
           continue;
         }
 
@@ -223,7 +226,7 @@ export default class LocalFileCtr extends ControllerModule {
           });
         } catch (statError) {
           // Silently ignore files we can't stat (e.g. permissions)
-          logger.error(`获取文件状态失败 ${fullPath}:`, statError);
+          logger.error(`Failed to get file status ${fullPath}:`, statError);
         }
       }
 
@@ -236,10 +239,10 @@ export default class LocalFileCtr extends ControllerModule {
         return (a.name || '').localeCompare(b.name || ''); // Then sort by name
       });
 
-      logger.debug('目录列表获取成功', { dirPath, resultCount: results.length });
+      logger.debug('Directory listing successful', { dirPath, resultCount: results.length });
       return results;
     } catch (error) {
-      logger.error(`列出目录失败 ${dirPath}:`, error);
+      logger.error(`Failed to list directory ${dirPath}:`, error);
       // Rethrow or return an empty array/error object depending on desired behavior
       // For now, returning empty array on error listing directory itself
       return [];
@@ -248,20 +251,20 @@ export default class LocalFileCtr extends ControllerModule {
 
   @ipcClientEvent('moveLocalFiles')
   async handleMoveFiles({ items }: MoveLocalFilesParams): Promise<LocalMoveFilesResultItem[]> {
-    logger.debug('开始批量移动文件:', { itemsCount: items?.length });
+    logger.debug('Starting batch file move:', { itemsCount: items?.length });
 
     const results: LocalMoveFilesResultItem[] = [];
 
     if (!items || items.length === 0) {
-      logger.warn('moveLocalFiles 被调用但参数为空');
+      logger.warn('moveLocalFiles called with empty parameters');
       return [];
     }
 
     // 逐个处理移动请求
     for (const item of items) {
       const { oldPath: sourcePath, newPath } = item;
-      const logPrefix = `[移动文件 ${sourcePath} -> ${newPath}]`;
-      logger.debug(`${logPrefix} 开始处理`);
+      const logPrefix = `[Moving file ${sourcePath} -> ${newPath}]`;
+      logger.debug(`${logPrefix} Starting process`);
 
       const resultItem: LocalMoveFilesResultItem = {
         newPath: undefined,
@@ -271,7 +274,7 @@ export default class LocalFileCtr extends ControllerModule {
 
       // 基本验证
       if (!sourcePath || !newPath) {
-        logger.error(`${logPrefix} 参数验证失败: 源路径或目标路径为空`);
+        logger.error(`${logPrefix} Parameter validation failed: source or target path is empty`);
         resultItem.error = 'Both oldPath and newPath are required for each item.';
         results.push(resultItem);
         continue;
@@ -281,13 +284,13 @@ export default class LocalFileCtr extends ControllerModule {
         // 检查源是否存在
         try {
           await accessPromise(sourcePath, fs.constants.F_OK);
-          logger.debug(`${logPrefix} 源文件存在`);
+          logger.debug(`${logPrefix} Source file exists`);
         } catch (accessError: any) {
           if (accessError.code === 'ENOENT') {
-            logger.error(`${logPrefix} 源文件不存在`);
+            logger.error(`${logPrefix} Source file does not exist`);
             throw new Error(`Source path not found: ${sourcePath}`);
           } else {
-            logger.error(`${logPrefix} 访问源文件权限错误:`, accessError);
+            logger.error(`${logPrefix} Permission error accessing source file:`, accessError);
             throw new Error(
               `Permission denied accessing source path: ${sourcePath}. ${accessError.message}`,
             );
@@ -296,7 +299,7 @@ export default class LocalFileCtr extends ControllerModule {
 
         // 检查目标路径是否与源路径相同
         if (path.normalize(sourcePath) === path.normalize(newPath)) {
-          logger.info(`${logPrefix} 源路径和目标路径相同，跳过移动`);
+          logger.info(`${logPrefix} Source and target paths are identical, skipping move`);
           resultItem.success = true;
           resultItem.newPath = newPath; // 即使未移动，也报告目标路径
           results.push(resultItem);
@@ -306,15 +309,15 @@ export default class LocalFileCtr extends ControllerModule {
         // LBYL: 确保目标目录存在
         const targetDir = path.dirname(newPath);
         makeSureDirExist(targetDir);
-        logger.debug(`${logPrefix} 已确保目标目录存在: ${targetDir}`);
+        logger.debug(`${logPrefix} Ensured target directory exists: ${targetDir}`);
 
         // 执行移动 (rename)
         await renamePromiseFs(sourcePath, newPath);
         resultItem.success = true;
         resultItem.newPath = newPath;
-        logger.info(`${logPrefix} 移动成功`);
+        logger.info(`${logPrefix} Move successful`);
       } catch (error) {
-        logger.error(`${logPrefix} 移动失败:`, error);
+        logger.error(`${logPrefix} Move failed:`, error);
         // 使用与 handleMoveFile 类似的错误处理逻辑
         let errorMessage = (error as Error).message;
         if ((error as any).code === 'ENOENT')
@@ -344,9 +347,9 @@ export default class LocalFileCtr extends ControllerModule {
       results.push(resultItem);
     }
 
-    logger.debug('批量移动文件完成', {
-      总数量: results.length,
-      成功数量: results.filter((r) => r.success).length,
+    logger.debug('Batch file move completed', {
+      successCount: results.filter((r) => r.success).length,
+      totalCount: results.length,
     });
     return results;
   }
@@ -359,12 +362,12 @@ export default class LocalFileCtr extends ControllerModule {
     newName: string;
     path: string;
   }): Promise<RenameLocalFileResult> {
-    const logPrefix = `[重命名 ${currentPath} -> ${newName}]`;
-    logger.debug(`${logPrefix} 开始处理重命名请求`);
+    const logPrefix = `[Renaming ${currentPath} -> ${newName}]`;
+    logger.debug(`${logPrefix} Starting rename request`);
 
     // Basic validation (can also be done in frontend action)
     if (!currentPath || !newName) {
-      logger.error(`${logPrefix} 参数验证失败: 路径或新名称为空`);
+      logger.error(`${logPrefix} Parameter validation failed: path or new name is empty`);
       return { error: 'Both path and newName are required.', newPath: '', success: false };
     }
     // Prevent path traversal or using invalid characters/names
@@ -375,7 +378,7 @@ export default class LocalFileCtr extends ControllerModule {
       newName === '..' ||
       /["*/:<>?\\|]/.test(newName) // Check for typical invalid filename characters
     ) {
-      logger.error(`${logPrefix} 新文件名包含非法字符: ${newName}`);
+      logger.error(`${logPrefix} New filename contains illegal characters: ${newName}`);
       return {
         error:
           'Invalid new name. It cannot contain path separators (/, \\), be "." or "..", or include characters like < > : " / \\ | ? *.',
@@ -388,17 +391,19 @@ export default class LocalFileCtr extends ControllerModule {
     try {
       const dir = path.dirname(currentPath);
       newPath = path.join(dir, newName);
-      logger.debug(`${logPrefix} 计算得到的新路径: ${newPath}`);
+      logger.debug(`${logPrefix} Calculated new path: ${newPath}`);
 
       // Check if paths are identical after calculation
       if (path.normalize(currentPath) === path.normalize(newPath)) {
-        logger.info(`${logPrefix} 源路径和计算得到的目标路径相同，跳过重命名`);
+        logger.info(
+          `${logPrefix} Source path and calculated target path are identical, skipping rename`,
+        );
         // Consider success as no change is needed, but maybe inform the user?
         // Return success for now.
         return { newPath, success: true };
       }
     } catch (error) {
-      logger.error(`${logPrefix} 计算新路径失败:`, error);
+      logger.error(`${logPrefix} Failed to calculate new path:`, error);
       return {
         error: `Internal error calculating the new path: ${(error as Error).message}`,
         newPath: '',
@@ -409,12 +414,12 @@ export default class LocalFileCtr extends ControllerModule {
     // Perform the rename operation using fs.promises.rename directly
     try {
       await renamePromise(currentPath, newPath);
-      logger.info(`${logPrefix} 重命名成功: ${currentPath} -> ${newPath}`);
+      logger.info(`${logPrefix} Rename successful: ${currentPath} -> ${newPath}`);
       // Optionally return the newPath if frontend needs it
       // return { success: true, newPath: newPath };
       return { newPath, success: true };
     } catch (error) {
-      logger.error(`${logPrefix} 重命名失败:`, error);
+      logger.error(`${logPrefix} Rename failed:`, error);
       let errorMessage = (error as Error).message;
       // Provide more specific error messages based on common codes
       if ((error as any).code === 'ENOENT') {
@@ -436,36 +441,39 @@ export default class LocalFileCtr extends ControllerModule {
 
   @ipcClientEvent('writeLocalFile')
   async handleWriteFile({ path: filePath, content }: WriteLocalFileParams) {
-    const logPrefix = `[写入文件 ${filePath}]`;
-    logger.debug(`${logPrefix} 开始写入文件`, { contentLength: content?.length });
+    const logPrefix = `[Writing file ${filePath}]`;
+    logger.debug(`${logPrefix} Starting to write file`, { contentLength: content?.length });
 
     // 验证参数
     if (!filePath) {
-      logger.error(`${logPrefix} 参数验证失败: 路径为空`);
-      return { error: '路径不能为空', success: false };
+      logger.error(`${logPrefix} Parameter validation failed: path is empty`);
+      return { error: 'Path cannot be empty', success: false };
     }
 
     if (content === undefined) {
-      logger.error(`${logPrefix} 参数验证失败: 内容为空`);
-      return { error: '内容不能为空', success: false };
+      logger.error(`${logPrefix} Parameter validation failed: content is empty`);
+      return { error: 'Content cannot be empty', success: false };
     }
 
     try {
       // 确保目标目录存在
       const dirname = path.dirname(filePath);
-      logger.debug(`${logPrefix} 创建目录: ${dirname}`);
+      logger.debug(`${logPrefix} Creating directory: ${dirname}`);
       fs.mkdirSync(dirname, { recursive: true });
 
       // 写入文件内容
-      logger.debug(`${logPrefix} 开始写入内容到文件`);
+      logger.debug(`${logPrefix} Starting to write content to file`);
       await writeFilePromise(filePath, content, 'utf8');
-      logger.info(`${logPrefix} 写入文件成功`, { path: filePath, size: content.length });
+      logger.info(`${logPrefix} File written successfully`, {
+        path: filePath,
+        size: content.length,
+      });
 
       return { success: true };
     } catch (error) {
-      logger.error(`${logPrefix} 写入文件失败:`, error);
+      logger.error(`${logPrefix} Failed to write file:`, error);
       return {
-        error: `写入文件失败: ${(error as Error).message}`,
+        error: `Failed to write file: ${(error as Error).message}`,
         success: false,
       };
     }
