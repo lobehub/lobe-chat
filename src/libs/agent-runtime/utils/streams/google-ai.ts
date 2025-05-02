@@ -96,6 +96,7 @@ const transformGoogleGenerativeAIStream = (
           id: context.id,
           type: 'grounding',
         },
+        ...usageChunks,
       ];
     }
 
