@@ -2,6 +2,37 @@
 
 # Changelog
 
+### [Version&nbsp;1.84.16](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.84.15...v1.84.16)
+<sup>Released on **2025-05-02**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix desktop quiting with reopen window.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **misc**: Fix desktop quiting with reopen window, closes [#7675](https://github.com/jaworldwideorg/OneJA-Bot/issues/7675) ([edeabcf](https://github.com/jaworldwideorg/OneJA-Bot/commit/edeabcf))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.84.16](https://github.com/lobehub/lobe-chat/compare/v1.84.15...v1.84.16)
 
 <sup>Released on **2025-05-02**</sup>
