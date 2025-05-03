@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.84.17](https://github.com/lobehub/lobe-chat/compare/v1.84.16...v1.84.17)
+
+<sup>Released on **2025-05-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add write file tool to local-file plugin.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add write file tool to local-file plugin, closes [#7684](https://github.com/lobehub/lobe-chat/issues/7684) ([e22e932](https://github.com/lobehub/lobe-chat/commit/e22e932))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.84.16](https://github.com/lobehub/lobe-chat/compare/v1.84.15...v1.84.16)
 
 <sup>Released on **2025-05-02**</sup>

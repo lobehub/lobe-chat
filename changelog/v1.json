@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add write file tool to local-file plugin."]
+    },
+    "date": "2025-05-03",
+    "version": "1.84.17"
+  },
+  {
+    "children": {
       "fixes": ["Fix desktop quiting with reopen window."]
     },
     "date": "2025-05-02",
