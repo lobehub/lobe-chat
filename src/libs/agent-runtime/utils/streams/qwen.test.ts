@@ -46,9 +46,11 @@ describe('QwenAIStream', () => {
     const onCompletionMock = vi.fn();
 
     const protocolStream = QwenAIStream(mockOpenAIStream, {
-      onStart: onStartMock,
-      onText: onTextMock,
-      onCompletion: onCompletionMock,
+      callbacks: {
+        onStart: onStartMock,
+        onText: onTextMock,
+        onCompletion: onCompletionMock,
+      },
     });
 
     const decoder = new TextDecoder();
@@ -111,7 +113,9 @@ describe('QwenAIStream', () => {
     const onToolCallMock = vi.fn();
 
     const protocolStream = QwenAIStream(mockOpenAIStream, {
-      onToolsCalling: onToolCallMock,
+      callbacks: {
+        onToolsCalling: onToolCallMock,
+      },
     });
 
     const decoder = new TextDecoder();
