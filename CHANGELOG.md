@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.84.18](https://github.com/lobehub/lobe-chat/compare/v1.84.17...v1.84.18)
+
+<sup>Released on **2025-05-03**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Add perf stat support for openai factory.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Add perf stat support for openai factory, closes [#7677](https://github.com/lobehub/lobe-chat/issues/7677) ([40464d1](https://github.com/lobehub/lobe-chat/commit/40464d1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.84.17](https://github.com/lobehub/lobe-chat/compare/v1.84.16...v1.84.17)
 
 <sup>Released on **2025-05-03**</sup>
