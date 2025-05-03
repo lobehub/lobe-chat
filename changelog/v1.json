@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add perf stat support for openai factory."]
+    },
+    "date": "2025-05-03",
+    "version": "1.84.18"
+  },
+  {
+    "children": {
       "improvements": ["Add write file tool to local-file plugin."]
     },
     "date": "2025-05-03",
