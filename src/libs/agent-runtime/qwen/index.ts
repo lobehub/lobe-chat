@@ -72,12 +72,7 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
         }),
       } as any;
     },
-    handleStream: (stream, callbacks) => {
-      return QwenAIStream(stream, {
-        callbacks: callbacks,
-        inputStartAt: Date.now(),
-      });
-    },
+    handleStream: QwenAIStream,
   },
   debug: {
     chatCompletion: () => process.env.DEBUG_QWEN_CHAT_COMPLETION === '1',
