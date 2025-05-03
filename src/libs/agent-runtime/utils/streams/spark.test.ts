@@ -96,7 +96,9 @@ describe('SparkAIStream', () => {
     const onToolCallMock = vi.fn();
 
     const protocolStream = SparkAIStream(mockStream, {
-      onToolsCalling: onToolCallMock,
+      callbacks: {
+        onToolsCalling: onToolCallMock,
+      },
     });
 
     const decoder = new TextDecoder();
@@ -156,7 +158,9 @@ describe('SparkAIStream', () => {
     const onTextMock = vi.fn();
 
     const protocolStream = SparkAIStream(mockStream, {
-      onText: onTextMock,
+      callbacks: {
+        onText: onTextMock,
+      },
     });
 
     const decoder = new TextDecoder();

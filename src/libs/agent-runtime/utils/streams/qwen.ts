@@ -121,7 +121,9 @@ interface QwenAIStreamOptions {
 
 export const QwenAIStream = (
   stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
-  options?: QwenAIStreamOptions,
+  // TODO: preserve for RFC 097
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
+  { callbacks, inputStartAt }: { callbacks?: ChatStreamCallbacks; inputStartAt?: number } = {},
 ) => {
   const { callbacks, inputStartAt } = options || {};
   const streamContext: StreamContext = { id: '' };

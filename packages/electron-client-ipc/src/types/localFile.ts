@@ -55,6 +55,22 @@ export interface LocalReadFilesParams {
   paths: string[];
 }
 
+export interface WriteLocalFileParams {
+  /**
+   * 要写入的内容
+   */
+  content: string;
+
+  /**
+   * 要写入的文件路径
+   */
+  path: string;
+}
+
+export interface RunCommandParams {
+  command: string;
+}
+
 export interface LocalReadFileResult {
   /**
    * Character count of the content within the specified `loc` range.
