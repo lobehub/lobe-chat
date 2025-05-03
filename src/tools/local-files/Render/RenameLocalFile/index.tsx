@@ -2,10 +2,11 @@ import { RenameLocalFileParams } from '@lobechat/electron-client-ipc';
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ArrowRightIcon } from 'lucide-react';
+import path from 'path-browserify-esm';
 import React, { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import FileIcon from '@/components/FileIcon';
+import { LocalFile } from '@/features/LocalFile';
 import { LocalReadFileState } from '@/tools/local-files/type';
 import { ChatMessagePluginError } from '@/types/message';
 
@@ -28,17 +29,15 @@ interface RenameLocalFileProps {
 const RenameLocalFile = memo<RenameLocalFileProps>(({ args }) => {
   const { styles } = useStyles();
 
-  const oldFileName = args.path.split('/').at(-1);
+  const { base: oldFileName, dir } = path.parse(args.path);
+
   return (
     <Flexbox align={'center'} className={styles.container} gap={8} horizontal paddingInline={12}>
       <Flexbox>{oldFileName}</Flexbox>
       <Flexbox>
         <Icon icon={ArrowRightIcon} />
       </Flexbox>
-      <Flexbox className={styles.new} gap={4} horizontal>
-        <FileIcon fileName={args.newName} size={20} variant={'raw'} />
-        {args.newName}
-      </Flexbox>
+      <LocalFile name={args.newName} path={path.join(dir, args.newName)} />
     </Flexbox>
   );
 });
