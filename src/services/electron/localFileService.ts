@@ -10,6 +10,7 @@ import {
   OpenLocalFileParams,
   OpenLocalFolderParams,
   RenameLocalFileParams,
+  WriteLocalFileParams,
   dispatch,
 } from '@lobechat/electron-client-ipc';
 
@@ -44,6 +45,10 @@ class LocalFileService {
 
   async renameLocalFile(params: RenameLocalFileParams) {
     return dispatch('renameLocalFile', params);
+  }
+
+  async writeFile(params: WriteLocalFileParams) {
+    return dispatch('writeLocalFile', params);
   }
 
   async openLocalFileOrFolder(path: string, isDirectory: boolean) {

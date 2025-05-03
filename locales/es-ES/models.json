@@ -1841,6 +1841,33 @@
   "qwen/qwen2.5-coder-7b-instruct": {
     "description": "Poderoso modelo de código de tamaño mediano, que soporta longitudes de contexto de 32K, experto en programación multilingüe."
   },
+  "qwen/qwen3-14b": {
+    "description": "Qwen3-14B es un modelo de lenguaje causal denso de 14.8 mil millones de parámetros en la serie Qwen3, diseñado para razonamiento complejo y diálogos eficientes. Soporta un cambio sin problemas entre un modo de 'pensamiento' para tareas de matemáticas, programación y razonamiento lógico, y un modo 'no reflexivo' para diálogos generales. Este modelo ha sido ajustado para seguir instrucciones, utilizar herramientas de agentes, escribir creativamente y realizar tareas multilingües en más de 100 idiomas y dialectos. Maneja de forma nativa un contexto de 32K tokens y se puede expandir a 131K tokens utilizando extensiones basadas en YaRN."
+  },
+  "qwen/qwen3-14b:free": {
+    "description": "Qwen3-14B es un modelo de lenguaje causal denso de 14.8 mil millones de parámetros en la serie Qwen3, diseñado para razonamiento complejo y diálogos eficientes. Soporta un cambio sin problemas entre un modo de 'pensamiento' para tareas de matemáticas, programación y razonamiento lógico, y un modo 'no reflexivo' para diálogos generales. Este modelo ha sido ajustado para seguir instrucciones, utilizar herramientas de agentes, escribir creativamente y realizar tareas multilingües en más de 100 idiomas y dialectos. Maneja de forma nativa un contexto de 32K tokens y se puede expandir a 131K tokens utilizando extensiones basadas en YaRN."
+  },
+  "qwen/qwen3-235b-a22b": {
+    "description": "Qwen3-235B-A22B es un modelo de mezcla de expertos (MoE) de 235B parámetros desarrollado por Qwen, que activa 22B parámetros en cada pasada hacia adelante. Soporta un cambio sin problemas entre un modo de 'pensamiento' para razonamiento complejo, matemáticas y tareas de código, y un modo 'no reflexivo' para eficiencia en diálogos generales. Este modelo demuestra una fuerte capacidad de razonamiento, soporte multilingüe (más de 100 idiomas y dialectos), y habilidades avanzadas de seguimiento de instrucciones y llamadas a herramientas de agentes. Maneja de forma nativa una ventana de contexto de 32K tokens y se puede expandir a 131K tokens utilizando extensiones basadas en YaRN."
+  },
+  "qwen/qwen3-235b-a22b:free": {
+    "description": "Qwen3-235B-A22B es un modelo de mezcla de expertos (MoE) de 235B parámetros desarrollado por Qwen, que activa 22B parámetros en cada pasada hacia adelante. Soporta un cambio sin problemas entre un modo de 'pensamiento' para razonamiento complejo, matemáticas y tareas de código, y un modo 'no reflexivo' para eficiencia en diálogos generales. Este modelo demuestra una fuerte capacidad de razonamiento, soporte multilingüe (más de 100 idiomas y dialectos), y habilidades avanzadas de seguimiento de instrucciones y llamadas a herramientas de agentes. Maneja de forma nativa una ventana de contexto de 32K tokens y se puede expandir a 131K tokens utilizando extensiones basadas en YaRN."
+  },
+  "qwen/qwen3-30b-a3b": {
+    "description": "Qwen3 es la última generación de la serie de modelos de lenguaje Qwen, con una arquitectura de mezcla densa y de expertos (MoE), que destaca en razonamiento, soporte multilingüe y tareas avanzadas de agentes. Su capacidad única para cambiar sin problemas entre un modo de pensamiento para razonamiento complejo y un modo no reflexivo para diálogos eficientes garantiza un rendimiento versátil y de alta calidad.\n\nQwen3 supera significativamente a modelos anteriores como QwQ y Qwen2.5, ofreciendo capacidades excepcionales en matemáticas, codificación, razonamiento de sentido común, escritura creativa y diálogos interactivos. La variante Qwen3-30B-A3B contiene 30.5 mil millones de parámetros (3.3 mil millones de parámetros activados), 48 capas, 128 expertos (activando 8 por tarea) y admite un contexto de hasta 131K tokens (usando YaRN), estableciendo un nuevo estándar para modelos de código abierto."
+  },
+  "qwen/qwen3-30b-a3b:free": {
+    "description": "Qwen3 es la última generación de la serie de modelos de lenguaje Qwen, con una arquitectura de mezcla densa y de expertos (MoE), que destaca en razonamiento, soporte multilingüe y tareas avanzadas de agentes. Su capacidad única para cambiar sin problemas entre un modo de pensamiento para razonamiento complejo y un modo no reflexivo para diálogos eficientes garantiza un rendimiento versátil y de alta calidad.\n\nQwen3 supera significativamente a modelos anteriores como QwQ y Qwen2.5, ofreciendo capacidades excepcionales en matemáticas, codificación, razonamiento de sentido común, escritura creativa y diálogos interactivos. La variante Qwen3-30B-A3B contiene 30.5 mil millones de parámetros (3.3 mil millones de parámetros activados), 48 capas, 128 expertos (activando 8 por tarea) y admite un contexto de hasta 131K tokens (usando YaRN), estableciendo un nuevo estándar para modelos de código abierto."
+  },
+  "qwen/qwen3-32b": {
+    "description": "Qwen3-32B es un modelo de lenguaje causal denso de 32.8 mil millones de parámetros en la serie Qwen3, optimizado para razonamiento complejo y diálogos eficientes. Soporta un cambio sin problemas entre un modo de 'pensamiento' para tareas de matemáticas, codificación y razonamiento lógico, y un modo 'no reflexivo' para diálogos más rápidos y generales. Este modelo muestra un rendimiento robusto en seguir instrucciones, utilizar herramientas de agentes, escribir creativamente y realizar tareas multilingües en más de 100 idiomas y dialectos. Maneja de forma nativa un contexto de 32K tokens y se puede expandir a 131K tokens utilizando extensiones basadas en YaRN."
+  },
+  "qwen/qwen3-32b:free": {
+    "description": "Qwen3-32B es un modelo de lenguaje causal denso de 32.8 mil millones de parámetros en la serie Qwen3, optimizado para razonamiento complejo y diálogos eficientes. Soporta un cambio sin problemas entre un modo de 'pensamiento' para tareas de matemáticas, codificación y razonamiento lógico, y un modo 'no reflexivo' para diálogos más rápidos y generales. Este modelo muestra un rendimiento robusto en seguir instrucciones, utilizar herramientas de agentes, escribir creativamente y realizar tareas multilingües en más de 100 idiomas y dialectos. Maneja de forma nativa un contexto de 32K tokens y se puede expandir a 131K tokens utilizando extensiones basadas en YaRN."
+  },
+  "qwen/qwen3-8b:free": {
+    "description": "Qwen3-8B es un modelo de lenguaje causal denso de 8.2 mil millones de parámetros en la serie Qwen3, diseñado para tareas intensivas en razonamiento y diálogos eficientes. Soporta un cambio sin problemas entre un modo de 'pensamiento' para matemáticas, codificación y razonamiento lógico, y un modo 'no reflexivo' para diálogos generales. Este modelo ha sido ajustado para seguir instrucciones, integrar agentes, escribir creativamente y utilizar más de 100 idiomas y dialectos. Soporta de forma nativa una ventana de contexto de 32K tokens y se puede expandir a 131K tokens a través de YaRN."
+  },
   "qwen2": {
     "description": "Qwen2 es el nuevo modelo de lenguaje a gran escala de Alibaba, que ofrece un rendimiento excepcional para satisfacer diversas necesidades de aplicación."
   },
@@ -1924,6 +1951,30 @@
   },
   "qwen2:72b": {
     "description": "Qwen2 es el nuevo modelo de lenguaje a gran escala de Alibaba, que ofrece un rendimiento excepcional para satisfacer diversas necesidades de aplicación."
+  },
+  "qwen3-0.6b": {
+    "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
+  },
+  "qwen3-1.7b": {
+    "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
+  },
+  "qwen3-14b": {
+    "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
+  },
+  "qwen3-235b-a22b": {
+    "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
+  },
+  "qwen3-30b-a3b": {
+    "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
+  },
+  "qwen3-32b": {
+    "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
+  },
+  "qwen3-4b": {
+    "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
+  },
+  "qwen3-8b": {
+    "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
   },
   "qwq": {
     "description": "QwQ es un modelo de investigación experimental que se centra en mejorar la capacidad de razonamiento de la IA."
@@ -2026,6 +2077,18 @@
   },
   "thudm/glm-4-9b-chat": {
     "description": "Versión de código abierto de la última generación del modelo preentrenado GLM-4 lanzado por Zhizhu AI."
+  },
+  "thudm/glm-4-9b:free": {
+    "description": "GLM-4-9B-0414 es un modelo de lenguaje de 9B parámetros en la serie GLM-4 desarrollado por THUDM. GLM-4-9B-0414 utiliza las mismas estrategias de aprendizaje por refuerzo y alineación que su modelo correspondiente de 32B, logrando un alto rendimiento en relación con su tamaño, lo que lo hace adecuado para implementaciones con recursos limitados que aún requieren una fuerte capacidad de comprensión y generación de lenguaje."
+  },
+  "thudm/glm-z1-9b:free": {
+    "description": "GLM-Z1-9B-0414 es un modelo de lenguaje de 9B parámetros en la serie GLM-4 desarrollado por THUDM. Utiliza técnicas inicialmente aplicadas al modelo GLM-Z1 más grande, incluyendo aprendizaje por refuerzo extendido, alineación de clasificación por pares y entrenamiento para tareas intensivas en razonamiento como matemáticas, código y lógica. A pesar de su menor tamaño, muestra un rendimiento robusto en tareas de razonamiento general y supera a muchos modelos de código abierto en su nivel de pesos."
+  },
+  "thudm/glm-z1-rumination-32b": {
+    "description": "THUDM: GLM Z1 Rumination 32B es un modelo de razonamiento profundo de 32B parámetros en la serie GLM-4-Z1, optimizado para tareas complejas y abiertas que requieren un pensamiento prolongado. Se basa en glm-4-32b-0414, añadiendo una fase adicional de aprendizaje por refuerzo y estrategias de alineación multietapa, introduciendo una capacidad de 'reflexión' diseñada para simular el procesamiento cognitivo extendido. Esto incluye razonamiento iterativo, análisis de múltiples saltos y flujos de trabajo mejorados por herramientas, como búsqueda, recuperación y síntesis consciente de citas.\n\nEste modelo destaca en escritura de investigación, análisis comparativo y preguntas complejas. Soporta llamadas a funciones para primitivos de búsqueda y navegación (`search`, `click`, `open`, `finish`), lo que permite su uso en tuberías de agentes. El comportamiento reflexivo está moldeado por un control cíclico de múltiples rondas con mecanismos de recompensa basados en reglas y decisiones retrasadas, y se basa en marcos de investigación profunda como el stack de alineación interno de OpenAI. Esta variante es adecuada para escenarios que requieren profundidad en lugar de velocidad."
+  },
+  "tngtech/deepseek-r1t-chimera:free": {
+    "description": "DeepSeek-R1T-Chimera se crea combinando DeepSeek-R1 y DeepSeek-V3 (0324), fusionando la capacidad de razonamiento de R1 con las mejoras de eficiencia de tokens de V3. Se basa en la arquitectura DeepSeek-MoE Transformer y está optimizado para tareas generales de generación de texto.\n\nEste modelo combina los pesos preentrenados de los dos modelos fuente para equilibrar el rendimiento en razonamiento, eficiencia y tareas de seguimiento de instrucciones. Se publica bajo la licencia MIT, destinado a fines de investigación y comerciales."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) proporciona una capacidad de cálculo mejorada a través de estrategias y arquitecturas de modelos eficientes."

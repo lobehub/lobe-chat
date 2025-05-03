@@ -1,8 +1,8 @@
 import { ModelIcon } from '@lobehub/icons';
-import { ActionIcon } from '@lobehub/ui';
+import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { Settings2Icon } from 'lucide-react';
-import { memo } from 'react';
+import { Loader2Icon, Settings2Icon } from 'lucide-react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -11,7 +11,7 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 
-import ActionPopover from '../../components/ActionPopover';
+import Action from '../components/Action';
 import ControlsForm from './ControlsForm';
 
 const useStyles = createStyles(({ css, token, cx }) => ({
@@ -55,7 +55,9 @@ const useStyles = createStyles(({ css, token, cx }) => ({
 
 const ModelSwitch = memo(() => {
   const { t } = useTranslation('chat');
-  const { styles, cx } = useStyles();
+  const { styles, cx, theme } = useStyles();
+  const [updating, setUpdating] = useState(false);
+  const [controlsUpdating, setControlsUpdating] = useState(false);
 
   const [model, provider] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
@@ -68,29 +70,35 @@ const ModelSwitch = memo(() => {
 
   return (
     <Flexbox align={'center'} className={isModelHasExtendParams ? styles.container : ''} horizontal>
-      <ModelSwitchPanel>
+      <ModelSwitchPanel setUpdating={setUpdating} updating={updating}>
         <Center
           className={cx(styles.model, isModelHasExtendParams && styles.modelWithControl)}
           height={36}
           width={36}
         >
-          <div className={styles.icon}>
-            <ModelIcon model={model} size={22} />
-          </div>
+          {updating ? (
+            <Icon color={theme.colorTextDescription} icon={Loader2Icon} size={18} spin />
+          ) : (
+            <div className={styles.icon}>
+              <ModelIcon model={model} size={22} />
+            </div>
+          )}
         </Center>
       </ModelSwitchPanel>
 
       {isModelHasExtendParams && (
-        <ActionPopover content={<ControlsForm />} minWidth={350} placement={'topLeft'}>
-          <ActionIcon
-            icon={Settings2Icon}
-            style={{ borderRadius: 20, marginInlineStart: -4 }}
-            title={t('extendParams.title')}
-            tooltipProps={{
-              placement: 'bottom',
-            }}
-          />
-        </ActionPopover>
+        <Action
+          icon={Settings2Icon}
+          loading={controlsUpdating}
+          popover={{
+            content: <ControlsForm setUpdating={setControlsUpdating} updating={controlsUpdating} />,
+            minWidth: 350,
+            placement: 'topLeft',
+          }}
+          showTooltip={false}
+          style={{ borderRadius: 20, marginInlineStart: -4 }}
+          title={t('extendParams.title')}
+        />
       )}
     </Flexbox>
   );

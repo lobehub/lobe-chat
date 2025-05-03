@@ -1,22 +1,22 @@
 import { Icon } from '@lobehub/ui';
 import { Checkbox } from 'antd';
 import { Loader2 } from 'lucide-react';
-import { memo, useState } from 'react';
+import { ReactNode, memo, useState } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
-interface FileItemProps {
-  enabled?: boolean;
+export interface CheckboxItemProps {
+  checked?: boolean;
   id: string;
-  label: string;
+  label?: ReactNode;
   onUpdate: (id: string, enabled: boolean) => Promise<void>;
 }
 
-const ListItem = memo<FileItemProps>(({ id, onUpdate, label, enabled }) => {
+const CheckboxItem = memo<CheckboxItemProps>(({ id, onUpdate, label, checked }) => {
   const [loading, setLoading] = useState(false);
 
   const updateState = async () => {
     setLoading(true);
-    await onUpdate(id, !enabled);
+    await onUpdate(id, !checked);
     setLoading(false);
   };
 
@@ -29,19 +29,21 @@ const ListItem = memo<FileItemProps>(({ id, onUpdate, label, enabled }) => {
         e.stopPropagation();
         updateState();
       }}
-      padding={'8px 12px'}
+      style={{
+        paddingLeft: 8,
+      }}
     >
-      {label}
+      {label || id}
       {loading ? (
         <Center width={18}>
           <Icon icon={Loader2} spin />
         </Center>
       ) : (
         <Checkbox
-          checked={enabled}
-          onClick={(e) => {
+          checked={checked}
+          onClick={async (e) => {
             e.stopPropagation();
-            updateState();
+            await updateState();
           }}
         />
       )}
@@ -49,4 +51,4 @@ const ListItem = memo<FileItemProps>(({ id, onUpdate, label, enabled }) => {
   );
 });
 
-export default ListItem;
+export default CheckboxItem;

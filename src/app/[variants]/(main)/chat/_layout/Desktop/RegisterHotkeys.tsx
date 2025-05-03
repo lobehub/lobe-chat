@@ -1,10 +1,13 @@
 'use client';
 
+import { memo } from 'react';
+
 import { useRegisterChatHotkeys } from '@/hooks/useHotkeys';
 
-const RegisterHotkeys = () => {
+const RegisterHotkeys = memo(() => {
   useRegisterChatHotkeys();
-  return null;
-};
+
+  return '';
+});
 
 export default RegisterHotkeys;

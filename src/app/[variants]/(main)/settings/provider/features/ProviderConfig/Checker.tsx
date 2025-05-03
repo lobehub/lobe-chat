@@ -144,6 +144,10 @@ const Checker = memo<ConnectionCheckerProps>(
               );
             }}
             options={totalModels.map((id) => ({ label: id, value: id }))}
+            style={{
+              flex: 1,
+              overflow: 'hidden',
+            }}
             suffixIcon={isProviderConfigUpdating && <Icon icon={Loader2Icon} spin />}
             value={checkModel}
             virtual

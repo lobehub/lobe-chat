@@ -1,4 +1,5 @@
 import { createStyles } from 'antd-style';
+import path from 'path-browserify-esm';
 import React from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -31,19 +32,20 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const LocalFile = ({
-  name,
-  path,
-  isDirectory,
-}: {
-  isDirectory: boolean;
-  name: string;
+interface LocalFolderProps {
   path: string;
-}) => {
+  size?: number;
+}
+
+export const LocalFolder = ({ path: pathname, size = 22 }: LocalFolderProps) => {
   const { styles } = useStyles();
   const handleClick = () => {
-    localFileService.openLocalFileOrFolder(path, isDirectory);
+    if (!path) return;
+
+    localFileService.openLocalFolder({ isDirectory: true, path: pathname });
   };
+
+  const { base } = path.parse(pathname);
 
   return (
     <Flexbox
@@ -54,12 +56,10 @@ const LocalFile = ({
       onClick={handleClick}
       style={{ display: 'inline-flex', verticalAlign: 'middle' }}
     >
-      <FileIcon fileName={name} isDirectory={isDirectory} size={22} variant={'raw'} />
+      <FileIcon fileName={base} isDirectory size={size} variant={'raw'} />
       <Flexbox align={'baseline'} gap={4} horizontal style={{ overflow: 'hidden', width: '100%' }}>
-        <div className={styles.title}>{name}</div>
+        <div className={styles.title}>{base}</div>
       </Flexbox>
     </Flexbox>
   );
 };
-
-export default LocalFile;

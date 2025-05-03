@@ -6,6 +6,7 @@ import {
   LocalSearchFilesParams,
   MoveLocalFilesParams,
   RenameLocalFileParams,
+  WriteLocalFileParams,
 } from '@lobechat/electron-client-ipc';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -23,7 +24,7 @@ import {
 export interface LocalFileAction {
   internal_triggerLocalFileToolCalling: <T = any>(
     id: string,
-    callingService: () => Promise<{ content: any; state: T }>,
+    callingService: () => Promise<{ content: any; state?: T }>,
   ) => Promise<boolean>;
 
   listLocalFiles: (id: string, params: ListLocalFileParams) => Promise<boolean>;
@@ -34,8 +35,9 @@ export interface LocalFileAction {
   renameLocalFile: (id: string, params: RenameLocalFileParams) => Promise<boolean>;
   // Added rename action
   searchLocalFiles: (id: string, params: LocalSearchFilesParams) => Promise<boolean>;
-
   toggleLocalFileLoading: (id: string, loading: boolean) => void;
+
+  writeLocalFile: (id: string, params: WriteLocalFileParams) => Promise<boolean>;
 }
 
 export const localFileSlice: StateCreator<
@@ -48,7 +50,9 @@ export const localFileSlice: StateCreator<
     get().toggleLocalFileLoading(id, true);
     try {
       const { state, content } = await callingService();
-      await get().updatePluginState(id, state as any);
+      if (state) {
+        await get().updatePluginState(id, state as any);
+      }
       await get().internal_updateMessageContent(id, JSON.stringify(content));
     } catch (error) {
       await get().internal_updateMessagePluginError(id, {
@@ -182,5 +186,25 @@ export const localFileSlice: StateCreator<
       false,
       `toggleLocalFileLoading/${loading ? 'start' : 'end'}`,
     );
+  },
+
+  writeLocalFile: async (id, params) => {
+    return get().internal_triggerLocalFileToolCalling(id, async () => {
+      const result = await localFileService.writeFile(params);
+
+      let content: { message: string; success: boolean };
+
+      if (result.success) {
+        content = {
+          message: `成功写入文件 ${params.path}`,
+          success: true,
+        };
+      } else {
+        const errorMessage = result.error;
+
+        content = { message: errorMessage || '写入文件失败', success: false };
+      }
+      return { content };
+    });
   },
 });

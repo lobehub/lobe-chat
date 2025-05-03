@@ -32,6 +32,4 @@ export const useRegisterFilesHotkeys = () => {
     enableScope(HotkeyScopeEnum.Files);
     return () => disableScope(HotkeyScopeEnum.Files);
   }, []);
-
-  return null;
 };

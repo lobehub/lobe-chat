@@ -68,17 +68,21 @@ const config = {
     gatekeeperAssess: false,
     hardenedRuntime: true,
     notarize: true,
-    target: [
-      { arch: ['x64', 'arm64'], target: 'dmg' },
-      { arch: ['x64', 'arm64'], target: 'zip' },
-    ],
+    target:
+      // 降低构建时间，nightly 只打 arm64
+      isNightly
+        ? [{ arch: ['arm64'], target: 'dmg' }]
+        : [
+            { arch: ['x64', 'arm64'], target: 'dmg' },
+            { arch: ['x64', 'arm64'], target: 'zip' },
+          ],
   },
   npmRebuild: true,
   nsis: {
+    allowToChangeInstallationDirectory: true,
     artifactName: '${productName}-${version}-setup.${ext}',
     createDesktopShortcut: 'always',
-    // allowToChangeInstallationDirectory: true,
-    // oneClick: false,
+    oneClick: false,
     shortcutName: '${productName}',
     uninstallDisplayName: '${productName}',
   },

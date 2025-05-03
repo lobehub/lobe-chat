@@ -14,13 +14,15 @@ import {
 } from '@/features/ModelParamsControl';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
+import { useServerConfigStore } from '@/store/serverConfig';
 
-interface ParamsControlsProps {
+interface ControlsProps {
   setUpdating: (updating: boolean) => void;
+  updating: boolean;
 }
-const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
+const Controls = memo<ControlsProps>(({ setUpdating }) => {
   const { t } = useTranslation('setting');
-
+  const mobile = useServerConfigStore((s) => s.isMobile);
   const updateAgentConfig = useAgentStore((s) => s.updateAgentConfig);
 
   const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
@@ -28,7 +30,6 @@ const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
   const items: FormItemProps[] = [
     {
       children: <Temperature />,
-      desc: <Tag>temperature</Tag>,
       label: (
         <Flexbox align={'center'} gap={8} horizontal justify={'space-between'}>
           {t('settingModel.temperature.title')}
@@ -36,10 +37,10 @@ const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
         </Flexbox>
       ),
       name: ['params', 'temperature'],
+      tag: 'temperature',
     },
     {
       children: <TopP />,
-      desc: <Tag>top_p</Tag>,
       label: (
         <Flexbox gap={8} horizontal>
           {t('settingModel.topP.title')}
@@ -47,10 +48,10 @@ const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
         </Flexbox>
       ),
       name: ['params', 'top_p'],
+      tag: 'top_p',
     },
     {
       children: <PresencePenalty />,
-      desc: <Tag>presence_penalty</Tag>,
       label: (
         <Flexbox gap={8} horizontal>
           {t('settingModel.presencePenalty.title')}
@@ -58,10 +59,10 @@ const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
         </Flexbox>
       ),
       name: ['params', 'presence_penalty'],
+      tag: 'presence_penalty',
     },
     {
       children: <FrequencyPenalty />,
-      desc: <Tag>frequency_penalty</Tag>,
       label: (
         <Flexbox gap={8} horizontal>
           {t('settingModel.frequencyPenalty.title')}
@@ -69,6 +70,7 @@ const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
         </Flexbox>
       ),
       name: ['params', 'frequency_penalty'],
+      tag: 'frequency_penalty',
     },
   ];
 
@@ -76,17 +78,25 @@ const ParamsControls = memo<ParamsControlsProps>(({ setUpdating }) => {
     <Form
       initialValues={config}
       itemMinWidth={200}
-      items={items}
+      items={
+        mobile
+          ? items
+          : items.map(({ tag, ...item }) => ({ ...item, desc: <Tag size={'small'}>{tag}</Tag> }))
+      }
       itemsType={'flat'}
       onValuesChange={debounce(async (values) => {
         setUpdating(true);
         await updateAgentConfig(values);
         setUpdating(false);
       }, 500)}
-      style={{ fontSize: 12 }}
-      variant={'borderless'}
+      styles={{
+        group: {
+          background: 'transparent',
+          paddingBottom: 12,
+        },
+      }}
     />
   );
 });
 
-export default ParamsControls;
+export default Controls;

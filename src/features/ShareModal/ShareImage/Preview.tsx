@@ -49,10 +49,10 @@ const Preview = memo<FieldType & { title?: string }>(
                 <ChatHeaderTitle
                   desc={displayDesc}
                   tag={
-                    <>
+                    <Flexbox gap={4} horizontal>
                       <ModelTag model={model} />
                       {plugins?.length > 0 && <PluginTag plugins={plugins} />}
-                    </>
+                    </Flexbox>
                   }
                   title={displayTitle}
                 />

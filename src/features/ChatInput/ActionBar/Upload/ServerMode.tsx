@@ -1,4 +1,4 @@
-import { ActionIcon, MenuProps, Tooltip } from '@lobehub/ui';
+import { MenuProps, Tooltip } from '@lobehub/ui';
 import { Upload } from 'antd';
 import { css, cx } from 'antd-style';
 import { FileUp, FolderUp, ImageUp, Paperclip } from 'lucide-react';
@@ -10,7 +10,7 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useFileStore } from '@/store/file';
 
-import ActionDropdown from '../../components/ActionDropdown';
+import Action from '../components/Action';
 
 const hotArea = css`
   &::before {
@@ -97,15 +97,14 @@ const FileUpload = memo(() => {
   ];
 
   return (
-    <ActionDropdown menu={{ items }}>
-      <ActionIcon
-        icon={Paperclip}
-        title={t('upload.action.tooltip')}
-        tooltipProps={{
-          placement: 'bottom',
-        }}
-      />
-    </ActionDropdown>
+    <Action
+      dropdown={{
+        menu: { items },
+      }}
+      icon={Paperclip}
+      showTooltip={false}
+      title={t('upload.action.tooltip')}
+    />
   );
 });
 

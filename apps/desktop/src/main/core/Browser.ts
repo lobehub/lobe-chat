@@ -55,6 +55,12 @@ export default class Browser {
     return this.retrieveOrInitialize();
   }
 
+  get webContents() {
+    if (this._browserWindow.isDestroyed()) return null;
+
+    return this._browserWindow.webContents;
+  }
+
   /**
    * Method to construct BrowserWindows object
    * @param options
@@ -184,12 +190,11 @@ export default class Browser {
 
     const browserWindow = new BrowserWindow({
       ...res,
-
       height: savedState?.height || height,
 
+      // Always create hidden first
       show: false,
 
-      // Always create hidden first
       title,
 
       transparent: true,
@@ -199,11 +204,7 @@ export default class Browser {
         // https://www.electronjs.org/docs/tutorial/context-isolation
         contextIsolation: true,
         preload: join(preloadDir, 'index.js'),
-        // devTools: isDev,
       },
-      // Use saved state if available, otherwise use options. Do not set x/y
-      // x: savedState?.x, // Don't restore x
-      // y: savedState?.y, // Don't restore y
       width: savedState?.width || width,
     });
 

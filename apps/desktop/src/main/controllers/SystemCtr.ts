@@ -1,5 +1,5 @@
 import { ElectronAppState } from '@lobechat/electron-client-ipc';
-import { app, systemPreferences } from 'electron';
+import { app, shell, systemPreferences } from 'electron';
 import { macOS } from 'electron-is';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -47,6 +47,11 @@ export default class SystemController extends ControllerModule {
   checkAccessibilityForMacOS() {
     if (!macOS()) return;
     return systemPreferences.isTrustedAccessibilityClient(true);
+  }
+
+  @ipcClientEvent('openExternalLink')
+  openExternalLink(url: string) {
+    return shell.openExternal(url);
   }
 
   /**

@@ -57,13 +57,7 @@ const FileParsingStatus = memo<FileParsingStatusProps>(
             styles={{ root: { pointerEvents: 'none' } }}
             title={t('FileParsingStatus.chunks.status.processingTip')}
           >
-            <Tag
-              bordered={false}
-              className={className}
-              color={'processing'}
-              icon={<Badge status={'processing'} />}
-              style={{ display: 'flex', gap: 4 }}
-            >
+            <Tag className={className} color={'processing'} icon={<Badge status={'processing'} />}>
               {t('FileParsingStatus.chunks.status.processing')}
             </Tag>
           </Tooltip>

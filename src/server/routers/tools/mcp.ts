@@ -39,11 +39,21 @@ export const mcpRouter = router({
     .input(
       z.object({
         identifier: z.string(),
+        metadata: z
+          .object({
+            avatar: z.string().optional(),
+            description: z.string().optional(),
+          })
+          .optional(),
         url: z.string().url(),
       }),
     )
     .query(async ({ input }) => {
-      return await mcpService.getStreamableMcpServerManifest(input.identifier, input.url);
+      return await mcpService.getStreamableMcpServerManifest(
+        input.identifier,
+        input.url,
+        input.metadata,
+      );
     }),
   /* eslint-disable sort-keys-fix/sort-keys-fix */
   // --- MCP Interaction ---

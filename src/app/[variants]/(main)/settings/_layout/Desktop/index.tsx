@@ -11,6 +11,7 @@ import InitClientDB from '@/features/InitClientDB';
 import Footer from '@/features/Setting/Footer';
 import SettingContainer from '@/features/Setting/SettingContainer';
 import { useActiveSettingsKey } from '@/hooks/useActiveTabKey';
+import { useProviderName } from '@/hooks/useProviderName';
 import { SettingsTabs } from '@/store/global/initialState';
 
 import { LayoutProps } from '../type';
@@ -27,6 +28,8 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
   const theme = useTheme();
   const pathname = usePathname();
   const isSkip = SKIP_PATHS.some((path) => pathname.startsWith(path));
+  const isProvider = pathname.includes('/settings/provider/');
+  const providerName = useProviderName(activeKey);
 
   return (
     <Flexbox
@@ -43,7 +46,7 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
           getContainer={() => ref.current}
           title={
             <>
-              {t(`tab.${activeKey}`)}
+              {isProvider ? providerName : t(`tab.${activeKey}`)}
               {activeKey === SettingsTabs.Sync && <Tag color={'gold'}>{t('tab.experiment')}</Tag>}
             </>
           }

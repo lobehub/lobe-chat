@@ -1,4 +1,3 @@
-import { ActionIcon } from '@lobehub/ui';
 import { Popconfirm } from 'antd';
 import { Eraser } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
@@ -10,6 +9,8 @@ import { useFileStore } from '@/store/file';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 import { HotkeyEnum } from '@/types/hotkey';
+
+import Action from '../components/Action';
 
 export const useClearCurrentMessages = () => {
   const clearMessage = useChatStore((s) => s.clearMessage);
@@ -47,7 +48,7 @@ const Clear = memo(() => {
         </div>
       }
     >
-      <ActionIcon
+      <Action
         icon={Eraser}
         title={actionTitle}
         tooltipProps={{

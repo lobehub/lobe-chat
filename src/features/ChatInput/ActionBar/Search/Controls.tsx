@@ -29,7 +29,7 @@ const useStyles = createStyles(({ css, token }) => ({
     color: ${token.colorTextDescription};
   `,
   icon: css`
-    border: 1px solid ${token.colorBorderSecondary};
+    border: 1px solid ${token.colorFillTertiary};
     border-radius: ${token.borderRadius}px;
     background: ${token.colorBgElevated};
   `,
@@ -59,11 +59,11 @@ interface NetworkOption {
   disable?: boolean;
   icon: LucideIcon;
   label: string;
-  setLoading?: (loading: boolean) => void;
+  setUpdating?: (loading: boolean) => void;
   value: SearchMode;
 }
 
-const Item = memo<NetworkOption>(({ value, description, icon, label, setLoading }) => {
+const Item = memo<NetworkOption>(({ value, description, icon, label, setUpdating }) => {
   const { cx, styles } = useStyles();
   const [mode, updateAgentChatConfig] = useAgentStore((s) => [
     agentChatConfigSelectors.agentSearchMode(s),
@@ -78,9 +78,9 @@ const Item = memo<NetworkOption>(({ value, description, icon, label, setLoading 
       horizontal
       key={value}
       onClick={async () => {
-        setLoading?.(true);
+        setUpdating?.(true);
         await updateAgentChatConfig({ searchMode: value });
-        setLoading?.(false);
+        setUpdating?.(false);
       }}
     >
       <Center className={styles.icon} flex={'none'} height={32} width={32}>
@@ -94,11 +94,12 @@ const Item = memo<NetworkOption>(({ value, description, icon, label, setLoading 
   );
 });
 
-interface AINetworkSettingsProps {
-  setLoading?: (loading: boolean) => void;
+interface ControlsProps {
+  setUpdating: (updating: boolean) => void;
+  updating: boolean;
 }
 
-const AINetworkSettings = memo<AINetworkSettingsProps>(({ setLoading }) => {
+const Controls = memo<ControlsProps>(({ setUpdating }) => {
   const { t } = useTranslation('chat');
   const [model, provider] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
@@ -130,13 +131,13 @@ const AINetworkSettings = memo<AINetworkSettingsProps>(({ setLoading }) => {
   return (
     <Flexbox gap={4}>
       {options.map((option) => (
-        <Item setLoading={setLoading} {...option} key={option.value} />
+        <Item setUpdating={setUpdating} {...option} key={option.value} />
       ))}
       {showDivider && <Divider style={{ margin: 0 }} />}
       {isModelHasBuiltinSearchConfig && <ModelBuiltinSearch />}
-      {!supportFC && <FCSearchModel setLoading={setLoading} />}
+      {!supportFC && <FCSearchModel setLoading={setUpdating} />}
     </Flexbox>
   );
 });
 
-export default AINetworkSettings;
+export default Controls;

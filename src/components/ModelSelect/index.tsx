@@ -31,12 +31,12 @@ const useStyles = createStyles(({ css, token }) => ({
     align-items: center;
     justify-content: center;
 
-    width: 20px;
+    width: 20px !important;
     height: 20px;
     border-radius: 4px;
   `,
   token: css`
-    width: 36px;
+    width: 36px !important;
     height: 20px;
     border-radius: 4px;
 

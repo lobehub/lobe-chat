@@ -1841,6 +1841,33 @@
   "qwen/qwen2.5-coder-7b-instruct": {
     "description": "Krachtig middelgroot codeermodel, ondersteunt 32K contextlengte, gespecialiseerd in meertalige programmering."
   },
+  "qwen/qwen3-14b": {
+    "description": "Qwen3-14B is een dichte causale taalmodel met 14 miljard parameters in de Qwen3 serie, speciaal ontworpen voor complexe redenering en efficiënte gesprekken. Het ondersteunt naadloze overgangen tussen de 'denk' modus voor wiskunde, programmeren en logische redenering en de 'niet-denk' modus voor algemene gesprekken. Dit model is fijn afgesteld voor het volgen van instructies, het gebruik van agenttools, creatieve schrijfopdrachten en meertalige taken in meer dan 100 talen en dialecten. Het verwerkt van nature 32K tokens context en kan worden uitgebreid tot 131K tokens met YaRN."
+  },
+  "qwen/qwen3-14b:free": {
+    "description": "Qwen3-14B is een dichte causale taalmodel met 14 miljard parameters in de Qwen3 serie, speciaal ontworpen voor complexe redenering en efficiënte gesprekken. Het ondersteunt naadloze overgangen tussen de 'denk' modus voor wiskunde, programmeren en logische redenering en de 'niet-denk' modus voor algemene gesprekken. Dit model is fijn afgesteld voor het volgen van instructies, het gebruik van agenttools, creatieve schrijfopdrachten en meertalige taken in meer dan 100 talen en dialecten. Het verwerkt van nature 32K tokens context en kan worden uitgebreid tot 131K tokens met YaRN."
+  },
+  "qwen/qwen3-235b-a22b": {
+    "description": "Qwen3-235B-A22B is een 235B parameters expert-meng (MoE) model ontwikkeld door Qwen, dat 22B parameters activeert bij elke voorwaartse doorgang. Het ondersteunt naadloze overgangen tussen de 'denk' modus voor complexe redenering, wiskunde en code taken en de 'niet-denk' modus voor algemene gespreks efficiëntie. Dit model toont krachtige redeneringscapaciteiten, meertalige ondersteuning (meer dan 100 talen en dialecten), geavanceerd volgen van instructies en het aanroepen van agenttools. Het verwerkt van nature een contextvenster van 32K tokens en kan worden uitgebreid tot 131K tokens met YaRN."
+  },
+  "qwen/qwen3-235b-a22b:free": {
+    "description": "Qwen3-235B-A22B is een 235B parameters expert-meng (MoE) model ontwikkeld door Qwen, dat 22B parameters activeert bij elke voorwaartse doorgang. Het ondersteunt naadloze overgangen tussen de 'denk' modus voor complexe redenering, wiskunde en code taken en de 'niet-denk' modus voor algemene gespreks efficiëntie. Dit model toont krachtige redeneringscapaciteiten, meertalige ondersteuning (meer dan 100 talen en dialecten), geavanceerd volgen van instructies en het aanroepen van agenttools. Het verwerkt van nature een contextvenster van 32K tokens en kan worden uitgebreid tot 131K tokens met YaRN."
+  },
+  "qwen/qwen3-30b-a3b": {
+    "description": "Qwen3 is de nieuwste generatie van de Qwen grote taalmodelserie, met een dichte en expert-meng (MoE) architectuur, die uitblinkt in redeneren, meertalige ondersteuning en geavanceerde agenttaken. De unieke mogelijkheid om naadloos over te schakelen tussen de denkmodus voor complexe redenering en de niet-denkmodus voor efficiënte gesprekken zorgt voor veelzijdige en hoogwaardige prestaties.\n\nQwen3 overtreft aanzienlijk eerdere modellen zoals QwQ en Qwen2.5, en biedt uitstekende vaardigheden in wiskunde, codering, gezond verstand redenering, creatieve schrijfvaardigheden en interactieve gesprekken. De Qwen3-30B-A3B variant bevat 30,5 miljard parameters (3,3 miljard actieve parameters), 48 lagen, 128 experts (waarvan 8 per taak geactiveerd), en ondersteunt tot 131K tokens context (met YaRN), waarmee het een nieuwe standaard voor open-source modellen stelt."
+  },
+  "qwen/qwen3-30b-a3b:free": {
+    "description": "Qwen3 is de nieuwste generatie van de Qwen grote taalmodelserie, met een dichte en expert-meng (MoE) architectuur, die uitblinkt in redeneren, meertalige ondersteuning en geavanceerde agenttaken. De unieke mogelijkheid om naadloos over te schakelen tussen de denkmodus voor complexe redenering en de niet-denkmodus voor efficiënte gesprekken zorgt voor veelzijdige en hoogwaardige prestaties.\n\nQwen3 overtreft aanzienlijk eerdere modellen zoals QwQ en Qwen2.5, en biedt uitstekende vaardigheden in wiskunde, codering, gezond verstand redenering, creatieve schrijfvaardigheden en interactieve gesprekken. De Qwen3-30B-A3B variant bevat 30,5 miljard parameters (3,3 miljard actieve parameters), 48 lagen, 128 experts (waarvan 8 per taak geactiveerd), en ondersteunt tot 131K tokens context (met YaRN), waarmee het een nieuwe standaard voor open-source modellen stelt."
+  },
+  "qwen/qwen3-32b": {
+    "description": "Qwen3-32B is een dichte causale taalmodel met 32,8 miljard parameters in de Qwen3 serie, geoptimaliseerd voor complexe redenering en efficiënte gesprekken. Het ondersteunt naadloze overgangen tussen de 'denk' modus voor wiskunde, codering en logische redenering en de 'niet-denk' modus voor snellere, algemene gesprekken. Dit model presteert krachtig in het volgen van instructies, het gebruik van agenttools, creatieve schrijfopdrachten en meertalige taken in meer dan 100 talen en dialecten. Het verwerkt van nature 32K tokens context en kan worden uitgebreid tot 131K tokens met YaRN."
+  },
+  "qwen/qwen3-32b:free": {
+    "description": "Qwen3-32B is een dichte causale taalmodel met 32,8 miljard parameters in de Qwen3 serie, geoptimaliseerd voor complexe redenering en efficiënte gesprekken. Het ondersteunt naadloze overgangen tussen de 'denk' modus voor wiskunde, codering en logische redenering en de 'niet-denk' modus voor snellere, algemene gesprekken. Dit model presteert krachtig in het volgen van instructies, het gebruik van agenttools, creatieve schrijfopdrachten en meertalige taken in meer dan 100 talen en dialecten. Het verwerkt van nature 32K tokens context en kan worden uitgebreid tot 131K tokens met YaRN."
+  },
+  "qwen/qwen3-8b:free": {
+    "description": "Qwen3-8B is een dichte causale taalmodel met 8 miljard parameters in de Qwen3 serie, speciaal ontworpen voor redeneringsintensieve taken en efficiënte gesprekken. Het ondersteunt naadloze overgangen tussen de 'denk' modus voor wiskunde, codering en logische redenering en de 'niet-denk' modus voor algemene gesprekken. Dit model is fijn afgesteld voor het volgen van instructies, agentintegratie, creatieve schrijfopdrachten en meertalig gebruik in meer dan 100 talen en dialecten. Het ondersteunt van nature een contextvenster van 32K tokens en kan worden uitgebreid tot 131K tokens via YaRN."
+  },
   "qwen2": {
     "description": "Qwen2 is Alibaba's nieuwe generatie grootschalig taalmodel, ondersteunt diverse toepassingsbehoeften met uitstekende prestaties."
   },
@@ -1924,6 +1951,30 @@
   },
   "qwen2:72b": {
     "description": "Qwen2 is Alibaba's nieuwe generatie grootschalig taalmodel, ondersteunt diverse toepassingsbehoeften met uitstekende prestaties."
+  },
+  "qwen3-0.6b": {
+    "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
+  },
+  "qwen3-1.7b": {
+    "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
+  },
+  "qwen3-14b": {
+    "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
+  },
+  "qwen3-235b-a22b": {
+    "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
+  },
+  "qwen3-30b-a3b": {
+    "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
+  },
+  "qwen3-32b": {
+    "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
+  },
+  "qwen3-4b": {
+    "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
+  },
+  "qwen3-8b": {
+    "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
   },
   "qwq": {
     "description": "QwQ is een experimenteel onderzoeksmodel dat zich richt op het verbeteren van de AI-redeneringscapaciteiten."
@@ -2026,6 +2077,18 @@
   },
   "thudm/glm-4-9b-chat": {
     "description": "De open-source versie van de nieuwste generatie voorgetrainde modellen van de GLM-4-serie, uitgebracht door Zhizhu AI."
+  },
+  "thudm/glm-4-9b:free": {
+    "description": "GLM-4-9B-0414 is een taalmodel met 9B parameters in de GLM-4 serie, ontwikkeld door THUDM. GLM-4-9B-0414 wordt getraind met dezelfde versterkingsleer- en afstemmingsstrategieën als het grotere 32B tegenhanger, en bereikt hoge prestaties in verhouding tot zijn formaat, waardoor het geschikt is voor implementaties met beperkte middelen die nog steeds sterke taalbegrip en generatiecapaciteiten vereisen."
+  },
+  "thudm/glm-z1-9b:free": {
+    "description": "GLM-Z1-9B-0414 is een taalmodel met 9B parameters in de GLM-4 serie, ontwikkeld door THUDM. Het maakt gebruik van technieken die oorspronkelijk zijn toegepast op het grotere GLM-Z1 model, waaronder uitgebreide versterkingsleer, parenrangschikking afstemming en training voor redeneringsintensieve taken zoals wiskunde, codering en logica. Ondanks zijn kleinere formaat, presteert het krachtig in algemene redeneringstaken en overtreft het veel open-source modellen op zijn gewichtsniveau."
+  },
+  "thudm/glm-z1-rumination-32b": {
+    "description": "THUDM: GLM Z1 Rumination 32B is een diep redeneringsmodel met 32B parameters in de GLM-4-Z1 serie, geoptimaliseerd voor complexe, open taken die langdurig nadenken vereisen. Het is gebaseerd op glm-4-32b-0414, met extra versterkingsleerfasen en meerfasige afstemmingsstrategieën, en introduceert de 'reflectieve' capaciteit die is ontworpen om uitgebreide cognitieve verwerking te simuleren. Dit omvat iteratieve redenering, multi-hop analyse en tool-versterkte workflows, zoals zoeken, ophalen en citatie-bewuste synthese.\n\nDit model presteert uitstekend in onderzoeksgericht schrijven, vergelijkende analyses en complexe vraag-en-antwoord situaties. Het ondersteunt functie-aanroepen voor zoek- en navigatiecommando's (`search`, `click`, `open`, `finish`), waardoor het kan worden gebruikt in agent-gebaseerde pipelines. Reflectief gedrag wordt gevormd door een multi-rondencycluscontrole met op regels gebaseerde beloningen en een vertraagd besluitvormingsmechanisme, en is gebaseerd op diepgaande onderzoeksframeworks zoals de interne afstemmingsstack van OpenAI. Deze variant is geschikt voor scenario's die diepgang in plaats van snelheid vereisen."
+  },
+  "tngtech/deepseek-r1t-chimera:free": {
+    "description": "DeepSeek-R1T-Chimera is gecreëerd door de combinatie van DeepSeek-R1 en DeepSeek-V3 (0324), en combineert de redeneringscapaciteiten van R1 met de verbeteringen in token efficiëntie van V3. Het is gebaseerd op de DeepSeek-MoE Transformer architectuur en is geoptimaliseerd voor algemene tekstgeneratietaken.\n\nDit model combineert de voorgetrainde gewichten van de twee bronmodellen om de prestaties in redeneren, efficiëntie en het volgen van instructies in balans te brengen. Het is vrijgegeven onder de MIT-licentie en is bedoeld voor onderzoek en commerciële doeleinden."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) biedt verbeterde rekenkracht door middel van efficiënte strategieën en modelarchitectuur."

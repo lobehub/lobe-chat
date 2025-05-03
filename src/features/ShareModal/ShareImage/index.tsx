@@ -24,7 +24,7 @@ const DEFAULT_FIELD_VALUE: FieldType = {
   withSystemRole: false,
 };
 
-const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
+const ShareImage = memo<{ mobile?: boolean }>(() => {
   const currentAgentTitle = useSessionStore(sessionMetaSelectors.currentAgentTitle);
   const [fieldValue, setFieldValue] = useState<FieldType>(DEFAULT_FIELD_VALUE);
   const { t } = useTranslation(['chat', 'common']);
@@ -32,11 +32,8 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { loading, onDownload, title } = useScreenshot({
     imageType: fieldValue.imageType,
     title: currentAgentTitle,
-    width: mobile ? 720 : undefined,
   });
-  const { loading: copyLoading, onCopy } = useImgToClipboard({
-    width: mobile ? 720 : undefined,
-  });
+  const { loading: copyLoading, onCopy } = useImgToClipboard();
   const settings: FormItemProps[] = [
     {
       children: <Switch />,
@@ -65,6 +62,7 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
     {
       children: <Segmented options={imageTypeOptions} />,
       label: t('shareModal.imageType'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'imageType',
     },
@@ -105,7 +103,11 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
           {!isMobile && button}
         </Flexbox>
       </Flexbox>
-      {isMobile && <Flexbox className={styles.footer}>{button}</Flexbox>}
+      {isMobile && (
+        <Flexbox className={styles.footer} gap={8} horizontal>
+          {button}
+        </Flexbox>
+      )}
     </>
   );
 });

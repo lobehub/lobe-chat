@@ -14,6 +14,18 @@ class ElectronSystemService {
     return dispatch('getDesktopAppState');
   }
 
+  async closeWindow(): Promise<void> {
+    return dispatch('closeWindow');
+  }
+
+  async maximizeWindow(): Promise<void> {
+    return dispatch('maximizeWindow');
+  }
+
+  async minimizeWindow(): Promise<void> {
+    return dispatch('minimizeWindow');
+  }
+
   // Add other system-related service methods here if needed in the future
 }
 

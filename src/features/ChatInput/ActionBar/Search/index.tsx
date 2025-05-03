@@ -1,4 +1,3 @@
-import { ActionIcon } from '@lobehub/ui';
 import { GlobeOffIcon } from '@lobehub/ui/icons';
 import { useTheme } from 'antd-style';
 import { Globe } from 'lucide-react';
@@ -10,42 +9,38 @@ import { useAgentEnableSearch } from '@/hooks/useAgentEnableSearch';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 
-import ActionPopover from '../../components/ActionPopover';
-import AINetworkSettings from './SwitchPanel';
+import Action from '../components/Action';
+import Controls from './Controls';
 
 const Search = memo(() => {
   const { t } = useTranslation('chat');
-  const [loading, setLoading] = useState(false);
   const [isLoading] = useAgentStore((s) => [agentSelectors.isAgentConfigLoading(s)]);
+  const [updating, setUpdating] = useState(false);
   const isAgentEnableSearch = useAgentEnableSearch();
   const theme = useTheme();
 
-  if (isLoading) return <ActionIcon disabled icon={GlobeOffIcon} />;
+  if (isDeprecatedEdition) return null;
+  if (isLoading) return <Action disabled icon={GlobeOffIcon} />;
 
   return (
-    !isDeprecatedEdition && (
-      <ActionPopover
-        content={<AINetworkSettings setLoading={setLoading} />}
-        maxWidth={320}
-        minWidth={320}
-        placement={'topLeft'}
-        styles={{
+    <Action
+      color={isAgentEnableSearch ? theme.colorInfo : undefined}
+      icon={isAgentEnableSearch ? Globe : GlobeOffIcon}
+      loading={updating}
+      popover={{
+        content: <Controls setUpdating={setUpdating} updating={updating} />,
+        maxWidth: 320,
+        minWidth: 320,
+        placement: 'topLeft',
+        styles: {
           body: {
             padding: 4,
           },
-        }}
-      >
-        <ActionIcon
-          color={isAgentEnableSearch ? theme.colorInfo : undefined}
-          icon={isAgentEnableSearch ? Globe : GlobeOffIcon}
-          loading={loading}
-          title={t('search.title')}
-          tooltipProps={{
-            placement: 'bottom',
-          }}
-        />
-      </ActionPopover>
-    )
+        },
+      }}
+      showTooltip={false}
+      title={t('search.title')}
+    />
   );
 });
 

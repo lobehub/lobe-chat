@@ -92,7 +92,9 @@ export const transformQwenStream = (chunk: OpenAI.ChatCompletionChunk): StreamPr
 
 export const QwenAIStream = (
   stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
-  callbacks?: ChatStreamCallbacks,
+  // TODO: preserve for RFC 097
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
+  { callbacks, inputStartAt }: { callbacks?: ChatStreamCallbacks; inputStartAt?: number } = {},
 ) => {
   const readableStream =
     stream instanceof ReadableStream ? stream : convertIterableToStream(stream);
