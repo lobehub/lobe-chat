@@ -125,8 +125,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'THUDM/GLM-Z1-Rumination-32B-0414',
     pricing: {
       currency: 'CNY',
-      input: 0.5,
-      output: 0.5,
+      input: 1,
+      output: 4,
     },
     type: 'chat',
   },
@@ -142,8 +142,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'THUDM/GLM-Z1-32B-0414',
     pricing: {
       currency: 'CNY',
-      input: 0.5,
-      output: 0.5,
+      input: 1,
+      output: 4,
     },
     type: 'chat',
   },
@@ -176,8 +176,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     id: 'THUDM/GLM-4-32B-0414',
     pricing: {
       currency: 'CNY',
-      input: 0.5,
-      output: 0.5,
+      input: 1.89,
+      output: 1.89,
     },
     type: 'chat',
   },
@@ -200,7 +200,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 65_536,
@@ -233,7 +232,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 65_536,
@@ -282,7 +280,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true,
+      functionCall: true,
+      reasoning: true
     },
     contextWindowTokens: 32_768,
     description:
@@ -298,7 +297,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true,
+      functionCall: true,
+      reasoning: true
     },
     contextWindowTokens: 32_768,
     description:
@@ -314,7 +314,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true,
+      functionCall: true,
+      reasoning: true
     },
     contextWindowTokens: 32_768,
     description:
@@ -330,7 +331,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true,
+      functionCall: true,
+      reasoning: true
     },
     contextWindowTokens: 32_768,
     description:
@@ -346,7 +348,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true,
+      functionCall: true,
+      reasoning: true
     },
     contextWindowTokens: 32_768,
     description:
@@ -362,7 +365,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true,
+      functionCall: true,
+      reasoning: true
     },
     contextWindowTokens: 32_768,
     description:
@@ -427,6 +431,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 32_768,
@@ -814,19 +819,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 0,
       output: 0,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 8192,
-    description:
-      'TeleChat2大模型是由中国电信从0到1自主研发的生成式语义大模型，支持百科问答、代码生成、长文生成等功能，为用户提供对话咨询服务，能够与用户进行对话互动，回答问题，协助创作，高效便捷地帮助用户获取信息、知识和灵感。模型在幻觉问题、长文生成、逻辑理解等方面均有较出色表现。',
-    displayName: 'TeleChat2',
-    id: 'TeleAI/TeleChat2',
-    pricing: {
-      currency: 'CNY',
-      input: 1.33,
-      output: 1.33,
     },
     type: 'chat',
   },

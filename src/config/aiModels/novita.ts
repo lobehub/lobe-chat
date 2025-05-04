@@ -279,7 +279,7 @@ const novitaChatModels: AIChatModelCard[] = [
   },
   {
     contextWindowTokens: 32_000,
-    displayName: 'Qwen 2.5 72B Instruct',
+    displayName: 'Qwen2.5 72B Instruct',
     id: 'qwen/qwen-2.5-72b-instruct',
     pricing: {
       input: 0.38,
@@ -332,7 +332,7 @@ const novitaChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 96_000,
-    displayName: 'Qwen 2.5 VL 72B Instruct',
+    displayName: 'Qwen2.5 VL 72B Instruct',
     enabled: true,
     id: 'qwen/qwen2.5-vl-72b-instruct',
     pricing: {
@@ -345,9 +345,9 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_000,
     displayName: 'Llama 3.2 1B Instruct',
     id: 'meta-llama/llama-3.2-1b-instruct',
-    pricing: {
-      input: 0.02,
-      output: 0.02,
+    pricing: { 
+      input: 0, 
+      output: 0 
     },
     type: 'chat',
   },
@@ -402,6 +402,66 @@ const novitaChatModels: AIChatModelCard[] = [
     pricing: {
       input: 0.18,
       output: 0.2,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'Qwen2.5 7B Instruct',
+    id: 'qwen/qwen2.5-7b-instruct',
+    pricing: {
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'GLM 4 9B 0414',
+    id: 'thudm/glm-4-9b-0414',
+    pricing: { 
+      input: 0,
+      output: 0 
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'GLM Z1 9B 0414',
+    id: 'thudm/glm-z1-9b-0414',
+    pricing: { 
+      input: 0,
+      output: 0 
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'GLM Z1 32B 0414',
+    id: 'thudm/glm-z1-32b-0414',
+    pricing: { 
+      input: 0.24, 
+      output: 0.24 
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'GLM 4 32B 0414',
+    id: 'thudm/glm-4-32b-0414',
+    pricing: { 
+      input: 0.24, 
+      output: 0.24 
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'GLM Z1 Rumination 32B 0414',
+    id: 'thudm/glm-z1-rumination-32b-0414',
+    pricing: { 
+      input: 0.24, 
+      output: 0.24 
     },
     type: 'chat',
   },
