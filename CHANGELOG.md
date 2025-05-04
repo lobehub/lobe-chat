@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.84.19](https://github.com/lobehub/lobe-chat/compare/v1.84.18...v1.84.19)
+
+<sup>Released on **2025-05-04**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix init state of loading.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix init state of loading, closes [#7694](https://github.com/lobehub/lobe-chat/issues/7694) ([1d97a68](https://github.com/lobehub/lobe-chat/commit/1d97a68))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.84.18](https://github.com/lobehub/lobe-chat/compare/v1.84.17...v1.84.18)
 
 <sup>Released on **2025-05-03**</sup>
