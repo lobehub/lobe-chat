@@ -5,6 +5,7 @@ export type RemoteServerError = 'CONFIG_ERROR' | 'AUTH_ERROR' | 'DISCONNECT_ERRO
 export interface ElectronState {
   appState: ElectronAppState;
   dataSyncConfig: DataSyncConfig;
+  isAppStateInit: boolean;
   isConnectingServer?: boolean;
   isInitRemoteServerConfig: boolean;
   isSyncActive?: boolean;
@@ -14,6 +15,7 @@ export interface ElectronState {
 export const initialState: ElectronState = {
   appState: {},
   dataSyncConfig: { storageMode: 'local' },
+  isAppStateInit: false,
   isConnectingServer: false,
   isInitRemoteServerConfig: false,
   isSyncActive: false,

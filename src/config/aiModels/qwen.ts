@@ -270,7 +270,7 @@ const qwenChatModels: AIChatModelCard[] = [
       functionCall: true,
       search: true,
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 131_072,
     description:
       '通义千问千亿级别超大规模语言模型，支持中文、英文等不同语言输入，当前通义千问2.5产品版本背后的API模型。',
     displayName: 'Qwen Max',
@@ -292,13 +292,13 @@ const qwenChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 1_000_000,
+    contextWindowTokens: 10_000_000,
     description:
       '通义千问超大规模语言模型，支持长文本上下文，以及基于长文档、多文档等多个场景的对话功能。',
     displayName: 'Qwen Long',
     enabled: true,
     id: 'qwen-long',
-    maxOutput: 6000,
+    maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
@@ -337,23 +337,23 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwen2.5-omni-7b',
     maxOutput: 2048,
     organization: 'Qwen',
-    // pricing: {
-    //   currency: 'CNY',
-    //   input: 0,
-    //   output: 0,
-    // },
+    pricing: {
+      currency: 'CNY',
+      input: 0.6,
+      output: 6,
+    },
     type: 'chat',
   },
   {
     abilities: {
       vision: true,
     },
-    contextWindowTokens: 32_000,
+    contextWindowTokens: 131_072,
     description:
       '通义千问大规模视觉语言模型增强版。大幅提升细节识别能力和文字识别能力，支持超百万像素分辨率和任意长宽比规格的图像。',
     displayName: 'Qwen VL Plus',
     id: 'qwen-vl-plus-latest',
-    maxOutput: 2048,
+    maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
@@ -366,13 +366,13 @@ const qwenChatModels: AIChatModelCard[] = [
     abilities: {
       vision: true,
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 131_072,
     description:
       '通义千问超大规模视觉语言模型。相比增强版，再次提升视觉推理能力和指令遵循能力，提供更高的视觉感知和认知水平。',
     displayName: 'Qwen VL Max',
     enabled: true,
     id: 'qwen-vl-max-latest',
-    maxOutput: 2048,
+    maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
@@ -505,7 +505,7 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       '通义千问QVQ视觉推理模型，支持视觉输入及思维链输出，在数学、编程、视觉分析、创作以及通用任务上都表现了更强的能力。',
     displayName: 'QVQ Max',
-    id: 'qvq-max', // Unsupported model `qvq-max-latest` for OpenAI compatibility mode
+    id: 'qvq-max-latest',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -582,8 +582,8 @@ const qwenChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 3.5,
-      output: 7,
+      input: 2,
+      output: 6,
     },
     type: 'chat',
   },
@@ -673,8 +673,8 @@ const qwenChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 3.5,
-      output: 7,
+      input: 2,
+      output: 6,
     },
     type: 'chat',
   },
@@ -686,6 +686,7 @@ const qwenChatModels: AIChatModelCard[] = [
     description: '以 Qwen-7B 语言模型初始化，添加图像模型，图像输入分辨率为448的预训练模型。',
     displayName: 'Qwen VL',
     id: 'qwen-vl-v1',
+    maxOutput: 1500,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
@@ -702,6 +703,7 @@ const qwenChatModels: AIChatModelCard[] = [
     description: '通义千问VL支持灵活的交互方式，包括多图、多轮问答、创作等能力的模型。',
     displayName: 'Qwen VL Chat',
     id: 'qwen-vl-chat-v1',
+    maxOutput: 1500,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',

@@ -1,6 +1,34 @@
 [
   {
     "children": {
+      "improvements": ["Remove doubao Provider."]
+    },
+    "date": "2025-05-04",
+    "version": "1.84.21"
+  },
+  {
+    "children": {
+      "improvements": ["Show Aliyun Bailian tokens usage tracking."]
+    },
+    "date": "2025-05-04",
+    "version": "1.84.20"
+  },
+  {
+    "children": {
+      "improvements": ["Fix init state of loading."]
+    },
+    "date": "2025-05-04",
+    "version": "1.84.19"
+  },
+  {
+    "children": {
+      "improvements": ["Add perf stat support for openai factory."]
+    },
+    "date": "2025-05-03",
+    "version": "1.84.18"
+  },
+  {
+    "children": {
       "improvements": ["Add write file tool to local-file plugin."]
     },
     "date": "2025-05-03",
