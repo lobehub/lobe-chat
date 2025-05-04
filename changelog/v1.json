@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Remove doubao Provider."]
+    },
+    "date": "2025-05-04",
+    "version": "1.84.21"
+  },
+  {
+    "children": {
       "improvements": ["Show Aliyun Bailian tokens usage tracking."]
     },
     "date": "2025-05-04",
