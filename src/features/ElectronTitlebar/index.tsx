@@ -15,10 +15,14 @@ import { TITLE_BAR_HEIGHT } from './const';
 const isMac = isMacOS();
 
 const TitleBar = memo(() => {
-  const initElectronAppState = useElectronStore((s) => s.useInitElectronAppState);
+  const [isAppStateInit, initElectronAppState] = useElectronStore((s) => [
+    s.isAppStateInit,
+    s.useInitElectronAppState,
+  ]);
 
   initElectronAppState();
 
+  const showWinControl = isAppStateInit && !isMac;
   return (
     <Flexbox
       align={'center'}
@@ -26,7 +30,7 @@ const TitleBar = memo(() => {
       height={TITLE_BAR_HEIGHT}
       horizontal
       justify={'space-between'}
-      paddingInline={isMac ? 12 : '12px 0'}
+      paddingInline={showWinControl ? '12px 0' : 12}
       style={{ minHeight: TITLE_BAR_HEIGHT }}
       width={'100%'}
     >
@@ -38,7 +42,7 @@ const TitleBar = memo(() => {
           <UpdateNotification />
           <Connection />
         </Flexbox>
-        {!isMac && (
+        {showWinControl && (
           <>
             <Divider type={'vertical'} />
             <WinControl />
