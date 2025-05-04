@@ -231,7 +231,7 @@ const hunyuanChatModels: AIChatModelCard[] = [
       input: 0.8,
       output: 2,
     },
-    releasedAt: '2025-03-13',
+    releasedAt: '2025-04-16',
     settings: {
       searchImpl: 'params',
     },
@@ -349,12 +349,12 @@ const hunyuanChatModels: AIChatModelCard[] = [
     abilities: {
       vision: true,
     },
-    contextWindowTokens: 12_000,
+    contextWindowTokens: 32_000,
     description: '混元最新多模态模型，支持图片+文本输入生成文本内容。',
     displayName: 'Hunyuan Vision',
     enabled: true,
     id: 'hunyuan-vision',
-    maxOutput: 6000,
+    maxOutput: 16_000,
     pricing: {
       currency: 'CNY',
       input: 18,
@@ -393,7 +393,7 @@ const hunyuanChatModels: AIChatModelCard[] = [
       input: 4,
       output: 8,
     },
-    releasedAt: '2024-11-15',
+    releasedAt: '2025-04-22',
     type: 'chat',
   },
   {

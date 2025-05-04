@@ -40,17 +40,15 @@ class MCPService {
   }
 
   async getStdioMcpServerManifest(
-    identifier: string,
-    command: string,
-    args?: string[],
+    stdioParams: {
+      args?: string[];
+      command: string;
+      env?: Record<string, string>;
+      name: string;
+    },
     metadata?: CustomPluginMetadata,
   ) {
-    return desktopClient.mcp.getStdioMcpServerManifest.query({
-      args: args,
-      command,
-      metadata,
-      name: identifier,
-    });
+    return desktopClient.mcp.getStdioMcpServerManifest.query({ ...stdioParams, metadata });
   }
 }
 

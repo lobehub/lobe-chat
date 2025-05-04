@@ -1841,6 +1841,33 @@
   "qwen/qwen2.5-coder-7b-instruct": {
     "description": "Potężny średniej wielkości model kodu, wspierający długość kontekstu 32K, specjalizujący się w programowaniu wielojęzycznym."
   },
+  "qwen/qwen3-14b": {
+    "description": "Qwen3-14B to gęsty model językowy o 14 miliardach parametrów w serii Qwen3, zaprojektowany z myślą o złożonym wnioskowaniu i efektywnych dialogach. Obsługuje płynne przełączanie między trybem 'myślenia' używanym do matematyki, programowania i wnioskowania logicznego a trybem 'nie-myślenia' stosowanym w ogólnych rozmowach. Model został dostosowany do przestrzegania instrukcji, użycia narzędzi agenta, twórczego pisania oraz wielojęzycznych zadań w ponad 100 językach i dialektach. Obsługuje natywnie 32K tokenów kontekstu i może być rozszerzany do 131K tokenów za pomocą YaRN."
+  },
+  "qwen/qwen3-14b:free": {
+    "description": "Qwen3-14B to gęsty model językowy o 14 miliardach parametrów w serii Qwen3, zaprojektowany z myślą o złożonym wnioskowaniu i efektywnych dialogach. Obsługuje płynne przełączanie między trybem 'myślenia' używanym do matematyki, programowania i wnioskowania logicznego a trybem 'nie-myślenia' stosowanym w ogólnych rozmowach. Model został dostosowany do przestrzegania instrukcji, użycia narzędzi agenta, twórczego pisania oraz wielojęzycznych zadań w ponad 100 językach i dialektach. Obsługuje natywnie 32K tokenów kontekstu i może być rozszerzany do 131K tokenów za pomocą YaRN."
+  },
+  "qwen/qwen3-235b-a22b": {
+    "description": "Qwen3-235B-A22B to model mieszanki ekspertów (MoE) o 235 miliardach parametrów opracowany przez Qwen, aktywujący 22 miliardy parametrów przy każdym przejściu do przodu. Obsługuje płynne przełączanie między trybem 'myślenia' używanym do złożonego wnioskowania, matematyki i zadań kodowania a trybem 'nie-myślenia' stosowanym w ogólnych rozmowach. Model wykazuje silne zdolności w zakresie wnioskowania, wsparcia wielojęzycznego (ponad 100 języków i dialektów), zaawansowanego przestrzegania instrukcji oraz wywoływania narzędzi agenta. Obsługuje natywnie okno kontekstu 32K tokenów i może być rozszerzany do 131K tokenów za pomocą YaRN."
+  },
+  "qwen/qwen3-235b-a22b:free": {
+    "description": "Qwen3-235B-A22B to model mieszanki ekspertów (MoE) o 235 miliardach parametrów opracowany przez Qwen, aktywujący 22 miliardy parametrów przy każdym przejściu do przodu. Obsługuje płynne przełączanie między trybem 'myślenia' używanym do złożonego wnioskowania, matematyki i zadań kodowania a trybem 'nie-myślenia' stosowanym w ogólnych rozmowach. Model wykazuje silne zdolności w zakresie wnioskowania, wsparcia wielojęzycznego (ponad 100 języków i dialektów), zaawansowanego przestrzegania instrukcji oraz wywoływania narzędzi agenta. Obsługuje natywnie okno kontekstu 32K tokenów i może być rozszerzany do 131K tokenów za pomocą YaRN."
+  },
+  "qwen/qwen3-30b-a3b": {
+    "description": "Qwen3 to najnowsza generacja serii dużych modeli językowych Qwen, charakteryzująca się architekturą gęstą i mieszanką ekspertów (MoE), która doskonale radzi sobie w zakresie wnioskowania, wsparcia wielojęzycznego i zaawansowanych zadań agenta. Jego unikalna zdolność do płynnego przełączania się między trybem myślenia w złożonym wnioskowaniu a trybem nie-myślenia w efektywnych dialogach zapewnia wszechstronność i wysoką jakość wydajności.\n\nQwen3 znacząco przewyższa wcześniejsze modele, takie jak QwQ i Qwen2.5, oferując doskonałe umiejętności w zakresie matematyki, kodowania, wnioskowania ogólnego, twórczego pisania i interaktywnych dialogów. Wariant Qwen3-30B-A3B zawiera 30,5 miliarda parametrów (3,3 miliarda aktywowanych parametrów), 48 warstw, 128 ekspertów (aktywowano 8 dla każdego zadania) i obsługuje kontekst do 131K tokenów (z użyciem YaRN), ustanawiając nowy standard dla modeli open source."
+  },
+  "qwen/qwen3-30b-a3b:free": {
+    "description": "Qwen3 to najnowsza generacja serii dużych modeli językowych Qwen, charakteryzująca się architekturą gęstą i mieszanką ekspertów (MoE), która doskonale radzi sobie w zakresie wnioskowania, wsparcia wielojęzycznego i zaawansowanych zadań agenta. Jego unikalna zdolność do płynnego przełączania się między trybem myślenia w złożonym wnioskowaniu a trybem nie-myślenia w efektywnych dialogach zapewnia wszechstronność i wysoką jakość wydajności.\n\nQwen3 znacząco przewyższa wcześniejsze modele, takie jak QwQ i Qwen2.5, oferując doskonałe umiejętności w zakresie matematyki, kodowania, wnioskowania ogólnego, twórczego pisania i interaktywnych dialogów. Wariant Qwen3-30B-A3B zawiera 30,5 miliarda parametrów (3,3 miliarda aktywowanych parametrów), 48 warstw, 128 ekspertów (aktywowano 8 dla każdego zadania) i obsługuje kontekst do 131K tokenów (z użyciem YaRN), ustanawiając nowy standard dla modeli open source."
+  },
+  "qwen/qwen3-32b": {
+    "description": "Qwen3-32B to gęsty model językowy o 32 miliardach parametrów w serii Qwen3, zoptymalizowany pod kątem złożonego wnioskowania i efektywnych dialogów. Obsługuje płynne przełączanie między trybem 'myślenia' używanym do matematyki, kodowania i wnioskowania logicznego a trybem 'nie-myślenia' stosowanym w szybszych, ogólnych rozmowach. Model wykazuje silną wydajność w przestrzeganiu instrukcji, użyciu narzędzi agenta, twórczym pisaniu oraz wielojęzycznych zadań w ponad 100 językach i dialektach. Obsługuje natywnie 32K tokenów kontekstu i może być rozszerzany do 131K tokenów za pomocą YaRN."
+  },
+  "qwen/qwen3-32b:free": {
+    "description": "Qwen3-32B to gęsty model językowy o 32 miliardach parametrów w serii Qwen3, zoptymalizowany pod kątem złożonego wnioskowania i efektywnych dialogów. Obsługuje płynne przełączanie między trybem 'myślenia' używanym do matematyki, kodowania i wnioskowania logicznego a trybem 'nie-myślenia' stosowanym w szybszych, ogólnych rozmowach. Model wykazuje silną wydajność w przestrzeganiu instrukcji, użyciu narzędzi agenta, twórczym pisaniu oraz wielojęzycznych zadań w ponad 100 językach i dialektach. Obsługuje natywnie 32K tokenów kontekstu i może być rozszerzany do 131K tokenów za pomocą YaRN."
+  },
+  "qwen/qwen3-8b:free": {
+    "description": "Qwen3-8B to gęsty model językowy o 8 miliardach parametrów w serii Qwen3, zaprojektowany z myślą o zadaniach wymagających intensywnego wnioskowania i efektywnych dialogach. Obsługuje płynne przełączanie między trybem 'myślenia' używanym do matematyki, kodowania i wnioskowania logicznego a trybem 'nie-myślenia' stosowanym w ogólnych rozmowach. Model został dostosowany do przestrzegania instrukcji, integracji agenta, twórczego pisania oraz wielojęzycznego użycia w ponad 100 językach i dialektach. Obsługuje natywnie okno kontekstu 32K tokenów i może być rozszerzany do 131K tokenów za pomocą YaRN."
+  },
   "qwen2": {
     "description": "Qwen2 to nowa generacja dużego modelu językowego Alibaba, wspierająca różnorodne potrzeby aplikacyjne dzięki doskonałej wydajności."
   },
@@ -1924,6 +1951,30 @@
   },
   "qwen2:72b": {
     "description": "Qwen2 to nowa generacja dużego modelu językowego Alibaba, wspierająca różnorodne potrzeby aplikacyjne dzięki doskonałej wydajności."
+  },
+  "qwen3-0.6b": {
+    "description": "Qwen3 to nowa generacja modelu Qwen, który znacznie zwiększa możliwości w zakresie wnioskowania, ogólności, agenta i wielojęzyczności, osiągając wiodące w branży wyniki w wielu kluczowych obszarach i wspierając przełączanie trybów myślenia."
+  },
+  "qwen3-1.7b": {
+    "description": "Qwen3 to nowa generacja modelu Qwen, który znacznie zwiększa możliwości w zakresie wnioskowania, ogólności, agenta i wielojęzyczności, osiągając wiodące w branży wyniki w wielu kluczowych obszarach i wspierając przełączanie trybów myślenia."
+  },
+  "qwen3-14b": {
+    "description": "Qwen3 to nowa generacja modelu Qwen, który znacznie zwiększa możliwości w zakresie wnioskowania, ogólności, agenta i wielojęzyczności, osiągając wiodące w branży wyniki w wielu kluczowych obszarach i wspierając przełączanie trybów myślenia."
+  },
+  "qwen3-235b-a22b": {
+    "description": "Qwen3 to nowa generacja modelu Qwen, który znacznie zwiększa możliwości w zakresie wnioskowania, ogólności, agenta i wielojęzyczności, osiągając wiodące w branży wyniki w wielu kluczowych obszarach i wspierając przełączanie trybów myślenia."
+  },
+  "qwen3-30b-a3b": {
+    "description": "Qwen3 to nowa generacja modelu Qwen, który znacznie zwiększa możliwości w zakresie wnioskowania, ogólności, agenta i wielojęzyczności, osiągając wiodące w branży wyniki w wielu kluczowych obszarach i wspierając przełączanie trybów myślenia."
+  },
+  "qwen3-32b": {
+    "description": "Qwen3 to nowa generacja modelu Qwen, który znacznie zwiększa możliwości w zakresie wnioskowania, ogólności, agenta i wielojęzyczności, osiągając wiodące w branży wyniki w wielu kluczowych obszarach i wspierając przełączanie trybów myślenia."
+  },
+  "qwen3-4b": {
+    "description": "Qwen3 to nowa generacja modelu Qwen, który znacznie zwiększa możliwości w zakresie wnioskowania, ogólności, agenta i wielojęzyczności, osiągając wiodące w branży wyniki w wielu kluczowych obszarach i wspierając przełączanie trybów myślenia."
+  },
+  "qwen3-8b": {
+    "description": "Qwen3 to nowa generacja modelu Qwen, który znacznie zwiększa możliwości w zakresie wnioskowania, ogólności, agenta i wielojęzyczności, osiągając wiodące w branży wyniki w wielu kluczowych obszarach i wspierając przełączanie trybów myślenia."
   },
   "qwq": {
     "description": "QwQ to eksperymentalny model badawczy, skoncentrowany na zwiększeniu zdolności wnioskowania AI."
@@ -2026,6 +2077,18 @@
   },
   "thudm/glm-4-9b-chat": {
     "description": "Otwarta wersja najnowszej generacji modelu pretrenowanego GLM-4 wydanego przez Zhipu AI."
+  },
+  "thudm/glm-4-9b:free": {
+    "description": "GLM-4-9B-0414 to model językowy o 9 miliardach parametrów w serii GLM-4 opracowany przez THUDM. GLM-4-9B-0414 wykorzystuje te same strategie uczenia przez wzmocnienie i dostosowania, co jego większy model odpowiadający 32B, osiągając wysoką wydajność w stosunku do swojej skali, co czyni go odpowiednim do wdrożeń z ograniczonymi zasobami, które nadal wymagają silnych zdolności rozumienia i generowania języka."
+  },
+  "thudm/glm-z1-9b:free": {
+    "description": "GLM-Z1-9B-0414 to model językowy o 9 miliardach parametrów w serii GLM-4 opracowany przez THUDM. Wykorzystuje techniki pierwotnie zastosowane w większym modelu GLM-Z1, w tym rozszerzone uczenie przez wzmocnienie, dostosowanie rankingowe w parach oraz trening do zadań intensywnie wymagających wnioskowania, takich jak matematyka, kodowanie i logika. Mimo mniejszej skali, wykazuje silną wydajność w ogólnych zadaniach wnioskowania i przewyższa wiele modeli open source na poziomie swoich wag."
+  },
+  "thudm/glm-z1-rumination-32b": {
+    "description": "THUDM: GLM Z1 Rumination 32B to model głębokiego wnioskowania o 32 miliardach parametrów w serii GLM-4-Z1, zoptymalizowany do złożonych, otwartych zadań wymagających długotrwałego myślenia. Opiera się na glm-4-32b-0414, dodając dodatkowe etapy uczenia przez wzmocnienie i strategie wieloetapowego dostosowania, wprowadzając zdolność 'refleksji' mającą na celu symulację rozszerzonego przetwarzania poznawczego. Obejmuje to iteracyjne wnioskowanie, analizy wielokrokowe i wzbogacone narzędziami przepływy pracy, takie jak wyszukiwanie, pobieranie i syntezę z uwzględnieniem cytatów.\n\nModel doskonale sprawdza się w pisaniu badawczym, analizie porównawczej i złożonych pytaniach i odpowiedziach. Obsługuje wywołania funkcji dla prymitywów wyszukiwania i nawigacji (`search`, `click`, `open`, `finish`), co umożliwia jego użycie w agentowych przepływach pracy. Zachowanie refleksyjne kształtowane jest przez wieloetapową kontrolę cykliczną z nagrodami opartymi na regułach i mechanizmem opóźnionych decyzji, a także na głębokich ramach badawczych, takich jak wewnętrzny stos dostosowujący OpenAI. Ten wariant jest odpowiedni dla scenariuszy wymagających głębokości, a nie szybkości."
+  },
+  "tngtech/deepseek-r1t-chimera:free": {
+    "description": "DeepSeek-R1T-Chimera powstał poprzez połączenie DeepSeek-R1 i DeepSeek-V3 (0324), łącząc zdolności wnioskowania R1 z poprawą efektywności tokenów V3. Opiera się na architekturze DeepSeek-MoE Transformer i został zoptymalizowany do ogólnych zadań generowania tekstu.\n\nModel łączy w sobie wagi wstępnie wytrenowane z dwóch źródłowych modeli, aby zrównoważyć wydajność wnioskowania, efektywności i przestrzegania instrukcji. Został wydany na licencji MIT, z zamiarem użycia w badaniach i zastosowaniach komercyjnych."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) oferuje zwiększoną moc obliczeniową dzięki efektywnym strategiom i architekturze modelu."

@@ -16,14 +16,14 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwen3-235b-a22b',
     maxOutput: 8192,
     organization: 'Qwen',
-    pricing: { // Thinking mode pricing
+    pricing: {
       currency: 'CNY',
-      input: 40,
-      output: 12,
+      input: 4,
+      output: 40, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
-      extendParams: ['enableReasoning'],
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -40,14 +40,14 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwen3-32b',
     maxOutput: 8192,
     organization: 'Qwen',
-    pricing: { // Thinking mode pricing
+    pricing: {
       currency: 'CNY',
-      input: 20,
-      output: 8,
+      input: 2,
+      output: 20, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
-      extendParams: ['enableReasoning'],
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -59,19 +59,19 @@ const qwenChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description:
       'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
-    displayName: 'Qwen3 30B A3B',
+    displayName: 'Qwen3 30B',
     enabled: true,
     id: 'qwen3-30b-a3b',
     maxOutput: 8192,
     organization: 'Qwen',
-    pricing: { // Thinking mode pricing
+    pricing: {
       currency: 'CNY',
-      input: 15,
-      output: 6,
+      input: 1.5,
+      output: 15, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
-      extendParams: ['enableReasoning'],
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -87,14 +87,14 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwen3-14b',
     maxOutput: 8192,
     organization: 'Qwen',
-    pricing: { // Thinking mode pricing
+    pricing: {
       currency: 'CNY',
-      input: 10,
-      output: 4,
+      input: 1,
+      output: 10, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
-      extendParams: ['enableReasoning'],
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -110,14 +110,14 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwen3-8b',
     maxOutput: 8192,
     organization: 'Qwen',
-    pricing: { // Thinking mode pricing
+    pricing: {
       currency: 'CNY',
-      input: 5,
-      output: 2,
+      input: 0.5,
+      output: 5, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
-      extendParams: ['enableReasoning'],
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -133,14 +133,14 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwen3-4b',
     maxOutput: 8192,
     organization: 'Qwen',
-    pricing: { // Thinking mode pricing
+    pricing: {
       currency: 'CNY',
-      input: 3,
-      output: 1.2,
+      input: 0.3,
+      output: 3, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
-      extendParams: ['enableReasoning'],
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -156,14 +156,14 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwen3-1.7b',
     maxOutput: 8192,
     organization: 'Qwen',
-    pricing: { // Thinking mode pricing
+    pricing: {
       currency: 'CNY',
-      input: 3,
-      output: 1.2,
+      input: 0.3,
+      output: 3, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
-      extendParams: ['enableReasoning'],
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -179,14 +179,14 @@ const qwenChatModels: AIChatModelCard[] = [
     id: 'qwen3-0.6b',
     maxOutput: 8192,
     organization: 'Qwen',
-    pricing: { // Thinking mode pricing
+    pricing: {
       currency: 'CNY',
-      input: 3,
-      output: 1.2,
+      input: 0.3,
+      output: 3, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
-      extendParams: ['enableReasoning'],
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
     },
     type: 'chat',
   },
@@ -241,7 +241,7 @@ const qwenChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-04-28',
     settings: {
-      extendParams: ['enableReasoning'],
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -269,7 +269,7 @@ const qwenChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-04-28',
     settings: {
-      extendParams: ['enableReasoning'],
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -282,7 +282,7 @@ const qwenChatModels: AIChatModelCard[] = [
     config: {
       deploymentName: 'qwen-max-2025-01-25', 
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 131_072,
     description:
       '通义千问千亿级别超大规模语言模型，支持中文、英文等不同语言输入，当前通义千问2.5产品版本背后的API模型。',
     displayName: 'Qwen Max',
@@ -307,12 +307,13 @@ const qwenChatModels: AIChatModelCard[] = [
     config: {
       deploymentName: 'qwen-long-latest', 
     },
-    contextWindowTokens: 1_000_000,
+    contextWindowTokens: 10_000_000,
     description:
       '通义千问超大规模语言模型，支持长文本上下文，以及基于长文档、多文档等多个场景的对话功能。',
     displayName: 'Qwen Long',
+    enabled: true,
     id: 'qwen-long',
-    maxOutput: 6000,
+    maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
@@ -353,7 +354,7 @@ const qwenChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 2, // use image input price
+      input: 0.6,
       output: 6,
     },
     type: 'chat',
@@ -365,12 +366,12 @@ const qwenChatModels: AIChatModelCard[] = [
     config: {
       deploymentName: 'qwen-vl-plus-2025-01-25', 
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 131_072,
     description:
       '通义千问大规模视觉语言模型增强版。大幅提升细节识别能力和文字识别能力，支持超百万像素分辨率和任意长宽比规格的图像。',
     displayName: 'Qwen VL Plus',
     id: 'qwen-vl-plus-latest',
-    maxOutput: 2048,
+    maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
@@ -386,13 +387,13 @@ const qwenChatModels: AIChatModelCard[] = [
     config: {
       deploymentName: 'qwen-vl-max-2025-04-08', 
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 131_072,
     description:
       '通义千问超大规模视觉语言模型。相比增强版，再次提升视觉推理能力和指令遵循能力，提供更高的视觉感知和认知水平。',
     displayName: 'Qwen VL Max',
     enabled: true,
     id: 'qwen-vl-max-latest',
-    maxOutput: 2048,
+    maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',

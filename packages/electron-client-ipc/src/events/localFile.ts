@@ -11,6 +11,7 @@ import {
   OpenLocalFolderParams,
   RenameLocalFileParams,
   RenameLocalFileResult,
+  WriteLocalFileParams,
 } from '../types';
 
 export interface LocalFilesDispatchEvents {
@@ -25,4 +26,5 @@ export interface LocalFilesDispatchEvents {
 
   renameLocalFile: (params: RenameLocalFileParams) => RenameLocalFileResult;
   searchLocalFiles: (params: LocalSearchFilesParams) => LocalFileItem[];
+  writeLocalFile: (params: WriteLocalFileParams) => RenameLocalFileResult;
 }

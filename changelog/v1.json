@@ -1,6 +1,120 @@
 [
   {
     "children": {
+      "improvements": ["Remove doubao Provider."]
+    },
+    "date": "2025-05-04",
+    "version": "1.84.21"
+  },
+  {
+    "children": {
+      "improvements": ["Show Aliyun Bailian tokens usage tracking."]
+    },
+    "date": "2025-05-04",
+    "version": "1.84.20"
+  },
+  {
+    "children": {
+      "improvements": ["Fix init state of loading."]
+    },
+    "date": "2025-05-04",
+    "version": "1.84.19"
+  },
+  {
+    "children": {
+      "improvements": ["Add perf stat support for openai factory."]
+    },
+    "date": "2025-05-03",
+    "version": "1.84.18"
+  },
+  {
+    "children": {
+      "improvements": ["Add write file tool to local-file plugin."]
+    },
+    "date": "2025-05-03",
+    "version": "1.84.17"
+  },
+  {
+    "children": {
+      "fixes": ["Fix desktop quiting with reopen window."]
+    },
+    "date": "2025-05-02",
+    "version": "1.84.16"
+  },
+  {
+    "children": {
+      "fixes": ["Siliconflow requests with tools no longer force non-streaming."]
+    },
+    "date": "2025-05-01",
+    "version": "1.84.15"
+  },
+  {
+    "children": {
+      "improvements": ["Add windows control and tray."]
+    },
+    "date": "2025-05-01",
+    "version": "1.84.14"
+  },
+  {
+    "children": {
+      "improvements": ["Fix style issues."]
+    },
+    "date": "2025-05-01",
+    "version": "1.84.13"
+  },
+  {
+    "children": {
+      "improvements": ["Support Qwen3 thinking_budget param."]
+    },
+    "date": "2025-04-30",
+    "version": "1.84.12"
+  },
+  {
+    "children": {
+      "improvements": ["Allow copy/edit when generate error."]
+    },
+    "date": "2025-04-30",
+    "version": "1.84.11"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add Gemini 2.5 Pro Experimental model, Add siliconflow Qwen3 & support thinking params, Arrange model tags neatly, Update mobile style and fix issues problem, update ollama checker."
+      ]
+    },
+    "date": "2025-04-30",
+    "version": "1.84.10"
+  },
+  {
+    "children": {
+      "fixes": ["Embeddings Format Issue with OpenAI API when using Ollama."]
+    },
+    "date": "2025-04-30",
+    "version": "1.84.9"
+  },
+  {
+    "children": {
+      "fixes": ["Fix stdio mcp server env issue."]
+    },
+    "date": "2025-04-29",
+    "version": "1.84.8"
+  },
+  {
+    "children": {
+      "fixes": ["Fix custom provider and knowledge base crash."]
+    },
+    "date": "2025-04-29",
+    "version": "1.84.7"
+  },
+  {
+    "children": {
+      "improvements": ["Fix OpenRouter models config, improve mcp stdio custom field."]
+    },
+    "date": "2025-04-29",
+    "version": "1.84.6"
+  },
+  {
+    "children": {
       "improvements": ["Add Qwen3 models."]
     },
     "date": "2025-04-29",

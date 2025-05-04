@@ -5,14 +5,23 @@ import PluginTag from '@/features/PluginStore/PluginItem/PluginTag';
 import { useToolStore } from '@/store/tool';
 import { customPluginSelectors } from '@/store/tool/selectors';
 
-const ToolItem = memo<{ identifier: string; label?: string }>(({ identifier, label }) => {
-  const isCustom = useToolStore((s) => customPluginSelectors.isCustomPlugin(identifier)(s));
+import CheckboxItem, { CheckboxItemProps } from '../components/CheckbokWithLoading';
+
+const ToolItem = memo<CheckboxItemProps>(({ id, onUpdate, label, checked }) => {
+  const isCustom = useToolStore((s) => customPluginSelectors.isCustomPlugin(id)(s));
 
   return (
-    <Flexbox align={'center'} gap={8} horizontal>
-      {label || identifier}
-      {isCustom && <PluginTag showText={false} type={'customPlugin'} />}
-    </Flexbox>
+    <CheckboxItem
+      checked={checked}
+      id={id}
+      label={
+        <Flexbox align={'center'} gap={8} horizontal>
+          {label || id}
+          {isCustom && <PluginTag showText={false} type={'customPlugin'} />}
+        </Flexbox>
+      }
+      onUpdate={onUpdate}
+    />
   );
 });
 

@@ -1841,6 +1841,33 @@
   "qwen/qwen2.5-coder-7b-instruct": {
     "description": "Güçlü orta ölçekli kod modeli, 32K bağlam uzunluğunu destekler, çok dilli programlama konusunda uzmandır."
   },
+  "qwen/qwen3-14b": {
+    "description": "Qwen3-14B, Qwen3 serisindeki yoğun 14.8 milyar parametreli nedensel dil modelidir ve karmaşık akıl yürütme ve etkili diyalog için tasarlanmıştır. Matematik, programlama ve mantık akıl yürütme gibi görevler için 'düşünme' modu ile genel diyalog için 'düşünmeme' modu arasında sorunsuz geçiş yapmayı destekler. Bu model, talimat takibi, ajan araç kullanımı, yaratıcı yazım ve 100'den fazla dil ve lehçede çok dilli görevler için ince ayar yapılmıştır. 32K token bağlamını yerel olarak işler ve YaRN tabanlı genişletme ile 131K token'a kadar genişletilebilir."
+  },
+  "qwen/qwen3-14b:free": {
+    "description": "Qwen3-14B, Qwen3 serisindeki yoğun 14.8 milyar parametreli nedensel dil modelidir ve karmaşık akıl yürütme ve etkili diyalog için tasarlanmıştır. Matematik, programlama ve mantık akıl yürütme gibi görevler için 'düşünme' modu ile genel diyalog için 'düşünmeme' modu arasında sorunsuz geçiş yapmayı destekler. Bu model, talimat takibi, ajan araç kullanımı, yaratıcı yazım ve 100'den fazla dil ve lehçede çok dilli görevler için ince ayar yapılmıştır. 32K token bağlamını yerel olarak işler ve YaRN tabanlı genişletme ile 131K token'a kadar genişletilebilir."
+  },
+  "qwen/qwen3-235b-a22b": {
+    "description": "Qwen3-235B-A22B, Qwen tarafından geliştirilen 235B parametreli uzman karışımı (MoE) modelidir ve her ileri geçişte 22B parametreyi etkinleştirir. Karmaşık akıl yürütme, matematik ve kod görevleri için 'düşünme' modu ile genel diyalog verimliliği için 'düşünmeme' modu arasında sorunsuz geçiş yapmayı destekler. Bu model, güçlü akıl yürütme yetenekleri, çok dilli destek (100'den fazla dil ve lehçe), ileri düzey talimat takibi ve ajan araç çağırma yetenekleri sergiler. 32K token bağlam penceresini yerel olarak işler ve YaRN tabanlı genişletme ile 131K token'a kadar genişletilebilir."
+  },
+  "qwen/qwen3-235b-a22b:free": {
+    "description": "Qwen3-235B-A22B, Qwen tarafından geliştirilen 235B parametreli uzman karışımı (MoE) modelidir ve her ileri geçişte 22B parametreyi etkinleştirir. Karmaşık akıl yürütme, matematik ve kod görevleri için 'düşünme' modu ile genel diyalog verimliliği için 'düşünmeme' modu arasında sorunsuz geçiş yapmayı destekler. Bu model, güçlü akıl yürütme yetenekleri, çok dilli destek (100'den fazla dil ve lehçe), ileri düzey talimat takibi ve ajan araç çağırma yetenekleri sergiler. 32K token bağlam penceresini yerel olarak işler ve YaRN tabanlı genişletme ile 131K token'a kadar genişletilebilir."
+  },
+  "qwen/qwen3-30b-a3b": {
+    "description": "Qwen3, Qwen büyük dil modeli serisinin en son neslidir ve yoğun ve uzman karışımı (MoE) mimarisi ile akıl yürütme, çok dilli destek ve ileri düzey görevlerde mükemmel performans sergilemektedir. Karmaşık akıl yürütme düşünce modu ile etkili diyalog için düşünmeden geçiş yapma yeteneği, çok yönlü ve yüksek kaliteli performansı garanti eder.\n\nQwen3, QwQ ve Qwen2.5 gibi önceki modellere kıyasla önemli ölçüde daha üstündür ve matematik, kodlama, genel bilgi akıl yürütme, yaratıcı yazım ve etkileşimli diyalog yetenekleri sunar. Qwen3-30B-A3B varyantı, 30.5 milyar parametre (3.3 milyar etkin parametre), 48 katman, 128 uzman (her görevde 8 etkin) içerir ve 131K token bağlamını destekler (YaRN kullanarak), açık kaynaklı modeller için yeni bir standart belirler."
+  },
+  "qwen/qwen3-30b-a3b:free": {
+    "description": "Qwen3, Qwen büyük dil modeli serisinin en son neslidir ve yoğun ve uzman karışımı (MoE) mimarisi ile akıl yürütme, çok dilli destek ve ileri düzey görevlerde mükemmel performans sergilemektedir. Karmaşık akıl yürütme düşünce modu ile etkili diyalog için düşünmeden geçiş yapma yeteneği, çok yönlü ve yüksek kaliteli performansı garanti eder.\n\nQwen3, QwQ ve Qwen2.5 gibi önceki modellere kıyasla önemli ölçüde daha üstündür ve matematik, kodlama, genel bilgi akıl yürütme, yaratıcı yazım ve etkileşimli diyalog yetenekleri sunar. Qwen3-30B-A3B varyantı, 30.5 milyar parametre (3.3 milyar etkin parametre), 48 katman, 128 uzman (her görevde 8 etkin) içerir ve 131K token bağlamını destekler (YaRN kullanarak), açık kaynaklı modeller için yeni bir standart belirler."
+  },
+  "qwen/qwen3-32b": {
+    "description": "Qwen3-32B, Qwen3 serisindeki yoğun 32.8 milyar parametreli nedensel dil modelidir ve karmaşık akıl yürütme ve etkili diyalog için optimize edilmiştir. Matematik, kodlama ve mantık akıl yürütme gibi görevler için 'düşünme' modu ile daha hızlı, genel diyalog için 'düşünmeme' modu arasında sorunsuz geçiş yapmayı destekler. Bu model, talimat takibi, ajan araç kullanımı, yaratıcı yazım ve 100'den fazla dil ve lehçede çok dilli görevlerde güçlü performans sergiler. 32K token bağlamını yerel olarak işler ve YaRN tabanlı genişletme ile 131K token'a kadar genişletilebilir."
+  },
+  "qwen/qwen3-32b:free": {
+    "description": "Qwen3-32B, Qwen3 serisindeki yoğun 32.8 milyar parametreli nedensel dil modelidir ve karmaşık akıl yürütme ve etkili diyalog için optimize edilmiştir. Matematik, kodlama ve mantık akıl yürütme gibi görevler için 'düşünme' modu ile daha hızlı, genel diyalog için 'düşünmeme' modu arasında sorunsuz geçiş yapmayı destekler. Bu model, talimat takibi, ajan araç kullanımı, yaratıcı yazım ve 100'den fazla dil ve lehçede çok dilli görevlerde güçlü performans sergiler. 32K token bağlamını yerel olarak işler ve YaRN tabanlı genişletme ile 131K token'a kadar genişletilebilir."
+  },
+  "qwen/qwen3-8b:free": {
+    "description": "Qwen3-8B, Qwen3 serisindeki yoğun 8.2 milyar parametreli nedensel dil modelidir ve akıl yürütme yoğun görevler ve etkili diyalog için tasarlanmıştır. Matematik, kodlama ve mantık akıl yürütme için 'düşünme' modu ile genel diyalog için 'düşünmeme' modu arasında sorunsuz geçiş yapmayı destekler. Bu model, talimat takibi, ajan entegrasyonu, yaratıcı yazım ve 100'den fazla dil ve lehçede çok dilli kullanım için ince ayar yapılmıştır. 32K token bağlam penceresini yerel olarak destekler ve YaRN aracılığıyla 131K token'a genişletilebilir."
+  },
   "qwen2": {
     "description": "Qwen2, Alibaba'nın yeni nesil büyük ölçekli dil modelidir, mükemmel performans ile çeşitli uygulama ihtiyaçlarını destekler."
   },
@@ -1924,6 +1951,30 @@
   },
   "qwen2:72b": {
     "description": "Qwen2, Alibaba'nın yeni nesil büyük ölçekli dil modelidir, mükemmel performans ile çeşitli uygulama ihtiyaçlarını destekler."
+  },
+  "qwen3-0.6b": {
+    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
+  },
+  "qwen3-1.7b": {
+    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
+  },
+  "qwen3-14b": {
+    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
+  },
+  "qwen3-235b-a22b": {
+    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
+  },
+  "qwen3-30b-a3b": {
+    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
+  },
+  "qwen3-32b": {
+    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
+  },
+  "qwen3-4b": {
+    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
+  },
+  "qwen3-8b": {
+    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
   },
   "qwq": {
     "description": "QwQ, AI akıl yürütme yeteneklerini artırmaya odaklanan deneysel bir araştırma modelidir."
@@ -2026,6 +2077,18 @@
   },
   "thudm/glm-4-9b-chat": {
     "description": "Zhi Pu AI tarafından yayınlanan GLM-4 serisinin en son nesil ön eğitim modelinin açık kaynak versiyonudur."
+  },
+  "thudm/glm-4-9b:free": {
+    "description": "GLM-4-9B-0414, THUDM tarafından geliştirilen GLM-4 serisinin 9 milyar parametreli dil modelidir. GLM-4-9B-0414, daha büyük 32B karşılık gelen model ile aynı güçlendirilmiş öğrenme ve hizalama stratejilerini kullanarak eğitilmiştir ve ölçeğine göre yüksek performans sergileyerek hala güçlü dil anlama ve üretim yeteneklerine ihtiyaç duyan kaynak sınırlı dağıtımlar için uygundur."
+  },
+  "thudm/glm-z1-9b:free": {
+    "description": "GLM-Z1-9B-0414, THUDM tarafından geliştirilen GLM-4 serisinin 9B parametreli dil modelidir. Daha büyük GLM-Z1 modeline uygulanan teknikleri içermekte olup, güçlendirilmiş öğrenme, çift sıralama hizalaması ve matematik, kodlama ve mantık gibi akıl yürütme yoğun görevler için eğitim almıştır. Daha küçük olmasına rağmen, genel akıl yürütme görevlerinde güçlü performans sergilemekte ve ağırlık seviyesinde birçok açık kaynak modelinden daha üstündür."
+  },
+  "thudm/glm-z1-rumination-32b": {
+    "description": "THUDM: GLM Z1 Rumination 32B, GLM-4-Z1 serisinin 32B parametreli derin akıl yürütme modelidir ve uzun süre düşünmeyi gerektiren karmaşık, açık uçlu görevler için optimize edilmiştir. glm-4-32b-0414 temel alınarak geliştirilmiş ve ek güçlendirilmiş öğrenme aşamaları ve çok aşamalı hizalama stratejileri eklenmiştir; genişletilmiş bilişsel işleme simüle etmek için 'düşünme' yeteneği getirilmiştir. Bu, yinelemeli akıl yürütme, çok adımlı analiz ve arama, alma ve alıntı bilincine sahip sentez gibi araç artırma iş akışlarını içerir.\n\nBu model, araştırma yazımı, karşılaştırmalı analiz ve karmaşık soru-cevap konularında mükemmel performans sergiler. Arama ve navigasyon ilkelere (`search`, `click`, `open`, `finish`) yönelik işlev çağrılarını destekler, böylece ajan tabanlı boru hatlarında kullanılabilir. Düşünme davranışı, kural tabanlı ödüller ve gecikmeli karar verme mekanizması ile çok turlu döngü kontrolü ile şekillendirilir ve OpenAI iç hizalama yığını gibi derin araştırma çerçevelerine göre değerlendirilir. Bu varyant, derinlik gerektiren senaryolar için uygundur."
+  },
+  "tngtech/deepseek-r1t-chimera:free": {
+    "description": "DeepSeek-R1T-Chimera, DeepSeek-R1 ve DeepSeek-V3 (0324) birleştirilerek oluşturulmuştur ve R1'in akıl yürütme yetenekleri ile V3'ün token verimliliği iyileştirmelerini bir araya getirir. DeepSeek-MoE Transformer mimarisine dayanır ve genel metin üretim görevleri için optimize edilmiştir.\n\nBu model, iki kaynak modelin önceden eğitilmiş ağırlıklarını birleştirerek akıl yürütme, verimlilik ve talimat takibi görevlerinin performansını dengelemektedir. MIT lisansı altında yayımlanmış olup, araştırma ve ticari kullanım için tasarlanmıştır."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B), etkili stratejiler ve model mimarisi ile artırılmış hesaplama yetenekleri sunar."
