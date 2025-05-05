@@ -162,6 +162,7 @@ export const getAuthConfig = () => {
       NEXT_AUTH_SECRET: z.string().optional(),
       NEXT_AUTH_SSO_PROVIDERS: z.string().optional().default('auth0'),
       NEXT_AUTH_DEBUG: z.boolean().optional().default(false),
+      NEXT_AUTH_SSO_SESSION_STRATEGIE: z.enum(['jwt', 'database']).optional().default('jwt'),
       NEXT_AUTH_SSO_ENABLE_REFRESH_TOKEN: z.boolean().optional().default(false),
       NEXT_AUTH_SSO_REFRESH_TOKEN_INTERVAL: z.number().optional(),
 
@@ -226,6 +227,7 @@ export const getAuthConfig = () => {
       NEXT_AUTH_SSO_PROVIDERS: process.env.NEXT_AUTH_SSO_PROVIDERS,
       NEXT_AUTH_SECRET: process.env.NEXT_AUTH_SECRET,
       NEXT_AUTH_DEBUG: !!process.env.NEXT_AUTH_DEBUG,
+      NEXT_AUTH_SSO_SESSION_STRATEGIE: process.env.NEXT_AUTH_SSO_SESSION_STRATEGIE || 'jwt',
       NEXT_AUTH_SSO_ENABLE_REFRESH_TOKEN: process.env.NEXT_AUTH_SSO_ENABLE_REFRESH_TOKEN === '1',
       NEXT_AUTH_SSO_REFRESH_TOKEN_INTERVAL: process.env.NEXT_AUTH_SSO_REFRESH_TOKEN_INTERVAL
         ? parseInt(process.env.NEXT_AUTH_SSO_REFRESH_TOKEN_INTERVAL)
