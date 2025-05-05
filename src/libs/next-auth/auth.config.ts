@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm/expressions';
 import type { NextAuthConfig } from 'next-auth';
 
-import { authEnv } from '@/config/auth';
+import { authEnv, getAuthConfig } from '@/config/auth';
 import { getServerDBConfig } from '@/config/db';
 import { serverDB } from '@/database/core/dbForEdge';
 import { nextauthAccounts } from '@/database/schemas';
@@ -9,7 +9,8 @@ import { nextauthAccounts } from '@/database/schemas';
 import { LobeNextAuthDbAdapter } from './adapter';
 import { ssoProviders } from './sso-providers';
 
-const { NEXT_PUBLIC_ENABLED_SERVER_SERVICE, NEXT_AUTH_SSO_SESSION_STRATEGIE } = getServerDBConfig();
+const { NEXT_PUBLIC_ENABLED_SERVER_SERVICE } = getServerDBConfig();
+const { NEXT_AUTH_SSO_SESSION_STRATEGIE } = getAuthConfig();
 
 export const initSSOProviders = () => {
   return authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH
