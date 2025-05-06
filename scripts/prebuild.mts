@@ -26,11 +26,15 @@ const partialBuildPages = [
     paths: ['src/app/[variants]/(main)/(mobile)'],
   },
   {
+    name: 'oauth',
+    disabled: isDesktop,
+    paths: ['src/app/[variants]/oauth', 'src/app/(backend)/oidc'],
+  },
+  {
     name: 'api-webhooks',
     disabled: isDesktop,
     paths: ['src/app/(backend)/api/webhooks'],
   },
-
   // no need for web
   {
     name: 'desktop-devtools',

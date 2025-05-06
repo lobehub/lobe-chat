@@ -1,7 +1,14 @@
 'use client';
 
 import { ProviderCombine } from '@lobehub/icons';
-import { Avatar, Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from '@lobehub/ui';
+import {
+  Avatar,
+  Form,
+  type FormGroupItemType,
+  type FormItemProps,
+  Icon,
+  Tooltip,
+} from '@lobehub/ui';
 import { useDebounceFn } from 'ahooks';
 import { Skeleton, Switch } from 'antd';
 import { createStyles } from 'antd-style';
@@ -292,7 +299,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
     ].filter(Boolean) as FormItemProps[];
 
     const logoUrl = data?.logo ?? logo;
-    const model: ItemGroup = {
+    const model: FormGroupItemType = {
       children: configItems,
 
       defaultActive: true,
@@ -353,7 +360,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
         onValuesChange={(_, values) => {
           debouncedUpdate(id, values);
         }}
-        variant={'pure'}
+        variant={'borderless'}
         {...FORM_STYLE}
       />
     );

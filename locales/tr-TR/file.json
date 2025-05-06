@@ -71,6 +71,9 @@
     "websites": "Web Siteleri"
   },
   "title": "Dosya",
+  "toggleLeftPanel": {
+    "title": "Sol Panelini Göster/Gizle"
+  },
   "uploadDock": {
     "body": {
       "collapse": "Kapat",

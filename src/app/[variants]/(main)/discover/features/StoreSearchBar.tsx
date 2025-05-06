@@ -77,8 +77,8 @@ const StoreSearchBar = memo<StoreSearchBarProps>(({ mobile, onBlur, onFocus, ...
       spotlight={!mobile}
       style={{ width: mobile || active ? '100%' : 'min(480px,100%)' }}
       styles={{ input: { width: '100%' } }}
-      type={'block'}
       value={searchKey ? String(searchKey) : ''}
+      variant={'filled'}
       {...rest}
     />
   );

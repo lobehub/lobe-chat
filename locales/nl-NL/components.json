@@ -88,7 +88,8 @@
     "emptyModel": "No enabled model, please go to settings to enable.",
     "emptyProvider": "Geen ingeschakelde provider, ga naar instellingen om deze in te schakelen",
     "goToSettings": "Ga naar instellingen",
-    "provider": "Provider"
+    "provider": "Provider",
+    "title": "Model"
   },
   "OllamaSetupGuide": {
     "action": {

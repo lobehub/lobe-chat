@@ -71,6 +71,9 @@
     "websites": "المواقع"
   },
   "title": "الملفات",
+  "toggleLeftPanel": {
+    "title": "عرض/إخفاء اللوحة الجانبية اليسرى"
+  },
   "uploadDock": {
     "body": {
       "collapse": "طي",

@@ -26,12 +26,12 @@ export const getServerGlobalConfig = async () => {
         enabledKey: 'ENABLED_AWS_BEDROCK',
         modelListKey: 'AWS_BEDROCK_MODEL_LIST',
       },
-      doubao: {
-        withDeploymentName: true,
-      },
       giteeai: {
         enabledKey: 'ENABLED_GITEE_AI',
         modelListKey: 'GITEE_AI_MODEL_LIST',
+      },
+      lmstudio: {
+        fetchOnClient: isDesktop ? false : undefined,
       },
       /* ↓ cloud slot ↓ */
 
@@ -39,9 +39,6 @@ export const getServerGlobalConfig = async () => {
       ollama: {
         enabled: isDesktop ? true : undefined,
         fetchOnClient: isDesktop ? false : !process.env.OLLAMA_PROXY_URL,
-      },
-      openai: {
-        enabled: isDesktop ? false : undefined,
       },
       tencentcloud: {
         enabledKey: 'ENABLED_TENCENT_CLOUD',

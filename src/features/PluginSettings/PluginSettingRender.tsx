@@ -1,4 +1,5 @@
-import { Input, InputNumber, Select, Slider, Switch } from 'antd';
+import { Input, InputNumber, InputPassword, Select } from '@lobehub/ui';
+import { Slider, Switch } from 'antd';
 import { JSONSchema7Type } from 'json-schema';
 import { memo } from 'react';
 
@@ -8,35 +9,26 @@ interface PluginSettingsProps {
   format?: string;
   maximum?: number;
   minimum?: number;
-  onChange: (value: any) => void;
+  onChange?: (value: any) => void;
   props?: any;
   type?: 'string' | 'number' | 'boolean';
+  value?: any;
 }
 
 const PluginSettingRender = memo<PluginSettingsProps>(
-  ({ type, defaultValue, enum: enumItems, onChange, format, minimum, maximum, props }) => {
+  ({ type, enum: enumItems, format, minimum, maximum, ...props }) => {
     switch (type) {
       case 'string': {
         switch (format) {
           case 'password': {
-            return (
-              <Input.Password
-                {...props}
-                autoComplete={'new-password'}
-                defaultValue={defaultValue}
-                onChange={(v) => {
-                  onChange(v.target.value);
-                }}
-              />
-            );
+            return <InputPassword {...props} autoComplete={'new-password'} />;
           }
         }
 
         if (enumItems) {
           return (
             <Select
-              defaultValue={defaultValue}
-              onChange={onChange}
+              {...props}
               options={enumItems.map((i) =>
                 typeof i === 'string' ? { label: i, value: i } : (i as any),
               )}
@@ -44,40 +36,16 @@ const PluginSettingRender = memo<PluginSettingsProps>(
           );
         }
 
-        return (
-          <Input
-            {...props}
-            defaultValue={defaultValue}
-            onChange={(v) => {
-              onChange(v.target.value);
-            }}
-          />
-        );
+        return <Input {...props} />;
       }
 
       case 'number': {
         if (typeof minimum === 'number' || typeof maximum === 'number')
-          return <Slider defaultValue={defaultValue} max={maximum} min={minimum} {...props} />;
-        return (
-          <InputNumber
-            {...props}
-            defaultValue={defaultValue}
-            onChange={(v) => {
-              onChange(v);
-            }}
-          />
-        );
+          return <Slider max={maximum} min={minimum} {...props} />;
+        return <InputNumber {...props} />;
       }
       case 'boolean': {
-        return (
-          <Switch
-            {...props}
-            defaultValue={defaultValue}
-            onChange={(e) => {
-              onChange(e);
-            }}
-          />
-        );
+        return <Switch {...props} />;
       }
     }
   },

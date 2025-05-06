@@ -71,6 +71,9 @@
     "websites": "Trang web"
   },
   "title": "Tệp",
+  "toggleLeftPanel": {
+    "title": "Hiện/Ẩn bảng bên trái"
+  },
   "uploadDock": {
     "body": {
       "collapse": "Thu gọn",

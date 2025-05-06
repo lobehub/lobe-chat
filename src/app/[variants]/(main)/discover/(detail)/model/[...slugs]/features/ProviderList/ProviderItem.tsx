@@ -1,7 +1,6 @@
 import { ModelTag, ProviderCombine } from '@lobehub/icons';
-import { ActionIcon, Grid, Icon, Tooltip } from '@lobehub/ui';
-import { Tag } from 'antd';
-import { createStyles, useResponsive } from 'antd-style';
+import { ActionIcon, Grid, Icon, Tag, Tooltip } from '@lobehub/ui';
+import { useResponsive, useTheme } from 'antd-style';
 import { BadgeCheck, BookIcon, ChevronRightIcon, KeyIcon } from 'lucide-react';
 import Link from 'next/link';
 import { memo, useMemo } from 'react';
@@ -16,13 +15,6 @@ import { formatPriceByCurrency, formatTokenNumber } from '@/utils/format';
 
 import Statistic, { type StatisticProps } from '../../../../../components/Statistic';
 
-const useStyles = createStyles(({ css, token }) => ({
-  tagGreen: css`
-    color: ${token.colorSuccess};
-    background: ${token.colorSuccessBgHover};
-  `,
-}));
-
 interface ProviderItemProps extends DiscoverProviderItem {
   mobile?: boolean;
   modelId: string;
@@ -31,7 +23,7 @@ interface ProviderItemProps extends DiscoverProviderItem {
 const ProviderItem = memo<ProviderItemProps>(({ mobile, modelId, identifier }) => {
   const { t } = useTranslation('discover');
   const { xl = true } = useResponsive();
-  const { styles, theme } = useStyles();
+  const theme = useTheme();
   const isLobeHub = identifier === 'lobehub';
 
   const isMobile = mobile || !xl;
@@ -80,22 +72,17 @@ const ProviderItem = memo<ProviderItemProps>(({ mobile, modelId, identifier }) =
         <ModelTag model={modelId} style={{ background: theme.colorFillQuaternary, margin: 0 }} />
         {isLobeHub && (
           <Tooltip title={t('models.providerInfo.officialTooltip')}>
-            <Tag
-              bordered={false}
-              className={styles.tagGreen}
-              icon={<Icon icon={BadgeCheck} />}
-              style={{ margin: 0 }}
-            />
+            <Tag color={'success'} icon={<Icon icon={BadgeCheck} />} />
           </Tooltip>
         )}
         {!isLobeHub && (
           <Tooltip title={t('models.providerInfo.apiTooltip')}>
-            <Tag bordered={false} icon={<Icon icon={KeyIcon} />} style={{ margin: 0 }} />
+            <Tag icon={<Icon icon={KeyIcon} />} />
           </Tooltip>
         )}
         <Tooltip title={t('models.guide')}>
           <Link href={urlJoin(BASE_PROVIDER_DOC_URL, identifier)} target={'_blank'}>
-            <Tag bordered={false} icon={<Icon icon={BookIcon} />} style={{ margin: 0 }} />
+            <Tag icon={<Icon icon={BookIcon} />} />
           </Link>
         </Tooltip>
       </Flexbox>

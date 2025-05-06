@@ -33,6 +33,22 @@
     "subTitle": "Hai rifiutato di autorizzare l'app ad accedere al tuo account LobeChat",
     "title": "Autorizzazione rifiutata"
   },
+  "handoff": {
+    "desc": {
+      "processing": "L'applicazione sta elaborando l'autorizzazione, verrà reindirizzato alla prossima pagina...",
+      "success": "È stato tentato di aprire l'app desktop. Se l'app non si apre automaticamente, si prega di passare manualmente. Può chiudere questa finestra del browser in seguito."
+    },
+    "title": {
+      "processing": "Elaborazione dell'autorizzazione...",
+      "success": "Autorizzazione completata"
+    }
+  },
+  "login": {
+    "button": "Conferma accesso",
+    "description": "L'app {{clientName}} richiede di utilizzare il tuo account per accedere",
+    "title": "Accedi a {{clientName}}",
+    "userWelcome": "Bentornato, "
+  },
   "success": {
     "subTitle": "Hai autorizzato con successo l'app ad accedere al tuo account LobeChat, puoi chiudere questa pagina",
     "title": "Autorizzazione riuscita"

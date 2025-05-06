@@ -4,7 +4,7 @@ import InstantSwitch from '@/components/InstantSwitch';
 import { useAiInfraStore } from '@/store/aiInfra';
 
 interface SwitchProps {
-  Component?: FC<{ enabled: boolean, id: string; }>;
+  Component?: FC<{ enabled: boolean; id: string }>;
   enabled: boolean;
   id: string;
 }

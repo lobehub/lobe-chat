@@ -1,27 +1,8 @@
-import { Icon } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { Block, Icon } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import { LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
-
-const useStyles = createStyles(({ css, token, isDarkMode }) => ({
-  card: css`
-    cursor: pointer;
-
-    padding-block: 12px;
-    padding-inline: 16px;
-    border: 1px solid ${token.colorFillSecondary};
-    border-radius: ${token.borderRadiusLG}px;
-
-    background: ${isDarkMode ? token.colorFillTertiary : token.colorBgContainer};
-
-    &:hover {
-      border: 1px solid ${token.colorFill};
-      background: ${isDarkMode ? token.colorFillSecondary : token.colorBgContainer};
-    }
-  `,
-}));
 
 export interface ItemCardProps {
   href: string;
@@ -31,14 +12,13 @@ export interface ItemCardProps {
 }
 
 const ItemCard = memo<ItemCardProps>(({ label, icon, href }) => {
-  const { styles, theme } = useStyles();
-
+  const theme = useTheme();
   return (
     <Link href={href} style={{ color: 'inherit' }} target={'_blank'}>
-      <Flexbox className={styles.card} gap={12} horizontal>
-        {icon && <Icon fill={theme.colorText} icon={icon} size={{ fontSize: 18 }} />}
+      <Block clickable gap={12} horizontal paddingBlock={12} paddingInline={18}>
+        {icon && <Icon fill={theme.colorText} icon={icon} size={18} />}
         {label}
-      </Flexbox>
+      </Block>
     </Link>
   );
 });

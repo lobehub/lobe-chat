@@ -57,3 +57,5 @@ export const useChatStore = createWithEqualityFn<ChatStore>()(
   subscribeWithSelector(devtools(createStore)),
   shallow,
 );
+
+export const getChatStoreState = () => useChatStore.getState();

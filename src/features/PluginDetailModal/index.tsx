@@ -1,8 +1,6 @@
-import { Modal, TabsNav } from '@lobehub/ui';
-import { Divider, TabsProps } from 'antd';
+import { Modal, Segmented, SegmentedProps } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center } from 'react-layout-kit';
 import useMergeState from 'use-merge-value';
 
 import PluginSettingsConfig from '@/features/PluginSettings';
@@ -20,9 +18,14 @@ interface PluginDetailModalProps {
   tab?: string;
 }
 
+enum Tab {
+  Info = 'info',
+  Settings = 'settings',
+}
+
 const PluginDetailModal = memo<PluginDetailModalProps>(
   ({ schema, onClose, id, onTabChange, open, tab }) => {
-    const [tabKey, setTabKey] = useMergeState('info', {
+    const [tabKey, setTabKey] = useMergeState(Tab.Info, {
       onChange: onTabChange,
       value: tab,
     });
@@ -33,6 +36,7 @@ const PluginDetailModal = memo<PluginDetailModalProps>(
     return (
       <Modal
         allowFullscreen
+        footer={null}
         onCancel={onClose}
         onOk={() => {
           onClose();
@@ -41,32 +45,32 @@ const PluginDetailModal = memo<PluginDetailModalProps>(
         title={t('detailModal.title')}
         width={650}
       >
-        <Center gap={8}>
-          <Meta id={id} />
-          <Divider style={{ marginBottom: 0, marginTop: 8 }} />
-          <TabsNav
-            activeKey={tabKey}
-            items={
-              [
-                {
-                  key: 'info',
-                  label: t('detailModal.tabs.info'),
-                },
-                hasSettings && {
-                  key: 'settings',
-                  label: t('detailModal.tabs.settings'),
-                },
-              ].filter(Boolean) as TabsProps['items']
-            }
-            onChange={setTabKey}
-            variant={'compact'}
-          />
-          {tabKey === 'settings' ? (
-            hasSettings && <PluginSettingsConfig id={id} schema={schema} />
-          ) : (
-            <APIs id={id} />
-          )}
-        </Center>
+        <Meta id={id} />
+        <Segmented
+          block
+          onChange={(v) => setTabKey(v as Tab)}
+          options={
+            [
+              {
+                label: t('detailModal.tabs.info'),
+                value: Tab.Info,
+              },
+              hasSettings && {
+                label: t('detailModal.tabs.settings'),
+                value: Tab.Settings,
+              },
+            ].filter(Boolean) as SegmentedProps['options']
+          }
+          style={{
+            marginBlock: 16,
+          }}
+          value={tabKey}
+        />
+        {tabKey === 'settings' ? (
+          hasSettings && <PluginSettingsConfig id={id} schema={schema} />
+        ) : (
+          <APIs id={id} />
+        )}
       </Modal>
     );
   },

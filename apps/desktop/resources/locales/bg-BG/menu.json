@@ -1,0 +1,70 @@
+{
+  "common": {
+    "checkUpdates": "Проверка за актуализации..."
+  },
+  "dev": {
+    "devPanel": "Панел на разработчика",
+    "devTools": "Инструменти за разработчици",
+    "forceReload": "Принудително презареждане",
+    "openStore": "Отворете файла за съхранение",
+    "refreshMenu": "Освежаване на менюто",
+    "reload": "Презареждане",
+    "title": "Разработка"
+  },
+  "edit": {
+    "copy": "Копиране",
+    "cut": "Изрязване",
+    "paste": "Поставяне",
+    "redo": "Повторно",
+    "selectAll": "Избери всичко",
+    "speech": "Глас",
+    "startSpeaking": "Започни четене",
+    "stopSpeaking": "Спри четенето",
+    "title": "Редактиране",
+    "undo": "Отмяна"
+  },
+  "file": {
+    "preferences": "Предпочитания",
+    "quit": "Изход",
+    "title": "Файл"
+  },
+  "help": {
+    "about": "За",
+    "githubRepo": "GitHub хранилище",
+    "reportIssue": "Докладвай проблем",
+    "title": "Помощ",
+    "visitWebsite": "Посети уебсайта"
+  },
+  "macOS": {
+    "about": "За {{appName}}",
+    "devTools": "Инструменти за разработчици на LobeHub",
+    "hide": "Скрий {{appName}}",
+    "hideOthers": "Скрий другите",
+    "preferences": "Настройки...",
+    "services": "Услуги",
+    "unhide": "Покажи всичко"
+  },
+  "tray": {
+    "open": "Отвори {{appName}}",
+    "quit": "Изход",
+    "show": "Покажи {{appName}}"
+  },
+  "view": {
+    "forceReload": "Принудително презареждане",
+    "reload": "Презареждане",
+    "resetZoom": "Нулиране на мащаба",
+    "title": "Изглед",
+    "toggleFullscreen": "Превключи на цял екран",
+    "zoomIn": "Увеличи",
+    "zoomOut": "Намали"
+  },
+  "window": {
+    "bringAllToFront": "Премести всички прозорци напред",
+    "close": "Затвори",
+    "front": "Премести всички прозорци напред",
+    "minimize": "Минимизирай",
+    "title": "Прозорец",
+    "toggleFullscreen": "Превключи на цял екран",
+    "zoom": "Мащаб"
+  }
+}

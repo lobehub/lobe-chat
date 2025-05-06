@@ -70,7 +70,7 @@ export const createPluginStoreSlice: StateCreator<
   loadPluginStore: async () => {
     const pluginMarketIndex = await toolService.getToolList();
 
-    set({ pluginStoreList: pluginMarketIndex }, false, n('loadPluginList'));
+    set({ pluginStoreList: pluginMarketIndex || [] }, false, n('loadPluginList'));
 
     return pluginMarketIndex;
   },

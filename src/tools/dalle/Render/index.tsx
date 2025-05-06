@@ -1,4 +1,4 @@
-import { ActionIcon, ImageGallery } from '@lobehub/ui';
+import { ActionIcon, PreviewGroup } from '@lobehub/ui';
 import { Download } from 'lucide-react';
 import { memo, useRef } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -29,13 +29,14 @@ const DallE = memo<BuiltinRenderProps<DallEImageItem[]>>(({ content, messageId }
     <Flexbox gap={16}>
       {/* 没想好工具条的作用 */}
       {/*<ToolBar content={content} messageId={messageId} />*/}
-      <ImageGallery
+      <PreviewGroup
         preview={{
           // 切换图片时设置
           onChange: (current: number) => {
             currentRef.current = current;
           },
           // 点击预览显示时设置
+
           onVisibleChange: (visible: boolean, _prevVisible: boolean, current: number) => {
             currentRef.current = current;
           },
@@ -43,7 +44,7 @@ const DallE = memo<BuiltinRenderProps<DallEImageItem[]>>(({ content, messageId }
         }}
       >
         <GalleyGrid items={content.map((c) => ({ ...c, messageId }))} renderItem={ImageItem} />
-      </ImageGallery>
+      </PreviewGroup>
     </Flexbox>
   );
 });

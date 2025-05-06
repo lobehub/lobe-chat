@@ -11,11 +11,24 @@ import { FOLDER_WIDTH } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
+import { TOOGLE_PANEL_BUTTON_ID } from '../../features/TogglePanelButton';
+
 export const useStyles = createStyles(({ css, token }) => ({
   panel: css`
     height: 100%;
     color: ${token.colorTextSecondary};
-    background: ${token.colorBgContainer};
+    background: ${token.colorBgLayout};
+
+    #${TOOGLE_PANEL_BUTTON_ID} {
+      opacity: 0;
+      transition: opacity 0.15s ${token.motionEaseInOut};
+    }
+
+    &:hover {
+      #${TOOGLE_PANEL_BUTTON_ID} {
+        opacity: 1;
+      }
+    }
   `,
 }));
 

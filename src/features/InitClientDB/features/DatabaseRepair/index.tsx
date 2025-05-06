@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Segmented } from 'antd';
+import { Button, Segmented } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { AlertCircle, ArrowLeft, PenToolIcon as Tool } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -19,6 +19,12 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
+enum DatabaseRepairTab {
+  Backup = 'backup',
+  Diagnosis = 'diagnosis',
+  Repair = 'repair',
+}
+
 interface DatabaseRepairProps {
   setShowRepair: (value: boolean) => void;
 }
@@ -26,7 +32,7 @@ interface DatabaseRepairProps {
 const DatabaseRepair = memo<DatabaseRepairProps>(({ setShowRepair }) => {
   const { t } = useTranslation('common');
   const { styles } = useStyles();
-  const [activeTab, setActiveTab] = useState('diagnosis');
+  const [activeTab, setActiveTab] = useState<DatabaseRepairTab>(DatabaseRepairTab.Diagnosis);
 
   return (
     <Flexbox gap={12}>
@@ -40,7 +46,7 @@ const DatabaseRepair = memo<DatabaseRepairProps>(({ setShowRepair }) => {
           {t('back')}
         </Button>
         <Segmented
-          onChange={setActiveTab}
+          onChange={(v) => setActiveTab(v as DatabaseRepairTab)}
           options={[
             {
               label: (
@@ -75,9 +81,9 @@ const DatabaseRepair = memo<DatabaseRepairProps>(({ setShowRepair }) => {
         <Flexbox width={36} />
       </Flexbox>
 
-      {activeTab === 'diagnosis' && <Diagnosis />}
-      {activeTab === 'repair' && <Repair />}
-      {activeTab === 'backup' && <Backup />}
+      {activeTab === DatabaseRepairTab.Diagnosis && <Diagnosis />}
+      {activeTab === DatabaseRepairTab.Repair && <Repair />}
+      {activeTab === DatabaseRepairTab.Backup && <Backup />}
     </Flexbox>
   );
 });

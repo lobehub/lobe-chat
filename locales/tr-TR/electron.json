@@ -1,0 +1,68 @@
+{
+  "remoteServer": {
+    "authError": "Yetkilendirme hatası: {{error}}",
+    "authPending": "Yetkilendirmeyi tarayıcıda tamamlayın",
+    "configDesc": "Uzak LobeChat sunucusuna bağlanın, veri senkronizasyonunu etkinleştirin",
+    "configError": "Yapılandırma hatası",
+    "configTitle": "Bulut Senkronizasyonunu Yapılandır",
+    "connect": "Bağlan ve yetkilendir",
+    "connected": "Bağlandı",
+    "disconnect": "Bağlantıyı kes",
+    "disconnectError": "Bağlantıyı kesme hatası",
+    "disconnected": "Bağlı değil",
+    "fetchError": "Yapılandırma alınamadı",
+    "invalidUrl": "Geçerli bir URL girin",
+    "serverUrl": "Sunucu adresi",
+    "statusConnected": "Bağlı",
+    "statusDisconnected": "Bağlı değil",
+    "urlRequired": "Lütfen sunucu adresini girin"
+  },
+  "sync": {
+    "continue": "Devam et",
+    "inCloud": "Şu anda bulut senkronizasyonu kullanılıyor",
+    "inLocalStorage": "Şu anda yerel depolama kullanılıyor",
+    "isIniting": "Başlatılıyor...",
+    "lobehubCloud": {
+      "description": "Resmi olarak sağlanan bulut versiyonu",
+      "title": "LobeHub Bulut"
+    },
+    "local": {
+      "description": "Yerel veritabanı kullanarak tamamen çevrimdışı kullanılabilir",
+      "title": "Yerel Veritabanı"
+    },
+    "mode": {
+      "cloudSync": "Bulut Senkronizasyonu",
+      "localStorage": "Yerel Depolama",
+      "title": "Bağlantı modunuzu seçin",
+      "useSelfHosted": "Kendi barındırdığınız örneği mi kullanmak istiyorsunuz?"
+    },
+    "selfHosted": {
+      "description": "Kendi başınıza dağıttığınız topluluk versiyonu",
+      "title": "Kendi Barındırdığınız Örnek"
+    }
+  },
+  "updater": {
+    "checkingUpdate": "Yeni sürüm kontrol ediliyor",
+    "checkingUpdateDesc": "Sürüm bilgileri alınıyor...",
+    "downloadNewVersion": "Yeni sürümü indir",
+    "downloadingUpdate": "Güncelleme indiriliyor",
+    "downloadingUpdateDesc": "Güncelleme indiriliyor, lütfen bekleyin...",
+    "installLater": "Gelecek başlatmada güncelle",
+    "isLatestVersion": "Şu anda en son sürümdesiniz",
+    "isLatestVersionDesc": "Harika, kullandığınız sürüm {{version}} en güncel sürüm. ",
+    "later": "Güncellemeyi daha sonra yap",
+    "newVersionAvailable": "Yeni sürüm mevcut",
+    "newVersionAvailableDesc": "Yeni sürüm {{version}} bulundu, hemen indirmek ister misiniz?",
+    "restartAndInstall": "Güncellemeyi yükle ve yeniden başlat",
+    "updateError": "Güncelleme hatası",
+    "updateReady": "Güncelleme hazır",
+    "updateReadyDesc": "Yeni sürüm {{version}} indirildi, uygulamayı yeniden başlattığınızda yükleme tamamlanacaktır.",
+    "upgradeNow": "Şimdi güncelle"
+  },
+  "waitingOAuth": {
+    "cancel": "İptal",
+    "description": "Tarayıcıda yetkilendirme sayfası açıldı, lütfen tarayıcıda yetkilendirmeyi tamamlayın",
+    "helpText": "Tarayıcı otomatik olarak açılmadıysa, lütfen iptal'e tıklayıp yeniden deneyin",
+    "title": "Yetkilendirme bağlantısını bekliyor"
+  }
+}

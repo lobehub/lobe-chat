@@ -1,6 +1,5 @@
 import { Heatmaps, HeatmapsProps } from '@lobehub/charts';
-import { FormGroup, Icon } from '@lobehub/ui';
-import { Tag } from 'antd';
+import { FormGroup, Icon, Tag } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { FlameIcon } from 'lucide-react';
 import { readableColor } from 'polished';
@@ -119,7 +118,7 @@ const AiHeatmaps = memo<Omit<HeatmapsProps, 'data'> & { inShare?: boolean; mobil
         extra={tags}
         style={FORM_STYLE.style}
         title={t('stats.lastYearActivity')}
-        variant={'pure'}
+        variant={'borderless'}
       >
         <Flexbox paddingBlock={24}>{content}</Flexbox>
       </FormGroup>

@@ -1,15 +1,22 @@
-import { Select, SelectProps } from 'antd';
+import { Select, type SelectProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo, useMemo } from 'react';
 
-import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
+import { ModelItemRender, ProviderItemRender, TAG_CLASSNAME } from '@/components/ModelSelect';
 import { useEnabledChatModels } from '@/hooks/useEnabledChatModels';
 import { EnabledProviderWithModels } from '@/types/aiProvider';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
-  select: css`
+  popup: css`
     &.${prefixCls}-select-dropdown .${prefixCls}-select-item-option-grouped {
       padding-inline-start: 12px;
+    }
+  `,
+  select: css`
+    .${prefixCls}-select-selection-item {
+      .${TAG_CLASSNAME} {
+        display: none;
+      }
     }
   `,
 }));
@@ -21,6 +28,7 @@ interface ModelOption {
 }
 
 interface ModelSelectProps {
+  defaultValue?: { model: string; provider?: string };
   onChange?: (props: { model: string; provider: string }) => void;
   showAbility?: boolean;
   value?: { model: string; provider?: string };
@@ -60,12 +68,14 @@ const ModelSelect = memo<ModelSelectProps>(({ value, onChange, showAbility = tru
 
   return (
     <Select
+      className={styles.select}
+      defaultValue={`${value?.provider}/${value?.model}`}
       onChange={(value, option) => {
         const model = value.split('/').slice(1).join('/');
         onChange?.({ model, provider: (option as unknown as ModelOption).provider });
       }}
       options={options}
-      popupClassName={styles.select}
+      popupClassName={styles.popup}
       popupMatchSelectWidth={false}
       value={`${value?.provider}/${value?.model}`}
     />

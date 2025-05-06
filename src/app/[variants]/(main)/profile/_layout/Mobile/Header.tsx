@@ -1,6 +1,6 @@
 'use client';
 
-import { MobileNavBar, MobileNavBarTitle } from '@lobehub/ui';
+import { ChatHeader } from '@lobehub/ui/mobile';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,9 +23,9 @@ const Header = memo(() => {
   };
 
   return (
-    <MobileNavBar
+    <ChatHeader
       center={
-        <MobileNavBarTitle
+        <ChatHeader.Title
           title={
             <Flexbox align={'center'} gap={8} horizontal>
               <span style={{ lineHeight: 1.2 }}> {t(`tab.${activeSettingsKey}`)}</span>

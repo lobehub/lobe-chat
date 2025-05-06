@@ -1,5 +1,5 @@
-import { Alert } from '@lobehub/ui';
-import { App, Button, Card, Typography } from 'antd';
+import { Alert, Button } from '@lobehub/ui';
+import { App, Card, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { AlertCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -45,7 +45,7 @@ const Backup = () => {
             message={t('clientDB.solve.backup.reset.alert')}
             showIcon
             type="error"
-            variant={'pure'}
+            variant={'borderless'}
           />
 
           <Button

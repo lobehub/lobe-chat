@@ -1,5 +1,6 @@
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { edgeClient } from '@/libs/trpc/client';
 import { globalHelpers } from '@/store/global/helpers';
 
 import { toolService } from '../tool';
@@ -14,6 +15,16 @@ vi.mock('@/store/global/helpers', () => ({
   },
 }));
 
+vi.mock('@/libs/trpc/client', () => ({
+  edgeClient: {
+    market: {
+      getPluginIndex: {
+        query: vi.fn(),
+      },
+    },
+  },
+}));
+
 beforeEach(() => {
   vi.resetAllMocks();
 });
@@ -24,26 +35,21 @@ describe('ToolService', () => {
       // Arrange
       const fakeResponse = { plugins: [{ name: 'TestPlugin' }] };
       (globalHelpers.getCurrentLanguage as Mock).mockReturnValue('tt');
-      global.fetch = vi.fn(() =>
-        Promise.resolve({
-          json: () => Promise.resolve(fakeResponse),
-        }),
-      ) as any;
+
+      (edgeClient.market.getPluginIndex.query as Mock).mockResolvedValue(fakeResponse);
 
       // Act
       const pluginList = await toolService.getToolList();
 
       // Assert
       expect(globalHelpers.getCurrentLanguage).toHaveBeenCalled();
-      expect(fetch).toHaveBeenCalledWith('/webapi/plugin/store?locale=tt');
       expect(pluginList).toEqual(fakeResponse.plugins);
     });
 
     it('should handle fetch error', async () => {
       // Arrange
-      const fakeUrl = 'http://fake-url.com/plugins.json';
       (globalHelpers.getCurrentLanguage as Mock).mockReturnValue('en');
-      global.fetch = vi.fn(() => Promise.reject(new Error('Network error')));
+      (edgeClient.market.getPluginIndex.query as Mock).mockRejectedValue(new Error('Network error'));
 
       // Act & Assert
       await expect(toolService.getToolList()).rejects.toThrow('Network error');
@@ -140,26 +146,6 @@ describe('ToolService', () => {
         expect(e).toEqual(new TypeError('fetchError'));
       }
       expect(fetch).toHaveBeenCalledWith(manifestUrl);
-    });
-
-    it('should return error on manifestInvalid', async () => {
-      const fakeManifest = { name: 'TestPlugin', version: '1.0.0' };
-      const manifestUrl = 'http://fake-url.com/manifest.json';
-      global.fetch = vi.fn(() =>
-        Promise.resolve({
-          headers: new Headers({ 'content-type': 'application/json' }),
-          ok: true,
-          json: () => {
-            throw new Error('abc');
-          },
-        }),
-      ) as any;
-
-      try {
-        await toolService.getToolManifest(manifestUrl);
-      } catch (e) {
-        expect(e).toEqual(new TypeError('urlError'));
-      }
     });
 
     it('should return error on manifestInvalid', async () => {

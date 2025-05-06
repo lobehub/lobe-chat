@@ -33,6 +33,22 @@
     "subTitle": "Odmówiłeś autoryzacji aplikacji do dostępu do Twojego konta LobeChat",
     "title": "Autoryzacja odrzucona"
   },
+  "handoff": {
+    "desc": {
+      "processing": "Aplikacja przetwarza autoryzację, wkrótce przejdzie do następnej strony...",
+      "success": "Próbowano otworzyć aplikację desktopową. Jeśli aplikacja nie otworzyła się automatycznie, przełącz się ręcznie. Możesz zamknąć to okno przeglądarki później."
+    },
+    "title": {
+      "processing": "Przetwarzanie autoryzacji...",
+      "success": "Autoryzacja zakończona"
+    }
+  },
+  "login": {
+    "button": "Potwierdź logowanie",
+    "description": "Aplikacja {{clientName}} prosi o użycie Twojego konta do logowania",
+    "title": "Logowanie do {{clientName}}",
+    "userWelcome": "Witaj z powrotem, "
+  },
   "success": {
     "subTitle": "Pomyślnie autoryzowałeś aplikację do dostępu do Twojego konta LobeChat, możesz zamknąć tę stronę",
     "title": "Autoryzacja zakończona sukcesem"

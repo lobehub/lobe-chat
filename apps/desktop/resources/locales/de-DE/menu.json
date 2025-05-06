@@ -1,0 +1,70 @@
+{
+  "common": {
+    "checkUpdates": "Überprüfen Sie auf Updates..."
+  },
+  "dev": {
+    "devPanel": "Entwicklerpanel",
+    "devTools": "Entwicklerwerkzeuge",
+    "forceReload": "Erzwinge Neuladen",
+    "openStore": "Speicherdatei öffnen",
+    "refreshMenu": "Menü aktualisieren",
+    "reload": "Neuladen",
+    "title": "Entwicklung"
+  },
+  "edit": {
+    "copy": "Kopieren",
+    "cut": "Ausschneiden",
+    "paste": "Einfügen",
+    "redo": "Wiederherstellen",
+    "selectAll": "Alles auswählen",
+    "speech": "Sprache",
+    "startSpeaking": "Beginne zu sprechen",
+    "stopSpeaking": "Stoppe das Sprechen",
+    "title": "Bearbeiten",
+    "undo": "Rückgängig"
+  },
+  "file": {
+    "preferences": "Einstellungen",
+    "quit": "Beenden",
+    "title": "Datei"
+  },
+  "help": {
+    "about": "Über",
+    "githubRepo": "GitHub-Repository",
+    "reportIssue": "Problem melden",
+    "title": "Hilfe",
+    "visitWebsite": "Besuche die Website"
+  },
+  "macOS": {
+    "about": "Über {{appName}}",
+    "devTools": "LobeHub Entwicklerwerkzeuge",
+    "hide": "{{appName}} ausblenden",
+    "hideOthers": "Andere ausblenden",
+    "preferences": "Einstellungen...",
+    "services": "Dienste",
+    "unhide": "Alle anzeigen"
+  },
+  "tray": {
+    "open": "{{appName}} öffnen",
+    "quit": "Beenden",
+    "show": "{{appName}} anzeigen"
+  },
+  "view": {
+    "forceReload": "Erzwinge Neuladen",
+    "reload": "Neuladen",
+    "resetZoom": "Zoom zurücksetzen",
+    "title": "Ansicht",
+    "toggleFullscreen": "Vollbild umschalten",
+    "zoomIn": "Vergrößern",
+    "zoomOut": "Verkleinern"
+  },
+  "window": {
+    "bringAllToFront": "Alle Fenster in den Vordergrund bringen",
+    "close": "Schließen",
+    "front": "Alle Fenster in den Vordergrund bringen",
+    "minimize": "Minimieren",
+    "title": "Fenster",
+    "toggleFullscreen": "Vollbild umschalten",
+    "zoom": "Zoom"
+  }
+}

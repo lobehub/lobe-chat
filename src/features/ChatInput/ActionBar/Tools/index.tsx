@@ -1,17 +1,21 @@
-import { ActionIcon } from '@lobehub/ui';
-import { Blocks, LucideLoader2 } from 'lucide-react';
-import { Suspense, memo } from 'react';
+import { Blocks } from 'lucide-react';
+import { Suspense, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import PluginStore from '@/features/PluginStore';
 import { useModelSupportToolUse } from '@/hooks/useModelSupportToolUse';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
-import DropdownMenu from './Dropdown';
+import Action from '../components/Action';
+import { useControls } from './useControls';
 
 const Tools = memo(() => {
   const { t } = useTranslation('setting');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [updating, setUpdating] = useState(false);
+  const items = useControls({ setModalOpen, setUpdating });
   const { enablePlugins } = useServerConfigStore(featureFlagsSelectors);
 
   const model = useAgentStore(agentSelectors.currentAgentModel);
@@ -19,19 +23,25 @@ const Tools = memo(() => {
 
   const enableFC = useModelSupportToolUse(model, provider);
 
+  if (!enablePlugins) return null;
+  if (!enableFC)
+    return <Action disabled icon={Blocks} showTooltip={true} title={t('tools.disabled')} />;
+
   return (
-    enablePlugins && (
-      <Suspense fallback={<ActionIcon icon={LucideLoader2} spin />}>
-        <DropdownMenu>
-          <ActionIcon
-            disable={!enableFC}
-            icon={Blocks}
-            placement={'bottom'}
-            title={t(enableFC ? 'tools.title' : 'tools.disabled')}
-          />
-        </DropdownMenu>
-      </Suspense>
-    )
+    <Suspense fallback={<Action disabled icon={Blocks} title={t('tools.title')} />}>
+      <Action
+        dropdown={{
+          maxWidth: 320,
+          menu: { items },
+          minWidth: 240,
+        }}
+        icon={Blocks}
+        loading={updating}
+        showTooltip={false}
+        title={t('tools.title')}
+      />
+      <PluginStore open={modalOpen} setOpen={setModalOpen} />
+    </Suspense>
   );
 });
 

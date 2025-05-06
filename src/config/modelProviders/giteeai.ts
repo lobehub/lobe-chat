@@ -110,7 +110,7 @@ const GiteeAI: ModelProviderCard = {
       enabled: true,
       id: 'Yi-34B-Chat',
     },
-/*
+    /*
     // not compatible with OpenAI SDK
     {
       description:

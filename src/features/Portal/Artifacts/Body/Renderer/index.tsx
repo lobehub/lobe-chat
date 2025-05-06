@@ -18,7 +18,7 @@ const Renderer = memo<{ content: string; type?: string }>(({ content, type }) =>
     }
 
     case 'application/lobe.artifacts.mermaid': {
-      return <Mermaid type={'pure'}>{content}</Mermaid>;
+      return <Mermaid variant={'borderless'}>{content}</Mermaid>;
     }
 
     case 'text/markdown': {

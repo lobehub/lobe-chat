@@ -1,7 +1,6 @@
 'use client';
 
-import { Avatar, Icon, Tag } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Avatar, Button, Icon, Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { startCase } from 'lodash-es';
 import { ChevronRight } from 'lucide-react';
@@ -104,9 +103,7 @@ const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
               })}
               key={tag}
             >
-              <Tag key={tag} style={{ margin: 0 }}>
-                {startCase(tag).trim()}
-              </Tag>
+              <Tag key={tag}>{startCase(tag).trim()}</Tag>
             </Link>
           ))}
         </Flexbox>

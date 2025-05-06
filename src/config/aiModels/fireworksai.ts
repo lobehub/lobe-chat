@@ -4,7 +4,7 @@ const fireworksaiChatModels: AIChatModelCard[] = [
   {
     contextWindowTokens: 131_072,
     description:
-        'Llama 3.3 70B Instruct 是 Llama 3.1 70B 的 12 月更新版本。该模型在 Llama 3.1 70B（于 2024 年 7 月发布）的基础上进行了改进，增强了工具调用、多语言文本支持、数学和编程能力。该模型在推理、数学和指令遵循方面达到了行业领先水平，并且能够提供与 3.1 405B 相似的性能，同时在速度和成本上具有显著优势。',
+      'Llama 3.3 70B Instruct 是 Llama 3.1 70B 的 12 月更新版本。该模型在 Llama 3.1 70B（于 2024 年 7 月发布）的基础上进行了改进，增强了工具调用、多语言文本支持、数学和编程能力。该模型在推理、数学和指令遵循方面达到了行业领先水平，并且能够提供与 3.1 405B 相似的性能，同时在速度和成本上具有显著优势。',
     displayName: 'Llama 3.3 70B Instruct',
     enabled: true,
     id: 'accounts/fireworks/models/llama-v3p3-70b-instruct',
@@ -139,8 +139,7 @@ const fireworksaiChatModels: AIChatModelCard[] = [
   },
   {
     contextWindowTokens: 32_768,
-    description:
-      '24B 参数模型，具备与更大型模型相当的最先进能力。',
+    description: '24B 参数模型，具备与更大型模型相当的最先进能力。',
     displayName: 'Mistral Small 3 Instruct',
     enabled: true,
     id: 'accounts/fireworks/models/mistral-small-24b-instruct-2501',
@@ -268,8 +267,7 @@ const fireworksaiChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 32_768,
-    description:
-      'Qwen-VL 模型的 72B 版本是阿里巴巴最新迭代的成果，代表了近一年的创新。',
+    description: 'Qwen-VL 模型的 72B 版本是阿里巴巴最新迭代的成果，代表了近一年的创新。',
     displayName: 'Qwen2 VL 72B Instruct',
     enabled: true,
     id: 'accounts/fireworks/models/qwen2-vl-72b-instruct',

@@ -20,18 +20,28 @@ export class ElectronIpcClient {
   private connectionAttempts: number = 0;
   private maxConnectionAttempts: number = 5;
   private dataBuffer: string = '';
+  private readonly appId: string;
 
-  constructor() {
-    log('Initializing client');
+  constructor(appId: string) {
+    log('Initializing client', appId);
+    this.appId = appId;
     this.initialize();
   }
 
   // 初始化客户端
   private initialize() {
     try {
-      // 从临时文件读取套接字路径
       const tempDir = os.tmpdir();
-      const socketInfoPath = path.join(tempDir, SOCK_INFO_FILE);
+
+      // Windows 平台强制使用命名管道
+      if (process.platform === 'win32') {
+        this.socketPath = WINDOW_PIPE_FILE(this.appId);
+        log('Using named pipe for Windows: %s', this.socketPath);
+        return;
+      }
+
+      // 其他平台尝试读取 sock info 文件
+      const socketInfoPath = path.join(tempDir, SOCK_INFO_FILE(this.appId));
 
       log('Looking for socket info at: %s', socketInfoPath);
       if (fs.existsSync(socketInfoPath)) {
@@ -39,10 +49,9 @@ export class ElectronIpcClient {
         this.socketPath = socketInfo.socketPath;
         log('Found socket path: %s', this.socketPath);
       } else {
-        // 如果找不到套接字信息，使用默认路径
-        this.socketPath =
-          process.platform === 'win32' ? WINDOW_PIPE_FILE : path.join(os.tmpdir(), SOCK_FILE);
-        log('Socket info not found, using default path: %s', this.socketPath);
+        // 如果找不到套接字信息，使用默认 sock 文件路径
+        this.socketPath = path.join(tempDir, SOCK_FILE(this.appId));
+        log('Socket info not found, using default sock path: %s', this.socketPath);
       }
     } catch (err) {
       console.error('Failed to initialize IPC client:', err);

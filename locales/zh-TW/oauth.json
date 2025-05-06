@@ -33,6 +33,22 @@
     "subTitle": "您已拒絕授權應用訪問您的 LobeChat 帳戶",
     "title": "授權被拒絕"
   },
+  "handoff": {
+    "desc": {
+      "processing": "應用正在處理授權，即將跳轉到下一個頁面...",
+      "success": "已嘗試打開桌面應用。如果應用未自動打開，請手動切換。您可以稍後關閉此瀏覽器窗口。"
+    },
+    "title": {
+      "processing": "授權處理中...",
+      "success": "授權已完成"
+    }
+  },
+  "login": {
+    "button": "確認登入",
+    "description": "應用 {{clientName}} 申請使用您的帳戶進行登入",
+    "title": "登入 {{clientName}}",
+    "userWelcome": "歡迎回來，"
+  },
   "success": {
     "subTitle": "您已成功授權應用訪問您的 LobeChat 帳戶，可以關閉該頁面了",
     "title": "授權成功"
