@@ -1,5 +1,5 @@
-import { ActionIcon, Avatar, Icon } from '@lobehub/ui';
-import { Divider, Popover, Switch, Tag, Typography } from 'antd';
+import { ActionIcon, Avatar, Icon, Tag } from '@lobehub/ui';
+import { Divider, Popover, Switch, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { TooltipPlacement } from 'antd/es/tooltip';
 import isEqual from 'fast-deep-equal';
@@ -81,7 +81,7 @@ const EnableSync = memo<EnableSyncProps>(({ hiddenActions, placement = 'bottomLe
                     <Icon
                       color={theme.purple}
                       icon={user.isMobile ? LucideSmartphone : LucideLaptop}
-                      size={{ fontSize: 24 }}
+                      size={24}
                     />
                   }
                   background={theme.purple1}

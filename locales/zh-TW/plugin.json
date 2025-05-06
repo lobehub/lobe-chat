@@ -1,4 +1,5 @@
 {
+  "confirm": "確定",
   "debug": {
     "arguments": "參數",
     "function_call": "函式呼叫",
@@ -48,10 +49,13 @@
     },
     "mcp": {
       "args": {
-        "desc": "傳遞給 STDIO 命令的參數列表",
+        "desc": "傳遞給執行命令的參數列表，一般在這裡輸入 MCP 伺服器名稱，或啟動腳本路徑",
         "label": "命令參數",
         "placeholder": "例如：--port 8080 --debug",
         "required": "請輸入啟動參數"
+      },
+      "avatar": {
+        "label": "插件圖示"
       },
       "command": {
         "desc": "用於啟動 MCP STDIO 插件的可執行文件或腳本",
@@ -59,9 +63,23 @@
         "placeholder": "例如：python main.py 或 /path/to/executable",
         "required": "請輸入啟動命令"
       },
+      "desc": {
+        "desc": "添加插件的描述說明",
+        "label": "插件描述",
+        "placeholder": "補充該插件的使用說明和場景等資訊"
+      },
       "endpoint": {
         "desc": "輸入你的 MCP Streamable HTTP Server 的地址",
         "label": "MCP Endpoint URL"
+      },
+      "env": {
+        "add": "新增一行",
+        "desc": "輸入你的 MCP Server 所需要的環境變數",
+        "duplicateKeyError": "欄位鍵必須唯一",
+        "formValidationFailed": "表單驗證失敗，請檢查參數格式",
+        "keyRequired": "欄位鍵不能為空",
+        "label": "MCP Server 環境變數",
+        "stringifyError": "無法序列化參數，請檢查參數格式"
       },
       "identifier": {
         "desc": "為你的 MCP 插件指定一個名稱，需要使用英文字符",
@@ -71,6 +89,13 @@
         "required": "請輸入 MCP 服務標識符"
       },
       "previewManifest": "預覽插件描述文件",
+      "quickImport": "快速匯入 JSON 配置",
+      "quickImportError": {
+        "empty": "輸入內容不能為空",
+        "invalidJson": "無效的 JSON 格式",
+        "invalidStructure": "JSON 格式無效"
+      },
+      "stdioNotSupported": "當前環境不支持 stdio 類型的 MCP 插件",
       "testConnection": "測試連接",
       "testConnectionTip": "測試連接成功後 MCP 插件才可以被正常使用",
       "type": {
@@ -138,8 +163,18 @@
       "schema": "Schema"
     },
     "preview": {
+      "api": {
+        "noParams": "該工具沒有參數",
+        "noResults": "未找到符合搜索條件的 API",
+        "params": "參數：",
+        "searchPlaceholder": "搜索工具..."
+      },
       "card": "外掛顯示預覽",
       "desc": "外掛描述預覽",
+      "empty": {
+        "desc": "完成配置後，將能夠在此處預覽插件支持的工具能力",
+        "title": "配置插件後開始預覽"
+      },
       "title": "外掛名稱預覽"
     },
     "save": "安裝插件",

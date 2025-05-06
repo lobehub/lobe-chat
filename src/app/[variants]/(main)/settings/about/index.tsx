@@ -49,7 +49,7 @@ const Page = memo<{ mobile?: boolean }>(({ mobile }) => {
       <Form.Group
         style={{ width: '100%' }}
         title={`${t('about')} ${BRANDING_NAME}`}
-        variant={'pure'}
+        variant={'borderless'}
       >
         <Flexbox gap={20} paddingBlock={20} width={'100%'}>
           <div className={styles.title}>{t('version')}</div>

@@ -6,12 +6,16 @@ import { BuiltinRenderProps } from '@/types/tool';
 
 import ListFiles from './ListFiles';
 import ReadLocalFile from './ReadLocalFile';
+import RenameLocalFile from './RenameLocalFile';
 import SearchFiles from './SearchFiles';
+import WriteFile from './WriteFile';
 
 const RenderMap = {
   [LocalFilesApiName.searchLocalFiles]: SearchFiles,
   [LocalFilesApiName.listLocalFiles]: ListFiles,
   [LocalFilesApiName.readLocalFile]: ReadLocalFile,
+  [LocalFilesApiName.renameLocalFile]: RenameLocalFile,
+  [LocalFilesApiName.writeLocalFile]: WriteFile,
 };
 
 const LocalFilesRender = memo<BuiltinRenderProps<LocalFileItem[]>>(

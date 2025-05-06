@@ -71,12 +71,6 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 ist ein von der DeepSeek Company entwickeltes MoE-Modell. Die Ergebnisse von DeepSeek-V3 übertreffen die anderer Open-Source-Modelle wie Qwen2.5-72B und Llama-3.1-405B und stehen in der Leistung auf Augenhöhe mit den weltweit führenden Closed-Source-Modellen GPT-4o und Claude-3.5-Sonnet."
   },
-  "Doubao-1.5-thinking-pro": {
-    "description": "Doubao-1.5 ist ein neues tiefes Denkmodell, das in den Fachbereichen Mathematik, Programmierung, wissenschaftlicher Schlussfolgerung und kreativen Schreibaufgaben herausragende Leistungen zeigt und in mehreren renommierten Benchmarks wie AIME 2024, Codeforces und GPQA die Spitzenposition erreicht oder nahe kommt. Es unterstützt ein Kontextfenster von 128k und eine Ausgabe von 16k."
-  },
-  "Doubao-1.5-thinking-pro-vision": {
-    "description": "Doubao-1.5 ist ein neues tiefes Denkmodell, das in den Fachbereichen Mathematik, Programmierung, wissenschaftlicher Schlussfolgerung und kreativen Schreibaufgaben herausragende Leistungen zeigt und in mehreren renommierten Benchmarks wie AIME 2024, Codeforces und GPQA die Spitzenposition erreicht oder nahe kommt. Es unterstützt ein Kontextfenster von 128k und eine Ausgabe von 16k."
-  },
   "Doubao-1.5-vision-pro": {
     "description": "Doubao-1.5-vision-pro ist ein neu verbessertes multimodales großes Modell, das beliebige Auflösungen und extreme Seitenverhältnisse bei der Bilderkennung unterstützt und die Fähigkeiten in visueller Schlussfolgerung, Dokumentenerkennung, Detailverständnis und Befolgung von Anweisungen verbessert."
   },
@@ -854,6 +848,12 @@
   "doubao-1.5-pro-32k": {
     "description": "Doubao-1.5-pro ist das neueste Hauptmodell der nächsten Generation, dessen Leistung umfassend verbessert wurde und das in den Bereichen Wissen, Code, Schlussfolgerungen usw. herausragende Leistungen zeigt."
   },
+  "doubao-1.5-thinking-pro": {
+    "description": "Das Doubao-1.5 Modell für tiefes Denken ist neu und zeichnet sich in Fachbereichen wie Mathematik, Programmierung und wissenschaftlichem Denken sowie in allgemeinen Aufgaben wie kreativem Schreiben aus. Es erreicht oder nähert sich in mehreren renommierten Benchmarks wie AIME 2024, Codeforces und GPQA dem Spitzenlevel der Branche. Es unterstützt ein Kontextfenster von 128k und eine Ausgabe von 16k."
+  },
+  "doubao-1.5-thinking-pro-vision": {
+    "description": "Das Doubao-1.5 Modell für tiefes Denken ist neu und zeichnet sich in Fachbereichen wie Mathematik, Programmierung und wissenschaftlichem Denken sowie in allgemeinen Aufgaben wie kreativem Schreiben aus. Es erreicht oder nähert sich in mehreren renommierten Benchmarks wie AIME 2024, Codeforces und GPQA dem Spitzenlevel der Branche. Es unterstützt ein Kontextfenster von 128k und eine Ausgabe von 16k."
+  },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite ist ein neu verbessertes multimodales großes Modell, das beliebige Auflösungen und extreme Seitenverhältnisse bei der Bilderkennung unterstützt und die Fähigkeiten in visueller Schlussfolgerung, Dokumentenerkennung, Detailverständnis und Befolgung von Anweisungen verbessert. Es unterstützt ein Kontextfenster von 128k und eine maximale Ausgabelänge von 16k Tokens."
   },
@@ -887,6 +887,15 @@
   "ernie-4.5-8k-preview": {
     "description": "Das ERNIE 4.5 Modell ist ein neu entwickeltes, natives multimodales Basis-Modell von Baidu, das durch die gemeinsame Modellierung mehrerer Modalitäten eine synergistische Optimierung erreicht und über hervorragende multimodale Verständnisfähigkeiten verfügt; es bietet verbesserte Sprachfähigkeiten, umfassende Verbesserungen in Verständnis, Generierung, Logik und Gedächtnis, sowie signifikante Verbesserungen in der Vermeidung von Halluzinationen, logischen Schlussfolgerungen und Programmierfähigkeiten."
   },
+  "ernie-4.5-turbo-128k": {
+    "description": "Wenxin 4.5 Turbo hat deutliche Verbesserungen in den Bereichen Halluzinationen reduzieren, logisches Denken und Programmierfähigkeiten. Im Vergleich zu Wenxin 4.5 ist es schneller und kostengünstiger. Die Modellfähigkeiten wurden umfassend verbessert, um besser mit mehrstufigen, langen historischen Dialogen und der Beantwortung von Fragen zu langen Dokumenten umzugehen."
+  },
+  "ernie-4.5-turbo-32k": {
+    "description": "Wenxin 4.5 Turbo hat deutliche Verbesserungen in den Bereichen Halluzinationen reduzieren, logisches Denken und Programmierfähigkeiten. Im Vergleich zu Wenxin 4.5 ist es schneller und kostengünstiger. Die Fähigkeiten in der Textkreation und Wissensfragen haben sich erheblich verbessert. Die Ausgabelänge und die Verzögerung bei vollständigen Sätzen sind im Vergleich zu ERNIE 4.5 gestiegen."
+  },
+  "ernie-4.5-turbo-vl-32k": {
+    "description": "Die neueste Version des Wenxin Yi Yan Modells hat signifikante Verbesserungen in den Bereichen Bildverständnis, Kreation, Übersetzung und Programmierung. Es unterstützt erstmals eine Kontextlänge von 32K, und die Verzögerung beim ersten Token wurde erheblich reduziert."
+  },
   "ernie-char-8k": {
     "description": "Das von Baidu entwickelte große Sprachmodell für vertikale Szenarien eignet sich für Anwendungen wie NPCs in Spielen, Kundenservice-Dialoge und Rollenspiele, mit einem klareren und konsistenteren Charakterstil, einer stärkeren Befolgung von Anweisungen und besserer Inferenzleistung."
   },
@@ -911,8 +920,14 @@
   "ernie-tiny-8k": {
     "description": "ERNIE Tiny ist ein hochleistungsfähiges großes Sprachmodell, dessen Bereitstellungs- und Feinabstimmungskosten die niedrigsten unter den Wenshin-Modellen sind."
   },
+  "ernie-x1-32k": {
+    "description": "Verfügt über stärkere Fähigkeiten in Verständnis, Planung, Reflexion und Evolution. Als umfassenderes tiefes Denkmodell kombiniert Wenxin X1 Genauigkeit, Kreativität und Ausdruckskraft und zeigt herausragende Leistungen in den Bereichen chinesische Wissensfragen, literarische Kreation, Textverfassung, alltägliche Gespräche, logisches Denken, komplexe Berechnungen und Werkzeugnutzung."
+  },
   "ernie-x1-32k-preview": {
     "description": "Das große Modell ERNIE X1 verfügt über verbesserte Fähigkeiten in Verständnis, Planung, Reflexion und Evolution. Als umfassenderes tiefes Denkmodell kombiniert ERNIE X1 Genauigkeit, Kreativität und Ausdruckskraft und zeigt herausragende Leistungen in den Bereichen chinesische Wissensabfragen, literarisches Schaffen, Textverfassung, alltägliche Gespräche, logisches Denken, komplexe Berechnungen und Werkzeugnutzung."
+  },
+  "ernie-x1-turbo-32k": {
+    "description": "Im Vergleich zu ERNIE-X1-32K bietet dieses Modell bessere Leistung und Effizienz."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) bietet stabile und anpassbare Leistung und ist die ideale Wahl für Lösungen komplexer Aufgaben."
@@ -1673,9 +1688,6 @@
   "o3-mini": {
     "description": "o3-mini ist unser neuestes kompaktes Inferenzmodell, das bei den gleichen Kosten- und Verzögerungszielen wie o1-mini hohe Intelligenz bietet."
   },
-  "o3-mini-high": {
-    "description": "o3-mini Hochleistungsmodell, das bei den gleichen Kosten- und Verzögerungszielen wie o1-mini hohe Intelligenz bietet."
-  },
   "o4-mini": {
     "description": "o4-mini ist unser neuestes kompaktes Modell der o-Serie. Es wurde für schnelle und effektive Inferenz optimiert und zeigt in Programmier- und visuellen Aufgaben eine hohe Effizienz und Leistung."
   },
@@ -1694,6 +1706,15 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B ist ein spärliches Expertenmodell, das mehrere Parameter nutzt, um die Schlussfolgerungsgeschwindigkeit zu erhöhen und sich für die Verarbeitung mehrsprachiger und Codegenerierungsaufgaben eignet."
   },
+  "openai/gpt-4.1": {
+    "description": "GPT-4.1 ist unser Flaggschiff-Modell für komplexe Aufgaben. Es eignet sich hervorragend zur Lösung von Problemen über verschiedene Fachgebiete hinweg."
+  },
+  "openai/gpt-4.1-mini": {
+    "description": "GPT-4.1 mini bietet ein Gleichgewicht zwischen Intelligenz, Geschwindigkeit und Kosten, was es zu einem attraktiven Modell für viele Anwendungsfälle macht."
+  },
+  "openai/gpt-4.1-nano": {
+    "description": "GPT-4.1 nano ist das schnellste und kosteneffektivste Modell der GPT-4.1-Reihe."
+  },
   "openai/gpt-4o": {
     "description": "ChatGPT-4o ist ein dynamisches Modell, das in Echtzeit aktualisiert wird, um die neueste Version zu gewährleisten. Es kombiniert starke Sprachverständnis- und Generierungsfähigkeiten und eignet sich für großangelegte Anwendungsszenarien, einschließlich Kundenservice, Bildung und technischem Support."
   },
@@ -1705,6 +1726,15 @@
   },
   "openai/o1-preview": {
     "description": "o1 ist OpenAIs neues Inferenzmodell, das für komplexe Aufgaben geeignet ist, die umfangreiches Allgemeinwissen erfordern. Das Modell hat einen Kontext von 128K und einen Wissensstand bis Oktober 2023."
+  },
+  "openai/o3": {
+    "description": "o3 ist ein leistungsstarkes Allround-Modell, das in mehreren Bereichen hervorragende Leistungen zeigt. Es setzt neue Maßstäbe für mathematische, wissenschaftliche, programmiertechnische und visuelle Denkaufgaben. Es ist auch versiert in technischer Schreibweise und der Befolgung von Anweisungen. Benutzer können es nutzen, um Texte, Code und Bilder zu analysieren und komplexe Probleme mit mehreren Schritten zu lösen."
+  },
+  "openai/o3-mini": {
+    "description": "o3-mini bietet hohe Intelligenz bei den gleichen Kosten- und Verzögerungszielen wie o1-mini."
+  },
+  "openai/o3-mini-high": {
+    "description": "o3-mini high ist eine hochintelligente Version mit dem gleichen Kosten- und Verzögerungsziel wie o1-mini."
   },
   "openai/o4-mini": {
     "description": "o4-mini ist für schnelle und effektive Inferenz optimiert und zeigt in Programmier- und visuellen Aufgaben eine hohe Effizienz und Leistung."
@@ -1811,6 +1841,33 @@
   "qwen/qwen2.5-coder-7b-instruct": {
     "description": "Leistungsstarkes, mittelgroßes Codierungsmodell, das 32K Kontextlängen unterstützt und in der mehrsprachigen Programmierung versiert ist."
   },
+  "qwen/qwen3-14b": {
+    "description": "Qwen3-14B ist ein kompaktes, 14,8 Milliarden Parameter umfassendes kausales Sprachmodell aus der Qwen3-Serie, das speziell für komplexe Inferenz und effiziente Dialoge entwickelt wurde. Es unterstützt den nahtlosen Wechsel zwischen dem \"Denk\"-Modus für Mathematik, Programmierung und logische Inferenz und dem \"Nicht-Denk\"-Modus für allgemeine Gespräche. Dieses Modell wurde feinabgestimmt und kann für die Befolgung von Anweisungen, die Nutzung von Agentenwerkzeugen, kreatives Schreiben sowie mehrsprachige Aufgaben in über 100 Sprachen und Dialekten verwendet werden. Es verarbeitet nativ 32K Token-Kontext und kann mithilfe von YaRN auf 131K Token erweitert werden."
+  },
+  "qwen/qwen3-14b:free": {
+    "description": "Qwen3-14B ist ein kompaktes, 14,8 Milliarden Parameter umfassendes kausales Sprachmodell aus der Qwen3-Serie, das speziell für komplexe Inferenz und effiziente Dialoge entwickelt wurde. Es unterstützt den nahtlosen Wechsel zwischen dem \"Denk\"-Modus für Mathematik, Programmierung und logische Inferenz und dem \"Nicht-Denk\"-Modus für allgemeine Gespräche. Dieses Modell wurde feinabgestimmt und kann für die Befolgung von Anweisungen, die Nutzung von Agentenwerkzeugen, kreatives Schreiben sowie mehrsprachige Aufgaben in über 100 Sprachen und Dialekten verwendet werden. Es verarbeitet nativ 32K Token-Kontext und kann mithilfe von YaRN auf 131K Token erweitert werden."
+  },
+  "qwen/qwen3-235b-a22b": {
+    "description": "Qwen3-235B-A22B ist ein 235B Parameter Expertenmischungsmodell (MoE), das von Qwen entwickelt wurde und bei jedem Vorwärtsdurchlauf 22B Parameter aktiviert. Es unterstützt den nahtlosen Wechsel zwischen dem \"Denk\"-Modus für komplexe Inferenz, Mathematik und Programmieraufgaben und dem \"Nicht-Denk\"-Modus für allgemeine Gespräche. Dieses Modell zeigt starke Inferenzfähigkeiten, mehrsprachige Unterstützung (über 100 Sprachen und Dialekte), fortgeschrittene Befolgung von Anweisungen und die Nutzung von Agentenwerkzeugen. Es verarbeitet nativ ein Kontextfenster von 32K Token und kann mithilfe von YaRN auf 131K Token erweitert werden."
+  },
+  "qwen/qwen3-235b-a22b:free": {
+    "description": "Qwen3-235B-A22B ist ein 235B Parameter Expertenmischungsmodell (MoE), das von Qwen entwickelt wurde und bei jedem Vorwärtsdurchlauf 22B Parameter aktiviert. Es unterstützt den nahtlosen Wechsel zwischen dem \"Denk\"-Modus für komplexe Inferenz, Mathematik und Programmieraufgaben und dem \"Nicht-Denk\"-Modus für allgemeine Gespräche. Dieses Modell zeigt starke Inferenzfähigkeiten, mehrsprachige Unterstützung (über 100 Sprachen und Dialekte), fortgeschrittene Befolgung von Anweisungen und die Nutzung von Agentenwerkzeugen. Es verarbeitet nativ ein Kontextfenster von 32K Token und kann mithilfe von YaRN auf 131K Token erweitert werden."
+  },
+  "qwen/qwen3-30b-a3b": {
+    "description": "Qwen3 ist die neueste Generation der Qwen großen Sprachmodellreihe, die über eine dichte und Expertenmischung (MoE) Architektur verfügt und in den Bereichen Inferenz, mehrsprachige Unterstützung und anspruchsvolle Agentenaufgaben hervorragende Leistungen zeigt. Ihre einzigartige Fähigkeit, nahtlos zwischen komplexen Denkmodi und effizienten Dialogmodi zu wechseln, gewährleistet eine vielseitige und qualitativ hochwertige Leistung.\n\nQwen3 übertrifft deutlich frühere Modelle wie QwQ und Qwen2.5 und bietet herausragende Fähigkeiten in Mathematik, Programmierung, allgemeinem Wissen, kreativem Schreiben und interaktiven Dialogen. Die Variante Qwen3-30B-A3B enthält 30,5 Milliarden Parameter (3,3 Milliarden aktivierte Parameter), 48 Schichten, 128 Experten (jeweils 8 aktivierte für jede Aufgabe) und unterstützt bis zu 131K Token-Kontext (unter Verwendung von YaRN), was einen neuen Standard für Open-Source-Modelle setzt."
+  },
+  "qwen/qwen3-30b-a3b:free": {
+    "description": "Qwen3 ist die neueste Generation der Qwen großen Sprachmodellreihe, die über eine dichte und Expertenmischung (MoE) Architektur verfügt und in den Bereichen Inferenz, mehrsprachige Unterstützung und anspruchsvolle Agentenaufgaben hervorragende Leistungen zeigt. Ihre einzigartige Fähigkeit, nahtlos zwischen komplexen Denkmodi und effizienten Dialogmodi zu wechseln, gewährleistet eine vielseitige und qualitativ hochwertige Leistung.\n\nQwen3 übertrifft deutlich frühere Modelle wie QwQ und Qwen2.5 und bietet herausragende Fähigkeiten in Mathematik, Programmierung, allgemeinem Wissen, kreativem Schreiben und interaktiven Dialogen. Die Variante Qwen3-30B-A3B enthält 30,5 Milliarden Parameter (3,3 Milliarden aktivierte Parameter), 48 Schichten, 128 Experten (jeweils 8 aktivierte für jede Aufgabe) und unterstützt bis zu 131K Token-Kontext (unter Verwendung von YaRN), was einen neuen Standard für Open-Source-Modelle setzt."
+  },
+  "qwen/qwen3-32b": {
+    "description": "Qwen3-32B ist ein kompaktes, 32,8 Milliarden Parameter umfassendes kausales Sprachmodell aus der Qwen3-Serie, das für komplexe Inferenz und effiziente Dialoge optimiert wurde. Es unterstützt den nahtlosen Wechsel zwischen dem \"Denk\"-Modus für Mathematik, Programmierung und logische Inferenz und dem \"Nicht-Denk\"-Modus für schnellere, allgemeine Gespräche. Dieses Modell zeigt starke Leistungen in der Befolgung von Anweisungen, der Nutzung von Agentenwerkzeugen, kreativem Schreiben sowie mehrsprachigen Aufgaben in über 100 Sprachen und Dialekten. Es verarbeitet nativ 32K Token-Kontext und kann mithilfe von YaRN auf 131K Token erweitert werden."
+  },
+  "qwen/qwen3-32b:free": {
+    "description": "Qwen3-32B ist ein kompaktes, 32,8 Milliarden Parameter umfassendes kausales Sprachmodell aus der Qwen3-Serie, das für komplexe Inferenz und effiziente Dialoge optimiert wurde. Es unterstützt den nahtlosen Wechsel zwischen dem \"Denk\"-Modus für Mathematik, Programmierung und logische Inferenz und dem \"Nicht-Denk\"-Modus für schnellere, allgemeine Gespräche. Dieses Modell zeigt starke Leistungen in der Befolgung von Anweisungen, der Nutzung von Agentenwerkzeugen, kreativem Schreiben sowie mehrsprachigen Aufgaben in über 100 Sprachen und Dialekten. Es verarbeitet nativ 32K Token-Kontext und kann mithilfe von YaRN auf 131K Token erweitert werden."
+  },
+  "qwen/qwen3-8b:free": {
+    "description": "Qwen3-8B ist ein kompaktes, 8,2 Milliarden Parameter umfassendes kausales Sprachmodell aus der Qwen3-Serie, das speziell für inferenzintensive Aufgaben und effiziente Dialoge entwickelt wurde. Es unterstützt den nahtlosen Wechsel zwischen dem \"Denk\"-Modus für Mathematik, Programmierung und logische Inferenz und dem \"Nicht-Denk\"-Modus für allgemeine Gespräche. Dieses Modell wurde feinabgestimmt und kann für die Befolgung von Anweisungen, die Integration von Agenten, kreatives Schreiben sowie die mehrsprachige Nutzung in über 100 Sprachen und Dialekten verwendet werden. Es unterstützt nativ ein Kontextfenster von 32K Token und kann über YaRN auf 131K Token erweitert werden."
+  },
   "qwen2": {
     "description": "Qwen2 ist das neue große Sprachmodell von Alibaba, das mit hervorragender Leistung eine Vielzahl von Anwendungsanforderungen unterstützt."
   },
@@ -1894,6 +1951,30 @@
   },
   "qwen2:72b": {
     "description": "Qwen2 ist das neue große Sprachmodell von Alibaba, das mit hervorragender Leistung eine Vielzahl von Anwendungsanforderungen unterstützt."
+  },
+  "qwen3-0.6b": {
+    "description": "Qwen3 ist ein neues, leistungsstarkes Modell der nächsten Generation, das in den Bereichen Inferenz, Allgemeinwissen, Agenten und Mehrsprachigkeit erhebliche Fortschritte erzielt hat und den Wechsel zwischen Denkmodi unterstützt."
+  },
+  "qwen3-1.7b": {
+    "description": "Qwen3 ist ein neues, leistungsstarkes Modell der nächsten Generation, das in den Bereichen Inferenz, Allgemeinwissen, Agenten und Mehrsprachigkeit erhebliche Fortschritte erzielt hat und den Wechsel zwischen Denkmodi unterstützt."
+  },
+  "qwen3-14b": {
+    "description": "Qwen3 ist ein neues, leistungsstarkes Modell der nächsten Generation, das in den Bereichen Inferenz, Allgemeinwissen, Agenten und Mehrsprachigkeit erhebliche Fortschritte erzielt hat und den Wechsel zwischen Denkmodi unterstützt."
+  },
+  "qwen3-235b-a22b": {
+    "description": "Qwen3 ist ein neues, leistungsstarkes Modell der nächsten Generation, das in den Bereichen Inferenz, Allgemeinwissen, Agenten und Mehrsprachigkeit erhebliche Fortschritte erzielt hat und den Wechsel zwischen Denkmodi unterstützt."
+  },
+  "qwen3-30b-a3b": {
+    "description": "Qwen3 ist ein neues, leistungsstarkes Modell der nächsten Generation, das in den Bereichen Inferenz, Allgemeinwissen, Agenten und Mehrsprachigkeit erhebliche Fortschritte erzielt hat und den Wechsel zwischen Denkmodi unterstützt."
+  },
+  "qwen3-32b": {
+    "description": "Qwen3 ist ein neues, leistungsstarkes Modell der nächsten Generation, das in den Bereichen Inferenz, Allgemeinwissen, Agenten und Mehrsprachigkeit erhebliche Fortschritte erzielt hat und den Wechsel zwischen Denkmodi unterstützt."
+  },
+  "qwen3-4b": {
+    "description": "Qwen3 ist ein neues, leistungsstarkes Modell der nächsten Generation, das in den Bereichen Inferenz, Allgemeinwissen, Agenten und Mehrsprachigkeit erhebliche Fortschritte erzielt hat und den Wechsel zwischen Denkmodi unterstützt."
+  },
+  "qwen3-8b": {
+    "description": "Qwen3 ist ein neues, leistungsstarkes Modell der nächsten Generation, das in den Bereichen Inferenz, Allgemeinwissen, Agenten und Mehrsprachigkeit erhebliche Fortschritte erzielt hat und den Wechsel zwischen Denkmodi unterstützt."
   },
   "qwq": {
     "description": "QwQ ist ein experimentelles Forschungsmodell, das sich auf die Verbesserung der KI-Inferenzfähigkeiten konzentriert."
@@ -1996,6 +2077,18 @@
   },
   "thudm/glm-4-9b-chat": {
     "description": "Die Open-Source-Version des neuesten vortrainierten Modells der GLM-4-Serie, das von Zhizhu AI veröffentlicht wurde."
+  },
+  "thudm/glm-4-9b:free": {
+    "description": "GLM-4-9B-0414 ist ein Sprachmodell mit 9 Milliarden Parametern aus der GLM-4-Serie, das von THUDM entwickelt wurde. GLM-4-9B-0414 verwendet die gleichen Verstärkungs- und Ausrichtungsstrategien wie das größere 32B-Modell und erzielt in Bezug auf seine Größe hohe Leistungen, was es für ressourcenbeschränkte Bereitstellungen geeignet macht, die dennoch starke Sprachverständnis- und Generierungsfähigkeiten erfordern."
+  },
+  "thudm/glm-z1-9b:free": {
+    "description": "GLM-Z1-9B-0414 ist ein Sprachmodell mit 9B Parametern aus der GLM-4-Serie, das von THUDM entwickelt wurde. Es verwendet Techniken, die ursprünglich auf das größere GLM-Z1-Modell angewendet wurden, einschließlich erweiterten verstärkten Lernens, paarweiser Rangordnungsausrichtung und Training für inferenzintensive Aufgaben wie Mathematik, Programmierung und Logik. Trotz seiner kleineren Größe zeigt es starke Leistungen bei allgemeinen Inferenzaufgaben und übertrifft viele Open-Source-Modelle in Bezug auf seine Gewichtung."
+  },
+  "thudm/glm-z1-rumination-32b": {
+    "description": "THUDM: GLM Z1 Rumination 32B ist ein tiefes Inferenzmodell mit 32B Parametern aus der GLM-4-Z1-Serie, das für komplexe, offene Aufgaben optimiert wurde, die langes Nachdenken erfordern. Es basiert auf glm-4-32b-0414 und hat zusätzliche Phasen des verstärkten Lernens und mehrstufige Ausrichtungsstrategien hinzugefügt, die die \"Reflexions\"-Fähigkeit einführen, die darauf abzielt, erweiterte kognitive Prozesse zu simulieren. Dazu gehören iterative Inferenz, mehrstufige Analysen und werkzeuggestützte Arbeitsabläufe wie Suche, Abruf und zitationsbewusste Synthese.\n\nDieses Modell zeigt hervorragende Leistungen in forschungsorientiertem Schreiben, vergleichender Analyse und komplexen Fragen und Antworten. Es unterstützt Funktionsaufrufe für Such- und Navigationsprimitiven (`search`, `click`, `open`, `finish`), sodass es in agentenbasierten Pipelines verwendet werden kann. Reflexionsverhalten wird durch ein mehrstufiges Regelbelohnungssystem und verzögerte Entscheidungsmechanismen geformt und wird an tiefen Forschungsrahmen wie dem internen Ausrichtungsstapel von OpenAI gemessen. Diese Variante eignet sich für Szenarien, die Tiefe statt Geschwindigkeit erfordern."
+  },
+  "tngtech/deepseek-r1t-chimera:free": {
+    "description": "DeepSeek-R1T-Chimera wurde durch die Kombination von DeepSeek-R1 und DeepSeek-V3 (0324) erstellt und vereint die Inferenzfähigkeiten von R1 mit den Verbesserungen der Token-Effizienz von V3. Es basiert auf der DeepSeek-MoE Transformer-Architektur und wurde für allgemeine Textgenerierungsaufgaben optimiert.\n\nDieses Modell kombiniert die vortrainierten Gewichte der beiden Quellmodelle, um die Leistung in Inferenz, Effizienz und Befolgung von Anweisungen auszugleichen. Es wird unter der MIT-Lizenz veröffentlicht und ist für Forschungs- und kommerzielle Zwecke gedacht."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) bietet durch effiziente Strategien und Modellarchitekturen verbesserte Rechenfähigkeiten."

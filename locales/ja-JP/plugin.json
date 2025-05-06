@@ -1,4 +1,5 @@
 {
+  "confirm": "確認",
   "debug": {
     "arguments": "引数",
     "function_call": "関数呼び出し",
@@ -48,10 +49,13 @@
     },
     "mcp": {
       "args": {
-        "desc": "STDIO コマンドに渡すパラメータのリスト",
+        "desc": "実行コマンドに渡すパラメータのリスト。通常、ここにMCPサーバー名または起動スクリプトのパスを入力します。",
         "label": "コマンドパラメータ",
         "placeholder": "例：--port 8080 --debug",
         "required": "起動パラメータを入力してください"
+      },
+      "avatar": {
+        "label": "プラグインアイコン"
       },
       "command": {
         "desc": "MCP STDIO プラグインを起動するための実行可能ファイルまたはスクリプト",
@@ -59,9 +63,23 @@
         "placeholder": "例：python main.py または /path/to/executable",
         "required": "起動コマンドを入力してください"
       },
+      "desc": {
+        "desc": "プラグインの説明を追加",
+        "label": "プラグインの説明",
+        "placeholder": "このプラグインの使用方法やシーンなどの情報を補足してください"
+      },
       "endpoint": {
         "desc": "あなたの MCP Streamable HTTP サーバーのアドレスを入力してください",
         "label": "MCP エンドポイント URL"
+      },
+      "env": {
+        "add": "行を追加",
+        "desc": "MCPサーバーに必要な環境変数を入力してください",
+        "duplicateKeyError": "フィールドキーは一意でなければなりません",
+        "formValidationFailed": "フォームの検証に失敗しました。パラメータの形式を確認してください",
+        "keyRequired": "フィールドキーは空にできません",
+        "label": "MCPサーバー環境変数",
+        "stringifyError": "パラメータをシリアライズできません。パラメータの形式を確認してください"
       },
       "identifier": {
         "desc": "あなたの MCP プラグインに名前を指定してください。英字を使用する必要があります",
@@ -71,6 +89,13 @@
         "required": "MCP サービス識別子を入力してください"
       },
       "previewManifest": "プラグインの説明ファイルをプレビュー",
+      "quickImport": "JSON 設定を迅速にインポート",
+      "quickImportError": {
+        "empty": "入力内容は空にできません",
+        "invalidJson": "無効な JSON 形式です",
+        "invalidStructure": "JSON 形式が無効です"
+      },
+      "stdioNotSupported": "現在の環境では stdio タイプの MCP プラグインはサポートされていません",
       "testConnection": "接続をテスト",
       "testConnectionTip": "接続テストが成功した後、MCP プラグインは正常に使用できます",
       "type": {
@@ -138,8 +163,18 @@
       "schema": "スキーマ"
     },
     "preview": {
+      "api": {
+        "noParams": "このツールにはパラメータがありません",
+        "noResults": "検索条件に一致する API が見つかりませんでした",
+        "params": "パラメータ:",
+        "searchPlaceholder": "ツールを検索..."
+      },
       "card": "プラグインのプレビュー表示",
       "desc": "プラグインの説明のプレビュー",
+      "empty": {
+        "desc": "設定が完了すると、ここでプラグインがサポートするツールの機能をプレビューできます",
+        "title": "プラグインを設定した後にプレビューを開始"
+      },
       "title": "プラグイン名のプレビュー"
     },
     "save": "プラグインを保存",

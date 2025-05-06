@@ -3,6 +3,7 @@ import { MenuDispatchEvents } from './menu';
 import { RemoteServerBroadcastEvents, RemoteServerDispatchEvents } from './remoteServer';
 import { ShortcutDispatchEvents } from './shortcut';
 import { SystemDispatchEvents } from './system';
+import { TrayDispatchEvents } from './tray';
 import { AutoUpdateBroadcastEvents, AutoUpdateDispatchEvents } from './update';
 import { UploadFilesDispatchEvents } from './upload';
 import { WindowsDispatchEvents } from './windows';
@@ -19,7 +20,8 @@ export interface ClientDispatchEvents
     AutoUpdateDispatchEvents,
     ShortcutDispatchEvents,
     RemoteServerDispatchEvents,
-    UploadFilesDispatchEvents {}
+    UploadFilesDispatchEvents,
+    TrayDispatchEvents {}
 
 export type ClientDispatchEventKey = keyof ClientDispatchEvents;
 

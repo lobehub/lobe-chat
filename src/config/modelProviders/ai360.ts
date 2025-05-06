@@ -18,8 +18,7 @@ const Ai360: ModelProviderCard = {
     },
     {
       contextWindowTokens: 8000,
-      description:
-        '360智脑系列效果最好的主力千亿级大模型，广泛适用于各领域复杂任务场景。',
+      description: '360智脑系列效果最好的主力千亿级大模型，广泛适用于各领域复杂任务场景。',
       displayName: '360GPT2 Pro',
       enabled: true,
       id: '360gpt2-pro',
@@ -31,8 +30,7 @@ const Ai360: ModelProviderCard = {
     },
     {
       contextWindowTokens: 8000,
-      description:
-        '360智脑系列效果最好的主力千亿级大模型，广泛适用于各领域复杂任务场景。',
+      description: '360智脑系列效果最好的主力千亿级大模型，广泛适用于各领域复杂任务场景。',
       displayName: '360GPT Pro',
       enabled: true,
       functionCall: true,
@@ -45,8 +43,7 @@ const Ai360: ModelProviderCard = {
     },
     {
       contextWindowTokens: 7000,
-      description:
-        '兼顾性能和效果的百亿级大模型，适合对性能/成本要求较高 的场景。',
+      description: '兼顾性能和效果的百亿级大模型，适合对性能/成本要求较高 的场景。',
       displayName: '360GPT Turbo',
       enabled: true,
       id: '360gpt-turbo',

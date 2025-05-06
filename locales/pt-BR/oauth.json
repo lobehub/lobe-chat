@@ -33,6 +33,22 @@
     "subTitle": "Você negou a autorização do aplicativo para acessar sua conta LobeChat",
     "title": "Autorização negada"
   },
+  "handoff": {
+    "desc": {
+      "processing": "O aplicativo está processando a autorização, redirecionando para a próxima página...",
+      "success": "Tentamos abrir o aplicativo de desktop. Se o aplicativo não abrir automaticamente, por favor, mude manualmente. Você pode fechar esta janela do navegador mais tarde."
+    },
+    "title": {
+      "processing": "Processando autorização...",
+      "success": "Autorização concluída"
+    }
+  },
+  "login": {
+    "button": "Confirmar login",
+    "description": "O aplicativo {{clientName}} solicita usar sua conta para fazer login",
+    "title": "Login no {{clientName}}",
+    "userWelcome": "Bem-vindo de volta, "
+  },
   "success": {
     "subTitle": "Você autorizou com sucesso o aplicativo a acessar sua conta LobeChat, pode fechar esta página agora",
     "title": "Autorização bem-sucedida"

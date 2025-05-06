@@ -1,7 +1,7 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
-import { Descriptions, Divider, Tag } from 'antd';
+import { Icon, Tag } from '@lobehub/ui';
+import { Descriptions, Divider } from 'antd';
 import { useTheme } from 'antd-style';
 import dayjs from 'dayjs';
 import { BoltIcon } from 'lucide-react';

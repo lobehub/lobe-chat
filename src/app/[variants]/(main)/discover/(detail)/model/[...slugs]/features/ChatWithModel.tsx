@@ -1,8 +1,8 @@
 'use client';
 
 import { ProviderIcon } from '@lobehub/icons';
-import { Icon } from '@lobehub/ui';
-import { Button, Dropdown } from 'antd';
+import { Button, Icon } from '@lobehub/ui';
+import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronDownIcon } from 'lucide-react';
 import Link from 'next/link';

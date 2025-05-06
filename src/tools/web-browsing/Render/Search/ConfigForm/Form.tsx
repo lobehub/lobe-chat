@@ -1,5 +1,4 @@
-import { Icon } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Button, Icon } from '@lobehub/ui';
 import { KeyRoundIcon, Loader2Icon } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -69,7 +68,7 @@ const Form = memo<ProviderApiKeyFormProps>(({ provider, id }) => {
         ) : (
           <Button
             block
-            icon={<Icon icon={KeyRoundIcon} />}
+            icon={KeyRoundIcon}
             onClick={() => {
               setShow(true);
             }}

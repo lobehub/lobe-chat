@@ -64,10 +64,7 @@ const FileItem = memo<FileItemProps>(({ id, onRemove, file, status, uploadState,
           e.stopPropagation();
           onRemove?.();
         }}
-        style={{
-          blockSize: '32px',
-          fontSize: '20px',
-        }}
+        size={'small'}
       />
     </Flexbox>
   );

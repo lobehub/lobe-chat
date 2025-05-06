@@ -136,9 +136,6 @@ export const getLLMConfig = () => {
       ENABLED_HIGRESS: z.boolean(),
       HIGRESS_API_KEY: z.string().optional(),
 
-      ENABLED_DOUBAO: z.boolean(),
-      DOUBAO_API_KEY: z.string().optional(),
-
       ENABLED_VOLCENGINE: z.boolean(),
       VOLCENGINE_API_KEY: z.string().optional(),
 
@@ -298,9 +295,6 @@ export const getLLMConfig = () => {
 
       ENABLED_HIGRESS: !!process.env.HIGRESS_API_KEY,
       HIGRESS_API_KEY: process.env.HIGRESS_API_KEY,
-
-      ENABLED_DOUBAO: !!process.env.DOUBAO_API_KEY,
-      DOUBAO_API_KEY: process.env.DOUBAO_API_KEY,
 
       ENABLED_TENCENT_CLOUD: !!process.env.TENCENT_CLOUD_API_KEY,
       TENCENT_CLOUD_API_KEY: process.env.TENCENT_CLOUD_API_KEY,

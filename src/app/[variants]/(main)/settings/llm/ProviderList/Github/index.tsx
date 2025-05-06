@@ -1,7 +1,6 @@
 'use client';
 
-import { Markdown } from '@lobehub/ui';
-import { Input } from 'antd';
+import { InputPassword, Markdown } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { useTranslation } from 'react-i18next';
 
@@ -35,7 +34,7 @@ export const useGithubProvider = (): ProviderItem => {
     apiKeyItems: [
       {
         children: (
-          <Input.Password
+          <InputPassword
             autoComplete={'new-password'}
             placeholder={t(`${providerKey}.personalAccessToken.placeholder`)}
           />

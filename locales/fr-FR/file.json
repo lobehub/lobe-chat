@@ -71,6 +71,9 @@
     "websites": "Sites web"
   },
   "title": "Fichiers",
+  "toggleLeftPanel": {
+    "title": "Afficher/Masquer le panneau de gauche"
+  },
   "uploadDock": {
     "body": {
       "collapse": "Réduire",

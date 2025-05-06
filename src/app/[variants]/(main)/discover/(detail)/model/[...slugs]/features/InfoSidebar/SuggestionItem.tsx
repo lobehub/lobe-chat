@@ -5,9 +5,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
+import { ModelInfoTags } from '@/components/ModelSelect';
 import { DiscoverModelItem } from '@/types/discover';
-
-import ModelFeatureTags from '../../../../../features/ModelFeatureTags';
 
 const { Paragraph, Title } = Typography;
 
@@ -45,7 +44,7 @@ export interface SuggestionItemProps
     FlexboxProps {}
 
 const SuggestionItem = memo<SuggestionItemProps>(({ className, meta, identifier }) => {
-  const { title, description, contextWindowTokens, vision, functionCall } = meta;
+  const { title, description } = meta;
   const { t } = useTranslation('models');
   const { cx, styles } = useStyles();
 
@@ -67,7 +66,7 @@ const SuggestionItem = memo<SuggestionItemProps>(({ className, meta, identifier 
           {t(`${identifier}.description`)}
         </Paragraph>
       )}
-      <ModelFeatureTags functionCall={functionCall} tokens={contextWindowTokens} vision={vision} />
+      <ModelInfoTags directionReverse {...meta} />
     </Flexbox>
   );
 });
