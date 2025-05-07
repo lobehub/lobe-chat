@@ -26,7 +26,10 @@ export class AssistantStore {
     return urlJoin(this.baseUrl, `${identifier}.${normalizeLocale(lang)}.json`);
   };
 
-  getAgentIndex = async (locale: Locales = DEFAULT_LANG, revalidate?: number) => {
+  getAgentIndex = async (
+    locale: Locales = DEFAULT_LANG,
+    revalidate?: number,
+  ): Promise<AgentStoreIndex> => {
     try {
       let res: Response;
 
@@ -42,7 +45,7 @@ export class AssistantStore {
 
       if (!res.ok) {
         console.warn('fetch agent index error:', await res.text());
-        return [];
+        return { agents: [], schemaVersion: 1 };
       }
 
       const data: AgentStoreIndex = await res.json();

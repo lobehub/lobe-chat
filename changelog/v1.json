@@ -1,6 +1,49 @@
 [
   {
     "children": {
+      "fixes": ["Fix electron state init on window."],
+      "improvements": ["Add Xiaohongshu crawler rules."]
+    },
+    "date": "2025-05-07",
+    "version": "1.84.22"
+  },
+  {
+    "children": {
+      "improvements": ["Remove doubao Provider."]
+    },
+    "date": "2025-05-04",
+    "version": "1.84.21"
+  },
+  {
+    "children": {
+      "improvements": ["Show Aliyun Bailian tokens usage tracking."]
+    },
+    "date": "2025-05-04",
+    "version": "1.84.20"
+  },
+  {
+    "children": {
+      "improvements": ["Fix init state of loading."]
+    },
+    "date": "2025-05-04",
+    "version": "1.84.19"
+  },
+  {
+    "children": {
+      "improvements": ["Add perf stat support for openai factory."]
+    },
+    "date": "2025-05-03",
+    "version": "1.84.18"
+  },
+  {
+    "children": {
+      "improvements": ["Add write file tool to local-file plugin."]
+    },
+    "date": "2025-05-03",
+    "version": "1.84.17"
+  },
+  {
+    "children": {
       "fixes": ["Fix desktop quiting with reopen window."]
     },
     "date": "2025-05-02",

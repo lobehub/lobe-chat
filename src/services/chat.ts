@@ -287,7 +287,6 @@ class ChatService {
     const providersWithDeploymentName = [
       ModelProvider.Azure,
       ModelProvider.Volcengine,
-      ModelProvider.Doubao,
       ModelProvider.AzureAI,
     ] as string[];
 
