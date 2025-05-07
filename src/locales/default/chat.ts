@@ -122,6 +122,17 @@ export default {
       outputText: '文本输出',
       outputTitle: '输出明细',
       reasoning: '深度思考',
+      speed: {
+        tps: {
+          title: 'TPS',
+          tooltip:
+            'Tokens Per Second，TPS。指AI生成内容的平均速度（Token/秒），在接收到首个 Token 后开始计算。',
+        },
+        ttft: {
+          title: 'TTFT',
+          tooltip: 'Time To First Token，TTFT。指从您发送消息到客户端接收到首个 Token 的时间间隔。',
+        },
+      },
       title: '生成明细',
       total: '总计消耗',
     },

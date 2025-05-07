@@ -88,9 +88,14 @@
     "emptyModel": "Không có mô hình nào được kích hoạt, vui lòng điều chỉnh trong cài đặt",
     "emptyProvider": "Không có nhà cung cấp nào được kích hoạt, vui lòng vào cài đặt để bật",
     "goToSettings": "Đi đến cài đặt",
-    "provider": "Nhà cung cấp"
+    "provider": "Nhà cung cấp",
+    "title": "Mô hình"
   },
   "OllamaSetupGuide": {
+    "action": {
+      "close": "Đóng thông báo",
+      "start": "Đã cài đặt và chạy, bắt đầu cuộc trò chuyện"
+    },
     "cors": {
       "description": "Do hạn chế bảo mật của trình duyệt, bạn cần cấu hình CORS cho Ollama để có thể sử dụng bình thường.",
       "linux": {

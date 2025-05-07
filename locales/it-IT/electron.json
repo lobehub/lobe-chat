@@ -1,0 +1,68 @@
+{
+  "remoteServer": {
+    "authError": "Autenticazione fallita: {{error}}",
+    "authPending": "Completa l'autenticazione nel browser",
+    "configDesc": "Collegati al server LobeChat remoto per abilitare la sincronizzazione dei dati",
+    "configError": "Errore di configurazione",
+    "configTitle": "Configura la sincronizzazione cloud",
+    "connect": "Collegati e autorizza",
+    "connected": "Connesso",
+    "disconnect": "Disconnetti",
+    "disconnectError": "Errore nella disconnessione",
+    "disconnected": "Non connesso",
+    "fetchError": "Errore nel recupero della configurazione",
+    "invalidUrl": "Inserisci un URL valido",
+    "serverUrl": "Indirizzo del server",
+    "statusConnected": "Connesso",
+    "statusDisconnected": "Non connesso",
+    "urlRequired": "Inserisci l'indirizzo del server"
+  },
+  "sync": {
+    "continue": "Continua",
+    "inCloud": "Attualmente utilizza la sincronizzazione cloud",
+    "inLocalStorage": "Attualmente utilizza l'archiviazione locale",
+    "isIniting": "In fase di inizializzazione...",
+    "lobehubCloud": {
+      "description": "Versione cloud fornita ufficialmente",
+      "title": "LobeHub Cloud"
+    },
+    "local": {
+      "description": "Utilizza un database locale, completamente disponibile offline",
+      "title": "Database locale"
+    },
+    "mode": {
+      "cloudSync": "Sincronizzazione cloud",
+      "localStorage": "Archiviazione locale",
+      "title": "Scegli il tuo modo di connessione",
+      "useSelfHosted": "Utilizzare un'istanza autogestita?"
+    },
+    "selfHosted": {
+      "description": "Versione comunitaria auto-ospitata",
+      "title": "Istanze autogestite"
+    }
+  },
+  "updater": {
+    "checkingUpdate": "Controllo aggiornamenti",
+    "checkingUpdateDesc": "Sto recuperando le informazioni sulla versione...",
+    "downloadNewVersion": "Scarica nuova versione",
+    "downloadingUpdate": "Download dell'aggiornamento in corso",
+    "downloadingUpdateDesc": "L'aggiornamento è in fase di download, attendere...",
+    "installLater": "Aggiorna al prossimo avvio",
+    "isLatestVersion": "Sei già all'ultima versione",
+    "isLatestVersionDesc": "Ottimo, la versione {{version}} che stai utilizzando è già la più recente.",
+    "later": "Aggiorna più tardi",
+    "newVersionAvailable": "Nuova versione disponibile",
+    "newVersionAvailableDesc": "È disponibile una nuova versione {{version}}, desideri scaricarla subito?",
+    "restartAndInstall": "Installa aggiornamenti e riavvia",
+    "updateError": "Errore di aggiornamento",
+    "updateReady": "Aggiornamento pronto",
+    "updateReadyDesc": "La nuova versione {{version}} è stata scaricata, riavvia l'app per completare l'installazione.",
+    "upgradeNow": "Aggiorna ora"
+  },
+  "waitingOAuth": {
+    "cancel": "Annulla",
+    "description": "Il browser ha aperto la pagina di autorizzazione, completare l'autorizzazione nel browser",
+    "helpText": "Se il browser non si è aperto automaticamente, fai clic su annulla e riprova",
+    "title": "In attesa di autorizzazione"
+  }
+}

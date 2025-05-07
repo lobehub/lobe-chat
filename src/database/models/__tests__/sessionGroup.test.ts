@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LobeChatDatabase } from '@/database/type';
 
 import { sessionGroups, users } from '../../schemas';
-import { SessionGroupModel } from '../../server/models/sessionGroup';
+import { SessionGroupModel } from '../sessionGroup';
 import { getTestDB } from './_util';
 
 const serverDB: LobeChatDatabase = await getTestDB();

@@ -1,5 +1,5 @@
-import { Icon, Tag } from '@lobehub/ui';
-import { Badge, Button, Popover } from 'antd';
+import { Button, Icon, Tag } from '@lobehub/ui';
+import { Badge, Popover } from 'antd';
 import { TooltipPlacement } from 'antd/es/tooltip';
 import { LucideCloudCog, LucideCloudy } from 'lucide-react';
 import Link from 'next/link';

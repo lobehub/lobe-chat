@@ -1,5 +1,10 @@
 import { PortalArtifact } from '@/types/artifact';
 
+export enum ArtifactDisplayMode {
+  Code = 'code',
+  Preview = 'preview',
+}
+
 export interface PortalFile {
   chunkId?: string;
   chunkText?: string;
@@ -8,7 +13,7 @@ export interface PortalFile {
 
 export interface ChatPortalState {
   portalArtifact?: PortalArtifact;
-  portalArtifactDisplayMode?: 'code' | 'preview';
+  portalArtifactDisplayMode?: ArtifactDisplayMode;
   portalFile?: PortalFile;
   portalMessageDetail?: string;
   portalThreadId?: string;
@@ -17,6 +22,6 @@ export interface ChatPortalState {
 }
 
 export const initialChatPortalState: ChatPortalState = {
-  portalArtifactDisplayMode: 'preview',
+  portalArtifactDisplayMode: ArtifactDisplayMode.Preview,
   showPortal: false,
 };

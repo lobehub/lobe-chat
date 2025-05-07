@@ -17,7 +17,7 @@ LobeChat supports customizing the model list during deployment. This configurati
 You can use `+` to add a model, `-` to hide a model, and use `model name->deploymentName=display name<extension configuration>` to customize the display name of a model, separated by English commas. The basic syntax is as follows:
 
 ```text
-id->deploymentName=displayName<maxToken:vision:reasoning:search:fc:file>,model2,model3
+id->deploymentName=displayName<maxToken:vision:reasoning:search:fc:file:imageOutput>,model2,model3
 ```
 
 For example: `+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo`
@@ -29,7 +29,7 @@ In the above example, it adds `qwen-7b-chat` and `glm-6b` to the model list, rem
 Considering the diversity of model capabilities, we started to add extension configuration in version `0.147.8`, with the following rules:
 
 ```shell
-id->deploymentName=displayName<maxToken:vision:reasoning:search:fc:file>
+id->deploymentName=displayName<maxToken:vision:reasoning:search:fc:file:imageOutput>
 ```
 
 The first value in angle brackets is designated as the `maxToken` for this model. The second value and beyond are the model's extension capabilities, separated by colons `:`, and the order is not important.
@@ -41,7 +41,8 @@ Examples are as follows:
 - `gemini-1.5-flash-latest=Gemini 1.5 Flash<16000:vision>`: Google Vision model, maximum context of 16k, supports image recognition;
 - `o3-mini=OpenAI o3-mini<200000:reasoning:fc>`: OpenAI o3-mini model, maximum context of 200k, supports reasoning and Function Call;
 - `qwen-max-latest=Qwen Max<32768:search:fc>`: Qwen 2.5 Max model, maximum context of 32k, supports web search and Function Call;
-- `gpt-4-all=ChatGPT Plus<128000:fc:vision:file>`, hacked version of ChatGPT Plus web, context of 128k, supports image recognition, Function Call, file upload.
+- `gpt-4-all=ChatGPT Plus<128000:fc:vision:file>`, hacked version of ChatGPT Plus web, context of 128k, supports image recognition, Function Call, file upload;
+- `gemini-2.0-flash-exp-image-generation=Gemini 2.0 Flash (Image Generation) Experimental<32768:imageOutput:vision>`, Gemini 2.0 Flash Experimental model for image generation, maximum context of 32k, supports image generation and recognition.
 
 Currently supported extension capabilities are:
 
@@ -49,6 +50,7 @@ Currently supported extension capabilities are:
 | ----------- | -------------------------------------------------------- |
 | `fc`        | Function Calling                                         |
 | `vision`    | Image Recognition                                        |
+| `imageOutput`    | Image Generation                                        |
 | `reasoning` | Support Reasoning                                        |
 | `search`    | Support Web Search                                        |
 | `file`      | File Upload (a bit hacky, not recommended for daily use) |

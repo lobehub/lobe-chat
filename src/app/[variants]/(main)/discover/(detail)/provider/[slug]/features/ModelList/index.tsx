@@ -1,8 +1,8 @@
 'use client';
 
 import { ProviderIcon } from '@lobehub/icons';
-import { Icon } from '@lobehub/ui';
-import { Button, Divider } from 'antd';
+import { Button } from '@lobehub/ui';
+import { Divider } from 'antd';
 import { useTheme } from 'antd-style';
 import { Brain, ChevronsUpDown } from 'lucide-react';
 import { Fragment, memo, useState } from 'react';
@@ -45,7 +45,7 @@ const ModelList = memo<ModelListProps>(({ mobile, modelData, identifier }) => {
       ))}
       {modelData.length > DEFAULT_LENGTH && !showAll && (
         <Flexbox padding={16}>
-          <Button icon={<Icon icon={ChevronsUpDown} />} onClick={() => setShowAll(true)}>
+          <Button icon={ChevronsUpDown} onClick={() => setShowAll(true)}>
             {t('providers.showAllModels')}{' '}
             <span style={{ color: theme.colorTextDescription }}>
               (+{modelData.length - DEFAULT_LENGTH})

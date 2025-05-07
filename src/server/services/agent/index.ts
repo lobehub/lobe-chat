@@ -1,5 +1,5 @@
 import { appEnv } from '@/config/app';
-import { SessionModel } from '@/database/server/models/session';
+import { SessionModel } from '@/database/models/session';
 import { LobeChatDatabase } from '@/database/type';
 import { parseAgentConfig } from '@/server/globalConfig/parseDefaultAgent';
 

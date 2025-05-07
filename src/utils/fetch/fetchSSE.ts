@@ -2,6 +2,7 @@ import { isObject } from 'lodash-es';
 
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/const/trace';
+import { parseToolCalls } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 import { SmoothingParams } from '@/types/llm';
 import {
@@ -10,6 +11,7 @@ import {
   MessageToolCallChunk,
   MessageToolCallSchema,
   ModelReasoning,
+  ModelSpeed,
   ModelTokensUsage,
 } from '@/types/message';
 import { ChatImageChunk } from '@/types/message/image';
@@ -18,7 +20,6 @@ import { nanoid } from '@/utils/uuid';
 
 import { fetchEventSource } from './fetchEventSource';
 import { getMessageError } from './parseError';
-import { parseToolCalls } from './parseToolCalls';
 
 type SSEFinishType = 'done' | 'error' | 'abort';
 
@@ -29,6 +30,7 @@ export type OnFinishHandler = (
     images?: ChatImageChunk[];
     observationId?: string | null;
     reasoning?: ModelReasoning;
+    speed?: ModelSpeed;
     toolCalls?: MessageToolCall[];
     traceId?: string | null;
     type?: SSEFinishType;
@@ -39,6 +41,11 @@ export type OnFinishHandler = (
 export interface MessageUsageChunk {
   type: 'usage';
   usage: ModelTokensUsage;
+}
+
+export interface MessageSpeedChunk {
+  speed: ModelSpeed;
+  type: 'speed';
 }
 
 export interface MessageTextChunk {
@@ -82,7 +89,8 @@ export interface FetchSSEOptions {
       | MessageReasoningChunk
       | MessageGroundingChunk
       | MessageUsageChunk
-      | MessageBase64ImageChunk,
+      | MessageBase64ImageChunk
+      | MessageSpeedChunk,
   ) => void;
   smoothing?: SmoothingParams | boolean;
 }
@@ -342,6 +350,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   let grounding: GroundingSearch | undefined = undefined;
   let usage: ModelTokensUsage | undefined = undefined;
   let images: ChatImageChunk[] = [];
+  let speed: ModelSpeed | undefined = undefined;
 
   await fetchEventSource(url, {
     body: options.body,
@@ -433,6 +442,12 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
           break;
         }
 
+        case 'speed': {
+          speed = data;
+          options.onMessageHandle?.({ speed: data, type: 'speed' });
+          break;
+        }
+
         case 'grounding': {
           grounding = data;
           options.onMessageHandle?.({ grounding: data, type: 'grounding' });
@@ -517,6 +532,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         images: images.length > 0 ? images : undefined,
         observationId,
         reasoning: !!thinking ? { content: thinking, signature: thinkingSignature } : undefined,
+        speed,
         toolCalls,
         traceId,
         type: finishedType,

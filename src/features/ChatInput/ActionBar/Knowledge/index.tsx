@@ -1,50 +1,59 @@
-import { ActionIcon } from '@lobehub/ui';
-import { LibraryBig, LucideLoader2 } from 'lucide-react';
-import { Suspense, memo } from 'react';
+import { LibraryBig } from 'lucide-react';
+import { Suspense, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import TipGuide from '@/components/TipGuide';
 import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import { isServerMode } from '@/const/version';
+import { AssignKnowledgeBaseModal } from '@/features/KnowledgeBaseModal';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 
-import DropdownMenu from './Dropdown';
+import Action from '../components/Action';
+import { useControls } from './useControls';
 
 const enableKnowledge = isServerMode;
 
 const Knowledge = memo(() => {
   const { t } = useTranslation('chat');
-
   const { enableKnowledgeBase } = useServerConfigStore(featureFlagsSelectors);
-
   const [showTip, updateGuideState] = useUserStore((s) => [
     preferenceSelectors.showUploadFileInKnowledgeBaseTip(s),
     s.updateGuideState,
   ]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [updating, setUpdating] = useState(false);
 
-  if (!enableKnowledgeBase) {
-    return null;
-  }
+  const items = useControls({ setModalOpen, setUpdating });
+
+  if (!enableKnowledgeBase) return null;
+  if (!enableKnowledge)
+    return (
+      <Action
+        disabled
+        icon={LibraryBig}
+        showTooltip={true}
+        title={t('knowledgeBase.disabled', { cloud: LOBE_CHAT_CLOUD })}
+      />
+    );
 
   const content = (
-    <DropdownMenu>
-      <ActionIcon
-        disable={!enableKnowledge}
-        icon={LibraryBig}
-        placement={'bottom'}
-        title={
-          enableKnowledge
-            ? t('knowledgeBase.title')
-            : t('knowledgeBase.disabled', { cloud: LOBE_CHAT_CLOUD })
-        }
-      />
-    </DropdownMenu>
+    <Action
+      dropdown={{
+        maxWidth: 320,
+        menu: { items },
+        minWidth: 240,
+      }}
+      icon={LibraryBig}
+      loading={updating}
+      showTooltip={false}
+      title={t('knowledgeBase.title')}
+    />
   );
 
   return (
-    <Suspense fallback={<ActionIcon icon={LucideLoader2} spin />}>
+    <Suspense fallback={<Action disabled icon={LibraryBig} title={t('knowledgeBase.title')} />}>
       {showTip ? (
         <TipGuide
           onOpenChange={() => {
@@ -59,6 +68,7 @@ const Knowledge = memo(() => {
       ) : (
         content
       )}
+      <AssignKnowledgeBaseModal open={modalOpen} setOpen={setModalOpen} />
     </Suspense>
   );
 });

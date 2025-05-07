@@ -7,6 +7,20 @@
     "images": "Images:",
     "prompt": "Prompt"
   },
+  "localFiles": {
+    "file": "File",
+    "folder": "Folder",
+    "open": "Open",
+    "openFile": "Open File",
+    "openFolder": "Open Folder",
+    "read": {
+      "more": "View More"
+    },
+    "readFile": "Read File",
+    "readFileError": "Failed to read file, please check if the file path is correct",
+    "readFiles": "Read Files",
+    "readFilesError": "Failed to read files, please check if the file path is correct"
+  },
   "search": {
     "createNewSearch": "Create a new search record",
     "emptyResult": "No results found, please modify your keywords and try again",
@@ -19,10 +33,50 @@
       "placeholder": "Keywords",
       "tooltip": "This will refresh the search results and create a new summary message"
     },
-    "searchEngine": "Search engine:",
+    "searchCategory": {
+      "placeholder": "Search Category",
+      "title": "Search Category:",
+      "value": {
+        "files": "Files",
+        "general": "General",
+        "images": "Images",
+        "it": "Information Technology",
+        "map": "Maps",
+        "music": "Music",
+        "news": "News",
+        "science": "Science",
+        "social_media": "Social Media",
+        "videos": "Videos"
+      }
+    },
+    "searchEngine": {
+      "placeholder": "Search Engine",
+      "title": "Search Engine:"
+    },
     "searchResult": "Number of searches:",
+    "searchTimeRange": {
+      "title": "Time Range:",
+      "value": {
+        "anytime": "Anytime",
+        "day": "Within a day",
+        "month": "Within a month",
+        "week": "Within a week",
+        "year": "Within a year"
+      }
+    },
     "summary": "Summary",
     "summaryTooltip": "Summarize the current content",
     "viewMoreResults": "View {{results}} more results"
+  },
+  "updateArgs": {
+    "duplicateKeyError": "Field key must be unique",
+    "form": {
+      "add": "Add an Item",
+      "key": "Field Key",
+      "value": "Field Value"
+    },
+    "formValidationFailed": "Form validation failed, please check the parameter format",
+    "keyRequired": "Field key cannot be empty",
+    "stringifyError": "Unable to serialize parameters, please check the parameter format"
   }
 }

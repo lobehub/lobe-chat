@@ -6,6 +6,7 @@
     "chat": "Sohbet Tercihi",
     "meta": "Asistan Bilgisi",
     "modal": "Model Ayarları",
+    "opening": "Açılış Ayarları",
     "plugin": "Eklenti Ayarları",
     "prompt": "Karakter Ayarları",
     "tts": "Metin Okuma Hizmeti"
@@ -41,6 +42,17 @@
     "sessionDesc": "Karakter ayarları ve oturum tercihleri.",
     "sessionWithName": "Oturum Ayarları · {{name}}",
     "title": "Ayarlar"
+  },
+  "hotkey": {
+    "conflicts": "Mevcut kısayol tuşlarıyla çakışıyor",
+    "group": {
+      "conversation": "Sohbet",
+      "essential": "Temel"
+    },
+    "invalidCombination": "Kısayol tuşu en az bir modifiye tuşu (Ctrl, Alt, Shift) ve bir normal tuş içermelidir",
+    "record": "Kısayol tuşunu kaydetmek için tuşa basın",
+    "reset": "Varsayılan kısayol tuşlarına sıfırla",
+    "title": "Kısayollar"
   },
   "llm": {
     "aesGcm": "Anahtarınız ve vekil adresiniz <1>AES-GCM</1> şifreleme algoritması kullanılarak şifrelenecektir",
@@ -138,6 +150,7 @@
       "title": "Arka Plan Rengi"
     },
     "description": {
+      "desc": "Asistanınızı basitçe tanıtın, karakter ayarı olarak kullanılmaz",
       "placeholder": "Asistan açıklamasını girin",
       "title": "Asistan Açıklaması"
     },
@@ -149,7 +162,9 @@
       "placeholder": "Prompt girin",
       "title": "Rol Ayarı"
     },
+    "submit": "Asistan bilgilerini güncelle",
     "tag": {
+      "desc": "Asistan etiketleri, asistan pazarında gösterilecektir",
       "placeholder": "Etiket girin",
       "title": "Etiket"
     },
@@ -194,6 +209,7 @@
       "placeholder": "Ön işleme şablonu {{text}}, gerçek zamanlı giriş bilgileri ile değiştirilir",
       "title": "Kullanıcı Girişi Ön İşleme"
     },
+    "submit": "Sohbet tercihlerini güncelle",
     "title": "Sohbet Ayarları"
   },
   "settingModel": {
@@ -231,6 +247,7 @@
       },
       "title": "Akıl yürütme yoğunluğu"
     },
+    "submit": "Model ayarlarını güncelle",
     "temperature": {
       "desc": "Değer ne kadar büyükse, cevap o kadar yaratıcı ve hayal gücü dolu olur; değer ne kadar küçükse, cevap o kadar titizdir.",
       "title": "Yaratıcılık Aktifliği",
@@ -241,6 +258,21 @@
       "desc": "Ne kadar olasılığı dikkate alır, değer ne kadar büyükse, daha fazla olası cevabı kabul eder; değer ne kadar küçükse, en olası cevabı seçme eğilimindedir. Yaratıcılık aktifliği ile birlikte değiştirilmesi önerilmez.",
       "title": "Düşünce Açıklığı"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "Sohbet açıldığında gösterilecek açılış mesajı, asistanın işlevlerini tanıtmak için kullanılır",
+      "placeholder": "Merhaba, ben Özelleştirilmiş Asistan, hemen benimle sohbet edebilirsiniz veya Asistan Ayarları'na giderek bilgimi tamamlayabilirsiniz.",
+      "title": "Açılış Mesajı"
+    },
+    "openingQuestions": {
+      "desc": "Sohbetin başlangıcında gösterilecek yönlendirici sorular",
+      "empty": "Henüz soru yok",
+      "placeholder": "Soruyu girin",
+      "repeat": "Soru zaten mevcut",
+      "title": "Açılış Soruları"
+    },
+    "title": "Açılış Ayarları"
   },
   "settingPlugin": {
     "title": "Eklenti Listesi"
@@ -292,6 +324,7 @@
       "desc": "'Tarayıcı' yerel konuşmadan metin hizmeti olduğundan",
       "title": "Konuşmadan Metin Hizmeti"
     },
+    "submit": "Ses hizmetini güncelle",
     "title": "Konuşma Hizmeti",
     "tts": "Metin Seslendirme Ayarlar",
     "ttsService": {
@@ -335,12 +368,45 @@
     },
     "title": "Tema Ayarları"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Dışa Aktar",
+        "exportType": {
+          "agent": "Yardımcı Ayarlarını Dışa Aktar",
+          "agentWithMessage": "Yardımcı ve Mesajları Dışa Aktar",
+          "all": "Küresel Ayarları ve Tüm Yardımcı Verilerini Dışa Aktar",
+          "allAgent": "Tüm Yardımcı Ayarlarını Dışa Aktar",
+          "allAgentWithMessage": "Tüm Yardımcıları ve Mesajları Dışa Aktar",
+          "globalSetting": "Küresel Ayarları Dışa Aktar"
+        },
+        "title": "Veri Dışa Aktar"
+      },
+      "import": {
+        "button": "İçe Aktar",
+        "title": "Veri İçe Aktar"
+      },
+      "title": "Gelişmiş İşlemler"
+    },
+    "desc": "Mevcut tarayıcıdaki depolama kullanımı",
+    "embeddings": {
+      "used": "Vektör Depolama"
+    },
+    "title": "Veri Depolama",
+    "used": "Depolama Kullanımı"
+  },
   "submitAgentModal": {
     "button": "Asistan Gönder",
     "identifier": "Asistan Kimliği",
     "metaMiss": "Lütfen göndermeden önce asistan bilgilerini tamamlayın. Bu, ad, açıklama ve etiketleri içermelidir.",
     "placeholder": "Asistan için benzersiz bir kimlik girin, örneğin web-geliştirme",
     "tooltips": "Asistan pazarına paylaşın"
+  },
+  "submitFooter": {
+    "reset": "Sıfırla",
+    "submit": "Kaydet",
+    "unSaved": "Kaydedilmemiş değişiklikler",
+    "unSavedWarning": "Şu anda kaydedilmemiş değişiklikler var"
   },
   "sync": {
     "device": {
@@ -393,6 +459,7 @@
       "placeholder": "Lütfen özel ipucu kelimelerini girin",
       "title": "Özel İpucu"
     },
+    "helpInfo": "Yeni bir asistan oluşturduğunuzda, varsayılan asistan ayarları ön ayar olarak kullanılacaktır.",
     "historyCompress": {
       "label": "Oturum Geçmişi Modeli",
       "modelDesc": "Oturum geçmişini sıkıştırmak için kullanılan modeli belirtin",
@@ -425,8 +492,10 @@
     "agent": "Varsayılan Asistan",
     "common": "Genel Ayarlar",
     "experiment": "Deney",
+    "hotkey": "Kısayollar",
     "llm": "Modeller",
     "provider": "Yapay Zeka Hizmet Sağlayıcısı",
+    "storage": "Veri Depolama",
     "sync": "Bulut Senkronizasyonu",
     "system-agent": "Sistem Asistanı",
     "tts": "Metin Seslendirme"

@@ -29,6 +29,8 @@ export interface V6AgentConfig {
   chatConfig: ChatConfig;
   fewShots?: FewShots;
   model: string;
+  openingMessage?: string;
+  openingQuestions?: string[];
   params: LLMParams;
   plugins?: string[];
   provider?: string;

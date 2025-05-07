@@ -1,7 +1,9 @@
 import dynamic from 'next/dynamic';
 
 import { analyticsEnv } from '@/config/analytics';
+import { isDesktop } from '@/const/version';
 
+import Desktop from './Desktop';
 import Google from './Google';
 import Vercel from './Vercel';
 
@@ -41,6 +43,7 @@ const Analytics = () => {
       {!!analyticsEnv.REACT_SCAN_MONITOR_API_KEY && (
         <ReactScan apiKey={analyticsEnv.REACT_SCAN_MONITOR_API_KEY} />
       )}
+      {isDesktop && <Desktop />}
     </>
   );
 };

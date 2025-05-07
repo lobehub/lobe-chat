@@ -1,41 +1,42 @@
-import { beforeAll, describe, expect, it, vi } from 'vitest';
-import { SparkAIStream, transformSparkResponseToStream } from './spark';
 import type OpenAI from 'openai';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
+
+import { SparkAIStream, transformSparkResponseToStream } from './spark';
 
 describe('SparkAIStream', () => {
   beforeAll(() => {});
 
   it('should transform non-streaming response to stream', async () => {
     const mockResponse = {
-      id: "cha000ceba6@dx193d200b580b8f3532",
-      object: "chat.completion",
+      id: 'cha000ceba6@dx193d200b580b8f3532',
+      object: 'chat.completion',
       created: 1734395014,
-      model: "max-32k",
+      model: 'max-32k',
       choices: [
         {
           message: {
-            role: "assistant",
-            content: "",
+            role: 'assistant',
+            content: '',
             refusal: null,
             tool_calls: {
-              type: "function",
+              type: 'function',
               function: {
                 arguments: '{"city":"Shanghai"}',
-                name: "realtime-weather____fetchCurrentWeather"
+                name: 'realtime-weather____fetchCurrentWeather',
               },
-              id: "call_1"
-            }
+              id: 'call_1',
+            },
           },
           index: 0,
           logprobs: null,
-          finish_reason: "tool_calls"
-        }
+          finish_reason: 'tool_calls',
+        },
       ],
       usage: {
         prompt_tokens: 8,
         completion_tokens: 0,
-        total_tokens: 8
-      }
+        total_tokens: 8,
+      },
     } as unknown as OpenAI.ChatCompletion;
 
     const stream = transformSparkResponseToStream(mockResponse);
@@ -48,15 +49,17 @@ describe('SparkAIStream', () => {
     }
 
     expect(chunks).toHaveLength(2);
-    expect(chunks[0].choices[0].delta.tool_calls).toEqual([{
-      function: {
-        arguments: '{"city":"Shanghai"}',
-        name: "realtime-weather____fetchCurrentWeather"
+    expect(chunks[0].choices[0].delta.tool_calls).toEqual([
+      {
+        function: {
+          arguments: '{"city":"Shanghai"}',
+          name: 'realtime-weather____fetchCurrentWeather',
+        },
+        id: 'call_1',
+        index: 0,
+        type: 'function',
       },
-      id: "call_1",
-      index: 0,
-      type: "function"
-    }]);
+    ]);
     expect(chunks[1].choices[0].finish_reason).toBeDefined();
   });
 
@@ -64,36 +67,38 @@ describe('SparkAIStream', () => {
     const mockStream = new ReadableStream({
       start(controller) {
         controller.enqueue({
-          id: "cha000b0bf9@dx193d1ffa61cb894532",
-          object: "chat.completion.chunk",
+          id: 'cha000b0bf9@dx193d1ffa61cb894532',
+          object: 'chat.completion.chunk',
           created: 1734395014,
-          model: "max-32k",
+          model: 'max-32k',
           choices: [
             {
               delta: {
-                role: "assistant",
-                content: "",
+                role: 'assistant',
+                content: '',
                 tool_calls: {
-                  type: "function",
+                  type: 'function',
                   function: {
                     arguments: '{"city":"Shanghai"}',
-                    name: "realtime-weather____fetchCurrentWeather"
+                    name: 'realtime-weather____fetchCurrentWeather',
                   },
-                  id: "call_1"
-                }
+                  id: 'call_1',
+                },
               },
-              index: 0
-            }
-          ]
+              index: 0,
+            },
+          ],
         } as unknown as OpenAI.ChatCompletionChunk);
         controller.close();
-      }
+      },
     });
 
     const onToolCallMock = vi.fn();
 
     const protocolStream = SparkAIStream(mockStream, {
-      onToolCall: onToolCallMock
+      callbacks: {
+        onToolsCalling: onToolCallMock,
+      },
     });
 
     const decoder = new TextDecoder();
@@ -107,7 +112,7 @@ describe('SparkAIStream', () => {
     expect(chunks).toEqual([
       'id: cha000b0bf9@dx193d1ffa61cb894532\n',
       'event: tool_calls\n',
-      `data: [{\"function\":{\"arguments\":\"{\\\"city\\\":\\\"Shanghai\\\"}\",\"name\":\"realtime-weather____fetchCurrentWeather\"},\"id\":\"call_1\",\"index\":0,\"type\":\"function\"}]\n\n`
+      `data: [{\"function\":{\"arguments\":\"{\\\"city\\\":\\\"Shanghai\\\"}\",\"name\":\"realtime-weather____fetchCurrentWeather\"},\"id\":\"call_1\",\"index\":0,\"type\":\"function\"}]\n\n`,
     ]);
 
     expect(onToolCallMock).toHaveBeenCalledTimes(1);
@@ -117,43 +122,45 @@ describe('SparkAIStream', () => {
     const mockStream = new ReadableStream({
       start(controller) {
         controller.enqueue({
-          id: "test-id",
-          object: "chat.completion.chunk",
+          id: 'test-id',
+          object: 'chat.completion.chunk',
           created: 1734395014,
-          model: "max-32k",
+          model: 'max-32k',
           choices: [
             {
               delta: {
-                content: "Hello",
-                role: "assistant"
+                content: 'Hello',
+                role: 'assistant',
               },
-              index: 0
-            }
-          ]
+              index: 0,
+            },
+          ],
         } as OpenAI.ChatCompletionChunk);
         controller.enqueue({
-          id: "test-id",
-          object: "chat.completion.chunk",
+          id: 'test-id',
+          object: 'chat.completion.chunk',
           created: 1734395014,
-          model: "max-32k",
+          model: 'max-32k',
           choices: [
             {
               delta: {
-                content: " World",
-                role: "assistant"
+                content: ' World',
+                role: 'assistant',
               },
-              index: 0
-            }
-          ]
+              index: 0,
+            },
+          ],
         } as OpenAI.ChatCompletionChunk);
         controller.close();
-      }
+      },
     });
 
     const onTextMock = vi.fn();
-    
+
     const protocolStream = SparkAIStream(mockStream, {
-      onText: onTextMock
+      callbacks: {
+        onText: onTextMock,
+      },
     });
 
     const decoder = new TextDecoder();
@@ -170,18 +177,18 @@ describe('SparkAIStream', () => {
       'data: "Hello"\n\n',
       'id: test-id\n',
       'event: text\n',
-      'data: " World"\n\n'
+      'data: " World"\n\n',
     ]);
 
-    expect(onTextMock).toHaveBeenNthCalledWith(1, '"Hello"');
-    expect(onTextMock).toHaveBeenNthCalledWith(2, '" World"');
+    expect(onTextMock).toHaveBeenNthCalledWith(1, 'Hello');
+    expect(onTextMock).toHaveBeenNthCalledWith(2, ' World');
   });
 
   it('should handle empty stream', async () => {
     const mockStream = new ReadableStream({
       start(controller) {
         controller.close();
-      }
+      },
     });
 
     const protocolStream = SparkAIStream(mockStream);

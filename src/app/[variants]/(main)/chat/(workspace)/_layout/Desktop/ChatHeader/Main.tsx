@@ -1,15 +1,13 @@
 'use client';
 
-import { ActionIcon, Avatar } from '@lobehub/ui';
+import { Avatar } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
-import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 import { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useGlobalStore } from '@/store/global';
@@ -17,6 +15,7 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
+import TogglePanelButton from '../../../../features/TogglePanelButton';
 import Tags from './Tags';
 
 const useStyles = createStyles(({ css }) => ({
@@ -41,8 +40,8 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
-const Main = memo(() => {
-  const { t } = useTranslation('chat');
+const Main = memo<{ className?: string }>(({ className }) => {
+  const { t } = useTranslation(['chat', 'hotkey']);
   const { styles } = useStyles();
   useInitAgentConfig();
   const [isPinned] = useQueryState('pinned', parseAsBoolean);
@@ -59,25 +58,11 @@ const Main = memo(() => {
 
   const displayTitle = isInbox ? t('inbox.title') : title;
   const showSessionPanel = useGlobalStore(systemStatusSelectors.showSessionPanel);
-  const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
 
   if (!init)
     return (
-      <Flexbox align={'center'} gap={8} horizontal>
-        {!isPinned && (
-          <ActionIcon
-            aria-label={t('agents')}
-            icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
-            onClick={() => {
-              updateSystemStatus({
-                sessionsWidth: showSessionPanel ? 0 : 320,
-                showSessionPanel: !showSessionPanel,
-              });
-            }}
-            size={DESKTOP_HEADER_ICON_SIZE}
-            title={t('agents')}
-          />
-        )}
+      <Flexbox align={'center'} className={className} gap={8} horizontal>
+        {!isPinned && !showSessionPanel && <TogglePanelButton />}
         <Skeleton
           active
           avatar={{ shape: 'circle', size: 28 }}
@@ -88,21 +73,8 @@ const Main = memo(() => {
     );
 
   return (
-    <Flexbox align={'center'} gap={4} horizontal>
-      {!isPinned && (
-        <ActionIcon
-          aria-label={t('agents')}
-          icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
-          onClick={() => {
-            updateSystemStatus({
-              sessionsWidth: showSessionPanel ? 0 : 320,
-              showSessionPanel: !showSessionPanel,
-            });
-          }}
-          size={DESKTOP_HEADER_ICON_SIZE}
-          title={t('agents')}
-        />
-      )}
+    <Flexbox align={'center'} className={className} gap={12} horizontal>
+      {!isPinned && !showSessionPanel && <TogglePanelButton />}
       <Avatar
         avatar={avatar}
         background={backgroundColor}
@@ -118,7 +90,7 @@ const Main = memo(() => {
   );
 });
 
-export default () => (
+export default memo<{ className?: string }>(({ className }) => (
   <Suspense
     fallback={
       <Skeleton
@@ -129,6 +101,6 @@ export default () => (
       />
     }
   >
-    <Main />
+    <Main className={className} />
   </Suspense>
-);
+));
