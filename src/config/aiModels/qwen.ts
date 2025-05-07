@@ -204,7 +204,7 @@ const qwenChatModels: AIChatModelCard[] = [
       '基于 Qwen2.5 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平。',
     displayName: 'QwQ Plus',
     enabled: true,
-    id: 'qwq-plus-latest',
+    id: 'qwq-plus',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -231,7 +231,7 @@ const qwenChatModels: AIChatModelCard[] = [
     description: '通义千问超大规模语言模型，支持中文、英文等不同语言输入。',
     displayName: 'Qwen Turbo',
     enabled: true,
-    id: 'qwen-turbo-latest',
+    id: 'qwen-turbo',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -259,7 +259,7 @@ const qwenChatModels: AIChatModelCard[] = [
     description: '通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入。',
     displayName: 'Qwen Plus',
     enabled: true,
-    id: 'qwen-plus-latest',
+    id: 'qwen-plus',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -287,7 +287,7 @@ const qwenChatModels: AIChatModelCard[] = [
       '通义千问千亿级别超大规模语言模型，支持中文、英文等不同语言输入，当前通义千问2.5产品版本背后的API模型。',
     displayName: 'Qwen Max',
     enabled: true,
-    id: 'qwen-max-latest',
+    id: 'qwen-max',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -326,12 +326,15 @@ const qwenChatModels: AIChatModelCard[] = [
     abilities: {
       vision: true,
     },
+    config: {
+      deploymentName: 'qwen-omni-turbo-latest', 
+    },
     contextWindowTokens: 32_768,
     description:
       'Qwen-Omni 系列模型支持输入多种模态的数据，包括视频、音频、图片、文本，并输出音频与文本。',
     displayName: 'Qwen Omni Turbo',
     enabled: true,
-    id: 'qwen-omni-turbo-latest',
+    id: 'qwen-omni-turbo',
     maxOutput: 2048,
     organization: 'Qwen',
     pricing: {
@@ -370,7 +373,7 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       '通义千问大规模视觉语言模型增强版。大幅提升细节识别能力和文字识别能力，支持超百万像素分辨率和任意长宽比规格的图像。',
     displayName: 'Qwen VL Plus',
-    id: 'qwen-vl-plus-latest',
+    id: 'qwen-vl-plus',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -392,7 +395,7 @@ const qwenChatModels: AIChatModelCard[] = [
       '通义千问超大规模视觉语言模型。相比增强版，再次提升视觉推理能力和指令遵循能力，提供更高的视觉感知和认知水平。',
     displayName: 'Qwen VL Max',
     enabled: true,
-    id: 'qwen-vl-max-latest',
+    id: 'qwen-vl-max',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -413,7 +416,7 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       '通义千问OCR是文字提取专有模型，专注于文档、表格、试题、手写体文字等类型图像的文字提取能力。它能够识别多种文字，目前支持的语言有：汉语、英语、法语、日语、韩语、德语、俄语、意大利语、越南语、阿拉伯语。',
     displayName: 'Qwen VL OCR',
-    id: 'qwen-vl-ocr-latest',
+    id: 'qwen-vl-ocr',
     maxOutput: 4096,
     organization: 'Qwen',
     pricing: {
@@ -424,10 +427,13 @@ const qwenChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    config: {
+      deploymentName: 'qwen-math-turbo-latest', 
+    },
     contextWindowTokens: 4096,
     description: '通义千问数学模型是专门用于数学解题的语言模型。',
     displayName: 'Qwen Math Turbo',
-    id: 'qwen-math-turbo-latest',
+    id: 'qwen-math-turbo',
     maxOutput: 3072,
     organization: 'Qwen',
     pricing: {
@@ -438,10 +444,13 @@ const qwenChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    config: {
+      deploymentName: 'qwen-math-plus-latest', 
+    },
     contextWindowTokens: 4096,
     description: '通义千问数学模型是专门用于数学解题的语言模型。',
     displayName: 'Qwen Math Plus',
-    id: 'qwen-math-plus-latest',
+    id: 'qwen-math-plus',
     maxOutput: 3072,
     organization: 'Qwen',
     pricing: {
@@ -452,10 +461,13 @@ const qwenChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    config: {
+      deploymentName: 'qwen-coder-turbo-latest', 
+    },
     contextWindowTokens: 131_072,
     description: '通义千问代码模型。',
     displayName: 'Qwen Coder Turbo',
-    id: 'qwen-coder-turbo-latest',
+    id: 'qwen-coder-turbo',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -466,10 +478,13 @@ const qwenChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    config: {
+      deploymentName: 'qwen-coder-plus-latest', 
+    },
     contextWindowTokens: 131_072,
     description: '通义千问代码模型。',
     displayName: 'Qwen Coder Plus',
-    id: 'qwen-coder-plus-latest',
+    id: 'qwen-coder-plus',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -532,7 +547,7 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       '通义千问QVQ视觉推理模型，支持视觉输入及思维链输出，在数学、编程、视觉分析、创作以及通用任务上都表现了更强的能力。',
     displayName: 'QVQ Max',
-    id: 'qvq-max-latest',
+    id: 'qvq-max',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
