@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.84.22](https://github.com/lobehub/lobe-chat/compare/v1.84.21...v1.84.22)
+
+<sup>Released on **2025-05-07**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix electron state init on window.
+
+#### 💄 Styles
+
+- **misc**: Add Xiaohongshu crawler rules.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix electron state init on window, closes [#7707](https://github.com/lobehub/lobe-chat/issues/7707) ([ef05b49](https://github.com/lobehub/lobe-chat/commit/ef05b49))
+
+#### Styles
+
+- **misc**: Add Xiaohongshu crawler rules, closes [#7717](https://github.com/lobehub/lobe-chat/issues/7717) ([cc3724d](https://github.com/lobehub/lobe-chat/commit/cc3724d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.84.21](https://github.com/lobehub/lobe-chat/compare/v1.84.20...v1.84.21)
 
 <sup>Released on **2025-05-04**</sup>
