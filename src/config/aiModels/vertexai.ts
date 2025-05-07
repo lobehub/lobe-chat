@@ -100,7 +100,7 @@ const vertexaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      vision: true
+      vision: true,
     },
     contextWindowTokens: 1_000_000 + 8192,
     description: 'Gemini 1.5 Flash 002 是一款高效的多模态模型，支持广泛应用的扩展。',
@@ -117,7 +117,7 @@ const vertexaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      vision: true
+      vision: true,
     },
     contextWindowTokens: 2_000_000 + 8192,
     description:
