@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Fix electron state init on window."],
+      "improvements": ["Add Xiaohongshu crawler rules."]
+    },
+    "date": "2025-05-07",
+    "version": "1.84.22"
+  },
+  {
+    "children": {
       "improvements": ["Remove doubao Provider."]
     },
     "date": "2025-05-04",
