@@ -18,6 +18,7 @@ export enum ChatSettingsTabs {
   Chat = 'chat',
   Meta = 'meta',
   Modal = 'modal',
+  Opening = 'opening',
   Plugin = 'plugin',
   Prompt = 'prompt',
   TTS = 'tts',
@@ -27,8 +28,10 @@ export enum SettingsTabs {
   About = 'about',
   Agent = 'agent',
   Common = 'common',
+  Hotkey = 'hotkey',
   LLM = 'llm',
   Provider = 'provider',
+  Storage = 'storage',
   Sync = 'sync',
   SystemAgent = 'system-agent',
   TTS = 'tts',
@@ -60,8 +63,10 @@ export interface SystemStatus {
   sessionsWidth: number;
   showChatSideBar?: boolean;
   showFilePanel?: boolean;
+  showHotkeyHelper?: boolean;
   showSessionPanel?: boolean;
   showSystemRole?: boolean;
+  systemRoleExpandedMap: Record<string, boolean>;
   /**
    * theme mode
    */
@@ -104,8 +109,10 @@ export const INITIAL_STATUS = {
   sessionsWidth: 320,
   showChatSideBar: true,
   showFilePanel: true,
+  showHotkeyHelper: false,
   showSessionPanel: true,
   showSystemRole: false,
+  systemRoleExpandedMap: {},
   themeMode: 'auto',
   threadInputHeight: 200,
   zenMode: false,

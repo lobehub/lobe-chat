@@ -7,6 +7,20 @@
     "images": "Immagini:",
     "prompt": "parola chiave"
   },
+  "localFiles": {
+    "file": "File",
+    "folder": "Cartella",
+    "open": "Apri",
+    "openFile": "Apri file",
+    "openFolder": "Apri cartella",
+    "read": {
+      "more": "Mostra di più"
+    },
+    "readFile": "Leggi file",
+    "readFileError": "Impossibile leggere il file, controlla se il percorso del file è corretto",
+    "readFiles": "Leggi file",
+    "readFilesError": "Impossibile leggere i file, controlla se il percorso del file è corretto"
+  },
   "search": {
     "createNewSearch": "Crea una nuova registrazione di ricerca",
     "emptyResult": "Nessun risultato trovato, per favore modifica le parole chiave e riprova",
@@ -19,10 +33,50 @@
       "placeholder": "Parole chiave",
       "tooltip": "Ricaricherà i risultati di ricerca e creerà un nuovo messaggio di sintesi"
     },
-    "searchEngine": "Motore di ricerca:",
+    "searchCategory": {
+      "placeholder": "Cerca categoria",
+      "title": "Categoria di ricerca:",
+      "value": {
+        "files": "File",
+        "general": "Generale",
+        "images": "Immagini",
+        "it": "Tecnologia dell'informazione",
+        "map": "Mappa",
+        "music": "Musica",
+        "news": "Notizie",
+        "science": "Scienza",
+        "social_media": "Social media",
+        "videos": "Video"
+      }
+    },
+    "searchEngine": {
+      "placeholder": "Motore di ricerca",
+      "title": "Motore di ricerca:"
+    },
     "searchResult": "Numero di ricerche:",
+    "searchTimeRange": {
+      "title": "Intervallo di tempo:",
+      "value": {
+        "anytime": "Nessun limite di tempo",
+        "day": "Entro un giorno",
+        "month": "Entro un mese",
+        "week": "Entro una settimana",
+        "year": "Entro un anno"
+      }
+    },
     "summary": "Riepilogo",
     "summaryTooltip": "Riepiloga il contenuto attuale",
     "viewMoreResults": "Visualizza altri {{results}} risultati"
+  },
+  "updateArgs": {
+    "duplicateKeyError": "La chiave del campo deve essere unica",
+    "form": {
+      "add": "Aggiungi un elemento",
+      "key": "Chiave del campo",
+      "value": "Valore del campo"
+    },
+    "formValidationFailed": "La convalida del modulo è fallita, controlla il formato dei parametri",
+    "keyRequired": "La chiave del campo non può essere vuota",
+    "stringifyError": "Impossibile serializzare i parametri, controlla il formato dei parametri"
   }
 }

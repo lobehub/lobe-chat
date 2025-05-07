@@ -99,15 +99,13 @@ describe('VertexAIStream', () => {
 
     const onStartMock = vi.fn();
     const onTextMock = vi.fn();
-    const onTokenMock = vi.fn();
     const onToolCallMock = vi.fn();
     const onCompletionMock = vi.fn();
 
     const protocolStream = VertexAIStream(mockGoogleStream, {
       onStart: onStartMock,
       onText: onTextMock,
-      onToken: onTokenMock,
-      onToolCall: onToolCallMock,
+      onToolsCalling: onToolCallMock,
       onCompletion: onCompletionMock,
     });
 
@@ -132,7 +130,7 @@ describe('VertexAIStream', () => {
     ]);
 
     expect(onStartMock).toHaveBeenCalledTimes(1);
-    expect(onTokenMock).toHaveBeenCalledTimes(2);
+    expect(onTextMock).toHaveBeenCalledTimes(2);
     expect(onCompletionMock).toHaveBeenCalledTimes(1);
   });
 
@@ -202,15 +200,13 @@ describe('VertexAIStream', () => {
 
     const onStartMock = vi.fn();
     const onTextMock = vi.fn();
-    const onTokenMock = vi.fn();
     const onToolCallMock = vi.fn();
     const onCompletionMock = vi.fn();
 
     const protocolStream = VertexAIStream(mockGoogleStream, {
       onStart: onStartMock,
       onText: onTextMock,
-      onToken: onTokenMock,
-      onToolCall: onToolCallMock,
+      onToolsCalling: onToolCallMock,
       onCompletion: onCompletionMock,
     });
 

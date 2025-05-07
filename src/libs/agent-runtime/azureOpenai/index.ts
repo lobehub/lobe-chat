@@ -9,6 +9,7 @@ import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../typ
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { transformResponseToStream } from '../utils/openaiCompatibleFactory';
+import { convertOpenAIMessages } from '../utils/openaiHelpers';
 import { StreamingResponse } from '../utils/response';
 import { OpenAIStream } from '../utils/streams';
 
@@ -49,7 +50,9 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
 
     try {
       const response = await this.client.chat.completions.create({
-        messages: updatedMessages as OpenAI.ChatCompletionMessageParam[],
+        messages: await convertOpenAIMessages(
+          updatedMessages as OpenAI.ChatCompletionMessageParam[],
+        ),
         model,
         ...params,
         max_completion_tokens: undefined,

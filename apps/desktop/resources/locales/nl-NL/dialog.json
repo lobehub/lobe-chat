@@ -1,0 +1,31 @@
+{
+  "about": {
+    "button": "Bevestigen",
+    "detail": "Een chatapplicatie gebaseerd op een groot taalmodel",
+    "message": "{{appName}} {{appVersion}}",
+    "title": "Over"
+  },
+  "confirm": {
+    "cancel": "Annuleren",
+    "no": "Nee",
+    "title": "Bevestigen",
+    "yes": "Ja"
+  },
+  "error": {
+    "button": "Bevestigen",
+    "detail": "Er is een fout opgetreden tijdens de operatie, probeer het later opnieuw",
+    "message": "Er is een fout opgetreden",
+    "title": "Fout"
+  },
+  "update": {
+    "downloadAndInstall": "Downloaden en installeren",
+    "downloadComplete": "Download voltooid",
+    "downloadCompleteMessage": "Het updatepakket is gedownload, wilt u het nu installeren?",
+    "installLater": "Later installeren",
+    "installNow": "Nu installeren",
+    "later": "Later herinneren",
+    "newVersion": "Nieuwe versie gevonden",
+    "newVersionAvailable": "Nieuwe versie beschikbaar: {{version}}",
+    "skipThisVersion": "Deze versie overslaan"
+  }
+}

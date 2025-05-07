@@ -776,7 +776,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         // 准备 callback 和 headers
         const mockCallback: ChatStreamCallbacks = {
           onStart: vi.fn(),
-          onToken: vi.fn(),
+          onCompletion: vi.fn(),
         };
         const mockHeaders = { 'Custom-Header': 'TestValue' };
 
@@ -793,7 +793,9 @@ describe('LobeOpenAICompatibleFactory', () => {
         // 验证 callback 被调用
         await result.text(); // 确保流被消费
         expect(mockCallback.onStart).toHaveBeenCalled();
-        expect(mockCallback.onToken).toHaveBeenCalledWith('hello');
+        expect(mockCallback.onCompletion).toHaveBeenCalledWith({
+          text: 'hello',
+        });
 
         // 验证 headers 被正确传递
         expect(result.headers.get('Custom-Header')).toEqual('TestValue');

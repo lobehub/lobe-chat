@@ -1,4 +1,4 @@
-import { MobileSafeArea, type MobileSafeAreaProps } from '@lobehub/ui';
+import { SafeArea, type SafeAreaProps } from '@lobehub/ui/mobile';
 import { memo } from 'react';
 
 import { HEADER_HEIGHT, MOBILE_NABBAR_HEIGHT, MOBILE_TABBAR_HEIGHT } from '@/const/layoutTokens';
@@ -6,7 +6,7 @@ import { HEADER_HEIGHT, MOBILE_NABBAR_HEIGHT, MOBILE_TABBAR_HEIGHT } from '@/con
 interface SafeSpacingProps {
   height?: number;
   mobile?: boolean;
-  position?: MobileSafeAreaProps['position'];
+  position?: SafeAreaProps['position'];
 }
 
 const SafeSpacing = memo<SafeSpacingProps>(({ height, position = 'top', mobile }) => {
@@ -19,7 +19,7 @@ const SafeSpacing = memo<SafeSpacingProps>(({ height, position = 'top', mobile }
   return (
     <>
       <div style={{ flex: 'none', height: height || h }} />
-      {mobile && <MobileSafeArea position={position} />}
+      {mobile && <SafeArea position={position} />}
     </>
   );
 });

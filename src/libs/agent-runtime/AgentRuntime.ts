@@ -12,6 +12,8 @@ import {
   ChatStreamPayload,
   EmbeddingsOptions,
   EmbeddingsPayload,
+  ModelRequestOptions,
+  PullModelParams,
   TextToImagePayload,
   TextToSpeechPayload,
 } from './types';
@@ -75,6 +77,10 @@ class AgentRuntime {
   }
   async textToSpeech(payload: TextToSpeechPayload, options?: EmbeddingsOptions) {
     return this._runtime.textToSpeech?.(payload, options);
+  }
+
+  async pullModel(params: PullModelParams, options?: ModelRequestOptions) {
+    return this._runtime.pullModel?.(params, options);
   }
 
   /**

@@ -1,4 +1,7 @@
 import { Theme, css } from 'antd-style';
+import { rgba } from 'polished';
+
+import { isDesktop } from '@/const/version';
 
 // fix ios input keyboard
 // overflow: hidden;
@@ -20,6 +23,17 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
     @media (min-device-width: 576px) {
       overflow: hidden;
     }
+  }
+
+  html {
+    background: ${isDesktop ? 'none' : token.colorBgLayout};
+  }
+
+  body {
+    /* 提高合成层级，强制硬件加速，否则会有渲染黑边出现 */
+    will-change: opacity;
+    transform: translateZ(0);
+    background: ${isDesktop ? rgba(token.colorBgLayout, 0.66) : token.colorBgLayout};
   }
 
   * {

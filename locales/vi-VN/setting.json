@@ -6,6 +6,7 @@
     "chat": "Tùy chọn Trò chuyện",
     "meta": "Thông tin Trợ lý",
     "modal": "Cài đặt Mô hình",
+    "opening": "Cài đặt mở đầu",
     "plugin": "Cài đặt Plugin",
     "prompt": "Thiết lập Nhân vật",
     "tts": "Dịch vụ Giọng nói"
@@ -41,6 +42,17 @@
     "sessionDesc": "Thiết lập nhân vật và ưu tiên phiên hội thoại.",
     "sessionWithName": "Cài đặt cuộc trò chuyện · {{name}}",
     "title": "Cài đặt"
+  },
+  "hotkey": {
+    "conflicts": "Xung đột với phím tắt hiện có",
+    "group": {
+      "conversation": "Cuộc trò chuyện",
+      "essential": "Cơ bản"
+    },
+    "invalidCombination": "Phím tắt cần ít nhất một phím sửa đổi (Ctrl, Alt, Shift) và một phím thông thường",
+    "record": "Nhấn phím để ghi lại phím tắt",
+    "reset": "Đặt lại thành phím tắt mặc định",
+    "title": "Phím tắt"
   },
   "llm": {
     "aesGcm": "Khóa và địa chỉ proxy của bạn sẽ được mã hóa bằng thuật toán mã hóa <1>AES-GCM</1>",
@@ -138,6 +150,7 @@
       "title": "Màu nền"
     },
     "description": {
+      "desc": "Giới thiệu ngắn gọn về trợ lý của bạn, không dùng để thiết lập nhân vật",
       "placeholder": "Vui lòng nhập mô tả trợ lý",
       "title": "Mô tả trợ lý"
     },
@@ -149,7 +162,9 @@
       "placeholder": "Vui lòng nhập từ khóa Prompt cho vai diễn",
       "title": "Thiết lập vai diễn"
     },
+    "submit": "Cập nhật thông tin trợ lý",
     "tag": {
+      "desc": "Thẻ trợ lý sẽ được hiển thị trong thị trường trợ lý",
       "placeholder": "Vui lòng nhập nhãn",
       "title": "Nhãn"
     },
@@ -194,6 +209,7 @@
       "placeholder": "Mẫu xử lý trước {{text}} sẽ được thay thế bằng thông tin nhập thời gian thực",
       "title": "Mẫu xử lý đầu vào của người dùng"
     },
+    "submit": "Cập nhật sở thích trò chuyện",
     "title": "Cài đặt trò chuyện"
   },
   "settingModel": {
@@ -231,6 +247,7 @@
       },
       "title": "Cường độ suy luận"
     },
+    "submit": "Cập nhật cài đặt mô hình",
     "temperature": {
       "desc": "Giá trị càng lớn, câu trả lời càng sáng tạo và giàu trí tưởng tượng; giá trị càng nhỏ, câu trả lời càng nghiêm ngặt",
       "title": "Mức độ sáng tạo",
@@ -241,6 +258,21 @@
       "desc": "Xem xét bao nhiêu khả năng, giá trị càng lớn, chấp nhận nhiều câu trả lời khả thi hơn; giá trị càng nhỏ, có xu hướng chọn câu trả lời khả thi nhất. Không khuyến nghị thay đổi cùng với mức độ sáng tạo",
       "title": "Mức độ mở trong tư duy"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "Tin nhắn mở đầu khi bắt đầu cuộc trò chuyện, dùng để giới thiệu chức năng của trợ lý",
+      "placeholder": "Xin chào, tôi là Trợ lý tùy chỉnh, bạn có thể bắt đầu trò chuyện với tôi ngay lập tức, hoặc đến Cài đặt trợ lý để hoàn thiện thông tin của tôi.",
+      "title": "Tin nhắn mở đầu"
+    },
+    "openingQuestions": {
+      "desc": "Câu hỏi hướng dẫn hiển thị khi bắt đầu cuộc trò chuyện",
+      "empty": "Chưa có câu hỏi nào",
+      "placeholder": "Nhập câu hỏi",
+      "repeat": "Câu hỏi đã tồn tại",
+      "title": "Câu hỏi mở đầu"
+    },
+    "title": "Cài đặt mở đầu"
   },
   "settingPlugin": {
     "title": "Danh sách plugin"
@@ -292,6 +324,7 @@
       "desc": "Trong đó, trình duyệt là dịch vụ nhận dạng giọng nói nguyên bản của trình duyệt",
       "title": "Dịch vụ nhận dạng giọng nói"
     },
+    "submit": "Cập nhật dịch vụ giọng nói",
     "title": "Dịch vụ giọng nói",
     "tts": "Cài đặt tổng hợp giọng nói",
     "ttsService": {
@@ -335,12 +368,45 @@
     },
     "title": "Cài đặt chủ đề"
   },
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Xuất",
+        "exportType": {
+          "agent": "Xuất cài đặt trợ lý",
+          "agentWithMessage": "Xuất trợ lý và tin nhắn",
+          "all": "Xuất cài đặt toàn cầu và tất cả dữ liệu trợ lý",
+          "allAgent": "Xuất tất cả cài đặt trợ lý",
+          "allAgentWithMessage": "Xuất tất cả trợ lý và tin nhắn",
+          "globalSetting": "Xuất cài đặt toàn cầu"
+        },
+        "title": "Xuất dữ liệu"
+      },
+      "import": {
+        "button": "Nhập",
+        "title": "Nhập dữ liệu"
+      },
+      "title": "Thao tác nâng cao"
+    },
+    "desc": "Dung lượng lưu trữ trong trình duyệt hiện tại",
+    "embeddings": {
+      "used": "Lưu trữ vector"
+    },
+    "title": "Lưu trữ dữ liệu",
+    "used": "Dung lượng lưu trữ"
+  },
   "submitAgentModal": {
     "button": "Gửi trợ lý",
     "identifier": "Nhận dạng trợ lý",
     "metaMiss": "Vui lòng điền đầy đủ thông tin trợ lý trước khi gửi, cần bao gồm tên, mô tả và nhãn",
     "placeholder": "Vui lòng nhập nhận dạng trợ lý, cần phải duy nhất, ví dụ như phát triển web",
     "tooltips": "Chia sẻ lên thị trường trợ lý"
+  },
+  "submitFooter": {
+    "reset": "Đặt lại",
+    "submit": "Lưu",
+    "unSaved": "Thay đổi chưa được lưu",
+    "unSavedWarning": "Hiện tại có thay đổi chưa được lưu"
   },
   "sync": {
     "device": {
@@ -393,6 +459,7 @@
       "placeholder": "Nhập từ gợi ý tùy chỉnh",
       "title": "Từ gợi ý tùy chỉnh"
     },
+    "helpInfo": "Khi tạo trợ lý mới, sẽ sử dụng cài đặt trợ lý mặc định làm giá trị mặc định.",
     "historyCompress": {
       "label": "Mô hình lịch sử cuộc trò chuyện",
       "modelDesc": "Chỉ định mô hình được sử dụng để nén lịch sử cuộc trò chuyện",
@@ -425,8 +492,10 @@
     "agent": "Trợ lý mặc định",
     "common": "Cài đặt chung",
     "experiment": "Thử nghiệm",
+    "hotkey": "Phím tắt",
     "llm": "Mô hình ngôn ngữ",
     "provider": "Nhà cung cấp AI",
+    "storage": "Lưu trữ dữ liệu",
     "sync": "Đồng bộ trên đám mây",
     "system-agent": "Trợ lý hệ thống",
     "tts": "Dịch vụ giọng nói"

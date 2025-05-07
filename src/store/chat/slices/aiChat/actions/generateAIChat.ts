@@ -388,6 +388,12 @@ export const generateAIChat: StateCreator<
             });
           }
         },
+        trace: {
+          traceId: params?.traceId,
+          sessionId: get().activeId,
+          topicId: get().activeTopicId,
+          traceName: TraceNameMap.SearchIntentRecognition,
+        },
         abortController,
         onMessageHandle: async (chunk) => {
           if (chunk.type === 'tool_calls') {
@@ -570,7 +576,7 @@ export const generateAIChat: StateCreator<
       },
       onFinish: async (
         content,
-        { traceId, observationId, toolCalls, reasoning, grounding, usage },
+        { traceId, observationId, toolCalls, reasoning, grounding, usage, speed },
       ) => {
         // if there is traceId, update it
         if (traceId) {
@@ -596,17 +602,26 @@ export const generateAIChat: StateCreator<
           }
         }
 
-        if (toolCalls && toolCalls.length > 0) {
+        let parsedToolCalls = toolCalls;
+        if (parsedToolCalls && parsedToolCalls.length > 0) {
           internal_toggleToolCallingStreaming(messageId, undefined);
+          parsedToolCalls = parsedToolCalls.map((item) => ({
+            ...item,
+            function: {
+              ...item.function,
+              arguments: !!item.function.arguments ? item.function.arguments : '{}',
+            },
+          }));
+          isFunctionCall = true;
         }
 
         // update the content after fetch result
         await internal_updateMessageContent(messageId, content, {
-          toolCalls,
+          toolCalls: parsedToolCalls,
           reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
           search: !!grounding?.citations ? grounding : undefined,
-          metadata: usage,
           imageList: finalImages.length > 0 ? finalImages : undefined,
+          metadata: speed ? { ...usage, ...speed } : usage,
         });
       },
       onMessageHandle: async (chunk) => {

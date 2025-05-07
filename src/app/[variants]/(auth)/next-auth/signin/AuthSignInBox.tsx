@@ -1,7 +1,8 @@
 'use client';
 
+import { Button } from '@lobehub/ui';
 import { LobeChat } from '@lobehub/ui/brand';
-import { Button, Col, Flex, Row, Skeleton, Typography } from 'antd';
+import { Col, Flex, Row, Skeleton, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { AuthError } from 'next-auth';
 import { signIn } from 'next-auth/react';

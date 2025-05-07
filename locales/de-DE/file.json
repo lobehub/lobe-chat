@@ -71,6 +71,9 @@
     "websites": "Webseiten"
   },
   "title": "Dateien",
+  "toggleLeftPanel": {
+    "title": "Linkes Panel einblenden/ausblenden"
+  },
   "uploadDock": {
     "body": {
       "collapse": "Einklappen",

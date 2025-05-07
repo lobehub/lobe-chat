@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, Block } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { shuffle } from 'lodash-es';
 import { ArrowRight } from 'lucide-react';
@@ -16,8 +16,6 @@ import { useChatStore } from '@/store/chat';
 
 const useStyles = createStyles(({ css, token, responsive }) => ({
   card: css`
-    cursor: pointer;
-
     padding-block: 12px;
     padding-inline: 24px;
     border-radius: 48px;
@@ -25,10 +23,6 @@ const useStyles = createStyles(({ css, token, responsive }) => ({
     color: ${token.colorText};
 
     background: ${token.colorBgContainer};
-
-    &:hover {
-      background: ${token.colorBgElevated};
-    }
 
     ${responsive.mobile} {
       padding-block: 8px;
@@ -75,7 +69,7 @@ const QuestionSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
         <Link href={USAGE_DOCUMENTS} target={'_blank'}>
           <ActionIcon
             icon={ArrowRight}
-            size={{ blockSize: 24, fontSize: 16 }}
+            size={{ blockSize: 24, size: 16 }}
             title={t('guide.questions.moreBtn')}
           />
         </Link>
@@ -84,9 +78,10 @@ const QuestionSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
         {qa.slice(0, mobile ? 2 : 5).map((item) => {
           const text = t(`guide.qa.${item}` as any, { appName: BRANDING_NAME });
           return (
-            <Flexbox
+            <Block
               align={'center'}
               className={styles.card}
+              clickable
               gap={8}
               horizontal
               key={item}
@@ -94,9 +89,10 @@ const QuestionSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
                 updateInputMessage(text);
                 sendMessage({ isWelcomeQuestion: true });
               }}
+              variant={'outlined'}
             >
               {t(text)}
-            </Flexbox>
+            </Block>
           );
         })}
       </Flexbox>
