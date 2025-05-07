@@ -307,7 +307,7 @@ describe('GoogleGenerativeAIStream', () => {
           promptTokensDetails: [{ modality: 'TEXT', tokenCount: 19 }],
           thoughtsTokenCount: 100,
         },
-        modelVersion: 'gemini-2.0-flash-exp-image-generation',
+        modelVersion: 'gemini-2.5-flash-preview-04-17',
       },
       {
         text: () => '567890\n',
@@ -331,7 +331,7 @@ describe('GoogleGenerativeAIStream', () => {
           candidatesTokensDetails: [{ modality: 'TEXT', tokenCount: 11 }],
           thoughtsTokenCount: 100,
         },
-        modelVersion: 'gemini-2.0-flash-exp-image-generation',
+        modelVersion: 'gemini-2.5-flash-preview-04-17',
       },
     ];
 
@@ -371,7 +371,140 @@ describe('GoogleGenerativeAIStream', () => {
         // usage
         'id: chat_1',
         'event: usage',
-        `data: {"inputTextTokens":19,"outputReasoningTokens":100,"outputTextTokens":11,"totalInputTokens":19,"totalOutputTokens":111,"totalTokens":131}\n`,
+        `data: {"inputTextTokens":19,"internalReasoningTokens":100,"outputReasoningTokens":100,"outputTextTokens":11,"totalInputTokens":19,"totalOutputTokens":111,"totalTokens":131}\n`,
+      ].map((i) => i + '\n'),
+    );
+  });
+
+  it('should handle thought candidate part', async () => {
+    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
+    const data = [
+      {
+        candidates: [
+          {
+            content: {
+              parts: [{ text: '**Understanding the Conditional Logic**\n\n', thought: true }],
+              role: 'model',
+            },
+            index: 0,
+          },
+        ],
+        text: () => '**Understanding the Conditional Logic**\n\n',
+        usageMetadata: {
+          promptTokenCount: 38,
+          candidatesTokenCount: 7,
+          totalTokenCount: 301,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 38 }],
+          thoughtsTokenCount: 256,
+        },
+        modelVersion: 'models/gemini-2.5-flash-preview-04-17',
+      },
+      {
+        candidates: [
+          {
+            content: {
+              parts: [{ text: '**Finalizing Interpretation**\n\n', thought: true }],
+              role: 'model',
+            },
+            index: 0,
+          },
+        ],
+        text: () => '**Finalizing Interpretation**\n\n',
+        usageMetadata: {
+          promptTokenCount: 38,
+          candidatesTokenCount: 13,
+          totalTokenCount: 355,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 38 }],
+          thoughtsTokenCount: 304,
+        },
+        modelVersion: 'models/gemini-2.5-flash-preview-04-17',
+      },
+      {
+        candidates: [
+          {
+            content: {
+              parts: [{ text: '简单来说，' }],
+              role: 'model',
+            },
+            index: 0,
+          },
+        ],
+        text: () => '简单来说，',
+        usageMetadata: {
+          promptTokenCount: 38,
+          candidatesTokenCount: 16,
+          totalTokenCount: 358,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 38 }],
+          thoughtsTokenCount: 304,
+        },
+        modelVersion: 'models/gemini-2.5-flash-preview-04-17',
+      },
+      {
+        candidates: [
+          {
+            content: { parts: [{ text: '文本内容。' }], role: 'model' },
+            finishReason: 'STOP',
+            index: 0,
+          },
+        ],
+        text: () => '文本内容。',
+        usageMetadata: {
+          promptTokenCount: 38,
+          candidatesTokenCount: 19,
+          totalTokenCount: 361,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 38 }],
+          thoughtsTokenCount: 304,
+        },
+        modelVersion: 'models/gemini-2.5-flash-preview-04-17',
+      },
+    ];
+
+    const mockGoogleStream = new ReadableStream({
+      start(controller) {
+        data.forEach((item) => {
+          controller.enqueue(item);
+        });
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = GoogleGenerativeAIStream(mockGoogleStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual(
+      [
+        'id: chat_1',
+        'event: reasoning',
+        'data: "**Understanding the Conditional Logic**\\n\\n"\n',
+
+        'id: chat_1',
+        'event: reasoning',
+        `data: "**Finalizing Interpretation**\\n\\n"\n`,
+
+        'id: chat_1',
+        'event: text',
+        `data: "简单来说，"\n`,
+
+        'id: chat_1',
+        'event: text',
+        `data: "文本内容。"\n`,
+        // stop
+        'id: chat_1',
+        'event: stop',
+        `data: "STOP"\n`,
+        // usage
+        'id: chat_1',
+        'event: usage',
+        `data: {"inputTextTokens":38,"internalReasoningTokens":304,"outputReasoningTokens":304,"outputTextTokens":19,"totalInputTokens":38,"totalOutputTokens":323,"totalTokens":361}\n`,
       ].map((i) => i + '\n'),
     );
   });

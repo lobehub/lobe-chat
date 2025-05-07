@@ -24,8 +24,10 @@ const transformGoogleGenerativeAIStream = (
   const usage = chunk.usageMetadata;
   const usageChunks: StreamProtocolChunk[] = [];
   if (candidate?.finishReason && usage) {
-    const outputReasoningTokens = (usage as any).thoughtsTokenCount || undefined;
-    const totalOutputTokens = (usage.candidatesTokenCount ?? 0) + (outputReasoningTokens ?? 0);
+    // totalTokenCount = promptTokenCount + candidatesTokenCount + thoughtsTokenCount
+    const internalReasoningTokens = (usage as any).thoughtsTokenCount || undefined;
+    const outputTextTokens = usage.candidatesTokenCount ?? 0;
+    const totalOutputTokens = outputTextTokens + (internalReasoningTokens ?? 0);
 
     usageChunks.push(
       { data: candidate.finishReason, id: context?.id, type: 'stop' },
@@ -38,8 +40,9 @@ const transformGoogleGenerativeAIStream = (
           inputTextTokens: (usage as any).promptTokensDetails?.find(
             (i: any) => i.modality === 'TEXT',
           )?.tokenCount,
-          outputReasoningTokens,
-          outputTextTokens: totalOutputTokens - (outputReasoningTokens ?? 0),
+          internalReasoningTokens,
+          outputReasoningTokens: internalReasoningTokens,
+          outputTextTokens,
           totalInputTokens: usage.promptTokenCount,
           totalOutputTokens,
           totalTokens: usage.totalTokenCount,
@@ -76,12 +79,20 @@ const transformGoogleGenerativeAIStream = (
   const text = chunk.text?.();
 
   if (candidate) {
+    let part;
+    let isThought = false;
+    if (Array.isArray(candidate.content.parts) && candidate.content.parts.length > 0) {
+      part = candidate.content.parts[0];
+      isThought = (part as any).thought ?? false;
+    }
+    const textDataType = isThought ? 'reasoning' : 'text';
+
     // return the grounding
     if (candidate.groundingMetadata) {
       const { webSearchQueries, groundingChunks } = candidate.groundingMetadata;
 
       return [
-        { data: text, id: context.id, type: 'text' },
+        { data: text, id: context.id, type: textDataType },
         {
           data: {
             citations: groundingChunks?.map((chunk) => ({
@@ -103,27 +114,29 @@ const transformGoogleGenerativeAIStream = (
     if (candidate.finishReason) {
       if (chunk.usageMetadata) {
         return [
-          !!text ? { data: text, id: context?.id, type: 'text' } : undefined,
+          !!text ? { data: text, id: context?.id, type: textDataType } : undefined,
           ...usageChunks,
         ].filter(Boolean) as StreamProtocolChunk[];
       }
       return { data: candidate.finishReason, id: context?.id, type: 'stop' };
     }
 
-    if (!!text?.trim()) return { data: text, id: context?.id, type: 'text' };
+    if (!!text?.trim()) return { data: text, id: context?.id, type: textDataType };
 
     // streaming the image
-    if (Array.isArray(candidate.content.parts) && candidate.content.parts.length > 0) {
-      const part = candidate.content.parts[0];
-
-      if (part && part.inlineData && part.inlineData.data && part.inlineData.mimeType) {
-        return {
-          data: `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`,
-          id: context.id,
-          type: 'base64_image',
-        };
-      }
+    if (part && part.inlineData && part.inlineData.data && part.inlineData.mimeType) {
+      return {
+        data: `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`,
+        id: context.id,
+        type: 'base64_image',
+      };
     }
+
+    return {
+      data: text,
+      id: context?.id,
+      type: textDataType,
+    };
   }
 
   return {
