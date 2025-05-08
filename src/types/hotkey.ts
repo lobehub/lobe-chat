@@ -66,6 +66,7 @@ export const HotkeyEnum = {
   RegenerateMessage: 'regenerateMessage',
   SaveTopic: 'saveTopic',
   Search: 'search',
+  ShowApp: 'showApp',
   SwitchAgent: 'switchAgent',
   ToggleLeftPanel: 'toggleLeftPanel',
   ToggleRightPanel: 'toggleRightPanel',
