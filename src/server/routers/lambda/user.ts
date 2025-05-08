@@ -2,8 +2,6 @@ import { UserJSON } from '@clerk/backend';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
-// 需要添加此导入
-
 import { enableClerk } from '@/const/auth';
 import { isDesktop } from '@/const/version';
 import { MessageModel } from '@/database/models/message';
