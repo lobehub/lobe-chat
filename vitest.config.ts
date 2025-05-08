@@ -32,6 +32,7 @@ export default defineConfig({
       '**/node_modules/**',
       '**/dist/**',
       '**/build/**',
+      '**/apps/desktop/**',
       'src/database/server/**/**',
       'src/database/repositories/dataImporter/deprecated/**/**',
     ],
