@@ -20,11 +20,11 @@ class LobeHubElectronIpcClient extends ElectronIpcClient {
   setDatabaseSchemaHash = async (hash: string | undefined) => {
     if (!hash) return;
 
-    return this.sendRequest('setDatabaseSchemaHash', hash);
+    return this.sendRequest('setDatabaseSchemaHash', { hash });
   };
 
   getFilePathById = async (id: string) => {
-    return this.sendRequest<string>('getStaticFilePath', id);
+    return this.sendRequest<string>('getStaticFilePath', { id });
   };
 
   deleteFiles = async (paths: string[]) => {

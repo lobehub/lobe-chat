@@ -88,7 +88,7 @@ export default class SystemController extends ControllerModule {
   }
 
   @ipcServerEvent('setDatabaseSchemaHash')
-  async setDatabaseSchemaHash(hash: string) {
+  async setDatabaseSchemaHash({ hash }: { hash: string }) {
     writeFileSync(this.DB_SCHEMA_HASH_PATH, hash, 'utf8');
   }
 
