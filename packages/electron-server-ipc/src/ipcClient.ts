@@ -178,10 +178,7 @@ export class ElectronIpcClient {
   }
 
   // 发送请求到 Electron IPC 服务器
-  public async sendRequest<T>(
-    method: ServerDispatchEventKey,
-    params: Record<string, any> = {},
-  ): Promise<T> {
+  public async sendRequest<T>(method: ServerDispatchEventKey, params: any = {}): Promise<T> {
     if (!this.socketPath) {
       console.error('Cannot send request: Electron IPC connection not available');
       throw new Error('Electron IPC connection not available');

@@ -23,7 +23,7 @@ export default class UploadFileCtr extends ControllerModule {
   // ======== server event
 
   @ipcServerEvent('getStaticFilePath')
-  async getFileUrlById({ id }: { id: string }) {
+  async getFileUrlById(id: string) {
     return this.fileService.getFilePath(id);
   }
 
