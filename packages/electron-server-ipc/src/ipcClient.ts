@@ -178,7 +178,11 @@ export class ElectronIpcClient {
   }
 
   // 发送请求到 Electron IPC 服务器
-  public async sendRequest<T>(method: ServerDispatchEventKey, params: any = {}): Promise<T> {
+  public async sendRequest<T>(
+    method: ServerDispatchEventKey,
+    params: any = {},
+    timeoutDelay = 5000,
+  ): Promise<T> {
     if (!this.socketPath) {
       console.error('Cannot send request: Electron IPC connection not available');
       throw new Error('Electron IPC connection not available');
@@ -207,7 +211,7 @@ export class ElectronIpcClient {
           const errorMsg = `Request timed out, method: ${method}`;
           console.error('Request timed out, ID: %s, method: %s', id, method);
           reject(new Error(errorMsg));
-        }, 5000);
+        }, timeoutDelay);
 
         // 发送请求
         const requestJson = JSON.stringify(request);
