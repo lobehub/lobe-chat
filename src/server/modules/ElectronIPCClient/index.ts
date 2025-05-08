@@ -24,7 +24,7 @@ class LobeHubElectronIpcClient extends ElectronIpcClient {
   };
 
   getFilePathById = async (id: string) => {
-    return this.sendRequest<string>('getStaticFilePath', id, 30_000);
+    return this.sendRequest<string>('getStaticFilePath', id);
   };
 
   deleteFiles = async (paths: string[]) => {
