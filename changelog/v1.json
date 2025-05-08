@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "fixes": ["Fix desktop upload image on macOS."]
+    },
+    "date": "2025-05-08",
+    "version": "1.84.25"
+  },
+  {
+    "children": {
+      "fixes": ["Fix changelog issue on desktop app."]
+    },
+    "date": "2025-05-08",
+    "version": "1.84.24"
+  },
+  {
+    "children": {
       "improvements": ["Add new gemini & Mistral models."]
     },
     "date": "2025-05-08",

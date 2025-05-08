@@ -35,7 +35,7 @@ const fileProcedure = asyncAuthedProcedure.use(async (opts) => {
       chunkService: new ChunkService(ctx.userId),
       embeddingModel: new EmbeddingModel(ctx.serverDB, ctx.userId),
       fileModel: new FileModel(ctx.serverDB, ctx.userId),
-      fileService: new FileService(),
+      fileService: new FileService(ctx.serverDB, ctx.userId),
     },
   });
 });
