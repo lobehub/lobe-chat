@@ -25,6 +25,7 @@ import { enableAuth } from '@/const/auth';
 import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import { DEFAULT_HOTKEY_CONFIG } from '@/const/settings';
 import {
+  CHANGELOG,
   DISCORD,
   DOCUMENTS_REFER_URL,
   EMAIL_SUPPORT,
@@ -144,7 +145,7 @@ export const useMenu = () => {
     {
       icon: <Icon icon={FileClockIcon} />,
       key: 'changelog',
-      label: <Link href={'/changelog/modal'}>{t('changelog')}</Link>,
+      label: <Link href={isDesktop ? CHANGELOG : '/changelog/modal'}>{t('changelog')}</Link>,
     },
     {
       children: [

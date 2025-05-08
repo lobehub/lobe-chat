@@ -71,6 +71,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 是一款由深度求索公司自研的MoE模型。DeepSeek-V3 多项评测成绩超越了 Qwen2.5-72B 和 Llama-3.1-405B 等其他开源模型，并在性能上和世界顶尖的闭源模型 GPT-4o 以及 Claude-3.5-Sonnet 不分伯仲。"
   },
+  "Doubao-1.5-thinking-pro-m": {
+    "description": "Doubao-1.5全新深度思考模型 (m 版本自带原生多模态深度推理能力)，在数学、编程、科学推理等专业领域及创意写作等通用任务中表现突出，在AIME 2024、Codeforces、GPQA等多项权威基准上达到或接近业界第一梯队水平。支持128k上下文窗口，16k输出。"
+  },
   "Doubao-1.5-vision-pro": {
     "description": "Doubao-1.5-vision-pro 全新升级的多模态大模型，支持任意分辨率和极端长宽比图像识别，增强视觉推理、文档识别、细节信息理解和指令遵循能力。"
   },
@@ -293,6 +296,21 @@
   "Qwen/Qwen2.5-VL-72B-Instruct": {
     "description": "Qwen2.5-VL 是 Qwen2.5 系列中的视觉语言模型。该模型在多方面有显著提升：具备更强的视觉理解能力，能够识别常见物体、分析文本、图表和布局；作为视觉代理能够推理并动态指导工具使用；支持理解超过 1 小时的长视频并捕捉关键事件；能够通过生成边界框或点准确定位图像中的物体；支持生成结构化输出，尤其适用于发票、表格等扫描数据。"
   },
+  "Qwen/Qwen3-14B": {
+    "description": "Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。"
+  },
+  "Qwen/Qwen3-235B-A22B": {
+    "description": "Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。"
+  },
+  "Qwen/Qwen3-30B-A3B": {
+    "description": "Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。"
+  },
+  "Qwen/Qwen3-32B": {
+    "description": "Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。"
+  },
+  "Qwen/Qwen3-8B": {
+    "description": "Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。"
+  },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 是 Qwen 模型的最新系列，支持 128k 上下文，对比当前最优的开源模型，Qwen2-72B 在自然语言理解、知识、代码、数学及多语言等多项能力上均显著超越当前领先的模型。"
   },
@@ -397,9 +415,6 @@
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4-9B-Chat 是智谱 AI 推出的 GLM-4 系列预训练模型中的开源版本。该模型在语义、数学、推理、代码和知识等多个方面表现出色。除了支持多轮对话外，GLM-4-9B-Chat 还具备网页浏览、代码执行、自定义工具调用（Function Call）和长文本推理等高级功能。模型支持 26 种语言，包括中文、英文、日语、韩语和德语等。在多项基准测试中，GLM-4-9B-Chat 展现了优秀的性能，如 AlignBench-v2、MT-Bench、MMLU 和 C-Eval 等。该模型支持最大 128K 的上下文长度，适用于学术研究和商业应用"
-  },
-  "TeleAI/TeleChat2": {
-    "description": "TeleChat2大模型是由中国电信从0到1自主研发的生成式语义大模型，支持百科问答、代码生成、长文生成等功能，为用户提供对话咨询服务，能够与用户进行对话互动，回答问题，协助创作，高效便捷地帮助用户获取信息、知识和灵感。模型在幻觉问题、长文生成、逻辑理解等方面均有较出色表现。"
   },
   "Vendor-A/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct 是阿里云发布的最新大语言模型系列之一。该 72B 模型在编码和数学等领域具有显著改进的能力。该模型还提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升"
@@ -800,6 +815,12 @@
   "deepseek/deepseek-chat": {
     "description": "融合通用与代码能力的全新开源模型, 不仅保留了原有 Chat 模型的通用对话能力和 Coder 模型的强大代码处理能力，还更好地对齐了人类偏好。此外，DeepSeek-V2.5 在写作任务、指令跟随等多个方面也实现了大幅提升。"
   },
+  "deepseek/deepseek-chat-v3-0324": {
+    "description": "DeepSeek V3 是一个 685B 参数的专家混合模型，是 DeepSeek 团队旗舰聊天模型系列的最新迭代。\n\n它继承了 [DeepSeek V3](/deepseek/deepseek-chat-v3) 模型，并在各种任务上表现出色。"
+  },
+  "deepseek/deepseek-chat-v3-0324:free": {
+    "description": "DeepSeek V3 是一个 685B 参数的专家混合模型，是 DeepSeek 团队旗舰聊天模型系列的最新迭代。\n\n它继承了 [DeepSeek V3](/deepseek/deepseek-chat-v3) 模型，并在各种任务上表现出色。"
+  },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek R1是DeepSeek团队发布的最新开源模型，具备非常强悍的推理性能，尤其在数学、编程和推理任务上达到了与OpenAI的o1模型相当的水平。"
   },
@@ -849,9 +870,6 @@
     "description": "Doubao-1.5-pro 全新一代主力模型，性能全面升级，在知识、代码、推理、等方面表现卓越。"
   },
   "doubao-1.5-thinking-pro": {
-    "description": "Doubao-1.5全新深度思考模型，在数学、编程、科学推理等专业领域及创意写作等通用任务中表现突出，在AIME 2024、Codeforces、GPQA等多项权威基准上达到或接近业界第一梯队水平。支持128k上下文窗口，16k输出。"
-  },
-  "doubao-1.5-thinking-pro-vision": {
     "description": "Doubao-1.5全新深度思考模型，在数学、编程、科学推理等专业领域及创意写作等通用任务中表现突出，在AIME 2024、Codeforces、GPQA等多项权威基准上达到或接近业界第一梯队水平。支持128k上下文窗口，16k输出。"
   },
   "doubao-1.5-vision-lite": {
@@ -995,9 +1013,6 @@
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Thinking Exp 是 Google 的实验性多模态推理AI模型，能对复杂问题进行推理，拥有新的思维能力。"
   },
-  "gemini-2.0-pro-exp-02-05": {
-    "description": "Gemini 2.0 Pro Experimental 是 Google 最新的实验性多模态AI模型，与历史版本相比有一定的质量提升，特别是对于世界知识、代码和长上下文。"
-  },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。"
   },
@@ -1005,6 +1020,9 @@
     "description": "Gemini 2.5 Pro Experimental 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。"
   },
   "gemini-2.5-pro-preview-03-25": {
+    "description": "Gemini 2.5 Pro Preview 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。"
+  },
+  "gemini-2.5-pro-preview-05-06": {
     "description": "Gemini 2.5 Pro Preview 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。"
   },
   "gemma-7b-it": {
@@ -1091,8 +1109,17 @@
   "google/gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash 提供下一代功能和改进，包括卓越的速度、原生工具使用、多模态生成和1M令牌上下文窗口。"
   },
-  "google/gemini-2.0-pro-exp-02-05:free": {
-    "description": "Gemini 2.0 Pro Experimental 是 Google 最新的实验性多模态AI模型，与历史版本相比有一定的质量提升，特别是对于世界知识、代码和长上下文。"
+  "google/gemini-2.0-flash-exp:free": {
+    "description": "Gemini 2.0 Flash Experimental 是 Google 最新的实验性多模态AI模型，与历史版本相比有一定的质量提升，特别是对于世界知识、代码和长上下文。"
+  },
+  "google/gemini-2.5-flash-preview": {
+    "description": "Gemini 2.5 Flash 是 Google 最先进的主力模型，专为高级推理、编码、数学和科学任务而设计。它包含内置的“思考”能力，使其能够提供具有更高准确性和细致上下文处理的响应。\n\n注意：此模型有两个变体：思考和非思考。输出定价根据思考能力是否激活而有显著差异。如果您选择标准变体（不带“:thinking”后缀），模型将明确避免生成思考令牌。\n\n要利用思考能力并接收思考令牌，您必须选择“:thinking”变体，这将产生更高的思考输出定价。\n\n此外，Gemini 2.5 Flash 可通过“推理最大令牌数”参数进行配置，如文档中所述 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)。"
+  },
+  "google/gemini-2.5-flash-preview:thinking": {
+    "description": "Gemini 2.5 Flash 是 Google 最先进的主力模型，专为高级推理、编码、数学和科学任务而设计。它包含内置的“思考”能力，使其能够提供具有更高准确性和细致上下文处理的响应。\n\n注意：此模型有两个变体：思考和非思考。输出定价根据思考能力是否激活而有显著差异。如果您选择标准变体（不带“:thinking”后缀），模型将明确避免生成思考令牌。\n\n要利用思考能力并接收思考令牌，您必须选择“:thinking”变体，这将产生更高的思考输出定价。\n\n此外，Gemini 2.5 Flash 可通过“推理最大令牌数”参数进行配置，如文档中所述 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)。"
+  },
+  "google/gemini-2.5-pro-preview-03-25": {
+    "description": "Gemini 2.5 Pro 是 Google 最先进的 AI 模型，专为高级推理、编码、数学和科学任务而设计。它采用“思考”能力，使其能够以更高的准确性和细致的上下文处理来推理响应。Gemini 2.5 Pro 在多个基准测试中取得了顶级性能，包括在 LMArena 排行榜上排名第一，反映了卓越的人类偏好对齐和复杂问题解决能力。"
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash 提供了优化后的多模态处理能力，适用多种复杂任务场景。"
@@ -1592,6 +1619,9 @@
   "mistral-large-latest": {
     "description": "Mistral Large是旗舰大模型，擅长多语言任务、复杂推理和代码生成，是高端应用的理想选择。"
   },
+  "mistral-medium-latest": {
+    "description": "Mistral Medium 3 以 8 倍的成本提供最先进的性能，并从根本上简化了企业部署。"
+  },
   "mistral-nemo": {
     "description": "Mistral Nemo 由 Mistral AI 和 NVIDIA 合作推出，是高效性能的 12B 模型。"
   },
@@ -1763,7 +1793,7 @@
   "qvq-72b-preview": {
     "description": "QVQ-72B-Preview 是由 Qwen 团队开发的实验性研究模型，专注于提升视觉推理能力。"
   },
-  "qvq-max": {
+  "qvq-max-latest": {
     "description": "通义千问QVQ视觉推理模型，支持视觉输入及思维链输出，在数学、编程、视觉分析、创作以及通用任务上都表现了更强的能力。"
   },
   "qwen-coder-plus-latest": {
@@ -2075,17 +2105,29 @@
   "text-embedding-3-small": {
     "description": "高效且经济的新一代 Embedding 模型，适用于知识检索、RAG 应用等场景"
   },
+  "thudm/glm-4-32b": {
+    "description": "GLM-4-32B-0414 是一个 32B 双语（中英）开放权重语言模型，针对代码生成、函数调用和代理式任务进行了优化。它在 15T 高质量和重推理数据上进行了预训练，并使用人类偏好对齐、拒绝采样和强化学习进一步完善。该模型在复杂推理、工件生成和结构化输出任务方面表现出色，在多个基准测试中达到了与 GPT-4o 和 DeepSeek-V3-0324 相当的性能。"
+  },
+  "thudm/glm-4-32b:free": {
+    "description": "GLM-4-32B-0414 是一个 32B 双语（中英）开放权重语言模型，针对代码生成、函数调用和代理式任务进行了优化。它在 15T 高质量和重推理数据上进行了预训练，并使用人类偏好对齐、拒绝采样和强化学习进一步完善。该模型在复杂推理、工件生成和结构化输出任务方面表现出色，在多个基准测试中达到了与 GPT-4o 和 DeepSeek-V3-0324 相当的性能。"
+  },
   "thudm/glm-4-9b-chat": {
     "description": "智谱AI发布的GLM-4系列最新一代预训练模型的开源版本。"
   },
   "thudm/glm-4-9b:free": {
     "description": "GLM-4-9B-0414 是 THUDM 开发的 GLM-4 系列中的 90 亿参数语言模型。GLM-4-9B-0414 使用与其较大的 32B 对应模型相同的强化学习和对齐策略进行训练，相对于其规模实现了高性能，使其适用于仍需要强大语言理解和生成能力的资源受限部署。"
   },
+  "thudm/glm-z1-32b": {
+    "description": "GLM-Z1-32B-0414 是 GLM-4-32B 的增强推理变体，专为深度数学、逻辑和面向代码的问题解决而构建。它应用扩展强化学习（任务特定和基于通用成对偏好）来提高复杂多步骤任务的性能。与基础 GLM-4-32B 模型相比，Z1 显著提升了结构化推理和形式化领域的能力。\n\n该模型支持通过提示工程强制执行“思考”步骤，并为长格式输出提供改进的连贯性。它针对代理工作流进行了优化，并支持长上下文（通过 YaRN）、JSON 工具调用和用于稳定推理的细粒度采样配置。非常适合需要深思熟虑、多步骤推理或形式化推导的用例。"
+  },
+  "thudm/glm-z1-32b:free": {
+    "description": "GLM-Z1-32B-0414 是 GLM-4-32B 的增强推理变体，专为深度数学、逻辑和面向代码的问题解决而构建。它应用扩展强化学习（任务特定和基于通用成对偏好）来提高复杂多步骤任务的性能。与基础 GLM-4-32B 模型相比，Z1 显著提升了结构化推理和形式化领域的能力。\n\n该模型支持通过提示工程强制执行“思考”步骤，并为长格式输出提供改进的连贯性。它针对代理工作流进行了优化，并支持长上下文（通过 YaRN）、JSON 工具调用和用于稳定推理的细粒度采样配置。非常适合需要深思熟虑、多步骤推理或形式化推导的用例。"
+  },
   "thudm/glm-z1-9b:free": {
     "description": "GLM-Z1-9B-0414 是由 THUDM 开发的 GLM-4 系列中的 9B 参数语言模型。它采用了最初应用于更大 GLM-Z1 模型的技术，包括扩展强化学习、成对排名对齐以及对数学、代码和逻辑等推理密集型任务的训练。尽管其规模较小，但它在通用推理任务上表现出强大的性能，并在其权重级别中优于许多开源模型。"
   },
   "thudm/glm-z1-rumination-32b": {
-    "description": "THUDM: GLM Z1 Rumination 32B 是 GLM-4-Z1 系列中的 32B 参数深度推理模型，针对需要长时间思考的复杂、开放式任务进行了优化。它建立在 glm-4-32b-0414 的基础上，增加了额外的强化学习阶段和多阶段对齐策略，引入了旨在模拟扩展认知处理的“反思”能力。这包括迭代推理、多跳分析和工具增强的工作流程，例如搜索、检索和引文感知合成。\n\n该模型在研究式写作、比较分析和复杂问答方面表现出色。它支持用于搜索和导航原语（`search`、`click`、`open`、`finish`）的函数调用，从而可以在代理式管道中使用。反思行为由具有基于规则的奖励塑造和延迟决策机制的多轮循环控制，并以 OpenAI 内部对齐堆栈等深度研究框架为基准。此变体适用于需要深度而非速度的场景。"
+    "description": "GLM Z1 Rumination 32B 是 GLM-4-Z1 系列中的 32B 参数深度推理模型，针对需要长时间思考的复杂、开放式任务进行了优化。它建立在 glm-4-32b-0414 的基础上，增加了额外的强化学习阶段和多阶段对齐策略，引入了旨在模拟扩展认知处理的“反思”能力。这包括迭代推理、多跳分析和工具增强的工作流程，例如搜索、检索和引文感知合成。\n\n该模型在研究式写作、比较分析和复杂问答方面表现出色。它支持用于搜索和导航原语（`search`、`click`、`open`、`finish`）的函数调用，从而可以在代理式管道中使用。反思行为由具有基于规则的奖励塑造和延迟决策机制的多轮循环控制，并以 OpenAI 内部对齐堆栈等深度研究框架为基准。此变体适用于需要深度而非速度的场景。"
   },
   "tngtech/deepseek-r1t-chimera:free": {
     "description": "DeepSeek-R1T-Chimera 通过合并 DeepSeek-R1 和 DeepSeek-V3 (0324) 创建，结合了 R1 的推理能力和 V3 的令牌效率改进。它基于 DeepSeek-MoE Transformer 架构，并针对通用文本生成任务进行了优化。\n\n该模型合并了两个源模型的预训练权重，以平衡推理、效率和指令遵循任务的性能。它根据 MIT 许可证发布，旨在用于研究和商业用途。"
