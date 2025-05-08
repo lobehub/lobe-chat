@@ -70,20 +70,25 @@ export class ElectronIPCServer {
       log('Received data chunk, size: %d bytes', chunk.length);
       dataBuffer += chunk;
 
-      try {
-        // 尝试解析 JSON 消息
-        const message = JSON.parse(dataBuffer);
-        log('Successfully parsed JSON message: %o', {
-          id: message.id,
-          method: message.method,
-        });
-        dataBuffer = ''; // 重置缓冲区
+      // 按 \n\n 分割消息
+      const messages = dataBuffer.split('\n');
+      // 保留最后一个可能不完整的消息
+      dataBuffer = messages.pop() || '';
 
-        // 处理请求
-        this.handleRequest(socket, message);
-      } catch {
-        // 如果不是有效的 JSON，可能是消息不完整，继续等待
-        log('Incomplete or invalid JSON, buffering for more data');
+      // 处理每个完整的消息
+      for (const message of messages) {
+        if (!message.trim()) continue;
+
+        try {
+          const parsedMessage = JSON.parse(message);
+          log('Successfully parsed JSON message: %o', {
+            id: parsedMessage.id,
+            method: parsedMessage.method,
+          });
+          this.handleRequest(socket, parsedMessage);
+        } catch (err) {
+          console.error('Failed to parse message: %s', err);
+        }
       }
     });
 
@@ -123,14 +128,14 @@ export class ElectronIPCServer {
 
   // 发送结果
   private sendResult(socket: net.Socket, id: string, result: any): void {
-    const response = JSON.stringify({ id, result }) + '\n';
+    const response = JSON.stringify({ id, result }) + '\n\n';
     log('Sending success response for ID: %s, size: %d bytes', id, response.length);
     socket.write(response);
   }
 
   // 发送错误
   private sendError(socket: net.Socket, id: string, error: string): void {
-    const response = JSON.stringify({ error, id }) + '\n';
+    const response = JSON.stringify({ error, id }) + '\n\n';
     log('Sending error response for ID: %s: %s', id, error);
     socket.write(response);
   }

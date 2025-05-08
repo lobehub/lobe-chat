@@ -1,6 +1,6 @@
 import { UserJSON } from '@clerk/backend';
+import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
-import { v4 as uuidv4 } from 'uuid'; // 需要添加此导入
 
 import { enableClerk } from '@/const/auth';
 import { isDesktop } from '@/const/version';
@@ -28,7 +28,7 @@ const userProcedure = authedProcedure.use(serverDatabase).use(async ({ ctx, next
   return next({
     ctx: {
       clerkAuth: new ClerkAuth(),
-      fileService: new FileService(),
+      fileService: new FileService(ctx.serverDB, ctx.userId),
       nextAuthDbAdapter: LobeNextAuthDbAdapter(ctx.serverDB),
       userModel: new UserModel(ctx.serverDB, ctx.userId),
     },

@@ -21,9 +21,11 @@ exports[`MCPClient > Stdio Transport > should list tools via stdio 1`] = `
     "name": "echo",
   },
   {
-    "annotations": {},
     "description": "Lists all available tools and methods",
     "inputSchema": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "additionalProperties": false,
+      "properties": {},
       "type": "object",
     },
     "name": "debug",
