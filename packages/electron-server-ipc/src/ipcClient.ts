@@ -237,7 +237,7 @@ export class ElectronIpcClient {
 
       try {
         // 发送请求
-        const requestJson = JSON.stringify(request);
+        const requestJson = JSON.stringify(request) + '\n';
         log('Writing request to socket, size: %d bytes', requestJson.length);
         this.socket!.write(requestJson, (err) => {
           if (err) {
