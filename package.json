@@ -115,13 +115,10 @@
       "eslint --fix"
     ]
   },
-  "overrides": {
-    "mdast-util-gfm-autolink-literal": "2.0.0"
-  },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
     "@ant-design/pro-components": "^2.8.7",
-    "@anthropic-ai/sdk": "^0.39.0",
+    "@anthropic-ai/sdk": "^0.40.1",
     "@auth/core": "^0.38.0",
     "@aws-sdk/client-bedrock-runtime": "^3.779.0",
     "@aws-sdk/client-s3": "^3.779.0",
@@ -368,5 +365,8 @@
         }
       }
     }
+  },
+  "overrides": {
+    "mdast-util-gfm-autolink-literal": "2.0.0"
   }
 }
