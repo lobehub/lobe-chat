@@ -71,6 +71,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3, Derin Arayış şirketi tarafından geliştirilen bir MoE modelidir. DeepSeek-V3, birçok değerlendirmede Qwen2.5-72B ve Llama-3.1-405B gibi diğer açık kaynak modelleri geride bırakmış ve performans açısından dünya çapında en iyi kapalı kaynak model olan GPT-4o ve Claude-3.5-Sonnet ile eşit seviyededir."
   },
+  "Doubao-1.5-thinking-pro-m": {
+    "description": "Doubao-1.5, yeni derin düşünme modeli (m versiyonu yerel çok modlu derin akıl yürütme yeteneği ile birlikte gelir) ve matematik, programlama, bilimsel akıl yürütme gibi uzmanlık alanlarında ve yaratıcı yazım gibi genel görevlerde mükemmel performans sergilemektedir. AIME 2024, Codeforces, GPQA gibi birçok otoriter benchmarkta endüstri birinciliğine ulaşmakta veya yaklaşmaktadır. 128k bağlam penceresi ve 16k çıktı destekler."
+  },
   "Doubao-1.5-vision-pro": {
     "description": "Doubao-1.5-vision-pro, yeni güncellenmiş çok modlu büyük modeldir, herhangi bir çözünürlük ve aşırı en-boy oranı görüntü tanıma desteği sunar, görsel çıkarım, belge tanıma, detay bilgisi anlama ve talimat takibi yeteneklerini artırır."
   },
@@ -293,6 +296,21 @@
   "Qwen/Qwen2.5-VL-72B-Instruct": {
     "description": "Qwen2.5-VL, Qwen2.5 serisindeki görsel-dil modelidir. Bu model birçok alanda önemli gelişmeler sunmaktadır: Gelişmiş görsel anlama yeteneğiyle yaygın nesneleri tanıyabilir, metinleri, grafikleri ve düzenleri analiz edebilir; görsel bir ajan olarak akıl yürütebilir ve araç kullanımını dinamik olarak yönlendirebilir; 1 saati aşan uzun videoları anlayabilir ve önemli olayları yakalayabilir; görüntülerdeki nesneleri sınırlayıcı kutular veya noktalar oluşturarak hassas bir şekilde konumlandırabilir; yapılandırılmış çıktılar üretebilir, özellikle fatura, tablo gibi taranmış veriler için uygundur."
   },
+  "Qwen/Qwen3-14B": {
+    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte önemli ölçüde geliştirilmiş yeni nesil Tongyi Qianwen büyük modelidir ve düşünme modu geçişini destekler."
+  },
+  "Qwen/Qwen3-235B-A22B": {
+    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte önemli ölçüde geliştirilmiş yeni nesil Tongyi Qianwen büyük modelidir ve düşünme modu geçişini destekler."
+  },
+  "Qwen/Qwen3-30B-A3B": {
+    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte önemli ölçüde geliştirilmiş yeni nesil Tongyi Qianwen büyük modelidir ve düşünme modu geçişini destekler."
+  },
+  "Qwen/Qwen3-32B": {
+    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte önemli ölçüde geliştirilmiş yeni nesil Tongyi Qianwen büyük modelidir ve düşünme modu geçişini destekler."
+  },
+  "Qwen/Qwen3-8B": {
+    "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte önemli ölçüde geliştirilmiş yeni nesil Tongyi Qianwen büyük modelidir ve düşünme modu geçişini destekler."
+  },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2, Qwen modelinin en yeni serisidir ve 128k bağlamı destekler. Mevcut en iyi açık kaynak modellerle karşılaştırıldığında, Qwen2-72B doğal dil anlama, bilgi, kod, matematik ve çok dilli yetenekler açısından mevcut lider modelleri önemli ölçüde aşmaktadır."
   },
@@ -397,9 +415,6 @@
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B açık kaynak versiyonu, diyalog uygulamaları için optimize edilmiş bir diyalog deneyimi sunar."
-  },
-  "TeleAI/TeleChat2": {
-    "description": "TeleChat2 büyük modeli, Çin Telekom tarafından sıfırdan geliştirilen jeneratif bir anlam büyük modelidir. Ansiklopedik soru yanıtlama, kod üretimi, uzun metin üretimi gibi işlevleri desteklemekte ve kullanıcılara diyalog danışmanlık hizmeti sunmaktadır. Kullanıcılarla diyalog etme, soruları yanıtlama, yaratımda yardımcı olma gibi yeteneklere sahiptir ve kullanıcıların bilgi, bilgi ve ilham edinmelerine etkin ve kolay bir şekilde yardımcı olmaktadır. Model, yanıltma sorunları, uzun metin üretimi, mantıksal anlama gibi alanlarda oldukça iyi performans sergilemektedir."
   },
   "Vendor-A/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct, Alibaba Cloud tarafından yayınlanan en son büyük dil modeli serilerinden biridir. Bu 72B modeli, kodlama ve matematik gibi alanlarda önemli ölçüde geliştirilmiş yeteneklere sahiptir. Model ayrıca, Çince, İngilizce gibi 29'dan fazla dili kapsayan çok dilli destek sunmaktadır. Model, talimat takibi, yapılandırılmış verileri anlama ve yapılandırılmış çıktı (özellikle JSON) üretme konularında önemli iyileştirmeler göstermektedir."
@@ -800,6 +815,12 @@
   "deepseek/deepseek-chat": {
     "description": "Genel ve kod yeteneklerini birleştiren yeni açık kaynak model, yalnızca mevcut Chat modelinin genel diyalog yeteneklerini ve Coder modelinin güçlü kod işleme yeteneklerini korumakla kalmaz, aynı zamanda insan tercihleriyle daha iyi hizalanmıştır. Ayrıca, DeepSeek-V2.5 yazma görevleri, talimat takibi gibi birçok alanda da büyük iyileştirmeler sağlamıştır."
   },
+  "deepseek/deepseek-chat-v3-0324": {
+    "description": "DeepSeek V3, 685B parametreye sahip bir uzman karışık modeldir ve DeepSeek ekibinin amiral gemisi sohbet modeli serisinin en son iterasyonudur.\n\nÇeşitli görevlerde mükemmel performans sergileyen [DeepSeek V3](/deepseek/deepseek-chat-v3) modelini devralmıştır."
+  },
+  "deepseek/deepseek-chat-v3-0324:free": {
+    "description": "DeepSeek V3, 685B parametreye sahip bir uzman karışık modeldir ve DeepSeek ekibinin amiral gemisi sohbet modeli serisinin en son iterasyonudur.\n\nÇeşitli görevlerde mükemmel performans sergileyen [DeepSeek V3](/deepseek/deepseek-chat-v3) modelini devralmıştır."
+  },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1, yalnızca çok az etiketli veri ile modelin akıl yürütme yeteneğini büyük ölçüde artırır. Model, nihai yanıtı vermeden önce bir düşünce zinciri içeriği sunarak nihai yanıtın doğruluğunu artırır."
   },
@@ -849,9 +870,6 @@
     "description": "Doubao-1.5-pro, tamamen yeni nesil ana model, performansı tamamen yükseltilmiş olup, bilgi, kod, akıl yürütme gibi alanlarda mükemmel bir performans sergilemektedir."
   },
   "doubao-1.5-thinking-pro": {
-    "description": "Doubao-1.5, tamamen yeni bir derin düşünme modeli, matematik, programlama, bilimsel akıl yürütme gibi uzmanlık alanlarında ve yaratıcı yazım gibi genel görevlerde olağanüstü performans sergilemektedir. AIME 2024, Codeforces, GPQA gibi birçok saygın ölçekte sektörün en üst seviyelerine ulaşmakta veya bunlara yakın bir performans göstermektedir. 128k bağlam penceresi ve 16k çıktı desteği sunmaktadır."
-  },
-  "doubao-1.5-thinking-pro-vision": {
     "description": "Doubao-1.5, tamamen yeni bir derin düşünme modeli, matematik, programlama, bilimsel akıl yürütme gibi uzmanlık alanlarında ve yaratıcı yazım gibi genel görevlerde olağanüstü performans sergilemektedir. AIME 2024, Codeforces, GPQA gibi birçok saygın ölçekte sektörün en üst seviyelerine ulaşmakta veya bunlara yakın bir performans göstermektedir. 128k bağlam penceresi ve 16k çıktı desteği sunmaktadır."
   },
   "doubao-1.5-vision-lite": {
@@ -995,9 +1013,6 @@
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp, Google'ın en son deneysel çok modlu AI modelidir, bir sonraki nesil özelliklere, olağanüstü hıza, yerel araç çağrısına ve çok modlu üretime sahiptir."
   },
-  "gemini-2.0-pro-exp-02-05": {
-    "description": "Gemini 2.0 Pro Deneysel, Google'ın en son deneysel çok modlu AI modelidir ve önceki sürümlere göre belirli bir kalite artışı sağlamaktadır, özellikle dünya bilgisi, kod ve uzun bağlam için."
-  },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Önizleme, Google'ın en iyi fiyat-performans oranına sahip modelidir ve kapsamlı özellikler sunar."
   },
@@ -1006,6 +1021,9 @@
   },
   "gemini-2.5-pro-preview-03-25": {
     "description": "Gemini 2.5 Pro Önizleme, Google'ın en gelişmiş düşünce modeli olup, kod, matematik ve STEM alanlarındaki karmaşık sorunları akıl yürütme yeteneğine sahiptir. Uzun bağlamları analiz ederek büyük veri setleri, kod havuzları ve belgeler üzerinde çalışabilir."
+  },
+  "gemini-2.5-pro-preview-05-06": {
+    "description": "Gemini 2.5 Pro Önizleme, Google'ın en gelişmiş düşünce modelidir ve kod, matematik ve STEM alanlarındaki karmaşık sorunları akıl yürütme yeteneğine sahiptir. Uzun bağlamları analiz ederek büyük veri setleri, kod havuzları ve belgeler üzerinde çalışabilir."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B, orta ölçekli görev işleme için uygundur ve maliyet etkinliği sunar."
@@ -1091,8 +1109,17 @@
   "google/gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash, mükemmel hız, yerel araç kullanımı, çok modlu üretim ve 1M token bağlam penceresi dahil olmak üzere bir sonraki nesil özellikler ve iyileştirmeler sunar."
   },
-  "google/gemini-2.0-pro-exp-02-05:free": {
-    "description": "Gemini 2.0 Pro Deneysel, Google'ın en son deneysel çok modlu AI modelidir ve önceki sürümlere göre belirli bir kalite artışı sağlamaktadır, özellikle dünya bilgisi, kod ve uzun bağlam için."
+  "google/gemini-2.0-flash-exp:free": {
+    "description": "Gemini 2.0 Flash Deneysel, Google'ın en yeni deneysel çok modlu AI modelidir ve önceki sürümlere göre belirli bir kalite artışı sağlamaktadır, özellikle dünya bilgisi, kod ve uzun bağlam için."
+  },
+  "google/gemini-2.5-flash-preview": {
+    "description": "Gemini 2.5 Flash, Google'ın en gelişmiş ana modelidir ve ileri düzey akıl yürütme, kodlama, matematik ve bilimsel görevler için tasarlanmıştır. Daha yüksek doğruluk ve ayrıntılı bağlam işleme ile yanıtlar sunabilen yerleşik 'düşünme' yeteneğine sahiptir.\n\nNot: Bu modelin iki varyantı vardır: düşünme ve düşünmeme. Çıktı fiyatlandırması, düşünme yeteneğinin etkin olup olmamasına göre önemli ölçüde farklılık gösterir. Standart varyantı (':thinking' eki olmadan) seçerseniz, model açıkça düşünme tokenleri üretmekten kaçınacaktır.\n\nDüşünme yeteneğinden yararlanmak ve düşünme tokenleri almak için, ':thinking' varyantını seçmelisiniz; bu, daha yüksek düşünme çıktı fiyatlandırması ile sonuçlanacaktır.\n\nAyrıca, Gemini 2.5 Flash, belgede belirtildiği gibi 'akıl yürütme maksimum token sayısı' parametresi ile yapılandırılabilir (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
+  },
+  "google/gemini-2.5-flash-preview:thinking": {
+    "description": "Gemini 2.5 Flash, Google'ın en gelişmiş ana modelidir ve ileri düzey akıl yürütme, kodlama, matematik ve bilimsel görevler için tasarlanmıştır. Daha yüksek doğruluk ve ayrıntılı bağlam işleme ile yanıtlar sunabilen yerleşik 'düşünme' yeteneğine sahiptir.\n\nNot: Bu modelin iki varyantı vardır: düşünme ve düşünmeme. Çıktı fiyatlandırması, düşünme yeteneğinin etkin olup olmamasına göre önemli ölçüde farklılık gösterir. Standart varyantı (':thinking' eki olmadan) seçerseniz, model açıkça düşünme tokenleri üretmekten kaçınacaktır.\n\nDüşünme yeteneğinden yararlanmak ve düşünme tokenleri almak için, ':thinking' varyantını seçmelisiniz; bu, daha yüksek düşünme çıktı fiyatlandırması ile sonuçlanacaktır.\n\nAyrıca, Gemini 2.5 Flash, belgede belirtildiği gibi 'akıl yürütme maksimum token sayısı' parametresi ile yapılandırılabilir (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
+  },
+  "google/gemini-2.5-pro-preview-03-25": {
+    "description": "Gemini 2.5 Pro, Google'ın en gelişmiş AI modelidir ve ileri düzey akıl yürütme, kodlama, matematik ve bilimsel görevler için tasarlanmıştır. 'Düşünme' yeteneği ile daha yüksek doğruluk ve ayrıntılı bağlam işleme ile yanıtlar üretebilir. Gemini 2.5 Pro, LMArena sıralamasında birinci olarak, mükemmel insan tercihleri uyumu ve karmaşık sorun çözme yeteneğini yansıtan birçok benchmark testinde en yüksek performansı göstermiştir."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash, optimize edilmiş çok modlu işleme yetenekleri sunar ve çeşitli karmaşık görev senaryolarına uygundur."
@@ -1592,6 +1619,9 @@
   "mistral-large-latest": {
     "description": "Mistral Large, çok dilli görevler, karmaşık akıl yürütme ve kod üretimi için ideal bir seçimdir ve yüksek uç uygulamalar için tasarlanmıştır."
   },
+  "mistral-medium-latest": {
+    "description": "Mistral Medium 3, 8 kat daha düşük maliyetle en ileri düzey performansı sunar ve kurumsal dağıtımları temelden basitleştirir."
+  },
   "mistral-nemo": {
     "description": "Mistral Nemo, Mistral AI ve NVIDIA işbirliği ile sunulan, yüksek verimli 12B modelidir."
   },
@@ -1763,8 +1793,8 @@
   "qvq-72b-preview": {
     "description": "QVQ modeli, Qwen ekibi tarafından geliştirilen deneysel bir araştırma modelidir; görsel akıl yürütme yeteneğini artırmaya odaklanır, özellikle matematik akıl yürütme alanında."
   },
-  "qvq-max": {
-    "description": "Genel Amaçlı QVQ Görsel Akıl Yürütme Modeli, görsel girdi ve düşünce zinciri çıktısını destekler. Matematik, programlama, görsel analiz, yaratıcılık ve genel görevlerde daha güçlü yetenekler sergilemektedir."
+  "qvq-max-latest": {
+    "description": "Tongyi Qianwen QVQ görsel akıl yürütme modeli, görsel girdi ve düşünme zinciri çıktısını destekler ve matematik, programlama, görsel analiz, yaratım ve genel görevlerde daha güçlü yetenekler sergilemektedir."
   },
   "qwen-coder-plus-latest": {
     "description": "Tongyi Qianwen kod modeli."
@@ -2075,11 +2105,23 @@
   "text-embedding-3-small": {
     "description": "Verimli ve ekonomik yeni nesil Embedding modeli, bilgi arama, RAG uygulamaları gibi senaryolar için uygundur."
   },
+  "thudm/glm-4-32b": {
+    "description": "GLM-4-32B-0414, kod üretimi, fonksiyon çağrıları ve ajan tabanlı görevler için optimize edilmiş 32B iki dilli (Çince ve İngilizce) açık ağırlık dil modelidir. 15T yüksek kaliteli ve yeniden akıl yürütme verisi üzerinde önceden eğitilmiştir ve insan tercihleri uyumu, reddetme örnekleme ve pekiştirmeli öğrenme ile daha da geliştirilmiştir. Bu model, karmaşık akıl yürütme, nesne üretimi ve yapılandırılmış çıktı görevlerinde mükemmel performans sergilemekte ve birçok benchmark testinde GPT-4o ve DeepSeek-V3-0324 ile karşılaştırılabilir performans göstermektedir."
+  },
+  "thudm/glm-4-32b:free": {
+    "description": "GLM-4-32B-0414, kod üretimi, fonksiyon çağrıları ve ajan tabanlı görevler için optimize edilmiş 32B iki dilli (Çince ve İngilizce) açık ağırlık dil modelidir. 15T yüksek kaliteli ve yeniden akıl yürütme verisi üzerinde önceden eğitilmiştir ve insan tercihleri uyumu, reddetme örnekleme ve pekiştirmeli öğrenme ile daha da geliştirilmiştir. Bu model, karmaşık akıl yürütme, nesne üretimi ve yapılandırılmış çıktı görevlerinde mükemmel performans sergilemekte ve birçok benchmark testinde GPT-4o ve DeepSeek-V3-0324 ile karşılaştırılabilir performans göstermektedir."
+  },
   "thudm/glm-4-9b-chat": {
     "description": "Zhi Pu AI tarafından yayınlanan GLM-4 serisinin en son nesil ön eğitim modelinin açık kaynak versiyonudur."
   },
   "thudm/glm-4-9b:free": {
     "description": "GLM-4-9B-0414, THUDM tarafından geliştirilen GLM-4 serisinin 9 milyar parametreli dil modelidir. GLM-4-9B-0414, daha büyük 32B karşılık gelen model ile aynı güçlendirilmiş öğrenme ve hizalama stratejilerini kullanarak eğitilmiştir ve ölçeğine göre yüksek performans sergileyerek hala güçlü dil anlama ve üretim yeteneklerine ihtiyaç duyan kaynak sınırlı dağıtımlar için uygundur."
+  },
+  "thudm/glm-z1-32b": {
+    "description": "GLM-Z1-32B-0414, GLM-4-32B'nin geliştirilmiş akıl yürütme varyantıdır ve derin matematik, mantık ve kod odaklı sorun çözme için tasarlanmıştır. Karmaşık çok adımlı görevlerin performansını artırmak için genişletilmiş pekiştirmeli öğrenme (görev spesifik ve genel çift tercih tabanlı) uygular. Temel GLM-4-32B modeline kıyasla, Z1 yapılandırılmış akıl yürütme ve formel alanlardaki yetenekleri önemli ölçüde artırmıştır.\n\nBu model, ipucu mühendisliği ile 'düşünme' adımlarını zorunlu kılmayı destekler ve uzun format çıktılar için geliştirilmiş tutarlılık sağlar. Ajan iş akışları için optimize edilmiştir ve uzun bağlamı (YaRN aracılığıyla), JSON araç çağrılarını ve kararlı akıl yürütme için ince ayar örnekleme yapılandırmalarını destekler. Derin düşünme, çok adımlı akıl yürütme veya formel çıkarım gerektiren kullanım durumları için idealdir."
+  },
+  "thudm/glm-z1-32b:free": {
+    "description": "GLM-Z1-32B-0414, GLM-4-32B'nin geliştirilmiş akıl yürütme varyantıdır ve derin matematik, mantık ve kod odaklı sorun çözme için tasarlanmıştır. Karmaşık çok adımlı görevlerin performansını artırmak için genişletilmiş pekiştirmeli öğrenme (görev spesifik ve genel çift tercih tabanlı) uygular. Temel GLM-4-32B modeline kıyasla, Z1 yapılandırılmış akıl yürütme ve formel alanlardaki yetenekleri önemli ölçüde artırmıştır.\n\nBu model, ipucu mühendisliği ile 'düşünme' adımlarını zorunlu kılmayı destekler ve uzun format çıktılar için geliştirilmiş tutarlılık sağlar. Ajan iş akışları için optimize edilmiştir ve uzun bağlamı (YaRN aracılığıyla), JSON araç çağrılarını ve kararlı akıl yürütme için ince ayar örnekleme yapılandırmalarını destekler. Derin düşünme, çok adımlı akıl yürütme veya formel çıkarım gerektiren kullanım durumları için idealdir."
   },
   "thudm/glm-z1-9b:free": {
     "description": "GLM-Z1-9B-0414, THUDM tarafından geliştirilen GLM-4 serisinin 9B parametreli dil modelidir. Daha büyük GLM-Z1 modeline uygulanan teknikleri içermekte olup, güçlendirilmiş öğrenme, çift sıralama hizalaması ve matematik, kodlama ve mantık gibi akıl yürütme yoğun görevler için eğitim almıştır. Daha küçük olmasına rağmen, genel akıl yürütme görevlerinde güçlü performans sergilemekte ve ağırlık seviyesinde birçok açık kaynak modelinden daha üstündür."
