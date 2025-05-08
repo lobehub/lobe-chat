@@ -35,6 +35,10 @@
     "desc": "Mevcut sayfanın ana arama kutusunu aç",
     "title": "Ara"
   },
+  "showApp": {
+    "desc": "Uygulamanın ana penceresini hızlıca aç",
+    "title": "Ana Pencereyi Göster"
+  },
   "switchAgent": {
     "desc": "Yan panelde sabitlenmiş asistanı değiştirmek için Ctrl tuşuna basılı tutarak 0~9 sayısına basın",
     "title": "Asistanı hızlıca değiştir"
