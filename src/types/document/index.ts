@@ -5,8 +5,7 @@ export interface LobeDocument {
   /**
    * 文件内容
    */
-  content: string;
-
+  content: string | null;
   /**
    * 文件创建时间戳。
    */
@@ -21,6 +20,8 @@ export interface LobeDocument {
    * 原始文件名。
    */
   filename: string;
+
+  id: string;
 
   /**
    * 文件级别的元数据。
@@ -148,4 +149,24 @@ export interface LobeDocumentPage {
    * 此页/块的核心文本内容。
    */
   pageContent: string;
+}
+
+/**
+ * 文档来源类型
+ */
+export enum DocumentSourceType {
+  /**
+   * 来自 API 的内容
+   */
+  API = 'api',
+
+  /**
+   * 本地或上传的文件
+   */
+  FILE = 'file',
+
+  /**
+   * 网页内容
+   */
+  WEB = 'web',
 }
