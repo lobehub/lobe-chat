@@ -9,6 +9,7 @@ import Menu, { type MenuProps } from '@/components/Menu';
 import { localeOptions } from '@/locales/resources';
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
 import { LocaleMode } from '@/types/locale';
 
 const LangButton = memo<{ placement?: PopoverProps['placement'] }>(({ placement = 'right' }) => {
@@ -19,8 +20,11 @@ const LangButton = memo<{ placement?: PopoverProps['placement'] }>(({ placement 
     s.switchLocale,
   ]);
 
+  const updateGeneralConfig = useUserStore((s) => s.updateGeneralConfig);
+
   const handleLangChange = (value: LocaleMode) => {
     switchLocale(value);
+    updateGeneralConfig({ language: value });
   };
 
   const { t } = useTranslation('setting');
