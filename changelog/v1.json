@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add new gemini & Mistral models."]
+    },
+    "date": "2025-05-08",
+    "version": "1.84.23"
+  },
+  {
+    "children": {
       "fixes": ["Fix electron state init on window."],
       "improvements": ["Add Xiaohongshu crawler rules."]
     },
