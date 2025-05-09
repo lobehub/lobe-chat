@@ -36,12 +36,21 @@ const userProcedure = authedProcedure.use(serverDatabase).use(async ({ ctx, next
 });
 
 export const userRouter = router({
+  deleteUserSSOSessions: userProcedure.mutation(async ({ ctx }) => {
+    const { userId, nextAuthUserService } = ctx;
+    return nextAuthUserService.deleteUserSSOSessions(userId);
+  }),
+
   getUserRegistrationDuration: userProcedure.query(async ({ ctx }) => {
     return ctx.userModel.getUserRegistrationDuration();
   }),
 
   getUserSSOProviders: userProcedure.query(async ({ ctx }) => {
     return ctx.nextAuthUserService.getUserSSOProviders(ctx.userId);
+  }),
+
+  getUserSSOSessions: userProcedure.query(async ({ ctx }) => {
+    return ctx.nextAuthUserService.getUserSSOSessions(ctx.userId);
   }),
 
   getUserState: userProcedure.query(async ({ ctx }): Promise<UserInitializationState> => {

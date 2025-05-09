@@ -66,6 +66,15 @@ export class ClientService extends BaseClientService implements IUserService {
     // Account not exist on next-auth in client mode, no need to implement this method
   };
 
+  getUserSSOSessions = async () => {
+    // Session not exist on next-auth in client mode, no need to implement this method
+    return [];
+  };
+
+  deleteUserSSOSessions = async () => {
+    // Session not exist on next-auth in client mode, no need to implement this method
+  };
+
   updateUserSettings: IUserService['updateUserSettings'] = async (value) => {
     const { keyVaults, ...res } = value;
 
