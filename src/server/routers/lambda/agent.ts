@@ -8,8 +8,8 @@ import { KnowledgeBaseModel } from '@/database/models/knowledgeBase';
 import { SessionModel } from '@/database/models/session';
 import { UserModel } from '@/database/models/user';
 import { pino } from '@/libs/logger';
-import { authedProcedure, router } from '@/libs/trpc';
-import { serverDatabase } from '@/libs/trpc/lambda';
+import { authedProcedure, router } from '@/libs/trpc/lambda';
+import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { AgentService } from '@/server/services/agent';
 import { KnowledgeItem, KnowledgeType } from '@/types/knowledgeBase';
 

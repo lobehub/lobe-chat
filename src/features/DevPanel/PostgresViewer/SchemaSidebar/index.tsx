@@ -129,7 +129,7 @@ const SchemaPanel = ({ onTableSelect, selectedTable }: SchemaPanelProps) => {
   };
 
   return (
-    <DraggablePanel placement={'left'}>
+    <DraggablePanel minWidth={264} placement={'left'}>
       <Flexbox height={'100%'} style={{ overflow: 'hidden', position: 'relative' }}>
         <Flexbox
           align={'center'}

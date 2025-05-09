@@ -5,7 +5,6 @@ import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ElectronIpcClient } from './ipcClient';
-import { ElectronIPCMethods } from './types';
 
 // Mock node modules
 vi.mock('node:fs');
@@ -13,6 +12,7 @@ vi.mock('node:net');
 vi.mock('node:os');
 vi.mock('node:path');
 
+const appId = 'lobehub';
 describe('ElectronIpcClient', () => {
   // Mock data
   const mockTempDir = '/mock/temp/dir';
@@ -55,7 +55,7 @@ describe('ElectronIpcClient', () => {
       vi.mocked(fs.readFileSync).mockReturnValue(JSON.stringify(mockSocketInfo));
 
       // Execute
-      new ElectronIpcClient();
+      new ElectronIpcClient(appId);
 
       // Verify
       expect(fs.existsSync).toHaveBeenCalledWith(mockSocketInfoPath);
@@ -67,7 +67,7 @@ describe('ElectronIpcClient', () => {
       vi.mocked(fs.existsSync).mockReturnValue(false);
 
       // Execute
-      new ElectronIpcClient();
+      new ElectronIpcClient(appId);
 
       // Verify
       expect(fs.existsSync).toHaveBeenCalledWith(mockSocketInfoPath);
@@ -76,7 +76,7 @@ describe('ElectronIpcClient', () => {
       // Test platform-specific behavior
       const originalPlatform = process.platform;
       Object.defineProperty(process, 'platform', { value: 'win32' });
-      new ElectronIpcClient();
+      new ElectronIpcClient(appId);
       Object.defineProperty(process, 'platform', { value: originalPlatform });
     });
 
@@ -87,7 +87,7 @@ describe('ElectronIpcClient', () => {
       });
 
       // Execute
-      new ElectronIpcClient();
+      new ElectronIpcClient(appId);
 
       // Verify
       expect(console.error).toHaveBeenCalledWith(
@@ -104,7 +104,7 @@ describe('ElectronIpcClient', () => {
       // Setup a client with a known socket path
       vi.mocked(fs.existsSync).mockReturnValue(true);
       vi.mocked(fs.readFileSync).mockReturnValue(JSON.stringify(mockSocketInfo));
-      client = new ElectronIpcClient();
+      client = new ElectronIpcClient(appId);
 
       // Reset socket mocks for each test
       mockSocket.on.mockReset();
@@ -124,7 +124,7 @@ describe('ElectronIpcClient', () => {
 
     it('should handle connection errors', async () => {
       // Start request - but don't await it yet
-      const requestPromise = client.sendRequest(ElectronIPCMethods.getDatabasePath);
+      const requestPromise = client.sendRequest('getDatabasePath');
 
       // Find the error event handler
       const errorCallArgs = mockSocket.on.mock.calls.find((call) => call[0] === 'error');
@@ -154,7 +154,7 @@ describe('ElectronIpcClient', () => {
       });
 
       // Start request
-      const requestPromise = client.sendRequest(ElectronIPCMethods.getDatabasePath);
+      const requestPromise = client.sendRequest('getDatabasePath');
 
       // Simulate connection established
       if (connectionCallback) connectionCallback();
@@ -171,7 +171,7 @@ describe('ElectronIpcClient', () => {
       // Setup a client with a known socket path
       vi.mocked(fs.existsSync).mockReturnValue(true);
       vi.mocked(fs.readFileSync).mockReturnValue(JSON.stringify(mockSocketInfo));
-      client = new ElectronIpcClient();
+      client = new ElectronIpcClient(appId);
 
       // Setup socket.on
       mockSocket.on.mockImplementation((event, callback) => {
@@ -188,7 +188,7 @@ describe('ElectronIpcClient', () => {
       });
 
       // Start a request to establish connection (but don't wait for it)
-      const requestPromise = client.sendRequest(ElectronIPCMethods.getDatabasePath).catch(() => {}); // Ignore any errors
+      const requestPromise = client.sendRequest('getDatabasePath').catch(() => {}); // Ignore any errors
 
       // Simulate connection
       if (connectionCallback) connectionCallback();

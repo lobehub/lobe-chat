@@ -87,7 +87,9 @@ describe('parseModelString', () => {
     });
 
     it('token and image output', () => {
-      const result = parseModelString('gemini-2.0-flash-exp-image-generation=Gemini 2.0 Flash (Image Generation) Experimental<32768:imageOutput>');
+      const result = parseModelString(
+        'gemini-2.0-flash-exp-image-generation=Gemini 2.0 Flash (Image Generation) Experimental<32768:imageOutput>',
+      );
 
       expect(result.add[0]).toEqual({
         displayName: 'Gemini 2.0 Flash (Image Generation) Experimental',
@@ -565,7 +567,12 @@ describe('transformToChatModelCards', () => {
         displayName: 'GPT-4o',
         enabled: true,
         id: 'gpt-4o',
-        pricing: { input: 2.5, output: 10 },
+        maxOutput: 4096,
+        pricing: {
+          cachedInput: 1.25,
+          input: 2.5,
+          output: 10,
+        },
         providerId: 'azure',
         releasedAt: '2024-05-13',
         source: 'builtin',
@@ -582,6 +589,11 @@ describe('transformToChatModelCards', () => {
         enabled: true,
         id: 'gpt-4o-mini',
         maxOutput: 4096,
+        pricing: {
+          cachedInput: 0.075,
+          input: 0.15,
+          output: 0.6,
+        },
         type: 'chat',
       },
       {
@@ -596,7 +608,11 @@ describe('transformToChatModelCards', () => {
         source: 'builtin',
         id: 'o1-mini',
         maxOutput: 65536,
-        pricing: { input: 1.1, output: 4.4 },
+        pricing: {
+          cachedInput: 0.55,
+          input: 1.1,
+          output: 4.4,
+        },
         releasedAt: '2024-09-12',
         type: 'chat',
       },

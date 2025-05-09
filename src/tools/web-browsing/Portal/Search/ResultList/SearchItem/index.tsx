@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import WebFavicon from '@/components/WebFavicon';
-import { SearchResult } from '@/types/tool/search';
+import { UniformSearchResult } from '@/types/tool/search';
 
 import TitleExtra from './TitleExtra';
 import Video from './Video';
@@ -16,10 +16,9 @@ const useStyles = createStyles(({ css, token }) => {
       flex: 1;
 
       padding: 8px;
+      border-radius: 8px;
 
       color: initial;
-
-      border-radius: 8px;
 
       &:hover {
         background: ${token.colorFillTertiary};
@@ -27,14 +26,12 @@ const useStyles = createStyles(({ css, token }) => {
     `,
     desc: css`
       overflow: hidden;
-
       display: -webkit-box;
       -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
 
       color: ${token.colorTextTertiary};
       text-overflow: ellipsis;
-
-      -webkit-line-clamp: 2;
     `,
     displayLink: css`
       color: ${token.colorTextQuaternary};
@@ -45,19 +42,17 @@ const useStyles = createStyles(({ css, token }) => {
     `,
     url: css`
       overflow: hidden;
-     { /* stylelint-disable-line */ }
       display: -webkit-box;
       -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
 
       color: ${token.colorTextDescription};
       text-overflow: ellipsis;
-
-      -webkit-line-clamp: 1;
     `,
   };
 });
 
-interface SearchResultProps extends SearchResult {
+interface SearchResultProps extends UniformSearchResult {
   highlight?: boolean;
 }
 

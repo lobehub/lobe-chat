@@ -3,7 +3,7 @@ import { createStyles } from 'antd-style';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { SearchResult } from '@/types/tool/search';
+import { UniformSearchResult } from '@/types/tool/search';
 
 import { ENGINE_ICON_MAP } from '../../../../const';
 import TitleExtra from './TitleExtra';
@@ -61,19 +61,21 @@ const useStyles = createStyles(({ css, token }) => {
   };
 });
 
-interface SearchResultProps extends SearchResult {
+interface SearchResultProps extends UniformSearchResult {
   highlight?: boolean;
 }
 const VideoItem = memo<SearchResultProps>(
-  ({ content, url, iframe_src, highlight, score, engines, title, category }) => {
+  ({ content, url, iframeSrc, highlight, score, engines, title, category, ...res }) => {
     const { styles, theme } = useStyles();
 
     const [expand, setExpand] = useState(false);
+
+    const videoUrl = iframeSrc || (res as any).iframe_src; // iframe_src 是 SearchXNG 的字段，兼容老的数据结构
     return (
       <Flexbox gap={12}>
         <Flexbox className={styles.container} onClick={() => setExpand(!expand)}>
           <Flexbox flex={1} gap={8} horizontal padding={12}>
-            {iframe_src && (
+            {videoUrl && (
               <Flexbox>
                 <iframe
                   // alt={title}
@@ -86,7 +88,7 @@ const VideoItem = memo<SearchResultProps>(
                   onPlay={(e) => {
                     e.preventDefault();
                   }}
-                  src={iframe_src}
+                  src={videoUrl}
                   style={{
                     pointerEvents: 'none',
                   }}
@@ -127,9 +129,9 @@ const VideoItem = memo<SearchResultProps>(
             </Flexbox>
           </Flexbox>
         </Flexbox>
-        {expand && iframe_src && (
+        {expand && videoUrl && (
           <Flexbox>
-            <iframe className={styles.iframe} height={440} src={iframe_src} width={'100%'} />
+            <iframe className={styles.iframe} height={440} src={videoUrl} width={'100%'} />
           </Flexbox>
         )}
       </Flexbox>

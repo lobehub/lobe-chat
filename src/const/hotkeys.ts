@@ -1,5 +1,3 @@
-import { combineKeys } from '@lobehub/ui/es/Hotkey';
-
 import {
   HotkeyEnum,
   HotkeyGroupEnum,
@@ -8,8 +6,18 @@ import {
   KeyEnum,
 } from '@/types/hotkey';
 
+const combineKeys = (keys: string[]) => keys.join('+');
+
 // mod 在 Mac 上是 command 键，alt 在 Win 上是 ctrl 键
 export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
+  // basic
+  {
+    group: HotkeyGroupEnum.Essential,
+    id: HotkeyEnum.ShowApp,
+    keys: combineKeys([KeyEnum.Mod, 'e']),
+    nonEditable: true,
+    scopes: [HotkeyScopeEnum.Global],
+  },
   {
     group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.Search,
@@ -33,7 +41,7 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
     group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.ToggleLeftPanel,
     keys: combineKeys([KeyEnum.Mod, KeyEnum.BracketLeft]),
-    scopes: [HotkeyScopeEnum.Chat],
+    scopes: [HotkeyScopeEnum.Chat, HotkeyScopeEnum.Files],
   },
   {
     group: HotkeyGroupEnum.Essential,
@@ -47,6 +55,15 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
     keys: combineKeys([KeyEnum.Ctrl, KeyEnum.Shift, KeyEnum.QuestionMark]),
     scopes: [HotkeyScopeEnum.Global],
   },
+  {
+    group: HotkeyGroupEnum.Essential,
+    id: HotkeyEnum.OpenSettings,
+    isDesktop: true,
+    keys: combineKeys([KeyEnum.Mod, KeyEnum.Comma]),
+    nonEditable: true,
+    scopes: [HotkeyScopeEnum.Global],
+  },
+  // Chat
   {
     group: HotkeyGroupEnum.Conversation,
     id: HotkeyEnum.OpenChatSettings,
@@ -76,6 +93,12 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
     id: HotkeyEnum.EditMessage,
     keys: combineKeys([KeyEnum.Alt, KeyEnum.LeftDoubleClick]),
     nonEditable: true,
+    scopes: [HotkeyScopeEnum.Chat],
+  },
+  {
+    group: HotkeyGroupEnum.Conversation,
+    id: HotkeyEnum.ClearCurrentMessages,
+    keys: combineKeys([KeyEnum.Alt, KeyEnum.Shift, KeyEnum.Backspace]),
     scopes: [HotkeyScopeEnum.Chat],
   },
 ];

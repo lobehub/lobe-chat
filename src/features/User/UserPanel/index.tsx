@@ -13,7 +13,7 @@ import { useNewVersion } from './useNewVersion';
 const useStyles = createStyles(({ css }) => {
   return {
     popover: css`
-      inset-block-start: ${isDesktop ? 24 : 8}px !important;
+      inset-block-start: ${isDesktop ? 32 : 8}px !important;
       inset-inline-start: 8px !important;
     `,
   };

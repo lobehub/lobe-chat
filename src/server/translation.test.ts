@@ -1,27 +1,15 @@
 // @vitest-environment node
 import { cookies } from 'next/headers';
-import * as fs from 'node:fs';
-import * as path from 'node:path';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
+import { DEFAULT_LANG } from '@/const/locale';
 import { normalizeLocale } from '@/locales/resources';
-import * as env from '@/utils/env';
 
 import { getLocale, translation } from './translation';
 
 // Mock external dependencies
 vi.mock('next/headers', () => ({
   cookies: vi.fn(),
-}));
-
-vi.mock('node:fs', () => ({
-  existsSync: vi.fn(),
-  readFileSync: vi.fn(),
-}));
-
-vi.mock('node:path', () => ({
-  join: vi.fn(),
 }));
 
 vi.mock('@/const/locale', () => ({
@@ -36,6 +24,28 @@ vi.mock('@/locales/resources', () => ({
 vi.mock('@/utils/env', () => ({
   isDev: false,
 }));
+
+// 模拟动态导入结果
+const mockTranslations = {
+  key1: 'Value 1',
+  key2: 'Value 2 with {{param}}',
+  nested: { key: 'Nested value' },
+};
+
+const mockDefaultTranslations = {
+  key1: '默认值 1',
+  key2: '默认值 2 带 {{param}}',
+  nested: { key: '默认嵌套值' },
+};
+
+// 重写导入函数
+vi.mock('@/../locales/en-US/common.json', async () => {
+  return mockTranslations;
+});
+
+vi.mock('@/locales/default/common', async () => {
+  return mockDefaultTranslations;
+});
 
 describe('getLocale', () => {
   const mockCookieStore = {
@@ -61,17 +71,12 @@ describe('getLocale', () => {
 });
 
 describe('translation', () => {
-  const mockTranslations = {
-    key1: 'Value 1',
-    key2: 'Value 2 with {{param}}',
-    nested: { key: 'Nested value' },
-  };
-
   beforeEach(() => {
     vi.clearAllMocks();
-    (fs.existsSync as any).mockReturnValue(true);
-    (fs.readFileSync as any).mockReturnValue(JSON.stringify(mockTranslations));
-    (path.join as any).mockImplementation((...args: any) => args.join('/'));
+    // 重置 import 模拟
+    vi.doMock('@/../locales/en-US/common.json', async () => {
+      return mockTranslations;
+    });
   });
 
   it('should return correct translation object', async () => {
@@ -88,43 +93,58 @@ describe('translation', () => {
     expect(t('nested.key')).toBe('Nested value');
   });
 
-  it('should return key if translation is not found', async () => {
+  it('should handle multiple parameters in translation string', async () => {
+    // 模拟多参数翻译
+    vi.doMock('@/../locales/en-US/common.json', async () => ({
+      multiParam: 'Hello {{name}}, you have {{count}} messages',
+    }));
+
     const { t } = await translation('common', 'en-US');
-    expect(t('nonexistent.key')).toBe('nonexistent.key');
+    expect(t('multiParam', { name: 'John', count: '5' })).toBe('Hello John, you have 5 messages');
   });
 
-  it('should use fallback language if specified locale file does not exist', async () => {
-    (fs.existsSync as any).mockReturnValueOnce(false);
-    await translation('common', 'nonexistent-LANG');
-    expect(fs.readFileSync).toHaveBeenCalledWith(
-      expect.stringContaining(`/${DEFAULT_LANG}/common.json`),
-      'utf8',
-    );
+  it('should handle different namespaces', async () => {
+    // 模拟另一个命名空间
+    vi.doMock('@/../locales/en-US/chat.json', async () => ({
+      welcome: 'Welcome to the chat',
+    }));
+
+    const { t } = await translation('chat', 'en-US');
+    expect(t('welcome')).toBe('Welcome to the chat');
   });
 
-  it('should use zh-CN in dev mode when fallback is needed', async () => {
-    (fs.existsSync as any).mockReturnValueOnce(false);
-    (env.isDev as unknown as boolean) = true;
-    await translation('common', 'nonexistent-LANG');
-    expect(fs.readFileSync).toHaveBeenCalledWith(
-      expect.stringContaining('/zh-CN/common.json'),
-      'utf8',
-    );
+  it('should handle deep nested objects in translations', async () => {
+    // 模拟深层嵌套对象
+    vi.doMock('@/../locales/en-US/common.json', async () => ({
+      very: {
+        deeply: {
+          nested: {
+            key: 'Found the nested value',
+          },
+        },
+      },
+    }));
+
+    const { t } = await translation('common', 'en-US');
+    expect(t('very.deeply.nested.key')).toBe('Found the nested value');
   });
 
-  it('should handle file reading errors', async () => {
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    (fs.readFileSync as any).mockImplementation(() => {
-      throw new Error('File read error');
-    });
+  it('should handle empty parameters object', async () => {
+    vi.doMock('@/../locales/en-US/common.json', async () => ({
+      simpleText: 'Just a simple text',
+    }));
 
-    const result = await translation('common', 'en-US');
-    expect(result.t('any.key')).toBe('any.key');
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Error while reading translation file',
-      expect.any(Error),
-    );
+    const { t } = await translation('common', 'en-US');
+    expect(t('simpleText', {})).toBe('Just a simple text');
+  });
 
-    consoleErrorSpy.mockRestore();
+  it('should handle missing parameters in translation string', async () => {
+    vi.doMock('@/../locales/en-US/common.json', async () => ({
+      withParam: 'Text with {{param}}',
+    }));
+
+    const { t } = await translation('common', 'en-US');
+    // 当缺少参数时应保留占位符
+    expect(t('withParam')).toBe('Text with {{param}}');
   });
 });

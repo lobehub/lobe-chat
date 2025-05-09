@@ -25,7 +25,7 @@ const FormAction = memo<
     animation?: boolean;
     avatar: ReactNode;
     background?: string;
-    description: string;
+    description: ReactNode;
     title: string;
   } & CenterProps
 >(

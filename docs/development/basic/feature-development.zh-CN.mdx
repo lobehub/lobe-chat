@@ -1,0 +1,463 @@
+# LobeChat 功能开发完全指南
+
+本文档旨在指导开发者了解如何在 LobeChat 中开发一块完整的功能需求。
+
+我们将以 [RFC 021 - 自定义助手开场引导](https://github.com/lobehub/lobe-chat/discussions/891) 为例，阐述完整的实现流程。
+
+## 一、更新 schema
+
+lobe-chat 使用 postgres 数据库，浏览器端本地数据库使用 [pglite](https://pglite.dev/)（wasm 版本 postgres）。项目还使用了 [drizzle](https://orm.drizzle.team/) ORM 用来操作数据库。
+
+相比旧方案浏览器端使用 indexDB 来说，浏览器端和 server 端都使用 postgres 好处在于 model 层代码可以完全复用。
+
+schemas 都统一放在 `src/database/schemas`，我们需要调整 `agents` 表增加两个配置项对应的字段：
+
+```diff
+// src/database/schemas/agent.ts
+export const agents = pgTable(
+  'agents',
+  {
+    id: text('id')
+      .primaryKey()
+      .$defaultFn(() => idGenerator('agents'))
+      .notNull(),
+    avatar: text('avatar'),
+    backgroundColor: text('background_color'),
+    plugins: jsonb('plugins').$type<string[]>().default([]),
+    // ...
+    tts: jsonb('tts').$type<LobeAgentTTSConfig>(),
+
++   openingMessage: text('opening_message'),
++   openingQuestions: text('opening_questions').array().default([]),
+
+    ...timestamps,
+  },
+  (t) => ({
+    // ...
+    // !: update index here
+  }),
+);
+
+```
+
+需要注意的是，有些时候我们可能还需要更新索引，但对于这个需求我们没有相关的性能瓶颈问题，所以不需要更新索引。
+
+调整完 schema 后我们需要运行 `npm run db:generate，` 使用 drizzle-kit 自带的数据库迁移能力生成对应的用于迁移到最新 schema 的 sql 代码。执行后会产生四个文件：
+
+- src/database/migrations/meta/\_journal.json：保存每次迁移的相关信息
+- src/database/migrations/0021\_add\_agent\_opening\_settings.sql：此次迁移的 sql 命令
+- src/database/client/migrations.json：pglite 使用的此次迁移的 sql 命令
+- src/database/migrations/meta/0021\_snapshot.json：当前最新的完整数据库快照
+
+注意脚本默认生成的迁移 sql 文件名不会像 `0021_add_agent_opening_settings.sql` 这样语义清晰，你需要自己手动对它重命名并且更新 `src/database/migrations/meta/_journal.json`。
+
+以前客户端存储使用 indexDB 数据迁移相对麻烦，现在本地端使用 pglite 之后数据库迁移就是一条命令的事，非常简单快捷，你也可以检查生成的迁移 sql 是否有什么优化空间，手动调整。
+
+## 二、更新数据模型
+
+在 `src/types` 下定义了我们项目中使用到的各种数据模型，我们并没有直接使用 drizzle schema 导出的类型，例如 `export type NewAgent = typeof agents.$inferInsert;`，而是根据前端需求和 db schema 定义中对应字段数据类型定义了对应的数据模型。
+
+数据模型定义都放在 `src/types` 文件夹下，更新 `src/types/agent/index.ts` 中 `LobeAgentConfig` 类型：
+
+```diff
+export interface LobeAgentConfig {
+  // ...
+  chatConfig: LobeAgentChatConfig;
+  /**
+   * 角色所使用的语言模型
+   * @default gpt-4o-mini
+   */
+  model: string;
+
++  /**
++   * 开场白
++   */
++  openingMessage?: string;
++  /**
++   * 开场问题
++   */
++  openingQuestions?: string[];
+
+  /**
+   * 语言模型参数
+   */
+  params: LLMParams;
+  /**
+   * 启用的插件
+   */
+  plugins?: string[];
+
+  /**
+   *  模型供应商
+   */
+  provider?: string;
+
+  /**
+   * 系统角色
+   */
+  systemRole: string;
+
+  /**
+   * 语音服务
+   */
+  tts: LobeAgentTTSConfig;
+}
+```
+
+## 三、Service 实现 / Model 实现
+
+- `model` 层封装对 DB 的可复用操作
+- `service` 层实现应用业务逻辑
+
+在 `src` 目录下都有对应的顶层文件夹。
+
+我们需要查看是否需要更新其实现，agent 配置在前端被抽象成 session 的配置，在 `src/services/session/server.ts` 中可以看到有个 service 函数 `updateSessionConfig`：
+
+```typescript
+export class ServerService implements ISessionService {
+  // ...
+  updateSessionConfig: ISessionService['updateSessionConfig'] = (id, config, signal) => {
+    return lambdaClient.session.updateSessionConfig.mutate({ id, value: config }, { signal });
+  };
+}
+```
+
+跳转 `lambdaClient.session.updateSessionConfig` 实现，发现它只是简单的 **merge** 了新的 config 和旧的 config。
+
+```typescript
+export const sessionRouter = router({
+  // ..
+  updateSessionConfig: sessionProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        value: z.object({}).passthrough().partial(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const session = await ctx.sessionModel.findByIdOrSlug(input.id);
+      // ...
+      const mergedValue = merge(session.agent, input.value);
+      return ctx.sessionModel.updateConfig(session.agent.id, mergedValue);
+    }),
+});
+```
+
+可以预想的到，我们前端会增加两个输入，用户修改的时候去调用这个 `updateSessionConfig`，而目前的时候都没细粒度到 config 中的具体字段，因此，service 层和 model 层不需要修改。
+
+## 四、前端实现
+
+### 数据流 store 实现
+
+lobe-chat 使用 [zustand](https://zustand.docs.pmnd.rs/getting-started/introduction) 作为全局状态管理框架，对于状态管理的详细实践介绍，可以查阅 [📘 状态管理最佳实践](/zh/docs/development/state-management/state-management-intro)。
+
+和 agent 相关的 store 有两个：
+
+- `src/features/AgentSetting/store` 服务于 agent 设置的局部 store
+- `src/store/agent` 用于获取当前会话 agent 的 store
+
+后者通过 `src/features/AgentSetting/AgentSettings.tsx` 中 `AgentSettings` 组件的 `onConfigChange` 监听并更新当前会话的 agent 配置。
+
+#### 更新 AgentSetting/store
+
+首先我们更新 initialState，阅读 `src/features/AgentSetting/store/initialState.ts` 后得知初始 agent 配置保存在 `src/const/settings/agent.ts` 中的 `DEFAULT_AGENT_CONFIG`：
+
+```diff
+export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
+  chatConfig: DEFAULT_AGENT_CHAT_CONFIG,
+  model: DEFAULT_MODEL,
++ openingQuestions: [],
+  params: {
+    frequency_penalty: 0,
+    presence_penalty: 0,
+    temperature: 1,
+    top_p: 1,
+  },
+  plugins: [],
+  provider: DEFAULT_PROVIDER,
+  systemRole: '',
+  tts: DEFAUTT_AGENT_TTS_CONFIG,
+};
+```
+
+其实你这里不更新都可以，因为 `openingQuestions` 类型本来就是可选的，`openingMessage` 我这里就不更新了。
+
+因为我们增加了两个新字段，为了方便在 `src/features/AgentSetting/AgentOpening` 文件夹中组件访问和性能优化，我们在 `src/features/AgentSetting/store/selectors.ts` 增加相关的 selectors：
+
+```diff
+import { DEFAULT_AGENT_CHAT_CONFIG } from '@/const/settings';
+import { LobeAgentChatConfig } from '@/types/agent';
+
+import { Store } from './action';
+
+const chatConfig = (s: Store): LobeAgentChatConfig =>
+  s.config.chatConfig || DEFAULT_AGENT_CHAT_CONFIG;
+
++export const DEFAULT_OPENING_QUESTIONS: string[] = [];
+export const selectors = {
+  chatConfig,
++ openingMessage: (s: Store) => s.config.openingMessage,
++ openingQuestions: (s: Store) => s.config.openingQuestions || DEFAULT_OPENING_QUESTIONS,
+};
+```
+
+这里我们就不增加额外的 action 用于更新 agent config 了，因为我观察到已有的其它代码也是直接使用现有代码中统一的 `setChatConfig`：
+
+```typescript
+export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, get) => ({
+  setAgentConfig: (config) => {
+    get().dispatchConfig({ config, type: 'update' });
+  },
+});
+```
+
+#### 更新 store/agent
+
+在组件 `src/app/[variants]/(main)/chat/(workspace)/@conversation/features/ChatList/WelcomeChatItem/WelcomeMessage.tsx` 我们使用了这个 store 用于获取当前 agent 配置，用来渲染用户自定义的开场消息和引导性问题。
+
+这里因为只需要读取两个配置项，我们就简单的加两个 selectors 就好了：
+
+更新 `src/store/agent/slices/chat/selectors/agent.ts`：
+
+```diff
+// ...
++const openingQuestions = (s: AgentStoreState) =>
++  currentAgentConfig(s).openingQuestions || DEFAULT_OPENING_QUESTIONS;
++const openingMessage = (s: AgentStoreState) => currentAgentConfig(s).openingMessage || '';
+
+export const agentSelectors = {
+  // ...
+  isInboxSession,
++ openingMessage,
++ openingQuestions,
+};
+```
+
+### UI 实现和 action 绑定
+
+我们这次要新增一个类别的设置， 在 `src/features/AgentSetting` 中定义了 agent 的各种设置的 UI 组件，这次我们要增加一个设置类型：开场设置。增加一个文件夹 `AgentOpening` 存放开场设置相关的组件。项目使用了：
+
+- [ant-design](https://ant.design/) 和 [lobe-ui：](https://github.com/lobehub/lobe-ui)组件库
+- [antd-style](https://ant-design.github.io/antd-style) ： css-in-js 方案
+- [react-layout-kit](https://github.com/arvinxx/react-layout-kit)：响应式布局组件
+- [@ant-design/icons](https://ant.design/components/icon-cn) 和 [lucide](https://lucide.dev/icons/): 图标库
+- [react-i18next](https://github.com/i18next/react-i18next) 和 [lobe-i18n](https://github.com/lobehub/lobe-cli-toolbox/tree/master/packages/lobe-i18n) ：i18n 框架和多语言自动翻译工具
+
+lobe-chat 是个国际化项目，新加的文案需要更新默认的 `locale` 文件： `src/locales/default/setting.ts` 。
+
+我们以子组件 `OpeningQuestion.tsx` 为例，组件实现：
+
+```typescript
+// src/features/AgentSetting/AgentOpening/OpeningQuestions.tsx
+'use client';
+
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { SortableList } from '@lobehub/ui';
+import { Button, Empty, Input } from 'antd';
+import { createStyles } from 'antd-style';
+import { memo, useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
+
+import { useStore } from '../store';
+import { selectors } from '../store/selectors';
+
+const useStyles = createStyles(({ css, token }) => ({
+  empty: css`
+    margin-block: 24px;
+    margin-inline: 0;
+  `,
+  questionItemContainer: css`
+    margin-block-end: 8px;
+    padding-block: 2px;
+    padding-inline: 10px 0;
+    background: ${token.colorBgContainer};
+  `,
+  questionItemContent: css`
+    flex: 1;
+  `,
+  questionsList: css`
+    width: 100%;
+    margin-block-start: 16px;
+  `,
+  repeatError: css`
+    margin: 0;
+    color: ${token.colorErrorText};
+  `,
+}));
+
+interface QuestionItem {
+  content: string;
+  id: number;
+}
+
+const OpeningQuestions = memo(() => {
+  const { t } = useTranslation('setting');
+  const { styles } = useStyles();
+  const [questionInput, setQuestionInput] = useState('');
+
+  // 使用 selector 访问对应配置
+  const openingQuestions = useStore(selectors.openingQuestions);
+  // 使用 action 更新配置
+  const updateConfig = useStore((s) => s.setAgentConfig);
+  const setQuestions = useCallback(
+    (questions: string[]) => {
+      updateConfig({ openingQuestions: questions });
+    },
+    [updateConfig],
+  );
+
+  const addQuestion = useCallback(() => {
+    if (!questionInput.trim()) return;
+
+    setQuestions([...openingQuestions, questionInput.trim()]);
+    setQuestionInput('');
+  }, [openingQuestions, questionInput, setQuestions]);
+
+  const removeQuestion = useCallback(
+    (content: string) => {
+      const newQuestions = [...openingQuestions];
+      const index = newQuestions.indexOf(content);
+      newQuestions.splice(index, 1);
+      setQuestions(newQuestions);
+    },
+    [openingQuestions, setQuestions],
+  );
+
+  // 处理拖拽排序后的逻辑
+  const handleSortEnd = useCallback(
+    (items: QuestionItem[]) => {
+      setQuestions(items.map((item) => item.content));
+    },
+    [setQuestions],
+  );
+
+  const items: QuestionItem[] = useMemo(() => {
+    return openingQuestions.map((item, index) => ({
+      content: item,
+      id: index,
+    }));
+  }, [openingQuestions]);
+
+  const isRepeat = openingQuestions.includes(questionInput.trim());
+
+  return (
+    <Flexbox gap={8}>
+      <Flexbox gap={4}>
+        <Input
+          addonAfter={
+            <Button
+              // don't allow repeat
+              disabled={openingQuestions.includes(questionInput.trim())}
+              icon={<PlusOutlined />}
+              onClick={addQuestion}
+              size="small"
+              type="text"
+            />
+          }
+          onChange={(e) => setQuestionInput(e.target.value)}
+          onPressEnter={addQuestion}
+          placeholder={t('settingOpening.openingQuestions.placeholder')}
+          value={questionInput}
+        />
+
+        {isRepeat && (
+          <p className={styles.repeatError}>{t('settingOpening.openingQuestions.repeat')}</p>
+        )}
+      </Flexbox>
+
+      <div className={styles.questionsList}>
+        {openingQuestions.length > 0 ? (
+          <SortableList
+            items={items}
+            onChange={handleSortEnd}
+            renderItem={(item) => (
+              <SortableList.Item className={styles.questionItemContainer} id={item.id}>
+                <SortableList.DragHandle />
+                <div className={styles.questionItemContent}>{item.content}</div>
+                <Button
+                  icon={<DeleteOutlined />}
+                  onClick={() => removeQuestion(item.content)}
+                  type="text"
+                />
+              </SortableList.Item>
+            )}
+          />
+        ) : (
+          <Empty
+            className={styles.empty}
+            description={t('settingOpening.openingQuestions.empty')}
+          />
+        )}
+      </div>
+    </Flexbox>
+  );
+});
+
+export default OpeningQuestions;
+```
+
+同时我们需要将用户设置的开场配置展示出来，这个是在 chat 页面，对应组件在 `src/app/[variants]/(main)/chat/(workspace)/@conversation/features/ChatList/WelcomeChatItem/WelcomeMessage.tsx`：
+
+```typescript
+const WelcomeMessage = () => {
+  const { t } = useTranslation('chat');
+
+  // 获取当前开场配置
+  const openingMessage = useAgentStore(agentSelectors.openingMessage);
+  const openingQuestions = useAgentStore(agentSelectors.openingQuestions);
+
+  const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
+  const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);
+  const activeId = useChatStore((s) => s.activeId);
+
+  const agentSystemRoleMsg = t('agentDefaultMessageWithSystemRole', {
+    name: meta.title || t('defaultAgent'),
+    systemRole: meta.description,
+  });
+
+  const agentMsg = t(isAgentEditable ? 'agentDefaultMessage' : 'agentDefaultMessageWithoutEdit', {
+    name: meta.title || t('defaultAgent'),
+    url: `/chat/settings?session=${activeId}`,
+  });
+
+  const message = useMemo(() => {
+    // 用户设置了就用用户设置的
+    if (openingMessage) return openingMessage;
+    return !!meta.description ? agentSystemRoleMsg : agentMsg;
+  }, [openingMessage, agentSystemRoleMsg, agentMsg, meta.description]);
+
+  const chatItem = (
+    <ChatItem
+      avatar={meta}
+      editing={false}
+      message={message}
+      placement={'left'}
+      type={type === 'chat' ? 'block' : 'pure'}
+    />
+  );
+
+  return openingQuestions.length > 0 ? (
+    <Flexbox>
+      {chatItem}
+      {/* 渲染引导性问题 */}
+      <OpeningQuestions mobile={mobile} questions={openingQuestions} />
+    </Flexbox>
+  ) : (
+    chatItem
+  );
+};
+export default WelcomeMessage;
+```
+
+## 五、测试
+
+项目使用 vitest 进行单元测试。
+
+由于我们目前两个新的配置字段都是可选的，所以理论上你不更新测试也能跑通，不过由于我们把前面提到的默认配置 `DEFAULT_AGENT_CONFIG` 增加了 `openingQuestions` 字段，这导致很多测试计算出的配置都是有这个字段的，因此我们还是需要更新一部分测试的快照。
+
+对于当前这个场景，我建议是本地直接跑下测试，看哪些测试失败了，针对需要更新，例如测试文件 `src/store/agent/slices/chat/selectors/agent.test.ts` 需要执行一下 `npx vitest -u src/store/agent/slices/chat/selectors/agent.test.ts` 更新快照。
+
+## 总结
+
+以上就是 LobeChat 开场设置功能的完整实现流程。开发者可以参考本文档进行相关功能的开发和测试。

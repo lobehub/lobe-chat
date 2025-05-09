@@ -4,6 +4,8 @@ import { pluginPrompts } from '@/prompts/plugin';
 import { MetaData } from '@/types/meta';
 import { ChatCompletionTool } from '@/types/openai/chat';
 import { LobeToolMeta } from '@/types/tool/tool';
+import { globalAgentContextManager } from '@/utils/client/GlobalAgentContextManager';
+import { hydrationPrompt } from '@/utils/promptTemplate';
 import { genToolCallingName } from '@/utils/toolCall';
 import { convertPluginManifestToToolsCalling } from '@/utils/toolManifest';
 
@@ -36,7 +38,14 @@ const enabledSystemRoles =
         const meta = manifest.meta || {};
 
         const title = pluginHelpers.getPluginTitle(meta) || manifest.identifier;
-        const systemRole = manifest.systemRole || pluginHelpers.getPluginDesc(meta);
+        let systemRole = manifest.systemRole || pluginHelpers.getPluginDesc(meta);
+
+        // Use the global context manager to fill the template
+        if (systemRole) {
+          const context = globalAgentContextManager.getContext();
+
+          systemRole = hydrationPrompt(systemRole, context);
+        }
 
         return {
           apis: manifest.api.map((m) => ({

@@ -26,7 +26,7 @@ const Header = () => {
     return (
       <Flexbox align={'center'} gap={8} horizontal>
         <ActionIcon icon={ArrowLeft} onClick={() => closeToolUI()} />
-        <Icon icon={Globe} size={{ fontSize: 16 }} />
+        <Icon icon={Globe} size={16} />
         <Typography.Text style={{ fontSize: 16 }} type={'secondary'}>
           {t('search.title')}
         </Typography.Text>

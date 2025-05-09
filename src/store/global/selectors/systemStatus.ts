@@ -50,8 +50,16 @@ const isPgliteInited = (s: GlobalState): boolean =>
 // 这个变量控制 clientdb 是否完成初始化，正常来说，只有 pgliteDB 模式下，才会存在变化，其他时候都是 true
 const isDBInited = (s: GlobalState): boolean => (isUsePgliteDB ? isPgliteInited(s) : true);
 
+const getAgentSystemRoleExpanded =
+  (agentId: string) =>
+  (s: GlobalState): boolean => {
+    const map = s.status.systemRoleExpandedMap || {};
+    return map[agentId] !== false; // 角色设定默认为展开状态
+  };
+
 export const systemStatusSelectors = {
   filePanelWidth,
+  getAgentSystemRoleExpanded,
   hidePWAInstaller,
   inZenMode,
   inputHeight,

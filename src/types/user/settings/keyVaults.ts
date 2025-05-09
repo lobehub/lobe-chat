@@ -43,7 +43,6 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   cloudflare?: CloudflareKeyVault;
   cohere?: OpenAICompatibleKeyVault;
   deepseek?: OpenAICompatibleKeyVault;
-  doubao?: OpenAICompatibleKeyVault;
   fireworksai?: OpenAICompatibleKeyVault;
   giteeai?: OpenAICompatibleKeyVault;
   github?: OpenAICompatibleKeyVault;

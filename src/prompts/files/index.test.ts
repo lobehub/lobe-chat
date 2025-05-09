@@ -135,4 +135,54 @@ describe('filesPrompts', () => {
     expect(result).toMatch(/<image.*?>.*<image.*?>/s); // Check for multiple image tags
     expect(result).toMatch(/<file.*?>.*<file.*?>/s); // Check for multiple file tags
   });
+
+  it('should handle without url', () => {
+    const images: ChatImageItem[] = [
+      mockImage,
+      {
+        id: 'img-2',
+        alt: 'second image',
+        url: 'https://example.com/image2.jpg',
+      },
+    ];
+
+    const files: ChatFileItem[] = [
+      mockFile,
+      {
+        id: 'file-2',
+        name: 'document.docx',
+        fileType: 'application/docx',
+        size: 2048,
+        url: 'https://example.com/document.docx',
+      },
+    ];
+
+    const result = filesPrompts({
+      imageList: images,
+      fileList: files,
+      addUrl: false,
+    });
+
+    expect(result).toMatchInlineSnapshot(`
+      "<!-- SYSTEM CONTEXT (NOT PART OF USER QUERY) -->
+      <context.instruction>following part contains context information injected by the system. Please follow these instructions:
+
+      1. Always prioritize handling user-visible content.
+      2. the context is only required when user's queries rely on it.
+      </context.instruction>
+      <files_info>
+      <images>
+      <images_docstring>here are user upload images you can refer to</images_docstring>
+      <image name="test image"></image>
+      <image name="second image"></image>
+      </images>
+      <files>
+      <files_docstring>here are user upload files you can refer to</files_docstring>
+      <file id="file-1" name="test.pdf" type="application/pdf" size="1024"></file>
+      <file id="file-2" name="document.docx" type="application/docx" size="2048"></file>
+      </files>
+      </files_info>
+      <!-- END SYSTEM CONTEXT -->"
+    `);
+  });
 });

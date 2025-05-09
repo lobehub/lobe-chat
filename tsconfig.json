@@ -37,10 +37,5 @@
     "src",
     "tests",
     "vitest.config.ts"
-  ],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs"
-    }
-  }
+  ]
 }

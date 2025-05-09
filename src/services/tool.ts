@@ -1,18 +1,15 @@
+import { edgeClient } from '@/libs/trpc/client';
 import { globalHelpers } from '@/store/global/helpers';
 import { DiscoverPlugintem } from '@/types/discover';
 import { convertOpenAIManifestToLobeManifest, getToolManifest } from '@/utils/toolManifest';
-
-import { API_ENDPOINTS } from './_url';
 
 class ToolService {
   getToolList = async (): Promise<DiscoverPlugintem[]> => {
     const locale = globalHelpers.getCurrentLanguage();
 
-    const res = await fetch(`${API_ENDPOINTS.pluginStore}?locale=${locale}`);
+    const data = await edgeClient.market.getPluginIndex.query({ locale });
 
-    const json = await res.json();
-
-    return json.plugins;
+    return data.plugins;
   };
 
   getToolManifest = getToolManifest;

@@ -13,7 +13,10 @@ const ManifestPreviewer = memo<PluginManifestPreviewerProps>(
     <Popover
       arrow={false}
       content={
-        <Highlighter language={'json'} style={{ maxHeight: 600, maxWidth: 400 }}>
+        <Highlighter
+          language={'json'}
+          style={{ maxHeight: 600, maxWidth: 400, overflow: 'scroll' }}
+        >
           {JSON.stringify(manifest, null, 2)}
         </Highlighter>
       }

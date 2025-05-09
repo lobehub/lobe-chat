@@ -4,6 +4,7 @@ export * from './asyncTask';
 export * from './file';
 export * from './message';
 export * from './nextauth';
+export * from './oidc';
 export * from './rag';
 export * from './ragEvals';
 export * from './relations';

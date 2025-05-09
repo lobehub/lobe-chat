@@ -6,6 +6,7 @@
     "chat": "Sohbet Tercihi",
     "meta": "Asistan Bilgisi",
     "modal": "Model Ayarları",
+    "opening": "Açılış Ayarları",
     "plugin": "Eklenti Ayarları",
     "prompt": "Karakter Ayarları",
     "tts": "Metin Okuma Hizmeti"
@@ -149,6 +150,7 @@
       "title": "Arka Plan Rengi"
     },
     "description": {
+      "desc": "Asistanınızı basitçe tanıtın, karakter ayarı olarak kullanılmaz",
       "placeholder": "Asistan açıklamasını girin",
       "title": "Asistan Açıklaması"
     },
@@ -160,7 +162,9 @@
       "placeholder": "Prompt girin",
       "title": "Rol Ayarı"
     },
+    "submit": "Asistan bilgilerini güncelle",
     "tag": {
+      "desc": "Asistan etiketleri, asistan pazarında gösterilecektir",
       "placeholder": "Etiket girin",
       "title": "Etiket"
     },
@@ -205,6 +209,7 @@
       "placeholder": "Ön işleme şablonu {{text}}, gerçek zamanlı giriş bilgileri ile değiştirilir",
       "title": "Kullanıcı Girişi Ön İşleme"
     },
+    "submit": "Sohbet tercihlerini güncelle",
     "title": "Sohbet Ayarları"
   },
   "settingModel": {
@@ -242,6 +247,7 @@
       },
       "title": "Akıl yürütme yoğunluğu"
     },
+    "submit": "Model ayarlarını güncelle",
     "temperature": {
       "desc": "Değer ne kadar büyükse, cevap o kadar yaratıcı ve hayal gücü dolu olur; değer ne kadar küçükse, cevap o kadar titizdir.",
       "title": "Yaratıcılık Aktifliği",
@@ -252,6 +258,21 @@
       "desc": "Ne kadar olasılığı dikkate alır, değer ne kadar büyükse, daha fazla olası cevabı kabul eder; değer ne kadar küçükse, en olası cevabı seçme eğilimindedir. Yaratıcılık aktifliği ile birlikte değiştirilmesi önerilmez.",
       "title": "Düşünce Açıklığı"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "Sohbet açıldığında gösterilecek açılış mesajı, asistanın işlevlerini tanıtmak için kullanılır",
+      "placeholder": "Merhaba, ben Özelleştirilmiş Asistan, hemen benimle sohbet edebilirsiniz veya Asistan Ayarları'na giderek bilgimi tamamlayabilirsiniz.",
+      "title": "Açılış Mesajı"
+    },
+    "openingQuestions": {
+      "desc": "Sohbetin başlangıcında gösterilecek yönlendirici sorular",
+      "empty": "Henüz soru yok",
+      "placeholder": "Soruyu girin",
+      "repeat": "Soru zaten mevcut",
+      "title": "Açılış Soruları"
+    },
+    "title": "Açılış Ayarları"
   },
   "settingPlugin": {
     "title": "Eklenti Listesi"
@@ -303,6 +324,7 @@
       "desc": "'Tarayıcı' yerel konuşmadan metin hizmeti olduğundan",
       "title": "Konuşmadan Metin Hizmeti"
     },
+    "submit": "Ses hizmetini güncelle",
     "title": "Konuşma Hizmeti",
     "tts": "Metin Seslendirme Ayarlar",
     "ttsService": {
@@ -380,6 +402,12 @@
     "placeholder": "Asistan için benzersiz bir kimlik girin, örneğin web-geliştirme",
     "tooltips": "Asistan pazarına paylaşın"
   },
+  "submitFooter": {
+    "reset": "Sıfırla",
+    "submit": "Kaydet",
+    "unSaved": "Kaydedilmemiş değişiklikler",
+    "unSavedWarning": "Şu anda kaydedilmemiş değişiklikler var"
+  },
   "sync": {
     "device": {
       "deviceName": {
@@ -431,6 +459,7 @@
       "placeholder": "Lütfen özel ipucu kelimelerini girin",
       "title": "Özel İpucu"
     },
+    "helpInfo": "Yeni bir asistan oluşturduğunuzda, varsayılan asistan ayarları ön ayar olarak kullanılacaktır.",
     "historyCompress": {
       "label": "Oturum Geçmişi Modeli",
       "modelDesc": "Oturum geçmişini sıkıştırmak için kullanılan modeli belirtin",

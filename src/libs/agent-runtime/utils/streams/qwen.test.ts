@@ -1,6 +1,8 @@
+import OpenAI from 'openai';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { QwenAIStream } from './qwen';
+import { StreamContext } from './protocol';
+import { QwenAIStream, transformQwenStream } from './qwen';
 
 describe('QwenAIStream', () => {
   beforeAll(() => {});
@@ -43,14 +45,14 @@ describe('QwenAIStream', () => {
 
     const onStartMock = vi.fn();
     const onTextMock = vi.fn();
-    const onTokenMock = vi.fn();
     const onCompletionMock = vi.fn();
 
     const protocolStream = QwenAIStream(mockOpenAIStream, {
-      onStart: onStartMock,
-      onText: onTextMock,
-      onToken: onTokenMock,
-      onCompletion: onCompletionMock,
+      callbacks: {
+        onStart: onStartMock,
+        onText: onTextMock,
+        onCompletion: onCompletionMock,
+      },
     });
 
     const decoder = new TextDecoder();
@@ -74,9 +76,8 @@ describe('QwenAIStream', () => {
     ]);
 
     expect(onStartMock).toHaveBeenCalledTimes(1);
-    expect(onTextMock).toHaveBeenNthCalledWith(1, '"Hello"');
-    expect(onTextMock).toHaveBeenNthCalledWith(2, '" world!"');
-    expect(onTokenMock).toHaveBeenCalledTimes(2);
+    expect(onTextMock).toHaveBeenNthCalledWith(1, 'Hello');
+    expect(onTextMock).toHaveBeenNthCalledWith(2, ' world!');
     expect(onCompletionMock).toHaveBeenCalledTimes(1);
   });
 
@@ -114,7 +115,9 @@ describe('QwenAIStream', () => {
     const onToolCallMock = vi.fn();
 
     const protocolStream = QwenAIStream(mockOpenAIStream, {
-      onToolCall: onToolCallMock,
+      callbacks: {
+        onToolsCalling: onToolCallMock,
+      },
     });
 
     const decoder = new TextDecoder();
@@ -346,5 +349,78 @@ describe('QwenAIStream', () => {
       'event: tool_calls\n',
       `data: [{"function":{"name":"tool1","arguments":"{}"},"id":"call_1","index":0,"type":"function"},{"function":{"name":"tool2","arguments":"{}"},"id":"call_2","index":1,"type":"function"}]\n\n`,
     ]);
+  });
+});
+
+describe('transformQwenStream', () => {
+  it('should handle usage chunk', () => {
+    const mockChunk: OpenAI.ChatCompletionChunk = {
+      choices: [],
+      id: 'usage-test-id',
+      model: 'qwen-test-model',
+      object: 'chat.completion.chunk',
+      created: Date.now(),
+      usage: {
+        completion_tokens: 50,
+        prompt_tokens: 100,
+        total_tokens: 150,
+        completion_tokens_details: {}, // Ensure these exist even if empty
+        prompt_tokens_details: {},     // Ensure these exist even if empty
+      },
+    };
+
+    const streamContext: StreamContext = { id: '' };
+
+    const result = transformQwenStream(mockChunk, streamContext);
+
+    expect(result).toEqual({
+      id: 'usage-test-id',
+      type: 'usage',
+      data: {
+        inputTextTokens: 100,
+        outputTextTokens: 50,
+        totalInputTokens: 100,
+        totalOutputTokens: 50,
+        totalTokens: 150,
+      },
+    });
+
+    // Verify streamContext is updated
+    expect(streamContext.usage).toEqual({
+      inputTextTokens: 100,
+      outputTextTokens: 50,
+      totalInputTokens: 100,
+      totalOutputTokens: 50,
+      totalTokens: 150,
+    });
+  });
+
+  it('should handle usage chunk without streamContext', () => {
+    const mockChunk: OpenAI.ChatCompletionChunk = {
+      choices: [],
+      id: 'usage-test-id-no-ctx',
+      model: 'qwen-test-model',
+      object: 'chat.completion.chunk',
+      created: Date.now(),
+      usage: {
+        completion_tokens: 55,
+        prompt_tokens: 105,
+        total_tokens: 160,
+      },
+    };
+
+    const result = transformQwenStream(mockChunk); // No streamContext passed
+
+    expect(result).toEqual({
+      id: 'usage-test-id-no-ctx',
+      type: 'usage',
+      data: {
+        inputTextTokens: 105,
+        outputTextTokens: 55,
+        totalInputTokens: 105,
+        totalOutputTokens: 55,
+        totalTokens: 160,
+      },
+    });
   });
 });

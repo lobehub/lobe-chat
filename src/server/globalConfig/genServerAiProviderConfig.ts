@@ -5,7 +5,15 @@ import { AiFullModelCard } from '@/types/aiModel';
 import { ProviderConfig } from '@/types/user/settings';
 import { extractEnabledModels, transformToAiChatModelList } from '@/utils/parseModels';
 
-export const genServerAiProvidersConfig = (specificConfig: Record<any, any>) => {
+interface ProviderSpecificConfig {
+  enabled?: boolean;
+  enabledKey?: string;
+  fetchOnClient?: boolean;
+  modelListKey?: string;
+  withDeploymentName?: boolean;
+}
+
+export const genServerAiProvidersConfig = (specificConfig: Record<any, ProviderSpecificConfig>) => {
   const llmConfig = getLLMConfig() as Record<string, any>;
 
   return Object.values(ModelProvider).reduce(
@@ -26,8 +34,9 @@ export const genServerAiProvidersConfig = (specificConfig: Record<any, any>) => 
 
       config[provider] = {
         enabled:
-          providerConfig.enabled ||
-          llmConfig[providerConfig.enabledKey || `ENABLED_${providerUpperCase}`],
+          typeof providerConfig.enabled !== 'undefined'
+            ? providerConfig.enabled
+            : llmConfig[providerConfig.enabledKey || `ENABLED_${providerUpperCase}`],
 
         enabledModels: extractEnabledModels(
           providerModelList,

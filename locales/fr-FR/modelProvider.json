@@ -164,6 +164,7 @@
     },
     "download": {
       "desc": "Ollama est en train de télécharger ce modèle, veuillez essayer de ne pas fermer cette page. Le téléchargement reprendra à l'endroit où il a été interrompu.",
+      "failed": "Échec du téléchargement du modèle, veuillez vérifier votre connexion réseau ou les paramètres d'Ollama, puis réessayez",
       "remainingTime": "Temps restant",
       "speed": "Vitesse de téléchargement",
       "title": "Téléchargement du modèle {{model}} en cours"

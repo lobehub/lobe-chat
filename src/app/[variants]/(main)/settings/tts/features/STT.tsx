@@ -1,7 +1,7 @@
 'use client';
 
-import { Form, type ItemGroup } from '@lobehub/ui';
-import { Select, Switch } from 'antd';
+import { Form, type FormGroupItemType, Select } from '@lobehub/ui';
+import { Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,8 +12,6 @@ import { settingsSelectors } from '@/store/user/selectors';
 
 import { sttOptions } from './const';
 
-type SettingItemGroup = ItemGroup;
-
 const TTS_SETTING_KEY = 'tts';
 
 const STT = memo(() => {
@@ -22,7 +20,7 @@ const STT = memo(() => {
   const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
   const [setSettings] = useUserStore((s) => [s.setSettings]);
 
-  const stt: SettingItemGroup = {
+  const stt: FormGroupItemType = {
     children: [
       {
         children: <Select options={sttOptions} />,
@@ -34,6 +32,7 @@ const STT = memo(() => {
         children: <Switch />,
         desc: t('settingTTS.sttAutoStop.desc'),
         label: t('settingTTS.sttAutoStop.title'),
+        layout: 'horizontal',
         minWidth: undefined,
         name: [TTS_SETTING_KEY, 'sttAutoStop'],
         valuePropName: 'checked',
@@ -49,7 +48,7 @@ const STT = memo(() => {
       items={[stt]}
       itemsType={'group'}
       onValuesChange={setSettings}
-      variant={'pure'}
+      variant={'borderless'}
       {...FORM_STYLE}
     />
   );

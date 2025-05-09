@@ -148,6 +148,15 @@ class UploadService {
     return result;
   };
 
+  uploadToDesktop = async (file: File) => {
+    const fileArrayBuffer = await file.arrayBuffer();
+    const hash = sha256(fileArrayBuffer);
+
+    const { desktopFileAPI } = await import('@/services/electron/file');
+    const { metadata } = await desktopFileAPI.uploadFile(file, hash);
+    return metadata;
+  };
+
   uploadToClientS3 = async (hash: string, file: File): Promise<FileMetadata> => {
     await clientS3Storage.putObject(hash, file);
 

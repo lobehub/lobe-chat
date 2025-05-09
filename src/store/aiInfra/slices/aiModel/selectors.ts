@@ -49,6 +49,12 @@ const isModelSupportToolUse = (id: string, provider: string) => (s: AIProviderSt
   return model?.abilities?.functionCall;
 };
 
+const isModelSupportFiles = (id: string, provider: string) => (s: AIProviderStoreState) => {
+  const model = getEnabledModelById(id, provider)(s);
+
+  return model?.abilities?.files;
+};
+
 const isModelSupportVision = (id: string, provider: string) => (s: AIProviderStoreState) => {
   const model = getEnabledModelById(id, provider)(s);
 
@@ -126,6 +132,7 @@ export const aiModelSelectors = {
   isModelHasContextWindowToken,
   isModelHasExtendParams,
   isModelLoading,
+  isModelSupportFiles,
   isModelSupportReasoning,
   isModelSupportToolUse,
   isModelSupportVision,

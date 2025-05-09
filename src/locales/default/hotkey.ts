@@ -5,6 +5,10 @@ const hotkey: HotkeyI18nTranslations = {
     desc: '将当前输入内容添加为用户消息，但不触发生成',
     title: '添加一条用户消息',
   },
+  clearCurrentMessages: {
+    desc: '清空当前会话的消息和上传的文件',
+    title: '清空会话消息',
+  },
   editMessage: {
     desc: '通过按住 Alt 并双击消息进入编辑模式',
     title: '编辑消息',
@@ -17,6 +21,10 @@ const hotkey: HotkeyI18nTranslations = {
     desc: '查看所有快捷键的使用说明',
     title: '打开快捷键帮助',
   },
+  openSettings: {
+    desc: '打开应用设置页面',
+    title: '应用设置',
+  },
   regenerateMessage: {
     desc: '重新生成最后一条消息',
     title: '重新生成消息',
@@ -28,6 +36,10 @@ const hotkey: HotkeyI18nTranslations = {
   search: {
     desc: '唤起当前页面主要搜索框',
     title: '搜索',
+  },
+  showApp: {
+    desc: '快速唤起应用主窗口',
+    title: '显示主窗口',
   },
   switchAgent: {
     desc: '通过按住 Ctrl 加数字 0~9 切换固定在侧边栏的助手',

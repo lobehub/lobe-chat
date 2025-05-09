@@ -6,7 +6,9 @@ import { imagesPrompts } from './image';
 export const filesPrompts = ({
   imageList,
   fileList,
+  addUrl = true,
 }: {
+  addUrl?: boolean;
   fileList?: ChatFileItem[];
   imageList: ChatImageItem[];
 }) => {
@@ -19,8 +21,8 @@ export const filesPrompts = ({
 2. the context is only required when user's queries rely on it.
 </context.instruction>
 <files_info>
-${imagesPrompts(imageList)}
-${fileList ? filePrompts(fileList) : ''}
+${imagesPrompts(imageList, addUrl)}
+${fileList ? filePrompts(fileList, addUrl) : ''}
 </files_info>
 <!-- END SYSTEM CONTEXT -->`;
 

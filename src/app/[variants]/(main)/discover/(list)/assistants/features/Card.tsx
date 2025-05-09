@@ -63,18 +63,17 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 export interface AssistantCardProps
   extends Omit<DiscoverAssistantItem, 'suggestions' | 'socialData' | 'config'> {
   className?: string;
+  compact?: boolean;
   href: string;
   showCategory?: boolean;
   style?: CSSProperties;
-  variant?: 'default' | 'compact';
 }
 
 const AssistantCard = memo<AssistantCardProps>(
-  ({ showCategory, className, meta, createdAt, author, variant, style, href }) => {
+  ({ showCategory, className, meta, createdAt, author, compact, style, href }) => {
     const { avatar, title, description, tags = [], category } = meta;
     const { cx, styles, theme } = useStyles();
     const categoryItem = useCategoryItem(category, 12);
-    const isCompact = variant === 'compact';
     const router = useRouter();
     const user = (
       <Flexbox
@@ -90,7 +89,7 @@ const AssistantCard = memo<AssistantCardProps>(
 
     return (
       <Flexbox className={cx(styles.container, className)} gap={24} style={style}>
-        {!isCompact && (
+        {!compact && (
           <div
             onClick={() => {
               router.push(href);
@@ -103,7 +102,7 @@ const AssistantCard = memo<AssistantCardProps>(
           <Link href={href}>
             <Flexbox gap={12}>
               <Flexbox
-                align={isCompact ? 'flex-start' : 'flex-end'}
+                align={compact ? 'flex-start' : 'flex-end'}
                 gap={16}
                 horizontal
                 justify={'space-between'}
@@ -114,7 +113,7 @@ const AssistantCard = memo<AssistantCardProps>(
                   gap={8}
                   style={{
                     overflow: 'hidden',
-                    paddingTop: isCompact ? 4 : 0,
+                    paddingTop: compact ? 4 : 0,
                     position: 'relative',
                   }}
                 >
@@ -122,14 +121,14 @@ const AssistantCard = memo<AssistantCardProps>(
                     className={styles.title}
                     ellipsis={{ rows: 1, tooltip: title }}
                     level={3}
-                    style={{ fontSize: isCompact ? 16 : 18 }}
+                    style={{ fontSize: compact ? 16 : 18 }}
                   >
                     {title}
                   </Title>
-                  {isCompact && user}
+                  {compact && user}
                 </Flexbox>
 
-                {isCompact ? (
+                {compact ? (
                   <Avatar avatar={avatar} size={40} style={{ display: 'block' }} title={title} />
                 ) : (
                   <Center
@@ -149,7 +148,7 @@ const AssistantCard = memo<AssistantCardProps>(
                 )}
               </Flexbox>
 
-              {!isCompact && (
+              {!compact && (
                 <Flexbox gap={8} horizontal style={{ fontSize: 12 }}>
                   {user}
                   <time className={styles.time} dateTime={new Date(createdAt).toISOString()}>
@@ -181,7 +180,7 @@ const AssistantCard = memo<AssistantCardProps>(
                   });
                   return (
                     <Link href={url} key={index}>
-                      <Tag style={{ margin: 0 }}>{startCase(tag).trim()}</Tag>
+                      <Tag>{startCase(tag).trim()}</Tag>
                     </Link>
                   );
                 })

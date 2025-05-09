@@ -17,7 +17,7 @@ export const OG_URL = '/og/cover.png?v=1';
 
 export const GITHUB = pkg.homepage;
 export const GITHUB_ISSUES = urlJoin(GITHUB, 'issues/new/choose');
-export const CHANGELOG = urlJoin(GITHUB, 'blob/main/CHANGELOG.md');
+export const CHANGELOG = 'https://lobehub.com/changelog';
 export const DOCKER_IMAGE = 'https://hub.docker.com/r/lobehub/lobe-chat';
 
 export const DOCUMENTS = urlJoin(OFFICIAL_SITE, '/docs');

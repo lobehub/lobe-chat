@@ -1,5 +1,5 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
-import { App, Button, Dropdown, Skeleton, Space, Typography } from 'antd';
+import { ActionIcon, Button, Dropdown } from '@lobehub/ui';
+import { App, Skeleton, Space, Typography } from 'antd';
 import { useTheme } from 'antd-style';
 import { CircleX, EllipsisVertical, LucideRefreshCcwDot, PlusIcon } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -57,7 +57,7 @@ const ModelTitle = memo<ModelFetcherProps>(
         gap={12}
         paddingBlock={8}
         style={{
-          background: theme.colorBgLayout,
+          background: theme.colorBgContainer,
           position: 'sticky',
           top: mobile ? -2 : -16,
           zIndex: 15,
@@ -107,7 +107,7 @@ const ModelTitle = memo<ModelFetcherProps>(
               <Space.Compact>
                 {showModelFetcher && (
                   <Button
-                    icon={<Icon icon={LucideRefreshCcwDot} />}
+                    icon={LucideRefreshCcwDot}
                     loading={fetchRemoteModelsLoading}
                     onClick={async () => {
                       setFetchRemoteModelsLoading(true);
@@ -128,7 +128,7 @@ const ModelTitle = memo<ModelFetcherProps>(
                 {showAddNewModel && (
                   <>
                     <Button
-                      icon={<Icon icon={PlusIcon} />}
+                      icon={PlusIcon}
                       onClick={() => {
                         setShowModal(true);
                       }}
@@ -157,7 +157,7 @@ const ModelTitle = memo<ModelFetcherProps>(
                     ],
                   }}
                 >
-                  <Button icon={<Icon icon={EllipsisVertical} />} size={'small'} />
+                  <Button icon={EllipsisVertical} size={'small'} />
                 </Dropdown>
               </Space.Compact>
             </Flexbox>

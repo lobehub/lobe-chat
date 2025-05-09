@@ -8,12 +8,12 @@ import Container from './Container';
 
 const loading = () => <Skeleton active style={{ width: 400 }} />;
 
-const OllamaSetupGuide = dynamic(() => import('@/components/OllamaSetupGuide'), {
+const OllamaSetupGuide = dynamic(() => import('@/features/OllamaSetupGuide'), {
   loading,
   ssr: false,
 });
 
-const InvalidModel = dynamic(() => import('./OllamaModelDownloader'), {
+const InvalidModel = dynamic(() => import('@/features/OllamaModelDownloader'), {
   loading,
   ssr: false,
 });
@@ -40,9 +40,11 @@ const CheckError = ({
   error?: ChatMessageError;
   setError: (error?: ChatMessageError) => void;
 }) => {
-  const errorBody: OllamaErrorResponse = (error as any)?.body;
+  const errorBody: OllamaErrorResponse = error?.body;
 
   const errorMessage = errorBody.error?.message;
+
+  if (error?.type === 'OllamaServiceUnavailable') return <OllamaSetupGuide />;
 
   // error of not pull the model
   const unresolvedModel = errorMessage?.match(UNRESOLVED_MODEL_REGEXP)?.[1];

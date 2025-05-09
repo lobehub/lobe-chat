@@ -92,4 +92,60 @@ describe('parseSystemAgent', () => {
 
     expect(parseSystemAgent(envValue)).toEqual(expected);
   });
+
+  it('should apply default setting to all system agents when default is specified', () => {
+    const envValue = 'default=ollama/deepseek-v3';
+
+    const result = parseSystemAgent(envValue);
+
+    expect(result.topic).toEqual({ provider: 'ollama', model: 'deepseek-v3' });
+    expect(result.translation).toEqual({ provider: 'ollama', model: 'deepseek-v3' });
+    expect(result.agentMeta).toEqual({ provider: 'ollama', model: 'deepseek-v3' });
+    expect(result.historyCompress).toEqual({ provider: 'ollama', model: 'deepseek-v3' });
+    expect(result.thread).toEqual({ provider: 'ollama', model: 'deepseek-v3' });
+    expect(result.queryRewrite).toEqual({
+      provider: 'ollama',
+      model: 'deepseek-v3',
+      enabled: true,
+    });
+  });
+
+  it('should override default setting with specific settings', () => {
+    const envValue = 'default=ollama/deepseek-v3,topic=openai/gpt-4';
+
+    const result = parseSystemAgent(envValue);
+
+    expect(result.topic).toEqual({ provider: 'openai', model: 'gpt-4' });
+
+    expect(result.translation).toEqual({ provider: 'ollama', model: 'deepseek-v3' });
+    expect(result.agentMeta).toEqual({ provider: 'ollama', model: 'deepseek-v3' });
+    expect(result.historyCompress).toEqual({ provider: 'ollama', model: 'deepseek-v3' });
+    expect(result.thread).toEqual({ provider: 'ollama', model: 'deepseek-v3' });
+    expect(result.queryRewrite).toEqual({
+      provider: 'ollama',
+      model: 'deepseek-v3',
+      enabled: true,
+    });
+  });
+
+  it('should properly handle priority when topic appears before default in the string', () => {
+    // 即使 topic 在 default 之前出现，topic 的设置仍然应该优先
+    const envValue = 'topic=openai/gpt-4,default=ollama/deepseek-v3';
+
+    const result = parseSystemAgent(envValue);
+
+    // topic 应该保持自己的设置而不被 default 覆盖
+    expect(result.topic).toEqual({ provider: 'openai', model: 'gpt-4' });
+
+    // 其他系统智能体应该使用默认配置
+    expect(result.translation).toEqual({ provider: 'ollama', model: 'deepseek-v3' });
+    expect(result.agentMeta).toEqual({ provider: 'ollama', model: 'deepseek-v3' });
+    expect(result.historyCompress).toEqual({ provider: 'ollama', model: 'deepseek-v3' });
+    expect(result.thread).toEqual({ provider: 'ollama', model: 'deepseek-v3' });
+    expect(result.queryRewrite).toEqual({
+      provider: 'ollama',
+      model: 'deepseek-v3',
+      enabled: true,
+    });
+  });
 });

@@ -1,8 +1,10 @@
+import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { t } from 'i18next';
 import { merge } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
 import { notification } from '@/components/AntdStaticMethods';
+import { mcpService } from '@/services/mcp';
 import { pluginService } from '@/services/plugin';
 import { toolService } from '@/services/tool';
 import { pluginHelpers } from '@/store/tool/helpers';
@@ -40,12 +42,22 @@ export const createCustomPluginSlice: StateCreator<
     if (!plugin) return;
 
     const { refreshPlugins, updateInstallLoadingState } = get();
+
     try {
       updateInstallLoadingState(id, true);
-      const manifest = await toolService.getToolManifest(
-        plugin.customParams?.manifestUrl,
-        plugin.customParams?.useProxy,
-      );
+      let manifest: LobeChatPluginManifest;
+      // mean this is a mcp plugin
+      if (!!plugin.customParams?.mcp) {
+        const url = plugin.customParams?.mcp?.url;
+        if (!url) return;
+
+        manifest = await mcpService.getStreamableMcpServerManifest(plugin.identifier, url);
+      } else {
+        manifest = await toolService.getToolManifest(
+          plugin.customParams?.manifestUrl,
+          plugin.customParams?.useProxy,
+        );
+      }
       updateInstallLoadingState(id, false);
 
       await pluginService.updatePluginManifest(id, manifest);

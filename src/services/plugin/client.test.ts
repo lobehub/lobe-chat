@@ -159,7 +159,9 @@ describe('PluginService', () => {
       // Arrange
       const id = 'plugin-id';
       const settings = { color: 'blue' };
-      await clientDB.insert(userInstalledPlugins).values([{ identifier: id, type: 'plugin', userId }]);
+      await clientDB
+        .insert(userInstalledPlugins)
+        .values([{ identifier: id, type: 'plugin', userId }]);
 
       // Act
       await pluginService.updatePluginSettings(id, settings);

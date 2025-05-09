@@ -8,11 +8,14 @@ import {
   Embeddings,
   EmbeddingsOptions,
   EmbeddingsPayload,
+  ModelRequestOptions,
+  PullModelParams,
   TextToImagePayload,
   TextToSpeechOptions,
   TextToSpeechPayload,
 } from './types';
 
+/* eslint-disable sort-keys-fix/sort-keys-fix , typescript-sort-keys/interface */
 export interface LobeRuntimeAI {
   baseURL?: string;
   chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions): Promise<Response>;
@@ -27,7 +30,11 @@ export interface LobeRuntimeAI {
     payload: TextToSpeechPayload,
     options?: TextToSpeechOptions,
   ) => Promise<ArrayBuffer>;
+
+  // 模型管理相关接口
+  pullModel?(params: PullModelParams, options?: ModelRequestOptions): Promise<Response>;
 }
+/* eslint-enabled */
 
 export abstract class LobeOpenAICompatibleRuntime {
   abstract baseURL: string;

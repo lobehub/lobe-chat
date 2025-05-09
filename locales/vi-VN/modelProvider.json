@@ -164,6 +164,7 @@
     },
     "download": {
       "desc": "Ollama đang tải xuống mô hình này, vui lòng không đóng trang này. Quá trình tải xuống sẽ tiếp tục từ nơi đã bị gián đoạn khi tải lại",
+      "failed": "Tải mô hình không thành công, vui lòng kiểm tra kết nối mạng hoặc cài đặt Ollama và thử lại",
       "remainingTime": "Thời gian còn lại",
       "speed": "Tốc độ tải xuống",
       "title": "Đang tải mô hình {{model}}"

@@ -3,7 +3,7 @@ import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
-import { isDeprecatedEdition } from '@/const/version';
+import { isDeprecatedEdition, isDesktop, isUsePgliteDB } from '@/const/version';
 import { useClientDataSWR } from '@/libs/swr';
 import { aiProviderService } from '@/services/aiProvider';
 import { AiInfraStore } from '@/store/aiInfra/store';
@@ -184,6 +184,7 @@ export const createAiProviderSlice: StateCreator<
         };
       },
       {
+        focusThrottleInterval: isDesktop || isUsePgliteDB ? 100 : undefined,
         onSuccess: async (data) => {
           if (!data) return;
 

@@ -8,6 +8,8 @@ class CloudflareStreamTransformer {
     const dataPrefix = /^data: /;
     const json = chunk.replace(dataPrefix, '');
     const parsedChunk = JSON.parse(json);
+    const res = parsedChunk?.response;
+    if (!res) return; // TODO: Add test; Handle tool_call parameter.
     controller.enqueue(`event: text\n`);
     controller.enqueue(`data: ${JSON.stringify(parsedChunk.response)}\n\n`);
   }
@@ -56,9 +58,4 @@ function desensitizeCloudflareUrl(url: string): string {
   }
 }
 
-export {
-  CloudflareStreamTransformer,
-  DEFAULT_BASE_URL_PREFIX,
-  desensitizeCloudflareUrl,
-  fillUrl,
-};
+export { CloudflareStreamTransformer, DEFAULT_BASE_URL_PREFIX, desensitizeCloudflareUrl, fillUrl };

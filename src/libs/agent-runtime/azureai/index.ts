@@ -34,7 +34,7 @@ export class LobeAzureAI implements LobeRuntimeAI {
   baseURL: string;
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
-    const { messages, model, ...params } = payload;
+    const { messages, model, temperature, top_p, ...params } = payload;
     // o1 series models on Azure OpenAI does not support streaming currently
     const enableStreaming = model.includes('o1') ? false : (params.stream ?? true);
 
@@ -56,7 +56,9 @@ export class LobeAzureAI implements LobeRuntimeAI {
           model,
           ...params,
           stream: enableStreaming,
+          temperature: model.includes('o3') ? undefined : temperature,
           tool_choice: params.tools ? 'auto' : undefined,
+          top_p: model.includes('o3') ? undefined : top_p,
         },
       });
 

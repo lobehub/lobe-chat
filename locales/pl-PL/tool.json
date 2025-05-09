@@ -7,6 +7,20 @@
     "images": "Obrazy:",
     "prompt": "słowo kluczowe"
   },
+  "localFiles": {
+    "file": "Plik",
+    "folder": "Folder",
+    "open": "Otwórz",
+    "openFile": "Otwórz plik",
+    "openFolder": "Otwórz folder",
+    "read": {
+      "more": "Zobacz więcej"
+    },
+    "readFile": "Odczytaj plik",
+    "readFileError": "Błąd odczytu pliku, sprawdź, czy ścieżka do pliku jest poprawna",
+    "readFiles": "Odczytaj pliki",
+    "readFilesError": "Błąd odczytu plików, sprawdź, czy ścieżka do plików jest poprawna"
+  },
   "search": {
     "createNewSearch": "Utwórz nową historię wyszukiwania",
     "emptyResult": "Nie znaleziono wyników, spróbuj zmienić słowa kluczowe",
@@ -19,10 +33,50 @@
       "placeholder": "Słowa kluczowe",
       "tooltip": "Ponownie pobierze wyniki wyszukiwania i utworzy nową wiadomość podsumowującą"
     },
-    "searchEngine": "Silnik wyszukiwania:",
+    "searchCategory": {
+      "placeholder": "Wyszukaj kategorię",
+      "title": "Kategoria wyszukiwania:",
+      "value": {
+        "files": "Pliki",
+        "general": "Ogólne",
+        "images": "Obrazy",
+        "it": "Technologia informacyjna",
+        "map": "Mapa",
+        "music": "Muzyka",
+        "news": "Aktualności",
+        "science": "Nauka",
+        "social_media": "Media społecznościowe",
+        "videos": "Filmy"
+      }
+    },
+    "searchEngine": {
+      "placeholder": "Silnik wyszukiwania",
+      "title": "Silnik wyszukiwania:"
+    },
     "searchResult": "Liczba wyników:",
+    "searchTimeRange": {
+      "title": "Zakres czasu:",
+      "value": {
+        "anytime": "Bez ograniczeń czasowych",
+        "day": "W ciągu jednego dnia",
+        "month": "W ciągu jednego miesiąca",
+        "week": "W ciągu jednego tygodnia",
+        "year": "W ciągu jednego roku"
+      }
+    },
     "summary": "Podsumowanie",
     "summaryTooltip": "Podsumuj bieżącą treść",
     "viewMoreResults": "Zobacz więcej {{results}} wyników"
+  },
+  "updateArgs": {
+    "duplicateKeyError": "Klucz pola musi być unikalny",
+    "form": {
+      "add": "Dodaj element",
+      "key": "Klucz pola",
+      "value": "Wartość pola"
+    },
+    "formValidationFailed": "Walidacja formularza nie powiodła się, sprawdź format parametrów",
+    "keyRequired": "Klucz pola nie może być pusty",
+    "stringifyError": "Nie można zserializować parametrów, sprawdź format parametrów"
   }
 }

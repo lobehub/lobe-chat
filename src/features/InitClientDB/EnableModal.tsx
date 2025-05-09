@@ -1,5 +1,4 @@
-import { Icon } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Button, Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { CpuIcon, LibraryBig, ShieldCheck } from 'lucide-react';
 import { memo } from 'react';
@@ -95,7 +94,7 @@ const EnableClientDBModal = memo<EnableClientDBModalProps>(({ open }) => {
           {features.map((item) => (
             <Flexbox align={'flex-start'} gap={24} horizontal key={item.title}>
               <Center className={styles.iconCtn}>
-                <Icon className={styles.icon} icon={item.avatar} size={{ fontSize: 36 }} />
+                <Icon className={styles.icon} icon={item.avatar} size={36} />
               </Center>
               <Flexbox gap={8}>
                 <p className={styles.title}>{item.title}</p>

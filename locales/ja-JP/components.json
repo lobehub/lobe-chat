@@ -88,9 +88,14 @@
     "emptyModel": "有効なモデルがありません。設定に移動して有効にしてください。",
     "emptyProvider": "有効なサービスプロバイダーがありません。設定に移動して有効にしてください。",
     "goToSettings": "設定に移動",
-    "provider": "プロバイダー"
+    "provider": "プロバイダー",
+    "title": "モデル"
   },
   "OllamaSetupGuide": {
+    "action": {
+      "close": "ヒントを閉じる",
+      "start": "インストールされ、実行中です。対話を開始します"
+    },
     "cors": {
       "description": "ブラウザのセキュリティ制限により、Ollamaを正常に使用するにはクロスオリジン設定が必要です。",
       "linux": {

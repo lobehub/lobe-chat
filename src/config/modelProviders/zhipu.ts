@@ -216,7 +216,7 @@ const ZhiPu: ModelProviderCard = {
   name: 'ZhiPu',
   settings: {
     sdkType: 'openai',
-    showModelFetcher: true
+    showModelFetcher: true,
   },
   url: 'https://zhipuai.cn',
 };

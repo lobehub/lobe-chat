@@ -52,6 +52,7 @@ export const POST = async (req: Request) => {
     return createErrorResponse(result.error as ErrorType);
   }
 
+  // TODO: need to be replace by better telemetry system
   // add trace
   const tracePayload = getTracePayload(req);
   const traceClient = new TraceClient();

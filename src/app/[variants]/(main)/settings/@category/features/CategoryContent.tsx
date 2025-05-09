@@ -17,13 +17,13 @@ const CategoryContent = memo(() => {
 
   return (
     <Menu
+      compact
       items={cateItems}
       onClick={({ key }) => {
         router.push(urlJoin('/settings', key));
       }}
       selectable
       selectedKeys={[activeTab]}
-      variant={'compact'}
     />
   );
 });

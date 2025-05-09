@@ -87,9 +87,9 @@ postgresql://postgres:wAbLxfXSwkxxxxxx@45.577.281.48:5432/postgres
 
 ```shell
 # 构建所必需的环境变量
-NIXPACKS_PKGS="pnpm bun"
+NIXPACKS_PKGS="bun"
 NIXPACKS_INSTALL_CMD="pnpm install"
-NIXPACKS_BUILD_CMD="pnpm run build"
+NIXPACKS_BUILD_CMD="NODE_OPTIONS='--max-old-space-size=8192' pnpm run build"
 NIXPACKS_START_CMD="pnpm start"
 
 APP_URL=

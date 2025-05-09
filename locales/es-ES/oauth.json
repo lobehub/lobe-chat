@@ -1,0 +1,56 @@
+{
+  "consent": {
+    "buttons": {
+      "accept": "Autorizar",
+      "deny": "Denegar"
+    },
+    "description": "La aplicación {{clientName}} solicita autorización para su cuenta",
+    "error": {
+      "sessionInvalid": {
+        "message": "La sesión de autorización ha expirado o es inválida, por favor inicie nuevamente el proceso de autorización.",
+        "title": "Sesión de autorización inválida"
+      },
+      "title": "Ocurrió un error",
+      "unsupportedInteraction": {
+        "message": "Tipo de interacción no soportado: {promptName}",
+        "title": "Tipo de interacción no soportado"
+      }
+    },
+    "permissionsTitle": "Solicitar los siguientes permisos:",
+    "redirectUri": "Se redirigirá a después de la autorización exitosa",
+    "scope": {
+      "email": "Acceder a su dirección de correo electrónico",
+      "offline_access": "Permitir que el cliente acceda a sus datos",
+      "openid": "Autenticarse con su cuenta de LobeChat",
+      "profile": "Acceder a su información básica de perfil (nombre, foto, etc.)",
+      "sync-read": "Leer sus datos sincronizados",
+      "sync-write": "Escribir y actualizar sus datos sincronizados"
+    },
+    "title": "Autorizar {{clientName}}"
+  },
+  "failed": {
+    "backToHome": "Volver a la página de inicio",
+    "subTitle": "Ha denegado el acceso de la aplicación a su cuenta de LobeChat",
+    "title": "Autorización denegada"
+  },
+  "handoff": {
+    "desc": {
+      "processing": "La aplicación está procesando la autorización, redirigiendo a la siguiente página...",
+      "success": "Se ha intentado abrir la aplicación de escritorio. Si la aplicación no se abre automáticamente, cambie manualmente. Puede cerrar esta ventana del navegador más tarde."
+    },
+    "title": {
+      "processing": "Procesando autorización...",
+      "success": "Autorización completada"
+    }
+  },
+  "login": {
+    "button": "Confirmar inicio de sesión",
+    "description": "La aplicación {{clientName}} solicita usar su cuenta para iniciar sesión",
+    "title": "Iniciar sesión en {{clientName}}",
+    "userWelcome": "Bienvenido de nuevo, "
+  },
+  "success": {
+    "subTitle": "Ha autorizado con éxito a la aplicación para acceder a su cuenta de LobeChat, puede cerrar esta página",
+    "title": "Autorización exitosa"
+  }
+}

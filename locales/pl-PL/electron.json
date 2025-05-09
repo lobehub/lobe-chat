@@ -1,0 +1,68 @@
+{
+  "remoteServer": {
+    "authError": "Błąd autoryzacji: {{error}}",
+    "authPending": "Proszę zakończyć autoryzację w przeglądarce",
+    "configDesc": "Połącz z zdalnym serwerem LobeChat, aby włączyć synchronizację danych",
+    "configError": "Błąd konfiguracji",
+    "configTitle": "Konfiguracja synchronizacji w chmurze",
+    "connect": "Połącz i autoryzuj",
+    "connected": "Połączono",
+    "disconnect": "Rozłącz",
+    "disconnectError": "Błąd rozłączenia",
+    "disconnected": "Nie połączono",
+    "fetchError": "Błąd pobierania konfiguracji",
+    "invalidUrl": "Proszę wprowadzić prawidłowy adres URL",
+    "serverUrl": "Adres serwera",
+    "statusConnected": "Połączono",
+    "statusDisconnected": "Nie połączono",
+    "urlRequired": "Proszę wprowadzić adres serwera"
+  },
+  "sync": {
+    "continue": "Kontynuuj",
+    "inCloud": "Obecnie używasz synchronizacji w chmurze",
+    "inLocalStorage": "Obecnie używasz lokalnego przechowywania",
+    "isIniting": "Inicjalizacja...",
+    "lobehubCloud": {
+      "description": "Oficjalna wersja chmurowa",
+      "title": "LobeHub Cloud"
+    },
+    "local": {
+      "description": "Używa lokalnej bazy danych, całkowicie offline",
+      "title": "Lokalna baza danych"
+    },
+    "mode": {
+      "cloudSync": "Synchronizacja w chmurze",
+      "localStorage": "Lokalne przechowywanie",
+      "title": "Wybierz tryb połączenia",
+      "useSelfHosted": "Używasz instancji samodzielnie hostowanej?"
+    },
+    "selfHosted": {
+      "description": "Wersja społecznościowa do samodzielnego wdrożenia",
+      "title": "Instancja samodzielnie hostowana"
+    }
+  },
+  "updater": {
+    "checkingUpdate": "Sprawdzanie aktualizacji",
+    "checkingUpdateDesc": "Pobieranie informacji o wersji...",
+    "downloadNewVersion": "Pobierz nową wersję",
+    "downloadingUpdate": "Pobieranie aktualizacji",
+    "downloadingUpdateDesc": "Aktualizacja jest pobierana, proszę czekać...",
+    "installLater": "Zaktualizuj przy następnym uruchomieniu",
+    "isLatestVersion": "Aktualnie używasz najnowszej wersji",
+    "isLatestVersionDesc": "Świetnie, używana wersja {{version}} jest najnowszą dostępną wersją.",
+    "later": "Zaktualizuj później",
+    "newVersionAvailable": "Dostępna nowa wersja",
+    "newVersionAvailableDesc": "Znaleziono nową wersję {{version}}, czy chcesz ją pobrać teraz?",
+    "restartAndInstall": "Zainstaluj aktualizację i uruchom ponownie",
+    "updateError": "Błąd aktualizacji",
+    "updateReady": "Aktualizacja gotowa",
+    "updateReadyDesc": "Nowa wersja {{version}} została pobrana, zainstaluj ją po ponownym uruchomieniu aplikacji.",
+    "upgradeNow": "Zaktualizuj teraz"
+  },
+  "waitingOAuth": {
+    "cancel": "Anuluj",
+    "description": "Przeglądarka otworzyła stronę autoryzacji, proszę zakończyć autoryzację w przeglądarce",
+    "helpText": "Jeśli przeglądarka nie otworzyła się automatycznie, kliknij anuluj i spróbuj ponownie",
+    "title": "Oczekiwanie na połączenie autoryzacyjne"
+  }
+}

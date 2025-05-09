@@ -102,6 +102,7 @@ describe('ImporterService', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -118,6 +119,7 @@ describe('ImporterService', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 2',
@@ -169,6 +171,7 @@ describe('ImporterService', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -185,6 +188,7 @@ describe('ImporterService', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 2',
@@ -225,6 +229,7 @@ describe('ImporterService', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -242,6 +247,7 @@ describe('ImporterService', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 2',
@@ -259,6 +265,7 @@ describe('ImporterService', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 3',
@@ -310,6 +317,7 @@ describe('ImporterService', () => {
               params: {},
               systemRole: 'Test Agent 1',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -326,6 +334,7 @@ describe('ImporterService', () => {
               params: {},
               systemRole: 'Test Agent 2',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 2',
@@ -390,6 +399,7 @@ describe('ImporterService', () => {
               params: {},
               systemRole: 'Test Agent 1',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -413,6 +423,7 @@ describe('ImporterService', () => {
               params: {},
               systemRole: 'Test Agent 1',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -462,6 +473,7 @@ describe('ImporterService', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -478,6 +490,7 @@ describe('ImporterService', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 2',
@@ -544,6 +557,7 @@ describe('ImporterService', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -619,6 +633,7 @@ describe('ImporterService', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -711,6 +726,7 @@ describe('ImporterService', () => {
               params: {},
               systemRole: 'abc',
               tts: {} as any,
+              openingQuestions: [],
             },
             meta: {
               title: 'Session 1',
@@ -923,6 +939,8 @@ describe('ImporterService', () => {
                   enableAutoCreateTopic: true,
                   historyCount: 1,
                 },
+                openingQuestions: ['Question 1', 'Question 2'],
+                openingMessage: 'Hello, I am [LobeChat](https://github.com/lobehub/lobe-chat).',
               },
               group: 'XlUbvOvL',
               meta: {

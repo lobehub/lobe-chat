@@ -71,6 +71,9 @@
     "websites": "Websites"
   },
   "title": "Files",
+  "toggleLeftPanel": {
+    "title": "Show/Hide Left Panel"
+  },
   "uploadDock": {
     "body": {
       "collapse": "Collapse",

@@ -1,18 +1,24 @@
 'use client';
 
-import { Form, HotkeyInput, type ItemGroup } from '@lobehub/ui';
+import { Form, type FormGroupItemType, HotkeyInput } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { HOTKEYS_REGISTRATION } from '@/const/hotkeys';
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { isDesktop } from '@/const/version';
 import hotkeyMeta from '@/locales/default/hotkey';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 import { HotkeyGroupEnum, HotkeyItem } from '@/types/hotkey';
 
-type SettingItemGroup = ItemGroup;
+const filterByDesktop = (item: HotkeyItem) => {
+  if (isDesktop) return true;
+
+  // is not desktop, filter out desktop only items
+  if (!isDesktop) return !item.isDesktop;
+};
 
 const HOTKEY_SETTING_KEY = 'hotkey';
 
@@ -30,6 +36,7 @@ const HotkeySetting = memo(() => {
         return value;
       })
       .filter(Boolean) as string[];
+
     return {
       children: (
         <HotkeyInput
@@ -50,17 +57,17 @@ const HotkeySetting = memo(() => {
     };
   };
 
-  const essential: SettingItemGroup = {
-    children: HOTKEYS_REGISTRATION.filter((item) => item.group === HotkeyGroupEnum.Essential).map(
-      (item) => mapHotkeyItem(item),
-    ),
+  const essential: FormGroupItemType = {
+    children: HOTKEYS_REGISTRATION.filter((item) => item.group === HotkeyGroupEnum.Essential)
+      .filter((item) => filterByDesktop(item))
+      .map((item) => mapHotkeyItem(item)),
     title: t('hotkey.group.essential'),
   };
 
-  const conversation: SettingItemGroup = {
-    children: HOTKEYS_REGISTRATION.filter(
-      (item) => item.group === HotkeyGroupEnum.Conversation,
-    ).map((item) => mapHotkeyItem(item)),
+  const conversation: FormGroupItemType = {
+    children: HOTKEYS_REGISTRATION.filter((item) => item.group === HotkeyGroupEnum.Conversation)
+      .filter((item) => filterByDesktop(item))
+      .map((item) => mapHotkeyItem(item)),
     title: t('hotkey.group.conversation'),
   };
 
@@ -71,7 +78,7 @@ const HotkeySetting = memo(() => {
       items={[essential, conversation]}
       itemsType={'group'}
       onValuesChange={setSettings}
-      variant={'pure'}
+      variant={'borderless'}
       {...FORM_STYLE}
     />
   );

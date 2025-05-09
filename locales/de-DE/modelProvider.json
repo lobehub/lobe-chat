@@ -164,6 +164,7 @@
     },
     "download": {
       "desc": "Ollama lädt dieses Modell herunter. Bitte schließen Sie diese Seite nicht. Ein erneuter Download wird an der unterbrochenen Stelle fortgesetzt.",
+      "failed": "Der Download des Modells ist fehlgeschlagen. Bitte überprüfen Sie Ihre Netzwerkverbindung oder die Ollama-Einstellungen und versuchen Sie es erneut.",
       "remainingTime": "Verbleibende Zeit",
       "speed": "Downloadgeschwindigkeit",
       "title": "Lade Modell {{model}} herunter"

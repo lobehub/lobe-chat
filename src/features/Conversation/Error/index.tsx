@@ -20,6 +20,11 @@ const loading = () => <Skeleton active />;
 
 const OllamaBizError = dynamic(() => import('./OllamaBizError'), { loading, ssr: false });
 
+const OllamaSetupGuide = dynamic(() => import('@/features/OllamaSetupGuide'), {
+  loading,
+  ssr: false,
+});
+
 // Config for the errorMessage display
 const getErrorAlertConfig = (
   errorType?: IPluginErrorType | ILobeAgentRuntimeErrorType | ErrorType,
@@ -49,6 +54,7 @@ const getErrorAlertConfig = (
       };
     }
 
+    case AgentRuntimeErrorType.OllamaServiceUnavailable:
     case AgentRuntimeErrorType.NoOpenAIAPIKey: {
       return {
         extraDefaultExpand: true,
@@ -85,6 +91,10 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
   if (!error?.type) return;
 
   switch (error.type) {
+    case AgentRuntimeErrorType.OllamaServiceUnavailable: {
+      return <OllamaSetupGuide id={data.id} />;
+    }
+
     case AgentRuntimeErrorType.OllamaBizError: {
       return <OllamaBizError {...data} />;
     }

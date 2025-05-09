@@ -1,0 +1,56 @@
+{
+  "consent": {
+    "buttons": {
+      "accept": "Autorizar",
+      "deny": "Negar"
+    },
+    "description": "O aplicativo {{clientName}} solicita autorização para sua conta",
+    "error": {
+      "sessionInvalid": {
+        "message": "A sessão de autorização expirou ou é inválida, por favor, inicie o processo de autorização novamente.",
+        "title": "Sessão de autorização inválida"
+      },
+      "title": "Ocorreu um erro",
+      "unsupportedInteraction": {
+        "message": "Tipo de interação não suportado: {promptName}",
+        "title": "Tipo de interação não suportado"
+      }
+    },
+    "permissionsTitle": "Solicitar as seguintes permissões:",
+    "redirectUri": "Você será redirecionado após a autorização bem-sucedida",
+    "scope": {
+      "email": "Acessar seu endereço de e-mail",
+      "offline_access": "Permitir que o cliente acesse seus dados",
+      "openid": "Autenticar usando sua conta LobeChat",
+      "profile": "Acessar suas informações básicas de perfil (nome, foto, etc.)",
+      "sync-read": "Ler seus dados de sincronização",
+      "sync-write": "Escrever e atualizar seus dados de sincronização"
+    },
+    "title": "Autorizar {{clientName}}"
+  },
+  "failed": {
+    "backToHome": "Voltar para a página inicial",
+    "subTitle": "Você negou a autorização do aplicativo para acessar sua conta LobeChat",
+    "title": "Autorização negada"
+  },
+  "handoff": {
+    "desc": {
+      "processing": "O aplicativo está processando a autorização, redirecionando para a próxima página...",
+      "success": "Tentamos abrir o aplicativo de desktop. Se o aplicativo não abrir automaticamente, por favor, mude manualmente. Você pode fechar esta janela do navegador mais tarde."
+    },
+    "title": {
+      "processing": "Processando autorização...",
+      "success": "Autorização concluída"
+    }
+  },
+  "login": {
+    "button": "Confirmar login",
+    "description": "O aplicativo {{clientName}} solicita usar sua conta para fazer login",
+    "title": "Login no {{clientName}}",
+    "userWelcome": "Bem-vindo de volta, "
+  },
+  "success": {
+    "subTitle": "Você autorizou com sucesso o aplicativo a acessar sua conta LobeChat, pode fechar esta página agora",
+    "title": "Autorização bem-sucedida"
+  }
+}

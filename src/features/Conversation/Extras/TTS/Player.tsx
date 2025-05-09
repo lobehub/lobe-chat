@@ -1,6 +1,5 @@
 import { AudioPlayer, AudioPlayerProps } from '@lobehub/tts/react';
-import { ActionIcon, Alert, Highlighter } from '@lobehub/ui';
-import { Button } from 'antd';
+import { ActionIcon, Alert, Button, Highlighter } from '@lobehub/ui';
 import { TrashIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -29,7 +28,7 @@ const Player = memo<PlayerProps>(({ onRetry, error, onDelete, audio, isLoading, 
           closable
           extra={
             error.body && (
-              <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
+              <Highlighter actionIconSize={'small'} language={'json'} variant={'borderless'}>
                 {JSON.stringify(error.body, null, 2)}
               </Highlighter>
             )

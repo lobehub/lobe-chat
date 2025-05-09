@@ -164,6 +164,7 @@
     },
     "download": {
       "desc": "Ollama 正在下载该模型，请尽量不要关闭本页面。重新下载时将会中断处继续",
+      "failed": "Model indirme başarısız oldu, lütfen ağı veya Ollama ayarlarını kontrol edip tekrar deneyin",
       "remainingTime": "剩余时间",
       "speed": "下载速度",
       "title": "正在下载模型 {{model}} "

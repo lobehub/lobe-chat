@@ -1,7 +1,7 @@
 /**
  * This file contains the root router of Lobe Chat tRPC-backend
  */
-import { publicProcedure, router } from '@/libs/trpc';
+import { publicProcedure, router } from '@/libs/trpc/lambda';
 
 import { agentRouter } from './agent';
 import { aiModelRouter } from './aiModel';

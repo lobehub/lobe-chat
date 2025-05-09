@@ -1,3 +1,29 @@
+import {
+  CodeIcon,
+  FileIcon,
+  FlaskConicalIcon,
+  ImageIcon,
+  MapIcon,
+  MusicIcon,
+  NewspaperIcon,
+  SearchIcon,
+  Share2Icon,
+  VideoIcon,
+} from 'lucide-react';
+
+export const CATEGORY_ICON_MAP: Record<string, any> = {
+  files: FileIcon,
+  general: SearchIcon,
+  images: ImageIcon,
+  it: CodeIcon,
+  map: MapIcon,
+  music: MusicIcon,
+  news: NewspaperIcon,
+  science: FlaskConicalIcon,
+  social_media: Share2Icon,
+  videos: VideoIcon,
+};
+
 export const ENGINE_ICON_MAP: Record<string, string> = {
   'arxiv': 'https://icons.duckduckgo.com/ip3/arxiv.org.ico',
   'bilibili': 'https://icons.duckduckgo.com/ip3/bilibili.com.ico',

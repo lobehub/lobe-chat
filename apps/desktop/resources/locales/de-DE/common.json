@@ -1,0 +1,32 @@
+{
+  "actions": {
+    "add": "Hinzufügen",
+    "back": "Zurück",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "confirm": "Bestätigen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "more": "Mehr",
+    "next": "Weiter",
+    "ok": "OK",
+    "previous": "Zurück",
+    "refresh": "Aktualisieren",
+    "remove": "Entfernen",
+    "retry": "Erneut versuchen",
+    "save": "Speichern",
+    "search": "Suchen",
+    "submit": "Einreichen"
+  },
+  "app": {
+    "description": "Ihre KI-Assistenten-Kollaborationsplattform",
+    "name": "LobeHub"
+  },
+  "status": {
+    "error": "Fehler",
+    "info": "Information",
+    "loading": "Lädt",
+    "success": "Erfolg",
+    "warning": "Warnung"
+  }
+}

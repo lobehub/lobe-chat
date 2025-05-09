@@ -33,6 +33,7 @@ export const DEFAULT_AGENT_CHAT_CONFIG: LobeAgentChatConfig = {
 export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
   chatConfig: DEFAULT_AGENT_CHAT_CONFIG,
   model: DEFAULT_MODEL,
+  openingQuestions: [],
   params: {
     frequency_penalty: 0,
     presence_penalty: 0,

@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
 
-import { useServerConfigStore } from '@/store/serverConfig';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
@@ -15,7 +14,6 @@ import PluginItem from './PluginItem';
 export const InstalledPluginList = memo(() => {
   const { t } = useTranslation('plugin');
   const [keywords, setKeywords] = useState<string>();
-  const mobile = useServerConfigStore((s) => s.isMobile);
   const installedPlugins = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
 
   const filteredPluginList = useMemo(
@@ -39,8 +37,8 @@ export const InstalledPluginList = memo(() => {
             onChange={(e) => setKeywords(e.target.value)}
             placeholder={t('store.placeholder')}
             style={{ flex: 1, width: '100%' }}
-            type={mobile ? 'block' : 'ghost'}
             value={keywords}
+            variant={'filled'}
           />
         </Flexbox>
         <AddPluginButton />

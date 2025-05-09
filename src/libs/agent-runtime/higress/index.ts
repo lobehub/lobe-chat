@@ -1,9 +1,9 @@
 import { uniqueId } from 'lodash-es';
 
+import type { ChatModelCard } from '@/types/llm';
+
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
-
-import type { ChatModelCard } from '@/types/llm';
 
 export interface HigressModelCard {
   context_length: number;
@@ -12,7 +12,7 @@ export interface HigressModelCard {
   name: string;
   top_provider: {
     max_completion_tokens: number;
-  }
+  };
 }
 
 export const LobeHigressAI = LobeOpenAICompatibleFactory({
@@ -29,12 +29,14 @@ export const LobeHigressAI = LobeOpenAICompatibleFactory({
   models: async ({ client }) => {
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-    const modelsPage = await client.models.list() as any;
+    const modelsPage = (await client.models.list()) as any;
     const modelList: HigressModelCard[] = modelsPage.data;
 
     return modelList
       .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.toLowerCase() === m.id.toLowerCase());
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+          (m) => model.id.toLowerCase() === m.id.toLowerCase(),
+        );
 
         return {
           contextWindowTokens: model.context_length,
@@ -42,22 +44,20 @@ export const LobeHigressAI = LobeOpenAICompatibleFactory({
           displayName: model.name,
           enabled: knownModel?.enabled || false,
           functionCall:
-            model.description.includes('function calling')
-            || model.description.includes('tools')
-            || knownModel?.abilities?.functionCall
-            || false,
+            model.description.includes('function calling') ||
+            model.description.includes('tools') ||
+            knownModel?.abilities?.functionCall ||
+            false,
           id: model.id,
           maxTokens: model.top_provider.max_completion_tokens,
           reasoning:
-            model.description.includes('reasoning')
-            || knownModel?.abilities?.reasoning
-            || false,
+            model.description.includes('reasoning') || knownModel?.abilities?.reasoning || false,
           vision:
-            model.description.includes('vision')
-            || model.description.includes('multimodal')
-            || model.id.includes('vision')
-            || knownModel?.abilities?.vision
-            || false,
+            model.description.includes('vision') ||
+            model.description.includes('multimodal') ||
+            model.id.includes('vision') ||
+            knownModel?.abilities?.vision ||
+            false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

@@ -7,6 +7,20 @@
     "images": "Imagens:",
     "prompt": "Palavra-chave"
   },
+  "localFiles": {
+    "file": "Arquivo",
+    "folder": "Pasta",
+    "open": "Abrir",
+    "openFile": "Abrir arquivo",
+    "openFolder": "Abrir pasta",
+    "read": {
+      "more": "Ver mais"
+    },
+    "readFile": "Ler arquivo",
+    "readFileError": "Falha ao ler o arquivo, verifique se o caminho do arquivo está correto",
+    "readFiles": "Ler arquivos",
+    "readFilesError": "Falha ao ler os arquivos, verifique se o caminho do arquivo está correto"
+  },
   "search": {
     "createNewSearch": "Criar nova pesquisa",
     "emptyResult": "Nenhum resultado encontrado, por favor, modifique as palavras-chave e tente novamente",
@@ -19,10 +33,50 @@
       "placeholder": "Palavras-chave",
       "tooltip": "Isso irá recuperar os resultados da pesquisa novamente e criar uma nova mensagem de resumo"
     },
-    "searchEngine": "Motor de busca:",
+    "searchCategory": {
+      "placeholder": "Pesquisar categoria",
+      "title": "Categoria de pesquisa:",
+      "value": {
+        "files": "Arquivos",
+        "general": "Geral",
+        "images": "Imagens",
+        "it": "Tecnologia da Informação",
+        "map": "Mapa",
+        "music": "Música",
+        "news": "Notícias",
+        "science": "Ciência",
+        "social_media": "Mídias sociais",
+        "videos": "Vídeos"
+      }
+    },
+    "searchEngine": {
+      "placeholder": "Motor de busca",
+      "title": "Motor de busca:"
+    },
     "searchResult": "Número de pesquisas:",
+    "searchTimeRange": {
+      "title": "Intervalo de tempo:",
+      "value": {
+        "anytime": "Sem restrição de tempo",
+        "day": "Dentro de um dia",
+        "month": "Dentro de um mês",
+        "week": "Dentro de uma semana",
+        "year": "Dentro de um ano"
+      }
+    },
     "summary": "Resumo",
     "summaryTooltip": "Resumir o conteúdo atual",
     "viewMoreResults": "Ver mais {{results}} resultados"
+  },
+  "updateArgs": {
+    "duplicateKeyError": "A chave do campo deve ser única",
+    "form": {
+      "add": "Adicionar um item",
+      "key": "Chave do campo",
+      "value": "Valor do campo"
+    },
+    "formValidationFailed": "Falha na validação do formulário, verifique o formato dos parâmetros",
+    "keyRequired": "A chave do campo não pode estar vazia",
+    "stringifyError": "Não foi possível serializar os parâmetros, verifique o formato dos parâmetros"
   }
 }

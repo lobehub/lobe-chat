@@ -164,6 +164,7 @@
     },
     "download": {
       "desc": "Ollama pobiera ten model, proszę nie zamykać tej strony. Wznowienie pobierania nastąpi od miejsca przerwania",
+      "failed": "Pobieranie modelu nie powiodło się, sprawdź połączenie sieciowe lub ustawienia Ollama, a następnie spróbuj ponownie",
       "remainingTime": "Pozostały czas",
       "speed": "Prędkość pobierania",
       "title": "Pobieranie modelu {{model}}"

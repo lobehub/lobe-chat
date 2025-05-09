@@ -1,38 +1,32 @@
 'use client';
 
-import { Form, ItemGroup, SliderWithInput } from '@lobehub/ui';
-import { Select, Switch } from 'antd';
+import { Form, type FormGroupItemType, Select, SliderWithInput } from '@lobehub/ui';
+import { Switch } from 'antd';
+import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
+import ModelSelect from '@/features/ModelSelect';
 import { useProviderName } from '@/hooks/useProviderName';
 
-import { useStore } from '../store';
-import { selectors } from '../store/selectors';
-import { useAgentSyncSettings } from '../useSyncAgemtSettings';
-import ModelSelect from './ModelSelect';
+import { selectors, useStore } from '../store';
 
 const AgentModal = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = Form.useForm();
+  const config = useStore(selectors.currentAgentConfig, isEqual);
 
-  const [enableMaxTokens, enableReasoningEffort, updateConfig] = useStore((s) => {
-    const config = selectors.chatConfig(s);
-    return [config.enableMaxTokens, config.enableReasoningEffort, s.setAgentConfig];
-  });
-
+  const updateConfig = useStore((s) => s.setAgentConfig);
   const providerName = useProviderName(useStore((s) => s.config.provider) as string);
 
-  useAgentSyncSettings(form);
-
-  const model: ItemGroup = {
+  const model: FormGroupItemType = {
     children: [
       {
         children: <ModelSelect />,
         desc: t('settingModel.model.desc', { provider: providerName }),
         label: t('settingModel.model.title'),
-        name: 'model',
+        name: '_modalConfig',
         tag: 'model',
       },
       {
@@ -66,6 +60,7 @@ const AgentModal = memo(() => {
       {
         children: <Switch />,
         label: t('settingModel.enableMaxTokens.title'),
+        layout: 'horizontal',
         minWidth: undefined,
         name: ['chatConfig', 'enableMaxTokens'],
         valuePropName: 'checked',
@@ -74,7 +69,7 @@ const AgentModal = memo(() => {
         children: <SliderWithInput max={32_000} min={0} step={100} />,
         desc: t('settingModel.maxTokens.desc'),
         divider: false,
-        hidden: !enableMaxTokens,
+        hidden: !config.chatConfig.enableMaxTokens,
         label: t('settingModel.maxTokens.title'),
         name: ['params', 'max_tokens'],
         tag: 'max_tokens',
@@ -82,6 +77,7 @@ const AgentModal = memo(() => {
       {
         children: <Switch />,
         label: t('settingModel.enableReasoningEffort.title'),
+        layout: 'horizontal',
         minWidth: undefined,
         name: ['chatConfig', 'enableReasoningEffort'],
         valuePropName: 'checked',
@@ -89,7 +85,7 @@ const AgentModal = memo(() => {
       {
         children: (
           <Select
-            defaultValue='medium'
+            defaultValue="medium"
             options={[
               { label: t('settingModel.reasoningEffort.options.low'), value: 'low' },
               { label: t('settingModel.reasoningEffort.options.medium'), value: 'medium' },
@@ -98,7 +94,7 @@ const AgentModal = memo(() => {
           />
         ),
         desc: t('settingModel.reasoningEffort.desc'),
-        hidden: !enableReasoningEffort,
+        hidden: !config.chatConfig.enableReasoningEffort,
         label: t('settingModel.reasoningEffort.title'),
         name: ['params', 'reasoning_effort'],
         tag: 'reasoning_effort',
@@ -109,11 +105,34 @@ const AgentModal = memo(() => {
 
   return (
     <Form
+      footer={
+        <Form.SubmitFooter
+          texts={{
+            reset: t('submitFooter.reset'),
+            submit: t('settingModel.submit'),
+            unSaved: t('submitFooter.unSaved'),
+            unSavedWarning: t('submitFooter.unSavedWarning'),
+          }}
+        />
+      }
       form={form}
+      initialValues={{
+        ...config,
+        _modalConfig: {
+          model: config.model,
+          provider: config.provider,
+        },
+      }}
       items={[model]}
       itemsType={'group'}
-      onValuesChange={updateConfig}
-      variant={'pure'}
+      onFinish={({ _modalConfig, ...rest }) => {
+        updateConfig({
+          model: _modalConfig?.model,
+          provider: _modalConfig?.provider,
+          ...rest,
+        });
+      }}
+      variant={'borderless'}
       {...FORM_STYLE}
     />
   );

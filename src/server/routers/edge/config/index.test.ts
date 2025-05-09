@@ -4,9 +4,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 /**
  * This file contains the root router of your tRPC-backend
  */
-import { createCallerFactory } from '@/libs/trpc';
-import { AuthContext, createContextInner } from '@/server/context';
-import { GlobalServerConfig } from '@/types/serverConfig';
+import { createCallerFactory } from '@/libs/trpc/edge';
+import { AuthContext, createContextInner } from '@/libs/trpc/edge/context';
 
 import { configRouter } from './index';
 

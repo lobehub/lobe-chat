@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button } from '@lobehub/ui';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';

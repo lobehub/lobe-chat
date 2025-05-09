@@ -22,13 +22,11 @@ describe('OllamaStream', () => {
 
       const onStartMock = vi.fn();
       const onTextMock = vi.fn();
-      const onTokenMock = vi.fn();
       const onCompletionMock = vi.fn();
 
       const protocolStream = OllamaStream(mockOllamaStream, {
         onStart: onStartMock,
         onText: onTextMock,
-        onToken: onTokenMock,
         onCompletion: onCompletionMock,
       });
 
@@ -53,9 +51,8 @@ describe('OllamaStream', () => {
       ]);
 
       expect(onStartMock).toHaveBeenCalledTimes(1);
-      expect(onTextMock).toHaveBeenNthCalledWith(1, '"Hello"');
-      expect(onTextMock).toHaveBeenNthCalledWith(2, '" world!"');
-      expect(onTokenMock).toHaveBeenCalledTimes(2);
+      expect(onTextMock).toHaveBeenNthCalledWith(1, 'Hello');
+      expect(onTextMock).toHaveBeenNthCalledWith(2, ' world!');
       expect(onCompletionMock).toHaveBeenCalledTimes(1);
     });
 
@@ -100,16 +97,14 @@ describe('OllamaStream', () => {
       });
       const onStartMock = vi.fn();
       const onTextMock = vi.fn();
-      const onTokenMock = vi.fn();
       const onToolCall = vi.fn();
       const onCompletionMock = vi.fn();
 
       const protocolStream = OllamaStream(mockOllamaStream, {
         onStart: onStartMock,
         onText: onTextMock,
-        onToken: onTokenMock,
         onCompletion: onCompletionMock,
-        onToolCall,
+        onToolsCalling: onToolCall,
       });
 
       const decoder = new TextDecoder();
@@ -134,7 +129,6 @@ describe('OllamaStream', () => {
       expect(onTextMock).toHaveBeenCalledTimes(0);
       expect(onStartMock).toHaveBeenCalledTimes(1);
       expect(onToolCall).toHaveBeenCalledTimes(1);
-      expect(onTokenMock).toHaveBeenCalledTimes(0);
       expect(onCompletionMock).toHaveBeenCalledTimes(1);
     });
   });

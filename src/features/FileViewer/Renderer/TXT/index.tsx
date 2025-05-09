@@ -22,7 +22,12 @@ const TXTViewer: DocRenderer = ({ mainState: { currentDocument } }) => {
   return (
     <Flexbox className={styles.page} id="txt-renderer">
       {!!currentDocument?.fileData ? (
-        <Highlighter language={'txt'} showLanguage={false} style={{ height: '100%' }} type={'pure'}>
+        <Highlighter
+          language={'txt'}
+          showLanguage={false}
+          style={{ height: '100%' }}
+          variant={'borderless'}
+        >
           {currentDocument?.fileData as string}
         </Highlighter>
       ) : (

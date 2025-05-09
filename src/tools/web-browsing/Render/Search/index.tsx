@@ -3,7 +3,7 @@ import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { ChatMessagePluginError } from '@/types/message';
-import { SearchQuery, SearchResponse } from '@/types/tool/search';
+import { SearchQuery, UniformSearchResponse } from '@/types/tool/search';
 
 import ConfigForm from './ConfigForm';
 import SearchQueryView from './SearchQuery';
@@ -13,7 +13,7 @@ interface SearchProps {
   messageId: string;
   pluginError: ChatMessagePluginError;
   searchQuery: SearchQuery;
-  searchResponse?: SearchResponse;
+  searchResponse?: UniformSearchResponse;
 }
 
 const Search = memo<SearchProps>(({ messageId, searchQuery, searchResponse, pluginError }) => {
@@ -28,7 +28,7 @@ const Search = memo<SearchProps>(({ messageId, searchQuery, searchResponse, plug
       <Alert
         extra={
           <Flexbox>
-            <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
+            <Highlighter actionIconSize={'small'} language={'json'} variant={'borderless'}>
               {JSON.stringify(pluginError.body?.data || pluginError.body, null, 2)}
             </Highlighter>
           </Flexbox>

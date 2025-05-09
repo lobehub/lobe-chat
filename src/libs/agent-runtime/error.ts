@@ -17,6 +17,7 @@ export const AgentRuntimeErrorType = {
 
   InvalidOllamaArgs: 'InvalidOllamaArgs',
   OllamaBizError: 'OllamaBizError',
+  OllamaServiceUnavailable: 'OllamaServiceUnavailable',
 
   InvalidBedrockCredentials: 'InvalidBedrockCredentials',
   InvalidVertexCredentials: 'InvalidVertexCredentials',

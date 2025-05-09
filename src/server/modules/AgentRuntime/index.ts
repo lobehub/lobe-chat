@@ -1,22 +1,10 @@
 import { getLLMConfig } from '@/config/llm';
 import { JWTPayload } from '@/const/auth';
-import { INBOX_SESSION_ID } from '@/const/session';
-import {
-  LOBE_CHAT_OBSERVATION_ID,
-  LOBE_CHAT_TRACE_ID,
-  TracePayload,
-  TraceTagMap,
-} from '@/const/trace';
-import { AgentRuntime, ChatStreamPayload, ModelProvider } from '@/libs/agent-runtime';
-import { TraceClient } from '@/libs/traces';
+import { AgentRuntime, ModelProvider } from '@/libs/agent-runtime';
 
 import apiKeyManager from './apiKeyManager';
 
-export interface AgentChatOptions {
-  enableTrace?: boolean;
-  provider: string;
-  trace?: TracePayload;
-}
+export * from './trace';
 
 /**
  * Retrieves the options object from environment and apikeymanager
@@ -26,7 +14,7 @@ export interface AgentChatOptions {
  * @param payload - The JWT payload.
  * @returns The options object.
  */
-const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
+const getParamsFromPayload = (provider: string, payload: JWTPayload) => {
   const llmConfig = getLLMConfig() as Record<string, any>;
 
   switch (provider) {
@@ -131,66 +119,7 @@ export const initAgentRuntimeWithUserPayload = (
   params: any = {},
 ) => {
   return AgentRuntime.initializeWithProvider(provider, {
-    ...getLlmOptionsFromPayload(provider, payload),
+    ...getParamsFromPayload(provider, payload),
     ...params,
   });
-};
-
-export const createTraceOptions = (
-  payload: ChatStreamPayload,
-  { trace: tracePayload, provider }: AgentChatOptions,
-) => {
-  const { messages, model, tools, ...parameters } = payload;
-  // create a trace to monitor the completion
-  const traceClient = new TraceClient();
-  const trace = traceClient.createTrace({
-    id: tracePayload?.traceId,
-    input: messages,
-    metadata: { provider },
-    name: tracePayload?.traceName,
-    sessionId: `${tracePayload?.sessionId || INBOX_SESSION_ID}@${tracePayload?.topicId || 'start'}`,
-    tags: tracePayload?.tags,
-    userId: tracePayload?.userId,
-  });
-
-  const generation = trace?.generation({
-    input: messages,
-    metadata: { provider },
-    model,
-    modelParameters: parameters as any,
-    name: `Chat Completion (${provider})`,
-    startTime: new Date(),
-  });
-
-  return {
-    callback: {
-      experimental_onToolCall: async () => {
-        trace?.update({
-          tags: [...(tracePayload?.tags || []), TraceTagMap.ToolsCall],
-        });
-      },
-
-      onCompletion: async (completion: string) => {
-        generation?.update({
-          endTime: new Date(),
-          metadata: { provider, tools },
-          output: completion,
-        });
-
-        trace?.update({ output: completion });
-      },
-
-      onFinal: async () => {
-        await traceClient.shutdownAsync();
-      },
-
-      onStart: () => {
-        generation?.update({ completionStartTime: new Date() });
-      },
-    },
-    headers: {
-      [LOBE_CHAT_OBSERVATION_ID]: generation?.id,
-      [LOBE_CHAT_TRACE_ID]: trace?.id,
-    },
-  };
 };

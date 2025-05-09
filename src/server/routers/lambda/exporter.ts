@@ -1,7 +1,7 @@
 import { DrizzleMigrationModel } from '@/database/models/drizzleMigration';
 import { DataExporterRepos } from '@/database/repositories/dataExporter';
-import { authedProcedure, router } from '@/libs/trpc';
-import { serverDatabase } from '@/libs/trpc/lambda';
+import { authedProcedure, router } from '@/libs/trpc/lambda';
+import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { ExportDatabaseData } from '@/types/export';
 
 const exportProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {

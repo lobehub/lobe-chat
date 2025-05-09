@@ -1,15 +1,18 @@
 'use client';
 
-import { TabsNav } from '@lobehub/ui';
+import { Tabs } from '@lobehub/ui';
 import { useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import AiProviderRuntimeConfig from './AiProviderRuntimeConfig';
-import ServerConfig from './ServerConfig';
+import { AIProvider, DefaultAgentConfig, ServerConfig, SystemAgent } from './ServerConfig';
 
 enum TabKey {
+  AIProvider = 'aiProvider',
   AiProviderRuntimeConfig = 'aiProviderRuntimeConfig',
+  DefaultAgentConfig = 'defaultAgentConfig',
   ServerConfig = 'serverConfig',
+  SystemAgent = 'systemAgent',
 }
 
 const SystemInspector = () => {
@@ -17,24 +20,40 @@ const SystemInspector = () => {
 
   return (
     <Flexbox gap={4} height={'100%'}>
-      <TabsNav
+      <Tabs
         activeKey={activeTab}
+        compact
         items={[
-          {
-            key: TabKey.ServerConfig,
-            label: 'Server Config',
-          },
           {
             key: TabKey.AiProviderRuntimeConfig,
             label: 'Ai Provider Runtime Config',
           },
+          {
+            key: TabKey.AIProvider,
+            label: 'AI Provider Config',
+          },
+
+          {
+            key: TabKey.DefaultAgentConfig,
+            label: 'Default Agent Config',
+          },
+          {
+            key: TabKey.SystemAgent,
+            label: 'System Agent',
+          },
+          {
+            key: TabKey.ServerConfig,
+            label: 'Server Config',
+          },
         ]}
         onChange={(activeTab) => setActiveTab(activeTab as TabKey)}
-        variant={'compact'}
       />
 
-      {activeTab === TabKey.ServerConfig && <ServerConfig />}
       {activeTab === TabKey.AiProviderRuntimeConfig && <AiProviderRuntimeConfig />}
+      {activeTab === TabKey.DefaultAgentConfig && <DefaultAgentConfig />}
+      {activeTab === TabKey.SystemAgent && <SystemAgent />}
+      {activeTab === TabKey.AIProvider && <AIProvider />}
+      {activeTab === TabKey.ServerConfig && <ServerConfig />}
     </Flexbox>
   );
 };

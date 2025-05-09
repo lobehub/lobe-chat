@@ -140,6 +140,20 @@
       "when": 1742806552131,
       "tag": "0019_add_hotkey_user_settings",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1744458287757,
+      "tag": "0020_add_oidc",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1744602998656,
+      "tag": "0021_add_agent_opening_settings",
+      "breakpoints": true
     }
   ],
   "version": "6"

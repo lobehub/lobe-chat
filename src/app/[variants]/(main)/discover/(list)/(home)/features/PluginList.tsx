@@ -11,8 +11,8 @@ const PluginList = memo<{ data: DiscoverPlugintem[] }>(({ data }) => {
     <Grid maxItemWidth={280} rows={4}>
       {data.map((item) => (
         <Card
+          compact
           showCategory
-          variant={'compact'}
           {...item}
           href={urlJoin('/discover/plugin/', item.identifier)}
           key={item.identifier}

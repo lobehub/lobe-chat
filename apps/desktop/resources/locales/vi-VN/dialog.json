@@ -1,0 +1,31 @@
+{
+  "about": {
+    "button": "Xác nhận",
+    "detail": "Một ứng dụng trò chuyện dựa trên mô hình ngôn ngữ lớn",
+    "message": "{{appName}} {{appVersion}}",
+    "title": "Về"
+  },
+  "confirm": {
+    "cancel": "Hủy",
+    "no": "Không",
+    "title": "Xác nhận",
+    "yes": "Có"
+  },
+  "error": {
+    "button": "Xác nhận",
+    "detail": "Đã xảy ra lỗi trong quá trình thực hiện, vui lòng thử lại sau",
+    "message": "Đã xảy ra lỗi",
+    "title": "Lỗi"
+  },
+  "update": {
+    "downloadAndInstall": "Tải xuống và cài đặt",
+    "downloadComplete": "Tải xuống hoàn tất",
+    "downloadCompleteMessage": "Gói cập nhật đã tải xuống hoàn tất, có muốn cài đặt ngay không?",
+    "installLater": "Cài đặt sau",
+    "installNow": "Cài đặt ngay",
+    "later": "Nhắc nhở sau",
+    "newVersion": "Phát hiện phiên bản mới",
+    "newVersionAvailable": "Phát hiện phiên bản mới: {{version}}",
+    "skipThisVersion": "Bỏ qua phiên bản này"
+  }
+}

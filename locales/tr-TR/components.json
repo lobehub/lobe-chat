@@ -88,9 +88,14 @@
     "emptyModel": "Etkinleştirilmiş model bulunmamaktadır, lütfen ayarlara giderek açın",
     "emptyProvider": "Etkinleştirilmiş bir sağlayıcı yok, lütfen ayarlara gidin",
     "goToSettings": "Ayrıntılara git",
-    "provider": "Sağlayıcı"
+    "provider": "Sağlayıcı",
+    "title": "Model"
   },
   "OllamaSetupGuide": {
+    "action": {
+      "close": "Uyarıyı Kapat",
+      "start": "Yüklendi ve çalışıyor, sohbete başla"
+    },
     "cors": {
       "description": "Tarayıcı güvenlik kısıtlamaları nedeniyle, Ollama'yı düzgün bir şekilde kullanabilmek için çapraz alan yapılandırması yapmanız gerekmektedir.",
       "linux": {

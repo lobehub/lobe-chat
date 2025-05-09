@@ -1,0 +1,68 @@
+{
+  "remoteServer": {
+    "authError": "認証エラー: {{error}}",
+    "authPending": "ブラウザで認証を完了してください",
+    "configDesc": "リモートLobeChatサーバーに接続し、データ同期を有効にします",
+    "configError": "設定エラー",
+    "configTitle": "クラウド同期の設定",
+    "connect": "接続して認証",
+    "connected": "接続済み",
+    "disconnect": "接続を切断",
+    "disconnectError": "接続の切断に失敗しました",
+    "disconnected": "未接続",
+    "fetchError": "設定の取得に失敗しました",
+    "invalidUrl": "有効なURLを入力してください",
+    "serverUrl": "サーバーアドレス",
+    "statusConnected": "接続済み",
+    "statusDisconnected": "未接続",
+    "urlRequired": "サーバーアドレスを入力してください"
+  },
+  "sync": {
+    "continue": "続行",
+    "inCloud": "現在、クラウド同期を使用しています",
+    "inLocalStorage": "現在、ローカルストレージを使用しています",
+    "isIniting": "初期化中...",
+    "lobehubCloud": {
+      "description": "公式提供のクラウド版",
+      "title": "LobeHub Cloud"
+    },
+    "local": {
+      "description": "ローカルデータベースを使用し、完全にオフラインで利用可能",
+      "title": "ローカルデータベース"
+    },
+    "mode": {
+      "cloudSync": "クラウド同期",
+      "localStorage": "ローカルストレージ",
+      "title": "接続モードを選択",
+      "useSelfHosted": "自己ホストのインスタンスを使用しますか？"
+    },
+    "selfHosted": {
+      "description": "自分でデプロイしたコミュニティ版",
+      "title": "自己ホストインスタンス"
+    }
+  },
+  "updater": {
+    "checkingUpdate": "更新を確認中",
+    "checkingUpdateDesc": "バージョン情報を取得しています...",
+    "downloadNewVersion": "新しいバージョンをダウンロード",
+    "downloadingUpdate": "更新をダウンロード中",
+    "downloadingUpdateDesc": "更新をダウンロードしています。しばらくお待ちください...",
+    "installLater": "次回起動時に更新",
+    "isLatestVersion": "現在最新のバージョンです",
+    "isLatestVersionDesc": "素晴らしい、使用中のバージョン {{version}} は最新のバージョンです。",
+    "later": "後で更新",
+    "newVersionAvailable": "新しいバージョンが利用可能です",
+    "newVersionAvailableDesc": "新しいバージョン {{version}} が見つかりました。今すぐダウンロードしますか？",
+    "restartAndInstall": "更新をインストールして再起動",
+    "updateError": "更新エラー",
+    "updateReady": "更新が準備完了",
+    "updateReadyDesc": "新しいバージョン {{version}} のダウンロードが完了しました。アプリを再起動するとインストールが完了します。",
+    "upgradeNow": "今すぐ更新"
+  },
+  "waitingOAuth": {
+    "cancel": "キャンセル",
+    "description": "ブラウザが認証ページを開きました。ブラウザで認証を完了してください",
+    "helpText": "ブラウザが自動的に開かない場合は、キャンセルをクリックして再試行してください",
+    "title": "認証接続を待機中"
+  }
+}

@@ -119,6 +119,16 @@
       "outputText": "文本輸出",
       "outputTitle": "輸出明細",
       "reasoning": "深度思考",
+      "speed": {
+        "tps": {
+          "title": "TPS",
+          "tooltip": "每秒令牌數，TPS。指AI生成內容的平均速度（Token/秒），在接收到首個令牌後開始計算。"
+        },
+        "ttft": {
+          "title": "TTFT",
+          "tooltip": "首次令牌時間，TTFT。指從您發送消息到客戶端接收到首個令牌的時間間隔。"
+        }
+      },
       "title": "生成明細",
       "total": "總計消耗"
     }

@@ -926,6 +926,8 @@
             "ttsService": "openai",
             "voice": { "openai": "alloy" }
           },
+          "openingMessage": "I'm an AI assistant, how can I help you today?",
+          "openingQuestions": ["Question 1", "Question 2"],
           "chatConfig": {
             "autoCreateTopicThreshold": 2,
             "displayMode": "chat",

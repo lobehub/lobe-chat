@@ -4,6 +4,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PluginResult from './PluginResultJSON';
+import PluginState from './PluginState';
 
 interface DebugProps {
   payload: object;
@@ -29,14 +30,19 @@ const Debug = memo<DebugProps>(({ payload, requestArgs, toolCallId }) => {
           label: t('debug.arguments'),
         },
         {
+          children: <PluginResult toolCallId={toolCallId} />,
+          key: 'response',
+          label: t('debug.response'),
+        },
+        {
           children: <Highlighter language={'json'}>{JSON.stringify(payload, null, 2)}</Highlighter>,
           key: 'function_call',
           label: t('debug.function_call'),
         },
         {
-          children: <PluginResult toolCallId={toolCallId} />,
-          key: 'response',
-          label: t('debug.response'),
+          children: <PluginState toolCallId={toolCallId} />,
+          key: 'pluginState',
+          label: t('debug.pluginState'),
         },
       ]}
       style={{ display: 'grid', maxWidth: 800, minWidth: 400 }}

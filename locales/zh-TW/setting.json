@@ -6,6 +6,7 @@
     "chat": "聊天偏好",
     "meta": "助手資訊",
     "modal": "模型設定",
+    "opening": "開場設定",
     "plugin": "外掛程式設定",
     "prompt": "角色設定",
     "tts": "語音服務"
@@ -149,6 +150,7 @@
       "title": "背景色"
     },
     "description": {
+      "desc": "簡單介紹你的助手，不作為角色設定",
       "placeholder": "請輸入助手描述",
       "title": "助手描述"
     },
@@ -160,7 +162,9 @@
       "placeholder": "請輸入角色 Prompt 提示詞",
       "title": "角色設定"
     },
+    "submit": "更新助手資訊",
     "tag": {
+      "desc": "助手標籤將在助手市場中展示",
       "placeholder": "請輸入標籤",
       "title": "標籤"
     },
@@ -205,6 +209,7 @@
       "placeholder": "預處理模板 {{text}} 將替換為實時輸入資訊",
       "title": "使用者輸入預處理"
     },
+    "submit": "更新聊天偏好",
     "title": "聊天設定"
   },
   "settingModel": {
@@ -242,6 +247,7 @@
       },
       "title": "推理強度"
     },
+    "submit": "更新模型設定",
     "temperature": {
       "desc": "數值越大，回答越有創意和想像力；數值越小，回答越嚴謹",
       "title": "創意活躍度",
@@ -252,6 +258,21 @@
       "desc": "考慮多少種可能性，值越大，接受更多可能的回答；值越小，傾向選擇最可能的回答。不推薦和創意活躍度一起更改",
       "title": "思維開放度"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "打開會話時的開場消息，用來介紹助手的功能",
+      "placeholder": "你好，我是 自訂助手，你可以立即與我開始對話，也可以前往 助手設定 完善我的資訊。",
+      "title": "開場消息"
+    },
+    "openingQuestions": {
+      "desc": "會話開始時展示的引導性問題",
+      "empty": "暫無問題",
+      "placeholder": "請輸入問題",
+      "repeat": "問題已存在",
+      "title": "開場問題"
+    },
+    "title": "開場設定"
   },
   "settingPlugin": {
     "title": "插件列表"
@@ -303,6 +324,7 @@
       "desc": "其中 browser 為瀏覽器原生的語音識別服務",
       "title": "語音識別服務"
     },
+    "submit": "更新語音服務",
     "title": "語音服務",
     "tts": "語音合成設定",
     "ttsService": {
@@ -380,6 +402,12 @@
     "placeholder": "請輸入助手的標識符，需要是唯一的，比如 web-development",
     "tooltips": "分享到助手市場"
   },
+  "submitFooter": {
+    "reset": "重置",
+    "submit": "保存",
+    "unSaved": "未保存更改",
+    "unSavedWarning": "當前有未保存的更改"
+  },
   "sync": {
     "device": {
       "deviceName": {
@@ -431,6 +459,7 @@
       "placeholder": "請輸入自訂提示詞",
       "title": "自訂提示詞"
     },
+    "helpInfo": "當創建新助手時，將以預設助手設定作為預設值。",
     "historyCompress": {
       "label": "會話歷史模型",
       "modelDesc": "指定用於壓縮會話歷史的模型",

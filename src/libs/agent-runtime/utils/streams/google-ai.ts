@@ -11,6 +11,7 @@ import {
   StreamToolCallChunkData,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
+  createTokenSpeedCalculator,
   generateToolCallId,
 } from './protocol';
 
@@ -19,31 +20,62 @@ const transformGoogleGenerativeAIStream = (
   context: StreamContext,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
   // maybe need another structure to add support for multiple choices
+  const candidate = chunk.candidates?.[0];
+  const usage = chunk.usageMetadata;
+  const usageChunks: StreamProtocolChunk[] = [];
+  if (candidate?.finishReason && usage) {
+    const outputReasoningTokens = (usage as any).thoughtsTokenCount || undefined;
+    const totalOutputTokens = (usage.candidatesTokenCount ?? 0) + (outputReasoningTokens ?? 0);
+
+    usageChunks.push(
+      { data: candidate.finishReason, id: context?.id, type: 'stop' },
+      {
+        data: {
+          // TODO: Google SDK 0.24.0 don't have promptTokensDetails types
+          inputImageTokens: (usage as any).promptTokensDetails?.find(
+            (i: any) => i.modality === 'IMAGE',
+          )?.tokenCount,
+          inputTextTokens: (usage as any).promptTokensDetails?.find(
+            (i: any) => i.modality === 'TEXT',
+          )?.tokenCount,
+          outputReasoningTokens,
+          outputTextTokens: totalOutputTokens - (outputReasoningTokens ?? 0),
+          totalInputTokens: usage.promptTokenCount,
+          totalOutputTokens,
+          totalTokens: usage.totalTokenCount,
+        } as ModelTokensUsage,
+        id: context?.id,
+        type: 'usage',
+      },
+    );
+  }
+
   const functionCalls = chunk.functionCalls?.();
 
   if (functionCalls) {
-    return {
-      data: functionCalls.map(
-        (value, index): StreamToolCallChunkData => ({
-          function: {
-            arguments: JSON.stringify(value.args),
-            name: value.name,
-          },
-          id: generateToolCallId(index, value.name),
-          index: index,
-          type: 'function',
-        }),
-      ),
-      id: context.id,
-      type: 'tool_calls',
-    };
+    return [
+      {
+        data: functionCalls.map(
+          (value, index): StreamToolCallChunkData => ({
+            function: {
+              arguments: JSON.stringify(value.args),
+              name: value.name,
+            },
+            id: generateToolCallId(index, value.name),
+            index: index,
+            type: 'function',
+          }),
+        ),
+        id: context.id,
+        type: 'tool_calls',
+      },
+      ...usageChunks,
+    ];
   }
 
   const text = chunk.text?.();
 
-  if (chunk.candidates) {
-    const candidate = chunk.candidates[0];
-
+  if (candidate) {
     // return the grounding
     if (candidate.groundingMetadata) {
       const { webSearchQueries, groundingChunks } = candidate.groundingMetadata;
@@ -64,31 +96,15 @@ const transformGoogleGenerativeAIStream = (
           id: context.id,
           type: 'grounding',
         },
+        ...usageChunks,
       ];
     }
 
     if (candidate.finishReason) {
       if (chunk.usageMetadata) {
-        const usage = chunk.usageMetadata;
         return [
           !!text ? { data: text, id: context?.id, type: 'text' } : undefined,
-          { data: candidate.finishReason, id: context?.id, type: 'stop' },
-          {
-            data: {
-              // TODO: Google SDK 0.24.0 don't have promptTokensDetails types
-              inputImageTokens: (usage as any).promptTokensDetails?.find(
-                (i: any) => i.modality === 'IMAGE',
-              )?.tokenCount,
-              inputTextTokens: (usage as any).promptTokensDetails?.find(
-                (i: any) => i.modality === 'TEXT',
-              )?.tokenCount,
-              totalInputTokens: usage.promptTokenCount,
-              totalOutputTokens: usage.candidatesTokenCount,
-              totalTokens: usage.totalTokenCount,
-            } as ModelTokensUsage,
-            id: context?.id,
-            type: 'usage',
-          },
+          ...usageChunks,
         ].filter(Boolean) as StreamProtocolChunk[];
       }
       return { data: candidate.finishReason, id: context?.id, type: 'stop' };
@@ -117,13 +133,21 @@ const transformGoogleGenerativeAIStream = (
   };
 };
 
+export interface GoogleAIStreamOptions {
+  callbacks?: ChatStreamCallbacks;
+  inputStartAt?: number;
+}
+
 export const GoogleGenerativeAIStream = (
   rawStream: ReadableStream<EnhancedGenerateContentResponse>,
-  callbacks?: ChatStreamCallbacks,
+  { callbacks, inputStartAt }: GoogleAIStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: 'chat_' + nanoid() };
 
   return rawStream
-    .pipeThrough(createSSEProtocolTransformer(transformGoogleGenerativeAIStream, streamStack))
+    .pipeThrough(
+      createTokenSpeedCalculator(transformGoogleGenerativeAIStream, { inputStartAt, streamStack }),
+    )
+    .pipeThrough(createSSEProtocolTransformer((c) => c, streamStack))
     .pipeThrough(createCallbacksTransformer(callbacks));
 };

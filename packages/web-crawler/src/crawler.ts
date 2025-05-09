@@ -3,6 +3,8 @@ import { CrawlUrlRule } from './type';
 import { crawUrlRules } from './urlRules';
 import { applyUrlRules } from './utils/appUrlRules';
 
+const defaultImpls = ['jina', 'naive', 'search1api', 'browserless'] as CrawlImplType[];
+
 interface CrawlOptions {
   impls?: string[];
 }
@@ -13,7 +15,7 @@ export class Crawler {
   constructor(options: CrawlOptions = {}) {
     this.impls = !!options.impls?.length
       ? (options.impls.filter((impl) => Object.keys(crawlImpls).includes(impl)) as CrawlImplType[])
-      : (['naive', 'jina', 'search1api','browserless'] as const);
+      : defaultImpls;
   }
 
   /**

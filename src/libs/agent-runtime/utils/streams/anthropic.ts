@@ -12,6 +12,7 @@ import {
   convertIterableToStream,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
+  createTokenSpeedCalculator,
 } from './protocol';
 
 export const transformAnthropicStream = (
@@ -188,9 +189,14 @@ export const transformAnthropicStream = (
   }
 };
 
+export interface AnthropicStreamOptions {
+  callbacks?: ChatStreamCallbacks;
+  inputStartAt?: number;
+}
+
 export const AnthropicStream = (
   stream: Stream<Anthropic.MessageStreamEvent> | ReadableStream,
-  callbacks?: ChatStreamCallbacks,
+  { callbacks, inputStartAt }: AnthropicStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: '' };
 
@@ -198,6 +204,9 @@ export const AnthropicStream = (
     stream instanceof ReadableStream ? stream : convertIterableToStream(stream);
 
   return readableStream
-    .pipeThrough(createSSEProtocolTransformer(transformAnthropicStream, streamStack))
+    .pipeThrough(
+      createTokenSpeedCalculator(transformAnthropicStream, { inputStartAt, streamStack }),
+    )
+    .pipeThrough(createSSEProtocolTransformer((c) => c, streamStack))
     .pipeThrough(createCallbacksTransformer(callbacks));
 };

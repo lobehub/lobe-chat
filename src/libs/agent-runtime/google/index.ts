@@ -106,6 +106,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       const contents = await this.buildGoogleMessages(payload.messages);
 
+      const inputStartAt = Date.now();
       const geminiStreamResult = await this.client
         .getGenerativeModel(
           {
@@ -161,7 +162,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       // Convert the response into a friendly text-stream
       const Stream = this.isVertexAi ? VertexAIStream : GoogleGenerativeAIStream;
-      const stream = Stream(prod, options?.callback);
+      const stream = Stream(prod, { callbacks: options?.callback, inputStartAt });
 
       // Respond with the stream
       return StreamingResponse(stream, { headers: options?.headers });
@@ -368,6 +369,9 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     payload?: ChatStreamPayload,
   ): GoogleFunctionCallTool[] | undefined {
     // 目前 Tools (例如 googleSearch) 无法与其他 FunctionCall 同时使用
+    if (payload?.messages?.some((m) => m.tool_calls?.length)) {
+      return; // 若历史消息中已有 function calling，则不再注入任何 Tools
+    }
     if (payload?.enabledSearch) {
       return [{ googleSearch: {} } as GoogleSearchRetrievalTool];
     }
