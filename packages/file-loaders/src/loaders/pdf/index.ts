@@ -1,10 +1,9 @@
 import debug from 'debug';
 import { readFile } from 'node:fs/promises';
-// For resolving path in ESM
-import { createRequire } from 'node:module';
-import { pathToFileURL } from 'node:url';
 import type { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist';
-import { GlobalWorkerOptions, getDocument, version } from 'pdfjs-dist/legacy/build/pdf.mjs';
+import { getDocument, version } from 'pdfjs-dist/legacy/build/pdf.mjs';
+// @ts-expect-error force webpack to include the worker
+import * as _pdfjsWorker from 'pdfjs-dist/legacy/build/pdf.worker.mjs';
 import type { TextContent } from 'pdfjs-dist/types/src/display/api';
 
 import type { DocumentPage, FileLoaderInterface } from '../../types';
@@ -16,31 +15,7 @@ const log = debug('file-loaders:pdf');
  */
 export class PdfLoader implements FileLoaderInterface {
   private pdfInstance: PDFDocumentProxy | null = null;
-
-  constructor() {
-    const require = createRequire(import.meta.url);
-
-    // --- PDF.js Worker Setup for Node.js ---
-    try {
-      const workerSrcPath = require.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
-      const workerSrcUrl = pathToFileURL(workerSrcPath).href;
-      console.log('workerSrcUrl:', workerSrcUrl);
-
-      // Set only if not already set or different to prevent potential issues if module re-evaluates.
-      if (GlobalWorkerOptions.workerSrc !== workerSrcUrl) {
-        GlobalWorkerOptions.workerSrc = workerSrcUrl;
-        log(`Set pdfjs-dist GlobalWorkerOptions.workerSrc to: ${workerSrcUrl}`);
-      }
-    } catch (error) {
-      log('Error resolving pdf.worker.mjs path or converting to URL:', error);
-      console.error(
-        'Failed to configure pdfjs-dist worker. PDF processing may fail or be unreliable.',
-        error,
-      );
-      // If this fails, pdfjs-dist will attempt its default loading mechanisms.
-    }
-    // --- End PDF.js Worker Setup ---
-  }
+  private pdfjsWorker = _pdfjsWorker;
 
   private async getPDFFile(filePath: string) {
     // GlobalWorkerOptions.workerSrc should have been set at the module level.
