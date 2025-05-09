@@ -456,6 +456,28 @@
     ],
     "bps": true,
     "folderMillis": 1744602998656,
-    "hash": "9a32c373461472a4afdb45e690c3009a0db0eaae81dcf6c8d05277a48f3a5e85"
+    "hash": "fdbac49ffdbe759234e760d0d48cdc1854028ea70d756a12b72f24305b4f3072"
+  },
+  {
+    "sql": [
+      "CREATE TABLE IF NOT EXISTS \"document_chunks\" (\n\t\"document_id\" varchar(30) NOT NULL,\n\t\"chunk_id\" uuid NOT NULL,\n\t\"page_index\" integer,\n\t\"user_id\" text NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\tCONSTRAINT \"document_chunks_document_id_chunk_id_pk\" PRIMARY KEY(\"document_id\",\"chunk_id\")\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"documents\" (\n\t\"id\" varchar(30) PRIMARY KEY NOT NULL,\n\t\"title\" text,\n\t\"content\" text,\n\t\"file_type\" varchar(255) NOT NULL,\n\t\"filename\" text,\n\t\"total_char_count\" integer NOT NULL,\n\t\"total_line_count\" integer NOT NULL,\n\t\"metadata\" jsonb,\n\t\"pages\" jsonb,\n\t\"source_type\" text NOT NULL,\n\t\"source\" text NOT NULL,\n\t\"file_id\" text,\n\t\"user_id\" text NOT NULL,\n\t\"client_id\" text,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"topic_documents\" (\n\t\"document_id\" text NOT NULL,\n\t\"topic_id\" text NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\tCONSTRAINT \"topic_documents_document_id_topic_id_pk\" PRIMARY KEY(\"document_id\",\"topic_id\")\n);\n",
+      "\nALTER TABLE \"document_chunks\" ADD CONSTRAINT \"document_chunks_document_id_documents_id_fk\" FOREIGN KEY (\"document_id\") REFERENCES \"public\".\"documents\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"document_chunks\" ADD CONSTRAINT \"document_chunks_chunk_id_chunks_id_fk\" FOREIGN KEY (\"chunk_id\") REFERENCES \"public\".\"chunks\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"document_chunks\" ADD CONSTRAINT \"document_chunks_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"documents\" ADD CONSTRAINT \"documents_file_id_files_id_fk\" FOREIGN KEY (\"file_id\") REFERENCES \"public\".\"files\"(\"id\") ON DELETE set null ON UPDATE no action;",
+      "\nALTER TABLE \"documents\" ADD CONSTRAINT \"documents_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"topic_documents\" ADD CONSTRAINT \"topic_documents_document_id_documents_id_fk\" FOREIGN KEY (\"document_id\") REFERENCES \"public\".\"documents\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"topic_documents\" ADD CONSTRAINT \"topic_documents_topic_id_topics_id_fk\" FOREIGN KEY (\"topic_id\") REFERENCES \"public\".\"topics\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"topic_documents\" ADD CONSTRAINT \"topic_documents_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nCREATE INDEX \"documents_source_idx\" ON \"documents\" USING btree (\"source\");",
+      "\nCREATE INDEX \"documents_file_type_idx\" ON \"documents\" USING btree (\"file_type\");",
+      "\nCREATE INDEX \"documents_file_id_idx\" ON \"documents\" USING btree (\"file_id\");",
+      "\nCREATE UNIQUE INDEX \"documents_client_id_user_id_unique\" ON \"documents\" USING btree (\"client_id\",\"user_id\");\n"
+    ],
+    "bps": true,
+    "folderMillis": 1746724476380,
+    "hash": "0518cd9882f7ea38eb498b31c8dda73fb56bbc3aa55445ecbc7a9e716631d047"
   }
 ]

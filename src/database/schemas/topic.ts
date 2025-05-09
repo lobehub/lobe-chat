@@ -1,11 +1,12 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
-import { boolean, jsonb, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
+import { boolean, jsonb, pgTable, primaryKey, text, uniqueIndex } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
+import { documents } from '@/database/schemas/document';
 import { idGenerator } from '@/database/utils/idGenerator';
 import { ChatTopicMetadata } from '@/types/topic';
 
-import { timestamps, timestamptz } from './_helpers';
+import { createdAt, timestamps, timestamptz } from './_helpers';
 import { sessions } from './session';
 import { users } from './user';
 
@@ -26,9 +27,7 @@ export const topics = pgTable(
     metadata: jsonb('metadata').$type<ChatTopicMetadata | undefined>(),
     ...timestamps,
   },
-  (t) => ({
-    clientIdUnique: uniqueIndex('topics_client_id_user_id_unique').on(t.clientId, t.userId),
-  }),
+  (t) => [uniqueIndex('topics_client_id_user_id_unique').on(t.clientId, t.userId)],
 );
 
 export type NewTopic = typeof topics.$inferInsert;
@@ -60,11 +59,35 @@ export const threads = pgTable(
     lastActiveAt: timestamptz('last_active_at').defaultNow(),
     ...timestamps,
   },
-  (t) => ({
-    clientIdUnique: uniqueIndex('threads_client_id_user_id_unique').on(t.clientId, t.userId),
-  }),
+  (t) => [uniqueIndex('threads_client_id_user_id_unique').on(t.clientId, t.userId)],
 );
 
 export type NewThread = typeof threads.$inferInsert;
 export type ThreadItem = typeof threads.$inferSelect;
 export const insertThreadSchema = createInsertSchema(threads);
+
+/**
+ * 文档与话题关联表 - 实现文档和话题的多对多关系
+ */
+export const topicDocuments = pgTable(
+  'topic_documents',
+  {
+    documentId: text('document_id')
+      .notNull()
+      .references(() => documents.id, { onDelete: 'cascade' }),
+
+    topicId: text('topic_id')
+      .notNull()
+      .references(() => topics.id, { onDelete: 'cascade' }),
+
+    userId: text('user_id')
+      .references(() => users.id, { onDelete: 'cascade' })
+      .notNull(),
+
+    createdAt: createdAt(),
+  },
+  (t) => [primaryKey({ columns: [t.documentId, t.topicId] })],
+);
+
+export type NewTopicDocument = typeof topicDocuments.$inferInsert;
+export type TopicDocumentItem = typeof topicDocuments.$inferSelect;
