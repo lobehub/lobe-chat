@@ -1,8 +1,9 @@
 import { eq } from 'drizzle-orm';
+import type { AdapterAccount } from 'next-auth/adapters';
 import { NextResponse } from 'next/server';
 
 import { UserModel } from '@/database/models/user';
-import { UserItem, nextauthSessions } from '@/database/schemas';
+import { UserItem, nextauthAccounts, nextauthSessions } from '@/database/schemas';
 import { serverDB } from '@/database/server';
 import { pino } from '@/libs/logger';
 import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
@@ -71,5 +72,44 @@ export class NextAuthUserService {
       return NextResponse.json({ message: 'user not found', success: false }, { status: 200 });
     }
     return NextResponse.json({ message: 'session invoked', success: true }, { status: 200 });
+  };
+
+  unlinkSSOProvider = async ({
+    provider,
+    providerAccountId,
+    userId,
+  }: {
+    provider: string;
+    providerAccountId: string;
+    userId: string;
+  }) => {
+    if (
+      this.adapter?.unlinkAccount &&
+      typeof this.adapter.unlinkAccount === 'function' &&
+      this.adapter?.getAccount &&
+      typeof this.adapter.getAccount === 'function'
+    ) {
+      const account = await this.adapter.getAccount(providerAccountId, provider);
+      // The userId can either get from ctx.nextAuth?.id or ctx.userId
+      if (!account || account.userId !== userId) throw new Error('The account does not exist');
+      await this.adapter.unlinkAccount({ provider, providerAccountId });
+    } else {
+      throw new Error('Adapter does not support unlinking accounts');
+    }
+  };
+
+  getUserSSOProviders = async (userId: string) => {
+    const result = await serverDB
+      .select({
+        expiresAt: nextauthAccounts.expires_at,
+        provider: nextauthAccounts.provider,
+        providerAccountId: nextauthAccounts.providerAccountId,
+        scope: nextauthAccounts.scope,
+        type: nextauthAccounts.type,
+        userId: nextauthAccounts.userId,
+      })
+      .from(nextauthAccounts)
+      .where(eq(nextauthAccounts.userId, userId));
+    return result as unknown as AdapterAccount[];
   };
 }
