@@ -15,7 +15,7 @@ export class NextAuthUserService {
     this.adapter = LobeNextAuthDbAdapter(serverDB);
   }
 
-  safeUpdateUser = async (
+  webHookUpdateUser = async (
     { providerAccountId, provider }: { provider: string; providerAccountId: string },
     data: Partial<UserItem>,
   ) => {
@@ -46,7 +46,7 @@ export class NextAuthUserService {
     return NextResponse.json({ message: 'user updated', success: true }, { status: 200 });
   };
 
-  invokeSession = async ({
+  webHookDeleteSession = async ({
     providerAccountId,
     provider,
   }: {
@@ -55,13 +55,10 @@ export class NextAuthUserService {
   }) => {
     // 1. Find User by account
     // @ts-expect-error: Already impl in `LobeNextauthDbAdapter`
-    const user = await this.adapter.getUserByAccount({
-      provider,
-      providerAccountId,
-    });
+    const account = await this.adapter.getAccount(provider, providerAccountId);
     // 2. If found, Invalidate user session
-    if (user?.id) {
-      await serverDB.delete(nextauthSessions).where(eq(nextauthSessions.userId, user.id));
+    if (account?.userId) {
+      await serverDB.delete(nextauthSessions).where(eq(nextauthSessions.userId, account.userId));
       pino.info(
         `Invoke user session "${JSON.stringify({ provider, providerAccountId })}" due to webhook`,
       );
@@ -111,5 +108,20 @@ export class NextAuthUserService {
       .from(nextauthAccounts)
       .where(eq(nextauthAccounts.userId, userId));
     return result as unknown as AdapterAccount[];
+  };
+
+  getUserSSOSessions = async (userId: string) => {
+    const result = await serverDB
+      .select({
+        expiresAt: nextauthSessions.expires,
+        userId: nextauthSessions.userId,
+      })
+      .from(nextauthSessions)
+      .where(eq(nextauthSessions.userId, userId));
+    return result;
+  };
+
+  deleteUserSSOSessions = async (userId: string) => {
+    await serverDB.delete(nextauthSessions).where(eq(nextauthSessions.userId, userId));
   };
 }

@@ -13,6 +13,7 @@ import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
 
 import SSOProvidersList from './features/SSOProvidersList';
+import SSOSessionsList from './features/SSOSessionsList';
 
 const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [isLoginWithNextAuth, isLogin] = useUserStore((s) => [
@@ -62,6 +63,13 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
         children: <SSOProvidersList />,
         hidden: !isLoginWithNextAuth,
         label: t('profile.sso.providers'),
+        layout: 'vertical',
+        minWidth: undefined,
+      },
+      {
+        children: <SSOSessionsList />,
+        hidden: !isLoginWithNextAuth,
+        label: '活动的会话',
         layout: 'vertical',
         minWidth: undefined,
       },

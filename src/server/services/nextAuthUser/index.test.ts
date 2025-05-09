@@ -27,7 +27,7 @@ describe('NextAuthUserService', () => {
     service = new NextAuthUserService();
   });
 
-  describe('safeUpdateUser', () => {
+  describe('webHookUpdateUser', () => {
     const mockUser = {
       id: 'user-123',
       email: 'test@example.com',
@@ -56,7 +56,7 @@ describe('NextAuthUserService', () => {
         getUserByAccount: vi.fn().mockResolvedValue(mockUser),
       };
 
-      const response = await service.safeUpdateUser(mockAccount, mockUpdateData);
+      const response = await service.webHookUpdateUser(mockAccount, mockUpdateData);
 
       expect(pino.info).toHaveBeenCalledWith(
         `updating user "${JSON.stringify(mockAccount)}" due to webhook`,
@@ -78,7 +78,7 @@ describe('NextAuthUserService', () => {
         getUserByAccount: vi.fn().mockResolvedValue(null),
       };
 
-      const response = await service.safeUpdateUser(mockAccount, mockUpdateData);
+      const response = await service.webHookUpdateUser(mockAccount, mockUpdateData);
 
       expect(pino.warn).toHaveBeenCalledWith(
         `[${mockAccount.provider}]: Webhooks handler user "${JSON.stringify(mockAccount)}" update for "${JSON.stringify(mockUpdateData)}", but no user was found by the providerAccountId.`,
@@ -100,7 +100,9 @@ describe('NextAuthUserService', () => {
         getUserByAccount: vi.fn().mockRejectedValue(mockError),
       };
 
-      await expect(service.safeUpdateUser(mockAccount, mockUpdateData)).rejects.toThrow(mockError);
+      await expect(service.webHookUpdateUser(mockAccount, mockUpdateData)).rejects.toThrow(
+        mockError,
+      );
 
       expect(UserModel).not.toHaveBeenCalled();
     });
