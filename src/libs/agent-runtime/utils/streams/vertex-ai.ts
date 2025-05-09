@@ -1,27 +1,58 @@
 import { EnhancedGenerateContentResponse, GenerateContentResponse } from '@google/generative-ai';
 
+import { ModelTokensUsage } from '@/types/message';
 import { nanoid } from '@/utils/uuid';
 
-import { ChatStreamCallbacks } from '../../types';
+import { type GoogleAIStreamOptions } from './google-ai';
 import {
   StreamContext,
   StreamProtocolChunk,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
+  createTokenSpeedCalculator,
   generateToolCallId,
 } from './protocol';
 
 const transformVertexAIStream = (
   chunk: GenerateContentResponse,
-  stack: StreamContext,
-): StreamProtocolChunk => {
+  context: StreamContext,
+): StreamProtocolChunk | StreamProtocolChunk[] => {
   // maybe need another structure to add support for multiple choices
-  const candidates = chunk.candidates;
+  const candidate = chunk.candidates?.[0];
+  const usage = chunk.usageMetadata;
+  const usageChunks: StreamProtocolChunk[] = [];
+  if (candidate?.finishReason && usage) {
+    const outputReasoningTokens = (usage as any).thoughtsTokenCount || undefined;
+    const totalOutputTokens = (usage.candidatesTokenCount ?? 0) + (outputReasoningTokens ?? 0);
 
+    usageChunks.push(
+      { data: candidate.finishReason, id: context?.id, type: 'stop' },
+      {
+        data: {
+          // TODO: Google SDK 0.24.0 don't have promptTokensDetails types
+          inputImageTokens: (usage as any).promptTokensDetails?.find(
+            (i: any) => i.modality === 'IMAGE',
+          )?.tokenCount,
+          inputTextTokens: (usage as any).promptTokensDetails?.find(
+            (i: any) => i.modality === 'TEXT',
+          )?.tokenCount,
+          outputReasoningTokens,
+          outputTextTokens: totalOutputTokens - (outputReasoningTokens ?? 0),
+          totalInputTokens: usage.promptTokenCount,
+          totalOutputTokens,
+          totalTokens: usage.totalTokenCount,
+        } as ModelTokensUsage,
+        id: context?.id,
+        type: 'usage',
+      },
+    );
+  }
+
+  const candidates = chunk.candidates;
   if (!candidates)
     return {
       data: '',
-      id: stack?.id,
+      id: context?.id,
       type: 'text',
     };
 
@@ -32,44 +63,58 @@ const transformVertexAIStream = (
     if (part.functionCall) {
       const functionCall = part.functionCall;
 
-      return {
-        data: [
-          {
-            function: {
-              arguments: JSON.stringify(functionCall.args),
-              name: functionCall.name,
+      return [
+        {
+          data: [
+            {
+              function: {
+                arguments: JSON.stringify(functionCall.args),
+                name: functionCall.name,
+              },
+              id: generateToolCallId(0, functionCall.name),
+              index: 0,
+              type: 'function',
             },
-            id: generateToolCallId(0, functionCall.name),
-            index: 0,
-            type: 'function',
-          },
-        ],
-        id: stack?.id,
-        type: 'tool_calls',
-      };
+          ],
+          id: context?.id,
+          type: 'tool_calls',
+        },
+        ...usageChunks,
+      ];
+    }
+
+    if (item.finishReason) {
+      if (chunk.usageMetadata) {
+        return [
+          !!part.text ? { data: part.text, id: context?.id, type: 'text' } : undefined,
+          ...usageChunks,
+        ].filter(Boolean) as StreamProtocolChunk[];
+      }
+      return { data: item.finishReason, id: context?.id, type: 'stop' };
     }
 
     return {
       data: part.text,
-      id: stack?.id,
+      id: context?.id,
       type: 'text',
     };
   }
 
   return {
     data: '',
-    id: stack?.id,
+    id: context?.id,
     type: 'stop',
   };
 };
 
 export const VertexAIStream = (
   rawStream: ReadableStream<EnhancedGenerateContentResponse>,
-  callbacks?: ChatStreamCallbacks,
+  { callbacks, inputStartAt }: GoogleAIStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: 'chat_' + nanoid() };
 
   return rawStream
-    .pipeThrough(createSSEProtocolTransformer(transformVertexAIStream, streamStack))
+    .pipeThrough(createTokenSpeedCalculator(transformVertexAIStream, { inputStartAt, streamStack }))
+    .pipeThrough(createSSEProtocolTransformer((c) => c, streamStack))
     .pipeThrough(createCallbacksTransformer(callbacks));
 };
