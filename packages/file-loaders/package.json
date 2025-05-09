@@ -30,7 +30,7 @@
     "concat-stream": "^2.0.0",
     "mammoth": "^1.8.0",
     "officeparser": "^5.1.1",
-    "pdfjs-dist": "4.10.38",
+    "pdfjs-dist": "5.2.133",
     "xlsx": "^0.18.5",
     "yauzl": "^3.2.0"
   },
