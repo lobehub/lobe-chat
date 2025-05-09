@@ -10,7 +10,7 @@ import { LobeNextAuthDbAdapter } from './adapter';
 import { ssoProviders } from './sso-providers';
 
 const { NEXT_PUBLIC_ENABLED_SERVER_SERVICE } = getServerDBConfig();
-const { NEXT_AUTH_SSO_SESSION_STRATEGIE } = getAuthConfig();
+const { NEXT_AUTH_SSO_SESSION_STRATEGY } = getAuthConfig();
 
 export const initSSOProviders = () => {
   return authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH
@@ -64,10 +64,7 @@ export default {
       // If the refresh token is enabled, try refresh token to the JWT
       // Only Casdoor & logto are supported
       // ref: https://authjs.dev/guides/refresh-token-rotation
-      if (
-        authEnv?.NEXT_AUTH_SSO_ENABLE_REFRESH_TOKEN &&
-        NEXT_AUTH_SSO_SESSION_STRATEGIE === 'jwt'
-      ) {
+      if (authEnv?.NEXT_AUTH_SSO_ENABLE_REFRESH_TOKEN && NEXT_AUTH_SSO_SESSION_STRATEGY === 'jwt') {
         if (!account && token?.expires_at && Date.now() < token.expires_at * 1000) {
           // Subsequent logins, but the `access_token` is still valid
           return token;
@@ -125,7 +122,7 @@ export default {
 
       if (
         NEXT_PUBLIC_ENABLED_SERVER_SERVICE &&
-        NEXT_AUTH_SSO_SESSION_STRATEGIE === 'database' &&
+        NEXT_AUTH_SSO_SESSION_STRATEGY === 'database' &&
         token
       ) {
         try {
@@ -199,5 +196,8 @@ export default {
   },
   providers: initSSOProviders(),
   secret: authEnv.NEXT_AUTH_SECRET,
+  session: {
+    strategy: NEXT_AUTH_SSO_SESSION_STRATEGY,
+  },
   trustHost: process.env?.AUTH_TRUST_HOST ? process.env.AUTH_TRUST_HOST === 'true' : true,
 } satisfies NextAuthConfig;
