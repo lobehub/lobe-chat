@@ -1,5 +1,5 @@
 import path from 'node:path';
-import { beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import type { FileLoaderInterface } from '../../types';
 import { TextLoader } from './index';
