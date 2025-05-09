@@ -23,7 +23,7 @@ exports[`loadFile Integration Tests > PDF Handling > should load content from a 
         "Title": "test",
       },
       "pdfMetadata": null,
-      "pdfVersion": "5.2.133",
+      "pdfVersion": "4.10.38",
     },
   },
   "pages": [
