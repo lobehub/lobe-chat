@@ -6,11 +6,12 @@ import { createdAt } from '@/database/schemas/_helpers';
 
 import { agents, agentsFiles, agentsKnowledgeBases } from './agent';
 import { asyncTasks } from './asyncTask';
+import { documentChunks, documents } from './document';
 import { files, knowledgeBases } from './file';
 import { messages, messagesFiles } from './message';
 import { chunks, unstructuredChunks } from './rag';
 import { sessionGroups, sessions } from './session';
-import { threads, topics } from './topic';
+import { threads, topicDocuments, topics } from './topic';
 import { users } from './user';
 
 export const agentsToSessions = pgTable(
@@ -65,11 +66,12 @@ export const fileChunks = pgTable(
 );
 export type NewFileChunkItem = typeof fileChunks.$inferInsert;
 
-export const topicRelations = relations(topics, ({ one }) => ({
+export const topicRelations = relations(topics, ({ one, many }) => ({
   session: one(sessions, {
     fields: [topics.sessionId],
     references: [sessions.id],
   }),
+  documents: many(topicDocuments),
 }));
 
 export const threadsRelations = relations(threads, ({ one }) => ({
@@ -151,6 +153,7 @@ export const filesRelations = relations(files, ({ many, one }) => ({
   messages: many(messagesFiles),
   sessions: many(filesToSessions),
   agents: many(agentsFiles),
+  documents: many(documents, { relationName: 'fileDocuments' }),
 
   chunkingTask: one(asyncTasks, {
     fields: [files.chunkTaskId],
@@ -159,5 +162,34 @@ export const filesRelations = relations(files, ({ many, one }) => ({
   embeddingTask: one(asyncTasks, {
     fields: [files.embeddingTaskId],
     references: [asyncTasks.id],
+  }),
+}));
+
+// Document 相关关系定义
+export const documentsRelations = relations(documents, ({ one, many }) => ({
+  file: one(files, {
+    fields: [documents.fileId],
+    references: [files.id],
+    relationName: 'fileDocuments',
+  }),
+  topics: many(topicDocuments),
+  chunks: many(documentChunks),
+}));
+
+export const topicDocumentsRelations = relations(topicDocuments, ({ one }) => ({
+  document: one(documents, {
+    fields: [topicDocuments.documentId],
+    references: [documents.id],
+  }),
+  topic: one(topics, {
+    fields: [topicDocuments.topicId],
+    references: [topics.id],
+  }),
+}));
+
+export const documentChunksRelations = relations(documentChunks, ({ one }) => ({
+  document: one(documents, {
+    fields: [documentChunks.documentId],
+    references: [documents.id],
   }),
 }));

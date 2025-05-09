@@ -20,6 +20,9 @@
   "author": "LobeHub <i@lobehub.com>",
   "sideEffects": false,
   "main": "./src/index.ts",
+  "scripts": {
+    "test": "vitest"
+  },
   "dependencies": {
     "@langchain/community": "^0.3.41",
     "@langchain/core": "^0.3.45",
@@ -27,13 +30,14 @@
     "concat-stream": "^2.0.0",
     "mammoth": "^1.8.0",
     "officeparser": "^5.1.1",
-    "pdfjs-dist": "4.8.69",
+    "pdfjs-dist": "4.10.38",
     "xlsx": "^0.18.5",
     "yauzl": "^3.2.0"
   },
   "devDependencies": {
     "@types/concat-stream": "^2.0.3",
     "@types/yauzl": "^2.10.3",
+    "canvas": "^3.1.0",
     "typescript": "^5"
   },
   "peerDependencies": {
