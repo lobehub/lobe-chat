@@ -2,7 +2,7 @@ import debug from 'debug';
 import { readFile } from 'node:fs/promises';
 import type { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist';
 import { getDocument, version } from 'pdfjs-dist/legacy/build/pdf.mjs';
-// @ts-expect-error force webpack to include the worker
+// @ts-ignore
 import * as _pdfjsWorker from 'pdfjs-dist/legacy/build/pdf.worker.mjs';
 import type { TextContent } from 'pdfjs-dist/types/src/display/api';
 
