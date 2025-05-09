@@ -1,7 +1,10 @@
 import debug from 'debug';
 import { readFile } from 'node:fs/promises';
-import { getDocument, version } from 'pdfjs-dist';
-import type { PDFDocumentProxy, PDFPageProxy, TextContent } from 'pdfjs-dist/types/src/display/api';
+// For resolving path in ESM
+import { createRequire } from 'node:module';
+import type { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist';
+import { GlobalWorkerOptions, getDocument, version } from 'pdfjs-dist/legacy/build/pdf.mjs';
+import type { TextContent } from 'pdfjs-dist/types/src/display/api';
 
 import type { DocumentPage, FileLoaderInterface } from '../../types';
 
@@ -13,7 +16,34 @@ const log = debug('file-loaders:pdf');
 export class PdfLoader implements FileLoaderInterface {
   private pdfInstance: PDFDocumentProxy | null = null;
 
+  constructor() {
+    const require = createRequire(import.meta.url);
+
+    // --- PDF.js Worker Setup for Node.js ---
+    // Try to set the workerSrc to the actual path of the worker script in node_modules.
+    // This is to help pdfjs-dist find its worker script in a Node.js/Next.js server environment.
+    try {
+      const workerSrcPath = require.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+      // Set only if not already set or different to prevent potential issues if module re-evaluates.
+      if (GlobalWorkerOptions.workerSrc !== workerSrcPath) {
+        GlobalWorkerOptions.workerSrc = workerSrcPath;
+        log(`Set pdfjs-dist GlobalWorkerOptions.workerSrc to: ${workerSrcPath}`);
+      }
+    } catch (error) {
+      log('Error resolving pdf.worker.mjs path:', error);
+      console.error(
+        'Failed to configure pdfjs-dist worker. PDF processing may fail or be unreliable.',
+        error,
+      );
+      // If this fails, pdfjs-dist will attempt its default loading mechanisms.
+    }
+    // --- End PDF.js Worker Setup ---
+  }
+
   private async getPDFFile(filePath: string) {
+    // GlobalWorkerOptions.workerSrc should have been set at the module level.
+    // We are now relying on pdfjs-dist to use this path when it creates a worker.
+
     log('Reading PDF file:', filePath);
     const dataBuffer = await readFile(filePath);
     log('PDF file read successfully, size:', dataBuffer.length, 'bytes');
@@ -21,8 +51,6 @@ export class PdfLoader implements FileLoaderInterface {
     const loadingTask = getDocument({
       data: new Uint8Array(dataBuffer.buffer, dataBuffer.byteOffset, dataBuffer.length),
       useSystemFonts: true,
-      // Explicitly disable worker thread
-      worker: undefined, // Attempt to use system fonts
     });
 
     log('PDF document loading task created');

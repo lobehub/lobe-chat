@@ -1,4 +1,3 @@
-import { join } from 'node:path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
@@ -10,6 +9,6 @@ export default defineConfig({
     //   reportsDirectory: './coverage/app',
     // },
     environment: 'happy-dom',
-    setupFiles: join(__dirname, './test/setup.ts'),
+    // setupFiles: join(__dirname, './test/setup.ts'),
   },
 });
