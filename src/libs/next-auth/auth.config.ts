@@ -48,7 +48,7 @@ export default {
       }
 
       // First-time login, save the `access_token`, its expiry and the `refresh_token`
-      if (account) {
+      if (account && authEnv?.NEXT_AUTH_SSO_ENABLE_REFRESH_TOKEN) {
         return {
           ...token,
           access_token: account?.access_token,
