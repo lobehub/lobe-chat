@@ -36,4 +36,24 @@ describe('loadFile Integration Tests', () => {
       testPureTextFile(file);
     });
   });
+
+  describe('PDF Handling', () => {
+    it(`should load content from a pdf file using filePath`, async () => {
+      const filePath = getFixturePath('test.pdf');
+
+      // Pass filePath directly to loadFile
+      const docs = await loadFile(filePath);
+
+      expect(docs.content).toEqual('123');
+      expect(docs.source).toEqual(filePath);
+
+      // @ts-expect-error
+      delete docs.source;
+      // @ts-expect-error
+      delete docs.createdTime;
+      // @ts-expect-error
+      delete docs.modifiedTime;
+      expect(docs).toMatchSnapshot();
+    });
+  });
 });
