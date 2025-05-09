@@ -89,11 +89,22 @@ const ollamaChatModels: AIChatModelCard[] = [
     description:
       'QwQ 是 Qwen 系列的推理模型。与传统的指令调优模型相比，QwQ 具备思考和推理的能力，能够在下游任务中，尤其是困难问题上，显著提升性能。QwQ-32B 是中型推理模型，能够在与最先进的推理模型（如 DeepSeek-R1、o1-mini）竞争时取得可观的表现。',
     displayName: 'QwQ 32B',
-    enabled: true,
     id: 'qwq',
     releasedAt: '2024-11-28',
     type: 'chat',
   },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 65_536,
+    description: 'Qwen3 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。',
+    displayName: 'Qwen3 7B',
+    enabled: true,
+    id: 'qwen3',
+    type: 'chat',
+  },
+
   {
     contextWindowTokens: 128_000,
     description: 'Qwen2.5 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。',
@@ -115,7 +126,6 @@ const ollamaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 128_000,
     description: 'Qwen2.5 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。',
     displayName: 'Qwen2.5 7B',
-    enabled: true,
     id: 'qwen2.5',
     type: 'chat',
   },

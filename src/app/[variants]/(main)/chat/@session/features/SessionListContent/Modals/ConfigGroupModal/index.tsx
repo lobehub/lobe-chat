@@ -1,5 +1,4 @@
-import { Icon, Modal, type ModalProps, SortableList } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Button, Modal, type ModalProps, SortableList } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { Plus } from 'lucide-react';
@@ -66,7 +65,7 @@ const ConfigGroupModal = memo<ModalProps>(({ open, onCancel }) => {
         />
         <Button
           block
-          icon={<Icon icon={Plus} />}
+          icon={Plus}
           loading={loading}
           onClick={async () => {
             setLoading(true);

@@ -1,4 +1,5 @@
 {
+  "confirm": "Bevestigen",
   "debug": {
     "arguments": "Argumenten",
     "function_call": "Functieoproep",
@@ -48,10 +49,13 @@
     },
     "mcp": {
       "args": {
-        "desc": "Lijst van parameters die aan het STDIO-commando worden doorgegeven",
+        "desc": "Een lijst met parameters die aan het uitvoeringscommando worden doorgegeven, meestal hier de naam van de MCP-server of het pad naar het opstartscript invoeren.",
         "label": "Commando-parameters",
         "placeholder": "Bijvoorbeeld: --port 8080 --debug",
         "required": "Voer de opstartparameters in"
+      },
+      "avatar": {
+        "label": "Plugin-icoon"
       },
       "command": {
         "desc": "Uitvoerbaar bestand of script om de MCP STDIO-plugin te starten",
@@ -59,9 +63,23 @@
         "placeholder": "Bijvoorbeeld: python main.py of /path/to/executable",
         "required": "Voer het opstartcommando in"
       },
+      "desc": {
+        "desc": "Voeg een beschrijving van de plugin toe",
+        "label": "Plugin-beschrijving",
+        "placeholder": "Vul informatie in over het gebruik en de scenario's van deze plugin"
+      },
       "endpoint": {
         "desc": "Voer het adres van je MCP Streamable HTTP Server in",
         "label": "MCP Endpoint URL"
+      },
+      "env": {
+        "add": "Een regel toevoegen",
+        "desc": "Voer de omgevingsvariabelen in die nodig zijn voor jouw MCP-server",
+        "duplicateKeyError": "Veldsleutels moeten uniek zijn",
+        "formValidationFailed": "Formuliervalidatie is mislukt, controleer het parameterformaat",
+        "keyRequired": "Veldsleutel mag niet leeg zijn",
+        "label": "Omgevingsvariabelen voor MCP-server",
+        "stringifyError": "Kan parameters niet serialiseren, controleer het parameterformaat"
       },
       "identifier": {
         "desc": "Geef je MCP-plugin een naam, gebruik Engelse karakters",
@@ -71,6 +89,13 @@
         "required": "Voer de MCP service-identificator in"
       },
       "previewManifest": "Voorbeeld van het plugin beschrijvingsbestand",
+      "quickImport": "Snelle import van JSON-configuratie",
+      "quickImportError": {
+        "empty": "Invoerveld mag niet leeg zijn",
+        "invalidJson": "Ongeldig JSON-formaat",
+        "invalidStructure": "Ongeldige JSON-structuur"
+      },
+      "stdioNotSupported": "De huidige omgeving ondersteunt geen stdio-type MCP-plug-ins",
       "testConnection": "Test verbinding",
       "testConnectionTip": "De MCP plugin kan pas normaal worden gebruikt na een succesvolle verbindingstest",
       "type": {
@@ -138,8 +163,18 @@
       "schema": "Schema"
     },
     "preview": {
+      "api": {
+        "noParams": "Deze tool heeft geen parameters",
+        "noResults": "Geen API's gevonden die aan de zoekcriteria voldoen",
+        "params": "Parameters:",
+        "searchPlaceholder": "Zoek tool..."
+      },
       "card": "Voorbeeld van plug-inweergave",
       "desc": "Voorbeeld van plug-inbeschrijving",
+      "empty": {
+        "desc": "Na configuratie kunt u hier de mogelijkheden van de ondersteunde tools van de plug-in bekijken",
+        "title": "Begin met het bekijken na het configureren van de plug-in"
+      },
       "title": "Voorbeeld van plug-innaam"
     },
     "save": "Installeer plug-in",

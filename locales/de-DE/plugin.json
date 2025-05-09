@@ -1,4 +1,5 @@
 {
+  "confirm": "Bestätigen",
   "debug": {
     "arguments": "Argumente",
     "function_call": "Funktionsaufruf",
@@ -48,10 +49,13 @@
     },
     "mcp": {
       "args": {
-        "desc": "Liste der Parameter, die an den STDIO-Befehl übergeben werden, normalerweise hier den MCP-Servernamen eingeben",
+        "desc": "Liste der Parameter, die an den auszuführenden Befehl übergeben werden, normalerweise hier den MCP-Servernamen oder den Pfad zum Startskript eingeben",
         "label": "Befehlsparameter",
         "placeholder": "Zum Beispiel: mcp-hello-world",
         "required": "Bitte geben Sie die Startparameter ein"
+      },
+      "avatar": {
+        "label": "Plugin-Icon"
       },
       "command": {
         "desc": "Die ausführbare Datei oder das Skript zum Starten des MCP STDIO-Servers",
@@ -59,9 +63,23 @@
         "placeholder": "Zum Beispiel: npx / uv / docker usw.",
         "required": "Bitte geben Sie den Startbefehl ein"
       },
+      "desc": {
+        "desc": "Beschreibung des Plugins hinzufügen",
+        "label": "Plugin-Beschreibung",
+        "placeholder": "Ergänzen Sie Informationen zur Verwendung und zu Szenarien dieses Plugins"
+      },
       "endpoint": {
         "desc": "Geben Sie die Adresse Ihres MCP Streamable HTTP Servers ein",
         "label": "MCP Endpoint-URL"
+      },
+      "env": {
+        "add": "Neue Zeile hinzufügen",
+        "desc": "Geben Sie die Umgebungsvariablen ein, die Ihr MCP-Server benötigt",
+        "duplicateKeyError": "Feldschlüssel müssen eindeutig sein",
+        "formValidationFailed": "Formularvalidierung fehlgeschlagen, bitte überprüfen Sie das Parameterformat",
+        "keyRequired": "Feldschlüssel darf nicht leer sein",
+        "label": "MCP-Server-Umgebungsvariablen",
+        "stringifyError": "Parameter können nicht serialisiert werden, bitte überprüfen Sie das Parameterformat"
       },
       "identifier": {
         "desc": "Geben Sie Ihrem MCP-Plugin einen Namen, der englische Zeichen verwenden muss",
@@ -71,6 +89,13 @@
         "required": "Bitte geben Sie die MCP-Dienstkennung ein"
       },
       "previewManifest": "Vorschau auf die Plugin-Beschreibungsdatei",
+      "quickImport": "Schnellimport von JSON-Konfiguration",
+      "quickImportError": {
+        "empty": "Eingabefeld darf nicht leer sein",
+        "invalidJson": "Ungültiges JSON-Format",
+        "invalidStructure": "JSON-Format ist ungültig"
+      },
+      "stdioNotSupported": "Die aktuelle Umgebung unterstützt keine stdio-Typ MCP-Plugins",
       "testConnection": "Verbindung testen",
       "testConnectionTip": "Die MCP-Plugins können erst nach erfolgreichem Test der Verbindung normal verwendet werden",
       "type": {
@@ -138,8 +163,18 @@
       "schema": "Schema"
     },
     "preview": {
+      "api": {
+        "noParams": "Dieses Tool hat keine Parameter",
+        "noResults": "Keine API gefunden, die den Suchkriterien entspricht",
+        "params": "Parameter:",
+        "searchPlaceholder": "Werkzeug suchen..."
+      },
       "card": "Vorschau der Plugin-Anzeige",
       "desc": "Vorschau der Plugin-Beschreibung",
+      "empty": {
+        "desc": "Nach der Konfiguration können Sie hier die unterstützten Funktionen des Plugins anzeigen",
+        "title": "Vorschau starten nach Plugin-Konfiguration"
+      },
       "title": "Vorschau des Plugin-Namens"
     },
     "save": "Plugin installieren",

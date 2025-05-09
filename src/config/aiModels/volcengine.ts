@@ -12,12 +12,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     config: {
       deploymentName: 'doubao-1-5-thinking-pro-250415',
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 131_072,
     description:
       'Doubao-1.5全新深度思考模型，在数学、编程、科学推理等专业领域及创意写作等通用任务中表现突出，在AIME 2024、Codeforces、GPQA等多项权威基准上达到或接近业界第一梯队水平。支持128k上下文窗口，16k输出。',
     displayName: 'Doubao 1.5 Thinking Pro',
     enabled: true,
-    id: 'Doubao-1.5-thinking-pro',
+    id: 'doubao-1.5-thinking-pro',
     maxOutput: 16_000,
     pricing: {
       currency: 'CNY',
@@ -33,14 +33,14 @@ const doubaoChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'doubao-1-5-thinking-pro-vision-250415',
+      deploymentName: 'doubao-1-5-thinking-pro-m-250415',
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 131_072,
     description:
-      'Doubao-1.5全新深度思考模型，在数学、编程、科学推理等专业领域及创意写作等通用任务中表现突出，在AIME 2024、Codeforces、GPQA等多项权威基准上达到或接近业界第一梯队水平。支持128k上下文窗口，16k输出。',
-    displayName: 'Doubao 1.5 Thinking Pro Vision',
+      'Doubao-1.5全新深度思考模型 (m 版本自带原生多模态深度推理能力)，在数学、编程、科学推理等专业领域及创意写作等通用任务中表现突出，在AIME 2024、Codeforces、GPQA等多项权威基准上达到或接近业界第一梯队水平。支持128k上下文窗口，16k输出。',
+    displayName: 'Doubao 1.5 Thinking Pro M',
     enabled: true,
-    id: 'Doubao-1.5-thinking-pro-vision',
+    id: 'Doubao-1.5-thinking-pro-m',
     maxOutput: 16_000,
     pricing: {
       currency: 'CNY',
@@ -57,7 +57,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     config: {
       deploymentName: 'deepseek-r1-250120',
     },
-    contextWindowTokens: 65_536,
+    contextWindowTokens: 98_304,
     description:
       'DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能比肩 OpenAI o1 正式版。',
     displayName: 'DeepSeek R1',
@@ -78,7 +78,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     config: {
       deploymentName: 'deepseek-r1-distill-qwen-32b-250120',
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 65_536,
     description:
       'DeepSeek-R1-Distill 模型是在开源模型的基础上通过微调训练得到的，训练过程中使用了由 DeepSeek-R1 生成的样本数据。',
     displayName: 'DeepSeek R1 Distill Qwen 32B',
@@ -99,7 +99,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     config: {
       deploymentName: 'deepseek-r1-distill-qwen-7b-250120',
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 65_536,
     description:
       'DeepSeek-R1-Distill 模型是在开源模型的基础上通过微调训练得到的，训练过程中使用了由 DeepSeek-R1 生成的样本数据。',
     displayName: 'DeepSeek R1 Distill Qwen 7B',
@@ -119,7 +119,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     config: {
       deploymentName: 'deepseek-v3-250324',
     },
-    contextWindowTokens: 65_536,
+    contextWindowTokens: 128_000,
     description:
       'DeepSeek-V3 是一款由深度求索公司自研的MoE模型。DeepSeek-V3 多项评测成绩超越了 Qwen2.5-72B 和 Llama-3.1-405B 等其他开源模型，并在性能上和世界顶尖的闭源模型 GPT-4o 以及 Claude-3.5-Sonnet 不分伯仲。',
     displayName: 'DeepSeek V3',
@@ -178,8 +178,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       deploymentName: 'doubao-1-5-lite-32k-250115',
     },
     contextWindowTokens: 32_768,
-    description:
-      'Doubao-1.5-lite 全新一代轻量版模型，极致响应速度，效果与时延均达到全球一流水平。',
+    description: 'Doubao-1.5-lite 全新一代轻量版模型，极致响应速度，效果与时延均达到全球一流水平。',
     displayName: 'Doubao 1.5 Lite 32k',
     enabled: true,
     id: 'doubao-1.5-lite-32k',

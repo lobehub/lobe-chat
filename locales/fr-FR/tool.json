@@ -54,7 +54,16 @@
       "title": "Moteur de recherche :"
     },
     "searchResult": "Nombre de recherches :",
-    "searchTimeRange": "Plage horaire :",
+    "searchTimeRange": {
+      "title": "Plage horaire :",
+      "value": {
+        "anytime": "Temps illimité",
+        "day": "Dans la journée",
+        "month": "Dans le mois",
+        "week": "Dans la semaine",
+        "year": "Dans l'année"
+      }
+    },
     "summary": "Résumé",
     "summaryTooltip": "Résumer le contenu actuel",
     "viewMoreResults": "Voir {{results}} résultats supplémentaires"

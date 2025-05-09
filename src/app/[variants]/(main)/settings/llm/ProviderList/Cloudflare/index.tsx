@@ -1,6 +1,6 @@
 'use client';
 
-import { Input } from 'antd';
+import { Input, InputPassword } from '@lobehub/ui';
 import { useTranslation } from 'react-i18next';
 
 import { CloudflareProviderCard } from '@/config/modelProviders';
@@ -19,7 +19,7 @@ export const useCloudflareProvider = (): ProviderItem => {
     apiKeyItems: [
       {
         children: (
-          <Input.Password
+          <InputPassword
             autoComplete={'new-password'}
             placeholder={t(`${providerKey}.apiKey.placeholder`)}
           />

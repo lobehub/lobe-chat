@@ -1,4 +1,5 @@
 {
+  "confirm": "Conferma",
   "debug": {
     "arguments": "Argomenti di chiamata",
     "function_call": "Chiamata di funzione",
@@ -48,10 +49,13 @@
     },
     "mcp": {
       "args": {
-        "desc": "Elenco dei parametri da passare al comando STDIO",
+        "desc": "Elenco di parametri da passare al comando di esecuzione, di solito qui si inserisce il nome del server MCP o il percorso dello script di avvio",
         "label": "Parametri del comando",
         "placeholder": "Ad esempio: --port 8080 --debug",
         "required": "Inserisci i parametri di avvio"
+      },
+      "avatar": {
+        "label": "Icona del plugin"
       },
       "command": {
         "desc": "File eseguibile o script per avviare il plugin MCP STDIO",
@@ -59,9 +63,23 @@
         "placeholder": "Ad esempio: python main.py o /path/to/executable",
         "required": "Inserisci il comando di avvio"
       },
+      "desc": {
+        "desc": "Descrizione del plugin",
+        "label": "Descrizione del plugin",
+        "placeholder": "Aggiungi informazioni sull'uso e sugli scenari del plugin"
+      },
       "endpoint": {
         "desc": "Inserisci l'indirizzo del tuo server HTTP Streamable MCP",
         "label": "URL Endpoint MCP"
+      },
+      "env": {
+        "add": "Aggiungi una riga",
+        "desc": "Inserisci le variabili d'ambiente necessarie per il tuo server MCP",
+        "duplicateKeyError": "La chiave del campo deve essere unica",
+        "formValidationFailed": "La convalida del modulo è fallita, controlla il formato dei parametri",
+        "keyRequired": "La chiave del campo non può essere vuota",
+        "label": "Variabili d'ambiente del server MCP",
+        "stringifyError": "Impossibile serializzare i parametri, controlla il formato dei parametri"
       },
       "identifier": {
         "desc": "Assegna un nome al tuo plugin MCP, deve utilizzare caratteri inglesi",
@@ -71,6 +89,13 @@
         "required": "Inserisci l'identificatore del servizio MCP"
       },
       "previewManifest": "Anteprima del file di descrizione del plugin",
+      "quickImport": "Importazione rapida della configurazione JSON",
+      "quickImportError": {
+        "empty": "Il contenuto non può essere vuoto",
+        "invalidJson": "Formato JSON non valido",
+        "invalidStructure": "Struttura JSON non valida"
+      },
+      "stdioNotSupported": "L'ambiente attuale non supporta i plugin MCP di tipo stdio",
       "testConnection": "Test di connessione",
       "testConnectionTip": "Il plugin MCP può essere utilizzato correttamente solo dopo un test di connessione riuscito",
       "type": {
@@ -138,8 +163,18 @@
       "schema": "Schema"
     },
     "preview": {
+      "api": {
+        "noParams": "Questo strumento non ha parametri",
+        "noResults": "Nessuna API trovata che soddisfi i criteri di ricerca",
+        "params": "Parametri:",
+        "searchPlaceholder": "Cerca strumento..."
+      },
       "card": "Anteprima dell'aspetto del plugin",
       "desc": "Anteprima della descrizione del plugin",
+      "empty": {
+        "desc": "Dopo aver completato la configurazione, sarà possibile visualizzare qui le capacità degli strumenti supportati dal plugin",
+        "title": "Inizia a visualizzare dopo aver configurato il plugin"
+      },
       "title": "Anteprima del nome del plugin"
     },
     "save": "Installa plugin",

@@ -35,6 +35,10 @@
     "desc": "Roep het hoofdzoekvak van de huidige pagina op",
     "title": "Zoeken"
   },
+  "showApp": {
+    "desc": "Snel het hoofdvenster van de applicatie openen",
+    "title": "Hoofdvenster weergeven"
+  },
   "switchAgent": {
     "desc": "Schakel tussen de in de zijbalk vastgezette assistenten door Ctrl ingedrukt te houden en een cijfer van 0~9 te drukken",
     "title": "Snel wisselen van assistent"

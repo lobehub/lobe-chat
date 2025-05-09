@@ -88,7 +88,8 @@
     "emptyModel": "No enabled model. Please go to settings to enable.",
     "emptyProvider": "No enabled providers. Please go to settings to enable one.",
     "goToSettings": "Go to settings",
-    "provider": "Provider"
+    "provider": "Provider",
+    "title": "Model"
   },
   "OllamaSetupGuide": {
     "action": {

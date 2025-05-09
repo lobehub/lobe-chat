@@ -1,4 +1,5 @@
 {
+  "confirm": "확인",
   "debug": {
     "arguments": "함수 호출 인수",
     "function_call": "함수 호출",
@@ -48,10 +49,13 @@
     },
     "mcp": {
       "args": {
-        "desc": "STDIO 명령에 전달할 매개변수 목록, 일반적으로 여기에서 MCP 서버 이름을 입력합니다",
+        "desc": "실행 명령에 전달할 매개변수 목록으로, 일반적으로 여기에서 MCP 서버 이름 또는 시작 스크립트 경로를 입력합니다.",
         "label": "명령 매개변수",
         "placeholder": "예: mcp-hello-world",
         "required": "시작 매개변수를 입력하세요"
+      },
+      "avatar": {
+        "label": "플러그인 아이콘"
       },
       "command": {
         "desc": "MCP STDIO 서버를 시작하는 실행 파일 또는 스크립트",
@@ -59,9 +63,23 @@
         "placeholder": "예: npx / uv / docker 등",
         "required": "시작 명령어를 입력하세요"
       },
+      "desc": {
+        "desc": "플러그인에 대한 설명 추가",
+        "label": "플러그인 설명",
+        "placeholder": "이 플러그인의 사용 설명 및 상황 등의 정보를 추가하세요"
+      },
       "endpoint": {
         "desc": "당신의 MCP 스트리밍 HTTP 서버 주소를 입력하세요",
         "label": "MCP 엔드포인트 URL"
+      },
+      "env": {
+        "add": "행 추가",
+        "desc": "MCP 서버에 필요한 환경 변수를 입력하세요.",
+        "duplicateKeyError": "필드 키는 고유해야 합니다.",
+        "formValidationFailed": "양식 검증 실패, 매개변수 형식을 확인하세요.",
+        "keyRequired": "필드 키는 비워둘 수 없습니다.",
+        "label": "MCP 서버 환경 변수",
+        "stringifyError": "매개변수를 직렬화할 수 없습니다. 매개변수 형식을 확인하세요."
       },
       "identifier": {
         "desc": "당신의 MCP 플러그인에 이름을 지정하세요, 영어 문자 사용 필요",
@@ -71,6 +89,13 @@
         "required": "MCP 서비스 식별자를 입력하세요"
       },
       "previewManifest": "플러그인 설명 파일 미리보기",
+      "quickImport": "JSON 구성 빠른 가져오기",
+      "quickImportError": {
+        "empty": "입력 내용이 비어 있을 수 없습니다",
+        "invalidJson": "유효하지 않은 JSON 형식입니다",
+        "invalidStructure": "JSON 형식이 유효하지 않습니다"
+      },
+      "stdioNotSupported": "현재 환경에서는 stdio 유형의 MCP 플러그인이 지원되지 않습니다",
       "testConnection": "연결 테스트",
       "testConnectionTip": "연결 테스트가 성공해야 MCP 플러그인을 정상적으로 사용할 수 있습니다",
       "type": {
@@ -138,8 +163,18 @@
       "schema": "스키마"
     },
     "preview": {
+      "api": {
+        "noParams": "이 도구에는 매개변수가 없습니다",
+        "noResults": "검색 조건에 맞는 API를 찾을 수 없습니다",
+        "params": "매개변수:",
+        "searchPlaceholder": "도구 검색..."
+      },
       "card": "플러그인 미리보기",
       "desc": "플러그인 설명 미리보기",
+      "empty": {
+        "desc": "구성을 완료한 후, 이곳에서 플러그인이 지원하는 도구 기능을 미리 볼 수 있습니다",
+        "title": "플러그인 구성 후 미리보기 시작"
+      },
       "title": "플러그인 이름 미리보기"
     },
     "save": "플러그인 설치",

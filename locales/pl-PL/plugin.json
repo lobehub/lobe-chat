@@ -1,4 +1,5 @@
 {
+  "confirm": "Potwierdź",
   "debug": {
     "arguments": "Argumenty",
     "function_call": "Wywołanie funkcji",
@@ -48,10 +49,13 @@
     },
     "mcp": {
       "args": {
-        "desc": "Lista argumentów przekazywanych do polecenia STDIO, zazwyczaj wpisz tutaj nazwę serwera MCP",
+        "desc": "Lista argumentów przekazywanych do polecenia wykonawczego, zazwyczaj wpisz tutaj nazwę serwera MCP lub ścieżkę do skryptu uruchamiającego",
         "label": "Argumenty polecenia",
         "placeholder": "Na przykład: mcp-hello-world",
         "required": "Proszę wprowadzić parametry uruchomienia"
+      },
+      "avatar": {
+        "label": "Ikona wtyczki"
       },
       "command": {
         "desc": "Wykonywalny plik lub skrypt do uruchomienia serwera MCP STDIO",
@@ -59,9 +63,23 @@
         "placeholder": "Na przykład: npx / uv / docker itp.",
         "required": "Proszę wprowadzić polecenie uruchomienia"
       },
+      "desc": {
+        "desc": "Opis dodawanej wtyczki",
+        "label": "Opis wtyczki",
+        "placeholder": "Uzupełnij informacje o użyciu i scenariuszach tej wtyczki"
+      },
       "endpoint": {
         "desc": "Wprowadź adres swojego serwera MCP Streamable HTTP",
         "label": "URL punktu końcowego MCP"
+      },
+      "env": {
+        "add": "Dodaj nowy wiersz",
+        "desc": "Wprowadź zmienne środowiskowe wymagane przez Twój serwer MCP",
+        "duplicateKeyError": "Klucz pola musi być unikalny",
+        "formValidationFailed": "Walidacja formularza nie powiodła się, sprawdź format argumentów",
+        "keyRequired": "Klucz pola nie może być pusty",
+        "label": "Zmienne środowiskowe serwera MCP",
+        "stringifyError": "Nie można zserializować argumentów, sprawdź format argumentów"
       },
       "identifier": {
         "desc": "Nadaj nazwę swojej wtyczce MCP, używając znaków angielskich",
@@ -71,6 +89,13 @@
         "required": "Proszę wprowadzić identyfikator usługi MCP"
       },
       "previewManifest": "Podgląd pliku opisu wtyczki",
+      "quickImport": "Szybki import konfiguracji JSON",
+      "quickImportError": {
+        "empty": "Wprowadzenie nie może być puste",
+        "invalidJson": "Nieprawidłowy format JSON",
+        "invalidStructure": "Format JSON jest nieprawidłowy"
+      },
+      "stdioNotSupported": "Bieżące środowisko nie obsługuje wtyczek MCP typu stdio",
       "testConnection": "Testuj połączenie",
       "testConnectionTip": "Wtyczka MCP może być używana prawidłowo po pomyślnym teście połączenia",
       "type": {
@@ -138,8 +163,18 @@
       "schema": "Schemat"
     },
     "preview": {
+      "api": {
+        "noParams": "To narzędzie nie ma parametrów",
+        "noResults": "Nie znaleziono API spełniającego kryteria wyszukiwania",
+        "params": "Parametry:",
+        "searchPlaceholder": "Szukaj narzędzia..."
+      },
       "card": "Podgląd wyświetlania wtyczki",
       "desc": "Podgląd opisu wtyczki",
+      "empty": {
+        "desc": "Po zakończeniu konfiguracji będziesz mógł podglądać możliwości narzędzi wspieranych przez wtyczkę",
+        "title": "Rozpocznij podgląd po skonfigurowaniu wtyczki"
+      },
       "title": "Podgląd nazwy wtyczki"
     },
     "save": "Zainstaluj wtyczkę",

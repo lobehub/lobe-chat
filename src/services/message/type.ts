@@ -8,7 +8,8 @@ import {
   ChatTranslate,
   CreateMessageParams,
   MessageItem,
-  ModelRankItem, UpdateMessageParams,
+  ModelRankItem,
+  UpdateMessageParams,
 } from '@/types/message';
 
 /* eslint-disable typescript-sort-keys/interface */

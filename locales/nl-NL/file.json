@@ -71,6 +71,9 @@
     "websites": "Websites"
   },
   "title": "Bestanden",
+  "toggleLeftPanel": {
+    "title": "Toon/Verberg het linkerpaneel"
+  },
   "uploadDock": {
     "body": {
       "collapse": "Samenvouwen",

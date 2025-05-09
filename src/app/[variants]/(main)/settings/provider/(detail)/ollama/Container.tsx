@@ -13,9 +13,9 @@ const useStyles = createStyles(({ css, token, responsive }) => ({
   container: css`
     position: relative;
 
-    width: min(50vw, 600px);
+    width: 100%;
     padding-inline: 40px;
-    border: 1px solid ${token.colorBorderBg};
+    border: 1px solid ${token.colorBorderSecondary};
     border-radius: 8px;
 
     background: ${token.colorBgContainer};

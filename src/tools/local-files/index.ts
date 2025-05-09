@@ -8,7 +8,7 @@ export const LocalFilesApiName = {
   readLocalFile: 'readLocalFile',
   renameLocalFile: 'renameLocalFile',
   searchLocalFiles: 'searchLocalFiles',
-  writeFile: 'writeFile',
+  writeLocalFile: 'writeLocalFile',
 };
 
 export const LocalFilesManifest: BuiltinToolManifest = {
@@ -176,26 +176,25 @@ export const LocalFilesManifest: BuiltinToolManifest = {
         type: 'object',
       },
     },
-    // TODO: Add writeFile API definition later
-    // {
-    //   description:
-    //     'Write content to a specific file. Input should be the file path and content. Overwrites existing file or creates a new one.',
-    //   name: LocalFilesApiName.writeFile,
-    //   parameters: {
-    //     properties: {
-    //       path: {
-    //         description: 'The file path to write to',
-    //         type: 'string',
-    //       },
-    //       content: {
-    //         description: 'The content to write',
-    //         type: 'string',
-    //       },
-    //     },
-    //     required: ['path', 'content'],
-    //     type: 'object',
-    //   },
-    // },
+    {
+      description:
+        'Write content to a specific file. Input should be the file path and content. Overwrites existing file or creates a new one.',
+      name: LocalFilesApiName.writeLocalFile,
+      parameters: {
+        properties: {
+          content: {
+            description: 'The content to write',
+            type: 'string',
+          },
+          path: {
+            description: 'The file path to write to',
+            type: 'string',
+          },
+        },
+        required: ['path', 'content'],
+        type: 'object',
+      },
+    },
   ],
   identifier: 'lobe-local-files',
   meta: {

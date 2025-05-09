@@ -1,4 +1,5 @@
 {
+  "confirm": "Onayla",
   "debug": {
     "arguments": "Argümanlar",
     "function_call": "Fonksiyon Çağrısı",
@@ -48,10 +49,13 @@
     },
     "mcp": {
       "args": {
-        "desc": "STDIO komutuna iletilecek parametreler listesi",
+        "desc": "Komutları yürütmek için geçilecek parametreler listesi, genellikle burada MCP sunucu adını veya başlatma betiği yolunu girin.",
         "label": "Komut Parametreleri",
         "placeholder": "Örneğin: --port 8080 --debug",
         "required": "Lütfen başlatma parametrelerini girin"
+      },
+      "avatar": {
+        "label": "Eklenti İkonu"
       },
       "command": {
         "desc": "MCP STDIO eklentisini başlatmak için kullanılacak yürütülebilir dosya veya betik",
@@ -59,9 +63,23 @@
         "placeholder": "Örneğin: python main.py veya /path/to/executable",
         "required": "Lütfen başlatma komutunu girin"
       },
+      "desc": {
+        "desc": "Eklentinin açıklama bilgisi ekleyin",
+        "label": "Eklenti Açıklaması",
+        "placeholder": "Bu eklentinin kullanım talimatları ve senaryoları gibi bilgileri ekleyin"
+      },
       "endpoint": {
         "desc": "MCP Streamable HTTP Sunucunuzun adresini girin",
         "label": "MCP Endpoint URL"
+      },
+      "env": {
+        "add": "Yeni bir satır ekle",
+        "desc": "MCP Sunucunuzun ihtiyaç duyduğu ortam değişkenlerini girin",
+        "duplicateKeyError": "Alan anahtarları benzersiz olmalıdır",
+        "formValidationFailed": "Form doğrulaması başarısız oldu, lütfen parametre formatını kontrol edin",
+        "keyRequired": "Alan anahtarı boş olamaz",
+        "label": "MCP Sunucu Ortam Değişkeni",
+        "stringifyError": "Parametreleri serileştirmek mümkün değil, lütfen parametre formatını kontrol edin"
       },
       "identifier": {
         "desc": "MCP eklentiniz için bir ad belirleyin, İngilizce karakterler kullanmalısınız",
@@ -71,6 +89,13 @@
         "required": "Lütfen MCP hizmet tanımlayıcısını girin"
       },
       "previewManifest": "Eklenti tanım dosyasını önizle",
+      "quickImport": "Hızlı JSON Yapılandırması İçe Aktar",
+      "quickImportError": {
+        "empty": "Girdi boş olamaz",
+        "invalidJson": "Geçersiz JSON formatı",
+        "invalidStructure": "JSON formatı geçersiz"
+      },
+      "stdioNotSupported": "Mevcut ortam stdio türündeki MCP eklentisini desteklemiyor",
       "testConnection": "Bağlantıyı test et",
       "testConnectionTip": "Bağlantı başarılı olduktan sonra MCP eklentisi normal şekilde kullanılabilir",
       "type": {
@@ -138,8 +163,18 @@
       "schema": "Şema"
     },
     "preview": {
+      "api": {
+        "noParams": "Bu aracın parametreleri yok",
+        "noResults": "Arama koşullarına uyan API bulunamadı",
+        "params": "Parametreler:",
+        "searchPlaceholder": "Aracı ara..."
+      },
       "card": "Eklenti Görünümünü Önizle",
       "desc": "Eklenti Açıklamasını Önizle",
+      "empty": {
+        "desc": "Yapılandırmayı tamamladıktan sonra, burada eklentinin desteklediği araç yeteneklerini önizleyebileceksiniz",
+        "title": "Eklentiyi yapılandırdıktan sonra önizlemeye başlayın"
+      },
       "title": "Eklenti Adı Önizlemesi"
     },
     "save": "Eklentiyi Yükle",

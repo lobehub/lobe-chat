@@ -298,17 +298,37 @@ export const TOKEN_SPEED_CHUNK_ID = 'output_speed';
  */
 export const createTokenSpeedCalculator = (
   transformer: (chunk: any, stack: StreamContext) => StreamProtocolChunk | StreamProtocolChunk[],
-  { streamStack, inputStartAt }: { inputStartAt?: number; streamStack?: StreamContext } = {},
+  { inputStartAt, streamStack }: { inputStartAt?: number; streamStack?: StreamContext } = {},
 ) => {
   let outputStartAt: number | undefined;
+  let outputThinking: boolean | undefined;
 
   const process = (chunk: StreamProtocolChunk) => {
     let result = [chunk];
-    // if the chunk is the first text chunk, set as output start
-    if (!outputStartAt && chunk.type === 'text') outputStartAt = Date.now();
+    // if the chunk is the first text or reasoning chunk, set as output start
+    if (!outputStartAt && (chunk.type === 'text' || chunk.type === 'reasoning')) {
+      outputStartAt = Date.now();
+    }
+
+    /**
+     * 部分 provider 在正式输出 reasoning 前，可能会先输出 content 为空字符串的 chunk，
+     * 其中 reasoning 可能为 null，会导致判断是否输出思考内容错误，所以过滤掉 null 或者空字符串。
+     * 也可能是某些特殊 token，所以不修改 outputStartAt 的逻辑。
+     */
+    if (
+      outputThinking === undefined &&
+      (chunk.type === 'text' || chunk.type === 'reasoning') &&
+      typeof chunk.data === 'string' &&
+      chunk.data.length > 0
+    ) {
+      outputThinking = chunk.type === 'reasoning';
+    }
     // if the chunk is the stop chunk, set as output finish
     if (inputStartAt && outputStartAt && chunk.type === 'usage') {
-      const outputTokens = chunk.data?.totalOutputTokens || chunk.data?.outputTextTokens;
+      const totalOutputTokens = chunk.data?.totalOutputTokens || chunk.data?.outputTextTokens;
+      const reasoningTokens = chunk.data?.outputReasoningTokens || 0;
+      const outputTokens =
+        (outputThinking ?? false) ? totalOutputTokens : totalOutputTokens - reasoningTokens;
       result.push({
         data: {
           tps: (outputTokens / (Date.now() - outputStartAt)) * 1000,

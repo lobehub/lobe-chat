@@ -54,7 +54,16 @@
       "title": "Công cụ tìm kiếm:"
     },
     "searchResult": "Số lượng tìm kiếm:",
-    "searchTimeRange": "Khoảng thời gian:",
+    "searchTimeRange": {
+      "title": "Khoảng thời gian:",
+      "value": {
+        "anytime": "Không giới hạn thời gian",
+        "day": "Trong một ngày",
+        "month": "Trong một tháng",
+        "week": "Trong một tuần",
+        "year": "Trong một năm"
+      }
+    },
     "summary": "Tóm tắt",
     "summaryTooltip": "Tóm tắt nội dung hiện tại",
     "viewMoreResults": "Xem thêm {{results}} kết quả"

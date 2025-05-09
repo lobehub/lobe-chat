@@ -35,6 +35,10 @@
     "desc": "Attiva la barra di ricerca principale della pagina corrente",
     "title": "Cerca"
   },
+  "showApp": {
+    "desc": "Apri rapidamente la finestra principale dell'applicazione",
+    "title": "Mostra finestra principale"
+  },
   "switchAgent": {
     "desc": "Cambia l'assistente fissato nella barra laterale tenendo premuto Ctrl e premendo un numero da 0 a 9",
     "title": "Cambia assistente rapidamente"

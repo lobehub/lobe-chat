@@ -4,21 +4,32 @@ import { LobeToolType } from './tool';
 
 export type PluginManifestMap = Record<string, LobeChatPluginManifest>;
 
+export interface CustomPluginMetadata {
+  avatar?: string;
+  description?: string;
+}
+
 export interface CustomPluginParams {
   apiMode?: 'openapi' | 'simple';
   enableSettings?: boolean;
   manifestMode?: 'local' | 'url';
   manifestUrl?: string;
+  useProxy?: boolean;
+
+  /* eslint-disable sort-keys-fix/sort-keys-fix , typescript-sort-keys/interface */
   /**
-   * 临时方案，后续需要做一次大重构
+   * TODO: 临时方案，后续需要做一次大重构
    */
   mcp?: {
     args?: string[];
+    env?: Record<string, string>;
     command?: string;
     type: 'http' | 'stdio';
     url?: string;
   };
-  useProxy?: boolean;
+  avatar?: string;
+  description?: string;
+  /* eslint-enable */
 }
 
 export interface LobeToolCustomPlugin {

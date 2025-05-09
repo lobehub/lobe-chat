@@ -119,7 +119,8 @@
   height: 2em;
 
   background-color: hsl(var(--hue), 10%, 15%);
-  background-image: radial-gradient(
+  background-image:
+    radial-gradient(
       88% 88% at 50% 50%,
       hsl(var(--hue), 10%, 20%) 47%,
       hsla(var(--hue), 10%, 20%, 0%) 50%

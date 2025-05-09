@@ -1,4 +1,4 @@
-import { resolve } from 'node:path';
+import { join, resolve } from 'node:path';
 import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
@@ -32,6 +32,7 @@ export default defineConfig({
       '**/node_modules/**',
       '**/dist/**',
       '**/build/**',
+      '**/apps/desktop/**',
       'src/database/server/**/**',
       'src/database/repositories/dataImporter/deprecated/**/**',
     ],
@@ -41,6 +42,6 @@ export default defineConfig({
         inline: ['vitest-canvas-mock'],
       },
     },
-    setupFiles: './tests/setup.ts',
+    setupFiles: join(__dirname, './tests/setup.ts'),
   },
 });

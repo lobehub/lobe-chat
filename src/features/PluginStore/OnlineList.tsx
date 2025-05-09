@@ -8,7 +8,6 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
 
 import AddPluginButton from '@/features/PluginStore/AddPluginButton';
-import { useServerConfigStore } from '@/store/serverConfig';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors, pluginStoreSelectors } from '@/store/tool/selectors';
 
@@ -18,7 +17,6 @@ import PluginItem from './PluginItem';
 export const OnlineList = memo(() => {
   const { t } = useTranslation('plugin');
   const [keywords, setKeywords] = useState<string>();
-  const mobile = useServerConfigStore((s) => s.isMobile);
   const pluginStoreList = useToolStore((s) => {
     const custom = pluginSelectors.installedCustomPluginMetaList(s);
     const store = pluginStoreSelectors.onlinePluginStore(s);
@@ -52,8 +50,8 @@ export const OnlineList = memo(() => {
             allowClear
             onChange={(e) => setKeywords(e.target.value)}
             placeholder={t('store.placeholder')}
-            type={mobile ? 'block' : 'ghost'}
             value={keywords}
+            variant={'filled'}
           />
         </Flexbox>
         <AddPluginButton />
@@ -64,7 +62,7 @@ export const OnlineList = memo(() => {
         <Center gap={12} padding={40}>
           {error ? (
             <>
-              <Icon icon={ServerCrash} size={{ fontSize: 80 }} />
+              <Icon icon={ServerCrash} size={80} />
               {t('store.networkError')}
             </>
           ) : (

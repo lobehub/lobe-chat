@@ -1,4 +1,4 @@
-import { ImageGallery } from '@lobehub/ui';
+import { PreviewGroup } from '@lobehub/ui';
 import { memo } from 'react';
 
 import GalleyGrid from '@/components/GalleyGrid';
@@ -18,9 +18,9 @@ interface FileListProps {
 
 const ImageFileListViewer = memo<FileListProps>(({ items }) => {
   return (
-    <ImageGallery>
+    <PreviewGroup>
       <GalleyGrid items={items} renderItem={ImageItem} />
-    </ImageGallery>
+    </PreviewGroup>
   );
 });
 

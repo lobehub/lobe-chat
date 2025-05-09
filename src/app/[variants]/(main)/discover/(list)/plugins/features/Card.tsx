@@ -64,22 +64,21 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 interface PluginCardProps
   extends Omit<DiscoverPlugintem, 'manifest' | 'suggestions' | 'socialData'> {
   className?: string;
+  compact?: boolean;
   href: string;
   showCategory?: boolean;
   style?: CSSProperties;
-  variant?: 'default' | 'compact';
 }
 
 const PluginCard = memo<PluginCardProps>(
-  ({ className, showCategory, meta, createdAt, author, variant, style, href }) => {
+  ({ className, showCategory, meta, createdAt, author, compact, style, href }) => {
     const { avatar, title, description, tags = [], category } = meta;
     const categoryItem = useCategoryItem(category, 12);
     const { cx, styles, theme } = useStyles();
-    const isCompact = variant === 'compact';
 
     return (
       <Flexbox className={cx(styles.container, className)} gap={24} style={style}>
-        {!isCompact && <CardBanner avatar={avatar} />}
+        {!compact && <CardBanner avatar={avatar} />}
         <Flexbox gap={12} padding={16}>
           <Link href={href}>
             <Flexbox gap={12}>
@@ -93,7 +92,7 @@ const PluginCard = memo<PluginCardProps>(
                 <Title className={styles.title} ellipsis={{ rows: 1, tooltip: title }} level={3}>
                   {title}
                 </Title>
-                {isCompact ? (
+                {compact ? (
                   <Avatar avatar={avatar} size={40} style={{ display: 'block' }} title={title} />
                 ) : (
                   <Center
@@ -120,7 +119,7 @@ const PluginCard = memo<PluginCardProps>(
               </Flexbox>
               <Flexbox gap={8} horizontal style={{ fontSize: 12 }}>
                 <div style={{ color: theme.colorTextSecondary }}>@{author}</div>
-                {!isCompact && (
+                {!compact && (
                   <time className={styles.time} dateTime={new Date(createdAt).toISOString()}>
                     {createdAt}
                   </time>
@@ -134,9 +133,7 @@ const PluginCard = memo<PluginCardProps>(
           <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
             {showCategory && categoryItem ? (
               <Link href={urlJoin('/discover/plugins', categoryItem.key)}>
-                <Tag icon={categoryItem.icon} style={{ margin: 0 }}>
-                  {categoryItem.label}
-                </Tag>
+                <Tag icon={categoryItem.icon}>{categoryItem.label}</Tag>
               </Link>
             ) : (
               tags
@@ -149,7 +146,7 @@ const PluginCard = memo<PluginCardProps>(
                   });
                   return (
                     <Link href={url} key={index}>
-                      <Tag style={{ margin: 0 }}>{startCase(tag).trim()}</Tag>
+                      <Tag>{startCase(tag).trim()}</Tag>
                     </Link>
                   );
                 })

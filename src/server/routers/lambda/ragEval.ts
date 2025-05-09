@@ -40,7 +40,7 @@ const ragEvalProcedure = authedProcedure
         datasetRecordModel: new EvalDatasetRecordModel(ctx.userId),
         evaluationModel: new EvalEvaluationModel(ctx.userId),
         evaluationRecordModel: new EvaluationRecordModel(ctx.userId),
-        fileService: new FileService(),
+        fileService: new FileService(ctx.serverDB, ctx.userId),
       },
     });
   });

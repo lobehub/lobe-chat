@@ -150,6 +150,7 @@
       "title": "Achtergrondkleur"
     },
     "description": {
+      "desc": "Een korte introductie van je assistent, niet als karakterinstelling",
       "placeholder": "Voer assistentbeschrijving in",
       "title": "Assistentbeschrijving"
     },
@@ -161,7 +162,9 @@
       "placeholder": "Voer rol Prompt-woord in",
       "title": "Rolinstelling"
     },
+    "submit": "Assistentinformatie bijwerken",
     "tag": {
+      "desc": "Assistentlabels worden weergegeven in de assistentmarkt",
       "placeholder": "Voer tag in",
       "title": "Tag"
     },
@@ -206,6 +209,7 @@
       "placeholder": "Voorbewerkingssjabloon {{text}} wordt vervangen door realtime invoer",
       "title": "Voorbewerking van gebruikersinvoer"
     },
+    "submit": "Chatvoorkeuren bijwerken",
     "title": "Chatinstellingen"
   },
   "settingModel": {
@@ -243,6 +247,7 @@
       },
       "title": "Redeneringsinspanningsniveau"
     },
+    "submit": "Modelinstellingen bijwerken",
     "temperature": {
       "desc": "Hoe hoger de waarde, hoe creatiever en fantasierijker het antwoord; hoe lager de waarde, hoe strikter het antwoord.",
       "title": "Creativiteit Activiteit",
@@ -319,6 +324,7 @@
       "desc": "Browser staat voor de native spraakherkenningsservice van de browser",
       "title": "Spraakherkenningsservice"
     },
+    "submit": "Spraakdienst bijwerken",
     "title": "Spraakdienst",
     "tts": "Spraaksynthese-instellingen",
     "ttsService": {
@@ -396,6 +402,12 @@
     "placeholder": "Voer de identificatie van de assistent in, deze moet uniek zijn, bijvoorbeeld web-ontwikkeling",
     "tooltips": "Delen op de assistentenmarkt"
   },
+  "submitFooter": {
+    "reset": "Resetten",
+    "submit": "Opslaan",
+    "unSaved": "Onopgeslagen wijzigingen",
+    "unSavedWarning": "Er zijn momenteel onopgeslagen wijzigingen"
+  },
   "sync": {
     "device": {
       "deviceName": {
@@ -447,6 +459,7 @@
       "placeholder": "Voer aangepaste prompt in",
       "title": "Aangepaste prompt"
     },
+    "helpInfo": "Wanneer je een nieuwe assistent maakt, worden de standaard assistentinstellingen als standaardwaarden gebruikt.",
     "historyCompress": {
       "label": "Gespreksgeschiedenismodel",
       "modelDesc": "Specificeer het model dat wordt gebruikt voor het comprimeren van gespreksgeschiedenis",

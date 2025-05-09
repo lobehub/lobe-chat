@@ -37,6 +37,10 @@ const hotkey: HotkeyI18nTranslations = {
     desc: '唤起当前页面主要搜索框',
     title: '搜索',
   },
+  showApp: {
+    desc: '快速唤起应用主窗口',
+    title: '显示主窗口',
+  },
   switchAgent: {
     desc: '通过按住 Ctrl 加数字 0~9 切换固定在侧边栏的助手',
     title: '快捷切换助手',

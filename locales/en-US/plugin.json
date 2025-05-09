@@ -1,4 +1,5 @@
 {
+  "confirm": "Confirm",
   "debug": {
     "arguments": "Arguments",
     "function_call": "Function Call",
@@ -48,10 +49,13 @@
     },
     "mcp": {
       "args": {
-        "desc": "A list of parameters passed to the STDIO command, typically enter the MCP server name here",
+        "desc": "A list of parameters to be passed to the execution command, typically the MCP server name or the path to the startup script.",
         "label": "Command Parameters",
         "placeholder": "For example: mcp-hello-world",
         "required": "Please enter the startup parameters"
+      },
+      "avatar": {
+        "label": "Plugin Icon"
       },
       "command": {
         "desc": "The executable file or script used to start the MCP STDIO Server",
@@ -59,9 +63,23 @@
         "placeholder": "For example: npx / uv / docker, etc.",
         "required": "Please enter the startup command"
       },
+      "desc": {
+        "desc": "Add a description for the plugin",
+        "label": "Plugin Description",
+        "placeholder": "Provide usage instructions and context for this plugin"
+      },
       "endpoint": {
         "desc": "Enter the address of your MCP Streamable HTTP Server",
         "label": "MCP Endpoint URL"
+      },
+      "env": {
+        "add": "Add a new line",
+        "desc": "Enter the environment variables required for your MCP Server",
+        "duplicateKeyError": "Field keys must be unique",
+        "formValidationFailed": "Form validation failed, please check the parameter format",
+        "keyRequired": "Field key cannot be empty",
+        "label": "MCP Server Environment Variables",
+        "stringifyError": "Unable to serialize parameters, please check the parameter format"
       },
       "identifier": {
         "desc": "Specify a name for your MCP plugin, using English characters",
@@ -71,6 +89,13 @@
         "required": "Please enter the MCP service identifier"
       },
       "previewManifest": "Preview Plugin Description File",
+      "quickImport": "Quick Import JSON Configuration",
+      "quickImportError": {
+        "empty": "Input cannot be empty",
+        "invalidJson": "Invalid JSON format",
+        "invalidStructure": "Invalid JSON structure"
+      },
+      "stdioNotSupported": "The current environment does not support stdio type MCP plugins",
       "testConnection": "Test Connection",
       "testConnectionTip": "The MCP plugin can only be used normally after a successful connection test",
       "type": {
@@ -138,8 +163,18 @@
       "schema": "Schema"
     },
     "preview": {
+      "api": {
+        "noParams": "This tool has no parameters",
+        "noResults": "No APIs found matching the search criteria",
+        "params": "Parameters:",
+        "searchPlaceholder": "Search tools..."
+      },
       "card": "Preview of plugin display",
       "desc": "Preview of plugin description",
+      "empty": {
+        "desc": "Once configured, you will be able to preview the capabilities supported by the plugin here",
+        "title": "Start Previewing After Configuring the Plugin"
+      },
       "title": "Plugin Name Preview"
     },
     "save": "Install Plugin",

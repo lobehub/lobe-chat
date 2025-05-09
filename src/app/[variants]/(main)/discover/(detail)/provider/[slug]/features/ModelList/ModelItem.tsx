@@ -9,11 +9,11 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
+import { ModelInfoTags } from '@/components/ModelSelect';
 import { DiscoverModelItem } from '@/types/discover';
 import { formatPriceByCurrency, formatTokenNumber } from '@/utils/format';
 
 import Statistic, { type StatisticProps } from '../../../../../components/Statistic';
-import ModelFeatureTags from '../../../../../features/ModelFeatureTags';
 
 const { Paragraph, Title } = Typography;
 
@@ -47,7 +47,7 @@ export interface SuggestionItemProps
 }
 
 const ModelItem = memo<SuggestionItemProps>(({ mobile, meta, identifier }) => {
-  const { title, contextWindowTokens, vision, functionCall } = meta;
+  const { title } = meta;
   const { xl = true } = useResponsive();
   const { t } = useTranslation('discover');
   const { styles, theme } = useStyles();
@@ -98,7 +98,7 @@ const ModelItem = memo<SuggestionItemProps>(({ mobile, meta, identifier }) => {
           </Flexbox>
         </Flexbox>
       </Link>
-      <ModelFeatureTags functionCall={functionCall} tokens={contextWindowTokens} vision={vision} />
+      <ModelInfoTags directionReverse {...meta} />
     </Flexbox>
   );
 

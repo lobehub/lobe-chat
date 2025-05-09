@@ -1,7 +1,7 @@
 'use client';
 
 import { ActionIcon } from '@lobehub/ui';
-import { MobileNavBar } from '@lobehub/ui/mobile';
+import { ChatHeader } from '@lobehub/ui/mobile';
 import { createStyles } from 'antd-style';
 import { SearchIcon } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -29,7 +29,7 @@ const Header = memo(() => {
   const [showSearch, setShowSearch] = useState(false);
 
   return (
-    <MobileNavBar
+    <ChatHeader
       center={
         showSearch && (
           <Flexbox align={'center'} className={styles.search} paddingBlock={8} paddingInline={16}>
@@ -37,7 +37,6 @@ const Header = memo(() => {
           </Flexbox>
         )
       }
-      contentStyles={{ center: { display: 'none' } }}
       left={<Nav />}
       right={
         showSearch ? (
@@ -56,6 +55,7 @@ const Header = memo(() => {
         ...mobileHeaderSticky,
         overflow: 'unset',
       }}
+      styles={{ center: { display: 'none' } }}
     />
   );
 });

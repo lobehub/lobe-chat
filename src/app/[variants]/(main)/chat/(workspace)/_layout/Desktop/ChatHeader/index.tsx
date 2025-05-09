@@ -16,17 +16,9 @@ const Header = () => {
     showHeader && (
       <ChatHeader
         className={electronStylish.draggable}
-        left={
-          <div className={electronStylish.nodrag}>
-            <Main />
-          </div>
-        }
-        right={
-          <div className={electronStylish.nodrag}>
-            <HeaderAction />
-          </div>
-        }
-        style={{ height: 48, minHeight: 48, paddingInline: 8, position: 'initial', zIndex: 11 }}
+        left={<Main className={electronStylish.nodrag} />}
+        right={<HeaderAction className={electronStylish.nodrag} />}
+        style={{ paddingInline: 8, position: 'initial', zIndex: 11 }}
       />
     )
   );

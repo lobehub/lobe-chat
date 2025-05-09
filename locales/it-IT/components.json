@@ -88,7 +88,8 @@
     "emptyModel": "Nessun modello attivo. Vai alle impostazioni per attivarne uno.",
     "emptyProvider": "Nessun fornitore attivo, vai alle impostazioni per attivarlo",
     "goToSettings": "Vai alle impostazioni",
-    "provider": "Provider"
+    "provider": "Provider",
+    "title": "Modello"
   },
   "OllamaSetupGuide": {
     "action": {

@@ -13,7 +13,7 @@ import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import { DATABASE_SELF_HOSTING_URL, OFFICIAL_URL, UTM_SOURCE } from '@/const/url';
 
 const BLOCK_SIZE = 100;
-const ICON_SIZE = 72;
+const ICON_SIZE = { size: 72, strokeWidth: 1.5 };
 
 const useStyles = createStyles(({ css, token }) => ({
   actionTitle: css`
@@ -100,7 +100,7 @@ const NotSupportClient = () => {
           }}
           width={BLOCK_SIZE}
         >
-          <Icon icon={FileImage} size={{ fontSize: ICON_SIZE, strokeWidth: 1.5 }} />
+          <Icon icon={FileImage} size={ICON_SIZE} />
         </Center>
         <Center
           className={styles.icon}
@@ -112,7 +112,7 @@ const NotSupportClient = () => {
           }}
           width={BLOCK_SIZE}
         >
-          <Icon icon={FileUpIcon} size={{ fontSize: ICON_SIZE, strokeWidth: 1.5 }} />
+          <Icon icon={FileUpIcon} size={ICON_SIZE} />
         </Center>
         <Center
           className={styles.icon}
@@ -123,7 +123,7 @@ const NotSupportClient = () => {
           }}
           width={BLOCK_SIZE}
         >
-          <Icon icon={FileText} size={{ fontSize: ICON_SIZE, strokeWidth: 1.5 }} />
+          <Icon icon={FileText} size={ICON_SIZE} />
         </Center>
       </Flexbox>
 

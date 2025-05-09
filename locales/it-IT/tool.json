@@ -54,7 +54,16 @@
       "title": "Motore di ricerca:"
     },
     "searchResult": "Numero di ricerche:",
-    "searchTimeRange": "Intervallo di tempo:",
+    "searchTimeRange": {
+      "title": "Intervallo di tempo:",
+      "value": {
+        "anytime": "Nessun limite di tempo",
+        "day": "Entro un giorno",
+        "month": "Entro un mese",
+        "week": "Entro una settimana",
+        "year": "Entro un anno"
+      }
+    },
     "summary": "Riepilogo",
     "summaryTooltip": "Riepiloga il contenuto attuale",
     "viewMoreResults": "Visualizza altri {{results}} risultati"
