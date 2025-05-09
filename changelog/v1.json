@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Add reasoning tokens and token usage statistics for Google Gemini."]
+    },
+    "date": "2025-05-09",
+    "version": "1.84.27"
+  },
+  {
+    "children": {
+      "improvements": ["Add qwen3 for ollama."]
+    },
+    "date": "2025-05-08",
+    "version": "1.84.26"
+  },
+  {
+    "children": {
       "fixes": ["Fix desktop upload image on macOS."]
     },
     "date": "2025-05-08",
