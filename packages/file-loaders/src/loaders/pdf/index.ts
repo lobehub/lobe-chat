@@ -2,6 +2,7 @@ import debug from 'debug';
 import { readFile } from 'node:fs/promises';
 // For resolving path in ESM
 import { createRequire } from 'node:module';
+import { pathToFileURL } from 'node:url';
 import type { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist';
 import { GlobalWorkerOptions, getDocument, version } from 'pdfjs-dist/legacy/build/pdf.mjs';
 import type { TextContent } from 'pdfjs-dist/types/src/display/api';
@@ -20,17 +21,18 @@ export class PdfLoader implements FileLoaderInterface {
     const require = createRequire(import.meta.url);
 
     // --- PDF.js Worker Setup for Node.js ---
-    // Try to set the workerSrc to the actual path of the worker script in node_modules.
-    // This is to help pdfjs-dist find its worker script in a Node.js/Next.js server environment.
     try {
       const workerSrcPath = require.resolve('pdfjs-dist/legacy/build/pdf.worker.mjs');
+      const workerSrcUrl = pathToFileURL(workerSrcPath).href;
+      console.log('workerSrcUrl:', workerSrcUrl);
+
       // Set only if not already set or different to prevent potential issues if module re-evaluates.
-      if (GlobalWorkerOptions.workerSrc !== workerSrcPath) {
-        GlobalWorkerOptions.workerSrc = workerSrcPath;
-        log(`Set pdfjs-dist GlobalWorkerOptions.workerSrc to: ${workerSrcPath}`);
+      if (GlobalWorkerOptions.workerSrc !== workerSrcUrl) {
+        GlobalWorkerOptions.workerSrc = workerSrcUrl;
+        log(`Set pdfjs-dist GlobalWorkerOptions.workerSrc to: ${workerSrcUrl}`);
       }
     } catch (error) {
-      log('Error resolving pdf.worker.mjs path:', error);
+      log('Error resolving pdf.worker.mjs path or converting to URL:', error);
       console.error(
         'Failed to configure pdfjs-dist worker. PDF processing may fail or be unreliable.',
         error,
