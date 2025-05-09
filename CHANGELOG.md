@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.85.0](https://github.com/lobehub/lobe-chat/compare/v1.84.27...v1.85.0)
+
+<sup>Released on **2025-05-09**</sup>
+
+#### ✨ Features
+
+- **misc**: Support upload files direct into chat context.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support upload files direct into chat context, closes [#7751](https://github.com/lobehub/lobe-chat/issues/7751) ([39b790e](https://github.com/lobehub/lobe-chat/commit/39b790e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.84.27](https://github.com/lobehub/lobe-chat/compare/v1.84.26...v1.84.27)
 
 <sup>Released on **2025-05-09**</sup>

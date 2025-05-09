@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support upload files direct into chat context."]
+    },
+    "date": "2025-05-09",
+    "version": "1.85.0"
+  },
+  {
+    "children": {
       "improvements": ["Add reasoning tokens and token usage statistics for Google Gemini."]
     },
     "date": "2025-05-09",

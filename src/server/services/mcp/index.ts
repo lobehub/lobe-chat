@@ -15,10 +15,6 @@ class MCPService {
   // Store instances of the custom MCPClient, keyed by serialized MCPClientParams
   private clients: Map<string, MCPClient> = new Map();
 
-  constructor() {
-    log('MCPService initialized');
-  }
-
   // --- MCP Interaction ---
 
   // listTools now accepts MCPClientParams

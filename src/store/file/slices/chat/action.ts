@@ -7,14 +7,10 @@ import { fileService } from '@/services/file';
 import { ServerService } from '@/services/file/server';
 import { ragService } from '@/services/rag';
 import { UPLOAD_NETWORK_ERROR } from '@/services/upload';
-import { userService } from '@/services/user';
-import { useAgentStore } from '@/store/agent';
 import {
   UploadFileListDispatch,
   uploadFileListReducer,
 } from '@/store/file/reducers/uploadFileList';
-import { useUserStore } from '@/store/user';
-import { preferenceSelectors } from '@/store/user/selectors';
 import { FileListItem } from '@/types/files';
 import { UploadFileItem } from '@/types/files/upload';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
@@ -97,7 +93,7 @@ export const createFileSlice: StateCreator<
   },
 
   uploadChatFiles: async (rawFiles) => {
-    const { dispatchChatUploadFileList, startAsyncTask } = get();
+    const { dispatchChatUploadFileList } = get();
     // 0. skip file in blacklist
     const files = rawFiles.filter((file) => !FILE_UPLOAD_BLACKLIST.includes(file.name));
     // 1. add files with base64
@@ -154,52 +150,8 @@ export const createFileSlice: StateCreator<
       // image don't need to be chunked and embedding
       if (isChunkingUnsupported(file.type)) return;
 
-      // 3. auto chunk and embedding
-      dispatchChatUploadFileList({
-        id: fileResult.id,
-        type: 'updateFile',
-        // make the taks empty to hint the user that the task is starting but not triggered
-        value: { tasks: {} },
-      });
-
-      await startAsyncTask(
-        fileResult.id,
-        async (id) => {
-          const data = await ragService.createParseFileTask(id);
-          if (!data || !data.id) throw new Error('failed to createParseFileTask');
-
-          // run the assignment
-          useAgentStore
-            .getState()
-            .addFilesToAgent([id], false)
-            .then(() => {
-              // trigger the tip if it's the first time
-              if (!preferenceSelectors.shouldTriggerFileInKnowledgeBaseTip(useUserStore.getState()))
-                return;
-
-              userService.updateGuide({ uploadFileInKnowledgeBase: true });
-            });
-
-          return data.id;
-        },
-
-        (fileItem) => {
-          dispatchChatUploadFileList({
-            id: fileResult.id,
-            type: 'updateFile',
-            value: {
-              tasks: {
-                chunkCount: fileItem.chunkCount,
-                chunkingError: fileItem.chunkingError,
-                chunkingStatus: fileItem.chunkingStatus,
-                embeddingError: fileItem.embeddingError,
-                embeddingStatus: fileItem.embeddingStatus,
-                finishEmbedding: fileItem.finishEmbedding,
-              },
-            },
-          });
-        },
-      );
+      const data = await ragService.parseFileContent(fileResult.id);
+      console.log(data);
     });
 
     await Promise.all(pools);
