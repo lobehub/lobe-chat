@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.84.26](https://github.com/lobehub/lobe-chat/compare/v1.84.25...v1.84.26)
+
+<sup>Released on **2025-05-08**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add qwen3 for ollama.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add qwen3 for ollama, closes [#7746](https://github.com/lobehub/lobe-chat/issues/7746) ([806d905](https://github.com/lobehub/lobe-chat/commit/806d905))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.84.25](https://github.com/lobehub/lobe-chat/compare/v1.84.24...v1.84.25)
 
 <sup>Released on **2025-05-08**</sup>
