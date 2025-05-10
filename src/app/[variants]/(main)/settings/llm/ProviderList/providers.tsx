@@ -50,6 +50,7 @@ import { useGithubProvider } from './Github';
 import { useHuggingFaceProvider } from './HuggingFace';
 import { useOllamaProvider } from './Ollama';
 import { useOpenAIProvider } from './OpenAI';
+import { usePollinationsProvider } from './Pollinations';
 
 export const useProviderList = (): ProviderItem[] => {
   const AzureProvider = useAzureProvider();
@@ -59,12 +60,14 @@ export const useProviderList = (): ProviderItem[] => {
   const CloudflareProvider = useCloudflareProvider();
   const GithubProvider = useGithubProvider();
   const HuggingFaceProvider = useHuggingFaceProvider();
+  const PollinationsProvider = usePollinationsProvider();
 
   return useMemo(
     () => [
       OpenAIProvider,
       AzureProvider,
       OllamaProvider,
+      PollinationsProvider,
       VLLMProviderCard,
       XinferenceProviderCard,
       AnthropicProviderCard,
@@ -117,6 +120,7 @@ export const useProviderList = (): ProviderItem[] => {
       CloudflareProvider,
       GithubProvider,
       HuggingFaceProvider,
+      PollinationsProvider,
     ],
   );
 };

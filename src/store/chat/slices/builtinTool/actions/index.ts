@@ -4,9 +4,10 @@ import { ChatStore } from '@/store/chat/store';
 
 import { ChatDallEAction, dalleSlice } from './dalle';
 import { LocalFileAction, localFileSlice } from './localFile';
+import { ChatPollinationsAction, pollinationsSlice } from './pollinations';
 import { SearchAction, searchSlice } from './search';
 
-export interface ChatBuiltinToolAction extends ChatDallEAction, SearchAction, LocalFileAction {}
+export interface ChatBuiltinToolAction extends ChatDallEAction, SearchAction, LocalFileAction, ChatPollinationsAction {}
 
 export const chatToolSlice: StateCreator<
   ChatStore,
@@ -15,6 +16,7 @@ export const chatToolSlice: StateCreator<
   ChatBuiltinToolAction
 > = (...params) => ({
   ...dalleSlice(...params),
+  ...pollinationsSlice(...params),
   ...searchSlice(...params),
   ...localFileSlice(...params),
 });

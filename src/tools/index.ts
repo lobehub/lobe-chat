@@ -4,6 +4,7 @@ import { LobeBuiltinTool } from '@/types/tool';
 import { ArtifactsManifest } from './artifacts';
 import { DalleManifest } from './dalle';
 import { LocalFilesManifest } from './local-files';
+import { PollinationsManifest } from './pollinations';
 import { WebBrowsingManifest } from './web-browsing';
 
 export const builtinTools: LobeBuiltinTool[] = [
@@ -15,6 +16,11 @@ export const builtinTools: LobeBuiltinTool[] = [
   {
     identifier: DalleManifest.identifier,
     manifest: DalleManifest,
+    type: 'builtin',
+  },
+  {
+    identifier: PollinationsManifest.identifier,
+    manifest: PollinationsManifest,
     type: 'builtin',
   },
   {

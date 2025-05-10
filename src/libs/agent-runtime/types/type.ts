@@ -54,6 +54,7 @@ export enum ModelProvider {
   OpenRouter = 'openrouter',
   PPIO = 'ppio',
   Perplexity = 'perplexity',
+  Pollinations = 'pollinations',
   Qwen = 'qwen',
   SambaNova = 'sambanova',
   Search1API = 'search1api',
