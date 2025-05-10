@@ -29,9 +29,6 @@
   "deepseek": {
     "description": "DeepSeek è un'azienda focalizzata sulla ricerca e applicazione della tecnologia AI, il cui ultimo modello DeepSeek-V2.5 combina capacità di dialogo generico e elaborazione del codice, realizzando miglioramenti significativi nell'allineamento delle preferenze umane, nei compiti di scrittura e nel rispetto delle istruzioni."
   },
-  "doubao": {
-    "description": "Il grande modello sviluppato internamente da ByteDance. Validato attraverso oltre 50 scenari aziendali interni, con un utilizzo quotidiano di trilioni di token che affinano continuamente il modello, offre diverse capacità multimodali, creando esperienze aziendali ricche con risultati di alta qualità."
-  },
   "fireworksai": {
     "description": "Fireworks AI è un fornitore leader di servizi di modelli linguistici avanzati, focalizzato su chiamate funzionali e elaborazione multimodale. Il suo ultimo modello Firefunction V2, basato su Llama-3, è ottimizzato per chiamate di funzione, dialogo e rispetto delle istruzioni. Il modello di linguaggio visivo FireLLaVA-13B supporta input misti di immagini e testo. Altri modelli notevoli includono la serie Llama e la serie Mixtral, offrendo supporto efficiente per il rispetto e la generazione di istruzioni multilingue."
   },

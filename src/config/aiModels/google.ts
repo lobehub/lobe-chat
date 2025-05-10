@@ -9,30 +9,6 @@ const googleChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 1_048_576 + 65_536,
-    description: 'Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。',
-    displayName: 'Gemini 2.5 Flash Preview 04-17',
-    enabled: true,
-    id: 'gemini-2.5-flash-preview-04-17',
-    maxOutput: 65_536,
-    pricing: {
-      input: 0.15,
-      output: 3.5, // Thinking
-    },
-    releasedAt: '2025-04-17',
-    settings: {
-      searchImpl: 'params',
-      searchProvider: 'google',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_048_576 + 65_536,
     description:
       'Gemini 2.5 Pro Experimental 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
     displayName: 'Gemini 2.5 Pro Experimental 03-25',
@@ -60,6 +36,30 @@ const googleChatModels: AIChatModelCard[] = [
     contextWindowTokens: 1_048_576 + 65_536,
     description:
       'Gemini 2.5 Pro Preview 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
+    displayName: 'Gemini 2.5 Pro Preview 05-06 (Paid)',
+    id: 'gemini-2.5-pro-preview-05-06',
+    maxOutput: 65_536,
+    pricing: {
+      input: 1.25, // prompts <= 200k tokens
+      output: 10, // prompts <= 200k tokens
+    },
+    releasedAt: '2025-05-06',
+    settings: {
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 65_536,
+    description:
+      'Gemini 2.5 Pro Preview 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
     displayName: 'Gemini 2.5 Pro Preview 03-25 (Paid)',
     id: 'gemini-2.5-pro-preview-03-25',
     maxOutput: 65_536,
@@ -68,6 +68,30 @@ const googleChatModels: AIChatModelCard[] = [
       output: 10, // prompts <= 200k tokens
     },
     releasedAt: '2025-03-25',
+    settings: {
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 65_536,
+    description: 'Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。',
+    displayName: 'Gemini 2.5 Flash Preview 04-17',
+    enabled: true,
+    id: 'gemini-2.5-flash-preview-04-17',
+    maxOutput: 65_536,
+    pricing: {
+      input: 0.15,
+      output: 3.5, // Thinking
+    },
+    releasedAt: '2025-04-17',
     settings: {
       searchImpl: 'params',
       searchProvider: 'google',
