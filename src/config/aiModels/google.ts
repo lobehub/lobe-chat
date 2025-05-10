@@ -107,7 +107,6 @@ const googleChatModels: AIChatModelCard[] = [
     description:
       'Gemini 2.0 Flash Thinking Exp 是 Google 的实验性多模态推理AI模型，能对复杂问题进行推理，拥有新的思维能力。',
     displayName: 'Gemini 2.0 Flash Thinking Experimental 01-21',
-    enabled: true,
     id: 'gemini-2.0-flash-thinking-exp-01-21',
     maxOutput: 65_536,
     pricing: {
@@ -128,7 +127,6 @@ const googleChatModels: AIChatModelCard[] = [
     description:
       'Gemini 2.0 Flash 提供下一代功能和改进，包括卓越的速度、原生工具使用、多模态生成和1M令牌上下文窗口。',
     displayName: 'Gemini 2.0 Flash',
-    enabled: true,
     id: 'gemini-2.0-flash',
     maxOutput: 8192,
     pricing: {
@@ -172,10 +170,27 @@ const googleChatModels: AIChatModelCard[] = [
       imageOutput: true,
       vision: true,
     },
+    contextWindowTokens: 32_768 + 8192,
+    description: 'Gemini 2.0 Flash 预览模型，支持图像生成',
+    displayName: 'Gemini 2.0 Flash Preview Image Generation',
+    enabled: true,
+    id: 'gemini-2.0-flash-preview-image-generation',
+    maxOutput: 8192,
+    pricing: {
+      input: 0.1,
+      output: 0.039, // per image
+    },
+    releasedAt: '2025-05-07',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      imageOutput: true,
+      vision: true,
+    },
     contextWindowTokens: 1_048_576 + 8192,
     description: 'Gemini 2.0 Flash 实验模型，支持图像生成',
     displayName: 'Gemini 2.0 Flash (Image Generation) Experimental',
-    enabled: true,
     id: 'gemini-2.0-flash-exp-image-generation',
     maxOutput: 8192,
     pricing: {
