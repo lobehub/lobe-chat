@@ -161,6 +161,11 @@ export default class BrowserManager {
       if (browser.webContents) this.webContentsMap.delete(browser.webContents);
     });
 
+    browser.browserWindow.on('show', () => {
+      if (browser.webContents)
+        this.webContentsMap.set(browser.webContents, browser.identifier as AppBrowsersIdentifiers);
+    });
+
     return browser;
   }
 
