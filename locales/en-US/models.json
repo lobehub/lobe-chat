@@ -71,6 +71,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 is a MoE model developed in-house by Deep Seek Company. Its performance surpasses that of other open-source models such as Qwen2.5-72B and Llama-3.1-405B in multiple assessments, and it stands on par with the world's top proprietary models like GPT-4o and Claude-3.5-Sonnet."
   },
+  "Doubao-1.5-thinking-pro-m": {
+    "description": "Doubao-1.5 is a new deep thinking model (the m version comes with native multimodal deep reasoning capabilities) that excels in specialized fields such as mathematics, programming, scientific reasoning, and general tasks like creative writing, achieving or nearing top-tier performance in authoritative benchmarks such as AIME 2024, Codeforces, and GPQA. It supports a 128k context window and 16k output."
+  },
   "Doubao-1.5-vision-pro": {
     "description": "Doubao-1.5-vision-pro is a newly upgraded multimodal large model that supports image recognition at any resolution and extreme aspect ratios, enhancing visual reasoning, document recognition, detail comprehension, and instruction following capabilities."
   },
@@ -293,6 +296,21 @@
   "Qwen/Qwen2.5-VL-72B-Instruct": {
     "description": "Qwen2.5-VL is the vision-language model in the Qwen2.5 series. This model demonstrates significant improvements across multiple dimensions: enhanced visual comprehension capable of recognizing common objects, analyzing text, charts, and layouts; serving as a visual agent that can reason and dynamically guide tool usage; supporting understanding of long videos exceeding 1 hour while capturing key events; able to precisely locate objects in images by generating bounding boxes or points; and capable of producing structured outputs particularly suitable for scanned data like invoices and forms."
   },
+  "Qwen/Qwen3-14B": {
+    "description": "Qwen3 is a next-generation model with significantly enhanced capabilities, achieving industry-leading levels in reasoning, general tasks, agent functions, and multilingual support, with a switchable thinking mode."
+  },
+  "Qwen/Qwen3-235B-A22B": {
+    "description": "Qwen3 is a next-generation model with significantly enhanced capabilities, achieving industry-leading levels in reasoning, general tasks, agent functions, and multilingual support, with a switchable thinking mode."
+  },
+  "Qwen/Qwen3-30B-A3B": {
+    "description": "Qwen3 is a next-generation model with significantly enhanced capabilities, achieving industry-leading levels in reasoning, general tasks, agent functions, and multilingual support, with a switchable thinking mode."
+  },
+  "Qwen/Qwen3-32B": {
+    "description": "Qwen3 is a next-generation model with significantly enhanced capabilities, achieving industry-leading levels in reasoning, general tasks, agent functions, and multilingual support, with a switchable thinking mode."
+  },
+  "Qwen/Qwen3-8B": {
+    "description": "Qwen3 is a next-generation model with significantly enhanced capabilities, achieving industry-leading levels in reasoning, general tasks, agent functions, and multilingual support, with a switchable thinking mode."
+  },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 is the latest series of the Qwen model, supporting 128k context. Compared to the current best open-source models, Qwen2-72B significantly surpasses leading models in natural language understanding, knowledge, coding, mathematics, and multilingual capabilities."
   },
@@ -397,9 +415,6 @@
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B is an open-source version that provides an optimized conversational experience for chat applications."
-  },
-  "TeleAI/TeleChat2": {
-    "description": "The TeleChat2 large model is a generative semantic model independently developed from scratch by China Telecom, supporting functions such as encyclopedia Q&A, code generation, and long text generation, providing users with conversational consulting services. It can interact with users, answer questions, assist in creation, and efficiently help users obtain information, knowledge, and inspiration. The model performs well in areas such as hallucination issues, long text generation, and logical understanding."
   },
   "Vendor-A/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct is one of the latest large language models released by Alibaba Cloud. This 72B model shows significant improvements in coding and mathematics. It also provides multilingual support, covering over 29 languages, including Chinese and English. The model has made notable advancements in instruction following, understanding structured data, and generating structured outputs, especially JSON."
@@ -800,6 +815,12 @@
   "deepseek/deepseek-chat": {
     "description": "A new open-source model that integrates general and coding capabilities, retaining the general conversational abilities of the original Chat model and the powerful code handling capabilities of the Coder model, while better aligning with human preferences. Additionally, DeepSeek-V2.5 has achieved significant improvements in writing tasks, instruction following, and more."
   },
+  "deepseek/deepseek-chat-v3-0324": {
+    "description": "DeepSeek V3 is a 685B parameter expert mixture model, the latest iteration in the DeepSeek team's flagship chat model series.\n\nIt inherits from the [DeepSeek V3](/deepseek/deepseek-chat-v3) model and performs excellently across various tasks."
+  },
+  "deepseek/deepseek-chat-v3-0324:free": {
+    "description": "DeepSeek V3 is a 685B parameter expert mixture model, the latest iteration in the DeepSeek team's flagship chat model series.\n\nIt inherits from the [DeepSeek V3](/deepseek/deepseek-chat-v3) model and performs excellently across various tasks."
+  },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1 significantly enhances model reasoning capabilities with minimal labeled data. Before outputting the final answer, the model first provides a chain of thought to improve the accuracy of the final response."
   },
@@ -849,9 +870,6 @@
     "description": "Doubao-1.5-pro is a new generation flagship model with comprehensive performance upgrades, excelling in knowledge, coding, reasoning, and more."
   },
   "doubao-1.5-thinking-pro": {
-    "description": "Doubao-1.5 is a brand new deep thinking model that excels in specialized fields such as mathematics, programming, and scientific reasoning, as well as in general tasks like creative writing. It has achieved or is close to the top tier of industry standards in several authoritative benchmarks, including AIME 2024, Codeforces, and GPQA. It supports a 128k context window and 16k output."
-  },
-  "doubao-1.5-thinking-pro-vision": {
     "description": "Doubao-1.5 is a brand new deep thinking model that excels in specialized fields such as mathematics, programming, and scientific reasoning, as well as in general tasks like creative writing. It has achieved or is close to the top tier of industry standards in several authoritative benchmarks, including AIME 2024, Codeforces, and GPQA. It supports a 128k context window and 16k output."
   },
   "doubao-1.5-vision-lite": {
@@ -995,9 +1013,6 @@
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp is Google's latest experimental multimodal AI model, featuring next-generation capabilities, exceptional speed, native tool invocation, and multimodal generation."
   },
-  "gemini-2.0-pro-exp-02-05": {
-    "description": "Gemini 2.0 Pro Experimental is Google's latest experimental multimodal AI model, showing a quality improvement compared to previous versions, especially in world knowledge, coding, and long context."
-  },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview is Google's most cost-effective model, offering a comprehensive set of features."
   },
@@ -1006,6 +1021,9 @@
   },
   "gemini-2.5-pro-preview-03-25": {
     "description": "Gemini 2.5 Pro Preview is Google's most advanced thinking model, capable of reasoning about complex problems in code, mathematics, and STEM fields, as well as analyzing large datasets, codebases, and documents using long-context analysis."
+  },
+  "gemini-2.5-pro-preview-05-06": {
+    "description": "Gemini 2.5 Pro Preview is Google's most advanced reasoning model, capable of reasoning about complex problems in code, mathematics, and STEM fields, as well as analyzing large datasets, codebases, and documents using long context."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B is suitable for medium to small-scale task processing, offering cost-effectiveness."
@@ -1091,8 +1109,17 @@
   "google/gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash offers next-generation features and improvements, including exceptional speed, native tool usage, multimodal generation, and a 1M token context window."
   },
-  "google/gemini-2.0-pro-exp-02-05:free": {
-    "description": "Gemini 2.0 Pro Experimental is Google's latest experimental multimodal AI model, showing a quality improvement compared to previous versions, especially in world knowledge, coding, and long context."
+  "google/gemini-2.0-flash-exp:free": {
+    "description": "Gemini 2.0 Flash Experimental is Google's latest experimental multimodal AI model, showing a quality improvement compared to historical versions, especially in world knowledge, code, and long context."
+  },
+  "google/gemini-2.5-flash-preview": {
+    "description": "Gemini 2.5 Flash is Google's most advanced flagship model, designed for advanced reasoning, coding, mathematics, and scientific tasks. It includes built-in 'thinking' capabilities that allow it to provide responses with higher accuracy and detailed context handling.\n\nNote: This model has two variants: thinking and non-thinking. Output pricing varies significantly based on whether the thinking capability is activated. If you choose the standard variant (without the ':thinking' suffix), the model will explicitly avoid generating thinking tokens.\n\nTo leverage the thinking capability and receive thinking tokens, you must select the ':thinking' variant, which will incur higher thinking output pricing.\n\nAdditionally, Gemini 2.5 Flash can be configured via the 'maximum tokens for reasoning' parameter, as described in the documentation (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
+  },
+  "google/gemini-2.5-flash-preview:thinking": {
+    "description": "Gemini 2.5 Flash is Google's most advanced flagship model, designed for advanced reasoning, coding, mathematics, and scientific tasks. It includes built-in 'thinking' capabilities that allow it to provide responses with higher accuracy and detailed context handling.\n\nNote: This model has two variants: thinking and non-thinking. Output pricing varies significantly based on whether the thinking capability is activated. If you choose the standard variant (without the ':thinking' suffix), the model will explicitly avoid generating thinking tokens.\n\nTo leverage the thinking capability and receive thinking tokens, you must select the ':thinking' variant, which will incur higher thinking output pricing.\n\nAdditionally, Gemini 2.5 Flash can be configured via the 'maximum tokens for reasoning' parameter, as described in the documentation (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
+  },
+  "google/gemini-2.5-pro-preview-03-25": {
+    "description": "Gemini 2.5 Pro is Google's cutting-edge AI model designed for advanced reasoning, coding, mathematics, and scientific tasks. It features 'thinking' capabilities that enable it to reason responses with higher accuracy and detailed context handling. Gemini 2.5 Pro has achieved top performance in multiple benchmark tests, including ranking first on the LMArena leaderboard, reflecting exceptional human preference alignment and complex problem-solving abilities."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash offers optimized multimodal processing capabilities, suitable for various complex task scenarios."
@@ -1592,6 +1619,9 @@
   "mistral-large-latest": {
     "description": "Mistral Large is the flagship model, excelling in multilingual tasks, complex reasoning, and code generation, making it an ideal choice for high-end applications."
   },
+  "mistral-medium-latest": {
+    "description": "Mistral Medium 3 offers state-of-the-art performance at 8 times the cost, fundamentally simplifying enterprise deployment."
+  },
   "mistral-nemo": {
     "description": "Mistral Nemo, developed in collaboration with Mistral AI and NVIDIA, is a high-performance 12B model."
   },
@@ -1763,8 +1793,8 @@
   "qvq-72b-preview": {
     "description": "The QVQ model is an experimental research model developed by the Qwen team, focusing on enhancing visual reasoning capabilities, particularly in the field of mathematical reasoning."
   },
-  "qvq-max": {
-    "description": "The QVQ Visual Reasoning Model supports visual input and chain-of-thought output, demonstrating enhanced capabilities in mathematics, programming, visual analysis, creative tasks, and general tasks."
+  "qvq-max-latest": {
+    "description": "The QVQ visual reasoning model supports visual input and thinking chain output, demonstrating stronger capabilities in mathematics, programming, visual analysis, creative writing, and general tasks."
   },
   "qwen-coder-plus-latest": {
     "description": "Tongyi Qianwen code model."
@@ -2075,11 +2105,23 @@
   "text-embedding-3-small": {
     "description": "An efficient and cost-effective next-generation embedding model, suitable for knowledge retrieval, RAG applications, and more."
   },
+  "thudm/glm-4-32b": {
+    "description": "GLM-4-32B-0414 is a 32B bilingual (Chinese-English) open-weight language model optimized for code generation, function calls, and agent-based tasks. It has been pre-trained on 15T of high-quality and re-reasoning data and further refined using human preference alignment, rejection sampling, and reinforcement learning. The model excels in complex reasoning, artifact generation, and structured output tasks, achieving performance comparable to GPT-4o and DeepSeek-V3-0324 in multiple benchmark tests."
+  },
+  "thudm/glm-4-32b:free": {
+    "description": "GLM-4-32B-0414 is a 32B bilingual (Chinese-English) open-weight language model optimized for code generation, function calls, and agent-based tasks. It has been pre-trained on 15T of high-quality and re-reasoning data and further refined using human preference alignment, rejection sampling, and reinforcement learning. The model excels in complex reasoning, artifact generation, and structured output tasks, achieving performance comparable to GPT-4o and DeepSeek-V3-0324 in multiple benchmark tests."
+  },
   "thudm/glm-4-9b-chat": {
     "description": "The open-source version of the latest generation pre-trained model from the GLM-4 series released by Zhiyuan AI."
   },
   "thudm/glm-4-9b:free": {
     "description": "GLM-4-9B-0414 is a 9 billion parameter language model in the GLM-4 series developed by THUDM. GLM-4-9B-0414 is trained using the same reinforcement learning and alignment strategies as its larger 32B counterpart, achieving high performance relative to its scale, making it suitable for resource-constrained deployments that still require strong language understanding and generation capabilities."
+  },
+  "thudm/glm-z1-32b": {
+    "description": "GLM-Z1-32B-0414 is an enhanced reasoning variant of GLM-4-32B, built for deep mathematics, logic, and code-oriented problem solving. It applies extended reinforcement learning (task-specific and based on general pairwise preferences) to improve performance on complex multi-step tasks. Compared to the base GLM-4-32B model, Z1 significantly enhances capabilities in structured reasoning and formal domains.\n\nThis model supports enforcing 'thinking' steps through prompt engineering and provides improved coherence for long-format outputs. It is optimized for agent workflows and supports long context (via YaRN), JSON tool calls, and fine-grained sampling configurations for stable reasoning. It is ideal for use cases requiring thoughtful, multi-step reasoning or formal derivation."
+  },
+  "thudm/glm-z1-32b:free": {
+    "description": "GLM-Z1-32B-0414 is an enhanced reasoning variant of GLM-4-32B, built for deep mathematics, logic, and code-oriented problem solving. It applies extended reinforcement learning (task-specific and based on general pairwise preferences) to improve performance on complex multi-step tasks. Compared to the base GLM-4-32B model, Z1 significantly enhances capabilities in structured reasoning and formal domains.\n\nThis model supports enforcing 'thinking' steps through prompt engineering and provides improved coherence for long-format outputs. It is optimized for agent workflows and supports long context (via YaRN), JSON tool calls, and fine-grained sampling configurations for stable reasoning. It is ideal for use cases requiring thoughtful, multi-step reasoning or formal derivation."
   },
   "thudm/glm-z1-9b:free": {
     "description": "GLM-Z1-9B-0414 is a 9 billion parameter language model in the GLM-4 series developed by THUDM. It employs techniques initially applied to the larger GLM-Z1 model, including extended reinforcement learning, pairwise ranking alignment, and training for reasoning-intensive tasks such as mathematics, coding, and logic. Despite its smaller scale, it demonstrates strong performance on general reasoning tasks and outperforms many open-source models at its weight level."

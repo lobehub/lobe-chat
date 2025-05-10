@@ -35,6 +35,10 @@
     "desc": "Activate the main search box on the current page",
     "title": "Search"
   },
+  "showApp": {
+    "desc": "Quickly open the main application window",
+    "title": "Show Main Window"
+  },
   "switchAgent": {
     "desc": "Switch between pinned assistants in the sidebar by holding Ctrl and pressing numbers 0-9",
     "title": "Quick Switch Assistant"

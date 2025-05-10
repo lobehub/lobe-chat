@@ -2,6 +2,306 @@
 
 # Changelog
 
+### [Version 1.85.6](https://github.com/lobehub/lobe-chat/compare/v1.85.5...v1.85.6)
+
+<sup>Released on **2025-05-10**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.85.5](https://github.com/lobehub/lobe-chat/compare/v1.85.4...v1.85.5)
+
+<sup>Released on **2025-05-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix window close issue and release Window/Linux beta.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix window close issue and release Window/Linux beta, closes [#7780](https://github.com/lobehub/lobe-chat/issues/7780) ([82c48b9](https://github.com/lobehub/lobe-chat/commit/82c48b9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.85.4](https://github.com/lobehub/lobe-chat/compare/v1.85.3...v1.85.4)
+
+<sup>Released on **2025-05-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix nothing return when reset the client db.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix nothing return when reset the client db, closes [#7738](https://github.com/lobehub/lobe-chat/issues/7738) ([90efb13](https://github.com/lobehub/lobe-chat/commit/90efb13))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.85.3](https://github.com/lobehub/lobe-chat/compare/v1.85.2...v1.85.3)
+
+<sup>Released on **2025-05-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Remove mcp client cache.
+
+#### 💄 Styles
+
+- **misc**: Improve pdf and xlsx file content parser.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Remove mcp client cache, closes [#7776](https://github.com/lobehub/lobe-chat/issues/7776) ([0582134](https://github.com/lobehub/lobe-chat/commit/0582134))
+
+#### Styles
+
+- **misc**: Improve pdf and xlsx file content parser, closes [#7783](https://github.com/lobehub/lobe-chat/issues/7783) ([0376870](https://github.com/lobehub/lobe-chat/commit/0376870))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.85.2](https://github.com/lobehub/lobe-chat/compare/v1.85.1...v1.85.2)
+
+<sup>Released on **2025-05-10**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Upgrade anthropic sdk.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Upgrade anthropic sdk, closes [#7773](https://github.com/lobehub/lobe-chat/issues/7773) ([39e871f](https://github.com/lobehub/lobe-chat/commit/39e871f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.85.1](https://github.com/lobehub/lobe-chat/compare/v1.85.0...v1.85.1)
+
+<sup>Released on **2025-05-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Qwen3 models for infiniai.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Qwen3 models for infiniai, closes [#7657](https://github.com/lobehub/lobe-chat/issues/7657) ([edd1732](https://github.com/lobehub/lobe-chat/commit/edd1732))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.85.0](https://github.com/lobehub/lobe-chat/compare/v1.84.27...v1.85.0)
+
+<sup>Released on **2025-05-09**</sup>
+
+#### ✨ Features
+
+- **misc**: Support upload files direct into chat context.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support upload files direct into chat context, closes [#7751](https://github.com/lobehub/lobe-chat/issues/7751) ([39b790e](https://github.com/lobehub/lobe-chat/commit/39b790e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.84.27](https://github.com/lobehub/lobe-chat/compare/v1.84.26...v1.84.27)
+
+<sup>Released on **2025-05-09**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add reasoning tokens and token usage statistics for Google Gemini.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add reasoning tokens and token usage statistics for Google Gemini, closes [#7501](https://github.com/lobehub/lobe-chat/issues/7501) ([b466b42](https://github.com/lobehub/lobe-chat/commit/b466b42))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.84.26](https://github.com/lobehub/lobe-chat/compare/v1.84.25...v1.84.26)
+
+<sup>Released on **2025-05-08**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add qwen3 for ollama.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add qwen3 for ollama, closes [#7746](https://github.com/lobehub/lobe-chat/issues/7746) ([806d905](https://github.com/lobehub/lobe-chat/commit/806d905))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.84.25](https://github.com/lobehub/lobe-chat/compare/v1.84.24...v1.84.25)
+
+<sup>Released on **2025-05-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix desktop upload image on macOS.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix desktop upload image on macOS, closes [#7741](https://github.com/lobehub/lobe-chat/issues/7741) ([07d5374](https://github.com/lobehub/lobe-chat/commit/07d5374))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.84.24](https://github.com/lobehub/lobe-chat/compare/v1.84.23...v1.84.24)
+
+<sup>Released on **2025-05-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix changelog issue on desktop app.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix changelog issue on desktop app, closes [#7740](https://github.com/lobehub/lobe-chat/issues/7740) ([f0a12af](https://github.com/lobehub/lobe-chat/commit/f0a12af))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.84.23](https://github.com/lobehub/lobe-chat/compare/v1.84.22...v1.84.23)
+
+<sup>Released on **2025-05-08**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add new gemini & Mistral models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add new gemini & Mistral models, closes [#7730](https://github.com/lobehub/lobe-chat/issues/7730) ([b7753e2](https://github.com/lobehub/lobe-chat/commit/b7753e2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.84.22](https://github.com/lobehub/lobe-chat/compare/v1.84.21...v1.84.22)
 
 <sup>Released on **2025-05-07**</sup>
