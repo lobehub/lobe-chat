@@ -44,7 +44,7 @@ describe('loadFile Integration Tests', () => {
       // Pass filePath directly to loadFile
       const docs = await loadFile(filePath);
 
-      expect(docs.content).toEqual('123');
+      expect(docs.content).toContain('123');
       expect(docs.source).toEqual(filePath);
 
       // @ts-expect-error

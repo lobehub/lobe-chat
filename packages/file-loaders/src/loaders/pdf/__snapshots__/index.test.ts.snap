@@ -1,7 +1,8 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`PdfLoader > should aggregate content correctly 1`] = `
-"简单报告
+"<page pageNumber="1">
+简单报告
 副标题
 轻点或点按此占位符⽂本并开始键⼊即可开始。你可以在 Mac、iPad、iPhone 或
 iCloud.com 上查看和编辑此⽂稿。
@@ -24,10 +25,13 @@ Pages ⽂稿可⽤于⽂字处理和⻚⾯布局。此“简单报告”模板�
 ⽂本添加你⾃⼰的内容。”
 ⻚脚 
 1
+</page>
 
+<page pageNumber="2">
 这是第⼆⻚的内容
 ⻚脚 
-2"
+2
+</page>"
 `;
 
 exports[`PdfLoader > should attach document metadata correctly 1`] = `
