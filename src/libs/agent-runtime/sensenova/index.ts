@@ -12,7 +12,8 @@ export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.sensenova.cn/compatible-mode/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { frequency_penalty, messages, model, temperature, top_p, ...rest } = payload;
+      const { frequency_penalty, max_tokens, messages, model, temperature, top_p, ...rest } =
+        payload;
 
       return {
         ...rest,
@@ -20,6 +21,7 @@ export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
           frequency_penalty !== undefined && frequency_penalty > 0 && frequency_penalty <= 2
             ? frequency_penalty
             : undefined,
+        max_new_tokens: max_tokens !== undefined && max_tokens > 0 ? max_tokens : undefined,
         messages: messages.map((message) =>
           message.role !== 'user' || !/^Sense(Nova-V6|Chat-Vision)/.test(model)
             ? message
