@@ -75,10 +75,8 @@ const transformGoogleGenerativeAIStream = (
 
   const text = chunk.text?.();
 
-  if (chunk.candidates) {
-    const candidate = chunk.candidates[0];
-
-    // 检查是否为 reasoning 内容 (thought: true)
+  if (candidate) {
+    // 首先检查是否为 reasoning 内容 (thought: true)
     if (Array.isArray(candidate.content.parts) && candidate.content.parts.length > 0) {
       for (const part of candidate.content.parts) {
         if (part && part.text && (part as any).thought === true) {
@@ -87,7 +85,6 @@ const transformGoogleGenerativeAIStream = (
       }
     }
 
-  if (candidate) {
     // return the grounding
     if (candidate.groundingMetadata) {
       const { webSearchQueries, groundingChunks } = candidate.groundingMetadata;
