@@ -80,9 +80,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # 暂时先支持 macOS
-        os: [macos-latest]
-    #        os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [macos-latest, windows-2025, ubuntu-latest]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -130,9 +128,9 @@ jobs:
           NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_BETA_DESKTOP_PROJECT_ID }}
           NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_BETA_DESKTOP_BASE_URL }}
 
-      # 非 macOS 平台构建处理
-      - name: Build artifact on other platforms
-        if: runner.os != 'macOS'
+      # Windows/Linux 平台构建处理 (统一处理 Windows 和 Linux 构建)
+      - name: Build artifact on Windows/Linux
+        if: runner.os == 'Windows' || runner.os == 'Linux'
         run: npm run desktop:build
         env:
           APP_URL: http://localhost:3015
@@ -140,6 +138,9 @@ jobs:
           KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
           NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_BETA_DESKTOP_PROJECT_ID }}
           NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_BETA_DESKTOP_BASE_URL }}
+          # Windows-specific, harmless on Linux. 将 TEMP 和 TMP 目录设置到 D 盘
+          TEMP: D:\temp
+          TMP: D:\temp
 
       # 上传构建产物，移除了 zip 相关部分
       - name: Upload artifact
