@@ -56,9 +56,9 @@ export class LobeAzureAI implements LobeRuntimeAI {
           model,
           ...params,
           stream: enableStreaming,
-          temperature: model.includes('o3') ? undefined : temperature,
+          temperature: (model.includes('o3') || model.includes('o4')) ? undefined : temperature,
           tool_choice: params.tools ? 'auto' : undefined,
-          top_p: model.includes('o3') ? undefined : top_p,
+          top_p: (model.includes('o3') || model.includes('o4')) ? undefined : top_p,
         },
       });
 
