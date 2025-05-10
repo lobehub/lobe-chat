@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix window close issue and release Window/Linux beta."]
+    },
+    "date": "2025-05-10",
+    "version": "1.85.5"
+  },
+  {
+    "children": {
       "fixes": ["Fix nothing return when reset the client db."]
     },
     "date": "2025-05-10",
