@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-05-10",
+    "version": "1.85.6"
+  },
+  {
     "children": {
       "fixes": ["Fix window close issue and release Window/Linux beta."]
     },
