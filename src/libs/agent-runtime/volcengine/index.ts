@@ -10,7 +10,12 @@ export const LobeVolcengineAI = LobeOpenAICompatibleFactory({
       return {
         ...rest,
         model,
-        thinking: thinking?.type,
+        ...(['thinking-vision-pro'].some((keyword) => model.toLowerCase().includes(keyword))
+          ? {
+              thinking:
+                thinking !== undefined && thinking.type === 'enabled' ? thinking.type : 'disabled',
+            }
+          : {}),
       } as any;
     },
   },

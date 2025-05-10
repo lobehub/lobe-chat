@@ -17,6 +17,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       '全新视觉深度思考模型，具备更强的通用多模态理解和推理能力，在 59 个公开评测基准中的 37 个上取得 SOTA 表现。',
     displayName: 'Doubao 1.5 Thinking Vision Pro',
+    enabled: true,
     id: 'Doubao-1.5-thinking-vision-pro',
     maxOutput: 16_000,
     pricing: {
