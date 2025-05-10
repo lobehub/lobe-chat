@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import * as xlsx from 'xlsx';
 
 import type { DocumentPage, FileLoaderInterface } from '../../types';
+import { promptTemplate } from './prompt';
 
 const log = debug('file-loaders:excel');
 
@@ -135,13 +136,7 @@ export class ExcelLoader implements FileLoaderInterface {
    */
   async aggregateContent(pages: DocumentPage[]): Promise<string> {
     log('Aggregating content from', pages.length, 'Excel pages');
-    const result = pages
-      .map((page) => {
-        const sheetName = page.metadata.sheetName;
-        const header = sheetName ? `## Sheet: ${sheetName}\n\n` : '';
-        return header + page.pageContent;
-      })
-      .join('\n\n---\n\n'); // Separator between sheets
+    const result = promptTemplate(pages);
 
     log('Excel content aggregated successfully, length:', result.length);
     return result;

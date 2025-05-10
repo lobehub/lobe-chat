@@ -2,7 +2,9 @@
 
 exports[`loadFile Integration Tests > PDF Handling > should load content from a pdf file using filePath 1`] = `
 {
-  "content": "123",
+  "content": "<page pageNumber="1">
+123
+</page>",
   "fileType": "pdf",
   "filename": "test.pdf",
   "metadata": {
