@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Remove mcp client cache."],
+      "improvements": ["Improve pdf and xlsx file content parser."]
+    },
+    "date": "2025-05-10",
+    "version": "1.85.3"
+  },
+  {
+    "children": {
       "improvements": ["Upgrade anthropic sdk."]
     },
     "date": "2025-05-10",
