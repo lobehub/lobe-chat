@@ -43,11 +43,11 @@ export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
   models: async ({ client }) => {
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-    const functionCallKeywords = ['sensechat-5'];
+    const functionCallKeywords = ['1202'];
 
     const visionKeywords = ['vision', 'sensenova-v6'];
 
-    const reasoningKeywords = ['deepseek-r1', 'sensenova-v6'];
+    const reasoningKeywords = ['deepseek-r1', 'reasoner'];
 
     client.baseURL = 'https://api.sensenova.cn/v1/llm';
 
