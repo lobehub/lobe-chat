@@ -1,26 +1,34 @@
+import debug from 'debug';
 import { readFile } from 'node:fs/promises';
 import * as xlsx from 'xlsx';
 
 import type { DocumentPage, FileLoaderInterface } from '../../types';
+
+const log = debug('file-loaders:excel');
 
 /**
  * Converts sheet data (array of objects) to a Markdown table string.
  * Handles empty sheets and escapes pipe characters.
  */
 function sheetToMarkdownTable(jsonData: Record<string, any>[]): string {
+  log('Converting sheet data to Markdown table, rows:', jsonData?.length || 0);
   if (!jsonData || jsonData.length === 0) {
+    log('Sheet is empty, returning placeholder message');
     return '*Sheet is empty or contains no data.*';
   }
 
   // Ensure all rows have the same keys based on the first row, handle potentially sparse data
   const headers = Object.keys(jsonData[0] || {});
+  log('Sheet headers:', headers);
   if (headers.length === 0) {
+    log('Sheet has no headers, returning placeholder message');
     return '*Sheet has headers but no data.*';
   }
 
   const headerRow = `| ${headers.join(' | ')} |`;
   const separatorRow = `| ${headers.map(() => '---').join(' | ')} |`;
 
+  log('Building data rows for Markdown table');
   const dataRows = jsonData
     .map((row) => {
       const cells = headers.map((header) => {
@@ -34,7 +42,9 @@ function sheetToMarkdownTable(jsonData: Record<string, any>[]): string {
     })
     .join('\n');
 
-  return `${headerRow}\n${separatorRow}\n${dataRows}`;
+  const result = `${headerRow}\n${separatorRow}\n${dataRows}`;
+  log('Markdown table created, length:', result.length);
+  return result;
 }
 
 /**
@@ -43,13 +53,20 @@ function sheetToMarkdownTable(jsonData: Record<string, any>[]): string {
  */
 export class ExcelLoader implements FileLoaderInterface {
   async loadPages(filePath: string): Promise<DocumentPage[]> {
+    log('Loading Excel file:', filePath);
     const pages: DocumentPage[] = [];
     try {
       // Use readFile for async operation compatible with other loaders
+      log('Reading Excel file as buffer');
       const dataBuffer = await readFile(filePath);
+      log('Excel file read successfully, size:', dataBuffer.length, 'bytes');
+
+      log('Parsing Excel workbook');
       const workbook = xlsx.read(dataBuffer, { type: 'buffer' });
+      log('Excel workbook parsed successfully, sheets:', workbook.SheetNames.length);
 
       for (const sheetName of workbook.SheetNames) {
+        log(`Processing sheet: ${sheetName}`);
         const worksheet = workbook.Sheets[sheetName];
         // Use sheet_to_json to get array of objects for our custom markdown function
         const jsonData = xlsx.utils.sheet_to_json<Record<string, any>>(worksheet, {
@@ -57,6 +74,7 @@ export class ExcelLoader implements FileLoaderInterface {
           defval: '',
           raw: false, // Use empty string for blank cells
         });
+        log(`Sheet ${sheetName} converted to JSON, rows:`, jsonData.length);
 
         // Convert to markdown using YOUR helper function
         const tableMarkdown = sheetToMarkdownTable(jsonData);
@@ -64,6 +82,7 @@ export class ExcelLoader implements FileLoaderInterface {
         const lines = tableMarkdown.split('\n');
         const lineCount = lines.length;
         const charCount = tableMarkdown.length;
+        log(`Sheet ${sheetName} converted to Markdown, lines: ${lineCount}, chars: ${charCount}`);
 
         pages.push({
           // Trim whitespace
@@ -74,9 +93,11 @@ export class ExcelLoader implements FileLoaderInterface {
           },
           pageContent: tableMarkdown.trim(),
         });
+        log(`Added sheet ${sheetName} as page`);
       }
 
       if (pages.length === 0) {
+        log('Excel file contains no sheets, creating empty page with error');
         pages.push({
           charCount: 0,
           lineCount: 0,
@@ -87,9 +108,11 @@ export class ExcelLoader implements FileLoaderInterface {
         });
       }
 
+      log('Excel loading completed, total pages:', pages.length);
       return pages;
     } catch (e) {
       const error = e as Error;
+      log('Error encountered while loading Excel file');
       console.error(`Error loading Excel file ${filePath}: ${error.message}`);
       const errorPage: DocumentPage = {
         charCount: 0,
@@ -99,6 +122,7 @@ export class ExcelLoader implements FileLoaderInterface {
         },
         pageContent: '',
       };
+      log('Created error page for failed Excel loading');
       return [errorPage];
     }
   }
@@ -110,12 +134,16 @@ export class ExcelLoader implements FileLoaderInterface {
    * @returns Aggregated content as a string.
    */
   async aggregateContent(pages: DocumentPage[]): Promise<string> {
-    return pages
+    log('Aggregating content from', pages.length, 'Excel pages');
+    const result = pages
       .map((page) => {
         const sheetName = page.metadata.sheetName;
         const header = sheetName ? `## Sheet: ${sheetName}\n\n` : '';
         return header + page.pageContent;
       })
       .join('\n\n---\n\n'); // Separator between sheets
+
+    log('Excel content aggregated successfully, length:', result.length);
+    return result;
   }
 }

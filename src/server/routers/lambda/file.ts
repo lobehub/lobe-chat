@@ -19,7 +19,7 @@ const fileProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
       asyncTaskModel: new AsyncTaskModel(ctx.serverDB, ctx.userId),
       chunkModel: new ChunkModel(ctx.serverDB, ctx.userId),
       fileModel: new FileModel(ctx.serverDB, ctx.userId),
-      fileService: new FileService(),
+      fileService: new FileService(ctx.serverDB, ctx.userId),
     },
   });
 });
