@@ -313,16 +313,33 @@ export class DatabaseManager {
   }
 
   async resetDatabase(): Promise<void> {
-    // 删除 IndexedDB 数据库
+    // 1. 关闭现有的 PGlite 连接（如果存在）
+    if (this.dbInstance) {
+      try {
+        // @ts-ignore
+        await (this.dbInstance.session as any).client.close();
+        console.log('PGlite instance closed successfully.');
+      } catch (e) {
+        console.error('Error closing PGlite instance:', e);
+        // 即使关闭失败，也尝试继续删除，IndexedDB 的 onblocked 或 onerror 会处理后续问题
+      }
+    }
+
+    // 2. 重置数据库实例和初始化状态
+    this.dbInstance = null;
+    this.initPromise = null;
+    this.isLocalDBSchemaSynced = false; // 重置同步状态
+
+    // 3. 删除 IndexedDB 数据库
     return new Promise<void>((resolve, reject) => {
       // 检查 IndexedDB 是否可用
       if (typeof indexedDB === 'undefined') {
         console.warn('IndexedDB is not available, cannot delete database');
-        resolve();
+        resolve(); // 在此环境下无法删除，直接解决
         return;
       }
 
-      const dbName = `/pglite/${DB_NAME}`;
+      const dbName = `/pglite/${DB_NAME}`; // PGlite IdbFs 使用的路径
       const request = indexedDB.deleteDatabase(dbName);
 
       request.onsuccess = () => {
@@ -338,8 +355,26 @@ export class DatabaseManager {
 
       // eslint-disable-next-line unicorn/prefer-add-event-listener
       request.onerror = (event) => {
-        console.error('❌ Error resetting database:', event);
-        reject(new Error(`Failed to reset database '${dbName}'`));
+        const error = (event.target as IDBOpenDBRequest)?.error;
+        console.error(`❌ Error resetting database '${dbName}':`, error);
+        reject(
+          new Error(
+            `Failed to reset database '${dbName}'. Error: ${error?.message || 'Unknown error'}`,
+          ),
+        );
+      };
+
+      request.onblocked = (event) => {
+        // 当其他打开的连接阻止数据库删除时，会触发此事件
+        console.warn(
+          `Deletion of database '${dbName}' is blocked. This usually means other connections (e.g., in other tabs) are still open. Event:`,
+          event,
+        );
+        reject(
+          new Error(
+            `Failed to reset database '${dbName}' because it is blocked by other open connections. Please close other tabs or applications using this database and try again.`,
+          ),
+        );
       };
     });
   }
