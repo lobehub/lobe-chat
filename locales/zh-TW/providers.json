@@ -95,6 +95,9 @@
   "ppio": {
     "description": "PPIO 派歐雲提供穩定、高性價比的開源模型 API 服務，支持 DeepSeek 全系列、Llama、Qwen 等行業領先的大模型。"
   },
+  "qiniu": {
+    "description": "Qiniu 是領先的雲服務提供商，提供高性價比、穩定的實時和批量 AI 推理服務，包括 DeepSeek、Llama 和 Qwen 等行業領先的大模型。"
+  },
   "qwen": {
     "description": "通義千問是阿里雲自主研發的超大規模語言模型，具有強大的自然語言理解和生成能力。它可以回答各種問題、創作文字內容、表達觀點看法、撰寫代碼等，在多個領域發揮作用。"
   },

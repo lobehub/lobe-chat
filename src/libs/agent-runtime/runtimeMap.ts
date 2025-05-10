@@ -30,6 +30,7 @@ import { LobeOpenAI } from './openai';
 import { LobeOpenRouterAI } from './openrouter';
 import { LobePerplexityAI } from './perplexity';
 import { LobePPIOAI } from './ppio';
+import { LobeQiniuAI } from './qiniu';
 import { LobeQwenAI } from './qwen';
 import { LobeSambaNovaAI } from './sambanova';
 import { LobeSearch1API } from './search1api';
@@ -82,6 +83,7 @@ export const providerRuntimeMap = {
   openrouter: LobeOpenRouterAI,
   perplexity: LobePerplexityAI,
   ppio: LobePPIOAI,
+  qiniu: LobeQiniuAI,
   qwen: LobeQwenAI,
   sambanova: LobeSambaNovaAI,
   search1api: LobeSearch1API,

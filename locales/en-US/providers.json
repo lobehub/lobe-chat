@@ -95,6 +95,9 @@
   "ppio": {
     "description": "PPIO supports stable and cost-efficient open-source LLM APIs, such as DeepSeek, Llama, Qwen etc."
   },
+  "qiniu": {
+    "description": "Qiniu, as a long-established cloud service provider, delivers cost-effective and reliable AI inference services for both real-time and batch processing, with a simple and user-friendly experience."
+  },
   "qwen": {
     "description": "Tongyi Qianwen is a large-scale language model independently developed by Alibaba Cloud, featuring strong natural language understanding and generation capabilities. It can answer various questions, create written content, express opinions, and write code, playing a role in multiple fields."
   },

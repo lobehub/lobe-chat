@@ -95,6 +95,9 @@
   "ppio": {
     "description": "PPIO biedt stabiele en kosteneffectieve open source model API-diensten, die ondersteuning bieden voor de volledige DeepSeek-serie, Llama, Qwen en andere toonaangevende grote modellen in de industrie."
   },
+  "qiniu": {
+    "description": "Qiniu is een leidende cloudserviceprovider die hoogwaardige, stabiele en kosteneffectieve real-time en batch AI-inferentie-API's biedt, inclusief modellen van Alibaba, met flexibele opties voor het bouwen en toepassen van AI-toepassingen."
+  },
   "qwen": {
     "description": "Tongyi Qianwen is een door Alibaba Cloud zelf ontwikkeld grootschalig taalmodel met krachtige mogelijkheden voor natuurlijke taalbegrip en -generatie. Het kan verschillende vragen beantwoorden, tekstinhoud creëren, meningen uiten, code schrijven, en speelt een rol in verschillende domeinen."
   },

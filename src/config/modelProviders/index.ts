@@ -32,6 +32,7 @@ import OpenAIProvider from './openai';
 import OpenRouterProvider from './openrouter';
 import PerplexityProvider from './perplexity';
 import PPIOProvider from './ppio';
+import QiniuProvider from './qiniu';
 import QwenProvider from './qwen';
 import SambaNovaProvider from './sambanova';
 import Search1APIProvider from './search1api';
@@ -101,6 +102,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   PPIOProvider.chatModels,
   Search1APIProvider.chatModels,
   InfiniAIProvider.chatModels,
+  QiniuProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -156,6 +158,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Ai360Provider,
   Search1APIProvider,
   InfiniAIProvider,
+  QiniuProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -199,6 +202,7 @@ export { default as OpenAIProviderCard } from './openai';
 export { default as OpenRouterProviderCard } from './openrouter';
 export { default as PerplexityProviderCard } from './perplexity';
 export { default as PPIOProviderCard } from './ppio';
+export { default as QiniuProviderCard } from './qiniu';
 export { default as QwenProviderCard } from './qwen';
 export { default as SambaNovaProviderCard } from './sambanova';
 export { default as Search1APIProviderCard } from './search1api';
