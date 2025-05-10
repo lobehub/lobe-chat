@@ -9,7 +9,8 @@ const channel = process.env.UPDATE_CHANNEL;
 console.log(`🚄 Build Version ${packageJSON.version}, Channel: ${channel}`);
 
 const isNightly = channel === 'nightly';
-const isBeta = channel === 'beta';
+const isBeta = packageJSON.name.includes('beta');
+
 /**
  * @type {import('electron-builder').Configuration}
  * @see https://www.electron.build/configuration
