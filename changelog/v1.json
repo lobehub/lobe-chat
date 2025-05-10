@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add Qwen3 models for infiniai."]
+    },
+    "date": "2025-05-10",
+    "version": "1.85.1"
+  },
+  {
+    "children": {
       "features": ["Support upload files direct into chat context."]
     },
     "date": "2025-05-09",
