@@ -106,6 +106,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       const contents = await this.buildGoogleMessages(payload.messages);
 
+      const inputStartAt = Date.now();
       const geminiStreamResult = await this.client
         .getGenerativeModel(
           {
@@ -161,7 +162,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       // Convert the response into a friendly text-stream
       const Stream = this.isVertexAi ? VertexAIStream : GoogleGenerativeAIStream;
-      const stream = Stream(prod, options?.callback);
+      const stream = Stream(prod, { callbacks: options?.callback, inputStartAt });
 
       // Respond with the stream
       return StreamingResponse(stream, { headers: options?.headers });
