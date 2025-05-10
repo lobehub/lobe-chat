@@ -29,7 +29,7 @@
   "dependencies": {
     "electron-updater": "^6.6.2",
     "get-port-please": "^3.1.2",
-    "pdfjs-dist": "4.8.69"
+    "pdfjs-dist": "4.10.38"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
