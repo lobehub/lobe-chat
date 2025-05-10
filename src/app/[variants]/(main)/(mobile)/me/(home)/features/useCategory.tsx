@@ -1,12 +1,11 @@
 import {
-  Book,
-  CircleUserRound,
+  Book, ChartColumnBigIcon,
   Cloudy,
   Database,
   Download,
   Feather,
-  FileClockIcon,
-  Settings2,
+  FileClockIcon, LogOut,
+  Settings2, ShieldCheck, UserCircle,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
@@ -15,30 +14,61 @@ import { CellProps } from '@/components/Cell';
 import { enableAuth } from '@/const/auth';
 import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import { DOCUMENTS, FEEDBACK, OFFICIAL_URL, UTM_SOURCE } from '@/const/url';
-import { isServerMode } from '@/const/version';
+import {isDeprecatedEdition, isServerMode} from '@/const/version';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
 import { useCategory as useSettingsCategory } from '../../settings/features/useCategory';
+import {ProfileTabs} from "@/store/global/initialState";
 
 export const useCategory = () => {
   const router = useRouter();
   const { canInstall, install } = usePWAInstall();
   const { t } = useTranslation(['common', 'setting', 'auth']);
   const { showCloudPromotion, hideDocs } = useServerConfigStore(featureFlagsSelectors);
-  const [isLogin, isLoginWithAuth] = useUserStore((s) => [
+  const [isLogin, isLoginWithAuth, isLoginWithClerk, signOut] = useUserStore((s) => [
     authSelectors.isLogin(s),
     authSelectors.isLoginWithAuth(s),
+    authSelectors.isLoginWithClerk(s),
+    s.logout
   ]);
 
   const profile: CellProps[] = [
     {
-      icon: CircleUserRound,
-      key: 'profile',
-      label: t('userPanel.profile'),
-      onClick: () => router.push('/me/profile'),
+      icon: UserCircle,
+      key: ProfileTabs.Profile,
+      label: t('tab.profile', { ns: 'auth' }),
+      onClick: () => router.push('/profile'),
+    },
+    enableAuth &&
+    isLoginWithClerk && {
+      icon: ShieldCheck,
+      key: ProfileTabs.Security,
+      label: t('tab.security', { ns: 'auth' }),
+      onClick: () => router.push('/profile/security'),
+    },
+    !isDeprecatedEdition && {
+      icon: ChartColumnBigIcon,
+      key: ProfileTabs.Stats,
+      label: t('tab.stats', { ns: 'auth' }),
+      onClick: () => router.push('/profile/stats'),
+    },
+  ].filter(Boolean) as CellProps[];
+
+  const logout: CellProps[] = [
+    {
+      type: 'divider',
+    },
+    {
+      icon: LogOut,
+      key: 'logout',
+      label: t('signout', { ns: 'auth' }),
+      onClick: () => {
+        signOut();
+        router.push('/login');
+      },
     },
   ];
 
@@ -128,6 +158,7 @@ export const useCategory = () => {
     ...(canInstall ? pwa : []),
     ...(isLogin && !isServerMode ? data : []),
     ...(!hideDocs ? helps : []),
+    ...(enableAuth && isLogin ? logout : []),
   ].filter(Boolean) as CellProps[];
 
   return mainItems;
