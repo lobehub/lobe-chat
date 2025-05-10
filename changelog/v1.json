@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Upgrade anthropic sdk."]
+    },
+    "date": "2025-05-10",
+    "version": "1.85.2"
+  },
+  {
+    "children": {
       "improvements": ["Add Qwen3 models for infiniai."]
     },
     "date": "2025-05-10",
