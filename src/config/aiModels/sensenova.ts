@@ -24,7 +24,6 @@ const sensenovaChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 32_768,
