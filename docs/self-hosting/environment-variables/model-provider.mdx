@@ -576,7 +576,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `VOLCENGINE_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name->deploymentName=display_name` to customize the display name of a model, separated by commas. The deploymentName `->deploymentName` can be omitted, and it defaults to the latest version. Definition syntax rules see [model-list][model-list]
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name->deploymentName=display_name` to customize the display name of a model, separated by commas. The deploymentName `->deploymentName` can be omitted, and it defaults to the latest model version. Definition syntax rules see [model-list][model-list]
 - Default: `-`
 - Example: `-all,+deepseek-r1,+deepseek-v3->deepseek-v3-250324,+doubao-1.5-pro-256k,+doubao-1.5-pro-32k->doubao-1-5-pro-32k-250115,+doubao-1.5-lite-32k`
 
