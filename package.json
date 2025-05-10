@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "1.85.0",
+  "version": "1.85.1",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -115,13 +115,10 @@
       "eslint --fix"
     ]
   },
-  "overrides": {
-    "mdast-util-gfm-autolink-literal": "2.0.0"
-  },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
     "@ant-design/pro-components": "^2.8.7",
-    "@anthropic-ai/sdk": "^0.41.0",
+    "@anthropic-ai/sdk": "^0.50.3",
     "@auth/core": "^0.38.0",
     "@aws-sdk/client-bedrock-runtime": "^3.779.0",
     "@aws-sdk/client-s3": "^3.779.0",
@@ -353,12 +350,15 @@
     "vitest": "^3.1.1",
     "vitest-canvas-mock": "^0.3.3"
   },
-  "packageManager": "pnpm@9.15.9",
+  "packageManager": "pnpm@10.10.0",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
   },
   "pnpm": {
+    "onlyBuiltDependencies": [
+      "@vercel/speed-insights"
+    ],
     "overrides": {
       "mdast-util-gfm-autolink-literal": "2.0.0"
     },
@@ -369,5 +369,8 @@
         }
       }
     }
+  },
+  "overrides": {
+    "mdast-util-gfm-autolink-literal": "2.0.0"
   }
 }
