@@ -60,7 +60,7 @@ services:
 
 # version lock ref: https://github.com/lobehub/lobe-chat/pull/7331
   casdoor:
-    image: casbin/casdoor:v1.843.0
+    image: casbin/casdoor:v1.904.0
     container_name: lobe-casdoor
     entrypoint: /bin/sh -c './server --createDatabase=true'
     network_mode: 'service:network-service'
