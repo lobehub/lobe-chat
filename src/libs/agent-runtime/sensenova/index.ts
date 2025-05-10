@@ -23,7 +23,7 @@ export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
             : undefined,
         max_new_tokens: max_tokens !== undefined && max_tokens > 0 ? max_tokens : undefined,
         messages: messages.map((message) =>
-          message.role !== 'user' || !/^Sense(Nova-V6|Chat-Vision)/.test(model)
+          message.role !== 'user' || !model || !/^Sense(Nova-V6|Chat-Vision)/.test(model)
             ? message
             : { ...message, content: convertSenseNovaMessage(message.content) },
         ) as any[],
