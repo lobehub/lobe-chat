@@ -5,7 +5,6 @@ dotenv.config();
 const packageJSON = require('./package.json');
 
 const channel = process.env.UPDATE_CHANNEL;
-const isWin = process.platform === 'win32';
 
 console.log(`🚄 Build Version ${packageJSON.version}, Channel: ${channel}`);
 
@@ -24,7 +23,7 @@ const config = {
   appImage: {
     artifactName: '${productName}-${version}.${ext}',
   },
-  asar: !isWin,
+  asar: true,
   detectUpdateChannel: true,
   directories: {
     buildResources: 'build',
