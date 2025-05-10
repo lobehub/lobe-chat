@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix nothing return when reset the client db."]
+    },
+    "date": "2025-05-10",
+    "version": "1.85.4"
+  },
+  {
+    "children": {
       "fixes": ["Remove mcp client cache."],
       "improvements": ["Improve pdf and xlsx file content parser."]
     },
