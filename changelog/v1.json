@@ -1,6 +1,34 @@
 [
   {
     "children": {
+      "improvements": ["Upgrade anthropic sdk."]
+    },
+    "date": "2025-05-10",
+    "version": "1.85.2"
+  },
+  {
+    "children": {
+      "improvements": ["Add Qwen3 models for infiniai."]
+    },
+    "date": "2025-05-10",
+    "version": "1.85.1"
+  },
+  {
+    "children": {
+      "features": ["Support upload files direct into chat context."]
+    },
+    "date": "2025-05-09",
+    "version": "1.85.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add reasoning tokens and token usage statistics for Google Gemini."]
+    },
+    "date": "2025-05-09",
+    "version": "1.84.27"
+  },
+  {
+    "children": {
       "improvements": ["Add qwen3 for ollama."]
     },
     "date": "2025-05-08",

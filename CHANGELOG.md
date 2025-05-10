@@ -2,6 +2,106 @@
 
 # Changelog
 
+### [Version 1.85.2](https://github.com/lobehub/lobe-chat/compare/v1.85.1...v1.85.2)
+
+<sup>Released on **2025-05-10**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Upgrade anthropic sdk.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Upgrade anthropic sdk, closes [#7773](https://github.com/lobehub/lobe-chat/issues/7773) ([39e871f](https://github.com/lobehub/lobe-chat/commit/39e871f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.85.1](https://github.com/lobehub/lobe-chat/compare/v1.85.0...v1.85.1)
+
+<sup>Released on **2025-05-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Qwen3 models for infiniai.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Qwen3 models for infiniai, closes [#7657](https://github.com/lobehub/lobe-chat/issues/7657) ([edd1732](https://github.com/lobehub/lobe-chat/commit/edd1732))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.85.0](https://github.com/lobehub/lobe-chat/compare/v1.84.27...v1.85.0)
+
+<sup>Released on **2025-05-09**</sup>
+
+#### ✨ Features
+
+- **misc**: Support upload files direct into chat context.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support upload files direct into chat context, closes [#7751](https://github.com/lobehub/lobe-chat/issues/7751) ([39b790e](https://github.com/lobehub/lobe-chat/commit/39b790e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.84.27](https://github.com/lobehub/lobe-chat/compare/v1.84.26...v1.84.27)
+
+<sup>Released on **2025-05-09**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add reasoning tokens and token usage statistics for Google Gemini.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add reasoning tokens and token usage statistics for Google Gemini, closes [#7501](https://github.com/lobehub/lobe-chat/issues/7501) ([b466b42](https://github.com/lobehub/lobe-chat/commit/b466b42))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.84.26](https://github.com/lobehub/lobe-chat/compare/v1.84.25...v1.84.26)
 
 <sup>Released on **2025-05-08**</sup>
