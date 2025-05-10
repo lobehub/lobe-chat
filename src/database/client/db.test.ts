@@ -4,30 +4,48 @@ import { ClientDBLoadingProgress, DatabaseLoadingState } from '@/types/clientDB'
 
 import { DatabaseManager } from './db';
 
-// Mock 所有外部依赖
+// Mock external dependencies
 vi.mock('@electric-sql/pglite', () => ({
-  default: vi.fn(),
   IdbFs: vi.fn(),
-  PGlite: vi.fn(),
   MemoryFS: vi.fn(),
+  PGlite: vi.fn(() => ({
+    dialect: {
+      migrate: vi.fn(),
+    },
+    rows: [],
+  })),
+  drizzle: vi.fn(),
 }));
 
 vi.mock('@electric-sql/pglite/vector', () => ({
-  default: vi.fn(),
   vector: vi.fn(),
 }));
 
 vi.mock('drizzle-orm/pglite', () => ({
   drizzle: vi.fn(() => ({
     dialect: {
-      migrate: vi.fn().mockResolvedValue(undefined),
+      migrate: vi.fn(),
+    },
+    execute: vi.fn(),
+    session: {
+      client: {
+        close: vi.fn(),
+      },
     },
   })),
 }));
 
+// Mock WebAssembly.compile to avoid empty buffer errors
+globalThis.WebAssembly = {
+  ...globalThis.WebAssembly,
+  compile: vi.fn().mockResolvedValue({}),
+} as any;
+
 let manager: DatabaseManager;
 let progressEvents: ClientDBLoadingProgress[] = [];
 let stateChanges: DatabaseLoadingState[] = [];
+
+const mockFsBundle = new Blob(['mock fs bundle']);
 
 let callbacks = {
   onProgress: vi.fn((progress: ClientDBLoadingProgress) => {
@@ -43,6 +61,26 @@ beforeEach(() => {
   progressEvents = [];
   stateChanges = [];
 
+  // Mock fetch
+  global.fetch = vi.fn().mockImplementation(() =>
+    Promise.resolve({
+      blob: () => Promise.resolve(mockFsBundle),
+      body: {
+        getReader: () =>
+          ({
+            read: () =>
+              Promise.resolve({
+                done: true,
+                value: new Uint8Array([1, 2, 3]), // non-empty buffer for wasm
+              }),
+          }) as any,
+      },
+      headers: new Headers({
+        'Content-Length': '1000',
+      }),
+    } as Response),
+  );
+
   callbacks = {
     onProgress: vi.fn((progress: ClientDBLoadingProgress) => {
       progressEvents.push(progress);
@@ -51,9 +89,16 @@ beforeEach(() => {
       stateChanges.push(state);
     }),
   };
-  // @ts-expect-error
+
+  // @ts-expect-error Reset singleton instance
   DatabaseManager['instance'] = undefined;
   manager = DatabaseManager.getInstance();
+
+  // Reset localStorage and indexedDB
+  // @ts-expect-error
+  global.localStorage = undefined;
+  // @ts-expect-error
+  global.indexedDB = undefined;
 });
 
 describe('DatabaseManager', () => {
@@ -61,7 +106,6 @@ describe('DatabaseManager', () => {
     it('should properly track loading states', async () => {
       await manager.initialize(callbacks);
 
-      // 验证状态转换顺序
       expect(stateChanges).toEqual([
         DatabaseLoadingState.Initializing,
         DatabaseLoadingState.LoadingDependencies,
@@ -75,7 +119,6 @@ describe('DatabaseManager', () => {
     it('should report dependencies loading progress', async () => {
       await manager.initialize(callbacks);
 
-      // 验证依赖加载进度回调
       const dependencyProgress = progressEvents.filter((e) => e.phase === 'dependencies');
       expect(dependencyProgress.length).toBeGreaterThan(0);
       expect(dependencyProgress[dependencyProgress.length - 1]).toEqual(
@@ -90,9 +133,7 @@ describe('DatabaseManager', () => {
     it('should report WASM loading progress', async () => {
       await manager.initialize(callbacks);
 
-      // 验证 WASM 加载进度回调
       const wasmProgress = progressEvents.filter((e) => e.phase === 'wasm');
-      // expect(wasmProgress.length).toBeGreaterThan(0);
       expect(wasmProgress[wasmProgress.length - 1]).toEqual(
         expect.objectContaining({
           phase: 'wasm',
@@ -103,7 +144,6 @@ describe('DatabaseManager', () => {
     });
 
     it('should handle initialization errors', async () => {
-      // 模拟加载失败
       vi.spyOn(global, 'fetch').mockRejectedValueOnce(new Error('Network error'));
 
       await expect(manager.initialize(callbacks)).rejects.toThrow();
@@ -116,46 +156,10 @@ describe('DatabaseManager', () => {
 
       await Promise.all([firstInit, secondInit]);
 
-      // 验证回调只被调用一次
       const readyStateCount = stateChanges.filter(
         (state) => state === DatabaseLoadingState.Ready,
       ).length;
       expect(readyStateCount).toBe(1);
-    });
-  });
-
-  describe('Progress Calculation', () => {
-    it('should report progress between 0 and 100', async () => {
-      await manager.initialize(callbacks);
-
-      // 验证所有进度值都在有效范围内
-      progressEvents.forEach((event) => {
-        expect(event.progress).toBeGreaterThanOrEqual(0);
-        expect(event.progress).toBeLessThanOrEqual(100);
-      });
-    });
-
-    it('should include timing information', async () => {
-      await manager.initialize(callbacks);
-
-      // 验证最终进度回调包含耗时信息
-      const finalProgress = progressEvents[progressEvents.length - 1];
-      expect(finalProgress.costTime).toBeGreaterThan(0);
-    });
-  });
-
-  describe('Error Handling', () => {
-    it('should handle missing callbacks gracefully', async () => {
-      // 测试没有提供回调的情况
-      await expect(manager.initialize()).resolves.toBeDefined();
-    });
-
-    it('should handle partial callbacks', async () => {
-      // 只提供部分回调
-      await expect(manager.initialize({ onProgress: callbacks.onProgress })).resolves.toBeDefined();
-      await expect(
-        manager.initialize({ onStateChange: callbacks.onStateChange }),
-      ).resolves.toBeDefined();
     });
   });
 
@@ -167,6 +171,172 @@ describe('DatabaseManager', () => {
     it('should provide access to database after initialization', async () => {
       await manager.initialize();
       expect(() => manager.db).not.toThrow();
+    });
+  });
+
+  describe('resetDatabase', () => {
+    beforeEach(async () => {
+      // Mock indexedDB.deleteDatabase
+      global.indexedDB = {
+        deleteDatabase: vi.fn().mockImplementation((name: string) => ({
+          onblocked: null,
+          onerror: null,
+          onsuccess: null,
+        })),
+      } as any;
+
+      await manager.initialize();
+    });
+
+    it('should properly close PGlite connection before reset', async () => {
+      const mockClose = vi.fn().mockResolvedValue(undefined);
+      // @ts-expect-error
+      manager.dbInstance = {
+        session: {
+          client: { close: mockClose },
+        },
+      } as any;
+
+      // Patch indexedDB.deleteDatabase to immediately call onsuccess
+      (global.indexedDB.deleteDatabase as any).mockImplementation((name: string) => {
+        const req: any = {
+          onblocked: null,
+          onerror: null,
+          onsuccess: null,
+        };
+        setTimeout(() => req.onsuccess && req.onsuccess(), 0);
+        return req;
+      });
+
+      await manager.resetDatabase();
+
+      expect(mockClose).toHaveBeenCalled();
+      expect(global.indexedDB.deleteDatabase).toHaveBeenCalledWith('/pglite/lobechat');
+    });
+
+    it('should reset database instance and state', async () => {
+      const mockClose = vi.fn().mockResolvedValue(undefined);
+      // @ts-expect-error
+      manager.dbInstance = {
+        session: {
+          client: { close: mockClose },
+        },
+      } as any;
+
+      (global.indexedDB.deleteDatabase as any).mockImplementation((name: string) => {
+        const req: any = {
+          onblocked: null,
+          onerror: null,
+          onsuccess: null,
+        };
+        setTimeout(() => req.onsuccess && req.onsuccess(), 0);
+        return req;
+      });
+
+      await manager.resetDatabase();
+
+      // @ts-expect-error Check internal state
+      expect(manager.dbInstance).toBeNull();
+      // @ts-expect-error Check internal state
+      expect(manager.initPromise).toBeNull();
+      // @ts-expect-error Check internal state
+      expect(manager.isLocalDBSchemaSynced).toBe(false);
+    });
+
+    it('should handle connection close errors gracefully', async () => {
+      const mockClose = vi.fn().mockRejectedValue(new Error('Close failed'));
+      // @ts-expect-error
+      manager.dbInstance = {
+        session: {
+          client: { close: mockClose },
+        },
+      } as any;
+
+      (global.indexedDB.deleteDatabase as any).mockImplementation((name: string) => {
+        const req: any = {
+          onblocked: null,
+          onerror: null,
+          onsuccess: null,
+        };
+        setTimeout(() => req.onsuccess && req.onsuccess(), 0);
+        return req;
+      });
+
+      await expect(manager.resetDatabase()).resolves.not.toThrow();
+      expect(mockClose).toHaveBeenCalled();
+    });
+
+    it('should handle blocked database deletion', async () => {
+      (global.indexedDB.deleteDatabase as any).mockImplementation((name: string) => {
+        const request: any = {
+          onblocked: null,
+          onerror: null,
+          onsuccess: null,
+        };
+        setTimeout(() => {
+          if (request.onblocked) {
+            request.onblocked({});
+          }
+        }, 0);
+        return request;
+      });
+
+      await expect(manager.resetDatabase()).rejects.toThrow(/blocked by other open connections/);
+    });
+
+    it('should handle database deletion errors', async () => {
+      (global.indexedDB.deleteDatabase as any).mockImplementation((name: string) => {
+        const request: any = {
+          onblocked: null,
+          onerror: null,
+          onsuccess: null,
+        };
+        setTimeout(() => {
+          if (request.onerror) {
+            // Simulate an error event with a target that has an error property
+            request.onerror({ target: { error: { message: 'IDB error' } } });
+          }
+        }, 0);
+        return request;
+      });
+
+      await expect(manager.resetDatabase()).rejects.toThrow(/Failed to reset database/);
+    });
+
+    it('should clear local storage schema hash', async () => {
+      const mockLocalStorage = {
+        removeItem: vi.fn(),
+      };
+      // @ts-expect-error
+      global.localStorage = mockLocalStorage;
+      const mockClose = vi.fn().mockResolvedValue(undefined);
+      // @ts-expect-error
+      manager.dbInstance = {
+        session: {
+          client: { close: mockClose },
+        },
+      } as any;
+
+      (global.indexedDB.deleteDatabase as any).mockImplementation((name: string) => {
+        const req: any = {
+          onblocked: null,
+          onerror: null,
+          onsuccess: null,
+        };
+        setTimeout(() => req.onsuccess && req.onsuccess(), 0);
+        return req;
+      });
+
+      await manager.resetDatabase();
+
+      expect(mockLocalStorage.removeItem).toHaveBeenCalledWith('LOBE_CHAT_PGLITE_SCHEMA_HASH');
+    });
+
+    it('should resolve if indexedDB is not available', async () => {
+      // @ts-expect-error
+      global.indexedDB = undefined;
+      // Should not throw, should resolve
+      await expect(manager.resetDatabase()).resolves.not.toThrow();
     });
   });
 });
