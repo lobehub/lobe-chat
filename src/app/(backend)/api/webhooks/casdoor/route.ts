@@ -21,7 +21,7 @@ export const POST = async (req: Request): Promise<NextResponse> => {
   const nextAuthUserService = new NextAuthUserService();
   switch (action) {
     case 'update-user': {
-      return nextAuthUserService.webHookUpdateUser(
+      return nextAuthUserService.safeUpdateUser(
         {
           provider: 'casdoor',
           providerAccountId: object.id,

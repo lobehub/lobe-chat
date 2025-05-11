@@ -143,6 +143,14 @@ export const getAuthConfig = () => {
   }
   // End
 
+  // TODO: Remove this when refresh token is stable
+  if (process.env.NEXT_AUTH_SSO_ENABLE_REFRESH_TOKEN) {
+    console.warn(
+      '[Warning] You have enabled the experimental feature: [RFC] 089 Refresh Token & Database Session. If you encounter any issues, please report them at https://github.com/lobehub/lobe-chat/issues',
+    );
+  }
+  // End
+
   return createEnv({
     client: {
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().optional(),

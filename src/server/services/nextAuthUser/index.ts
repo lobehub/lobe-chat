@@ -8,6 +8,9 @@ import { serverDB } from '@/database/server';
 import { pino } from '@/libs/logger';
 import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 
+/**
+ * Methods prefixed with `safe` are designed to handle operations (e.g., webhook events) without re-verifying the userId.
+ */
 export class NextAuthUserService {
   adapter;
 
@@ -15,7 +18,7 @@ export class NextAuthUserService {
     this.adapter = LobeNextAuthDbAdapter(serverDB);
   }
 
-  webHookUpdateUser = async (
+  safeUpdateUser = async (
     { providerAccountId, provider }: { provider: string; providerAccountId: string },
     data: Partial<UserItem>,
   ) => {
@@ -46,7 +49,7 @@ export class NextAuthUserService {
     return NextResponse.json({ message: 'user updated', success: true }, { status: 200 });
   };
 
-  webHookDeleteSession = async ({
+  safeDeleteSession = async ({
     providerAccountId,
     provider,
   }: {

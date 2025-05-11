@@ -23,7 +23,7 @@ export const POST = async (req: Request): Promise<NextResponse> => {
   const nextAuthUserService = new NextAuthUserService();
   switch (event) {
     case 'User.Data.Updated': {
-      return nextAuthUserService.webHookUpdateUser(
+      return nextAuthUserService.safeUpdateUser(
         {
           provider: 'logto',
           providerAccountId: data.id,
@@ -37,7 +37,7 @@ export const POST = async (req: Request): Promise<NextResponse> => {
     }
     case 'User.SuspensionStatus.Updated': {
       if (data?.isSuspended) {
-        return nextAuthUserService.webHookDeleteSession({
+        return nextAuthUserService.safeDeleteSession({
           provider: 'logto',
           providerAccountId: data.id,
         });
