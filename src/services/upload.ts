@@ -18,6 +18,7 @@ interface UploadFileToS3Options {
   filename?: string;
   onNotSupported?: () => void;
   onProgress?: (status: FileUploadStatus, state: FileUploadState) => void;
+  pathname?: string;
   skipCheckFileType?: boolean;
 }
 
@@ -27,7 +28,7 @@ class UploadService {
    */
   uploadFileToS3 = async (
     file: File,
-    { onProgress, directory, skipCheckFileType, onNotSupported }: UploadFileToS3Options,
+    { onProgress, directory, skipCheckFileType, onNotSupported, pathname }: UploadFileToS3Options,
   ): Promise<{ data: FileMetadata; success: boolean }> => {
     const { getElectronStoreState } = await import('@/store/electron');
     const { electronSyncSelectors } = await import('@/store/electron/selectors');
@@ -45,7 +46,7 @@ class UploadService {
     if (isServerMode) {
       // if is server mode, upload to server s3,
 
-      const data = await this.uploadToServerS3(file, { directory, onProgress });
+      const data = await this.uploadToServerS3(file, { directory, onProgress, pathname });
       return { data, success: true };
     }
 
@@ -115,19 +116,27 @@ class UploadService {
     };
   };
 
+  uploadDataToS3 = async (data: object, options: UploadFileToS3Options = {}) => {
+    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+    const file = new File([blob], options.filename || 'data.json', { type: 'application/json' });
+    return await this.uploadFileToS3(file, options);
+  };
+
   uploadToServerS3 = async (
     file: File,
     {
       onProgress,
       directory,
+      pathname,
     }: {
       directory?: string;
       onProgress?: (status: FileUploadStatus, state: FileUploadState) => void;
+      pathname?: string;
     },
   ): Promise<FileMetadata> => {
     const xhr = new XMLHttpRequest();
 
-    const { preSignUrl, ...result } = await this.getSignedUploadUrl(file, directory);
+    const { preSignUrl, ...result } = await this.getSignedUploadUrl(file, { directory, pathname });
     let startTime = Date.now();
     xhr.upload.addEventListener('progress', (event) => {
       if (event.lengthComputable) {
@@ -208,7 +217,7 @@ class UploadService {
 
   private getSignedUploadUrl = async (
     file: File,
-    directory?: string,
+    options: { directory?: string; pathname?: string } = {},
   ): Promise<
     FileMetadata & {
       preSignUrl: string;
@@ -218,8 +227,8 @@ class UploadService {
 
     // 精确到以 h 为单位的 path
     const date = (Date.now() / 1000 / 60 / 60).toFixed(0);
-    const dirname = `${directory || fileEnv.NEXT_PUBLIC_S3_FILE_PATH}/${date}`;
-    const pathname = `${dirname}/${filename}`;
+    const dirname = `${options.directory || fileEnv.NEXT_PUBLIC_S3_FILE_PATH}/${date}`;
+    const pathname = options.pathname ?? `${dirname}/${filename}`;
 
     const preSignUrl = await edgeClient.upload.createS3PreSignedUrl.mutate({ pathname });
 
