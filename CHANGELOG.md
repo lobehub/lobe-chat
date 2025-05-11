@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.85.8](https://github.com/lobehub/lobe-chat/compare/v1.85.7...v1.85.8)
+
+<sup>Released on **2025-05-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix config import issue in the desktop version.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix config import issue in the desktop version, closes [#7800](https://github.com/lobehub/lobe-chat/issues/7800) ([2cb8635](https://github.com/lobehub/lobe-chat/commit/2cb8635))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.85.7](https://github.com/lobehub/lobe-chat/compare/v1.85.6...v1.85.7)
 
 <sup>Released on **2025-05-11**</sup>
