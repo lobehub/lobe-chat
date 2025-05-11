@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix config import issue in the desktop version."]
+    },
+    "date": "2025-05-11",
+    "version": "1.85.8"
+  },
+  {
+    "children": {
       "fixes": ["Fix streamable http url valid and refactor local files to local system."]
     },
     "date": "2025-05-11",
