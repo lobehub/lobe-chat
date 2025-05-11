@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.85.7](https://github.com/lobehub/lobe-chat/compare/v1.85.6...v1.85.7)
+
+<sup>Released on **2025-05-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix streamable http url valid and refactor local files to local system.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix streamable http url valid and refactor local files to local system, closes [#7794](https://github.com/lobehub/lobe-chat/issues/7794) ([37fd5fe](https://github.com/lobehub/lobe-chat/commit/37fd5fe))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.85.6](https://github.com/lobehub/lobe-chat/compare/v1.85.5...v1.85.6)
 
 <sup>Released on **2025-05-10**</sup>
