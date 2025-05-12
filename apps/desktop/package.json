@@ -29,7 +29,7 @@
   "dependencies": {
     "electron-updater": "^6.6.2",
     "get-port-please": "^3.1.2",
-    "pdfjs-dist": "4.8.69"
+    "pdfjs-dist": "4.10.38"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
@@ -47,7 +47,7 @@
     "@types/set-cookie-parser": "^2.4.10",
     "consola": "^3.1.0",
     "cookie": "^1.0.2",
-    "electron": "^35.2.0",
+    "electron": "^36.2.0",
     "electron-builder": "^26.0.12",
     "electron-is": "^3.0.0",
     "electron-log": "^5.3.3",

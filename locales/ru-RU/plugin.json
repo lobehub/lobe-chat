@@ -111,7 +111,7 @@
         "title": "Тип плагина MCP"
       },
       "url": {
-        "desc": "Введите адрес вашего MCP Server Streamable HTTP, который не заканчивается на /sse",
+        "desc": "Введите адрес вашего MCP сервера Streamable HTTP, режим SSE не поддерживается",
         "invalid": "Пожалуйста, введите действительный URL-адрес",
         "label": "URL-адрес HTTP Endpoint",
         "required": "Пожалуйста, введите URL службы MCP"

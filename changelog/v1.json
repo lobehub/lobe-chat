@@ -1,6 +1,54 @@
 [
   {
     "children": {
+      "fixes": ["Fix config import issue in the desktop version."]
+    },
+    "date": "2025-05-11",
+    "version": "1.85.8"
+  },
+  {
+    "children": {
+      "fixes": ["Fix streamable http url valid and refactor local files to local system."]
+    },
+    "date": "2025-05-11",
+    "version": "1.85.7"
+  },
+  {
+    "children": {},
+    "date": "2025-05-10",
+    "version": "1.85.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix window close issue and release Window/Linux beta."]
+    },
+    "date": "2025-05-10",
+    "version": "1.85.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix nothing return when reset the client db."]
+    },
+    "date": "2025-05-10",
+    "version": "1.85.4"
+  },
+  {
+    "children": {
+      "fixes": ["Remove mcp client cache."],
+      "improvements": ["Improve pdf and xlsx file content parser."]
+    },
+    "date": "2025-05-10",
+    "version": "1.85.3"
+  },
+  {
+    "children": {
+      "improvements": ["Upgrade anthropic sdk."]
+    },
+    "date": "2025-05-10",
+    "version": "1.85.2"
+  },
+  {
+    "children": {
       "improvements": ["Add Qwen3 models for infiniai."]
     },
     "date": "2025-05-10",

@@ -1982,6 +1982,9 @@
   "qwen2:72b": {
     "description": "Qwen2, Alibaba'nın yeni nesil büyük ölçekli dil modelidir, mükemmel performans ile çeşitli uygulama ihtiyaçlarını destekler."
   },
+  "qwen3": {
+    "description": "Qwen3, Alibaba'nın yeni nesil büyük ölçekli dil modelidir ve çeşitli uygulama ihtiyaçlarını mükemmel bir performansla destekler."
+  },
   "qwen3-0.6b": {
     "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
   },
