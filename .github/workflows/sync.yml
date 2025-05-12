@@ -13,7 +13,7 @@ on:
       ignore_files:
         description: 'Files to ignore during sync (comma-separated)'
         required: false
-        default: 'CHANGELOG.md'
+        default: 'changelog/*,CHANGELOG.md'
         type: string
 
 jobs:
@@ -53,11 +53,19 @@ jobs:
 
           # Create a backup of files to be preserved
           mkdir -p .file_backup
-          for file in $(echo $IGNORE_FILES | tr ',' ' '); do
-            if [ -f "$file" ]; then
-              echo "Backing up $file"
-              cp "$file" .file_backup/ || true
-            fi
+
+          # Process each pattern (comma-separated)
+          for pattern in $(echo $IGNORE_FILES | tr ',' ' '); do
+            # Use find to handle wildcards
+            for file in $(find . -type f -path "./$pattern" 2>/dev/null || echo "$pattern"); do
+              # Skip if the file doesn't exist or if it's the find command returning the pattern
+              if [ -f "$file" ]; then
+                echo "Backing up $file"
+                # Create directory structure in backup
+                mkdir -p ".file_backup/$(dirname "$file")"
+                cp "$file" ".file_backup/$file" || true
+              fi
+            done
           done
 
       - name: Sync upstream changes
@@ -73,13 +81,20 @@ jobs:
       - name: Restore ignored files
         if: steps.sync.outputs.has_new_commits == 'true'
         run: |
-          # Restore files from backup
-          for file in $(echo $IGNORE_FILES | tr ',' ' '); do
-            if [ -f ".file_backup/$file" ]; then
-              echo "Restoring $file"
-              cp ".file_backup/$file" "$file"
-              git add "$file"
-            fi
+          # Process each pattern (comma-separated)
+          for pattern in $(echo $IGNORE_FILES | tr ',' ' '); do
+            # Find all matching files in the backup
+            for file in $(find .file_backup -type f -path ".file_backup/$pattern" 2>/dev/null || find .file_backup -type f -name "$(basename "$pattern")" 2>/dev/null); do
+              # Get the original file path
+              original_file="${file#.file_backup/}"
+              if [ -f "$file" ]; then
+                echo "Restoring $original_file"
+                # Ensure directory exists
+                mkdir -p "$(dirname "$original_file")"
+                cp "$file" "$original_file"
+                git add "$original_file"
+              fi
+            done
           done
 
           # Commit the restored files if there are changes
