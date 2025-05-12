@@ -120,8 +120,8 @@ describe('NextAuthUserService', () => {
       await service.safeDeleteSession(mockReq);
       // Expect to query the account first
       expect(service.adapter.getAccount).toBeCalledWith(
-        mockReq.provider,
         mockReq.providerAccountId,
+        mockReq.provider,
       );
       // Expect to delete the session
       expect(service.serverDB.delete).toBeCalledWith(nextauthSessions);
@@ -140,8 +140,8 @@ describe('NextAuthUserService', () => {
       service.adapter.getAccount = vi.fn().mockResolvedValue({});
       service.safeDeleteSession(mockReq);
       expect(service.adapter.getAccount).toBeCalledWith(
-        mockReq.provider,
         mockReq.providerAccountId,
+        mockReq.provider,
       );
       expect(service.serverDB.delete).not.toBeCalledWith(nextauthSessions);
     });
