@@ -63,7 +63,7 @@ export class NextAuthUserService {
   }) => {
     // 1. Find User by account
     // @ts-expect-error: Already impl in `LobeNextauthDbAdapter`
-    const account = await this.adapter.getAccount(provider, providerAccountId);
+    const account = await this.adapter.getAccount(providerAccountId, provider);
     // 2. If found, Invalidate user session
     if (account?.userId) {
       await this.serverDB
