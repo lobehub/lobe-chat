@@ -9,13 +9,17 @@ import { pino } from '@/libs/logger';
 import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 
 /**
- * Methods prefixed with `safe` are designed to handle operations (e.g., webhook events) without re-verifying the userId.
+ * @class NextAuthUserService
+ * @description Methods prefixed with `safe` are designed to handle operations (e.g., webhook events) without re-verifying the userId.
+ * If `userId` is required, it should be passed from middleware context to prevent Cross-User attacks.
  */
 export class NextAuthUserService {
   adapter;
+  serverDB;
 
   constructor() {
     this.adapter = LobeNextAuthDbAdapter(serverDB);
+    this.serverDB = serverDB;
   }
 
   safeUpdateUser = async (
@@ -32,7 +36,7 @@ export class NextAuthUserService {
 
     // 2. If found, Update user data from provider
     if (user?.id) {
-      const userModel = new UserModel(serverDB, user.id);
+      const userModel = new UserModel(this.serverDB, user.id);
 
       // Perform update
       await userModel.updateUser({
@@ -44,9 +48,10 @@ export class NextAuthUserService {
       pino.warn(
         `[${provider}]: Webhooks handler user "${JSON.stringify({ provider, providerAccountId })}" update for "${JSON.stringify(data)}", but no user was found by the providerAccountId.`,
       );
-      return NextResponse.json({ message: 'user not found', success: false }, { status: 200 });
+      // Do not return error to the webhook, as it may be attack by keyword guess
+      return NextResponse.json({ message: 'safeUpdateUser', success: true }, { status: 200 });
     }
-    return NextResponse.json({ message: 'user updated', success: true }, { status: 200 });
+    return NextResponse.json({ message: 'safeUpdateUser', success: true }, { status: 200 });
   };
 
   safeDeleteSession = async ({
@@ -61,7 +66,9 @@ export class NextAuthUserService {
     const account = await this.adapter.getAccount(provider, providerAccountId);
     // 2. If found, Invalidate user session
     if (account?.userId) {
-      await serverDB.delete(nextauthSessions).where(eq(nextauthSessions.userId, account.userId));
+      await this.serverDB
+        .delete(nextauthSessions)
+        .where(eq(nextauthSessions.userId, account.userId));
       pino.info(
         `Invoke user session "${JSON.stringify({ provider, providerAccountId })}" due to webhook`,
       );
@@ -69,9 +76,9 @@ export class NextAuthUserService {
       pino.warn(
         `[${provider}]: Webhooks handler user "${JSON.stringify({ provider, providerAccountId })}" session invoke, but no user was found by the providerAccountId.`,
       );
-      return NextResponse.json({ message: 'user not found', success: false }, { status: 200 });
+      return NextResponse.json({ message: 'safeDeleteSession', success: true }, { status: 200 });
     }
-    return NextResponse.json({ message: 'session invoked', success: true }, { status: 200 });
+    return NextResponse.json({ message: 'safeDeleteSession', success: true }, { status: 200 });
   };
 
   unlinkSSOProvider = async ({
@@ -99,7 +106,7 @@ export class NextAuthUserService {
   };
 
   getUserSSOProviders = async (userId: string) => {
-    const result = await serverDB
+    const result = await this.serverDB
       .select({
         expiresAt: nextauthAccounts.expires_at,
         provider: nextauthAccounts.provider,
@@ -114,7 +121,7 @@ export class NextAuthUserService {
   };
 
   getUserSSOSessions = async (userId: string) => {
-    const result = await serverDB
+    const result = await this.serverDB
       .select({
         expiresAt: nextauthSessions.expires,
         userId: nextauthSessions.userId,
