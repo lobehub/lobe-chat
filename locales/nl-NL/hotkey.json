@@ -3,6 +3,10 @@
     "desc": "Voeg de huidige invoer toe als gebruikersbericht, maar activeer geen generatie",
     "title": "Voeg een gebruikersbericht toe"
   },
+  "clearCurrentMessages": {
+    "desc": "Verwijder de berichten en geüploade bestanden van de huidige sessie",
+    "title": "Verwijder sessieberichten"
+  },
   "editMessage": {
     "desc": "Ga naar de bewerkingsmodus door Alt ingedrukt te houden en op het bericht te dubbelklikken",
     "title": "Bewerk bericht"
@@ -30,6 +34,10 @@
   "search": {
     "desc": "Roep het hoofdzoekvak van de huidige pagina op",
     "title": "Zoeken"
+  },
+  "showApp": {
+    "desc": "Snel het hoofdvenster van de applicatie openen",
+    "title": "Hoofdvenster weergeven"
   },
   "switchAgent": {
     "desc": "Schakel tussen de in de zijbalk vastgezette assistenten door Ctrl ingedrukt te houden en een cijfer van 0~9 te drukken",

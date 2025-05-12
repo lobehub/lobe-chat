@@ -3,6 +3,10 @@
     "desc": "Mevcut girdi içeriğini kullanıcı mesajı olarak ekleyin, ancak oluşturmayı tetiklemeyin",
     "title": "Bir kullanıcı mesajı ekle"
   },
+  "clearCurrentMessages": {
+    "desc": "Geçerli oturumun mesajlarını ve yüklenen dosyaları temizle",
+    "title": "Oturum mesajlarını temizle"
+  },
   "editMessage": {
     "desc": "Mesaja çift tıklayıp Alt tuşuna basarak düzenleme moduna geçin",
     "title": "Mesajı düzenle"
@@ -30,6 +34,10 @@
   "search": {
     "desc": "Mevcut sayfanın ana arama kutusunu aç",
     "title": "Ara"
+  },
+  "showApp": {
+    "desc": "Uygulamanın ana penceresini hızlıca aç",
+    "title": "Ana Pencereyi Göster"
   },
   "switchAgent": {
     "desc": "Yan panelde sabitlenmiş asistanı değiştirmek için Ctrl tuşuna basılı tutarak 0~9 sayısına basın",

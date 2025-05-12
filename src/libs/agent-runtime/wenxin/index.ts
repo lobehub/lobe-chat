@@ -15,7 +15,7 @@ export const LobeWenxinAI = LobeOpenAICompatibleFactory({
             enable: true,
             enable_citation: true,
             enable_trace: true,
-          }
+          },
         }),
       } as any;
     },

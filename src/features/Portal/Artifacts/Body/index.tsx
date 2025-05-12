@@ -4,6 +4,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
+import { ArtifactDisplayMode } from '@/store/chat/slices/portal/initialState';
 import { ArtifactType } from '@/types/artifact';
 
 import Renderer from './Renderer';
@@ -34,8 +35,8 @@ const ArtifactsUI = memo(() => {
   useEffect(() => {
     // when message generating , check whether the artifact is closed
     // if close, move the display mode to preview
-    if (isMessageGenerating && isArtifactTagClosed && displayMode === 'code') {
-      useChatStore.setState({ portalArtifactDisplayMode: 'preview' });
+    if (isMessageGenerating && isArtifactTagClosed && displayMode === ArtifactDisplayMode.Code) {
+      useChatStore.setState({ portalArtifactDisplayMode: ArtifactDisplayMode.Preview });
     }
   }, [isMessageGenerating, displayMode, isArtifactTagClosed]);
 
@@ -64,7 +65,9 @@ const ArtifactsUI = memo(() => {
 
   // show code when the artifact is not closed or the display mode is code or the artifact type is code
   const showCode =
-    !isArtifactTagClosed || displayMode === 'code' || artifactType === ArtifactType.Code;
+    !isArtifactTagClosed ||
+    displayMode === ArtifactDisplayMode.Code ||
+    artifactType === ArtifactType.Code;
 
   return (
     <Flexbox

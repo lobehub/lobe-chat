@@ -12,12 +12,110 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'o3 是一款全能强大的模型，在多个领域表现出色。它为数学、科学、编程和视觉推理任务树立了新标杆。它也擅长技术写作和指令遵循。用户可利用它分析文本、代码和图像，解决多步骤的复杂问题。',
+    displayName: 'o3',
+    enabled: true,
+    id: 'o3',
+    maxOutput: 100_000,
+    pricing: {
+      cachedInput: 2.5,
+      input: 10,
+      output: 40,
+    },
+    releasedAt: '2025-04-17',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'o4-mini 是我们最新的小型 o 系列模型。 它专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。',
+    displayName: 'o4-mini',
+    enabled: true,
+    id: 'o4-mini',
+    maxOutput: 100_000,
+    pricing: {
+      cachedInput: 0.275,
+      input: 1.1,
+      output: 4.4,
+    },
+    releasedAt: '2025-04-17',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_047_576,
+    description: 'GPT-4.1 是我们用于复杂任务的旗舰模型。它非常适合跨领域解决问题。',
+    displayName: 'GPT-4.1',
+    enabled: true,
+    id: 'gpt-4.1',
+    maxOutput: 32_768,
+    pricing: {
+      cachedInput: 0.5,
+      input: 2,
+      output: 8,
+    },
+    releasedAt: '2025-04-14',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_047_576,
+    description:
+      'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
+    displayName: 'GPT-4.1 mini',
+    enabled: true,
+    id: 'gpt-4.1-mini',
+    maxOutput: 32_768,
+    pricing: {
+      cachedInput: 0.1,
+      input: 0.4,
+      output: 1.6,
+    },
+    releasedAt: '2025-04-14',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_047_576,
+    description: 'GPT-4.1 nano 是最快，最具成本效益的GPT-4.1模型。',
+    displayName: 'GPT-4.1 nano',
+    id: 'gpt-4.1-nano',
+    maxOutput: 32_768,
+    pricing: {
+      cachedInput: 0.025,
+      input: 0.1,
+      output: 0.4,
+    },
+    releasedAt: '2025-04-14',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
     },
     contextWindowTokens: 200_000,
     description:
       'o3-mini 是我们最新的小型推理模型，在与 o1-mini 相同的成本和延迟目标下提供高智能。',
-    displayName: 'OpenAI o3-mini',
-    enabled: true,
+    displayName: 'o3-mini',
     id: 'o3-mini',
     maxOutput: 100_000,
     pricing: {
@@ -35,8 +133,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     contextWindowTokens: 128_000,
     description:
       'o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。',
-    displayName: 'OpenAI o1-mini',
-    enabled: true,
+    displayName: 'o1-mini',
     id: 'o1-mini',
     maxOutput: 65_536,
     pricing: {
@@ -55,8 +152,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     contextWindowTokens: 200_000,
     description:
       'o1是OpenAI新的推理模型，支持图文输入并输出文本，适用于需要广泛通用知识的复杂任务。该模型具有200K上下文和2023年10月的知识截止日期。',
-    displayName: 'OpenAI o1',
-    enabled: true,
+    displayName: 'o1',
     id: 'o1',
     maxOutput: 100_000,
     pricing: {
@@ -74,8 +170,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     contextWindowTokens: 128_000,
     description:
       'o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。',
-    displayName: 'OpenAI o1-preview',
-    enabled: true,
+    displayName: 'o1-preview',
     id: 'o1-preview',
     maxOutput: 32_768,
     pricing: {
@@ -94,8 +189,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'GPT-4.5 的研究预览版，它是我们迄今为止最大、最强大的 GPT 模型。它拥有广泛的世界知识，并能更好地理解用户意图，使其在创造性任务和自主规划方面表现出色。GPT-4.5 可接受文本和图像输入，并生成文本输出（包括结构化输出）。支持关键的开发者功能，如函数调用、批量 API 和流式输出。在需要创造性、开放式思考和对话的任务（如写作、学习或探索新想法）中，GPT-4.5 表现尤为出色。知识截止日期为 2023 年 10 月。',
     displayName: 'GPT-4.5 Preview',
-    enabled: true,
-    id: 'gpt-4.5-preview',
+    id: 'gpt-4.5-preview', // deprecated on 2025-07-14
     maxOutput: 16_384,
     pricing: {
       cachedInput: 37.5,
@@ -114,7 +208,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'GPT-4o mini是OpenAI在GPT-4 Omni之后推出的最新模型，支持图文输入并输出文本。作为他们最先进的小型模型，它比其他近期的前沿模型便宜很多，并且比GPT-3.5 Turbo便宜超过60%。它保持了最先进的智能，同时具有显著的性价比。GPT-4o mini在MMLU测试中获得了 82% 的得分，目前在聊天偏好上排名高于 GPT-4。',
     displayName: 'GPT-4o mini',
-    enabled: true,
     id: 'gpt-4o-mini',
     maxOutput: 16_384,
     pricing: {
@@ -136,6 +229,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4o 1120',
     id: 'gpt-4o-2024-11-20',
     pricing: {
+      cachedInput: 1.25,
       input: 2.5,
       output: 10,
     },
@@ -151,7 +245,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
     displayName: 'GPT-4o',
-    enabled: true,
     id: 'gpt-4o',
     pricing: {
       cachedInput: 1.25,
@@ -159,23 +252,6 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 10,
     },
     releasedAt: '2024-05-13',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 128_000,
-    description:
-      'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
-    displayName: 'GPT-4o 0806',
-    id: 'gpt-4o-2024-08-06',
-    pricing: {
-      input: 2.5,
-      output: 10,
-    },
-    releasedAt: '2024-08-06',
     type: 'chat',
   },
   {
@@ -345,29 +421,12 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。',
     displayName: 'GPT-4 32K',
-    id: 'gpt-4-32k',
-    // Will be discontinued on June 6, 2025
+    id: 'gpt-4-32k', // deprecated on 2025-06-06
     legacy: true,
     pricing: {
       input: 60,
       output: 120,
     },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 32_768,
-    description:
-      'GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。',
-    displayName: 'GPT-4 32K 0613',
-    id: 'gpt-4-32k-0613',
-    pricing: {
-      input: 60,
-      output: 120,
-    },
-    releasedAt: '2023-06-13',
     type: 'chat',
   },
   {

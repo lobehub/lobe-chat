@@ -1,4 +1,5 @@
-import { DiscordIcon, Icon } from '@lobehub/ui';
+import { Hotkey, Icon } from '@lobehub/ui';
+import { DiscordIcon } from '@lobehub/ui/icons';
 import { Badge } from 'antd';
 import { ItemType } from 'antd/es/menu/interface';
 import {
@@ -22,7 +23,9 @@ import { Flexbox } from 'react-layout-kit';
 import type { MenuProps } from '@/components/Menu';
 import { enableAuth } from '@/const/auth';
 import { LOBE_CHAT_CLOUD } from '@/const/branding';
+import { DEFAULT_HOTKEY_CONFIG } from '@/const/settings';
 import {
+  CHANGELOG,
   DISCORD,
   DOCUMENTS_REFER_URL,
   EMAIL_SUPPORT,
@@ -31,6 +34,7 @@ import {
   UTM_SOURCE,
   mailTo,
 } from '@/const/url';
+import { isDesktop } from '@/const/version';
 import DataImporter from '@/features/DataImporter';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -81,6 +85,11 @@ export const useMenu = () => {
 
   const settings: MenuProps['items'] = [
     {
+      extra: isDesktop ? (
+        <div>
+          <Hotkey keys={DEFAULT_HOTKEY_CONFIG.openSettings} />
+        </div>
+      ) : undefined,
       icon: <Icon icon={Settings2} />,
       key: 'setting',
       label: (
@@ -136,7 +145,7 @@ export const useMenu = () => {
     {
       icon: <Icon icon={FileClockIcon} />,
       key: 'changelog',
-      label: <Link href={'/changelog/modal'}>{t('changelog')}</Link>,
+      label: <Link href={isDesktop ? CHANGELOG : '/changelog/modal'}>{t('changelog')}</Link>,
     },
     {
       children: [

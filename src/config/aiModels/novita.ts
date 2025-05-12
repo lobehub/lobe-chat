@@ -1,33 +1,44 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
 // https://novita.ai/pricing
-
 const novitaChatModels: AIChatModelCard[] = [
   {
     contextWindowTokens: 131_072,
-    displayName: 'Llama 3.3 70B Instruct',
+    displayName: 'Llama 4 Scout 17B Instruct',
     enabled: true,
-    id: 'meta-llama/llama-3.3-70b-instruct',
+    id: 'meta-llama/llama-4-scout-17b-16e-instruct',
     pricing: {
-      input: 0.13,
-      output: 0.39,
+      input: 0.1,
+      output: 0.5,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 1_048_576,
+    displayName: 'Llama 4 Maverick 17B Instruct',
+    enabled: true,
+    id: 'meta-llama/llama-4-maverick-17b-128e-instruct-fp8',
+    pricing: {
+      input: 0.2,
+      output: 0.85,
     },
     type: 'chat',
   },
   {
     contextWindowTokens: 16_384,
-    description: 'Llama 3.1 8B Instruct 是 Meta 推出的最新版本，优化了高质量对话场景，表现优于许多领先的闭源模型。',
+    description: 'Llama 3.1 8B Instruct  优化了高质量对话场景，表现优于许多领先的闭源模型。',
     displayName: 'Llama 3.1 8B Instruct',
     id: 'meta-llama/llama-3.1-8b-instruct',
     pricing: {
-      input: 0.05,
+      input: 0.02,
       output: 0.05,
     },
     type: 'chat',
   },
   {
     contextWindowTokens: 32_768,
-    description: 'Llama 3.1 70B Instruct 专为高质量对话而设计，在人类评估中表现突出，特别适合高交互场景。',
+    description:
+      'Llama 3.1 70B Instruct 专为高质量对话而设计，在人类评估中表现突出，特别适合高交互场景。',
     displayName: 'Llama 3.1 70B Instruct',
     id: 'meta-llama/llama-3.1-70b-instruct',
     pricing: {
@@ -73,7 +84,6 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_000,
     description: 'Gemma 3 27B 是谷歌的一款开源语言模型，以其在效率和性能方面设立了新的标准。',
     displayName: 'Gemma 3 27B',
-    enabled: true,
     id: 'google/gemma-3-27b-it',
     pricing: {
       input: 0.2,
@@ -190,7 +200,7 @@ const novitaChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek/deepseek-v3-0324',
     pricing: {
-      input: 0.4,
+      input: 0.37,
       output: 1.3,
     },
     type: 'chat',
@@ -269,7 +279,7 @@ const novitaChatModels: AIChatModelCard[] = [
   },
   {
     contextWindowTokens: 32_000,
-    displayName: 'Qwen 2.5 72B Instruct',
+    displayName: 'Qwen2.5 72B Instruct',
     id: 'qwen/qwen-2.5-72b-instruct',
     pricing: {
       input: 0.38,
@@ -318,18 +328,12 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 32_768,
-    displayName: 'Qwen 2 VL 72B Instruct',
-    id: 'qwen/qwen-2-vl-72b-instruct',
-    pricing: {
-      input: 0.45,
-      output: 0.45,
+    abilities: {
+      vision: true,
     },
-    type: 'chat',
-  },
-  {
     contextWindowTokens: 96_000,
-    displayName: 'Qwen 2.5 VL 72B Instruct',
+    displayName: 'Qwen2.5 VL 72B Instruct',
+    enabled: true,
     id: 'qwen/qwen2.5-vl-72b-instruct',
     pricing: {
       input: 0.8,
@@ -341,9 +345,9 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_000,
     displayName: 'Llama 3.2 1B Instruct',
     id: 'meta-llama/llama-3.2-1b-instruct',
-    pricing: {
-      input: 0.02,
-      output: 0.02,
+    pricing: { 
+      input: 0, 
+      output: 0 
     },
     type: 'chat',
   },
@@ -378,7 +382,7 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 16_000,
+    contextWindowTokens: 8192,
     displayName: 'L31 70B Euryale v2.2',
     id: 'sao10k/l31-70b-euryale-v2.2',
     pricing: {
@@ -388,25 +392,76 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 32_768,
-    displayName: 'Qwen 2 7B Instruct',
-    id: 'qwen/qwen-2-7b-instruct',
-    pricing: {
-      input: 0.054,
-      output: 0.054,
-    },
-    type: 'chat',
-  },
-  {
     abilities: {
       reasoning: true,
     },
     contextWindowTokens: 32_768,
     displayName: 'QwQ 32B',
+    enabled: true,
     id: 'qwen/qwq-32b',
     pricing: {
       input: 0.18,
       output: 0.2,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'Qwen2.5 7B Instruct',
+    id: 'qwen/qwen2.5-7b-instruct',
+    pricing: {
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'GLM 4 9B 0414',
+    id: 'thudm/glm-4-9b-0414',
+    pricing: { 
+      input: 0,
+      output: 0 
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'GLM Z1 9B 0414',
+    id: 'thudm/glm-z1-9b-0414',
+    pricing: { 
+      input: 0,
+      output: 0 
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'GLM Z1 32B 0414',
+    id: 'thudm/glm-z1-32b-0414',
+    pricing: { 
+      input: 0.24, 
+      output: 0.24 
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'GLM 4 32B 0414',
+    id: 'thudm/glm-4-32b-0414',
+    pricing: { 
+      input: 0.24, 
+      output: 0.24 
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'GLM Z1 Rumination 32B 0414',
+    id: 'thudm/glm-z1-rumination-32b-0414',
+    pricing: { 
+      input: 0.24, 
+      output: 0.24 
     },
     type: 'chat',
   },

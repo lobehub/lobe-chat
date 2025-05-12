@@ -17,12 +17,6 @@ export const search1api: CrawlImpl = async (url) => {
   // Get API key from environment variable
   const apiKey = process.env.SEARCH1API_CRAWL_API_KEY || process.env.SEARCH1API_API_KEY;
 
-  if (!apiKey) {
-    throw new Error(
-      'SEARCH1API_API_KEY environment variable is not set. Visit https://www.search1api.com to get free quota.',
-    );
-  }
-
   let res: Response;
 
   try {
@@ -32,7 +26,7 @@ export const search1api: CrawlImpl = async (url) => {
           url,
         }),
         headers: {
-          'Authorization': `Bearer ${apiKey}`,
+          'Authorization': !apiKey ? '' : `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
         },
         method: 'POST',

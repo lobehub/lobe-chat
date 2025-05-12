@@ -1,11 +1,14 @@
 {
+  "confirm": "Confirmer",
   "debug": {
     "arguments": "Arguments de l'appel",
     "function_call": "Appel de fonction",
     "off": "Désactivé",
     "on": "Activer le débogage",
     "payload": "charge du plugin",
+    "pluginState": "État du plugin",
     "response": "Réponse",
+    "title": "Détails du plugin",
     "tool_call": "demande d'appel d'outil"
   },
   "detailModal": {
@@ -34,14 +37,84 @@
         "label": "Identifiant"
       },
       "mode": {
-        "local": "Configuration visuelle",
-        "local-tooltip": "Configuration visuelle non prise en charge pour le moment",
+        "mcp": "Plugin MCP",
+        "mcpExp": "Expérimental",
         "url": "Lien en ligne"
       },
       "name": {
         "desc": "Titre du plugin",
         "label": "Titre",
         "placeholder": "Moteur de recherche"
+      }
+    },
+    "mcp": {
+      "args": {
+        "desc": "Liste des paramètres à passer à la commande d'exécution, généralement ici le nom du serveur MCP ou le chemin du script de démarrage",
+        "label": "Paramètres de commande",
+        "placeholder": "Par exemple : --port 8080 --debug",
+        "required": "Veuillez entrer les paramètres de démarrage"
+      },
+      "avatar": {
+        "label": "Icône du plugin"
+      },
+      "command": {
+        "desc": "Fichier exécutable ou script utilisé pour démarrer le plugin MCP STDIO",
+        "label": "Commande",
+        "placeholder": "Par exemple : python main.py ou /path/to/executable",
+        "required": "Veuillez entrer la commande de démarrage"
+      },
+      "desc": {
+        "desc": "Description du plugin",
+        "label": "Description du plugin",
+        "placeholder": "Ajoutez des informations sur l'utilisation et le contexte de ce plugin"
+      },
+      "endpoint": {
+        "desc": "Entrez l'adresse de votre serveur HTTP Streamable MCP",
+        "label": "URL de l'endpoint MCP"
+      },
+      "env": {
+        "add": "Ajouter une ligne",
+        "desc": "Entrez les variables d'environnement nécessaires pour votre serveur MCP",
+        "duplicateKeyError": "La clé du champ doit être unique",
+        "formValidationFailed": "Échec de la validation du formulaire, veuillez vérifier le format des paramètres",
+        "keyRequired": "La clé du champ ne peut pas être vide",
+        "label": "Variables d'environnement du serveur MCP",
+        "stringifyError": "Impossible de sérialiser les paramètres, veuillez vérifier le format des paramètres"
+      },
+      "identifier": {
+        "desc": "Donnez un nom à votre plugin MCP, en utilisant des caractères anglais",
+        "invalid": "Vous ne pouvez entrer que des caractères anglais, des chiffres, - et _",
+        "label": "Nom du plugin MCP",
+        "placeholder": "Par exemple : my-mcp-plugin",
+        "required": "Veuillez entrer l'identifiant du service MCP"
+      },
+      "previewManifest": "Aperçu du fichier de description du plugin",
+      "quickImport": "Importation rapide de la configuration JSON",
+      "quickImportError": {
+        "empty": "Le contenu ne peut pas être vide",
+        "invalidJson": "Format JSON invalide",
+        "invalidStructure": "Structure JSON invalide"
+      },
+      "stdioNotSupported": "L'environnement actuel ne prend pas en charge les plugins MCP de type stdio",
+      "testConnection": "Tester la connexion",
+      "testConnectionTip": "Le plugin MCP ne peut être utilisé normalement qu'après un test de connexion réussi",
+      "type": {
+        "desc": "Choisissez le mode de communication du plugin MCP, la version web ne prend en charge que le HTTP Streamable",
+        "httpFeature1": "Compatible avec la version web et de bureau",
+        "httpFeature2": "Connexion à un serveur MCP distant, sans installation ni configuration supplémentaires",
+        "httpShortDesc": "Protocole de communication basé sur HTTP en continu",
+        "label": "Type de plugin MCP",
+        "stdioFeature1": "Latence de communication réduite, adapté à l'exécution locale",
+        "stdioFeature2": "Nécessite l'installation et l'exécution d'un serveur MCP local",
+        "stdioNotAvailable": "Le mode STDIO n'est disponible que dans la version de bureau",
+        "stdioShortDesc": "Protocole de communication basé sur l'entrée/sortie standard",
+        "title": "Type de plugin MCP"
+      },
+      "url": {
+        "desc": "Entrez l'adresse HTTP Streamable de votre serveur MCP, le mode SSE n'est pas pris en charge",
+        "invalid": "Veuillez entrer une URL valide",
+        "label": "URL de l'endpoint HTTP",
+        "required": "Veuillez entrer l'URL du service MCP"
       }
     },
     "meta": {
@@ -69,12 +142,14 @@
         "label": "Identifiant",
         "pattenErrorMessage": "Seuls les caractères alphanumériques, - et _ sont autorisés"
       },
+      "lobe": "Plugin {{appName}}",
       "manifest": {
         "desc": "{{appName}} sera installé via ce lien pour ajouter le plugin.",
         "label": "URL du fichier de description du plugin (Manifest)",
         "preview": "Aperçu du Manifest",
         "refresh": "Actualiser"
       },
+      "openai": "Plugin OpenAI",
       "title": {
         "desc": "Titre du plugin",
         "label": "Titre",
@@ -88,8 +163,18 @@
       "schema": "Schéma"
     },
     "preview": {
+      "api": {
+        "noParams": "Cet outil n'a pas de paramètres",
+        "noResults": "Aucune API correspondant aux critères de recherche trouvée",
+        "params": "Paramètres :",
+        "searchPlaceholder": "Rechercher un outil..."
+      },
       "card": "Aperçu de l'interface du plugin",
       "desc": "Aperçu de la description du plugin",
+      "empty": {
+        "desc": "Une fois la configuration terminée, vous pourrez prévisualiser les capacités des outils pris en charge par le plugin ici",
+        "title": "Commencez la prévisualisation après avoir configuré le plugin"
+      },
       "title": "Aperçu du nom du plugin"
     },
     "save": "Installer le plugin",
@@ -116,6 +201,7 @@
     "noManifest": "Aucun fichier de description trouvé",
     "openAPIInvalid": "Échec d'analyse de l'OpenAPI, erreur : \n\n {{error}}",
     "reinstallError": "Échec de la mise à jour du plugin {{name}}",
+    "testConnectionFailed": "Échec de l'obtention du Manifest : {{error}}",
     "urlError": "Ce lien ne renvoie pas de contenu au format JSON. Veuillez vous assurer qu'il s'agit d'un lien valide."
   },
   "inspector": {
@@ -194,5 +280,6 @@
     },
     "title": "Boutique de plugins"
   },
+  "unknownError": "Erreur inconnue",
   "unknownPlugin": "Plugin inconnu"
 }

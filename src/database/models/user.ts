@@ -62,10 +62,15 @@ export class UserModel {
   getUserState = async (decryptor: DecryptUserKeyVaults) => {
     const result = await this.db
       .select({
+        avatar: users.avatar,
+        email: users.email,
+        firstName: users.firstName,
+        fullName: users.fullName,
         isOnboarded: users.isOnboarded,
+        lastName: users.lastName,
         preference: users.preference,
-
         settingsDefaultAgent: userSettings.defaultAgent,
+
         settingsGeneral: userSettings.general,
         settingsHotkey: userSettings.hotkey,
         settingsKeyVaults: userSettings.keyVaults,
@@ -73,6 +78,7 @@ export class UserModel {
         settingsSystemAgent: userSettings.systemAgent,
         settingsTTS: userSettings.tts,
         settingsTool: userSettings.tool,
+        username: users.username,
       })
       .from(users)
       .where(eq(users.id, this.userId))
@@ -105,10 +111,16 @@ export class UserModel {
     };
 
     return {
+      avatar: state.avatar || undefined,
+      email: state.email || undefined,
+      firstName: state.firstName || undefined,
+      fullName: state.fullName || undefined,
       isOnboarded: state.isOnboarded,
+      lastName: state.lastName || undefined,
       preference: state.preference as UserPreference,
       settings,
       userId: this.userId,
+      username: state.username || undefined,
     };
   };
 

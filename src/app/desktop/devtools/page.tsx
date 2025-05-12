@@ -58,13 +58,14 @@ const DevTools = memo(() => {
           topActions={items.map((item) => (
             <ActionIcon
               active={tab === item.key}
+              icon={item.icon}
               key={item.key}
               onClick={() => setTab(item.key)}
-              placement={'right'}
               title={item.key}
-            >
-              {item.icon}
-            </ActionIcon>
+              tooltipProps={{
+                placement: 'right',
+              }}
+            />
           ))}
         />
         {items.map((item) => (

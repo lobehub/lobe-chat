@@ -1,11 +1,14 @@
 {
+  "confirm": "Xác nhận",
   "debug": {
     "arguments": "Tham số gọi",
     "function_call": "Gọi hàm",
     "off": "Tắt gỡ lỗi",
     "on": "Xem thông tin gọi plugin",
     "payload": "Dữ liệu cắm",
+    "pluginState": "Trạng thái plugin",
     "response": "Kết quả trả về",
+    "title": "Chi tiết plugin",
     "tool_call": "Yêu cầu công cụ"
   },
   "detailModal": {
@@ -34,14 +37,84 @@
         "label": "Định danh"
       },
       "mode": {
-        "local": "Cấu hình trực quan",
-        "local-tooltip": "Tạm thời không hỗ trợ cấu hình trực quan",
+        "mcp": "MCP Plugin",
+        "mcpExp": "Thí nghiệm",
         "url": "Liên kết trực tuyến"
       },
       "name": {
         "desc": "Tiêu đề plugin",
         "label": "Tiêu đề",
         "placeholder": "Tìm kiếm công cụ tìm kiếm"
+      }
+    },
+    "mcp": {
+      "args": {
+        "desc": "Danh sách các tham số được truyền cho lệnh thực thi, thường nhập tên máy chủ MCP hoặc đường dẫn đến tập lệnh khởi động",
+        "label": "Tham số lệnh",
+        "placeholder": "Ví dụ: mcp-hello-world",
+        "required": "Vui lòng nhập tham số khởi động"
+      },
+      "avatar": {
+        "label": "Biểu tượng tiện ích"
+      },
+      "command": {
+        "desc": "Tập tin thực thi hoặc kịch bản dùng để khởi động Máy chủ MCP STDIO",
+        "label": "Lệnh",
+        "placeholder": "Ví dụ: npx / uv / docker v.v.",
+        "required": "Vui lòng nhập lệnh khởi động"
+      },
+      "desc": {
+        "desc": "Mô tả về tiện ích",
+        "label": "Mô tả tiện ích",
+        "placeholder": "Bổ sung thông tin về cách sử dụng và các tình huống của tiện ích này"
+      },
+      "endpoint": {
+        "desc": "Nhập địa chỉ của máy chủ HTTP Streamable MCP của bạn",
+        "label": "URL Điểm cuối MCP"
+      },
+      "env": {
+        "add": "Thêm một dòng",
+        "desc": "Nhập các biến môi trường cần thiết cho máy chủ MCP của bạn",
+        "duplicateKeyError": "Khóa trường phải là duy nhất",
+        "formValidationFailed": "Xác thực biểu mẫu không thành công, vui lòng kiểm tra định dạng tham số",
+        "keyRequired": "Khóa trường không được để trống",
+        "label": "Biến môi trường máy chủ MCP",
+        "stringifyError": "Không thể tuần tự hóa tham số, vui lòng kiểm tra định dạng tham số"
+      },
+      "identifier": {
+        "desc": "Chỉ định một tên cho plugin MCP của bạn, cần sử dụng ký tự tiếng Anh",
+        "invalid": "Chỉ có thể nhập ký tự tiếng Anh, số, và hai ký hiệu - và _",
+        "label": "Tên plugin MCP",
+        "placeholder": "Ví dụ: my-mcp-plugin",
+        "required": "Vui lòng nhập định danh dịch vụ MCP"
+      },
+      "previewManifest": "Xem trước tệp mô tả plugin",
+      "quickImport": "Nhập khẩu nhanh cấu hình JSON",
+      "quickImportError": {
+        "empty": "Nội dung nhập vào không được để trống",
+        "invalidJson": "Định dạng JSON không hợp lệ",
+        "invalidStructure": "Định dạng JSON không hợp lệ"
+      },
+      "stdioNotSupported": "Môi trường hiện tại không hỗ trợ plugin MCP loại stdio",
+      "testConnection": "Kiểm tra kết nối",
+      "testConnectionTip": "Chỉ sau khi kiểm tra kết nối thành công, plugin MCP mới có thể được sử dụng bình thường",
+      "type": {
+        "desc": "Chọn phương thức giao tiếp của plugin MCP, phiên bản web chỉ hỗ trợ Streamable HTTP",
+        "httpFeature1": "Tương thích với phiên bản web và desktop",
+        "httpFeature2": "Kết nối với máy chủ MCP từ xa, không cần cài đặt cấu hình thêm",
+        "httpShortDesc": "Giao thức truyền thông dựa trên HTTP theo dòng",
+        "label": "Loại plugin MCP",
+        "stdioFeature1": "Độ trễ truyền thông thấp hơn, phù hợp cho thực thi cục bộ",
+        "stdioFeature2": "Cần cài đặt và chạy máy chủ MCP cục bộ",
+        "stdioNotAvailable": "Chế độ STDIO chỉ khả dụng trên phiên bản desktop",
+        "stdioShortDesc": "Giao thức truyền thông dựa trên đầu vào và đầu ra tiêu chuẩn",
+        "title": "Loại plugin MCP"
+      },
+      "url": {
+        "desc": "Nhập địa chỉ HTTP Streamable của máy chủ MCP của bạn, không hỗ trợ chế độ SSE",
+        "invalid": "Vui lòng nhập địa chỉ URL hợp lệ",
+        "label": "URL Điểm cuối HTTP",
+        "required": "Vui lòng nhập URL dịch vụ MCP"
       }
     },
     "meta": {
@@ -69,12 +142,14 @@
         "label": "Định danh",
         "pattenErrorMessage": "Chỉ có thể nhập ký tự tiếng Anh, số, - và _"
       },
+      "lobe": "Plugin {{appName}}",
       "manifest": {
         "desc": "{{appName}} sẽ cài đặt plugin qua liên kết này",
         "label": "Tệp mô tả plugin (Manifest) URL",
         "preview": "Xem trước Manifest",
         "refresh": "Làm mới"
       },
+      "openai": "Plugin OpenAI",
       "title": {
         "desc": "Tiêu đề plugin",
         "label": "Tiêu đề",
@@ -88,8 +163,18 @@
       "schema": "Schema"
     },
     "preview": {
+      "api": {
+        "noParams": "Công cụ này không có tham số",
+        "noResults": "Không tìm thấy API nào phù hợp với điều kiện tìm kiếm",
+        "params": "Tham số:",
+        "searchPlaceholder": "Tìm kiếm công cụ..."
+      },
       "card": "Xem trước hiệu ứng plugin",
       "desc": "Xem trước mô tả plugin",
+      "empty": {
+        "desc": "Sau khi hoàn thành cấu hình, bạn sẽ có thể xem trước khả năng của các công cụ hỗ trợ plugin tại đây",
+        "title": "Bắt đầu xem trước sau khi cấu hình plugin"
+      },
       "title": "Xem trước tên plugin"
     },
     "save": "Cài đặt plugin",
@@ -116,6 +201,7 @@
     "noManifest": "Tệp mô tả không tồn tại",
     "openAPIInvalid": "OpenAPI phân tích thất bại, lỗi: \n\n {{error}}",
     "reinstallError": "Làm mới plugin {{name}} thất bại",
+    "testConnectionFailed": "Lấy Manifest thất bại: {{error}}",
     "urlError": "Liên kết này không trả về nội dung dạng JSON, vui lòng đảm bảo rằng đó là một liên kết hợp lệ"
   },
   "inspector": {
@@ -194,5 +280,6 @@
     },
     "title": "Cửa hàng plugin"
   },
+  "unknownError": "Lỗi không xác định",
   "unknownPlugin": "Plugin không xác định"
 }

@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import WebFavicon from '@/components/WebFavicon';
-import { SearchResult } from '@/types/tool/search';
+import { UniformSearchResult } from '@/types/tool/search';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -43,7 +43,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const SearchResultItem = memo<SearchResult>(({ url, title }) => {
+const SearchResultItem = memo<UniformSearchResult>(({ url, title }) => {
   const { styles } = useStyles();
 
   const urlObj = new URL(url);

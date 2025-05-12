@@ -6,6 +6,7 @@
     "chat": "Preferencje czatu",
     "meta": "Informacje o asystencie",
     "modal": "Ustawienia modalne",
+    "opening": "Ustawienia otwarcia",
     "plugin": "Ustawienia wtyczki",
     "prompt": "Ustawienia roli",
     "tts": "Usługi głosowe"
@@ -149,6 +150,7 @@
       "title": "Kolor tła"
     },
     "description": {
+      "desc": "Krótki opis twojego asystenta, nie jako ustawienie postaci",
       "placeholder": "Proszę wprowadzić opis asystenta",
       "title": "Opis asystenta"
     },
@@ -160,7 +162,9 @@
       "placeholder": "Proszę wprowadzić słowo kluczowe dla roli Prompt",
       "title": "Ustawienia roli"
     },
+    "submit": "Zaktualizuj informacje o asystencie",
     "tag": {
+      "desc": "Tagi asystenta będą wyświetlane na rynku asystentów",
       "placeholder": "Proszę wprowadzić tag",
       "title": "Tag"
     },
@@ -205,6 +209,7 @@
       "placeholder": "Szablon wejściowy {{text}} zostanie zastąpiony rzeczywistą wiadomością",
       "title": "Szablon wejściowy"
     },
+    "submit": "Zaktualizuj preferencje czatu",
     "title": "Ustawienia czatu"
   },
   "settingModel": {
@@ -242,6 +247,7 @@
       },
       "title": "Intensywność rozumowania"
     },
+    "submit": "Zaktualizuj ustawienia modelu",
     "temperature": {
       "desc": "Im większa wartość, tym bardziej kreatywne i wyobrażeniowe będą odpowiedzi; im mniejsza wartość, tym bardziej rygorystyczne odpowiedzi",
       "title": "Aktywność kreatywna",
@@ -252,6 +258,21 @@
       "desc": "Ile możliwości należy rozważyć, im większa wartość, tym więcej możliwych odpowiedzi; im mniejsza wartość, tym większa tendencja do wyboru najbardziej prawdopodobnej odpowiedzi. Nie zaleca się jednoczesnej zmiany z aktywnością kreatywną",
       "title": "Otwartość myślenia"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "Wiadomość powitalna wyświetlana przy otwarciu rozmowy, służąca do przedstawienia funkcji asystenta",
+      "placeholder": "Cześć, jestem dostosowanym asystentem, możesz od razu rozpocząć rozmowę lub przejść do ustawień asystenta, aby uzupełnić moje informacje.",
+      "title": "Wiadomość powitalna"
+    },
+    "openingQuestions": {
+      "desc": "Pytania wprowadzające wyświetlane na początku rozmowy",
+      "empty": "Brak pytań",
+      "placeholder": "Wprowadź pytanie",
+      "repeat": "Pytanie już istnieje",
+      "title": "Pytania powitalne"
+    },
+    "title": "Ustawienia otwarcia"
   },
   "settingPlugin": {
     "title": "Lista wtyczek"
@@ -303,6 +324,7 @@
       "desc": "Dla przeglądarki używana jest wbudowana usługa rozpoznawania mowy",
       "title": "Usługa rozpoznawania mowy"
     },
+    "submit": "Zaktualizuj usługę głosową",
     "title": "Usługi mowy",
     "tts": "Ustawienia syntezy mowy",
     "ttsService": {
@@ -380,6 +402,12 @@
     "placeholder": "Wprowadź identyfikator asystenta, musi być unikalny, na przykład web-development",
     "tooltips": "Udostępnij na rynku asystentów"
   },
+  "submitFooter": {
+    "reset": "Resetuj",
+    "submit": "Zapisz",
+    "unSaved": "Nie zapisane zmiany",
+    "unSavedWarning": "Obecnie są niezapisane zmiany"
+  },
   "sync": {
     "device": {
       "deviceName": {
@@ -431,6 +459,7 @@
       "placeholder": "Wprowadź niestandardowe słowo podpowiedzi",
       "title": "Niestandardowe słowo podpowiedzi"
     },
+    "helpInfo": "Podczas tworzenia nowego asystenta, domyślne ustawienia asystenta będą używane jako wartości wstępne.",
     "historyCompress": {
       "label": "Model historii rozmów",
       "modelDesc": "Model używany do kompresji historii rozmów",

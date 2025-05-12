@@ -38,13 +38,13 @@ export const TopicsRank = memo(() => {
             <ActionIcon
               icon={MaximizeIcon}
               onClick={() => setOpen(true)}
-              size={{ blockSize: 28, fontSize: 20 }}
+              size={{ blockSize: 28, size: 20 }}
             />
           ) : undefined
         }
         style={FORM_STYLE.style}
         title={t('stats.modelsRank.title')}
-        variant={'pure'}
+        variant={'borderless'}
       >
         <Flexbox horizontal paddingBlock={16}>
           <BarList

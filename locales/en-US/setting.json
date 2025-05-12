@@ -6,6 +6,7 @@
     "chat": "Chat Preferences",
     "meta": "Assistant Info",
     "modal": "Model Settings",
+    "opening": "Opening Settings",
     "plugin": "Plugin Settings",
     "prompt": "Role Configuration",
     "tts": "Voice Service"
@@ -149,6 +150,7 @@
       "title": "Background Color"
     },
     "description": {
+      "desc": "A brief introduction to your assistant, not for character setting",
       "placeholder": "Enter assistant description",
       "title": "Assistant Description"
     },
@@ -160,7 +162,9 @@
       "placeholder": "Enter role prompt word",
       "title": "Role Setting"
     },
+    "submit": "Update Assistant Information",
     "tag": {
+      "desc": "Assistant tags will be displayed in the assistant marketplace",
       "placeholder": "Enter tag",
       "title": "Tag"
     },
@@ -205,6 +209,7 @@
       "placeholder": "Preprocessing template {{text}} will be replaced with real-time input information",
       "title": "User Input Preprocessing"
     },
+    "submit": "Update Chat Preferences",
     "title": "Chat Settings"
   },
   "settingModel": {
@@ -242,6 +247,7 @@
       },
       "title": "Reasoning Effort"
     },
+    "submit": "Update Model Settings",
     "temperature": {
       "desc": "The higher the value, the more creative and imaginative the responses; the lower the value, the more rigorous the responses.",
       "title": "Creativity Level",
@@ -252,6 +258,21 @@
       "desc": "How many possibilities to consider; a higher value accepts more potential answers, while a lower value tends to choose the most likely answer. It is not recommended to change this alongside the creativity level.",
       "title": "Openness to Ideas"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "The opening message displayed when the conversation starts, used to introduce the assistant's features",
+      "placeholder": "Hello, I am your Custom Assistant. You can start chatting with me right away, or go to Assistant Settings to complete my information.",
+      "title": "Opening Message"
+    },
+    "openingQuestions": {
+      "desc": "Guiding questions displayed at the beginning of the conversation",
+      "empty": "No questions available",
+      "placeholder": "Please enter a question",
+      "repeat": "Question already exists",
+      "title": "Opening Questions"
+    },
+    "title": "Opening Settings"
   },
   "settingPlugin": {
     "title": "Plugin List"
@@ -303,6 +324,7 @@
       "desc": "Where 'browser' is the native speech recognition service of the browser",
       "title": "Speech Recognition Service"
     },
+    "submit": "Update Voice Service",
     "title": "Speech Service",
     "tts": "Text-to-Speech Settings",
     "ttsService": {
@@ -380,6 +402,12 @@
     "placeholder": "Enter a unique identifier for the assistant, e.g. web-development",
     "tooltips": "Share to the assistant marketplace"
   },
+  "submitFooter": {
+    "reset": "Reset",
+    "submit": "Save",
+    "unSaved": "Unsaved Changes",
+    "unSavedWarning": "There are currently unsaved changes"
+  },
   "sync": {
     "device": {
       "deviceName": {
@@ -431,6 +459,7 @@
       "placeholder": "Please enter custom prompt",
       "title": "Custom Prompt"
     },
+    "helpInfo": "When creating a new assistant, the default assistant settings will be used as preset values.",
     "historyCompress": {
       "label": "Conversation History Model",
       "modelDesc": "Specify the model used to compress conversation history",

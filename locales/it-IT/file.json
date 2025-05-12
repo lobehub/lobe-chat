@@ -71,6 +71,9 @@
     "websites": "Siti web"
   },
   "title": "File",
+  "toggleLeftPanel": {
+    "title": "Mostra/Nascondi il pannello sinistro"
+  },
   "uploadDock": {
     "body": {
       "collapse": "Riduci",

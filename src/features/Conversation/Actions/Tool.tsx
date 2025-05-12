@@ -28,7 +28,6 @@ export const ToolActionsBar: RenderAction = memo(({ id }) => {
           }
         }
       }}
-      type="ghost"
     />
   );
 });

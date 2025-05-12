@@ -1,6 +1,6 @@
 'use client';
 
-import { TabsNav } from '@lobehub/ui';
+import { Tabs as TabsNav } from '@lobehub/ui';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 

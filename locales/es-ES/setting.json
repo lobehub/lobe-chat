@@ -6,6 +6,7 @@
     "chat": "Preferencias de chat",
     "meta": "Información del asistente",
     "modal": "Configuración del modelo",
+    "opening": "Configuración de apertura",
     "plugin": "Configuración de complementos",
     "prompt": "Configuración de roles",
     "tts": "Servicio de voz"
@@ -149,6 +150,7 @@
       "title": "Color de fondo"
     },
     "description": {
+      "desc": "Una breve introducción a tu asistente, no como una configuración de personaje",
       "placeholder": "Ingresa la descripción del asistente",
       "title": "Descripción del asistente"
     },
@@ -160,7 +162,9 @@
       "placeholder": "Ingresa la palabra de aviso del rol",
       "title": "Configuración del rol"
     },
+    "submit": "Actualizar información del asistente",
     "tag": {
+      "desc": "Las etiquetas del asistente se mostrarán en el mercado de asistentes",
       "placeholder": "Ingresa la etiqueta",
       "title": "Etiqueta"
     },
@@ -205,6 +209,7 @@
       "placeholder": "La plantilla de preprocesamiento {{text}} se reemplazará por la información de entrada en tiempo real",
       "title": "Preprocesamiento de entrada del usuario"
     },
+    "submit": "Actualizar preferencias de chat",
     "title": "Configuración de chat"
   },
   "settingModel": {
@@ -242,6 +247,7 @@
       },
       "title": "Intensidad de razonamiento"
     },
+    "submit": "Actualizar configuración del modelo",
     "temperature": {
       "desc": "Cuanto mayor sea el valor, más creativas e imaginativas serán las respuestas; cuanto menor sea el valor, más rigurosas serán las respuestas",
       "title": "Nivel de creatividad",
@@ -252,6 +258,21 @@
       "desc": "Cuántas posibilidades se consideran, cuanto mayor sea el valor, más respuestas posibles se aceptan; cuanto menor sea el valor, se tiende a elegir la respuesta más probable. No se recomienda cambiarlo junto con el nivel de creatividad",
       "title": "Apertura mental"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "Mensaje de apertura al iniciar la conversación, utilizado para presentar las funciones del asistente",
+      "placeholder": "Hola, soy el asistente personalizado, puedes comenzar a hablar conmigo de inmediato o ir a la configuración del asistente para completar mi información.",
+      "title": "Mensaje de apertura"
+    },
+    "openingQuestions": {
+      "desc": "Preguntas orientativas que se muestran al inicio de la conversación",
+      "empty": "No hay preguntas disponibles",
+      "placeholder": "Introduce una pregunta",
+      "repeat": "La pregunta ya existe",
+      "title": "Preguntas de apertura"
+    },
+    "title": "Configuración de apertura"
   },
   "settingPlugin": {
     "title": "Lista de complementos"
@@ -303,6 +324,7 @@
       "desc": "El servicio de reconocimiento de voz, donde el navegador es el servicio nativo de reconocimiento de voz del navegador",
       "title": "Servicio de reconocimiento de voz"
     },
+    "submit": "Actualizar servicio de voz",
     "title": "Servicio de voz",
     "tts": "Configuración de síntesis de voz",
     "ttsService": {
@@ -380,6 +402,12 @@
     "placeholder": "Ingrese el identificador único del asistente, por ejemplo desarrollo-web",
     "tooltips": "Compartir en el mercado de asistentes"
   },
+  "submitFooter": {
+    "reset": "Restablecer",
+    "submit": "Guardar",
+    "unSaved": "Cambios no guardados",
+    "unSavedWarning": "Actualmente hay cambios no guardados"
+  },
   "sync": {
     "device": {
       "deviceName": {
@@ -431,6 +459,7 @@
       "placeholder": "Introduce la palabra clave personalizada",
       "title": "Palabra clave personalizada"
     },
+    "helpInfo": "Al crear un nuevo asistente, se utilizarán los ajustes predeterminados del asistente como valores predeterminados.",
     "historyCompress": {
       "label": "Modelo de historial de conversación",
       "modelDesc": "Especifica el modelo utilizado para comprimir el historial de conversación",

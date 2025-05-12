@@ -1,11 +1,14 @@
 {
+  "confirm": "Onayla",
   "debug": {
     "arguments": "Argümanlar",
     "function_call": "Fonksiyon Çağrısı",
     "off": "Hata Ayıklamayı Kapat",
     "on": "Eklenti Çağrı Bilgilerini Görüntüle",
     "payload": "eklenti yükü",
+    "pluginState": "Eklenti Durumu",
     "response": "Yanıt",
+    "title": "Eklenti Detayları",
     "tool_call": "aracı çağrı"
   },
   "detailModal": {
@@ -34,14 +37,84 @@
         "label": "Tanımlayıcı"
       },
       "mode": {
-        "local": "Yapılandırma",
-        "local-tooltip": "Yapılandırma geçici olarak desteklenmiyor",
+        "mcp": "MCP Eklentisi",
+        "mcpExp": "Deneysel",
         "url": "Çevrimiçi Bağlantı"
       },
       "name": {
         "desc": "Eklenti başlığı",
         "label": "Başlık",
         "placeholder": "Arama Motoru"
+      }
+    },
+    "mcp": {
+      "args": {
+        "desc": "Komutları yürütmek için geçilecek parametreler listesi, genellikle burada MCP sunucu adını veya başlatma betiği yolunu girin.",
+        "label": "Komut Parametreleri",
+        "placeholder": "Örneğin: --port 8080 --debug",
+        "required": "Lütfen başlatma parametrelerini girin"
+      },
+      "avatar": {
+        "label": "Eklenti İkonu"
+      },
+      "command": {
+        "desc": "MCP STDIO eklentisini başlatmak için kullanılacak yürütülebilir dosya veya betik",
+        "label": "Komut",
+        "placeholder": "Örneğin: python main.py veya /path/to/executable",
+        "required": "Lütfen başlatma komutunu girin"
+      },
+      "desc": {
+        "desc": "Eklentinin açıklama bilgisi ekleyin",
+        "label": "Eklenti Açıklaması",
+        "placeholder": "Bu eklentinin kullanım talimatları ve senaryoları gibi bilgileri ekleyin"
+      },
+      "endpoint": {
+        "desc": "MCP Streamable HTTP Sunucunuzun adresini girin",
+        "label": "MCP Endpoint URL"
+      },
+      "env": {
+        "add": "Yeni bir satır ekle",
+        "desc": "MCP Sunucunuzun ihtiyaç duyduğu ortam değişkenlerini girin",
+        "duplicateKeyError": "Alan anahtarları benzersiz olmalıdır",
+        "formValidationFailed": "Form doğrulaması başarısız oldu, lütfen parametre formatını kontrol edin",
+        "keyRequired": "Alan anahtarı boş olamaz",
+        "label": "MCP Sunucu Ortam Değişkeni",
+        "stringifyError": "Parametreleri serileştirmek mümkün değil, lütfen parametre formatını kontrol edin"
+      },
+      "identifier": {
+        "desc": "MCP eklentiniz için bir ad belirleyin, İngilizce karakterler kullanmalısınız",
+        "invalid": "Sadece İngilizce karakterler, rakamlar, - ve _ bu iki sembolü girebilirsiniz",
+        "label": "MCP Eklenti Adı",
+        "placeholder": "Örneğin: my-mcp-plugin",
+        "required": "Lütfen MCP hizmet tanımlayıcısını girin"
+      },
+      "previewManifest": "Eklenti tanım dosyasını önizle",
+      "quickImport": "Hızlı JSON Yapılandırması İçe Aktar",
+      "quickImportError": {
+        "empty": "Girdi boş olamaz",
+        "invalidJson": "Geçersiz JSON formatı",
+        "invalidStructure": "JSON formatı geçersiz"
+      },
+      "stdioNotSupported": "Mevcut ortam stdio türündeki MCP eklentisini desteklemiyor",
+      "testConnection": "Bağlantıyı test et",
+      "testConnectionTip": "Bağlantı başarılı olduktan sonra MCP eklentisi normal şekilde kullanılabilir",
+      "type": {
+        "desc": "MCP eklentisinin iletişim yöntemini seçin, web sürümü yalnızca Streamable HTTP'yi destekler",
+        "httpFeature1": "Web ve masaüstü sürümü ile uyumlu",
+        "httpFeature2": "Ekstra kurulum ve yapılandırma gerektirmeden uzak MCP sunucusuna bağlanma",
+        "httpShortDesc": "Akış tabanlı HTTP iletişim protokolü",
+        "label": "MCP Eklenti Türü",
+        "stdioFeature1": "Daha düşük iletişim gecikmesi, yerel çalıştırma için uygundur",
+        "stdioFeature2": "Yerel olarak MCP sunucusunun kurulması ve çalıştırılması gerekir",
+        "stdioNotAvailable": "STDIO modu yalnızca masaüstü sürümünde mevcuttur",
+        "stdioShortDesc": "Standart giriş çıkış tabanlı iletişim protokolü",
+        "title": "MCP Eklenti Türü"
+      },
+      "url": {
+        "desc": "MCP Sunucu Akış HTTP adresinizi girin, SSE modunu desteklemez",
+        "invalid": "Lütfen geçerli bir URL adresi girin",
+        "label": "HTTP Endpoint URL",
+        "required": "Lütfen MCP hizmet URL'sini girin"
       }
     },
     "meta": {
@@ -69,12 +142,14 @@
         "label": "Tanımlayıcı",
         "pattenErrorMessage": "Sadece İngilizce karakterler, sayılar, - ve _ kullanılabilir"
       },
+      "lobe": "{{appName}} eklentisi",
       "manifest": {
         "desc": "{{appName}} bu bağlantı aracılığıyla eklentiyi yükleyecektir.",
         "label": "Eklenti Tanım Dosyası (Manifest) URL'si",
         "preview": "Manifesti Önizle",
         "refresh": "Yenile"
       },
+      "openai": "OpenAI eklentisi",
       "title": {
         "desc": "Eklenti başlığı",
         "label": "Başlık",
@@ -88,8 +163,18 @@
       "schema": "Şema"
     },
     "preview": {
+      "api": {
+        "noParams": "Bu aracın parametreleri yok",
+        "noResults": "Arama koşullarına uyan API bulunamadı",
+        "params": "Parametreler:",
+        "searchPlaceholder": "Aracı ara..."
+      },
       "card": "Eklenti Görünümünü Önizle",
       "desc": "Eklenti Açıklamasını Önizle",
+      "empty": {
+        "desc": "Yapılandırmayı tamamladıktan sonra, burada eklentinin desteklediği araç yeteneklerini önizleyebileceksiniz",
+        "title": "Eklentiyi yapılandırdıktan sonra önizlemeye başlayın"
+      },
       "title": "Eklenti Adı Önizlemesi"
     },
     "save": "Eklentiyi Yükle",
@@ -116,6 +201,7 @@
     "noManifest": "Manifest dosyası mevcut değil",
     "openAPIInvalid": "OpenAPI ayrıştırma hatası, hata: \n\n {{error}}",
     "reinstallError": "{{name}} eklentisi yenilenemedi",
+    "testConnectionFailed": "Manifest alınamadı: {{error}}",
     "urlError": "Bağlantı JSON formatında içerik döndürmedi. Lütfen geçerli bir bağlantı olduğundan emin olun"
   },
   "inspector": {
@@ -194,5 +280,6 @@
     },
     "title": "Eklenti Mağazası"
   },
+  "unknownError": "Bilinmeyen hata",
   "unknownPlugin": "Bilinmeyen eklenti"
 }

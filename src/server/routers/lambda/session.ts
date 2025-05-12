@@ -4,8 +4,8 @@ import { SessionModel } from '@/database/models/session';
 import { SessionGroupModel } from '@/database/models/sessionGroup';
 import { insertAgentSchema, insertSessionSchema } from '@/database/schemas';
 import { getServerDB } from '@/database/server';
-import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
-import { serverDatabase } from '@/libs/trpc/lambda';
+import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
+import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { AgentChatConfigSchema } from '@/types/agent';
 import { LobeMetaDataSchema } from '@/types/meta';
 import { BatchTaskResult } from '@/types/service';
@@ -76,7 +76,14 @@ export const sessionRouter = router({
     .input(
       z.object({
         config: insertAgentSchema
-          .omit({ chatConfig: true, plugins: true, tags: true, tts: true })
+          .omit({
+            chatConfig: true,
+            openingMessage: true,
+            openingQuestions: true,
+            plugins: true,
+            tags: true,
+            tts: true,
+          })
           .passthrough()
           .partial(),
         session: insertSessionSchema.omit({ createdAt: true, updatedAt: true }).partial(),
@@ -90,14 +97,10 @@ export const sessionRouter = router({
     }),
 
   getGroupedSessions: publicProcedure.query(async ({ ctx }): Promise<ChatSessionList> => {
-    if (!ctx.userId)
-      return {
-        sessionGroups: [],
-        sessions: [],
-      };
+    if (!ctx.userId) return { sessionGroups: [], sessions: [] };
 
     const serverDB = await getServerDB();
-    const sessionModel = new SessionModel(serverDB, ctx.userId);
+    const sessionModel = new SessionModel(serverDB, ctx.userId!);
 
     return sessionModel.queryWithGroups();
   }),

@@ -16,11 +16,34 @@ const googleChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-pro-exp-03-25',
     maxOutput: 65_536,
     pricing: {
-      cachedInput: 0,
       input: 0,
       output: 0,
     },
     releasedAt: '2025-03-25',
+    settings: {
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 65_536,
+    description:
+      'Gemini 2.5 Pro Preview 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
+    displayName: 'Gemini 2.5 Pro Preview 05-06 (Paid)',
+    id: 'gemini-2.5-pro-preview-05-06',
+    maxOutput: 65_536,
+    pricing: {
+      input: 1.25, // prompts <= 200k tokens
+      output: 10, // prompts <= 200k tokens
+    },
+    releasedAt: '2025-05-06',
     settings: {
       searchImpl: 'params',
       searchProvider: 'google',
@@ -53,6 +76,30 @@ const googleChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 65_536,
+    description: 'Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。',
+    displayName: 'Gemini 2.5 Flash Preview 04-17',
+    enabled: true,
+    id: 'gemini-2.5-flash-preview-04-17',
+    maxOutput: 65_536,
+    pricing: {
+      input: 0.15,
+      output: 3.5, // Thinking
+    },
+    releasedAt: '2025-04-17',
+    settings: {
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       reasoning: true,
       vision: true,
     },
@@ -61,7 +108,7 @@ const googleChatModels: AIChatModelCard[] = [
       'Gemini 2.0 Flash Thinking Exp 是 Google 的实验性多模态推理AI模型，能对复杂问题进行推理，拥有新的思维能力。',
     displayName: 'Gemini 2.0 Flash Thinking Experimental 01-21',
     enabled: true,
-      id: 'gemini-2.0-flash-thinking-exp-01-21',
+    id: 'gemini-2.0-flash-thinking-exp-01-21',
     maxOutput: 65_536,
     pricing: {
       cachedInput: 0,
@@ -174,7 +221,6 @@ const googleChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      imageOutput: true,
       vision: true,
     },
     contextWindowTokens: 1_048_576 + 8192,
@@ -295,6 +341,42 @@ const googleChatModels: AIChatModelCard[] = [
       output: 0.15,
     },
     releasedAt: '2024-10-03',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_768 + 8192,
+    displayName: 'Gemma 3 1B',
+    id: 'gemma-3-1b-it',
+    maxOutput: 8192,
+    pricing: {
+      cachedInput: 0,
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_768 + 8192,
+    displayName: 'Gemma 3 4B',
+    id: 'gemma-3-4b-it',
+    maxOutput: 8192,
+    pricing: {
+      cachedInput: 0,
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_768 + 8192,
+    displayName: 'Gemma 3 12B',
+    id: 'gemma-3-12b-it',
+    maxOutput: 8192,
+    pricing: {
+      cachedInput: 0,
+      input: 0,
+      output: 0,
+    },
     type: 'chat',
   },
 ];

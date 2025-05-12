@@ -124,8 +124,7 @@ const FireworksAI: ModelProviderCard = {
     },
     {
       contextWindowTokens: 32_768,
-      description:
-        '24B 参数模型，具备与更大型模型相当的最先进能力。',
+      description: '24B 参数模型，具备与更大型模型相当的最先进能力。',
       displayName: 'Mistral Small 3 Instruct',
       enabled: true,
       id: 'accounts/fireworks/models/mistral-small-24b-instruct-2501',
@@ -231,8 +230,7 @@ const FireworksAI: ModelProviderCard = {
     },
     {
       contextWindowTokens: 32_768,
-      description:
-        'Qwen-VL 模型的 72B 版本是阿里巴巴最新迭代的成果，代表了近一年的创新。',
+      description: 'Qwen-VL 模型的 72B 版本是阿里巴巴最新迭代的成果，代表了近一年的创新。',
       displayName: 'Qwen2 VL 72B Instruct',
       enabled: true,
       id: 'accounts/fireworks/models/qwen2-vl-72b-instruct',

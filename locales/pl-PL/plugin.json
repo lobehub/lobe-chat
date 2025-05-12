@@ -1,11 +1,14 @@
 {
+  "confirm": "Potwierdź",
   "debug": {
     "arguments": "Argumenty",
     "function_call": "Wywołanie funkcji",
     "off": "Wyłącz debugowanie",
     "on": "Wyświetl informacje o wywołaniach wtyczki",
     "payload": "dane wejściowe wtyczki",
+    "pluginState": "Stan wtyczki",
     "response": "Odpowiedź",
+    "title": "Szczegóły wtyczki",
     "tool_call": "żądanie wywołania narzędzia"
   },
   "detailModal": {
@@ -34,14 +37,84 @@
         "label": "Identyfikator"
       },
       "mode": {
-        "local": "Konfiguracja wizualna",
-        "local-tooltip": "Konfiguracja wizualna nie jest obecnie obsługiwana",
+        "mcp": "Wtyczka MCP",
+        "mcpExp": "Eksperymentalna",
         "url": "Link online"
       },
       "name": {
         "desc": "Tytuł wtyczki",
         "label": "Tytuł",
         "placeholder": "Wyszukiwarka"
+      }
+    },
+    "mcp": {
+      "args": {
+        "desc": "Lista argumentów przekazywanych do polecenia wykonawczego, zazwyczaj wpisz tutaj nazwę serwera MCP lub ścieżkę do skryptu uruchamiającego",
+        "label": "Argumenty polecenia",
+        "placeholder": "Na przykład: mcp-hello-world",
+        "required": "Proszę wprowadzić parametry uruchomienia"
+      },
+      "avatar": {
+        "label": "Ikona wtyczki"
+      },
+      "command": {
+        "desc": "Wykonywalny plik lub skrypt do uruchomienia serwera MCP STDIO",
+        "label": "Polecenie",
+        "placeholder": "Na przykład: npx / uv / docker itp.",
+        "required": "Proszę wprowadzić polecenie uruchomienia"
+      },
+      "desc": {
+        "desc": "Opis dodawanej wtyczki",
+        "label": "Opis wtyczki",
+        "placeholder": "Uzupełnij informacje o użyciu i scenariuszach tej wtyczki"
+      },
+      "endpoint": {
+        "desc": "Wprowadź adres swojego serwera MCP Streamable HTTP",
+        "label": "URL punktu końcowego MCP"
+      },
+      "env": {
+        "add": "Dodaj nowy wiersz",
+        "desc": "Wprowadź zmienne środowiskowe wymagane przez Twój serwer MCP",
+        "duplicateKeyError": "Klucz pola musi być unikalny",
+        "formValidationFailed": "Walidacja formularza nie powiodła się, sprawdź format argumentów",
+        "keyRequired": "Klucz pola nie może być pusty",
+        "label": "Zmienne środowiskowe serwera MCP",
+        "stringifyError": "Nie można zserializować argumentów, sprawdź format argumentów"
+      },
+      "identifier": {
+        "desc": "Nadaj nazwę swojej wtyczce MCP, używając znaków angielskich",
+        "invalid": "Można wprowadzać tylko znaki angielskie, cyfry, oraz symbole - i _",
+        "label": "Nazwa wtyczki MCP",
+        "placeholder": "Na przykład: my-mcp-plugin",
+        "required": "Proszę wprowadzić identyfikator usługi MCP"
+      },
+      "previewManifest": "Podgląd pliku opisu wtyczki",
+      "quickImport": "Szybki import konfiguracji JSON",
+      "quickImportError": {
+        "empty": "Wprowadzenie nie może być puste",
+        "invalidJson": "Nieprawidłowy format JSON",
+        "invalidStructure": "Format JSON jest nieprawidłowy"
+      },
+      "stdioNotSupported": "Bieżące środowisko nie obsługuje wtyczek MCP typu stdio",
+      "testConnection": "Testuj połączenie",
+      "testConnectionTip": "Wtyczka MCP może być używana prawidłowo po pomyślnym teście połączenia",
+      "type": {
+        "desc": "Wybierz sposób komunikacji wtyczki MCP, wersja przeglądarkowa obsługuje tylko Streamable HTTP",
+        "httpFeature1": "Kompatybilność z wersją przeglądarkową i desktopową",
+        "httpFeature2": "Połączenie zdalnego serwera MCP, bez potrzeby dodatkowej instalacji i konfiguracji",
+        "httpShortDesc": "Protokół komunikacyjny oparty na strumieniowym HTTP",
+        "label": "Typ wtyczki MCP",
+        "stdioFeature1": "Niższe opóźnienie komunikacji, odpowiednie do lokalnego wykonania",
+        "stdioFeature2": "Wymaga lokalnej instalacji i uruchomienia serwera MCP",
+        "stdioNotAvailable": "Tryb STDIO jest dostępny tylko w wersji desktopowej",
+        "stdioShortDesc": "Protokół komunikacyjny oparty na standardowym wejściu/wyjściu",
+        "title": "Typ wtyczki MCP"
+      },
+      "url": {
+        "desc": "Wprowadź adres URL swojego serwera MCP Streamable HTTP, nie obsługuje trybu SSE",
+        "invalid": "Proszę wprowadzić prawidłowy adres URL",
+        "label": "URL punktu końcowego HTTP",
+        "required": "Proszę wprowadzić adres URL usługi MCP"
       }
     },
     "meta": {
@@ -69,12 +142,14 @@
         "label": "Identyfikator",
         "pattenErrorMessage": "Dozwolone są tylko znaki alfanumeryczne, myślnik - i podkreślenie _"
       },
+      "lobe": "Wtyczka {{appName}}",
       "manifest": {
         "desc": "{{appName}} zainstaluje wtyczkę za pośrednictwem tego linku",
         "label": "Opis wtyczki (Manifest) URL",
         "preview": "Podgląd",
         "refresh": "Odśwież"
       },
+      "openai": "Wtyczka OpenAI",
       "title": {
         "desc": "Tytuł wtyczki",
         "label": "Tytuł",
@@ -88,8 +163,18 @@
       "schema": "Schemat"
     },
     "preview": {
+      "api": {
+        "noParams": "To narzędzie nie ma parametrów",
+        "noResults": "Nie znaleziono API spełniającego kryteria wyszukiwania",
+        "params": "Parametry:",
+        "searchPlaceholder": "Szukaj narzędzia..."
+      },
       "card": "Podgląd wyświetlania wtyczki",
       "desc": "Podgląd opisu wtyczki",
+      "empty": {
+        "desc": "Po zakończeniu konfiguracji będziesz mógł podglądać możliwości narzędzi wspieranych przez wtyczkę",
+        "title": "Rozpocznij podgląd po skonfigurowaniu wtyczki"
+      },
       "title": "Podgląd nazwy wtyczki"
     },
     "save": "Zainstaluj wtyczkę",
@@ -116,6 +201,7 @@
     "noManifest": "Plik manifestu nie istnieje",
     "openAPIInvalid": "Analiza OpenAPI nie powiodła się. Błąd: \n\n {{error}}",
     "reinstallError": "Nie udało się odświeżyć wtyczki {{name}}",
+    "testConnectionFailed": "Nie udało się pobrać manifestu: {{error}}",
     "urlError": "Link nie zwrócił treści w formacie JSON. Upewnij się, że jest to poprawny link."
   },
   "inspector": {
@@ -194,5 +280,6 @@
     },
     "title": "Sklep wtyczek"
   },
+  "unknownError": "Nieznany błąd",
   "unknownPlugin": "nieznana wtyczka"
 }

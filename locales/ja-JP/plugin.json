@@ -1,11 +1,14 @@
 {
+  "confirm": "確認",
   "debug": {
     "arguments": "引数",
     "function_call": "関数呼び出し",
     "off": "デバッグをオフにする",
     "on": "プラグイン呼び出し情報を表示する",
     "payload": "ペイロード",
+    "pluginState": "プラグインの状態",
     "response": "レスポンス",
+    "title": "プラグインの詳細",
     "tool_call": "ツール呼び出し"
   },
   "detailModal": {
@@ -34,14 +37,84 @@
         "label": "識別子"
       },
       "mode": {
-        "local": "ビジュアル設定",
-        "local-tooltip": "ビジュアル設定は一時的にサポートされていません",
+        "mcp": "MCP プラグイン",
+        "mcpExp": "実験的",
         "url": "オンラインリンク"
       },
       "name": {
         "desc": "プラグインのタイトル",
         "label": "タイトル",
         "placeholder": "検索エンジン"
+      }
+    },
+    "mcp": {
+      "args": {
+        "desc": "実行コマンドに渡すパラメータのリスト。通常、ここにMCPサーバー名または起動スクリプトのパスを入力します。",
+        "label": "コマンドパラメータ",
+        "placeholder": "例：--port 8080 --debug",
+        "required": "起動パラメータを入力してください"
+      },
+      "avatar": {
+        "label": "プラグインアイコン"
+      },
+      "command": {
+        "desc": "MCP STDIO プラグインを起動するための実行可能ファイルまたはスクリプト",
+        "label": "コマンド",
+        "placeholder": "例：python main.py または /path/to/executable",
+        "required": "起動コマンドを入力してください"
+      },
+      "desc": {
+        "desc": "プラグインの説明を追加",
+        "label": "プラグインの説明",
+        "placeholder": "このプラグインの使用方法やシーンなどの情報を補足してください"
+      },
+      "endpoint": {
+        "desc": "あなたの MCP Streamable HTTP サーバーのアドレスを入力してください",
+        "label": "MCP エンドポイント URL"
+      },
+      "env": {
+        "add": "行を追加",
+        "desc": "MCPサーバーに必要な環境変数を入力してください",
+        "duplicateKeyError": "フィールドキーは一意でなければなりません",
+        "formValidationFailed": "フォームの検証に失敗しました。パラメータの形式を確認してください",
+        "keyRequired": "フィールドキーは空にできません",
+        "label": "MCPサーバー環境変数",
+        "stringifyError": "パラメータをシリアライズできません。パラメータの形式を確認してください"
+      },
+      "identifier": {
+        "desc": "あなたの MCP プラグインに名前を指定してください。英字を使用する必要があります",
+        "invalid": "英字、数字、- および _ のみを入力できます",
+        "label": "MCP プラグイン名",
+        "placeholder": "例：my-mcp-plugin",
+        "required": "MCP サービス識別子を入力してください"
+      },
+      "previewManifest": "プラグインの説明ファイルをプレビュー",
+      "quickImport": "JSON 設定を迅速にインポート",
+      "quickImportError": {
+        "empty": "入力内容は空にできません",
+        "invalidJson": "無効な JSON 形式です",
+        "invalidStructure": "JSON 形式が無効です"
+      },
+      "stdioNotSupported": "現在の環境では stdio タイプの MCP プラグインはサポートされていません",
+      "testConnection": "接続をテスト",
+      "testConnectionTip": "接続テストが成功した後、MCP プラグインは正常に使用できます",
+      "type": {
+        "desc": "MCP プラグインの通信方式を選択してください。ウェブ版は Streamable HTTP のみをサポートしています",
+        "httpFeature1": "ウェブ版とデスクトップ版の互換性",
+        "httpFeature2": "追加のインストールや設定なしでリモートMCPサーバーに接続",
+        "httpShortDesc": "ストリーミングHTTPに基づく通信プロトコル",
+        "label": "MCP プラグインタイプ",
+        "stdioFeature1": "通信遅延が少なく、ローカル実行に適している",
+        "stdioFeature2": "ローカルにMCPサーバーをインストールして実行する必要がある",
+        "stdioNotAvailable": "STDIOモードはデスクトップ版でのみ利用可能",
+        "stdioShortDesc": "標準入力出力に基づく通信プロトコル",
+        "title": "MCPプラグインタイプ"
+      },
+      "url": {
+        "desc": "あなたのMCPサーバーのストリーミングHTTPアドレスを入力してください。SSEモードはサポートされていません。",
+        "invalid": "有効な URL アドレスを入力してください",
+        "label": "HTTP エンドポイント URL",
+        "required": "MCP サービスの URL を入力してください"
       }
     },
     "meta": {
@@ -69,12 +142,14 @@
         "label": "識別子",
         "pattenErrorMessage": "英数字、-、_ のみ入力できます"
       },
+      "lobe": "{{appName}} プラグイン",
       "manifest": {
         "desc": "{{appName}}はこのリンクを通じてプラグインをインストールします",
         "label": "プラグイン記述ファイル (Manifest) URL",
         "preview": "マニフェストのプレビュー",
         "refresh": "更新"
       },
+      "openai": "OpenAI プラグイン",
       "title": {
         "desc": "プラグインのタイトル",
         "label": "タイトル",
@@ -88,8 +163,18 @@
       "schema": "スキーマ"
     },
     "preview": {
+      "api": {
+        "noParams": "このツールにはパラメータがありません",
+        "noResults": "検索条件に一致する API が見つかりませんでした",
+        "params": "パラメータ:",
+        "searchPlaceholder": "ツールを検索..."
+      },
       "card": "プラグインのプレビュー表示",
       "desc": "プラグインの説明のプレビュー",
+      "empty": {
+        "desc": "設定が完了すると、ここでプラグインがサポートするツールの機能をプレビューできます",
+        "title": "プラグインを設定した後にプレビューを開始"
+      },
       "title": "プラグイン名のプレビュー"
     },
     "save": "プラグインを保存",
@@ -116,6 +201,7 @@
     "noManifest": "マニフェストが存在しません",
     "openAPIInvalid": "OpenAPIの解析に失敗しました。エラー: \n\n {{error}}",
     "reinstallError": "プラグイン{{name}}の再インストールに失敗しました",
+    "testConnectionFailed": "マニフェストの取得に失敗しました: {{error}}",
     "urlError": "このリンクはJSON形式のコンテンツを返していません。有効なリンクであることを確認してください"
   },
   "inspector": {
@@ -194,5 +280,6 @@
     },
     "title": "プラグインストア"
   },
+  "unknownError": "未知のエラー",
   "unknownPlugin": "未知のプラグイン"
 }

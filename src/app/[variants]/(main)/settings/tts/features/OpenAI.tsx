@@ -1,7 +1,7 @@
 'use client';
 
-import { Form, type ItemGroup } from '@lobehub/ui';
-import { Select } from 'antd';
+import { Form, type FormGroupItemType } from '@lobehub/ui';
+import { Select } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,8 +12,6 @@ import { settingsSelectors } from '@/store/user/selectors';
 
 import { opeanaiSTTOptions, opeanaiTTSOptions } from './const';
 
-type SettingItemGroup = ItemGroup;
-
 const TTS_SETTING_KEY = 'tts';
 
 const OpenAI = memo(() => {
@@ -22,7 +20,7 @@ const OpenAI = memo(() => {
   const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
   const [setSettings] = useUserStore((s) => [s.setSettings]);
 
-  const openai: SettingItemGroup = {
+  const openai: FormGroupItemType = {
     children: [
       {
         children: <Select options={opeanaiTTSOptions} />,
@@ -45,7 +43,7 @@ const OpenAI = memo(() => {
       items={[openai]}
       itemsType={'group'}
       onValuesChange={setSettings}
-      variant={'pure'}
+      variant={'borderless'}
       {...FORM_STYLE}
     />
   );

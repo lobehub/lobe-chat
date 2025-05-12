@@ -2,9 +2,11 @@ import auth from './auth';
 import changelog from './changelog';
 import chat from './chat';
 import clerk from './clerk';
+import color from './color';
 import common from './common';
 import components from './components';
 import discover from './discover';
+import electron from './electron';
 import error from './error';
 import file from './file';
 import hotkey from './hotkey';
@@ -13,6 +15,7 @@ import metadata from './metadata';
 import migration from './migration';
 import modelProvider from './modelProvider';
 import models from './models';
+import oauth from './oauth';
 import plugin from './plugin';
 import portal from './portal';
 import providers from './providers';
@@ -28,9 +31,11 @@ const resources = {
   changelog,
   chat,
   clerk,
+  color,
   common,
   components,
   discover,
+  electron,
   error,
   file,
   hotkey,
@@ -39,6 +44,7 @@ const resources = {
   migration,
   modelProvider,
   models,
+  oauth,
   plugin,
   portal,
   providers,

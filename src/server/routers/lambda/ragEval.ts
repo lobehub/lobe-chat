@@ -13,9 +13,8 @@ import {
   EvalEvaluationModel,
   EvaluationRecordModel,
 } from '@/database/server/models/ragEval';
-import { authedProcedure, router } from '@/libs/trpc';
-import { serverDatabase } from '@/libs/trpc/lambda';
-import { keyVaults } from '@/libs/trpc/middleware/keyVaults';
+import { authedProcedure, router } from '@/libs/trpc/lambda';
+import { keyVaults, serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { createAsyncServerClient } from '@/server/routers/async';
 import { FileService } from '@/server/services/file';
 import {
@@ -41,7 +40,7 @@ const ragEvalProcedure = authedProcedure
         datasetRecordModel: new EvalDatasetRecordModel(ctx.userId),
         evaluationModel: new EvalEvaluationModel(ctx.userId),
         evaluationRecordModel: new EvaluationRecordModel(ctx.userId),
-        fileService: new FileService(),
+        fileService: new FileService(ctx.serverDB, ctx.userId),
       },
     });
   });

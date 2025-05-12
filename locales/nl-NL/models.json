@@ -5,8 +5,14 @@
   "01-ai/yi-1.5-9b-chat": {
     "description": "Zero One Everything, het nieuwste open-source fine-tuning model, met 9 miljard parameters, dat fine-tuning ondersteunt voor verschillende dialoogscenario's, met hoogwaardige trainingsdata die zijn afgestemd op menselijke voorkeuren."
   },
+  "360/deepseek-r1": {
+    "description": "【360 Deployment Version】DeepSeek-R1 maakt op grote schaal gebruik van versterkend leren in de post-training fase, waardoor de modelinferencecapaciteit aanzienlijk is verbeterd met slechts een paar gelabelde gegevens. Het presteert op het gebied van wiskunde, code en natuurlijke taalredenering op een niveau dat vergelijkbaar is met de officiële versie van OpenAI o1."
+  },
   "360gpt-pro": {
     "description": "360GPT Pro, als een belangrijk lid van de 360 AI-modelreeks, voldoet aan de diverse natuurlijke taaltoepassingsscenario's met efficiënte tekstverwerkingscapaciteiten en ondersteunt lange tekstbegrip en meerdaagse gesprekken."
+  },
+  "360gpt-pro-trans": {
+    "description": "Een model speciaal voor vertalingen, geoptimaliseerd door diepgaande afstemming, met toonaangevende vertaalresultaten."
   },
   "360gpt-turbo": {
     "description": "360GPT Turbo biedt krachtige reken- en gesprekscapaciteiten, met uitstekende semantische begrip en generatie-efficiëntie, en is de ideale intelligente assistentoplossing voor bedrijven en ontwikkelaars."
@@ -61,6 +67,15 @@
   },
   "DeepSeek-R1-Distill-Qwen-7B": {
     "description": "DeepSeek-R1 distillatiemodel gebaseerd op Qwen2.5-Math-7B, geoptimaliseerd voor inferentieprestaties door versterkend leren en koude startdata, open-source model dat de multi-taak benchmark vernieuwt."
+  },
+  "DeepSeek-V3": {
+    "description": "DeepSeek-V3 is een MoE-model dat zelf is ontwikkeld door DeepSeek Company. De prestaties van DeepSeek-V3 overtreffen die van andere open-source modellen zoals Qwen2.5-72B en Llama-3.1-405B, en presteert op het gebied van prestaties gelijkwaardig aan de wereldtop gesloten modellen zoals GPT-4o en Claude-3.5-Sonnet."
+  },
+  "Doubao-1.5-thinking-pro-m": {
+    "description": "Doubao-1.5 is een nieuw diep denkmodel (de m-versie heeft ingebouwde multimodale diep redeneringscapaciteiten), dat uitblinkt in wiskunde, programmeren, wetenschappelijke redenering en creatieve schrijfopdrachten, en in verschillende autoritaire benchmarks zoals AIME 2024, Codeforces, GPQA, het niveau van de top van de industrie bereikt of benadert. Ondersteunt een contextvenster van 128k en 16k output."
+  },
+  "Doubao-1.5-vision-pro": {
+    "description": "Doubao-1.5-vision-pro is een nieuw geüpgradede multimodale groot model, dat ondersteuning biedt voor beeldherkenning met willekeurige resoluties en extreme beeldverhoudingen, en de visuele redenering, documentherkenning, begrip van gedetailleerde informatie en het volgen van instructies verbetert."
   },
   "Doubao-1.5-vision-pro-32k": {
     "description": "Doubao-1.5-vision-pro is een nieuw geüpgraded multimodaal groot model, dat ondersteuning biedt voor beeldherkenning met willekeurige resoluties en extreme beeldverhoudingen, en de visuele redenering, documentherkenning, begrip van gedetailleerde informatie en het volgen van instructies verbetert."
@@ -281,6 +296,21 @@
   "Qwen/Qwen2.5-VL-72B-Instruct": {
     "description": "Qwen2.5-VL is een visueel-taalmodel uit de Qwen2.5-reeks. Dit model heeft aanzienlijke verbeteringen op verschillende gebieden: het heeft een betere visuele begripscapaciteit, kan veelvoorkomende objecten herkennen, tekst, grafieken en lay-outs analyseren; als visueel agent kan het redeneren en het gebruik van tools dynamisch begeleiden; het ondersteunt het begrijpen van video's langer dan 1 uur en kan belangrijke gebeurtenissen vastleggen; het kan objecten in afbeeldingen nauwkeurig lokaliseren door bounding boxes of punten te genereren; het ondersteunt de generatie van gestructureerde uitvoer, met name geschikt voor facturen, tabellen en andere gescande gegevens."
   },
+  "Qwen/Qwen3-14B": {
+    "description": "Qwen3 is een nieuwe generatie Qwen-model met aanzienlijk verbeterde capaciteiten, die op het gebied van redenering, algemeen gebruik, agent en meertaligheid op een leidende positie in de industrie staat, en ondersteunt de schakel tussen denkmodi."
+  },
+  "Qwen/Qwen3-235B-A22B": {
+    "description": "Qwen3 is een nieuwe generatie Qwen-model met aanzienlijk verbeterde capaciteiten, die op het gebied van redenering, algemeen gebruik, agent en meertaligheid op een leidende positie in de industrie staat, en ondersteunt de schakel tussen denkmodi."
+  },
+  "Qwen/Qwen3-30B-A3B": {
+    "description": "Qwen3 is een nieuwe generatie Qwen-model met aanzienlijk verbeterde capaciteiten, die op het gebied van redenering, algemeen gebruik, agent en meertaligheid op een leidende positie in de industrie staat, en ondersteunt de schakel tussen denkmodi."
+  },
+  "Qwen/Qwen3-32B": {
+    "description": "Qwen3 is een nieuwe generatie Qwen-model met aanzienlijk verbeterde capaciteiten, die op het gebied van redenering, algemeen gebruik, agent en meertaligheid op een leidende positie in de industrie staat, en ondersteunt de schakel tussen denkmodi."
+  },
+  "Qwen/Qwen3-8B": {
+    "description": "Qwen3 is een nieuwe generatie Qwen-model met aanzienlijk verbeterde capaciteiten, die op het gebied van redenering, algemeen gebruik, agent en meertaligheid op een leidende positie in de industrie staat, en ondersteunt de schakel tussen denkmodi."
+  },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 is de nieuwste serie van het Qwen-model, dat 128k context ondersteunt. In vergelijking met de huidige beste open-source modellen, overtreft Qwen2-72B op het gebied van natuurlijke taalbegrip, kennis, code, wiskunde en meertaligheid aanzienlijk de huidige toonaangevende modellen."
   },
@@ -341,6 +371,15 @@
   "SenseChat-Vision": {
     "description": "De nieuwste versie van het model (V5.5) ondersteunt meerdere afbeeldingen als invoer en heeft aanzienlijke optimalisaties doorgevoerd in de basiscapaciteiten van het model, met verbeteringen in objecteigenschappenherkenning, ruimtelijke relaties, actie-evenementherkenning, scènebegrip, emotieherkenning, logische kennisredenering en tekstbegrip en -generatie."
   },
+  "SenseNova-V6-Pro": {
+    "description": "Realiseert de native integratie van afbeeldingen, tekst en video, doorbreekt de traditionele beperkingen van gescheiden multimodaliteit, en heeft in de OpenCompass en SuperCLUE evaluaties dubbele kampioenstitels behaald."
+  },
+  "SenseNova-V6-Reasoner": {
+    "description": "Combineert visuele en taaldiepe redenering, realiseert langzaam denken en diepgaande redenering, en presenteert het volledige denkproces."
+  },
+  "SenseNova-V6-Turbo": {
+    "description": "Realiseert de native integratie van afbeeldingen, tekst en video, doorbreekt de traditionele beperkingen van gescheiden multimodaliteit, en is op alle belangrijke dimensies zoals basisvaardigheden in multimodaliteit en taalvaardigheden toonaangevend, met een evenwichtige benadering van tekst en redenering, en heeft in verschillende evaluaties herhaaldelijk de top van binnen- en buitenlandse ranglijsten bereikt."
+  },
   "Skylark2-lite-8k": {
     "description": "De tweede generatie Skylark (Skylark2) model, Skylark2-lite model heeft een hoge responssnelheid, geschikt voor scenario's met hoge realtimevereisten, kostenbewustzijn en lagere modelnauwkeurigheidsvereisten, met een contextvenster lengte van 8k."
   },
@@ -356,14 +395,26 @@
   "Skylark2-pro-turbo-8k": {
     "description": "De tweede generatie Skylark (Skylark2) model, Skylark2-pro-turbo-8k biedt snellere inferentie en lagere kosten, met een contextvenster lengte van 8k."
   },
+  "THUDM/GLM-4-32B-0414": {
+    "description": "GLM-4-32B-0414 is de nieuwe generatie open source model uit de GLM-serie, met 32 miljard parameters. De prestaties van dit model zijn vergelijkbaar met die van OpenAI's GPT-serie en DeepSeek's V3/R1-serie."
+  },
+  "THUDM/GLM-4-9B-0414": {
+    "description": "GLM-4-9B-0414 is een klein model uit de GLM-serie met 9 miljard parameters. Dit model erft de technische kenmerken van de GLM-4-32B-serie, maar biedt een lichtere implementatieoptie. Ondanks de kleinere schaal toont GLM-4-9B-0414 nog steeds uitstekende capaciteiten in taken zoals codegeneratie, webdesign, SVG-graphics generatie en op zoek gebaseerde schrijfopdrachten."
+  },
+  "THUDM/GLM-Z1-32B-0414": {
+    "description": "GLM-Z1-32B-0414 is een redeneringsmodel met diep denkvermogen. Dit model is ontwikkeld op basis van GLM-4-32B-0414 door middel van koude start en versterkend leren, en is verder getraind op wiskunde, code en logische taken. In vergelijking met het basismodel heeft GLM-Z1-32B-0414 aanzienlijke verbeteringen in wiskundige vaardigheden en het oplossen van complexe taken."
+  },
+  "THUDM/GLM-Z1-9B-0414": {
+    "description": "GLM-Z1-9B-0414 is een klein model uit de GLM-serie met slechts 9 miljard parameters, maar toont verbazingwekkende capaciteiten terwijl het de open source traditie behoudt. Ondanks de kleinere schaal presteert dit model nog steeds uitstekend in wiskundige redenering en algemene taken, met een algehele prestatie die vooroploopt in de open source modellen van gelijke schaal."
+  },
+  "THUDM/GLM-Z1-Rumination-32B-0414": {
+    "description": "GLM-Z1-Rumination-32B-0414 is een diep redeneringsmodel met reflectievermogen (vergelijkbaar met OpenAI's Deep Research). In tegenstelling tot typische diep denkmodellen, gebruikt het reflectiemodel langere periodes van diep nadenken om meer open en complexe problemen op te lossen."
+  },
   "THUDM/chatglm3-6b": {
     "description": "ChatGLM3-6B is het open-source model van de ChatGLM-serie, ontwikkeld door Zhipu AI. Dit model behoudt de uitstekende kenmerken van de vorige generatie, zoals vloeiende gesprekken en lage implementatiedrempels, terwijl het nieuwe functies introduceert. Het maakt gebruik van meer diverse trainingsdata, een groter aantal trainingsstappen en een meer redelijke trainingsstrategie, en presteert uitstekend onder de voorgetrainde modellen van minder dan 10B. ChatGLM3-6B ondersteunt complexe scenario's zoals meerdaagse gesprekken, tool-aanroepen, code-uitvoering en agenttaken. Naast het gespreksmodel zijn ook het basismodel ChatGLM-6B-Base en het lange tekstgespreksmodel ChatGLM3-6B-32K open-source gemaakt. Dit model is volledig open voor academisch onderzoek en staat ook gratis commercieel gebruik toe na registratie."
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B is de open-source versie die een geoptimaliseerde gesprekservaring biedt voor gespreksapplicaties."
-  },
-  "TeleAI/TeleChat2": {
-    "description": "Het TeleChat2-model is een generatief semantisch groot model dat van de grond af aan is ontwikkeld door China Telecom, en ondersteunt functies zoals encyclopedische vraag-en-antwoord, codegeneratie en lange tekstgeneratie, en biedt gebruikers gespreksadviesdiensten. Het kan met gebruikers communiceren, vragen beantwoorden, helpen bij creatie en efficiënt en gemakkelijk informatie, kennis en inspiratie bieden. Het model presteert goed in het omgaan met hallucinatieproblemen, lange tekstgeneratie en logische begrip."
   },
   "Vendor-A/Qwen/Qwen2.5-72B-Instruct": {
     "description": "Qwen2.5-72B-Instruct is een van de nieuwste grote taalmodellen die door Alibaba Cloud is uitgebracht. Dit 72B-model heeft aanzienlijke verbeteringen in coderings- en wiskundige vaardigheden. Het model biedt ook meertalige ondersteuning, met meer dan 29 ondersteunde talen, waaronder Chinees en Engels. Het model heeft aanzienlijke verbeteringen in het volgen van instructies, het begrijpen van gestructureerde gegevens en het genereren van gestructureerde uitvoer (vooral JSON)."
@@ -521,6 +572,9 @@
   "charglm-3": {
     "description": "CharGLM-3 is ontworpen voor rollenspellen en emotionele begeleiding, ondersteunt zeer lange meerdaagse herinneringen en gepersonaliseerde gesprekken, met brede toepassingen."
   },
+  "charglm-4": {
+    "description": "CharGLM-4 is ontworpen voor rollenspel en emotionele begeleiding, ondersteunt extreem lange meerdaagse herinneringen en gepersonaliseerde gesprekken, met brede toepassingen."
+  },
   "chatglm3": {
     "description": "ChatGLM3 is een gesloten bronmodel dat is uitgebracht door Zhipu AI en de KEG-laboratorium van Tsinghua-universiteit. Het is voorafgetraind met een enorme hoeveelheid Chinese en Engelse identificatoren en getraind om in overeenstemming te zijn met menselijke voorkeuren. In vergelijking met het eerste model, heeft het verbeteringen van respectievelijk 16%, 36% en 280% behaald op MMLU, C-Eval en GSM8K, en staat het bovendruk op de Chinese taaklijst C-Eval. Het is geschikt voor scenario's met hoge eisen aan kennis, redeneringsvermogen en creativiteit, zoals het schrijven van advertentieteksten, romans, kennisgerelateerde teksten en codegeneratie."
   },
@@ -632,8 +686,17 @@
   "command-r-plus-04-2024": {
     "description": "Command R+ is een instructievolgend dialoogmodel dat hogere kwaliteit en betrouwbaarheid biedt voor taaltaken, met een langere contextlengte dan eerdere modellen. Het is het meest geschikt voor complexe RAG-workflows en meervoudig gebruik van tools."
   },
+  "command-r-plus-08-2024": {
+    "description": "Command R+ is een dialoogmodel dat instructies volgt, met hogere kwaliteit en betrouwbaarheid in taalgerelateerde taken, en een langere contextlengte dan eerdere modellen. Het is het meest geschikt voor complexe RAG-workflows en het gebruik van meerdere stappen."
+  },
   "command-r7b-12-2024": {
     "description": "command-r7b-12-2024 is een compacte en efficiënte bijgewerkte versie, uitgebracht in december 2024. Het presteert uitstekend in taken die complexe redenering en meervoudige verwerking vereisen, zoals RAG, toolgebruik en agenten."
+  },
+  "compound-beta": {
+    "description": "Compound-beta is een samengesteld AI-systeem dat wordt ondersteund door meerdere open beschikbare modellen in GroqCloud, en kan intelligent en selectief tools gebruiken om gebruikersvragen te beantwoorden."
+  },
+  "compound-beta-mini": {
+    "description": "Compound-beta-mini is een samengesteld AI-systeem dat wordt ondersteund door open beschikbare modellen in GroqCloud, en kan intelligent en selectief tools gebruiken om gebruikersvragen te beantwoorden."
   },
   "dall-e-2": {
     "description": "De tweede generatie DALL·E model, ondersteunt realistischere en nauwkeurigere beeldgeneratie, met een resolutie die vier keer zo hoog is als die van de eerste generatie."
@@ -752,6 +815,12 @@
   "deepseek/deepseek-chat": {
     "description": "Een nieuw open-source model dat algemene en codeercapaciteiten combineert, niet alleen de algemene gespreksvaardigheden van het oorspronkelijke Chat-model en de krachtige codeverwerkingscapaciteiten van het Coder-model behoudt, maar ook beter is afgestemd op menselijke voorkeuren. Bovendien heeft DeepSeek-V2.5 aanzienlijke verbeteringen gerealiseerd in schrijfopdrachten, instructievolging en meer."
   },
+  "deepseek/deepseek-chat-v3-0324": {
+    "description": "DeepSeek V3 is een expert gemengd model met 685B parameters, de nieuwste iteratie van de vlaggenschip chatmodelreeks van het DeepSeek-team.\n\nHet is een opvolger van het [DeepSeek V3](/deepseek/deepseek-chat-v3) model en presteert uitstekend in verschillende taken."
+  },
+  "deepseek/deepseek-chat-v3-0324:free": {
+    "description": "DeepSeek V3 is een expert gemengd model met 685B parameters, de nieuwste iteratie van de vlaggenschip chatmodelreeks van het DeepSeek-team.\n\nHet is een opvolger van het [DeepSeek V3](/deepseek/deepseek-chat-v3) model en presteert uitstekend in verschillende taken."
+  },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1 heeft de redeneringscapaciteiten van het model aanzienlijk verbeterd, zelfs met zeer weinig gelabelde gegevens. Voordat het model het uiteindelijke antwoord geeft, genereert het eerst een denkproces om de nauwkeurigheid van het uiteindelijke antwoord te verbeteren."
   },
@@ -779,6 +848,18 @@
   "deepseek/deepseek-v3/community": {
     "description": "DeepSeek-V3 heeft een belangrijke doorbraak bereikt in inferentiesnelheid ten opzichte van eerdere modellen. Het staat op de eerste plaats onder open-source modellen en kan zich meten met de meest geavanceerde gesloten modellen ter wereld. DeepSeek-V3 maakt gebruik van Multi-Head Latent Attention (MLA) en de DeepSeekMoE-architectuur, die grondig zijn gevalideerd in DeepSeek-V2. Bovendien introduceert DeepSeek-V3 een aanvullende verliesloze strategie voor load balancing en stelt het multi-label voorspellingsdoelen in om sterkere prestaties te behalen."
   },
+  "deepseek_r1": {
+    "description": "DeepSeek-R1 is een redeneringsmodel aangedreven door versterkend leren (RL), dat de problemen van herhaling en leesbaarheid in het model oplost. Voor RL introduceerde DeepSeek-R1 koude startgegevens, wat de inferentieprestaties verder optimaliseerde. Het presteert vergelijkbaar met OpenAI-o1 in wiskunde, code en redeneringstaken, en heeft door zorgvuldig ontworpen trainingsmethoden de algehele effectiviteit verbeterd."
+  },
+  "deepseek_r1_distill_llama_70b": {
+    "description": "DeepSeek-R1-Distill-Llama-70B is een model dat is verkregen door distillatie training van Llama-3.3-70B-Instruct. Dit model maakt deel uit van de DeepSeek-R1 serie en toont uitstekende prestaties in verschillende domeinen zoals wiskunde, programmeren en redenering door gebruik te maken van voorbeelden gegenereerd door DeepSeek-R1."
+  },
+  "deepseek_r1_distill_qwen_14b": {
+    "description": "DeepSeek-R1-Distill-Qwen-14B is een model dat is verkregen door kennisdistillatie van Qwen2.5-14B. Dit model is fijn afgesteld met 800.000 zorgvuldig geselecteerde voorbeelden gegenereerd door DeepSeek-R1, en toont uitstekende redeneringscapaciteiten."
+  },
+  "deepseek_r1_distill_qwen_32b": {
+    "description": "DeepSeek-R1-Distill-Qwen-32B is een model dat is verkregen door kennisdistillatie van Qwen2.5-32B. Dit model is fijn afgesteld met 800.000 zorgvuldig geselecteerde voorbeelden gegenereerd door DeepSeek-R1, en toont uitstekende prestaties in verschillende domeinen zoals wiskunde, programmeren en redenering."
+  },
   "doubao-1.5-lite-32k": {
     "description": "Doubao-1.5-lite is de nieuwste generatie lichtgewicht model, met extreme responssnelheid en prestaties die wereldwijd tot de top behoren."
   },
@@ -787,6 +868,12 @@
   },
   "doubao-1.5-pro-32k": {
     "description": "Doubao-1.5-pro is de nieuwste generatie hoofdmachine, met algehele prestatie-upgrades en uitstekende prestaties op het gebied van kennis, code, redenering, enz."
+  },
+  "doubao-1.5-thinking-pro": {
+    "description": "Doubao-1.5 is een gloednieuw diepdenkend model dat uitblinkt in professionele gebieden zoals wiskunde, programmeren en wetenschappelijk redeneren, evenals in algemene taken zoals creatief schrijven. Het heeft op verschillende prestigieuze benchmarks zoals AIME 2024, Codeforces en GPQA niveaus bereikt die gelijk zijn aan of dicht bij de top van de industrie liggen. Ondersteunt een contextvenster van 128k en een output van 16k."
+  },
+  "doubao-1.5-vision-lite": {
+    "description": "Doubao-1.5-vision-lite is een nieuw geüpgradede multimodale groot model, dat ondersteuning biedt voor beeldherkenning met willekeurige resoluties en extreme beeldverhoudingen, en de visuele redenering, documentherkenning, begrip van gedetailleerde informatie en het volgen van instructies verbetert. Ondersteunt een contextvenster van 128k en een maximale outputlengte van 16k tokens."
   },
   "emohaa": {
     "description": "Emohaa is een psychologisch model met professionele adviescapaciteiten, dat gebruikers helpt emotionele problemen te begrijpen."
@@ -818,6 +905,15 @@
   "ernie-4.5-8k-preview": {
     "description": "Het Wenxin grote model 4.5 is een nieuwe generatie native multimodale basisgrootte model, ontwikkeld door Baidu, dat samenwerking optimaliseert door meerdere modaliteiten gezamenlijk te modelleren, met uitstekende multimodale begripcapaciteiten; het heeft verbeterde taalvaardigheden, met verbeteringen in begrip, generatie, logica en geheugen, en significante verbeteringen in hallucinatie, logische redenering en codecapaciteiten."
   },
+  "ernie-4.5-turbo-128k": {
+    "description": "Wenxin 4.5 Turbo heeft duidelijke verbeteringen in het verminderen van hallucinaties, logische redenering en codevaardigheden. In vergelijking met Wenxin 4.5 is het sneller en goedkoper. De modelcapaciteiten zijn aanzienlijk verbeterd, waardoor het beter voldoet aan de verwerking van meerdaagse lange historische gesprekken en taken voor het begrijpen van lange documenten."
+  },
+  "ernie-4.5-turbo-32k": {
+    "description": "Wenxin 4.5 Turbo heeft duidelijke verbeteringen in het verminderen van hallucinaties, logische redenering en codevaardigheden. In vergelijking met Wenxin 4.5 is het sneller en goedkoper. De capaciteiten voor tekstcreatie en kennisvragen zijn aanzienlijk verbeterd. De uitvoerlengte en de vertraging bij volledige zinnen zijn in vergelijking met ERNIE 4.5 toegenomen."
+  },
+  "ernie-4.5-turbo-vl-32k": {
+    "description": "De gloednieuwe versie van het Wenxin Yiyan grote model heeft aanzienlijke verbeteringen in beeldbegrip, creatie, vertaling en code. Het ondersteunt voor het eerst een contextlengte van 32K, en de vertraging bij de eerste token is aanzienlijk verminderd."
+  },
   "ernie-char-8k": {
     "description": "Een door Baidu ontwikkeld groot taalmodel voor verticale scenario's, geschikt voor toepassingen zoals game NPC's, klantenservice dialoog, en rollenspellen, met een duidelijkere en consistentere karakterstijl, sterkere instructievolgcapaciteiten en betere inferentieprestaties."
   },
@@ -842,8 +938,14 @@
   "ernie-tiny-8k": {
     "description": "ERNIE Tiny is een ultra-presterend groot taalmodel dat de laagste implementatie- en afstemmingskosten heeft binnen de Wenxin modelreeks."
   },
+  "ernie-x1-32k": {
+    "description": "Beschikt over sterkere capaciteiten in begrip, planning, reflectie en evolutie. Als een diepgaand denkmodel met een breder scala aan vaardigheden, combineert Wenxin X1 nauwkeurigheid, creativiteit en stijl, en excelleert het in Chinese kennisvragen, literaire creatie, tekstschrijven, dagelijkse gesprekken, logische redenering, complexe berekeningen en het aanroepen van tools."
+  },
   "ernie-x1-32k-preview": {
     "description": "Het Wenxin grote model X1 heeft sterkere capaciteiten in begrip, planning, reflectie en evolutie. Als een dieper denkmodel met bredere mogelijkheden, combineert Wenxin X1 nauwkeurigheid, creativiteit en stijl, en excelleert in Chinese kennisvragen, literaire creatie, tekstschrijven, dagelijkse gesprekken, logische redenering, complexe berekeningen en het aanroepen van tools."
+  },
+  "ernie-x1-turbo-32k": {
+    "description": "In vergelijking met ERNIE-X1-32K biedt dit model betere prestaties en effectiviteit."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) biedt stabiele en afstelbare prestaties, ideaal voor oplossingen voor complexe taken."
@@ -911,14 +1013,17 @@
   "gemini-2.0-flash-thinking-exp-01-21": {
     "description": "Gemini 2.0 Flash Exp is Google's nieuwste experimentele multimodale AI-model, met next-gen functies, uitstekende snelheid, native tool-aanroepen en multimodale generatie."
   },
-  "gemini-2.0-pro-exp-02-05": {
-    "description": "Gemini 2.0 Pro Experimental is Google's nieuwste experimentele multimodale AI-model, met aanzienlijke kwaliteitsverbeteringen ten opzichte van eerdere versies, vooral op het gebied van wereldkennis, code en lange context."
+  "gemini-2.5-flash-preview-04-17": {
+    "description": "Gemini 2.5 Flash Preview is het meest kosteneffectieve model van Google, dat uitgebreide functionaliteit biedt."
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental is Google's meest geavanceerde denkmodel, dat in staat is om te redeneren over complexe problemen in code, wiskunde en STEM-gebieden, en bovendien gebruik maakt van lange contexten om grote datasets, codebases en documenten te analyseren."
   },
   "gemini-2.5-pro-preview-03-25": {
     "description": "Gemini 2.5 Pro Preview is Google's meest geavanceerde denkmodel, dat in staat is om te redeneren over complexe problemen in code, wiskunde en STEM-gebieden, en grote datasets, codebases en documenten te analyseren met behulp van lange context."
+  },
+  "gemini-2.5-pro-preview-05-06": {
+    "description": "Gemini 2.5 Pro Preview is Google's meest geavanceerde denkmodel, in staat om te redeneren over complexe problemen in code, wiskunde en STEM-gebieden, en om grote datasets, codebases en documenten te analyseren met lange context."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B is geschikt voor het verwerken van middelgrote taken, met een goede kosteneffectiviteit."
@@ -953,6 +1058,9 @@
   "glm-4-air": {
     "description": "GLM-4-Air is een kosteneffectieve versie met prestaties die dicht bij GLM-4 liggen, met snelle snelheid en een betaalbare prijs."
   },
+  "glm-4-air-250414": {
+    "description": "GLM-4-Air is een kosteneffectieve versie, met prestaties die dicht bij GLM-4 liggen, en biedt snelle snelheid tegen een betaalbare prijs."
+  },
   "glm-4-airx": {
     "description": "GLM-4-AirX biedt een efficiënte versie van GLM-4-Air, met een redeneersnelheid tot 2,6 keer sneller."
   },
@@ -961,6 +1069,9 @@
   },
   "glm-4-flash": {
     "description": "GLM-4-Flash is de ideale keuze voor het verwerken van eenvoudige taken, met de snelste snelheid en de laagste prijs."
+  },
+  "glm-4-flash-250414": {
+    "description": "GLM-4-Flash is de ideale keuze voor het verwerken van eenvoudige taken, met de snelste snelheid en gratis."
   },
   "glm-4-flashx": {
     "description": "GLM-4-FlashX is een verbeterde versie van Flash met een super snelle inferentiesnelheid."
@@ -980,14 +1091,35 @@
   "glm-4v-plus": {
     "description": "GLM-4V-Plus heeft de capaciteit om video-inhoud en meerdere afbeeldingen te begrijpen, geschikt voor multimodale taken."
   },
+  "glm-4v-plus-0111": {
+    "description": "GLM-4V-Plus heeft de capaciteit om video-inhoud en meerdere afbeeldingen te begrijpen, geschikt voor multimodale taken."
+  },
+  "glm-z1-air": {
+    "description": "Redeneringsmodel: beschikt over krachtige redeneringscapaciteiten, geschikt voor taken die diepgaande redenering vereisen."
+  },
+  "glm-z1-airx": {
+    "description": "Supersnelle redenering: met een extreem snelle redeneringssnelheid en krachtige redeneringseffecten."
+  },
+  "glm-z1-flash": {
+    "description": "De GLM-Z1 serie beschikt over krachtige complexe redeneringscapaciteiten en presteert uitstekend in logische redenering, wiskunde en programmeren. De maximale contextlengte is 32K."
+  },
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview heeft krachtige complexe redeneercapaciteiten en presteert uitstekend in logische redenering, wiskunde en programmeren."
   },
   "google/gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash biedt next-gen functies en verbeteringen, waaronder uitstekende snelheid, native toolgebruik, multimodale generatie en een contextvenster van 1M tokens."
   },
-  "google/gemini-2.0-pro-exp-02-05:free": {
-    "description": "Gemini 2.0 Pro Experimental is Google's nieuwste experimentele multimodale AI-model, met aanzienlijke kwaliteitsverbeteringen ten opzichte van eerdere versies, vooral op het gebied van wereldkennis, code en lange context."
+  "google/gemini-2.0-flash-exp:free": {
+    "description": "Gemini 2.0 Flash Experimental is Google's nieuwste experimentele multimodale AI-model, met een aanzienlijke kwaliteitsverbetering ten opzichte van eerdere versies, vooral voor wereldkennis, code en lange context."
+  },
+  "google/gemini-2.5-flash-preview": {
+    "description": "Gemini 2.5 Flash is Google's meest geavanceerde hoofmodel, ontworpen voor geavanceerde redenering, codering, wiskunde en wetenschappelijke taken. Het bevat ingebouwde 'denkkracht', waardoor het in staat is om antwoorden te geven met een hogere nauwkeurigheid en gedetailleerde contextverwerking.\n\nLet op: dit model heeft twee varianten: denken en niet-denken. De outputprijs verschilt aanzienlijk afhankelijk van of de denkkracht is geactiveerd. Als u de standaardvariant kiest (zonder de ':thinking' suffix), zal het model expliciet vermijden om denk-tokens te genereren.\n\nOm gebruik te maken van de denkkracht en denk-tokens te ontvangen, moet u de ':thinking' variant kiezen, wat resulteert in hogere prijzen voor denk-output.\n\nBovendien kan Gemini 2.5 Flash worden geconfigureerd via de parameter 'max tokens for reasoning', zoals beschreven in de documentatie (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
+  },
+  "google/gemini-2.5-flash-preview:thinking": {
+    "description": "Gemini 2.5 Flash is Google's meest geavanceerde hoofmodel, ontworpen voor geavanceerde redenering, codering, wiskunde en wetenschappelijke taken. Het bevat ingebouwde 'denkkracht', waardoor het in staat is om antwoorden te geven met een hogere nauwkeurigheid en gedetailleerde contextverwerking.\n\nLet op: dit model heeft twee varianten: denken en niet-denken. De outputprijs verschilt aanzienlijk afhankelijk van of de denkkracht is geactiveerd. Als u de standaardvariant kiest (zonder de ':thinking' suffix), zal het model expliciet vermijden om denk-tokens te genereren.\n\nOm gebruik te maken van de denkkracht en denk-tokens te ontvangen, moet u de ':thinking' variant kiezen, wat resulteert in hogere prijzen voor denk-output.\n\nBovendien kan Gemini 2.5 Flash worden geconfigureerd via de parameter 'max tokens for reasoning', zoals beschreven in de documentatie (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
+  },
+  "google/gemini-2.5-pro-preview-03-25": {
+    "description": "Gemini 2.5 Pro is Google's meest geavanceerde AI-model, ontworpen voor geavanceerde redenering, codering, wiskunde en wetenschappelijke taken. Het beschikt over 'denkkracht', waardoor het in staat is om antwoorden te redeneren met een hogere nauwkeurigheid en gedetailleerde contextverwerking. Gemini 2.5 Pro heeft top prestaties behaald in meerdere benchmarktests, waaronder de eerste plaats op de LMArena-ranglijst, wat de uitstekende afstemming op menselijke voorkeuren en het vermogen om complexe problemen op te lossen weerspiegelt."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash biedt geoptimaliseerde multimodale verwerkingscapaciteiten, geschikt voor verschillende complexe taakscenario's."
@@ -1067,6 +1199,15 @@
   "gpt-4-vision-preview": {
     "description": "Het nieuwste GPT-4 Turbo-model heeft visuele functies. Nu kunnen visuele verzoeken worden gedaan met behulp van JSON-indeling en functieaanroepen. GPT-4 Turbo is een verbeterde versie die kosteneffectieve ondersteuning biedt voor multimodale taken. Het vindt een balans tussen nauwkeurigheid en efficiëntie, geschikt voor toepassingen die realtime interactie vereisen."
   },
+  "gpt-4.1": {
+    "description": "GPT-4.1 is ons vlaggenschipmodel voor complexe taken. Het is zeer geschikt voor het oplossen van problemen over verschillende domeinen."
+  },
+  "gpt-4.1-mini": {
+    "description": "GPT-4.1 mini biedt een balans tussen intelligentie, snelheid en kosten, waardoor het een aantrekkelijk model is voor veel gebruikssituaties."
+  },
+  "gpt-4.1-nano": {
+    "description": "GPT-4.1 mini biedt een balans tussen intelligentie, snelheid en kosten, waardoor het een aantrekkelijk model is voor veel gebruikssituaties."
+  },
   "gpt-4.5-preview": {
     "description": "De onderzoekspreview van GPT-4.5, ons grootste en krachtigste GPT-model tot nu toe. Het heeft een uitgebreide wereldkennis en kan de intenties van gebruikers beter begrijpen, waardoor het uitblinkt in creatieve taken en autonome planning. GPT-4.5 accepteert tekst- en afbeeldingsinvoer en genereert tekstuitvoer (inclusief gestructureerde uitvoer). Het ondersteunt belangrijke ontwikkelaarsfuncties zoals functieaanroepen, batch-API's en streaminguitvoer. In taken die creativiteit, open denken en dialoog vereisen (zoals schrijven, leren of het verkennen van nieuwe ideeën), presteert GPT-4.5 bijzonder goed. De kennis is bijgewerkt tot oktober 2023."
   },
@@ -1108,6 +1249,18 @@
   },
   "grok-2-vision-1212": {
     "description": "Dit model heeft verbeteringen aangebracht in nauwkeurigheid, instructievolging en meertalige capaciteiten."
+  },
+  "grok-3-beta": {
+    "description": "Vlaggenschipmodel, gespecialiseerd in data-extractie, programmeren en tekstsamenvattingen voor zakelijke toepassingen, met diepgaande kennis in de financiële, medische, juridische en wetenschappelijke sectoren."
+  },
+  "grok-3-fast-beta": {
+    "description": "Vlaggenschipmodel, gespecialiseerd in data-extractie, programmeren en tekstsamenvattingen voor zakelijke toepassingen, met diepgaande kennis in de financiële, medische, juridische en wetenschappelijke sectoren."
+  },
+  "grok-3-mini-beta": {
+    "description": "Lichtgewicht model dat vooraf nadenkt voordat het een gesprek aangaat. Snel en intelligent, geschikt voor logische taken die geen diepgaande domeinkennis vereisen, en kan de oorspronkelijke denksporen vastleggen."
+  },
+  "grok-3-mini-fast-beta": {
+    "description": "Lichtgewicht model dat vooraf nadenkt voordat het een gesprek aangaat. Snel en intelligent, geschikt voor logische taken die geen diepgaande domeinkennis vereisen, en kan de oorspronkelijke denksporen vastleggen."
   },
   "grok-beta": {
     "description": "Biedt prestaties vergelijkbaar met Grok 2, maar met hogere efficiëntie, snelheid en functionaliteit."
@@ -1178,11 +1331,14 @@
   "hunyuan-turbos-20250226": {
     "description": "hunyuan-TurboS pv2.1.2 vaste versie met verbeterde training van token-upgrades; verbeterde denkcapaciteiten voor wiskunde/logica/code; verbeterde gebruikerservaring in zowel het Chinees als het Engels, inclusief tekstcreatie, tekstbegrip, kennisvragen en casual chat."
   },
-  "hunyuan-turbos-20250313": {
-    "description": "Een uniforme stijl voor het oplossen van wiskundige problemen, met een versterking van meerdaagse wiskundige vraag-en-antwoord. Optimalisatie van de antwoordstijl voor tekstcreatie, met verwijdering van AI-kenmerken en een toename van de literairheid."
-  },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS is de nieuwste versie van het Hunyuan vlaggenschipmodel, met verbeterde denkcapaciteiten en een betere gebruikerservaring."
+  },
+  "hunyuan-turbos-longtext-128k-20250325": {
+    "description": "Uitstekend in het verwerken van lange teksttaken zoals documentsamenvattingen en documentvragen, en heeft ook de capaciteit om algemene tekstgeneratietaken uit te voeren. Het presteert uitstekend in de analyse en generatie van lange teksten en kan effectief omgaan met complexe en gedetailleerde lange inhoud."
+  },
+  "hunyuan-turbos-vision": {
+    "description": "Dit model is geschikt voor beeld- en tekstbegrip, en is de nieuwste generatie visuele taal flagship model gebaseerd op Hunyuan's turbos, gericht op taken gerelateerd aan beeld- en tekstbegrip, waaronder op afbeeldingen gebaseerde entiteitsherkenning, kennisvragen, copywriting en probleemoplossing via foto's, met algehele verbeteringen ten opzichte van de vorige generatie modellen."
   },
   "hunyuan-vision": {
     "description": "Het nieuwste multimodale model van Hunyuan, ondersteunt het genereren van tekstinhoud op basis van afbeelding + tekstinvoer."
@@ -1201,6 +1357,12 @@
   },
   "internlm3-latest": {
     "description": "Onze nieuwste modelreeks heeft uitstekende inferentieprestaties en leidt de open-source modellen in dezelfde klasse. Standaard gericht op ons recentste InternLM3 model."
+  },
+  "jamba-large": {
+    "description": "Ons krachtigste en meest geavanceerde model, speciaal ontworpen voor het verwerken van complexe taken op bedrijfsniveau, met uitstekende prestaties."
+  },
+  "jamba-mini": {
+    "description": "Het meest efficiënte model in zijn klasse, met een balans tussen snelheid en kwaliteit, en een compact formaat."
   },
   "jina-deepsearch-v1": {
     "description": "Diepe zoekopdrachten combineren webzoekopdrachten, lezen en redeneren voor een uitgebreide verkenning. Je kunt het beschouwen als een agent die jouw onderzoeksopdracht aanneemt - het zal een uitgebreide zoektocht uitvoeren en meerdere iteraties doorlopen voordat het een antwoord geeft. Dit proces omvat voortdurende onderzoek, redeneren en het oplossen van problemen vanuit verschillende invalshoeken. Dit is fundamenteel anders dan het rechtstreeks genereren van antwoorden uit voorgetrainde gegevens door standaard grote modellen en het vertrouwen op eenmalige oppervlakkige zoekopdrachten van traditionele RAG-systemen."
@@ -1457,6 +1619,9 @@
   "mistral-large-latest": {
     "description": "Mistral Large is het vlaggenschipmodel, dat uitblinkt in meertalige taken, complexe inferentie en codegeneratie, ideaal voor high-end toepassingen."
   },
+  "mistral-medium-latest": {
+    "description": "Mistral Medium 3 biedt geavanceerde prestaties tegen 8 keer de kosten en vereenvoudigt de implementatie voor bedrijven fundamenteel."
+  },
   "mistral-nemo": {
     "description": "Mistral Nemo is een 12B-model dat is ontwikkeld in samenwerking met Mistral AI en NVIDIA, biedt efficiënte prestaties."
   },
@@ -1547,8 +1712,14 @@
   "o1-preview": {
     "description": "o1 is het nieuwe redeneermodel van OpenAI, geschikt voor complexe taken die uitgebreide algemene kennis vereisen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
   },
+  "o3": {
+    "description": "o3 is een veelzijdig en krachtig model dat uitblinkt in verschillende domeinen. Het stelt nieuwe normen voor wiskunde, wetenschap, programmeren en visuele redeneringstaken. Het is ook bedreven in technische schrijfvaardigheid en het volgen van instructies. Gebruikers kunnen het gebruiken om teksten, code en afbeeldingen te analyseren en complexe meerstapsproblemen op te lossen."
+  },
   "o3-mini": {
     "description": "o3-mini is ons nieuwste kleine inferentiemodel dat hoge intelligentie biedt met dezelfde kosten- en vertragingdoelen als o1-mini."
+  },
+  "o4-mini": {
+    "description": "o4-mini is ons nieuwste compacte model uit de o-serie. Het is geoptimaliseerd voor snelle en efficiënte inferentie, met een hoge efficiëntie en prestaties in codering en visuele taken."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba is een Mamba 2-taalmodel dat zich richt op codegeneratie en krachtige ondersteuning biedt voor geavanceerde code- en inferentietaken."
@@ -1565,6 +1736,15 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B is een spaarzaam expertmodel dat meerdere parameters benut om de inferentiesnelheid te verhogen, geschikt voor het verwerken van meertalige en codegeneratietaken."
   },
+  "openai/gpt-4.1": {
+    "description": "GPT-4.1 is ons vlaggenschipmodel voor complexe taken. Het is zeer geschikt voor het oplossen van problemen over verschillende domeinen."
+  },
+  "openai/gpt-4.1-mini": {
+    "description": "GPT-4.1 mini biedt een balans tussen intelligentie, snelheid en kosten, waardoor het een aantrekkelijke keuze is voor veel gebruiksscenario's."
+  },
+  "openai/gpt-4.1-nano": {
+    "description": "GPT-4.1 nano is het snelste en meest kosteneffectieve GPT-4.1 model."
+  },
   "openai/gpt-4o": {
     "description": "ChatGPT-4o is een dynamisch model dat in realtime wordt bijgewerkt om de meest actuele versie te behouden. Het combineert krachtige taalbegrip- en generatiecapaciteiten, geschikt voor grootschalige toepassingsscenario's, waaronder klantenservice, onderwijs en technische ondersteuning."
   },
@@ -1576,6 +1756,21 @@
   },
   "openai/o1-preview": {
     "description": "o1 is het nieuwe redeneermodel van OpenAI, geschikt voor complexe taken die uitgebreide algemene kennis vereisen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
+  },
+  "openai/o3": {
+    "description": "o3 is een krachtige, veelzijdige model dat uitblinkt in verschillende domeinen. Het stelt nieuwe normen voor wiskunde, wetenschap, programmeren en visuele redeneertaken. Het is ook bedreven in technische schrijfvaardigheid en het opvolgen van instructies. Gebruikers kunnen het gebruiken om teksten, code en afbeeldingen te analyseren en complexe problemen met meerdere stappen op te lossen."
+  },
+  "openai/o3-mini": {
+    "description": "o3-mini biedt hoge intelligentie met dezelfde kosten- en vertragingdoelen als o1-mini."
+  },
+  "openai/o3-mini-high": {
+    "description": "o3-mini high is een versie met een hoog redeneerniveau die hoge intelligentie biedt met dezelfde kosten- en vertragingdoelen als o1-mini."
+  },
+  "openai/o4-mini": {
+    "description": "o4-mini is geoptimaliseerd voor snelle en efficiënte inferentie, met hoge efficiëntie en prestaties in codering en visuele taken."
+  },
+  "openai/o4-mini-high": {
+    "description": "o4-mini high inference level versie, geoptimaliseerd voor snelle en efficiënte inferentie, met hoge efficiëntie en prestaties in codering en visuele taken."
   },
   "openrouter/auto": {
     "description": "Afhankelijk van de contextlengte, het onderwerp en de complexiteit, wordt uw verzoek verzonden naar Llama 3 70B Instruct, Claude 3.5 Sonnet (zelfregulerend) of GPT-4o."
@@ -1598,8 +1793,8 @@
   "qvq-72b-preview": {
     "description": "Het QVQ-model is een experimenteel onderzoeksmodel ontwikkeld door het Qwen-team, gericht op het verbeteren van visuele redeneervaardigheden, vooral in het domein van wiskundige redenering."
   },
-  "qvq-max": {
-    "description": "De QVQ visuele redeneermodel ondersteunt visuele invoer en denktaken, en toont sterkere capaciteiten in wiskunde, programmeren, visuele analyse, creatie en algemene taken."
+  "qvq-max-latest": {
+    "description": "De QVQ visuele redeneer model ondersteunt visuele input en denkketenoutput, en toont sterkere capaciteiten in wiskunde, programmeren, visuele analyse, creatie en algemene taken."
   },
   "qwen-coder-plus-latest": {
     "description": "Tongyi Qianwen code model."
@@ -1675,6 +1870,33 @@
   },
   "qwen/qwen2.5-coder-7b-instruct": {
     "description": "Krachtig middelgroot codeermodel, ondersteunt 32K contextlengte, gespecialiseerd in meertalige programmering."
+  },
+  "qwen/qwen3-14b": {
+    "description": "Qwen3-14B is een dichte causale taalmodel met 14 miljard parameters in de Qwen3 serie, speciaal ontworpen voor complexe redenering en efficiënte gesprekken. Het ondersteunt naadloze overgangen tussen de 'denk' modus voor wiskunde, programmeren en logische redenering en de 'niet-denk' modus voor algemene gesprekken. Dit model is fijn afgesteld voor het volgen van instructies, het gebruik van agenttools, creatieve schrijfopdrachten en meertalige taken in meer dan 100 talen en dialecten. Het verwerkt van nature 32K tokens context en kan worden uitgebreid tot 131K tokens met YaRN."
+  },
+  "qwen/qwen3-14b:free": {
+    "description": "Qwen3-14B is een dichte causale taalmodel met 14 miljard parameters in de Qwen3 serie, speciaal ontworpen voor complexe redenering en efficiënte gesprekken. Het ondersteunt naadloze overgangen tussen de 'denk' modus voor wiskunde, programmeren en logische redenering en de 'niet-denk' modus voor algemene gesprekken. Dit model is fijn afgesteld voor het volgen van instructies, het gebruik van agenttools, creatieve schrijfopdrachten en meertalige taken in meer dan 100 talen en dialecten. Het verwerkt van nature 32K tokens context en kan worden uitgebreid tot 131K tokens met YaRN."
+  },
+  "qwen/qwen3-235b-a22b": {
+    "description": "Qwen3-235B-A22B is een 235B parameters expert-meng (MoE) model ontwikkeld door Qwen, dat 22B parameters activeert bij elke voorwaartse doorgang. Het ondersteunt naadloze overgangen tussen de 'denk' modus voor complexe redenering, wiskunde en code taken en de 'niet-denk' modus voor algemene gespreks efficiëntie. Dit model toont krachtige redeneringscapaciteiten, meertalige ondersteuning (meer dan 100 talen en dialecten), geavanceerd volgen van instructies en het aanroepen van agenttools. Het verwerkt van nature een contextvenster van 32K tokens en kan worden uitgebreid tot 131K tokens met YaRN."
+  },
+  "qwen/qwen3-235b-a22b:free": {
+    "description": "Qwen3-235B-A22B is een 235B parameters expert-meng (MoE) model ontwikkeld door Qwen, dat 22B parameters activeert bij elke voorwaartse doorgang. Het ondersteunt naadloze overgangen tussen de 'denk' modus voor complexe redenering, wiskunde en code taken en de 'niet-denk' modus voor algemene gespreks efficiëntie. Dit model toont krachtige redeneringscapaciteiten, meertalige ondersteuning (meer dan 100 talen en dialecten), geavanceerd volgen van instructies en het aanroepen van agenttools. Het verwerkt van nature een contextvenster van 32K tokens en kan worden uitgebreid tot 131K tokens met YaRN."
+  },
+  "qwen/qwen3-30b-a3b": {
+    "description": "Qwen3 is de nieuwste generatie van de Qwen grote taalmodelserie, met een dichte en expert-meng (MoE) architectuur, die uitblinkt in redeneren, meertalige ondersteuning en geavanceerde agenttaken. De unieke mogelijkheid om naadloos over te schakelen tussen de denkmodus voor complexe redenering en de niet-denkmodus voor efficiënte gesprekken zorgt voor veelzijdige en hoogwaardige prestaties.\n\nQwen3 overtreft aanzienlijk eerdere modellen zoals QwQ en Qwen2.5, en biedt uitstekende vaardigheden in wiskunde, codering, gezond verstand redenering, creatieve schrijfvaardigheden en interactieve gesprekken. De Qwen3-30B-A3B variant bevat 30,5 miljard parameters (3,3 miljard actieve parameters), 48 lagen, 128 experts (waarvan 8 per taak geactiveerd), en ondersteunt tot 131K tokens context (met YaRN), waarmee het een nieuwe standaard voor open-source modellen stelt."
+  },
+  "qwen/qwen3-30b-a3b:free": {
+    "description": "Qwen3 is de nieuwste generatie van de Qwen grote taalmodelserie, met een dichte en expert-meng (MoE) architectuur, die uitblinkt in redeneren, meertalige ondersteuning en geavanceerde agenttaken. De unieke mogelijkheid om naadloos over te schakelen tussen de denkmodus voor complexe redenering en de niet-denkmodus voor efficiënte gesprekken zorgt voor veelzijdige en hoogwaardige prestaties.\n\nQwen3 overtreft aanzienlijk eerdere modellen zoals QwQ en Qwen2.5, en biedt uitstekende vaardigheden in wiskunde, codering, gezond verstand redenering, creatieve schrijfvaardigheden en interactieve gesprekken. De Qwen3-30B-A3B variant bevat 30,5 miljard parameters (3,3 miljard actieve parameters), 48 lagen, 128 experts (waarvan 8 per taak geactiveerd), en ondersteunt tot 131K tokens context (met YaRN), waarmee het een nieuwe standaard voor open-source modellen stelt."
+  },
+  "qwen/qwen3-32b": {
+    "description": "Qwen3-32B is een dichte causale taalmodel met 32,8 miljard parameters in de Qwen3 serie, geoptimaliseerd voor complexe redenering en efficiënte gesprekken. Het ondersteunt naadloze overgangen tussen de 'denk' modus voor wiskunde, codering en logische redenering en de 'niet-denk' modus voor snellere, algemene gesprekken. Dit model presteert krachtig in het volgen van instructies, het gebruik van agenttools, creatieve schrijfopdrachten en meertalige taken in meer dan 100 talen en dialecten. Het verwerkt van nature 32K tokens context en kan worden uitgebreid tot 131K tokens met YaRN."
+  },
+  "qwen/qwen3-32b:free": {
+    "description": "Qwen3-32B is een dichte causale taalmodel met 32,8 miljard parameters in de Qwen3 serie, geoptimaliseerd voor complexe redenering en efficiënte gesprekken. Het ondersteunt naadloze overgangen tussen de 'denk' modus voor wiskunde, codering en logische redenering en de 'niet-denk' modus voor snellere, algemene gesprekken. Dit model presteert krachtig in het volgen van instructies, het gebruik van agenttools, creatieve schrijfopdrachten en meertalige taken in meer dan 100 talen en dialecten. Het verwerkt van nature 32K tokens context en kan worden uitgebreid tot 131K tokens met YaRN."
+  },
+  "qwen/qwen3-8b:free": {
+    "description": "Qwen3-8B is een dichte causale taalmodel met 8 miljard parameters in de Qwen3 serie, speciaal ontworpen voor redeneringsintensieve taken en efficiënte gesprekken. Het ondersteunt naadloze overgangen tussen de 'denk' modus voor wiskunde, codering en logische redenering en de 'niet-denk' modus voor algemene gesprekken. Dit model is fijn afgesteld voor het volgen van instructies, agentintegratie, creatieve schrijfopdrachten en meertalig gebruik in meer dan 100 talen en dialecten. Het ondersteunt van nature een contextvenster van 32K tokens en kan worden uitgebreid tot 131K tokens via YaRN."
   },
   "qwen2": {
     "description": "Qwen2 is Alibaba's nieuwe generatie grootschalig taalmodel, ondersteunt diverse toepassingsbehoeften met uitstekende prestaties."
@@ -1760,6 +1982,33 @@
   "qwen2:72b": {
     "description": "Qwen2 is Alibaba's nieuwe generatie grootschalig taalmodel, ondersteunt diverse toepassingsbehoeften met uitstekende prestaties."
   },
+  "qwen3": {
+    "description": "Qwen3 is het nieuwe generatie grootschalige taalmodel van Alibaba, dat uitstekende prestaties levert ter ondersteuning van diverse applicatiebehoeften."
+  },
+  "qwen3-0.6b": {
+    "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
+  },
+  "qwen3-1.7b": {
+    "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
+  },
+  "qwen3-14b": {
+    "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
+  },
+  "qwen3-235b-a22b": {
+    "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
+  },
+  "qwen3-30b-a3b": {
+    "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
+  },
+  "qwen3-32b": {
+    "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
+  },
+  "qwen3-4b": {
+    "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
+  },
+  "qwen3-8b": {
+    "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
+  },
   "qwq": {
     "description": "QwQ is een experimenteel onderzoeksmodel dat zich richt op het verbeteren van de AI-redeneringscapaciteiten."
   },
@@ -1771,6 +2020,9 @@
   },
   "qwq-plus-latest": {
     "description": "De QwQ-inferentiemodel, getraind op het Qwen2.5-model, heeft zijn inferentievermogen aanzienlijk verbeterd door middel van versterkend leren. De kernindicatoren van het model, zoals wiskundige code (AIME 24/25, LiveCodeBench) en enkele algemene indicatoren (IFEval, LiveBench, enz.), bereiken het niveau van de DeepSeek-R1 volwaardige versie."
+  },
+  "qwq_32b": {
+    "description": "Een gemiddeld schaal redeneringsmodel uit de Qwen-serie. In vergelijking met traditionele instructie-geoptimaliseerde modellen, kan QwQ, dat over denk- en redeneringscapaciteiten beschikt, de prestaties in downstream-taken, vooral bij het oplossen van moeilijke problemen, aanzienlijk verbeteren."
   },
   "r1-1776": {
     "description": "R1-1776 is een versie van het DeepSeek R1-model, dat is bijgetraind om ongecensureerde, onpartijdige feitelijke informatie te bieden."
@@ -1832,11 +2084,20 @@
   "step-2-16k": {
     "description": "Ondersteunt grootschalige contextinteracties, geschikt voor complexe gespreksscenario's."
   },
+  "step-2-16k-exp": {
+    "description": "De experimentele versie van het step-2 model, met de nieuwste functies, in een rollende update. Niet aanbevolen voor gebruik in een productieomgeving."
+  },
   "step-2-mini": {
     "description": "Een razendsnel groot model gebaseerd op de nieuwe generatie zelfontwikkelde Attention-architectuur MFA, dat met zeer lage kosten vergelijkbare resultaten als step1 behaalt, terwijl het een hogere doorvoer en snellere responstijd behoudt. Het kan algemene taken verwerken en heeft speciale vaardigheden op het gebied van codering."
   },
+  "step-r1-v-mini": {
+    "description": "Dit model is een krachtig redeneringsmodel met sterke beeldbegripcapaciteiten, in staat om beeld- en tekstinformatie te verwerken en tekstinhoud te genereren na diep nadenken. Dit model presteert uitstekend in visuele redenering en heeft eersteklas wiskundige, code- en tekstredeneringscapaciteiten. De contextlengte is 100k."
+  },
   "taichu_llm": {
     "description": "Het Zido Tai Chu-taalmodel heeft een sterke taalbegripcapaciteit en kan tekstcreatie, kennisvragen, codeprogrammering, wiskundige berekeningen, logische redenering, sentimentanalyse, tekstsamenvattingen en meer aan. Het combineert innovatief grote data voortraining met rijke kennis uit meerdere bronnen, door algoritmische technologie continu te verfijnen en voortdurend nieuwe kennis op te nemen uit enorme tekstdata op het gebied van vocabulaire, structuur, grammatica en semantiek, waardoor de modelprestaties voortdurend evolueren. Het biedt gebruikers gemakkelijkere informatie en diensten en een meer intelligente ervaring."
+  },
+  "taichu_o1": {
+    "description": "taichu_o1 is een nieuw generatie redeneringsmodel dat mensachtige denkprocessen mogelijk maakt door multimodale interactie en versterkend leren, en ondersteunt complexe besluitvorming, terwijl het een hoge precisie-output behoudt en de denkpaden van modelinference toont, geschikt voor strategische analyse en diep nadenken."
   },
   "taichu_vl": {
     "description": "Integreert beeldbegrip, kennisoverdracht en logische toerekening, en presteert uitstekend in het domein van vraag-en-antwoord met tekst en afbeeldingen."
@@ -1847,8 +2108,32 @@
   "text-embedding-3-small": {
     "description": "Een efficiënte en kosteneffectieve nieuwe generatie Embedding model, geschikt voor kennisretrieval, RAG-toepassingen en andere scenario's."
   },
+  "thudm/glm-4-32b": {
+    "description": "GLM-4-32B-0414 is een 32B tweetalig (Chinees en Engels) open gewichten taalmodel, geoptimaliseerd voor codegeneratie, functieaanroepen en agenttaken. Het is voorgetraind op 15T hoogwaardige en herredeneringsdata en verder verfijnd met afstemming op menselijke voorkeuren, afwijzingssampling en versterkingsleren. Dit model presteert uitstekend in complexe redenering, artefactgeneratie en gestructureerde outputtaken, en heeft vergelijkbare prestaties behaald als GPT-4o en DeepSeek-V3-0324 in meerdere benchmarktests."
+  },
+  "thudm/glm-4-32b:free": {
+    "description": "GLM-4-32B-0414 is een 32B tweetalig (Chinees en Engels) open gewichten taalmodel, geoptimaliseerd voor codegeneratie, functieaanroepen en agenttaken. Het is voorgetraind op 15T hoogwaardige en herredeneringsdata en verder verfijnd met afstemming op menselijke voorkeuren, afwijzingssampling en versterkingsleren. Dit model presteert uitstekend in complexe redenering, artefactgeneratie en gestructureerde outputtaken, en heeft vergelijkbare prestaties behaald als GPT-4o en DeepSeek-V3-0324 in meerdere benchmarktests."
+  },
   "thudm/glm-4-9b-chat": {
     "description": "De open-source versie van de nieuwste generatie voorgetrainde modellen van de GLM-4-serie, uitgebracht door Zhizhu AI."
+  },
+  "thudm/glm-4-9b:free": {
+    "description": "GLM-4-9B-0414 is een taalmodel met 9B parameters in de GLM-4 serie, ontwikkeld door THUDM. GLM-4-9B-0414 wordt getraind met dezelfde versterkingsleer- en afstemmingsstrategieën als het grotere 32B tegenhanger, en bereikt hoge prestaties in verhouding tot zijn formaat, waardoor het geschikt is voor implementaties met beperkte middelen die nog steeds sterke taalbegrip en generatiecapaciteiten vereisen."
+  },
+  "thudm/glm-z1-32b": {
+    "description": "GLM-Z1-32B-0414 is een verbeterde redeneringsvariant van GLM-4-32B, speciaal gebouwd voor diepgaande wiskunde, logica en codegerichte probleemoplossing. Het past uitgebreide versterkingsleren toe (taakspecifiek en op basis van algemene parenvoorkeuren) om de prestaties van complexe meerstaps taken te verbeteren. In vergelijking met het basis GLM-4-32B-model heeft Z1 de mogelijkheden voor gestructureerde redenering en formele domeinen aanzienlijk verbeterd.\n\nDit model ondersteunt het afdwingen van 'denkstappen' via prompt-engineering en biedt verbeterde coherentie voor lange outputformaten. Het is geoptimaliseerd voor agentwerkstromen en ondersteunt lange context (via YaRN), JSON-toolaanroepen en fijnmazige samplingconfiguraties voor stabiele redenering. Zeer geschikt voor gebruikscases die diepgaand nadenken, meerstaps redenering of formele afleiding vereisen."
+  },
+  "thudm/glm-z1-32b:free": {
+    "description": "GLM-Z1-32B-0414 is een verbeterde redeneringsvariant van GLM-4-32B, speciaal gebouwd voor diepgaande wiskunde, logica en codegerichte probleemoplossing. Het past uitgebreide versterkingsleren toe (taakspecifiek en op basis van algemene parenvoorkeuren) om de prestaties van complexe meerstaps taken te verbeteren. In vergelijking met het basis GLM-4-32B-model heeft Z1 de mogelijkheden voor gestructureerde redenering en formele domeinen aanzienlijk verbeterd.\n\nDit model ondersteunt het afdwingen van 'denkstappen' via prompt-engineering en biedt verbeterde coherentie voor lange outputformaten. Het is geoptimaliseerd voor agentwerkstromen en ondersteunt lange context (via YaRN), JSON-toolaanroepen en fijnmazige samplingconfiguraties voor stabiele redenering. Zeer geschikt voor gebruikscases die diepgaand nadenken, meerstaps redenering of formele afleiding vereisen."
+  },
+  "thudm/glm-z1-9b:free": {
+    "description": "GLM-Z1-9B-0414 is een taalmodel met 9B parameters in de GLM-4 serie, ontwikkeld door THUDM. Het maakt gebruik van technieken die oorspronkelijk zijn toegepast op het grotere GLM-Z1 model, waaronder uitgebreide versterkingsleer, parenrangschikking afstemming en training voor redeneringsintensieve taken zoals wiskunde, codering en logica. Ondanks zijn kleinere formaat, presteert het krachtig in algemene redeneringstaken en overtreft het veel open-source modellen op zijn gewichtsniveau."
+  },
+  "thudm/glm-z1-rumination-32b": {
+    "description": "THUDM: GLM Z1 Rumination 32B is een diep redeneringsmodel met 32B parameters in de GLM-4-Z1 serie, geoptimaliseerd voor complexe, open taken die langdurig nadenken vereisen. Het is gebaseerd op glm-4-32b-0414, met extra versterkingsleerfasen en meerfasige afstemmingsstrategieën, en introduceert de 'reflectieve' capaciteit die is ontworpen om uitgebreide cognitieve verwerking te simuleren. Dit omvat iteratieve redenering, multi-hop analyse en tool-versterkte workflows, zoals zoeken, ophalen en citatie-bewuste synthese.\n\nDit model presteert uitstekend in onderzoeksgericht schrijven, vergelijkende analyses en complexe vraag-en-antwoord situaties. Het ondersteunt functie-aanroepen voor zoek- en navigatiecommando's (`search`, `click`, `open`, `finish`), waardoor het kan worden gebruikt in agent-gebaseerde pipelines. Reflectief gedrag wordt gevormd door een multi-rondencycluscontrole met op regels gebaseerde beloningen en een vertraagd besluitvormingsmechanisme, en is gebaseerd op diepgaande onderzoeksframeworks zoals de interne afstemmingsstack van OpenAI. Deze variant is geschikt voor scenario's die diepgang in plaats van snelheid vereisen."
+  },
+  "tngtech/deepseek-r1t-chimera:free": {
+    "description": "DeepSeek-R1T-Chimera is gecreëerd door de combinatie van DeepSeek-R1 en DeepSeek-V3 (0324), en combineert de redeneringscapaciteiten van R1 met de verbeteringen in token efficiëntie van V3. Het is gebaseerd op de DeepSeek-MoE Transformer architectuur en is geoptimaliseerd voor algemene tekstgeneratietaken.\n\nDit model combineert de voorgetrainde gewichten van de twee bronmodellen om de prestaties in redeneren, efficiëntie en het volgen van instructies in balans te brengen. Het is vrijgegeven onder de MIT-licentie en is bedoeld voor onderzoek en commerciële doeleinden."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) biedt verbeterde rekenkracht door middel van efficiënte strategieën en modelarchitectuur."
