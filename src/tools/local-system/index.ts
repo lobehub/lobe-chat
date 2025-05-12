@@ -2,7 +2,7 @@ import { BuiltinToolManifest } from '@/types/tool';
 
 import { systemPrompt } from './systemRole';
 
-export const LocalFilesApiName = {
+export const LocalSystemApiName = {
   listLocalFiles: 'listLocalFiles',
   moveLocalFiles: 'moveLocalFiles',
   readLocalFile: 'readLocalFile',
@@ -11,12 +11,12 @@ export const LocalFilesApiName = {
   writeLocalFile: 'writeLocalFile',
 };
 
-export const LocalFilesManifest: BuiltinToolManifest = {
+export const LocalSystemManifest: BuiltinToolManifest = {
   api: [
     {
       description:
         'List files and folders in a specified directory. Input should be a path. Output is a JSON array of file/folder names.',
-      name: LocalFilesApiName.listLocalFiles,
+      name: LocalSystemApiName.listLocalFiles,
       parameters: {
         properties: {
           path: {
@@ -31,7 +31,7 @@ export const LocalFilesManifest: BuiltinToolManifest = {
     {
       description:
         'Read the content of a specific file. Input should be the file path. Output is the file content as a string.',
-      name: LocalFilesApiName.readLocalFile,
+      name: LocalSystemApiName.readLocalFile,
       parameters: {
         properties: {
           loc: {
@@ -54,7 +54,7 @@ export const LocalFilesManifest: BuiltinToolManifest = {
     {
       description:
         'Search for files within the workspace based on a query string and optional filter options. Input should include the search query and any filter options. Output is a JSON array of matching file paths.',
-      name: LocalFilesApiName.searchLocalFiles,
+      name: LocalSystemApiName.searchLocalFiles,
       parameters: {
         properties: {
           contentContains: {
@@ -130,7 +130,7 @@ export const LocalFilesManifest: BuiltinToolManifest = {
     {
       description:
         'Moves or renames multiple files/directories. Input is an array of objects, each containing an oldPath and a newPath.',
-      name: LocalFilesApiName.moveLocalFiles,
+      name: LocalSystemApiName.moveLocalFiles,
       parameters: {
         properties: {
           items: {
@@ -160,7 +160,7 @@ export const LocalFilesManifest: BuiltinToolManifest = {
     {
       description:
         'Rename a file or folder in its current location. Input should be the current full path and the new name.',
-      name: LocalFilesApiName.renameLocalFile,
+      name: LocalSystemApiName.renameLocalFile,
       parameters: {
         properties: {
           newName: {
@@ -179,7 +179,7 @@ export const LocalFilesManifest: BuiltinToolManifest = {
     {
       description:
         'Write content to a specific file. Input should be the file path and content. Overwrites existing file or creates a new one.',
-      name: LocalFilesApiName.writeLocalFile,
+      name: LocalSystemApiName.writeLocalFile,
       parameters: {
         properties: {
           content: {
@@ -196,10 +196,10 @@ export const LocalFilesManifest: BuiltinToolManifest = {
       },
     },
   ],
-  identifier: 'lobe-local-files',
+  identifier: 'lobe-local-system',
   meta: {
     avatar: '📁',
-    title: 'Local Files',
+    title: 'Local System',
   },
   systemRole: systemPrompt,
   type: 'builtin',

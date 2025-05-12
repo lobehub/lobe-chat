@@ -2,6 +2,181 @@
 
 # Changelog
 
+### [Version 1.85.8](https://github.com/lobehub/lobe-chat/compare/v1.85.7...v1.85.8)
+
+<sup>Released on **2025-05-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix config import issue in the desktop version.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix config import issue in the desktop version, closes [#7800](https://github.com/lobehub/lobe-chat/issues/7800) ([2cb8635](https://github.com/lobehub/lobe-chat/commit/2cb8635))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.85.7](https://github.com/lobehub/lobe-chat/compare/v1.85.6...v1.85.7)
+
+<sup>Released on **2025-05-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix streamable http url valid and refactor local files to local system.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix streamable http url valid and refactor local files to local system, closes [#7794](https://github.com/lobehub/lobe-chat/issues/7794) ([37fd5fe](https://github.com/lobehub/lobe-chat/commit/37fd5fe))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.85.6](https://github.com/lobehub/lobe-chat/compare/v1.85.5...v1.85.6)
+
+<sup>Released on **2025-05-10**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.85.5](https://github.com/lobehub/lobe-chat/compare/v1.85.4...v1.85.5)
+
+<sup>Released on **2025-05-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix window close issue and release Window/Linux beta.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix window close issue and release Window/Linux beta, closes [#7780](https://github.com/lobehub/lobe-chat/issues/7780) ([82c48b9](https://github.com/lobehub/lobe-chat/commit/82c48b9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.85.4](https://github.com/lobehub/lobe-chat/compare/v1.85.3...v1.85.4)
+
+<sup>Released on **2025-05-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix nothing return when reset the client db.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix nothing return when reset the client db, closes [#7738](https://github.com/lobehub/lobe-chat/issues/7738) ([90efb13](https://github.com/lobehub/lobe-chat/commit/90efb13))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.85.3](https://github.com/lobehub/lobe-chat/compare/v1.85.2...v1.85.3)
+
+<sup>Released on **2025-05-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Remove mcp client cache.
+
+#### 💄 Styles
+
+- **misc**: Improve pdf and xlsx file content parser.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Remove mcp client cache, closes [#7776](https://github.com/lobehub/lobe-chat/issues/7776) ([0582134](https://github.com/lobehub/lobe-chat/commit/0582134))
+
+#### Styles
+
+- **misc**: Improve pdf and xlsx file content parser, closes [#7783](https://github.com/lobehub/lobe-chat/issues/7783) ([0376870](https://github.com/lobehub/lobe-chat/commit/0376870))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.85.2](https://github.com/lobehub/lobe-chat/compare/v1.85.1...v1.85.2)
+
+<sup>Released on **2025-05-10**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Upgrade anthropic sdk.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Upgrade anthropic sdk, closes [#7773](https://github.com/lobehub/lobe-chat/issues/7773) ([39e871f](https://github.com/lobehub/lobe-chat/commit/39e871f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.85.1](https://github.com/lobehub/lobe-chat/compare/v1.85.0...v1.85.1)
 
 <sup>Released on **2025-05-10**</sup>

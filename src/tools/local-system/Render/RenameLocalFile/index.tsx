@@ -7,7 +7,7 @@ import React, { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { LocalFile } from '@/features/LocalFile';
-import { LocalReadFileState } from '@/tools/local-files/type';
+import { LocalReadFileState } from '@/tools/local-system/type';
 import { ChatMessagePluginError } from '@/types/message';
 
 const useStyles = createStyles(({ css, token }) => ({

@@ -1,7 +1,5 @@
-// sort-imports-ignore
-import '@anthropic-ai/sdk/shims/web';
-import Anthropic from '@anthropic-ai/sdk';
-import { ClientOptions } from 'openai';
+import Anthropic, { ClientOptions } from '@anthropic-ai/sdk';
+
 import type { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../BaseAI';
@@ -12,10 +10,10 @@ import {
   ChatStreamPayload,
   ModelProvider,
 } from '../types';
+import { buildAnthropicMessages, buildAnthropicTools } from '../utils/anthropicHelpers';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { desensitizeUrl } from '../utils/desensitizeUrl';
-import { buildAnthropicMessages, buildAnthropicTools } from '../utils/anthropicHelpers';
 import { StreamingResponse } from '../utils/response';
 import { AnthropicStream } from '../utils/streams';
 import { handleAnthropicError } from './handleAnthropicError';
