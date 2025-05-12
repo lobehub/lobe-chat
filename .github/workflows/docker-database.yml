@@ -12,8 +12,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  REGISTRY_URL: onejaacr.azurecr.io
-  REGISTRY_IMAGE: onejaacr.azurecr.io/ai/oneja-bot-database
+  REGISTRY_URL: jaworldwide.azurecr.io
+  REGISTRY_IMAGE: jaworldwide.azurecr.io/oneja/ai/bot-database
   PR_TAG_PREFIX: pr-
 
 jobs:
