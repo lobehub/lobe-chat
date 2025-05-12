@@ -1,8 +1,15 @@
 name: Release CI
+
+permissions:
+  contents: write
+  issues: write
+  actions: write
+
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   release:
