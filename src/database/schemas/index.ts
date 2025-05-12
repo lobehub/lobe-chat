@@ -1,6 +1,7 @@
 export * from './agent';
 export * from './aiInfra';
 export * from './asyncTask';
+export * from './document';
 export * from './file';
 export * from './message';
 export * from './nextauth';

@@ -115,6 +115,45 @@ table async_tasks {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 }
 
+table document_chunks {
+  document_id varchar(30) [not null]
+  chunk_id uuid [not null]
+  page_index integer
+  user_id text [not null]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    (document_id, chunk_id) [pk]
+  }
+}
+
+table documents {
+  id varchar(30) [pk, not null]
+  title text
+  content text
+  file_type varchar(255) [not null]
+  filename text
+  total_char_count integer [not null]
+  total_line_count integer [not null]
+  metadata jsonb
+  pages jsonb
+  source_type text [not null]
+  source text [not null]
+  file_id text
+  user_id text [not null]
+  client_id text
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    source [name: 'documents_source_idx']
+    file_type [name: 'documents_file_type_idx']
+    file_id [name: 'documents_file_id_idx']
+    (client_id, user_id) [name: 'documents_client_id_user_id_unique', unique]
+  }
+}
+
 table files {
   id text [pk, not null]
   user_id text [not null]
@@ -670,6 +709,17 @@ table threads {
   }
 }
 
+table topic_documents {
+  document_id text [not null]
+  topic_id text [not null]
+  user_id text [not null]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    (document_id, topic_id) [pk]
+  }
+}
+
 table topics {
   id text [pk, not null]
   title text
@@ -744,6 +794,10 @@ ref: agents_to_sessions.agent_id > agents.id
 
 ref: unstructured_chunks.file_id - files.id
 
+ref: document_chunks.document_id > documents.id
+
+ref: documents.file_id > files.id
+
 ref: files.embedding_task_id - async_tasks.id
 
 ref: messages.session_id - sessions.id
@@ -755,5 +809,9 @@ ref: messages.topic_id - topics.id
 ref: threads.source_message_id - messages.id
 
 ref: sessions.group_id - session_groups.id
+
+ref: topic_documents.document_id > documents.id
+
+ref: topic_documents.topic_id > topics.id
 
 ref: topics.session_id - sessions.id

@@ -13,6 +13,13 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
   // basic
   {
     group: HotkeyGroupEnum.Essential,
+    id: HotkeyEnum.ShowApp,
+    keys: combineKeys([KeyEnum.Mod, 'e']),
+    nonEditable: true,
+    scopes: [HotkeyScopeEnum.Global],
+  },
+  {
+    group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.Search,
     keys: combineKeys([KeyEnum.Mod, 'k']),
     scopes: [HotkeyScopeEnum.Global],

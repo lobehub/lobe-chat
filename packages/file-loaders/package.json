@@ -20,14 +20,18 @@
   "author": "LobeHub <i@lobehub.com>",
   "sideEffects": false,
   "main": "./src/index.ts",
+  "scripts": {
+    "test": "vitest"
+  },
   "dependencies": {
     "@langchain/community": "^0.3.41",
     "@langchain/core": "^0.3.45",
+    "@napi-rs/canvas": "^0.1.70",
     "@xmldom/xmldom": "^0.9.8",
     "concat-stream": "^2.0.0",
     "mammoth": "^1.8.0",
     "officeparser": "^5.1.1",
-    "pdfjs-dist": "4.8.69",
+    "pdfjs-dist": "4.10.38",
     "xlsx": "^0.18.5",
     "yauzl": "^3.2.0"
   },
