@@ -9,7 +9,8 @@ const channel = process.env.UPDATE_CHANNEL;
 console.log(`🚄 Build Version ${packageJSON.version}, Channel: ${channel}`);
 
 const isNightly = channel === 'nightly';
-const isBeta = channel === 'beta';
+const isBeta = packageJSON.name.includes('beta');
+
 /**
  * @type {import('electron-builder').Configuration}
  * @see https://www.electron.build/configuration
@@ -53,18 +54,14 @@ const config = {
   mac: {
     compression: 'maximum',
     entitlementsInherit: 'build/entitlements.mac.plist',
-    extendInfo: [
-      { NSCameraUsageDescription: "Application requests access to the device's camera." },
-      { NSMicrophoneUsageDescription: "Application requests access to the device's microphone." },
-      {
-        NSDocumentsFolderUsageDescription:
-          "Application requests access to the user's Documents folder.",
-      },
-      {
-        NSDownloadsFolderUsageDescription:
-          "Application requests access to the user's Downloads folder.",
-      },
-    ],
+    extendInfo: {
+      NSCameraUsageDescription: "Application requests access to the device's camera.",
+      NSDocumentsFolderUsageDescription:
+        "Application requests access to the user's Documents folder.",
+      NSDownloadsFolderUsageDescription:
+        "Application requests access to the user's Downloads folder.",
+      NSMicrophoneUsageDescription: "Application requests access to the device's microphone.",
+    },
     gatekeeperAssess: false,
     hardenedRuntime: true,
     notarize: true,
@@ -79,10 +76,10 @@ const config = {
   },
   npmRebuild: true,
   nsis: {
+    allowToChangeInstallationDirectory: true,
     artifactName: '${productName}-${version}-setup.${ext}',
     createDesktopShortcut: 'always',
-    // allowToChangeInstallationDirectory: true,
-    // oneClick: false,
+    oneClick: false,
     shortcutName: '${productName}',
     uninstallDisplayName: '${productName}',
   },

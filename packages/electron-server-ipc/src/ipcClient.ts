@@ -192,39 +192,76 @@ export class ElectronIpcClient {
 
     log('Sending request: %s %o', method, params);
     return new Promise<T>((resolve, reject) => {
-      try {
-        const id = Math.random().toString(36).slice(2, 15);
-        const request = { id, method, params };
-        log('Created request with ID: %s', id);
+      const id = Math.random().toString(36).slice(2, 15);
+      const request = { id, method, params };
+      log('Created request with ID: %s', id);
 
-        // 将请求添加到队列
-        this.requestQueue.set(id, { reject, resolve });
-        log('Added request to queue, current queue size: %d', this.requestQueue.size);
+      // eslint-disable-next-line no-undef
+      let requestTimeoutId: NodeJS.Timeout;
 
-        // 设置超时
-        const timeout = setTimeout(() => {
-          this.requestQueue.delete(id);
-          const errorMsg = `Request timed out, method: ${method}`;
+      const cleanupAndResolve = (value: T) => {
+        clearTimeout(requestTimeoutId);
+        this.requestQueue.delete(id);
+        resolve(value);
+      };
+
+      const cleanupAndReject = (error: any) => {
+        clearTimeout(requestTimeoutId);
+        this.requestQueue.delete(id);
+        // 保留超时错误的 console.error 日志
+        if (
+          error &&
+          error.message &&
+          typeof error.message === 'string' &&
+          error.message.startsWith('Request timed out')
+        ) {
           console.error('Request timed out, ID: %s, method: %s', id, method);
-          reject(new Error(errorMsg));
-        }, 5000);
+        }
+        reject(error);
+      };
 
+      this.requestQueue.set(id, { reject: cleanupAndReject, resolve: cleanupAndResolve });
+      log('Added request to queue, current queue size: %d', this.requestQueue.size);
+
+      requestTimeoutId = setTimeout(() => {
+        const pendingRequest = this.requestQueue.get(id);
+        if (pendingRequest) {
+          // 请求仍在队列中，表示超时
+          // 调用其专用的 reject处理器 (cleanupAndReject)
+          const errorMsg = `Request timed out, method: ${method}`;
+          // console.error 移至 cleanupAndReject 中处理
+          pendingRequest.reject(new Error(errorMsg));
+        }
+        // 如果 pendingRequest 不存在, 表示请求已被处理，其超时已清除
+      }, 5000);
+
+      try {
         // 发送请求
-        const requestJson = JSON.stringify(request);
+        const requestJson = JSON.stringify(request) + '\n';
         log('Writing request to socket, size: %d bytes', requestJson.length);
         this.socket!.write(requestJson, (err) => {
           if (err) {
-            clearTimeout(timeout);
-            this.requestQueue.delete(id);
+            // 写入失败，请求应被视为失败
+            // 调用其 reject 处理器 (cleanupAndReject)
+            const pending = this.requestQueue.get(id);
+            if (pending) {
+              pending.reject(err); // 这会调用 cleanupAndReject
+            } else {
+              // 理论上不应发生，因为写入失败通常很快
+              // 但为安全起见，确保原始 promise 被 reject
+              cleanupAndReject(err);
+            }
             console.error('Failed to write request to socket: %o', err);
-            reject(err);
           } else {
             log('Request successfully written to socket, ID: %s', id);
           }
         });
       } catch (err) {
-        console.error('Error sending request: %o', err);
-        reject(err);
+        console.error('Error sending request (during setup/write phase): %o', err);
+        // 发生在此处的错误意味着请求甚至没有机会进入队列或设置超时
+        // 直接调用 cleanupAndReject 以确保一致性，尽管此时 requestTimeoutId 可能未定义
+        // (clearTimeout(undefined)是安全的)
+        cleanupAndReject(err);
       }
     });
   }

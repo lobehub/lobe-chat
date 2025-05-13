@@ -111,7 +111,7 @@
         "title": "Tipo de complemento MCP"
       },
       "url": {
-        "desc": "Introduce la dirección HTTP transmitible de tu servidor MCP, que no debe terminar con /sse",
+        "desc": "Introduce la dirección HTTP transmitible de tu servidor MCP, no se admite el modo SSE",
         "invalid": "Por favor, introduce una URL válida",
         "label": "URL del Endpoint HTTP",
         "required": "Por favor, introduce la URL del servicio MCP"

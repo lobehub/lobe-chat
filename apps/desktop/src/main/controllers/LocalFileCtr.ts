@@ -9,6 +9,7 @@ import {
   OpenLocalFileParams,
   OpenLocalFolderParams,
   RenameLocalFileResult,
+  WriteLocalFileParams,
 } from '@lobechat/electron-client-ipc';
 import { SYSTEM_FILES_TO_IGNORE, loadFile } from '@lobechat/file-loaders';
 import { shell } from 'electron';
@@ -20,13 +21,18 @@ import { promisify } from 'node:util';
 import FileSearchService from '@/services/fileSearchSrv';
 import { FileResult, SearchOptions } from '@/types/fileSearch';
 import { makeSureDirExist } from '@/utils/file-system';
+import { createLogger } from '@/utils/logger';
 
 import { ControllerModule, ipcClientEvent } from './index';
+
+// 创建日志记录器
+const logger = createLogger('controllers:LocalFileCtr');
 
 const statPromise = promisify(fs.stat);
 const readdirPromise = promisify(fs.readdir);
 const renamePromiseFs = promisify(fs.rename);
 const accessPromise = promisify(fs.access);
+const writeFilePromise = promisify(fs.writeFile);
 
 export default class LocalFileCtr extends ControllerModule {
   private get searchService() {
@@ -38,11 +44,20 @@ export default class LocalFileCtr extends ControllerModule {
    */
   @ipcClientEvent('searchLocalFiles')
   async handleLocalFilesSearch(params: LocalSearchFilesParams): Promise<FileResult[]> {
+    logger.debug('Received file search request:', { keywords: params.keywords });
+
     const options: Omit<SearchOptions, 'keywords'> = {
       limit: 30,
     };
 
-    return this.searchService.search(params.keywords, options);
+    try {
+      const results = await this.searchService.search(params.keywords, options);
+      logger.debug('File search completed', { count: results.length });
+      return results;
+    } catch (error) {
+      logger.error('File search failed:', error);
+      return [];
+    }
   }
 
   @ipcClientEvent('openLocalFile')
@@ -50,11 +65,14 @@ export default class LocalFileCtr extends ControllerModule {
     error?: string;
     success: boolean;
   }> {
+    logger.debug('Attempting to open file:', { filePath });
+
     try {
       await shell.openPath(filePath);
+      logger.debug('File opened successfully:', { filePath });
       return { success: true };
     } catch (error) {
-      console.error(`Failed to open file ${filePath}:`, error);
+      logger.error(`Failed to open file ${filePath}:`, error);
       return { error: (error as Error).message, success: false };
     }
   }
@@ -64,35 +82,42 @@ export default class LocalFileCtr extends ControllerModule {
     error?: string;
     success: boolean;
   }> {
+    const folderPath = isDirectory ? targetPath : path.dirname(targetPath);
+    logger.debug('Attempting to open folder:', { folderPath, isDirectory, targetPath });
+
     try {
-      const folderPath = isDirectory ? targetPath : path.dirname(targetPath);
       await shell.openPath(folderPath);
+      logger.debug('Folder opened successfully:', { folderPath });
       return { success: true };
     } catch (error) {
-      console.error(`Failed to open folder for path ${targetPath}:`, error);
+      logger.error(`Failed to open folder ${folderPath}:`, error);
       return { error: (error as Error).message, success: false };
     }
   }
 
   @ipcClientEvent('readLocalFiles')
   async readFiles({ paths }: LocalReadFilesParams): Promise<LocalReadFileResult[]> {
+    logger.debug('Starting batch file reading:', { count: paths.length });
+
     const results: LocalReadFileResult[] = [];
 
     for (const filePath of paths) {
       // 初始化结果对象
+      logger.debug('Reading single file:', { filePath });
       const result = await this.readFile({ path: filePath });
-
       results.push(result);
     }
 
+    logger.debug('Batch file reading completed', { count: results.length });
     return results;
   }
 
   @ipcClientEvent('readLocalFile')
   async readFile({ path: filePath, loc }: LocalReadFileParams): Promise<LocalReadFileResult> {
-    try {
-      const effectiveLoc = loc ?? [0, 200];
+    const effectiveLoc = loc ?? [0, 200];
+    logger.debug('Starting to read file:', { filePath, loc: effectiveLoc });
 
+    try {
       const fileDocument = await loadFile(filePath);
 
       const [startLine, endLine] = effectiveLoc;
@@ -105,6 +130,13 @@ export default class LocalFileCtr extends ControllerModule {
       const content = selectedLines.join('\n');
       const charCount = content.length;
       const lineCount = selectedLines.length;
+
+      logger.debug('File read successfully:', {
+        filePath,
+        selectedLineCount: lineCount,
+        totalCharCount,
+        totalLineCount,
+      });
 
       const result: LocalReadFileResult = {
         // Char count for the selected range
@@ -128,6 +160,7 @@ export default class LocalFileCtr extends ControllerModule {
       try {
         const stats = await statPromise(filePath);
         if (stats.isDirectory()) {
+          logger.warn('Attempted to read directory content:', { filePath });
           result.content = 'This is a directory and cannot be read as plain text.';
           result.charCount = 0;
           result.lineCount = 0;
@@ -136,12 +169,12 @@ export default class LocalFileCtr extends ControllerModule {
           result.totalLineCount = 0;
         }
       } catch (statError) {
-        console.error(`Stat failed for ${filePath} after loadFile:`, statError);
+        logger.error(`Failed to get file status ${filePath}:`, statError);
       }
 
       return result;
     } catch (error) {
-      console.error(`Error processing file ${filePath}:`, error);
+      logger.error(`Failed to read file ${filePath}:`, error);
       const errorMessage = (error as Error).message;
       return {
         charCount: 0,
@@ -160,13 +193,20 @@ export default class LocalFileCtr extends ControllerModule {
 
   @ipcClientEvent('listLocalFiles')
   async listLocalFiles({ path: dirPath }: ListLocalFileParams): Promise<FileResult[]> {
+    logger.debug('Listing directory contents:', { dirPath });
+
     const results: FileResult[] = [];
     try {
       const entries = await readdirPromise(dirPath);
+      logger.debug('Directory entries retrieved successfully:', {
+        dirPath,
+        entriesCount: entries.length,
+      });
 
       for (const entry of entries) {
         // Skip specific system files based on the ignore list
         if (SYSTEM_FILES_TO_IGNORE.includes(entry)) {
+          logger.debug('Ignoring system file:', { fileName: entry });
           continue;
         }
 
@@ -186,7 +226,7 @@ export default class LocalFileCtr extends ControllerModule {
           });
         } catch (statError) {
           // Silently ignore files we can't stat (e.g. permissions)
-          console.error(`Failed to stat ${fullPath}:`, statError);
+          logger.error(`Failed to get file status ${fullPath}:`, statError);
         }
       }
 
@@ -199,9 +239,10 @@ export default class LocalFileCtr extends ControllerModule {
         return (a.name || '').localeCompare(b.name || ''); // Then sort by name
       });
 
+      logger.debug('Directory listing successful', { dirPath, resultCount: results.length });
       return results;
     } catch (error) {
-      console.error(`Failed to list directory ${dirPath}:`, error);
+      logger.error(`Failed to list directory ${dirPath}:`, error);
       // Rethrow or return an empty array/error object depending on desired behavior
       // For now, returning empty array on error listing directory itself
       return [];
@@ -210,16 +251,21 @@ export default class LocalFileCtr extends ControllerModule {
 
   @ipcClientEvent('moveLocalFiles')
   async handleMoveFiles({ items }: MoveLocalFilesParams): Promise<LocalMoveFilesResultItem[]> {
+    logger.debug('Starting batch file move:', { itemsCount: items?.length });
+
     const results: LocalMoveFilesResultItem[] = [];
 
     if (!items || items.length === 0) {
-      console.warn('moveLocalFiles called with empty items array.');
+      logger.warn('moveLocalFiles called with empty parameters');
       return [];
     }
 
     // 逐个处理移动请求
     for (const item of items) {
       const { oldPath: sourcePath, newPath } = item;
+      const logPrefix = `[Moving file ${sourcePath} -> ${newPath}]`;
+      logger.debug(`${logPrefix} Starting process`);
+
       const resultItem: LocalMoveFilesResultItem = {
         newPath: undefined,
         sourcePath,
@@ -228,6 +274,7 @@ export default class LocalFileCtr extends ControllerModule {
 
       // 基本验证
       if (!sourcePath || !newPath) {
+        logger.error(`${logPrefix} Parameter validation failed: source or target path is empty`);
         resultItem.error = 'Both oldPath and newPath are required for each item.';
         results.push(resultItem);
         continue;
@@ -237,10 +284,13 @@ export default class LocalFileCtr extends ControllerModule {
         // 检查源是否存在
         try {
           await accessPromise(sourcePath, fs.constants.F_OK);
+          logger.debug(`${logPrefix} Source file exists`);
         } catch (accessError: any) {
           if (accessError.code === 'ENOENT') {
+            logger.error(`${logPrefix} Source file does not exist`);
             throw new Error(`Source path not found: ${sourcePath}`);
           } else {
+            logger.error(`${logPrefix} Permission error accessing source file:`, accessError);
             throw new Error(
               `Permission denied accessing source path: ${sourcePath}. ${accessError.message}`,
             );
@@ -249,7 +299,7 @@ export default class LocalFileCtr extends ControllerModule {
 
         // 检查目标路径是否与源路径相同
         if (path.normalize(sourcePath) === path.normalize(newPath)) {
-          console.log(`Skipping move: source and target path are identical: ${sourcePath}`);
+          logger.info(`${logPrefix} Source and target paths are identical, skipping move`);
           resultItem.success = true;
           resultItem.newPath = newPath; // 即使未移动，也报告目标路径
           results.push(resultItem);
@@ -259,14 +309,15 @@ export default class LocalFileCtr extends ControllerModule {
         // LBYL: 确保目标目录存在
         const targetDir = path.dirname(newPath);
         makeSureDirExist(targetDir);
+        logger.debug(`${logPrefix} Ensured target directory exists: ${targetDir}`);
 
         // 执行移动 (rename)
         await renamePromiseFs(sourcePath, newPath);
         resultItem.success = true;
         resultItem.newPath = newPath;
-        console.log(`Successfully moved ${sourcePath} to ${newPath}`);
+        logger.info(`${logPrefix} Move successful`);
       } catch (error) {
-        console.error(`Error moving ${sourcePath} to ${newPath}:`, error);
+        logger.error(`${logPrefix} Move failed:`, error);
         // 使用与 handleMoveFile 类似的错误处理逻辑
         let errorMessage = (error as Error).message;
         if ((error as any).code === 'ENOENT')
@@ -296,6 +347,10 @@ export default class LocalFileCtr extends ControllerModule {
       results.push(resultItem);
     }
 
+    logger.debug('Batch file move completed', {
+      successCount: results.filter((r) => r.success).length,
+      totalCount: results.length,
+    });
     return results;
   }
 
@@ -307,8 +362,12 @@ export default class LocalFileCtr extends ControllerModule {
     newName: string;
     path: string;
   }): Promise<RenameLocalFileResult> {
+    const logPrefix = `[Renaming ${currentPath} -> ${newName}]`;
+    logger.debug(`${logPrefix} Starting rename request`);
+
     // Basic validation (can also be done in frontend action)
     if (!currentPath || !newName) {
+      logger.error(`${logPrefix} Parameter validation failed: path or new name is empty`);
       return { error: 'Both path and newName are required.', newPath: '', success: false };
     }
     // Prevent path traversal or using invalid characters/names
@@ -319,6 +378,7 @@ export default class LocalFileCtr extends ControllerModule {
       newName === '..' ||
       /["*/:<>?\\|]/.test(newName) // Check for typical invalid filename characters
     ) {
+      logger.error(`${logPrefix} New filename contains illegal characters: ${newName}`);
       return {
         error:
           'Invalid new name. It cannot contain path separators (/, \\), be "." or "..", or include characters like < > : " / \\ | ? *.',
@@ -331,18 +391,19 @@ export default class LocalFileCtr extends ControllerModule {
     try {
       const dir = path.dirname(currentPath);
       newPath = path.join(dir, newName);
+      logger.debug(`${logPrefix} Calculated new path: ${newPath}`);
 
       // Check if paths are identical after calculation
       if (path.normalize(currentPath) === path.normalize(newPath)) {
-        console.log(
-          `Skipping rename: oldPath and calculated newPath are identical: ${currentPath}`,
+        logger.info(
+          `${logPrefix} Source path and calculated target path are identical, skipping rename`,
         );
         // Consider success as no change is needed, but maybe inform the user?
         // Return success for now.
         return { newPath, success: true };
       }
     } catch (error) {
-      console.error(`Error calculating new path for rename ${currentPath} to ${newName}:`, error);
+      logger.error(`${logPrefix} Failed to calculate new path:`, error);
       return {
         error: `Internal error calculating the new path: ${(error as Error).message}`,
         newPath: '',
@@ -353,12 +414,12 @@ export default class LocalFileCtr extends ControllerModule {
     // Perform the rename operation using fs.promises.rename directly
     try {
       await renamePromise(currentPath, newPath);
-      console.log(`Successfully renamed ${currentPath} to ${newPath}`);
+      logger.info(`${logPrefix} Rename successful: ${currentPath} -> ${newPath}`);
       // Optionally return the newPath if frontend needs it
       // return { success: true, newPath: newPath };
       return { newPath, success: true };
     } catch (error) {
-      console.error(`Error renaming ${currentPath} to ${newPath}:`, error);
+      logger.error(`${logPrefix} Rename failed:`, error);
       let errorMessage = (error as Error).message;
       // Provide more specific error messages based on common codes
       if ((error as any).code === 'ENOENT') {
@@ -375,6 +436,46 @@ export default class LocalFileCtr extends ControllerModule {
       }
       // Add more specific checks as needed
       return { error: errorMessage, newPath: '', success: false };
+    }
+  }
+
+  @ipcClientEvent('writeLocalFile')
+  async handleWriteFile({ path: filePath, content }: WriteLocalFileParams) {
+    const logPrefix = `[Writing file ${filePath}]`;
+    logger.debug(`${logPrefix} Starting to write file`, { contentLength: content?.length });
+
+    // 验证参数
+    if (!filePath) {
+      logger.error(`${logPrefix} Parameter validation failed: path is empty`);
+      return { error: 'Path cannot be empty', success: false };
+    }
+
+    if (content === undefined) {
+      logger.error(`${logPrefix} Parameter validation failed: content is empty`);
+      return { error: 'Content cannot be empty', success: false };
+    }
+
+    try {
+      // 确保目标目录存在
+      const dirname = path.dirname(filePath);
+      logger.debug(`${logPrefix} Creating directory: ${dirname}`);
+      fs.mkdirSync(dirname, { recursive: true });
+
+      // 写入文件内容
+      logger.debug(`${logPrefix} Starting to write content to file`);
+      await writeFilePromise(filePath, content, 'utf8');
+      logger.info(`${logPrefix} File written successfully`, {
+        path: filePath,
+        size: content.length,
+      });
+
+      return { success: true };
+    } catch (error) {
+      logger.error(`${logPrefix} Failed to write file:`, error);
+      return {
+        error: `Failed to write file: ${(error as Error).message}`,
+        success: false,
+      };
     }
   }
 }

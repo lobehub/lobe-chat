@@ -3,8 +3,6 @@ import { createStyles } from 'antd-style';
 import { Trash } from 'lucide-react';
 import { memo } from 'react';
 
-import { usePlatform } from '@/hooks/usePlatform';
-
 import { MIN_IMAGE_SIZE } from './style';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -21,15 +19,9 @@ const useStyles = createStyles(({ css, token }) => ({
     box-shadow: 0 0 0 1px ${token.colorFill} inset;
   `,
   image: css`
+    width: 64px !important;
+    height: 64px !important;
     margin-block: 0 !important;
-
-    .ant-image {
-      height: 100% !important;
-
-      img {
-        height: 100% !important;
-      }
-    }
   `,
 }));
 
@@ -43,7 +35,6 @@ interface FileItemProps {
 const FileItem = memo<FileItemProps>(({ alt, onRemove, src, loading }) => {
   const IMAGE_SIZE = MIN_IMAGE_SIZE;
   const { styles, cx } = useStyles();
-  const { isSafari } = usePlatform();
 
   return (
     <Image
@@ -56,19 +47,17 @@ const FileItem = memo<FileItemProps>(({ alt, onRemove, src, loading }) => {
             e.stopPropagation();
             onRemove?.();
           }}
-          style={{
-            blockSize: '28px',
-            fontSize: '20px',
-          }}
+          size={'small'}
         />
       }
       alt={alt || ''}
       alwaysShowActions
-      height={isSafari ? 'auto' : '100%'}
+      height={64}
       isLoading={loading}
+      objectFit={'cover'}
       size={IMAGE_SIZE as any}
       src={src}
-      style={{ height: isSafari ? 'auto' : '100%' }}
+      width={64}
       wrapperClassName={cx(styles.image, styles.editableImage)}
     />
   );
