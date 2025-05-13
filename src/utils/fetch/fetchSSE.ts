@@ -315,9 +315,8 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
   const { smoothing } = options;
 
-  const textSmoothing = typeof smoothing === 'boolean' ? smoothing : (smoothing?.text ?? true);
-  const toolsCallingSmoothing =
-    typeof smoothing === 'boolean' ? smoothing : (smoothing?.toolsCalling ?? true);
+  const textSmoothing = false;
+  const toolsCallingSmoothing = false;
   const smoothingSpeed = isObject(smoothing) ? smoothing.speed : undefined;
 
   let output = '';
