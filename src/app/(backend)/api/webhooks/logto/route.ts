@@ -42,7 +42,7 @@ export const POST = async (req: Request): Promise<NextResponse> => {
           providerAccountId: data.id,
         });
       }
-      break;
+      return NextResponse.json({ message: 'safeDeleteSession', success: true }, { status: 200 });
     }
   }
   pino.warn(`${req.url} received event type "${event}", but no handler is defined for this type`);
