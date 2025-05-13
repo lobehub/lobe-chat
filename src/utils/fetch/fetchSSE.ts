@@ -317,7 +317,24 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
 
   const textSmoothing = false;
   const toolsCallingSmoothing = false;
+  // const textSmoothing = typeof smoothing === 'boolean' ? smoothing : (smoothing?.text ?? true);
+  // const toolsCallingSmoothing =
+  //   typeof smoothing === 'boolean' ? smoothing : (smoothing?.toolsCalling ?? true);
   const smoothingSpeed = isObject(smoothing) ? smoothing.speed : undefined;
+
+  // 添加文本buffer和计时器相关变量
+  let textBuffer = '';
+  // eslint-disable-next-line no-undef
+  let bufferTimer: NodeJS.Timeout | null = null;
+  const BUFFER_INTERVAL = 300; // 300ms
+
+  // 创建一个函数来处理buffer的刷新
+  const flushTextBuffer = () => {
+    if (textBuffer) {
+      options.onMessageHandle?.({ text: textBuffer, type: 'text' });
+      textBuffer = '';
+    }
+  };
 
   let output = '';
   const textController = createSmoothMessage({
@@ -429,7 +446,17 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
             if (!textController.isAnimationActive) textController.startAnimation();
           } else {
             output += data;
-            options.onMessageHandle?.({ text: data, type: 'text' });
+
+            // 使用buffer机制
+            textBuffer += data;
+
+            // 如果还没有设置计时器，创建一个
+            if (!bufferTimer) {
+              bufferTimer = setTimeout(() => {
+                flushTextBuffer();
+                bufferTimer = null;
+              }, BUFFER_INTERVAL);
+            }
           }
 
           break;
@@ -507,6 +534,12 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   if (response) {
     textController.stopAnimation();
     toolCallsController.stopAnimations();
+
+    // 确保所有缓冲区数据都被处理
+    if (bufferTimer) {
+      clearTimeout(bufferTimer);
+      flushTextBuffer();
+    }
 
     if (response.ok) {
       // if there is no onMessageHandler, we should call onHandleMessage first
