@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update electron style on windows."]
+    },
+    "date": "2025-05-14",
+    "version": "1.85.10"
+  },
+  {
+    "children": {
       "fixes": ["Redirect unauthorized next-auth user to signin page."],
       "improvements": ["Improve smoothing on completion."]
     },
