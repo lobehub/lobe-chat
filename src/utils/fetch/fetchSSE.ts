@@ -316,10 +316,11 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   const { smoothing } = options;
 
   const textSmoothing = false;
-  const toolsCallingSmoothing = false;
+  // TODO: 看下后面就是完全移除 smoothing 还是怎么说
   // const textSmoothing = typeof smoothing === 'boolean' ? smoothing : (smoothing?.text ?? true);
-  // const toolsCallingSmoothing =
-  //   typeof smoothing === 'boolean' ? smoothing : (smoothing?.toolsCalling ?? true);
+  const toolsCallingSmoothing =
+    typeof smoothing === 'boolean' ? smoothing : (smoothing?.toolsCalling ?? true);
+
   const smoothingSpeed = isObject(smoothing) ? smoothing.speed : undefined;
 
   // 添加文本buffer和计时器相关变量
@@ -328,7 +329,6 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   let bufferTimer: NodeJS.Timeout | null = null;
   const BUFFER_INTERVAL = 300; // 300ms
 
-  // 创建一个函数来处理buffer的刷新
   const flushTextBuffer = () => {
     if (textBuffer) {
       options.onMessageHandle?.({ text: textBuffer, type: 'text' });
@@ -355,6 +355,18 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     },
     startSpeed: smoothingSpeed,
   });
+
+  let thinkingBuffer = '';
+  // eslint-disable-next-line no-undef
+  let thinkingBufferTimer: NodeJS.Timeout | null = null;
+
+  // 创建一个函数来处理buffer的刷新
+  const flushThinkingBuffer = () => {
+    if (thinkingBuffer) {
+      options.onMessageHandle?.({ text: thinkingBuffer, type: 'reasoning' });
+      thinkingBuffer = '';
+    }
+  };
 
   const toolCallsController = createSmoothToolCalls({
     onToolCallsUpdate: (toolCalls, isAnimationActives) => {
@@ -492,7 +504,17 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
             if (!thinkingController.isAnimationActive) thinkingController.startAnimation();
           } else {
             thinking += data;
-            options.onMessageHandle?.({ text: data, type: 'reasoning' });
+
+            // 使用buffer机制
+            thinkingBuffer += data;
+
+            // 如果还没有设置计时器，创建一个
+            if (!thinkingBufferTimer) {
+              thinkingBufferTimer = setTimeout(() => {
+                flushThinkingBuffer();
+                thinkingBufferTimer = null;
+              }, BUFFER_INTERVAL);
+            }
           }
 
           break;
@@ -539,6 +561,11 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     if (bufferTimer) {
       clearTimeout(bufferTimer);
       flushTextBuffer();
+    }
+
+    if (thinkingBufferTimer) {
+      clearTimeout(thinkingBufferTimer);
+      flushThinkingBuffer();
     }
 
     if (response.ok) {

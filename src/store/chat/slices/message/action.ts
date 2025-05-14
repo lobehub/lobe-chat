@@ -431,7 +431,6 @@ export const chatMessage: StateCreator<
 
       return abortController;
     } else {
-      console.log('123');
       if (!id) {
         set({ [abortControllerKey]: undefined, [key]: [] }, false, action);
       } else
