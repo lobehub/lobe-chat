@@ -2,6 +2,38 @@
 
 # Changelog
 
+### [Version&nbsp;1.85.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.85.1...v1.85.2)
+<sup>Released on **2025-05-14**</sup>
+
+
+#### 💄 Styles
+
+- **misc**: Improve smoothing on completion, update electron style on windows.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Styles
+
+* **misc**: Improve smoothing on completion, closes [#7833](https://github.com/jaworldwideorg/OneJA-Bot/issues/7833) ([6434686](https://github.com/jaworldwideorg/OneJA-Bot/commit/6434686))
+* **misc**: Update electron style on windows, closes [#7839](https://github.com/jaworldwideorg/OneJA-Bot/issues/7839) ([474de56](https://github.com/jaworldwideorg/OneJA-Bot/commit/474de56))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.85.10](https://github.com/lobehub/lobe-chat/compare/v1.85.9...v1.85.10)
 
 <sup>Released on **2025-05-14**</sup>
