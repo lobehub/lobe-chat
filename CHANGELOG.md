@@ -2,111 +2,32 @@
 
 # Changelog
 
-### [Version&nbsp;1.85.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.85.0...v1.85.1)
-<sup>Released on **2025-05-14**</sup>
+### [Version 1.85.9](https://github.com/lobehub/lobe-chat/compare/v1.85.8...v1.85.9)
 
+<sup>Released on **2025-05-14**</sup>
 
 #### 🐛 Bug Fixes
 
 - **misc**: Redirect unauthorized next-auth user to signin page.
 
-
-<br/>
-
-
-
-<details>
-<summary><kbd>Improvements and Fixes</kbd></summary>
-
-
-
-#### What's fixed
-
-* **misc**: Redirect unauthorized next-auth user to signin page, closes [#7813](https://github.com/jaworldwideorg/OneJA-Bot/issues/7813) ([6160784](https://github.com/jaworldwideorg/OneJA-Bot/commit/6160784))
-
-</details>
-
-
-<div align="right">
-
-[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
-
-</div>
-
-## [Version&nbsp;1.85.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.84.16...v1.85.0)
-<sup>Released on **2025-05-12**</sup>
-
-
-#### ♻ Code Refactoring
-
-- **misc**: Add perf stat support for openai factory, Remove doubao Provider, upgrade anthropic sdk.
-
-
-#### ✨ Features
-
-- **misc**: Support upload files direct into chat context.
-
-
-#### 🐛 Bug Fixes
-
-- **misc**: Fix changelog issue on desktop app, fix config import issue in the desktop version, fix desktop upload image on macOS, fix electron state init on window, fix nothing return when reset the client db, fix streamable http url valid and refactor local files to local system, fix window close issue and release Window/Linux beta, remove mcp client cache.
-
-
 #### 💄 Styles
 
-- **misc**: Add new gemini & Mistral models, add qwen3 for ollama, add Qwen3 models for infiniai, add reasoning tokens and token usage statistics for Google Gemini, add write file tool to local-file plugin, add Xiaohongshu crawler rules, fix init state of loading, improve pdf and xlsx file content parser, Show Aliyun Bailian tokens usage tracking.
-
+- **misc**: Improve smoothing on completion.
 
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-
-
-#### Code refactoring
-
-* **misc**: Add perf stat support for openai factory, closes [#7677](https://github.com/jaworldwideorg/OneJA-Bot/issues/7677) ([40464d1](https://github.com/jaworldwideorg/OneJA-Bot/commit/40464d1))
-* **misc**: Remove doubao Provider, closes [#7573](https://github.com/jaworldwideorg/OneJA-Bot/issues/7573) ([0cf3bcc](https://github.com/jaworldwideorg/OneJA-Bot/commit/0cf3bcc))
-* **misc**: Upgrade anthropic sdk, closes [#7773](https://github.com/jaworldwideorg/OneJA-Bot/issues/7773) ([39e871f](https://github.com/jaworldwideorg/OneJA-Bot/commit/39e871f))
-
-
-
-#### What's improved
-
-* **misc**: Support upload files direct into chat context, closes [#7751](https://github.com/jaworldwideorg/OneJA-Bot/issues/7751) ([39b790e](https://github.com/jaworldwideorg/OneJA-Bot/commit/39b790e))
-
-
-
 #### What's fixed
 
-* **misc**: Fix changelog issue on desktop app, closes [#7740](https://github.com/jaworldwideorg/OneJA-Bot/issues/7740) ([f0a12af](https://github.com/jaworldwideorg/OneJA-Bot/commit/f0a12af))
-* **misc**: Fix config import issue in the desktop version, closes [#7800](https://github.com/jaworldwideorg/OneJA-Bot/issues/7800) ([2cb8635](https://github.com/jaworldwideorg/OneJA-Bot/commit/2cb8635))
-* **misc**: Fix desktop upload image on macOS, closes [#7741](https://github.com/jaworldwideorg/OneJA-Bot/issues/7741) ([07d5374](https://github.com/jaworldwideorg/OneJA-Bot/commit/07d5374))
-* **misc**: Fix electron state init on window, closes [#7707](https://github.com/jaworldwideorg/OneJA-Bot/issues/7707) ([ef05b49](https://github.com/jaworldwideorg/OneJA-Bot/commit/ef05b49))
-* **misc**: Fix nothing return when reset the client db, closes [#7738](https://github.com/jaworldwideorg/OneJA-Bot/issues/7738) ([90efb13](https://github.com/jaworldwideorg/OneJA-Bot/commit/90efb13))
-* **misc**: Fix streamable http url valid and refactor local files to local system, closes [#7794](https://github.com/jaworldwideorg/OneJA-Bot/issues/7794) ([37fd5fe](https://github.com/jaworldwideorg/OneJA-Bot/commit/37fd5fe))
-* **misc**: Fix window close issue and release Window/Linux beta, closes [#7780](https://github.com/jaworldwideorg/OneJA-Bot/issues/7780) ([82c48b9](https://github.com/jaworldwideorg/OneJA-Bot/commit/82c48b9))
-* **misc**: Remove mcp client cache, closes [#7776](https://github.com/jaworldwideorg/OneJA-Bot/issues/7776) ([0582134](https://github.com/jaworldwideorg/OneJA-Bot/commit/0582134))
-
-
+- **misc**: Redirect unauthorized next-auth user to signin page, closes [#7813](https://github.com/lobehub/lobe-chat/issues/7813) ([6160784](https://github.com/lobehub/lobe-chat/commit/6160784))
 
 #### Styles
 
-* **misc**: Add new gemini & Mistral models, closes [#7730](https://github.com/jaworldwideorg/OneJA-Bot/issues/7730) ([b7753e2](https://github.com/jaworldwideorg/OneJA-Bot/commit/b7753e2))
-* **misc**: Add qwen3 for ollama, closes [#7746](https://github.com/jaworldwideorg/OneJA-Bot/issues/7746) ([806d905](https://github.com/jaworldwideorg/OneJA-Bot/commit/806d905))
-* **misc**: Add Qwen3 models for infiniai, closes [#7657](https://github.com/jaworldwideorg/OneJA-Bot/issues/7657) ([edd1732](https://github.com/jaworldwideorg/OneJA-Bot/commit/edd1732))
-* **misc**: Add reasoning tokens and token usage statistics for Google Gemini, closes [#7501](https://github.com/jaworldwideorg/OneJA-Bot/issues/7501) ([b466b42](https://github.com/jaworldwideorg/OneJA-Bot/commit/b466b42))
-* **misc**: Add write file tool to local-file plugin, closes [#7684](https://github.com/jaworldwideorg/OneJA-Bot/issues/7684) ([e22e932](https://github.com/jaworldwideorg/OneJA-Bot/commit/e22e932))
-* **misc**: Add Xiaohongshu crawler rules, closes [#7717](https://github.com/jaworldwideorg/OneJA-Bot/issues/7717) ([cc3724d](https://github.com/jaworldwideorg/OneJA-Bot/commit/cc3724d))
-* **misc**: Fix init state of loading, closes [#7694](https://github.com/jaworldwideorg/OneJA-Bot/issues/7694) ([1d97a68](https://github.com/jaworldwideorg/OneJA-Bot/commit/1d97a68))
-* **misc**: Improve pdf and xlsx file content parser, closes [#7783](https://github.com/jaworldwideorg/OneJA-Bot/issues/7783) ([0376870](https://github.com/jaworldwideorg/OneJA-Bot/commit/0376870))
-* **misc**: Show Aliyun Bailian tokens usage tracking, closes [#7660](https://github.com/jaworldwideorg/OneJA-Bot/issues/7660) ([3ef0542](https://github.com/jaworldwideorg/OneJA-Bot/commit/3ef0542))
+- **misc**: Improve smoothing on completion, closes [#7833](https://github.com/lobehub/lobe-chat/issues/7833) ([6434686](https://github.com/lobehub/lobe-chat/commit/6434686))
 
 </details>
-
 
 <div align="right">
 
