@@ -10,30 +10,6 @@ const googleChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_048_576 + 65_536,
     description:
-      'Gemini 2.5 Pro Experimental 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
-    displayName: 'Gemini 2.5 Pro Experimental 03-25',
-    id: 'gemini-2.5-pro-exp-03-25',
-    maxOutput: 65_536,
-    pricing: {
-      input: 0,
-      output: 0,
-    },
-    releasedAt: '2025-03-25',
-    settings: {
-      searchImpl: 'params',
-      searchProvider: 'google',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_048_576 + 65_536,
-    description:
       'Gemini 2.5 Pro Preview 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
     displayName: 'Gemini 2.5 Pro Preview 05-06 (Paid)',
     id: 'gemini-2.5-pro-preview-05-06',
@@ -58,13 +34,13 @@ const googleChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_048_576 + 65_536,
     description:
-      'Gemini 2.5 Pro Preview 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
-    displayName: 'Gemini 2.5 Pro Preview 03-25 (Paid)',
-    id: 'gemini-2.5-pro-preview-03-25',
+      'Gemini 2.5 Pro Experimental 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
+    displayName: 'Gemini 2.5 Pro Experimental 03-25',
+    id: 'gemini-2.5-pro-exp-03-25',
     maxOutput: 65_536,
     pricing: {
-      input: 1.25, // prompts <= 200k tokens
-      output: 10, // prompts <= 200k tokens
+      input: 0,
+      output: 0,
     },
     releasedAt: '2025-03-25',
     settings: {
@@ -95,25 +71,6 @@ const googleChatModels: AIChatModelCard[] = [
       searchImpl: 'params',
       searchProvider: 'google',
     },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_048_576 + 65_536,
-    description:
-      'Gemini 2.0 Flash Thinking Exp 是 Google 的实验性多模态推理AI模型，能对复杂问题进行推理，拥有新的思维能力。',
-    displayName: 'Gemini 2.0 Flash Thinking Experimental 01-21',
-    id: 'gemini-2.0-flash-thinking-exp-01-21',
-    maxOutput: 65_536,
-    pricing: {
-      cachedInput: 0,
-      input: 0,
-      output: 0,
-    },
-    releasedAt: '2025-01-21',
     type: 'chat',
   },
   {
@@ -235,6 +192,7 @@ const googleChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      outputImage: true,
       vision: true,
     },
     contextWindowTokens: 1_048_576 + 8192,
@@ -247,6 +205,23 @@ const googleChatModels: AIChatModelCard[] = [
       output: 0,
     },
     releasedAt: '2025-02-05',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 32_768,
+    description:
+      'LearnLM 是一个实验性的、特定于任务的语言模型，经过训练以符合学习科学原则，可在教学和学习场景中遵循系统指令，充当专家导师等。',
+    displayName: 'LearnLM 2.0 Flash Experimental',
+    id: 'learnlm-2.0-flash-experimental',
+    maxOutput: 32_768,
+    pricing: {
+      cachedInput: 0,
+      input: 0,
+      output: 0,
+    },
     type: 'chat',
   },
   {
