@@ -189,11 +189,16 @@ export default class Browser {
       `[${this.identifier}] Saved window state (only size used): ${JSON.stringify(savedState)}`,
     );
 
-    const { isWindows11 } = this.getWindowsVersion();
+    const { isWindows11, isWindows } = this.getWindowsVersion();
     const isDarkMode = nativeTheme.shouldUseDarkColors;
 
     const browserWindow = new BrowserWindow({
       ...res,
+      ...(isWindows
+        ? {
+            titleBarStyle: 'hidden',
+          }
+        : {}),
       ...(isWindows11
         ? {
             backgroundMaterial: isDarkMode ? 'mica' : 'acrylic',
@@ -209,7 +214,7 @@ export default class Browser {
       // Always create hidden first
       show: false,
       title,
-      titleBarStyle: 'hidden',
+
       webPreferences: {
         // Context isolation environment
         // https://www.electronjs.org/docs/tutorial/context-isolation
