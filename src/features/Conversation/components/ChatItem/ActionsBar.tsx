@@ -69,7 +69,7 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
         case 'edit': {
           toggleMessageEditing(id, true);
 
-          virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'smooth', index });
+          virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
         }
       }
       if (!item) return;

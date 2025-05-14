@@ -200,7 +200,7 @@ const Item = memo<ChatListItemProps>(
         if (item.role && ['assistant', 'user'].includes(item.role) && e.altKey) {
           toggleMessageEditing(id, true);
 
-          virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'smooth', index });
+          virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
         }
       },
       [item, disableEditing],
