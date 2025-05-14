@@ -41,6 +41,7 @@ export class App {
   updaterManager: UpdaterManager;
   shortcutManager: ShortcutManager;
   trayManager: TrayManager;
+  chromeFlags: string[] = ['OverlayScrollbar', 'FluentOverlayScrollbar', 'FluentScrollbar'];
 
   /**
    * whether app is in quiting
@@ -184,6 +185,8 @@ export class App {
         }
       }
     });
+
+    app.commandLine.appendSwitch('enable-features', this.chromeFlags.join(','));
 
     logger.debug('Waiting for app to be ready');
     await app.whenReady();

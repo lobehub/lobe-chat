@@ -1,4 +1,3 @@
-import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Minus, Square, XIcon } from 'lucide-react';
 
@@ -12,7 +11,7 @@ const useStyles = createStyles(({ css, cx, token }) => {
     align-items: center;
     justify-content: center;
 
-    width: 40px;
+    width: ${TITLE_BAR_HEIGHT * 1.2}px;
     min-height: ${TITLE_BAR_HEIGHT}px;
 
     color: ${token.colorTextSecondary};
@@ -22,10 +21,12 @@ const useStyles = createStyles(({ css, cx, token }) => {
     -webkit-app-region: no-drag;
 
     &:hover {
+      color: ${token.colorText};
       background: ${token.colorFillTertiary};
     }
 
     &:active {
+      color: ${token.colorText};
       background: ${token.colorFillSecondary};
     }
   `;
@@ -33,6 +34,8 @@ const useStyles = createStyles(({ css, cx, token }) => {
     close: cx(
       icon,
       css`
+        padding-inline-end: 2px;
+
         &:hover {
           color: ${token.colorTextLightSolid};
 
@@ -58,6 +61,7 @@ const useStyles = createStyles(({ css, cx, token }) => {
 
 const WinControl = () => {
   const { styles } = useStyles();
+
   return (
     <div className={styles.container}>
       <div
@@ -66,7 +70,7 @@ const WinControl = () => {
           electronSystemService.minimizeWindow();
         }}
       >
-        <Icon icon={Minus} style={{ fontSize: 18 }} />
+        <Minus absoluteStrokeWidth size={14} strokeWidth={1.2} />
       </div>
       <div
         className={styles.icon}
@@ -74,7 +78,7 @@ const WinControl = () => {
           electronSystemService.maximizeWindow();
         }}
       >
-        <Icon icon={Square} />
+        <Square absoluteStrokeWidth size={10} strokeWidth={1.2} />
       </div>
       <div
         className={styles.close}
@@ -82,7 +86,7 @@ const WinControl = () => {
           electronSystemService.closeWindow();
         }}
       >
-        <Icon icon={XIcon} style={{ fontSize: 18 }} />
+        <XIcon absoluteStrokeWidth size={14} strokeWidth={1.2} />
       </div>
     </div>
   );

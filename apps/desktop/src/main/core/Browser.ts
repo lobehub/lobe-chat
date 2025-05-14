@@ -1,5 +1,6 @@
 import { MainBroadcastEventKey, MainBroadcastParams } from '@lobechat/electron-client-ipc';
-import { BrowserWindow, BrowserWindowConstructorOptions, ipcMain } from 'electron';
+import { BrowserWindow, BrowserWindowConstructorOptions, ipcMain, nativeTheme } from 'electron';
+import os from 'node:os';
 import { join } from 'node:path';
 
 import { createLogger } from '@/utils/logger';
@@ -188,16 +189,31 @@ export default class Browser {
       `[${this.identifier}] Saved window state (only size used): ${JSON.stringify(savedState)}`,
     );
 
+    const { isWindows11, isWindows } = this.getWindowsVersion();
+    const isDarkMode = nativeTheme.shouldUseDarkColors;
+
     const browserWindow = new BrowserWindow({
       ...res,
-      height: savedState?.height || height,
+      ...(isWindows
+        ? {
+            titleBarStyle: 'hidden',
+          }
+        : {}),
+      ...(isWindows11
+        ? {
+            backgroundMaterial: isDarkMode ? 'mica' : 'acrylic',
+            vibrancy: 'under-window',
+            visualEffectState: 'active',
+          }
+        : {}),
+      autoHideMenuBar: true,
+      backgroundColor: '#00000000',
+      frame: false,
 
+      height: savedState?.height || height,
       // Always create hidden first
       show: false,
-
       title,
-
-      transparent: true,
 
       webPreferences: {
         // Context isolation environment
@@ -211,16 +227,12 @@ export default class Browser {
     this._browserWindow = browserWindow;
     logger.debug(`[${this.identifier}] BrowserWindow instance created.`);
 
+    if (isWindows11) this.applyVisualEffects();
+
     logger.debug(`[${this.identifier}] Setting up nextInterceptor.`);
     this.stopInterceptHandler = this.app.nextInterceptor({
       session: browserWindow.webContents.session,
     });
-
-    // Windows 11 can use this new API
-    if (process.platform === 'win32' && browserWindow.setBackgroundMaterial) {
-      logger.debug(`[${this.identifier}] Setting window background material for Windows 11`);
-      browserWindow.setBackgroundMaterial('acrylic');
-    }
 
     logger.debug(`[${this.identifier}] Initiating placeholder and URL loading sequence.`);
     this.loadPlaceholder().then(() => {
@@ -334,6 +346,16 @@ export default class Browser {
     this._browserWindow.webContents.send(channel, data);
   };
 
+  applyVisualEffects() {
+    // Windows 11 can use this new API
+    if (this._browserWindow) {
+      logger.debug(`[${this.identifier}] Setting window background material for Windows 11`);
+      const isDarkMode = nativeTheme.shouldUseDarkColors;
+      this._browserWindow?.setBackgroundMaterial(isDarkMode ? 'mica' : 'acrylic');
+      this._browserWindow?.setVibrancy('under-window');
+    }
+  }
+
   toggleVisible() {
     logger.debug(`Toggling visibility for window: ${this.identifier}`);
     if (this._browserWindow.isVisible() && this._browserWindow.isFocused()) {
@@ -342,5 +364,37 @@ export default class Browser {
       this._browserWindow.show();
       this._browserWindow.focus();
     }
+  }
+
+  getWindowsVersion() {
+    if (process.platform !== 'win32') {
+      return {
+        isWindows: false,
+        isWindows10: false,
+        isWindows11: false,
+        version: null,
+      };
+    }
+
+    // 获取操作系统版本（如 "10.0.22621"）
+    const release = os.release();
+    const parts = release.split('.');
+
+    // 主版本和次版本
+    const majorVersion = parseInt(parts[0], 10);
+    const minorVersion = parseInt(parts[1], 10);
+
+    // 构建号是第三部分
+    const buildNumber = parseInt(parts[2], 10);
+
+    // Windows 11 的构建号从 22000 开始
+    const isWindows11 = majorVersion === 10 && minorVersion === 0 && buildNumber >= 22_000;
+
+    return {
+      buildNumber,
+      isWindows: true,
+      isWindows11,
+      version: release,
+    };
   }
 }
