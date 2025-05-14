@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.85.9](https://github.com/lobehub/lobe-chat/compare/v1.85.8...v1.85.9)
+
+<sup>Released on **2025-05-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Redirect unauthorized next-auth user to signin page.
+
+#### 💄 Styles
+
+- **misc**: Improve smoothing on completion.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Redirect unauthorized next-auth user to signin page, closes [#7813](https://github.com/lobehub/lobe-chat/issues/7813) ([6160784](https://github.com/lobehub/lobe-chat/commit/6160784))
+
+#### Styles
+
+- **misc**: Improve smoothing on completion, closes [#7833](https://github.com/lobehub/lobe-chat/issues/7833) ([6434686](https://github.com/lobehub/lobe-chat/commit/6434686))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.85.8](https://github.com/lobehub/lobe-chat/compare/v1.85.7...v1.85.8)
 
 <sup>Released on **2025-05-11**</sup>
