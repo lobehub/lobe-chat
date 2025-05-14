@@ -2,6 +2,37 @@
 
 # Changelog
 
+### [Version&nbsp;1.85.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.85.0...v1.85.1)
+<sup>Released on **2025-05-14**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Redirect unauthorized next-auth user to signin page.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **misc**: Redirect unauthorized next-auth user to signin page, closes [#7813](https://github.com/jaworldwideorg/OneJA-Bot/issues/7813) ([6160784](https://github.com/jaworldwideorg/OneJA-Bot/commit/6160784))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version&nbsp;1.85.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.84.16...v1.85.0)
 <sup>Released on **2025-05-12**</sup>
 
