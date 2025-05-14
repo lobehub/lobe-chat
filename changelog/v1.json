@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Redirect unauthorized next-auth user to signin page."],
+      "improvements": ["Improve smoothing on completion."]
+    },
+    "date": "2025-05-14",
+    "version": "1.85.9"
+  },
+  {
+    "children": {
       "fixes": ["Fix config import issue in the desktop version."]
     },
     "date": "2025-05-11",
