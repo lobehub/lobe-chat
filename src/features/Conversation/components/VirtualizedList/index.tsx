@@ -34,7 +34,7 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
 
   useEffect(() => {
     if (virtuosoRef.current) {
-      virtuosoRef.current.scrollToIndex({ align: 'end', behavior: 'auto', index: 'LAST' });
+      virtuosoRef.current.scrollToIndex({ align: 'end', behavior: 'smooth', index: 'LAST' });
     }
   }, [id]);
 
@@ -87,7 +87,7 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
             const virtuoso = virtuosoRef.current;
             switch (type) {
               case 'auto': {
-                virtuoso?.scrollToIndex({ align: 'end', behavior: 'auto', index: 'LAST' });
+                virtuoso?.scrollToIndex({ align: 'end', behavior: 'smooth', index: 'LAST' });
                 break;
               }
               case 'click': {
