@@ -192,7 +192,7 @@ const googleChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      outputImage: true,
+      imageOutput: true,
       vision: true,
     },
     contextWindowTokens: 1_048_576 + 8192,
