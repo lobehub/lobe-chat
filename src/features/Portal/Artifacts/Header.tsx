@@ -33,12 +33,8 @@ const Header = () => {
   return (
     <Flexbox align={'center'} flex={1} gap={12} horizontal justify={'space-between'} width={'100%'}>
       <Flexbox align={'center'} gap={4} horizontal>
-        <ActionIcon icon={ArrowLeft} onClick={() => closeArtifact()} />
-        <Typography.Text
-          className={cx(oneLineEllipsis)}
-          style={{ fontSize: 16 }}
-          type={'secondary'}
-        >
+        <ActionIcon icon={ArrowLeft} onClick={() => closeArtifact()} size={'small'} />
+        <Typography.Text className={cx(oneLineEllipsis)} type={'secondary'}>
           {artifactTitle}
         </Typography.Text>
       </Flexbox>

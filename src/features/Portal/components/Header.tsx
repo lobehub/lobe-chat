@@ -18,6 +18,7 @@ const Header = memo<{ title: ReactNode }>(({ title }) => {
           onClick={() => {
             toggleInspector(false);
           }}
+          size={'small'}
         />
       }
       style={{ paddingBlock: 8, paddingInline: 8 }}
