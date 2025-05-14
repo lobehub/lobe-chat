@@ -19,7 +19,7 @@ import {
   LocalReadFileState,
   LocalReadFilesState,
   LocalRenameFileState,
-} from '@/tools/local-files/type';
+} from '@/tools/local-system/type';
 
 export interface LocalFileAction {
   internal_triggerLocalFileToolCalling: <T = any>(

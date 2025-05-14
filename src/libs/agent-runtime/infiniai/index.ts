@@ -44,7 +44,7 @@ export const LobeInfiniAI = LobeOpenAICompatibleFactory({
   models: async ({ client }) => {
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-    const reasoningKeywords = ['deepseek-r1', 'qwq'];
+    const reasoningKeywords = ['deepseek-r1', 'qwq', 'qwen3'];
     const visionKeywords = ['qwen2.5-vl'];
 
     const modelsPage = (await client.models.list()) as any;

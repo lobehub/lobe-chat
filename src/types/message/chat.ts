@@ -31,6 +31,7 @@ export interface ChatTTS {
 }
 
 export interface ChatFileItem {
+  content?: string;
   fileType: string;
   id: string;
   name: string;

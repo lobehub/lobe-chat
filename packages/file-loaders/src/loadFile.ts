@@ -1,3 +1,4 @@
+import debug from 'debug';
 import { stat } from 'node:fs/promises';
 import * as path from 'node:path';
 
@@ -7,37 +8,52 @@ import { FileDocument, FileMetadata, SupportedFileType } from './types';
 import type { DocumentPage, FileLoaderInterface } from './types';
 import { isTextReadableFile } from './utils/isTextReadableFile';
 
+const log = debug('file-loaders:loadFile');
+
 /**
  * Determines the file type based on the filename extension.
  * @param filePath The path to the file.
  * @returns The determined file type or 'txt' if text-readable, undefined otherwise.
  */
 const getFileType = (filePath: string): SupportedFileType | undefined => {
+  log('Determining file type for:', filePath);
   const extension = path.extname(filePath).toLowerCase().replace('.', '');
 
-  if (!extension) return 'txt'; // Treat files without extension as text?
+  if (!extension) {
+    log('No extension found, treating as txt');
+    return 'txt'; // Treat files without extension as text?
+  }
 
   // Prioritize checking if it's a generally text-readable type
   if (isTextReadableFile(extension)) {
+    log(`Extension '${extension}' is text-readable, treating as txt`);
     return 'txt';
   }
 
   // Handle specific non-text or complex types
+  log(`Checking specific types for extension: '${extension}'`);
   switch (extension) {
     case 'pdf': {
+      log('File type identified as pdf');
       return 'pdf';
     }
     case 'docx': {
+      log('File type identified as docx');
       return 'docx';
     }
     case 'xlsx':
     case 'xls': {
+      log('File type identified as excel');
       return 'excel';
     }
     case 'pptx': {
+      log('File type identified as pptx');
       return 'pptx';
     }
     default: {
+      log(
+        `Extension '${extension}' is not a specifically handled type and not text-readable. Unsupported.`,
+      );
       // If not text-readable and not a specific known type, it's unsupported
       return undefined;
     }
@@ -59,18 +75,23 @@ export const loadFile = async (
   filePath: string,
   fileMetadata?: FileMetadata,
 ): Promise<FileDocument> => {
+  log('Starting to load file:', filePath, 'with metadata:', fileMetadata);
   let stats;
   let fsError: string | undefined;
 
   try {
+    log('Attempting to get file stats for:', filePath);
     stats = await stat(filePath);
+    log('Successfully retrieved file stats:', stats);
   } catch (e) {
     const error = e as Error;
+    log('Error getting file stats for %s: %s', filePath, error.message);
     console.error(`Error getting file stats for ${filePath}: ${error.message}`);
     fsError = `Failed to access file stats: ${error.message}`;
   }
 
   // Determine base file info from path and stats (if available)
+  log('Determining base file info');
   const fileExtension = path.extname(filePath).slice(1).toLowerCase();
   const baseFilename = path.basename(filePath);
 
@@ -80,13 +101,22 @@ export const loadFile = async (
   const fileType = fileMetadata?.fileType ?? fileExtension;
   const createdTime = fileMetadata?.createdTime ?? stats?.ctime ?? new Date();
   const modifiedTime = fileMetadata?.modifiedTime ?? stats?.mtime ?? new Date();
+  log('File info determined/overridden: %O', {
+    createdTime,
+    fileType,
+    filename,
+    modifiedTime,
+    source,
+  });
 
   const paserType = getFileType(filePath);
+  log('Parser type determined as:', paserType);
 
   // Select the loader CLASS based on the determined fileType, fallback to DefaultLoader
   const LoaderClass: new () => FileLoaderInterface = paserType
     ? fileLoaders[paserType]
     : DefaultLoader;
+  log('Selected loader class:', LoaderClass.name);
 
   if (!paserType) {
     console.warn(
@@ -102,17 +132,23 @@ export const loadFile = async (
   let loaderSpecificMetadata: any | undefined;
 
   // Instantiate the loader
+  log('Instantiating loader:', LoaderClass.name);
   const loaderInstance = new LoaderClass();
 
   // If we couldn't even get stats, skip loader execution
   if (!fsError) {
+    log('File stats available, proceeding with loader execution.');
     try {
       // 1. Load pages using the instance
+      log('Loading pages with loader:', LoaderClass.name, 'for file:', filePath);
       pages = await loaderInstance.loadPages(filePath);
+      log('Pages loaded successfully, count:', pages.length);
 
       try {
         // 2. Aggregate content using the instance
+        log('Aggregating content with loader:', LoaderClass.name);
         aggregatedContent = await loaderInstance.aggregateContent(pages);
+        log('Content aggregated successfully, length:', aggregatedContent.length);
       } catch (aggError) {
         const error = aggError as Error;
         console.error(
@@ -124,8 +160,10 @@ export const loadFile = async (
 
       // 3. Attach document-specific metadata if loader supports it
       if (typeof loaderInstance.attachDocumentMetadata === 'function') {
+        log('Loader supports attachDocumentMetadata. Attaching...');
         try {
           loaderSpecificMetadata = await loaderInstance.attachDocumentMetadata(filePath);
+          log('Document-specific metadata attached:', loaderSpecificMetadata);
         } catch (metaErr) {
           const error = metaErr as Error;
           console.error(
@@ -133,6 +171,8 @@ export const loadFile = async (
           );
           metadataError = `Metadata attachment failed: ${error.message}`;
         }
+      } else {
+        log('Loader does not support attachDocumentMetadata.');
       }
     } catch (loadErr) {
       const error = loadErr as Error;
@@ -152,6 +192,7 @@ export const loadFile = async (
       // Aggregated content remains empty
     }
   } else {
+    log('File stats access failed (fsError: %s). Creating minimal error page.', fsError);
     // If stats failed, create a minimal error page
     pages = [
       {
@@ -167,16 +208,20 @@ export const loadFile = async (
   // Calculate totals from the loaded pages
   let totalCharCount = 0;
   let totalLineCount = 0;
+  log('Calculating total char and line counts from pages.');
   for (const page of pages) {
     totalCharCount += page.charCount;
     totalLineCount += page.lineCount;
   }
+  log('Totals calculated:', { totalCharCount, totalLineCount });
 
   // Combine all potential errors
   const combinedError =
     [fsError, loaderError, aggregationError, metadataError].filter(Boolean).join('; ') || undefined;
+  if (combinedError) log('Combined errors:', combinedError);
 
   // Construct the final FileDocument
+  log('Constructing final FileDocument.');
   const fileDocument: FileDocument = {
     content: aggregatedContent, // Use content from aggregateContent
     createdTime,
@@ -202,5 +247,10 @@ export const loadFile = async (
     delete fileDocument.metadata.error;
   }
 
+  log('File loading process completed for:', filePath, 'Returning document:', {
+    fileType: fileDocument.fileType,
+    filename: fileDocument.filename,
+    pages: fileDocument.pages?.length,
+  });
   return fileDocument;
 };

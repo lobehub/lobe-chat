@@ -326,7 +326,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | [必应网页搜索](https://lobechat.com/discover/plugin/Bingsearch-identifier)<br/><sup>By **FineHow** on **2024-12-22**</sup> | 通过 BingApi 搜索互联网上的信息<br/>`bingsearch`                                   |
 | [谷歌自定义搜索引擎](https://lobechat.com/discover/plugin/google-cse)<br/><sup>By **vsnthdev** on **2024-12-02**</sup>     | 通过他们的官方自定义搜索引擎 API 搜索谷歌。<br/>`网络` `搜索`                      |
 
-> 📊 Total plugins: [<kbd>**44**</kbd>](https://lobechat.com/discover/plugins)
+> 📊 Total plugins: [<kbd>**43**</kbd>](https://lobechat.com/discover/plugins)
 
  <!-- PLUGIN LIST -->
 

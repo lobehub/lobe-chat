@@ -7,7 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { chatToolSelectors } from '@/store/chat/selectors';
-import { LocalFileSearchState } from '@/tools/local-files/type';
+import { LocalFileSearchState } from '@/tools/local-system/type';
 
 import SearchView from './SearchView';
 

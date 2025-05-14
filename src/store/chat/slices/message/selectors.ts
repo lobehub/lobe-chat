@@ -157,6 +157,9 @@ const isMessageLoading = (id: string) => (s: ChatStoreState) => s.messageLoading
 const isMessageGenerating = (id: string) => (s: ChatStoreState) => s.chatLoadingIds.includes(id);
 const isMessageInRAGFlow = (id: string) => (s: ChatStoreState) =>
   s.messageRAGLoadingIds.includes(id);
+const isMessageInChatReasoning = (id: string) => (s: ChatStoreState) =>
+  s.reasoningLoadingIds.includes(id);
+
 const isPluginApiInvoking = (id: string) => (s: ChatStoreState) =>
   s.pluginApiLoadingIds.includes(id);
 
@@ -170,6 +173,7 @@ const isToolCallStreaming = (id: string, index: number) => (s: ChatStoreState) =
 
 const isAIGenerating = (s: ChatStoreState) =>
   s.chatLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
+
 const isInRAGFlow = (s: ChatStoreState) =>
   s.messageRAGLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
 
@@ -208,6 +212,7 @@ export const chatSelectors = {
   isHasMessageLoading,
   isMessageEditing,
   isMessageGenerating,
+  isMessageInChatReasoning,
   isMessageInRAGFlow,
   isMessageLoading,
   isPluginApiInvoking,

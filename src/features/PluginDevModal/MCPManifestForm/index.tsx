@@ -17,6 +17,7 @@ import { isDesktop } from '@/const/version';
 import { mcpService } from '@/services/mcp';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
+import { electronStylish } from '@/styles/electron';
 
 import ArgsInput from './ArgsInput';
 import EnvEditor from './EnvEditor';
@@ -225,6 +226,7 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
           />
           <Flexbox horizontal justify={'space-between'}>
             <Button
+              className={electronStylish.nodrag}
               onClick={() => {
                 setIsImportModalVisible(false);
               }}
@@ -296,7 +298,15 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
               name={HTTP_URL_KEY}
               rules={[
                 { message: t('dev.mcp.url.required'), required: true },
-                { message: t('dev.mcp.url.invalid'), type: 'url' },
+                {
+                  message: t('dev.mcp.url.invalid'),
+                  validator: async (_, value) => {
+                    if (!value) return true;
+
+                    // 如果不是 URL 就会自动抛出错误
+                    new URL(value);
+                  },
+                },
               ]}
               tag={'url'}
             >

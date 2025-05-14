@@ -30,6 +30,7 @@ import { today } from '@/utils/time';
 import {
   MessagePluginItem,
   chunks,
+  documents,
   embeddings,
   fileChunks,
   files,
@@ -154,6 +155,29 @@ export class MessageModel {
       })),
     );
 
+    // 获取关联的文档内容
+    const fileIds = relatedFileList.map((file) => file.id).filter(Boolean);
+
+    let documentsMap: Record<string, string> = {};
+
+    if (fileIds.length > 0) {
+      const documentsList = await this.db
+        .select({
+          content: documents.content,
+          fileId: documents.fileId,
+        })
+        .from(documents)
+        .where(inArray(documents.fileId, fileIds));
+
+      documentsMap = documentsList.reduce(
+        (acc, doc) => {
+          if (doc.fileId) acc[doc.fileId] = doc.content as string;
+          return acc;
+        },
+        {} as Record<string, string>,
+      );
+    }
+
     const imageList = relatedFileList.filter((i) => (i.fileType || '').startsWith('image'));
     const fileList = relatedFileList.filter((i) => !(i.fileType || '').startsWith('image'));
 
@@ -214,6 +238,7 @@ export class MessageModel {
             .filter((relation) => relation.messageId === item.id)
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             .map<ChatFileItem>(({ id, url, size, fileType, name }) => ({
+              content: documentsMap[id],
               fileType: fileType!,
               id,
               name: name!,

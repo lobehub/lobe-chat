@@ -4,11 +4,8 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { message } from '@/components/AntdStaticMethods';
 import { LOBE_CHAT_CLOUD } from '@/const/branding';
-import { isDesktop, isServerMode } from '@/const/version';
 import { fileService } from '@/services/file';
 import { uploadService } from '@/services/upload';
-import { getElectronStoreState } from '@/store/electron';
-import { electronSyncSelectors } from '@/store/electron/selectors';
 import { FileMetadata, UploadFileItem } from '@/types/files';
 
 import { FileStore } from '../../store';
@@ -96,25 +93,8 @@ export const createFileUploadSlice: StateCreator<
     }
     // 2. if file don't exist, need upload files
     else {
-      // only if not enable sync
-      const state = getElectronStoreState();
-      const isSyncActive = electronSyncSelectors.isSyncActive(state);
-
-      if (isDesktop && !isSyncActive) {
-        metadata = await uploadService.uploadToDesktop(file);
-      } else if (isServerMode) {
-        // if is server mode, upload to server s3, or upload to client s3
-        metadata = await uploadService.uploadWithProgress(file, {
-          onProgress: (status, upload) => {
-            onStatusUpdate?.({
-              id: file.name,
-              type: 'updateFile',
-              value: { status: status === 'success' ? 'processing' : status, uploadState: upload },
-            });
-          },
-        });
-      } else {
-        if (!skipCheckFileType && !file.type.startsWith('image')) {
+      const { data, success } = await uploadService.uploadFileToS3(file, {
+        onNotSupported: () => {
           onStatusUpdate?.({ id: file.name, type: 'removeFile' });
           message.info({
             content: t('upload.fileOnlySupportInServerMode', {
@@ -124,12 +104,19 @@ export const createFileUploadSlice: StateCreator<
             }),
             duration: 5,
           });
-          return;
-        }
+        },
+        onProgress: (status, upload) => {
+          onStatusUpdate?.({
+            id: file.name,
+            type: 'updateFile',
+            value: { status: status === 'success' ? 'processing' : status, uploadState: upload },
+          });
+        },
+        skipCheckFileType,
+      });
+      if (!success) return;
 
-        // Upload to the indexeddb in the browser
-        metadata = await uploadService.uploadToClientS3(hash, file);
-      }
+      metadata = data;
     }
 
     // 3. use more powerful file type detector to get file type

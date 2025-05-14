@@ -111,7 +111,7 @@
         "title": "Тип на MCP плъгин"
       },
       "url": {
-        "desc": "Въведете адреса на вашия MCP сървър Streamable HTTP, който не завършва с /sse",
+        "desc": "Въведете адреса на вашия MCP сървър Streamable HTTP, не поддържа режим SSE",
         "invalid": "Моля, въведете валиден URL адрес",
         "label": "HTTP Endpoint URL",
         "required": "Моля, въведете URL на MCP услугата"

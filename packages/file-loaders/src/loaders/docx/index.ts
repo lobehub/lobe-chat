@@ -1,15 +1,21 @@
 import { DocxLoader as LangchainDocxLoader } from '@langchain/community/document_loaders/fs/docx';
+import debug from 'debug';
 
 import type { DocumentPage, FileLoaderInterface } from '../../types';
+
+const log = debug('file-loaders:docx');
 
 /**
  * Loads Word documents (.docx) using the LangChain Community DocxLoader.
  */
 export class DocxLoader implements FileLoaderInterface {
   async loadPages(filePath: string): Promise<DocumentPage[]> {
+    log('Loading DOCX file:', filePath);
     try {
       const loader = new LangchainDocxLoader(filePath);
+      log('LangChain DocxLoader created');
       const docs = await loader.load(); // Langchain DocxLoader typically loads the whole doc as one
+      log('DOCX document loaded, parts:', docs.length);
 
       const pages: DocumentPage[] = docs.map((doc) => {
         const pageContent = doc.pageContent || '';
@@ -27,6 +33,8 @@ export class DocxLoader implements FileLoaderInterface {
         // @ts-expect-error Remove source if present, as it's handled at the FileDocument level
         delete metadata.source;
 
+        log('DOCX document processed, lines:', lineCount, 'chars:', charCount);
+
         return {
           charCount,
           lineCount,
@@ -37,6 +45,7 @@ export class DocxLoader implements FileLoaderInterface {
 
       // If docs array is empty (e.g., empty file), create an empty page
       if (pages.length === 0) {
+        log('No content in DOCX document, creating empty page');
         pages.push({
           charCount: 0,
           lineCount: 0,
@@ -45,9 +54,11 @@ export class DocxLoader implements FileLoaderInterface {
         });
       }
 
+      log('DOCX loading completed, total pages:', pages.length);
       return pages;
     } catch (e) {
       const error = e as Error;
+      log('Error encountered while loading DOCX file');
       console.error(`Error loading DOCX file ${filePath} using LangChain loader: ${error.message}`);
       const errorPage: DocumentPage = {
         charCount: 0,
@@ -57,6 +68,7 @@ export class DocxLoader implements FileLoaderInterface {
         },
         pageContent: '',
       };
+      log('Created error page for failed DOCX loading');
       return [errorPage];
     }
   }
@@ -68,6 +80,9 @@ export class DocxLoader implements FileLoaderInterface {
    * @returns Aggregated content as a string.
    */
   async aggregateContent(pages: DocumentPage[]): Promise<string> {
-    return pages.map((page) => page.pageContent).join('\n\n');
+    log('Aggregating content from', pages.length, 'DOCX pages');
+    const result = pages.map((page) => page.pageContent).join('\n\n');
+    log('DOCX content aggregated successfully, length:', result.length);
+    return result;
   }
 }

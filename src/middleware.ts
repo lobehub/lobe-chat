@@ -134,11 +134,22 @@ const defaultMiddleware = (request: NextRequest) => {
   return NextResponse.rewrite(url, { status: 200 });
 };
 
+const isProtectedRoute = createRouteMatcher([
+  '/settings(.*)',
+  '/files(.*)',
+  '/onboard(.*)',
+  '/oauth(.*)',
+  // ↓ cloud ↓
+]);
+
 // Initialize an Edge compatible NextAuth middleware
 const nextAuthMiddleware = NextAuthEdge.auth((req) => {
   logNextAuth('NextAuth middleware processing request: %s %s', req.method, req.url);
 
   const response = defaultMiddleware(req);
+
+  const isProtected = isProtectedRoute(req);
+  logNextAuth('Route protection status: %s, %s', req.url, isProtected ? 'protected' : 'public');
 
   // Just check if session exists
   const session = req.auth;
@@ -165,19 +176,19 @@ const nextAuthMiddleware = NextAuthEdge.auth((req) => {
       response.headers.set(OIDC_SESSION_HEADER, session.user.id);
     }
   } else {
-    logNextAuth('Not logged in, no auth header set');
+    // If request a protected route, redirect to sign-in page
+    // ref: https://authjs.dev/getting-started/session-management/protecting
+    if (isProtected) {
+      logNextAuth('Request a protected route, redirecting to sign-in page');
+      const nextLoginUrl = new URL('/next-auth/signin', req.nextUrl.origin);
+      nextLoginUrl.searchParams.set('callbackUrl', req.nextUrl.pathname);
+      return Response.redirect(nextLoginUrl);
+    }
+    logNextAuth('Request a free route but not login, allow visit without auth header');
   }
 
   return response;
 });
-
-const isProtectedRoute = createRouteMatcher([
-  '/settings(.*)',
-  '/files(.*)',
-  '/onboard(.*)',
-  '/oauth(.*)',
-  // ↓ cloud ↓
-]);
 
 const clerkAuthMiddleware = clerkMiddleware(
   async (auth, req) => {

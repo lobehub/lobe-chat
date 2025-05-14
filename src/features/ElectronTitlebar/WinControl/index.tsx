@@ -12,7 +12,7 @@ const useStyles = createStyles(({ css, cx, token }) => {
     align-items: center;
     justify-content: center;
 
-    width: 64px;
+    width: 40px;
     min-height: ${TITLE_BAR_HEIGHT}px;
 
     color: ${token.colorTextSecondary};

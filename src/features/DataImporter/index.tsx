@@ -64,7 +64,6 @@ const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
 
     const { type, ...res } = importResults;
 
-    console.log(res);
     if (type === 'settings') return;
 
     return Object.entries(res)

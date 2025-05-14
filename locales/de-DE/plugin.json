@@ -111,7 +111,7 @@
         "title": "MCP-Plugin-Typ"
       },
       "url": {
-        "desc": "Geben Sie Ihre MCP-Server-Streamable-HTTP-Adresse ein, die nicht mit /sse endet",
+        "desc": "Geben Sie Ihre MCP-Server-Streamable-HTTP-Adresse ein, SSE-Modus wird nicht unterstützt",
         "invalid": "Bitte geben Sie eine gültige URL ein",
         "label": "HTTP Endpoint-URL",
         "required": "Bitte geben Sie die MCP-Dienst-URL ein"

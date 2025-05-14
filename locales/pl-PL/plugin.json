@@ -111,7 +111,7 @@
         "title": "Typ wtyczki MCP"
       },
       "url": {
-        "desc": "Wprowadź adres HTTP swojego serwera MCP Streamable, który nie kończy się na /sse",
+        "desc": "Wprowadź adres URL swojego serwera MCP Streamable HTTP, nie obsługuje trybu SSE",
         "invalid": "Proszę wprowadzić prawidłowy adres URL",
         "label": "URL punktu końcowego HTTP",
         "required": "Proszę wprowadzić adres URL usługi MCP"

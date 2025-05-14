@@ -1,6 +1,5 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { Popover, type PopoverProps } from 'antd';
-import { useTheme } from 'antd-style';
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,7 +15,6 @@ const themeIcons = {
 };
 
 const ThemeButton = memo<{ placement?: PopoverProps['placement'] }>(({ placement = 'right' }) => {
-  const theme = useTheme();
   const [themeMode, switchThemeMode] = useGlobalStore((s) => [
     systemStatusSelectors.themeMode(s),
     s.switchThemeMode,
@@ -60,11 +58,7 @@ const ThemeButton = memo<{ placement?: PopoverProps['placement'] }>(({ placement
       }}
       trigger={['click', 'hover']}
     >
-      <ActionIcon
-        icon={themeIcons[themeMode]}
-        size={{ blockSize: 32, size: 16 }}
-        style={{ border: `1px solid ${theme.colorFillSecondary}` }}
-      />
+      <ActionIcon icon={themeIcons[themeMode]} size={{ blockSize: 32, size: 16 }} />
     </Popover>
   );
 });

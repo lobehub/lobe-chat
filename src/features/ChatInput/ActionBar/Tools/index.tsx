@@ -31,9 +31,10 @@ const Tools = memo(() => {
     <Suspense fallback={<Action disabled icon={Blocks} title={t('tools.title')} />}>
       <Action
         dropdown={{
-          maxWidth: 320,
+          maxHeight: 500,
+          maxWidth: 480,
           menu: { items },
-          minWidth: 240,
+          minWidth: 320,
         }}
         icon={Blocks}
         loading={updating}

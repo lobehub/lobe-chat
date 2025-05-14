@@ -111,7 +111,7 @@
         "title": "MCP 플러그인 유형"
       },
       "url": {
-        "desc": "MCP 서버의 스트리밍 HTTP 주소를 입력하세요. /sse로 끝나지 않습니다.",
+        "desc": "MCP 서버의 스트리밍 HTTP 주소를 입력하세요. SSE 모드는 지원하지 않습니다.",
         "invalid": "유효한 URL 주소를 입력하세요",
         "label": "HTTP 엔드포인트 URL",
         "required": "MCP 서비스 URL을 입력하세요"

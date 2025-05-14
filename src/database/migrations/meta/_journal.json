@@ -154,6 +154,13 @@
       "when": 1744602998656,
       "tag": "0021_add_agent_opening_settings",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1746724476380,
+      "tag": "0022_add_documents",
+      "breakpoints": true
     }
   ],
   "version": "6"

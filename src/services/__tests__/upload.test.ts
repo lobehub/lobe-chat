@@ -69,7 +69,7 @@ describe('UploadService', () => {
         }
       });
 
-      const result = await uploadService.uploadWithProgress(mockFile, { onProgress });
+      const result = await uploadService.uploadToServerS3(mockFile, { onProgress });
 
       expect(result).toEqual({
         date: '1',
@@ -91,9 +91,7 @@ describe('UploadService', () => {
         }
       });
 
-      await expect(uploadService.uploadWithProgress(mockFile, {})).rejects.toBe(
-        UPLOAD_NETWORK_ERROR,
-      );
+      await expect(uploadService.uploadToServerS3(mockFile, {})).rejects.toBe(UPLOAD_NETWORK_ERROR);
     });
 
     it('should handle upload error', async () => {
@@ -109,7 +107,7 @@ describe('UploadService', () => {
         }
       });
 
-      await expect(uploadService.uploadWithProgress(mockFile, {})).rejects.toBe('Bad Request');
+      await expect(uploadService.uploadToServerS3(mockFile, {})).rejects.toBe('Bad Request');
     });
   });
 
@@ -125,7 +123,7 @@ describe('UploadService', () => {
 
       (clientS3Storage.putObject as any).mockResolvedValue(undefined);
 
-      const result = await uploadService.uploadToClientS3(hash, mockFile);
+      const result = await uploadService['uploadToClientS3'](hash, mockFile);
 
       expect(clientS3Storage.putObject).toHaveBeenCalledWith(hash, mockFile);
       expect(result).toEqual(expectedResult);

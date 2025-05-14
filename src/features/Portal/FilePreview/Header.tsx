@@ -20,7 +20,7 @@ const Header = () => {
 
   return (
     <Flexbox align={'center'} gap={4} horizontal>
-      <ActionIcon icon={ArrowLeft} onClick={() => closeFilePreview()} />
+      <ActionIcon icon={ArrowLeft} onClick={() => closeFilePreview()} size={'small'} />
 
       {isLoading ? (
         <Skeleton.Button active style={{ height: 28 }} />

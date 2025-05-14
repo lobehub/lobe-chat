@@ -1,7 +1,7 @@
 import { LocalFileItem } from '@lobechat/electron-client-ipc';
 import { memo } from 'react';
+import { LocalSystemApiName } from 'src/tools/local-system';
 
-import { LocalFilesApiName } from '@/tools/local-files';
 import { BuiltinRenderProps } from '@/types/tool';
 
 import ListFiles from './ListFiles';
@@ -11,11 +11,11 @@ import SearchFiles from './SearchFiles';
 import WriteFile from './WriteFile';
 
 const RenderMap = {
-  [LocalFilesApiName.searchLocalFiles]: SearchFiles,
-  [LocalFilesApiName.listLocalFiles]: ListFiles,
-  [LocalFilesApiName.readLocalFile]: ReadLocalFile,
-  [LocalFilesApiName.renameLocalFile]: RenameLocalFile,
-  [LocalFilesApiName.writeLocalFile]: WriteFile,
+  [LocalSystemApiName.searchLocalFiles]: SearchFiles,
+  [LocalSystemApiName.listLocalFiles]: ListFiles,
+  [LocalSystemApiName.readLocalFile]: ReadLocalFile,
+  [LocalSystemApiName.renameLocalFile]: RenameLocalFile,
+  [LocalSystemApiName.writeLocalFile]: WriteFile,
 };
 
 const LocalFilesRender = memo<BuiltinRenderProps<LocalFileItem[]>>(

@@ -3,7 +3,7 @@ import { Terminal } from '@xterm/xterm';
 import '@xterm/xterm/css/xterm.css';
 import { memo, useEffect, useRef } from 'react';
 
-import { LocalReadFileState } from '@/tools/local-files/type';
+import { LocalReadFileState } from '@/tools/local-system/type';
 import { ChatMessagePluginError } from '@/types/message';
 
 interface RunCommandProps {

@@ -111,7 +111,7 @@
         "title": "MCP Plugin Type"
       },
       "url": {
-        "desc": "Enter your MCP Server Streamable HTTP address, which should not end with /sse",
+        "desc": "Enter your MCP Server Streamable HTTP address, SSE mode is not supported.",
         "invalid": "Please enter a valid URL",
         "label": "HTTP Endpoint URL",
         "required": "Please enter the MCP service URL"

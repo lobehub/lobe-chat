@@ -1982,6 +1982,9 @@
   "qwen2:72b": {
     "description": "Qwen2 to nowa generacja dużego modelu językowego Alibaba, wspierająca różnorodne potrzeby aplikacyjne dzięki doskonałej wydajności."
   },
+  "qwen3": {
+    "description": "Qwen3 to nowa generacja dużego modelu językowego od Alibaba, który wspiera różnorodne potrzeby aplikacyjne dzięki doskonałej wydajności."
+  },
   "qwen3-0.6b": {
     "description": "Qwen3 to nowa generacja modelu Qwen, który znacznie zwiększa możliwości w zakresie wnioskowania, ogólności, agenta i wielojęzyczności, osiągając wiodące w branży wyniki w wielu kluczowych obszarach i wspierając przełączanie trybów myślenia."
   },

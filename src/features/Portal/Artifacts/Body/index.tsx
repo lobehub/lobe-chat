@@ -79,7 +79,10 @@ const ArtifactsUI = memo(() => {
       style={{ overflow: 'hidden' }}
     >
       {showCode ? (
-        <Highlighter language={language || 'txt'} style={{ maxHeight: '100%', overflow: 'hidden' }}>
+        <Highlighter
+          language={language || 'txt'}
+          style={{ fontSize: 12, height: '100%', overflow: 'auto' }}
+        >
           {artifactContent}
         </Highlighter>
       ) : (
