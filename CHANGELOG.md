@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.85.10](https://github.com/lobehub/lobe-chat/compare/v1.85.9...v1.85.10)
+
+<sup>Released on **2025-05-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update electron style on windows.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update electron style on windows, closes [#7839](https://github.com/lobehub/lobe-chat/issues/7839) ([474de56](https://github.com/lobehub/lobe-chat/commit/474de56))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.85.9](https://github.com/lobehub/lobe-chat/compare/v1.85.8...v1.85.9)
 
 <sup>Released on **2025-05-14**</sup>
