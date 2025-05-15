@@ -95,6 +95,9 @@
   "ppio": {
     "description": "PPIO Paeou Cloud offre servizi API per modelli open source stabili e ad alto rapporto qualità-prezzo, supportando l'intera gamma di DeepSeek, Llama, Qwen e altri modelli di grandi dimensioni leader del settore."
   },
+  "qiniu": {
+    "description": "Qiniu è un fornitore di servizi cloud leader, offrendo API di IA ad alta velocità e efficienza, incluso il modello Alibaba, con opzioni flessibili per costruire e applicare applicazioni di IA."
+  },
   "qwen": {
     "description": "Qwen è un modello di linguaggio di grande scala sviluppato autonomamente da Alibaba Cloud, con potenti capacità di comprensione e generazione del linguaggio naturale. Può rispondere a varie domande, creare contenuti testuali, esprimere opinioni e scrivere codice, svolgendo un ruolo in vari settori."
   },

@@ -95,6 +95,9 @@
   "ppio": {
     "description": "PPIO Paiou Cloud, istikrarlı ve yüksek maliyet etkinliğe sahip açık kaynak model API hizmeti sunar, DeepSeek'in tüm serisi, Llama, Qwen gibi sektörün önde gelen büyük modellerini destekler."
   },
+  "qiniu": {
+    "description": "Qiniu, esnek seçeneklerle büyük model API hizmetleri sunan lider bulut hizmeti sağlayıcısıdır, DeepSeek, Llama ve Qwen gibi sektörün önde gelen büyük modellerini destekler."
+  },
   "qwen": {
     "description": "Tongyi Qianwen, Alibaba Cloud tarafından geliştirilen büyük ölçekli bir dil modelidir ve güçlü doğal dil anlama ve üretme yeteneklerine sahiptir. Çeşitli soruları yanıtlayabilir, metin içeriği oluşturabilir, görüşlerini ifade edebilir ve kod yazabilir. Birçok alanda etkili bir şekilde kullanılmaktadır."
   },
