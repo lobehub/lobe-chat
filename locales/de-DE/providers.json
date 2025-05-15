@@ -95,6 +95,9 @@
   "ppio": {
     "description": "PPIO Paiou Cloud bietet stabile und kosteneffiziente Open-Source-Modell-API-Dienste und unterstützt die gesamte DeepSeek-Serie, Llama, Qwen und andere führende große Modelle der Branche."
   },
+  "qiniu": {
+    "description": "Qiniu ist ein führender Anbieter von Cloud-Diensten, der schnelle und effiziente API-Dienste für große Modelle bereitstellt, einschließlich der von Alibaba, mit flexiblen Optionen für das Entwickeln und Anwenden von AI-Anwendungen."
+  },
   "qwen": {
     "description": "Tongyi Qianwen ist ein von Alibaba Cloud selbst entwickeltes, groß angelegtes Sprachmodell mit starken Fähigkeiten zur Verarbeitung und Generierung natürlicher Sprache. Es kann eine Vielzahl von Fragen beantworten, Texte erstellen, Meinungen äußern und Code schreiben und spielt in mehreren Bereichen eine Rolle."
   },

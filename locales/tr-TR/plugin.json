@@ -111,7 +111,7 @@
         "title": "MCP Eklenti Türü"
       },
       "url": {
-        "desc": "MCP Sunucu Akış HTTP adresinizi girin, /sse ile bitmemelidir",
+        "desc": "MCP Sunucu Akış HTTP adresinizi girin, SSE modunu desteklemez",
         "invalid": "Lütfen geçerli bir URL adresi girin",
         "label": "HTTP Endpoint URL",
         "required": "Lütfen MCP hizmet URL'sini girin"

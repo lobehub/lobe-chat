@@ -40,7 +40,7 @@ class RAGEvalService {
   };
 
   importDatasetRecords = async (datasetId: number, file: File): Promise<void> => {
-    const { path } = await uploadService.uploadWithProgress(file, { directory: 'ragEval' });
+    const { path } = await uploadService.uploadToServerS3(file, { directory: 'ragEval' });
 
     await lambdaClient.ragEval.importDatasetRecords.mutate({ datasetId, pathname: path });
   };

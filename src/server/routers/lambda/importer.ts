@@ -39,11 +39,19 @@ export const importerRouter = router({
         });
       }
 
+      let result: ImportResultData;
       if ('schemaHash' in data) {
-        return ctx.dataImporterService.importPgData(data as unknown as ImportPgDataStructure);
+        result = await ctx.dataImporterService.importPgData(
+          data as unknown as ImportPgDataStructure,
+        );
+      } else {
+        result = await ctx.dataImporterService.importData(data);
       }
 
-      return ctx.dataImporterService.importData(data);
+      // clean file after upload
+      await ctx.fileService.deleteFile(input.pathname);
+
+      return result;
     }),
 
   importByPost: importProcedure

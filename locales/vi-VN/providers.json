@@ -95,6 +95,9 @@
   "ppio": {
     "description": "PPIO派欧云 cung cấp dịch vụ API mô hình mã nguồn mở ổn định, hiệu quả chi phí cao, hỗ trợ toàn bộ dòng sản phẩm DeepSeek, Llama, Qwen và các mô hình lớn hàng đầu trong ngành."
   },
+  "qiniu": {
+    "description": "Qiniu là nhà cung cấp dịch vụ cloud hàng đầu, cung cấp API cho các mô hình AI lớn, bao gồm DeepSeek, Llama và Qwen, với các tùy chọn linh hoạt để xây dựng và áp dụng các ứng dụng AI."
+  },
   "qwen": {
     "description": "Qwen là mô hình ngôn ngữ quy mô lớn tự phát triển của Alibaba Cloud, có khả năng hiểu và tạo ngôn ngữ tự nhiên mạnh mẽ. Nó có thể trả lời nhiều câu hỏi, sáng tác nội dung văn bản, bày tỏ quan điểm, viết mã, v.v., hoạt động trong nhiều lĩnh vực."
   },
