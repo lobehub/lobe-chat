@@ -520,6 +520,7 @@
     "hotkey": "快速鍵",
     "llm": "語言模型",
     "provider": "AI 服務商",
+    "proxy": "網路代理",
     "storage": "資料儲存",
     "sync": "雲端同步",
     "system-agent": "系統助手",

@@ -1,4 +1,22 @@
 {
+  "proxy": {
+    "auth": "需要認證",
+    "bypass": "不使用代理的地址",
+    "enable": "啟用代理",
+    "password": "密碼",
+    "password_placeholder": "請輸入密碼",
+    "port": "埠號",
+    "server": "伺服器地址",
+    "testButton": "測試連接",
+    "testFailed": "連接失敗: {{error}}",
+    "testSuccess": "連接成功",
+    "testUrl": "測試地址",
+    "testUrlPlaceholder": "請輸入要測試的 URL",
+    "testing": "正在測試連接...",
+    "type": "代理類型",
+    "username": "使用者名稱",
+    "username_placeholder": "請輸入使用者名稱"
+  },
   "remoteServer": {
     "authError": "授權失敗: {{error}}",
     "authPending": "請在瀏覽器中完成授權",

@@ -1,4 +1,22 @@
 {
+  "proxy": {
+    "auth": "يتطلب المصادقة",
+    "bypass": "العناوين التي لا تستخدم الوكيل",
+    "enable": "تفعيل الوكيل",
+    "password": "كلمة المرور",
+    "password_placeholder": "الرجاء إدخال كلمة المرور",
+    "port": "المنفذ",
+    "server": "عنوان الخادم",
+    "testButton": "اختبار الاتصال",
+    "testFailed": "فشل الاتصال: {{error}}",
+    "testSuccess": "تم الاتصال بنجاح",
+    "testUrl": "عنوان الاختبار",
+    "testUrlPlaceholder": "الرجاء إدخال عنوان URL للاختبار",
+    "testing": "جارٍ اختبار الاتصال...",
+    "type": "نوع الوكيل",
+    "username": "اسم المستخدم",
+    "username_placeholder": "الرجاء إدخال اسم المستخدم"
+  },
   "remoteServer": {
     "authError": "فشل التفويض: {{error}}",
     "authPending": "يرجى إكمال التفويض في المتصفح",

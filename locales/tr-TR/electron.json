@@ -1,4 +1,22 @@
 {
+  "proxy": {
+    "auth": "Kimlik doğrulama gerekli",
+    "bypass": "Proxy kullanılmayacak adresler",
+    "enable": "Proxy'yi etkinleştir",
+    "password": "Şifre",
+    "password_placeholder": "Şifrenizi girin",
+    "port": "Port",
+    "server": "Sunucu adresi",
+    "testButton": "Bağlantıyı test et",
+    "testFailed": "Bağlantı başarısız: {{error}}",
+    "testSuccess": "Bağlantı başarılı",
+    "testUrl": "Test adresi",
+    "testUrlPlaceholder": "Test etmek için URL girin",
+    "testing": "Bağlantı test ediliyor...",
+    "type": "Proxy türü",
+    "username": "Kullanıcı adı",
+    "username_placeholder": "Kullanıcı adınızı girin"
+  },
   "remoteServer": {
     "authError": "Yetkilendirme hatası: {{error}}",
     "authPending": "Yetkilendirmeyi tarayıcıda tamamlayın",

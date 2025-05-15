@@ -1,4 +1,22 @@
 {
+  "proxy": {
+    "auth": "Authentication Required",
+    "bypass": "Addresses not using the proxy",
+    "enable": "Enable Proxy",
+    "password": "Password",
+    "password_placeholder": "Please enter your password",
+    "port": "Port",
+    "server": "Server Address",
+    "testButton": "Test Connection",
+    "testFailed": "Connection Failed: {{error}}",
+    "testSuccess": "Connection Successful",
+    "testUrl": "Test URL",
+    "testUrlPlaceholder": "Please enter the URL to test",
+    "testing": "Testing Connection...",
+    "type": "Proxy Type",
+    "username": "Username",
+    "username_placeholder": "Please enter your username"
+  },
   "remoteServer": {
     "authError": "Authorization failed: {{error}}",
     "authPending": "Please complete the authorization in your browser",

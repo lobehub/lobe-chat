@@ -1,4 +1,22 @@
 {
+  "proxy": {
+    "auth": "Authentification requise",
+    "bypass": "Adresses sans proxy",
+    "enable": "Activer le proxy",
+    "password": "Mot de passe",
+    "password_placeholder": "Veuillez entrer le mot de passe",
+    "port": "Port",
+    "server": "Adresse du serveur",
+    "testButton": "Tester la connexion",
+    "testFailed": "Échec de la connexion : {{error}}",
+    "testSuccess": "Connexion réussie",
+    "testUrl": "Adresse de test",
+    "testUrlPlaceholder": "Veuillez entrer l'URL à tester",
+    "testing": "Test de la connexion en cours...",
+    "type": "Type de proxy",
+    "username": "Nom d'utilisateur",
+    "username_placeholder": "Veuillez entrer le nom d'utilisateur"
+  },
   "remoteServer": {
     "authError": "Échec de l'autorisation : {{error}}",
     "authPending": "Veuillez terminer l'autorisation dans le navigateur",

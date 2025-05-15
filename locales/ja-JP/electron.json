@@ -1,4 +1,22 @@
 {
+  "proxy": {
+    "auth": "認証が必要",
+    "bypass": "プロキシを使用しないアドレス",
+    "enable": "プロキシを有効にする",
+    "password": "パスワード",
+    "password_placeholder": "パスワードを入力してください",
+    "port": "ポート",
+    "server": "サーバーアドレス",
+    "testButton": "接続テスト",
+    "testFailed": "接続に失敗しました: {{error}}",
+    "testSuccess": "接続成功",
+    "testUrl": "テストURL",
+    "testUrlPlaceholder": "テストするURLを入力してください",
+    "testing": "接続をテスト中...",
+    "type": "プロキシタイプ",
+    "username": "ユーザー名",
+    "username_placeholder": "ユーザー名を入力してください"
+  },
   "remoteServer": {
     "authError": "認証エラー: {{error}}",
     "authPending": "ブラウザで認証を完了してください",

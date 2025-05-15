@@ -520,6 +520,7 @@
     "hotkey": "단축키",
     "llm": "언어 모델",
     "provider": "AI 서비스 제공자",
+    "proxy": "네트워크 프록시",
     "storage": "데이터 저장소",
     "sync": "클라우드 동기화",
     "system-agent": "시스템 도우미",
