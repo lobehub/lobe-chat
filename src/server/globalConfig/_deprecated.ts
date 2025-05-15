@@ -1,6 +1,6 @@
 import { getLLMConfig } from '@/config/llm';
 import * as ProviderCards from '@/config/modelProviders';
-import { ModelProvider } from '@/libs/agent-runtime';
+import { ModelProvider } from '@/libs/model-runtime';
 import { ModelProviderCard } from '@/types/llm';
 import { extractEnabledModels, transformToChatModelCards } from '@/utils/_deprecated/parseModels';
 

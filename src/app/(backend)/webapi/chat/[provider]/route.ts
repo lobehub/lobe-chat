@@ -3,7 +3,7 @@ import {
   AGENT_RUNTIME_ERROR_SET,
   AgentRuntime,
   ChatCompletionErrorPayload,
-} from '@/libs/agent-runtime';
+} from '@/libs/model-runtime';
 import { createTraceOptions, initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
