@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.86.1](https://github.com/lobehub/lobe-chat/compare/v1.86.0...v1.86.1)
+
+<sup>Released on **2025-05-15**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor agent runtime to model runtime.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor agent runtime to model runtime, closes [#7846](https://github.com/lobehub/lobe-chat/issues/7846) ([a3b9448](https://github.com/lobehub/lobe-chat/commit/a3b9448))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.86.0](https://github.com/lobehub/lobe-chat/compare/v1.85.10...v1.86.0)
+
+<sup>Released on **2025-05-15**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Qiniu Provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Qiniu Provider, closes [#7649](https://github.com/lobehub/lobe-chat/issues/7649) ([c9b8e9f](https://github.com/lobehub/lobe-chat/commit/c9b8e9f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.85.10](https://github.com/lobehub/lobe-chat/compare/v1.85.9...v1.85.10)
 
 <sup>Released on **2025-05-14**</sup>

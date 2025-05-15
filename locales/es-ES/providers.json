@@ -95,6 +95,9 @@
   "ppio": {
     "description": "PPIO Paiouyun ofrece servicios de API de modelos de código abierto estables y de alto rendimiento, que admiten toda la serie DeepSeek, Llama, Qwen y otros modelos grandes líderes en la industria."
   },
+  "qiniu": {
+    "description": "Qiniu es un proveedor líder de servicios de nube, ofreciendo API de IA de alta velocidad y eficiencia, incluyendo modelos de Alibaba, con opciones flexibles para construir y aplicar aplicaciones de IA."
+  },
   "qwen": {
     "description": "Tongyi Qianwen es un modelo de lenguaje de gran escala desarrollado de forma independiente por Alibaba Cloud, con potentes capacidades de comprensión y generación de lenguaje natural. Puede responder a diversas preguntas, crear contenido escrito, expresar opiniones y redactar código, desempeñando un papel en múltiples campos."
   },

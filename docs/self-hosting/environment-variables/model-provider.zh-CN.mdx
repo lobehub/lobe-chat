@@ -325,7 +325,6 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 默认值：`https://api.moonshot.cn/v1`
 - 示例：`https://my-moonshot-proxy.com/v1`
 
-
 ## Perplexity AI
 
 ### `PERPLEXITY_API_KEY`
@@ -421,6 +420,29 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。模型定义语法规则见 [模型列表][model-list]
 - 默认值：`-`
 - 示例：`-all,+yi-large,+yi-large-rag`
+
+## 七牛云
+
+### `QINIU_API_KEY`
+
+- 类型：必选
+- 描述：这是你在七牛云上获取的 API 密钥
+- 默认值：-
+- 示例：`sk-xxxxx...xxxxx`
+
+### `QINIU_MODEL_LIST`
+
+- 类型：可选
+- 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。模型定义语法规则见 [模型列表][model-list]
+- 默认值：`-`
+- 示例：`-all,+deepseek-r1,+deepseek-v3`
+
+### `QINIU_PROXY_URL`
+
+- 类型：可选
+- 描述：如果你手动配置了 Qiniu 接口代理，可以使用此配置项来覆盖默认的 Qiniu API 请求基础 URL
+- 默认值：`https://api.qnaigc.com/v1`
+- 示例：`https://my-qnaigc.com/v1`
 
 ## 通义千问
 
