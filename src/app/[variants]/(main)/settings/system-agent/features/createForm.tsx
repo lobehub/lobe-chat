@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Form, type FormGroupItemType, type FormItemProps } from '@lobehub/ui';
-import { Form as AntForm, Switch } from 'antd';
+import { Form as AntForm, Skeleton, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { PencilIcon } from 'lucide-react';
 import { memo } from 'react';
@@ -14,8 +14,6 @@ import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 import { type UserSystemAgentConfigKey } from '@/types/user/settings';
 
-import { useSyncSystemAgent } from './useSync';
-
 interface SystemAgentFormProps {
   allowCustomPrompt?: boolean;
   allowDisable?: boolean;
@@ -26,11 +24,15 @@ interface SystemAgentFormProps {
 const SystemAgentForm = memo(
   ({ systemAgentKey, allowDisable, allowCustomPrompt, defaultPrompt }: SystemAgentFormProps) => {
     const { t } = useTranslation('setting');
-
-    const settings = useUserStore(settingsSelectors.currentSystemAgent, isEqual);
-    const [updateSystemAgent] = useUserStore((s) => [s.updateSystemAgent]);
-
     const [form] = AntForm.useForm();
+    const settings = useUserStore(settingsSelectors.currentSystemAgent, isEqual);
+    const [updateSystemAgent, isUserStateInit] = useUserStore((s) => [
+      s.updateSystemAgent,
+      s.isUserStateInit,
+    ]);
+
+    if (!isUserStateInit) return <Skeleton active paragraph={{ rows: 5 }} title={false} />;
+
     const value = settings[systemAgentKey];
 
     const systemAgentSettings: FormGroupItemType = {
@@ -93,8 +95,6 @@ const SystemAgentForm = memo(
         </span>
       ),
     };
-
-    useSyncSystemAgent(form, settings);
 
     return (
       <Form form={form} initialValues={settings} items={[systemAgentSettings]} {...FORM_STYLE} />

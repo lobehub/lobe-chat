@@ -1,6 +1,7 @@
 'use client';
 
 import { Form, type FormGroupItemType, HotkeyInput } from '@lobehub/ui';
+import { Skeleton } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +28,9 @@ const HotkeySetting = memo(() => {
   const [form] = Form.useForm();
 
   const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
-  const [setSettings] = useUserStore((s) => [s.setSettings]);
+  const [setSettings, isUserStateInit] = useUserStore((s) => [s.setSettings, s.isUserStateInit]);
+
+  if (!isUserStateInit) return <Skeleton active paragraph={{ rows: 5 }} title={false} />;
 
   const mapHotkeyItem = (item: HotkeyItem) => {
     const hotkeyConflicts = Object.entries(settings.hotkey)

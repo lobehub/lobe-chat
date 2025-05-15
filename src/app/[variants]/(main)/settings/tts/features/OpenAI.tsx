@@ -2,6 +2,7 @@
 
 import { Form, type FormGroupItemType } from '@lobehub/ui';
 import { Select } from '@lobehub/ui';
+import { Skeleton } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,25 +13,25 @@ import { settingsSelectors } from '@/store/user/selectors';
 
 import { opeanaiSTTOptions, opeanaiTTSOptions } from './const';
 
-const TTS_SETTING_KEY = 'tts';
-
 const OpenAI = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = Form.useForm();
-  const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
-  const [setSettings] = useUserStore((s) => [s.setSettings]);
+  const { tts } = useUserStore(settingsSelectors.currentSettings, isEqual);
+  const [setSettings, isUserStateInit] = useUserStore((s) => [s.setSettings, s.isUserStateInit]);
+
+  if (!isUserStateInit) return <Skeleton active paragraph={{ rows: 5 }} title={false} />;
 
   const openai: FormGroupItemType = {
     children: [
       {
         children: <Select options={opeanaiTTSOptions} />,
         label: t('settingTTS.openai.ttsModel'),
-        name: [TTS_SETTING_KEY, 'openAI', 'ttsModel'],
+        name: ['openAI', 'ttsModel'],
       },
       {
         children: <Select options={opeanaiSTTOptions} />,
         label: t('settingTTS.openai.sttModel'),
-        name: [TTS_SETTING_KEY, 'openAI', 'sttModel'],
+        name: ['openAI', 'sttModel'],
       },
     ],
     title: t('settingTTS.openai.title'),
@@ -38,11 +39,25 @@ const OpenAI = memo(() => {
 
   return (
     <Form
+      footer={
+        <Form.SubmitFooter
+          texts={{
+            reset: t('submitFooter.reset'),
+            submit: t('submitFooter.submit'),
+            unSaved: t('submitFooter.unSaved'),
+            unSavedWarning: t('submitFooter.unSavedWarning'),
+          }}
+        />
+      }
       form={form}
-      initialValues={settings}
+      initialValues={tts}
       items={[openai]}
       itemsType={'group'}
-      onValuesChange={setSettings}
+      onFinish={(values) => {
+        setSettings({
+          tts: values,
+        });
+      }}
       variant={'borderless'}
       {...FORM_STYLE}
     />

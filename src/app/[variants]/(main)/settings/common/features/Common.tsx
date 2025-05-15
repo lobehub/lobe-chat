@@ -1,85 +1,81 @@
 'use client';
 
-import { Button, Form, type FormGroupItemType, InputPassword } from '@lobehub/ui';
-import { App } from 'antd';
-import isEqual from 'fast-deep-equal';
-import { memo, useCallback } from 'react';
+import { Form, type FormGroupItemType, ImageSelect } from '@lobehub/ui';
+import { Select } from '@lobehub/ui';
+import { Skeleton } from 'antd';
+import { Monitor, Moon, Sun } from 'lucide-react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useSyncSettings } from '@/app/[variants]/(main)/settings/hooks/useSyncSettings';
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { DEFAULT_SETTINGS } from '@/const/settings';
-import { useServerConfigStore } from '@/store/serverConfig';
-import { serverConfigSelectors } from '@/store/serverConfig/selectors';
-import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/selectors';
+import { imageUrl } from '@/const/url';
+import { localeOptions } from '@/locales/resources';
+import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 
 const Common = memo(() => {
   const { t } = useTranslation('setting');
-  const [form] = Form.useForm();
 
-  const showAccessCodeConfig = useServerConfigStore(serverConfigSelectors.enabledAccessCode);
+  const themeMode = useGlobalStore(systemStatusSelectors.themeMode);
+  const language = useGlobalStore(systemStatusSelectors.language);
+  const [setThemeMode, switchLocale, isStatusInit] = useGlobalStore((s) => [
+    s.switchThemeMode,
+    s.switchLocale,
+    s.isStatusInit,
+  ]);
 
-  const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
-  const [setSettings, resetSettings] = useUserStore((s) => [s.setSettings, s.resetSettings]);
+  if (!isStatusInit) return <Skeleton active paragraph={{ rows: 5 }} title={false} />;
 
-  const { message, modal } = App.useApp();
-
-  const handleReset = useCallback(() => {
-    modal.confirm({
-      centered: true,
-      okButtonProps: { danger: true },
-      onOk: () => {
-        resetSettings();
-        form.setFieldsValue(DEFAULT_SETTINGS);
-        message.success(t('danger.reset.success'));
-      },
-      title: t('danger.reset.confirm'),
-    });
-  }, []);
-
-  const system: FormGroupItemType = {
+  const theme: FormGroupItemType = {
     children: [
       {
         children: (
-          <InputPassword
-            autoComplete={'new-password'}
-            placeholder={t('settingSystem.accessCode.placeholder')}
+          <ImageSelect
+            height={60}
+            onChange={setThemeMode}
+            options={[
+              {
+                icon: Sun,
+                img: imageUrl('theme_light.webp'),
+                label: t('settingCommon.themeMode.light'),
+                value: 'light',
+              },
+              {
+                icon: Moon,
+                img: imageUrl('theme_dark.webp'),
+                label: t('settingCommon.themeMode.dark'),
+                value: 'dark',
+              },
+              {
+                icon: Monitor,
+                img: imageUrl('theme_auto.webp'),
+                label: t('settingCommon.themeMode.auto'),
+                value: 'auto',
+              },
+            ]}
+            unoptimized={false}
+            value={themeMode}
+            width={100}
           />
         ),
-        desc: t('settingSystem.accessCode.desc'),
-        hidden: !showAccessCodeConfig,
-        label: t('settingSystem.accessCode.title'),
-        name: ['keyVaults', 'password'],
+        label: t('settingCommon.themeMode.title'),
+        minWidth: undefined,
       },
       {
         children: (
-          <Button danger onClick={handleReset} type={'primary'}>
-            {t('danger.reset.action')}
-          </Button>
+          <Select
+            defaultValue={language}
+            onChange={switchLocale}
+            options={[{ label: t('settingCommon.lang.autoMode'), value: 'auto' }, ...localeOptions]}
+          />
         ),
-        desc: t('danger.reset.desc'),
-        label: t('danger.reset.title'),
-        layout: 'horizontal',
-        minWidth: undefined,
+        label: t('settingCommon.lang.title'),
       },
     ],
-    title: t('settingSystem.title'),
+    title: t('settingCommon.title'),
   };
 
-  useSyncSettings(form);
-
-  return (
-    <Form
-      form={form}
-      initialValues={settings}
-      items={[system]}
-      itemsType={'group'}
-      onValuesChange={setSettings}
-      variant={'borderless'}
-      {...FORM_STYLE}
-    />
-  );
+  return <Form items={[theme]} itemsType={'group'} variant={'borderless'} {...FORM_STYLE} />;
 });
 
 export default Common;

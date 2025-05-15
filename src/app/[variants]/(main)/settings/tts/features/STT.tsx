@@ -1,7 +1,7 @@
 'use client';
 
 import { Form, type FormGroupItemType, Select } from '@lobehub/ui';
-import { Switch } from 'antd';
+import { Skeleton, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,13 +12,13 @@ import { settingsSelectors } from '@/store/user/selectors';
 
 import { sttOptions } from './const';
 
-const TTS_SETTING_KEY = 'tts';
-
 const STT = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = Form.useForm();
-  const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
-  const [setSettings] = useUserStore((s) => [s.setSettings]);
+  const { tts } = useUserStore(settingsSelectors.currentSettings, isEqual);
+  const [setSettings, isUserStateInit] = useUserStore((s) => [s.setSettings, s.isUserStateInit]);
+
+  if (!isUserStateInit) return <Skeleton active paragraph={{ rows: 5 }} title={false} />;
 
   const stt: FormGroupItemType = {
     children: [
@@ -26,7 +26,7 @@ const STT = memo(() => {
         children: <Select options={sttOptions} />,
         desc: t('settingTTS.sttService.desc'),
         label: t('settingTTS.sttService.title'),
-        name: [TTS_SETTING_KEY, 'sttServer'],
+        name: 'sttServer',
       },
       {
         children: <Switch />,
@@ -34,7 +34,7 @@ const STT = memo(() => {
         label: t('settingTTS.sttAutoStop.title'),
         layout: 'horizontal',
         minWidth: undefined,
-        name: [TTS_SETTING_KEY, 'sttAutoStop'],
+        name: 'sttAutoStop',
         valuePropName: 'checked',
       },
     ],
@@ -43,11 +43,25 @@ const STT = memo(() => {
 
   return (
     <Form
+      footer={
+        <Form.SubmitFooter
+          texts={{
+            reset: t('submitFooter.reset'),
+            submit: t('submitFooter.submit'),
+            unSaved: t('submitFooter.unSaved'),
+            unSavedWarning: t('submitFooter.unSavedWarning'),
+          }}
+        />
+      }
       form={form}
-      initialValues={settings}
+      initialValues={tts}
       items={[stt]}
       itemsType={'group'}
-      onValuesChange={setSettings}
+      onFinish={(values) => {
+        setSettings({
+          tts: values,
+        });
+      }}
       variant={'borderless'}
       {...FORM_STYLE}
     />
