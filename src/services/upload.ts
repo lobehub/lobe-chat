@@ -3,7 +3,7 @@ import { sha256 } from 'js-sha256';
 
 import { fileEnv } from '@/config/file';
 import { isDesktop, isServerMode } from '@/const/version';
-import { parseDataUri } from '@/libs/agent-runtime/utils/uriParser';
+import { parseDataUri } from '@/libs/model-runtime/utils/uriParser';
 import { edgeClient } from '@/libs/trpc/client';
 import { API_ENDPOINTS } from '@/services/_url';
 import { clientS3Storage } from '@/services/file/ClientS3';

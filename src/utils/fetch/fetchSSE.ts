@@ -2,7 +2,7 @@ import { isObject } from 'lodash-es';
 
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/const/trace';
-import { parseToolCalls } from '@/libs/agent-runtime';
+import { parseToolCalls } from '@/libs/model-runtime';
 import { ChatErrorType } from '@/types/fetch';
 import { SmoothingParams } from '@/types/llm';
 import {

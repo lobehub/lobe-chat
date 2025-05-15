@@ -3,7 +3,7 @@ import { isEmpty } from 'lodash-es';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { LobeChatDatabase } from '@/database/type';
-import { ModelProvider } from '@/libs/agent-runtime';
+import { ModelProvider } from '@/libs/model-runtime';
 import {
   AiProviderDetailItem,
   AiProviderListItem,

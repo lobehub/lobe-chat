@@ -1,4 +1,4 @@
-import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
+import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/model-runtime';
 import { ChatErrorType, ErrorResponse, ErrorType } from '@/types/fetch';
 
 const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
