@@ -242,7 +242,7 @@ export default {
       title: '代码高亮主题',
     },
     mermaidTheme: {
-      title: '思维导图主题',
+      title: 'Mermaid 主题',
     },
     title: '聊天外观',
   },
