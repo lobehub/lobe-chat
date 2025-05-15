@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Add Qiniu Provider."]
+    },
+    "date": "2025-05-15",
+    "version": "1.86.0"
+  },
+  {
+    "children": {
       "improvements": ["Update electron style on windows."]
     },
     "date": "2025-05-14",
