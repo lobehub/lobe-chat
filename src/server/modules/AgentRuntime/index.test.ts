@@ -22,9 +22,9 @@ import {
   LobeZeroOneAI,
   LobeZhipuAI,
   ModelProvider,
-} from '@/libs/agent-runtime';
-import { AgentRuntime } from '@/libs/agent-runtime';
-import { LobeStepfunAI } from '@/libs/agent-runtime/stepfun';
+} from '@/libs/model-runtime';
+import { AgentRuntime } from '@/libs/model-runtime';
+import { LobeStepfunAI } from '@/libs/model-runtime/stepfun';
 
 import { initAgentRuntimeWithUserPayload } from './index';
 
@@ -60,7 +60,7 @@ vi.mock('@/config/llm', () => ({
 
 /**
  * Test cases for function initAgentRuntimeWithUserPayload
- * this method will use AgentRuntime from `@/libs/agent-runtime`
+ * this method will use AgentRuntime from `@/libs/model-runtime`
  * and method `getLlmOptionsFromPayload` to initialize runtime
  * with user payload. Test case below will test both the methods
  */
