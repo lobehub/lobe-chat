@@ -25,6 +25,7 @@ import {
 } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
+import { prependInitialChunkToStream } from '../utils/prependInitialChunkToStream';
 import { StreamingResponse } from '../utils/response';
 import {
   GoogleGenerativeAIStream,
@@ -161,11 +162,23 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       }
 
       // Convert the response into a friendly text-stream
-      const Stream = this.isVertexAi ? VertexAIStream : GoogleGenerativeAIStream;
-      const stream = Stream(prod, { callbacks: options?.callback, inputStartAt });
+      const StreamAdapter = this.isVertexAi ? VertexAIStream : GoogleGenerativeAIStream;
+      let aiStream = StreamAdapter(prod, { callbacks: options?.callback, inputStartAt });
 
-      // Respond with the stream
-      return StreamingResponse(stream, { headers: options?.headers });
+      // ***** MINIMAL CHANGE START *****
+      // Prepend the heartbeat chunk to the AI stream
+      const encoder = new TextEncoder();
+      // Send a single space as a minimal heartbeat.
+      // You could also send a more specific "thinking" indicator if your client handles it.
+      // e.g., encoder.encode('{"status": "processing"}\n') if using SSE and client expects JSON.
+      // For simple text streaming, a space is often enough.
+      const heartbeatChunk = encoder.encode(' ');
+      const streamWithHeartbeat = prependInitialChunkToStream(aiStream, heartbeatChunk);
+      // ***** MINIMAL CHANGE END *****
+
+      // Respond with the stream (now with heartbeat)
+
+      return StreamingResponse(streamWithHeartbeat, { headers: options?.headers });
     } catch (e) {
       const err = e as Error;
 
