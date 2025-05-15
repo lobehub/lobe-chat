@@ -14,7 +14,7 @@ import {
   AgentRuntimeError,
   ChatCompletionErrorPayload,
   ModelProvider,
-} from '@/libs/agent-runtime';
+} from '@/libs/model-runtime';
 import { filesPrompts } from '@/prompts/files';
 import { BuiltinSystemRolePrompts } from '@/prompts/systemRole';
 import { getAgentStoreState } from '@/store/agent';

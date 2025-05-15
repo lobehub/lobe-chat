@@ -6,7 +6,7 @@ import { Suspense, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useProviderName } from '@/hooks/useProviderName';
-import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
+import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/model-runtime';
 import { ChatErrorType, ErrorType } from '@/types/fetch';
 import { ChatMessage, ChatMessageError } from '@/types/message';
 

@@ -1,6 +1,6 @@
 import * as AiModels from '@/config/aiModels';
 import { getLLMConfig } from '@/config/llm';
-import { ModelProvider } from '@/libs/agent-runtime';
+import { ModelProvider } from '@/libs/model-runtime';
 import { AiFullModelCard } from '@/types/aiModel';
 import { ProviderConfig } from '@/types/user/settings';
 import { extractEnabledModels, transformToAiChatModelList } from '@/utils/parseModels';
