@@ -22,8 +22,9 @@ const transformVertexAIStream = (
   const usage = chunk.usageMetadata;
   const usageChunks: StreamProtocolChunk[] = [];
   if (candidate?.finishReason && usage) {
-    const outputReasoningTokens = (usage as any).thoughtsTokenCount || undefined;
-    const totalOutputTokens = (usage.candidatesTokenCount ?? 0) + (outputReasoningTokens ?? 0);
+    const outputReasoningTokens = usage.thoughtsTokenCount || undefined;
+    const outputTextTokens = usage.candidatesTokenCount ?? 0;
+    const totalOutputTokens = outputTextTokens + (outputReasoningTokens ?? 0);
 
     usageChunks.push(
       { data: candidate.finishReason, id: context?.id, type: 'stop' },
@@ -37,7 +38,7 @@ const transformVertexAIStream = (
             (i: any) => i.modality === 'TEXT',
           )?.tokenCount,
           outputReasoningTokens,
-          outputTextTokens: totalOutputTokens - (outputReasoningTokens ?? 0),
+          outputTextTokens,
           totalInputTokens: usage.promptTokenCount,
           totalOutputTokens,
           totalTokens: usage.totalTokenCount,
@@ -59,6 +60,8 @@ const transformVertexAIStream = (
   const item = candidates[0];
   if (item.content) {
     const part = item.content.parts?.[0];
+    let isThought = part?.thought ?? false;
+    const textDataType = isThought ? 'reasoning' : 'text';
 
     if (part?.functionCall) {
       const functionCall = part.functionCall;
@@ -86,7 +89,7 @@ const transformVertexAIStream = (
     if (item.finishReason) {
       if (chunk.usageMetadata) {
         return [
-          !!part?.text ? { data: part.text, id: context?.id, type: 'text' } : undefined,
+          !!part?.text ? { data: part.text, id: context?.id, type: textDataType } : undefined,
           ...usageChunks,
         ].filter(Boolean) as StreamProtocolChunk[];
       }
@@ -96,7 +99,7 @@ const transformVertexAIStream = (
     return {
       data: part?.text,
       id: context?.id,
-      type: 'text',
+      type: textDataType,
     };
   }
 

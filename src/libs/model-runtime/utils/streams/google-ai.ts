@@ -74,7 +74,7 @@ const transformGoogleGenerativeAIStream = (
     ];
   }
 
-  const text = chunk.text;
+  const text = chunk.text || candidate?.content?.parts?.[0].text;
 
   if (candidate) {
     let part;

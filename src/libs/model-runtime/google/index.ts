@@ -7,6 +7,8 @@ import {
   GoogleSearch,
   Part,
   Type as SchemaType,
+  ThinkingConfig,
+  setDefaultBaseUrls,
 } from '@google/genai';
 
 import type { ChatModelCard } from '@/types/llm';
@@ -50,6 +52,8 @@ const modelsWithThinking = new Set([
   'gemini-2.5-flash-preview-04-17',
   'gemini-2.5-pro-preview-05-06',
 ]);
+
+const modelsWithThinkingControl = new Set(['gemini-2.5-flash-preview-04-17']);
 
 export interface GoogleModelCard {
   displayName: string;
@@ -95,6 +99,10 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
   constructor({ apiKey, baseURL, client, isVertexAi, id }: LobeGoogleAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
+
+    if (baseURL) {
+      setDefaultBaseUrls({ geminiUrl: baseURL });
+    }
 
     this.apiKey = apiKey;
     this.client = client ? client : new GoogleGenAI({ apiKey });
@@ -143,14 +151,16 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       };
 
       if (modelsWithThinking.has(payload.model)) {
-        const thinkingConfig: { includeThoughts?: boolean; thinkingBudget?: number } = {
+        const thinkingConfig: ThinkingConfig = {
           includeThoughts: true,
         };
-        const thinking = payload.thinking;
-        if (thinking?.type === 'enabled') {
-          thinkingConfig.thinkingBudget = thinking.budget_tokens;
-        } else {
-          thinkingConfig.thinkingBudget = 0;
+        if (modelsWithThinkingControl.has(payload.model)) {
+          const thinking = payload.thinking;
+          if (thinking?.type === 'enabled') {
+            thinkingConfig.thinkingBudget = thinking.budget_tokens;
+          } else {
+            thinkingConfig.thinkingBudget = 0;
+          }
         }
         config.thinkingConfig = thinkingConfig;
       }
