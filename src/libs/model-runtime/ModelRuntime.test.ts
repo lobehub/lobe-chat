@@ -10,7 +10,7 @@ import { AgentRuntime, ChatStreamPayload, LobeOpenAI, ModelProvider } from '@/li
 import { providerRuntimeMap } from '@/libs/model-runtime/runtimeMap';
 import { createTraceOptions } from '@/server/modules/AgentRuntime';
 
-import { AgentChatOptions } from './AgentRuntime';
+import { AgentChatOptions } from './ModelRuntime';
 
 const specialProviders = [
   { id: 'openai', payload: { apiKey: 'user-openai-key', baseURL: 'user-endpoint' } },

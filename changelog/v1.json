@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "features": ["Support custom language and Mermaid Appearance."],
+      "fixes": ["Fix oidc redirect url."]
+    },
+    "date": "2025-05-16",
+    "version": "1.87.0"
+  },
+  {
+    "children": {
       "improvements": ["Refactor agent runtime to model runtime."]
     },
     "date": "2025-05-15",
