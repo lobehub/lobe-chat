@@ -170,6 +170,20 @@
     },
     "title": "Informações do assistente"
   },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Personalização de escala de cinza com diferentes inclinações de cor",
+      "title": "Cor Neutra"
+    },
+    "preview": {
+      "title": "Paleta de Cores"
+    },
+    "primaryColor": {
+      "desc": "Cor do tema personalizada",
+      "title": "Cor do Tema"
+    },
+    "title": "Aparência do Aplicativo"
+  },
   "settingChat": {
     "autoCreateTopicThreshold": {
       "desc": "Quando o número de mensagens atingir esse valor, um tópico será criado automaticamente",
@@ -211,6 +225,35 @@
     },
     "submit": "Atualizar preferências de chat",
     "title": "Configurações de chat"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Tamanho da fonte do conteúdo do chat",
+      "marks": {
+        "normal": "Padrão"
+      },
+      "title": "Tamanho da Fonte"
+    },
+    "highlighterTheme": {
+      "title": "Tema de Destaque de Código"
+    },
+    "mermaidTheme": {
+      "title": "Tema Sereia"
+    },
+    "title": "Aparência do Chat"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Seguir o Sistema",
+      "title": "Idioma"
+    },
+    "themeMode": {
+      "auto": "Automático",
+      "dark": "Escuro",
+      "light": "Claro",
+      "title": "Tema"
+    },
+    "title": "Configurações Comuns"
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -336,37 +379,6 @@
       "preview": "Ouvir voz",
       "title": "Voz de síntese de fala"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Avatar"
-    },
-    "fontSize": {
-      "desc": "Tamanho da fonte do conteúdo do chat",
-      "marks": {
-        "normal": "Normal"
-      },
-      "title": "Tamanho da Fonte"
-    },
-    "lang": {
-      "autoMode": "Seguir sistema",
-      "title": "Idioma"
-    },
-    "neutralColor": {
-      "desc": "Personalização de tons de cinza com diferentes tendências de cores",
-      "title": "Cor Neutra"
-    },
-    "primaryColor": {
-      "desc": "Cor do tema personalizado",
-      "title": "Cor Principal"
-    },
-    "themeMode": {
-      "auto": "Automático",
-      "dark": "Escuro",
-      "light": "Claro",
-      "title": "Tema"
-    },
-    "title": "Configurações de Tema"
   },
   "storage": {
     "actions": {

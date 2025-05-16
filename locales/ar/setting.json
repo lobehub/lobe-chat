@@ -170,6 +170,20 @@
     },
     "title": "معلومات المساعد"
   },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "تخصيص تدرجات الرمادي ذات الاتجاهات اللونية المختلفة",
+      "title": "لون محايد"
+    },
+    "preview": {
+      "title": "لوحة الألوان"
+    },
+    "primaryColor": {
+      "desc": "تخصيص لون الموضوع",
+      "title": "لون الموضوع"
+    },
+    "title": "مظهر التطبيق"
+  },
   "settingChat": {
     "autoCreateTopicThreshold": {
       "desc": "عند تجاوز عدد الرسائل الحالي هذا القيمة، سيتم إنشاء موضوع تلقائيًا",
@@ -211,6 +225,35 @@
     },
     "submit": "تحديث تفضيلات الدردشة",
     "title": "إعدادات الدردشة"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "حجم خط محتوى الدردشة",
+      "marks": {
+        "normal": "عادي"
+      },
+      "title": "حجم الخط"
+    },
+    "highlighterTheme": {
+      "title": "موضوع تمييز الكود"
+    },
+    "mermaidTheme": {
+      "title": "موضوع حورية البحر"
+    },
+    "title": "مظهر الدردشة"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "اتباع النظام",
+      "title": "اللغة"
+    },
+    "themeMode": {
+      "auto": "تلقائي",
+      "dark": "داكن",
+      "light": "فاتح",
+      "title": "الموضوع"
+    },
+    "title": "الإعدادات العامة"
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -336,37 +379,6 @@
       "preview": "معاينة الصوت",
       "title": "مصدر توليد الكلام"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "الصورة الرمزية"
-    },
-    "fontSize": {
-      "desc": "حجم الخط لمحتوى المحادثة",
-      "marks": {
-        "normal": "عادي"
-      },
-      "title": "حجم الخط"
-    },
-    "lang": {
-      "autoMode": "متابعة النظام",
-      "title": "اللغة"
-    },
-    "neutralColor": {
-      "desc": "تخصيص درجات اللون الرمادي للاتجاهات المختلفة",
-      "title": "اللون الأحادي"
-    },
-    "primaryColor": {
-      "desc": "تخصيص لون السمة الرئيسي",
-      "title": "لون السمة"
-    },
-    "themeMode": {
-      "auto": "تلقائي",
-      "dark": "داكن",
-      "light": "فاتح",
-      "title": "السمة"
-    },
-    "title": "إعدادات السمة"
   },
   "storage": {
     "actions": {

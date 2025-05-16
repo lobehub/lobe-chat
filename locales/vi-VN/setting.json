@@ -170,6 +170,20 @@
     },
     "title": "Thông tin trợ lý"
   },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Tùy chỉnh thang độ xám với các xu hướng màu sắc khác nhau",
+      "title": "Màu trung tính"
+    },
+    "preview": {
+      "title": "Bảng màu"
+    },
+    "primaryColor": {
+      "desc": "Tùy chỉnh màu chủ đề",
+      "title": "Màu chủ đề"
+    },
+    "title": "Giao diện ứng dụng"
+  },
   "settingChat": {
     "autoCreateTopicThreshold": {
       "desc": "Khi số tin nhắn hiện tại vượt quá giá trị này, chủ đề sẽ tự động được tạo",
@@ -211,6 +225,35 @@
     },
     "submit": "Cập nhật sở thích trò chuyện",
     "title": "Cài đặt trò chuyện"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Kích thước phông chữ của nội dung trò chuyện",
+      "marks": {
+        "normal": "Chuẩn"
+      },
+      "title": "Kích thước phông chữ"
+    },
+    "highlighterTheme": {
+      "title": "Chủ đề làm nổi bật mã"
+    },
+    "mermaidTheme": {
+      "title": "Chủ đề Nàng Tiên Cá"
+    },
+    "title": "Giao diện trò chuyện"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Theo hệ thống",
+      "title": "Ngôn ngữ"
+    },
+    "themeMode": {
+      "auto": "Tự động",
+      "dark": "Tối",
+      "light": "Sáng",
+      "title": "Chủ đề"
+    },
+    "title": "Cài đặt chung"
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -336,37 +379,6 @@
       "preview": "Xem trước âm thanh",
       "title": "Nguồn âm thanh tổng hợp giọng nói"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Hình đại diện"
-    },
-    "fontSize": {
-      "desc": "Kích cỡ chữ của nội dung trò chuyện",
-      "marks": {
-        "normal": "Bình thường"
-      },
-      "title": "Kích cỡ chữ"
-    },
-    "lang": {
-      "autoMode": "Theo hệ thống",
-      "title": "Ngôn ngữ"
-    },
-    "neutralColor": {
-      "desc": "Tùy chỉnh mức xám theo xu hướng màu sắc khác nhau",
-      "title": "Màu trung tính"
-    },
-    "primaryColor": {
-      "desc": "Tùy chỉnh màu chủ đề",
-      "title": "Màu chủ đề"
-    },
-    "themeMode": {
-      "auto": "Tự động",
-      "dark": "Tối",
-      "light": "Sáng",
-      "title": "Chủ đề"
-    },
-    "title": "Cài đặt chủ đề"
   },
   "storage": {
     "actions": {
