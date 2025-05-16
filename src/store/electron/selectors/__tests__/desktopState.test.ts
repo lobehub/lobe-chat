@@ -8,6 +8,7 @@ describe('desktopStateSelectors', () => {
   describe('usePath', () => {
     it('should return userPath from appState', () => {
       const state: ElectronState = {
+        isAppStateInit: false,
         appState: {
           userPath: {
             desktop: '/test/desktop',
@@ -41,6 +42,7 @@ describe('desktopStateSelectors', () => {
     it('should handle undefined userPath', () => {
       const state: ElectronState = {
         appState: {},
+        isAppStateInit: false,
         dataSyncConfig: {
           storageMode: 'local',
         },

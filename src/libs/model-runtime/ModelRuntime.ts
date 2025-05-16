@@ -24,7 +24,7 @@ export interface AgentChatOptions {
   trace?: TracePayload;
 }
 
-class AgentRuntime {
+class ModelRuntime {
   private _runtime: LobeRuntimeAI;
 
   constructor(runtime: LobeRuntimeAI) {
@@ -110,8 +110,8 @@ class AgentRuntime {
     const providerAI = providerRuntimeMap[provider] ?? LobeOpenAI;
     const runtimeModel: LobeRuntimeAI = new providerAI(params);
 
-    return new AgentRuntime(runtimeModel);
+    return new ModelRuntime(runtimeModel);
   }
 }
 
-export default AgentRuntime;
+export default ModelRuntime;
