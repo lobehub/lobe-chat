@@ -2,10 +2,15 @@ import { LobeChatPluginApi, LobeChatPluginManifest, PluginSchema } from '@lobehu
 import { McpError } from '@modelcontextprotocol/sdk/types.js';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
+import { exec } from 'node:child_process';
+import { promisify } from 'node:util';
 
 import { MCPClient, MCPClientParams, StdioMCPParams } from '@/libs/mcp';
+import { CheckMcpInstallParams, CheckMcpInstallResult } from '@/types/plugins';
 import { CustomPluginMetadata } from '@/types/tool/plugin';
 import { safeParseJSON } from '@/utils/safeParseJSON';
+
+const execPromise = promisify(exec);
 
 const log = debug('lobe-mcp:service');
 
@@ -167,6 +172,164 @@ class MCPService {
       // TODO: temporary
       type: 'mcp' as any,
     };
+  }
+
+  /**
+   * 检查系统依赖版本
+   */
+  private async checkSystemDependency(dependency: {
+    checkCommand?: string;
+    name: string;
+    requiredVersion?: string;
+    type?: string;
+    versionParsingRequired?: boolean;
+  }): Promise<{ error?: string; installed: boolean; meetRequirement: boolean; version?: string }> {
+    try {
+      // 如果没有提供检查命令，则使用通用命令
+      const checkCommand = dependency.checkCommand || `${dependency.name} --version`;
+
+      const { stdout, stderr } = await execPromise(checkCommand);
+      if (stderr && !stdout) {
+        return {
+          error: stderr,
+          installed: false,
+          meetRequirement: false,
+        };
+      }
+
+      const output = stdout.trim();
+      let version = output;
+
+      // 处理版本解析
+      if (dependency.versionParsingRequired) {
+        // 提取版本号 - 通常格式为 vX.Y.Z 或 X.Y.Z
+        const versionMatch = output.match(/[Vv]?(\d+(\.\d+)*)/);
+        if (versionMatch) {
+          version = versionMatch[0];
+        }
+      }
+
+      let meetRequirement = true;
+
+      if (dependency.requiredVersion) {
+        // 提取数字部分
+        const currentVersion = version.replace(/^[Vv]/, ''); // 移除可能的 v 前缀
+        const currentVersionNum = parseFloat(currentVersion);
+
+        // 从要求版本中提取条件和数字
+        const requirementMatch = dependency.requiredVersion.match(/([<=>]+)?(\d+(\.\d+)*)/);
+
+        if (requirementMatch) {
+          const [, operator = '=', requiredVersion] = requirementMatch;
+          const requiredNum = parseFloat(requiredVersion);
+
+          switch (operator) {
+            case '>=': {
+              meetRequirement = currentVersionNum >= requiredNum;
+              break;
+            }
+            case '>': {
+              meetRequirement = currentVersionNum > requiredNum;
+              break;
+            }
+            case '<=': {
+              meetRequirement = currentVersionNum <= requiredNum;
+              break;
+            }
+            case '<': {
+              meetRequirement = currentVersionNum < requiredNum;
+              break;
+            }
+            default: {
+              // 默认为等于
+              meetRequirement = currentVersionNum === requiredNum;
+              break;
+            }
+          }
+        }
+      }
+
+      return {
+        installed: true,
+        meetRequirement,
+        version,
+      };
+    } catch (error) {
+      return {
+        error: error instanceof Error ? error.message : '未知错误',
+        installed: false,
+        meetRequirement: false,
+      };
+    }
+  }
+
+  /**
+   * 检查 npm 包是否已安装
+   */
+  private async checkNpmPackageInstalled(packageName: string): Promise<boolean> {
+    try {
+      // 使用 npm list 检查包是否已全局安装
+      const { stdout: globalStdout } = await execPromise(`npm list -g ${packageName} --depth=0`);
+      if (!globalStdout.includes('(empty)') && globalStdout.includes(packageName)) {
+        return true;
+      }
+
+      // 检查包是否可以通过 npx 直接使用（这也能验证包是否可用）
+      await execPromise(`npx -y ${packageName} --version`);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * 检查 MCP 插件安装状态
+   */
+  async checkMcpInstall(manifest: CheckMcpInstallParams): Promise<CheckMcpInstallResult> {
+    try {
+      const systemDependenciesResults = [];
+
+      // 检查系统依赖
+      if (manifest.systemDependencies && manifest.systemDependencies.length > 0) {
+        for (const dep of manifest.systemDependencies) {
+          const result = await this.checkSystemDependency(dep);
+          systemDependenciesResults.push({
+            name: dep.name,
+            ...result,
+          });
+        }
+      }
+
+      // 检查 npm 包是否已安装
+      let packageInstalled = false;
+      if (manifest.installationMethod === 'npm' && manifest.installationDetails.packageName) {
+        packageInstalled = await this.checkNpmPackageInstalled(
+          manifest.installationDetails.packageName,
+        );
+      } else if (
+        manifest.installationMethod === 'manual' &&
+        manifest.installationDetails.repositoryUrlToClone
+      ) {
+        // 对于手动安装，我们只能检查用户是否遵循了指南，但无法确认
+        // 这里简单返回 false，实际使用时用户需要手动确认
+        packageInstalled = false;
+      }
+
+      // 检查系统依赖是否都满足要求
+      const allDependenciesMet = systemDependenciesResults.every((dep) => dep.meetRequirement);
+
+      return {
+        allDependenciesMet,
+        packageInstalled,
+        success: true,
+        systemDependencies: systemDependenciesResults,
+      };
+    } catch (error) {
+      return {
+        error: error instanceof Error ? error.message : '检查 MCP 插件安装状态时发生未知错误',
+        success: false,
+      };
+    }
   }
 }
 
