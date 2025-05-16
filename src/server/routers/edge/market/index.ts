@@ -1,4 +1,6 @@
+import { MarketSDK } from '@lobehub/market-sdk';
 import { TRPCError } from '@trpc/server';
+import debug from 'debug';
 import { z } from 'zod';
 
 import { DEFAULT_LANG } from '@/const/locale';
@@ -7,6 +9,8 @@ import { Locales } from '@/locales/resources';
 import { AssistantStore } from '@/server/modules/AssistantStore';
 import { PluginStore } from '@/server/modules/PluginStore';
 import { AgentStoreIndex } from '@/types/discover';
+
+const log = debug('lobe-edge-router:market');
 
 export const marketRouter = router({
   getAgent: publicProcedure
@@ -17,6 +21,7 @@ export const marketRouter = router({
       }),
     )
     .query(async ({ input }) => {
+      log('getAgent input: %O', input);
       const { id, locale } = input;
 
       const market = new AssistantStore();
@@ -48,6 +53,7 @@ export const marketRouter = router({
         .optional(),
     )
     .query(async ({ input }): Promise<AgentStoreIndex> => {
+      log('getAgentIndex input: %O', input);
       const locale = input?.locale;
 
       const market = new AssistantStore();
@@ -66,7 +72,7 @@ export const marketRouter = router({
       }
     }),
 
-  getPluginIndex: publicProcedure
+  getLegacyPluginList: publicProcedure
     .input(
       z
         .object({
@@ -75,34 +81,56 @@ export const marketRouter = router({
         .optional(),
     )
     .query(async ({ input }) => {
+      log('getLegacyPluginList input: %O', input);
+      const pluginStore = new PluginStore();
       const locale = input?.locale;
 
-      const pluginStore = new PluginStore();
-
       try {
-        // 获取插件索引URL
-        let res = await fetch(pluginStore.getPluginIndexUrl(locale as Locales));
-
-        // 如果找不到对应语言的插件索引，尝试获取默认语言的插件索引
-        if (res.status === 404) {
-          res = await fetch(pluginStore.getPluginIndexUrl(DEFAULT_LANG));
-        }
-
-        if (res.ok) {
-          return res.json();
-        }
-
-        throw new Error('Failed to fetch plugin index');
-      } catch (e) {
-        // it means failed to fetch
-        if ((e as Error).message.includes('fetch failed')) {
-          return [];
-        }
-
+        return await pluginStore.getPluginList(locale);
+      } catch {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'failed to fetch plugin market index',
         });
       }
+    }),
+
+  getPluginList: publicProcedure
+    .input(
+      z
+        .object({
+          category: z.string().optional(),
+          locale: z.string().optional(),
+          page: z.number().optional(),
+          pageSize: z.number().optional(),
+          q: z.string().optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ input }) => {
+      log('getPluginList input: %O', input);
+      const market = new MarketSDK({ baseUrl: 'http://localhost:8787/api' });
+
+      return await market.getPluginList({
+        category: input?.category,
+        locale: input?.locale,
+        page: input?.page,
+        pageSize: input?.pageSize,
+        q: input?.q,
+      });
+    }),
+
+  getPluginManifest: publicProcedure
+    .input(
+      z.object({
+        identifier: z.string(),
+        locale: z.string().optional(),
+      }),
+    )
+    .query(async ({ input }) => {
+      log('getPluginManifest input: %O', input);
+      const market = new MarketSDK({ baseUrl: 'http://localhost:8787/api' });
+
+      return await market.getPluginManifest(input.identifier, input.locale);
     }),
 });
