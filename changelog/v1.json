@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Support Doubao 1.5 Thinking Vision Pro model."]
+    },
+    "date": "2025-05-16",
+    "version": "1.87.2"
+  },
+  {
+    "children": {
       "improvements": [
         "Update internlm model list, add series, update Spark X1 model list & fix build-in search params."
       ]
