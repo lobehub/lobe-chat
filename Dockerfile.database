@@ -124,6 +124,9 @@ COPY --from=builder /app/src/database/migrations /app/migrations
 COPY --from=builder /app/scripts/migrateServerDB/docker.cjs /app/docker.cjs
 COPY --from=builder /app/scripts/migrateServerDB/errorHint.js /app/errorHint.js
 
+# Copy oidc jwks generate script
+COPY --from=builder /app/scripts/generate-oidc-jwk.mjs /app/generate-oidc-jwk.mjs
+
 # copy dependencies
 COPY --from=builder /deps/node_modules/.pnpm /app/node_modules/.pnpm
 COPY --from=builder /deps/node_modules/pg /app/node_modules/pg
