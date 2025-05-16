@@ -53,16 +53,9 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload, createR
       return originalResponse;
     }
 
-    // ***** HEARTBEAT MODIFICATION START *****
-    const encoder = new TextEncoder();
-    // Send a single space as a minimal heartbeat.
-    // Adjust as needed (e.g., for SSE: encoder.encode(':\n\n') or a specific event)
-    const heartbeatChunk = encoder.encode(' ');
-
     // originalResponse.body should be ReadableStream<Uint8Array>
     const streamWithHeartbeat = prependInitialChunkToStream(
-      originalResponse.body as ReadableStream<Uint8Array>, // Cast if necessary, but Response.body should be this type
-      heartbeatChunk,
+      originalResponse.body, // Cast if necessary, but Response.body should be this type
     );
 
     // Create a new Response with the modified stream and original headers/status
