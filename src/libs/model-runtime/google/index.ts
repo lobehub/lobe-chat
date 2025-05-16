@@ -6,6 +6,7 @@ import {
   Tool as GoogleFunctionCallTool,
   GoogleGenerativeAI,
   GoogleSearchRetrievalTool,
+  ModelParams,
   Part,
   SchemaType,
 } from '@google/generative-ai';
@@ -45,6 +46,11 @@ const modelsDisableInstuction = new Set([
   'gemini-2.0-flash-exp',
   'gemini-2.0-flash-exp-image-generation',
   'gemini-2.0-flash-preview-image-generation',
+]);
+
+const modelsWithThinking = new Set([
+  'gemini-2.5-flash-preview-04-17',
+  'gemini-2.5-pro-preview-05-06',
 ]);
 
 export interface GoogleModelCard {
@@ -108,41 +114,53 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       const contents = await this.buildGoogleMessages(payload.messages);
 
+      const modelParams: ModelParams = {
+        generationConfig: {
+          maxOutputTokens: payload.max_tokens,
+          // @ts-expect-error - Google SDK 0.24.0 doesn't have this property for now with
+          response_modalities: modelsWithModalities.has(model) ? ['Text', 'Image'] : undefined,
+          temperature: payload.temperature,
+          topP: payload.top_p,
+        },
+        model,
+        // avoid wide sensitive words
+        // refs: https://github.com/lobehub/lobe-chat/pull/1418
+        safetySettings: [
+          {
+            category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+            threshold: getThreshold(model),
+          },
+          {
+            category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+            threshold: getThreshold(model),
+          },
+          {
+            category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+            threshold: getThreshold(model),
+          },
+          {
+            category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+            threshold: getThreshold(model),
+          },
+        ],
+      };
+
+      if (modelsWithThinking.has(payload.model)) {
+        const thinkingConfig: { includeThoughts?: boolean; thinkingBudget?: number } = {
+          includeThoughts: true,
+        };
+        const thinking = payload.thinking;
+        if (thinking?.type === 'enabled') {
+          thinkingConfig.thinkingBudget = thinking.budget_tokens;
+        } else if (thinking?.type === 'disabled') {
+          thinkingConfig.thinkingBudget = 0;
+        }
+        (modelParams as any).thinkingConfig = thinkingConfig;
+      }
+
       const inputStartAt = Date.now();
       const geminiStreamResult = await this.client
-        .getGenerativeModel(
-          {
-            generationConfig: {
-              maxOutputTokens: payload.max_tokens,
-              // @ts-expect-error - Google SDK 0.24.0 doesn't have this property for now with
-              response_modalities: modelsWithModalities.has(model) ? ['Text', 'Image'] : undefined,
-              temperature: payload.temperature,
-              topP: payload.top_p,
-            },
-            model,
-            // avoid wide sensitive words
-            // refs: https://github.com/lobehub/lobe-chat/pull/1418
-            safetySettings: [
-              {
-                category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-                threshold: getThreshold(model),
-              },
-              {
-                category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-                threshold: getThreshold(model),
-              },
-              {
-                category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-                threshold: getThreshold(model),
-              },
-              {
-                category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-                threshold: getThreshold(model),
-              },
-            ],
-          },
-          { apiVersion: 'v1beta', baseUrl: this.baseURL },
-        )
+        .getGenerativeModel(modelParams, { apiVersion: 'v1beta', baseUrl: this.baseURL })
         .generateContentStream({
           contents,
           systemInstruction: modelsDisableInstuction.has(model)

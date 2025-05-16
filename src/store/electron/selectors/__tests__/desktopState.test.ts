@@ -24,6 +24,7 @@ describe('desktopStateSelectors', () => {
         dataSyncConfig: {
           storageMode: 'local',
         },
+        isAppStateInit: false,
         isInitRemoteServerConfig: false,
       };
 
@@ -46,6 +47,7 @@ describe('desktopStateSelectors', () => {
         dataSyncConfig: {
           storageMode: 'local',
         },
+        isAppStateInit: false,
         isInitRemoteServerConfig: false,
       };
 
