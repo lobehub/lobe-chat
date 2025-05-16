@@ -1,5 +1,5 @@
 // @vitest-environment edge-runtime
-import { FunctionDeclarationsTool } from '@google/generative-ai';
+import { GenerateContentResponse, Tool } from '@google/genai';
 import OpenAI from 'openai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -22,9 +22,8 @@ beforeEach(() => {
   instance = new LobeGoogleAI({ apiKey: 'test' });
 
   // 使用 vi.spyOn 来模拟 chat.completions.create 方法
-  vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-    generateContentStream: vi.fn().mockResolvedValue(new ReadableStream()),
-  } as any);
+  const mockStreamData = (async function* (): AsyncGenerator<GenerateContentResponse> {})();
+  vi.spyOn(instance['client'].models, 'generateContentStream').mockResolvedValue(mockStreamData);
 });
 
 afterEach(() => {
@@ -60,9 +59,9 @@ describe('LobeGoogleAI', () => {
           controller.close();
         },
       });
-      vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-        generateContentStream: vi.fn().mockResolvedValueOnce(mockStream),
-      } as any);
+      vi.spyOn(instance['client'].models, 'generateContentStream').mockResolvedValue(
+        mockStream as any,
+      );
 
       const result = await instance.chat({
         messages: [{ content: 'Hello', role: 'user' }],
@@ -208,9 +207,9 @@ describe('LobeGoogleAI', () => {
         },
       });
 
-      vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-        generateContentStream: vi.fn().mockResolvedValueOnce(mockStream),
-      } as any);
+      vi.spyOn(instance['client'].models, 'generateContentStream').mockResolvedValue(
+        mockStream as any,
+      );
     });
 
     it('should call debugStream in DEBUG mode', async () => {
@@ -224,9 +223,9 @@ describe('LobeGoogleAI', () => {
           controller.close();
         },
       });
-      vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-        generateContentStream: vi.fn().mockResolvedValueOnce(mockStream),
-      } as any);
+      vi.spyOn(instance['client'].models, 'generateContentStream').mockResolvedValue(
+        mockStream as any,
+      );
       const debugStreamSpy = vi
         .spyOn(debugStreamModule, 'debugStream')
         .mockImplementation(() => Promise.resolve());
@@ -250,9 +249,7 @@ describe('LobeGoogleAI', () => {
 
         const apiError = new Error(message);
 
-        vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-          generateContentStream: vi.fn().mockRejectedValue(apiError),
-        } as any);
+        vi.spyOn(instance['client'].models, 'generateContentStream').mockRejectedValue(apiError);
 
         try {
           await instance.chat({
@@ -271,9 +268,7 @@ describe('LobeGoogleAI', () => {
 
         const apiError = new Error(message);
 
-        vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-          generateContentStream: vi.fn().mockRejectedValue(apiError),
-        } as any);
+        vi.spyOn(instance['client'].models, 'generateContentStream').mockRejectedValue(apiError);
 
         try {
           await instance.chat({
@@ -292,9 +287,7 @@ describe('LobeGoogleAI', () => {
 
         const apiError = new Error(message);
 
-        vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-          generateContentStream: vi.fn().mockRejectedValue(apiError),
-        } as any);
+        vi.spyOn(instance['client'].models, 'generateContentStream').mockRejectedValue(apiError);
 
         try {
           await instance.chat({
@@ -326,9 +319,7 @@ describe('LobeGoogleAI', () => {
 
         const apiError = new Error(message);
 
-        vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-          generateContentStream: vi.fn().mockRejectedValue(apiError),
-        } as any);
+        vi.spyOn(instance['client'].models, 'generateContentStream').mockRejectedValue(apiError);
 
         try {
           await instance.chat({
@@ -354,9 +345,7 @@ describe('LobeGoogleAI', () => {
         const apiError = new Error('Error message');
 
         // 使用 vi.spyOn 来模拟 chat.completions.create 方法
-        vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-          generateContentStream: vi.fn().mockRejectedValue(apiError),
-        } as any);
+        vi.spyOn(instance['client'].models, 'generateContentStream').mockRejectedValue(apiError);
 
         // Act
         try {
@@ -392,9 +381,7 @@ describe('LobeGoogleAI', () => {
         };
         const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
 
-        vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-          generateContentStream: vi.fn().mockRejectedValue(apiError),
-        } as any);
+        vi.spyOn(instance['client'].models, 'generateContentStream').mockRejectedValue(apiError);
 
         // Act
         try {
@@ -418,9 +405,9 @@ describe('LobeGoogleAI', () => {
         // Arrange
         const genericError = new Error('Generic Error');
 
-        vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-          generateContentStream: vi.fn().mockRejectedValue(genericError),
-        } as any);
+        vi.spyOn(instance['client'].models, 'generateContentStream').mockRejectedValue(
+          genericError,
+        );
 
         // Act
         try {
@@ -590,11 +577,11 @@ describe('LobeGoogleAI', () => {
         const googleTools = instance['buildGoogleTools'](tools);
 
         expect(googleTools).toHaveLength(1);
-        expect((googleTools![0] as FunctionDeclarationsTool).functionDeclarations![0]).toEqual({
+        expect((googleTools![0] as Tool).functionDeclarations![0]).toEqual({
           name: 'testTool',
           description: 'A test tool',
           parameters: {
-            type: 'object',
+            type: 'OBJECT',
             properties: {
               param1: { type: 'string' },
               param2: { type: 'number' },

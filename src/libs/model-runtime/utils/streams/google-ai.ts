@@ -1,4 +1,4 @@
-import { EnhancedGenerateContentResponse } from '@google/generative-ai';
+import { GenerateContentResponse } from '@google/genai';
 
 import { ModelTokensUsage } from '@/types/message';
 import { GroundingSearch } from '@/types/search';
@@ -16,7 +16,7 @@ import {
 } from './protocol';
 
 const transformGoogleGenerativeAIStream = (
-  chunk: EnhancedGenerateContentResponse,
+  chunk: GenerateContentResponse,
   context: StreamContext,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
   // maybe need another structure to add support for multiple choices
@@ -25,7 +25,7 @@ const transformGoogleGenerativeAIStream = (
   const usageChunks: StreamProtocolChunk[] = [];
   if (candidate?.finishReason && usage) {
     // totalTokenCount = promptTokenCount + candidatesTokenCount + thoughtsTokenCount
-    const internalReasoningTokens = (usage as any).thoughtsTokenCount || undefined;
+    const internalReasoningTokens = usage.thoughtsTokenCount;
     const outputTextTokens = usage.candidatesTokenCount ?? 0;
     const totalOutputTokens = outputTextTokens + (internalReasoningTokens ?? 0);
 
@@ -34,12 +34,10 @@ const transformGoogleGenerativeAIStream = (
       {
         data: {
           // TODO: Google SDK 0.24.0 don't have promptTokensDetails types
-          inputImageTokens: (usage as any).promptTokensDetails?.find(
-            (i: any) => i.modality === 'IMAGE',
-          )?.tokenCount,
-          inputTextTokens: (usage as any).promptTokensDetails?.find(
-            (i: any) => i.modality === 'TEXT',
-          )?.tokenCount,
+          inputImageTokens: usage.promptTokensDetails?.find((i: any) => i.modality === 'IMAGE')
+            ?.tokenCount,
+          inputTextTokens: usage.promptTokensDetails?.find((i: any) => i.modality === 'TEXT')
+            ?.tokenCount,
           internalReasoningTokens,
           outputReasoningTokens: internalReasoningTokens,
           outputTextTokens,
@@ -53,7 +51,7 @@ const transformGoogleGenerativeAIStream = (
     );
   }
 
-  const functionCalls = chunk.functionCalls?.();
+  const functionCalls = chunk.functionCalls;
 
   if (functionCalls) {
     return [
@@ -76,14 +74,14 @@ const transformGoogleGenerativeAIStream = (
     ];
   }
 
-  const text = chunk.text?.();
+  const text = chunk.text;
 
   if (candidate) {
     let part;
     let isThought = false;
-    if (Array.isArray(candidate.content.parts) && candidate.content.parts.length > 0) {
+    if (Array.isArray(candidate.content?.parts) && candidate.content.parts.length > 0) {
       part = candidate.content.parts[0];
-      isThought = (part as any).thought ?? false;
+      isThought = part.thought ?? false;
     }
     const textDataType = isThought ? 'reasoning' : 'text';
 
@@ -152,7 +150,7 @@ export interface GoogleAIStreamOptions {
 }
 
 export const GoogleGenerativeAIStream = (
-  rawStream: ReadableStream<EnhancedGenerateContentResponse>,
+  rawStream: ReadableStream<GenerateContentResponse>,
   { callbacks, inputStartAt }: GoogleAIStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: 'chat_' + nanoid() };

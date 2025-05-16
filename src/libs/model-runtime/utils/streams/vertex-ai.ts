@@ -1,4 +1,4 @@
-import { EnhancedGenerateContentResponse, GenerateContentResponse } from '@google/generative-ai';
+import { GenerateContentResponse } from '@google/genai';
 
 import { ModelTokensUsage } from '@/types/message';
 import { nanoid } from '@/utils/uuid';
@@ -58,9 +58,9 @@ const transformVertexAIStream = (
 
   const item = candidates[0];
   if (item.content) {
-    const part = item.content.parts[0];
+    const part = item.content.parts?.[0];
 
-    if (part.functionCall) {
+    if (part?.functionCall) {
       const functionCall = part.functionCall;
 
       return [
@@ -86,7 +86,7 @@ const transformVertexAIStream = (
     if (item.finishReason) {
       if (chunk.usageMetadata) {
         return [
-          !!part.text ? { data: part.text, id: context?.id, type: 'text' } : undefined,
+          !!part?.text ? { data: part.text, id: context?.id, type: 'text' } : undefined,
           ...usageChunks,
         ].filter(Boolean) as StreamProtocolChunk[];
       }
@@ -94,7 +94,7 @@ const transformVertexAIStream = (
     }
 
     return {
-      data: part.text,
+      data: part?.text,
       id: context?.id,
       type: 'text',
     };
@@ -108,7 +108,7 @@ const transformVertexAIStream = (
 };
 
 export const VertexAIStream = (
-  rawStream: ReadableStream<EnhancedGenerateContentResponse>,
+  rawStream: ReadableStream<GenerateContentResponse>,
   { callbacks, inputStartAt }: GoogleAIStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: 'chat_' + nanoid() };

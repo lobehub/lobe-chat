@@ -1,15 +1,13 @@
-import type { VertexAI } from '@google-cloud/vertexai';
 import {
   Content,
-  FunctionCallPart,
   FunctionDeclaration,
+  GenerateContentConfig,
   Tool as GoogleFunctionCallTool,
-  GoogleGenerativeAI,
-  GoogleSearchRetrievalTool,
-  ModelParams,
+  GoogleGenAI,
+  GoogleSearch,
   Part,
-  SchemaType,
-} from '@google/generative-ai';
+  Type as SchemaType,
+} from '@google/genai';
 
 import type { ChatModelCard } from '@/types/llm';
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
@@ -83,13 +81,13 @@ const DEFAULT_BASE_URL = 'https://generativelanguage.googleapis.com';
 interface LobeGoogleAIParams {
   apiKey?: string;
   baseURL?: string;
-  client?: GoogleGenerativeAI | VertexAI;
+  client?: GoogleGenAI;
   id?: string;
   isVertexAi?: boolean;
 }
 
 export class LobeGoogleAI implements LobeRuntimeAI {
-  private client: GoogleGenerativeAI;
+  private client: GoogleGenAI;
   private isVertexAi: boolean;
   baseURL?: string;
   apiKey?: string;
@@ -98,9 +96,8 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   constructor({ apiKey, baseURL, client, isVertexAi, id }: LobeGoogleAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
-    this.client = new GoogleGenerativeAI(apiKey);
     this.apiKey = apiKey;
-    this.client = client ? (client as GoogleGenerativeAI) : new GoogleGenerativeAI(apiKey);
+    this.client = client ? client : new GoogleGenAI({ apiKey });
     this.baseURL = client ? undefined : baseURL || DEFAULT_BASE_URL;
     this.isVertexAi = isVertexAi || false;
 
@@ -114,15 +111,9 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       const contents = await this.buildGoogleMessages(payload.messages);
 
-      const modelParams: ModelParams = {
-        generationConfig: {
-          maxOutputTokens: payload.max_tokens,
-          // @ts-expect-error - Google SDK 0.24.0 doesn't have this property for now with
-          response_modalities: modelsWithModalities.has(model) ? ['Text', 'Image'] : undefined,
-          temperature: payload.temperature,
-          topP: payload.top_p,
-        },
-        model,
+      const config: GenerateContentConfig = {
+        maxOutputTokens: payload.max_tokens,
+        responseModalities: modelsWithModalities.has(model) ? ['Text', 'Image'] : undefined,
         // avoid wide sensitive words
         // refs: https://github.com/lobehub/lobe-chat/pull/1418
         safetySettings: [
@@ -143,6 +134,12 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             threshold: getThreshold(model),
           },
         ],
+        systemInstruction: modelsDisableInstuction.has(model)
+          ? undefined
+          : (payload.system as string),
+        temperature: payload.temperature,
+        tools: this.buildGoogleTools(payload.tools, payload),
+        topP: payload.top_p,
       };
 
       if (modelsWithThinking.has(payload.model)) {
@@ -152,24 +149,20 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         const thinking = payload.thinking;
         if (thinking?.type === 'enabled') {
           thinkingConfig.thinkingBudget = thinking.budget_tokens;
-        } else if (thinking?.type === 'disabled') {
+        } else {
           thinkingConfig.thinkingBudget = 0;
         }
-        (modelParams as any).thinkingConfig = thinkingConfig;
+        config.thinkingConfig = thinkingConfig;
       }
 
       const inputStartAt = Date.now();
-      const geminiStreamResult = await this.client
-        .getGenerativeModel(modelParams, { apiVersion: 'v1beta', baseUrl: this.baseURL })
-        .generateContentStream({
-          contents,
-          systemInstruction: modelsDisableInstuction.has(model)
-            ? undefined
-            : (payload.system as string),
-          tools: this.buildGoogleTools(payload.tools, payload),
-        });
+      const geminiStreamResponse = await this.client.models.generateContentStream({
+        config,
+        contents,
+        model,
+      });
 
-      const googleStream = convertIterableToStream(geminiStreamResult.stream);
+      const googleStream = convertIterableToStream(geminiStreamResponse);
       const [prod, useForDebug] = googleStream.tee();
 
       const key = this.isVertexAi
@@ -300,7 +293,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     const content = message.content as string | UserMessageContentPart[];
     if (!!message.tool_calls) {
       return {
-        parts: message.tool_calls.map<FunctionCallPart>((tool) => ({
+        parts: message.tool_calls.map<Part>((tool) => ({
           functionCall: {
             args: safeParseJSON(tool.function.arguments)!,
             name: tool.function.name,
@@ -393,7 +386,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       return; // 若历史消息中已有 function calling，则不再注入任何 Tools
     }
     if (payload?.enabledSearch) {
-      return [{ googleSearch: {} } as GoogleSearchRetrievalTool];
+      return [{ googleSearch: {} } as GoogleSearch];
     }
 
     if (!tools || tools.length === 0) return;

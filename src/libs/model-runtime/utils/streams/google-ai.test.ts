@@ -1,4 +1,4 @@
-import { EnhancedGenerateContentResponse } from '@google/generative-ai';
+import { GenerateContentResponse } from '@google/genai';
 import { describe, expect, it, vi } from 'vitest';
 
 import * as uuidModule from '@/utils/uuid';
@@ -11,10 +11,9 @@ describe('GoogleGenerativeAIStream', () => {
 
     const mockGenerateContentResponse = (text: string, functionCalls?: any[]) =>
       ({
-        text: () => text,
-        functionCall: () => functionCalls?.[0],
-        functionCalls: () => functionCalls,
-      }) as EnhancedGenerateContentResponse;
+        text: text,
+        functionCalls: functionCalls,
+      }) as unknown as GenerateContentResponse;
 
     const mockGoogleStream = new ReadableStream({
       start(controller) {
@@ -114,12 +113,6 @@ describe('GoogleGenerativeAIStream', () => {
       },
       modelVersion: 'gemini-2.0-flash-exp',
     };
-    const mockGenerateContentResponse = (text: string, functionCalls?: any[]) =>
-      ({
-        text: () => text,
-        functionCall: () => functionCalls?.[0],
-        functionCalls: () => functionCalls,
-      }) as EnhancedGenerateContentResponse;
 
     const mockGoogleStream = new ReadableStream({
       start(controller) {
@@ -209,7 +202,7 @@ describe('GoogleGenerativeAIStream', () => {
             ],
           },
         ],
-        text: () => '234',
+        text: '234',
         usageMetadata: {
           promptTokenCount: 20,
           totalTokenCount: 20,
@@ -218,7 +211,7 @@ describe('GoogleGenerativeAIStream', () => {
         modelVersion: 'gemini-2.0-flash-exp-image-generation',
       },
       {
-        text: () => '567890\n',
+        text: '567890\n',
         candidates: [
           {
             content: { parts: [{ text: '567890\n' }], role: 'model' },
@@ -299,7 +292,7 @@ describe('GoogleGenerativeAIStream', () => {
             ],
           },
         ],
-        text: () => '234',
+        text: '234',
         usageMetadata: {
           promptTokenCount: 19,
           candidatesTokenCount: 3,
@@ -310,7 +303,7 @@ describe('GoogleGenerativeAIStream', () => {
         modelVersion: 'gemini-2.5-flash-preview-04-17',
       },
       {
-        text: () => '567890\n',
+        text: '567890\n',
         candidates: [
           {
             content: { parts: [{ text: '567890\n' }], role: 'model' },
@@ -390,7 +383,7 @@ describe('GoogleGenerativeAIStream', () => {
             index: 0,
           },
         ],
-        text: () => '**Understanding the Conditional Logic**\n\n',
+        text: '**Understanding the Conditional Logic**\n\n',
         usageMetadata: {
           promptTokenCount: 38,
           candidatesTokenCount: 7,
@@ -410,7 +403,7 @@ describe('GoogleGenerativeAIStream', () => {
             index: 0,
           },
         ],
-        text: () => '**Finalizing Interpretation**\n\n',
+        text: '**Finalizing Interpretation**\n\n',
         usageMetadata: {
           promptTokenCount: 38,
           candidatesTokenCount: 13,
@@ -430,7 +423,7 @@ describe('GoogleGenerativeAIStream', () => {
             index: 0,
           },
         ],
-        text: () => '简单来说，',
+        text: '简单来说，',
         usageMetadata: {
           promptTokenCount: 38,
           candidatesTokenCount: 16,
@@ -448,7 +441,7 @@ describe('GoogleGenerativeAIStream', () => {
             index: 0,
           },
         ],
-        text: () => '文本内容。',
+        text: '文本内容。',
         usageMetadata: {
           promptTokenCount: 38,
           candidatesTokenCount: 19,
