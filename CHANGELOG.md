@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.87.2](https://github.com/lobehub/lobe-chat/compare/v1.87.1...v1.87.2)
+
+<sup>Released on **2025-05-16**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support Doubao 1.5 Thinking Vision Pro model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support Doubao 1.5 Thinking Vision Pro model, closes [#7784](https://github.com/lobehub/lobe-chat/issues/7784) ([9cf0d6f](https://github.com/lobehub/lobe-chat/commit/9cf0d6f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.87.1](https://github.com/lobehub/lobe-chat/compare/v1.87.0...v1.87.1)
 
 <sup>Released on **2025-05-16**</sup>
