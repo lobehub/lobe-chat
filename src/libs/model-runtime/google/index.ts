@@ -8,8 +8,8 @@ import {
   Part,
   Type as SchemaType,
   ThinkingConfig,
-  setDefaultBaseUrls,
 } from '@google/genai';
+import { GoogleGenAI as GoogleGenAINode } from '@google/genai/node';
 
 import type { ChatModelCard } from '@/types/llm';
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
@@ -85,13 +85,13 @@ const DEFAULT_BASE_URL = 'https://generativelanguage.googleapis.com';
 interface LobeGoogleAIParams {
   apiKey?: string;
   baseURL?: string;
-  client?: GoogleGenAI;
+  client?: GoogleGenAI | GoogleGenAINode;
   id?: string;
   isVertexAi?: boolean;
 }
 
 export class LobeGoogleAI implements LobeRuntimeAI {
-  private client: GoogleGenAI;
+  private client: GoogleGenAI | GoogleGenAINode;
   private isVertexAi: boolean;
   baseURL?: string;
   apiKey?: string;
@@ -100,12 +100,10 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   constructor({ apiKey, baseURL, client, isVertexAi, id }: LobeGoogleAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
-    if (baseURL) {
-      setDefaultBaseUrls({ geminiUrl: baseURL });
-    }
+    const httpOptions = baseURL ? { baseUrl: baseURL } : undefined;
 
     this.apiKey = apiKey;
-    this.client = client ? client : new GoogleGenAI({ apiKey });
+    this.client = client ? client : new GoogleGenAI({ apiKey, httpOptions });
     this.baseURL = client ? undefined : baseURL || DEFAULT_BASE_URL;
     this.isVertexAi = isVertexAi || false;
 

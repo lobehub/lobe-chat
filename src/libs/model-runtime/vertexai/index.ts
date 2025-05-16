@@ -1,4 +1,4 @@
-import { GoogleGenAI, GoogleGenAIOptions } from '@google/genai';
+import { GoogleGenAI, GoogleGenAIOptions } from '@google/genai/node';
 
 import { AgentRuntimeErrorType } from '../error';
 import { LobeGoogleAI } from '../google';
