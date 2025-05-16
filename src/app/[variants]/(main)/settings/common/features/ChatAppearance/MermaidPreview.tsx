@@ -13,33 +13,39 @@ sequenceDiagram
 \`\`\`
 `;
 
-const MermaidPreview = memo<{ theme?: MermaidProps['theme'] }>(({ theme }) => {
-  const token = useTheme();
-  return (
-    <Block
-      style={{
-        background: token.colorBgContainerSecondary,
-        marginBlock: 16,
-        paddingBottom: 16,
-      }}
-      variant={'outlined'}
-    >
-      <ChatItem
-        avatar={{
-          avatar: DEFAULT_INBOX_AVATAR,
+const MermaidPreview = memo<{ theme?: MermaidProps['theme'] }>(
+  ({ theme }) => {
+    const token = useTheme();
+    return (
+      <Block
+        style={{
+          background: token.colorBgContainerSecondary,
+          marginBlock: 16,
+          minHeight: 320,
+          paddingBottom: 16,
         }}
-        markdownProps={{
-          componentProps: {
-            mermaid: {
-              fullFeatured: false,
-              theme,
+        variant={'outlined'}
+      >
+        <ChatItem
+          avatar={{
+            avatar: DEFAULT_INBOX_AVATAR,
+          }}
+          markdownProps={{
+            componentProps: {
+              mermaid: {
+                fullFeatured: false,
+                theme,
+              },
             },
-          },
-        }}
-        message={code}
-      />
-    </Block>
-  );
-});
+          }}
+          message={code}
+        />
+      </Block>
+    );
+  },
+  (prevProps, nextProps) => {
+    return prevProps.theme === nextProps.theme;
+  },
+);
 
 export default MermaidPreview;

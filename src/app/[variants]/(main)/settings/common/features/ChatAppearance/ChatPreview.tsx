@@ -15,7 +15,7 @@ const ChatPreview = memo<Pick<MarkdownProps, 'fontSize'>>(({ fontSize }) => {
       style={{
         background: theme.colorBgContainerSecondary,
         marginBlock: 16,
-        paddingBottom: 16,
+        minHeight: 110,
       }}
       variant={'outlined'}
     >

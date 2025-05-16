@@ -1,9 +1,10 @@
 'use client';
 
-import { Form, type FormGroupItemType, Select } from '@lobehub/ui';
+import { Form, type FormGroupItemType, Icon, Select } from '@lobehub/ui';
 import { Skeleton, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { memo } from 'react';
+import { Loader2Icon } from 'lucide-react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
@@ -17,6 +18,7 @@ const STT = memo(() => {
   const [form] = Form.useForm();
   const { tts } = useUserStore(settingsSelectors.currentSettings, isEqual);
   const [setSettings, isUserStateInit] = useUserStore((s) => [s.setSettings, s.isUserStateInit]);
+  const [loading, setLoading] = useState(false);
 
   if (!isUserStateInit) return <Skeleton active paragraph={{ rows: 5 }} title={false} />;
 
@@ -38,29 +40,22 @@ const STT = memo(() => {
         valuePropName: 'checked',
       },
     ],
+    extra: loading && <Icon icon={Loader2Icon} size={16} spin style={{ opacity: 0.5 }} />,
     title: t('settingTTS.stt'),
   };
 
   return (
     <Form
-      footer={
-        <Form.SubmitFooter
-          texts={{
-            reset: t('submitFooter.reset'),
-            submit: t('submitFooter.submit'),
-            unSaved: t('submitFooter.unSaved'),
-            unSavedWarning: t('submitFooter.unSavedWarning'),
-          }}
-        />
-      }
       form={form}
       initialValues={tts}
       items={[stt]}
       itemsType={'group'}
-      onFinish={(values) => {
-        setSettings({
+      onValuesChange={async (values) => {
+        setLoading(true);
+        await setSettings({
           tts: values,
         });
+        setLoading(false);
       }}
       variant={'borderless'}
       {...FORM_STYLE}

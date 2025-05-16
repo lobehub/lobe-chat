@@ -1,11 +1,12 @@
 'use client';
 
-import { Button, Form, type FormGroupItemType, type FormItemProps } from '@lobehub/ui';
+import { Button, Form, type FormGroupItemType, type FormItemProps, Icon } from '@lobehub/ui';
 import { Form as AntForm, Skeleton, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { PencilIcon } from 'lucide-react';
-import { memo } from 'react';
+import { Loader2Icon, PencilIcon } from 'lucide-react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import TextArea from '@/components/TextArea';
 import { FORM_STYLE } from '@/const/layoutTokens';
@@ -30,6 +31,7 @@ const SystemAgentForm = memo(
       s.updateSystemAgent,
       s.isUserStateInit,
     ]);
+    const [loading, setLoading] = useState(false);
 
     if (!isUserStateInit) return <Skeleton active paragraph={{ rows: 5 }} title={false} />;
 
@@ -40,8 +42,10 @@ const SystemAgentForm = memo(
         {
           children: (
             <ModelSelect
-              onChange={(props) => {
-                updateSystemAgent(systemAgentKey, props);
+              onChange={async (props) => {
+                setLoading(true);
+                await updateSystemAgent(systemAgentKey, props);
+                setLoading(false);
               }}
               showAbility={false}
               // value={value}
@@ -54,8 +58,10 @@ const SystemAgentForm = memo(
         (!!allowCustomPrompt && {
           children: !!value.customPrompt ? (
             <TextArea
-              onChange={(e) => {
-                updateSystemAgent(systemAgentKey, { customPrompt: e });
+              onBlur={async (e) => {
+                setLoading(true);
+                await updateSystemAgent(systemAgentKey, { customPrompt: e.target.value });
+                setLoading(false);
               }}
               placeholder={t('systemAgent.customPrompt.placeholder')}
               style={{ minHeight: 160 }}
@@ -66,7 +72,9 @@ const SystemAgentForm = memo(
               block
               icon={PencilIcon}
               onClick={async () => {
+                setLoading(true);
                 await updateSystemAgent(systemAgentKey, { customPrompt: defaultPrompt });
+                setLoading(false);
               }}
             >
               {t('systemAgent.customPrompt.addPrompt')}
@@ -77,13 +85,20 @@ const SystemAgentForm = memo(
           name: [systemAgentKey, 'customPrompt'],
         }) as FormItemProps,
       ].filter(Boolean),
-      extra: allowDisable && (
-        <Switch
-          onChange={(enabled) => {
-            updateSystemAgent(systemAgentKey, { enabled });
-          }}
-          value={value.enabled}
-        />
+      extra: (
+        <Flexbox>
+          {loading && <Icon icon={Loader2Icon} size={16} spin style={{ opacity: 0.5 }} />}
+          {allowDisable && (
+            <Switch
+              onChange={async (enabled) => {
+                setLoading(true);
+                await updateSystemAgent(systemAgentKey, { enabled });
+                setLoading(false);
+              }}
+              value={value.enabled}
+            />
+          )}
+        </Flexbox>
       ),
       title: (
         <span

@@ -1,7 +1,6 @@
 import Appearance from './features/Appearance';
 import ChatAppearance from './features/ChatAppearance';
 import Common from './features/Common';
-import System from './features/System';
 
 const Page = () => {
   return (
@@ -9,7 +8,6 @@ const Page = () => {
       <Common />
       <Appearance />
       <ChatAppearance />
-      <System />
     </>
   );
 };

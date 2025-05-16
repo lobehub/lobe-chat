@@ -3,6 +3,7 @@
 import {
   Form,
   type FormGroupItemType,
+  Icon,
   Select,
   SliderWithInput,
   highlighterThemes,
@@ -10,6 +11,7 @@ import {
 } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import isEqual from 'fast-deep-equal';
+import { Loader2Icon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -23,17 +25,16 @@ import MermaidPreview from './MermaidPreview';
 
 const ChatAppearance = memo(() => {
   const { t } = useTranslation('setting');
-  const [form] = Form.useForm();
   const { general } = useUserStore(settingsSelectors.currentSettings, isEqual);
   const [setSettings, isUserStateInit] = useUserStore((s) => [s.setSettings, s.isUserStateInit]);
-  const [previewSettings, setPreviewSettings] = useState(general);
+  const [loading, setLoading] = useState(false);
 
   if (!isUserStateInit) return <Skeleton active paragraph={{ rows: 5 }} title={false} />;
 
   const theme: FormGroupItemType = {
     children: [
       {
-        children: <ChatPreview fontSize={previewSettings.fontSize} />,
+        children: <ChatPreview fontSize={general.fontSize} />,
         noStyle: true,
       },
       {
@@ -72,7 +73,7 @@ const ChatAppearance = memo(() => {
         name: 'fontSize',
       },
       {
-        children: <HighlighterPreview theme={previewSettings.highlighterTheme} />,
+        children: <HighlighterPreview theme={general.highlighterTheme} />,
         noStyle: true,
       },
       {
@@ -88,7 +89,7 @@ const ChatAppearance = memo(() => {
         name: 'highlighterTheme',
       },
       {
-        children: <MermaidPreview theme={previewSettings.mermaidTheme} />,
+        children: <MermaidPreview theme={general.mermaidTheme} />,
         noStyle: true,
       },
       {
@@ -104,31 +105,20 @@ const ChatAppearance = memo(() => {
         name: 'mermaidTheme',
       },
     ],
+    extra: loading && <Icon icon={Loader2Icon} size={16} spin style={{ opacity: 0.5 }} />,
     title: t('settingChatAppearance.title'),
   };
 
   return (
     <Form
-      footer={
-        <Form.SubmitFooter
-          texts={{
-            reset: t('submitFooter.reset'),
-            submit: t('submitFooter.submit'),
-            unSaved: t('submitFooter.unSaved'),
-            unSavedWarning: t('submitFooter.unSavedWarning'),
-          }}
-        />
-      }
-      form={form}
       initialValues={general}
       items={[theme]}
       itemsType={'group'}
-      onFinish={(values) => {
-        setSettings({
-          general: values,
-        });
+      onValuesChange={async (value) => {
+        setLoading(true);
+        await setSettings({ general: value });
+        setLoading(false);
       }}
-      onValuesChange={(_, v) => setPreviewSettings(v)}
       variant={'borderless'}
       {...FORM_STYLE}
     />

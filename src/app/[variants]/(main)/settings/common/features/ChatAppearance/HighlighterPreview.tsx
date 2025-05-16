@@ -16,34 +16,40 @@ const dog = { name: "Buddy", breed: "Golden Retriever" } satisfies Animal;
 \`\`\`
 `;
 
-const HighlighterPreview = memo<{ theme?: HighlighterProps['theme'] }>(({ theme }) => {
-  const token = useTheme();
+const HighlighterPreview = memo<{ theme?: HighlighterProps['theme'] }>(
+  ({ theme }) => {
+    const token = useTheme();
 
-  return (
-    <Block
-      style={{
-        background: token.colorBgContainerSecondary,
-        marginBlock: 16,
-        paddingBottom: 16,
-      }}
-      variant={'outlined'}
-    >
-      <ChatItem
-        avatar={{
-          avatar: DEFAULT_INBOX_AVATAR,
+    return (
+      <Block
+        style={{
+          background: token.colorBgContainerSecondary,
+          marginBlock: 16,
+          minHeight: 260,
+          paddingBottom: 16,
         }}
-        markdownProps={{
-          componentProps: {
-            highlight: {
-              fullFeatured: false,
-              theme,
+        variant={'outlined'}
+      >
+        <ChatItem
+          avatar={{
+            avatar: DEFAULT_INBOX_AVATAR,
+          }}
+          markdownProps={{
+            componentProps: {
+              highlight: {
+                fullFeatured: false,
+                theme,
+              },
             },
-          },
-        }}
-        message={code}
-      />
-    </Block>
-  );
-});
+          }}
+          message={code}
+        />
+      </Block>
+    );
+  },
+  (prevProps, nextProps) => {
+    return prevProps.theme === nextProps.theme;
+  },
+);
 
 export default HighlighterPreview;
