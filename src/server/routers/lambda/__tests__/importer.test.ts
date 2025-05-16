@@ -8,6 +8,7 @@ import { ImportResultData } from '@/types/importer';
 import { importerRouter } from '../importer';
 
 const mockGetFileContent = vi.fn();
+const mockDeleteFile = vi.fn();
 const mockImportData = vi.fn();
 const mockImportPgData = vi.fn();
 
@@ -21,6 +22,7 @@ vi.mock('@/database/repositories/dataImporter', () => ({
 vi.mock('@/server/services/file', () => ({
   FileService: vi.fn().mockImplementation(() => ({
     getFileContent: mockGetFileContent,
+    deleteFile: mockDeleteFile,
   })),
 }));
 
@@ -74,6 +76,7 @@ describe('importerRouter', () => {
       expect(result).toEqual(mockImportResult);
       expect(mockGetFileContent).toHaveBeenCalledWith('test.json');
       expect(mockImportData).toHaveBeenCalledWith(JSON.parse(mockFileContent));
+      expect(mockDeleteFile).toHaveBeenCalledWith('test.json');
     });
 
     it('should handle PG data import', async () => {

@@ -41,7 +41,8 @@ const Knowledge = memo(() => {
   const content = (
     <Action
       dropdown={{
-        maxWidth: 320,
+        maxHeight: 500,
+        maxWidth: 480,
         menu: { items },
         minWidth: 240,
       }}

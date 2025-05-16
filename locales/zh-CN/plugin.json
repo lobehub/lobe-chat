@@ -111,7 +111,7 @@
         "title": "MCP 插件类型"
       },
       "url": {
-        "desc": "输入你的 MCP Server Streamable HTTP 地址，不会以 /sse 结尾",
+        "desc": "输入你的 MCP Server Streamable HTTP 地址，不支持 SSE 模式",
         "invalid": "请输入有效的 URL 地址",
         "label": "Streamable HTTP Endpoint URL",
         "required": "请输入 MCP 服务 URL"
