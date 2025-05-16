@@ -1,9 +1,9 @@
-import { ChatItem } from '@lobehub/ui/chat';
 import isEqual from 'fast-deep-equal';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import ChatItem from '@/features/ChatItem';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
