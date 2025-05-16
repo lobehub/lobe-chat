@@ -372,10 +372,14 @@ export const createTokenSpeedCalculator = (
         (outputThinking ?? false)
           ? totalOutputTokens
           : Math.max(0, totalOutputTokens - reasoningTokens);
+      const outputFinishAt = Date.now();
       result.push({
         data: {
-          tps: (outputTokens / (Date.now() - outputStartAt)) * 1000,
+          tps: (outputTokens / (outputFinishAt - outputStartAt)) * 1000,
           ttft: outputStartAt - inputStartAt,
+          inputStartAt,
+          outputStartAt,
+          outputFinishAt,
         } as ModelSpeed,
         id: TOKEN_SPEED_CHUNK_ID,
         type: 'speed',
