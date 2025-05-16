@@ -111,7 +111,7 @@
         "title": "Type de plugin MCP"
       },
       "url": {
-        "desc": "Entrez l'adresse HTTP Streamable de votre serveur MCP, sans terminer par /sse",
+        "desc": "Entrez l'adresse HTTP Streamable de votre serveur MCP, le mode SSE n'est pas pris en charge",
         "invalid": "Veuillez entrer une URL valide",
         "label": "URL de l'endpoint HTTP",
         "required": "Veuillez entrer l'URL du service MCP"

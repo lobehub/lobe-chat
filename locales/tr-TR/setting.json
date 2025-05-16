@@ -170,6 +170,20 @@
     },
     "title": "Asistan Bilgileri"
   },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Farklı renk eğilimlerine sahip gri tonları özelleştirme",
+      "title": "Nötr Renk"
+    },
+    "preview": {
+      "title": "Renk Paleti"
+    },
+    "primaryColor": {
+      "desc": "Özelleştirilebilir tema rengi",
+      "title": "Tema Rengi"
+    },
+    "title": "Uygulama Görünümü"
+  },
   "settingChat": {
     "autoCreateTopicThreshold": {
       "desc": "Mevcut mesaj sayısı bu değeri aştığında otomatik olarak bir konu oluşturulur",
@@ -211,6 +225,35 @@
     },
     "submit": "Sohbet tercihlerini güncelle",
     "title": "Sohbet Ayarları"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Sohbet içeriğinin yazı tipi boyutu",
+      "marks": {
+        "normal": "Standart"
+      },
+      "title": "Yazı Tipi Boyutu"
+    },
+    "highlighterTheme": {
+      "title": "Kod Vurgulama Teması"
+    },
+    "mermaidTheme": {
+      "title": "Deniz Kızı Teması"
+    },
+    "title": "Sohbet Görünümü"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Sistemi Takip Et",
+      "title": "Dil"
+    },
+    "themeMode": {
+      "auto": "Otomatik",
+      "dark": "Karanlık",
+      "light": "Açık",
+      "title": "Tema"
+    },
+    "title": "Genel Ayarlar"
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -336,37 +379,6 @@
       "preview": "Ses Önizlemesi",
       "title": "Metin Seslendirme"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Avatar"
-    },
-    "fontSize": {
-      "desc": "Sohbet içeriği için yazı boyutu",
-      "marks": {
-        "normal": "Normal"
-      },
-      "title": "Yazı Boyutu"
-    },
-    "lang": {
-      "autoMode": "Sistem Takibi",
-      "title": "Dil"
-    },
-    "neutralColor": {
-      "desc": "Farklı renk eğilimleri için özel nötr renk",
-      "title": "Nötr Renk"
-    },
-    "primaryColor": {
-      "desc": "Özel ana tema rengi",
-      "title": "Ana Renk"
-    },
-    "themeMode": {
-      "auto": "Oto",
-      "dark": "Karanlık",
-      "light": "Açık",
-      "title": "Tema"
-    },
-    "title": "Tema Ayarları"
   },
   "storage": {
     "actions": {

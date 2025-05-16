@@ -25,7 +25,7 @@ const Header = () => {
   if (toolUIIdentifier === WebBrowsingManifest.identifier) {
     return (
       <Flexbox align={'center'} gap={8} horizontal>
-        <ActionIcon icon={ArrowLeft} onClick={() => closeToolUI()} />
+        <ActionIcon icon={ArrowLeft} onClick={() => closeToolUI()} size={'small'} />
         <Icon icon={Globe} size={16} />
         <Typography.Text style={{ fontSize: 16 }} type={'secondary'}>
           {t('search.title')}
@@ -35,7 +35,7 @@ const Header = () => {
   }
   return (
     <Flexbox align={'center'} gap={4} horizontal>
-      <ActionIcon icon={ArrowLeft} onClick={() => closeToolUI()} />
+      <ActionIcon icon={ArrowLeft} onClick={() => closeToolUI()} size={'small'} />
       <PluginAvatar identifier={toolUIIdentifier} size={28} />
       <Typography.Text style={{ fontSize: 16 }} type={'secondary'}>
         {pluginTitle}

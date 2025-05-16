@@ -95,6 +95,9 @@
   "ppio": {
     "description": "O PPIO Paiouyun oferece serviços de API de modelos de código aberto estáveis e com alto custo-benefício, suportando toda a linha DeepSeek, Llama, Qwen e outros grandes modelos líderes da indústria."
   },
+  "qiniu": {
+    "description": "Qiniu é um fornecedor de serviços de cloud leader, oferecendo API de IA de alta velocidade e eficiência, incluindo modelos Alibaba, com opções flexíveis para construir e aplicar aplicações de IA."
+  },
   "qwen": {
     "description": "Qwen é um modelo de linguagem de grande escala desenvolvido pela Alibaba Cloud, com forte capacidade de compreensão e geração de linguagem natural. Ele pode responder a várias perguntas, criar conteúdo escrito, expressar opiniões e escrever código, atuando em vários campos."
   },

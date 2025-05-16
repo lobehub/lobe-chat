@@ -63,7 +63,7 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
         ) : (
           <BrandWatermark />
         )}
-        <Flexbox align={'center'} flex={'none'} gap={6} horizontal>
+        <Flexbox align={'center'} flex={'none'} gap={2} horizontal>
           <LangButton />
           <ThemeButton />
         </Flexbox>
