@@ -1982,6 +1982,9 @@
   "qwen2:72b": {
     "description": "Qwen2 is Alibaba's nieuwe generatie grootschalig taalmodel, ondersteunt diverse toepassingsbehoeften met uitstekende prestaties."
   },
+  "qwen3": {
+    "description": "Qwen3 is het nieuwe generatie grootschalige taalmodel van Alibaba, dat uitstekende prestaties levert ter ondersteuning van diverse applicatiebehoeften."
+  },
   "qwen3-0.6b": {
     "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
   },

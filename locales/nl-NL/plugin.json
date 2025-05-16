@@ -111,7 +111,7 @@
         "title": "MCP-plugintype"
       },
       "url": {
-        "desc": "Voer je MCP Server Streamable HTTP-adres in, dit eindigt niet op /sse",
+        "desc": "Voer je MCP Server Streamable HTTP-adres in, SSE-modus wordt niet ondersteund",
         "invalid": "Voer een geldige URL in",
         "label": "HTTP Endpoint URL",
         "required": "Voer de MCP service URL in"
