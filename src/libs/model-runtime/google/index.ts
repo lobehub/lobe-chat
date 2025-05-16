@@ -160,6 +160,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             thinkingConfig.thinkingBudget = thinking.budget_tokens;
           } else {
             thinkingConfig.thinkingBudget = 0;
+            thinkingConfig.includeThoughts = false;
           }
         }
         config.thinkingConfig = thinkingConfig;
