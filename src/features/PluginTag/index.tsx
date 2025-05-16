@@ -6,7 +6,7 @@ import { LucideToyBrick } from 'lucide-react';
 import { memo } from 'react';
 import { Center } from 'react-layout-kit';
 
-import Avatar from '@/features/PluginStore/PluginItem/PluginAvatar';
+import Avatar from '@/components/Plugins/PluginAvatar';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
