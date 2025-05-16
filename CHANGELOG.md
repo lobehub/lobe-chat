@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.87.1](https://github.com/lobehub/lobe-chat/compare/v1.87.0...v1.87.1)
+
+<sup>Released on **2025-05-16**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update internlm model list, add series, update Spark X1 model list & fix build-in search params.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update internlm model list, add series, closes [#7566](https://github.com/lobehub/lobe-chat/issues/7566) ([4eaddf4](https://github.com/lobehub/lobe-chat/commit/4eaddf4))
+- **misc**: Update Spark X1 model list & fix build-in search params, closes [#7480](https://github.com/lobehub/lobe-chat/issues/7480) ([7050c81](https://github.com/lobehub/lobe-chat/commit/7050c81))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.87.0](https://github.com/lobehub/lobe-chat/compare/v1.86.1...v1.87.0)
 
 <sup>Released on **2025-05-16**</sup>
