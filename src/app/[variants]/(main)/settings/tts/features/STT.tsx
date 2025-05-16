@@ -1,9 +1,10 @@
 'use client';
 
-import { Form, type FormGroupItemType, Select } from '@lobehub/ui';
-import { Switch } from 'antd';
+import { Form, type FormGroupItemType, Icon, Select } from '@lobehub/ui';
+import { Skeleton, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { memo } from 'react';
+import { Loader2Icon } from 'lucide-react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
@@ -12,13 +13,14 @@ import { settingsSelectors } from '@/store/user/selectors';
 
 import { sttOptions } from './const';
 
-const TTS_SETTING_KEY = 'tts';
-
 const STT = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = Form.useForm();
-  const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
-  const [setSettings] = useUserStore((s) => [s.setSettings]);
+  const { tts } = useUserStore(settingsSelectors.currentSettings, isEqual);
+  const [setSettings, isUserStateInit] = useUserStore((s) => [s.setSettings, s.isUserStateInit]);
+  const [loading, setLoading] = useState(false);
+
+  if (!isUserStateInit) return <Skeleton active paragraph={{ rows: 5 }} title={false} />;
 
   const stt: FormGroupItemType = {
     children: [
@@ -26,7 +28,7 @@ const STT = memo(() => {
         children: <Select options={sttOptions} />,
         desc: t('settingTTS.sttService.desc'),
         label: t('settingTTS.sttService.title'),
-        name: [TTS_SETTING_KEY, 'sttServer'],
+        name: 'sttServer',
       },
       {
         children: <Switch />,
@@ -34,20 +36,27 @@ const STT = memo(() => {
         label: t('settingTTS.sttAutoStop.title'),
         layout: 'horizontal',
         minWidth: undefined,
-        name: [TTS_SETTING_KEY, 'sttAutoStop'],
+        name: 'sttAutoStop',
         valuePropName: 'checked',
       },
     ],
+    extra: loading && <Icon icon={Loader2Icon} size={16} spin style={{ opacity: 0.5 }} />,
     title: t('settingTTS.stt'),
   };
 
   return (
     <Form
       form={form}
-      initialValues={settings}
+      initialValues={tts}
       items={[stt]}
       itemsType={'group'}
-      onValuesChange={setSettings}
+      onValuesChange={async (values) => {
+        setLoading(true);
+        await setSettings({
+          tts: values,
+        });
+        setLoading(false);
+      }}
       variant={'borderless'}
       {...FORM_STYLE}
     />

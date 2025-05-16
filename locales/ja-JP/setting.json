@@ -170,6 +170,20 @@
     },
     "title": "アシスタント情報"
   },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "異なる色彩傾向のグレースケールカスタマイズ",
+      "title": "ニュートラルカラー"
+    },
+    "preview": {
+      "title": "カラーパレット"
+    },
+    "primaryColor": {
+      "desc": "テーマカラーのカスタマイズ",
+      "title": "テーマカラー"
+    },
+    "title": "アプリの外観"
+  },
   "settingChat": {
     "autoCreateTopicThreshold": {
       "desc": "現在のメッセージ数がこの値を超えると、トピックが自動的に作成されます",
@@ -211,6 +225,35 @@
     },
     "submit": "チャットの好みを更新",
     "title": "チャット設定"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "チャット内容のフォントサイズ",
+      "marks": {
+        "normal": "標準"
+      },
+      "title": "フォントサイズ"
+    },
+    "highlighterTheme": {
+      "title": "コードハイライトテーマ"
+    },
+    "mermaidTheme": {
+      "title": "マーメイドテーマ"
+    },
+    "title": "チャットの外観"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "システムに従う",
+      "title": "言語"
+    },
+    "themeMode": {
+      "auto": "自動",
+      "dark": "ダーク",
+      "light": "ライト",
+      "title": "テーマ"
+    },
+    "title": "一般設定"
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -336,37 +379,6 @@
       "preview": "音声を試聴",
       "title": "音声合成音声"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "アバター"
-    },
-    "fontSize": {
-      "desc": "チャットのフォントサイズ",
-      "marks": {
-        "normal": "標準"
-      },
-      "title": "フォントサイズ"
-    },
-    "lang": {
-      "autoMode": "システムに従う",
-      "title": "言語"
-    },
-    "neutralColor": {
-      "desc": "異なる色調のグレースケールのカスタマイズ",
-      "title": "中立色"
-    },
-    "primaryColor": {
-      "desc": "カスタマイズテーマカラー",
-      "title": "テーマカラー"
-    },
-    "themeMode": {
-      "auto": "自動",
-      "dark": "ダーク",
-      "light": "ライト",
-      "title": "テーマ"
-    },
-    "title": "テーマ設定"
   },
   "storage": {
     "actions": {
