@@ -5,11 +5,12 @@ import Link from 'next/link';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import MCPTag from '@/components/Plugins/MCPTag';
+import PluginAvatar from '@/components/Plugins/PluginAvatar';
+import PluginTag from '@/components/Plugins/PluginTag';
 import { InstallPluginMeta } from '@/types/tool/plugin';
 
 import Actions from './Action';
-import PluginAvatar from './PluginAvatar';
-import PluginTag from './PluginTag';
 
 const { Paragraph } = Typography;
 
@@ -32,52 +33,58 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const PluginItem = memo<InstallPluginMeta>(({ identifier, homepage, author, type, meta = {} }) => {
-  const { styles } = useStyles();
+interface PluginItemProps extends InstallPluginMeta {
+  isMCP?: boolean;
+}
+const PluginItem = memo<PluginItemProps>(
+  ({ identifier, homepage, author, type, meta = {}, isMCP }) => {
+    const { styles } = useStyles();
 
-  return (
-    <Flexbox
-      align={'center'}
-      gap={8}
-      horizontal
-      justify={'space-between'}
-      paddingBlock={12}
-      paddingInline={16}
-      style={{ position: 'relative' }}
-    >
+    return (
       <Flexbox
         align={'center'}
-        flex={1}
         gap={8}
         horizontal
-        style={{ overflow: 'hidden', position: 'relative' }}
+        justify={'space-between'}
+        paddingBlock={12}
+        paddingInline={16}
+        style={{ position: 'relative' }}
       >
-        <PluginAvatar avatar={meta.avatar} />
-        <Flexbox flex={1} gap={4} style={{ overflow: 'hidden', position: 'relative' }}>
-          <Flexbox align={'center'} gap={8} horizontal>
-            <Tooltip title={identifier}>
-              {homepage ? (
-                <Link className={styles.link} href={homepage} target={'_blank'}>
+        <Flexbox
+          align={'center'}
+          flex={1}
+          gap={8}
+          horizontal
+          style={{ overflow: 'hidden', position: 'relative' }}
+        >
+          <PluginAvatar avatar={meta.avatar} />
+          <Flexbox flex={1} gap={4} style={{ overflow: 'hidden', position: 'relative' }}>
+            <Flexbox align={'center'} gap={8} horizontal>
+              <Tooltip title={identifier}>
+                {homepage ? (
+                  <Link className={styles.link} href={homepage} target={'_blank'}>
+                    <Paragraph className={styles.title} ellipsis={{ rows: 1 }}>
+                      {meta.title}
+                    </Paragraph>
+                  </Link>
+                ) : (
                   <Paragraph className={styles.title} ellipsis={{ rows: 1 }}>
                     {meta.title}
                   </Paragraph>
-                </Link>
-              ) : (
-                <Paragraph className={styles.title} ellipsis={{ rows: 1 }}>
-                  {meta.title}
-                </Paragraph>
-              )}
-            </Tooltip>
-            <PluginTag author={author} type={type} />
+                )}
+              </Tooltip>
+              <PluginTag author={author} type={type} />
+              {isMCP && <MCPTag />}
+            </Flexbox>
+            <Paragraph className={styles.desc} ellipsis={{ rows: 1 }}>
+              {meta.description}
+            </Paragraph>
           </Flexbox>
-          <Paragraph className={styles.desc} ellipsis={{ rows: 1 }}>
-            {meta.description}
-          </Paragraph>
         </Flexbox>
+        <Actions identifier={identifier} isMCP={isMCP} type={type} />
       </Flexbox>
-      <Actions identifier={identifier} type={type} />
-    </Flexbox>
-  );
-});
+    );
+  },
+);
 
 export default PluginItem;
