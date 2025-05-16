@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "improvements": [
+        "Update internlm model list, add series, update Spark X1 model list & fix build-in search params."
+      ]
+    },
+    "date": "2025-05-16",
+    "version": "1.87.1"
+  },
+  {
+    "children": {
       "features": ["Support custom language and Mermaid Appearance."],
       "fixes": ["Fix oidc redirect url."]
     },
