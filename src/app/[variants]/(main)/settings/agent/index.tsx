@@ -1,6 +1,7 @@
 'use client';
 
 import { Tabs } from '@lobehub/ui';
+import { Skeleton } from 'antd';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { useQueryState } from 'nuqs';
@@ -21,10 +22,15 @@ const Page = memo(() => {
   });
   const config = useUserStore(settingsSelectors.defaultAgentConfig, isEqual);
   const meta = useUserStore(settingsSelectors.defaultAgentMeta, isEqual);
-  const [updateAgent] = useUserStore((s) => [s.updateDefaultAgent]);
-  const isUserStateInit = useUserStore((s) => s.isUserStateInit);
+  const [updateAgent, isUserStateInit] = useUserStore((s) => [
+    s.updateDefaultAgent,
+    s.isUserStateInit,
+  ]);
+
   const theme = useTheme();
   const mobile = useServerConfigStore((s) => s.isMobile);
+
+  if (!isUserStateInit) return <Skeleton active paragraph={{ rows: 5 }} title={false} />;
 
   return (
     <>

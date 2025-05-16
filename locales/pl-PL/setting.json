@@ -170,6 +170,20 @@
     },
     "title": "Informacje o asystencie"
   },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Dostosowanie odcieni szarości w różnych kolorach",
+      "title": "Kolor neutralny"
+    },
+    "preview": {
+      "title": "Paleta kolorów"
+    },
+    "primaryColor": {
+      "desc": "Dostosowanie koloru motywu",
+      "title": "Kolor motywu"
+    },
+    "title": "Wygląd aplikacji"
+  },
   "settingChat": {
     "autoCreateTopicThreshold": {
       "desc": "Automatyczne tworzenie tematu po przekroczeniu określonej liczby wiadomości",
@@ -211,6 +225,35 @@
     },
     "submit": "Zaktualizuj preferencje czatu",
     "title": "Ustawienia czatu"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Rozmiar czcionki w treści czatu",
+      "marks": {
+        "normal": "Standardowy"
+      },
+      "title": "Rozmiar czcionki"
+    },
+    "highlighterTheme": {
+      "title": "Motyw podświetlania kodu"
+    },
+    "mermaidTheme": {
+      "title": "Motyw Syreny"
+    },
+    "title": "Wygląd czatu"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Podążaj za systemem",
+      "title": "Język"
+    },
+    "themeMode": {
+      "auto": "Automatyczny",
+      "dark": "Ciemny",
+      "light": "Jasny",
+      "title": "Motyw"
+    },
+    "title": "Ustawienia ogólne"
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -336,37 +379,6 @@
       "preview": "Podgląd głosu",
       "title": "Głos syntezy mowy"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Awatar"
-    },
-    "fontSize": {
-      "desc": "Rozmiar czcionki wiadomości",
-      "marks": {
-        "normal": "Standardowy"
-      },
-      "title": "Rozmiar czcionki"
-    },
-    "lang": {
-      "autoMode": "Automatycznie",
-      "title": "Język"
-    },
-    "neutralColor": {
-      "desc": "Dostosowanie odcieni szarości z różnymi kolorami",
-      "title": "Kolor neutralny"
-    },
-    "primaryColor": {
-      "desc": "Dostosowywanie koloru motywu",
-      "title": "Kolor motywu"
-    },
-    "themeMode": {
-      "auto": "Automatyczny",
-      "dark": "Ciemny",
-      "light": "Jasny",
-      "title": "Motyw"
-    },
-    "title": "Ustawienia motywu"
   },
   "storage": {
     "actions": {
