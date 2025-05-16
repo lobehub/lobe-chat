@@ -170,6 +170,20 @@
     },
     "title": "Assistenteninformationen"
   },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Anpassung der Graustufen mit unterschiedlichen Farbneigungen",
+      "title": "Neutrale Farben"
+    },
+    "preview": {
+      "title": "Farbauswahl"
+    },
+    "primaryColor": {
+      "desc": "Benutzerdefinierte Hauptfarbe",
+      "title": "Hauptfarbe"
+    },
+    "title": "Anwendungsdesign"
+  },
   "settingChat": {
     "autoCreateTopicThreshold": {
       "desc": "Automatische Erstellung eines Themas, wenn die Anzahl der Nachrichten diesen Wert überschreitet",
@@ -211,6 +225,35 @@
     },
     "submit": "Chat-Präferenzen aktualisieren",
     "title": "Chat-Einstellungen"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Schriftgröße des Chatinhalts",
+      "marks": {
+        "normal": "Standard"
+      },
+      "title": "Schriftgröße"
+    },
+    "highlighterTheme": {
+      "title": "Code-Hervorhebungsthema"
+    },
+    "mermaidTheme": {
+      "title": "Mermaid-Thema"
+    },
+    "title": "Chatdesign"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "System folgen",
+      "title": "Sprache"
+    },
+    "themeMode": {
+      "auto": "Automatisch",
+      "dark": "Dunkel",
+      "light": "Hell",
+      "title": "Thema"
+    },
+    "title": "Allgemeine Einstellungen"
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -336,37 +379,6 @@
       "preview": "Stimme anhören",
       "title": "Sprachsynthese-Stimme"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Profilbild"
-    },
-    "fontSize": {
-      "desc": "Schriftgröße für Chat-Inhalte",
-      "marks": {
-        "normal": "Normal"
-      },
-      "title": "Schriftgröße"
-    },
-    "lang": {
-      "autoMode": "Systemsprache folgen",
-      "title": "Sprache"
-    },
-    "neutralColor": {
-      "desc": "Benutzerdefinierte Graustufen für verschiedene Farbneigungen",
-      "title": "Neutralfarbe"
-    },
-    "primaryColor": {
-      "desc": "Benutzerdefinierte Hauptfarbe des Themas",
-      "title": "Hauptfarbe"
-    },
-    "themeMode": {
-      "auto": "Automatisch",
-      "dark": "Dunkel",
-      "light": "Hell",
-      "title": "Thema"
-    },
-    "title": "Thema einstellen"
   },
   "storage": {
     "actions": {

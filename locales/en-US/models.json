@@ -1982,6 +1982,9 @@
   "qwen2:72b": {
     "description": "Qwen2 is Alibaba's next-generation large-scale language model, supporting diverse application needs with excellent performance."
   },
+  "qwen3": {
+    "description": "Qwen3 is Alibaba's next-generation large-scale language model, designed to support diverse application needs with outstanding performance."
+  },
   "qwen3-0.6b": {
     "description": "Qwen3 is a next-generation model with significantly enhanced capabilities, achieving industry-leading levels in reasoning, general tasks, agent functionality, and multilingual support, while also supporting mode switching."
   },

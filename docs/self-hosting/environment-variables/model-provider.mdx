@@ -423,6 +423,29 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Default: `-`
 - Example: `-all,+yi-large,+yi-large-rag`
 
+## Qiniu
+
+### `QINIU_API_KEY`
+
+- Type: Required
+- Description: This is the API key you can obtain from Qiniu AI service
+- Default: -
+- Example：`sk-xxxxx...xxxxx`
+
+### `QINIU_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+deepseek-r1,+deepseek-v3`
+
+### `QINIU_PROXY_URL`
+
+- Type: Optional
+- Description: If you manually configure the Qiniu API proxy, you can use this configuration item to override the default Qiniu API request base URL
+- Default: `https://api.qnaigc.com/v1`
+- Example: `https://my-qnaigc.com/v1`
+
 ## Qwen
 
 ### `QWEN_API_KEY`
