@@ -170,6 +170,20 @@
     },
     "title": "Assistant Information"
   },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Custom grayscale with different color tendencies",
+      "title": "Neutral Color"
+    },
+    "preview": {
+      "title": "Color Palette"
+    },
+    "primaryColor": {
+      "desc": "Custom theme color",
+      "title": "Theme Color"
+    },
+    "title": "Application Appearance"
+  },
   "settingChat": {
     "autoCreateTopicThreshold": {
       "desc": "Automatically create a topic when the current message count exceeds this value",
@@ -211,6 +225,35 @@
     },
     "submit": "Update Chat Preferences",
     "title": "Chat Settings"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Font size of chat content",
+      "marks": {
+        "normal": "Standard"
+      },
+      "title": "Font Size"
+    },
+    "highlighterTheme": {
+      "title": "Code Highlight Theme"
+    },
+    "mermaidTheme": {
+      "title": "Mermaid Theme"
+    },
+    "title": "Chat Appearance"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Follow System",
+      "title": "Language"
+    },
+    "themeMode": {
+      "auto": "Automatic",
+      "dark": "Dark",
+      "light": "Light",
+      "title": "Theme"
+    },
+    "title": "General Settings"
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -336,37 +379,6 @@
       "preview": "Voice Preview",
       "title": "Text-to-Speech Voice"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Avatar"
-    },
-    "fontSize": {
-      "desc": "Font size for chat content",
-      "marks": {
-        "normal": "Normal"
-      },
-      "title": "Font Size"
-    },
-    "lang": {
-      "autoMode": "Follow System",
-      "title": "Language"
-    },
-    "neutralColor": {
-      "desc": "Custom neutral color for different color tendencies",
-      "title": "Neutral Color"
-    },
-    "primaryColor": {
-      "desc": "Custom primary theme color",
-      "title": "Primary Color"
-    },
-    "themeMode": {
-      "auto": "Auto",
-      "dark": "Dark",
-      "light": "Light",
-      "title": "Theme"
-    },
-    "title": "Theme Settings"
   },
   "storage": {
     "actions": {

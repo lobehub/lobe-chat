@@ -170,6 +170,20 @@
     },
     "title": "Informazioni sull'assistente"
   },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Personalizzazione dei grigi con diverse inclinazioni di colore",
+      "title": "Colore Neutro"
+    },
+    "preview": {
+      "title": "Tavolozza"
+    },
+    "primaryColor": {
+      "desc": "Colore del tema personalizzato",
+      "title": "Colore del Tema"
+    },
+    "title": "Aspetto dell'Applicazione"
+  },
   "settingChat": {
     "autoCreateTopicThreshold": {
       "desc": "Una volta superato questo numero di messaggi, verrà creato automaticamente un argomento",
@@ -211,6 +225,35 @@
     },
     "submit": "Aggiorna preferenze chat",
     "title": "Impostazioni della chat"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Dimensione del carattere per il contenuto della chat",
+      "marks": {
+        "normal": "Normale"
+      },
+      "title": "Dimensione del Carattere"
+    },
+    "highlighterTheme": {
+      "title": "Tema di Evidenziazione del Codice"
+    },
+    "mermaidTheme": {
+      "title": "Tema Sirena"
+    },
+    "title": "Aspetto della Chat"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Segui il sistema",
+      "title": "Lingua"
+    },
+    "themeMode": {
+      "auto": "Automatico",
+      "dark": "Scuro",
+      "light": "Chiaro",
+      "title": "Tema"
+    },
+    "title": "Impostazioni Generali"
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -336,37 +379,6 @@
       "preview": "Anteprima della voce",
       "title": "Voce di sintesi vocale"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Avatar"
-    },
-    "fontSize": {
-      "desc": "Dimensione del carattere per i messaggi",
-      "marks": {
-        "normal": "Normale"
-      },
-      "title": "Dimensione del carattere"
-    },
-    "lang": {
-      "autoMode": "Segui il sistema",
-      "title": "Lingua"
-    },
-    "neutralColor": {
-      "desc": "Personalizzazione delle sfumature di grigio per diverse preferenze di colore",
-      "title": "Colore neutro"
-    },
-    "primaryColor": {
-      "desc": "Colore del tema personalizzato",
-      "title": "Colore principale"
-    },
-    "themeMode": {
-      "auto": "Automatico",
-      "dark": "Scuro",
-      "light": "Chiaro",
-      "title": "Tema"
-    },
-    "title": "Impostazioni del tema"
   },
   "storage": {
     "actions": {

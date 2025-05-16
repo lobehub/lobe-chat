@@ -11,11 +11,15 @@ import {
   generateToolCallId,
 } from './protocol';
 
+import { convertUsage } from '../usageConverter';
+
 export function transformSparkResponseToStream(data: OpenAI.ChatCompletion) {
   return new ReadableStream({
     start(controller) {
+      const choices = data?.choices || [];
+
       const chunk: OpenAI.ChatCompletionChunk = {
-        choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => {
+        choices: choices.map((choice: OpenAI.ChatCompletion.Choice) => {
           const toolCallsArray = choice.message.tool_calls
             ? Array.isArray(choice.message.tool_calls)
               ? choice.message.tool_calls
@@ -49,7 +53,7 @@ export function transformSparkResponseToStream(data: OpenAI.ChatCompletion) {
       controller.enqueue(chunk);
 
       controller.enqueue({
-        choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
+        choices: choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
           delta: {
             content: null,
             role: choice.message.role,
@@ -106,12 +110,37 @@ export const transformSparkStream = (chunk: OpenAI.ChatCompletionChunk): StreamP
     return { data: item.finish_reason, id: chunk.id, type: 'stop' };
   }
 
+  if (
+    item.delta &&
+    'reasoning_content' in item.delta &&
+    typeof item.delta.reasoning_content === 'string' &&
+    item.delta.reasoning_content !== ''
+  ) {
+    return { data: item.delta.reasoning_content, id: chunk.id, type: 'reasoning' };
+  }
+
   if (typeof item.delta?.content === 'string') {
+    /*
+    处理 v1 endpoint usage，混合在最后一个 content 内容中
+    {"code":0,"message":"Success","sid":"cha000d05ef@dx196553ae415b80a432","id":"cha000d05ef@dx196553ae415b80a432","created":1745186655,"choices":[{"delta":{"role":"assistant","content":"😊"},"index":0}],"usage":{"prompt_tokens":1,"completion_tokens":418,"total_tokens":419}}
+    */
+    if (chunk.usage) {
+      return [
+        { data: item.delta.content, id: chunk.id, type: 'text' },
+        { data: convertUsage(chunk.usage), id: chunk.id, type: 'usage' },
+      ] as any;
+    }
+
     return { data: item.delta.content, id: chunk.id, type: 'text' };
   }
 
   if (item.delta?.content === null) {
     return { data: item.delta, id: chunk.id, type: 'data' };
+  }
+
+  // 处理 v2 endpoint usage
+  if (chunk.usage) {
+    return { data: convertUsage(chunk.usage), id: chunk.id, type: 'usage' };
   }
 
   return {
