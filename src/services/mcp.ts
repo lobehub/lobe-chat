@@ -1,6 +1,7 @@
 import { isDesktop } from '@/const/version';
 import { desktopClient, toolsClient } from '@/libs/trpc/client';
 import { ChatToolPayload } from '@/types/message';
+import { CheckMcpInstallResult } from '@/types/plugins';
 import { CustomPluginMetadata } from '@/types/tool/plugin';
 
 class MCPService {
@@ -49,6 +50,39 @@ class MCPService {
     metadata?: CustomPluginMetadata,
   ) {
     return desktopClient.mcp.getStdioMcpServerManifest.query({ ...stdioParams, metadata });
+  }
+
+  /**
+   * 检查 MCP 插件安装状态
+   * @param manifest MCP 插件清单
+   * @returns 安装检测结果
+   */
+  async checkInstallation(manifest: PluginManifest): Promise<CheckMcpInstallResult> {
+    try {
+      // 选择推荐的部署选项，或者第一个选项
+      const deployOption =
+        manifest.deploymentOptions?.find((option) => option.isRecommended) ||
+        manifest.deploymentOptions?.[0];
+
+      if (!deployOption) {
+        return {
+          error: '未找到有效的部署选项',
+          success: false,
+        };
+      }
+
+      // 调用主进程的安装检测功能
+      return desktopClient.mcp.validMcpServerInstallable.query({
+        installationDetails: deployOption.installationDetails,
+        installationMethod: deployOption.installationMethod,
+        systemDependencies: deployOption.systemDependencies,
+      });
+    } catch (error) {
+      return {
+        error: error instanceof Error ? error.message : '未知错误',
+        success: false,
+      };
+    }
   }
 }
 

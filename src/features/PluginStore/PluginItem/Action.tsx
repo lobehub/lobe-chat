@@ -16,17 +16,21 @@ import EditCustomPlugin from './EditCustomPlugin';
 
 interface ActionsProps {
   identifier: string;
+  isMCP?: boolean;
   type: LobeToolType;
 }
 
-const Actions = memo<ActionsProps>(({ identifier, type }) => {
+const Actions = memo<ActionsProps>(({ identifier, type, isMCP }) => {
   const mobile = useServerConfigStore((s) => s.isMobile);
-  const [installed, installing, installPlugin, unInstallPlugin] = useToolStore((s) => [
-    pluginSelectors.isPluginInstalled(identifier)(s),
-    pluginStoreSelectors.isPluginInstallLoading(identifier)(s),
-    s.installPlugin,
-    s.uninstallPlugin,
-  ]);
+  const [installed, installing, installPlugin, unInstallPlugin, installMCPPlugin] = useToolStore(
+    (s) => [
+      pluginSelectors.isPluginInstalled(identifier)(s),
+      pluginStoreSelectors.isPluginInstallLoading(identifier)(s),
+      s.installPlugin,
+      s.uninstallPlugin,
+      s.installMCPPlugin,
+    ],
+  );
 
   const isCustomPlugin = type === 'customPlugin';
   const { t } = useTranslation('plugin');
@@ -92,8 +96,12 @@ const Actions = memo<ActionsProps>(({ identifier, type }) => {
           <Button
             loading={installing}
             onClick={async () => {
-              await installPlugin(identifier);
-              await togglePlugin(identifier);
+              if (isMCP) {
+                const data = await installMCPPlugin(identifier);
+              } else {
+                await installPlugin(identifier);
+                await togglePlugin(identifier);
+              }
             }}
             size={mobile ? 'small' : undefined}
             type={'primary'}

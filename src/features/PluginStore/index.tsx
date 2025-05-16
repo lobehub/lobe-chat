@@ -7,7 +7,8 @@ import { useServerConfigStore } from '@/store/serverConfig';
 import { useToolStore } from '@/store/tool';
 
 import InstalledPluginList from './InstalledPluginList';
-import OnlineList from './OnlineList';
+import LobePluginList from './LobePluginList';
+import MCPPluginList from './MCPPluginList';
 
 interface PluginStoreProps {
   open?: boolean;
@@ -25,7 +26,7 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
       onCancel={() => {
         setOpen(false);
       }}
-      open={open}
+      open
       styles={{ body: { overflow: 'hidden' } }}
       title={t('store.title')}
       width={800}
@@ -41,14 +42,17 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
             useToolStore.setState({ listType: v as any });
           }}
           options={[
-            { label: t('store.tabs.all'), value: 'all' },
+            { label: t('store.tabs.mcp'), value: 'mcp' },
+            { label: t('store.tabs.old'), value: 'old' },
             { label: t('store.tabs.installed'), value: 'installed' },
           ]}
           style={{ flex: 1 }}
           value={listType}
           variant={'filled'}
         />
-        {listType === 'all' ? <OnlineList /> : <InstalledPluginList />}
+        {listType === 'mcp' && <MCPPluginList />}
+        {listType === 'old' && <LobePluginList />}
+        {listType === 'installed' && <InstalledPluginList />}
       </Flexbox>
     </Modal>
   );
