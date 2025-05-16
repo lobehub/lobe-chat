@@ -2,6 +2,7 @@ import { parse } from 'cookie';
 import debug from 'debug';
 import { User } from 'next-auth';
 import { NextRequest } from 'next/server';
+import { ipAddress } from '@vercel/functions'
 
 import {
   ClientSecretPayload,
@@ -37,6 +38,8 @@ export interface AuthContext {
   resHeaders?: Headers;
   userAgent?: string;
   userId?: string | null;
+  // Add traces
+  ip?: string | null;
 }
 
 /**
@@ -51,6 +54,7 @@ export const createContextInner = async (params?: {
   oidcAuth?: OIDCAuth | null;
   userAgent?: string;
   userId?: string | null;
+  ip?: string | null;
 }): Promise<AuthContext> => {
   log('createContextInner called with params: %O', params);
   const responseHeaders = new Headers();
@@ -64,6 +68,7 @@ export const createContextInner = async (params?: {
     resHeaders: responseHeaders,
     userAgent: params?.userAgent,
     userId: params?.userId,
+    ip: params?.ip,
   };
 };
 
@@ -103,6 +108,7 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
   let userId;
   let auth;
   let oidcAuth = null;
+  const ip = ipAddress(request);
 
   // Prioritize checking for OIDC authentication (both standard Authorization and custom Oidc-Auth headers)
   if (oidcEnv.ENABLE_OIDC) {
@@ -131,6 +137,7 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
           oidcAuth,
           ...commonContext,
           userId,
+          ip,
         });
       }
     } catch (error) {
