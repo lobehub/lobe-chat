@@ -215,11 +215,9 @@ const nextConfig: NextConfig = {
   transpilePackages: ['pdfjs-dist', 'mermaid'],
 
   webpack(config) {
-    if (config.cache && !dev) {
-      config.cache = Object.freeze({
-        type: 'memory',
-      })
-    }
+    config.cache = {
+      type: 'memory',
+    };
     
     config.experiments = {
       asyncWebAssembly: true,
