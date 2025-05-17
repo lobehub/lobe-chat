@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Clean code with new antd api."]
+    },
+    "date": "2025-05-17",
+    "version": "1.87.3"
+  },
+  {
+    "children": {
       "improvements": ["Support Doubao 1.5 Thinking Vision Pro model."]
     },
     "date": "2025-05-16",
