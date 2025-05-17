@@ -8,13 +8,15 @@ export interface OpenAIModelCard {
   id: string;
 }
 
+const prunePrefixes = ['o1', 'o3', 'o4'];
+
 export const LobeOpenAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.openai.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
       const { model } = payload;
 
-      if (model.startsWith('o1') || model.startsWith('o3')) {
+      if (prunePrefixes.some(prefix => model.startsWith(prefix))) {
         return pruneReasoningPayload(payload) as any;
       }
 
@@ -38,11 +40,11 @@ export const LobeOpenAI = LobeOpenAICompatibleFactory({
   models: async ({ client }) => {
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-    const functionCallKeywords = ['gpt-4', 'gpt-3.5', 'o3-mini'];
+    const functionCallKeywords = ['4o', '4.1', 'o3', 'o4'];
 
-    const visionKeywords = ['gpt-4o', 'vision'];
+    const visionKeywords = ['4o', '4.1', 'o4'];
 
-    const reasoningKeywords = ['o1', 'o3'];
+    const reasoningKeywords = ['o1', 'o3', 'o4'];
 
     const modelsPage = (await client.models.list()) as any;
     const modelList: OpenAIModelCard[] = modelsPage.data;
