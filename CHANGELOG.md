@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.87.3](https://github.com/lobehub/lobe-chat/compare/v1.87.2...v1.87.3)
+
+<sup>Released on **2025-05-17**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Clean code with new antd api.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Clean code with new antd api, closes [#7870](https://github.com/lobehub/lobe-chat/issues/7870) ([c543884](https://github.com/lobehub/lobe-chat/commit/c543884))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.87.2](https://github.com/lobehub/lobe-chat/compare/v1.87.1...v1.87.2)
 
 <sup>Released on **2025-05-16**</sup>
