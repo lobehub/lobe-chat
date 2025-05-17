@@ -180,6 +180,17 @@ const groqChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    contextWindowTokens: 131_072,
+    displayName: 'Llama Guard 4 12B',
+    id: 'meta-llama/Llama-Guard-4-12B',
+    maxOutput: 128,
+    pricing: {
+      input: 0.2,
+      output: 0.2,
+    },
+    type: 'chat',
+  },
+  {
     contextWindowTokens: 8192,
     displayName: 'Llama Guard 3 8B',
     id: 'llama-guard-3-8b',
