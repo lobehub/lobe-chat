@@ -327,7 +327,7 @@
     "happy-dom": "^17.4.4",
     "husky": "^9.1.7",
     "just-diff": "^6.0.2",
-    "lint-staged": "^15.5.0",
+    "lint-staged": "^16.0.0",
     "lodash": "^4.17.21",
     "markdown-table": "^3.0.4",
     "markdown-to-txt": "^2.0.1",
