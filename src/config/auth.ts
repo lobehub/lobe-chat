@@ -18,6 +18,9 @@ declare global {
 
       NEXT_AUTH_DEBUG?: string;
 
+      NEXT_AUTH_SSO_ENABLE_REFRESH_TOKEN?: string;
+      NEXT_AUTH_SSO_REFRESH_TOKEN_INTERVAL?: string;
+
       AUTH0_CLIENT_ID?: string;
       AUTH0_CLIENT_SECRET?: string;
       AUTH0_ISSUER?: string;
@@ -140,6 +143,7 @@ export const getAuthConfig = () => {
   }
   // End
 
+
   return createEnv({
     client: {
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().optional(),
@@ -159,6 +163,9 @@ export const getAuthConfig = () => {
       NEXT_AUTH_SECRET: z.string().optional(),
       NEXT_AUTH_SSO_PROVIDERS: z.string().optional().default('auth0'),
       NEXT_AUTH_DEBUG: z.boolean().optional().default(false),
+      NEXT_AUTH_SSO_SESSION_STRATEGY: z.enum(['jwt', 'database']).optional().default('jwt'),
+      NEXT_AUTH_SSO_ENABLE_REFRESH_TOKEN: z.boolean().optional().default(false),
+      NEXT_AUTH_SSO_REFRESH_TOKEN_INTERVAL: z.number().optional(),
 
       // Auth0
       AUTH0_CLIENT_ID: z.string().optional(),
@@ -221,6 +228,11 @@ export const getAuthConfig = () => {
       NEXT_AUTH_SSO_PROVIDERS: process.env.NEXT_AUTH_SSO_PROVIDERS,
       NEXT_AUTH_SECRET: process.env.NEXT_AUTH_SECRET,
       NEXT_AUTH_DEBUG: !!process.env.NEXT_AUTH_DEBUG,
+      NEXT_AUTH_SSO_SESSION_STRATEGY: process.env.NEXT_AUTH_SSO_SESSION_STRATEGY || 'jwt',
+      NEXT_AUTH_SSO_ENABLE_REFRESH_TOKEN: process.env.NEXT_AUTH_SSO_ENABLE_REFRESH_TOKEN === '1',
+      NEXT_AUTH_SSO_REFRESH_TOKEN_INTERVAL: process.env.NEXT_AUTH_SSO_REFRESH_TOKEN_INTERVAL
+        ? parseInt(process.env.NEXT_AUTH_SSO_REFRESH_TOKEN_INTERVAL)
+        : undefined,
 
       // Auth0
       AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
