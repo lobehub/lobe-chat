@@ -213,7 +213,7 @@ ENV \
     # GitHub
     GITHUB_TOKEN="" GITHUB_MODEL_LIST="" \
     # Google
-    GOOGLE_API_KEY="" GOOGLE_MODEL_LIST="" GOOGLE_PROXY_URL="" \
+    GOOGLE_MODEL_LIST="" GOOGLE_PROXY_URL="" \
     # Groq
     GROQ_API_KEY="" GROQ_MODEL_LIST="" GROQ_PROXY_URL="" \
     # Higress

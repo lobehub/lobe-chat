@@ -9,7 +9,6 @@ import {
   Type as SchemaType,
   ThinkingConfig,
 } from '@google/genai';
-import { GoogleGenAI as GoogleGenAINode } from '@google/genai/node';
 
 import type { ChatModelCard } from '@/types/llm';
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
@@ -85,13 +84,13 @@ const DEFAULT_BASE_URL = 'https://generativelanguage.googleapis.com';
 interface LobeGoogleAIParams {
   apiKey?: string;
   baseURL?: string;
-  client?: GoogleGenAI | GoogleGenAINode;
+  client?: GoogleGenAI;
   id?: string;
   isVertexAi?: boolean;
 }
 
 export class LobeGoogleAI implements LobeRuntimeAI {
-  private client: GoogleGenAI | GoogleGenAINode;
+  private client: GoogleGenAI;
   private isVertexAi: boolean;
   baseURL?: string;
   apiKey?: string;
