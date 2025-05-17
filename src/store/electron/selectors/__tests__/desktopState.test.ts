@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { ElectronState } from '@/store/electron/initialState';
+import { ElectronState, defaultProxySettings } from '@/store/electron/initialState';
 
 import { desktopStateSelectors } from '../desktopState';
 
@@ -25,6 +25,8 @@ describe('desktopStateSelectors', () => {
           storageMode: 'local',
         },
         isInitRemoteServerConfig: false,
+        isAppStateInit: false,
+        proxySettings: defaultProxySettings,
       };
 
       expect(desktopStateSelectors.usePath(state)).toEqual({
@@ -47,6 +49,8 @@ describe('desktopStateSelectors', () => {
           storageMode: 'local',
         },
         isInitRemoteServerConfig: false,
+        isAppStateInit: false,
+        proxySettings: defaultProxySettings,
       };
 
       expect(desktopStateSelectors.usePath(state)).toBeUndefined();
