@@ -21,6 +21,7 @@ const prefixes = {
   threads: 'thd',
   topics: 'tpc',
   user: 'user',
+  spendLogs: 'spend_log',
 } as const;
 
 export const idGenerator = (namespace: keyof typeof prefixes, size = 12) => {
