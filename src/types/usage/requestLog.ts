@@ -26,6 +26,6 @@ export const RequestLogSchema = z.object({
     model: z.string(),
     provider: z.string(),
     metadata: z.any().optional(),
-    callType: z.enum(["chat", "image"]),
+    callType: z.enum(["chat", "history_summary"]),
     spend: z.number(),
 })
