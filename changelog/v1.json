@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Supported SenseNova v6 models correctly & update Gemini models."]
+    },
+    "date": "2025-05-18",
+    "version": "1.87.4"
+  },
+  {
+    "children": {
       "improvements": ["Clean code with new antd api."]
     },
     "date": "2025-05-17",
