@@ -670,14 +670,14 @@ export const generateAIChat: StateCreator<
         });
 
         // TODO: 更新 RequestLog
-        const aiModelListItem = aiModelSelectors.getModelCard(model, provider!)(getAiInfraStoreState());
-        await usageService.createRequestLog({
-          metadata: speed ? { ...usage, ...speed } : usage,
-          model,
-          provider,
-          callType: 'chat', // 此处需要根据实际情况进行调整
-          pricing: aiModelListItem?.pricing,
-        })
+        // const aiModelListItem = aiModelSelectors.getModelCard(model, provider!)(getAiInfraStoreState());
+        // await usageService.createRequestLog({
+        //   metadata: speed ? { ...usage, ...speed } : usage,
+        //   model,
+        //   provider,
+        //   callType: 'chat', // 此处需要根据实际情况进行调整
+        //   pricing: aiModelListItem?.pricing,
+        // })
       },
       onMessageHandle: async (chunk) => {
         switch (chunk.type) {

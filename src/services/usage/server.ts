@@ -6,7 +6,7 @@ import { getDetailsToken } from '@/features/Conversation/Extras/Usage/UsageDetai
 import { LobeDefaultAiModelListItem } from '@/types/aiModel';
 
 export class ServerService implements IUsageService {
-    async createRequestLog(requestLog: RequestLog): Promise<void> {
+    async createRequestLog(requestLog: RequestLog): Promise<any> {
         // 计算 spend
         const metadata = requestLog?.metadata;
         let spend = 0;
