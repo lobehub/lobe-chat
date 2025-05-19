@@ -26,7 +26,7 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
       onCancel={() => {
         setOpen(false);
       }}
-      open
+      open={open}
       styles={{ body: { overflow: 'hidden' } }}
       title={t('store.title')}
       width={800}

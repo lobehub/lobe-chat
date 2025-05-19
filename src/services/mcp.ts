@@ -1,3 +1,5 @@
+import { PluginManifest } from '@lobehub/market-sdk';
+
 import { isDesktop } from '@/const/version';
 import { desktopClient, toolsClient } from '@/libs/trpc/client';
 import { ChatToolPayload } from '@/types/message';
@@ -12,7 +14,10 @@ class MCPService {
     const s = getToolStoreState();
     const { identifier, arguments: args, apiName } = payload;
 
-    const plugin = pluginSelectors.getCustomPluginById(identifier)(s);
+    const installPlugin = pluginSelectors.getInstalledPluginById(identifier)(s);
+    const customPlugin = pluginSelectors.getCustomPluginById(identifier)(s);
+
+    const plugin = installPlugin || customPlugin;
 
     if (!plugin) return;
 
@@ -59,23 +64,17 @@ class MCPService {
    */
   async checkInstallation(manifest: PluginManifest): Promise<CheckMcpInstallResult> {
     try {
-      // 选择推荐的部署选项，或者第一个选项
-      const deployOption =
-        manifest.deploymentOptions?.find((option) => option.isRecommended) ||
-        manifest.deploymentOptions?.[0];
-
-      if (!deployOption) {
+      // 确保有部署选项
+      if (!manifest.deploymentOptions?.length) {
         return {
           error: '未找到有效的部署选项',
           success: false,
         };
       }
 
-      // 调用主进程的安装检测功能
-      return desktopClient.mcp.validMcpServerInstallable.query({
-        installationDetails: deployOption.installationDetails,
-        installationMethod: deployOption.installationMethod,
-        systemDependencies: deployOption.systemDependencies,
+      // 将所有部署选项传递给主进程进行检查
+      return desktopClient.mcp.validMcpServerInstallable.mutate({
+        deploymentOptions: manifest.deploymentOptions as any,
       });
     } catch (error) {
       return {
