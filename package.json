@@ -121,7 +121,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
     "@ant-design/pro-components": "^2.8.7",
-    "@anthropic-ai/sdk": "^0.50.3",
+    "@anthropic-ai/sdk": "^0.51.0",
     "@auth/core": "^0.38.0",
     "@aws-sdk/client-bedrock-runtime": "^3.779.0",
     "@aws-sdk/client-s3": "^3.779.0",
