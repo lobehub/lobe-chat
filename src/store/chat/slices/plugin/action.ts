@@ -467,6 +467,7 @@ export const chatPlugin: StateCreator<
       const result = await mcpService.invokeMcpToolCall(payload, {
         signal: abortController?.signal,
       });
+      console.log(result);
       if (!!result) data = result;
     } catch (error) {
       console.log(error);

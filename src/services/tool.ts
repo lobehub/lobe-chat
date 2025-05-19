@@ -18,10 +18,17 @@ class ToolService {
     return edgeClient.market.getPluginList.query({ locale });
   };
 
-  getMCPPluginManifest = async (identifier: string): Promise<PluginManifest> => {
+  getMCPPluginManifest = async (
+    identifier: string,
+    options: { install?: boolean } = {},
+  ): Promise<PluginManifest> => {
     const locale = globalHelpers.getCurrentLanguage();
 
-    return edgeClient.market.getPluginManifest.query({ identifier, locale });
+    return edgeClient.market.getPluginManifest.query({
+      identifier,
+      install: options.install,
+      locale,
+    });
   };
 
   getToolManifest = getToolManifest;
