@@ -186,6 +186,9 @@ export class App {
       }
     });
 
+    // https://github.com/electron/electron/issues/46538#issuecomment-2808806722
+    app.commandLine.appendSwitch('gtk-version', '3');
+
     app.commandLine.appendSwitch('enable-features', this.chromeFlags.join(','));
 
     logger.debug('Waiting for app to be ready');
