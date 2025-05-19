@@ -21,6 +21,7 @@ import { ShortcutManager } from './ShortcutManager';
 import { StoreManager } from './StoreManager';
 import TrayManager from './TrayManager';
 import { UpdaterManager } from './UpdaterManager';
+import SetupDevTools from './SetupDevTools';
 
 const logger = createLogger('core:App');
 
@@ -117,7 +118,7 @@ export class App {
       app.exit(0);
     }
 
-    this.initDevBranding();
+    await SetupDevTools.init();
 
     //  ==============
     await this.ipcServer.start();
@@ -303,16 +304,6 @@ export class App {
   private addService = (ServiceClass: IServiceModule) => {
     const service = new ServiceClass(this);
     this.services.set(ServiceClass, service);
-  };
-
-  private initDevBranding = () => {
-    if (!isDev) return;
-
-    logger.debug('Setting up dev branding');
-    app.setName('lobehub-desktop-dev');
-    if (macOS()) {
-      app.dock!.setIcon(join(buildDir, 'icon-dev.png'));
-    }
   };
 
   private registerNextHandler() {
