@@ -15,7 +15,7 @@ export interface RequestLog {
     /**
      * 请求标识
      */
-    callType: "chat" | "image";
+    callType: "chat" | "history_summary";
     /**
      * 费用
      */

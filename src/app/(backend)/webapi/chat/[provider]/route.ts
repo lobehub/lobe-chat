@@ -6,7 +6,7 @@ import {
 import { ChatErrorType } from '@lobechat/types';
 
 import { checkAuth } from '@/app/(backend)/middleware/auth';
-import { createTraceOptions, initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
+import { createTraceOptions, createUsageTracker, initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ChatStreamPayload } from '@/types/openai/chat';
 import { createErrorResponse } from '@/utils/errorResponse';
 import { getTracePayload } from '@/utils/trace';
@@ -35,6 +35,8 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload, createR
     // If user enable trace
     if (tracePayload?.enabled) {
       traceOptions = createTraceOptions(data, { provider, trace: tracePayload });
+    } else if (jwtPayload?.userId) {
+      traceOptions = createUsageTracker(data, jwtPayload.userId);
     }
 
     return await modelRuntime.chat(data, {
