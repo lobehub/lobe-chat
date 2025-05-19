@@ -186,6 +186,7 @@ export class App {
       }
     });
 
+    // refs: https://github.com/lobehub/lobe-chat/pull/7883
     // https://github.com/electron/electron/issues/46538#issuecomment-2808806722
     app.commandLine.appendSwitch('gtk-version', '3');
 
