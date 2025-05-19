@@ -13,14 +13,15 @@ const SWR_DEVTOOLS: ExtensionReference = {
 
 const logger = createLogger('core:setupDev');
 
-export default class SetupDevTools {
+export default class SetupDev {
   static async init() {
     if (!isDev) return;
 
     logger.debug('Initializing dev tools');
-    const setupDevTools = new SetupDevTools();
-    setupDevTools.setDevBranding();
-    await setupDevTools.installDevTools();
+
+    const setup = new SetupDev();
+    setup.setDevBranding();
+    setup.installDevTools();
 
     logger.debug('Dev tools initialized');
   }
@@ -35,22 +36,18 @@ export default class SetupDevTools {
 
   private installDevTools = async () => {
     logger.debug('Installing dev tools');
-    return new Promise((resolve, reject) => {
-      app.on('ready', () => {
-        installExtension([
-          REDUX_DEVTOOLS,
-          REACT_DEVELOPER_TOOLS,
-          SWR_DEVTOOLS,
-        ])
-          .then((extensions) => {
-            logger.info(`Added Extensions: ${extensions.map((ext) => ext.name).join(', ')}`);
-            resolve(extensions);
-          })
-          .catch((err) => {
-            logger.error('Failed to install devtools extensions:', err);
-            reject(err);
-          });
-      });
+    app.on('ready', () => {
+      installExtension([
+        REDUX_DEVTOOLS,
+        REACT_DEVELOPER_TOOLS,
+        SWR_DEVTOOLS,
+      ])
+        .then((extensions) => {
+          logger.info(`Added Extensions: ${extensions.map((ext) => ext.name).join(', ')}`);
+        })
+        .catch((err) => {
+          logger.error('Failed to install devtools extensions:', err);
+        });
     });
   };
 }

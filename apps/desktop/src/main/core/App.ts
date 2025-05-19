@@ -21,7 +21,7 @@ import { ShortcutManager } from './ShortcutManager';
 import { StoreManager } from './StoreManager';
 import TrayManager from './TrayManager';
 import { UpdaterManager } from './UpdaterManager';
-import SetupDevTools from './SetupDevTools';
+import SetupDev from './SetupDev';
 
 const logger = createLogger('core:App');
 
@@ -118,7 +118,7 @@ export class App {
       app.exit(0);
     }
 
-    await SetupDevTools.init();
+    SetupDev.init();
 
     //  ==============
     await this.ipcServer.start();
