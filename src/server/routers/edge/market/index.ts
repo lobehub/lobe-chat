@@ -124,6 +124,7 @@ export const marketRouter = router({
     .input(
       z.object({
         identifier: z.string(),
+        install: z.boolean().optional(),
         locale: z.string().optional(),
       }),
     )

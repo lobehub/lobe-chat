@@ -1,3 +1,4 @@
+import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { PluginListResponse } from '@lobehub/market-sdk';
 import { t } from 'i18next';
 import useSWR, { SWRResponse } from 'swr';
@@ -27,34 +28,57 @@ export const createMCPPluginStoreSlice: StateCreator<
   [],
   PluginMCPStoreAction
 > = (set, get) => ({
-  installMCPPlugin: async (name) => {
-    const plugin = mcpStoreSelectors.getPluginById(name)(get());
+  installMCPPlugin: async (identifier) => {
+    const plugin = mcpStoreSelectors.getPluginById(identifier)(get());
 
     if (!plugin || !plugin.manifestUrl) return;
 
     const { updateInstallLoadingState, refreshPlugins } = get();
     try {
-      updateInstallLoadingState(name, true);
-      const data = await toolService.getMCPPluginManifest(plugin.identifier);
+      updateInstallLoadingState(identifier, true);
+      const data = await toolService.getMCPPluginManifest(plugin.identifier, { install: true });
 
       console.log(data);
       const result = await mcpService.checkInstallation(data);
-      if (result.success) {
-        console.log('result', result);
+      let manifest: LobeChatPluginManifest | undefined;
+
+      if (!result.success) return;
+
+      console.log('result', result);
+      if (result.connection?.type === 'stdio') {
+        manifest = await mcpService.getStdioMcpServerManifest(
+          {
+            args: result.connection.args,
+            command: result.connection.command!,
+            name: identifier,
+          },
+          { avatar: plugin.icon, description: plugin.description },
+        );
       }
+      if (result.connection?.type === 'http') {
+        manifest = await mcpService.getStreamableMcpServerManifest(
+          identifier,
+          result.connection.url!,
+          { avatar: plugin.icon, description: plugin.description },
+        );
+      }
+
+      if (!manifest) return;
 
       // 4. 存储 manifest 信息
       await pluginService.installPlugin({
+        // 针对 mcp 先将 connection 信息存到 customParams 字段里
+        customParams: { mcp: result.connection },
         identifier: plugin.identifier,
-        manifest: data,
+        manifest: manifest,
         type: 'plugin',
       });
       await refreshPlugins();
 
-      updateInstallLoadingState(name, undefined);
+      updateInstallLoadingState(identifier, undefined);
     } catch (error) {
       console.error(error);
-      updateInstallLoadingState(name, undefined);
+      updateInstallLoadingState(identifier, undefined);
 
       const err = error as PluginInstallError;
       notification.error({

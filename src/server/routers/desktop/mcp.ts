@@ -60,14 +60,12 @@ export const mcpRouter = router({
   validMcpServerInstallable: mcpProcedure
     .input(
       z.object({
-        installationDetails: z.object({}).passthrough(),
-        installationMethod: z.string(),
-        systemDependencies: z.any(),
+        deploymentOptions: z.array(z.object({}).passthrough()),
       }),
     )
-    .query(async ({ input }) => {
+    .mutation(async ({ input }) => {
       log('checkMcpInstall input: %O', input);
 
-      return await mcpService.checkMcpInstall(input);
+      return await mcpService.checkMcpInstall(input as any);
     }),
 });

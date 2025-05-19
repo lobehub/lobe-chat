@@ -1,20 +1,23 @@
 import { LobeChatPluginApi, LobeChatPluginManifest, PluginSchema } from '@lobehub/chat-plugin-sdk';
+import { DeploymentOption } from '@lobehub/market-sdk';
 import { McpError } from '@modelcontextprotocol/sdk/types.js';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
 
 import { MCPClient, MCPClientParams, StdioMCPParams } from '@/libs/mcp';
-import { CheckMcpInstallParams, CheckMcpInstallResult } from '@/types/plugins';
+import { mcpSystemDepsCheckService } from '@/server/services/mcp/deps';
+import { CheckMcpInstallResult } from '@/types/plugins';
 import { CustomPluginMetadata } from '@/types/tool/plugin';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
-const execPromise = promisify(exec);
-
 const log = debug('lobe-mcp:service');
 
+// Removed MCPConnection interface as it's no longer needed
+
 class MCPService {
+  // Store instances of the custom MCPClient, keyed by serialized MCPClientParams
+  private clients: Map<string, MCPClient> = new Map();
+
   // --- MCP Interaction ---
 
   // listTools now accepts MCPClientParams
@@ -86,35 +89,29 @@ class MCPService {
     }
   }
 
-  // TODO: Consider adding methods for managing the client lifecycle if needed,
-  // e.g., explicitly closing clients on shutdown or after inactivity,
-  // although for serverless, on-demand creation/retrieval might be sufficient.
-
-  // TODO: Implement methods like listResources, getResource, listPrompts, getPrompt if needed,
-  // following the pattern of accepting MCPClientParams.
-
-  // --- Client Management (Replaces Connection Management) ---
-
   // Private method to get or initialize a client based on parameters
   private async getClient(params: MCPClientParams): Promise<MCPClient> {
-    try {
-      // Ensure stdio is only attempted in desktop/server environments within the client itself
-      // or add a check here if MCPClient doesn't handle it.
-      // Example check (adjust based on where environment check is best handled):
-      // if (params.type === 'stdio' && typeof window !== 'undefined') {
-      //   throw new Error('Stdio MCP type is not supported in browser environment.');
-      // }
+    const key = this.serializeParams(params); // Use custom serialization
+    log(`Attempting to get client for key: ${key} (params: %O)`, params);
 
+    if (this.clients.has(key)) {
+      log(`Returning cached client for key: ${key}`);
+      return this.clients.get(key)!;
+    }
+
+    log(`No cached client found for key: ${key}. Initializing new client.`);
+    try {
       const client = new MCPClient(params);
       await client.initialize({
         onProgress: (progress) => {
           log(`New client initializing... ${progress.progress}/${progress.total}`);
         },
       }); // Initialization logic should be within MCPClient
-      log(`New client initialized`);
+      this.clients.set(key, client);
+      log(`New client initialized and cached for key: ${key}`);
       return client;
     } catch (error) {
-      console.error(`Failed to initialize MCP client`, error);
+      console.error(`Failed to initialize MCP client for key ${key}:`, error);
       // Do not cache failed initializations
       throw new TRPCError({
         cause: error,
@@ -122,6 +119,24 @@ class MCPService {
         message: `Failed to initialize MCP client, reason: ${(error as Error).message}`,
       });
     }
+  }
+
+  // Custom serialization function to ensure consistent keys
+  private serializeParams(params: MCPClientParams): string {
+    const sortedKeys = Object.keys(params).sort();
+    const sortedParams: Record<string, any> = {};
+
+    for (const key of sortedKeys) {
+      const value = (params as any)[key];
+      // Sort the 'args' array if it exists
+      if (key === 'args' && Array.isArray(value)) {
+        sortedParams[key] = JSON.stringify(key);
+      } else {
+        sortedParams[key] = value;
+      }
+    }
+
+    return JSON.stringify(sortedParams);
   }
 
   async getStreamableMcpServerManifest(
@@ -175,158 +190,43 @@ class MCPService {
   }
 
   /**
-   * 检查系统依赖版本
+   * Check MCP plugin installation status
    */
-  private async checkSystemDependency(dependency: {
-    checkCommand?: string;
-    name: string;
-    requiredVersion?: string;
-    type?: string;
-    versionParsingRequired?: boolean;
-  }): Promise<{ error?: string; installed: boolean; meetRequirement: boolean; version?: string }> {
+  async checkMcpInstall(input: {
+    deploymentOptions: DeploymentOption[];
+  }): Promise<CheckMcpInstallResult> {
     try {
-      // 如果没有提供检查命令，则使用通用命令
-      const checkCommand = dependency.checkCommand || `${dependency.name} --version`;
+      log('Checking MCP plugin installation status: %O', input);
+      const results = [];
 
-      const { stdout, stderr } = await execPromise(checkCommand);
-      if (stderr && !stdout) {
-        return {
-          error: stderr,
-          installed: false,
-          meetRequirement: false,
-        };
+      // 检查每个部署选项
+      for (const option of input.deploymentOptions) {
+        // 使用系统依赖检查服务检查部署选项
+        const result = await mcpSystemDepsCheckService.checkDeployOption(option);
+        results.push(result);
       }
 
-      const output = stdout.trim();
-      let version = output;
+      // 找出推荐的或第一个可安装的选项
+      const recommendedResult = results.find((r) => r.isRecommended && r.allDependenciesMet);
+      const firstInstallableResult = results.find((r) => r.allDependenciesMet);
 
-      // 处理版本解析
-      if (dependency.versionParsingRequired) {
-        // 提取版本号 - 通常格式为 vX.Y.Z 或 X.Y.Z
-        const versionMatch = output.match(/[Vv]?(\d+(\.\d+)*)/);
-        if (versionMatch) {
-          version = versionMatch[0];
-        }
-      }
+      // 返回推荐的结果，或第一个可安装的结果，或第一个结果
+      const bestResult = recommendedResult || firstInstallableResult || results[0];
 
-      let meetRequirement = true;
-
-      if (dependency.requiredVersion) {
-        // 提取数字部分
-        const currentVersion = version.replace(/^[Vv]/, ''); // 移除可能的 v 前缀
-        const currentVersionNum = parseFloat(currentVersion);
-
-        // 从要求版本中提取条件和数字
-        const requirementMatch = dependency.requiredVersion.match(/([<=>]+)?(\d+(\.\d+)*)/);
-
-        if (requirementMatch) {
-          const [, operator = '=', requiredVersion] = requirementMatch;
-          const requiredNum = parseFloat(requiredVersion);
-
-          switch (operator) {
-            case '>=': {
-              meetRequirement = currentVersionNum >= requiredNum;
-              break;
-            }
-            case '>': {
-              meetRequirement = currentVersionNum > requiredNum;
-              break;
-            }
-            case '<=': {
-              meetRequirement = currentVersionNum <= requiredNum;
-              break;
-            }
-            case '<': {
-              meetRequirement = currentVersionNum < requiredNum;
-              break;
-            }
-            default: {
-              // 默认为等于
-              meetRequirement = currentVersionNum === requiredNum;
-              break;
-            }
-          }
-        }
-      }
+      log('Check completed, best result: %O', bestResult);
 
       return {
-        installed: true,
-        meetRequirement,
-        version,
-      };
-    } catch (error) {
-      return {
-        error: error instanceof Error ? error.message : '未知错误',
-        installed: false,
-        meetRequirement: false,
-      };
-    }
-  }
-
-  /**
-   * 检查 npm 包是否已安装
-   */
-  private async checkNpmPackageInstalled(packageName: string): Promise<boolean> {
-    try {
-      // 使用 npm list 检查包是否已全局安装
-      const { stdout: globalStdout } = await execPromise(`npm list -g ${packageName} --depth=0`);
-      if (!globalStdout.includes('(empty)') && globalStdout.includes(packageName)) {
-        return true;
-      }
-
-      // 检查包是否可以通过 npx 直接使用（这也能验证包是否可用）
-      await execPromise(`npx -y ${packageName} --version`);
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  /**
-   * 检查 MCP 插件安装状态
-   */
-  async checkMcpInstall(manifest: CheckMcpInstallParams): Promise<CheckMcpInstallResult> {
-    try {
-      const systemDependenciesResults = [];
-
-      // 检查系统依赖
-      if (manifest.systemDependencies && manifest.systemDependencies.length > 0) {
-        for (const dep of manifest.systemDependencies) {
-          const result = await this.checkSystemDependency(dep);
-          systemDependenciesResults.push({
-            name: dep.name,
-            ...result,
-          });
-        }
-      }
-
-      // 检查 npm 包是否已安装
-      let packageInstalled = false;
-      if (manifest.installationMethod === 'npm' && manifest.installationDetails.packageName) {
-        packageInstalled = await this.checkNpmPackageInstalled(
-          manifest.installationDetails.packageName,
-        );
-      } else if (
-        manifest.installationMethod === 'manual' &&
-        manifest.installationDetails.repositoryUrlToClone
-      ) {
-        // 对于手动安装，我们只能检查用户是否遵循了指南，但无法确认
-        // 这里简单返回 false，实际使用时用户需要手动确认
-        packageInstalled = false;
-      }
-
-      // 检查系统依赖是否都满足要求
-      const allDependenciesMet = systemDependenciesResults.every((dep) => dep.meetRequirement);
-
-      return {
-        allDependenciesMet,
-        packageInstalled,
+        ...bestResult,
+        allOptions: results,
         success: true,
-        systemDependencies: systemDependenciesResults,
       };
     } catch (error) {
+      log('Check failed: %O', error);
       return {
-        error: error instanceof Error ? error.message : '检查 MCP 插件安装状态时发生未知错误',
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Unknown error when checking MCP plugin installation status',
         success: false,
       };
     }

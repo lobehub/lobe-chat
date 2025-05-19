@@ -97,7 +97,8 @@ const Actions = memo<ActionsProps>(({ identifier, type, isMCP }) => {
             loading={installing}
             onClick={async () => {
               if (isMCP) {
-                const data = await installMCPPlugin(identifier);
+                await installMCPPlugin(identifier);
+                await togglePlugin(identifier);
               } else {
                 await installPlugin(identifier);
                 await togglePlugin(identifier);
