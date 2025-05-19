@@ -501,4 +501,275 @@ describe('GoogleGenerativeAIStream', () => {
       ].map((i) => i + '\n'),
     );
   });
+
+  it('should return undefined data without text', async () => {
+    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
+    const data = [
+      {
+        candidates: [
+          {
+            content: { parts: [{ text: '234' }], role: 'model' },
+            safetyRatings: [
+              { category: 'HARM_CATEGORY_HATE_SPEECH', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_HARASSMENT', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', probability: 'NEGLIGIBLE' },
+            ],
+          },
+        ],
+        text: '234',
+        usageMetadata: {
+          promptTokenCount: 19,
+          candidatesTokenCount: 3,
+          totalTokenCount: 122,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 19 }],
+          thoughtsTokenCount: 100,
+        },
+        modelVersion: 'gemini-2.5-flash-preview-04-17',
+      },
+      {
+        text: '',
+        candidates: [
+          {
+            content: { parts: [{ text: '' }], role: 'model' },
+            safetyRatings: [
+              { category: 'HARM_CATEGORY_HATE_SPEECH', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_HARASSMENT', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', probability: 'NEGLIGIBLE' },
+            ],
+          },
+        ],
+        usageMetadata: {
+          promptTokenCount: 19,
+          candidatesTokenCount: 3,
+          totalTokenCount: 122,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 19 }],
+          candidatesTokensDetails: [{ modality: 'TEXT', tokenCount: 3 }],
+          thoughtsTokenCount: 100,
+        },
+        modelVersion: 'gemini-2.5-flash-preview-04-17',
+      },
+      {
+        text: '567890\n',
+        candidates: [
+          {
+            content: { parts: [{ text: '567890\n' }], role: 'model' },
+            finishReason: 'STOP',
+            safetyRatings: [
+              { category: 'HARM_CATEGORY_HATE_SPEECH', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_HARASSMENT', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', probability: 'NEGLIGIBLE' },
+            ],
+          },
+        ],
+        usageMetadata: {
+          promptTokenCount: 19,
+          candidatesTokenCount: 11,
+          totalTokenCount: 131,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 19 }],
+          candidatesTokensDetails: [{ modality: 'TEXT', tokenCount: 11 }],
+          thoughtsTokenCount: 100,
+        },
+        modelVersion: 'gemini-2.5-flash-preview-04-17',
+      },
+    ];
+
+    const mockGoogleStream = new ReadableStream({
+      start(controller) {
+        data.forEach((item) => {
+          controller.enqueue(item);
+        });
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = GoogleGenerativeAIStream(mockGoogleStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual(
+      [
+        'id: chat_1',
+        'event: text',
+        'data: "234"\n',
+
+        'id: chat_1',
+        'event: text',
+        'data: ""\n',
+
+        'id: chat_1',
+        'event: text',
+        `data: "567890\\n"\n`,
+        // stop
+        'id: chat_1',
+        'event: stop',
+        `data: "STOP"\n`,
+        // usage
+        'id: chat_1',
+        'event: usage',
+        `data: {"inputTextTokens":19,"outputReasoningTokens":100,"outputTextTokens":11,"totalInputTokens":19,"totalOutputTokens":111,"totalTokens":131}\n`,
+      ].map((i) => i + '\n'),
+    );
+  });
+
+  it('should handle groundingMetadata', async () => {
+    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
+    const data = [
+      {
+        candidates: [
+          {
+            content: {
+              parts: [
+                {
+                  text: '123',
+                },
+              ],
+              role: 'model',
+            },
+            index: 0,
+            groundingMetadata: {},
+          },
+        ],
+        usageMetadata: {
+          promptTokenCount: 9,
+          candidatesTokenCount: 18,
+          totalTokenCount: 27,
+          promptTokensDetails: [
+            {
+              modality: 'TEXT',
+              tokenCount: 9,
+            },
+          ],
+        },
+        modelVersion: 'models/gemini-2.5-flash-preview-04-17',
+      },
+      {
+        candidates: [
+          {
+            content: {
+              parts: [
+                {
+                  text: '45678',
+                },
+              ],
+              role: 'model',
+            },
+            finishReason: 'STOP',
+            index: 0,
+            groundingMetadata: {
+              searchEntryPoint: {
+                renderedContent: 'content\n',
+              },
+              groundingChunks: [
+                {
+                  web: {
+                    uri: 'https://vertexaisearch.cloud.google.com/grounding-api-redirect/AbF9wXG1234545',
+                    title: 'npmjs.com',
+                  },
+                },
+                {
+                  web: {
+                    uri: 'https://vertexaisearch.cloud.google.com/grounding-api-redirect/AbF9wXE9288334',
+                    title: 'google.dev',
+                  },
+                },
+              ],
+              groundingSupports: [
+                {
+                  segment: {
+                    startIndex: 63,
+                    endIndex: 67,
+                    text: '1。',
+                  },
+                  groundingChunkIndices: [0],
+                  confidenceScores: [1],
+                },
+                {
+                  segment: {
+                    startIndex: 69,
+                    endIndex: 187,
+                    text: 'SDK。',
+                  },
+                  groundingChunkIndices: [1],
+                  confidenceScores: [1],
+                },
+              ],
+              webSearchQueries: ['sdk latest version'],
+            },
+          },
+        ],
+        usageMetadata: {
+          promptTokenCount: 9,
+          candidatesTokenCount: 122,
+          totalTokenCount: 131,
+          promptTokensDetails: [
+            {
+              modality: 'TEXT',
+              tokenCount: 9,
+            },
+          ],
+        },
+        modelVersion: 'models/gemini-2.5-flash-preview-04-17',
+      },
+    ];
+
+    const mockGoogleStream = new ReadableStream({
+      start(controller) {
+        data.forEach((item) => {
+          controller.enqueue(item);
+        });
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = GoogleGenerativeAIStream(mockGoogleStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual(
+      [
+        'id: chat_1',
+        'event: text',
+        'data: "123"\n',
+
+        'id: chat_1',
+        'event: grounding',
+        'data: {}\n',
+
+        'id: chat_1',
+        'event: text',
+        'data: "45678"\n',
+
+        'id: chat_1',
+        'event: grounding',
+        `data: {\"citations\":[{\"favicon\":\"npmjs.com\",\"title\":\"npmjs.com\",\"url\":\"https://vertexaisearch.cloud.google.com/grounding-api-redirect/AbF9wXG1234545\"},{\"favicon\":\"google.dev\",\"title\":\"google.dev\",\"url\":\"https://vertexaisearch.cloud.google.com/grounding-api-redirect/AbF9wXE9288334\"}],\"searchQueries\":[\"sdk latest version\"]}\n`,
+        // stop
+        'id: chat_1',
+        'event: stop',
+        `data: "STOP"\n`,
+        // usage
+        'id: chat_1',
+        'event: usage',
+        `data: {"inputTextTokens":9,"outputTextTokens":122,"totalInputTokens":9,"totalOutputTokens":122,"totalTokens":131}\n`,
+      ].map((i) => i + '\n'),
+    );
+  });
 });

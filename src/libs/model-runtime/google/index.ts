@@ -4,7 +4,6 @@ import {
   GenerateContentConfig,
   Tool as GoogleFunctionCallTool,
   GoogleGenAI,
-  GoogleSearch,
   Part,
   Type as SchemaType,
   ThinkingConfig,
@@ -394,7 +393,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       return; // 若历史消息中已有 function calling，则不再注入任何 Tools
     }
     if (payload?.enabledSearch) {
-      return [{ googleSearch: {} } as GoogleSearch];
+      return [{ googleSearch: {} }];
     }
 
     if (!tools || tools.length === 0) return;

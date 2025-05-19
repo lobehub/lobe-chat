@@ -4,6 +4,7 @@ import OpenAI from 'openai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { OpenAIChatMessage } from '@/libs/model-runtime';
+import { ChatStreamPayload } from '@/types/openai/chat';
 import * as imageToBase64Module from '@/utils/imageToBase64';
 
 import * as debugStreamModule from '../utils/debugStream';
@@ -589,6 +590,63 @@ describe('LobeGoogleAI', () => {
             required: ['param1'],
           },
         });
+      });
+
+      it('should only add tools once', () => {
+        const tools: OpenAI.ChatCompletionTool[] = [
+          {
+            function: {
+              name: 'testTool',
+              description: 'A test tool',
+              parameters: {
+                type: 'object',
+                properties: {
+                  param1: { type: 'string' },
+                  param2: { type: 'number' },
+                },
+                required: ['param1'],
+              },
+            },
+            type: 'function',
+          },
+        ];
+
+        const payload: ChatStreamPayload = {
+          messages: [
+            {
+              role: 'user',
+              content: '',
+              tool_calls: [
+                { function: { name: 'some_func', arguments: '' }, id: 'func_1', type: 'function' },
+              ],
+            },
+          ],
+          model: 'gemini-2.5-flash-preview-04-17',
+          temperature: 1,
+        };
+
+        const googleTools = instance['buildGoogleTools'](tools, payload);
+
+        expect(googleTools).toBeUndefined();
+      });
+
+      it('should handle googleSearch', () => {
+        const payload: ChatStreamPayload = {
+          messages: [
+            {
+              role: 'user',
+              content: '',
+            },
+          ],
+          model: 'gemini-2.5-flash-preview-04-17',
+          temperature: 1,
+          enabledSearch: true,
+        };
+
+        const googleTools = instance['buildGoogleTools'](undefined, payload);
+
+        expect(googleTools).toHaveLength(1);
+        expect(googleTools![0] as Tool).toEqual({ googleSearch: {} });
       });
     });
 
