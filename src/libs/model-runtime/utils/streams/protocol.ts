@@ -326,14 +326,11 @@ export const createTokenSpeedCalculator = (
     // if the chunk is the stop chunk, set as output finish
     if (inputStartAt && outputStartAt && chunk.type === 'usage') {
       const totalOutputTokens = chunk.data?.totalOutputTokens || chunk.data?.outputTextTokens;
-      const reasoningTokens = chunk.data?.outputReasoningTokens || 0;
       // Google Gemini 2.5 包含内部思考过程，同时也会输出部分思考过程
-      const internalReasoningTokens = chunk.data?.internalReasoningTokens || 0;
+      const reasoningTokens = chunk.data?.outputReasoningTokens || 0;
 
       const outputTokens =
-        (outputThinking ?? false)
-          ? totalOutputTokens - internalReasoningTokens
-          : totalOutputTokens - reasoningTokens;
+        (outputThinking ?? false) ? totalOutputTokens : totalOutputTokens - reasoningTokens;
       result.push({
         data: {
           tps: (outputTokens / (Date.now() - outputStartAt)) * 1000,

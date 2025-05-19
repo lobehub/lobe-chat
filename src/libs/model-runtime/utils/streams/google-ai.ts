@@ -25,9 +25,9 @@ const transformGoogleGenerativeAIStream = (
   const usageChunks: StreamProtocolChunk[] = [];
   if (candidate?.finishReason && usage) {
     // totalTokenCount = promptTokenCount + candidatesTokenCount + thoughtsTokenCount
-    const internalReasoningTokens = usage.thoughtsTokenCount;
+    const reasoningTokens = usage.thoughtsTokenCount;
     const outputTextTokens = usage.candidatesTokenCount ?? 0;
-    const totalOutputTokens = outputTextTokens + (internalReasoningTokens ?? 0);
+    const totalOutputTokens = outputTextTokens + (reasoningTokens ?? 0);
 
     usageChunks.push(
       { data: candidate.finishReason, id: context?.id, type: 'stop' },
@@ -38,8 +38,7 @@ const transformGoogleGenerativeAIStream = (
             ?.tokenCount,
           inputTextTokens: usage.promptTokensDetails?.find((i: any) => i.modality === 'TEXT')
             ?.tokenCount,
-          internalReasoningTokens,
-          outputReasoningTokens: internalReasoningTokens,
+          outputReasoningTokens: reasoningTokens,
           outputTextTokens,
           totalInputTokens: usage.promptTokenCount,
           totalOutputTokens,

@@ -364,7 +364,7 @@ describe('GoogleGenerativeAIStream', () => {
         // usage
         'id: chat_1',
         'event: usage',
-        `data: {"inputTextTokens":19,"internalReasoningTokens":100,"outputReasoningTokens":100,"outputTextTokens":11,"totalInputTokens":19,"totalOutputTokens":111,"totalTokens":131}\n`,
+        `data: {"inputTextTokens":19,"outputReasoningTokens":100,"outputTextTokens":11,"totalInputTokens":19,"totalOutputTokens":111,"totalTokens":131}\n`,
       ].map((i) => i + '\n'),
     );
   });
@@ -497,7 +497,7 @@ describe('GoogleGenerativeAIStream', () => {
         // usage
         'id: chat_1',
         'event: usage',
-        `data: {"inputTextTokens":38,"internalReasoningTokens":304,"outputReasoningTokens":304,"outputTextTokens":19,"totalInputTokens":38,"totalOutputTokens":323,"totalTokens":361}\n`,
+        `data: {"inputTextTokens":38,"outputReasoningTokens":304,"outputTextTokens":19,"totalInputTokens":38,"totalOutputTokens":323,"totalTokens":361}\n`,
       ].map((i) => i + '\n'),
     );
   });
