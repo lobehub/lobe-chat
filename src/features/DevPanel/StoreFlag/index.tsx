@@ -4,7 +4,7 @@ import { useBoolean } from 'ahooks';
 import { Button, Checkbox, Divider } from 'antd';
 import type { CheckboxProps } from 'antd';
 import { intersection } from 'lodash-es';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { storeNames } from '@/store/middleware/createDevtools';
@@ -44,7 +44,7 @@ const StoreFlag = () => {
       }
       url.search = params.toString();
       window.location.href = url.toString();
-    } catch (error) {
+    } catch {
       offSync();
     }
   };
@@ -53,18 +53,18 @@ const StoreFlag = () => {
     <Flexbox>
       <Flexbox paddingInline={16}>
         <Checkbox.Group
-          style={{ gap: 16, flexDirection: 'column' }}
-          options={Array.from(storeNames)}
-          value={checkedList}
           onChange={onChange}
+          options={Array.from(storeNames)}
+          style={{ flexDirection: 'column', gap: 16 }}
+          value={checkedList}
         />
       </Flexbox>
       <Divider />
-      <Flexbox padding={16} justify="space-between" horizontal align="center">
-        <Checkbox indeterminate={indeterminate} onChange={onCheckAllChange} checked={checkAll}>
+      <Flexbox align="center" horizontal justify="space-between" padding={16}>
+        <Checkbox checked={checkAll} indeterminate={indeterminate} onChange={onCheckAllChange}>
           Check all
         </Checkbox>
-        <Button type="primary" onClick={handleApply} loading={sync}>
+        <Button loading={sync} onClick={handleApply} type="primary">
           Apply
         </Button>
       </Flexbox>
