@@ -110,7 +110,7 @@ const DevModal = memo<DevModalProps>(
       >
         <Drawer
           containerMaxWidth={'auto'}
-          destroyOnClose
+          destroyOnHidden
           footer={footer}
           height={'100vh'}
           onClose={(e) => {
