@@ -73,7 +73,7 @@ const ChatAppearance = memo(() => {
         name: 'fontSize',
       },
       {
-        children: <HighlighterPreview theme={general.highlighterTheme} />,
+        children: <HighlighterPreview theme={general.highlighterLightTheme} />,
         noStyle: true,
       },
       {
@@ -85,11 +85,27 @@ const ChatAppearance = memo(() => {
             }))}
           />
         ),
-        label: t('settingChatAppearance.highlighterTheme.title'),
-        name: 'highlighterTheme',
+        label: t('settingChatAppearance.highlighterTheme.light.title'),
+        name: 'highlighterLightTheme',
       },
       {
-        children: <MermaidPreview theme={general.mermaidTheme} />,
+        children: <HighlighterPreview theme={general.highlighterDarkTheme} />,
+        noStyle: true,
+      },
+      {
+        children: (
+          <Select
+            options={highlighterThemes.map((item) => ({
+              label: item.displayName,
+              value: item.id,
+            }))}
+          />
+        ),
+        label: t('settingChatAppearance.highlighterTheme.dark.title'),
+        name: 'highlighterDarkTheme',
+      },
+      {
+        children: <MermaidPreview theme={general.mermaidLightTheme} />,
         noStyle: true,
       },
       {
@@ -101,8 +117,24 @@ const ChatAppearance = memo(() => {
             }))}
           />
         ),
-        label: t('settingChatAppearance.mermaidTheme.title'),
-        name: 'mermaidTheme',
+        label: t('settingChatAppearance.mermaidTheme.light.title'),
+        name: 'mermaidLightTheme',
+      },
+      {
+        children: <MermaidPreview theme={general.mermaidDarkTheme} />,
+        noStyle: true,
+      },
+      {
+        children: (
+          <Select
+            options={mermaidThemes.map((item) => ({
+              label: item.displayName,
+              value: item.id,
+            }))}
+          />
+        ),
+        label: t('settingChatAppearance.mermaidTheme.dark.title'),
+        name: 'mermaidDarkTheme',
       },
     ],
     extra: loading && <Icon icon={Loader2Icon} size={16} spin style={{ opacity: 0.5 }} />,

@@ -239,10 +239,20 @@ export default {
       title: '字体大小',
     },
     highlighterTheme: {
-      title: '代码高亮主题',
+      dark: {
+        title: '暗色高亮主题',
+      },
+      light: {
+        title: '亮色高亮主题',
+      },
     },
     mermaidTheme: {
-      title: 'Mermaid 主题',
+      dark: {
+        title: '暗色 Mermaid 主题',
+      },
+      light: {
+        title: '亮色 Mermaid 主题',
+      },
     },
     title: '聊天外观',
   },

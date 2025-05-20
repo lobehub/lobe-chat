@@ -17,8 +17,10 @@ describe('settingsSelectors', () => {
 
       expect(result).toEqual({
         fontSize: 12,
-        highlighterTheme: 'lobe-theme',
-        mermaidTheme: 'lobe-theme',
+        highlighterDarkTheme: 'lobe-theme',
+        highlighterLightTheme: 'lobe-theme',
+        mermaidDarkTheme: 'lobe-theme',
+        mermaidLightTheme: 'lobe-theme',
       });
     });
   });
@@ -113,26 +115,50 @@ describe('settingsSelectors', () => {
     });
   });
 
-  it('should return the highlighterTheme', () => {
+  it('should return the highlighterDarkTheme', () => {
     const s: UserState = merge(initialState, {
       settings: {
-        general: { highlighterTheme: 'lobe-theme' },
+        general: { highlighterDarkTheme: 'lobe-theme' },
       },
     });
 
-    const result = userGeneralSettingsSelectors.highlighterTheme(s as UserStore);
+    const result = userGeneralSettingsSelectors.highlighterDarkTheme(s as UserStore);
 
     expect(result).toBe('lobe-theme');
   });
 
-  it('should return the mermaidTheme', () => {
+  it('should return the highlighterLightTheme', () => {
     const s: UserState = merge(initialState, {
       settings: {
-        general: { mermaidTheme: 'lobe-theme' },
+        general: { highlighterLightTheme: 'lobe-theme' },
       },
     });
 
-    const result = userGeneralSettingsSelectors.mermaidTheme(s as UserStore);
+    const result = userGeneralSettingsSelectors.highlighterLightTheme(s as UserStore);
+
+    expect(result).toBe('lobe-theme');
+  });
+
+  it('should return the mermaidDarkTheme', () => {
+    const s: UserState = merge(initialState, {
+      settings: {
+        general: { mermaidDarkTheme: 'lobe-theme' },
+      },
+    });
+
+    const result = userGeneralSettingsSelectors.mermaidDarkTheme(s as UserStore);
+
+    expect(result).toBe('lobe-theme');
+  });
+
+  it('should return the mermaidLightTheme', () => {
+    const s: UserState = merge(initialState, {
+      settings: {
+        general: { mermaidLightTheme: 'lobe-theme' },
+      },
+    });
+
+    const result = userGeneralSettingsSelectors.mermaidLightTheme(s as UserStore);
 
     expect(result).toBe('lobe-theme');
   });

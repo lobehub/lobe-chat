@@ -6,14 +6,18 @@ const generalConfig = (s: UserStore) => currentSettings(s).general || {};
 const neutralColor = (s: UserStore) => generalConfig(s).neutralColor;
 const primaryColor = (s: UserStore) => generalConfig(s).primaryColor;
 const fontSize = (s: UserStore) => generalConfig(s).fontSize;
-const highlighterTheme = (s: UserStore) => generalConfig(s).highlighterTheme;
-const mermaidTheme = (s: UserStore) => generalConfig(s).mermaidTheme;
+const highlighterDarkTheme = (s: UserStore) => generalConfig(s).highlighterDarkTheme;
+const highlighterLightTheme = (s: UserStore) => generalConfig(s).highlighterLightTheme;
+const mermaidDarkTheme = (s: UserStore) => generalConfig(s).mermaidDarkTheme;
+const mermaidLightTheme = (s: UserStore) => generalConfig(s).mermaidLightTheme;
 
 export const userGeneralSettingsSelectors = {
   config: generalConfig,
   fontSize,
-  highlighterTheme,
-  mermaidTheme,
+  highlighterDarkTheme,
+  highlighterLightTheme,
+  mermaidDarkTheme,
+  mermaidLightTheme,
   neutralColor,
   primaryColor,
 };

@@ -2,8 +2,10 @@ import type { HighlighterProps, MermaidProps, NeutralColors, PrimaryColors } fro
 
 export interface UserGeneralConfig {
   fontSize: number;
-  highlighterTheme?: HighlighterProps['theme'];
-  mermaidTheme?: MermaidProps['theme'];
+  highlighterDarkTheme?: HighlighterProps['theme'];
+  highlighterLightTheme?: HighlighterProps['theme'];
+  mermaidDarkTheme?: MermaidProps['theme'];
+  mermaidLightTheme?: MermaidProps['theme'];
   neutralColor?: NeutralColors;
   primaryColor?: PrimaryColors;
 }
