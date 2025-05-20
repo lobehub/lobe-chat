@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix desktop open issue on linux like Fedora42."]
+    },
+    "date": "2025-05-20",
+    "version": "1.87.5"
+  },
+  {
+    "children": {
       "fixes": ["Supported SenseNova v6 models correctly & update Gemini models."]
     },
     "date": "2025-05-18",
