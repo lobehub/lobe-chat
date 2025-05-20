@@ -64,6 +64,86 @@ const Ollama: ModelProviderCard = {
       releasedAt: '2024-11-28',
     },
     {
+      contextWindowTokens: 32_768,
+      description:
+        'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+      displayName: 'Qwen3 0.6B',
+      functionCall: true,
+      id: 'qwen3:0.6b',
+      reasoning: true,
+      releasedAt: '2025-04-28',
+    },
+    {
+      contextWindowTokens: 32_768,
+      description:
+        'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+      displayName: 'Qwen3 1.7B',
+      functionCall: true,
+      id: 'qwen3:1.7b',
+      reasoning: true,
+      releasedAt: '2025-04-28',
+    },
+    {
+      contextWindowTokens: 131_072,
+      description:
+        'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+      displayName: 'Qwen3 4B',
+      functionCall: true,
+      id: 'qwen3:4b',
+      reasoning: true,
+      releasedAt: '2025-04-28',
+    },
+    {
+      contextWindowTokens: 131_072,
+      description:
+        'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+      displayName: 'Qwen3 8B',
+      functionCall: true,
+      id: 'qwen3:8b',
+      reasoning: true,
+      releasedAt: '2025-04-28',
+    },
+    {
+      contextWindowTokens: 131_072,
+      description:
+        'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+      displayName: 'Qwen3 14B',
+      functionCall: true,
+      id: 'qwen3:14b',
+      reasoning: true,
+      releasedAt: '2025-04-28',
+    },
+    {
+      contextWindowTokens: 131_072,
+      description:
+        'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+      displayName: 'Qwen3 30B A3B',
+      functionCall: true,
+      id: 'qwen3:30b',
+      reasoning: true,
+      releasedAt: '2025-04-28',
+    },
+    {
+      contextWindowTokens: 131_072,
+      description:
+        'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+      displayName: 'Qwen3 32B',
+      functionCall: true,
+      id: 'qwen3:32b',
+      reasoning: true,
+      releasedAt: '2025-04-28',
+    },
+    {
+      contextWindowTokens: 131_072,
+      description:
+        'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+      displayName: 'Qwen3 235B A22B',
+      functionCall: true,
+      id: 'qwen3:235b',
+      reasoning: true,
+      releasedAt: '2025-04-28',
+    },
+    {
       contextWindowTokens: 128_000,
       description: 'Qwen2.5 是阿里巴巴的新一代大规模语言模型，以优异的性能支持多元化的应用需求。',
       displayName: 'Qwen2.5 0.5B',
