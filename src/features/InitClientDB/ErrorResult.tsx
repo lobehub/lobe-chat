@@ -85,9 +85,6 @@ const ErrorResult = memo<FailedModalProps>(({ children }) => {
         onCancel={() => {
           setOpen(false);
         }}
-        onClose={() => {
-          setOpen(false);
-        }}
         open={open}
         title={t('clientDB.error.title')}
       >
