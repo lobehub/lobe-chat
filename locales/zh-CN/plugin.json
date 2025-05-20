@@ -219,8 +219,23 @@
     "content": "调用插件中...",
     "plugin": "插件运行中..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "查看文件列表",
+      "moveLocalFiles": "移动文件",
+      "readLocalFile": "读取文件内容",
+      "renameLocalFile": "重命名",
+      "searchLocalFiles": "搜索文件",
+      "writeLocalFile": "写入文件"
+    },
+    "title": "本地文件"
+  },
   "pluginList": "插件列表",
   "search": {
+    "apiName": {
+      "crawlSinglePage": "读取页面内容",
+      "search": "搜索页面"
+    },
     "config": {
       "addKey": "添加秘钥",
       "close": "删除",

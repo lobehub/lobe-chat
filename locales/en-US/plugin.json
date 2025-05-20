@@ -219,8 +219,23 @@
     "content": "Calling plugin...",
     "plugin": "Plugin is running..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "View File List",
+      "moveLocalFiles": "Move File",
+      "readLocalFile": "Read File Content",
+      "renameLocalFile": "Rename",
+      "searchLocalFiles": "Search Files",
+      "writeLocalFile": "Write to File"
+    },
+    "title": "Local Files"
+  },
   "pluginList": "Plugin List",
   "search": {
+    "apiName": {
+      "crawlSinglePage": "Read Page Content",
+      "search": "Search Page"
+    },
     "config": {
       "addKey": "Add Key",
       "close": "Delete",

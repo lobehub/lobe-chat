@@ -219,8 +219,23 @@
     "content": "Загрузка плагина...",
     "plugin": "Запуск плагина..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "Просмотреть список файлов",
+      "moveLocalFiles": "Переместить файл",
+      "readLocalFile": "Читать содержимое файла",
+      "renameLocalFile": "Переименовать",
+      "searchLocalFiles": "Поиск файлов",
+      "writeLocalFile": "Записать файл"
+    },
+    "title": "Локальные файлы"
+  },
   "pluginList": "Список плагинов",
   "search": {
+    "apiName": {
+      "crawlSinglePage": "Читать содержимое страницы",
+      "search": "Поиск страницы"
+    },
     "config": {
       "addKey": "Добавить ключ",
       "close": "Удалить",

@@ -74,6 +74,9 @@
   "Doubao-1.5-thinking-pro-m": {
     "description": "Doubao-1.5 is een nieuw diep denkmodel (de m-versie heeft ingebouwde multimodale diep redeneringscapaciteiten), dat uitblinkt in wiskunde, programmeren, wetenschappelijke redenering en creatieve schrijfopdrachten, en in verschillende autoritaire benchmarks zoals AIME 2024, Codeforces, GPQA, het niveau van de top van de industrie bereikt of benadert. Ondersteunt een contextvenster van 128k en 16k output."
   },
+  "Doubao-1.5-thinking-vision-pro": {
+    "description": "Een nieuw visueel diepdenkend model, met sterkere algemene multimodale begrip- en redeneringscapaciteiten, dat SOTA-prestaties behaalt op 37 van de 59 openbare evaluatiestandaarden."
+  },
   "Doubao-1.5-vision-pro": {
     "description": "Doubao-1.5-vision-pro is een nieuw geüpgradede multimodale groot model, dat ondersteuning biedt voor beeldherkenning met willekeurige resoluties en extreme beeldverhoudingen, en de visuele redenering, documentherkenning, begrip van gedetailleerde informatie en het volgen van instructies verbetert."
   },
@@ -338,6 +341,9 @@
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct is een groot taalmodel dat speciaal is ontworpen voor codegeneratie, codebegrip en efficiënte ontwikkelingsscenario's, met een toonaangevende parameteromvang van 32B, dat kan voldoen aan diverse programmeerbehoeften."
   },
+  "SenseCat-5-1202": {
+    "description": "De nieuwste versie gebaseerd op V5.5, met significante verbeteringen ten opzichte van de vorige versie in basisvaardigheden in het Chinees en Engels, chatten, exacte wetenschappen, geesteswetenschappen, schrijven, wiskundige logica, en woordtelling."
+  },
   "SenseChat": {
     "description": "Basisversie van het model (V4), met een contextlengte van 4K, heeft sterke algemene capaciteiten."
   },
@@ -350,11 +356,11 @@
   "SenseChat-5": {
     "description": "De nieuwste versie van het model (V5.5), met een contextlengte van 128K, heeft aanzienlijke verbeteringen in wiskundig redeneren, Engelse conversatie, instructievolging en begrip van lange teksten, en kan zich meten met GPT-4o."
   },
-  "SenseChat-5-1202": {
-    "description": "Dit is de nieuwste versie gebaseerd op V5.5, met significante verbeteringen in basisvaardigheden in het Chinees en Engels, chatten, exacte wetenschappen, geesteswetenschappen, schrijven, wiskundige logica en woordtelling in vergelijking met de vorige versie."
-  },
   "SenseChat-5-Cantonese": {
     "description": "Met een contextlengte van 32K overtreft het de conversatiebegrip in het Kantonees van GPT-4 en kan het zich in verschillende domeinen zoals kennis, redeneren, wiskunde en coderen meten met GPT-4 Turbo."
+  },
+  "SenseChat-5-beta": {
+    "description": "Presteert in sommige opzichten beter dan SenseCat-5-1202"
   },
   "SenseChat-Character": {
     "description": "Standaardversie van het model, met een contextlengte van 8K, hoge responsnelheid."
@@ -1010,8 +1016,8 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash is een modelvariant die is geoptimaliseerd voor kosteneffectiviteit en lage latentie."
   },
-  "gemini-2.0-flash-thinking-exp-01-21": {
-    "description": "Gemini 2.0 Flash Exp is Google's nieuwste experimentele multimodale AI-model, met next-gen functies, uitstekende snelheid, native tool-aanroepen en multimodale generatie."
+  "gemini-2.0-flash-preview-image-generation": {
+    "description": "Gemini 2.0 Flash previewmodel, ondersteunt beeldgeneratie"
   },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview is het meest kosteneffectieve model van Google, dat uitgebreide functionaliteit biedt."
@@ -1349,14 +1355,17 @@
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 biedt intelligente gespreksoplossingen voor meerdere scenario's."
   },
-  "internlm2-pro-chat": {
-    "description": "Onze oudere modelversie die we nog steeds onderhouden, met opties voor 7B en 20B parameters."
-  },
   "internlm2.5-latest": {
     "description": "Onze nieuwste modelreeks met uitstekende redeneervaardigheden, ondersteunt een contextlengte van 1M en heeft verbeterde instructievolging en toolaanroepmogelijkheden."
   },
   "internlm3-latest": {
     "description": "Onze nieuwste modelreeks heeft uitstekende inferentieprestaties en leidt de open-source modellen in dezelfde klasse. Standaard gericht op ons recentste InternLM3 model."
+  },
+  "internvl2.5-latest": {
+    "description": "De InternVL2.5 versie die we nog steeds onderhouden, biedt uitstekende en stabiele prestaties. Standaard gericht op ons recentste InternVL2.5-seriemodel, momenteel gericht op internvl2.5-78b."
+  },
+  "internvl3-latest": {
+    "description": "Ons nieuwste multimodale grote model, met verbeterde beeld- en tekstbegripcapaciteiten en lange termijn beeldbegrip, presteert op het niveau van toonaangevende gesloten modellen. Standaard gericht op ons recentste InternVL-seriemodel, momenteel gericht op internvl3-78b."
   },
   "jamba-large": {
     "description": "Ons krachtigste en meest geavanceerde model, speciaal ontworpen voor het verwerken van complexe taken op bedrijfsniveau, met uitstekende prestaties."
@@ -1372,6 +1381,9 @@
   },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM is een experimenteel, taak-specifiek taalmodel dat is getraind volgens de principes van de leerwetenschap, en kan systeeminstructies volgen in onderwijs- en leeromgevingen, en fungeert als een expertmentor."
+  },
+  "learnlm-2.0-flash-experimental": {
+    "description": "LearnLM is een experimenteel, taakgericht taalmodel, getraind om te voldoen aan de principes van leerwetenschap, kan systeeminstructies volgen in onderwijs- en leerscenario's, en fungeert als een expertmentor."
   },
   "lite": {
     "description": "Spark Lite is een lichtgewicht groot taalmodel met extreem lage latentie en efficiënte verwerkingscapaciteit. Het is volledig gratis en open, en ondersteunt realtime online zoekfunctionaliteit. De snelle respons maakt het uitermate geschikt voor inferentie op apparaten met lage rekenkracht en modelafstemming, wat gebruikers uitstekende kosteneffectiviteit en een slimme ervaring biedt, vooral in kennisvragen, contentgeneratie en zoekscenario's."
@@ -2161,6 +2173,9 @@
   },
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 is een taalmodel van Microsoft AI dat uitblinkt in complexe gesprekken, meertaligheid, inferentie en intelligente assistentie."
+  },
+  "x1": {
+    "description": "Het Spark X1-model zal verder worden geüpgraded, met verbeterde prestaties in redenering, tekstgeneratie en taalbegrip, ter vergelijking met OpenAI o1 en DeepSeek R1."
   },
   "yi-1.5-34b-chat": {
     "description": "Yi-1.5 is een geüpgradeerde versie van Yi. Het wordt voortdurend voorgetraind met een hoge-kwaliteitscorpus van 500B tokens op basis van Yi, en fijn afgesteld op 3M diverse fijnafstemmingssamples."
