@@ -30,7 +30,7 @@ export const DOCUMENTS_REFER_URL = `${DOCUMENTS}?utm_source=${UTM_SOURCE}`;
 
 export const WIKI = urlJoin(GITHUB, 'wiki');
 export const WIKI_PLUGIN_GUIDE = urlJoin(USAGE_DOCUMENTS, '/plugins/development');
-export const MANUAL_UPGRADE_URL = urlJoin(SELF_HOSTING_DOCUMENTS, '/advanced/upstream-sync');
+export const MANUAL_UPGRADE_URL = 'https://www.cntimo.com';
 
 export const BLOG = urlJoin(OFFICIAL_SITE, 'blog');
 
