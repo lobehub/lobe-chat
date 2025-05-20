@@ -4,7 +4,7 @@ import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { ModelProvider } from '@/libs/agent-runtime';
+import { ModelProvider } from '@/libs/model-runtime';
 import { useChatStore } from '@/store/chat';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 

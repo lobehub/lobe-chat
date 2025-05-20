@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LobeChatDatabase } from '@/database/type';
-import { ModelProvider } from '@/libs/agent-runtime';
+import { ModelProvider } from '@/libs/model-runtime';
 import { sleep } from '@/utils/sleep';
 
 import { aiProviders, users } from '../../schemas';

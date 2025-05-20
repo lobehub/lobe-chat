@@ -1,6 +1,72 @@
 [
   {
     "children": {
+      "fixes": ["Fix desktop open issue on linux like Fedora42."]
+    },
+    "date": "2025-05-20",
+    "version": "1.87.5"
+  },
+  {
+    "children": {
+      "fixes": ["Supported SenseNova v6 models correctly & update Gemini models."]
+    },
+    "date": "2025-05-18",
+    "version": "1.87.4"
+  },
+  {
+    "children": {
+      "improvements": ["Clean code with new antd api."]
+    },
+    "date": "2025-05-17",
+    "version": "1.87.3"
+  },
+  {
+    "children": {
+      "improvements": ["Support Doubao 1.5 Thinking Vision Pro model."]
+    },
+    "date": "2025-05-16",
+    "version": "1.87.2"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Update internlm model list, add series, update Spark X1 model list & fix build-in search params."
+      ]
+    },
+    "date": "2025-05-16",
+    "version": "1.87.1"
+  },
+  {
+    "children": {
+      "features": ["Support custom language and Mermaid Appearance."],
+      "fixes": ["Fix oidc redirect url."]
+    },
+    "date": "2025-05-16",
+    "version": "1.87.0"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor agent runtime to model runtime."]
+    },
+    "date": "2025-05-15",
+    "version": "1.86.1"
+  },
+  {
+    "children": {
+      "features": ["Add Qiniu Provider."]
+    },
+    "date": "2025-05-15",
+    "version": "1.86.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update electron style on windows."]
+    },
+    "date": "2025-05-14",
+    "version": "1.85.10"
+  },
+  {
+    "children": {
       "fixes": ["Redirect unauthorized next-auth user to signin page."],
       "improvements": ["Improve smoothing on completion."]
     },

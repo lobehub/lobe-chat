@@ -26,7 +26,7 @@ const LangButton = memo<{ placement?: PopoverProps['placement'] }>(({ placement 
     () => [
       {
         key: 'auto',
-        label: t('settingTheme.lang.autoMode'),
+        label: t('settingCommon.lang.autoMode'),
         onClick: () => handleLangChange('auto'),
       },
       ...localeOptions.map((item) => ({

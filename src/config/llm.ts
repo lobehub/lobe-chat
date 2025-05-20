@@ -78,6 +78,9 @@ export const getLLMConfig = () => {
       ENABLED_XINFERENCE: z.boolean(),
       XINFERENCE_API_KEY: z.string().optional(),
 
+      ENABLED_QINIU: z.boolean(),
+      QINIU_API_KEY: z.string().optional(),
+
       ENABLED_QWEN: z.boolean(),
       QWEN_API_KEY: z.string().optional(),
 
@@ -236,6 +239,9 @@ export const getLLMConfig = () => {
 
       ENABLED_XINFERENCE: !!process.env.XINFERENCE_API_KEY,
       XINFERENCE_API_KEY: process.env.XINFERENCE_API_KEY,
+
+      ENABLED_QINIU: !!process.env.QINIU_API_KEY,
+      QINIU_API_KEY: process.env.QINIU_API_KEY,
 
       ENABLED_QWEN: !!process.env.QWEN_API_KEY,
       QWEN_API_KEY: process.env.QWEN_API_KEY,

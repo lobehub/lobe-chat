@@ -67,6 +67,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   password?: string;
   perplexity?: OpenAICompatibleKeyVault;
   ppio?: OpenAICompatibleKeyVault;
+  qiniu?: OpenAICompatibleKeyVault;
   qwen?: OpenAICompatibleKeyVault;
   sambanova?: OpenAICompatibleKeyVault;
   search1api?: OpenAICompatibleKeyVault;
