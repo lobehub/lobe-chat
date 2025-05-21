@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve tools display."]
+    },
+    "date": "2025-05-21",
+    "version": "1.87.6"
+  },
+  {
+    "children": {
       "fixes": ["Fix desktop open issue on linux like Fedora42."]
     },
     "date": "2025-05-20",

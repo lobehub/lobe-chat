@@ -219,8 +219,23 @@
     "content": "Извикване на плъгин...",
     "plugin": "Плъгинът работи..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "Преглед на списъка с файлове",
+      "moveLocalFiles": "Премести файл",
+      "readLocalFile": "Чети съдържанието на файла",
+      "renameLocalFile": "Преименувай",
+      "searchLocalFiles": "Търсене на файлове",
+      "writeLocalFile": "Запиши файл"
+    },
+    "title": "Локални файлове"
+  },
   "pluginList": "Списък с плъгини",
   "search": {
+    "apiName": {
+      "crawlSinglePage": "Чети съдържанието на страницата",
+      "search": "Търсене на страница"
+    },
     "config": {
       "addKey": "Добавяне на ключ",
       "close": "Изтриване",
