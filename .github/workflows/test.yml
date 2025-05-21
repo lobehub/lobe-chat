@@ -48,7 +48,7 @@ jobs:
           APP_URL: https://home.com
 
       - name: Upload Server coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/server/lcov.info
@@ -58,7 +58,7 @@ jobs:
         run: bun run test-app:coverage
 
       - name: Upload App Coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/app/lcov.info
