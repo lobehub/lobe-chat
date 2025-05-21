@@ -74,6 +74,9 @@
   "Doubao-1.5-thinking-pro-m": {
     "description": "Doubao-1.5 全新深度思考模型 (m 版本自帶原生多模態深度推理能力)，在數學、程式設計、科學推理等專業領域及創意寫作等通用任務中表現突出，在 AIME 2024、Codeforces、GPQA 等多項權威基準上達到或接近業界第一梯隊水平。支持 128k 上下文窗口，16k 輸出。"
   },
+  "Doubao-1.5-thinking-vision-pro": {
+    "description": "全新視覺深度思考模型，具備更強的通用多模態理解和推理能力，在 59 個公開評測基準中的 37 個上取得 SOTA 表現。"
+  },
   "Doubao-1.5-vision-pro": {
     "description": "Doubao-1.5-vision-pro 全新升級的多模態大模型，支持任意解析度和極端長寬比圖像識別，增強視覺推理、文檔識別、細節信息理解和指令遵循能力。"
   },
@@ -338,6 +341,9 @@
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct 是一款專為代碼生成、代碼理解和高效開發場景設計的大型語言模型，採用了業界領先的32B參數規模，能夠滿足多樣化的程式需求。"
   },
+  "SenseCat-5-1202": {
+    "description": "是基於V5.5的最新版本，較上版本在中英文基礎能力、聊天、理科知識、文科知識、寫作、數理邏輯、字數控制等幾個維度的表現有顯著提升。"
+  },
   "SenseChat": {
     "description": "基礎版本模型 (V4)，4K上下文長度，通用能力強大"
   },
@@ -350,11 +356,11 @@
   "SenseChat-5": {
     "description": "最新版本模型 (V5.5)，128K上下文長度，在數學推理、英文對話、指令跟隨以及長文本理解等領域能力顯著提升，比肩GPT-4o"
   },
-  "SenseChat-5-1202": {
-    "description": "是基於V5.5的最新版本，較上版本在中英文基礎能力、聊天、理科知識、文科知識、寫作、數理邏輯、字數控制等幾個維度的表現有顯著提升。"
-  },
   "SenseChat-5-Cantonese": {
     "description": "32K上下文長度，在粵語的對話理解上超越了GPT-4，在知識、推理、數學及程式編寫等多個領域均能與GPT-4 Turbo相媲美"
+  },
+  "SenseChat-5-beta": {
+    "description": "部分性能優於 SenseCat-5-1202"
   },
   "SenseChat-Character": {
     "description": "標準版模型，8K上下文長度，高響應速度"
@@ -1010,8 +1016,8 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash 模型變體，針對成本效益和低延遲等目標進行了優化。"
   },
-  "gemini-2.0-flash-thinking-exp-01-21": {
-    "description": "Gemini 2.0 Flash Exp 是 Google 最新的實驗性多模態AI模型，擁有下一代特性，卓越的速度，原生工具調用以及多模態生成。"
+  "gemini-2.0-flash-preview-image-generation": {
+    "description": "Gemini 2.0 Flash 預覽模型，支持圖像生成"
   },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview 是 Google 性價比最高的模型，提供全面的功能。"
@@ -1349,14 +1355,17 @@
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 提供多場景下的智能對話解決方案。"
   },
-  "internlm2-pro-chat": {
-    "description": "我們仍在維護的舊版本模型，有 7B、20B 多種模型參數量可選。"
-  },
   "internlm2.5-latest": {
     "description": "我們最新的模型系列，有著卓越的推理性能，支持 1M 的上下文長度以及更強的指令跟隨和工具調用能力。"
   },
   "internlm3-latest": {
     "description": "我們最新的模型系列，有著卓越的推理性能，領跑同量級開源模型。默認指向我們最新發布的 InternLM3 系列模型"
+  },
+  "internvl2.5-latest": {
+    "description": "我們仍在維護的 InternVL2.5 版本，具備優異且穩定的性能。默認指向我們最新發布的 InternVL2.5 系列模型，當前指向 internvl2.5-78b。"
+  },
+  "internvl3-latest": {
+    "description": "我們最新發布的多模態大模型，具備更強的圖文理解能力、長時序圖片理解能力，性能比肩頂尖閉源模型。默認指向我們最新發布的 InternVL 系列模型，當前指向 internvl3-78b。"
   },
   "jamba-large": {
     "description": "我們最強大、最先進的模型，專為處理企業級複雜任務而設計，具備卓越的性能。"
@@ -1371,6 +1380,9 @@
     "description": "Kimi 智能助手產品使用最新的 Kimi 大模型，可能包含尚未穩定的特性。支持圖片理解，同時會自動根據請求的上下文長度選擇 8k/32k/128k 模型作為計費模型"
   },
   "learnlm-1.5-pro-experimental": {
+    "description": "LearnLM 是一個實驗性的、特定於任務的語言模型，經過訓練以符合學習科學原則，可在教學和學習場景中遵循系統指令，充當專家導師等。"
+  },
+  "learnlm-2.0-flash-experimental": {
     "description": "LearnLM 是一個實驗性的、特定於任務的語言模型，經過訓練以符合學習科學原則，可在教學和學習場景中遵循系統指令，充當專家導師等。"
   },
   "lite": {
@@ -2161,6 +2173,9 @@
   },
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 是微軟 AI 提供的語言模型，在複雜對話、多語言、推理和智能助手領域表現尤為出色。"
+  },
+  "x1": {
+    "description": "Spark X1 模型將進一步升級，在原來數學任務國內領先的基礎上，推理、文本生成、語言理解等通用任務實現效果對標 OpenAI o1 和 DeepSeek R1。"
   },
   "yi-1.5-34b-chat": {
     "description": "Yi-1.5 是 Yi 的升級版本。它使用 500B Tokens 的高品質語料庫在 Yi 上持續進行預訓練，並在 3M 個多樣化的微調樣本上進行微調。"

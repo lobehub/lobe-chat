@@ -316,10 +316,11 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   const { smoothing } = options;
 
   const textSmoothing = false;
+  // const toolsCallingSmoothing = false;
   // TODO: 看下后面就是完全移除 smoothing 还是怎么说
   // const textSmoothing = typeof smoothing === 'boolean' ? smoothing : (smoothing?.text ?? true);
   const toolsCallingSmoothing =
-    typeof smoothing === 'boolean' ? smoothing : (smoothing?.toolsCalling ?? true);
+    typeof smoothing === 'boolean' ? smoothing : (smoothing?.toolsCalling ?? false);
 
   const smoothingSpeed = isObject(smoothing) ? smoothing.speed : undefined;
 
