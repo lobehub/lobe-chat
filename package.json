@@ -135,7 +135,7 @@
     "@codesandbox/sandpack-react": "^2.20.0",
     "@cyntler/react-doc-viewer": "^1.17.0",
     "@electric-sql/pglite": "0.2.17",
-    "@google/genai": "^0.15.0",
+    "@google/genai": "^1.0.0",
     "@huggingface/inference": "^2.8.1",
     "@icons-pack/react-simple-icons": "9.6.0",
     "@khmyznikov/pwa-install": "0.3.9",
