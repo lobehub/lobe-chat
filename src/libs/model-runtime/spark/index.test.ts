@@ -13,4 +13,7 @@ testProvider({
   defaultBaseURL,
   chatDebugEnv: 'DEBUG_SPARK_CHAT_COMPLETION',
   chatModel: 'spark',
+  test: {
+    skipAPICall: true,
+  },
 });

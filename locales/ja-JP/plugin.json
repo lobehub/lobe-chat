@@ -219,8 +219,23 @@
     "content": "プラグインを呼び出しています...",
     "plugin": "プラグインの実行中..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "ファイルリストを表示",
+      "moveLocalFiles": "ファイルを移動",
+      "readLocalFile": "ファイル内容を読み取る",
+      "renameLocalFile": "名前を変更",
+      "searchLocalFiles": "ファイルを検索",
+      "writeLocalFile": "ファイルに書き込む"
+    },
+    "title": "ローカルファイル"
+  },
   "pluginList": "プラグインリスト",
   "search": {
+    "apiName": {
+      "crawlSinglePage": "ページ内容を読み取る",
+      "search": "ページを検索"
+    },
     "config": {
       "addKey": "キーを追加",
       "close": "削除",
