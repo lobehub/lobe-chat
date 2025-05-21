@@ -80,6 +80,10 @@ interface LobeGoogleAIParams {
   isVertexAi?: boolean;
 }
 
+interface GoogleAIThinkingConfig {
+  includeThoughts?: boolean;
+}
+
 export class LobeGoogleAI implements LobeRuntimeAI {
   private client: GoogleGenerativeAI;
   private isVertexAi: boolean;
@@ -104,6 +108,10 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const payload = this.buildPayload(rawPayload);
       const model = payload.model;
 
+      const thinkingConfig: GoogleAIThinkingConfig = {
+        includeThoughts: true,
+      };
+
       const contents = await this.buildGoogleMessages(payload.messages);
 
       const inputStartAt = Date.now();
@@ -115,6 +123,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
               // @ts-expect-error - Google SDK 0.24.0 doesn't have this property for now with
               response_modalities: modelsWithModalities.has(model) ? ['Text', 'Image'] : undefined,
               temperature: payload.temperature,
+              thinkingConfig,
               topP: payload.top_p,
             },
             model,
