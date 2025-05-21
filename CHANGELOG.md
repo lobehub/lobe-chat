@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.87.6](https://github.com/lobehub/lobe-chat/compare/v1.87.5...v1.87.6)
+
+<sup>Released on **2025-05-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve tools display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve tools display, closes [#7906](https://github.com/lobehub/lobe-chat/issues/7906) ([af8a05b](https://github.com/lobehub/lobe-chat/commit/af8a05b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.87.5](https://github.com/lobehub/lobe-chat/compare/v1.87.4...v1.87.5)
 
 <sup>Released on **2025-05-20**</sup>
