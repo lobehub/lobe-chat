@@ -408,16 +408,6 @@ const novitaChatModels: AIChatModelCard[] = [
   },
   {
     contextWindowTokens: 4096,
-    displayName: 'Airoboros L2 70B',
-    id: 'jondurbin/airoboros-l2-70b',
-    pricing: {
-      input: 0.5,
-      output: 0.5,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 4096,
     displayName: 'Midnight Rose 70B',
     id: 'sophosympatheia/midnight-rose-70b',
     pricing: {
