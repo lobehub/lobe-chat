@@ -150,7 +150,7 @@
     "@lobehub/chat-plugins-gateway": "^1.9.0",
     "@lobehub/icons": "^2.0.0",
     "@lobehub/tts": "^2.0.1",
-    "@lobehub/ui": "^2.1.6",
+    "@lobehub/ui": "^2.1.7",
     "@modelcontextprotocol/sdk": "^1.11.4",
     "@neondatabase/serverless": "^1.0.0",
     "@next/third-parties": "^15.3.2",
