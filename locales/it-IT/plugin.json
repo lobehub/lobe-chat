@@ -219,8 +219,23 @@
     "content": "Caricamento del plugin in corso...",
     "plugin": "Esecuzione del plugin in corso..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "Visualizza elenco file",
+      "moveLocalFiles": "Sposta file",
+      "readLocalFile": "Leggi contenuto file",
+      "renameLocalFile": "Rinomina",
+      "searchLocalFiles": "Cerca file",
+      "writeLocalFile": "Scrivi file"
+    },
+    "title": "File locali"
+  },
   "pluginList": "Elenco dei plugin",
   "search": {
+    "apiName": {
+      "crawlSinglePage": "Leggi contenuto pagina",
+      "search": "Cerca pagina"
+    },
     "config": {
       "addKey": "Aggiungi chiave",
       "close": "Rimuovi",

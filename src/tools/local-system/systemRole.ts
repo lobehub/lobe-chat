@@ -16,7 +16,7 @@ Here are some known locations and system details on the user's system. User is u
 You have access to a set of tools to interact with the user's local file system:
 
 1.  **listLocalFiles**: Lists files and directories in a specified path.
-2.  **readLocalFile**: Reads the content of a specified file, optionally within a line range.
+2.  **readLocalFile**: Reads the content of a specified file, optionally within a line range. You can read file types such as Word, Excel, PowerPoint, PDF, and plain text files.
 3.  **writeFile**: Write content to a specific file, only support plain text file like \`.text\` or \`.md\`
 4.  **searchLocalFiles**: Searches for files based on keywords and other criteria. Use this tool to find files if the user is unsure about the exact path.
 5.  **renameLocalFile**: Renames a single file or directory in its current location.

@@ -74,6 +74,9 @@
   "Doubao-1.5-thinking-pro-m": {
     "description": "Doubao-1.5 est un nouveau modèle de pensée profonde (version m avec des capacités de raisonnement multimodal natif), qui excelle dans des domaines spécialisés tels que les mathématiques, la programmation, le raisonnement scientifique et des tâches générales comme l'écriture créative, atteignant ou se rapprochant des niveaux de pointe dans plusieurs benchmarks autorisés tels que AIME 2024, Codeforces, GPQA. Prend en charge une fenêtre de contexte de 128k et une sortie de 16k."
   },
+  "Doubao-1.5-thinking-vision-pro": {
+    "description": "Nouveau modèle de pensée visuelle profonde, doté de capacités de compréhension et de raisonnement multimodal général plus puissantes, ayant obtenu des performances SOTA dans 37 des 59 benchmarks d'évaluation publics."
+  },
   "Doubao-1.5-vision-pro": {
     "description": "Doubao-1.5-vision-pro est un modèle multimodal de nouvelle génération, prenant en charge la reconnaissance d'images à n'importe quelle résolution et rapport d'aspect extrême, améliorant les capacités de raisonnement visuel, de reconnaissance de documents, de compréhension des informations détaillées et de respect des instructions."
   },
@@ -338,6 +341,9 @@
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct est un grand modèle de langage conçu pour la génération de code, la compréhension de code et les scénarios de développement efficaces, avec une échelle de 32 milliards de paramètres, répondant à des besoins de programmation variés."
   },
+  "SenseCat-5-1202": {
+    "description": "Basé sur la version V5.5, cette version présente des améliorations significatives par rapport à la précédente dans plusieurs dimensions, notamment les compétences de base en chinois et en anglais, la conversation, les connaissances en sciences, les connaissances en lettres, l'écriture, la logique mathématique et le contrôle du nombre de mots."
+  },
   "SenseChat": {
     "description": "Modèle de version de base (V4), longueur de contexte de 4K, avec de puissantes capacités générales."
   },
@@ -350,11 +356,11 @@
   "SenseChat-5": {
     "description": "Modèle de dernière version (V5.5), longueur de contexte de 128K, avec des capacités significativement améliorées dans le raisonnement mathématique, les dialogues en anglais, le suivi d'instructions et la compréhension de longs textes, rivalisant avec GPT-4o."
   },
-  "SenseChat-5-1202": {
-    "description": "C'est la dernière version basée sur V5.5, qui présente des améliorations significatives par rapport à la version précédente dans plusieurs dimensions telles que les capacités de base en chinois et en anglais, la conversation, les connaissances en sciences, les connaissances en lettres, l'écriture, la logique mathématique et le contrôle du nombre de mots."
-  },
   "SenseChat-5-Cantonese": {
     "description": "Longueur de contexte de 32K, surpassant GPT-4 dans la compréhension des dialogues en cantonais, rivalisant avec GPT-4 Turbo dans plusieurs domaines tels que les connaissances, le raisonnement, les mathématiques et la rédaction de code."
+  },
+  "SenseChat-5-beta": {
+    "description": "Certaines performances surpassent celles de SenseCat-5-1202"
   },
   "SenseChat-Character": {
     "description": "Modèle standard, longueur de contexte de 8K, avec une grande rapidité de réponse."
@@ -1010,8 +1016,8 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Une variante du modèle Gemini 2.0 Flash, optimisée pour des objectifs tels que le rapport coût-efficacité et la faible latence."
   },
-  "gemini-2.0-flash-thinking-exp-01-21": {
-    "description": "Gemini 2.0 Flash Exp est le dernier modèle d'IA multimodal expérimental de Google, doté de caractéristiques de nouvelle génération, d'une vitesse exceptionnelle, d'appels d'outils natifs et de génération multimodale."
+  "gemini-2.0-flash-preview-image-generation": {
+    "description": "Modèle de prévisualisation Gemini 2.0 Flash, prenant en charge la génération d'images"
   },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview est le modèle le plus rentable de Google, offrant des fonctionnalités complètes."
@@ -1349,14 +1355,17 @@
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 fournit des solutions de dialogue intelligent dans divers scénarios."
   },
-  "internlm2-pro-chat": {
-    "description": "Une ancienne version du modèle que nous maintenons encore, avec des options de paramètres de 7B et 20B disponibles."
-  },
   "internlm2.5-latest": {
     "description": "Notre dernière série de modèles, offrant des performances d'inférence exceptionnelles, prenant en charge une longueur de contexte de 1M et des capacités améliorées de suivi des instructions et d'appel d'outils."
   },
   "internlm3-latest": {
     "description": "Notre dernière série de modèles, avec des performances d'inférence exceptionnelles, en tête des modèles open source de même niveau. Par défaut, elle pointe vers notre dernière version du modèle InternLM3."
+  },
+  "internvl2.5-latest": {
+    "description": "Version InternVL2.5 que nous maintenons encore, offrant des performances excellentes et stables. Il pointe par défaut vers notre dernier modèle de la série InternVL2.5, actuellement vers internvl2.5-78b."
+  },
+  "internvl3-latest": {
+    "description": "Nous avons récemment publié un grand modèle multimodal, doté de capacités de compréhension d'images et de textes plus puissantes, ainsi que d'une compréhension d'images sur de longues séquences, dont les performances rivalisent avec celles des meilleurs modèles fermés. Il pointe par défaut vers notre dernier modèle de la série InternVL, actuellement vers internvl3-78b."
   },
   "jamba-large": {
     "description": "Notre modèle le plus puissant et avancé, conçu pour traiter des tâches complexes de niveau entreprise, offrant des performances exceptionnelles."
@@ -1371,6 +1380,9 @@
     "description": "Le produit d'assistant intelligent Kimi utilise le dernier modèle Kimi, qui peut inclure des fonctionnalités encore instables. Il prend en charge la compréhension des images et choisit automatiquement le modèle de facturation 8k/32k/128k en fonction de la longueur du contexte de la demande."
   },
   "learnlm-1.5-pro-experimental": {
+    "description": "LearnLM est un modèle de langage expérimental, spécifique à des tâches, formé pour respecter les principes des sciences de l'apprentissage, capable de suivre des instructions systématiques dans des contextes d'enseignement et d'apprentissage, agissant comme un mentor expert, entre autres."
+  },
+  "learnlm-2.0-flash-experimental": {
     "description": "LearnLM est un modèle de langage expérimental, spécifique à des tâches, formé pour respecter les principes des sciences de l'apprentissage, capable de suivre des instructions systématiques dans des contextes d'enseignement et d'apprentissage, agissant comme un mentor expert, entre autres."
   },
   "lite": {
@@ -2161,6 +2173,9 @@
   },
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 est un modèle de langage proposé par Microsoft AI, particulièrement performant dans les domaines des dialogues complexes, du multilinguisme, du raisonnement et des assistants intelligents."
+  },
+  "x1": {
+    "description": "Le modèle Spark X1 sera mis à niveau, et sur la base de ses performances déjà leaders dans les tâches mathématiques, il atteindra des résultats comparables dans des tâches générales telles que le raisonnement, la génération de texte et la compréhension du langage, en se mesurant à OpenAI o1 et DeepSeek R1."
   },
   "yi-1.5-34b-chat": {
     "description": "Yi-1.5 est une version améliorée de Yi. Il utilise un corpus de haute qualité de 500 milliards de tokens pour poursuivre l'entraînement préalable de Yi, et est affiné sur 3 millions d'exemples de fine-tuning variés."
