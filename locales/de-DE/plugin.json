@@ -219,8 +219,23 @@
     "content": "Plugin wird aufgerufen...",
     "plugin": "Plugin wird ausgeführt..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "Dateiliste anzeigen",
+      "moveLocalFiles": "Dateien verschieben",
+      "readLocalFile": "Dateiinhalt lesen",
+      "renameLocalFile": "Umbenennen",
+      "searchLocalFiles": "Dateien suchen",
+      "writeLocalFile": "Datei schreiben"
+    },
+    "title": "Lokale Dateien"
+  },
   "pluginList": "Plugin-Liste",
   "search": {
+    "apiName": {
+      "crawlSinglePage": "Seiteninhalt lesen",
+      "search": "Seite suchen"
+    },
     "config": {
       "addKey": "Schlüssel hinzufügen",
       "close": "Löschen",

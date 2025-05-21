@@ -2,69 +2,49 @@
 
 # Changelog
 
-## [Version&nbsp;1.86.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.85.2...v1.86.0)
-<sup>Released on **2025-05-20**</sup>
+### [Version 1.87.7](https://github.com/lobehub/lobe-chat/compare/v1.87.6...v1.87.7)
 
-
-#### ♻ Code Refactoring
-
-- **misc**: Clean code with new antd api, refactor agent runtime to model runtime.
-
-
-#### ✨ Features
-
-- **misc**: Add Qiniu Provider, support custom language and Mermaid Appearance.
-
+<sup>Released on **2025-05-21**</sup>
 
 #### 🐛 Bug Fixes
 
-- **misc**: Fix desktop open issue on linux like Fedora42, fix oidc redirect url, supported SenseNova v6 models correctly & update Gemini models.
-
-
-#### 💄 Styles
-
-- **misc**: Support Doubao 1.5 Thinking Vision Pro model, update internlm model list, add  series, update Spark X1 model list & fix build-in search params.
-
+- **misc**: Bump @lobehub/ui to 2.1.7.
 
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-
-
-#### Code refactoring
-
-* **misc**: Clean code with new antd api, closes [#7870](https://github.com/jaworldwideorg/OneJA-Bot/issues/7870) ([c543884](https://github.com/jaworldwideorg/OneJA-Bot/commit/c543884))
-* **misc**: Refactor agent runtime to model runtime, closes [#7846](https://github.com/jaworldwideorg/OneJA-Bot/issues/7846) ([a3b9448](https://github.com/jaworldwideorg/OneJA-Bot/commit/a3b9448))
-
-
-
-#### What's improved
-
-* **misc**: Add Qiniu Provider, closes [#7649](https://github.com/jaworldwideorg/OneJA-Bot/issues/7649) ([c9b8e9f](https://github.com/jaworldwideorg/OneJA-Bot/commit/c9b8e9f))
-* **misc**: Support custom language and Mermaid Appearance, closes [#7850](https://github.com/jaworldwideorg/OneJA-Bot/issues/7850) ([bee2b2d](https://github.com/jaworldwideorg/OneJA-Bot/commit/bee2b2d))
-
-
-
 #### What's fixed
 
-* **misc**: Fix desktop open issue on linux like Fedora42, closes [#7883](https://github.com/jaworldwideorg/OneJA-Bot/issues/7883) ([5b0154f](https://github.com/jaworldwideorg/OneJA-Bot/commit/5b0154f))
-* **misc**: Fix oidc redirect url, closes [#7855](https://github.com/jaworldwideorg/OneJA-Bot/issues/7855) ([3156538](https://github.com/jaworldwideorg/OneJA-Bot/commit/3156538))
-* **misc**: Supported SenseNova v6 models correctly & update Gemini models, closes [#7778](https://github.com/jaworldwideorg/OneJA-Bot/issues/7778) ([e2b5ed3](https://github.com/jaworldwideorg/OneJA-Bot/commit/e2b5ed3))
-
-
-
-#### Styles
-
-* **misc**: Support Doubao 1.5 Thinking Vision Pro model, closes [#7784](https://github.com/jaworldwideorg/OneJA-Bot/issues/7784) ([9cf0d6f](https://github.com/jaworldwideorg/OneJA-Bot/commit/9cf0d6f))
-* **misc**: Update internlm model list, add  series, closes [#7566](https://github.com/jaworldwideorg/OneJA-Bot/issues/7566) ([4eaddf4](https://github.com/jaworldwideorg/OneJA-Bot/commit/4eaddf4))
-* **misc**: Update Spark X1 model list & fix build-in search params, closes [#7480](https://github.com/jaworldwideorg/OneJA-Bot/issues/7480) ([7050c81](https://github.com/jaworldwideorg/OneJA-Bot/commit/7050c81))
+- **misc**: Bump @lobehub/ui to 2.1.7, closes [#7912](https://github.com/lobehub/lobe-chat/issues/7912) ([457b645](https://github.com/lobehub/lobe-chat/commit/457b645))
 
 </details>
 
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.87.6](https://github.com/lobehub/lobe-chat/compare/v1.87.5...v1.87.6)
+
+<sup>Released on **2025-05-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve tools display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve tools display, closes [#7906](https://github.com/lobehub/lobe-chat/issues/7906) ([af8a05b](https://github.com/lobehub/lobe-chat/commit/af8a05b))
+
+</details>
 
 <div align="right">
 
