@@ -22,7 +22,7 @@ export const LobeXAI = LobeOpenAICompatibleFactory({
         ...(enabledSearch && {
           search_parameters: {
             max_search_results: Math.min(Math.max(parseInt(process.env.XAI_MAX_SEARCH_RESULTS ?? '15', 10), 1), 30),
-            mode: 'on',
+            mode: 'auto',
             return_citations: true,
             sources: [
               {
