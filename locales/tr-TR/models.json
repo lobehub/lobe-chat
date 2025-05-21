@@ -74,6 +74,9 @@
   "Doubao-1.5-thinking-pro-m": {
     "description": "Doubao-1.5, yeni derin düşünme modeli (m versiyonu yerel çok modlu derin akıl yürütme yeteneği ile birlikte gelir) ve matematik, programlama, bilimsel akıl yürütme gibi uzmanlık alanlarında ve yaratıcı yazım gibi genel görevlerde mükemmel performans sergilemektedir. AIME 2024, Codeforces, GPQA gibi birçok otoriter benchmarkta endüstri birinciliğine ulaşmakta veya yaklaşmaktadır. 128k bağlam penceresi ve 16k çıktı destekler."
   },
+  "Doubao-1.5-thinking-vision-pro": {
+    "description": "Tamamen yeni bir görsel derin düşünme modeli, daha güçlü genel çok modlu anlama ve akıl yürütme yeteneğine sahiptir; 59 kamu değerlendirme ölçütünden 37'sinde SOTA performansı elde etmiştir."
+  },
   "Doubao-1.5-vision-pro": {
     "description": "Doubao-1.5-vision-pro, yeni güncellenmiş çok modlu büyük modeldir, herhangi bir çözünürlük ve aşırı en-boy oranı görüntü tanıma desteği sunar, görsel çıkarım, belge tanıma, detay bilgisi anlama ve talimat takibi yeteneklerini artırır."
   },
@@ -338,6 +341,9 @@
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct, kod üretimi, kod anlama ve verimli geliştirme senaryoları için tasarlanmış büyük bir dil modelidir. Sektördeki en ileri 32B parametre ölçeğini kullanarak çeşitli programlama ihtiyaçlarını karşılayabilir."
   },
+  "SenseCat-5-1202": {
+    "description": "V5.5 tabanlı en son sürüm olup, önceki sürüme göre Çince ve İngilizce temel yetenekler, sohbet, fen bilgisi, sosyal bilimler, yazma, matematiksel mantık, kelime sayısı kontrolü gibi birkaç boyutta önemli iyileştirmeler göstermektedir."
+  },
   "SenseChat": {
     "description": "Temel sürüm model (V4), 4K bağlam uzunluğu ile genel yetenekleri güçlüdür."
   },
@@ -350,11 +356,11 @@
   "SenseChat-5": {
     "description": "En son sürüm model (V5.5), 128K bağlam uzunluğu, matematiksel akıl yürütme, İngilizce diyalog, talimat takibi ve uzun metin anlama gibi alanlarda önemli gelişmeler göstermektedir ve GPT-4o ile karşılaştırılabilir."
   },
-  "SenseChat-5-1202": {
-    "description": "V5.5 tabanlı en son versiyondur, önceki versiyona göre Çince ve İngilizce temel yetenekleri, sohbet, fen bilgisi, sosyal bilimler bilgisi, yazım, matematiksel mantık, kelime sayısı kontrolü gibi birkaç boyutta önemli bir gelişim göstermiştir."
-  },
   "SenseChat-5-Cantonese": {
     "description": "32K bağlam uzunluğu ile, Kantonca diyalog anlama konusunda GPT-4'ü aşmakta, bilgi, akıl yürütme, matematik ve kod yazma gibi birçok alanda GPT-4 Turbo ile rekabet edebilmektedir."
+  },
+  "SenseChat-5-beta": {
+    "description": "Bazı performansları SenseCat-5-1202'den daha iyidir."
   },
   "SenseChat-Character": {
     "description": "Standart sürüm model, 8K bağlam uzunluğu ile yüksek yanıt hızı sunmaktadır."
@@ -1010,8 +1016,8 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash model varyantı, maliyet etkinliği ve düşük gecikme gibi hedefler için optimize edilmiştir."
   },
-  "gemini-2.0-flash-thinking-exp-01-21": {
-    "description": "Gemini 2.0 Flash Exp, Google'ın en son deneysel çok modlu AI modelidir, bir sonraki nesil özelliklere, olağanüstü hıza, yerel araç çağrısına ve çok modlu üretime sahiptir."
+  "gemini-2.0-flash-preview-image-generation": {
+    "description": "Gemini 2.0 Flash önizleme modeli, görüntü üretimini destekler."
   },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Önizleme, Google'ın en iyi fiyat-performans oranına sahip modelidir ve kapsamlı özellikler sunar."
@@ -1349,14 +1355,17 @@
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5, çoklu senaryolarda akıllı diyalog çözümleri sunar."
   },
-  "internlm2-pro-chat": {
-    "description": "Hala bakımını yaptığımız eski sürüm model, 7B ve 20B gibi çeşitli model parametreleri sunmaktadır."
-  },
   "internlm2.5-latest": {
     "description": "En son model serimiz, olağanüstü çıkarım performansına sahiptir, 1M bağlam uzunluğunu destekler ve daha güçlü talimat takibi ve araç çağırma yetenekleri sunar."
   },
   "internlm3-latest": {
     "description": "En son model serimiz, olağanüstü çıkarım performansına sahiptir ve aynı ölçekli açık kaynak modeller arasında liderdir. Varsayılan olarak en son yayımlanan InternLM3 serisi modellerine işaret eder."
+  },
+  "internvl2.5-latest": {
+    "description": "Hala bakımını yaptığımız InternVL2.5 sürümü, mükemmel ve istikrarlı bir performansa sahiptir. Varsayılan olarak en son yayımladığımız InternVL2.5 serisi modele işaret eder, şu anda internvl2.5-78b'ye işaret ediyor."
+  },
+  "internvl3-latest": {
+    "description": "En son yayımladığımız çok modlu büyük model, daha güçlü metin-görüntü anlama yeteneği ve uzun süreli görüntü anlama yeteneğine sahiptir; performansı en iyi kapalı kaynak modellerle karşılaştırılabilir. Varsayılan olarak en son yayımladığımız InternVL serisi modele işaret eder, şu anda internvl3-78b'ye işaret ediyor."
   },
   "jamba-large": {
     "description": "En güçlü ve en gelişmiş modelimiz, kurumsal düzeyde karmaşık görevleri işlemek için tasarlanmıştır ve olağanüstü performans sunar."
@@ -1372,6 +1381,9 @@
   },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM, öğrenme bilimleri ilkelerine uygun olarak eğitilmiş, görev odaklı deneysel bir dil modelidir. Eğitim ve öğrenim senaryolarında sistem talimatlarını takip edebilir ve uzman bir mentor olarak görev alabilir."
+  },
+  "learnlm-2.0-flash-experimental": {
+    "description": "LearnLM, öğrenme bilimleri ilkelerine uygun olarak eğitilmiş, görev odaklı deneysel bir dil modelidir; öğretim ve öğrenim senaryolarında sistem talimatlarını takip edebilir, uzman bir mentor gibi davranabilir."
   },
   "lite": {
     "description": "Spark Lite, son derece düşük gecikme süresi ve yüksek verimlilikle çalışan hafif bir büyük dil modelidir. Tamamen ücretsiz ve açık olup, gerçek zamanlı çevrimiçi arama işlevini desteklemektedir. Hızlı yanıt verme özelliği, düşük hesaplama gücüne sahip cihazlarda çıkarım uygulamaları ve model ince ayarlarında mükemmel performans sergileyerek, kullanıcılara maliyet etkinliği ve akıllı deneyim sunmakta, özellikle bilgi sorgulama, içerik oluşturma ve arama senaryolarında başarılı olmaktadır."
@@ -2161,6 +2173,9 @@
   },
   "wizardlm2:8x22b": {
     "description": "WizardLM 2, Microsoft AI tarafından sunulan bir dil modelidir, karmaşık diyaloglar, çok dilli, akıl yürütme ve akıllı asistan alanlarında özellikle başarılıdır."
+  },
+  "x1": {
+    "description": "Spark X1 modeli daha da geliştirilecek; önceki matematik görevlerinde ulusal liderlik temelinde, akıl yürütme, metin üretimi, dil anlama gibi genel görevlerde OpenAI o1 ve DeepSeek R1 ile karşılaştırılabilir sonuçlar elde edilecektir."
   },
   "yi-1.5-34b-chat": {
     "description": "Yi-1.5, Yi'nin geliştirilmiş sürümüdür. Yüksek kaliteli 500B token'lı veri kümesi üzerinde devam eden ön eğitimi ve 3M çeşitlendirilmiş ince ayar örneği üzerinde ince ayarını içerir."
