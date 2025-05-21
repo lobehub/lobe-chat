@@ -414,6 +414,30 @@ const googleChatModels: AIChatModelCard[] = [
     },
     type: 'chat',
   },
+  {
+    contextWindowTokens: 131_072 + 8192,
+    displayName: 'Gemma 3 27B',
+    id: 'gemma-3-27b-it',
+    maxOutput: 8192,
+    pricing: {
+      cachedInput: 0,
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 2048 + 8192,
+    displayName: 'Gemma 3n E4B',
+    id: 'gemma-3n-e4b-it',
+    maxOutput: 2048,
+    pricing: {
+      cachedInput: 0,
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
 ];
 
 export const allModels = [...googleChatModels];
