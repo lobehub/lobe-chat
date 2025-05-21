@@ -74,6 +74,9 @@
   "Doubao-1.5-thinking-pro-m": {
     "description": "Doubao-1.5 là mô hình suy nghĩ sâu mới (phiên bản m đi kèm khả năng suy luận đa phương thức nguyên bản), thể hiện xuất sắc trong các lĩnh vực chuyên môn như toán học, lập trình, suy luận khoa học và các nhiệm vụ chung như viết sáng tạo, đạt hoặc gần đạt trình độ hàng đầu trong nhiều bài kiểm tra chuẩn uy tín như AIME 2024, Codeforces, GPQA. Hỗ trợ cửa sổ ngữ cảnh 128k, đầu ra 16k."
   },
+  "Doubao-1.5-thinking-vision-pro": {
+    "description": "Mô hình tư duy sâu mới với thị giác, có khả năng hiểu và suy luận đa phương thức mạnh mẽ hơn, đạt được hiệu suất SOTA trong 37 trên 59 tiêu chuẩn đánh giá công khai."
+  },
   "Doubao-1.5-vision-pro": {
     "description": "Doubao-1.5-vision-pro là mô hình đa phương tiện lớn được nâng cấp mới, hỗ trợ nhận diện hình ảnh với bất kỳ độ phân giải nào và tỷ lệ dài rộng cực đoan, tăng cường khả năng suy luận hình ảnh, nhận diện tài liệu, hiểu thông tin chi tiết và tuân thủ hướng dẫn."
   },
@@ -338,6 +341,9 @@
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct là một mô hình ngôn ngữ lớn được thiết kế đặc biệt cho việc tạo mã, hiểu mã và các tình huống phát triển hiệu quả, với quy mô 32B tham số hàng đầu trong ngành, có thể đáp ứng nhu cầu lập trình đa dạng."
   },
+  "SenseCat-5-1202": {
+    "description": "Là phiên bản mới nhất dựa trên V5.5, có sự cải thiện đáng kể so với phiên bản trước về khả năng cơ bản tiếng Trung và tiếng Anh, trò chuyện, kiến thức khoa học tự nhiên, kiến thức nhân văn, viết lách, logic toán học, kiểm soát số từ, và nhiều khía cạnh khác."
+  },
   "SenseChat": {
     "description": "Mô hình phiên bản cơ bản (V4), độ dài ngữ cảnh 4K, khả năng tổng quát mạnh mẽ."
   },
@@ -350,11 +356,11 @@
   "SenseChat-5": {
     "description": "Phiên bản mô hình mới nhất (V5.5), độ dài ngữ cảnh 128K, khả năng cải thiện đáng kể trong suy luận toán học, đối thoại tiếng Anh, theo dõi chỉ dẫn và hiểu biết văn bản dài, ngang tầm với GPT-4o."
   },
-  "SenseChat-5-1202": {
-    "description": "Là phiên bản mới nhất dựa trên V5.5, có sự cải thiện đáng kể về khả năng cơ bản giữa tiếng Trung và tiếng Anh, trò chuyện, kiến thức khoa học, kiến thức nhân văn, viết lách, logic toán học, kiểm soát số lượng từ và một số khía cạnh khác so với phiên bản trước."
-  },
   "SenseChat-5-Cantonese": {
     "description": "Độ dài ngữ cảnh 32K, vượt qua GPT-4 trong hiểu biết đối thoại tiếng Quảng Đông, có thể so sánh với GPT-4 Turbo trong nhiều lĩnh vực như kiến thức, suy luận, toán học và lập trình mã."
+  },
+  "SenseChat-5-beta": {
+    "description": "Một số hiệu suất vượt trội hơn SenseCat-5-1202"
   },
   "SenseChat-Character": {
     "description": "Mô hình phiên bản tiêu chuẩn, độ dài ngữ cảnh 8K, tốc độ phản hồi cao."
@@ -1010,8 +1016,8 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Biến thể mô hình Gemini 2.0 Flash được tối ưu hóa cho hiệu quả chi phí và độ trễ thấp."
   },
-  "gemini-2.0-flash-thinking-exp-01-21": {
-    "description": "Gemini 2.0 Flash Exp là mô hình AI đa phương thức thử nghiệm mới nhất của Google, sở hữu các tính năng thế hệ tiếp theo, tốc độ vượt trội, gọi công cụ bản địa và sinh ra đa phương thức."
+  "gemini-2.0-flash-preview-image-generation": {
+    "description": "Mô hình xem trước Gemini 2.0 Flash, hỗ trợ tạo hình ảnh"
   },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview là mô hình có giá trị tốt nhất của Google, cung cấp đầy đủ các tính năng."
@@ -1349,14 +1355,17 @@
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 cung cấp giải pháp đối thoại thông minh cho nhiều tình huống."
   },
-  "internlm2-pro-chat": {
-    "description": "Mô hình phiên bản cũ mà chúng tôi vẫn đang duy trì, có sẵn với nhiều tùy chọn tham số 7B và 20B."
-  },
   "internlm2.5-latest": {
     "description": "Dòng mô hình mới nhất của chúng tôi, có hiệu suất suy luận xuất sắc, hỗ trợ độ dài ngữ cảnh 1M và khả năng theo dõi chỉ dẫn và gọi công cụ mạnh mẽ hơn."
   },
   "internlm3-latest": {
     "description": "Dòng mô hình mới nhất của chúng tôi, có hiệu suất suy luận xuất sắc, dẫn đầu trong số các mô hình mã nguồn mở cùng cấp. Mặc định chỉ đến mô hình InternLM3 mới nhất mà chúng tôi đã phát hành."
+  },
+  "internvl2.5-latest": {
+    "description": "Phiên bản InternVL2.5 mà chúng tôi vẫn đang duy trì, có hiệu suất xuất sắc và ổn định. Mặc định chỉ đến mô hình InternVL2.5 mới nhất của chúng tôi, hiện tại chỉ đến internvl2.5-78b."
+  },
+  "internvl3-latest": {
+    "description": "Chúng tôi vừa phát hành mô hình lớn đa phương thức mới nhất, có khả năng hiểu hình ảnh và văn bản mạnh mẽ hơn, khả năng hiểu hình ảnh theo chuỗi thời gian dài, hiệu suất tương đương với các mô hình đóng nguồn hàng đầu. Mặc định chỉ đến mô hình InternVL mới nhất của chúng tôi, hiện tại chỉ đến internvl3-78b."
   },
   "jamba-large": {
     "description": "Mô hình mạnh mẽ và tiên tiến nhất của chúng tôi, được thiết kế đặc biệt để xử lý các nhiệm vụ phức tạp cấp doanh nghiệp, với hiệu suất xuất sắc."
@@ -1372,6 +1381,9 @@
   },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM là một mô hình ngôn ngữ thử nghiệm, chuyên biệt cho các nhiệm vụ, được đào tạo để tuân theo các nguyên tắc khoa học học tập, có thể tuân theo các chỉ dẫn hệ thống trong các tình huống giảng dạy và học tập, đóng vai trò như một người hướng dẫn chuyên gia."
+  },
+  "learnlm-2.0-flash-experimental": {
+    "description": "LearnLM là một mô hình ngôn ngữ thử nghiệm, chuyên biệt cho nhiệm vụ, được đào tạo để tuân theo các nguyên tắc khoa học học tập, có thể tuân theo hướng dẫn hệ thống trong các tình huống giảng dạy và học tập, đóng vai trò như một người hướng dẫn chuyên gia."
   },
   "lite": {
     "description": "Spark Lite là một mô hình ngôn ngữ lớn nhẹ, có độ trễ cực thấp và khả năng xử lý hiệu quả, hoàn toàn miễn phí và mở, hỗ trợ chức năng tìm kiếm trực tuyến theo thời gian thực. Đặc điểm phản hồi nhanh của nó giúp nó nổi bật trong các ứng dụng suy diễn trên thiết bị có công suất thấp và tinh chỉnh mô hình, mang lại hiệu quả chi phí và trải nghiệm thông minh xuất sắc cho người dùng, đặc biệt trong các tình huống hỏi đáp kiến thức, tạo nội dung và tìm kiếm."
@@ -2161,6 +2173,9 @@
   },
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 là mô hình ngôn ngữ do Microsoft AI cung cấp, đặc biệt xuất sắc trong các lĩnh vực đối thoại phức tạp, đa ngôn ngữ, suy luận và trợ lý thông minh."
+  },
+  "x1": {
+    "description": "Mô hình Spark X1 sẽ được nâng cấp thêm, trên nền tảng dẫn đầu trong các nhiệm vụ toán học trong nước, đạt được hiệu quả trong các nhiệm vụ chung như suy luận, tạo văn bản, hiểu ngôn ngữ tương đương với OpenAI o1 và DeepSeek R1."
   },
   "yi-1.5-34b-chat": {
     "description": "Yi-1.5 là phiên bản nâng cấp của Yi. Nó sử dụng 500B token từ cơ sở dữ liệu chất lượng cao để tiếp tục tiền huấn luyện trên Yi, và được tinh chỉnh trên 3M mẫu đa dạng."
