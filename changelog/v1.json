@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Bump @lobehub/ui to 2.1.7."]
+    },
+    "date": "2025-05-21",
+    "version": "1.87.7"
+  },
+  {
+    "children": {
       "improvements": ["Improve tools display."]
     },
     "date": "2025-05-21",
