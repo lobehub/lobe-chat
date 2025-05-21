@@ -74,6 +74,9 @@
   "Doubao-1.5-thinking-pro-m": {
     "description": "Doubao-1.5 is a new deep thinking model (the m version comes with native multimodal deep reasoning capabilities) that excels in specialized fields such as mathematics, programming, scientific reasoning, and general tasks like creative writing, achieving or nearing top-tier performance in authoritative benchmarks such as AIME 2024, Codeforces, and GPQA. It supports a 128k context window and 16k output."
   },
+  "Doubao-1.5-thinking-vision-pro": {
+    "description": "A brand new visual deep thinking model, equipped with stronger general multimodal understanding and reasoning capabilities, achieving SOTA performance in 37 out of 59 public evaluation benchmarks."
+  },
   "Doubao-1.5-vision-pro": {
     "description": "Doubao-1.5-vision-pro is a newly upgraded multimodal large model that supports image recognition at any resolution and extreme aspect ratios, enhancing visual reasoning, document recognition, detail comprehension, and instruction following capabilities."
   },
@@ -338,6 +341,9 @@
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct is a large language model specifically designed for code generation, code understanding, and efficient development scenarios, featuring an industry-leading 32 billion parameters to meet diverse programming needs."
   },
+  "SenseCat-5-1202": {
+    "description": "Based on the latest version V5.5, it shows significant improvements over the previous version in several dimensions, including basic capabilities in Chinese and English, conversation, scientific knowledge, humanities knowledge, writing, mathematical logic, and word count control."
+  },
   "SenseChat": {
     "description": "Basic version model (V4) with a context length of 4K, featuring strong general capabilities."
   },
@@ -350,11 +356,11 @@
   "SenseChat-5": {
     "description": "The latest version model (V5.5) with a context length of 128K shows significant improvements in mathematical reasoning, English conversation, instruction following, and long text comprehension, comparable to GPT-4o."
   },
-  "SenseChat-5-1202": {
-    "description": "This is the latest version based on V5.5, showing significant improvements in basic capabilities in Chinese and English, chatting, scientific knowledge, humanities knowledge, writing, mathematical logic, and word count control compared to the previous version."
-  },
   "SenseChat-5-Cantonese": {
     "description": "With a context length of 32K, it surpasses GPT-4 in Cantonese conversation comprehension and is competitive with GPT-4 Turbo in knowledge, reasoning, mathematics, and code writing across multiple domains."
+  },
+  "SenseChat-5-beta": {
+    "description": "Partially outperforms SenseCat-5-1202"
   },
   "SenseChat-Character": {
     "description": "Standard version model with an 8K context length and high response speed."
@@ -1010,8 +1016,8 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash is a variant of the model optimized for cost-effectiveness and low latency."
   },
-  "gemini-2.0-flash-thinking-exp-01-21": {
-    "description": "Gemini 2.0 Flash Exp is Google's latest experimental multimodal AI model, featuring next-generation capabilities, exceptional speed, native tool invocation, and multimodal generation."
+  "gemini-2.0-flash-preview-image-generation": {
+    "description": "Gemini 2.0 Flash preview model, supports image generation"
   },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview is Google's most cost-effective model, offering a comprehensive set of features."
@@ -1349,14 +1355,17 @@
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 offers intelligent dialogue solutions across multiple scenarios."
   },
-  "internlm2-pro-chat": {
-    "description": "An older version of the model that we still maintain, available in various parameter sizes of 7B and 20B."
-  },
   "internlm2.5-latest": {
     "description": "Our latest model series, featuring exceptional reasoning performance, supporting a context length of 1M, and enhanced instruction following and tool invocation capabilities."
   },
   "internlm3-latest": {
     "description": "Our latest model series boasts exceptional inference performance, leading the pack among open-source models of similar scale. It defaults to our most recently released InternLM3 series models."
+  },
+  "internvl2.5-latest": {
+    "description": "The InternVL2.5 version we continue to maintain, offering excellent and stable performance. It defaults to our latest released InternVL2.5 series model, currently pointing to internvl2.5-78b."
+  },
+  "internvl3-latest": {
+    "description": "Our latest released multimodal large model, featuring enhanced image-text understanding capabilities and long-sequence image comprehension, performs on par with top proprietary models. It defaults to our latest released InternVL series model, currently pointing to internvl3-78b."
   },
   "jamba-large": {
     "description": "Our most powerful and advanced model, designed for handling complex enterprise-level tasks with exceptional performance."
@@ -1372,6 +1381,9 @@
   },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM is an experimental, task-specific language model trained to align with learning science principles, capable of following systematic instructions in teaching and learning scenarios, acting as an expert tutor, among other roles."
+  },
+  "learnlm-2.0-flash-experimental": {
+    "description": "LearnLM is an experimental, task-specific language model trained to align with the principles of learning science, capable of following systematic instructions in teaching and learning scenarios, acting as an expert tutor, among other roles."
   },
   "lite": {
     "description": "Spark Lite is a lightweight large language model with extremely low latency and efficient processing capabilities, completely free and open, supporting real-time online search functionality. Its quick response feature makes it excel in inference applications and model fine-tuning on low-power devices, providing users with excellent cost-effectiveness and intelligent experiences, particularly in knowledge Q&A, content generation, and search scenarios."
@@ -2161,6 +2173,9 @@
   },
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 is a language model provided by Microsoft AI, excelling in complex dialogues, multilingual capabilities, reasoning, and intelligent assistant applications."
+  },
+  "x1": {
+    "description": "The Spark X1 model will undergo further upgrades, achieving results in reasoning, text generation, and language understanding tasks that match OpenAI o1 and DeepSeek R1, building on its leading position in domestic mathematical tasks."
   },
   "yi-1.5-34b-chat": {
     "description": "Yi-1.5 is an upgraded version of Yi. It continues pre-training on Yi using a high-quality corpus of 500B tokens and is fine-tuned on 3M diverse samples."

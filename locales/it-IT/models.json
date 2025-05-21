@@ -74,6 +74,9 @@
   "Doubao-1.5-thinking-pro-m": {
     "description": "Doubao-1.5 è un nuovo modello di pensiero profondo (versione m con capacità di ragionamento multimodale native), che si distingue in matematica, programmazione, ragionamento scientifico e compiti generali come la scrittura creativa, raggiungendo o avvicinandosi ai livelli di punta del settore in vari benchmark autorevoli come AIME 2024, Codeforces, GPQA. Supporta una finestra di contesto di 128k e un output di 16k."
   },
+  "Doubao-1.5-thinking-vision-pro": {
+    "description": "Nuovo modello di pensiero visivo profondo, con una maggiore capacità di comprensione e ragionamento multimodale generale, ottenendo prestazioni SOTA in 37 dei 59 benchmark pubblici."
+  },
   "Doubao-1.5-vision-pro": {
     "description": "Doubao-1.5-vision-pro è un grande modello multimodale aggiornato, che supporta il riconoscimento di immagini a qualsiasi risoluzione e proporzioni estremamente lunghe, migliorando le capacità di ragionamento visivo, riconoscimento di documenti, comprensione delle informazioni dettagliate e rispetto delle istruzioni."
   },
@@ -338,6 +341,9 @@
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct è un grande modello linguistico progettato per la generazione di codice, la comprensione del codice e scenari di sviluppo efficienti, con una scala di 32 miliardi di parametri all'avanguardia nel settore, in grado di soddisfare esigenze di programmazione diversificate."
   },
+  "SenseCat-5-1202": {
+    "description": "È l'ultima versione basata su V5.5, con miglioramenti significativi rispetto alla versione precedente in vari ambiti come le capacità di base in cinese e inglese, chat, conoscenze scientifiche, conoscenze umanistiche, scrittura, logica matematica e controllo del numero di parole."
+  },
   "SenseChat": {
     "description": "Modello di base (V4), lunghezza del contesto di 4K, con potenti capacità generali."
   },
@@ -350,11 +356,11 @@
   "SenseChat-5": {
     "description": "Modello dell'ultima versione (V5.5), lunghezza del contesto di 128K, con capacità significativamente migliorate in ragionamento matematico, conversazioni in inglese, seguire istruzioni e comprensione di testi lunghi, paragonabile a GPT-4o."
   },
-  "SenseChat-5-1202": {
-    "description": "È l'ultima versione basata su V5.5, con miglioramenti significativi rispetto alla versione precedente nelle capacità di base in cinese e inglese, chat, conoscenze scientifiche, conoscenze umanistiche, scrittura, logica matematica e controllo del numero di parole."
-  },
   "SenseChat-5-Cantonese": {
     "description": "Lunghezza del contesto di 32K, supera GPT-4 nella comprensione delle conversazioni in cantonese, paragonabile a GPT-4 Turbo in vari ambiti come conoscenza, ragionamento, matematica e scrittura di codice."
+  },
+  "SenseChat-5-beta": {
+    "description": "Alcune prestazioni superiori a SenseCat-5-1202"
   },
   "SenseChat-Character": {
     "description": "Modello standard, lunghezza del contesto di 8K, alta velocità di risposta."
@@ -1010,8 +1016,8 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash è una variante del modello Flash, ottimizzata per obiettivi come il rapporto costo-efficacia e la bassa latenza."
   },
-  "gemini-2.0-flash-thinking-exp-01-21": {
-    "description": "Gemini 2.0 Flash Exp è il più recente modello AI multimodale sperimentale di Google, dotato di caratteristiche di nuova generazione, velocità eccezionale, chiamate a strumenti nativi e generazione multimodale."
+  "gemini-2.0-flash-preview-image-generation": {
+    "description": "Gemini 2.0 Flash modello di anteprima, supporta la generazione di immagini"
   },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview è il modello più conveniente di Google, che offre funzionalità complete."
@@ -1349,14 +1355,17 @@
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 offre soluzioni di dialogo intelligente in vari scenari."
   },
-  "internlm2-pro-chat": {
-    "description": "Un modello della vecchia versione che stiamo ancora mantenendo, disponibile in diverse dimensioni di parametri: 7B e 20B."
-  },
   "internlm2.5-latest": {
     "description": "La nostra ultima serie di modelli, con prestazioni di ragionamento eccezionali, supporta una lunghezza di contesto di 1M e offre una migliore capacità di seguire istruzioni e chiamare strumenti."
   },
   "internlm3-latest": {
     "description": "La nostra ultima serie di modelli, con prestazioni di inferenza eccezionali, è leader tra i modelli open source della stessa classe. Punta di default ai modelli della serie InternLM3 appena rilasciati."
+  },
+  "internvl2.5-latest": {
+    "description": "La versione InternVL2.5 che stiamo ancora mantenendo, offre prestazioni eccellenti e stabili. Punta di default al nostro ultimo modello della serie InternVL2.5, attualmente indirizzato a internvl2.5-78b."
+  },
+  "internvl3-latest": {
+    "description": "Il nostro ultimo modello multimodale, con una maggiore capacità di comprensione delle immagini e del testo, e una comprensione delle immagini a lungo termine, offre prestazioni paragonabili ai migliori modelli closed-source. Punta di default al nostro ultimo modello della serie InternVL, attualmente indirizzato a internvl3-78b."
   },
   "jamba-large": {
     "description": "Il nostro modello più potente e avanzato, progettato per gestire compiti complessi a livello aziendale, con prestazioni eccezionali."
@@ -1371,6 +1380,9 @@
     "description": "Il prodotto Kimi Smart Assistant utilizza il più recente modello Kimi, che potrebbe includere funzionalità non ancora stabili. Supporta la comprensione delle immagini e selezionerà automaticamente il modello di fatturazione 8k/32k/128k in base alla lunghezza del contesto della richiesta."
   },
   "learnlm-1.5-pro-experimental": {
+    "description": "LearnLM è un modello linguistico sperimentale, specifico per compiti, addestrato per rispettare i principi della scienza dell'apprendimento, in grado di seguire istruzioni sistematiche in contesti di insegnamento e apprendimento, fungendo da tutor esperto."
+  },
+  "learnlm-2.0-flash-experimental": {
     "description": "LearnLM è un modello linguistico sperimentale, specifico per compiti, addestrato per rispettare i principi della scienza dell'apprendimento, in grado di seguire istruzioni sistematiche in contesti di insegnamento e apprendimento, fungendo da tutor esperto."
   },
   "lite": {
@@ -2161,6 +2173,9 @@
   },
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 è un modello di linguaggio fornito da Microsoft AI, particolarmente efficace in dialoghi complessi, multilingue, ragionamento e assistenti intelligenti."
+  },
+  "x1": {
+    "description": "Il modello Spark X1 sarà ulteriormente aggiornato, raggiungendo risultati in compiti generali come ragionamento, generazione di testo e comprensione del linguaggio, in linea con OpenAI o1 e DeepSeek R1, partendo da una posizione di leadership nei compiti matematici."
   },
   "yi-1.5-34b-chat": {
     "description": "Yi-1.5 è una versione aggiornata di Yi. Utilizza un corpus di alta qualità di 500B token per il pre-addestramento continuo di Yi e viene finetunato su 3M campioni di micro-tuning diversificati."
