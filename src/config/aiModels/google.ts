@@ -36,6 +36,7 @@ const googleChatModels: AIChatModelCard[] = [
     description:
       'Gemini 2.5 Pro Experimental 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
     displayName: 'Gemini 2.5 Pro Experimental 03-25',
+    enabled: true,
     id: 'gemini-2.5-pro-exp-03-25',
     maxOutput: 65_536,
     pricing: {
@@ -58,8 +59,31 @@ const googleChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_048_576 + 65_536,
     description: 'Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。',
-    displayName: 'Gemini 2.5 Flash Preview 04-17',
+    displayName: 'Gemini 2.5 Flash Preview 05-20',
     enabled: true,
+    id: 'gemini-2.5-flash-preview-05-20',
+    maxOutput: 65_536,
+    pricing: {
+      input: 0.15,
+      output: 3.5, // Thinking
+    },
+    releasedAt: '2025-05-20',
+    settings: {
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 65_536,
+    description: 'Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。',
+    displayName: 'Gemini 2.5 Flash Preview 04-17',
     id: 'gemini-2.5-flash-preview-04-17',
     maxOutput: 65_536,
     pricing: {
