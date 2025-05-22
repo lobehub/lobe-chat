@@ -16,8 +16,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 1.25,
-      output: 5,
+      input: 2.5,
+      output: 10,
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -38,8 +38,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 0.5,
-      output: 2,
+      input: 1,
+      output: 4,
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -60,8 +60,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 0.35,
-      output: 1.4,
+      input: 0.7,
+      output: 2.8,
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -82,8 +82,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 0.25,
-      output: 1,
+      input: 0.5,
+      output: 2,
     },
     releasedAt: '2025-04-28',
     settings: {
