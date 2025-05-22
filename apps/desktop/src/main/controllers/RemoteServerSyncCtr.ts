@@ -7,6 +7,7 @@ import http, { IncomingMessage, OutgoingHttpHeaders } from 'node:http';
 import https from 'node:https';
 import { URL } from 'node:url';
 
+import { LocalRagSrv } from '@/main/services/LocalRagSrv'; // Added for Local RAG
 import { createLogger } from '@/utils/logger';
 
 import RemoteServerConfigCtr from './RemoteServerConfigCtr';
@@ -24,6 +25,7 @@ export default class RemoteServerSyncCtr extends ControllerModule {
    * Cached instance of RemoteServerConfigCtr
    */
   private _remoteServerConfigCtrInstance: RemoteServerConfigCtr | null = null;
+  private localRagService: LocalRagSrv | undefined; // Added for Local RAG
 
   /**
    * Remote server configuration controller
@@ -38,9 +40,31 @@ export default class RemoteServerSyncCtr extends ControllerModule {
   /**
    * Controller initialization - No specific logic needed here now for request handling
    */
-  afterAppReady() {
+  async afterAppReady() {
     logger.info('RemoteServerSyncCtr initialized (IPC based)');
-    // No need to register protocol handler anymore
+
+    // Initialize LocalRagSrv
+    try {
+      // Important: Ensure LocalRagSrv is registered in the main app's service container
+      this.localRagService = this.app.getService(LocalRagSrv);
+      if (this.localRagService) {
+        // EnsureDBInitialized is critical to wait for DB setup before any operations.
+        await this.localRagService.ensureDBInitialized();
+        logger.info('LocalRagSrv instance obtained and DB initialization awaited successfully.');
+      } else {
+        // This case implies LocalRagSrv might not be registered in the service container.
+        logger.error(
+          'Failed to get LocalRagSrv instance. Ensure it is registered in the main application service container.',
+        );
+      }
+    } catch (error) {
+      logger.error(
+        'Error during LocalRagSrv initialization or ensureDBInitialized call in RemoteServerSyncCtr:',
+        error,
+      );
+      // Depending on the app's error handling strategy, this might be a critical failure.
+      // For now, we log it; the localRagService will remain undefined, and local RAG calls will fail.
+    }
   }
 
   /**
@@ -188,62 +212,130 @@ export default class RemoteServerSyncCtr extends ControllerModule {
       urlPath: args.urlPath, // Log headers too for context
     });
 
-    const url = new URL(args.urlPath, 'http://a.b');
-    const logPrefix = `[ProxyTRPC ${args.method} ${url.pathname}]`; // Prefix for this specific request
+    const url = new URL(args.urlPath, 'http://a.b'); // Using a dummy base for URL parsing if needed
+    const procedurePath = url.pathname.split('/').pop() || ''; // e.g., 'chunk.semanticSearch'
+    const logPrefix = `[ProxyTRPC ${args.method} ${procedurePath}]`;
 
+    // --- Local RAG Routing Logic ---
+    // Hypothetical setting check for local RAG mode.
+    // Replace with actual global store or setting manager access.
+    const knowledgeBaseSettings = this.app.storeManager.get('knowledgeBaseSettings');
+    const shouldUseLocalRag = knowledgeBaseSettings?.useLocalKnowledgeBase === true;
+
+    if (shouldUseLocalRag && this.localRagService) {
+      logger.info(`${logPrefix} Local RAG mode is active.`);
+
+      // Route: chunk.semanticSearch
+      if (procedurePath === 'chunk.semanticSearch' && args.method === 'POST') {
+        logger.info(`${logPrefix} Routing to LocalRagSrv.semanticSearch.`);
+        try {
+          // Ensure body is parsed if it's a string (should be if Content-Type is application/json)
+          // args.body is ArrayBuffer, so we need to decode it.
+          const requestBodyString = Buffer.from(args.body).toString('utf-8');
+          const requestBodyJson = JSON.parse(requestBodyString);
+
+          // Extract parameters for semanticSearch.
+          // Based on `src/app/api/rest/rag/route.ts` and `src/services/rag/chunk/index.ts`
+          // the body for `chunk.semanticSearch` might look like: { json: { query: string, fileIds?: string[], limit?: number } }
+          // Or it might be flatter if the tRPC client sends it directly.
+          // We assume `args.body.json` is the already parsed JSON payload or needs parsing from string.
+          // For this example, let's assume the structure is { query: string, limit?: number }
+          // This might need adjustment based on actual client-side tRPC request structure.
+
+          const query = requestBodyJson.query;
+          const limit = requestBodyJson.limit || 10; // Default k value
+
+          if (!query || typeof query !== 'string') {
+            logger.error(`${logPrefix} Invalid 'query' parameter for local semantic search.`);
+            return {
+              body: Buffer.from(JSON.stringify({ error: "Invalid 'query' parameter" })).buffer,
+              headers: { 'content-type': 'application/json' },
+              status: 400,
+              statusText: 'Bad Request',
+            };
+          }
+
+          const searchResults = await this.localRagService.semanticSearch(
+            query,
+            limit,
+            'local_rag_placeholder_key', // API key placeholder
+          );
+
+          const responseBody = JSON.stringify(searchResults);
+          return {
+            body: Buffer.from(responseBody).buffer,
+            headers: { 'content-type': 'application/json' },
+            status: 200,
+            statusText: 'OK',
+          };
+        } catch (error) {
+          logger.error(`${logPrefix} Error in LocalRagSrv.semanticSearch:`, error);
+          return {
+            body: Buffer.from(JSON.stringify({ error: 'Local RAG search failed' })).buffer,
+            headers: { 'content-type': 'application/json' },
+            status: 500,
+            statusText: 'Internal Server Error',
+          };
+        }
+      }
+      // Add other local RAG routes here (e.g., for processAndStoreFile, deleteDocument)
+      // For example:
+      // if (procedurePath === 'document.addLocalFileToRag' && args.method === 'POST') {
+      //   // ... extract filePath, documentId from args.body.json
+      //   // await this.localRagService.processAndStoreFile(filePath, documentId, 'local_rag_placeholder_key');
+      //   // return { status: 200, ... }
+      // }
+      // if (procedurePath === 'document.deleteLocalDocument' && args.method === 'POST') {
+      //   // ... extract documentId from args.body.json
+      //   // await this.localRagService.deleteDocument(documentId);
+      //   // return { status: 200, ... }
+      // }
+
+      logger.info(`${logPrefix} Path ${procedurePath} not handled by local RAG, attempting remote forward.`);
+    }
+    // --- End of Local RAG Routing ---
+
+
+    // --- Existing Remote Forwarding Logic ---
+    logger.debug(`${logPrefix} Proceeding with remote server request for ${url.pathname}.`);
     try {
       const config = await this.remoteServerConfigCtr.getRemoteServerConfig();
       if (!config.active || (config.storageMode === 'selfHost' && !config.remoteServerUrl)) {
         logger.warn(
           `${logPrefix} Remote server sync not active or configured. Rejecting proxy request.`,
-        ); // Enhanced log
+        );
         return {
           body: Buffer.from('Remote server sync not active or configured').buffer,
           headers: {},
-
           status: 503,
-          // Service Unavailable
-          statusText: 'Remote server sync not active or configured', // Return ArrayBuffer
+          statusText: 'Remote server sync not active or configured',
         };
       }
       const remoteServerUrl = await this.remoteServerConfigCtr.getRemoteServerUrl();
 
-      // Get initial token
       let token = await this.remoteServerConfigCtr.getAccessToken();
-      logger.debug(
-        `${logPrefix} Initial token check: ${token ? 'Token exists' : 'No token found'}`,
-      ); // Added log
+      logger.debug(`${logPrefix} Remote: Initial token check: ${token ? 'Token exists' : 'No token found'}`);
 
-      logger.info(`${logPrefix} Attempting to forward request...`); // Added log
+      logger.info(`${logPrefix} Remote: Attempting to forward request...`);
       let response = await this.forwardRequest({ ...args, accessToken: token, remoteServerUrl });
 
-      // Handle 401: Refresh token and retry if necessary
       if (response.status === 401) {
-        logger.info(`${logPrefix} Received 401 from forwarded request. Attempting token refresh.`); // Enhanced log
-        const refreshed = await this.refreshTokenIfNeeded(logPrefix); // Pass prefix for context
+        logger.info(`${logPrefix} Remote: Received 401. Attempting token refresh.`);
+        const refreshed = await this.refreshTokenIfNeeded(logPrefix);
 
         if (refreshed) {
           const newToken = await this.remoteServerConfigCtr.getAccessToken();
           if (newToken) {
-            logger.info(`${logPrefix} Token refreshed successfully, retrying the request.`); // Enhanced log
-            response = await this.forwardRequest({
-              ...args,
-              accessToken: newToken,
-              remoteServerUrl,
-            });
+            logger.info(`${logPrefix} Remote: Token refreshed, retrying request.`);
+            response = await this.forwardRequest({ ...args, accessToken: newToken, remoteServerUrl });
           } else {
-            logger.error(
-              `${logPrefix} Token refresh reported success, but failed to retrieve new token. Keeping original 401 response.`,
-            ); // Enhanced log
-            // Keep the original 401 response
+            logger.error(`${logPrefix} Remote: Token refresh reported success, but no new token found.`);
           }
         } else {
-          logger.error(`${logPrefix} Token refresh failed. Keeping original 401 response.`); // Enhanced log
-          // Keep the original 401 response
+          logger.error(`${logPrefix} Remote: Token refresh failed.`);
         }
       }
 
-      // Convert headers and body to format defined in IPC event
       const responseHeaders: Record<string, string> = {};
       for (const [key, value] of Object.entries(response.headers)) {
         if (value !== undefined) {
@@ -251,33 +343,28 @@ export default class RemoteServerSyncCtr extends ControllerModule {
         }
       }
 
-      // Return the final response, ensuring body is serializable (string or ArrayBuffer)
-      const responseBody = response.body; // Buffer
-
-      // IMPORTANT: Check IPC limits. Large bodies might fail. Consider chunking if needed.
-      // Convert Buffer to ArrayBuffer for IPC
-      const finalBody = responseBody.buffer.slice(
-        responseBody.byteOffset,
-        responseBody.byteOffset + responseBody.byteLength,
+      const responseBodyBuffer = response.body;
+      const finalBody = responseBodyBuffer.buffer.slice(
+        responseBodyBuffer.byteOffset,
+        responseBodyBuffer.byteOffset + responseBodyBuffer.byteLength,
       );
 
-      logger.debug(`${logPrefix} Forwarding successful. Status: ${response.status}`); // Added log
+      logger.debug(`${logPrefix} Remote: Forwarding successful. Status: ${response.status}`);
       return {
         body: finalBody as ArrayBuffer,
         headers: responseHeaders,
         status: response.status,
-        statusText: response.statusText, // Return ArrayBuffer
+        statusText: response.statusText,
       };
     } catch (error) {
-      logger.error(`${logPrefix} Unhandled error processing proxyTRPCRequest:`, error); // Enhanced log
-      // Ensure a serializable error response is returned
+      logger.error(`${logPrefix} Error processing proxyTRPCRequest (remote path):`, error);
       return {
         body: Buffer.from(
           `Internal Server Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
         ).buffer,
         headers: {},
         status: 500,
-        statusText: 'Internal Server Error during proxy', // Return ArrayBuffer
+        statusText: 'Internal Server Error during proxy',
       };
     }
   }
@@ -311,8 +398,15 @@ export default class RemoteServerSyncCtr extends ControllerModule {
   /**
    * Clean up resources - No protocol handler to unregister anymore
    */
-  destroy() {
+  async destroy() { // Changed to async
     logger.info('Destroying RemoteServerSyncCtr');
-    // Nothing specific to clean up here regarding request handling now
+    if (this.localRagService) {
+      try {
+        await this.localRagService.destroy();
+        logger.info('LocalRagSrv destroyed successfully.');
+      } catch (error) {
+        logger.error('Error destroying LocalRagSrv:', error);
+      }
+    }
   }
 }
