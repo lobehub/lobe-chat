@@ -122,7 +122,7 @@
     "@ant-design/icons": "^5.6.1",
     "@ant-design/pro-components": "^2.8.7",
     "@anthropic-ai/sdk": "^0.51.0",
-    "@auth/core": "^0.38.0",
+    "@auth/core": "^0.39.0",
     "@aws-sdk/client-bedrock-runtime": "^3.812.0",
     "@aws-sdk/client-s3": "^3.812.0",
     "@aws-sdk/s3-request-presigner": "^3.812.0",
