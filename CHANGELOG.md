@@ -2,6 +2,50 @@
 
 # Changelog
 
+### [Version&nbsp;1.86.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.86.0...v1.86.1)
+<sup>Released on **2025-05-22**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: 'top_p' is not supported with o4-mini, bump  @lobehub/ui to 2.1.7, pin zustand version to avoid type error.
+
+
+#### 💄 Styles
+
+- **misc**: Improve tools display.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **misc**: 'top_p' is not supported with o4-mini, closes [#7747](https://github.com/jaworldwideorg/OneJA-Bot/issues/7747) ([4e04399](https://github.com/jaworldwideorg/OneJA-Bot/commit/4e04399))
+* **misc**: Bump  @lobehub/ui to 2.1.7, closes [#7912](https://github.com/jaworldwideorg/OneJA-Bot/issues/7912) ([457b645](https://github.com/jaworldwideorg/OneJA-Bot/commit/457b645))
+* **misc**: Pin zustand version to avoid type error, closes [#7929](https://github.com/jaworldwideorg/OneJA-Bot/issues/7929) ([4f6e286](https://github.com/jaworldwideorg/OneJA-Bot/commit/4f6e286))
+
+
+
+#### Styles
+
+* **misc**: Improve tools display, closes [#7906](https://github.com/jaworldwideorg/OneJA-Bot/issues/7906) ([af8a05b](https://github.com/jaworldwideorg/OneJA-Bot/commit/af8a05b))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.87.7](https://github.com/lobehub/lobe-chat/compare/v1.87.6...v1.87.7)
 
 <sup>Released on **2025-05-21**</sup>
