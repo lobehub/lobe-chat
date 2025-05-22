@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["'top_p' is not supported with o4-mini, pin zustand version to avoid type error."]
+    },
+    "date": "2025-05-22",
+    "version": "1.87.8"
+  },
+  {
+    "children": {
       "fixes": ["Bump @lobehub/ui to 2.1.7."]
     },
     "date": "2025-05-21",
