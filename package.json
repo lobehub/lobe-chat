@@ -268,7 +268,7 @@
     "yaml": "^2.8.0",
     "yjs": "^13.6.27",
     "zod": "^3.25.7",
-    "zustand": "^5.0.4",
+    "zustand": "5.0.4",
     "zustand-utils": "^2.1.0"
   },
   "devDependencies": {
