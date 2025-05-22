@@ -50,7 +50,32 @@ const CommonSTT = memo<{
 
     return (
       <Dropdown
-        dropdownRender={
+        menu={{
+          activeKey: 'time',
+          items: [
+            {
+              key: 'title',
+              label: (
+                <Flexbox>
+                  <div style={{ fontWeight: 'bolder' }}>{t('stt.action')}</div>
+                </Flexbox>
+              ),
+            },
+            {
+              key: 'time',
+              label: (
+                <Flexbox align={'center'} gap={8} horizontal>
+                  <div className={styles.recording} />
+                  {time > 0 ? formattedTime : t(isRecording ? 'stt.loading' : 'stt.prettifying')}
+                </Flexbox>
+              ),
+            },
+          ],
+        }}
+        onOpenChange={handleDropdownVisibleChange}
+        open={dropdownOpen || !!error || isRecording || isLoading}
+        placement={mobile ? 'topRight' : 'top'}
+        popupRender={
           error
             ? () => (
                 <Alert
@@ -79,31 +104,6 @@ const CommonSTT = memo<{
               )
             : undefined
         }
-        menu={{
-          activeKey: 'time',
-          items: [
-            {
-              key: 'title',
-              label: (
-                <Flexbox>
-                  <div style={{ fontWeight: 'bolder' }}>{t('stt.action')}</div>
-                </Flexbox>
-              ),
-            },
-            {
-              key: 'time',
-              label: (
-                <Flexbox align={'center'} gap={8} horizontal>
-                  <div className={styles.recording} />
-                  {time > 0 ? formattedTime : t(isRecording ? 'stt.loading' : 'stt.prettifying')}
-                </Flexbox>
-              ),
-            },
-          ],
-        }}
-        onOpenChange={handleDropdownVisibleChange}
-        open={dropdownOpen || !!error || isRecording || isLoading}
-        placement={mobile ? 'topRight' : 'top'}
         trigger={['click']}
       >
         <ActionIcon

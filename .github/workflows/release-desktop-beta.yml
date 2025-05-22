@@ -80,9 +80,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # 暂时先支持 macOS
-        os: [macos-latest]
-    #        os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [macos-latest, windows-2025, ubuntu-latest]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -130,9 +128,24 @@ jobs:
           NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_BETA_DESKTOP_PROJECT_ID }}
           NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_BETA_DESKTOP_BASE_URL }}
 
-      # 非 macOS 平台构建处理
-      - name: Build artifact on other platforms
-        if: runner.os != 'macOS'
+      #  Windows 平台构建处理
+      - name: Build artifact on Windows
+        if: runner.os == 'Windows'
+        run: npm run desktop:build
+        env:
+          APP_URL: http://localhost:3015
+          DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
+          KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
+          NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_BETA_DESKTOP_PROJECT_ID }}
+          NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_BETA_DESKTOP_BASE_URL }}
+
+          # 将 TEMP 和 TMP 目录设置到 D 盘
+          TEMP: D:\temp
+          TMP: D:\temp
+
+      # Linux 平台构建处理
+      - name: Build artifact on Linux
+        if: runner.os == 'Linux'
         run: npm run desktop:build
         env:
           APP_URL: http://localhost:3015

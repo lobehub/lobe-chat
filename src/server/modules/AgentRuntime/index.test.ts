@@ -22,9 +22,9 @@ import {
   LobeZeroOneAI,
   LobeZhipuAI,
   ModelProvider,
-} from '@/libs/agent-runtime';
-import { AgentRuntime } from '@/libs/agent-runtime';
-import { LobeStepfunAI } from '@/libs/agent-runtime/stepfun';
+} from '@/libs/model-runtime';
+import { AgentRuntime } from '@/libs/model-runtime';
+import { LobeStepfunAI } from '@/libs/model-runtime/stepfun';
 
 import { initAgentRuntimeWithUserPayload } from './index';
 
@@ -52,6 +52,7 @@ vi.mock('@/config/llm', () => ({
     MISTRAL_API_KEY: 'test-mistral-key',
     OPENROUTER_API_KEY: 'test-openrouter-key',
     TOGETHERAI_API_KEY: 'test-togetherai-key',
+    QINIU_API_KEY: 'test-qiniu-key',
     QWEN_API_KEY: 'test-qwen-key',
     STEPFUN_API_KEY: 'test-stepfun-key',
   })),
@@ -59,7 +60,7 @@ vi.mock('@/config/llm', () => ({
 
 /**
  * Test cases for function initAgentRuntimeWithUserPayload
- * this method will use AgentRuntime from `@/libs/agent-runtime`
+ * this method will use AgentRuntime from `@/libs/model-runtime`
  * and method `getLlmOptionsFromPayload` to initialize runtime
  * with user payload. Test case below will test both the methods
  */

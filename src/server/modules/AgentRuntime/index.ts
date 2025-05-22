@@ -1,6 +1,6 @@
 import { getLLMConfig } from '@/config/llm';
 import { JWTPayload } from '@/const/auth';
-import { AgentRuntime, ModelProvider } from '@/libs/agent-runtime';
+import { AgentRuntime, ModelProvider } from '@/libs/model-runtime';
 
 import apiKeyManager from './apiKeyManager';
 
