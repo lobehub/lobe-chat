@@ -118,12 +118,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     const postTools = buildAnthropicTools(tools, { enabledContextCaching });
 
     if (!!thinking && thinking.type === 'enabled') {
-      // claude 3.7 thinking has max output of 64000 tokens
-      const maxTokens = !!max_tokens
-        ? thinking?.budget_tokens && thinking?.budget_tokens > max_tokens
-          ? Math.min(thinking?.budget_tokens + max_tokens, 64_000)
-          : max_tokens
-        : 64_000;
+      const maxTokens = max_tokens || 64_000;
 
       // `temperature` may only be set to 1 when thinking is enabled.
       // `top_p` must be unset when thinking is enabled.
@@ -132,7 +127,12 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
         messages: postMessages,
         model,
         system: systemPrompts,
-        thinking,
+        thinking: {
+          ...thinking,
+          budget_tokens: thinking?.budget_tokens 
+            ? Math.min(thinking.budget_tokens, maxTokens - 1)  // `max_tokens` must be greater than `thinking.budget_tokens`.
+            : 1024,
+        },
         tools: postTools,
       } satisfies Anthropic.MessageCreateParams;
     }
