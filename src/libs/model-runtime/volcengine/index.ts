@@ -1,5 +1,3 @@
-import type { ChatModelCard } from '@/types/llm';
-
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 import { MODEL_CONFIGS, processModelList } from '../utils/modelParse';

@@ -1,9 +1,7 @@
-import type { ChatModelCard } from '@/types/llm';
-
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 import { pruneReasoningPayload } from '../utils/openaiHelpers';
-import { processModelList, MODEL_CONFIGS } from '../utils/modelParse';
+import { processModelList, MODEL_CONFIGS, detectProvider } from '../utils/modelParse';
 
 export interface OpenAIModelCard {
   id: string;
@@ -42,12 +40,9 @@ export const LobeOpenAI = LobeOpenAICompatibleFactory({
     const modelsPage = (await client.models.list()) as any;
     const modelList: OpenAIModelCard[] = modelsPage.data;
 
-    // 检查是否有 doubao 模型来决定使用哪种配置
-    const hasDoubaoModel = modelList.some((model) => 
-      model.id.toLowerCase().includes('doubao')
-    );
-
-    const config = hasDoubaoModel ? MODEL_CONFIGS.volcengine : MODEL_CONFIGS.openai;
+    // 自动检测模型提供商并选择相应配置
+    const detectedProvider = detectProvider(modelList);
+    const config = MODEL_CONFIGS[detectedProvider];
     
     return processModelList(modelList, config);
   },

@@ -1,11 +1,72 @@
 import type { ChatModelCard } from '@/types/llm';
 
 export interface ModelProcessorConfig {
-  functionCallKeywords: readonly string[];
-  visionKeywords: readonly string[];
-  reasoningKeywords: readonly string[];
   excludeKeywords?: readonly string[];
+  functionCallKeywords: readonly string[];
+  reasoningKeywords: readonly string[];
+  visionKeywords: readonly string[];
 }
+
+// 模型标签关键词配置
+export const MODEL_CONFIGS = {
+  anthropic: {
+    excludeKeywords: [],
+    functionCallKeywords: ['claude'],
+    reasoningKeywords: ['-3-7-', '-4-'],
+    visionKeywords: ['claude'],
+  },
+  google: {
+    excludeKeywords: [],
+    functionCallKeywords: ['gemini'],
+    reasoningKeywords: ['thinking', '-2.5-'],
+    visionKeywords: ['gemini', 'learnlm'],
+  },
+  openai: {
+    excludeKeywords: ['audio'],
+    functionCallKeywords: ['gpt-4', 'gpt-3.5', 'o3-mini'],
+    reasoningKeywords: ['o1', 'o3'],
+    visionKeywords: ['gpt-4o', 'vision'],
+  },
+  volcengine: {
+    excludeKeywords: [],
+    functionCallKeywords: ['doubao-1.5'],
+    reasoningKeywords: ['thinking', '-r1'],
+    visionKeywords: ['vision', '-m'],
+  },
+  zhipu: {
+    excludeKeywords: [],
+    functionCallKeywords: ['glm-4'],
+    reasoningKeywords: ['glm-zero', 'glm-z1'],
+    visionKeywords: ['glm-4v'],
+  },
+} as const;
+
+// 模型提供商关键词配置
+export const PROVIDER_DETECTION_CONFIG = {
+  anthropic: ['claude'],
+  google: ['gemini'],
+  volcengine: ['doubao'],
+  zhipu: ['glm'],
+} as const;
+
+/**
+ * 检测模型的提供商类型
+ * @param modelList 模型列表
+ * @returns 检测到的提供商配置键名，默认为 'openai'
+ */
+export const detectProvider = (modelList: Array<{ id: string }>): keyof typeof MODEL_CONFIGS => {
+  for (const [provider, keywords] of Object.entries(PROVIDER_DETECTION_CONFIG)) {
+    const hasProviderModel = modelList.some((model) =>
+      keywords.some(keyword => model.id.toLowerCase().includes(keyword))
+    );
+    
+    if (hasProviderModel && provider in MODEL_CONFIGS) {
+      return provider as keyof typeof MODEL_CONFIGS;
+    }
+  }
+  
+  return 'openai'; // 默认返回 openai 配置
+};
 
 export const processModelList = async (
   modelList: Array<{ id: string }>,
@@ -47,19 +108,3 @@ export const processModelList = async (
     })
     .filter(Boolean) as ChatModelCard[];
 };
-
-// 预定义的配置
-export const MODEL_CONFIGS = {
-  openai: {
-    functionCallKeywords: ['gpt-4', 'gpt-3.5', 'o3-mini'],
-    visionKeywords: ['gpt-4o', 'vision'],
-    reasoningKeywords: ['o1', 'o3'],
-    excludeKeywords: ['audio'],
-  },
-  volcengine: {
-    functionCallKeywords: ['doubao-1.5'],
-    visionKeywords: ['vision', '-m'],
-    reasoningKeywords: ['thinking', '-r1'],
-    excludeKeywords: [],
-  },
-} as const;
