@@ -13,7 +13,7 @@ const anthropicChatModels: AIChatModelCard[] = [
     displayName: 'Claude 4 Sonnet',
     enabled: true,
     id: 'claude-sonnet-4-20250514',
-    maxOutput: 8192,
+    maxOutput: 64_000,
     pricing: {
       cachedInput: 0.3,
       input: 3,
@@ -37,7 +37,7 @@ const anthropicChatModels: AIChatModelCard[] = [
     displayName: 'Claude Opus 4',
     enabled: true,
     id: 'claude-opus-4-20250514',
-    maxOutput: 8192,
+    maxOutput: 32_000,
     pricing: {
       cachedInput: 1.5,
       input: 15,
@@ -62,7 +62,7 @@ const anthropicChatModels: AIChatModelCard[] = [
     displayName: 'Claude 3.7 Sonnet 0219',
     enabled: true,
     id: 'claude-3-7-sonnet-20250219',
-    maxOutput: 8192,
+    maxOutput: 64_000,
     pricing: {
       cachedInput: 0.3,
       input: 3,
