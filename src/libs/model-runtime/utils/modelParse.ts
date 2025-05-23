@@ -23,15 +23,21 @@ export const MODEL_CONFIGS = {
   },
   openai: {
     excludeKeywords: ['audio'],
-    functionCallKeywords: ['gpt-4', 'gpt-3.5', 'o3-mini'],
-    reasoningKeywords: ['o1', 'o3'],
-    visionKeywords: ['gpt-4o', 'vision'],
+    functionCallKeywords: ['4o', '4.1', 'o3', 'o4'],
+    reasoningKeywords: ['o1', 'o3', 'o4'],
+    visionKeywords: ['4o', '4.1', 'o4'],
   },
   volcengine: {
     excludeKeywords: [],
     functionCallKeywords: ['doubao-1.5'],
     reasoningKeywords: ['thinking', '-r1'],
     visionKeywords: ['vision', '-m'],
+  },
+  zeroone: {
+    excludeKeywords: [],
+    functionCallKeywords: ['fc'],
+    reasoningKeywords: [],
+    visionKeywords: ['vision'],
   },
   zhipu: {
     excludeKeywords: [],
@@ -46,6 +52,7 @@ export const PROVIDER_DETECTION_CONFIG = {
   anthropic: ['claude'],
   google: ['gemini'],
   volcengine: ['doubao'],
+  zeroone: ['yi-'],
   zhipu: ['glm'],
 } as const;
 
