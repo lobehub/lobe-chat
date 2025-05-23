@@ -219,8 +219,23 @@
     "content": "جاري استدعاء الإضافة...",
     "plugin": "جاري تشغيل الإضافة..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "عرض قائمة الملفات",
+      "moveLocalFiles": "نقل الملفات",
+      "readLocalFile": "قراءة محتوى الملف",
+      "renameLocalFile": "إعادة تسمية",
+      "searchLocalFiles": "البحث عن الملفات",
+      "writeLocalFile": "كتابة في الملف"
+    },
+    "title": "الملفات المحلية"
+  },
   "pluginList": "قائمة الإضافات",
   "search": {
+    "apiName": {
+      "crawlSinglePage": "قراءة محتوى الصفحة",
+      "search": "بحث في الصفحة"
+    },
     "config": {
       "addKey": "إضافة مفتاح",
       "close": "حذف",
