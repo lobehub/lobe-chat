@@ -68,6 +68,7 @@ const googleChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-04-17',
     settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
       searchImpl: 'params',
       searchProvider: 'google',
     },

@@ -82,6 +82,10 @@ interface LobeGoogleAIParams {
   isVertexAi?: boolean;
 }
 
+interface GoogleAIThinkingConfig {
+  thinkingBudget?: number;
+}
+
 export class LobeGoogleAI implements LobeRuntimeAI {
   private client: GoogleGenerativeAI;
   private isVertexAi: boolean;
@@ -104,7 +108,11 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   async chat(rawPayload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     try {
       const payload = this.buildPayload(rawPayload);
-      const model = payload.model;
+      const { model, thinking } = payload;
+
+      const thinkingConfig: GoogleAIThinkingConfig = {
+        thinkingBudget: thinking?.type === 'enabled' ? Math.min(thinking.budget_tokens, 24_576) : 0,
+      };
 
       const contents = await this.buildGoogleMessages(payload.messages);
 
@@ -117,6 +125,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
               // @ts-expect-error - Google SDK 0.24.0 doesn't have this property for now with
               response_modalities: modelsWithModalities.has(model) ? ['Text', 'Image'] : undefined,
               temperature: payload.temperature,
+              thinkingConfig,
               topP: payload.top_p,
             },
             model,
