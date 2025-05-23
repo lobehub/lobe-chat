@@ -15,6 +15,12 @@ export const MODEL_CONFIGS = {
     reasoningKeywords: ['-3-7-', '-4-'],
     visionKeywords: ['claude'],
   },
+  deepseek: {
+    excludeKeywords: [],
+    functionCallKeywords: ['v3'],
+    reasoningKeywords: ['r1'],
+    visionKeywords: [],
+  },
   google: {
     excludeKeywords: [],
     functionCallKeywords: ['gemini'],
@@ -50,7 +56,9 @@ export const MODEL_CONFIGS = {
 // 模型提供商关键词配置
 export const PROVIDER_DETECTION_CONFIG = {
   anthropic: ['claude'],
+  deepseek: ['deepseek'],
   google: ['gemini'],
+  openai: ['o1', 'o3', 'o4', 'gpt-'],
   volcengine: ['doubao'],
   zeroone: ['yi-'],
   zhipu: ['glm'],
