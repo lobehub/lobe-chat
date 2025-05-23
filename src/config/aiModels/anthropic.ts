@@ -9,8 +9,8 @@ const anthropicChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
-      'Claude 4 Sonnet 可以产生近乎即时的响应或延长的逐步思考，用户可以清晰地看到这些过程。API 用户还可以对模型思考的时间进行细致的控制',
-    displayName: 'Claude 4 Sonnet',
+      'Claude Sonnet 4 可以产生近乎即时的响应或延长的逐步思考，用户可以清晰地看到这些过程。API 用户还可以对模型思考的时间进行细致的控制',
+    displayName: 'Claude Sonnet 4',
     enabled: true,
     id: 'claude-sonnet-4-20250514',
     maxOutput: 64_000,
@@ -59,7 +59,7 @@ const anthropicChatModels: AIChatModelCard[] = [
     contextWindowTokens: 200_000,
     description:
       'Claude 3.7 Sonnet 是 Anthropic 迄今为止最智能的模型，也是市场上首个混合推理模型。Claude 3.7 Sonnet 可以产生近乎即时的响应或延长的逐步思考，用户可以清晰地看到这些过程。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。',
-    displayName: 'Claude 3.7 Sonnet 0219',
+    displayName: 'Claude 3.7 Sonnet',
     enabled: true,
     id: 'claude-3-7-sonnet-20250219',
     maxOutput: 64_000,
@@ -107,7 +107,7 @@ const anthropicChatModels: AIChatModelCard[] = [
     contextWindowTokens: 200_000,
     description:
       'Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同时保持与 Sonnet 相同的价格。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。',
-    displayName: 'Claude 3.5 Sonnet',
+    displayName: 'Claude 3.5 Sonnet v2',
     enabled: true,
     id: 'claude-3-5-sonnet-20241022',
     maxOutput: 8192,
@@ -131,7 +131,7 @@ const anthropicChatModels: AIChatModelCard[] = [
     contextWindowTokens: 200_000,
     description:
       'Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同时保持与 Sonnet 相同的价格。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。',
-    displayName: 'Claude 3.5 Sonnet 0620',
+    displayName: 'Claude 3.5 Sonnet',
     id: 'claude-3-5-sonnet-20240620',
     maxOutput: 8192,
     pricing: {
@@ -176,7 +176,7 @@ const anthropicChatModels: AIChatModelCard[] = [
     description:
       'Claude 3 Sonnet 在智能和速度方面为企业工作负载提供了理想的平衡。它以更低的价格提供最大效用，可靠且适合大规模部署。',
     displayName: 'Claude 3 Sonnet',
-    id: 'claude-3-sonnet-20240229',
+    id: 'claude-3-sonnet-20240229', // 弃用日期 2025年7月21日
     maxOutput: 4096,
     pricing: {
       input: 3,
@@ -211,7 +211,7 @@ const anthropicChatModels: AIChatModelCard[] = [
     description:
       'Claude 2 为企业提供了关键能力的进步，包括业界领先的 200K token 上下文、大幅降低模型幻觉的发生率、系统提示以及一个新的测试功能：工具调用。',
     displayName: 'Claude 2.1',
-    id: 'claude-2.1',
+    id: 'claude-2.1', // 弃用日期 2025年7月21日
     maxOutput: 4096,
     pricing: {
       input: 8,
@@ -225,7 +225,7 @@ const anthropicChatModels: AIChatModelCard[] = [
     description:
       'Claude 2 为企业提供了关键能力的进步，包括业界领先的 200K token 上下文、大幅降低模型幻觉的发生率、系统提示以及一个新的测试功能：工具调用。',
     displayName: 'Claude 2.0',
-    id: 'claude-2.0',
+    id: 'claude-2.0', // 弃用日期 2025年7月21日
     maxOutput: 4096,
     pricing: {
       input: 8,
