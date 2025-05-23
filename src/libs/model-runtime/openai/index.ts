@@ -3,6 +3,7 @@ import type { ChatModelCard } from '@/types/llm';
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 import { pruneReasoningPayload } from '../utils/openaiHelpers';
+import { processModelList, MODEL_CONFIGS } from '../utils/modelParse';
 
 export interface OpenAIModelCard {
   id: string;
@@ -38,45 +39,17 @@ export const LobeOpenAI = LobeOpenAICompatibleFactory({
     chatCompletion: () => process.env.DEBUG_OPENAI_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
-
-    const functionCallKeywords = ['4o', '4.1', 'o3', 'o4'];
-
-    const visionKeywords = ['4o', '4.1', 'o4'];
-
-    const reasoningKeywords = ['o1', 'o3', 'o4'];
-
     const modelsPage = (await client.models.list()) as any;
     const modelList: OpenAIModelCard[] = modelsPage.data;
 
-    return modelList
-      .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
-          (m) => model.id.toLowerCase() === m.id.toLowerCase(),
-        );
+    // 检查是否有 doubao 模型来决定使用哪种配置
+    const hasDoubaoModel = modelList.some((model) => 
+      model.id.toLowerCase().includes('doubao')
+    );
 
-        return {
-          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
-          displayName: knownModel?.displayName ?? undefined,
-          enabled: knownModel?.enabled || false,
-          functionCall:
-            (functionCallKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) &&
-              !model.id.toLowerCase().includes('audio')) ||
-            knownModel?.abilities?.functionCall ||
-            false,
-          id: model.id,
-          reasoning:
-            reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-            knownModel?.abilities?.reasoning ||
-            false,
-          vision:
-            (visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) &&
-              !model.id.toLowerCase().includes('audio')) ||
-            knownModel?.abilities?.vision ||
-            false,
-        };
-      })
-      .filter(Boolean) as ChatModelCard[];
+    const config = hasDoubaoModel ? MODEL_CONFIGS.volcengine : MODEL_CONFIGS.openai;
+    
+    return processModelList(modelList, config);
   },
   provider: ModelProvider.OpenAI,
 });
