@@ -118,7 +118,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     const postTools = buildAnthropicTools(tools, { enabledContextCaching });
 
     if (!!thinking && thinking.type === 'enabled') {
-      const maxTokens = max_tokens || 64_000;
+      const maxTokens = max_tokens || 32_000; // Claude Opus 4 has minimum maxOutput
 
       // `temperature` may only be set to 1 when thinking is enabled.
       // `top_p` must be unset when thinking is enabled.
