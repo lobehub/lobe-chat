@@ -29,6 +29,7 @@ const anthropicChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
