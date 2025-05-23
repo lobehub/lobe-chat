@@ -2,6 +2,40 @@
 
 # Changelog
 
+## [Version 1.88.0](https://github.com/lobehub/lobe-chat/compare/v1.87.9...v1.88.0)
+
+<sup>Released on **2025-05-23**</sup>
+
+#### ✨ Features
+
+- **misc**: Add claude 4 series.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix missing email field to user, update agent config of client db will override old config.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add claude 4 series, closes [#7939](https://github.com/lobehub/lobe-chat/issues/7939) ([9b4f950](https://github.com/lobehub/lobe-chat/commit/9b4f950))
+
+#### What's fixed
+
+- **misc**: Fix missing email field to user, closes [#7913](https://github.com/lobehub/lobe-chat/issues/7913) ([d314130](https://github.com/lobehub/lobe-chat/commit/d314130))
+- **misc**: Update agent config of client db will override old config, closes [#7918](https://github.com/lobehub/lobe-chat/issues/7918) ([f7cda68](https://github.com/lobehub/lobe-chat/commit/f7cda68))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.87.9](https://github.com/lobehub/lobe-chat/compare/v1.87.8...v1.87.9)
 
 <sup>Released on **2025-05-23**</sup>

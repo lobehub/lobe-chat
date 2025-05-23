@@ -1,6 +1,16 @@
 [
   {
     "children": {
+      "features": ["Add claude 4 series."],
+      "fixes": [
+        "Fix missing email field to user, update agent config of client db will override old config."
+      ]
+    },
+    "date": "2025-05-23",
+    "version": "1.88.0"
+  },
+  {
+    "children": {
       "improvements": ["Resolve InputNumber display overlap issue."]
     },
     "date": "2025-05-23",
