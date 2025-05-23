@@ -50,30 +50,71 @@ export const PROVIDER_DETECTION_CONFIG = {
 } as const;
 
 /**
- * 检测模型的提供商类型
- * @param modelList 模型列表
+ * 检测单个模型的提供商类型
+ * @param modelId 模型ID
  * @returns 检测到的提供商配置键名，默认为 'openai'
  */
-export const detectProvider = (modelList: Array<{ id: string }>): keyof typeof MODEL_CONFIGS => {
+export const detectModelProvider = (modelId: string): keyof typeof MODEL_CONFIGS => {
+  const lowerModelId = modelId.toLowerCase();
+  
   for (const [provider, keywords] of Object.entries(PROVIDER_DETECTION_CONFIG)) {
-    const hasProviderModel = modelList.some((model) =>
-      keywords.some(keyword => model.id.toLowerCase().includes(keyword))
-    );
+    const hasKeyword = keywords.some(keyword => lowerModelId.includes(keyword));
     
-    if (hasProviderModel && provider in MODEL_CONFIGS) {
+    if (hasKeyword && provider in MODEL_CONFIGS) {
       return provider as keyof typeof MODEL_CONFIGS;
     }
   }
   
-  return 'openai'; // 默认返回 openai 配置
+  return 'openai';
 };
 
+/**
+ * 处理模型卡片的通用逻辑
+ */
+const processModelCard = (
+  model: { id: string },
+  config: ModelProcessorConfig,
+  knownModel?: any
+): ChatModelCard => {
+  const { functionCallKeywords, visionKeywords, reasoningKeywords, excludeKeywords = [] } = config;
+
+  const isExcludedModel = excludeKeywords.some((keyword) => 
+    model.id.toLowerCase().includes(keyword)
+  );
+
+  return {
+    contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
+    displayName: knownModel?.displayName ?? undefined,
+    enabled: knownModel?.enabled || false,
+    functionCall:
+      (functionCallKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) &&
+        !isExcludedModel) ||
+      knownModel?.abilities?.functionCall ||
+      false,
+    id: model.id,
+    reasoning:
+      reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
+      knownModel?.abilities?.reasoning ||
+      false,
+    vision:
+      (visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) &&
+        !isExcludedModel) ||
+      knownModel?.abilities?.vision ||
+      false,
+  };
+};
+
+/**
+ * 处理单一提供商的模型列表
+ * @param modelList 模型列表
+ * @param config 提供商配置
+ * @returns 处理后的模型卡片列表
+ */
 export const processModelList = async (
   modelList: Array<{ id: string }>,
   config: ModelProcessorConfig,
 ): Promise<ChatModelCard[]> => {
   const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
-  const { functionCallKeywords, visionKeywords, reasoningKeywords, excludeKeywords = [] } = config;
 
   return modelList
     .map((model) => {
@@ -81,30 +122,31 @@ export const processModelList = async (
         (m) => model.id.toLowerCase() === m.id.toLowerCase(),
       );
 
-      const isExcludedModel = excludeKeywords.some((keyword) => 
-        model.id.toLowerCase().includes(keyword)
+      return processModelCard(model, config, knownModel);
+    })
+    .filter(Boolean);
+};
+
+/**
+ * 处理混合提供商的模型列表
+ * @param modelList 模型列表
+ * @returns 处理后的模型卡片列表
+ */
+export const processMultiProviderModelList = async (
+  modelList: Array<{ id: string }>,
+): Promise<ChatModelCard[]> => {
+  const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
+  return modelList
+    .map((model) => {
+      const detectedProvider = detectModelProvider(model.id);
+      const config = MODEL_CONFIGS[detectedProvider];
+      
+      const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+        (m) => model.id.toLowerCase() === m.id.toLowerCase(),
       );
 
-      return {
-        contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
-        displayName: knownModel?.displayName ?? undefined,
-        enabled: knownModel?.enabled || false,
-        functionCall:
-          (functionCallKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) &&
-            !isExcludedModel) ||
-          knownModel?.abilities?.functionCall ||
-          false,
-        id: model.id,
-        reasoning:
-          reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-          knownModel?.abilities?.reasoning ||
-          false,
-        vision:
-          (visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) &&
-            !isExcludedModel) ||
-          knownModel?.abilities?.vision ||
-          false,
-      };
+      return processModelCard(model, config, knownModel);
     })
-    .filter(Boolean) as ChatModelCard[];
+    .filter(Boolean);
 };

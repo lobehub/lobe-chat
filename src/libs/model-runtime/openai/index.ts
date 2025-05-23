@@ -1,7 +1,7 @@
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 import { pruneReasoningPayload } from '../utils/openaiHelpers';
-import { processModelList, MODEL_CONFIGS, detectProvider } from '../utils/modelParse';
+import { processMultiProviderModelList } from '../utils/modelParse';
 
 export interface OpenAIModelCard {
   id: string;
@@ -41,10 +41,7 @@ export const LobeOpenAI = LobeOpenAICompatibleFactory({
     const modelList: OpenAIModelCard[] = modelsPage.data;
 
     // 自动检测模型提供商并选择相应配置
-    const detectedProvider = detectProvider(modelList);
-    const config = MODEL_CONFIGS[detectedProvider];
-    
-    return processModelList(modelList, config);
+    return processMultiProviderModelList(modelList);
   },
   provider: ModelProvider.OpenAI,
 });
