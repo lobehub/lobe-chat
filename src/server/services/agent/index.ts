@@ -1,8 +1,6 @@
-import { appEnv } from '@/config/app';
 import { SessionModel } from '@/database/models/session';
 import { LobeChatDatabase } from '@/database/type';
 import { getServerDefaultAgentConfig } from '@/server/globalConfig';
-import { parseAgentConfig } from '@/server/globalConfig/parseDefaultAgent';
 
 export class AgentService {
   private readonly userId: string;
