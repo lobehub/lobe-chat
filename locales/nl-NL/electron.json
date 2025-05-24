@@ -1,4 +1,22 @@
 {
+  "proxy": {
+    "auth": "Authenticatie vereist",
+    "bypass": "Adressen zonder proxy",
+    "enable": "Proxy inschakelen",
+    "password": "Wachtwoord",
+    "password_placeholder": "Voer wachtwoord in",
+    "port": "Poort",
+    "server": "Serveradres",
+    "testButton": "Test verbinding",
+    "testFailed": "Verbinding mislukt: {{error}}",
+    "testSuccess": "Verbinding succesvol",
+    "testUrl": "Testadres",
+    "testUrlPlaceholder": "Voer de te testen URL in",
+    "testing": "Verbinding aan het testen...",
+    "type": "Proxy type",
+    "username": "Gebruikersnaam",
+    "username_placeholder": "Voer gebruikersnaam in"
+  },
   "remoteServer": {
     "authError": "Autorisatiefout: {{error}}",
     "authPending": "Voltooi de autorisatie in de browser",

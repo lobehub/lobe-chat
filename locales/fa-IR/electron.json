@@ -1,4 +1,22 @@
 {
+  "proxy": {
+    "auth": "نیاز به تأیید هویت",
+    "bypass": "آدرس‌هایی که از پروکسی استفاده نمی‌کنند",
+    "enable": "فعال‌سازی پروکسی",
+    "password": "رمز عبور",
+    "password_placeholder": "لطفاً رمز عبور را وارد کنید",
+    "port": "پورت",
+    "server": "آدرس سرور",
+    "testButton": "آزمایش اتصال",
+    "testFailed": "اتصال ناموفق: {{error}}",
+    "testSuccess": "اتصال موفق",
+    "testUrl": "آدرس آزمایش",
+    "testUrlPlaceholder": "لطفاً آدرس URL مورد نظر برای آزمایش را وارد کنید",
+    "testing": "در حال آزمایش اتصال...",
+    "type": "نوع پروکسی",
+    "username": "نام کاربری",
+    "username_placeholder": "لطفاً نام کاربری را وارد کنید"
+  },
   "remoteServer": {
     "authError": "خطای مجوز: {{error}}",
     "authPending": "لطفاً مجوز را در مرورگر کامل کنید",
