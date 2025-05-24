@@ -2,6 +2,64 @@
 
 # Changelog
 
+### [Version 1.88.2](https://github.com/lobehub/lobe-chat/compare/v1.88.1...v1.88.2)
+
+<sup>Released on **2025-05-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add live search support for xAI.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add live search support for xAI, closes [#7907](https://github.com/lobehub/lobe-chat/issues/7907) ([dff4b7b](https://github.com/lobehub/lobe-chat/commit/dff4b7b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.88.1](https://github.com/lobehub/lobe-chat/compare/v1.88.0...v1.88.1)
+
+<sup>Released on **2025-05-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: User nickName & username selector in desktop.
+
+#### 💄 Styles
+
+- **misc**: Support Gemini 2.5 thought reasoning.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: User nickName & username selector in desktop, closes [#7899](https://github.com/lobehub/lobe-chat/issues/7899) ([bf51746](https://github.com/lobehub/lobe-chat/commit/bf51746))
+
+#### Styles
+
+- **misc**: Support Gemini 2.5 thought reasoning, closes [#7686](https://github.com/lobehub/lobe-chat/issues/7686) ([f34c4de](https://github.com/lobehub/lobe-chat/commit/f34c4de))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.88.0](https://github.com/lobehub/lobe-chat/compare/v1.87.9...v1.88.0)
 
 <sup>Released on **2025-05-23**</sup>
