@@ -122,7 +122,7 @@ export interface ChatStreamPayload {
    */
   temperature: number;
   /**
-   * use for Claude
+   * use for Claude and Gemini
    */
   thinking?: {
     budget_tokens: number;
