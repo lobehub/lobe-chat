@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add live search support for xAI."]
+    },
+    "date": "2025-05-24",
+    "version": "1.88.2"
+  },
+  {
+    "children": {
       "fixes": ["User nickName & username selector in desktop."],
       "improvements": ["Support Gemini 2.5 thought reasoning."]
     },
