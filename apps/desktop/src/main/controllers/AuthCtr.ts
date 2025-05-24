@@ -217,12 +217,15 @@ export default class AuthCtr extends ControllerModule {
     } else {
       // Handle protocol callback via second-instance event on Windows and Linux
       logger.debug('Registering second-instance event handler for Windows/Linux');
-      app.on('second-instance', (event, commandLine) => {
+      app.on('second-instance', async (event, commandLine) => {
         // Find the URL from command line arguments
         const url = commandLine.find((arg) => arg.startsWith(`${protocolPrefix}://`));
         if (url) {
           logger.info(`Found URL from second-instance command line arguments: ${url}`);
-          this.handleAuthCallback(url);
+          const { success } = await this.handleAuthCallback(url);
+          if (success) {
+            this.app.browserManager.getMainWindow().show();
+          }
         } else {
           logger.warn('Protocol URL not found in second-instance command line arguments');
         }
