@@ -1,13 +1,13 @@
-import { VertexAI, VertexInit } from '@google-cloud/vertexai';
+import { GoogleGenAI, type GoogleGenAIOptions } from '@google/genai';
 
 import { AgentRuntimeErrorType } from '../error';
 import { LobeGoogleAI } from '../google';
 import { AgentRuntimeError } from '../utils/createError';
 
 export class LobeVertexAI extends LobeGoogleAI {
-  static initFromVertexAI(params?: VertexInit) {
+  static initFromVertexAI(params?: GoogleGenAIOptions) {
     try {
-      const client = new VertexAI({ ...params });
+      const client = new GoogleGenAI({ ...params });
 
       return new LobeGoogleAI({ apiKey: 'avoid-error', client, isVertexAi: true });
     } catch (e) {
