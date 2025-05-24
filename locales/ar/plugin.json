@@ -233,6 +233,7 @@
   "pluginList": "قائمة الإضافات",
   "search": {
     "apiName": {
+      "crawlMultiPages": "قراءة محتوى صفحات متعددة",
       "crawlSinglePage": "قراءة محتوى الصفحة",
       "search": "بحث في الصفحة"
     },
