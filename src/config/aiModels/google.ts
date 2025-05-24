@@ -285,7 +285,7 @@ const googleChatModels: AIChatModelCard[] = [
     contextWindowTokens: 2_008_192,
     description:
       'Gemini 1.5 Pro 002 是最新的生产就绪模型，提供更高质量的输出，特别在数学、长上下文和视觉任务方面有显著提升。',
-    displayName: 'Gemini 1.5 Pro 002',
+    displayName: 'Gemini 1.5 Pro 002 (Paid)',
     id: 'gemini-1.5-pro-002', // Deprecated on 2025-09-24
     maxOutput: 8192,
     pricing: {
@@ -303,7 +303,7 @@ const googleChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 2_008_192,
     description: 'Gemini 1.5 Pro 001 是可扩展的多模态AI解决方案，支持广泛的复杂任务。',
-    displayName: 'Gemini 1.5 Pro 001',
+    displayName: 'Gemini 1.5 Pro 001 (Paid)',
     id: 'gemini-1.5-pro-001', // Deprecated on 2025-05-27
     maxOutput: 8192,
     pricing: {

@@ -233,6 +233,7 @@
   "pluginList": "Список плагинов",
   "search": {
     "apiName": {
+      "crawlMultiPages": "Чтение содержимого нескольких страниц",
       "crawlSinglePage": "Читать содержимое страницы",
       "search": "Поиск страницы"
     },
