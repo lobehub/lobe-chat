@@ -45,6 +45,11 @@ const modelsDisableInstuction = new Set([
   'gemini-2.0-flash-exp',
   'gemini-2.0-flash-exp-image-generation',
   'gemini-2.0-flash-preview-image-generation',
+  'gemma-3-1b-it',
+  'gemma-3-4b-it',
+  'gemma-3-12b-it',
+  'gemma-3-27b-it',
+  'gemma-3n-e4b-it',
 ]);
 
 export interface GoogleModelCard {
