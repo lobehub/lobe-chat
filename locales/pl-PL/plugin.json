@@ -233,6 +233,7 @@
   "pluginList": "Lista wtyczek",
   "search": {
     "apiName": {
+      "crawlMultiPages": "Odczytaj zawartość wielu stron",
       "crawlSinglePage": "Odczytaj zawartość strony",
       "search": "Szukaj strony"
     },

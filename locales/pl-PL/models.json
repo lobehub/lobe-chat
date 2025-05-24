@@ -617,6 +617,12 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet zapewnia idealną równowagę między inteligencją a szybkością dla obciążeń roboczych w przedsiębiorstwach. Oferuje maksymalną użyteczność przy niższej cenie, jest niezawodny i odpowiedni do dużych wdrożeń."
   },
+  "claude-opus-4-20250514": {
+    "description": "Claude Opus 4 to najpotężniejszy model Anthropic, zaprojektowany do obsługi wysoce złożonych zadań. Wyróżnia się doskonałymi osiągami, inteligencją, płynnością i zdolnością rozumienia."
+  },
+  "claude-sonnet-4-20250514": {
+    "description": "Claude 4 Sonnet może generować niemal natychmiastowe odpowiedzi lub wydłużone, stopniowe myślenie, co pozwala użytkownikom wyraźnie zobaczyć te procesy. Użytkownicy API mogą również szczegółowo kontrolować czas myślenia modelu."
+  },
   "codegeex-4": {
     "description": "CodeGeeX-4 to potężny asystent programowania AI, obsługujący inteligentne pytania i odpowiedzi oraz uzupełnianie kodu w różnych językach programowania, zwiększając wydajność programistów."
   },
