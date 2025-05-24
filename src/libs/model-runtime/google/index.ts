@@ -38,7 +38,7 @@ const modelsWithModalities = new Set([
   'gemini-2.0-flash-preview-image-generation',
 ]);
 
-const modelsDisableInstuction = new Set([
+const modelsDisableInstruction = new Set([
   'gemini-2.0-flash-exp',
   'gemini-2.0-flash-exp-image-generation',
   'gemini-2.0-flash-preview-image-generation',
@@ -93,9 +93,6 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   constructor({ apiKey, baseURL, client, isVertexAi, id }: LobeGoogleAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
-    this.client = new GoogleGenAI({
-      apiKey,
-    });
     this.apiKey = apiKey;
     this.client = client
       ? (client as GoogleGenAI)
@@ -143,7 +140,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
               threshold: getThreshold(model),
             },
           ],
-          systemInstruction: modelsDisableInstuction.has(model)
+          systemInstruction: modelsDisableInstruction.has(model)
             ? undefined
             : (payload.system as string),
           temperature: payload.temperature,
