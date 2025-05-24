@@ -1,3 +1,4 @@
+import { aiImage } from './aiImage';
 import auth from './auth';
 import changelog from './changelog';
 import chat from './chat';
@@ -27,6 +28,7 @@ import topic from './topic';
 import welcome from './welcome';
 
 const resources = {
+  aiImage,
   auth,
   changelog,
   chat,

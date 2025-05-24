@@ -1,10 +1,10 @@
 import {
   AIChatModelCard,
   AIEmbeddingModelCard,
+  AIImageModelCard,
   AIRealtimeModelCard,
   AISTTModelCard,
   AITTSModelCard,
-  AIText2ImageModelCard,
 } from '@/types/aiModel';
 
 export const openaiChatModels: AIChatModelCard[] = [
@@ -565,7 +565,7 @@ export const openaiSTTModels: AISTTModelCard[] = [
 ];
 
 // 图像生成模型
-export const openaiImageModels: AIText2ImageModelCard[] = [
+export const openaiImageModels: AIImageModelCard[] = [
   {
     description:
       '最新的 DALL·E 模型，于2023年11月发布。支持更真实、准确的图像生成，具有更强的细节表现力',

@@ -1,5 +1,5 @@
 import { ActionIcon, ActionIconProps } from '@lobehub/ui';
-import { Compass, FolderClosed, MessageSquare } from 'lucide-react';
+import { Compass, FolderClosed, Image, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -70,6 +70,15 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
           />
         </Link>
       )}
+      <Link aria-label={t('tab.aiImage')} href={'/ai-image'}>
+        <ActionIcon
+          active={tab === SidebarTabKey.AiImage}
+          icon={Image}
+          size={ICON_SIZE}
+          title={t('tab.aiImage')}
+          tooltipProps={{ placement: 'right' }}
+        />
+      </Link>
     </Flexbox>
   );
 });

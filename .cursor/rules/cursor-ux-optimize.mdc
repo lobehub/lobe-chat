@@ -1,0 +1,35 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+## Formatting Response
+
+This is about how you should format your responses.
+
+### Render Markdown Table
+
+- Be aware that the cursor chat you are in can't render markdown table correctly.
+- IMPORTANT: Tables need to be rendered in plain text and not markdown
+
+Exmaple rendering of a table:
+
+When rendering tables, do not use markdown table syntax or plain text alone. Instead, place the entire table inside a code/text block (using triple backticks). This ensures the table formatting is preserved and readable in the chat interface.
+Example:
+
++----+---------+-----------+
+| ID |  Name   |   Role    |
++----+---------+-----------+
+| 1  | Alice   | Admin     |
+| 2  | Bob     | User      |
+| 3  | Charlie | Moderator |
++----+---------+-----------+
+
+### Categorize steps with dividers
+
+When your answer involves a multi-step process, enclose each step in a separate box like this (adjust box width to fit the longest line):
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ 1. Set up the project        ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛

@@ -207,6 +207,12 @@ export const createAiProviderSlice: StateCreator<
             children: getModelListByType(provider.id, 'chat'),
             name: provider.name || provider.id,
           }));
+
+          const enabledImageModelList = data.enabledAiProviders.map((provider) => ({
+            ...provider,
+            children: getModelListByType(provider.id, 'image'),
+            name: provider.name || provider.id,
+          }));
           const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
           set(
@@ -216,6 +222,7 @@ export const createAiProviderSlice: StateCreator<
               enabledAiModels: data.enabledAiModels,
               enabledAiProviders: data.enabledAiProviders,
               enabledChatModelList,
+              enabledImageModelList,
             },
             false,
             'useFetchAiProviderRuntimeState',

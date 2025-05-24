@@ -115,9 +115,6 @@
       "eslint --fix"
     ]
   },
-  "overrides": {
-    "mdast-util-gfm-autolink-literal": "2.0.0"
-  },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
     "@ant-design/pro-components": "^2.8.7",
@@ -148,7 +145,7 @@
     "@lobehub/charts": "^2.0.0",
     "@lobehub/chat-plugin-sdk": "^1.32.4",
     "@lobehub/chat-plugins-gateway": "^1.9.0",
-    "@lobehub/icons": "^2.0.0",
+    "@lobehub/icons": "^2.1.0",
     "@lobehub/tts": "^2.0.1",
     "@lobehub/ui": "^2.1.7",
     "@modelcontextprotocol/sdk": "^1.11.4",
@@ -372,5 +369,8 @@
         }
       }
     }
+  },
+  "overrides": {
+    "mdast-util-gfm-autolink-literal": "2.0.0"
   }
 }
