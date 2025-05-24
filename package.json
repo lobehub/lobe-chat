@@ -232,7 +232,7 @@
     "react-confetti": "^6.4.0",
     "react-dom": "^19.1.0",
     "react-fast-marquee": "^1.6.5",
-    "react-hotkeys-hook": "^4.6.2",
+    "react-hotkeys-hook": "^5.0.0",
     "react-i18next": "^15.5.1",
     "react-layout-kit": "^1.9.1",
     "react-lazy-load": "^4.0.1",
