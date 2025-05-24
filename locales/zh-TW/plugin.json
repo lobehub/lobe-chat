@@ -233,6 +233,7 @@
   "pluginList": "外掛清單",
   "search": {
     "apiName": {
+      "crawlMultiPages": "讀取多個頁面內容",
       "crawlSinglePage": "讀取頁面內容",
       "search": "搜尋頁面"
     },
