@@ -233,6 +233,7 @@
   "pluginList": "فهرست افزونه‌ها",
   "search": {
     "apiName": {
+      "crawlMultiPages": "خواندن محتوای چندین صفحه",
       "crawlSinglePage": "خواندن محتوای صفحه",
       "search": "جستجو در صفحه"
     },
