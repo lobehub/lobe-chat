@@ -1,14 +1,11 @@
-import type { VertexAI } from '@google-cloud/vertexai';
 import {
   Content,
-  FunctionCallPart,
   FunctionDeclaration,
   Tool as GoogleFunctionCallTool,
-  GoogleGenerativeAI,
-  GoogleSearchRetrievalTool,
+  GoogleGenAI,
   Part,
-  SchemaType,
-} from '@google/generative-ai';
+  Type as SchemaType,
+} from '@google/genai';
 
 import type { ChatModelCard } from '@/types/llm';
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
@@ -77,7 +74,7 @@ const DEFAULT_BASE_URL = 'https://generativelanguage.googleapis.com';
 interface LobeGoogleAIParams {
   apiKey?: string;
   baseURL?: string;
-  client?: GoogleGenerativeAI | VertexAI;
+  client?: GoogleGenAI;
   id?: string;
   isVertexAi?: boolean;
 }
@@ -87,7 +84,7 @@ interface GoogleAIThinkingConfig {
 }
 
 export class LobeGoogleAI implements LobeRuntimeAI {
-  private client: GoogleGenerativeAI;
+  private client: GoogleGenAI;
   private isVertexAi: boolean;
   baseURL?: string;
   apiKey?: string;
@@ -96,9 +93,13 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   constructor({ apiKey, baseURL, client, isVertexAi, id }: LobeGoogleAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
-    this.client = new GoogleGenerativeAI(apiKey);
+    this.client = new GoogleGenAI({
+      apiKey,
+    });
     this.apiKey = apiKey;
-    this.client = client ? (client as GoogleGenerativeAI) : new GoogleGenerativeAI(apiKey);
+    this.client = client
+      ? (client as GoogleGenAI)
+      : new GoogleGenAI({ apiKey, vertexai: isVertexAi });
     this.baseURL = client ? undefined : baseURL || DEFAULT_BASE_URL;
     this.isVertexAi = isVertexAi || false;
 
@@ -117,50 +118,44 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const contents = await this.buildGoogleMessages(payload.messages);
 
       const inputStartAt = Date.now();
-      const geminiStreamResult = await this.client
-        .getGenerativeModel(
-          {
-            generationConfig: {
-              maxOutputTokens: payload.max_tokens,
-              // @ts-expect-error - Google SDK 0.24.0 doesn't have this property for now with
-              response_modalities: modelsWithModalities.has(model) ? ['Text', 'Image'] : undefined,
-              temperature: payload.temperature,
-              thinkingConfig,
-              topP: payload.top_p,
+      const geminiStreamResult = await this.client.models.generateContentStream({
+        config: {
+          maxOutputTokens: payload.max_tokens,
+          responseModalities: modelsWithModalities.has(model) ? ['Text', 'Image'] : undefined,
+
+          // avoid wide sensitive words
+          // refs: https://github.com/lobehub/lobe-chat/pull/1418
+          safetySettings: [
+            {
+              category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+              threshold: getThreshold(model),
             },
-            model,
-            // avoid wide sensitive words
-            // refs: https://github.com/lobehub/lobe-chat/pull/1418
-            safetySettings: [
-              {
-                category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-                threshold: getThreshold(model),
-              },
-              {
-                category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-                threshold: getThreshold(model),
-              },
-              {
-                category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-                threshold: getThreshold(model),
-              },
-              {
-                category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-                threshold: getThreshold(model),
-              },
-            ],
-          },
-          { apiVersion: 'v1beta', baseUrl: this.baseURL },
-        )
-        .generateContentStream({
-          contents,
+            {
+              category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+              threshold: getThreshold(model),
+            },
+            {
+              category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+              threshold: getThreshold(model),
+            },
+            {
+              category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+              threshold: getThreshold(model),
+            },
+          ],
           systemInstruction: modelsDisableInstuction.has(model)
             ? undefined
             : (payload.system as string),
+          temperature: payload.temperature,
+          thinkingConfig,
           tools: this.buildGoogleTools(payload.tools, payload),
-        });
+          topP: payload.top_p,
+        },
+        contents,
+        model,
+      });
 
-      const googleStream = convertIterableToStream(geminiStreamResult.stream);
+      const googleStream = convertIterableToStream(geminiStreamResult);
       const [prod, useForDebug] = googleStream.tee();
 
       const key = this.isVertexAi
@@ -291,7 +286,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     const content = message.content as string | UserMessageContentPart[];
     if (!!message.tool_calls) {
       return {
-        parts: message.tool_calls.map<FunctionCallPart>((tool) => ({
+        parts: message.tool_calls.map<Part>((tool) => ({
           functionCall: {
             args: safeParseJSON(tool.function.arguments)!,
             name: tool.function.name,
@@ -384,7 +379,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       return; // 若历史消息中已有 function calling，则不再注入任何 Tools
     }
     if (payload?.enabledSearch) {
-      return [{ googleSearch: {} } as GoogleSearchRetrievalTool];
+      return [{ googleSearch: {} } as GoogleFunctionCallTool];
     }
 
     if (!tools || tools.length === 0) return;

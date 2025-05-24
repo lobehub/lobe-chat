@@ -1,4 +1,4 @@
-import { EnhancedGenerateContentResponse, GenerateContentResponse } from '@google/generative-ai';
+import { GenerateContentResponse } from '@google/genai';
 
 import { ModelTokensUsage } from '@/types/message';
 import { nanoid } from '@/utils/uuid';
@@ -57,7 +57,7 @@ const transformVertexAIStream = (
     };
 
   const item = candidates[0];
-  if (item.content) {
+  if (item.content && item.content.parts) {
     const part = item.content.parts[0];
 
     if (part.functionCall) {
@@ -108,7 +108,7 @@ const transformVertexAIStream = (
 };
 
 export const VertexAIStream = (
-  rawStream: ReadableStream<EnhancedGenerateContentResponse>,
+  rawStream: ReadableStream<GenerateContentResponse>,
   { callbacks, inputStartAt }: GoogleAIStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: 'chat_' + nanoid() };

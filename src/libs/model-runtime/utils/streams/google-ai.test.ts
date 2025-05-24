@@ -1,4 +1,4 @@
-import { EnhancedGenerateContentResponse } from '@google/generative-ai';
+import { GenerateContentResponse } from '@google/genai';
 import { describe, expect, it, vi } from 'vitest';
 
 import * as uuidModule from '@/utils/uuid';
@@ -11,10 +11,12 @@ describe('GoogleGenerativeAIStream', () => {
 
     const mockGenerateContentResponse = (text: string, functionCalls?: any[]) =>
       ({
-        text: () => text,
-        functionCall: () => functionCalls?.[0],
-        functionCalls: () => functionCalls,
-      }) as EnhancedGenerateContentResponse;
+        text,
+        data: undefined,
+        executableCode: undefined,
+        codeExecutionResult: undefined,
+        functionCalls: functionCalls,
+      }) as GenerateContentResponse;
 
     const mockGoogleStream = new ReadableStream({
       start(controller) {
@@ -116,10 +118,12 @@ describe('GoogleGenerativeAIStream', () => {
     };
     const mockGenerateContentResponse = (text: string, functionCalls?: any[]) =>
       ({
-        text: () => text,
-        functionCall: () => functionCalls?.[0],
-        functionCalls: () => functionCalls,
-      }) as EnhancedGenerateContentResponse;
+        text: text,
+        data: undefined,
+        executableCode: undefined,
+        codeExecutionResult: undefined,
+        functionCalls: functionCalls,
+      }) as GenerateContentResponse;
 
     const mockGoogleStream = new ReadableStream({
       start(controller) {
