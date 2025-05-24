@@ -18,6 +18,12 @@ export const getUserAuth = async () => {
 
     const userId = session?.user.id;
 
+    if (session?.error === 'RefreshTokenError') {
+      // If we fail to refresh the token,
+      // don't return the userId
+      return { nextAuth: session };
+    }
+
     return { nextAuth: session, userId };
   }
 

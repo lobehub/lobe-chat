@@ -27,7 +27,4 @@ const { NEXT_PUBLIC_ENABLED_SERVER_SERVICE } = getServerDBConfig();
 export default NextAuth({
   ...config,
   adapter: NEXT_PUBLIC_ENABLED_SERVER_SERVICE ? LobeNextAuthDbAdapter(serverDB) : undefined,
-  session: {
-    strategy: 'jwt',
-  },
 });
