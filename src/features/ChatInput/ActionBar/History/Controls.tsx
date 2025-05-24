@@ -45,6 +45,7 @@ const Controls = memo<ControlsProps>(({ updating, setUpdating }) => {
               maxWidth: 64,
             },
           }}
+          unlimitedInput={true}
         />
       ),
       name: 'historyCount',
