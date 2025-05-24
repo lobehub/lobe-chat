@@ -234,6 +234,7 @@ export default {
   pluginList: '插件列表',
   search: {
     apiName: {
+      crawlMultiPages: '读取多个页面内容',
       crawlSinglePage: '读取页面内容',
       search: '搜索页面',
     },
