@@ -9,16 +9,16 @@ const anthropicChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
-      'Claude Sonnet 4 可以产生近乎即时的响应或延长的逐步思考，用户可以清晰地看到这些过程。API 用户还可以对模型思考的时间进行细致的控制',
-    displayName: 'Claude Sonnet 4',
+      'Claude Opus 4 是 Anthropic 用于处理高度复杂任务的最强大模型。它在性能、智能、流畅性和理解力方面表现卓越。',
+    displayName: 'Claude Opus 4',
     enabled: true,
-    id: 'claude-sonnet-4-20250514',
-    maxOutput: 64_000,
+    id: 'claude-opus-4-20250514',
+    maxOutput: 32_000,
     pricing: {
-      cachedInput: 0.3,
-      input: 3,
-      output: 15,
-      writeCacheInput: 3.75,
+      cachedInput: 1.5,
+      input: 15,
+      output: 75,
+      writeCacheInput: 18.75,
     },
     releasedAt: '2025-05-23',
     settings: {
@@ -34,16 +34,16 @@ const anthropicChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
-      'Claude Opus 4 是 Anthropic 用于处理高度复杂任务的最强大模型。它在性能、智能、流畅性和理解力方面表现卓越。',
-    displayName: 'Claude Opus 4',
+      'Claude Sonnet 4 可以产生近乎即时的响应或延长的逐步思考，用户可以清晰地看到这些过程。API 用户还可以对模型思考的时间进行细致的控制',
+    displayName: 'Claude Sonnet 4',
     enabled: true,
-    id: 'claude-opus-4-20250514',
-    maxOutput: 32_000,
+    id: 'claude-sonnet-4-20250514',
+    maxOutput: 64_000,
     pricing: {
-      cachedInput: 1.5,
-      input: 15,
-      output: 75,
-      writeCacheInput: 18.75,
+      cachedInput: 0.3,
+      input: 3,
+      output: 15,
+      writeCacheInput: 3.75,
     },
     releasedAt: '2025-05-23',
     settings: {
@@ -73,30 +73,6 @@ const anthropicChatModels: AIChatModelCard[] = [
     releasedAt: '2025-02-24',
     settings: {
       extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 200_000,
-    description:
-      'Claude 3.5 Haiku 是 Anthropic 最快的下一代模型。与 Claude 3 Haiku 相比，Claude 3.5 Haiku 在各项技能上都有所提升，并在许多智力基准测试中超越了上一代最大的模型 Claude 3 Opus。',
-    displayName: 'Claude 3.5 Haiku',
-    enabled: true,
-    id: 'claude-3-5-haiku-20241022',
-    maxOutput: 8192,
-    pricing: {
-      cachedInput: 0.1,
-      input: 1,
-      output: 5,
-      writeCacheInput: 1.25,
-    },
-    releasedAt: '2024-11-05',
-    settings: {
-      extendParams: ['disableContextCaching'],
     },
     type: 'chat',
   },
@@ -141,6 +117,30 @@ const anthropicChatModels: AIChatModelCard[] = [
       writeCacheInput: 3.75,
     },
     releasedAt: '2024-06-20',
+    settings: {
+      extendParams: ['disableContextCaching'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'Claude 3.5 Haiku 是 Anthropic 最快的下一代模型。与 Claude 3 Haiku 相比，Claude 3.5 Haiku 在各项技能上都有所提升，并在许多智力基准测试中超越了上一代最大的模型 Claude 3 Opus。',
+    displayName: 'Claude 3.5 Haiku',
+    enabled: true,
+    id: 'claude-3-5-haiku-20241022',
+    maxOutput: 8192,
+    pricing: {
+      cachedInput: 0.1,
+      input: 1,
+      output: 5,
+      writeCacheInput: 1.25,
+    },
+    releasedAt: '2024-11-05',
     settings: {
       extendParams: ['disableContextCaching'],
     },
