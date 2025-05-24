@@ -1,7 +1,7 @@
 'use client';
 
 import { ActionIcon, SideNav } from '@lobehub/ui';
-import { Cog, DatabaseIcon } from 'lucide-react';
+import { Cog, DatabaseIcon, Package} from 'lucide-react';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -10,6 +10,7 @@ import PostgresViewer from '@/features/DevPanel/PostgresViewer';
 import SystemInspector from '@/features/DevPanel/SystemInspector';
 import { useStyles } from '@/features/DevPanel/features/FloatPanel';
 import { electronStylish } from '@/styles/electron';
+import StoreFlag from '@/features/DevPanel/StoreFlag';
 
 const DevTools = memo(() => {
   const { styles, theme, cx } = useStyles();
@@ -24,6 +25,11 @@ const DevTools = memo(() => {
       children: <SystemInspector />,
       icon: <Cog size={16} />,
       key: 'System Status',
+    },
+     {
+      children: <StoreFlag />,
+      icon: <Package size={16} />,
+      key: 'Store Flags',
     },
   ];
 
