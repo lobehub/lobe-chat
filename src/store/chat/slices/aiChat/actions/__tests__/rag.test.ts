@@ -197,13 +197,13 @@ describe('chatRAG actions', () => {
       expect(result.current.internal_shouldUseRAG()).toBe(true);
     });
 
-    it('should return true if has user files', () => {
+    it('should return false if has user files', () => {
       const { result } = renderHook(() => useChatStore());
 
       vi.spyOn(agentSelectors, 'hasEnabledKnowledge').mockReturnValue(false);
       vi.spyOn(chatSelectors, 'currentUserFiles').mockReturnValue([{ id: 'file-1' }] as any);
 
-      expect(result.current.internal_shouldUseRAG()).toBe(true);
+      expect(result.current.internal_shouldUseRAG()).toBeFalsy();
     });
 
     it('should return false if no knowledge or files', () => {

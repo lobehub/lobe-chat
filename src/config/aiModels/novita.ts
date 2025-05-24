@@ -1,7 +1,106 @@
 import { AIChatModelCard } from '@/types/aiModel';
-
 // https://novita.ai/pricing
 const novitaChatModels: AIChatModelCard[] = [
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'Qwen3 0.6B FP8',
+    id: 'qwen/qwen3-0.6b-fp8',
+    pricing: {
+      input: 0,
+      output: 0
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'Qwen3 1.7B FP8',
+    id: 'qwen/qwen3-1.7b-fp8',
+    pricing: {
+      input: 0,
+      output: 0
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 128_000,
+    displayName: 'Qwen3 4B FP8',
+    id: 'qwen/qwen3-4b-fp8',
+    pricing: {
+      input: 0,
+      output: 0
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 160_000,
+    displayName: 'Deepseek Prover V2 671B',
+    id: 'deepseek/deepseek-prover-v2-671b',
+    pricing: {
+      input: 0.7,
+      output: 2.5
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 40_960,
+    displayName: 'Qwen3 235B A22B FP8',
+    id: 'qwen/qwen3-235b-a22b-fp8',
+    pricing: {
+      input: 0.2,
+      output: 0.8
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 40_960,
+    displayName: 'Qwen3 30B A3B FP8',
+    id: 'qwen/qwen3-30b-a3b-fp8',
+    pricing: {
+      input: 0.1,
+      output: 0.45
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 40_960,
+    displayName: 'Qwen3 32B FP8',
+    id: 'qwen/qwen3-32b-fp8',
+    pricing: {
+      input: 0.1,
+      output: 0.45
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 131_072,
+    displayName: 'Llama 3.3 70B Instruct',
+    id: 'meta-llama/llama-3.3-70b-instruct',
+    pricing: {
+      input: 0.13,
+      output: 0.39
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 128_000,
+    displayName: 'Qwen3 8B FP8',
+    id: 'qwen/qwen3-8b-fp8',
+    pricing: {
+      input: 0.035,
+      output: 0.138
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 40_960,
+    displayName: 'Qwen3 14B FP8',
+    id: 'qwen/qwen3-14b-fp8',
+    pricing: {
+      input: 0.07,
+      output: 0.275
+    },
+    type: 'chat',
+  },
   {
     contextWindowTokens: 131_072,
     displayName: 'Llama 4 Scout 17B Instruct',
@@ -37,7 +136,8 @@ const novitaChatModels: AIChatModelCard[] = [
   },
   {
     contextWindowTokens: 32_768,
-    description: 'Llama 3.1 70B Instruct 专为高质量对话而设计，在人类评估中表现突出，特别适合高交互场景。',
+    description:
+      'Llama 3.1 70B Instruct 专为高质量对话而设计，在人类评估中表现突出，特别适合高交互场景。',
     displayName: 'Llama 3.1 70B Instruct',
     id: 'meta-llama/llama-3.1-70b-instruct',
     pricing: {
@@ -157,6 +257,16 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    contextWindowTokens: 160_000,
+    displayName: 'Deepseek Prover V2 671B',
+    id: 'deepseek/deepseek-prover-v2-671b',
+    pricing: {
+      input: 0.7,
+      output: 2.5,
+    },
+    type: 'chat',
+  },
+  {
     contextWindowTokens: 64_000,
     displayName: 'Deepseek V3 Turbo',
     id: 'deepseek/deepseek-v3-turbo',
@@ -199,7 +309,7 @@ const novitaChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek/deepseek-v3-0324',
     pricing: {
-      input: 0.37,
+      input: 0.33,
       output: 1.3,
     },
     type: 'chat',
@@ -278,7 +388,7 @@ const novitaChatModels: AIChatModelCard[] = [
   },
   {
     contextWindowTokens: 32_000,
-    displayName: 'Qwen 2.5 72B Instruct',
+    displayName: 'Qwen2.5 72B Instruct',
     id: 'qwen/qwen-2.5-72b-instruct',
     pricing: {
       input: 0.38,
@@ -331,7 +441,7 @@ const novitaChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 96_000,
-    displayName: 'Qwen 2.5 VL 72B Instruct',
+    displayName: 'Qwen2.5 VL 72B Instruct',
     enabled: true,
     id: 'qwen/qwen2.5-vl-72b-instruct',
     pricing: {
@@ -344,9 +454,9 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_000,
     displayName: 'Llama 3.2 1B Instruct',
     id: 'meta-llama/llama-3.2-1b-instruct',
-    pricing: {
-      input: 0.02,
-      output: 0.02,
+    pricing: { 
+      input: 0, 
+      output: 0 
     },
     type: 'chat',
   },
@@ -390,7 +500,7 @@ const novitaChatModels: AIChatModelCard[] = [
     },
     type: 'chat',
   },
-    {
+  {
     abilities: {
       reasoning: true,
     },
@@ -404,7 +514,66 @@ const novitaChatModels: AIChatModelCard[] = [
     },
     type: 'chat',
   },
-
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'Qwen2.5 7B Instruct',
+    id: 'qwen/qwen2.5-7b-instruct',
+    pricing: {
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'GLM 4 9B 0414',
+    id: 'thudm/glm-4-9b-0414',
+    pricing: { 
+      input: 0,
+      output: 0 
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'GLM Z1 9B 0414',
+    id: 'thudm/glm-z1-9b-0414',
+    pricing: { 
+      input: 0,
+      output: 0 
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'GLM Z1 32B 0414',
+    id: 'thudm/glm-z1-32b-0414',
+    pricing: { 
+      input: 0.24, 
+      output: 0.24 
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'GLM 4 32B 0414',
+    id: 'thudm/glm-4-32b-0414',
+    pricing: { 
+      input: 0.24, 
+      output: 0.24 
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'GLM Z1 Rumination 32B 0414',
+    id: 'thudm/glm-z1-rumination-32b-0414',
+    pricing: { 
+      input: 0.24, 
+      output: 0.24 
+    },
+    type: 'chat',
+  },
 ];
 
 export const allModels = [...novitaChatModels];

@@ -57,6 +57,13 @@ export type LambdaContext = Awaited<ReturnType<typeof createContextInner>>;
  * @link https://trpc.io/docs/v11/context
  */
 export const createLambdaContext = async (request: NextRequest): Promise<LambdaContext> => {
+  // we have a special header to debug the api endpoint in development mode
+  // IT WON'T GO INTO PRODUCTION ANYMORE
+  const isDebugApi = request.headers.get('lobe-auth-dev-backend-api') === '1';
+  if (process.env.NODE_ENV === 'development' && isDebugApi) {
+    return { userId: process.env.MOCK_DEV_USER_ID };
+  }
+
   log('createLambdaContext called for request');
   // for API-response caching see https://trpc.io/docs/v11/caching
 

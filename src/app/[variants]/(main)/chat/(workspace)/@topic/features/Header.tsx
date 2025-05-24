@@ -1,7 +1,7 @@
 'use client';
 
-import { ActionIcon, Icon } from '@lobehub/ui';
-import { App, Dropdown, MenuProps } from 'antd';
+import { ActionIcon, Dropdown, Icon, type MenuProps } from '@lobehub/ui';
+import { App } from 'antd';
 import type { ItemType } from 'antd/es/menu/interface';
 import { LucideCheck, MoreHorizontal, Search, Trash } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
@@ -18,7 +18,7 @@ import { TopicDisplayMode } from '@/types/topic';
 import TopicSearchBar from './TopicSearchBar';
 
 const Header = memo(() => {
-  const { t } = useTranslation('topic');
+  const { t } = useTranslation(['topic', 'common']);
   const [topicLength, removeUnstarredTopic, removeAllTopic] = useChatStore((s) => [
     topicSelectors.currentTopicLength(s),
     s.removeUnstarredTopic,
@@ -50,8 +50,10 @@ const Header = memo(() => {
         label: t('actions.removeUnstarred'),
         onClick: () => {
           modal.confirm({
+            cancelText: t('cancel', { ns: 'common' }),
             centered: true,
             okButtonProps: { danger: true },
+            okText: t('ok', { ns: 'common' }),
             onOk: removeUnstarredTopic,
             title: t('actions.confirmRemoveUnstarred'),
           });
@@ -64,8 +66,10 @@ const Header = memo(() => {
         label: t('actions.removeAll'),
         onClick: () => {
           modal.confirm({
+            cancelText: t('cancel', { ns: 'common' }),
             centered: true,
             okButtonProps: { danger: true },
+            okText: t('ok', { ns: 'common' }),
             onOk: removeAllTopic,
             title: t('actions.confirmRemoveAll'),
           });

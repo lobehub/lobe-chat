@@ -11,7 +11,7 @@ const xinferenceChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek V3',
     enabled: true,
     id: 'deepseek-v3',
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
@@ -23,31 +23,29 @@ const xinferenceChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek R1',
     enabled: true,
     id: 'deepseek-r1',
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
       reasoning: true,
     },
     contextWindowTokens: 131_072,
-    description:
-      'deepseek-r1-distill-llama 是基于 Llama 从 DeepSeek-R1 蒸馏而来的模型。',
+    description: 'deepseek-r1-distill-llama 是基于 Llama 从 DeepSeek-R1 蒸馏而来的模型。',
     displayName: 'DeepSeek R1 Distill Llama',
     enabled: true,
     id: 'deepseek-r1-distill-llama',
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
       reasoning: true,
     },
     contextWindowTokens: 131_072,
-    description:
-      'deepseek-r1-distill-qwen 是基于 Qwen 从 DeepSeek-R1 蒸馏而来的模型。',
+    description: 'deepseek-r1-distill-qwen 是基于 Qwen 从 DeepSeek-R1 蒸馏而来的模型。',
     displayName: 'DeepSeek R1 Distill Qwen',
     enabled: true,
     id: 'deepseek-r1-distill-qwen',
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
@@ -59,7 +57,7 @@ const xinferenceChatModels: AIChatModelCard[] = [
     displayName: 'QwQ 32B',
     enabled: true,
     id: 'qwq-32b',
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
@@ -67,12 +65,11 @@ const xinferenceChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 32_768,
-    description:
-      'QVQ-72B-Preview 是由 Qwen 团队开发的实验性研究模型，专注于提升视觉推理能力。',
+    description: 'QVQ-72B-Preview 是由 Qwen 团队开发的实验性研究模型，专注于提升视觉推理能力。',
     displayName: 'QVQ 72B Preview',
     enabled: true,
     id: 'qvq-72b-preview',
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
@@ -84,31 +81,29 @@ const xinferenceChatModels: AIChatModelCard[] = [
     displayName: 'Qwen2.5 Instruct',
     enabled: true,
     id: 'qwen2.5-instruct',
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
     },
     contextWindowTokens: 32_768,
-    description:
-      'Qwen2.5-Coder 是 Qwen 系列中最新的代码专用大型语言模型（前身为 CodeQwen）。',
+    description: 'Qwen2.5-Coder 是 Qwen 系列中最新的代码专用大型语言模型（前身为 CodeQwen）。',
     displayName: 'Qwen2.5 Coder Instruct',
     enabled: true,
     id: 'qwen2.5-coder-instruct',
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
       vision: true,
     },
     contextWindowTokens: 128_000,
-    description:
-      'Qwen2.5-VL 是 Qwen 模型家族中视觉语言模型的最新版本。',
+    description: 'Qwen2.5-VL 是 Qwen 模型家族中视觉语言模型的最新版本。',
     displayName: 'Qwen2.5 VL Instruct',
     enabled: true,
     id: 'qwen2.5-vl-instruct',
-    type: 'chat'
+    type: 'chat',
   },
   {
     contextWindowTokens: 1_024_000,
@@ -117,7 +112,7 @@ const xinferenceChatModels: AIChatModelCard[] = [
     displayName: 'Mistral Nemo Instruct',
     enabled: true,
     id: 'mistral-nemo-instruct',
-    type: 'chat'
+    type: 'chat',
   },
   {
     contextWindowTokens: 131_072,
@@ -126,7 +121,7 @@ const xinferenceChatModels: AIChatModelCard[] = [
     displayName: 'Mistral Large Instruct',
     enabled: true,
     id: 'mistral-large-instruct',
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
@@ -138,7 +133,7 @@ const xinferenceChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.3 Instruct',
     enabled: true,
     id: 'llama-3.3-instruct',
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
@@ -150,7 +145,7 @@ const xinferenceChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.2 Vision Instruct',
     enabled: true,
     id: 'llama-3.2-vision-instruct',
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
@@ -162,9 +157,9 @@ const xinferenceChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.1 Instruct',
     enabled: true,
     id: 'llama-3.1-instruct',
-    type: 'chat'
+    type: 'chat',
   },
-]
+];
 
 export const allModels = [...xinferenceChatModels];
 

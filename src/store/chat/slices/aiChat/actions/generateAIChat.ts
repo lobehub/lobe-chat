@@ -602,13 +602,22 @@ export const generateAIChat: StateCreator<
           }
         }
 
-        if (toolCalls && toolCalls.length > 0) {
+        let parsedToolCalls = toolCalls;
+        if (parsedToolCalls && parsedToolCalls.length > 0) {
           internal_toggleToolCallingStreaming(messageId, undefined);
+          parsedToolCalls = parsedToolCalls.map((item) => ({
+            ...item,
+            function: {
+              ...item.function,
+              arguments: !!item.function.arguments ? item.function.arguments : '{}',
+            },
+          }));
+          isFunctionCall = true;
         }
 
         // update the content after fetch result
         await internal_updateMessageContent(messageId, content, {
-          toolCalls,
+          toolCalls: parsedToolCalls,
           reasoning: !!reasoning ? { ...reasoning, duration } : undefined,
           search: !!grounding?.citations ? grounding : undefined,
           imageList: finalImages.length > 0 ? finalImages : undefined,
@@ -668,7 +677,15 @@ export const generateAIChat: StateCreator<
             // if there is no duration, it means the end of reasoning
             if (!duration) {
               duration = Date.now() - thinkingStartAt;
-              internal_toggleChatReasoning(false, messageId, n('generateMessage(end)') as string);
+
+              const isInChatReasoning = chatSelectors.isMessageInChatReasoning(messageId)(get());
+              if (isInChatReasoning) {
+                internal_toggleChatReasoning(
+                  false,
+                  messageId,
+                  n('toggleChatReasoning/false') as string,
+                );
+              }
             }
 
             internal_dispatchMessage({
@@ -686,7 +703,11 @@ export const generateAIChat: StateCreator<
             // if there is no thinkingStartAt, it means the start of reasoning
             if (!thinkingStartAt) {
               thinkingStartAt = Date.now();
-              internal_toggleChatReasoning(true, messageId, n('generateMessage(end)') as string);
+              internal_toggleChatReasoning(
+                true,
+                messageId,
+                n('toggleChatReasoning/true') as string,
+              );
             }
 
             thinking += chunk.text;

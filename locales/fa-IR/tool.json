@@ -54,7 +54,16 @@
       "title": "موتور جستجو:"
     },
     "searchResult": "تعداد جستجو:",
-    "searchTimeRange": "محدوده زمانی:",
+    "searchTimeRange": {
+      "title": "محدوده زمانی:",
+      "value": {
+        "anytime": "زمان نامحدود",
+        "day": "در یک روز",
+        "month": "در یک ماه",
+        "week": "در یک هفته",
+        "year": "در یک سال"
+      }
+    },
     "summary": "خلاصه",
     "summaryTooltip": "خلاصه محتوای فعلی",
     "viewMoreResults": "مشاهده {{results}} نتیجه بیشتر"

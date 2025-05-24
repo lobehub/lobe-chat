@@ -150,6 +150,7 @@
       "title": "Couleur de fond"
     },
     "description": {
+      "desc": "Une brève introduction à votre assistant, sans être une caractéristique de personnage",
       "placeholder": "Veuillez saisir la description de l'agent",
       "title": "Description de l'agent"
     },
@@ -161,11 +162,27 @@
       "placeholder": "Veuillez saisir le mot de prompt du rôle",
       "title": "Paramètre du rôle"
     },
+    "submit": "Mettre à jour les informations de l'assistant",
     "tag": {
+      "desc": "Les étiquettes de l'assistant seront affichées sur le marché des assistants",
       "placeholder": "Veuillez saisir l'étiquette",
       "title": "Étiquette"
     },
     "title": "Informations sur l'agent"
+  },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Personnalisation des nuances de gris selon les tendances de couleur",
+      "title": "Couleur neutre"
+    },
+    "preview": {
+      "title": "Palette de couleurs"
+    },
+    "primaryColor": {
+      "desc": "Couleur de thème personnalisée",
+      "title": "Couleur du thème"
+    },
+    "title": "Apparence de l'application"
   },
   "settingChat": {
     "autoCreateTopicThreshold": {
@@ -206,7 +223,37 @@
       "placeholder": "Le modèle de prétraitement {{text}} sera remplacé par les informations d'entrée en temps réel",
       "title": "Modèle de prétraitement de l'entrée utilisateur"
     },
+    "submit": "Mettre à jour les préférences de chat",
     "title": "Paramètres de chat"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Taille de la police du contenu de chat",
+      "marks": {
+        "normal": "Standard"
+      },
+      "title": "Taille de la police"
+    },
+    "highlighterTheme": {
+      "title": "Thème de surlignage de code"
+    },
+    "mermaidTheme": {
+      "title": "Thème Sirène"
+    },
+    "title": "Apparence du chat"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Suivre le système",
+      "title": "Langue"
+    },
+    "themeMode": {
+      "auto": "Automatique",
+      "dark": "Sombre",
+      "light": "Clair",
+      "title": "Thème"
+    },
+    "title": "Paramètres généraux"
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -243,6 +290,7 @@
       },
       "title": "Intensité de raisonnement"
     },
+    "submit": "Mettre à jour les paramètres du modèle",
     "temperature": {
       "desc": "Plus la valeur est élevée, plus les réponses sont créatives et imaginatives ; plus la valeur est basse, plus les réponses sont rigoureuses",
       "title": "Niveau de créativité",
@@ -319,6 +367,7 @@
       "desc": "Le service de reconnaissance vocale, où 'browser' est le service natif de reconnaissance vocale du navigateur",
       "title": "Service de reconnaissance vocale"
     },
+    "submit": "Mettre à jour le service vocal",
     "title": "Services vocaux",
     "tts": "Paramètres de synthèse vocale",
     "ttsService": {
@@ -330,37 +379,6 @@
       "preview": "Prévisualisation de la voix",
       "title": "Voix de synthèse vocale"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Avatar"
-    },
-    "fontSize": {
-      "desc": "Taille de la police du contenu du chat",
-      "marks": {
-        "normal": "Normal"
-      },
-      "title": "Taille de la police"
-    },
-    "lang": {
-      "autoMode": "Suivre le système",
-      "title": "Langue"
-    },
-    "neutralColor": {
-      "desc": "Personnalisation des nuances de gris pour différentes tendances de couleur",
-      "title": "Couleur neutre"
-    },
-    "primaryColor": {
-      "desc": "Couleur de thème personnalisée",
-      "title": "Couleur principale"
-    },
-    "themeMode": {
-      "auto": "Automatique",
-      "dark": "Sombre",
-      "light": "Clair",
-      "title": "Thème"
-    },
-    "title": "Paramètres du thème"
   },
   "storage": {
     "actions": {
@@ -395,6 +413,12 @@
     "metaMiss": "Veuillez compléter les informations de l'agent avant de soumettre. Elles doivent inclure le nom, la description et les balises.",
     "placeholder": "Veuillez entrer l'identifiant de l'agent, qui doit être unique, par exemple développement-web",
     "tooltips": "Partager sur le marché des agents"
+  },
+  "submitFooter": {
+    "reset": "Réinitialiser",
+    "submit": "Enregistrer",
+    "unSaved": "Modifications non enregistrées",
+    "unSavedWarning": "Il y a actuellement des modifications non enregistrées"
   },
   "sync": {
     "device": {
@@ -447,6 +471,7 @@
       "placeholder": "Veuillez entrer le mot-clé personnalisé",
       "title": "Mot-clé personnalisé"
     },
+    "helpInfo": "Lors de la création d'un nouvel assistant, les paramètres par défaut de l'assistant seront utilisés comme valeurs par défaut.",
     "historyCompress": {
       "label": "Modèle d'historique de conversation",
       "modelDesc": "Modèle utilisé pour compresser l'historique des conversations",

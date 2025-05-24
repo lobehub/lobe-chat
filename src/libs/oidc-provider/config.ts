@@ -17,13 +17,15 @@ export const defaultClients: ClientMetadata[] = [
     post_logout_redirect_uris: [
       'com.lobehub.lobehub-desktop-dev://auth/logout/callback',
       'com.lobehub.lobehub-desktop-nightly://auth/logout/callback',
+      'com.lobehub.lobehub-desktop-beta://auth/logout/callback',
       'com.lobehub.lobehub-desktop://auth/logout/callback',
     ],
 
     redirect_uris: [
       'com.lobehub.lobehub-desktop-dev://auth/callback',
       'com.lobehub.lobehub-desktop-nightly://auth/callback',
-      'com.lobehub.lobehub-desktop://auth/logout/callback',
+      'com.lobehub.lobehub-desktop-beta://auth/callback',
+      'com.lobehub.lobehub-desktop://auth/callback',
     ],
 
     // 支持授权码获取令牌和刷新令牌

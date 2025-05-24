@@ -150,6 +150,7 @@
       "title": "Colore di sfondo"
     },
     "description": {
+      "desc": "Una breve introduzione al tuo assistente, non come impostazione del personaggio",
       "placeholder": "Inserisci la descrizione dell'assistente",
       "title": "Descrizione dell'assistente"
     },
@@ -161,11 +162,27 @@
       "placeholder": "Inserisci la parola di prompt del ruolo",
       "title": "Impostazione del ruolo"
     },
+    "submit": "Aggiorna informazioni assistente",
     "tag": {
+      "desc": "Le etichette dell'assistente verranno visualizzate nel mercato degli assistenti",
       "placeholder": "Inserisci un'etichetta",
       "title": "Etichetta"
     },
     "title": "Informazioni sull'assistente"
+  },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Personalizzazione dei grigi con diverse inclinazioni di colore",
+      "title": "Colore Neutro"
+    },
+    "preview": {
+      "title": "Tavolozza"
+    },
+    "primaryColor": {
+      "desc": "Colore del tema personalizzato",
+      "title": "Colore del Tema"
+    },
+    "title": "Aspetto dell'Applicazione"
   },
   "settingChat": {
     "autoCreateTopicThreshold": {
@@ -206,7 +223,37 @@
       "placeholder": "Il modello di input {{text}} verrà sostituito con le informazioni in tempo reale",
       "title": "Pre-elaborazione dell'input dell'utente"
     },
+    "submit": "Aggiorna preferenze chat",
     "title": "Impostazioni della chat"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Dimensione del carattere per il contenuto della chat",
+      "marks": {
+        "normal": "Normale"
+      },
+      "title": "Dimensione del Carattere"
+    },
+    "highlighterTheme": {
+      "title": "Tema di Evidenziazione del Codice"
+    },
+    "mermaidTheme": {
+      "title": "Tema Sirena"
+    },
+    "title": "Aspetto della Chat"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Segui il sistema",
+      "title": "Lingua"
+    },
+    "themeMode": {
+      "auto": "Automatico",
+      "dark": "Scuro",
+      "light": "Chiaro",
+      "title": "Tema"
+    },
+    "title": "Impostazioni Generali"
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -243,6 +290,7 @@
       },
       "title": "Intensità del ragionamento"
     },
+    "submit": "Aggiorna impostazioni modello",
     "temperature": {
       "desc": "Maggiore è il valore, più creativi e fantasiosi saranno le risposte; minore è il valore, più rigorose saranno le risposte",
       "title": "Attività Creativa",
@@ -319,6 +367,7 @@
       "desc": "Il servizio di riconoscimento vocale, dove 'browser' è il servizio nativo del browser",
       "title": "Servizio di riconoscimento vocale"
     },
+    "submit": "Aggiorna servizio vocale",
     "title": "Servizio vocale",
     "tts": "Impostazioni di sintesi vocale",
     "ttsService": {
@@ -330,37 +379,6 @@
       "preview": "Anteprima della voce",
       "title": "Voce di sintesi vocale"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Avatar"
-    },
-    "fontSize": {
-      "desc": "Dimensione del carattere per i messaggi",
-      "marks": {
-        "normal": "Normale"
-      },
-      "title": "Dimensione del carattere"
-    },
-    "lang": {
-      "autoMode": "Segui il sistema",
-      "title": "Lingua"
-    },
-    "neutralColor": {
-      "desc": "Personalizzazione delle sfumature di grigio per diverse preferenze di colore",
-      "title": "Colore neutro"
-    },
-    "primaryColor": {
-      "desc": "Colore del tema personalizzato",
-      "title": "Colore principale"
-    },
-    "themeMode": {
-      "auto": "Automatico",
-      "dark": "Scuro",
-      "light": "Chiaro",
-      "title": "Tema"
-    },
-    "title": "Impostazioni del tema"
   },
   "storage": {
     "actions": {
@@ -395,6 +413,12 @@
     "metaMiss": "Si prega di completare le informazioni dell'assistente prima di inviare, è necessario includere nome, descrizione e tag",
     "placeholder": "Inserisci l'identificatore dell'assistente, deve essere univoco, ad esempio sviluppo-web",
     "tooltips": "Condividi sul mercato degli assistenti"
+  },
+  "submitFooter": {
+    "reset": "Ripristina",
+    "submit": "Salva",
+    "unSaved": "Modifiche non salvate",
+    "unSavedWarning": "Ci sono modifiche non salvate attualmente"
   },
   "sync": {
     "device": {
@@ -447,6 +471,7 @@
       "placeholder": "Inserisci il suggerimento personalizzato",
       "title": "Suggerimento personalizzato"
     },
+    "helpInfo": "Quando crei un nuovo assistente, verranno utilizzate le impostazioni predefinite dell'assistente come valori predefiniti.",
     "historyCompress": {
       "label": "Modello di storia delle conversazioni",
       "modelDesc": "Specifica il modello utilizzato per comprimere la storia delle conversazioni",

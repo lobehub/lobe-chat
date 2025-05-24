@@ -1,6 +1,6 @@
 'use client';
 
-import { TabsNav, Tag } from '@lobehub/ui';
+import { Tabs, Tag } from '@lobehub/ui';
 import { Empty, Skeleton, Table } from 'antd';
 import { useTheme } from 'antd-style';
 import { PuzzleIcon } from 'lucide-react';
@@ -37,14 +37,14 @@ const ParameterList = memo<ParameterListProps>(({ data }) => {
 
     content = (
       <>
-        <TabsNav
+        <Tabs
           activeKey={active as any}
+          compact
           items={api.map((item, index) => ({
             key: index as any,
             label: item.name,
           }))}
           onChange={(key) => setActive(key as any)}
-          variant={'compact'}
         />
         <Flexbox
           padding={16}

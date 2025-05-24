@@ -1,7 +1,11 @@
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+import {
+  StdioClientTransport,
+  getDefaultEnvironment,
+} from '@modelcontextprotocol/sdk/client/stdio.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.d.ts';
+import type { Progress } from '@modelcontextprotocol/sdk/types.js';
 import debug from 'debug';
 
 import { MCPClientParams, McpTool } from './types';
@@ -24,9 +28,14 @@ export class MCPClient {
       }
       case 'stdio': {
         log('Using Stdio transport with command: %s and args: %O', params.command, params.args);
+
         this.transport = new StdioClientTransport({
           args: params.args,
           command: params.command,
+          env: {
+            ...getDefaultEnvironment(),
+            ...params.env,
+          },
         });
         break;
       }
@@ -38,10 +47,20 @@ export class MCPClient {
     }
   }
 
-  async initialize() {
+  async initialize(options: { onProgress?: (progress: Progress) => void } = {}) {
     log('Initializing MCP connection...');
-    await this.mcp.connect(this.transport);
-    log('MCP connection initialized.');
+
+    try {
+      await this.mcp.connect(this.transport, { onprogress: options.onProgress });
+      log('MCP connection initialized.');
+    } catch (e) {
+      if ((e as any).code === -32_000) {
+        throw new Error('Fail to connecting MCP Server, please check your configuration.');
+      }
+
+      log('MCP connection failed:', e);
+      throw e;
+    }
   }
 
   async disconnect() {

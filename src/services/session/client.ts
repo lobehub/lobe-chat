@@ -106,10 +106,7 @@ export class ClientService extends BaseClientService implements ISessionService 
   };
 
   updateSessionConfig: ISessionService['updateSessionConfig'] = async (activeId, config) => {
-    const session = await this.sessionModel.findByIdOrSlug(activeId);
-    if (!session || !config) return;
-
-    return this.sessionModel.updateConfig(session.agent.id, config as AgentItem);
+    return this.sessionModel.updateConfig(activeId, config as AgentItem);
   };
 
   updateSessionMeta: ISessionService['updateSessionMeta'] = async (activeId, meta) => {

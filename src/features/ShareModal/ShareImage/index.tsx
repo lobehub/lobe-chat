@@ -1,5 +1,5 @@
-import { Form, type FormItemProps, Icon } from '@lobehub/ui';
-import { Button, Segmented, Switch } from 'antd';
+import { Button, Form, type FormItemProps, Segmented } from '@lobehub/ui';
+import { Switch } from 'antd';
 import { CopyIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +24,7 @@ const DEFAULT_FIELD_VALUE: FieldType = {
   withSystemRole: false,
 };
 
-const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
+const ShareImage = memo<{ mobile?: boolean }>(() => {
   const currentAgentTitle = useSessionStore(sessionMetaSelectors.currentAgentTitle);
   const [fieldValue, setFieldValue] = useState<FieldType>(DEFAULT_FIELD_VALUE);
   const { t } = useTranslation(['chat', 'common']);
@@ -32,15 +32,13 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { loading, onDownload, title } = useScreenshot({
     imageType: fieldValue.imageType,
     title: currentAgentTitle,
-    width: mobile ? 720 : undefined,
   });
-  const { loading: copyLoading, onCopy } = useImgToClipboard({
-    width: mobile ? 720 : undefined,
-  });
+  const { loading: copyLoading, onCopy } = useImgToClipboard();
   const settings: FormItemProps[] = [
     {
       children: <Switch />,
       label: t('shareModal.withSystemRole'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'withSystemRole',
       valuePropName: 'checked',
@@ -48,6 +46,7 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
     {
       children: <Switch />,
       label: t('shareModal.withBackground'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'withBackground',
       valuePropName: 'checked',
@@ -55,6 +54,7 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
     {
       children: <Switch />,
       label: t('shareModal.withFooter'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'withFooter',
       valuePropName: 'checked',
@@ -62,6 +62,7 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
     {
       children: <Segmented options={imageTypeOptions} />,
       label: t('shareModal.imageType'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'imageType',
     },
@@ -73,7 +74,7 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
     <>
       <Button
         block
-        icon={<Icon icon={CopyIcon} />}
+        icon={CopyIcon}
         loading={copyLoading}
         onClick={() => onCopy()}
         size={isMobile ? undefined : 'large'}
@@ -81,13 +82,7 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
       >
         {t('copy', { ns: 'common' })}
       </Button>
-      <Button
-        block
-        loading={loading}
-        onClick={onDownload}
-        size={isMobile ? undefined : 'large'}
-        variant={'filled'}
-      >
+      <Button block loading={loading} onClick={onDownload} size={isMobile ? undefined : 'large'}>
         {t('shareModal.download')}
       </Button>
     </>
@@ -97,7 +92,7 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
     <>
       <Flexbox className={styles.body} gap={16} horizontal={!isMobile}>
         <Preview title={title} {...fieldValue} />
-        <Flexbox className={styles.sidebar} gap={16}>
+        <Flexbox className={styles.sidebar} gap={12}>
           <Form
             initialValues={DEFAULT_FIELD_VALUE}
             items={settings}
@@ -108,7 +103,11 @@ const ShareImage = memo<{ mobile?: boolean }>(({ mobile }) => {
           {!isMobile && button}
         </Flexbox>
       </Flexbox>
-      {isMobile && <Flexbox className={styles.footer}>{button}</Flexbox>}
+      {isMobile && (
+        <Flexbox className={styles.footer} gap={8} horizontal>
+          {button}
+        </Flexbox>
+      )}
     </>
   );
 });

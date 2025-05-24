@@ -1,4 +1,4 @@
-import { ModelProviderKey } from '@/libs/agent-runtime';
+import { ModelProviderKey } from '@/libs/model-runtime';
 import { AiFullModelCard } from '@/types/aiModel';
 import { ChatModelCard } from '@/types/llm';
 

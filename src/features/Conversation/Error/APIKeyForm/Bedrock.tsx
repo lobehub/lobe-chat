@@ -1,12 +1,11 @@
 import { Aws } from '@lobehub/icons';
-import { Icon } from '@lobehub/ui';
-import { Button, Input, Select } from 'antd';
+import { Button, Icon, InputPassword, Select } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Network, ShieldPlus } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ModelProvider } from '@/libs/agent-runtime';
+import { ModelProvider } from '@/libs/model-runtime';
 import { useUserStore } from '@/store/user';
 import { keyVaultsConfigSelectors } from '@/store/user/selectors';
 
@@ -32,38 +31,38 @@ const BedrockForm = memo(() => {
       description={t('bedrock.unlock.description')}
       title={t('bedrock.unlock.title')}
     >
-      <Input.Password
+      <InputPassword
         autoComplete={'new-password'}
         onChange={(e) => {
           setConfig(ModelProvider.Bedrock, { accessKeyId: e.target.value });
         }}
         placeholder={'Aws Access Key Id'}
-        type={'block'}
         value={accessKeyId}
+        variant={'filled'}
       />
-      <Input.Password
+      <InputPassword
         autoComplete={'new-password'}
         onChange={(e) => {
           setConfig(ModelProvider.Bedrock, { secretAccessKey: e.target.value });
         }}
         placeholder={'Aws Secret Access Key'}
-        type={'block'}
         value={secretAccessKey}
+        variant={'filled'}
       />
       {showSessionToken ? (
-        <Input.Password
+        <InputPassword
           autoComplete={'new-password'}
           onChange={(e) => {
             setConfig(ModelProvider.Bedrock, { sessionToken: e.target.value });
           }}
           placeholder={'Aws Session Token'}
-          type={'block'}
           value={sessionToken}
+          variant={'filled'}
         />
       ) : (
         <Button
           block
-          icon={<Icon icon={ShieldPlus} />}
+          icon={ShieldPlus}
           onClick={() => {
             setShowSessionToken(true);
           }}

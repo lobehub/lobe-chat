@@ -10,7 +10,6 @@ import { default as bedrock } from './bedrock';
 import { default as cloudflare } from './cloudflare';
 import { default as cohere } from './cohere';
 import { default as deepseek } from './deepseek';
-import { default as doubao } from './doubao';
 import { default as fireworksai } from './fireworksai';
 import { default as giteeai } from './giteeai';
 import { default as github } from './github';
@@ -33,6 +32,7 @@ import { default as openai } from './openai';
 import { default as openrouter } from './openrouter';
 import { default as perplexity } from './perplexity';
 import { default as ppio } from './ppio';
+import { default as qiniu } from './qiniu';
 import { default as qwen } from './qwen';
 import { default as sambanova } from './sambanova';
 import { default as search1api } from './search1api';
@@ -83,7 +83,6 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   cloudflare,
   cohere,
   deepseek,
-  doubao,
   fireworksai,
   giteeai,
   github,
@@ -106,6 +105,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   openrouter,
   perplexity,
   ppio,
+  qiniu,
   qwen,
   sambanova,
   search1api,
@@ -137,7 +137,6 @@ export { default as bedrock } from './bedrock';
 export { default as cloudflare } from './cloudflare';
 export { default as cohere } from './cohere';
 export { default as deepseek } from './deepseek';
-export { default as doubao } from './doubao';
 export { default as fireworksai } from './fireworksai';
 export { default as giteeai } from './giteeai';
 export { default as github } from './github';
@@ -160,6 +159,7 @@ export { default as openai } from './openai';
 export { default as openrouter } from './openrouter';
 export { default as perplexity } from './perplexity';
 export { default as ppio } from './ppio';
+export { default as qiniu } from './qiniu';
 export { default as qwen } from './qwen';
 export { default as sambanova } from './sambanova';
 export { default as search1api } from './search1api';

@@ -14,9 +14,9 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 8000,
     pricing: {
       input: 2.5,
-      output: 10
+      output: 10,
     },
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
@@ -30,9 +30,9 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       input: 3,
-      output: 15
+      output: 15,
     },
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
@@ -47,9 +47,9 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       input: 2.5,
-      output: 10
+      output: 10,
     },
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
@@ -63,26 +63,25 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       input: 0.15,
-      output: 0.6
+      output: 0.6,
     },
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
     },
     contextWindowTokens: 128_000,
-    description:
-      'command-r-08-2024 是 Command R 模型的更新版本，于 2024 年 8 月发布。',
+    description: 'command-r-08-2024 是 Command R 模型的更新版本，于 2024 年 8 月发布。',
     displayName: 'Command R 2408',
     enabled: true,
     id: 'command-r-08-2024',
     maxOutput: 4000,
     pricing: {
       input: 0.15,
-      output: 0.6
+      output: 0.6,
     },
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
@@ -96,9 +95,9 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       input: 0.5,
-      output: 1.5
+      output: 1.5,
     },
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
@@ -112,9 +111,9 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       input: 0.0375,
-      output: 0.15
+      output: 0.15,
     },
-    type: 'chat'
+    type: 'chat',
   },
   {
     contextWindowTokens: 4000,
@@ -125,9 +124,9 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       input: 1,
-      output: 2
+      output: 2,
     },
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
@@ -141,22 +140,21 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       input: 1,
-      output: 2
+      output: 2,
     },
-    type: 'chat'
+    type: 'chat',
   },
   {
     contextWindowTokens: 4000,
-    description:
-      '一个更小、更快的 Command 版本，几乎同样强大，但速度更快。',
+    description: '一个更小、更快的 Command 版本，几乎同样强大，但速度更快。',
     displayName: 'Command Light',
     id: 'command-light',
     maxOutput: 4000,
     pricing: {
       input: 0.3,
-      output: 0.6
+      output: 0.6,
     },
-    type: 'chat'
+    type: 'chat',
   },
   {
     contextWindowTokens: 4000,
@@ -167,9 +165,9 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       input: 0.3,
-      output: 0.6
+      output: 0.6,
     },
-    type: 'chat'
+    type: 'chat',
   },
   {
     contextWindowTokens: 128_000,
@@ -181,9 +179,9 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       input: 0.5,
-      output: 1.5
+      output: 1.5,
     },
-    type: 'chat'
+    type: 'chat',
   },
   {
     contextWindowTokens: 8000,
@@ -195,9 +193,9 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       input: 0.5,
-      output: 1.5
+      output: 1.5,
     },
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
@@ -212,9 +210,9 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       input: 0.5,
-      output: 1.5
+      output: 1.5,
     },
-    type: 'chat'
+    type: 'chat',
   },
   {
     abilities: {
@@ -229,11 +227,11 @@ const cohereChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       input: 0.5,
-      output: 1.5
+      output: 1.5,
     },
-    type: 'chat'
+    type: 'chat',
   },
-]
+];
 
 export const allModels = [...cohereChatModels];
 

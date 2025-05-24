@@ -1,5 +1,5 @@
-import { Icon } from '@lobehub/ui';
-import { App, Button } from 'antd';
+import { Button, Icon } from '@lobehub/ui';
+import { App } from 'antd';
 import { ScanFace } from 'lucide-react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';

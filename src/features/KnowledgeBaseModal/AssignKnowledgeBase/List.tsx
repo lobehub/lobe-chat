@@ -26,7 +26,7 @@ export const List = memo(() => {
     <Center gap={12} padding={40}>
       {error ? (
         <>
-          <Icon icon={ServerCrash} size={{ fontSize: 80 }} />
+          <Icon icon={ServerCrash} size={80} />
           {t('networkError')}
         </>
       ) : (
