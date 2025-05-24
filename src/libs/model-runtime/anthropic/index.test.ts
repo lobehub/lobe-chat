@@ -130,7 +130,7 @@ describe('LobeAnthropicAI', () => {
       // Assert
       expect(instance['client'].messages.create).toHaveBeenCalledWith(
         {
-          max_tokens: 8192,
+          max_tokens: 64000,
           messages: [
             {
               content: [{ cache_control: { type: 'ephemeral' }, text: 'Hello', type: 'text' }],
@@ -147,8 +147,13 @@ describe('LobeAnthropicAI', () => {
             },
           ],
           temperature: 0,
+          metadata: undefined,
+          tools: undefined,
+          top_p: undefined,
         },
-        {},
+        {
+          signal: undefined,
+        },
       );
       expect(result).toBeInstanceOf(Response);
     });
@@ -617,7 +622,7 @@ describe('LobeAnthropicAI', () => {
         const result = await instance['buildAnthropicPayload'](payload);
 
         expect(result).toEqual({
-          max_tokens: 32000,
+          max_tokens: 4096,
           messages: [
             {
               content: [
@@ -738,7 +743,7 @@ describe('LobeAnthropicAI', () => {
 
         const result = await instance['buildAnthropicPayload'](payload);
 
-        expect(result.max_tokens).toBe(8192);
+        expect(result.max_tokens).toBe(4096);
       });
 
       it('should respect max_tokens when explicitly provided', async () => {
