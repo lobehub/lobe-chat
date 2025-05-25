@@ -23,7 +23,7 @@ export interface AnthropicModelCard {
   id: string;
 }
 
-type ExtendedTool = Anthropic.Tool | Anthropic.WebSearchTool20250305;
+type anthropicTools = Anthropic.Tool | Anthropic.WebSearchTool20250305;
 
 const modelsWithSmallContextWindow = new Set(['claude-3-opus-20240229', 'claude-3-haiku-20240307']);
 
@@ -137,7 +137,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
 
     const postMessages = await buildAnthropicMessages(user_messages, { enabledContextCaching });
 
-    let postTools: ExtendedTool[] | undefined = buildAnthropicTools(tools, { enabledContextCaching });
+    let postTools: anthropicTools[] | undefined = buildAnthropicTools(tools, { enabledContextCaching });
 
     if (enabledSearch) {
       // Limit the number of searches per request
