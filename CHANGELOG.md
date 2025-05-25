@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.88.3](https://github.com/lobehub/lobe-chat/compare/v1.88.2...v1.88.3)
+
+<sup>Released on **2025-05-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix message refresh 401 on desktop.
+
+#### 💄 Styles
+
+- **misc**: Add gemini & hunyuan & Claude models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix message refresh 401 on desktop, closes [#7958](https://github.com/lobehub/lobe-chat/issues/7958) ([b4b426f](https://github.com/lobehub/lobe-chat/commit/b4b426f))
+
+#### Styles
+
+- **misc**: Add gemini & hunyuan & Claude models, closes [#7908](https://github.com/lobehub/lobe-chat/issues/7908) ([5244f22](https://github.com/lobehub/lobe-chat/commit/5244f22))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.88.2](https://github.com/lobehub/lobe-chat/compare/v1.88.1...v1.88.2)
 
 <sup>Released on **2025-05-24**</sup>
