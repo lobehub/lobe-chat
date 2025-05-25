@@ -1,6 +1,6 @@
 import { ElectronAppState } from '@lobechat/electron-client-ipc';
 import { ThemeMode } from 'antd-style';
-import { app, nativeTheme, shell, systemPreferences } from 'electron';
+import { app, shell, systemPreferences } from 'electron';
 import { macOS } from 'electron-is';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -71,15 +71,7 @@ export default class SystemController extends ControllerModule {
 
   @ipcClientEvent('updateThemeMode')
   async updateThemeModeHandler(themeMode: ThemeMode) {
-    let theme: 'light' | 'dark';
-
-    if (themeMode === 'auto') {
-      theme = nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
-    } else {
-      theme = themeMode;
-    }
-
-    this.app.browserManager.broadcastToAllWindows('themeChanged', { theme });
+    this.app.browserManager.broadcastToAllWindows('themeChanged', { themeMode });
   }
 
   @ipcServerEvent('getDatabasePath')

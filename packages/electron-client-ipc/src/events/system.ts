@@ -16,5 +16,5 @@ export interface SystemDispatchEvents {
 }
 
 export interface SystemBroadcastEvents {
-  themeChanged: (data: { theme: 'light' | 'dark' }) => void;
+  themeChanged: (data: { themeMode: ThemeMode }) => void;
 }
