@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.88.6](https://github.com/lobehub/lobe-chat/compare/v1.88.5...v1.88.6)
+
+<sup>Released on **2025-05-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix draggable issue with agent header.
+
+#### 💄 Styles
+
+- **misc**: Fix a few typos in the model tooltips.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix draggable issue with agent header, closes [#7968](https://github.com/lobehub/lobe-chat/issues/7968) ([cd84241](https://github.com/lobehub/lobe-chat/commit/cd84241))
+
+#### Styles
+
+- **misc**: Fix a few typos in the model tooltips, closes [#7952](https://github.com/lobehub/lobe-chat/issues/7952) ([8416fec](https://github.com/lobehub/lobe-chat/commit/8416fec))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.88.5](https://github.com/lobehub/lobe-chat/compare/v1.88.4...v1.88.5)
 
 <sup>Released on **2025-05-25**</sup>
