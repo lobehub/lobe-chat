@@ -40,6 +40,12 @@ declare global {
       ZITADEL_CLIENT_ID?: string;
       ZITADEL_CLIENT_SECRET?: string;
       ZITADEL_ISSUER?: string;
+
+      // Cognito
+      COGNITO_CLIENT_ID?: string;
+      COGNITO_CLIENT_SECRET?: string;
+      COGNITO_ISSUER?: string;
+
     }
   }
 }
@@ -138,6 +144,15 @@ export const getAuthConfig = () => {
   if (process.env.ZITADEL_ISSUER) {
     console.warn(removeTipsTemplate('ZITADEL_ISSUER', 'AUTH_ZITADEL_ISSUER'));
   }
+  if (process.env.COGNITO_CLIENT_ID) {
+    console.warn(removeTipsTemplate('COGNITO_CLIENT_ID', 'AUTH_COGNITO_ID'));
+  }
+  if (process.env.COGNITO_CLIENT_SECRET) {
+    console.warn(removeTipsTemplate('COGNITO_CLIENT_SECRET', 'AUTH_COGNITO_SECRET'));
+  }
+  if (process.env.COGNITO_ISSUER) {
+    console.warn(removeTipsTemplate('COGNITO_ISSUER', 'AUTH_COGNITO_ISSUER'));
+  }
   // End
 
   return createEnv({
@@ -207,6 +222,11 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: z.string().optional(),
+
+      // Cognito
+      COGNITO_CLIENT_ID: z.string().optional(),
+      COGNITO_CLIENT_SECRET: z.string().optional(),
+      COGNITO_ISSUER: z.string().optional(),
     },
 
     runtimeEnv: {
@@ -269,6 +289,11 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: process.env.CASDOOR_WEBHOOK_SECRET,
+
+      // Cognito
+      COGNITO_CLIENT_ID: process.env.COGNITO_CLIENT_ID,
+      COGNITO_CLIENT_SECRET: process.env.COGNITO_CLIENT_SECRET,
+      COGNITO_ISSUER: process.env.COGNITO_ISSUER,
     },
   });
 };
