@@ -1,7 +1,7 @@
 import { ActionIconGroup, type ActionIconGroupEvent, type ActionIconGroupProps } from '@lobehub/ui';
 import { App } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { memo, use, useCallback, useState } from 'react';
+import { memo, use, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
@@ -11,8 +11,6 @@ import { MessageRoleType } from '@/types/message';
 
 import { renderActions } from '../../Actions';
 import { useChatListActionsBar } from '../../hooks/useChatListActionsBar';
-// import ExportPreview from './ExportPreview';
-import ShareMessageModal from './ShareMessageModal';
 
 export type ActionsBarProps = ActionIconGroupProps;
 
@@ -64,8 +62,6 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
   ]);
   const { message } = App.useApp();
   const virtuosoRef = use(VirtuosoContext);
-  // const [showModal, setModal] = useState(false);
-  const [showShareModal, setShareModal] = useState(false);
 
   const handleActionClick = useCallback(
     async (action: ActionIconGroupEvent) => {
@@ -117,16 +113,6 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
           ttsMessage(id);
           break;
         }
-
-        // case 'export': {
-        //   setModal(true);
-        //   break;
-        // }
-
-        case 'share': {
-          setShareModal(true);
-          break;
-        }
       }
 
       if (action.keyPath.at(-1) === 'translate') {
@@ -142,25 +128,7 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
 
   const RenderFunction = renderActions[(item?.role || '') as MessageRoleType] ?? ActionsBar;
 
-  if (!item) return null;
-
-  return (
-    <>
-      <RenderFunction {...item} onActionClick={handleActionClick} />
-      {/*{showModal && (*/}
-      {/*  <ExportPreview content={item.content} onClose={() => setModal(false)} open={showModal} />*/}
-      {/*)}*/}
-      {showShareModal && (
-        <ShareMessageModal
-          message={item}
-          onClose={() => {
-            setShareModal(false);
-          }}
-          open={showShareModal}
-        />
-      )}
-    </>
-  );
+  return <RenderFunction {...item!} onActionClick={handleActionClick} />;
 });
 
 export default Actions;

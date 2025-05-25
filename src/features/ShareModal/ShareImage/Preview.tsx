@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { ProductLogo } from '@/components/Branding';
-import { ChatItem } from '@/features/Conversation';
 import PluginTag from '@/features/PluginTag';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
@@ -15,20 +14,16 @@ import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selector
 
 import pkg from '../../../../package.json';
 import { useContainerStyles } from '../style';
+import ChatList from './ChatList';
 import { useStyles } from './style';
 import { FieldType } from './type';
 
-interface PreviewProps extends FieldType {
-  messageIds: string[];
-  systemRole?: string;
-  title?: string;
-}
-
-const Preview = memo<PreviewProps>(
-  ({ title, withSystemRole, withBackground, withFooter, messageIds, systemRole }) => {
-    const [model, plugins] = useAgentStore((s) => [
+const Preview = memo<FieldType & { title?: string }>(
+  ({ title, withSystemRole, withBackground, withFooter }) => {
+    const [model, plugins, systemRole] = useAgentStore((s) => [
       agentSelectors.currentAgentModel(s),
       agentSelectors.currentAgentPlugins(s),
+      agentSelectors.currentAgentSystemRole(s),
     ]);
     const [isInbox, description, avatar, backgroundColor] = useSessionStore((s) => [
       sessionSelectors.isInboxSession(s),
@@ -68,15 +63,7 @@ const Preview = memo<PreviewProps>(
                 </div>
               )}
             </div>
-            <Flexbox
-              height={'100%'}
-              style={{ paddingTop: 24, position: 'relative' }}
-              width={'100%'}
-            >
-              {messageIds.map((id, index) => (
-                <ChatItem id={id} index={index} key={id} />
-              ))}
-            </Flexbox>
+            <ChatList />
             {withFooter ? (
               <Flexbox align={'center'} className={styles.footer} gap={4}>
                 <ProductLogo type={'combine'} />

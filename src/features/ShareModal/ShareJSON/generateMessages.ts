@@ -5,7 +5,7 @@ import { FieldType } from './type';
 
 interface JSONParams extends FieldType {
   messages: ChatMessage[];
-  systemRole?: string;
+  systemRole: string;
 }
 export const generateMessages = ({
   messages,

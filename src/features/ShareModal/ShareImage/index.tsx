@@ -24,13 +24,7 @@ const DEFAULT_FIELD_VALUE: FieldType = {
   withSystemRole: false,
 };
 
-interface ShareImageProps {
-  messageIds: string[];
-  mobile?: boolean;
-  systemRole?: string;
-}
-
-const ShareImage = memo<ShareImageProps>(({ messageIds, systemRole }) => {
+const ShareImage = memo<{ mobile?: boolean }>(() => {
   const currentAgentTitle = useSessionStore(sessionMetaSelectors.currentAgentTitle);
   const [fieldValue, setFieldValue] = useState<FieldType>(DEFAULT_FIELD_VALUE);
   const { t } = useTranslation(['chat', 'common']);
@@ -97,7 +91,7 @@ const ShareImage = memo<ShareImageProps>(({ messageIds, systemRole }) => {
   return (
     <>
       <Flexbox className={styles.body} gap={16} horizontal={!isMobile}>
-        <Preview title={title} {...fieldValue} messageIds={messageIds} systemRole={systemRole} />
+        <Preview title={title} {...fieldValue} />
         <Flexbox className={styles.sidebar} gap={12}>
           <Form
             initialValues={DEFAULT_FIELD_VALUE}
