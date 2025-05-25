@@ -23,6 +23,8 @@ export interface AnthropicModelCard {
   id: string;
 }
 
+type ExtendedTool = Anthropic.Tool | Anthropic.WebSearchTool20250305;
+
 const modelsWithSmallContextWindow = new Set(['claude-3-opus-20240229', 'claude-3-haiku-20240307']);
 
 const DEFAULT_BASE_URL = 'https://api.anthropic.com';
@@ -99,6 +101,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       tools,
       thinking,
       enabledContextCaching = true,
+      enabledSearch,
     } = payload;
 
     const { default: anthropicModels } = await import('@/config/aiModels/anthropic');
@@ -127,7 +130,22 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
 
     const postMessages = await buildAnthropicMessages(user_messages, { enabledContextCaching });
 
-    const postTools = buildAnthropicTools(tools, { enabledContextCaching });
+    let postTools: ExtendedTool[] | undefined = buildAnthropicTools(tools, { enabledContextCaching });
+
+    if (enabledSearch) {
+      const webSearchTool: Anthropic.WebSearchTool20250305 = {
+        type: "web_search_20250305",
+        name: "web_search",
+        max_uses: 5
+      };
+
+      // 如果已有工具，则添加到现有工具列表中；否则创建新的工具列表
+      if (postTools && postTools.length > 0) {
+        postTools = [...postTools, webSearchTool];
+      } else {
+        postTools = [webSearchTool];
+      }
+    }
 
     if (!!thinking && thinking.type === 'enabled') {
       const maxTokens = getMaxTokens() || 32_000; // Claude Opus 4 has minimum maxOutput
