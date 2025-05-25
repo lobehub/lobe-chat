@@ -140,11 +140,15 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     let postTools: ExtendedTool[] | undefined = buildAnthropicTools(tools, { enabledContextCaching });
 
     if (enabledSearch) {
+      // Limit the number of searches per request
+      const maxUses = process.env.ANTHROPIC_MAX_USES;
+
       const webSearchTool: Anthropic.WebSearchTool20250305 = {
-        // Limit the number of searches per request
-        max_uses: parseInt(process.env.ANTHROPIC_MAX_USES ?? '5', 10),
         name: 'web_search',
         type: 'web_search_20250305',
+        ...(maxUses && Number.isInteger(Number(maxUses)) && { 
+          max_uses: Number(maxUses) 
+        }),
       };
 
       // 如果已有工具，则添加到现有工具列表中；否则创建新的工具列表
