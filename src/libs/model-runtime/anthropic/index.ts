@@ -47,7 +47,14 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
   constructor({ apiKey, baseURL = DEFAULT_BASE_URL, id, ...res }: AnthropicAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
-    this.client = new Anthropic({ apiKey, baseURL, ...res });
+    const betaHeaders = process.env.ANTHROPIC_BETA_HEADERS;
+
+    this.client = new Anthropic({
+      apiKey,
+      baseURL,
+      ...(betaHeaders ? { defaultHeaders: { "anthropic-beta": betaHeaders } } : {}),
+      ...res
+    });
     this.baseURL = this.client.baseURL;
     this.apiKey = apiKey;
     this.id = id || ModelProvider.Anthropic;
@@ -134,9 +141,10 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
 
     if (enabledSearch) {
       const webSearchTool: Anthropic.WebSearchTool20250305 = {
-        type: "web_search_20250305",
-        name: "web_search",
-        max_uses: 5
+        // Limit the number of searches per request
+        max_uses: parseInt(process.env.ANTHROPIC_MAX_USES ?? '5', 10),
+        name: 'web_search',
+        type: 'web_search_20250305',
       };
 
       // 如果已有工具，则添加到现有工具列表中；否则创建新的工具列表
