@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.88.4](https://github.com/lobehub/lobe-chat/compare/v1.88.3...v1.88.4)
+
+<sup>Released on **2025-05-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **docs**: Rename and update Google Gemini documentation.
+
+#### 💄 Styles
+
+- **misc**: Improve thread flicker when first-time loading.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **docs**: Rename and update Google Gemini documentation, closes [#7957](https://github.com/lobehub/lobe-chat/issues/7957) ([432c28d](https://github.com/lobehub/lobe-chat/commit/432c28d))
+
+#### Styles
+
+- **misc**: Improve thread flicker when first-time loading, closes [#7963](https://github.com/lobehub/lobe-chat/issues/7963) ([4cacacd](https://github.com/lobehub/lobe-chat/commit/4cacacd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.88.3](https://github.com/lobehub/lobe-chat/compare/v1.88.2...v1.88.3)
 
 <sup>Released on **2025-05-25**</sup>
