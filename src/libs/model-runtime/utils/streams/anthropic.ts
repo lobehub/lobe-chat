@@ -59,6 +59,7 @@ export const transformAnthropicStream = (
           return { data: chunk.content_block.text, id: context.id, type: 'data' };
         }
 
+        case 'server_tool_use':
         case 'tool_use': {
           const toolChunk = chunk.content_block;
 
@@ -146,6 +147,10 @@ export const transformAnthropicStream = (
             id: context.id,
             type: 'reasoning',
           };
+        }
+
+        case 'citations_delta': {
+          return { data: chunk.delta.citation, id: context.id, type: 'grounding' };
         }
 
         default: {
