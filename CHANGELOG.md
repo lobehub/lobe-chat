@@ -2,6 +2,290 @@
 
 # Changelog
 
+### [Version 1.88.5](https://github.com/lobehub/lobe-chat/compare/v1.88.4...v1.88.5)
+
+<sup>Released on **2025-05-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support share single message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support share single message, closes [#7967](https://github.com/lobehub/lobe-chat/issues/7967) ([660a5ad](https://github.com/lobehub/lobe-chat/commit/660a5ad))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.88.4](https://github.com/lobehub/lobe-chat/compare/v1.88.3...v1.88.4)
+
+<sup>Released on **2025-05-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **docs**: Rename and update Google Gemini documentation.
+
+#### 💄 Styles
+
+- **misc**: Improve thread flicker when first-time loading.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **docs**: Rename and update Google Gemini documentation, closes [#7957](https://github.com/lobehub/lobe-chat/issues/7957) ([432c28d](https://github.com/lobehub/lobe-chat/commit/432c28d))
+
+#### Styles
+
+- **misc**: Improve thread flicker when first-time loading, closes [#7963](https://github.com/lobehub/lobe-chat/issues/7963) ([4cacacd](https://github.com/lobehub/lobe-chat/commit/4cacacd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.88.3](https://github.com/lobehub/lobe-chat/compare/v1.88.2...v1.88.3)
+
+<sup>Released on **2025-05-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix message refresh 401 on desktop.
+
+#### 💄 Styles
+
+- **misc**: Add gemini & hunyuan & Claude models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix message refresh 401 on desktop, closes [#7958](https://github.com/lobehub/lobe-chat/issues/7958) ([b4b426f](https://github.com/lobehub/lobe-chat/commit/b4b426f))
+
+#### Styles
+
+- **misc**: Add gemini & hunyuan & Claude models, closes [#7908](https://github.com/lobehub/lobe-chat/issues/7908) ([5244f22](https://github.com/lobehub/lobe-chat/commit/5244f22))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.88.2](https://github.com/lobehub/lobe-chat/compare/v1.88.1...v1.88.2)
+
+<sup>Released on **2025-05-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add live search support for xAI.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add live search support for xAI, closes [#7907](https://github.com/lobehub/lobe-chat/issues/7907) ([dff4b7b](https://github.com/lobehub/lobe-chat/commit/dff4b7b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.88.1](https://github.com/lobehub/lobe-chat/compare/v1.88.0...v1.88.1)
+
+<sup>Released on **2025-05-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: User nickName & username selector in desktop.
+
+#### 💄 Styles
+
+- **misc**: Support Gemini 2.5 thought reasoning.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: User nickName & username selector in desktop, closes [#7899](https://github.com/lobehub/lobe-chat/issues/7899) ([bf51746](https://github.com/lobehub/lobe-chat/commit/bf51746))
+
+#### Styles
+
+- **misc**: Support Gemini 2.5 thought reasoning, closes [#7686](https://github.com/lobehub/lobe-chat/issues/7686) ([f34c4de](https://github.com/lobehub/lobe-chat/commit/f34c4de))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.88.0](https://github.com/lobehub/lobe-chat/compare/v1.87.9...v1.88.0)
+
+<sup>Released on **2025-05-23**</sup>
+
+#### ✨ Features
+
+- **misc**: Add claude 4 series.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix missing email field to user, update agent config of client db will override old config.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add claude 4 series, closes [#7939](https://github.com/lobehub/lobe-chat/issues/7939) ([9b4f950](https://github.com/lobehub/lobe-chat/commit/9b4f950))
+
+#### What's fixed
+
+- **misc**: Fix missing email field to user, closes [#7913](https://github.com/lobehub/lobe-chat/issues/7913) ([d314130](https://github.com/lobehub/lobe-chat/commit/d314130))
+- **misc**: Update agent config of client db will override old config, closes [#7918](https://github.com/lobehub/lobe-chat/issues/7918) ([f7cda68](https://github.com/lobehub/lobe-chat/commit/f7cda68))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.87.9](https://github.com/lobehub/lobe-chat/compare/v1.87.8...v1.87.9)
+
+<sup>Released on **2025-05-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Resolve InputNumber display overlap issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Resolve InputNumber display overlap issue, closes [#7892](https://github.com/lobehub/lobe-chat/issues/7892) ([5486663](https://github.com/lobehub/lobe-chat/commit/5486663))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.87.8](https://github.com/lobehub/lobe-chat/compare/v1.87.7...v1.87.8)
+
+<sup>Released on **2025-05-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: 'top_p' is not supported with o4-mini, pin zustand version to avoid type error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: 'top_p' is not supported with o4-mini, closes [#7747](https://github.com/lobehub/lobe-chat/issues/7747) ([4e04399](https://github.com/lobehub/lobe-chat/commit/4e04399))
+- **misc**: Pin zustand version to avoid type error, closes [#7929](https://github.com/lobehub/lobe-chat/issues/7929) ([4f6e286](https://github.com/lobehub/lobe-chat/commit/4f6e286))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.87.7](https://github.com/lobehub/lobe-chat/compare/v1.87.6...v1.87.7)
+
+<sup>Released on **2025-05-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Bump @lobehub/ui to 2.1.7.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Bump @lobehub/ui to 2.1.7, closes [#7912](https://github.com/lobehub/lobe-chat/issues/7912) ([457b645](https://github.com/lobehub/lobe-chat/commit/457b645))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.87.6](https://github.com/lobehub/lobe-chat/compare/v1.87.5...v1.87.6)
+
+<sup>Released on **2025-05-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve tools display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve tools display, closes [#7906](https://github.com/lobehub/lobe-chat/issues/7906) ([af8a05b](https://github.com/lobehub/lobe-chat/commit/af8a05b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.87.5](https://github.com/lobehub/lobe-chat/compare/v1.87.4...v1.87.5)
 
 <sup>Released on **2025-05-20**</sup>

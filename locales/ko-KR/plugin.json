@@ -219,8 +219,24 @@
     "content": "플러그인 호출 중...",
     "plugin": "플러그인 실행 중..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "파일 목록 보기",
+      "moveLocalFiles": "파일 이동",
+      "readLocalFile": "파일 내용 읽기",
+      "renameLocalFile": "이름 바꾸기",
+      "searchLocalFiles": "파일 검색",
+      "writeLocalFile": "파일 쓰기"
+    },
+    "title": "로컬 파일"
+  },
   "pluginList": "플러그인 목록",
   "search": {
+    "apiName": {
+      "crawlMultiPages": "여러 페이지 내용 읽기",
+      "crawlSinglePage": "페이지 내용 읽기",
+      "search": "페이지 검색"
+    },
     "config": {
       "addKey": "키 추가",
       "close": "삭제",

@@ -219,8 +219,24 @@
     "content": "Eklenti çağrılıyor...",
     "plugin": "Eklenti çalışıyor..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "Dosya listesini görüntüle",
+      "moveLocalFiles": "Dosyaları taşı",
+      "readLocalFile": "Dosya içeriğini oku",
+      "renameLocalFile": "Yeniden adlandır",
+      "searchLocalFiles": "Dosyaları ara",
+      "writeLocalFile": "Dosyaya yaz"
+    },
+    "title": "Yerel Dosya"
+  },
   "pluginList": "Eklenti Listesi",
   "search": {
+    "apiName": {
+      "crawlMultiPages": "Birden Fazla Sayfa İçeriğini Okuma",
+      "crawlSinglePage": "Sayfa içeriğini oku",
+      "search": "Sayfayı ara"
+    },
     "config": {
       "addKey": "Anahtar Ekle",
       "close": "Sil",

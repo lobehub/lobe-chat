@@ -10,6 +10,9 @@ vi.mock('@/config/app', () => ({
   appEnv: {
     DEFAULT_AGENT_CONFIG: 'model=gpt-4;temperature=0.7',
   },
+  getAppConfig: () => ({
+    DEFAULT_AGENT_CONFIG: 'model=gpt-4;temperature=0.7',
+  }),
 }));
 
 vi.mock('@/server/globalConfig/parseDefaultAgent', () => ({

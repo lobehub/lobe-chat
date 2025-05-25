@@ -83,6 +83,7 @@ describe('createCommonSlice', () => {
         settings: {
           general: { fontSize: 14 },
         },
+        email: 'test@example.com'
       };
 
       vi.spyOn(userService, 'getUserState').mockResolvedValueOnce(mockUserState);
@@ -104,6 +105,7 @@ describe('createCommonSlice', () => {
       // 验证状态是否正确更新
       expect(useUserStore.getState().user?.avatar).toBe(mockUserState.avatar);
       expect(useUserStore.getState().settings).toEqual(mockUserState.settings);
+      expect(useUserStore.getState().user?.email).toEqual(mockUserState.email);
       expect(successCallback).toHaveBeenCalledWith(mockUserState);
     });
 

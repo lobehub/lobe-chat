@@ -1,12 +1,12 @@
+import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
-import { memo, useState } from 'react';
+import { Suspense, memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { threadSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
 
-import ThreadItem from '../ThreadItem';
+import ThreadList from '../ThreadList';
 import DefaultContent from './DefaultContent';
 import TopicContent from './TopicContent';
 
@@ -54,8 +54,6 @@ const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav, threadId }) =
   const [toggleTopic] = useChatStore((s) => [s.switchTopic]);
   const [isHover, setHovering] = useState(false);
 
-  const threads = useChatStore(threadSelectors.getThreadsByTopic(id));
-
   return (
     <Flexbox style={{ position: 'relative' }}>
       <Flexbox
@@ -80,10 +78,18 @@ const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav, threadId }) =
           <TopicContent fav={fav} id={id} showMore={isHover} title={title} />
         )}
       </Flexbox>
-      {active &&
-        threads?.map((item, index) => (
-          <ThreadItem id={item.id} index={index} key={item.id} title={item.title} />
-        ))}
+      {active && (
+        <Suspense
+          fallback={
+            <Flexbox gap={8} paddingBlock={8} paddingInline={24} width={'100%'}>
+              <Skeleton.Button active size={'small'} style={{ height: 18, width: '100%' }} />
+              <Skeleton.Button active size={'small'} style={{ height: 18, width: '100%' }} />
+            </Flexbox>
+          }
+        >
+          <ThreadList />
+        </Suspense>
+      )}
     </Flexbox>
   );
 });

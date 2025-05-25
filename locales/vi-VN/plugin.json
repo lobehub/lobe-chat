@@ -219,8 +219,24 @@
     "content": "Đang gọi plugin...",
     "plugin": "Plugin đang chạy..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "Xem danh sách tệp",
+      "moveLocalFiles": "Di chuyển tệp",
+      "readLocalFile": "Đọc nội dung tệp",
+      "renameLocalFile": "Đổi tên",
+      "searchLocalFiles": "Tìm kiếm tệp",
+      "writeLocalFile": "Ghi vào tệp"
+    },
+    "title": "Tệp cục bộ"
+  },
   "pluginList": "Danh sách plugin",
   "search": {
+    "apiName": {
+      "crawlMultiPages": "Đọc nội dung của nhiều trang",
+      "crawlSinglePage": "Đọc nội dung trang",
+      "search": "Tìm kiếm trang"
+    },
     "config": {
       "addKey": "Thêm khóa",
       "close": "Xóa",

@@ -219,8 +219,24 @@
     "content": "Plugin wordt geladen...",
     "plugin": "Plugin wordt uitgevoerd..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "Bestandlijst weergeven",
+      "moveLocalFiles": "Bestanden verplaatsen",
+      "readLocalFile": "Bestand inhoud lezen",
+      "renameLocalFile": "Hernoemen",
+      "searchLocalFiles": "Bestanden zoeken",
+      "writeLocalFile": "Bestand schrijven"
+    },
+    "title": "Lokale bestanden"
+  },
   "pluginList": "Lijst met plugins",
   "search": {
+    "apiName": {
+      "crawlMultiPages": "Meerdere pagina-inhoud lezen",
+      "crawlSinglePage": "Pagina-inhoud lezen",
+      "search": "Pagina zoeken"
+    },
     "config": {
       "addKey": "Voeg sleutel toe",
       "close": "Verwijderen",

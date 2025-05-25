@@ -219,8 +219,24 @@
     "content": "呼叫插件中...",
     "plugin": "外掛執行中..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "查看檔案列表",
+      "moveLocalFiles": "移動檔案",
+      "readLocalFile": "讀取檔案內容",
+      "renameLocalFile": "重新命名",
+      "searchLocalFiles": "搜尋檔案",
+      "writeLocalFile": "寫入檔案"
+    },
+    "title": "本地檔案"
+  },
   "pluginList": "外掛清單",
   "search": {
+    "apiName": {
+      "crawlMultiPages": "讀取多個頁面內容",
+      "crawlSinglePage": "讀取頁面內容",
+      "search": "搜尋頁面"
+    },
     "config": {
       "addKey": "添加密鑰",
       "close": "刪除",

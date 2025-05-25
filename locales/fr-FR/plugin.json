@@ -219,8 +219,24 @@
     "content": "Appel du plugin en cours...",
     "plugin": "Exécution du plugin en cours..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "Afficher la liste des fichiers",
+      "moveLocalFiles": "Déplacer les fichiers",
+      "readLocalFile": "Lire le contenu du fichier",
+      "renameLocalFile": "Renommer",
+      "searchLocalFiles": "Rechercher des fichiers",
+      "writeLocalFile": "Écrire dans le fichier"
+    },
+    "title": "Fichiers locaux"
+  },
   "pluginList": "Liste des plugins",
   "search": {
+    "apiName": {
+      "crawlMultiPages": "Lire le contenu de plusieurs pages",
+      "crawlSinglePage": "Lire le contenu de la page",
+      "search": "Rechercher la page"
+    },
     "config": {
       "addKey": "Ajouter une clé",
       "close": "Supprimer",

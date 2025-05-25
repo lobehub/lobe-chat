@@ -219,8 +219,24 @@
     "content": "Wywoływanie wtyczki...",
     "plugin": "Wtyczka jest uruchomiona..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "Wyświetl listę plików",
+      "moveLocalFiles": "Przenieś pliki",
+      "readLocalFile": "Odczytaj zawartość pliku",
+      "renameLocalFile": "Zmień nazwę",
+      "searchLocalFiles": "Szukaj plików",
+      "writeLocalFile": "Zapisz plik"
+    },
+    "title": "Pliki lokalne"
+  },
   "pluginList": "Lista wtyczek",
   "search": {
+    "apiName": {
+      "crawlMultiPages": "Odczytaj zawartość wielu stron",
+      "crawlSinglePage": "Odczytaj zawartość strony",
+      "search": "Szukaj strony"
+    },
     "config": {
       "addKey": "Dodaj klucz",
       "close": "Usuń",
