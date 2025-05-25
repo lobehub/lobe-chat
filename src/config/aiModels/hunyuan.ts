@@ -231,7 +231,7 @@ const hunyuanChatModels: AIChatModelCard[] = [
       input: 0.8,
       output: 2,
     },
-    releasedAt: '2025-04-16',
+    releasedAt: '2025-05-20',
     settings: {
       searchImpl: 'params',
     },
@@ -302,7 +302,6 @@ const hunyuanChatModels: AIChatModelCard[] = [
     contextWindowTokens: 8000,
     description: '混元最新多模态模型，支持多语种作答，中英文能力均衡。',
     displayName: 'Hunyuan Standard Vision',
-    enabled: true,
     id: 'hunyuan-standard-vision',
     maxOutput: 2000,
     releasedAt: '2024-12-31',
@@ -361,6 +360,20 @@ const hunyuanChatModels: AIChatModelCard[] = [
       output: 18,
     },
     releasedAt: '2025-01-03',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 8192 + 24_576,
+    description: '混元多模态理解深度思考模型，支持多模态原生长思维链，擅长处理各种图片推理场景，在理科难题上相比快思考模型全面提升。',
+    displayName: 'Hunyuan T1 Vision',
+    enabled: true,
+    id: 'hunyuan-t1-vision',
+    maxOutput: 8192,
+    releasedAt: '2025-05-16',
     type: 'chat',
   },
   {
