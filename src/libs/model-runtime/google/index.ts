@@ -68,13 +68,14 @@ enum HarmCategory {
 
 enum HarmBlockThreshold {
   BLOCK_NONE = 'BLOCK_NONE',
+  OFF = 'OFF'
 }
 
 function getThreshold(model: string): HarmBlockThreshold {
-  if (modelsOffSafetySettings.has(model)) {
-    return 'OFF' as HarmBlockThreshold; // https://discuss.ai.google.dev/t/59352
-  }
-  return HarmBlockThreshold.BLOCK_NONE;
+  // if (modelsOffSafetySettings.has(model)) {
+  //   return 'OFF' as HarmBlockThreshold; // https://discuss.ai.google.dev/t/59352
+  // }
+  return HarmBlockThreshold.OFF;
 }
 
 const DEFAULT_BASE_URL = 'https://generativelanguage.googleapis.com';
