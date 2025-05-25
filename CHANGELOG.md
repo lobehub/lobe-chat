@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.88.5](https://github.com/lobehub/lobe-chat/compare/v1.88.4...v1.88.5)
+
+<sup>Released on **2025-05-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support share single message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support share single message, closes [#7967](https://github.com/lobehub/lobe-chat/issues/7967) ([660a5ad](https://github.com/lobehub/lobe-chat/commit/660a5ad))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.88.4](https://github.com/lobehub/lobe-chat/compare/v1.88.3...v1.88.4)
 
 <sup>Released on **2025-05-25**</sup>
