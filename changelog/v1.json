@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Fix draggable issue with agent header."],
+      "improvements": ["Fix a few typos in the model tooltips."]
+    },
+    "date": "2025-05-25",
+    "version": "1.88.6"
+  },
+  {
+    "children": {
       "improvements": ["Support share single message."]
     },
     "date": "2025-05-25",
