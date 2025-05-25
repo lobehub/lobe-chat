@@ -8,12 +8,11 @@ import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
+import { topicSelectors } from '@/store/chat/selectors';
 import { exportFile } from '@/utils/client/exportFile';
 
+import { ShareContentProps } from '../ShareText/type';
 import { useStyles } from '../style';
 import Preview from './Preview';
 import { generateMessages } from './generateMessages';
@@ -24,7 +23,7 @@ const DEFAULT_FIELD_VALUE: FieldType = {
   withSystemRole: true,
 };
 
-const ShareImage = memo(() => {
+const ShareJSON = memo<ShareContentProps>(({ systemRole, messages }) => {
   const [fieldValue, setFieldValue] = useState(DEFAULT_FIELD_VALUE);
   const { t } = useTranslation(['chat', 'common']);
   const { styles } = useStyles();
@@ -49,8 +48,6 @@ const ShareImage = memo(() => {
     },
   ];
 
-  const systemRole = useAgentStore(agentSelectors.currentAgentSystemRole);
-  const messages = useChatStore(chatSelectors.activeBaseChats, isEqual);
   const data = generateMessages({ ...fieldValue, messages, systemRole });
   const content = JSON.stringify(data, null, 2);
 
@@ -109,4 +106,4 @@ const ShareImage = memo(() => {
   );
 });
 
-export default ShareImage;
+export default ShareJSON;

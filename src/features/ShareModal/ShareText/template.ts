@@ -54,7 +54,7 @@ const markdownTemplate = template(
 
 interface MarkdownParams extends FieldType {
   messages: ChatMessage[];
-  systemRole: string;
+  systemRole?: string;
   title: string;
 }
 

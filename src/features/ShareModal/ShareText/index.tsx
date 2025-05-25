@@ -8,16 +8,14 @@ import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
+import { topicSelectors } from '@/store/chat/selectors';
 import { exportFile } from '@/utils/client/exportFile';
 
 import { useStyles } from '../style';
 import Preview from './Preview';
 import { generateMarkdown } from './template';
-import { FieldType } from './type';
+import { FieldType, ShareContentProps } from './type';
 
 const DEFAULT_FIELD_VALUE: FieldType = {
   includeTool: true,
@@ -26,7 +24,7 @@ const DEFAULT_FIELD_VALUE: FieldType = {
   withSystemRole: false,
 };
 
-const ShareText = memo(() => {
+const ShareText = memo<ShareContentProps>(({ messages, systemRole }) => {
   const [fieldValue, setFieldValue] = useState(DEFAULT_FIELD_VALUE);
   const { t } = useTranslation(['chat', 'common']);
   const { styles } = useStyles();
@@ -66,8 +64,6 @@ const ShareText = memo(() => {
     },
   ];
 
-  const [systemRole] = useAgentStore((s) => [agentSelectors.currentAgentSystemRole(s)]);
-  const messages = useChatStore(chatSelectors.activeBaseChats, isEqual);
   const topic = useChatStore(topicSelectors.currentActiveTopic, isEqual);
 
   const title = topic?.title || t('shareModal.exportTitle');
