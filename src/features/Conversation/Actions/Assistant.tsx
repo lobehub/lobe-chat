@@ -17,8 +17,17 @@ export const AssistantActionsBar: RenderAction = memo(({ onActionClick, error, t
     threadSelectors.hasThreadBySourceMsgId(id)(s),
   ]);
 
-  const { regenerate, edit, delAndRegenerate, copy, divider, del, branching } =
-    useChatListActionsBar({ hasThread });
+  const {
+    regenerate,
+    edit,
+    delAndRegenerate,
+    copy,
+    divider,
+    del,
+    branching,
+    // export: exportPDF,
+    share,
+  } = useChatListActionsBar({ hasThread });
 
   const { translate, tts } = useCustomActions();
   const hasTools = !!tools;
@@ -38,7 +47,20 @@ export const AssistantActionsBar: RenderAction = memo(({ onActionClick, error, t
     <ActionIconGroup
       items={items}
       menu={{
-        items: [edit, copy, divider, tts, translate, divider, regenerate, delAndRegenerate, del],
+        items: [
+          edit,
+          copy,
+          divider,
+          tts,
+          translate,
+          divider,
+          share,
+          // exportPDF,
+          divider,
+          regenerate,
+          delAndRegenerate,
+          del,
+        ],
       }}
       onActionClick={onActionClick}
     />

@@ -1,6 +1,28 @@
 [
   {
     "children": {
+      "improvements": ["Support share single message."]
+    },
+    "date": "2025-05-25",
+    "version": "1.88.5"
+  },
+  {
+    "children": {
+      "improvements": ["Improve thread flicker when first-time loading."]
+    },
+    "date": "2025-05-25",
+    "version": "1.88.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix message refresh 401 on desktop."],
+      "improvements": ["Add gemini & hunyuan & Claude models."]
+    },
+    "date": "2025-05-25",
+    "version": "1.88.3"
+  },
+  {
+    "children": {
       "improvements": ["Add live search support for xAI."]
     },
     "date": "2025-05-24",
