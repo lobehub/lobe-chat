@@ -233,6 +233,7 @@
   "pluginList": "Lista de complementos",
   "search": {
     "apiName": {
+      "crawlMultiPages": "Leer el contenido de múltiples páginas",
       "crawlSinglePage": "Leer contenido de la página",
       "search": "Buscar página"
     },
