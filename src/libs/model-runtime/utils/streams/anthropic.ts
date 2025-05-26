@@ -1,7 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { Stream } from '@anthropic-ai/sdk/streaming';
 
-import { ModelTokensUsage } from '@/types/message';
+import { ModelTokensUsage, CitationItem } from '@/types/message';
 
 import { ChatStreamCallbacks } from '../../types';
 import {
@@ -86,6 +86,27 @@ export const transformAnthropicStream = (
 
           return { data: [toolCall], id: context.id, type: 'tool_calls' };
         }
+
+        case 'web_search_tool_result': {
+          const citations = chunk.content_block.content;
+
+          return [
+            {
+              data: {
+                citations: (citations as any[]).map(
+                  (item) =>
+                    ({
+                      title: item.title,
+                      url: item.url,
+                    }) as CitationItem,
+                ),
+              },
+              id: context.id,
+              type: 'grounding',
+            },
+          ];
+        }
+
         case 'thinking': {
           const thinkingChunk = chunk.content_block;
 
@@ -147,10 +168,6 @@ export const transformAnthropicStream = (
             id: context.id,
             type: 'reasoning',
           };
-        }
-
-        case 'citations_delta': {
-          return { data: chunk.delta.citation, id: context.id, type: 'grounding' };
         }
 
         default: {
