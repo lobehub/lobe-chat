@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Allow SliderWithInput to have no input limit."]
+    },
+    "date": "2025-05-26",
+    "version": "1.88.8"
+  },
+  {
+    "children": {
       "fixes": ["Fix chat header in the desktop."]
     },
     "date": "2025-05-26",
