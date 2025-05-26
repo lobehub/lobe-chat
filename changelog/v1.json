@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix chat header in the desktop."]
+    },
+    "date": "2025-05-26",
+    "version": "1.88.7"
+  },
+  {
+    "children": {
       "fixes": ["Fix draggable issue with agent header."],
       "improvements": ["Fix a few typos in the model tooltips."]
     },
