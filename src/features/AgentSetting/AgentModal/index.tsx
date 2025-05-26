@@ -66,7 +66,7 @@ const AgentModal = memo(() => {
         valuePropName: 'checked',
       },
       {
-        children: <SliderWithInput max={32_000} min={0} step={100} />,
+        children: <SliderWithInput max={32_000} min={0} step={100} unlimitedInput={true} />,
         desc: t('settingModel.maxTokens.desc'),
         divider: false,
         hidden: !config.chatConfig.enableMaxTokens,
