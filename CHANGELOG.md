@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.88.10](https://github.com/lobehub/lobe-chat/compare/v1.88.9...v1.88.10)
+
+<sup>Released on **2025-05-26**</sup>
+
+#### 💄 Styles
+
+- **DevPanel**: Improve json display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **DevPanel**: Improve json display, closes [#7978](https://github.com/lobehub/lobe-chat/issues/7978) ([db800d2](https://github.com/lobehub/lobe-chat/commit/db800d2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.88.9](https://github.com/lobehub/lobe-chat/compare/v1.88.8...v1.88.9)
 
 <sup>Released on **2025-05-26**</sup>
