@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "improvements": ["Correct model name SenseChat-5-1202."]
+    },
+    "date": "2025-05-26",
+    "version": "1.88.11"
+  },
+  {
     "children": {},
     "date": "2025-05-26",
     "version": "1.88.10"
