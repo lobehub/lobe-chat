@@ -1,4 +1,22 @@
 {
+  "proxy": {
+    "auth": "Cần xác thực",
+    "bypass": "Địa chỉ không sử dụng proxy",
+    "enable": "Bật proxy",
+    "password": "Mật khẩu",
+    "password_placeholder": "Vui lòng nhập mật khẩu",
+    "port": "Cổng",
+    "server": "Địa chỉ máy chủ",
+    "testButton": "Kiểm tra kết nối",
+    "testFailed": "Kết nối thất bại: {{error}}",
+    "testSuccess": "Kết nối thành công",
+    "testUrl": "Địa chỉ kiểm tra",
+    "testUrlPlaceholder": "Vui lòng nhập URL cần kiểm tra",
+    "testing": "Đang kiểm tra kết nối...",
+    "type": "Loại proxy",
+    "username": "Tên người dùng",
+    "username_placeholder": "Vui lòng nhập tên người dùng"
+  },
   "remoteServer": {
     "authError": "Xác thực thất bại: {{error}}",
     "authPending": "Vui lòng hoàn tất xác thực trong trình duyệt",
