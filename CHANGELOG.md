@@ -2,6 +2,174 @@
 
 # Changelog
 
+### [Version 1.88.9](https://github.com/lobehub/lobe-chat/compare/v1.88.8...v1.88.9)
+
+<sup>Released on **2025-05-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Auto sync theme mode in desktop.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Auto sync theme mode in desktop, closes [#7970](https://github.com/lobehub/lobe-chat/issues/7970) ([a16fa02](https://github.com/lobehub/lobe-chat/commit/a16fa02))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.88.8](https://github.com/lobehub/lobe-chat/compare/v1.88.7...v1.88.8)
+
+<sup>Released on **2025-05-26**</sup>
+
+#### 💄 Styles
+
+- **misc**: Allow `SliderWithInput` to have no input limit.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Allow `SliderWithInput` to have no input limit, closes [#7708](https://github.com/lobehub/lobe-chat/issues/7708) ([bdb02b2](https://github.com/lobehub/lobe-chat/commit/bdb02b2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.88.7](https://github.com/lobehub/lobe-chat/compare/v1.88.6...v1.88.7)
+
+<sup>Released on **2025-05-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **DragUpload**: Resolve issue with pasting clipboard images in Safari.
+- **misc**: Fix chat header in the desktop.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **DragUpload**: Resolve issue with pasting clipboard images in Safari, closes [#7961](https://github.com/lobehub/lobe-chat/issues/7961) ([3c3cc75](https://github.com/lobehub/lobe-chat/commit/3c3cc75))
+- **misc**: Fix chat header in the desktop, closes [#7973](https://github.com/lobehub/lobe-chat/issues/7973) ([63c3a71](https://github.com/lobehub/lobe-chat/commit/63c3a71))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.88.6](https://github.com/lobehub/lobe-chat/compare/v1.88.5...v1.88.6)
+
+<sup>Released on **2025-05-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix draggable issue with agent header.
+
+#### 💄 Styles
+
+- **misc**: Fix a few typos in the model tooltips.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix draggable issue with agent header, closes [#7968](https://github.com/lobehub/lobe-chat/issues/7968) ([cd84241](https://github.com/lobehub/lobe-chat/commit/cd84241))
+
+#### Styles
+
+- **misc**: Fix a few typos in the model tooltips, closes [#7952](https://github.com/lobehub/lobe-chat/issues/7952) ([8416fec](https://github.com/lobehub/lobe-chat/commit/8416fec))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.88.5](https://github.com/lobehub/lobe-chat/compare/v1.88.4...v1.88.5)
+
+<sup>Released on **2025-05-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support share single message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support share single message, closes [#7967](https://github.com/lobehub/lobe-chat/issues/7967) ([660a5ad](https://github.com/lobehub/lobe-chat/commit/660a5ad))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.88.4](https://github.com/lobehub/lobe-chat/compare/v1.88.3...v1.88.4)
+
+<sup>Released on **2025-05-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **docs**: Rename and update Google Gemini documentation.
+
+#### 💄 Styles
+
+- **misc**: Improve thread flicker when first-time loading.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **docs**: Rename and update Google Gemini documentation, closes [#7957](https://github.com/lobehub/lobe-chat/issues/7957) ([432c28d](https://github.com/lobehub/lobe-chat/commit/432c28d))
+
+#### Styles
+
+- **misc**: Improve thread flicker when first-time loading, closes [#7963](https://github.com/lobehub/lobe-chat/issues/7963) ([4cacacd](https://github.com/lobehub/lobe-chat/commit/4cacacd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.88.3](https://github.com/lobehub/lobe-chat/compare/v1.88.2...v1.88.3)
 
 <sup>Released on **2025-05-25**</sup>
