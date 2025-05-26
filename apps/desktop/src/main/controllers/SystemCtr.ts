@@ -1,5 +1,4 @@
-import { ElectronAppState } from '@lobechat/electron-client-ipc';
-import { ThemeMode } from 'antd-style';
+import { ElectronAppState, ThemeMode } from '@lobechat/electron-client-ipc';
 import { app, shell, systemPreferences } from 'electron';
 import { macOS } from 'electron-is';
 import { readFileSync, writeFileSync } from 'node:fs';
