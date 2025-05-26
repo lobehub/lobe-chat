@@ -100,29 +100,36 @@ export const transformOpenAIStream = (
       // one-api 的流式接口，会出现既有 finish_reason ，也有 content 的情况
       //  {"id":"demo","model":"deepl-en","choices":[{"index":0,"delta":{"role":"assistant","content":"Introduce yourself."},"finish_reason":"stop"}]}
       if (typeof item.delta?.content === 'string' && !!item.delta.content) {
-        // MiniMax 的内建 web_search 会在第一个流中返回引用源，需要先转为 JSON 数组后解析
+        // MiniMax 内建搜索功能会在第一个 tools 流中 content 返回引用源，需要忽略
         // {"id":"0483748a25071c611e2f48d2982fbe96","choices":[{"finish_reason":"stop","index":0,"delta":{"content":"[{\"no\":1,\"url\":\"https://www.xiaohongshu.com/discovery/item/66d8de3c000000001f01e752\",\"title\":\"郑钦文为国而战，没有理由不坚持🏅\",\"content\":\"·2024年08月03日\\n中国队选手郑钦文夺得巴黎奥运会网球女单比赛金牌（巴黎奥运第16金）\\n#巴黎奥运会[话题]# #郑钦文[话题]# #人物素材积累[话题]# #作文素材积累[话题]# #申论素材[话题]#\",\"web_icon\":\"https://www.xiaohongshu.com/favicon.ico\"}]","role":"tool","tool_call_id":"call_function_6696730535"}}],"created":1748255114,"model":"abab6.5s-chat","object":"chat.completion.chunk","usage":{"total_tokens":0,"total_characters":0},"input_sensitive":false,"output_sensitive":false,"input_sensitive_type":0,"output_sensitive_type":0,"output_sensitive_int":0}
         if (typeof item.delta?.role === 'string' && item.delta.role === 'tool') {
-          const citations = JSON.parse(item.delta.content);
-
-          return [
-            {
-              data: {
-                citations: (citations as any[]).map(
-                  (item) =>
-                    ({
-                      title: item.title,
-                      url: item.url,
-                    }) as CitationItem,
-                ),
-              },
-              id: chunk.id,
-              type: 'grounding',
-            },
-          ];
+          return { data: null, id: chunk.id, type: 'text' };
         }
 
         return { data: item.delta.content, id: chunk.id, type: 'text' };
+      }
+
+      // MiniMax 内建搜索功能会在最后一个流中的 message 数组中返回 4 个 Object，其中最后一个为 annotations
+      // {"id":"0483bf14ba55225a66de2342a21b4003","choices":[{"finish_reason":"tool_calls","index":0,"messages":[{"content":"","role":"user","reasoning_content":""},{"content":"","role":"assistant","tool_calls":[{"id":"call_function_0872338692","type":"web_search","function":{"name":"get_search_result","arguments":"{\"query_tag\":[\"天气\"],\"query_list\":[\"上海 2025年5月26日 天气\"]}"}}],"reasoning_content":""},{"content":"","role":"tool","tool_call_id":"call_function_0872338692","reasoning_content":""},{"content":"","role":"assistant","name":"海螺AI","annotations":[{"text":"【5†source】","url":"https://mtianqi.eastday.com/tianqi/shanghai/20250526.html","quote":"上海天气预报提供上海2025年05月26日天气"}],"audio_content":"","reasoning_content":""}]}],"created":1748274196,"model":"MiniMax-Text-01","object":"chat.completion","usage":{"total_tokens":13110,"total_characters":0,"prompt_tokens":12938,"completion_tokens":172},"base_resp":{"status_code":0,"status_msg":"Invalid parameters detected, json: unknown field \"user\""}}
+      if ((item as any).messages && (item as any).messages.length > 0) {
+        const messages = (item as any).messages;
+        const citations = messages[messages.length - 1].annotations;
+
+        return [
+          {
+            data: {
+              citations: citations.map(
+                (item: any) =>
+                  ({
+                    title: item.url,
+                    url: item.url,
+                  }) as CitationItem,
+              ),
+            },
+            id: chunk.id,
+            type: 'grounding',
+          },
+        ];
       }
 
       // xAI Live Search 功能返回引用源
@@ -202,7 +209,7 @@ export const transformOpenAIStream = (
                   citations: (citations as any[]).map((item) => ({
                     title: typeof item === 'string' ? item : item.title,
                     url: typeof item === 'string' ? item : item.url || item.link,
-                  })).filter(c => c.title && c.url),
+                  })).filter(c => c.title && c.url), // Zhipu 内建搜索工具有时会返回空 link 引发程序崩溃
                 },
                 id: chunk.id,
                 type: 'grounding',
