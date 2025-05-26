@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.88.9](https://github.com/lobehub/lobe-chat/compare/v1.88.8...v1.88.9)
+
+<sup>Released on **2025-05-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Auto sync theme mode in desktop.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Auto sync theme mode in desktop, closes [#7970](https://github.com/lobehub/lobe-chat/issues/7970) ([a16fa02](https://github.com/lobehub/lobe-chat/commit/a16fa02))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.88.8](https://github.com/lobehub/lobe-chat/compare/v1.88.7...v1.88.8)
 
 <sup>Released on **2025-05-26**</sup>
