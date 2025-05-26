@@ -167,7 +167,9 @@ export const transformOpenAIStream = (
             // in Hunyuan api, the citation is in every chunk
             ('search_info' in chunk && (chunk.search_info as any)?.search_results) ||
             // in Wenxin api, the citation is in the first and last chunk
-            ('search_results' in chunk && chunk.search_results);
+            ('search_results' in chunk && chunk.search_results) ||
+            // in Zhipu api, the citation is in the first chunk
+            ('web_search' in chunk && chunk.web_search);
 
           if (citations) {
             streamContext.returnedCitation = true;
@@ -175,13 +177,10 @@ export const transformOpenAIStream = (
             return [
               {
                 data: {
-                  citations: (citations as any[]).map(
-                    (item) =>
-                      ({
-                        title: typeof item === 'string' ? item : item.title,
-                        url: typeof item === 'string' ? item : item.url,
-                      }) as CitationItem,
-                  ),
+                  citations: (citations as any[]).map((item) => ({
+                    title: typeof item === 'string' ? item : item.title,
+                    url: typeof item === 'string' ? item : item.url || item.link,
+                  })).filter(c => c.title && c.url),
                 },
                 id: chunk.id,
                 type: 'grounding',
