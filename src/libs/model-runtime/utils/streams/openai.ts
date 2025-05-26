@@ -99,8 +99,29 @@ export const transformOpenAIStream = (
     if (item.finish_reason) {
       // one-api 的流式接口，会出现既有 finish_reason ，也有 content 的情况
       //  {"id":"demo","model":"deepl-en","choices":[{"index":0,"delta":{"role":"assistant","content":"Introduce yourself."},"finish_reason":"stop"}]}
-
       if (typeof item.delta?.content === 'string' && !!item.delta.content) {
+        // MiniMax 的内建 web_search 会在第一个流中返回引用源，需要先转为 JSON 数组后解析
+        // {"id":"0483748a25071c611e2f48d2982fbe96","choices":[{"finish_reason":"stop","index":0,"delta":{"content":"[{\"no\":1,\"url\":\"https://www.xiaohongshu.com/discovery/item/66d8de3c000000001f01e752\",\"title\":\"郑钦文为国而战，没有理由不坚持🏅\",\"content\":\"·2024年08月03日\\n中国队选手郑钦文夺得巴黎奥运会网球女单比赛金牌（巴黎奥运第16金）\\n#巴黎奥运会[话题]# #郑钦文[话题]# #人物素材积累[话题]# #作文素材积累[话题]# #申论素材[话题]#\",\"web_icon\":\"https://www.xiaohongshu.com/favicon.ico\"}]","role":"tool","tool_call_id":"call_function_6696730535"}}],"created":1748255114,"model":"abab6.5s-chat","object":"chat.completion.chunk","usage":{"total_tokens":0,"total_characters":0},"input_sensitive":false,"output_sensitive":false,"input_sensitive_type":0,"output_sensitive_type":0,"output_sensitive_int":0}
+        if (typeof item.delta?.role === 'string' && item.delta.role === 'tool') {
+          const citations = JSON.parse(item.delta.content);
+
+          return [
+            {
+              data: {
+                citations: (citations as any[]).map(
+                  (item) =>
+                    ({
+                      title: item.title,
+                      url: item.url,
+                    }) as CitationItem,
+                ),
+              },
+              id: chunk.id,
+              type: 'grounding',
+            },
+          ];
+        }
+
         return { data: item.delta.content, id: chunk.id, type: 'text' };
       }
 
