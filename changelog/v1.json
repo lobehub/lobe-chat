@@ -1,5 +1,17 @@
 [
   {
+    "children": {},
+    "date": "2025-05-26",
+    "version": "1.88.10"
+  },
+  {
+    "children": {
+      "fixes": ["Auto sync theme mode in desktop."]
+    },
+    "date": "2025-05-26",
+    "version": "1.88.9"
+  },
+  {
     "children": {
       "improvements": ["Allow SliderWithInput to have no input limit."]
     },
