@@ -220,6 +220,28 @@ export const openaiChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: false,
+      search: true,
+    },
+    contextWindowTokens: 128_000,
+    description: 'GPT-4o mini search preview 是一个专门为搜索功能优化的预览版本，具有增强的网络搜索能力和实时信息检索功能。',
+    displayName: 'GPT-4o mini Search Preview',
+    enabled: true,
+    id: 'gpt-4o-mini-search-preview',
+    maxOutput: 16_384,
+    pricing: {
+      cachedInput: 0.075,
+      input: 0.15,
+      output: 0.6,
+    },
+    releasedAt: '2024-12-01',
+    settings: {
+      searchImpl: 'tool',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       functionCall: true,
       vision: true,
     },
