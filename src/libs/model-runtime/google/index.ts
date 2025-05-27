@@ -142,7 +142,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
               response_modalities: modelsWithModalities.has(model) ? ['Text', 'Image'] : undefined,
               temperature: payload.temperature,
               topP: payload.top_p,
-              ...(modelsDisableInstuction.has(model) ? {} : { thinkingConfig }),
+              ...(modelsDisableInstuction.has(model) || model.toLowerCase().includes('learnlm') ? {} : { thinkingConfig }),
             },
             model,
             // avoid wide sensitive words
