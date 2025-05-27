@@ -117,7 +117,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const { model, thinking } = payload;
 
       const thinkingConfig: GoogleAIThinkingConfig = {
-        includeThoughts: true,
+        includeThoughts: thinking?.type === 'enabled' ? true : undefined,
         thinkingBudget: thinking?.type === 'enabled' ? Math.min(thinking.budget_tokens, 24_576) : 0,
       };
 
