@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-05-27",
+    "version": "1.88.13"
+  },
+  {
     "children": {
       "improvements": ["Support adjust thinkingBudget in gemini 2.5 flash."]
     },
