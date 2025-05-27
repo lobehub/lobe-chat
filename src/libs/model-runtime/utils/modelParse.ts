@@ -8,7 +8,7 @@ export interface ModelProcessorConfig {
 }
 
 // 模型标签关键词配置
-export const MODEL_CONFIGS = {
+export const MODEL_LIST_CONFIGS = {
   anthropic: {
     excludeKeywords: [],
     functionCallKeywords: ['claude'],
@@ -69,14 +69,14 @@ export const PROVIDER_DETECTION_CONFIG = {
  * @param modelId 模型ID
  * @returns 检测到的提供商配置键名，默认为 'openai'
  */
-export const detectModelProvider = (modelId: string): keyof typeof MODEL_CONFIGS => {
+export const detectModelProvider = (modelId: string): keyof typeof MODEL_LIST_CONFIGS => {
   const lowerModelId = modelId.toLowerCase();
   
   for (const [provider, keywords] of Object.entries(PROVIDER_DETECTION_CONFIG)) {
     const hasKeyword = keywords.some(keyword => lowerModelId.includes(keyword));
     
-    if (hasKeyword && provider in MODEL_CONFIGS) {
-      return provider as keyof typeof MODEL_CONFIGS;
+    if (hasKeyword && provider in MODEL_LIST_CONFIGS) {
+      return provider as keyof typeof MODEL_LIST_CONFIGS;
     }
   }
   
@@ -87,7 +87,7 @@ export const detectModelProvider = (modelId: string): keyof typeof MODEL_CONFIGS
  * 处理模型卡片的通用逻辑
  */
 const processModelCard = (
-  model: { id: string },
+  model: { [key: string]: any; id: string },
   config: ModelProcessorConfig,
   knownModel?: any
 ): ChatModelCard => {
@@ -98,8 +98,8 @@ const processModelCard = (
   );
 
   return {
-    contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
-    displayName: knownModel?.displayName ?? undefined,
+    contextWindowTokens: model.contextWindowTokens ?? knownModel?.contextWindowTokens ?? undefined,
+    displayName: model.displayName ?? knownModel?.displayName ?? model.id,
     enabled: knownModel?.enabled || false,
     functionCall:
       (functionCallKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) &&
@@ -107,6 +107,7 @@ const processModelCard = (
       knownModel?.abilities?.functionCall ||
       false,
     id: model.id,
+    maxOutput: model.maxOutput ?? knownModel?.maxOutput ?? undefined,
     reasoning:
       reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
       knownModel?.abilities?.reasoning ||
@@ -155,7 +156,7 @@ export const processMultiProviderModelList = async (
   return modelList
     .map((model) => {
       const detectedProvider = detectModelProvider(model.id);
-      const config = MODEL_CONFIGS[detectedProvider];
+      const config = MODEL_LIST_CONFIGS[detectedProvider];
       
       const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
         (m) => model.id.toLowerCase() === m.id.toLowerCase(),

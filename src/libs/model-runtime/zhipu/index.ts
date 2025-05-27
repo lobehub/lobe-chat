@@ -1,6 +1,6 @@
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
-import { MODEL_CONFIGS, processModelList } from '../utils/modelParse';
+import { MODEL_LIST_CONFIGS, processModelList } from '../utils/modelParse';
 
 export interface ZhipuModelCard {
   description: string;
@@ -75,7 +75,7 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
       displayName: model.modelName,
       id: model.modelCode,
     }));
-    return processModelList(standardModelList, MODEL_CONFIGS.zhipu);
+    return processModelList(standardModelList, MODEL_LIST_CONFIGS.zhipu);
   },
   provider: ModelProvider.ZhiPu,
 });

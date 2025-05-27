@@ -1,6 +1,6 @@
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
-import { MODEL_CONFIGS, processModelList } from '../utils/modelParse';
+import { MODEL_LIST_CONFIGS, processModelList } from '../utils/modelParse';
 
 export interface VolcengineModelCard {
   id: string;
@@ -33,7 +33,7 @@ export const LobeVolcengineAI = LobeOpenAICompatibleFactory({
     const modelsPage = (await client.models.list()) as any;
     const modelList: VolcengineModelCard[] = modelsPage.data;
 
-    return processModelList(modelList, MODEL_CONFIGS.volcengine);
+    return processModelList(modelList, MODEL_LIST_CONFIGS.volcengine);
   },
   provider: ModelProvider.Volcengine,
 });

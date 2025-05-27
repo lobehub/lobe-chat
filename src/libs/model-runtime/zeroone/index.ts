@@ -1,6 +1,6 @@
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
-import { processModelList, MODEL_CONFIGS } from '../utils/modelParse';
+import { processModelList, MODEL_LIST_CONFIGS } from '../utils/modelParse';
 
 export interface ZeroOneModelCard {
   id: string;
@@ -15,7 +15,7 @@ export const LobeZeroOneAI = LobeOpenAICompatibleFactory({
     const modelsPage = (await client.models.list()) as any;
     const modelList: ZeroOneModelCard[] = modelsPage.data;
 
-    return processModelList(modelList, MODEL_CONFIGS.zeroone);
+    return processModelList(modelList, MODEL_LIST_CONFIGS.zeroone);
   },
   provider: ModelProvider.ZeroOne,
 });
