@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Support adjust thinkingBudget in gemini 2.5 flash."]
+    },
+    "date": "2025-05-27",
+    "version": "1.88.12"
+  },
+  {
+    "children": {
       "improvements": ["Correct model name SenseChat-5-1202."]
     },
     "date": "2025-05-26",
