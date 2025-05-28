@@ -2,6 +2,81 @@
 
 # Changelog
 
+## [Version&nbsp;1.87.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.86.1...v1.87.0)
+<sup>Released on **2025-05-28**</sup>
+
+
+#### ✨ Features
+
+- **misc**: Add claude 4 series.
+
+
+#### 🐛 Bug Fixes
+
+- **docs**: Rename and update Google Gemini documentation.
+- **DragUpload**: Resolve issue with pasting clipboard images in Safari.
+- **misc**: Auto sync theme mode in desktop, cant invoke the application after OIDC authorization in Windows 11, fix chat header in the desktop, fix draggable issue with agent header, fix message refresh 401 on desktop, fix missing email field to user, update agent config of client db will override old config, user nickName & username selector in desktop.
+
+
+#### 💄 Styles
+
+- **DevPanel**: Improve json display.
+- **misc**: Add gemini & hunyuan & Claude models, add live search support for xAI, Allow `SliderWithInput` to have no input limit, correct model name `SenseChat-5-1202`, fix a few typos in the model tooltips, improve thread flicker when first-time loading, resolve InputNumber display overlap issue, support adjust thinkingBudget in gemini 2.5 flash, Support Gemini 2.5 thought reasoning, support share single message.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's improved
+
+* **misc**: Add claude 4 series, closes [#7939](https://github.com/jaworldwideorg/OneJA-Bot/issues/7939) ([9b4f950](https://github.com/jaworldwideorg/OneJA-Bot/commit/9b4f950))
+
+
+
+#### What's fixed
+
+* **docs**: Rename and update Google Gemini documentation, closes [#7957](https://github.com/jaworldwideorg/OneJA-Bot/issues/7957) ([432c28d](https://github.com/jaworldwideorg/OneJA-Bot/commit/432c28d))
+* **DragUpload**: Resolve issue with pasting clipboard images in Safari, closes [#7961](https://github.com/jaworldwideorg/OneJA-Bot/issues/7961) ([3c3cc75](https://github.com/jaworldwideorg/OneJA-Bot/commit/3c3cc75))
+* **misc**: Auto sync theme mode in desktop, closes [#7970](https://github.com/jaworldwideorg/OneJA-Bot/issues/7970) ([a16fa02](https://github.com/jaworldwideorg/OneJA-Bot/commit/a16fa02))
+* **misc**: Cant invoke the application after OIDC authorization in Windows 11, closes [#7900](https://github.com/jaworldwideorg/OneJA-Bot/issues/7900) ([585e386](https://github.com/jaworldwideorg/OneJA-Bot/commit/585e386))
+* **misc**: Fix chat header in the desktop, closes [#7973](https://github.com/jaworldwideorg/OneJA-Bot/issues/7973) ([63c3a71](https://github.com/jaworldwideorg/OneJA-Bot/commit/63c3a71))
+* **misc**: Fix draggable issue with agent header, closes [#7968](https://github.com/jaworldwideorg/OneJA-Bot/issues/7968) ([cd84241](https://github.com/jaworldwideorg/OneJA-Bot/commit/cd84241))
+* **misc**: Fix message refresh 401 on desktop, closes [#7958](https://github.com/jaworldwideorg/OneJA-Bot/issues/7958) ([b4b426f](https://github.com/jaworldwideorg/OneJA-Bot/commit/b4b426f))
+* **misc**: Fix missing email field to user, closes [#7913](https://github.com/jaworldwideorg/OneJA-Bot/issues/7913) ([d314130](https://github.com/jaworldwideorg/OneJA-Bot/commit/d314130))
+* **misc**: Update agent config of client db will override old config, closes [#7918](https://github.com/jaworldwideorg/OneJA-Bot/issues/7918) ([f7cda68](https://github.com/jaworldwideorg/OneJA-Bot/commit/f7cda68))
+* **misc**: User nickName & username selector in desktop, closes [#7899](https://github.com/jaworldwideorg/OneJA-Bot/issues/7899) ([bf51746](https://github.com/jaworldwideorg/OneJA-Bot/commit/bf51746))
+
+
+
+#### Styles
+
+* **DevPanel**: Improve json display, closes [#7978](https://github.com/jaworldwideorg/OneJA-Bot/issues/7978) ([db800d2](https://github.com/jaworldwideorg/OneJA-Bot/commit/db800d2))
+* **misc**: Add gemini & hunyuan & Claude models, closes [#7908](https://github.com/jaworldwideorg/OneJA-Bot/issues/7908) ([5244f22](https://github.com/jaworldwideorg/OneJA-Bot/commit/5244f22))
+* **misc**: Add live search support for xAI, closes [#7907](https://github.com/jaworldwideorg/OneJA-Bot/issues/7907) ([dff4b7b](https://github.com/jaworldwideorg/OneJA-Bot/commit/dff4b7b))
+* **misc**: Allow `SliderWithInput` to have no input limit, closes [#7708](https://github.com/jaworldwideorg/OneJA-Bot/issues/7708) ([bdb02b2](https://github.com/jaworldwideorg/OneJA-Bot/commit/bdb02b2))
+* **misc**: Correct model name `SenseChat-5-1202`, closes [#7979](https://github.com/jaworldwideorg/OneJA-Bot/issues/7979) ([d9e1336](https://github.com/jaworldwideorg/OneJA-Bot/commit/d9e1336))
+* **misc**: Fix a few typos in the model tooltips, closes [#7952](https://github.com/jaworldwideorg/OneJA-Bot/issues/7952) ([8416fec](https://github.com/jaworldwideorg/OneJA-Bot/commit/8416fec))
+* **misc**: Improve thread flicker when first-time loading, closes [#7963](https://github.com/jaworldwideorg/OneJA-Bot/issues/7963) ([4cacacd](https://github.com/jaworldwideorg/OneJA-Bot/commit/4cacacd))
+* **misc**: Resolve InputNumber display overlap issue, closes [#7892](https://github.com/jaworldwideorg/OneJA-Bot/issues/7892) ([5486663](https://github.com/jaworldwideorg/OneJA-Bot/commit/5486663))
+* **misc**: Support adjust thinkingBudget in gemini 2.5 flash, closes [#7947](https://github.com/jaworldwideorg/OneJA-Bot/issues/7947) ([a9db548](https://github.com/jaworldwideorg/OneJA-Bot/commit/a9db548))
+* **misc**: Support Gemini 2.5 thought reasoning, closes [#7686](https://github.com/jaworldwideorg/OneJA-Bot/issues/7686) ([f34c4de](https://github.com/jaworldwideorg/OneJA-Bot/commit/f34c4de))
+* **misc**: Support share single message, closes [#7967](https://github.com/jaworldwideorg/OneJA-Bot/issues/7967) ([660a5ad](https://github.com/jaworldwideorg/OneJA-Bot/commit/660a5ad))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.88.14](https://github.com/lobehub/lobe-chat/compare/v1.88.13...v1.88.14)
 
 <sup>Released on **2025-05-28**</sup>
