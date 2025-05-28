@@ -1,5 +1,14 @@
 import type { ActionIconGroupItemType } from '@lobehub/ui';
-import { Copy, Edit, ListRestart, RotateCcw, Split, Trash } from 'lucide-react';
+import {
+  Copy,
+  DownloadIcon,
+  Edit,
+  ListRestart,
+  RotateCcw,
+  Share2,
+  Split,
+  Trash,
+} from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -12,7 +21,9 @@ interface ChatListActionsBar {
   delAndRegenerate: ActionIconGroupItemType;
   divider: { type: 'divider' };
   edit: ActionIconGroupItemType;
+  export: ActionIconGroupItemType;
   regenerate: ActionIconGroupItemType;
+  share: ActionIconGroupItemType;
 }
 
 export const useChatListActionsBar = ({
@@ -59,10 +70,20 @@ export const useChatListActionsBar = ({
         key: 'edit',
         label: t('edit', { defaultValue: 'Edit' }),
       },
+      export: {
+        icon: DownloadIcon,
+        key: 'export',
+        label: '导出为 PDF',
+      },
       regenerate: {
         icon: RotateCcw,
         key: 'regenerate',
         label: t('regenerate', { defaultValue: 'Regenerate' }),
+      },
+      share: {
+        icon: Share2,
+        key: 'share',
+        label: t('share', { defaultValue: 'Share' }),
       },
     }),
     [hasThread],

@@ -1,6 +1,148 @@
 [
   {
     "children": {
+      "fixes": ["Cant invoke the application after OIDC authorization in Windows 11."]
+    },
+    "date": "2025-05-28",
+    "version": "1.88.14"
+  },
+  {
+    "children": {},
+    "date": "2025-05-27",
+    "version": "1.88.13"
+  },
+  {
+    "children": {
+      "improvements": ["Support adjust thinkingBudget in gemini 2.5 flash."]
+    },
+    "date": "2025-05-27",
+    "version": "1.88.12"
+  },
+  {
+    "children": {
+      "improvements": ["Correct model name SenseChat-5-1202."]
+    },
+    "date": "2025-05-26",
+    "version": "1.88.11"
+  },
+  {
+    "children": {},
+    "date": "2025-05-26",
+    "version": "1.88.10"
+  },
+  {
+    "children": {
+      "fixes": ["Auto sync theme mode in desktop."]
+    },
+    "date": "2025-05-26",
+    "version": "1.88.9"
+  },
+  {
+    "children": {
+      "improvements": ["Allow SliderWithInput to have no input limit."]
+    },
+    "date": "2025-05-26",
+    "version": "1.88.8"
+  },
+  {
+    "children": {
+      "fixes": ["Fix chat header in the desktop."]
+    },
+    "date": "2025-05-26",
+    "version": "1.88.7"
+  },
+  {
+    "children": {
+      "fixes": ["Fix draggable issue with agent header."],
+      "improvements": ["Fix a few typos in the model tooltips."]
+    },
+    "date": "2025-05-25",
+    "version": "1.88.6"
+  },
+  {
+    "children": {
+      "improvements": ["Support share single message."]
+    },
+    "date": "2025-05-25",
+    "version": "1.88.5"
+  },
+  {
+    "children": {
+      "improvements": ["Improve thread flicker when first-time loading."]
+    },
+    "date": "2025-05-25",
+    "version": "1.88.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix message refresh 401 on desktop."],
+      "improvements": ["Add gemini & hunyuan & Claude models."]
+    },
+    "date": "2025-05-25",
+    "version": "1.88.3"
+  },
+  {
+    "children": {
+      "improvements": ["Add live search support for xAI."]
+    },
+    "date": "2025-05-24",
+    "version": "1.88.2"
+  },
+  {
+    "children": {
+      "fixes": ["User nickName & username selector in desktop."],
+      "improvements": ["Support Gemini 2.5 thought reasoning."]
+    },
+    "date": "2025-05-24",
+    "version": "1.88.1"
+  },
+  {
+    "children": {
+      "features": ["Add claude 4 series."],
+      "fixes": [
+        "Fix missing email field to user, update agent config of client db will override old config."
+      ]
+    },
+    "date": "2025-05-23",
+    "version": "1.88.0"
+  },
+  {
+    "children": {
+      "improvements": ["Resolve InputNumber display overlap issue."]
+    },
+    "date": "2025-05-23",
+    "version": "1.87.9"
+  },
+  {
+    "children": {
+      "fixes": ["'top_p' is not supported with o4-mini, pin zustand version to avoid type error."]
+    },
+    "date": "2025-05-22",
+    "version": "1.87.8"
+  },
+  {
+    "children": {
+      "fixes": ["Bump @lobehub/ui to 2.1.7."]
+    },
+    "date": "2025-05-21",
+    "version": "1.87.7"
+  },
+  {
+    "children": {
+      "improvements": ["Improve tools display."]
+    },
+    "date": "2025-05-21",
+    "version": "1.87.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix desktop open issue on linux like Fedora42."]
+    },
+    "date": "2025-05-20",
+    "version": "1.87.5"
+  },
+  {
+    "children": {
       "fixes": ["Supported SenseNova v6 models correctly & update Gemini models."]
     },
     "date": "2025-05-18",

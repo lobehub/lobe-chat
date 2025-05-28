@@ -393,13 +393,23 @@ export class SessionModel {
       .returning();
   };
 
-  updateConfig = async (id: string, data: Partial<AgentItem>) => {
-    if (Object.keys(data).length === 0) return;
+  updateConfig = async (sessionId: string, data: DeepPartial<AgentItem> | undefined | null) => {
+    if (!data || Object.keys(data).length === 0) return;
 
+    const session = await this.findByIdOrSlug(sessionId);
+    if (!session) return;
+
+    if (!session.agent) {
+      throw new Error(
+        'this session is not assign with agent, please contact with admin to fix this issue.',
+      );
+    }
+
+    const mergedValue = merge(session.agent, data);
     return this.db
       .update(agents)
-      .set(data)
-      .where(and(eq(agents.id, id), eq(agents.userId, this.userId)));
+      .set(mergedValue)
+      .where(and(eq(agents.id, session.agent.id), eq(agents.userId, this.userId)));
   };
 
   // **************** Helper *************** //

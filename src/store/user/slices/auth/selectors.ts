@@ -4,19 +4,31 @@ import { enableAuth, enableClerk, enableNextAuth } from '@/const/auth';
 import { BRANDING_NAME } from '@/const/branding';
 import { UserStore } from '@/store/user';
 import { LobeUser } from '@/types/user';
+import { isDesktop } from '@/const/version';
 
 const DEFAULT_USERNAME = BRANDING_NAME;
 
 const nickName = (s: UserStore) => {
-  if (!enableAuth) return t('userPanel.defaultNickname', { ns: 'common' });
+  const defaultNickName = s.user?.fullName || s.user?.username;
+  if (!enableAuth) {
+    if (isDesktop) {
+      return defaultNickName;
+    }
+    return t('userPanel.defaultNickname', { ns: 'common' });
+  }
 
-  if (s.isSignedIn) return s.user?.fullName || s.user?.username;
+  if (s.isSignedIn) return defaultNickName;
 
   return t('userPanel.anonymousNickName', { ns: 'common' });
 };
 
 const username = (s: UserStore) => {
-  if (!enableAuth) return DEFAULT_USERNAME;
+  if (!enableAuth) {
+    if (isDesktop) {
+      return s.user?.username;
+    }
+    return DEFAULT_USERNAME;
+  }
 
   if (s.isSignedIn) return s.user?.username;
 
