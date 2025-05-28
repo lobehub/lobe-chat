@@ -1,20 +1,19 @@
 'use client';
 
-import { useBoolean } from 'ahooks';
-import { Button, Checkbox, Divider } from 'antd';
-import type { CheckboxProps } from 'antd';
+import { CopyButton } from '@lobehub/ui';
+import { useUpdateEffect } from 'ahooks';
+import { Button, Checkbox, CheckboxProps, Divider, Input, type InputRef, Space } from 'antd';
 import { intersection } from 'lodash-es';
-import { useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { storeNames } from '@/store/middleware/createDevtools';
 
-const SEPARATOR = '~';
+const SEPARATOR = ',';
 const ALL = '*';
 
 const StoreFlag = () => {
   const [url] = useState(() => new URL(window.location.href));
-  const [sync, { setTrue: onSync, setFalse: offSync }] = useBoolean(false);
 
   const [checkedList, setCheckedList] = useState<string[]>(() => {
     const debug = url.searchParams.get('debug');
@@ -33,9 +32,11 @@ const StoreFlag = () => {
     setCheckedList(e.target.checked ? Array.from(storeNames) : []);
   };
 
-  const handleApply = () => {
+  const flattenStr = checkedList.sort().join(SEPARATOR);
+
+  const [isValid, omittedUrl, realUrl] = useMemo(() => {
+    let _isValid: boolean = false;
     try {
-      onSync();
       const params = new URLSearchParams(url.search);
       if (checkedList.length > 0) {
         params.set('debug', checkAll ? ALL : checkedList.join(SEPARATOR));
@@ -43,15 +44,32 @@ const StoreFlag = () => {
         params.delete('debug');
       }
       url.search = params.toString();
-      window.location.href = url.toString();
+      const omitted = `${url.protocol}//${url.host}/...?debug=${params.get('debug') ?? ''}`;
+      const realUrl = url.toString();
+      _isValid = realUrl !== window.location.href;
+      return [_isValid, omitted, url.toString()];
     } catch {
-      offSync();
+      // no-thing
     }
+    return [_isValid];
+  }, [url, flattenStr]);
+
+  const urlInputRef = useRef<InputRef>(null);
+
+  useUpdateEffect(() => {
+    if (omittedUrl && omittedUrl.length) {
+      urlInputRef.current?.focus();
+      urlInputRef.current?.setSelectionRange(omittedUrl.length, omittedUrl.length);
+    }
+  }, [omittedUrl]);
+
+  const handleApply = () => {
+    window.location.href = realUrl!;
   };
 
   return (
     <Flexbox>
-      <Flexbox paddingInline={16}>
+      <Flexbox padding={16}>
         <Checkbox.Group
           onChange={onChange}
           options={Array.from(storeNames)}
@@ -60,13 +78,28 @@ const StoreFlag = () => {
         />
       </Flexbox>
       <Divider />
-      <Flexbox align="center" horizontal justify="space-between" padding={16}>
-        <Checkbox checked={checkAll} indeterminate={indeterminate} onChange={onCheckAllChange}>
+      <Flexbox align="center" gap={8} horizontal justify="space-between" padding={16}>
+        <Checkbox
+          checked={checkAll}
+          indeterminate={indeterminate}
+          onChange={onCheckAllChange}
+          style={{ flex: `1 0 auto` }}
+        >
           Check all
         </Checkbox>
-        <Button loading={sync} onClick={handleApply} type="primary">
-          Apply
-        </Button>
+        <Space.Compact style={{ width: '100%' }}>
+          <Input
+            readOnly
+            ref={urlInputRef}
+            style={{ userSelect: 'none' }}
+            value={omittedUrl}
+            variant="filled"
+          />
+          <CopyButton content={realUrl!} disabled={!isValid} variant="borderless" />
+          <Button disabled={!isValid} onClick={handleApply} type="primary">
+            Apply
+          </Button>
+        </Space.Compact>
       </Flexbox>
     </Flexbox>
   );
