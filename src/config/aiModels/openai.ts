@@ -48,6 +48,9 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 4.4,
     },
     releasedAt: '2025-04-17',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {
@@ -478,8 +481,7 @@ export const openaiChatModels: AIChatModelCard[] = [
   },
   {
     contextWindowTokens: 4096,
-    description:
-      'GPT 3.5 Turbo，适用于各种文本生成和理解任务，对指令遵循的优化',
+    description: 'GPT 3.5 Turbo，适用于各种文本生成和理解任务，对指令遵循的优化',
     displayName: 'GPT-3.5 Turbo Instruct',
     id: 'gpt-3.5-turbo-instruct',
     pricing: {

@@ -231,11 +231,16 @@ class ChatService {
           type: 'enabled',
         };
       }
+
       if (
         modelExtendParams!.includes('disableContextCaching') &&
         chatConfig.disableContextCaching
       ) {
         extendParams.enabledContextCaching = false;
+      }
+
+      if (modelExtendParams!.includes('reasoningEffort') && chatConfig.reasoningEffort) {
+        extendParams.reasoning_effort = chatConfig.reasoningEffort;
       }
     }
 
