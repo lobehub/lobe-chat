@@ -233,6 +233,7 @@
   "pluginList": "Lijst met plugins",
   "search": {
     "apiName": {
+      "crawlMultiPages": "Meerdere pagina-inhoud lezen",
       "crawlSinglePage": "Pagina-inhoud lezen",
       "search": "Pagina zoeken"
     },

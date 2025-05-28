@@ -233,6 +233,7 @@
   "pluginList": "Danh sách plugin",
   "search": {
     "apiName": {
+      "crawlMultiPages": "Đọc nội dung của nhiều trang",
       "crawlSinglePage": "Đọc nội dung trang",
       "search": "Tìm kiếm trang"
     },

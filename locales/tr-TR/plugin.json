@@ -227,11 +227,13 @@
       "renameLocalFile": "Yeniden adlandır",
       "searchLocalFiles": "Dosyaları ara",
       "writeLocalFile": "Dosyaya yaz"
-    }
+    },
+    "title": "Yerel Dosya"
   },
   "pluginList": "Eklenti Listesi",
   "search": {
     "apiName": {
+      "crawlMultiPages": "Birden Fazla Sayfa İçeriğini Okuma",
       "crawlSinglePage": "Sayfa içeriğini oku",
       "search": "Sayfayı ara"
     },
@@ -294,7 +296,6 @@
     },
     "title": "Eklenti Mağazası"
   },
-  "title": "Yerel Dosyalar",
   "unknownError": "Bilinmeyen hata",
   "unknownPlugin": "Bilinmeyen eklenti"
 }
