@@ -1,28 +1,24 @@
 import type { ChatModelCard } from '@/types/llm';
 
 export interface ModelProcessorConfig {
-  excludeKeywords?: readonly string[];
-  functionCallKeywords: readonly string[];
-  reasoningKeywords: readonly string[];
-  visionKeywords: readonly string[];
+  excludeKeywords?: readonly string[]; // 对符合的模型不添加标签
+  functionCallKeywords?: readonly string[];
+  reasoningKeywords?: readonly string[];
+  visionKeywords?: readonly string[];
 }
 
 // 模型标签关键词配置
 export const MODEL_LIST_CONFIGS = {
   anthropic: {
-    excludeKeywords: [],
     functionCallKeywords: ['claude'],
-    reasoningKeywords: ['-3-7-', '-4-'],
+    reasoningKeywords: ['-3-7', '3.7', '-4'],
     visionKeywords: ['claude'],
   },
   deepseek: {
-    excludeKeywords: [],
     functionCallKeywords: ['v3'],
     reasoningKeywords: ['r1'],
-    visionKeywords: [],
   },
   google: {
-    excludeKeywords: [],
     functionCallKeywords: ['gemini'],
     reasoningKeywords: ['thinking', '-2.5-'],
     visionKeywords: ['gemini', 'learnlm'],
@@ -34,7 +30,6 @@ export const MODEL_LIST_CONFIGS = {
     visionKeywords: ['4o', '4.1', 'o4'],
   },
   qwen: {
-    excludeKeywords: [],
     functionCallKeywords: [
       'qwen-max',
       'qwen-plus', 
@@ -45,23 +40,19 @@ export const MODEL_LIST_CONFIGS = {
       'qwen2.5',
       'qwen3',
     ],
-    reasoningKeywords: ['qvq', 'qwq', 'deepseek-r1', 'qwen3'],
+    reasoningKeywords: ['qvq', 'qwq', 'qwen3'],
     visionKeywords: ['qvq', 'vl'],
   },
   volcengine: {
-    excludeKeywords: [],
     functionCallKeywords: ['doubao-1.5'],
     reasoningKeywords: ['thinking', '-r1'],
     visionKeywords: ['vision', '-m'],
   },
   zeroone: {
-    excludeKeywords: [],
     functionCallKeywords: ['fc'],
-    reasoningKeywords: [],
     visionKeywords: ['vision'],
   },
   zhipu: {
-    excludeKeywords: [],
     functionCallKeywords: ['glm-4'],
     reasoningKeywords: ['glm-zero', 'glm-z1'],
     visionKeywords: ['glm-4v'],
@@ -107,7 +98,12 @@ const processModelCard = (
   config: ModelProcessorConfig,
   knownModel?: any
 ): ChatModelCard => {
-  const { functionCallKeywords, visionKeywords, reasoningKeywords, excludeKeywords = [] } = config;
+  const { 
+    functionCallKeywords = [], 
+    visionKeywords = [], 
+    reasoningKeywords = [], 
+    excludeKeywords = [] 
+  } = config;
 
   const isExcludedModel = excludeKeywords.some((keyword) => 
     model.id.toLowerCase().includes(keyword)
