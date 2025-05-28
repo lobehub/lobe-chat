@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "fixes": ["Cant invoke the application after OIDC authorization in Windows 11."]
+    },
+    "date": "2025-05-28",
+    "version": "1.88.14"
+  },
+  {
     "children": {},
     "date": "2025-05-27",
     "version": "1.88.13"
