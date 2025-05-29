@@ -126,7 +126,7 @@
     "@aws-sdk/client-bedrock-runtime": "^3.812.0",
     "@aws-sdk/client-s3": "^3.812.0",
     "@aws-sdk/s3-request-presigner": "^3.812.0",
-    "@azure-rest/ai-inference": "1.0.0-beta.5",
+    "@azure-rest/ai-inference": "1.0.0-beta.6",
     "@azure/core-auth": "^1.9.0",
     "@cfworker/json-schema": "^4.1.1",
     "@clerk/localizations": "^3.16.0",
