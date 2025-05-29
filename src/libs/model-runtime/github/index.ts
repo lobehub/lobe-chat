@@ -20,10 +20,17 @@ export const LobeGithubAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://models.github.ai/inference',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { model } = payload;
+      const { frequency_penalty, model, presence_penalty, ...rest } = payload;
 
       if (model.startsWith('o1') || model.startsWith('o3')) {
         return { ...pruneReasoningPayload(payload), stream: false } as any;
+      }
+
+      if (model === 'xai/grok-3-mini') {
+        return {
+          ...rest,
+          model,
+        };
       }
 
       return { ...payload, stream: payload.stream ?? true };
