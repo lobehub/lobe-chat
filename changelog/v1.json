@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Cmd + click chat tab not open new tab."],
+      "improvements": ["Update GitHub models."]
+    },
+    "date": "2025-05-29",
+    "version": "1.88.16"
+  },
+  {
+    "children": {
       "improvements": ["Add fc ability to deepseek-reasoner model."]
     },
     "date": "2025-05-29",
