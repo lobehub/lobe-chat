@@ -488,7 +488,7 @@ const githubChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description: '相同的Phi-3-medium模型，但具有更大的上下文大小，适用于RAG或少量提示。',
     displayName: 'Phi-3-medium 128K',
-    id: 'microsoft/Phi-3-mini-128k-instruct',
+    id: 'microsoft/Phi-3-medium-128k-instruct',
     maxOutput: 4096,
     type: 'chat',
   },
