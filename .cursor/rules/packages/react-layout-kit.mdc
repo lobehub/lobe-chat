@@ -63,8 +63,6 @@ import { Flexbox } from 'react-layout-kit';
   <Flexbox
     flex={1}
     style={{
-      display: 'flex',
-      flexDirection: 'column',
       height: '100%',
     }}
   >

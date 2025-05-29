@@ -41,7 +41,7 @@ Commonly used column definitions, especially for timestamps, are centralized in 
 - Most tables include a `user_id` column referencing `users.id` with `onDelete: 'cascade'`
 
 ### Timestamps
-- Consistently use the `...timestamps` spread from [_helpers.ts](mdc:src/database/schemas/_helpers.ts) for `created_at`, `updated_at`, and `accessedAt` columns
+- Consistently use the `...timestamps` spread from [_helpers.ts](mdc:src/database/schemas/_helpers.ts) for `created_at`, `updated_at`, and `accessed_at` columns
 
 ### Default Values
 - `.$defaultFn(() => expression)` for dynamic defaults (e.g., `idGenerator()`, `randomSlug()`)
@@ -92,6 +92,7 @@ export const agents = pgTable(
     userId: text('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
+    clientId: text('client_id'),
     chatConfig: jsonb('chat_config').$type<LobeAgentChatConfig>(),
     ...timestamps,
   },

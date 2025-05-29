@@ -17,7 +17,7 @@ read [folder-structure.mdx](mdc:docs/development/basic/folder-structure.mdx) to 
 
 The project uses the following technologies:
 
-- use pnpm as package manager
+- pnpm as package manager
 - Next.js 15 for frontend and backend, using app router instead of pages router
 - react 19, using hooks, functional components, react server components
 - TypeScript programming language
@@ -27,7 +27,7 @@ The project uses the following technologies:
 - react-i18next for i18n
 - lucide-react, @ant-design/icons for icons
 - @lobehub/icons for AI provider/model logo icon
-- use @formkit/auto-animate for react list animation
+- @formkit/auto-animate for react list animation
 - zustand for global state management
 - nuqs for type-safe search params state manager
 - SWR for react data fetch
@@ -36,7 +36,7 @@ The project uses the following technologies:
 - lodash-es for utility library
 - zod for data validation
 - TRPC for type safe backend
-- PGLite for client DB and postgress for backend DB
+- PGLite for client DB and PostgreSQL for backend DB
 - Drizzle ORM
 - Vitest for testing, testing-library for react component test
 - Prettier for code formatting
