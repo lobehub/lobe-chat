@@ -287,20 +287,6 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 64_000,
-    displayName: 'Deepseek R1 Turbo',
-    enabled: true,
-    id: 'deepseek/deepseek-r1-turbo',
-    pricing: {
-      input: 0.7,
-      output: 2.5,
-    },
-    type: 'chat',
-  },
-  {
     contextWindowTokens: 128_000,
     displayName: 'Deepseek V3 0324',
     enabled: true,
@@ -308,6 +294,33 @@ const novitaChatModels: AIChatModelCard[] = [
     pricing: {
       input: 0.33,
       output: 1.3,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 65_536,
+    displayName: 'Deepseek R1 0528',
+    enabled: true,
+    id: 'deepseek/deepseek-r1-0528',
+    pricing: {
+      input: 0.7,
+      output: 2.5,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 64_000,
+    displayName: 'Deepseek R1 Turbo',
+    id: 'deepseek/deepseek-r1-turbo',
+    pricing: {
+      input: 0.7,
+      output: 2.5,
     },
     type: 'chat',
   },
