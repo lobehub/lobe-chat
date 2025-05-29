@@ -37,7 +37,7 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
         href={'/chat'}
         onClick={(e) => {
           // If Cmd key is pressed, let the default link behavior happen (open in new tab)
-          if (e.metaKey) {
+          if (e.metaKey || e.ctrlKey) {
             return;
           }
 
