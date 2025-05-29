@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.88.18](https://github.com/lobehub/lobe-chat/compare/v1.88.17...v1.88.18)
+
+<sup>Released on **2025-05-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Close historySummary correctly, Enable thinking output only for supported Gemini thinking models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Close historySummary correctly, closes [#7010](https://github.com/lobehub/lobe-chat/issues/7010) ([90a6f68](https://github.com/lobehub/lobe-chat/commit/90a6f68))
+- **misc**: Enable thinking output only for supported Gemini thinking models, closes [#7987](https://github.com/lobehub/lobe-chat/issues/7987) ([f503c53](https://github.com/lobehub/lobe-chat/commit/f503c53))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.88.17](https://github.com/lobehub/lobe-chat/compare/v1.88.16...v1.88.17)
 
 <sup>Released on **2025-05-29**</sup>
