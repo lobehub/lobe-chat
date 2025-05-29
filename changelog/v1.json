@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Increase the history limit."]
+    },
+    "date": "2025-05-29",
+    "version": "1.88.17"
+  },
+  {
+    "children": {
       "fixes": ["Cmd + click chat tab not open new tab."],
       "improvements": ["Update GitHub models."]
     },
