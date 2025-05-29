@@ -42,16 +42,6 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 160_000,
-    displayName: 'Deepseek Prover V2 671B',
-    id: 'deepseek/deepseek-prover-v2-671b',
-    pricing: {
-      input: 0.7,
-      output: 2.5
-    },
-    type: 'chat',
-  },
-  {
     contextWindowTokens: 40_960,
     displayName: 'Qwen3 235B A22B FP8',
     id: 'qwen/qwen3-235b-a22b-fp8',
@@ -217,7 +207,7 @@ const novitaChatModels: AIChatModelCard[] = [
     displayName: 'Mistral 7B Instruct',
     id: 'mistralai/mistral-7b-instruct',
     pricing: {
-      input: 0.059,
+      input: 0.029,
       output: 0.059,
     },
     type: 'chat',
@@ -397,7 +387,7 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 16_000,
+    contextWindowTokens: 8192,
     displayName: 'L3 70B Euryale v2.1',
     id: 'sao10k/l3-70b-euryale-v2.1',
     pricing: {
