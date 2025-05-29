@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add fc ability to deepseek-reasoner model."]
+    },
+    "date": "2025-05-29",
+    "version": "1.88.15"
+  },
+  {
+    "children": {
       "fixes": ["Cant invoke the application after OIDC authorization in Windows 11."]
     },
     "date": "2025-05-28",
