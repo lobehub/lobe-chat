@@ -27,6 +27,9 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 40,
     },
     releasedAt: '2025-04-17',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {
@@ -127,6 +130,9 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 4.4,
     },
     releasedAt: '2025-01-31',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {
@@ -145,6 +151,9 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 4.4,
     },
     releasedAt: '2024-09-12',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {
@@ -164,6 +173,9 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 60,
     },
     releasedAt: '2024-12-17',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {
@@ -181,6 +193,9 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 60,
     },
     releasedAt: '2024-09-12',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {

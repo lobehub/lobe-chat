@@ -89,6 +89,7 @@ const ControlsForm = memo<ControlsProps>(({ setUpdating }) => {
     },
     {
       children: <ReasoningEffortSlider />,
+      desc: 'reasoning_effort',
       label: t('extendParams.reasoningEffort.title'),
       layout: 'horizontal',
       minWidth: undefined,

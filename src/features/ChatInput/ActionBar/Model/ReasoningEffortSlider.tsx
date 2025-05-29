@@ -11,7 +11,7 @@ const ReasoningEffortSlider = memo(() => {
     s.updateAgentChatConfig,
   ]);
 
-  const reasoningEffort = config.reasoningEffort || 'medium';
+  const reasoningEffort = config.reasoningEffort || 'medium'; // Default to 'medium' if not set
 
   const marks = {
     0: 'low',
@@ -31,7 +31,7 @@ const ReasoningEffortSlider = memo(() => {
   );
 
   return (
-    <Flexbox align={'center'} gap={12} horizontal paddingInline={'0 20px'} width={'14vw'}>
+    <Flexbox align={'center'} gap={12} horizontal paddingInline={'0 20px'} width={'13vw'}>
       <Flexbox flex={1}>
         <Slider
           marks={marks}
