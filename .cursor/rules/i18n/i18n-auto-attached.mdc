@@ -1,0 +1,6 @@
+---
+description: 
+globs: src/locales/**/*
+alwaysApply: false
+---
+read [i18n.mdc](mdc:.cursor/rules/i18n/i18n.mdc)
