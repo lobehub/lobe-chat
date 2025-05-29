@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.88.15](https://github.com/lobehub/lobe-chat/compare/v1.88.14...v1.88.15)
+
+<sup>Released on **2025-05-29**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add fc ability to deepseek-reasoner model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add fc ability to deepseek-reasoner model, closes [#8006](https://github.com/lobehub/lobe-chat/issues/8006) ([1511c75](https://github.com/lobehub/lobe-chat/commit/1511c75))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.88.14](https://github.com/lobehub/lobe-chat/compare/v1.88.13...v1.88.14)
 
 <sup>Released on **2025-05-28**</sup>
