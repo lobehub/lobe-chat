@@ -7,7 +7,7 @@ import { LobeGithubAI } from './index';
 testProvider({
   Runtime: LobeGithubAI,
   provider: ModelProvider.Github,
-  defaultBaseURL: 'https://models.inference.ai.azure.com',
+  defaultBaseURL: 'https://models.github.ai/inference',
   chatDebugEnv: 'DEBUG_GITHUB_CHAT_COMPLETION',
   chatModel: 'gpt-4o',
   invalidErrorType: 'InvalidGithubToken',
