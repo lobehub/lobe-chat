@@ -38,7 +38,7 @@ const deepseekChatModels: AIChatModelCard[] = [
       input: 4,
       output: 16,
     },
-    releasedAt: '2025-01-20',
+    releasedAt: '2025-05-28',
     type: 'chat',
   },
 ];
