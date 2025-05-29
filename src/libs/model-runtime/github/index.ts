@@ -17,13 +17,17 @@ export interface GithubModelCard {
 /* eslint-enable typescript-sort-keys/interface */
 
 export const LobeGithubAI = LobeOpenAICompatibleFactory({
-  baseURL: 'https://models.inference.ai.azure.com',
+  baseURL: 'https://models.github.ai/inference',
   chatCompletion: {
     handlePayload: (payload) => {
       const { model } = payload;
 
       if (model.startsWith('o1') || model.startsWith('o3')) {
         return { ...pruneReasoningPayload(payload), stream: false } as any;
+      }
+
+      if (model === 'xai/grok-3-mini') {
+        return { ...payload, frequency_penalty: undefined, presence_penalty: undefined };
       }
 
       return { ...payload, stream: payload.stream ?? true };
@@ -43,7 +47,7 @@ export const LobeGithubAI = LobeOpenAICompatibleFactory({
 
     const visionKeywords = ['vision'];
 
-    const reasoningKeywords = ['deepseek-r1', 'o1', 'o3'];
+    const reasoningKeywords = ['deepseek-r1', 'o1', 'o3', 'grok-3-mini'];
 
     const modelsPage = (await client.models.list()) as any;
     const modelList: GithubModelCard[] = modelsPage.body;
