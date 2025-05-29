@@ -1,7 +1,7 @@
 'use client';
 
 import { ActionIcon, SideNav } from '@lobehub/ui';
-import { Cog, DatabaseIcon} from 'lucide-react';
+import { Cog, DatabaseIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
