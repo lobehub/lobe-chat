@@ -80,7 +80,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     config: {
-      deploymentName: 'deepseek-r1-250120',
+      deploymentName: 'deepseek-r1-250528',
     },
     contextWindowTokens: 98_304,
     description:
