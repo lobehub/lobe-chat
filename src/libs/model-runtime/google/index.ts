@@ -117,8 +117,17 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const { model, thinking } = payload;
 
       const thinkingConfig: GoogleAIThinkingConfig = {
-        includeThoughts: true,
-        thinkingBudget: thinking?.type === 'enabled' ? Math.min(thinking.budget_tokens, 24_576) : 0,
+        includeThoughts:
+          (thinking?.type === 'enabled') || 
+          (!thinking && model && (model.includes('-2.5-') || model.includes('thinking'))) 
+            ? true
+            : undefined,
+        thinkingBudget:
+          thinking?.type === 'enabled'
+            ? Math.min(thinking.budget_tokens, 24_576)
+            : thinking?.type === 'disabled'
+              ? 0
+              : undefined,
       };
 
       const contents = await this.buildGoogleMessages(payload.messages);
@@ -132,8 +141,8 @@ export class LobeGoogleAI implements LobeRuntimeAI {
               // @ts-expect-error - Google SDK 0.24.0 doesn't have this property for now with
               response_modalities: modelsWithModalities.has(model) ? ['Text', 'Image'] : undefined,
               temperature: payload.temperature,
-              thinkingConfig,
               topP: payload.top_p,
+              ...(modelsDisableInstuction.has(model) || model.toLowerCase().includes('learnlm') ? {} : { thinkingConfig }),
             },
             model,
             // avoid wide sensitive words
