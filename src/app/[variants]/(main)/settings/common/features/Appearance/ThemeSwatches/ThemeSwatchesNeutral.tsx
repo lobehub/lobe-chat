@@ -2,10 +2,12 @@ import { ColorSwatches, NeutralColors, findCustomThemeName, neutralColors } from
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-const ThemeSwatchesNeutral = memo<{
+interface IProps {
   onChange?: (v: NeutralColors) => void;
   value?: NeutralColors;
-}>(({ value, onChange }) => {
+}
+
+const ThemeSwatchesNeutral = memo<IProps>(({ value, onChange }) => {
   const { t } = useTranslation('color');
 
   const handleSelect = (v: any) => {
