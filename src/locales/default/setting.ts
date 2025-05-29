@@ -249,7 +249,10 @@ export default {
       desc: '聊天消息的过渡动画',
       options: {
         fadeIn: '淡入',
-        none: "无",
+        none: {
+          desc: '这取决于模型的响应输出方式，请自行测试。',
+          value: "无",
+        },
         smooth: '平滑',
       },
       title: '过渡动画',
