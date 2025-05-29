@@ -45,12 +45,12 @@ const Search1API: ModelProviderCard = {
     proxyUrl: {
       placeholder: 'https://api.search1api.com/v1',
     },
+    responseAnimation: {
+      speed: 2,
+      text: 'smooth',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
-    smoothing: {
-      speed: 2,
-      text: true,
-    },
   },
   url: 'https://www.search1api.com',
 };

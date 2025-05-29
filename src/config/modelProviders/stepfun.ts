@@ -175,12 +175,12 @@ const Stepfun: ModelProviderCard = {
   name: 'Stepfun',
   settings: {
     disableBrowserRequest: true,
+    responseAnimation: {
+      speed: 2,
+      text: 'smooth',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
-    smoothing: {
-      speed: 2,
-      text: true,
-    },
   },
   smoothing: {
     speed: 2,

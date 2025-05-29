@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { AiModelForSelect, EnabledAiModel, ModelSearchImplementType } from '@/types/aiModel';
-import { SmoothingParams } from '@/types/llm';
+import { ResponseAnimation } from '@/types/llm';
 
 export const AiProviderSourceEnum = {
   Builtin: 'builtin',
@@ -57,6 +57,7 @@ export interface AiProviderSettings {
       }
     | false;
 
+  responseAnimation?: ResponseAnimation;
   /**
    * default openai
    */
@@ -74,10 +75,6 @@ export interface AiProviderSettings {
   showChecker?: boolean;
   showDeployName?: boolean;
   showModelFetcher?: boolean;
-  /**
-   * whether to smoothing the output
-   */
-  smoothing?: SmoothingParams;
 }
 
 const AiProviderSettingsSchema = z.object({

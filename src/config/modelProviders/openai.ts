@@ -317,10 +317,8 @@ const OpenAI: ModelProviderCard = {
   modelsUrl: 'https://platform.openai.com/docs/models',
   name: 'OpenAI',
   settings: {
+    responseAnimation: 'smooth',
     showModelFetcher: true,
-    smoothing: {
-      text: true,
-    },
   },
   url: 'https://openai.com',
 };

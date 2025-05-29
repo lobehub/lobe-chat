@@ -42,7 +42,7 @@ import { createErrorResponse } from '@/utils/errorResponse';
 import { FetchSSEOptions, fetchSSE, getMessageError } from '@/utils/fetch';
 import { genToolCallingName } from '@/utils/toolCall';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
-import { SmoothingParams } from '@/types/llm';
+import { ResponseAnimation, ResponseAnimationStyle } from '@/types/llm';
 
 import { createHeaderWithAuth, createPayloadWithKeyVaults } from './_auth';
 import { API_ENDPOINTS } from './_url';
@@ -84,10 +84,10 @@ const findDeploymentName = (model: string, provider: string) => {
   return deploymentId;
 };
 
-export const normalizeSmoothing = (smoothing?: SmoothingParams | boolean | 'none') => {
-  return typeof smoothing === 'object'
-    ? smoothing
-    : { text: smoothing, toolsCalling: smoothing } satisfies SmoothingParams;
+export const standardizeAnimationStyle = (animationStyle?: ResponseAnimation): Exclude<ResponseAnimation, ResponseAnimationStyle> => {
+  return typeof animationStyle === 'object'
+    ? animationStyle
+    : { text: animationStyle, toolsCalling: animationStyle };
 };
 
 const isEnableFetchOnClient = (provider: string) => {
@@ -283,7 +283,7 @@ class ChatService {
   };
 
   getChatCompletion = async (params: Partial<ChatStreamPayload>, options?: FetchOptions) => {
-    const { signal, smoothing } = options ?? {};
+    const { signal, responseAnimation } = options ?? {};
 
     const { provider = ModelProvider.OpenAI, ...res } = params;
 
@@ -371,17 +371,12 @@ class ChatService {
       onErrorHandle: options?.onErrorHandle,
       onFinish: options?.onFinish,
       onMessageHandle: options?.onMessageHandle,
-      signal,
-      smoothing: merge(
-        {},
-        providerConfig?.settings?.smoothing || /** @deprecated in V2 */ providerConfig?.smoothing,
-        normalizeSmoothing(
-          userPreferTransitionMode === 'none'
-            ? 'none'
-            : userPreferTransitionMode === 'smooth'
+      responseAnimation:
+        [userPreferTransitionMode, responseAnimation].reduce(
+          (acc, cur) => merge(acc, standardizeAnimationStyle(cur)),
+          providerConfig?.settings?.responseAnimation ?? {}
         ),
-        normalizeSmoothing(smoothing),
-      )
+      signal
     });
   };
 

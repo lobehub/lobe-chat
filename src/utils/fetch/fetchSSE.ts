@@ -3,7 +3,7 @@ import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/const/trace';
 import { parseToolCalls } from '@/libs/model-runtime';
 import { ChatErrorType } from '@/types/fetch';
-import { SmoothingParams } from '@/types/llm';
+import { ResponseAnimation } from '@/types/llm';
 import {
   ChatMessageError,
   MessageToolCall,
@@ -19,7 +19,7 @@ import { nanoid } from '@/utils/uuid';
 
 import { fetchEventSource } from './fetchEventSource';
 import { getMessageError } from './parseError';
-import { normalizeSmoothing } from '@/services/chat';
+import { standardizeAnimationStyle } from '@/services/chat';
 
 type SSEFinishType = 'done' | 'error' | 'abort';
 
@@ -92,7 +92,7 @@ export interface FetchSSEOptions {
       | MessageBase64ImageChunk
       | MessageSpeedChunk,
   ) => void;
-  smoothing?: SmoothingParams | boolean | 'none';
+  responseAnimation?: ResponseAnimation
 }
 
 const START_ANIMATION_SPEED = 10; // 默认起始速度
@@ -313,10 +313,10 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   let finishedType: SSEFinishType = 'done';
   let response!: Response;
 
-  const { text, toolsCalling, speed: smoothingSpeed } = normalizeSmoothing(options.smoothing);
+  const { text, toolsCalling, speed: smoothingSpeed } = standardizeAnimationStyle(options.responseAnimation ?? {});
   const shouldSkipTextProcessing = text === 'none';
-  const textSmoothing = typeof text === 'boolean' && text;
-  const toolsCallingSmoothing = typeof toolsCalling === 'boolean' && toolsCalling;
+  const textSmoothing = text === 'smooth';
+  const toolsCallingSmoothing = toolsCalling === 'smooth';
 
   // 添加文本buffer和计时器相关变量
   let textBuffer = '';
@@ -392,14 +392,14 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
           error.type
             ? error
             : {
-                body: {
-                  message: error.message,
-                  name: error.name,
-                  stack: error.stack,
-                },
+              body: {
                 message: error.message,
-                type: ChatErrorType.UnknownChatFetchError,
+                name: error.name,
+                stack: error.stack,
               },
+              message: error.message,
+              type: ChatErrorType.UnknownChatFetchError,
+            },
         );
         return;
       }

@@ -38,7 +38,7 @@ describe('fetchSSE', () => {
     await fetchSSE('/', {
       onMessageHandle: mockOnMessageHandle,
       onFinish: mockOnFinish,
-      smoothing: false,
+      responseAnimation: 'fadeIn'
     });
 
     expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hello World', type: 'text' });
@@ -75,7 +75,7 @@ describe('fetchSSE', () => {
     await fetchSSE('/', {
       onMessageHandle: mockOnMessageHandle,
       onFinish: mockOnFinish,
-      smoothing: false,
+      responseAnimation: 'fadeIn'
     });
 
     expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, {
@@ -138,7 +138,7 @@ describe('fetchSSE', () => {
     await fetchSSE('/', {
       onMessageHandle: mockOnMessageHandle,
       onFinish: mockOnFinish,
-      smoothing: true,
+      responseAnimation: 'smooth',
     });
 
     const expectedMessages = [
@@ -186,7 +186,7 @@ describe('fetchSSE', () => {
     await fetchSSE('/', {
       onMessageHandle: mockOnMessageHandle,
       onFinish: mockOnFinish,
-      smoothing: 'none',
+      responseAnimation: 'none',
     });
 
     expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'He', type: 'text' });
@@ -220,7 +220,7 @@ describe('fetchSSE', () => {
       await fetchSSE('/', {
         onMessageHandle: mockOnMessageHandle,
         onFinish: mockOnFinish,
-        smoothing: false,
+        responseAnimation: 'fadeIn',
       });
 
       expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hello', type: 'reasoning' });
@@ -298,7 +298,7 @@ describe('fetchSSE', () => {
     await fetchSSE('/', {
       onMessageHandle: mockOnMessageHandle,
       onFinish: mockOnFinish,
-      smoothing: true,
+      responseAnimation: 'smooth',
     });
 
     // TODO: need to check whether the `aarg1` is correct
@@ -350,7 +350,7 @@ describe('fetchSSE', () => {
       onMessageHandle: mockOnMessageHandle,
       onFinish: mockOnFinish,
       signal: abortController.signal,
-      smoothing: true,
+      responseAnimation: 'smooth',
     });
 
     const expectedMessages = [
@@ -389,7 +389,7 @@ describe('fetchSSE', () => {
       },
     );
 
-    await fetchSSE('/', { onFinish: mockOnFinish, smoothing: false });
+    await fetchSSE('/', { onFinish: mockOnFinish, responseAnimation: 'fadeIn' });
 
     expect(mockOnFinish).toHaveBeenCalledWith('Hello', {
       observationId: null,
@@ -406,7 +406,7 @@ describe('fetchSSE', () => {
       },
     );
 
-    await fetchSSE('/', { onFinish: mockOnFinish, smoothing: false });
+    await fetchSSE('/', { onFinish: mockOnFinish, responseAnimation: 'fadeIn' });
 
     expect(mockOnFinish).toHaveBeenCalledWith('Hello', {
       observationId: null,
@@ -427,7 +427,7 @@ describe('fetchSSE', () => {
         },
       );
 
-      await fetchSSE('/', { onAbort: mockOnAbort, smoothing: false });
+      await fetchSSE('/', { onAbort: mockOnAbort, responseAnimation: 'fadeIn' });
 
       expect(mockOnAbort).toHaveBeenCalledWith('Hello');
     });
@@ -442,7 +442,7 @@ describe('fetchSSE', () => {
         },
       );
 
-      await fetchSSE('/', { onAbort: mockOnAbort, smoothing: false });
+      await fetchSSE('/', { onAbort: mockOnAbort, responseAnimation: 'fadeIn' });
 
       expect(mockOnAbort).toHaveBeenCalledWith('Hello');
     });
@@ -465,7 +465,7 @@ describe('fetchSSE', () => {
 
       try {
         await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
-      } catch (e) {}
+      } catch (e) { }
 
       expect(mockOnErrorHandle).toHaveBeenCalledWith(mockError);
     });
@@ -482,7 +482,7 @@ describe('fetchSSE', () => {
 
       try {
         await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
-      } catch (e) {}
+      } catch (e) { }
 
       expect(mockOnErrorHandle).toHaveBeenCalledWith({
         type: 'UnknownChatFetchError',
@@ -507,7 +507,7 @@ describe('fetchSSE', () => {
 
           try {
             await options.onopen!(res as any);
-          } catch (e) {}
+          } catch (e) { }
         },
       );
 
@@ -541,7 +541,7 @@ describe('fetchSSE', () => {
 
       try {
         await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
-      } catch (e) {}
+      } catch (e) { }
 
       expect(mockOnErrorHandle).toHaveBeenCalledWith(mockError);
     });
@@ -558,7 +558,7 @@ describe('fetchSSE', () => {
 
       try {
         await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
-      } catch (e) {}
+      } catch (e) { }
 
       expect(mockOnErrorHandle).toHaveBeenCalledWith({
         body: {
