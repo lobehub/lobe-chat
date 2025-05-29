@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "fixes": [
+        "Close historySummary correctly, Enable thinking output only for supported Gemini thinking models."
+      ]
+    },
+    "date": "2025-05-29",
+    "version": "1.88.18"
+  },
+  {
+    "children": {
       "improvements": ["Increase the history limit."]
     },
     "date": "2025-05-29",
