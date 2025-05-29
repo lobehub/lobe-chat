@@ -245,10 +245,6 @@ const BaiduWenxin: ModelProviderCard = {
     },
     sdkType: 'openai',
   },
-  smoothing: {
-    speed: 2,
-    text: true,
-  },
   url: 'https://cloud.baidu.com/wenxin.html',
 };
 

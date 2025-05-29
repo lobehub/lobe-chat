@@ -81,10 +81,6 @@ const Spark: ModelProviderCard = {
     sdkType: 'openai',
     showModelFetcher: false,
   },
-  smoothing: {
-    speed: 2,
-    text: true,
-  },
   url: 'https://www.xfyun.cn',
 };
 

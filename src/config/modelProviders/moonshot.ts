@@ -52,10 +52,6 @@ const Moonshot: ModelProviderCard = {
     sdkType: 'openai',
     showModelFetcher: true,
   },
-  smoothing: {
-    speed: 2,
-    text: true,
-  },
   url: 'https://www.moonshot.cn',
 };
 

@@ -53,10 +53,6 @@ const Minimax: ModelProviderCard = {
     },
     sdkType: 'openai',
   },
-  smoothing: {
-    speed: 2,
-    text: true,
-  },
   url: 'https://www.minimaxi.com',
 };
 

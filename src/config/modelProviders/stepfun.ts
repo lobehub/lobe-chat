@@ -182,10 +182,6 @@ const Stepfun: ModelProviderCard = {
     sdkType: 'openai',
     showModelFetcher: true,
   },
-  smoothing: {
-    speed: 2,
-    text: true,
-  },
   url: 'https://stepfun.com',
 };
 
