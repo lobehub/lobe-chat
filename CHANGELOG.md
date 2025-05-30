@@ -2,6 +2,37 @@
 
 # Changelog
 
+### [Version&nbsp;1.87.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.87.1...v1.87.2)
+<sup>Released on **2025-05-30**</sup>
+
+
+#### 💄 Styles
+
+- **misc**: Support Web Search Tools and Beta Header from Anthropic.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Styles
+
+* **misc**: Support Web Search Tools and Beta Header from Anthropic, closes [#7964](https://github.com/jaworldwideorg/OneJA-Bot/issues/7964) ([a47ddc5](https://github.com/jaworldwideorg/OneJA-Bot/commit/a47ddc5))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.88.19](https://github.com/lobehub/lobe-chat/compare/v1.88.18...v1.88.19)
 
 <sup>Released on **2025-05-30**</sup>
