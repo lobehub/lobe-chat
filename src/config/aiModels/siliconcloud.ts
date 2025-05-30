@@ -115,7 +115,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
     displayName: 'Qwen3 8B',
-    enabled: true,
     id: 'Qwen/Qwen3-8B',
     organization: 'Qwen',
     pricing: {
@@ -171,7 +170,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'GLM-Z1-9B-0414 是 GLM 系列的小型模型，仅有 90 亿参数，但保持了开源传统的同时展现出惊人的能力。尽管规模较小，该模型在数学推理和通用任务上仍表现出色，其总体性能在同等规模的开源模型中已处于领先水平。',
     displayName: 'GLM-Z1 9B 0414',
-    enabled: true,
     id: 'THUDM/GLM-Z1-9B-0414',
     pricing: {
       currency: 'CNY',
@@ -206,6 +204,23 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     displayName: 'GLM-4 9B 0414',
     enabled: true,
     id: 'THUDM/GLM-4-9B-0414',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'DeepSeek-R1-0528-Qwen3-8B 是通过从 DeepSeek-R1-0528 模型蒸馏思维链到 Qwen3 8B Base 获得的模型。该模型在开源模型中达到了最先进（SOTA）的性能，在 AIME 2024 测试中超越了 Qwen3 8B 10%，并达到了 Qwen3-235B-thinking 的性能水平。该模型在数学推理、编程和通用逻辑等多个基准测试中表现出色，其架构与 Qwen3-8B 相同，但共享 DeepSeek-R1-0528 的分词器配置。',
+    displayName: 'DeepSeek R1 0528 Qwen3 8B',
+    enabled: true,
+    id: 'deepseek-ai/DeepSeek-R1-0528-Qwen3-8B',
     pricing: {
       currency: 'CNY',
       input: 0,
