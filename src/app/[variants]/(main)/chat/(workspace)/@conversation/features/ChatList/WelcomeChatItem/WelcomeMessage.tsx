@@ -1,9 +1,10 @@
-import { ChatItem } from '@lobehub/ui/chat';
 import isEqual from 'fast-deep-equal';
+import qs from 'query-string';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import ChatItem from '@/features/ChatItem';
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
@@ -31,7 +32,10 @@ const WelcomeMessage = () => {
 
   const agentMsg = t(isAgentEditable ? 'agentDefaultMessage' : 'agentDefaultMessageWithoutEdit', {
     name: meta.title || t('defaultAgent'),
-    url: `/chat/settings?session=${activeId}`,
+    url: qs.stringifyUrl({
+      query: mobile ? { session: activeId, showMobileWorkspace: mobile } : { session: activeId },
+      url: '/chat/settings',
+    }),
   });
 
   const message = useMemo(() => {

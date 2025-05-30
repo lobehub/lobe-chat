@@ -111,7 +111,7 @@
         "title": "MCP-plugintype"
       },
       "url": {
-        "desc": "Voer je MCP Server Streamable HTTP-adres in, dit eindigt niet op /sse",
+        "desc": "Voer je MCP Server Streamable HTTP-adres in, SSE-modus wordt niet ondersteund",
         "invalid": "Voer een geldige URL in",
         "label": "HTTP Endpoint URL",
         "required": "Voer de MCP service URL in"
@@ -219,8 +219,24 @@
     "content": "Plugin wordt geladen...",
     "plugin": "Plugin wordt uitgevoerd..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "Bestandlijst weergeven",
+      "moveLocalFiles": "Bestanden verplaatsen",
+      "readLocalFile": "Bestand inhoud lezen",
+      "renameLocalFile": "Hernoemen",
+      "searchLocalFiles": "Bestanden zoeken",
+      "writeLocalFile": "Bestand schrijven"
+    },
+    "title": "Lokale bestanden"
+  },
   "pluginList": "Lijst met plugins",
   "search": {
+    "apiName": {
+      "crawlMultiPages": "Meerdere pagina-inhoud lezen",
+      "crawlSinglePage": "Pagina-inhoud lezen",
+      "search": "Pagina zoeken"
+    },
     "config": {
       "addKey": "Voeg sleutel toe",
       "close": "Verwijderen",

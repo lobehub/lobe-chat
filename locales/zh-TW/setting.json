@@ -170,6 +170,20 @@
     },
     "title": "助手資訊"
   },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "不同色彩傾向的灰階自訂",
+      "title": "中性色"
+    },
+    "preview": {
+      "title": "調色盤"
+    },
+    "primaryColor": {
+      "desc": "自訂主題色",
+      "title": "主題色"
+    },
+    "title": "應用外觀"
+  },
   "settingChat": {
     "autoCreateTopicThreshold": {
       "desc": "當前訊息數超過設定值後，將自動建立話題",
@@ -211,6 +225,35 @@
     },
     "submit": "更新聊天偏好",
     "title": "聊天設定"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "聊天內容的字體大小",
+      "marks": {
+        "normal": "標準"
+      },
+      "title": "字體大小"
+    },
+    "highlighterTheme": {
+      "title": "程式碼高亮主題"
+    },
+    "mermaidTheme": {
+      "title": "美人魚主題"
+    },
+    "title": "聊天外觀"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "跟隨系統",
+      "title": "語言"
+    },
+    "themeMode": {
+      "auto": "自動",
+      "dark": "深色",
+      "light": "淺色",
+      "title": "主題"
+    },
+    "title": "通用設定"
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -336,37 +379,6 @@
       "preview": "試聽聲源",
       "title": "語音合成聲源"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "頭像"
-    },
-    "fontSize": {
-      "desc": "聊天內容的字體大小",
-      "marks": {
-        "normal": "標準"
-      },
-      "title": "字體大小"
-    },
-    "lang": {
-      "autoMode": "跟隨系統",
-      "title": "語言"
-    },
-    "neutralColor": {
-      "desc": "不同色彩傾向的灰階自定義",
-      "title": "中性色"
-    },
-    "primaryColor": {
-      "desc": "自定義主題色",
-      "title": "主題色"
-    },
-    "themeMode": {
-      "auto": "自動",
-      "dark": "深色",
-      "light": "淺色",
-      "title": "主題"
-    },
-    "title": "主題設定"
   },
   "storage": {
     "actions": {

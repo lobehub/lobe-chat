@@ -2,7 +2,7 @@ import { type AuthObject } from '@clerk/backend';
 
 import { getAppConfig } from '@/config/app';
 import { enableClerk, enableNextAuth } from '@/const/auth';
-import { AgentRuntimeError } from '@/libs/agent-runtime';
+import { AgentRuntimeError } from '@/libs/model-runtime';
 import { ChatErrorType } from '@/types/fetch';
 
 interface CheckAuthParams {

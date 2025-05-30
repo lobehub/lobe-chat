@@ -170,6 +170,20 @@
     },
     "title": "اطلاعات دستیار"
   },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "سفارشی‌سازی مقیاس خاکستری با تم‌های رنگی مختلف",
+      "title": "رنگ‌های خنثی"
+    },
+    "preview": {
+      "title": "پالت رنگ"
+    },
+    "primaryColor": {
+      "desc": "سفارشی‌سازی رنگ تم",
+      "title": "رنگ تم"
+    },
+    "title": "ظاهر برنامه"
+  },
   "settingChat": {
     "autoCreateTopicThreshold": {
       "desc": "پس از اینکه تعداد پیام‌های فعلی از این مقدار بیشتر شود، به‌طور خودکار موضوع ایجاد می‌شود",
@@ -211,6 +225,35 @@
     },
     "submit": "به‌روزرسانی ترجیحات چت",
     "title": "تنظیمات چت"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "اندازه فونت محتوای چت",
+      "marks": {
+        "normal": "استاندارد"
+      },
+      "title": "اندازه فونت"
+    },
+    "highlighterTheme": {
+      "title": "تم هایلایت کد"
+    },
+    "mermaidTheme": {
+      "title": "تم مرمید"
+    },
+    "title": "ظاهر چت"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "پیروی از سیستم",
+      "title": "زبان"
+    },
+    "themeMode": {
+      "auto": "خودکار",
+      "dark": "تیره",
+      "light": "روشن",
+      "title": "تم"
+    },
+    "title": "تنظیمات عمومی"
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -336,37 +379,6 @@
       "preview": "پیش‌نمایش منبع صوتی",
       "title": "منبع صوتی تبدیل متن به گفتار"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "آواتار"
-    },
-    "fontSize": {
-      "desc": "اندازه فونت محتوای چت",
-      "marks": {
-        "normal": "استاندارد"
-      },
-      "title": "اندازه فونت"
-    },
-    "lang": {
-      "autoMode": "دنبال کردن سیستم",
-      "title": "زبان"
-    },
-    "neutralColor": {
-      "desc": "سفارشی‌سازی طیف خاکستری با تمایلات رنگی مختلف",
-      "title": "رنگ خنثی"
-    },
-    "primaryColor": {
-      "desc": "سفارشی‌سازی رنگ اصلی",
-      "title": "رنگ اصلی"
-    },
-    "themeMode": {
-      "auto": "خودکار",
-      "dark": "تیره",
-      "light": "روشن",
-      "title": "حالت تم"
-    },
-    "title": "تنظیمات تم"
   },
   "storage": {
     "actions": {

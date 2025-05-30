@@ -29,9 +29,6 @@
   "deepseek": {
     "description": "DeepSeek ist ein Unternehmen, das sich auf die Forschung und Anwendung von KI-Technologien spezialisiert hat. Ihr neuestes Modell, DeepSeek-V2.5, kombiniert allgemeine Dialog- und Codeverarbeitungsfähigkeiten und hat signifikante Fortschritte in den Bereichen menschliche Präferenzanpassung, Schreibaufgaben und Befehlsbefolgung erzielt."
   },
-  "doubao": {
-    "description": "Ein von ByteDance entwickeltes großes Modell. Durch die praktische Validierung in über 50 internen Geschäftsszenarien und die kontinuierliche Verfeinerung mit täglich Billionen von Tokens bietet es vielfältige Modalitäten und schafft mit hochwertigen Modellergebnissen ein reichhaltiges Geschäftserlebnis für Unternehmen."
-  },
   "fireworksai": {
     "description": "Fireworks AI ist ein führender Anbieter von fortschrittlichen Sprachmodellen, der sich auf Funktionsaufrufe und multimodale Verarbeitung spezialisiert hat. Ihr neuestes Modell, Firefunction V2, basiert auf Llama-3 und ist für Funktionsaufrufe, Dialoge und Befehlsbefolgung optimiert. Das visuelle Sprachmodell FireLLaVA-13B unterstützt gemischte Eingaben von Bildern und Text. Weitere bemerkenswerte Modelle sind die Llama-Serie und die Mixtral-Serie, die effiziente mehrsprachige Befehlsbefolgung und Generierungsunterstützung bieten."
   },
@@ -97,6 +94,9 @@
   },
   "ppio": {
     "description": "PPIO Paiou Cloud bietet stabile und kosteneffiziente Open-Source-Modell-API-Dienste und unterstützt die gesamte DeepSeek-Serie, Llama, Qwen und andere führende große Modelle der Branche."
+  },
+  "qiniu": {
+    "description": "Qiniu ist ein führender Anbieter von Cloud-Diensten, der schnelle und effiziente API-Dienste für große Modelle bereitstellt, einschließlich der von Alibaba, mit flexiblen Optionen für das Entwickeln und Anwenden von AI-Anwendungen."
   },
   "qwen": {
     "description": "Tongyi Qianwen ist ein von Alibaba Cloud selbst entwickeltes, groß angelegtes Sprachmodell mit starken Fähigkeiten zur Verarbeitung und Generierung natürlicher Sprache. Es kann eine Vielzahl von Fragen beantworten, Texte erstellen, Meinungen äußern und Code schreiben und spielt in mehreren Bereichen eine Rolle."

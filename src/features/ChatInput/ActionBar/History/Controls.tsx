@@ -40,6 +40,12 @@ const Controls = memo<ControlsProps>(({ updating, setUpdating }) => {
           size={'small'}
           step={1}
           style={{ marginBlock: 8, paddingLeft: 4 }}
+          styles={{
+            input: {
+              maxWidth: 64,
+            },
+          }}
+          unlimitedInput={true}
         />
       ),
       name: 'historyCount',

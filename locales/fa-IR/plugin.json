@@ -111,7 +111,7 @@
         "title": "نوع افزونه MCP"
       },
       "url": {
-        "desc": "آدرس HTTP قابل پخش سرور MCP خود را وارد کنید، که با /sse پایان نمی‌یابد",
+        "desc": "آدرس HTTP قابل پخش سرور MCP خود را وارد کنید، حالت SSE پشتیبانی نمی‌شود",
         "invalid": "لطفاً یک آدرس URL معتبر وارد کنید",
         "label": "آدرس URL نقطه پایانی HTTP",
         "required": "لطفاً URL سرویس MCP را وارد کنید"
@@ -219,8 +219,24 @@
     "content": "در حال فراخوانی افزونه...",
     "plugin": "افزونه در حال اجرا..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "نمایش لیست فایل‌ها",
+      "moveLocalFiles": "انتقال فایل‌ها",
+      "readLocalFile": "خواندن محتوای فایل",
+      "renameLocalFile": "تغییر نام",
+      "searchLocalFiles": "جستجوی فایل‌ها",
+      "writeLocalFile": "نوشتن در فایل"
+    },
+    "title": "فایل‌های محلی"
+  },
   "pluginList": "فهرست افزونه‌ها",
   "search": {
+    "apiName": {
+      "crawlMultiPages": "خواندن محتوای چندین صفحه",
+      "crawlSinglePage": "خواندن محتوای صفحه",
+      "search": "جستجو در صفحه"
+    },
     "config": {
       "addKey": "کلید را اضافه کنید",
       "close": "حذف",

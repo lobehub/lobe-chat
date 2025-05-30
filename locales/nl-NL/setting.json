@@ -170,6 +170,20 @@
     },
     "title": "Assistentinformatie"
   },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Aangepaste grijstinten met verschillende kleurvoorkeuren",
+      "title": "Neutrale kleur"
+    },
+    "preview": {
+      "title": "Kleurpalet"
+    },
+    "primaryColor": {
+      "desc": "Aangepaste themakleur",
+      "title": "Themakleur"
+    },
+    "title": "Toepassing uiterlijk"
+  },
   "settingChat": {
     "autoCreateTopicThreshold": {
       "desc": "Automatisch een onderwerp maken wanneer het aantal berichten de ingestelde waarde overschrijdt",
@@ -211,6 +225,35 @@
     },
     "submit": "Chatvoorkeuren bijwerken",
     "title": "Chatinstellingen"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "De lettergrootte van de chatinhoud",
+      "marks": {
+        "normal": "Standaard"
+      },
+      "title": "Lettergrootte"
+    },
+    "highlighterTheme": {
+      "title": "Code markeer thema"
+    },
+    "mermaidTheme": {
+      "title": "Mermaid-thema"
+    },
+    "title": "Chat uiterlijk"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Volg systeem",
+      "title": "Taal"
+    },
+    "themeMode": {
+      "auto": "Automatisch",
+      "dark": "Donker",
+      "light": "Licht",
+      "title": "Thema"
+    },
+    "title": "Algemene instellingen"
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -336,37 +379,6 @@
       "preview": "Stem voorbeluisteren",
       "title": "Spraaksynthese stem"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Profielfoto"
-    },
-    "fontSize": {
-      "desc": "Lettergrootte van chatberichten",
-      "marks": {
-        "normal": "Normaal"
-      },
-      "title": "Lettergrootte"
-    },
-    "lang": {
-      "autoMode": "Volg systeem",
-      "title": "Taal"
-    },
-    "neutralColor": {
-      "desc": "Aangepaste grijstinten voor verschillende kleurvoorkeuren",
-      "title": "Neutrale kleur"
-    },
-    "primaryColor": {
-      "desc": "Aangepaste themakleur",
-      "title": "Themakleur"
-    },
-    "themeMode": {
-      "auto": "Automatisch",
-      "dark": "Donker",
-      "light": "Licht",
-      "title": "Thema"
-    },
-    "title": "Thema-instellingen"
   },
   "storage": {
     "actions": {
