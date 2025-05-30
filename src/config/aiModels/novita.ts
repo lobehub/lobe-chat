@@ -228,7 +228,7 @@ const novitaChatModels: AIChatModelCard[] = [
     abilities: {
       reasoning: true,
     },
-    contextWindowTokens: 65_536,
+    contextWindowTokens: 128_000,
     displayName: 'Deepseek R1 0528',
     enabled: true,
     id: 'deepseek/deepseek-r1-0528',
