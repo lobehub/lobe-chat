@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Support Web Search Tools and Beta Header from Anthropic."]
+    },
+    "date": "2025-05-30",
+    "version": "1.88.19"
+  },
+  {
+    "children": {
       "fixes": [
         "Close historySummary correctly, Enable thinking output only for supported Gemini thinking models."
       ]
