@@ -115,6 +115,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
     displayName: 'Qwen3 8B',
+    enabled: true,
     id: 'Qwen/Qwen3-8B',
     organization: 'Qwen',
     pricing: {
