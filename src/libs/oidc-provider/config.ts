@@ -26,6 +26,7 @@ export const defaultClients: ClientMetadata[] = [
       'com.lobehub.lobehub-desktop-nightly://auth/callback',
       'com.lobehub.lobehub-desktop-beta://auth/callback',
       'com.lobehub.lobehub-desktop://auth/callback',
+      'http://localhost:3000/auth/callback',
     ],
 
     // 支持授权码获取令牌和刷新令牌

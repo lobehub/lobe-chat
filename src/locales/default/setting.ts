@@ -172,6 +172,61 @@ export default {
     },
     title: '助手信息',
   },
+  settingApiKey: {
+    copy: {
+      success: '复制成功',
+    },
+    create: {
+      close: '关闭',
+      copy: '复制',
+      description: '描述',
+      descriptionPlaceholder: '请输入 API Key 描述',
+      error: '创建失败',
+      name: '名称',
+      namePlaceholder: '请输入 API Key 名称',
+      submit: '创建',
+      success: '创建成功',
+      title: '创建 API Key',
+    },
+    delete: {
+      cancel: '取消',
+      confirm: '确认',
+      error: '删除失败',
+      success: '删除成功',
+      title: '删除 API Key',
+    },
+    edit: {
+      cancel: '取消',
+      description: '描述',
+      descriptionPlaceholder: '请输入 API Key 描述',
+      error: '更新失败',
+      name: '名称',
+      namePlaceholder: '请输入 API Key 名称',
+      submit: '更新',
+      success: '更新成功',
+      title: '编辑 API Key',
+    },
+    list: {
+      actions: '操作',
+      copy: '复制',
+      delete: '删除',
+      description: '描述',
+      edit: '编辑',
+      empty: '暂无 API Key',
+      enabled: '启用',
+      error: '获取失败',
+      expiresAt: '过期时间',
+      key: 'Key',
+      lastUsedAt: '最后使用时间',
+      name: '名称',
+      never: '永不过期',
+      title: 'API Key 列表',
+    },
+    toggle: {
+      error: '更新失败',
+      success: '更新成功',
+    },
+  },
 
   settingAppearance: {
     neutralColor: {
@@ -187,7 +242,6 @@ export default {
     },
     title: '应用外观',
   },
-
   settingChat: {
     autoCreateTopicThreshold: {
       desc: '当前消息数超过设定该值后，将自动创建话题',
@@ -506,6 +560,7 @@ export default {
   tab: {
     'about': '关于',
     'agent': '默认助手',
+    'api-key': 'API Key 管理',
     'common': '通用设置',
     'experiment': '实验',
     'hotkey': '快捷键',

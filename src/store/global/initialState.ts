@@ -27,6 +27,7 @@ export enum ChatSettingsTabs {
 export enum SettingsTabs {
   About = 'about',
   Agent = 'agent',
+  ApiKey = 'api-key',
   Common = 'common',
   Hotkey = 'hotkey',
   LLM = 'llm',

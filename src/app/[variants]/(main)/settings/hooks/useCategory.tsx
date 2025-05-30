@@ -5,6 +5,7 @@ import {
   Cloudy,
   Database,
   Info,
+  Key,
   KeyboardIcon,
   Mic2,
   Settings2,
@@ -116,6 +117,15 @@ export const useCategory = () => {
         },
         {
           type: 'divider',
+        },
+        {
+          icon: <Icon icon={Key} />,
+          key: SettingsTabs.ApiKey,
+          label: (
+            <Link href={'/settings/api-key'} onClick={(e) => e.preventDefault()}>
+              {t('tab.api-key')}
+            </Link>
+          ),
         },
         {
           icon: <Icon icon={Database} />,
