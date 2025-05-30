@@ -302,6 +302,64 @@ describe('LobeAnthropicAI', () => {
           { enabledContextCaching: true },
         );
       });
+
+      it('should build payload with tools and web search enabled', async () => {
+        const tools: ChatCompletionTool[] = [
+          { function: { name: 'tool1', description: 'desc1' }, type: 'function' }
+        ];
+
+        const mockAnthropicTools = [{ name: 'tool1', description: 'desc1' }];
+
+        vi.spyOn(anthropicHelpers, 'buildAnthropicTools').mockReturnValue(mockAnthropicTools as any);
+
+        const payload: ChatStreamPayload = {
+          messages: [{ content: 'Search and get info', role: 'user' }],
+          model: 'claude-3-haiku-20240307',
+          temperature: 0.5,
+          tools,
+          enabledSearch: true,
+        };
+
+        const result = await instance['buildAnthropicPayload'](payload);
+
+        expect(anthropicHelpers.buildAnthropicTools).toHaveBeenCalledWith(tools, {
+          enabledContextCaching: true,
+        });
+
+        // Should include both the converted tools and web search tool
+        expect(result.tools).toEqual([
+          ...mockAnthropicTools,
+          {
+            name: 'web_search',
+            type: 'web_search_20250305',
+          },
+        ]);
+      });
+
+      it('should build payload with web search enabled but no other tools', async () => {
+        vi.spyOn(anthropicHelpers, 'buildAnthropicTools').mockReturnValue(undefined);
+
+        const payload: ChatStreamPayload = {
+          messages: [{ content: 'Search for information', role: 'user' }],
+          model: 'claude-3-haiku-20240307',
+          temperature: 0.5,
+          enabledSearch: true,
+        };
+
+        const result = await instance['buildAnthropicPayload'](payload);
+
+        expect(anthropicHelpers.buildAnthropicTools).toHaveBeenCalledWith(undefined, {
+          enabledContextCaching: true,
+        });
+
+        // Should only include web search tool
+        expect(result.tools).toEqual([
+          {
+            name: 'web_search',
+            type: 'web_search_20250305',
+          },
+        ]);
+      });
     });
 
     describe('Error', () => {

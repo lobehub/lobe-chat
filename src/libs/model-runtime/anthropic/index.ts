@@ -23,6 +23,8 @@ export interface AnthropicModelCard {
   id: string;
 }
 
+type anthropicTools = Anthropic.Tool | Anthropic.WebSearchTool20250305;
+
 const modelsWithSmallContextWindow = new Set(['claude-3-opus-20240229', 'claude-3-haiku-20240307']);
 
 const DEFAULT_BASE_URL = 'https://api.anthropic.com';
@@ -45,7 +47,14 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
   constructor({ apiKey, baseURL = DEFAULT_BASE_URL, id, ...res }: AnthropicAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
-    this.client = new Anthropic({ apiKey, baseURL, ...res });
+    const betaHeaders = process.env.ANTHROPIC_BETA_HEADERS;
+
+    this.client = new Anthropic({
+      apiKey,
+      baseURL,
+      ...(betaHeaders ? { defaultHeaders: { "anthropic-beta": betaHeaders } } : {}),
+      ...res
+    });
     this.baseURL = this.client.baseURL;
     this.apiKey = apiKey;
     this.id = id || ModelProvider.Anthropic;
@@ -99,6 +108,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       tools,
       thinking,
       enabledContextCaching = true,
+      enabledSearch,
     } = payload;
 
     const { default: anthropicModels } = await import('@/config/aiModels/anthropic');
@@ -127,7 +137,27 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
 
     const postMessages = await buildAnthropicMessages(user_messages, { enabledContextCaching });
 
-    const postTools = buildAnthropicTools(tools, { enabledContextCaching });
+    let postTools: anthropicTools[] | undefined = buildAnthropicTools(tools, { enabledContextCaching });
+
+    if (enabledSearch) {
+      // Limit the number of searches per request
+      const maxUses = process.env.ANTHROPIC_MAX_USES;
+
+      const webSearchTool: Anthropic.WebSearchTool20250305 = {
+        name: 'web_search',
+        type: 'web_search_20250305',
+        ...(maxUses && Number.isInteger(Number(maxUses)) && Number(maxUses) > 0 && { 
+          max_uses: Number(maxUses) 
+        }),
+      };
+
+      // 如果已有工具，则添加到现有工具列表中；否则创建新的工具列表
+      if (postTools && postTools.length > 0) {
+        postTools = [...postTools, webSearchTool];
+      } else {
+        postTools = [webSearchTool];
+      }
+    }
 
     if (!!thinking && thinking.type === 'enabled') {
       const maxTokens = getMaxTokens() || 32_000; // Claude Opus 4 has minimum maxOutput
