@@ -20,7 +20,8 @@ const ReasoningEffortSlider = memo(() => {
   };
 
   const effortValues = ['low', 'medium', 'high'];
-  const currentValue = effortValues.indexOf(reasoningEffort);
+  const indexValue = effortValues.indexOf(reasoningEffort);
+  const currentValue = indexValue === -1 ? 1 : indexValue;
 
   const updateReasoningEffort = useCallback(
     (value: number) => {
