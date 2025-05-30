@@ -2,6 +2,52 @@
 
 # Changelog
 
+### [Version&nbsp;1.87.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.87.0...v1.87.1)
+<sup>Released on **2025-05-30**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Close historySummary correctly, cmd + click chat tab not open new tab, Enable thinking output only for supported Gemini thinking models.
+
+
+#### 💄 Styles
+
+- **misc**: Add fc ability to deepseek-reasoner model, increase the history limit, Update GitHub models.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **misc**: Close historySummary correctly, closes [#7010](https://github.com/jaworldwideorg/OneJA-Bot/issues/7010) ([90a6f68](https://github.com/jaworldwideorg/OneJA-Bot/commit/90a6f68))
+* **misc**: Cmd + click chat tab not open new tab, closes [#8001](https://github.com/jaworldwideorg/OneJA-Bot/issues/8001) ([d6d2129](https://github.com/jaworldwideorg/OneJA-Bot/commit/d6d2129))
+* **misc**: Enable thinking output only for supported Gemini thinking models, closes [#7987](https://github.com/jaworldwideorg/OneJA-Bot/issues/7987) ([f503c53](https://github.com/jaworldwideorg/OneJA-Bot/commit/f503c53))
+
+
+
+#### Styles
+
+* **misc**: Add fc ability to deepseek-reasoner model, closes [#8006](https://github.com/jaworldwideorg/OneJA-Bot/issues/8006) ([1511c75](https://github.com/jaworldwideorg/OneJA-Bot/commit/1511c75))
+* **misc**: Increase the history limit, closes [#8007](https://github.com/jaworldwideorg/OneJA-Bot/issues/8007) ([5ec7c8d](https://github.com/jaworldwideorg/OneJA-Bot/commit/5ec7c8d))
+* **misc**: Update GitHub models, closes [#8002](https://github.com/jaworldwideorg/OneJA-Bot/issues/8002) ([7b8f533](https://github.com/jaworldwideorg/OneJA-Bot/commit/7b8f533))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.88.18](https://github.com/lobehub/lobe-chat/compare/v1.88.17...v1.88.18)
 
 <sup>Released on **2025-05-29**</sup>
