@@ -5,7 +5,7 @@
 export const LOBE_CHAT_CLOUD = 'OneJA AI';
 
 export const BRANDING_NAME = 'OneJA AI';
-export const BRANDING_LOGO_URL = '';
+export const BRANDING_LOGO_URL = '/icons/icon-512x512.png';
 
 export const ORG_NAME = 'JA Worldwide';
 
