@@ -67,7 +67,7 @@ describe('ChatPluginAction', () => {
           {
             ...toolMessage,
             meta: {
-              avatar: '🤯',
+              avatar: '/icons/icon-512x512.png',
               backgroundColor: 'rgba(0,0,0,0)',
               description: undefined,
               title: undefined,
