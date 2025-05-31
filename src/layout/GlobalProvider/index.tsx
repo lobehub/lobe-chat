@@ -1,7 +1,7 @@
 import { ReactNode, Suspense } from 'react';
 
-import { appEnv } from '@/config/app';
 import { getServerFeatureFlagsValue } from '@/config/featureFlags';
+import { appEnv } from '@/envs/app';
 import DevPanel from '@/features/DevPanel';
 import { getServerGlobalConfig } from '@/server/globalConfig';
 import { ServerConfigStoreProvider } from '@/store/serverConfig/Provider';

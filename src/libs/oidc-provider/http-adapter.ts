@@ -4,7 +4,7 @@ import { NextRequest } from 'next/server';
 import { IncomingMessage, ServerResponse } from 'node:http';
 import urlJoin from 'url-join';
 
-import { appEnv } from '@/config/app';
+import { appEnv } from '@/envs/app';
 
 const log = debug('lobe-oidc:http-adapter');
 

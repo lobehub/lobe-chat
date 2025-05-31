@@ -1,6 +1,6 @@
 import { EdgeConfigClient, createClient } from '@vercel/edge-config';
 
-import { appEnv } from '@/config/app';
+import { appEnv } from '@/envs/app';
 
 const EdgeConfigKeys = {
   /**
