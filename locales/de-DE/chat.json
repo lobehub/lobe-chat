@@ -43,6 +43,9 @@
     "reasoningBudgetToken": {
       "title": "Token für Denkaufwand"
     },
+    "reasoningEffort": {
+      "title": "Argumentationsstärke"
+    },
     "title": "Modell Erweiterungsfunktionen"
   },
   "history": {

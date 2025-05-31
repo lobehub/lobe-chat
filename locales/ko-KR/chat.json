@@ -43,6 +43,9 @@
     "reasoningBudgetToken": {
       "title": "사고 소모 토큰"
     },
+    "reasoningEffort": {
+      "title": "추론 강도"
+    },
     "title": "모델 확장 기능"
   },
   "history": {
