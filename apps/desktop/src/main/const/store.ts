@@ -16,6 +16,9 @@ export const STORE_NAME = 'lobehub-settings';
 export const STORE_DEFAULTS: ElectronMainStore = {
   dataSyncConfig: { storageMode: 'local' },
   encryptedTokens: {},
+  knowledgeBaseSettings: {
+    useLocalKnowledgeBase: false, // Default to false
+  },
   locale: 'auto',
   shortcuts: DEFAULT_SHORTCUTS_CONFIG,
   storagePath: appStorageDir,
