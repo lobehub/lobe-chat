@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.88.20](https://github.com/lobehub/lobe-chat/compare/v1.88.19...v1.88.20)
+
+<sup>Released on **2025-05-31**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Agent automatic completion meta not working error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Agent automatic completion meta not working error, closes [#8003](https://github.com/lobehub/lobe-chat/issues/8003) ([c5307bf](https://github.com/lobehub/lobe-chat/commit/c5307bf))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.88.19](https://github.com/lobehub/lobe-chat/compare/v1.88.18...v1.88.19)
 
 <sup>Released on **2025-05-30**</sup>
