@@ -61,6 +61,7 @@ const xaiChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-04-03',
     settings: {
+      extendParams: ['reasoningEffort'],
       searchImpl: 'params',
     },
     type: 'chat',
@@ -82,6 +83,7 @@ const xaiChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-04-03',
     settings: {
+      extendParams: ['reasoningEffort'],
       searchImpl: 'params',
     },
     type: 'chat',
