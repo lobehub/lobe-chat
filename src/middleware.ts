@@ -134,6 +134,16 @@ const defaultMiddleware = (request: NextRequest) => {
   return NextResponse.rewrite(url, { status: 200 });
 };
 
+const isPublicRoute = createRouteMatcher([
+  '/api/auth(.*)',
+  '/trpc/edge(.*)',
+  // next auth
+  '/next-auth/(.*)',
+  // clerk
+  '/login',
+  '/signup',
+]);
+
 const isProtectedRoute = createRouteMatcher([
   '/settings(.*)',
   '/files(.*)',
@@ -148,7 +158,9 @@ const nextAuthMiddleware = NextAuthEdge.auth((req) => {
 
   const response = defaultMiddleware(req);
 
-  const isProtected = isProtectedRoute(req);
+  // when enable auth protection, only public route is not protected, others are all protected
+  const isProtected = appEnv.ENABLE_AUTH_PROTECTION ? !isPublicRoute(req) : isProtectedRoute(req);
+
   logNextAuth('Route protection status: %s, %s', req.url, isProtected ? 'protected' : 'public');
 
   // Just check if session exists
@@ -229,6 +241,7 @@ const clerkAuthMiddleware = clerkMiddleware(
 );
 
 logDefault('Middleware configuration: %O', {
+  enableAuthProtection: appEnv.ENABLE_AUTH_PROTECTION,
   enableClerk: authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH,
   enableNextAuth: authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH,
   enableOIDC: oidcEnv.ENABLE_OIDC,
