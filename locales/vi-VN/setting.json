@@ -259,9 +259,6 @@
     "enableMaxTokens": {
       "title": "Bật giới hạn phản hồi một lần"
     },
-    "enableReasoningEffort": {
-      "title": "Bật điều chỉnh cường độ suy luận"
-    },
     "frequencyPenalty": {
       "desc": "Giá trị càng lớn, từ ngữ càng phong phú đa dạng; giá trị càng thấp, từ ngữ càng đơn giản mộc mạc",
       "title": "Độ phong phú từ vựng"
@@ -280,15 +277,6 @@
     "presencePenalty": {
       "desc": "Giá trị càng lớn, càng có xu hướng sử dụng các cách diễn đạt khác nhau, tránh lặp lại khái niệm; giá trị càng nhỏ, càng có xu hướng sử dụng các khái niệm hoặc mô tả lặp lại, thể hiện tính nhất quán cao hơn",
       "title": "Độ phân tán trong diễn đạt"
-    },
-    "reasoningEffort": {
-      "desc": "Giá trị càng lớn, khả năng suy luận càng mạnh, nhưng có thể làm tăng thời gian phản hồi và tiêu tốn Token",
-      "options": {
-        "high": "Cao",
-        "low": "Thấp",
-        "medium": "Trung bình"
-      },
-      "title": "Cường độ suy luận"
     },
     "submit": "Cập nhật cài đặt mô hình",
     "temperature": {

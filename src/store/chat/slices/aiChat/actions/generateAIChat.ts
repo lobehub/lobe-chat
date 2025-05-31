@@ -538,11 +538,6 @@ export const generateAIChat: StateCreator<
       ? agentConfig.params.max_tokens
       : undefined;
 
-    // 5. handle reasoning_effort
-    agentConfig.params.reasoning_effort = chatConfig.enableReasoningEffort
-      ? agentConfig.params.reasoning_effort
-      : undefined;
-
     let isFunctionCall = false;
     let msgTraceId: string | undefined;
     let output = '';
@@ -552,7 +547,9 @@ export const generateAIChat: StateCreator<
     // to upload image
     const uploadTasks: Map<string, Promise<{ id?: string; url?: string }>> = new Map();
 
-    const historySummary = topicSelectors.currentActiveTopicSummary(get());
+    const historySummary = chatConfig.enableCompressHistory
+      ? topicSelectors.currentActiveTopicSummary(get())
+      : undefined;
     await chatService.createAssistantMessageStream({
       abortController,
       params: {
