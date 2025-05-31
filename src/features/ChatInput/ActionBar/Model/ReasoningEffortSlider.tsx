@@ -32,7 +32,13 @@ const ReasoningEffortSlider = memo(() => {
   );
 
   return (
-    <Flexbox align={'center'} gap={12} horizontal paddingInline={'0 20px'} width={'13vw'}>
+    <Flexbox
+      align={'center'}
+      gap={12}
+      horizontal
+      paddingInline={'0 20px'}
+      style={{ minWidth: 200, width: '100%' }}
+    >
       <Flexbox flex={1}>
         <Slider
           marks={marks}
