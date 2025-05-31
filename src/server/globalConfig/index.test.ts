@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { getAppConfig } from '@/config/app';
 import { knowledgeEnv } from '@/config/knowledge';
+import { getAppConfig } from '@/envs/app';
 import { SystemEmbeddingConfig } from '@/types/knowledgeBase';
 import { FilesConfigItem } from '@/types/user/settings/filesConfig';
 

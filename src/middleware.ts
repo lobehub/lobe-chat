@@ -4,10 +4,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { UAParser } from 'ua-parser-js';
 import urlJoin from 'url-join';
 
-import { appEnv } from '@/config/app';
 import { authEnv } from '@/config/auth';
 import { LOBE_LOCALE_COOKIE } from '@/const/locale';
 import { LOBE_THEME_APPEARANCE } from '@/const/theme';
+import { appEnv } from '@/envs/app';
 import NextAuthEdge from '@/libs/next-auth/edge';
 import { Locales } from '@/locales/resources';
 import { parseBrowserLanguage } from '@/utils/locale';

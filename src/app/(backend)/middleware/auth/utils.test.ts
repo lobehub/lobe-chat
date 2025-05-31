@@ -1,7 +1,7 @@
 import { type AuthObject } from '@clerk/backend';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getAppConfig } from '@/config/app';
+import { getAppConfig } from '@/envs/app';
 
 import { checkAuthMethod } from './utils';
 
