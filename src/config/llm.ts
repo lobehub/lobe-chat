@@ -162,6 +162,9 @@ export const getLLMConfig = () => {
 
       ENABLED_INFINIAI: z.boolean(),
       INFINIAI_API_KEY: z.string().optional(),
+
+      ENABLED_MODELSCOPE: z.boolean(),
+      MODELSCOPE_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -272,9 +275,6 @@ export const getLLMConfig = () => {
       ENABLED_SILICONCLOUD: !!process.env.SILICONCLOUD_API_KEY,
       SILICONCLOUD_API_KEY: process.env.SILICONCLOUD_API_KEY,
 
-      ENABLED_GITEE_AI: !!process.env.GITEE_AI_API_KEY,
-      GITEE_AI_API_KEY: process.env.GITEE_AI_API_KEY,
-
       ENABLED_UPSTAGE: !!process.env.UPSTAGE_API_KEY,
       UPSTAGE_API_KEY: process.env.UPSTAGE_API_KEY,
 
@@ -287,14 +287,8 @@ export const getLLMConfig = () => {
       ENABLED_HUNYUAN: !!process.env.HUNYUAN_API_KEY,
       HUNYUAN_API_KEY: process.env.HUNYUAN_API_KEY,
 
-      ENABLED_HUGGINGFACE: !!process.env.HUGGINGFACE_API_KEY,
-      HUGGINGFACE_API_KEY: process.env.HUGGINGFACE_API_KEY,
-
-      ENABLED_SENSENOVA: !!process.env.SENSENOVA_API_KEY,
-      SENSENOVA_API_KEY: process.env.SENSENOVA_API_KEY,
-
-      ENABLED_XAI: !!process.env.XAI_API_KEY,
-      XAI_API_KEY: process.env.XAI_API_KEY,
+      ENABLED_INFINIAI: !!process.env.INFINIAI_API_KEY,
+      INFINIAI_API_KEY: process.env.INFINIAI_API_KEY,
 
       ENABLED_INTERNLM: !!process.env.INTERNLM_API_KEY,
       INTERNLM_API_KEY: process.env.INTERNLM_API_KEY,
@@ -302,26 +296,38 @@ export const getLLMConfig = () => {
       ENABLED_HIGRESS: !!process.env.HIGRESS_API_KEY,
       HIGRESS_API_KEY: process.env.HIGRESS_API_KEY,
 
-      ENABLED_TENCENT_CLOUD: !!process.env.TENCENT_CLOUD_API_KEY,
-      TENCENT_CLOUD_API_KEY: process.env.TENCENT_CLOUD_API_KEY,
+      ENABLED_HUGGINGFACE: !!process.env.HUGGINGFACE_API_KEY,
+      HUGGINGFACE_API_KEY: process.env.HUGGINGFACE_API_KEY,
 
       ENABLED_JINA: !!process.env.JINA_API_KEY,
       JINA_API_KEY: process.env.JINA_API_KEY,
 
-      ENABLED_SAMBANOVA: !!process.env.SAMBANOVA_API_KEY,
-      SAMBANOVA_API_KEY: process.env.SAMBANOVA_API_KEY,
+      ENABLED_COHERE: !!process.env.COHERE_API_KEY,
+      COHERE_API_KEY: process.env.COHERE_API_KEY,
+
+      ENABLED_GITEE_AI: !!process.env.GITEE_AI_API_KEY,
+      GITEE_AI_API_KEY: process.env.GITEE_AI_API_KEY,
 
       ENABLED_PPIO: !!process.env.PPIO_API_KEY,
       PPIO_API_KEY: process.env.PPIO_API_KEY,
 
+      ENABLED_XAI: !!process.env.XAI_API_KEY,
+      XAI_API_KEY: process.env.XAI_API_KEY,
+
+      ENABLED_SENSENOVA: !!process.env.SENSENOVA_API_KEY,
+      SENSENOVA_API_KEY: process.env.SENSENOVA_API_KEY,
+
+      ENABLED_TENCENT_CLOUD: !!process.env.TENCENT_CLOUD_API_KEY,
+      TENCENT_CLOUD_API_KEY: process.env.TENCENT_CLOUD_API_KEY,
+
+      ENABLED_SAMBANOVA: !!process.env.SAMBANOVA_API_KEY,
+      SAMBANOVA_API_KEY: process.env.SAMBANOVA_API_KEY,
+
       ENABLED_SEARCH1API: !!process.env.SEARCH1API_API_KEY,
       SEARCH1API_API_KEY: process.env.SEARCH1API_API_KEY,
 
-      ENABLED_COHERE: !!process.env.COHERE_API_KEY,
-      COHERE_API_KEY: process.env.COHERE_API_KEY,
-
-      ENABLED_INFINIAI: !!process.env.INFINIAI_API_KEY,
-      INFINIAI_API_KEY: process.env.INFINIAI_API_KEY,
+      ENABLED_MODELSCOPE: !!process.env.MODELSCOPE_API_KEY,
+      MODELSCOPE_API_KEY: process.env.MODELSCOPE_API_KEY,
     },
   });
 };
