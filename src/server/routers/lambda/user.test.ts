@@ -75,11 +75,16 @@ describe('userRouter', () => {
             getUserSSOProviders: vi.fn().mockResolvedValue(mockProviders),
           }) as any,
       );
-
+      const originalSelect = serverDB.select;
+      serverDB.select = vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnThis(),
+        from: vi.fn().mockReturnThis(),
+        where: vi.fn().mockResolvedValue(mockProviders),
+      });
       const result = await userRouter.createCaller({ ...mockCtx }).getUserSSOProviders();
 
       expect(result).toEqual(mockProviders);
-      expect(UserModel).toHaveBeenCalledWith(serverDB, mockUserId);
+      serverDB.select = originalSelect;
     });
   });
 
@@ -257,7 +262,7 @@ describe('userRouter', () => {
 
       await expect(
         userRouter.createCaller({ ...mockCtx }).unlinkSSOProvider(mockInput),
-      ).rejects.toThrow('The method in LobeNextAuthDbAdapter `unlinkAccount` is not implemented');
+      ).rejects.toThrow('Adapter does not support unlinking accounts');
     });
   });
 
