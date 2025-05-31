@@ -4,14 +4,16 @@ import {
   Form,
   type FormGroupItemType,
   Icon,
+  Segmented,
   Select,
   SliderWithInput,
   highlighterThemes,
   mermaidThemes,
 } from '@lobehub/ui';
 import { Skeleton } from 'antd';
+import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { Loader2Icon } from 'lucide-react';
+import { Loader2Icon, TriangleAlert } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -20,19 +22,64 @@ import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 
 import ChatPreview from './ChatPreview';
+import ChatTransitionPreview from './ChatTransitionPreview';
 import HighlighterPreview from './HighlighterPreview';
 import MermaidPreview from './MermaidPreview';
 
 const ChatAppearance = memo(() => {
   const { t } = useTranslation('setting');
   const { general } = useUserStore(settingsSelectors.currentSettings, isEqual);
+  const theme = useTheme();
   const [setSettings, isUserStateInit] = useUserStore((s) => [s.setSettings, s.isUserStateInit]);
   const [loading, setLoading] = useState(false);
 
   if (!isUserStateInit) return <Skeleton active paragraph={{ rows: 5 }} title={false} />;
 
-  const theme: FormGroupItemType = {
+  const themeItems: FormGroupItemType = {
     children: [
+      {
+        children: (
+          <ChatTransitionPreview key={general.transitionMode} mode={general.transitionMode} />
+        ),
+        noStyle: true,
+      },
+      {
+        children: (
+          <Segmented
+            block
+            options={[
+              {
+                label: t('settingChatAppearance.transitionMode.options.none.value'),
+                value: 'none',
+              },
+              {
+                label: t('settingChatAppearance.transitionMode.options.fadeIn'),
+                value: 'fadeIn',
+              },
+              {
+                label: t('settingChatAppearance.transitionMode.options.smooth'),
+                value: 'smooth',
+              },
+            ]}
+          />
+        ),
+        desc: t('settingChatAppearance.transitionMode.desc'),
+        label: t('settingChatAppearance.transitionMode.title'),
+        name: 'transitionMode',
+        tooltip:
+          general.transitionMode === 'none'
+            ? {
+                icon: (
+                  <TriangleAlert
+                    color={theme.colorWarning}
+                    size={14}
+                    style={{ alignSelf: 'flex-end', marginBlockEnd: 2, marginInlineStart: 8 }}
+                  />
+                ),
+                title: t('settingChatAppearance.transitionMode.options.none.desc'),
+              }
+            : undefined,
+      },
       {
         children: <ChatPreview fontSize={general.fontSize} />,
         noStyle: true,
@@ -112,7 +159,7 @@ const ChatAppearance = memo(() => {
   return (
     <Form
       initialValues={general}
-      items={[theme]}
+      items={[themeItems]}
       itemsType={'group'}
       onValuesChange={async (value) => {
         setLoading(true);

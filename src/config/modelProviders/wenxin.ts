@@ -239,15 +239,11 @@ const BaiduWenxin: ModelProviderCard = {
   modelsUrl: 'https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Nlks5zkzu#%E5%AF%B9%E8%AF%9Dchat',
   name: 'Wenxin',
   settings: {
-    sdkType: 'openai',
-    smoothing: {
+    responseAnimation: {
       speed: 2,
-      text: true,
+      text: 'smooth',
     },
-  },
-  smoothing: {
-    speed: 2,
-    text: true,
+    sdkType: 'openai',
   },
   url: 'https://cloud.baidu.com/wenxin.html',
 };

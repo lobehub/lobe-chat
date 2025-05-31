@@ -47,15 +47,11 @@ const Minimax: ModelProviderCard = {
   modelsUrl: 'https://platform.minimaxi.com/document/Models',
   name: 'Minimax',
   settings: {
-    sdkType: 'openai',
-    smoothing: {
+    responseAnimation: {
       speed: 2,
-      text: true,
+      text: 'smooth',
     },
-  },
-  smoothing: {
-    speed: 2,
-    text: true,
+    sdkType: 'openai',
   },
   url: 'https://www.minimaxi.com',
 };

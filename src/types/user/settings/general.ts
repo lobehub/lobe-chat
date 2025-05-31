@@ -1,3 +1,4 @@
+import { ResponseAnimationStyle } from '@/types/llm';
 import type { HighlighterProps, MermaidProps, NeutralColors, PrimaryColors } from '@lobehub/ui';
 
 export interface UserGeneralConfig {
@@ -6,4 +7,5 @@ export interface UserGeneralConfig {
   mermaidTheme?: MermaidProps['theme'];
   neutralColor?: NeutralColors;
   primaryColor?: PrimaryColors;
+  transitionMode?: ResponseAnimationStyle;
 }
