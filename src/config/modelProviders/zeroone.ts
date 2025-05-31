@@ -151,6 +151,9 @@ const ZeroOne: ModelProviderCard = {
   modelsUrl: 'https://platform.lingyiwanwu.com/docs#模型与计费',
   name: '01.AI',
   settings: {
+    proxyUrl: {
+      placeholder: 'https://api.lingyiwanwu.com/v1',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
   },
