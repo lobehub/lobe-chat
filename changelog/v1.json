@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "improvements": [
+        "Enhanced reasoning_effort Slider Component, Update Hunyuan models & deepseek-r1-0528."
+      ]
+    },
+    "date": "2025-05-31",
+    "version": "1.88.21"
+  },
+  {
+    "children": {
       "fixes": ["Agent automatic completion meta not working error."]
     },
     "date": "2025-05-31",
