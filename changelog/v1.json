@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Support 01.ai proxy url."]
+    },
+    "date": "2025-05-31",
+    "version": "1.88.22"
+  },
+  {
+    "children": {
       "improvements": [
         "Enhanced reasoning_effort Slider Component, Update Hunyuan models & deepseek-r1-0528."
       ]
