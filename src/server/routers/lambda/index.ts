@@ -10,6 +10,7 @@ import { chunkRouter } from './chunk';
 import { documentRouter } from './document';
 import { exporterRouter } from './exporter';
 import { fileRouter } from './file';
+import { generationTopicRouter } from './generationTopic';
 import { importerRouter } from './importer';
 import { knowledgeBaseRouter } from './knowledgeBase';
 import { messageRouter } from './message';
@@ -40,6 +41,7 @@ export const lambdaRouter = router({
   thread: threadRouter,
   topic: topicRouter,
   user: userRouter,
+  generationTopic: generationTopicRouter,
 });
 
 export type LambdaRouter = typeof lambdaRouter;

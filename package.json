@@ -115,9 +115,6 @@
       "eslint --fix"
     ]
   },
-  "overrides": {
-    "mdast-util-gfm-autolink-literal": "2.0.0"
-  },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
     "@ant-design/pro-components": "^2.8.7",
@@ -135,6 +132,7 @@
     "@codesandbox/sandpack-react": "^2.20.0",
     "@cyntler/react-doc-viewer": "^1.17.0",
     "@electric-sql/pglite": "0.2.17",
+    "@formkit/auto-animate": "^0.8.2",
     "@google-cloud/vertexai": "^1.10.0",
     "@google/generative-ai": "^0.24.1",
     "@huggingface/inference": "^2.8.1",
@@ -148,7 +146,7 @@
     "@lobehub/charts": "^2.0.0",
     "@lobehub/chat-plugin-sdk": "^1.32.4",
     "@lobehub/chat-plugins-gateway": "^1.9.0",
-    "@lobehub/icons": "^2.0.0",
+    "@lobehub/icons": "^2.1.0",
     "@lobehub/tts": "^2.0.1",
     "@lobehub/ui": "^2.1.7",
     "@modelcontextprotocol/sdk": "^1.11.4",
@@ -373,5 +371,8 @@
         }
       }
     }
+  },
+  "overrides": {
+    "mdast-util-gfm-autolink-literal": "2.0.0"
   }
 }
