@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.88.21](https://github.com/lobehub/lobe-chat/compare/v1.88.20...v1.88.21)
+
+<sup>Released on **2025-05-31**</sup>
+
+#### 💄 Styles
+
+- **misc**: Enhanced reasoning_effort Slider Component, Update Hunyuan models & deepseek-r1-0528.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Enhanced reasoning_effort Slider Component, closes [#7998](https://github.com/lobehub/lobe-chat/issues/7998) ([750b26a](https://github.com/lobehub/lobe-chat/commit/750b26a))
+- **misc**: Update Hunyuan models & deepseek-r1-0528, closes [#7993](https://github.com/lobehub/lobe-chat/issues/7993) ([2eb198c](https://github.com/lobehub/lobe-chat/commit/2eb198c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.88.20](https://github.com/lobehub/lobe-chat/compare/v1.88.19...v1.88.20)
 
 <sup>Released on **2025-05-31**</sup>
