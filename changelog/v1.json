@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Agent automatic completion meta not working error."]
+    },
+    "date": "2025-05-31",
+    "version": "1.88.20"
+  },
+  {
+    "children": {
       "improvements": ["Support Web Search Tools and Beta Header from Anthropic."]
     },
     "date": "2025-05-30",
