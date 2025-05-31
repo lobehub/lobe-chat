@@ -36,7 +36,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     "contextWindowTokens": 8192,
     "description": "Meta's latest class of models, Llama 3.1, has launched with a variety of sizes and configurations. The 70B instruct-tuned version is optimized for high-quality dialogue use cases. It has demonstrated strong performance in human evaluations compared to leading closed-source models.",
     "displayName": "meta-llama/llama-3.1-70b-instruct",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "meta-llama/llama-3.1-70b-instruct",
     "reasoning": false,
