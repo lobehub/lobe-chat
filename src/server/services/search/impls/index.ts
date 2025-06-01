@@ -1,5 +1,7 @@
 import { Search1APIImpl } from './search1api';
 import { SearXNGImpl } from './searxng';
+import { TavilyImpl } from './tavily';
+
 import { SearchServiceImpl } from './type';
 
 /**
@@ -8,6 +10,7 @@ import { SearchServiceImpl } from './type';
 export enum SearchImplType {
   SearXNG = 'searxng',
   Search1API = 'search1api',
+  Tavily = 'tavily',
 }
 
 /**
@@ -19,6 +22,10 @@ export const createSearchServiceImpl = (
   switch (type) {
     case SearchImplType.SearXNG: {
       return new SearXNGImpl();
+    }
+
+    case SearchImplType.Tavily: {
+      return new TavilyImpl();
     }
 
     default: {
