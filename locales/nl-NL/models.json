@@ -341,9 +341,6 @@
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct is een groot taalmodel dat speciaal is ontworpen voor codegeneratie, codebegrip en efficiënte ontwikkelingsscenario's, met een toonaangevende parameteromvang van 32B, dat kan voldoen aan diverse programmeerbehoeften."
   },
-  "SenseCat-5-1202": {
-    "description": "De nieuwste versie gebaseerd op V5.5, met significante verbeteringen ten opzichte van de vorige versie in basisvaardigheden in het Chinees en Engels, chatten, exacte wetenschappen, geesteswetenschappen, schrijven, wiskundige logica, en woordtelling."
-  },
   "SenseChat": {
     "description": "Basisversie van het model (V4), met een contextlengte van 4K, heeft sterke algemene capaciteiten."
   },
@@ -355,6 +352,9 @@
   },
   "SenseChat-5": {
     "description": "De nieuwste versie van het model (V5.5), met een contextlengte van 128K, heeft aanzienlijke verbeteringen in wiskundig redeneren, Engelse conversatie, instructievolging en begrip van lange teksten, en kan zich meten met GPT-4o."
+  },
+  "SenseChat-5-1202": {
+    "description": "Gebaseerd op versie V5.5, met significante verbeteringen ten opzichte van de vorige versie in basisvaardigheden in Chinees en Engels, chatten, exacte wetenschappen, geesteswetenschappen, schrijven, wiskundige logica en woordenaantalcontrole."
   },
   "SenseChat-5-Cantonese": {
     "description": "Met een contextlengte van 32K overtreft het de conversatiebegrip in het Kantonees van GPT-4 en kan het zich in verschillende domeinen zoals kennis, redeneren, wiskunde en coderen meten met GPT-4 Turbo."
@@ -515,6 +515,12 @@
   "ai21-jamba-1.5-mini": {
     "description": "Een meertalig model met 52 miljard parameters (12 miljard actief), biedt een contextvenster van 256K, functieaanroep, gestructureerde output en gegronde generatie."
   },
+  "ai21-labs/AI21-Jamba-1.5-Large": {
+    "description": "Een meertalig model met 398 miljard parameters (waarvan 94 miljard actief), biedt een contextvenster van 256K tokens, functieaanroepen, gestructureerde output en feitelijke generatie."
+  },
+  "ai21-labs/AI21-Jamba-1.5-Mini": {
+    "description": "Een meertalig model met 52 miljard parameters (waarvan 12 miljard actief), biedt een contextvenster van 256K tokens, functieaanroepen, gestructureerde output en feitelijke generatie."
+  },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet heeft de industrienormen verbeterd, met prestaties die de concurrentiemodellen en Claude 3 Opus overtreffen, en presteert uitstekend in brede evaluaties, met de snelheid en kosten van ons gemiddelde model."
   },
@@ -667,6 +673,12 @@
   },
   "cohere-command-r-plus": {
     "description": "Command R+ is een state-of-the-art RAG-geoptimaliseerd model ontworpen om enterprise-grade workloads aan te pakken."
+  },
+  "cohere/Cohere-command-r": {
+    "description": "Command R is een schaalbaar generatief model ontworpen voor RAG en toolgebruik, waarmee bedrijven productieklaar AI kunnen realiseren."
+  },
+  "cohere/Cohere-command-r-plus": {
+    "description": "Command R+ is een geavanceerd RAG-geoptimaliseerd model, ontworpen voor bedrijfsniveau workloads."
   },
   "command": {
     "description": "Een instructievolgend dialoogmodel dat hoge kwaliteit en betrouwbaarheid biedt voor taaltaken, met een langere contextlengte dan ons basisgeneratiemodel."
@@ -1028,6 +1040,12 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview is het meest kosteneffectieve model van Google, dat uitgebreide functionaliteit biedt."
   },
+  "gemini-2.5-flash-preview-04-17-thinking": {
+    "description": "Gemini 2.5 Flash Preview is het meest kosteneffectieve model van Google en biedt uitgebreide functionaliteiten."
+  },
+  "gemini-2.5-flash-preview-05-20": {
+    "description": "Gemini 2.5 Flash Preview is het meest kosteneffectieve model van Google en biedt uitgebreide functionaliteiten."
+  },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental is Google's meest geavanceerde denkmodel, dat in staat is om te redeneren over complexe problemen in code, wiskunde en STEM-gebieden, en bovendien gebruik maakt van lange contexten om grote datasets, codebases en documenten te analyseren."
   },
@@ -1262,23 +1280,17 @@
   "grok-2-vision-1212": {
     "description": "Dit model heeft verbeteringen aangebracht in nauwkeurigheid, instructievolging en meertalige capaciteiten."
   },
-  "grok-3-beta": {
-    "description": "Vlaggenschipmodel, gespecialiseerd in data-extractie, programmeren en tekstsamenvattingen voor zakelijke toepassingen, met diepgaande kennis in de financiële, medische, juridische en wetenschappelijke sectoren."
+  "grok-3": {
+    "description": "Vlaggenschipmodel, gespecialiseerd in data-extractie, programmeren en tekstsamenvatting voor bedrijfsapplicaties, met diepgaande kennis in financiën, gezondheidszorg, recht en wetenschap."
   },
-  "grok-3-fast-beta": {
-    "description": "Vlaggenschipmodel, gespecialiseerd in data-extractie, programmeren en tekstsamenvattingen voor zakelijke toepassingen, met diepgaande kennis in de financiële, medische, juridische en wetenschappelijke sectoren."
+  "grok-3-fast": {
+    "description": "Vlaggenschipmodel, gespecialiseerd in data-extractie, programmeren en tekstsamenvatting voor bedrijfsapplicaties, met diepgaande kennis in financiën, gezondheidszorg, recht en wetenschap."
   },
-  "grok-3-mini-beta": {
-    "description": "Lichtgewicht model dat vooraf nadenkt voordat het een gesprek aangaat. Snel en intelligent, geschikt voor logische taken die geen diepgaande domeinkennis vereisen, en kan de oorspronkelijke denksporen vastleggen."
+  "grok-3-mini": {
+    "description": "Lichtgewicht model dat eerst nadenkt voor het reageren. Snel en intelligent, geschikt voor logische taken zonder diepgaande domeinkennis en kan de oorspronkelijke denkprocessen vastleggen."
   },
-  "grok-3-mini-fast-beta": {
-    "description": "Lichtgewicht model dat vooraf nadenkt voordat het een gesprek aangaat. Snel en intelligent, geschikt voor logische taken die geen diepgaande domeinkennis vereisen, en kan de oorspronkelijke denksporen vastleggen."
-  },
-  "grok-beta": {
-    "description": "Biedt prestaties vergelijkbaar met Grok 2, maar met hogere efficiëntie, snelheid en functionaliteit."
-  },
-  "grok-vision-beta": {
-    "description": "Het nieuwste model voor beeldbegrip, dat een breed scala aan visuele informatie kan verwerken, waaronder documenten, grafieken, screenshots en foto's."
+  "grok-3-mini-fast": {
+    "description": "Lichtgewicht model dat eerst nadenkt voor het reageren. Snel en intelligent, geschikt voor logische taken zonder diepgaande domeinkennis en kan de oorspronkelijke denkprocessen vastleggen."
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B is een taalmodel dat creativiteit en intelligentie combineert door meerdere topmodellen te integreren."
@@ -1321,6 +1333,9 @@
   },
   "hunyuan-t1-latest": {
     "description": "De eerste ultra-grote Hybrid-Transformer-Mamba inferentiemodel in de industrie, dat de inferentiemogelijkheden uitbreidt, met een superieure decodesnelheid en verder afgestemd op menselijke voorkeuren."
+  },
+  "hunyuan-t1-vision": {
+    "description": "Hunyuan multimodaal begrip en diepdenkend model, ondersteunt native multimodale lange-denk-ketens, excelleert in diverse beeldredeneerscenario's en verbetert aanzienlijk ten opzichte van snelle denkers bij exacte wetenschappen."
   },
   "hunyuan-translation": {
     "description": "Ondersteunt vertalingen tussen het Chinees en 15 andere talen, waaronder Engels, Japans, Frans, Portugees, Spaans, Turks, Russisch, Arabisch, Koreaans, Italiaans, Duits, Vietnamees, Maleis en Indonesisch. Gebaseerd op een geautomatiseerde evaluatie van de COMET-score met een meervoudige scenario-vertalingstestset, overtreft het in het algemeen de vertaalcapaciteiten van vergelijkbare modellen op de markt."
@@ -1586,6 +1601,30 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 is een open groot taalmodel (LLM) gericht op ontwikkelaars, onderzoekers en bedrijven, ontworpen om hen te helpen bij het bouwen, experimenteren en verantwoordelijk opschalen van hun generatieve AI-ideeën. Als onderdeel van het basis systeem voor wereldwijde gemeenschapsinnovatie is het zeer geschikt voor apparaten met beperkte rekenkracht en middelen, edge-apparaten en snellere trainingstijden."
   },
+  "meta/Llama-3.2-11B-Vision-Instruct": {
+    "description": "Uitstekende beeldredeneercapaciteiten op hoge resolutie afbeeldingen, geschikt voor visuele begripstoepassingen."
+  },
+  "meta/Llama-3.2-90B-Vision-Instruct": {
+    "description": "Geavanceerde beeldredeneercapaciteiten voor visuele begripagenttoepassingen."
+  },
+  "meta/Llama-3.3-70B-Instruct": {
+    "description": "Llama 3.3 is het meest geavanceerde meertalige open-source grote taalmodel in de Llama-serie, biedt prestaties vergelijkbaar met een 405B model tegen zeer lage kosten. Gebaseerd op de Transformer-architectuur en verbeterd via supervised fine-tuning (SFT) en reinforcement learning met menselijke feedback (RLHF) voor bruikbaarheid en veiligheid. De instructie-geoptimaliseerde versie is geoptimaliseerd voor meertalige dialogen en presteert beter dan veel open-source en gesloten chatmodellen op diverse industriële benchmarks. Kennisafkapdatum is december 2023."
+  },
+  "meta/Meta-Llama-3-70B-Instruct": {
+    "description": "Een krachtig model met 70 miljard parameters, uitmuntend in redeneren, coderen en brede taaltoepassingen."
+  },
+  "meta/Meta-Llama-3-8B-Instruct": {
+    "description": "Een veelzijdig model met 8 miljard parameters, geoptimaliseerd voor dialoog- en tekstgeneratietaken."
+  },
+  "meta/Meta-Llama-3.1-405B-Instruct": {
+    "description": "Llama 3.1 tekstmodel met instructie-finetuning, geoptimaliseerd voor meertalige dialoogtoepassingen, presteert uitstekend op veelgebruikte industriële benchmarks vergeleken met beschikbare open-source en gesloten chatmodellen."
+  },
+  "meta/Meta-Llama-3.1-70B-Instruct": {
+    "description": "Llama 3.1 tekstmodel met instructie-finetuning, geoptimaliseerd voor meertalige dialoogtoepassingen, presteert uitstekend op veelgebruikte industriële benchmarks vergeleken met beschikbare open-source en gesloten chatmodellen."
+  },
+  "meta/Meta-Llama-3.1-8B-Instruct": {
+    "description": "Llama 3.1 tekstmodel met instructie-finetuning, geoptimaliseerd voor meertalige dialoogtoepassingen, presteert uitstekend op veelgebruikte industriële benchmarks vergeleken met beschikbare open-source en gesloten chatmodellen."
+  },
   "meta/llama-3.1-405b-instruct": {
     "description": "Geavanceerd LLM, ondersteunt synthetische gegevensgeneratie, kennisdistillatie en redeneren, geschikt voor chatbots, programmeren en specifieke domeintaken."
   },
@@ -1610,6 +1649,30 @@
   "meta/llama-3.3-70b-instruct": {
     "description": "Geavanceerd LLM, gespecialiseerd in redeneren, wiskunde, algemene kennis en functieaanroepen."
   },
+  "microsoft/Phi-3-medium-128k-instruct": {
+    "description": "Hetzelfde Phi-3-medium model, maar met een groter contextvenster, geschikt voor RAG of weinig prompts."
+  },
+  "microsoft/Phi-3-medium-4k-instruct": {
+    "description": "Een model met 14 miljard parameters, kwalitatief beter dan Phi-3-mini, gericht op hoogwaardige, redeneerrijke data."
+  },
+  "microsoft/Phi-3-mini-128k-instruct": {
+    "description": "Hetzelfde Phi-3-mini model, maar met een groter contextvenster, geschikt voor RAG of weinig prompts."
+  },
+  "microsoft/Phi-3-mini-4k-instruct": {
+    "description": "Het kleinste lid van de Phi-3 familie, geoptimaliseerd voor kwaliteit en lage latentie."
+  },
+  "microsoft/Phi-3-small-128k-instruct": {
+    "description": "Hetzelfde Phi-3-small model, maar met een groter contextvenster, geschikt voor RAG of weinig prompts."
+  },
+  "microsoft/Phi-3-small-8k-instruct": {
+    "description": "Een model met 7 miljard parameters, kwalitatief beter dan Phi-3-mini, gericht op hoogwaardige, redeneerrijke data."
+  },
+  "microsoft/Phi-3.5-mini-instruct": {
+    "description": "Een bijgewerkte versie van het Phi-3-mini model."
+  },
+  "microsoft/Phi-3.5-vision-instruct": {
+    "description": "Een bijgewerkte versie van het Phi-3-vision model."
+  },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 is een taalmodel van Microsoft AI dat uitblinkt in complexe gesprekken, meertaligheid, redenering en intelligente assistenttoepassingen."
   },
@@ -1627,6 +1690,15 @@
   },
   "mistral": {
     "description": "Mistral is het 7B-model van Mistral AI, geschikt voor variabele taalverwerkingsbehoeften."
+  },
+  "mistral-ai/Mistral-Large-2411": {
+    "description": "Het vlaggenschipmodel van Mistral, geschikt voor grootschalige redeneertaken of sterk gespecialiseerde complexe taken (zoals synthetische tekstgeneratie, codegeneratie, RAG of agenten)."
+  },
+  "mistral-ai/Mistral-Nemo": {
+    "description": "Mistral Nemo is een geavanceerd taalmodel (LLM) met toonaangevende redeneercapaciteiten, wereldkennis en codeervaardigheden binnen zijn grootteklasse."
+  },
+  "mistral-ai/mistral-small-2503": {
+    "description": "Mistral Small is geschikt voor elke taalgebaseerde taak die hoge efficiëntie en lage latentie vereist."
   },
   "mistral-large": {
     "description": "Mixtral Large is het vlaggenschipmodel van Mistral, dat de capaciteiten van codegeneratie, wiskunde en inferentie combineert, ondersteunt een contextvenster van 128k."
@@ -1768,6 +1840,9 @@
   },
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini is het nieuwste model van OpenAI, gelanceerd na GPT-4 Omni, dat tekst- en afbeeldingsinvoer ondersteunt en tekstuitvoer genereert. Als hun meest geavanceerde kleine model is het veel goedkoper dan andere recente toonaangevende modellen en meer dan 60% goedkoper dan GPT-3.5 Turbo. Het behoudt de meest geavanceerde intelligentie met een aanzienlijke prijs-kwaliteitverhouding. GPT-4o mini behaalde 82% op de MMLU-test en staat momenteel hoger in chatvoorkeuren dan GPT-4."
+  },
+  "openai/o1": {
+    "description": "o1 is het nieuwe redeneermodel van OpenAI, ondersteunt tekst- en beeldinvoer en genereert tekstuitvoer, geschikt voor complexe taken die brede algemene kennis vereisen. Dit model heeft een context van 200K en een kennisafkapdatum van oktober 2023."
   },
   "openai/o1-mini": {
     "description": "o1-mini is een snel en kosteneffectief redeneermodel dat is ontworpen voor programmeer-, wiskunde- en wetenschappelijke toepassingen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."

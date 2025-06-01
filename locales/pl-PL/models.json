@@ -341,9 +341,6 @@
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct to duży model językowy zaprojektowany specjalnie do generowania kodu, rozumienia kodu i efektywnych scenariuszy rozwoju, wykorzystujący wiodącą w branży skalę 32B parametrów, zdolny do zaspokojenia różnorodnych potrzeb programistycznych."
   },
-  "SenseCat-5-1202": {
-    "description": "Jest to najnowsza wersja oparta na V5.5, która w porównaniu do poprzedniej wersji wykazuje znaczną poprawę w kilku wymiarach, takich jak podstawowe umiejętności w języku chińskim i angielskim, czat, wiedza ścisła, wiedza humanistyczna, pisanie, logika matematyczna oraz kontrola liczby słów."
-  },
   "SenseChat": {
     "description": "Podstawowa wersja modelu (V4), długość kontekstu 4K, silne zdolności ogólne."
   },
@@ -355,6 +352,9 @@
   },
   "SenseChat-5": {
     "description": "Najnowsza wersja modelu (V5.5), długość kontekstu 128K, znacznie poprawione zdolności w zakresie rozumowania matematycznego, rozmów w języku angielskim, podążania za instrukcjami oraz rozumienia długich tekstów, dorównująca GPT-4o."
+  },
+  "SenseChat-5-1202": {
+    "description": "Oparty na najnowszej wersji V5.5, z wyraźnymi ulepszeniami w podstawowych zdolnościach w języku chińskim i angielskim, czacie, wiedzy ścisłej i humanistycznej, pisaniu, logice matematycznej oraz kontroli liczby słów."
   },
   "SenseChat-5-Cantonese": {
     "description": "Długość kontekstu 32K, w rozumieniu rozmów w języku kantońskim przewyższa GPT-4, w wielu dziedzinach, takich jak wiedza, rozumowanie, matematyka i programowanie, dorównuje GPT-4 Turbo."
@@ -515,6 +515,12 @@
   "ai21-jamba-1.5-mini": {
     "description": "Model wielojęzyczny z 52 miliardami parametrów (12 miliardów aktywnych), oferujący okno kontekstowe o długości 256K, wywoływanie funkcji, strukturalne wyjście i generację opartą na kontekście."
   },
+  "ai21-labs/AI21-Jamba-1.5-Large": {
+    "description": "Model wielojęzyczny o 398 miliardach parametrów (94 miliardy aktywnych), oferujący okno kontekstowe o długości 256K, wywoływanie funkcji, strukturalne wyjście oraz generowanie oparte na faktach."
+  },
+  "ai21-labs/AI21-Jamba-1.5-Mini": {
+    "description": "Model wielojęzyczny o 52 miliardach parametrów (12 miliardów aktywnych), oferujący okno kontekstowe o długości 256K, wywoływanie funkcji, strukturalne wyjście oraz generowanie oparte na faktach."
+  },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet podnosi standardy branżowe, przewyższając modele konkurencji oraz Claude 3 Opus, osiągając doskonałe wyniki w szerokim zakresie ocen, jednocześnie oferując szybkość i koszty na poziomie naszych modeli średniej klasy."
   },
@@ -667,6 +673,12 @@
   },
   "cohere-command-r-plus": {
     "description": "Command R+ to model zoptymalizowany pod kątem RAG, zaprojektowany do obsługi obciążeń roboczych na poziomie przedsiębiorstwa."
+  },
+  "cohere/Cohere-command-r": {
+    "description": "Command R to skalowalny model generatywny zaprojektowany do zastosowań RAG i narzędziowych, umożliwiający firmom wdrożenie AI na poziomie produkcyjnym."
+  },
+  "cohere/Cohere-command-r-plus": {
+    "description": "Command R+ to zaawansowany model zoptymalizowany pod kątem RAG, stworzony do obsługi obciążeń na poziomie przedsiębiorstwa."
   },
   "command": {
     "description": "Model konwersacyjny, który przestrzega instrukcji, oferujący wysoką jakość i niezawodność w zadaniach językowych, a także dłuższą długość kontekstu w porównaniu do naszych podstawowych modeli generacyjnych."
@@ -1028,6 +1040,12 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview to najbardziej opłacalny model Google, oferujący wszechstronne funkcje."
   },
+  "gemini-2.5-flash-preview-04-17-thinking": {
+    "description": "Gemini 2.5 Flash Preview to najbardziej opłacalny model Google, oferujący wszechstronne funkcje."
+  },
+  "gemini-2.5-flash-preview-05-20": {
+    "description": "Gemini 2.5 Flash Preview to najbardziej opłacalny model Google, oferujący wszechstronne funkcje."
+  },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental to najnowocześniejszy model myślenia Google, zdolny do wnioskowania w zakresie kodu, matematyki i złożonych problemów w dziedzinie STEM, a także do analizy dużych zbiorów danych, repozytoriów kodu i dokumentów, wykorzystując długi kontekst."
   },
@@ -1262,23 +1280,17 @@
   "grok-2-vision-1212": {
     "description": "Model ten poprawił dokładność, przestrzeganie instrukcji oraz zdolności wielojęzyczne."
   },
-  "grok-3-beta": {
-    "description": "Flagowy model, specjalizujący się w ekstrakcji danych, programowaniu i podsumowywaniu tekstów w zastosowaniach korporacyjnych, posiadający głęboką wiedzę w dziedzinach takich jak finanse, medycyna, prawo i nauka."
+  "grok-3": {
+    "description": "Flagowy model, specjalizujący się w ekstrakcji danych, programowaniu i streszczaniu tekstów na poziomie korporacyjnym, z głęboką wiedzą w dziedzinach finansów, medycyny, prawa i nauki."
   },
-  "grok-3-fast-beta": {
-    "description": "Flagowy model, specjalizujący się w ekstrakcji danych, programowaniu i podsumowywaniu tekstów w zastosowaniach korporacyjnych, posiadający głęboką wiedzę w dziedzinach takich jak finanse, medycyna, prawo i nauka."
+  "grok-3-fast": {
+    "description": "Flagowy model, specjalizujący się w ekstrakcji danych, programowaniu i streszczaniu tekstów na poziomie korporacyjnym, z głęboką wiedzą w dziedzinach finansów, medycyny, prawa i nauki."
   },
-  "grok-3-mini-beta": {
-    "description": "Lekki model, który przed rozmową najpierw przemyśli. Działa szybko i inteligentnie, nadaje się do logicznych zadań, które nie wymagają głębokiej wiedzy w danej dziedzinie, i potrafi uchwycić pierwotne ścieżki myślenia."
+  "grok-3-mini": {
+    "description": "Lekki model, który najpierw analizuje przed rozmową. Działa szybko i inteligentnie, odpowiedni do zadań logicznych nie wymagających głębokiej wiedzy dziedzinowej, z możliwością śledzenia pierwotnego toku myślenia."
   },
-  "grok-3-mini-fast-beta": {
-    "description": "Lekki model, który przed rozmową najpierw przemyśli. Działa szybko i inteligentnie, nadaje się do logicznych zadań, które nie wymagają głębokiej wiedzy w danej dziedzinie, i potrafi uchwycić pierwotne ścieżki myślenia."
-  },
-  "grok-beta": {
-    "description": "Oferuje wydajność porównywalną z Grok 2, ale z wyższą efektywnością, prędkością i funkcjonalnością."
-  },
-  "grok-vision-beta": {
-    "description": "Najnowszy model rozumienia obrazów, który potrafi przetwarzać różnorodne informacje wizualne, w tym dokumenty, wykresy, zrzuty ekranu i zdjęcia."
+  "grok-3-mini-fast": {
+    "description": "Lekki model, który najpierw analizuje przed rozmową. Działa szybko i inteligentnie, odpowiedni do zadań logicznych nie wymagających głębokiej wiedzy dziedzinowej, z możliwością śledzenia pierwotnego toku myślenia."
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B to model językowy łączący kreatywność i inteligencję, zintegrowany z wieloma wiodącymi modelami."
@@ -1321,6 +1333,9 @@
   },
   "hunyuan-t1-latest": {
     "description": "Pierwszy na świecie ultra-duży model wnioskowania Hybrid-Transformer-Mamba, rozszerzający zdolności wnioskowania, z niezwykle szybkim dekodowaniem, lepiej dostosowany do ludzkich preferencji."
+  },
+  "hunyuan-t1-vision": {
+    "description": "Model głębokiego myślenia multimodalnego Hunyuan, obsługujący natywne łańcuchy myślowe multimodalne, doskonały w różnych scenariuszach wnioskowania obrazowego, z wyraźną przewagą nad modelami szybkiego myślenia w rozwiązywaniu problemów ścisłych."
   },
   "hunyuan-translation": {
     "description": "Obsługuje tłumaczenie między 15 językami, w tym chińskim, angielskim, japońskim, francuskim, portugalskim, hiszpańskim, tureckim, rosyjskim, arabskim, koreańskim, włoskim, niemieckim, wietnamskim, malajskim i indonezyjskim, opartym na automatycznej ocenie COMET w oparciu o zestaw testowy do tłumaczenia w różnych scenariuszach, wykazując ogólnie lepsze zdolności tłumaczeniowe w porównaniu do modeli o podobnej skali na rynku."
@@ -1586,6 +1601,30 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 to otwarty duży model językowy (LLM) skierowany do deweloperów, badaczy i przedsiębiorstw, mający na celu pomoc w budowaniu, eksperymentowaniu i odpowiedzialnym rozwijaniu ich pomysłów na generatywną sztuczną inteligencję. Jako część podstawowego systemu innowacji globalnej społeczności, jest idealny dla urządzeń o ograniczonej mocy obliczeniowej i zasobach, a także dla szybszego czasu szkolenia."
   },
+  "meta/Llama-3.2-11B-Vision-Instruct": {
+    "description": "Wysokiej jakości zdolności wnioskowania obrazowego na obrazach o wysokiej rozdzielczości, idealne do zastosowań związanych z rozumieniem wizualnym."
+  },
+  "meta/Llama-3.2-90B-Vision-Instruct": {
+    "description": "Zaawansowane zdolności wnioskowania obrazowego przeznaczone do zastosowań agentów rozumienia wizualnego."
+  },
+  "meta/Llama-3.3-70B-Instruct": {
+    "description": "Llama 3.3 to najnowocześniejszy wielojęzyczny, otwarty model językowy z serii Llama, oferujący wydajność porównywalną z modelem 405B przy bardzo niskich kosztach. Opiera się na architekturze Transformer i jest ulepszony przez nadzorowane dostrajanie (SFT) oraz uczenie ze wzmocnieniem na podstawie opinii ludzi (RLHF). Wersja dostrojona pod kątem instrukcji jest zoptymalizowana do wielojęzycznych dialogów i przewyższa wiele otwartych i zamkniętych modeli czatu w licznych branżowych benchmarkach. Data odcięcia wiedzy: grudzień 2023."
+  },
+  "meta/Meta-Llama-3-70B-Instruct": {
+    "description": "Potężny model o 70 miliardach parametrów, wyróżniający się wnioskowaniem, kodowaniem i szerokim zastosowaniem językowym."
+  },
+  "meta/Meta-Llama-3-8B-Instruct": {
+    "description": "Wszechstronny model o 8 miliardach parametrów, zoptymalizowany do zadań dialogowych i generowania tekstu."
+  },
+  "meta/Meta-Llama-3.1-405B-Instruct": {
+    "description": "Model tekstowy Llama 3.1 dostrojony pod kątem instrukcji, zoptymalizowany do wielojęzycznych zastosowań dialogowych, osiągający doskonałe wyniki w wielu dostępnych otwartych i zamkniętych modelach czatu na popularnych branżowych benchmarkach."
+  },
+  "meta/Meta-Llama-3.1-70B-Instruct": {
+    "description": "Model tekstowy Llama 3.1 dostrojony pod kątem instrukcji, zoptymalizowany do wielojęzycznych zastosowań dialogowych, osiągający doskonałe wyniki w wielu dostępnych otwartych i zamkniętych modelach czatu na popularnych branżowych benchmarkach."
+  },
+  "meta/Meta-Llama-3.1-8B-Instruct": {
+    "description": "Model tekstowy Llama 3.1 dostrojony pod kątem instrukcji, zoptymalizowany do wielojęzycznych zastosowań dialogowych, osiągający doskonałe wyniki w wielu dostępnych otwartych i zamkniętych modelach czatu na popularnych branżowych benchmarkach."
+  },
   "meta/llama-3.1-405b-instruct": {
     "description": "Zaawansowany LLM, wspierający generowanie danych syntetycznych, destylację wiedzy i wnioskowanie, odpowiedni do chatbotów, programowania i zadań w określonych dziedzinach."
   },
@@ -1610,6 +1649,30 @@
   "meta/llama-3.3-70b-instruct": {
     "description": "Zaawansowany LLM, specjalizujący się w wnioskowaniu, matematyce, zdrowym rozsądku i wywoływaniu funkcji."
   },
+  "microsoft/Phi-3-medium-128k-instruct": {
+    "description": "Ten sam model Phi-3-medium, ale z większym rozmiarem kontekstu, odpowiedni do RAG lub nielicznych podpowiedzi."
+  },
+  "microsoft/Phi-3-medium-4k-instruct": {
+    "description": "Model o 14 miliardach parametrów, lepszej jakości niż Phi-3-mini, skoncentrowany na wysokiej jakości i danych wymagających intensywnego wnioskowania."
+  },
+  "microsoft/Phi-3-mini-128k-instruct": {
+    "description": "Ten sam model Phi-3-mini, ale z większym rozmiarem kontekstu, odpowiedni do RAG lub nielicznych podpowiedzi."
+  },
+  "microsoft/Phi-3-mini-4k-instruct": {
+    "description": "Najmniejszy członek rodziny Phi-3, zoptymalizowany pod kątem jakości i niskich opóźnień."
+  },
+  "microsoft/Phi-3-small-128k-instruct": {
+    "description": "Ten sam model Phi-3-small, ale z większym rozmiarem kontekstu, odpowiedni do RAG lub nielicznych podpowiedzi."
+  },
+  "microsoft/Phi-3-small-8k-instruct": {
+    "description": "Model o 7 miliardach parametrów, lepszej jakości niż Phi-3-mini, skoncentrowany na wysokiej jakości i danych wymagających intensywnego wnioskowania."
+  },
+  "microsoft/Phi-3.5-mini-instruct": {
+    "description": "Zaktualizowana wersja modelu Phi-3-mini."
+  },
+  "microsoft/Phi-3.5-vision-instruct": {
+    "description": "Zaktualizowana wersja modelu Phi-3-vision."
+  },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 to model językowy oferowany przez Microsoft AI, który wyróżnia się w złożonych rozmowach, wielojęzyczności, wnioskowaniu i jako inteligentny asystent."
   },
@@ -1627,6 +1690,15 @@
   },
   "mistral": {
     "description": "Mistral to model 7B wydany przez Mistral AI, odpowiedni do zmiennych potrzeb przetwarzania języka."
+  },
+  "mistral-ai/Mistral-Large-2411": {
+    "description": "Flagowy model Mistral, odpowiedni do zadań wymagających dużej mocy obliczeniowej lub wysoko wyspecjalizowanych, takich jak generowanie tekstu syntetycznego, generowanie kodu, RAG lub agentów."
+  },
+  "mistral-ai/Mistral-Nemo": {
+    "description": "Mistral Nemo to nowoczesny model językowy (LLM) oferujący najlepsze w swojej klasie zdolności wnioskowania, wiedzy o świecie i kodowania."
+  },
+  "mistral-ai/mistral-small-2503": {
+    "description": "Mistral Small jest przeznaczony do wszelkich zadań językowych wymagających wysokiej wydajności i niskich opóźnień."
   },
   "mistral-large": {
     "description": "Mixtral Large to flagowy model Mistral, łączący zdolności generowania kodu, matematyki i wnioskowania, wspierający kontekst o długości 128k."
@@ -1768,6 +1840,9 @@
   },
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini to najnowszy model OpenAI, wydany po GPT-4 Omni, obsługujący wejścia tekstowe i wizualne. Jako ich najnowocześniejszy mały model, jest znacznie tańszy od innych niedawnych modeli czołowych i kosztuje o ponad 60% mniej niż GPT-3.5 Turbo. Utrzymuje najnowocześniejszą inteligencję, oferując jednocześnie znaczną wartość za pieniądze. GPT-4o mini uzyskał wynik 82% w teście MMLU i obecnie zajmuje wyższą pozycję w preferencjach czatu niż GPT-4."
+  },
+  "openai/o1": {
+    "description": "o1 to nowy model wnioskowania OpenAI, obsługujący wejścia tekstowo-obrazowe i generujący tekst, odpowiedni do złożonych zadań wymagających szerokiej wiedzy ogólnej. Model posiada kontekst o długości 200K oraz datę odcięcia wiedzy na październik 2023."
   },
   "openai/o1-mini": {
     "description": "o1-mini to szybki i ekonomiczny model wnioskowania zaprojektowany z myślą o programowaniu, matematyce i zastosowaniach naukowych. Model ten ma kontekst 128K i datę graniczną wiedzy z października 2023 roku."

@@ -499,11 +499,59 @@ const openrouterChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     contextWindowTokens: 163_840,
     description:
-      'DeepSeek V3 是一个 685B 参数的专家混合模型，是 DeepSeek 团队旗舰聊天模型系列的最新迭代。\n\n它继承了 [DeepSeek V3](/deepseek/deepseek-chat-v3) 模型，并在各种任务上表现出色。',
-    displayName: 'DeepSeek V3 0324 (Free)',
-    id: 'deepseek/deepseek-chat-v3-0324:free',
+      'DeepSeek-R1 在仅有极少标注数据的情况下，极大提升了模型推理能力。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。',
+    displayName: 'DeepSeek R1 0528',
+    id: 'deepseek/deepseek-r1-0528',
+    pricing: {
+      input: 0.5,
+      output: 2.18,
+    },
+    releasedAt: '2025-05-28',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 163_840,
+    description:
+      'DeepSeek-R1 在仅有极少标注数据的情况下，极大提升了模型推理能力。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。',
+    displayName: 'DeepSeek R1 0528 (Free)',
+    id: 'deepseek/deepseek-r1-0528:free',
+    releasedAt: '2025-05-28',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 163_840,
+    description:
+      'DeepSeek-R1 在仅有极少标注数据的情况下，极大提升了模型推理能力。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。',
+    displayName: 'DeepSeek R1',
+    id: 'deepseek/deepseek-r1',
+    pricing: {
+      input: 3,
+      output: 8,
+    },
+    releasedAt: '2025-01-20',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 163_840,
+    description:
+      'DeepSeek-R1 在仅有极少标注数据的情况下，极大提升了模型推理能力。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。',
+    displayName: 'DeepSeek R1 (Free)',
+    id: 'deepseek/deepseek-r1:free',
+    releasedAt: '2025-01-20',
     type: 'chat',
   },
   {
@@ -517,6 +565,14 @@ const openrouterChatModels: AIChatModelCard[] = [
       input: 0.27,
       output: 1.1,
     },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 163_840,
+    description:
+      'DeepSeek V3 是一个 685B 参数的专家混合模型，是 DeepSeek 团队旗舰聊天模型系列的最新迭代。\n\n它继承了 [DeepSeek V3](/deepseek/deepseek-chat-v3) 模型，并在各种任务上表现出色。',
+    displayName: 'DeepSeek V3 0324 (Free)',
+    id: 'deepseek/deepseek-chat-v3-0324:free',
     type: 'chat',
   },
   {
@@ -671,50 +727,6 @@ const openrouterChatModels: AIChatModelCard[] = [
       input: 3.5,
       output: 10.5,
     },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 128_000,
-    description:
-      '融合通用与代码能力的全新开源模型, 不仅保留了原有 Chat 模型的通用对话能力和 Coder 模型的强大代码处理能力，还更好地对齐了人类偏好。此外，DeepSeek-V2.5 在写作任务、指令跟随等多个方面也实现了大幅提升。',
-    displayName: 'DeepSeek V2.5',
-    id: 'deepseek/deepseek-chat',
-    pricing: {
-      input: 0.14,
-      output: 0.28,
-    },
-    releasedAt: '2024-09-05',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 163_840,
-    description:
-      'DeepSeek-R1 在仅有极少标注数据的情况下，极大提升了模型推理能力。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。',
-    displayName: 'DeepSeek R1',
-    id: 'deepseek/deepseek-r1',
-    pricing: {
-      input: 3,
-      output: 8,
-    },
-    releasedAt: '2025-01-20',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 163_840,
-    description:
-      'DeepSeek-R1 在仅有极少标注数据的情况下，极大提升了模型推理能力。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。',
-    displayName: 'DeepSeek R1 (Free)',
-    id: 'deepseek/deepseek-r1:free',
-    releasedAt: '2025-01-20',
     type: 'chat',
   },
   {

@@ -259,9 +259,6 @@
     "enableMaxTokens": {
       "title": "Włącz limit jednorazowej odpowiedzi"
     },
-    "enableReasoningEffort": {
-      "title": "Włącz dostosowanie intensywności rozumowania"
-    },
     "frequencyPenalty": {
       "desc": "Im większa wartość, tym bardziej zróżnicowane i bogate słownictwo; im mniejsza wartość, tym prostsze i bardziej bezpośrednie słownictwo",
       "title": "Różnorodność słownictwa"
@@ -280,15 +277,6 @@
     "presencePenalty": {
       "desc": "Im większa wartość, tym większa tendencja do różnorodnych wyrażeń, unikanie powtórzeń; im mniejsza wartość, tym większa tendencja do używania powtarzających się koncepcji lub narracji, co prowadzi do większej spójności",
       "title": "Różnorodność wyrażeń"
-    },
-    "reasoningEffort": {
-      "desc": "Im wyższa wartość, tym silniejsza zdolność rozumowania, ale może to zwiększyć czas odpowiedzi i zużycie tokenów",
-      "options": {
-        "high": "Wysoki",
-        "low": "Niski",
-        "medium": "Średni"
-      },
-      "title": "Intensywność rozumowania"
     },
     "submit": "Zaktualizuj ustawienia modelu",
     "temperature": {

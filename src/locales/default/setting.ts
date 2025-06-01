@@ -263,9 +263,6 @@ export default {
     enableMaxTokens: {
       title: '开启单次回复限制',
     },
-    enableReasoningEffort: {
-      title: '开启推理强度调整',
-    },
     frequencyPenalty: {
       desc: '值越大，用词越丰富多样；值越低，用词更朴实简单',
       title: '词汇丰富度',
@@ -284,15 +281,6 @@ export default {
     presencePenalty: {
       desc: '值越大，越倾向不同的表达方式，避免概念重复；值越小，越倾向使用重复的概念或叙述，表达更具一致性',
       title: '表述发散度',
-    },
-    reasoningEffort: {
-      desc: '值越大，推理能力越强，但可能会增加响应时间和 Token 消耗',
-      options: {
-        high: '高',
-        low: '低',
-        medium: '中',
-      },
-      title: '推理强度',
     },
     submit: '更新模型设置',
     temperature: {
