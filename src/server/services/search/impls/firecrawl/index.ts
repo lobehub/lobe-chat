@@ -41,7 +41,7 @@ export class FirecrawlImpl implements SearchServiceImpl {
 
   private get baseUrl(): string {
     // Assuming the base URL is consistent with the crawl endpoint
-    return 'https://api.firecrawl.dev/v1';
+    return process.env.FIRECRAWL_URL || 'https://api.firecrawl.dev/v1';
   }
 
   async query(query: string, params: SearchParams = {}): Promise<UniformSearchResponse> {
