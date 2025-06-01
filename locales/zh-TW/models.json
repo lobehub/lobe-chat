@@ -341,9 +341,6 @@
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct 是一款專為代碼生成、代碼理解和高效開發場景設計的大型語言模型，採用了業界領先的32B參數規模，能夠滿足多樣化的程式需求。"
   },
-  "SenseCat-5-1202": {
-    "description": "是基於V5.5的最新版本，較上版本在中英文基礎能力、聊天、理科知識、文科知識、寫作、數理邏輯、字數控制等幾個維度的表現有顯著提升。"
-  },
   "SenseChat": {
     "description": "基礎版本模型 (V4)，4K上下文長度，通用能力強大"
   },
@@ -355,6 +352,9 @@
   },
   "SenseChat-5": {
     "description": "最新版本模型 (V5.5)，128K上下文長度，在數學推理、英文對話、指令跟隨以及長文本理解等領域能力顯著提升，比肩GPT-4o"
+  },
+  "SenseChat-5-1202": {
+    "description": "是基於 V5.5 的最新版本，較上版本在中英文基礎能力、聊天、理科知識、文科知識、寫作、數理邏輯、字數控制等幾個維度的表現有顯著提升。"
   },
   "SenseChat-5-Cantonese": {
     "description": "32K上下文長度，在粵語的對話理解上超越了GPT-4，在知識、推理、數學及程式編寫等多個領域均能與GPT-4 Turbo相媲美"
@@ -515,6 +515,12 @@
   "ai21-jamba-1.5-mini": {
     "description": "一個52B參數（12B活躍）多語言模型，提供256K長上下文窗口、函數調用、結構化輸出和基於實體的生成。"
   },
+  "ai21-labs/AI21-Jamba-1.5-Large": {
+    "description": "一個 398B 參數（94B 活躍）的多語言模型，提供 256K 長上下文視窗、函數呼叫、結構化輸出和基於事實的生成。"
+  },
+  "ai21-labs/AI21-Jamba-1.5-Mini": {
+    "description": "一個 52B 參數（12B 活躍）的多語言模型，提供 256K 長上下文視窗、函數呼叫、結構化輸出和基於事實的生成。"
+  },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet提升了行業標準，性能超過競爭對手模型和Claude 3 Opus，在廣泛的評估中表現出色，同時具有我們中等層級模型的速度和成本。"
   },
@@ -667,6 +673,12 @@
   },
   "cohere-command-r-plus": {
     "description": "Command R+是一個最先進的RAG優化模型，旨在應對企業級工作負載。"
+  },
+  "cohere/Cohere-command-r": {
+    "description": "Command R 是一個可擴展的生成模型，旨在針對 RAG 和工具使用，使企業能夠實現生產級 AI。"
+  },
+  "cohere/Cohere-command-r-plus": {
+    "description": "Command R+ 是一個最先進的 RAG 優化模型，旨在應對企業級工作負載。"
   },
   "command": {
     "description": "一個遵循指令的對話模型，在語言任務中表現出高質量、更可靠，並且相比我們的基礎生成模型具有更長的上下文長度。"
@@ -1028,6 +1040,12 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview 是 Google 性價比最高的模型，提供全面的功能。"
   },
+  "gemini-2.5-flash-preview-04-17-thinking": {
+    "description": "Gemini 2.5 Flash Preview 是 Google 性價比最高的模型，提供全面的功能。"
+  },
+  "gemini-2.5-flash-preview-05-20": {
+    "description": "Gemini 2.5 Flash Preview 是 Google 性價比最高的模型，提供全面的功能。"
+  },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro 實驗版是 Google 最先進的思維模型，能夠對代碼、數學和 STEM 領域的複雜問題進行推理，還能利用長上下文來分析大型數據集、代碼庫和文檔。"
   },
@@ -1262,23 +1280,17 @@
   "grok-2-vision-1212": {
     "description": "該模型在準確性、指令遵循和多語言能力方面有所改進。"
   },
-  "grok-3-beta": {
-    "description": "旗艦級模型，擅長數據提取、程式設計和文本摘要等企業級應用，擁有金融、醫療、法律和科學等領域的深厚知識。"
+  "grok-3": {
+    "description": "旗艦級模型，擅長資料擷取、程式設計和文本摘要等企業級應用，擁有金融、醫療、法律和科學等領域的深厚知識。"
   },
-  "grok-3-fast-beta": {
-    "description": "旗艦級模型，擅長數據提取、程式設計和文本摘要等企業級應用，擁有金融、醫療、法律和科學等領域的深厚知識。"
+  "grok-3-fast": {
+    "description": "旗艦級模型，擅長資料擷取、程式設計和文本摘要等企業級應用，擁有金融、醫療、法律和科學等領域的深厚知識。"
   },
-  "grok-3-mini-beta": {
-    "description": "輕量級模型，會在對話前先思考。運行快速、智能，適用於不需要深層領域知識的邏輯任務，並能獲取原始的思維軌跡。"
+  "grok-3-mini": {
+    "description": "輕量級模型，對話前會先思考。運行快速、智能，適用於不需要深層領域知識的邏輯任務，並能獲取原始的思維軌跡。"
   },
-  "grok-3-mini-fast-beta": {
-    "description": "輕量級模型，會在對話前先思考。運行快速、智能，適用於不需要深層領域知識的邏輯任務，並能獲取原始的思維軌跡。"
-  },
-  "grok-beta": {
-    "description": "擁有與 Grok 2 相當的性能，但具備更高的效率、速度和功能。"
-  },
-  "grok-vision-beta": {
-    "description": "最新的圖像理解模型，可以處理各種各樣的視覺信息，包括文檔、圖表、截圖和照片等。"
+  "grok-3-mini-fast": {
+    "description": "輕量級模型，對話前會先思考。運行快速、智能，適用於不需要深層領域知識的邏輯任務，並能獲取原始的思維軌跡。"
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B 是一款合併了多個頂尖模型的創意與智能相結合的語言模型。"
@@ -1321,6 +1333,9 @@
   },
   "hunyuan-t1-latest": {
     "description": "業界首個超大規模 Hybrid-Transformer-Mamba 推理模型，擴展推理能力，超強解碼速度，進一步對齊人類偏好。"
+  },
+  "hunyuan-t1-vision": {
+    "description": "混元多模態理解深度思考模型，支援多模態原生長思維鏈，擅長處理各種圖片推理場景，在理科難題上相比快思考模型全面提升。"
   },
   "hunyuan-translation": {
     "description": "支持中文和英語、日語、法語、葡萄牙語、西班牙語、土耳其語、俄語、阿拉伯語、韓語、義大利語、德語、越南語、馬來語、印尼語15種語言互譯，基於多場景翻譯評測集自動化評估COMET評分，在十餘種常用語種中外互譯能力上整體優於市場同規模模型。"
@@ -1586,6 +1601,30 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 是一款面向開發者、研究人員和企業的開放大型語言模型 (LLM)，旨在幫助他們構建、實驗並負責任地擴展他們的生成 AI 想法。作為全球社區創新的基礎系統的一部分，它非常適合計算能力和資源有限、邊緣設備和更快的訓練時間。"
   },
+  "meta/Llama-3.2-11B-Vision-Instruct": {
+    "description": "在高解析度影像上表現出色的影像推理能力，適用於視覺理解應用。"
+  },
+  "meta/Llama-3.2-90B-Vision-Instruct": {
+    "description": "適用於視覺理解代理應用的高階影像推理能力。"
+  },
+  "meta/Llama-3.3-70B-Instruct": {
+    "description": "Llama 3.3 是 Llama 系列最先進的多語言開源大型語言模型，以極低成本體驗媲美 405B 模型的效能。基於 Transformer 結構，並透過監督微調（SFT）和人類回饋強化學習（RLHF）提升實用性和安全性。其指令調校版本專為多語言對話優化，在多項產業基準上表現優於眾多開源和封閉聊天模型。知識截止日期為 2023 年 12 月。"
+  },
+  "meta/Meta-Llama-3-70B-Instruct": {
+    "description": "一個強大的 700 億參數模型，在推理、編碼和廣泛的語言應用方面表現出色。"
+  },
+  "meta/Meta-Llama-3-8B-Instruct": {
+    "description": "一個多功能的 80 億參數模型，針對對話和文本生成任務進行優化。"
+  },
+  "meta/Meta-Llama-3.1-405B-Instruct": {
+    "description": "Llama 3.1 指令調校的文本模型，針對多語言對話用例進行優化，在許多可用的開源和封閉聊天模型中，在常見產業基準上表現優異。"
+  },
+  "meta/Meta-Llama-3.1-70B-Instruct": {
+    "description": "Llama 3.1 指令調校的文本模型，針對多語言對話用例進行優化，在許多可用的開源和封閉聊天模型中，在常見產業基準上表現優異。"
+  },
+  "meta/Meta-Llama-3.1-8B-Instruct": {
+    "description": "Llama 3.1 指令調校的文本模型，針對多語言對話用例進行優化，在許多可用的開源和封閉聊天模型中，在常見產業基準上表現優異。"
+  },
   "meta/llama-3.1-405b-instruct": {
     "description": "高級 LLM，支持合成數據生成、知識蒸餾和推理，適用於聊天機器人、編程和特定領域任務。"
   },
@@ -1610,6 +1649,30 @@
   "meta/llama-3.3-70b-instruct": {
     "description": "先進的 LLM，擅長推理、數學、常識和函數調用。"
   },
+  "microsoft/Phi-3-medium-128k-instruct": {
+    "description": "相同的 Phi-3-medium 模型，但具有更大的上下文大小，適用於 RAG 或少量提示。"
+  },
+  "microsoft/Phi-3-medium-4k-instruct": {
+    "description": "一個 140 億參數模型，品質優於 Phi-3-mini，重點關注高品質、推理密集型資料。"
+  },
+  "microsoft/Phi-3-mini-128k-instruct": {
+    "description": "相同的 Phi-3-mini 模型，但具有更大的上下文大小，適用於 RAG 或少量提示。"
+  },
+  "microsoft/Phi-3-mini-4k-instruct": {
+    "description": "Phi-3 家族中最小的成員，針對品質和低延遲進行優化。"
+  },
+  "microsoft/Phi-3-small-128k-instruct": {
+    "description": "相同的 Phi-3-small 模型，但具有更大的上下文大小，適用於 RAG 或少量提示。"
+  },
+  "microsoft/Phi-3-small-8k-instruct": {
+    "description": "一個 70 億參數模型，品質優於 Phi-3-mini，重點關注高品質、推理密集型資料。"
+  },
+  "microsoft/Phi-3.5-mini-instruct": {
+    "description": "Phi-3-mini 模型的更新版。"
+  },
+  "microsoft/Phi-3.5-vision-instruct": {
+    "description": "Phi-3-vision 模型的更新版。"
+  },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 是微軟AI提供的語言模型，在複雜對話、多語言、推理和智能助手領域表現尤為出色。"
   },
@@ -1627,6 +1690,15 @@
   },
   "mistral": {
     "description": "Mistral 是 Mistral AI 發布的 7B 模型，適合多變的語言處理需求。"
+  },
+  "mistral-ai/Mistral-Large-2411": {
+    "description": "Mistral 的旗艦模型，適合需要大規模推理能力或高度專業化的複雜任務（合成文本生成、程式碼生成、RAG 或代理）。"
+  },
+  "mistral-ai/Mistral-Nemo": {
+    "description": "Mistral Nemo 是一種尖端的語言模型（LLM），在其尺寸類別中擁有最先進的推理、世界知識和編碼能力。"
+  },
+  "mistral-ai/mistral-small-2503": {
+    "description": "Mistral Small 可用於任何需要高效率和低延遲的基於語言的任務。"
   },
   "mistral-large": {
     "description": "Mixtral Large 是 Mistral 的旗艦模型，結合代碼生成、數學和推理的能力，支持 128k 上下文窗口。"
@@ -1768,6 +1840,9 @@
   },
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini是OpenAI在GPT-4 Omni之後推出的最新模型，支持圖文輸入並輸出文本。作為他們最先進的小型模型，它比其他近期的前沿模型便宜很多，並且比GPT-3.5 Turbo便宜超過60%。它保持了最先進的智能，同時具有顯著的性價比。GPT-4o mini在MMLU測試中獲得了82%的得分，目前在聊天偏好上排名高於GPT-4。"
+  },
+  "openai/o1": {
+    "description": "o1 是 OpenAI 新的推理模型，支援圖文輸入並輸出文本，適用於需要廣泛通用知識的複雜任務。該模型具有 200K 上下文和 2023 年 10 月的知識截止日期。"
   },
   "openai/o1-mini": {
     "description": "o1-mini是一款針對程式設計、數學和科學應用場景而設計的快速、經濟高效的推理模型。該模型具有128K上下文和2023年10月的知識截止日期。"

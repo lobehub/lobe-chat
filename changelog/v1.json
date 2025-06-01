@@ -1,6 +1,119 @@
 [
   {
     "children": {
+      "fixes": [
+        "Disable LaTeX and Mermaid rendering in SystemRoleContent to prevent lag caused by massive rendering tasks when switching topics, fix DeepSeek new R1 Search error."
+      ],
+      "improvements": [
+        "Use default deployment name when parseModelString doesn't contain deployment name."
+      ]
+    },
+    "date": "2025-06-01",
+    "version": "1.90.1"
+  },
+  {
+    "children": {
+      "features": ["Support protect page."]
+    },
+    "date": "2025-06-01",
+    "version": "1.90.0"
+  },
+  {
+    "children": {
+      "features": ["Support ModelScope Provider."]
+    },
+    "date": "2025-06-01",
+    "version": "1.89.0"
+  },
+  {
+    "children": {
+      "improvements": ["+ in the welcome message can be clicked to create an assistant."]
+    },
+    "date": "2025-05-31",
+    "version": "1.88.23"
+  },
+  {
+    "children": {
+      "improvements": ["Support 01.ai proxy url."]
+    },
+    "date": "2025-05-31",
+    "version": "1.88.22"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Enhanced reasoning_effort Slider Component, Update Hunyuan models & deepseek-r1-0528."
+      ]
+    },
+    "date": "2025-05-31",
+    "version": "1.88.21"
+  },
+  {
+    "children": {
+      "fixes": ["Agent automatic completion meta not working error."]
+    },
+    "date": "2025-05-31",
+    "version": "1.88.20"
+  },
+  {
+    "children": {
+      "improvements": ["Support Web Search Tools and Beta Header from Anthropic."]
+    },
+    "date": "2025-05-30",
+    "version": "1.88.19"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Close historySummary correctly, Enable thinking output only for supported Gemini thinking models."
+      ]
+    },
+    "date": "2025-05-29",
+    "version": "1.88.18"
+  },
+  {
+    "children": {
+      "improvements": ["Increase the history limit."]
+    },
+    "date": "2025-05-29",
+    "version": "1.88.17"
+  },
+  {
+    "children": {
+      "fixes": ["Cmd + click chat tab not open new tab."],
+      "improvements": ["Update GitHub models."]
+    },
+    "date": "2025-05-29",
+    "version": "1.88.16"
+  },
+  {
+    "children": {
+      "improvements": ["Add fc ability to deepseek-reasoner model."]
+    },
+    "date": "2025-05-29",
+    "version": "1.88.15"
+  },
+  {
+    "children": {
+      "fixes": ["Cant invoke the application after OIDC authorization in Windows 11."]
+    },
+    "date": "2025-05-28",
+    "version": "1.88.14"
+  },
+  {
+    "children": {},
+    "date": "2025-05-27",
+    "version": "1.88.13"
+  },
+  {
+    "children": {
+      "improvements": ["Support adjust thinkingBudget in gemini 2.5 flash."]
+    },
+    "date": "2025-05-27",
+    "version": "1.88.12"
+  },
+  {
+    "children": {
       "improvements": ["Correct model name SenseChat-5-1202."]
     },
     "date": "2025-05-26",

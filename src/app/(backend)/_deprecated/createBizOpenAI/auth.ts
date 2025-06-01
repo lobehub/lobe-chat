@@ -1,4 +1,4 @@
-import { getAppConfig } from '@/config/app';
+import { getAppConfig } from '@/envs/app';
 import { ChatErrorType } from '@/types/fetch';
 
 interface AuthConfig {
