@@ -13,7 +13,7 @@ interface BochaQueryParams {
   freshness?: string;
   include?: string;
   query: string;
-  summery?: boolean;
+  summary?: boolean;
 }
 
 const log = debug('lobe-search:Bocha');
@@ -46,6 +46,7 @@ export class BochaImpl implements SearchServiceImpl {
     const defaultQueryParams: BochaQueryParams = {
       count: 15,
       query,
+      summary: true,
     };
 
     let body: BochaQueryParams = {
@@ -103,7 +104,7 @@ export class BochaImpl implements SearchServiceImpl {
       const mappedResults = (bochaResponse.data.webPages.value || []).map(
         (result): UniformSearchResult => ({
           category: 'general', // Default category
-          content: result.snippet || '', // Prioritize content, fallback to snippet
+          content: result.summary || result.snippet || '', // Prioritize content, fallback to snippet
           engines: ['bocha'], // Use 'bocha' as the engine name
           parsedUrl: result.url ? new URL(result.url).hostname : '', // Basic URL parsing
           score: 1, // Default score to 1

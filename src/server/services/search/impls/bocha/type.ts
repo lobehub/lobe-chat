@@ -4,7 +4,7 @@ export interface BochaSearchParameters {
   freshness?: string;
   include?: string;
   query: string;
-  summery?: boolean;
+  summary?: boolean;
 }
 
 interface BochaQueryContext {
@@ -22,6 +22,7 @@ interface BochaValue {
   name: string;
   siteName?: string;
   snippet?: string;
+  summary?: string;
   url: string;
 }
 
