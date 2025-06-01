@@ -196,7 +196,7 @@ LobeChat 支持文件上传与知识库功能，你可以上传文件、图片�
 - **[OpenRouter](https://lobechat.com/discover/provider/openrouter)**: OpenRouter 是一个提供多种前沿大模型接口的服务平台，支持 OpenAI、Anthropic、LLaMA 及更多，适合多样化的开发和应用需求。用户可根据自身需求灵活选择最优的模型和价格，助力 AI 体验的提升。
 - **[Cloudflare Workers AI](https://lobechat.com/discover/provider/cloudflare)**: 在 Cloudflare 的全球网络上运行由无服务器 GPU 驱动的机器学习模型。
 
-<details><summary><kbd>See more providers (+31)</kbd></summary>
+<details><summary><kbd>See more providers (+32)</kbd></summary>
 
 - **[GitHub](https://lobechat.com/discover/provider/github)**: 通过 GitHub 模型，开发人员可以成为 AI 工程师，并使用行业领先的 AI 模型进行构建。
 - **[Novita](https://lobechat.com/discover/provider/novita)**: Novita AI 是一个提供多种大语言模型与 AI 图像生成的 API 服务的平台，灵活、可靠且具有成本效益。它支持 Llama3、Mistral 等最新的开源模型，并为生成式 AI 应用开发提供了全面、用户友好且自动扩展的 API 解决方案，适合 AI 初创公司的快速发展。
@@ -206,6 +206,7 @@ LobeChat 支持文件上传与知识库功能，你可以上传文件、图片�
 - **[Groq](https://lobechat.com/discover/provider/groq)**: Groq 的 LPU 推理引擎在最新的独立大语言模型（LLM）基准测试中表现卓越，以其惊人的速度和效率重新定义了 AI 解决方案的标准。Groq 是一种即时推理速度的代表，在基于云的部署中展现了良好的性能。
 - **[Perplexity](https://lobechat.com/discover/provider/perplexity)**: Perplexity 是一家领先的对话生成模型提供商，提供多种先进的 Llama 3.1 模型，支持在线和离线应用，特别适用于复杂的自然语言处理任务。
 - **[Mistral](https://lobechat.com/discover/provider/mistral)**: Mistral 提供先进的通用、专业和研究型模型，广泛应用于复杂推理、多语言任务、代码生成等领域，通过功能调用接口，用户可以集成自定义功能，实现特定应用。
+- **[ModelScope](https://lobechat.com/discover/provider/modelscope)**:
 - **[Ai21Labs](https://lobechat.com/discover/provider/ai21)**: AI21 Labs 为企业构建基础模型和人工智能系统，加速生成性人工智能在生产中的应用。
 - **[Upstage](https://lobechat.com/discover/provider/upstage)**: Upstage 专注于为各种商业需求开发 AI 模型，包括 Solar LLM 和文档 AI，旨在实现工作的人造通用智能（AGI）。通过 Chat API 创建简单的对话代理，并支持功能调用、翻译、嵌入以及特定领域应用。
 - **[xAI](https://lobechat.com/discover/provider/xai)**: xAI 是一家致力于构建人工智能以加速人类科学发现的公司。我们的使命是推动我们对宇宙的共同理解。
@@ -232,7 +233,7 @@ LobeChat 支持文件上传与知识库功能，你可以上传文件、图片�
 
 </details>
 
-> 📊 Total providers: [<kbd>**41**</kbd>](https://lobechat.com/discover/providers)
+> 📊 Total providers: [<kbd>**42**</kbd>](https://lobechat.com/discover/providers)
 
  <!-- PROVIDER LIST -->
 
