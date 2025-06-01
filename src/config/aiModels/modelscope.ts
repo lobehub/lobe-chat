@@ -28,17 +28,6 @@ const modelscopeChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     contextWindowTokens: 131_072,
-    description: 'DeepSeek-R1是DeepSeek最新的推理模型，具有强大的数学和逻辑推理能力。',
-    displayName: 'DeepSeek-R1-0528',
-    enabled: true,
-    id: 'deepseek-ai/DeepSeek-R1-0528',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 131_072,
     description: 'DeepSeek-R1是DeepSeek最新的推理模型，专注于复杂推理任务。',
     displayName: 'DeepSeek-R1',
     enabled: true,
