@@ -93,6 +93,7 @@ export const createCommonSlice: StateCreator<
               data.avatar || data.userId
                 ? merge(get().user, {
                     avatar: data.avatar,
+                    email: data.email,
                     firstName: data.firstName,
                     fullName: data.fullName,
                     id: data.userId,

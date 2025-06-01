@@ -10,8 +10,4 @@ testProvider({
   defaultBaseURL: 'https://api.x.ai/v1',
   chatDebugEnv: 'DEBUG_XAI_CHAT_COMPLETION',
   chatModel: 'grok',
-
-  test: {
-    skipAPICall: true,
-  },
 });
