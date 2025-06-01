@@ -25,8 +25,8 @@ const log = debug('lobe-search:Firecrawl');
 
 const timeRangeMapping = {
   day: 'qdr:d',
-  week: 'qdr:w',
   month: 'qdr:m',
+  week: 'qdr:w',
   year: 'qdr:y',
 };
 

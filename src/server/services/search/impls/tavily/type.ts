@@ -4,8 +4,8 @@ export interface TavilySearchParameters {
   exclude_domains?: string[];
   include_answer?: boolean | string;
   include_domains?: string[];
-  include_images?: boolean;
   include_image_descriptions?: boolean;
+  include_images?: boolean;
   include_raw_content?: boolean;
   max_results?: number;
   query: string;
@@ -21,10 +21,10 @@ interface TavilyImages {
 
 interface TavilyResults {
   content?: string;
-  url: string;
   raw_content?: string | null;
   score?: number;
   title?: string;
+  url: string;
 }
 
 export interface TavilyResponse {

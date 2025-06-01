@@ -30,6 +30,6 @@ interface FirecrawlData {
 }
 
 export interface FirecrawlResponse {
-  success?: boolean;
   data: FirecrawlData[];
+  success?: boolean;
 }

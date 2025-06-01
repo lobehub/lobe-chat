@@ -13,8 +13,8 @@ interface TavilyQueryParams {
   exclude_domains?: string[];
   include_answer?: boolean | string;
   include_domains?: string[];
-  include_images?: boolean;
   include_image_descriptions?: boolean;
+  include_images?: boolean;
   include_raw_content?: boolean;
   max_results?: number;
   query: string;
@@ -45,8 +45,8 @@ export class TavilyImpl implements SearchServiceImpl {
 
     const defaultQueryParams: TavilyQueryParams = {
       include_answer: false,
-      include_images: false,
       include_image_descriptions: true,
+      include_images: false,
       include_raw_content: false,
       max_results: 15,
       query,
