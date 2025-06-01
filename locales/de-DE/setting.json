@@ -259,9 +259,6 @@
     "enableMaxTokens": {
       "title": "Maximale Token pro Antwort aktivieren"
     },
-    "enableReasoningEffort": {
-      "title": "Aktivieren Sie die Anpassung der Schlussfolgerungsintensität"
-    },
     "frequencyPenalty": {
       "desc": "Je höher der Wert, desto vielfältiger und abwechslungsreicher die Wortwahl; je niedriger der Wert, desto einfacher und schlichter die Wortwahl",
       "title": "Wortvielfalt"
@@ -280,15 +277,6 @@
     "presencePenalty": {
       "desc": "Je höher der Wert, desto eher werden unterschiedliche Ausdrucksweisen bevorzugt, um Wiederholungen zu vermeiden; je niedriger der Wert, desto eher werden wiederholte Konzepte oder Erzählungen verwendet, was zu einer konsistenteren Ausdrucksweise führt",
       "title": "Ausdrucksvielfalt"
-    },
-    "reasoningEffort": {
-      "desc": "Je höher der Wert, desto stärker die Schlussfolgerungsfähigkeit, aber dies kann die Antwortzeit und den Tokenverbrauch erhöhen.",
-      "options": {
-        "high": "Hoch",
-        "low": "Niedrig",
-        "medium": "Mittel"
-      },
-      "title": "Schlussfolgerungsintensität"
     },
     "submit": "Modell-Einstellungen aktualisieren",
     "temperature": {

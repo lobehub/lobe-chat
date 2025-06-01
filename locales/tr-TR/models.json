@@ -341,9 +341,6 @@
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct, kod üretimi, kod anlama ve verimli geliştirme senaryoları için tasarlanmış büyük bir dil modelidir. Sektördeki en ileri 32B parametre ölçeğini kullanarak çeşitli programlama ihtiyaçlarını karşılayabilir."
   },
-  "SenseCat-5-1202": {
-    "description": "V5.5 tabanlı en son sürüm olup, önceki sürüme göre Çince ve İngilizce temel yetenekler, sohbet, fen bilgisi, sosyal bilimler, yazma, matematiksel mantık, kelime sayısı kontrolü gibi birkaç boyutta önemli iyileştirmeler göstermektedir."
-  },
   "SenseChat": {
     "description": "Temel sürüm model (V4), 4K bağlam uzunluğu ile genel yetenekleri güçlüdür."
   },
@@ -355,6 +352,9 @@
   },
   "SenseChat-5": {
     "description": "En son sürüm model (V5.5), 128K bağlam uzunluğu, matematiksel akıl yürütme, İngilizce diyalog, talimat takibi ve uzun metin anlama gibi alanlarda önemli gelişmeler göstermektedir ve GPT-4o ile karşılaştırılabilir."
+  },
+  "SenseChat-5-1202": {
+    "description": "V5.5 tabanlı en son sürüm olup, önceki sürüme kıyasla Çince ve İngilizce temel yetenekler, sohbet, fen bilimleri bilgisi, sosyal bilimler bilgisi, yazım, matematiksel mantık ve kelime sayısı kontrolü gibi birçok alanda belirgin gelişmeler sunar."
   },
   "SenseChat-5-Cantonese": {
     "description": "32K bağlam uzunluğu ile, Kantonca diyalog anlama konusunda GPT-4'ü aşmakta, bilgi, akıl yürütme, matematik ve kod yazma gibi birçok alanda GPT-4 Turbo ile rekabet edebilmektedir."
@@ -515,6 +515,12 @@
   "ai21-jamba-1.5-mini": {
     "description": "52B parametreli (12B aktif) çok dilli bir model, 256K uzun bağlam penceresi, fonksiyon çağrısı, yapılandırılmış çıktı ve temellendirilmiş üretim sunar."
   },
+  "ai21-labs/AI21-Jamba-1.5-Large": {
+    "description": "398 milyar parametreli (94 milyar aktif) çok dilli model, 256K uzun bağlam penceresi, fonksiyon çağrısı, yapılandırılmış çıktı ve gerçeklere dayalı üretim sunar."
+  },
+  "ai21-labs/AI21-Jamba-1.5-Mini": {
+    "description": "52 milyar parametreli (12 milyar aktif) çok dilli model, 256K uzun bağlam penceresi, fonksiyon çağrısı, yapılandırılmış çıktı ve gerçeklere dayalı üretim sunar."
+  },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet, endüstri standartlarını yükselterek, rakip modelleri ve Claude 3 Opus'u geride bırakarak geniş bir değerlendirmede mükemmel performans sergilerken, orta seviye modellerimizin hızı ve maliyeti ile birlikte gelir."
   },
@@ -667,6 +673,12 @@
   },
   "cohere-command-r-plus": {
     "description": "Command R+, kurumsal düzeyde iş yüklerini ele almak için tasarlanmış en son RAG optimize edilmiş bir modeldir."
+  },
+  "cohere/Cohere-command-r": {
+    "description": "Command R, RAG ve araç kullanımı için ölçeklenebilir bir üretim modeli olup, işletmelerin üretim seviyesinde yapay zeka uygulamalarını gerçekleştirmesine olanak tanır."
+  },
+  "cohere/Cohere-command-r-plus": {
+    "description": "Command R+, işletme düzeyindeki iş yükleri için tasarlanmış, en gelişmiş RAG optimize modelidir."
   },
   "command": {
     "description": "Dil görevlerinde yüksek kalite ve güvenilirlik sunan, talimatları izleyen bir diyalog modelidir ve temel üretim modelimize göre daha uzun bir bağlam uzunluğuna sahiptir."
@@ -1028,6 +1040,12 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Önizleme, Google'ın en iyi fiyat-performans oranına sahip modelidir ve kapsamlı özellikler sunar."
   },
+  "gemini-2.5-flash-preview-04-17-thinking": {
+    "description": "Gemini 2.5 Flash Önizleme, Google'ın en yüksek maliyet-performans modelidir ve kapsamlı özellikler sunar."
+  },
+  "gemini-2.5-flash-preview-05-20": {
+    "description": "Gemini 2.5 Flash Önizleme, Google'ın en yüksek maliyet-performans modelidir ve kapsamlı özellikler sunar."
+  },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Deneysel, Google'ın en gelişmiş düşünce modeli olup, kod, matematik ve STEM alanlarındaki karmaşık sorunları akıl yürütebilmektedir. Ayrıca, uzun bağlamları kullanarak büyük veri setlerini, kod havuzlarını ve belgeleri analiz edebilir."
   },
@@ -1262,23 +1280,17 @@
   "grok-2-vision-1212": {
     "description": "Bu model, doğruluk, talimat takibi ve çok dilli yetenekler açısından geliştirilmiştir."
   },
-  "grok-3-beta": {
-    "description": "Amiral gemisi model, veri çıkarımı, programlama ve metin özeti gibi kurumsal uygulamalarda uzmandır ve finans, sağlık, hukuk ve bilim gibi alanlarda derin bir bilgiye sahiptir."
+  "grok-3": {
+    "description": "Amiral gemisi model olup, veri çıkarımı, programlama ve metin özetleme gibi kurumsal uygulamalarda uzmandır; finans, sağlık, hukuk ve bilim alanlarında derin bilgiye sahiptir."
   },
-  "grok-3-fast-beta": {
-    "description": "Amiral gemisi model, veri çıkarımı, programlama ve metin özeti gibi kurumsal uygulamalarda uzmandır ve finans, sağlık, hukuk ve bilim gibi alanlarda derin bir bilgiye sahiptir."
+  "grok-3-fast": {
+    "description": "Amiral gemisi model olup, veri çıkarımı, programlama ve metin özetleme gibi kurumsal uygulamalarda uzmandır; finans, sağlık, hukuk ve bilim alanlarında derin bilgiye sahiptir."
   },
-  "grok-3-mini-beta": {
-    "description": "Hafif model, konuşmadan önce düşünür. Hızlı ve akıllı çalışır, derin alan bilgisi gerektirmeyen mantıksal görevler için uygundur ve ham düşünce izlerini elde edebilir."
+  "grok-3-mini": {
+    "description": "Hafif model olup, konuşma öncesi düşünür. Hızlı ve akıllı çalışır, derin alan bilgisi gerektirmeyen mantıksal görevler için uygundur ve orijinal düşünce izlerini elde edebilir."
   },
-  "grok-3-mini-fast-beta": {
-    "description": "Hafif model, konuşmadan önce düşünür. Hızlı ve akıllı çalışır, derin alan bilgisi gerektirmeyen mantıksal görevler için uygundur ve ham düşünce izlerini elde edebilir."
-  },
-  "grok-beta": {
-    "description": "Grok 2 ile karşılaştırılabilir performansa sahip, ancak daha yüksek verimlilik, hız ve işlevsellik sunar."
-  },
-  "grok-vision-beta": {
-    "description": "En son görüntü anlama modeli, belgeler, grafikler, ekran görüntüleri ve fotoğraflar gibi çeşitli görsel bilgileri işleyebilir."
+  "grok-3-mini-fast": {
+    "description": "Hafif model olup, konuşma öncesi düşünür. Hızlı ve akıllı çalışır, derin alan bilgisi gerektirmeyen mantıksal görevler için uygundur ve orijinal düşünce izlerini elde edebilir."
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B, birden fazla üst düzey modelin birleşimiyle yaratıcı ve zeka odaklı bir dil modelidir."
@@ -1321,6 +1333,9 @@
   },
   "hunyuan-t1-latest": {
     "description": "Sektördeki ilk ultra büyük ölçekli Hybrid-Transformer-Mamba çıkarım modeli, çıkarım yeteneklerini genişletir, yüksek çözümleme hızı sunar ve insan tercihleri ile daha iyi hizalanır."
+  },
+  "hunyuan-t1-vision": {
+    "description": "Hunyuan çok modlu anlayış derin düşünme modeli, çok modlu doğal uzun düşünce zincirini destekler, çeşitli görsel çıkarım senaryolarında uzmandır ve fen bilimleri problemlerinde hızlı düşünme modellerine kıyasla kapsamlı iyileşme sağlar."
   },
   "hunyuan-translation": {
     "description": "Çince ve İngilizce, Japonca, Fransızca, Portekizce, İspanyolca, Türkçe, Rusça, Arapça, Korece, İtalyanca, Almanca, Vietnamca, Malayca, Endonezyaca dahil olmak üzere 15 dil arasında çeviri desteği sunar. Çoklu senaryo çeviri değerlendirme setine dayalı otomatik değerlendirme COMET puanı ile, ondan fazla yaygın dildeki çeviri yetenekleri, pazarın aynı ölçekli modellerine göre genel olarak daha üstündür."
@@ -1586,6 +1601,30 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3, geliştiriciler, araştırmacılar ve işletmeler için açık bir büyük dil modelidir (LLM) ve onların üretken AI fikirlerini inşa etmelerine, denemelerine ve sorumlu bir şekilde genişletmelerine yardımcı olmak için tasarlanmıştır. Küresel topluluk yeniliğinin temel sistemlerinden biri olarak, sınırlı hesaplama gücü ve kaynaklara sahip, kenar cihazları ve daha hızlı eğitim süreleri için son derece uygundur."
   },
+  "meta/Llama-3.2-11B-Vision-Instruct": {
+    "description": "Yüksek çözünürlüklü görüntülerde üstün görsel çıkarım yeteneği sunar, görsel anlama uygulamaları için idealdir."
+  },
+  "meta/Llama-3.2-90B-Vision-Instruct": {
+    "description": "Görsel anlama ajan uygulamaları için gelişmiş görüntü çıkarım yetenekleri sağlar."
+  },
+  "meta/Llama-3.3-70B-Instruct": {
+    "description": "Llama 3.3, Llama serisinin en gelişmiş çok dilli açık kaynak büyük dil modeli olup, 405 milyar parametreli modellere kıyasla çok düşük maliyetle yüksek performans sunar. Transformer mimarisi temel alınmış, denetimli ince ayar (SFT) ve insan geri bildirimi ile güçlendirilmiş pekiştirmeli öğrenme (RLHF) ile faydalılık ve güvenlik artırılmıştır. Çok dilli diyaloglar için optimize edilmiş talimat ayarlı versiyonu, birçok endüstri kıyaslamasında açık ve kapalı sohbet modellerinden üstün performans gösterir. Bilgi kesim tarihi 2023 Aralık'tır."
+  },
+  "meta/Meta-Llama-3-70B-Instruct": {
+    "description": "Çıkarım, kodlama ve geniş dil uygulamalarında üstün performans gösteren güçlü 70 milyar parametreli model."
+  },
+  "meta/Meta-Llama-3-8B-Instruct": {
+    "description": "Diyalog ve metin üretimi görevleri için optimize edilmiş çok yönlü 8 milyar parametreli model."
+  },
+  "meta/Meta-Llama-3.1-405B-Instruct": {
+    "description": "Llama 3.1 talimat ayarlı metin modeli, çok dilli diyalog senaryoları için optimize edilmiştir ve birçok açık ve kapalı sohbet modeli arasında yaygın endüstri kıyaslamalarında üstün performans sergiler."
+  },
+  "meta/Meta-Llama-3.1-70B-Instruct": {
+    "description": "Llama 3.1 talimat ayarlı metin modeli, çok dilli diyalog senaryoları için optimize edilmiştir ve birçok açık ve kapalı sohbet modeli arasında yaygın endüstri kıyaslamalarında üstün performans sergiler."
+  },
+  "meta/Meta-Llama-3.1-8B-Instruct": {
+    "description": "Llama 3.1 talimat ayarlı metin modeli, çok dilli diyalog senaryoları için optimize edilmiştir ve birçok açık ve kapalı sohbet modeli arasında yaygın endüstri kıyaslamalarında üstün performans sergiler."
+  },
   "meta/llama-3.1-405b-instruct": {
     "description": "Gelişmiş LLM, sentetik veri üretimi, bilgi damıtma ve akıl yürütmeyi destekler, sohbet botları, programlama ve belirli alan görevleri için uygundur."
   },
@@ -1610,6 +1649,30 @@
   "meta/llama-3.3-70b-instruct": {
     "description": "Akıllı LLM, akıl yürütme, matematik, genel bilgi ve fonksiyon çağrılarında uzmandır."
   },
+  "microsoft/Phi-3-medium-128k-instruct": {
+    "description": "Aynı Phi-3-medium modeli, ancak daha büyük bağlam boyutuna sahip olup RAG veya az sayıda istem için uygundur."
+  },
+  "microsoft/Phi-3-medium-4k-instruct": {
+    "description": "140 milyar parametreli model, Phi-3-mini'den daha yüksek kaliteye sahip olup, yüksek kaliteli ve çıkarım yoğun veriye odaklanır."
+  },
+  "microsoft/Phi-3-mini-128k-instruct": {
+    "description": "Aynı Phi-3-mini modeli, ancak daha büyük bağlam boyutuna sahip olup RAG veya az sayıda istem için uygundur."
+  },
+  "microsoft/Phi-3-mini-4k-instruct": {
+    "description": "Phi-3 ailesinin en küçük üyesi olup, kalite ve düşük gecikme için optimize edilmiştir."
+  },
+  "microsoft/Phi-3-small-128k-instruct": {
+    "description": "Aynı Phi-3-small modeli, ancak daha büyük bağlam boyutuna sahip olup RAG veya az sayıda istem için uygundur."
+  },
+  "microsoft/Phi-3-small-8k-instruct": {
+    "description": "70 milyar parametreli model, Phi-3-mini'den daha yüksek kaliteye sahip olup, yüksek kaliteli ve çıkarım yoğun veriye odaklanır."
+  },
+  "microsoft/Phi-3.5-mini-instruct": {
+    "description": "Phi-3-mini modelinin güncellenmiş versiyonu."
+  },
+  "microsoft/Phi-3.5-vision-instruct": {
+    "description": "Phi-3-vision modelinin güncellenmiş versiyonu."
+  },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2, Microsoft AI tarafından sağlanan bir dil modelidir ve karmaşık diyaloglar, çok dilli destek, akıl yürütme ve akıllı asistan alanlarında özellikle başarılıdır."
   },
@@ -1627,6 +1690,15 @@
   },
   "mistral": {
     "description": "Mistral, Mistral AI tarafından sunulan 7B modelidir, değişken dil işleme ihtiyaçları için uygundur."
+  },
+  "mistral-ai/Mistral-Large-2411": {
+    "description": "Mistral'in amiral gemisi modeli olup, büyük ölçekli çıkarım yetenekleri veya yüksek derecede uzmanlaşmış karmaşık görevler (metin sentezi, kod üretimi, RAG veya ajanlar) için uygundur."
+  },
+  "mistral-ai/Mistral-Nemo": {
+    "description": "Mistral Nemo, boyut kategorisinde en gelişmiş çıkarım, dünya bilgisi ve kodlama yeteneklerine sahip ileri düzey bir dil modelidir (LLM)."
+  },
+  "mistral-ai/mistral-small-2503": {
+    "description": "Mistral Small, yüksek verimlilik ve düşük gecikme gerektiren dil tabanlı görevler için uygundur."
   },
   "mistral-large": {
     "description": "Mixtral Large, Mistral'ın amiral gemisi modelidir, kod üretimi, matematik ve akıl yürütme yeteneklerini birleştirir, 128k bağlam penceresini destekler."
@@ -1768,6 +1840,9 @@
   },
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini, OpenAI'nin GPT-4 Omni'den sonra sunduğu en son modeldir; görsel ve metin girişi destekler ve metin çıktısı verir. En gelişmiş küçük model olarak, diğer son zamanlardaki öncü modellere göre çok daha ucuzdur ve GPT-3.5 Turbo'dan %60'tan fazla daha ucuzdur. En son teknolojiyi korurken, önemli bir maliyet etkinliği sunar. GPT-4o mini, MMLU testinde %82 puan almış olup, şu anda sohbet tercihleri açısından GPT-4'ün üzerinde bir sıralamaya sahiptir."
+  },
+  "openai/o1": {
+    "description": "o1, OpenAI'nin yeni çıkarım modeli olup, metin ve görsel girişleri destekler ve metin çıktısı üretir; geniş kapsamlı genel bilgi gerektiren karmaşık görevler için uygundur. Model, 200K bağlam uzunluğuna ve 2023 Ekim bilgi kesim tarihine sahiptir."
   },
   "openai/o1-mini": {
     "description": "o1-mini, programlama, matematik ve bilim uygulama senaryoları için tasarlanmış hızlı ve ekonomik bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."

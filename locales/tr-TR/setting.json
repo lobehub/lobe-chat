@@ -259,9 +259,6 @@
     "enableMaxTokens": {
       "title": "Max Token Sınırlamasını Etkinleştir"
     },
-    "enableReasoningEffort": {
-      "title": "Akıl yürütme yoğunluğunu ayarla"
-    },
     "frequencyPenalty": {
       "desc": "Değer ne kadar büyükse, kelime dağarcığı o kadar zengin ve çeşitli olur; değer ne kadar düşükse, kelimeler o kadar sade ve basit olur.",
       "title": "Kelime Zenginliği"
@@ -280,15 +277,6 @@
     "presencePenalty": {
       "desc": "Değer ne kadar büyükse, farklı ifade biçimlerine yönelme eğilimi artar, kavram tekrarından kaçınılır; değer ne kadar küçükse, tekrar eden kavramlar veya anlatımlar kullanma eğilimi artar, ifade daha tutarlı olur.",
       "title": "İfade Çeşitliliği"
-    },
-    "reasoningEffort": {
-      "desc": "Değer ne kadar yüksekse, akıl yürütme yeteneği o kadar güçlüdür, ancak yanıt süresi ve Token tüketimini artırabilir",
-      "options": {
-        "high": "Yüksek",
-        "low": "Düşük",
-        "medium": "Orta"
-      },
-      "title": "Akıl yürütme yoğunluğu"
     },
     "submit": "Model ayarlarını güncelle",
     "temperature": {
