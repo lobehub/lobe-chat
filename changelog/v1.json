@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Enable deploymentName for Aliyun Bailian."]
+    },
+    "date": "2025-06-01",
+    "version": "1.90.3"
+  },
+  {
+    "children": {
       "improvements": ["Support web_search tool for MiniMax & Zhipu."]
     },
     "date": "2025-06-01",
