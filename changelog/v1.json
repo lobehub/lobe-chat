@@ -1,6 +1,32 @@
 [
   {
     "children": {
+      "fixes": [
+        "Disable LaTeX and Mermaid rendering in SystemRoleContent to prevent lag caused by massive rendering tasks when switching topics, fix DeepSeek new R1 Search error."
+      ],
+      "improvements": [
+        "Use default deployment name when parseModelString doesn't contain deployment name."
+      ]
+    },
+    "date": "2025-06-01",
+    "version": "1.90.1"
+  },
+  {
+    "children": {
+      "features": ["Support protect page."]
+    },
+    "date": "2025-06-01",
+    "version": "1.90.0"
+  },
+  {
+    "children": {
+      "features": ["Support ModelScope Provider."]
+    },
+    "date": "2025-06-01",
+    "version": "1.89.0"
+  },
+  {
+    "children": {
       "improvements": ["+ in the welcome message can be clicked to create an assistant."]
     },
     "date": "2025-05-31",
