@@ -34,8 +34,8 @@ export const exa: CrawlImpl = async (url) => {
           urls: [url],
         }),
         headers: {
-          'x-api-key': !apiKey ? '' : apiKey,
           'Content-Type': 'application/json',
+          'x-api-key': !apiKey ? '' : apiKey,
         },
         method: 'POST',
       }),

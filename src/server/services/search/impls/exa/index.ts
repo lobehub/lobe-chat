@@ -58,8 +58,8 @@ export class ExaImpl implements SearchServiceImpl {
       response = await fetch(endpoint, {
         body: JSON.stringify(body),
         headers: {
-          'x-api-key': this.apiKey ? this.apiKey : '',
           'Content-Type': 'application/json',
+          'x-api-key': this.apiKey ? this.apiKey : '',
         },
         method: 'POST',
       });
