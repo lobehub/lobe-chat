@@ -16,10 +16,12 @@ const aihubmixModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
-    description: 'Claude Opus 4 最新版本，具有卓越的推理和创作能力',
+    description:
+      'Claude Opus 4 是 Anthropic 迄今为止最强大的模型，专为处理复杂、长时间运行的任务而设计。',
     displayName: 'Claude Opus 4',
     enabled: true,
     id: 'claude-opus-4-20250514',
@@ -32,7 +34,8 @@ const aihubmixModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 200_000,
-    description: 'Claude Sonnet 4 最新版本，平衡性能与效率',
+    description:
+      'Claude Sonnet 4 是一款高效且性价比高的模型，作为 Claude Sonnet 3.7 的升级版，适合日常任务和中等复杂度的应用。',
     displayName: 'Claude Sonnet 4',
     enabled: true,
     id: 'claude-sonnet-4-20250514',
