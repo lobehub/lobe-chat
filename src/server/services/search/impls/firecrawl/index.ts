@@ -5,21 +5,7 @@ import urlJoin from 'url-join';
 import { SearchParams, UniformSearchResponse, UniformSearchResult } from '@/types/tool/search';
 
 import { SearchServiceImpl } from '../type';
-import { FirecrawlResponse } from './type';
-
-interface FirecrawlScrapeOptions {
-  formats: string[];
-}
-
-interface FirecrawlQueryParams {
-  country?: string;
-  lang?: string;
-  limit?: number;
-  query: string;
-  scrapeOptions?: FirecrawlScrapeOptions;
-  tbs?: string;
-  timeout?: number;
-}
+import { FirecrawlSearchParameters, FirecrawlResponse } from './type';
 
 const log = debug('lobe-search:Firecrawl');
 
@@ -48,7 +34,7 @@ export class FirecrawlImpl implements SearchServiceImpl {
     log('Starting Firecrawl query with query: "%s", params: %o', query, params);
     const endpoint = urlJoin(this.baseUrl, '/search');
 
-    const defaultQueryParams: FirecrawlQueryParams = {
+    const defaultQueryParams: FirecrawlSearchParameters = {
       limit: 15,
       query,
       /*
@@ -58,7 +44,7 @@ export class FirecrawlImpl implements SearchServiceImpl {
       */
     };
 
-    let body: FirecrawlQueryParams = {
+    let body: FirecrawlSearchParameters = {
       ...defaultQueryParams,
       tbs:
         params?.searchTimeRange && params.searchTimeRange !== 'anytime'

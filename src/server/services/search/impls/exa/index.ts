@@ -5,22 +5,7 @@ import urlJoin from 'url-join';
 import { SearchParams, UniformSearchResponse, UniformSearchResult } from '@/types/tool/search';
 
 import { SearchServiceImpl } from '../type';
-import { ExaResponse } from './type';
-
-interface ExaQueryParams {
-  category?: string;
-  endCrawlDate?: string;
-  endPublishedDate?: string;
-  excludeDomains?: string[];
-  excludeText?: string[];
-  includeDomains?: string[];
-  includeText?: string[];
-  numResults?: number;
-  query: string;
-  startCrawlDate?: string;
-  startPublishedDate?: string;
-  type?: string;
-}
+import { ExaSearchParameters, ExaResponse } from './type';
 
 const log = debug('lobe-search:Exa');
 
@@ -42,10 +27,30 @@ export class ExaImpl implements SearchServiceImpl {
     log('Starting Exa query with query: "%s", params: %o', query, params);
     const endpoint = urlJoin(this.baseUrl, '/search');
 
-    let body: ExaQueryParams = {
+    const defaultQueryParams: ExaSearchParameters = {
       numResults: 15,
       query,
       type: 'auto',
+    };
+
+    let body: ExaSearchParameters = {
+      ...defaultQueryParams,
+      ...(params?.searchTimeRange && params.searchTimeRange !== 'anytime'
+        ? (() => {
+            const now = Date.now();
+            const days = { day: 1, month: 30, week: 7, year: 365 }[params.searchTimeRange!];
+
+            if (days === undefined) return {};
+
+            return {
+              endPublishedDate: new Date(now).toISOString(),
+              startPublishedDate: new Date(now - days * 86_400 * 1000).toISOString(),
+            };
+          })()
+        : {}),
+      category:
+        // Exa 只支持 news 类型
+        params?.searchCategories?.filter(cat => ['news'].includes(cat))?.[0],
     };
 
     log('Constructed request body: %o', body);
@@ -94,7 +99,7 @@ export class ExaImpl implements SearchServiceImpl {
 
       const mappedResults = (exaResponse.results || []).map(
         (result): UniformSearchResult => ({
-          category: 'general', // Default category
+          category: body.category || 'general', // Default category
           content: result.text || '', // Prioritize content, fallback to snippet
           engines: ['exa'], // Use 'exa' as the engine name
           parsedUrl: result.url ? new URL(result.url).hostname : '', // Basic URL parsing

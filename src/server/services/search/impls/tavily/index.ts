@@ -5,23 +5,7 @@ import urlJoin from 'url-join';
 import { SearchParams, UniformSearchResponse, UniformSearchResult } from '@/types/tool/search';
 
 import { SearchServiceImpl } from '../type';
-import { TavilyResponse } from './type';
-
-interface TavilyQueryParams {
-  chunks_per_source?: number;
-  days?: number;
-  exclude_domains?: string[];
-  include_answer?: boolean | string;
-  include_domains?: string[];
-  include_image_descriptions?: boolean;
-  include_images?: boolean;
-  include_raw_content?: boolean;
-  max_results?: number;
-  query: string;
-  search_depth?: string;
-  time_range?: string;
-  topic?: string;
-}
+import { TavilySearchParameters, TavilyResponse } from './type';
 
 const log = debug('lobe-search:Tavily');
 
@@ -43,7 +27,7 @@ export class TavilyImpl implements SearchServiceImpl {
     log('Starting Tavily query with query: "%s", params: %o', query, params);
     const endpoint = urlJoin(this.baseUrl, '/search');
 
-    const defaultQueryParams: TavilyQueryParams = {
+    const defaultQueryParams: TavilySearchParameters = {
       include_answer: false,
       include_image_descriptions: true,
       include_images: false,
@@ -53,7 +37,7 @@ export class TavilyImpl implements SearchServiceImpl {
       search_depth: process.env.TAVILY_SEARCH_DEPTH || 'basic' // basic or advanced
     };
 
-    let body: TavilyQueryParams = {
+    let body: TavilySearchParameters = {
       ...defaultQueryParams,
       time_range:
         params?.searchTimeRange && params.searchTimeRange !== 'anytime'

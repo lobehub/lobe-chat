@@ -5,11 +5,7 @@ import urlJoin from 'url-join';
 import { SearchParams, UniformSearchResponse, UniformSearchResult } from '@/types/tool/search';
 
 import { SearchServiceImpl } from '../type';
-import { JinaResponse } from './type';
-
-interface JinaQueryParams {
-  q: string;
-}
+import { JinaSearchParameters, JinaResponse } from './type';
 
 const log = debug('lobe-search:Jina');
 
@@ -31,7 +27,7 @@ export class JinaImpl implements SearchServiceImpl {
     log('Starting Jina query with query: "%s", params: %o', query, params);
     const endpoint = urlJoin(this.baseUrl, '/');
 
-    let body: JinaQueryParams = {
+    let body: JinaSearchParameters = {
       q: query,
     };
 

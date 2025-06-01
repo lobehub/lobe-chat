@@ -5,16 +5,7 @@ import urlJoin from 'url-join';
 import { SearchParams, UniformSearchResponse, UniformSearchResult } from '@/types/tool/search';
 
 import { SearchServiceImpl } from '../type';
-import { BochaResponse } from './type';
-
-interface BochaQueryParams {
-  count?: number;
-  exclude?: string;
-  freshness?: string;
-  include?: string;
-  query: string;
-  summary?: boolean;
-}
+import { BochaSearchParameters, BochaResponse } from './type';
 
 const log = debug('lobe-search:Bocha');
 
@@ -43,13 +34,13 @@ export class BochaImpl implements SearchServiceImpl {
     log('Starting Bocha query with query: "%s", params: %o', query, params);
     const endpoint = urlJoin(this.baseUrl, '/web-search');
 
-    const defaultQueryParams: BochaQueryParams = {
+    const defaultQueryParams: BochaSearchParameters = {
       count: 15,
       query,
       summary: true,
     };
 
-    let body: BochaQueryParams = {
+    let body: BochaSearchParameters = {
       ...defaultQueryParams,
       freshness:
         params?.searchTimeRange && params.searchTimeRange !== 'anytime'
