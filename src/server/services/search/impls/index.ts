@@ -1,4 +1,4 @@
-import { BoChaAIImpl } from './bochaai';
+import { BochaImpl } from './bocha';
 import { ExaImpl } from './exa';
 import { FirecrawlImpl } from './firecrawl';
 import { JinaImpl } from './jina';
@@ -12,7 +12,7 @@ import { SearchServiceImpl } from './type';
  * Available search service implementations
  */
 export enum SearchImplType {
-  BoChaAI = 'bochaai',
+  Bocha = 'bocha',
   Exa = 'exa',
   Firecrawl = 'firecrawl',
   Jina = 'jina',
@@ -28,8 +28,8 @@ export const createSearchServiceImpl = (
   type: SearchImplType = SearchImplType.SearXNG,
 ): SearchServiceImpl => {
   switch (type) {
-    case SearchImplType.BoChaAI: {
-      return new BoChaAIImpl();
+    case SearchImplType.Bocha: {
+      return new BochaImpl();
     }
 
     case SearchImplType.Exa: {

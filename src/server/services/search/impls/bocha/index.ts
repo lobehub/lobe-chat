@@ -5,9 +5,9 @@ import urlJoin from 'url-join';
 import { SearchParams, UniformSearchResponse, UniformSearchResult } from '@/types/tool/search';
 
 import { SearchServiceImpl } from '../type';
-import { BoChaAIResponse } from './type';
+import { BochaResponse } from './type';
 
-interface BoChaAIQueryParams {
+interface BochaQueryParams {
   count?: number;
   exclude?: string;
   freshness?: string;
@@ -16,7 +16,7 @@ interface BoChaAIQueryParams {
   summery?: boolean;
 }
 
-const log = debug('lobe-search:BoChaAI');
+const log = debug('lobe-search:Bocha');
 
 const timeRangeMapping = {
   day: 'oneDay',
@@ -26,12 +26,12 @@ const timeRangeMapping = {
 };
 
 /**
- * BoChaAI implementation of the search service
+ * Bocha implementation of the search service
  * Primarily used for web crawling
  */
-export class BoChaAIImpl implements SearchServiceImpl {
+export class BochaImpl implements SearchServiceImpl {
   private get apiKey(): string | undefined {
-    return process.env.BOCHAAI_API_KEY;
+    return process.env.BOCHA_API_KEY;
   }
 
   private get baseUrl(): string {
@@ -40,15 +40,15 @@ export class BoChaAIImpl implements SearchServiceImpl {
   }
 
   async query(query: string, params: SearchParams = {}): Promise<UniformSearchResponse> {
-    log('Starting BoChaAI query with query: "%s", params: %o', query, params);
+    log('Starting Bocha query with query: "%s", params: %o', query, params);
     const endpoint = urlJoin(this.baseUrl, '/web-search');
 
-    const defaultQueryParams: BoChaAIQueryParams = {
+    const defaultQueryParams: BochaQueryParams = {
       count: 15,
       query,
     };
 
-    let body: BoChaAIQueryParams = {
+    let body: BochaQueryParams = {
       ...defaultQueryParams,
       freshness:
         params?.searchTimeRange && params.searchTimeRange !== 'anytime'
@@ -74,37 +74,37 @@ export class BoChaAIImpl implements SearchServiceImpl {
       log('Received response with status: %d', response.status);
       costTime = Date.now() - startAt;
     } catch (error) {
-      log.extend('error')('BoChaAI fetch error: %o', error);
+      log.extend('error')('Bocha fetch error: %o', error);
       throw new TRPCError({
         cause: error,
         code: 'SERVICE_UNAVAILABLE',
-        message: 'Failed to connect to BoChaAI.',
+        message: 'Failed to connect to Bocha.',
       });
     }
 
     if (!response.ok) {
       const errorBody = await response.text();
       log.extend('error')(
-        `BoChaAI request failed with status ${response.status}: %s`,
+        `Bocha request failed with status ${response.status}: %s`,
         errorBody.length > 200 ? `${errorBody.slice(0, 200)}...` : errorBody,
       );
       throw new TRPCError({
         cause: errorBody,
         code: 'SERVICE_UNAVAILABLE',
-        message: `BoChaAI request failed: ${response.statusText}`,
+        message: `Bocha request failed: ${response.statusText}`,
       });
     }
 
     try {
-      const bochaaiResponse = (await response.json()) as BoChaAIResponse;
+      const bochaResponse = (await response.json()) as BochaResponse;
 
-      log('Parsed BoChaAI response: %o', bochaaiResponse);
+      log('Parsed Bocha response: %o', bochaResponse);
 
-      const mappedResults = (bochaaiResponse.data.webPages.value || []).map(
+      const mappedResults = (bochaResponse.data.webPages.value || []).map(
         (result): UniformSearchResult => ({
           category: 'general', // Default category
           content: result.snippet || '', // Prioritize content, fallback to snippet
-          engines: ['bochaai'], // Use 'bochaai' as the engine name
+          engines: ['bocha'], // Use 'bocha' as the engine name
           parsedUrl: result.url ? new URL(result.url).hostname : '', // Basic URL parsing
           score: 1, // Default score to 1
           title: result.name || '',
@@ -121,11 +121,11 @@ export class BoChaAIImpl implements SearchServiceImpl {
         results: mappedResults,
       };
     } catch (error) {
-      log.extend('error')('Error parsing BoChaAI response: %o', error);
+      log.extend('error')('Error parsing Bocha response: %o', error);
       throw new TRPCError({
         cause: error,
         code: 'INTERNAL_SERVER_ERROR',
-        message: 'Failed to parse BoChaAI response.',
+        message: 'Failed to parse Bocha response.',
       });
     }
   }
