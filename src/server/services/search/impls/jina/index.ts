@@ -45,8 +45,8 @@ export class JinaImpl implements SearchServiceImpl {
       response = await fetch(endpoint, {
         body: JSON.stringify(body),
         headers: {
-          'Authorization': this.apiKey ? `Bearer ${this.apiKey}` : '',
           'Accept': 'application/json',
+          'Authorization': this.apiKey ? `Bearer ${this.apiKey}` : '',
           'Content-Type': 'application/json',
           'X-Respond-With': 'no-content',
         },

@@ -11,8 +11,8 @@ interface JinaMeta {
 }
 
 interface JinaData {
-  description?: string;
   content?: string;
+  description?: string;
   title: string;
   url: string;
   usage?: JinaUsage;
