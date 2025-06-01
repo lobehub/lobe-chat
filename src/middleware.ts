@@ -193,7 +193,7 @@ const nextAuthMiddleware = NextAuthEdge.auth((req) => {
     if (isProtected) {
       logNextAuth('Request a protected route, redirecting to sign-in page');
       const nextLoginUrl = new URL('/next-auth/signin', req.nextUrl.origin);
-      nextLoginUrl.searchParams.set('callbackUrl', req.nextUrl.pathname);
+      nextLoginUrl.searchParams.set('callbackUrl', req.nextUrl.href);
       return Response.redirect(nextLoginUrl);
     }
     logNextAuth('Request a free route but not login, allow visit without auth header');
