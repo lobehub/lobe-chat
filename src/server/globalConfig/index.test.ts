@@ -9,7 +9,7 @@ import { getServerDefaultAgentConfig, getServerDefaultFilesConfig } from './inde
 import { parseAgentConfig } from './parseDefaultAgent';
 import { parseFilesConfig } from './parseFilesConfig';
 
-vi.mock('@/config/app', () => ({
+vi.mock('@/envs/app', () => ({
   getAppConfig: vi.fn(),
 }));
 
