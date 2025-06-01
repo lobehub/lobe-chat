@@ -2,6 +2,56 @@
 
 # Changelog
 
+## [Version 1.90.0](https://github.com/lobehub/lobe-chat/compare/v1.89.0...v1.90.0)
+
+<sup>Released on **2025-06-01**</sup>
+
+#### ✨ Features
+
+- **misc**: Support protect page.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support protect page, closes [#8024](https://github.com/lobehub/lobe-chat/issues/8024) ([d61a9f5](https://github.com/lobehub/lobe-chat/commit/d61a9f5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.89.0](https://github.com/lobehub/lobe-chat/compare/v1.88.23...v1.89.0)
+
+<sup>Released on **2025-06-01**</sup>
+
+#### ✨ Features
+
+- **misc**: Support ModelScope Provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support ModelScope Provider, closes [#8026](https://github.com/lobehub/lobe-chat/issues/8026) ([7b91dfd](https://github.com/lobehub/lobe-chat/commit/7b91dfd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.88.23](https://github.com/lobehub/lobe-chat/compare/v1.88.22...v1.88.23)
 
 <sup>Released on **2025-05-31**</sup>
