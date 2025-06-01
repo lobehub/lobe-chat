@@ -15,13 +15,18 @@ export const MODEL_LIST_CONFIGS = {
     visionKeywords: ['claude'],
   },
   deepseek: {
-    functionCallKeywords: ['v3'],
+    functionCallKeywords: ['v3', 'r1'],
     reasoningKeywords: ['r1'],
   },
   google: {
     functionCallKeywords: ['gemini'],
     reasoningKeywords: ['thinking', '-2.5-'],
     visionKeywords: ['gemini', 'learnlm'],
+  },
+  llama: {
+    functionCallKeywords: ['llama-3.2', 'llama-3.3', 'llama-4'],
+    reasoningKeywords: [],
+    visionKeywords: [],
   },
   openai: {
     excludeKeywords: ['audio'],
@@ -32,7 +37,7 @@ export const MODEL_LIST_CONFIGS = {
   qwen: {
     functionCallKeywords: [
       'qwen-max',
-      'qwen-plus', 
+      'qwen-plus',
       'qwen-turbo',
       'qwen-long',
       'qwen1.5',
@@ -53,7 +58,7 @@ export const MODEL_LIST_CONFIGS = {
     visionKeywords: ['vision'],
   },
   zhipu: {
-    functionCallKeywords: ['glm-4'],
+    functionCallKeywords: ['glm-4', 'glm-z1'],
     reasoningKeywords: ['glm-zero', 'glm-z1'],
     visionKeywords: ['glm-4v'],
   },
@@ -64,6 +69,7 @@ export const PROVIDER_DETECTION_CONFIG = {
   anthropic: ['claude'],
   deepseek: ['deepseek'],
   google: ['gemini'],
+  llama: ['llama'],
   openai: ['o1', 'o3', 'o4', 'gpt-'],
   qwen: ['qwen', 'qwq', 'qvq'],
   volcengine: ['doubao'],
@@ -78,15 +84,15 @@ export const PROVIDER_DETECTION_CONFIG = {
  */
 export const detectModelProvider = (modelId: string): keyof typeof MODEL_LIST_CONFIGS => {
   const lowerModelId = modelId.toLowerCase();
-  
+
   for (const [provider, keywords] of Object.entries(PROVIDER_DETECTION_CONFIG)) {
-    const hasKeyword = keywords.some(keyword => lowerModelId.includes(keyword));
-    
+    const hasKeyword = keywords.some((keyword) => lowerModelId.includes(keyword));
+
     if (hasKeyword && provider in MODEL_LIST_CONFIGS) {
       return provider as keyof typeof MODEL_LIST_CONFIGS;
     }
   }
-  
+
   return 'openai';
 };
 
@@ -96,17 +102,17 @@ export const detectModelProvider = (modelId: string): keyof typeof MODEL_LIST_CO
 const processModelCard = (
   model: { [key: string]: any; id: string },
   config: ModelProcessorConfig,
-  knownModel?: any
+  knownModel?: any,
 ): ChatModelCard => {
-  const { 
-    functionCallKeywords = [], 
-    visionKeywords = [], 
-    reasoningKeywords = [], 
-    excludeKeywords = [] 
+  const {
+    functionCallKeywords = [],
+    visionKeywords = [],
+    reasoningKeywords = [],
+    excludeKeywords = [],
   } = config;
 
-  const isExcludedModel = excludeKeywords.some((keyword) => 
-    model.id.toLowerCase().includes(keyword)
+  const isExcludedModel = excludeKeywords.some((keyword) =>
+    model.id.toLowerCase().includes(keyword),
   );
 
   return {
@@ -169,7 +175,7 @@ export const processMultiProviderModelList = async (
     .map((model) => {
       const detectedProvider = detectModelProvider(model.id);
       const config = MODEL_LIST_CONFIGS[detectedProvider];
-      
+
       const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
         (m) => model.id.toLowerCase() === m.id.toLowerCase(),
       );

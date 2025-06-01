@@ -1,7 +1,7 @@
 import { ModelProvider } from '../types';
+import { processMultiProviderModelList } from '../utils/modelParse';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 import { QwenAIStream } from '../utils/streams';
-import { processModelList, MODEL_LIST_CONFIGS } from '../utils/modelParse';
 
 export interface QwenModelCard {
   id: string;
@@ -79,8 +79,8 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
   models: async ({ client }) => {
     const modelsPage = (await client.models.list()) as any;
     const modelList: QwenModelCard[] = modelsPage.data;
-  
-    return processModelList(modelList, MODEL_LIST_CONFIGS.qwen);
+
+    return processMultiProviderModelList(modelList);
   },
   provider: ModelProvider.Qwen,
 });
