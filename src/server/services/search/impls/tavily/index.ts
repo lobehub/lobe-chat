@@ -110,7 +110,7 @@ export class TavilyImpl implements SearchServiceImpl {
 
       const mappedResults = (tavilyResponse.results || []).map(
         (result): UniformSearchResult => ({
-          category: 'general', // Default category
+          category: body.topic || 'general', // Default category
           content: result.content || '', // Prioritize content, fallback to snippet
           engines: ['tavily'], // Use 'tavily' as the engine name
           parsedUrl: result.url ? new URL(result.url).hostname : '', // Basic URL parsing
