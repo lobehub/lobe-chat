@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.88.23](https://github.com/lobehub/lobe-chat/compare/v1.88.22...v1.88.23)
+
+<sup>Released on **2025-05-31**</sup>
+
+#### 💄 Styles
+
+- **misc**: `+` in the welcome message can be clicked to create an assistant.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: `+` in the welcome message can be clicked to create an assistant, closes [#7984](https://github.com/lobehub/lobe-chat/issues/7984) ([9f07e4c](https://github.com/lobehub/lobe-chat/commit/9f07e4c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.88.22](https://github.com/lobehub/lobe-chat/compare/v1.88.21...v1.88.22)
 
 <sup>Released on **2025-05-31**</sup>
