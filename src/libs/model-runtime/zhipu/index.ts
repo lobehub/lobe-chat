@@ -22,6 +22,9 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
               type: 'web_search',
               web_search: {
                 enable: true,
+                result_sequence: 'before', // 将搜索结果返回顺序更改为 before 适配最小化 OpenAIStream 改动
+                search_engine: process.env.ZHIPU_SEARCH_ENGINE || 'search_std', // search_std, search_pro
+                search_result: true,
               },
             },
           ]
