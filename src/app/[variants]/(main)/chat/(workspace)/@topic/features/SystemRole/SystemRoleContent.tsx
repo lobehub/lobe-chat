@@ -107,6 +107,7 @@ const SystemRole = memo(() => {
           <EditableMessage
             classNames={{ markdown: styles.prompt }}
             editing={editing}
+            markdownProps={{ enableLatex: false, enableMermaid: false }}
             model={{
               extra: (
                 <AgentInfo
