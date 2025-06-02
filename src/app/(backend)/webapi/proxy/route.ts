@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import fetch from 'node-fetch';
 import { RequestFilteringAgentOptions, useAgent as ssrfAgent } from 'request-filtering-agent';
 
-import { appEnv } from '@/config/app';
+import { appEnv } from '@/envs/app';
 
 /**
  * just for a proxy

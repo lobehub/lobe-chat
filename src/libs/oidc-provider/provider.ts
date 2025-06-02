@@ -2,10 +2,10 @@ import debug from 'debug';
 import Provider, { Configuration, KoaContextWithOIDC } from 'oidc-provider';
 import urlJoin from 'url-join';
 
-import { appEnv } from '@/config/app';
 import { serverDBEnv } from '@/config/db';
 import { UserModel } from '@/database/models/user';
 import { LobeChatDatabase } from '@/database/type';
+import { appEnv } from '@/envs/app';
 import { oidcEnv } from '@/envs/oidc';
 
 import { DrizzleAdapter } from './adapter';

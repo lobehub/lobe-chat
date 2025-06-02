@@ -21,6 +21,8 @@ export const LobeOpenAI = LobeOpenAICompatibleFactory({
       }
 
       if (model.includes('-search-')) {
+        const oaiSearchContextSize = process.env.OPENAI_SEARCH_CONTEXT_SIZE; // low, medium, high
+
         return {
           ...payload,
           frequency_penalty: undefined,
@@ -28,7 +30,12 @@ export const LobeOpenAI = LobeOpenAICompatibleFactory({
           stream: payload.stream ?? true,
           temperature: undefined,
           top_p: undefined,
-        };
+          ...(oaiSearchContextSize && {
+            web_search_options: {
+              search_context_size: oaiSearchContextSize,
+            },
+          }),
+        } as any;
       }
 
       return { ...payload, stream: payload.stream ?? true };
