@@ -20,7 +20,7 @@ export { LobeQwenAI } from './qwen';
 export { LobeTogetherAI } from './togetherai';
 export * from './types';
 export { AgentRuntimeError } from './utils/createError';
-export { LobeOpenAICompatibleFactory } from './utils/openaiCompatibleFactory';
+export { createOpenAICompatibleRuntime } from './utils/openaiCompatibleFactory';
 export { pruneReasoningPayload } from './utils/openaiHelpers';
 export { LobeVolcengineAI } from './volcengine';
 export { LobeZeroOneAI } from './zeroone';
