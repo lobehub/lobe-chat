@@ -1,5 +1,5 @@
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { pruneReasoningPayload } from '../utils/openaiHelpers';
 import { processMultiProviderModelList } from '../utils/modelParse';
 
@@ -9,13 +9,13 @@ export interface OpenAIModelCard {
 
 const prunePrefixes = ['o1', 'o3', 'o4'];
 
-export const LobeOpenAI = LobeOpenAICompatibleFactory({
+export const LobeOpenAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.openai.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
       const { model } = payload;
 
-      if (prunePrefixes.some(prefix => model.startsWith(prefix))) {
+      if (prunePrefixes.some((prefix) => model.startsWith(prefix))) {
         return pruneReasoningPayload(payload) as any;
       }
 

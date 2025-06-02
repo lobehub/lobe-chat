@@ -1,5 +1,5 @@
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { MODEL_LIST_CONFIGS, processModelList } from '../utils/modelParse';
 
 export interface ZhipuModelCard {
@@ -8,7 +8,7 @@ export interface ZhipuModelCard {
   modelName: string;
 }
 
-export const LobeZhipuAI = LobeOpenAICompatibleFactory({
+export const LobeZhipuAI = createOpenAICompatibleRuntime({
   baseURL: 'https://open.bigmodel.cn/api/paas/v4',
   chatCompletion: {
     handlePayload: (payload) => {

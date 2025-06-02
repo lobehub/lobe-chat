@@ -2,14 +2,14 @@ import type { ChatModelCard } from '@/types/llm';
 
 import { AgentRuntimeErrorType } from '../error';
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface GroqModelCard {
   context_window: number;
   id: string;
 }
 
-export const LobeGroq = LobeOpenAICompatibleFactory({
+export const LobeGroq = createOpenAICompatibleRuntime({
   baseURL: 'https://api.groq.com/openai/v1',
   chatCompletion: {
     handleError: (error) => {

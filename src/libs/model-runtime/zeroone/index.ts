@@ -1,12 +1,12 @@
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { processModelList, MODEL_LIST_CONFIGS } from '../utils/modelParse';
 
 export interface ZeroOneModelCard {
   id: string;
 }
 
-export const LobeZeroOneAI = LobeOpenAICompatibleFactory({
+export const LobeZeroOneAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.lingyiwanwu.com/v1',
   debug: {
     chatCompletion: () => process.env.DEBUG_ZEROONE_CHAT_COMPLETION === '1',

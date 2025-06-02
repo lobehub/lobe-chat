@@ -8,7 +8,7 @@ import { experimental_buildLlama2Prompt } from 'ai/prompts';
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import {
-  ChatCompetitionOptions,
+  ChatMethodOptions,
   ChatStreamPayload,
   Embeddings,
   EmbeddingsOptions,
@@ -51,7 +51,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     });
   }
 
-  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
+  async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {
     if (payload.model.startsWith('meta')) return this.invokeLlamaModel(payload, options);
 
     return this.invokeClaudeModel(payload, options);
@@ -114,7 +114,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
   private invokeClaudeModel = async (
     payload: ChatStreamPayload,
-    options?: ChatCompetitionOptions,
+    options?: ChatMethodOptions,
   ): Promise<Response> => {
     const { max_tokens, messages, model, temperature, top_p, tools } = payload;
     const system_message = messages.find((m) => m.role === 'system');
@@ -169,7 +169,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
   private invokeLlamaModel = async (
     payload: ChatStreamPayload,
-    options?: ChatCompetitionOptions,
+    options?: ChatMethodOptions,
   ): Promise<Response> => {
     const { max_tokens, messages, model } = payload;
     const command = new InvokeModelWithResponseStreamCommand({

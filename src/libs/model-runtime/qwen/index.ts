@@ -1,6 +1,6 @@
 import { ModelProvider } from '../types';
 import { processMultiProviderModelList } from '../utils/modelParse';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { QwenAIStream } from '../utils/streams';
 
 export interface QwenModelCard {
@@ -19,7 +19,7 @@ export const QwenLegacyModels = new Set([
   'qwen-1.8b-longcontext-chat',
 ]);
 
-export const LobeQwenAI = LobeOpenAICompatibleFactory({
+export const LobeQwenAI = createOpenAICompatibleRuntime({
   baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
   chatCompletion: {
     handlePayload: (payload) => {
