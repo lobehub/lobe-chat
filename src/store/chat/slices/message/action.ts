@@ -358,8 +358,8 @@ export const chatMessage: StateCreator<
         await refreshMessages();
       }
 
-      internal_toggleMessageLoading(false, tempId);
       if (message.topicId) await internal_touchTopicUpdatedAt(message.topicId);
+      internal_toggleMessageLoading(false, tempId);
       return id;
     } catch (e) {
       internal_toggleMessageLoading(false, tempId);
