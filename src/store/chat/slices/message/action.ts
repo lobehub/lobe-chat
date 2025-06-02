@@ -295,7 +295,12 @@ export const chatMessage: StateCreator<
   },
 
   internal_updateMessageContent: async (id, content, extra) => {
-    const { internal_dispatchMessage, refreshMessages, internal_transformToolCalls } = get();
+    const {
+      internal_dispatchMessage,
+      refreshMessages,
+      internal_transformToolCalls,
+      internal_touchTopicUpdatedAt,
+    } = get();
 
     // Due to the async update method and refresh need about 100ms
     // we need to update the message content at the frontend to avoid the update flick
@@ -325,6 +330,9 @@ export const chatMessage: StateCreator<
       imageList: extra?.imageList,
     });
     await refreshMessages();
+
+    const topicId = chatSelectors.getMessageById(id)(get())?.topicId;
+    if (topicId) await internal_touchTopicUpdatedAt(topicId);
   },
 
   internal_createMessage: async (message, context) => {
@@ -333,6 +341,7 @@ export const chatMessage: StateCreator<
       refreshMessages,
       internal_toggleMessageLoading,
       internal_dispatchMessage,
+      internal_touchTopicUpdatedAt,
     } = get();
     let tempId = context?.tempMessageId;
     if (!tempId) {
@@ -350,6 +359,7 @@ export const chatMessage: StateCreator<
       }
 
       internal_toggleMessageLoading(false, tempId);
+      if (message.topicId) await internal_touchTopicUpdatedAt(message.topicId);
       return id;
     } catch (e) {
       internal_toggleMessageLoading(false, tempId);

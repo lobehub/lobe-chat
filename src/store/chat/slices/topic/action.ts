@@ -55,6 +55,7 @@ export interface ChatTopicAction {
   internal_updateTopicLoading: (id: string, loading: boolean) => void;
   internal_createTopic: (params: CreateTopicParams) => Promise<string>;
   internal_updateTopic: (id: string, data: Partial<ChatTopic>) => Promise<void>;
+  internal_touchTopicUpdatedAt: (id: string) => Promise<void>;
   internal_dispatchTopic: (payload: ChatTopicDispatch, action?: any) => void;
 }
 
@@ -307,6 +308,10 @@ export const chatTopic: StateCreator<
     await topicService.updateTopic(id, data);
     await get().refreshTopic();
     get().internal_updateTopicLoading(id, false);
+  },
+  internal_touchTopicUpdatedAt: async (id) => {
+    get().internal_dispatchTopic({ type: 'updateTopic', id, value: {} });
+    await topicService.updateTopic(id, {});
   },
   internal_createTopic: async (params) => {
     const tmpId = Date.now().toString();
