@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.90.4](https://github.com/lobehub/lobe-chat/compare/v1.90.3...v1.90.4)
+
+<sup>Released on **2025-06-02**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Rename the createOpenAICompatibleRuntime.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Update the clerk middleware to support route protection.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Rename the createOpenAICompatibleRuntime, closes [#8049](https://github.com/lobehub/lobe-chat/issues/8049) ([ee660d6](https://github.com/lobehub/lobe-chat/commit/ee660d6))
+
+#### What's fixed
+
+- **misc**: Update the clerk middleware to support route protection, closes [#8044](https://github.com/lobehub/lobe-chat/issues/8044) ([309f973](https://github.com/lobehub/lobe-chat/commit/309f973))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.90.3](https://github.com/lobehub/lobe-chat/compare/v1.90.2...v1.90.3)
 
 <sup>Released on **2025-06-01**</sup>
