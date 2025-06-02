@@ -1,7 +1,7 @@
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
-export const LobeAi21AI = LobeOpenAICompatibleFactory({
+export const LobeAi21AI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.ai21.com/studio/v1',
   chatCompletion: {
     handlePayload: (payload) => {
