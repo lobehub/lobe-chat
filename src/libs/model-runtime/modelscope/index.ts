@@ -1,8 +1,7 @@
-
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface ModelScopeModelCard {
   created: number;
@@ -11,7 +10,7 @@ export interface ModelScopeModelCard {
   owned_by: string;
 }
 
-export const LobeModelScopeAI = LobeOpenAICompatibleFactory({
+export const LobeModelScopeAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api-inference.modelscope.cn/v1',
   debug: {
     chatCompletion: () => process.env.DEBUG_MODELSCOPE_CHAT_COMPLETION === '1',

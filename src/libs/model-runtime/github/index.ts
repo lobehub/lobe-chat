@@ -2,7 +2,7 @@ import type { ChatModelCard } from '@/types/llm';
 
 import { AgentRuntimeErrorType } from '../error';
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { pruneReasoningPayload } from '../utils/openaiHelpers';
 
 export interface GithubModelCard {
@@ -16,7 +16,7 @@ export interface GithubModelCard {
 
 /* eslint-enable typescript-sort-keys/interface */
 
-export const LobeGithubAI = LobeOpenAICompatibleFactory({
+export const LobeGithubAI = createOpenAICompatibleRuntime({
   baseURL: 'https://models.github.ai/inference',
   chatCompletion: {
     handlePayload: (payload) => {

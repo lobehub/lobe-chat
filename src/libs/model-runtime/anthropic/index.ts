@@ -5,8 +5,8 @@ import type { ChatModelCard } from '@/types/llm';
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import {
-  ChatCompetitionOptions,
   type ChatCompletionErrorPayload,
+  ChatMethodOptions,
   ChatStreamPayload,
   ModelProvider,
 } from '../types';
@@ -52,15 +52,15 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     this.client = new Anthropic({
       apiKey,
       baseURL,
-      ...(betaHeaders ? { defaultHeaders: { "anthropic-beta": betaHeaders } } : {}),
-      ...res
+      ...(betaHeaders ? { defaultHeaders: { 'anthropic-beta': betaHeaders } } : {}),
+      ...res,
     });
     this.baseURL = this.client.baseURL;
     this.apiKey = apiKey;
     this.id = id || ModelProvider.Anthropic;
   }
 
-  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
+  async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {
     try {
       const anthropicPayload = await this.buildAnthropicPayload(payload);
       const inputStartAt = Date.now();
@@ -112,7 +112,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     } = payload;
 
     const { default: anthropicModels } = await import('@/config/aiModels/anthropic');
-    const modelConfig = anthropicModels.find(m => m.id === model);
+    const modelConfig = anthropicModels.find((m) => m.id === model);
     const defaultMaxOutput = modelConfig?.maxOutput;
 
     // 配置优先级：用户设置 > 模型配置 > 硬编码默认值
@@ -137,7 +137,9 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
 
     const postMessages = await buildAnthropicMessages(user_messages, { enabledContextCaching });
 
-    let postTools: anthropicTools[] | undefined = buildAnthropicTools(tools, { enabledContextCaching });
+    let postTools: anthropicTools[] | undefined = buildAnthropicTools(tools, {
+      enabledContextCaching,
+    });
 
     if (enabledSearch) {
       // Limit the number of searches per request
@@ -146,9 +148,11 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       const webSearchTool: Anthropic.WebSearchTool20250305 = {
         name: 'web_search',
         type: 'web_search_20250305',
-        ...(maxUses && Number.isInteger(Number(maxUses)) && Number(maxUses) > 0 && { 
-          max_uses: Number(maxUses) 
-        }),
+        ...(maxUses &&
+          Number.isInteger(Number(maxUses)) &&
+          Number(maxUses) > 0 && {
+            max_uses: Number(maxUses),
+          }),
       };
 
       // 如果已有工具，则添加到现有工具列表中；否则创建新的工具列表
@@ -171,8 +175,8 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
         system: systemPrompts,
         thinking: {
           ...thinking,
-          budget_tokens: thinking?.budget_tokens 
-            ? Math.min(thinking.budget_tokens, maxTokens - 1)  // `max_tokens` must be greater than `thinking.budget_tokens`.
+          budget_tokens: thinking?.budget_tokens
+            ? Math.min(thinking.budget_tokens, maxTokens - 1) // `max_tokens` must be greater than `thinking.budget_tokens`.
             : 1024,
         },
         tools: postTools,

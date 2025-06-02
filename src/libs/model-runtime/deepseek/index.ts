@@ -1,13 +1,13 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface DeepSeekModelCard {
   id: string;
 }
 
-export const LobeDeepSeekAI = LobeOpenAICompatibleFactory({
+export const LobeDeepSeekAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.deepseek.com/v1',
   debug: {
     chatCompletion: () => process.env.DEBUG_DEEPSEEK_CHAT_COMPLETION === '1',

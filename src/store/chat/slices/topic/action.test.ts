@@ -264,7 +264,8 @@ describe('topic action', () => {
       const topicId = 'topic-id';
       const newTitle = 'Updated Topic Title';
       // Mock the topicService.updateTitle to resolve immediately
-      (topicService.updateTopic as Mock).mockResolvedValue(undefined);
+
+      const spyOn = vi.spyOn(topicService, 'updateTopic');
 
       const { result } = renderHook(() => useChatStore());
 
@@ -276,7 +277,7 @@ describe('topic action', () => {
       });
 
       // Verify that the topicService.updateTitle was called with correct parameters
-      expect(topicService.updateTopic).toHaveBeenCalledWith(topicId, {
+      expect(spyOn).toHaveBeenCalledWith(topicId, {
         title: 'Updated Topic Title',
       });
 

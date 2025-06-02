@@ -1,10 +1,10 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { PPIOModelCard } from './type';
 
-export const LobePPIOAI = LobeOpenAICompatibleFactory({
+export const LobePPIOAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.ppinfra.com/v3/openai',
   constructorOptions: {
     defaultHeaders: {
