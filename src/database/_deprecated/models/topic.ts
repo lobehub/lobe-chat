@@ -36,8 +36,8 @@ class _TopicModel extends BaseModel {
       if (a.favorite && !b.favorite) return -1; // a是星标，b不是，a排前面
       if (!a.favorite && b.favorite) return 1; // b是星标，a不是，b排前面
 
-      // 如果星标状态相同，则按时间倒序排序
-      return b.createdAt - a.createdAt;
+      // 如果星标状态相同，则按 updatedAt 时间倒序排序
+      return b.updatedAt - a.updatedAt;
     });
 
     // handle pageSize

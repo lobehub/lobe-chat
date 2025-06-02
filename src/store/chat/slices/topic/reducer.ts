@@ -34,7 +34,9 @@ export const topicReducer = (state: ChatTopic[] = [], payload: ChatTopicDispatch
           updatedAt: Date.now(),
         });
 
-        return draftState.sort((a, b) => Number(b.favorite) - Number(a.favorite));
+        return draftState.sort(
+          (a, b) => Number(b.favorite) - Number(a.favorite) || b.updatedAt - a.updatedAt,
+        );
       });
     }
 
@@ -47,6 +49,10 @@ export const topicReducer = (state: ChatTopic[] = [], payload: ChatTopicDispatch
           // TODO: updatedAt 类型后续需要修改为 Date
           // @ts-ignore
           draftState[topicIndex] = { ...draftState[topicIndex], ...value, updatedAt: new Date() };
+
+          draftState.sort(
+            (a, b) => Number(b.favorite) - Number(a.favorite) || b.updatedAt - a.updatedAt,
+          );
         }
       });
     }

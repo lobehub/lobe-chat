@@ -68,11 +68,11 @@ const sortGroups = (groups: GroupedTopic[]): GroupedTopic[] => {
 export const groupTopicsByTime = (topics: ChatTopic[]): GroupedTopic[] => {
   if (!topics.length) return [];
 
-  const sortedTopics = [...topics].sort((a, b) => b.createdAt - a.createdAt);
+  const sortedTopics = [...topics].sort((a, b) => b.updatedAt - a.updatedAt);
   const groupsMap = new Map<TimeGroupId, ChatTopic[]>();
 
   sortedTopics.forEach((topic) => {
-    const groupId = getTopicGroupId(topic.createdAt);
+    const groupId = getTopicGroupId(topic.updatedAt);
     const existingGroup = groupsMap.get(groupId) || [];
     groupsMap.set(groupId, [...existingGroup, topic]);
   });

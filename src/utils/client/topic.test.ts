@@ -122,7 +122,7 @@ describe('groupTopicsByTime', () => {
     ]);
   });
 
-  it('should sort topics within groups by createdAt in descending order', () => {
+  it('should sort topics within groups by updatedAt in descending order', () => {
     const today1 = dayjs().hour(9).valueOf();
     const today2 = dayjs().hour(10).valueOf();
     const today3 = dayjs().hour(11).valueOf();
