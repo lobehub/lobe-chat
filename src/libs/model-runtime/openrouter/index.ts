@@ -1,7 +1,7 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { OpenRouterModelCard, OpenRouterModelExtraInfo, OpenRouterReasoning } from './type';
 
 const formatPrice = (price: string) => {
@@ -9,7 +9,7 @@ const formatPrice = (price: string) => {
   return Number((Number(price) * 1e6).toPrecision(5));
 };
 
-export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
+export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
   baseURL: 'https://openrouter.ai/api/v1',
   chatCompletion: {
     handlePayload: (payload) => {

@@ -1,14 +1,14 @@
 import minimaxChatModels from '@/config/aiModels/minimax';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export const getMinimaxMaxOutputs = (modelId: string): number | undefined => {
   const model = minimaxChatModels.find((model) => model.id === modelId);
   return model ? model.maxOutput : undefined;
 };
 
-export const LobeMinimaxAI = LobeOpenAICompatibleFactory({
+export const LobeMinimaxAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.minimax.chat/v1',
   chatCompletion: {
     handlePayload: (payload) => {
