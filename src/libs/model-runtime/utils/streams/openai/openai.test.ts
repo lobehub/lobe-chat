@@ -2,8 +2,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { AgentRuntimeErrorType } from '@/libs/model-runtime';
 
+import { FIRST_CHUNK_ERROR_KEY } from '../protocol';
 import { OpenAIStream } from './openai';
-import { FIRST_CHUNK_ERROR_KEY } from './protocol';
 
 describe('OpenAIStream', () => {
   it('should transform OpenAI stream to protocol stream', async () => {

@@ -78,7 +78,6 @@ export interface StreamToolCallChunkData {
 export interface StreamProtocolToolCallChunk {
   data: StreamToolCallChunkData[];
   id: string;
-  index: number;
   type: 'tool_calls';
 }
 
