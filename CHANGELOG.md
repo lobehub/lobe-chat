@@ -2,6 +2,68 @@
 
 # Changelog
 
+## [Version&nbsp;1.88.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.87.2...v1.88.0)
+<sup>Released on **2025-06-02**</sup>
+
+
+#### ✨ Features
+
+- **misc**:  Support ModelScope Provider, support protect page.
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Agent automatic completion meta not working error, disable LaTeX and Mermaid rendering in SystemRoleContent to prevent lag caused by massive rendering tasks when switching topics, fix DeepSeek new R1 Search error.
+
+
+#### 💄 Styles
+
+- **misc**:  `+` in the welcome message can be clicked to create an assistant, Enable deploymentName for Aliyun Bailian, Enhanced reasoning_effort Slider Component, support `web_search` tool for MiniMax & Zhipu, support 01.ai proxy url, Update Hunyuan models & deepseek-r1-0528, use default deployment name when parseModelString doesn't contain deployment name.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's improved
+
+* **misc**:  Support ModelScope Provider, closes [#8026](https://github.com/jaworldwideorg/OneJA-Bot/issues/8026) ([7b91dfd](https://github.com/jaworldwideorg/OneJA-Bot/commit/7b91dfd))
+* **misc**: Support protect page, closes [#8024](https://github.com/jaworldwideorg/OneJA-Bot/issues/8024) ([d61a9f5](https://github.com/jaworldwideorg/OneJA-Bot/commit/d61a9f5))
+
+
+
+#### What's fixed
+
+* **misc**: Agent automatic completion meta not working error, closes [#8003](https://github.com/jaworldwideorg/OneJA-Bot/issues/8003) ([c5307bf](https://github.com/jaworldwideorg/OneJA-Bot/commit/c5307bf))
+* **misc**: Disable LaTeX and Mermaid rendering in SystemRoleContent to prevent lag caused by massive rendering tasks when switching topics, closes [#8034](https://github.com/jaworldwideorg/OneJA-Bot/issues/8034) ([5b42ee2](https://github.com/jaworldwideorg/OneJA-Bot/commit/5b42ee2))
+* **misc**: Fix DeepSeek new R1 Search error, closes [#8035](https://github.com/jaworldwideorg/OneJA-Bot/issues/8035) ([cf58628](https://github.com/jaworldwideorg/OneJA-Bot/commit/cf58628))
+
+
+
+#### Styles
+
+* **misc**:  `+` in the welcome message can be clicked to create an assistant, closes [#7984](https://github.com/jaworldwideorg/OneJA-Bot/issues/7984) ([9f07e4c](https://github.com/jaworldwideorg/OneJA-Bot/commit/9f07e4c))
+* **misc**: Enable deploymentName for Aliyun Bailian, closes [#7576](https://github.com/jaworldwideorg/OneJA-Bot/issues/7576) ([169e598](https://github.com/jaworldwideorg/OneJA-Bot/commit/169e598))
+* **misc**: Enhanced reasoning_effort Slider Component, closes [#7998](https://github.com/jaworldwideorg/OneJA-Bot/issues/7998) ([750b26a](https://github.com/jaworldwideorg/OneJA-Bot/commit/750b26a))
+* **misc**: Support `web_search` tool for MiniMax & Zhipu, closes [#7980](https://github.com/jaworldwideorg/OneJA-Bot/issues/7980) ([28cdafb](https://github.com/jaworldwideorg/OneJA-Bot/commit/28cdafb))
+* **misc**: Support 01.ai proxy url, closes [#8025](https://github.com/jaworldwideorg/OneJA-Bot/issues/8025) ([e0442b8](https://github.com/jaworldwideorg/OneJA-Bot/commit/e0442b8))
+* **misc**: Update Hunyuan models & deepseek-r1-0528, closes [#7993](https://github.com/jaworldwideorg/OneJA-Bot/issues/7993) ([2eb198c](https://github.com/jaworldwideorg/OneJA-Bot/commit/2eb198c))
+* **misc**: Use default deployment name when parseModelString doesn't contain deployment name, closes [#7719](https://github.com/jaworldwideorg/OneJA-Bot/issues/7719) ([aef19f4](https://github.com/jaworldwideorg/OneJA-Bot/commit/aef19f4))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.90.3](https://github.com/lobehub/lobe-chat/compare/v1.90.2...v1.90.3)
 
 <sup>Released on **2025-06-01**</sup>
