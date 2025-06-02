@@ -1,13 +1,13 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface XAIModelCard {
   id: string;
 }
 
-export const LobeXAI = LobeOpenAICompatibleFactory({
+export const LobeXAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.x.ai/v1',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -21,7 +21,10 @@ export const LobeXAI = LobeOpenAICompatibleFactory({
         stream: true,
         ...(enabledSearch && {
           search_parameters: {
-            max_search_results: Math.min(Math.max(parseInt(process.env.XAI_MAX_SEARCH_RESULTS ?? '15', 10), 1), 30),
+            max_search_results: Math.min(
+              Math.max(parseInt(process.env.XAI_MAX_SEARCH_RESULTS ?? '15', 10), 1),
+              30,
+            ),
             mode: 'auto',
             return_citations: true,
             sources: [

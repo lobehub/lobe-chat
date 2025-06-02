@@ -1,9 +1,9 @@
 import OpenAI from 'openai';
 
 import { ChatStreamPayload, ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
-export const LobePerplexityAI = LobeOpenAICompatibleFactory({
+export const LobePerplexityAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.perplexity.ai',
   chatCompletion: {
     handlePayload: (payload: ChatStreamPayload) => {

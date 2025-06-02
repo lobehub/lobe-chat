@@ -1,7 +1,7 @@
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
-export const LobeVolcengineAI = LobeOpenAICompatibleFactory({
+export const LobeVolcengineAI = createOpenAICompatibleRuntime({
   baseURL: 'https://ark.cn-beijing.volces.com/api/v3',
   chatCompletion: {
     handlePayload: (payload) => {

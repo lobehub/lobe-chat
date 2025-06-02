@@ -137,7 +137,7 @@ export interface ChatStreamPayload {
   top_p?: number;
 }
 
-export interface ChatCompetitionOptions {
+export interface ChatMethodOptions {
   callback?: ChatStreamCallbacks;
   /**
    * response headers

@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 import { ChatModelCard } from '@/types/llm';
 
 import {
-  ChatCompetitionOptions,
+  ChatMethodOptions,
   ChatStreamPayload,
   Embeddings,
   EmbeddingsOptions,
@@ -18,7 +18,7 @@ import {
 /* eslint-disable sort-keys-fix/sort-keys-fix , typescript-sort-keys/interface */
 export interface LobeRuntimeAI {
   baseURL?: string;
-  chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions): Promise<Response>;
+  chat(payload: ChatStreamPayload, options?: ChatMethodOptions): Promise<Response>;
 
   embeddings?(payload: EmbeddingsPayload, options?: EmbeddingsOptions): Promise<Embeddings[]>;
 
@@ -40,7 +40,7 @@ export abstract class LobeOpenAICompatibleRuntime {
   abstract baseURL: string;
   abstract client: OpenAI;
 
-  abstract chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions): Promise<Response>;
+  abstract chat(payload: ChatStreamPayload, options?: ChatMethodOptions): Promise<Response>;
 
   abstract models(): Promise<ChatModelCard[]>;
 

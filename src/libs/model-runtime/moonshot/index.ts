@@ -1,13 +1,13 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ChatStreamPayload, ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface MoonshotModelCard {
   id: string;
 }
 
-export const LobeMoonshotAI = LobeOpenAICompatibleFactory({
+export const LobeMoonshotAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.moonshot.cn/v1',
   chatCompletion: {
     handlePayload: (payload: ChatStreamPayload) => {
