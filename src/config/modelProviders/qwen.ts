@@ -419,7 +419,7 @@ const Qwen: ModelProviderCard = {
   id: 'qwen',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://help.aliyun.com/zh/dashscope/developer-reference/api-details',
-  name: 'Qwen',
+  name: 'Aliyun Bailian',
   proxyUrl: {
     placeholder: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
   },
@@ -429,15 +429,12 @@ const Qwen: ModelProviderCard = {
       placeholder: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
     },
     sdkType: 'openai',
+    showDeployName: true,
     showModelFetcher: true,
     smoothing: {
       speed: 2,
       text: true,
     },
-  },
-  smoothing: {
-    speed: 2,
-    text: true,
   },
   url: 'https://www.aliyun.com/product/bailian',
 };

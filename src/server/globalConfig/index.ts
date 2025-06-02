@@ -40,6 +40,9 @@ export const getServerGlobalConfig = async () => {
         enabled: isDesktop ? true : undefined,
         fetchOnClient: isDesktop ? false : !process.env.OLLAMA_PROXY_URL,
       },
+      qwen: {
+        withDeploymentName: true,
+      },
       tencentcloud: {
         enabledKey: 'ENABLED_TENCENT_CLOUD',
         modelListKey: 'TENCENT_CLOUD_MODEL_LIST',

@@ -209,8 +209,8 @@ LobeChat 支持文件上传与知识库功能，你可以上传文件、图片�
 - **[ModelScope](https://lobechat.com/discover/provider/modelscope)**:
 - **[Ai21Labs](https://lobechat.com/discover/provider/ai21)**: AI21 Labs 为企业构建基础模型和人工智能系统，加速生成性人工智能在生产中的应用。
 - **[Upstage](https://lobechat.com/discover/provider/upstage)**: Upstage 专注于为各种商业需求开发 AI 模型，包括 Solar LLM 和文档 AI，旨在实现工作的人造通用智能（AGI）。通过 Chat API 创建简单的对话代理，并支持功能调用、翻译、嵌入以及特定领域应用。
-- **[xAI](https://lobechat.com/discover/provider/xai)**: xAI 是一家致力于构建人工智能以加速人类科学发现的公司。我们的使命是推动我们对宇宙的共同理解。
-- **[Qwen](https://lobechat.com/discover/provider/qwen)**: 通义千问是阿里云自主研发的超大规模语言模型，具有强大的自然语言理解和生成能力。它可以回答各种问题、创作文字内容、表达观点看法、撰写代码等，在多个领域发挥作用。
+- **[xAI (Grok)](https://lobechat.com/discover/provider/xai)**: xAI 是一家致力于构建人工智能以加速人类科学发现的公司。我们的使命是推动我们对宇宙的共同理解。
+- **[Aliyun Bailian](https://lobechat.com/discover/provider/qwen)**: 通义千问是阿里云自主研发的超大规模语言模型，具有强大的自然语言理解和生成能力。它可以回答各种问题、创作文字内容、表达观点看法、撰写代码等，在多个领域发挥作用。
 - **[Wenxin](https://lobechat.com/discover/provider/wenxin)**: 企业级一站式大模型与 AI 原生应用开发及服务平台，提供最全面易用的生成式人工智能模型开发、应用开发全流程工具链
 - **[Hunyuan](https://lobechat.com/discover/provider/hunyuan)**: 由腾讯研发的大语言模型，具备强大的中文创作能力，复杂语境下的逻辑推理能力，以及可靠的任务执行能力
 - **[ZhiPu](https://lobechat.com/discover/provider/zhipu)**: 智谱 AI 提供多模态与语言模型的开放平台，支持广泛的 AI 应用场景，包括文本处理、图像理解与编程辅助等。

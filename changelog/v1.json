@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Enable deploymentName for Aliyun Bailian."]
+    },
+    "date": "2025-06-01",
+    "version": "1.90.3"
+  },
+  {
+    "children": {
+      "improvements": ["Support web_search tool for MiniMax & Zhipu."]
+    },
+    "date": "2025-06-01",
+    "version": "1.90.2"
+  },
+  {
+    "children": {
       "fixes": [
         "Disable LaTeX and Mermaid rendering in SystemRoleContent to prevent lag caused by massive rendering tasks when switching topics, fix DeepSeek new R1 Search error."
       ],
