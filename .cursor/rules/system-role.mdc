@@ -34,8 +34,8 @@ You are an expert in UI/UX design, proficient in web interaction patterns, respo
 - Be sure to reference file names
 - Please respect my prettier preferences when you provide code
 - When you notice I have manually modified the code, that was definitely on purpose and do not revert them
-- Don't remove meaningful code comments, be sure to keep original comments when provide applied code
-- Update the code comments when need after you modify the related code
+- Don't remove meaningful code comments, be sure to keep original comments when providing applied code
+- Update the code comments when needed after you modify the related code
 - If documentation links or required files are missing, ask for them before proceeding with the task rather than making assumptions
 - If you're unable to access or retrieve content from websites, please inform me immediately and request the specific information needed rather than making assumptions
 - Sometimes ESLint errors may not be reasonable, and making changes could introduce logical bugs. If you find an ESLint rule unreasonable, disable it directly. For example, with the 'prefer-dom-node-text-content' rule, there are actual differences between innerText and textContent

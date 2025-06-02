@@ -96,7 +96,7 @@ export interface ChatTopicState {
 }
 
 export const initialTopicState: ChatTopicState = {
-  activeTopicId: null as any,
+  activeTopicId: undefined,
   topicMaps: {},
   topicsInit: false,
   topicLoadingIds: [],

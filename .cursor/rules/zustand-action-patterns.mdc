@@ -5,7 +5,7 @@ alwaysApply: false
 ---
 # LobeChat Zustand Action 组织模式
 
-本文档详细说明了 LobeChat 项目中 Zustand Action 的组织方式、命名规范和实现模式，特别关注乐观更新、错误处理和与后端服务的集成。
+本文档详细说明了 LobeChat 项目中 Zustand Action 的组织方式、命名规范和实现模式，特别关注乐观更新与后端服务的集成。
 
 ## Action 类型分层
 
@@ -289,51 +289,6 @@ refreshTopic: async () => {
 },
 ```
 
-## 错误处理模式
-
-### 统一的错误状态更新
-
-```typescript
-// 错误处理的标准模式
-internal_updateMessageError: async (id, error) => {
-  get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } });
-  await messageService.updateMessage(id, { error });
-  await get().refreshMessages();
-},
-
-// 插件错误处理
-internal_updateMessagePluginError: async (id, error) => {
-  await messageService.updateMessagePluginError(id, error);
-  await get().refreshMessages();
-},
-```
-
-### 错误类型定义
-
-```typescript
-// 定义明确的错误类型
-export enum ChatErrorType {
-  CreateMessageError = 'CreateMessageError',
-  PluginServerError = 'PluginServerError',
-  PluginSettingsInvalid = 'PluginSettingsInvalid',
-}
-
-// 在 action 中使用
-catch (e) {
-  internal_dispatchMessage({
-    id: tempId,
-    type: 'updateMessage',
-    value: {
-      error: { 
-        type: ChatErrorType.CreateMessageError, 
-        message: (e as Error).message, 
-        body: e 
-      },
-    },
-  });
-}
-```
-
 ## 命名规范总结
 
 ### Action 命名模式
@@ -355,10 +310,9 @@ catch (e) {
 ## 最佳实践
 
 1. **始终实现乐观更新**：对于用户交互频繁的操作
-2. **错误状态管理**：为每个可能失败的操作提供错误处理
-3. **加载状态管理**：使用统一的加载状态数组管理并发操作
-4. **类型安全**：为所有 action payload 定义 TypeScript 接口
-5. **SWR 集成**：使用 SWR 管理数据获取和缓存失效
-6. **AbortController**：为长时间运行的操作提供取消能力
+2. **加载状态管理**：使用统一的加载状态数组管理并发操作
+3. **类型安全**：为所有 action payload 定义 TypeScript 接口
+4. **SWR 集成**：使用 SWR 管理数据获取和缓存失效
+5. **AbortController**：为长时间运行的操作提供取消能力
 
 这套 Action 组织模式确保了代码的一致性、可维护性，并提供了优秀的用户体验。
