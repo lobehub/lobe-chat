@@ -1,7 +1,7 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface Ai360ModelCard {
   id: string;
@@ -9,7 +9,7 @@ export interface Ai360ModelCard {
   total_tokens: number;
 }
 
-export const LobeAi360AI = LobeOpenAICompatibleFactory({
+export const LobeAi360AI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.360.cn/v1',
   chatCompletion: {
     handlePayload: (payload) => {
