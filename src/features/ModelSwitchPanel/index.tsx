@@ -4,7 +4,7 @@ import type { ItemType } from 'antd/es/menu/interface';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { PropsWithChildren, memo, useMemo } from 'react';
+import { type ReactNode, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -40,14 +40,15 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
 
 const menuKey = (provider: string, model: string) => `${provider}-${model}`;
 
-const ModelSwitchPanel = memo<
-  PropsWithChildren<{
-    onOpenChange?: (open: boolean) => void;
-    open?: boolean;
-    setUpdating?: (updating: boolean) => void;
-    updating?: boolean;
-  }>
->(({ children, setUpdating, onOpenChange, open }) => {
+interface IProps {
+  children?: ReactNode;
+  onOpenChange?: (open: boolean) => void;
+  open?: boolean;
+  setUpdating?: (updating: boolean) => void;
+  updating?: boolean;
+}
+
+const ModelSwitchPanel = memo<IProps>(({ children, setUpdating, onOpenChange, open }) => {
   const { t } = useTranslation('components');
   const { styles, theme } = useStyles();
   const [model, provider, updateAgentConfig] = useAgentStore((s) => [

@@ -27,6 +27,9 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 40,
     },
     releasedAt: '2025-04-17',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {
@@ -48,6 +51,9 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 4.4,
     },
     releasedAt: '2025-04-17',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {
@@ -124,6 +130,9 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 4.4,
     },
     releasedAt: '2025-01-31',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {
@@ -142,6 +151,9 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 4.4,
     },
     releasedAt: '2024-09-12',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {
@@ -161,6 +173,9 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 60,
     },
     releasedAt: '2024-12-17',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {
@@ -178,6 +193,9 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 60,
     },
     releasedAt: '2024-09-12',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {
@@ -220,22 +238,59 @@ export const openaiChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: false,
       search: true,
     },
     contextWindowTokens: 128_000,
-    description: 'GPT-4o mini search preview 是一个专门为搜索功能优化的预览版本，具有增强的网络搜索能力和实时信息检索功能。',
+    description:
+      'GPT-4o mini 搜索预览版是一个专门训练用于理解和执行网页搜索查询的模型，使用的是 Chat Completions API。除了令牌费用之外，网页搜索查询还会按每次工具调用收取费用。',
     displayName: 'GPT-4o mini Search Preview',
     id: 'gpt-4o-mini-search-preview',
     maxOutput: 16_384,
     pricing: {
-      cachedInput: 0.075,
       input: 0.15,
       output: 0.6,
     },
-    releasedAt: '2024-12-01',
+    releasedAt: '2025-03-11',
     settings: {
-      searchImpl: 'tool',
+      searchImpl: 'internal',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
+    displayName: 'GPT-4o',
+    id: 'gpt-4o',
+    pricing: {
+      cachedInput: 1.25,
+      input: 2.5,
+      output: 10,
+    },
+    releasedAt: '2024-05-13',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      search: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'GPT-4o 搜索预览版是一个专门训练用于理解和执行网页搜索查询的模型，使用的是 Chat Completions API。除了令牌费用之外，网页搜索查询还会按每次工具调用收取费用。',
+    displayName: 'GPT-4o Search Preview',
+    id: 'gpt-4o-search-preview',
+    maxOutput: 16_384,
+    pricing: {
+      input: 2.5,
+      output: 10,
+    },
+    releasedAt: '2025-03-11',
+    settings: {
+      searchImpl: 'internal',
     },
     type: 'chat',
   },
@@ -255,24 +310,6 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 10,
     },
     releasedAt: '2024-11-20',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 128_000,
-    description:
-      'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
-    displayName: 'GPT-4o',
-    id: 'gpt-4o',
-    pricing: {
-      cachedInput: 1.25,
-      input: 2.5,
-      output: 10,
-    },
-    releasedAt: '2024-05-13',
     type: 'chat',
   },
   {
@@ -499,8 +536,7 @@ export const openaiChatModels: AIChatModelCard[] = [
   },
   {
     contextWindowTokens: 4096,
-    description:
-      'GPT 3.5 Turbo，适用于各种文本生成和理解任务，对指令遵循的优化',
+    description: 'GPT 3.5 Turbo，适用于各种文本生成和理解任务，对指令遵循的优化',
     displayName: 'GPT-3.5 Turbo Instruct',
     id: 'gpt-3.5-turbo-instruct',
     pricing: {
