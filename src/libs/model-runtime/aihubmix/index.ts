@@ -1,7 +1,7 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface AiHubMixModelCard {
   created: number;
@@ -10,7 +10,7 @@ export interface AiHubMixModelCard {
   owned_by: string;
 }
 
-export const LobeAiHubMixAI = LobeOpenAICompatibleFactory({
+export const LobeAiHubMixAI = createOpenAICompatibleRuntime({
   baseURL: 'https://aihubmix.com/v1',
   debug: {
     chatCompletion: () => process.env.DEBUG_AIHUBMIX_CHAT_COMPLETION === '1',
