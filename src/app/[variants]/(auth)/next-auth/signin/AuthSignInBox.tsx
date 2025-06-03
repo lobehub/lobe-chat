@@ -7,7 +7,7 @@ import { createStyles } from 'antd-style';
 import { AuthError } from 'next-auth';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import BrandWatermark from '@/components/BrandWatermark';
@@ -103,13 +103,6 @@ export default memo(() => {
     { href: PRIVACY_URL, id: 1, label: t('footerPageLink__privacy') },
     { href: TERMS_URL, id: 2, label: t('footerPageLink__terms') },
   ];
-
-  // Auto-click the button if there's only one provider (Okta)
-  useEffect(() => {
-    if (oAuthSSOProviders && oAuthSSOProviders.length === 1) {
-      handleSignIn(oAuthSSOProviders[0]);
-    }
-  }, [oAuthSSOProviders, handleSignIn, callbackUrl]);
 
   return (
     <div className={styles.container}>
