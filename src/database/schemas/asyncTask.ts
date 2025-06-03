@@ -16,6 +16,12 @@ export const asyncTasks = pgTable('async_tasks', {
     .notNull(),
   duration: integer('duration'),
 
+  /** 推理任务 ID，用于 webhook 回调识别 */
+  // inferenceId: varchar('inference_id', { length: 128 }),
+
+  /** 推理结束时间，不论成功或失败 */
+  // finalizedAt: timestamptz('finalized_at'),
+
   ...timestamps,
 });
 

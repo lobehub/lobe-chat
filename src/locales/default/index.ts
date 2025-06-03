@@ -10,6 +10,7 @@ import electron from './electron';
 import error from './error';
 import file from './file';
 import hotkey from './hotkey';
+import { image } from './image';
 import knowledgeBase from './knowledgeBase';
 import metadata from './metadata';
 import migration from './migration';
@@ -27,6 +28,7 @@ import topic from './topic';
 import welcome from './welcome';
 
 const resources = {
+  image,
   auth,
   changelog,
   chat,

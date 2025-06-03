@@ -7,7 +7,7 @@ import { isDeprecatedEdition, isDesktop, isUsePgliteDB } from '@/const/version';
 import { useClientDataSWR } from '@/libs/swr';
 import { aiProviderService } from '@/services/aiProvider';
 import { AiInfraStore } from '@/store/aiInfra/store';
-import { ModelAbilities } from '@/types/aiModel';
+import { AIImageModelCard, ModelAbilities } from '@/types/aiModel';
 import {
   AiProviderDetailItem,
   AiProviderListItem,
@@ -196,6 +196,9 @@ export const createAiProviderSlice: StateCreator<
                 contextWindowTokens: model.contextWindowTokens,
                 displayName: model.displayName ?? '',
                 id: model.id,
+                ...(model.type === 'image' && {
+                  parameters: (model as AIImageModelCard).parameters,
+                }),
               }));
 
             return uniqBy(models, 'id');
@@ -207,6 +210,12 @@ export const createAiProviderSlice: StateCreator<
             children: getModelListByType(provider.id, 'chat'),
             name: provider.name || provider.id,
           }));
+
+          const enabledImageModelList = data.enabledAiProviders.map((provider) => ({
+            ...provider,
+            children: getModelListByType(provider.id, 'image'),
+            name: provider.name || provider.id,
+          }));
           const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
           set(
@@ -216,6 +225,7 @@ export const createAiProviderSlice: StateCreator<
               enabledAiModels: data.enabledAiModels,
               enabledAiProviders: data.enabledAiProviders,
               enabledChatModelList,
+              enabledImageModelList,
             },
             false,
             'useFetchAiProviderRuntimeState',

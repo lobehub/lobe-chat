@@ -1,0 +1,36 @@
+{
+  "config": {
+    "title": "AI Image Generation",
+    "model": {
+      "label": "Model"
+    },
+    "prompt": {
+      "placeholder": "Describe what you want to generate"
+    },
+    "width": {
+      "label": "Width"
+    },
+    "height": {
+      "label": "Height"
+    },
+    "size": {
+      "label": "Size"
+    },
+    "aspectRatio": {
+      "label": "Aspect Ratio"
+    },
+    "steps": {
+      "label": "Steps"
+    },
+    "seed": {
+      "label": "Seed"
+    }
+  },
+  "topic": {
+    "createNew": "New Topic",
+    "untitled": "Default Topic",
+    "empty": "No generation topics",
+    "deleteConfirm": "Delete Generation Topic",
+    "deleteConfirmDesc": "You are about to delete this generation topic. This action cannot be undone, please proceed with caution."
+  }
+}

@@ -223,7 +223,10 @@
     "hash": "9646161fa041354714f823d726af27247bcd6e60fa3be5698c0d69f337a5700b"
   },
   {
-    "sql": ["DROP TABLE \"user_budgets\";", "\nDROP TABLE \"user_subscriptions\";"],
+    "sql": [
+      "DROP TABLE \"user_budgets\";",
+      "\nDROP TABLE \"user_subscriptions\";"
+    ],
     "bps": true,
     "folderMillis": 1729699958471,
     "hash": "7dad43a2a25d1aec82124a4e53f8d82f8505c3073f23606c1dc5d2a4598eacf9"
@@ -295,7 +298,9 @@
     "hash": "845a692ceabbfc3caf252a97d3e19a213bc0c433df2689900135f9cfded2cf49"
   },
   {
-    "sql": ["ALTER TABLE \"messages\" ADD COLUMN \"reasoning\" jsonb;"],
+    "sql": [
+      "ALTER TABLE \"messages\" ADD COLUMN \"reasoning\" jsonb;"
+    ],
     "bps": true,
     "folderMillis": 1737609172353,
     "hash": "2cb36ae4fcdd7b7064767e04bfbb36ae34518ff4bb1b39006f2dd394d1893868"
@@ -479,5 +484,21 @@
     "bps": true,
     "folderMillis": 1746724476380,
     "hash": "0518cd9882f7ea38eb498b31c8dda73fb56bbc3aa55445ecbc7a9e716631d047"
+  },
+  {
+    "sql": [
+      "CREATE TABLE \"generation_batches\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"generation_topic_id\" text NOT NULL,\n\t\"provider\" text NOT NULL,\n\t\"model\" text NOT NULL,\n\t\"prompt\" text NOT NULL,\n\t\"width\" integer,\n\t\"height\" integer,\n\t\"ratio\" varchar(64),\n\t\"config\" jsonb,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE \"generation_topics\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"title\" text,\n\t\"image_url\" text,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE \"generations\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"generation_batch_id\" varchar(64) NOT NULL,\n\t\"async_task_id\" uuid,\n\t\"seed\" text,\n\t\"asset\" jsonb,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nALTER TABLE \"generation_batches\" ADD CONSTRAINT \"generation_batches_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"generation_batches\" ADD CONSTRAINT \"generation_batches_generation_topic_id_generation_topics_id_fk\" FOREIGN KEY (\"generation_topic_id\") REFERENCES \"public\".\"generation_topics\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"generation_topics\" ADD CONSTRAINT \"generation_topics_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"generations\" ADD CONSTRAINT \"generations_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"generations\" ADD CONSTRAINT \"generations_generation_batch_id_generation_batches_id_fk\" FOREIGN KEY (\"generation_batch_id\") REFERENCES \"public\".\"generation_batches\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"generations\" ADD CONSTRAINT \"generations_async_task_id_async_tasks_id_fk\" FOREIGN KEY (\"async_task_id\") REFERENCES \"public\".\"async_tasks\"(\"id\") ON DELETE set null ON UPDATE no action;"
+    ],
+    "bps": true,
+    "folderMillis": 1748434217895,
+    "hash": "084bd8f3fc724d2ba8ffd62de7594219f012e04f1e95d492934b3f1104606faa"
   }
 ]

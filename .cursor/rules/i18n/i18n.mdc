@@ -73,7 +73,7 @@ const resources = {
 **Development Mode** (Recommended):
 
 - Manually add Chinese translations to corresponding JSON files in `locales/zh-CN/namespace.json`, this avoids running slow automation during development
-- Don't auto add translations for other language like English etc, most of developer is Chinese,
+- Important: Don't auto add translations for other language like English etc, most of developer is Chinese
 
 **Production Mode**:
 

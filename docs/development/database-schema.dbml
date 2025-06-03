@@ -217,6 +217,44 @@ table knowledge_bases {
   }
 }
 
+table generation_batches {
+  id text [pk, not null]
+  user_id text [not null]
+  generation_topic_id text [not null]
+  provider text [not null]
+  model text [not null]
+  prompt text [not null]
+  width integer
+  height integer
+  ratio varchar(64)
+  config jsonb
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+}
+
+table generation_topics {
+  id text [pk, not null]
+  user_id text [not null]
+  title text
+  image_url text
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+}
+
+table generations {
+  id text [pk, not null]
+  user_id text [not null]
+  generation_batch_id varchar(64) [not null]
+  async_task_id uuid
+  seed text
+  asset jsonb
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+}
+
 table message_chunks {
   message_id text
   chunk_id uuid

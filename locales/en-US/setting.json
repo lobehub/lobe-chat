@@ -459,6 +459,11 @@
       "placeholder": "Please enter custom prompt",
       "title": "Custom Prompt"
     },
+    "generationTopic": {
+      "label": "AI Image Topic Naming Model",
+      "modelDesc": "Model designated for automatic AI image topic naming",
+      "title": "Automatic AI Image Topic Naming"
+    },
     "helpInfo": "When creating a new assistant, the default assistant settings will be used as preset values.",
     "historyCompress": {
       "label": "Conversation History Model",

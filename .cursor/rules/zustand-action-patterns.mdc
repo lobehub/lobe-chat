@@ -204,6 +204,43 @@ internal_createMessage: async (message, context) => {
 },
 ```
 
+### 删除操作模式（不使用乐观更新）
+
+**删除操作通常不适合乐观更新**，因为：
+- 删除是破坏性操作，错误恢复复杂
+- 用户对删除操作的即时反馈期望较低
+- 删除失败时恢复原状态会造成困惑
+
+```typescript
+// 删除操作的标准模式 - 无乐观更新
+removeGenerationTopic: async (id: string) => {
+  const { internal_removeGenerationTopic } = get();
+  await internal_removeGenerationTopic(id);
+},
+
+internal_removeGenerationTopic: async (id: string) => {
+  // 1. 显示加载状态
+  get().internal_updateGenerationTopicLoading(id, true);
+  
+  try {
+    // 2. 直接调用后端服务
+    await generationTopicService.deleteTopic(id);
+    
+    // 3. 刷新数据获取最新状态
+    await get().refreshGenerationTopics();
+  } finally {
+    // 4. 确保清除加载状态（无论成功或失败）
+    get().internal_updateGenerationTopicLoading(id, false);
+  }
+},
+```
+
+**删除操作的特点**：
+- 直接调用服务，不预先更新状态
+- 依赖 loading 状态提供用户反馈
+- 操作完成后刷新整个列表确保一致性
+- 使用 `try/finally` 确保 loading 状态总是被清理
+
 ## 加载状态管理模式
 
 LobeChat 使用统一的加载状态管理模式：
@@ -309,10 +346,15 @@ refreshTopic: async () => {
 
 ## 最佳实践
 
-1. **始终实现乐观更新**：对于用户交互频繁的操作
+1. **合理使用乐观更新**：
+   - ✅ 适用：创建、更新操作（用户交互频繁）
+   - ❌ 避免：删除操作（破坏性操作，错误恢复复杂）
 2. **加载状态管理**：使用统一的加载状态数组管理并发操作
 3. **类型安全**：为所有 action payload 定义 TypeScript 接口
 4. **SWR 集成**：使用 SWR 管理数据获取和缓存失效
 5. **AbortController**：为长时间运行的操作提供取消能力
+6. **操作模式选择**：
+   - 创建/更新：乐观更新 + 最终一致性
+   - 删除：加载状态 + 服务调用 + 数据刷新
 
 这套 Action 组织模式确保了代码的一致性、可维护性，并提供了优秀的用户体验。
