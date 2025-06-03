@@ -8,7 +8,7 @@ import { createErrorResponse } from '@/utils/errorResponse';
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import {
-  ChatCompetitionOptions,
+  ChatMethodOptions,
   ChatStreamPayload,
   Embeddings,
   EmbeddingsPayload,
@@ -43,7 +43,7 @@ export class LobeOllamaAI implements LobeRuntimeAI {
     if (baseURL) this.baseURL = baseURL;
   }
 
-  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
+  async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {
     try {
       const abort = () => {
         this.client.abort();
