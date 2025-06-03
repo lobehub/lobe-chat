@@ -479,5 +479,15 @@
     "bps": true,
     "folderMillis": 1746724476380,
     "hash": "0518cd9882f7ea38eb498b31c8dda73fb56bbc3aa55445ecbc7a9e716631d047"
+  },
+  {
+    "sql": [
+      "-- Custom SQL migration file, put your code below! --\nUPDATE agents SET chat_config = jsonb_set(chat_config, '{enableReasoningEffort}', 'false') WHERE chat_config ->> 'enableReasoningEffort' = 'true';\n",
+      "\nUPDATE agents SET params = params - 'reasoning_effort' WHERE params ? 'reasoning_effort';\n",
+      "\nDELETE FROM ai_providers WHERE id = 'doubao';"
+    ],
+    "bps": true,
+    "folderMillis": 1748925630721,
+    "hash": "15815e06e3b188933119f380ae12ef8694f2c5f8003cebb397ed00053a065be4"
   }
 ]
