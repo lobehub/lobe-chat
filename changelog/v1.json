@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "features": ["Add more provider support for search & crawl."],
+      "improvements": ["Update modelscope models."]
+    },
+    "date": "2025-06-03",
+    "version": "1.91.0"
+  },
+  {
+    "children": {
       "improvements": ["Rename the createOpenAICompatibleRuntime."],
       "fixes": ["Update the clerk middleware to support route protection."]
     },
