@@ -1,7 +1,7 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface XinferenceModelCard {
   context_length: number;
@@ -12,7 +12,7 @@ export interface XinferenceModelCard {
   name: string;
 }
 
-export const LobeXinferenceAI = LobeOpenAICompatibleFactory({
+export const LobeXinferenceAI = createOpenAICompatibleRuntime({
   baseURL: 'http://localhost:9997/v1',
   debug: {
     chatCompletion: () => process.env.DEBUG_XINFERENCE_CHAT_COMPLETION === '1',

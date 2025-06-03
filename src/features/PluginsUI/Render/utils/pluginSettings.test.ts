@@ -9,7 +9,7 @@ describe('useOnPluginSettingsUpdate', () => {
 
   afterEach(() => {
     mockCallback.mockReset();
-    window.removeEventListener('message', expect.any(Function));
+    window.removeEventListener('message', () => {});
   });
 
   it('calls the callback when a PluginChannel updatePluginSettings message is received', () => {

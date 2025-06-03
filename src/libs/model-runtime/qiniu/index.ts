@@ -1,13 +1,13 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface QiniuModelCard {
   id: string;
 }
 
-export const LobeQiniuAI = LobeOpenAICompatibleFactory({
+export const LobeQiniuAI = createOpenAICompatibleRuntime({
   apiKey: 'placeholder-to-avoid-error',
   baseURL: 'https://api.qnaigc.com/v1',
   debug: {

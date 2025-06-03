@@ -8,7 +8,7 @@ import { LobeCloudflareParams } from './cloudflare';
 import { LobeOpenAI } from './openai';
 import { providerRuntimeMap } from './runtimeMap';
 import {
-  ChatCompetitionOptions,
+  ChatMethodOptions,
   ChatStreamPayload,
   EmbeddingsOptions,
   EmbeddingsPayload,
@@ -60,7 +60,7 @@ class ModelRuntime {
    * }));
    * ```
    */
-  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
+  async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {
     return this._runtime.chat(payload, options);
   }
 

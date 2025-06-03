@@ -2,13 +2,13 @@ import type { ChatModelCard } from '@/types/llm';
 
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompletionErrorPayload, ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface InfiniAIModelCard {
   id: string;
 }
 
-export const LobeInfiniAI = LobeOpenAICompatibleFactory({
+export const LobeInfiniAI = createOpenAICompatibleRuntime({
   baseURL: 'https://cloud.infini-ai.com/maas/v1',
   chatCompletion: {
     handleError(error): Omit<ChatCompletionErrorPayload, 'provider'> | undefined {

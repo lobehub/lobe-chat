@@ -206,7 +206,9 @@ const clerkAuthMiddleware = clerkMiddleware(
   async (auth, req) => {
     logClerk('Clerk middleware processing request: %s %s', req.method, req.url);
 
-    const isProtected = isProtectedRoute(req);
+    // when enable auth protection, only public route is not protected, others are all protected
+    const isProtected = appEnv.ENABLE_AUTH_PROTECTION ? !isPublicRoute(req) : isProtectedRoute(req);
+
     logClerk('Route protection status: %s, %s', req.url, isProtected ? 'protected' : 'public');
 
     if (isProtected) {

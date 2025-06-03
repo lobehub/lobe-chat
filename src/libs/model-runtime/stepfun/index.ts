@@ -1,13 +1,13 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface StepfunModelCard {
   id: string;
 }
 
-export const LobeStepfunAI = LobeOpenAICompatibleFactory({
+export const LobeStepfunAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.stepfun.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {

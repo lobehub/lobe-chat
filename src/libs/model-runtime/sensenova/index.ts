@@ -1,14 +1,14 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { convertSenseNovaMessage } from '../utils/sensenovaHelpers';
 
 export interface SenseNovaModelCard {
   id: string;
 }
 
-export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
+export const LobeSenseNovaAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.sensenova.cn/compatible-mode/v1',
   chatCompletion: {
     handlePayload: (payload) => {

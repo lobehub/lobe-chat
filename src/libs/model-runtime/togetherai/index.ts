@@ -1,10 +1,10 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { TogetherAIModel } from './type';
 
-export const LobeTogetherAI = LobeOpenAICompatibleFactory({
+export const LobeTogetherAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.together.xyz/v1',
   constructorOptions: {
     defaultHeaders: {

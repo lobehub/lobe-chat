@@ -1,10 +1,10 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { NovitaModelCard } from './type';
 
-export const LobeNovitaAI = LobeOpenAICompatibleFactory({
+export const LobeNovitaAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.novita.ai/v3/openai',
   constructorOptions: {
     defaultHeaders: {

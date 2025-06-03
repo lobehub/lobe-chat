@@ -17,8 +17,8 @@ import { safeParseJSON } from '@/utils/safeParseJSON';
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../error';
 import {
-  ChatCompetitionOptions,
   ChatCompletionTool,
+  ChatMethodOptions,
   ChatStreamPayload,
   OpenAIChatMessage,
   UserMessageContentPart,
@@ -111,15 +111,15 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     this.provider = id || (isVertexAi ? 'vertexai' : 'google');
   }
 
-  async chat(rawPayload: ChatStreamPayload, options?: ChatCompetitionOptions) {
+  async chat(rawPayload: ChatStreamPayload, options?: ChatMethodOptions) {
     try {
       const payload = this.buildPayload(rawPayload);
       const { model, thinking } = payload;
 
       const thinkingConfig: GoogleAIThinkingConfig = {
         includeThoughts:
-          (thinking?.type === 'enabled') || 
-          (!thinking && model && (model.includes('-2.5-') || model.includes('thinking'))) 
+          thinking?.type === 'enabled' ||
+          (!thinking && model && (model.includes('-2.5-') || model.includes('thinking')))
             ? true
             : undefined,
         thinkingBudget:
@@ -142,7 +142,9 @@ export class LobeGoogleAI implements LobeRuntimeAI {
               response_modalities: modelsWithModalities.has(model) ? ['Text', 'Image'] : undefined,
               temperature: payload.temperature,
               topP: payload.top_p,
-              ...(modelsDisableInstuction.has(model) || model.toLowerCase().includes('learnlm') ? {} : { thinkingConfig }),
+              ...(modelsDisableInstuction.has(model) || model.toLowerCase().includes('learnlm')
+                ? {}
+                : { thinkingConfig }),
             },
             model,
             // avoid wide sensitive words

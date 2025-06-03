@@ -1,9 +1,9 @@
 import OpenAI from 'openai';
 
 import { ChatStreamPayload, ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
-export const LobeTaichuAI = LobeOpenAICompatibleFactory({
+export const LobeTaichuAI = createOpenAICompatibleRuntime({
   baseURL: 'https://ai-maas.wair.ac.cn/maas/v1',
   chatCompletion: {
     handlePayload: (payload: ChatStreamPayload) => {

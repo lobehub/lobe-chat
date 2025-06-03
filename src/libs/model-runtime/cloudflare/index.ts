@@ -2,7 +2,7 @@ import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
-import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
+import { ChatMethodOptions, ChatStreamPayload, ModelProvider } from '../types';
 import {
   CloudflareStreamTransformer,
   DEFAULT_BASE_URL_PREFIX,
@@ -54,7 +54,7 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
     this.apiKey = apiKey;
   }
 
-  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions): Promise<Response> {
+  async chat(payload: ChatStreamPayload, options?: ChatMethodOptions): Promise<Response> {
     try {
       const { model, tools, ...restPayload } = payload;
       const functions = tools?.map((tool) => tool.function);

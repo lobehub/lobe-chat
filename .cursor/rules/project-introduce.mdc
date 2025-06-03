@@ -34,6 +34,7 @@ The project uses the following technologies:
 - aHooks for react hooks library
 - dayjs for date and time library
 - lodash-es for utility library
+- fast-deep-equal for deep comparison of JavaScript objects
 - zod for data validation
 - TRPC for type safe backend
 - PGLite for client DB and PostgreSQL for backend DB

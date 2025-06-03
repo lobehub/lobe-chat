@@ -9,8 +9,8 @@ import type { ChatModelCard } from '@/types/llm';
 import { LobeRuntimeAI } from '../../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
 import type {
-  ChatCompetitionOptions,
   ChatCompletionErrorPayload,
+  ChatMethodOptions,
   ChatStreamPayload,
   Embeddings,
   EmbeddingsOptions,
@@ -150,7 +150,7 @@ export function transformResponseToStream(data: OpenAI.ChatCompletion) {
   });
 }
 
-export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>({
+export const createOpenAICompatibleRuntime = <T extends Record<string, any> = any>({
   provider,
   baseURL: DEFAULT_BASE_URL,
   apiKey: DEFAULT_API_LEY,
@@ -199,7 +199,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
       this.id = options.id || provider;
     }
 
-    async chat({ responseMode, ...payload }: ChatStreamPayload, options?: ChatCompetitionOptions) {
+    async chat({ responseMode, ...payload }: ChatStreamPayload, options?: ChatMethodOptions) {
       try {
         const inputStartAt = Date.now();
         const postPayload = chatCompletion?.handlePayload
