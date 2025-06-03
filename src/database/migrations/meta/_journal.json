@@ -161,6 +161,13 @@
       "when": 1746724476380,
       "tag": "0022_add_documents",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1748925630721,
+      "tag": "0023_remove_param_and_doubao",
+      "breakpoints": true
     }
   ],
   "version": "6"
