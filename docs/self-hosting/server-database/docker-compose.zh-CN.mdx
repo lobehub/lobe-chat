@@ -61,7 +61,8 @@ bash <(curl -fsSL https://lobe.li/setup.sh) -l zh_CN
 - [域名模式](#域名模式)：支持局域网 / 公网在使用反向代理下的 `http/https` 访问，适用于个人或团队日常使用；
 
 <Callout type="info">
-  在脚本的选项提示 `(选项1/选项2)[选项1]` 中：`(选项1 / 选项2)` 代表可以选择的选项，`[选项1]`代表默认选项，直接回车即可选择默认选项。
+  在脚本的选项提示 `(选项1/选项2)[选项1]` 中：`(选项1 / 选项2)`
+  代表可以选择的选项，`[选项1]`代表默认选项，直接回车即可选择默认选项。
 </Callout>
 
 ### 本地模式
@@ -75,9 +76,7 @@ bash <(curl -fsSL https://lobe.li/setup.sh) -l zh_CN
 
   你需要在脚本运行结束后查看配置生成报告，包括 Casdoor 管理员的帐号、用户账号和它们的初始登录密码。
 
-  <Callout type="warning">
-    请使用用户账号登录 LobeChat，管理员账号仅用于管理 Casdoor。
-  </Callout>
+  <Callout type="warning">请使用用户账号登录 LobeChat，管理员账号仅用于管理 Casdoor。</Callout>
 
   ```log
   安全密钥生成结果如下：
@@ -123,8 +122,7 @@ bash <(curl -fsSL https://lobe.li/setup.sh) -l zh_CN
 
   ### 访问应用
 
-  通过 [http://localhost:3210](http://localhost:3210) 访问你的 LobeChat 服务。
-  应用的账号密码在步骤`2`的报告中。
+  通过 [http://localhost:3210](http://localhost:3210) 访问你的 LobeChat 服务。应用的账号密码在步骤`2`的报告中。
 </Steps>
 
 ### 端口模式
@@ -141,9 +139,7 @@ bash <(curl -fsSL https://lobe.li/setup.sh) -l zh_CN
 
   你需要在脚本运行结束后查看配置生成报告，包括 Casdoor 管理员的帐号、用户账号和它们的初始登录密码。
 
-  <Callout type="warning">
-    请使用用户账号登录 LobeChat，管理员账号仅用于管理 Casdoor。
-  </Callout>
+  <Callout type="warning">请使用用户账号登录 LobeChat，管理员账号仅用于管理 Casdoor。</Callout>
 
   ```log
   安全密钥生成结果如下：
@@ -188,8 +184,7 @@ bash <(curl -fsSL https://lobe.li/setup.sh) -l zh_CN
 
   ### 访问应用
 
-  你可以通过 `http://your_server_ip:3210` 访问你的 LobeChat 服务。
-  应用的账号密码在步骤`2`的报告中。
+  你可以通过 `http://your_server_ip:3210` 访问你的 LobeChat 服务。应用的账号密码在步骤`2`的报告中。
 
   <Callout type="warning">
     请注意，如果你的服务能够被公网访问，我们强烈建议你参考 [文档](https://lobehub.com/docs/self-hosting/advanced/auth/next-auth/casdoor) 关闭注册功能。
@@ -239,23 +234,21 @@ bash <(curl -fsSL https://lobe.li/setup.sh) -l zh_CN
   - 选择访问协议：`http` 或 `https`
   - 安全密钥重新生成：我们强烈建议你重新生成安全密钥，如果你缺少脚本所需的密钥生成库，我们建议你参考 [自定义部署](#自定义部署) 章节对密钥进行修改。
 
-  <Callout type="warning">
-    以下问题可能导致你的服务无法正常访问：
+    <Callout type="warning">
+      以下问题可能导致你的服务无法正常访问：
 
-    - 此处的域名配置需要与步骤`1`中的反向代理配置保持一致。
+      - 此处的域名配置需要与步骤`1`中的反向代理配置保持一致。
 
-    - 如果你使用 Cloudflare 的域名解析服务并开启了 `全程代理`，请使用 `https` 协议。
+      - 如果你使用 Cloudflare 的域名解析服务并开启了 `全程代理`，请使用 `https` 协议。
 
-    - 如果你使用了 HTTPS 协议，请确保你的域名证书已经正确配置，一键部署默认不支持自签发证书。
-  </Callout>
+      - 如果你使用了 HTTPS 协议，请确保你的域名证书已经正确配置，一键部署默认不支持自签发证书。
+    </Callout>
 
   ### 查看配置生成报告
 
   你需要在脚本运行结束后查看配置生成报告，包括 Casdoor 管理员的初始登录密码。
 
-  <Callout type="warning">
-    请使用用户账号登录 LobeChat，管理员账号仅用于管理 Casdoor。
-  </Callout>
+  <Callout type="warning">请使用用户账号登录 LobeChat，管理员账号仅用于管理 Casdoor。</Callout>
 
   ```log
   安全密钥生成结果如下：
@@ -309,8 +302,7 @@ bash <(curl -fsSL https://lobe.li/setup.sh) -l zh_CN
 
 ## 自定义部署
 
-该章节主要为你介绍在不同的网络环境下自定义部署 LobeChat 服务必须要修改的配置。
-在开始前，你可以先下载 [Docker Compose 配置文件](https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/docker-compose.yml) 以及 [环境变量配置文件](https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/.env.zh-CN.example)。
+该章节主要为你介绍在不同的网络环境下自定义部署 LobeChat 服务必须要修改的配置。在开始前，你可以先下载 [Docker Compose 配置文件](https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/docker-compose.yml) 以及 [环境变量配置文件](https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/.env.zh-CN.example)。
 
 ```sh
 curl -O https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/docker-compose.yml
@@ -319,7 +311,8 @@ mv .env.zh-CN.example .env
 ```
 
 <Callout type="info">
-  本章节并不包含所有完整变量，剩余的变量可以查阅 [使用服务端数据库部署](/zh/docs/self-hosting/server-database) 。
+  本章节并不包含所有完整变量，剩余的变量可以查阅
+  [使用服务端数据库部署](/zh/docs/self-hosting/server-database) 。
 </Callout>
 
 ### 预备知识
@@ -331,8 +324,7 @@ mv .env.zh-CN.example .env
 - 支持 S3 协议的对象存储服务
 - 受 LobeChat 支持的 SSO 登录鉴权服务
 
-这些服务可以通过自建或者在线云服务组合搭配，以满足不同层次的部署需求。
-本文中，我们提供了完全基于开源自建服务的 Docker Compose 配置，你可以直接使用这份配置文件来启动 LobeChat 数据库版本，也可以对之进行修改以适应你的需求。
+这些服务可以通过自建或者在线云服务组合搭配，以满足不同层次的部署需求。本文中，我们提供了完全基于开源自建服务的 Docker Compose 配置，你可以直接使用这份配置文件来启动 LobeChat 数据库版本，也可以对之进行修改以适应你的需求。
 
 我们默认使用 [MinIO](https://github.com/minio/minio) 作为本地 S3 对象存储服务，使用 [Casdoor](https://github.com/casdoor/casdoor) 作为本地鉴权服务。
 
@@ -352,8 +344,7 @@ mv .env.zh-CN.example .env
 AUTH_CASDOOR_ISSUER=https://auth.example.com
 ```
 
-该配置会影响 LobeChat 的登录鉴权服务，你需要确保 Casdoor 服务的地址正确。
-你可以在 [常见问题](#常见问题) 中找到该配置错误的常见现象及解决方案。
+该配置会影响 LobeChat 的登录鉴权服务，你需要确保 Casdoor 服务的地址正确。你可以在 [常见问题](#常见问题) 中找到该配置错误的常见现象及解决方案。
 
 - 同时，你也需要在 Casdoor 中允许回调地址为 LobeChat 的地址：
 
@@ -412,6 +403,7 @@ lobe-chat      | [auth][error] r3: "response" is not a conform Authorization Ser
 - 请参考 [域名模式](#域名模式) 章节中的反向代理配置注意事项。
 
 - 一个直接的排查方式，你可以直接访问 `https://auth.example.com/.well-known/openid-configuration`，如果
+
   - 返回了非 JSON 格式的数据，则说明你的反向代理配置错误。
   - 如果返回的 JSON 格式数据中的 `"issuer": "URL"` 字段不是你配置的 `https://auth.example.com`，则说明你的环境变量配置错误。
 
@@ -493,9 +485,8 @@ lobe-chat      | [auth][error] TypeError: fetch failed
 适用于已经在生产环境下使用 `logto` 作为登录鉴权服务的用户
 
 <Callout type="info">
-  由于使用[Logto](https://logto.io/)
-  作为登录鉴权服务存在比较大的不稳定性。
-  因此，下文基于发布到 IP 模式的教程，实现了使用 Casdoor 作为鉴权服务提供商的域名发布方案。
+  由于使用[Logto](https://logto.io/) 作为登录鉴权服务存在比较大的不稳定性。 因此，下文基于发布到 IP
+  模式的教程，实现了使用 Casdoor 作为鉴权服务提供商的域名发布方案。
   本文剩余部分也将以其为例进行说明。如果你使用其他诸如 Logto
   等其他登录鉴权服务，流程应当相近，但请注意不同的登录鉴权服务的端口配置可能有所差异。
 </Callout>
@@ -527,44 +518,49 @@ docker compose up -d
 接下来，修改配置文件以实现域名发布
 
 1. 修改 `docker-compose.yml` 文件
+
    1. 修改 `minio`的`MINIO_API_CORS_ALLOW_ORIGIN`字段。
+
    ```yaml
-         'MINIO_API_CORS_ALLOW_ORIGIN=https://lobe.example.com'
+   'MINIO_API_CORS_ALLOW_ORIGIN=https://lobe.example.com'
    ```
+
    2. 修改`casdoor`的`origin`字段。
+
    ```yaml
-         origin: 'https://auth.example.com'
+   origin: 'https://auth.example.com'
    ```
+
    3. 修改`lobe`的`environment`字段。
+
    ```yaml
-           # - 'APP_URL=http://localhost:3210'
-     - 'APP_URL=https://lobe.example.com'
+   # - 'APP_URL=http://localhost:3210'
+   - 'APP_URL=https://lobe.example.com'
 
-     - 'NEXT_AUTH_SSO_PROVIDERS=casdoor'
-     - 'KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ='
-     - 'NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg'
-     # - 'AUTH_URL=http://localhost:${LOBE_PORT}/api/auth'
-     - 'AUTH_URL=https://lobe.example.com/api/auth'
+   - 'NEXT_AUTH_SSO_PROVIDERS=casdoor'
+   - 'KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ='
+   - 'NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg'
+   # - 'AUTH_URL=http://localhost:${LOBE_PORT}/api/auth'
+   - 'AUTH_URL=https://lobe.example.com/api/auth'
 
-     # - 'AUTH_CASDOOR_ISSUER=http://localhost:${CASDOOR_PORT}'
-     - 'AUTH_CASDOOR_ISSUER=https://auth.example.com'
+   # - 'AUTH_CASDOOR_ISSUER=http://localhost:${CASDOOR_PORT}'
+   - 'AUTH_CASDOOR_ISSUER=https://auth.example.com'
 
-     - 'DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}'
-     # - 'S3_ENDPOINT=http://localhost:${MINIO_PORT}'
-     - 'S3_ENDPOINT=https://minio.example.com'
+   - 'DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}'
+   # - 'S3_ENDPOINT=http://localhost:${MINIO_PORT}'
+   - 'S3_ENDPOINT=https://minio.example.com'
 
-     - 'S3_BUCKET=${MINIO_LOBE_BUCKET}'
-     # - 'S3_PUBLIC_DOMAIN=http://localhost:${MINIO_PORT}'
-     - 'S3_PUBLIC_DOMAIN=https://minio.example.com'
+   - 'S3_BUCKET=${MINIO_LOBE_BUCKET}'
+   # - 'S3_PUBLIC_DOMAIN=http://localhost:${MINIO_PORT}'
+   - 'S3_PUBLIC_DOMAIN=https://minio.example.com'
 
-     - 'S3_ENABLE_PATH_STYLE=1'
-     - 'LLM_VISION_IMAGE_USE_BASE64=1'
+   - 'S3_ENABLE_PATH_STYLE=1'
+   - 'LLM_VISION_IMAGE_USE_BASE64=1'
    ```
+
 2. 修改 `.env` 文件
 
-<Callout type="info">
-  为了安全起见，修改 `.env` 文件中的 ROOT USER 的字段
-</Callout>
+<Callout type="info">为了安全起见，修改 `.env` 文件中的 ROOT USER 的字段</Callout>
 
 ```sh
 # MinIO S3 configuration
@@ -666,12 +662,10 @@ docker compose up -d # 重新启动
 # HTTP_PROXY=http://localhost:7890
 # HTTPS_PROXY=http://localhost:7890
 
-
 # Other environment variables, as needed. You can refer to the environment variables configuration for the client version, making sure not to have ACCESS_CODE.
 # OPENAI_API_KEY=sk-xxxx
 # OPENAI_PROXY_URL=https://api.openai.com/v1
 # OPENAI_MODEL_LIST=...
-
 
 # ===========================
 # ====== Preset config ======
@@ -697,7 +691,6 @@ MINIO_ROOT_PASSWORD=Crj1570768
 MINIO_LOBE_BUCKET=lobe
 S3_ACCESS_KEY_ID=dB6Uq9CYZPdWSZouPyEd
 S3_SECRET_ACCESS_KEY=aPBW8CVULkh8bw1GatlT0GjLihcXHLNwRml4pieS
-
 ```
 
 - `docker-compose.yml`
