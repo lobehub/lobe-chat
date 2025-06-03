@@ -43,6 +43,9 @@
     "reasoningBudgetToken": {
       "title": "Düşünme Tüketim Tokeni"
     },
+    "reasoningEffort": {
+      "title": "Akıl Yürütme Gücü"
+    },
     "title": "Model Genişletme Özellikleri"
   },
   "history": {
@@ -119,6 +122,16 @@
       "outputText": "Metin çıkışı",
       "outputTitle": "Çıkış detayları",
       "reasoning": "Derin düşünme",
+      "speed": {
+        "tps": {
+          "title": "TPS",
+          "tooltip": "Token Başına Saniye, TPS. AI tarafından üretilen içeriğin ortalama hızını (Token/saniye) belirtir, ilk Token alındıktan sonra hesaplanmaya başlanır."
+        },
+        "ttft": {
+          "title": "TTFT",
+          "tooltip": "İlk Token'a Kadar Geçen Süre, TTFT. Mesajınızı göndermenizden, istemcinin ilk Token'ı almasına kadar geçen zaman aralığını belirtir."
+        }
+      },
       "title": "Üretim detayları",
       "total": "Toplam tüketim"
     }

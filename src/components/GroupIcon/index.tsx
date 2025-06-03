@@ -17,7 +17,7 @@ const GroupIcon = memo<{ icon: LucideIcon }>(({ icon }) => {
 
   return (
     <Center className={styles.icon} flex={'none'} height={40} width={40}>
-      <Icon icon={icon} size={{ fontSize: 24 }} />
+      <Icon icon={icon} size={24} />
     </Center>
   );
 });

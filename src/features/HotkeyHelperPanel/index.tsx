@@ -1,6 +1,7 @@
 'use client';
 
-import { Drawer, Grid, TabsNav } from '@lobehub/ui';
+import { Grid, Icon, Modal, Segmented } from '@lobehub/ui';
+import { MessageSquare, Settings2 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -20,39 +21,42 @@ const HotkeyHelperPanel = memo(() => {
   const handleClose = () => updateSystemStatus({ showHotkeyHelper: false });
 
   return (
-    <Drawer
-      height={240}
-      mask={false}
-      maskClosable={false}
-      onClose={handleClose}
+    <Modal
+      centered
+      footer={null}
+      onCancel={handleClose}
       open={open}
-      placement={'bottom'}
       styles={{
-        bodyContent: { paddingBlock: 24 },
-        title: { paddingBlock: 0 },
+        body: { paddingBlock: 24 },
+        mask: {
+          backdropFilter: 'blur(8px)',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        },
       }}
       title={
-        <TabsNav
-          activeKey={active}
-          items={[
+        <Segmented
+          onChange={(key) => setActive(key as HotkeyGroupId)}
+          options={[
             {
-              key: HotkeyGroupEnum.Essential,
+              icon: <Icon icon={Settings2} />,
               label: t('hotkey.group.essential'),
+              value: HotkeyGroupEnum.Essential,
             },
             {
-              key: HotkeyGroupEnum.Conversation,
+              icon: <Icon icon={MessageSquare} />,
               label: t('hotkey.group.conversation'),
+              value: HotkeyGroupEnum.Conversation,
             },
           ]}
-          onChange={(key) => setActive(key as HotkeyGroupId)}
-          variant={'compact'}
+          value={active}
+          variant="filled"
         />
       }
     >
       <Grid gap={32}>
         <HotkeyContent groupId={active} />
       </Grid>
-    </Drawer>
+    </Modal>
   );
 });
 

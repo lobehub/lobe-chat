@@ -11,9 +11,15 @@ import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selector
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 
 import ContextCachingSwitch from './ContextCachingSwitch';
+import ReasoningEffortSlider from './ReasoningEffortSlider';
 import ReasoningTokenSlider from './ReasoningTokenSlider';
 
-const ControlsForm = memo(() => {
+interface ControlsProps {
+  setUpdating: (updating: boolean) => void;
+  updating: boolean;
+}
+
+const ControlsForm = memo<ControlsProps>(({ setUpdating }) => {
   const { t } = useTranslation('chat');
   const [model, provider, updateAgentChatConfig] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
@@ -67,6 +73,7 @@ const ControlsForm = memo(() => {
         </span>
       ),
       label: t('extendParams.enableReasoning.title'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'enableReasoning',
     },
@@ -76,6 +83,17 @@ const ControlsForm = memo(() => {
       layout: 'vertical',
       minWidth: undefined,
       name: 'reasoningBudgetToken',
+      style: {
+        paddingBottom: 0,
+      },
+    },
+    {
+      children: <ReasoningEffortSlider />,
+      desc: 'reasoning_effort',
+      label: t('extendParams.reasoningEffort.title'),
+      layout: 'horizontal',
+      minWidth: undefined,
+      name: 'reasoningEffort',
       style: {
         paddingBottom: 0,
       },
@@ -93,11 +111,13 @@ const ControlsForm = memo(() => {
       }
       itemsType={'flat'}
       onValuesChange={async (_, values) => {
+        setUpdating(true);
         await updateAgentChatConfig(values);
+        setUpdating(false);
       }}
       size={'small'}
       style={{ fontSize: 12 }}
-      variant={'pure'}
+      variant={'borderless'}
     />
   );
 });

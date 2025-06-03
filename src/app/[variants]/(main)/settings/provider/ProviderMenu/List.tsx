@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, ScrollShadow } from '@lobehub/ui';
 import { Typography } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { ArrowDownUpIcon } from 'lucide-react';
@@ -31,7 +31,7 @@ const ProviderList = () => {
 
   const isMobile = useIsMobile();
   return (
-    <Flexbox gap={4} padding={'0 12px'} style={{ marginBottom: 12 }}>
+    <ScrollShadow gap={4} height={'100%'} paddingInline={12} size={4} style={{ paddingBottom: 32 }}>
       {!isMobile && <All />}
       <Flexbox
         align={'center'}
@@ -69,7 +69,7 @@ const ProviderList = () => {
       {disabledModelProviderList.map((item) => (
         <ProviderItem {...item} key={item.id} />
       ))}
-    </Flexbox>
+    </ScrollShadow>
   );
 };
 

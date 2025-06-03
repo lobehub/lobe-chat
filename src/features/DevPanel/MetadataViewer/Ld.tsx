@@ -16,7 +16,7 @@ const Ld = memo(() => {
     );
 
   return (
-    <Highlighter language="json" type={'pure'}>
+    <Highlighter language="json" variant={'borderless'}>
       {JSON.stringify(JSON.parse(ld), null, 2)}
     </Highlighter>
   );

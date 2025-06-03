@@ -29,9 +29,6 @@
   "deepseek": {
     "description": "DeepSeek, yapay zeka teknolojisi araştırma ve uygulamalarına odaklanan bir şirkettir. En son modeli DeepSeek-V2.5, genel diyalog ve kod işleme yeteneklerini birleştirerek, insan tercihleriyle uyum, yazma görevleri ve talimat takibi gibi alanlarda önemli iyileştirmeler sağlamaktadır."
   },
-  "doubao": {
-    "description": "ByteDance tarafından geliştirilen kendi büyük modeli. ByteDance içindeki 50'den fazla iş senaryosunda uygulama doğrulaması ile, günlük trilyon seviyesinde token kullanımı ile sürekli olarak geliştirilmekte, çeşitli modalite yetenekleri sunmakta ve kaliteli model performansı ile işletmelere zengin iş deneyimleri yaratmaktadır."
-  },
   "fireworksai": {
     "description": "Fireworks AI, işlev çağrısı ve çok modlu işleme üzerine odaklanan önde gelen bir gelişmiş dil modeli hizmet sağlayıcısıdır. En son modeli Firefunction V2, Llama-3 tabanlıdır ve işlev çağrısı, diyalog ve talimat takibi için optimize edilmiştir. Görsel dil modeli FireLLaVA-13B, görüntü ve metin karışık girişi desteklemektedir. Diğer dikkat çekici modeller arasında Llama serisi ve Mixtral serisi bulunmaktadır ve etkili çok dilli talimat takibi ve üretim desteği sunmaktadır."
   },
@@ -97,6 +94,9 @@
   },
   "ppio": {
     "description": "PPIO Paiou Cloud, istikrarlı ve yüksek maliyet etkinliğe sahip açık kaynak model API hizmeti sunar, DeepSeek'in tüm serisi, Llama, Qwen gibi sektörün önde gelen büyük modellerini destekler."
+  },
+  "qiniu": {
+    "description": "Qiniu, esnek seçeneklerle büyük model API hizmetleri sunan lider bulut hizmeti sağlayıcısıdır, DeepSeek, Llama ve Qwen gibi sektörün önde gelen büyük modellerini destekler."
   },
   "qwen": {
     "description": "Tongyi Qianwen, Alibaba Cloud tarafından geliştirilen büyük ölçekli bir dil modelidir ve güçlü doğal dil anlama ve üretme yeteneklerine sahiptir. Çeşitli soruları yanıtlayabilir, metin içeriği oluşturabilir, görüşlerini ifade edebilir ve kod yazabilir. Birçok alanda etkili bir şekilde kullanılmaktadır."

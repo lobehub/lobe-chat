@@ -1,12 +1,11 @@
 'use client';
 
-import { Markdown } from '@lobehub/ui';
-import { AutoComplete, Input } from 'antd';
+import { AutoComplete, Input, InputPassword, Markdown } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { useTranslation } from 'react-i18next';
 
 import { AzureProviderCard } from '@/config/modelProviders';
-import { ModelProvider } from '@/libs/agent-runtime';
+import { ModelProvider } from '@/libs/model-runtime';
 import { useUserStore } from '@/store/user';
 import { modelProviderSelectors } from '@/store/user/selectors';
 
@@ -46,10 +45,7 @@ export const useAzureProvider = (): ProviderItem => {
     apiKeyItems: [
       {
         children: (
-          <Input.Password
-            autoComplete={'new-password'}
-            placeholder={t('azure.token.placeholder')}
-          />
+          <InputPassword autoComplete={'new-password'} placeholder={t('azure.token.placeholder')} />
         ),
         desc: t('azure.token.desc'),
         label: t('azure.token.title'),

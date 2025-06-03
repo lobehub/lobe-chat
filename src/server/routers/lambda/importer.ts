@@ -2,18 +2,20 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 import { DataImporterRepos } from '@/database/repositories/dataImporter';
-import { authedProcedure, router } from '@/libs/trpc';
-import { serverDatabase } from '@/libs/trpc/lambda';
+import { authedProcedure, router } from '@/libs/trpc/lambda';
+import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { FileService } from '@/server/services/file';
 import { ImportPgDataStructure } from '@/types/export';
 import { ImportResultData, ImporterEntryData } from '@/types/importer';
 
 const importProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
-  const dataImporterService = new DataImporterRepos(ctx.serverDB, ctx.userId);
 
   return opts.next({
-    ctx: { dataImporterService, fileService: new FileService() },
+    ctx: {
+      dataImporterService: new DataImporterRepos(ctx.serverDB, ctx.userId),
+      fileService: new FileService(ctx.serverDB, ctx.userId),
+    },
   });
 });
 
@@ -37,11 +39,19 @@ export const importerRouter = router({
         });
       }
 
+      let result: ImportResultData;
       if ('schemaHash' in data) {
-        return ctx.dataImporterService.importPgData(data as unknown as ImportPgDataStructure);
+        result = await ctx.dataImporterService.importPgData(
+          data as unknown as ImportPgDataStructure,
+        );
+      } else {
+        result = await ctx.dataImporterService.importData(data);
       }
 
-      return ctx.dataImporterService.importData(data);
+      // clean file after upload
+      await ctx.fileService.deleteFile(input.pathname);
+
+      return result;
     }),
 
   importByPost: importProcedure

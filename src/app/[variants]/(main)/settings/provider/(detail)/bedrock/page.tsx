@@ -1,6 +1,6 @@
 'use client';
 
-import { Select } from 'antd';
+import { Select } from '@lobehub/ui';
 import { useTranslation } from 'react-i18next';
 
 import { FormPassword } from '@/components/FormInput';

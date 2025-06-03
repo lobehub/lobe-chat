@@ -71,6 +71,9 @@
     "websites": "Sitios web"
   },
   "title": "Archivos",
+  "toggleLeftPanel": {
+    "title": "Mostrar/Ocultar panel izquierdo"
+  },
   "uploadDock": {
     "body": {
       "collapse": "Colapsar",

@@ -3,8 +3,8 @@ import { z } from 'zod';
 import { MessageModel } from '@/database/models/message';
 import { updateMessagePluginSchema } from '@/database/schemas';
 import { getServerDB } from '@/database/server';
-import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
-import { serverDatabase } from '@/libs/trpc/lambda';
+import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
+import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { FileService } from '@/server/services/file';
 import { ChatMessage } from '@/types/message';
 import { BatchTaskResult } from '@/types/service';
@@ -16,7 +16,7 @@ const messageProcedure = authedProcedure.use(serverDatabase).use(async (opts) =>
 
   return opts.next({
     ctx: {
-      fileService: new FileService(),
+      fileService: new FileService(ctx.serverDB, ctx.userId),
       messageModel: new MessageModel(ctx.serverDB, ctx.userId),
     },
   });
@@ -102,7 +102,7 @@ export const messageRouter = router({
       const serverDB = await getServerDB();
 
       const messageModel = new MessageModel(serverDB, ctx.userId);
-      const fileService = new FileService();
+      const fileService = new FileService(serverDB, ctx.userId);
 
       return messageModel.query(input, {
         postProcessUrl: (path) => fileService.getFullFileUrl(path),

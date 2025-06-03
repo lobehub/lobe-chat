@@ -86,9 +86,9 @@ Switch to the Environment section, fill in the environment variables, and click 
 
 ```shell
 # Environment variables required for building
-NIXPACKS_PKGS="pnpm bun"
+NIXPACKS_PKGS="bun"
 NIXPACKS_INSTALL_CMD="pnpm install"
-NIXPACKS_BUILD_CMD="pnpm run build"
+NIXPACKS_BUILD_CMD="NODE_OPTIONS='--max-old-space-size=8192' pnpm run build"
 NIXPACKS_START_CMD="pnpm start"
 
 APP_URL=

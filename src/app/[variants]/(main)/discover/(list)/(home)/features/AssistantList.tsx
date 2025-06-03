@@ -19,10 +19,10 @@ const AssistantList = memo<{ data: DiscoverAssistantItem[] }>(({ data }) => {
       ))}
       {data.slice(8, 16).map((item) => (
         <Card
+          compact
           href={urlJoin('/discover/assistant/', item.identifier)}
           key={item.identifier}
           showCategory
-          variant={'compact'}
           {...item}
         />
       ))}

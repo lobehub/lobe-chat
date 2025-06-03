@@ -3,6 +3,10 @@
     "desc": "Dodaj bieżącą treść jako wiadomość użytkownika, ale nie wyzwalaj generowania",
     "title": "Dodaj wiadomość użytkownika"
   },
+  "clearCurrentMessages": {
+    "desc": "Wyczyść wiadomości i przesłane pliki w bieżącej rozmowie",
+    "title": "Wyczyść wiadomości rozmowy"
+  },
   "editMessage": {
     "desc": "Wejdź w tryb edycji, przytrzymując klawisz Alt i podwójnie klikając wiadomość",
     "title": "Edytuj wiadomość"
@@ -30,6 +34,10 @@
   "search": {
     "desc": "Wywołaj główne pole wyszukiwania na bieżącej stronie",
     "title": "Szukaj"
+  },
+  "showApp": {
+    "desc": "Szybkie otwarcie głównego okna aplikacji",
+    "title": "Pokaż główne okno"
   },
   "switchAgent": {
     "desc": "Przełączaj przypiętego asystenta w pasku bocznym, przytrzymując Ctrl i naciskając numery 0-9",

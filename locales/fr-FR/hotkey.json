@@ -3,6 +3,10 @@
     "desc": "Ajouter le contenu actuel en tant que message utilisateur sans déclencher de génération",
     "title": "Ajouter un message utilisateur"
   },
+  "clearCurrentMessages": {
+    "desc": "Effacer les messages de la session actuelle et les fichiers téléchargés",
+    "title": "Effacer les messages de la session"
+  },
   "editMessage": {
     "desc": "Entrez en mode édition en maintenant la touche Alt enfoncée et en double-cliquant sur le message",
     "title": "Éditer le message"
@@ -30,6 +34,10 @@
   "search": {
     "desc": "Faire apparaître la barre de recherche principale de la page actuelle",
     "title": "Rechercher"
+  },
+  "showApp": {
+    "desc": "Ouvrir rapidement la fenêtre principale de l'application",
+    "title": "Afficher la fenêtre principale"
   },
   "switchAgent": {
     "desc": "Changer d'assistant fixé dans la barre latérale en maintenant Ctrl et en appuyant sur un chiffre de 0 à 9",

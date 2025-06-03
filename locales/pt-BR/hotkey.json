@@ -3,6 +3,10 @@
     "desc": "Adiciona o conteúdo atual como uma mensagem do usuário, mas não aciona a geração",
     "title": "Adicionar uma mensagem do usuário"
   },
+  "clearCurrentMessages": {
+    "desc": "Limpar as mensagens da conversa atual e os arquivos enviados",
+    "title": "Limpar mensagens da conversa"
+  },
   "editMessage": {
     "desc": "Entre no modo de edição pressionando Alt e clicando duas vezes na mensagem",
     "title": "Editar mensagem"
@@ -30,6 +34,10 @@
   "search": {
     "desc": "Abrir a caixa de pesquisa principal da página atual",
     "title": "Pesquisar"
+  },
+  "showApp": {
+    "desc": "Abrir rapidamente a janela principal do aplicativo",
+    "title": "Mostrar janela principal"
   },
   "switchAgent": {
     "desc": "Troque o assistente fixo na barra lateral pressionando Ctrl e um número de 0 a 9",

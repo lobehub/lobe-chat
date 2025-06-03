@@ -1,6 +1,6 @@
 'use client';
 
-import { MobileNavBar, MobileNavBarTitle } from '@lobehub/ui/mobile';
+import { ChatHeader } from '@lobehub/ui/mobile';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,8 +14,8 @@ const Header = memo(() => {
   const router = useQueryRoute();
 
   return (
-    <MobileNavBar
-      center={<MobileNavBarTitle title={t('header.session')} />}
+    <ChatHeader
+      center={<ChatHeader.Title title={t('header.session')} />}
       onBackClick={() => router.push('/chat')}
       right={<HeaderContent />}
       showBackButton

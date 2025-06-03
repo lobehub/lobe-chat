@@ -1,4 +1,4 @@
-import { ActionIcon } from '@lobehub/ui';
+import { ActionIcon, ActionIconProps } from '@lobehub/ui';
 import { Compass, FolderClosed, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
@@ -10,6 +10,12 @@ import { SidebarTabKey } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
+const ICON_SIZE: ActionIconProps['size'] = {
+  blockSize: 40,
+  size: 24,
+  strokeWidth: 2,
+};
+
 export interface TopActionProps {
   isPinned?: boolean | null;
   tab?: SidebarTabKey;
@@ -20,43 +26,53 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
   const switchBackToChat = useGlobalStore((s) => s.switchBackToChat);
   const { showMarket, enableKnowledgeBase } = useServerConfigStore(featureFlagsSelectors);
 
+  const isChatActive = tab === SidebarTabKey.Chat && !isPinned;
+  const isFilesActive = tab === SidebarTabKey.Files;
+  const isDiscoverActive = tab === SidebarTabKey.Discover;
+
   return (
     <Flexbox gap={8}>
       <Link
         aria-label={t('tab.chat')}
         href={'/chat'}
         onClick={(e) => {
+          // If Cmd key is pressed, let the default link behavior happen (open in new tab)
+          if (e.metaKey || e.ctrlKey) {
+            return;
+          }
+
+          // Otherwise, prevent default and switch session within the current tab
           e.preventDefault();
           switchBackToChat(useSessionStore.getState().activeId);
         }}
       >
         <ActionIcon
-          active={tab === SidebarTabKey.Chat && !isPinned}
+          active={isChatActive}
           icon={MessageSquare}
-          placement={'right'}
-          size="large"
+          size={ICON_SIZE}
           title={t('tab.chat')}
+          tooltipProps={{ placement: 'right' }}
         />
       </Link>
       {enableKnowledgeBase && (
         <Link aria-label={t('tab.files')} href={'/files'}>
           <ActionIcon
-            active={tab === SidebarTabKey.Files}
+            active={isFilesActive}
             icon={FolderClosed}
-            placement={'right'}
-            size="large"
+            size={ICON_SIZE}
             title={t('tab.files')}
+            tooltipProps={{ placement: 'right' }}
           />
         </Link>
       )}
       {showMarket && (
         <Link aria-label={t('tab.discover')} href={'/discover'}>
           <ActionIcon
-            active={tab === SidebarTabKey.Discover}
+            active={isDiscoverActive}
             icon={Compass}
-            placement={'right'}
-            size="large"
+            size={ICON_SIZE}
             title={t('tab.discover')}
+            tooltipProps={{ placement: 'right' }}
           />
         </Link>
       )}

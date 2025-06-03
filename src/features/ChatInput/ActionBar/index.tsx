@@ -1,4 +1,4 @@
-import { ChatInputActionBar } from '@lobehub/ui';
+import { ChatInputActionBar } from '@lobehub/ui/chat';
 import { ReactNode, memo } from 'react';
 
 import { ActionKeys, actionMap } from './config';
@@ -24,7 +24,7 @@ export interface ActionBarProps {
 
 const ActionBar = memo<ActionBarProps>(
   ({
-    padding = '0 16px',
+    padding = '0 8px',
     rightAreaStartRender,
     rightAreaEndRender,
     leftAreaStartRender,

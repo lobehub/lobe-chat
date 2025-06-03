@@ -87,7 +87,9 @@ describe('parseModelString', () => {
     });
 
     it('token and image output', () => {
-      const result = parseModelString('gemini-2.0-flash-exp-image-generation=Gemini 2.0 Flash (Image Generation) Experimental<32768:imageOutput>');
+      const result = parseModelString(
+        'gemini-2.0-flash-exp-image-generation=Gemini 2.0 Flash (Image Generation) Experimental<32768:imageOutput>',
+      );
 
       expect(result.add[0]).toEqual({
         displayName: 'Gemini 2.0 Flash (Image Generation) Experimental',
@@ -304,16 +306,13 @@ describe('parseModelString', () => {
   });
 
   describe('deployment name', () => {
-    it('should have same deployment name as id', () => {
+    it('should have no deployment name', () => {
       const result = parseModelString('model1=Model 1', true);
       expect(result.add[0]).toEqual({
         id: 'model1',
         displayName: 'Model 1',
         abilities: {},
         type: 'chat',
-        config: {
-          deploymentName: 'model1',
-        },
       });
     });
 
@@ -453,6 +452,61 @@ describe('transformToChatModelCards', () => {
     expect(result).toMatchSnapshot();
   });
 
+  it('should use default deploymentName from known model when not specified in string (VolcEngine case)', () => {
+    const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+      (m) => m.id === 'deepseek-r1' && m.providerId === 'volcengine',
+    );
+    const defaultChatModels: AiFullModelCard[] = [];
+    const result = transformToAiChatModelList({
+      modelString: '+deepseek-r1',
+      defaultChatModels,
+      providerId: 'volcengine',
+      withDeploymentName: true,
+    });
+    expect(result).toContainEqual({
+      ...knownModel,
+      enabled: true,
+    });
+  });
+
+  it('should use deploymentName from modelString when specified (VolcEngine case)', () => {
+    const defaultChatModels: AiFullModelCard[] = [];
+    const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+      (m) => m.id === 'deepseek-r1' && m.providerId === 'volcengine',
+    );
+    const result = transformToAiChatModelList({
+      modelString: `+deepseek-r1->my-custom-deploy`,
+      defaultChatModels,
+      providerId: 'volcengine',
+      withDeploymentName: true,
+    });
+    expect(result).toContainEqual({
+      ...knownModel,
+      enabled: true,
+      config: { deploymentName: 'my-custom-deploy' },
+    });
+  });
+
+  it('should set both id and deploymentName to the full string when no -> is used and withDeploymentName is true', () => {
+    const defaultChatModels: AiFullModelCard[] = [];
+    const result = transformToAiChatModelList({
+      modelString: `+my_model`,
+      defaultChatModels,
+      providerId: 'volcengine',
+      withDeploymentName: true,
+    });
+    expect(result).toContainEqual({
+      id: `my_model`,
+      displayName: `my_model`,
+      type: 'chat',
+      abilities: {},
+      enabled: true,
+      config: {
+        deploymentName: `my_model`,
+      },
+    });
+  });
+
   it('should handle azure real case', () => {
     const defaultChatModels = [
       {
@@ -565,7 +619,12 @@ describe('transformToChatModelCards', () => {
         displayName: 'GPT-4o',
         enabled: true,
         id: 'gpt-4o',
-        pricing: { input: 2.5, output: 10 },
+        maxOutput: 4096,
+        pricing: {
+          cachedInput: 1.25,
+          input: 2.5,
+          output: 10,
+        },
         providerId: 'azure',
         releasedAt: '2024-05-13',
         source: 'builtin',
@@ -582,6 +641,11 @@ describe('transformToChatModelCards', () => {
         enabled: true,
         id: 'gpt-4o-mini',
         maxOutput: 4096,
+        pricing: {
+          cachedInput: 0.075,
+          input: 0.15,
+          output: 0.6,
+        },
         type: 'chat',
       },
       {
@@ -596,7 +660,11 @@ describe('transformToChatModelCards', () => {
         source: 'builtin',
         id: 'o1-mini',
         maxOutput: 65536,
-        pricing: { input: 1.1, output: 4.4 },
+        pricing: {
+          cachedInput: 0.55,
+          input: 1.1,
+          output: 4.4,
+        },
         releasedAt: '2024-09-12',
         type: 'chat',
       },

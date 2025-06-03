@@ -6,6 +6,7 @@ export default {
     chat: '聊天偏好',
     meta: '助手信息',
     modal: '模型设置',
+    opening: '开场设置',
     plugin: '插件设置',
     prompt: '角色设定',
     tts: '语音服务',
@@ -145,12 +146,13 @@ export default {
   },
   settingAgent: {
     avatar: {
-      title: '头像',
+      title: '助手头像',
     },
     backgroundColor: {
-      title: '背景色',
+      title: '头像背景色',
     },
     description: {
+      desc: '简单介绍你的助手，不作为角色设定',
       placeholder: '请输入助手描述',
       title: '助手描述',
     },
@@ -162,12 +164,30 @@ export default {
       placeholder: '请输入角色 Prompt 提示词',
       title: '角色设定',
     },
+    submit: '更新助手信息',
     tag: {
+      desc: '助手标签将在助手市场中展示',
       placeholder: '请输入标签',
       title: '标签',
     },
     title: '助手信息',
   },
+
+  settingAppearance: {
+    neutralColor: {
+      desc: '不同色彩倾向的灰阶自定义',
+      title: '中性色',
+    },
+    preview: {
+      title: '调色盘',
+    },
+    primaryColor: {
+      desc: '自定义主题色',
+      title: '主题色',
+    },
+    title: '应用外观',
+  },
+
   settingChat: {
     autoCreateTopicThreshold: {
       desc: '当前消息数超过设定该值后，将自动创建话题',
@@ -207,14 +227,41 @@ export default {
       placeholder: '预处理模版 {{text}} 将替换为实时输入信息',
       title: '用户输入预处理',
     },
+    submit: '更新聊天偏好',
     title: '聊天设置',
+  },
+  settingChatAppearance: {
+    fontSize: {
+      desc: '聊天内容的字体大小',
+      marks: {
+        normal: '标准',
+      },
+      title: '字体大小',
+    },
+    highlighterTheme: {
+      title: '代码高亮主题',
+    },
+    mermaidTheme: {
+      title: 'Mermaid 主题',
+    },
+    title: '聊天外观',
+  },
+  settingCommon: {
+    lang: {
+      autoMode: '跟随系统',
+      title: '语言',
+    },
+    themeMode: {
+      auto: '自动',
+      dark: '深色',
+      light: '浅色',
+      title: '主题',
+    },
+    title: '通用设置',
   },
   settingModel: {
     enableMaxTokens: {
       title: '开启单次回复限制',
-    },
-    enableReasoningEffort: {
-      title: '开启推理强度调整',
     },
     frequencyPenalty: {
       desc: '值越大，用词越丰富多样；值越低，用词更朴实简单',
@@ -235,15 +282,7 @@ export default {
       desc: '值越大，越倾向不同的表达方式，避免概念重复；值越小，越倾向使用重复的概念或叙述，表达更具一致性',
       title: '表述发散度',
     },
-    reasoningEffort: {
-      desc: '值越大，推理能力越强，但可能会增加响应时间和 Token 消耗',
-      options: {
-        high: '高',
-        low: '低',
-        medium: '中',
-      },
-      title: '推理强度',
-    },
+    submit: '更新模型设置',
     temperature: {
       desc: '数值越大，回答越有创意和想象力；数值越小，回答越严谨',
       title: '创意活跃度',
@@ -254,6 +293,21 @@ export default {
       desc: '考虑多少种可能性，值越大，接受更多可能的回答；值越小，倾向选择最可能的回答。不推荐和创意活跃度一起更改',
       title: '思维开放度',
     },
+  },
+  settingOpening: {
+    openingMessage: {
+      desc: '打开会话时的开场消息，用来介绍助手的功能',
+      placeholder: '你好，我是自定义助手。你可以立即与我开始对话，也可以前往助手设置完善我的信息。',
+      title: '开场消息',
+    },
+    openingQuestions: {
+      desc: '会话开始时展示的引导性问题',
+      empty: '暂无问题',
+      placeholder: '请输入问题',
+      repeat: '问题已存在',
+      title: '开场问题',
+    },
+    title: '开场设置',
   },
   settingPlugin: {
     title: '插件列表',
@@ -305,6 +359,7 @@ export default {
       desc: '其中 browser 为浏览器原生的语音识别服务',
       title: '语音识别服务',
     },
+    submit: '更新语音服务',
     title: '语音服务',
     tts: '语音合成设置',
     ttsService: {
@@ -316,37 +371,6 @@ export default {
       preview: '试听声源',
       title: '语音合成声源',
     },
-  },
-  settingTheme: {
-    avatar: {
-      title: '头像',
-    },
-    fontSize: {
-      desc: '聊天内容的字体大小',
-      marks: {
-        normal: '标准',
-      },
-      title: '字体大小',
-    },
-    lang: {
-      autoMode: '跟随系统',
-      title: '语言',
-    },
-    neutralColor: {
-      desc: '不同色彩倾向的灰阶自定义',
-      title: '中性色',
-    },
-    primaryColor: {
-      desc: '自定义主题色',
-      title: '主题色',
-    },
-    themeMode: {
-      auto: '自动',
-      dark: '深色',
-      light: '浅色',
-      title: '主题',
-    },
-    title: '主题设置',
   },
   storage: {
     actions: {
@@ -381,6 +405,12 @@ export default {
     metaMiss: '请补全助手信息后提交，需要包含名称、描述和标签',
     placeholder: '请输入助手的标识符，需要是唯一的，比如 web-development',
     tooltips: '分享到助手市场',
+  },
+  submitFooter: {
+    reset: '重置',
+    submit: '保存',
+    unSaved: '未保存更改',
+    unSavedWarning: '当前有未保存的更改',
   },
   sync: {
     device: {
@@ -433,6 +463,7 @@ export default {
       placeholder: '请输入自定义提示词',
       title: '自定义提示词',
     },
+    helpInfo: '当创建新助手时，将以默认助手设置作为预设值。',
     historyCompress: {
       label: '会话历史模型',
       modelDesc: '指定用于压缩会话历史的模型',

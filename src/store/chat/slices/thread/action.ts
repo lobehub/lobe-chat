@@ -215,8 +215,6 @@ export const chatThreadMessage: StateCreator<
       enable && !!topicId && !isDeprecatedEdition ? [SWR_USE_FETCH_THREADS, topicId] : null,
       async ([, topicId]: [string, string]) => threadService.getThreads(topicId),
       {
-        suspense: true,
-        fallbackData: [],
         onSuccess: (threads) => {
           const nextMap = { ...get().threadMaps, [topicId!]: threads };
 
