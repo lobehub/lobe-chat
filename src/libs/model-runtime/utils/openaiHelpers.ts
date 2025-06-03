@@ -6,9 +6,12 @@ import { imageUrlToBase64 } from '@/utils/imageToBase64';
 
 import { parseDataUri } from './uriParser';
 
+import { parsePlaceholderVariables } from './placeholderParser';
+
 export const convertMessageContent = async (
   content: OpenAI.ChatCompletionContentPart,
 ): Promise<OpenAI.ChatCompletionContentPart> => {
+  // 处理图片URL转换
   if (content.type === 'image_url') {
     const { type } = parseDataUri(content.image_url.url);
 
@@ -21,6 +24,14 @@ export const convertMessageContent = async (
       };
     }
   }
+  
+  // 处理文本内容中的预留值
+  if (content.type === 'text' && typeof content.text === 'string') {
+    return {
+      ...content,
+      text: parsePlaceholderVariables(content.text),
+    };
+  }
 
   return content;
 };
@@ -31,7 +42,7 @@ export const convertOpenAIMessages = async (messages: OpenAI.ChatCompletionMessa
       ...message,
       content:
         typeof message.content === 'string'
-          ? message.content
+          ? parsePlaceholderVariables(message.content)
           : await Promise.all(
               (message.content || []).map((c) =>
                 convertMessageContent(c as OpenAI.ChatCompletionContentPart),
