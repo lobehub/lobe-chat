@@ -37,6 +37,9 @@ const Taichu: ModelProviderCard = {
   modelsUrl: 'https://ai-maas.wair.ac.cn/#/doc',
   name: 'Taichu',
   settings: {
+    proxyUrl: {
+      placeholder: 'https://ai-maas.wair.ac.cn/maas/v1',
+    },
     sdkType: 'openai',
   },
   url: 'https://ai-maas.wair.ac.cn',
