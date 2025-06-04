@@ -280,7 +280,7 @@ const qwenChatModels: AIChatModelCard[] = [
       search: true,
     },
     config: {
-      deploymentName: 'qwen-max-2025-01-25', 
+      deploymentName: 'qwen-max-2025-01-25',
     },
     contextWindowTokens: 131_072,
     description:
@@ -305,7 +305,7 @@ const qwenChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     config: {
-      deploymentName: 'qwen-long-latest', 
+      deploymentName: 'qwen-long-latest',
     },
     contextWindowTokens: 10_000_000,
     description:
@@ -327,7 +327,7 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'qwen-omni-turbo-latest', 
+      deploymentName: 'qwen-omni-turbo-latest',
     },
     contextWindowTokens: 32_768,
     description:
@@ -367,7 +367,7 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'qwen-vl-plus-2025-01-25', 
+      deploymentName: 'qwen-vl-plus-2025-01-25',
     },
     contextWindowTokens: 131_072,
     description:
@@ -388,7 +388,7 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'qwen-vl-max-2025-04-08', 
+      deploymentName: 'qwen-vl-max-2025-04-08',
     },
     contextWindowTokens: 131_072,
     description:
@@ -410,7 +410,7 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'qwen-vl-ocr-2025-04-13', 
+      deploymentName: 'qwen-vl-ocr-2025-04-13',
     },
     contextWindowTokens: 34_096,
     description:
@@ -428,7 +428,7 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     config: {
-      deploymentName: 'qwen-math-turbo-latest', 
+      deploymentName: 'qwen-math-turbo-latest',
     },
     contextWindowTokens: 4096,
     description: '通义千问数学模型是专门用于数学解题的语言模型。',
@@ -445,7 +445,7 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     config: {
-      deploymentName: 'qwen-math-plus-latest', 
+      deploymentName: 'qwen-math-plus-latest',
     },
     contextWindowTokens: 4096,
     description: '通义千问数学模型是专门用于数学解题的语言模型。',
@@ -462,7 +462,7 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     config: {
-      deploymentName: 'qwen-coder-turbo-latest', 
+      deploymentName: 'qwen-coder-turbo-latest',
     },
     contextWindowTokens: 131_072,
     description: '通义千问代码模型。',
@@ -479,7 +479,7 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     config: {
-      deploymentName: 'qwen-coder-plus-latest', 
+      deploymentName: 'qwen-coder-plus-latest',
     },
     contextWindowTokens: 131_072,
     description: '通义千问代码模型。',
@@ -541,7 +541,7 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'qvq-max-latest', 
+      deploymentName: 'qvq-max-latest',
     },
     contextWindowTokens: 122_880,
     description:

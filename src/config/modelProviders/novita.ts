@@ -117,6 +117,9 @@ const Novita: ModelProviderCard = {
   name: 'Novita',
   settings: {
     disableBrowserRequest: true,
+    proxyUrl: {
+      placeholder: 'https://api.novita.ai/v3/openai',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
   },
