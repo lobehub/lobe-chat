@@ -233,8 +233,7 @@ AgentRuntime 是 Lobe Chat 中的一个核心抽象层，它封装了与不同 A
 
    **适配器实现示例**：
 
-   1. **OpenRouter 适配器**：
-      OpenRouter 是一个统一 API，可以通过它访问多个模型提供商的 AI 模型。Lobe Chat 通过适配器实现对 OpenRouter 的支持：
+   1. **OpenRouter 适配器**：OpenRouter 是一个统一 API，可以通过它访问多个模型提供商的 AI 模型。Lobe Chat 通过适配器实现对 OpenRouter 的支持：
 
       ```ts
       // OpenRouter 适配器实现
@@ -272,8 +271,7 @@ AgentRuntime 是 Lobe Chat 中的一个核心抽象层，它封装了与不同 A
       }
       ```
 
-   2. **Google Gemini 适配器**：
-      Gemini 是 Google 的大语言模型，Lobe Chat 通过专门的适配器支持 Gemini 系列模型：
+   2. **Google Gemini 适配器**：Gemini 是 Google 的大语言模型，Lobe Chat 通过专门的适配器支持 Gemini 系列模型：
 
       ```ts
       import { GoogleGenerativeAI } from '@google/generative-ai';

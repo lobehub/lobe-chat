@@ -2,63 +2,32 @@
 
 # Changelog
 
-## [Version&nbsp;1.89.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.88.0...v1.89.0)
+## [Version 1.91.0](https://github.com/lobehub/lobe-chat/compare/v1.90.4...v1.91.0)
+
 <sup>Released on **2025-06-03**</sup>
-
-
-#### ♻ Code Refactoring
-
-- **misc**: Rename the createOpenAICompatibleRuntime.
-
 
 #### ✨ Features
 
 - **misc**: Add more provider support for search & crawl.
 
-
-#### 🐛 Bug Fixes
-
-- **misc**: Update the clerk middleware to support route protection.
-
-
 #### 💄 Styles
 
 - **misc**: Update modelscope models.
 
-
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-
-
-#### Code refactoring
-
-* **misc**: Rename the createOpenAICompatibleRuntime, closes [#8049](https://github.com/jaworldwideorg/OneJA-Bot/issues/8049) ([ee660d6](https://github.com/jaworldwideorg/OneJA-Bot/commit/ee660d6))
-
-
-
 #### What's improved
 
-* **misc**: Add more provider support for search & crawl, closes [#8033](https://github.com/jaworldwideorg/OneJA-Bot/issues/8033) ([23fade3](https://github.com/jaworldwideorg/OneJA-Bot/commit/23fade3))
-
-
-
-#### What's fixed
-
-* **misc**: Update the clerk middleware to support route protection, closes [#8044](https://github.com/jaworldwideorg/OneJA-Bot/issues/8044) ([309f973](https://github.com/jaworldwideorg/OneJA-Bot/commit/309f973))
-
-
+- **misc**: Add more provider support for search & crawl, closes [#8033](https://github.com/lobehub/lobe-chat/issues/8033) ([23fade3](https://github.com/lobehub/lobe-chat/commit/23fade3))
 
 #### Styles
 
-* **misc**: Update modelscope models, closes [#8057](https://github.com/jaworldwideorg/OneJA-Bot/issues/8057) ([3e02c25](https://github.com/jaworldwideorg/OneJA-Bot/commit/3e02c25))
+- **misc**: Update modelscope models, closes [#8057](https://github.com/lobehub/lobe-chat/issues/8057) ([3e02c25](https://github.com/lobehub/lobe-chat/commit/3e02c25))
 
 </details>
-
 
 <div align="right">
 
