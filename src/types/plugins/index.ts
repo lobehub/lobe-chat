@@ -1,4 +1,4 @@
-import { ConnectionType, PluginType } from '@lobehub/market-sdk';
+import { ConnectionType } from '@lobehub/market-sdk';
 
 interface PluginCompatibility {
   maxAppVersion?: string;
@@ -36,7 +36,6 @@ export interface PluginItem {
   resourcesCount?: number;
   tags?: string[];
   toolsCount?: number;
-  type: PluginType;
   version: string;
 }
 

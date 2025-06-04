@@ -3,9 +3,7 @@ import urlJoin from 'url-join';
 import { DEFAULT_LANG, isLocaleNotSupport } from '@/const/locale';
 import { appEnv } from '@/envs/app';
 import { Locales, normalizeLocale } from '@/locales/resources';
-import { DiscoverPlugintem } from '@/types/discover';
-
-const revalidate: number = 3600;
+import { CacheRevalidate, CacheTag } from '@/types/discover';
 
 export class PluginStore {
   private readonly baseUrl: string;
@@ -16,26 +14,26 @@ export class PluginStore {
 
   getPluginIndexUrl = (lang: Locales = DEFAULT_LANG) => {
     if (isLocaleNotSupport(lang)) return this.baseUrl;
-
     return urlJoin(this.baseUrl, `index.${normalizeLocale(lang)}.json`);
   };
 
-  getPluginList = async (locale?: string): Promise<DiscoverPlugintem[]> => {
+  getPluginList = async (locale?: string): Promise<any[]> => {
     try {
       let res = await fetch(this.getPluginIndexUrl(locale as Locales), {
-        next: { revalidate: 12 * revalidate },
+        cache: 'force-cache',
+        next: { revalidate: CacheRevalidate.Details, tags: [CacheTag.Discover, CacheTag.Plugins] },
       });
-
       if (!res.ok) {
         res = await fetch(this.getPluginIndexUrl(DEFAULT_LANG), {
-          next: { revalidate: 12 * revalidate },
+          cache: 'force-cache',
+          next: {
+            revalidate: CacheRevalidate.Details,
+            tags: [CacheTag.Discover, CacheTag.Plugins],
+          },
         });
       }
-
       if (!res.ok) return [];
-
       const json = await res.json();
-
       return json.plugins ?? [];
     } catch (e) {
       console.error('[getPluginListError] failed to fetch plugin list, error detail:');

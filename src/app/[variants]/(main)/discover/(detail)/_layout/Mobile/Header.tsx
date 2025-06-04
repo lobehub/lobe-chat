@@ -15,7 +15,7 @@ const Header = memo(() => {
 
   return (
     <ChatHeader
-      onBackClick={() => router.push(urlJoin('/discover', `${path}s`))}
+      onBackClick={() => router.push(urlJoin('/discover', path))}
       showBackButton
       style={mobileHeaderSticky}
     />
