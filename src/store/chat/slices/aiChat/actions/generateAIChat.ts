@@ -359,9 +359,15 @@ export const generateAIChat: StateCreator<
       model,
       provider!,
     )(getAiInfraStoreState());
+    const isModelHasBuiltinSearch = aiModelSelectors.isModelHasBuiltinSearch(
+      model,
+      provider!,
+    )(getAiInfraStoreState());
+    const useModelBuiltinSearch =
+      agentChatConfigSelectors.useModelBuiltinSearch(getAgentStoreState());
+    const useModelSearch = isModelHasBuiltinSearch && useModelBuiltinSearch;
     const isAgentEnableSearch = agentChatConfigSelectors.isAgentEnableSearch(getAgentStoreState());
-
-    if (isAgentEnableSearch && !isModelSupportToolUse) {
+    if (isAgentEnableSearch && !useModelSearch && !isModelSupportToolUse) {
       const { model, provider } = agentChatConfigSelectors.searchFCModel(getAgentStoreState());
 
       let isToolsCalling = false;
