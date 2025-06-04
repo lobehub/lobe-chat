@@ -1,4 +1,4 @@
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'nextjs-toploader/app';
 import qs, { type ParsedQuery } from 'query-string';
 import { useMemo } from 'react';
 

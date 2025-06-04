@@ -1,5 +1,6 @@
 'use client';
 
+import { Icon } from '@lobehub/ui';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { memo, useMemo } from 'react';
@@ -26,6 +27,7 @@ const Category = memo(() => {
     <CategoryMenu
       items={items.map((item: any) => ({
         ...item,
+        icon: <Icon icon={item.icon} size={18} />,
         label: (
           <Link
             href={urlJoin(

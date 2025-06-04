@@ -1,9 +1,9 @@
 'use client';
 
 import { ProviderIcon } from '@lobehub/icons';
-import { Icon } from '@lobehub/ui';
-import { MenuProps } from 'antd';
+import { Icon, MenuProps } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
+import { unionBy } from 'lodash-es';
 import { LayoutPanelTop } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -14,7 +14,7 @@ import urlJoin from 'url-join';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { DiscoverProviderItem } from '@/types/discover';
 
-import CategoryMenu, { ICON_SIZE } from '../../../components/CategoryMenu';
+import CategoryMenu from '../../../components/CategoryMenu';
 
 const Category = memo<{ data: DiscoverProviderItem[] }>(({ data }) => {
   const pathname = usePathname();
@@ -30,11 +30,11 @@ const Category = memo<{ data: DiscoverProviderItem[] }>(({ data }) => {
   const { t } = useTranslation('discover');
   const items: MenuProps['items'] = [
     {
-      icon: <Icon color={theme.colorTextSecondary} icon={LayoutPanelTop} size={ICON_SIZE} />,
+      icon: LayoutPanelTop,
       key: 'all',
       label: t('category.plugin.all'),
     },
-    ...data.map((item) => ({
+    ...unionBy(data, 'identifier').map((item) => ({
       icon: (
         <ProviderIcon
           provider={item.identifier}
@@ -52,6 +52,7 @@ const Category = memo<{ data: DiscoverProviderItem[] }>(({ data }) => {
     <CategoryMenu
       items={items.map((item: any) => ({
         ...item,
+        icon: <Icon icon={item.icon} size={18} />,
         label: (
           <Link href={urlJoin('/discover/models', item.key === 'all' ? '' : item.key)}>
             {item.label}

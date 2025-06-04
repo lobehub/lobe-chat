@@ -12,10 +12,10 @@ class ToolService {
     return edgeClient.market.getLegacyPluginList.query({ locale });
   };
 
-  getMCPPluginList = async (): Promise<PluginListResponse> => {
+  getMCPPluginList = async (props: { q?: string }): Promise<PluginListResponse> => {
     const locale = globalHelpers.getCurrentLanguage();
 
-    return edgeClient.market.getPluginList.query({ locale });
+    return edgeClient.market.getPluginList.query({ locale, ...props });
   };
 
   getMCPPluginManifest = async (

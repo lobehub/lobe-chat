@@ -12,6 +12,10 @@ import { AgentStoreIndex } from '@/types/discover';
 
 const log = debug('lobe-edge-router:market');
 
+const marketSDK = new MarketSDK({
+  baseURL: process.env.MARKET_BASE_URL || 'http://localhost:8787/api',
+});
+
 export const marketRouter = router({
   getAgent: publicProcedure
     .input(
@@ -95,29 +99,96 @@ export const marketRouter = router({
       }
     }),
 
+  getPluginCategories: publicProcedure.query(async () => {
+    log('getPluginCategories called');
+
+    try {
+      return await marketSDK.plugins.getCategories();
+    } catch (error) {
+      log('Error fetching categories: %O', error);
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to fetch plugin categories',
+      });
+    }
+  }),
+
+  getPluginDetail: publicProcedure
+    .input(
+      z.object({
+        identifier: z.string(),
+        locale: z.string().optional(),
+        version: z.string().optional(),
+      }),
+    )
+    .query(async ({ input }) => {
+      log('getPluginDetail input: %O', input);
+
+      try {
+        return await marketSDK.plugins.getPluginDetail(
+          input.identifier,
+          input.locale,
+          input.version,
+        );
+      } catch (error) {
+        log('Error fetching plugin detail: %O', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch plugin detail',
+        });
+      }
+    }),
+
+  getPluginIdentifiers: publicProcedure.query(async () => {
+    log('getPluginIdentifiers called');
+
+    try {
+      return await marketSDK.plugins.getPublishedIdentifiers();
+    } catch (error) {
+      log('Error fetching published identifiers: %O', error);
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Failed to fetch published identifiers',
+      });
+    }
+  }),
+
   getPluginList: publicProcedure
     .input(
       z
         .object({
           category: z.string().optional(),
           locale: z.string().optional(),
+          order: z.enum(['asc', 'desc']).optional(),
           page: z.number().optional(),
           pageSize: z.number().optional(),
           q: z.string().optional(),
+          sort: z
+            .enum(['installCount', 'createdAt', 'updatedAt', 'ratingAverage', 'ratingCount'])
+            .optional(),
         })
         .optional(),
     )
     .query(async ({ input }) => {
       log('getPluginList input: %O', input);
-      const market = new MarketSDK({ baseUrl: 'http://localhost:8787/api' });
 
-      return await market.getPluginList({
-        category: input?.category,
-        locale: input?.locale,
-        page: input?.page,
-        pageSize: input?.pageSize,
-        q: input?.q,
-      });
+      try {
+        return await marketSDK.plugins.getPluginList({
+          category: input?.category,
+          locale: input?.locale,
+          order: input?.order,
+          page: input?.page,
+          pageSize: input?.pageSize,
+          q: input?.q,
+          sort: input?.sort,
+        });
+      } catch (error) {
+        log('Error fetching plugin list: %O', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch plugin list',
+        });
+      }
     }),
 
   getPluginManifest: publicProcedure
@@ -130,8 +201,15 @@ export const marketRouter = router({
     )
     .query(async ({ input }) => {
       log('getPluginManifest input: %O', input);
-      const market = new MarketSDK({ baseUrl: 'http://localhost:8787/api' });
 
-      return await market.getPluginManifest(input.identifier, input.locale);
+      try {
+        return await marketSDK.plugins.getPluginManifest(input.identifier, input.locale);
+      } catch (error) {
+        log('Error fetching plugin manifest: %O', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch plugin manifest',
+        });
+      }
     }),
 });

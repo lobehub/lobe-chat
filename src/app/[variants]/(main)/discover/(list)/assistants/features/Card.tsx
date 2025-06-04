@@ -1,4 +1,4 @@
-import { Avatar, Tag } from '@lobehub/ui';
+import { Avatar, Icon, Tag } from '@lobehub/ui';
 import { Skeleton, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { startCase } from 'lodash-es';
@@ -73,7 +73,7 @@ const AssistantCard = memo<AssistantCardProps>(
   ({ showCategory, className, meta, createdAt, author, compact, style, href }) => {
     const { avatar, title, description, tags = [], category } = meta;
     const { cx, styles, theme } = useStyles();
-    const categoryItem = useCategoryItem(category, 12);
+    const categoryItem = useCategoryItem(category);
     const router = useRouter();
     const user = (
       <Flexbox
@@ -165,7 +165,7 @@ const AssistantCard = memo<AssistantCardProps>(
           <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
             {showCategory && categoryItem ? (
               <Link href={urlJoin('/discover/assistants', categoryItem.key)}>
-                <Tag icon={categoryItem.icon} style={{ margin: 0 }}>
+                <Tag icon={<Icon icon={categoryItem.icon} size={12} />} style={{ margin: 0 }}>
                   {categoryItem.label}
                 </Tag>
               </Link>
