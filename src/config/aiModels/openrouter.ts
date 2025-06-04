@@ -1,4 +1,5 @@
 import { AIChatModelCard } from '@/types/aiModel';
+
 // https://openrouter.ai/docs/api-reference/list-available-models
 const openrouterChatModels: AIChatModelCard[] = [
   {
@@ -501,6 +502,7 @@ const openrouterChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
+      functionCall: true,
     },
     contextWindowTokens: 163_840,
     description:
@@ -517,6 +519,7 @@ const openrouterChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
+      functionCall: true,
     },
     contextWindowTokens: 163_840,
     description:
