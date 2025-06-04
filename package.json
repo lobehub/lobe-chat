@@ -270,7 +270,8 @@
     "yjs": "^13.6.27",
     "zod": "^3.25.48",
     "zustand": "5.0.4",
-    "zustand-utils": "^2.1.0"
+    "zustand-utils": "^2.1.0",
+    "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
