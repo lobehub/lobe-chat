@@ -305,12 +305,14 @@ describe('LobeAnthropicAI', () => {
 
       it('should build payload with tools and web search enabled', async () => {
         const tools: ChatCompletionTool[] = [
-          { function: { name: 'tool1', description: 'desc1' }, type: 'function' }
+          { function: { name: 'tool1', description: 'desc1' }, type: 'function' },
         ];
 
         const mockAnthropicTools = [{ name: 'tool1', description: 'desc1' }];
 
-        vi.spyOn(anthropicHelpers, 'buildAnthropicTools').mockReturnValue(mockAnthropicTools as any);
+        vi.spyOn(anthropicHelpers, 'buildAnthropicTools').mockReturnValue(
+          mockAnthropicTools as any,
+        );
 
         const payload: ChatStreamPayload = {
           messages: [{ content: 'Search and get info', role: 'user' }],

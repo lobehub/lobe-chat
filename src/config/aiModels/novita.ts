@@ -1,4 +1,5 @@
 import { AIChatModelCard } from '@/types/aiModel';
+
 // https://novita.ai/pricing
 const novitaChatModels: AIChatModelCard[] = [
   {
@@ -7,7 +8,7 @@ const novitaChatModels: AIChatModelCard[] = [
     id: 'qwen/qwen3-4b-fp8',
     pricing: {
       input: 0,
-      output: 0
+      output: 0,
     },
     type: 'chat',
   },
@@ -17,7 +18,7 @@ const novitaChatModels: AIChatModelCard[] = [
     id: 'qwen/qwen3-235b-a22b-fp8',
     pricing: {
       input: 0.2,
-      output: 0.8
+      output: 0.8,
     },
     type: 'chat',
   },
@@ -27,7 +28,7 @@ const novitaChatModels: AIChatModelCard[] = [
     id: 'qwen/qwen3-30b-a3b-fp8',
     pricing: {
       input: 0.1,
-      output: 0.45
+      output: 0.45,
     },
     type: 'chat',
   },
@@ -37,7 +38,7 @@ const novitaChatModels: AIChatModelCard[] = [
     id: 'qwen/qwen3-32b-fp8',
     pricing: {
       input: 0.1,
-      output: 0.45
+      output: 0.45,
     },
     type: 'chat',
   },
@@ -47,7 +48,7 @@ const novitaChatModels: AIChatModelCard[] = [
     id: 'meta-llama/llama-3.3-70b-instruct',
     pricing: {
       input: 0.13,
-      output: 0.39
+      output: 0.39,
     },
     type: 'chat',
   },
@@ -57,7 +58,7 @@ const novitaChatModels: AIChatModelCard[] = [
     id: 'qwen/qwen3-8b-fp8',
     pricing: {
       input: 0.035,
-      output: 0.138
+      output: 0.138,
     },
     type: 'chat',
   },
@@ -384,9 +385,9 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_000,
     displayName: 'Llama 3.2 1B Instruct',
     id: 'meta-llama/llama-3.2-1b-instruct',
-    pricing: { 
-      input: 0, 
-      output: 0 
+    pricing: {
+      input: 0,
+      output: 0,
     },
     type: 'chat',
   },
@@ -434,9 +435,9 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_000,
     displayName: 'GLM 4 9B 0414',
     id: 'thudm/glm-4-9b-0414',
-    pricing: { 
+    pricing: {
       input: 0,
-      output: 0 
+      output: 0,
     },
     type: 'chat',
   },
@@ -444,9 +445,9 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_000,
     displayName: 'GLM Z1 9B 0414',
     id: 'thudm/glm-z1-9b-0414',
-    pricing: { 
+    pricing: {
       input: 0,
-      output: 0 
+      output: 0,
     },
     type: 'chat',
   },
@@ -454,9 +455,9 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_000,
     displayName: 'GLM Z1 32B 0414',
     id: 'thudm/glm-z1-32b-0414',
-    pricing: { 
-      input: 0.24, 
-      output: 0.24 
+    pricing: {
+      input: 0.24,
+      output: 0.24,
     },
     type: 'chat',
   },
@@ -464,9 +465,9 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_000,
     displayName: 'GLM 4 32B 0414',
     id: 'thudm/glm-4-32b-0414',
-    pricing: { 
-      input: 0.24, 
-      output: 0.24 
+    pricing: {
+      input: 0.24,
+      output: 0.24,
     },
     type: 'chat',
   },
@@ -474,9 +475,9 @@ const novitaChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_000,
     displayName: 'GLM Z1 Rumination 32B 0414',
     id: 'thudm/glm-z1-rumination-32b-0414',
-    pricing: { 
-      input: 0.24, 
-      output: 0.24 
+    pricing: {
+      input: 0.24,
+      output: 0.24,
     },
     type: 'chat',
   },
