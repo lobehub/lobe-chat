@@ -1,354 +1,933 @@
-import { cloneDeep, isString, merge, uniqBy } from 'lodash-es';
-import pMap from 'p-map';
+import { CategoryItem, CategoryListQuery, MarketSDK } from '@lobehub/market-sdk';
+import dayjs from 'dayjs';
+import matter from 'gray-matter';
+import { cloneDeep, countBy, isString, merge, uniq, uniqBy } from 'lodash-es';
+import urlJoin from 'url-join';
 
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import {
   DEFAULT_DISCOVER_ASSISTANT_ITEM,
-  DEFAULT_DISCOVER_MODEL_ITEM,
   DEFAULT_DISCOVER_PLUGIN_ITEM,
   DEFAULT_DISCOVER_PROVIDER_ITEM,
 } from '@/const/discover';
-import { DEFAULT_LANG } from '@/const/locale';
-import { Locales } from '@/locales/resources';
+import { normalizeLocale } from '@/locales/resources';
 import { AssistantStore } from '@/server/modules/AssistantStore';
 import { PluginStore } from '@/server/modules/PluginStore';
 import {
-  AssistantCategory,
+  AssistantListResponse,
+  AssistantQueryParams,
+  AssistantSorts,
+  CacheRevalidate,
+  CacheTag,
+  DiscoverAssistantDetail,
   DiscoverAssistantItem,
+  DiscoverMcpDetail,
+  DiscoverModelDetail,
   DiscoverModelItem,
-  DiscoverPlugintem,
+  DiscoverPluginDetail,
+  DiscoverPluginItem,
+  DiscoverProviderDetail,
   DiscoverProviderItem,
-  PluginCategory,
+  IdentifiersResponse,
+  McpListResponse,
+  McpQueryParams,
+  ModelListResponse,
+  ModelQueryParams,
+  ModelSorts,
+  PluginListResponse,
+  PluginQueryParams,
+  PluginSorts,
+  ProviderListResponse,
+  ProviderQueryParams,
+  ProviderSorts,
 } from '@/types/discover';
 import { getToolManifest } from '@/utils/toolManifest';
-
-const revalidate: number = 3600;
 
 export class DiscoverService {
   assistantStore = new AssistantStore();
   pluginStore = new PluginStore();
+  market: MarketSDK;
 
-  // Assistants
-  searchAssistant = async (locale: Locales, keywords: string): Promise<DiscoverAssistantItem[]> => {
-    const list = await this.getAssistantList(locale);
-    return list.filter((item) => {
-      return [item.author, item.meta.title, item.meta.description, item.meta?.tags]
-        .flat()
-        .filter(Boolean)
-        .join(',')
-        .toLowerCase()
-        .includes(decodeURIComponent(keywords).toLowerCase());
+  constructor() {
+    this.market = new MarketSDK({
+      baseURL: process.env.MARKET_BASE_URL || 'http://localhost:8787/api',
     });
-  };
+  }
 
-  getAssistantCategory = async (
-    locale: Locales,
-    category: AssistantCategory,
-  ): Promise<DiscoverAssistantItem[]> => {
-    const list = await this.getAssistantList(locale);
-    return list.filter((item) => item.meta.category === category);
-  };
+  // ============================== Helper Methods ==============================
 
-  getAssistantList = async (locale: Locales): Promise<DiscoverAssistantItem[]> => {
-    const json = await this.assistantStore.getAgentIndex(locale, revalidate);
+  /**
+   * 计算 ModelAbilities 的完整度分数
+   * 分数越高表示 abilities 越全
+   */
+  private calculateAbilitiesScore = (abilities?: any): number => {
+    if (!abilities) return 0;
 
-    // @ts-expect-error 目前类型不一致，未来要统一
-    return json.agents ?? [];
-  };
-
-  getAssistantById = async (
-    locale: Locales,
-    identifier: string,
-  ): Promise<DiscoverAssistantItem | undefined> => {
-    let res = await fetch(this.assistantStore.getAgentUrl(identifier, locale), {
-      next: { revalidate: 12 * revalidate },
-    });
-
-    if (!res.ok) {
-      res = await fetch(this.assistantStore.getAgentUrl(DEFAULT_LANG), {
-        next: { revalidate: 12 * revalidate },
-      });
-    }
-
-    if (!res.ok) return;
-
-    let assistant = await res.json();
-
-    if (!assistant) return;
-
-    assistant = merge(cloneDeep(DEFAULT_DISCOVER_ASSISTANT_ITEM), assistant);
-
-    const categoryItems = await this.getAssistantCategory(
-      locale,
-      assistant.meta.category || AssistantCategory.General,
-    );
-
-    assistant = {
-      ...assistant,
-      suggestions: categoryItems
-        .filter((item) => item.identifier !== assistant.identifier)
-        .slice(0, 5) as any,
+    let score = 0;
+    const abilityWeights = {
+      files: 1,
+      functionCall: 1,
+      imageOutput: 1,
+      reasoning: 1,
+      search: 1,
+      vision: 1,
     };
 
-    return assistant;
-  };
-
-  getAssistantByIds = async (
-    locale: Locales,
-    identifiers: string[],
-  ): Promise<DiscoverAssistantItem[]> => {
-    const list = await pMap(
-      identifiers,
-      async (identifier) => this.getAssistantById(locale, identifier),
-      {
-        concurrency: 5,
-      },
-    );
-
-    return list.filter(Boolean) as DiscoverAssistantItem[];
-  };
-
-  // Tools
-
-  searchPlugin = async (locale: Locales, keywords: string): Promise<DiscoverPlugintem[]> => {
-    const list = await this.getPluginList(locale);
-    return list.filter((item) => {
-      return [item.author, item.meta.title, item.meta.description, item.meta?.tags]
-        .flat()
-        .filter(Boolean)
-        .join(',')
-        .toLowerCase()
-        .includes(decodeURIComponent(keywords).toLowerCase());
+    Object.entries(abilityWeights).forEach(([ability, weight]) => {
+      if (abilities[ability]) {
+        score += weight;
+      }
     });
+
+    return score;
   };
 
-  getPluginCategory = async (
-    locale: Locales,
-    category: PluginCategory,
-  ): Promise<DiscoverPlugintem[]> => {
-    const list = await this.getPluginList(locale);
-    return list.filter((item) => item.meta.category === category);
-  };
+  /**
+   * 在模型数组中选择 abilities 最全的模型
+   * 组合最全的 abilities 和最大的 contextWindowTokens
+   */
+  private selectModelWithBestAbilities = (models: DiscoverModelItem[]): DiscoverModelItem => {
+    if (models.length === 1) return models[0];
 
-  getPluginList = async (locale: Locales): Promise<DiscoverPlugintem[]> => {
-    try {
-      let res = await fetch(this.pluginStore.getPluginIndexUrl(locale), {
-        next: { revalidate: 12 * revalidate },
-      });
-
-      if (!res.ok) {
-        res = await fetch(this.pluginStore.getPluginIndexUrl(DEFAULT_LANG), {
-          next: { revalidate: 12 * revalidate },
+    // 找到最全的 abilities
+    let bestAbilities: Record<string, boolean> = {};
+    let maxAbilitiesScore = 0;
+    models.forEach((model) => {
+      const score = this.calculateAbilitiesScore(model.abilities);
+      if (score > maxAbilitiesScore) {
+        maxAbilitiesScore = score;
+        bestAbilities = { ...(model.abilities as Record<string, boolean>) };
+      } else if (score === maxAbilitiesScore && model.abilities) {
+        // 合并相同分数的 abilities，确保获得最全的组合
+        const abilities = model.abilities as Record<string, boolean>;
+        Object.keys(abilities).forEach((key) => {
+          if (abilities[key]) {
+            bestAbilities[key] = true;
+          }
         });
       }
+    });
 
-      if (!res.ok) return [];
-
-      const json = await res.json();
-
-      return json.plugins ?? [];
-    } catch (e) {
-      console.error('[getPluginListError] failed to fetch plugin list, error detail:');
-      console.error(e);
-      return [];
-    }
-  };
-
-  getPluginByIds = async (locale: Locales, identifiers: string[]): Promise<DiscoverPlugintem[]> => {
-    let list = await pMap(
-      identifiers,
-      async (identifier) => this.getPluginById(locale, identifier),
-      {
-        concurrency: 5,
-      },
+    // 找到最大的 contextWindowTokens
+    const maxContextWindowTokens = Math.max(
+      ...models.map((model) => model.contextWindowTokens || 0),
     );
 
-    return list.filter(Boolean) as DiscoverPlugintem[];
-  };
+    // 找到最新的 releasedAt
+    const latestReleasedAt = models
+      .map((model) => model.releasedAt)
+      .filter(Boolean)
+      .sort((a, b) => new Date(b!).getTime() - new Date(a!).getTime())[0];
 
-  getPluginById = async (
-    locale: Locales,
-    identifier: string,
-    withManifest?: boolean,
-  ): Promise<DiscoverPlugintem | undefined> => {
-    const list = await this.getPluginList(locale);
-    let plugin = list.find((item) => item.identifier === identifier) as DiscoverPlugintem;
+    // 找到最短的 identifier
+    const shortestIdentifier = models
+      .map((model) => model.identifier)
+      .reduce((shortest, current) => (current.length < shortest.length ? current : shortest));
 
-    if (!plugin) return;
+    // 选择一个基础模型（通常选择第一个）
+    const baseModel = models[0];
 
-    plugin = merge(cloneDeep(DEFAULT_DISCOVER_PLUGIN_ITEM), plugin);
-
-    if (withManifest) {
-      const manifest = isString(plugin?.manifest)
-        ? await getToolManifest(plugin.manifest)
-        : plugin?.manifest;
-
-      plugin = {
-        ...plugin,
-        manifest,
-      } as DiscoverPlugintem;
-    }
-
-    const categoryItems = await this.getPluginCategory(
-      locale,
-      plugin.meta.category || PluginCategory.Tools,
-    );
-
-    plugin = {
-      ...plugin,
-      suggestions: categoryItems
-        .filter((item) => item.identifier !== plugin.identifier)
-        .slice(0, 5) as any,
-    } as DiscoverPlugintem;
-
-    return plugin;
-  };
-
-  // Providers
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getProviderList = async (_locale: Locales): Promise<DiscoverProviderItem[]> => {
-    const list = DEFAULT_MODEL_PROVIDER_LIST.filter((item) => item.chatModels.length > 0);
-    return list.map((item) => {
-      const provider = {
-        identifier: item.id,
-        meta: {
-          ...item,
-          title: item.name,
-        },
-        models: item.chatModels.map((item) => item.id),
-      };
-      return merge(cloneDeep(DEFAULT_DISCOVER_PROVIDER_ITEM), provider) as DiscoverProviderItem;
-    });
-  };
-
-  searchProvider = async (locale: Locales, keywords: string): Promise<DiscoverProviderItem[]> => {
-    const list = await this.getProviderList(locale);
-    return list.filter((item) => {
-      return [item.identifier, item.meta.title]
-        .filter(Boolean)
-        .join(',')
-        .toLowerCase()
-        .includes(decodeURIComponent(keywords).toLowerCase());
-    });
-  };
-
-  getProviderById = async (
-    locale: Locales,
-    id: string,
-  ): Promise<DiscoverProviderItem | undefined> => {
-    const list = await this.getProviderList(locale);
-    let provider = list.find((item) => item.identifier === id);
-
-    if (!provider) return;
-
-    provider = {
-      ...provider,
-      suggestions: list
-        .filter((item) => item.identifier !== provider?.identifier)
-        .slice(0, 5) as any,
+    // 组装最终模型，使用最佳的各项属性
+    const result: DiscoverModelItem = {
+      ...baseModel,
+      abilities: bestAbilities as any,
+      contextWindowTokens: maxContextWindowTokens || baseModel.contextWindowTokens,
+      identifier: shortestIdentifier,
+      releasedAt: latestReleasedAt || baseModel.releasedAt,
     };
 
-    return merge(cloneDeep(DEFAULT_DISCOVER_PROVIDER_ITEM), provider) as DiscoverProviderItem;
+    return result;
   };
 
-  getProviderByIds = async (
-    locale: Locales,
-    identifiers: string[],
-  ): Promise<DiscoverProviderItem[]> => {
-    const list = await pMap(
-      identifiers,
-      async (identifier) => this.getProviderById(locale, identifier),
+  // ============================== Assistant Market ==============================
+
+  private _getAssistantList = async (locale?: string): Promise<DiscoverAssistantItem[]> => {
+    const normalizedLocale = normalizeLocale(locale);
+    const list = await this.assistantStore.getAgentIndex(normalizedLocale);
+    if (!list || !Array.isArray(list)) return [];
+    return list.map(({ meta, ...item }) => ({ ...item, ...meta }));
+  };
+
+  getAssistantCategories = async (params: CategoryListQuery = {}): Promise<CategoryItem[]> => {
+    const { q, locale } = params;
+    let list = await this._getAssistantList(locale);
+    if (q) {
+      list = list.filter((item) => {
+        return [item.author, item.title, item.description, item?.tags]
+          .flat()
+          .filter(Boolean)
+          .join(',')
+          .toLowerCase()
+          .includes(decodeURIComponent(q).toLowerCase());
+      });
+    }
+    const categoryCounts = countBy(list, (item) => item.category);
+    return Object.entries(categoryCounts)
+      .filter(([category]) => Boolean(category)) // 过滤掉空值
+      .map(([category, count]) => ({
+        category,
+        count,
+      }));
+  };
+
+  getAssistantDetail = async (params: {
+    identifier: string;
+    locale?: string;
+  }): Promise<DiscoverAssistantDetail | undefined> => {
+    const { locale, identifier } = params;
+    const normalizedLocale = normalizeLocale(locale);
+    let data = await this.assistantStore.getAgent(identifier, normalizedLocale);
+    if (!data) return;
+    const { meta, ...item } = data;
+    const assistant = merge(cloneDeep(DEFAULT_DISCOVER_ASSISTANT_ITEM), { ...item, ...meta });
+    const list = await this.getAssistantList({
+      category: assistant.category,
+      locale,
+      page: 1,
+      pageSize: 7,
+    });
+    return {
+      ...assistant,
+      related: list.items.filter((item) => item.identifier !== assistant.identifier).slice(0, 6),
+    };
+  };
+
+  getAssistantIdentifiers = async (): Promise<IdentifiersResponse> => {
+    const list = await this._getAssistantList();
+    return list.map((item) => {
+      return {
+        identifier: item.identifier,
+        lastModified: item.createdAt,
+      };
+    });
+  };
+
+  getAssistantList = async (params: AssistantQueryParams = {}): Promise<AssistantListResponse> => {
+    const {
+      locale,
+      category,
+      order = 'desc',
+      page = 1,
+      pageSize = 20,
+      q,
+      sort = AssistantSorts.CreatedAt,
+    } = params;
+    let list = await this._getAssistantList(locale);
+
+    if (category) {
+      list = list.filter((item) => item.category === category);
+    }
+
+    if (q) {
+      list = list.filter((item) => {
+        return [item.author, item.title, item.description, item?.tags]
+          .flat()
+          .filter(Boolean)
+          .join(',')
+          .toLowerCase()
+          .includes(decodeURIComponent(q).toLowerCase());
+      });
+    }
+
+    if (sort) {
+      switch (sort) {
+        case AssistantSorts.CreatedAt: {
+          list = list.sort((a, b) => {
+            if (order === 'asc') {
+              return dayjs(a.createdAt).unix() - dayjs(b.createdAt).unix();
+            } else {
+              return dayjs(b.createdAt).unix() - dayjs(a.createdAt).unix();
+            }
+          });
+          break;
+        }
+        case AssistantSorts.KnowledgeCount: {
+          list = list.sort((a, b) => {
+            if (order === 'asc') {
+              return a.knowledgeCount - b.knowledgeCount;
+            } else {
+              return b.knowledgeCount - a.knowledgeCount;
+            }
+          });
+          break;
+        }
+        case AssistantSorts.PluginCount: {
+          list = list.sort((a, b) => {
+            if (order === 'asc') {
+              return a.pluginCount - b.pluginCount;
+            } else {
+              return b.pluginCount - a.pluginCount;
+            }
+          });
+          break;
+        }
+        case AssistantSorts.TokenUsage: {
+          list = list.sort((a, b) => {
+            if (order === 'asc') {
+              return a.tokenUsage - b.tokenUsage;
+            } else {
+              return b.tokenUsage - a.tokenUsage;
+            }
+          });
+          break;
+        }
+        case AssistantSorts.Identifier: {
+          list = list.sort((a, b) => {
+            if (order !== 'desc') {
+              return a.identifier.localeCompare(b.identifier);
+            } else {
+              return b.identifier.localeCompare(a.identifier);
+            }
+          });
+          break;
+        }
+        case AssistantSorts.Title: {
+          list = list.sort((a, b) => {
+            if (order === 'desc') {
+              return (a.title || a.identifier).localeCompare(b.title || b.identifier);
+            } else {
+              return (b.title || b.identifier).localeCompare(a.title || a.identifier);
+            }
+          });
+          break;
+        }
+      }
+    }
+
+    return {
+      currentPage: page,
+      items: list.slice((page - 1) * pageSize, page * pageSize),
+      pageSize,
+      totalCount: list.length,
+      totalPages: Math.ceil(list.length / pageSize),
+    };
+  };
+
+  // ============================== MCP Market ==============================
+
+  getMcpCategories = async (params: CategoryListQuery = {}): Promise<CategoryItem[]> => {
+    const { locale } = params;
+    const normalizedLocale = normalizeLocale(locale);
+    return this.market.plugins.getCategories(
       {
-        concurrency: 5,
+        ...params,
+        locale: normalizedLocale,
+      },
+      {
+        cache: 'force-cache',
+        next: {
+          revalidate: CacheRevalidate.List,
+          tags: [CacheTag.Discover, CacheTag.MCP],
+        },
       },
     );
-
-    return list.filter(Boolean) as DiscoverProviderItem[];
   };
 
-  // Models
+  getMcpDetail = async (params: {
+    identifier: string;
+    locale?: string;
+    version?: string;
+  }): Promise<DiscoverMcpDetail> => {
+    const { locale } = params;
+    const normalizedLocale = normalizeLocale(locale);
+    const mcp = await this.market.plugins.getPluginDetail(
+      { ...params, locale: normalizedLocale },
+      {
+        cache: 'force-cache',
+        next: {
+          revalidate: CacheRevalidate.Details,
+          tags: [CacheTag.Discover, CacheTag.MCP],
+        },
+      },
+    );
+    const list = await this.getMcpList({
+      category: mcp.category,
+      locale,
+      page: 1,
+      pageSize: 7,
+    });
+    return {
+      ...mcp,
+      related: list.items.filter((item) => item.identifier !== mcp.identifier).slice(0, 6),
+    };
+  };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private _getModelList = async (locale: Locales): Promise<DiscoverModelItem[]> => {
-    const list = DEFAULT_MODEL_PROVIDER_LIST.filter((item) => item.chatModels.length > 0);
-    const providers = await this.getProviderList(locale);
+  getMcpIdentifiers = async (): Promise<IdentifiersResponse> => {
+    return this.market.plugins.getPublishedIdentifiers({
+      cache: 'force-cache',
+      next: {
+        revalidate: CacheRevalidate.List,
+        tags: [CacheTag.Discover, CacheTag.MCP],
+      },
+    });
+  };
 
-    return list.flatMap((provider) => {
-      return provider.chatModels.map((item) => {
-        const ids = item.id.split('/')[1] || item.id;
-        const providerIds = providers
-          .filter((provider) => provider.models.join('').includes(ids))
-          .map((provider) => provider.identifier);
-        const model = {
-          identifier: item.id,
-          meta: {
-            ...item,
-            category: provider.id,
-            title: item.displayName || item.id,
-          },
-          providers: providerIds,
-          suggestions: [],
-        };
-        return merge(cloneDeep(DEFAULT_DISCOVER_MODEL_ITEM), model) as DiscoverModelItem;
+  getMcpList = async (params: McpQueryParams = {}): Promise<McpListResponse> => {
+    const { locale } = params;
+    const normalizedLocale = normalizeLocale(locale);
+    return this.market.plugins.getPluginList(
+      {
+        ...params,
+        locale: normalizedLocale,
+      },
+      {
+        cache: 'force-cache',
+        next: {
+          revalidate: CacheRevalidate.List,
+          tags: [CacheTag.Discover, CacheTag.MCP],
+        },
+      },
+    );
+  };
+
+  getMcpManifest = async (params: { identifier: string; locale?: string; version?: string }) => {
+    const { locale } = params;
+    const normalizedLocale = normalizeLocale(locale);
+    return this.market.plugins.getPluginManifest(
+      {
+        ...params,
+        locale: normalizedLocale,
+      },
+      {
+        cache: 'force-cache',
+        next: {
+          revalidate: CacheRevalidate.List,
+          tags: [CacheTag.Discover, CacheTag.MCP],
+        },
+      },
+    );
+  };
+
+  // ============================== Plugin Market ==============================
+
+  private _getPluginList = async (locale?: string): Promise<DiscoverPluginItem[]> => {
+    const normalizedLocale = normalizeLocale(locale);
+    const list = await this.pluginStore.getPluginList(normalizedLocale);
+    if (!list || !Array.isArray(list)) return [];
+    return list.map(({ meta, ...item }) => ({ ...item, ...meta }));
+  };
+
+  getLegacyPluginList = async ({ locale }: { locale?: string } = {}): Promise<any> => {
+    const normalizedLocale = normalizeLocale(locale);
+    return this.pluginStore.getPluginList(normalizedLocale);
+  };
+
+  getPluginCategories = async (params: CategoryListQuery = {}): Promise<CategoryItem[]> => {
+    const { q, locale } = params;
+    let list = await this._getPluginList(locale);
+    if (q) {
+      list = list.filter((item) => {
+        return [item.author, item.title, item.description, item?.tags]
+          .flat()
+          .filter(Boolean)
+          .join(',')
+          .toLowerCase()
+          .includes(decodeURIComponent(q).toLowerCase());
       });
+    }
+    const categoryCounts = countBy(list, (item) => item.category);
+    return Object.entries(categoryCounts)
+      .filter(([category]) => Boolean(category)) // 过滤掉空值
+      .map(([category, count]) => ({
+        category,
+        count,
+      }));
+  };
+
+  getPluginDetail = async (params: {
+    identifier: string;
+    locale?: string;
+    withManifest?: boolean;
+  }): Promise<DiscoverPluginDetail | undefined> => {
+    const { locale, identifier, withManifest } = params;
+    const all = await this._getPluginList(locale);
+    let raw = all.find((item) => item.identifier === identifier);
+    if (!raw) return;
+
+    raw = merge(cloneDeep(DEFAULT_DISCOVER_PLUGIN_ITEM), raw);
+    const list = await this.getPluginList({
+      category: raw.category,
+      locale,
+      page: 1,
+      pageSize: 7,
+    });
+
+    let plugin = {
+      ...raw,
+      related: list.items.filter((item) => item.identifier !== raw.identifier).slice(0, 6),
+    };
+
+    if (!withManifest || !plugin?.manifest || !isString(plugin?.manifest)) return plugin;
+
+    try {
+      const manifest = await getToolManifest(plugin.manifest);
+
+      return {
+        ...plugin,
+        manifest,
+      };
+    } catch {
+      return plugin;
+    }
+  };
+
+  getPluginIdentifiers = async (): Promise<IdentifiersResponse> => {
+    const list = await this._getPluginList();
+    return list.map((item) => {
+      return {
+        identifier: item.identifier,
+        lastModified: item.createdAt,
+      };
     });
   };
 
-  getModelList = async (locale: Locales): Promise<DiscoverModelItem[]> => {
-    const list = await this._getModelList(locale);
+  getPluginList = async (params: PluginQueryParams = {}): Promise<PluginListResponse> => {
+    const {
+      locale,
+      category,
+      order = 'desc',
+      page = 1,
+      pageSize = 20,
+      q,
+      sort = PluginSorts.CreatedAt,
+    } = params;
 
-    return uniqBy(list, (item) => {
-      const ids = item.identifier.split('/');
-      return ids[1] || item.identifier;
+    let list = await this._getPluginList(locale);
+
+    if (category) {
+      list = list.filter((item) => item.category === category);
+    }
+
+    if (q) {
+      list = list.filter((item) => {
+        return [item.author, item.title, item.description, item?.tags]
+          .flat()
+          .filter(Boolean)
+          .join(',')
+          .toLowerCase()
+          .includes(decodeURIComponent(q).toLowerCase());
+      });
+    }
+
+    if (sort) {
+      switch (sort) {
+        case PluginSorts.CreatedAt: {
+          list = list.sort((a, b) => {
+            if (order === 'asc') {
+              return dayjs(a.createdAt).unix() - dayjs(b.createdAt).unix();
+            } else {
+              return dayjs(b.createdAt).unix() - dayjs(a.createdAt).unix();
+            }
+          });
+          break;
+        }
+        case PluginSorts.Identifier: {
+          list = list.sort((a, b) => {
+            if (order === 'desc') {
+              return a.identifier.localeCompare(b.identifier);
+            } else {
+              return b.identifier.localeCompare(a.identifier);
+            }
+          });
+          break;
+        }
+        case PluginSorts.Title: {
+          list = list.sort((a, b) => {
+            if (order === 'desc') {
+              return a.title.localeCompare(b.title);
+            } else {
+              return b.title.localeCompare(a.title);
+            }
+          });
+          break;
+        }
+      }
+    }
+
+    return {
+      currentPage: page,
+      items: list.slice((page - 1) * pageSize, page * pageSize),
+      pageSize,
+      totalCount: list.length,
+      totalPages: Math.ceil(list.length / pageSize),
+    };
+  };
+
+  // ============================== Providers ==============================
+
+  private _getProviderList = async (): Promise<DiscoverProviderItem[]> => {
+    return DEFAULT_MODEL_PROVIDER_LIST.map((item) => {
+      const models = uniq(
+        LOBE_DEFAULT_MODEL_LIST.filter((m) => m.providerId === item.id).map((m) => m.id),
+      );
+      const provider = {
+        ...item,
+        identifier: item.id,
+        modelCount: models.length,
+        models,
+      };
+      return merge(cloneDeep(DEFAULT_DISCOVER_PROVIDER_ITEM), provider);
     });
   };
 
-  searchModel = async (locale: Locales, keywords: string): Promise<DiscoverModelItem[]> => {
-    const list = await this.getModelList(locale);
-    return list.filter((item) => {
-      return [item.identifier, item.meta.title, item.meta.description, item.providers]
-        .flat()
-        .filter(Boolean)
-        .join(',')
-        .toLowerCase()
-        .includes(decodeURIComponent(keywords).toLowerCase());
+  getProviderDetail = async (params: {
+    identifier: string;
+    locale?: string;
+    withReadme?: boolean;
+  }): Promise<DiscoverProviderDetail | undefined> => {
+    const { identifier, locale, withReadme } = params;
+    const all = await this._getProviderList();
+    let provider = all.find((item) => item.identifier === identifier);
+    if (!provider) return;
+
+    const list = await this.getProviderList({
+      page: 1,
+      pageSize: 7,
+    });
+
+    let readme;
+
+    if (withReadme) {
+      try {
+        const normalizedLocale = normalizeLocale(locale);
+        const res = await fetch(
+          urlJoin(
+            'https://raw.githubusercontent.com/lobehub/lobe-chat/refs/heads/main/docs/usage/providers',
+            normalizedLocale === 'zh-CN' ? `${identifier}.zh-CN.mdx` : `${identifier}.mdx`,
+          ),
+          {
+            cache: 'force-cache',
+            next: {
+              tags: [CacheTag.Discover, CacheTag.Providers],
+            },
+          },
+        );
+
+        const data = await res.text();
+        const { content } = matter(data);
+        readme = content.trimEnd();
+      } catch {}
+    }
+
+    return {
+      ...provider,
+      models: uniqBy(
+        LOBE_DEFAULT_MODEL_LIST.filter((m) => m.providerId === provider.id),
+        (item) => item.id,
+      ),
+      readme,
+      related: list.items.filter((item) => item.identifier !== provider.identifier).slice(0, 6),
+    };
+  };
+
+  getProviderIdentifiers = async (): Promise<IdentifiersResponse> => {
+    const list = await this._getProviderList();
+    return list.map((item) => {
+      return {
+        identifier: item.identifier,
+        lastModified: dayjs().toISOString(),
+      };
     });
   };
 
-  getModelCategory = async (locale: Locales, category: string): Promise<DiscoverModelItem[]> => {
-    const list = await this._getModelList(locale);
-    return list.filter((item) => item.meta.category === category);
+  getProviderList = async (params: ProviderQueryParams = {}): Promise<ProviderListResponse> => {
+    const { page = 1, pageSize = 20, q, sort = ProviderSorts.Default, order = 'desc' } = params;
+    let list = await this._getProviderList();
+
+    if (q) {
+      list = list.filter((item) => {
+        return [item.identifier, item.description, item.name]
+          .filter(Boolean)
+          .join(',')
+          .toLowerCase()
+          .includes(decodeURIComponent(q).toLowerCase());
+      });
+    }
+
+    if (sort) {
+      switch (sort) {
+        case ProviderSorts.Identifier: {
+          list = list.sort((a, b) => {
+            if (order === 'desc') {
+              return a.identifier.localeCompare(b.identifier);
+            } else {
+              return b.identifier.localeCompare(a.identifier);
+            }
+          });
+          break;
+        }
+        case ProviderSorts.ModelCount: {
+          list = list.sort((a, b) => {
+            if (order === 'asc') {
+              return a.modelCount - b.modelCount;
+            } else {
+              return b.modelCount - a.modelCount;
+            }
+          });
+          break;
+        }
+      }
+    }
+
+    return {
+      currentPage: page,
+      items: list.slice((page - 1) * pageSize, page * pageSize),
+      pageSize,
+      totalCount: list.length,
+      totalPages: Math.ceil(list.length / pageSize),
+    };
   };
 
-  getModelById = async (locale: Locales, id: string): Promise<DiscoverModelItem | undefined> => {
-    const list = await this.getModelList(locale);
-    let model = list.find((item) => item.identifier === id);
+  // ============================== Models ==============================
+
+  private _getRawModelList = async (): Promise<DiscoverModelItem[]> => {
+    return LOBE_DEFAULT_MODEL_LIST.map((item) => {
+      const identifier = (item.id.split('/').at(-1) || item.id).toLowerCase();
+      const providers = uniq(
+        LOBE_DEFAULT_MODEL_LIST.filter(
+          (m) =>
+            m.id.toLowerCase() === identifier ||
+            m.id.includes(`/${identifier}`) ||
+            m.displayName?.toLowerCase() === item.displayName?.toLowerCase(),
+        ).map((m) => m.providerId),
+      );
+      const model = {
+        ...item,
+        category: item.providerId,
+        identifier,
+        providerCount: providers.length,
+        providers,
+      };
+      // 使用简单的合并而不是 DEFAULT_DISCOVER_MODEL_ITEM，避免类型冲突
+      return {
+        ...model,
+        abilities: model.abilities || {},
+      } as DiscoverModelItem;
+    });
+  };
+
+  private _getModelList = async (category?: string): Promise<DiscoverModelItem[]> => {
+    let list = await this._getRawModelList();
+
+    if (category) {
+      list = list.filter((item) => item.providerId === category);
+    }
+
+    // 优化去重逻辑：选择 abilities 最全的模型
+    // 1. 按 identifier 分组
+    const identifierGroups = new Map<string, DiscoverModelItem[]>();
+    list.forEach((item) => {
+      const key = item.identifier;
+      if (!identifierGroups.has(key)) {
+        identifierGroups.set(key, []);
+      }
+      identifierGroups.get(key)!.push(item);
+    });
+
+    // 2. 从每个 identifier 组中选择 abilities 最全的
+    let deduplicatedByIdentifier = Array.from(identifierGroups.values()).map((models) =>
+      this.selectModelWithBestAbilities(models),
+    );
+
+    // 3. 按 displayName 分组
+    const displayNameGroups = new Map<string, DiscoverModelItem[]>();
+    deduplicatedByIdentifier.forEach((item) => {
+      const key = item.displayName?.toLowerCase() || '';
+      if (!displayNameGroups.has(key)) {
+        displayNameGroups.set(key, []);
+      }
+      displayNameGroups.get(key)!.push(item);
+    });
+
+    // 4. 从每个 displayName 组中选择 abilities 最全的
+    const finalList: DiscoverModelItem[] = Array.from(displayNameGroups.values()).map((models) =>
+      this.selectModelWithBestAbilities(models),
+    );
+
+    return finalList;
+  };
+
+  getModelCategories = async (params: CategoryListQuery = {}): Promise<CategoryItem[]> => {
+    const { q } = params;
+    let list = LOBE_DEFAULT_MODEL_LIST;
+    if (q) {
+      list = list.filter((item) => {
+        return [item.id, item.displayName, item.description]
+          .flat()
+          .filter(Boolean)
+          .join(',')
+          .toLowerCase()
+          .includes(decodeURIComponent(q).toLowerCase());
+      });
+    }
+    const categoryCounts = countBy(list, (item) => item.providerId);
+    return Object.entries(categoryCounts)
+      .filter(([category]) => Boolean(category)) // 过滤掉空值
+      .map(([category, count]) => ({
+        category,
+        count,
+      }));
+  };
+
+  getModelDetail = async (params: {
+    identifier: string;
+  }): Promise<DiscoverModelDetail | undefined> => {
+    const { identifier } = params;
+    const all = await this._getModelList();
+    let model = all.find((item) => item.identifier.toLowerCase() === identifier.toLowerCase());
+
+    if (!model) {
+      const raw = await this._getRawModelList();
+      model = raw.find((item) => item.identifier.toLowerCase() === identifier.toLowerCase());
+    }
 
     if (!model) return;
 
-    const categoryItems = model?.meta?.category
-      ? await this.getModelCategory(locale, model.meta.category)
-      : [];
+    const providers = DEFAULT_MODEL_PROVIDER_LIST.filter((item) =>
+      model.providers?.includes(item.id),
+    );
 
-    model = {
+    const list = await this.getModelList({
+      page: 1,
+      pageSize: 7,
+      q: model.identifier.split('-')[0],
+    });
+
+    return {
       ...model,
-      suggestions: categoryItems
-        .filter((item) => item.identifier !== model?.identifier)
-        .slice(0, 5) as any,
+      providers: providers.map((item) => ({
+        ...item,
+        model: LOBE_DEFAULT_MODEL_LIST.find((m) => {
+          if (m.providerId !== item.id) return false;
+          return (
+            m.id.toLowerCase() === model.identifier.toLowerCase() ||
+            m.id.toLowerCase().includes(`/${model.identifier.toLowerCase()}`) ||
+            m.displayName?.toLowerCase() === model.displayName?.toLowerCase()
+          );
+        }),
+      })),
+      related: list.items
+        .filter(
+          (item) => item.identifier !== model.identifier && item.displayName !== model?.displayName,
+        )
+        .slice(0, 6),
     };
-
-    return merge(cloneDeep(DEFAULT_DISCOVER_MODEL_ITEM), model);
   };
 
-  getModelByIds = async (locale: Locales, identifiers: string[]): Promise<DiscoverModelItem[]> => {
-    const list = await pMap(
-      identifiers,
-      async (identifier) => this.getModelById(locale, identifier),
-      {
-        concurrency: 5,
-      },
-    );
-    return list.filter(Boolean) as DiscoverModelItem[];
+  getModelIdentifiers = async (): Promise<IdentifiersResponse> => {
+    const list = await this._getModelList();
+    return list.map((item) => {
+      return {
+        identifier: item.identifier,
+        lastModified: item.releasedAt || dayjs().toISOString(),
+      };
+    });
+  };
+
+  getModelList = async (params: ModelQueryParams = {}): Promise<ModelListResponse> => {
+    const {
+      category,
+      order = 'desc',
+      page = 1,
+      pageSize = 20,
+      q,
+      sort = ModelSorts.ReleasedAt,
+    } = params;
+    let list = await this._getModelList(category);
+
+    // if (category) {
+    //   list = list.filter((item) => item.category === category);
+    // }
+
+    if (q) {
+      list = list.filter((item) => {
+        return [item.identifier, item.displayName, item.description]
+          .flat()
+          .filter(Boolean)
+          .join(',')
+          .toLowerCase()
+          .includes(decodeURIComponent(q).toLowerCase());
+      });
+    }
+
+    if (sort) {
+      switch (sort) {
+        case ModelSorts.ReleasedAt: {
+          list = list.sort((a, b) => {
+            if (order === 'asc') {
+              return dayjs(a.releasedAt).unix() - dayjs(b.releasedAt).unix();
+            } else {
+              return dayjs(b.releasedAt).unix() - dayjs(a.releasedAt).unix();
+            }
+          });
+          break;
+        }
+        case ModelSorts.Identifier: {
+          list = list.sort((a, b) => {
+            if (order === 'desc') {
+              return a.identifier.localeCompare(b.identifier);
+            } else {
+              return b.identifier.localeCompare(a.identifier);
+            }
+          });
+          break;
+        }
+        case ModelSorts.InputPrice: {
+          list = list.sort((a, b) => {
+            if (order === 'asc') {
+              return (
+                (a.pricing?.input || a.pricing?.audioInput || 0) -
+                (b.pricing?.input || b.pricing?.audioInput || 0)
+              );
+            } else {
+              return (
+                (b.pricing?.input || b.pricing?.audioInput || 0) -
+                (a.pricing?.input || a.pricing?.audioInput || 0)
+              );
+            }
+          });
+          break;
+        }
+        case ModelSorts.OutputPrice: {
+          list = list.sort((a, b) => {
+            if (order === 'asc') {
+              return (a.pricing?.output || 0) - (b.pricing?.output || 0);
+            } else {
+              return (b.pricing?.output || 0) - (a.pricing?.output || 0);
+            }
+          });
+          break;
+        }
+        case ModelSorts.ContextWindowTokens: {
+          list = list.sort((a, b) => {
+            if (order === 'asc') {
+              return (a.contextWindowTokens || 0) - (b.contextWindowTokens || 0);
+            } else {
+              return (b.contextWindowTokens || 0) - (a.contextWindowTokens || 0);
+            }
+          });
+          break;
+        }
+        case ModelSorts.ProviderCount: {
+          list = list.sort((a, b) => {
+            if (order === 'asc') {
+              return a.providerCount - b.providerCount;
+            } else {
+              return b.providerCount - a.providerCount;
+            }
+          });
+          break;
+        }
+      }
+    }
+
+    return {
+      currentPage: page,
+      items: list.slice((page - 1) * pageSize, page * pageSize),
+      pageSize,
+      totalCount: list.length,
+      totalPages: Math.ceil(list.length / pageSize),
+    };
   };
 }

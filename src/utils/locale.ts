@@ -5,7 +5,7 @@ import { Locales, locales, normalizeLocale } from '@/locales/resources';
 import { RouteVariants } from '@/utils/server/routeVariants';
 
 export const getAntdLocale = async (lang?: string) => {
-  let normalLang = normalizeLocale(lang);
+  let normalLang: any = normalizeLocale(lang);
 
   // due to antd only have ar-EG locale, we need to convert ar to ar-EG
   // refs: https://ant.design/docs/react/i18n
