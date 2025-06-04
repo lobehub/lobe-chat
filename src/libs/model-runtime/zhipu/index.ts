@@ -1,6 +1,6 @@
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
-import { MODEL_LIST_CONFIGS, processModelList } from '../utils/modelParse';
+import { processMultiProviderModelList } from '../utils/modelParse';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface ZhipuModelCard {
   description: string;
@@ -8,7 +8,7 @@ export interface ZhipuModelCard {
   modelName: string;
 }
 
-export const LobeZhipuAI = LobeOpenAICompatibleFactory({
+export const LobeZhipuAI = createOpenAICompatibleRuntime({
   baseURL: 'https://open.bigmodel.cn/api/paas/v4',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -21,6 +21,9 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
               type: 'web_search',
               web_search: {
                 enable: true,
+                result_sequence: 'before', // 将搜索结果返回顺序更改为 before 适配最小化 OpenAIStream 改动
+                search_engine: process.env.ZHIPU_SEARCH_ENGINE || 'search_std', // search_std, search_pro
+                search_result: true,
               },
             },
           ]

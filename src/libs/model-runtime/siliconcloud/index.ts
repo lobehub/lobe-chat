@@ -1,13 +1,13 @@
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompletionErrorPayload, ModelProvider } from '../types';
 import { processMultiProviderModelList } from '../utils/modelParse';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface SiliconCloudModelCard {
   id: string;
 }
 
-export const LobeSiliconCloudAI = LobeOpenAICompatibleFactory({
+export const LobeSiliconCloudAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.siliconflow.cn/v1',
   chatCompletion: {
     handleError: (error: any): Omit<ChatCompletionErrorPayload, 'provider'> | undefined => {
