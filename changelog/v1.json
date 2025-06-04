@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve loading state."]
+    },
+    "date": "2025-06-04",
+    "version": "1.91.1"
+  },
+  {
+    "children": {
       "features": ["Add more provider support for search & crawl."],
       "improvements": ["Update modelscope models."]
     },
