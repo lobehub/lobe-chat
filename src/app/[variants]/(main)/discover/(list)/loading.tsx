@@ -12,10 +12,7 @@ import CategoryContainer from '../components/CategoryContainer';
 export default memo(() => {
   const pathname = usePathname();
   const mobile = useServerConfigStore((s) => s.isMobile);
-  const withoutCategory =
-    pathname === '/discover' ||
-    pathname === '/discover/providers' ||
-    pathname === '/discover/search';
+  const withoutCategory = pathname === '/discover' || pathname === '/discover/provider';
 
   if (mobile || withoutCategory)
     return (

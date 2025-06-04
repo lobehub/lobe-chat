@@ -1,17 +1,19 @@
+import { ScrollShadow } from '@lobehub/ui';
 import { PropsWithChildren, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
-const CategoryContainer = memo<PropsWithChildren<{ top?: number }>>(({ children, top = 52 }) => {
+const CategoryContainer = memo<PropsWithChildren<{ top?: number }>>(({ children, top = 64 }) => {
   return (
-    <Flexbox
+    <ScrollShadow
       as={'aside'}
       flex={'none'}
       height={`calc(100vh - ${top * 2 + 4}px)`}
-      style={{ overflowX: 'hidden', overflowY: 'hidden', position: 'sticky', top }}
+      hideScrollBar
+      size={4}
+      style={{ paddingBottom: 16, position: 'sticky', top }}
       width={220}
     >
       {children}
-    </Flexbox>
+    </ScrollShadow>
   );
 });
 
