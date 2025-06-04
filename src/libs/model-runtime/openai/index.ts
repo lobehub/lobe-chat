@@ -1,7 +1,7 @@
 import { ModelProvider } from '../types';
+import { processMultiProviderModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { pruneReasoningPayload } from '../utils/openaiHelpers';
-import { processMultiProviderModelList } from '../utils/modelParse';
 
 export interface OpenAIModelCard {
   id: string;

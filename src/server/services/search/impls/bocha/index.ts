@@ -5,7 +5,7 @@ import urlJoin from 'url-join';
 import { SearchParams, UniformSearchResponse, UniformSearchResult } from '@/types/tool/search';
 
 import { SearchServiceImpl } from '../type';
-import { BochaSearchParameters, BochaResponse } from './type';
+import { BochaResponse, BochaSearchParameters } from './type';
 
 const log = debug('lobe-search:Bocha');
 
@@ -44,7 +44,7 @@ export class BochaImpl implements SearchServiceImpl {
       ...defaultQueryParams,
       freshness:
         params?.searchTimeRange && params.searchTimeRange !== 'anytime'
-          ? timeRangeMapping[params.searchTimeRange as keyof typeof timeRangeMapping] ?? undefined
+          ? (timeRangeMapping[params.searchTimeRange as keyof typeof timeRangeMapping] ?? undefined)
           : undefined,
     };
 

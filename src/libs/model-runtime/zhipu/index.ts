@@ -1,6 +1,6 @@
 import { ModelProvider } from '../types';
-import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { MODEL_LIST_CONFIGS, processModelList } from '../utils/modelParse';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface ZhipuModelCard {
   description: string;
@@ -73,7 +73,7 @@ export const LobeZhipuAI = createOpenAICompatibleRuntime({
 
     const modelList: ZhipuModelCard[] = json.rows;
 
-    const standardModelList = modelList.map(model => ({
+    const standardModelList = modelList.map((model) => ({
       description: model.description,
       displayName: model.modelName,
       id: model.modelCode,

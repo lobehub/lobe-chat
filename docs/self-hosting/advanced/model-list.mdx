@@ -21,6 +21,8 @@ id->deploymentName=displayName<maxToken:vision:reasoning:search:fc:file:imageOut
 ```
 The deploymentName `->deploymentName` can be omitted, and it defaults to the latest model version. Currently, the model service providers that support `->deploymentName` are: Azure, Volcengine and Qwen.
 
+The deploymentName `->deploymentName` can be omitted, and it defaults to the latest model version. Currently, the model service providers that support `->deploymentName` are: Azure, Volcengine and Qwen.
+
 For example: `+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo`
 
 In the above example, it adds `qwen-7b-chat` and `glm-6b` to the model list, removes `gpt-3.5-turbo` from the list, and displays the model name of `gpt-4-0125-preview` as `gpt-4-turbo`. If you want to disable all models first and then enable specific models, you can use `-all,+gpt-3.5-turbo`, which means only enabling `gpt-3.5-turbo`.
@@ -47,11 +49,11 @@ Examples are as follows:
 
 Currently supported extension capabilities are:
 
-| ---         | Description                                              |
-| ----------- | -------------------------------------------------------- |
-| `fc`        | Function Calling                                         |
-| `vision`    | Image Recognition                                        |
-| `imageOutput`    | Image Generation                                        |
-| `reasoning` | Support Reasoning                                        |
-| `search`    | Support Web Search                                        |
-| `file`      | File Upload (a bit hacky, not recommended for daily use) |
+| ---           | Description                                              |
+| ------------- | -------------------------------------------------------- |
+| `fc`          | Function Calling                                         |
+| `vision`      | Image Recognition                                        |
+| `imageOutput` | Image Generation                                         |
+| `reasoning`   | Support Reasoning                                        |
+| `search`      | Support Web Search                                       |
+| `file`        | File Upload (a bit hacky, not recommended for daily use) |
