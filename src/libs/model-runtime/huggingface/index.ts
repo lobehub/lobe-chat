@@ -8,6 +8,8 @@ import { ModelProvider } from '../types';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { convertIterableToStream } from '../utils/streams';
 
+import { parsePlaceholderVariablesMessages } from '../utils/placeholderParser';
+
 export interface HuggingFaceModelCard {
   id: string;
   tags: string[];
@@ -33,7 +35,7 @@ export const LobeHuggingFaceAI = createOpenAICompatibleRuntime({
       const hfRes = client.chatCompletionStream({
         endpointUrl: instance.baseURL ? urlJoin(instance.baseURL, payload.model) : instance.baseURL,
         max_tokens: max_tokens,
-        messages: payload.messages,
+        messages: parsePlaceholderVariablesMessages(payload.messages),
         model: payload.model,
         stream: true,
         temperature: payload.temperature,

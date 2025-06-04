@@ -1,9 +1,7 @@
-import { parsePlaceholderVariables } from './placeholderParser';
-
 export const convertSenseNovaMessage = (content: any) => {
   // 如果为单条 string 类 content，则格式转换为 text 类
   if (typeof content === 'string') {
-    return [{ text: parsePlaceholderVariables(content), type: 'text' }];
+    return [{ text: content, type: 'text' }];
   }
 
   // 如果内容为空或不是数组，返回空数组避免后续错误

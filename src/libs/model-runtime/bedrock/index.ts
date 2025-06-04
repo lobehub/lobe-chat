@@ -25,6 +25,8 @@ import {
   createBedrockStream,
 } from '../utils/streams';
 
+import { parsePlaceholderVariablesMessages } from '../utils/placeholderParser';
+
 export interface LobeBedrockAIParams {
   accessKeyId?: string;
   accessKeySecret?: string;
@@ -117,8 +119,10 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     options?: ChatMethodOptions,
   ): Promise<Response> => {
     const { max_tokens, messages, model, temperature, top_p, tools } = payload;
-    const system_message = messages.find((m) => m.role === 'system');
-    const user_messages = messages.filter((m) => m.role !== 'system');
+
+    const payload_messages = parsePlaceholderVariablesMessages(messages);
+    const system_message = payload_messages.find((m) => m.role === 'system');
+    const user_messages = payload_messages.filter((m) => m.role !== 'system');
 
     const command = new InvokeModelWithResponseStreamCommand({
       accept: 'application/json',
@@ -172,11 +176,14 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     options?: ChatMethodOptions,
   ): Promise<Response> => {
     const { max_tokens, messages, model } = payload;
+
+    const payload_messages = parsePlaceholderVariablesMessages(messages);
+
     const command = new InvokeModelWithResponseStreamCommand({
       accept: 'application/json',
       body: JSON.stringify({
         max_gen_len: max_tokens || 400,
-        prompt: experimental_buildLlama2Prompt(messages as any),
+        prompt: experimental_buildLlama2Prompt(payload_messages as any),
       }),
       contentType: 'application/json',
       modelId: model,

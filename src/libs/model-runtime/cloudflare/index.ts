@@ -14,6 +14,8 @@ import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
 import { createCallbacksTransformer } from '../utils/streams';
 
+import { parsePlaceholderVariablesMessages } from '../utils/placeholderParser';
+
 export interface CloudflareModelCard {
   description: string;
   name: string;
@@ -56,7 +58,8 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
 
   async chat(payload: ChatStreamPayload, options?: ChatMethodOptions): Promise<Response> {
     try {
-      const { model, tools, ...restPayload } = payload;
+      const { messages, model, tools, ...restPayload } = payload;
+      const payload_messages = parsePlaceholderVariablesMessages(messages);
       const functions = tools?.map((tool) => tool.function);
       const headers = options?.headers || {};
       if (this.apiKey) {
@@ -64,7 +67,7 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
       }
       const url = new URL(model, this.baseURL);
       const response = await fetch(url, {
-        body: JSON.stringify({ tools: functions, ...restPayload }),
+        body: JSON.stringify({ messages: payload_messages, tools: functions, ...restPayload }),
         headers: { 'Content-Type': 'application/json', ...headers },
         method: 'POST',
         signal: options?.signal,

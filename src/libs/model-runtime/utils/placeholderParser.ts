@@ -56,3 +56,47 @@ export const parsePlaceholderVariables = (text: string): string => {
     return variables[key] || match;
   });
 };
+
+/**
+ * 解析消息内容，替换占位符变量
+ * @param messages 原始消息数组
+ * @returns 处理后的消息数组
+ */
+export const parsePlaceholderVariablesMessages = (messages: any[]): any[] =>
+  messages.map(message => {
+    // 检查 message 是否具有 content 属性
+    if (!Object.prototype.hasOwnProperty.call(message, 'content')) {
+      return message;
+    }
+
+    const content = message.content;
+
+    // 处理字符串类型的 content
+    if (typeof content === 'string') {
+      return {
+        ...message,
+        content: parsePlaceholderVariables(content)
+      };
+    }
+
+    // 处理数组类型的 content（如混合 text 和 image_url）
+    if (Array.isArray(content)) {
+      return {
+        ...message,
+        content: content.map(item => {
+          // 仅对 type 为 text 的元素进行处理
+          if (item && typeof item === 'object' && item.type === 'text') {
+            return {
+              ...item,
+              text: parsePlaceholderVariables(item.text)
+            };
+          }
+          // 非 text 类型保持原样返回
+          return item;
+        })
+      };
+    }
+
+    // 非字符串、非数组的 content 原样返回
+    return message;
+  });
