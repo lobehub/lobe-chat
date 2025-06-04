@@ -1,5 +1,6 @@
 'use client';
 
+import { Icon } from '@lobehub/ui';
 import Link from 'next/link';
 import qs from 'query-string';
 import { memo } from 'react';
@@ -21,6 +22,7 @@ const Category = memo(() => {
         .filter((item) => item?.key !== DiscoverTab.Home)
         .map((item: any) => ({
           ...item,
+          icon: <Icon icon={item.icon} size={18} />,
           label: (
             <Link
               href={qs.stringifyUrl({

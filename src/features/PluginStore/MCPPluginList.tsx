@@ -7,26 +7,26 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
 
-import AddPluginButton from '@/features/PluginStore/AddPluginButton';
 import { useToolStore } from '@/store/tool';
-import { pluginSelectors, pluginStoreSelectors } from '@/store/tool/selectors';
+import { mcpStoreSelectors, pluginSelectors } from '@/store/tool/selectors';
 
+import AddPluginButton from './AddPluginButton';
 import Loading from './Loading';
 import PluginItem from './PluginItem';
 
-export const OnlineList = memo(() => {
+export const MCPPluginList = memo(() => {
   const { t } = useTranslation('plugin');
-  const [keywords, setKeywords] = useState<string>();
+  const [keywords, setKeywords] = useState<string | undefined>();
   const pluginStoreList = useToolStore((s) => {
     const custom = pluginSelectors.installedCustomPluginMetaList(s);
-    const store = pluginStoreSelectors.onlinePluginStore(s);
+    const store = mcpStoreSelectors.mcpPluginList(s);
 
     return [...custom, ...store];
   }, isEqual);
 
-  const useFetchPluginList = useToolStore((s) => s.useFetchPluginStore);
+  const useFetchMCPPluginStore = useToolStore((s) => s.useFetchMCPPluginStore);
 
-  const { isLoading, error } = useFetchPluginList();
+  const { isLoading, error } = useFetchMCPPluginStore({ keywords });
 
   const isEmpty = pluginStoreList.length === 0;
 
@@ -73,7 +73,7 @@ export const OnlineList = memo(() => {
         <Virtuoso
           itemContent={(index) => {
             const item = filteredPluginList[index];
-            return <PluginItem key={item.identifier} {...item} />;
+            return <PluginItem key={item.identifier} {...item} isMCP />;
           }}
           overscan={400}
           style={{ height: 500, marginInline: -16 }}
@@ -84,4 +84,4 @@ export const OnlineList = memo(() => {
   );
 });
 
-export default OnlineList;
+export default MCPPluginList;

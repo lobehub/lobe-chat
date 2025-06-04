@@ -1,6 +1,8 @@
 import { PropsWithChildren } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import Footer from '@/features/Setting/Footer';
+
 const MAX_WIDTH = 1440;
 
 const Layout = ({ children }: PropsWithChildren) => {
@@ -18,6 +20,8 @@ const Layout = ({ children }: PropsWithChildren) => {
         width={'100%'}
       >
         {children}
+        <div />
+        <Footer />
       </Flexbox>
     </Flexbox>
   );

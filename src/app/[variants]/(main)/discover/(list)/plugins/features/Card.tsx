@@ -1,4 +1,4 @@
-import { Avatar, Tag } from '@lobehub/ui';
+import { Avatar, Icon, Tag } from '@lobehub/ui';
 import { Skeleton, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { startCase } from 'lodash-es';
@@ -73,7 +73,7 @@ interface PluginCardProps
 const PluginCard = memo<PluginCardProps>(
   ({ className, showCategory, meta, createdAt, author, compact, style, href }) => {
     const { avatar, title, description, tags = [], category } = meta;
-    const categoryItem = useCategoryItem(category, 12);
+    const categoryItem = useCategoryItem(category);
     const { cx, styles, theme } = useStyles();
 
     return (
@@ -133,7 +133,7 @@ const PluginCard = memo<PluginCardProps>(
           <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
             {showCategory && categoryItem ? (
               <Link href={urlJoin('/discover/plugins', categoryItem.key)}>
-                <Tag icon={categoryItem.icon}>{categoryItem.label}</Tag>
+                <Tag icon={<Icon icon={categoryItem.icon} size={12} />}>{categoryItem.label}</Tag>
               </Link>
             ) : (
               tags

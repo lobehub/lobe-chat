@@ -3,12 +3,12 @@
 import { Tabs } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { usePathname } from 'next/navigation';
+import { useRouter } from 'nextjs-toploader/app';
 import { rgba } from 'polished';
 import { memo, useState } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { DiscoverTab } from '@/types/discover';
 
 import { MAX_WIDTH } from '../../../features/const';
@@ -42,7 +42,7 @@ const Nav = memo(() => {
   const pathname = usePathname();
   const { cx, styles } = useStyles();
   const { items, activeKey } = useNav();
-  const router = useQueryRoute();
+  const router = useRouter();
 
   useScroll((scroll, delta) => {
     if (delta < 0) {

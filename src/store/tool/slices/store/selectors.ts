@@ -5,7 +5,7 @@ import type { ToolStoreState } from '../../initialState';
 const onlinePluginStore = (s: ToolStoreState) => {
   const installedPluginIds = new Set(s.installedPlugins.map((i) => i.identifier));
   const list =
-    s.listType === 'all'
+    s.listType === 'old'
       ? s.pluginStoreList
       : s.pluginStoreList.filter((p) => installedPluginIds.has(p.identifier));
 

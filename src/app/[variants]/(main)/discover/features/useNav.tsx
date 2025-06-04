@@ -1,5 +1,7 @@
-import { Icon } from '@lobehub/ui';
+import { MCP } from '@lobehub/icons';
+import { Dropdown, Icon } from '@lobehub/ui';
 import { Bot, Brain, BrainCircuit, House, Puzzle } from 'lucide-react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -32,27 +34,76 @@ export const useNav = () => {
       {
         icon: <Icon icon={House} size={ICON_SIZE} />,
         key: DiscoverTab.Home,
-        label: t('tab.home'),
+        label: (
+          <Link href={'/discover'} style={{ color: 'inherit' }}>
+            {t('tab.home')}
+          </Link>
+        ),
       },
       {
         icon: <Icon icon={Bot} size={ICON_SIZE} />,
         key: DiscoverTab.Assistants,
-        label: t('tab.assistants'),
+        label: (
+          <Link href={urlJoin('/discover', DiscoverTab.Assistants)} style={{ color: 'inherit' }}>
+            {t('tab.assistants')}
+          </Link>
+        ),
       },
       {
-        icon: <Icon icon={Puzzle} size={ICON_SIZE} />,
-        key: DiscoverTab.Plugins,
-        label: t('tab.plugins'),
+        icon: <MCP className={'anticon'} size={ICON_SIZE} />,
+        key: DiscoverTab.Mcp,
+        label: (
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  icon: <MCP className={'anticon'} size={ICON_SIZE} />,
+                  key: DiscoverTab.Mcp,
+                  label: (
+                    <Link href={urlJoin('/discover', DiscoverTab.Mcp)} style={{ color: 'inherit' }}>
+                      {'MCP Servers'}
+                    </Link>
+                  ),
+                },
+                {
+                  icon: <Icon icon={Puzzle} size={ICON_SIZE} />,
+                  key: DiscoverTab.Plugins,
+                  label: (
+                    <Link
+                      href={urlJoin('/discover', DiscoverTab.Plugins)}
+                      style={{ color: 'inherit' }}
+                    >
+                      {t('tab.plugins')}
+                    </Link>
+                  ),
+                },
+              ],
+            }}
+            placement={'bottom'}
+          >
+            <Link href={urlJoin('/discover', DiscoverTab.Mcp)} style={{ color: 'inherit' }}>
+              {t('tab.plugins')}
+            </Link>
+          </Dropdown>
+        ),
       },
       {
         icon: <Icon icon={Brain} size={ICON_SIZE} />,
         key: DiscoverTab.Models,
-        label: t('tab.models'),
+        label: (
+          <Link href={urlJoin('/discover', DiscoverTab.Models)} style={{ color: 'inherit' }}>
+            {t('tab.models')}
+          </Link>
+        ),
       },
       {
         icon: <Icon icon={BrainCircuit} size={ICON_SIZE} />,
         key: DiscoverTab.Providers,
-        label: t('tab.providers'),
+        label: (
+          <Link href={urlJoin('/discover', DiscoverTab.Providers)} style={{ color: 'inherit' }}>
+            {t('tab.providers')}
+          </Link>
+        ),
       },
     ],
     [t],
