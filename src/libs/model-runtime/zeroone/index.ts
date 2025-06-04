@@ -1,5 +1,5 @@
 import { ModelProvider } from '../types';
-import { processMultiProviderModelList } from '../utils/modelParse';
+import { MODEL_LIST_CONFIGS, processModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface ZeroOneModelCard {
