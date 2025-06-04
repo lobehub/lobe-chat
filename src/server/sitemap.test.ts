@@ -80,7 +80,7 @@ describe('Sitemap', () => {
       ]);
 
       const assistantsSitemap = await sitemap.getAssistants();
-      expect(assistantsSitemap.length).toBe(15);
+      expect(assistantsSitemap.length).toBe(18);
       expect(assistantsSitemap).toContainEqual(
         expect.objectContaining({
           url: getCanonicalUrl('/discover/assistant/test-assistant'),
@@ -136,7 +136,7 @@ describe('Sitemap', () => {
       ]);
 
       const pluginsSitemap = await sitemap.getPlugins();
-      expect(pluginsSitemap.length).toBe(15);
+      expect(pluginsSitemap.length).toBe(18);
       expect(pluginsSitemap).toContainEqual(
         expect.objectContaining({
           url: getCanonicalUrl('/discover/plugin/test-plugin'),
@@ -180,7 +180,7 @@ describe('Sitemap', () => {
       ]);
 
       const modelsSitemap = await sitemap.getModels();
-      expect(modelsSitemap.length).toBe(15);
+      expect(modelsSitemap.length).toBe(18);
       expect(modelsSitemap).toContainEqual(
         expect.objectContaining({
           url: getCanonicalUrl('/discover/model/test:model'),
@@ -224,7 +224,7 @@ describe('Sitemap', () => {
       ]);
 
       const providersSitemap = await sitemap.getProviders();
-      expect(providersSitemap.length).toBe(15);
+      expect(providersSitemap.length).toBe(18);
       expect(providersSitemap).toContainEqual(
         expect.objectContaining({
           url: getCanonicalUrl('/discover/provider/test-provider'),
