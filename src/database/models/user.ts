@@ -205,6 +205,15 @@ export class UserModel {
       .values({ ...params })
       .returning();
 
+    // Assign default role to new user
+    try {
+      const { assignDefaultRoleToUser } = await import('@/database/utils/rbacInit');
+      await assignDefaultRoleToUser(user.id);
+    } catch (error) {
+      console.warn('Failed to assign default role to new user:', error);
+      // Don't affect user creation process
+    }
+
     return { duplicate: false, user };
   };
 

@@ -10,6 +10,7 @@ import { documentChunks, documents } from './document';
 import { files, knowledgeBases } from './file';
 import { messages, messagesFiles } from './message';
 import { chunks, unstructuredChunks } from './rag';
+import { permissions, rolePermissions, roles, userRoles } from './rbac';
 import { sessionGroups, sessions } from './session';
 import { threads, topicDocuments, topics } from './topic';
 import { users } from './user';
@@ -165,7 +166,7 @@ export const filesRelations = relations(files, ({ many, one }) => ({
   }),
 }));
 
-// Document 相关关系定义
+// Document related relationship definitions
 export const documentsRelations = relations(documents, ({ one, many }) => ({
   file: one(files, {
     fields: [documents.fileId],
@@ -191,5 +192,42 @@ export const documentChunksRelations = relations(documentChunks, ({ one }) => ({
   document: one(documents, {
     fields: [documentChunks.documentId],
     references: [documents.id],
+  }),
+}));
+
+// ==================== RBAC Relationship Definitions ====================
+
+export const usersRelations = relations(users, ({ many }) => ({
+  userRoles: many(userRoles),
+}));
+
+export const rolesRelations = relations(roles, ({ many }) => ({
+  userRoles: many(userRoles),
+  rolePermissions: many(rolePermissions),
+}));
+
+export const permissionsRelations = relations(permissions, ({ many }) => ({
+  rolePermissions: many(rolePermissions),
+}));
+
+export const userRolesRelations = relations(userRoles, ({ one }) => ({
+  user: one(users, {
+    fields: [userRoles.userId],
+    references: [users.id],
+  }),
+  role: one(roles, {
+    fields: [userRoles.roleId],
+    references: [roles.id],
+  }),
+}));
+
+export const rolePermissionsRelations = relations(rolePermissions, ({ one }) => ({
+  role: one(roles, {
+    fields: [rolePermissions.roleId],
+    references: [roles.id],
+  }),
+  permission: one(permissions, {
+    fields: [rolePermissions.permissionId],
+    references: [permissions.id],
   }),
 }));

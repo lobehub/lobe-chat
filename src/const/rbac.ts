@@ -1,0 +1,249 @@
+/**
+ * RBAC Permission Constants Definition
+ * Complete permission system based on all functional modules in the project
+ */
+export const PERMISSIONS = {
+  // ==================== Agent Management ====================
+  AGENT_CREATE: 'agent:create',
+
+  AGENT_DELETE: 'agent:delete',
+
+  AGENT_FORK: 'agent:fork',
+
+  AGENT_PUBLISH: 'agent:publish',
+
+  AGENT_READ: 'agent:read',
+
+  AGENT_SHARE: 'agent:share',
+
+  AGENT_UPDATE: 'agent:update',
+
+  // ==================== AI Infrastructure Management ====================
+  AI_MODEL_CONFIGURE: 'ai_model:configure',
+
+  AI_MODEL_USE: 'ai_model:use',
+
+  AI_PROVIDER_CREATE: 'ai_provider:create',
+
+  AI_PROVIDER_DELETE: 'ai_provider:delete',
+
+  AI_PROVIDER_READ: 'ai_provider:read',
+
+  AI_PROVIDER_UPDATE: 'ai_provider:update',
+
+  // ==================== API Key Management ====================
+  API_KEY_CREATE: 'api_key:create',
+
+  API_KEY_DELETE: 'api_key:delete',
+
+  API_KEY_READ: 'api_key:read',
+
+  API_KEY_UPDATE: 'api_key:update',
+
+  // ==================== Async Task Management ====================
+  ASYNC_TASK_CANCEL: 'async_task:cancel',
+
+  ASYNC_TASK_CREATE: 'async_task:create',
+
+  ASYNC_TASK_READ: 'async_task:read',
+
+  AUDIT_LOG_EXPORT: 'audit:log_export',
+
+  // ==================== Audit Logs ====================
+  AUDIT_LOG_READ: 'audit:log_read',
+
+  // ==================== Authentication Management ====================
+  AUTH_OAUTH_CONFIGURE: 'auth:oauth_configure',
+
+  AUTH_OIDC_CONFIGURE: 'auth:oidc_configure',
+
+  AUTH_SESSION_MANAGE: 'auth:session_manage',
+
+  // ==================== Data Management ====================
+  DATA_BACKUP: 'data:backup',
+
+  DATA_EXPORT: 'data:export',
+
+  DATA_IMPORT: 'data:import',
+
+  DATA_RESTORE: 'data:restore',
+
+  // ==================== Document Management ====================
+  DOCUMENT_CHUNK: 'document:chunk',
+
+  DOCUMENT_CREATE: 'document:create',
+
+  DOCUMENT_DELETE: 'document:delete',
+
+  DOCUMENT_READ: 'document:read',
+
+  DOCUMENT_UPDATE: 'document:update',
+
+  // ==================== File Management ====================
+  FILE_DELETE: 'file:delete',
+
+  FILE_DOWNLOAD: 'file:download',
+
+  FILE_READ: 'file:read',
+
+  FILE_SHARE: 'file:share',
+
+  FILE_UPDATE: 'file:update',
+
+  FILE_UPLOAD: 'file:upload',
+
+  // ==================== Knowledge Base Management ====================
+  KNOWLEDGE_BASE_CREATE: 'knowledge_base:create',
+
+  KNOWLEDGE_BASE_DELETE: 'knowledge_base:delete',
+
+  KNOWLEDGE_BASE_READ: 'knowledge_base:read',
+
+  KNOWLEDGE_BASE_SHARE: 'knowledge_base:share',
+
+  KNOWLEDGE_BASE_UPDATE: 'knowledge_base:update',
+
+  // ==================== Message Management ====================
+  MESSAGE_CREATE: 'message:create',
+
+  MESSAGE_DELETE: 'message:delete',
+
+  MESSAGE_FAVORITE: 'message:favorite',
+
+  MESSAGE_READ: 'message:read',
+
+  MESSAGE_REGENERATE: 'message:regenerate',
+
+  MESSAGE_UPDATE: 'message:update',
+
+  // ==================== Plugin Management ====================
+  PLUGIN_CONFIGURE: 'plugin:configure',
+
+  PLUGIN_DEVELOP: 'plugin:develop',
+
+  PLUGIN_INSTALL: 'plugin:install',
+
+  PLUGIN_UNINSTALL: 'plugin:uninstall',
+
+  // ==================== RAG Features ====================
+  RAG_EMBED: 'rag:embed',
+
+  RAG_EVAL: 'rag:eval',
+
+  RAG_SEARCH: 'rag:search',
+
+  // ==================== Session Management ====================
+  SESSION_CREATE: 'session:create',
+
+  SESSION_DELETE: 'session:delete',
+
+  SESSION_EXPORT: 'session:export',
+
+  // ==================== Session Group Management ====================
+  SESSION_GROUP_CREATE: 'session_group:create',
+
+  SESSION_GROUP_DELETE: 'session_group:delete',
+
+  SESSION_GROUP_READ: 'session_group:read',
+
+  SESSION_GROUP_UPDATE: 'session_group:update',
+
+  SESSION_IMPORT: 'session:import',
+
+  SESSION_READ: 'session:read',
+
+  SESSION_SHARE: 'session:share',
+
+  SESSION_UPDATE: 'session:update',
+
+  // ==================== System Management ====================
+  SYSTEM_BACKUP: 'system:backup',
+
+  SYSTEM_CONFIGURE: 'system:configure',
+
+  SYSTEM_LOG_VIEW: 'system:log_view',
+
+  SYSTEM_MAINTENANCE: 'system:maintenance',
+
+  SYSTEM_MONITOR: 'system:monitor',
+
+  SYSTEM_RESTORE: 'system:restore',
+
+  // ==================== Topic Management ====================
+  TOPIC_CREATE: 'topic:create',
+
+  TOPIC_DELETE: 'topic:delete',
+
+  TOPIC_FAVORITE: 'topic:favorite',
+
+  TOPIC_READ: 'topic:read',
+
+  TOPIC_UPDATE: 'topic:update',
+
+  // ==================== User Management ====================
+  USER_CREATE: 'user:create',
+
+  USER_DELETE: 'user:delete',
+
+  USER_PROFILE_UPDATE: 'user:profile_update',
+
+  USER_READ: 'user:read',
+
+  USER_UPDATE: 'user:update',
+} as const;
+
+/**
+ * RBAC Role Constants Definition
+ */
+export const ROLES = {
+  ADMIN: 'admin',
+  USER: 'user',
+} as const;
+
+/**
+ * Permission Module Categories
+ */
+export const PERMISSION_MODULES = {
+  AGENT: 'agent',
+  AI_MODEL: 'ai_model',
+  AI_PROVIDER: 'ai_provider',
+  API_KEY: 'api_key',
+  ASYNC_TASK: 'async_task',
+  AUDIT: 'audit',
+  AUTH: 'auth',
+  DATA: 'data',
+  DOCUMENT: 'document',
+  FILE: 'file',
+  KNOWLEDGE_BASE: 'knowledge_base',
+  MESSAGE: 'message',
+  PLUGIN: 'plugin',
+  RAG: 'rag',
+  SESSION: 'session',
+  SESSION_GROUP: 'session_group',
+  SYSTEM: 'system',
+  TOPIC: 'topic',
+  USER: 'user',
+} as const;
+
+/**
+ * Role Description Mapping
+ */
+export const ROLE_DESCRIPTIONS = {
+  [ROLES.ADMIN]: 'Administrator with all system permissions',
+  [ROLES.USER]: 'Regular user with basic usage permissions',
+} as const;
+
+/**
+ * Default Role Permission Mapping Example
+ * Note: This is just an example, actual permission assignment is configured by administrators in the system
+ */
+export const DEFAULT_ROLE_PERMISSIONS_DEMO = {
+  [ROLES.ADMIN]: Object.values(PERMISSIONS),
+  [ROLES.USER]: [
+    // Basic permissions example for regular users
+    PERMISSIONS.TOPIC_CREATE,
+    PERMISSIONS.TOPIC_READ,
+    PERMISSIONS.MESSAGE_CREATE,
+    PERMISSIONS.MESSAGE_READ,
+  ],
+} as const;
