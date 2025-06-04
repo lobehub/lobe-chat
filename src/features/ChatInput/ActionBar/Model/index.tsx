@@ -57,7 +57,6 @@ const ModelSwitch = memo(() => {
   const { t } = useTranslation('chat');
   const { styles, cx, theme } = useStyles();
   const [updating, setUpdating] = useState(false);
-  const [controlsUpdating, setControlsUpdating] = useState(false);
 
   const [model, provider] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
@@ -89,9 +88,8 @@ const ModelSwitch = memo(() => {
       {isModelHasExtendParams && (
         <Action
           icon={Settings2Icon}
-          loading={controlsUpdating}
           popover={{
-            content: <ControlsForm setUpdating={setControlsUpdating} updating={controlsUpdating} />,
+            content: <ControlsForm />,
             minWidth: 350,
             placement: 'topLeft',
           }}
