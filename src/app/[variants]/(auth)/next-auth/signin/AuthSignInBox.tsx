@@ -7,7 +7,7 @@ import { createStyles } from 'antd-style';
 import { AuthError } from 'next-auth';
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { memo } from 'react';
+import { memo, useEffect, useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import BrandWatermark from '@/components/BrandWatermark';
@@ -97,6 +97,15 @@ export default memo(() => {
       throw error;
     }
   };
+
+  // Auto-click the sign-in button when there's only one provider
+  useLayoutEffect(() => {
+    // Only auto-click when oAuthSSOProviders is loaded and has exactly one provider
+    if (oAuthSSOProviders && oAuthSSOProviders.length === 1) {
+      // useLayoutEffect ensures the component is fully rendered before this runs
+      handleSignIn(oAuthSSOProviders[0]);
+    }
+  }, [oAuthSSOProviders]); // Only re-run when oAuthSSOProviders changes
 
   const footerBtns = [
     { href: DOCUMENTS_REFER_URL, id: 0, label: t('footerPageLink__help') },
