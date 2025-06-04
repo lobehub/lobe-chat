@@ -20,11 +20,11 @@ const GithubBadge = memo(() => {
   const [selectedTheme, setSelectedTheme] = useState<BadgeTheme>('dark');
 
   const pageUrl = urlJoin(OFFICIAL_SITE, 'mcp', identifier);
-  const badgeUrl = urlJoin(OFFICIAL_SITE, 'api/badge/mcp', identifier);
+  const badgeUrl = urlJoin(OFFICIAL_SITE, 'badge/mcp', identifier);
   const styledBadgeUrl =
     selectedStyle === 'flat-square' ? badgeUrl : `${badgeUrl}?style=${selectedStyle}`;
 
-  const badgeFullUrl = urlJoin(OFFICIAL_SITE, 'api/badge/mcp-full', identifier);
+  const badgeFullUrl = urlJoin(OFFICIAL_SITE, 'badge/mcp-full', identifier);
 
   // 构建带主题参数的完整 badge URL
   const styledBadgeFullUrl =
