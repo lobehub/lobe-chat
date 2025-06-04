@@ -36,7 +36,7 @@ describe('AssistantService', () => {
       // Arrange
       const fakeResponse = { agents: [{ name: 'TestAssisstant' }] };
       (globalHelpers.getCurrentLanguage as Mock).mockReturnValue('tt');
-      
+
       (edgeClient.market.getAgentIndex.query as Mock).mockResolvedValue(fakeResponse);
 
       // Act
@@ -50,21 +50,19 @@ describe('AssistantService', () => {
     it('should handle fetch error', async () => {
       // Arrange
       (globalHelpers.getCurrentLanguage as Mock).mockReturnValue('en');
-      (edgeClient.market.getAgentIndex.query as Mock).mockRejectedValue(
-        new Error('Network error'),
-      );
+      (edgeClient.market.getAgentIndex.query as Mock).mockRejectedValue(new Error('Network error'));
 
       // Act & Assert
       await expect(assistantService.getAssistantList()).rejects.toThrow('Network error');
     });
   });
-  
+
   describe('getAssistantById', () => {
     it('should fetch and return the assistant by id', async () => {
       // Arrange
       const fakeResponse = { identifier: 'test-assisstant' };
       (globalHelpers.getCurrentLanguage as Mock).mockReturnValue('tt');
-      
+
       (edgeClient.market.getAgent.query as Mock).mockResolvedValue(fakeResponse);
 
       // Act

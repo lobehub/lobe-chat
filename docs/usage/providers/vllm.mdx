@@ -21,13 +21,13 @@ This document will guide you on how to use vLLM in LobeChat:
 
   vLLM has certain requirements for hardware and software environments. Be sure to configure according to the following requirements:
 
-  | Hardware Requirements     |                                                                         |
-  | --------- | ----------------------------------------------------------------------- |
-  | GPU       | - NVIDIA CUDA <br /> - AMD ROCm <br /> - Intel XPU                      |
-  | CPU       | - Intel/AMD x86 <br /> - ARM AArch64 <br /> - Apple silicon             |
+  | Hardware Requirements |                                                                         |
+  | --------------------- | ----------------------------------------------------------------------- |
+  | GPU                   | - NVIDIA CUDA <br /> - AMD ROCm <br /> - Intel XPU                      |
+  | CPU                   | - Intel/AMD x86 <br /> - ARM AArch64 <br /> - Apple silicon             |
   | Other AI Accelerators | - Google TPU <br /> - Intel Gaudi <br /> - AWS Neuron <br /> - OpenVINO |
 
-  | Software Requirements                                    |
+  | Software Requirements                   |
   | --------------------------------------- |
   | - OS: Linux <br /> - Python: 3.9 – 3.12 |
 
@@ -55,8 +55,10 @@ This document will guide you on how to use vLLM in LobeChat:
   pip install vllm
   ```
 
-  <Callout type={"note"}>
-    For non-CUDA platforms, please refer to the [official documentation](https://docs.vllm.ai/en/latest/getting_started/installation/index.html#installation-index) to learn how to install vLLM.
+  <Callout type={'note'}>
+    For non-CUDA platforms, please refer to the [official
+    documentation](https://docs.vllm.ai/en/latest/getting_started/installation/index.html#installation-index)
+    to learn how to install vLLM.
   </Callout>
 
   ### Step 3: Start Local Service
@@ -72,7 +74,8 @@ This document will guide you on how to use vLLM in LobeChat:
   You can enable the server to check the API key in the header by passing the parameter `--api-key` or the environment variable `VLLM_API_KEY`. If not set, no API Key is required to access.
 
   <Callout type={'note'}>
-    For more detailed vLLM server configuration, please refer to the [official documentation](https://docs.vllm.ai/en/latest/).
+    For more detailed vLLM server configuration, please refer to the [official
+    documentation](https://docs.vllm.ai/en/latest/).
   </Callout>
 
   ### Step 4: Configure vLLM in LobeChat
@@ -84,15 +87,15 @@ This document will guide you on how to use vLLM in LobeChat:
 
   - Open the vLLM service provider and fill in the API service address and API Key.
 
-  <Callout type={"warning"}>
-    *   If your vLLM is not configured with an API Key, please leave the API Key blank.
-    *   If your vLLM is running locally, please make sure to turn on `Client Request Mode`.
+  <Callout type={'warning'}>
+    * If your vLLM is not configured with an API Key, please leave the API Key blank. \* If your vLLM
+      is running locally, please make sure to turn on `Client Request Mode`.
   </Callout>
 
   - Add the model you are running to the model list below.
   - Select a vLLM model to run for your assistant and start the conversation.
 
-  <Image alt={'Select vLLM Model'} inStep src={'https://github.com/user-attachments/assets/fcdfb9c5-819a-488f-b28d-0857fe861219'} />
+    <Image alt={'Select vLLM Model'} inStep src={'https://github.com/user-attachments/assets/fcdfb9c5-819a-488f-b28d-0857fe861219'} />
 </Steps>
 
 Now you can use the models provided by vLLM in LobeChat to have conversations.
