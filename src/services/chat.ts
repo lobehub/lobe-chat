@@ -238,12 +238,16 @@ class ChatService {
           };
         }
       }
-      
+
       if (
         modelExtendParams!.includes('disableContextCaching') &&
         chatConfig.disableContextCaching
       ) {
         extendParams.enabledContextCaching = false;
+      }
+
+      if (modelExtendParams!.includes('reasoningEffort') && chatConfig.reasoningEffort) {
+        extendParams.reasoning_effort = chatConfig.reasoningEffort;
       }
     }
 
@@ -296,6 +300,7 @@ class ChatService {
       ModelProvider.Azure,
       ModelProvider.Volcengine,
       ModelProvider.AzureAI,
+      ModelProvider.Qwen,
     ] as string[];
 
     if (providersWithDeploymentName.includes(provider)) {

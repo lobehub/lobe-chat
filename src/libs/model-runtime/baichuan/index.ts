@@ -1,7 +1,7 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ChatStreamPayload, ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface BaichuanModelCard {
   function_call: boolean;
@@ -11,7 +11,7 @@ export interface BaichuanModelCard {
   model_show_name: string;
 }
 
-export const LobeBaichuanAI = LobeOpenAICompatibleFactory({
+export const LobeBaichuanAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.baichuan-ai.com/v1',
   chatCompletion: {
     handlePayload: (payload: ChatStreamPayload) => {

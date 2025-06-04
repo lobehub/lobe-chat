@@ -1,13 +1,13 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface NvidiaModelCard {
   id: string;
 }
 
-export const LobeNvidiaAI = LobeOpenAICompatibleFactory({
+export const LobeNvidiaAI = createOpenAICompatibleRuntime({
   baseURL: 'https://integrate.api.nvidia.com/v1',
   debug: {
     chatCompletion: () => process.env.DEBUG_NVIDIA_CHAT_COMPLETION === '1',
