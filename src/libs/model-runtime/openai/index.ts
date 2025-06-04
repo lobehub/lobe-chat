@@ -1,4 +1,4 @@
-import { ModelProvider } from '../types';
+import { ChatStreamPayload, ModelProvider } from '../types';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { pruneReasoningPayload } from '../utils/openaiHelpers';
 import { processMultiProviderModelList } from '../utils/modelParse';
@@ -14,6 +14,10 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
   chatCompletion: {
     handlePayload: (payload) => {
       const { model } = payload;
+
+      if (model === 'o1-pro') {
+        return { ...payload, apiMode: 'response' } as ChatStreamPayload;
+      }
 
       if (prunePrefixes.some((prefix) => model.startsWith(prefix))) {
         return pruneReasoningPayload(payload) as any;

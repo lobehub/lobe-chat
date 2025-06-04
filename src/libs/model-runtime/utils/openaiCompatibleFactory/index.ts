@@ -202,7 +202,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     }
 
     async chat(
-      { responseMode, apiMode = 'chatCompletion', ...payload }: ChatStreamPayload,
+      { responseMode, apiMode = 'response', ...payload }: ChatStreamPayload,
       options?: ChatMethodOptions,
     ) {
       // new openai Response API
@@ -469,15 +469,22 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       payload: ChatStreamPayload,
       options?: ChatMethodOptions,
     ): Promise<Response> {
+      // remove penalty params
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { messages, frequency_penalty: _, presence_penalty: __, ...res } = payload;
+      const { messages, frequency_penalty: _, presence_penalty: __, reasoning, ...res } = payload;
 
       const inputStartAt = Date.now();
       const input = await convertOpenAIResponseInputs(messages as any);
 
+      if (reasoning && reasoning.effort) {
+        reasoning.summary = 'auto';
+      }
+
       const postPayload = {
         ...res,
+        // include: ['reasoning.encrypted_content'],
         input,
+        reasoning,
         store: false,
         stream: payload.stream ?? true,
         tools: payload.tools?.map((tool) => this.convertChatCompletionToolToResponseTool(tool)),

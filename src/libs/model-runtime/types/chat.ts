@@ -102,10 +102,11 @@ export interface ChatStreamPayload {
    * @default 0
    */
   presence_penalty?: number;
-  /**
-   * @default openai
-   */
   provider?: string;
+  reasoning?: {
+    effort?: string;
+    summary?: string;
+  };
   responseMode?: 'stream' | 'json';
   /**
    * @title 是否开启流式请求

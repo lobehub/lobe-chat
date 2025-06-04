@@ -45,6 +45,7 @@ const transformOpenAIStream = (
 
         return { data: chunk.response.status, id: streamContext.id, type: 'data' };
       }
+
       case 'response.output_item.added': {
         switch (chunk.item.type) {
           case 'function_call': {
@@ -71,7 +72,7 @@ const transformOpenAIStream = (
           }
         }
 
-        return { data: chunk.item.status, id: streamContext.id, type: 'data' };
+        return { data: chunk.item, id: streamContext.id, type: 'data' };
       }
 
       case 'response.function_call_arguments.delta': {
