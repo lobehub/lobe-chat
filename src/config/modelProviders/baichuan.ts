@@ -97,6 +97,9 @@ const Baichuan: ModelProviderCard = {
   modelsUrl: 'https://platform.baichuan-ai.com/price',
   name: 'Baichuan',
   settings: {
+    proxyUrl: {
+      placeholder: 'https://api.baichuan-ai.com/v1',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
     smoothing: {

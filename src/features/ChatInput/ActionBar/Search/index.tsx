@@ -1,7 +1,7 @@
 import { GlobeOffIcon } from '@lobehub/ui/icons';
 import { useTheme } from 'antd-style';
 import { Globe } from 'lucide-react';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { isDeprecatedEdition } from '@/const/version';
@@ -15,7 +15,6 @@ import Controls from './Controls';
 const Search = memo(() => {
   const { t } = useTranslation('chat');
   const [isLoading] = useAgentStore((s) => [agentSelectors.isAgentConfigLoading(s)]);
-  const [updating, setUpdating] = useState(false);
   const isAgentEnableSearch = useAgentEnableSearch();
   const theme = useTheme();
 
@@ -26,9 +25,8 @@ const Search = memo(() => {
     <Action
       color={isAgentEnableSearch ? theme.colorInfo : undefined}
       icon={isAgentEnableSearch ? Globe : GlobeOffIcon}
-      loading={updating}
       popover={{
-        content: <Controls setUpdating={setUpdating} updating={updating} />,
+        content: <Controls />,
         maxWidth: 320,
         minWidth: 320,
         placement: 'topLeft',
