@@ -1,5 +1,7 @@
-import { v4 as uuidv4 } from 'uuid';
 import { template } from 'lodash-es';
+
+import { v4 as uuidv4 } from 'uuid';
+
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
@@ -67,9 +69,9 @@ export const parsePlaceholderVariables = (text: string): string => {
   try {
     // 使用 lodash template，自定义插值语法为 {{}}
     const compiled = template(text, {
-      interpolate: /{{([\s\S]+?)}}/g
+      interpolate: /{{([\S\s]+?)}}/g
     });
-    
+
     return compiled(getTemplateVariables());
   } catch (error) {
     // 如果模板编译失败，返回原文本
