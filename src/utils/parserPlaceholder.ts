@@ -5,6 +5,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
+import { getAgentStoreState } from '@/store/agent/store';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
+
 const placeholderVariablesRegex = /{{(.*?)}}/g;
 
 /* eslint-disable sort-keys-fix/sort-keys-fix */
@@ -103,6 +106,16 @@ export const VARIABLE_GENERATORS = {
   language: () => typeof navigator !== 'undefined' ? navigator.language : '',
   platform: () => typeof navigator !== 'undefined' ? navigator.platform : '',
   user_agent: () => typeof navigator !== 'undefined' ? navigator.userAgent : '',
+
+  /**
+  * LobeChat 模板变量
+  *
+  * | Value | Example |
+  * |-------|---------|
+  * | `{{input_template}}` | Some contents |
+  *
+  */
+  input_template: () => agentChatConfigSelectors.currentChatConfig(getAgentStoreState()).inputTemplate || '',
 } as Record<string, () => string>;
 
 /**
