@@ -15,8 +15,8 @@ const provider = {
       },
     },
     // TODO(NextAuth ENVs Migration): Remove once nextauth envs migration time end
-    clientId: authEnv.AUTH_GOOGLE_CLIENT_ID ?? process.env.AUTH_GOOGLE_CLIENT_ID,
-    clientSecret: authEnv.AUTH_GOOGLE_CLIENT_SECRET ?? process.env.AUTH_GOOGLE_CLIENT_SECRET,
+    clientId: process.env.AUTH_GOOGLE_CLIENT_ID,
+    clientSecret: process.env.AUTH_GOOGLE_CLIENT_SECRET,
   }),
 };
 
