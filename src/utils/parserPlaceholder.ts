@@ -1,7 +1,37 @@
 import { v4 as uuidv4 } from 'uuid';
-
+import { template } from 'lodash-es';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
+
+/**
+ * 获取模板变量对象
+ * @returns 包含所有预留值的对象
+ */
+const getTemplateVariables = () => {
+  const now = new Date();
+  return {
+    date: now.toLocaleDateString(),
+    datetime: now.toLocaleString(),
+    day: now.getDate().toString().padStart(2, '0'),
+    hour: now.getHours().toString().padStart(2, '0'),
+    iso: now.toISOString(),
+    locale: Intl.DateTimeFormat().resolvedOptions().locale,
+    minute: now.getMinutes().toString().padStart(2, '0'),
+    month: (now.getMonth() + 1).toString().padStart(2, '0'),
+    nickname: userProfileSelectors.nickName(useUserStore.getState()) ?? '',
+    random: Math.floor(Math.random() * 1_000_000 + 1).toString(),
+    random_hex: Math.floor(Math.random() * 16_777_215).toString(16).padStart(6, '0'),
+    random_int: Math.floor(Math.random() * 100 + 1).toString(),
+    second: now.getSeconds().toString().padStart(2, '0'),
+    time: now.toLocaleTimeString(),
+    timestamp: Date.now().toString(),
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    username: userProfileSelectors.username(useUserStore.getState()) ?? '',
+    uuid: uuidv4(),
+    weekday: now.toLocaleDateString('en-US', { weekday: 'long' }),
+    year: now.getFullYear().toString(),
+  };
+};
 
 /**
  * 预留值解析函数 - 将模板变量替换为实际值
@@ -34,34 +64,18 @@ import { userProfileSelectors } from '@/store/user/selectors';
  * @returns 替换后的文本
  */
 export const parsePlaceholderVariables = (text: string): string => {
-  const now = new Date();
-
-  const variables: Record<string, string> = {
-    date: now.toLocaleDateString(),
-    datetime: now.toLocaleString(),
-    day: now.getDate().toString().padStart(2, '0'),
-    hour: now.getHours().toString().padStart(2, '0'),
-    iso: now.toISOString(),
-    locale: Intl.DateTimeFormat().resolvedOptions().locale,
-    minute: now.getMinutes().toString().padStart(2, '0'),
-    month: (now.getMonth() + 1).toString().padStart(2, '0'),
-    nickname: userProfileSelectors.nickName(useUserStore.getState()) ?? '',
-    random: Math.floor(Math.random() * 1_000_000 + 1).toString(),
-    random_hex: Math.floor(Math.random() * 16_777_215).toString(16).padStart(6, '0'),
-    random_int: Math.floor(Math.random() * 100 + 1).toString(),
-    second: now.getSeconds().toString().padStart(2, '0'),
-    time: now.toLocaleTimeString(),
-    timestamp: Date.now().toString(),
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    username: userProfileSelectors.username(useUserStore.getState()) ?? '',
-    uuid: uuidv4(),
-    weekday: now.toLocaleDateString('en-US', { weekday: 'long' }),
-    year: now.getFullYear().toString(),
-  };
-
-  return text.replaceAll(/{{(\w+)}}/g, (match: string, key: string) => {
-    return variables[key] || match;
-  });
+  try {
+    // 使用 lodash template，自定义插值语法为 {{}}
+    const compiled = template(text, {
+      interpolate: /{{([\s\S]+?)}}/g
+    });
+    
+    return compiled(getTemplateVariables());
+  } catch (error) {
+    // 如果模板编译失败，返回原文本
+    console.warn('Template parsing failed:', error);
+    return text;
+  }
 };
 
 /**
