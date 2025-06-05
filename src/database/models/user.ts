@@ -5,6 +5,7 @@ import type { AdapterAccount } from 'next-auth/adapters';
 import { DeepPartial } from 'utility-types';
 
 import { LobeChatDatabase } from '@/database/type';
+import { assignDefaultRoleToUser } from '@/database/utils/rbacInit';
 import { UserGuide, UserPreference } from '@/types/user';
 import { UserKeyVaults, UserSettings } from '@/types/user/settings';
 import { merge } from '@/utils/merge';
@@ -207,7 +208,6 @@ export class UserModel {
 
     // Assign default role to new user
     try {
-      const { assignDefaultRoleToUser } = await import('@/database/utils/rbacInit');
       await assignDefaultRoleToUser(user.id);
     } catch (error) {
       console.warn('Failed to assign default role to new user:', error);

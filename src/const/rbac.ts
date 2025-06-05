@@ -132,6 +132,35 @@ export const PERMISSIONS = {
 
   RAG_SEARCH: 'rag:search',
 
+  // ==================== RBAC Management ====================
+  RBAC_PERMISSION_CREATE: 'rbac:permission_create',
+
+  RBAC_PERMISSION_DELETE: 'rbac:permission_delete',
+
+  RBAC_PERMISSION_READ: 'rbac:permission_read',
+
+  RBAC_PERMISSION_UPDATE: 'rbac:permission_update',
+
+  RBAC_ROLE_CREATE: 'rbac:role_create',
+
+  RBAC_ROLE_DELETE: 'rbac:role_delete',
+
+  RBAC_ROLE_PERMISSION_ASSIGN: 'rbac:role_permission_assign',
+
+  RBAC_ROLE_PERMISSION_REVOKE: 'rbac:role_permission_revoke',
+
+  RBAC_ROLE_READ: 'rbac:role_read',
+
+  RBAC_ROLE_UPDATE: 'rbac:role_update',
+
+  RBAC_SYSTEM_INIT: 'rbac:system_init',
+
+  RBAC_USER_PERMISSION_VIEW: 'rbac:user_permission_view',
+
+  RBAC_USER_ROLE_ASSIGN: 'rbac:user_role_assign',
+
+  RBAC_USER_ROLE_REVOKE: 'rbac:user_role_revoke',
+
   // ==================== Session Management ====================
   SESSION_CREATE: 'session:create',
 
@@ -218,6 +247,7 @@ export const PERMISSION_MODULES = {
   MESSAGE: 'message',
   PLUGIN: 'plugin',
   RAG: 'rag',
+  RBAC: 'rbac',
   SESSION: 'session',
   SESSION_GROUP: 'session_group',
   SYSTEM: 'system',
@@ -239,11 +269,5 @@ export const ROLE_DESCRIPTIONS = {
  */
 export const DEFAULT_ROLE_PERMISSIONS_DEMO = {
   [ROLES.ADMIN]: Object.values(PERMISSIONS),
-  [ROLES.USER]: [
-    // Basic permissions example for regular users
-    PERMISSIONS.TOPIC_CREATE,
-    PERMISSIONS.TOPIC_READ,
-    PERMISSIONS.MESSAGE_CREATE,
-    PERMISSIONS.MESSAGE_READ,
-  ],
+  [ROLES.USER]: [],
 } as const;

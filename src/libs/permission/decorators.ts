@@ -249,7 +249,7 @@ export function RequireAuth() {
 /**
  * 组合装饰器
  */
-export function APIEndpoint(config: {
+export function CompositePermission(config: {
   auth?: boolean;
   permissions?: PermissionOptions;
   roles?: RoleOptions;

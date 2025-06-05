@@ -1,5 +1,6 @@
 import { LobeChatDatabase } from '@/database/type';
 
+import { NewPermission } from '../schemas';
 import { RBACModel } from './rbac';
 
 /**
@@ -48,7 +49,7 @@ export class RBACSeeder {
    * Initialize system permissions
    */
   async seedPermissions() {
-    const systemPermissions = [
+    const systemPermissions: NewPermission[] = [
       // ==================== User Management Permissions ====================
       {
         code: 'user:create',
@@ -764,10 +765,124 @@ export class RBACSeeder {
         module: 'audit',
         name: 'Export Audit Logs',
       },
+
+      // ==================== RBAC Management Permissions ====================
+      {
+        code: 'rbac:permission_create',
+        description: 'Permission to create new permissions',
+        id: 'rbac_permission_create',
+        isActive: true,
+        module: 'rbac',
+        name: 'Create Permission',
+      },
+      {
+        code: 'rbac:permission_delete',
+        description: 'Permission to delete permissions',
+        id: 'rbac_permission_delete',
+        isActive: true,
+        module: 'rbac',
+        name: 'Delete Permission',
+      },
+      {
+        code: 'rbac:permission_read',
+        description: 'Permission to view permissions',
+        id: 'rbac_permission_read',
+        isActive: true,
+        module: 'rbac',
+        name: 'View Permission',
+      },
+      {
+        code: 'rbac:permission_update',
+        description: 'Permission to update permissions',
+        id: 'rbac_permission_update',
+        isActive: true,
+        module: 'rbac',
+        name: 'Update Permission',
+      },
+      {
+        code: 'rbac:role_create',
+        description: 'Permission to create new roles',
+        id: 'rbac_role_create',
+        isActive: true,
+        module: 'rbac',
+        name: 'Create Role',
+      },
+      {
+        code: 'rbac:role_delete',
+        description: 'Permission to delete roles',
+        id: 'rbac_role_delete',
+        isActive: true,
+        module: 'rbac',
+        name: 'Delete Role',
+      },
+      {
+        code: 'rbac:role_permission_assign',
+        description: 'Permission to assign permissions to roles',
+        id: 'rbac_role_permission_assign',
+        isActive: true,
+        module: 'rbac',
+        name: 'Assign Role Permission',
+      },
+      {
+        code: 'rbac:role_permission_revoke',
+        description: 'Permission to revoke permissions from roles',
+        id: 'rbac_role_permission_revoke',
+        isActive: true,
+        module: 'rbac',
+        name: 'Revoke Role Permission',
+      },
+      {
+        code: 'rbac:role_read',
+        description: 'Permission to view roles',
+        id: 'rbac_role_read',
+        isActive: true,
+        module: 'rbac',
+        name: 'View Role',
+      },
+      {
+        code: 'rbac:role_update',
+        description: 'Permission to update roles',
+        id: 'rbac_role_update',
+        isActive: true,
+        module: 'rbac',
+        name: 'Update Role',
+      },
+      {
+        code: 'rbac:system_init',
+        description: 'Permission to initialize RBAC system',
+        id: 'rbac_system_init',
+        isActive: true,
+        module: 'rbac',
+        name: 'Initialize RBAC System',
+      },
+      {
+        code: 'rbac:user_permission_view',
+        description: 'Permission to view user permissions',
+        id: 'rbac_user_permission_view',
+        isActive: true,
+        module: 'rbac',
+        name: 'View User Permissions',
+      },
+      {
+        code: 'rbac:user_role_assign',
+        description: 'Permission to assign roles to users',
+        id: 'rbac_user_role_assign',
+        isActive: true,
+        module: 'rbac',
+        name: 'Assign User Role',
+      },
+      {
+        code: 'rbac:user_role_revoke',
+        description: 'Permission to revoke roles from users',
+        id: 'rbac_user_role_revoke',
+        isActive: true,
+        module: 'rbac',
+        name: 'Revoke User Role',
+      },
     ];
 
     for (const permission of systemPermissions) {
-      const existingPermission = await this.rbacModel.getPermissionByCode(permission.code);
+      const existingPermission = await this.rbacModel.getPermissionByCode(permission.code!);
       if (!existingPermission) {
         await this.rbacModel.createPermission(permission);
         console.log(`✅ Created system permission: ${permission.name} (${permission.code})`);
@@ -794,57 +909,9 @@ export class RBACSeeder {
     if (userRole) {
       // This is just a Demo example showing how to assign basic permissions to regular users
       // In production environment, permissions should be configured by administrators through management interface
-      const userPermissionCodesDemo = new Set([
-        // Basic session functionality
-        'session:create',
-        'session:read',
-        'session:update',
-        'session:delete',
+      const userPermissionCodes = new Set<string>([]);
 
-        // Topic management
-        'topic:create',
-        'topic:read',
-        'topic:update',
-        'topic:delete',
-        'topic:favorite',
-
-        // Message functionality
-        'message:create',
-        'message:read',
-        'message:regenerate',
-
-        // Agent usage
-        'agent:create',
-        'agent:read',
-        'agent:update',
-        'agent:fork',
-
-        // File management
-        'file:upload',
-        'file:read',
-        'file:download',
-
-        // Knowledge base basic functionality
-        'knowledge_base:create',
-        'knowledge_base:read',
-        'knowledge_base:update',
-
-        // AI model usage
-        'ai_model:use',
-
-        // Plugin basic functionality
-        'plugin:install',
-        'plugin:configure',
-
-        // RAG functionality
-        'rag:search',
-        'rag:embed',
-
-        // Personal profile management
-        'user:profile_update',
-      ]);
-
-      const userPermissions = allPermissions.filter((p) => userPermissionCodesDemo.has(p.code));
+      const userPermissions = allPermissions.filter((p) => userPermissionCodes.has(p.code));
       const permissionIds = userPermissions.map((p) => p.id);
       await this.rbacModel.assignPermissionsToRole(userRole.id, permissionIds);
       console.log(

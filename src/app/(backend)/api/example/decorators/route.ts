@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 
-import { RequireAdmin, RequireAuth, RequirePermission } from '@/libs/auth';
+import { RequireAdmin, RequireAuth, RequirePermission } from '@/libs/permission';
 
 class DecoratorExampleController {
   /**
