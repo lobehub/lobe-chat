@@ -67,23 +67,63 @@ const getUserInfoVariables = () => {
 };
 
 /**
- * 获取随机值和其他工具类模板变量
- * @returns 包含随机值和其他工具类预留值的对象
+ * 获取随机值类模板变量
+ * @returns 包含随机值类预留值的对象
  *
  * | Value | Example |
  * |-------|---------|
+ * | `{{random}}` | 100041 |
+ * | `{{random_bool}}` | true |
+ * | `{{random_float}}` | 76.02 |
  * | `{{random_hex}}` | de0dbd |
  * | `{{random_int}}` | 68 |
- * | `{{random}}` | 100041 |
- * | `{{uuid}}` | dd90b35-669f-4e87-beb8-ac6877f6995d |
+ * | `{{random_string}}` | wqn9zfrqe7h |
  *
  */
-const getUtilityVariables = () => {
+const getRandomVariables = () => {
   return {
     random: Math.floor(Math.random() * 1_000_000 + 1).toString(),
+    random_bool: Math.random() > 0.5 ? 'true' : 'false',
+    random_float: (Math.random() * 100).toFixed(2),
     random_hex: Math.floor(Math.random() * 16_777_215).toString(16).padStart(6, '0'),
     random_int: Math.floor(Math.random() * 100 + 1).toString(),
+    random_string: Math.random().toString(36).substring(2, 15),
+  };
+};
+
+/**
+ * 获取 UUID 类模板变量
+ * @returns 包含 UUID 类类预留值的对象
+ *
+ * | Value | Example |
+ * |-------|---------|
+ * | `{{uuid}}` | dd90b35-669f-4e87-beb8-ac6877f6995d |
+ * | `{{uuid_short}}` | dd90b35 |
+ *
+ */
+const getUUIDVariables = () => {
+  return {
     uuid: uuidv4(),
+    uuid_short: uuidv4().split('-')[0],
+  };
+};
+
+/**
+ * 获取平台类模板变量
+ * @returns 包含平台类预留值的对象
+ *
+ * | Value | Example |
+ * |-------|---------|
+ * | `{{language}}` | zh-CN |
+ * | `{{platform}}` | MacIntel |
+ * | `{{user_agent}}` | Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0 |
+ *
+ */
+const getPlatformVariables = () => {
+  return {
+    language: typeof navigator !== 'undefined' ? navigator.language : '',
+    platform: typeof navigator !== 'undefined' ? navigator.platform : '',
+    user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
   };
 };
 
@@ -95,7 +135,9 @@ const getTemplateVariables = () => {
   return {
     ...getTimeVariables(),
     ...getUserInfoVariables(),
-    ...getUtilityVariables(),
+    ...getRandomVariables(),
+    ...getUUIDVariables(),
+    ...getPlatformVariables(),
   };
 };
 
