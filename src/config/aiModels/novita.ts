@@ -129,7 +129,7 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 64_000,
+    contextWindowTokens: 60_288,
     description: 'Mistral Nemo 是多语言支持和高性能编程的7.3B参数模型。',
     displayName: 'Mistral Nemo',
     id: 'mistralai/mistral-nemo',

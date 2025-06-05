@@ -7,7 +7,7 @@ export interface ModelProcessorConfig {
   visionKeywords?: readonly string[];
 }
 
-// 模型标签关键词配置
+// 模型标签关键词配置，开头添加感叹号 ! 表示排除关键词
 export const MODEL_LIST_CONFIGS = {
   anthropic: {
     functionCallKeywords: ['claude'],
@@ -97,6 +97,34 @@ export const detectModelProvider = (modelId: string): keyof typeof MODEL_LIST_CO
 };
 
 /**
+ * 处理带感叹号的排除关键词逻辑
+ * @param keywords 关键词列表
+ * @param modelId 模型ID
+ * @returns 是否匹配关键词
+ */
+const processKeywords = (keywords: readonly string[], modelId: string): boolean => {
+  const lowerModelId = modelId.toLowerCase();
+
+  // 构造排除模式列表：去掉'!'，trim 并转小写，过滤空串
+  const excludePatterns = keywords
+    .filter((k) => k.startsWith('!'))
+    .map((k) => k.slice(1).trim().toLowerCase())
+    .filter((p) => p.length > 0);
+
+  if (excludePatterns.some((p) => lowerModelId.includes(p))) {
+    return false;
+  }
+
+  // 构造包含模式列表：trim 并转小写，过滤空串
+  const includePatterns = keywords
+    .filter((k) => !k.startsWith('!'))
+    .map((k) => k.trim().toLowerCase())
+    .filter((p) => p.length > 0);
+
+  return includePatterns.some((p) => lowerModelId.includes(p));
+};
+
+/**
  * 处理模型卡片的通用逻辑
  */
 const processModelCard = (
@@ -120,19 +148,15 @@ const processModelCard = (
     displayName: model.displayName ?? knownModel?.displayName ?? model.id,
     enabled: knownModel?.enabled || false,
     functionCall:
-      (functionCallKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) &&
-        !isExcludedModel) ||
+      (processKeywords(functionCallKeywords, model.id) && !isExcludedModel) ||
       knownModel?.abilities?.functionCall ||
       false,
     id: model.id,
     maxOutput: model.maxOutput ?? knownModel?.maxOutput ?? undefined,
     reasoning:
-      reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-      knownModel?.abilities?.reasoning ||
-      false,
+      processKeywords(reasoningKeywords, model.id) || knownModel?.abilities?.reasoning || false,
     vision:
-      (visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) &&
-        !isExcludedModel) ||
+      (processKeywords(visionKeywords, model.id) && !isExcludedModel) ||
       knownModel?.abilities?.vision ||
       false,
   };
