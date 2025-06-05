@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add Volcengine & OpenAI-like Provider (e.g. oneapi) model fetch support."]
+    },
+    "date": "2025-06-05",
+    "version": "1.91.2"
+  },
+  {
+    "children": {
       "improvements": ["Improve loading state."]
     },
     "date": "2025-06-04",
