@@ -23,14 +23,15 @@ const nickName = (s: UserStore) => {
 };
 
 const username = (s: UserStore) => {
+  const defaultUserName = s.user?.username || s.user?.fullName;
   if (!enableAuth) {
     if (isDesktop) {
-      return s.user?.username;
+      return defaultUserName;
     }
     return DEFAULT_USERNAME;
   }
 
-  if (s.isSignedIn) return s.user?.username;
+  if (s.isSignedIn) return defaultUserName;
 
   return 'anonymous';
 };
