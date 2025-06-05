@@ -87,7 +87,7 @@ const getRandomVariables = () => {
     random_float: (Math.random() * 100).toFixed(2),
     random_hex: Math.floor(Math.random() * 16_777_215).toString(16).padStart(6, '0'),
     random_int: Math.floor(Math.random() * 100 + 1).toString(),
-    random_string: Math.random().toString(36).substring(2, 15),
+    random_string: Math.random().toString(36).slice(2, 15),
   };
 };
 
