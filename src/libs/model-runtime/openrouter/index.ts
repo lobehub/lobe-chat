@@ -1,6 +1,7 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
+import { processMultiProviderModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { OpenRouterModelCard, OpenRouterModelExtraInfo, OpenRouterReasoning } from './type';
 
@@ -40,20 +41,9 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
     chatCompletion: () => process.env.DEBUG_OPENROUTER_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
-
-    const reasoningKeywords = [
-      'deepseek/deepseek-r1',
-      'openai/o1',
-      'openai/o3',
-      'qwen/qvq',
-      'qwen/qwq',
-      'thinking',
-    ];
-
     const modelsPage = (await client.models.list()) as any;
     const modelList: OpenRouterModelCard[] = modelsPage.data;
-
+  
     const modelsExtraInfo: OpenRouterModelExtraInfo[] = [];
     try {
       const response = await fetch('https://openrouter.ai/api/frontend/models');
@@ -62,50 +52,51 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
         modelsExtraInfo.push(...data['data']);
       }
     } catch (error) {
-      // 忽略 fetch 错误，使用空的 modelsExtraInfo 数组继续处理
       console.error('Failed to fetch OpenRouter frontend models:', error);
     }
-
-    return modelList
-      .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
-          (m) => model.id.toLowerCase() === m.id.toLowerCase(),
-        );
-        const extraInfo = modelsExtraInfo.find(
-          (m) => m.slug.toLowerCase() === model.id.toLowerCase(),
-        );
-
-        return {
-          contextWindowTokens: model.context_length,
-          description: model.description,
-          displayName: model.name,
-          enabled: knownModel?.enabled || false,
-          functionCall:
-            model.description.includes('function calling') ||
-            model.description.includes('tools') ||
-            extraInfo?.endpoint?.supports_tool_parameters ||
-            knownModel?.abilities?.functionCall ||
-            false,
-          id: model.id,
-          maxTokens:
-            typeof model.top_provider.max_completion_tokens === 'number'
-              ? model.top_provider.max_completion_tokens
-              : undefined,
-          pricing: {
-            input: formatPrice(model.pricing.prompt),
-            output: formatPrice(model.pricing.completion),
-          },
-          reasoning:
-            reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-            extraInfo?.endpoint?.supports_reasoning ||
-            knownModel?.abilities?.reasoning ||
-            false,
-          releasedAt: new Date(model.created * 1000).toISOString().split('T')[0],
-          vision:
-            model.architecture.modality.includes('image') || knownModel?.abilities?.vision || false,
-        };
-      })
-      .filter(Boolean) as ChatModelCard[];
+  
+    // 解析模型能力
+    const baseModels = await processMultiProviderModelList(modelList);
+  
+    // 合并 OpenRouter 获取的模型信息
+    return baseModels.map((baseModel) => {
+      const model = modelList.find(m => m.id === baseModel.id);
+      const extraInfo = modelsExtraInfo.find(
+        (m) => m.slug.toLowerCase() === baseModel.id.toLowerCase(),
+      );
+  
+      if (!model) return baseModel;
+  
+      return {
+        ...baseModel,
+        contextWindowTokens: model.context_length,
+        description: model.description,
+        displayName: model.name,
+        functionCall:
+          baseModel.functionCall ||
+          model.description.includes('function calling') ||
+          model.description.includes('tools') ||
+          extraInfo?.endpoint?.supports_tool_parameters ||
+          false,
+        maxTokens:
+          typeof model.top_provider.max_completion_tokens === 'number'
+            ? model.top_provider.max_completion_tokens
+            : undefined,
+        pricing: {
+          input: formatPrice(model.pricing.prompt),
+          output: formatPrice(model.pricing.completion),
+        },
+        reasoning:
+          baseModel.reasoning ||
+          extraInfo?.endpoint?.supports_reasoning ||
+          false,
+        releasedAt: new Date(model.created * 1000).toISOString().split('T')[0],
+        vision:
+          baseModel.vision ||
+          model.architecture.modality.includes('image') ||
+          false,
+      };
+    }).filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.OpenRouter,
 });

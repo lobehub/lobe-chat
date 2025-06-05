@@ -227,10 +227,12 @@ export const transformOpenAIStream = (
             return [
               {
                 data: {
-                  citations: (citations as any[]).map((item) => ({
-                    title: typeof item === 'string' ? item : item.title,
-                    url: typeof item === 'string' ? item : item.url || item.link,
-                  })).filter(c => c.title && c.url), // Zhipu 内建搜索工具有时会返回空 link 引发程序崩溃
+                  citations: (citations as any[])
+                    .map((item) => ({
+                      title: typeof item === 'string' ? item : item.title,
+                      url: typeof item === 'string' ? item : item.url || item.link,
+                    }))
+                    .filter((c) => c.title && c.url), // Zhipu 内建搜索工具有时会返回空 link 引发程序崩溃
                 },
                 id: chunk.id,
                 type: 'grounding',

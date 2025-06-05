@@ -215,6 +215,9 @@ const ZhiPu: ModelProviderCard = {
   modelsUrl: 'https://open.bigmodel.cn/dev/howuse/model',
   name: 'ZhiPu',
   settings: {
+    proxyUrl: {
+      placeholder: 'https://open.bigmodel.cn/api/paas/v4',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
   },

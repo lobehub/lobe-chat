@@ -100,16 +100,15 @@ export class UserService {
     const s3 = new S3();
     const s3FileUrl = `user/avatar/${id}/${image}`;
 
-    try{
+    try {
       const file = await s3.getFileByteArray(s3FileUrl);
       if (!file) {
         return null;
       }
       const fileBuffer = Buffer.from(file);
       return fileBuffer;
-    }
-    catch (error) {
+    } catch (error) {
       pino.error('Failed to get user avatar:', error);
     }
-  }
+  };
 }

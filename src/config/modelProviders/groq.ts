@@ -176,9 +176,6 @@ const Groq: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://console.groq.com/docs/models',
   name: 'Groq',
-  proxyUrl: {
-    placeholder: 'https://api.groq.com/openai/v1',
-  },
   settings: {
     proxyUrl: {
       placeholder: 'https://api.groq.com/openai/v1',

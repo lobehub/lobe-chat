@@ -1,7 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref:
-// https://github.com/marketplace/models
+// ref: https://github.com/marketplace/models
 const Github: ModelProviderCard = {
   chatModels: [
     {

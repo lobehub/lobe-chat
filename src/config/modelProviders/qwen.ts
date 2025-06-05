@@ -420,9 +420,6 @@ const Qwen: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://help.aliyun.com/zh/dashscope/developer-reference/api-details',
   name: 'Aliyun Bailian',
-  proxyUrl: {
-    placeholder: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
-  },
   settings: {
     disableBrowserRequest: true,
     proxyUrl: {

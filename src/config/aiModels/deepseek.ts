@@ -1,4 +1,5 @@
 import { AIChatModelCard } from '@/types/aiModel';
+
 // https://api-docs.deepseek.com/zh-cn/quick_start/pricing
 const deepseekChatModels: AIChatModelCard[] = [
   {

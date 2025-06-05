@@ -273,6 +273,9 @@ const FireworksAI: ModelProviderCard = {
   modelsUrl: 'https://fireworks.ai/models?show=Serverless',
   name: 'Fireworks AI',
   settings: {
+    proxyUrl: {
+      placeholder: 'https://api.fireworks.ai/inference/v1',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
   },

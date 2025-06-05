@@ -136,7 +136,7 @@ const defaultMiddleware = (request: NextRequest) => {
 
 const isPublicRoute = createRouteMatcher([
   '/api/auth(.*)',
-  '/trpc/edge(.*)',
+  '/trpc(.*)',
   // next auth
   '/next-auth/(.*)',
   // clerk

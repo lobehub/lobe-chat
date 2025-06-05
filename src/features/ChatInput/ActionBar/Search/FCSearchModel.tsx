@@ -31,11 +31,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface FCSearchModelProps {
-  setLoading?: (loading: boolean) => void;
-}
-
-const FCSearchModel = memo<FCSearchModelProps>(({ setLoading }) => {
+const FCSearchModel = memo(() => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
   const [searchFCModel, updateAgentChatConfig] = useAgentStore((s) => [
@@ -50,9 +46,7 @@ const FCSearchModel = memo<FCSearchModelProps>(({ setLoading }) => {
       </Flexbox>
       <FunctionCallingModelSelect
         onChange={async (value) => {
-          setLoading?.(true);
           await updateAgentChatConfig({ searchFCModel: value });
-          setLoading?.(false);
         }}
         style={{
           maxWidth: 160,

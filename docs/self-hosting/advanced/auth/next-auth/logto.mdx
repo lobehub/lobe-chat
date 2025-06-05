@@ -1,8 +1,8 @@
 ---
 title: Configuring Logto Authentication Service in LobeChat
 description: >-
-  Learn how to configure Logto authentication service in LobeChat, including
-  deployment, creation, setting permissions, and environment variables.
+  Learn how to configure Logto authentication service in LobeChat, including deployment, creation, setting permissions, and environment variables.
+
 tags:
   - Logto Authentication
   - Environment Variable Configuration
@@ -86,23 +86,17 @@ If you are using Logto Cloud, assume its endpoint domain is `https://example.log
 
 If you encounter issues during the Logto deployment process, refer to the following common problems:
 
-- `Only roles with the xxx attribute may create roles`:
-  Check your database user's permissions and ensure that the user in your Logto database has the `admin` role to create roles.
+- `Only roles with the xxx attribute may create roles`: Check your database user's permissions and ensure that the user in your Logto database has the `admin` role to create roles.
 
-- Error executing `logto db seed` on third-party databases like `Neon`:
-  Try using the `logto db seed --encrypt-base-role` command.
+- Error executing `logto db seed` on third-party databases like `Neon`: Try using the `logto db seed --encrypt-base-role` command.
 
-- Database seeding failed:
-  Try skipping the seeding process with the `--skip-seed` parameter.
+- Database seeding failed: Try skipping the seeding process with the `--skip-seed` parameter.
 
-- `Error: role xxx already exists`:
-  Delete the existing role in the database.
+- `Error: role xxx already exists`: Delete the existing role in the database.
 
-- Database migration failed after a version upgrade:
-  Try using the command `npx @logto/cli db alteration deploy $version` (e.g., `npx @logto/cli db alteration deploy 1.22.0`).
+- Database migration failed after a version upgrade: Try using the command `npx @logto/cli db alteration deploy $version` (e.g., `npx @logto/cli db alteration deploy 1.22.0`).
 
-- I am using Docker deployment and want a one-click upgrade:
-  Execute the custom command in the container: `sh -c "npm run cli db seed -- --swe --encrypt-base-role" && npx @logto/cli db alteration deploy $version && npm start`
+- I am using Docker deployment and want a one-click upgrade: Execute the custom command in the container: `sh -c "npm run cli db seed -- --swe --encrypt-base-role" && npx @logto/cli db alteration deploy $version && npm start`
 
 <Callout type={'info'}>
   After successful deployment, users will be able to authenticate via Logto and use LobeChat.

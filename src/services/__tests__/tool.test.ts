@@ -49,7 +49,9 @@ describe('ToolService', () => {
     it('should handle fetch error', async () => {
       // Arrange
       (globalHelpers.getCurrentLanguage as Mock).mockReturnValue('en');
-      (edgeClient.market.getPluginIndex.query as Mock).mockRejectedValue(new Error('Network error'));
+      (edgeClient.market.getPluginIndex.query as Mock).mockRejectedValue(
+        new Error('Network error'),
+      );
 
       // Act & Assert
       await expect(toolService.getToolList()).rejects.toThrow('Network error');

@@ -44,11 +44,10 @@ interface IProps {
   children?: ReactNode;
   onOpenChange?: (open: boolean) => void;
   open?: boolean;
-  setUpdating?: (updating: boolean) => void;
   updating?: boolean;
 }
 
-const ModelSwitchPanel = memo<IProps>(({ children, setUpdating, onOpenChange, open }) => {
+const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
   const { t } = useTranslation('components');
   const { styles, theme } = useStyles();
   const [model, provider, updateAgentConfig] = useAgentStore((s) => [
@@ -66,9 +65,7 @@ const ModelSwitchPanel = memo<IProps>(({ children, setUpdating, onOpenChange, op
         key: menuKey(provider.id, model.id),
         label: <ModelItemRender {...model} {...model.abilities} />,
         onClick: async () => {
-          setUpdating?.(true);
           await updateAgentConfig({ model: model.id, provider: provider.id });
-          setUpdating?.(false);
         },
       }));
 

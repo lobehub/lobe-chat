@@ -1,8 +1,8 @@
 ---
 title: Customizing Provider Model List in LobeChat for Deployment
 description: >-
-  Learn how to customize the model list in LobeChat for deployment with the
-  syntax and extension capabilities
+  Learn how to customize the model list in LobeChat for deployment with the syntax and extension capabilities
+
 tags:
   - LobeChat
   - model customization
@@ -19,6 +19,7 @@ You can use `+` to add a model, `-` to hide a model, and use `model name->deploy
 ```text
 id->deploymentName=displayName<maxToken:vision:reasoning:search:fc:file:imageOutput>,model2,model3
 ```
+
 The deploymentName `->deploymentName` can be omitted, and it defaults to the latest model version. Currently, the model service providers that support `->deploymentName` are: Azure, Volcengine and Qwen.
 
 For example: `+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo`
@@ -47,11 +48,11 @@ Examples are as follows:
 
 Currently supported extension capabilities are:
 
-| ---         | Description                                              |
-| ----------- | -------------------------------------------------------- |
-| `fc`        | Function Calling                                         |
-| `vision`    | Image Recognition                                        |
-| `imageOutput`    | Image Generation                                        |
-| `reasoning` | Support Reasoning                                        |
-| `search`    | Support Web Search                                        |
-| `file`      | File Upload (a bit hacky, not recommended for daily use) |
+| ---           | Description                                              |
+| ------------- | -------------------------------------------------------- |
+| `fc`          | Function Calling                                         |
+| `vision`      | Image Recognition                                        |
+| `imageOutput` | Image Generation                                         |
+| `reasoning`   | Support Reasoning                                        |
+| `search`      | Support Web Search                                       |
+| `file`        | File Upload (a bit hacky, not recommended for daily use) |

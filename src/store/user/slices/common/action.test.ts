@@ -83,7 +83,7 @@ describe('createCommonSlice', () => {
         settings: {
           general: { fontSize: 14 },
         },
-        email: 'test@example.com'
+        email: 'test@example.com',
       };
 
       vi.spyOn(userService, 'getUserState').mockResolvedValueOnce(mockUserState);

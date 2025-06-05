@@ -13,7 +13,8 @@ tags:
 LobeChat 支持为 AI 配置联网搜索功能，这使得 AI 能够获取最新的网络信息，从而提供更准确、更及时的回答。联网搜索功能基于 [SearXNG](https://github.com/searxng/searxng) 搜索引擎，它是一个尊重隐私的元搜索引擎，可以聚合多个搜索引擎的结果。
 
 <Callout type={'info'}>
-  SearXNG 是一个开源的元搜索引擎，可以自行部署，也可以使用公共实例。通过配置 SearXNG，LobeChat 可以让 AI 获取最新的互联网信息，从而回答时效性问题、提供最新资讯。
+  SearXNG 是一个开源的元搜索引擎，可以自行部署，也可以使用公共实例。通过配置 SearXNG，LobeChat
+  可以让 AI 获取最新的互联网信息，从而回答时效性问题、提供最新资讯。
 </Callout>
 
 # 核心环境变量
@@ -30,16 +31,15 @@ SEARXNG_URL=https://searxng-instance.com
 
 您可以在 [SearXNG 实例列表](https://searx.space/) 中找到公开可用的 SearXNG 实例。选择一个响应速度快、可靠性高的实例，然后将其 URL 配置到 LobeChat 中。
 
-> 注意，使用的 `searxng` 必须开启 `json` 输出，否则 `lobe-chat` 调用会报错。
-> 如果是自托管，类似下面这样，找到 `searxng` 的配置文件，追加 `json` 即可。
+> 注意，使用的 `searxng` 必须开启 `json` 输出，否则 `lobe-chat` 调用会报错。如果是自托管，类似下面这样，找到 `searxng` 的配置文件，追加 `json` 即可。
 
 ```bash
 $ vi searxng/settings.yml
 ...
 search:
-  formats:
-    - html
-    - json
+formats:
+- html
+- json
 ```
 
 # 验证联网搜索功能
@@ -47,7 +47,7 @@ search:
 配置完成后，您可以通过以下步骤验证联网搜索功能是否正常工作：
 
 1. 重启 LobeChat 服务
-2. 启动一个新的聊天，启动智能联网，之后向 AI 提问一个需要最新信息的问题，例如："今天的实时金价是多少？"或"最近的重大新闻有哪些？"
+2. 启动一个新的聊天，启动智能联网，之后向 AI 提问一个需要最新信息的问题，例如："今天的实时金价是多少？" 或 "最近的重大新闻有哪些？"
 3. 观察 AI 是否能够返回基于互联网搜索的最新信息
 
 如果 AI 能够回答这些时效性问题，说明联网搜索功能已经成功配置。
