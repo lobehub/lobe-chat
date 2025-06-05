@@ -22,8 +22,6 @@ import { OllamaStream, convertIterableToStream, createModelPullStream } from '..
 import { parseDataUri } from '../utils/uriParser';
 import { OllamaMessage } from './type';
 
-import { parsePlaceholderVariablesMessages } from '../utils/placeholderParser';
-
 export interface OllamaModelCard {
   name: string;
 }
@@ -54,10 +52,8 @@ export class LobeOllamaAI implements LobeRuntimeAI {
 
       options?.signal?.addEventListener('abort', abort);
 
-      const payload_messages = parsePlaceholderVariablesMessages(payload.messages);
-
       const response = await this.client.chat({
-        messages: this.buildOllamaMessages(payload_messages),
+        messages: this.buildOllamaMessages(payload.messages),
         model: payload.model,
         options: {
           frequency_penalty: payload.frequency_penalty,

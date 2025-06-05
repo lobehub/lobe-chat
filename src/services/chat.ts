@@ -41,6 +41,7 @@ import { createErrorResponse } from '@/utils/errorResponse';
 import { FetchSSEOptions, fetchSSE, getMessageError } from '@/utils/fetch';
 import { genToolCallingName } from '@/utils/toolCall';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
+import { parsePlaceholderVariablesMessages } from '@/utils/placeholderParser';
 
 import { createHeaderWithAuth, createPayloadWithKeyVaults } from './_auth';
 import { API_ENDPOINTS } from './_url';
@@ -193,7 +194,7 @@ class ChatService {
 
     const oaiMessages = this.processMessages(
       {
-        messages,
+        messages: parsePlaceholderVariablesMessages(messages),
         model: payload.model,
         provider: payload.provider!,
         tools: pluginIds,

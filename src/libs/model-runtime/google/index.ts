@@ -32,8 +32,6 @@ import {
 } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 
-import { parsePlaceholderVariablesMessages } from '../utils/placeholderParser';
-
 const modelsOffSafetySettings = new Set(['gemini-2.0-flash-exp']);
 
 const modelsWithModalities = new Set([
@@ -242,9 +240,8 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   }
 
   private buildPayload(payload: ChatStreamPayload) {
-    const payload_messages = parsePlaceholderVariablesMessages(payload.messages);
-    const system_message = payload_messages.find((m) => m.role === 'system');
-    const user_messages = payload_messages.filter((m) => m.role !== 'system');
+    const system_message = payload.messages.find((m) => m.role === 'system');
+    const user_messages = payload.messages.filter((m) => m.role !== 'system');
 
     return {
       ...payload,

@@ -4,8 +4,6 @@ import { ModelProvider } from '../types';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { convertSenseNovaMessage } from '../utils/sensenovaHelpers';
 
-import { parsePlaceholderVariablesMessages } from '../utils/placeholderParser';
-
 export interface SenseNovaModelCard {
   id: string;
 }
@@ -17,8 +15,6 @@ export const LobeSenseNovaAI = createOpenAICompatibleRuntime({
       const { frequency_penalty, max_tokens, messages, model, temperature, top_p, ...rest } =
         payload;
 
-      const payload_messages = parsePlaceholderVariablesMessages(messages);
-
       return {
         ...rest,
         frequency_penalty:
@@ -26,7 +22,7 @@ export const LobeSenseNovaAI = createOpenAICompatibleRuntime({
             ? frequency_penalty
             : undefined,
         max_new_tokens: max_tokens !== undefined && max_tokens > 0 ? max_tokens : undefined,
-        messages: payload_messages.map((message) =>
+        messages: messages.map((message) =>
           message.role !== 'user' || !model || !/^Sense(Nova-V6|Chat-Vision)/.test(model)
             ? message
             : { ...message, content: convertSenseNovaMessage(message.content) },
