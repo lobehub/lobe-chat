@@ -40,10 +40,6 @@ declare global {
       ZITADEL_CLIENT_ID?: string;
       ZITADEL_CLIENT_SECRET?: string;
       ZITADEL_ISSUER?: string;
-
-      // GOOGLE
-      AUTH_GOOGLE_CLIENT_ID?: string;
-      AUTH_GOOGLE_CLIENT_SECRET?: string;
     }
   }
 }
@@ -211,10 +207,6 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: z.string().optional(),
-
-      // Google
-      AUTH_GOOGLE_CLIENT_ID: z.string().optional(),
-      AUTH_GOOGLE_CLIENT_SECRET: z.string().optional(),
     },
 
     runtimeEnv: {
@@ -277,10 +269,6 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: process.env.CASDOOR_WEBHOOK_SECRET,
-
-      // Google
-      AUTH_GOOGLE_CLIENT_ID: process.env.AUTH_GOOGLE_CLIENT_ID,
-      AUTH_GOOGLE_CLIENT_SECRET: process.env.AUTH_GOOGLE_CLIENT_SECRET,
     },
   });
 };
