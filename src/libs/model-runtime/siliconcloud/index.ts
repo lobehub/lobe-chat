@@ -1,7 +1,6 @@
-import type { ChatModelCard } from '@/types/llm';
-
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompletionErrorPayload, ModelProvider } from '../types';
+import { processMultiProviderModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface SiliconCloudModelCard {
@@ -69,58 +68,10 @@ export const LobeSiliconCloudAI = createOpenAICompatibleRuntime({
     invalidAPIKey: AgentRuntimeErrorType.InvalidProviderAPIKey,
   },
   models: async ({ client }) => {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
-
-    const functionCallKeywords = [
-      'qwen/qwen3',
-      'qwen/qwen2.5',
-      'thudm/glm-4',
-      'deepseek-ai/deepseek',
-      'internlm/internlm2_5',
-      'meta-llama/meta-llama-3.1',
-      'meta-llama/meta-llama-3.3',
-    ];
-
-    const visionKeywords = [
-      'opengvlab/internvl',
-      'qwen/qvq',
-      'qwen/qwen2-vl',
-      'teleai/telemm',
-      'deepseek-ai/deepseek-vl',
-    ];
-
-    const reasoningKeywords = ['deepseek-ai/deepseek-r1', 'qwen/qvq', 'qwen/qwq', 'qwen/qwen3'];
-
     const modelsPage = (await client.models.list()) as any;
     const modelList: SiliconCloudModelCard[] = modelsPage.data;
 
-    return modelList
-      .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
-          (m) => model.id.toLowerCase() === m.id.toLowerCase(),
-        );
-
-        return {
-          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
-          displayName: knownModel?.displayName ?? undefined,
-          enabled: knownModel?.enabled || false,
-          functionCall:
-            (functionCallKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) &&
-              !model.id.toLowerCase().includes('deepseek-r1')) ||
-            knownModel?.abilities?.functionCall ||
-            false,
-          id: model.id,
-          reasoning:
-            reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-            knownModel?.abilities?.reasoning ||
-            false,
-          vision:
-            visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-            knownModel?.abilities?.vision ||
-            false,
-        };
-      })
-      .filter(Boolean) as ChatModelCard[];
+    return processMultiProviderModelList(modelList);
   },
   provider: ModelProvider.SiliconCloud,
 });
