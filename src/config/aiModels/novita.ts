@@ -227,8 +227,8 @@ const novitaChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true,
       functionCall: true,
+      reasoning: true,
     },
     contextWindowTokens: 128_000,
     displayName: 'Deepseek R1 0528',
@@ -242,8 +242,8 @@ const novitaChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true,
       functionCall: true,
+      reasoning: true,
     },
     contextWindowTokens: 128_000,
     displayName: 'DeepSeek R1 0528 Qwen3 8B',
