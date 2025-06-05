@@ -2,6 +2,38 @@
 
 # Changelog
 
+### [Version&nbsp;1.91.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.91.0...v1.91.1)
+<sup>Released on **2025-06-05**</sup>
+
+
+#### 💄 Styles
+
+- **misc**: Add Volcengine & OpenAI-like Provider (e.g. oneapi) model fetch support, improve loading state.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Styles
+
+* **misc**: Add Volcengine & OpenAI-like Provider (e.g. oneapi) model fetch support, closes [#8064](https://github.com/jaworldwideorg/OneJA-Bot/issues/8064) ([d3dafe1](https://github.com/jaworldwideorg/OneJA-Bot/commit/d3dafe1))
+* **misc**: Improve loading state, closes [#8072](https://github.com/jaworldwideorg/OneJA-Bot/issues/8072) ([f0a7193](https://github.com/jaworldwideorg/OneJA-Bot/commit/f0a7193))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.91.2](https://github.com/lobehub/lobe-chat/compare/v1.91.1...v1.91.2)
 
 <sup>Released on **2025-06-05**</sup>
