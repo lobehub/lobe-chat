@@ -1,9 +1,15 @@
 import NextAuth from 'next-auth';
 
-import authConfig from './auth.config';
+import { getServerDBConfig } from '@/config/db';
+import { serverDB } from '@/database/core/dbForEdge';
+
+import { LobeNextAuthDbAdapter } from './adapter';
+import config from './auth.config';
+
+const { NEXT_PUBLIC_ENABLED_SERVER_SERVICE } = getServerDBConfig();
 
 /**
- * NextAuth initialization without Database adapter
+ * NextAuth initialization without node Database adapter
  *
  * @example
  * ```ts
@@ -23,4 +29,7 @@ import authConfig from './auth.config';
  * signOut();
  * ```
  */
-export default NextAuth(authConfig);
+export default NextAuth({
+  ...config,
+  adapter: NEXT_PUBLIC_ENABLED_SERVER_SERVICE ? LobeNextAuthDbAdapter(serverDB) : undefined,
+});
