@@ -190,11 +190,14 @@ class ChatService {
       pluginIds.push(WebBrowsingManifest.identifier);
     }
 
-    // ============  1. preprocess messages   ============ //
+    // ============  1. preprocess placeholder variables   ============ //
+    const parsedMessages = parsePlaceholderVariablesMessages(messages);
+
+    // ============  2. preprocess messages   ============ //
 
     const oaiMessages = this.processMessages(
       {
-        messages: parsePlaceholderVariablesMessages(messages),
+        messages: parsedMessages,
         model: payload.model,
         provider: payload.provider!,
         tools: pluginIds,
@@ -202,14 +205,14 @@ class ChatService {
       options,
     );
 
-    // ============  2. preprocess tools   ============ //
+    // ============  3. preprocess tools   ============ //
 
     const tools = this.prepareTools(pluginIds, {
       model: payload.model,
       provider: payload.provider!,
     });
 
-    // ============  3. process extend params   ============ //
+    // ============  4. process extend params   ============ //
 
     let extendParams: Record<string, any> = {};
 
