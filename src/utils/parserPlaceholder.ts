@@ -154,7 +154,7 @@ export const parsePlaceholderVariables = (text: string): string => {
     });
 
     return compiled(getTemplateVariables());
-  } catch (error) {
+  } catch {
     // 如果模板编译失败，返回原文本
     return text;
   }
