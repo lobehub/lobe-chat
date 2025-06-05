@@ -129,31 +129,33 @@ const extractPlaceholderVariables = (text: string): string[] => {
 };
 
 /**
- * 预留值解析函数 - 将模板变量替换为实际值
- * @param text - 包含模板变量的文本
+ * 将模板变量替换为实际值，并支持递归解析嵌套变量
+ * @param text - 含变量的原始文本
+ * @param depth - 递归深度，默认 1，设置更高可支持 {{input_template}} 中的 {{date}} 等
  * @returns 替换后的文本
  */
-export const parsePlaceholderVariables = (text: string): string => {
-  try {
-    const keys = extractPlaceholderVariables(text);
-    const variables: Record<string, string> = {};
+export const parsePlaceholderVariables = (text: string, depth = 2): string => {
+  let result = text;
 
-    for (const key of keys) {
-      const generator = VARIABLE_GENERATORS[key];
-      if (generator) {
-        variables[key] = generator();
-      }
+  // 递归解析，用于处理如 {{input_template}} 存在额外预设变量
+  for (let i = 0; i < depth; i++) {
+    try {
+      const variables = Object.fromEntries(
+        extractPlaceholderVariables(result)
+          .map((key) => [key, VARIABLE_GENERATORS[key]?.()])
+          .filter(([, value]) => value !== undefined)
+      );
+
+      const replaced = template(result, { interpolate: placeholderVariablesRegex })(variables);
+      if (replaced === result) break;
+
+      result = replaced;
+    } catch {
+      break;
     }
-
-    const compiled = template(text, {
-      interpolate: placeholderVariablesRegex,
-    });
-
-    return compiled(variables);
-  } catch {
-    // 如果模板编译失败，返回原文本
-    return text;
   }
+
+  return result;
 };
 
 /**
