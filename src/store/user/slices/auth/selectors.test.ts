@@ -33,6 +33,24 @@ afterEach(() => {
 });
 
 describe('userProfileSelectors', () => {
+  describe('email', () => {
+    it('should return user email if exist', () => {
+      const store: UserStore = {
+        user: { email: 'demo@lobehub.com' },
+      } as UserStore;
+
+      expect(userProfileSelectors.fullName(store)).toBe('demo@lobehub.com');
+    });
+
+    it('should return empty string if not exist', () => {
+      const store: UserStore = {
+        user: { fullName: undefined },
+      } as UserStore;
+
+      expect(userProfileSelectors.fullName(store)).toBe('');
+    });
+  });
+
   describe('fullName', () => {
     it('should return user fullName if exist', () => {
       const store: UserStore = {

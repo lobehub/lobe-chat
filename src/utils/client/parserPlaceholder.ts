@@ -53,10 +53,12 @@ export const VARIABLE_GENERATORS = {
   *
   * | Value | Example |
   * |-------|---------|
+  * | `{{email}}` | demo@lobehub.com |
   * | `{{nickname}}` | 社区版用户 |
   * | `{{username}}` | LobeChat |
   *
   */
+  email: () => userProfileSelectors.email(useUserStore.getState()) ?? '',
   nickname: () => userProfileSelectors.nickName(useUserStore.getState()) ?? '',
   username: () => userProfileSelectors.username(useUserStore.getState()) ?? userProfileSelectors.fullName(useUserStore.getState()) ?? '',
 
