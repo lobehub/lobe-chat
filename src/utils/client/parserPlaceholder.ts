@@ -60,7 +60,7 @@ export const VARIABLE_GENERATORS = {
   */
   email: () => userProfileSelectors.email(useUserStore.getState()) ?? '',
   nickname: () => userProfileSelectors.nickName(useUserStore.getState()) ?? '',
-  username: () => userProfileSelectors.username(useUserStore.getState()) ?? userProfileSelectors.fullName(useUserStore.getState()) ?? '',
+  username: () => userProfileSelectors.displayUserName(useUserStore.getState()) ?? userProfileSelectors.fullName(useUserStore.getState()) ?? '',
 
   /**
   * 随机值类模板变量

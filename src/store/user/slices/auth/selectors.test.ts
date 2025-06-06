@@ -33,6 +33,64 @@ afterEach(() => {
 });
 
 describe('userProfileSelectors', () => {
+  describe('displayUserName', () => {
+    it('should return default username when auth is disabled and not desktop', () => {
+      enableAuth = false;
+      isDesktop = false;
+
+      const store: UserStore = {
+        isSignedIn: false,
+        user: null,
+        enableAuth: () => false,
+      } as unknown as UserStore;
+
+      expect(userProfileSelectors.username(store)).toBe('LobeChat');
+    });
+
+    it('should return user username when auth is disabled and is desktop', () => {
+      enableAuth = false;
+      isDesktop = true;
+
+      const store: UserStore = {
+        isSignedIn: false,
+        user: { username: 'johndoe' },
+        enableAuth: () => false,
+      } as unknown as UserStore;
+
+      expect(userProfileSelectors.username(store)).toBe('johndoe');
+    });
+
+    it('should return user username when signed in', () => {
+      const store: UserStore = {
+        isSignedIn: true,
+        user: { username: 'johndoe' },
+        enableAuth: () => true,
+      } as UserStore;
+
+      expect(userProfileSelectors.username(store)).toBe('johndoe');
+    });
+
+    it('should return email when signed in but username is not existed in UserStore', () => {
+      const store: UserStore = {
+        isSignedIn: true,
+        user: { email: 'demo@lobehub.com' },
+        enableAuth: () => true,
+      } as UserStore;
+
+      expect(userProfileSelectors.username(store)).toBe('demo@lobehub.com');
+    });
+
+    it('should return "anonymous" when not signed in', () => {
+      const store: UserStore = {
+        enableAuth: () => true,
+        isSignedIn: false,
+        user: null,
+      } as unknown as UserStore;
+
+      expect(userProfileSelectors.username(store)).toBe('anonymous');
+    });
+  });
+
   describe('email', () => {
     it('should return user email if exist', () => {
       const store: UserStore = {
