@@ -6,14 +6,22 @@ import { Col, Flex, Row, Skeleton, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { AuthError } from 'next-auth';
 import { signIn } from 'next-auth/react';
+import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+
+
 import BrandWatermark from '@/components/BrandWatermark';
 import AuthIcons from '@/components/NextAuth/AuthIcons';
+import { BRANDING_LOGO_URL, BRANDING_NAME } from '@/const/branding';
 import { DOCUMENTS_REFER_URL, PRIVACY_URL, TERMS_URL } from '@/const/url';
 import { useUserStore } from '@/store/user';
+
+
+
+
 
 const { Title, Paragraph } = Typography;
 
@@ -124,9 +132,9 @@ export default memo(() => {
           <div className={styles.text}>
             <Title className={styles.title} level={4}>
               <div>
-                <LobeChat size={48} />
+                <Image alt={BRANDING_NAME} height={32} src={BRANDING_LOGO_URL} style={{ height: 48 }} width={48} />
               </div>
-              {t('signIn.start.title', { applicationName: 'LobeChat' })}
+              {t('signIn.start.title', { applicationName: BRANDING_NAME })}
             </Title>
             <Paragraph className={styles.description}>{t('signIn.start.subtitle')}</Paragraph>
           </div>
