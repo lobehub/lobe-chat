@@ -35,12 +35,16 @@ jobs:
           if [ ! -d tmp ] ; then
             mkdir tmp
           fi
-          $(bunx tsx scripts/i18nWorkflow/check.ts > tmp/check-translation-logs.txt) 2>&1
+          $(bunx tsx scripts/i18nWorkflow/check.ts > tmp/check-translation-logs.txt) 2>&1 || true
           if [ -s tmp/check-translation-logs.txt ]; then
             cat tmp/check-translation-logs.txt
             echo "logs<<EOF" >> $GITHUB_OUTPUT
             cat tmp/check-translation-logs.txt >> $GITHUB_OUTPUT
             echo "EOF" >> $GITHUB_OUTPUT
+          fi
+          if [ -s tmp/check-translation-logs.txt ]; then
+            echo "Translation check failed"
+            exit 1
           fi
 
       - name: Fail Comment

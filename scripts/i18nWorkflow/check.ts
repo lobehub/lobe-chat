@@ -9,7 +9,7 @@ import {
   outputLocaleJsonFilepath,
   srcDefaultLocales,
 } from './const';
-import { readJSON, split, tagWhite } from './utils';
+import { readJSON, tagWhite } from './utils';
 
 const toArr = <T>(any: T | T[]): T[] => {
   if (Array.isArray(any)) return any;
@@ -120,7 +120,6 @@ const checker = () => {
   );
 
   if ([Object.keys(differenceMap).length, missNamespaces.length, hasMissKeys].some(Boolean)) {
-    split('DIFF ANALYSIS');
     console.log(colors.redBright(`❌ i18n workflow check failed. Please fix the issues above.`));
     // eslint-disable-next-line unicorn/no-process-exit
     process.exit(1);
