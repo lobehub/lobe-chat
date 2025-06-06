@@ -93,6 +93,10 @@ const transformOpenAIStream = (
         return { data: chunk.delta, id: chunk.item_id, type: 'text' };
       }
 
+      case 'response.reasoning_summary_text.delta': {
+        return { data: chunk.delta, id: chunk.item_id, type: 'reasoning' };
+      }
+
       case 'response.completed': {
         if (chunk.response.usage) {
           return {

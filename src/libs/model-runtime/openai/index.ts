@@ -1,7 +1,7 @@
 import { ChatStreamPayload, ModelProvider } from '../types';
+import { processMultiProviderModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { pruneReasoningPayload } from '../utils/openaiHelpers';
-import { processMultiProviderModelList } from '../utils/modelParse';
 
 export interface OpenAIModelCard {
   id: string;
@@ -56,4 +56,18 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
     return processMultiProviderModelList(modelList);
   },
   provider: ModelProvider.OpenAI,
+  responses: {
+    handlePayload: (payload: ChatStreamPayload) => {
+      const { model } = payload;
+      if (prunePrefixes.some((prefix) => model.startsWith(prefix))) {
+        if (!payload.reasoning) {
+          payload.reasoning = { summary: 'auto' };
+        } else {
+          payload.reasoning.summary = 'auto';
+        }
+      }
+
+      return { ...payload, stream: payload.stream ?? true };
+    },
+  },
 });

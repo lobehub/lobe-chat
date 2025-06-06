@@ -96,6 +96,12 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
         transformModel?: (model: OpenAI.Model) => ChatModelCard;
       };
   provider: string;
+  responses?: {
+    handlePayload?: (
+      payload: ChatStreamPayload,
+      options: ConstructorOptions<T>,
+    ) => ChatStreamPayload;
+  };
 }
 
 /**
@@ -162,6 +168,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
   chatCompletion,
   models,
   customClient,
+  responses,
 }: OpenAICompatibleFactoryOptions<T>) => {
   const ErrorType = {
     bizError: errorType?.bizError || AgentRuntimeErrorType.ProviderBizError,
@@ -469,24 +476,22 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       payload: ChatStreamPayload,
       options?: ChatMethodOptions,
     ): Promise<Response> {
-      // remove penalty params
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { messages, frequency_penalty: _, presence_penalty: __, reasoning, ...res } = payload;
-
       const inputStartAt = Date.now();
-      const input = await convertOpenAIResponseInputs(messages as any);
 
-      if (reasoning && reasoning.effort) {
-        reasoning.summary = 'auto';
-      }
+      const { messages, ...res } = responses?.handlePayload
+        ? (responses?.handlePayload(payload, this._options) as ChatStreamPayload)
+        : payload;
+
+      // remove penalty params
+      delete res.frequency_penalty;
+      delete res.presence_penalty;
+
+      const input = await convertOpenAIResponseInputs(messages as any);
 
       const postPayload = {
         ...res,
-        // include: ['reasoning.encrypted_content'],
         input,
-        reasoning,
         store: false,
-        stream: payload.stream ?? true,
         tools: payload.tools?.map((tool) => this.convertChatCompletionToolToResponseTool(tool)),
       } as OpenAI.Responses.ResponseCreateParamsStreaming;
 
