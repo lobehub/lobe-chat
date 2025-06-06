@@ -391,7 +391,7 @@ const novitaChatModels: AIChatModelCard[] = [
     abilities: {
       vision: true,
     },
-    contextWindowTokens: 96_000,
+    contextWindowTokens: 32_768,
     displayName: 'Qwen2.5 VL 72B Instruct',
     enabled: true,
     id: 'qwen/qwen2.5-vl-72b-instruct',
