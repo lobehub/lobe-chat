@@ -12,6 +12,8 @@ jobs:
   check-translation:
     permissions:
       pull-requests: write  # for actions-cool/maintain-one-comment to modify or create PR comments
+      issues: write  # for actions-cool/maintain-one-comment to modify or create issue comments
+      statuses: write
     runs-on: ubuntu-latest
 
     steps:

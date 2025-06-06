@@ -1,11 +1,15 @@
-import { consola } from 'consola';
 import { colors } from 'consola/utils';
 import { diff } from 'just-diff';
-import { existsSync } from 'node:fs';
 import { forOwn, isPlainObject } from 'lodash-es';
-import { split, readJSON, tagWhite } from './utils';
+import { existsSync } from 'node:fs';
 
-import { entryLocaleJsonFilepath, i18nConfig, outputLocaleJsonFilepath, srcDefaultLocales } from './const';
+import {
+  entryLocaleJsonFilepath,
+  i18nConfig,
+  outputLocaleJsonFilepath,
+  srcDefaultLocales,
+} from './const';
+import { readJSON, split, tagWhite } from './utils';
 
 const toArr = <T>(any: T | T[]): T[] => {
   if (Array.isArray(any)) return any;
@@ -42,7 +46,6 @@ function getAllPaths(obj: Record<string, any>) {
 
   return paths;
 }
-
 
 const checker = () => {
   const resources = require(srcDefaultLocales);
@@ -90,11 +93,11 @@ const checker = () => {
   }
 
   if (Object.keys(differenceMap).length > 0) {
-    consola.warn(
+    console.log(
       colors.yellowBright(`⚠️ Differences found between development and production locales:`),
     );
     for (const [ns, diffs] of Object.entries(differenceMap)) {
-      consola.warn(colors.yellowBright(`⚠️ Namespace: ${ns}`));
+      console.log(colors.yellowBright(`⚠️ Namespace: ${ns}`));
       for (const diff of diffs) {
         console.log(`\t- ${diff.op} at \`${toArr(diff.path).join(' --> ')}\``);
       }
@@ -102,26 +105,25 @@ const checker = () => {
   }
 
   if (missNamespaces.length > 0) {
-    consola.fail(tagWhite(i18nConfig.entryLocale), colors.red(`❌ Missing namespaces in production: ${missNamespaces.join(', ')}`));
+    console.log(
+      tagWhite(i18nConfig.entryLocale),
+      colors.red(`❌ Missing namespaces in production: ${missNamespaces.join(', ')}`),
+    );
   }
 
   // br
   console.log();
   console.log();
 
-  const hasMissKeys = Object.values(missKeys).some(localeKeys =>
-    Object.values(localeKeys).some(nsKeys => nsKeys.size > 0)
+  const hasMissKeys = Object.values(missKeys).some((localeKeys) =>
+    Object.values(localeKeys).some((nsKeys) => nsKeys.size > 0),
   );
 
-  if ([
-    Object.keys(differenceMap).length,
-    missNamespaces.length,
-    hasMissKeys
-  ].some(Boolean)) {
+  if ([Object.keys(differenceMap).length, missNamespaces.length, hasMissKeys].some(Boolean)) {
     split('DIFF ANALYSIS');
-    throw new Error(
-      colors.redBright(`❌ i18n workflow check failed. Please fix the issues above.`),
-    );
+    console.log(colors.redBright(`❌ i18n workflow check failed. Please fix the issues above.`));
+    // eslint-disable-next-line unicorn/no-process-exit
+    process.exit(1);
   }
 };
 
