@@ -42,12 +42,12 @@ describe('userProfileSelectors', () => {
       expect(userProfileSelectors.fullName(store)).toBe('John Doe');
     });
 
-    it('should return undefined if not exist', () => {
+    it('should return empty string if not exist', () => {
       const store: UserStore = {
         user: { fullName: undefined },
       } as UserStore;
 
-      expect(userProfileSelectors.fullName(store)).toBe(undefined);
+      expect(userProfileSelectors.fullName(store)).toBe('');
     });
   });
 
