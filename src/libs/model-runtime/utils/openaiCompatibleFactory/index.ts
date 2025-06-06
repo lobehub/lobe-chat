@@ -209,11 +209,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     }
 
     async chat(
-      { responseMode, apiMode = 'response', ...payload }: ChatStreamPayload,
+      { responseMode, apiMode, ...payload }: ChatStreamPayload,
       options?: ChatMethodOptions,
     ) {
       // new openai Response API
-      if (apiMode === 'response') {
+      if (apiMode === 'responses') {
         return this.handleResponseAPIMode(payload, options);
       }
 

@@ -489,5 +489,11 @@
     "bps": true,
     "folderMillis": 1748925630721,
     "hash": "15815e06e3b188933119f380ae12ef8694f2c5f8003cebb397ed00053a065be4"
+  },
+  {
+    "sql": ["ALTER TABLE \"ai_providers\" ADD COLUMN \"config\" jsonb;"],
+    "bps": true,
+    "folderMillis": 1749230869719,
+    "hash": "39cea379f08ee4cb944875c0b67f7791387b508c2d47958bb4cd501ed1ef33eb"
   }
 ]

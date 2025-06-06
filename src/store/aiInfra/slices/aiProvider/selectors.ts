@@ -99,6 +99,13 @@ const isProviderHasBuiltinSearchConfig = (id: string) => (s: AIProviderStoreStat
   return !!providerCfg?.settings.searchMode && providerCfg?.settings.searchMode !== 'internal';
 };
 
+const isProviderEnableResponseApi = (id: string) => (s: AIProviderStoreState) => {
+  const providerCfg = providerConfigById(id)(s);
+
+  const enableResponseApi = providerCfg?.config?.enableResponseApi;
+  return typeof enableResponseApi === 'boolean' ? enableResponseApi : id === 'openai';
+};
+
 export const aiProviderSelectors = {
   activeProviderConfig,
   disabledAiProviderList,
@@ -107,6 +114,7 @@ export const aiProviderSelectors = {
   isActiveProviderEndpointNotEmpty,
   isAiProviderConfigLoading,
   isProviderConfigUpdating,
+  isProviderEnableResponseApi,
   isProviderEnabled,
   isProviderFetchOnClient,
   isProviderHasBuiltinSearch,

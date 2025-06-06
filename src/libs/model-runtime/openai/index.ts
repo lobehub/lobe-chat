@@ -16,7 +16,7 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
       const { model } = payload;
 
       if (model === 'o1-pro') {
-        return { ...payload, apiMode: 'response' } as ChatStreamPayload;
+        return { ...payload, apiMode: 'responses' } as ChatStreamPayload;
       }
 
       if (prunePrefixes.some((prefix) => model.startsWith(prefix))) {

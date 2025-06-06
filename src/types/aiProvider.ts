@@ -79,6 +79,7 @@ export interface AiProviderSettings {
    * whether to smoothing the output
    */
   smoothing?: SmoothingParams;
+  supportResponsesApi?: boolean;
 }
 
 const AiProviderSettingsSchema = z.object({
@@ -106,7 +107,12 @@ const AiProviderSettingsSchema = z.object({
       toolsCalling: z.boolean().optional(),
     })
     .optional(),
+  supportResponsesApi: z.boolean().optional(),
 });
+
+export interface AiProviderConfig {
+  enableResponseApi?: boolean;
+}
 
 // create
 export const CreateAiProviderSchema = z.object({
@@ -235,6 +241,7 @@ export interface EnabledProviderWithModels {
 }
 
 export interface AiProviderRuntimeConfig {
+  config: AiProviderConfig;
   fetchOnClient?: boolean;
   keyVaults: Record<string, string>;
   settings: AiProviderSettings;

@@ -236,6 +236,7 @@ export class AiProviderModel {
   getAiProviderRuntimeConfig = async (decryptor?: DecryptUserKeyVaults) => {
     const result = await this.db
       .select({
+        config: aiProviders.config,
         fetchOnClient: aiProviders.fetchOnClient,
         id: aiProviders.id,
         keyVaults: aiProviders.keyVaults,
@@ -262,6 +263,7 @@ export class AiProviderModel {
       }
 
       runtimeConfig[item.id] = {
+        config: item.config || {},
         fetchOnClient: typeof item.fetchOnClient === 'boolean' ? item.fetchOnClient : undefined,
         keyVaults,
         settings: !!builtin ? merge(builtin.settings, userSettings) : userSettings,

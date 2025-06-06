@@ -67,7 +67,7 @@ export interface OpenAIChatMessage {
  * @title Chat Stream Payload
  */
 export interface ChatStreamPayload {
-  apiMode?: 'chatCompletion' | 'response';
+  apiMode?: 'chatCompletion' | 'responses';
   /**
    * 开启上下文缓存
    */
