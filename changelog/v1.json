@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Correct deepseek R1 fc support display."],
+      "improvements": ["Add openAI websearch and claude 4 to modelproviders."]
+    },
+    "date": "2025-06-05",
+    "version": "1.91.3"
+  },
+  {
+    "children": {
       "improvements": ["Add Volcengine & OpenAI-like Provider (e.g. oneapi) model fetch support."]
     },
     "date": "2025-06-05",
