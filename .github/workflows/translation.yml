@@ -35,7 +35,7 @@ jobs:
           if [ ! -d tmp ] ; then
             mkdir tmp
           fi
-          $(bunx tsx scripts/i18nWorkflow/check.ts > tmp/check-translation-logs.txt) 2>&1 || true
+          $(bunx tsx scripts/i18nWorkflow/check.ts > tmp/check-translation-logs.txt) 2>&1
           if [ -s tmp/check-translation-logs.txt ]; then
             cat tmp/check-translation-logs.txt
             echo "logs<<EOF" >> $GITHUB_OUTPUT
