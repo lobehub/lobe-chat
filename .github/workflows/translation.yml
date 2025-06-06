@@ -43,8 +43,8 @@ jobs:
             echo "EOF" >> $GITHUB_OUTPUT
           fi
 
-      - name: Fail PR Comment
-        if: ${{ steps.check.outcome == 'failure' }}
+      - name: Fail Comment
+        if: ${{ steps.check.outcome == 'failure' || failure() }}
         uses: actions-cool/maintain-one-comment@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
