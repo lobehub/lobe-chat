@@ -1,7 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
 import { produce } from 'immer';
-import { template } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
@@ -507,8 +506,6 @@ export const generateAIChat: StateCreator<
     const agentConfig = agentSelectors.currentAgentConfig(getAgentStoreState());
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
 
-    const compiler = template(chatConfig.inputTemplate, { interpolate: /{{([\S\s]+?)}}/g });
-
     // ================================== //
     //   messages uniformly preprocess    //
     // ================================== //
@@ -523,29 +520,12 @@ export const generateAIChat: StateCreator<
       historyCount,
     });
 
-    // 2. replace inputMessage template
-    preprocessMsgs = !chatConfig.inputTemplate
-      ? preprocessMsgs
-      : preprocessMsgs.map((m) => {
-          if (m.role === 'user') {
-            try {
-              return { ...m, content: compiler({ text: m.content }) };
-            } catch (error) {
-              console.error(error);
-
-              return m;
-            }
-          }
-
-          return m;
-        });
-
-    // 3. add systemRole
+    // 2. add systemRole
     if (agentConfig.systemRole) {
       preprocessMsgs.unshift({ content: agentConfig.systemRole, role: 'system' } as ChatMessage);
     }
 
-    // 4. handle max_tokens
+    // 3. handle max_tokens
     agentConfig.params.max_tokens = chatConfig.enableMaxTokens
       ? agentConfig.params.max_tokens
       : undefined;
