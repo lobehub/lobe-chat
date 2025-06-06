@@ -369,11 +369,12 @@ describe('chatMessage actions', () => {
       const messageId = 'message-id';
       const newContent = 'Updated content';
 
+      const spy = vi.spyOn(messageService, 'updateMessage');
       await act(async () => {
         await result.current.internal_updateMessageContent(messageId, newContent);
       });
 
-      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { content: newContent });
+      expect(spy).toHaveBeenCalledWith(messageId, { content: newContent });
     });
 
     it('should dispatch message update action', async () => {

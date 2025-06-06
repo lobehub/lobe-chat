@@ -1,8 +1,8 @@
 ---
 title: Deploying LobeChat with Docker Compose
 description: >-
-  Learn how to deploy the LobeChat service using Docker Compose, including
-  configuration tutorials for various services.
+  Learn how to deploy the LobeChat service using Docker Compose, including configuration tutorials for various services.
+
 tags:
   - Docker Compose
   - LobeChat
@@ -62,7 +62,9 @@ The script supports the following deployment modes; please choose the appropriat
 - [Domain Mode](#domain-mode): Supports LAN/public `http/https` access with reverse proxy; suitable for personal or team use.
 
 <Callout type="info">
-  In the script's options prompt `(Option1/Option2)[Option1]`: `(Option1 / Option2)` indicates selectable options, while `[Option1]` indicates the default option; simply press enter to choose the default.
+  In the script's options prompt `(Option1/Option2)[Option1]`: `(Option1 / Option2)` indicates
+  selectable options, while `[Option1]` indicates the default option; simply press enter to choose
+  the default.
 </Callout>
 
 ### Local Mode
@@ -77,7 +79,8 @@ The script supports the following deployment modes; please choose the appropriat
   After the script finishes running, you need to check the configuration generation report, which includes the accounts and initial login passwords for the Casdoor administrator and user.
 
   <Callout type="warning">
-    Please log in to LobeChat using the user account; the administrator account is only for managing Casdoor.
+    Please log in to LobeChat using the user account; the administrator account is only for managing
+    Casdoor.
   </Callout>
 
   ```log
@@ -142,7 +145,8 @@ The script supports the following deployment modes; please choose the appropriat
   After the script finishes running, please check the configuration generation report for the Casdoor administrator account, user account, and their initial login passwords.
 
   <Callout type="warning">
-    Please log in to LobeChat using the user account; the administrator account is only for managing Casdoor.
+    Please log in to LobeChat using the user account; the administrator account is only for managing
+    Casdoor.
   </Callout>
 
   ```log
@@ -191,8 +195,8 @@ The script supports the following deployment modes; please choose the appropriat
   You can access your LobeChat service at `http://your_server_ip:3210`. The account credentials for the application can be found in the report from step `2`.
 
   <Callout type="warning">
-    If your service can accessed via the public network, 
-    we strongly recommend disabling the registration, 
+    If your service can accessed via the public network,
+    we strongly recommend disabling the registration,
     refer to the [documentation](https://lobehub.com/docs/self-hosting/advanced/auth/next-auth/casdoor)
     for more information.
   </Callout>
@@ -227,9 +231,9 @@ The script supports the following deployment modes; please choose the appropriat
     }
     ```
 
-    ⚠️ If you are using such panel software, 
-    please do not enable any form of caching in the reverse proxy settings of such panel software to avoid affecting the normal operation of the service. 
-    Read more at https://github.com/lobehub/lobe-chat/discussions/5986
+    ⚠️ If you are using such panel software,
+    please do not enable any form of caching in the reverse proxy settings of such panel software to avoid affecting the normal operation of the service.
+    Read more at [https://github.com/lobehub/lobe-chat/discussions/5986](https://github.com/lobehub/lobe-chat/discussions/5986)
   </Callout>
 
   ### Complete Remaining Configuration in Interactive Script
@@ -257,7 +261,8 @@ The script supports the following deployment modes; please choose the appropriat
   After the script finishes running, you need to check the configuration generation report, which includes the initial login password for the Casdoor administrator.
 
   <Callout type="warning">
-    Please log in to LobeChat using the user account; the administrator account is only for managing Casdoor.
+    Please log in to LobeChat using the user account; the administrator account is only for managing
+    Casdoor.
   </Callout>
 
   ```log
@@ -304,10 +309,10 @@ The script supports the following deployment modes; please choose the appropriat
   ### Access Application
 
   You can access your LobeChat service via `https://lobe.example.com`. The account credentials for the application can be found in the report from step `3`.
-  
+
   <Callout type="warning">
-    If your service can accessed via the public network, 
-    we strongly recommend disabling the registration, 
+    If your service can accessed via the public network,
+    we strongly recommend disabling the registration,
     refer to the [documentation](https://lobehub.com/docs/self-hosting/advanced/auth/next-auth/casdoor)
     for more information.
   </Callout>
@@ -324,7 +329,8 @@ mv .env.example .env
 ```
 
 <Callout type="info">
-  This section does not cover all complete variables; remaining variables can be referenced in [Deploying with the Server Database](/en/docs/self-hosting/server-database).
+  This section does not cover all complete variables; remaining variables can be referenced in
+  [Deploying with the Server Database](/en/docs/self-hosting/server-database).
 </Callout>
 
 ### Prerequisites
@@ -341,7 +347,8 @@ These services can be combined through self-hosting or online cloud services to 
 We use [MinIO](https://github.com/minio/minio) as the local S3 object storage service and [Casdoor](https://github.com/casdoor/casdoor) as the local authentication service by default.
 
 <Callout type="warning">
-  If your network topology is complex, please make sure these services can communicate properly within your network environment.
+  If your network topology is complex, please make sure these services can communicate properly
+  within your network environment.
 </Callout>
 
 ### Necessary Configuration
@@ -415,6 +422,7 @@ Solutions:
 - Please refer to the reverse proxy configuration notes in the [Domain Mode](#domain-mode) section.
 
 - A direct troubleshooting method is to access `https://auth.example.com/.well-known/openid-configuration` directly; if:
+
   - Non-JSON format data is returned, it indicates your reverse proxy configuration is incorrect.
   - If the returned JSON format data contains an `"issuer": "URL"` field that does not match your configured `https://auth.example.com`, it indicates your environment variable configuration is incorrect.
 
@@ -478,6 +486,7 @@ Allow users to change their avatars in Casdoor.
      ],
      "Version": "2012-10-17"
    }
+   ```
 ````
 
 2. Create a new access key and store the generated `Access Key` and `Secret Key`.
@@ -497,9 +506,12 @@ Allow users to change their avatars in Casdoor.
 This is applicable for users who have been using `logto` as their login and authentication service in a production environment.
 
 <Callout type="info">
-  Due to significant instability when using [Logto](https://logto.io/)
-  as a login and authentication service, the following tutorial is based on deploying with an IP mode, implementing a domain release solution using Casdoor as the authentication service provider.
-  The remainder of this article will illustrate using this as an example. If you are using other login authentication services like Logto, the process should be similar, but be aware that port configurations may differ among different services.
+  Due to significant instability when using [Logto](https://logto.io/) as a login and authentication
+  service, the following tutorial is based on deploying with an IP mode, implementing a domain
+  release solution using Casdoor as the authentication service provider. The remainder of this
+  article will illustrate using this as an example. If you are using other login authentication
+  services like Logto, the process should be similar, but be aware that port configurations may
+  differ among different services.
 </Callout>
 
 In the following, it is assumed that in addition to the above services, you are also running an **Nginx** layer for reverse proxy and SSL configuration.
@@ -529,44 +541,49 @@ After running, you will get three files:
 Next, modify the configuration files to achieve domain release.
 
 1. Modify the `docker-compose.yml` file.
+
    1. Change the `MINIO_API_CORS_ALLOW_ORIGIN` field of `minio`.
+
    ```yaml
-         'MINIO_API_CORS_ALLOW_ORIGIN=https://lobe.example.com'
+   'MINIO_API_CORS_ALLOW_ORIGIN=https://lobe.example.com'
    ```
+
    2. Modify the `origin` field of `casdoor`.
+
    ```yaml
-         origin: 'https://auth.example.com'
+   origin: 'https://auth.example.com'
    ```
+
    3. Modify the `environment` field of `lobe`.
+
    ```yaml
-           # - 'APP_URL=http://localhost:3210'
-     - 'APP_URL=https://lobe.example.com'
+   # - 'APP_URL=http://localhost:3210'
+   - 'APP_URL=https://lobe.example.com'
 
-     - 'NEXT_AUTH_SSO_PROVIDERS=casdoor'
-     - 'KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ='
-     - 'NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg'
-     # - 'AUTH_URL=http://localhost:${LOBE_PORT}/api/auth'
-     - 'AUTH_URL=https://lobe.example.com/api/auth'
+   - 'NEXT_AUTH_SSO_PROVIDERS=casdoor'
+   - 'KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ='
+   - 'NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg'
+   # - 'AUTH_URL=http://localhost:${LOBE_PORT}/api/auth'
+   - 'AUTH_URL=https://lobe.example.com/api/auth'
 
-     # - 'AUTH_CASDOOR_ISSUER=http://localhost:${CASDOOR_PORT}'
-     - 'AUTH_CASDOOR_ISSUER=https://auth.example.com'
+   # - 'AUTH_CASDOOR_ISSUER=http://localhost:${CASDOOR_PORT}'
+   - 'AUTH_CASDOOR_ISSUER=https://auth.example.com'
 
-     - 'DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}'
-     # - 'S3_ENDPOINT=http://localhost:${MINIO_PORT}'
-     - 'S3_ENDPOINT=https://minio.example.com'
+   - 'DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}'
+   # - 'S3_ENDPOINT=http://localhost:${MINIO_PORT}'
+   - 'S3_ENDPOINT=https://minio.example.com'
 
-     - 'S3_BUCKET=${MINIO_LOBE_BUCKET}'
-     # - 'S3_PUBLIC_DOMAIN=http://localhost:${MINIO_PORT}'
-     - 'S3_PUBLIC_DOMAIN=https://minio.example.com'
+   - 'S3_BUCKET=${MINIO_LOBE_BUCKET}'
+   # - 'S3_PUBLIC_DOMAIN=http://localhost:${MINIO_PORT}'
+   - 'S3_PUBLIC_DOMAIN=https://minio.example.com'
 
-     - 'S3_ENABLE_PATH_STYLE=1'
-     - 'LLM_VISION_IMAGE_USE_BASE64=1'
+   - 'S3_ENABLE_PATH_STYLE=1'
+   - 'LLM_VISION_IMAGE_USE_BASE64=1'
    ```
+
 2. Modify the `.env` file.
 
-<Callout type="info">
-  For security reasons, modify the ROOT USER field in the `.env` file.
-</Callout>
+<Callout type="info">For security reasons, modify the ROOT USER field in the `.env` file.</Callout>
 
 ```sh
 # MinIO S3 configuration
@@ -583,8 +600,10 @@ docker logs -f lobe-chat
 ```
 
 <Callout type="tip">
-  In our official Docker images, automatic migration of the database schema is performed before starting the images.
-  Our official images guarantee the stability of "empty database -> complete tables" for automatic table creation. Therefore, we recommend your database instance use an empty table instance to avoid the trouble of manually maintaining table structure or migrations.
+  In our official Docker images, automatic migration of the database schema is performed before
+  starting the images. Our official images guarantee the stability of "empty database -> complete
+  tables" for automatic table creation. Therefore, we recommend your database instance use an empty
+  table instance to avoid the trouble of manually maintaining table structure or migrations.
 </Callout>
 
 If you encounter issues during table creation, you can try the following command to forcibly remove the database container and restart:
@@ -621,7 +640,8 @@ After logging in, perform the following actions:
 - Save and exit.
 
 <Callout type="info">
-  Following the steps above ensures that not all users are administrators by default, leading to an unsafe situation.
+  Following the steps above ensures that not all users are administrators by default, leading to an
+  unsafe situation.
 </Callout>
 
 #### S3 Object Storage Service Configuration
@@ -747,6 +767,7 @@ services:
     restart: always
     command: >
       server /etc/minio/data --address ":${MINIO_PORT}" --console-address ":9001"
+
 
   casdoor:
     image: casbin/casdoor

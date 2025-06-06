@@ -1,7 +1,7 @@
 import urlJoin from 'url-join';
 
-import { appEnv } from '@/config/app';
 import { DEFAULT_LANG, isLocaleNotSupport } from '@/const/locale';
+import { appEnv } from '@/envs/app';
 import { Locales, normalizeLocale } from '@/locales/resources';
 import { EdgeConfig } from '@/server/modules/EdgeConfig';
 import { AgentStoreIndex } from '@/types/discover';
