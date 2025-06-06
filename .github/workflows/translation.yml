@@ -78,7 +78,7 @@ jobs:
             await github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: github.event.pull_request.head.sha,
+              sha: "${{ github.event.pull_request.head.sha }}",
               state,
               description: state === 'success' ? 'Translation check passed' : 'Translation check failed',
               context: 'translation-check'
