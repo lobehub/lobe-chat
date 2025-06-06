@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "使用者最新的一條訊息會填充到此模板",
-      "placeholder": "預處理模板 {{text}} 將替換為實時輸入資訊",
+      "placeholder": "預處理模板 {{input_template}} 將替換為實時輸入資訊",
       "title": "使用者輸入預處理"
     },
     "submit": "更新聊天偏好",

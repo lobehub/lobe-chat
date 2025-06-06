@@ -33,6 +33,24 @@ afterEach(() => {
 });
 
 describe('userProfileSelectors', () => {
+  describe('fullName', () => {
+    it('should return user fullName if exist', () => {
+      const store: UserStore = {
+        user: { fullName: 'John Doe' },
+      } as UserStore;
+
+      expect(userProfileSelectors.fullName(store)).toBe('John Doe');
+    });
+
+    it('should return empty string if not exist', () => {
+      const store: UserStore = {
+        user: { fullName: undefined },
+      } as UserStore;
+
+      expect(userProfileSelectors.fullName(store)).toBe('');
+    });
+  });
+
   describe('nickName', () => {
     it('should return default nickname when auth is disabled and not desktop', () => {
       enableAuth = false;

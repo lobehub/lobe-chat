@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "El último mensaje del usuario se completará en esta plantilla",
-      "placeholder": "La plantilla de preprocesamiento {{text}} se reemplazará por la información de entrada en tiempo real",
+      "placeholder": "La plantilla de preprocesamiento {{input_template}} se reemplazará por la información de entrada en tiempo real",
       "title": "Preprocesamiento de entrada del usuario"
     },
     "submit": "Actualizar preferencias de chat",

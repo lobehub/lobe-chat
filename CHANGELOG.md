@@ -2,6 +2,47 @@
 
 # Changelog
 
+## [Version 1.92.0](https://github.com/lobehub/lobe-chat/compare/v1.91.3...v1.92.0)
+
+<sup>Released on **2025-06-06**</sup>
+
+#### ✨ Features
+
+- **misc**: Support placeholder variables in prompts and input.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Some web search bugs.
+
+#### 💄 Styles
+
+- **misc**: Support Vertex AI thought summaries.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support placeholder variables in prompts and input, closes [#8060](https://github.com/lobehub/lobe-chat/issues/8060) ([3752739](https://github.com/lobehub/lobe-chat/commit/3752739))
+
+#### What's fixed
+
+- **misc**: Some web search bugs, closes [#8068](https://github.com/lobehub/lobe-chat/issues/8068) ([bebe7a3](https://github.com/lobehub/lobe-chat/commit/bebe7a3))
+
+#### Styles
+
+- **misc**: Support Vertex AI thought summaries, closes [#8090](https://github.com/lobehub/lobe-chat/issues/8090) ([1355a2e](https://github.com/lobehub/lobe-chat/commit/1355a2e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.91.3](https://github.com/lobehub/lobe-chat/compare/v1.91.2...v1.91.3)
 
 <sup>Released on **2025-06-05**</sup>
