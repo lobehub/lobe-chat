@@ -172,14 +172,18 @@ class ChatService {
 
     // =================== 0. process search =================== //
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
-
+    const aiInfraStoreState = getAiInfraStoreState();
     const enabledSearch = chatConfig.searchMode !== 'off';
+    const isProviderHasBuiltinSearch = aiProviderSelectors.isProviderHasBuiltinSearch(
+      payload.provider!,
+    )(aiInfraStoreState);
     const isModelHasBuiltinSearch = aiModelSelectors.isModelHasBuiltinSearch(
       payload.model,
       payload.provider!,
-    )(getAiInfraStoreState());
+    )(aiInfraStoreState);
 
-    const useModelSearch = isModelHasBuiltinSearch && chatConfig.useModelBuiltinSearch;
+    const useModelSearch =
+      (isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && chatConfig.useModelBuiltinSearch;
 
     const useApplicationBuiltinSearchTool = enabledSearch && !useModelSearch;
 
@@ -215,14 +219,14 @@ class ChatService {
     const isModelHasExtendParams = aiModelSelectors.isModelHasExtendParams(
       payload.model,
       payload.provider!,
-    )(getAiInfraStoreState());
+    )(aiInfraStoreState);
 
     // model
     if (isModelHasExtendParams) {
       const modelExtendParams = aiModelSelectors.modelExtendParams(
         payload.model,
         payload.provider!,
-      )(getAiInfraStoreState());
+      )(aiInfraStoreState);
       // if model has extended params, then we need to check if the model can use reasoning
 
       if (modelExtendParams!.includes('enableReasoning')) {
