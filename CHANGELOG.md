@@ -2,6 +2,89 @@
 
 # Changelog
 
+### [Version 1.91.3](https://github.com/lobehub/lobe-chat/compare/v1.91.2...v1.91.3)
+
+<sup>Released on **2025-06-05**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Correct deepseek R1 fc support display.
+
+#### 💄 Styles
+
+- **misc**: Add openAI websearch and claude 4 to modelproviders.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Correct deepseek R1 fc support display, closes [#8069](https://github.com/lobehub/lobe-chat/issues/8069) ([ed5bb5f](https://github.com/lobehub/lobe-chat/commit/ed5bb5f))
+
+#### Styles
+
+- **misc**: Add openAI websearch and claude 4 to modelproviders, closes [#7988](https://github.com/lobehub/lobe-chat/issues/7988) ([95994f4](https://github.com/lobehub/lobe-chat/commit/95994f4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.91.2](https://github.com/lobehub/lobe-chat/compare/v1.91.1...v1.91.2)
+
+<sup>Released on **2025-06-05**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Volcengine & OpenAI-like Provider (e.g. oneapi) model fetch support.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Volcengine & OpenAI-like Provider (e.g. oneapi) model fetch support, closes [#8064](https://github.com/lobehub/lobe-chat/issues/8064) ([d3dafe1](https://github.com/lobehub/lobe-chat/commit/d3dafe1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.91.1](https://github.com/lobehub/lobe-chat/compare/v1.91.0...v1.91.1)
+
+<sup>Released on **2025-06-04**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve loading state.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve loading state, closes [#8072](https://github.com/lobehub/lobe-chat/issues/8072) ([f0a7193](https://github.com/lobehub/lobe-chat/commit/f0a7193))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.91.0](https://github.com/lobehub/lobe-chat/compare/v1.90.4...v1.91.0)
 
 <sup>Released on **2025-06-03**</sup>
