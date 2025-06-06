@@ -80,6 +80,20 @@ const OpenAI: ModelProviderCard = {
     },
     {
       contextWindowTokens: 128_000,
+      description: 'GPT-4o mini search preview 是一个专门为搜索功能优化的预览版本，具有增强的网络搜索能力和实时信息检索功能。',
+      displayName: 'GPT-4o mini Search Preview',
+      functionCall: true,
+      id: 'gpt-4o-mini-search-preview',
+      maxOutput: 16_384,
+      pricing: {
+        input: 0.15,
+        output: 0.6,
+      },
+      releasedAt: '2024-12-01',
+      vision: true,
+    },
+    {
+      contextWindowTokens: 128_000,
       description:
         'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
       displayName: 'GPT-4o 1120',
