@@ -1,0 +1,86 @@
+name: 🌐 Check Translation
+
+on:
+  push:
+    # paths:
+    #   - 'src/locales/**'
+  pull_request:
+    # paths:
+    #   - 'src/locales/**'
+
+jobs:
+  check-translation:
+    permissions:
+      pull-requests: write  # for actions-cool/maintain-one-comment to modify or create PR comments
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: ${{ secrets.BUN_VERSION }}
+
+      - name: Install deps
+        run: bun i
+
+      - name: Check Translation
+        id: check
+        run: |
+          if [ ! -d tmp ] ; then
+            mkdir tmp
+          fi
+          $(bunx tsx scripts/i18nWorkflow/check.ts > tmp/check-translation-logs.txt) 2>&1 || true
+          if [ -s tmp/check-translation-logs.txt ]; then
+            cat tmp/check-translation-logs.txt
+            echo "logs<<EOF" >> $GITHUB_OUTPUT
+            cat tmp/check-translation-logs.txt >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Fail PR Comment
+        if: ${{ github.event_name == 'pull_request' && steps.check.outcome == 'failure' }}
+        uses: actions-cool/maintain-one-comment@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body-include: <!-- CHECK_TRANSLATION_HOOK -->
+          body: |
+            ## Translation Check Failed
+
+            > [!WARNING]
+            > **Note**: The translation check has failed. Please fix the issues listed below:
+            > If you are not familiar with the translation process, please refer to the [translation guide](https://github.com/lobehub/lobe-chat/blob/main/docs/development/internationalization/internationalization-implementation.mdx).
+
+            <details>
+              <summary>Translation Check Logs</summary>
+
+              ```
+              ${{ steps.check.outputs.logs }}
+              ```
+
+            </details>
+
+            <!-- CHECK_TRANSLATION_HOOK -->
+
+      - name: Create Commit Status
+        if: ${{ always() }}
+        uses: actions/github-script@v7
+        env:
+          CHECK_STATUS: ${{ steps.check.outcome }}
+        with:
+          script: |
+            const state = process.env.CHECK_STATUS === 'success' ? 'success' : 'failure';
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: github.sha,
+              state,
+              description: state === 'success' ? 'Translation check passed' : 'Translation check failed',
+              context: 'translation-check'
+            })
