@@ -227,6 +227,7 @@ const novitaChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 128_000,
@@ -241,6 +242,7 @@ const novitaChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 128_000,

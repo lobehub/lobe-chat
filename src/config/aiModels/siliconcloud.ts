@@ -215,6 +215,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
