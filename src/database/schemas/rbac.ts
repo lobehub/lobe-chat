@@ -25,7 +25,7 @@ export const permissions = pgTable('rbac_permissions', {
   code: text('code').notNull().unique(), // Permission code, e.g.: chat:create, file:upload
   name: text('name').notNull(), // Permission name
   description: text('description'), // Permission description
-  module: text('module').notNull(), // Module it belongs to, e.g.: chat, file, user
+  category: text('category').notNull(), // Category it belongs to, e.g.: message, knowledge_base, agent
   isActive: boolean('is_active').default(true).notNull(), // Whether it's active
 
   ...timestamps,

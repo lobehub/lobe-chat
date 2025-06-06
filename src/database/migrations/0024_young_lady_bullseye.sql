@@ -3,7 +3,7 @@ CREATE TABLE "rbac_permissions" (
 	"code" text NOT NULL,
 	"name" text NOT NULL,
 	"description" text,
-	"module" text NOT NULL,
+	"category" text NOT NULL,
 	"is_active" boolean DEFAULT true NOT NULL,
 	"accessed_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
