@@ -44,7 +44,7 @@ describe('userProfileSelectors', () => {
         enableAuth: () => false,
       } as unknown as UserStore;
 
-      expect(userProfileSelectors.username(store)).toBe('LobeChat');
+      expect(userProfileSelectors.displayUserName(store)).toBe('LobeChat');
     });
 
     it('should return user username when auth is disabled and is desktop', () => {
@@ -57,7 +57,7 @@ describe('userProfileSelectors', () => {
         enableAuth: () => false,
       } as unknown as UserStore;
 
-      expect(userProfileSelectors.username(store)).toBe('johndoe');
+      expect(userProfileSelectors.displayUserName(store)).toBe('johndoe');
     });
 
     it('should return user username when signed in', () => {
@@ -67,7 +67,7 @@ describe('userProfileSelectors', () => {
         enableAuth: () => true,
       } as UserStore;
 
-      expect(userProfileSelectors.username(store)).toBe('johndoe');
+      expect(userProfileSelectors.displayUserName(store)).toBe('johndoe');
     });
 
     it('should return email when signed in but username is not existed in UserStore', () => {
@@ -77,7 +77,7 @@ describe('userProfileSelectors', () => {
         enableAuth: () => true,
       } as UserStore;
 
-      expect(userProfileSelectors.username(store)).toBe('demo@lobehub.com');
+      expect(userProfileSelectors.displayUserName(store)).toBe('demo@lobehub.com');
     });
 
     it('should return "anonymous" when not signed in', () => {
@@ -87,7 +87,7 @@ describe('userProfileSelectors', () => {
         user: null,
       } as unknown as UserStore;
 
-      expect(userProfileSelectors.username(store)).toBe('anonymous');
+      expect(userProfileSelectors.displayUserName(store)).toBe('anonymous');
     });
   });
 
@@ -97,15 +97,15 @@ describe('userProfileSelectors', () => {
         user: { email: 'demo@lobehub.com' },
       } as UserStore;
 
-      expect(userProfileSelectors.fullName(store)).toBe('demo@lobehub.com');
+      expect(userProfileSelectors.email(store)).toBe('demo@lobehub.com');
     });
 
     it('should return empty string if not exist', () => {
       const store: UserStore = {
-        user: { fullName: undefined },
+        user: { email: undefined },
       } as UserStore;
 
-      expect(userProfileSelectors.fullName(store)).toBe('');
+      expect(userProfileSelectors.email(store)).toBe('');
     });
   });
 
