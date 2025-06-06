@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "features": ["Support placeholder variables in prompts and input."],
+      "fixes": ["Some web search bugs."],
+      "improvements": ["Support Vertex AI thought summaries."]
+    },
+    "date": "2025-06-06",
+    "version": "1.92.0"
+  },
+  {
+    "children": {
       "fixes": ["Correct deepseek R1 fc support display."],
       "improvements": ["Add openAI websearch and claude 4 to modelproviders."]
     },

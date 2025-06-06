@@ -518,7 +518,6 @@ const openrouterChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 163_840,
