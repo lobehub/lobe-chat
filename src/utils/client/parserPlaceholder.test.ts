@@ -1,35 +1,36 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { parsePlaceholderVariablesMessages, VARIABLE_GENERATORS } from './parserPlaceholder';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { VARIABLE_GENERATORS, parsePlaceholderVariablesMessages } from './parserPlaceholder';
 
 // Mock dependencies
 vi.mock('@/utils/uuid', () => ({
-  uuid: () => 'mocked-uuid-12345'
+  uuid: () => 'mocked-uuid-12345',
 }));
 
 vi.mock('@/store/user', () => ({
   useUserStore: {
-    getState: () => ({})
-  }
+    getState: () => ({}),
+  },
 }));
 
 vi.mock('@/store/user/selectors', () => ({
   userProfileSelectors: {
+    displayUserName: () => 'testuser',
     nickName: () => 'Test User',
-    username: () => 'testuser',
-    fullName: () => 'Test Full Name'
-  }
+    fullName: () => 'Test Full Name',
+  },
 }));
 
 vi.mock('@/store/agent/store', () => ({
-  getAgentStoreState: () => ({})
+  getAgentStoreState: () => ({}),
 }));
 
 vi.mock('@/store/agent/selectors', () => ({
   agentChatConfigSelectors: {
     currentChatConfig: () => ({
-      inputTemplate: 'Hello {{username}}!'
-    })
-  }
+      inputTemplate: 'Hello {{username}}!',
+    }),
+  },
 }));
 
 describe('parsePlaceholderVariablesMessages', () => {
@@ -52,8 +53,8 @@ describe('parsePlaceholderVariablesMessages', () => {
       const messages = [
         {
           id: '1',
-          content: 'Hello {{username}}, today is {{date}}'
-        }
+          content: 'Hello {{username}}, today is {{date}}',
+        },
       ];
 
       const result = parsePlaceholderVariablesMessages(messages);
@@ -66,8 +67,8 @@ describe('parsePlaceholderVariablesMessages', () => {
       const messages = [
         {
           id: '1',
-          content: 'Time: {{time}}, Date: {{date}}, User: {{nickname}}'
-        }
+          content: 'Time: {{time}}, Date: {{date}}, User: {{nickname}}',
+        },
       ];
 
       const result = parsePlaceholderVariablesMessages(messages);
@@ -81,8 +82,8 @@ describe('parsePlaceholderVariablesMessages', () => {
         {
           id: '1',
           role: 'user',
-          content: 'Hello {{username}}'
-        }
+          content: 'Hello {{username}}',
+        },
       ];
 
       const result = parsePlaceholderVariablesMessages(messages);
@@ -90,7 +91,7 @@ describe('parsePlaceholderVariablesMessages', () => {
       expect(result[0]).toEqual({
         id: '1',
         role: 'user',
-        content: 'Hello testuser'
+        content: 'Hello testuser',
       });
     });
   });
@@ -103,14 +104,14 @@ describe('parsePlaceholderVariablesMessages', () => {
           content: [
             {
               type: 'text',
-              text: 'Hello {{username}}'
+              text: 'Hello {{username}}',
             },
             {
               type: 'image_url',
-              image_url: 'image.jpg'
-            }
-          ]
-        }
+              image_url: 'image.jpg',
+            },
+          ],
+        },
       ];
 
       const result = parsePlaceholderVariablesMessages(messages);
@@ -118,7 +119,7 @@ describe('parsePlaceholderVariablesMessages', () => {
       expect(result[0].content[0].text).toBe('Hello testuser');
       expect(result[0].content[1]).toEqual({
         type: 'image_url',
-        image_url: 'image.jpg'
+        image_url: 'image.jpg',
       });
     });
 
@@ -129,18 +130,18 @@ describe('parsePlaceholderVariablesMessages', () => {
           content: [
             {
               type: 'text',
-              text: 'Date: {{date}}'
+              text: 'Date: {{date}}',
             },
             {
               type: 'text',
-              text: 'Time: {{time}}'
+              text: 'Time: {{time}}',
             },
             {
               type: 'image_url',
-              image_url: 'test.jpg'
-            }
-          ]
-        }
+              image_url: 'test.jpg',
+            },
+          ],
+        },
       ];
 
       const result = parsePlaceholderVariablesMessages(messages);
@@ -149,7 +150,7 @@ describe('parsePlaceholderVariablesMessages', () => {
       expect(result[0].content[1].text).toContain(new Date().toLocaleTimeString());
       expect(result[0].content[2]).toEqual({
         type: 'image_url',
-        image_url: 'test.jpg'
+        image_url: 'test.jpg',
       });
     });
 
@@ -164,10 +165,10 @@ describe('parsePlaceholderVariablesMessages', () => {
             },
             {
               type: 'image_url',
-              name: 'image2.jpg'
-            }
-          ]
-        }
+              name: 'image2.jpg',
+            },
+          ],
+        },
       ];
 
       const result = parsePlaceholderVariablesMessages(messages);
@@ -175,12 +176,12 @@ describe('parsePlaceholderVariablesMessages', () => {
       expect(result[0].content).toEqual([
         {
           type: 'image_url',
-          image_url: 'image.jpg'
+          image_url: 'image.jpg',
         },
         {
           type: 'image_url',
-          name: 'image2.jpg'
-        }
+          name: 'image2.jpg',
+        },
       ]);
     });
   });
@@ -192,25 +193,19 @@ describe('parsePlaceholderVariablesMessages', () => {
     });
 
     it('should handle messages without content', () => {
-      const messages = [
-        { id: '1' },
-        { id: '2', content: null },
-        { id: '3', content: undefined }
-      ];
+      const messages = [{ id: '1' }, { id: '2', content: null }, { id: '3', content: undefined }];
 
       const result = parsePlaceholderVariablesMessages(messages);
 
       expect(result).toEqual([
         { id: '1' },
         { id: '2', content: null },
-        { id: '3', content: undefined }
+        { id: '3', content: undefined },
       ]);
     });
 
     it('should handle empty string content', () => {
-      const messages = [
-        { id: '1', content: '' }
-      ];
+      const messages = [{ id: '1', content: '' }];
 
       const result = parsePlaceholderVariablesMessages(messages);
 
@@ -220,13 +215,13 @@ describe('parsePlaceholderVariablesMessages', () => {
     it('should handle content without variables', () => {
       const messages = [
         { id: '1', content: 'Hello world!' },
-        { 
-          id: '2', 
+        {
+          id: '2',
           content: [
             { type: 'text', text: 'No variables here' },
-            { type: 'image_url', image_url: 'test.jpg' }
-          ]
-        }
+            { type: 'image_url', image_url: 'test.jpg' },
+          ],
+        },
       ];
 
       const result = parsePlaceholderVariablesMessages(messages);
@@ -236,9 +231,7 @@ describe('parsePlaceholderVariablesMessages', () => {
     });
 
     it('should handle unknown variable types', () => {
-      const messages = [
-        { id: '1', content: 'Hello {{unknown_variable}}!' }
-      ];
+      const messages = [{ id: '1', content: 'Hello {{unknown_variable}}!' }];
 
       const result = parsePlaceholderVariablesMessages(messages);
 
@@ -247,9 +240,7 @@ describe('parsePlaceholderVariablesMessages', () => {
     });
 
     it('should handle nested variables (input_template)', () => {
-      const messages = [
-        { id: '1', content: 'Template: {{input_template}}' }
-      ];
+      const messages = [{ id: '1', content: 'Template: {{input_template}}' }];
 
       const result = parsePlaceholderVariablesMessages(messages);
 
@@ -261,10 +252,10 @@ describe('parsePlaceholderVariablesMessages', () => {
   describe('specific variable types', () => {
     it('should handle time variables', () => {
       const messages = [
-        { 
-          id: '1', 
-          content: 'Year: {{year}}, Month: {{month}}, Day: {{day}}' 
-        }
+        {
+          id: '1',
+          content: 'Year: {{year}}, Month: {{month}}, Day: {{day}}',
+        },
       ];
 
       const result = parsePlaceholderVariablesMessages(messages);
@@ -276,10 +267,10 @@ describe('parsePlaceholderVariablesMessages', () => {
 
     it('should handle random variables', () => {
       const messages = [
-        { 
-          id: '1', 
-          content: 'Random: {{random}}, Bool: {{random_bool}}, UUID: {{uuid}}' 
-        }
+        {
+          id: '1',
+          content: 'Random: {{random}}, Bool: {{random_bool}}, UUID: {{uuid}}',
+        },
       ];
 
       const result = parsePlaceholderVariablesMessages(messages);
@@ -291,10 +282,10 @@ describe('parsePlaceholderVariablesMessages', () => {
 
     it('should handle user variables', () => {
       const messages = [
-        { 
-          id: '1', 
-          content: 'User: {{username}}, Nickname: {{nickname}}' 
-        }
+        {
+          id: '1',
+          content: 'User: {{username}}, Nickname: {{nickname}}',
+        },
       ];
 
       const result = parsePlaceholderVariablesMessages(messages);
@@ -307,13 +298,11 @@ describe('parsePlaceholderVariablesMessages', () => {
     it('should process multiple messages correctly', () => {
       const messages = [
         { id: '1', content: 'Hello {{username}}' },
-        { 
-          id: '2', 
-          content: [
-            { type: 'text', text: 'Today is {{date}}' }
-          ]
+        {
+          id: '2',
+          content: [{ type: 'text', text: 'Today is {{date}}' }],
         },
-        { id: '3', content: 'Time: {{time}}' }
+        { id: '3', content: 'Time: {{time}}' },
       ];
 
       const result = parsePlaceholderVariablesMessages(messages);
