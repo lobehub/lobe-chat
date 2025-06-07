@@ -41,6 +41,7 @@ import { createErrorResponse } from '@/utils/errorResponse';
 import { FetchSSEOptions, fetchSSE, getMessageError } from '@/utils/fetch';
 import { genToolCallingName } from '@/utils/toolCall';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
+import { parsePlaceholderVariablesMessages } from '@/utils/client/parserPlaceholder';
 
 import { createHeaderWithAuth, createPayloadWithKeyVaults } from './_auth';
 import { API_ENDPOINTS } from './_url';
@@ -172,14 +173,18 @@ class ChatService {
 
     // =================== 0. process search =================== //
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
-
+    const aiInfraStoreState = getAiInfraStoreState();
     const enabledSearch = chatConfig.searchMode !== 'off';
+    const isProviderHasBuiltinSearch = aiProviderSelectors.isProviderHasBuiltinSearch(
+      payload.provider!,
+    )(aiInfraStoreState);
     const isModelHasBuiltinSearch = aiModelSelectors.isModelHasBuiltinSearch(
       payload.model,
       payload.provider!,
-    )(getAiInfraStoreState());
+    )(aiInfraStoreState);
 
-    const useModelSearch = isModelHasBuiltinSearch && chatConfig.useModelBuiltinSearch;
+    const useModelSearch =
+      (isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && chatConfig.useModelBuiltinSearch;
 
     const useApplicationBuiltinSearchTool = enabledSearch && !useModelSearch;
 
@@ -189,11 +194,14 @@ class ChatService {
       pluginIds.push(WebBrowsingManifest.identifier);
     }
 
-    // ============  1. preprocess messages   ============ //
+    // ============  1. preprocess placeholder variables   ============ //
+    const parsedMessages = parsePlaceholderVariablesMessages(messages);
+
+    // ============  2. preprocess messages   ============ //
 
     const oaiMessages = this.processMessages(
       {
-        messages,
+        messages: parsedMessages,
         model: payload.model,
         provider: payload.provider!,
         tools: pluginIds,
@@ -201,28 +209,28 @@ class ChatService {
       options,
     );
 
-    // ============  2. preprocess tools   ============ //
+    // ============  3. preprocess tools   ============ //
 
     const tools = this.prepareTools(pluginIds, {
       model: payload.model,
       provider: payload.provider!,
     });
 
-    // ============  3. process extend params   ============ //
+    // ============  4. process extend params   ============ //
 
     let extendParams: Record<string, any> = {};
 
     const isModelHasExtendParams = aiModelSelectors.isModelHasExtendParams(
       payload.model,
       payload.provider!,
-    )(getAiInfraStoreState());
+    )(aiInfraStoreState);
 
     // model
     if (isModelHasExtendParams) {
       const modelExtendParams = aiModelSelectors.modelExtendParams(
         payload.model,
         payload.provider!,
-      )(getAiInfraStoreState());
+      )(aiInfraStoreState);
       // if model has extended params, then we need to check if the model can use reasoning
 
       if (modelExtendParams!.includes('enableReasoning')) {
