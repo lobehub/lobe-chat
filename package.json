@@ -51,7 +51,7 @@
     "desktop:build-next": "npm run build:electron",
     "desktop:prepare-dist": "tsx scripts/electronWorkflow/moveNextStandalone.ts",
     "dev": "next dev --turbopack -p 3010",
-    "dev:desktop": "next dev --turbopack -p 3015",
+    "dev:desktop": "dotenvx run -f .env.desktop -- next dev --turbopack -p 3015",
     "docs:i18n": "lobe-i18n md && npm run lint:md && npm run lint:mdx && prettier -c --write locales/**/*",
     "docs:seo": "lobe-seo && npm run lint:mdx",
     "i18n": "npm run workflow:i18n && lobe-i18n",
@@ -274,6 +274,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
+    "@dotenvx/dotenvx": "^1.44.1",
     "@edge-runtime/vm": "^5.0.0",
     "@huggingface/tasks": "^0.15.9",
     "@lobehub/i18n-cli": "^1.22.0",
