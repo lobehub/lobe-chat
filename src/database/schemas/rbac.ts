@@ -47,11 +47,11 @@ export const rolePermissions = pgTable(
 
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
-  (self) => ({
-    id: primaryKey({ columns: [self.roleId, self.permissionId] }),
-    roleIdIdx: index('rbac_role_permissions_role_id_idx').on(self.roleId),
-    permissionIdIdx: index('rbac_role_permissions_permission_id_idx').on(self.permissionId),
-  }),
+  (self) => [
+    primaryKey({ columns: [self.roleId, self.permissionId] }),
+    index('rbac_role_permissions_role_id_idx').on(self.roleId),
+    index('rbac_role_permissions_permission_id_idx').on(self.permissionId),
+  ],
 );
 
 export type NewRolePermission = typeof rolePermissions.$inferInsert;
@@ -71,11 +71,11 @@ export const userRoles = pgTable(
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     expiresAt: timestamp('expires_at', { withTimezone: true }), // Support for temporary roles
   },
-  (self) => ({
-    id: primaryKey({ columns: [self.userId, self.roleId] }),
-    userIdIdx: index('rbac_user_roles_user_id_idx').on(self.userId),
-    roleIdIdx: index('rbac_user_roles_role_id_idx').on(self.roleId),
-  }),
+  (self) => [
+    primaryKey({ columns: [self.userId, self.roleId] }),
+    index('rbac_user_roles_user_id_idx').on(self.userId),
+    index('rbac_user_roles_role_id_idx').on(self.roleId),
+  ],
 );
 
 export type NewUserRole = typeof userRoles.$inferInsert;
