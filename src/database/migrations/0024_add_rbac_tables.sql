@@ -12,8 +12,8 @@ CREATE TABLE "rbac_permissions" (
 );
 --> statement-breakpoint
 CREATE TABLE "rbac_role_permissions" (
-	"role_id" text NOT NULL,
-	"permission_id" text NOT NULL,
+	"role_id" integer NOT NULL,
+	"permission_id" integer NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "rbac_role_permissions_role_id_permission_id_pk" PRIMARY KEY("role_id","permission_id")
 );
@@ -33,7 +33,7 @@ CREATE TABLE "rbac_roles" (
 --> statement-breakpoint
 CREATE TABLE "rbac_user_roles" (
 	"user_id" text NOT NULL,
-	"role_id" text NOT NULL,
+	"role_id" integer NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"expires_at" timestamp with time zone,
 	CONSTRAINT "rbac_user_roles_user_id_role_id_pk" PRIMARY KEY("user_id","role_id")

@@ -38,10 +38,10 @@ export type PermissionItem = typeof permissions.$inferSelect;
 export const rolePermissions = pgTable(
   'rbac_role_permissions',
   {
-    roleId: text('role_id')
+    roleId: integer('role_id')
       .references(() => roles.id, { onDelete: 'cascade' })
       .notNull(),
-    permissionId: text('permission_id')
+    permissionId: integer('permission_id')
       .references(() => permissions.id, { onDelete: 'cascade' })
       .notNull(),
 
@@ -64,7 +64,7 @@ export const userRoles = pgTable(
     userId: text('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
-    roleId: text('role_id')
+    roleId: integer('role_id')
       .references(() => roles.id, { onDelete: 'cascade' })
       .notNull(),
 

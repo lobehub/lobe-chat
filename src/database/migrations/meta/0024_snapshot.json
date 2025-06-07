@@ -1,5 +1,5 @@
 {
-  "id": "ff167b42-0026-4402-a7a7-83856a46ec8d",
+  "id": "ef492902-0a6e-49ba-8b3c-cf92f2ee4cfe",
   "prevId": "dd44269c-f132-41cc-b33e-97fbd08dafc3",
   "version": "7",
   "dialect": "postgresql",
@@ -4710,13 +4710,13 @@
       "columns": {
         "role_id": {
           "name": "role_id",
-          "type": "text",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
         "permission_id": {
           "name": "permission_id",
-          "type": "text",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -4905,7 +4905,7 @@
         },
         "role_id": {
           "name": "role_id",
-          "type": "text",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
