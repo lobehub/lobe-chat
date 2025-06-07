@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Add support to azureopenai embedding."]
+    },
+    "date": "2025-06-07",
+    "version": "1.92.2"
+  },
+  {
+    "children": {
+      "improvements": ["Improve {{username}} placeholder variable, Update Gemini & Qwen models."]
+    },
+    "date": "2025-06-07",
+    "version": "1.92.1"
+  },
+  {
+    "children": {
       "features": ["Support placeholder variables in prompts and input."],
       "fixes": ["Some web search bugs."],
       "improvements": ["Support Vertex AI thought summaries."]
