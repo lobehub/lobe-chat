@@ -32,7 +32,22 @@ const transformOllamaStream = (chunk: ChatResponse, stack: StreamContext): Strea
       type: 'tool_calls',
     };
   }
-  return { data: chunk.message.content, id: stack.id, type: 'text' };
+
+  // 处理 <think> & </think> 思考链，清除 <think> 标签和周围空白
+  const thinkingContent = chunk.message.content.replace(/<\/?think>/g, '');
+  // 判断是否有 <think> 或 </think> 标签，更新状态
+  if (chunk.message.content.includes('<think>')) {
+    stack.thinkingInContent = true;
+  } else if (chunk.message.content.includes('</think>')) {
+    stack.thinkingInContent = false;
+  }
+
+  // 返回类型根据当前思考模式确定
+  return {
+    data: thinkingContent,
+    id: stack.id,
+    type: stack?.thinkingInContent ? 'reasoning' : 'text',
+  };
 };
 
 export const OllamaStream = (

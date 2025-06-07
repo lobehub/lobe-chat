@@ -242,7 +242,21 @@ export const transformOpenAIStream = (
           }
         }
 
-        return { data: content, id: chunk.id, type: 'text' };
+        // 处理 <think> & </think> 思考链，清除 <think> 标签和周围空白
+        const thinkingContent = content.replace(/<\/?think>/g, '');
+        // 判断是否有 <think> 或 </think> 标签，更新状态
+        if (content.includes('<think>')) {
+          streamContext.thinkingInContent = true;
+        } else if (content.includes('</think>')) {
+          streamContext.thinkingInContent = false;
+        }
+
+        // 返回类型根据当前思考模式确定
+        return {
+          data: thinkingContent,
+          id: chunk.id,
+          type: streamContext?.thinkingInContent ? 'reasoning' : 'text',
+        };
       }
     }
 
