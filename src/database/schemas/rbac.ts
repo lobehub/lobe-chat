@@ -1,12 +1,12 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
-import { boolean, index, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core';
+import { boolean, index, integer, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core';
 
 import { timestamps } from './_helpers';
 import { users } from './user';
 
 // Roles table
 export const roles = pgTable('rbac_roles', {
-  id: text('id').primaryKey().notNull(),
+  id: integer('id').primaryKey().generatedByDefaultAsIdentity(),
   name: text('name').notNull().unique(), // Role name, e.g.: admin, user, guest
   displayName: text('display_name').notNull(), // Display name
   description: text('description'), // Role description
@@ -21,7 +21,7 @@ export type RoleItem = typeof roles.$inferSelect;
 
 // Permissions table
 export const permissions = pgTable('rbac_permissions', {
-  id: text('id').primaryKey().notNull(),
+  id: integer('id').primaryKey().generatedByDefaultAsIdentity(),
   code: text('code').notNull().unique(), // Permission code, e.g.: chat:create, file:upload
   name: text('name').notNull(), // Permission name
   description: text('description'), // Permission description

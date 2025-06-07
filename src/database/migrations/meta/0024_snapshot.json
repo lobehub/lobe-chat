@@ -1,5 +1,5 @@
 {
-  "id": "1026b2ed-d783-418c-9084-5b74c369b5f8",
+  "id": "ff167b42-0026-4402-a7a7-83856a46ec8d",
   "prevId": "dd44269c-f132-41cc-b33e-97fbd08dafc3",
   "version": "7",
   "dialect": "postgresql",
@@ -4620,9 +4620,20 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "integer",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "rbac_permissions_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
         "code": {
           "name": "code",
@@ -4797,9 +4808,20 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "integer",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "identity": {
+            "type": "byDefault",
+            "name": "rbac_roles_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
         },
         "name": {
           "name": "name",
