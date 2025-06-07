@@ -1,4 +1,22 @@
 {
+  "proxy": {
+    "auth": "需要认证",
+    "bypass": "不使用代理的地址",
+    "enable": "启用代理",
+    "password": "密码",
+    "password_placeholder": "请输入密码",
+    "port": "端口",
+    "server": "服务器地址",
+    "testButton": "测试连接",
+    "testFailed": "连接失败: {{error}}",
+    "testSuccess": "连接成功",
+    "testUrl": "测试地址",
+    "testUrlPlaceholder": "请输入要测试的 URL",
+    "testing": "正在测试连接...",
+    "type": "代理类型",
+    "username": "用户名",
+    "username_placeholder": "请输入用户名"
+  },
   "remoteServer": {
     "authError": "授权失败: {{error}}",
     "authPending": "请在浏览器中完成授权",

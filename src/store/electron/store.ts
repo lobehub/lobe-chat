@@ -4,6 +4,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { createDevtools } from '../middleware/createDevtools';
 import { type ElectronAppAction, createElectronAppSlice } from './actions/app';
+import { type ElectronSettingsAction, settingsSlice } from './actions/settings';
 import { type ElectronRemoteServerAction, remoteSyncSlice } from './actions/sync';
 import { type ElectronState, initialState } from './initialState';
 
@@ -12,7 +13,8 @@ import { type ElectronState, initialState } from './initialState';
 export interface ElectronStore
   extends ElectronState,
     ElectronRemoteServerAction,
-    ElectronAppAction {
+    ElectronAppAction,
+    ElectronSettingsAction {
   /* empty */
 }
 
@@ -22,6 +24,7 @@ const createStore: StateCreator<ElectronStore, [['zustand/devtools', never]]> = 
   ...initialState,
   ...remoteSyncSlice(...parameters),
   ...createElectronAppSlice(...parameters),
+  ...settingsSlice(...parameters),
 });
 
 //  ===============  实装 useStore ============ //
