@@ -6,6 +6,7 @@ import {
   Tool as GoogleFunctionCallTool,
   GoogleGenerativeAI,
   GoogleSearchRetrievalTool,
+  HarmBlockThreshold,
   Part,
   SchemaType,
 } from '@google/generative-ai';
@@ -32,7 +33,7 @@ import {
 } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 
-const modelsOffSafetySettings = new Set(['gemini-2.0-flash-exp']);
+// const modelsOffSafetySettings = new Set(['gemini-2.0-flash-exp']);
 
 const modelsWithModalities = new Set([
   'gemini-2.0-flash-exp',
@@ -65,16 +66,7 @@ enum HarmCategory {
   HARM_CATEGORY_SEXUALLY_EXPLICIT = 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
 }
 
-enum HarmBlockThreshold {
-  BLOCK_NONE = 'BLOCK_NONE',
-}
-
-function getThreshold(model: string): HarmBlockThreshold {
-  if (modelsOffSafetySettings.has(model)) {
-    return 'OFF' as HarmBlockThreshold; // https://discuss.ai.google.dev/t/59352
-  }
-  return HarmBlockThreshold.BLOCK_NONE;
-}
+const threshold = 'OFF' as HarmBlockThreshold;
 
 const DEFAULT_BASE_URL = 'https://generativelanguage.googleapis.com';
 
@@ -151,19 +143,19 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             safetySettings: [
               {
                 category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-                threshold: getThreshold(model),
+                threshold: threshold,
               },
               {
                 category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-                threshold: getThreshold(model),
+                threshold: threshold,
               },
               {
                 category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-                threshold: getThreshold(model),
+                threshold: threshold,
               },
               {
                 category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-                threshold: getThreshold(model),
+                threshold: threshold,
               },
             ],
           },
