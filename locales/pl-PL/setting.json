@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "Motyw Syreny"
     },
-    "title": "Wygląd czatu"
+    "title": "Wygląd czatu",
+    "transitionMode": {
+      "desc": "Animacja przejścia wiadomości czatu",
+      "options": {
+        "fadeIn": "Pojawianie się",
+        "none": {
+          "desc": "To zależy od sposobu generowania odpowiedzi przez model, proszę przetestować samodzielnie.",
+          "value": "Brak"
+        },
+        "smooth": "Płynne"
+      },
+      "title": "Animacja przejścia"
+    }
   },
   "settingCommon": {
     "lang": {

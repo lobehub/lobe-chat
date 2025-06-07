@@ -12,6 +12,8 @@ import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { useUserStore } from '@/store/user';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 import { ChatMessage } from '@/types/message';
 
 import ErrorMessageExtra, { useErrorContent } from '../../Error';
@@ -70,6 +72,7 @@ const Item = memo<ChatListItemProps>(
 
     const type = useAgentStore(agentChatConfigSelectors.displayMode);
     const item = useChatStore(chatSelectors.getMessageById(id), isEqual);
+    const transitionMode = useUserStore(userGeneralSettingsSelectors.transitionMode);
 
     const [
       isMessageLoading,
@@ -89,6 +92,7 @@ const Item = memo<ChatListItemProps>(
 
     // when the message is in RAG flow or the AI generating, it should be in loading state
     const isProcessing = isInRAGFlow || generating;
+    const animated = transitionMode === 'fadeIn' && generating;
 
     const onAvatarsClick = useAvatarsClick(item?.role);
 
@@ -168,7 +172,7 @@ const Item = memo<ChatListItemProps>(
 
     const markdownProps = useMemo(
       () => ({
-        animated: generating,
+        animated,
         citations: item?.role === 'user' ? undefined : item?.search?.citations,
         components,
         customRender: markdownCustomRender,
@@ -184,7 +188,7 @@ const Item = memo<ChatListItemProps>(
               // if the citations's url and title are all the same, we should not show the citations
               item?.search?.citations.every((item) => item.title !== item.url),
       }),
-      [generating, components, markdownCustomRender, item?.role, item?.search],
+      [animated, components, markdownCustomRender, item?.role, item?.search],
     );
 
     const onChange = useCallback((value: string) => updateMessageContent(id, value), [id]);

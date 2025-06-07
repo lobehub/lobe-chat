@@ -71,6 +71,9 @@
   "mistral": {
     "description": "Mistral cung cấp các mô hình tiên tiến cho mục đích chung, chuyên nghiệp và nghiên cứu, được ứng dụng rộng rãi trong suy diễn phức tạp, nhiệm vụ đa ngôn ngữ, tạo mã, v.v. Thông qua giao diện gọi chức năng, người dùng có thể tích hợp các chức năng tùy chỉnh để thực hiện các ứng dụng cụ thể."
   },
+  "modelscope": {
+    "description": "ModelScope là nền tảng mô hình như một dịch vụ do Alibaba Cloud phát triển, cung cấp nhiều mô hình AI và dịch vụ suy luận phong phú."
+  },
   "moonshot": {
     "description": "Moonshot là nền tảng mã nguồn mở do Công ty TNHH Công nghệ Mặt Trăng Bắc Kinh phát hành, cung cấp nhiều mô hình xử lý ngôn ngữ tự nhiên, ứng dụng rộng rãi trong nhiều lĩnh vực, bao gồm nhưng không giới hạn ở sáng tác nội dung, nghiên cứu học thuật, gợi ý thông minh, chẩn đoán y tế, v.v., hỗ trợ xử lý văn bản dài và nhiệm vụ tạo phức tạp."
   },

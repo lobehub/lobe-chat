@@ -59,11 +59,14 @@ export interface ChatModelCard {
   vision?: boolean;
 }
 
-export interface SmoothingParams {
-  speed?: number;
-  text?: boolean;
-  toolsCalling?: boolean;
-}
+export type ResponseAnimationStyle = 'smooth' | 'fadeIn' | 'none';
+export type ResponseAnimation =
+  | {
+      speed?: number;
+      text?: ResponseAnimationStyle;
+      toolsCalling?: ResponseAnimationStyle;
+    }
+  | ResponseAnimationStyle;
 
 export interface ModelProviderCard {
   /**
@@ -137,11 +140,6 @@ export interface ModelProviderCard {
    * whether to show the provider config
    */
   showConfig?: boolean;
-  /**
-   * whether to smoothing the output
-   * @deprecated
-   */
-  smoothing?: SmoothingParams;
   /**
    * provider's website url
    */

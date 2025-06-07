@@ -206,12 +206,12 @@ const Google: ModelProviderCard = {
     proxyUrl: {
       placeholder: 'https://generativelanguage.googleapis.com',
     },
+    responseAnimation: {
+      speed: 50,
+      text: 'smooth',
+    },
     sdkType: 'google',
     showModelFetcher: true,
-    smoothing: {
-      speed: 50,
-      text: true,
-    },
   },
   url: 'https://ai.google.dev',
 };

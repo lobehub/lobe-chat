@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "Tema Sirena"
     },
-    "title": "Apariencia del Chat"
+    "title": "Apariencia del Chat",
+    "transitionMode": {
+      "desc": "Animación de transición de los mensajes de chat",
+      "options": {
+        "fadeIn": "Aparecer gradualmente",
+        "none": {
+          "desc": "Depende de la forma en que el modelo genera la respuesta, por favor pruébelo usted mismo.",
+          "value": "Ninguna"
+        },
+        "smooth": "Suave"
+      },
+      "title": "Animación de transición"
+    }
   },
   "settingCommon": {
     "lang": {

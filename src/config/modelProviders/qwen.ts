@@ -425,13 +425,13 @@ const Qwen: ModelProviderCard = {
     proxyUrl: {
       placeholder: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
     },
+    responseAnimation: {
+      speed: 2,
+      text: 'smooth',
+    },
     sdkType: 'openai',
     showDeployName: true,
     showModelFetcher: true,
-    smoothing: {
-      speed: 2,
-      text: true,
-    },
   },
   url: 'https://www.aliyun.com/product/bailian',
 };
