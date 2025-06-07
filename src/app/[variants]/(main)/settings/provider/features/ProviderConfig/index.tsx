@@ -286,11 +286,12 @@ const ProviderConfig = memo<ProviderConfigProps>(
             children: isLoading ? (
               <Skeleton.Button active />
             ) : (
-              <Switch checked={enableResponseApi} disabled={configUpdating} />
+              <Switch loading={configUpdating} value={enableResponseApi} />
             ),
             desc: t('providerModels.config.responsesApi.desc'),
             label: t('providerModels.config.responsesApi.title'),
             minWidth: undefined,
+            name: ['config', 'enableResponseApi'],
           }
         : undefined,
       clientFetchItem,

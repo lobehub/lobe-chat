@@ -93,6 +93,15 @@ const transformOpenAIStream = (
         return { data: chunk.delta, id: chunk.item_id, type: 'text' };
       }
 
+      case 'response.reasoning_summary_part.added': {
+        if (!streamContext.startReasoning) {
+          streamContext.startReasoning = true;
+          return { data: '', id: chunk.item_id, type: 'reasoning' };
+        } else {
+          return { data: '\n', id: chunk.item_id, type: 'reasoning' };
+        }
+      }
+
       case 'response.reasoning_summary_text.delta': {
         return { data: chunk.delta, id: chunk.item_id, type: 'reasoning' };
       }

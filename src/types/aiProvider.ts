@@ -212,11 +212,21 @@ export type UpdateAiProviderParams = z.infer<typeof UpdateAiProviderSchema>;
 
 export const UpdateAiProviderConfigSchema = z.object({
   checkModel: z.string().optional(),
+  config: z
+    .object({
+      enableResponseApi: z.boolean().optional(),
+    })
+    .optional(),
   fetchOnClient: z.boolean().nullable().optional(),
-  keyVaults: z.object({}).passthrough().optional(),
+  keyVaults: z.record(z.string(), z.string()).optional(),
 });
 
-export type UpdateAiProviderConfigParams = z.infer<typeof UpdateAiProviderConfigSchema>;
+export type UpdateAiProviderConfigParams = {
+  checkModel?: string;
+  config?: AiProviderConfig;
+  fetchOnClient?: boolean | null;
+  keyVaults?: Record<string, string>;
+};
 
 export interface AiProviderSortMap {
   id: string;

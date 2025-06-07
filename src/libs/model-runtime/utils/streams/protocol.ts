@@ -23,6 +23,10 @@ export interface StreamContext {
    * This array accumulates all citation items received during the streaming response.
    */
   returnedCitationArray?: CitationItem[];
+  /**
+   * O series models need a condition to separate part
+   */
+  startReasoning?: boolean;
   thinking?: {
     id: string;
     name: string;

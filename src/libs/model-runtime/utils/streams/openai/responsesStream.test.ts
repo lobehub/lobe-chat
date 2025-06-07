@@ -578,6 +578,27 @@ describe('OpenAIResponsesStream', () => {
           },
         },
         {
+          type: 'response.reasoning_summary_part.added',
+          item_id: 'rs_6843fe13e73c8190a49d9372ef8cd46f08c019075e7c8955',
+          output_index: 0,
+          summary_index: 1,
+          part: { type: 'summary_text', text: '' },
+        },
+        {
+          type: 'response.reasoning_summary_text.delta',
+          item_id: 'rs_6843fe13e73c8190a49d9372ef8cd46f08c019075e7c8955',
+          output_index: 0,
+          summary_index: 1,
+          delta: '**Exploring a mathematical sequence**',
+        },
+        {
+          type: 'response.reasoning_summary_text.delta',
+          item_id: 'rs_6843fe13e73c8190a49d9372ef8cd46f08c019075e7c8955',
+          output_index: 0,
+          summary_index: 1,
+          delta: ' analyzing',
+        },
+        {
           type: 'response.output_item.done',
           output_index: 0,
           item: {
