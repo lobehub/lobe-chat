@@ -103,7 +103,10 @@ const isProviderEnableResponseApi = (id: string) => (s: AIProviderStoreState) =>
   const providerCfg = providerConfigById(id)(s);
 
   const enableResponseApi = providerCfg?.config?.enableResponseApi;
-  return typeof enableResponseApi === 'boolean' ? enableResponseApi : id === 'openai';
+
+  if (typeof enableResponseApi === 'boolean') return enableResponseApi;
+
+  return id === 'openai';
 };
 
 export const aiProviderSelectors = {

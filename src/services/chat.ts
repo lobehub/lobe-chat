@@ -315,7 +315,9 @@ class ChatService {
       model = findDeploymentName(model, provider);
     }
 
-    const apiMode = aiProviderSelectors.isProviderEnableResponseApi(provider)
+    const apiMode = aiProviderSelectors.isProviderEnableResponseApi(provider)(
+      getAiInfraStoreState(),
+    )
       ? 'responses'
       : undefined;
 
