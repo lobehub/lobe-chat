@@ -285,6 +285,9 @@ const TogetherAI: ModelProviderCard = {
   modelsUrl: 'https://docs.together.ai/docs/chat-models',
   name: 'Together AI',
   settings: {
+    proxyUrl: {
+      placeholder: 'https://api.together.xyz/v1',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
   },

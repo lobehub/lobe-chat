@@ -5,8 +5,8 @@ import type { ChatModelCard } from '@/types/llm';
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import {
-  ChatCompetitionOptions,
   type ChatCompletionErrorPayload,
+  ChatMethodOptions,
   ChatStreamPayload,
   ModelProvider,
 } from '../types';
@@ -22,6 +22,8 @@ export interface AnthropicModelCard {
   display_name: string;
   id: string;
 }
+
+type anthropicTools = Anthropic.Tool | Anthropic.WebSearchTool20250305;
 
 const modelsWithSmallContextWindow = new Set(['claude-3-opus-20240229', 'claude-3-haiku-20240307']);
 
@@ -45,13 +47,20 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
   constructor({ apiKey, baseURL = DEFAULT_BASE_URL, id, ...res }: AnthropicAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
-    this.client = new Anthropic({ apiKey, baseURL, ...res });
+    const betaHeaders = process.env.ANTHROPIC_BETA_HEADERS;
+
+    this.client = new Anthropic({
+      apiKey,
+      baseURL,
+      ...(betaHeaders ? { defaultHeaders: { 'anthropic-beta': betaHeaders } } : {}),
+      ...res,
+    });
     this.baseURL = this.client.baseURL;
     this.apiKey = apiKey;
     this.id = id || ModelProvider.Anthropic;
   }
 
-  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
+  async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {
     try {
       const anthropicPayload = await this.buildAnthropicPayload(payload);
       const inputStartAt = Date.now();
@@ -99,10 +108,11 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       tools,
       thinking,
       enabledContextCaching = true,
+      enabledSearch,
     } = payload;
 
     const { default: anthropicModels } = await import('@/config/aiModels/anthropic');
-    const modelConfig = anthropicModels.find(m => m.id === model);
+    const modelConfig = anthropicModels.find((m) => m.id === model);
     const defaultMaxOutput = modelConfig?.maxOutput;
 
     // 配置优先级：用户设置 > 模型配置 > 硬编码默认值
@@ -127,7 +137,31 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
 
     const postMessages = await buildAnthropicMessages(user_messages, { enabledContextCaching });
 
-    const postTools = buildAnthropicTools(tools, { enabledContextCaching });
+    let postTools: anthropicTools[] | undefined = buildAnthropicTools(tools, {
+      enabledContextCaching,
+    });
+
+    if (enabledSearch) {
+      // Limit the number of searches per request
+      const maxUses = process.env.ANTHROPIC_MAX_USES;
+
+      const webSearchTool: Anthropic.WebSearchTool20250305 = {
+        name: 'web_search',
+        type: 'web_search_20250305',
+        ...(maxUses &&
+          Number.isInteger(Number(maxUses)) &&
+          Number(maxUses) > 0 && {
+            max_uses: Number(maxUses),
+          }),
+      };
+
+      // 如果已有工具，则添加到现有工具列表中；否则创建新的工具列表
+      if (postTools && postTools.length > 0) {
+        postTools = [...postTools, webSearchTool];
+      } else {
+        postTools = [webSearchTool];
+      }
+    }
 
     if (!!thinking && thinking.type === 'enabled') {
       const maxTokens = getMaxTokens() || 32_000; // Claude Opus 4 has minimum maxOutput
@@ -141,8 +175,8 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
         system: systemPrompts,
         thinking: {
           ...thinking,
-          budget_tokens: thinking?.budget_tokens 
-            ? Math.min(thinking.budget_tokens, maxTokens - 1)  // `max_tokens` must be greater than `thinking.budget_tokens`.
+          budget_tokens: thinking?.budget_tokens
+            ? Math.min(thinking.budget_tokens, maxTokens - 1) // `max_tokens` must be greater than `thinking.budget_tokens`.
             : 1024,
         },
         tools: postTools,
