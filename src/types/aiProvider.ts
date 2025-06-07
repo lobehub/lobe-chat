@@ -218,15 +218,10 @@ export const UpdateAiProviderConfigSchema = z.object({
     })
     .optional(),
   fetchOnClient: z.boolean().nullable().optional(),
-  keyVaults: z.record(z.string(), z.string()).optional(),
+  keyVaults: z.record(z.string(), z.string().optional()).optional(),
 });
 
-export type UpdateAiProviderConfigParams = {
-  checkModel?: string;
-  config?: AiProviderConfig;
-  fetchOnClient?: boolean | null;
-  keyVaults?: Record<string, string>;
-};
+export type UpdateAiProviderConfigParams = z.infer<typeof UpdateAiProviderConfigSchema>;
 
 export interface AiProviderSortMap {
   id: string;
