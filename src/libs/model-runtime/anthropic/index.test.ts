@@ -130,7 +130,7 @@ describe('LobeAnthropicAI', () => {
       // Assert
       expect(instance['client'].messages.create).toHaveBeenCalledWith(
         {
-          max_tokens: 8192,
+          max_tokens: 64000,
           messages: [
             {
               content: [{ cache_control: { type: 'ephemeral' }, text: 'Hello', type: 'text' }],
@@ -147,8 +147,13 @@ describe('LobeAnthropicAI', () => {
             },
           ],
           temperature: 0,
+          metadata: undefined,
+          tools: undefined,
+          top_p: undefined,
         },
-        {},
+        {
+          signal: undefined,
+        },
       );
       expect(result).toBeInstanceOf(Response);
     });
@@ -296,6 +301,66 @@ describe('LobeAnthropicAI', () => {
           [{ function: { name: 'tool1', description: 'desc1' }, type: 'function' }],
           { enabledContextCaching: true },
         );
+      });
+
+      it('should build payload with tools and web search enabled', async () => {
+        const tools: ChatCompletionTool[] = [
+          { function: { name: 'tool1', description: 'desc1' }, type: 'function' },
+        ];
+
+        const mockAnthropicTools = [{ name: 'tool1', description: 'desc1' }];
+
+        vi.spyOn(anthropicHelpers, 'buildAnthropicTools').mockReturnValue(
+          mockAnthropicTools as any,
+        );
+
+        const payload: ChatStreamPayload = {
+          messages: [{ content: 'Search and get info', role: 'user' }],
+          model: 'claude-3-haiku-20240307',
+          temperature: 0.5,
+          tools,
+          enabledSearch: true,
+        };
+
+        const result = await instance['buildAnthropicPayload'](payload);
+
+        expect(anthropicHelpers.buildAnthropicTools).toHaveBeenCalledWith(tools, {
+          enabledContextCaching: true,
+        });
+
+        // Should include both the converted tools and web search tool
+        expect(result.tools).toEqual([
+          ...mockAnthropicTools,
+          {
+            name: 'web_search',
+            type: 'web_search_20250305',
+          },
+        ]);
+      });
+
+      it('should build payload with web search enabled but no other tools', async () => {
+        vi.spyOn(anthropicHelpers, 'buildAnthropicTools').mockReturnValue(undefined);
+
+        const payload: ChatStreamPayload = {
+          messages: [{ content: 'Search for information', role: 'user' }],
+          model: 'claude-3-haiku-20240307',
+          temperature: 0.5,
+          enabledSearch: true,
+        };
+
+        const result = await instance['buildAnthropicPayload'](payload);
+
+        expect(anthropicHelpers.buildAnthropicTools).toHaveBeenCalledWith(undefined, {
+          enabledContextCaching: true,
+        });
+
+        // Should only include web search tool
+        expect(result.tools).toEqual([
+          {
+            name: 'web_search',
+            type: 'web_search_20250305',
+          },
+        ]);
       });
     });
 
@@ -617,7 +682,7 @@ describe('LobeAnthropicAI', () => {
         const result = await instance['buildAnthropicPayload'](payload);
 
         expect(result).toEqual({
-          max_tokens: 64000,
+          max_tokens: 4096,
           messages: [
             {
               content: [
@@ -627,7 +692,9 @@ describe('LobeAnthropicAI', () => {
             },
           ],
           model: 'claude-3-haiku-20240307',
-          thinking: { type: 'enabled', budget_tokens: 0 },
+          system: undefined,
+          thinking: { type: 'enabled', budget_tokens: 1024 },
+          tools: undefined,
         });
       });
 
@@ -653,7 +720,9 @@ describe('LobeAnthropicAI', () => {
             },
           ],
           model: 'claude-3-haiku-20240307',
-          thinking: { type: 'enabled', budget_tokens: 0 },
+          system: undefined,
+          thinking: { type: 'enabled', budget_tokens: 1024 },
+          tools: undefined,
         });
       });
 
@@ -669,7 +738,7 @@ describe('LobeAnthropicAI', () => {
         const result = await instance['buildAnthropicPayload'](payload);
 
         expect(result).toEqual({
-          max_tokens: 3000, // budget_tokens + max_tokens
+          max_tokens: 1000,
           messages: [
             {
               content: [
@@ -679,7 +748,9 @@ describe('LobeAnthropicAI', () => {
             },
           ],
           model: 'claude-3-haiku-20240307',
-          thinking: { type: 'enabled', budget_tokens: 2000 },
+          system: undefined,
+          thinking: { type: 'enabled', budget_tokens: 999 },
+          tools: undefined,
         });
       });
 
@@ -695,7 +766,7 @@ describe('LobeAnthropicAI', () => {
         const result = await instance['buildAnthropicPayload'](payload);
 
         expect(result).toEqual({
-          max_tokens: 64000, // capped at 64000
+          max_tokens: 10000,
           messages: [
             {
               content: [
@@ -705,7 +776,9 @@ describe('LobeAnthropicAI', () => {
             },
           ],
           model: 'claude-3-haiku-20240307',
-          thinking: { type: 'enabled', budget_tokens: 60000 },
+          system: undefined,
+          thinking: { type: 'enabled', budget_tokens: 9999 },
+          tools: undefined,
         });
       });
 
@@ -730,7 +803,7 @@ describe('LobeAnthropicAI', () => {
 
         const result = await instance['buildAnthropicPayload'](payload);
 
-        expect(result.max_tokens).toBe(8192);
+        expect(result.max_tokens).toBe(4096);
       });
 
       it('should respect max_tokens when explicitly provided', async () => {

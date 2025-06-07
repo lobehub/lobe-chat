@@ -21,7 +21,7 @@ vi.mock('@/const/auth', async (importOriginal) => {
   };
 });
 
-vi.mock('@/config/app', () => ({
+vi.mock('@/envs/app', () => ({
   getAppConfig: vi.fn(),
 }));
 

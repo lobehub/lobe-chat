@@ -122,7 +122,7 @@ export interface ChatStreamPayload {
    */
   temperature: number;
   /**
-   * use for Claude
+   * use for Claude and Gemini
    */
   thinking?: {
     budget_tokens: number;
@@ -137,7 +137,7 @@ export interface ChatStreamPayload {
   top_p?: number;
 }
 
-export interface ChatCompetitionOptions {
+export interface ChatMethodOptions {
   callback?: ChatStreamCallbacks;
   /**
    * response headers

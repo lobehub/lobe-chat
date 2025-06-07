@@ -4,10 +4,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { UAParser } from 'ua-parser-js';
 import urlJoin from 'url-join';
 
-import { appEnv } from '@/config/app';
 import { authEnv } from '@/config/auth';
 import { LOBE_LOCALE_COOKIE } from '@/const/locale';
 import { LOBE_THEME_APPEARANCE } from '@/const/theme';
+import { appEnv } from '@/envs/app';
 import NextAuthEdge from '@/libs/next-auth/edge';
 import { Locales } from '@/locales/resources';
 import { parseBrowserLanguage } from '@/utils/locale';
@@ -134,6 +134,16 @@ const defaultMiddleware = (request: NextRequest) => {
   return NextResponse.rewrite(url, { status: 200 });
 };
 
+const isPublicRoute = createRouteMatcher([
+  '/api/auth(.*)',
+  '/trpc(.*)',
+  // next auth
+  '/next-auth/(.*)',
+  // clerk
+  '/login',
+  '/signup',
+]);
+
 const isProtectedRoute = createRouteMatcher([
   '/settings(.*)',
   '/files(.*)',
@@ -148,7 +158,9 @@ const nextAuthMiddleware = NextAuthEdge.auth((req) => {
 
   const response = defaultMiddleware(req);
 
-  const isProtected = isProtectedRoute(req);
+  // when enable auth protection, only public route is not protected, others are all protected
+  const isProtected = appEnv.ENABLE_AUTH_PROTECTION ? !isPublicRoute(req) : isProtectedRoute(req);
+
   logNextAuth('Route protection status: %s, %s', req.url, isProtected ? 'protected' : 'public');
 
   // Just check if session exists
@@ -181,7 +193,7 @@ const nextAuthMiddleware = NextAuthEdge.auth((req) => {
     if (isProtected) {
       logNextAuth('Request a protected route, redirecting to sign-in page');
       const nextLoginUrl = new URL('/next-auth/signin', req.nextUrl.origin);
-      nextLoginUrl.searchParams.set('callbackUrl', req.nextUrl.pathname);
+      nextLoginUrl.searchParams.set('callbackUrl', req.nextUrl.href);
       return Response.redirect(nextLoginUrl);
     }
     logNextAuth('Request a free route but not login, allow visit without auth header');
@@ -194,7 +206,9 @@ const clerkAuthMiddleware = clerkMiddleware(
   async (auth, req) => {
     logClerk('Clerk middleware processing request: %s %s', req.method, req.url);
 
-    const isProtected = isProtectedRoute(req);
+    // when enable auth protection, only public route is not protected, others are all protected
+    const isProtected = appEnv.ENABLE_AUTH_PROTECTION ? !isPublicRoute(req) : isProtectedRoute(req);
+
     logClerk('Route protection status: %s, %s', req.url, isProtected ? 'protected' : 'public');
 
     if (isProtected) {
@@ -229,6 +243,7 @@ const clerkAuthMiddleware = clerkMiddleware(
 );
 
 logDefault('Middleware configuration: %O', {
+  enableAuthProtection: appEnv.ENABLE_AUTH_PROTECTION,
   enableClerk: authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH,
   enableNextAuth: authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH,
   enableOIDC: oidcEnv.ENABLE_OIDC,

@@ -6,7 +6,7 @@ import { systemToUserModels } from '@/const/models';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
-import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
+import { ChatMethodOptions, ChatStreamPayload, ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { transformResponseToStream } from '../utils/openaiCompatibleFactory';
@@ -33,7 +33,7 @@ export class LobeAzureAI implements LobeRuntimeAI {
 
   baseURL: string;
 
-  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
+  async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {
     const { messages, model, temperature, top_p, ...params } = payload;
     // o1 series models on Azure OpenAI does not support streaming currently
     const enableStreaming = model.includes('o1') ? false : (params.stream ?? true);
@@ -56,9 +56,9 @@ export class LobeAzureAI implements LobeRuntimeAI {
           model,
           ...params,
           stream: enableStreaming,
-          temperature: (model.includes('o3') || model.includes('o4')) ? undefined : temperature,
+          temperature: model.includes('o3') || model.includes('o4') ? undefined : temperature,
           tool_choice: params.tools ? 'auto' : undefined,
-          top_p: (model.includes('o3') || model.includes('o4')) ? undefined : top_p,
+          top_p: model.includes('o3') || model.includes('o4') ? undefined : top_p,
         },
       });
 
