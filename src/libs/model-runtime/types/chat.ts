@@ -67,6 +67,7 @@ export interface OpenAIChatMessage {
  * @title Chat Stream Payload
  */
 export interface ChatStreamPayload {
+  apiMode?: 'chatCompletion' | 'responses';
   /**
    * 开启上下文缓存
    */
@@ -97,20 +98,16 @@ export interface ChatStreamPayload {
    */
   n?: number;
   /**
-   * 开启的插件列表
-   */
-  plugins?: string[];
-  /**
    * @title 控制生成文本中的惩罚系数，用于减少主题的变化
    * @default 0
    */
   presence_penalty?: number;
-
-  /**
-   * @default openai
-   */
   provider?: string;
-  responseMode?: 'streamText' | 'json';
+  reasoning?: {
+    effort?: string;
+    summary?: string;
+  };
+  responseMode?: 'stream' | 'json';
   /**
    * @title 是否开启流式请求
    * @default true

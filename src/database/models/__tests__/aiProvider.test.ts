@@ -361,12 +361,14 @@ describe('AiProviderModel', () => {
       const config = await aiProviderModel.getAiProviderRuntimeConfig(mockDecryptor);
 
       expect(config.provider1).toEqual({
+        config: {},
         fetchOnClient: true,
         keyVaults: { decryptedKey: 'value' },
         settings: { setting1: true },
       });
 
       expect(config.provider2).toEqual({
+        config: {},
         fetchOnClient: undefined,
         keyVaults: {},
         settings: {},

@@ -119,6 +119,7 @@ export class AiProviderModel {
 
     const commonFields = {
       checkModel: value.checkModel,
+      config: value.config,
       fetchOnClient: value.fetchOnClient,
       keyVaults,
     };
@@ -129,11 +130,10 @@ export class AiProviderModel {
         ...commonFields,
         id,
         source: this.getProviderSource(id),
-        updatedAt: new Date(),
         userId: this.userId,
       })
       .onConflictDoUpdate({
-        set: { ...commonFields, updatedAt: new Date() },
+        set: commonFields,
         target: [aiProviders.id, aiProviders.userId],
       });
   };
@@ -184,6 +184,7 @@ export class AiProviderModel {
     const query = this.db
       .select({
         checkModel: aiProviders.checkModel,
+        config: aiProviders.config,
         description: aiProviders.description,
         enabled: aiProviders.enabled,
         fetchOnClient: aiProviders.fetchOnClient,
@@ -236,6 +237,7 @@ export class AiProviderModel {
   getAiProviderRuntimeConfig = async (decryptor?: DecryptUserKeyVaults) => {
     const result = await this.db
       .select({
+        config: aiProviders.config,
         fetchOnClient: aiProviders.fetchOnClient,
         id: aiProviders.id,
         keyVaults: aiProviders.keyVaults,
@@ -262,6 +264,7 @@ export class AiProviderModel {
       }
 
       runtimeConfig[item.id] = {
+        config: item.config || {},
         fetchOnClient: typeof item.fetchOnClient === 'boolean' ? item.fetchOnClient : undefined,
         keyVaults,
         settings: !!builtin ? merge(builtin.settings, userSettings) : userSettings,

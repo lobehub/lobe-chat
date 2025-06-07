@@ -230,6 +230,9 @@
   "Pro/deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 to model wnioskowania napędzany uczeniem ze wzmocnieniem (RL), który rozwiązuje problemy z powtarzalnością i czytelnością modeli. Przed RL, DeepSeek-R1 wprowadził dane do zimnego startu, co dodatkowo zoptymalizowało wydajność wnioskowania. W zadaniach matematycznych, kodowych i wnioskowania, osiąga wyniki porównywalne z OpenAI-o1, a dzięki starannie zaprojektowanym metodom treningowym poprawia ogólne wyniki."
   },
+  "Pro/deepseek-ai/DeepSeek-R1-0120": {
+    "description": "DeepSeek-R1 to model wnioskowania napędzany uczeniem ze wzmocnieniem (RL), rozwiązujący problemy powtarzalności i czytelności w modelach. Przed zastosowaniem RL wprowadzono dane cold start, co dodatkowo zoptymalizowało wydajność wnioskowania. Model osiąga wyniki porównywalne z OpenAI-o1 w zadaniach matematycznych, kodowania i wnioskowania, a dzięki starannie zaprojektowanym metodom treningowym poprawia ogólną efektywność."
+  },
   "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
     "description": "DeepSeek-R1-Distill-Qwen-1.5B to model stworzony na podstawie Qwen2.5-Math-1.5B poprzez proces wiedzy distylacji. Model ten został dostrajony za pomocą 800 000 wybrukowanych próbek wygenerowanych przez DeepSeek-R1, co pozwoliło osiągnąć dobre wyniki na wielu testach benchmarkowych. Jako lekki model, osiągnął 83,9% dokładności na MATH-500, 28,9% sukcesów na AIME 2024 oraz 954 punkty na CodeForces, co świadczy o zdolnościach wnioskowania przekraczających jego rozmiar parametrów."
   },
@@ -422,8 +425,8 @@
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B to otwarta wersja, oferująca zoptymalizowane doświadczenie dialogowe dla aplikacji konwersacyjnych."
   },
-  "Vendor-A/Qwen/Qwen2.5-72B-Instruct": {
-    "description": "Qwen2.5-72B-Instruct to jeden z najnowszych modeli dużych języków wydanych przez Alibaba Cloud. Model 72B ma znacząco poprawione zdolności w zakresie kodowania i matematyki. Oferuje również wsparcie dla wielu języków, obejmując ponad 29 języków, w tym chiński i angielski. Model ten wykazuje znaczną poprawę w zakresie przestrzegania instrukcji, rozumienia danych strukturalnych oraz generowania strukturalnych wyników (szczególnie JSON)."
+  "Tongyi-Zhiwen/QwenLong-L1-32B": {
+    "description": "QwenLong-L1-32B to pierwszy duży model wnioskowania z długim kontekstem (LRM) wytrenowany z użyciem uczenia ze wzmocnieniem, zoptymalizowany pod kątem zadań wnioskowania na długich tekstach. Model osiąga stabilne przejście od krótkiego do długiego kontekstu dzięki progresywnemu rozszerzaniu kontekstu w ramach uczenia ze wzmocnieniem. W siedmiu benchmarkach dotyczących pytań i odpowiedzi na długich dokumentach QwenLong-L1-32B przewyższa flagowe modele takie jak OpenAI-o3-mini i Qwen3-235B-A22B, osiągając wydajność porównywalną z Claude-3.7-Sonnet-Thinking. Model jest szczególnie silny w złożonych zadaniach matematycznego, logicznego i wieloetapowego wnioskowania."
   },
   "Yi-34B-Chat": {
     "description": "Yi-1.5-34B, zachowując doskonałe ogólne zdolności językowe oryginalnej serii modeli, znacznie poprawił zdolności logiczne i kodowania dzięki dodatkowym treningom na 500 miliardach wysokiej jakości tokenów."
@@ -734,6 +737,12 @@
   "deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 to model wnioskowania napędzany uczeniem przez wzmacnianie (RL), który rozwiązuje problemy z powtarzalnością i czytelnością modelu. Przed RL, DeepSeek-R1 wprowadził dane z zimnego startu, co dodatkowo zoptymalizowało wydajność wnioskowania. W zadaniach matematycznych, kodowania i wnioskowania osiąga wyniki porównywalne z OpenAI-o1, a dzięki starannie zaprojektowanym metodom treningowym poprawia ogólne efekty."
   },
+  "deepseek-ai/DeepSeek-R1-0528": {
+    "description": "DeepSeek R1 znacząco zwiększa głębokość zdolności wnioskowania i dedukcji dzięki zwiększonym zasobom obliczeniowym oraz wprowadzeniu mechanizmów optymalizacji algorytmów w trakcie dalszego treningu. Model osiąga doskonałe wyniki w różnych benchmarkach, w tym w matematyce, programowaniu i logice ogólnej. Jego ogólna wydajność jest obecnie zbliżona do czołowych modeli, takich jak O3 i Gemini 2.5 Pro."
+  },
+  "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B": {
+    "description": "DeepSeek-R1-0528-Qwen3-8B to model uzyskany przez destylację łańcuchów myślowych z modelu DeepSeek-R1-0528 do Qwen3 8B Base. Model osiąga najnowocześniejszą (SOTA) wydajność wśród modeli open source, przewyższając Qwen3 8B o 10% w teście AIME 2024 i osiągając poziom wydajności Qwen3-235B-thinking. Wykazuje doskonałe wyniki w matematycznym wnioskowaniu, programowaniu i logice ogólnej, posiadając architekturę identyczną z Qwen3-8B, ale korzystając z tokenizera DeepSeek-R1-0528."
+  },
   "deepseek-ai/DeepSeek-R1-Distill-Llama-70B": {
     "description": "Model destylacyjny DeepSeek-R1, optymalizujący wydajność wnioskowania dzięki uczeniu przez wzmocnienie i danym z zimnego startu, otwarty model ustanawiający nowe standardy w wielu zadaniach."
   },
@@ -836,9 +845,6 @@
   "deepseek-v3-0324": {
     "description": "DeepSeek-V3-0324 to model MoE z 671 miliardami parametrów, który wyróżnia się w zakresie programowania i umiejętności technicznych, rozumienia kontekstu oraz przetwarzania długich tekstów."
   },
-  "deepseek/deepseek-chat": {
-    "description": "Nowy, otwarty model łączący zdolności ogólne i kodowe, który nie tylko zachowuje ogólne zdolności dialogowe oryginalnego modelu Chat, ale także potężne zdolności przetwarzania kodu modelu Coder, lepiej dostosowując się do ludzkich preferencji. Ponadto, DeepSeek-V2.5 osiągnął znaczne poprawy w zadaniach pisarskich, przestrzeganiu instrukcji i wielu innych obszarach."
-  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 to model mieszany z 685B parametrami, będący najnowszą iteracją flagowej serii modeli czatu zespołu DeepSeek.\n\nDziedziczy po modelu [DeepSeek V3](/deepseek/deepseek-chat-v3) i wykazuje doskonałe wyniki w różnych zadaniach."
   },
@@ -847,6 +853,12 @@
   },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1 znacznie poprawił zdolności wnioskowania modelu przy minimalnej ilości oznaczonych danych. Przed wygenerowaniem ostatecznej odpowiedzi, model najpierw wygeneruje fragment myślenia, aby zwiększyć dokładność końcowej odpowiedzi."
+  },
+  "deepseek/deepseek-r1-0528": {
+    "description": "DeepSeek-R1 znacząco poprawia zdolność wnioskowania modelu nawet przy minimalnej ilości oznaczonych danych. Przed wygenerowaniem ostatecznej odpowiedzi model najpierw generuje łańcuch myślowy, co zwiększa dokładność końcowej odpowiedzi."
+  },
+  "deepseek/deepseek-r1-0528:free": {
+    "description": "DeepSeek-R1 znacząco poprawia zdolność wnioskowania modelu nawet przy minimalnej ilości oznaczonych danych. Przed wygenerowaniem ostatecznej odpowiedzi model najpierw generuje łańcuch myślowy, co zwiększa dokładność końcowej odpowiedzi."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1 Distill Llama 70B to duży model językowy oparty na Llama3.3 70B, który wykorzystuje dostrojenie na podstawie wyjścia DeepSeek R1, osiągając konkurencyjną wydajność porównywalną z dużymi modelami na czołowej pozycji."
@@ -1262,6 +1274,9 @@
   "gpt-4o-mini-realtime-preview": {
     "description": "Wersja na żywo GPT-4o-mini, obsługująca wejście i wyjście audio oraz tekstowe w czasie rzeczywistym."
   },
+  "gpt-4o-mini-search-preview": {
+    "description": "GPT-4o mini wersja podglądowa do wyszukiwania to model specjalnie wytrenowany do rozumienia i realizacji zapytań wyszukiwania internetowego, korzystający z API Chat Completions. Poza opłatami za tokeny, zapytania wyszukiwania internetowego są dodatkowo obciążane opłatą za każde wywołanie narzędzia."
+  },
   "gpt-4o-mini-tts": {
     "description": "GPT-4o mini TTS to model tekstu na mowę oparty na GPT-4o mini, oferujący wysokiej jakości generowanie mowy przy niższych kosztach."
   },
@@ -1273,6 +1288,9 @@
   },
   "gpt-4o-realtime-preview-2024-12-17": {
     "description": "Wersja na żywo GPT-4o, obsługująca wejście i wyjście audio oraz tekstowe w czasie rzeczywistym."
+  },
+  "gpt-4o-search-preview": {
+    "description": "GPT-4o wersja podglądowa do wyszukiwania to model specjalnie wytrenowany do rozumienia i realizacji zapytań wyszukiwania internetowego, korzystający z API Chat Completions. Poza opłatami za tokeny, zapytania wyszukiwania internetowego są dodatkowo obciążane opłatą za każde wywołanie narzędzia."
   },
   "grok-2-1212": {
     "description": "Model ten poprawił dokładność, przestrzeganie instrukcji oraz zdolności wielojęzyczne."
@@ -1307,6 +1325,9 @@
   "hunyuan-large-longcontext": {
     "description": "Specjalizuje się w zadaniach związanych z długimi tekstami, takich jak streszczenia dokumentów i pytania i odpowiedzi dotyczące dokumentów, a także ma zdolność do obsługi ogólnych zadań generowania tekstu. Wykazuje doskonałe wyniki w analizie i generowaniu długich tekstów, skutecznie radząc sobie z złożonymi i szczegółowymi wymaganiami dotyczącymi przetwarzania długich treści."
   },
+  "hunyuan-large-vision": {
+    "description": "Model przeznaczony do scenariuszy rozumienia obrazów i tekstu, oparty na modelu Hunyuan Large, obsługujący dowolną rozdzielczość i wiele obrazów wraz z tekstem, generujący treści tekstowe, skupiający się na zadaniach związanych z rozumieniem obrazowo-tekstowym, z wyraźną poprawą zdolności wielojęzycznego rozumienia obrazów i tekstu."
+  },
   "hunyuan-lite": {
     "description": "Zaktualizowana do struktury MOE, z oknem kontekstowym o długości 256k, prowadzi w wielu zestawach testowych w NLP, kodowaniu, matematyce i innych dziedzinach w porównaniu do wielu modeli open source."
   },
@@ -1331,17 +1352,14 @@
   "hunyuan-t1-20250321": {
     "description": "Kompleksowy model zdolności w naukach ścisłych i humanistycznych, z silną zdolnością do uchwycenia długich informacji tekstowych. Wspiera wnioskowanie w odpowiedzi na różnorodne trudności w matematyce, logice, naukach ścisłych i kodowaniu."
   },
+  "hunyuan-t1-20250403": {
+    "description": "Zwiększenie zdolności generowania kodu na poziomie projektu; poprawa jakości pisania generowanego tekstu; ulepszenie wieloetapowego rozumienia tematów, przestrzegania instrukcji typu tob oraz rozumienia słów; optymalizacja problemów z mieszanym użyciem uproszczonych i tradycyjnych znaków oraz mieszanym językiem chińsko-angielskim."
+  },
   "hunyuan-t1-latest": {
     "description": "Pierwszy na świecie ultra-duży model wnioskowania Hybrid-Transformer-Mamba, rozszerzający zdolności wnioskowania, z niezwykle szybkim dekodowaniem, lepiej dostosowany do ludzkich preferencji."
   },
   "hunyuan-t1-vision": {
     "description": "Model głębokiego myślenia multimodalnego Hunyuan, obsługujący natywne łańcuchy myślowe multimodalne, doskonały w różnych scenariuszach wnioskowania obrazowego, z wyraźną przewagą nad modelami szybkiego myślenia w rozwiązywaniu problemów ścisłych."
-  },
-  "hunyuan-translation": {
-    "description": "Obsługuje tłumaczenie między 15 językami, w tym chińskim, angielskim, japońskim, francuskim, portugalskim, hiszpańskim, tureckim, rosyjskim, arabskim, koreańskim, włoskim, niemieckim, wietnamskim, malajskim i indonezyjskim, opartym na automatycznej ocenie COMET w oparciu o zestaw testowy do tłumaczenia w różnych scenariuszach, wykazując ogólnie lepsze zdolności tłumaczeniowe w porównaniu do modeli o podobnej skali na rynku."
-  },
-  "hunyuan-translation-lite": {
-    "description": "Model tłumaczenia Hunyuan wspiera naturalne tłumaczenie w formie dialogu; obsługuje tłumaczenie między chińskim, angielskim, japońskim, francuskim, portugalskim, hiszpańskim, tureckim, rosyjskim, arabskim, koreańskim, włoskim, niemieckim, wietnamskim, malajskim i indonezyjskim."
   },
   "hunyuan-turbo": {
     "description": "Hunyuan to nowa generacja dużego modelu językowego w wersji próbnej, wykorzystująca nową strukturę modelu mieszanych ekspertów (MoE), która w porównaniu do hunyuan-pro charakteryzuje się szybszą efektywnością wnioskowania i lepszymi wynikami."
@@ -1355,8 +1373,11 @@
   "hunyuan-turbo-vision": {
     "description": "Nowa generacja flagowego modelu językowo-wizualnego Hunyuan, wykorzystująca nową strukturę modelu mieszanych ekspertów (MoE), z pełnym zwiększeniem zdolności w zakresie podstawowego rozpoznawania, tworzenia treści, pytań i odpowiedzi oraz analizy i rozumowania w porównaniu do poprzedniej generacji modeli."
   },
-  "hunyuan-turbos-20250226": {
-    "description": "hunyuan-TurboS pv2.1.2 to stabilna wersja zaktualizowanej bazy treningowej, z podniesioną liczbą tokenów; poprawione zdolności myślenia w matematyce/logice/kodzie; poprawa ogólnego doświadczenia w języku chińskim i angielskim, w tym w tworzeniu tekstu, rozumieniu tekstu, pytaniach i odpowiedziach oraz rozmowach."
+  "hunyuan-turbos-20250313": {
+    "description": "Ujednolicenie stylu kroków rozwiązywania zadań matematycznych, wzmocnienie wieloetapowego zadawania pytań matematycznych. Optymalizacja stylu odpowiedzi w tworzeniu tekstów, eliminacja sztuczności AI, wzbogacenie języka."
+  },
+  "hunyuan-turbos-20250416": {
+    "description": "Aktualizacja bazy pretrenowania, wzmacniająca zdolność rozumienia i przestrzegania instrukcji; w fazie dostrajania poprawa umiejętności matematycznych, programistycznych, logicznych i nauk ścisłych; podniesienie jakości twórczości literackiej, rozumienia tekstu, dokładności tłumaczeń oraz wiedzy ogólnej; wzmocnienie zdolności agentów w różnych dziedzinach, ze szczególnym naciskiem na rozumienie wieloetapowych dialogów."
   },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS to najnowsza wersja flagowego modelu Hunyuan, oferująca silniejsze zdolności myślenia i lepsze efekty doświadczenia."
@@ -1364,8 +1385,8 @@
   "hunyuan-turbos-longtext-128k-20250325": {
     "description": "Specjalizuje się w zadaniach związanych z długimi tekstami, takimi jak streszczenia dokumentów i pytania do dokumentów, a także ma zdolność do generowania ogólnych tekstów. W analizie i generowaniu długich tekstów wykazuje doskonałe wyniki, skutecznie radząc sobie z złożonymi i szczegółowymi wymaganiami przetwarzania długich treści."
   },
-  "hunyuan-turbos-vision": {
-    "description": "Model ten jest przeznaczony do scenariuszy zrozumienia obrazów i tekstów, oparty na nowej generacji flagowego modelu wizualno-językowego turbos, koncentrującego się na zadaniach związanych z rozumieniem obrazów i tekstów, w tym rozpoznawaniu bytów na podstawie obrazów, pytaniach o wiedzę, tworzeniu treści reklamowych i rozwiązywaniu problemów na podstawie zdjęć, w porównaniu do poprzedniej generacji modeli, oferując kompleksowe ulepszenia."
+  "hunyuan-turbos-role-plus": {
+    "description": "Najnowsza wersja modelu do odgrywania ról Hunyuan, oficjalnie dostrojona przez Hunyuan, oparta na modelu Hunyuan i wzbogacona o dane scenariuszy odgrywania ról, zapewniająca lepsze podstawowe efekty w tych scenariuszach."
   },
   "hunyuan-vision": {
     "description": "Najnowocześniejszy model multimodalny Hunyuan, wspierający generowanie treści tekstowych na podstawie obrazów i tekstu."
@@ -1886,11 +1907,14 @@
   "qvq-72b-preview": {
     "description": "Model QVQ jest eksperymentalnym modelem badawczym opracowanym przez zespół Qwen, skoncentrowanym na zwiększeniu zdolności w zakresie rozumowania wizualnego, szczególnie w dziedzinie rozumowania matematycznego."
   },
-  "qvq-max-latest": {
-    "description": "Model wizualnego wnioskowania QVQ, wspierający wejścia wizualne oraz wyjścia w formie łańcucha myślenia, wykazuje silniejsze zdolności w matematyce, programowaniu, analizie wizualnej, twórczości oraz ogólnych zadaniach."
+  "qvq-max": {
+    "description": "Model wizualnego wnioskowania Tongyi Qianwen QVQ, obsługujący wejścia wizualne i generujący łańcuchy myślowe, wykazujący silne zdolności w matematyce, programowaniu, analizie wizualnej, twórczości oraz zadaniach ogólnych."
   },
-  "qwen-coder-plus-latest": {
-    "description": "Model kodowania Qwen, oparty na ogólnym zrozumieniu."
+  "qwen-coder-plus": {
+    "description": "Model kodowania Tongyi Qianwen."
+  },
+  "qwen-coder-turbo": {
+    "description": "Model kodowania Tongyi Qianwen."
   },
   "qwen-coder-turbo-latest": {
     "description": "Model kodowania Qwen."
@@ -1898,8 +1922,14 @@
   "qwen-long": {
     "description": "Qwen to ultra-duży model językowy, który obsługuje długie konteksty tekstowe oraz funkcje dialogowe oparte na długich dokumentach i wielu dokumentach."
   },
+  "qwen-math-plus": {
+    "description": "Model matematyczny Tongyi Qianwen, specjalnie zaprojektowany do rozwiązywania zadań matematycznych."
+  },
   "qwen-math-plus-latest": {
     "description": "Model matematyczny Qwen, stworzony specjalnie do rozwiązywania problemów matematycznych."
+  },
+  "qwen-math-turbo": {
+    "description": "Model matematyczny Tongyi Qianwen, specjalnie zaprojektowany do rozwiązywania zadań matematycznych."
   },
   "qwen-math-turbo-latest": {
     "description": "Model matematyczny Qwen, stworzony specjalnie do rozwiązywania problemów matematycznych."
@@ -1907,32 +1937,29 @@
   "qwen-max": {
     "description": "Qwen Max to model językowy o skali miliardowej, obsługujący chiński, angielski i inne języki. Aktualna wersja API modelu na bazie Qwen 2.5."
   },
-  "qwen-max-latest": {
-    "description": "Model językowy Qwen Max o skali miliardów parametrów, obsługujący różne języki, w tym chiński i angielski, będący API modelu za produktem Qwen 2.5."
-  },
-  "qwen-omni-turbo-latest": {
-    "description": "Modele z serii Qwen-Omni obsługują różne rodzaje danych wejściowych, w tym wideo, audio, obrazy i tekst, oraz generują wyjścia w postaci audio i tekstu."
+  "qwen-omni-turbo": {
+    "description": "Modele z serii Qwen-Omni obsługują dane wejściowe w różnych modalnościach, w tym wideo, audio, obrazy i tekst, oraz generują wyjścia w postaci audio i tekstu."
   },
   "qwen-plus": {
     "description": "Qwen Plus to ulepszona wersja ogromnego modelu językowego, wspierająca różne języki, w tym chiński i angielski."
   },
-  "qwen-plus-latest": {
-    "description": "Wzmocniona wersja modelu językowego Qwen Plus, obsługująca różne języki, w tym chiński i angielski."
-  },
   "qwen-turbo": {
     "description": "Qwen Turbo to ogromny model językowy, który obsługuje różne języki, w tym chiński i angielski."
-  },
-  "qwen-turbo-latest": {
-    "description": "Model językowy Qwen Turbo, obsługujący różne języki, w tym chiński i angielski."
   },
   "qwen-vl-chat-v1": {
     "description": "Qwen VL obsługuje elastyczne interakcje, w tym wiele obrazów, wielokrotne pytania i odpowiedzi oraz zdolności twórcze."
   },
+  "qwen-vl-max": {
+    "description": "Nadzwyczajny, bardzo duży model wizualno-językowy Tongyi Qianwen. W porównaniu z wersją wzmocnioną, ponownie poprawia zdolności wnioskowania wizualnego i przestrzegania instrukcji, oferując wyższy poziom percepcji i poznania wizualnego."
+  },
   "qwen-vl-max-latest": {
     "description": "Model wizualno-językowy Qwen o ultra dużej skali. W porównaniu do wersji rozszerzonej, ponownie zwiększa zdolności wnioskowania wizualnego i przestrzegania instrukcji, oferując wyższy poziom percepcji wizualnej i poznawczej."
   },
-  "qwen-vl-ocr-latest": {
-    "description": "Model OCR Tongyi Qianwen to specjalistyczny model do ekstrakcji tekstu, skoncentrowany na zdolności do wydobywania tekstu z obrazów dokumentów, tabel, zadań testowych i pisma ręcznego. Potrafi rozpoznawać wiele języków, w tym: chiński, angielski, francuski, japoński, koreański, niemiecki, rosyjski, włoski, wietnamski i arabski."
+  "qwen-vl-ocr": {
+    "description": "Tongyi Qianwen OCR to specjalistyczny model do ekstrakcji tekstu, skoncentrowany na rozpoznawaniu tekstu w dokumentach, tabelach, zadaniach testowych i pismach odręcznych. Potrafi rozpoznawać wiele języków, w tym chiński, angielski, francuski, japoński, koreański, niemiecki, rosyjski, włoski, wietnamski i arabski."
+  },
+  "qwen-vl-plus": {
+    "description": "Wzmocniona wersja dużego modelu wizualno-językowego Tongyi Qianwen. Znacząco poprawia zdolność rozpoznawania detali i tekstu, obsługuje obrazy o rozdzielczości przekraczającej milion pikseli oraz dowolnych proporcjach."
   },
   "qwen-vl-plus-latest": {
     "description": "Wersja rozszerzona modelu wizualno-językowego Qwen. Znacząco poprawia zdolność rozpoznawania szczegółów i tekstu, obsługuje obrazy o rozdzielczości przekraczającej milion pikseli oraz dowolnych proporcjach."
@@ -2020,6 +2047,9 @@
   },
   "qwen2.5-coder-1.5b-instruct": {
     "description": "Otwarta wersja modelu kodowania Qwen."
+  },
+  "qwen2.5-coder-14b-instruct": {
+    "description": "Otwarta wersja modelu kodowania Tongyi Qianwen."
   },
   "qwen2.5-coder-32b-instruct": {
     "description": "Otwarta wersja modelu kodowania Qwen."
@@ -2111,8 +2141,8 @@
   "qwq-32b-preview": {
     "description": "Model QwQ to eksperymentalny model badawczy opracowany przez zespół Qwen, skoncentrowany na zwiększeniu zdolności wnioskowania AI."
   },
-  "qwq-plus-latest": {
-    "description": "Model inferency QwQ, oparty na modelu Qwen2.5, został znacznie ulepszony dzięki uczeniu przez wzmocnienie, co zwiększa jego zdolności inferencyjne. Kluczowe wskaźniki modelu, takie jak matematyczny kod i inne (AIME 24/25, LiveCodeBench), oraz niektóre ogólne wskaźniki (IFEval, LiveBench itp.) osiągają poziom pełnej wersji DeepSeek-R1."
+  "qwq-plus": {
+    "description": "Model wnioskowania QwQ oparty na modelu Qwen2.5, znacznie poprawiony dzięki uczeniu ze wzmocnieniem. Kluczowe wskaźniki modelu w matematyce i kodowaniu (AIME 24/25, LiveCodeBench) oraz niektóre wskaźniki ogólne (IFEval, LiveBench itp.) osiągają poziom pełnej wersji DeepSeek-R1."
   },
   "qwq_32b": {
     "description": "Model wnioskowania średniej wielkości z serii Qwen. W porównaniu do tradycyjnych modeli dostosowanych do instrukcji, QwQ, posiadający zdolności myślenia i wnioskowania, może znacznie poprawić wydajność w zadaniach końcowych, zwłaszcza w rozwiązywaniu trudnych problemów."

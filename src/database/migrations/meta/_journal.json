@@ -175,6 +175,13 @@
       "when": 1749301573666,
       "tag": "0024_add_rbac_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1749309388370,
+      "tag": "0025_add_provider_config",
+      "breakpoints": true
     }
   ],
   "version": "6"

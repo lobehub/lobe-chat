@@ -208,6 +208,10 @@
         "title": "クライアントリクエストモードを使用"
       },
       "helpDoc": "設定ガイド",
+      "responsesApi": {
+        "desc": "OpenAIの新世代リクエストフォーマット規格を採用し、チェーン思考などの高度な機能を解放します",
+        "title": "Responses API 規格の使用"
+      },
       "waitingForMore": "さらに多くのモデルが <1>接続予定</1> です。お楽しみに"
     },
     "createNew": {

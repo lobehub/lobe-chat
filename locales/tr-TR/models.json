@@ -230,6 +230,9 @@
   "Pro/deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1, modeldeki tekrarlılık ve okunabilirlik sorunlarını çözen bir güçlendirilmiş öğrenme (RL) destekli çıkarım modelidir. RL'den önce, DeepSeek-R1 soğuk başlangıç verileri tanıtarak çıkarım performansını daha da optimize etmiştir. Matematik, kod ve çıkarım görevlerinde OpenAI-o1 ile benzer performans göstermektedir ve özenle tasarlanmış eğitim yöntemleri ile genel etkisini artırmıştır."
   },
+  "Pro/deepseek-ai/DeepSeek-R1-0120": {
+    "description": "DeepSeek-R1, pekiştirmeli öğrenme (RL) destekli bir akıl yürütme modelidir ve modeldeki tekrar ve okunabilirlik sorunlarını çözer. RL öncesinde soğuk başlangıç verisi kullanarak akıl yürütme performansını daha da optimize etmiştir. Matematik, kodlama ve akıl yürütme görevlerinde OpenAI-o1 ile benzer performans gösterir ve özenle tasarlanmış eğitim yöntemleriyle genel performansı artırır."
+  },
   "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
     "description": "DeepSeek-R1-Distill-Qwen-1.5B, Qwen2.5-Math-1.5B temel alınarak bilgi damıtma yöntemiyle geliştirilmiş bir modeldir. Bu model, DeepSeek-R1 tarafından oluşturulan 800 bin seçkin örnekle ince ayar yapılmış olup, çeşitli kıyaslama testlerinde etkileyici performans sergilemektedir. Hafif bir model olmasına rağmen, MATH-500'de %83.9 doğruluk, AIME 2024'te %28.9 geçme oranı ve CodeForces'ta 954 puan elde ederek, parametre boyutunun ötesinde bir akıl yürütme yeteneği göstermiştir."
   },
@@ -422,8 +425,8 @@
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B açık kaynak versiyonu, diyalog uygulamaları için optimize edilmiş bir diyalog deneyimi sunar."
   },
-  "Vendor-A/Qwen/Qwen2.5-72B-Instruct": {
-    "description": "Qwen2.5-72B-Instruct, Alibaba Cloud tarafından yayınlanan en son büyük dil modeli serilerinden biridir. Bu 72B modeli, kodlama ve matematik gibi alanlarda önemli ölçüde geliştirilmiş yeteneklere sahiptir. Model ayrıca, Çince, İngilizce gibi 29'dan fazla dili kapsayan çok dilli destek sunmaktadır. Model, talimat takibi, yapılandırılmış verileri anlama ve yapılandırılmış çıktı (özellikle JSON) üretme konularında önemli iyileştirmeler göstermektedir."
+  "Tongyi-Zhiwen/QwenLong-L1-32B": {
+    "description": "QwenLong-L1-32B, uzun bağlamlı büyük ölçekli akıl yürütme modeli (LRM) olup, pekiştirmeli öğrenme ile eğitilen ilk modeldir ve uzun metin akıl yürütme görevlerine optimize edilmiştir. Model, kademeli bağlam genişletme pekiştirmeli öğrenme çerçevesiyle kısa bağlamdan uzun bağlama stabil geçiş sağlar. Yedi uzun bağlamlı belge soru-cevap kıyaslama testinde, QwenLong-L1-32B OpenAI-o3-mini ve Qwen3-235B-A22B gibi amiral gemisi modelleri geride bırakmış ve Claude-3.7-Sonnet-Thinking ile karşılaştırılabilir performans göstermiştir. Model özellikle matematiksel akıl yürütme, mantıksal akıl yürütme ve çok adımlı akıl yürütme gibi karmaşık görevlerde uzmandır."
   },
   "Yi-34B-Chat": {
     "description": "Yi-1.5-34B, orijinal model serisinin mükemmel genel dil yeteneklerini korurken, 500 milyar yüksek kaliteli token ile artımlı eğitim sayesinde matematiksel mantık ve kodlama yeteneklerini büyük ölçüde artırmıştır."
@@ -734,6 +737,12 @@
   "deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1, tekrarlayan öğrenme (RL) destekli bir çıkarım modelidir ve modeldeki tekrarlama ve okunabilirlik sorunlarını çözmektedir. RL'den önce, DeepSeek-R1 soğuk başlangıç verilerini tanıtarak çıkarım performansını daha da optimize etmiştir. Matematik, kod ve çıkarım görevlerinde OpenAI-o1 ile benzer bir performans sergilemekte ve özenle tasarlanmış eğitim yöntemleri ile genel etkisini artırmaktadır."
   },
+  "deepseek-ai/DeepSeek-R1-0528": {
+    "description": "DeepSeek R1, artırılmış hesaplama kaynakları ve son eğitim sürecinde algoritma optimizasyon mekanizmalarının entegrasyonu sayesinde çıkarım ve akıl yürütme derinliğini önemli ölçüde artırmıştır. Model, matematik, programlama ve genel mantık alanlarında çeşitli kıyaslama testlerinde üstün performans göstermektedir. Genel performansı, O3 ve Gemini 2.5 Pro gibi lider modellerle yakındır."
+  },
+  "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B": {
+    "description": "DeepSeek-R1-0528-Qwen3-8B, DeepSeek-R1-0528 modelinden düşünce zinciri distilasyonu yoluyla Qwen3 8B Base modeline elde edilen bir modeldir. Açık kaynak modeller arasında en ileri (SOTA) performansa sahiptir, AIME 2024 testinde Qwen3 8B'yi %10 aşmış ve Qwen3-235B-thinking performans seviyesine ulaşmıştır. Model matematiksel akıl yürütme, programlama ve genel mantık gibi çeşitli kıyaslama testlerinde üstün performans gösterir; mimarisi Qwen3-8B ile aynıdır ancak DeepSeek-R1-0528'in tokenizer konfigürasyonunu paylaşır."
+  },
   "deepseek-ai/DeepSeek-R1-Distill-Llama-70B": {
     "description": "DeepSeek-R1 damıtma modeli, pekiştirme öğrenimi ve soğuk başlatma verileri ile çıkarım performansını optimize eder, açık kaynak model çoklu görev standartlarını yeniler."
   },
@@ -836,9 +845,6 @@
   "deepseek-v3-0324": {
     "description": "DeepSeek-V3-0324, 671B parametreye sahip bir MoE modelidir ve programlama ile teknik yetenekler, bağlam anlama ve uzun metin işleme gibi alanlarda belirgin avantajlar sunar."
   },
-  "deepseek/deepseek-chat": {
-    "description": "Genel ve kod yeteneklerini birleştiren yeni açık kaynak model, yalnızca mevcut Chat modelinin genel diyalog yeteneklerini ve Coder modelinin güçlü kod işleme yeteneklerini korumakla kalmaz, aynı zamanda insan tercihleriyle daha iyi hizalanmıştır. Ayrıca, DeepSeek-V2.5 yazma görevleri, talimat takibi gibi birçok alanda da büyük iyileştirmeler sağlamıştır."
-  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3, 685B parametreye sahip bir uzman karışık modeldir ve DeepSeek ekibinin amiral gemisi sohbet modeli serisinin en son iterasyonudur.\n\nÇeşitli görevlerde mükemmel performans sergileyen [DeepSeek V3](/deepseek/deepseek-chat-v3) modelini devralmıştır."
   },
@@ -847,6 +853,12 @@
   },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1, yalnızca çok az etiketli veri ile modelin akıl yürütme yeteneğini büyük ölçüde artırır. Model, nihai yanıtı vermeden önce bir düşünce zinciri içeriği sunarak nihai yanıtın doğruluğunu artırır."
+  },
+  "deepseek/deepseek-r1-0528": {
+    "description": "DeepSeek-R1, çok az etiketli veri ile modelin akıl yürütme yeteneğini büyük ölçüde artırır. Nihai yanıtı vermeden önce, model doğruluğu artırmak için bir düşünce zinciri çıktısı üretir."
+  },
+  "deepseek/deepseek-r1-0528:free": {
+    "description": "DeepSeek-R1, çok az etiketli veri ile modelin akıl yürütme yeteneğini büyük ölçüde artırır. Nihai yanıtı vermeden önce, model doğruluğu artırmak için bir düşünce zinciri çıktısı üretir."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1 Distill Llama 70B, Llama3.3 70B tabanlı büyük bir dil modelidir ve DeepSeek R1'in çıktısını kullanarak ince ayar yaparak büyük öncü modellerle rekabet edebilecek bir performans elde etmiştir."
@@ -1262,6 +1274,9 @@
   "gpt-4o-mini-realtime-preview": {
     "description": "GPT-4o-mini gerçek zamanlı versiyonu, ses ve metin için gerçek zamanlı giriş ve çıkış desteği sunar."
   },
+  "gpt-4o-mini-search-preview": {
+    "description": "GPT-4o mini arama önizleme sürümü, web arama sorgularını anlama ve yürütme için özel olarak eğitilmiş bir modeldir ve Chat Completions API kullanır. Jeton ücretlerinin yanı sıra, web arama sorguları her araç çağrısı başına ücretlendirilir."
+  },
   "gpt-4o-mini-tts": {
     "description": "GPT-4o mini TTS, GPT-4o mini'ye dayalı bir metin-ses modeldir ve yüksek kaliteli ses üretimi, düşük maliyetli oluşturma sunar."
   },
@@ -1273,6 +1288,9 @@
   },
   "gpt-4o-realtime-preview-2024-12-17": {
     "description": "GPT-4o gerçek zamanlı versiyonu, ses ve metin için gerçek zamanlı giriş ve çıkış desteği sunar."
+  },
+  "gpt-4o-search-preview": {
+    "description": "GPT-4o arama önizleme sürümü, web arama sorgularını anlama ve yürütme için özel olarak eğitilmiş bir modeldir ve Chat Completions API kullanır. Jeton ücretlerinin yanı sıra, web arama sorguları her araç çağrısı başına ücretlendirilir."
   },
   "grok-2-1212": {
     "description": "Bu model, doğruluk, talimat takibi ve çok dilli yetenekler açısından geliştirilmiştir."
@@ -1307,6 +1325,9 @@
   "hunyuan-large-longcontext": {
     "description": "Uzun metin görevlerini, örneğin belge özeti ve belge sorgulama gibi, işleme konusunda uzmandır; aynı zamanda genel metin oluşturma görevlerini de yerine getirme yeteneğine sahiptir. Uzun metinlerin analizi ve oluşturulmasında mükemmel bir performans sergiler, karmaşık ve ayrıntılı uzun metin içerik işleme ihtiyaçlarına etkili bir şekilde yanıt verebilir."
   },
+  "hunyuan-large-vision": {
+    "description": "Bu model, görsel ve metin anlama senaryoları için uygundur. Hunyuan Large tabanlı görsel-dil büyük modelidir, herhangi bir çözünürlükte çoklu resim ve metin girişini destekler, metin üretir, görsel-metinsel anlama görevlerine odaklanır ve çok dilli görsel-metinsel anlama yeteneğinde belirgin gelişme sağlar."
+  },
   "hunyuan-lite": {
     "description": "MOE yapısına yükseltilmiş, bağlam penceresi 256k, NLP, kod, matematik, endüstri gibi birçok değerlendirme setinde birçok açık kaynak modelden önde."
   },
@@ -1331,17 +1352,14 @@
   "hunyuan-t1-20250321": {
     "description": "Modelin hem fen hem de sosyal bilimler alanındaki yeteneklerini kapsamlı bir şekilde inşa eder, uzun metin bilgilerini yakalama yeteneği yüksektir. Her türlü zorluktaki matematik/ mantık çıkarımı/ bilim/ kod gibi bilimsel sorunları çözme yeteneğini destekler."
   },
+  "hunyuan-t1-20250403": {
+    "description": "Proje düzeyinde kod üretme yeteneğini artırır; metin oluşturma ve yazma kalitesini yükseltir; metin anlama, çok turlu konu takibi, toB komut uyumu ve kelime-anlama yeteneklerini geliştirir; karmaşık geleneksel ve basitleştirilmiş Çince ile İngilizce karışık çıktı sorunlarını optimize eder."
+  },
   "hunyuan-t1-latest": {
     "description": "Sektördeki ilk ultra büyük ölçekli Hybrid-Transformer-Mamba çıkarım modeli, çıkarım yeteneklerini genişletir, yüksek çözümleme hızı sunar ve insan tercihleri ile daha iyi hizalanır."
   },
   "hunyuan-t1-vision": {
     "description": "Hunyuan çok modlu anlayış derin düşünme modeli, çok modlu doğal uzun düşünce zincirini destekler, çeşitli görsel çıkarım senaryolarında uzmandır ve fen bilimleri problemlerinde hızlı düşünme modellerine kıyasla kapsamlı iyileşme sağlar."
-  },
-  "hunyuan-translation": {
-    "description": "Çince ve İngilizce, Japonca, Fransızca, Portekizce, İspanyolca, Türkçe, Rusça, Arapça, Korece, İtalyanca, Almanca, Vietnamca, Malayca, Endonezyaca dahil olmak üzere 15 dil arasında çeviri desteği sunar. Çoklu senaryo çeviri değerlendirme setine dayalı otomatik değerlendirme COMET puanı ile, ondan fazla yaygın dildeki çeviri yetenekleri, pazarın aynı ölçekli modellerine göre genel olarak daha üstündür."
-  },
-  "hunyuan-translation-lite": {
-    "description": "Hunyuan çeviri modeli, doğal dil diyalog tarzı çeviriyi destekler; Çince ve İngilizce, Japonca, Fransızca, Portekizce, İspanyolca, Türkçe, Rusça, Arapça, Korece, İtalyanca, Almanca, Vietnamca, Malayca, Endonezyaca dahil olmak üzere 15 dil arasında çeviri desteği sunar."
   },
   "hunyuan-turbo": {
     "description": "Hunyuan'ın yeni nesil büyük dil modelinin önizleme sürümü, tamamen yeni bir karma uzman modeli (MoE) yapısı kullanır ve hunyuan-pro'ya kıyasla daha hızlı çıkarım verimliliği ve daha güçlü performans sunar."
@@ -1355,8 +1373,11 @@
   "hunyuan-turbo-vision": {
     "description": "Hunyuan'ın yeni nesil görsel dil amiral modeli, tamamen yeni bir karışık uzman modeli (MoE) yapısını benimser; metin ve görüntü anlama ile ilgili temel tanıma, içerik oluşturma, bilgi sorgulama, analiz ve akıl yürütme gibi yeteneklerde bir önceki nesil modele göre kapsamlı bir iyileştirme sağlar."
   },
-  "hunyuan-turbos-20250226": {
-    "description": "hunyuan-TurboS pv2.1.2 sabit versiyonu, ön eğitim tabanlı token sayısını yükseltmiştir; matematik/lojik/kod gibi düşünme yeteneklerini geliştirmiştir; Çince ve İngilizce genel deneyim kalitesini artırmıştır, metin oluşturma, metin anlama, bilgi sorgulama, sohbet gibi alanlarda."
+  "hunyuan-turbos-20250313": {
+    "description": "Matematik problem çözme adımlarının stilini birleştirir, matematikte çok turlu soru-cevapları güçlendirir. Metin oluşturma, yanıt stilini optimize eder, yapay zeka izlerini kaldırır, edebi ifadeyi artırır."
+  },
+  "hunyuan-turbos-20250416": {
+    "description": "Ön eğitim tabanı yükseltmesi, tabanın komut anlama ve uyum yeteneklerini güçlendirir; hizalama aşamasında matematik, kodlama, mantık ve bilimsel alanlardaki yetenekleri artırır; yaratıcı yazım kalitesi, metin anlama, çeviri doğruluğu ve bilgi tabanlı soru-cevap gibi beşeri bilimler yeteneklerini geliştirir; çeşitli alanlardaki ajan yeteneklerini güçlendirir, özellikle çok turlu diyalog anlama yeteneğine odaklanır."
   },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS, daha güçlü düşünme yeteneği ve daha iyi deneyim sunan en son sürümüdür."
@@ -1364,8 +1385,8 @@
   "hunyuan-turbos-longtext-128k-20250325": {
     "description": "Uzun metin görevlerini, örneğin belge özetleme ve belge yanıtları gibi, işleme konusunda uzmandır ve genel metin oluşturma görevlerini de yerine getirebilir. Uzun metinlerin analizi ve oluşturulmasında mükemmel performans gösterir, karmaşık ve ayrıntılı uzun metin içerik işleme ihtiyaçlarını etkili bir şekilde karşılar."
   },
-  "hunyuan-turbos-vision": {
-    "description": "Bu model, görsel ve metin anlama senaryoları için uygundur, en son Hunyuan turbosuna dayanan yeni nesil görsel dil amiral modeli olup, görsel ve metin anlama ile ilgili görevlerde, resim tabanlı varlık tanıma, bilgi yanıtı, metin yazımı, fotoğrafla problem çözme gibi alanlarda, önceki nesil modellere göre kapsamlı bir iyileşme sunar."
+  "hunyuan-turbos-role-plus": {
+    "description": "Hunyuan'ın en son rol yapma modeli, Hunyuan tarafından resmi olarak ince ayar ve eğitimle geliştirilmiş, rol yapma senaryoları veri setiyle artırılmıştır ve rol yapma senaryolarında daha iyi temel performans sunar."
   },
   "hunyuan-vision": {
     "description": "Hunyuan'ın en son çok modlu modeli, resim + metin girişi ile metin içeriği oluşturmayı destekler."
@@ -1886,11 +1907,14 @@
   "qvq-72b-preview": {
     "description": "QVQ modeli, Qwen ekibi tarafından geliştirilen deneysel bir araştırma modelidir; görsel akıl yürütme yeteneğini artırmaya odaklanır, özellikle matematik akıl yürütme alanında."
   },
-  "qvq-max-latest": {
-    "description": "Tongyi Qianwen QVQ görsel akıl yürütme modeli, görsel girdi ve düşünme zinciri çıktısını destekler ve matematik, programlama, görsel analiz, yaratım ve genel görevlerde daha güçlü yetenekler sergilemektedir."
+  "qvq-max": {
+    "description": "Tongyi Qianwen QVQ görsel akıl yürütme modeli, görsel giriş ve düşünce zinciri çıktısını destekler; matematik, programlama, görsel analiz, yaratım ve genel görevlerde daha güçlü performans sergiler."
   },
-  "qwen-coder-plus-latest": {
-    "description": "Tongyi Qianwen kod modeli."
+  "qwen-coder-plus": {
+    "description": "Tongyi Qianwen kodlama modeli."
+  },
+  "qwen-coder-turbo": {
+    "description": "Tongyi Qianwen kodlama modeli."
   },
   "qwen-coder-turbo-latest": {
     "description": "Tongyi Qianwen kodlama modeli."
@@ -1898,8 +1922,14 @@
   "qwen-long": {
     "description": "Tongyi Qianwen, uzun metin bağlamını destekleyen ve uzun belgeler, çoklu belgeler gibi çeşitli senaryolar için diyalog işlevselliği sunan büyük ölçekli bir dil modelidir."
   },
+  "qwen-math-plus": {
+    "description": "Tongyi Qianwen matematik modeli, matematik problemlerini çözmek için özel olarak tasarlanmış dil modelidir."
+  },
   "qwen-math-plus-latest": {
     "description": "Tongyi Qianwen matematik modeli, matematik problemlerini çözmek için özel olarak tasarlanmış bir dil modelidir."
+  },
+  "qwen-math-turbo": {
+    "description": "Tongyi Qianwen matematik modeli, matematik problemlerini çözmek için özel olarak tasarlanmış dil modelidir."
   },
   "qwen-math-turbo-latest": {
     "description": "Tongyi Qianwen matematik modeli, matematik problemlerini çözmek için özel olarak tasarlanmış bir dil modelidir."
@@ -1907,32 +1937,29 @@
   "qwen-max": {
     "description": "Tongyi Qianwen, 100 milyar seviyesinde büyük ölçekli bir dil modelidir ve Çince, İngilizce gibi farklı dil girişlerini destekler; şu anda Tongyi Qianwen 2.5 ürün sürümünün arkasındaki API modelidir."
   },
-  "qwen-max-latest": {
-    "description": "Tongyi Qianwen, 100 milyar seviyesinde büyük bir dil modeli, Çince, İngilizce ve diğer dillerde girişleri destekler, şu anda Tongyi Qianwen 2.5 ürün versiyonunun arkasındaki API modelidir."
-  },
-  "qwen-omni-turbo-latest": {
-    "description": "Qwen-Omni serisi modeller, video, ses, resim ve metin gibi çeşitli modlarda veri girişi destekler ve ses ile metin çıktısı verir."
+  "qwen-omni-turbo": {
+    "description": "Qwen-Omni serisi modeller, video, ses, resim ve metin dahil çoklu modalite girişlerini destekler ve ses ile metin çıktısı sağlar."
   },
   "qwen-plus": {
     "description": "Tongyi Qianwen, Çince, İngilizce gibi farklı dil girişlerini destekleyen geliştirilmiş büyük ölçekli bir dil modelidir."
   },
-  "qwen-plus-latest": {
-    "description": "Tongyi Qianwen'in geliştirilmiş versiyonu, çok dilli girişleri destekler."
-  },
   "qwen-turbo": {
     "description": "Tongyi Qianwen, Çince, İngilizce gibi farklı dil girişlerini destekleyen büyük ölçekli bir dil modelidir."
-  },
-  "qwen-turbo-latest": {
-    "description": "Tongyi Qianwen, çok dilli bir dil modeli, Çince, İngilizce ve diğer dillerde girişleri destekler."
   },
   "qwen-vl-chat-v1": {
     "description": "Tongyi Qianwen VL, çoklu görüntü, çok turlu soru-cevap, yaratım gibi esnek etkileşim yöntemlerini destekleyen bir modeldir."
   },
+  "qwen-vl-max": {
+    "description": "Tongyi Qianwen ultra büyük ölçekli görsel-dil modeli. Geliştirilmiş versiyona kıyasla görsel akıl yürütme ve komut uyum yeteneklerini daha da artırır, daha yüksek görsel algı ve bilişsel seviyeler sunar."
+  },
   "qwen-vl-max-latest": {
     "description": "Tongyi Qianwen ultra büyük ölçekli görsel dil modeli. Geliştirilmiş versiyona kıyasla, görsel akıl yürütme yeteneğini ve talimatlara uyum yeteneğini bir kez daha artırır, daha yüksek görsel algı ve bilişsel seviyeler sunar."
   },
-  "qwen-vl-ocr-latest": {
-    "description": "Tongyi Qianwen OCR, belge, tablo, sınav soruları, el yazısı gibi çeşitli görüntü türlerinden metin çıkarma yeteneğine odaklanan özel bir modeldir. Birçok yazıyı tanıyabilir, şu anda desteklenen diller: Çince, İngilizce, Fransızca, Japonca, Korece, Almanca, Rusça, İtalyanca, Vietnamca, Arapça."
+  "qwen-vl-ocr": {
+    "description": "Tongyi Qianwen OCR, belge, tablo, sınav soruları ve el yazısı gibi görüntülerden metin çıkarma konusunda uzmanlaşmış özel modeldir. Çoklu dil tanıma yeteneğine sahiptir; desteklenen diller arasında Çince, İngilizce, Fransızca, Japonca, Korece, Almanca, Rusça, İtalyanca, Vietnamca ve Arapça bulunmaktadır."
+  },
+  "qwen-vl-plus": {
+    "description": "Tongyi Qianwen büyük ölçekli görsel-dil modeli geliştirilmiş versiyonu. Detay tanıma ve metin tanıma yeteneklerini büyük ölçüde artırır, milyonlarca piksel çözünürlük ve herhangi bir en-boy oranındaki görüntüleri destekler."
   },
   "qwen-vl-plus-latest": {
     "description": "Tongyi Qianwen büyük ölçekli görsel dil modelinin geliştirilmiş versiyonu. Detay tanıma ve metin tanıma yeteneklerini büyük ölçüde artırır, bir milyondan fazla piksel çözünürlüğü ve herhangi bir en-boy oranındaki görüntüleri destekler."
@@ -2020,6 +2047,9 @@
   },
   "qwen2.5-coder-1.5b-instruct": {
     "description": "Tongyi Qianwen kodlama modelinin açık kaynak sürümüdür."
+  },
+  "qwen2.5-coder-14b-instruct": {
+    "description": "Tongyi Qianwen kodlama modeli açık kaynak sürümü."
   },
   "qwen2.5-coder-32b-instruct": {
     "description": "Tongyi Qianwen kod modeli açık kaynak versiyonu."
@@ -2111,8 +2141,8 @@
   "qwq-32b-preview": {
     "description": "QwQ modeli, Qwen ekibi tarafından geliştirilen deneysel bir araştırma modelidir ve AI akıl yürütme yeteneklerini artırmaya odaklanmaktadır."
   },
-  "qwq-plus-latest": {
-    "description": "Qwen2.5 modeli üzerine eğitilmiş QwQ çıkarım modeli, pekiştirmeli öğrenme ile modelin çıkarım yeteneğini önemli ölçüde artırmıştır. Modelin matematiksel kodları ve diğer temel göstergeleri (AIME 24/25, LiveCodeBench) ile bazı genel göstergeleri (IFEval, LiveBench vb.) DeepSeek-R1 tam sürüm seviyesine ulaşmıştır."
+  "qwq-plus": {
+    "description": "Qwen2.5 modeli temel alınarak eğitilmiş QwQ akıl yürütme modeli, pekiştirmeli öğrenme ile modelin akıl yürütme yeteneğini büyük ölçüde artırmıştır. Model, matematik ve kodlama gibi temel göstergelerde (AIME 24/25, LiveCodeBench) ve bazı genel göstergelerde (IFEval, LiveBench vb.) DeepSeek-R1 tam sürüm seviyesine ulaşmıştır."
   },
   "qwq_32b": {
     "description": "Qwen serisinin orta ölçekli çıkarım modelidir. Geleneksel talimat ayarlama modellerine kıyasla, düşünme ve çıkarım yeteneğine sahip QwQ, özellikle zorlu görevleri çözme konusunda, alt görevlerde performansı önemli ölçüde artırabilir."

@@ -230,6 +230,9 @@
   "Pro/deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 是一款強化學習（RL）驅動的推理模型，解決了模型中的重複性和可讀性問題。在 RL 之前，DeepSeek-R1 引入了冷啟動數據，進一步優化了推理性能。它在數學、代碼和推理任務中與 OpenAI-o1 表現相當，並且透過精心設計的訓練方法，提升了整體效果。"
   },
+  "Pro/deepseek-ai/DeepSeek-R1-0120": {
+    "description": "DeepSeek-R1 是一款強化學習（RL）驅動的推理模型，解決了模型中的重複性和可讀性問題。在 RL 之前，DeepSeek-R1 引入了冷啟動資料，進一步優化了推理性能。它在數學、程式碼和推理任務中與 OpenAI-o1 表現相當，並且透過精心設計的訓練方法，提升了整體效果。"
+  },
   "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
     "description": "DeepSeek-R1-Distill-Qwen-1.5B 是基於 Qwen2.5-Math-1.5B 透過知識蒸餾技術所獲得的模型。該模型使用 DeepSeek-R1 產生的 80 萬個精選樣本進行微調，在多項基準測試中展現出優異的表現。作為一個輕量級模型，在 MATH-500 上達到了 83.9% 的準確率，在 AIME 2024 上獲得了 28.9% 的通過率，在 CodeForces 上取得了 954 的評分，顯示出超越其參數規模的推理能力。"
   },
@@ -422,8 +425,8 @@
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B 開放源碼版本，為會話應用提供優化後的對話體驗。"
   },
-  "Vendor-A/Qwen/Qwen2.5-72B-Instruct": {
-    "description": "Qwen2.5-72B-Instruct 是阿里雲發布的最新大語言模型系列之一。該 72B 模型在編碼和數學等領域具有顯著改進的能力。該模型還提供了多語言支持，覆蓋超過 29 種語言，包括中文、英文等。模型在指令跟隨、理解結構化數據以及生成結構化輸出（尤其是 JSON）方面都有顯著提升"
+  "Tongyi-Zhiwen/QwenLong-L1-32B": {
+    "description": "QwenLong-L1-32B 是首個使用強化學習訓練的長上下文大型推理模型（LRM），專門針對長文本推理任務進行優化。該模型透過漸進式上下文擴展的強化學習框架，實現了從短上下文到長上下文的穩定遷移。在七個長上下文文件問答基準測試中，QwenLong-L1-32B 超越了 OpenAI-o3-mini 和 Qwen3-235B-A22B 等旗艦模型，性能可媲美 Claude-3.7-Sonnet-Thinking。該模型特別擅長數學推理、邏輯推理和多跳推理等複雜任務。"
   },
   "Yi-34B-Chat": {
     "description": "Yi-1.5-34B 在保持原系列模型優秀的通用語言能力的前提下，通過增量訓練 5 千億高質量 token，大幅提高了數學邏輯和代碼能力。"
@@ -734,6 +737,12 @@
   "deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 是一款強化學習（RL）驅動的推理模型，解決了模型中的重複性和可讀性問題。在 RL 之前，DeepSeek-R1 引入了冷啟動數據，進一步優化了推理性能。它在數學、程式碼和推理任務中與 OpenAI-o1 表現相當，並且通過精心設計的訓練方法，提升了整體效果。"
   },
+  "deepseek-ai/DeepSeek-R1-0528": {
+    "description": "DeepSeek R1 透過利用增加的計算資源和在後訓練過程中引入演算法優化機制，顯著提高了其推理和推斷能力的深度。該模型在各種基準評估中表現出色，包括數學、程式設計和一般邏輯方面。其整體性能現已接近領先模型，如 O3 和 Gemini 2.5 Pro。"
+  },
+  "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B": {
+    "description": "DeepSeek-R1-0528-Qwen3-8B 是透過從 DeepSeek-R1-0528 模型蒸餾思維鏈到 Qwen3 8B Base 獲得的模型。該模型在開源模型中達到了最先進（SOTA）的性能，在 AIME 2024 測試中超越了 Qwen3 8B 10%，並達到了 Qwen3-235B-thinking 的性能水準。該模型在數學推理、程式設計和通用邏輯等多個基準測試中表現出色，其架構與 Qwen3-8B 相同，但共享 DeepSeek-R1-0528 的分詞器配置。"
+  },
   "deepseek-ai/DeepSeek-R1-Distill-Llama-70B": {
     "description": "DeepSeek-R1 蒸餾模型，通過強化學習與冷啟動數據優化推理性能，開源模型刷新多任務標杆。"
   },
@@ -836,9 +845,6 @@
   "deepseek-v3-0324": {
     "description": "DeepSeek-V3-0324 為 671B 參數的 MoE 模型，在程式設計與技術能力、上下文理解與長文本處理等方面優勢突出。"
   },
-  "deepseek/deepseek-chat": {
-    "description": "融合通用與代碼能力的全新開源模型，不僅保留了原有 Chat 模型的通用對話能力和 Coder 模型的強大代碼處理能力，還更好地對齊了人類偏好。此外，DeepSeek-V2.5 在寫作任務、指令跟隨等多個方面也實現了大幅提升。"
-  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 是一個 685B 參數的專家混合模型，是 DeepSeek 團隊旗艦聊天模型系列的最新迭代。\n\n它繼承了 [DeepSeek V3](/deepseek/deepseek-chat-v3) 模型，並在各種任務上表現出色。"
   },
@@ -847,6 +853,12 @@
   },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1 在僅有極少標註數據的情況下，極大提升了模型推理能力。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
+  },
+  "deepseek/deepseek-r1-0528": {
+    "description": "DeepSeek-R1 在僅有極少標註資料的情況下，極大提升了模型推理能力。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
+  },
+  "deepseek/deepseek-r1-0528:free": {
+    "description": "DeepSeek-R1 在僅有極少標註資料的情況下，極大提升了模型推理能力。在輸出最終回答之前，模型會先輸出一段思維鏈內容，以提升最終答案的準確性。"
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1 Distill Llama 70B是基於Llama3.3 70B的大型語言模型，該模型利用DeepSeek R1輸出的微調，實現了與大型前沿模型相當的競爭性能。"
@@ -1262,6 +1274,9 @@
   "gpt-4o-mini-realtime-preview": {
     "description": "GPT-4o-mini 實時版本，支持音頻和文本實時輸入輸出"
   },
+  "gpt-4o-mini-search-preview": {
+    "description": "GPT-4o mini 搜尋預覽版是一個專門訓練用於理解和執行網頁搜尋查詢的模型，使用的是 Chat Completions API。除了代幣費用之外，網頁搜尋查詢還會按每次工具呼叫收取費用。"
+  },
   "gpt-4o-mini-tts": {
     "description": "GPT-4o mini TTS 是基於 GPT-4o mini 的文本轉語音模型，提供高品質的語音生成，同時降低成本。"
   },
@@ -1273,6 +1288,9 @@
   },
   "gpt-4o-realtime-preview-2024-12-17": {
     "description": "GPT-4o 實時版本，支持音頻和文本實時輸入輸出"
+  },
+  "gpt-4o-search-preview": {
+    "description": "GPT-4o 搜尋預覽版是一個專門訓練用於理解和執行網頁搜尋查詢的模型，使用的是 Chat Completions API。除了代幣費用之外，網頁搜尋查詢還會按每次工具呼叫收取費用。"
   },
   "grok-2-1212": {
     "description": "該模型在準確性、指令遵循和多語言能力方面有所改進。"
@@ -1307,6 +1325,9 @@
   "hunyuan-large-longcontext": {
     "description": "擅長處理長文任務如文檔摘要和文檔問答等，同時也具備處理通用文本生成任務的能力。在長文本的分析和生成上表現優異，能有效應對複雜和詳盡的長文內容處理需求。"
   },
+  "hunyuan-large-vision": {
+    "description": "此模型適用於圖文理解場景，是基於混元Large訓練的視覺語言大模型，支援任意解析度多張圖片+文本輸入，生成文本內容，聚焦圖文理解相關任務，在多語言圖文理解能力上有顯著提升。"
+  },
   "hunyuan-lite": {
     "description": "升級為 MOE 結構，上下文窗口為 256k，在 NLP、代碼、數學、行業等多項評測集上領先眾多開源模型。"
   },
@@ -1331,17 +1352,14 @@
   "hunyuan-t1-20250321": {
     "description": "全面搭建模型文理科能力，長文本信息捕捉能力強。支持推理解答各種難度的數學/邏輯推理/科學/代碼等科學問題。"
   },
+  "hunyuan-t1-20250403": {
+    "description": "提升專案級別程式碼生成能力；提升文本生成寫作品質；提升文本理解 topic 的多輪、tob 指令遵循和字詞理解能力；優化繁簡混雜和中英混雜輸出問題。"
+  },
   "hunyuan-t1-latest": {
     "description": "業界首個超大規模 Hybrid-Transformer-Mamba 推理模型，擴展推理能力，超強解碼速度，進一步對齊人類偏好。"
   },
   "hunyuan-t1-vision": {
     "description": "混元多模態理解深度思考模型，支援多模態原生長思維鏈，擅長處理各種圖片推理場景，在理科難題上相比快思考模型全面提升。"
-  },
-  "hunyuan-translation": {
-    "description": "支持中文和英語、日語、法語、葡萄牙語、西班牙語、土耳其語、俄語、阿拉伯語、韓語、義大利語、德語、越南語、馬來語、印尼語15種語言互譯，基於多場景翻譯評測集自動化評估COMET評分，在十餘種常用語種中外互譯能力上整體優於市場同規模模型。"
-  },
-  "hunyuan-translation-lite": {
-    "description": "混元翻譯模型支持自然語言對話式翻譯；支持中文和英語、日語、法語、葡萄牙語、西班牙語、土耳其語、俄語、阿拉伯語、韓語、義大利語、德語、越南語、馬來語、印尼語15種語言互譯。"
   },
   "hunyuan-turbo": {
     "description": "混元全新一代大語言模型的預覽版，採用全新的混合專家模型（MoE）結構，相較於 hunyuan-pro 推理效率更快，效果表現更強。"
@@ -1355,8 +1373,11 @@
   "hunyuan-turbo-vision": {
     "description": "混元新一代視覺語言旗艦大模型，採用全新的混合專家模型（MoE）結構，在圖文理解相關的基礎識別、內容創作、知識問答、分析推理等能力上相比前一代模型全面提升。"
   },
-  "hunyuan-turbos-20250226": {
-    "description": "hunyuan-TurboS pv2.1.2 固定版本預訓練底座訓練token數升級；數學/邏輯/代碼等思考能力提升；中英文通用體驗效果提升，包括文本創作、文本理解、知識問答、閒聊等。"
+  "hunyuan-turbos-20250313": {
+    "description": "統一數學解題步驟的風格，加強數學多輪問答。文本創作優化回答風格，去除 AI 味，增加文采。"
+  },
+  "hunyuan-turbos-20250416": {
+    "description": "預訓練底座升級，增強底座的指令理解及遵循能力；對齊階段增強數學、程式碼、邏輯、科學等理科能力；提升文創寫作品質、文本理解、翻譯準確率、知識問答等文科能力；增強各領域 Agent 能力，重點加強多輪對話理解能力等。"
   },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS 混元旗艦大模型最新版本，具備更強的思考能力，更優的體驗效果。"
@@ -1364,8 +1385,8 @@
   "hunyuan-turbos-longtext-128k-20250325": {
     "description": "擅長處理長文任務如文檔摘要和文檔問答等，同時也具備處理通用文本生成任務的能力。在長文本的分析和生成上表現優異，能有效應對複雜和詳盡的長文內容處理需求。"
   },
-  "hunyuan-turbos-vision": {
-    "description": "此模型適用於圖文理解場景，是基於混元最新 turbos 的新一代視覺語言旗艦大模型，聚焦圖文理解相關任務，包括基於圖片的實體識別、知識問答、文案創作、拍照解題等方面，相比前一代模型全面提升。"
+  "hunyuan-turbos-role-plus": {
+    "description": "混元最新版角色扮演模型，混元官方精調訓練推出的角色扮演模型，基於混元模型結合角色扮演場景資料集進行增訓，在角色扮演場景具有更好的基礎效果。"
   },
   "hunyuan-vision": {
     "description": "混元最新多模態模型，支持圖片 + 文本輸入生成文本內容。"
@@ -1886,11 +1907,14 @@
   "qvq-72b-preview": {
     "description": "QVQ模型是由 Qwen 團隊開發的實驗性研究模型，專注於提升視覺推理能力，尤其在數學推理領域。"
   },
-  "qvq-max-latest": {
-    "description": "通義千問 QVQ 視覺推理模型，支持視覺輸入及思維鏈輸出，在數學、程式設計、視覺分析、創作以及通用任務上都表現了更強的能力。"
+  "qvq-max": {
+    "description": "通義千問 QVQ 視覺推理模型，支援視覺輸入及思維鏈輸出，在數學、程式設計、視覺分析、創作以及通用任務上都展現了更強的能力。"
   },
-  "qwen-coder-plus-latest": {
-    "description": "通義千問代碼模型。"
+  "qwen-coder-plus": {
+    "description": "通義千問程式碼模型。"
+  },
+  "qwen-coder-turbo": {
+    "description": "通義千問程式碼模型。"
   },
   "qwen-coder-turbo-latest": {
     "description": "通義千問代碼模型。"
@@ -1898,7 +1922,13 @@
   "qwen-long": {
     "description": "通義千問超大規模語言模型，支持長文本上下文，以及基於長文檔、多文檔等多個場景的對話功能。"
   },
+  "qwen-math-plus": {
+    "description": "通義千問數學模型是專門用於數學解題的語言模型。"
+  },
   "qwen-math-plus-latest": {
+    "description": "通義千問數學模型是專門用於數學解題的語言模型。"
+  },
+  "qwen-math-turbo": {
     "description": "通義千問數學模型是專門用於數學解題的語言模型。"
   },
   "qwen-math-turbo-latest": {
@@ -1907,32 +1937,29 @@
   "qwen-max": {
     "description": "通義千問千億級別超大規模語言模型，支持中文、英文等不同語言輸入，當前通義千問 2.5 產品版本背後的 API 模型。"
   },
-  "qwen-max-latest": {
-    "description": "通義千問千億級別超大規模語言模型，支持中文、英文等不同語言輸入，當前通義千問2.5產品版本背後的API模型。"
-  },
-  "qwen-omni-turbo-latest": {
-    "description": "Qwen-Omni 系列模型支持輸入多種模態的數據，包括視頻、音頻、圖片、文本，並輸出音頻與文本。"
+  "qwen-omni-turbo": {
+    "description": "Qwen-Omni 系列模型支援輸入多種模態的資料，包括影片、音訊、圖片、文本，並輸出音訊與文本。"
   },
   "qwen-plus": {
-    "description": "通義千問超大規模語言模型增強版，支持中文、英文等不同語言輸入。"
-  },
-  "qwen-plus-latest": {
     "description": "通義千問超大規模語言模型增強版，支持中文、英文等不同語言輸入。"
   },
   "qwen-turbo": {
     "description": "通義千問超大規模語言模型，支持中文、英文等不同語言輸入。"
   },
-  "qwen-turbo-latest": {
-    "description": "通義千問超大規模語言模型，支持中文、英文等不同語言輸入。"
-  },
   "qwen-vl-chat-v1": {
     "description": "通義千問VL支持靈活的交互方式，包括多圖、多輪問答、創作等能力的模型。"
+  },
+  "qwen-vl-max": {
+    "description": "通義千問超大規模視覺語言模型。相比增強版，再次提升視覺推理能力和指令遵循能力，提供更高的視覺感知和認知水準。"
   },
   "qwen-vl-max-latest": {
     "description": "通義千問超大規模視覺語言模型。相比增強版，再次提升視覺推理能力和指令遵循能力，提供更高的視覺感知和認知水平。"
   },
-  "qwen-vl-ocr-latest": {
-    "description": "通義千問OCR是文字提取專有模型，專注於文檔、表格、試題、手寫體文字等類型圖像的文字提取能力。它能夠識別多種文字，目前支持的語言有：漢語、英語、法語、日語、韓語、德語、俄語、意大利語、越南語、阿拉伯語。"
+  "qwen-vl-ocr": {
+    "description": "通義千問 OCR 是文字擷取專有模型，專注於文件、表格、試題、手寫體文字等類型影像的文字擷取能力。它能夠識別多種文字，目前支援的語言有：漢語、英語、法語、日語、韓語、德語、俄語、義大利語、越南語、阿拉伯語。"
+  },
+  "qwen-vl-plus": {
+    "description": "通義千問大規模視覺語言模型增強版。大幅提升細節識別能力和文字識別能力，支援超百萬像素解析度和任意長寬比規格的影像。"
   },
   "qwen-vl-plus-latest": {
     "description": "通義千問大規模視覺語言模型增強版。大幅提升細節識別能力和文字識別能力，支持超百萬像素解析度和任意長寬比規格的圖像。"
@@ -2020,6 +2047,9 @@
   },
   "qwen2.5-coder-1.5b-instruct": {
     "description": "通義千問代碼模型開源版。"
+  },
+  "qwen2.5-coder-14b-instruct": {
+    "description": "通義千問程式碼模型開源版。"
   },
   "qwen2.5-coder-32b-instruct": {
     "description": "通義千問代碼模型開源版。"
@@ -2111,8 +2141,8 @@
   "qwq-32b-preview": {
     "description": "QwQ模型是由 Qwen 團隊開發的實驗性研究模型，專注於增強 AI 推理能力。"
   },
-  "qwq-plus-latest": {
-    "description": "基於 Qwen2.5 模型訓練的 QwQ 推理模型，通過強化學習大幅度提升了模型推理能力。模型數學代碼等核心指標（AIME 24/25、LiveCodeBench）以及部分通用指標（IFEval、LiveBench等）達到 DeepSeek-R1 滿血版水平。"
+  "qwq-plus": {
+    "description": "基於 Qwen2.5 模型訓練的 QwQ 推理模型，透過強化學習大幅度提升了模型推理能力。模型數學程式碼等核心指標（AIME 24/25、LiveCodeBench）以及部分通用指標（IFEval、LiveBench等）達到 DeepSeek-R1 滿血版水準。"
   },
   "qwq_32b": {
     "description": "Qwen 系列中等規模的推理模型。與傳統的指令調優模型相比，具備思考和推理能力的 QwQ 在下游任務中，尤其是在解決難題時，能夠顯著提升性能。"
