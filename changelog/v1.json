@@ -1,6 +1,21 @@
 [
   {
     "children": {
+      "features": ["Support OpenAI Responses API mode."]
+    },
+    "date": "2025-06-08",
+    "version": "1.93.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix client s3 getObject throw error."],
+      "improvements": ["Support OpenRouter Claude 4 reasoning."]
+    },
+    "date": "2025-06-08",
+    "version": "1.92.3"
+  },
+  {
+    "children": {
       "improvements": ["Add support to azureopenai embedding."]
     },
     "date": "2025-06-07",
