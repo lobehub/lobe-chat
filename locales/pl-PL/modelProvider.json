@@ -208,6 +208,10 @@
         "title": "Użyj trybu żądania klienta"
       },
       "helpDoc": "Dokumentacja konfiguracyjna",
+      "responsesApi": {
+        "desc": "Wykorzystuje nową generację formatu zapytań OpenAI, odblokowując zaawansowane funkcje, takie jak łańcuchy myślowe",
+        "title": "Użyj specyfikacji Responses API"
+      },
       "waitingForMore": "Więcej modeli jest w <1>planach integracji</1>, proszę czekać"
     },
     "createNew": {
