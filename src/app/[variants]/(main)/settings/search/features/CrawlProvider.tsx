@@ -1,7 +1,7 @@
 'use client';
 
 import { Form, type FormGroupItemType, type FormItemProps } from '@lobehub/ui';
-import { Input, Select, Skeleton, Slider, Switch } from 'antd';
+import { Input, Select, Skeleton, Slider } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -58,38 +58,10 @@ const CrawlProvider = memo(() => {
       name: ['crawlConfig', 'timeout'],
     },
     {
-      children: (
-        <Select
-          options={[
-            { label: 'Markdown', value: 'markdown' },
-            { label: 'HTML', value: 'html' },
-            { label: t('search.crawl.config.outputFormat.text'), value: 'text' },
-          ]}
-        />
-      ),
-      desc: t('search.crawl.config.outputFormat.desc'),
-      label: t('search.crawl.config.outputFormat.title'),
-      name: ['crawlConfig', 'outputFormat'],
-    },
-    {
       children: <Slider max={20_000} min={1000} step={500} />,
       desc: t('search.crawl.config.maxContentLength.desc'),
       label: t('search.crawl.config.maxContentLength.title'),
       name: ['crawlConfig', 'maxContentLength'],
-    },
-    {
-      children: <Switch />,
-      desc: t('search.crawl.config.executeJS.desc'),
-      label: t('search.crawl.config.executeJS.title'),
-      name: ['crawlConfig', 'executeJS'],
-      valuePropName: 'checked',
-    },
-    {
-      children: <Switch />,
-      desc: t('search.crawl.config.includeImages.desc'),
-      label: t('search.crawl.config.includeImages.title'),
-      name: ['crawlConfig', 'includeImages'],
-      valuePropName: 'checked',
     },
   ];
 
