@@ -618,7 +618,6 @@ describe('ChatService', () => {
         stream: true,
         ...DEFAULT_AGENT_CONFIG.params,
         ...params,
-        apiMode: 'responses',
       };
 
       await chatService.getChatCompletion(params, options);
@@ -682,7 +681,6 @@ describe('ChatService', () => {
         stream: true,
         ...DEFAULT_AGENT_CONFIG.params,
         ...params,
-        apiMode: 'responses',
       };
 
       const result = await chatService.getChatCompletion(params, options);
