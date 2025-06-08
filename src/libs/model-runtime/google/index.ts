@@ -123,9 +123,17 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             : undefined,
         thinkingBudget:
           thinking?.type === 'enabled'
-            ? Math.min(thinking.budget_tokens, 24_576)
+            ? (() => {
+                const budget = thinking.budget_tokens;
+                if (model.includes('-2.5-flash')) {
+                  return Math.min(budget, 24_576);
+                } else if (model.includes('-2.5-pro')) {
+                  return Math.max(128, Math.min(budget, 32_768));
+                }
+                return Math.min(budget, 24_576);
+              })()
             : thinking?.type === 'disabled'
-              ? 0
+              ? model.includes('-2.5-pro') ? 128 : 0
               : undefined,
       };
 
