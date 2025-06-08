@@ -8,9 +8,11 @@ import type { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
-import type {
+import {
   ChatCompletionErrorPayload,
+  ChatCompletionTool,
   ChatMethodOptions,
+  ChatStreamCallbacks,
   ChatStreamPayload,
   Embeddings,
   EmbeddingsOptions,
@@ -20,14 +22,13 @@ import type {
   TextToSpeechOptions,
   TextToSpeechPayload,
 } from '../../types';
-import { ChatStreamCallbacks } from '../../types';
 import { AgentRuntimeError } from '../createError';
 import { debugResponse, debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
 import { handleOpenAIError } from '../handleOpenAIError';
-import { convertOpenAIMessages } from '../openaiHelpers';
+import { convertOpenAIMessages, convertOpenAIResponseInputs } from '../openaiHelpers';
 import { StreamingResponse } from '../response';
-import { OpenAIStream, OpenAIStreamOptions } from '../streams';
+import { OpenAIResponsesStream, OpenAIStream, OpenAIStreamOptions } from '../streams';
 
 // the model contains the following keywords is not a chat model, so we should filter them out
 export const CHAT_MODELS_BLOCK_LIST = [
@@ -83,6 +84,7 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
   customClient?: CustomClientOptions<T>;
   debug?: {
     chatCompletion: () => boolean;
+    responses?: () => boolean;
   };
   errorType?: {
     bizError: ILobeAgentRuntimeErrorType;
@@ -94,6 +96,12 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
         transformModel?: (model: OpenAI.Model) => ChatModelCard;
       };
   provider: string;
+  responses?: {
+    handlePayload?: (
+      payload: ChatStreamPayload,
+      options: ConstructorOptions<T>,
+    ) => ChatStreamPayload;
+  };
 }
 
 /**
@@ -160,6 +168,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
   chatCompletion,
   models,
   customClient,
+  responses,
 }: OpenAICompatibleFactoryOptions<T>) => {
   const ErrorType = {
     bizError: errorType?.bizError || AgentRuntimeErrorType.ProviderBizError,
@@ -199,7 +208,15 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       this.id = options.id || provider;
     }
 
-    async chat({ responseMode, ...payload }: ChatStreamPayload, options?: ChatMethodOptions) {
+    async chat(
+      { responseMode, apiMode, ...payload }: ChatStreamPayload,
+      options?: ChatMethodOptions,
+    ) {
+      // new openai Response API
+      if (apiMode === 'responses') {
+        return this.handleResponseAPIMode(payload, options);
+      }
+
       try {
         const inputStartAt = Date.now();
         const postPayload = chatCompletion?.handlePayload
@@ -454,5 +471,62 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         provider: this.id as ModelProvider,
       });
     }
+
+    private async handleResponseAPIMode(
+      payload: ChatStreamPayload,
+      options?: ChatMethodOptions,
+    ): Promise<Response> {
+      const inputStartAt = Date.now();
+
+      const { messages, ...res } = responses?.handlePayload
+        ? (responses?.handlePayload(payload, this._options) as ChatStreamPayload)
+        : payload;
+
+      // remove penalty params
+      delete res.frequency_penalty;
+      delete res.presence_penalty;
+
+      const input = await convertOpenAIResponseInputs(messages as any);
+
+      const postPayload = {
+        ...res,
+        input,
+        store: false,
+        tools: payload.tools?.map((tool) => this.convertChatCompletionToolToResponseTool(tool)),
+      } as OpenAI.Responses.ResponseCreateParamsStreaming;
+
+      if (debug?.responses?.()) {
+        console.log('[requestPayload]');
+        console.log(JSON.stringify(postPayload), '\n');
+      }
+
+      const response = await this.client.responses.create(postPayload, {
+        headers: options?.requestHeaders,
+        signal: options?.signal,
+      });
+
+      const [prod, useForDebug] = response.tee();
+
+      if (debug?.responses?.()) {
+        const useForDebugStream =
+          useForDebug instanceof ReadableStream ? useForDebug : useForDebug.toReadableStream();
+
+        debugStream(useForDebugStream).catch(console.error);
+      }
+
+      const streamOptions: OpenAIStreamOptions = {
+        bizErrorTypeTransformer: chatCompletion?.handleStreamBizErrorType,
+        callbacks: options?.callback,
+        provider: this.id,
+      };
+
+      return StreamingResponse(OpenAIResponsesStream(prod, { ...streamOptions, inputStartAt }), {
+        headers: options?.headers,
+      });
+    }
+
+    private convertChatCompletionToolToResponseTool = (tool: ChatCompletionTool) => {
+      return { type: tool.type, ...tool.function };
+    };
   };
 };
