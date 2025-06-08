@@ -31,6 +31,18 @@ export interface StreamContext {
     id: string;
     name: string;
   };
+  /**
+   * Indicates whether the current state is within a "thinking" segment of the model output
+   * (e.g., when processing lmstudio responses).
+   *
+   * When parsing output containing <think> and </think> tags:
+   * - Set to `true` upon encountering a <think> tag (entering reasoning mode)
+   * - Set to `false` upon encountering a </think> tag (exiting reasoning mode)
+   *
+   * While `thinkingInContent` is `true`, subsequent content should be stored in `reasoning_content`.
+   * When `false`, content should be stored in the regular `content` field.
+   */
+  thinkingInContent?: boolean;
   tool?: {
     id: string;
     index: number;
