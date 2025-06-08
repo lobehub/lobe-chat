@@ -60,6 +60,7 @@ export const convertOpenAIResponseInputs = async (
 
         return;
       }
+
       if (message.role === 'tool') {
         input.push({
           call_id: message.tool_call_id,
@@ -71,15 +72,24 @@ export const convertOpenAIResponseInputs = async (
       }
 
       // default item
+      // also need handle image
       const item = {
         ...message,
         content:
           typeof message.content === 'string'
             ? message.content
             : await Promise.all(
-                (message.content || []).map((c) =>
-                  convertMessageContent(c as OpenAI.ChatCompletionContentPart),
-                ),
+                (message.content || []).map(async (c) => {
+                  if (c.type === 'text') {
+                    return { ...c, type: 'input_text' };
+                  }
+
+                  const image = await convertMessageContent(c as OpenAI.ChatCompletionContentPart);
+                  return {
+                    image_url: (image as OpenAI.ChatCompletionContentPartImage).image_url?.url,
+                    type: 'input_image',
+                  };
+                }),
               ),
       } as OpenAI.Responses.ResponseInputItem;
 
