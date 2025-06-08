@@ -5,6 +5,7 @@ import {
   Cloudy,
   Database,
   EthernetPort,
+  Globe,
   Info,
   KeyboardIcon,
   Mic2,
@@ -88,7 +89,7 @@ export const useCategory = () => {
                 ),
               }
             : {
-                icon: <Icon icon={Brain} />,
+                icon: <Icon icon={Cloudy} />,
                 key: SettingsTabs.Provider,
                 label: (
                   <Link href={'/settings/provider'} onClick={(e) => e.preventDefault()}>
@@ -96,7 +97,15 @@ export const useCategory = () => {
                   </Link>
                 ),
               }),
-
+        {
+          icon: <Icon icon={Globe} />,
+          key: SettingsTabs.Search,
+          label: (
+            <Link href={'/settings/search'} onClick={(e) => e.preventDefault()}>
+              {t('tab.search')}
+            </Link>
+          ),
+        },
         enableSTT && {
           icon: <Icon icon={Mic2} />,
           key: SettingsTabs.TTS,
@@ -115,6 +124,7 @@ export const useCategory = () => {
             </Link>
           ),
         },
+
         {
           type: 'divider',
         },

@@ -33,6 +33,7 @@ export enum SettingsTabs {
   LLM = 'llm',
   Provider = 'provider',
   Proxy = 'proxy',
+  Search = 'search',
   Storage = 'storage',
   Sync = 'sync',
   SystemAgent = 'system-agent',
