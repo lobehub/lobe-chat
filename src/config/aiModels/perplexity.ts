@@ -95,6 +95,7 @@ const perplexityChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
+      vision: true,
     },
     contextWindowTokens: 127_072,
     description:
