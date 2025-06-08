@@ -618,6 +618,32 @@ describe('ChatService', () => {
         stream: true,
         ...DEFAULT_AGENT_CONFIG.params,
         ...params,
+        apiMode: 'responses',
+      };
+
+      await chatService.getChatCompletion(params, options);
+
+      expect(global.fetch).toHaveBeenCalledWith(expect.any(String), {
+        body: JSON.stringify(expectedPayload),
+        headers: expect.any(Object),
+        method: 'POST',
+      });
+    });
+    it('should make a POST request without response in non-openai provider payload', async () => {
+      const params: Partial<ChatStreamPayload> = {
+        model: 'deepseek-reasoner',
+        provider: 'deepseek',
+        messages: [],
+      };
+
+      const options = {};
+
+      const expectedPayload = {
+        model: 'deepseek-reasoner',
+        stream: true,
+        ...DEFAULT_AGENT_CONFIG.params,
+        messages: [],
+        provider: undefined,
       };
 
       await chatService.getChatCompletion(params, options);
@@ -656,6 +682,7 @@ describe('ChatService', () => {
         stream: true,
         ...DEFAULT_AGENT_CONFIG.params,
         ...params,
+        apiMode: 'responses',
       };
 
       const result = await chatService.getChatCompletion(params, options);

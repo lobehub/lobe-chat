@@ -71,6 +71,9 @@
   "mistral": {
     "description": "Mistral biedt geavanceerde algemene, professionele en onderzoeksmodellen, die breed worden toegepast in complexe redenering, meertalige taken, codegeneratie en meer. Via functionele aanroepinterfaces kunnen gebruikers aangepaste functies integreren voor specifieke toepassingen."
   },
+  "modelscope": {
+    "description": "ModelScope is een door Alibaba Cloud gelanceerd platform voor model-als-een-service, dat een breed scala aan AI-modellen en inferentiediensten biedt."
+  },
   "moonshot": {
     "description": "Moonshot is een open platform gelanceerd door Beijing Dark Side Technology Co., Ltd., dat verschillende modellen voor natuurlijke taalverwerking biedt, met een breed toepassingsgebied, waaronder maar niet beperkt tot contentcreatie, academisch onderzoek, slimme aanbevelingen, medische diagnose, en ondersteunt lange tekstverwerking en complexe generatietaken."
   },
