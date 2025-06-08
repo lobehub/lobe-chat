@@ -206,14 +206,8 @@
   "Phi-3.5-vision-instrust": {
     "description": "Zaktualizowana wersja modelu Phi-3-vision."
   },
-  "Pro/Qwen/Qwen2-1.5B-Instruct": {
-    "description": "Qwen2-1.5B-Instruct to model dużego języka z serii Qwen2, dostosowany do instrukcji, o rozmiarze parametrów wynoszącym 1.5B. Model ten oparty jest na architekturze Transformer, wykorzystując funkcję aktywacji SwiGLU, przesunięcia QKV w uwadze oraz grupowe zapytania uwagi. Wykazuje doskonałe wyniki w wielu testach benchmarkowych dotyczących rozumienia języka, generowania, zdolności wielojęzycznych, kodowania, matematyki i wnioskowania, przewyższając większość modeli open-source. W porównaniu do Qwen1.5-1.8B-Chat, Qwen2-1.5B-Instruct wykazuje znaczną poprawę wydajności w testach MMLU, HumanEval, GSM8K, C-Eval i IFEval, mimo że ma nieco mniejszą liczbę parametrów."
-  },
   "Pro/Qwen/Qwen2-7B-Instruct": {
     "description": "Qwen2-7B-Instruct to model dużego języka z serii Qwen2, dostosowany do instrukcji, o rozmiarze parametrów wynoszącym 7B. Model ten oparty jest na architekturze Transformer, wykorzystując funkcję aktywacji SwiGLU, przesunięcia QKV w uwadze oraz grupowe zapytania uwagi. Może obsługiwać duże wejścia. Model ten wykazuje doskonałe wyniki w wielu testach benchmarkowych dotyczących rozumienia języka, generowania, zdolności wielojęzycznych, kodowania, matematyki i wnioskowania, przewyższając większość modeli open-source i wykazując konkurencyjność z modelami własnościowymi w niektórych zadaniach. Qwen2-7B-Instruct wykazuje znaczną poprawę wydajności w wielu ocenach w porównaniu do Qwen1.5-7B-Chat."
-  },
-  "Pro/Qwen/Qwen2-VL-7B-Instruct": {
-    "description": "Qwen2-VL to najnowsza iteracja modelu Qwen-VL, osiągająca najnowocześniejsze wyniki w benchmarkach zrozumienia wizualnego."
   },
   "Pro/Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct to jeden z najnowszych modeli dużych języków wydanych przez Alibaba Cloud. Model 7B ma znacząco poprawione zdolności w zakresie kodowania i matematyki. Oferuje również wsparcie dla wielu języków, obejmując ponad 29 języków, w tym chiński i angielski. Model ten wykazuje znaczną poprawę w zakresie przestrzegania instrukcji, rozumienia danych strukturalnych oraz generowania strukturalnych wyników (szczególnie JSON)."
@@ -232,9 +226,6 @@
   },
   "Pro/deepseek-ai/DeepSeek-R1-0120": {
     "description": "DeepSeek-R1 to model wnioskowania napędzany uczeniem ze wzmocnieniem (RL), rozwiązujący problemy powtarzalności i czytelności w modelach. Przed zastosowaniem RL wprowadzono dane cold start, co dodatkowo zoptymalizowało wydajność wnioskowania. Model osiąga wyniki porównywalne z OpenAI-o1 w zadaniach matematycznych, kodowania i wnioskowania, a dzięki starannie zaprojektowanym metodom treningowym poprawia ogólną efektywność."
-  },
-  "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
-    "description": "DeepSeek-R1-Distill-Qwen-1.5B to model stworzony na podstawie Qwen2.5-Math-1.5B poprzez proces wiedzy distylacji. Model ten został dostrajony za pomocą 800 000 wybrukowanych próbek wygenerowanych przez DeepSeek-R1, co pozwoliło osiągnąć dobre wyniki na wielu testach benchmarkowych. Jako lekki model, osiągnął 83,9% dokładności na MATH-500, 28,9% sukcesów na AIME 2024 oraz 954 punkty na CodeForces, co świadczy o zdolnościach wnioskowania przekraczających jego rozmiar parametrów."
   },
   "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": {
     "description": "DeepSeek-R1-Distill-Qwen-7B to model stworzony na podstawie Qwen2.5-Math-7B poprzez proces wiedzy distylacji. Model ten został wytrenowany na 800 000 wybrukowanych próbkach wygenerowanych przez DeepSeek-R1, co pozwoliło mu wykazać się doskonałymi zdolnościami wnioskowania. W wielu testach referencyjnych osiągnął znakomite wyniki, w tym 92,8% dokładności na MATH-500, 55,5% sukcesów na AIME 2024 oraz 1189 punktów na CodeForces, co potwierdza jego silne umiejętności matematyczne i programistyczne jako modelu o rozmiarze 7B."
@@ -256,9 +247,6 @@
   },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview to najnowszy eksperymentalny model badawczy Qwen, skoncentrowany na zwiększeniu zdolności wnioskowania AI. Poprzez eksplorację złożonych mechanizmów, takich jak mieszanie języków i wnioskowanie rekurencyjne, główne zalety obejmują silne zdolności analizy wnioskowania, matematyki i programowania. Jednocześnie występują problemy z przełączaniem języków, cyklami wnioskowania, kwestiami bezpieczeństwa oraz różnicami w innych zdolnościach."
-  },
-  "Qwen/Qwen2-1.5B-Instruct": {
-    "description": "Qwen2-1.5B-Instruct to model dużego języka z serii Qwen2, dostosowany do instrukcji, o rozmiarze parametrów wynoszącym 1.5B. Model ten oparty jest na architekturze Transformer, wykorzystując funkcję aktywacji SwiGLU, przesunięcia QKV w uwadze oraz grupowe zapytania uwagi. Wykazuje doskonałe wyniki w wielu testach benchmarkowych dotyczących rozumienia języka, generowania, zdolności wielojęzycznych, kodowania, matematyki i wnioskowania, przewyższając większość modeli open-source. W porównaniu do Qwen1.5-1.8B-Chat, Qwen2-1.5B-Instruct wykazuje znaczną poprawę wydajności w testach MMLU, HumanEval, GSM8K, C-Eval i IFEval, mimo że ma nieco mniejszą liczbę parametrów."
   },
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2 to zaawansowany uniwersalny model językowy, wspierający różne typy poleceń."
@@ -418,9 +406,6 @@
   },
   "THUDM/GLM-Z1-Rumination-32B-0414": {
     "description": "GLM-Z1-Rumination-32B-0414 to model głębokiego wnioskowania z zdolnością do refleksji (konkurujący z Deep Research OpenAI). W przeciwieństwie do typowych modeli głębokiego myślenia, model refleksyjny stosuje dłuższy czas głębokiego myślenia do rozwiązywania bardziej otwartych i złożonych problemów."
-  },
-  "THUDM/chatglm3-6b": {
-    "description": "ChatGLM3-6B to otwarty model z serii ChatGLM, opracowany przez Zhipu AI. Model ten zachowuje doskonałe cechy poprzednich modeli, takie jak płynność rozmowy i niski próg wdrożenia, jednocześnie wprowadzając nowe funkcje. Wykorzystuje bardziej zróżnicowane dane treningowe, większą liczbę kroków treningowych i bardziej rozsądne strategie treningowe, osiągając doskonałe wyniki w modelach pretrenowanych poniżej 10B. ChatGLM3-6B obsługuje złożone scenariusze, takie jak wieloetapowe rozmowy, wywoływanie narzędzi, wykonywanie kodu i zadania agenta. Oprócz modelu konwersacyjnego, udostępniono również podstawowy model ChatGLM-6B-Base oraz model do rozmów długotematycznych ChatGLM3-6B-32K. Model jest całkowicie otwarty dla badań akademickich i pozwala na bezpłatne wykorzystanie komercyjne po rejestracji."
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B to otwarta wersja, oferująca zoptymalizowane doświadczenie dialogowe dla aplikacji konwersacyjnych."
@@ -1390,9 +1375,6 @@
   },
   "hunyuan-vision": {
     "description": "Najnowocześniejszy model multimodalny Hunyuan, wspierający generowanie treści tekstowych na podstawie obrazów i tekstu."
-  },
-  "internlm/internlm2_5-20b-chat": {
-    "description": "Innowacyjny model open source InternLM2.5, dzięki dużej liczbie parametrów, zwiększa inteligencję dialogową."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 oferuje inteligentne rozwiązania dialogowe w różnych scenariuszach."
