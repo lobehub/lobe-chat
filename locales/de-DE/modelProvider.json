@@ -208,6 +208,10 @@
         "title": "Client-Anforderungsmodus verwenden"
       },
       "helpDoc": "Konfigurationsanleitung",
+      "responsesApi": {
+        "desc": "Verwendet das neue Anforderungsformat von OpenAI, um fortgeschrittene Funktionen wie Chain-of-Thought freizuschalten",
+        "title": "Verwendung des Responses API-Standards"
+      },
       "waitingForMore": "Weitere Modelle werden <1>geplant</1>, bitte warten Sie"
     },
     "createNew": {

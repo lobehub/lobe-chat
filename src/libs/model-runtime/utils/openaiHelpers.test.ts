@@ -3,7 +3,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
 
-import { convertMessageContent, convertOpenAIMessages } from './openaiHelpers';
+import {
+  convertMessageContent,
+  convertOpenAIMessages,
+  convertOpenAIResponseInputs,
+} from './openaiHelpers';
 import { parseDataUri } from './uriParser';
 
 // 模拟依赖
@@ -142,5 +146,145 @@ describe('convertOpenAIMessages', () => {
     expect(result).toEqual(messages);
 
     expect(Promise.all).toHaveBeenCalledTimes(2); // 一次用于消息数组，一次用于内容数组
+  });
+});
+
+describe('convertOpenAIResponseInputs', () => {
+  it('应该正确转换普通文本消息', async () => {
+    const messages: OpenAI.ChatCompletionMessageParam[] = [
+      { role: 'user', content: 'Hello' },
+      { role: 'assistant', content: 'Hi there!' },
+    ];
+
+    const result = await convertOpenAIResponseInputs(messages);
+
+    expect(result).toEqual([
+      { role: 'user', content: 'Hello' },
+      { role: 'assistant', content: 'Hi there!' },
+    ]);
+  });
+
+  it('应该正确转换带有工具调用的消息', async () => {
+    const messages: OpenAI.ChatCompletionMessageParam[] = [
+      {
+        role: 'assistant',
+        content: '',
+        tool_calls: [
+          {
+            id: 'call_123',
+            type: 'function',
+            function: {
+              name: 'test_function',
+              arguments: '{"key": "value"}',
+            },
+          },
+        ],
+      },
+    ];
+
+    const result = await convertOpenAIResponseInputs(messages);
+
+    expect(result).toEqual([
+      {
+        arguments: 'test_function',
+        call_id: 'call_123',
+        name: 'test_function',
+        type: 'function_call',
+      },
+    ]);
+  });
+
+  it('应该正确转换工具响应消息', async () => {
+    const messages: OpenAI.ChatCompletionMessageParam[] = [
+      {
+        role: 'tool',
+        content: 'Function result',
+        tool_call_id: 'call_123',
+      },
+    ];
+
+    const result = await convertOpenAIResponseInputs(messages);
+
+    expect(result).toEqual([
+      {
+        call_id: 'call_123',
+        output: 'Function result',
+        type: 'function_call_output',
+      },
+    ]);
+  });
+
+  it('应该正确转换包含图片的消息', async () => {
+    const messages: OpenAI.ChatCompletionMessageParam[] = [
+      {
+        role: 'user',
+        content: [
+          { type: 'text', text: 'Here is an image' },
+          {
+            type: 'image_url',
+            image_url: {
+              url: 'data:image/jpeg;base64,test123',
+            },
+          },
+        ],
+      },
+    ];
+
+    const result = await convertOpenAIResponseInputs(messages);
+
+    expect(result).toEqual([
+      {
+        role: 'user',
+        content: [
+          { type: 'input_text', text: 'Here is an image' },
+          {
+            type: 'input_image',
+            image_url: 'data:image/jpeg;base64,test123',
+          },
+        ],
+      },
+    ]);
+  });
+
+  it('应该正确处理混合类型的消息序列', async () => {
+    const messages: OpenAI.ChatCompletionMessageParam[] = [
+      { role: 'user', content: 'I need help with a function' },
+      {
+        role: 'assistant',
+        content: '',
+        tool_calls: [
+          {
+            id: 'call_456',
+            type: 'function',
+            function: {
+              name: 'get_data',
+              arguments: '{}',
+            },
+          },
+        ],
+      },
+      {
+        role: 'tool',
+        content: '{"result": "success"}',
+        tool_call_id: 'call_456',
+      },
+    ];
+
+    const result = await convertOpenAIResponseInputs(messages);
+
+    expect(result).toEqual([
+      { role: 'user', content: 'I need help with a function' },
+      {
+        arguments: 'get_data',
+        call_id: 'call_456',
+        name: 'get_data',
+        type: 'function_call',
+      },
+      {
+        call_id: 'call_456',
+        output: '{"result": "success"}',
+        type: 'function_call_output',
+      },
+    ]);
   });
 });

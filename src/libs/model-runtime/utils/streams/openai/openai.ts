@@ -3,9 +3,9 @@ import type { Stream } from 'openai/streaming';
 
 import { ChatMessageError, CitationItem } from '@/types/message';
 
-import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
-import { ChatStreamCallbacks } from '../../types';
-import { convertUsage } from '../usageConverter';
+import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../../error';
+import { ChatStreamCallbacks } from '../../../types';
+import { convertUsage } from '../../usageConverter';
 import {
   FIRST_CHUNK_ERROR_KEY,
   StreamContext,
@@ -18,9 +18,9 @@ import {
   createSSEProtocolTransformer,
   createTokenSpeedCalculator,
   generateToolCallId,
-} from './protocol';
+} from '../protocol';
 
-export const transformOpenAIStream = (
+const transformOpenAIStream = (
   chunk: OpenAI.ChatCompletionChunk,
   streamContext: StreamContext,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
