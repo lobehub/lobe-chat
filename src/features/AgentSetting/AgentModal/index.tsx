@@ -16,6 +16,7 @@ const AgentModal = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = Form.useForm();
   const enableMaxTokens = AntdForm.useWatch(['chatConfig', 'enableMaxTokens'], form);
+  const enableReasoningEffort = AntdForm.useWatch(['chatConfig', 'enableReasoningEffort'], form);
   const config = useStore(selectors.currentAgentConfig, isEqual);
 
   const updateConfig = useStore((s) => s.setAgentConfig);
@@ -95,7 +96,7 @@ const AgentModal = memo(() => {
           />
         ),
         desc: t('settingModel.reasoningEffort.desc'),
-        hidden: !config.chatConfig.enableReasoningEffort,
+        hidden: !enableReasoningEffort,
         label: t('settingModel.reasoningEffort.title'),
         name: ['params', 'reasoning_effort'],
         tag: 'reasoning_effort',
