@@ -79,6 +79,8 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
         } else {
           payload.reasoning.summary = 'auto';
         }
+
+        return pruneReasoningPayload(payload) as any;
       }
 
       return { ...rest, model, stream: payload.stream ?? true, tools: openaiTools } as any;
