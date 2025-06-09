@@ -2,6 +2,48 @@
 
 # Changelog
 
+### [Version&nbsp;1.91.3](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.91.2...v1.91.3)
+<sup>Released on **2025-06-06**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Some web search bugs.
+
+
+#### 💄 Styles
+
+- **misc**: Support Vertex AI thought summaries.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **misc**: Some web search bugs, closes [#8068](https://github.com/jaworldwideorg/OneJA-Bot/issues/8068) ([bebe7a3](https://github.com/jaworldwideorg/OneJA-Bot/commit/bebe7a3))
+
+
+
+#### Styles
+
+* **misc**: Support Vertex AI thought summaries, closes [#8090](https://github.com/jaworldwideorg/OneJA-Bot/issues/8090) ([1355a2e](https://github.com/jaworldwideorg/OneJA-Bot/commit/1355a2e))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.91.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.91.1...v1.91.2)
 <sup>Released on **2025-06-06**</sup>
 

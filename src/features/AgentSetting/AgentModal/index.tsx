@@ -1,7 +1,7 @@
 'use client';
 
 import { Form, type FormGroupItemType, SliderWithInput } from '@lobehub/ui';
-import { Switch } from 'antd';
+import { Form as AntdForm, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +15,7 @@ import { selectors, useStore } from '../store';
 const AgentModal = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = Form.useForm();
+  const enableMaxTokens = AntdForm.useWatch(['chatConfig', 'enableMaxTokens'], form);
   const config = useStore(selectors.currentAgentConfig, isEqual);
 
   const updateConfig = useStore((s) => s.setAgentConfig);
@@ -69,7 +70,7 @@ const AgentModal = memo(() => {
         children: <SliderWithInput max={32_000} min={0} step={100} unlimitedInput={true} />,
         desc: t('settingModel.maxTokens.desc'),
         divider: false,
-        hidden: !config.chatConfig.enableMaxTokens,
+        hidden: !enableMaxTokens,
         label: t('settingModel.maxTokens.title'),
         name: ['params', 'max_tokens'],
         tag: 'max_tokens',
