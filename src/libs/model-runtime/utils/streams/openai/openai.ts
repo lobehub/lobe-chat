@@ -211,7 +211,7 @@ const transformOpenAIStream = (
 
       if (typeof content === 'string') {
         // 清除 <think> 及 </think> 标签
-        const thinkingContent = content.replace(/<\/?think>/g, '');
+        const thinkingContent = content.replaceAll(/<\/?think>/g, '');
 
         // 判断是否有 <think> 或 </think> 标签，更新 thinkingInContent 状态
         if (content.includes('<think>')) {
@@ -248,7 +248,11 @@ const transformOpenAIStream = (
                 id: chunk.id,
                 type: 'grounding',
               },
-              { data: thinkingContent, id: chunk.id, type: streamContext?.thinkingInContent ? 'reasoning' : 'text' },
+              {
+                data: thinkingContent,
+                id: chunk.id,
+                type: streamContext?.thinkingInContent ? 'reasoning' : 'text',
+              },
             ];
           }
         }
