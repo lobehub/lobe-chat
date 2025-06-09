@@ -20,7 +20,17 @@ import {
 import { OpenAIStreamOptions } from './openai';
 
 const transformOpenAIStream = (
-  chunk: OpenAI.Responses.ResponseStreamEvent,
+  chunk: OpenAI.Responses.ResponseStreamEvent | {
+    annotation: {
+      end_index: number;
+      start_index: number;
+      title: string;
+      type: 'url_citation';
+      url: string;
+    };
+    item_id: string;
+    type: 'response.output_text.annotation.added';
+  },
   streamContext: StreamContext,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
   // handle the first chunk error
@@ -106,41 +116,39 @@ const transformOpenAIStream = (
         return { data: chunk.delta, id: chunk.item_id, type: 'reasoning' };
       }
 
-      case 'response.completed': {
-        const response_completed_results = [];
+      case 'response.output_text.annotation.added': {
+        const citations = chunk.annotation;
 
-        if ((chunk as any).response.output) {
-          const outputs = (chunk as any).response.output;
-          const lastMessage = outputs?.[outputs.length - 1];
-          const lastContent = lastMessage?.content?.[lastMessage.content.length - 1];
+        if (streamContext.returnedCitationArray) {
+          streamContext.returnedCitationArray.push({
+            title: citations.title,
+            url: citations.url,
+          } as CitationItem);
+        }
 
-          const citations = lastContent?.annotations;
-          if (citations) {
-            response_completed_results.push({
-              data: {
-                citations: citations.map(
-                  (item: any) =>
-                    ({
-                      title: item.title,
-                      url: item.url,
-                    }) as CitationItem,
-                ),
-              },
-              id: chunk.response.id,
-              type: 'grounding',
-            });
+        return { data: null, id: chunk.item_id, type: 'text' };
+      }
+
+      case 'response.output_item.done': {
+        if (streamContext.returnedCitationArray?.length) {
+          return {
+            data: { citations: streamContext.returnedCitationArray },
+            id: chunk.item.id,
+            type: 'grounding',
           }
         }
 
+        return { data: null, id: chunk.item.id, type: 'text' };
+      }
+
+      case 'response.completed': {
         if (chunk.response.usage) {
-          response_completed_results.push({
+          return {
             data: convertResponseUsage(chunk.response.usage),
             id: chunk.response.id,
             type: 'usage',
-          });
+          };
         }
-
-        if (response_completed_results.length > 0) return response_completed_results as any;
 
         return { data: chunk, id: streamContext.id, type: 'data' };
       }
