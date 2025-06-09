@@ -12,7 +12,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
-      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -30,7 +29,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     releasedAt: '2025-04-17',
     settings: {
       extendParams: ['reasoningEffort'],
-      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -38,7 +36,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
-      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -56,7 +53,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     releasedAt: '2025-04-17',
     settings: {
       extendParams: ['reasoningEffort'],
-      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -129,7 +125,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
-      search: true,
     },
     contextWindowTokens: 200_000,
     description:
@@ -145,7 +140,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     releasedAt: '2025-01-31',
     settings: {
       extendParams: ['reasoningEffort'],
-      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -153,7 +147,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
-      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -169,7 +162,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     releasedAt: '2025-03-19',
     settings: {
       extendParams: ['reasoningEffort'],
-      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -198,7 +190,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
-      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -215,7 +206,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     releasedAt: '2024-12-17',
     settings: {
       extendParams: ['reasoningEffort'],
-      searchImpl: 'params',
     },
     type: 'chat',
   },

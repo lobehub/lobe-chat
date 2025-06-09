@@ -478,11 +478,12 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     ): Promise<Response> {
       const inputStartAt = Date.now();
 
-      const { messages, tools, ...res } = responses?.handlePayload
+      const { messages, reasoning_effort, tools, ...res } = responses?.handlePayload
         ? (responses?.handlePayload(payload, this._options) as ChatStreamPayload)
         : payload;
 
       // remove penalty params
+      delete res.apiMode;
       delete res.frequency_penalty;
       delete res.presence_penalty;
 
@@ -490,6 +491,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
       const postPayload = {
         ...res,
+        ...(reasoning_effort ? { reasoning: { effort: reasoning_effort } } : {}),
         input,
         store: false,
         tools: tools?.map((tool) => this.convertChatCompletionToolToResponseTool(tool)),
