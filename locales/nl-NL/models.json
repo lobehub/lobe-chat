@@ -548,6 +548,12 @@
   "anthropic/claude-3.7-sonnet": {
     "description": "Claude 3.7 Sonnet is het meest geavanceerde model van Anthropic tot nu toe en het eerste hybride redeneermodel op de markt. Claude 3.7 Sonnet kan bijna onmiddellijke reacties of uitgebreide stapsgewijze overpeinzingen genereren, waarbij gebruikers deze processen duidelijk kunnen volgen. Sonnet is bijzonder goed in programmeren, datawetenschap, visuele verwerking en agenttaken."
   },
+  "anthropic/claude-opus-4": {
+    "description": "Claude Opus 4 is het krachtigste model van Anthropic voor het verwerken van zeer complexe taken. Het blinkt uit in prestaties, intelligentie, vloeiendheid en begrip."
+  },
+  "anthropic/claude-sonnet-4": {
+    "description": "Claude Sonnet 4 kan bijna onmiddellijke reacties genereren of uitgebreide stapsgewijze overwegingen, waarbij gebruikers deze processen duidelijk kunnen volgen. API-gebruikers kunnen ook de denktijd van het model nauwkeurig regelen."
+  },
   "aya": {
     "description": "Aya 23 is een meertalig model van Cohere, ondersteunt 23 talen en biedt gemak voor diverse taaltoepassingen."
   },
@@ -772,6 +778,9 @@
   },
   "deepseek-r1": {
     "description": "DeepSeek-R1 is een op versterkend leren (RL) aangedreven inferentiemodel dat de problemen van herhaling en leesbaarheid in het model oplost. Voor RL introduceerde DeepSeek-R1 koude startdata om de inferentieprestaties verder te optimaliseren. Het presteert vergelijkbaar met OpenAI-o1 in wiskunde, code en inferentietaken, en verbetert de algehele effectiviteit door zorgvuldig ontworpen trainingsmethoden."
+  },
+  "deepseek-r1-0528": {
+    "description": "685 miljard parameter full-power model, uitgebracht op 28 mei 2025. DeepSeek-R1 maakt uitgebreid gebruik van versterkend leren in de post-trainingsfase, wat de reden is voor de aanzienlijke verbetering van het redeneervermogen van het model ondanks zeer beperkte gelabelde data. Het presteert uitstekend op taken zoals wiskunde, coderen en natuurlijke taalredenering."
   },
   "deepseek-r1-70b-fast-online": {
     "description": "DeepSeek R1 70B snelle versie, ondersteunt realtime online zoeken en biedt snellere reactietijden zonder in te boeten op modelprestaties."
@@ -1051,6 +1060,9 @@
   },
   "gemini-2.5-pro-preview-05-06": {
     "description": "Gemini 2.5 Pro Preview is Google's meest geavanceerde denkmodel, in staat om te redeneren over complexe problemen in code, wiskunde en STEM-gebieden, en om grote datasets, codebases en documenten te analyseren met lange context."
+  },
+  "gemini-2.5-pro-preview-06-05": {
+    "description": "Gemini 2.5 Pro Preview is Google's meest geavanceerde denkwijze-model, in staat om complexe problemen op het gebied van code, wiskunde en STEM te redeneren, en grote datasets, codebases en documenten te analyseren met lange context."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B is geschikt voor het verwerken van middelgrote taken, met een goede kosteneffectiviteit."
@@ -1340,6 +1352,9 @@
   "hunyuan-t1-20250403": {
     "description": "Verbeter de codegeneratie op projectniveau; verhoog de kwaliteit van tekstgeneratie en schrijfvaardigheid; verbeter het begrip van tekstonderwerpen, multi-turn en to-the-point instructies en woordbegrip; optimaliseer problemen met gemengde traditionele en vereenvoudigde karakters en gemengde Chinese en Engelse output."
   },
+  "hunyuan-t1-20250529": {
+    "description": "Geoptimaliseerd voor tekstcreatie en essay schrijven, verbeterde vaardigheden in frontend codering, wiskunde en logisch redeneren, en verbeterde instructievolging."
+  },
   "hunyuan-t1-latest": {
     "description": "De eerste ultra-grote Hybrid-Transformer-Mamba inferentiemodel in de industrie, dat de inferentiemogelijkheden uitbreidt, met een superieure decodesnelheid en verder afgestemd op menselijke voorkeuren."
   },
@@ -1363,6 +1378,9 @@
   },
   "hunyuan-turbos-20250416": {
     "description": "Upgrade van het pre-trainingsfundament, versterkt het begrip en de naleving van instructies; verbetert wiskundige, codeer-, logische en wetenschappelijke vaardigheden tijdens de afstemmingsfase; verhoogt de kwaliteit van creatieve teksten, tekstbegrip, vertaalnauwkeurigheid en kennisvragen; versterkt de capaciteiten van agenten in diverse domeinen, met speciale aandacht voor het begrip van multi-turn dialogen."
+  },
+  "hunyuan-turbos-20250604": {
+    "description": "Upgrade van de pre-trainingsbasis, verbeterde schrijf- en leesbegripvaardigheden, aanzienlijke verbetering van codeer- en wetenschappelijke vaardigheden, en voortdurende verbetering in het volgen van complexe instructies."
   },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS is de nieuwste versie van het Hunyuan vlaggenschipmodel, met verbeterde denkcapaciteiten en een betere gebruikerservaring."
@@ -1891,6 +1909,9 @@
   },
   "qvq-max": {
     "description": "Tongyi Qianwen QVQ visueel redeneermodel, ondersteunt visuele input en keten van gedachten output, toont sterkere capaciteiten in wiskunde, programmeren, visuele analyse, creatie en algemene taken."
+  },
+  "qvq-plus": {
+    "description": "Visueel redeneermodel. Ondersteunt visuele input en keten van gedachten output. De plus-versie, uitgebracht na het qvq-max model, biedt snellere redeneersnelheid en een betere balans tussen effectiviteit en kosten in vergelijking met het qvq-max model."
   },
   "qwen-coder-plus": {
     "description": "Tongyi Qianwen codeermodel."

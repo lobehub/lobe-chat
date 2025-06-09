@@ -548,6 +548,12 @@
   "anthropic/claude-3.7-sonnet": {
     "description": "Claude 3.7 Sonnet, Anthropic'in şimdiye kadarki en akıllı modeli ve piyasadaki ilk karma akıl yürütme modelidir. Claude 3.7 Sonnet, neredeyse anlık yanıtlar veya uzatılmış adım adım düşünme süreçleri üretebilir; kullanıcılar bu süreçleri net bir şekilde görebilir. Sonnet, programlama, veri bilimi, görsel işleme ve temsilci görevlerde özellikle yeteneklidir."
   },
+  "anthropic/claude-opus-4": {
+    "description": "Claude Opus 4, Anthropic tarafından yüksek karmaşıklıktaki görevleri işlemek için geliştirilen en güçlü modeldir. Performans, zeka, akıcılık ve anlama yeteneği açısından üstün bir performans sergiler."
+  },
+  "anthropic/claude-sonnet-4": {
+    "description": "Claude Sonnet 4, neredeyse anında yanıtlar veya uzatılmış adım adım düşünme süreçleri üretebilir; kullanıcılar bu süreçleri net bir şekilde görebilir. API kullanıcıları ayrıca modelin düşünme süresini ayrıntılı olarak kontrol edebilir."
+  },
   "aya": {
     "description": "Aya 23, Cohere tarafından sunulan çok dilli bir modeldir, 23 dili destekler ve çok dilli uygulamalar için kolaylık sağlar."
   },
@@ -772,6 +778,9 @@
   },
   "deepseek-r1": {
     "description": "DeepSeek-R1, tekrarlayan öğrenme (RL) destekli bir çıkarım modelidir ve modeldeki tekrarlama ve okunabilirlik sorunlarını çözmektedir. RL'den önce, DeepSeek-R1 soğuk başlangıç verilerini tanıtarak çıkarım performansını daha da optimize etmiştir. Matematik, kod ve çıkarım görevlerinde OpenAI-o1 ile benzer bir performans sergilemekte ve özenle tasarlanmış eğitim yöntemleri ile genel etkisini artırmaktadır."
+  },
+  "deepseek-r1-0528": {
+    "description": "685 milyar parametreli tam sürüm model, 28 Mayıs 2025'te yayınlandı. DeepSeek-R1, son eğitim aşamasında pek az etiketli veriyle güçlendirilmiş öğrenme tekniklerini geniş çapta kullanarak modelin çıkarım yeteneğini büyük ölçüde artırdı. Matematik, kodlama, doğal dil çıkarımı gibi görevlerde yüksek performans ve güçlü yetenekler sergiler."
   },
   "deepseek-r1-70b-fast-online": {
     "description": "DeepSeek R1 70B hızlı versiyonu, gerçek zamanlı çevrimiçi arama desteği ile, model performansını korurken daha hızlı yanıt süreleri sunar."
@@ -1051,6 +1060,9 @@
   },
   "gemini-2.5-pro-preview-05-06": {
     "description": "Gemini 2.5 Pro Önizleme, Google'ın en gelişmiş düşünce modelidir ve kod, matematik ve STEM alanlarındaki karmaşık sorunları akıl yürütme yeteneğine sahiptir. Uzun bağlamları analiz ederek büyük veri setleri, kod havuzları ve belgeler üzerinde çalışabilir."
+  },
+  "gemini-2.5-pro-preview-06-05": {
+    "description": "Gemini 2.5 Pro Önizlemesi, Google'ın en gelişmiş düşünce modelidir; kodlama, matematik ve STEM alanlarındaki karmaşık problemleri çözebilir ve uzun bağlam kullanarak büyük veri setleri, kod kütüphaneleri ve belgeleri analiz edebilir."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B, orta ölçekli görev işleme için uygundur ve maliyet etkinliği sunar."
@@ -1340,6 +1352,9 @@
   "hunyuan-t1-20250403": {
     "description": "Proje düzeyinde kod üretme yeteneğini artırır; metin oluşturma ve yazma kalitesini yükseltir; metin anlama, çok turlu konu takibi, toB komut uyumu ve kelime-anlama yeteneklerini geliştirir; karmaşık geleneksel ve basitleştirilmiş Çince ile İngilizce karışık çıktı sorunlarını optimize eder."
   },
+  "hunyuan-t1-20250529": {
+    "description": "Metin oluşturma ve kompozisyon yazımını optimize eder; kod ön yüzü, matematik, mantıksal çıkarım gibi fen bilimleri yeteneklerini geliştirir ve talimatlara uyum yeteneğini artırır."
+  },
   "hunyuan-t1-latest": {
     "description": "Sektördeki ilk ultra büyük ölçekli Hybrid-Transformer-Mamba çıkarım modeli, çıkarım yeteneklerini genişletir, yüksek çözümleme hızı sunar ve insan tercihleri ile daha iyi hizalanır."
   },
@@ -1363,6 +1378,9 @@
   },
   "hunyuan-turbos-20250416": {
     "description": "Ön eğitim tabanı yükseltmesi, tabanın komut anlama ve uyum yeteneklerini güçlendirir; hizalama aşamasında matematik, kodlama, mantık ve bilimsel alanlardaki yetenekleri artırır; yaratıcı yazım kalitesi, metin anlama, çeviri doğruluğu ve bilgi tabanlı soru-cevap gibi beşeri bilimler yeteneklerini geliştirir; çeşitli alanlardaki ajan yeteneklerini güçlendirir, özellikle çok turlu diyalog anlama yeteneğine odaklanır."
+  },
+  "hunyuan-turbos-20250604": {
+    "description": "Ön eğitim tabanı yükseltildi; yazma ve okuduğunu anlama yetenekleri geliştirildi; kodlama ve fen bilimleri yeteneklerinde önemli iyileştirmeler sağlandı; karmaşık talimatlara uyum gibi alanlarda sürekli gelişme devam ediyor."
   },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS, daha güçlü düşünme yeteneği ve daha iyi deneyim sunan en son sürümüdür."
@@ -1891,6 +1909,9 @@
   },
   "qvq-max": {
     "description": "Tongyi Qianwen QVQ görsel akıl yürütme modeli, görsel giriş ve düşünce zinciri çıktısını destekler; matematik, programlama, görsel analiz, yaratım ve genel görevlerde daha güçlü performans sergiler."
+  },
+  "qvq-plus": {
+    "description": "Görsel çıkarım modeli. Görsel girişleri ve düşünce zinciri çıktısını destekler; qvq-max modelinin ardından gelen plus versiyonudur. qvq-max modeline kıyasla, qvq-plus serisi modeller daha hızlı çıkarım yapar ve performans ile maliyet arasında daha dengeli bir sonuç sunar."
   },
   "qwen-coder-plus": {
     "description": "Tongyi Qianwen kodlama modeli."

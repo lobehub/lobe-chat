@@ -548,6 +548,12 @@
   "anthropic/claude-3.7-sonnet": {
     "description": "Claude 3.7 Sonnet 是 Anthropic 迄今為止最智能的模型，也是市場上首個混合推理模型。Claude 3.7 Sonnet 可以產生近乎即時的回應或延長的逐步思考，使用者可以清晰地看到這些過程。Sonnet 特別擅長程式設計、數據科學、視覺處理、代理任務。"
   },
+  "anthropic/claude-opus-4": {
+    "description": "Claude Opus 4 是 Anthropic 用於處理高度複雜任務的最強大模型。它在性能、智慧、流暢性和理解力方面表現卓越。"
+  },
+  "anthropic/claude-sonnet-4": {
+    "description": "Claude Sonnet 4 可以產生近乎即時的回應或延長的逐步思考，使用者可以清楚地看到這些過程。API 使用者還可以對模型思考的時間進行細緻的控制。"
+  },
   "aya": {
     "description": "Aya 23 是 Cohere 推出的多語言模型，支持 23 種語言，為多元化語言應用提供便利。"
   },
@@ -772,6 +778,9 @@
   },
   "deepseek-r1": {
     "description": "DeepSeek-R1 是一款強化學習（RL）驅動的推理模型，解決了模型中的重複性和可讀性問題。在 RL 之前，DeepSeek-R1 引入了冷啟動數據，進一步優化了推理性能。它在數學、程式碼和推理任務中與 OpenAI-o1 表現相當，並且通過精心設計的訓練方法，提升了整體效果。"
+  },
+  "deepseek-r1-0528": {
+    "description": "685B 滿血版模型，2025年5月28日發布。DeepSeek-R1 在後訓練階段大規模使用了強化學習技術，在僅有極少標註資料的情況下，大幅提升了模型推理能力。在數學、程式碼、自然語言推理等任務上，性能較高，能力較強。"
   },
   "deepseek-r1-70b-fast-online": {
     "description": "DeepSeek R1 70B 快速版，支持即時聯網搜索，在保持模型性能的同時提供更快的響應速度。"
@@ -1051,6 +1060,9 @@
   },
   "gemini-2.5-pro-preview-05-06": {
     "description": "Gemini 2.5 Pro Preview 是 Google 最先進的思維模型，能夠對程式碼、數學和 STEM 領域的複雜問題進行推理，以及使用長上下文分析大型數據集、程式庫和文檔。"
+  },
+  "gemini-2.5-pro-preview-06-05": {
+    "description": "Gemini 2.5 Pro Preview 是 Google 最先進的思維模型，能夠對程式碼、數學和STEM領域的複雜問題進行推理，以及使用長上下文分析大型資料集、程式碼庫和文件。"
   },
   "gemma-7b-it": {
     "description": "Gemma 7B 適合中小規模任務處理，兼具成本效益。"
@@ -1340,6 +1352,9 @@
   "hunyuan-t1-20250403": {
     "description": "提升專案級別程式碼生成能力；提升文本生成寫作品質；提升文本理解 topic 的多輪、tob 指令遵循和字詞理解能力；優化繁簡混雜和中英混雜輸出問題。"
   },
+  "hunyuan-t1-20250529": {
+    "description": "優化文本創作、作文寫作，優化程式碼前端、數學、邏輯推理等理科能力，提升指令遵循能力。"
+  },
   "hunyuan-t1-latest": {
     "description": "業界首個超大規模 Hybrid-Transformer-Mamba 推理模型，擴展推理能力，超強解碼速度，進一步對齊人類偏好。"
   },
@@ -1363,6 +1378,9 @@
   },
   "hunyuan-turbos-20250416": {
     "description": "預訓練底座升級，增強底座的指令理解及遵循能力；對齊階段增強數學、程式碼、邏輯、科學等理科能力；提升文創寫作品質、文本理解、翻譯準確率、知識問答等文科能力；增強各領域 Agent 能力，重點加強多輪對話理解能力等。"
+  },
+  "hunyuan-turbos-20250604": {
+    "description": "預訓練底座升級，寫作、閱讀理解能力提升，較大幅度提升程式碼和理科能力，複雜指令遵循等持續提升。"
   },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS 混元旗艦大模型最新版本，具備更強的思考能力，更優的體驗效果。"
@@ -1891,6 +1909,9 @@
   },
   "qvq-max": {
     "description": "通義千問 QVQ 視覺推理模型，支援視覺輸入及思維鏈輸出，在數學、程式設計、視覺分析、創作以及通用任務上都展現了更強的能力。"
+  },
+  "qvq-plus": {
+    "description": "視覺推理模型。支援視覺輸入及思維鏈輸出，繼qvq-max模型後推出的plus版本，相較於qvq-max模型，qvq-plus系列模型推理速度更快，效果和成本更均衡。"
   },
   "qwen-coder-plus": {
     "description": "通義千問程式碼模型。"

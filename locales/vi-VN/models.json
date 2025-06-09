@@ -548,6 +548,12 @@
   "anthropic/claude-3.7-sonnet": {
     "description": "Claude 3.7 Sonnet là mô hình thông minh nhất của Anthropic cho đến nay, và cũng là mô hình suy luận hỗn hợp đầu tiên trên thị trường. Claude 3.7 Sonnet có khả năng tạo ra phản hồi gần như ngay lập tức hoặc suy nghĩ từng bước kéo dài, cho phép người dùng thấy rõ những quá trình này. Sonnet đặc biệt xuất sắc trong lập trình, khoa học dữ liệu, xử lý hình ảnh và các nhiệm vụ đại diện."
   },
+  "anthropic/claude-opus-4": {
+    "description": "Claude Opus 4 là mô hình mạnh mẽ nhất của Anthropic dùng để xử lý các nhiệm vụ phức tạp cao. Nó thể hiện xuất sắc về hiệu suất, trí tuệ, sự mượt mà và khả năng hiểu biết."
+  },
+  "anthropic/claude-sonnet-4": {
+    "description": "Claude Sonnet 4 có thể tạo ra phản hồi gần như tức thì hoặc suy nghĩ từng bước kéo dài, người dùng có thể rõ ràng quan sát quá trình này. Người dùng API cũng có thể kiểm soát chi tiết thời gian suy nghĩ của mô hình."
+  },
   "aya": {
     "description": "Aya 23 là mô hình đa ngôn ngữ do Cohere phát hành, hỗ trợ 23 ngôn ngữ, tạo điều kiện thuận lợi cho các ứng dụng ngôn ngữ đa dạng."
   },
@@ -772,6 +778,9 @@
   },
   "deepseek-r1": {
     "description": "DeepSeek-R1 là một mô hình suy diễn được điều khiển bởi học tăng cường (RL), giải quyết các vấn đề về tính lặp lại và khả năng đọc hiểu trong mô hình. Trước khi áp dụng RL, DeepSeek-R1 đã giới thiệu dữ liệu khởi động lạnh, tối ưu hóa thêm hiệu suất suy diễn. Nó thể hiện hiệu suất tương đương với OpenAI-o1 trong các nhiệm vụ toán học, mã và suy diễn, và thông qua phương pháp đào tạo được thiết kế cẩn thận, nâng cao hiệu quả tổng thể."
+  },
+  "deepseek-r1-0528": {
+    "description": "Mô hình phiên bản đầy đủ 685 tỷ tham số, phát hành ngày 28 tháng 5 năm 2025. DeepSeek-R1 sử dụng rộng rãi kỹ thuật học tăng cường trong giai đoạn huấn luyện sau, nâng cao đáng kể khả năng suy luận của mô hình dù có rất ít dữ liệu gán nhãn. Hiệu suất cao và năng lực mạnh mẽ trong các nhiệm vụ toán học, lập trình, suy luận ngôn ngữ tự nhiên."
   },
   "deepseek-r1-70b-fast-online": {
     "description": "DeepSeek R1 70B phiên bản nhanh, hỗ trợ tìm kiếm trực tuyến theo thời gian thực, cung cấp tốc độ phản hồi nhanh hơn trong khi vẫn giữ hiệu suất của mô hình."
@@ -1051,6 +1060,9 @@
   },
   "gemini-2.5-pro-preview-05-06": {
     "description": "Gemini 2.5 Pro Preview là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận về mã, toán học và các vấn đề phức tạp trong lĩnh vực STEM, cũng như phân tích các tập dữ liệu lớn, kho mã và tài liệu bằng cách sử dụng ngữ cảnh dài."
+  },
+  "gemini-2.5-pro-preview-06-05": {
+    "description": "Gemini 2.5 Pro Preview là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận các vấn đề phức tạp trong lĩnh vực mã nguồn, toán học và STEM, cũng như phân tích dữ liệu lớn, kho mã và tài liệu với ngữ cảnh dài."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B phù hợp cho việc xử lý các nhiệm vụ quy mô vừa và nhỏ, đồng thời mang lại hiệu quả chi phí."
@@ -1340,6 +1352,9 @@
   "hunyuan-t1-20250403": {
     "description": "Nâng cao khả năng tạo mã cấp dự án; cải thiện chất lượng viết văn bản; nâng cao khả năng hiểu chủ đề văn bản đa vòng, tuân thủ chỉ thị toB và hiểu từ ngữ; tối ưu hóa vấn đề đầu ra hỗn hợp phồn thể và giản thể, cũng như hỗn hợp tiếng Trung và tiếng Anh."
   },
+  "hunyuan-t1-20250529": {
+    "description": "Tối ưu hóa sáng tạo văn bản, viết luận, cải thiện khả năng lập trình frontend, toán học, suy luận logic và các kỹ năng khoa học tự nhiên, nâng cao khả năng tuân thủ chỉ dẫn."
+  },
   "hunyuan-t1-latest": {
     "description": "Mô hình suy luận Hybrid-Transformer-Mamba quy mô siêu lớn đầu tiên trong ngành, mở rộng khả năng suy luận, tốc độ giải mã cực nhanh, và tiếp tục điều chỉnh theo sở thích của con người."
   },
@@ -1363,6 +1378,9 @@
   },
   "hunyuan-turbos-20250416": {
     "description": "Nâng cấp nền tảng tiền huấn luyện, tăng cường khả năng hiểu và tuân thủ chỉ thị của nền tảng; tăng cường năng lực các môn khoa học tự nhiên như toán học, lập trình, logic, khoa học trong giai đoạn căn chỉnh; cải thiện chất lượng sáng tạo văn học, hiểu văn bản, độ chính xác dịch thuật, hỏi đáp kiến thức và các năng lực khoa học xã hội; tăng cường năng lực Agent trong các lĩnh vực, đặc biệt là khả năng hiểu đối thoại đa vòng."
+  },
+  "hunyuan-turbos-20250604": {
+    "description": "Nâng cấp nền tảng tiền huấn luyện, cải thiện khả năng viết và đọc hiểu, tăng cường đáng kể năng lực lập trình và khoa học tự nhiên, tiếp tục nâng cao khả năng tuân thủ các chỉ dẫn phức tạp."
   },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS là phiên bản mới nhất của mô hình lớn hỗn hợp Hunyuan, có khả năng tư duy mạnh mẽ hơn và trải nghiệm tốt hơn."
@@ -1891,6 +1909,9 @@
   },
   "qvq-max": {
     "description": "Mô hình suy luận thị giác QVQ của Tongyi Qianwen, hỗ trợ đầu vào thị giác và xuất ra chuỗi suy nghĩ, thể hiện năng lực mạnh mẽ trong toán học, lập trình, phân tích thị giác, sáng tạo và các nhiệm vụ chung."
+  },
+  "qvq-plus": {
+    "description": "Mô hình suy luận thị giác. Hỗ trợ đầu vào hình ảnh và đầu ra chuỗi suy nghĩ, phiên bản plus ra mắt sau mô hình qvq-max, với tốc độ suy luận nhanh hơn, hiệu quả và chi phí cân bằng hơn so với qvq-max."
   },
   "qwen-coder-plus": {
     "description": "Mô hình mã hóa Tongyi Qianwen."

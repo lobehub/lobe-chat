@@ -548,6 +548,12 @@
   "anthropic/claude-3.7-sonnet": {
     "description": "Claude 3.7 Sonnet è il modello più intelligente di Anthropic fino ad oggi ed è il primo modello di ragionamento ibrido sul mercato. Claude 3.7 Sonnet può generare risposte quasi istantanee o pensieri prolungati e graduali, consentendo agli utenti di vedere chiaramente questi processi. Sonnet è particolarmente abile nella programmazione, nella scienza dei dati, nell'elaborazione visiva e nei compiti di agenzia."
   },
+  "anthropic/claude-opus-4": {
+    "description": "Claude Opus 4 è il modello più potente di Anthropic per gestire compiti altamente complessi. Eccelle in prestazioni, intelligenza, fluidità e capacità di comprensione."
+  },
+  "anthropic/claude-sonnet-4": {
+    "description": "Claude Sonnet 4 può generare risposte quasi istantanee o un ragionamento esteso e graduale, che gli utenti possono osservare chiaramente. Gli utenti API possono anche controllare con precisione il tempo di riflessione del modello."
+  },
   "aya": {
     "description": "Aya 23 è un modello multilingue lanciato da Cohere, supporta 23 lingue, facilitando applicazioni linguistiche diversificate."
   },
@@ -772,6 +778,9 @@
   },
   "deepseek-r1": {
     "description": "DeepSeek-R1 è un modello di inferenza guidato da apprendimento rinforzato (RL) che affronta i problemi di ripetitività e leggibilità nel modello. Prima dell'RL, DeepSeek-R1 ha introdotto dati di cold start, ottimizzando ulteriormente le prestazioni di inferenza. Si comporta in modo comparabile a OpenAI-o1 in compiti matematici, di codifica e di inferenza, e migliora l'efficacia complessiva attraverso metodi di addestramento accuratamente progettati."
+  },
+  "deepseek-r1-0528": {
+    "description": "Modello completo da 685 miliardi di parametri, rilasciato il 28 maggio 2025. DeepSeek-R1 utilizza ampiamente tecniche di apprendimento rinforzato nella fase post-addestramento, migliorando notevolmente le capacità di ragionamento del modello con pochissimi dati annotati. Eccelle in matematica, programmazione, ragionamento in linguaggio naturale e altre attività."
   },
   "deepseek-r1-70b-fast-online": {
     "description": "DeepSeek R1 70B versione veloce, supporta la ricerca online in tempo reale, fornendo una velocità di risposta più rapida mantenendo le prestazioni del modello."
@@ -1051,6 +1060,9 @@
   },
   "gemini-2.5-pro-preview-05-06": {
     "description": "Gemini 2.5 Pro Preview è il modello di pensiero più avanzato di Google, in grado di ragionare su problemi complessi nel codice, nella matematica e nei campi STEM, utilizzando analisi di lungo contesto per esaminare grandi set di dati, librerie di codice e documenti."
+  },
+  "gemini-2.5-pro-preview-06-05": {
+    "description": "Gemini 2.5 Pro Preview è il modello di pensiero più avanzato di Google, capace di ragionare su problemi complessi in codice, matematica e ambito STEM, oltre a utilizzare contesti estesi per analizzare grandi dataset, librerie di codice e documenti."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B è adatto per l'elaborazione di compiti di piccole e medie dimensioni, combinando efficienza dei costi."
@@ -1340,6 +1352,9 @@
   "hunyuan-t1-20250403": {
     "description": "Migliorare la capacità di generazione del codice a livello di progetto; migliorare la qualità della scrittura generata dal testo; potenziare la comprensione multi-turno degli argomenti, l’aderenza alle istruzioni toB e la comprensione di parole e termini; ottimizzare i problemi di output misto tra cinese semplificato e tradizionale e tra cinese e inglese."
   },
+  "hunyuan-t1-20250529": {
+    "description": "Ottimizzato per la creazione di testi, la scrittura di saggi, il frontend del codice, la matematica, il ragionamento logico e altre competenze scientifiche, con miglioramenti nella capacità di seguire istruzioni."
+  },
   "hunyuan-t1-latest": {
     "description": "Il primo modello di inferenza ibrido su larga scala Hybrid-Transformer-Mamba del settore, che espande le capacità di inferenza, offre una velocità di decodifica eccezionale e allinea ulteriormente le preferenze umane."
   },
@@ -1363,6 +1378,9 @@
   },
   "hunyuan-turbos-20250416": {
     "description": "Aggiornamento della base pre-addestrata per rafforzare la comprensione e l’aderenza alle istruzioni; miglioramento delle capacità scientifiche in matematica, programmazione, logica e scienze durante la fase di allineamento; potenziamento delle capacità umanistiche come la qualità della scrittura creativa, la comprensione testuale, la precisione della traduzione e il question answering; rafforzamento delle capacità degli agenti in vari settori, con particolare attenzione alla comprensione multi-turno."
+  },
+  "hunyuan-turbos-20250604": {
+    "description": "Aggiornamento della base pre-addestrata, con miglioramenti nelle capacità di scrittura e comprensione della lettura, notevoli progressi nelle competenze di programmazione e scientifiche, e continui miglioramenti nell’aderenza a istruzioni complesse."
   },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS è l'ultima versione del modello di punta Hunyuan, con capacità di pensiero più forti e un'esperienza utente migliore."
@@ -1891,6 +1909,9 @@
   },
   "qvq-max": {
     "description": "Modello di ragionamento visivo QVQ di Tongyi Qianwen, supporta input visivi e output di catene di pensieri, mostrando capacità superiori in matematica, programmazione, analisi visiva, creazione e compiti generali."
+  },
+  "qvq-plus": {
+    "description": "Modello di ragionamento visivo. Supporta input visivi e output a catena di pensiero. Versione plus lanciata dopo il modello qvq-max, con velocità di ragionamento più elevata e un equilibrio migliore tra prestazioni ed efficienza rispetto a qvq-max."
   },
   "qwen-coder-plus": {
     "description": "Modello di codice Tongyi Qianwen."

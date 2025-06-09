@@ -548,6 +548,12 @@
   "anthropic/claude-3.7-sonnet": {
     "description": "Claude 3.7 Sonnet is Anthropic's most advanced model to date and the first hybrid reasoning model on the market. Claude 3.7 Sonnet can generate near-instant responses or extended step-by-step reasoning, allowing users to clearly observe these processes. Sonnet excels particularly in programming, data science, visual processing, and agent tasks."
   },
+  "anthropic/claude-opus-4": {
+    "description": "Claude Opus 4 is Anthropic's most powerful model designed for handling highly complex tasks. It excels in performance, intelligence, fluency, and comprehension."
+  },
+  "anthropic/claude-sonnet-4": {
+    "description": "Claude Sonnet 4 can generate near-instant responses or extended step-by-step reasoning, allowing users to clearly observe these processes. API users also have fine-grained control over the model's thinking time."
+  },
   "aya": {
     "description": "Aya 23 is a multilingual model launched by Cohere, supporting 23 languages, facilitating diverse language applications."
   },
@@ -772,6 +778,9 @@
   },
   "deepseek-r1": {
     "description": "DeepSeek-R1 is a reinforcement learning (RL) driven inference model that addresses issues of repetitiveness and readability within the model. Prior to RL, DeepSeek-R1 introduced cold start data to further optimize inference performance. It performs comparably to OpenAI-o1 in mathematical, coding, and reasoning tasks, and enhances overall effectiveness through meticulously designed training methods."
+  },
+  "deepseek-r1-0528": {
+    "description": "The full-capacity 685B model released on May 28, 2025. DeepSeek-R1 extensively employs reinforcement learning during post-training, significantly enhancing reasoning capabilities with minimal labeled data. It demonstrates strong performance in mathematics, coding, and natural language reasoning tasks."
   },
   "deepseek-r1-70b-fast-online": {
     "description": "DeepSeek R1 70B fast version, supporting real-time online search, providing faster response times while maintaining model performance."
@@ -1051,6 +1060,9 @@
   },
   "gemini-2.5-pro-preview-05-06": {
     "description": "Gemini 2.5 Pro Preview is Google's most advanced reasoning model, capable of reasoning about complex problems in code, mathematics, and STEM fields, as well as analyzing large datasets, codebases, and documents using long context."
+  },
+  "gemini-2.5-pro-preview-06-05": {
+    "description": "Gemini 2.5 Pro Preview is Google's most advanced cognitive model, capable of reasoning through complex problems in code, mathematics, and STEM fields, as well as analyzing large datasets, codebases, and documents using long-context understanding."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B is suitable for medium to small-scale task processing, offering cost-effectiveness."
@@ -1340,6 +1352,9 @@
   "hunyuan-t1-20250403": {
     "description": "Enhance project-level code generation capabilities; improve the quality of text generation and writing; enhance multi-turn topic understanding, ToB instruction compliance, and word comprehension; optimize issues with mixed traditional and simplified Chinese as well as mixed Chinese and English output."
   },
+  "hunyuan-t1-20250529": {
+    "description": "Optimized for text creation and essay writing, with enhanced abilities in frontend coding, mathematics, logical reasoning, and improved instruction-following capabilities."
+  },
   "hunyuan-t1-latest": {
     "description": "The industry's first ultra-large-scale Hybrid-Transformer-Mamba inference model, enhancing reasoning capabilities with exceptional decoding speed, further aligning with human preferences."
   },
@@ -1363,6 +1378,9 @@
   },
   "hunyuan-turbos-20250416": {
     "description": "Upgrade the pre-training foundation to strengthen instruction understanding and compliance; enhance STEM abilities in mathematics, coding, logic, and science during alignment; improve humanities capabilities such as creative writing quality, text comprehension, translation accuracy, and knowledge Q&A; boost agent capabilities across various domains, with a focus on multi-turn dialogue understanding."
+  },
+  "hunyuan-turbos-20250604": {
+    "description": "Upgraded pretraining foundation with improved writing and reading comprehension skills, significantly enhanced coding and STEM abilities, and continuous improvements in following complex instructions."
   },
   "hunyuan-turbos-latest": {
     "description": "The latest version of hunyuan-TurboS, the flagship model of Hunyuan, features enhanced reasoning capabilities and improved user experience."
@@ -1891,6 +1909,9 @@
   },
   "qvq-max": {
     "description": "Tongyi Qianwen QVQ visual reasoning model supports visual input and chain-of-thought output, demonstrating stronger capabilities in mathematics, programming, visual analysis, creation, and general tasks."
+  },
+  "qvq-plus": {
+    "description": "A visual reasoning model supporting visual inputs and chain-of-thought outputs. The plus version, succeeding the qvq-max model, offers faster reasoning speed and a more balanced trade-off between performance and cost."
   },
   "qwen-coder-plus": {
     "description": "Tongyi Qianwen coding model."
