@@ -12,6 +12,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -29,6 +30,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     releasedAt: '2025-04-17',
     settings: {
       extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -36,6 +38,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -53,12 +56,14 @@ export const openaiChatModels: AIChatModelCard[] = [
     releasedAt: '2025-04-17',
     settings: {
       extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
     },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 1_047_576,
@@ -73,11 +78,15 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 8,
     },
     releasedAt: '2025-04-14',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 1_047_576,
@@ -93,6 +102,9 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 1.6,
     },
     releasedAt: '2025-04-14',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
@@ -117,6 +129,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
     },
     contextWindowTokens: 200_000,
     description:
@@ -132,6 +145,31 @@ export const openaiChatModels: AIChatModelCard[] = [
     releasedAt: '2025-01-31',
     settings: {
       extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'o1 系列模型经过强化学习训练，能够在回答前进行思考，并执行复杂的推理任务。o1-pro 模型使用了更多计算资源，以进行更深入的思考，从而持续提供更优质的回答。',
+    displayName: 'o1-pro',
+    id: 'o1-pro',
+    maxOutput: 100_000,
+    pricing: {
+      input: 150,
+      output: 600,
+    },
+    releasedAt: '2025-03-19',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -158,7 +196,9 @@ export const openaiChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -175,6 +215,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     releasedAt: '2024-12-17',
     settings: {
       extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
     },
     type: 'chat',
   },

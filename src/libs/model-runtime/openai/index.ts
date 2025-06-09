@@ -9,14 +9,16 @@ export interface OpenAIModelCard {
 
 const prunePrefixes = ['o1', 'o3', 'o4'];
 
+const oaiSearchContextSize = process.env.OPENAI_SEARCH_CONTEXT_SIZE; // low, medium, high
+
 export const LobeOpenAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.openai.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { model } = payload;
+      const { enabledSearch, model, ...rest } = payload;
 
-      if (model === 'o1-pro') {
-        return { ...payload, apiMode: 'responses' } as ChatStreamPayload;
+      if (model === 'o1-pro' || enabledSearch) {
+        return { ...rest, apiMode: 'responses', enabledSearch, model } as ChatStreamPayload;
       }
 
       if (prunePrefixes.some((prefix) => model.startsWith(prefix))) {
@@ -24,11 +26,10 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
       }
 
       if (model.includes('-search-')) {
-        const oaiSearchContextSize = process.env.OPENAI_SEARCH_CONTEXT_SIZE; // low, medium, high
-
         return {
-          ...payload,
+          ...rest,
           frequency_penalty: undefined,
+          model,
           presence_penalty: undefined,
           stream: payload.stream ?? true,
           temperature: undefined,
@@ -41,7 +42,7 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
         } as any;
       }
 
-      return { ...payload, stream: payload.stream ?? true };
+      return { ...rest, model, stream: payload.stream ?? true };
     },
   },
   debug: {
@@ -57,8 +58,21 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
   },
   provider: ModelProvider.OpenAI,
   responses: {
-    handlePayload: (payload: ChatStreamPayload) => {
-      const { model } = payload;
+    handlePayload: (payload) => {
+      const { enabledSearch, model, tools, ...rest } = payload;
+
+      const openaiTools = enabledSearch
+        ? [
+            ...(tools || []),
+            {
+              type: 'web_search_preview',
+              ...(oaiSearchContextSize && {
+                search_context_size: oaiSearchContextSize,
+              }),
+            },
+          ]
+        : tools;
+
       if (prunePrefixes.some((prefix) => model.startsWith(prefix))) {
         if (!payload.reasoning) {
           payload.reasoning = { summary: 'auto' };
@@ -67,7 +81,7 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
         }
       }
 
-      return { ...payload, stream: payload.stream ?? true };
+      return { ...rest, model, stream: payload.stream ?? true, tools: openaiTools } as any;
     },
   },
 });

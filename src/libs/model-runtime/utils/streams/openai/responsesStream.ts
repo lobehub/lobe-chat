@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 import type { Stream } from 'openai/streaming';
 
-import { ChatMessageError } from '@/types/message';
+import { ChatMessageError, CitationItem } from '@/types/message';
 
 import { AgentRuntimeErrorType } from '../../../error';
 import { convertResponseUsage } from '../../usageConverter';
@@ -107,13 +107,40 @@ const transformOpenAIStream = (
       }
 
       case 'response.completed': {
+        const response_completed_results = [];
+
+        if ((chunk as any).response.output) {
+          const outputs = (chunk as any).response.output;
+          const lastMessage = outputs?.[outputs.length - 1];
+          const lastContent = lastMessage?.content?.[lastMessage.content.length - 1];
+
+          const citations = lastContent?.annotations;
+          if (citations) {
+            response_completed_results.push({
+              data: {
+                citations: citations.map(
+                  (item: any) =>
+                    ({
+                      title: item.title,
+                      url: item.url,
+                    }) as CitationItem,
+                ),
+              },
+              id: chunk.response.id,
+              type: 'grounding',
+            });
+          }
+        }
+
         if (chunk.response.usage) {
-          return {
+          response_completed_results.push({
             data: convertResponseUsage(chunk.response.usage),
             id: chunk.response.id,
             type: 'usage',
-          };
+          });
         }
+
+        if (response_completed_results.length > 0) return response_completed_results as any;
 
         return { data: chunk, id: streamContext.id, type: 'data' };
       }

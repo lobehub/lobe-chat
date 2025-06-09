@@ -209,14 +209,9 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     }
 
     async chat(
-      { responseMode, apiMode, ...payload }: ChatStreamPayload,
+      { responseMode, ...payload }: ChatStreamPayload,
       options?: ChatMethodOptions,
     ) {
-      // new openai Response API
-      if (apiMode === 'responses') {
-        return this.handleResponseAPIMode(payload, options);
-      }
-
       try {
         const inputStartAt = Date.now();
         const postPayload = chatCompletion?.handlePayload
@@ -225,6 +220,11 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
               ...payload,
               stream: payload.stream ?? true,
             } as OpenAI.ChatCompletionCreateParamsStreaming);
+
+        // new openai Response API
+        if ((postPayload as any).apiMode === 'responses') {
+          return this.handleResponseAPIMode(payload, options);
+        }
 
         const messages = await convertOpenAIMessages(postPayload.messages);
 
@@ -478,7 +478,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     ): Promise<Response> {
       const inputStartAt = Date.now();
 
-      const { messages, ...res } = responses?.handlePayload
+      const { messages, tools, ...res } = responses?.handlePayload
         ? (responses?.handlePayload(payload, this._options) as ChatStreamPayload)
         : payload;
 
@@ -492,7 +492,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         ...res,
         input,
         store: false,
-        tools: payload.tools?.map((tool) => this.convertChatCompletionToolToResponseTool(tool)),
+        tools: tools?.map((tool) => this.convertChatCompletionToolToResponseTool(tool)),
       } as OpenAI.Responses.ResponseCreateParamsStreaming;
 
       if (debug?.responses?.()) {
