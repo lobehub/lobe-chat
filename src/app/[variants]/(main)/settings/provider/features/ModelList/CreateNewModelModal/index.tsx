@@ -30,7 +30,7 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ open, setOpen }) => {
 
   return (
     <Modal
-      destroyOnClose
+      destroyOnHidden
       footer={[
         <Button key="cancel" onClick={closeModal}>
           {t('cancel', { ns: 'common' })}

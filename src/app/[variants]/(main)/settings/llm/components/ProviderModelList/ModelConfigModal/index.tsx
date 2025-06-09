@@ -5,7 +5,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useUserStore } from '@/store/user';
-import { modelConfigSelectors } from '@/store/user/slices/modelList/selectors';
+import { modelConfigSelectors } from '@/store/user/selectors';
 
 import ModelConfigForm from './Form';
 
@@ -39,7 +39,7 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
 
   return (
     <Modal
-      destroyOnClose
+      destroyOnHidden
       footer={[
         <Button key="cancel" onClick={closeModal}>
           {tc('cancel')}

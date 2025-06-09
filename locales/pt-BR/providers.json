@@ -71,6 +71,9 @@
   "mistral": {
     "description": "A Mistral oferece modelos avançados gerais, especializados e de pesquisa, amplamente utilizados em raciocínio complexo, tarefas multilíngues, geração de código, entre outros, permitindo que os usuários integrem funcionalidades personalizadas por meio de interfaces de chamada de função."
   },
+  "modelscope": {
+    "description": "ModelScope é uma plataforma de modelo como serviço lançada pela Alibaba Cloud, que oferece uma ampla variedade de modelos de IA e serviços de inferência."
+  },
   "moonshot": {
     "description": "Moonshot é uma plataforma de código aberto lançada pela Beijing Dark Side Technology Co., Ltd., oferecendo uma variedade de modelos de processamento de linguagem natural, com ampla gama de aplicações, incluindo, mas não se limitando a, criação de conteúdo, pesquisa acadêmica, recomendações inteligentes e diagnósticos médicos, suportando processamento de textos longos e tarefas de geração complexas."
   },
@@ -94,6 +97,9 @@
   },
   "ppio": {
     "description": "O PPIO Paiouyun oferece serviços de API de modelos de código aberto estáveis e com alto custo-benefício, suportando toda a linha DeepSeek, Llama, Qwen e outros grandes modelos líderes da indústria."
+  },
+  "qiniu": {
+    "description": "Qiniu é um fornecedor de serviços de cloud leader, oferecendo API de IA de alta velocidade e eficiência, incluindo modelos Alibaba, com opções flexíveis para construir e aplicar aplicações de IA."
   },
   "qwen": {
     "description": "Qwen é um modelo de linguagem de grande escala desenvolvido pela Alibaba Cloud, com forte capacidade de compreensão e geração de linguagem natural. Ele pode responder a várias perguntas, criar conteúdo escrito, expressar opiniões e escrever código, atuando em vários campos."

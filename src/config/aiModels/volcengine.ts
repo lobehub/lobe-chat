@@ -8,6 +8,32 @@ const doubaoChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      vision: true,
+    },
+    config: {
+      deploymentName: 'doubao-1-5-thinking-vision-pro-250428',
+    },
+    contextWindowTokens: 131_072,
+    description:
+      '全新视觉深度思考模型，具备更强的通用多模态理解和推理能力，在 59 个公开评测基准中的 37 个上取得 SOTA 表现。',
+    displayName: 'Doubao 1.5 Thinking Vision Pro',
+    enabled: true,
+    id: 'Doubao-1.5-thinking-vision-pro',
+    maxOutput: 16_000,
+    pricing: {
+      currency: 'CNY',
+      input: 3,
+      output: 9,
+    },
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
     },
     config: {
       deploymentName: 'doubao-1-5-thinking-pro-250415',
@@ -39,7 +65,6 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       'Doubao-1.5全新深度思考模型 (m 版本自带原生多模态深度推理能力)，在数学、编程、科学推理等专业领域及创意写作等通用任务中表现突出，在AIME 2024、Codeforces、GPQA等多项权威基准上达到或接近业界第一梯队水平。支持128k上下文窗口，16k输出。',
     displayName: 'Doubao 1.5 Thinking Pro M',
-    enabled: true,
     id: 'Doubao-1.5-thinking-pro-m',
     maxOutput: 16_000,
     pricing: {
@@ -55,11 +80,11 @@ const doubaoChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     config: {
-      deploymentName: 'deepseek-r1-250120',
+      deploymentName: 'deepseek-r1-250528',
     },
-    contextWindowTokens: 98_304,
+    contextWindowTokens: 131_072,
     description:
-      'DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能比肩 OpenAI o1 正式版。',
+      '0528最新版本上线，DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能比肩 OpenAI o1 正式版。',
     displayName: 'DeepSeek R1',
     id: 'deepseek-r1',
     maxOutput: 16_384,

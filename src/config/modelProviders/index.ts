@@ -24,6 +24,7 @@ import JinaProvider from './jina';
 import LMStudioProvider from './lmstudio';
 import MinimaxProvider from './minimax';
 import MistralProvider from './mistral';
+import ModelScopeProvider from './modelscope';
 import MoonshotProvider from './moonshot';
 import NovitaProvider from './novita';
 import NvidiaProvider from './nvidia';
@@ -32,6 +33,7 @@ import OpenAIProvider from './openai';
 import OpenRouterProvider from './openrouter';
 import PerplexityProvider from './perplexity';
 import PPIOProvider from './ppio';
+import QiniuProvider from './qiniu';
 import QwenProvider from './qwen';
 import SambaNovaProvider from './sambanova';
 import Search1APIProvider from './search1api';
@@ -66,6 +68,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   GithubProvider.chatModels,
   MinimaxProvider.chatModels,
   MistralProvider.chatModels,
+  ModelScopeProvider.chatModels,
   MoonshotProvider.chatModels,
   OllamaProvider.chatModels,
   VLLMProvider.chatModels,
@@ -101,6 +104,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   PPIOProvider.chatModels,
   Search1APIProvider.chatModels,
   InfiniAIProvider.chatModels,
+  QiniuProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -128,6 +132,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   GroqProvider,
   PerplexityProvider,
   MistralProvider,
+  ModelScopeProvider,
   Ai21Provider,
   UpstageProvider,
   XAIProvider,
@@ -156,6 +161,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Ai360Provider,
   Search1APIProvider,
   InfiniAIProvider,
+  QiniuProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -191,6 +197,7 @@ export { default as JinaProviderCard } from './jina';
 export { default as LMStudioProviderCard } from './lmstudio';
 export { default as MinimaxProviderCard } from './minimax';
 export { default as MistralProviderCard } from './mistral';
+export { default as ModelScopeProviderCard } from './modelscope';
 export { default as MoonshotProviderCard } from './moonshot';
 export { default as NovitaProviderCard } from './novita';
 export { default as NvidiaProviderCard } from './nvidia';
@@ -199,6 +206,7 @@ export { default as OpenAIProviderCard } from './openai';
 export { default as OpenRouterProviderCard } from './openrouter';
 export { default as PerplexityProviderCard } from './perplexity';
 export { default as PPIOProviderCard } from './ppio';
+export { default as QiniuProviderCard } from './qiniu';
 export { default as QwenProviderCard } from './qwen';
 export { default as SambaNovaProviderCard } from './sambanova';
 export { default as Search1APIProviderCard } from './search1api';

@@ -111,7 +111,7 @@
         "title": "MCP 插件类型"
       },
       "url": {
-        "desc": "输入你的 MCP Server Streamable HTTP 地址，不会以 /sse 结尾",
+        "desc": "输入你的 MCP Server Streamable HTTP 地址，不支持 SSE 模式",
         "invalid": "请输入有效的 URL 地址",
         "label": "Streamable HTTP Endpoint URL",
         "required": "请输入 MCP 服务 URL"
@@ -219,8 +219,24 @@
     "content": "调用插件中...",
     "plugin": "插件运行中..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "查看文件列表",
+      "moveLocalFiles": "移动文件",
+      "readLocalFile": "读取文件内容",
+      "renameLocalFile": "重命名",
+      "searchLocalFiles": "搜索文件",
+      "writeLocalFile": "写入文件"
+    },
+    "title": "本地文件"
+  },
   "pluginList": "插件列表",
   "search": {
+    "apiName": {
+      "crawlMultiPages": "读取多个页面内容",
+      "crawlSinglePage": "读取页面内容",
+      "search": "搜索页面"
+    },
     "config": {
       "addKey": "添加秘钥",
       "close": "删除",

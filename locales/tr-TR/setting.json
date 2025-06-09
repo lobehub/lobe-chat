@@ -170,6 +170,20 @@
     },
     "title": "Asistan Bilgileri"
   },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Farklı renk eğilimlerine sahip gri tonları özelleştirme",
+      "title": "Nötr Renk"
+    },
+    "preview": {
+      "title": "Renk Paleti"
+    },
+    "primaryColor": {
+      "desc": "Özelleştirilebilir tema rengi",
+      "title": "Tema Rengi"
+    },
+    "title": "Uygulama Görünümü"
+  },
   "settingChat": {
     "autoCreateTopicThreshold": {
       "desc": "Mevcut mesaj sayısı bu değeri aştığında otomatik olarak bir konu oluşturulur",
@@ -206,18 +220,44 @@
     },
     "inputTemplate": {
       "desc": "Kullanıcının son mesajı bu şablona doldurulur",
-      "placeholder": "Ön işleme şablonu {{text}}, gerçek zamanlı giriş bilgileri ile değiştirilir",
+      "placeholder": "Ön işleme şablonu {{input_template}}, gerçek zamanlı giriş bilgileri ile değiştirilir",
       "title": "Kullanıcı Girişi Ön İşleme"
     },
     "submit": "Sohbet tercihlerini güncelle",
     "title": "Sohbet Ayarları"
   },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Sohbet içeriğinin yazı tipi boyutu",
+      "marks": {
+        "normal": "Standart"
+      },
+      "title": "Yazı Tipi Boyutu"
+    },
+    "highlighterTheme": {
+      "title": "Kod Vurgulama Teması"
+    },
+    "mermaidTheme": {
+      "title": "Deniz Kızı Teması"
+    },
+    "title": "Sohbet Görünümü"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Sistemi Takip Et",
+      "title": "Dil"
+    },
+    "themeMode": {
+      "auto": "Otomatik",
+      "dark": "Karanlık",
+      "light": "Açık",
+      "title": "Tema"
+    },
+    "title": "Genel Ayarlar"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Max Token Sınırlamasını Etkinleştir"
-    },
-    "enableReasoningEffort": {
-      "title": "Akıl yürütme yoğunluğunu ayarla"
     },
     "frequencyPenalty": {
       "desc": "Değer ne kadar büyükse, kelime dağarcığı o kadar zengin ve çeşitli olur; değer ne kadar düşükse, kelimeler o kadar sade ve basit olur.",
@@ -237,15 +277,6 @@
     "presencePenalty": {
       "desc": "Değer ne kadar büyükse, farklı ifade biçimlerine yönelme eğilimi artar, kavram tekrarından kaçınılır; değer ne kadar küçükse, tekrar eden kavramlar veya anlatımlar kullanma eğilimi artar, ifade daha tutarlı olur.",
       "title": "İfade Çeşitliliği"
-    },
-    "reasoningEffort": {
-      "desc": "Değer ne kadar yüksekse, akıl yürütme yeteneği o kadar güçlüdür, ancak yanıt süresi ve Token tüketimini artırabilir",
-      "options": {
-        "high": "Yüksek",
-        "low": "Düşük",
-        "medium": "Orta"
-      },
-      "title": "Akıl yürütme yoğunluğu"
     },
     "submit": "Model ayarlarını güncelle",
     "temperature": {
@@ -336,37 +367,6 @@
       "preview": "Ses Önizlemesi",
       "title": "Metin Seslendirme"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Avatar"
-    },
-    "fontSize": {
-      "desc": "Sohbet içeriği için yazı boyutu",
-      "marks": {
-        "normal": "Normal"
-      },
-      "title": "Yazı Boyutu"
-    },
-    "lang": {
-      "autoMode": "Sistem Takibi",
-      "title": "Dil"
-    },
-    "neutralColor": {
-      "desc": "Farklı renk eğilimleri için özel nötr renk",
-      "title": "Nötr Renk"
-    },
-    "primaryColor": {
-      "desc": "Özel ana tema rengi",
-      "title": "Ana Renk"
-    },
-    "themeMode": {
-      "auto": "Oto",
-      "dark": "Karanlık",
-      "light": "Açık",
-      "title": "Tema"
-    },
-    "title": "Tema Ayarları"
   },
   "storage": {
     "actions": {

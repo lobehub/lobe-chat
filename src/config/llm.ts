@@ -78,6 +78,9 @@ export const getLLMConfig = () => {
       ENABLED_XINFERENCE: z.boolean(),
       XINFERENCE_API_KEY: z.string().optional(),
 
+      ENABLED_QINIU: z.boolean(),
+      QINIU_API_KEY: z.string().optional(),
+
       ENABLED_QWEN: z.boolean(),
       QWEN_API_KEY: z.string().optional(),
 
@@ -159,6 +162,9 @@ export const getLLMConfig = () => {
 
       ENABLED_INFINIAI: z.boolean(),
       INFINIAI_API_KEY: z.string().optional(),
+
+      ENABLED_MODELSCOPE: z.boolean(),
+      MODELSCOPE_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -236,6 +242,9 @@ export const getLLMConfig = () => {
 
       ENABLED_XINFERENCE: !!process.env.XINFERENCE_API_KEY,
       XINFERENCE_API_KEY: process.env.XINFERENCE_API_KEY,
+
+      ENABLED_QINIU: !!process.env.QINIU_API_KEY,
+      QINIU_API_KEY: process.env.QINIU_API_KEY,
 
       ENABLED_QWEN: !!process.env.QWEN_API_KEY,
       QWEN_API_KEY: process.env.QWEN_API_KEY,
@@ -316,6 +325,9 @@ export const getLLMConfig = () => {
 
       ENABLED_INFINIAI: !!process.env.INFINIAI_API_KEY,
       INFINIAI_API_KEY: process.env.INFINIAI_API_KEY,
+
+      ENABLED_MODELSCOPE: !!process.env.MODELSCOPE_API_KEY,
+      MODELSCOPE_API_KEY: process.env.MODELSCOPE_API_KEY,
     },
   });
 };

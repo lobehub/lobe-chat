@@ -170,6 +170,20 @@
     },
     "title": "Assistant Information"
   },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Custom grayscale with different color tendencies",
+      "title": "Neutral Color"
+    },
+    "preview": {
+      "title": "Color Palette"
+    },
+    "primaryColor": {
+      "desc": "Custom theme color",
+      "title": "Theme Color"
+    },
+    "title": "Application Appearance"
+  },
   "settingChat": {
     "autoCreateTopicThreshold": {
       "desc": "Automatically create a topic when the current message count exceeds this value",
@@ -206,18 +220,44 @@
     },
     "inputTemplate": {
       "desc": "The user's latest message will be filled into this template",
-      "placeholder": "Preprocessing template {{text}} will be replaced with real-time input information",
+      "placeholder": "Preprocessing template {{input_template}} will be replaced with real-time input information",
       "title": "User Input Preprocessing"
     },
     "submit": "Update Chat Preferences",
     "title": "Chat Settings"
   },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Font size of chat content",
+      "marks": {
+        "normal": "Standard"
+      },
+      "title": "Font Size"
+    },
+    "highlighterTheme": {
+      "title": "Code Highlight Theme"
+    },
+    "mermaidTheme": {
+      "title": "Mermaid Theme"
+    },
+    "title": "Chat Appearance"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Follow System",
+      "title": "Language"
+    },
+    "themeMode": {
+      "auto": "Automatic",
+      "dark": "Dark",
+      "light": "Light",
+      "title": "Theme"
+    },
+    "title": "General Settings"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Enable Max Tokens Limit"
-    },
-    "enableReasoningEffort": {
-      "title": "Enable Reasoning Effort Adjustment"
     },
     "frequencyPenalty": {
       "desc": "The higher the value, the more diverse and rich the vocabulary; the lower the value, the simpler and more straightforward the language.",
@@ -237,15 +277,6 @@
     "presencePenalty": {
       "desc": "The higher the value, the more inclined to use different expressions and avoid concept repetition; the lower the value, the more inclined to use repeated concepts or narratives, resulting in more consistent expression.",
       "title": "Expression Divergence"
-    },
-    "reasoningEffort": {
-      "desc": "The higher the value, the stronger the reasoning ability, but it may increase response time and token consumption.",
-      "options": {
-        "high": "High",
-        "low": "Low",
-        "medium": "Medium"
-      },
-      "title": "Reasoning Effort"
     },
     "submit": "Update Model Settings",
     "temperature": {
@@ -336,37 +367,6 @@
       "preview": "Voice Preview",
       "title": "Text-to-Speech Voice"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Avatar"
-    },
-    "fontSize": {
-      "desc": "Font size for chat content",
-      "marks": {
-        "normal": "Normal"
-      },
-      "title": "Font Size"
-    },
-    "lang": {
-      "autoMode": "Follow System",
-      "title": "Language"
-    },
-    "neutralColor": {
-      "desc": "Custom neutral color for different color tendencies",
-      "title": "Neutral Color"
-    },
-    "primaryColor": {
-      "desc": "Custom primary theme color",
-      "title": "Primary Color"
-    },
-    "themeMode": {
-      "auto": "Auto",
-      "dark": "Dark",
-      "light": "Light",
-      "title": "Theme"
-    },
-    "title": "Theme Settings"
   },
   "storage": {
     "actions": {

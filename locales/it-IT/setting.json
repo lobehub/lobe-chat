@@ -170,6 +170,20 @@
     },
     "title": "Informazioni sull'assistente"
   },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Personalizzazione dei grigi con diverse inclinazioni di colore",
+      "title": "Colore Neutro"
+    },
+    "preview": {
+      "title": "Tavolozza"
+    },
+    "primaryColor": {
+      "desc": "Colore del tema personalizzato",
+      "title": "Colore del Tema"
+    },
+    "title": "Aspetto dell'Applicazione"
+  },
   "settingChat": {
     "autoCreateTopicThreshold": {
       "desc": "Una volta superato questo numero di messaggi, verrà creato automaticamente un argomento",
@@ -206,18 +220,44 @@
     },
     "inputTemplate": {
       "desc": "Il template verrà popolato con l'ultimo messaggio dell'utente",
-      "placeholder": "Il modello di input {{text}} verrà sostituito con le informazioni in tempo reale",
+      "placeholder": "Il modello di input {{input_template}} verrà sostituito con le informazioni in tempo reale",
       "title": "Pre-elaborazione dell'input dell'utente"
     },
     "submit": "Aggiorna preferenze chat",
     "title": "Impostazioni della chat"
   },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Dimensione del carattere per il contenuto della chat",
+      "marks": {
+        "normal": "Normale"
+      },
+      "title": "Dimensione del Carattere"
+    },
+    "highlighterTheme": {
+      "title": "Tema di Evidenziazione del Codice"
+    },
+    "mermaidTheme": {
+      "title": "Tema Sirena"
+    },
+    "title": "Aspetto della Chat"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Segui il sistema",
+      "title": "Lingua"
+    },
+    "themeMode": {
+      "auto": "Automatico",
+      "dark": "Scuro",
+      "light": "Chiaro",
+      "title": "Tema"
+    },
+    "title": "Impostazioni Generali"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Abilita limite di risposta singola"
-    },
-    "enableReasoningEffort": {
-      "title": "Attiva la regolazione dell'intensità del ragionamento"
     },
     "frequencyPenalty": {
       "desc": "Maggiore è il valore, più ricca e varia sarà la scelta delle parole; minore è il valore, più semplici e dirette saranno le parole",
@@ -237,15 +277,6 @@
     "presencePenalty": {
       "desc": "Maggiore è il valore, maggiore sarà la tendenza a esprimere in modi diversi, evitando ripetizioni; minore è il valore, maggiore sarà la tendenza a utilizzare concetti o narrazioni ripetute, rendendo l'espressione più coerente",
       "title": "Divergenza espressiva"
-    },
-    "reasoningEffort": {
-      "desc": "Maggiore è il valore, più forte è la capacità di ragionamento, ma potrebbe aumentare il tempo di risposta e il consumo di Token",
-      "options": {
-        "high": "Alto",
-        "low": "Basso",
-        "medium": "Medio"
-      },
-      "title": "Intensità del ragionamento"
     },
     "submit": "Aggiorna impostazioni modello",
     "temperature": {
@@ -336,37 +367,6 @@
       "preview": "Anteprima della voce",
       "title": "Voce di sintesi vocale"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Avatar"
-    },
-    "fontSize": {
-      "desc": "Dimensione del carattere per i messaggi",
-      "marks": {
-        "normal": "Normale"
-      },
-      "title": "Dimensione del carattere"
-    },
-    "lang": {
-      "autoMode": "Segui il sistema",
-      "title": "Lingua"
-    },
-    "neutralColor": {
-      "desc": "Personalizzazione delle sfumature di grigio per diverse preferenze di colore",
-      "title": "Colore neutro"
-    },
-    "primaryColor": {
-      "desc": "Colore del tema personalizzato",
-      "title": "Colore principale"
-    },
-    "themeMode": {
-      "auto": "Automatico",
-      "dark": "Scuro",
-      "light": "Chiaro",
-      "title": "Tema"
-    },
-    "title": "Impostazioni del tema"
   },
   "storage": {
     "actions": {

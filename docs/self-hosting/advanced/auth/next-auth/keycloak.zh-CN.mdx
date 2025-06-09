@@ -13,7 +13,8 @@ tags:
 [Keycloak](https://www.keycloak.org/) 是一个开源的身份和访问管理解决方案，提供单点登录、身份代理和社交登录等功能，适用于现代应用和服务。
 
 <Callout type={'tip'}>
-  若你想要私有部署 Keycloak，我们建议你将之与 LobeChat 一同使用 Docker Compose 部署，这样可以更方便地管理服务。
+  若你想要私有部署 Keycloak，我们建议你将之与 LobeChat 一同使用 Docker Compose
+  部署，这样可以更方便地管理服务。
 </Callout>
 
 ## Keycloak 配置流程
@@ -34,10 +35,12 @@ tags:
   访问你私有部署的 Keycloak 管理控制台（默认为 `http://localhost:8080/admin`），使用管理员账号登录。
 
   1. 创建新领域（Realm）
+
      - 点击左上角的下拉菜单，选择 "Create Realm"
      - 输入名称，例如 "LobeChat"，然后点击 "Create"
 
   2. 创建客户端（Client）
+
      - 在左侧菜单中选择 "Clients"，然后点击 "Create client"
      - 填写以下信息：
        - Client ID: `lobechat`
@@ -62,6 +65,7 @@ tags:
   ### 配置用户和角色（可选）
 
   1. 创建用户
+
      - 在左侧菜单中选择 "Users"，然后点击 "Add user"
      - 填写用户信息，点击 "Create"
      - 在用户详情页，切换到 "Credentials" 选项卡

@@ -170,6 +170,20 @@
     },
     "title": "Informations sur l'agent"
   },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Personnalisation des nuances de gris selon les tendances de couleur",
+      "title": "Couleur neutre"
+    },
+    "preview": {
+      "title": "Palette de couleurs"
+    },
+    "primaryColor": {
+      "desc": "Couleur de thème personnalisée",
+      "title": "Couleur du thème"
+    },
+    "title": "Apparence de l'application"
+  },
   "settingChat": {
     "autoCreateTopicThreshold": {
       "desc": "Une fois que le nombre de messages atteint cette valeur, un sujet sera automatiquement créé",
@@ -206,18 +220,44 @@
     },
     "inputTemplate": {
       "desc": "Le dernier message de l'utilisateur sera rempli dans ce modèle",
-      "placeholder": "Le modèle de prétraitement {{text}} sera remplacé par les informations d'entrée en temps réel",
+      "placeholder": "Le modèle de prétraitement {{input_template}} sera remplacé par les informations d'entrée en temps réel",
       "title": "Modèle de prétraitement de l'entrée utilisateur"
     },
     "submit": "Mettre à jour les préférences de chat",
     "title": "Paramètres de chat"
   },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Taille de la police du contenu de chat",
+      "marks": {
+        "normal": "Standard"
+      },
+      "title": "Taille de la police"
+    },
+    "highlighterTheme": {
+      "title": "Thème de surlignage de code"
+    },
+    "mermaidTheme": {
+      "title": "Thème Sirène"
+    },
+    "title": "Apparence du chat"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Suivre le système",
+      "title": "Langue"
+    },
+    "themeMode": {
+      "auto": "Automatique",
+      "dark": "Sombre",
+      "light": "Clair",
+      "title": "Thème"
+    },
+    "title": "Paramètres généraux"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Activer la limite de tokens par réponse"
-    },
-    "enableReasoningEffort": {
-      "title": "Activer l'ajustement de l'intensité de raisonnement"
     },
     "frequencyPenalty": {
       "desc": "Plus la valeur est élevée, plus le vocabulaire est riche et varié ; plus la valeur est basse, plus le vocabulaire est simple et direct",
@@ -237,15 +277,6 @@
     "presencePenalty": {
       "desc": "Plus la valeur est élevée, plus il y a tendance à utiliser des expressions différentes, évitant la répétition des concepts ; plus la valeur est basse, plus il y a tendance à utiliser des concepts ou des narrations répétitifs, rendant l'expression plus cohérente",
       "title": "Diversité de l'expression"
-    },
-    "reasoningEffort": {
-      "desc": "Plus la valeur est élevée, plus la capacité de raisonnement est forte, mais cela peut augmenter le temps de réponse et la consommation de jetons",
-      "options": {
-        "high": "Élevé",
-        "low": "Bas",
-        "medium": "Moyen"
-      },
-      "title": "Intensité de raisonnement"
     },
     "submit": "Mettre à jour les paramètres du modèle",
     "temperature": {
@@ -336,37 +367,6 @@
       "preview": "Prévisualisation de la voix",
       "title": "Voix de synthèse vocale"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Avatar"
-    },
-    "fontSize": {
-      "desc": "Taille de la police du contenu du chat",
-      "marks": {
-        "normal": "Normal"
-      },
-      "title": "Taille de la police"
-    },
-    "lang": {
-      "autoMode": "Suivre le système",
-      "title": "Langue"
-    },
-    "neutralColor": {
-      "desc": "Personnalisation des nuances de gris pour différentes tendances de couleur",
-      "title": "Couleur neutre"
-    },
-    "primaryColor": {
-      "desc": "Couleur de thème personnalisée",
-      "title": "Couleur principale"
-    },
-    "themeMode": {
-      "auto": "Automatique",
-      "dark": "Sombre",
-      "light": "Clair",
-      "title": "Thème"
-    },
-    "title": "Paramètres du thème"
   },
   "storage": {
     "actions": {

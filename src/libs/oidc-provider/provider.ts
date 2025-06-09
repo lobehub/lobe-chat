@@ -2,10 +2,10 @@ import debug from 'debug';
 import Provider, { Configuration, KoaContextWithOIDC } from 'oidc-provider';
 import urlJoin from 'url-join';
 
-import { appEnv } from '@/config/app';
 import { serverDBEnv } from '@/config/db';
 import { UserModel } from '@/database/models/user';
 import { LobeChatDatabase } from '@/database/type';
+import { appEnv } from '@/envs/app';
 import { oidcEnv } from '@/envs/oidc';
 
 import { DrizzleAdapter } from './adapter';
@@ -256,7 +256,7 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
 
     // 8. 令牌有效期
     ttl: {
-      AccessToken: 3600, // 1 hour in seconds
+      AccessToken: 7 * 24 * 60 * 60, // 1 week temporarily,need to revert 1 hour with better implement
       AuthorizationCode: 600, // 10 minutes
       DeviceCode: 600, // 10 minutes (if enabled)
 

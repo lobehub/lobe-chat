@@ -36,6 +36,12 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
         aria-label={t('tab.chat')}
         href={'/chat'}
         onClick={(e) => {
+          // If Cmd key is pressed, let the default link behavior happen (open in new tab)
+          if (e.metaKey || e.ctrlKey) {
+            return;
+          }
+
+          // Otherwise, prevent default and switch session within the current tab
           e.preventDefault();
           switchBackToChat(useSessionStore.getState().activeId);
         }}

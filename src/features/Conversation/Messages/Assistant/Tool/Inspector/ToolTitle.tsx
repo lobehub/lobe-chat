@@ -1,8 +1,8 @@
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { Globe } from 'lucide-react';
-import { memo } from 'react';
+import { Globe, Laptop } from 'lucide-react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -13,7 +13,10 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { shinyTextStylish } from '@/styles/loading';
+import { LocalSystemManifest } from '@/tools/local-system';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
+
+import BuiltinPluginTitle from './BuiltinPluginTitle';
 
 export const useStyles = createStyles(({ css, token }) => ({
   apiName: css`
@@ -53,12 +56,35 @@ const ToolTitle = memo<ToolTitleProps>(({ identifier, messageId, index, apiName,
 
   const pluginMeta = useToolStore(toolSelectors.getMetaById(identifier), isEqual);
 
-  if (identifier === WebBrowsingManifest.identifier) {
+  const plugins = useMemo(
+    () => [
+      {
+        apiName: t(`search.apiName.${apiName}`, apiName),
+        icon: <Icon icon={Globe} size={13} />,
+        id: WebBrowsingManifest.identifier,
+        title: t('search.title'),
+      },
+      {
+        apiName: t(`localSystem.apiName.${apiName}`, apiName),
+        icon: <Icon icon={Laptop} size={13} />,
+        id: LocalSystemManifest.identifier,
+        title: t('localSystem.title'),
+      },
+    ],
+    [],
+  );
+
+  const builtinPluginTitle = plugins.find((item) => item.id === identifier);
+
+  if (!!builtinPluginTitle) {
     return (
-      <Flexbox align={'center'} className={isLoading ? styles.shinyText : ''} gap={4} horizontal>
-        {isLoading ? <Loader /> : <Icon icon={Globe} size={13} />}
-        <div>{t('search.title')}</div>/<span className={styles.apiName}>{apiName}</span>
-      </Flexbox>
+      <BuiltinPluginTitle
+        {...builtinPluginTitle}
+        identifier={identifier}
+        index={index}
+        messageId={messageId}
+        toolCallId={toolCallId}
+      />
     );
   }
 

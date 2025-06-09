@@ -58,6 +58,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   lobehub?: any;
   minimax?: OpenAICompatibleKeyVault;
   mistral?: OpenAICompatibleKeyVault;
+  modelscope?: OpenAICompatibleKeyVault;
   moonshot?: OpenAICompatibleKeyVault;
   novita?: OpenAICompatibleKeyVault;
   nvidia?: OpenAICompatibleKeyVault;
@@ -67,6 +68,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   password?: string;
   perplexity?: OpenAICompatibleKeyVault;
   ppio?: OpenAICompatibleKeyVault;
+  qiniu?: OpenAICompatibleKeyVault;
   qwen?: OpenAICompatibleKeyVault;
   sambanova?: OpenAICompatibleKeyVault;
   search1api?: OpenAICompatibleKeyVault;

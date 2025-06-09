@@ -74,6 +74,9 @@
   "Doubao-1.5-thinking-pro-m": {
     "description": "Doubao-1.5 è un nuovo modello di pensiero profondo (versione m con capacità di ragionamento multimodale native), che si distingue in matematica, programmazione, ragionamento scientifico e compiti generali come la scrittura creativa, raggiungendo o avvicinandosi ai livelli di punta del settore in vari benchmark autorevoli come AIME 2024, Codeforces, GPQA. Supporta una finestra di contesto di 128k e un output di 16k."
   },
+  "Doubao-1.5-thinking-vision-pro": {
+    "description": "Nuovo modello di pensiero visivo profondo, con una maggiore capacità di comprensione e ragionamento multimodale generale, ottenendo prestazioni SOTA in 37 dei 59 benchmark pubblici."
+  },
   "Doubao-1.5-vision-pro": {
     "description": "Doubao-1.5-vision-pro è un grande modello multimodale aggiornato, che supporta il riconoscimento di immagini a qualsiasi risoluzione e proporzioni estremamente lunghe, migliorando le capacità di ragionamento visivo, riconoscimento di documenti, comprensione delle informazioni dettagliate e rispetto delle istruzioni."
   },
@@ -227,6 +230,9 @@
   "Pro/deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 è un modello di inferenza guidato dall'apprendimento per rinforzo (RL) che affronta i problemi di ripetitività e leggibilità nel modello. Prima dell'RL, DeepSeek-R1 ha introdotto dati di cold start, ottimizzando ulteriormente le prestazioni di inferenza. Si comporta in modo comparabile a OpenAI-o1 in compiti matematici, di codifica e di inferenza, e migliora l'efficacia complessiva grazie a metodi di addestramento ben progettati."
   },
+  "Pro/deepseek-ai/DeepSeek-R1-0120": {
+    "description": "DeepSeek-R1 è un modello di ragionamento guidato da apprendimento rinforzato (RL) che risolve problemi di ripetitività e leggibilità. Prima del RL, ha introdotto dati di cold start per ottimizzare ulteriormente le prestazioni di ragionamento. Le sue prestazioni in matematica, codice e ragionamento sono comparabili a OpenAI-o1, con miglioramenti complessivi grazie a metodi di addestramento accuratamente progettati."
+  },
   "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
     "description": "DeepSeek-R1-Distill-Qwen-1.5B è un modello ottenuto attraverso il distillamento del knowledge da Qwen2.5-Math-1.5B. Questo modello è stato fine-tunato utilizzando 800.000 campioni selezionati generati da DeepSeek-R1, mostrando un'ottima performance in diversi benchmark. Come modello leggero, ha raggiunto un'accuratezza del 83,9% su MATH-500, una percentuale di passaggio del 28,9% su AIME 2024 e una valutazione di 954 su CodeForces, dimostrando capacità di inferenza superiori alla sua scala di parametri."
   },
@@ -351,10 +357,13 @@
     "description": "Modello dell'ultima versione (V5.5), lunghezza del contesto di 128K, con capacità significativamente migliorate in ragionamento matematico, conversazioni in inglese, seguire istruzioni e comprensione di testi lunghi, paragonabile a GPT-4o."
   },
   "SenseChat-5-1202": {
-    "description": "È l'ultima versione basata su V5.5, con miglioramenti significativi rispetto alla versione precedente nelle capacità di base in cinese e inglese, chat, conoscenze scientifiche, conoscenze umanistiche, scrittura, logica matematica e controllo del numero di parole."
+    "description": "Basato sulla versione V5.5 più recente, mostra miglioramenti significativi rispetto alla versione precedente in capacità di base in cinese e inglese, chat, conoscenze scientifiche e umanistiche, scrittura, logica matematica e controllo della lunghezza del testo."
   },
   "SenseChat-5-Cantonese": {
     "description": "Lunghezza del contesto di 32K, supera GPT-4 nella comprensione delle conversazioni in cantonese, paragonabile a GPT-4 Turbo in vari ambiti come conoscenza, ragionamento, matematica e scrittura di codice."
+  },
+  "SenseChat-5-beta": {
+    "description": "Alcune prestazioni superiori a SenseCat-5-1202"
   },
   "SenseChat-Character": {
     "description": "Modello standard, lunghezza del contesto di 8K, alta velocità di risposta."
@@ -416,8 +425,8 @@
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B è una versione open source, progettata per fornire un'esperienza di dialogo ottimizzata per applicazioni conversazionali."
   },
-  "Vendor-A/Qwen/Qwen2.5-72B-Instruct": {
-    "description": "Qwen2.5-72B-Instruct è uno dei più recenti modelli linguistici di grandi dimensioni rilasciati da Alibaba Cloud. Questo modello da 72B ha capacità notevolmente migliorate in codifica e matematica. Il modello offre anche supporto multilingue, coprendo oltre 29 lingue, tra cui cinese e inglese. Ha mostrato miglioramenti significativi nel seguire istruzioni, comprendere dati strutturati e generare output strutturati (soprattutto JSON)."
+  "Tongyi-Zhiwen/QwenLong-L1-32B": {
+    "description": "QwenLong-L1-32B è il primo modello di ragionamento a lungo contesto di grandi dimensioni (LRM) addestrato con apprendimento rinforzato, ottimizzato per compiti di ragionamento su testi lunghi. Il modello utilizza un framework di apprendimento rinforzato con espansione progressiva del contesto, garantendo una transizione stabile da contesti brevi a lunghi. Nei sette benchmark di domande su documenti a lungo contesto, QwenLong-L1-32B supera modelli di punta come OpenAI-o3-mini e Qwen3-235B-A22B, con prestazioni comparabili a Claude-3.7-Sonnet-Thinking. Eccelle in ragionamento matematico, logico e multi-hop."
   },
   "Yi-34B-Chat": {
     "description": "Yi-1.5-34B, mantenendo le eccellenti capacità linguistiche generali della serie originale, ha notevolmente migliorato la logica matematica e le capacità di codifica attraverso un addestramento incrementale su 500 miliardi di token di alta qualità."
@@ -508,6 +517,12 @@
   },
   "ai21-jamba-1.5-mini": {
     "description": "Un modello multilingue con 52 miliardi di parametri (12 miliardi attivi), offre una finestra di contesto lunga 256K, chiamata di funzione, output strutturato e generazione ancorata."
+  },
+  "ai21-labs/AI21-Jamba-1.5-Large": {
+    "description": "Un modello multilingue con 398 miliardi di parametri (94 miliardi attivi), offre una finestra contestuale lunga 256K token, chiamate di funzione, output strutturati e generazione basata su fatti."
+  },
+  "ai21-labs/AI21-Jamba-1.5-Mini": {
+    "description": "Un modello multilingue con 52 miliardi di parametri (12 miliardi attivi), offre una finestra contestuale lunga 256K token, chiamate di funzione, output strutturati e generazione basata su fatti."
   },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet ha elevato gli standard del settore, superando i modelli concorrenti e Claude 3 Opus, dimostrando prestazioni eccezionali in una vasta gamma di valutazioni, mantenendo la velocità e i costi dei nostri modelli di livello medio."
@@ -611,6 +626,12 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet offre un equilibrio ideale tra intelligenza e velocità per i carichi di lavoro aziendali. Fornisce la massima utilità a un prezzo inferiore, affidabile e adatto per distribuzioni su larga scala."
   },
+  "claude-opus-4-20250514": {
+    "description": "Claude Opus 4 è il modello più potente di Anthropic per gestire compiti altamente complessi. Eccelle in prestazioni, intelligenza, fluidità e comprensione."
+  },
+  "claude-sonnet-4-20250514": {
+    "description": "Claude 4 Sonnet può generare risposte quasi istantanee o pensieri graduali prolungati, consentendo agli utenti di vedere chiaramente questi processi. Gli utenti dell'API possono anche controllare in modo dettagliato il tempo di riflessione del modello."
+  },
   "codegeex-4": {
     "description": "CodeGeeX-4 è un potente assistente di programmazione AI, supporta domande intelligenti e completamento del codice in vari linguaggi di programmazione, migliorando l'efficienza dello sviluppo."
   },
@@ -655,6 +676,12 @@
   },
   "cohere-command-r-plus": {
     "description": "Command R+ è un modello ottimizzato per RAG all'avanguardia progettato per affrontare carichi di lavoro di livello aziendale."
+  },
+  "cohere/Cohere-command-r": {
+    "description": "Command R è un modello generativo scalabile progettato per l'uso con RAG e strumenti, che consente alle aziende di implementare AI a livello produttivo."
+  },
+  "cohere/Cohere-command-r-plus": {
+    "description": "Command R+ è un modello ottimizzato all'avanguardia per RAG, progettato per gestire carichi di lavoro aziendali."
   },
   "command": {
     "description": "Un modello di dialogo che segue le istruzioni, con alta qualità e maggiore affidabilità nelle attività linguistiche, e una lunghezza di contesto più lunga rispetto ai nostri modelli generativi di base."
@@ -709,6 +736,12 @@
   },
   "deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 è un modello di inferenza guidato da apprendimento rinforzato (RL) che affronta i problemi di ripetitività e leggibilità nel modello. Prima dell'RL, DeepSeek-R1 ha introdotto dati di cold start, ottimizzando ulteriormente le prestazioni di inferenza. Si comporta in modo comparabile a OpenAI-o1 in compiti matematici, di codifica e di inferenza, e migliora l'efficacia complessiva attraverso metodi di addestramento accuratamente progettati."
+  },
+  "deepseek-ai/DeepSeek-R1-0528": {
+    "description": "DeepSeek R1 migliora significativamente la profondità delle capacità di ragionamento e inferenza grazie all’uso di risorse computazionali aumentate e all’introduzione di meccanismi di ottimizzazione algoritmica nel post-addestramento. Il modello eccelle in vari benchmark, inclusi matematica, programmazione e logica generale, avvicinandosi alle prestazioni di modelli leader come O3 e Gemini 2.5 Pro."
+  },
+  "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B": {
+    "description": "DeepSeek-R1-0528-Qwen3-8B è un modello ottenuto distillando la catena di pensieri da DeepSeek-R1-0528 al modello base Qwen3 8B. Rappresenta lo stato dell’arte tra i modelli open source, superando Qwen3 8B del 10% nel test AIME 2024 e raggiungendo le prestazioni di Qwen3-235B-thinking. Eccelle in ragionamento matematico, programmazione e logica generale, con architettura identica a Qwen3-8B ma con configurazione del tokenizer condivisa con DeepSeek-R1-0528."
   },
   "deepseek-ai/DeepSeek-R1-Distill-Llama-70B": {
     "description": "Il modello di distillazione DeepSeek-R1 ottimizza le prestazioni di inferenza attraverso l'apprendimento rinforzato e dati di avvio a freddo, aggiornando il benchmark multi-task del modello open source."
@@ -812,9 +845,6 @@
   "deepseek-v3-0324": {
     "description": "DeepSeek-V3-0324 è un modello MoE con 671 miliardi di parametri, con vantaggi notevoli nelle capacità di programmazione e tecniche, comprensione del contesto e gestione di testi lunghi."
   },
-  "deepseek/deepseek-chat": {
-    "description": "Un nuovo modello open source che integra capacità generali e di codice, mantenendo non solo le capacità di dialogo generali del modello Chat originale e la potente capacità di elaborazione del codice del modello Coder, ma allineandosi anche meglio alle preferenze umane. Inoltre, DeepSeek-V2.5 ha ottenuto notevoli miglioramenti in vari aspetti, come compiti di scrittura e seguire istruzioni."
-  },
   "deepseek/deepseek-chat-v3-0324": {
     "description": "DeepSeek V3 è un modello misto esperto con 685B di parametri, l'ultima iterazione della serie di modelli di chat di punta del team DeepSeek.\n\nEredita il modello [DeepSeek V3](/deepseek/deepseek-chat-v3) e si comporta eccezionalmente in vari compiti."
   },
@@ -823,6 +853,12 @@
   },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1 ha notevolmente migliorato le capacità di ragionamento del modello con pochissimi dati etichettati. Prima di fornire la risposta finale, il modello genera una catena di pensiero per migliorare l'accuratezza della risposta finale."
+  },
+  "deepseek/deepseek-r1-0528": {
+    "description": "DeepSeek-R1 migliora notevolmente la capacità di ragionamento del modello anche con pochissimi dati annotati. Prima di fornire la risposta finale, il modello genera una catena di pensieri per aumentare la precisione della risposta."
+  },
+  "deepseek/deepseek-r1-0528:free": {
+    "description": "DeepSeek-R1 migliora notevolmente la capacità di ragionamento del modello anche con pochissimi dati annotati. Prima di fornire la risposta finale, il modello genera una catena di pensieri per aumentare la precisione della risposta."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1 Distill Llama 70B è un grande modello di linguaggio basato su Llama3.3 70B, che utilizza il fine-tuning dell'output di DeepSeek R1 per raggiungere prestazioni competitive paragonabili a quelle dei modelli all'avanguardia di grandi dimensioni."
@@ -1010,11 +1046,17 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Gemini 2.0 Flash è una variante del modello Flash, ottimizzata per obiettivi come il rapporto costo-efficacia e la bassa latenza."
   },
-  "gemini-2.0-flash-thinking-exp-01-21": {
-    "description": "Gemini 2.0 Flash Exp è il più recente modello AI multimodale sperimentale di Google, dotato di caratteristiche di nuova generazione, velocità eccezionale, chiamate a strumenti nativi e generazione multimodale."
+  "gemini-2.0-flash-preview-image-generation": {
+    "description": "Gemini 2.0 Flash modello di anteprima, supporta la generazione di immagini"
   },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview è il modello più conveniente di Google, che offre funzionalità complete."
+  },
+  "gemini-2.5-flash-preview-04-17-thinking": {
+    "description": "Gemini 2.5 Flash Preview è il modello Google con il miglior rapporto qualità-prezzo, che offre funzionalità complete."
+  },
+  "gemini-2.5-flash-preview-05-20": {
+    "description": "Gemini 2.5 Flash Preview è il modello Google con il miglior rapporto qualità-prezzo, che offre funzionalità complete."
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental è il modello di pensiero più avanzato di Google, in grado di ragionare su problemi complessi in codice, matematica e nei campi STEM, e di analizzare grandi set di dati, codebase e documenti utilizzando contesti lunghi."
@@ -1232,6 +1274,9 @@
   "gpt-4o-mini-realtime-preview": {
     "description": "Versione in tempo reale di GPT-4o-mini, supporta input e output audio e testuali in tempo reale."
   },
+  "gpt-4o-mini-search-preview": {
+    "description": "La versione preview di GPT-4o mini per la ricerca è un modello appositamente addestrato per comprendere ed eseguire query di ricerca web, utilizzando l’API Chat Completions. Oltre ai costi per token, le query di ricerca web comportano un costo per ogni chiamata allo strumento."
+  },
   "gpt-4o-mini-tts": {
     "description": "GPT-4o mini TTS è un modello di sintesi vocale basato su GPT-4o mini, che offre una generazione di voce di alta qualità a un costo più basso."
   },
@@ -1244,29 +1289,26 @@
   "gpt-4o-realtime-preview-2024-12-17": {
     "description": "Versione in tempo reale di GPT-4o, supporta input e output audio e testuali in tempo reale."
   },
+  "gpt-4o-search-preview": {
+    "description": "La versione preview di GPT-4o per la ricerca è un modello appositamente addestrato per comprendere ed eseguire query di ricerca web, utilizzando l’API Chat Completions. Oltre ai costi per token, le query di ricerca web comportano un costo per ogni chiamata allo strumento."
+  },
   "grok-2-1212": {
     "description": "Questo modello ha migliorato l'accuratezza, il rispetto delle istruzioni e le capacità multilingue."
   },
   "grok-2-vision-1212": {
     "description": "Questo modello ha migliorato l'accuratezza, il rispetto delle istruzioni e le capacità multilingue."
   },
-  "grok-3-beta": {
-    "description": "Modello di punta, specializzato in estrazione di dati, programmazione e sintesi di testi per applicazioni aziendali, con una profonda conoscenza nei settori finanziario, medico, legale e scientifico."
+  "grok-3": {
+    "description": "Modello di punta, eccelle in estrazione dati, programmazione e sintesi testuale per applicazioni aziendali, con profonda conoscenza nei settori finanziario, medico, legale e scientifico."
   },
-  "grok-3-fast-beta": {
-    "description": "Modello di punta, specializzato in estrazione di dati, programmazione e sintesi di testi per applicazioni aziendali, con una profonda conoscenza nei settori finanziario, medico, legale e scientifico."
+  "grok-3-fast": {
+    "description": "Modello di punta, eccelle in estrazione dati, programmazione e sintesi testuale per applicazioni aziendali, con profonda conoscenza nei settori finanziario, medico, legale e scientifico."
   },
-  "grok-3-mini-beta": {
-    "description": "Modello leggero, riflette prima di rispondere. Esegue rapidamente e in modo intelligente, adatto a compiti logici che non richiedono conoscenze approfondite del settore e in grado di acquisire il tracciato di pensiero originale."
+  "grok-3-mini": {
+    "description": "Modello leggero che riflette prima di rispondere. Veloce e intelligente, adatto a compiti logici che non richiedono conoscenze di dominio profonde, con tracciamento del processo di pensiero originale."
   },
-  "grok-3-mini-fast-beta": {
-    "description": "Modello leggero, riflette prima di rispondere. Esegue rapidamente e in modo intelligente, adatto a compiti logici che non richiedono conoscenze approfondite del settore e in grado di acquisire il tracciato di pensiero originale."
-  },
-  "grok-beta": {
-    "description": "Offre prestazioni comparabili a Grok 2, ma con maggiore efficienza, velocità e funzionalità."
-  },
-  "grok-vision-beta": {
-    "description": "L'ultimo modello di comprensione delle immagini, in grado di gestire una vasta gamma di informazioni visive, tra cui documenti, grafici, screenshot e fotografie."
+  "grok-3-mini-fast": {
+    "description": "Modello leggero che riflette prima di rispondere. Veloce e intelligente, adatto a compiti logici che non richiedono conoscenze di dominio profonde, con tracciamento del processo di pensiero originale."
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B è un modello linguistico che combina creatività e intelligenza, unendo diversi modelli di punta."
@@ -1282,6 +1324,9 @@
   },
   "hunyuan-large-longcontext": {
     "description": "Specializzato nel gestire compiti di testi lunghi come riassunti di documenti e domande e risposte sui documenti, possiede anche capacità di generazione di testi generali. Eccelle nell'analisi e nella generazione di testi lunghi, in grado di affrontare efficacemente esigenze complesse e dettagliate di elaborazione di contenuti lunghi."
+  },
+  "hunyuan-large-vision": {
+    "description": "Questo modello è adatto per scenari di comprensione testo-immagine, basato sul modello misto Large di Hunyuan. Supporta input di più immagini a risoluzione arbitraria più testo, generando contenuti testuali, con un focus sulle attività di comprensione testo-immagine e un significativo miglioramento nelle capacità multilingue."
   },
   "hunyuan-lite": {
     "description": "Aggiornato a una struttura MOE, con una finestra di contesto di 256k, è in testa a molti modelli open source in vari set di valutazione su NLP, codice, matematica e settori."
@@ -1307,14 +1352,14 @@
   "hunyuan-t1-20250321": {
     "description": "Costruisce completamente le capacità del modello in scienze umane e scientifiche, con una forte capacità di catturare informazioni in testi lunghi. Supporta il ragionamento per risolvere problemi scientifici di varia difficoltà, inclusi matematica, logica, scienza e codice."
   },
+  "hunyuan-t1-20250403": {
+    "description": "Migliorare la capacità di generazione del codice a livello di progetto; migliorare la qualità della scrittura generata dal testo; potenziare la comprensione multi-turno degli argomenti, l’aderenza alle istruzioni toB e la comprensione di parole e termini; ottimizzare i problemi di output misto tra cinese semplificato e tradizionale e tra cinese e inglese."
+  },
   "hunyuan-t1-latest": {
     "description": "Il primo modello di inferenza ibrido su larga scala Hybrid-Transformer-Mamba del settore, che espande le capacità di inferenza, offre una velocità di decodifica eccezionale e allinea ulteriormente le preferenze umane."
   },
-  "hunyuan-translation": {
-    "description": "Supporta la traduzione tra cinese e inglese, giapponese, francese, portoghese, spagnolo, turco, russo, arabo, coreano, italiano, tedesco, vietnamita, malese e indonesiano, per un totale di 15 lingue, con valutazione automatica basata su un set di valutazione di traduzione multi-scenario e punteggio COMET, mostrando complessivamente prestazioni superiori rispetto ai modelli di dimensioni simili sul mercato in termini di capacità di traduzione reciproca tra le lingue più comuni."
-  },
-  "hunyuan-translation-lite": {
-    "description": "Il modello di traduzione Hunyuan supporta la traduzione in modo conversazionale in linguaggio naturale; supporta la traduzione tra cinese e inglese, giapponese, francese, portoghese, spagnolo, turco, russo, arabo, coreano, italiano, tedesco, vietnamita, malese e indonesiano, per un totale di 15 lingue."
+  "hunyuan-t1-vision": {
+    "description": "Modello di comprensione multimodale profonda Hunyuan, supporta catene di pensiero native multimodali, eccelle in vari scenari di ragionamento visivo e migliora significativamente rispetto ai modelli di pensiero rapido nei problemi scientifici."
   },
   "hunyuan-turbo": {
     "description": "Anteprima della nuova generazione di modelli di linguaggio di Hunyuan, utilizza una nuova struttura di modello ibrido di esperti (MoE), con una maggiore efficienza di inferenza e prestazioni superiori rispetto a hunyuan-pro."
@@ -1328,8 +1373,11 @@
   "hunyuan-turbo-vision": {
     "description": "Il nuovo modello di punta di linguaggio visivo di Hunyuan, adotta una nuova struttura di modello esperto misto (MoE), con miglioramenti complessivi nelle capacità di riconoscimento di base, creazione di contenuti, domande e risposte, analisi e ragionamento rispetto alla generazione precedente."
   },
-  "hunyuan-turbos-20250226": {
-    "description": "hunyuan-TurboS pv2.1.2 versione fissa, aggiornamento del token di addestramento della base pre-addestrata; miglioramento delle capacità di pensiero in matematica/logica/codice; miglioramento dell'esperienza generale in cinese e inglese, inclusi creazione di testi, comprensione del testo, domande e risposte di conoscenza, conversazione casuale, ecc."
+  "hunyuan-turbos-20250313": {
+    "description": "Uniformare lo stile dei passaggi di risoluzione dei problemi matematici e rafforzare il question answering multi-turno in matematica. Ottimizzare lo stile delle risposte nella creazione testuale, eliminando l’impronta AI e aumentando la qualità letteraria."
+  },
+  "hunyuan-turbos-20250416": {
+    "description": "Aggiornamento della base pre-addestrata per rafforzare la comprensione e l’aderenza alle istruzioni; miglioramento delle capacità scientifiche in matematica, programmazione, logica e scienze durante la fase di allineamento; potenziamento delle capacità umanistiche come la qualità della scrittura creativa, la comprensione testuale, la precisione della traduzione e il question answering; rafforzamento delle capacità degli agenti in vari settori, con particolare attenzione alla comprensione multi-turno."
   },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS è l'ultima versione del modello di punta Hunyuan, con capacità di pensiero più forti e un'esperienza utente migliore."
@@ -1337,8 +1385,8 @@
   "hunyuan-turbos-longtext-128k-20250325": {
     "description": "Eccelle nella gestione di compiti di testo lungo come riassunti di documenti e domande sui documenti, e possiede anche la capacità di gestire compiti di generazione di testo generico. Mostra prestazioni eccezionali nell'analisi e generazione di testi lunghi, affrontando efficacemente le esigenze di elaborazione di contenuti complessi e dettagliati."
   },
-  "hunyuan-turbos-vision": {
-    "description": "Questo modello è adatto per scenari di comprensione visiva e testuale, ed è un nuovo modello di linguaggio visivo di punta basato sui più recenti turbos di Hunyuan, focalizzato su compiti di comprensione visiva, inclusi riconoscimento di entità basato su immagini, domande e risposte, creazione di testi e risoluzione di problemi fotografici, con miglioramenti complessivi rispetto alla generazione precedente."
+  "hunyuan-turbos-role-plus": {
+    "description": "Ultima versione del modello di role-playing di Hunyuan, finemente addestrato ufficialmente, basato sul modello Hunyuan e ulteriormente addestrato con dataset specifici per scenari di role-playing, offrendo migliori prestazioni di base in tali contesti."
   },
   "hunyuan-vision": {
     "description": "Ultimo modello multimodale di Hunyuan, supporta l'input di immagini e testo per generare contenuti testuali."
@@ -1349,14 +1397,17 @@
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 offre soluzioni di dialogo intelligente in vari scenari."
   },
-  "internlm2-pro-chat": {
-    "description": "Un modello della vecchia versione che stiamo ancora mantenendo, disponibile in diverse dimensioni di parametri: 7B e 20B."
-  },
   "internlm2.5-latest": {
     "description": "La nostra ultima serie di modelli, con prestazioni di ragionamento eccezionali, supporta una lunghezza di contesto di 1M e offre una migliore capacità di seguire istruzioni e chiamare strumenti."
   },
   "internlm3-latest": {
     "description": "La nostra ultima serie di modelli, con prestazioni di inferenza eccezionali, è leader tra i modelli open source della stessa classe. Punta di default ai modelli della serie InternLM3 appena rilasciati."
+  },
+  "internvl2.5-latest": {
+    "description": "La versione InternVL2.5 che stiamo ancora mantenendo, offre prestazioni eccellenti e stabili. Punta di default al nostro ultimo modello della serie InternVL2.5, attualmente indirizzato a internvl2.5-78b."
+  },
+  "internvl3-latest": {
+    "description": "Il nostro ultimo modello multimodale, con una maggiore capacità di comprensione delle immagini e del testo, e una comprensione delle immagini a lungo termine, offre prestazioni paragonabili ai migliori modelli closed-source. Punta di default al nostro ultimo modello della serie InternVL, attualmente indirizzato a internvl3-78b."
   },
   "jamba-large": {
     "description": "Il nostro modello più potente e avanzato, progettato per gestire compiti complessi a livello aziendale, con prestazioni eccezionali."
@@ -1371,6 +1422,9 @@
     "description": "Il prodotto Kimi Smart Assistant utilizza il più recente modello Kimi, che potrebbe includere funzionalità non ancora stabili. Supporta la comprensione delle immagini e selezionerà automaticamente il modello di fatturazione 8k/32k/128k in base alla lunghezza del contesto della richiesta."
   },
   "learnlm-1.5-pro-experimental": {
+    "description": "LearnLM è un modello linguistico sperimentale, specifico per compiti, addestrato per rispettare i principi della scienza dell'apprendimento, in grado di seguire istruzioni sistematiche in contesti di insegnamento e apprendimento, fungendo da tutor esperto."
+  },
+  "learnlm-2.0-flash-experimental": {
     "description": "LearnLM è un modello linguistico sperimentale, specifico per compiti, addestrato per rispettare i principi della scienza dell'apprendimento, in grado di seguire istruzioni sistematiche in contesti di insegnamento e apprendimento, fungendo da tutor esperto."
   },
   "lite": {
@@ -1568,6 +1622,30 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 è un modello di linguaggio di grandi dimensioni (LLM) open source progettato per sviluppatori, ricercatori e aziende, per aiutarli a costruire, sperimentare e scalare responsabilmente le loro idee di AI generativa. Come parte di un sistema di base per l'innovazione della comunità globale, è particolarmente adatto per dispositivi a bassa potenza e risorse limitate, oltre a garantire tempi di addestramento più rapidi."
   },
+  "meta/Llama-3.2-11B-Vision-Instruct": {
+    "description": "Eccelle nelle capacità di ragionamento su immagini ad alta risoluzione, adatto ad applicazioni di comprensione visiva."
+  },
+  "meta/Llama-3.2-90B-Vision-Instruct": {
+    "description": "Capacità avanzate di ragionamento su immagini per applicazioni di agenti di comprensione visiva."
+  },
+  "meta/Llama-3.3-70B-Instruct": {
+    "description": "Llama 3.3 è il modello linguistico open source multilingue più avanzato della serie Llama, che offre prestazioni paragonabili a un modello da 405 miliardi di parametri a costi estremamente contenuti. Basato su architettura Transformer, migliorato tramite fine-tuning supervisionato (SFT) e apprendimento rinforzato con feedback umano (RLHF) per utilità e sicurezza. La versione ottimizzata per istruzioni è progettata per dialoghi multilingue e supera molti modelli di chat open source e proprietari in diversi benchmark industriali. Data di cut-off della conoscenza: dicembre 2023."
+  },
+  "meta/Meta-Llama-3-70B-Instruct": {
+    "description": "Un potente modello da 70 miliardi di parametri, eccellente in ragionamento, codifica e ampie applicazioni linguistiche."
+  },
+  "meta/Meta-Llama-3-8B-Instruct": {
+    "description": "Un modello versatile da 8 miliardi di parametri, ottimizzato per compiti di dialogo e generazione di testo."
+  },
+  "meta/Meta-Llama-3.1-405B-Instruct": {
+    "description": "Modello testuale Llama 3.1 ottimizzato per istruzioni, progettato per casi d'uso di dialogo multilingue, con prestazioni eccellenti in molti benchmark industriali rispetto a numerosi modelli di chat open source e proprietari."
+  },
+  "meta/Meta-Llama-3.1-70B-Instruct": {
+    "description": "Modello testuale Llama 3.1 ottimizzato per istruzioni, progettato per casi d'uso di dialogo multilingue, con prestazioni eccellenti in molti benchmark industriali rispetto a numerosi modelli di chat open source e proprietari."
+  },
+  "meta/Meta-Llama-3.1-8B-Instruct": {
+    "description": "Modello testuale Llama 3.1 ottimizzato per istruzioni, progettato per casi d'uso di dialogo multilingue, con prestazioni eccellenti in molti benchmark industriali rispetto a numerosi modelli di chat open source e proprietari."
+  },
   "meta/llama-3.1-405b-instruct": {
     "description": "LLM avanzato, supporta la generazione di dati sintetici, la distillazione della conoscenza e il ragionamento, adatto per chatbot, programmazione e compiti specifici."
   },
@@ -1592,6 +1670,30 @@
   "meta/llama-3.3-70b-instruct": {
     "description": "LLM avanzato, specializzato in ragionamento, matematica, conoscenze generali e chiamate di funzione."
   },
+  "microsoft/Phi-3-medium-128k-instruct": {
+    "description": "Stesso modello Phi-3-medium, ma con una dimensione del contesto maggiore, adatto per RAG o pochi prompt."
+  },
+  "microsoft/Phi-3-medium-4k-instruct": {
+    "description": "Un modello da 14 miliardi di parametri, con qualità superiore a Phi-3-mini, focalizzato su dati di alta qualità e intensivi di ragionamento."
+  },
+  "microsoft/Phi-3-mini-128k-instruct": {
+    "description": "Stesso modello Phi-3-mini, ma con una dimensione del contesto maggiore, adatto per RAG o pochi prompt."
+  },
+  "microsoft/Phi-3-mini-4k-instruct": {
+    "description": "Il membro più piccolo della famiglia Phi-3, ottimizzato per qualità e bassa latenza."
+  },
+  "microsoft/Phi-3-small-128k-instruct": {
+    "description": "Stesso modello Phi-3-small, ma con una dimensione del contesto maggiore, adatto per RAG o pochi prompt."
+  },
+  "microsoft/Phi-3-small-8k-instruct": {
+    "description": "Un modello da 7 miliardi di parametri, con qualità superiore a Phi-3-mini, focalizzato su dati di alta qualità e intensivi di ragionamento."
+  },
+  "microsoft/Phi-3.5-mini-instruct": {
+    "description": "Versione aggiornata del modello Phi-3-mini."
+  },
+  "microsoft/Phi-3.5-vision-instruct": {
+    "description": "Versione aggiornata del modello Phi-3-vision."
+  },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 è un modello linguistico fornito da Microsoft AI, particolarmente efficace in conversazioni complesse, multilingue, ragionamento e assistenti intelligenti."
   },
@@ -1609,6 +1711,15 @@
   },
   "mistral": {
     "description": "Mistral è un modello da 7B lanciato da Mistral AI, adatto per esigenze di elaborazione linguistica variabili."
+  },
+  "mistral-ai/Mistral-Large-2411": {
+    "description": "Il modello di punta di Mistral, ideale per compiti complessi che richiedono capacità di ragionamento su larga scala o alta specializzazione (generazione di testo sintetico, generazione di codice, RAG o agenti)."
+  },
+  "mistral-ai/Mistral-Nemo": {
+    "description": "Mistral Nemo è un modello linguistico all'avanguardia (LLM) che offre capacità di ragionamento, conoscenza del mondo e codifica tra le migliori nella sua categoria di dimensioni."
+  },
+  "mistral-ai/mistral-small-2503": {
+    "description": "Mistral Small è adatto a qualsiasi compito basato sul linguaggio che richieda alta efficienza e bassa latenza."
   },
   "mistral-large": {
     "description": "Mixtral Large è il modello di punta di Mistral, combinando capacità di generazione di codice, matematica e ragionamento, supporta una finestra di contesto di 128k."
@@ -1751,6 +1862,9 @@
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini è il modello più recente di OpenAI, lanciato dopo GPT-4 Omni, che supporta input visivi e testuali e produce output testuali. Come il loro modello di piccole dimensioni più avanzato, è molto più economico rispetto ad altri modelli all'avanguardia recenti e costa oltre il 60% in meno rispetto a GPT-3.5 Turbo. Mantiene un'intelligenza all'avanguardia, offrendo un notevole rapporto qualità-prezzo. GPT-4o mini ha ottenuto un punteggio dell'82% nel test MMLU e attualmente è classificato più in alto di GPT-4 per preferenze di chat."
   },
+  "openai/o1": {
+    "description": "o1 è il nuovo modello di ragionamento di OpenAI, supporta input di testo e immagini e produce output testuali, adatto a compiti complessi che richiedono una vasta conoscenza generale. Il modello ha un contesto di 200K token e una data di cut-off della conoscenza a ottobre 2023."
+  },
   "openai/o1-mini": {
     "description": "o1-mini è un modello di inferenza rapido ed economico progettato per applicazioni di programmazione, matematica e scienza. Questo modello ha un contesto di 128K e una data di cutoff della conoscenza di ottobre 2023."
   },
@@ -1793,11 +1907,14 @@
   "qvq-72b-preview": {
     "description": "Il modello QVQ è un modello di ricerca sperimentale sviluppato dal team Qwen, focalizzato sul miglioramento delle capacità di ragionamento visivo, in particolare nel campo del ragionamento matematico."
   },
-  "qvq-max-latest": {
-    "description": "Il modello di ragionamento visivo QVQ di Tongyi Qianwen supporta input visivi e output di catene di pensiero, mostrando capacità superiori in matematica, programmazione, analisi visiva, creazione e compiti generali."
+  "qvq-max": {
+    "description": "Modello di ragionamento visivo QVQ di Tongyi Qianwen, supporta input visivi e output di catene di pensieri, mostrando capacità superiori in matematica, programmazione, analisi visiva, creazione e compiti generali."
   },
-  "qwen-coder-plus-latest": {
-    "description": "Modello di codice Qwen di Tongyi."
+  "qwen-coder-plus": {
+    "description": "Modello di codice Tongyi Qianwen."
+  },
+  "qwen-coder-turbo": {
+    "description": "Modello di codice Tongyi Qianwen."
   },
   "qwen-coder-turbo-latest": {
     "description": "Modello di codice Tongyi Qwen."
@@ -1805,8 +1922,14 @@
   "qwen-long": {
     "description": "Qwen è un modello di linguaggio su larga scala che supporta contesti di testo lunghi e funzionalità di dialogo basate su documenti lunghi e multipli."
   },
+  "qwen-math-plus": {
+    "description": "Modello matematico Tongyi Qianwen specializzato nella risoluzione di problemi matematici."
+  },
   "qwen-math-plus-latest": {
     "description": "Il modello matematico Tongyi Qwen è progettato specificamente per la risoluzione di problemi matematici."
+  },
+  "qwen-math-turbo": {
+    "description": "Modello matematico Tongyi Qianwen specializzato nella risoluzione di problemi matematici."
   },
   "qwen-math-turbo-latest": {
     "description": "Il modello matematico Tongyi Qwen è progettato specificamente per la risoluzione di problemi matematici."
@@ -1814,32 +1937,29 @@
   "qwen-max": {
     "description": "Qwen Max è un modello linguistico di grandi dimensioni con trilioni di parametri, supporta input in diverse lingue, tra cui cinese e inglese e attualmente è il modello API dietro la versione 2.5 di Qwen."
   },
-  "qwen-max-latest": {
-    "description": "Modello linguistico su larga scala Tongyi Qwen con miliardi di parametri, supporta input in diverse lingue tra cui cinese e inglese, attualmente il modello API dietro la versione del prodotto Tongyi Qwen 2.5."
-  },
-  "qwen-omni-turbo-latest": {
-    "description": "La serie di modelli Qwen-Omni supporta l'input di dati in diverse modalità, inclusi video, audio, immagini e testo, e produce output audio e testuale."
+  "qwen-omni-turbo": {
+    "description": "La serie di modelli Qwen-Omni supporta input multimodali, inclusi video, audio, immagini e testo, e produce output audio e testuale."
   },
   "qwen-plus": {
     "description": "Qwen Plus è una versione potenziata del modello linguistico di grandi dimensioni, che supporta input in diverse lingue, tra cui cinese e inglese."
   },
-  "qwen-plus-latest": {
-    "description": "Versione potenziata del modello linguistico su larga scala Tongyi Qwen, supporta input in diverse lingue tra cui cinese e inglese."
-  },
   "qwen-turbo": {
     "description": "Qwen è un modello linguistico di grandi dimensioni che supporta input in diverse lingue, tra cui cinese e inglese."
-  },
-  "qwen-turbo-latest": {
-    "description": "Il modello linguistico su larga scala Tongyi Qwen, supporta input in diverse lingue tra cui cinese e inglese."
   },
   "qwen-vl-chat-v1": {
     "description": "Qwen VL supporta modalità di interazione flessibili, inclusi modelli di domande e risposte multipli e creativi."
   },
+  "qwen-vl-max": {
+    "description": "Modello multimodale di grandissima scala Tongyi Qianwen. Rispetto alla versione potenziata, migliora ulteriormente le capacità di ragionamento visivo e l’aderenza alle istruzioni, offrendo un livello superiore di percezione e cognizione visiva."
+  },
   "qwen-vl-max-latest": {
     "description": "Modello di linguaggio visivo Qwen di grande scala. Rispetto alla versione potenziata, migliora ulteriormente la capacità di ragionamento visivo e di aderenza alle istruzioni, offrendo un livello superiore di percezione visiva e cognizione."
   },
-  "qwen-vl-ocr-latest": {
-    "description": "Qwen OCR è un modello specializzato nell'estrazione di testo, focalizzato sulla capacità di estrazione di testo da immagini di documenti, tabelle, domande d'esame, scrittura a mano, ecc. È in grado di riconoscere vari testi, supportando attualmente le seguenti lingue: cinese, inglese, francese, giapponese, coreano, tedesco, russo, italiano, vietnamita, arabo."
+  "qwen-vl-ocr": {
+    "description": "Tongyi Qianwen OCR è un modello specializzato nell’estrazione di testo, focalizzato su immagini di documenti, tabelle, esercizi e scrittura a mano. Riconosce molteplici lingue, tra cui cinese, inglese, francese, giapponese, coreano, tedesco, russo, italiano, vietnamita e arabo."
+  },
+  "qwen-vl-plus": {
+    "description": "Versione potenziata del modello multimodale di grande scala Tongyi Qianwen. Migliora notevolmente la capacità di riconoscimento dei dettagli e del testo, supportando immagini con risoluzione superiore a un milione di pixel e proporzioni di dimensioni arbitrarie."
   },
   "qwen-vl-plus-latest": {
     "description": "Versione potenziata del modello di linguaggio visivo Qwen. Migliora notevolmente la capacità di riconoscimento dei dettagli e di riconoscimento del testo, supportando risoluzioni superiori a un milione di pixel e immagini di qualsiasi rapporto di aspetto."
@@ -1928,6 +2048,9 @@
   "qwen2.5-coder-1.5b-instruct": {
     "description": "Versione open-source del modello di codice Qwen."
   },
+  "qwen2.5-coder-14b-instruct": {
+    "description": "Versione open source del modello di codice Tongyi Qianwen."
+  },
   "qwen2.5-coder-32b-instruct": {
     "description": "Versione open source del modello di codice Qwen di Tongyi."
   },
@@ -1982,6 +2105,9 @@
   "qwen2:72b": {
     "description": "Qwen2 è la nuova generazione di modelli di linguaggio su larga scala di Alibaba, supporta prestazioni eccellenti per esigenze applicative diversificate."
   },
+  "qwen3": {
+    "description": "Qwen3 è la nuova generazione di modelli linguistici su larga scala di Alibaba, che supporta una varietà di esigenze applicative con prestazioni eccellenti."
+  },
   "qwen3-0.6b": {
     "description": "Qwen3 è un modello di nuova generazione con capacità notevolmente migliorate, raggiungendo livelli leader del settore in inferenza, generazione generale, agenti e multilinguismo, e supporta il passaggio tra modalità di pensiero."
   },
@@ -2015,8 +2141,8 @@
   "qwq-32b-preview": {
     "description": "Il modello QwQ è un modello di ricerca sperimentale sviluppato dal team Qwen, focalizzato sul potenziamento delle capacità di ragionamento dell'IA."
   },
-  "qwq-plus-latest": {
-    "description": "Il modello di inferenza QwQ, addestrato sul modello Qwen2.5, ha notevolmente migliorato le capacità di inferenza del modello attraverso l'apprendimento rinforzato. I principali indicatori core (AIME 24/25, LiveCodeBench) e alcuni indicatori generali (IFEval, LiveBench, ecc.) raggiungono il livello della versione completa di DeepSeek-R1."
+  "qwq-plus": {
+    "description": "Modello di ragionamento QwQ basato su Qwen2.5, che ha migliorato significativamente le capacità di ragionamento tramite apprendimento rinforzato. Gli indicatori chiave in matematica e codice (AIME 24/25, LiveCodeBench) e alcuni indicatori generali (IFEval, LiveBench, ecc.) raggiungono il livello completo di DeepSeek-R1."
   },
   "qwq_32b": {
     "description": "Modello di inferenza di dimensioni medie della serie Qwen. Rispetto ai modelli tradizionali ottimizzati per le istruzioni, QwQ, con le sue capacità di pensiero e ragionamento, può migliorare significativamente le prestazioni nei compiti downstream, specialmente nella risoluzione di problemi difficili."
@@ -2158,6 +2284,9 @@
   },
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 è un modello di linguaggio fornito da Microsoft AI, particolarmente efficace in dialoghi complessi, multilingue, ragionamento e assistenti intelligenti."
+  },
+  "x1": {
+    "description": "Il modello Spark X1 sarà ulteriormente aggiornato, raggiungendo risultati in compiti generali come ragionamento, generazione di testo e comprensione del linguaggio, in linea con OpenAI o1 e DeepSeek R1, partendo da una posizione di leadership nei compiti matematici."
   },
   "yi-1.5-34b-chat": {
     "description": "Yi-1.5 è una versione aggiornata di Yi. Utilizza un corpus di alta qualità di 500B token per il pre-addestramento continuo di Yi e viene finetunato su 3M campioni di micro-tuning diversificati."

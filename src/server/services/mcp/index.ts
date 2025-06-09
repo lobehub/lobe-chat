@@ -9,12 +9,7 @@ import { safeParseJSON } from '@/utils/safeParseJSON';
 
 const log = debug('lobe-mcp:service');
 
-// Removed MCPConnection interface as it's no longer needed
-
 class MCPService {
-  // Store instances of the custom MCPClient, keyed by serialized MCPClientParams
-  private clients: Map<string, MCPClient> = new Map();
-
   // --- MCP Interaction ---
 
   // listTools now accepts MCPClientParams
@@ -97,15 +92,6 @@ class MCPService {
 
   // Private method to get or initialize a client based on parameters
   private async getClient(params: MCPClientParams): Promise<MCPClient> {
-    const key = this.serializeParams(params); // Use custom serialization
-    log(`Attempting to get client for key: ${key} (params: %O)`, params);
-
-    if (this.clients.has(key)) {
-      log(`Returning cached client for key: ${key}`);
-      return this.clients.get(key)!;
-    }
-
-    log(`No cached client found for key: ${key}. Initializing new client.`);
     try {
       // Ensure stdio is only attempted in desktop/server environments within the client itself
       // or add a check here if MCPClient doesn't handle it.
@@ -120,11 +106,10 @@ class MCPService {
           log(`New client initializing... ${progress.progress}/${progress.total}`);
         },
       }); // Initialization logic should be within MCPClient
-      this.clients.set(key, client);
-      log(`New client initialized and cached for key: ${key}`);
+      log(`New client initialized`);
       return client;
     } catch (error) {
-      console.error(`Failed to initialize MCP client for key ${key}:`, error);
+      console.error(`Failed to initialize MCP client`, error);
       // Do not cache failed initializations
       throw new TRPCError({
         cause: error,
@@ -132,24 +117,6 @@ class MCPService {
         message: `Failed to initialize MCP client, reason: ${(error as Error).message}`,
       });
     }
-  }
-
-  // Custom serialization function to ensure consistent keys
-  private serializeParams(params: MCPClientParams): string {
-    const sortedKeys = Object.keys(params).sort();
-    const sortedParams: Record<string, any> = {};
-
-    for (const key of sortedKeys) {
-      const value = (params as any)[key];
-      // Sort the 'args' array if it exists
-      if (key === 'args' && Array.isArray(value)) {
-        sortedParams[key] = JSON.stringify(key);
-      } else {
-        sortedParams[key] = value;
-      }
-    }
-
-    return JSON.stringify(sortedParams);
   }
 
   async getStreamableMcpServerManifest(

@@ -208,6 +208,10 @@
         "title": "Gebruik clientaanvraagmodus"
       },
       "helpDoc": "Configuratiehandleiding",
+      "responsesApi": {
+        "desc": "Gebruik de nieuwe generatie OpenAI-aanvraagformaatstandaard om geavanceerde functies zoals keten van gedachten te ontgrendelen",
+        "title": "Gebruik Responses API-standaard"
+      },
       "waitingForMore": "Meer modellen zijn in <1>planning voor integratie</1>, blijf op de hoogte"
     },
     "createNew": {

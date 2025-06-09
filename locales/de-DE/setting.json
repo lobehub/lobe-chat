@@ -170,6 +170,20 @@
     },
     "title": "Assistenteninformationen"
   },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Anpassung der Graustufen mit unterschiedlichen Farbneigungen",
+      "title": "Neutrale Farben"
+    },
+    "preview": {
+      "title": "Farbauswahl"
+    },
+    "primaryColor": {
+      "desc": "Benutzerdefinierte Hauptfarbe",
+      "title": "Hauptfarbe"
+    },
+    "title": "Anwendungsdesign"
+  },
   "settingChat": {
     "autoCreateTopicThreshold": {
       "desc": "Automatische Erstellung eines Themas, wenn die Anzahl der Nachrichten diesen Wert überschreitet",
@@ -206,18 +220,44 @@
     },
     "inputTemplate": {
       "desc": "Die neueste Benutzernachricht wird in dieses Template eingefügt",
-      "placeholder": "Vorlagen-{{text}} werden durch Echtzeit-Eingabeinformationen ersetzt",
+      "placeholder": "Vorlagen-{{input_template}} werden durch Echtzeit-Eingabeinformationen ersetzt",
       "title": "Benutzereingabe-Vorverarbeitung"
     },
     "submit": "Chat-Präferenzen aktualisieren",
     "title": "Chat-Einstellungen"
   },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Schriftgröße des Chatinhalts",
+      "marks": {
+        "normal": "Standard"
+      },
+      "title": "Schriftgröße"
+    },
+    "highlighterTheme": {
+      "title": "Code-Hervorhebungsthema"
+    },
+    "mermaidTheme": {
+      "title": "Mermaid-Thema"
+    },
+    "title": "Chatdesign"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "System folgen",
+      "title": "Sprache"
+    },
+    "themeMode": {
+      "auto": "Automatisch",
+      "dark": "Dunkel",
+      "light": "Hell",
+      "title": "Thema"
+    },
+    "title": "Allgemeine Einstellungen"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Maximale Token pro Antwort aktivieren"
-    },
-    "enableReasoningEffort": {
-      "title": "Aktivieren Sie die Anpassung der Schlussfolgerungsintensität"
     },
     "frequencyPenalty": {
       "desc": "Je höher der Wert, desto vielfältiger und abwechslungsreicher die Wortwahl; je niedriger der Wert, desto einfacher und schlichter die Wortwahl",
@@ -237,15 +277,6 @@
     "presencePenalty": {
       "desc": "Je höher der Wert, desto eher werden unterschiedliche Ausdrucksweisen bevorzugt, um Wiederholungen zu vermeiden; je niedriger der Wert, desto eher werden wiederholte Konzepte oder Erzählungen verwendet, was zu einer konsistenteren Ausdrucksweise führt",
       "title": "Ausdrucksvielfalt"
-    },
-    "reasoningEffort": {
-      "desc": "Je höher der Wert, desto stärker die Schlussfolgerungsfähigkeit, aber dies kann die Antwortzeit und den Tokenverbrauch erhöhen.",
-      "options": {
-        "high": "Hoch",
-        "low": "Niedrig",
-        "medium": "Mittel"
-      },
-      "title": "Schlussfolgerungsintensität"
     },
     "submit": "Modell-Einstellungen aktualisieren",
     "temperature": {
@@ -336,37 +367,6 @@
       "preview": "Stimme anhören",
       "title": "Sprachsynthese-Stimme"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Profilbild"
-    },
-    "fontSize": {
-      "desc": "Schriftgröße für Chat-Inhalte",
-      "marks": {
-        "normal": "Normal"
-      },
-      "title": "Schriftgröße"
-    },
-    "lang": {
-      "autoMode": "Systemsprache folgen",
-      "title": "Sprache"
-    },
-    "neutralColor": {
-      "desc": "Benutzerdefinierte Graustufen für verschiedene Farbneigungen",
-      "title": "Neutralfarbe"
-    },
-    "primaryColor": {
-      "desc": "Benutzerdefinierte Hauptfarbe des Themas",
-      "title": "Hauptfarbe"
-    },
-    "themeMode": {
-      "auto": "Automatisch",
-      "dark": "Dunkel",
-      "light": "Hell",
-      "title": "Thema"
-    },
-    "title": "Thema einstellen"
   },
   "storage": {
     "actions": {

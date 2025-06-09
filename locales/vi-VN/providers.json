@@ -71,6 +71,9 @@
   "mistral": {
     "description": "Mistral cung cấp các mô hình tiên tiến cho mục đích chung, chuyên nghiệp và nghiên cứu, được ứng dụng rộng rãi trong suy diễn phức tạp, nhiệm vụ đa ngôn ngữ, tạo mã, v.v. Thông qua giao diện gọi chức năng, người dùng có thể tích hợp các chức năng tùy chỉnh để thực hiện các ứng dụng cụ thể."
   },
+  "modelscope": {
+    "description": "ModelScope là nền tảng mô hình như một dịch vụ do Alibaba Cloud phát triển, cung cấp nhiều mô hình AI và dịch vụ suy luận phong phú."
+  },
   "moonshot": {
     "description": "Moonshot là nền tảng mã nguồn mở do Công ty TNHH Công nghệ Mặt Trăng Bắc Kinh phát hành, cung cấp nhiều mô hình xử lý ngôn ngữ tự nhiên, ứng dụng rộng rãi trong nhiều lĩnh vực, bao gồm nhưng không giới hạn ở sáng tác nội dung, nghiên cứu học thuật, gợi ý thông minh, chẩn đoán y tế, v.v., hỗ trợ xử lý văn bản dài và nhiệm vụ tạo phức tạp."
   },
@@ -94,6 +97,9 @@
   },
   "ppio": {
     "description": "PPIO派欧云 cung cấp dịch vụ API mô hình mã nguồn mở ổn định, hiệu quả chi phí cao, hỗ trợ toàn bộ dòng sản phẩm DeepSeek, Llama, Qwen và các mô hình lớn hàng đầu trong ngành."
+  },
+  "qiniu": {
+    "description": "Qiniu là nhà cung cấp dịch vụ cloud hàng đầu, cung cấp API cho các mô hình AI lớn, bao gồm DeepSeek, Llama và Qwen, với các tùy chọn linh hoạt để xây dựng và áp dụng các ứng dụng AI."
   },
   "qwen": {
     "description": "Qwen là mô hình ngôn ngữ quy mô lớn tự phát triển của Alibaba Cloud, có khả năng hiểu và tạo ngôn ngữ tự nhiên mạnh mẽ. Nó có thể trả lời nhiều câu hỏi, sáng tác nội dung văn bản, bày tỏ quan điểm, viết mã, v.v., hoạt động trong nhiều lĩnh vực."

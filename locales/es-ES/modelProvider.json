@@ -208,6 +208,10 @@
         "title": "Usar modo de solicitud del cliente"
       },
       "helpDoc": "Guía de configuración",
+      "responsesApi": {
+        "desc": "Utiliza el nuevo formato de solicitud de OpenAI para desbloquear características avanzadas como cadenas de pensamiento",
+        "title": "Uso de la especificación Responses API"
+      },
       "waitingForMore": "Más modelos están en <1>planificación de integración</1>, por favor, espera"
     },
     "createNew": {

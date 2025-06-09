@@ -71,6 +71,9 @@
   "mistral": {
     "description": "Mistral oferuje zaawansowane modele ogólne, specjalistyczne i badawcze, szeroko stosowane w złożonym rozumowaniu, zadaniach wielojęzycznych, generowaniu kodu i innych dziedzinach. Dzięki interfejsowi wywołań funkcji użytkownicy mogą integrować dostosowane funkcje, realizując konkretne zastosowania."
   },
+  "modelscope": {
+    "description": "ModelScope to platforma modelu jako usługi wprowadzona przez Alibaba Cloud, oferująca bogaty wybór modeli AI i usług inferencyjnych."
+  },
   "moonshot": {
     "description": "Moonshot to otwarta platforma stworzona przez Beijing Dark Side Technology Co., Ltd., oferująca różnorodne modele przetwarzania języka naturalnego, szeroko stosowane w takich dziedzinach jak tworzenie treści, badania akademickie, inteligentne rekomendacje, diagnoza medyczna i inne, wspierająca przetwarzanie długich tekstów i złożone zadania generacyjne."
   },
@@ -94,6 +97,9 @@
   },
   "ppio": {
     "description": "PPIO Paiou Cloud oferuje stabilne i opłacalne usługi API modeli open source, wspierające pełną gamę DeepSeek, Llama, Qwen i inne wiodące modele w branży."
+  },
+  "qiniu": {
+    "description": "Qiniu to wiodący dostawca usług chmurowych, oferujący API do dużych modeli AI, w tym DeepSeek, Llama i Qwen, z elastycznymi opcjami do tworzenia i stosowania aplikacji AI."
   },
   "qwen": {
     "description": "Tongyi Qianwen to samodzielnie opracowany przez Alibaba Cloud model językowy o dużej skali, charakteryzujący się silnymi zdolnościami rozumienia i generowania języka naturalnego. Może odpowiadać na różnorodne pytania, tworzyć treści pisemne, wyrażać opinie, pisać kod i działać w wielu dziedzinach."

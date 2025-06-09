@@ -111,7 +111,7 @@
         "title": "Typ wtyczki MCP"
       },
       "url": {
-        "desc": "Wprowadź adres HTTP swojego serwera MCP Streamable, który nie kończy się na /sse",
+        "desc": "Wprowadź adres URL swojego serwera MCP Streamable HTTP, nie obsługuje trybu SSE",
         "invalid": "Proszę wprowadzić prawidłowy adres URL",
         "label": "URL punktu końcowego HTTP",
         "required": "Proszę wprowadzić adres URL usługi MCP"
@@ -219,8 +219,24 @@
     "content": "Wywoływanie wtyczki...",
     "plugin": "Wtyczka jest uruchomiona..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "Wyświetl listę plików",
+      "moveLocalFiles": "Przenieś pliki",
+      "readLocalFile": "Odczytaj zawartość pliku",
+      "renameLocalFile": "Zmień nazwę",
+      "searchLocalFiles": "Szukaj plików",
+      "writeLocalFile": "Zapisz plik"
+    },
+    "title": "Pliki lokalne"
+  },
   "pluginList": "Lista wtyczek",
   "search": {
+    "apiName": {
+      "crawlMultiPages": "Odczytaj zawartość wielu stron",
+      "crawlSinglePage": "Odczytaj zawartość strony",
+      "search": "Szukaj strony"
+    },
     "config": {
       "addKey": "Dodaj klucz",
       "close": "Usuń",

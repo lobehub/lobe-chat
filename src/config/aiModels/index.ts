@@ -24,6 +24,7 @@ import { default as jina } from './jina';
 import { default as lmstudio } from './lmstudio';
 import { default as minimax } from './minimax';
 import { default as mistral } from './mistral';
+import { default as modelscope } from './modelscope';
 import { default as moonshot } from './moonshot';
 import { default as novita } from './novita';
 import { default as nvidia } from './nvidia';
@@ -32,6 +33,7 @@ import { default as openai } from './openai';
 import { default as openrouter } from './openrouter';
 import { default as perplexity } from './perplexity';
 import { default as ppio } from './ppio';
+import { default as qiniu } from './qiniu';
 import { default as qwen } from './qwen';
 import { default as sambanova } from './sambanova';
 import { default as search1api } from './search1api';
@@ -96,6 +98,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   lmstudio,
   minimax,
   mistral,
+  modelscope,
   moonshot,
   novita,
   nvidia,
@@ -104,6 +107,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   openrouter,
   perplexity,
   ppio,
+  qiniu,
   qwen,
   sambanova,
   search1api,
@@ -149,6 +153,7 @@ export { default as jina } from './jina';
 export { default as lmstudio } from './lmstudio';
 export { default as minimax } from './minimax';
 export { default as mistral } from './mistral';
+export { default as modelscope } from './modelscope';
 export { default as moonshot } from './moonshot';
 export { default as novita } from './novita';
 export { default as nvidia } from './nvidia';
@@ -157,6 +162,7 @@ export { default as openai } from './openai';
 export { default as openrouter } from './openrouter';
 export { default as perplexity } from './perplexity';
 export { default as ppio } from './ppio';
+export { default as qiniu } from './qiniu';
 export { default as qwen } from './qwen';
 export { default as sambanova } from './sambanova';
 export { default as search1api } from './search1api';

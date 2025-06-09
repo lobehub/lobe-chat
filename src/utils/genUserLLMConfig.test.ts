@@ -5,7 +5,7 @@ import { ModelProviderCard } from '@/types/llm';
 import { genUserLLMConfig } from './genUserLLMConfig';
 
 // Mock ModelProvider enum
-vi.mock('@/libs/agent-runtime', () => ({
+vi.mock('@/libs/model-runtime', () => ({
   ModelProvider: {
     Ollama: 'ollama',
     OpenAI: 'openai',

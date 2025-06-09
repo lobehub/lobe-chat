@@ -7,6 +7,7 @@ import * as _pdfjsWorker from 'pdfjs-dist/legacy/build/pdf.worker.mjs';
 import type { TextContent } from 'pdfjs-dist/types/src/display/api';
 
 import type { DocumentPage, FileLoaderInterface } from '../../types';
+import { promptTemplate } from './prompt';
 
 const log = debug('file-loaders:pdf');
 
@@ -132,7 +133,7 @@ export class PdfLoader implements FileLoaderInterface {
       `Found ${validPages.length} valid pages for aggregation (${pages.length - validPages.length} pages with errors filtered out)`,
     );
 
-    const result = validPages.map((page) => page.pageContent).join('\n\n');
+    const result = promptTemplate(validPages);
     log('PDF content aggregated successfully, length:', result.length);
     return result;
   }

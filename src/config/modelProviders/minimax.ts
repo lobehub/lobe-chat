@@ -47,15 +47,14 @@ const Minimax: ModelProviderCard = {
   modelsUrl: 'https://platform.minimaxi.com/document/Models',
   name: 'Minimax',
   settings: {
+    proxyUrl: {
+      placeholder: 'https://api.minimax.chat/v1',
+    },
     sdkType: 'openai',
     smoothing: {
       speed: 2,
       text: true,
     },
-  },
-  smoothing: {
-    speed: 2,
-    text: true,
   },
   url: 'https://www.minimaxi.com',
 };

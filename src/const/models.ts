@@ -12,6 +12,10 @@ export const disableStreamModels = new Set(['o1', 'o1-2024-12-17']);
  * models support context caching
  */
 export const contextCachingModels = new Set([
+  'claude-opus-4-latest',
+  'claude-opus-4-20250514',
+  'claude-sonnet-4-latest',
+  'claude-sonnet-4-20250514',
   'claude-3-7-sonnet-latest',
   'claude-3-7-sonnet-20250219',
   'claude-3-5-sonnet-latest',
@@ -22,6 +26,10 @@ export const contextCachingModels = new Set([
 ]);
 
 export const thinkingWithToolClaudeModels = new Set([
+  'claude-opus-4-latest',
+  'claude-opus-4-20250514',
+  'claude-sonnet-4-latest',
+  'claude-sonnet-4-20250514',
   'claude-3-7-sonnet-latest',
   'claude-3-7-sonnet-20250219',
 ]);

@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { checkAuthMethod } from '@/app/(backend)/middleware/auth/utils';
 import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED } from '@/const/auth';
-import { AgentRuntime, LobeRuntimeAI } from '@/libs/agent-runtime';
+import { AgentRuntime, LobeRuntimeAI } from '@/libs/model-runtime';
 import { ChatErrorType } from '@/types/fetch';
 import { getJWTPayload } from '@/utils/server/jwt';
 

@@ -170,6 +170,20 @@
     },
     "title": "Thông tin trợ lý"
   },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Tùy chỉnh thang độ xám với các xu hướng màu sắc khác nhau",
+      "title": "Màu trung tính"
+    },
+    "preview": {
+      "title": "Bảng màu"
+    },
+    "primaryColor": {
+      "desc": "Tùy chỉnh màu chủ đề",
+      "title": "Màu chủ đề"
+    },
+    "title": "Giao diện ứng dụng"
+  },
   "settingChat": {
     "autoCreateTopicThreshold": {
       "desc": "Khi số tin nhắn hiện tại vượt quá giá trị này, chủ đề sẽ tự động được tạo",
@@ -206,18 +220,44 @@
     },
     "inputTemplate": {
       "desc": "Tin nhắn mới nhất của người dùng sẽ được điền vào mẫu này",
-      "placeholder": "Mẫu xử lý trước {{text}} sẽ được thay thế bằng thông tin nhập thời gian thực",
+      "placeholder": "Mẫu xử lý trước {{input_template}} sẽ được thay thế bằng thông tin nhập thời gian thực",
       "title": "Mẫu xử lý đầu vào của người dùng"
     },
     "submit": "Cập nhật sở thích trò chuyện",
     "title": "Cài đặt trò chuyện"
   },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Kích thước phông chữ của nội dung trò chuyện",
+      "marks": {
+        "normal": "Chuẩn"
+      },
+      "title": "Kích thước phông chữ"
+    },
+    "highlighterTheme": {
+      "title": "Chủ đề làm nổi bật mã"
+    },
+    "mermaidTheme": {
+      "title": "Chủ đề Nàng Tiên Cá"
+    },
+    "title": "Giao diện trò chuyện"
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Theo hệ thống",
+      "title": "Ngôn ngữ"
+    },
+    "themeMode": {
+      "auto": "Tự động",
+      "dark": "Tối",
+      "light": "Sáng",
+      "title": "Chủ đề"
+    },
+    "title": "Cài đặt chung"
+  },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Bật giới hạn phản hồi một lần"
-    },
-    "enableReasoningEffort": {
-      "title": "Bật điều chỉnh cường độ suy luận"
     },
     "frequencyPenalty": {
       "desc": "Giá trị càng lớn, từ ngữ càng phong phú đa dạng; giá trị càng thấp, từ ngữ càng đơn giản mộc mạc",
@@ -237,15 +277,6 @@
     "presencePenalty": {
       "desc": "Giá trị càng lớn, càng có xu hướng sử dụng các cách diễn đạt khác nhau, tránh lặp lại khái niệm; giá trị càng nhỏ, càng có xu hướng sử dụng các khái niệm hoặc mô tả lặp lại, thể hiện tính nhất quán cao hơn",
       "title": "Độ phân tán trong diễn đạt"
-    },
-    "reasoningEffort": {
-      "desc": "Giá trị càng lớn, khả năng suy luận càng mạnh, nhưng có thể làm tăng thời gian phản hồi và tiêu tốn Token",
-      "options": {
-        "high": "Cao",
-        "low": "Thấp",
-        "medium": "Trung bình"
-      },
-      "title": "Cường độ suy luận"
     },
     "submit": "Cập nhật cài đặt mô hình",
     "temperature": {
@@ -336,37 +367,6 @@
       "preview": "Xem trước âm thanh",
       "title": "Nguồn âm thanh tổng hợp giọng nói"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Hình đại diện"
-    },
-    "fontSize": {
-      "desc": "Kích cỡ chữ của nội dung trò chuyện",
-      "marks": {
-        "normal": "Bình thường"
-      },
-      "title": "Kích cỡ chữ"
-    },
-    "lang": {
-      "autoMode": "Theo hệ thống",
-      "title": "Ngôn ngữ"
-    },
-    "neutralColor": {
-      "desc": "Tùy chỉnh mức xám theo xu hướng màu sắc khác nhau",
-      "title": "Màu trung tính"
-    },
-    "primaryColor": {
-      "desc": "Tùy chỉnh màu chủ đề",
-      "title": "Màu chủ đề"
-    },
-    "themeMode": {
-      "auto": "Tự động",
-      "dark": "Tối",
-      "light": "Sáng",
-      "title": "Chủ đề"
-    },
-    "title": "Cài đặt chủ đề"
   },
   "storage": {
     "actions": {
