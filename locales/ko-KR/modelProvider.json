@@ -208,6 +208,10 @@
         "title": "클라이언트 요청 모드 사용"
       },
       "helpDoc": "설정 가이드",
+      "responsesApi": {
+        "desc": "OpenAI의 최신 요청 형식 규격을 사용하여 사고 연결 등 고급 기능을 활성화합니다",
+        "title": "Responses API 규격 사용"
+      },
       "waitingForMore": "더 많은 모델이 <1>계획 중</1>입니다. 기대해 주세요"
     },
     "createNew": {

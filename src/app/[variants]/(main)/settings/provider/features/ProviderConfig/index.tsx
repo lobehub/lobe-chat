@@ -134,6 +134,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
       defaultShowBrowserRequest,
       disableBrowserRequest,
       showChecker = true,
+      supportResponsesApi,
     } = settings || {};
     const { t } = useTranslation('modelProvider');
     const [form] = Form.useForm();
@@ -146,6 +147,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
       isLoading,
       configUpdating,
       isFetchOnClient,
+      enableResponseApi,
       isProviderEndpointNotEmpty,
       isProviderApiKeyNotEmpty,
     ] = useAiInfraStore((s) => [
@@ -155,6 +157,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
       aiProviderSelectors.isAiProviderConfigLoading(id)(s),
       aiProviderSelectors.isProviderConfigUpdating(id)(s),
       aiProviderSelectors.isProviderFetchOnClient(id)(s),
+      aiProviderSelectors.isProviderEnableResponseApi(id)(s),
       aiProviderSelectors.isActiveProviderEndpointNotEmpty(s),
       aiProviderSelectors.isActiveProviderApiKeyNotEmpty(s),
     ]);
@@ -278,6 +281,19 @@ const ProviderConfig = memo<ProviderConfigProps>(
     const configItems = [
       ...apiKeyItem,
       endpointItem,
+      supportResponsesApi
+        ? {
+            children: isLoading ? (
+              <Skeleton.Button active />
+            ) : (
+              <Switch loading={configUpdating} value={enableResponseApi} />
+            ),
+            desc: t('providerModels.config.responsesApi.desc'),
+            label: t('providerModels.config.responsesApi.title'),
+            minWidth: undefined,
+            name: ['config', 'enableResponseApi'],
+          }
+        : undefined,
       clientFetchItem,
       showChecker
         ? {

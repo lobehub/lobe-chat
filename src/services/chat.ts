@@ -37,6 +37,7 @@ import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage, MessageToolCall } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
+import { parsePlaceholderVariablesMessages } from '@/utils/client/parserPlaceholder';
 import { createErrorResponse } from '@/utils/errorResponse';
 import { FetchSSEOptions, fetchSSE, getMessageError } from '@/utils/fetch';
 import { genToolCallingName } from '@/utils/toolCall';
@@ -193,11 +194,14 @@ class ChatService {
       pluginIds.push(WebBrowsingManifest.identifier);
     }
 
-    // ============  1. preprocess messages   ============ //
+    // ============  1. preprocess placeholder variables   ============ //
+    const parsedMessages = parsePlaceholderVariablesMessages(messages);
+
+    // ============  2. preprocess messages   ============ //
 
     const oaiMessages = this.processMessages(
       {
-        messages,
+        messages: parsedMessages,
         model: payload.model,
         provider: payload.provider!,
         tools: pluginIds,
@@ -205,14 +209,14 @@ class ChatService {
       options,
     );
 
-    // ============  2. preprocess tools   ============ //
+    // ============  3. preprocess tools   ============ //
 
     const tools = this.prepareTools(pluginIds, {
       model: payload.model,
       provider: payload.provider!,
     });
 
-    // ============  3. process extend params   ============ //
+    // ============  4. process extend params   ============ //
 
     let extendParams: Record<string, any> = {};
 
@@ -311,9 +315,15 @@ class ChatService {
       model = findDeploymentName(model, provider);
     }
 
+    const apiMode = aiProviderSelectors.isProviderEnableResponseApi(provider)(
+      getAiInfraStoreState(),
+    )
+      ? 'responses'
+      : undefined;
+
     const payload = merge(
       { model: DEFAULT_AGENT_CONFIG.model, stream: true, ...DEFAULT_AGENT_CONFIG.params },
-      { ...res, model },
+      { ...res, apiMode, model },
     );
 
     /**

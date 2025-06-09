@@ -2,41 +2,24 @@
 
 # Changelog
 
-### [Version&nbsp;1.91.3](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.91.2...v1.91.3)
-<sup>Released on **2025-06-06**</sup>
+### [Version 1.93.1](https://github.com/lobehub/lobe-chat/compare/v1.93.0...v1.93.1)
 
+<sup>Released on **2025-06-08**</sup>
 
 #### 🐛 Bug Fixes
 
-- **misc**: Some web search bugs.
-
-
-#### 💄 Styles
-
-- **misc**: Support Vertex AI thought summaries.
-
+- **misc**: Fix openai default Responses API issue.
 
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-
-
 #### What's fixed
 
-* **misc**: Some web search bugs, closes [#8068](https://github.com/jaworldwideorg/OneJA-Bot/issues/8068) ([bebe7a3](https://github.com/jaworldwideorg/OneJA-Bot/commit/bebe7a3))
-
-
-
-#### Styles
-
-* **misc**: Support Vertex AI thought summaries, closes [#8090](https://github.com/jaworldwideorg/OneJA-Bot/issues/8090) ([1355a2e](https://github.com/jaworldwideorg/OneJA-Bot/commit/1355a2e))
+- **misc**: Fix openai default Responses API issue, closes [#8124](https://github.com/lobehub/lobe-chat/issues/8124) ([7f6ccf2](https://github.com/lobehub/lobe-chat/commit/7f6ccf2))
 
 </details>
-
 
 <div align="right">
 
@@ -44,41 +27,151 @@
 
 </div>
 
-### [Version&nbsp;1.91.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.91.1...v1.91.2)
-<sup>Released on **2025-06-06**</sup>
+## [Version 1.93.0](https://github.com/lobehub/lobe-chat/compare/v1.92.3...v1.93.0)
 
+<sup>Released on **2025-06-08**</sup>
 
-#### 🐛 Bug Fixes
+#### ✨ Features
 
-- **misc**: Correct deepseek R1 fc support display.
-
-
-#### 💄 Styles
-
-- **misc**: Add openAI websearch and claude 4 to modelproviders.
-
+- **misc**: Support OpenAI Responses API mode.
 
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
+#### What's improved
 
-
-#### What's fixed
-
-* **misc**: Correct deepseek R1 fc support display, closes [#8069](https://github.com/jaworldwideorg/OneJA-Bot/issues/8069) ([ed5bb5f](https://github.com/jaworldwideorg/OneJA-Bot/commit/ed5bb5f))
-
-
-
-#### Styles
-
-* **misc**: Add openAI websearch and claude 4 to modelproviders, closes [#7988](https://github.com/jaworldwideorg/OneJA-Bot/issues/7988) ([95994f4](https://github.com/jaworldwideorg/OneJA-Bot/commit/95994f4))
+- **misc**: Support OpenAI Responses API mode, closes [#8048](https://github.com/lobehub/lobe-chat/issues/8048) ([5bf0921](https://github.com/lobehub/lobe-chat/commit/5bf0921))
 
 </details>
 
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.92.3](https://github.com/lobehub/lobe-chat/compare/v1.92.2...v1.92.3)
+
+<sup>Released on **2025-06-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix client s3 getObject throw error.
+
+#### 💄 Styles
+
+- **misc**: Support OpenRouter Claude 4 reasoning.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix client s3 getObject throw error, closes [#8009](https://github.com/lobehub/lobe-chat/issues/8009) ([b91ca8c](https://github.com/lobehub/lobe-chat/commit/b91ca8c))
+
+#### Styles
+
+- **misc**: Support OpenRouter Claude 4 reasoning, closes [#8087](https://github.com/lobehub/lobe-chat/issues/8087) ([039be1d](https://github.com/lobehub/lobe-chat/commit/039be1d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.92.2](https://github.com/lobehub/lobe-chat/compare/v1.92.1...v1.92.2)
+
+<sup>Released on **2025-06-07**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add support to azureopenai embedding.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add support to azureopenai embedding, closes [#8075](https://github.com/lobehub/lobe-chat/issues/8075) ([0725f94](https://github.com/lobehub/lobe-chat/commit/0725f94))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.92.1](https://github.com/lobehub/lobe-chat/compare/v1.92.0...v1.92.1)
+
+<sup>Released on **2025-06-07**</sup>
+
+#### 💄 Styles
+
+- **ModelSelect**: Add responsive layout for mobile devices.
+- **misc**: Improve `{{username}}` placeholder variable, Update Gemini & Qwen models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **ModelSelect**: Add responsive layout for mobile devices, closes [#7960](https://github.com/lobehub/lobe-chat/issues/7960) ([cb84c3e](https://github.com/lobehub/lobe-chat/commit/cb84c3e))
+- **misc**: Improve `{{username}}` placeholder variable, closes [#8100](https://github.com/lobehub/lobe-chat/issues/8100) ([95fd588](https://github.com/lobehub/lobe-chat/commit/95fd588))
+- **misc**: Update Gemini & Qwen models, closes [#8083](https://github.com/lobehub/lobe-chat/issues/8083) ([6308237](https://github.com/lobehub/lobe-chat/commit/6308237))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.92.0](https://github.com/lobehub/lobe-chat/compare/v1.91.3...v1.92.0)
+
+<sup>Released on **2025-06-06**</sup>
+
+#### ✨ Features
+
+- **misc**: Support placeholder variables in prompts and input.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Some web search bugs.
+
+#### 💄 Styles
+
+- **misc**: Support Vertex AI thought summaries.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support placeholder variables in prompts and input, closes [#8060](https://github.com/lobehub/lobe-chat/issues/8060) ([3752739](https://github.com/lobehub/lobe-chat/commit/3752739))
+
+#### What's fixed
+
+- **misc**: Some web search bugs, closes [#8068](https://github.com/lobehub/lobe-chat/issues/8068) ([bebe7a3](https://github.com/lobehub/lobe-chat/commit/bebe7a3))
+
+#### Styles
+
+- **misc**: Support Vertex AI thought summaries, closes [#8090](https://github.com/lobehub/lobe-chat/issues/8090) ([1355a2e](https://github.com/lobehub/lobe-chat/commit/1355a2e))
+
+</details>
 
 <div align="right">
 
