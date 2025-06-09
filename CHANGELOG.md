@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.93.2](https://github.com/lobehub/lobe-chat/compare/v1.93.1...v1.93.2)
+
+<sup>Released on **2025-06-09**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor `<think>` & `</think>` handling.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor `<think>` & `</think>` handling, closes [#8121](https://github.com/lobehub/lobe-chat/issues/8121) ([04ac353](https://github.com/lobehub/lobe-chat/commit/04ac353))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.93.1](https://github.com/lobehub/lobe-chat/compare/v1.93.0...v1.93.1)
 
 <sup>Released on **2025-06-08**</sup>
