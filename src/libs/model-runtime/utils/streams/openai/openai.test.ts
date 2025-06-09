@@ -904,6 +904,169 @@ describe('OpenAIStream', () => {
   });
 
   describe('Reasoning', () => {
+    it('should handle <think></think> tags in streaming content', async () => {
+      const data = [
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '<think>' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '这是一个思考过程' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '，需要仔细分析问题。' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '</think>' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '根据分析，我的答案是：' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '这是最终答案。' },
+              logprobs: null,
+              finish_reason: null,
+            },
+          ],
+        },
+        {
+          id: '1',
+          object: 'chat.completion.chunk',
+          created: 1737563070,
+          model: 'deepseek-reasoner',
+          system_fingerprint: 'fp_1c5d8833bc',
+          choices: [
+            {
+              index: 0,
+              delta: { content: '' },
+              logprobs: null,
+              finish_reason: 'stop',
+            },
+          ],
+          usage: {
+            prompt_tokens: 10,
+            completion_tokens: 50,
+            total_tokens: 60,
+            prompt_tokens_details: { cached_tokens: 0 },
+            completion_tokens_details: { reasoning_tokens: 20 },
+            prompt_cache_hit_tokens: 0,
+            prompt_cache_miss_tokens: 10,
+          },
+        },
+      ];
+
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          data.forEach((chunk) => {
+            controller.enqueue(chunk);
+          });
+          controller.close();
+        },
+      });
+
+      const protocolStream = OpenAIStream(mockOpenAIStream);
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks).toEqual(
+        [
+          'id: 1',
+          'event: reasoning',
+          `data: ""\n`,
+          'id: 1',
+          'event: reasoning',
+          `data: "这是一个思考过程"\n`,
+          'id: 1',
+          'event: reasoning',
+          `data: "，需要仔细分析问题。"\n`,
+          'id: 1',
+          'event: text',
+          `data: ""\n`,
+          'id: 1',
+          'event: text',
+          `data: "根据分析，我的答案是："\n`,
+          'id: 1',
+          'event: text',
+          `data: "这是最终答案。"\n`,
+          'id: 1',
+          'event: usage',
+          `data: {"inputCacheMissTokens":10,"inputTextTokens":10,"outputReasoningTokens":20,"outputTextTokens":30,"totalInputTokens":10,"totalOutputTokens":50,"totalTokens":60}\n`,
+        ].map((i) => `${i}\n`),
+      );
+    });
+
     it('should handle reasoning event in official DeepSeek api', async () => {
       const data = [
         {

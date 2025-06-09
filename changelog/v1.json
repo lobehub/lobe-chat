@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor <think> & </think> handling."]
+    },
+    "date": "2025-06-09",
+    "version": "1.93.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix openai default Responses API issue."]
     },
     "date": "2025-06-08",
