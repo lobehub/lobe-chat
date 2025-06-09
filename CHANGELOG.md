@@ -2,6 +2,66 @@
 
 # Changelog
 
+## [Version&nbsp;1.92.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.91.3...v1.92.0)
+<sup>Released on **2025-06-09**</sup>
+
+
+#### ✨ Features
+
+- **misc**: Support OpenAI Responses API mode, support placeholder variables in prompts and input.
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix client s3 getObject throw error, fix openai default Responses API issue.
+
+
+#### 💄 Styles
+
+- **ModelSelect**: Add responsive layout for mobile devices.
+- **misc**: Add support to azureopenai embedding, improve `{{username}}` placeholder variable, Support OpenRouter Claude 4 reasoning, Update Gemini & Qwen models.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's improved
+
+* **misc**: Support OpenAI Responses API mode, closes [#8048](https://github.com/jaworldwideorg/OneJA-Bot/issues/8048) ([5bf0921](https://github.com/jaworldwideorg/OneJA-Bot/commit/5bf0921))
+* **misc**: Support placeholder variables in prompts and input, closes [#8060](https://github.com/jaworldwideorg/OneJA-Bot/issues/8060) ([3752739](https://github.com/jaworldwideorg/OneJA-Bot/commit/3752739))
+
+
+
+#### What's fixed
+
+* **misc**: Fix client s3 getObject throw error, closes [#8009](https://github.com/jaworldwideorg/OneJA-Bot/issues/8009) ([b91ca8c](https://github.com/jaworldwideorg/OneJA-Bot/commit/b91ca8c))
+* **misc**: Fix openai default Responses API issue, closes [#8124](https://github.com/jaworldwideorg/OneJA-Bot/issues/8124) ([7f6ccf2](https://github.com/jaworldwideorg/OneJA-Bot/commit/7f6ccf2))
+
+
+
+#### Styles
+
+* **ModelSelect**: Add responsive layout for mobile devices, closes [#7960](https://github.com/jaworldwideorg/OneJA-Bot/issues/7960) ([cb84c3e](https://github.com/jaworldwideorg/OneJA-Bot/commit/cb84c3e))
+* **misc**: Add support to azureopenai embedding, closes [#8075](https://github.com/jaworldwideorg/OneJA-Bot/issues/8075) ([0725f94](https://github.com/jaworldwideorg/OneJA-Bot/commit/0725f94))
+* **misc**: Improve `{{username}}` placeholder variable, closes [#8100](https://github.com/jaworldwideorg/OneJA-Bot/issues/8100) ([95fd588](https://github.com/jaworldwideorg/OneJA-Bot/commit/95fd588))
+* **misc**: Support OpenRouter Claude 4 reasoning, closes [#8087](https://github.com/jaworldwideorg/OneJA-Bot/issues/8087) ([039be1d](https://github.com/jaworldwideorg/OneJA-Bot/commit/039be1d))
+* **misc**: Update Gemini & Qwen models, closes [#8083](https://github.com/jaworldwideorg/OneJA-Bot/issues/8083) ([6308237](https://github.com/jaworldwideorg/OneJA-Bot/commit/6308237))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.93.1](https://github.com/lobehub/lobe-chat/compare/v1.93.0...v1.93.1)
 
 <sup>Released on **2025-06-08**</sup>
