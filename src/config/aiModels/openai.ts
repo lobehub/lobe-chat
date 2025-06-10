@@ -290,6 +290,7 @@ export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 128_000,
@@ -303,6 +304,9 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 10,
     },
     releasedAt: '2024-05-13',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
@@ -328,6 +332,7 @@ export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 128_000,
@@ -341,11 +346,15 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 10,
     },
     releasedAt: '2024-11-20',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 128_000,
@@ -358,9 +367,16 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 15,
     },
     releasedAt: '2024-05-13',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+      search: true,
+    },
     contextWindowTokens: 128_000,
     description: 'GPT-4o Audio 模型，支持音频输入输出',
     displayName: 'GPT-4o Audio',
@@ -371,6 +387,9 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 10,
     },
     releasedAt: '2024-10-01',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
