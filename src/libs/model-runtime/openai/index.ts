@@ -81,6 +81,11 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
           payload.reasoning.summary = 'auto';
         }
 
+        // computer-use series must set truncation as auto
+        if (model.startsWith('computer-use')) {
+          payload.truncation = 'auto';
+        }
+
         return pruneReasoningPayload(payload) as any;
       }
 
