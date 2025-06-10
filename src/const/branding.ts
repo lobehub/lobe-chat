@@ -16,14 +16,14 @@ export const BRANDING_URL = {
 };
 
 export const SOCIAL_URL = {
-  discord: 'https://discord.gg/AYFPHvv2jT',
-  github: 'https://github.com/lobehub',
-  medium: 'https://medium.com/@lobehub',
-  x: 'https://x.com/lobehub',
-  youtube: 'https://www.youtube.com/@lobehub',
+  discord: 'https://discord.gg/',
+  github: 'https://github.com/jaworldwideorg',
+  medium: 'https://medium.com/',
+  x: 'https://x.com/jaworldwide',
+  youtube: 'https://www.youtube.com/@jaworldwide',
 };
 
 export const BRANDING_EMAIL = {
-  business: 'hello@lobehub.com',
-  support: 'support@lobehub.com',
+  business: 'contact@jaworldwide.org',
+  support: 'support@jaworldwide.org',
 };
