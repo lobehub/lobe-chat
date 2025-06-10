@@ -294,6 +294,28 @@ export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      //search: true,
+    },
+    contextWindowTokens: 128_000,
+    description: 'GPT-4o mini Audio 模型，支持音频输入输出',
+    displayName: 'GPT-4o mini Audio',
+    id: 'gpt-4o-mini-audio-preview',
+    maxOutput: 16_384,
+    pricing: {
+      input: 0.15,
+      output: 0.6,
+    },
+    releasedAt: '2024-12-17',
+    /*
+    settings: {
+      searchImpl: 'params',
+    },
+    */
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       search: true,
       vision: true,
     },
@@ -379,7 +401,7 @@ export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      search: true,
+      //search: true,
     },
     contextWindowTokens: 128_000,
     description: 'GPT-4o Audio 模型，支持音频输入输出',
@@ -391,9 +413,11 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 10,
     },
     releasedAt: '2024-10-01',
+    /*
     settings: {
       searchImpl: 'params',
     },
+    */
     type: 'chat',
   },
   {
@@ -596,6 +620,48 @@ export const openaiChatModels: AIChatModelCard[] = [
     pricing: {
       input: 1.5,
       output: 2,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description: 'codex-mini-latest 是 o4-mini 的微调版本，专门用于 Codex CLI。对于直接通过 API 使用，我们推荐从 gpt-4.1 开始。',
+    displayName: 'Codex mini',
+    id: 'codex-mini-latest',
+    maxOutput: 100_000,
+    pricing: {
+      input: 1.5,
+      output: 6,
+    },
+    releasedAt: '2025-06-01',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 8192,
+    description: 'computer-use-preview 模型是专为“计算机使用工具”设计的专用模型，经过训练以理解并执行计算机相关任务。',
+    displayName: 'Computer Use Preview',
+    id: 'computer-use-preview',
+    maxOutput: 1024,
+    pricing: {
+      input: 3,
+      output: 12,
+    },
+    releasedAt: '2025-03-11',
+    settings: {
+      extendParams: ['reasoningEffort'],
     },
     type: 'chat',
   },
