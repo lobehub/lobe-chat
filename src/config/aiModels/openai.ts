@@ -251,6 +251,7 @@ export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 128_000,
@@ -265,6 +266,9 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 0.6,
     },
     releasedAt: '2024-07-18',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
