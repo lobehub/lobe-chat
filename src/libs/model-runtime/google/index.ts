@@ -25,11 +25,7 @@ import {
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
-import {
-  GoogleGenerativeAIStream,
-  VertexAIStream,
-  convertIterableToStream,
-} from '../utils/streams';
+import { GoogleGenerativeAIStream, VertexAIStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 
 const modelsOffSafetySettings = new Set(['gemini-2.0-flash-exp']);
@@ -91,6 +87,17 @@ interface GoogleAIThinkingConfig {
   thinkingBudget?: number;
 }
 
+const isAbortError = (error: Error): boolean => {
+  const message = error.message.toLowerCase();
+  return (
+    message.includes('aborted') ||
+    message.includes('cancelled') ||
+    message.includes('error reading from the stream') ||
+    message.includes('abort') ||
+    error.name === 'AbortError'
+  );
+};
+
 export class LobeGoogleAI implements LobeRuntimeAI {
   private client: GoogleGenerativeAI;
   private isVertexAi: boolean;
@@ -132,6 +139,20 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const contents = await this.buildGoogleMessages(payload.messages);
 
       const inputStartAt = Date.now();
+
+      const controller = new AbortController();
+      const originalSignal = options?.signal;
+
+      if (originalSignal) {
+        if (originalSignal.aborted) {
+          controller.abort();
+        } else {
+          originalSignal.addEventListener('abort', () => {
+            controller.abort();
+          });
+        }
+      }
+
       const geminiStreamResult = await this.client
         .getGenerativeModel(
           {
@@ -178,11 +199,11 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             tools: this.buildGoogleTools(payload.tools, payload),
           },
           {
-            signal: options?.signal,
+            signal: controller.signal,
           },
         );
 
-      const googleStream = convertIterableToStream(geminiStreamResult.stream);
+      const googleStream = this.createEnhancedStream(geminiStreamResult.stream, controller.signal);
       const [prod, useForDebug] = googleStream.tee();
 
       const key = this.isVertexAi
@@ -202,11 +223,56 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     } catch (e) {
       const err = e as Error;
 
+      // 如果是取消请求的错误，不要抛出异常，而是返回空响应
+      if (isAbortError(err)) {
+        console.log('Request was cancelled, preserving existing content');
+        // 返回一个空的流响应，保留已经输出的内容
+        const emptyStream = new ReadableStream({
+          start(controller) {
+            controller.close();
+          },
+        });
+        return StreamingResponse(emptyStream, { headers: options?.headers });
+      }
+
       console.log(err);
       const { errorType, error } = this.parseErrorMessage(err.message);
 
       throw AgentRuntimeError.chat({ error, errorType, provider: this.provider });
     }
+  }
+
+  private createEnhancedStream(originalStream: any, signal: AbortSignal): ReadableStream {
+    return new ReadableStream({
+      async start(controller) {
+        let hasData = false;
+
+        try {
+          for await (const chunk of originalStream) {
+            if (signal.aborted) {
+              // 如果请求被取消，优雅地结束流但不抛出错误
+              if (hasData) {
+                console.log('Stream cancelled, but preserving existing content');
+              }
+              break;
+            }
+
+            hasData = true;
+            controller.enqueue(chunk);
+          }
+        } catch (error) {
+          // 检查是否是取消相关的错误
+          if (isAbortError(error as Error) || signal.aborted) {
+            console.log('Stream reading cancelled, preserving existing content');
+          } else {
+            controller.error(error);
+            return;
+          }
+        }
+
+        controller.close();
+      },
+    });
   }
 
   async models(options?: { signal?: AbortSignal }) {
