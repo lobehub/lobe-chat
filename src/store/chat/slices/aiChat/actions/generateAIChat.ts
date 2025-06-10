@@ -1,7 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
 import { produce } from 'immer';
-import { isNil } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
@@ -266,7 +265,7 @@ export const generateAIChat: StateCreator<
 
       const topic = topicSelectors.currentActiveTopic(get());
 
-      if (topic && isNil(topic.title)) {
+      if (topic && !topic.title) {
         const chats = chatSelectors.getBaseChatsByKey(messageMapKey(activeId, topic.id))(get());
         await get().summaryTopicTitle(topic.id, chats);
       }
