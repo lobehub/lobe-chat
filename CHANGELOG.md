@@ -2,6 +2,37 @@
 
 # Changelog
 
+## [Version&nbsp;1.94.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.93.2...v1.94.0)
+<sup>Released on **2025-06-10**</sup>
+
+
+#### ✨ Features
+
+- **misc**: Support google sso as auth provider.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's improved
+
+* **misc**: Support google sso as auth provider, closes [#8074](https://github.com/jaworldwideorg/OneJA-Bot/issues/8074) ([43ab03a](https://github.com/jaworldwideorg/OneJA-Bot/commit/43ab03a))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.94.0](https://github.com/lobehub/lobe-chat/compare/v1.93.3...v1.94.0)
 
 <sup>Released on **2025-06-10**</sup>
