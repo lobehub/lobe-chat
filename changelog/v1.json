@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update pplx abilities tags, support vision."]
+    },
+    "date": "2025-06-10",
+    "version": "1.94.1"
+  },
+  {
+    "children": {
       "features": ["Support google sso as auth provider."],
       "fixes": ["Restore reasoningEffort in setting."]
     },
