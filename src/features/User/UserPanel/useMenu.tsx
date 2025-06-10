@@ -22,13 +22,11 @@ import { Flexbox } from 'react-layout-kit';
 
 import type { MenuProps } from '@/components/Menu';
 import { enableAuth } from '@/const/auth';
-import { LOBE_CHAT_CLOUD } from '@/const/branding';
+import { BRANDING_EMAIL, LOBE_CHAT_CLOUD, SOCIAL_URL } from '@/const/branding';
 import { DEFAULT_HOTKEY_CONFIG } from '@/const/settings';
 import {
   CHANGELOG,
-  DISCORD,
   DOCUMENTS_REFER_URL,
-  EMAIL_SUPPORT,
   GITHUB_ISSUES,
   OFFICIAL_URL,
   UTM_SOURCE,
@@ -171,7 +169,7 @@ export const useMenu = () => {
           icon: <Icon icon={DiscordIcon} />,
           key: 'discord',
           label: (
-            <Link href={DISCORD} target={'_blank'}>
+            <Link href={SOCIAL_URL.discord} target={'_blank'}>
               {t('userPanel.discord')}
             </Link>
           ),
@@ -180,7 +178,7 @@ export const useMenu = () => {
           icon: <Icon icon={Mail} />,
           key: 'email',
           label: (
-            <Link href={mailTo(EMAIL_SUPPORT)} target={'_blank'}>
+            <Link href={mailTo(BRANDING_EMAIL.support)} target={'_blank'}>
               {t('userPanel.email')}
             </Link>
           ),
