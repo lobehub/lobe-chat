@@ -2,42 +2,32 @@
 
 # Changelog
 
-### [Version&nbsp;1.93.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.93.1...v1.93.2)
+## [Version 1.94.0](https://github.com/lobehub/lobe-chat/compare/v1.93.3...v1.94.0)
+
 <sup>Released on **2025-06-10**</sup>
 
+#### ✨ Features
 
-#### ♻ Code Refactoring
-
-- **misc**: Refactor `<think>` & `</think>` handling, refactor branding info.
-
+- **misc**: Support google sso as auth provider.
 
 #### 🐛 Bug Fixes
 
 - **misc**: Restore reasoningEffort in setting.
 
-
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
+#### What's improved
 
-
-#### Code refactoring
-
-* **misc**: Refactor `<think>` & `</think>` handling, closes [#8121](https://github.com/jaworldwideorg/OneJA-Bot/issues/8121) ([04ac353](https://github.com/jaworldwideorg/OneJA-Bot/commit/04ac353))
-* **misc**: Refactor branding info, closes [#8134](https://github.com/jaworldwideorg/OneJA-Bot/issues/8134) ([3baa966](https://github.com/jaworldwideorg/OneJA-Bot/commit/3baa966))
-
-
+- **misc**: Support google sso as auth provider, closes [#8074](https://github.com/lobehub/lobe-chat/issues/8074) ([43ab03a](https://github.com/lobehub/lobe-chat/commit/43ab03a))
 
 #### What's fixed
 
-* **misc**: Restore reasoningEffort in setting, closes [#8123](https://github.com/jaworldwideorg/OneJA-Bot/issues/8123) ([3be609c](https://github.com/jaworldwideorg/OneJA-Bot/commit/3be609c))
+- **misc**: Restore reasoningEffort in setting, closes [#8123](https://github.com/lobehub/lobe-chat/issues/8123) ([3be609c](https://github.com/lobehub/lobe-chat/commit/3be609c))
 
 </details>
-
 
 <div align="right">
 
