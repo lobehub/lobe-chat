@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "features": ["Support google sso as auth provider."],
+      "fixes": ["Restore reasoningEffort in setting."]
+    },
+    "date": "2025-06-10",
+    "version": "1.94.0"
+  },
+  {
+    "children": {
       "improvements": ["Refactor branding info."]
     },
     "date": "2025-06-10",
