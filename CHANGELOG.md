@@ -2,6 +2,49 @@
 
 # Changelog
 
+### [Version&nbsp;1.93.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.93.1...v1.93.2)
+<sup>Released on **2025-06-10**</sup>
+
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor `<think>` & `</think>` handling, refactor branding info.
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Restore reasoningEffort in setting.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Code refactoring
+
+* **misc**: Refactor `<think>` & `</think>` handling, closes [#8121](https://github.com/jaworldwideorg/OneJA-Bot/issues/8121) ([04ac353](https://github.com/jaworldwideorg/OneJA-Bot/commit/04ac353))
+* **misc**: Refactor branding info, closes [#8134](https://github.com/jaworldwideorg/OneJA-Bot/issues/8134) ([3baa966](https://github.com/jaworldwideorg/OneJA-Bot/commit/3baa966))
+
+
+
+#### What's fixed
+
+* **misc**: Restore reasoningEffort in setting, closes [#8123](https://github.com/jaworldwideorg/OneJA-Bot/issues/8123) ([3be609c](https://github.com/jaworldwideorg/OneJA-Bot/commit/3be609c))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.93.3](https://github.com/lobehub/lobe-chat/compare/v1.93.2...v1.93.3)
 
 <sup>Released on **2025-06-10**</sup>
