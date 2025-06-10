@@ -259,6 +259,9 @@
     "enableMaxTokens": {
       "title": "Limiet voor enkele reacties inschakelen"
     },
+    "enableReasoningEffort": {
+      "title": "Schakel redeneerkracht aanpassing in"
+    },
     "frequencyPenalty": {
       "desc": "Hoe hoger de waarde, hoe rijker en gevarieerder de woordkeuze; hoe lager de waarde, hoe eenvoudiger en directer de woordkeuze",
       "title": "Woordenschat diversiteit"
@@ -277,6 +280,15 @@
     "presencePenalty": {
       "desc": "Hoe hoger de waarde, hoe meer de neiging om verschillende uitdrukkingen te gebruiken en herhaling van concepten te vermijden; hoe lager de waarde, hoe meer de neiging om herhalende concepten of verhalen te gebruiken, wat zorgt voor meer consistentie in de uitdrukking",
       "title": "Uitdrukkingsdiversiteit"
+    },
+    "reasoningEffort": {
+      "desc": "Hoe hoger de waarde, hoe sterker het redeneervermogen, maar dit kan de reactietijd en het tokenverbruik verhogen",
+      "options": {
+        "high": "Hoog",
+        "low": "Laag",
+        "medium": "Gemiddeld"
+      },
+      "title": "Redeneerkracht"
     },
     "submit": "Modelinstellingen bijwerken",
     "temperature": {
