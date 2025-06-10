@@ -169,13 +169,18 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           },
           { apiVersion: 'v1beta', baseUrl: this.baseURL },
         )
-        .generateContentStream({
-          contents,
-          systemInstruction: modelsDisableInstuction.has(model)
-            ? undefined
-            : (payload.system as string),
-          tools: this.buildGoogleTools(payload.tools, payload),
-        });
+        .generateContentStream(
+          {
+            contents,
+            systemInstruction: modelsDisableInstuction.has(model)
+              ? undefined
+              : (payload.system as string),
+            tools: this.buildGoogleTools(payload.tools, payload),
+          },
+          {
+            signal: options?.signal,
+          },
+        );
 
       const googleStream = convertIterableToStream(geminiStreamResult.stream);
       const [prod, useForDebug] = googleStream.tee();
@@ -204,24 +209,25 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     }
   }
 
-  async models() {
+  async models(options?: { signal?: AbortSignal }) {
     try {
       const url = `${this.baseURL}/v1beta/models?key=${this.apiKey}`;
       const response = await fetch(url, {
         method: 'GET',
+        signal: options?.signal,
       });
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-  
+
       const json = await response.json();
-      
+
       const modelList: GoogleModelCard[] = json.models;
-  
+
       const processedModels = modelList.map((model) => {
         const id = model.name.replace(/^models\//, '');
-        
+
         return {
           contextWindowTokens: (model.inputTokenLimit || 0) + (model.outputTokenLimit || 0),
           displayName: model.displayName || id,
@@ -229,9 +235,9 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           maxOutput: model.outputTokenLimit || undefined,
         };
       });
-  
+
       const { MODEL_LIST_CONFIGS, processModelList } = await import('../utils/modelParse');
-      
+
       return processModelList(processedModels, MODEL_LIST_CONFIGS.google);
     } catch (error) {
       console.error('Failed to fetch Google models:', error);
