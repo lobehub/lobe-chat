@@ -259,6 +259,9 @@
     "enableMaxTokens": {
       "title": "Ativar limite de resposta única"
     },
+    "enableReasoningEffort": {
+      "title": "Ativar ajuste de intensidade de raciocínio"
+    },
     "frequencyPenalty": {
       "desc": "Quanto maior o valor, mais rica e variada será a escolha de palavras; quanto menor o valor, mais simples e direta será a escolha de palavras.",
       "title": "Riqueza do Vocabulário"
@@ -277,6 +280,15 @@
     "presencePenalty": {
       "desc": "Quanto maior o valor, mais inclinado a diferentes formas de expressão, evitando repetições de conceitos; quanto menor o valor, mais inclinado a usar conceitos ou narrativas repetidas, resultando em uma expressão mais consistente.",
       "title": "Diversidade de Expressão"
+    },
+    "reasoningEffort": {
+      "desc": "Quanto maior o valor, mais forte é a capacidade de raciocínio, mas pode aumentar o tempo de resposta e o consumo de tokens",
+      "options": {
+        "high": "Alto",
+        "low": "Baixo",
+        "medium": "Médio"
+      },
+      "title": "Intensidade do raciocínio"
     },
     "submit": "Atualizar configurações do modelo",
     "temperature": {

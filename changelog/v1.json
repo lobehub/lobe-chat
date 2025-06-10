@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor branding info."]
+    },
+    "date": "2025-06-10",
+    "version": "1.93.3"
+  },
+  {
+    "children": {
       "improvements": ["Refactor <think> & </think> handling."]
     },
     "date": "2025-06-09",

@@ -206,14 +206,8 @@
   "Phi-3.5-vision-instrust": {
     "description": "Versión actualizada del modelo Phi-3-vision."
   },
-  "Pro/Qwen/Qwen2-1.5B-Instruct": {
-    "description": "Qwen2-1.5B-Instruct es un modelo de lenguaje a gran escala de ajuste fino por instrucciones dentro de la serie Qwen2, con un tamaño de parámetros de 1.5B. Este modelo se basa en la arquitectura Transformer, utilizando funciones de activación SwiGLU, sesgos de atención QKV y atención de consulta agrupada, entre otras técnicas. Ha destacado en múltiples pruebas de referencia en comprensión del lenguaje, generación, capacidad multilingüe, codificación, matemáticas y razonamiento, superando a la mayoría de los modelos de código abierto. En comparación con Qwen1.5-1.8B-Chat, Qwen2-1.5B-Instruct ha mostrado mejoras significativas en pruebas como MMLU, HumanEval, GSM8K, C-Eval e IFEval, a pesar de tener un número de parámetros ligeramente menor."
-  },
   "Pro/Qwen/Qwen2-7B-Instruct": {
     "description": "Qwen2-7B-Instruct es un modelo de lenguaje a gran escala de ajuste fino por instrucciones dentro de la serie Qwen2, con un tamaño de parámetros de 7B. Este modelo se basa en la arquitectura Transformer, utilizando funciones de activación SwiGLU, sesgos de atención QKV y atención de consulta agrupada, entre otras técnicas. Es capaz de manejar entradas a gran escala. Este modelo ha destacado en múltiples pruebas de referencia en comprensión del lenguaje, generación, capacidad multilingüe, codificación, matemáticas y razonamiento, superando a la mayoría de los modelos de código abierto y mostrando competitividad comparable a modelos propietarios en ciertas tareas. Qwen2-7B-Instruct ha mostrado mejoras significativas en múltiples evaluaciones en comparación con Qwen1.5-7B-Chat."
-  },
-  "Pro/Qwen/Qwen2-VL-7B-Instruct": {
-    "description": "Qwen2-VL es la última iteración del modelo Qwen-VL, alcanzando un rendimiento de vanguardia en pruebas de comprensión visual."
   },
   "Pro/Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct es uno de los últimos modelos de lenguaje a gran escala lanzados por Alibaba Cloud. Este modelo de 7B ha mejorado significativamente en áreas como codificación y matemáticas. También ofrece soporte multilingüe, abarcando más de 29 idiomas, incluidos chino e inglés. El modelo ha mostrado mejoras significativas en el seguimiento de instrucciones, comprensión de datos estructurados y generación de salidas estructuradas (especialmente JSON)."
@@ -232,9 +226,6 @@
   },
   "Pro/deepseek-ai/DeepSeek-R1-0120": {
     "description": "DeepSeek-R1 es un modelo de razonamiento impulsado por aprendizaje reforzado (RL) que aborda problemas de repetición y legibilidad en modelos. Antes del RL, DeepSeek-R1 introdujo datos de arranque en frío para optimizar aún más el rendimiento del razonamiento. Su desempeño en matemáticas, código y tareas de razonamiento es comparable a OpenAI-o1, y mejora el rendimiento general mediante métodos de entrenamiento cuidadosamente diseñados."
-  },
-  "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
-    "description": "DeepSeek-R1-Distill-Qwen-1.5B es un modelo obtenido mediante destilación de conocimiento basado en Qwen2.5-Math-1.5B. Este modelo fue ajustado utilizando 800,000 muestras seleccionadas generadas por DeepSeek-R1, demostrando un rendimiento notable en múltiples benchmarks. Como modelo ligero, alcanzó una precisión del 83.9% en MATH-500, una tasa de aprobación del 28.9% en AIME 2024 y una puntuación de 954 en CodeForces, mostrando capacidades de razonamiento que superan su escala de parámetros."
   },
   "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": {
     "description": "DeepSeek-R1-Distill-Qwen-7B es un modelo obtenido mediante destilación de conocimiento basado en Qwen2.5-Math-7B. Este modelo se ha ajustado utilizando 800.000 muestras seleccionadas generadas por DeepSeek-R1, demostrando una excelente capacidad de razonamiento. Ha mostrado un rendimiento sobresaliente en múltiples pruebas de referencia, alcanzando un 92,8% de precisión en MATH-500, un 55,5% de tasa de aprobación en AIME 2024 y una puntuación de 1189 en CodeForces, lo que demuestra una fuerte capacidad matemática y de programación para un modelo de escala 7B."
@@ -256,9 +247,6 @@
   },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview es el último modelo de investigación experimental de Qwen, enfocado en mejorar la capacidad de razonamiento de la IA. A través de la exploración de mecanismos complejos como la mezcla de lenguajes y el razonamiento recursivo, sus principales ventajas incluyen una poderosa capacidad de análisis de razonamiento, así como habilidades matemáticas y de programación. Sin embargo, también presenta problemas de cambio de idioma, ciclos de razonamiento, consideraciones de seguridad y diferencias en otras capacidades."
-  },
-  "Qwen/Qwen2-1.5B-Instruct": {
-    "description": "Qwen2-1.5B-Instruct es un modelo de lenguaje a gran escala de ajuste fino por instrucciones dentro de la serie Qwen2, con un tamaño de parámetros de 1.5B. Este modelo se basa en la arquitectura Transformer, utilizando funciones de activación SwiGLU, sesgos de atención QKV y atención de consulta agrupada, entre otras técnicas. Ha destacado en múltiples pruebas de referencia en comprensión del lenguaje, generación, capacidad multilingüe, codificación, matemáticas y razonamiento, superando a la mayoría de los modelos de código abierto. En comparación con Qwen1.5-1.8B-Chat, Qwen2-1.5B-Instruct ha mostrado mejoras significativas en pruebas como MMLU, HumanEval, GSM8K, C-Eval e IFEval, a pesar de tener un número de parámetros ligeramente menor."
   },
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2 es un modelo de lenguaje general avanzado, que soporta múltiples tipos de instrucciones."
@@ -419,9 +407,6 @@
   "THUDM/GLM-Z1-Rumination-32B-0414": {
     "description": "GLM-Z1-Rumination-32B-0414 es un modelo de inferencia profunda con capacidad de reflexión (en comparación con la investigación profunda de OpenAI). A diferencia de los modelos típicos de pensamiento profundo, el modelo de reflexión utiliza un tiempo de reflexión más prolongado para resolver problemas más abiertos y complejos."
   },
-  "THUDM/chatglm3-6b": {
-    "description": "ChatGLM3-6B es un modelo de código abierto de la serie ChatGLM, desarrollado por Zhipu AI. Este modelo conserva las excelentes características de su predecesor, como la fluidez en el diálogo y un bajo umbral de implementación, al tiempo que introduce nuevas características. Utiliza datos de entrenamiento más diversos, un mayor número de pasos de entrenamiento y estrategias de entrenamiento más razonables, destacando entre los modelos preentrenados de menos de 10B. ChatGLM3-6B admite diálogos de múltiples turnos, llamadas a herramientas, ejecución de código y tareas de agente en escenarios complejos. Además del modelo de diálogo, también se han lanzado el modelo base ChatGLM-6B-Base y el modelo de diálogo de texto largo ChatGLM3-6B-32K. Este modelo está completamente abierto para la investigación académica y permite el uso comercial gratuito tras el registro."
-  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B es una versión de código abierto, que proporciona una experiencia de conversación optimizada para aplicaciones de diálogo."
   },
@@ -562,6 +547,12 @@
   },
   "anthropic/claude-3.7-sonnet": {
     "description": "Claude 3.7 Sonnet es el modelo más inteligente de Anthropic hasta la fecha y el primer modelo de razonamiento híbrido en el mercado. Claude 3.7 Sonnet puede generar respuestas casi instantáneas o un pensamiento prolongado y gradual, permitiendo a los usuarios observar claramente estos procesos. Sonnet es especialmente hábil en programación, ciencia de datos, procesamiento visual y tareas de agente."
+  },
+  "anthropic/claude-opus-4": {
+    "description": "Claude Opus 4 es el modelo más potente de Anthropic para manejar tareas altamente complejas. Destaca por su rendimiento, inteligencia, fluidez y capacidad de comprensión excepcionales."
+  },
+  "anthropic/claude-sonnet-4": {
+    "description": "Claude Sonnet 4 puede generar respuestas casi instantáneas o razonamientos prolongados paso a paso, que los usuarios pueden seguir claramente. Los usuarios de la API también pueden controlar con precisión el tiempo de reflexión del modelo."
   },
   "aya": {
     "description": "Aya 23 es un modelo multilingüe lanzado por Cohere, que admite 23 idiomas, facilitando aplicaciones de lenguaje diversas."
@@ -787,6 +778,9 @@
   },
   "deepseek-r1": {
     "description": "DeepSeek-R1 es un modelo de inferencia impulsado por aprendizaje reforzado (RL) que aborda los problemas de repetitividad y legibilidad en el modelo. Antes de RL, DeepSeek-R1 introdujo datos de arranque en frío, optimizando aún más el rendimiento de la inferencia. Su desempeño en tareas matemáticas, de código e inferencia es comparable al de OpenAI-o1, y ha mejorado su efectividad general a través de métodos de entrenamiento cuidadosamente diseñados."
+  },
+  "deepseek-r1-0528": {
+    "description": "Modelo completo de 685 mil millones de parámetros, lanzado el 28 de mayo de 2025. DeepSeek-R1 utiliza técnicas de aprendizaje reforzado a gran escala en la fase de postentrenamiento, mejorando significativamente la capacidad de razonamiento del modelo con muy pocos datos etiquetados. Presenta alto rendimiento y gran capacidad en tareas de matemáticas, código y razonamiento en lenguaje natural."
   },
   "deepseek-r1-70b-fast-online": {
     "description": "DeepSeek R1 70B versión rápida, que soporta búsqueda en línea en tiempo real, ofreciendo una velocidad de respuesta más rápida mientras mantiene el rendimiento del modelo."
@@ -1066,6 +1060,9 @@
   },
   "gemini-2.5-pro-preview-05-06": {
     "description": "Gemini 2.5 Pro Preview es el modelo de pensamiento más avanzado de Google, capaz de razonar sobre problemas complejos en código, matemáticas y campos STEM, así como de analizar grandes conjuntos de datos, bibliotecas de código y documentos utilizando un análisis de contexto prolongado."
+  },
+  "gemini-2.5-pro-preview-06-05": {
+    "description": "Gemini 2.5 Pro Preview es el modelo de pensamiento más avanzado de Google, capaz de razonar sobre problemas complejos en código, matemáticas y áreas STEM, así como analizar grandes conjuntos de datos, bases de código y documentos utilizando contextos extensos."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B es adecuado para el procesamiento de tareas de pequeña y mediana escala, combinando rentabilidad."
@@ -1355,6 +1352,9 @@
   "hunyuan-t1-20250403": {
     "description": "Mejora la capacidad de generación de código a nivel de proyecto; mejora la calidad de la escritura generada en texto; mejora la comprensión de temas en texto, el seguimiento de instrucciones tob en múltiples rondas y la comprensión de palabras; optimiza problemas de salida con mezcla de caracteres tradicionales y simplificados, así como mezcla de chino e inglés."
   },
+  "hunyuan-t1-20250529": {
+    "description": "Optimiza la creación de textos, redacción de ensayos, mejora habilidades en programación frontend, matemáticas y razonamiento lógico, y aumenta la capacidad de seguir instrucciones."
+  },
   "hunyuan-t1-latest": {
     "description": "El primer modelo de inferencia híbrido de gran escala Hybrid-Transformer-Mamba de la industria, que amplía la capacidad de inferencia, ofrece una velocidad de decodificación excepcional y alinea aún más con las preferencias humanas."
   },
@@ -1379,6 +1379,9 @@
   "hunyuan-turbos-20250416": {
     "description": "Actualización de la base de preentrenamiento para fortalecer la comprensión y el seguimiento de instrucciones; mejora en matemáticas, programación, lógica y ciencias durante la fase de alineación; mejora en calidad de escritura creativa, comprensión de texto, precisión en traducción y preguntas de conocimiento en humanidades; refuerzo de capacidades de agentes en diversos campos, con especial énfasis en la comprensión de diálogos multilínea."
   },
+  "hunyuan-turbos-20250604": {
+    "description": "Actualización de la base de preentrenamiento, mejora en la escritura y comprensión lectora, aumento significativo en habilidades de programación y ciencias, y progreso continuo en el seguimiento de instrucciones complejas."
+  },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS es la última versión del modelo insignia Hunyuan, con una mayor capacidad de pensamiento y una mejor experiencia."
   },
@@ -1390,9 +1393,6 @@
   },
   "hunyuan-vision": {
     "description": "El último modelo multimodal de Hunyuan, que admite la entrada de imágenes y texto para generar contenido textual."
-  },
-  "internlm/internlm2_5-20b-chat": {
-    "description": "El innovador modelo de código abierto InternLM2.5 mejora la inteligencia del diálogo mediante un gran número de parámetros."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 ofrece soluciones de diálogo inteligente en múltiples escenarios."
@@ -1909,6 +1909,9 @@
   },
   "qvq-max": {
     "description": "Modelo de razonamiento visual QVQ de Tongyi Qianwen, que soporta entrada visual y salida de cadena de pensamiento, mostrando capacidades superiores en matemáticas, programación, análisis visual, creación y tareas generales."
+  },
+  "qvq-plus": {
+    "description": "Modelo de razonamiento visual. Soporta entrada visual y salida en cadena de pensamiento. Versión plus lanzada tras el modelo qvq-max, con mayor velocidad de razonamiento y un equilibrio mejorado entre eficacia y coste en comparación con qvq-max."
   },
   "qwen-coder-plus": {
     "description": "Modelo de código Tongyi Qianwen."
