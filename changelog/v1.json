@@ -1,6 +1,35 @@
 [
   {
     "children": {
+      "features": ["Support google sso as auth provider."],
+      "fixes": ["Restore reasoningEffort in setting."]
+    },
+    "date": "2025-06-10",
+    "version": "1.94.0"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor branding info."]
+    },
+    "date": "2025-06-10",
+    "version": "1.93.3"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor <think> & </think> handling."]
+    },
+    "date": "2025-06-09",
+    "version": "1.93.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix openai default Responses API issue."]
+    },
+    "date": "2025-06-08",
+    "version": "1.93.1"
+  },
+  {
+    "children": {
       "features": ["Support OpenAI Responses API mode."]
     },
     "date": "2025-06-08",

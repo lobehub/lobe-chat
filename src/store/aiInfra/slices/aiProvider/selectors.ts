@@ -106,7 +106,7 @@ const isProviderEnableResponseApi = (id: string) => (s: AIProviderStoreState) =>
 
   if (typeof enableResponseApi === 'boolean') return enableResponseApi;
 
-  return id === 'openai';
+  return false;
 };
 
 export const aiProviderSelectors = {
