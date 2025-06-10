@@ -133,6 +133,7 @@ export interface ChatStreamPayload {
    * @default 1
    */
   top_p?: number;
+  truncation?: 'auto' | 'disabled';
 }
 
 export interface ChatMethodOptions {
