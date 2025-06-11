@@ -301,7 +301,7 @@ jobs:
             style
 
       - name: Check Pull Request Status
-        if: steps.git_status.outputs.changes_exist == 'true'
+        if: steps.git_status.outputs.changes_exist == 'true' && steps.commit_push.outputs.push_success == 'true'
         run: |
           if [ "${{ steps.create_pr.outputs.pull-request-number }}" ]; then
             echo "✅ Pull request #${{ steps.create_pr.outputs.pull-request-number }} created/updated successfully."
