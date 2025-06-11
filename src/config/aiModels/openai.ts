@@ -16,6 +16,28 @@ export const openaiChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
+      'o3-pro 模型使用更多的计算来更深入地思考并始终提供更好的答案，仅支持 Responses API 下使用。',
+    displayName: 'o3-pro',
+    id: 'o3-pro',
+    maxOutput: 100_000,
+    pricing: {
+      input: 20,
+      output: 80,
+    },
+    releasedAt: '2025-06-10',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
       'o3 是一款全能强大的模型，在多个领域表现出色。它为数学、科学、编程和视觉推理任务树立了新标杆。它也擅长技术写作和指令遵循。用户可利用它分析文本、代码和图像，解决多步骤的复杂问题。',
     displayName: 'o3',
     enabled: true,
@@ -26,7 +48,7 @@ export const openaiChatModels: AIChatModelCard[] = [
       input: 2,
       output: 8,
     },
-    releasedAt: '2025-04-17',
+    releasedAt: '2025-04-16',
     settings: {
       extendParams: ['reasoningEffort'],
     },
