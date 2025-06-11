@@ -10,7 +10,7 @@ import {
   outputLocaleJsonFilepath,
   srcDefaultLocales,
 } from './const';
-import { readJSON, tagWhite, writeJSON } from './utils';
+import { readJSON, tagWhite, writeJSONWithPrettier } from './utils';
 
 export const genDiff = () => {
   consola.start(`Diff between Dev/Prod local...`);
@@ -41,7 +41,7 @@ export const genDiff = () => {
         unset(localeJSON, item.path);
       }
 
-      writeJSON(localeFilepath, localeJSON);
+      writeJSONWithPrettier(localeFilepath, localeJSON);
       clearLocals.push(locale);
     }
     consola.info('clear', clearLocals);
