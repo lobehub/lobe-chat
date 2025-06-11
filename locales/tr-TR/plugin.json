@@ -291,8 +291,9 @@
     "placeholder": "Eklenti adını, açıklamasını veya anahtar kelimeleri ara...",
     "releasedAt": "{{createdAt}} tarihinde yayınlandı",
     "tabs": {
-      "all": "Tümü",
-      "installed": "Yüklü"
+      "installed": "Yüklü",
+      "mcp": "MCP Eklentisi",
+      "old": "Eski Sürüm Eklentisi"
     },
     "title": "Eklenti Mağazası"
   },

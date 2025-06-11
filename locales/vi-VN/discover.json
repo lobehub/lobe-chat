@@ -191,18 +191,7 @@
     "result": "{{count}} kết quả tìm kiếm về <highlight>{{keyword}}</highlight>",
     "searching": "Đang tìm kiếm..."
   },
-  "sort": {
-    "mostLiked": "Nhiều người thích nhất",
-    "mostUsed": "Sử dụng nhiều nhất",
-    "newest": "Mới nhất",
-    "oldest": "Cũ nhất",
-    "recommended": "Được đề xuất"
-  },
   "tab": {
-    "assistants": "Trợ lý",
-    "home": "Trang chủ",
-    "models": "Mô hình",
-    "plugins": "Plugin",
-    "providers": "Nhà cung cấp mô hình"
+    "home": "Trang chủ"
   }
 }

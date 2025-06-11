@@ -191,18 +191,7 @@
     "result": "{{count}} نتیجه برای <highlight>{{keyword}}</highlight> یافت شد",
     "searching": "در حال جستجو..."
   },
-  "sort": {
-    "mostLiked": "بیشترین پسند",
-    "mostUsed": "بیشترین استفاده",
-    "newest": "جدیدترین",
-    "oldest": "قدیمی‌ترین",
-    "recommended": "توصیه‌شده"
-  },
   "tab": {
-    "assistants": "دستیارها",
-    "home": "صفحه اصلی",
-    "models": "مدل‌ها",
-    "plugins": "افزونه‌ها",
-    "providers": "ارائه‌دهندگان مدل"
+    "home": "صفحه اصلی"
   }
 }
