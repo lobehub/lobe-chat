@@ -219,11 +219,36 @@ jobs:
           echo "💾 Committing and pushing changes..."
 
           git add .
-          git commit -m "🤖 style: update i18n
+
+          # Check if there are staged changes after adding files
+          if git diff --cached --exit-code >/dev/null 2>&1; then
+            echo "ℹ️ No staged changes detected after git add. Skipping commit."
+            echo "push_success=false" >> $GITHUB_OUTPUT
+            echo "no_changes_after_stage=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Attempt to commit with handling for lint-staged preventing empty commits
+          if git commit -m "🤖 style: update i18n
 
           - Auto-generated i18n updates
           - Generated at: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
-          - Workflow run: ${{ github.run_number }}"
+          - Workflow run: ${{ github.run_number }}"; then
+            echo "✅ Successfully committed changes"
+          else
+            commit_exit_code=$?
+            if [ $commit_exit_code -eq 1 ]; then
+              echo "ℹ️ No changes to commit after lint-staged processing. This is normal."
+              echo "push_success=false" >> $GITHUB_OUTPUT
+              echo "no_changes_after_lint=true" >> $GITHUB_OUTPUT
+              exit 0
+            else
+              echo "❌ Commit failed with exit code: $commit_exit_code"
+              echo "push_success=false" >> $GITHUB_OUTPUT
+              echo "ERROR_COMMIT_PUSH=Git commit failed with exit code $commit_exit_code" >> $GITHUB_ENV
+              exit 1
+            fi
+          fi
 
           # Push with retry mechanism
           for i in {1..3}; do
@@ -287,8 +312,18 @@ jobs:
           fi
 
       - name: No changes
-        if: steps.git_status.outputs.changes_exist != 'true' && steps.run_i18n.outputs.i18n_success == 'true'
-        run: echo "ℹ️ No changes to commit. Skipping PR creation."
+        if: |
+          (steps.git_status.outputs.changes_exist != 'true' && steps.run_i18n.outputs.i18n_success == 'true') ||
+          (steps.commit_push.outputs.no_changes_after_stage == 'true') ||
+          (steps.commit_push.outputs.no_changes_after_lint == 'true')
+        run: |
+          if [ "${{ steps.commit_push.outputs.no_changes_after_stage }}" == "true" ]; then
+            echo "ℹ️ No staged changes detected after git add. Skipping PR creation."
+          elif [ "${{ steps.commit_push.outputs.no_changes_after_lint }}" == "true" ]; then
+            echo "ℹ️ No changes remaining after lint-staged processing. Skipping PR creation."
+          else
+            echo "ℹ️ No changes to commit. Skipping PR creation."
+          fi
 
       # Set step status for issue creation
       - name: Set step conclusions
