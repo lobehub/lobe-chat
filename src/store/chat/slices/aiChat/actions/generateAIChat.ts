@@ -263,7 +263,8 @@ export const generateAIChat: StateCreator<
         return;
       }
 
-      const topic = topicSelectors.currentActiveTopic(get());
+      if (!activeTopicId) return;
+      const topic = topicSelectors.getTopicById(activeTopicId)(get());
 
       if (topic && !topic.title) {
         const chats = chatSelectors.getBaseChatsByKey(messageMapKey(activeId, topic.id))(get());
