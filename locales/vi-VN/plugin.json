@@ -291,7 +291,9 @@
     "placeholder": "Tìm kiếm tên hoặc mô tả plugin...",
     "releasedAt": "Đã phát hành vào {{createdAt}}",
     "tabs": {
-      "installed": "Đã cài đặt"
+      "installed": "Đã cài đặt",
+      "mcp": "Tiện ích MCP",
+      "old": "Tiện ích phiên bản cũ"
     },
     "title": "Cửa hàng plugin"
   },
