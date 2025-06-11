@@ -6,7 +6,7 @@ import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronDownIcon } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'nextjs-toploader/app';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';

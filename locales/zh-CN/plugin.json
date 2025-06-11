@@ -291,8 +291,9 @@
     "placeholder": "搜索插件名称介绍或关键词...",
     "releasedAt": "发布于 {{createdAt}}",
     "tabs": {
-      "all": "全部",
-      "installed": "已安装"
+      "installed": "已安装",
+      "mcp": "MCP 插件",
+      "old": "旧版插件"
     },
     "title": "插件商店"
   },

@@ -25,9 +25,11 @@ describe('getServerConfig', () => {
     it('should return default URLs when no environment variables are set', () => {
       const config = getAppConfig();
       expect(config.AGENTS_INDEX_URL).toBe(
-        'https://registry.npmmirror.com/@lobehub/agents-index/v1/files/public',
+        'https://registry.npmmirror.com/@lobehub/agents-index/latest/files/public',
       );
-      expect(config.PLUGINS_INDEX_URL).toBe('https://chat-plugins.lobehub.com');
+      expect(config.PLUGINS_INDEX_URL).toBe(
+        'https://registry.npmmirror.com/@lobehub/plugins-index/latest/files/public',
+      );
     });
 
     it('should return custom URLs when environment variables are set', () => {
@@ -44,9 +46,11 @@ describe('getServerConfig', () => {
 
       const config = getAppConfig();
       expect(config.AGENTS_INDEX_URL).toBe(
-        'https://registry.npmmirror.com/@lobehub/agents-index/v1/files/public',
+        'https://registry.npmmirror.com/@lobehub/agents-index/latest/files/public',
       );
-      expect(config.PLUGINS_INDEX_URL).toBe('https://chat-plugins.lobehub.com');
+      expect(config.PLUGINS_INDEX_URL).toBe(
+        'https://registry.npmmirror.com/@lobehub/plugins-index/latest/files/public',
+      );
     });
   });
 });

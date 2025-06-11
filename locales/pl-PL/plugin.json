@@ -291,8 +291,9 @@
     "placeholder": "Szukaj nazwy wtyczki, opisu lub słowa kluczowego...",
     "releasedAt": "Wydane {{createdAt}}",
     "tabs": {
-      "all": "Wszystkie",
-      "installed": "Zainstalowane"
+      "installed": "Zainstalowane",
+      "mcp": "Wtyczka MCP",
+      "old": "Stara wtyczka"
     },
     "title": "Sklep wtyczek"
   },

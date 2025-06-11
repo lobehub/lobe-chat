@@ -291,8 +291,9 @@
     "placeholder": "Zoek plugin op naam, beschrijving of trefwoord...",
     "releasedAt": "Uitgebracht op {{createdAt}}",
     "tabs": {
-      "all": "Alle",
-      "installed": "Geïnstalleerd"
+      "installed": "Geïnstalleerd",
+      "mcp": "MCP-plug-in",
+      "old": "Oude plug-in"
     },
     "title": "Pluginwinkel"
   },

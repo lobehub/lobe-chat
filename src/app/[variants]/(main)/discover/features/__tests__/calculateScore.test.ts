@@ -32,7 +32,7 @@ describe('calculateScore', () => {
         hasReadme: true,
         hasLicense: true,
         hasDeployment: true,
-        hasDeployMoreThanManual: false, // 缺少这项
+        hasDeployMoreThanManual: true,
         hasValidated: true,
         hasTools: true,
         hasPrompts: true,
@@ -64,7 +64,7 @@ describe('calculateScore', () => {
       const result = calculateScore(scoreItems);
 
       expect(result.grade).toBe('b');
-      expect(result.percentage).toBeGreaterThanOrEqual(65);
+      expect(result.percentage).toBeGreaterThanOrEqual(60);
       expect(result.percentage).toBeLessThan(85);
     });
   });

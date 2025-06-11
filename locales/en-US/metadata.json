@@ -13,6 +13,10 @@
       "title": "AI Assistants"
     },
     "description": "Content creation, copywriting, Q&A, image generation, video generation, voice generation, intelligent agents, automated workflows, custom AI applications, customize your own AI application workspace",
+    "mcp": {
+      "description": "Search, compare, and connect to thousands of MCP Servers, enabling AI systems to easily access file systems, databases, APIs, and other essential resources, comprehensively expanding your AI capabilities.",
+      "title": "MCP Servers Marketplace"
+    },
     "models": {
       "description": "Explore mainstream AI models OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek",
       "title": "AI Models"
