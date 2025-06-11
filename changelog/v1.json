@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-06-11",
+    "version": "1.94.3"
+  },
+  {
     "children": {
       "fixes": ["Update Gemini range of thinkingBudget."]
     },
