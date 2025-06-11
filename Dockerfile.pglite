@@ -102,25 +102,22 @@ FROM busybox:latest AS app
 
 COPY --from=base /distroless/ /
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder /app/.next/standalone /app/
-
-# Copy server launcher
-COPY --from=builder /app/scripts/serverLauncher/startServer.js /app/startServer.js
-
 RUN \
     # Add nextjs:nodejs to run the app
     addgroup -S -g 1001 nodejs \
     && adduser -D -G nodejs -H -S -h /app -u 1001 nextjs \
     # Set permission for nextjs:nodejs
-    && chown -R nextjs:nodejs /app /etc/proxychains4.conf
+    && chown nextjs:nodejs /etc/proxychains4.conf
+
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone /app/
+
+# Copy server launcher
+COPY --from=builder --chown=nextjs:nodejs /app/scripts/serverLauncher/startServer.js /app/startServer.js
 
 ## Production image, copy all the files and run next
-FROM scratch
-
-# Copy all the files from app, set the correct permission for prerender cache
-COPY --from=app / /
+FROM app
 
 ENV NODE_ENV="production" \
     NODE_OPTIONS="--dns-result-order=ipv4first --use-openssl-ca" \
