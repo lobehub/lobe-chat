@@ -42,7 +42,6 @@ import {
   ProviderQueryParams,
   ProviderSorts,
 } from '@/types/discover';
-import { getToolManifest } from '@/utils/toolManifest';
 
 export class DiscoverService {
   assistantStore = new AssistantStore();
@@ -460,16 +459,20 @@ export class DiscoverService {
 
     if (!withManifest || !plugin?.manifest || !isString(plugin?.manifest)) return plugin;
 
-    try {
-      const manifest = await getToolManifest(plugin.manifest);
+    // 在 Edge Runtime 环境中使用了 Node.js 的 path 模块，但 Edge Runtime 不支持所有 Node.js API
+    // 这个函数使用了 @lobehub/chat-plugin-sdk/openapi，该包最终依赖了 @apidevtools/swagger-parser，而这个包在 Edge Runtime 环境中使用了不被支持的 Node.js path 模块。
+    // try {
+    //   const manifest = await getToolManifest(plugin.manifest);
+    //
+    //   return {
+    //     ...plugin,
+    //     manifest,
+    //   };
+    // } catch {
+    //   return plugin;
+    // }
 
-      return {
-        ...plugin,
-        manifest,
-      };
-    } catch {
-      return plugin;
-    }
+    return plugin;
   };
 
   getPluginIdentifiers = async (): Promise<IdentifiersResponse> => {
