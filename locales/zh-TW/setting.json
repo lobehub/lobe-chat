@@ -259,6 +259,9 @@
     "enableMaxTokens": {
       "title": "啟用單次回覆限制"
     },
+    "enableReasoningEffort": {
+      "title": "開啟推理強度調整"
+    },
     "frequencyPenalty": {
       "desc": "值越大，用詞越豐富多樣；值越低，用詞更樸實簡單",
       "title": "詞彙豐富度"
@@ -277,6 +280,15 @@
     "presencePenalty": {
       "desc": "值越大，越傾向不同的表達方式，避免概念重複；值越小，越傾向使用重複的概念或敘述，表達更具一致性",
       "title": "表述發散度"
+    },
+    "reasoningEffort": {
+      "desc": "數值越大，推理能力越強，但可能會增加回應時間和 Token 消耗",
+      "options": {
+        "high": "高",
+        "low": "低",
+        "medium": "中"
+      },
+      "title": "推理強度"
     },
     "submit": "更新模型設定",
     "temperature": {
