@@ -52,6 +52,7 @@ const transformOpenAIStream = (
     switch (chunk.type) {
       case 'response.created': {
         streamContext.id = chunk.response.id;
+        streamContext.returnedCitationArray = [];
 
         return { data: chunk.response.status, id: streamContext.id, type: 'data' };
       }
