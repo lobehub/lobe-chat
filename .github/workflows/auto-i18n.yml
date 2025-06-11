@@ -84,7 +84,7 @@ jobs:
         run: |
           echo "🔄 Attempting to rebase existing branch..."
 
-                    # Fetch the existing branch with error handling
+          # Fetch the existing branch with error handling
           if ! git fetch origin style/auto-i18n; then
             echo "❌ Failed to fetch existing branch"
             echo "rebase_success=false" >> $GITHUB_OUTPUT
@@ -288,10 +288,9 @@ jobs:
 
       - name: No changes
         if: steps.git_status.outputs.changes_exist != 'true' && steps.run_i18n.outputs.i18n_success == 'true'
-        run:
-          echo "ℹ️ No changes to commit. Skipping PR creation."
+        run: echo "ℹ️ No changes to commit. Skipping PR creation."
 
-          # Set step status for issue creation
+      # Set step status for issue creation
       - name: Set step conclusions
         if: always()
         run: |
