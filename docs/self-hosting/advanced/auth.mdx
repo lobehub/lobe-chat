@@ -1,9 +1,8 @@
 ---
 title: LobeChat Authentication Service Configuration
 description: >-
-  Learn how to configure external authentication services using Clerk or Next
-  Auth for centralized user authorization management. Supported authentication
-  services include Auth0, Azure ID, etc.
+  Learn how to configure external authentication services using Clerk or Next Auth for centralized user authorization management. Supported authentication services include Auth0, Azure ID, etc.
+
 tags:
   - Authentication Service
   - Next Auth
@@ -54,6 +53,8 @@ Currently supported identity verification services include:
   <Card href={'/docs/self-hosting/advanced/auth/next-auth/logto'} title={'Logto'} />
 
   <Card href={'/docs/self-hosting/advanced/auth/next-auth/keycloak'} title={'Keycloak'} />
+
+  <Card href={'/docs/self-hosting/advanced/auth/next-auth/google'} title={'Google'} />
 </Cards>
 
 Click on the links to view the corresponding platform's configuration documentation.
@@ -76,6 +77,7 @@ The order corresponds to the display order of the SSO providers.
 | Microsoft Entra ID    | `microsoft-entra-id`    |
 | ZITADEL               | `zitadel`               |
 | Keycloak              | `keycloak`              |
+| Google                | `google`                |
 
 ## Other SSO Providers
 

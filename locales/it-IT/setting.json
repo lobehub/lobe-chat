@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "Il template verrà popolato con l'ultimo messaggio dell'utente",
-      "placeholder": "Il modello di input {{text}} verrà sostituito con le informazioni in tempo reale",
+      "placeholder": "Il modello di input {{input_template}} verrà sostituito con le informazioni in tempo reale",
       "title": "Pre-elaborazione dell'input dell'utente"
     },
     "submit": "Aggiorna preferenze chat",
@@ -260,7 +260,7 @@
       "title": "Abilita limite di risposta singola"
     },
     "enableReasoningEffort": {
-      "title": "Attiva la regolazione dell'intensità del ragionamento"
+      "title": "Abilita regolazione dell'intensità del ragionamento"
     },
     "frequencyPenalty": {
       "desc": "Maggiore è il valore, più ricca e varia sarà la scelta delle parole; minore è il valore, più semplici e dirette saranno le parole",
@@ -282,7 +282,7 @@
       "title": "Divergenza espressiva"
     },
     "reasoningEffort": {
-      "desc": "Maggiore è il valore, più forte è la capacità di ragionamento, ma potrebbe aumentare il tempo di risposta e il consumo di Token",
+      "desc": "Valori più alti indicano una maggiore capacità di ragionamento, ma potrebbero aumentare i tempi di risposta e il consumo di token",
       "options": {
         "high": "Alto",
         "low": "Basso",

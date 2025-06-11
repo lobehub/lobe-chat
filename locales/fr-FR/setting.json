@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "Le dernier message de l'utilisateur sera rempli dans ce modèle",
-      "placeholder": "Le modèle de prétraitement {{text}} sera remplacé par les informations d'entrée en temps réel",
+      "placeholder": "Le modèle de prétraitement {{input_template}} sera remplacé par les informations d'entrée en temps réel",
       "title": "Modèle de prétraitement de l'entrée utilisateur"
     },
     "submit": "Mettre à jour les préférences de chat",
@@ -260,7 +260,7 @@
       "title": "Activer la limite de tokens par réponse"
     },
     "enableReasoningEffort": {
-      "title": "Activer l'ajustement de l'intensité de raisonnement"
+      "title": "Activer l'ajustement de l'intensité du raisonnement"
     },
     "frequencyPenalty": {
       "desc": "Plus la valeur est élevée, plus le vocabulaire est riche et varié ; plus la valeur est basse, plus le vocabulaire est simple et direct",
@@ -285,10 +285,10 @@
       "desc": "Plus la valeur est élevée, plus la capacité de raisonnement est forte, mais cela peut augmenter le temps de réponse et la consommation de jetons",
       "options": {
         "high": "Élevé",
-        "low": "Bas",
+        "low": "Faible",
         "medium": "Moyen"
       },
-      "title": "Intensité de raisonnement"
+      "title": "Intensité du raisonnement"
     },
     "submit": "Mettre à jour les paramètres du modèle",
     "temperature": {

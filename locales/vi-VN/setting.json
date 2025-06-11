@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "Tin nhắn mới nhất của người dùng sẽ được điền vào mẫu này",
-      "placeholder": "Mẫu xử lý trước {{text}} sẽ được thay thế bằng thông tin nhập thời gian thực",
+      "placeholder": "Mẫu xử lý trước {{input_template}} sẽ được thay thế bằng thông tin nhập thời gian thực",
       "title": "Mẫu xử lý đầu vào của người dùng"
     },
     "submit": "Cập nhật sở thích trò chuyện",
@@ -282,7 +282,7 @@
       "title": "Độ phân tán trong diễn đạt"
     },
     "reasoningEffort": {
-      "desc": "Giá trị càng lớn, khả năng suy luận càng mạnh, nhưng có thể làm tăng thời gian phản hồi và tiêu tốn Token",
+      "desc": "Giá trị càng cao, khả năng suy luận càng mạnh, nhưng có thể làm tăng thời gian phản hồi và tiêu thụ Token",
       "options": {
         "high": "Cao",
         "low": "Thấp",

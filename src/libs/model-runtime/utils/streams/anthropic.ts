@@ -1,7 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { Stream } from '@anthropic-ai/sdk/streaming';
 
-import { ModelTokensUsage } from '@/types/message';
+import { CitationItem, ModelTokensUsage } from '@/types/message';
 
 import { ChatStreamCallbacks } from '../../types';
 import {
@@ -23,6 +23,7 @@ export const transformAnthropicStream = (
   switch (chunk.type) {
     case 'message_start': {
       context.id = chunk.message.id;
+      context.returnedCitationArray = [];
       let totalInputTokens = chunk.message.usage?.input_tokens;
 
       if (
@@ -59,6 +60,7 @@ export const transformAnthropicStream = (
           return { data: chunk.content_block.text, id: context.id, type: 'data' };
         }
 
+        case 'server_tool_use':
         case 'tool_use': {
           const toolChunk = chunk.content_block;
 
@@ -85,6 +87,29 @@ export const transformAnthropicStream = (
 
           return { data: [toolCall], id: context.id, type: 'tool_calls' };
         }
+
+        /*
+        case 'web_search_tool_result': {
+          const citations = chunk.content_block.content;
+
+          return [
+            {
+              data: {
+                citations: (citations as any[]).map(
+                  (item) =>
+                    ({
+                      title: item.title,
+                      url: item.url,
+                    }) as CitationItem,
+                ),
+              },
+              id: context.id,
+              type: 'grounding',
+            },
+          ];
+        }
+        */
+
         case 'thinking': {
           const thinkingChunk = chunk.content_block;
 
@@ -148,6 +173,19 @@ export const transformAnthropicStream = (
           };
         }
 
+        case 'citations_delta': {
+          const citations = (chunk as any).delta.citation;
+
+          if (context.returnedCitationArray) {
+            context.returnedCitationArray.push({
+              title: citations.title,
+              url: citations.url,
+            } as CitationItem);
+          }
+
+          return { data: null, id: context.id, type: 'text' };
+        }
+
         default: {
           break;
         }
@@ -180,7 +218,18 @@ export const transformAnthropicStream = (
     }
 
     case 'message_stop': {
-      return { data: 'message_stop', id: context.id, type: 'stop' };
+      return [
+        ...(context.returnedCitationArray?.length
+          ? [
+              {
+                data: { citations: context.returnedCitationArray },
+                id: context.id,
+                type: 'grounding',
+              },
+            ]
+          : []),
+        { data: 'message_stop', id: context.id, type: 'stop' },
+      ] as any;
     }
 
     default: {

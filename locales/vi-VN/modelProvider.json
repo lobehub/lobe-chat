@@ -208,6 +208,10 @@
         "title": "Sử dụng chế độ yêu cầu từ khách hàng"
       },
       "helpDoc": "Hướng dẫn cấu hình",
+      "responsesApi": {
+        "desc": "Sử dụng định dạng yêu cầu thế hệ mới của OpenAI, mở khóa các tính năng nâng cao như chuỗi suy nghĩ",
+        "title": "Sử dụng chuẩn Responses API"
+      },
       "waitingForMore": "Nhiều mô hình hơn đang <1>được lên kế hoạch</1>, xin hãy chờ đợi"
     },
     "createNew": {

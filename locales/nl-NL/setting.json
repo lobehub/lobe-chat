@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "De meest recente gebruikersboodschap wordt ingevuld in dit sjabloon",
-      "placeholder": "Voorbewerkingssjabloon {{text}} wordt vervangen door realtime invoer",
+      "placeholder": "Voorbewerkingssjabloon {{input_template}} wordt vervangen door realtime invoer",
       "title": "Voorbewerking van gebruikersinvoer"
     },
     "submit": "Chatvoorkeuren bijwerken",
@@ -260,7 +260,7 @@
       "title": "Limiet voor enkele reacties inschakelen"
     },
     "enableReasoningEffort": {
-      "title": "Inschakelen van redeneringsinspanningsaanpassing"
+      "title": "Schakel redeneerkracht aanpassing in"
     },
     "frequencyPenalty": {
       "desc": "Hoe hoger de waarde, hoe rijker en gevarieerder de woordkeuze; hoe lager de waarde, hoe eenvoudiger en directer de woordkeuze",
@@ -282,13 +282,13 @@
       "title": "Uitdrukkingsdiversiteit"
     },
     "reasoningEffort": {
-      "desc": "Hoe hoger de waarde, hoe sterker de redeneringscapaciteit, maar dit kan de responstijd en het tokenverbruik verhogen",
+      "desc": "Hoe hoger de waarde, hoe sterker het redeneervermogen, maar dit kan de reactietijd en het tokenverbruik verhogen",
       "options": {
         "high": "Hoog",
         "low": "Laag",
         "medium": "Gemiddeld"
       },
-      "title": "Redeneringsinspanningsniveau"
+      "title": "Redeneerkracht"
     },
     "submit": "Modelinstellingen bijwerken",
     "temperature": {
