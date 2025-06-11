@@ -223,16 +223,14 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     } catch (e) {
       const err = e as Error;
 
-      // 如果是取消请求的错误，不要抛出异常，而是返回空响应
+      // 移除之前的静默处理，统一抛出错误
       if (isAbortError(err)) {
-        console.log('Request was cancelled, preserving existing content');
-        // 返回一个空的流响应，保留已经输出的内容
-        const emptyStream = new ReadableStream({
-          start(controller) {
-            controller.close();
-          },
+        console.log('Request was cancelled');
+        throw AgentRuntimeError.chat({
+          error: { message: 'Request was cancelled' },
+          errorType: AgentRuntimeErrorType.ProviderBizError,
+          provider: this.provider,
         });
-        return StreamingResponse(emptyStream, { headers: options?.headers });
       }
 
       console.log(err);
@@ -250,22 +248,39 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         try {
           for await (const chunk of originalStream) {
             if (signal.aborted) {
-              // 如果请求被取消，优雅地结束流但不抛出错误
+              // 如果有数据已经输出，优雅地关闭流而不是抛出错误
               if (hasData) {
-                console.log('Stream cancelled, but preserving existing content');
+                console.log('Stream cancelled gracefully, preserving existing output');
+                controller.close();
+                return;
+              } else {
+                // 如果还没有数据输出，则抛出取消错误
+                throw new Error('Stream cancelled');
               }
-              break;
             }
 
             hasData = true;
             controller.enqueue(chunk);
           }
         } catch (error) {
-          // 检查是否是取消相关的错误
-          if (isAbortError(error as Error) || signal.aborted) {
-            console.log('Stream reading cancelled, preserving existing content');
+          const err = error as Error;
+
+          // 统一处理所有错误，包括 abort 错误
+          if (isAbortError(err) || signal.aborted) {
+            // 如果有数据已经输出，优雅地关闭流
+            if (hasData) {
+              console.log('Stream reading cancelled gracefully, preserving existing output');
+              controller.close();
+              return;
+            } else {
+              console.log('Stream reading cancelled before any output');
+              controller.error(new Error('Stream cancelled'));
+              return;
+            }
           } else {
-            controller.error(error);
+            // 处理其他流解析错误
+            console.error('Stream parsing error:', err);
+            controller.error(err);
             return;
           }
         }
