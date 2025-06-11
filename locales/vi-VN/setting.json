@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "Chủ đề Nàng Tiên Cá"
     },
-    "title": "Giao diện trò chuyện"
+    "title": "Giao diện trò chuyện",
+    "transitionMode": {
+      "desc": "Hiệu ứng chuyển tiếp của tin nhắn trò chuyện",
+      "options": {
+        "fadeIn": "Mờ dần",
+        "none": {
+          "desc": "Điều này phụ thuộc vào cách mô hình phản hồi, vui lòng tự kiểm tra.",
+          "value": "Không"
+        },
+        "smooth": "Mượt mà"
+      },
+      "title": "Hiệu ứng chuyển tiếp"
+    }
   },
   "settingCommon": {
     "lang": {
