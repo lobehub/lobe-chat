@@ -306,7 +306,7 @@ jobs:
       # Error handling and issue creation
       - name: Upload debug artifacts
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: debug-logs-${{ github.run_number }}
           path: |
