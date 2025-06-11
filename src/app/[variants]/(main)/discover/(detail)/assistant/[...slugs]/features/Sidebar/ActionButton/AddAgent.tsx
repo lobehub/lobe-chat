@@ -4,7 +4,7 @@ import { Icon } from '@lobehub/ui';
 import { App, Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronDownIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'nextjs-toploader/app';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

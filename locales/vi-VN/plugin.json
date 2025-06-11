@@ -291,7 +291,6 @@
     "placeholder": "Tìm kiếm tên hoặc mô tả plugin...",
     "releasedAt": "Đã phát hành vào {{createdAt}}",
     "tabs": {
-      "all": "Tất cả",
       "installed": "Đã cài đặt"
     },
     "title": "Cửa hàng plugin"

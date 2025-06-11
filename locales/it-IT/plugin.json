@@ -291,8 +291,9 @@
     "placeholder": "Cerca per nome, descrizione o parola chiave del plugin...",
     "releasedAt": "Pubblicato il {{createdAt}}",
     "tabs": {
-      "all": "Tutti",
-      "installed": "Installati"
+      "installed": "Installati",
+      "mcp": "Plugin MCP",
+      "old": "Plugin vecchio"
     },
     "title": "Negozio dei plugin"
   },
