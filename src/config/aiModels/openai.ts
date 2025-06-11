@@ -22,9 +22,9 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'o3',
     maxOutput: 100_000,
     pricing: {
-      cachedInput: 2.5,
-      input: 10,
-      output: 40,
+      cachedInput: 0.5,
+      input: 2,
+      output: 8,
     },
     releasedAt: '2025-04-17',
     settings: {
