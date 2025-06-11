@@ -12,8 +12,8 @@ import {
 } from './const';
 import { readJSON, tagWhite, writeJSONWithPrettier } from './utils';
 
-export const genDiff = () => {
-  consola.start(`Diff between Dev/Prod local...`);
+export const genRemoveDiff = () => {
+  consola.start(`Remove diff analysis...`);
 
   const resources = require(srcDefaultLocales);
   const data = Object.entries(resources.default);

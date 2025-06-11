@@ -1,9 +1,9 @@
 import { genDefaultLocale } from './genDefaultLocale';
-import { genDiff } from './genDiff';
+import { genRemoveDiff } from './genRemoveDiff';
 import { split } from './utils';
 
 split('DIFF ANALYSIS');
-genDiff();
+genRemoveDiff();
 
 split('GENERATE DEFAULT LOCALE');
 genDefaultLocale();
