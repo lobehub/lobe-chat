@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Update Gemini range of thinkingBudget."]
+    },
+    "date": "2025-06-11",
+    "version": "1.94.2"
+  },
+  {
+    "children": {
       "improvements": ["Update pplx abilities tags, support vision."]
     },
     "date": "2025-06-10",
