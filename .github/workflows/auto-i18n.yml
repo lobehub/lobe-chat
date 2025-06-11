@@ -26,11 +26,11 @@ jobs:
         with:
           bun-version: ${{ secrets.BUN_VERSION }}
 
-            - name: Validate environment
+      - name: Validate environment
         id: validate_env
         run: |
           echo "🔍 Validating environment..."
-          
+
           # Check required secrets
           if [ -z "${{ secrets.OPENAI_API_KEY }}" ]; then
             echo "❌ OPENAI_API_KEY is missing"
@@ -38,14 +38,14 @@ jobs:
             echo "ERROR_VALIDATE_ENV=OPENAI_API_KEY secret is not configured" >> $GITHUB_ENV
             exit 1
           fi
-          
+
           if [ -z "${{ secrets.GH_TOKEN }}" ]; then
             echo "❌ GH_TOKEN is missing"
             echo "env_valid=false" >> $GITHUB_OUTPUT
             echo "ERROR_VALIDATE_ENV=GH_TOKEN secret is not configured" >> $GITHUB_ENV
             exit 1
           fi
-          
+
           # Test OpenAI API connectivity (optional, with timeout)
           echo "🌐 Testing OpenAI API connectivity..."
           if timeout 30s curl -s -H "Authorization: Bearer ${{ secrets.OPENAI_API_KEY }}" \
@@ -54,7 +54,7 @@ jobs:
           else
             echo "⚠️ OpenAI API test failed (but continuing...)"
           fi
-          
+
           echo "env_valid=true" >> $GITHUB_OUTPUT
 
       - name: Check if branch exists
@@ -84,14 +84,14 @@ jobs:
         run: |
           echo "🔄 Attempting to rebase existing branch..."
 
-                    # Fetch the existing branch with error handling
+          # Fetch the existing branch with error handling
           if ! git fetch origin style/auto-i18n; then
             echo "❌ Failed to fetch existing branch"
             echo "rebase_success=false" >> $GITHUB_OUTPUT
             echo "ERROR_REBASE_ATTEMPT=Failed to fetch existing branch from origin" >> $GITHUB_ENV
             exit 1
           fi
-          
+
           if ! git checkout -b style/auto-i18n origin/style/auto-i18n; then
             echo "❌ Failed to checkout existing branch"
             echo "rebase_success=false" >> $GITHUB_OUTPUT
@@ -290,7 +290,7 @@ jobs:
         if: steps.git_status.outputs.changes_exist != 'true' && steps.run_i18n.outputs.i18n_success == 'true'
         run: echo "ℹ️ No changes to commit. Skipping PR creation."
 
-            # Set step status for issue creation
+      # Set step status for issue creation
       - name: Set step conclusions
         if: always()
         run: |
