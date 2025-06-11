@@ -8,7 +8,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { DISCORD, GITHUB, MEDIDUM, X } from '@/const/url';
+import { SOCIAL_URL } from '@/const/branding';
+import { GITHUB } from '@/const/url';
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -38,17 +39,17 @@ const Follow = memo(() => {
           title={t('follow', { name: 'GitHub' })}
         />
       </Link>
-      <Link href={X} rel="noreferrer" target={'_blank'}>
+      <Link href={SOCIAL_URL.x} rel="noreferrer" target={'_blank'}>
         <ActionIcon className={styles.icon} icon={SiX as any} title={t('follow', { name: 'X' })} />
       </Link>
-      <Link href={DISCORD} rel="noreferrer" target={'_blank'}>
+      <Link href={SOCIAL_URL.discord} rel="noreferrer" target={'_blank'}>
         <ActionIcon
           className={styles.icon}
           icon={SiDiscord as any}
           title={t('follow', { name: 'Discord' })}
         />
       </Link>
-      <Link href={MEDIDUM} rel="noreferrer" target={'_blank'}>
+      <Link href={SOCIAL_URL.medium} rel="noreferrer" target={'_blank'}>
         <ActionIcon
           className={styles.icon}
           icon={SiMedium as any}

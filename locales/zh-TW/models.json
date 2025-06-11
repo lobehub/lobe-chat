@@ -206,14 +206,8 @@
   "Phi-3.5-vision-instrust": {
     "description": "Phi-3-vision模型的更新版。"
   },
-  "Pro/Qwen/Qwen2-1.5B-Instruct": {
-    "description": "Qwen2-1.5B-Instruct 是 Qwen2 系列中的指令微調大語言模型，參數規模為 1.5B。該模型基於 Transformer 架構，採用了 SwiGLU 激活函數、注意力 QKV 偏置和組查詢注意力等技術。它在語言理解、生成、多語言能力、編碼、數學和推理等多個基準測試中表現出色，超越了大多數開源模型。與 Qwen1.5-1.8B-Chat 相比，Qwen2-1.5B-Instruct 在 MMLU、HumanEval、GSM8K、C-Eval 和 IFEval 等測試中均顯示出顯著的性能提升，儘管參數量略少"
-  },
   "Pro/Qwen/Qwen2-7B-Instruct": {
     "description": "Qwen2-7B-Instruct 是 Qwen2 系列中的指令微調大語言模型，參數規模為 7B。該模型基於 Transformer 架構，採用了 SwiGLU 激活函數、注意力 QKV 偏置和組查詢注意力等技術。它能夠處理大規模輸入。該模型在語言理解、生成、多語言能力、編碼、數學和推理等多個基準測試中表現出色，超越了大多數開源模型，並在某些任務上展現出與專有模型相當的競爭力。Qwen2-7B-Instruct 在多項評測中均優於 Qwen1.5-7B-Chat，顯示出顯著的性能提升"
-  },
-  "Pro/Qwen/Qwen2-VL-7B-Instruct": {
-    "description": "Qwen2-VL 是 Qwen-VL 模型的最新迭代版本，在視覺理解基準測試中達到了最先進的性能。"
   },
   "Pro/Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct 是阿里雲發布的最新大語言模型系列之一。該 7B 模型在編碼和數學等領域具有顯著改進的能力。該模型還提供了多語言支持，覆蓋超過 29 種語言，包括中文、英文等。模型在指令跟隨、理解結構化數據以及生成結構化輸出（尤其是 JSON）方面都有顯著提升"
@@ -232,9 +226,6 @@
   },
   "Pro/deepseek-ai/DeepSeek-R1-0120": {
     "description": "DeepSeek-R1 是一款強化學習（RL）驅動的推理模型，解決了模型中的重複性和可讀性問題。在 RL 之前，DeepSeek-R1 引入了冷啟動資料，進一步優化了推理性能。它在數學、程式碼和推理任務中與 OpenAI-o1 表現相當，並且透過精心設計的訓練方法，提升了整體效果。"
-  },
-  "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
-    "description": "DeepSeek-R1-Distill-Qwen-1.5B 是基於 Qwen2.5-Math-1.5B 透過知識蒸餾技術所獲得的模型。該模型使用 DeepSeek-R1 產生的 80 萬個精選樣本進行微調，在多項基準測試中展現出優異的表現。作為一個輕量級模型，在 MATH-500 上達到了 83.9% 的準確率，在 AIME 2024 上獲得了 28.9% 的通過率，在 CodeForces 上取得了 954 的評分，顯示出超越其參數規模的推理能力。"
   },
   "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": {
     "description": "DeepSeek-R1-Distill-Qwen-7B 是基於 Qwen2.5-Math-7B 透過知識蒸餾技術所獲得的模型。該模型使用 DeepSeek-R1 生成的 80 萬個精選樣本進行微調，展現出優異的推理能力。在多個基準測試中表現出色，其中在 MATH-500 上達到了 92.8% 的準確率，在 AIME 2024 上達到了 55.5% 的通過率，在 CodeForces 上獲得了 1189 的評分，作為 7B 規模的模型展示了較強的數學和程式設計能力。"
@@ -256,9 +247,6 @@
   },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview是Qwen 最新的實驗性研究模型，專注於提升AI推理能力。通過探索語言混合、遞歸推理等複雜機制，主要優勢包括強大的推理分析能力、數學和編程能力。與此同時，也存在語言切換問題、推理循環、安全性考量、其他能力方面的差異。"
-  },
-  "Qwen/Qwen2-1.5B-Instruct": {
-    "description": "Qwen2-1.5B-Instruct 是 Qwen2 系列中的指令微調大語言模型，參數規模為 1.5B。該模型基於 Transformer 架構，採用了 SwiGLU 激活函數、注意力 QKV 偏置和組查詢注意力等技術。它在語言理解、生成、多語言能力、編碼、數學和推理等多個基準測試中表現出色，超越了大多數開源模型。與 Qwen1.5-1.8B-Chat 相比，Qwen2-1.5B-Instruct 在 MMLU、HumanEval、GSM8K、C-Eval 和 IFEval 等測試中均顯示出顯著的性能提升，儘管參數量略少"
   },
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2 是先進的通用語言模型，支持多種指令類型。"
@@ -419,9 +407,6 @@
   "THUDM/GLM-Z1-Rumination-32B-0414": {
     "description": "GLM-Z1-Rumination-32B-0414 是一個具有沉思能力的深度推理模型（與 OpenAI 的 Deep Research 對標）。與典型的深度思考模型不同，沉思模型採用更長時間的深度思考來解決更開放和複雜的問題。"
   },
-  "THUDM/chatglm3-6b": {
-    "description": "ChatGLM3-6B 是 ChatGLM 系列的開源模型，由智譜 AI 開發。該模型保留了前代模型的優秀特性，如對話流暢和部署門檻低，同時引入了新的特性。它採用了更多樣的訓練數據、更充分的訓練步數和更合理的訓練策略，在 10B 以下的預訓練模型中表現出色。ChatGLM3-6B 支持多輪對話、工具調用、代碼執行和 Agent 任務等複雜場景。除對話模型外，還開源了基礎模型 ChatGLM-6B-Base 和長文本對話模型 ChatGLM3-6B-32K。該模型對學術研究完全開放，在登記後也允許免費商業使用"
-  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B 開放源碼版本，為會話應用提供優化後的對話體驗。"
   },
@@ -562,6 +547,12 @@
   },
   "anthropic/claude-3.7-sonnet": {
     "description": "Claude 3.7 Sonnet 是 Anthropic 迄今為止最智能的模型，也是市場上首個混合推理模型。Claude 3.7 Sonnet 可以產生近乎即時的回應或延長的逐步思考，使用者可以清晰地看到這些過程。Sonnet 特別擅長程式設計、數據科學、視覺處理、代理任務。"
+  },
+  "anthropic/claude-opus-4": {
+    "description": "Claude Opus 4 是 Anthropic 用於處理高度複雜任務的最強大模型。它在性能、智慧、流暢性和理解力方面表現卓越。"
+  },
+  "anthropic/claude-sonnet-4": {
+    "description": "Claude Sonnet 4 可以產生近乎即時的回應或延長的逐步思考，使用者可以清楚地看到這些過程。API 使用者還可以對模型思考的時間進行細緻的控制。"
   },
   "aya": {
     "description": "Aya 23 是 Cohere 推出的多語言模型，支持 23 種語言，為多元化語言應用提供便利。"
@@ -787,6 +778,9 @@
   },
   "deepseek-r1": {
     "description": "DeepSeek-R1 是一款強化學習（RL）驅動的推理模型，解決了模型中的重複性和可讀性問題。在 RL 之前，DeepSeek-R1 引入了冷啟動數據，進一步優化了推理性能。它在數學、程式碼和推理任務中與 OpenAI-o1 表現相當，並且通過精心設計的訓練方法，提升了整體效果。"
+  },
+  "deepseek-r1-0528": {
+    "description": "685B 滿血版模型，2025年5月28日發布。DeepSeek-R1 在後訓練階段大規模使用了強化學習技術，在僅有極少標註資料的情況下，大幅提升了模型推理能力。在數學、程式碼、自然語言推理等任務上，性能較高，能力較強。"
   },
   "deepseek-r1-70b-fast-online": {
     "description": "DeepSeek R1 70B 快速版，支持即時聯網搜索，在保持模型性能的同時提供更快的響應速度。"
@@ -1066,6 +1060,9 @@
   },
   "gemini-2.5-pro-preview-05-06": {
     "description": "Gemini 2.5 Pro Preview 是 Google 最先進的思維模型，能夠對程式碼、數學和 STEM 領域的複雜問題進行推理，以及使用長上下文分析大型數據集、程式庫和文檔。"
+  },
+  "gemini-2.5-pro-preview-06-05": {
+    "description": "Gemini 2.5 Pro Preview 是 Google 最先進的思維模型，能夠對程式碼、數學和STEM領域的複雜問題進行推理，以及使用長上下文分析大型資料集、程式碼庫和文件。"
   },
   "gemma-7b-it": {
     "description": "Gemma 7B 適合中小規模任務處理，兼具成本效益。"
@@ -1355,6 +1352,9 @@
   "hunyuan-t1-20250403": {
     "description": "提升專案級別程式碼生成能力；提升文本生成寫作品質；提升文本理解 topic 的多輪、tob 指令遵循和字詞理解能力；優化繁簡混雜和中英混雜輸出問題。"
   },
+  "hunyuan-t1-20250529": {
+    "description": "優化文本創作、作文寫作，優化程式碼前端、數學、邏輯推理等理科能力，提升指令遵循能力。"
+  },
   "hunyuan-t1-latest": {
     "description": "業界首個超大規模 Hybrid-Transformer-Mamba 推理模型，擴展推理能力，超強解碼速度，進一步對齊人類偏好。"
   },
@@ -1379,6 +1379,9 @@
   "hunyuan-turbos-20250416": {
     "description": "預訓練底座升級，增強底座的指令理解及遵循能力；對齊階段增強數學、程式碼、邏輯、科學等理科能力；提升文創寫作品質、文本理解、翻譯準確率、知識問答等文科能力；增強各領域 Agent 能力，重點加強多輪對話理解能力等。"
   },
+  "hunyuan-turbos-20250604": {
+    "description": "預訓練底座升級，寫作、閱讀理解能力提升，較大幅度提升程式碼和理科能力，複雜指令遵循等持續提升。"
+  },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS 混元旗艦大模型最新版本，具備更強的思考能力，更優的體驗效果。"
   },
@@ -1390,9 +1393,6 @@
   },
   "hunyuan-vision": {
     "description": "混元最新多模態模型，支持圖片 + 文本輸入生成文本內容。"
-  },
-  "internlm/internlm2_5-20b-chat": {
-    "description": "創新的開源模型InternLM2.5，通過大規模的參數提高了對話智能。"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 提供多場景下的智能對話解決方案。"
@@ -1909,6 +1909,9 @@
   },
   "qvq-max": {
     "description": "通義千問 QVQ 視覺推理模型，支援視覺輸入及思維鏈輸出，在數學、程式設計、視覺分析、創作以及通用任務上都展現了更強的能力。"
+  },
+  "qvq-plus": {
+    "description": "視覺推理模型。支援視覺輸入及思維鏈輸出，繼qvq-max模型後推出的plus版本，相較於qvq-max模型，qvq-plus系列模型推理速度更快，效果和成本更均衡。"
   },
   "qwen-coder-plus": {
     "description": "通義千問程式碼模型。"

@@ -206,14 +206,8 @@
   "Phi-3.5-vision-instrust": {
     "description": "Phi-3-vision 모델의 업데이트된 버전입니다."
   },
-  "Pro/Qwen/Qwen2-1.5B-Instruct": {
-    "description": "Qwen2-1.5B-Instruct는 Qwen2 시리즈의 지침 미세 조정 대규모 언어 모델로, 파라미터 규모는 1.5B입니다. 이 모델은 Transformer 아키텍처를 기반으로 하며, SwiGLU 활성화 함수, 주의 QKV 편향 및 그룹 쿼리 주의와 같은 기술을 사용합니다. 이 모델은 언어 이해, 생성, 다국어 능력, 코딩, 수학 및 추론 등 여러 벤치마크 테스트에서 뛰어난 성능을 보이며, 대부분의 오픈 소스 모델을 초월합니다. Qwen1.5-1.8B-Chat과 비교할 때, Qwen2-1.5B-Instruct는 MMLU, HumanEval, GSM8K, C-Eval 및 IFEval 등의 테스트에서 상당한 성능 향상을 보였습니다."
-  },
   "Pro/Qwen/Qwen2-7B-Instruct": {
     "description": "Qwen2-7B-Instruct는 Qwen2 시리즈의 지침 미세 조정 대규모 언어 모델로, 파라미터 규모는 7B입니다. 이 모델은 Transformer 아키텍처를 기반으로 하며, SwiGLU 활성화 함수, 주의 QKV 편향 및 그룹 쿼리 주의와 같은 기술을 사용합니다. 이 모델은 대규모 입력을 처리할 수 있습니다. 이 모델은 언어 이해, 생성, 다국어 능력, 코딩, 수학 및 추론 등 여러 벤치마크 테스트에서 뛰어난 성능을 보이며, 대부분의 오픈 소스 모델을 초월하고 특정 작업에서 독점 모델과 동등한 경쟁력을 보여줍니다. Qwen2-7B-Instruct는 여러 평가에서 Qwen1.5-7B-Chat보다 우수하여 상당한 성능 향상을 보였습니다."
-  },
-  "Pro/Qwen/Qwen2-VL-7B-Instruct": {
-    "description": "Qwen2-VL은 Qwen-VL 모델의 최신 반복 버전으로, 시각 이해 기준 테스트에서 최첨단 성능을 달성했습니다."
   },
   "Pro/Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct는 Alibaba Cloud에서 발표한 최신 대규모 언어 모델 시리즈 중 하나입니다. 이 7B 모델은 코딩 및 수학 분야에서 상당한 개선된 능력을 가지고 있습니다. 이 모델은 또한 29개 이상의 언어를 포함한 다국어 지원을 제공합니다. 모델은 지침 준수, 구조화된 데이터 이해 및 구조화된 출력 생성(특히 JSON)에서 상당한 향상을 보입니다."
@@ -232,9 +226,6 @@
   },
   "Pro/deepseek-ai/DeepSeek-R1-0120": {
     "description": "DeepSeek-R1은 강화 학습(RL) 기반 추론 모델로, 모델 내 반복성과 가독성 문제를 해결했습니다. RL 이전에 콜드 스타트 데이터를 도입하여 추론 성능을 추가 최적화했으며, 수학, 코드, 추론 작업에서 OpenAI-o1과 유사한 성능을 보이고, 정교한 훈련 방법을 통해 전체 성능을 향상시켰습니다."
-  },
-  "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
-    "description": "DeepSeek-R1-Distill-Qwen-1.5B는 Qwen2.5-Math-1.5B를 기반으로 지식 증류를 통해 개발된 모델입니다. 이 모델은 DeepSeek-R1에서 생성된 80만 개의 선별된 샘플을 사용하여 미세 조정되었으며, 여러 벤치마크에서 우수한 성능을 보여주었습니다. 경량 모델임에도 불구하고 MATH-500에서 83.9%의 정확도, AIME 2024에서 28.9%의 통과율, CodeForces에서 954점을 기록하여 매개변수 규모를 뛰어넘는 추론 능력을 입증했습니다."
   },
   "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": {
     "description": "DeepSeek-R1-Distill-Qwen-7B는 Qwen2.5-Math-7B를 기반으로 지식 증류를 통해 개발된 모델입니다. 이 모델은 DeepSeek-R1에서 생성된 80만 개의 선별된 샘플을 사용하여 미세 조정되었으며, 우수한 추론 능력을 보여줍니다. 다양한 벤치마크에서 뛰어난 성능을 발휘하며, MATH-500에서 92.8%의 정확도, AIME 2024에서 55.5%의 통과율, CodeForces에서 1189점을 기록하여 7B 규모 모델로서 강력한 수학 및 프로그래밍 능력을 입증했습니다."
@@ -256,9 +247,6 @@
   },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview는 Qwen의 최신 실험적 연구 모델로, AI 추론 능력을 향상시키는 데 중점을 두고 있습니다. 언어 혼합, 재귀 추론 등 복잡한 메커니즘을 탐구하며, 주요 장점으로는 강력한 추론 분석 능력, 수학 및 프로그래밍 능력이 포함됩니다. 동시에 언어 전환 문제, 추론 루프, 안전성 고려 및 기타 능력 차이와 같은 문제도 존재합니다."
-  },
-  "Qwen/Qwen2-1.5B-Instruct": {
-    "description": "Qwen2-1.5B-Instruct는 Qwen2 시리즈의 지침 미세 조정 대규모 언어 모델로, 파라미터 규모는 1.5B입니다. 이 모델은 Transformer 아키텍처를 기반으로 하며, SwiGLU 활성화 함수, 주의 QKV 편향 및 그룹 쿼리 주의와 같은 기술을 사용합니다. 이 모델은 언어 이해, 생성, 다국어 능력, 코딩, 수학 및 추론 등 여러 벤치마크 테스트에서 뛰어난 성능을 보이며, 대부분의 오픈 소스 모델을 초월합니다. Qwen1.5-1.8B-Chat과 비교할 때, Qwen2-1.5B-Instruct는 MMLU, HumanEval, GSM8K, C-Eval 및 IFEval 등의 테스트에서 상당한 성능 향상을 보였습니다."
   },
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2는 다양한 지시 유형을 지원하는 고급 범용 언어 모델입니다."
@@ -419,9 +407,6 @@
   "THUDM/GLM-Z1-Rumination-32B-0414": {
     "description": "GLM-Z1-Rumination-32B-0414는 깊은 추론 능력을 갖춘 모델로(OpenAI의 Deep Research와 비교됨), 전형적인 깊은 사고 모델과는 달리, 더 긴 시간 동안 깊은 사고를 통해 더 개방적이고 복잡한 문제를 해결합니다."
   },
-  "THUDM/chatglm3-6b": {
-    "description": "ChatGLM3-6B는 Zhizhu AI가 개발한 ChatGLM 시리즈의 오픈 소스 모델입니다. 이 모델은 이전 모델의 우수한 특성을 유지하면서 대화의 유창함과 배포 장벽을 낮추는 새로운 기능을 도입했습니다. 더 다양한 훈련 데이터, 충분한 훈련 단계 및 합리적인 훈련 전략을 채택하여 10B 이하의 사전 훈련 모델 중에서 뛰어난 성능을 보입니다. ChatGLM3-6B는 다중 회전 대화, 도구 호출, 코드 실행 및 에이전트 작업과 같은 복잡한 시나리오를 지원합니다. 대화 모델 외에도 기본 모델 ChatGLM-6B-Base 및 긴 텍스트 대화 모델 ChatGLM3-6B-32K도 오픈 소스되었습니다. 이 모델은 학술 연구에 완전히 개방되어 있으며, 등록 후 무료 상업적 사용도 허용됩니다."
-  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B 오픈 소스 버전으로, 대화 응용을 위한 최적화된 대화 경험을 제공합니다."
   },
@@ -562,6 +547,12 @@
   },
   "anthropic/claude-3.7-sonnet": {
     "description": "Claude 3.7 Sonnet은 Anthropic이 지금까지 개발한 가장 지능적인 모델로, 시장에서 최초의 혼합 추론 모델입니다. Claude 3.7 Sonnet은 거의 즉각적인 응답이나 연장된 단계적 사고를 생성할 수 있으며, 사용자는 이러한 과정을 명확하게 볼 수 있습니다. Sonnet은 프로그래밍, 데이터 과학, 시각 처리, 대리 작업에 특히 뛰어납니다."
+  },
+  "anthropic/claude-opus-4": {
+    "description": "Claude Opus 4는 Anthropic에서 고도로 복잡한 작업을 처리하기 위해 개발한 가장 강력한 모델입니다. 성능, 지능, 유창성 및 이해력 면에서 뛰어난 성과를 보입니다."
+  },
+  "anthropic/claude-sonnet-4": {
+    "description": "Claude Sonnet 4는 거의 즉각적인 응답이나 단계별 심층 사고를 생성할 수 있으며, 사용자는 이러한 과정을 명확하게 볼 수 있습니다. API 사용자는 모델의 사고 시간을 세밀하게 제어할 수도 있습니다."
   },
   "aya": {
     "description": "Aya 23은 Cohere에서 출시한 다국어 모델로, 23개 언어를 지원하여 다양한 언어 응용에 편리함을 제공합니다."
@@ -787,6 +778,9 @@
   },
   "deepseek-r1": {
     "description": "DeepSeek-R1은 강화 학습(RL) 기반의 추론 모델로, 모델 내의 반복성과 가독성 문제를 해결합니다. RL 이전에 DeepSeek-R1은 콜드 스타트 데이터를 도입하여 추론 성능을 더욱 최적화했습니다. 수학, 코드 및 추론 작업에서 OpenAI-o1과 유사한 성능을 보이며, 정교하게 설계된 훈련 방법을 통해 전체적인 효과를 향상시켰습니다."
+  },
+  "deepseek-r1-0528": {
+    "description": "685B 풀스펙 모델로, 2025년 5월 28일에 출시되었습니다. DeepSeek-R1은 후학습 단계에서 대규모 강화 학습 기술을 활용하여 극소수의 라벨 데이터만으로도 모델의 추론 능력을 크게 향상시켰습니다. 수학, 코드, 자연어 추론 등 과제에서 높은 성능과 강력한 능력을 자랑합니다."
   },
   "deepseek-r1-70b-fast-online": {
     "description": "DeepSeek R1 70B 빠른 버전으로, 실시간 온라인 검색을 지원하며 모델 성능을 유지하면서 더 빠른 응답 속도를 제공합니다."
@@ -1066,6 +1060,9 @@
   },
   "gemini-2.5-pro-preview-05-06": {
     "description": "Gemini 2.5 Pro Preview는 Google의 최첨단 사고 모델로, 코드, 수학 및 STEM 분야의 복잡한 문제를 추론하고 긴 맥락을 사용하여 대규모 데이터 세트, 코드베이스 및 문서를 분석할 수 있습니다."
+  },
+  "gemini-2.5-pro-preview-06-05": {
+    "description": "Gemini 2.5 Pro Preview는 구글의 최첨단 사고 모델로, 코드, 수학 및 STEM 분야의 복잡한 문제를 추론할 수 있으며, 긴 문맥을 활용해 대규모 데이터셋, 코드베이스 및 문서를 분석합니다."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B는 중소 규모 작업 처리에 적합하며, 비용 효과성을 갖추고 있습니다."
@@ -1355,6 +1352,9 @@
   "hunyuan-t1-20250403": {
     "description": "프로젝트 수준의 코드 생성 능력 향상; 텍스트 생성 및 작문 품질 향상; 텍스트 이해 주제의 다중 라운드, B2B 명령 준수 및 단어 이해 능력 향상; 번체와 간체 혼용 및 중영 혼용 출력 문제 최적화."
   },
+  "hunyuan-t1-20250529": {
+    "description": "텍스트 창작과 작문을 최적화하고, 코드 프론트엔드, 수학, 논리 추론 등 이공계 능력을 향상시키며, 명령어 준수 능력을 강화합니다."
+  },
   "hunyuan-t1-latest": {
     "description": "업계 최초의 초대형 Hybrid-Transformer-Mamba 추론 모델로, 추론 능력을 확장하고, 뛰어난 디코딩 속도를 자랑하며, 인간의 선호에 더욱 부합합니다."
   },
@@ -1379,6 +1379,9 @@
   "hunyuan-turbos-20250416": {
     "description": "사전 학습 기반 업그레이드로 명령 이해 및 준수 능력 강화; 정렬 단계에서 수학, 코드, 논리, 과학 등 이공계 능력 강화; 문예 창작 품질, 텍스트 이해, 번역 정확도, 지식 질의응답 등 인문계 능력 향상; 각 분야 에이전트 능력 강화, 특히 다중 라운드 대화 이해 능력 중점 강화."
   },
+  "hunyuan-turbos-20250604": {
+    "description": "사전 학습 기반 업그레이드로 작문 및 독해 능력이 향상되었으며, 코드 및 이공계 능력이 크게 향상되고 복잡한 명령어 준수 능력도 지속적으로 개선됩니다."
+  },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS 혼원 플래그십 대모델 최신 버전으로, 더 강력한 사고 능력과 더 나은 경험 효과를 제공합니다."
   },
@@ -1390,9 +1393,6 @@
   },
   "hunyuan-vision": {
     "description": "혼원 최신 다중 모달 모델로, 이미지와 텍스트 입력을 지원하여 텍스트 콘텐츠를 생성합니다."
-  },
-  "internlm/internlm2_5-20b-chat": {
-    "description": "혁신적인 오픈 소스 모델 InternLM2.5는 대규모 파라미터를 통해 대화의 지능을 향상시킵니다."
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5는 다양한 시나리오에서 스마트 대화 솔루션을 제공합니다."
@@ -1909,6 +1909,9 @@
   },
   "qvq-max": {
     "description": "통의천문 QVQ 비전 추론 모델로, 시각 입력과 사고 과정(chain-of-thought) 출력을 지원하며, 수학, 프로그래밍, 시각 분석, 창작 및 일반 작업에서 뛰어난 능력을 발휘합니다."
+  },
+  "qvq-plus": {
+    "description": "시각 추론 모델입니다. 시각 입력과 사고 체인 출력을 지원하며, qvq-max 모델에 이어 출시된 플러스 버전으로, qvq-max 모델에 비해 추론 속도가 더 빠르고 성능과 비용의 균형이 우수합니다."
   },
   "qwen-coder-plus": {
     "description": "통의천문 코드 모델입니다."
