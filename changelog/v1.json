@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "improvements": ["Transition animation switch."]
+    },
+    "date": "2025-06-11",
+    "version": "1.94.4"
+  },
+  {
     "children": {},
     "date": "2025-06-11",
     "version": "1.94.3"
