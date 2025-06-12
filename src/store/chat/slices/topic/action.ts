@@ -26,6 +26,7 @@ import { setNamespace } from '@/utils/storeDebug';
 import { chatSelectors } from '../message/selectors';
 import { ChatTopicDispatch, topicReducer } from './reducer';
 import { topicSelectors } from './selectors';
+import { findNextAvailableTitle } from '@/utils/titleHelper';
 
 const n = setNamespace('t');
 
@@ -56,10 +57,7 @@ export interface ChatTopicAction {
   internal_createTopic: (params: CreateTopicParams) => Promise<string>;
   internal_updateTopic: (id: string, data: Partial<ChatTopic>) => Promise<void>;
   internal_dispatchTopic: (payload: ChatTopicDispatch, action?: any) => void;
-  internal_findNextAvailableTopicTitle: (
-    baseTitle: string,
-    duplicateSymbol?: string,
-  ) => string;
+  internal_findNextAvailableTopicTitle: (topic: ChatTopic) => string;
 }
 
 export const chatTopic: StateCreator<
@@ -123,7 +121,7 @@ export const chatTopic: StateCreator<
     const topic = topicSelectors.getTopicById(id)(get());
     if (!topic) return;
 
-    const newTitle = get().internal_findNextAvailableTopicTitle(topic.title);
+    const newTitle = get().internal_findNextAvailableTopicTitle(topic);
 
     message.loading({
       content: t('duplicateLoading', { ns: 'topic' }),
@@ -339,10 +337,7 @@ export const chatTopic: StateCreator<
 
     set({ topicMaps: nextMap }, false, action ?? n(`dispatchTopic/${payload.type}`));
   },
-  internal_findNextAvailableTopicTitle: (
-    baseTitle,
-    duplicateSymbol = t('duplicateSymbol', { ns: 'common' }),
-  ) => {
+  internal_findNextAvailableTopicTitle: ({ title }) => {
     const titleSet = new Set<string>();
 
     const topics = topicSelectors.currentTopics(get()) || [];
@@ -352,39 +347,6 @@ export const chatTopic: StateCreator<
       }
     });
 
-    if (!titleSet.has(baseTitle)) {
-      return baseTitle
-    }
-
-    let strippedBase = baseTitle;
-    const matchWithNumber = baseTitle.match(
-      new RegExp(`^(.*?)(\\s${duplicateSymbol}\\s\\d+)$`),
-    );
-    const matchWithoutNumber = baseTitle.match(
-      new RegExp(`^(.*?)(\\s${duplicateSymbol})$`),
-    );
-
-    if (matchWithNumber) {
-      // e.g., "My Session" from "My Session copy 1"
-      strippedBase = matchWithNumber[1];
-    } else if (matchWithoutNumber) {
-      // e.g., "My Session" from "My Session copy"
-      strippedBase = matchWithoutNumber[1];
-    }
-
-    const noNumberTitle = `${strippedBase} ${duplicateSymbol}`;
-    if (!titleSet.has(noNumberTitle)) {
-      return noNumberTitle;
-    }
-
-    let count = 1;
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      const numberedTitle = `${strippedBase} ${duplicateSymbol} ${count}`;
-      if (!titleSet.has(numberedTitle)) {
-        return numberedTitle;
-      }
-      count++;
-    }
-  },
+    return findNextAvailableTitle(title, titleSet);
+  }
 });

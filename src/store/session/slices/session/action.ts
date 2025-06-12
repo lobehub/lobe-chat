@@ -20,7 +20,6 @@ import {
   LobeSessionType,
   LobeSessions,
   SessionDefaultGroup,
-  SessionGroupId,
   UpdateSessionParams,
 } from '@/types/session';
 import { merge } from '@/utils/merge';
@@ -29,6 +28,7 @@ import { setNamespace } from '@/utils/storeDebug';
 import { SessionDispatch, sessionsReducer } from './reducers';
 import { sessionSelectors } from './selectors';
 import { sessionMetaSelectors } from './selectors/meta';
+import { findNextAvailableTitle } from '@/utils/titleHelper';
 
 const n = setNamespace('session');
 
@@ -88,11 +88,7 @@ export interface SessionAction {
     customGroups: LobeSessionGroups,
     actions?: string,
   ) => void;
-  internal_findNextAvailableSessionTitle: (params: {
-    baseTitle: string,
-    duplicateSymbol?: string,
-    groupId?: SessionGroupId
-  }) => string;
+  internal_findNextAvailableSessionTitle: (session: LobeAgentSession) => string;
 }
 
 export const createSessionSlice: StateCreator<
@@ -130,12 +126,8 @@ export const createSessionSlice: StateCreator<
     const session = sessionSelectors.getSessionById(id)(get());
 
     if (!session) return;
-    const title = sessionMetaSelectors.getTitle(session.meta);
 
-    const newTitle = get().internal_findNextAvailableSessionTitle({
-      baseTitle: title,
-      groupId: session.group,
-    });
+    const newTitle = get().internal_findNextAvailableSessionTitle(session);
 
     const messageLoadingKey = 'duplicateSession.loading';
 
@@ -285,12 +277,12 @@ export const createSessionSlice: StateCreator<
     await mutate([FETCH_SESSIONS_KEY, true]);
   },
 
-  internal_findNextAvailableSessionTitle: ({
-    baseTitle,
-    duplicateSymbol = t('duplicateSymbol', { ns: 'common' }),
-    groupId = SessionDefaultGroup.Default,
-  }) => {
+  internal_findNextAvailableSessionTitle: (session) => {
+    const title = sessionMetaSelectors.getTitle(session.meta);
+    const groupId = session.group ?? SessionDefaultGroup.Default
+
     const sessions = sessionSelectors.getSessionsByGroupId(groupId)(get());
+
     const titleSet = new Set<string>();
     sessions.forEach((session) => {
       const title = session.meta?.title;
@@ -299,39 +291,6 @@ export const createSessionSlice: StateCreator<
       }
     });
 
-    if (!titleSet.has(baseTitle)) {
-      return baseTitle
-    }
-
-    let strippedBase = baseTitle;
-    const matchWithNumber = baseTitle.match(
-      new RegExp(`^(.*?)(\\s${duplicateSymbol}\\s\\d+)$`),
-    );
-    const matchWithoutNumber = baseTitle.match(
-      new RegExp(`^(.*?)(\\s${duplicateSymbol})$`),
-    );
-
-    if (matchWithNumber) {
-      // e.g., "My Session" from "My Session copy 1"
-      strippedBase = matchWithNumber[1];
-    } else if (matchWithoutNumber) {
-      // e.g., "My Session" from "My Session copy"
-      strippedBase = matchWithoutNumber[1];
-    }
-
-    const noNumberTitle = `${strippedBase} ${duplicateSymbol}`;
-    if (!titleSet.has(noNumberTitle)) {
-      return noNumberTitle;
-    }
-
-    let count = 1;
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      const numberedTitle = `${strippedBase} ${duplicateSymbol} ${count}`;
-      if (!titleSet.has(numberedTitle)) {
-        return numberedTitle;
-      }
-      count++;
-    }
+    return findNextAvailableTitle(title, titleSet);
   },
 });
