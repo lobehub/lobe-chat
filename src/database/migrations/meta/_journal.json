@@ -182,6 +182,13 @@
       "when": 1749309388370,
       "tag": "0025_add_provider_config",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1749742573819,
+      "tag": "0026_add_apiKey_table",
+      "breakpoints": true
     }
   ],
   "version": "6"
