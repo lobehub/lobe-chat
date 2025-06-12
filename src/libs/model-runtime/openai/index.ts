@@ -15,7 +15,7 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
     handlePayload: (payload) => {
       const { model } = payload;
 
-      if (model === 'o1-pro') {
+      if (model === 'o1-pro' || model === 'o3-pro') {
         return { ...payload, apiMode: 'responses' } as ChatStreamPayload;
       }
 
@@ -58,12 +58,20 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
   provider: ModelProvider.OpenAI,
   responses: {
     handlePayload: (payload: ChatStreamPayload) => {
-      const { model } = payload;
+      const { model, reasoning_effort } = payload;
       if (prunePrefixes.some((prefix) => model.startsWith(prefix))) {
         if (!payload.reasoning) {
           payload.reasoning = { summary: 'auto' };
         } else {
           payload.reasoning.summary = 'auto';
+        }
+      }
+
+      if (reasoning_effort) {
+        if (!payload.reasoning) {
+          payload.reasoning = { effort: reasoning_effort };
+        } else {
+          payload.reasoning.effort = reasoning_effort;
         }
       }
 
