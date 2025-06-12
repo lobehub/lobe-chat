@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Support web_search_preview & fix some bug form OpenAI Response API."]
+    },
+    "date": "2025-06-12",
+    "version": "1.94.5"
+  },
+  {
+    "children": {
       "improvements": ["Transition animation switch."]
     },
     "date": "2025-06-11",
