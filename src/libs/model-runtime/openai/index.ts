@@ -58,24 +58,21 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
   provider: ModelProvider.OpenAI,
   responses: {
     handlePayload: (payload: ChatStreamPayload) => {
-      const { model, reasoning_effort } = payload;
+      const { model, reasoning_effort, ...rest } = payload;
+      
       if (prunePrefixes.some((prefix) => model.startsWith(prefix))) {
-        if (!payload.reasoning) {
-          payload.reasoning = { summary: 'auto' };
-        } else {
-          payload.reasoning.summary = 'auto';
-        }
+        rest.reasoning = rest.reasoning 
+          ? { ...rest.reasoning, summary: 'auto' }
+          : { summary: 'auto' };
       }
-
+  
       if (reasoning_effort) {
-        if (!payload.reasoning) {
-          payload.reasoning = { effort: reasoning_effort };
-        } else {
-          payload.reasoning.effort = reasoning_effort;
-        }
+        rest.reasoning = rest.reasoning 
+          ? { ...rest.reasoning, effort: reasoning_effort }
+          : { effort: reasoning_effort };
       }
 
-      return { ...payload, stream: payload.stream ?? true };
+      return { ...rest, model, stream: rest.stream ?? true };
     },
   },
 });
