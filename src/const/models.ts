@@ -11,8 +11,11 @@ export const disableStreamModels = new Set([
   'o1-2024-12-17',
   'o1-pro',
   'o1-pro-2025-03-19',
+  /*
+  官网显示不支持，但是实际试下来支持 Streaming，暂时注释掉
   'o3-pro',
   'o3-pro-2025-06-10',
+  */
   'computer-use-preview',
   'computer-use-preview-2025-03-11',
 ]);
