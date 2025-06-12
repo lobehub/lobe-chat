@@ -2,6 +2,54 @@
 
 # Changelog
 
+### [Version&nbsp;1.94.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.94.0...v1.94.1)
+<sup>Released on **2025-06-12**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **chat**: Improve response animation merging logic.
+- **misc**: Update Gemini range of thinkingBudget.
+
+
+#### 💄 Styles
+
+- **ModelSelect**: Improve mobile layout and text overflow handling.
+- **misc**: Support `web_search_preview` & fix some bug form OpenAI Response API, Transition animation switch, update pplx abilities tags, support `vision`.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **chat**: Improve response animation merging logic, closes [#8160](https://github.com/jaworldwideorg/OneJA-Bot/issues/8160) ([9d81cdc](https://github.com/jaworldwideorg/OneJA-Bot/commit/9d81cdc))
+* **misc**: Update Gemini range of thinkingBudget, closes [#8122](https://github.com/jaworldwideorg/OneJA-Bot/issues/8122) ([7331e8a](https://github.com/jaworldwideorg/OneJA-Bot/commit/7331e8a))
+
+
+
+#### Styles
+
+* **ModelSelect**: Improve mobile layout and text overflow handling, closes [#8118](https://github.com/jaworldwideorg/OneJA-Bot/issues/8118) ([d97aa49](https://github.com/jaworldwideorg/OneJA-Bot/commit/d97aa49))
+* **misc**: Support `web_search_preview` & fix some bug form OpenAI Response API, closes [#8131](https://github.com/jaworldwideorg/OneJA-Bot/issues/8131) ([b2983f0](https://github.com/jaworldwideorg/OneJA-Bot/commit/b2983f0))
+* **misc**: Transition animation switch, closes [#7981](https://github.com/jaworldwideorg/OneJA-Bot/issues/7981) ([dd4ab3f](https://github.com/jaworldwideorg/OneJA-Bot/commit/dd4ab3f))
+* **misc**: Update pplx abilities tags, support `vision`, closes [#8119](https://github.com/jaworldwideorg/OneJA-Bot/issues/8119) ([5c2e5f7](https://github.com/jaworldwideorg/OneJA-Bot/commit/5c2e5f7))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.94.5](https://github.com/lobehub/lobe-chat/compare/v1.94.4...v1.94.5)
 
 <sup>Released on **2025-06-12**</sup>
