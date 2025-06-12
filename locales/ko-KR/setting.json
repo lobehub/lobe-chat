@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "인어 테마"
     },
-    "title": "채팅 외관"
+    "title": "채팅 외관",
+    "transitionMode": {
+      "desc": "채팅 메시지의 전환 애니메이션",
+      "options": {
+        "fadeIn": "서서히 나타남",
+        "none": {
+          "desc": "이는 모델의 응답 출력 방식에 따라 다르므로 직접 테스트해 보세요.",
+          "value": "없음"
+        },
+        "smooth": "부드럽게"
+      },
+      "title": "전환 애니메이션"
+    }
   },
   "settingCommon": {
     "lang": {
