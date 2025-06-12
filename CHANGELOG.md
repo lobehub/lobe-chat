@@ -2,6 +2,133 @@
 
 # Changelog
 
+### [Version 1.94.4](https://github.com/lobehub/lobe-chat/compare/v1.94.3...v1.94.4)
+
+<sup>Released on **2025-06-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Transition animation switch.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Transition animation switch, closes [#7981](https://github.com/lobehub/lobe-chat/issues/7981) ([dd4ab3f](https://github.com/lobehub/lobe-chat/commit/dd4ab3f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.94.3](https://github.com/lobehub/lobe-chat/compare/v1.94.2...v1.94.3)
+
+<sup>Released on **2025-06-11**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.94.2](https://github.com/lobehub/lobe-chat/compare/v1.94.1...v1.94.2)
+
+<sup>Released on **2025-06-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Update Gemini range of thinkingBudget.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Update Gemini range of thinkingBudget, closes [#8122](https://github.com/lobehub/lobe-chat/issues/8122) ([7331e8a](https://github.com/lobehub/lobe-chat/commit/7331e8a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.94.1](https://github.com/lobehub/lobe-chat/compare/v1.94.0...v1.94.1)
+
+<sup>Released on **2025-06-10**</sup>
+
+#### 💄 Styles
+
+- **ModelSelect**: Improve mobile layout and text overflow handling.
+- **misc**: Update pplx abilities tags, support `vision`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **ModelSelect**: Improve mobile layout and text overflow handling, closes [#8118](https://github.com/lobehub/lobe-chat/issues/8118) ([d97aa49](https://github.com/lobehub/lobe-chat/commit/d97aa49))
+- **misc**: Update pplx abilities tags, support `vision`, closes [#8119](https://github.com/lobehub/lobe-chat/issues/8119) ([5c2e5f7](https://github.com/lobehub/lobe-chat/commit/5c2e5f7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.94.0](https://github.com/lobehub/lobe-chat/compare/v1.93.3...v1.94.0)
+
+<sup>Released on **2025-06-10**</sup>
+
+#### ✨ Features
+
+- **misc**: Support google sso as auth provider.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Restore reasoningEffort in setting.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support google sso as auth provider, closes [#8074](https://github.com/lobehub/lobe-chat/issues/8074) ([43ab03a](https://github.com/lobehub/lobe-chat/commit/43ab03a))
+
+#### What's fixed
+
+- **misc**: Restore reasoningEffort in setting, closes [#8123](https://github.com/lobehub/lobe-chat/issues/8123) ([3be609c](https://github.com/lobehub/lobe-chat/commit/3be609c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.93.3](https://github.com/lobehub/lobe-chat/compare/v1.93.2...v1.93.3)
 
 <sup>Released on **2025-06-10**</sup>

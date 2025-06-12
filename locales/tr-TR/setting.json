@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "Deniz Kızı Teması"
     },
-    "title": "Sohbet Görünümü"
+    "title": "Sohbet Görünümü",
+    "transitionMode": {
+      "desc": "Sohbet mesajlarının geçiş animasyonu",
+      "options": {
+        "fadeIn": "Solma",
+        "none": {
+          "desc": "Bu, modelin yanıt çıktısına bağlıdır, lütfen kendiniz test edin.",
+          "value": "Yok"
+        },
+        "smooth": "Yumuşak"
+      },
+      "title": "Geçiş Animasyonu"
+    }
   },
   "settingCommon": {
     "lang": {

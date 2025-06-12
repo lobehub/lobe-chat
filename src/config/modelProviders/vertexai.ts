@@ -11,10 +11,8 @@ const VertexAI: ModelProviderCard = {
   name: 'Vertex AI',
   settings: {
     disableBrowserRequest: true,
+    responseAnimation: 'smooth',
     showModelFetcher: false,
-    smoothing: {
-      text: true,
-    },
   },
   url: 'https://cloud.google.com/vertex-ai',
 };
