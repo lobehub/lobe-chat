@@ -1,8 +1,4 @@
-import { z } from 'zod';
-
-import { insertApiKeySchema } from '@/database/schemas/apiKey';
-
-export type ApiKeyItem = z.infer<typeof insertApiKeySchema>;
+export { type ApiKeyItem } from '@/database/schemas/apiKey';
 
 export interface CreateApiKeyParams {
   expiresAt?: Date;

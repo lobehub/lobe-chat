@@ -5,6 +5,10 @@ import { generateApiKey, isApiKeyExpired, validateApiKeyFormat } from '@/utils/a
 
 import { ApiKeyItem, NewApiKeyItem, apiKeys } from '../schemas';
 
+type EncryptAPIKeyVaults = (keyVaults: string) => Promise<string>;
+
+const defaultSerialize = (s: string) => s;
+
 export class ApiKeyModel {
   private userId: string;
   private db: LobeChatDatabase;
@@ -14,11 +18,19 @@ export class ApiKeyModel {
     this.db = db;
   }
 
-  create = async (params: Omit<NewApiKeyItem, 'userId' | 'id' | 'key'>) => {
+  create = async (
+    params: Omit<NewApiKeyItem, 'userId' | 'id' | 'key'>,
+    encryptor?: EncryptAPIKeyVaults,
+  ) => {
     const key = generateApiKey();
+
+    const encrypt = encryptor || defaultSerialize;
+
+    const encryptedKey = await encrypt(key);
+
     const [result] = await this.db
       .insert(apiKeys)
-      .values({ ...params, key, userId: this.userId })
+      .values({ ...params, key: encryptedKey, userId: this.userId })
       .returning();
 
     return result;
@@ -39,13 +51,17 @@ export class ApiKeyModel {
     });
   };
 
-  findByKey = async (key: string) => {
+  findByKey = async (key: string, encryptor?: EncryptAPIKeyVaults) => {
     if (!validateApiKeyFormat(key)) {
       return null;
     }
 
+    const encrypt = encryptor || defaultSerialize;
+
+    const encryptedKey = await encrypt(key);
+
     return this.db.query.apiKeys.findFirst({
-      where: eq(apiKeys.key, key),
+      where: eq(apiKeys.key, encryptedKey),
     });
   };
 

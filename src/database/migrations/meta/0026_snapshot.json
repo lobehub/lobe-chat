@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "643f7a52-a877-49cb-8a70-8c05376c2fd3",
+  "id": "b1438f55-7229-43ef-b4f1-da836cc2bd07",
   "policies": {},
   "prevId": "5023d4c4-0eab-4f55-9399-ff599bda5ab8",
   "roles": {},
@@ -685,13 +685,13 @@
         },
         "name": {
           "name": "name",
-          "type": "char(256)",
+          "type": "varchar(256)",
           "primaryKey": false,
           "notNull": true
         },
         "key": {
           "name": "key",
-          "type": "char(256)",
+          "type": "varchar(256)",
           "primaryKey": false,
           "notNull": true
         },
@@ -719,13 +719,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "accessed_at": {
-          "name": "accessed_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
         },
         "created_at": {
           "name": "created_at",

@@ -23,8 +23,7 @@ export const apiKeyRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const data = await ctx.apiKeyModel.create(input);
-      return data;
+      return await ctx.apiKeyModel.create(input);
     }),
 
   deleteAllApiKeys: apiKeyProcedure.mutation(async ({ ctx }) => {
