@@ -3,13 +3,17 @@ import { z } from 'zod';
 import { ApiKeyModel } from '@/database/models/apiKey';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
+import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 
 const apiKeyProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
 
+  const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
+
   return opts.next({
     ctx: {
       apiKeyModel: new ApiKeyModel(ctx.serverDB, ctx.userId),
+      gateKeeper,
     },
   });
 });
@@ -23,7 +27,7 @@ export const apiKeyRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return await ctx.apiKeyModel.create(input);
+      return await ctx.apiKeyModel.create(input, ctx.gateKeeper.encrypt);
     }),
 
   deleteAllApiKeys: apiKeyProcedure.mutation(async ({ ctx }) => {
@@ -39,7 +43,7 @@ export const apiKeyRouter = router({
   getApiKey: apiKeyProcedure
     .input(z.object({ apiKey: z.string() }))
     .query(async ({ input, ctx }) => {
-      return ctx.apiKeyModel.findByKey(input.apiKey);
+      return ctx.apiKeyModel.findByKey(input.apiKey, ctx.gateKeeper.encrypt);
     }),
 
   getApiKeyById: apiKeyProcedure
