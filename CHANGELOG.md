@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.94.7](https://github.com/lobehub/lobe-chat/compare/v1.94.6...v1.94.7)
+
+<sup>Released on **2025-06-12**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Doubao Seed 1.6 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Doubao Seed 1.6 model, closes [#8167](https://github.com/lobehub/lobe-chat/issues/8167) ([bdfa44b](https://github.com/lobehub/lobe-chat/commit/bdfa44b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.94.6](https://github.com/lobehub/lobe-chat/compare/v1.94.5...v1.94.6)
 
 <sup>Released on **2025-06-12**</sup>
