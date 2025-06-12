@@ -11,6 +11,8 @@ export const disableStreamModels = new Set([
   'o1-2024-12-17',
   'o1-pro',
   'o1-pro-2025-03-19',
+  'o3-pro',
+  'o3-pro-2025-06-10',
   'computer-use-preview',
   'computer-use-preview-2025-03-11',
 ]);
@@ -21,6 +23,8 @@ export const disableStreamModels = new Set([
 export const responsesAPIModels = new Set([
   'o1-pro',
   'o1-pro-2025-03-19',
+  'o3-pro',
+  'o3-pro-2025-06-10',
   'codex-mini-latest',
   'computer-use-preview',
   'computer-use-preview-2025-03-11',
