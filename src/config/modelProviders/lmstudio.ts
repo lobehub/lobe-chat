@@ -12,12 +12,12 @@ const LMStudio: ModelProviderCard = {
     proxyUrl: {
       placeholder: 'http://127.0.0.1:1234/v1',
     },
+    responseAnimation: {
+      speed: 2,
+      text: 'smooth',
+    },
     showApiKey: false,
     showModelFetcher: true,
-    smoothing: {
-      speed: 2,
-      text: true,
-    },
   },
   url: 'https://lmstudio.ai',
 };
