@@ -290,6 +290,48 @@ export const createSessionSlice: StateCreator<
     duplicateSymbol = t('duplicateSymbol', { ns: 'common' }),
     groupId = SessionDefaultGroup.Default,
   }) => {
-    return ``
+    const sessions = sessionSelectors.getSessionsByGroupId(groupId)(get());
+    const titleSet = new Set<string>();
+    sessions.forEach((session) => {
+      const title = session.meta?.title;
+      if (title) {
+        titleSet.add(title);
+      }
+    });
+
+    if (!titleSet.has(baseTitle)) {
+      return baseTitle
+    }
+
+    let strippedBase = baseTitle;
+    const matchWithNumber = baseTitle.match(
+      new RegExp(`^(.*?)(\\s${duplicateSymbol}\\s\\d+)$`),
+    );
+    const matchWithoutNumber = baseTitle.match(
+      new RegExp(`^(.*?)(\\s${duplicateSymbol})$`),
+    );
+
+    if (matchWithNumber) {
+      // e.g., "My Session" from "My Session copy 1"
+      strippedBase = matchWithNumber[1];
+    } else if (matchWithoutNumber) {
+      // e.g., "My Session" from "My Session copy"
+      strippedBase = matchWithoutNumber[1];
+    }
+
+    const noNumberTitle = `${strippedBase} ${duplicateSymbol}`;
+    if (!titleSet.has(noNumberTitle)) {
+      return noNumberTitle;
+    }
+
+    let count = 1;
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const numberedTitle = `${strippedBase} ${duplicateSymbol} ${count}`;
+      if (!titleSet.has(numberedTitle)) {
+        return numberedTitle;
+      }
+      count++;
+    }
   },
 });

@@ -230,7 +230,7 @@ describe('SessionAction', () => {
     });
   });
 
-  describe.only('findNextAvailableSessionTitle', () => {
+  describe('findNextAvailableSessionTitle', () => {
     const mockSessions = [
       { meta: { title: 'Test Session' }, group: 'default' },
       { meta: { title: 'Test Session copy' }, group: 'default' },
