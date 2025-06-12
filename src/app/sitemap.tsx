@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 
-import { LAST_MODIFIED, SitemapType, sitemapModule } from '@/server/sitemap';
+import { LAST_MODIFIED, Sitemap, SitemapType } from '@/server/sitemap';
 
 // Sitemap缓存配置 - 24小时重新验证
 export const revalidate = 86_400; // 24小时 - 内容页面缓存
@@ -12,6 +12,7 @@ export const generateSitemapLink = (url: string) =>
   );
 
 export async function generateSitemaps() {
+  const sitemapModule = new Sitemap();
   // 生成动态的sitemap列表，包括分页的sitemap
   const staticSitemaps = sitemapModule.sitemapIndexs;
 
@@ -50,6 +51,7 @@ export function parsePaginatedId(id: string): { page?: number; type: SitemapType
 
 export default async function sitemap({ id }: { id: string }): Promise<MetadataRoute.Sitemap> {
   const { type, page } = parsePaginatedId(id);
+  const sitemapModule = new Sitemap();
 
   switch (type) {
     case SitemapType.Pages: {
