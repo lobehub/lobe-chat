@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { AiModelForSelect, EnabledAiModel, ModelSearchImplementType } from '@/types/aiModel';
-import { SmoothingParams } from '@/types/llm';
+import { ResponseAnimation } from '@/types/llm';
 
 export const AiProviderSourceEnum = {
   Builtin: 'builtin',
@@ -58,6 +58,7 @@ export interface AiProviderSettings {
       }
     | false;
 
+  responseAnimation?: ResponseAnimation;
   /**
    * default openai
    */
@@ -75,12 +76,10 @@ export interface AiProviderSettings {
   showChecker?: boolean;
   showDeployName?: boolean;
   showModelFetcher?: boolean;
-  /**
-   * whether to smoothing the output
-   */
-  smoothing?: SmoothingParams;
   supportResponsesApi?: boolean;
 }
+
+const ResponseAnimationType = z.enum(['smooth', 'fadeIn', 'none']);
 
 const AiProviderSettingsSchema = z.object({
   defaultShowBrowserRequest: z.boolean().optional(),
@@ -94,6 +93,13 @@ const AiProviderSettingsSchema = z.object({
     })
     .or(z.literal(false))
     .optional(),
+  responseAnimation: z
+    .object({
+      text: ResponseAnimationType.optional(),
+      toolsCalling: ResponseAnimationType.optional(),
+    })
+    .or(ResponseAnimationType)
+    .optional(),
   sdkType: z.enum(['anthropic', 'openai', 'ollama']).optional(),
   searchMode: z.enum(['params', 'internal']).optional(),
   showAddNewModel: z.boolean().optional(),
@@ -101,12 +107,6 @@ const AiProviderSettingsSchema = z.object({
   showChecker: z.boolean().optional(),
   showDeployName: z.boolean().optional(),
   showModelFetcher: z.boolean().optional(),
-  smoothing: z
-    .object({
-      text: z.boolean().optional(),
-      toolsCalling: z.boolean().optional(),
-    })
-    .optional(),
   supportResponsesApi: z.boolean().optional(),
 });
 
