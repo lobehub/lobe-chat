@@ -350,5 +350,3 @@ export class Sitemap {
     ];
   }
 }
-
-export const sitemapModule = new Sitemap();
