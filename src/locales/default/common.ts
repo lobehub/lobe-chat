@@ -153,6 +153,7 @@ export default {
   document: '使用文档',
   download: '下载',
   duplicate: '创建副本',
+  duplicateSymbol: '副本',
   edit: '编辑',
   export: '导出配置',
   exportType: {

@@ -19,6 +19,8 @@ import {
   LobeSessionGroups,
   LobeSessionType,
   LobeSessions,
+  SessionDefaultGroup,
+  SessionGroupId,
   UpdateSessionParams,
 } from '@/types/session';
 import { merge } from '@/utils/merge';
@@ -86,7 +88,11 @@ export interface SessionAction {
     customGroups: LobeSessionGroups,
     actions?: string,
   ) => void;
-  /* eslint-enable */
+  internal_findNextAvailableSessionTitle: (params: {
+    baseTitle: string,
+    duplicateSymbol?: string,
+    groupId?: SessionGroupId
+  }) => string;
 }
 
 export const createSessionSlice: StateCreator<
@@ -126,7 +132,10 @@ export const createSessionSlice: StateCreator<
     if (!session) return;
     const title = sessionMetaSelectors.getTitle(session.meta);
 
-    const newTitle = t('duplicateSession.title', { ns: 'chat', title: title });
+    const newTitle = get().internal_findNextAvailableSessionTitle({
+      baseTitle: title,
+      groupId: session.group,
+    });
 
     const messageLoadingKey = 'duplicateSession.loading';
 
@@ -274,5 +283,13 @@ export const createSessionSlice: StateCreator<
   },
   refreshSessions: async () => {
     await mutate([FETCH_SESSIONS_KEY, true]);
+  },
+
+  internal_findNextAvailableSessionTitle: ({
+    baseTitle,
+    duplicateSymbol = t('duplicateSymbol', { ns: 'common' }),
+    groupId = SessionDefaultGroup.Default,
+  }) => {
+    return ``
   },
 });

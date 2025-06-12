@@ -25,6 +25,12 @@ const getSessionMetaById =
     return session.meta;
   };
 
+const getSessionsByGroupId =
+  (groupId: string) =>
+  (s: SessionStore): LobeSessions => {
+    return allSessions(s).filter((session) => session.group === groupId);
+  };
+
 const currentSession = (s: SessionStore): LobeAgentSession | undefined => {
   if (!s.activeId) return;
 
@@ -51,6 +57,7 @@ export const sessionSelectors = {
   defaultSessions,
   getSessionById,
   getSessionMetaById,
+  getSessionsByGroupId,
   hasCustomAgents,
   isInboxSession,
   isSessionListInit,
