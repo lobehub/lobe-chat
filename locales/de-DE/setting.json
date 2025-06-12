@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "Mermaid-Thema"
     },
-    "title": "Chatdesign"
+    "title": "Chatdesign",
+    "transitionMode": {
+      "desc": "Übergangsanimation der Chatnachrichten",
+      "options": {
+        "fadeIn": "Einblenden",
+        "none": {
+          "desc": "Dies hängt von der Art der Antwort des Modells ab, bitte testen Sie es selbst.",
+          "value": "Keine"
+        },
+        "smooth": "Sanft"
+      },
+      "title": "Übergangsanimation"
+    }
   },
   "settingCommon": {
     "lang": {
