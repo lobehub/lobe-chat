@@ -12,7 +12,7 @@ import {
 } from './const';
 import { readJSON, tagWhite, writeJSONWithPrettier } from './utils';
 
-export const genRemoveDiff = () => {
+export const genDiff = () => {
   consola.start(`Remove diff analysis...`);
 
   const resources = require(srcDefaultLocales);
