@@ -59,7 +59,7 @@ const qwenChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description:
       'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
-    displayName: 'Qwen3 30B',
+    displayName: 'Qwen3 30B A3B',
     enabled: true,
     id: 'qwen3-30b-a3b',
     maxOutput: 8192,
@@ -196,12 +196,15 @@ const qwenChatModels: AIChatModelCard[] = [
       reasoning: true,
       search: true,
     },
+    config: {
+      deploymentName: 'qwq-plus-latest', // expired on 2025-09-02
+    },
     contextWindowTokens: 131_072,
     description:
       '基于 Qwen2.5 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平。',
     displayName: 'QwQ Plus',
     enabled: true,
-    id: 'qwq-plus-latest',
+    id: 'qwq-plus',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -221,11 +224,14 @@ const qwenChatModels: AIChatModelCard[] = [
       reasoning: true,
       search: true,
     },
+    config: {
+      deploymentName: 'qwen-turbo-2025-04-28', // expired on 2025-10-26
+    },
     contextWindowTokens: 1_000_000,
     description: '通义千问超大规模语言模型，支持中文、英文等不同语言输入。',
     displayName: 'Qwen Turbo',
     enabled: true,
-    id: 'qwen-turbo-latest',
+    id: 'qwen-turbo',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -246,11 +252,14 @@ const qwenChatModels: AIChatModelCard[] = [
       reasoning: true,
       search: true,
     },
+    config: {
+      deploymentName: 'qwen-plus-2025-04-28', // expired on 2025-10-26
+    },
     contextWindowTokens: 131_072,
     description: '通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入。',
     displayName: 'Qwen Plus',
     enabled: true,
-    id: 'qwen-plus-latest',
+    id: 'qwen-plus',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -270,12 +279,15 @@ const qwenChatModels: AIChatModelCard[] = [
       functionCall: true,
       search: true,
     },
+    config: {
+      deploymentName: 'qwen-max-2025-01-25',
+    },
     contextWindowTokens: 131_072,
     description:
       '通义千问千亿级别超大规模语言模型，支持中文、英文等不同语言输入，当前通义千问2.5产品版本背后的API模型。',
     displayName: 'Qwen Max',
     enabled: true,
-    id: 'qwen-max-latest',
+    id: 'qwen-max',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -291,6 +303,9 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+    },
+    config: {
+      deploymentName: 'qwen-long-latest',
     },
     contextWindowTokens: 10_000_000,
     description:
@@ -311,12 +326,15 @@ const qwenChatModels: AIChatModelCard[] = [
     abilities: {
       vision: true,
     },
+    config: {
+      deploymentName: 'qwen-omni-turbo-latest',
+    },
     contextWindowTokens: 32_768,
     description:
       'Qwen-Omni 系列模型支持输入多种模态的数据，包括视频、音频、图片、文本，并输出音频与文本。',
     displayName: 'Qwen Omni Turbo',
     enabled: true,
-    id: 'qwen-omni-turbo-latest',
+    id: 'qwen-omni-turbo',
     maxOutput: 2048,
     organization: 'Qwen',
     pricing: {
@@ -348,11 +366,14 @@ const qwenChatModels: AIChatModelCard[] = [
     abilities: {
       vision: true,
     },
+    config: {
+      deploymentName: 'qwen-vl-plus-2025-01-25',
+    },
     contextWindowTokens: 131_072,
     description:
       '通义千问大规模视觉语言模型增强版。大幅提升细节识别能力和文字识别能力，支持超百万像素分辨率和任意长宽比规格的图像。',
     displayName: 'Qwen VL Plus',
-    id: 'qwen-vl-plus-latest',
+    id: 'qwen-vl-plus',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -366,12 +387,15 @@ const qwenChatModels: AIChatModelCard[] = [
     abilities: {
       vision: true,
     },
+    config: {
+      deploymentName: 'qwen-vl-max-2025-04-08',
+    },
     contextWindowTokens: 131_072,
     description:
       '通义千问超大规模视觉语言模型。相比增强版，再次提升视觉推理能力和指令遵循能力，提供更高的视觉感知和认知水平。',
     displayName: 'Qwen VL Max',
     enabled: true,
-    id: 'qwen-vl-max-latest',
+    id: 'qwen-vl-max',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -385,11 +409,14 @@ const qwenChatModels: AIChatModelCard[] = [
     abilities: {
       vision: true,
     },
+    config: {
+      deploymentName: 'qwen-vl-ocr-2025-04-13',
+    },
     contextWindowTokens: 34_096,
     description:
       '通义千问OCR是文字提取专有模型，专注于文档、表格、试题、手写体文字等类型图像的文字提取能力。它能够识别多种文字，目前支持的语言有：汉语、英语、法语、日语、韩语、德语、俄语、意大利语、越南语、阿拉伯语。',
     displayName: 'Qwen VL OCR',
-    id: 'qwen-vl-ocr-latest',
+    id: 'qwen-vl-ocr',
     maxOutput: 4096,
     organization: 'Qwen',
     pricing: {
@@ -400,10 +427,13 @@ const qwenChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    config: {
+      deploymentName: 'qwen-math-turbo-latest',
+    },
     contextWindowTokens: 4096,
     description: '通义千问数学模型是专门用于数学解题的语言模型。',
     displayName: 'Qwen Math Turbo',
-    id: 'qwen-math-turbo-latest',
+    id: 'qwen-math-turbo',
     maxOutput: 3072,
     organization: 'Qwen',
     pricing: {
@@ -414,10 +444,13 @@ const qwenChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    config: {
+      deploymentName: 'qwen-math-plus-latest',
+    },
     contextWindowTokens: 4096,
     description: '通义千问数学模型是专门用于数学解题的语言模型。',
     displayName: 'Qwen Math Plus',
-    id: 'qwen-math-plus-latest',
+    id: 'qwen-math-plus',
     maxOutput: 3072,
     organization: 'Qwen',
     pricing: {
@@ -428,10 +461,13 @@ const qwenChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    config: {
+      deploymentName: 'qwen-coder-turbo-latest',
+    },
     contextWindowTokens: 131_072,
     description: '通义千问代码模型。',
     displayName: 'Qwen Coder Turbo',
-    id: 'qwen-coder-turbo-latest',
+    id: 'qwen-coder-turbo',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -442,10 +478,13 @@ const qwenChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    config: {
+      deploymentName: 'qwen-coder-plus-latest',
+    },
     contextWindowTokens: 131_072,
     description: '通义千问代码模型。',
     displayName: 'Qwen Coder Plus',
-    id: 'qwen-coder-plus-latest',
+    id: 'qwen-coder-plus',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -501,11 +540,14 @@ const qwenChatModels: AIChatModelCard[] = [
       reasoning: true,
       vision: true,
     },
-    contextWindowTokens: 122_880,
+    config: {
+      deploymentName: 'qvq-max-latest',
+    },
+    contextWindowTokens: 131_072,
     description:
       '通义千问QVQ视觉推理模型，支持视觉输入及思维链输出，在数学、编程、视觉分析、创作以及通用任务上都表现了更强的能力。',
     displayName: 'QVQ Max',
-    id: 'qvq-max-latest',
+    id: 'qvq-max',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -513,7 +555,30 @@ const qwenChatModels: AIChatModelCard[] = [
       input: 8,
       output: 32,
     },
-    releasedAt: '2025-03-25',
+    releasedAt: '2025-05-15',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    config: {
+      deploymentName: 'qvq-plus-latest',
+    },
+    contextWindowTokens: 131_072,
+    description:
+      '视觉推理模型。支持视觉输入及思维链输出，继qvq-max模型后推出的plus版本，相较于qvq-max模型，qvq-plus系列模型推理速度更快，效果和成本更均衡。',
+    displayName: 'QVQ Plus',
+    id: 'qvq-plus',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 5,
+    },
+    releasedAt: '2025-05-15',
     type: 'chat',
   },
   {
@@ -667,8 +732,8 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     contextWindowTokens: 131_072,
     description: '通义千问代码模型开源版。',
-    displayName: 'Qwen2.5 Coder 32B',
-    id: 'qwen2.5-coder-32b-instruct',
+    displayName: 'Qwen2.5 Coder 14B',
+    id: 'qwen2.5-coder-14b-instruct',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
@@ -679,36 +744,16 @@ const qwenChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: {
-      vision: true,
-    },
-    contextWindowTokens: 8000,
-    description: '以 Qwen-7B 语言模型初始化，添加图像模型，图像输入分辨率为448的预训练模型。',
-    displayName: 'Qwen VL',
-    id: 'qwen-vl-v1',
-    maxOutput: 1500,
+    contextWindowTokens: 131_072,
+    description: '通义千问代码模型开源版。',
+    displayName: 'Qwen2.5 Coder 32B',
+    id: 'qwen2.5-coder-32b-instruct',
+    maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      vision: true,
-    },
-    contextWindowTokens: 8000,
-    description: '通义千问VL支持灵活的交互方式，包括多图、多轮问答、创作等能力的模型。',
-    displayName: 'Qwen VL Chat',
-    id: 'qwen-vl-chat-v1',
-    maxOutput: 1500,
-    organization: 'Qwen',
-    pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
+      input: 2,
+      output: 6,
     },
     type: 'chat',
   },
@@ -773,9 +818,28 @@ const qwenChatModels: AIChatModelCard[] = [
     abilities: {
       reasoning: true,
     },
-    contextWindowTokens: 65_792,
+    contextWindowTokens: 65_536,
     description:
-      'DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能较高，能力较强。',
+      '685B 满血版模型，2025年5月28日发布。DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能较高，能力较强。',
+    displayName: 'DeepSeek R1 0528',
+    id: 'deepseek-r1-0528',
+    maxOutput: 8192,
+    organization: 'DeepSeek',
+    pricing: {
+      currency: 'CNY',
+      input: 4,
+      output: 16,
+    },
+    releasedAt: '2025-05-28',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      '671B 满血版模型，2025年1月20日发布。DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能较高，能力较强。',
     displayName: 'DeepSeek R1',
     id: 'deepseek-r1',
     maxOutput: 8192,
@@ -789,7 +853,7 @@ const qwenChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 65_792,
+    contextWindowTokens: 65_536,
     description:
       'DeepSeek-V3 为自研 MoE 模型，671B 参数，激活 37B，在 14.8T token 上进行了预训练，在长文本、代码、数学、百科、中文能力上表现优秀。',
     displayName: 'DeepSeek V3',

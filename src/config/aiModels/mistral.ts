@@ -9,8 +9,7 @@ const mistralChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     contextWindowTokens: 128_000,
-    description:
-      'Mistral Medium 3 以 8 倍的成本提供最先进的性能，并从根本上简化了企业部署。',
+    description: 'Mistral Medium 3 以 8 倍的成本提供最先进的性能，并从根本上简化了企业部署。',
     displayName: 'Mistral Medium 3',
     enabled: true,
     id: 'mistral-medium-latest',

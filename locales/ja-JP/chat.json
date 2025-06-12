@@ -43,6 +43,9 @@
     "reasoningBudgetToken": {
       "title": "思考消費トークン"
     },
+    "reasoningEffort": {
+      "title": "推論の強度"
+    },
     "title": "モデル拡張機能"
   },
   "history": {

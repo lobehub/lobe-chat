@@ -5,7 +5,7 @@ import type { ChatModelCard } from '@/types/llm';
 
 import { AgentRuntimeErrorType } from '../error';
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { convertIterableToStream } from '../utils/streams';
 
 export interface HuggingFaceModelCard {
@@ -13,7 +13,7 @@ export interface HuggingFaceModelCard {
   tags: string[];
 }
 
-export const LobeHuggingFaceAI = LobeOpenAICompatibleFactory({
+export const LobeHuggingFaceAI = createOpenAICompatibleRuntime({
   chatCompletion: {
     handleStreamBizErrorType: (error) => {
       // e.g.: Server meta-llama/Meta-Llama-3.1-8B-Instruct does not seem to support chat completion. Error: Model requires a Pro subscription; check out hf.co/pricing to learn more. Make sure to include your HF token in your query.

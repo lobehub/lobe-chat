@@ -43,6 +43,9 @@
     "reasoningBudgetToken": {
       "title": "Token zużycia myślenia"
     },
+    "reasoningEffort": {
+      "title": "Intensywność rozumowania"
+    },
     "title": "Funkcje rozszerzenia modelu"
   },
   "history": {

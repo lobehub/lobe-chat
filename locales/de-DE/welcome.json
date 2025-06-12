@@ -4,7 +4,7 @@
       "replaceBtn": "Ersetzen",
       "title": "Neue Assistentenempfehlung:"
     },
-    "defaultMessage": "Ich bin Ihr persönlicher intelligenter Assistent {{appName}}. Wie kann ich Ihnen jetzt helfen?\nWenn Sie einen professionelleren oder maßgeschneiderten Assistenten benötigen, klicken Sie auf `+`, um einen benutzerdefinierten Assistenten zu erstellen.",
+    "defaultMessage": "Ich bin Ihr persönlicher intelligenter Assistent {{appName}}. Wie kann ich Ihnen jetzt helfen?<br />Wenn Sie einen professionelleren oder maßgeschneiderten Assistenten benötigen, klicken Sie auf <plus />, um einen benutzerdefinierten Assistenten zu erstellen.",
     "defaultMessageWithoutCreate": "Ich bin Ihr persönlicher intelligenter Assistent {{appName}}. Wie kann ich Ihnen jetzt helfen?",
     "qa": {
       "q01": "Was ist LobeHub?",

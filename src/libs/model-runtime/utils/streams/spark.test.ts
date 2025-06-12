@@ -40,7 +40,7 @@ describe('SparkAIStream', () => {
           },
         ],
       },
-    ]
+    ];
 
     const mockSparkStream = new ReadableStream({
       start(controller) {

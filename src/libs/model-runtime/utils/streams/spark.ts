@@ -2,6 +2,7 @@ import OpenAI from 'openai';
 import type { Stream } from 'openai/streaming';
 
 import { ChatStreamCallbacks } from '../../types';
+import { convertUsage } from '../usageConverter';
 import {
   StreamProtocolChunk,
   StreamProtocolToolCallChunk,
@@ -10,8 +11,6 @@ import {
   createSSEProtocolTransformer,
   generateToolCallId,
 } from './protocol';
-
-import { convertUsage } from '../usageConverter';
 
 export function transformSparkResponseToStream(data: OpenAI.ChatCompletion) {
   return new ReadableStream({

@@ -1,13 +1,13 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface LMStudioModelCard {
   id: string;
 }
 
-export const LobeLMStudioAI = LobeOpenAICompatibleFactory({
+export const LobeLMStudioAI = createOpenAICompatibleRuntime({
   apiKey: 'placeholder-to-avoid-error',
   baseURL: 'http://127.0.0.1:1234/v1',
   debug: {

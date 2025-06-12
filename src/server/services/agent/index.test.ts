@@ -6,7 +6,7 @@ import { parseAgentConfig } from '@/server/globalConfig/parseDefaultAgent';
 
 import { AgentService } from './index';
 
-vi.mock('@/config/app', () => ({
+vi.mock('@/envs/app', () => ({
   appEnv: {
     DEFAULT_AGENT_CONFIG: 'model=gpt-4;temperature=0.7',
   },

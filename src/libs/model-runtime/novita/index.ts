@@ -1,10 +1,11 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { processMultiProviderModelList } from '../utils/modelParse';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { NovitaModelCard } from './type';
 
-export const LobeNovitaAI = LobeOpenAICompatibleFactory({
+export const LobeNovitaAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.novita.ai/v3/openai',
   constructorOptions: {
     defaultHeaders: {
@@ -15,38 +16,36 @@ export const LobeNovitaAI = LobeOpenAICompatibleFactory({
     chatCompletion: () => process.env.DEBUG_NOVITA_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
-
     const reasoningKeywords = ['deepseek-r1'];
 
     const modelsPage = (await client.models.list()) as any;
     const modelList: NovitaModelCard[] = modelsPage.data;
 
-    return modelList
-      .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
-          (m) => model.id.toLowerCase() === m.id.toLowerCase(),
-        );
+    // 解析模型能力
+    const baseModels = await processMultiProviderModelList(modelList);
+
+    // 合并 Novita 获取的模型信息
+    return baseModels
+      .map((baseModel) => {
+        const model = modelList.find((m) => m.id === baseModel.id);
+
+        if (!model) return baseModel;
 
         return {
+          ...baseModel,
           contextWindowTokens: model.context_size,
           description: model.description,
           displayName: model.title,
-          enabled: knownModel?.enabled || false,
           functionCall:
+            baseModel.functionCall ||
             model.description.toLowerCase().includes('function calling') ||
-            knownModel?.abilities?.functionCall ||
             false,
-          id: model.id,
           reasoning:
+            baseModel.reasoning ||
             model.description.toLowerCase().includes('reasoning task') ||
             reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-            knownModel?.abilities?.reasoning ||
             false,
-          vision:
-            model.description.toLowerCase().includes('vision') ||
-            knownModel?.abilities?.vision ||
-            false,
+          vision: baseModel.vision || model.description.toLowerCase().includes('vision') || false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

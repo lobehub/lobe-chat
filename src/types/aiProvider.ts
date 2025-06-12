@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { AiModelForSelect, EnabledAiModel, ModelSearchImplementType } from '@/types/aiModel';
-import { SmoothingParams } from '@/types/llm';
+import { ResponseAnimation } from '@/types/llm';
 
 export const AiProviderSourceEnum = {
   Builtin: 'builtin',
@@ -23,6 +23,7 @@ export const AiProviderSDKEnum = {
   Huggingface: 'huggingface',
   Ollama: 'ollama',
   Openai: 'openai',
+  Qwen: 'qwen',
   Volcengine: 'volcengine',
 } as const;
 
@@ -57,6 +58,7 @@ export interface AiProviderSettings {
       }
     | false;
 
+  responseAnimation?: ResponseAnimation;
   /**
    * default openai
    */
@@ -74,11 +76,10 @@ export interface AiProviderSettings {
   showChecker?: boolean;
   showDeployName?: boolean;
   showModelFetcher?: boolean;
-  /**
-   * whether to smoothing the output
-   */
-  smoothing?: SmoothingParams;
+  supportResponsesApi?: boolean;
 }
+
+const ResponseAnimationType = z.enum(['smooth', 'fadeIn', 'none']);
 
 const AiProviderSettingsSchema = z.object({
   defaultShowBrowserRequest: z.boolean().optional(),
@@ -92,6 +93,13 @@ const AiProviderSettingsSchema = z.object({
     })
     .or(z.literal(false))
     .optional(),
+  responseAnimation: z
+    .object({
+      text: ResponseAnimationType.optional(),
+      toolsCalling: ResponseAnimationType.optional(),
+    })
+    .or(ResponseAnimationType)
+    .optional(),
   sdkType: z.enum(['anthropic', 'openai', 'ollama']).optional(),
   searchMode: z.enum(['params', 'internal']).optional(),
   showAddNewModel: z.boolean().optional(),
@@ -99,13 +107,12 @@ const AiProviderSettingsSchema = z.object({
   showChecker: z.boolean().optional(),
   showDeployName: z.boolean().optional(),
   showModelFetcher: z.boolean().optional(),
-  smoothing: z
-    .object({
-      text: z.boolean().optional(),
-      toolsCalling: z.boolean().optional(),
-    })
-    .optional(),
+  supportResponsesApi: z.boolean().optional(),
 });
+
+export interface AiProviderConfig {
+  enableResponseApi?: boolean;
+}
 
 // create
 export const CreateAiProviderSchema = z.object({
@@ -205,8 +212,13 @@ export type UpdateAiProviderParams = z.infer<typeof UpdateAiProviderSchema>;
 
 export const UpdateAiProviderConfigSchema = z.object({
   checkModel: z.string().optional(),
+  config: z
+    .object({
+      enableResponseApi: z.boolean().optional(),
+    })
+    .optional(),
   fetchOnClient: z.boolean().nullable().optional(),
-  keyVaults: z.object({}).passthrough().optional(),
+  keyVaults: z.record(z.string(), z.string().optional()).optional(),
 });
 
 export type UpdateAiProviderConfigParams = z.infer<typeof UpdateAiProviderConfigSchema>;
@@ -234,6 +246,7 @@ export interface EnabledProviderWithModels {
 }
 
 export interface AiProviderRuntimeConfig {
+  config: AiProviderConfig;
   fetchOnClient?: boolean;
   keyVaults: Record<string, string>;
   settings: AiProviderSettings;

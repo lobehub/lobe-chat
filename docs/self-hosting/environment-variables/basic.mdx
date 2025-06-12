@@ -1,9 +1,8 @@
 ---
 title: Customize LobeChat Deployment with Environment Variables
 description: >-
-  Learn about the common environment variables used to customize LobeChat
-  deployment, including access code, OAuth SSO, base path, and default agent
-  configuration.
+  Learn about the common environment variables used to customize LobeChat deployment, including access code, OAuth SSO, base path, and default agent configuration.
+
 tags:
   - LobeChat
   - environment variables
@@ -121,8 +120,8 @@ For specific content, please refer to the [Feature Flags](/docs/self-hosting/adv
 <Callout type="info">
   If you're using Docker Desktop on Windows or macOS, it relies on a virtual machine. In this setup,
   `localhost` / `127.0.0.1` refers to the localhost of the container itself. In such cases, please
-  try using `host.docker.internal` instead of `localhost`.
-  Use `http://user:password@127.0.0.1:7890` to connect to an authenticated proxy server.
+  try using `host.docker.internal` instead of `localhost`. Use `http://user:password@127.0.0.1:7890`
+  to connect to an authenticated proxy server.
 </Callout>
 
 ### `ENABLE_PROXY_DNS`
@@ -145,6 +144,13 @@ For specific content, please refer to the [Feature Flags](/docs/self-hosting/adv
 - Description: Allow private IP address list, multiple IP addresses are separated by commas. Only when `SSRF_ALLOW_PRIVATE_IP_ADDRESS` is `0`, it takes effect.
 - Default: -
 - Example: `198.18.1.62,224.0.0.3`
+
+### `ENABLE_AUTH_PROTECTION`
+
+- Type: Optional
+- Description: Controls whether to enable route protection. When set to `1`, all routes except public routes (like `/api/auth`, `/next-auth/*`, `/login`, `/signup`) will require authentication. When set to `0` or not set, only specific protected routes (like `/settings`, `/files`) will require authentication.
+- Default: `0`
+- Example: `1` or `0`
 
 ## Plugin Service
 

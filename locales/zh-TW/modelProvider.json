@@ -208,6 +208,10 @@
         "title": "使用客戶端請求模式"
       },
       "helpDoc": "配置教程",
+      "responsesApi": {
+        "desc": "採用 OpenAI 新一代請求格式規範，解鎖思維鏈等進階特性",
+        "title": "使用 Responses API 規範"
+      },
       "waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待"
     },
     "createNew": {

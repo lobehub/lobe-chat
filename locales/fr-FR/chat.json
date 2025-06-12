@@ -43,6 +43,9 @@
     "reasoningBudgetToken": {
       "title": "Token de consommation de réflexion"
     },
+    "reasoningEffort": {
+      "title": "Intensité du raisonnement"
+    },
     "title": "Fonctionnalités d'extension du modèle"
   },
   "history": {

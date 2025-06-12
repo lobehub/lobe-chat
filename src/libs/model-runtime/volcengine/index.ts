@@ -1,7 +1,12 @@
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
+import { MODEL_LIST_CONFIGS, processModelList } from '../utils/modelParse';
 
-export const LobeVolcengineAI = LobeOpenAICompatibleFactory({
+export interface VolcengineModelCard {
+  id: string;
+}
+
+export const LobeVolcengineAI = createOpenAICompatibleRuntime({
   baseURL: 'https://ark.cn-beijing.volces.com/api/v3',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -23,6 +28,12 @@ export const LobeVolcengineAI = LobeOpenAICompatibleFactory({
   },
   debug: {
     chatCompletion: () => process.env.DEBUG_VOLCENGINE_CHAT_COMPLETION === '1',
+  },
+  models: async ({ client }) => {
+    const modelsPage = (await client.models.list()) as any;
+    const modelList: VolcengineModelCard[] = modelsPage.data;
+
+    return processModelList(modelList, MODEL_LIST_CONFIGS.volcengine);
   },
   provider: ModelProvider.Volcengine,
 });

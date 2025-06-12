@@ -1,7 +1,7 @@
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
-export const LobeWenxinAI = LobeOpenAICompatibleFactory({
+export const LobeWenxinAI = createOpenAICompatibleRuntime({
   baseURL: 'https://qianfan.baidubce.com/v2',
   chatCompletion: {
     handlePayload: (payload) => {

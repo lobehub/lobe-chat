@@ -7,6 +7,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
+import { useAgentStore } from '@/store/agent/store';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 
@@ -35,10 +37,14 @@ const History = memo(() => {
     return [history?.content, history?.model];
   });
 
+  const enableCompressHistory = useAgentStore(
+    (s) => agentChatConfigSelectors.currentChatConfig(s).enableCompressHistory,
+  );
+
   return (
     <Flexbox paddingInline={16} style={{ paddingBottom: 8 }}>
       <HistoryDivider enable />
-      {!!content && (
+      {enableCompressHistory && !!content && (
         <Flexbox className={styles.container} gap={8}>
           <Flexbox align={'flex-start'} gap={8} horizontal>
             <Center height={20} width={20}>

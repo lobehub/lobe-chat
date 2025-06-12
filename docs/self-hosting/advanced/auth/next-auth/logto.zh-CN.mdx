@@ -83,22 +83,16 @@ tags:
 
 若你在部署 Logto 过程中遇到问题，可以参考以下常见问题：
 
-- `Only roles with the xxx attribute may create roles`：
-  请检查你的数据库用户权限，确保你的 Logto 数据库中的用户具有 `admin` 角色，以便创建角色。
+- `Only roles with the xxx attribute may create roles`：请检查你的数据库用户权限，确保你的 Logto 数据库中的用户具有 `admin` 角色，以便创建角色。
 
-- 在第三方数据库例如 `Neon` 上执行`logto db seed`出错:
-  尝试使用`logto db seed --encrypt-base-role`命令。
+- 在第三方数据库例如 `Neon` 上执行`logto db seed`出错：尝试使用`logto db seed --encrypt-base-role`命令。
 
-- 数据库播种失败：
-  请尝试使用`--skip-seed`参数跳过播种。
+- 数据库播种失败：请尝试使用`--skip-seed`参数跳过播种。
 
-- `Error: role xxx already exists`：
-  在数据库中删除已存在的角色即可。
+- `Error: role xxx already exists`：在数据库中删除已存在的角色即可。
 
-- 版本升级后，数据库迁移失败：
-  请尝试使用` npx @logto/cli db alteration deploy $version`命令 (例如`npx @logto/cli db alteration deploy 1.22.0`)
+- 版本升级后，数据库迁移失败：请尝试使用` npx @logto/cli db alteration deploy $version`命令 (例如`npx @logto/cli db alteration deploy 1.22.0`)
 
-- 我使用 docker 部署 希望一键升级：
-  在容器中执行自定义命令：`sh -c "npm run cli db seed -- --swe --encrypt-base-role" && npx @logto/cli db alteration deploy $version && npm start`
+- 我使用 docker 部署 希望一键升级：在容器中执行自定义命令：`sh -c "npm run cli db seed -- --swe --encrypt-base-role" && npx @logto/cli db alteration deploy $version && npm start`
 
 <Callout type={'info'}>部署成功后，用户将可以通过 Logto 身份认证并使用 LobeChat。</Callout>

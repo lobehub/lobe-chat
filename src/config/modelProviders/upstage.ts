@@ -37,6 +37,9 @@ const Upstage: ModelProviderCard = {
   modelsUrl: 'https://developers.upstage.ai/docs/getting-started/models',
   name: 'Upstage',
   settings: {
+    proxyUrl: {
+      placeholder: 'https://api.upstage.ai/v1/solar',
+    },
     sdkType: 'openai',
   },
   url: 'https://upstage.ai',

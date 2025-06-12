@@ -1,0 +1,359 @@
+name: Daily i18n Update
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-i18n:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: ${{ secrets.BUN_VERSION }}
+
+      - name: Validate environment
+        id: validate_env
+        run: |
+          echo "🔍 Validating environment..."
+
+          # Check required secrets
+          if [ -z "${{ secrets.OPENAI_API_KEY }}" ]; then
+            echo "❌ OPENAI_API_KEY is missing"
+            echo "env_valid=false" >> $GITHUB_OUTPUT
+            echo "ERROR_VALIDATE_ENV=OPENAI_API_KEY secret is not configured" >> $GITHUB_ENV
+            exit 1
+          fi
+
+          if [ -z "${{ secrets.GH_TOKEN }}" ]; then
+            echo "❌ GH_TOKEN is missing"
+            echo "env_valid=false" >> $GITHUB_OUTPUT
+            echo "ERROR_VALIDATE_ENV=GH_TOKEN secret is not configured" >> $GITHUB_ENV
+            exit 1
+          fi
+
+          # Test OpenAI API connectivity (optional, with timeout)
+          echo "🌐 Testing OpenAI API connectivity..."
+          if timeout 30s curl -s -H "Authorization: Bearer ${{ secrets.OPENAI_API_KEY }}" \
+             ${{ secrets.OPENAI_PROXY_URL || 'https://api.openai.com' }}/v1/models >/dev/null 2>&1; then
+            echo "✅ OpenAI API accessible"
+          else
+            echo "⚠️ OpenAI API test failed (but continuing...)"
+          fi
+
+          echo "env_valid=true" >> $GITHUB_OUTPUT
+
+      - name: Check if branch exists
+        id: check_branch
+        run: |
+          echo "🔍 Checking for existing branch..."
+
+          # Retry mechanism for network issues
+          for i in {1..3}; do
+            if git ls-remote --exit-code --heads origin style/auto-i18n >/dev/null 2>&1; then
+              echo "branch_exists=true" >> $GITHUB_OUTPUT
+              echo "🔍 Found existing branch: style/auto-i18n"
+              exit 0
+            elif [ $i -eq 3 ]; then
+              echo "branch_exists=false" >> $GITHUB_OUTPUT
+              echo "ℹ️ Branch style/auto-i18n does not exist"
+              exit 0
+            else
+              echo "⚠️ Network issue, retrying... ($i/3)"
+              sleep 5
+            fi
+          done
+
+      - name: Handle existing branch with rebase
+        if: steps.check_branch.outputs.branch_exists == 'true'
+        id: rebase_attempt
+        run: |
+          echo "🔄 Attempting to rebase existing branch..."
+
+          # Fetch the existing branch with error handling
+          if ! git fetch origin style/auto-i18n; then
+            echo "❌ Failed to fetch existing branch"
+            echo "rebase_success=false" >> $GITHUB_OUTPUT
+            echo "ERROR_REBASE_ATTEMPT=Failed to fetch existing branch from origin" >> $GITHUB_ENV
+            exit 1
+          fi
+
+          if ! git checkout -b style/auto-i18n origin/style/auto-i18n; then
+            echo "❌ Failed to checkout existing branch"
+            echo "rebase_success=false" >> $GITHUB_OUTPUT
+            echo "ERROR_REBASE_ATTEMPT=Failed to checkout existing branch" >> $GITHUB_ENV
+            exit 1
+          fi
+
+          # Try to rebase onto latest main
+          if git rebase origin/main; then
+            echo "✅ Rebase successful"
+            echo "rebase_success=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Rebase failed due to conflicts"
+            echo "rebase_success=false" >> $GITHUB_OUTPUT
+            
+            # Abort the failed rebase
+            git rebase --abort || echo "⚠️ Failed to abort rebase cleanly"
+            
+            # Go back to main and delete the problematic branch
+            git checkout main
+            git branch -D style/auto-i18n || echo "⚠️ Failed to delete local branch"
+            
+            # Try to delete remote branch, handle if it fails
+            if git push origin --delete style/auto-i18n 2>/dev/null; then
+              echo "🗑️ Deleted old branch due to rebase conflicts"
+            else
+              echo "⚠️ Could not delete remote branch (may not exist or permission issue)"
+            fi
+          fi
+
+      - name: Create clean branch if needed
+        if: steps.check_branch.outputs.branch_exists == 'false' || steps.rebase_attempt.outputs.rebase_success == 'false'
+        id: create_branch
+        run: |
+          echo "🌿 Creating fresh branch from main..."
+
+          # Ensure we're on main and it's up to date
+          git checkout main
+          git pull origin main
+
+          # Create new branch
+          if git checkout -b style/auto-i18n; then
+            echo "✅ Successfully created new branch"
+            echo "branch_created=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Failed to create new branch"
+            echo "branch_created=false" >> $GITHUB_OUTPUT
+            echo "ERROR_CREATE_BRANCH=Failed to create new branch style/auto-i18n" >> $GITHUB_ENV
+            exit 1
+          fi
+
+      - name: Install deps
+        id: install_deps
+        run: |
+          echo "📦 Installing dependencies..."
+
+          # Retry mechanism for dependency installation
+          for i in {1..3}; do
+            if bun i; then
+              echo "✅ Dependencies installed successfully"
+              echo "deps_installed=true" >> $GITHUB_OUTPUT
+              exit 0
+            elif [ $i -eq 3 ]; then
+              echo "❌ Failed to install dependencies after 3 attempts"
+              echo "deps_installed=false" >> $GITHUB_OUTPUT
+              echo "ERROR_INSTALL_DEPS=Failed to install dependencies with bun after 3 retries" >> $GITHUB_ENV
+              exit 1
+            else
+              echo "⚠️ Dependency installation failed, retrying... ($i/3)"
+              sleep 10
+            fi
+          done
+
+      - name: Run i18n update
+        id: run_i18n
+        run: |
+          echo "🌐 Running i18n update..."
+
+          # Set timeout and capture output
+          if timeout 900s bun run i18n 2>&1 | tee i18n_output.log; then
+            echo "✅ i18n update completed successfully"
+            echo "i18n_success=true" >> $GITHUB_OUTPUT
+          else
+            exit_code=$?
+            echo "❌ i18n update failed with exit code: $exit_code"
+            echo "i18n_success=false" >> $GITHUB_OUTPUT
+            
+            # Capture error details
+            if [ $exit_code -eq 124 ]; then
+              echo "ERROR_RUN_I18N=i18n update timed out after 15 minutes" >> $GITHUB_ENV
+            else
+              echo "ERROR_RUN_I18N=i18n update failed with exit code $exit_code" >> $GITHUB_ENV
+            fi
+            
+            # Save output for debugging
+            echo "📋 Saving debug output..."
+            exit 1
+          fi
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_PROXY_URL: ${{ secrets.OPENAI_PROXY_URL }}
+
+      - name: Check for changes
+        id: git_status
+        if: steps.run_i18n.outputs.i18n_success == 'true'
+        run: |
+          echo "🔍 Checking for changes..."
+
+          if git diff --exit-code >/dev/null 2>&1; then
+            echo "changes_exist=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ No changes detected"
+          else
+            echo "changes_exist=true" >> $GITHUB_OUTPUT
+            echo "✨ Changes detected"
+            
+            # Show what changed
+            echo "📝 Changed files:"
+            git diff --name-only | head -20
+          fi
+
+      - name: Commit and push changes
+        if: steps.git_status.outputs.changes_exist == 'true'
+        id: commit_push
+        run: |
+          echo "💾 Committing and pushing changes..."
+
+          git add .
+
+          # Check if there are staged changes after adding files
+          if git diff --cached --exit-code >/dev/null 2>&1; then
+            echo "ℹ️ No staged changes detected after git add. Skipping commit."
+            echo "push_success=false" >> $GITHUB_OUTPUT
+            echo "no_changes_after_stage=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Attempt to commit with handling for lint-staged preventing empty commits
+          if git commit -m "🤖 style: update i18n
+
+          - Auto-generated i18n updates
+          - Generated at: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          - Workflow run: ${{ github.run_number }}"; then
+            echo "✅ Successfully committed changes"
+          else
+            commit_exit_code=$?
+            if [ $commit_exit_code -eq 1 ]; then
+              echo "ℹ️ No changes to commit after lint-staged processing. This is normal."
+              echo "push_success=false" >> $GITHUB_OUTPUT
+              echo "no_changes_after_lint=true" >> $GITHUB_OUTPUT
+              exit 0
+            else
+              echo "❌ Commit failed with exit code: $commit_exit_code"
+              echo "push_success=false" >> $GITHUB_OUTPUT
+              echo "ERROR_COMMIT_PUSH=Git commit failed with exit code $commit_exit_code" >> $GITHUB_ENV
+              exit 1
+            fi
+          fi
+
+          # Push with retry mechanism
+          for i in {1..3}; do
+            if git push origin style/auto-i18n --force-with-lease; then
+              echo "✅ Successfully pushed changes"
+              echo "push_success=true" >> $GITHUB_OUTPUT
+              exit 0
+            elif [ $i -eq 3 ]; then
+              echo "❌ Failed to push changes after 3 attempts"
+              echo "push_success=false" >> $GITHUB_OUTPUT
+              echo "ERROR_COMMIT_PUSH=Failed to push changes to remote repository after 3 retries" >> $GITHUB_ENV
+              exit 1
+            else
+              echo "⚠️ Push failed, retrying... ($i/3)"
+              sleep 5
+            fi
+          done
+
+      - name: Create or Update Pull Request
+        if: steps.git_status.outputs.changes_exist == 'true' && steps.commit_push.outputs.push_success == 'true'
+        id: create_pr
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          branch: 'style/auto-i18n'
+          title: '🤖 style: update i18n'
+          body: |
+            This PR updates the i18n files.
+
+            ## 🔄 Update Strategy
+            ${{ steps.check_branch.outputs.branch_exists == 'true' && steps.rebase_attempt.outputs.rebase_success == 'true' && '✅ Successfully rebased existing branch onto latest main' || '' }}
+            ${{ steps.check_branch.outputs.branch_exists == 'true' && steps.rebase_attempt.outputs.rebase_success == 'false' && '🔄 Recreated branch due to rebase conflicts' || '' }}
+            ${{ steps.check_branch.outputs.branch_exists == 'false' && '🌿 Created fresh branch from main' || '' }}
+
+            ## 📝 Changes
+            - Auto-generated i18n updates
+            - Generated at: ${{ github.run_number }}
+            - Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+
+            ## 🤖 Automation Info
+            - Workflow: `${{ github.workflow }}`
+            - Run ID: `${{ github.run_id }}`
+            - Commit: `${{ github.sha }}`
+
+            > This PR is automatically generated by GitHub Actions and kept up-to-date with the latest main branch.
+          base: main
+          labels: |
+            i18n
+            automated
+            style
+
+      - name: Check Pull Request Status
+        if: steps.git_status.outputs.changes_exist == 'true' && steps.commit_push.outputs.push_success == 'true'
+        run: |
+          if [ "${{ steps.create_pr.outputs.pull-request-number }}" ]; then
+            echo "✅ Pull request #${{ steps.create_pr.outputs.pull-request-number }} created/updated successfully."
+            echo "🔗 PR URL: ${{ steps.create_pr.outputs.pull-request-url }}"
+          else
+            echo "❌ Failed to create/update pull request."
+            exit 1
+          fi
+
+      - name: No changes
+        if: |
+          (steps.git_status.outputs.changes_exist != 'true' && steps.run_i18n.outputs.i18n_success == 'true') ||
+          (steps.commit_push.outputs.no_changes_after_stage == 'true') ||
+          (steps.commit_push.outputs.no_changes_after_lint == 'true')
+        run: |
+          if [ "${{ steps.commit_push.outputs.no_changes_after_stage }}" == "true" ]; then
+            echo "ℹ️ No staged changes detected after git add. Skipping PR creation."
+          elif [ "${{ steps.commit_push.outputs.no_changes_after_lint }}" == "true" ]; then
+            echo "ℹ️ No changes remaining after lint-staged processing. Skipping PR creation."
+          else
+            echo "ℹ️ No changes to commit. Skipping PR creation."
+          fi
+
+      # Set step status for issue creation
+      - name: Set step conclusions
+        if: always()
+        run: |
+          echo "STEP_VALIDATE_ENV=${{ steps.validate_env.conclusion || 'Not run' }}" >> $GITHUB_ENV
+          echo "STEP_CHECK_BRANCH=${{ steps.check_branch.conclusion || 'Not run' }}" >> $GITHUB_ENV
+          echo "STEP_REBASE_ATTEMPT=${{ steps.rebase_attempt.conclusion || 'Not run' }}" >> $GITHUB_ENV
+          echo "STEP_CREATE_BRANCH=${{ steps.create_branch.conclusion || 'Not run' }}" >> $GITHUB_ENV
+          echo "STEP_INSTALL_DEPS=${{ steps.install_deps.conclusion || 'Not run' }}" >> $GITHUB_ENV
+          echo "STEP_RUN_I18N=${{ steps.run_i18n.conclusion || 'Not run' }}" >> $GITHUB_ENV
+          echo "STEP_COMMIT_PUSH=${{ steps.commit_push.conclusion || 'Not run' }}" >> $GITHUB_ENV
+          echo "STEP_CREATE_PR=${{ steps.create_pr.conclusion || 'Not run' }}" >> $GITHUB_ENV
+
+      # Error handling and issue creation
+      - name: Upload debug artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-logs-${{ github.run_number }}
+          path: |
+            i18n_output.log
+            /tmp/*.log
+          retention-days: 7
+
+      - name: Create issue on failure
+        if: failure()
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GH_TOKEN }}
+          script: |
+            const createFailureIssue = require('./.github/scripts/create-failure-issue.js');
+            return await createFailureIssue({ github, context, core });

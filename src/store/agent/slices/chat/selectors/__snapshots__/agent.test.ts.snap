@@ -9,7 +9,7 @@ exports[`agentSelectors > defaultAgentConfig > should merge DEFAULT_AGENT_CONFIG
     "enableCompressHistory": true,
     "enableHistoryCount": true,
     "enableReasoning": false,
-    "historyCount": 8,
+    "historyCount": 20,
     "reasoningBudgetToken": 1024,
     "searchFCModel": {
       "model": "gpt-4.1-mini",

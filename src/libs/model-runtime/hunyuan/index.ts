@@ -1,13 +1,13 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface HunyuanModelCard {
   id: string;
 }
 
-export const LobeHunyuanAI = LobeOpenAICompatibleFactory({
+export const LobeHunyuanAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.hunyuan.cloud.tencent.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {

@@ -4,7 +4,7 @@
       "replaceBtn": "Cambiar grupo",
       "title": "Recomendación de asistentes nuevos:"
     },
-    "defaultMessage": "Soy su asistente inteligente personal {{appName}}. ¿En qué puedo ayudarle ahora?\nSi necesita un asistente más profesional o personalizado, puede hacer clic en `+` para crear un asistente personalizado.",
+    "defaultMessage": "Soy su asistente inteligente personal {{appName}}. ¿En qué puedo ayudarle ahora?<br />Si necesita un asistente más profesional o personalizado, puede hacer clic en <plus /> para crear un asistente personalizado.",
     "defaultMessageWithoutCreate": "Soy su asistente inteligente personal {{appName}}. ¿En qué puedo ayudarle ahora?",
     "qa": {
       "q01": "¿Qué es LobeHub?",

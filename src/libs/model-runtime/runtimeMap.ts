@@ -1,17 +1,17 @@
 import { LobeAi21AI } from './ai21';
 import { LobeAi360AI } from './ai360';
-import LobeAnthropicAI from './anthropic';
+import { LobeAnthropicAI } from './anthropic';
 import { LobeAzureOpenAI } from './azureOpenai';
 import { LobeAzureAI } from './azureai';
 import { LobeBaichuanAI } from './baichuan';
-import LobeBedrockAI from './bedrock';
+import { LobeBedrockAI } from './bedrock';
 import { LobeCloudflareAI } from './cloudflare';
 import { LobeCohereAI } from './cohere';
 import { LobeDeepSeekAI } from './deepseek';
 import { LobeFireworksAI } from './fireworksai';
 import { LobeGiteeAI } from './giteeai';
 import { LobeGithubAI } from './github';
-import LobeGoogleAI from './google';
+import { LobeGoogleAI } from './google';
 import { LobeGroq } from './groq';
 import { LobeHigressAI } from './higress';
 import { LobeHuggingFaceAI } from './huggingface';
@@ -22,10 +22,11 @@ import { LobeJinaAI } from './jina';
 import { LobeLMStudioAI } from './lmstudio';
 import { LobeMinimaxAI } from './minimax';
 import { LobeMistralAI } from './mistral';
+import { LobeModelScopeAI } from './modelscope';
 import { LobeMoonshotAI } from './moonshot';
 import { LobeNovitaAI } from './novita';
 import { LobeNvidiaAI } from './nvidia';
-import LobeOllamaAI from './ollama';
+import { LobeOllamaAI } from './ollama';
 import { LobeOpenAI } from './openai';
 import { LobeOpenRouterAI } from './openrouter';
 import { LobePerplexityAI } from './perplexity';
@@ -75,6 +76,7 @@ export const providerRuntimeMap = {
   lmstudio: LobeLMStudioAI,
   minimax: LobeMinimaxAI,
   mistral: LobeMistralAI,
+  modelscope: LobeModelScopeAI,
   moonshot: LobeMoonshotAI,
   novita: LobeNovitaAI,
   nvidia: LobeNvidiaAI,

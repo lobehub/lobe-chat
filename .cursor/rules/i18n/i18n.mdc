@@ -1,0 +1,183 @@
+---
+description: i18n workflow and troubleshooting
+globs: 
+alwaysApply: false
+---
+# LobeChat Internationalization (i18n) Guide
+
+## Architecture Overview
+
+LobeChat uses **react-i18next** for internationalization with a well-structured namespace approach:
+
+- **Default language**: Chinese (zh-CN) - serves as the source language
+- **Supported locales**: 18 languages including English, Japanese, Korean, Arabic, etc.
+- **Framework**: react-i18next with Next.js app router
+- **Translation automation**: [@lobehub/i18n-cli](mdc:package.json) for automated translations, config file: .i18nrc.js
+
+## Directory Structure
+
+```
+src/locales/
+├── default/           # Source language files (zh-CN)
+│   ├── index.ts      # Namespace exports
+│   ├── common.ts     # Common translations
+│   ├── chat.ts       # Chat-related translations
+│   ├── setting.ts    # Settings translations
+│   └── ...           # Other namespace files
+└── resources.ts      # Type definitions and locale config
+
+locales/               # Translated files
+├── en-US/            # English translations
+│   ├── common.json   # Common translations
+│   ├── chat.json     # Chat translations
+│   ├── setting.json  # Settings translations
+│   └── ...           # Other namespace JSON files
+├── ja-JP/            # Japanese translations
+│   ├── common.json
+│   ├── chat.json
+│   └── ...
+└── ...               # Other language folders
+```
+
+## Workflow for Adding New Translations
+
+### 1. Add New Translation Keys
+
+**Step 1**: Add translation key to the appropriate namespace file in [src/locales/default/](mdc:src/locales/default)
+
+```typescript
+// Example: src/locales/default/common.ts
+export default {
+    // ... existing keys
+    newFeature: {
+        title: "新功能标题",
+        description: "功能描述文案",
+        button: "操作按钮",
+    },
+};
+```
+
+**Step 2**: If creating a new namespace, export it in [src/locales/default/index.ts](mdc:src/locales/default/index.ts)
+
+```typescript
+import newNamespace from "./newNamespace";
+
+const resources = {
+    // ... existing namespaces
+    newNamespace,
+} as const;
+```
+
+### 2. Translation Process
+
+**Development Mode** (Recommended):
+
+- Manually add Chinese translations to corresponding JSON files in `locales/zh-CN/namespace.json`, this avoids running slow automation during development
+- Don't auto add translations for other language like English etc, most of developer is Chinese,
+
+**Production Mode**:
+
+```bash
+# Generate translations for all languages
+npm run i18n
+```
+
+## Usage in Components
+
+### Basic Usage with Hooks
+
+```tsx
+import { useTranslation } from "react-i18next";
+
+const MyComponent = () => {
+    const { t } = useTranslation("common"); // namespace
+
+    return (
+        <div>
+            <h1>{t("newFeature.title")}</h1>
+            <p>{t("newFeature.description")}</p>
+            <button>{t("newFeature.button")}</button>
+        </div>
+    );
+};
+```
+
+### With Parameters
+
+```tsx
+const { t } = useTranslation("common");
+
+// Translation key with interpolation
+<p>{t("welcome.message", { name: "John" })}</p>;
+
+// Corresponding locale file:
+// welcome: { message: '欢迎 {{name}} 使用!' }
+```
+
+### Multiple Namespaces
+
+```tsx
+const { t } = useTranslation(['common', 'chat']);
+
+// Access different namespaces
+<button>{t('common:save')}</button>
+<span>{t('chat:typing')}</span>
+```
+
+## Type Safety
+
+The project uses TypeScript for type-safe translations with auto-generated types from [src/locales/resources.ts](mdc:src/locales/resources.ts):
+
+```typescript
+import type { DefaultResources, NS, Locales } from "@/locales/resources";
+
+// Available types:
+// - NS: Available namespace keys ('common' | 'chat' | 'setting' | ...)
+// - Locales: Supported locale codes ('en-US' | 'zh-CN' | 'ja-JP' | ...)
+
+// Type-safe namespace usage
+const namespace: NS = "common"; // ✅ Valid
+const locale: Locales = "en-US"; // ✅ Valid
+```
+
+## Best Practices
+
+### 1. Namespace Organization
+
+- **common**: Shared UI elements (buttons, labels, actions)
+- **chat**: Chat-specific features
+- **setting**: Configuration and settings
+- **error**: Error messages and handling
+- **[feature]**: Feature-specific or page specific namespaces
+
+### 2. Key Naming Conventions
+
+```typescript
+// ✅ Good: Hierarchical structure
+export default {
+    modal: {
+        confirm: {
+            title: "确认操作",
+            message: "确定要执行此操作吗？",
+            actions: {
+                confirm: "确认",
+                cancel: "取消",
+            },
+        },
+    },
+};
+
+// ❌ Avoid: Flat structure
+export default {
+    modalConfirmTitle: "确认操作",
+    modalConfirmMessage: "确定要执行此操作吗？",
+};
+```
+
+## Troubleshooting
+
+### Missing Translation Keys
+
+- Check if the key exists in src/locales/default/namespace.ts
+- Ensure proper namespace import in component
+- Ensure new namespaces are exported in [src/locales/default/index.ts](mdc:src/locales/default/index.ts)

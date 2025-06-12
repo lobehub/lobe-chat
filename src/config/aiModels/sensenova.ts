@@ -78,7 +78,7 @@ const sensenovaChatModels: AIChatModelCard[] = [
     description:
       '是基于V5.5的最新版本，较上版本在中英文基础能力，聊天，理科知识， 文科知识，写作，数理逻辑，字数控制 等几个维度的表现有显著提升。',
     displayName: 'SenseChat 5.5 1202',
-    id: 'SenseCat-5-1202',
+    id: 'SenseChat-5-1202',
     pricing: {
       currency: 'CNY',
       input: 8,

@@ -1,0 +1,68 @@
+---
+description: 
+globs: *.tsx
+alwaysApply: false
+---
+# react component 编写指南
+
+- 如果要写复杂样式的话用 antd-style ，简单的话可以用 style 属性直接写内联样式
+- 如果需要 flex 布局或者居中布局应该使用 react-layout-kit
+- 选择组件库中的组件时优先使用 [lobe-ui.mdc](mdc:.cursor/rules/package-usage/lobe-ui.mdc) 有的，然后才是 antd 的，不知道 @lobehub/ui 的组件怎么用，有哪些属性，就自己搜下这个项目其它地方怎么用的，不要瞎猜
+
+## 访问 theme 的两种方式
+
+### 使用 antd-style 的 useTheme hook
+
+```tsx
+import { useTheme } from 'antd-style';
+
+const MyComponent = () => {
+  const theme = useTheme();
+  
+  return (
+    <div style={{ 
+      color: theme.colorPrimary,
+      backgroundColor: theme.colorBgContainer,
+      padding: theme.padding,
+      borderRadius: theme.borderRadius
+    }}>
+      使用主题 token 的组件
+    </div>
+  );
+}
+```
+
+### 使用 antd-style 的 createStyles
+
+```tsx
+const useStyles = createStyles(({ css, token }) => {
+  return {
+    container: css`
+      background-color: ${token.colorBgContainer};
+      border-radius: ${token.borderRadius}px;
+      padding: ${token.padding}px;
+      color: ${token.colorText};
+    `,
+    title: css`
+      font-size: ${token.fontSizeLG}px;
+      font-weight: ${token.fontWeightStrong};
+      margin-bottom: ${token.marginSM}px;
+    `,
+    content: css`
+      font-size: ${token.fontSize}px;
+      line-height: ${token.lineHeight};
+    `
+  };
+});
+
+const Card: FC<CardProps> = ({ title, content }) => {
+  const { styles } = useStyles();
+  
+  return (
+    <Flexbox className={styles.container}>
+      <div className={styles.title}>{title}</div>
+      <div className={styles.content}>{content}</div>
+    </Flexbox>
+  );
+};
+```

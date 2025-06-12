@@ -70,20 +70,15 @@ const Spark: ModelProviderCard = {
   name: 'Spark',
   settings: {
     disableBrowserRequest: true,
-    modelEditable: false,
     proxyUrl: {
       placeholder: 'https://spark-api-open.xf-yun.com/v1',
     },
+    responseAnimation: {
+      speed: 2,
+      text: 'smooth',
+    },
     sdkType: 'openai',
     showModelFetcher: false,
-    smoothing: {
-      speed: 2,
-      text: true,
-    },
-  },
-  smoothing: {
-    speed: 2,
-    text: true,
   },
   url: 'https://www.xfyun.cn',
 };

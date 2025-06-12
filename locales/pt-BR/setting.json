@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "A última mensagem do usuário será preenchida neste modelo",
-      "placeholder": "O modelo de pré-processamento {{text}} será substituído pela entrada em tempo real",
+      "placeholder": "O modelo de pré-processamento {{input_template}} será substituído pela entrada em tempo real",
       "title": "Pré-processamento de entrada do usuário"
     },
     "submit": "Atualizar preferências de chat",
@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "Tema Sereia"
     },
-    "title": "Aparência do Chat"
+    "title": "Aparência do Chat",
+    "transitionMode": {
+      "desc": "Animação de transição das mensagens do chat",
+      "options": {
+        "fadeIn": "Desvanecer",
+        "none": {
+          "desc": "Depende da forma como o modelo responde, por favor teste por conta própria.",
+          "value": "Nenhuma"
+        },
+        "smooth": "Suave"
+      },
+      "title": "Animação de transição"
+    }
   },
   "settingCommon": {
     "lang": {
@@ -282,13 +294,13 @@
       "title": "Diversidade de Expressão"
     },
     "reasoningEffort": {
-      "desc": "Quanto maior o valor, mais forte será a capacidade de raciocínio, mas isso pode aumentar o tempo de resposta e o consumo de tokens",
+      "desc": "Quanto maior o valor, mais forte é a capacidade de raciocínio, mas pode aumentar o tempo de resposta e o consumo de tokens",
       "options": {
         "high": "Alto",
         "low": "Baixo",
         "medium": "Médio"
       },
-      "title": "Intensidade de raciocínio"
+      "title": "Intensidade do raciocínio"
     },
     "submit": "Atualizar configurações do modelo",
     "temperature": {

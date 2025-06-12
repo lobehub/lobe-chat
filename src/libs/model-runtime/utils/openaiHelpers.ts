@@ -41,6 +41,65 @@ export const convertOpenAIMessages = async (messages: OpenAI.ChatCompletionMessa
   )) as OpenAI.ChatCompletionMessageParam[];
 };
 
+export const convertOpenAIResponseInputs = async (
+  messages: OpenAI.ChatCompletionMessageParam[],
+) => {
+  let input: OpenAI.Responses.ResponseInputItem[] = [];
+  await Promise.all(
+    messages.map(async (message) => {
+      // if message is assistant messages with tool calls , transform it to function type item
+      if (message.role === 'assistant' && message.tool_calls && message.tool_calls?.length > 0) {
+        message.tool_calls?.forEach((tool) => {
+          input.push({
+            arguments: tool.function.name,
+            call_id: tool.id,
+            name: tool.function.name,
+            type: 'function_call',
+          });
+        });
+
+        return;
+      }
+
+      if (message.role === 'tool') {
+        input.push({
+          call_id: message.tool_call_id,
+          output: message.content,
+          type: 'function_call_output',
+        } as OpenAI.Responses.ResponseFunctionToolCallOutputItem);
+
+        return;
+      }
+
+      // default item
+      // also need handle image
+      const item = {
+        ...message,
+        content:
+          typeof message.content === 'string'
+            ? message.content
+            : await Promise.all(
+                (message.content || []).map(async (c) => {
+                  if (c.type === 'text') {
+                    return { ...c, type: 'input_text' };
+                  }
+
+                  const image = await convertMessageContent(c as OpenAI.ChatCompletionContentPart);
+                  return {
+                    image_url: (image as OpenAI.ChatCompletionContentPartImage).image_url?.url,
+                    type: 'input_image',
+                  };
+                }),
+              ),
+      } as OpenAI.Responses.ResponseInputItem;
+
+      input.push(item);
+    }),
+  );
+
+  return input;
+};
+
 export const pruneReasoningPayload = (payload: ChatStreamPayload) => {
   return {
     ...payload,

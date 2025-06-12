@@ -43,6 +43,9 @@
     "reasoningBudgetToken": {
       "title": "思考消耗 Token"
     },
+    "reasoningEffort": {
+      "title": "推理強度"
+    },
     "title": "模型擴展功能"
   },
   "history": {

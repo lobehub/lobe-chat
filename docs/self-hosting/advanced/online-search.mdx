@@ -1,10 +1,10 @@
 ---
 title: >-
-  Configuring Online Search Functionality - Enhancing AI's Ability to Access Web
-  Information
+  Configuring Online Search Functionality - Enhancing AI's Ability to Access Web Information
+
 description: >-
-  Learn how to configure the SearXNG online search functionality for LobeChat,
-  enabling AI to access the latest web information.
+  Learn how to configure the SearXNG online search functionality for LobeChat, enabling AI to access the latest web information.
+
 tags:
   - Online Search
   - SearXNG
@@ -17,7 +17,9 @@ tags:
 LobeChat supports configuring online search functionality for AI, allowing it to access the latest web information and provide more accurate and timely responses. The online search feature is based on the [SearXNG](https://github.com/searxng/searxng) search engine, which is a privacy-respecting metasearch engine that aggregates results from multiple search engines.
 
 <Callout type={'info'}>
-  SearXNG is an open-source metasearch engine that can be self-hosted or accessed via public instances. By configuring SearXNG, LobeChat enables AI to retrieve the latest internet information, allowing it to answer time-sensitive questions and provide up-to-date news.
+  SearXNG is an open-source metasearch engine that can be self-hosted or accessed via public
+  instances. By configuring SearXNG, LobeChat enables AI to retrieve the latest internet
+  information, allowing it to answer time-sensitive questions and provide up-to-date news.
 </Callout>
 
 # Core Environment Variables
@@ -34,16 +36,15 @@ This URL should point to a functional SearXNG instance. You can choose to self-h
 
 You can find publicly available SearXNG instances in the [SearXNG instance list](https://searx.space/). Choose an instance that is fast and reliable, and then configure its URL in LobeChat.
 
-> Note that the `searxng` you use must have `json` output enabled; otherwise, the `lobe-chat` call will result in an error.
-> If self-hosting, find the `searxng` configuration file and add `json` as shown below.
+> Note that the `searxng` you use must have `json` output enabled; otherwise, the `lobe-chat` call will result in an error. If self-hosting, find the `searxng` configuration file and add `json` as shown below.
 
 ```bash
 $ vi searxng/settings.yml
 ...
 search:
-  formats:
-    - html
-    - json
+formats:
+- html
+- json
 ```
 
 # Verifying Online Search Functionality

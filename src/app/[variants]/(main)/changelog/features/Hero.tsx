@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import { BRANDING_NAME } from '@/const/branding';
-import { OFFICIAL_SITE, X } from '@/const/url';
+import { BRANDING_NAME, SOCIAL_URL } from '@/const/branding';
+import { OFFICIAL_SITE } from '@/const/url';
 
 import GridLayout from './GridLayout';
 
@@ -28,7 +28,7 @@ const Hero = memo(() => {
             {t('actions.versions')}
           </Link>
           <div style={{ color: theme.colorInfo }}>·</div>
-          <Link href={X} target={'_blank'}>
+          <Link href={SOCIAL_URL.x} target={'_blank'}>
             {t('actions.followOnX')}
           </Link>
         </Flexbox>

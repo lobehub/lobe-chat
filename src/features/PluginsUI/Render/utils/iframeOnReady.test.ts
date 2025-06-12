@@ -9,7 +9,7 @@ describe('useOnPluginReadyForInteraction', () => {
 
   afterEach(() => {
     mockOnReady.mockReset();
-    window.removeEventListener('message', expect.any(Function));
+    window.removeEventListener('message', () => {});
   });
 
   it('sets readyForRender to true when a PluginChannel.pluginReadyForRender message is received', async () => {

@@ -1,9 +1,8 @@
 ---
 title: Configuring Keycloak Authentication Service in LobeChat
 description: >-
-  Learn how to configure the Keycloak authentication service in LobeChat,
-  including deployment, creation, permission settings, and environment
-  variables.
+  Learn how to configure the Keycloak authentication service in LobeChat, including deployment, creation, permission settings, and environment variables.
+
 tags:
   - Keycloak Authentication
   - Environment Variable Configuration
@@ -16,7 +15,8 @@ tags:
 [Keycloak](https://www.keycloak.org/) is an open-source identity and access management solution that provides single sign-on, identity brokering, and social login features, suitable for modern applications and services.
 
 <Callout type={'tip'}>
-  If you want to privately deploy Keycloak, we recommend using it together with LobeChat via Docker Compose deployment for easier service management.
+  If you want to privately deploy Keycloak, we recommend using it together with LobeChat via Docker
+  Compose deployment for easier service management.
 </Callout>
 
 ## Keycloak Configuration Process
@@ -37,10 +37,12 @@ If you deploy using a public network, this guide assumes:
   Access your privately deployed Keycloak admin console (default is `http://localhost:8080/admin`) and log in with the administrator account.
 
   1. Create a new Realm
+
      - Click the dropdown menu in the upper left corner and select "Create Realm"
      - Enter a name, such as "LobeChat", then click "Create"
 
   2. Create a Client
+
      - Select "Clients" from the left menu, then click "Create client"
      - Fill in the following information:
        - Client ID: `lobechat`
@@ -65,6 +67,7 @@ If you deploy using a public network, this guide assumes:
   ### Configure Users and Roles (Optional)
 
   1. Create Users
+
      - Select "Users" from the left menu, then click "Add user"
      - Fill in the user information and click "Create"
      - On the user details page, switch to the "Credentials" tab
@@ -87,7 +90,8 @@ If you deploy using a public network, this guide assumes:
   4. Click "Save" to save the settings
 
   <Callout type={'warning'}>
-    If registration is not disabled, anyone might be able to register and log in to your application. Please configure according to your security requirements.
+    If registration is not disabled, anyone might be able to register and log in to your application.
+    Please configure according to your security requirements.
   </Callout>
 
   ### Configure Environment Variables
@@ -116,4 +120,6 @@ If you deploy using a public network, this guide assumes:
   </Callout>
 </Steps>
 
-<Callout type={'info'}>After successful deployment, users will be able to authenticate through Keycloak and use LobeChat.</Callout>
+<Callout type={'info'}>
+  After successful deployment, users will be able to authenticate through Keycloak and use LobeChat.
+</Callout>

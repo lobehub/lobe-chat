@@ -1,4 +1,4 @@
-import { appEnv } from '@/config/app';
+import { appEnv } from '@/envs/app';
 
 export type ErrorType = Error & { digest?: string };
 

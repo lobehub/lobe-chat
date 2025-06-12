@@ -1,8 +1,7 @@
 import { ModelIcon } from '@lobehub/icons';
-import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { Loader2Icon, Settings2Icon } from 'lucide-react';
-import { memo, useState } from 'react';
+import { Settings2Icon } from 'lucide-react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -55,9 +54,7 @@ const useStyles = createStyles(({ css, token, cx }) => ({
 
 const ModelSwitch = memo(() => {
   const { t } = useTranslation('chat');
-  const { styles, cx, theme } = useStyles();
-  const [updating, setUpdating] = useState(false);
-  const [controlsUpdating, setControlsUpdating] = useState(false);
+  const { styles, cx } = useStyles();
 
   const [model, provider] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
@@ -70,28 +67,23 @@ const ModelSwitch = memo(() => {
 
   return (
     <Flexbox align={'center'} className={isModelHasExtendParams ? styles.container : ''} horizontal>
-      <ModelSwitchPanel setUpdating={setUpdating} updating={updating}>
+      <ModelSwitchPanel>
         <Center
           className={cx(styles.model, isModelHasExtendParams && styles.modelWithControl)}
           height={36}
           width={36}
         >
-          {updating ? (
-            <Icon color={theme.colorTextDescription} icon={Loader2Icon} size={18} spin />
-          ) : (
-            <div className={styles.icon}>
-              <ModelIcon model={model} size={22} />
-            </div>
-          )}
+          <div className={styles.icon}>
+            <ModelIcon model={model} size={22} />
+          </div>
         </Center>
       </ModelSwitchPanel>
 
       {isModelHasExtendParams && (
         <Action
           icon={Settings2Icon}
-          loading={controlsUpdating}
           popover={{
-            content: <ControlsForm setUpdating={setControlsUpdating} updating={controlsUpdating} />,
+            content: <ControlsForm />,
             minWidth: 350,
             placement: 'topLeft',
           }}

@@ -3,7 +3,7 @@ import { boolean, integer, jsonb, pgTable, primaryKey, text, varchar } from 'dri
 
 import { timestamps } from '@/database/schemas/_helpers';
 import { users } from '@/database/schemas/user';
-import { AiProviderSettings } from '@/types/aiProvider';
+import { AiProviderConfig, AiProviderSettings } from '@/types/aiProvider';
 
 export const aiProviders = pgTable(
   'ai_providers',
@@ -28,6 +28,10 @@ export const aiProviders = pgTable(
     settings: jsonb('settings')
       .$defaultFn(() => ({}))
       .$type<AiProviderSettings>(),
+
+    config: jsonb('config')
+      .$defaultFn(() => ({}))
+      .$type<AiProviderConfig>(),
 
     ...timestamps,
   },

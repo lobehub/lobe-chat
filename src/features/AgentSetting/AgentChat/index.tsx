@@ -67,7 +67,7 @@ const AgentChat = memo(() => {
         valuePropName: 'checked',
       },
       {
-        children: <SliderWithInput max={8} min={0} />,
+        children: <SliderWithInput max={8} min={0} unlimitedInput={true} />,
         desc: t('settingChat.autoCreateTopicThreshold.desc'),
         divider: false,
         hidden: !config.enableAutoCreateTopic,
@@ -83,7 +83,7 @@ const AgentChat = memo(() => {
         valuePropName: 'checked',
       },
       {
-        children: <SliderWithInput max={20} min={0} />,
+        children: <SliderWithInput max={20} min={0} unlimitedInput={true} />,
         desc: t('settingChat.historyCount.desc'),
         divider: false,
         hidden: !config.enableHistoryCount,

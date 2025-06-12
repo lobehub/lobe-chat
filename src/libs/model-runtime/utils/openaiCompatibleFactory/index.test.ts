@@ -14,7 +14,7 @@ import officalOpenAIModels from '@/libs/model-runtime/openai/fixtures/openai-mod
 import { sleep } from '@/utils/sleep';
 
 import * as debugStreamModule from '../debugStream';
-import { LobeOpenAICompatibleFactory } from './index';
+import { createOpenAICompatibleRuntime } from './index';
 
 const provider = 'groq';
 const defaultBaseURL = 'https://api.groq.com/openai/v1';
@@ -26,7 +26,7 @@ vi.spyOn(console, 'error').mockImplementation(() => {});
 
 let instance: LobeOpenAICompatibleRuntime;
 
-const LobeMockProvider = LobeOpenAICompatibleFactory({
+const LobeMockProvider = createOpenAICompatibleRuntime({
   baseURL: defaultBaseURL,
   chatCompletion: {
     handleError: (error) => {
@@ -426,7 +426,7 @@ describe('LobeOpenAICompatibleFactory', () => {
 
     describe('noUserId option', () => {
       it('should not add user to payload when noUserId is true', async () => {
-        const LobeMockProvider = LobeOpenAICompatibleFactory({
+        const LobeMockProvider = createOpenAICompatibleRuntime({
           baseURL: 'https://api.mistral.ai/v1',
           chatCompletion: {
             noUserId: true,
@@ -457,7 +457,7 @@ describe('LobeOpenAICompatibleFactory', () => {
       });
 
       it('should add user to payload when noUserId is false', async () => {
-        const LobeMockProvider = LobeOpenAICompatibleFactory({
+        const LobeMockProvider = createOpenAICompatibleRuntime({
           baseURL: 'https://api.mistral.ai/v1',
           chatCompletion: {
             noUserId: false,
@@ -488,7 +488,7 @@ describe('LobeOpenAICompatibleFactory', () => {
       });
 
       it('should add user to payload when noUserId is not set in chatCompletion', async () => {
-        const LobeMockProvider = LobeOpenAICompatibleFactory({
+        const LobeMockProvider = createOpenAICompatibleRuntime({
           baseURL: 'https://api.mistral.ai/v1',
           provider: ModelProvider.Mistral,
         });
@@ -831,7 +831,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         },
       );
 
-      const LobeMockProvider = LobeOpenAICompatibleFactory({
+      const LobeMockProvider = createOpenAICompatibleRuntime({
         baseURL: 'https://api.test.com/v1',
         chatCompletion: {
           handleStream: customStreamHandler,
@@ -890,7 +890,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         });
       });
 
-      const LobeMockProvider = LobeOpenAICompatibleFactory({
+      const LobeMockProvider = createOpenAICompatibleRuntime({
         baseURL: 'https://api.test.com/v1',
         chatCompletion: {
           handleTransformResponseToStream: customTransformHandler,

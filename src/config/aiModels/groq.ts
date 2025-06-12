@@ -42,8 +42,8 @@ const groqChatModels: AIChatModelCard[] = [
     id: 'meta-llama/llama-4-maverick-17b-128e-instruct',
     maxOutput: 8192,
     pricing: {
-      input: 0.5,
-      output: 0.77,
+      input: 0.2,
+      output: 0.6,
     },
     type: 'chat',
   },
@@ -73,17 +73,6 @@ const groqChatModels: AIChatModelCard[] = [
     pricing: {
       input: 0.75, // 0.75 - 5.00
       output: 0.99, // 0.99 - 5.00
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 131_072,
-    displayName: 'DeepSeek R1 Distill Llama 70B SpecDec',
-    id: 'deepseek-r1-distill-llama-70b-specdec',
-    maxOutput: 16_384,
-    pricing: {
-      input: 0.75,
-      output: 0.99,
     },
     type: 'chat',
   },
@@ -157,7 +146,7 @@ const groqChatModels: AIChatModelCard[] = [
   },
   {
     contextWindowTokens: 32_768,
-    displayName: 'Mixtral Saba 24B',
+    displayName: 'Mistral Saba 24B',
     id: 'mistral-saba-24b',
     pricing: {
       input: 0.79,
@@ -166,23 +155,9 @@ const groqChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 32_768,
-    description: 'Mixtral 8x7B 提供高容错的并行计算能力，适合复杂任务。',
-    displayName: 'Mixtral 8x7B Instruct',
-    id: 'mixtral-8x7b-32768',
-    pricing: {
-      input: 0.24,
-      output: 0.24,
-    },
-    type: 'chat',
-  },
-  {
     contextWindowTokens: 131_072,
     displayName: 'Llama Guard 4 12B',
-    id: 'meta-llama/Llama-Guard-4-12B',
+    id: 'meta-llama/llama-guard-4-12b',
     maxOutput: 128,
     pricing: {
       input: 0.2,
@@ -204,6 +179,18 @@ const groqChatModels: AIChatModelCard[] = [
     contextWindowTokens: 4096,
     displayName: 'ALLaM 2 7B',
     id: 'allam-2-7b',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 512,
+    displayName: 'Llama Prompt Guard 2 22M',
+    id: 'meta-llama/llama-prompt-guard-2-22m',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 512,
+    displayName: 'Llama Prompt Guard 2 86M',
+    id: 'meta-llama/llama-prompt-guard-2-86m',
     type: 'chat',
   },
 ];

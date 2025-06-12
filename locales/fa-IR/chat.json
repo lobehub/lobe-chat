@@ -43,6 +43,9 @@
     "reasoningBudgetToken": {
       "title": "توکن مصرف تفکر"
     },
+    "reasoningEffort": {
+      "title": "شدت استدلال"
+    },
     "title": "ویژگی‌های گسترش مدل"
   },
   "history": {

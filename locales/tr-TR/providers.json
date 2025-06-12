@@ -71,6 +71,9 @@
   "mistral": {
     "description": "Mistral, karmaşık akıl yürütme, çok dilli görevler, kod üretimi gibi alanlarda geniş bir uygulama yelpazesine sahip gelişmiş genel, profesyonel ve araştırma modelleri sunmaktadır. Fonksiyon çağrısı arayüzü aracılığıyla kullanıcılar, özel işlevleri entegre ederek belirli uygulamalar gerçekleştirebilirler."
   },
+  "modelscope": {
+    "description": "ModelScope, Alibaba Cloud tarafından sunulan bir model hizmet platformudur ve zengin AI modelleri ile çıkarım hizmetleri sağlar."
+  },
   "moonshot": {
     "description": "Moonshot, Beijing Yuezhi Anmian Technology Co., Ltd. tarafından sunulan açık kaynaklı bir platformdur. İçerik oluşturma, akademik araştırma, akıllı öneri, tıbbi teşhis gibi geniş bir uygulama alanına sahip çeşitli doğal dil işleme modelleri sunmaktadır. Uzun metin işleme ve karmaşık üretim görevlerini desteklemektedir."
   },

@@ -146,6 +146,9 @@ const GiteeAI: ModelProviderCard = {
   name: 'Gitee AI',
   settings: {
     disableBrowserRequest: true,
+    proxyUrl: {
+      placeholder: 'https://ai.gitee.com/v1',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
   },

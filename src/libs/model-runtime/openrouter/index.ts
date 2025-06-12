@@ -1,7 +1,9 @@
+import OpenRouterModels from '@/config/aiModels/openrouter';
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { processMultiProviderModelList } from '../utils/modelParse';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { OpenRouterModelCard, OpenRouterModelExtraInfo, OpenRouterReasoning } from './type';
 
 const formatPrice = (price: string) => {
@@ -9,16 +11,31 @@ const formatPrice = (price: string) => {
   return Number((Number(price) * 1e6).toPrecision(5));
 };
 
-export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
+export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
   baseURL: 'https://openrouter.ai/api/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { thinking } = payload;
+      const { thinking, model, max_tokens } = payload;
 
       let reasoning: OpenRouterReasoning = {};
+
       if (thinking?.type === 'enabled') {
+        const modelConfig = OpenRouterModels.find((m) => m.id === model);
+        const defaultMaxOutput = modelConfig?.maxOutput;
+
+        // 配置优先级：用户设置 > 模型配置 > 硬编码默认值
+        const getMaxTokens = () => {
+          if (max_tokens) return max_tokens;
+          if (defaultMaxOutput) return defaultMaxOutput;
+          return undefined;
+        };
+
+        const maxTokens = getMaxTokens() || 32_000; // Claude Opus 4 has minimum maxOutput
+
         reasoning = {
-          max_tokens: thinking.budget_tokens,
+          max_tokens: thinking?.budget_tokens
+            ? Math.min(thinking.budget_tokens, maxTokens - 1)
+            : 1024,
         };
       }
 
@@ -40,17 +57,6 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
     chatCompletion: () => process.env.DEBUG_OPENROUTER_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
-
-    const reasoningKeywords = [
-      'deepseek/deepseek-r1',
-      'openai/o1',
-      'openai/o3',
-      'qwen/qvq',
-      'qwen/qwq',
-      'thinking',
-    ];
-
     const modelsPage = (await client.models.list()) as any;
     const modelList: OpenRouterModelCard[] = modelsPage.data;
 
@@ -62,31 +68,33 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
         modelsExtraInfo.push(...data['data']);
       }
     } catch (error) {
-      // 忽略 fetch 错误，使用空的 modelsExtraInfo 数组继续处理
       console.error('Failed to fetch OpenRouter frontend models:', error);
     }
 
-    return modelList
-      .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
-          (m) => model.id.toLowerCase() === m.id.toLowerCase(),
-        );
+    // 解析模型能力
+    const baseModels = await processMultiProviderModelList(modelList);
+
+    // 合并 OpenRouter 获取的模型信息
+    return baseModels
+      .map((baseModel) => {
+        const model = modelList.find((m) => m.id === baseModel.id);
         const extraInfo = modelsExtraInfo.find(
-          (m) => m.slug.toLowerCase() === model.id.toLowerCase(),
+          (m) => m.slug.toLowerCase() === baseModel.id.toLowerCase(),
         );
 
+        if (!model) return baseModel;
+
         return {
+          ...baseModel,
           contextWindowTokens: model.context_length,
           description: model.description,
           displayName: model.name,
-          enabled: knownModel?.enabled || false,
           functionCall:
+            baseModel.functionCall ||
             model.description.includes('function calling') ||
             model.description.includes('tools') ||
             extraInfo?.endpoint?.supports_tool_parameters ||
-            knownModel?.abilities?.functionCall ||
             false,
-          id: model.id,
           maxTokens:
             typeof model.top_provider.max_completion_tokens === 'number'
               ? model.top_provider.max_completion_tokens
@@ -95,14 +103,9 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
             input: formatPrice(model.pricing.prompt),
             output: formatPrice(model.pricing.completion),
           },
-          reasoning:
-            reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-            extraInfo?.endpoint?.supports_reasoning ||
-            knownModel?.abilities?.reasoning ||
-            false,
+          reasoning: baseModel.reasoning || extraInfo?.endpoint?.supports_reasoning || false,
           releasedAt: new Date(model.created * 1000).toISOString().split('T')[0],
-          vision:
-            model.architecture.modality.includes('image') || knownModel?.abilities?.vision || false,
+          vision: baseModel.vision || model.architecture.modality.includes('image') || false,
         };
       })
       .filter(Boolean) as ChatModelCard[];

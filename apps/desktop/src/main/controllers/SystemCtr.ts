@@ -1,4 +1,4 @@
-import { ElectronAppState } from '@lobechat/electron-client-ipc';
+import { ElectronAppState, ThemeMode } from '@lobechat/electron-client-ipc';
 import { app, shell, systemPreferences } from 'electron';
 import { macOS } from 'electron-is';
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -66,6 +66,11 @@ export default class SystemController extends ControllerModule {
     await this.app.i18n.changeLanguage(locale === 'auto' ? app.getLocale() : locale);
 
     return { success: true };
+  }
+
+  @ipcClientEvent('updateThemeMode')
+  async updateThemeModeHandler(themeMode: ThemeMode) {
+    this.app.browserManager.broadcastToAllWindows('themeChanged', { themeMode });
   }
 
   @ipcServerEvent('getDatabasePath')

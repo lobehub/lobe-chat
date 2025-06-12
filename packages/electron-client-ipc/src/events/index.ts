@@ -2,7 +2,7 @@ import { LocalFilesDispatchEvents } from './localFile';
 import { MenuDispatchEvents } from './menu';
 import { RemoteServerBroadcastEvents, RemoteServerDispatchEvents } from './remoteServer';
 import { ShortcutDispatchEvents } from './shortcut';
-import { SystemDispatchEvents } from './system';
+import { SystemBroadcastEvents, SystemDispatchEvents } from './system';
 import { TrayDispatchEvents } from './tray';
 import { AutoUpdateBroadcastEvents, AutoUpdateDispatchEvents } from './update';
 import { UploadFilesDispatchEvents } from './upload';
@@ -35,7 +35,8 @@ export type ClientEventReturnType<T extends ClientDispatchEventKey> = ReturnType
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface MainBroadcastEvents
   extends AutoUpdateBroadcastEvents,
-    RemoteServerBroadcastEvents {}
+    RemoteServerBroadcastEvents,
+    SystemBroadcastEvents {}
 
 export type MainBroadcastEventKey = keyof MainBroadcastEvents;
 

@@ -1,7 +1,7 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface MistralModelCard {
   capabilities: {
@@ -13,7 +13,7 @@ export interface MistralModelCard {
   max_context_length: number;
 }
 
-export const LobeMistralAI = LobeOpenAICompatibleFactory({
+export const LobeMistralAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.mistral.ai/v1',
   chatCompletion: {
     // Mistral API does not support stream_options: { include_usage: true }

@@ -1,7 +1,7 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface CohereModelCard {
   context_length: number;
@@ -10,7 +10,7 @@ export interface CohereModelCard {
   supports_vision: boolean;
 }
 
-export const LobeCohereAI = LobeOpenAICompatibleFactory({
+export const LobeCohereAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.cohere.ai/compatibility/v1',
   chatCompletion: {
     // https://docs.cohere.com/v2/docs/compatibility-api#unsupported-parameters
