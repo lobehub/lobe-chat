@@ -65,9 +65,10 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
         max_completion_tokens: undefined,
         stream: enableStreaming,
         tool_choice: params.tools ? 'auto' : undefined,
-      });
+      } as any);
+      
       if (enableStreaming) {
-        const stream = response as Stream<OpenAI.ChatCompletionChunk>;
+        const stream = response as unknown as Stream<OpenAI.ChatCompletionChunk>;
         const [prod, debug] = stream.tee();
         if (process.env.DEBUG_AZURE_CHAT_COMPLETION === '1') {
           debugStream(debug.toReadableStream()).catch(console.error);
