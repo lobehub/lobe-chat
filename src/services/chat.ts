@@ -398,8 +398,11 @@ class ChatService {
       onFinish: options?.onFinish,
       onMessageHandle: options?.onMessageHandle,
       responseAnimation: [userPreferTransitionMode, responseAnimation].reduce(
-        (acc, cur) => merge(acc, standardizeAnimationStyle(cur)),
-        providerConfig?.settings?.responseAnimation ?? {},
+        (acc, cur) => {
+          const style = standardizeAnimationStyle(cur) ?? {};
+          return merge(acc, style);
+        },
+        merge({}, providerConfig?.settings?.responseAnimation ?? {}),
       ),
       signal,
     });
