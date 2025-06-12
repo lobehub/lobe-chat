@@ -150,6 +150,7 @@
   "document": "Документация",
   "download": "Скачать",
   "duplicate": "Создать копию",
+  "duplicateSymbol": "копия",
   "edit": "Редактировать",
   "export": "Экспорт настроек",
   "exportType": {
