@@ -26,10 +26,8 @@
   "defaultSession": "Trợ lý mặc định",
   "duplicateSession": {
     "loading": "Đang sao chép...",
-    "success": "Sao chép thành công",
-    "title": "{{title}} Bản sao"
+    "success": "Sao chép thành công"
   },
-  "duplicateTitle": "{{title}} Bản sao",
   "emptyAgent": "Không có trợ lý",
   "extendParams": {
     "disableContextCaching": {

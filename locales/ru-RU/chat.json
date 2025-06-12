@@ -26,10 +26,8 @@
   "defaultSession": "Пользовательский помощник",
   "duplicateSession": {
     "loading": "Копирование...",
-    "success": "Копирование завершено",
-    "title": "{{title}} Копия"
+    "success": "Копирование завершено"
   },
-  "duplicateTitle": "{{title}} Копия",
   "emptyAgent": "Нет ассистента",
   "extendParams": {
     "disableContextCaching": {

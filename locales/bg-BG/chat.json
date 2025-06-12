@@ -26,10 +26,8 @@
   "defaultSession": "Агент по подразбиране",
   "duplicateSession": {
     "loading": "Копиране...",
-    "success": "Копирането е успешно",
-    "title": "{{title}} Копие"
+    "success": "Копирането е успешно"
   },
-  "duplicateTitle": "{{title}} Копие",
   "emptyAgent": "Няма наличен асистент",
   "extendParams": {
     "disableContextCaching": {

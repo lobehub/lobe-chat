@@ -28,9 +28,7 @@ export default {
   duplicateSession: {
     loading: '复制中...',
     success: '复制成功',
-    title: '{{title}} 副本',
   },
-  duplicateTitle: '{{title}} 副本',
   emptyAgent: '暂无助手',
   extendParams: {
     disableContextCaching: {

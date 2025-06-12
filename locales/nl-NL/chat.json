@@ -26,10 +26,8 @@
   "defaultSession": "Standaard assistent",
   "duplicateSession": {
     "loading": "Bezig met kopiëren...",
-    "success": "Kopiëren gelukt",
-    "title": "{{title}} Kopie"
+    "success": "Kopiëren gelukt"
   },
-  "duplicateTitle": "{{title}} Kopie",
   "emptyAgent": "Geen assistent beschikbaar",
   "extendParams": {
     "disableContextCaching": {

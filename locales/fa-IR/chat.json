@@ -26,10 +26,8 @@
   "defaultSession": "دستیار سفارشی",
   "duplicateSession": {
     "loading": "در حال کپی کردن...",
-    "success": "کپی با موفقیت انجام شد",
-    "title": "نسخه کپی {{title}}"
+    "success": "کپی با موفقیت انجام شد"
   },
-  "duplicateTitle": "نسخه‌ای از {{title}}",
   "emptyAgent": "دستیار موجود نیست",
   "extendParams": {
     "disableContextCaching": {

@@ -26,10 +26,8 @@
   "defaultSession": "기본 도우미",
   "duplicateSession": {
     "loading": "복사 중...",
-    "success": "복사 성공",
-    "title": "{{title}} 복사본"
+    "success": "복사 성공"
   },
-  "duplicateTitle": "{{title}} 복사본",
   "emptyAgent": "도우미가 없습니다",
   "extendParams": {
     "disableContextCaching": {

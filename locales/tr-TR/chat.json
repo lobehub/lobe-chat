@@ -26,10 +26,8 @@
   "defaultSession": "Varsayılan Asistan",
   "duplicateSession": {
     "loading": "Kopyalanıyor...",
-    "success": "Kopyalama başarılı",
-    "title": "{{title}} Kopyası"
+    "success": "Kopyalama başarılı"
   },
-  "duplicateTitle": "{{title}} Kopya",
   "emptyAgent": "Asistan yok",
   "extendParams": {
     "disableContextCaching": {

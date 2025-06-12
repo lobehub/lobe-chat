@@ -26,10 +26,8 @@
   "defaultSession": "Sessione predefinita",
   "duplicateSession": {
     "loading": "In corso di duplicazione...",
-    "success": "Duplicazione riuscita",
-    "title": "{{title}} Copia"
+    "success": "Duplicazione riuscita"
   },
-  "duplicateTitle": "{{title}} Copia",
   "emptyAgent": "Nessun assistente disponibile",
   "extendParams": {
     "disableContextCaching": {
