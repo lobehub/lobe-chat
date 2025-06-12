@@ -388,6 +388,13 @@ class ChatService {
     const userPreferTransitionMode =
       userGeneralSettingsSelectors.transitionMode(getUserStoreState());
 
+    // The order of the array is very important.
+    const mergedResponseAnimation = [
+      providerConfig?.settings?.responseAnimation || {},
+      userPreferTransitionMode,
+      responseAnimation,
+    ].reduce((acc, cur) => merge(acc, standardizeAnimationStyle(cur)), {});
+
     return fetchSSE(API_ENDPOINTS.chat(sdkType), {
       body: JSON.stringify(payload),
       fetcher: fetcher,
@@ -397,10 +404,7 @@ class ChatService {
       onErrorHandle: options?.onErrorHandle,
       onFinish: options?.onFinish,
       onMessageHandle: options?.onMessageHandle,
-      responseAnimation: [userPreferTransitionMode, responseAnimation].reduce(
-        (acc, cur) => merge(acc, standardizeAnimationStyle(cur)),
-        providerConfig?.settings?.responseAnimation ?? {},
-      ),
+      responseAnimation: mergedResponseAnimation,
       signal,
     });
   };
