@@ -96,7 +96,6 @@ const ControlsForm = memo(() => {
     },
     {
       children: <ThinkingSlider />,
-      desc: 'thinking.type',
       label: t('extendParams.thinking.title'),
       layout: 'horizontal',
       minWidth: undefined,

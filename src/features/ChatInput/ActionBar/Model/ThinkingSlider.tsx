@@ -14,9 +14,9 @@ const ThinkingSlider = memo(() => {
   const thinking = config.thinking || 'auto'; // Default to 'auto' if not set
 
   const marks = {
-    0: 'off',
-    1: 'auto',
-    2: 'on',
+    0: 'OFF',
+    1: 'AUTO',
+    2: 'ON',
   };
 
   const thinkingValues = ['disabled', 'auto', 'enabled'];
