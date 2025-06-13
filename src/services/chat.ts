@@ -263,6 +263,10 @@ class ChatService {
       if (modelExtendParams!.includes('reasoningEffort') && chatConfig.reasoningEffort) {
         extendParams.reasoning_effort = chatConfig.reasoningEffort;
       }
+
+      if (modelExtendParams!.includes('thinking') && chatConfig.thinking) {
+        extendParams.thinking = { type: chatConfig.thinking };
+      }
     }
 
     return this.getChatCompletion(

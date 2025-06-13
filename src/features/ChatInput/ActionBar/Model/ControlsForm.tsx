@@ -13,6 +13,7 @@ import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import ContextCachingSwitch from './ContextCachingSwitch';
 import ReasoningEffortSlider from './ReasoningEffortSlider';
 import ReasoningTokenSlider from './ReasoningTokenSlider';
+import ThinkingSlider from './ThinkingSlider';
 
 const ControlsForm = memo(() => {
   const { t } = useTranslation('chat');
@@ -89,6 +90,17 @@ const ControlsForm = memo(() => {
       layout: 'horizontal',
       minWidth: undefined,
       name: 'reasoningEffort',
+      style: {
+        paddingBottom: 0,
+      },
+    },
+    {
+      children: <ThinkingSlider />,
+      desc: 'thinking.type',
+      label: t('extendParams.thinking.title'),
+      layout: 'horizontal',
+      minWidth: undefined,
+      name: 'thinking',
       style: {
         paddingBottom: 0,
       },

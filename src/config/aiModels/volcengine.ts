@@ -49,7 +49,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       output: 24,
     },
     settings: {
-      extendParams: ['enableReasoning'],
+      extendParams: ['thinking'],
     },
     type: 'chat',
   },
