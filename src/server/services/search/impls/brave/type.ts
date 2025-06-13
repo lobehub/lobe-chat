@@ -4,8 +4,8 @@ export interface BraveSearchParameters {
   enable_rich_callback?: boolean;
   extra_snippets?: boolean;
   freshness?: string;
-  goggles_id?: string;
   goggles?: string[];
+  goggles_id?: string;
   offset?: number;
   q: string;
   result_filter?: string;
