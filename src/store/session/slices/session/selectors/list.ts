@@ -26,7 +26,7 @@ const getSessionMetaById =
   };
 
 const getSessionsByGroupId =
-  (groupId: string) =>
+  (groupId?: string) =>
   (s: SessionStore): LobeSessions => {
     return allSessions(s).filter((session) => session.group === groupId);
   };

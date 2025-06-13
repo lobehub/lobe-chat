@@ -19,16 +19,15 @@ import {
   LobeSessionGroups,
   LobeSessionType,
   LobeSessions,
-  SessionDefaultGroup,
   UpdateSessionParams,
 } from '@/types/session';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
+import { findNextAvailableTitle } from '@/utils/titleHelper';
 
 import { SessionDispatch, sessionsReducer } from './reducers';
 import { sessionSelectors } from './selectors';
 import { sessionMetaSelectors } from './selectors/meta';
-import { findNextAvailableTitle } from '@/utils/titleHelper';
 
 const n = setNamespace('session');
 
@@ -279,9 +278,8 @@ export const createSessionSlice: StateCreator<
 
   internal_findNextAvailableSessionTitle: (session) => {
     const title = sessionMetaSelectors.getTitle(session.meta);
-    const groupId = session.group ?? SessionDefaultGroup.Default
 
-    const sessions = sessionSelectors.getSessionsByGroupId(groupId)(get());
+    const sessions = sessionSelectors.getSessionsByGroupId(session.group)(get());
 
     const titleSet = new Set<string>();
     sessions.forEach((session) => {
