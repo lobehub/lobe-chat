@@ -1,3 +1,4 @@
+import AiHubMixModels from '@/config/aiModels/aihubmix';
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
@@ -16,8 +17,6 @@ export const LobeAiHubMixAI = createOpenAICompatibleRuntime({
     chatCompletion: () => process.env.DEBUG_AIHUBMIX_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
-
     const functionCallKeywords = [
       'gpt-4',
       'gpt-3.5',
@@ -54,7 +53,7 @@ export const LobeAiHubMixAI = createOpenAICompatibleRuntime({
 
       return modelList
         .map((model) => {
-          const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+          const knownModel = AiHubMixModels.find(
             (m) => model.id.toLowerCase() === m.id.toLowerCase(),
           );
 
