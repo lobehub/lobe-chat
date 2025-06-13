@@ -23,7 +23,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 2.4,
-      output: 12,
+      output: 24,
     },
     type: 'chat',
   },
@@ -48,6 +48,9 @@ const doubaoChatModels: AIChatModelCard[] = [
       input: 2.4,
       output: 24,
     },
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -71,6 +74,9 @@ const doubaoChatModels: AIChatModelCard[] = [
       input: 0.6,
       output: 6,
     },
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
     type: 'chat',
   },
   {
@@ -86,7 +92,6 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       '全新视觉深度思考模型，具备更强的通用多模态理解和推理能力，在 59 个公开评测基准中的 37 个上取得 SOTA 表现。',
     displayName: 'Doubao 1.5 Thinking Vision Pro',
-    enabled: true,
     id: 'Doubao-1.5-thinking-vision-pro',
     maxOutput: 16_000,
     pricing: {
@@ -111,7 +116,6 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       'Doubao-1.5全新深度思考模型，在数学、编程、科学推理等专业领域及创意写作等通用任务中表现突出，在AIME 2024、Codeforces、GPQA等多项权威基准上达到或接近业界第一梯队水平。支持128k上下文窗口，16k输出。',
     displayName: 'Doubao 1.5 Thinking Pro',
-    enabled: true,
     id: 'doubao-1.5-thinking-pro',
     maxOutput: 16_000,
     pricing: {
@@ -237,7 +241,6 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       'Doubao-1.5-pro 全新一代主力模型，性能全面升级，在知识、代码、推理、等方面表现卓越。',
     displayName: 'Doubao 1.5 Pro 32k',
-    enabled: true,
     id: 'doubao-1.5-pro-32k',
     maxOutput: 12_288,
     pricing: {
@@ -274,7 +277,6 @@ const doubaoChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_768,
     description: 'Doubao-1.5-lite 全新一代轻量版模型，极致响应速度，效果与时延均达到全球一流水平。',
     displayName: 'Doubao 1.5 Lite 32k',
-    enabled: true,
     id: 'doubao-1.5-lite-32k',
     maxOutput: 12_288,
     pricing: {

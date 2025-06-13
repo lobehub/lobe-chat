@@ -137,28 +137,6 @@ const groqChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 8192,
-    description: 'Meta Llama 3 70B 提供无与伦比的复杂性处理能力，为高要求项目量身定制。',
-    displayName: 'Llama 3 70B',
-    id: 'llama3-70b-8192',
-    pricing: {
-      input: 0.59,
-      output: 0.79,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 8192,
-    description: 'Meta Llama 3 8B 带来优质的推理效能，适合多场景应用需求。',
-    displayName: 'Llama 3 8B',
-    id: 'llama3-8b-8192',
-    pricing: {
-      input: 0.05,
-      output: 0.08,
-    },
-    type: 'chat',
-  },
-  {
     contextWindowTokens: 32_768,
     displayName: 'Mistral Saba 24B',
     id: 'mistral-saba-24b',

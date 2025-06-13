@@ -15,12 +15,9 @@ export const LobeVolcengineAI = createOpenAICompatibleRuntime({
       return {
         ...rest,
         model,
-        ...(['thinking-vision-pro'].some((keyword) => model.toLowerCase().includes(keyword))
+        ...(['thinking-vision-pro', 'doubao-seed-1.6'].some((keyword) => model.toLowerCase().includes(keyword))
           ? {
-              thinking:
-                thinking !== undefined && thinking.type === 'enabled'
-                  ? { type: 'enabled' }
-                  : { type: 'disabled' },
+              thinking: thinking?.type
             }
           : {}),
       } as any;
