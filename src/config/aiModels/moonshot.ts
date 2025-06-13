@@ -28,6 +28,25 @@ const moonshotChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'kimi-thinking-preview 模型是月之暗面提供的具有多模态推理能力和通用推理能力的多模态思考模型，它擅长深度推理，帮助解决更多更难的事情',
+    displayName: 'Kimi Thinking Preview',
+    enabled: true,
+    id: 'kimi-thinking-preview',
+    pricing: {
+      currency: 'CNY',
+      input: 200,
+      output: 200,
+    },
+    releasedAt: '2025-05-06',
+    type: 'chat',
+  },
+  {
+    abilities: {
       functionCall: true,
       search: true,
     },

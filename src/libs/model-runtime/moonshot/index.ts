@@ -40,7 +40,9 @@ export const LobeMoonshotAI = createOpenAICompatibleRuntime({
 
     const functionCallKeywords = ['moonshot-v1', 'kimi-latest'];
 
-    const visionKeywords = ['kimi-latest', 'vision'];
+    const visionKeywords = ['kimi-latest', 'kimi-thinking', 'vision'];
+
+    const reasoningKeywords = ['thinking'];
 
     const modelsPage = (await client.models.list()) as any;
     const modelList: MoonshotModelCard[] = modelsPage.data;
@@ -60,7 +62,10 @@ export const LobeMoonshotAI = createOpenAICompatibleRuntime({
             knownModel?.abilities?.functionCall ||
             false,
           id: model.id,
-          reasoning: knownModel?.abilities?.reasoning || false,
+          reasoning:
+            reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
+            knownModel?.abilities?.reasoning ||
+            false,
           vision:
             visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
             knownModel?.abilities?.vision ||
