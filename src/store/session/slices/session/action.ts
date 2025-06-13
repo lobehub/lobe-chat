@@ -23,6 +23,7 @@ import {
 } from '@/types/session';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
+import { findNextAvailableTitle } from '@/utils/titleHelper';
 
 import { SessionDispatch, sessionsReducer } from './reducers';
 import { sessionSelectors } from './selectors';
@@ -86,7 +87,7 @@ export interface SessionAction {
     customGroups: LobeSessionGroups,
     actions?: string,
   ) => void;
-  /* eslint-enable */
+  internal_findNextAvailableSessionTitle: (session: LobeAgentSession) => string;
 }
 
 export const createSessionSlice: StateCreator<
@@ -124,9 +125,8 @@ export const createSessionSlice: StateCreator<
     const session = sessionSelectors.getSessionById(id)(get());
 
     if (!session) return;
-    const title = sessionMetaSelectors.getTitle(session.meta);
 
-    const newTitle = t('duplicateSession.title', { ns: 'chat', title: title });
+    const newTitle = get().internal_findNextAvailableSessionTitle(session);
 
     const messageLoadingKey = 'duplicateSession.loading';
 
@@ -274,5 +274,21 @@ export const createSessionSlice: StateCreator<
   },
   refreshSessions: async () => {
     await mutate([FETCH_SESSIONS_KEY, true]);
+  },
+
+  internal_findNextAvailableSessionTitle: (session) => {
+    const title = sessionMetaSelectors.getTitle(session.meta);
+
+    const sessions = sessionSelectors.getSessionsByGroupId(session.group)(get());
+
+    const titleSet = new Set<string>();
+    sessions.forEach((session) => {
+      const title = session.meta?.title;
+      if (title) {
+        titleSet.add(title);
+      }
+    });
+
+    return findNextAvailableTitle(title, titleSet);
   },
 });

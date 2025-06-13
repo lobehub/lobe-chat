@@ -26,10 +26,8 @@
   "defaultSession": "Standardassistent",
   "duplicateSession": {
     "loading": "Kopieren läuft...",
-    "success": "Kopieren erfolgreich",
-    "title": "{{title}} Kopie"
+    "success": "Kopieren erfolgreich"
   },
-  "duplicateTitle": "{{title}} Kopie",
   "emptyAgent": "Kein Assistent verfügbar",
   "extendParams": {
     "disableContextCaching": {
