@@ -36,7 +36,7 @@ describe('ToolService', () => {
       const fakeResponse = { plugins: [{ name: 'TestPlugin' }] };
       (globalHelpers.getCurrentLanguage as Mock).mockReturnValue('tt');
 
-      (edgeClient.market.getPluginIndex.query as Mock).mockResolvedValue(fakeResponse);
+      (edgeClient.market.getLegacyPluginList.query as Mock).mockResolvedValue(fakeResponse);
 
       // Act
       const pluginList = await toolService.getToolList();
@@ -49,7 +49,7 @@ describe('ToolService', () => {
     it('should handle fetch error', async () => {
       // Arrange
       (globalHelpers.getCurrentLanguage as Mock).mockReturnValue('en');
-      (edgeClient.market.getPluginIndex.query as Mock).mockRejectedValue(
+      (edgeClient.market.getLegacyPluginList.query as Mock).mockRejectedValue(
         new Error('Network error'),
       );
 

@@ -291,8 +291,9 @@
     "placeholder": "Search for plugin name, description, or keyword...",
     "releasedAt": "Released at {{createdAt}}",
     "tabs": {
-      "all": "All",
-      "installed": "Installed"
+      "installed": "Installed",
+      "mcp": "MCP Plugins",
+      "old": "Legacy Plugins"
     },
     "title": "Plugin Store"
   },

@@ -8,8 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import ManifestPreviewer from '@/components/ManifestPreviewer';
-import PluginAvatar from '@/features/PluginStore/PluginItem/PluginAvatar';
-import PluginTag from '@/features/PluginStore/PluginItem/PluginTag';
+import PluginAvatar from '@/components/Plugins/PluginAvatar';
+import PluginTag from '@/components/Plugins/PluginTag';
 import { pluginHelpers } from '@/store/tool';
 
 import ApiVisualizer from './ApiVisualizer';
