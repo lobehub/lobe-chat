@@ -627,6 +627,7 @@ describe('GoogleGenerativeAIStream', () => {
 
     const data = [
       {
+        text: '123',
         candidates: [
           {
             content: {
@@ -655,6 +656,7 @@ describe('GoogleGenerativeAIStream', () => {
         modelVersion: 'models/gemini-2.5-flash-preview-04-17',
       },
       {
+        text: '45678',
         candidates: [
           {
             content: {
