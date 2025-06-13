@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "Mermaid-thema"
     },
-    "title": "Chat uiterlijk"
+    "title": "Chat uiterlijk",
+    "transitionMode": {
+      "desc": "Overgangsanimatie van chatberichten",
+      "options": {
+        "fadeIn": "Vervagen",
+        "none": {
+          "desc": "Dit hangt af van de manier waarop het model reageert; test dit zelf.",
+          "value": "Geen"
+        },
+        "smooth": "Vloeiend"
+      },
+      "title": "Overgangsanimatie"
+    }
   },
   "settingCommon": {
     "lang": {

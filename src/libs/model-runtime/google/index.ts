@@ -25,11 +25,7 @@ import {
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
-import {
-  GoogleGenerativeAIStream,
-  VertexAIStream,
-  convertIterableToStream,
-} from '../utils/streams';
+import { GoogleGenerativeAIStream, VertexAIStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 
 const modelsOffSafetySettings = new Set(['gemini-2.0-flash-exp']);
@@ -91,6 +87,17 @@ interface GoogleAIThinkingConfig {
   thinkingBudget?: number;
 }
 
+const isAbortError = (error: Error): boolean => {
+  const message = error.message.toLowerCase();
+  return (
+    message.includes('aborted') ||
+    message.includes('cancelled') ||
+    message.includes('error reading from the stream') ||
+    message.includes('abort') ||
+    error.name === 'AbortError'
+  );
+};
+
 export class LobeGoogleAI implements LobeRuntimeAI {
   private client: GoogleGenerativeAI;
   private isVertexAi: boolean;
@@ -140,6 +147,20 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const contents = await this.buildGoogleMessages(payload.messages);
 
       const inputStartAt = Date.now();
+
+      const controller = new AbortController();
+      const originalSignal = options?.signal;
+
+      if (originalSignal) {
+        if (originalSignal.aborted) {
+          controller.abort();
+        } else {
+          originalSignal.addEventListener('abort', () => {
+            controller.abort();
+          });
+        }
+      }
+
       const geminiStreamResult = await this.client
         .getGenerativeModel(
           {
@@ -177,15 +198,20 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           },
           { apiVersion: 'v1beta', baseUrl: this.baseURL },
         )
-        .generateContentStream({
-          contents,
-          systemInstruction: modelsDisableInstuction.has(model)
-            ? undefined
-            : (payload.system as string),
-          tools: this.buildGoogleTools(payload.tools, payload),
-        });
+        .generateContentStream(
+          {
+            contents,
+            systemInstruction: modelsDisableInstuction.has(model)
+              ? undefined
+              : (payload.system as string),
+            tools: this.buildGoogleTools(payload.tools, payload),
+          },
+          {
+            signal: controller.signal,
+          },
+        );
 
-      const googleStream = convertIterableToStream(geminiStreamResult.stream);
+      const googleStream = this.createEnhancedStream(geminiStreamResult.stream, controller.signal);
       const [prod, useForDebug] = googleStream.tee();
 
       const key = this.isVertexAi
@@ -205,6 +231,16 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     } catch (e) {
       const err = e as Error;
 
+      // 移除之前的静默处理，统一抛出错误
+      if (isAbortError(err)) {
+        console.log('Request was cancelled');
+        throw AgentRuntimeError.chat({
+          error: { message: 'Request was cancelled' },
+          errorType: AgentRuntimeErrorType.ProviderBizError,
+          provider: this.provider,
+        });
+      }
+
       console.log(err);
       const { errorType, error } = this.parseErrorMessage(err.message);
 
@@ -212,24 +248,75 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     }
   }
 
-  async models() {
+  private createEnhancedStream(originalStream: any, signal: AbortSignal): ReadableStream {
+    return new ReadableStream({
+      async start(controller) {
+        let hasData = false;
+
+        try {
+          for await (const chunk of originalStream) {
+            if (signal.aborted) {
+              // 如果有数据已经输出，优雅地关闭流而不是抛出错误
+              if (hasData) {
+                console.log('Stream cancelled gracefully, preserving existing output');
+                controller.close();
+                return;
+              } else {
+                // 如果还没有数据输出，则抛出取消错误
+                throw new Error('Stream cancelled');
+              }
+            }
+
+            hasData = true;
+            controller.enqueue(chunk);
+          }
+        } catch (error) {
+          const err = error as Error;
+
+          // 统一处理所有错误，包括 abort 错误
+          if (isAbortError(err) || signal.aborted) {
+            // 如果有数据已经输出，优雅地关闭流
+            if (hasData) {
+              console.log('Stream reading cancelled gracefully, preserving existing output');
+              controller.close();
+              return;
+            } else {
+              console.log('Stream reading cancelled before any output');
+              controller.error(new Error('Stream cancelled'));
+              return;
+            }
+          } else {
+            // 处理其他流解析错误
+            console.error('Stream parsing error:', err);
+            controller.error(err);
+            return;
+          }
+        }
+
+        controller.close();
+      },
+    });
+  }
+
+  async models(options?: { signal?: AbortSignal }) {
     try {
       const url = `${this.baseURL}/v1beta/models?key=${this.apiKey}`;
       const response = await fetch(url, {
         method: 'GET',
+        signal: options?.signal,
       });
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-  
+
       const json = await response.json();
-      
+
       const modelList: GoogleModelCard[] = json.models;
-  
+
       const processedModels = modelList.map((model) => {
         const id = model.name.replace(/^models\//, '');
-        
+
         return {
           contextWindowTokens: (model.inputTokenLimit || 0) + (model.outputTokenLimit || 0),
           displayName: model.displayName || id,
@@ -237,9 +324,9 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           maxOutput: model.outputTokenLimit || undefined,
         };
       });
-  
+
       const { MODEL_LIST_CONFIGS, processModelList } = await import('../utils/modelParse');
-      
+
       return processModelList(processedModels, MODEL_LIST_CONFIGS.google);
     } catch (error) {
       console.error('Failed to fetch Google models:', error);

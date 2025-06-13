@@ -77,9 +77,11 @@ interface ThinkingProps {
   duration?: number;
   style?: CSSProperties;
   thinking?: boolean;
+  thinkingAnimated?: boolean;
 }
 
-const Thinking = memo<ThinkingProps>(({ content, duration, thinking, style, citations }) => {
+const Thinking = memo<ThinkingProps>((props) => {
+  const { content, duration, thinking, style, citations, thinkingAnimated } = props;
   const { t } = useTranslation(['components', 'common']);
   const { styles, cx, theme } = useStyles();
 
@@ -154,7 +156,7 @@ const Thinking = memo<ThinkingProps>(({ content, duration, thinking, style, cita
             }}
           >
             {typeof content === 'string' ? (
-              <Markdown animated={thinking} citations={citations} variant={'chat'}>
+              <Markdown animated={thinkingAnimated} citations={citations} variant={'chat'}>
                 {content}
               </Markdown>
             ) : (

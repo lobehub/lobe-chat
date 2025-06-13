@@ -13,12 +13,12 @@ const Doubao: ModelProviderCard = {
     proxyUrl: {
       placeholder: 'https://ark.cn-beijing.volces.com/api/v3',
     },
+    responseAnimation: {
+      speed: 2,
+      text: 'smooth',
+    },
     sdkType: 'openai',
     showDeployName: true,
-    smoothing: {
-      speed: 2,
-      text: true,
-    },
   },
   url: 'https://www.volcengine.com/product/ark',
 };
