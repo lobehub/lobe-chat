@@ -2,6 +2,48 @@
 
 # Changelog
 
+### [Version&nbsp;1.94.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.94.1...v1.94.2)
+<sup>Released on **2025-06-13**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Abort the Gemini request correctly & Add openai o3-pro.
+
+
+#### 💄 Styles
+
+- **misc**: Add Doubao Seed 1.6 model.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **misc**: Abort the Gemini request correctly & Add openai o3-pro, closes [#8135](https://github.com/jaworldwideorg/OneJA-Bot/issues/8135) ([c79f1b9](https://github.com/jaworldwideorg/OneJA-Bot/commit/c79f1b9))
+
+
+
+#### Styles
+
+* **misc**: Add Doubao Seed 1.6 model, closes [#8167](https://github.com/jaworldwideorg/OneJA-Bot/issues/8167) ([bdfa44b](https://github.com/jaworldwideorg/OneJA-Bot/commit/bdfa44b))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.94.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.94.0...v1.94.1)
 <sup>Released on **2025-06-12**</sup>
 
