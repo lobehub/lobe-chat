@@ -1,4 +1,5 @@
 import { BochaImpl } from './bocha';
+import { BraveImpl } from './brave';
 import { ExaImpl } from './exa';
 import { FirecrawlImpl } from './firecrawl';
 import { JinaImpl } from './jina';
@@ -13,6 +14,7 @@ import { SearchServiceImpl } from './type';
  */
 export enum SearchImplType {
   Bocha = 'bocha',
+  Brave = 'brave',
   Exa = 'exa',
   Firecrawl = 'firecrawl',
   Jina = 'jina',
@@ -30,6 +32,10 @@ export const createSearchServiceImpl = (
   switch (type) {
     case SearchImplType.Bocha: {
       return new BochaImpl();
+    }
+
+    case SearchImplType.Brave: {
+      return new BraveImpl();
     }
 
     case SearchImplType.Exa: {
