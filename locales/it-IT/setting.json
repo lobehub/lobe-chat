@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "Il template verrà popolato con l'ultimo messaggio dell'utente",
-      "placeholder": "Il modello di input {{text}} verrà sostituito con le informazioni in tempo reale",
+      "placeholder": "Il modello di input {{input_template}} verrà sostituito con le informazioni in tempo reale",
       "title": "Pre-elaborazione dell'input dell'utente"
     },
     "submit": "Aggiorna preferenze chat",
@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "Tema Sirena"
     },
-    "title": "Aspetto della Chat"
+    "title": "Aspetto della Chat",
+    "transitionMode": {
+      "desc": "Animazione di transizione dei messaggi di chat",
+      "options": {
+        "fadeIn": "Dissolvenza in entrata",
+        "none": {
+          "desc": "Dipende dal modo in cui il modello restituisce la risposta, si prega di testare autonomamente.",
+          "value": "Nessuna"
+        },
+        "smooth": "Fluido"
+      },
+      "title": "Animazione di transizione"
+    }
   },
   "settingCommon": {
     "lang": {
@@ -258,6 +270,9 @@
   "settingModel": {
     "enableMaxTokens": {
       "title": "Abilita limite di risposta singola"
+    },
+    "enableReasoningEffort": {
+      "title": "Abilita regolazione dell'intensità del ragionamento"
     },
     "frequencyPenalty": {
       "desc": "Maggiore è il valore, più ricca e varia sarà la scelta delle parole; minore è il valore, più semplici e dirette saranno le parole",
@@ -277,6 +292,15 @@
     "presencePenalty": {
       "desc": "Maggiore è il valore, maggiore sarà la tendenza a esprimere in modi diversi, evitando ripetizioni; minore è il valore, maggiore sarà la tendenza a utilizzare concetti o narrazioni ripetute, rendendo l'espressione più coerente",
       "title": "Divergenza espressiva"
+    },
+    "reasoningEffort": {
+      "desc": "Valori più alti indicano una maggiore capacità di ragionamento, ma potrebbero aumentare i tempi di risposta e il consumo di token",
+      "options": {
+        "high": "Alto",
+        "low": "Basso",
+        "medium": "Medio"
+      },
+      "title": "Intensità del ragionamento"
     },
     "submit": "Aggiorna impostazioni modello",
     "temperature": {

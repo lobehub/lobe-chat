@@ -81,6 +81,21 @@ const OpenAI: ModelProviderCard = {
     {
       contextWindowTokens: 128_000,
       description:
+        'GPT-4o mini search preview 是一个专门为搜索功能优化的预览版本，具有增强的网络搜索能力和实时信息检索功能。',
+      displayName: 'GPT-4o mini Search Preview',
+      functionCall: true,
+      id: 'gpt-4o-mini-search-preview',
+      maxOutput: 16_384,
+      pricing: {
+        input: 0.15,
+        output: 0.6,
+      },
+      releasedAt: '2024-12-01',
+      vision: true,
+    },
+    {
+      contextWindowTokens: 128_000,
+      description:
         'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
       displayName: 'GPT-4o 1120',
       enabled: true,
@@ -308,7 +323,7 @@ const OpenAI: ModelProviderCard = {
       },
     },
   ],
-  checkModel: 'gpt-4o-mini',
+  checkModel: 'gpt-4.1-nano',
   description:
     'OpenAI 是全球领先的人工智能研究机构，其开发的模型如GPT系列推动了自然语言处理的前沿。OpenAI 致力于通过创新和高效的AI解决方案改变多个行业。他们的产品具有显著的性能和经济性，广泛用于研究、商业和创新应用。',
   enabled: true,
@@ -317,10 +332,9 @@ const OpenAI: ModelProviderCard = {
   modelsUrl: 'https://platform.openai.com/docs/models',
   name: 'OpenAI',
   settings: {
+    responseAnimation: 'smooth',
     showModelFetcher: true,
-    smoothing: {
-      text: true,
-    },
+    supportResponsesApi: true,
   },
   url: 'https://openai.com',
 };

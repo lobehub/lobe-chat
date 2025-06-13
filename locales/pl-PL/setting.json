@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "Ostatnia wiadomość użytkownika zostanie wypełniona w tym szablonie",
-      "placeholder": "Szablon wejściowy {{text}} zostanie zastąpiony rzeczywistą wiadomością",
+      "placeholder": "Szablon wejściowy {{input_template}} zostanie zastąpiony rzeczywistą wiadomością",
       "title": "Szablon wejściowy"
     },
     "submit": "Zaktualizuj preferencje czatu",
@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "Motyw Syreny"
     },
-    "title": "Wygląd czatu"
+    "title": "Wygląd czatu",
+    "transitionMode": {
+      "desc": "Animacja przejścia wiadomości czatu",
+      "options": {
+        "fadeIn": "Pojawianie się",
+        "none": {
+          "desc": "To zależy od sposobu generowania odpowiedzi przez model, proszę przetestować samodzielnie.",
+          "value": "Brak"
+        },
+        "smooth": "Płynne"
+      },
+      "title": "Animacja przejścia"
+    }
   },
   "settingCommon": {
     "lang": {
@@ -258,6 +270,9 @@
   "settingModel": {
     "enableMaxTokens": {
       "title": "Włącz limit jednorazowej odpowiedzi"
+    },
+    "enableReasoningEffort": {
+      "title": "Włącz regulację intensywności wnioskowania"
     },
     "frequencyPenalty": {
       "desc": "Im większa wartość, tym bardziej zróżnicowane i bogate słownictwo; im mniejsza wartość, tym prostsze i bardziej bezpośrednie słownictwo",
@@ -277,6 +292,15 @@
     "presencePenalty": {
       "desc": "Im większa wartość, tym większa tendencja do różnorodnych wyrażeń, unikanie powtórzeń; im mniejsza wartość, tym większa tendencja do używania powtarzających się koncepcji lub narracji, co prowadzi do większej spójności",
       "title": "Różnorodność wyrażeń"
+    },
+    "reasoningEffort": {
+      "desc": "Im wyższa wartość, tym silniejsza zdolność wnioskowania, ale może to zwiększyć czas odpowiedzi i zużycie tokenów",
+      "options": {
+        "high": "Wysoka",
+        "low": "Niska",
+        "medium": "Średnia"
+      },
+      "title": "Intensywność wnioskowania"
     },
     "submit": "Zaktualizuj ustawienia modelu",
     "temperature": {

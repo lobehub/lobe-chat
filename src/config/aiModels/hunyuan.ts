@@ -32,6 +32,28 @@ const hunyuanChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 92_000,
     description:
+      '优化文本创作、作文写作，优化代码前端、数学、逻辑推理等理科能力，提升指令遵循能力。',
+    displayName: 'Hunyuan T1 20250529',
+    id: 'hunyuan-t1-20250529',
+    maxOutput: 64_000,
+    pricing: {
+      currency: 'CNY',
+      input: 1,
+      output: 4,
+    },
+    releasedAt: '2025-05-29',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      search: true,
+    },
+    contextWindowTokens: 92_000,
+    description:
       '提升项目级别代码生成能力；提升文本生成写作质量；提升文本理解 topic 的多轮、tob 指令遵循和字词理解能力；优化繁简混杂和中英混杂输出问题。',
     displayName: 'Hunyuan T1 20250403',
     id: 'hunyuan-t1-20250403',
@@ -253,6 +275,28 @@ const hunyuanChatModels: AIChatModelCard[] = [
       output: 2,
     },
     releasedAt: '2025-05-20',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+    },
+    contextWindowTokens: 44_000,
+    description:
+      '预训练底座升级，写作、阅读理解能力提升，较大幅度提升代码和理科能力，复杂指令遵循等持续提升。',
+    displayName: 'Hunyuan TurboS 20250604',
+    id: 'hunyuan-turbos-20250604',
+    maxOutput: 16_000,
+    pricing: {
+      currency: 'CNY',
+      input: 0.8,
+      output: 2,
+    },
+    releasedAt: '2025-06-04',
     settings: {
       searchImpl: 'params',
     },

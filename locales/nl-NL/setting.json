@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "De meest recente gebruikersboodschap wordt ingevuld in dit sjabloon",
-      "placeholder": "Voorbewerkingssjabloon {{text}} wordt vervangen door realtime invoer",
+      "placeholder": "Voorbewerkingssjabloon {{input_template}} wordt vervangen door realtime invoer",
       "title": "Voorbewerking van gebruikersinvoer"
     },
     "submit": "Chatvoorkeuren bijwerken",
@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "Mermaid-thema"
     },
-    "title": "Chat uiterlijk"
+    "title": "Chat uiterlijk",
+    "transitionMode": {
+      "desc": "Overgangsanimatie van chatberichten",
+      "options": {
+        "fadeIn": "Vervagen",
+        "none": {
+          "desc": "Dit hangt af van de manier waarop het model reageert; test dit zelf.",
+          "value": "Geen"
+        },
+        "smooth": "Vloeiend"
+      },
+      "title": "Overgangsanimatie"
+    }
   },
   "settingCommon": {
     "lang": {
@@ -258,6 +270,9 @@
   "settingModel": {
     "enableMaxTokens": {
       "title": "Limiet voor enkele reacties inschakelen"
+    },
+    "enableReasoningEffort": {
+      "title": "Schakel redeneerkracht aanpassing in"
     },
     "frequencyPenalty": {
       "desc": "Hoe hoger de waarde, hoe rijker en gevarieerder de woordkeuze; hoe lager de waarde, hoe eenvoudiger en directer de woordkeuze",
@@ -277,6 +292,15 @@
     "presencePenalty": {
       "desc": "Hoe hoger de waarde, hoe meer de neiging om verschillende uitdrukkingen te gebruiken en herhaling van concepten te vermijden; hoe lager de waarde, hoe meer de neiging om herhalende concepten of verhalen te gebruiken, wat zorgt voor meer consistentie in de uitdrukking",
       "title": "Uitdrukkingsdiversiteit"
+    },
+    "reasoningEffort": {
+      "desc": "Hoe hoger de waarde, hoe sterker het redeneervermogen, maar dit kan de reactietijd en het tokenverbruik verhogen",
+      "options": {
+        "high": "Hoog",
+        "low": "Laag",
+        "medium": "Gemiddeld"
+      },
+      "title": "Redeneerkracht"
     },
     "submit": "Modelinstellingen bijwerken",
     "temperature": {

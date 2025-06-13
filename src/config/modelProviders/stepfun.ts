@@ -176,12 +176,12 @@ const Stepfun: ModelProviderCard = {
     proxyUrl: {
       placeholder: 'https://api.stepfun.com/v1',
     },
+    responseAnimation: {
+      speed: 2,
+      text: 'smooth',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
-    smoothing: {
-      speed: 2,
-      text: true,
-    },
   },
   url: 'https://stepfun.com',
 };

@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "Le dernier message de l'utilisateur sera rempli dans ce modèle",
-      "placeholder": "Le modèle de prétraitement {{text}} sera remplacé par les informations d'entrée en temps réel",
+      "placeholder": "Le modèle de prétraitement {{input_template}} sera remplacé par les informations d'entrée en temps réel",
       "title": "Modèle de prétraitement de l'entrée utilisateur"
     },
     "submit": "Mettre à jour les préférences de chat",
@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "Thème Sirène"
     },
-    "title": "Apparence du chat"
+    "title": "Apparence du chat",
+    "transitionMode": {
+      "desc": "Animation de transition des messages de chat",
+      "options": {
+        "fadeIn": "Fondu en entrée",
+        "none": {
+          "desc": "Cela dépend de la manière dont le modèle génère la réponse, veuillez tester par vous-même.",
+          "value": "Aucun"
+        },
+        "smooth": "Fluide"
+      },
+      "title": "Animation de transition"
+    }
   },
   "settingCommon": {
     "lang": {
@@ -258,6 +270,9 @@
   "settingModel": {
     "enableMaxTokens": {
       "title": "Activer la limite de tokens par réponse"
+    },
+    "enableReasoningEffort": {
+      "title": "Activer l'ajustement de l'intensité du raisonnement"
     },
     "frequencyPenalty": {
       "desc": "Plus la valeur est élevée, plus le vocabulaire est riche et varié ; plus la valeur est basse, plus le vocabulaire est simple et direct",
@@ -277,6 +292,15 @@
     "presencePenalty": {
       "desc": "Plus la valeur est élevée, plus il y a tendance à utiliser des expressions différentes, évitant la répétition des concepts ; plus la valeur est basse, plus il y a tendance à utiliser des concepts ou des narrations répétitifs, rendant l'expression plus cohérente",
       "title": "Diversité de l'expression"
+    },
+    "reasoningEffort": {
+      "desc": "Plus la valeur est élevée, plus la capacité de raisonnement est forte, mais cela peut augmenter le temps de réponse et la consommation de jetons",
+      "options": {
+        "high": "Élevé",
+        "low": "Faible",
+        "medium": "Moyen"
+      },
+      "title": "Intensité du raisonnement"
     },
     "submit": "Mettre à jour les paramètres du modèle",
     "temperature": {

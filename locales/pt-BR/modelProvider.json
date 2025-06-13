@@ -208,6 +208,10 @@
         "title": "Usar Modo de Requisição do Cliente"
       },
       "helpDoc": "Tutorial de Configuração",
+      "responsesApi": {
+        "desc": "Adota o novo padrão de formato de requisição da OpenAI, desbloqueando recursos avançados como cadeias de raciocínio",
+        "title": "Usar o padrão Responses API"
+      },
       "waitingForMore": "Mais modelos estão <1>planejados para integração</1>, fique atento"
     },
     "createNew": {

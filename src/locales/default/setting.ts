@@ -224,7 +224,7 @@ export default {
     },
     inputTemplate: {
       desc: '用户最新的一条消息会填充到此模板',
-      placeholder: '预处理模版 {{text}} 将替换为实时输入信息',
+      placeholder: '预处理模版 {{input_template}} 将替换为实时输入信息',
       title: '用户输入预处理',
     },
     submit: '更新聊天偏好',
@@ -245,6 +245,18 @@ export default {
       title: 'Mermaid 主题',
     },
     title: '聊天外观',
+    transitionMode: {
+      desc: '聊天消息的过渡动画',
+      options: {
+        fadeIn: '淡入',
+        none: {
+          desc: '这取决于模型的响应输出方式，请自行测试。',
+          value: '无',
+        },
+        smooth: '平滑',
+      },
+      title: '过渡动画',
+    },
   },
   settingCommon: {
     lang: {
@@ -262,6 +274,9 @@ export default {
   settingModel: {
     enableMaxTokens: {
       title: '开启单次回复限制',
+    },
+    enableReasoningEffort: {
+      title: '开启推理强度调整',
     },
     frequencyPenalty: {
       desc: '值越大，用词越丰富多样；值越低，用词更朴实简单',
@@ -281,6 +296,15 @@ export default {
     presencePenalty: {
       desc: '值越大，越倾向不同的表达方式，避免概念重复；值越小，越倾向使用重复的概念或叙述，表达更具一致性',
       title: '表述发散度',
+    },
+    reasoningEffort: {
+      desc: '值越大，推理能力越强，但可能会增加响应时间和 Token 消耗',
+      options: {
+        high: '高',
+        low: '低',
+        medium: '中',
+      },
+      title: '推理强度',
     },
     submit: '更新模型设置',
     temperature: {

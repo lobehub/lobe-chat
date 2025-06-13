@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "A última mensagem do usuário será preenchida neste modelo",
-      "placeholder": "O modelo de pré-processamento {{text}} será substituído pela entrada em tempo real",
+      "placeholder": "O modelo de pré-processamento {{input_template}} será substituído pela entrada em tempo real",
       "title": "Pré-processamento de entrada do usuário"
     },
     "submit": "Atualizar preferências de chat",
@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "Tema Sereia"
     },
-    "title": "Aparência do Chat"
+    "title": "Aparência do Chat",
+    "transitionMode": {
+      "desc": "Animação de transição das mensagens do chat",
+      "options": {
+        "fadeIn": "Desvanecer",
+        "none": {
+          "desc": "Depende da forma como o modelo responde, por favor teste por conta própria.",
+          "value": "Nenhuma"
+        },
+        "smooth": "Suave"
+      },
+      "title": "Animação de transição"
+    }
   },
   "settingCommon": {
     "lang": {
@@ -258,6 +270,9 @@
   "settingModel": {
     "enableMaxTokens": {
       "title": "Ativar limite de resposta única"
+    },
+    "enableReasoningEffort": {
+      "title": "Ativar ajuste de intensidade de raciocínio"
     },
     "frequencyPenalty": {
       "desc": "Quanto maior o valor, mais rica e variada será a escolha de palavras; quanto menor o valor, mais simples e direta será a escolha de palavras.",
@@ -277,6 +292,15 @@
     "presencePenalty": {
       "desc": "Quanto maior o valor, mais inclinado a diferentes formas de expressão, evitando repetições de conceitos; quanto menor o valor, mais inclinado a usar conceitos ou narrativas repetidas, resultando em uma expressão mais consistente.",
       "title": "Diversidade de Expressão"
+    },
+    "reasoningEffort": {
+      "desc": "Quanto maior o valor, mais forte é a capacidade de raciocínio, mas pode aumentar o tempo de resposta e o consumo de tokens",
+      "options": {
+        "high": "Alto",
+        "low": "Baixo",
+        "medium": "Médio"
+      },
+      "title": "Intensidade do raciocínio"
     },
     "submit": "Atualizar configurações do modelo",
     "temperature": {

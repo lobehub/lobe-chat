@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "Kullanıcının son mesajı bu şablona doldurulur",
-      "placeholder": "Ön işleme şablonu {{text}}, gerçek zamanlı giriş bilgileri ile değiştirilir",
+      "placeholder": "Ön işleme şablonu {{input_template}}, gerçek zamanlı giriş bilgileri ile değiştirilir",
       "title": "Kullanıcı Girişi Ön İşleme"
     },
     "submit": "Sohbet tercihlerini güncelle",
@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "Deniz Kızı Teması"
     },
-    "title": "Sohbet Görünümü"
+    "title": "Sohbet Görünümü",
+    "transitionMode": {
+      "desc": "Sohbet mesajlarının geçiş animasyonu",
+      "options": {
+        "fadeIn": "Solma",
+        "none": {
+          "desc": "Bu, modelin yanıt çıktısına bağlıdır, lütfen kendiniz test edin.",
+          "value": "Yok"
+        },
+        "smooth": "Yumuşak"
+      },
+      "title": "Geçiş Animasyonu"
+    }
   },
   "settingCommon": {
     "lang": {
@@ -258,6 +270,9 @@
   "settingModel": {
     "enableMaxTokens": {
       "title": "Max Token Sınırlamasını Etkinleştir"
+    },
+    "enableReasoningEffort": {
+      "title": "Akıl Yürütme Gücü Ayarını Etkinleştir"
     },
     "frequencyPenalty": {
       "desc": "Değer ne kadar büyükse, kelime dağarcığı o kadar zengin ve çeşitli olur; değer ne kadar düşükse, kelimeler o kadar sade ve basit olur.",
@@ -277,6 +292,15 @@
     "presencePenalty": {
       "desc": "Değer ne kadar büyükse, farklı ifade biçimlerine yönelme eğilimi artar, kavram tekrarından kaçınılır; değer ne kadar küçükse, tekrar eden kavramlar veya anlatımlar kullanma eğilimi artar, ifade daha tutarlı olur.",
       "title": "İfade Çeşitliliği"
+    },
+    "reasoningEffort": {
+      "desc": "Değer ne kadar yüksekse, akıl yürütme yeteneği o kadar güçlü olur, ancak yanıt süresi ve Token tüketimi artabilir",
+      "options": {
+        "high": "Yüksek",
+        "low": "Düşük",
+        "medium": "Orta"
+      },
+      "title": "Akıl Yürütme Gücü"
     },
     "submit": "Model ayarlarını güncelle",
     "temperature": {

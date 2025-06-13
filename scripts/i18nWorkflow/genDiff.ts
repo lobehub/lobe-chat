@@ -10,10 +10,10 @@ import {
   outputLocaleJsonFilepath,
   srcDefaultLocales,
 } from './const';
-import { readJSON, tagWhite, writeJSON } from './utils';
+import { readJSON, tagWhite, writeJSONWithPrettier } from './utils';
 
 export const genDiff = () => {
-  consola.start(`Diff between Dev/Prod local...`);
+  consola.start(`Remove diff analysis...`);
 
   const resources = require(srcDefaultLocales);
   const data = Object.entries(resources.default);
@@ -21,27 +21,26 @@ export const genDiff = () => {
   for (const [ns, devJSON] of data) {
     const filepath = entryLocaleJsonFilepath(`${ns}.json`);
     if (!existsSync(filepath)) continue;
-    const prodJSON = readJSON(filepath);
+    const previousProdJSON = readJSON(filepath);
 
-    const diffResult = diff(prodJSON, devJSON as any);
-    const remove = diffResult.filter((item) => item.op === 'remove');
-    if (remove.length === 0) {
+    const diffResult = diff(previousProdJSON, devJSON as any);
+    if (diffResult.length === 0) {
       consola.success(tagWhite(ns), colors.gray(filepath));
       continue;
     }
 
     const clearLocals = [];
 
-    for (const locale of [i18nConfig.entryLocale, ...i18nConfig.outputLocales]) {
+    for (const locale of i18nConfig.outputLocales) {
       const localeFilepath = outputLocaleJsonFilepath(locale, `${ns}.json`);
       if (!existsSync(localeFilepath)) continue;
       const localeJSON = readJSON(localeFilepath);
 
-      for (const item of remove) {
+      for (const item of diffResult) {
         unset(localeJSON, item.path);
       }
 
-      writeJSON(localeFilepath, localeJSON);
+      writeJSONWithPrettier(localeFilepath, localeJSON);
       clearLocals.push(locale);
     }
     consola.info('clear', clearLocals);

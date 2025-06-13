@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "El último mensaje del usuario se completará en esta plantilla",
-      "placeholder": "La plantilla de preprocesamiento {{text}} se reemplazará por la información de entrada en tiempo real",
+      "placeholder": "La plantilla de preprocesamiento {{input_template}} se reemplazará por la información de entrada en tiempo real",
       "title": "Preprocesamiento de entrada del usuario"
     },
     "submit": "Actualizar preferencias de chat",
@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "Tema Sirena"
     },
-    "title": "Apariencia del Chat"
+    "title": "Apariencia del Chat",
+    "transitionMode": {
+      "desc": "Animación de transición de los mensajes de chat",
+      "options": {
+        "fadeIn": "Aparecer gradualmente",
+        "none": {
+          "desc": "Depende de la forma en que el modelo genera la respuesta, por favor pruébelo usted mismo.",
+          "value": "Ninguna"
+        },
+        "smooth": "Suave"
+      },
+      "title": "Animación de transición"
+    }
   },
   "settingCommon": {
     "lang": {
@@ -258,6 +270,9 @@
   "settingModel": {
     "enableMaxTokens": {
       "title": "Activar límite de tokens por respuesta"
+    },
+    "enableReasoningEffort": {
+      "title": "Activar ajuste de intensidad de razonamiento"
     },
     "frequencyPenalty": {
       "desc": "Cuanto mayor sea el valor, más rica y variada será la elección de palabras; cuanto menor sea el valor, más simples y directas serán las palabras.",
@@ -277,6 +292,15 @@
     "presencePenalty": {
       "desc": "Cuanto mayor sea el valor, más se inclinará hacia diferentes formas de expresión, evitando la repetición de conceptos; cuanto menor sea el valor, más se inclinará hacia el uso de conceptos o narrativas repetidas, expresando mayor consistencia.",
       "title": "Diversidad de expresión"
+    },
+    "reasoningEffort": {
+      "desc": "Cuanto mayor sea el valor, más fuerte será la capacidad de razonamiento, pero puede aumentar el tiempo de respuesta y el consumo de tokens",
+      "options": {
+        "high": "Alto",
+        "low": "Bajo",
+        "medium": "Medio"
+      },
+      "title": "Intensidad de razonamiento"
     },
     "submit": "Actualizar configuración del modelo",
     "temperature": {

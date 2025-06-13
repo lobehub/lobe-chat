@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "Tin nhắn mới nhất của người dùng sẽ được điền vào mẫu này",
-      "placeholder": "Mẫu xử lý trước {{text}} sẽ được thay thế bằng thông tin nhập thời gian thực",
+      "placeholder": "Mẫu xử lý trước {{input_template}} sẽ được thay thế bằng thông tin nhập thời gian thực",
       "title": "Mẫu xử lý đầu vào của người dùng"
     },
     "submit": "Cập nhật sở thích trò chuyện",
@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "Chủ đề Nàng Tiên Cá"
     },
-    "title": "Giao diện trò chuyện"
+    "title": "Giao diện trò chuyện",
+    "transitionMode": {
+      "desc": "Hiệu ứng chuyển tiếp của tin nhắn trò chuyện",
+      "options": {
+        "fadeIn": "Mờ dần",
+        "none": {
+          "desc": "Điều này phụ thuộc vào cách mô hình phản hồi, vui lòng tự kiểm tra.",
+          "value": "Không"
+        },
+        "smooth": "Mượt mà"
+      },
+      "title": "Hiệu ứng chuyển tiếp"
+    }
   },
   "settingCommon": {
     "lang": {
@@ -258,6 +270,9 @@
   "settingModel": {
     "enableMaxTokens": {
       "title": "Bật giới hạn phản hồi một lần"
+    },
+    "enableReasoningEffort": {
+      "title": "Bật điều chỉnh cường độ suy luận"
     },
     "frequencyPenalty": {
       "desc": "Giá trị càng lớn, từ ngữ càng phong phú đa dạng; giá trị càng thấp, từ ngữ càng đơn giản mộc mạc",
@@ -277,6 +292,15 @@
     "presencePenalty": {
       "desc": "Giá trị càng lớn, càng có xu hướng sử dụng các cách diễn đạt khác nhau, tránh lặp lại khái niệm; giá trị càng nhỏ, càng có xu hướng sử dụng các khái niệm hoặc mô tả lặp lại, thể hiện tính nhất quán cao hơn",
       "title": "Độ phân tán trong diễn đạt"
+    },
+    "reasoningEffort": {
+      "desc": "Giá trị càng cao, khả năng suy luận càng mạnh, nhưng có thể làm tăng thời gian phản hồi và tiêu thụ Token",
+      "options": {
+        "high": "Cao",
+        "low": "Thấp",
+        "medium": "Trung bình"
+      },
+      "title": "Cường độ suy luận"
     },
     "submit": "Cập nhật cài đặt mô hình",
     "temperature": {

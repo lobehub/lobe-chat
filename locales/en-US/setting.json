@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "The user's latest message will be filled into this template",
-      "placeholder": "Preprocessing template {{text}} will be replaced with real-time input information",
+      "placeholder": "Preprocessing template {{input_template}} will be replaced with real-time input information",
       "title": "User Input Preprocessing"
     },
     "submit": "Update Chat Preferences",
@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "Mermaid Theme"
     },
-    "title": "Chat Appearance"
+    "title": "Chat Appearance",
+    "transitionMode": {
+      "desc": "Transition animation for chat messages",
+      "options": {
+        "fadeIn": "Fade In",
+        "none": {
+          "desc": "This depends on the model's response output method; please test it yourself.",
+          "value": "None"
+        },
+        "smooth": "Smooth"
+      },
+      "title": "Transition Animation"
+    }
   },
   "settingCommon": {
     "lang": {
@@ -258,6 +270,9 @@
   "settingModel": {
     "enableMaxTokens": {
       "title": "Enable Max Tokens Limit"
+    },
+    "enableReasoningEffort": {
+      "title": "Enable Reasoning Effort Adjustment"
     },
     "frequencyPenalty": {
       "desc": "The higher the value, the more diverse and rich the vocabulary; the lower the value, the simpler and more straightforward the language.",
@@ -277,6 +292,15 @@
     "presencePenalty": {
       "desc": "The higher the value, the more inclined to use different expressions and avoid concept repetition; the lower the value, the more inclined to use repeated concepts or narratives, resulting in more consistent expression.",
       "title": "Expression Divergence"
+    },
+    "reasoningEffort": {
+      "desc": "Higher values enhance reasoning ability but may increase response time and token usage.",
+      "options": {
+        "high": "High",
+        "low": "Low",
+        "medium": "Medium"
+      },
+      "title": "Reasoning Effort"
     },
     "submit": "Update Model Settings",
     "temperature": {

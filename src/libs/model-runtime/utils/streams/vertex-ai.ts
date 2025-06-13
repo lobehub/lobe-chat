@@ -48,6 +48,18 @@ const transformVertexAIStream = (
     );
   }
 
+  if (
+    candidate && // 首先检查是否为 reasoning 内容 (thought: true)
+    Array.isArray(candidate.content.parts) &&
+    candidate.content.parts.length > 0
+  ) {
+    for (const part of candidate.content.parts) {
+      if (part && part.text && (part as any).thought === true) {
+        return { data: part.text, id: context.id, type: 'reasoning' };
+      }
+    }
+  }
+
   const candidates = chunk.candidates;
   if (!candidates)
     return {

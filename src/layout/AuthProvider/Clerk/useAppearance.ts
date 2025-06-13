@@ -89,10 +89,7 @@ export const useStyles = createStyles(
       socialButtonsBlockButton__google: css`
         order: -1;
       `,
-    }) as Partial<{
-      // eslint-disable-next-line unused-imports/no-unused-vars
-      [k in keyof ElementsConfig]: any;
-    }>,
+    }) as Partial<Record<keyof ElementsConfig, any>>,
 );
 
 export const useAppearance = () => {

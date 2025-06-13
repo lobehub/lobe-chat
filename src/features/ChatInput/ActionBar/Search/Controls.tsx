@@ -9,7 +9,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/slices/chat';
-import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
+import { aiModelSelectors, aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { SearchMode } from '@/types/search';
 
 import FCSearchModel from './FCSearchModel';
@@ -99,6 +99,9 @@ const Controls = memo(() => {
   ]);
 
   const supportFC = useAiInfraStore(aiModelSelectors.isModelSupportToolUse(model, provider));
+  const isProviderHasBuiltinSearchConfig = useAiInfraStore(
+    aiProviderSelectors.isProviderHasBuiltinSearchConfig(provider),
+  );
   const isModelHasBuiltinSearchConfig = useAiInfraStore(
     aiModelSelectors.isModelHasBuiltinSearchConfig(model, provider),
   );
@@ -119,6 +122,7 @@ const Controls = memo(() => {
   ];
 
   const showDivider = isModelHasBuiltinSearchConfig || !supportFC;
+  const showModelBuiltinSearch = isModelHasBuiltinSearchConfig || isProviderHasBuiltinSearchConfig;
 
   return (
     <Flexbox gap={4}>
@@ -126,7 +130,7 @@ const Controls = memo(() => {
         <Item {...option} key={option.value} />
       ))}
       {showDivider && <Divider style={{ margin: 0 }} />}
-      {isModelHasBuiltinSearchConfig && <ModelBuiltinSearch />}
+      {showModelBuiltinSearch && <ModelBuiltinSearch />}
       {!supportFC && <FCSearchModel />}
     </Flexbox>
   );

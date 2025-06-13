@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "Die neueste Benutzernachricht wird in dieses Template eingefügt",
-      "placeholder": "Vorlagen-{{text}} werden durch Echtzeit-Eingabeinformationen ersetzt",
+      "placeholder": "Vorlagen-{{input_template}} werden durch Echtzeit-Eingabeinformationen ersetzt",
       "title": "Benutzereingabe-Vorverarbeitung"
     },
     "submit": "Chat-Präferenzen aktualisieren",
@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "Mermaid-Thema"
     },
-    "title": "Chatdesign"
+    "title": "Chatdesign",
+    "transitionMode": {
+      "desc": "Übergangsanimation der Chatnachrichten",
+      "options": {
+        "fadeIn": "Einblenden",
+        "none": {
+          "desc": "Dies hängt von der Art der Antwort des Modells ab, bitte testen Sie es selbst.",
+          "value": "Keine"
+        },
+        "smooth": "Sanft"
+      },
+      "title": "Übergangsanimation"
+    }
   },
   "settingCommon": {
     "lang": {
@@ -258,6 +270,9 @@
   "settingModel": {
     "enableMaxTokens": {
       "title": "Maximale Token pro Antwort aktivieren"
+    },
+    "enableReasoningEffort": {
+      "title": "Aktivieren der Anpassung der Schlussfolgerungsintensität"
     },
     "frequencyPenalty": {
       "desc": "Je höher der Wert, desto vielfältiger und abwechslungsreicher die Wortwahl; je niedriger der Wert, desto einfacher und schlichter die Wortwahl",
@@ -277,6 +292,15 @@
     "presencePenalty": {
       "desc": "Je höher der Wert, desto eher werden unterschiedliche Ausdrucksweisen bevorzugt, um Wiederholungen zu vermeiden; je niedriger der Wert, desto eher werden wiederholte Konzepte oder Erzählungen verwendet, was zu einer konsistenteren Ausdrucksweise führt",
       "title": "Ausdrucksvielfalt"
+    },
+    "reasoningEffort": {
+      "desc": "Je höher der Wert, desto stärker die Schlussfolgerungsfähigkeit, kann jedoch die Antwortzeit und den Token-Verbrauch erhöhen",
+      "options": {
+        "high": "Hoch",
+        "low": "Niedrig",
+        "medium": "Mittel"
+      },
+      "title": "Schlussfolgerungsintensität"
     },
     "submit": "Modell-Einstellungen aktualisieren",
     "temperature": {

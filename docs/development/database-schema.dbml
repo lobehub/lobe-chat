@@ -94,6 +94,7 @@ table ai_providers {
   key_vaults text
   source varchar(20)
   settings jsonb
+  config jsonb
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
@@ -619,6 +620,55 @@ table rag_eval_evaluation_records {
   accessed_at "timestamp with time zone" [not null, default: `now()`]
   created_at "timestamp with time zone" [not null, default: `now()`]
   updated_at "timestamp with time zone" [not null, default: `now()`]
+}
+
+table rbac_permissions {
+  id integer [pk, not null]
+  code text [not null, unique]
+  name text [not null]
+  description text
+  category text [not null]
+  is_active boolean [not null, default: true]
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+}
+
+table rbac_role_permissions {
+  role_id integer [not null]
+  permission_id integer [not null]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+
+  indexes {
+    (role_id, permission_id) [pk]
+    role_id [name: 'rbac_role_permissions_role_id_idx']
+    permission_id [name: 'rbac_role_permissions_permission_id_idx']
+  }
+}
+
+table rbac_roles {
+  id integer [pk, not null]
+  name text [not null, unique]
+  display_name text [not null]
+  description text
+  is_system boolean [not null, default: false]
+  is_active boolean [not null, default: true]
+  accessed_at "timestamp with time zone" [not null, default: `now()`]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  updated_at "timestamp with time zone" [not null, default: `now()`]
+}
+
+table rbac_user_roles {
+  user_id text [not null]
+  role_id integer [not null]
+  created_at "timestamp with time zone" [not null, default: `now()`]
+  expires_at "timestamp with time zone"
+
+  indexes {
+    (user_id, role_id) [pk]
+    user_id [name: 'rbac_user_roles_user_id_idx']
+    role_id [name: 'rbac_user_roles_role_id_idx']
+  }
 }
 
 table agents_to_sessions {

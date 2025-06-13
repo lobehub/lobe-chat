@@ -71,6 +71,9 @@
   "mistral": {
     "description": "Mistral ofrece modelos avanzados generales, especializados y de investigación, ampliamente utilizados en razonamiento complejo, tareas multilingües, generación de código, etc. A través de interfaces de llamada de funciones, los usuarios pueden integrar funciones personalizadas para aplicaciones específicas."
   },
+  "modelscope": {
+    "description": "ModelScope es una plataforma de modelo como servicio lanzada por Alibaba Cloud, que ofrece una amplia variedad de modelos de IA y servicios de inferencia."
+  },
   "moonshot": {
     "description": "Moonshot es una plataforma de código abierto lanzada por Beijing Dark Side Technology Co., que ofrece una variedad de modelos de procesamiento del lenguaje natural, con aplicaciones en campos amplios, incluyendo pero no limitado a creación de contenido, investigación académica, recomendaciones inteligentes y diagnóstico médico, apoyando el procesamiento de textos largos y tareas de generación complejas."
   },
