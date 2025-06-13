@@ -11,6 +11,75 @@ const doubaoChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
+      deploymentName: 'doubao-seed-1-6-thinking-250615',
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Doubao-Seed-1.6-thinking模型思考能力大幅强化， 对比Doubao-1.5-thinking-pro，在Coding、Math、 逻辑推理等基础能力上进一步提升， 支持视觉理解。 支持 256k 上下文窗口，输出长度支持最大 16k tokens。',
+    displayName: 'Doubao Seed 1.6 Thinking',
+    enabled: true,
+    id: 'doubao-seed-1.6-thinking',
+    maxOutput: 16_000,
+    pricing: {
+      currency: 'CNY',
+      input: 2.4,
+      output: 12,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    config: {
+      deploymentName: 'doubao-seed-1-6-250615',
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Doubao-Seed-1.6全新多模态深度思考模型，同时支持auto/thinking/non-thinking三种思考模式。 non-thinking模式下，模型效果对比Doubao-1.5-pro/250115大幅提升。支持 256k 上下文窗口，输出长度支持最大 16k tokens。',
+    displayName: 'Doubao Seed 1.6',
+    enabled: true,
+    id: 'doubao-seed-1.6',
+    maxOutput: 16_000,
+    pricing: {
+      currency: 'CNY',
+      input: 2.4,
+      output: 24,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    config: {
+      deploymentName: 'doubao-seed-1-6-flash-250615',
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Doubao-Seed-1.6-flash推理速度极致的多模态深度思考模型，TPOT仅需10ms； 同时支持文本和视觉理解，文本理解能力超过上一代lite，视觉理解比肩友商pro系列模型。支持 256k 上下文窗口，输出长度支持最大 16k tokens。',
+    displayName: 'Doubao Seed 1.6 Flash',
+    enabled: true,
+    id: 'doubao-seed-1.6-flash',
+    maxOutput: 16_000,
+    pricing: {
+      currency: 'CNY',
+      input: 0.6,
+      output: 6,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    config: {
       deploymentName: 'doubao-1-5-thinking-vision-pro-250428',
     },
     contextWindowTokens: 131_072,
