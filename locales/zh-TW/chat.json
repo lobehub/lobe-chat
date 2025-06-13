@@ -46,6 +46,9 @@
     "reasoningEffort": {
       "title": "推理強度"
     },
+    "thinking": {
+      "title": "深度思考開關"
+    },
     "title": "模型擴展功能"
   },
   "history": {
