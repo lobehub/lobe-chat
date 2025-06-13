@@ -62,6 +62,7 @@ export const LobeAi360AI = createOpenAICompatibleRuntime({
             reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
             knownModel?.abilities?.reasoning ||
             false,
+          search: knownModel?.abilities?.search || false,
           vision: knownModel?.abilities?.vision || false,
         };
       })

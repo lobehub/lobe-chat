@@ -54,6 +54,11 @@ export interface ChatModelCard {
   releasedAt?: string;
 
   /**
+   * whether model supports search web
+   */
+  search?: boolean;
+
+  /**
    *  whether model supports vision
    */
   vision?: boolean;

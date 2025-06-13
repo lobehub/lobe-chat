@@ -45,6 +45,7 @@ export const LobeNovitaAI = createOpenAICompatibleRuntime({
             model.description.toLowerCase().includes('reasoning task') ||
             reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
             false,
+          search: baseModel.search || false,
           vision: baseModel.vision || model.description.toLowerCase().includes('vision') || false,
         };
       })

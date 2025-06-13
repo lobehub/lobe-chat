@@ -74,6 +74,7 @@ export const LobeGithubAI = createOpenAICompatibleRuntime({
             reasoningKeywords.some((keyword) => model.name.toLowerCase().includes(keyword)) ||
             knownModel?.abilities?.reasoning ||
             false,
+          search: knownModel?.abilities?.search || false,
           vision:
             visionKeywords.some((keyword) => model.description.toLowerCase().includes(keyword)) ||
             knownModel?.abilities?.vision ||

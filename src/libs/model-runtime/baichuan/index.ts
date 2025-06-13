@@ -62,6 +62,7 @@ export const LobeBaichuanAI = createOpenAICompatibleRuntime({
           id: model.model,
           maxTokens: model.max_tokens,
           reasoning: knownModel?.abilities?.reasoning || false,
+          search: knownModel?.abilities?.search || false,
           vision: knownModel?.abilities?.vision || false,
         };
       })

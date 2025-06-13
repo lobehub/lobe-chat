@@ -61,6 +61,7 @@ export const LobeMoonshotAI = createOpenAICompatibleRuntime({
             false,
           id: model.id,
           reasoning: knownModel?.abilities?.reasoning || false,
+          search: knownModel?.abilities?.search || false,
           vision:
             visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
             knownModel?.abilities?.vision ||

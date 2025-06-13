@@ -37,6 +37,7 @@ export const LobeDeepSeekAI = createOpenAICompatibleRuntime({
             model.id.toLowerCase().includes('reasoner') ||
             knownModel?.abilities?.reasoning ||
             false,
+          search: knownModel?.abilities?.search || false,
           vision: knownModel?.abilities?.vision || false,
         };
       })

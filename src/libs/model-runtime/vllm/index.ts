@@ -31,6 +31,7 @@ export const LobeVLLMAI = createOpenAICompatibleRuntime({
           functionCall: knownModel?.abilities?.functionCall || false,
           id: model.id,
           reasoning: knownModel?.abilities?.reasoning || false,
+          search: knownModel?.abilities?.search || false,
           vision: knownModel?.abilities?.vision || false,
         };
       })
