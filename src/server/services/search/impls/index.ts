@@ -3,6 +3,7 @@ import { BraveImpl } from './brave';
 import { ExaImpl } from './exa';
 import { FirecrawlImpl } from './firecrawl';
 import { JinaImpl } from './jina';
+import { KagiImpl } from './kagi';
 import { Search1APIImpl } from './search1api';
 import { SearXNGImpl } from './searxng';
 import { TavilyImpl } from './tavily';
@@ -18,6 +19,7 @@ export enum SearchImplType {
   Exa = 'exa',
   Firecrawl = 'firecrawl',
   Jina = 'jina',
+  Kagi = 'kagi',
   SearXNG = 'searxng',
   Search1API = 'search1api',
   Tavily = 'tavily',
@@ -48,6 +50,10 @@ export const createSearchServiceImpl = (
 
     case SearchImplType.Jina: {
       return new JinaImpl();
+    }
+
+    case SearchImplType.Kagi: {
+      return new KagiImpl();
     }
 
     case SearchImplType.SearXNG: {
