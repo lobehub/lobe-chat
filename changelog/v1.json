@@ -1,6 +1,46 @@
 [
   {
     "children": {
+      "improvements": ["Add Doubao Seed 1.6 model."]
+    },
+    "date": "2025-06-12",
+    "version": "1.94.7"
+  },
+  {
+    "children": {
+      "fixes": ["Abort the Gemini request correctly & Add openai o3-pro."]
+    },
+    "date": "2025-06-12",
+    "version": "1.94.6"
+  },
+  {
+    "children": {
+      "improvements": ["Support web_search_preview & fix some bug form OpenAI Response API."]
+    },
+    "date": "2025-06-12",
+    "version": "1.94.5"
+  },
+  {
+    "children": {
+      "improvements": ["Transition animation switch."]
+    },
+    "date": "2025-06-11",
+    "version": "1.94.4"
+  },
+  {
+    "children": {},
+    "date": "2025-06-11",
+    "version": "1.94.3"
+  },
+  {
+    "children": {
+      "fixes": ["Update Gemini range of thinkingBudget."]
+    },
+    "date": "2025-06-11",
+    "version": "1.94.2"
+  },
+  {
+    "children": {
       "improvements": ["Update pplx abilities tags, support vision."]
     },
     "date": "2025-06-10",

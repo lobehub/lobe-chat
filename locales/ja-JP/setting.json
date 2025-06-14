@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "マーメイドテーマ"
     },
-    "title": "チャットの外観"
+    "title": "チャットの外観",
+    "transitionMode": {
+      "desc": "チャットメッセージの遷移アニメーション",
+      "options": {
+        "fadeIn": "フェードイン",
+        "none": {
+          "desc": "これはモデルの応答出力方法によりますので、ご自身でテストしてください。",
+          "value": "なし"
+        },
+        "smooth": "スムーズ"
+      },
+      "title": "遷移アニメーション"
+    }
   },
   "settingCommon": {
     "lang": {

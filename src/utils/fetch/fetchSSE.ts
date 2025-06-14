@@ -1,10 +1,8 @@
-import { isObject } from 'lodash-es';
-
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/const/trace';
 import { parseToolCalls } from '@/libs/model-runtime';
 import { ChatErrorType } from '@/types/fetch';
-import { SmoothingParams } from '@/types/llm';
+import { ResponseAnimation, ResponseAnimationStyle } from '@/types/llm';
 import {
   ChatMessageError,
   MessageToolCall,
@@ -92,7 +90,7 @@ export interface FetchSSEOptions {
       | MessageBase64ImageChunk
       | MessageSpeedChunk,
   ) => void;
-  smoothing?: SmoothingParams | boolean;
+  responseAnimation?: ResponseAnimation;
 }
 
 const START_ANIMATION_SPEED = 10; // 默认起始速度
@@ -302,6 +300,14 @@ const createSmoothToolCalls = (params: {
   };
 };
 
+export const standardizeAnimationStyle = (
+  animationStyle?: ResponseAnimation,
+): Exclude<ResponseAnimation, ResponseAnimationStyle> => {
+  return typeof animationStyle === 'object'
+    ? animationStyle
+    : { text: animationStyle, toolsCalling: animationStyle };
+};
+
 /**
  * Fetch data using stream method
  */
@@ -313,16 +319,14 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   let finishedType: SSEFinishType = 'done';
   let response!: Response;
 
-  const { smoothing } = options;
-
-  const textSmoothing = false;
-  // const toolsCallingSmoothing = false;
-  // TODO: 看下后面就是完全移除 smoothing 还是怎么说
-  // const textSmoothing = typeof smoothing === 'boolean' ? smoothing : (smoothing?.text ?? true);
-  const toolsCallingSmoothing =
-    typeof smoothing === 'boolean' ? smoothing : (smoothing?.toolsCalling ?? false);
-
-  const smoothingSpeed = isObject(smoothing) ? smoothing.speed : undefined;
+  const {
+    text,
+    toolsCalling,
+    speed: smoothingSpeed,
+  } = standardizeAnimationStyle(options.responseAnimation ?? {});
+  const shouldSkipTextProcessing = text === 'none';
+  const textSmoothing = text === 'smooth';
+  const toolsCallingSmoothing = toolsCalling === 'smooth';
 
   // 添加文本buffer和计时器相关变量
   let textBuffer = '';
@@ -453,7 +457,10 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
           // skip empty text
           if (!data) break;
 
-          if (textSmoothing) {
+          if (shouldSkipTextProcessing) {
+            output += data;
+            options.onMessageHandle?.({ text: data, type: 'text' });
+          } else if (textSmoothing) {
             textController.pushToQueue(data);
 
             if (!textController.isAnimationActive) textController.startAnimation();

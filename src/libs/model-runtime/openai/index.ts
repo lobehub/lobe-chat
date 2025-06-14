@@ -2,21 +2,24 @@ import { ChatStreamPayload, ModelProvider } from '../types';
 import { processMultiProviderModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { pruneReasoningPayload } from '../utils/openaiHelpers';
+import { responsesAPIModels } from '@/const/models';
 
 export interface OpenAIModelCard {
   id: string;
 }
 
-const prunePrefixes = ['o1', 'o3', 'o4'];
+const prunePrefixes = ['o1', 'o3', 'o4', 'codex', 'computer-use'];
+
+const oaiSearchContextSize = process.env.OPENAI_SEARCH_CONTEXT_SIZE; // low, medium, high
 
 export const LobeOpenAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.openai.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { model } = payload;
+      const { enabledSearch, model, ...rest } = payload;
 
-      if (model === 'o1-pro') {
-        return { ...payload, apiMode: 'responses' } as ChatStreamPayload;
+      if (responsesAPIModels.has(model) || enabledSearch) {
+        return { ...rest, apiMode: 'responses', enabledSearch, model } as ChatStreamPayload;
       }
 
       if (prunePrefixes.some((prefix) => model.startsWith(prefix))) {
@@ -24,11 +27,10 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
       }
 
       if (model.includes('-search-')) {
-        const oaiSearchContextSize = process.env.OPENAI_SEARCH_CONTEXT_SIZE; // low, medium, high
-
         return {
-          ...payload,
+          ...rest,
           frequency_penalty: undefined,
+          model,
           presence_penalty: undefined,
           stream: payload.stream ?? true,
           temperature: undefined,
@@ -41,7 +43,7 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
         } as any;
       }
 
-      return { ...payload, stream: payload.stream ?? true };
+      return { ...rest, model, stream: payload.stream ?? true };
     },
   },
   debug: {
@@ -57,17 +59,37 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
   },
   provider: ModelProvider.OpenAI,
   responses: {
-    handlePayload: (payload: ChatStreamPayload) => {
-      const { model } = payload;
+    handlePayload: (payload) => {
+      const { enabledSearch, model, tools, ...rest } = payload;
+
+      const openaiTools = enabledSearch
+        ? [
+            ...(tools || []),
+            {
+              type: 'web_search_preview',
+              ...(oaiSearchContextSize && {
+                search_context_size: oaiSearchContextSize,
+              }),
+            },
+          ]
+        : tools;
+
       if (prunePrefixes.some((prefix) => model.startsWith(prefix))) {
         if (!payload.reasoning) {
           payload.reasoning = { summary: 'auto' };
         } else {
           payload.reasoning.summary = 'auto';
         }
+
+        // computer-use series must set truncation as auto
+        if (model.startsWith('computer-use')) {
+          payload.truncation = 'auto';
+        }
+
+        return pruneReasoningPayload(payload) as any;
       }
 
-      return { ...payload, stream: payload.stream ?? true };
+      return { ...rest, model, stream: payload.stream ?? true, tools: openaiTools } as any;
     },
   },
 });
