@@ -1,23 +1,21 @@
 import { Context } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 
-import { RBAC_PERMISSIONS } from '@/const/rbac';
 import { getServerDB } from '@/database/core/db-adaptor';
-import { RbacModel } from '@/database/models/rbac';
 import { LobeChatDatabase } from '@/database/type';
 
-import { ApiResponse } from '../types';
+import { ApiResponse } from '../types/api';
 
 /**
- * Base Controller Class
- * Provides unified response formatting, error handling, and common utility methods
+ * 基础控制器类
+ * 提供统一的响应格式化、错误处理和通用工具方法
  */
 export abstract class BaseController {
   private _db: LobeChatDatabase | null = null;
 
   /**
-   * Get database connection instance
-   * Lazy initialization to avoid initializing the database during module import
+   * 获取数据库连接实例
+   * 延迟初始化，避免在模块导入时就初始化数据库
    */
   protected async getDatabase(): Promise<LobeChatDatabase> {
     if (!this._db) {
@@ -27,11 +25,11 @@ export abstract class BaseController {
   }
 
   /**
-   * Success response formatting
+   * 成功响应格式化
    * @param c Hono Context
-   * @param data Response data
-   * @param message Response message
-   * @returns Formatted success response
+   * @param data 响应数据
+   * @param message 响应消息
+   * @returns 格式化的成功响应
    */
   protected success<T>(c: Context, data?: T, message?: string): Response {
     const response: ApiResponse<T> = {
@@ -45,11 +43,11 @@ export abstract class BaseController {
   }
 
   /**
-   * Error response formatting
+   * 错误响应格式化
    * @param c Hono Context
-   * @param error Error message
-   * @param statusCode HTTP status code, default 500
-   * @returns Formatted error response
+   * @param error 错误信息
+   * @param statusCode HTTP状态码，默认500
+   * @returns 格式化的错误响应
    */
   protected error(c: Context, error: string, statusCode: number = 500): Response {
     const response: ApiResponse = {
@@ -62,197 +60,168 @@ export abstract class BaseController {
   }
 
   /**
-   * Unified exception handling
+   * 统一异常处理
    * @param c Hono Context
-   * @param error Exception object
-   * @returns Formatted error response
+   * @param error 异常对象
+   * @returns 格式化的错误响应
    */
   protected handleError(c: Context, error: unknown): Response {
     console.error('Controller Error:', error);
 
-    // Handle HTTPException
+    // 处理 HTTPException
     if (error instanceof HTTPException) {
       return this.error(c, error.message, error.status);
     }
 
-    // Handle other known error types
+    // 处理其他已知错误类型
     if (error instanceof Error) {
-      // Handle business logic errors
+      // 处理业务逻辑错误
       if (error.name === 'BusinessError') {
         return this.error(c, error.message, 400);
       }
 
-      // Handle authentication errors
+      // 处理认证错误
       if (error.name === 'AuthenticationError') {
         return this.error(c, error.message, 401);
       }
 
-      // Handle authorization errors
+      // 处理权限错误
       if (error.name === 'AuthorizationError') {
         return this.error(c, error.message, 403);
       }
 
-      // Handle not found errors
+      // 处理未找到错误
       if (error.name === 'NotFoundError') {
         return this.error(c, error.message, 404);
       }
 
-      // Other errors
+      // 其他错误
       return this.error(c, error.message, 500);
     }
 
-    // Unknown error
-    return this.error(c, 'Internal Server Error', 500);
+    // 未知错误
+    return this.error(c, '服务器内部错误', 500);
   }
 
   /**
-   * Get request parameters
+   * 获取请求参数
    * @param c Hono Context
-   * @returns Request parameters object
+   * @returns 请求参数对象
    */
-  protected getParams<T = any>(c: Context): T {
-    // @ts-ignore
-    return c.req.valid('param') as T;
+  protected getParams(c: Context): Record<string, string> {
+    return Object.fromEntries(
+      Object.entries(c.req.param()).map(([key, value]) => [key, String(value)]),
+    );
   }
 
   /**
-   * Get query parameters
+   * 获取查询参数
    * @param c Hono Context
-   * @returns Query parameters object
+   * @returns 查询参数对象
    */
-  protected getQuery<T = any>(c: Context): T {
-    // @ts-ignore
-    return c.req.valid('query') as T;
+  protected getQuery(c: Context): Record<string, string | string[]> {
+    const url = new URL(c.req.url);
+    const params: Record<string, string | string[]> = {};
+
+    for (const [key, value] of url.searchParams.entries()) {
+      if (params[key]) {
+        // 如果已存在，转换为数组
+        if (Array.isArray(params[key])) {
+          (params[key] as string[]).push(value);
+        } else {
+          params[key] = [params[key] as string, value];
+        }
+      } else {
+        params[key] = value;
+      }
+    }
+
+    return params;
   }
 
   /**
-   * Get request body
+   * 获取请求体
    * @param c Hono Context
-   * @returns Request body object
+   * @returns 请求体对象
    */
-  protected async getBody<T = any>(c: Context): Promise<T> {
-    // @ts-ignore
-    return c.req.valid('json') as T;
+  protected async getBody<T = any>(c: Context): Promise<T | null> {
+    try {
+      const contentType = c.req.header('content-type');
+
+      if (contentType?.includes('application/json')) {
+        return await c.req.json<T>();
+      }
+
+      if (contentType?.includes('application/x-www-form-urlencoded')) {
+        const formData = await c.req.formData();
+        const body: any = {};
+        for (const [key, value] of formData.entries()) {
+          body[key] = value;
+        }
+        return body as T;
+      }
+
+      return null;
+    } catch (error) {
+      console.warn('解析请求体失败:', error);
+      return null;
+    }
   }
 
   /**
-   * Get request form data
+   * 获取用户ID（从中间件设置的上下文中）
    * @param c Hono Context
-   * @returns Request form data object
-   */
-  protected async getFormData<T = any>(c: Context): Promise<T> {
-    return c.req.formData() as T;
-  }
-
-  /**
-   * Get user ID (from context set by middleware)
-   * @param c Hono Context
-   * @returns User ID, returns null if not authenticated
+   * @returns 用户ID，如果未认证则返回null
    */
   protected getUserId(c: Context): string | null {
     return c.get('userId') || null;
   }
 
   /**
-   * Get authentication type (from context set by middleware)
+   * 获取JWT载荷（从中间件设置的上下文中）
    * @param c Hono Context
-   * @returns Authentication type, returns null if not authenticated
+   * @returns JWT载荷对象，如果未认证则返回null
+   */
+  protected getJwtPayload(c: Context): any | null {
+    return c.get('jwtPayload') || null;
+  }
+
+  /**
+   * 获取认证类型（从中间件设置的上下文中）
+   * @param c Hono Context
+   * @returns 认证类型，如果未认证则返回null
    */
   protected getAuthType(c: Context): string | null {
     return c.get('authType') || null;
   }
 
   /**
-   * Get authentication data (from context set by middleware)
+   * 获取认证数据（从中间件设置的上下文中）
    * @param c Hono Context
-   * @returns Authentication data object, returns null if not authenticated
+   * @returns 认证数据对象，如果未认证则返回null
    */
   protected getAuthData(c: Context): any | null {
     return c.get('authData') || null;
   }
 
   /**
-   * Get RBAC model instance
+   * 检查用户是否已认证
    * @param c Hono Context
-   * @returns RBAC model instance
+   * @returns 是否已认证
    */
-  protected async getRbacModel(c: Context): Promise<RbacModel> {
-    const db = await this.getDatabase();
-    return new RbacModel(db, this.getUserId(c)!);
+  protected isAuthenticated(c: Context): boolean {
+    return !!this.getUserId(c);
   }
 
   /**
-   * Check if user has specific permission
+   * 获取认证信息摘要
    * @param c Hono Context
-   * @param permission Permission string (e.g., 'session:read:all')
-   * @returns Promise<boolean>
+   * @returns 认证信息摘要
    */
-  protected async hasPermission(
-    c: Context,
-    permissionKey: keyof typeof RBAC_PERMISSIONS,
-  ): Promise<boolean> {
-    const rbacModel = await this.getRbacModel(c);
-
-    return await rbacModel.hasPermission(RBAC_PERMISSIONS[permissionKey], this.getUserId(c)!);
-  }
-
-  /**
-   * Check permission and throw error if not authorized
-   * @param c Hono Context
-   * @param permission Permission string
-   * @param errorMessage Custom error message
-   * @throws HTTPException if permission denied
-   */
-  protected async requirePermission(
-    c: Context,
-    permission: keyof typeof RBAC_PERMISSIONS,
-    errorMessage?: string,
-  ): Promise<void> {
-    const hasPermission = await this.hasPermission(c, permission);
-    if (!hasPermission) {
-      throw new HTTPException(403, {
-        message: errorMessage || `您没有权限执行此操作：${permission}`,
-      });
-    }
-  }
-
-  /**
-   * Check if user has any of the specified permissions
-   * @param c Hono Context
-   * @param permissions Array of permission strings
-   * @returns Promise<boolean>
-   */
-  protected async hasAnyPermission(
-    c: Context,
-    permissionKeys: (keyof typeof RBAC_PERMISSIONS)[],
-  ): Promise<boolean> {
-    const permissions = permissionKeys.map((permission) => RBAC_PERMISSIONS[permission]);
-
-    const rbacModel = await this.getRbacModel(c);
-    return await rbacModel.hasAnyPermission(permissions, this.getUserId(c)!);
-  }
-
-  /**
-   * Check any permission and throw error if not authorized
-   * @param c Hono Context
-   * @param permissions Array of permission strings
-   * @param errorMessage Custom error message
-   * @throws HTTPException if permission denied
-   */
-  protected async requireAnyPermission(
-    c: Context,
-    permissionKeys: (keyof typeof RBAC_PERMISSIONS)[],
-    errorMessage?: string,
-  ): Promise<void> {
-    const hasPermission = await this.hasAnyPermission(c, permissionKeys);
-    if (!hasPermission) {
-      throw new HTTPException(403, {
-        message:
-          errorMessage ||
-          `您没有权限执行此操作，需要以下权限之一：${permissionKeys
-            .map((key) => RBAC_PERMISSIONS[key])
-            .join(', ')}`,
-      });
-    }
+  protected getAuthSummary(c: Context): { authType: string | null; userId: string | null } {
+    return {
+      authType: this.getAuthType(c),
+      userId: this.getUserId(c),
+    };
   }
 }
