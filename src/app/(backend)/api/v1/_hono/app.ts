@@ -4,7 +4,7 @@ import { logger } from 'hono/logger';
 import { prettyJSON } from 'hono/pretty-json';
 
 // 导入用户认证中间件（支持OIDC和API Key两种认证方式）
-import { userAuthMiddleware } from './middleware/auth';
+import { userAuthMiddleware } from './middleware/oidc-auth';
 // 导入路由
 import routes from './routes';
 
