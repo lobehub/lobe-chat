@@ -1,0 +1,27 @@
+{
+  "properties": {
+    "prompt": {},
+    "width": {
+      "minimum": 512,
+      "maximum": 1536,
+      "step": 1,
+      "default": 1024
+    },
+    "height": {
+      "minimum": 512,
+      "maximum": 1536,
+      "step": 1,
+      "default": 1024
+    },
+    "steps": {
+      "minimum": 1,
+      "maximum": 12,
+      "default": 4
+    },
+    "seed": {
+      "default": null
+    }
+  },
+  "required": ["prompt"],
+  "type": "object"
+}

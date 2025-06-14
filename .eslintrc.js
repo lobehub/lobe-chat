@@ -2,6 +2,10 @@ const config = require('@lobehub/lint').eslint;
 
 config.extends.push('plugin:@next/next/recommended');
 
+config.rules['@typescript-eslint/no-empty-interface'] = 0;
+config.rules['sort-keys-fix/sort-keys-fix'] = 0;
+config.rules['typescript-sort-keys/interface'] = 0;
+
 config.rules['unicorn/no-negated-condition'] = 0;
 config.rules['unicorn/prefer-type-error'] = 0;
 config.rules['unicorn/prefer-logical-operator-over-ternary'] = 0;
@@ -12,6 +16,7 @@ config.rules['unicorn/prefer-code-point'] = 0;
 config.rules['no-extra-boolean-cast'] = 0;
 config.rules['unicorn/no-useless-undefined'] = 0;
 config.rules['react/no-unknown-property'] = 0;
+config.rules['react/jsx-boolean-value'] = 2;
 config.rules['unicorn/prefer-ternary'] = 0;
 config.rules['unicorn/prefer-spread'] = 0;
 config.rules['unicorn/catch-error-name'] = 0;

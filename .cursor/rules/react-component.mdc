@@ -8,6 +8,7 @@ alwaysApply: false
 - 如果要写复杂样式的话用 antd-style ，简单的话可以用 style 属性直接写内联样式
 - 如果需要 flex 布局或者居中布局应该使用 react-layout-kit
 - 选择组件库中的组件时优先使用 [lobe-ui.mdc](mdc:.cursor/rules/package-usage/lobe-ui.mdc) 有的，然后才是 antd 的，不知道 @lobehub/ui 的组件怎么用，有哪些属性，就自己搜下这个项目其它地方怎么用的，不要瞎猜
+    - 图标按钮使用 ActionIcon
 
 ## 访问 theme 的两种方式
 

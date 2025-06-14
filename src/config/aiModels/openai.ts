@@ -1,10 +1,11 @@
+import GptImage1ParamsSchema from '@/config/paramsSchemas/openai/gpt-image-1.json';
 import {
   AIChatModelCard,
   AIEmbeddingModelCard,
+  AIImageModelCard,
   AIRealtimeModelCard,
   AISTTModelCard,
   AITTSModelCard,
-  AIText2ImageModelCard,
 } from '@/types/aiModel';
 
 export const openaiChatModels: AIChatModelCard[] = [
@@ -764,7 +765,7 @@ export const openaiSTTModels: AISTTModelCard[] = [
 ];
 
 // 图像生成模型
-export const openaiImageModels: AIText2ImageModelCard[] = [
+export const openaiImageModels: AIImageModelCard[] = [
   {
     description:
       '最新的 DALL·E 模型，于2023年11月发布。支持更真实、准确的图像生成，具有更强的细节表现力',
@@ -785,6 +786,14 @@ export const openaiImageModels: AIText2ImageModelCard[] = [
       input: 0.02, // $0.020 per image (1024×1024)
     },
     resolutions: ['256x256', '512x512', '1024x1024'],
+    type: 'image',
+  },
+  {
+    enabled: true,
+    description: 'ChatGPT 原生多模态图片生成模型',
+    displayName: 'gpt-image-1',
+    id: 'gpt-image-1',
+    parameters: GptImage1ParamsSchema,
     type: 'image',
   },
 ];

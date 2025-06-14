@@ -1,4 +1,4 @@
-import { ActionIcon, Image } from '@lobehub/ui';
+import { ActionIcon, Image, ImageProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Trash } from 'lucide-react';
 import { CSSProperties, memo } from 'react';
@@ -43,10 +43,11 @@ interface FileItemProps {
   onRemove?: () => void;
   style?: CSSProperties;
   url?: string;
+  preview?: ImageProps['preview'];
 }
 
 const FileItem = memo<FileItemProps>(
-  ({ editable, alt, onRemove, url, loading, alwaysShowClose }) => {
+  ({ editable, alt, onRemove, url, loading, alwaysShowClose, preview }) => {
     const IMAGE_SIZE = editable ? MIN_IMAGE_SIZE : '100%';
     const { styles, cx } = useStyles();
     const { isSafari } = usePlatform();
@@ -71,6 +72,7 @@ const FileItem = memo<FileItemProps>(
         alwaysShowActions={alwaysShowClose}
         height={isSafari ? 'auto' : '100%'}
         isLoading={loading}
+        preview={preview}
         size={IMAGE_SIZE as any}
         src={url}
         style={{ height: isSafari ? 'auto' : '100%' }}

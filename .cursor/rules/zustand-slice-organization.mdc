@@ -13,10 +13,10 @@ LobeChat 的 `chat` store (`src/store/chat/`) 采用模块化的 slice 结构来
 
 ### 关键聚合文件
 
-- **`src/store/chat/initialState.ts`**: 聚合所有 slice 的初始状态
-- **`src/store/chat/store.ts`**: 定义顶层的 `ChatStore`，组合所有 slice 的 actions
-- **`src/store/chat/selectors.ts`**: 统一导出所有 slice 的 selectors
-- **`src/store/chat/helpers.ts`**: 提供聊天相关的辅助函数
+- `src/store/chat/initialState.ts`: 聚合所有 slice 的初始状态
+- `src/store/chat/store.ts`: 定义顶层的 `ChatStore`，组合所有 slice 的 actions
+- `src/store/chat/selectors.ts`: 统一导出所有 slice 的 selectors
+- `src/store/chat/helpers.ts`: 提供聊天相关的辅助函数
 
 ### Store 聚合模式
 
@@ -81,7 +81,7 @@ src/store/chat/slices/
 
 ### 文件职责说明
 
-1. **`initialState.ts`**:
+1. `initialState.ts`:
    - 定义 slice 的 TypeScript 状态接口
    - 提供初始状态默认值
 
@@ -104,7 +104,7 @@ export const initialTopicState: ChatTopicState = {
 };
 ```
 
-2. **`reducer.ts`** (复杂状态使用):
+2. `reducer.ts` (复杂状态使用):
    - 定义纯函数 reducer，处理同步状态转换
    - 使用 `immer` 确保不可变更新
 
@@ -150,10 +150,10 @@ export const topicReducer = (state: ChatTopic[] = [], payload: ChatTopicDispatch
 };
 ```
 
-3. **`selectors.ts`**:
+3. `selectors.ts`:
    - 提供状态查询和计算函数
    - 供 UI 组件使用的状态订阅接口
-   - **重要**: 使用 `export const xxxSelectors` 模式聚合所有 selectors
+   - 重要: 使用 `export const xxxSelectors` 模式聚合所有 selectors
 
 ```typescript
 // 典型的 selectors.ts 结构
@@ -277,22 +277,22 @@ export { aiChatSelectors } from './slices/aiChat/selectors';
 
 ## 最佳实践
 
-1. **Slice 划分原则**:
+1. Slice 划分原则:
    - 按功能领域划分（message, topic, aiChat 等）
    - 每个 slice 管理相关的状态和操作
    - 避免 slice 之间的强耦合
 
-2. **文件命名规范**:
+2. 文件命名规范:
    - 使用小驼峰命名 slice 目录
    - 文件名使用一致的模式（action.ts, selectors.ts 等）
    - 复杂 actions 时使用 actions/ 子目录
 
-3. **状态结构设计**:
+3. 状态结构设计:
    - 扁平化的状态结构，避免深层嵌套
    - 使用 Map 结构管理列表数据
    - 分离加载状态和业务数据
 
-4. **类型安全**:
+4. 类型安全:
    - 为每个 slice 定义清晰的 TypeScript 接口
    - 使用 Zustand 的 StateCreator 确保类型一致性
    - 在顶层聚合时保持类型安全

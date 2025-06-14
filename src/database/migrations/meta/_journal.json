@@ -182,6 +182,20 @@
       "when": 1749309388370,
       "tag": "0025_add_provider_config",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1749521244623,
+      "tag": "0026_ai_image",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1749552657856,
+      "tag": "0027_generation_add_file_id",
+      "breakpoints": true
     }
   ],
   "version": "6"

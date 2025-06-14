@@ -5,6 +5,8 @@ alwaysApply: false
 ---
 ## @lobehub/ui Components
 
+具体用法不懂可以联网搜索，例如 ActionIcon 就爬取 https://ui.lobehub.com/components/action-icon
+
 - General
   ActionIcon
   ActionIconGroup
