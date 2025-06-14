@@ -1,205 +1,266 @@
-import { and, eq, inArray, sql } from 'drizzle-orm';
+/**
+ * RBAC Permission Actions Definition
+ * Defines all executable permission action types in the system
+ * Format: resource:action (e.g., agent:create, file:upload)
+ */
+const PERMISSION_ACTIONS = {
+  // ==================== Agent Management ====================
+  AGENT_CREATE: 'agent:create',
 
-import { permissions, rolePermissions, roles, userRoles } from '@/database/schemas/rbac';
-import { LobeChatDatabase } from '@/database/type';
+  AGENT_DELETE: 'agent:delete',
 
-export interface UserPermissionInfo {
-  category: string;
-  permissionCode: string;
-  permissionName: string;
-  roleName: string;
-}
+  AGENT_FORK: 'agent:fork',
 
-export class RbacModel {
-  private userId: string;
-  private db: LobeChatDatabase;
+  AGENT_PUBLISH: 'agent:publish',
 
-  constructor(db: LobeChatDatabase, userId: string) {
-    this.userId = userId;
-    this.db = db;
-  }
+  AGENT_READ: 'agent:read',
 
-  /**
-   * Get all permissions for a specific user
-   * @param userId - User ID to query permissions for
-   * @returns Array of permission codes that the user has
-   */
-  getUserPermissions = async (userId?: string): Promise<string[]> => {
-    const targetUserId = userId || this.userId;
+  AGENT_SHARE: 'agent:share',
 
-    const result = await this.db
-      .select({
-        permissionCode: permissions.code,
-      })
-      .from(userRoles)
-      .innerJoin(roles, eq(userRoles.roleId, roles.id))
-      .innerJoin(rolePermissions, eq(roles.id, rolePermissions.roleId))
-      .innerJoin(permissions, eq(rolePermissions.permissionId, permissions.id))
-      .where(
-        and(
-          eq(userRoles.userId, targetUserId),
-          eq(roles.isActive, true),
-          eq(permissions.isActive, true),
-          // Check if role assignment is not expired
-          sql`(${userRoles.expiresAt} IS NULL OR ${userRoles.expiresAt} > NOW())`,
-        ),
-      );
+  AGENT_UPDATE: 'agent:update',
 
-    return result.map((row) => row.permissionCode);
-  };
+  // ==================== AI Infrastructure Management ====================
+  AI_MODEL_CONFIGURE: 'ai_model:configure',
 
-  /**
-   * Get detailed permission information for a user
-   * @param userId - User ID to query permissions for
-   * @returns Array of detailed permission information
-   */
-  getUserPermissionDetails = async (userId?: string): Promise<UserPermissionInfo[]> => {
-    const targetUserId = userId || this.userId;
+  AI_MODEL_USE: 'ai_model:use',
 
-    const result = await this.db
-      .select({
-        category: permissions.category,
-        permissionCode: permissions.code,
-        permissionName: permissions.name,
-        roleName: roles.name,
-      })
-      .from(userRoles)
-      .innerJoin(roles, eq(userRoles.roleId, roles.id))
-      .innerJoin(rolePermissions, eq(roles.id, rolePermissions.roleId))
-      .innerJoin(permissions, eq(rolePermissions.permissionId, permissions.id))
-      .where(
-        and(
-          eq(userRoles.userId, targetUserId),
-          eq(roles.isActive, true),
-          eq(permissions.isActive, true),
-          // Check if role assignment is not expired
-          sql`(${userRoles.expiresAt} IS NULL OR ${userRoles.expiresAt} > NOW())`,
-        ),
-      )
-      .orderBy(permissions.category, permissions.code);
+  AI_PROVIDER_CREATE: 'ai_provider:create',
 
-    return result;
-  };
+  AI_PROVIDER_DELETE: 'ai_provider:delete',
 
-  /**
-   * Check if user has a specific permission
-   * @param permissionCode - Permission code to check
-   * @param userId - User ID to check (optional, defaults to instance userId)
-   * @returns Boolean indicating if user has the permission
-   */
-  hasPermission = async (permissionCode: string, userId?: string): Promise<boolean> => {
-    const targetUserId = userId || this.userId;
+  AI_PROVIDER_READ: 'ai_provider:read',
 
-    const result = await this.db
-      .select({ count: sql<number>`count(*)` })
-      .from(userRoles)
-      .innerJoin(roles, eq(userRoles.roleId, roles.id))
-      .innerJoin(rolePermissions, eq(roles.id, rolePermissions.roleId))
-      .innerJoin(permissions, eq(rolePermissions.permissionId, permissions.id))
-      .where(
-        and(
-          eq(userRoles.userId, targetUserId),
-          eq(permissions.code, permissionCode),
-          eq(roles.isActive, true),
-          eq(permissions.isActive, true),
-          // Check if role assignment is not expired
-          sql`(${userRoles.expiresAt} IS NULL OR ${userRoles.expiresAt} > NOW())`,
-        ),
-      );
+  AI_PROVIDER_UPDATE: 'ai_provider:update',
 
-    return (result[0]?.count || 0) > 0;
-  };
+  // ==================== API Key Management ====================
+  API_KEY_CREATE: 'api_key:create',
 
-  /**
-   * Check if user has any of the specified permissions (OR logic)
-   * @param permissionCodes - Array of permission codes to check
-   * @param userId - User ID to check (optional, defaults to instance userId)
-   * @returns Boolean indicating if user has at least one of the permissions
-   */
-  hasAnyPermission = async (permissionCodes: string[], userId?: string): Promise<boolean> => {
-    if (permissionCodes.length === 0) return false;
+  API_KEY_DELETE: 'api_key:delete',
 
-    const targetUserId = userId || this.userId;
+  API_KEY_READ: 'api_key:read',
 
-    const result = await this.db
-      .select({ count: sql<number>`count(*)` })
-      .from(userRoles)
-      .innerJoin(roles, eq(userRoles.roleId, roles.id))
-      .innerJoin(rolePermissions, eq(roles.id, rolePermissions.roleId))
-      .innerJoin(permissions, eq(rolePermissions.permissionId, permissions.id))
-      .where(
-        and(
-          eq(userRoles.userId, targetUserId),
-          inArray(permissions.code, permissionCodes),
-          eq(roles.isActive, true),
-          eq(permissions.isActive, true),
-          // Check if role assignment is not expired
-          sql`(${userRoles.expiresAt} IS NULL OR ${userRoles.expiresAt} > NOW())`,
-        ),
-      );
+  API_KEY_UPDATE: 'api_key:update',
 
-    return (result[0]?.count || 0) > 0;
-  };
+  // ==================== Async Task Management ====================
+  ASYNC_TASK_CANCEL: 'async_task:cancel',
 
-  /**
-   * Check if user has all of the specified permissions (AND logic)
-   * @param permissionCodes - Array of permission codes to check
-   * @param userId - User ID to check (optional, defaults to instance userId)
-   * @returns Boolean indicating if user has all of the permissions
-   */
-  hasAllPermissions = async (permissionCodes: string[], userId?: string): Promise<boolean> => {
-    if (permissionCodes.length === 0) return true;
+  ASYNC_TASK_CREATE: 'async_task:create',
 
-    const targetUserId = userId || this.userId;
+  ASYNC_TASK_READ: 'async_task:read',
 
-    const result = await this.db
-      .select({ count: sql<number>`count(DISTINCT ${permissions.code})` })
-      .from(userRoles)
-      .innerJoin(roles, eq(userRoles.roleId, roles.id))
-      .innerJoin(rolePermissions, eq(roles.id, rolePermissions.roleId))
-      .innerJoin(permissions, eq(rolePermissions.permissionId, permissions.id))
-      .where(
-        and(
-          eq(userRoles.userId, targetUserId),
-          inArray(permissions.code, permissionCodes),
-          eq(roles.isActive, true),
-          eq(permissions.isActive, true),
-          // Check if role assignment is not expired
-          sql`(${userRoles.expiresAt} IS NULL OR ${userRoles.expiresAt} > NOW())`,
-        ),
-      );
+  AUDIT_LOG_EXPORT: 'audit:log_export',
 
-    return (result[0]?.count || 0) === permissionCodes.length;
-  };
+  // ==================== Audit Logs ====================
+  AUDIT_LOG_READ: 'audit:log_read',
 
-  /**
-   * Get user's active roles
-   * @param userId - User ID to query roles for
-   * @returns Array of role information
-   */
-  getUserRoles = async (userId?: string) => {
-    const targetUserId = userId || this.userId;
+  // ==================== Authentication Management ====================
+  AUTH_OAUTH_CONFIGURE: 'auth:oauth_configure',
 
-    return this.db
-      .select({
-        createdAt: userRoles.createdAt,
-        description: roles.description,
-        displayName: roles.displayName,
-        expiresAt: userRoles.expiresAt,
-        id: roles.id,
-        isSystem: roles.isSystem,
-        name: roles.name,
-      })
-      .from(userRoles)
-      .innerJoin(roles, eq(userRoles.roleId, roles.id))
-      .where(
-        and(
-          eq(userRoles.userId, targetUserId),
-          eq(roles.isActive, true),
-          // Check if role assignment is not expired
-          sql`(${userRoles.expiresAt} IS NULL OR ${userRoles.expiresAt} > NOW())`,
-        ),
-      )
-      .orderBy(userRoles.createdAt);
-  };
-}
+  AUTH_OIDC_CONFIGURE: 'auth:oidc_configure',
+
+  AUTH_SESSION_MANAGE: 'auth:session_manage',
+
+  // ==================== Data Management ====================
+  DATA_BACKUP: 'data:backup',
+
+  DATA_EXPORT: 'data:export',
+
+  DATA_IMPORT: 'data:import',
+
+  DATA_RESTORE: 'data:restore',
+
+  // ==================== Document Management ====================
+  DOCUMENT_CHUNK: 'document:chunk',
+
+  DOCUMENT_CREATE: 'document:create',
+
+  DOCUMENT_DELETE: 'document:delete',
+
+  DOCUMENT_READ: 'document:read',
+
+  DOCUMENT_UPDATE: 'document:update',
+
+  // ==================== File Management ====================
+  FILE_DELETE: 'file:delete',
+
+  FILE_DOWNLOAD: 'file:download',
+
+  FILE_READ: 'file:read',
+
+  FILE_SHARE: 'file:share',
+
+  FILE_UPDATE: 'file:update',
+
+  FILE_UPLOAD: 'file:upload',
+
+  // ==================== Knowledge Base Management ====================
+  KNOWLEDGE_BASE_CREATE: 'knowledge_base:create',
+
+  KNOWLEDGE_BASE_DELETE: 'knowledge_base:delete',
+
+  KNOWLEDGE_BASE_READ: 'knowledge_base:read',
+
+  KNOWLEDGE_BASE_SHARE: 'knowledge_base:share',
+
+  KNOWLEDGE_BASE_UPDATE: 'knowledge_base:update',
+
+  // ==================== Message Management ====================
+  MESSAGE_CREATE: 'message:create',
+
+  MESSAGE_DELETE: 'message:delete',
+
+  MESSAGE_FAVORITE: 'message:favorite',
+
+  MESSAGE_READ: 'message:read',
+
+  MESSAGE_REGENERATE: 'message:regenerate',
+
+  MESSAGE_UPDATE: 'message:update',
+
+  // ==================== Plugin Management ====================
+  PLUGIN_CONFIGURE: 'plugin:configure',
+
+  PLUGIN_DEVELOP: 'plugin:develop',
+
+  PLUGIN_INSTALL: 'plugin:install',
+
+  PLUGIN_UNINSTALL: 'plugin:uninstall',
+
+  // ==================== RAG Features ====================
+  RAG_EMBED: 'rag:embed',
+
+  RAG_EVAL: 'rag:eval',
+
+  RAG_SEARCH: 'rag:search',
+
+  // ==================== RBAC Management ====================
+  RBAC_PERMISSION_CREATE: 'rbac:permission_create',
+
+  RBAC_PERMISSION_DELETE: 'rbac:permission_delete',
+
+  RBAC_PERMISSION_READ: 'rbac:permission_read',
+
+  RBAC_PERMISSION_UPDATE: 'rbac:permission_update',
+
+  RBAC_ROLE_CREATE: 'rbac:role_create',
+
+  RBAC_ROLE_DELETE: 'rbac:role_delete',
+
+  RBAC_ROLE_PERMISSION_ASSIGN: 'rbac:role_permission_assign',
+
+  RBAC_ROLE_PERMISSION_REVOKE: 'rbac:role_permission_revoke',
+
+  RBAC_ROLE_READ: 'rbac:role_read',
+
+  RBAC_ROLE_UPDATE: 'rbac:role_update',
+
+  RBAC_SYSTEM_INIT: 'rbac:system_init',
+
+  RBAC_USER_PERMISSION_VIEW: 'rbac:user_permission_view',
+
+  RBAC_USER_ROLE_ASSIGN: 'rbac:user_role_assign',
+
+  RBAC_USER_ROLE_REVOKE: 'rbac:user_role_revoke',
+
+  // ==================== Session Management ====================
+  SESSION_CREATE: 'session:create',
+
+  SESSION_DELETE: 'session:delete',
+
+  SESSION_EXPORT: 'session:export',
+
+  // ==================== Session Group Management ====================
+  SESSION_GROUP_CREATE: 'session_group:create',
+
+  SESSION_GROUP_DELETE: 'session_group:delete',
+
+  SESSION_GROUP_READ: 'session_group:read',
+
+  SESSION_GROUP_UPDATE: 'session_group:update',
+
+  SESSION_IMPORT: 'session:import',
+
+  SESSION_READ: 'session:read',
+
+  SESSION_SHARE: 'session:share',
+
+  SESSION_UPDATE: 'session:update',
+
+  // ==================== System Management ====================
+  SYSTEM_BACKUP: 'system:backup',
+
+  SYSTEM_CONFIGURE: 'system:configure',
+
+  SYSTEM_LOG_VIEW: 'system:log_view',
+
+  SYSTEM_MAINTENANCE: 'system:maintenance',
+
+  SYSTEM_MONITOR: 'system:monitor',
+
+  SYSTEM_RESTORE: 'system:restore',
+
+  // ==================== Topic Management ====================
+  TOPIC_CREATE: 'topic:create',
+
+  TOPIC_DELETE: 'topic:delete',
+
+  TOPIC_FAVORITE: 'topic:favorite',
+
+  TOPIC_READ: 'topic:read',
+
+  TOPIC_UPDATE: 'topic:update',
+
+  // ==================== User Management ====================
+  USER_CREATE: 'user:create',
+
+  USER_DELETE: 'user:delete',
+
+  USER_PROFILE_UPDATE: 'user:profile_update',
+
+  USER_READ: 'user:read',
+
+  USER_UPDATE: 'user:update',
+} as const;
+
+/**
+ * Operation Scope Constants Definition
+ */
+export const OPERATION_SCOPE = ['ALL', 'WORKSPACE', 'OWNER'] as const;
+
+/**
+ * RBAC System Permissions Definition
+ * Combines permission actions with operation scopes to generate complete RBAC permission definitions
+ * Format: resource:action:scope (e.g., agent:create:workspace, file:upload:owner)
+ */
+export const RBAC_PERMISSIONS = Object.entries(PERMISSION_ACTIONS).reduce(
+  (acc, [key, permission]) => {
+    OPERATION_SCOPE.forEach((scope) => {
+      const permissionWithScopeKey =
+        `${key}_${scope}` as `${keyof typeof PERMISSION_ACTIONS}_${(typeof OPERATION_SCOPE)[number]}`;
+
+      acc[permissionWithScopeKey] = `${permission}:${scope.toLowerCase()}`;
+    });
+
+    return acc;
+  },
+  {} as Record<`${keyof typeof PERMISSION_ACTIONS}_${(typeof OPERATION_SCOPE)[number]}`, string>,
+);
+
+/**
+ * RBAC Permissions Key Type Definition
+ */
+export type RBAC_PERMISSIONS_KEY = keyof typeof RBAC_PERMISSIONS;
+
+/**
+ * RBAC Role Constants Definition
+ */
+export const SYSTEM_DEFAULT_ROLES = {
+  SUPER_ADMIN: 'super_admin',
+} as const;
+
+/**
+ * Role Description Mapping
+ */
+export const ROLE_DESCRIPTIONS = {
+  [SYSTEM_DEFAULT_ROLES.SUPER_ADMIN]: 'Administrator with all system permissions',
+} as const;
