@@ -1,1 +1,2 @@
-export { type IUserService, UserService } from './user.service';
+export * from './message.service';
+export * from './user.service';

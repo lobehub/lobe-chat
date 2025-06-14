@@ -1,2 +1,2 @@
-export { ExampleController } from './example.controller';
-export { UserController } from './user.controller';
+export * from './message.controller';
+export * from './user.controller';
