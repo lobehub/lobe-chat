@@ -519,6 +519,7 @@
     "hotkey": "Sneltoetsen",
     "llm": "Taalmodel",
     "provider": "AI-dienstverlener",
+    "proxy": "Netwerkproxy",
     "storage": "Gegevensopslag",
     "sync": "Cloudsynchronisatie",
     "system-agent": "Systeemassistent",
