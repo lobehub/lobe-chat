@@ -1,6 +1,6 @@
 import { LobeChatDatabase } from '@/database/type';
 
-import { IBaseService } from '../types/api';
+import { IBaseService } from '../types';
 
 /**
  * Base service class
