@@ -57,7 +57,7 @@ export class RbacModel {
   getUserPermissionDetails = async (userId?: string): Promise<UserPermissionInfo[]> => {
     const targetUserId = userId || this.userId;
 
-    const result = await this.db
+    return await this.db
       .select({
         category: permissions.category,
         permissionCode: permissions.code,
@@ -78,8 +78,6 @@ export class RbacModel {
         ),
       )
       .orderBy(permissions.category, permissions.code);
-
-    return result;
   };
 
   /**
@@ -181,7 +179,7 @@ export class RbacModel {
   getUserRoles = async (userId?: string) => {
     const targetUserId = userId || this.userId;
 
-    return this.db
+    return await this.db
       .select({
         createdAt: userRoles.createdAt,
         description: roles.description,
