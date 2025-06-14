@@ -4,7 +4,7 @@ import { HTTPException } from 'hono/http-exception';
 import { getServerDB } from '@/database/core/db-adaptor';
 import { LobeChatDatabase } from '@/database/type';
 
-import { ApiResponse } from '../types/api';
+import { ApiResponse } from '../types';
 
 /**
  * Base Controller Class

@@ -1,7 +1,7 @@
-import ExampleRoutes from './example';
-import UserRoutes from './users';
+import TopicRoutes from './message.route';
+import UserRoutes from './users.route';
 
 export default {
-  example: ExampleRoutes,
+  topic: TopicRoutes,
   user: UserRoutes,
 };
