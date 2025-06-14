@@ -1,5 +1,7 @@
 import { LobeChatDatabase } from '@/database/type';
 
+export * from './user.type';
+
 /**
  * 标准API响应格式
  */
@@ -9,18 +11,6 @@ export interface ApiResponse<T = any> {
   message?: string;
   success: boolean;
   timestamp: string;
-}
-
-/**
- * 分页响应格式
- */
-export interface PaginatedResponse<T = any> extends ApiResponse<T[]> {
-  pagination: {
-    limit: number;
-    page: number;
-    total: number;
-    totalPages: number;
-  };
 }
 
 /**
