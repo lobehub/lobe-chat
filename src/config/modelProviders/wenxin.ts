@@ -242,11 +242,11 @@ const BaiduWenxin: ModelProviderCard = {
     proxyUrl: {
       placeholder: 'https://qianfan.baidubce.com/v2',
     },
-    sdkType: 'openai',
-    smoothing: {
+    responseAnimation: {
       speed: 2,
-      text: true,
+      text: 'smooth',
     },
+    sdkType: 'openai',
   },
   url: 'https://cloud.baidu.com/wenxin.html',
 };
