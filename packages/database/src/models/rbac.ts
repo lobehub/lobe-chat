@@ -2,7 +2,7 @@ import { and, eq, inArray, sql } from 'drizzle-orm';
 
 import { LobeChatDatabase } from '@/database/type';
 
-import { permissions, rolePermissions, roles, userRoles } from '../schemas/rbac';
+import { RoleItem, permissions, rolePermissions, roles, userRoles } from '../schemas/rbac';
 
 export interface UserPermissionInfo {
   category: string;
@@ -176,18 +176,20 @@ export class RbacModel {
    * @param userId - User ID to query roles for
    * @returns Array of role information
    */
-  getUserRoles = async (userId?: string) => {
+  getUserRoles = async (userId?: string): Promise<RoleItem[]> => {
     const targetUserId = userId || this.userId;
 
     return await this.db
       .select({
-        createdAt: userRoles.createdAt,
+        accessedAt: roles.accessedAt,
+        createdAt: roles.createdAt,
         description: roles.description,
         displayName: roles.displayName,
-        expiresAt: userRoles.expiresAt,
         id: roles.id,
+        isActive: roles.isActive,
         isSystem: roles.isSystem,
         name: roles.name,
+        updatedAt: roles.updatedAt,
       })
       .from(userRoles)
       .innerJoin(roles, eq(userRoles.roleId, roles.id))
