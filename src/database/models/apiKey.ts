@@ -6,6 +6,7 @@ import { generateApiKey, isApiKeyExpired, validateApiKeyFormat } from '@/utils/a
 import { ApiKeyItem, NewApiKeyItem, apiKeys } from '../schemas';
 
 type EncryptAPIKeyVaults = (keyVaults: string) => Promise<string>;
+type DecryptAPIKeyVaults = (keyVaults: string) => Promise<{ plaintext: string }>;
 
 const defaultSerialize = (s: string) => s;
 
@@ -44,11 +45,29 @@ export class ApiKeyModel {
     return this.db.delete(apiKeys).where(eq(apiKeys.userId, this.userId));
   };
 
-  query = async () => {
-    return this.db.query.apiKeys.findMany({
+  query = async (decryptor?: DecryptAPIKeyVaults) => {
+    const results = await this.db.query.apiKeys.findMany({
       orderBy: [desc(apiKeys.updatedAt)],
       where: eq(apiKeys.userId, this.userId),
     });
+
+    // 如果没有提供解密器，直接返回原始结果
+    if (!decryptor) {
+      return results;
+    }
+
+    // 对每个 API Key 的 key 字段进行解密
+    const decryptedResults = await Promise.all(
+      results.map(async (apiKey) => {
+        const decryptedKey = await decryptor(apiKey.key);
+        return {
+          ...apiKey,
+          key: decryptedKey.plaintext,
+        };
+      }),
+    );
+
+    return decryptedResults;
   };
 
   findByKey = async (key: string, encryptor?: EncryptAPIKeyVaults) => {

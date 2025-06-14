@@ -53,7 +53,7 @@ export const apiKeyRouter = router({
     }),
 
   getApiKeys: apiKeyProcedure.query(async ({ ctx }) => {
-    return ctx.apiKeyModel.query();
+    return ctx.apiKeyModel.query(ctx.gateKeeper.decrypt);
   }),
 
   updateApiKey: apiKeyProcedure

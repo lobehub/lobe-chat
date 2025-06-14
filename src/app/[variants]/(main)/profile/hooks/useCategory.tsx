@@ -1,5 +1,5 @@
 import { Icon } from '@lobehub/ui';
-import { ChartColumnBigIcon, ShieldCheck, UserCircle } from 'lucide-react';
+import { ChartColumnBigIcon, KeyIcon, ShieldCheck, UserCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 
@@ -40,6 +40,15 @@ export const useCategory = () => {
       label: (
         <Link href={'/profile/stats'} onClick={(e) => e.preventDefault()}>
           {t('tab.stats')}
+        </Link>
+      ),
+    },
+    {
+      icon: <Icon icon={KeyIcon} />,
+      key: ProfileTabs.APIKey,
+      label: (
+        <Link href={'/profile/apikey'} onClick={(e) => e.preventDefault()}>
+          {t('tab.apikey')}
         </Link>
       ),
     },
