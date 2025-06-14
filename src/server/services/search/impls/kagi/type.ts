@@ -19,6 +19,6 @@ interface KagiData {
 }
 
 export interface KagiResponse {
-  meta?: any;
   data: KagiData[];
+  meta?: any;
 }
