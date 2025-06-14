@@ -18,7 +18,6 @@ export class DocxLoader implements FileLoaderInterface {
       }else{
         loader = new LangchainDocxLoader(filePath, { type: "docx" });
       }
-      loader = new LangchainDocxLoader(filePath);
       log('LangChain DocxLoader created');
       const docs = await loader.load(); // Langchain DocxLoader typically loads the whole doc as one
       log('DOCX document loaded, parts:', docs.length);
