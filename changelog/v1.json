@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Correctly handle reasoning_effort."]
+    },
+    "date": "2025-06-15",
+    "version": "1.94.8"
+  },
+  {
+    "children": {
       "improvements": ["Add Doubao Seed 1.6 model."]
     },
     "date": "2025-06-12",
