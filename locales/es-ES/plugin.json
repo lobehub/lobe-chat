@@ -291,8 +291,9 @@
     "placeholder": "Buscar por nombre, descripción o palabra clave del complemento...",
     "releasedAt": "Publicado el {{createdAt}}",
     "tabs": {
-      "all": "Todos",
-      "installed": "Instalados"
+      "installed": "Instalados",
+      "mcp": "Complemento MCP",
+      "old": "Complemento antiguo"
     },
     "title": "Tienda de complementos"
   },
