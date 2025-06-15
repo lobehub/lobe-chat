@@ -10,7 +10,7 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
   const { t } = await translation('auth', locale);
   return metadataModule.generate({
     description: t('header.desc'),
-    title: t('tab.apiKey'),
+    title: t('tab.apikey'),
     url: '/profile/apikey',
   });
 };

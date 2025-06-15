@@ -1,39 +1,36 @@
-import { DatePicker, FormModal, Input, TextArea } from '@lobehub/ui';
+import { FormModal, Input } from '@lobehub/ui';
 import { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { ApiKeyItem, CreateApiKeyParams, UpdateApiKeyParams } from '@/types/apiKey';
+import { CreateApiKeyParams } from '@/types/apiKey';
+
+import ApiKeyDatePicker from '../ApiKeyDatePicker';
 
 interface ApiKeyModalProps {
-  initialValues?: Partial<ApiKeyItem>;
   onCancel: () => void;
-  onOk: (values: CreateApiKeyParams | UpdateApiKeyParams) => void;
+  onOk: (values: CreateApiKeyParams) => void;
   open: boolean;
+  submitLoading?: boolean;
 }
 
-const ApiKeyModal: FC<ApiKeyModalProps> = ({ open, onCancel, onOk, initialValues }) => {
-  const isEdit = !!initialValues?.id;
+const ApiKeyModal: FC<ApiKeyModalProps> = ({ open, onCancel, onOk, submitLoading }) => {
+  const { t } = useTranslation('auth');
 
   return (
     <FormModal
       destroyOnHidden
       height={'90%'}
-      initialValues={initialValues}
       itemMinWidth={'max(30%,240px)'}
       items={[
         {
-          children: <Input placeholder="请输入 API Key 名称" />,
-          label: '名称',
+          children: <Input placeholder={t('apikey.form.fields.name.placeholder')} />,
+          label: t('apikey.form.fields.name.label'),
           name: 'name',
           rules: [{ required: true }],
         },
         {
-          children: <TextArea placeholder="请输入 API Key 描述" />,
-          label: '描述',
-          name: 'description',
-        },
-        {
-          children: <DatePicker placeholder="永不过期" style={{ width: '100%' }} />,
-          label: '过期时间',
+          children: <ApiKeyDatePicker style={{ width: '100%' }} />,
+          label: t('apikey.form.fields.expiresAt.label'),
           name: 'expiresAt',
         },
       ]}
@@ -41,9 +38,9 @@ const ApiKeyModal: FC<ApiKeyModalProps> = ({ open, onCancel, onOk, initialValues
       onCancel={onCancel}
       onFinish={onOk}
       open={open}
-      submitLoading={false}
-      submitText={isEdit ? '保存' : '创建'}
-      title={isEdit ? '编辑 API Key' : '创建 API Key'}
+      submitLoading={submitLoading}
+      submitText={t('apikey.form.submit')}
+      title={t('apikey.form.title')}
     />
   );
 };

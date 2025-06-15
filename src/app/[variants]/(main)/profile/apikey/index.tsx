@@ -5,8 +5,10 @@ import { Button } from '@lobehub/ui';
 import { useMutation } from '@tanstack/react-query';
 import { Popconfirm, Switch } from 'antd';
 import { createStyles } from 'antd-style';
+import { isString } from 'lodash';
 import { Trash } from 'lucide-react';
 import { FC, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { apiKeyService } from '@/services/apiKey';
 import { ApiKeyItem, CreateApiKeyParams, UpdateApiKeyParams } from '@/types/apiKey';
@@ -30,8 +32,8 @@ const useStyles = createStyles(({ css, token }) => ({
 
 const Page: FC = () => {
   const { styles } = useStyles();
+  const { t } = useTranslation('auth');
   const [modalOpen, setModalOpen] = useState(false);
-  const [editingApiKey, setEditingApiKey] = useState<ApiKeyItem | undefined>();
 
   const actionRef = useRef<ActionType>(null);
 
@@ -48,7 +50,6 @@ const Page: FC = () => {
       apiKeyService.update(id, params),
     onSuccess: () => {
       actionRef.current?.reload();
-      setModalOpen(false);
     },
   });
 
@@ -60,16 +61,11 @@ const Page: FC = () => {
   });
 
   const handleCreate = () => {
-    setEditingApiKey(undefined);
     setModalOpen(true);
   };
 
-  const handleModalOk = (values: CreateApiKeyParams | UpdateApiKeyParams) => {
-    if (editingApiKey) {
-      updateMutation.mutate({ id: editingApiKey.id!, params: values });
-    } else {
-      createMutation.mutate(values as CreateApiKeyParams);
-    }
+  const handleModalOk = (values: CreateApiKeyParams) => {
+    createMutation.mutate(values);
   };
 
   const columns: ProColumns<ApiKeyItem>[] = [
@@ -78,22 +74,26 @@ const Page: FC = () => {
       key: 'name',
       render: (_, apiKey) => (
         <EditableCell
-          onSubmit={() => {
-            console.log('onSubmit');
+          onSubmit={(name) => {
+            if (!name || name === apiKey.name) {
+              return;
+            }
+
+            updateMutation.mutate({ id: apiKey.id!, params: { name: name as string } });
           }}
-          placeholder="请输入"
+          placeholder={t('apikey.display.enterPlaceholder')}
           type="text"
           value={apiKey.name}
         />
       ),
-      title: '名称',
+      title: t('apikey.list.columns.name'),
     },
     {
       dataIndex: 'key',
       ellipsis: true,
       key: 'key',
       render: (_, apiKey) => <ApiKeyDisplay apiKey={apiKey.key} />,
-      title: 'Key',
+      title: t('apikey.list.columns.key'),
       width: 230,
     },
     {
@@ -102,13 +102,12 @@ const Page: FC = () => {
       render: (_, apiKey: ApiKeyItem) => (
         <Switch
           checked={!!apiKey.enabled}
-          loading={updateMutation.isPending}
           onChange={(checked) => {
             updateMutation.mutate({ id: apiKey.id!, params: { enabled: checked } });
           }}
         />
       ),
-      title: '启用状态',
+      title: t('apikey.list.columns.status'),
       width: 100,
     },
     {
@@ -116,35 +115,46 @@ const Page: FC = () => {
       key: 'expiresAt',
       render: (_, apiKey) => (
         <EditableCell
-          onSubmit={() => {
-            console.log('onSubmit');
+          onSubmit={(expiresAt) => {
+            if (isString(expiresAt) || expiresAt === apiKey.expiresAt) {
+              return;
+            }
+
+            updateMutation.mutate({
+              id: apiKey.id!,
+              params: { expiresAt: expiresAt as Date | null },
+            });
           }}
-          placeholder="永不过期"
+          placeholder={t('apikey.display.neverExpires')}
           type="date"
-          value={apiKey.expiresAt?.toLocaleString() || '永不过期'}
+          value={apiKey.expiresAt?.toLocaleString() || t('apikey.display.neverExpires')}
         />
       ),
-      title: '过期时间',
+      title: t('apikey.list.columns.expiresAt'),
       width: 170,
     },
     {
       dataIndex: 'lastUsedAt',
       key: 'lastUsedAt',
-      renderText: (_, apiKey: ApiKeyItem) => apiKey.lastUsedAt?.toLocaleString() || '从未使用',
-      title: '最后使用时间',
+      renderText: (_, apiKey: ApiKeyItem) =>
+        apiKey.lastUsedAt?.toLocaleString() || t('apikey.display.neverUsed'),
+      title: t('apikey.list.columns.lastUsedAt'),
     },
     {
       key: 'action',
       render: (_: any, apiKey: ApiKeyItem) => (
         <Popconfirm
+          cancelText={t('apikey.list.actions.deleteConfirm.actions.cancel')}
+          description={t('apikey.list.actions.deleteConfirm.content')}
+          okText={t('apikey.list.actions.deleteConfirm.actions.ok')}
           onConfirm={() => deleteMutation.mutate(apiKey.id!)}
-          title="确认删除该 API-Key 吗？"
+          title={t('apikey.list.actions.deleteConfirm.title')}
         >
-          <Button icon={Trash} size="small" title="删除" type="text" />
+          <Button icon={Trash} size="small" title={t('apikey.list.actions.delete')} type="text" />
         </Popconfirm>
       ),
-      title: '操作',
-      width: 60,
+      title: t('apikey.list.columns.actions'),
+      width: 100,
     },
   ];
 
@@ -154,7 +164,7 @@ const Page: FC = () => {
         actionRef={actionRef}
         className={styles.table}
         columns={columns}
-        headerTitle="API Key 列表"
+        headerTitle={t('apikey.list.title')}
         options={false}
         pagination={false}
         request={async () => {
@@ -170,16 +180,16 @@ const Page: FC = () => {
         toolbar={{
           actions: [
             <Button key="create" onClick={handleCreate} type="primary">
-              创建 API Key
+              {t('apikey.list.actions.create')}
             </Button>,
           ],
         }}
       />
       <ApiKeyModal
-        initialValues={editingApiKey}
         onCancel={() => setModalOpen(false)}
         onOk={handleModalOk}
         open={modalOpen}
+        submitLoading={createMutation.isPending}
       />
     </div>
   );

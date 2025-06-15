@@ -7,6 +7,6 @@ export interface CreateApiKeyParams {
 
 export interface UpdateApiKeyParams {
   enabled?: boolean;
-  expiresAt?: Date;
+  expiresAt?: Date | null;
   name?: string;
 }

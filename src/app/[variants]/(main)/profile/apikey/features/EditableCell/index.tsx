@@ -1,20 +1,24 @@
 'use client';
 
-import { ActionIcon, DatePicker, Input, TextArea } from '@lobehub/ui';
+import { ActionIcon, Input } from '@lobehub/ui';
+import { InputRef, message } from 'antd';
 import { createStyles } from 'antd-style';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { Check, Edit, X } from 'lucide-react';
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import React, { memo, useCallback, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import ApiKeyDatePicker from '../ApiKeyDatePicker';
 
 // 内容类型定义
-export type ContentType = 'text' | 'textarea' | 'date';
+export type ContentType = 'text' | 'date';
 
 // 组件Props接口定义
 export interface EditableCellProps {
   /** 是否禁用编辑 */
   disabled?: boolean;
   /** 提交回调函数 */
-  onSubmit: (value: string) => void;
+  onSubmit: (value: string | Date | null) => void;
   /** 占位符文本 */
   placeholder?: string;
   /** 内容类型 */
@@ -49,9 +53,6 @@ const useStyles = createStyles(({ css, token }) => ({
     color: ${token.colorText};
     word-break: break-all;
   `,
-  dateDisplay: css`
-    color: ${token.colorText};
-  `,
   editButton: css`
     opacity: 0;
     transition: opacity 0.2s ease;
@@ -78,26 +79,20 @@ const useStyles = createStyles(({ css, token }) => ({
 const EditableCell = memo<EditableCellProps>(
   ({ value, type, onSubmit, placeholder, disabled = false }) => {
     const { styles, cx } = useStyles();
+    const { t } = useTranslation('auth');
 
     // 编辑状态管理
     const [isEditing, setIsEditing] = useState(false);
-    // 临时编辑值状态
-    const [editValue, setEditValue] = useState(value);
-    // 日期选择器弹出状态
-    const [datePickerOpen, setDatePickerOpen] = useState(false);
-    // 用于Input和TextArea的ref
-    const inputRef = useRef<any>(null);
 
-    // 当外部value变化时更新内部编辑值
-    useEffect(() => {
-      setEditValue(value);
-    }, [value]);
+    // 用于Input的ref
+    const inputRef = useRef<InputRef>(null);
 
     // 格式化显示值
     const formatDisplayValue = useCallback(
       (val: string) => {
         if (type === 'date' && val) {
           const date = dayjs(val);
+
           return date.isValid() ? date.format('YYYY-MM-DD') : val;
         }
         return val || placeholder || '';
@@ -108,45 +103,36 @@ const EditableCell = memo<EditableCellProps>(
     // 开始编辑
     const handleEdit = useCallback(() => {
       if (disabled) return;
-      setIsEditing(true);
-      setEditValue(value);
 
-      // 对于日期类型，显示日期选择器
-      if (type === 'date') {
-        setDatePickerOpen(true);
-      } else {
-        // 对于文本类型，聚焦输入框
-        setTimeout(() => {
-          inputRef.current?.focus?.();
-        }, 100);
-      }
+      setIsEditing(true);
     }, [disabled, value, type]);
 
     // 提交编辑
     const handleSubmit = useCallback(() => {
-      const finalValue =
-        type === 'date' && editValue
-          ? dayjs(editValue).isValid()
-            ? dayjs(editValue).format('YYYY-MM-DD')
-            : editValue
-          : editValue;
+      if (type === 'text') {
+        const inputValue = inputRef.current?.input?.value;
 
-      onSubmit(finalValue);
+        if (!inputValue) {
+          message.warning(t('apikey.validation.required'));
+          return;
+        }
+
+        onSubmit(inputValue);
+      }
+
       setIsEditing(false);
-      setDatePickerOpen(false);
-    }, [editValue, onSubmit, type]);
+    }, [onSubmit, type, t]);
 
     // 取消编辑
     const handleCancel = useCallback(() => {
-      setEditValue(value);
       setIsEditing(false);
-      setDatePickerOpen(false);
     }, [value]);
 
-    // 键盘事件处理
+    // 输入框组件的键盘事件处理
     const handleKeyDown = useCallback(
       (e: React.KeyboardEvent) => {
-        if (e.key === 'Enter' && type !== 'textarea') {
+        console.log(e);
+        if (e.key === 'Enter') {
           e.preventDefault();
           handleSubmit();
         } else if (e.key === 'Escape') {
@@ -157,13 +143,12 @@ const EditableCell = memo<EditableCellProps>(
       [handleSubmit, handleCancel, type],
     );
 
-    // 日期选择处理
-    const handleDateChange = useCallback((date: any) => {
-      if (date) {
-        const dateStr = dayjs(date).format('YYYY-MM-DD');
-        setEditValue(dateStr);
-      }
-    }, []);
+    // 日期选择器提交
+    const handleDatePickerSubmit = (date: Dayjs | null) => {
+      onSubmit(date && dayjs(date).toDate());
+
+      setIsEditing(false);
+    };
 
     // 渲染编辑模式
     const renderEditMode = useCallback(() => {
@@ -173,46 +158,29 @@ const EditableCell = memo<EditableCellProps>(
             <div className={styles.inputWrapper}>
               <Input
                 autoFocus
+                defaultValue={value}
                 onBlur={handleSubmit}
-                onChange={(e) => setEditValue(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={placeholder}
                 ref={inputRef}
-                value={editValue}
-              />
-            </div>
-          );
-        }
-
-        case 'textarea': {
-          return (
-            <div className={styles.textareaWrapper}>
-              <TextArea
-                autoFocus
-                onChange={(e) => setEditValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={placeholder}
-                ref={inputRef}
-                rows={3}
-                value={editValue}
               />
             </div>
           );
         }
 
         case 'date': {
-          const dateValue = editValue && dayjs(editValue).isValid() ? dayjs(editValue) : null;
+          const dateValue = value && dayjs(value).isValid() ? dayjs(value) : null;
+
           return (
-            <DatePicker
-              onChange={handleDateChange}
-              onOpenChange={(open) => {
-                if (!open) {
-                  handleSubmit();
+            <ApiKeyDatePicker
+              defaultValue={dateValue}
+              onChange={handleDatePickerSubmit}
+              onOpenChange={() => {
+                if (isEditing) {
+                  setIsEditing(false);
                 }
               }}
               open={true}
-              placeholder={placeholder}
-              value={dateValue}
             />
           );
         }
@@ -221,16 +189,7 @@ const EditableCell = memo<EditableCellProps>(
           return null;
         }
       }
-    }, [
-      type,
-      editValue,
-      handleKeyDown,
-      placeholder,
-      handleSubmit,
-      datePickerOpen,
-      formatDisplayValue,
-      styles,
-    ]);
+    }, [type, handleKeyDown, placeholder, handleSubmit, formatDisplayValue, styles]);
 
     // 如果是编辑模式且不是日期类型，显示编辑界面
     if (isEditing && type !== 'date') {
@@ -251,7 +210,7 @@ const EditableCell = memo<EditableCellProps>(
         <div className={styles.content}>
           {type === 'date' && isEditing ? renderEditMode() : formatDisplayValue(value)}
         </div>
-        {!disabled && (
+        {!isEditing && (
           <ActionIcon
             className={cx(styles.editButton, 'edit-button')}
             icon={Edit}

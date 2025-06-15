@@ -63,7 +63,7 @@ export const apiKeyRouter = router({
         value: z.object({
           description: z.string().optional(),
           enabled: z.boolean().optional(),
-          expiresAt: z.date().optional(),
+          expiresAt: z.date().optional().nullable(),
           name: z.string().optional(),
         }),
       }),
