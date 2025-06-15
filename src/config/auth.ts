@@ -18,6 +18,8 @@ declare global {
 
       NEXT_AUTH_DEBUG?: string;
 
+      NEXT_AUTH_SSO_SESSION_STRATEGY?: string;
+
       AUTH0_CLIENT_ID?: string;
       AUTH0_CLIENT_SECRET?: string;
       AUTH0_ISSUER?: string;
@@ -159,6 +161,7 @@ export const getAuthConfig = () => {
       NEXT_AUTH_SECRET: z.string().optional(),
       NEXT_AUTH_SSO_PROVIDERS: z.string().optional().default('auth0'),
       NEXT_AUTH_DEBUG: z.boolean().optional().default(false),
+      NEXT_AUTH_SSO_SESSION_STRATEGY: z.enum(['jwt', 'database']).optional().default('jwt'),
 
       // Auth0
       AUTH0_CLIENT_ID: z.string().optional(),
@@ -221,6 +224,7 @@ export const getAuthConfig = () => {
       NEXT_AUTH_SSO_PROVIDERS: process.env.NEXT_AUTH_SSO_PROVIDERS,
       NEXT_AUTH_SECRET: process.env.NEXT_AUTH_SECRET,
       NEXT_AUTH_DEBUG: !!process.env.NEXT_AUTH_DEBUG,
+      NEXT_AUTH_SSO_SESSION_STRATEGY: process.env.NEXT_AUTH_SSO_SESSION_STRATEGY || 'jwt',
 
       // Auth0
       AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
