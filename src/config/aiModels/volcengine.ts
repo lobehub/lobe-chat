@@ -22,8 +22,8 @@ const doubaoChatModels: AIChatModelCard[] = [
     maxOutput: 16_000,
     pricing: {
       currency: 'CNY',
-      input: 2.4,
-      output: 24,
+      input: 1.2, // 输入长度 (32, 128] 千 token
+      output: 16,
     },
     type: 'chat',
   },
@@ -45,8 +45,8 @@ const doubaoChatModels: AIChatModelCard[] = [
     maxOutput: 16_000,
     pricing: {
       currency: 'CNY',
-      input: 2.4,
-      output: 24,
+      input: 1.2, // 输入长度 (32, 128] 千 token
+      output: 16,
     },
     settings: {
       extendParams: ['thinking'],
@@ -71,8 +71,8 @@ const doubaoChatModels: AIChatModelCard[] = [
     maxOutput: 16_000,
     pricing: {
       currency: 'CNY',
-      input: 0.6,
-      output: 6,
+      input: 0.3, // 输入长度 (32, 128] 千 token
+      output: 3,
     },
     settings: {
       extendParams: ['enableReasoning'],
@@ -132,7 +132,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'doubao-1-5-thinking-pro-m-250415',
+      deploymentName: 'doubao-1-5-thinking-pro-m-250428',
     },
     contextWindowTokens: 131_072,
     description:
@@ -237,12 +237,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     config: {
       deploymentName: 'doubao-1-5-pro-32k-250115',
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 128_000,
     description:
       'Doubao-1.5-pro 全新一代主力模型，性能全面升级，在知识、代码、推理、等方面表现卓越。',
     displayName: 'Doubao 1.5 Pro 32k',
     id: 'doubao-1.5-pro-32k',
-    maxOutput: 12_288,
+    maxOutput: 16_384,
     pricing: {
       currency: 'CNY',
       input: 0.8,
@@ -395,6 +395,9 @@ const doubaoChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    config: {
+      deploymentName: 'doubao-lite-4k-character-240828',
+    },
     contextWindowTokens: 4096,
     description:
       '拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持 4k 上下文窗口的推理和精调。',
@@ -443,20 +446,6 @@ const doubaoChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 4096,
-    description:
-      '效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持 4k 上下文窗口的推理和精调。',
-    displayName: 'Doubao Pro 4k',
-    id: 'Doubao-pro-4k',
-    maxOutput: 4096,
-    pricing: {
-      currency: 'CNY',
-      input: 0.8,
-      output: 2,
-    },
-    type: 'chat',
-  },
-  {
     config: {
       deploymentName: 'doubao-pro-32k-241215',
     },
@@ -470,20 +459,6 @@ const doubaoChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 0.8,
       output: 2,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 128_000,
-    description:
-      '效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持 128k 上下文窗口的推理和精调。',
-    displayName: 'Doubao Pro 128k',
-    id: 'Doubao-pro-128k',
-    maxOutput: 4096,
-    pricing: {
-      currency: 'CNY',
-      input: 5,
-      output: 9,
     },
     type: 'chat',
   },
