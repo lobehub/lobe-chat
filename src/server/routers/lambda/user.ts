@@ -29,7 +29,7 @@ const userProcedure = authedProcedure.use(serverDatabase).use(async ({ ctx, next
     ctx: {
       clerkAuth: new ClerkAuth(),
       fileService: new FileService(ctx.serverDB, ctx.userId),
-      nextAuthDbAdapter: LobeNextAuthDbAdapter(ctx.serverDB),
+      nextAuthDbAdapter: LobeNextAuthDbAdapter(),
       userModel: new UserModel(ctx.serverDB, ctx.userId),
     },
   });
