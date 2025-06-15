@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.94.9](https://github.com/lobehub/lobe-chat/compare/v1.94.8...v1.94.9)
+
+<sup>Released on **2025-06-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add `kimi-thinking-preview` model from Moonshot.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add `kimi-thinking-preview` model from Moonshot, closes [#8171](https://github.com/lobehub/lobe-chat/issues/8171) ([93d677c](https://github.com/lobehub/lobe-chat/commit/93d677c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.94.8](https://github.com/lobehub/lobe-chat/compare/v1.94.7...v1.94.8)
 
 <sup>Released on **2025-06-15**</sup>
