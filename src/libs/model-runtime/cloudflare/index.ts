@@ -150,6 +150,7 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
             model.name.toLowerCase().includes('deepseek-r1') ||
             knownModel?.abilities?.reasoning ||
             false,
+          search: knownModel?.abilities?.search || false,
           vision:
             model.name.toLowerCase().includes('vision') ||
             model.task?.name.toLowerCase().includes('image-to-text') ||
