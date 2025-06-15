@@ -1,5 +1,11 @@
 import { MainBroadcastEventKey, MainBroadcastParams } from '@lobechat/electron-client-ipc';
-import { BrowserWindow, BrowserWindowConstructorOptions, ipcMain, nativeTheme } from 'electron';
+import {
+  BrowserWindow,
+  BrowserWindowConstructorOptions,
+  ipcMain,
+  nativeTheme,
+  screen,
+} from 'electron';
 import os from 'node:os';
 import { join } from 'node:path';
 
@@ -19,6 +25,7 @@ export interface BrowserWindowOpts extends BrowserWindowConstructorOptions {
    */
   identifier: string;
   keepAlive?: boolean;
+  parentIdentifier?: string;
   path: string;
   showOnInit?: boolean;
   title?: string;
@@ -145,7 +152,38 @@ export default class Browser {
 
   show() {
     logger.debug(`Showing window: ${this.identifier}`);
+    this.determineWindowPosition();
     this.browserWindow.show();
+  }
+
+  private determineWindowPosition() {
+    const { parentIdentifier } = this.options;
+
+    if (parentIdentifier) {
+      // todo: fix ts type
+      const parentWin = this.app.browserManager.retrieveByIdentifier(parentIdentifier as any);
+      if (parentWin) {
+        logger.debug(`[${this.identifier}] Found parent window: ${parentIdentifier}`);
+
+        const display = screen.getDisplayNearestPoint(parentWin.browserWindow.getContentBounds());
+        if (display) {
+          const {
+            workArea: { x, y, width: displayWidth, height: displayHeight },
+          } = display;
+
+          const { width, height } = this._browserWindow.getContentBounds();
+          logger.debug(
+            `[${this.identifier}] Display bounds: x=${x}, y=${y}, width=${displayWidth}, height=${displayHeight}`,
+          );
+
+          // Calculate new position
+          const newX = Math.floor(Math.max(x + (displayWidth - width) / 2, x));
+          const newY = Math.floor(Math.max(y + (displayHeight - height) / 2, y));
+          logger.debug(`[${this.identifier}] Calculated position: x=${newX}, y=${newY}`);
+          this._browserWindow.setPosition(newX, newY, false);
+        }
+      }
+    }
   }
 
   hide() {
