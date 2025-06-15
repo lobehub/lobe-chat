@@ -46,6 +46,15 @@ export class ClientService implements IUserService {
     // Account not exist on next-auth in client mode, no need to implement this method
   };
 
+  getUserSSOSessions = async () => {
+    // Session not exist on next-auth in client mode, no need to implement this method
+    return [];
+  };
+
+  deleteUserSSOSessions = async () => {
+    // Session not exist on next-auth in client mode, no need to implement this method
+  };
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateUserSettings = async (patch: DeepPartial<UserSettings>, _?: any) => {
     return UserModel.updateSettings(patch);
