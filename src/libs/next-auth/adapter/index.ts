@@ -4,273 +4,173 @@ import type {
   AdapterUser,
   VerificationToken,
 } from '@auth/core/adapters';
-import { and, eq } from 'drizzle-orm';
-import type { NeonDatabase } from 'drizzle-orm/neon-serverless';
 import { Adapter, AdapterAccount } from 'next-auth/adapters';
 
-import { UserModel } from '@/database/models/user';
-import * as schema from '@/database/schemas';
-import { AgentService } from '@/server/services/agent';
-import { merge } from '@/utils/merge';
+import { appEnv } from '@/envs/app';
+import debug from 'debug';
+import urlJoin from 'url-join';
+import { serverDBEnv } from '@/config/db';
 
-import {
-  mapAdapterUserToLobeUser,
-  mapAuthenticatorQueryResutlToAdapterAuthenticator,
-  mapLobeUserToAdapterUser,
-  partialMapAdapterUserToLobeUser,
-} from './utils';
+const log = debug('lobe-next-auth:adapter');
 
-const {
-  nextauthAccounts,
-  nextauthAuthenticators,
-  nextauthSessions,
-  nextauthVerificationTokens,
-  users,
-} = schema;
+interface BackendAdapterResponse {
+  success: boolean;
+  data?: any;
+  error?: string;
+}
 
 /**
  * @description LobeNextAuthDbAdapter is implemented to handle the database operations
  * for NextAuth, this function do the same things as `src/app/api/webhooks/clerk/route.ts`
  * @returns {Adapter}
  */
-export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Adapter {
+export function LobeNextAuthDbAdapter(): Adapter {
+  const baseUrl = appEnv.APP_URL;
+
+  // Ensure the baseUrl is set, otherwise throw an error
+  if (!baseUrl) {
+    throw new Error('LobeNextAuthDbAdapter: APP_URL is not set in environment variables');
+  }
+  const interactionUrl = urlJoin(baseUrl, '/api/auth/adapter')
+  log(`LobeNextAuthDbAdapter initialized with url: ${interactionUrl}`);
+
+  // Ensure serverDBEnv.KEY_VAULTS_SECRET is set, otherwise throw an error
+  if (!serverDBEnv.KEY_VAULTS_SECRET) {
+    throw new Error('LobeNextAuthDbAdapter: KEY_VAULTS_SECRET is not set in environment variables');
+  }
+
+  const fetcher = (action: string, data: any) => fetch(interactionUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${serverDBEnv.KEY_VAULTS_SECRET}`,
+    },
+    body: JSON.stringify({ data, action }),
+  });
+  const postProcessor = async (res: Response) => {
+    const data = (await res.json()) as BackendAdapterResponse;
+    if (!data.success) {
+      log('LobeNextAuthDbAdapter: Error in postProcessor:', data.error);
+      throw new Error(`LobeNextAuthDbAdapter: ${data.error}`);
+    }
+    return data.data
+  }
+
   return {
     async createAuthenticator(authenticator): Promise<AdapterAuthenticator> {
-      const result = await serverDB
-        .insert(nextauthAuthenticators)
-        .values(authenticator)
-        .returning()
-        .then((res) => res[0] ?? undefined);
-      if (!result) throw new Error('LobeNextAuthDbAdapter: Failed to create authenticator');
-      return mapAuthenticatorQueryResutlToAdapterAuthenticator(result);
+      const data = await fetcher('createAuthenticator', authenticator);
+      return await postProcessor(data);
     },
-    async createSession(data): Promise<AdapterSession> {
-      return serverDB
-        .insert(nextauthSessions)
-        .values(data)
-        .returning()
-        .then((res) => res[0]);
+    async createSession(session): Promise<AdapterSession> {
+      const data = await fetcher('createSession', session);
+      return await postProcessor(data)
     },
     async createUser(user): Promise<AdapterUser> {
-      const { id, name, email, emailVerified, image, providerAccountId } = user;
-      // return the user if it already exists
-      let existingUser =
-        email && typeof email === 'string' && email.trim()
-          ? await UserModel.findByEmail(serverDB, email)
-          : undefined;
-      // If the user is not found by email, try to find by providerAccountId
-      if (!existingUser && providerAccountId) {
-        existingUser = await UserModel.findById(serverDB, providerAccountId);
-      }
-      if (existingUser) {
-        const adapterUser = mapLobeUserToAdapterUser(existingUser);
-        return adapterUser;
-      }
-
-      // create a new user if it does not exist
-      // Use id from provider if it exists, otherwise use id assigned by next-auth
-      // ref: https://github.com/lobehub/lobe-chat/pull/2935
-      const uid = providerAccountId ?? id;
-      await UserModel.createUser(
-        serverDB,
-        mapAdapterUserToLobeUser({
-          email,
-          emailVerified,
-          // Use providerAccountId as userid to identify if the user exists in a SSO provider
-          id: uid,
-          image,
-          name,
-        }),
-      );
-
-      // 3. Create an inbox session for the user
-      const agentService = new AgentService(serverDB, uid);
-      await agentService.createInbox();
-
-      return { ...user, id: uid };
+      const data = await fetcher('createUser', user);
+      return await postProcessor(data);
     },
     async createVerificationToken(data): Promise<VerificationToken | null | undefined> {
-      return serverDB
-        .insert(nextauthVerificationTokens)
-        .values(data)
-        .returning()
-        .then((res) => res[0]);
+      const result = await fetcher('createVerificationToken', data);
+      return await postProcessor(result);
     },
     async deleteSession(sessionToken): Promise<AdapterSession | null | undefined> {
-      await serverDB
-        .delete(nextauthSessions)
-        .where(eq(nextauthSessions.sessionToken, sessionToken));
+      const result = await fetcher('deleteSession', sessionToken);
+      await postProcessor(result);
       return;
     },
     async deleteUser(id): Promise<AdapterUser | null | undefined> {
-      const user = await UserModel.findById(serverDB, id);
-      if (!user) throw new Error('NextAuth: Delete User not found');
-
-      await UserModel.deleteUser(serverDB, id);
+      const result = await fetcher('deleteUser', id);
+      await postProcessor(result);
       return;
     },
 
     async getAccount(providerAccountId, provider): Promise<AdapterAccount | null> {
-      return serverDB
-        .select()
-        .from(nextauthAccounts)
-        .where(
-          and(
-            eq(nextauthAccounts.provider, provider),
-            eq(nextauthAccounts.providerAccountId, providerAccountId),
-          ),
-        )
-        .then((res) => res[0] ?? null) as Promise<AdapterAccount | null>;
+      const data = await fetcher('getAccount', {
+        providerAccountId,
+        provider,
+      });
+      const result = await postProcessor(data);
+      return result;
     },
 
     async getAuthenticator(credentialID): Promise<AdapterAuthenticator | null> {
-      const result = await serverDB
-        .select()
-        .from(nextauthAuthenticators)
-        .where(eq(nextauthAuthenticators.credentialID, credentialID))
-        .then((res) => res[0] ?? null);
-      if (!result) throw new Error('LobeNextAuthDbAdapter: Failed to get authenticator');
-      return mapAuthenticatorQueryResutlToAdapterAuthenticator(result);
+      const result = await fetcher('getAuthenticator', credentialID);
+      const data = await postProcessor(result);
+      return data
     },
 
     async getSessionAndUser(sessionToken): Promise<{
       session: AdapterSession;
       user: AdapterUser;
     } | null> {
-      const result = await serverDB
-        .select({
-          session: nextauthSessions,
-          user: users,
-        })
-        .from(nextauthSessions)
-        .where(eq(nextauthSessions.sessionToken, sessionToken))
-        .innerJoin(users, eq(users.id, nextauthSessions.userId))
-        .then((res) => (res.length > 0 ? res[0] : null));
-
-      if (!result) return null;
-      const adapterUser = mapLobeUserToAdapterUser(result.user);
-      if (!adapterUser) return null;
-      return {
-        session: result.session,
-        user: adapterUser,
-      };
+      const result = await fetcher('getSessionAndUser', sessionToken);
+      const data = await postProcessor(result);
+      return data
     },
 
     async getUser(id): Promise<AdapterUser | null> {
-      const lobeUser = await UserModel.findById(serverDB, id);
-      if (!lobeUser) return null;
-      return mapLobeUserToAdapterUser(lobeUser);
+      log('getUser called with id:', id);
+      const result = await fetcher('getUserInfo', id)
+      const data = await postProcessor(result);
+      return data;
     },
 
     async getUserByAccount(account): Promise<AdapterUser | null> {
-      const result = await serverDB
-        .select({
-          account: nextauthAccounts,
-          users,
-        })
-        .from(nextauthAccounts)
-        .innerJoin(users, eq(nextauthAccounts.userId, users.id))
-        .where(
-          and(
-            eq(nextauthAccounts.provider, account.provider),
-            eq(nextauthAccounts.providerAccountId, account.providerAccountId),
-          ),
-        )
-        .then((res) => res[0]);
-
-      return result?.users ? mapLobeUserToAdapterUser(result.users) : null;
+      const data = await fetcher('getUserByAccount', account)
+      const result = await postProcessor(data);
+      return result;
     },
 
     async getUserByEmail(email): Promise<AdapterUser | null> {
-      const lobeUser =
-        email && typeof email === 'string' && email.trim()
-          ? await UserModel.findByEmail(serverDB, email)
-          : undefined;
-      return lobeUser ? mapLobeUserToAdapterUser(lobeUser) : null;
+      const data = await fetcher('getUserByEmail', email);
+      const result = await postProcessor(data);
+      return result;
     },
 
     async linkAccount(data): Promise<AdapterAccount | null | undefined> {
-      const [account] = await serverDB
-        .insert(nextauthAccounts)
-        .values(data as any)
-        .returning();
-      if (!account) throw new Error('NextAuthAccountModel: Failed to create account');
-      // TODO Update type annotation
-      return account as any;
+      const result = await fetcher('linkAccount', data);
+      const account = await postProcessor(result);
+      return account;
     },
 
     async listAuthenticatorsByUserId(userId): Promise<AdapterAuthenticator[]> {
-      const result = await serverDB
-        .select()
-        .from(nextauthAuthenticators)
-        .where(eq(nextauthAuthenticators.userId, userId))
-        .then((res) => res);
-      if (result.length === 0)
-        throw new Error('LobeNextAuthDbAdapter: Failed to get authenticator list');
-      return result.map((r) => mapAuthenticatorQueryResutlToAdapterAuthenticator(r));
+      const result = await fetcher('listAuthenticatorsByUserId', userId);
+      const data = await postProcessor(result);
+      return data;
     },
 
     // @ts-ignore: The return type is {Promise<void> | Awaitable<AdapterAccount | undefined>}
     async unlinkAccount(account): Promise<void | AdapterAccount | undefined> {
-      await serverDB
-        .delete(nextauthAccounts)
-        .where(
-          and(
-            eq(nextauthAccounts.provider, account.provider),
-            eq(nextauthAccounts.providerAccountId, account.providerAccountId),
-          ),
-        );
+      const result = await fetcher('unlinkAccount', account);
+      await postProcessor(result);
+      return
     },
 
     async updateAuthenticatorCounter(credentialID, counter): Promise<AdapterAuthenticator> {
-      const result = await serverDB
-        .update(nextauthAuthenticators)
-        .set({ counter })
-        .where(eq(nextauthAuthenticators.credentialID, credentialID))
-        .returning()
-        .then((res) => res[0]);
-      if (!result) throw new Error('LobeNextAuthDbAdapter: Failed to update authenticator counter');
-      return mapAuthenticatorQueryResutlToAdapterAuthenticator(result);
+      const result = await fetcher('updateAuthenticatorCounter', {
+        credentialID,
+        counter,
+      });
+      const data = await postProcessor(result);
+      return data;
     },
 
     async updateSession(data): Promise<AdapterSession | null | undefined> {
-      const res = await serverDB
-        .update(nextauthSessions)
-        .set(data)
-        .where(eq(nextauthSessions.sessionToken, data.sessionToken))
-        .returning();
-      return res[0];
+      const result = await fetcher('updateSession', data);
+      const session = await postProcessor(result);
+      return session;
     },
 
     async updateUser(user): Promise<AdapterUser> {
-      const lobeUser = await UserModel.findById(serverDB, user?.id);
-      if (!lobeUser) throw new Error('NextAuth: User not found');
-      const userModel = new UserModel(serverDB, user.id);
-
-      const updatedUser = await userModel.updateUser({
-        ...partialMapAdapterUserToLobeUser(user),
-      });
-      if (!updatedUser) throw new Error('NextAuth: Failed to update user');
-
-      // merge new user data with old user data
-      const newAdapterUser = mapLobeUserToAdapterUser(lobeUser);
-      if (!newAdapterUser) {
-        throw new Error('NextAuth: Failed to map user data to adapter user');
-      }
-      return merge(newAdapterUser, user);
+      const result = await fetcher('updateUser', user);
+      const data = await postProcessor(result);
+      return data;
     },
 
     async useVerificationToken(identifier_token): Promise<VerificationToken | null> {
-      return serverDB
-        .delete(nextauthVerificationTokens)
-        .where(
-          and(
-            eq(nextauthVerificationTokens.identifier, identifier_token.identifier),
-            eq(nextauthVerificationTokens.token, identifier_token.token),
-          ),
-        )
-        .returning()
-        .then((res) => (res.length > 0 ? res[0] : null));
+      const result = await fetcher('useVerificationToken', identifier_token);
+      const data = await postProcessor(result);
+      return data;
     },
   };
 }
