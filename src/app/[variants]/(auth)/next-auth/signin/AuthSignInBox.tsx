@@ -76,7 +76,11 @@ export default memo(() => {
 
   const searchParams = useSearchParams();
 
+<<<<<<< HEAD
   // Redirect back to the page url, fallback to '/' if failed
+=======
+  // Redirect back to the page url
+>>>>>>> ecf695d9b (:bug: fix: default callbackUrl)
   const callbackUrl = searchParams.get('callbackUrl') ?? '/';
 
   const handleSignIn = async (provider: string) => {
