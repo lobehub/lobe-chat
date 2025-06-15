@@ -13,7 +13,7 @@ import {
   mapLobeUserToAdapterUser,
   mapAuthenticatorQueryResutlToAdapterAuthenticator,
   partialMapAdapterUserToLobeUser
-} from '@/libs/next-auth/adapter/utils';
+} from './utils';
 
 import { and, eq } from 'drizzle-orm';
 
