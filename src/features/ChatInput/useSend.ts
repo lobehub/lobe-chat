@@ -4,6 +4,9 @@ import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { fileChatSelectors, useFileStore } from '@/store/file';
 import { SendMessageParams } from '@/types/message';
+import { parsePlaceholderVariables } from '@/utils/client/parserPlaceholder';
+import { agentChatConfigSelectors } from '@/store/agent/selectors';
+import { useAgentStore } from '@/store/agent';
 
 export type UseSendMessageParams = Pick<
   SendMessageParams,
@@ -37,12 +40,19 @@ export const useSendMessage = () => {
     if (!canSend) return;
 
     const fileList = fileChatSelectors.chatUploadFileList(useFileStore.getState());
+
+    // 用户输入预处理
+    const inputTemplate = agentChatConfigSelectors.currentChatConfig(useAgentStore.getState()).inputTemplate;
+    const processedMessage = inputTemplate 
+      ? parsePlaceholderVariables(inputTemplate.replace('{{input_template}}', store.inputMessage || ''))
+      : store.inputMessage;
+
     // if there is no message and no image, then we should not send the message
-    if (!store.inputMessage && fileList.length === 0) return;
+    if (!processedMessage && fileList.length === 0) return;
 
     sendMessage({
       files: fileList,
-      message: store.inputMessage,
+      message: processedMessage,
       ...params,
     });
 
