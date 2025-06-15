@@ -1,3 +1,5 @@
+import mime from 'mime';
+
 /**
  * Build a path string from a path and a hash/search object
  * @param path
@@ -21,3 +23,11 @@ export const pathString = (
   if (search) url.search = search;
   return url.toString().replace(tempBase, '');
 };
+
+export function inferContentTypeFromImageUrl(url: string) {
+  const extension = url.split('.').pop();
+  if (!extension) {
+    throw new Error(`Invalid image url: ${url}`);
+  }
+  return mime.getType(extension);
+}

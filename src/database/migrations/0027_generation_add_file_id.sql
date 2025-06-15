@@ -1,0 +1,2 @@
+ALTER TABLE "generations" ADD COLUMN "file_id" text;--> statement-breakpoint
+ALTER TABLE "generations" ADD CONSTRAINT "generations_file_id_files_id_fk" FOREIGN KEY ("file_id") REFERENCES "public"."files"("id") ON DELETE cascade ON UPDATE no action;

@@ -1,6 +1,7 @@
 export enum AsyncTaskType {
   Chunking = 'chunk',
   Embedding = 'embedding',
+  ImageGeneration = 'image_generation',
 }
 
 export enum AsyncTaskStatus {

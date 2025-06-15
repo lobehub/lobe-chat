@@ -45,7 +45,13 @@ export const files = pgTable(
     userId: text('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
+    /**
+     * mime
+     */
     fileType: varchar('file_type', { length: 255 }).notNull(),
+    /**
+     * sha256
+     */
     fileHash: varchar('file_hash', { length: 64 }).references(() => globalFiles.hashId, {
       onDelete: 'no action',
     }),
