@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import InitClientDB from '@/features/InitClientDB';
@@ -24,9 +23,7 @@ const Layout = ({ children, session }: LayoutProps) => {
       {/* ↓ cloud slot ↓ */}
 
       {/* ↑ cloud slot ↑ */}
-      <Suspense>
-        <RegisterHotkeys />
-      </Suspense>
+      <RegisterHotkeys />
     </>
   );
 };
