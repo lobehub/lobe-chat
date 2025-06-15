@@ -530,6 +530,11 @@ export const generateAIChat: StateCreator<
       ? agentConfig.params.max_tokens
       : undefined;
 
+    // 4. handle reasoning_effort
+    agentConfig.params.reasoning_effort = chatConfig.enableReasoningEffort
+      ? agentConfig.params.reasoning_effort
+      : undefined;
+
     let isFunctionCall = false;
     let msgTraceId: string | undefined;
     let output = '';
