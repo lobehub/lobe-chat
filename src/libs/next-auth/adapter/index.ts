@@ -49,6 +49,7 @@ export function LobeNextAuthDbAdapter(): Adapter {
   });
   const postProcessor = async (res: Response) => {
     const data = (await res.json()) as BackendAdapterResponse;
+    log('LobeNextAuthDbAdapter: postProcessor called with data:', data);
     if (!data.success) {
       log('LobeNextAuthDbAdapter: Error in postProcessor:', data.error);
       throw new Error(`LobeNextAuthDbAdapter: ${data.error}`);
@@ -110,7 +111,7 @@ export function LobeNextAuthDbAdapter(): Adapter {
 
     async getUser(id): Promise<AdapterUser | null> {
       log('getUser called with id:', id);
-      const result = await fetcher('getUserInfo', id)
+      const result = await fetcher('getUser', id)
       const data = await postProcessor(result);
       return data;
     },
