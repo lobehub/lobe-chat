@@ -14,7 +14,19 @@ const MarkdownRender = memo<{ children?: string }>(({ children }) => {
     );
   return (
     <Markdown
-      components={{ h1: H1, h2: H2, h3: H3, h4: H4, h5: H5, img: 'img' }}
+      allowHtml
+      components={{
+        h1: H1,
+        h2: H2,
+        h3: H3,
+        h4: H4,
+        h5: H5,
+        img: ({ src, ...rest }: { src: string }) => {
+          if (src.includes('glama.ai')) return;
+          if (src && src.startsWith('http')) return <img src={src} {...rest} />;
+          return;
+        },
+      }}
       enableImageGallery={false}
       enableLatex={false}
     >

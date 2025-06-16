@@ -1,10 +1,7 @@
-import { Avatar, Block } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Avatar, Block, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-
-const { Title, Paragraph } = Typography;
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -40,23 +37,18 @@ const KnowledgeItem = memo<{ avatar?: string; description?: string; title: strin
             overflow: 'hidden',
           }}
         >
-          <Title
-            className={title}
-            ellipsis={{
-              rows: 1,
-            }}
-            level={2}
-          >
+          <Text as={'h2'} className={title} ellipsis>
             {title}
-          </Title>
-          <Paragraph
+          </Text>
+          <Text
+            as={'p'}
             className={styles.desc}
             ellipsis={{
               rows: 2,
             }}
           >
             {description}
-          </Paragraph>
+          </Text>
         </Flexbox>
       </Block>
     );

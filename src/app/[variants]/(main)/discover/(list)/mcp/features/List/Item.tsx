@@ -1,9 +1,8 @@
 'use client';
 
 import { Github } from '@lobehub/icons';
-import { ActionIcon, Avatar, Block, Icon } from '@lobehub/ui';
+import { ActionIcon, Avatar, Block, Icon, Text } from '@lobehub/ui';
 import { Spotlight } from '@lobehub/ui/awesome';
-import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { ClockIcon, StarIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -20,8 +19,6 @@ import InstallationIcon from '../../../../features/InstallationIcon';
 import PublishedTime from '../../../../features/PublishedTime';
 import ConnectionTypeTag from './ConnectionTypeTag';
 import MetaInfo from './MetaInfo';
-
-const { Title, Paragraph } = Typography;
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -129,15 +126,9 @@ const McpItem = memo<DiscoverMcpItem>(
                 }}
               >
                 <Link href={link} style={{ color: 'inherit', overflow: 'hidden' }}>
-                  <Title
-                    className={styles.title}
-                    ellipsis={{
-                      rows: 1,
-                    }}
-                    level={2}
-                  >
+                  <Text as={'h2'} className={styles.title} ellipsis>
                     {name}
-                  </Title>
+                  </Text>
                 </Link>
                 {isFeatured && <Icon color={theme.gold} fill={theme.gold} icon={StarIcon} />}
               </Flexbox>
@@ -164,14 +155,15 @@ const McpItem = memo<DiscoverMcpItem>(
             resourcesCount={resourcesCount}
             toolsCount={toolsCount}
           />
-          <Paragraph
+          <Text
+            as={'p'}
             className={styles.desc}
             ellipsis={{
               rows: 3,
             }}
           >
             {description}
-          </Paragraph>
+          </Text>
           <Flexbox
             align={'center'}
             className={styles.secondaryDesc}

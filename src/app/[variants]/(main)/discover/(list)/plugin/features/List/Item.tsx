@@ -1,6 +1,5 @@
 import { Github } from '@lobehub/icons';
-import { ActionIcon, Avatar, Block, Icon } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { ActionIcon, Avatar, Block, Icon, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ClockIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -12,8 +11,6 @@ import urlJoin from 'url-join';
 
 import PublishedTime from '@/app/[variants]/(main)/discover/features/PublishedTime';
 import { DiscoverPluginItem } from '@/types/discover';
-
-const { Paragraph, Title } = Typography;
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -104,15 +101,9 @@ const PluginItem = memo<DiscoverPluginItem>(
                 }}
               >
                 <Link href={link} style={{ color: 'inherit', overflow: 'hidden' }}>
-                  <Title
-                    className={styles.title}
-                    ellipsis={{
-                      rows: 1,
-                    }}
-                    level={2}
-                  >
+                  <Text as={'h2'} className={styles.title} ellipsis>
                     {title}
-                  </Title>
+                  </Text>
                 </Link>
               </Flexbox>
               {author && <div className={styles.author}>{author}</div>}
@@ -129,14 +120,15 @@ const PluginItem = memo<DiscoverPluginItem>(
           </Flexbox>
         </Flexbox>
         <Flexbox flex={1} gap={12} paddingInline={16}>
-          <Paragraph
+          <Text
+            as={'p'}
             className={styles.desc}
             ellipsis={{
               rows: 3,
             }}
           >
             {description}
-          </Paragraph>
+          </Text>
         </Flexbox>
         <Flexbox
           align={'center'}

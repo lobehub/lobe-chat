@@ -1,8 +1,7 @@
 'use client';
 
 import { Github, MCP } from '@lobehub/icons';
-import { ActionIcon, Avatar, Button, Icon, Tooltip } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { ActionIcon, Avatar, Button, Icon, Text, Tooltip } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import { BookTextIcon, CoinsIcon, DotIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -96,14 +95,14 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
                 position: 'relative',
               }}
             >
-              <Typography.Title
-                ellipsis={{ rows: 1 }}
-                level={1}
+              <Text
+                as={'h1'}
+                ellipsis
                 style={{ fontSize: mobile ? 18 : 24, margin: 0 }}
                 title={identifier}
               >
                 {title}
-              </Typography.Title>
+              </Text>
             </Flexbox>
             <Flexbox align={'center'} gap={6} horizontal>
               <Link

@@ -1,8 +1,7 @@
 'use client';
 
 import { Github } from '@lobehub/icons';
-import { ActionIcon, Avatar, Button, Icon } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { ActionIcon, Avatar, Button, Icon, Text } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import { DotIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -31,7 +30,7 @@ const useStyles = createStyles(({ css, token }) => {
   };
 });
 
-const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
+const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile, inModal }) => {
   const { author, identifier, createdAt, category, avatar, title } = useDetailContext();
   const { styles, theme } = useStyles();
   const { mobile = isMobile } = useResponsive();
@@ -82,14 +81,14 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
                 position: 'relative',
               }}
             >
-              <Typography.Title
-                ellipsis={{ rows: 1 }}
-                level={1}
-                style={{ fontSize: mobile ? 18 : 24, margin: 0 }}
+              <Text
+                as={'h1'}
+                ellipsis
+                style={{ fontSize: inModal ? 20 : mobile ? 18 : 24, margin: 0 }}
                 title={identifier}
               >
                 {title}
-              </Typography.Title>
+              </Text>
             </Flexbox>
             <Flexbox align={'center'} gap={6} horizontal>
               <Link

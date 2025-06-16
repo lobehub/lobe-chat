@@ -1,12 +1,10 @@
-import { Avatar, Block } from '@lobehub/ui';
-import { Skeleton, Typography } from 'antd';
+import { Avatar, Block, Text } from '@lobehub/ui';
+import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useDiscoverStore } from '@/store/discover';
-
-const { Title, Paragraph } = Typography;
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -50,23 +48,18 @@ const PluginItem = memo<{ identifier: string }>(({ identifier }) => {
           overflow: 'hidden',
         }}
       >
-        <Title
-          className={styles.title}
-          ellipsis={{
-            rows: 1,
-          }}
-          level={2}
-        >
+        <Text as={'h2'} className={styles.title} ellipsis>
           {data.title}
-        </Title>
-        <Paragraph
+        </Text>
+        <Text
+          as={'p'}
           className={styles.desc}
           ellipsis={{
             rows: 2,
           }}
         >
           {data.description}
-        </Paragraph>
+        </Text>
       </Flexbox>
     </Block>
   );

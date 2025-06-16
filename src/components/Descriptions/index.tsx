@@ -1,12 +1,9 @@
-import { Grid, type GridProps, Icon, IconProps } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Grid, type GridProps, Icon, IconProps, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { CSSProperties, ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import CopyableLabel from '../CopyableLabel';
-
-const { Paragraph } = Typography;
 
 const useStyles = createStyles(({ responsive, css, token }) => {
   return {
@@ -82,18 +79,14 @@ const Descriptions = memo<DescriptionsProps>(
                 width={labelWidth}
               >
                 {item.icon && <Icon color={theme.colorTextSecondary} icon={item.icon} />}
-                <Paragraph
-                  ellipsis={{
-                    rows: 1,
-                  }}
+                <Text
+                  ellipsis
                   style={{
                     color: theme.colorTextSecondary,
-                    margin: 0,
-                    overflow: 'hidden',
                   }}
                 >
                   {item.label}
-                </Paragraph>
+                </Text>
               </Flexbox>
               <Flexbox
                 align={'center'}
@@ -110,14 +103,9 @@ const Descriptions = memo<DescriptionsProps>(
                     value={item.value ? String(item.value) : '--'}
                   />
                 ) : (
-                  <Paragraph
-                    ellipsis={{
-                      rows: 1,
-                    }}
-                    style={{ margin: 0, overflow: 'hidden', ...item.style }}
-                  >
+                  <Text ellipsis style={{ ...item.style }}>
                     {item.value}
-                  </Paragraph>
+                  </Text>
                 )}
               </Flexbox>
             </Flexbox>
