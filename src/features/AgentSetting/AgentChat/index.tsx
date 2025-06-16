@@ -52,7 +52,17 @@ const AgentChat = memo(() => {
         name: 'displayMode',
       },
       {
-        children: <TextArea placeholder={t('settingChat.inputTemplate.placeholder')} />,
+        children: (
+          <TextArea 
+            onFocus={() => {
+              const currentValue = form.getFieldValue('inputTemplate');
+              if (!currentValue || currentValue.trim() === '') {
+                form.setFieldValue('inputTemplate', '{{input_template}}');
+              }
+            }}
+            placeholder={t('settingChat.inputTemplate.placeholder')}
+          />
+        ),
         desc: t('settingChat.inputTemplate.desc'),
         label: t('settingChat.inputTemplate.title'),
         name: 'inputTemplate',

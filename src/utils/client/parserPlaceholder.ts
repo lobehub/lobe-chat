@@ -190,3 +190,23 @@ export const parsePlaceholderVariablesMessages = (messages: any[]): any[] =>
 
     return message;
   });
+
+/**
+ * 处理输入模板，将配置中的模板与输入消息结合
+ * @param inputMessage 用户输入的消息
+ * @returns 处理后的完整消息
+ */
+export const processInputTemplate = (inputMessage: string): string => {
+  const inputTemplate = agentChatConfigSelectors.currentChatConfig(getAgentStoreState()).inputTemplate || '';
+  
+  if (!inputTemplate) {
+    return inputMessage;
+  }
+
+  // 将 {{input_template}} 替换为实际的输入消息
+  const processedTemplate = inputTemplate.replaceAll('{{input_template}}', inputMessage);
+  
+  // 解析其他占位符变量
+  // return parsePlaceholderVariables(processedTemplate);
+  return processedTemplate;
+};

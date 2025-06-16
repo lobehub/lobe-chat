@@ -24,7 +24,7 @@ import { ChatMessage, CreateMessageParams, SendMessageParams } from '@/types/mes
 import { ChatImageItem } from '@/types/message/image';
 import { MessageSemanticSearchChunk } from '@/types/rag';
 import { setNamespace } from '@/utils/storeDebug';
-import { parsePlaceholderVariablesMessages } from '@/utils/client/parserPlaceholder';
+import { parsePlaceholderVariablesMessages, processInputTemplate } from '@/utils/client/parserPlaceholder';
 
 import { chatSelectors, topicSelectors } from '../../../selectors';
 
@@ -529,6 +529,15 @@ export const generateAIChat: StateCreator<
 
     // 3. handle placeholder variables
     preprocessMsgs = parsePlaceholderVariablesMessages(preprocessMsgs);
+    if (preprocessMsgs.length > 0) {
+      const lastMessage = preprocessMsgs.at(-1);
+      if (lastMessage?.role === 'user' && typeof lastMessage.content === 'string') {
+        preprocessMsgs[preprocessMsgs.length - 1] = {
+          ...lastMessage,
+          content: processInputTemplate(lastMessage.content)
+        };
+      }
+    }
 
     // 4. handle max_tokens
     agentConfig.params.max_tokens = chatConfig.enableMaxTokens
