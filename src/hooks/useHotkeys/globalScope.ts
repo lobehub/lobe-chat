@@ -1,4 +1,5 @@
 import isEqual from 'fast-deep-equal';
+import { useRouter } from 'next/navigation';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 import { useHotkeys } from 'react-hotkeys-hook';
 
@@ -60,10 +61,17 @@ export const useOpenHotkeyHelperHotkey = () => {
   );
 };
 
+export const useOpenSettingHotKey = () => {
+  const router = useRouter();
+
+  return useHotkeyById(HotkeyEnum.OpenSettings, () => router.push('/settings/common'));
+};
+
 // 注册聚合
 
 export const useRegisterGlobalHotkeys = () => {
   // 全局自动注册不需要 enableScope
   useSwitchAgentHotkey();
+  useOpenSettingHotKey();
   useOpenHotkeyHelperHotkey();
 };
