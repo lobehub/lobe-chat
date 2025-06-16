@@ -2,6 +2,49 @@
 
 # Changelog
 
+### [Version&nbsp;1.94.3](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.94.2...v1.94.3)
+<sup>Released on **2025-06-16**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Correctly handle `reasoning_effort`, improve chat selectors and enhance topic handling logic.
+
+
+#### 💄 Styles
+
+- **misc**: Add `kimi-thinking-preview` model from Moonshot.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **misc**: Correctly handle `reasoning_effort`, closes [#8180](https://github.com/jaworldwideorg/OneJA-Bot/issues/8180) ([1c04736](https://github.com/jaworldwideorg/OneJA-Bot/commit/1c04736))
+* **misc**: Improve chat selectors and enhance topic handling logic, closes [#8133](https://github.com/jaworldwideorg/OneJA-Bot/issues/8133) [#8117](https://github.com/jaworldwideorg/OneJA-Bot/issues/8117) ([15b24f1](https://github.com/jaworldwideorg/OneJA-Bot/commit/15b24f1))
+
+
+
+#### Styles
+
+* **misc**: Add `kimi-thinking-preview` model from Moonshot, closes [#8171](https://github.com/jaworldwideorg/OneJA-Bot/issues/8171) ([93d677c](https://github.com/jaworldwideorg/OneJA-Bot/commit/93d677c))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.94.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.94.1...v1.94.2)
 <sup>Released on **2025-06-13**</sup>
 
