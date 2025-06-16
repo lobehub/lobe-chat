@@ -91,15 +91,15 @@ export type HotkeyGroupId = (typeof HotkeyGroupEnum)[keyof typeof HotkeyGroupEnu
 export type HotkeyScopeId = (typeof HotkeyScopeEnum)[keyof typeof HotkeyScopeEnum];
 
 export interface HotkeyItem {
-  // 快捷键分组用于展示
+  /** 快捷键分组 */
   group: HotkeyGroupId;
   id: HotkeyId;
+  /** 是否是桌面端专用的快捷键 */
   isDesktop?: boolean;
-  // 是否是桌面端专用的快捷键
   keys: string;
-  // 是否为不可编辑的快捷键
+  /** 是否为不可编辑的快捷键 */
   nonEditable?: boolean;
-  // 快捷键作用域
+  /** 快捷键作用域 */
   scopes?: HotkeyScopeId[];
 }
 

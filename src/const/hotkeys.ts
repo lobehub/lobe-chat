@@ -58,7 +58,6 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
   {
     group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.OpenSettings,
-    isDesktop: true,
     keys: combineKeys([KeyEnum.Mod, KeyEnum.Comma]),
     nonEditable: true,
     scopes: [HotkeyScopeEnum.Global],

@@ -1,15 +1,23 @@
 import { Hotkey } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { HOTKEYS_REGISTRATION } from '@/const/hotkeys';
+import { isDesktop } from '@/const/version';
 import hotkeyMeta from '@/locales/default/hotkey';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/slices/settings/selectors';
-import { HotkeyGroupId } from '@/types/hotkey';
+import { HotkeyGroupId, HotkeyItem } from '@/types/hotkey';
+
+const filterByDesktop = (item: HotkeyItem) => {
+  if (isDesktop) return true;
+
+  // is not desktop, filter out desktop only items
+  if (!isDesktop) return !item.isDesktop;
+};
 
 const useStyle = createStyles(({ css, token }) => ({
   desc: css`
@@ -36,9 +44,15 @@ const HotkeyContent = memo<HotkeyContentProps>(({ groupId }) => {
   const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
   const { t } = useTranslation('hotkey');
   const { styles } = useStyle();
+
+  const hotkeys = useMemo(
+    () => HOTKEYS_REGISTRATION.filter((item) => item.group === groupId && filterByDesktop(item)),
+    [groupId],
+  );
+
   return (
     <>
-      {HOTKEYS_REGISTRATION.filter((item) => item.group === groupId).map((item) => (
+      {hotkeys.map((item) => (
         <Flexbox align={'flex-start'} gap={16} horizontal key={item.id} width={'100%'}>
           <Flexbox flex={1} gap={4} justify={'space-between'}>
             <span>{t(`${item.id}.title`)}</span>
