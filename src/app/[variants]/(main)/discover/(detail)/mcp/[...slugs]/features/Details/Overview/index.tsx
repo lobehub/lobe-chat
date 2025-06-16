@@ -10,7 +10,7 @@ import MarkdownRender from '../../../../../features/MakedownRender';
 import { useDetailContext } from '../../DetailProvider';
 import TagList from './TagList';
 
-const Overview = memo(() => {
+const Overview = memo<{ inModal?: boolean }>(({ inModal }) => {
   const { t } = useTranslation('discover');
   const { related = [], category, tags = [], description, overview } = useDetailContext();
   return (
@@ -31,20 +31,22 @@ const Overview = memo(() => {
         {overview?.readme && <MarkdownRender>{overview.readme.trimEnd()}</MarkdownRender>}
         <TagList tags={tags} />
       </Flexbox>
-      <Flexbox gap={16}>
-        <Title
-          more={t('mcp.details.related.more')}
-          moreLink={qs.stringifyUrl({
-            query: {
-              category,
-            },
-            url: '/discover/mcp',
-          })}
-        >
-          {t('mcp.details.related.listTitle')}
-        </Title>
-        <McpList data={related} />
-      </Flexbox>
+      {!inModal && (
+        <Flexbox gap={16}>
+          <Title
+            more={t('mcp.details.related.more')}
+            moreLink={qs.stringifyUrl({
+              query: {
+                category,
+              },
+              url: '/discover/mcp',
+            })}
+          >
+            {t('mcp.details.related.listTitle')}
+          </Title>
+          <McpList data={related} />
+        </Flexbox>
+      )}
     </Flexbox>
   );
 });

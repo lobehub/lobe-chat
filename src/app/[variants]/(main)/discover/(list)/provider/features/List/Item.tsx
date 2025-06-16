@@ -1,6 +1,5 @@
 import { Github, ModelTag, ProviderCombine } from '@lobehub/icons';
-import { ActionIcon, Block, MaskShadow } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { ActionIcon, Block, MaskShadow, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { GlobeIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -11,8 +10,6 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { DiscoverProviderItem } from '@/types/discover';
-
-const { Paragraph } = Typography;
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -103,14 +100,14 @@ const ProviderItem = memo<DiscoverProviderItem>(
         </Flexbox>
         <Flexbox flex={1} gap={12} paddingInline={16}>
           {description && (
-            <Paragraph
+            <Text
               className={styles.desc}
               ellipsis={{
                 rows: 3,
               }}
             >
               {t(`${identifier}.description`, { ns: 'providers' })}
-            </Paragraph>
+            </Text>
           )}
         </Flexbox>
         <Flexbox

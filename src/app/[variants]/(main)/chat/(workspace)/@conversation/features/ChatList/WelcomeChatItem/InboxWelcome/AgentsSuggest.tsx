@@ -1,7 +1,7 @@
 'use client';
 
-import { ActionIcon, Avatar, Block, Grid } from '@lobehub/ui';
-import { Skeleton, Typography } from 'antd';
+import { ActionIcon, Avatar, Block, Grid, Text } from '@lobehub/ui';
+import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { RefreshCw } from 'lucide-react';
 import Link from 'next/link';
@@ -12,8 +12,6 @@ import urlJoin from 'url-join';
 
 import { useDiscoverStore } from '@/store/discover';
 import { DiscoverAssistantItem } from '@/types/discover';
-
-const { Paragraph } = Typography;
 
 const useStyles = createStyles(({ css, token, responsive }) => ({
   card: css`
@@ -98,12 +96,12 @@ const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
                 <Block className={styles.card} clickable gap={12} horizontal variant={'outlined'}>
                   <Avatar avatar={item.avatar} style={{ flex: 'none' }} />
                   <Flexbox gap={2} style={{ overflow: 'hidden', width: '100%' }}>
-                    <Paragraph className={styles.cardTitle} ellipsis={{ rows: 1 }}>
+                    <Text className={styles.cardTitle} ellipsis={{ rows: 1 }}>
                       {item.title}
-                    </Paragraph>
-                    <Paragraph className={styles.cardDesc} ellipsis={{ rows: mobile ? 1 : 2 }}>
+                    </Text>
+                    <Text className={styles.cardDesc} ellipsis={{ rows: mobile ? 1 : 2 }}>
                       {item.description}
-                    </Paragraph>
+                    </Text>
                   </Flexbox>
                 </Block>
               </Link>
