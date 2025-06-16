@@ -18,8 +18,8 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "lobehubbot"
+          git config --global user.email "i@lobehub.com"
 
       - name: Install bun
         uses: oven-sh/setup-bun@v1
@@ -255,6 +255,8 @@ jobs:
             if git push origin style/auto-i18n --force-with-lease; then
               echo "✅ Successfully pushed changes"
               echo "push_success=true" >> $GITHUB_OUTPUT
+              # Store the commit hash for later use
+              echo "commit_hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
               exit 0
             elif [ $i -eq 3 ]; then
               echo "❌ Failed to push changes after 3 attempts"
@@ -273,8 +275,11 @@ jobs:
         run: |
           echo "🔍 Checking branch differences..."
 
+          # Ensure we have the latest main branch
+          git fetch origin main
+
           # Check if there are actual differences between the branches
-          if git diff --quiet main...style/auto-i18n; then
+          if git diff --quiet origin/main...origin/style/auto-i18n; then
             echo "ℹ️ No differences between main and style/auto-i18n branches"
             echo "has_differences=false" >> $GITHUB_OUTPUT
           else
@@ -283,7 +288,7 @@ jobs:
           fi
 
       - name: Create or Update Pull Request
-        if: steps.git_status.outputs.changes_exist == 'true' && steps.commit_push.outputs.push_success == 'true' && steps.check_diff.outputs.has_differences == 'true'
+        if: steps.git_status.outputs.changes_exist == 'true' && steps.commit_push.outputs.push_success == 'true'
         id: create_pr
         uses: peter-evans/create-pull-request@v4
         with:
@@ -302,6 +307,7 @@ jobs:
             - Auto-generated i18n updates
             - Generated at: ${{ github.run_number }}
             - Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+            - Commit: `${{ steps.commit_push.outputs.commit_hash }}`
 
             ## 🤖 Automation Info
             - Workflow: `${{ github.workflow }}`
@@ -314,6 +320,14 @@ jobs:
             i18n
             automated
             style
+          delete-branch: false
+          push-to-fork: ''
+          commit-message: '[create-pull-request] automated change'
+          committer: lobehubbot <i@lobehub.com>
+          author: lobehubbot <i@lobehub.com>
+          signoff: false
+          draft: false
+          branch-suffix: short-commit-hash
 
       - name: Check Pull Request Status
         if: steps.git_status.outputs.changes_exist == 'true' && steps.commit_push.outputs.push_success == 'true'
