@@ -1,6 +1,48 @@
 [
   {
     "children": {
+      "fixes": ["Improve chat selectors and enhance topic handling logic."]
+    },
+    "date": "2025-06-15",
+    "version": "1.94.10"
+  },
+  {
+    "children": {
+      "improvements": ["Add kimi-thinking-preview model from Moonshot."]
+    },
+    "date": "2025-06-15",
+    "version": "1.94.9"
+  },
+  {
+    "children": {
+      "fixes": ["Correctly handle reasoning_effort."]
+    },
+    "date": "2025-06-15",
+    "version": "1.94.8"
+  },
+  {
+    "children": {
+      "improvements": ["Add Doubao Seed 1.6 model."]
+    },
+    "date": "2025-06-12",
+    "version": "1.94.7"
+  },
+  {
+    "children": {
+      "fixes": ["Abort the Gemini request correctly & Add openai o3-pro."]
+    },
+    "date": "2025-06-12",
+    "version": "1.94.6"
+  },
+  {
+    "children": {
+      "improvements": ["Support web_search_preview & fix some bug form OpenAI Response API."]
+    },
+    "date": "2025-06-12",
+    "version": "1.94.5"
+  },
+  {
+    "children": {
       "improvements": ["Transition animation switch."]
     },
     "date": "2025-06-11",
