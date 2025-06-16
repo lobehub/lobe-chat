@@ -659,6 +659,9 @@
   "codestral-latest": {
     "description": "Codestral is a cutting-edge generative model focused on code generation, optimized for intermediate filling and code completion tasks."
   },
+  "codex-mini-latest": {
+    "description": "codex-mini-latest is a fine-tuned version of o4-mini, specifically designed for Codex CLI. For direct API usage, we recommend starting with gpt-4.1."
+  },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B is a model designed for instruction following, dialogue, and programming."
   },
@@ -715,6 +718,9 @@
   },
   "compound-beta-mini": {
     "description": "Compound-beta-mini is a composite AI system supported by publicly available models in GroqCloud, intelligently and selectively using tools to answer user queries."
+  },
+  "computer-use-preview": {
+    "description": "The computer-use-preview model is a dedicated model designed for \"computer usage tools,\" trained to understand and execute computer-related tasks."
   },
   "dall-e-2": {
     "description": "The second generation DALL·E model, supporting more realistic and accurate image generation, with a resolution four times that of the first generation."
@@ -904,6 +910,15 @@
   },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite is a newly upgraded multimodal large model that supports image recognition at any resolution and extreme aspect ratios, enhancing visual reasoning, document recognition, detail comprehension, and instruction following capabilities. It supports a context window of 128k and an output length of up to 16k tokens."
+  },
+  "doubao-seed-1.6": {
+    "description": "Doubao-Seed-1.6 is a brand-new multimodal deep thinking model supporting auto, thinking, and non-thinking modes. In non-thinking mode, its performance significantly surpasses Doubao-1.5-pro/250115. It supports a 256k context window and output lengths up to 16k tokens."
+  },
+  "doubao-seed-1.6-flash": {
+    "description": "Doubao-Seed-1.6-flash is an ultra-fast multimodal deep thinking model with inference speed as low as 10ms on TPOT; it supports both text and visual understanding. Its text comprehension exceeds the previous lite generation, and its visual understanding rivals competitor pro series models. It supports a 256k context window and output lengths up to 16k tokens."
+  },
+  "doubao-seed-1.6-thinking": {
+    "description": "Doubao-Seed-1.6-thinking significantly enhances thinking capabilities compared to Doubao-1.5-thinking-pro, with further improvements in coding, math, and logical reasoning skills. It supports visual understanding and a 256k context window, with output lengths up to 16k tokens."
   },
   "emohaa": {
     "description": "Emohaa is a psychological model with professional counseling capabilities, helping users understand emotional issues."
@@ -1268,6 +1283,9 @@
   "gpt-4o-mini": {
     "description": "GPT-4o mini is the latest model released by OpenAI after GPT-4 Omni, supporting both image and text input while outputting text. As their most advanced small model, it is significantly cheaper than other recent cutting-edge models, costing over 60% less than GPT-3.5 Turbo. It maintains state-of-the-art intelligence while offering remarkable cost-effectiveness. GPT-4o mini scored 82% on the MMLU test and currently ranks higher than GPT-4 in chat preferences."
   },
+  "gpt-4o-mini-audio-preview": {
+    "description": "GPT-4o mini Audio model supports audio input and output."
+  },
   "gpt-4o-mini-realtime-preview": {
     "description": "GPT-4o-mini real-time version, supporting real-time audio and text input and output."
   },
@@ -1420,6 +1438,9 @@
   },
   "kimi-latest": {
     "description": "The Kimi Smart Assistant product uses the latest Kimi large model, which may include features that are not yet stable. It supports image understanding and will automatically select the 8k/32k/128k model as the billing model based on the length of the request context."
+  },
+  "kimi-thinking-preview": {
+    "description": "kimi-thinking-preview is a multimodal thinking model provided by Dark Side of the Moon, featuring multimodal and general reasoning abilities. It excels at deep reasoning to help solve more complex and challenging problems."
   },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM is an experimental, task-specific language model trained to align with learning science principles, capable of following systematic instructions in teaching and learning scenarios, acting as an expert tutor, among other roles."
@@ -1823,11 +1844,17 @@
   "o1-preview": {
     "description": "o1 is OpenAI's new reasoning model, suitable for complex tasks that require extensive general knowledge. This model features a 128K context and has a knowledge cutoff date of October 2023."
   },
+  "o1-pro": {
+    "description": "The o1 series models are trained with reinforcement learning to think before answering and perform complex reasoning tasks. The o1-pro model uses more computational resources for deeper thinking, consistently delivering higher-quality responses."
+  },
   "o3": {
     "description": "o3 is a versatile and powerful model that excels across multiple domains. It sets new benchmarks for tasks in mathematics, science, programming, and visual reasoning. It is also skilled in technical writing and instruction following, allowing users to analyze text, code, and images to solve complex multi-step problems."
   },
   "o3-mini": {
     "description": "o3-mini is our latest small inference model that delivers high intelligence while maintaining the same cost and latency targets as o1-mini."
+  },
+  "o3-pro": {
+    "description": "The o3-pro model employs increased computation for deeper thinking and consistently better answers. It is only available for use under the Responses API."
   },
   "o4-mini": {
     "description": "o4-mini is our latest small model in the o series. It is optimized for fast and efficient inference, demonstrating high efficiency and performance in coding and visual tasks."
