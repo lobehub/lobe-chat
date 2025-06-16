@@ -1,12 +1,9 @@
-import { Avatar, Block } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Avatar, Block, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { DiscoverMcpItem } from '@/types/discover';
-
-const { Title, Paragraph } = Typography;
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -40,23 +37,18 @@ const RelatedItem = memo<DiscoverMcpItem>(({ name, icon, description, identifier
           overflow: 'hidden',
         }}
       >
-        <Title
-          className={styles.title}
-          ellipsis={{
-            rows: 1,
-          }}
-          level={2}
-        >
+        <Text as={'h2'} className={styles.title} ellipsis>
           {name}
-        </Title>
-        <Paragraph
+        </Text>
+        <Text
+          as={'p'}
           className={styles.desc}
           ellipsis={{
             rows: 2,
           }}
         >
           {description}
-        </Paragraph>
+        </Text>
       </Flexbox>
     </Block>
   );

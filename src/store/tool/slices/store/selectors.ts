@@ -1,3 +1,4 @@
+import { PluginStoreTabs } from '@/store/tool/slices/store/initialState';
 import { InstallPluginMeta } from '@/types/tool/plugin';
 
 import type { ToolStoreState } from '../../initialState';
@@ -5,7 +6,7 @@ import type { ToolStoreState } from '../../initialState';
 const onlinePluginStore = (s: ToolStoreState) => {
   const installedPluginIds = new Set(s.installedPlugins.map((i) => i.identifier));
   const list =
-    s.listType === 'old'
+    s.listType === PluginStoreTabs.Plugin
       ? s.pluginStoreList
       : s.pluginStoreList.filter((p) => installedPluginIds.has(p.identifier));
 

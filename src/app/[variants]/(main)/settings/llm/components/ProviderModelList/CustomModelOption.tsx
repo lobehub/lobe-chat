@@ -1,6 +1,6 @@
 import { ModelIcon } from '@lobehub/icons';
-import { ActionIcon, Icon } from '@lobehub/ui';
-import { App, Typography } from 'antd';
+import { ActionIcon, Icon, Text } from '@lobehub/ui';
+import { App } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { LucideArrowRight, LucideSettings, LucideTrash2 } from 'lucide-react';
 import { memo } from 'react';
@@ -45,10 +45,10 @@ const CustomModelOption = memo<CustomModelOptionProps>(({ id, provider }) => {
         <ModelIcon model={id} size={32} />
         <Flexbox direction={'vertical'} style={{ flex: 1, overflow: 'hidden' }}>
           <Flexbox align={'center'} gap={8} horizontal>
-            <Typography.Text ellipsis>{modelCard?.displayName || id}</Typography.Text>
+            <Text ellipsis>{modelCard?.displayName || id}</Text>
             <ModelInfoTags id={id} {...modelCard} isCustom />
           </Flexbox>
-          <Typography.Text ellipsis style={{ fontSize: 12, marginTop: '4px' }} type={'secondary'}>
+          <Text ellipsis style={{ fontSize: 12, marginTop: '4px' }} type={'secondary'}>
             {id}
             {!!modelCard?.deploymentName && (
               <>
@@ -56,7 +56,7 @@ const CustomModelOption = memo<CustomModelOptionProps>(({ id, provider }) => {
                 {modelCard?.deploymentName}
               </>
             )}
-          </Typography.Text>
+          </Text>
         </Flexbox>
       </Flexbox>
 

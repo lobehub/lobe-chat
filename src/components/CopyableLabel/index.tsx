@@ -1,5 +1,4 @@
-import { CopyButton } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { CopyButton, Text } from '@lobehub/ui';
 import { CSSProperties, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -16,8 +15,8 @@ const CopyableLabel = memo<{ style?: CSSProperties; value?: string | null }>(
           ...style,
         }}
       >
-        <Typography.Paragraph
-          ellipsis={{ rows: 1 }}
+        <Text
+          ellipsis
           style={{
             color: 'inherit',
             fontFamily: 'inherit',
@@ -28,7 +27,7 @@ const CopyableLabel = memo<{ style?: CSSProperties; value?: string | null }>(
           }}
         >
           {value || '--'}
-        </Typography.Paragraph>
+        </Text>
         <CopyButton content={value || '--'} size={'small'} />
       </Flexbox>
     );

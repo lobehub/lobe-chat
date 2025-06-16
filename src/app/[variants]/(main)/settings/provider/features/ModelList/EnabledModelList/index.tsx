@@ -1,5 +1,4 @@
-import { ActionIcon } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { ActionIcon, Text } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { ArrowDownUpIcon, ToggleLeft } from 'lucide-react';
 import { useState } from 'react';
@@ -24,9 +23,9 @@ const EnabledModelList = () => {
   return (
     <>
       <Flexbox horizontal justify={'space-between'}>
-        <Typography.Text style={{ fontSize: 12, marginTop: 8 }} type={'secondary'}>
+        <Text style={{ fontSize: 12, marginTop: 8 }} type={'secondary'}>
           {t('providerModels.list.enabled')}
-        </Typography.Text>
+        </Text>
         {!isEmpty && (
           <Flexbox horizontal>
             <ActionIcon
@@ -66,9 +65,9 @@ const EnabledModelList = () => {
       </Flexbox>
       {isEmpty ? (
         <Center padding={12}>
-          <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
+          <Text style={{ fontSize: 12 }} type={'secondary'}>
             {t('providerModels.list.enabledEmpty')}
-          </Typography.Text>
+          </Text>
         </Center>
       ) : (
         <Flexbox gap={2}>

@@ -1,5 +1,4 @@
-import { Avatar, Icon } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Avatar, Icon, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { InboxIcon } from 'lucide-react';
@@ -35,7 +34,7 @@ const FileList = () => {
         size={48}
       />
       <Balancer>
-        <Typography.Text type={'secondary'}>{t('emptyKnowledgeList')}</Typography.Text>
+        <Text type={'secondary'}>{t('emptyKnowledgeList')}</Text>
       </Balancer>
     </Center>
   ) : (

@@ -1,7 +1,6 @@
 'use client';
 
-import { ActionIcon } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { ActionIcon, Text } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { ToggleRightIcon } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -26,9 +25,9 @@ const SearchResult = memo(() => {
   return (
     <>
       <Flexbox horizontal justify={'space-between'}>
-        <Typography.Text style={{ fontSize: 12, marginTop: 8 }} type={'secondary'}>
+        <Text style={{ fontSize: 12, marginTop: 8 }} type={'secondary'}>
           {t('providerModels.list.searchResult', { count: filteredModels.length })}
-        </Typography.Text>
+        </Text>
         {!isEmpty && (
           <Flexbox horizontal>
             <ActionIcon

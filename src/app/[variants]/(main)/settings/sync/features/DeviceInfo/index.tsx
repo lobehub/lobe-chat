@@ -1,6 +1,6 @@
 'use client';
 
-import { Typography } from 'antd';
+import { Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
 import { memo } from 'react';
@@ -65,9 +65,9 @@ const DeviceCard = memo<DeviceCardProps>(({ browser, os }) => {
       <Flexbox className={styles.container} padding={4}>
         <Flexbox horizontal paddingBlock={8} paddingInline={12}>
           <div>
-            <Typography style={{ fontSize: 18, fontWeight: 'bold' }}>
+            <Text strong style={{ fontSize: 18 }}>
               {t('sync.device.title')}
-            </Typography>
+            </Text>
           </div>
         </Flexbox>
         <Flexbox

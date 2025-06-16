@@ -1,5 +1,5 @@
-import { ActionIcon, Dropdown, EditableText, Icon, type MenuProps } from '@lobehub/ui';
-import { App, Typography } from 'antd';
+import { ActionIcon, Dropdown, EditableText, Icon, type MenuProps, Text } from '@lobehub/ui';
+import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import { MoreVertical, PencilLine, Trash } from 'lucide-react';
 import { memo, useMemo } from 'react';
@@ -30,7 +30,6 @@ const useStyles = createStyles(({ css, token }) => ({
     text-align: start;
   `,
 }));
-const { Paragraph } = Typography;
 
 interface TopicContentProps {
   active?: boolean;
@@ -109,13 +108,14 @@ const Content = memo<TopicContentProps>(({ id, title, active, showMore }) => {
             <BubblesLoading />
           </Flexbox>
         ) : (
-          <Paragraph
+          <Text
+            as={'p'}
             className={cx(styles.title, active && styles.active)}
             ellipsis={{ rows: 1, tooltip: { placement: 'left', title } }}
             style={{ margin: 0 }}
           >
             {title}
-          </Paragraph>
+          </Text>
         )
       ) : (
         <EditableText

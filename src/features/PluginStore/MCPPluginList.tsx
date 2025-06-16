@@ -1,26 +1,24 @@
-import { Icon, SearchBar } from '@lobehub/ui';
+import { Icon } from '@lobehub/ui';
 import { Empty } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { ServerCrash } from 'lucide-react';
-import { memo, useMemo, useState } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Center } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
 
 import { useToolStore } from '@/store/tool';
 import { mcpStoreSelectors, pluginSelectors } from '@/store/tool/selectors';
 
-import AddPluginButton from './AddPluginButton';
 import Loading from './Loading';
 import PluginItem from './PluginItem';
 
-export const MCPPluginList = memo(() => {
+export const MCPPluginList = memo<{ keywords?: string }>(({ keywords }) => {
   const { t } = useTranslation('plugin');
-  const [keywords, setKeywords] = useState<string | undefined>();
+
   const pluginStoreList = useToolStore((s) => {
     const custom = pluginSelectors.installedCustomPluginMetaList(s);
     const store = mcpStoreSelectors.mcpPluginList(s);
-
     return [...custom, ...store];
   }, isEqual);
 
@@ -42,45 +40,31 @@ export const MCPPluginList = memo(() => {
     [pluginStoreList, keywords],
   );
 
+  if (isLoading) return <Loading />;
+  if (isEmpty)
+    return (
+      <Center gap={12} padding={40}>
+        {error ? (
+          <>
+            <Icon icon={ServerCrash} size={80} />
+            {t('store.networkError')}
+          </>
+        ) : (
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        )}
+      </Center>
+    );
+
   return (
-    <>
-      <Flexbox align={'center'} gap={8} horizontal justify={'space-between'}>
-        <Flexbox flex={1}>
-          <SearchBar
-            allowClear
-            onChange={(e) => setKeywords(e.target.value)}
-            placeholder={t('store.placeholder')}
-            value={keywords}
-            variant={'filled'}
-          />
-        </Flexbox>
-        <AddPluginButton />
-      </Flexbox>
-      {isLoading ? (
-        <Loading />
-      ) : isEmpty ? (
-        <Center gap={12} padding={40}>
-          {error ? (
-            <>
-              <Icon icon={ServerCrash} size={80} />
-              {t('store.networkError')}
-            </>
-          ) : (
-            <Empty description={t('store.empty')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-          )}
-        </Center>
-      ) : (
-        <Virtuoso
-          itemContent={(index) => {
-            const item = filteredPluginList[index];
-            return <PluginItem key={item.identifier} {...item} isMCP />;
-          }}
-          overscan={400}
-          style={{ height: 500, marginInline: -16 }}
-          totalCount={filteredPluginList.length}
-        />
-      )}
-    </>
+    <Virtuoso
+      itemContent={(index) => {
+        const item = filteredPluginList[index];
+        return <PluginItem key={item.identifier} {...item} isMCP />;
+      }}
+      overscan={400}
+      style={{ height: 500, marginInline: -16 }}
+      totalCount={filteredPluginList.length}
+    />
   );
 });
 

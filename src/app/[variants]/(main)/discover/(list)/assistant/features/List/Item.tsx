@@ -1,6 +1,5 @@
 import { Github } from '@lobehub/icons';
-import { ActionIcon, Avatar, Block, Icon } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { ActionIcon, Avatar, Block, Icon, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ClockIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -14,8 +13,6 @@ import PublishedTime from '@/app/[variants]/(main)/discover/features/PublishedTi
 import { DiscoverAssistantItem } from '@/types/discover';
 
 import TokenTag from './TokenTag';
-
-const { Paragraph, Title } = Typography;
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -123,15 +120,9 @@ const AssistantItem = memo<DiscoverAssistantItem>(
                 }}
               >
                 <Link href={link} style={{ color: 'inherit', overflow: 'hidden' }}>
-                  <Title
-                    className={styles.title}
-                    ellipsis={{
-                      rows: 1,
-                    }}
-                    level={2}
-                  >
+                  <Text as={'h2'} className={styles.title} ellipsis>
                     {title}
-                  </Title>
+                  </Text>
                 </Link>
               </Flexbox>
               {author && <div className={styles.author}>{author}</div>}
@@ -151,14 +142,15 @@ const AssistantItem = memo<DiscoverAssistantItem>(
           </Flexbox>
         </Flexbox>
         <Flexbox flex={1} gap={12} paddingInline={16}>
-          <Paragraph
+          <Text
+            as={'p'}
             className={styles.desc}
             ellipsis={{
               rows: 3,
             }}
           >
             {description}
-          </Paragraph>
+          </Text>
           <TokenTag
             knowledgeCount={knowledgeCount}
             pluginCount={pluginCount}

@@ -1,7 +1,7 @@
 'use client';
 
-import { ActionIcon, Button } from '@lobehub/ui';
-import { Divider, Typography } from 'antd';
+import { ActionIcon, Button, Text } from '@lobehub/ui';
+import { Divider } from 'antd';
 import { useTheme } from 'antd-style';
 import { ArrowLeftIcon, DownloadIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -42,12 +42,12 @@ const Header = memo<HeaderProps>(({ filename, url }) => {
           {t('back')}
         </Button>
         <Divider type={'vertical'} />
-        <Typography.Title
-          level={1}
+        <Text
+          as={'h1'}
           style={{ fontSize: 16, lineHeight: 1.5, marginBottom: 0, paddingInlineStart: 8 }}
         >
           {filename}
-        </Typography.Title>
+        </Text>
       </Flexbox>
       <Flexbox>
         <ActionIcon

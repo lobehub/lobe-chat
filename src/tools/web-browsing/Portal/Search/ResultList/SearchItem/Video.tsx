@@ -1,4 +1,5 @@
-import { Avatar as AntAvatar, Typography } from 'antd';
+import { Text } from '@lobehub/ui';
+import { Avatar as AntAvatar } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -122,9 +123,9 @@ const VideoItem = memo<SearchResultProps>(
                   score={score}
                 />
               </Flexbox>
-              <Typography.Text className={styles.url} type={'secondary'}>
+              <Text className={styles.url} type={'secondary'}>
                 {url}
-              </Typography.Text>
+              </Text>
               <Flexbox className={styles.desc}>{content}</Flexbox>
             </Flexbox>
           </Flexbox>

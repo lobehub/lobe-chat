@@ -1,5 +1,5 @@
-import { ActionIcon, Avatar, Icon, Tag } from '@lobehub/ui';
-import { Divider, Popover, Switch, Typography } from 'antd';
+import { ActionIcon, Avatar, Icon, Tag, Text } from '@lobehub/ui';
+import { Divider, Popover, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { TooltipPlacement } from 'antd/es/tooltip';
 import isEqual from 'fast-deep-equal';
@@ -14,8 +14,6 @@ import { syncSettingsSelectors } from '@/store/user/selectors';
 import { pathString } from '@/utils/url';
 
 import EnableTag from './EnableTag';
-
-const { Text } = Typography;
 
 const useStyles = createStyles(({ css, token, prefixCls }) => ({
   text: css`
@@ -67,9 +65,7 @@ const EnableSync = memo<EnableSyncProps>(({ hiddenActions, placement = 'bottomLe
               style={{ paddingInlineEnd: 12 }}
             >
               {t('sync.channel')}
-              <Text className={styles.text} copyable>
-                {channelName}
-              </Text>
+              <Text className={styles.text}>{channelName}</Text>
             </Flexbox>
           </Flexbox>
           <Divider dashed style={{ margin: 0 }} />
@@ -99,9 +95,9 @@ const EnableSync = memo<EnableSyncProps>(({ hiddenActions, placement = 'bottomLe
                       </Flexbox>
                     )}
                   </Flexbox>
-                  <Typography.Text type={'secondary'}>
+                  <Text type={'secondary'}>
                     {user.os} · {user.browser}
-                  </Typography.Text>
+                  </Text>
                 </Flexbox>
               </Flexbox>
             ))}

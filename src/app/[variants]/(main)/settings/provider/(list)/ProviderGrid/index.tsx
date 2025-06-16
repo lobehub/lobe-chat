@@ -1,7 +1,6 @@
 'use client';
 
-import { Grid, Tag } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Grid, Tag, Text } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -25,9 +24,9 @@ const List = memo(() => {
     return (
       <Flexbox gap={24} paddingBlock={'0 16px'}>
         <Flexbox align={'center'} gap={4} horizontal>
-          <Typography.Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+          <Text strong style={{ fontSize: 16 }}>
             {t('list.title.enabled')}
-          </Typography.Text>
+          </Text>
         </Flexbox>
         <Grid gap={16} rows={3}>
           {loadingArr.map((item) => (
@@ -41,9 +40,9 @@ const List = memo(() => {
     <>
       <Flexbox gap={24}>
         <Flexbox align={'center'} gap={8} horizontal>
-          <Typography.Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+          <Text strong style={{ fontSize: 18 }}>
             {t('list.title.enabled')}
-          </Typography.Text>
+          </Text>
           <Tag>{enabledList.length}</Tag>
         </Flexbox>
         <Grid gap={16} rows={3}>
@@ -54,9 +53,9 @@ const List = memo(() => {
       </Flexbox>
       <Flexbox gap={24}>
         <Flexbox align={'center'} gap={8} horizontal>
-          <Typography.Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+          <Text strong style={{ fontSize: 18 }}>
             {t('list.title.disabled')}
-          </Typography.Text>
+          </Text>
           <Tag>{disabledList.length}</Tag>
         </Flexbox>
         <Grid gap={16} rows={3}>

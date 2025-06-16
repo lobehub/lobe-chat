@@ -1,9 +1,10 @@
 'use client';
 
 import { Avatar, Button, Form, type FormGroupItemType, Tag, Tooltip } from '@lobehub/ui';
-import { Empty, Space, Switch, Typography } from 'antd';
+import { Empty, Space, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { LucideTrash2, Store } from 'lucide-react';
+import Link from 'next/link';
 import { memo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
@@ -130,7 +131,7 @@ const AgentPlugin = memo(() => {
         description={
           <Trans i18nKey={'plugin.empty'} ns={'setting'}>
             暂无安装插件，
-            <Typography.Link
+            <Link
               href={'/'}
               onClick={(e) => {
                 e.preventDefault();
@@ -138,7 +139,7 @@ const AgentPlugin = memo(() => {
               }}
             >
               前往插件市场
-            </Typography.Link>
+            </Link>
             安装
           </Trans>
         }

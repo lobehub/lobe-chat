@@ -1,4 +1,4 @@
-import { Typography } from 'antd';
+import { Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { CSSProperties, memo } from 'react';
@@ -44,10 +44,10 @@ const Thread = memo<ThreadProps>(({ id, placement, style }) => {
       <div style={{ width: 40 }} />
       <Flexbox className={styles.container} gap={4} padding={4} style={{ width: 'fit-content' }}>
         <Flexbox gap={8} horizontal paddingInline={6}>
-          <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
+          <Text style={{ fontSize: 12 }} type={'secondary'}>
             {t('thread.title')}
             {threads.length}
-          </Typography.Text>
+          </Text>
         </Flexbox>
         <Flexbox>
           {threads.map((thread) => (

@@ -1,4 +1,4 @@
-import { Typography } from 'antd';
+import { Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { PropsWithChildren, memo } from 'react';
 
@@ -35,9 +35,9 @@ const CollapseDesc = memo<PropsWithChildren<{ hide?: boolean }>>(({ children, hi
   const { cx, styles } = useStyles();
 
   return (
-    <Typography.Paragraph className={cx(styles.desc, hide && styles.hideDesc)}>
+    <Text as={'p'} className={cx(styles.desc, hide && styles.hideDesc)}>
       {children}
-    </Typography.Paragraph>
+    </Text>
   );
 });
 

@@ -1,8 +1,8 @@
 'use client';
 
 import { CrawlErrorResult, CrawlSuccessResult } from '@lobechat/web-crawler';
-import { Alert, Highlighter, Icon } from '@lobehub/ui';
-import { Descriptions, Typography } from 'antd';
+import { Alert, Highlighter, Icon, Text } from '@lobehub/ui';
+import { Descriptions } from 'antd';
 import { createStyles } from 'antd-style';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
@@ -12,8 +12,6 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
-
-const { Paragraph } = Typography;
 
 const useStyles = createStyles(({ token, css }) => {
   return {
@@ -146,9 +144,9 @@ const CrawlerResultCard = memo<CrawlerData>(({ result, messageId, crawler, origi
             </Center>
           </Link>
         </Flexbox>
-        <Paragraph className={styles.description} ellipsis={{ expandable: false, rows: 2 }}>
+        <Text className={styles.description} ellipsis={{ rows: 2 }}>
           {description || result.content?.slice(0, 40)}
-        </Paragraph>
+        </Text>
       </Flexbox>
       <div className={styles.footer}>
         <Descriptions

@@ -1,5 +1,5 @@
-import { ActionIcon, Button, Dropdown } from '@lobehub/ui';
-import { App, Skeleton, Space, Typography } from 'antd';
+import { ActionIcon, Button, Dropdown, Text } from '@lobehub/ui';
+import { App, Skeleton, Space } from 'antd';
 import { useTheme } from 'antd-style';
 import { CircleX, EllipsisVertical, LucideRefreshCcwDot, PlusIcon } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -65,14 +65,14 @@ const ModelTitle = memo<ModelFetcherProps>(
       >
         <Flexbox align={'center'} gap={0} horizontal justify={'space-between'}>
           <Flexbox align={'center'} gap={8} horizontal>
-            <Typography.Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+            <Text strong style={{ fontSize: 16 }}>
               {t('providerModels.list.title')}
-            </Typography.Text>
+            </Text>
 
             {isLoading ? (
               <Skeleton.Button active style={{ height: 22 }} />
             ) : (
-              <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
+              <Text style={{ fontSize: 12 }} type={'secondary'}>
                 <div style={{ display: 'flex', lineHeight: '24px' }}>
                   {t('providerModels.list.total', { count: totalModels })}
                   {hasRemoteModels && (
@@ -89,7 +89,7 @@ const ModelTitle = memo<ModelFetcherProps>(
                     />
                   )}
                 </div>
-              </Typography.Text>
+              </Text>
             )}
           </Flexbox>
           {isLoading ? (

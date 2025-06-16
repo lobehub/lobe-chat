@@ -1,8 +1,7 @@
 'use client';
 
 import { ModelIcon } from '@lobehub/icons';
-import { Icon } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Icon, Text } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import { DotIcon } from 'lucide-react';
 import { memo } from 'react';
@@ -69,14 +68,14 @@ const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
                 position: 'relative',
               }}
             >
-              <Typography.Title
+              <Text
+                as={'h1'}
                 ellipsis={{ rows: 1 }}
-                level={1}
                 style={{ fontSize: mobile ? 18 : 24, margin: 0 }}
                 title={identifier}
               >
                 {displayName || identifier}
-              </Typography.Title>
+              </Text>
             </Flexbox>
             <Flexbox align={'center'} gap={6} horizontal>
               {type && <ModelTypeIcon type={type} />}

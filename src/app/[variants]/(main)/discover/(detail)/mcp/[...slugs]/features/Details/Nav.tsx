@@ -1,6 +1,6 @@
 'use client';
 
-import { Icon, Tabs, Tag } from '@lobehub/ui';
+import { Icon, Tabs, TabsProps, Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import {
   BookOpenIcon,
@@ -38,9 +38,10 @@ const useStyles = createStyles(({ css, token }) => {
 
 const Nav = memo<{
   activeTab?: McpNavKey;
+  inModal?: boolean;
   mobile?: boolean;
   setActiveTab?: (tab: McpNavKey) => void;
-}>(({ mobile, setActiveTab, activeTab = McpNavKey.Overview }) => {
+}>(({ mobile, setActiveTab, activeTab = McpNavKey.Overview, inModal }) => {
   const { t } = useTranslation('discover');
   const { versions, deploymentOptions, toolsCount, resourcesCount, promptsCount, github } =
     useDetailContext();
@@ -54,83 +55,85 @@ const Nav = memo<{
     <Tabs
       activeKey={activeTab}
       compact={mobile}
-      items={[
-        {
-          icon: <Icon icon={BookOpenIcon} size={16} />,
-          key: McpNavKey.Overview,
-          label: t('mcp.details.overview.title'),
-        },
-        {
-          icon: <Icon icon={DownloadIcon} size={16} />,
-          key: McpNavKey.Deployment,
-          label:
-            deploymentCount > 1 ? (
-              <Flexbox
-                align={'center'}
-                gap={6}
-                horizontal
-                style={{
-                  display: 'inline-flex',
-                }}
-              >
-                {t('mcp.details.deployment.title')}
-                <Tag>{deploymentCount}</Tag>
-              </Flexbox>
-            ) : (
-              t('mcp.details.deployment.title')
-            ),
-        },
-        {
-          icon: <Icon icon={CodeIcon} size={16} />,
-          key: McpNavKey.Schema,
-          label:
-            schemaCount > 1 ? (
-              <Flexbox
-                align={'center'}
-                gap={6}
-                horizontal
-                style={{
-                  display: 'inline-flex',
-                }}
-              >
-                {t('mcp.details.schema.title')}
-                <Tag>{schemaCount}</Tag>
-              </Flexbox>
-            ) : (
-              t('mcp.details.schema.title')
-            ),
-        },
-        {
-          icon: <Icon icon={ListIcon} size={16} />,
-          key: McpNavKey.Related,
-          label: t('mcp.details.related.title'),
-        },
-        {
-          icon: <Icon icon={PackageCheckIcon} size={16} />,
-          key: McpNavKey.Score,
-          label: t('mcp.details.score.title'),
-        },
-        {
-          icon: <Icon icon={HistoryIcon} size={16} />,
-          key: McpNavKey.Version,
-          label:
-            versionCount > 1 ? (
-              <Flexbox
-                align={'center'}
-                gap={6}
-                horizontal
-                style={{
-                  display: 'inline-flex',
-                }}
-              >
-                {t('mcp.details.versions.title')}
-                <Tag>{versionCount}</Tag>
-              </Flexbox>
-            ) : (
-              t('mcp.details.versions.title')
-            ),
-        },
-      ]}
+      items={
+        [
+          {
+            icon: <Icon icon={BookOpenIcon} size={16} />,
+            key: McpNavKey.Overview,
+            label: t('mcp.details.overview.title'),
+          },
+          {
+            icon: <Icon icon={DownloadIcon} size={16} />,
+            key: McpNavKey.Deployment,
+            label:
+              deploymentCount > 1 ? (
+                <Flexbox
+                  align={'center'}
+                  gap={6}
+                  horizontal
+                  style={{
+                    display: 'inline-flex',
+                  }}
+                >
+                  {t('mcp.details.deployment.title')}
+                  <Tag>{deploymentCount}</Tag>
+                </Flexbox>
+              ) : (
+                t('mcp.details.deployment.title')
+              ),
+          },
+          {
+            icon: <Icon icon={CodeIcon} size={16} />,
+            key: McpNavKey.Schema,
+            label:
+              schemaCount > 1 ? (
+                <Flexbox
+                  align={'center'}
+                  gap={6}
+                  horizontal
+                  style={{
+                    display: 'inline-flex',
+                  }}
+                >
+                  {t('mcp.details.schema.title')}
+                  <Tag>{schemaCount}</Tag>
+                </Flexbox>
+              ) : (
+                t('mcp.details.schema.title')
+              ),
+          },
+          !inModal && {
+            icon: <Icon icon={ListIcon} size={16} />,
+            key: McpNavKey.Related,
+            label: t('mcp.details.related.title'),
+          },
+          {
+            icon: <Icon icon={PackageCheckIcon} size={16} />,
+            key: McpNavKey.Score,
+            label: t('mcp.details.score.title'),
+          },
+          !inModal && {
+            icon: <Icon icon={HistoryIcon} size={16} />,
+            key: McpNavKey.Version,
+            label:
+              versionCount > 1 ? (
+                <Flexbox
+                  align={'center'}
+                  gap={6}
+                  horizontal
+                  style={{
+                    display: 'inline-flex',
+                  }}
+                >
+                  {t('mcp.details.versions.title')}
+                  <Tag>{versionCount}</Tag>
+                </Flexbox>
+              ) : (
+                t('mcp.details.versions.title')
+              ),
+          },
+        ].filter(Boolean) as TabsProps['items']
+      }
       onChange={(key) => setActiveTab?.(key as McpNavKey)}
     />
   );
@@ -140,21 +143,23 @@ const Nav = memo<{
   ) : (
     <Flexbox align={'center'} className={styles.nav} horizontal justify={'space-between'}>
       {nav}
-      <Flexbox gap={12} horizontal>
-        <Link className={styles.link} href={SOCIAL_URL.discord} target={'_blank'}>
-          {t('mcp.details.nav.needHelp')}
-        </Link>
-        {github?.url && (
-          <>
-            <Link className={styles.link} href={github.url} target={'_blank'}>
-              {t('mcp.details.nav.viewSourceCode')}
-            </Link>
-            <Link className={styles.link} href={urlJoin(github.url, 'issues')} target={'_blank'}>
-              {t('mcp.details.nav.reportIssue')}
-            </Link>
-          </>
-        )}
-      </Flexbox>
+      {!inModal && (
+        <Flexbox gap={12} horizontal>
+          <Link className={styles.link} href={SOCIAL_URL.discord} target={'_blank'}>
+            {t('mcp.details.nav.needHelp')}
+          </Link>
+          {github?.url && (
+            <>
+              <Link className={styles.link} href={github.url} target={'_blank'}>
+                {t('mcp.details.nav.viewSourceCode')}
+              </Link>
+              <Link className={styles.link} href={urlJoin(github.url, 'issues')} target={'_blank'}>
+                {t('mcp.details.nav.reportIssue')}
+              </Link>
+            </>
+          )}
+        </Flexbox>
+      )}
     </Flexbox>
   );
 });

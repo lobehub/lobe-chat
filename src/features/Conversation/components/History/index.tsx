@@ -1,6 +1,5 @@
 import { ModelTag } from '@lobehub/icons';
-import { Icon, Markdown } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Icon, Markdown, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ScrollText } from 'lucide-react';
 import { memo } from 'react';
@@ -50,7 +49,7 @@ const History = memo(() => {
             <Center height={20} width={20}>
               <Icon icon={ScrollText} size={16} style={{ color: theme.colorTextDescription }} />
             </Center>
-            <Typography.Text type={'secondary'}>{t('historySummary')}</Typography.Text>
+            <Text type={'secondary'}>{t('historySummary')}</Text>
             {model && (
               <div>
                 <ModelTag model={model} />

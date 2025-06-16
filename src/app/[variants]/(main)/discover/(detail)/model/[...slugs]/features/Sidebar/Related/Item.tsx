@@ -1,14 +1,11 @@
 import { ModelIcon } from '@lobehub/icons';
-import { Block } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Block, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { DiscoverModelItem } from '@/types/discover';
-
-const { Title, Paragraph } = Typography;
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -43,23 +40,18 @@ const RelatedItem = memo<DiscoverModelItem>(({ identifier, displayName }) => {
           overflow: 'hidden',
         }}
       >
-        <Title
-          className={styles.title}
-          ellipsis={{
-            rows: 1,
-          }}
-          level={2}
-        >
+        <Text as={'h2'} className={styles.title} ellipsis>
           {displayName || identifier}
-        </Title>
-        <Paragraph
+        </Text>
+        <Text
+          as={'p'}
           className={styles.desc}
           ellipsis={{
             rows: 2,
           }}
         >
           {t(`${identifier}.description`)}
-        </Paragraph>
+        </Text>
       </Flexbox>
     </Block>
   );

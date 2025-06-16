@@ -1,6 +1,6 @@
 'use client';
 
-import { Icon, Tabs } from '@lobehub/ui';
+import { Icon, Tabs, TabsProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { BookOpenIcon, ListIcon } from 'lucide-react';
 import Link from 'next/link';
@@ -31,9 +31,10 @@ const useStyles = createStyles(({ css, token }) => {
 
 const Nav = memo<{
   activeTab?: PluginNavKey;
+  inModal?: boolean;
   mobile?: boolean;
   setActiveTab?: (tab: PluginNavKey) => void;
-}>(({ mobile, setActiveTab, activeTab = PluginNavKey.Overview }) => {
+}>(({ mobile, setActiveTab, activeTab = PluginNavKey.Overview, inModal }) => {
   const { t } = useTranslation('discover');
   const { identifier } = useDetailContext();
   const { styles } = useStyles();
@@ -42,18 +43,20 @@ const Nav = memo<{
     <Tabs
       activeKey={activeTab}
       compact={mobile}
-      items={[
-        {
-          icon: <Icon icon={BookOpenIcon} size={16} />,
-          key: PluginNavKey.Overview,
-          label: t('plugins.details.overview.title'),
-        },
-        {
-          icon: <Icon icon={ListIcon} size={16} />,
-          key: PluginNavKey.Related,
-          label: t('plugins.details.related.title'),
-        },
-      ]}
+      items={
+        [
+          {
+            icon: <Icon icon={BookOpenIcon} size={16} />,
+            key: PluginNavKey.Overview,
+            label: t('plugins.details.overview.title'),
+          },
+          !inModal && {
+            icon: <Icon icon={ListIcon} size={16} />,
+            key: PluginNavKey.Related,
+            label: t('plugins.details.related.title'),
+          },
+        ].filter(Boolean) as TabsProps['items']
+      }
       onChange={(key) => setActiveTab?.(key as PluginNavKey)}
     />
   );

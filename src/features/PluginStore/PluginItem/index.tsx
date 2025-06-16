@@ -1,5 +1,4 @@
-import { Tooltip } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Text, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
@@ -11,8 +10,6 @@ import PluginTag from '@/components/Plugins/PluginTag';
 import { InstallPluginMeta } from '@/types/tool/plugin';
 
 import Actions from './Action';
-
-const { Paragraph } = Typography;
 
 const useStyles = createStyles(({ css, token }) => ({
   desc: css`
@@ -63,22 +60,22 @@ const PluginItem = memo<PluginItemProps>(
               <Tooltip title={identifier}>
                 {homepage ? (
                   <Link className={styles.link} href={homepage} target={'_blank'}>
-                    <Paragraph className={styles.title} ellipsis={{ rows: 1 }}>
+                    <Text className={styles.title} ellipsis>
                       {meta.title}
-                    </Paragraph>
+                    </Text>
                   </Link>
                 ) : (
-                  <Paragraph className={styles.title} ellipsis={{ rows: 1 }}>
+                  <Text className={styles.title} ellipsis>
                     {meta.title}
-                  </Paragraph>
+                  </Text>
                 )}
               </Tooltip>
               <PluginTag author={author} type={type} />
               {isMCP && <MCPTag />}
             </Flexbox>
-            <Paragraph className={styles.desc} ellipsis={{ rows: 1 }}>
+            <Text className={styles.desc} ellipsis>
               {meta.description}
-            </Paragraph>
+            </Text>
           </Flexbox>
         </Flexbox>
         <Actions identifier={identifier} isMCP={isMCP} type={type} />

@@ -1,8 +1,8 @@
 'use client';
 
 import { ModelIcon, ProviderIcon } from '@lobehub/icons';
-import { Block, Icon, Tag } from '@lobehub/ui';
-import { Popover, Typography } from 'antd';
+import { Block, Icon, Tag, Text } from '@lobehub/ui';
+import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import { ClockIcon } from 'lucide-react';
@@ -18,8 +18,6 @@ import { DiscoverModelItem } from '@/types/discover';
 
 import PublishedTime from '../../../../features/PublishedTime';
 import ModelTypeIcon from './ModelTypeIcon';
-
-const { Title, Paragraph } = Typography;
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -109,15 +107,9 @@ const ModelItem = memo<DiscoverModelItem>(
                 }}
               >
                 <Link href={link} style={{ color: 'inherit', overflow: 'hidden' }}>
-                  <Title
-                    className={styles.title}
-                    ellipsis={{
-                      rows: 1,
-                    }}
-                    level={2}
-                  >
+                  <Text as={'h2'} className={styles.title} ellipsis>
                     {displayName}
-                  </Title>
+                  </Text>
                 </Link>
               </Flexbox>
               <div className={styles.author}>{identifier}</div>
@@ -133,14 +125,15 @@ const ModelItem = memo<DiscoverModelItem>(
             directionReverse
             {...abilities}
           />
-          <Paragraph
+          <Text
+            as={'p'}
             className={styles.desc}
             ellipsis={{
               rows: 3,
             }}
           >
             {t(`${identifier}.description`)}
-          </Paragraph>
+          </Text>
         </Flexbox>
         <Flexbox
           align={'center'}
