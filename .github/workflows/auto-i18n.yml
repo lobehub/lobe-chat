@@ -5,12 +5,22 @@ on:
     - cron: '0 0 * * *'
   workflow_dispatch:
 
+# Add permissions configuration
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   update-i18n:
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
     steps:
+      - name: Configure Git
+        run: |
+          git config --global user.name "lobehubbot"
+          git config --global user.email "i@lobehub.com"
+
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.ref }}
@@ -33,7 +43,7 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v7
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
           add-paths: |
             locales/**/*.json
           labels: |
