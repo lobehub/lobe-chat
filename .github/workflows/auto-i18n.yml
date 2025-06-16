@@ -267,8 +267,23 @@ jobs:
             fi
           done
 
-      - name: Create or Update Pull Request
+      - name: Check branch differences
         if: steps.git_status.outputs.changes_exist == 'true' && steps.commit_push.outputs.push_success == 'true'
+        id: check_diff
+        run: |
+          echo "🔍 Checking branch differences..."
+
+          # Check if there are actual differences between the branches
+          if git diff --quiet main...style/auto-i18n; then
+            echo "ℹ️ No differences between main and style/auto-i18n branches"
+            echo "has_differences=false" >> $GITHUB_OUTPUT
+          else
+            echo "✨ Differences found between branches"
+            echo "has_differences=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create or Update Pull Request
+        if: steps.git_status.outputs.changes_exist == 'true' && steps.commit_push.outputs.push_success == 'true' && steps.check_diff.outputs.has_differences == 'true'
         id: create_pr
         uses: peter-evans/create-pull-request@v4
         with:
@@ -315,12 +330,15 @@ jobs:
         if: |
           (steps.git_status.outputs.changes_exist != 'true' && steps.run_i18n.outputs.i18n_success == 'true') ||
           (steps.commit_push.outputs.no_changes_after_stage == 'true') ||
-          (steps.commit_push.outputs.no_changes_after_lint == 'true')
+          (steps.commit_push.outputs.no_changes_after_lint == 'true') ||
+          (steps.check_diff.outputs.has_differences == 'false')
         run: |
           if [ "${{ steps.commit_push.outputs.no_changes_after_stage }}" == "true" ]; then
             echo "ℹ️ No staged changes detected after git add. Skipping PR creation."
           elif [ "${{ steps.commit_push.outputs.no_changes_after_lint }}" == "true" ]; then
             echo "ℹ️ No changes remaining after lint-staged processing. Skipping PR creation."
+          elif [ "${{ steps.check_diff.outputs.has_differences }}" == "false" ]; then
+            echo "ℹ️ No differences between main and style/auto-i18n branches. Skipping PR creation."
           else
             echo "ℹ️ No changes to commit. Skipping PR creation."
           fi
