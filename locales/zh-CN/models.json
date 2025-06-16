@@ -659,6 +659,9 @@
   "codestral-latest": {
     "description": "Codestral 是我们最先进的编码语言模型，第二个版本于2025年1月发布，专门从事低延迟、高频任务如中间填充（RST）、代码纠正和测试生成。"
   },
+  "codex-mini-latest": {
+    "description": "codex-mini-latest 是 o4-mini 的微调版本，专门用于 Codex CLI。对于直接通过 API 使用，我们推荐从 gpt-4.1 开始。"
+  },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B 是一款为指令遵循、对话和编程设计的模型。"
   },
@@ -715,6 +718,9 @@
   },
   "compound-beta-mini": {
     "description": "Compound-beta-mini 是一个复合 AI 系统，由 GroqCloud 中已经支持的公开可用模型提供支持，可以智能地、有选择地使用工具来回答用户查询。"
+  },
+  "computer-use-preview": {
+    "description": "computer-use-preview 模型是专为“计算机使用工具”设计的专用模型，经过训练以理解并执行计算机相关任务。"
   },
   "dall-e-2": {
     "description": "第二代 DALL·E 模型，支持更真实、准确的图像生成，分辨率是第一代的4倍"
@@ -904,6 +910,15 @@
   },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite 全新升级的多模态大模型，支持任意分辨率和极端长宽比图像识别，增强视觉推理、文档识别、细节信息理解和指令遵循能力。支持 128k 上下文窗口，输出长度支持最大 16k tokens。"
+  },
+  "doubao-seed-1.6": {
+    "description": "Doubao-Seed-1.6全新多模态深度思考模型，同时支持auto/thinking/non-thinking三种思考模式。 non-thinking模式下，模型效果对比Doubao-1.5-pro/250115大幅提升。支持 256k 上下文窗口，输出长度支持最大 16k tokens。"
+  },
+  "doubao-seed-1.6-flash": {
+    "description": "Doubao-Seed-1.6-flash推理速度极致的多模态深度思考模型，TPOT仅需10ms； 同时支持文本和视觉理解，文本理解能力超过上一代lite，视觉理解比肩友商pro系列模型。支持 256k 上下文窗口，输出长度支持最大 16k tokens。"
+  },
+  "doubao-seed-1.6-thinking": {
+    "description": "Doubao-Seed-1.6-thinking模型思考能力大幅强化， 对比Doubao-1.5-thinking-pro，在Coding、Math、 逻辑推理等基础能力上进一步提升， 支持视觉理解。 支持 256k 上下文窗口，输出长度支持最大 16k tokens。"
   },
   "emohaa": {
     "description": "Emohaa 是心理模型，具备专业咨询能力，帮助用户理解情感问题。"
@@ -1268,6 +1283,9 @@
   "gpt-4o-mini": {
     "description": "GPT-4o mini是OpenAI在GPT-4 Omni之后推出的最新模型，支持图文输入并输出文本。作为他们最先进的小型模型，它比其他近期的前沿模型便宜很多，并且比GPT-3.5 Turbo便宜超过60%。它保持了最先进的智能，同时具有显著的性价比。GPT-4o mini在MMLU测试中获得了 82% 的得分，目前在聊天偏好上排名高于 GPT-4。"
   },
+  "gpt-4o-mini-audio-preview": {
+    "description": "GPT-4o mini Audio 模型，支持音频输入输出"
+  },
   "gpt-4o-mini-realtime-preview": {
     "description": "GPT-4o-mini 实时版本，支持音频和文本实时输入输出"
   },
@@ -1420,6 +1438,9 @@
   },
   "kimi-latest": {
     "description": "Kimi 智能助手产品使用最新的 Kimi 大模型，可能包含尚未稳定的特性。支持图片理解，同时会自动根据请求的上下文长度选择 8k/32k/128k 模型作为计费模型"
+  },
+  "kimi-thinking-preview": {
+    "description": "kimi-thinking-preview 模型是月之暗面提供的具有多模态推理能力和通用推理能力的多模态思考模型，它擅长深度推理，帮助解决更多更难的事情"
   },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM 是一个实验性的、特定于任务的语言模型，经过训练以符合学习科学原则，可在教学和学习场景中遵循系统指令，充当专家导师等。"
@@ -1823,11 +1844,17 @@
   "o1-preview": {
     "description": "o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。"
   },
+  "o1-pro": {
+    "description": "o1 系列模型经过强化学习训练，能够在回答前进行思考，并执行复杂的推理任务。o1-pro 模型使用了更多计算资源，以进行更深入的思考，从而持续提供更优质的回答。"
+  },
   "o3": {
     "description": "o3 是一款全能强大的模型，在多个领域表现出色。它为数学、科学、编程和视觉推理任务树立了新标杆。它也擅长技术写作和指令遵循。用户可利用它分析文本、代码和图像，解决多步骤的复杂问题。"
   },
   "o3-mini": {
     "description": "o3-mini 是我们最新的小型推理模型，在与 o1-mini 相同的成本和延迟目标下提供高智能。"
+  },
+  "o3-pro": {
+    "description": "o3-pro 模型使用更多的计算来更深入地思考并始终提供更好的答案，仅支持 Responses API 下使用。"
   },
   "o4-mini": {
     "description": "o4-mini 是我们最新的小型 o 系列模型。 它专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。"
