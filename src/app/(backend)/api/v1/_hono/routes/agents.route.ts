@@ -1,29 +1,64 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
+import { z } from 'zod';
 
 import { RBAC_PERMISSIONS } from '@/const/rbac';
 import { getScopePermissions } from '@/utils/rbac';
 
 import { AgentController } from '../controllers/agent.controller';
-import { requireAuth } from '../middleware/auth';
+import { requireAuth } from '../middleware/oidc-auth';
 import { requireAnyPermission } from '../middleware/permission-check';
-import { SessionIdParamSchema } from '../types';
-import {
-  AgentIdParamSchema,
-  CreateAgentRequestSchema,
-  UpdateAgentRequestSchema,
-} from '../types/agent.type';
+
+// 参数校验 Schema
+const createAgentSchema = z.object({
+  avatar: z.string().optional(),
+  chatConfig: z
+    .object({
+      autoCreateTopicThreshold: z.number(),
+      disableContextCaching: z.boolean().optional(),
+      displayMode: z.enum(['chat', 'docs']).optional(),
+      enableAutoCreateTopic: z.boolean().optional(),
+      enableCompressHistory: z.boolean().optional(),
+      enableHistoryCount: z.boolean().optional(),
+      enableMaxTokens: z.boolean().optional(),
+      enableReasoning: z.boolean().optional(),
+      enableReasoningEffort: z.boolean().optional(),
+      historyCount: z.number().optional(),
+      reasoningBudgetToken: z.number().optional(),
+      reasoningEffort: z.enum(['low', 'medium', 'high']).optional(),
+      searchFCModel: z.string().optional(),
+      searchMode: z.enum(['disabled', 'enabled']).optional(),
+      useModelBuiltinSearch: z.boolean().optional(),
+    })
+    .optional(),
+  description: z.string().optional(),
+  model: z.string().optional(),
+  params: z.record(z.unknown()).optional(),
+  provider: z.string().optional(),
+  slug: z.string().min(1, 'slug 不能为空'),
+  systemRole: z.string().optional(),
+  title: z.string().min(1, '标题不能为空'),
+});
+
+const updateAgentSchema = createAgentSchema.extend({
+  id: z.string().min(1, 'Agent ID 不能为空'),
+});
+
+const deleteAgentSchema = z.object({
+  agentId: z.string().min(1, 'Agent ID 不能为空'),
+  migrateTo: z.string().optional(),
+});
 
 // Agent 相关路由
 const AgentRoutes = new Hono();
 
 /**
  * 获取系统中所有的 Agent 列表
- * GET /api/v1/agents
+ * GET /api/v1/agents/list
  * 需要 Agent 读取权限
  */
 AgentRoutes.get(
-  '/',
+  '/list',
   requireAuth,
   requireAnyPermission(
     getScopePermissions('AGENT_READ', ['ALL', 'WORKSPACE']),
@@ -37,14 +72,14 @@ AgentRoutes.get(
 
 /**
  * 创建智能体
- * POST /api/v1/agents
+ * POST /api/v1/agents/create
  * 需要 Agent 创建权限（仅管理员）
  */
 AgentRoutes.post(
-  '/',
+  '/create',
   requireAuth,
   requireAnyPermission([RBAC_PERMISSIONS.AGENT_CREATE_ALL], '您没有权限创建 Agent'),
-  zValidator('json', CreateAgentRequestSchema),
+  zValidator('json', createAgentSchema),
   async (c) => {
     const controller = new AgentController();
     return await controller.createAgent(c);
@@ -53,15 +88,14 @@ AgentRoutes.post(
 
 /**
  * 更新智能体
- * PUT /api/v1/agents/:id
+ * PUT /api/v1/agents/update
  * 需要 Agent 更新权限（仅管理员）
  */
 AgentRoutes.put(
-  '/:id',
+  '/update',
   requireAuth,
   requireAnyPermission([RBAC_PERMISSIONS.AGENT_UPDATE_ALL], '您没有权限更新 Agent'),
-  zValidator('param', AgentIdParamSchema),
-  zValidator('json', UpdateAgentRequestSchema),
+  zValidator('json', updateAgentSchema),
   async (c) => {
     const controller = new AgentController();
     return await controller.updateAgent(c);
@@ -70,14 +104,14 @@ AgentRoutes.put(
 
 /**
  * 删除智能体
- * DELETE /api/v1/agents/:id
+ * DELETE /api/v1/agents/delete
  * 需要 Agent 删除权限（仅管理员）
  */
 AgentRoutes.delete(
-  '/:id',
+  '/delete',
   requireAuth,
   requireAnyPermission([RBAC_PERMISSIONS.AGENT_DELETE_ALL], '您没有权限删除 Agent'),
-  zValidator('param', AgentIdParamSchema),
+  zValidator('json', deleteAgentSchema),
   async (c) => {
     const controller = new AgentController();
     return await controller.deleteAgent(c);
@@ -96,29 +130,9 @@ AgentRoutes.get(
     getScopePermissions('AGENT_READ', ['ALL', 'WORKSPACE', 'OWNER']),
     '您没有权限查看 Agent 详情',
   ),
-  zValidator('param', AgentIdParamSchema),
   async (c) => {
     const controller = new AgentController();
     return await controller.getAgentById(c);
-  },
-);
-
-/**
- * 根据 Session ID 获取关联的 Agent 详情
- * GET /api/v1/agents/session/:sessionId
- * 需要会话读取权限
- */
-AgentRoutes.get(
-  '/session/:sessionId',
-  requireAuth,
-  requireAnyPermission(
-    getScopePermissions('AGENT_READ', ['ALL', 'WORKSPACE', 'OWNER']),
-    '您没有权限查看此会话的 Agent 详情',
-  ),
-  zValidator('param', SessionIdParamSchema),
-  async (c) => {
-    const controller = new AgentController();
-    return await controller.getAgentBySessionId(c);
   },
 );
 
