@@ -1,22 +1,21 @@
-import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 
-import { getScopePermissions } from '@/utils/rbac';
+import { RBAC_PERMISSIONS } from '@/const/rbac';
+import { getAllScopePermissions, getScopePermissions } from '@/utils/rbac';
 
 import { RoleController } from '../controllers/role.controller';
-import { requireAuth } from '../middleware/auth';
+import { requireAuth } from '../middleware/oidc-auth';
 import { requireAnyPermission } from '../middleware/permission-check';
-import { RoleIdParamSchema, UpdateRoleRequestSchema } from '../types/role.type';
 
 const RolesRoutes = new Hono();
 
 /**
  * Get all roles in the system
- * GET /api/v1/roles
+ * GET /api/v1/roles/list
  * Requires role read permission (specific scopes)
  */
 RolesRoutes.get(
-  '/',
+  '/list',
   requireAuth,
   requireAnyPermission(
     getScopePermissions('RBAC_ROLE_READ', ['ALL', 'WORKSPACE']),
@@ -24,26 +23,24 @@ RolesRoutes.get(
   ),
   async (c) => {
     const roleController = new RoleController();
-
     return await roleController.getAllRoles(c);
   },
 );
 
 /**
  * Get all active roles in the system
- * GET /api/v1/roles?status=active
+ * GET /api/v1/roles/active
  * Requires role read permission (only admin level)
  */
 RolesRoutes.get(
   '/active',
   requireAuth,
   requireAnyPermission(
-    getScopePermissions('RBAC_ROLE_READ', ['ALL', 'WORKSPACE']),
+    [RBAC_PERMISSIONS.RBAC_ROLE_READ_ALL],
     'You do not have permission to view active roles',
   ),
   async (c) => {
     const roleController = new RoleController();
-
     return await roleController.getActiveRoles(c);
   },
 );
@@ -60,10 +57,8 @@ RolesRoutes.get(
     getScopePermissions('RBAC_ROLE_READ', ['ALL', 'WORKSPACE']),
     'You do not have permission to view role details',
   ),
-  zValidator('param', RoleIdParamSchema),
   async (c) => {
     const roleController = new RoleController();
-
     return await roleController.getRoleById(c);
   },
 );
@@ -71,40 +66,19 @@ RolesRoutes.get(
 /**
  * Get role permissions mapping
  * GET /api/v1/roles/:id/permissions
+ * Requires role read permission (all scopes) - 这里演示全量权限的场景
  */
 RolesRoutes.get(
   '/:id/permissions',
   requireAuth,
   requireAnyPermission(
-    getScopePermissions('RBAC_ROLE_READ', ['ALL', 'WORKSPACE']),
+    getAllScopePermissions('RBAC_ROLE_READ'),
     'You do not have permission to view role permissions',
   ),
-  zValidator('param', RoleIdParamSchema),
   async (c) => {
     const roleController = new RoleController();
-
-    return roleController.getRolePermissions(c);
-  },
-);
-
-/**
- * Update role information
- * PUT /api/v1/roles/:id
- * Requires role update permission (admin only)
- */
-RolesRoutes.put(
-  '/:id',
-  requireAuth,
-  requireAnyPermission(
-    getScopePermissions('RBAC_ROLE_UPDATE', ['ALL', 'WORKSPACE']),
-    '您没有权限更新角色信息',
-  ),
-  zValidator('param', RoleIdParamSchema),
-  zValidator('json', UpdateRoleRequestSchema),
-  async (c) => {
-    const roleController = new RoleController();
-
-    return await roleController.updateRole(c);
+    // 这里可以添加获取角色权限的逻辑
+    return roleController.getRoleById(c);
   },
 );
 
