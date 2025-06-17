@@ -2,6 +2,7 @@ import { LobeChatDatabase } from '@/database/type';
 
 export * from './agent.type';
 export * from './message.type';
+export * from './message-translate.type';
 export * from './role.type';
 export * from './topic.type';
 export * from './user.type';
