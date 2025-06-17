@@ -2,6 +2,7 @@ import { Context } from 'hono';
 
 import { BaseController } from '../common/base.controller';
 import { MessageService } from '../services/message.service';
+import { MessagesCreateRequest } from '../types/message.type';
 
 export class MessageController extends BaseController {
   /**
@@ -52,6 +53,47 @@ export class MessageController extends BaseController {
         },
         '查询用户消息数量成功',
       );
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 根据话题ID获取消息列表
+   * GET /api/v1/messages/queryByTopic
+   * Query: { topicId: string }
+   */
+  async handleGetMessagesByTopic(c: Context) {
+    try {
+      const userId = this.getUserId(c)!;
+      const query = this.getQuery(c);
+      const topicId = query.topicId as string;
+
+      const db = await this.getDatabase();
+      const messageService = new MessageService(db, userId);
+      const messages = await messageService.getMessagesByTopicId(topicId);
+
+      return this.success(c, messages, '获取话题消息列表成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 创建新消息
+   * POST /api/v1/messages/create
+   * Body: { content: string, role: 'assistant'|'user', sessionId: string, topic: string, fromModel: string, fromProvider: string, files?: string[] }
+   */
+  async handleCreateMessage(c: Context) {
+    try {
+      const userId = this.getUserId(c)!;
+      const messageData = (await this.getBody<MessagesCreateRequest>(c))!;
+
+      const db = await this.getDatabase();
+      const messageService = new MessageService(db, userId);
+      const result = await messageService.createMessage(messageData);
+
+      return this.success(c, result, '创建消息成功');
     } catch (error) {
       return this.handleError(c, error);
     }
