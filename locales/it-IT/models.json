@@ -1439,6 +1439,9 @@
   "kimi-latest": {
     "description": "Il prodotto Kimi Smart Assistant utilizza il più recente modello Kimi, che potrebbe includere funzionalità non ancora stabili. Supporta la comprensione delle immagini e selezionerà automaticamente il modello di fatturazione 8k/32k/128k in base alla lunghezza del contesto della richiesta."
   },
+  "kimi-thinking-preview": {
+    "description": "Il modello kimi-thinking-preview, fornito da Moon's Dark Side, è un modello multimodale di pensiero con capacità di ragionamento multimodale e generale, eccellente nel ragionamento profondo per aiutare a risolvere problemi più complessi."
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM è un modello linguistico sperimentale, specifico per compiti, addestrato per rispettare i principi della scienza dell'apprendimento, in grado di seguire istruzioni sistematiche in contesti di insegnamento e apprendimento, fungendo da tutor esperto."
   },

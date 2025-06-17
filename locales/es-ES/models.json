@@ -1439,6 +1439,9 @@
   "kimi-latest": {
     "description": "El producto asistente inteligente Kimi utiliza el último modelo grande de Kimi, que puede incluir características que aún no están estables. Soporta la comprensión de imágenes y seleccionará automáticamente el modelo de facturación de 8k/32k/128k según la longitud del contexto de la solicitud."
   },
+  "kimi-thinking-preview": {
+    "description": "El modelo kimi-thinking-preview, proporcionado por la cara oculta de la luna, es un modelo multimodal de pensamiento con capacidades de razonamiento multimodal y general, especializado en razonamiento profundo para ayudar a resolver problemas más complejos."
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM es un modelo de lenguaje experimental y específico para tareas, entrenado para cumplir con los principios de la ciencia del aprendizaje, capaz de seguir instrucciones sistemáticas en escenarios de enseñanza y aprendizaje, actuando como un tutor experto, entre otros."
   },

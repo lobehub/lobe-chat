@@ -1439,6 +1439,9 @@
   "kimi-latest": {
     "description": "The Kimi Smart Assistant product uses the latest Kimi large model, which may include features that are not yet stable. It supports image understanding and will automatically select the 8k/32k/128k model as the billing model based on the length of the request context."
   },
+  "kimi-thinking-preview": {
+    "description": "kimi-thinking-preview is a multimodal thinking model provided by Dark Side of the Moon, featuring multimodal and general reasoning abilities. It excels at deep reasoning to help solve more complex and challenging problems."
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM is an experimental, task-specific language model trained to align with learning science principles, capable of following systematic instructions in teaching and learning scenarios, acting as an expert tutor, among other roles."
   },

@@ -1439,6 +1439,9 @@
   "kimi-latest": {
     "description": "Kimi 智能助手產品使用最新的 Kimi 大模型，可能包含尚未穩定的特性。支持圖片理解，同時會自動根據請求的上下文長度選擇 8k/32k/128k 模型作為計費模型"
   },
+  "kimi-thinking-preview": {
+    "description": "kimi-thinking-preview 模型是月之暗面提供的具有多模態推理能力和通用推理能力的多模態思考模型，它擅長深度推理，幫助解決更多更難的事情"
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM 是一個實驗性的、特定於任務的語言模型，經過訓練以符合學習科學原則，可在教學和學習場景中遵循系統指令，充當專家導師等。"
   },

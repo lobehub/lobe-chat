@@ -1439,6 +1439,9 @@
   "kimi-latest": {
     "description": "Das Kimi intelligente Assistenzprodukt verwendet das neueste Kimi Großmodell, das möglicherweise noch instabile Funktionen enthält. Es unterstützt die Bildverarbeitung und wählt automatisch das Abrechnungsmodell 8k/32k/128k basierend auf der Länge des angeforderten Kontexts aus."
   },
+  "kimi-thinking-preview": {
+    "description": "Das kimi-thinking-preview Modell von Moon’s Dark Side ist ein multimodales Denkmodell mit Fähigkeiten zu multimodalem und allgemeinem logischem Denken. Es ist spezialisiert auf tiefgehende Schlussfolgerungen und hilft dabei, komplexere und schwierigere Aufgaben zu lösen."
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM ist ein experimentelles, aufgabenorientiertes Sprachmodell, das darauf trainiert wurde, den Prinzipien der Lernwissenschaft zu entsprechen und in Lehr- und Lernszenarien systematische Anweisungen zu befolgen, als Expertenmentor zu fungieren usw."
   },
