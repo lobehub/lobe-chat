@@ -66,30 +66,32 @@ const Nav = memo<{
   ) : (
     <Flexbox align={'center'} className={styles.nav} horizontal justify={'space-between'}>
       {nav}
-      <Flexbox gap={12} horizontal>
-        <Link className={styles.link} href={SOCIAL_URL.discord} target={'_blank'}>
-          {t('mcp.details.nav.needHelp')}
-        </Link>
-        {identifier && (
+      {!inModal && (
+        <Flexbox gap={12} horizontal>
+          <Link className={styles.link} href={SOCIAL_URL.discord} target={'_blank'}>
+            {t('mcp.details.nav.needHelp')}
+          </Link>
+          {identifier && (
+            <Link
+              className={styles.link}
+              href={urlJoin(
+                'https://github.com/lobehub/lobe-chat-plugins/tree/main/src',
+                `${identifier}.json`,
+              )}
+              target={'_blank'}
+            >
+              {t('mcp.details.nav.viewSourceCode')}
+            </Link>
+          )}
           <Link
             className={styles.link}
-            href={urlJoin(
-              'https://github.com/lobehub/lobe-chat-plugins/tree/main/src',
-              `${identifier}.json`,
-            )}
+            href={'https://github.com/lobehub/lobe-chat-plugins/issues/new/choose'}
             target={'_blank'}
           >
-            {t('mcp.details.nav.viewSourceCode')}
+            {t('mcp.details.nav.reportIssue')}
           </Link>
-        )}
-        <Link
-          className={styles.link}
-          href={'https://github.com/lobehub/lobe-chat-plugins/issues/new/choose'}
-          target={'_blank'}
-        >
-          {t('mcp.details.nav.reportIssue')}
-        </Link>
-      </Flexbox>
+        </Flexbox>
+      )}
     </Flexbox>
   );
 });

@@ -6,12 +6,14 @@ import PluginAvatar from '@/components/Plugins/PluginAvatar';
 import { DiscoverMcpItem } from '@/types/discover';
 import { LobeToolType } from '@/types/tool/tool';
 
+import Actions from './Action';
+
 interface PluginItemProps extends DiscoverMcpItem {
   active?: boolean;
   onClick?: () => void;
   type?: LobeToolType;
 }
-const Item = memo<PluginItemProps>(({ name, description, icon, onClick, active }) => {
+const Item = memo<PluginItemProps>(({ name, description, icon, onClick, active, identifier }) => {
   return (
     <Block
       align={'center'}
@@ -42,6 +44,7 @@ const Item = memo<PluginItemProps>(({ name, description, icon, onClick, active }
           </Text>
         </Flexbox>
       </Flexbox>
+      <Actions identifier={identifier} />
     </Block>
   );
 });

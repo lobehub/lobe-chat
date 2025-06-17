@@ -1,4 +1,5 @@
 import { Icon } from '@lobehub/ui';
+import { Empty } from 'antd';
 import { uniqBy } from 'lodash-es';
 import { ServerCrash } from 'lucide-react';
 import { memo, useCallback, useEffect, useState } from 'react';
@@ -9,7 +10,6 @@ import { Virtuoso } from 'react-virtuoso';
 import { useDiscoverStore } from '@/store/discover';
 import { DiscoverMcpItem } from '@/types/discover';
 
-import Loading from '../../Loading';
 import VirtuosoLoading from '../../VirtuosoLoading';
 import Item from './Item';
 
@@ -47,13 +47,20 @@ export const List = memo<{
     if (data && allItems.length < data.totalCount) setPage((prev) => prev + 1);
   }, [data, allItems.length]);
 
-  if (!allItems.length) return <Loading />;
-
   if (error)
     return (
       <Center gap={12} padding={40}>
         <Icon icon={ServerCrash} size={80} />
         {t('store.networkError')}
+      </Center>
+    );
+
+  const isEmpty = allItems.length === 0;
+
+  if (isEmpty)
+    return (
+      <Center paddingBlock={40}>
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
       </Center>
     );
 

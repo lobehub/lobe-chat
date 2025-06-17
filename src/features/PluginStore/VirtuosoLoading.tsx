@@ -1,14 +1,16 @@
 import { Icon } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import { Loader2Icon } from 'lucide-react';
 import { memo } from 'react';
 import { Center } from 'react-layout-kit';
 
-const VirtuosoLoadingtsx = memo(() => {
+const VirtuosoLoading = memo(() => {
+  const theme = useTheme();
   return (
     <Center padding={16}>
-      <Icon icon={Loader2Icon} spin />
+      <Icon color={theme.colorTextDescription} icon={Loader2Icon} spin />
     </Center>
   );
 });
 
-export default VirtuosoLoadingtsx;
+export default VirtuosoLoading;

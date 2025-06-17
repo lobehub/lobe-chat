@@ -7,8 +7,8 @@ import { useDiscoverStore } from '@/store/discover';
 
 import Title from '../../components/Title';
 import AssistantList from '../assistant/features/List';
-import Loading from '../loading';
 import McpList from '../mcp/features/List';
+import Loading from './loading';
 
 const Client = memo<{ mobile?: boolean }>(() => {
   const { t } = useTranslation('discover');

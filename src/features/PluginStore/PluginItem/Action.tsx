@@ -105,7 +105,6 @@ const Actions = memo<ActionsProps>(({ identifier, type, isMCP }) => {
               }
             }}
             size={mobile ? 'small' : undefined}
-            type={'primary'}
           >
             {t('store.actions.install')}
           </Button>
