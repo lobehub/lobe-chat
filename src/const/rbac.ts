@@ -1,9 +1,11 @@
+import { wrapperRBACPermission } from '@/utils/rbac';
+
 /**
  * RBAC Permission Actions Definition
  * Defines all executable permission action types in the system
  * Format: resource:action (e.g., agent:create, file:upload)
  */
-const PERMISSION_ACTIONS = {
+export const PERMISSION_ACTIONS = {
   // ==================== Agent Management ====================
   AGENT_CREATE: 'agent:create',
 
@@ -225,7 +227,7 @@ const PERMISSION_ACTIONS = {
 /**
  * Operation Scope Constants Definition
  */
-export const OPERATION_SCOPE = ['ALL', 'WORKSPACE', 'OWNER'] as const;
+export const PERMISSION_SCOPE = ['ALL', 'WORKSPACE', 'OWNER'] as const;
 
 /**
  * RBAC System Permissions Definition
@@ -233,17 +235,10 @@ export const OPERATION_SCOPE = ['ALL', 'WORKSPACE', 'OWNER'] as const;
  * Format: resource:action:scope (e.g., agent:create:workspace, file:upload:owner)
  */
 export const RBAC_PERMISSIONS = Object.entries(PERMISSION_ACTIONS).reduce(
-  (acc, [key, permission]) => {
-    OPERATION_SCOPE.forEach((scope) => {
-      const permissionWithScopeKey =
-        `${key}_${scope}` as `${keyof typeof PERMISSION_ACTIONS}_${(typeof OPERATION_SCOPE)[number]}`;
-
-      acc[permissionWithScopeKey] = `${permission}:${scope.toLowerCase()}`;
-    });
-
-    return acc;
+  (acc, [key]) => {
+    return Object.assign(acc, wrapperRBACPermission(key as keyof typeof PERMISSION_ACTIONS));
   },
-  {} as Record<`${keyof typeof PERMISSION_ACTIONS}_${(typeof OPERATION_SCOPE)[number]}`, string>,
+  {} as Record<`${keyof typeof PERMISSION_ACTIONS}_${(typeof PERMISSION_SCOPE)[number]}`, string>,
 );
 
 /**
