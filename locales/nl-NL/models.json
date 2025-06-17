@@ -659,6 +659,9 @@
   "codestral-latest": {
     "description": "Codestral is een geavanceerd generatief model dat zich richt op codegeneratie, geoptimaliseerd voor tussentijdse invulling en code-aanvultaken."
   },
+  "codex-mini-latest": {
+    "description": "codex-mini-latest is een verfijnde versie van o4-mini, speciaal ontworpen voor Codex CLI. Voor direct gebruik via de API raden we aan te beginnen met gpt-4.1."
+  },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B is een model ontworpen voor instructievolging, gesprekken en programmeren."
   },
@@ -715,6 +718,9 @@
   },
   "compound-beta-mini": {
     "description": "Compound-beta-mini is een samengesteld AI-systeem dat wordt ondersteund door open beschikbare modellen in GroqCloud, en kan intelligent en selectief tools gebruiken om gebruikersvragen te beantwoorden."
+  },
+  "computer-use-preview": {
+    "description": "Het computer-use-preview model is een speciaal model ontworpen voor 'computergebruiktools', getraind om computergerelateerde taken te begrijpen en uit te voeren."
   },
   "dall-e-2": {
     "description": "De tweede generatie DALL·E model, ondersteunt realistischere en nauwkeurigere beeldgeneratie, met een resolutie die vier keer zo hoog is als die van de eerste generatie."
@@ -904,6 +910,15 @@
   },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite is een nieuw geüpgradede multimodale groot model, dat ondersteuning biedt voor beeldherkenning met willekeurige resoluties en extreme beeldverhoudingen, en de visuele redenering, documentherkenning, begrip van gedetailleerde informatie en het volgen van instructies verbetert. Ondersteunt een contextvenster van 128k en een maximale outputlengte van 16k tokens."
+  },
+  "doubao-seed-1.6": {
+    "description": "Doubao-Seed-1.6 is een gloednieuw multimodaal diepdenkend model dat drie denkwijzen ondersteunt: auto, thinking en non-thinking. In de non-thinking modus is de modelprestatie aanzienlijk verbeterd ten opzichte van Doubao-1.5-pro/250115. Ondersteunt een contextvenster van 256k en een maximale uitvoerlengte van 16k tokens."
+  },
+  "doubao-seed-1.6-flash": {
+    "description": "Doubao-Seed-1.6-flash is een multimodaal diepdenkend model met extreem snelle inferentiesnelheid, TPOT slechts 10ms; ondersteunt zowel tekst- als visueel begrip, met tekstbegrip dat beter is dan de vorige lite-generatie en visueel begrip dat vergelijkbaar is met concurrerende pro-serie modellen. Ondersteunt een contextvenster van 256k en een maximale uitvoerlengte van 16k tokens."
+  },
+  "doubao-seed-1.6-thinking": {
+    "description": "Doubao-Seed-1.6-thinking model heeft sterk verbeterde denkvermogens. Vergeleken met Doubao-1.5-thinking-pro zijn de basisvaardigheden in coderen, wiskunde en logisch redeneren verder verbeterd, met ondersteuning voor visueel begrip. Ondersteunt een contextvenster van 256k en een maximale uitvoerlengte van 16k tokens."
   },
   "emohaa": {
     "description": "Emohaa is een psychologisch model met professionele adviescapaciteiten, dat gebruikers helpt emotionele problemen te begrijpen."
@@ -1268,6 +1283,9 @@
   "gpt-4o-mini": {
     "description": "GPT-4o mini is het nieuwste model van OpenAI, gelanceerd na GPT-4 Omni, en ondersteunt zowel tekst- als beeldinvoer met tekstuitvoer. Als hun meest geavanceerde kleine model is het veel goedkoper dan andere recente toonaangevende modellen en meer dan 60% goedkoper dan GPT-3.5 Turbo. Het behoudt de meest geavanceerde intelligentie met een aanzienlijke prijs-kwaliteitverhouding. GPT-4o mini behaalde 82% op de MMLU-test en staat momenteel hoger in chatvoorkeuren dan GPT-4."
   },
+  "gpt-4o-mini-audio-preview": {
+    "description": "GPT-4o mini Audio model, ondersteunt audio-invoer en -uitvoer."
+  },
   "gpt-4o-mini-realtime-preview": {
     "description": "GPT-4o-mini realtime versie, ondersteunt audio en tekst realtime invoer en uitvoer."
   },
@@ -1420,6 +1438,9 @@
   },
   "kimi-latest": {
     "description": "Kimi slimme assistent product maakt gebruik van het nieuwste Kimi grote model, dat mogelijk nog niet stabiele functies bevat. Ondersteunt beeldbegrip en kiest automatisch het 8k/32k/128k model als factureringsmodel op basis van de lengte van de context van het verzoek."
+  },
+  "kimi-thinking-preview": {
+    "description": "kimi-thinking-preview model is een multimodaal denkmodel met multimodale en algemene redeneervaardigheden, aangeboden door de donkere zijde van de maan. Het blinkt uit in diep redeneren en helpt bij het oplossen van complexere problemen."
   },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM is een experimenteel, taak-specifiek taalmodel dat is getraind volgens de principes van de leerwetenschap, en kan systeeminstructies volgen in onderwijs- en leeromgevingen, en fungeert als een expertmentor."
@@ -1823,11 +1844,17 @@
   "o1-preview": {
     "description": "o1 is het nieuwe redeneermodel van OpenAI, geschikt voor complexe taken die uitgebreide algemene kennis vereisen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
   },
+  "o1-pro": {
+    "description": "De o1-serie modellen zijn getraind met versterkend leren, kunnen nadenken voordat ze antwoorden en complexe redeneertaken uitvoeren. Het o1-pro model gebruikt meer rekenkracht voor diepgaander denken, waardoor het continu betere antwoorden levert."
+  },
   "o3": {
     "description": "o3 is een veelzijdig en krachtig model dat uitblinkt in verschillende domeinen. Het stelt nieuwe normen voor wiskunde, wetenschap, programmeren en visuele redeneringstaken. Het is ook bedreven in technische schrijfvaardigheid en het volgen van instructies. Gebruikers kunnen het gebruiken om teksten, code en afbeeldingen te analyseren en complexe meerstapsproblemen op te lossen."
   },
   "o3-mini": {
     "description": "o3-mini is ons nieuwste kleine inferentiemodel dat hoge intelligentie biedt met dezelfde kosten- en vertragingdoelen als o1-mini."
+  },
+  "o3-pro": {
+    "description": "Het o3-pro model gebruikt meer rekenkracht om dieper na te denken en altijd betere antwoorden te bieden, alleen ondersteund onder de Responses API."
   },
   "o4-mini": {
     "description": "o4-mini is ons nieuwste compacte model uit de o-serie. Het is geoptimaliseerd voor snelle en efficiënte inferentie, met een hoge efficiëntie en prestaties in codering en visuele taken."

@@ -659,6 +659,9 @@
   "codestral-latest": {
     "description": "Codestral là mô hình sinh mã tiên tiến tập trung vào việc sinh mã, tối ưu hóa cho các nhiệm vụ điền vào khoảng trống và hoàn thiện mã."
   },
+  "codex-mini-latest": {
+    "description": "codex-mini-latest là phiên bản tinh chỉnh của o4-mini, được thiết kế đặc biệt cho Codex CLI. Đối với việc sử dụng trực tiếp qua API, chúng tôi khuyến nghị bắt đầu từ gpt-4.1."
+  },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B là mô hình được thiết kế cho việc tuân thủ hướng dẫn, đối thoại và lập trình."
   },
@@ -715,6 +718,9 @@
   },
   "compound-beta-mini": {
     "description": "Compound-beta-mini là một hệ thống AI phức hợp, được hỗ trợ bởi các mô hình có sẵn công khai trong GroqCloud, có khả năng thông minh và chọn lọc sử dụng công cụ để trả lời các truy vấn của người dùng."
+  },
+  "computer-use-preview": {
+    "description": "Mô hình computer-use-preview được thiết kế chuyên biệt cho \"công cụ sử dụng máy tính\", được huấn luyện để hiểu và thực hiện các nhiệm vụ liên quan đến máy tính."
   },
   "dall-e-2": {
     "description": "Mô hình DALL·E thế hệ thứ hai, hỗ trợ tạo hình ảnh chân thực và chính xác hơn, với độ phân giải gấp 4 lần thế hệ đầu tiên."
@@ -904,6 +910,15 @@
   },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite là mô hình đa phương tiện lớn được nâng cấp mới, hỗ trợ nhận diện hình ảnh với bất kỳ độ phân giải nào và tỷ lệ dài rộng cực đoan, tăng cường khả năng suy luận hình ảnh, nhận diện tài liệu, hiểu thông tin chi tiết và tuân thủ hướng dẫn. Hỗ trợ cửa sổ ngữ cảnh 128k, độ dài đầu ra tối đa 16k tokens."
+  },
+  "doubao-seed-1.6": {
+    "description": "Doubao-Seed-1.6 là mô hình suy nghĩ sâu đa phương thức hoàn toàn mới, hỗ trợ ba chế độ suy nghĩ auto/thinking/non-thinking. Ở chế độ non-thinking, hiệu quả mô hình cải thiện đáng kể so với Doubao-1.5-pro/250115. Hỗ trợ cửa sổ ngữ cảnh 256k, độ dài đầu ra tối đa 16k tokens."
+  },
+  "doubao-seed-1.6-flash": {
+    "description": "Doubao-Seed-1.6-flash là mô hình suy nghĩ sâu đa phương thức với tốc độ suy luận tối ưu, TPOT chỉ cần 10ms; đồng thời hỗ trợ hiểu văn bản và hình ảnh, khả năng hiểu văn bản vượt trội so với thế hệ lite trước, khả năng hiểu hình ảnh sánh ngang với các mô hình pro của đối thủ. Hỗ trợ cửa sổ ngữ cảnh 256k, độ dài đầu ra tối đa 16k tokens."
+  },
+  "doubao-seed-1.6-thinking": {
+    "description": "Mô hình Doubao-Seed-1.6-thinking có khả năng suy nghĩ được tăng cường đáng kể, so với Doubao-1.5-thinking-pro, nâng cao hơn nữa các năng lực cơ bản như Lập trình, Toán học, Lý luận logic, đồng thời hỗ trợ hiểu hình ảnh. Hỗ trợ cửa sổ ngữ cảnh 256k, độ dài đầu ra tối đa 16k tokens."
   },
   "emohaa": {
     "description": "Emohaa là mô hình tâm lý, có khả năng tư vấn chuyên nghiệp, giúp người dùng hiểu các vấn đề cảm xúc."
@@ -1268,6 +1283,9 @@
   "gpt-4o-mini": {
     "description": "GPT-4o mini là mô hình mới nhất do OpenAI phát hành sau GPT-4 Omni, hỗ trợ đầu vào hình ảnh và đầu ra văn bản. Là mô hình nhỏ gọn tiên tiến nhất của họ, nó rẻ hơn nhiều so với các mô hình tiên tiến gần đây khác và rẻ hơn hơn 60% so với GPT-3.5 Turbo. Nó giữ lại trí thông minh tiên tiến nhất trong khi có giá trị sử dụng đáng kể. GPT-4o mini đạt 82% điểm trong bài kiểm tra MMLU và hiện đứng cao hơn GPT-4 về sở thích trò chuyện."
   },
+  "gpt-4o-mini-audio-preview": {
+    "description": "Mô hình GPT-4o mini Audio, hỗ trợ đầu vào và đầu ra âm thanh."
+  },
   "gpt-4o-mini-realtime-preview": {
     "description": "Phiên bản thời gian thực của GPT-4o-mini, hỗ trợ đầu vào và đầu ra âm thanh và văn bản theo thời gian thực."
   },
@@ -1420,6 +1438,9 @@
   },
   "kimi-latest": {
     "description": "Sản phẩm trợ lý thông minh Kimi sử dụng mô hình lớn Kimi mới nhất, có thể chứa các tính năng chưa ổn định. Hỗ trợ hiểu hình ảnh, đồng thời tự động chọn mô hình 8k/32k/128k làm mô hình tính phí dựa trên độ dài ngữ cảnh yêu cầu."
+  },
+  "kimi-thinking-preview": {
+    "description": "Mô hình kimi-thinking-preview do Moon's Dark Side cung cấp, có khả năng suy luận đa phương thức và suy luận tổng quát, nổi bật với khả năng suy luận sâu, giúp giải quyết nhiều vấn đề khó khăn hơn."
   },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM là một mô hình ngôn ngữ thử nghiệm, chuyên biệt cho các nhiệm vụ, được đào tạo để tuân theo các nguyên tắc khoa học học tập, có thể tuân theo các chỉ dẫn hệ thống trong các tình huống giảng dạy và học tập, đóng vai trò như một người hướng dẫn chuyên gia."
@@ -1823,11 +1844,17 @@
   "o1-preview": {
     "description": "o1 là mô hình suy diễn mới của OpenAI, phù hợp cho các nhiệm vụ phức tạp cần kiến thức tổng quát rộng rãi. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."
   },
+  "o1-pro": {
+    "description": "Dòng mô hình o1 được huấn luyện qua học tăng cường, có khả năng suy nghĩ trước khi trả lời và thực hiện các nhiệm vụ suy luận phức tạp. Mô hình o1-pro sử dụng nhiều tài nguyên tính toán hơn để suy nghĩ sâu hơn, từ đó liên tục cung cấp câu trả lời chất lượng cao hơn."
+  },
   "o3": {
     "description": "o3 là một mô hình toàn năng mạnh mẽ, thể hiện xuất sắc trong nhiều lĩnh vực. Nó thiết lập tiêu chuẩn mới cho các nhiệm vụ toán học, khoa học, lập trình và suy luận hình ảnh. Nó cũng giỏi trong việc viết kỹ thuật và tuân thủ hướng dẫn. Người dùng có thể sử dụng nó để phân tích văn bản, mã và hình ảnh, giải quyết các vấn đề phức tạp nhiều bước."
   },
   "o3-mini": {
     "description": "o3-mini là mô hình suy diễn nhỏ gọn mới nhất của chúng tôi, cung cấp trí thông minh cao với chi phí và độ trễ tương tự như o1-mini."
+  },
+  "o3-pro": {
+    "description": "Mô hình o3-pro sử dụng nhiều tài nguyên tính toán hơn để suy nghĩ sâu hơn và luôn cung cấp câu trả lời tốt hơn, chỉ hỗ trợ sử dụng dưới API Responses."
   },
   "o4-mini": {
     "description": "o4-mini là mô hình nhỏ gọn mới nhất trong dòng o của chúng tôi. Nó được tối ưu hóa cho suy luận nhanh chóng và hiệu quả, thể hiện hiệu suất và hiệu quả cao trong các nhiệm vụ mã hóa và hình ảnh."
