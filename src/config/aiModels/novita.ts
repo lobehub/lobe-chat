@@ -4,6 +4,16 @@ import { AIChatModelCard } from '@/types/aiModel';
 const novitaChatModels: AIChatModelCard[] = [
   {
     contextWindowTokens: 128_000,
+    displayName: 'MiniMax M1 80K',
+    id: 'minimaxai/minimax-m1-80k',
+    pricing: {
+      input: 0.55,
+      output: 2.2,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 128_000,
     displayName: 'Qwen3 4B FP8',
     id: 'qwen/qwen3-4b-fp8',
     pricing: {
