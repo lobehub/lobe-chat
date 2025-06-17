@@ -1,5 +1,6 @@
 import { LobeChatDatabase } from '@/database/type';
 
+export * from './agent.type';
 export * from './user.type';
 
 /**
