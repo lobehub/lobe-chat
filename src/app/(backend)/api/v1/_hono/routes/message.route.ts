@@ -8,6 +8,10 @@ import { getAllScopePermissions, getScopePermissions } from '@/utils/rbac';
 import { MessageController } from '../controllers';
 import { requireAuth } from '../middleware';
 import { requireAnyPermission } from '../middleware/permission-check';
+import {
+  MessagesCreateRequestSchema,
+  MessagesQueryByTopicRequestSchema,
+} from '../types/message.type';
 
 // 参数校验 Schema
 const countByTopicsSchema = z.object({
@@ -62,6 +66,36 @@ MessageRoutes.post(
   (c) => {
     const controller = new MessageController();
     return controller.handleCountMessagesByUser(c);
+  },
+);
+
+// GET /api/v1/messages/queryByTopic - 根据话题ID获取消息列表 (需要消息读取权限)
+MessageRoutes.get(
+  '/queryByTopic',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('MESSAGE_READ', ['ALL', 'WORKSPACE', 'OWNER']),
+    'You do not have permission to read messages',
+  ),
+  zValidator('query', MessagesQueryByTopicRequestSchema),
+  (c) => {
+    const controller = new MessageController();
+    return controller.handleGetMessagesByTopic(c);
+  },
+);
+
+// POST /api/v1/messages/create - 创建新消息 (需要消息写入权限)
+MessageRoutes.post(
+  '/create',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('MESSAGE_CREATE', ['ALL', 'WORKSPACE', 'OWNER']),
+    'You do not have permission to create messages',
+  ),
+  zValidator('json', MessagesCreateRequestSchema),
+  (c) => {
+    const controller = new MessageController();
+    return controller.handleCreateMessage(c);
   },
 );
 
