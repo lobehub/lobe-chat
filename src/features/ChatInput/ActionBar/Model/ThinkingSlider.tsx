@@ -15,7 +15,7 @@ const ThinkingSlider = memo(() => {
 
   const marks = {
     0: 'OFF',
-    1: 'AUTO',
+    1: 'Auto',
     2: 'ON',
   };
 
