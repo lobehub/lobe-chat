@@ -183,7 +183,7 @@ export const generateAIChat: StateCreator<
 
       // if there is no activeTopicId and the feature length is greater than the threshold
       // then create a new topic and active it
-      if (!get().activeTopicId && featureLength >= agentConfig.autoCreateTopicThreshold) {
+      if (!activeTopicId && featureLength >= agentConfig.autoCreateTopicThreshold) {
         // we need to create a temp message for optimistic update
         tempMessageId = get().internal_createTmpMessage(newMessage);
         get().internal_toggleMessageLoading(true, tempMessageId);
@@ -258,15 +258,16 @@ export const generateAIChat: StateCreator<
 
       // check activeTopic and then auto update topic title
       if (newTopicId) {
-        const chats = chatSelectors.activeBaseChats(get());
+        const chats = chatSelectors.getBaseChatsByKey(messageMapKey(activeId, newTopicId))(get());
         await get().summaryTopicTitle(newTopicId, chats);
         return;
       }
 
-      const topic = topicSelectors.currentActiveTopic(get());
+      if (!activeTopicId) return;
+      const topic = topicSelectors.getTopicById(activeTopicId)(get());
 
       if (topic && !topic.title) {
-        const chats = chatSelectors.activeBaseChats(get());
+        const chats = chatSelectors.getBaseChatsByKey(messageMapKey(activeId, topic.id))(get());
         await get().summaryTopicTitle(topic.id, chats);
       }
     };
@@ -528,6 +529,11 @@ export const generateAIChat: StateCreator<
     // 3. handle max_tokens
     agentConfig.params.max_tokens = chatConfig.enableMaxTokens
       ? agentConfig.params.max_tokens
+      : undefined;
+
+    // 4. handle reasoning_effort
+    agentConfig.params.reasoning_effort = chatConfig.enableReasoningEffort
+      ? agentConfig.params.reasoning_effort
       : undefined;
 
     let isFunctionCall = false;

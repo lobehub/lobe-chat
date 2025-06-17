@@ -659,6 +659,9 @@
   "codestral-latest": {
     "description": "Codestral, kod üretimine odaklanan son teknoloji bir üretim modelidir, ara doldurma ve kod tamamlama görevlerini optimize etmiştir."
   },
+  "codex-mini-latest": {
+    "description": "codex-mini-latest, Codex CLI için özel olarak tasarlanmış o4-mini'nin ince ayar versiyonudur. API üzerinden doğrudan kullanım için, gpt-4.1'den başlamanızı öneririz."
+  },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B, talimat takibi, diyalog ve programlama için tasarlanmış bir modeldir."
   },
@@ -715,6 +718,9 @@
   },
   "compound-beta-mini": {
     "description": "Compound-beta-mini, GroqCloud'da desteklenen açık kullanılabilir modellerden güç alan bir bileşik AI sistemidir, kullanıcı sorgularını yanıtlamak için araçları akıllıca ve seçici bir şekilde kullanabilir."
+  },
+  "computer-use-preview": {
+    "description": "computer-use-preview modeli, \"Bilgisayar Kullanım Araçları\" için özel olarak tasarlanmış bir modeldir ve bilgisayarla ilgili görevleri anlama ve yerine getirme konusunda eğitilmiştir."
   },
   "dall-e-2": {
     "description": "İkinci nesil DALL·E modeli, daha gerçekçi ve doğru görüntü üretimi destekler, çözünürlüğü birinci neslin 4 katıdır."
@@ -904,6 +910,15 @@
   },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite, yeni güncellenmiş çok modlu büyük modeldir, herhangi bir çözünürlük ve aşırı en-boy oranı görüntü tanıma desteği sunar, görsel çıkarım, belge tanıma, detay bilgisi anlama ve talimat takibi yeteneklerini artırır. 128k bağlam penceresi destekler, çıktı uzunluğu maksimum 16k token destekler."
+  },
+  "doubao-seed-1.6": {
+    "description": "Doubao-Seed-1.6, auto/thinking/non-thinking olmak üzere üç düşünme modunu destekleyen tamamen yeni çok modlu derin düşünme modelidir. Non-thinking modunda, model performansı Doubao-1.5-pro/250115'e kıyasla büyük ölçüde artmıştır. 256k bağlam penceresini destekler ve çıktı uzunluğu maksimum 16k token olabilir."
+  },
+  "doubao-seed-1.6-flash": {
+    "description": "Doubao-Seed-1.6-flash, TPOT sadece 10ms olan son derece hızlı çok modlu derin düşünme modelidir; hem metin hem de görsel anlayışı destekler, metin anlama yeteneği önceki lite neslini aşar, görsel anlama ise rakiplerin pro serisi modelleriyle eşdeğerdir. 256k bağlam penceresini destekler ve çıktı uzunluğu maksimum 16k token olabilir."
+  },
+  "doubao-seed-1.6-thinking": {
+    "description": "Doubao-Seed-1.6-thinking modeli düşünme yeteneğinde büyük gelişme göstermiştir; Doubao-1.5-thinking-pro ile karşılaştırıldığında Kodlama, Matematik ve mantıksal akıl yürütme gibi temel yeteneklerde daha da iyileşmiştir ve görsel anlayışı destekler. 256k bağlam penceresini destekler ve çıktı uzunluğu maksimum 16k token olabilir."
   },
   "emohaa": {
     "description": "Emohaa, duygusal sorunları anlamalarına yardımcı olmak için profesyonel danışmanlık yeteneklerine sahip bir psikolojik modeldir."
@@ -1268,6 +1283,9 @@
   "gpt-4o-mini": {
     "description": "GPT-4o mini, OpenAI'nin GPT-4 Omni'den sonra tanıttığı en yeni modeldir. Görsel ve metin girişi destekler ve metin çıktısı verir. En gelişmiş küçük model olarak, diğer son zamanlardaki öncü modellere göre çok daha ucuzdur ve GPT-3.5 Turbo'dan %60'tan fazla daha ucuzdur. En son teknolojiyi korurken, önemli bir maliyet etkinliği sunar. GPT-4o mini, MMLU testinde %82 puan almış olup, şu anda sohbet tercihleri açısından GPT-4'ün üzerinde yer almaktadır."
   },
+  "gpt-4o-mini-audio-preview": {
+    "description": "GPT-4o mini Ses modeli, ses giriş ve çıkışını destekler."
+  },
   "gpt-4o-mini-realtime-preview": {
     "description": "GPT-4o-mini gerçek zamanlı versiyonu, ses ve metin için gerçek zamanlı giriş ve çıkış desteği sunar."
   },
@@ -1420,6 +1438,9 @@
   },
   "kimi-latest": {
     "description": "Kimi akıllı asistan ürünü, en son Kimi büyük modelini kullanır ve henüz kararlı olmayan özellikler içerebilir. Görüntü anlayışını desteklerken, isteğin bağlam uzunluğuna göre 8k/32k/128k modelini faturalama modeli olarak otomatik olarak seçecektir."
+  },
+  "kimi-thinking-preview": {
+    "description": "kimi-thinking-preview modeli, Ay'ın karanlık yüzü tarafından sunulan çok modlu akıl yürütme ve genel akıl yürütme yeteneklerine sahip çok modlu düşünme modelidir; derin akıl yürütmede uzmandır ve daha zor sorunların çözümüne yardımcı olur."
   },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM, öğrenme bilimleri ilkelerine uygun olarak eğitilmiş, görev odaklı deneysel bir dil modelidir. Eğitim ve öğrenim senaryolarında sistem talimatlarını takip edebilir ve uzman bir mentor olarak görev alabilir."
@@ -1823,11 +1844,17 @@
   "o1-preview": {
     "description": "o1, OpenAI'nin geniş genel bilgiye ihtiyaç duyan karmaşık görevler için uygun yeni bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."
   },
+  "o1-pro": {
+    "description": "o1 serisi modeller, güçlendirilmiş öğrenme ile eğitilmiş olup, yanıtlamadan önce düşünme yapabilir ve karmaşık akıl yürütme görevlerini yerine getirebilir. o1-pro modeli, daha derin düşünme için daha fazla hesaplama kaynağı kullanır ve böylece sürekli olarak daha kaliteli yanıtlar sunar."
+  },
   "o3": {
     "description": "o3, çok çeşitli alanlarda mükemmel performans gösteren çok yönlü güçlü bir modeldir. Matematik, bilim, programlama ve görsel çıkarım görevlerinde yeni standartlar belirler. Ayrıca teknik yazım ve talimat takibi konusunda da uzmandır. Kullanıcılar, metin, kod ve görüntüleri analiz ederek çok adımlı karmaşık sorunları çözebilir."
   },
   "o3-mini": {
     "description": "o3-mini, aynı maliyet ve gecikme hedefleriyle yüksek zeka sunan en yeni küçük ölçekli çıkarım modelimizdir."
+  },
+  "o3-pro": {
+    "description": "o3-pro modeli, daha derin düşünmek ve her zaman daha iyi yanıtlar sunmak için daha fazla hesaplama kullanır; yalnızca Responses API altında kullanılabilir."
   },
   "o4-mini": {
     "description": "o4-mini, en yeni küçük o serisi modelimizdir. Hızlı ve etkili çıkarım için optimize edilmiştir ve kodlama ile görsel görevlerde son derece yüksek verimlilik ve performans sergiler."
