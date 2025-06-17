@@ -659,6 +659,9 @@
   "codestral-latest": {
     "description": "Codestral은 코드 생성을 전문으로 하는 최첨단 생성 모델로, 중간 채우기 및 코드 완성 작업을 최적화했습니다."
   },
+  "codex-mini-latest": {
+    "description": "codex-mini-latest는 o4-mini의 미세 조정 버전으로, Codex CLI 전용입니다. API를 통해 직접 사용하려면 gpt-4.1부터 시작하는 것을 권장합니다."
+  },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B는 지시 준수, 대화 및 프로그래밍을 위해 설계된 모델입니다."
   },
@@ -715,6 +718,9 @@
   },
   "compound-beta-mini": {
     "description": "Compound-beta-mini는 GroqCloud에서 지원하는 공개 가능한 모델로 구성된 복합 AI 시스템으로, 사용자의 쿼리에 답변하기 위해 도구를 지능적으로 선택적으로 사용할 수 있습니다."
+  },
+  "computer-use-preview": {
+    "description": "computer-use-preview 모델은 '컴퓨터 사용 도구'를 위해 특별히 설계된 전용 모델로, 컴퓨터 관련 작업을 이해하고 수행하도록 훈련되었습니다."
   },
   "dall-e-2": {
     "description": "2세대 DALL·E 모델로, 더 사실적이고 정확한 이미지 생성을 지원하며, 해상도는 1세대의 4배입니다."
@@ -904,6 +910,15 @@
   },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite는 새롭게 업그레이드된 다중 모드 대모델로, 임의의 해상도와 극단적인 가로 세로 비율의 이미지 인식을 지원하며, 시각적 추론, 문서 인식, 세부 정보 이해 및 지시 준수 능력을 강화합니다. 128k 문맥 창을 지원하며, 최대 16k 토큰의 출력 길이를 지원합니다."
+  },
+  "doubao-seed-1.6": {
+    "description": "Doubao-Seed-1.6은 완전히 새로워진 다중 모달 심층 사고 모델로, auto/thinking/non-thinking 세 가지 사고 모드를 모두 지원합니다. non-thinking 모드에서 모델 성능은 Doubao-1.5-pro/250115에 비해 크게 향상되었습니다. 256k 컨텍스트 윈도우를 지원하며, 출력 길이는 최대 16k 토큰까지 가능합니다."
+  },
+  "doubao-seed-1.6-flash": {
+    "description": "Doubao-Seed-1.6-flash는 추론 속도가 극대화된 다중 모달 심층 사고 모델로, TPOT가 단 10ms에 불과합니다. 텍스트와 시각 이해를 모두 지원하며, 텍스트 이해 능력은 이전 세대 lite를 능가하고, 시각 이해는 경쟁사 pro 시리즈 모델과 견줄 만합니다. 256k 컨텍스트 윈도우를 지원하며, 출력 길이는 최대 16k 토큰까지 가능합니다."
+  },
+  "doubao-seed-1.6-thinking": {
+    "description": "Doubao-Seed-1.6-thinking 모델은 사고 능력이 크게 강화되어 Doubao-1.5-thinking-pro에 비해 코딩, 수학, 논리 추론 등 기본 능력이 더욱 향상되었으며, 시각 이해를 지원합니다. 256k 컨텍스트 윈도우를 지원하며, 출력 길이는 최대 16k 토큰까지 가능합니다."
   },
   "emohaa": {
     "description": "Emohaa는 심리 모델로, 전문 상담 능력을 갖추고 있어 사용자가 감정 문제를 이해하는 데 도움을 줍니다."
@@ -1268,6 +1283,9 @@
   "gpt-4o-mini": {
     "description": "GPT-4o mini는 OpenAI가 GPT-4 Omni 이후에 출시한 최신 모델로, 텍스트와 이미지를 입력받아 텍스트를 출력합니다. 이 모델은 최신의 소형 모델로, 최근의 다른 최첨단 모델보다 훨씬 저렴하며, GPT-3.5 Turbo보다 60% 이상 저렴합니다. 최첨단의 지능을 유지하면서도 뛰어난 가성비를 자랑합니다. GPT-4o mini는 MMLU 테스트에서 82%의 점수를 기록했으며, 현재 채팅 선호도에서 GPT-4보다 높은 순위를 차지하고 있습니다."
   },
+  "gpt-4o-mini-audio-preview": {
+    "description": "GPT-4o mini Audio 모델로, 오디오 입력과 출력을 지원합니다."
+  },
   "gpt-4o-mini-realtime-preview": {
     "description": "GPT-4o-mini 실시간 버전으로, 오디오 및 텍스트의 실시간 입력 및 출력을 지원합니다."
   },
@@ -1420,6 +1438,9 @@
   },
   "kimi-latest": {
     "description": "Kimi 스마트 어시스턴트 제품은 최신 Kimi 대형 모델을 사용하며, 아직 안정되지 않은 기능이 포함될 수 있습니다. 이미지 이해를 지원하며, 요청의 맥락 길이에 따라 8k/32k/128k 모델을 청구 모델로 자동 선택합니다."
+  },
+  "kimi-thinking-preview": {
+    "description": "kimi-thinking-preview 모델은 월면의 어두운 면에서 제공하는 다중 모달 추론 능력과 범용 추론 능력을 갖춘 다중 모달 사고 모델로, 심층 추론에 능하며 더 어렵고 복잡한 문제 해결을 돕습니다."
   },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM은 학습 과학 원칙에 맞춰 훈련된 실험적이고 특정 작업에 특화된 언어 모델로, 교육 및 학습 환경에서 시스템 지침을 따르며 전문가 멘토 역할을 수행합니다."
@@ -1823,11 +1844,17 @@
   "o1-preview": {
     "description": "o1은 OpenAI의 새로운 추론 모델로, 광범위한 일반 지식이 필요한 복잡한 작업에 적합합니다. 이 모델은 128K의 컨텍스트와 2023년 10월의 지식 기준일을 가지고 있습니다."
   },
+  "o1-pro": {
+    "description": "o1 시리즈 모델은 강화 학습을 통해 훈련되어 답변 전에 사고를 수행하고 복잡한 추론 작업을 실행할 수 있습니다. o1-pro 모델은 더 많은 계산 자원을 사용하여 더 깊이 사고함으로써 지속적으로 더 우수한 답변을 제공합니다."
+  },
   "o3": {
     "description": "o3는 다재다능한 강력한 모델로, 여러 분야에서 뛰어난 성능을 발휘합니다. 수학, 과학, 프로그래밍 및 시각적 추론 작업에서 새로운 기준을 세웠습니다. 기술 작문 및 지시 준수에도 능숙합니다. 사용자는 이를 통해 텍스트, 코드 및 이미지를 분석하고, 다단계 복잡한 문제를 해결할 수 있습니다."
   },
   "o3-mini": {
     "description": "o3-mini는 최신 소형 추론 모델로, o1-mini와 동일한 비용과 지연 목표에서 높은 지능을 제공합니다."
+  },
+  "o3-pro": {
+    "description": "o3-pro 모델은 더 많은 계산을 사용하여 더 깊이 사고하고 항상 더 나은 답변을 제공하며, Responses API에서만 사용할 수 있습니다."
   },
   "o4-mini": {
     "description": "o4-mini는 최신 소형 o 시리즈 모델로, 빠르고 효율적인 추론을 위해 최적화되어 있으며, 코딩 및 시각적 작업에서 매우 높은 효율성과 성능을 자랑합니다."
