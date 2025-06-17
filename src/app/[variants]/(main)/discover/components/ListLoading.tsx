@@ -8,7 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 
 const ListLoading = memo(() => {
   return (
-    <Flexbox style={{ marginBlock: 24 }} width={'100%'}>
+    <Flexbox width={'100%'}>
       <Grid rows={3} width={'100%'}>
         {Array.from({ length: 12 }).map((_, index) => (
           <Block gap={24} key={index} padding={16} variant={'outlined'}>

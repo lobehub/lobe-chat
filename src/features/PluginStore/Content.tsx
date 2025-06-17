@@ -8,7 +8,7 @@ import { useToolStore } from '@/store/tool';
 import { PluginStoreTabs } from '@/store/tool/slices/store';
 
 import AddPluginButton from './AddPluginButton';
-import InstalledPluginList from './InstalledPluginList';
+import InstalledList from './InstalledList';
 import McpList from './McpList';
 import PluginList from './PluginList';
 import Search from './Search';
@@ -46,7 +46,7 @@ export const Content = memo(() => {
       </Flexbox>
       {listType === PluginStoreTabs.MCP && <McpList keywords={keywords} />}
       {listType === PluginStoreTabs.Plugin && <PluginList keywords={keywords} />}
-      {listType === PluginStoreTabs.Installed && <InstalledPluginList keywords={keywords} />}
+      {listType === PluginStoreTabs.Installed && <InstalledList keywords={keywords} />}
     </Flexbox>
   );
 });
