@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 import type { Stream } from 'openai/streaming';
 
-import { ChatMessageError } from '@/types/message';
+import { ChatMessageError, CitationItem } from '@/types/message';
 
 import { AgentRuntimeErrorType } from '../../../error';
 import { convertResponseUsage } from '../../usageConverter';
@@ -20,7 +20,17 @@ import {
 import { OpenAIStreamOptions } from './openai';
 
 const transformOpenAIStream = (
-  chunk: OpenAI.Responses.ResponseStreamEvent,
+  chunk: OpenAI.Responses.ResponseStreamEvent | {
+    annotation: {
+      end_index: number;
+      start_index: number;
+      title: string;
+      type: 'url_citation';
+      url: string;
+    };
+    item_id: string;
+    type: 'response.output_text.annotation.added';
+  },
   streamContext: StreamContext,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
   // handle the first chunk error
@@ -42,6 +52,7 @@ const transformOpenAIStream = (
     switch (chunk.type) {
       case 'response.created': {
         streamContext.id = chunk.response.id;
+        streamContext.returnedCitationArray = [];
 
         return { data: chunk.response.status, id: streamContext.id, type: 'data' };
       }
@@ -104,6 +115,31 @@ const transformOpenAIStream = (
 
       case 'response.reasoning_summary_text.delta': {
         return { data: chunk.delta, id: chunk.item_id, type: 'reasoning' };
+      }
+
+      case 'response.output_text.annotation.added': {
+        const citations = chunk.annotation;
+
+        if (streamContext.returnedCitationArray) {
+          streamContext.returnedCitationArray.push({
+            title: citations.title,
+            url: citations.url,
+          } as CitationItem);
+        }
+
+        return { data: null, id: chunk.item_id, type: 'text' };
+      }
+
+      case 'response.output_item.done': {
+        if (streamContext.returnedCitationArray?.length) {
+          return {
+            data: { citations: streamContext.returnedCitationArray },
+            id: chunk.item.id,
+            type: 'grounding',
+          }
+        }
+
+        return { data: null, id: chunk.item.id, type: 'text' };
       }
 
       case 'response.completed': {

@@ -240,7 +240,19 @@
     "mermaidTheme": {
       "title": "美人魚主題"
     },
-    "title": "聊天外觀"
+    "title": "聊天外觀",
+    "transitionMode": {
+      "desc": "聊天訊息的過渡動畫",
+      "options": {
+        "fadeIn": "淡入",
+        "none": {
+          "desc": "這取決於模型的回應輸出方式，請自行測試。",
+          "value": "無"
+        },
+        "smooth": "平滑"
+      },
+      "title": "過渡動畫"
+    }
   },
   "settingCommon": {
     "lang": {
