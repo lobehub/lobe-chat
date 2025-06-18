@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add MiniMax-M1 model."]
+    },
+    "date": "2025-06-18",
+    "version": "1.94.12"
+  },
+  {
+    "children": {
       "fixes": ["Enhance the multi-display window opening experience."]
     },
     "date": "2025-06-17",
