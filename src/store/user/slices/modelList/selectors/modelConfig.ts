@@ -18,10 +18,10 @@ const providerWhitelist = new Set(['ollama']);
  * 4. On Server, by default.
  */
 const isProviderFetchOnClient = (provider: GlobalLLMProviderKey | string) => (s: UserStore) => {
-  const config = getProviderConfigById(provider)(s);
-
   // if is desktop, force on Server.
   if (isDesktop) return false;
+
+  const config = getProviderConfigById(provider)(s);
 
   // If the provider already disable browser request in model config, force on Server.
   if (isProviderDisableBrowserRequest(provider)) return false;
