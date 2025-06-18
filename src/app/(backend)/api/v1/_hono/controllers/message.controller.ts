@@ -99,6 +99,26 @@ export class MessageController extends BaseController {
     }
   }
 
+  /**
+   * 创建用户消息并生成AI回复
+   * POST /api/v1/messages/create-with-reply
+   * Body: { content: string, role: 'assistant'|'user', sessionId: string, topic: string, fromModel: string, fromProvider: string, files?: string[] }
+   */
+  async handleCreateMessageWithAIReply(c: Context) {
+    try {
+      const userId = this.getUserId(c)!;
+      const messageData = (await this.getBody<MessagesCreateRequest>(c))!;
+
+      const db = await this.getDatabase();
+      const messageService = new MessageService(db, userId);
+      const result = await messageService.createMessageWithAIReply(messageData);
+
+      return this.success(c, result, '创建消息并生成AI回复成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
   // 保留原有的示例方法
   handleGetExample(c: Context) {
     return this.success(c, { message: 'Message API is working' }, '示例接口调用成功');

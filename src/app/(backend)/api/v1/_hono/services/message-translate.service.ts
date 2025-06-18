@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 
-import { messageTranslates } from '@/database/schemas';
+import { messageTranslates, messages } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 
 import { BaseService } from '../common/base.service';
@@ -9,6 +9,7 @@ import {
   MessageTranslateResponse,
   MessageTranslateTriggerRequest,
 } from '../types/message-translate.type';
+import { ChatService } from './chat.service';
 
 export class MessageTranslateService extends BaseService {
   constructor(db: LobeChatDatabase, userId: string | null) {
@@ -87,17 +88,25 @@ export class MessageTranslateService extends BaseService {
     });
 
     try {
-      // TODO: 这里应该集成真正的翻译服务（如Google Translate API, DeepL等）
-      // 目前先使用模拟翻译内容
-      const mockTranslatedContent = `[翻译结果] 从 ${translateData.from || '自动检测'} 翻译到 ${
-        translateData.to
-      } 的内容`;
+      // 首先获取原始消息内容
+      const originalMessage = await this.getOriginalMessageContent(translateData.messageId);
+      if (!originalMessage) {
+        throw this.createCommonError('未找到要翻译的消息');
+      }
+
+      // 使用ChatService进行翻译
+      const chatService = new ChatService(this.db, this.userId);
+      const translatedContent = await chatService.translate({
+        fromLanguage: translateData.from,
+        text: originalMessage,
+        toLanguage: translateData.to,
+      });
 
       // 使用 upsert 操作：如果存在则更新，不存在则插入
       await this.db
         .insert(messageTranslates)
         .values({
-          content: mockTranslatedContent,
+          content: translatedContent,
           from: translateData.from,
           id: translateData.messageId,
           to: translateData.to,
@@ -105,7 +114,7 @@ export class MessageTranslateService extends BaseService {
         })
         .onConflictDoUpdate({
           set: {
-            content: mockTranslatedContent,
+            content: translatedContent,
             from: translateData.from,
             to: translateData.to,
           },
@@ -119,6 +128,29 @@ export class MessageTranslateService extends BaseService {
         messageId: translateData.messageId,
       });
       throw this.createCommonError('翻译消息失败');
+    }
+  }
+
+  /**
+   * 获取原始消息内容
+   * @param messageId 消息ID
+   * @returns 消息内容
+   */
+  private async getOriginalMessageContent(messageId: string): Promise<string | null> {
+    try {
+      const result = await this.db
+        .select({ content: messages.content })
+        .from(messages)
+        .where(eq(messages.id, messageId))
+        .limit(1);
+
+      return result[0]?.content || null;
+    } catch (error) {
+      this.log('error', '获取原始消息内容失败', {
+        error: error instanceof Error ? error.message : String(error),
+        messageId,
+      });
+      return null;
     }
   }
 }
