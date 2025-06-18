@@ -2,6 +2,37 @@
 
 # Changelog
 
+### [Version&nbsp;1.94.4](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.94.3...v1.94.4)
+<sup>Released on **2025-06-18**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Enhance the multi-display window opening experience.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **misc**: Enhance the multi-display window opening experience, closes [#8176](https://github.com/jaworldwideorg/OneJA-Bot/issues/8176) ([b132e66](https://github.com/jaworldwideorg/OneJA-Bot/commit/b132e66))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.94.3](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.94.2...v1.94.3)
 <sup>Released on **2025-06-16**</sup>
 
