@@ -99,4 +99,19 @@ MessageRoutes.post(
   },
 );
 
+// POST /api/v1/messages/create-with-reply - 创建用户消息并生成AI回复 (需要消息写入权限)
+MessageRoutes.post(
+  '/create-with-reply',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('MESSAGE_CREATE', ['ALL', 'WORKSPACE', 'OWNER']),
+    'You do not have permission to create messages with AI reply',
+  ),
+  zValidator('json', MessagesCreateRequestSchema),
+  (c) => {
+    const controller = new MessageController();
+    return controller.handleCreateMessageWithAIReply(c);
+  },
+);
+
 export default MessageRoutes;
