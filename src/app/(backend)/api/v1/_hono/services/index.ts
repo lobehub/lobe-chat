@@ -1,4 +1,5 @@
 export * from './agent.service';
+export * from './chat.service';
 export * from './message.service';
 export * from './message-translate.service';
 export * from './role.service';
