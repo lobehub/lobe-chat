@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Enhance the multi-display window opening experience."]
+    },
+    "date": "2025-06-17",
+    "version": "1.94.11"
+  },
+  {
+    "children": {
       "fixes": ["Improve chat selectors and enhance topic handling logic."]
     },
     "date": "2025-06-15",
