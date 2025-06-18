@@ -30,6 +30,14 @@ const getMeta = (message: ChatMessage) => {
   }
 };
 
+const getBaseChatsByKey =
+  (key: string) =>
+  (s: ChatStoreState): ChatMessage[] => {
+    const messages = s.messagesMap[key] || [];
+
+    return messages.map((i) => ({ ...i, meta: getMeta(i) }));
+  };
+
 const currentChatKey = (s: ChatStoreState) => messageMapKey(s.activeId, s.activeTopicId);
 
 /**
@@ -38,9 +46,7 @@ const currentChatKey = (s: ChatStoreState) => messageMapKey(s.activeId, s.active
 const activeBaseChats = (s: ChatStoreState): ChatMessage[] => {
   if (!s.activeId) return [];
 
-  const messages = s.messagesMap[currentChatKey(s)] || [];
-
-  return messages.map((i) => ({ ...i, meta: getMeta(i) }));
+  return getBaseChatsByKey(currentChatKey(s))(s);
 };
 
 /**
@@ -203,6 +209,7 @@ export const chatSelectors = {
   currentChatLoadingState,
   currentToolMessages,
   currentUserFiles,
+  getBaseChatsByKey,
   getMessageById,
   getMessageByToolCallId,
   getTraceIdByMessageId,

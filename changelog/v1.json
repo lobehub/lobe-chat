@@ -1,6 +1,34 @@
 [
   {
     "children": {
+      "fixes": ["Enhance the multi-display window opening experience."]
+    },
+    "date": "2025-06-17",
+    "version": "1.94.11"
+  },
+  {
+    "children": {
+      "fixes": ["Improve chat selectors and enhance topic handling logic."]
+    },
+    "date": "2025-06-15",
+    "version": "1.94.10"
+  },
+  {
+    "children": {
+      "improvements": ["Add kimi-thinking-preview model from Moonshot."]
+    },
+    "date": "2025-06-15",
+    "version": "1.94.9"
+  },
+  {
+    "children": {
+      "fixes": ["Correctly handle reasoning_effort."]
+    },
+    "date": "2025-06-15",
+    "version": "1.94.8"
+  },
+  {
+    "children": {
       "improvements": ["Add Doubao Seed 1.6 model."]
     },
     "date": "2025-06-12",

@@ -659,6 +659,9 @@
   "codestral-latest": {
     "description": "Codestral é um modelo gerador de ponta focado em geração de código, otimizado para preenchimento intermediário e tarefas de conclusão de código."
   },
+  "codex-mini-latest": {
+    "description": "codex-mini-latest é uma versão ajustada do o4-mini, especialmente para o Codex CLI. Para uso direto via API, recomendamos começar com o gpt-4.1."
+  },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B é um modelo projetado para seguir instruções, diálogos e programação."
   },
@@ -715,6 +718,9 @@
   },
   "compound-beta-mini": {
     "description": "Compound-beta-mini é um sistema de IA composto, suportado por modelos abertos disponíveis no GroqCloud, que pode usar ferramentas de forma inteligente e seletiva para responder a consultas dos usuários."
+  },
+  "computer-use-preview": {
+    "description": "O modelo computer-use-preview é um modelo dedicado projetado para \"ferramentas de uso de computador\", treinado para entender e executar tarefas relacionadas a computadores."
   },
   "dall-e-2": {
     "description": "O segundo modelo DALL·E, suporta geração de imagens mais realistas e precisas, com resolução quatro vezes maior que a da primeira geração."
@@ -904,6 +910,15 @@
   },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite é um modelo multimodal atualizado, suportando reconhecimento de imagens de qualquer resolução e proporções extremas, melhorando a capacidade de raciocínio visual, reconhecimento de documentos, compreensão de informações detalhadas e seguimento de instruções. Suporta uma janela de contexto de 128k, com comprimento de saída de até 16k tokens."
+  },
+  "doubao-seed-1.6": {
+    "description": "Doubao-Seed-1.6 é um novo modelo multimodal de pensamento profundo, suportando três modos de pensamento: auto, thinking e non-thinking. No modo non-thinking, o desempenho do modelo melhora significativamente em comparação com Doubao-1.5-pro/250115. Suporta janela de contexto de 256k e comprimento máximo de saída de 16k tokens."
+  },
+  "doubao-seed-1.6-flash": {
+    "description": "Doubao-Seed-1.6-flash é um modelo multimodal de pensamento profundo com velocidade de inferência extrema, TPOT de apenas 10ms; suporta compreensão de texto e visual, com capacidade de compreensão textual superior à geração lite anterior e compreensão visual comparável aos modelos pro da concorrência. Suporta janela de contexto de 256k e comprimento máximo de saída de 16k tokens."
+  },
+  "doubao-seed-1.6-thinking": {
+    "description": "O modelo Doubao-Seed-1.6-thinking tem capacidade de pensamento significativamente reforçada, melhorando ainda mais as habilidades básicas em Coding, Matemática e raciocínio lógico em comparação com Doubao-1.5-thinking-pro, além de suportar compreensão visual. Suporta janela de contexto de 256k e comprimento máximo de saída de 16k tokens."
   },
   "emohaa": {
     "description": "O Emohaa é um modelo psicológico com capacidade de consultoria profissional, ajudando os usuários a entender questões emocionais."
@@ -1268,6 +1283,9 @@
   "gpt-4o-mini": {
     "description": "O GPT-4o mini é o mais recente modelo lançado pela OpenAI após o GPT-4 Omni, suportando entrada de texto e imagem e gerando texto como saída. Como seu modelo compacto mais avançado, ele é muito mais acessível do que outros modelos de ponta recentes, custando mais de 60% menos que o GPT-3.5 Turbo. Ele mantém uma inteligência de ponta, ao mesmo tempo que oferece um custo-benefício significativo. O GPT-4o mini obteve uma pontuação de 82% no teste MMLU e atualmente está classificado acima do GPT-4 em preferências de chat."
   },
+  "gpt-4o-mini-audio-preview": {
+    "description": "Modelo GPT-4o mini Audio, suporta entrada e saída de áudio."
+  },
   "gpt-4o-mini-realtime-preview": {
     "description": "Versão em tempo real do GPT-4o-mini, suporta entrada e saída de áudio e texto em tempo real."
   },
@@ -1420,6 +1438,9 @@
   },
   "kimi-latest": {
     "description": "O produto assistente inteligente Kimi utiliza o mais recente modelo Kimi, que pode conter recursos ainda não estáveis. Suporta compreensão de imagens e seleciona automaticamente o modelo de cobrança de 8k/32k/128k com base no comprimento do contexto da solicitação."
+  },
+  "kimi-thinking-preview": {
+    "description": "O modelo kimi-thinking-preview, fornecido pela Face Oculta da Lua, é um modelo multimodal de pensamento com capacidades de raciocínio multimodal e geral, especializado em raciocínio profundo para ajudar a resolver problemas mais complexos."
   },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM é um modelo de linguagem experimental e específico para tarefas, treinado para atender aos princípios da ciência da aprendizagem, podendo seguir instruções sistemáticas em cenários de ensino e aprendizagem, atuando como um mentor especialista, entre outros."
@@ -1823,11 +1844,17 @@
   "o1-preview": {
     "description": "o1 é o novo modelo de raciocínio da OpenAI, adequado para tarefas complexas que exigem amplo conhecimento geral. Este modelo possui um contexto de 128K e uma data limite de conhecimento em outubro de 2023."
   },
+  "o1-pro": {
+    "description": "A série de modelos o1 é treinada com aprendizado por reforço, capaz de pensar antes de responder e executar tarefas complexas de raciocínio. O modelo o1-pro utiliza mais recursos computacionais para um pensamento mais profundo, oferecendo respostas de qualidade superior de forma contínua."
+  },
   "o3": {
     "description": "o3 é um modelo versátil e poderoso, com excelente desempenho em várias áreas. Ele estabelece novos padrões para tarefas de matemática, ciência, programação e raciocínio visual. Também é bom em redação técnica e seguimento de instruções. Os usuários podem utilizá-lo para analisar textos, códigos e imagens, resolvendo problemas complexos em múltiplas etapas."
   },
   "o3-mini": {
     "description": "o3-mini é nosso mais recente modelo de inferência em miniatura, oferecendo alta inteligência com os mesmos custos e metas de latência que o o1-mini."
+  },
+  "o3-pro": {
+    "description": "O modelo o3-pro utiliza mais computação para pensar mais profundamente e sempre fornecer melhores respostas, suportado apenas para uso via Responses API."
   },
   "o4-mini": {
     "description": "o4-mini é nosso mais recente modelo compacto da série o. Ele é otimizado para inferência rápida e eficaz, apresentando alta eficiência e desempenho em tarefas de codificação e visuais."
