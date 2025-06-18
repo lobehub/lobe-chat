@@ -8,6 +8,23 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 131_072,
     description:
+      'MiniMax-M1 是开源权重的大规模混合注意力推理模型，拥有 4560 亿参数，每个 Token 可激活约 459 亿参数。模型原生支持 100 万 Token 的超长上下文，并通过闪电注意力机制，在 10 万 Token 的生成任务中相比 DeepSeek R1 节省 75% 的浮点运算量。同时，MiniMax-M1 采用 MoE（混合专家）架构，结合 CISPO 算法与混合注意力设计的高效强化学习训练，在长输入推理与真实软件工程场景中实现了业界领先的性能。',
+    displayName: 'MiniMax M1 80K',
+    id: 'MiniMaxAI/MiniMax-M1-80k',
+    pricing: {
+      currency: 'CNY',
+      input: 4,
+      output: 16,
+    },
+    releasedAt: '2025-06-16',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
       'QwenLong-L1-32B 是首个使用强化学习训练的长上下文大型推理模型（LRM），专门针对长文本推理任务进行优化。该模型通过渐进式上下文扩展的强化学习框架，实现了从短上下文到长上下文的稳定迁移。在七个长上下文文档问答基准测试中，QwenLong-L1-32B 超越了 OpenAI-o3-mini 和 Qwen3-235B-A22B 等旗舰模型，性能可媲美 Claude-3.7-Sonnet-Thinking。该模型特别擅长数学推理、逻辑推理和多跳推理等复杂任务。',
     displayName: 'QwenLong L1 32B',
     id: 'Tongyi-Zhiwen/QwenLong-L1-32B',
