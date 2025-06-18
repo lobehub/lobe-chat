@@ -3,6 +3,22 @@ import { AIChatModelCard } from '@/types/aiModel';
 // https://novita.ai/pricing
 const novitaChatModels: AIChatModelCard[] = [
   {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 128_000,
+    displayName: 'MiniMax M1 80K',
+    id: 'minimaxai/minimax-m1-80k',
+    pricing: {
+      input: 0.55,
+      output: 2.2,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
     contextWindowTokens: 128_000,
     displayName: 'Qwen3 4B FP8',
     id: 'qwen/qwen3-4b-fp8',
@@ -13,6 +29,9 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     contextWindowTokens: 40_960,
     displayName: 'Qwen3 235B A22B FP8',
     id: 'qwen/qwen3-235b-a22b-fp8',
@@ -23,6 +42,9 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     contextWindowTokens: 40_960,
     displayName: 'Qwen3 30B A3B FP8',
     id: 'qwen/qwen3-30b-a3b-fp8',
@@ -33,6 +55,9 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     contextWindowTokens: 40_960,
     displayName: 'Qwen3 32B FP8',
     id: 'qwen/qwen3-32b-fp8',
