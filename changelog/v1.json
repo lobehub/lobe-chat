@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "improvements": [
+        "Update Gemini 2.5 Pro, Flash GA models. Add Gemini 2.5 Flash-Lite Preview model."
+      ]
+    },
+    "date": "2025-06-18",
+    "version": "1.94.13"
+  },
+  {
+    "children": {
       "improvements": ["Add MiniMax-M1 model."]
     },
     "date": "2025-06-18",
