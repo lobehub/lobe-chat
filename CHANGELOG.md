@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.94.13](https://github.com/lobehub/lobe-chat/compare/v1.94.12...v1.94.13)
+
+<sup>Released on **2025-06-18**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Gemini 2.5 Pro, Flash GA models. Add Gemini 2.5 Flash-Lite Preview model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Gemini 2.5 Pro, Flash GA models. Add Gemini 2.5 Flash-Lite Preview model, closes [#8213](https://github.com/lobehub/lobe-chat/issues/8213) ([39ef8be](https://github.com/lobehub/lobe-chat/commit/39ef8be))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.94.12](https://github.com/lobehub/lobe-chat/compare/v1.94.11...v1.94.12)
 
 <sup>Released on **2025-06-18**</sup>
