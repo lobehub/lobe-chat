@@ -120,28 +120,37 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   async chat(rawPayload: ChatStreamPayload, options?: ChatMethodOptions) {
     try {
       const payload = this.buildPayload(rawPayload);
-      const { model, thinking } = payload;
+      const { model, thinkingBudget } = payload;
 
       const thinkingConfig: GoogleAIThinkingConfig = {
         includeThoughts:
-          thinking?.type === 'enabled' ||
-          (!thinking && model && (model.includes('-2.5-') || model.includes('thinking')))
+          !!thinkingBudget ||
+          (!thinkingBudget && model && (model.includes('-2.5-') || model.includes('thinking')))
             ? true
             : undefined,
-        thinkingBudget:
-          thinking?.type === 'enabled'
-            ? (() => {
-                const budget = thinking.budget_tokens;
-                if (model.includes('-2.5-flash')) {
-                  return Math.min(budget, 24_576);
-                } else if (model.includes('-2.5-pro')) {
-                  return Math.max(128, Math.min(budget, 32_768));
-                }
-                return Math.min(budget, 24_576);
-              })()
-            : thinking?.type === 'disabled'
-              ? model.includes('-2.5-pro') ? 128 : 0
-              : undefined,
+        // https://ai.google.dev/gemini-api/docs/thinking#set-budget
+        thinkingBudget: (() => {
+          if (thinkingBudget !== undefined && thinkingBudget !== null) {
+            if (model.includes('-2.5-flash-lite')) {
+              if (thinkingBudget === 0 || thinkingBudget === -1) {
+                return thinkingBudget;
+              }
+              return Math.max(512, Math.min(thinkingBudget, 24_576));
+            } else if (model.includes('-2.5-flash')) {
+              return Math.min(thinkingBudget, 24_576);
+            } else if (model.includes('-2.5-pro')) {
+              return Math.max(128, Math.min(thinkingBudget, 32_768));
+            }
+            return Math.min(thinkingBudget, 24_576);
+          }
+
+          if (model.includes('-2.5-pro') || model.includes('-2.5-flash')) {
+            return -1;
+          } else if (model.includes('-2.5-flash-lite')) {
+            return 0;
+          }
+          return undefined;
+        })(),
       };
 
       const contents = await this.buildGoogleMessages(payload.messages);
