@@ -11,6 +11,7 @@ import {
   MessageResponse,
   MessagesCreateRequest,
 } from '../types/message.type';
+import { ChatService } from './chat.service';
 
 /**
  * 消息统计结果类型
@@ -176,6 +177,132 @@ export class MessageService extends BaseService {
     } catch (error) {
       this.log('error', '创建消息失败', { error });
       throw this.createCommonError('创建消息失败');
+    }
+  }
+
+  /**
+   * 创建用户消息并生成AI回复
+   * @param messageData 用户消息数据
+   * @returns 用户消息ID和AI回复消息ID
+   */
+  async createMessageWithAIReply(messageData: MessagesCreateRequest): ServiceResult<{
+    aiReplyContent: string;
+    aiReplyId: string;
+    userMessageId: string;
+  }> {
+    if (!this.userId) {
+      throw this.createAuthError('未授权操作');
+    }
+
+    this.log('info', '创建消息并生成AI回复', {
+      role: messageData.role,
+      sessionId: messageData.sessionId,
+      topicId: messageData.topic,
+      userId: this.userId,
+    });
+
+    try {
+      // 1. 创建用户消息
+      const userMessage = await this.createMessage(messageData);
+
+      // 2. 如果是用户消息，生成AI回复
+      if (messageData.role === 'user') {
+        // 获取对话历史
+        const conversationHistory = await this.getConversationHistory(
+          messageData.sessionId,
+          messageData.topic,
+        );
+
+        // 使用ChatService生成回复
+        const chatService = new ChatService(this.db, this.userId);
+        const aiReplyContent = await chatService.generateReply({
+          conversationHistory,
+          model: messageData.fromModel,
+          provider: messageData.fromProvider,
+          sessionId: messageData.sessionId,
+          userMessage: messageData.content,
+        });
+
+        // 3. 创建AI回复消息
+        const aiReplyData: MessagesCreateRequest = {
+          content: aiReplyContent,
+          fromModel: messageData.fromModel,
+          fromProvider: messageData.fromProvider,
+          role: 'assistant',
+          sessionId: messageData.sessionId,
+          topic: messageData.topic,
+        };
+
+        const aiReply = await this.createMessage(aiReplyData);
+
+        this.log('info', '创建消息和AI回复完成', {
+          aiReplyId: aiReply.id,
+          userMessageId: userMessage.id,
+        });
+
+        return {
+          aiReplyContent,
+          aiReplyId: aiReply.id,
+          userMessageId: userMessage.id,
+        };
+      }
+
+      // 如果不是用户消息，只返回消息ID
+      return {
+        aiReplyContent: '',
+        aiReplyId: '',
+        userMessageId: userMessage.id,
+      };
+    } catch (error) {
+      this.log('error', '创建消息和AI回复失败', { error });
+      throw this.createCommonError('创建消息和AI回复失败');
+    }
+  }
+
+  /**
+   * 获取对话历史
+   * @param sessionId 会话ID
+   * @param topicId 话题ID
+   * @param limit 消息数量限制
+   * @returns 对话历史
+   */
+  private async getConversationHistory(
+    sessionId: string,
+    topicId: string,
+    limit: number = 10,
+  ): Promise<Array<{ content: string, role: 'user' | 'assistant' | 'system'; }>> {
+    try {
+      const result = await this.db
+        .select({
+          content: messages.content,
+          role: messages.role,
+        })
+        .from(messages)
+        .where(
+          and(
+            eq(messages.sessionId, sessionId),
+            eq(messages.topicId, topicId),
+            eq(messages.userId, this.userId!),
+          ),
+        )
+        .orderBy(desc(messages.createdAt))
+        .limit(limit);
+
+      // 反转顺序，使最新的消息在后面
+      return result
+        .reverse()
+        .filter((msg) => msg.content && ['user', 'assistant'].includes(msg.role))
+        .map((msg) => ({
+          content: msg.content!,
+          role: msg.role as 'user' | 'assistant',
+        }));
+    } catch (error) {
+      this.log('error', '获取对话历史失败', {
+        error: error instanceof Error ? error.message : String(error),
+        sessionId,
+        topicId,
+      });
+      return [];
     }
   }
 }
