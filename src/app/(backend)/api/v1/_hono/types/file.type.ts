@@ -4,12 +4,14 @@ import { FileMetadata } from '@/types/files';
  * 文件上传请求类型
  */
 export interface FileUploadRequest {
-  /** 上传目录（可选） */
+  /** 文件目录（可选） */
   directory?: string;
   /** 文件对象 */
   file: File;
   /** 知识库ID（可选） */
   knowledgeBaseId?: string;
+  /** 自定义路径（可选） */
+  pathname?: string;
   /** 是否跳过文件类型检查 */
   skipCheckFileType?: boolean;
 }

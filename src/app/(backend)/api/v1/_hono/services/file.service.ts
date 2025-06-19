@@ -3,8 +3,8 @@ import { sha256 } from 'js-sha256';
 import { FileModel } from '@/database/models/file';
 import { FileItem } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
+import { S3 } from '@/server/modules/S3';
 import { FileService as CoreFileService } from '@/server/services/file';
-import { uploadService } from '@/services/upload';
 import { FileMetadata } from '@/types/files';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 import { nanoid } from '@/utils/uuid';
@@ -30,11 +30,43 @@ import {
 export class FileUploadService extends BaseService {
   private fileModel: FileModel;
   private coreFileService: CoreFileService;
+  private s3Service: S3;
 
   constructor(db: LobeChatDatabase, userId: string) {
     super(db, userId);
     this.fileModel = new FileModel(db, userId);
     this.coreFileService = new CoreFileService(db, userId!);
+    this.s3Service = new S3();
+  }
+
+  async uploadToServerS3(
+    file: File,
+    {
+      directory,
+      pathname,
+    }: {
+      directory?: string;
+      pathname?: string;
+    },
+  ): Promise<{ data: FileMetadata; success: boolean }> {
+    const metadata = this.generateFileMetadata(file, directory);
+    const key = pathname || metadata.path;
+
+    // 直接使用S3服务上传文件，而不是预签名URL
+    const fileBuffer = Buffer.from(await file.arrayBuffer());
+    await this.s3Service.uploadBuffer(key, fileBuffer, file.type);
+
+    const result: FileMetadata = {
+      date: metadata.date,
+      dirname: metadata.dirname,
+      filename: metadata.filename,
+      path: key,
+    };
+
+    return {
+      data: result,
+      success: true,
+    };
   }
 
   /**
@@ -63,9 +95,9 @@ export class FileUploadService extends BaseService {
       const hash = sha256(fileArrayBuffer);
 
       // 3. 使用现有的上传服务上传文件
-      const uploadResult = await uploadService.uploadFileToS3(file, {
+      const uploadResult = await this.uploadToServerS3(file, {
         directory: options.directory,
-        skipCheckFileType: options.skipCheckFileType,
+        pathname: options.pathname,
       });
 
       if (!uploadResult.success) {
