@@ -99,11 +99,12 @@ interface ScoreItem {
 }
 
 interface TotalScoreProps {
+  isValidated?: boolean;
   scoreItems?: ScoreItem[];
   scoreResult: ScoreResult;
 }
 
-const TotalScore = memo<TotalScoreProps>(({ scoreResult, scoreItems = [] }) => {
+const TotalScore = memo<TotalScoreProps>(({ scoreResult, scoreItems = [], isValidated }) => {
   const { styles, theme } = useStyles();
   const { t } = useTranslation('discover');
 
@@ -216,15 +217,17 @@ const TotalScore = memo<TotalScoreProps>(({ scoreResult, scoreItems = [] }) => {
           </h2>
           <div className={styles.description}>{t(`mcp.details.scoreLevel.${grade}.desc`)}</div>
         </Flexbox>
-        <Center
-          className={styles.gradeBadge}
-          style={{
-            borderColor: getGradeColor(grade, theme),
-            color: getGradeColor(grade, theme),
-          }}
-        >
-          {grade.toUpperCase()}
-        </Center>
+        {isValidated && (
+          <Center
+            className={styles.gradeBadge}
+            style={{
+              borderColor: getGradeColor(grade, theme),
+              color: getGradeColor(grade, theme),
+            }}
+          >
+            {grade.toUpperCase()}
+          </Center>
+        )}
       </Flexbox>
 
       <div className={styles.progressContainer}>
