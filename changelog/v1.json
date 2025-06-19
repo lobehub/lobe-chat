@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update model card for Gemini 2.5 Pro via OpenRouter."]
+    },
+    "date": "2025-06-19",
+    "version": "1.94.15"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-06-19",
