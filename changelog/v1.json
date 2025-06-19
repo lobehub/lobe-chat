@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-06-19",
+    "version": "1.94.14"
+  },
+  {
+    "children": {
       "improvements": [
         "Update Gemini 2.5 Pro, Flash GA models. Add Gemini 2.5 Flash-Lite Preview model."
       ]
