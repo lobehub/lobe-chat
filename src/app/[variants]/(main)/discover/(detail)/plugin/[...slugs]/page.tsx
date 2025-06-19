@@ -54,6 +54,7 @@ export const generateMetadata = async (props: DiscoverPageProps) => {
     keywords: tags,
     ...metadataModule.generate({
       alternate: true,
+      canonical: urlJoin('https://lobehub.com/plugin', identifier),
       description: description,
       locale,
       tags: tags,
