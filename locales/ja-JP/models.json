@@ -176,8 +176,14 @@
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3は、Llamaシリーズの最先端の多言語オープンソース大規模言語モデルで、非常に低コストで405Bモデルに匹敵する性能を体験できます。Transformer構造に基づき、監視付き微調整（SFT）と人間のフィードバックによる強化学習（RLHF）を通じて有用性と安全性を向上させています。その指示調整バージョンは多言語対話に最適化されており、さまざまな業界のベンチマークで多くのオープンソースおよびクローズドチャットモデルを上回る性能を発揮します。知識のカットオフ日は2023年12月です。"
   },
+  "MiniMax-M1": {
+    "description": "新たに自社開発された推論モデル。世界最先端：80Kの思考チェーン×1Mの入力で、海外のトップモデルに匹敵する性能を実現。"
+  },
   "MiniMax-Text-01": {
     "description": "MiniMax-01シリーズモデルでは、大胆な革新を行いました：初めて大規模に線形注意メカニズムを実現し、従来のTransformerアーキテクチャが唯一の選択肢ではなくなりました。このモデルのパラメータ数は4560億に達し、単回のアクティベーションは459億です。モデルの総合性能は海外のトップモデルに匹敵し、世界最長の400万トークンのコンテキストを効率的に処理でき、GPT-4oの32倍、Claude-3.5-Sonnetの20倍です。"
+  },
+  "MiniMaxAI/MiniMax-M1-80k": {
+    "description": "MiniMax-M1はオープンソースの重みを持つ大規模混合注意力推論モデルで、4560億のパラメータを有し、各トークンで約459億のパラメータが活性化されます。モデルは100万トークンの超長文コンテキストをネイティブにサポートし、ライトニングアテンション機構により10万トークンの生成タスクでDeepSeek R1と比べて75％の浮動小数点演算量を削減します。また、MiniMax-M1はMoE（混合エキスパート）アーキテクチャを採用し、CISPOアルゴリズムと混合注意力設計による効率的な強化学習トレーニングを組み合わせ、長文入力推論および実際のソフトウェア工学シナリオで業界最高の性能を実現しています。"
   },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B)は、高精度の指示モデルであり、複雑な計算に適しています。"
@@ -1058,6 +1064,12 @@
   "gemini-2.0-flash-preview-image-generation": {
     "description": "Gemini 2.0 Flash プレビュー モデル、画像生成をサポート"
   },
+  "gemini-2.5-flash": {
+    "description": "Gemini 2.5 FlashはGoogleのコストパフォーマンスに優れたモデルで、包括的な機能を提供します。"
+  },
+  "gemini-2.5-flash-lite-preview-06-17": {
+    "description": "Gemini 2.5 Flash-Lite PreviewはGoogleの最小かつコストパフォーマンスに優れたモデルで、大規模利用を目的に設計されています。"
+  },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Previewは、Googleのコストパフォーマンスに優れたモデルで、包括的な機能を提供します。"
   },
@@ -1066,6 +1078,9 @@
   },
   "gemini-2.5-flash-preview-05-20": {
     "description": "Gemini 2.5 Flash PreviewはGoogleのコストパフォーマンスに優れたモデルで、包括的な機能を提供します。"
+  },
+  "gemini-2.5-pro": {
+    "description": "Gemini 2.5 ProはGoogleの最先端思考モデルで、コード、数学、STEM分野の複雑な問題の推論が可能であり、長文コンテキストを用いて大規模データセット、コードベース、ドキュメントの分析を行います。"
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimentalは、Googleの最先端の思考モデルであり、コード、数学、STEM分野の複雑な問題に対して推論を行うことができ、長いコンテキストを利用して大規模なデータセット、コードベース、文書を分析します。"
