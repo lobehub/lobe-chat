@@ -176,8 +176,14 @@
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3은 Llama 시리즈에서 가장 진보된 다국어 오픈 소스 대형 언어 모델로, 매우 낮은 비용으로 405B 모델의 성능을 경험할 수 있습니다. Transformer 구조를 기반으로 하며, 감독 미세 조정(SFT)과 인간 피드백 강화 학습(RLHF)을 통해 유용성과 안전성을 향상시켰습니다. 그 지시 조정 버전은 다국어 대화를 위해 최적화되어 있으며, 여러 산업 기준에서 많은 오픈 소스 및 폐쇄형 채팅 모델보다 우수한 성능을 보입니다. 지식 마감일은 2023년 12월입니다."
   },
+  "MiniMax-M1": {
+    "description": "완전히 새로 개발된 추론 모델입니다. 세계 최고 수준: 80K 사고 체인 x 1M 입력, 해외 최상위 모델과 견줄 만한 성능을 자랑합니다."
+  },
   "MiniMax-Text-01": {
     "description": "MiniMax-01 시리즈 모델에서는 대담한 혁신을 이루었습니다: 대규모로 선형 주의 메커니즘을 처음으로 구현하였으며, 전통적인 Transformer 아키텍처가 더 이상 유일한 선택이 아닙니다. 이 모델의 파라미터 수는 4560억에 달하며, 단일 활성화는 45.9억입니다. 모델의 종합 성능은 해외 최고의 모델과 견줄 수 있으며, 전 세계에서 가장 긴 400만 토큰의 문맥을 효율적으로 처리할 수 있습니다. 이는 GPT-4o의 32배, Claude-3.5-Sonnet의 20배에 해당합니다."
+  },
+  "MiniMaxAI/MiniMax-M1-80k": {
+    "description": "MiniMax-M1은 오픈 소스 가중치를 가진 대규모 혼합 주의 추론 모델로, 4,560억 개의 파라미터를 보유하고 있으며, 각 토큰당 약 459억 개의 파라미터가 활성화됩니다. 모델은 100만 토큰의 초장기 문맥을 원활히 지원하며, 번개 주의 메커니즘을 통해 10만 토큰 생성 작업에서 DeepSeek R1 대비 75%의 부동 소수점 연산량을 절감합니다. 또한 MiniMax-M1은 MoE(혼합 전문가) 아키텍처를 채택하고, CISPO 알고리즘과 혼합 주의 설계가 결합된 효율적인 강화 학습 훈련을 통해 긴 입력 추론과 실제 소프트웨어 엔지니어링 환경에서 업계 선도적인 성능을 구현합니다."
   },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B)는 고정밀 지시 모델로, 복잡한 계산에 적합합니다."
@@ -1058,6 +1064,12 @@
   "gemini-2.0-flash-preview-image-generation": {
     "description": "Gemini 2.0 Flash 미리보기 모델로, 이미지 생성을 지원합니다."
   },
+  "gemini-2.5-flash": {
+    "description": "Gemini 2.5 Flash는 구글에서 가장 가성비가 뛰어난 모델로, 포괄적인 기능을 제공합니다."
+  },
+  "gemini-2.5-flash-lite-preview-06-17": {
+    "description": "Gemini 2.5 Flash-Lite Preview는 구글의 가장 작고 가성비가 뛰어난 모델로, 대규모 사용을 위해 설계되었습니다."
+  },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview는 Google의 가장 가성비 높은 모델로, 포괄적인 기능을 제공합니다."
   },
@@ -1066,6 +1078,9 @@
   },
   "gemini-2.5-flash-preview-05-20": {
     "description": "Gemini 2.5 Flash Preview는 Google의 최고의 가성비 모델로, 포괄적인 기능을 제공합니다."
+  },
+  "gemini-2.5-pro": {
+    "description": "Gemini 2.5 Pro는 구글의 최첨단 사고 모델로, 코드, 수학 및 STEM 분야의 복잡한 문제를 추론할 수 있으며, 긴 문맥을 활용해 대규모 데이터셋, 코드베이스 및 문서를 분석합니다."
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental은 Google의 최첨단 사고 모델로, 코드, 수학 및 STEM 분야의 복잡한 문제를 추론할 수 있으며, 긴 문맥을 활용하여 대규모 데이터 세트, 코드베이스 및 문서를 분석할 수 있습니다."
