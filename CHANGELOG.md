@@ -2,6 +2,181 @@
 
 # Changelog
 
+### [Version 1.94.14](https://github.com/lobehub/lobe-chat/compare/v1.94.13...v1.94.14)
+
+<sup>Released on **2025-06-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#8225](https://github.com/lobehub/lobe-chat/issues/8225) ([53e1784](https://github.com/lobehub/lobe-chat/commit/53e1784))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.94.13](https://github.com/lobehub/lobe-chat/compare/v1.94.12...v1.94.13)
+
+<sup>Released on **2025-06-18**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Gemini 2.5 Pro, Flash GA models. Add Gemini 2.5 Flash-Lite Preview model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Gemini 2.5 Pro, Flash GA models. Add Gemini 2.5 Flash-Lite Preview model, closes [#8213](https://github.com/lobehub/lobe-chat/issues/8213) ([39ef8be](https://github.com/lobehub/lobe-chat/commit/39ef8be))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.94.12](https://github.com/lobehub/lobe-chat/compare/v1.94.11...v1.94.12)
+
+<sup>Released on **2025-06-18**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add MiniMax-M1 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add MiniMax-M1 model, closes [#8209](https://github.com/lobehub/lobe-chat/issues/8209) ([41a0178](https://github.com/lobehub/lobe-chat/commit/41a0178))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.94.11](https://github.com/lobehub/lobe-chat/compare/v1.94.10...v1.94.11)
+
+<sup>Released on **2025-06-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Enhance the multi-display window opening experience.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Enhance the multi-display window opening experience, closes [#8176](https://github.com/lobehub/lobe-chat/issues/8176) ([b132e66](https://github.com/lobehub/lobe-chat/commit/b132e66))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.94.10](https://github.com/lobehub/lobe-chat/compare/v1.94.9...v1.94.10)
+
+<sup>Released on **2025-06-15**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Improve chat selectors and enhance topic handling logic.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Improve chat selectors and enhance topic handling logic, closes [#8133](https://github.com/lobehub/lobe-chat/issues/8133) [#8117](https://github.com/lobehub/lobe-chat/issues/8117) ([15b24f1](https://github.com/lobehub/lobe-chat/commit/15b24f1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.94.9](https://github.com/lobehub/lobe-chat/compare/v1.94.8...v1.94.9)
+
+<sup>Released on **2025-06-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add `kimi-thinking-preview` model from Moonshot.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add `kimi-thinking-preview` model from Moonshot, closes [#8171](https://github.com/lobehub/lobe-chat/issues/8171) ([93d677c](https://github.com/lobehub/lobe-chat/commit/93d677c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.94.8](https://github.com/lobehub/lobe-chat/compare/v1.94.7...v1.94.8)
+
+<sup>Released on **2025-06-15**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Correctly handle `reasoning_effort`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Correctly handle `reasoning_effort`, closes [#8180](https://github.com/lobehub/lobe-chat/issues/8180) ([1c04736](https://github.com/lobehub/lobe-chat/commit/1c04736))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.94.7](https://github.com/lobehub/lobe-chat/compare/v1.94.6...v1.94.7)
 
 <sup>Released on **2025-06-12**</sup>
