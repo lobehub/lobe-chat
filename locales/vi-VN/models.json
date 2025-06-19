@@ -176,8 +176,14 @@
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3 là mô hình ngôn ngữ lớn mã nguồn mở đa ngôn ngữ tiên tiến nhất trong dòng Llama, mang đến trải nghiệm hiệu suất tương đương mô hình 405B với chi phí cực thấp. Dựa trên cấu trúc Transformer, và được cải thiện tính hữu ích và an toàn thông qua tinh chỉnh giám sát (SFT) và học tăng cường từ phản hồi của con người (RLHF). Phiên bản tinh chỉnh theo chỉ dẫn của nó được tối ưu hóa cho các cuộc đối thoại đa ngôn ngữ, thể hiện tốt hơn nhiều mô hình trò chuyện mã nguồn mở và đóng trong nhiều tiêu chuẩn ngành. Ngày cắt đứt kiến thức là tháng 12 năm 2023."
   },
+  "MiniMax-M1": {
+    "description": "Mô hình suy luận tự phát triển hoàn toàn mới. Dẫn đầu toàn cầu: 80K chuỗi tư duy x 1 triệu đầu vào, hiệu quả sánh ngang các mô hình hàng đầu quốc tế."
+  },
   "MiniMax-Text-01": {
     "description": "Trong dòng mô hình MiniMax-01, chúng tôi đã thực hiện những đổi mới táo bạo: lần đầu tiên hiện thực hóa quy mô lớn cơ chế chú ý tuyến tính, kiến trúc Transformer truyền thống không còn là lựa chọn duy nhất. Mô hình này có số lượng tham số lên tới 4560 tỷ, trong đó kích hoạt một lần là 45,9 tỷ. Hiệu suất tổng hợp của mô hình tương đương với các mô hình hàng đầu quốc tế, đồng thời có khả năng xử lý hiệu quả ngữ cảnh dài nhất toàn cầu lên tới 4 triệu token, gấp 32 lần GPT-4o và 20 lần Claude-3.5-Sonnet."
+  },
+  "MiniMaxAI/MiniMax-M1-80k": {
+    "description": "MiniMax-M1 là mô hình suy luận chú ý hỗn hợp quy mô lớn với trọng số mã nguồn mở, sở hữu 456 tỷ 600 triệu tham số, mỗi Token có thể kích hoạt khoảng 45,9 tỷ tham số. Mô hình hỗ trợ ngữ cảnh siêu dài lên đến 1 triệu Token một cách nguyên bản, và thông qua cơ chế chú ý chớp nhoáng, trong các tác vụ sinh 100.000 Token tiết kiệm 75% lượng phép tính dấu chấm động so với DeepSeek R1. Đồng thời, MiniMax-M1 áp dụng kiến trúc MoE (chuyên gia hỗn hợp), kết hợp thuật toán CISPO và thiết kế chú ý hỗn hợp trong huấn luyện tăng cường hiệu quả, đạt hiệu suất hàng đầu trong ngành khi suy luận đầu vào dài và các kịch bản kỹ thuật phần mềm thực tế."
   },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) là mô hình chỉ dẫn chính xác cao, phù hợp cho tính toán phức tạp."
@@ -1058,6 +1064,12 @@
   "gemini-2.0-flash-preview-image-generation": {
     "description": "Mô hình xem trước Gemini 2.0 Flash, hỗ trợ tạo hình ảnh"
   },
+  "gemini-2.5-flash": {
+    "description": "Gemini 2.5 Flash là mô hình có hiệu suất chi phí tốt nhất của Google, cung cấp đầy đủ các chức năng."
+  },
+  "gemini-2.5-flash-lite-preview-06-17": {
+    "description": "Gemini 2.5 Flash-Lite Preview là mô hình nhỏ nhất và có hiệu suất chi phí tốt nhất của Google, được thiết kế dành cho sử dụng quy mô lớn."
+  },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview là mô hình có giá trị tốt nhất của Google, cung cấp đầy đủ các tính năng."
   },
@@ -1066,6 +1078,9 @@
   },
   "gemini-2.5-flash-preview-05-20": {
     "description": "Gemini 2.5 Flash Preview là mô hình có hiệu suất chi phí tốt nhất của Google, cung cấp các tính năng toàn diện."
+  },
+  "gemini-2.5-pro": {
+    "description": "Gemini 2.5 Pro là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận các vấn đề phức tạp trong lĩnh vực mã nguồn, toán học và STEM, cũng như phân tích các bộ dữ liệu lớn, kho mã và tài liệu bằng ngữ cảnh dài."
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận về mã, toán học và các vấn đề phức tạp trong lĩnh vực STEM, đồng thời có thể phân tích các tập dữ liệu lớn, kho mã và tài liệu bằng cách sử dụng ngữ cảnh dài."
