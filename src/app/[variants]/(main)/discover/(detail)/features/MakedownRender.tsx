@@ -1,6 +1,7 @@
 import { Markdown } from '@lobehub/ui';
 import { Empty } from 'antd';
-import { memo } from 'react';
+import Link from 'next/link';
+import { ReactNode, memo } from 'react';
 import { Center } from 'react-layout-kit';
 
 import { H1, H2, H3, H4, H5 } from './Toc/Heading';
@@ -16,6 +17,11 @@ const MarkdownRender = memo<{ children?: string }>(({ children }) => {
     <Markdown
       allowHtml
       components={{
+        a: ({ href, ...rest }: { children: ReactNode; href: string }) => {
+          if (href && href.startsWith('http'))
+            return <Link {...rest} href={href} target={'_blank'} />;
+          return rest?.children;
+        },
         h1: H1,
         h2: H2,
         h3: H3,
