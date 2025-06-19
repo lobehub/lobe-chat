@@ -23,11 +23,13 @@ export const POST = checkAuth(async (req: Request, { jwtPayload }) =>
       const googleAuthOptions = credentials ? { credentials } : undefined;
 
       const location = process.env.VERTEXAI_LOCATION ?? 'global';
+      const apiEndpoint =
+        process.env.GOOGLE_VERTEX_BASE_URL ||
+        (location === 'global'
+          ? 'aiplatform.googleapis.com'
+          : `${location}-aiplatform.googleapis.com`);
       const instance = LobeVertexAI.initFromVertexAI({
-        apiEndpoint:
-          location === 'global'
-            ? 'aiplatform.googleapis.com'
-            : `${location}-aiplatform.googleapis.com`,
+        apiEndpoint,
         googleAuthOptions,
         location,
         project: !!credentials?.project_id ? credentials?.project_id : process.env.VERTEXAI_PROJECT,
