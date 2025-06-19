@@ -22,7 +22,7 @@ export const apiKeyRouter = router({
   createApiKey: apiKeyProcedure
     .input(
       z.object({
-        expiresAt: z.date().optional(),
+        expiresAt: z.date().optional().nullable(),
         name: z.string(),
       }),
     )

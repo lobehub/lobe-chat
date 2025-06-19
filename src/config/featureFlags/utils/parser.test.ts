@@ -24,6 +24,11 @@ describe('parseFeatureFlag', () => {
     });
   });
 
+  it('should handle apiKey feature flag', () => {
+    expect(parseFeatureFlag('+apiKey')).toEqual({ apiKey: true });
+    expect(parseFeatureFlag('-apiKey')).toEqual({ apiKey: false });
+  });
+
   it('should hide content with commercial flags', () => {
     const input = '+commercial_hide_github,+commercial_hide_docs';
     expect(parseFeatureFlag(input)).toEqual({

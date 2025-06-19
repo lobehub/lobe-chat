@@ -1,4 +1,5 @@
 import { FormModal, Input } from '@lobehub/ui';
+import { Dayjs } from 'dayjs';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -12,6 +13,10 @@ interface ApiKeyModalProps {
   open: boolean;
   submitLoading?: boolean;
 }
+
+type FormValues = Omit<CreateApiKeyParams, 'expiresAt'> & {
+  expiresAt: Dayjs | null;
+};
 
 const ApiKeyModal: FC<ApiKeyModalProps> = ({ open, onCancel, onOk, submitLoading }) => {
   const { t } = useTranslation('auth');
@@ -36,7 +41,12 @@ const ApiKeyModal: FC<ApiKeyModalProps> = ({ open, onCancel, onOk, submitLoading
       ]}
       itemsType={'flat'}
       onCancel={onCancel}
-      onFinish={onOk}
+      onFinish={(values: FormValues) => {
+        onOk({
+          ...values,
+          expiresAt: values.expiresAt ? values.expiresAt.toDate() : null,
+        } satisfies CreateApiKeyParams);
+      }}
       open={open}
       submitLoading={submitLoading}
       submitText={t('apikey.form.submit')}

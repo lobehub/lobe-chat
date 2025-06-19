@@ -1,7 +1,7 @@
 export { type ApiKeyItem } from '@/database/schemas/apiKey';
 
 export interface CreateApiKeyParams {
-  expiresAt?: Date;
+  expiresAt?: Date | null;
   name: string;
 }
 

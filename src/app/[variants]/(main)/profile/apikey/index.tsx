@@ -5,7 +5,6 @@ import { Button } from '@lobehub/ui';
 import { useMutation } from '@tanstack/react-query';
 import { Popconfirm, Switch } from 'antd';
 import { createStyles } from 'antd-style';
-import { isString } from 'lodash';
 import { Trash } from 'lucide-react';
 import { FC, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -116,13 +115,13 @@ const Page: FC = () => {
       render: (_, apiKey) => (
         <EditableCell
           onSubmit={(expiresAt) => {
-            if (isString(expiresAt) || expiresAt === apiKey.expiresAt) {
+            if (expiresAt === apiKey.expiresAt) {
               return;
             }
 
             updateMutation.mutate({
               id: apiKey.id!,
-              params: { expiresAt: expiresAt as Date | null },
+              params: { expiresAt: expiresAt ? new Date(expiresAt as string) : null },
             });
           }}
           placeholder={t('apikey.display.neverExpires')}
@@ -150,7 +149,13 @@ const Page: FC = () => {
           onConfirm={() => deleteMutation.mutate(apiKey.id!)}
           title={t('apikey.list.actions.deleteConfirm.title')}
         >
-          <Button icon={Trash} size="small" title={t('apikey.list.actions.delete')} type="text" />
+          <Button
+            icon={Trash}
+            size="small"
+            style={{ verticalAlign: 'middle' }}
+            title={t('apikey.list.actions.delete')}
+            type="text"
+          />
         </Popconfirm>
       ),
       title: t('apikey.list.columns.actions'),

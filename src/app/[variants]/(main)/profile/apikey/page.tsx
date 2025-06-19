@@ -1,3 +1,6 @@
+import { notFound } from 'next/navigation';
+
+import { serverFeatureFlags } from '@/config/featureFlags';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
 import { DynamicLayoutProps } from '@/types/next';
@@ -16,5 +19,9 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
 };
 
 export default () => {
+  const { showApiKeyManage } = serverFeatureFlags();
+
+  if (!showApiKeyManage) return notFound();
+
   return <Page />;
 };

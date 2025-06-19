@@ -23,8 +23,8 @@ export interface EditableCellProps {
   placeholder?: string;
   /** 内容类型 */
   type: ContentType;
-  /** 当前值 */
-  value: string;
+  /** 从数据库中查出的值，不管是什么类型，存进去的都是字符串 */
+  value: string | null;
 }
 
 // 样式定义
@@ -89,12 +89,13 @@ const EditableCell = memo<EditableCellProps>(
 
     // 格式化显示值
     const formatDisplayValue = useCallback(
-      (val: string) => {
+      (val: string | null) => {
         if (type === 'date' && val) {
           const date = dayjs(val);
 
-          return date.isValid() ? date.format('YYYY-MM-DD') : val;
+          return date.isValid() ? date.format('YYYY-MM-DD') : val || placeholder || '';
         }
+
         return val || placeholder || '';
       },
       [type, placeholder],
@@ -145,7 +146,7 @@ const EditableCell = memo<EditableCellProps>(
 
     // 日期选择器提交
     const handleDatePickerSubmit = (date: Dayjs | null) => {
-      onSubmit(date && dayjs(date).toDate());
+      onSubmit(date && dayjs(date).toISOString());
 
       setIsEditing(false);
     };
@@ -158,7 +159,7 @@ const EditableCell = memo<EditableCellProps>(
             <div className={styles.inputWrapper}>
               <Input
                 autoFocus
-                defaultValue={value}
+                defaultValue={value as string}
                 onBlur={handleSubmit}
                 onKeyDown={handleKeyDown}
                 placeholder={placeholder}
@@ -191,8 +192,8 @@ const EditableCell = memo<EditableCellProps>(
       }
     }, [type, handleKeyDown, placeholder, handleSubmit, formatDisplayValue, styles]);
 
-    // 如果是编辑模式且不是日期类型，显示编辑界面
-    if (isEditing && type !== 'date') {
+    // 文本类型的编辑模式，展示保存和取消按钮
+    if (type === 'text' && isEditing) {
       return (
         <div className={styles.editingContainer}>
           {renderEditMode()}
@@ -204,20 +205,21 @@ const EditableCell = memo<EditableCellProps>(
       );
     }
 
-    // 显示模式
+    // 日期类型的编辑模式，展示日期选择器
+    if (type === 'date' && isEditing) {
+      return renderEditMode();
+    }
+
+    // 展示模式
     return (
       <div className={styles.container}>
-        <div className={styles.content}>
-          {type === 'date' && isEditing ? renderEditMode() : formatDisplayValue(value)}
-        </div>
-        {!isEditing && (
-          <ActionIcon
-            className={cx(styles.editButton, 'edit-button')}
-            icon={Edit}
-            onClick={handleEdit}
-            size="small"
-          />
-        )}
+        <div className={styles.content}>{formatDisplayValue(value)}</div>
+        <ActionIcon
+          className={cx(styles.editButton, 'edit-button')}
+          icon={Edit}
+          onClick={handleEdit}
+          size="small"
+        />
       </div>
     );
   },
