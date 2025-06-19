@@ -2,7 +2,7 @@
 
 import { Icon, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { HammerIcon, LayersIcon, MessageSquareQuoteIcon } from 'lucide-react';
+import { CircleDashedIcon, HammerIcon, LayersIcon, MessageSquareQuoteIcon } from 'lucide-react';
 import Link from 'next/link';
 import qs from 'query-string';
 import { memo } from 'react';
@@ -149,6 +149,45 @@ const Scores = memo<ScoresProps>(
 
     const showExtra = showToolts || showResources || showPrompts;
 
+    const scoreTag = (
+      <Tooltip title={`${t(`mcp.details.scoreLevel.${grade}.desc`)} (${Math.round(percentage)}%)`}>
+        <Flexbox
+          align={'center'}
+          className={cx(styles.tag, getGradeStyleClass(grade, styles))}
+          gap={8}
+          horizontal
+          style={{
+            paddingLeft: 4,
+          }}
+        >
+          <Center className={styles.gradeIcon} style={{ borderColor: getGradeColor(grade, theme) }}>
+            {grade.toUpperCase()}
+          </Center>
+          <span style={{ fontWeight: 500 }}>
+            {t(`mcp.details.scoreLevel.${grade}.title`).toUpperCase()}
+          </span>
+        </Flexbox>
+      </Tooltip>
+    );
+
+    const unvalidatedTag = (
+      <Tooltip title={t('mcp.unvalidated.desc')}>
+        <Flexbox
+          align={'center'}
+          className={styles.tag}
+          gap={8}
+          horizontal
+          style={{
+            color: theme.colorTextDescription,
+            paddingLeft: 4,
+          }}
+        >
+          <Icon color={theme.colorTextQuaternary} icon={CircleDashedIcon} size={22} />
+          {t('mcp.unvalidated.title')}
+        </Flexbox>
+      </Tooltip>
+    );
+
     return (
       <Flexbox
         align={'center'}
@@ -165,29 +204,7 @@ const Scores = memo<ScoresProps>(
             url: urlJoin('/discover/mcp', identifier),
           })}
         >
-          <Tooltip
-            title={`${t(`mcp.details.scoreLevel.${grade}.desc`)} (${Math.round(percentage)}%)`}
-          >
-            <Flexbox
-              align={'center'}
-              className={cx(styles.tag, getGradeStyleClass(grade, styles))}
-              gap={8}
-              horizontal
-              style={{
-                paddingLeft: 4,
-              }}
-            >
-              <Center
-                className={styles.gradeIcon}
-                style={{ borderColor: getGradeColor(grade, theme) }}
-              >
-                {grade.toUpperCase()}
-              </Center>
-              <span style={{ fontWeight: 500 }}>
-                {t(`mcp.details.scoreLevel.${grade}.title`).toUpperCase()}
-              </span>
-            </Flexbox>
-          </Tooltip>
+          {isValidated ? scoreTag : unvalidatedTag}
         </Link>
         {showExtra && (
           <Link

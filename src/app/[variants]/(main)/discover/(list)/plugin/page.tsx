@@ -27,6 +27,7 @@ export const generateMetadata = async (props: DiscoverPageProps) => {
   const { locale, t } = await getSharedProps(props);
   return metadataModule.generate({
     alternate: true,
+    canonical: 'https://lobehub.com/plugin',
     description: t('discover.plugins.description'),
     locale,
     title: t('discover.plugins.title'),

@@ -54,6 +54,7 @@ const Score = memo(() => {
     <Flexbox gap={16}>
       {/* 总分显示 */}
       <TotalScore
+        isValidated={isValidated}
         scoreItems={scoreListItems.map((item) => ({
           check: item.check,
           required: item.required,

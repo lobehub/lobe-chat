@@ -164,38 +164,41 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
         style={{
           color: theme.colorTextSecondary,
         }}
+        wrap={'wrap'}
       >
         {mobile && scores}
         {!mobile && cateButton}
-        {Boolean(github?.language) && (
-          <Flexbox align={'center'} gap={6} horizontal>
-            <Icon
-              color={theme.colorFillTertiary}
-              fill={getLanguageColor(github?.language)}
-              icon={CircleIcon}
-              size={12}
-            />
-            {github?.language}
-          </Flexbox>
-        )}
-        {Boolean(github?.license) && (
-          <Flexbox align={'center'} gap={6} horizontal>
-            <Icon icon={ScaleIcon} size={14} />
-            {github?.license}
-          </Flexbox>
-        )}
-        {Boolean(installCount) && (
-          <Flexbox align={'center'} gap={6} horizontal>
-            <Icon icon={DownloadIcon} size={14} />
-            {installCount}
-          </Flexbox>
-        )}
-        {Boolean(github?.stars) && (
-          <Flexbox align={'center'} gap={6} horizontal>
-            <Icon icon={StarIcon} size={14} />
-            {github?.stars}
-          </Flexbox>
-        )}
+        <Flexbox align={'center'} gap={mobile ? 12 : 24} horizontal wrap={'wrap'}>
+          {Boolean(github?.language) && (
+            <Flexbox align={'center'} gap={6} horizontal>
+              <Icon
+                color={theme.colorFillTertiary}
+                fill={getLanguageColor(github?.language)}
+                icon={CircleIcon}
+                size={12}
+              />
+              {github?.language}
+            </Flexbox>
+          )}
+          {Boolean(github?.license) && (
+            <Flexbox align={'center'} gap={6} horizontal>
+              <Icon icon={ScaleIcon} size={14} />
+              {github?.license}
+            </Flexbox>
+          )}
+          {Boolean(installCount) && (
+            <Flexbox align={'center'} gap={6} horizontal>
+              <Icon icon={DownloadIcon} size={14} />
+              {installCount}
+            </Flexbox>
+          )}
+          {Boolean(github?.stars) && (
+            <Flexbox align={'center'} gap={6} horizontal>
+              <Icon icon={StarIcon} size={14} />
+              {github?.stars}
+            </Flexbox>
+          )}
+        </Flexbox>
       </Flexbox>
     </Flexbox>
   );

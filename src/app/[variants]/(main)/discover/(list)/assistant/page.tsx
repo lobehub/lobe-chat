@@ -27,6 +27,7 @@ export const generateMetadata = async (props: DiscoverPageProps) => {
   const { locale, t } = await getSharedProps(props);
   return metadataModule.generate({
     alternate: true,
+    canonical: 'https://lobehub.com/assistant',
     description: t('discover.assistants.description'),
     locale,
     title: t('discover.assistants.title'),
