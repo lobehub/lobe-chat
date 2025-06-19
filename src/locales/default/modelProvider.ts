@@ -68,6 +68,8 @@ export default {
       customSessionToken: '自定义 Session Token',
       description:
         '输入你的 AWS AccessKeyId / SecretAccessKey 即可开始会话。应用不会记录你的鉴权配置',
+      imageGenerationDescription:
+        '输入你的 AWS AccessKeyId / SecretAccessKey 即可开始生成。应用不会记录你的鉴权配置',
       title: '使用自定义 Bedrock 鉴权信息',
     },
   },

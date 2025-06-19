@@ -28,6 +28,7 @@ export const useClientDataSWR: SWRHook = (key, fetch, config) =>
     // we need to set it to 0.
     dedupingInterval: 0,
     focusThrottleInterval:
+      // FIXME: desktop 云同步模式也是走 edge 请求，也应该增大延迟
       // desktop 1.5s
       isDesktop
         ? 1500

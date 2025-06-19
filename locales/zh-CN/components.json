@@ -91,6 +91,25 @@
     "provider": "服务商",
     "title": "模型"
   },
+  "MultiImagesUpload": {
+    "placeholder": {
+      "primary": "点击上传图片",
+      "secondary": "支持多张图片选择"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} 已上传"
+    },
+    "actions": {
+      "uploadMore": "点击上传更多"
+    },
+    "modal": {
+      "title": "管理图片 ({{count}})",
+      "upload": "上传图片",
+      "complete": "完成",
+      "newFileIndicator": "新增",
+      "selectImageToPreview": "请选择要预览的图片"
+    }
+  },
   "OllamaSetupGuide": {
     "action": {
       "close": "关闭提示",

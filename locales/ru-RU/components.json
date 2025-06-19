@@ -91,6 +91,25 @@
     "provider": "Поставщик",
     "title": "Модель"
   },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "Нажмите, чтобы загрузить ещё"
+    },
+    "modal": {
+      "complete": "Готово",
+      "newFileIndicator": "Новое",
+      "selectImageToPreview": "Выберите изображение для просмотра",
+      "title": "Управление изображениями ({{count}})",
+      "upload": "Загрузить изображение"
+    },
+    "placeholder": {
+      "primary": "Нажмите, чтобы загрузить изображение",
+      "secondary": "Поддерживается выбор нескольких изображений"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} загружено"
+    }
+  },
   "OllamaSetupGuide": {
     "action": {
       "close": "Закрыть уведомление",

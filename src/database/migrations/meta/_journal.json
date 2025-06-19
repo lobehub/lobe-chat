@@ -182,6 +182,13 @@
       "when": 1749309388370,
       "tag": "0025_add_provider_config",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1750303625758,
+      "tag": "0026_ai_image",
+      "breakpoints": true
     }
   ],
   "version": "6"

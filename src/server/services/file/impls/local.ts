@@ -180,4 +180,13 @@ export class DesktopLocalFileImpl implements FileServiceImpl {
     console.warn('uploadContent not implemented for Desktop local file service', filePath, content);
     return;
   }
+
+  /**
+   * 从完整URL中提取key
+   * 在本地文件实现中，不应该调用此方法
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getKeyFromFullUrl(_url: string): string {
+    throw new Error('getKeyFromFullUrl should not be called in local file implementation');
+  }
 }

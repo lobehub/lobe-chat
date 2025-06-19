@@ -91,6 +91,25 @@
     "provider": "Proveedor",
     "title": "Modelo"
   },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "Haz clic para subir más"
+    },
+    "modal": {
+      "complete": "Completar",
+      "newFileIndicator": "Nuevo",
+      "selectImageToPreview": "Por favor, selecciona una imagen para previsualizar",
+      "title": "Gestionar imágenes ({{count}})",
+      "upload": "Subir imágenes"
+    },
+    "placeholder": {
+      "primary": "Haz clic para subir imágenes",
+      "secondary": "Se admite la selección de múltiples imágenes"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} subidas"
+    }
+  },
   "OllamaSetupGuide": {
     "action": {
       "close": "Cerrar aviso",

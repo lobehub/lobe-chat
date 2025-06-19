@@ -28,70 +28,73 @@ LobeChat 的后端设计注重模块化、可测试性和灵活性，以适应�
 
 其主要分层如下：
 
-1.  **客户端服务层 (`src/services`)**:
-    *   位于 src/services/。
-    *   这是客户端业务逻辑的核心层，负责封装各种业务操作和数据处理逻辑。
-    *   **环境适配**: 根据不同的运行环境，服务层会选择合适的数据访问方式：
-        *   **本地数据库模式**: 直接调用 `Model` 层进行数据操作，适用于浏览器 PGLite 和本地 Electron 应用。
-        *   **远程数据库模式**: 通过 `tRPC` 客户端调用服务端 API，适用于需要云同步的场景。
-    *   **类型转换**: 对于简单的数据类型转换，直接在此层进行类型断言，如 `this.pluginModel.query() as Promise<LobeTool[]>`
-    *   每个服务模块通常包含 `client.ts`（本地模式）、`server.ts`（远程模式）和 `type.ts`（接口定义）文件，在实现时应该确保本地模式和远程模式业务逻辑实现一致，只是数据库不同。
+1.  客户端服务层 (`src/services`):
 
-2.  **API 接口层 (`TRPC`)**:
-    *   位于 src/server/routers/
-    *   使用 `tRPC` 构建类型安全的 API。Router 根据运行时环境（如 Edge Functions, Node.js Lambda）进行组织。
-    *   负责接收客户端请求，并将其路由到相应的 `Service` 层进行处理。
-    *   新建 lambda 端点时可以参考 src/server/routers/lambda/_template.ts
+    - 位于 src/services/。
+    - 这是客户端业务逻辑的核心层，负责封装各种业务操作和数据处理逻辑。
+    - 环境适配: 根据不同的运行环境，服务层会选择合适的数据访问方式：
+        - 本地数据库模式: 直接调用 `Model` 层进行数据操作，适用于浏览器 PGLite 和本地 Electron 应用。
+        - 远程数据库模式: 通过 `tRPC` 客户端调用服务端 API，适用于需要云同步的场景。
+    - 类型转换: 对于简单的数据类型转换，直接在此层进行类型断言，如 `this.pluginModel.query() as Promise<LobeTool[]>`
+    - 每个服务模块通常包含 `client.ts`（本地模式）、`server.ts`（远程模式）和 `type.ts`（接口定义）文件，在实现时应该确保本地模式和远程模式业务逻辑实现一致，只是数据库不同。
 
-3.  **服务端服务层 (`server/services`)**:
-    *   位于 src/server/services/。
-    *   核心职责是封装独立的、可复用的业务逻辑单元。这些服务应易于测试。
-    *   **平台差异抽象**: 一个关键特性是通过其内部的 `impls` 子目录（例如 src/server/services/file/impls 包含 s3.ts 和 local.ts）来抹平不同运行环境带来的差异（例如云端使用 S3 存储，桌面版使用本地文件系统）。这使得上层（如 `tRPC` routers）无需关心底层具体实现。
-    *   目标是使 `tRPC` router 层的逻辑尽可能纯粹，专注于请求处理和业务流程编排。
-    *   服务会调用 `Repository` 层或直接调用 `Model` 层进行数据持久化和检索，也可能调用其他服务。
+2.  API 接口层 (`TRPC`):
 
-4.  **仓库层 (`Repositories`)**:
-    *   位于 src/database/repositories/。
-    *   主要处理**复杂的跨表查询和数据聚合**逻辑，特别是当需要从**多个 `Model`** 获取数据并进行组合时。
-    *   与 `Model` 层不同，`Repository` 层专注于复杂的业务查询场景，而不涉及简单的领域模型转换。
-    *   当业务逻辑涉及多表关联、复杂的数据统计或需要事务处理时，会使用 `Repository` 层。
-    *   如果数据操作简单（仅涉及单个 `Model`），则通常直接在 `src/services` 层调用 `Model` 并进行简单的类型断言。
+    - 位于 src/server/routers/
+    - 使用 `tRPC` 构建类型安全的 API。Router 根据运行时环境（如 Edge Functions, Node.js Lambda）进行组织。
+    - 负责接收客户端请求，并将其路由到相应的 `Service` 层进行处理。
+    - 新建 lambda 端点时可以参考 src/server/routers/lambda/\_template.ts
 
-5.  **模型层 (`Models`)**:
-    *   位于 src/database/models/ (例如 src/database/models/plugin.ts 和 src/database/models/document.ts)。
-    *   提供对数据库中各个表（由 src/database/schemas/ 中的 Drizzle ORM schema 定义）的基本 CRUD (创建、读取、更新、删除) 操作和简单的查询能力。
-    *   `Model` 类专注于单个数据表的直接操作，**不涉及复杂的领域模型转换**，这些转换通常在上层的 `src/services` 中通过类型断言完成。
-    * model（例如 Topic） 层接口经常需要从对应的 schema 层导入 NewTopic 和 TopicItem
-    * 创建新的 model 时可以参考 src/database/models/_template.ts
+3.  仓库层 (`Repositories`):
 
-6.  **数据库 (`Database`)**:
-    *   **客户端模式 (浏览器/PWA)**: 使用 PGLite (基于 WASM 的 PostgreSQL)，数据存储在用户浏览器本地。
-    *   **服务端模式 (云部署)**: 使用远程 PostgreSQL 数据库。
-    *   **Electron 桌面应用**:
-        *   Electron 客户端会启动一个本地 Node.js 服务。
-        *   本地服务通过 `tRPC` 与 Electron 的渲染进程通信。
-        *   数据库选择依赖于是否开启**云同步**功能：
-            *   **云同步开启**: 连接到远程 PostgreSQL 数据库。
-            *   **云同步关闭**: 使用 PGLite (通过 Node.js 的 WASM 实现) 在本地存储数据。
+    - 位于 src/database/repositories/。
+    - 主要处理复杂的跨表查询和数据聚合逻辑，特别是当需要从多个 `Model` 获取数据并进行组合时。
+    - 与 `Model` 层不同，`Repository` 层专注于复杂的业务查询场景，而不涉及简单的领域模型转换。
+    - 当业务逻辑涉及多表关联、复杂的数据统计或需要事务处理时，会使用 `Repository` 层。
+    - 如果数据操作简单（仅涉及单个 `Model`），则通常直接在 `src/services` 层调用 `Model` 并进行简单的类型断言。
+
+4.  模型层 (`Models`):
+
+    - 位于 src/database/models/ (例如 src/database/models/plugin.ts 和 src/database/models/document.ts)。
+    - 提供对数据库中各个表（由 src/database/schemas/ 中的 Drizzle ORM schema 定义）的基本 CRUD (创建、读取、更新、删除) 操作和简单的查询能力。
+    - `Model` 类专注于单个数据表的直接操作，不涉及复杂的领域模型转换，这些转换通常在上层的 `src/services` 中通过类型断言完成。
+    - model（例如 Topic） 层接口经常需要从对应的 schema 层导入 NewTopic 和 TopicItem
+    - 创建新的 model 时可以参考 src/database/models/\_template.ts
+
+5.  数据库 (`Database`):
+    - 客户端模式 (浏览器/PWA): 使用 PGLite (基于 WASM 的 PostgreSQL)，数据存储在用户浏览器本地。
+    - 服务端模式 (云部署): 使用远程 PostgreSQL 数据库。
+    - Electron 桌面应用:
+        - Electron 客户端会启动一个本地 Node.js 服务。
+        - 本地服务通过 `tRPC` 与 Electron 的渲染进程通信。
+        - 数据库选择依赖于是否开启云同步功能：
+            - 云同步开启: 连接到远程 PostgreSQL 数据库。
+            - 云同步关闭: 使用 PGLite (通过 Node.js 的 WASM 实现) 在本地存储数据。
 
 ## 数据流向说明
 
 ### 浏览器/PWA 模式
+
 ```
-UI (React) → Zustand State → Model Layer → PGLite (本地数据库)
+UI (React) → Zustand action -> Client Service → Model Layer → PGLite (本地数据库)
 ```
 
 ### 服务端模式
+
 ```
-UI (React) → Zustand State → tRPC Client → tRPC Routers → Services → Repositories/Models → Remote PostgreSQL
+UI (React) → Zustand action → Client Service -> TRPC Client → TRPC Routers  → Repositories/Models → Remote PostgreSQL
 ```
 
 ### Electron 桌面应用模式
+
 ```
-UI (Electron Renderer) → Zustand State → tRPC Client → 本地 Node.js 服务 → tRPC Routers → Services → Repositories/Models → PGLite/Remote PostgreSQL (取决于云同步设置)
+UI (Electron Renderer) → Zustand action → Client Service -> TRPC Client → 本地 Node.js 服务 → TRPC Routers → Repositories/Models → PGLite/Remote PostgreSQL (取决于云同步设置)
 ```
 
+## 服务层 (Server Services)
 
-
-
-
+-  位于 src/server/services/。
+-  核心职责是封装独立的、可复用的业务逻辑单元。这些服务应易于测试。
+-  平台差异抽象: 一个关键特性是通过其内部的 `impls` 子目录（例如 src/server/services/file/impls 包含 s3.ts 和 local.ts）来抹平不同运行环境带来的差异（例如云端使用 S3 存储，桌面版使用本地文件系统）。这使得上层（如 `tRPC` routers）无需关心底层具体实现。
+-  目标是使 `tRPC` router 层的逻辑尽可能纯粹，专注于请求处理和业务流程编排。
+-  服务可能会调用 `Repository` 层或直接调用 `Model` 层进行数据持久化和检索，也可能调用其他服务。

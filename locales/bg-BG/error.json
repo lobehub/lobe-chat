@@ -130,6 +130,7 @@
     "addProxyUrl": "Добавете URL адрес на OpenAI прокси (по избор)",
     "apiKey": {
       "description": "Въведете вашия {{name}} API ключ, за да започнете сесия",
+      "imageGenerationDescription": "Въведете своя {{name}} API ключ, за да започнете генерирането",
       "title": "Използване на персонализиран {{name}} API ключ"
     },
     "closeMessage": "Затвори съобщението",
