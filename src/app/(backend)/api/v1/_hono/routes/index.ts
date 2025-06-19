@@ -2,7 +2,7 @@ import AgentRoutes from './agents.route';
 import ChatRoutes from './chat.route';
 import FileRoutes from './files.route';
 import MessageTranslatesRoutes from './message-translates.route';
-import TopicRoutes from './message.route';
+import MessageRoutes from './message.route';
 import RolesRoutes from './roles.route';
 import TopicsRoutes from './topics.route';
 import UserRoutes from './users.route';
@@ -12,8 +12,8 @@ export default {
   chat: ChatRoutes,
   files: FileRoutes,
   message_translates: MessageTranslatesRoutes,
+  messages: MessageRoutes,
   roles: RolesRoutes,
-  topic: TopicRoutes,
   topics: TopicsRoutes,
   user: UserRoutes,
 };
