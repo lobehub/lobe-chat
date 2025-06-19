@@ -4,12 +4,9 @@ import { BaseController } from '../common/base.controller';
 import { FileUploadService } from '../services/file.service';
 import {
   BatchFileUploadRequest,
-  BatchGetFilesRequest,
   FileListQuery,
-  FileParseRequest,
   FileUploadRequest,
-  FileUrlRequest,
-  PublicFileUploadRequest,
+  PreSignedUrlRequest,
 } from '../types/file.type';
 
 /**
@@ -28,25 +25,22 @@ export class FileController extends BaseController {
       const db = await this.getDatabase();
       const fileService = new FileUploadService(db, userId);
 
-      // 处理 multipart/form-data，支持中文文件名
-      const formData = await c.req.parseBody();
-
-      const file = formData['file'] as File;
+      // 处理 multipart/form-data
+      const formData = await c.req.formData();
+      const file = formData.get('file') as File;
 
       if (!file) {
         return this.error(c, 'No file provided', 400);
       }
 
       // 获取其他参数
-      const knowledgeBaseId = formData['knowledgeBaseId'] as string | null;
-      const skipCheckFileType = formData['skipCheckFileType'] === 'true';
-      const directory = formData['directory'] as string | null;
-      const sessionId = formData['sessionId'] as string | null;
+      const knowledgeBaseId = formData.get('knowledgeBaseId') as string | null;
+      const skipCheckFileType = formData.get('skipCheckFileType') === 'true';
+      const directory = formData.get('directory') as string | null;
 
       const options: Partial<FileUploadRequest> = {
         directory: directory || undefined,
         knowledgeBaseId: knowledgeBaseId || undefined,
-        sessionId: sessionId || undefined,
         skipCheckFileType,
       };
 
@@ -69,19 +63,14 @@ export class FileController extends BaseController {
       const db = await this.getDatabase();
       const fileService = new FileUploadService(db, userId);
 
-      // 处理 multipart/form-data，支持中文文件名
+      // 处理 multipart/form-data
       const formData = await c.req.formData();
-
       const files: File[] = [];
 
       // 收集所有文件
-      const fileEntries = formData.getAll('files');
-
-      for (const file of fileEntries) {
-        if (file instanceof File) {
-          files.push(file);
-        } else {
-          return this.error(c, 'Invalid file format', 400);
+      for (const [key, value] of formData.entries()) {
+        if (key === 'files' && value instanceof File) {
+          files.push(value);
         }
       }
 
@@ -93,13 +82,11 @@ export class FileController extends BaseController {
       const knowledgeBaseId = formData.get('knowledgeBaseId') as string | null;
       const skipCheckFileType = formData.get('skipCheckFileType') === 'true';
       const directory = formData.get('directory') as string | null;
-      const sessionId = formData.get('sessionId') as string | null;
 
       const request: BatchFileUploadRequest = {
         directory: directory || undefined,
         files,
         knowledgeBaseId: knowledgeBaseId || undefined,
-        sessionId: sessionId || undefined,
         skipCheckFileType,
       };
 
@@ -110,6 +97,35 @@ export class FileController extends BaseController {
         result,
         `Batch upload completed: ${result.summary.successful} successful, ${result.summary.failed} failed`,
       );
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 创建预签名URL
+   * POST /files/presigned-url
+   */
+  async createPreSignedUrl(c: Context) {
+    try {
+      const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
+
+      const body = await this.getBody<PreSignedUrlRequest>(c);
+      if (!body) {
+        return this.error(c, 'Invalid request body', 400);
+      }
+
+      // 验证必填字段
+      if (!body.filename || !body.fileType || !body.size) {
+        return this.error(c, 'Missing required fields: filename, fileType, size', 400);
+      }
+
+      const db = await this.getDatabase();
+      const fileService = new FileUploadService(db, userId);
+
+      const result = await fileService.createPreSignedUrl(body);
+
+      return this.success(c, result, 'Pre-signed URL created successfully');
     } catch (error) {
       return this.handleError(c, error);
     }
@@ -129,8 +145,8 @@ export class FileController extends BaseController {
       const fileListQuery: FileListQuery = {
         fileType: query.fileType as string,
         knowledgeBaseId: query.knowledgeBaseId as string,
-        page: query.page,
-        pageSize: query.pageSize,
+        page: query.page ? parseInt(query.page as string, 10) : undefined,
+        pageSize: query.pageSize ? parseInt(query.pageSize as string, 10) : undefined,
         search: query.search as string,
       };
 
@@ -152,7 +168,12 @@ export class FileController extends BaseController {
   async getFile(c: Context) {
     try {
       const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
+
       const { id } = this.getParams(c);
+      if (!id) {
+        return this.error(c, 'File ID is required', 400);
+      }
+
       const db = await this.getDatabase();
       const fileService = new FileUploadService(db, userId);
 
@@ -165,123 +186,18 @@ export class FileController extends BaseController {
   }
 
   /**
-   * 获取文件访问URL
-   * GET /files/:id/url
-   */
-  async getFileUrl(c: Context) {
-    try {
-      const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
-      const { id } = this.getParams(c);
-      const query = this.getQuery(c);
-
-      // 解析查询参数
-      const options: FileUrlRequest = {
-        expiresIn: query.expiresIn ? parseInt(query.expiresIn as string, 10) : undefined,
-      };
-
-      const db = await this.getDatabase();
-      const fileService = new FileUploadService(db, userId);
-
-      const result = await fileService.getFileUrl(id, options);
-
-      return this.success(c, result, 'File URL generated successfully');
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  /**
-   * 获取文件永久访问URL
-   * GET /files/:id/permanent-url
-   */
-  async getPermanentFileUrl(c: Context) {
-    try {
-      const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
-      const { id } = this.getParams(c);
-      const db = await this.getDatabase();
-      const fileService = new FileUploadService(db, userId);
-
-      const result = await fileService.getPermanentFileUrl(id);
-
-      return this.success(c, result, 'Permanent file URL generated successfully');
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  /**
-   * 公共文件上传
-   * POST /files/upload-public
-   */
-  async uploadPublicFile(c: Context) {
-    try {
-      const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
-
-      const db = await this.getDatabase();
-      const fileService = new FileUploadService(db, userId);
-
-      const formData = await this.getFormData(c);
-      const file = formData.get('file') as File;
-
-      if (!file) {
-        return this.error(c, 'No file provided', 400);
-      }
-
-      // 获取其他参数
-      const knowledgeBaseId = formData.get('knowledgeBaseId') as string | null;
-      const skipCheckFileType = formData.get('skipCheckFileType') === 'true';
-      const directory = formData.get('directory') as string | null;
-      const sessionId = formData.get('sessionId') as string | null;
-
-      const options: PublicFileUploadRequest = {
-        directory: directory || undefined,
-        knowledgeBaseId: knowledgeBaseId || undefined,
-        sessionId: sessionId || undefined,
-        skipCheckFileType,
-      };
-
-      const result = await fileService.uploadPublicFile(file, options);
-
-      return this.success(c, result, 'Public file uploaded successfully');
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  /**
-   * 解析文件内容
-   * POST /files/:id/parse
-   */
-  async parseFile(c: Context) {
-    try {
-      const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
-      const { id } = this.getParams(c);
-      const query = this.getQuery(c);
-
-      // 解析查询参数
-      const options: Partial<FileParseRequest> = {
-        skipExist: query.skipExist === 'true',
-      };
-
-      const db = await this.getDatabase();
-      const fileService = new FileUploadService(db, userId);
-
-      const result = await fileService.parseFile(id, options);
-
-      return this.success(c, result, 'File parsed successfully');
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  /**
    * 删除文件
    * DELETE /files/:id
    */
   async deleteFile(c: Context) {
     try {
       const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
+
       const { id } = this.getParams(c);
+      if (!id) {
+        return this.error(c, 'File ID is required', 400);
+      }
+
       const db = await this.getDatabase();
       const fileService = new FileUploadService(db, userId);
 
@@ -294,70 +210,18 @@ export class FileController extends BaseController {
   }
 
   /**
-   * 上传文件并解析文件内容
-   * POST /files/upload-and-parse
+   * 健康检查
+   * GET /files/health
    */
-  async uploadAndParseFile(c: Context) {
-    try {
-      const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
-
-      const db = await this.getDatabase();
-      const fileService = new FileUploadService(db, userId);
-
-      const formData = await this.getFormData(c);
-      const file = formData.get('file') as File;
-
-      if (!file) {
-        return this.error(c, 'No file provided', 400);
-      }
-
-      // 获取其他参数
-      const knowledgeBaseId = formData.get('knowledgeBaseId') as string | null;
-      const skipCheckFileType = formData.get('skipCheckFileType') === 'true';
-      const directory = formData.get('directory') as string | null;
-      const sessionId = formData.get('sessionId') as string | null;
-      const skipExist = formData.get('skipExist') === 'true';
-
-      const uploadOptions: Partial<FileUploadRequest> = {
-        directory: directory || undefined,
-        knowledgeBaseId: knowledgeBaseId || undefined,
-        sessionId: sessionId || undefined,
-        skipCheckFileType,
-      };
-
-      const parseOptions = {
-        skipExist,
-      };
-
-      const result = await fileService.uploadAndParseFile(file, uploadOptions, parseOptions);
-
-      return this.success(c, result, 'File uploaded and parsed successfully');
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  /**
-   * 批量获取文件详情和内容
-   * POST /files/batch-get
-   */
-  async batchGetFiles(c: Context) {
-    try {
-      const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
-      const body = await this.getBody<BatchGetFilesRequest>(c);
-
-      if (!body || !body.fileIds || body.fileIds.length === 0) {
-        return this.error(c, 'File IDs are required', 400);
-      }
-
-      const db = await this.getDatabase();
-      const fileService = new FileUploadService(db, userId);
-
-      const result = await fileService.batchGetFiles(body);
-
-      return this.success(c, result, 'Files retrieved successfully');
-    } catch (error) {
-      return this.handleError(c, error);
-    }
+  async health(c: Context) {
+    return this.success(
+      c,
+      {
+        service: 'file-upload-service',
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+      },
+      'File service is healthy',
+    );
   }
 }
