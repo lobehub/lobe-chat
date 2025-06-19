@@ -1,5 +1,3 @@
-import { wrapperRBACPermission } from '@/utils/rbac';
-
 /**
  * RBAC Permission Actions Definition
  * Defines all executable permission action types in the system
@@ -236,7 +234,23 @@ export const PERMISSION_SCOPE = ['ALL', 'WORKSPACE', 'OWNER'] as const;
  */
 export const RBAC_PERMISSIONS = Object.entries(PERMISSION_ACTIONS).reduce(
   (acc, [key]) => {
-    return Object.assign(acc, wrapperRBACPermission(key as keyof typeof PERMISSION_ACTIONS));
+    const permissionValue = PERMISSION_ACTIONS[key as keyof typeof PERMISSION_ACTIONS];
+
+    const scopePermissions = PERMISSION_SCOPE.reduce(
+      (scopeAcc, scope) => {
+        const permissionWithScopeKey =
+          `${key}_${scope}` as `${keyof typeof PERMISSION_ACTIONS}_${(typeof PERMISSION_SCOPE)[number]}`;
+
+        scopeAcc[permissionWithScopeKey] = `${permissionValue}:${scope.toLowerCase()}`;
+        return scopeAcc;
+      },
+      {} as Record<
+        `${keyof typeof PERMISSION_ACTIONS}_${(typeof PERMISSION_SCOPE)[number]}`,
+        string
+      >,
+    );
+
+    return Object.assign(acc, scopePermissions);
   },
   {} as Record<`${keyof typeof PERMISSION_ACTIONS}_${(typeof PERMISSION_SCOPE)[number]}`, string>,
 );
