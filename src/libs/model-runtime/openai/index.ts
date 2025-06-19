@@ -77,9 +77,9 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
 
       if (prunePrefixes.some((prefix) => model.startsWith(prefix))) {
         if (!payload.reasoning) {
-          payload.reasoning = { summary: 'detailed' };
+          payload.reasoning = { summary: 'auto' };
         } else {
-          payload.reasoning.summary = 'detailed';
+          payload.reasoning.summary = 'auto';
         }
 
         // computer-use series must set truncation as auto
