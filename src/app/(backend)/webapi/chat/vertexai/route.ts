@@ -24,7 +24,7 @@ export const POST = checkAuth(async (req: Request, { jwtPayload }) =>
 
       const location = process.env.VERTEXAI_LOCATION ?? 'global';
       const apiEndpoint =
-        process.env.GOOGLE_VERTEX_BASE_URL ||
+        process.env.VERTEXAI_API_ENDPOINT ||
         (location === 'global'
           ? 'aiplatform.googleapis.com'
           : `${location}-aiplatform.googleapis.com`);
