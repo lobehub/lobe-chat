@@ -176,8 +176,14 @@
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3 to najnowocześniejszy wielojęzyczny otwarty model językowy z serii Llama, oferujący wydajność porównywalną z modelem 405B przy bardzo niskich kosztach. Oparty na strukturze Transformer, poprawiony dzięki nadzorowanemu dostrajaniu (SFT) oraz uczeniu ze wzmocnieniem opartym na ludzkiej opinii (RLHF), co zwiększa jego użyteczność i bezpieczeństwo. Jego wersja dostosowana do instrukcji została zoptymalizowana do wielojęzycznych dialogów, osiągając lepsze wyniki niż wiele dostępnych modeli czatu, zarówno otwartych, jak i zamkniętych, w wielu branżowych benchmarkach. Data graniczna wiedzy to grudzień 2023."
   },
+  "MiniMax-M1": {
+    "description": "Nowy, samodzielnie opracowany model inferencyjny. Globalny lider: 80K łańcuchów myślowych x 1M wejść, efektywność porównywalna z najlepszymi modelami zagranicznymi."
+  },
   "MiniMax-Text-01": {
     "description": "W serii modeli MiniMax-01 wprowadziliśmy odważne innowacje: po raz pierwszy na dużą skalę zrealizowano mechanizm liniowej uwagi, tradycyjna architektura Transformera nie jest już jedynym wyborem. Liczba parametrów tego modelu wynosi aż 456 miliardów, z aktywacją wynoszącą 45,9 miliarda. Ogólna wydajność modelu dorównuje najlepszym modelom zagranicznym, jednocześnie efektywnie przetwarzając kontekst o długości do 4 milionów tokenów, co stanowi 32 razy więcej niż GPT-4o i 20 razy więcej niż Claude-3.5-Sonnet."
+  },
+  "MiniMaxAI/MiniMax-M1-80k": {
+    "description": "MiniMax-M1 to otwartoźródłowy model inferencyjny o dużej skali z mieszanym mechanizmem uwagi, posiadający 456 miliardów parametrów, z których około 45,9 miliarda jest aktywowanych na każdy token. Model natywnie obsługuje ultra-długi kontekst do 1 miliona tokenów i dzięki mechanizmowi błyskawicznej uwagi oszczędza 75% operacji zmiennoprzecinkowych w zadaniach generowania na 100 tysiącach tokenów w porównaniu do DeepSeek R1. Ponadto MiniMax-M1 wykorzystuje architekturę MoE (mieszani eksperci), łącząc algorytm CISPO z efektywnym treningiem wzmacniającym opartym na mieszanej uwadze, osiągając wiodącą w branży wydajność w inferencji długich wejść i rzeczywistych scenariuszach inżynierii oprogramowania."
   },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) to model poleceń o wysokiej precyzji, idealny do złożonych obliczeń."
@@ -1058,6 +1064,12 @@
   "gemini-2.0-flash-preview-image-generation": {
     "description": "Model Gemini 2.0 Flash do generowania obrazów, wspierający generację obrazów"
   },
+  "gemini-2.5-flash": {
+    "description": "Gemini 2.5 Flash to najbardziej opłacalny model Google, oferujący wszechstronne funkcje."
+  },
+  "gemini-2.5-flash-lite-preview-06-17": {
+    "description": "Gemini 2.5 Flash-Lite Preview to najmniejszy i najbardziej opłacalny model Google, zaprojektowany z myślą o masowym zastosowaniu."
+  },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview to najbardziej opłacalny model Google, oferujący wszechstronne funkcje."
   },
@@ -1066,6 +1078,9 @@
   },
   "gemini-2.5-flash-preview-05-20": {
     "description": "Gemini 2.5 Flash Preview to najbardziej opłacalny model Google, oferujący wszechstronne funkcje."
+  },
+  "gemini-2.5-pro": {
+    "description": "Gemini 2.5 Pro to najnowocześniejszy model myślowy Google, zdolny do rozumowania nad złożonymi problemami w dziedzinach kodowania, matematyki i STEM oraz analizowania dużych zbiorów danych, repozytoriów kodu i dokumentacji przy użyciu długiego kontekstu."
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental to najnowocześniejszy model myślenia Google, zdolny do wnioskowania w zakresie kodu, matematyki i złożonych problemów w dziedzinie STEM, a także do analizy dużych zbiorów danych, repozytoriów kodu i dokumentów, wykorzystując długi kontekst."

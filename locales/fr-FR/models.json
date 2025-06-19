@@ -176,8 +176,14 @@
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3 est le modèle de langage open source multilingue le plus avancé de la série Llama, offrant des performances comparables à celles d'un modèle de 405B à un coût très faible. Basé sur une architecture Transformer, il a été amélioré en utilité et en sécurité grâce à un ajustement supervisé (SFT) et à un apprentissage par renforcement avec retour humain (RLHF). Sa version optimisée pour les instructions est spécialement conçue pour les dialogues multilingues et surpasse de nombreux modèles de chat open source et fermés sur plusieurs benchmarks industriels. La date limite des connaissances est décembre 2023."
   },
+  "MiniMax-M1": {
+    "description": "Modèle d'inférence entièrement développé en interne. Leader mondial : 80K chaînes de pensée x 1M d'entrées, des performances comparables aux meilleurs modèles internationaux."
+  },
   "MiniMax-Text-01": {
     "description": "Dans la série de modèles MiniMax-01, nous avons réalisé une innovation audacieuse : la première mise en œuvre à grande échelle d'un mécanisme d'attention linéaire, rendant l'architecture Transformer traditionnelle non plus le seul choix. Ce modèle possède un nombre de paramètres atteignant 456 milliards, avec 45,9 milliards d'activations par instance. Les performances globales du modèle rivalisent avec celles des meilleurs modèles étrangers, tout en étant capable de traiter efficacement un contexte mondial de 4 millions de tokens, soit 32 fois celui de GPT-4o et 20 fois celui de Claude-3.5-Sonnet."
+  },
+  "MiniMaxAI/MiniMax-M1-80k": {
+    "description": "MiniMax-M1 est un modèle d'inférence à attention mixte à grande échelle avec poids open source, comptant 456 milliards de paramètres, activant environ 45,9 milliards de paramètres par token. Le modèle supporte nativement un contexte ultra-long de 1 million de tokens et, grâce au mécanisme d'attention éclair, réduit de 75 % les opérations en virgule flottante lors de tâches de génération de 100 000 tokens par rapport à DeepSeek R1. Par ailleurs, MiniMax-M1 utilise une architecture MoE (Experts Mixtes), combinant l'algorithme CISPO et une conception d'attention mixte pour un entraînement efficace par apprentissage par renforcement, offrant des performances de pointe dans l'inférence sur longues entrées et les scénarios réels d'ingénierie logicielle."
   },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) est un modèle d'instructions de haute précision, adapté aux calculs complexes."
@@ -1058,6 +1064,12 @@
   "gemini-2.0-flash-preview-image-generation": {
     "description": "Modèle de prévisualisation Gemini 2.0 Flash, prenant en charge la génération d'images"
   },
+  "gemini-2.5-flash": {
+    "description": "Gemini 2.5 Flash est le modèle le plus rentable de Google, offrant des fonctionnalités complètes."
+  },
+  "gemini-2.5-flash-lite-preview-06-17": {
+    "description": "Gemini 2.5 Flash-Lite Preview est le modèle le plus compact et rentable de Google, conçu pour une utilisation à grande échelle."
+  },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview est le modèle le plus rentable de Google, offrant des fonctionnalités complètes."
   },
@@ -1066,6 +1078,9 @@
   },
   "gemini-2.5-flash-preview-05-20": {
     "description": "Gemini 2.5 Flash Preview est le modèle le plus rentable de Google, offrant des fonctionnalités complètes."
+  },
+  "gemini-2.5-pro": {
+    "description": "Gemini 2.5 Pro est le modèle de raisonnement le plus avancé de Google, capable de traiter des problèmes complexes en code, mathématiques et domaines STEM, ainsi que d'analyser de grands ensembles de données, des bases de code et des documents avec un contexte étendu."
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental est le modèle de pensée le plus avancé de Google, capable de raisonner sur des problèmes complexes en code, mathématiques et dans les domaines STEM, tout en utilisant un long contexte pour analyser de grands ensembles de données, des bibliothèques de code et des documents."
