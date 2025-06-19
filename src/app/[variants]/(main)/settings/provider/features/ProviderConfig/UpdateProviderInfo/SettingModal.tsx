@@ -92,6 +92,7 @@ const CreateNewProvider = memo<CreateNewProviderProps>(({ onClose, open, initial
             { label: 'OpenAI', value: 'openai' },
             { label: 'Anthropic', value: 'anthropic' },
             { label: 'Ollama', value: 'ollama' },
+            { label: 'Gemini', value: 'google' },
             // { label: 'Azure AI', value: 'azureai' },
           ]}
           placeholder={t('createNewAiProvider.sdkType.placeholder')}
