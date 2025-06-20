@@ -1187,8 +1187,8 @@
   "google/gemini-2.5-flash-preview:thinking": {
     "description": "Gemini 2.5 Flashは、Googleの最先端の主力モデルであり、高度な推論、コーディング、数学、科学タスクのために設計されています。内蔵の「思考」能力を備えており、より高い精度と詳細なコンテキスト処理で応答を提供します。\n\n注意：このモデルには、思考と非思考の2つのバリアントがあります。出力の価格は、思考能力が有効かどうかによって大きく異なります。標準バリアント（「:thinking」サフィックスなし）を選択すると、モデルは明示的に思考トークンの生成を避けます。\n\n思考能力を利用して思考トークンを受け取るには、「:thinking」バリアントを選択する必要があり、これにより思考出力の価格が高くなります。\n\nさらに、Gemini 2.5 Flashは、「推論最大トークン数」パラメータを介して構成可能であり、文書に記載されています (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)。"
   },
-  "google/gemini-2.5-pro-preview-03-25": {
-    "description": "Gemini 2.5 Proは、Googleの最先端AIモデルであり、高度な推論、コーディング、数学、科学タスクのために設計されています。思考能力を備えており、より高い精度と詳細なコンテキスト処理で推論応答を提供します。Gemini 2.5 Proは、複数のベンチマークテストでトップパフォーマンスを達成し、LMArenaランキングで1位を獲得しており、卓越した人間の好みの整合性と複雑な問題解決能力を反映しています。"
+  "google/gemini-2.5-pro-preview": {
+    "description": "Gemini 2.5 Pro Preview は、Google の最先端の思考モデルであり、コード、数学、STEM 分野の複雑な問題を推論し、長いコンテキストを用いて大規模なデータセット、コードベース、ドキュメントを分析することができます。"
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flashは、最適化されたマルチモーダル処理能力を提供し、さまざまな複雑なタスクシナリオに適しています。"
