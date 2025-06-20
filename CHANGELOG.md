@@ -2,6 +2,52 @@
 
 # Changelog
 
+### [Version&nbsp;1.94.5](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.94.4...v1.94.5)
+<sup>Released on **2025-06-20**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Correctly pass `reasoning.summary`.
+
+
+#### 💄 Styles
+
+- **misc**: Add MiniMax-M1 model, Update Gemini 2.5 Pro, Flash GA models. Add Gemini 2.5 Flash-Lite Preview model, update i18n, update i18n, update model card for Gemini 2.5 Pro via OpenRouter.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **misc**: Correctly pass `reasoning.summary`, closes [#8221](https://github.com/jaworldwideorg/OneJA-Bot/issues/8221) ([da79815](https://github.com/jaworldwideorg/OneJA-Bot/commit/da79815))
+
+
+
+#### Styles
+
+* **misc**: Add MiniMax-M1 model, closes [#8209](https://github.com/jaworldwideorg/OneJA-Bot/issues/8209) ([41a0178](https://github.com/jaworldwideorg/OneJA-Bot/commit/41a0178))
+* **misc**: Update Gemini 2.5 Pro, Flash GA models. Add Gemini 2.5 Flash-Lite Preview model, closes [#8213](https://github.com/jaworldwideorg/OneJA-Bot/issues/8213) ([39ef8be](https://github.com/jaworldwideorg/OneJA-Bot/commit/39ef8be))
+* **misc**: Update i18n, closes [#8233](https://github.com/jaworldwideorg/OneJA-Bot/issues/8233) ([88c4362](https://github.com/jaworldwideorg/OneJA-Bot/commit/88c4362))
+* **misc**: Update i18n, closes [#8225](https://github.com/jaworldwideorg/OneJA-Bot/issues/8225) ([53e1784](https://github.com/jaworldwideorg/OneJA-Bot/commit/53e1784))
+* **misc**: Update model card for Gemini 2.5 Pro via OpenRouter, closes [#8129](https://github.com/jaworldwideorg/OneJA-Bot/issues/8129) ([c96d9ef](https://github.com/jaworldwideorg/OneJA-Bot/commit/c96d9ef))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.94.4](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.94.3...v1.94.4)
 <sup>Released on **2025-06-18**</sup>
 
