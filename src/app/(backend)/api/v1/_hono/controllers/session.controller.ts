@@ -2,15 +2,14 @@ import { Context } from 'hono';
 
 import { BaseController } from '../common/base.controller';
 import { SessionService } from '../services/session.service';
-import { SessionGroupService } from '../services/sessionGroup.service';
 import {
-  BatchGetSessionsRequest,
-  BatchUpdateSessionsRequest,
   CloneSessionRequest,
+  CountSessionsRequest,
   CreateSessionRequest,
   GetSessionsRequest,
+  RankSessionsRequest,
   SearchSessionsRequest,
-  UpdateSessionGroupAssignmentRequest,
+  UpdateSessionConfigRequest,
   UpdateSessionRequest,
 } from '../types/session.type';
 
@@ -27,11 +26,14 @@ export class SessionController extends BaseController {
    */
   async getSessions(c: Context): Promise<Response> {
     try {
-      const request = this.getQuery<GetSessionsRequest>(c);
-      const currentUserId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
+      const query = c.req.query();
+      const request: GetSessionsRequest = {
+        current: query.current ? Number(query.current) : undefined,
+        pageSize: query.pageSize ? Number(query.pageSize) : undefined,
+      };
 
       const db = await this.getDatabase();
-      const sessionService = new SessionService(db, currentUserId);
+      const sessionService = new SessionService(db, this.getUserId(c));
       const sessions = await sessionService.getSessions(request);
 
       return this.success(c, sessions, '获取会话列表成功');
@@ -59,24 +61,6 @@ export class SessionController extends BaseController {
   }
 
   /**
-   * 获取按Agent分组的会话数量
-   * GET /api/v1/sessions/grouped-by-agent
-   * @param c Hono Context
-   * @returns 按Agent分组的会话数量响应
-   */
-  async getSessionsGroupedByAgent(c: Context): Promise<Response> {
-    try {
-      const db = await this.getDatabase();
-      const sessionService = new SessionService(db, this.getUserId(c));
-      const result = await sessionService.getSessionCountGroupedByAgent();
-
-      return this.success(c, result, '获取按Agent分组的会话数量成功');
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  /**
    * 根据 ID 获取会话详情
    * GET /api/v1/sessions/:id
    * @param c Hono Context
@@ -84,7 +68,12 @@ export class SessionController extends BaseController {
    */
   async getSessionById(c: Context): Promise<Response> {
     try {
-      const { id: sessionId } = this.getParams<{ id: string }>(c);
+      const sessionId = c.req.param('id');
+
+      if (!sessionId) {
+        return this.error(c, '会话 ID 是必需的', 400);
+      }
+
       const db = await this.getDatabase();
       const sessionService = new SessionService(db, this.getUserId(c));
       const session = await sessionService.getSessionById(sessionId);
@@ -100,6 +89,34 @@ export class SessionController extends BaseController {
   }
 
   /**
+   * 获取会话配置
+   * GET /api/v1/sessions/:id/config
+   * @param c Hono Context
+   * @returns 会话配置响应
+   */
+  async getSessionConfig(c: Context): Promise<Response> {
+    try {
+      const sessionId = c.req.param('id');
+
+      if (!sessionId) {
+        return this.error(c, '会话 ID 是必需的', 400);
+      }
+
+      const db = await this.getDatabase();
+      const sessionService = new SessionService(db, this.getUserId(c));
+      const config = await sessionService.getSessionConfig(sessionId);
+
+      if (!config) {
+        return this.error(c, '会话不存在', 404);
+      }
+
+      return this.success(c, config, '获取会话配置成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
    * 创建会话
    * POST /api/v1/sessions/create
    * @param c Hono Context
@@ -107,7 +124,7 @@ export class SessionController extends BaseController {
    */
   async createSession(c: Context): Promise<Response> {
     try {
-      const body = await this.getBody<CreateSessionRequest>(c);
+      const body = await c.req.json<CreateSessionRequest>();
 
       const db = await this.getDatabase();
       const sessionService = new SessionService(db, this.getUserId(c));
@@ -135,8 +152,12 @@ export class SessionController extends BaseController {
    */
   async updateSession(c: Context): Promise<Response> {
     try {
-      const { id: sessionId } = this.getParams<{ id: string }>(c);
-      const body = await this.getBody<Omit<UpdateSessionRequest, 'id'>>(c);
+      const sessionId = c.req.param('id');
+      const body = await c.req.json<Omit<UpdateSessionRequest, 'id'>>();
+
+      if (!sessionId) {
+        return this.error(c, '会话 ID 是必需的', 400);
+      }
 
       const request: UpdateSessionRequest = {
         id: sessionId,
@@ -154,6 +175,36 @@ export class SessionController extends BaseController {
   }
 
   /**
+   * 更新会话配置
+   * PUT /api/v1/sessions/:id/config
+   * @param c Hono Context
+   * @returns 更新结果响应
+   */
+  async updateSessionConfig(c: Context): Promise<Response> {
+    try {
+      const sessionId = c.req.param('id');
+      const body = await c.req.json<Omit<UpdateSessionConfigRequest, 'id'>>();
+
+      if (!sessionId) {
+        return this.error(c, '会话 ID 是必需的', 400);
+      }
+
+      const request: UpdateSessionConfigRequest = {
+        id: sessionId,
+        ...body,
+      };
+
+      const db = await this.getDatabase();
+      const sessionService = new SessionService(db, this.getUserId(c));
+      await sessionService.updateSessionConfig(request);
+
+      return this.success(c, null, '会话配置更新成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
    * 删除会话
    * DELETE /api/v1/sessions/:id
    * @param c Hono Context
@@ -161,25 +212,14 @@ export class SessionController extends BaseController {
    */
   async deleteSession(c: Context): Promise<Response> {
     try {
-      const userId = this.getUserId(c)!;
+      const sessionId = c.req.param('id');
 
-      const { id: sessionId } = this.getParams<{ id: string }>(c);
+      if (!sessionId) {
+        return this.error(c, '会话 ID 是必需的', 400);
+      }
+
       const db = await this.getDatabase();
-      const sessionService = new SessionService(db, userId);
-
-      const session = await sessionService.getSessionById(sessionId);
-
-      if (!session) {
-        return this.error(c, '会话不存在', 404);
-      }
-      if (session.userId !== userId) {
-        const hasPermission = await this.hasPermission(c, 'SESSION_DELETE_ALL');
-
-        if (!hasPermission) {
-          return this.error(c, '您没有权限删除该会话', 403);
-        }
-      }
-
+      const sessionService = new SessionService(db, this.getUserId(c));
       await sessionService.deleteSession(sessionId);
 
       return this.success(c, null, '会话删除成功');
@@ -196,8 +236,12 @@ export class SessionController extends BaseController {
    */
   async cloneSession(c: Context): Promise<Response> {
     try {
-      const { id: sessionId } = this.getParams<{ id: string }>(c);
-      const body = await this.getBody<Omit<CloneSessionRequest, 'id'>>(c);
+      const sessionId = c.req.param('id');
+      const body = await c.req.json<Omit<CloneSessionRequest, 'id'>>();
+
+      if (!sessionId) {
+        return this.error(c, '会话 ID 是必需的', 400);
+      }
 
       const request: CloneSessionRequest = {
         id: sessionId,
@@ -234,7 +278,17 @@ export class SessionController extends BaseController {
    */
   async searchSessions(c: Context): Promise<Response> {
     try {
-      const request = this.getQuery<SearchSessionsRequest>(c);
+      const query = c.req.query();
+
+      if (!query.keywords) {
+        return this.error(c, '搜索关键词是必需的', 400);
+      }
+
+      const request: SearchSessionsRequest = {
+        current: query.current ? Number(query.current) : undefined,
+        keywords: query.keywords,
+        pageSize: query.pageSize ? Number(query.pageSize) : undefined,
+      };
 
       const db = await this.getDatabase();
       const sessionService = new SessionService(db, this.getUserId(c));
@@ -247,82 +301,66 @@ export class SessionController extends BaseController {
   }
 
   /**
-   * 更新会话分组关联
-   * PUT /api/v1/sessions/:id/group
+   * 获取会话排行
+   * GET /api/v1/sessions/rank
    * @param c Hono Context
-   * @returns 更新结果响应
+   * @returns 会话排行响应
    */
-  async updateSessionGroupAssignment(c: Context): Promise<Response> {
+  async rankSessions(c: Context): Promise<Response> {
     try {
-      const { id: sessionId } = this.getParams<{ id: string }>(c);
-      const body = await this.getBody<UpdateSessionGroupAssignmentRequest>(c);
+      const query = c.req.query();
+      const request: RankSessionsRequest = {
+        limit: query.limit ? Number(query.limit) : undefined,
+      };
 
       const db = await this.getDatabase();
       const sessionService = new SessionService(db, this.getUserId(c));
+      const rankData = await sessionService.rankSessions(request);
 
-      // 验证会话是否存在
-      const session = await sessionService.getSessionById(sessionId);
-      if (!session) {
-        return this.error(c, '会话不存在', 404);
-      }
-
-      // 如果提供了 groupId，验证分组是否存在
-      if (body.groupId) {
-        const groupService = new SessionGroupService(db, this.getUserId(c));
-        const group = await groupService.getSessionGroupById(body.groupId);
-        if (!group) {
-          return this.error(c, '会话组不存在', 404);
-        }
-      }
-
-      // 更新会话分组
-      await sessionService.updateSession({
-        groupId: body.groupId || undefined,
-        id: sessionId,
-      });
-
-      return this.success(c, null, '会话分组更新成功');
+      return this.success(c, rankData, '获取会话排行成功');
     } catch (error) {
       return this.handleError(c, error);
     }
   }
 
   /**
-   * 批量查询指定的会话
-   * POST /api/v1/sessions/batch
+   * 统计会话数量
+   * GET /api/v1/sessions/count
    * @param c Hono Context
-   * @returns 批量查询结果响应
+   * @returns 会话数量响应
    */
-  async batchGetSessions(c: Context): Promise<Response> {
+  async countSessions(c: Context): Promise<Response> {
     try {
-      const body = await this.getBody<BatchGetSessionsRequest>(c);
+      const query = c.req.query();
+      const request: CountSessionsRequest = {
+        endDate: query.endDate,
+        range: query.rangeStart && query.rangeEnd ? [query.rangeStart, query.rangeEnd] : undefined,
+        startDate: query.startDate,
+      };
 
       const db = await this.getDatabase();
       const sessionService = new SessionService(db, this.getUserId(c));
-      const result = await sessionService.batchGetSessions(body);
+      const result = await sessionService.countSessions(request);
 
-      return this.success(c, result, '批量查询会话成功');
+      return this.success(c, result, '统计会话数量成功');
     } catch (error) {
       return this.handleError(c, error);
     }
   }
 
   /**
-   * 批量更新会话
-   * PUT /api/v1/sessions/batch-update
+   * 删除所有会话
+   * DELETE /api/v1/sessions/all
    * @param c Hono Context
-   * @returns 批量更新结果响应
+   * @returns 删除结果响应
    */
-  async batchUpdateSessions(c: Context): Promise<Response> {
+  async deleteAllSessions(c: Context): Promise<Response> {
     try {
-      const body = await this.getBody<BatchUpdateSessionsRequest>(c);
-      const currentUserId = this.getUserId(c)!;
-
       const db = await this.getDatabase();
-      const sessionService = new SessionService(db, currentUserId);
-      const result = await sessionService.batchUpdateSessions(body);
+      const sessionService = new SessionService(db, this.getUserId(c));
+      await sessionService.deleteAllSessions();
 
-      return this.success(c, result, '批量更新会话成功');
+      return this.success(c, null, '所有会话删除成功');
     } catch (error) {
       return this.handleError(c, error);
     }
