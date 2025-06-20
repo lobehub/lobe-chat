@@ -1,7 +1,9 @@
+import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 
 import { FileController } from '../controllers/file.controller';
 import { requireAuth } from '../middleware/oidc-auth';
+import { FileIdParamSchema, FileListQuerySchema } from '../types/file.type';
 
 /**
  * 文件管理路由
@@ -9,12 +11,6 @@ import { requireAuth } from '../middleware/oidc-auth';
  */
 const fileController = new FileController();
 const app = new Hono();
-
-/**
- * 健康检查
- * GET /files/health
- */
-app.get('/health', (c) => fileController.health(c));
 
 /**
  * 单文件上传
@@ -43,21 +39,6 @@ app.post('/upload', requireAuth, (c) => fileController.uploadFile(c));
 app.post('/batch-upload', requireAuth, (c) => fileController.batchUploadFiles(c));
 
 /**
- * 创建预签名URL
- * POST /files/presigned-url
- * Content-Type: application/json
- *
- * Request body:
- * {
- *   "filename": "example.pdf",
- *   "fileType": "application/pdf",
- *   "size": 1024000,
- *   "pathname": "custom/path" // optional
- * }
- */
-app.post('/presigned-url', requireAuth, (c) => fileController.createPreSignedUrl(c));
-
-/**
  * 获取文件列表
  * GET /files
  *
@@ -68,7 +49,9 @@ app.post('/presigned-url', requireAuth, (c) => fileController.createPreSignedUrl
  * - knowledgeBaseId: string (optional) - 知识库ID过滤
  * - search: string (optional) - 搜索关键词
  */
-app.get('/', requireAuth, (c) => fileController.getFiles(c));
+app.get('/', requireAuth, zValidator('query', FileListQuerySchema), (c) =>
+  fileController.getFiles(c),
+);
 
 /**
  * 获取文件详情
@@ -77,7 +60,9 @@ app.get('/', requireAuth, (c) => fileController.getFiles(c));
  * Path parameters:
  * - id: string (required) - 文件ID
  */
-app.get('/:id', requireAuth, (c) => fileController.getFile(c));
+app.get('/:id', requireAuth, zValidator('param', FileIdParamSchema), (c) =>
+  fileController.getFile(c),
+);
 
 /**
  * 删除文件
@@ -86,6 +71,8 @@ app.get('/:id', requireAuth, (c) => fileController.getFile(c));
  * Path parameters:
  * - id: string (required) - 文件ID
  */
-app.delete('/:id', requireAuth, (c) => fileController.deleteFile(c));
+app.delete('/:id', requireAuth, zValidator('param', FileIdParamSchema), (c) =>
+  fileController.deleteFile(c),
+);
 
 export default app;

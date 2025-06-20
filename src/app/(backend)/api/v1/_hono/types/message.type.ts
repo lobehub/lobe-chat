@@ -61,3 +61,20 @@ export interface MessageResponse {
 export interface MessageCreateResponse {
   id: string;
 }
+
+// Additional schemas for message routes
+export const CountByTopicsRequestSchema = z.object({
+  topicIds: z.array(z.string()).min(1, '话题ID数组不能为空'),
+});
+
+export const CountByUserRequestSchema = z.object({
+  userId: z.string().min(1, '用户ID不能为空'),
+});
+
+export interface CountByTopicsRequest {
+  topicIds: string[];
+}
+
+export interface CountByUserRequest {
+  userId: string;
+}
