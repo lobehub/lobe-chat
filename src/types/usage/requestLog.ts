@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { ChatModelPricing } from "../aiModel";
 import { MessageMetadata } from "../message";
+import { SpendLogItem } from "@/database/schemas";
 
 export interface RequestLog {
     /**
@@ -29,3 +30,11 @@ export const RequestLogSchema = z.object({
     callType: z.enum(["chat", "history_summary"]),
     spend: z.number(),
 })
+
+export type UsageLog = {
+    requestLogs: SpendLogItem[];
+    totalSpend: number;
+    totalTokens: number;
+    totalRequests: number;
+    date: number;
+}
