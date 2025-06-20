@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import { FileMetadata } from '@/types/files';
 
 /**
@@ -168,3 +170,23 @@ export interface FileUploadProgress {
   /** 总字节数 */
   total: number;
 }
+
+// Zod Schemas for validation
+export const PreSignedUrlRequestSchema = z.object({
+  fileType: z.string().min(1, '文件类型不能为空'),
+  filename: z.string().min(1, '文件名不能为空'),
+  pathname: z.string().optional(),
+  size: z.number().positive('文件大小必须大于0'),
+});
+
+export const FileListQuerySchema = z.object({
+  fileType: z.string().optional(),
+  knowledgeBaseId: z.string().optional(),
+  page: z.number().min(1).optional(),
+  pageSize: z.number().min(1).max(100).optional(),
+  search: z.string().optional(),
+});
+
+export const FileIdParamSchema = z.object({
+  id: z.string().min(1, '文件 ID 不能为空'),
+});
