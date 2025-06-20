@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "De meest recente gebruikersboodschap wordt ingevuld in dit sjabloon",
-      "placeholder": "Voorbewerkingssjabloon {{input_template}} wordt vervangen door realtime invoer",
+      "placeholder": "Voorbewerkingssjabloon {{text}} wordt vervangen door realtime invoer",
       "title": "Voorbewerking van gebruikersinvoer"
     },
     "submit": "Chatvoorkeuren bijwerken",
