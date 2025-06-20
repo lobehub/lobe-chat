@@ -3,8 +3,8 @@ import debug from 'debug';
 import urlJoin from 'url-join';
 
 import { ChatStreamCallbacks, ChatStreamPayload } from '@/libs/model-runtime';
-import { appEnv } from '@/config/app';
 import { serverDBEnv } from '@/config/db';
+import { appEnv } from '@/envs/app';
 
 const log = debug('lobe-usage:tracker');
 
