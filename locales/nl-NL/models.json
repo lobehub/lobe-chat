@@ -1187,8 +1187,8 @@
   "google/gemini-2.5-flash-preview:thinking": {
     "description": "Gemini 2.5 Flash is Google's meest geavanceerde hoofmodel, ontworpen voor geavanceerde redenering, codering, wiskunde en wetenschappelijke taken. Het bevat ingebouwde 'denkkracht', waardoor het in staat is om antwoorden te geven met een hogere nauwkeurigheid en gedetailleerde contextverwerking.\n\nLet op: dit model heeft twee varianten: denken en niet-denken. De outputprijs verschilt aanzienlijk afhankelijk van of de denkkracht is geactiveerd. Als u de standaardvariant kiest (zonder de ':thinking' suffix), zal het model expliciet vermijden om denk-tokens te genereren.\n\nOm gebruik te maken van de denkkracht en denk-tokens te ontvangen, moet u de ':thinking' variant kiezen, wat resulteert in hogere prijzen voor denk-output.\n\nBovendien kan Gemini 2.5 Flash worden geconfigureerd via de parameter 'max tokens for reasoning', zoals beschreven in de documentatie (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
-  "google/gemini-2.5-pro-preview-03-25": {
-    "description": "Gemini 2.5 Pro is Google's meest geavanceerde AI-model, ontworpen voor geavanceerde redenering, codering, wiskunde en wetenschappelijke taken. Het beschikt over 'denkkracht', waardoor het in staat is om antwoorden te redeneren met een hogere nauwkeurigheid en gedetailleerde contextverwerking. Gemini 2.5 Pro heeft top prestaties behaald in meerdere benchmarktests, waaronder de eerste plaats op de LMArena-ranglijst, wat de uitstekende afstemming op menselijke voorkeuren en het vermogen om complexe problemen op te lossen weerspiegelt."
+  "google/gemini-2.5-pro-preview": {
+    "description": "Gemini 2.5 Pro Preview is het meest geavanceerde denkkader van Google, dat in staat is om complexe problemen op het gebied van code, wiskunde en STEM te redeneren, en grote datasets, codebases en documenten te analyseren met behulp van lange context."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash biedt geoptimaliseerde multimodale verwerkingscapaciteiten, geschikt voor verschillende complexe taakscenario's."
