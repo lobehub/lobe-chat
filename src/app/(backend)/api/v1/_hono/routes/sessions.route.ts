@@ -1,6 +1,5 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { z } from 'zod';
 
 import { getScopePermissions } from '@/utils/rbac';
 
@@ -8,56 +7,20 @@ import { SessionController } from '../controllers/session.controller';
 import { SessionGroupController } from '../controllers/sessionGroup.controller';
 import { requireAuth } from '../middleware/oidc-auth';
 import { requireAnyPermission } from '../middleware/permission-check';
-
-// 参数校验 Schema
-const createSessionSchema = z.object({
-  avatar: z.string().optional(),
-  backgroundColor: z.string().optional(),
-  config: z.object({}).passthrough().optional(),
-  description: z.string().optional(),
-  groupId: z.string().optional(),
-  meta: z.object({}).passthrough().optional(),
-  pinned: z.boolean().optional(),
-  title: z.string().optional(),
-  type: z.enum(['agent', 'group']).optional(),
-});
-
-const updateSessionSchema = z.object({
-  avatar: z.string().optional(),
-  backgroundColor: z.string().optional(),
-  description: z.string().optional(),
-  groupId: z.string().optional(),
-  pinned: z.boolean().optional(),
-  title: z.string().optional(),
-});
-
-const updateSessionConfigSchema = z.object({
-  config: z.object({}).passthrough().optional(),
-  meta: z.object({}).passthrough().optional(),
-});
-
-const cloneSessionSchema = z.object({
-  newTitle: z.string().min(1, '新标题不能为空'),
-});
-
-const createSessionGroupSchema = z.object({
-  name: z.string().min(1, '会话组名称不能为空'),
-  sort: z.number().optional(),
-});
-
-const updateSessionGroupSchema = z.object({
-  name: z.string().min(1, '会话组名称不能为空').optional(),
-  sort: z.number().optional(),
-});
-
-const updateSessionGroupOrderSchema = z.object({
-  sortMap: z.array(
-    z.object({
-      id: z.string(),
-      sort: z.number(),
-    }),
-  ),
-});
+import {
+  CloneSessionRequestSchema,
+  CountSessionsRequestSchema,
+  CreateSessionGroupRequestSchema,
+  CreateSessionRequestSchema,
+  GetSessionsRequestSchema,
+  SearchSessionsRequestSchema,
+  SessionGroupIdParamSchema,
+  SessionIdParamSchema,
+  UpdateSessionConfigRequestSchema,
+  UpdateSessionGroupOrderRequestSchema,
+  UpdateSessionGroupRequestSchema,
+  UpdateSessionRequestSchema,
+} from '../types/session.type';
 
 // Sessions 相关路由
 const SessionRoutes = new Hono();
@@ -76,6 +39,7 @@ SessionRoutes.get(
     getScopePermissions('SESSION_READ', ['ALL', 'WORKSPACE', 'OWNER']),
     '您没有权限查看会话列表',
   ),
+  zValidator('query', GetSessionsRequestSchema),
   async (c) => {
     const controller = new SessionController();
     return await controller.getSessions(c);
@@ -112,27 +76,10 @@ SessionRoutes.get(
     getScopePermissions('SESSION_READ', ['ALL', 'WORKSPACE', 'OWNER']),
     '您没有权限搜索会话',
   ),
+  zValidator('query', SearchSessionsRequestSchema),
   async (c) => {
     const controller = new SessionController();
     return await controller.searchSessions(c);
-  },
-);
-
-/**
- * 获取会话排行
- * GET /api/v1/sessions/rank
- * 需要会话读取权限
- */
-SessionRoutes.get(
-  '/rank',
-  requireAuth,
-  requireAnyPermission(
-    getScopePermissions('SESSION_READ', ['ALL', 'WORKSPACE', 'OWNER']),
-    '您没有权限查看会话排行',
-  ),
-  async (c) => {
-    const controller = new SessionController();
-    return await controller.rankSessions(c);
   },
 );
 
@@ -148,6 +95,7 @@ SessionRoutes.get(
     getScopePermissions('SESSION_READ', ['ALL', 'WORKSPACE', 'OWNER']),
     '您没有权限查看会话统计',
   ),
+  zValidator('query', CountSessionsRequestSchema),
   async (c) => {
     const controller = new SessionController();
     return await controller.countSessions(c);
@@ -166,7 +114,7 @@ SessionRoutes.post(
     getScopePermissions('SESSION_CREATE', ['ALL', 'WORKSPACE']),
     '您没有权限创建会话',
   ),
-  zValidator('json', createSessionSchema),
+  zValidator('json', CreateSessionRequestSchema),
   async (c) => {
     const controller = new SessionController();
     return await controller.createSession(c);
@@ -185,6 +133,7 @@ SessionRoutes.get(
     getScopePermissions('SESSION_READ', ['ALL', 'WORKSPACE', 'OWNER']),
     '您没有权限查看会话详情',
   ),
+  zValidator('param', SessionIdParamSchema),
   async (c) => {
     const controller = new SessionController();
     return await controller.getSessionById(c);
@@ -203,6 +152,7 @@ SessionRoutes.get(
     getScopePermissions('SESSION_READ', ['ALL', 'WORKSPACE', 'OWNER']),
     '您没有权限查看会话配置',
   ),
+  zValidator('param', SessionIdParamSchema),
   async (c) => {
     const controller = new SessionController();
     return await controller.getSessionConfig(c);
@@ -221,7 +171,8 @@ SessionRoutes.put(
     getScopePermissions('SESSION_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),
     '您没有权限更新会话',
   ),
-  zValidator('json', updateSessionSchema),
+  zValidator('param', SessionIdParamSchema),
+  zValidator('json', UpdateSessionRequestSchema),
   async (c) => {
     const controller = new SessionController();
     return await controller.updateSession(c);
@@ -240,7 +191,8 @@ SessionRoutes.put(
     getScopePermissions('SESSION_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),
     '您没有权限更新会话配置',
   ),
-  zValidator('json', updateSessionConfigSchema),
+  zValidator('param', SessionIdParamSchema),
+  zValidator('json', UpdateSessionConfigRequestSchema),
   async (c) => {
     const controller = new SessionController();
     return await controller.updateSessionConfig(c);
@@ -259,6 +211,7 @@ SessionRoutes.delete(
     getScopePermissions('SESSION_DELETE', ['ALL', 'WORKSPACE', 'OWNER']),
     '您没有权限删除会话',
   ),
+  zValidator('param', SessionIdParamSchema),
   async (c) => {
     const controller = new SessionController();
     return await controller.deleteSession(c);
@@ -277,7 +230,8 @@ SessionRoutes.post(
     getScopePermissions('SESSION_CREATE', ['ALL', 'WORKSPACE']),
     '您没有权限克隆会话',
   ),
-  zValidator('json', cloneSessionSchema),
+  zValidator('param', SessionIdParamSchema),
+  zValidator('json', CloneSessionRequestSchema),
   async (c) => {
     const controller = new SessionController();
     return await controller.cloneSession(c);
@@ -334,7 +288,7 @@ SessionRoutes.post(
     getScopePermissions('SESSION_GROUP_CREATE', ['ALL', 'WORKSPACE']),
     '您没有权限创建会话组',
   ),
-  zValidator('json', createSessionGroupSchema),
+  zValidator('json', CreateSessionGroupRequestSchema),
   async (c) => {
     const controller = new SessionGroupController();
     return await controller.createSessionGroup(c);
@@ -353,7 +307,7 @@ SessionRoutes.put(
     getScopePermissions('SESSION_GROUP_UPDATE', ['ALL', 'WORKSPACE']),
     '您没有权限更新会话组排序',
   ),
-  zValidator('json', updateSessionGroupOrderSchema),
+  zValidator('json', UpdateSessionGroupOrderRequestSchema),
   async (c) => {
     const controller = new SessionGroupController();
     return await controller.updateSessionGroupOrder(c);
@@ -390,6 +344,7 @@ SessionRoutes.get(
     getScopePermissions('SESSION_GROUP_READ', ['ALL', 'WORKSPACE', 'OWNER']),
     '您没有权限查看会话组详情',
   ),
+  zValidator('param', SessionGroupIdParamSchema),
   async (c) => {
     const controller = new SessionGroupController();
     return await controller.getSessionGroupById(c);
@@ -408,7 +363,8 @@ SessionRoutes.put(
     getScopePermissions('SESSION_GROUP_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),
     '您没有权限更新会话组',
   ),
-  zValidator('json', updateSessionGroupSchema),
+  zValidator('param', SessionGroupIdParamSchema),
+  zValidator('json', UpdateSessionGroupRequestSchema),
   async (c) => {
     const controller = new SessionGroupController();
     return await controller.updateSessionGroup(c);
@@ -427,6 +383,7 @@ SessionRoutes.delete(
     getScopePermissions('SESSION_GROUP_DELETE', ['ALL', 'WORKSPACE', 'OWNER']),
     '您没有权限删除会话组',
   ),
+  zValidator('param', SessionGroupIdParamSchema),
   async (c) => {
     const controller = new SessionGroupController();
     return await controller.deleteSessionGroup(c);

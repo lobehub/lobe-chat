@@ -1,6 +1,5 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { z } from 'zod';
 
 import { RBAC_PERMISSIONS } from '@/const/rbac';
 import { getScopePermissions } from '@/utils/rbac';
@@ -8,46 +7,12 @@ import { getScopePermissions } from '@/utils/rbac';
 import { AgentController } from '../controllers/agent.controller';
 import { requireAuth } from '../middleware/oidc-auth';
 import { requireAnyPermission } from '../middleware/permission-check';
-
-// 参数校验 Schema
-const createAgentSchema = z.object({
-  avatar: z.string().optional(),
-  chatConfig: z
-    .object({
-      autoCreateTopicThreshold: z.number(),
-      disableContextCaching: z.boolean().optional(),
-      displayMode: z.enum(['chat', 'docs']).optional(),
-      enableAutoCreateTopic: z.boolean().optional(),
-      enableCompressHistory: z.boolean().optional(),
-      enableHistoryCount: z.boolean().optional(),
-      enableMaxTokens: z.boolean().optional(),
-      enableReasoning: z.boolean().optional(),
-      enableReasoningEffort: z.boolean().optional(),
-      historyCount: z.number().optional(),
-      reasoningBudgetToken: z.number().optional(),
-      reasoningEffort: z.enum(['low', 'medium', 'high']).optional(),
-      searchFCModel: z.string().optional(),
-      searchMode: z.enum(['disabled', 'enabled']).optional(),
-      useModelBuiltinSearch: z.boolean().optional(),
-    })
-    .optional(),
-  description: z.string().optional(),
-  model: z.string().optional(),
-  params: z.record(z.unknown()).optional(),
-  provider: z.string().optional(),
-  slug: z.string().min(1, 'slug 不能为空'),
-  systemRole: z.string().optional(),
-  title: z.string().min(1, '标题不能为空'),
-});
-
-const updateAgentSchema = createAgentSchema.extend({
-  id: z.string().min(1, 'Agent ID 不能为空'),
-});
-
-const deleteAgentSchema = z.object({
-  agentId: z.string().min(1, 'Agent ID 不能为空'),
-  migrateTo: z.string().optional(),
-});
+import {
+  AgentDeleteRequestSchema,
+  AgentIdParamSchema,
+  CreateAgentRequestSchema,
+  UpdateAgentRequestSchema,
+} from '../types/agent.type';
 
 // Agent 相关路由
 const AgentRoutes = new Hono();
@@ -79,7 +44,7 @@ AgentRoutes.post(
   '/create',
   requireAuth,
   requireAnyPermission([RBAC_PERMISSIONS.AGENT_CREATE_ALL], '您没有权限创建 Agent'),
-  zValidator('json', createAgentSchema),
+  zValidator('json', CreateAgentRequestSchema),
   async (c) => {
     const controller = new AgentController();
     return await controller.createAgent(c);
@@ -95,7 +60,7 @@ AgentRoutes.put(
   '/update',
   requireAuth,
   requireAnyPermission([RBAC_PERMISSIONS.AGENT_UPDATE_ALL], '您没有权限更新 Agent'),
-  zValidator('json', updateAgentSchema),
+  zValidator('json', UpdateAgentRequestSchema),
   async (c) => {
     const controller = new AgentController();
     return await controller.updateAgent(c);
@@ -111,7 +76,7 @@ AgentRoutes.delete(
   '/delete',
   requireAuth,
   requireAnyPermission([RBAC_PERMISSIONS.AGENT_DELETE_ALL], '您没有权限删除 Agent'),
-  zValidator('json', deleteAgentSchema),
+  zValidator('json', AgentDeleteRequestSchema),
   async (c) => {
     const controller = new AgentController();
     return await controller.deleteAgent(c);
@@ -130,6 +95,7 @@ AgentRoutes.get(
     getScopePermissions('AGENT_READ', ['ALL', 'WORKSPACE', 'OWNER']),
     '您没有权限查看 Agent 详情',
   ),
+  zValidator('param', AgentIdParamSchema),
   async (c) => {
     const controller = new AgentController();
     return await controller.getAgentById(c);
