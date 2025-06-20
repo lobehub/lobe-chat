@@ -208,10 +208,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       this.id = options.id || provider;
     }
 
-    async chat(
-      { responseMode, ...payload }: ChatStreamPayload,
-      options?: ChatMethodOptions,
-    ) {
+    async chat({ responseMode, ...payload }: ChatStreamPayload, options?: ChatMethodOptions) {
       try {
         const inputStartAt = Date.now();
         const postPayload = chatCompletion?.handlePayload
@@ -478,7 +475,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     ): Promise<Response> {
       const inputStartAt = Date.now();
 
-      const { messages, reasoning_effort, tools, ...res } = responses?.handlePayload
+      const { messages, reasoning_effort, tools, reasoning, ...res } = responses?.handlePayload
         ? (responses?.handlePayload(payload, this._options) as ChatStreamPayload)
         : payload;
 
@@ -491,7 +488,14 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
       const postPayload = {
         ...res,
-        ...(reasoning_effort ? { reasoning: { effort: reasoning_effort } } : {}),
+        ...(reasoning || reasoning_effort
+          ? {
+              reasoning: {
+                ...reasoning,
+                ...(reasoning_effort && { effort: reasoning_effort }),
+              },
+            }
+          : {}),
         input,
         store: false,
         tools: tools?.map((tool) => this.convertChatCompletionToolToResponseTool(tool)),

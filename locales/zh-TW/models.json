@@ -176,8 +176,14 @@
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3 是 Llama 系列最先進的多語言開源大型語言模型，以極低成本體驗媲美 405B 模型的性能。基於 Transformer 結構，並透過監督微調（SFT）和人類反饋強化學習（RLHF）提升有用性和安全性。其指令調優版本專為多語言對話優化，在多項行業基準上表現優於眾多開源和封閉聊天模型。知識截止日期為 2023 年 12 月"
   },
+  "MiniMax-M1": {
+    "description": "全新自研推理模型。全球領先：80K思維鏈 x 1M輸入，效果比肩海外頂尖模型。"
+  },
   "MiniMax-Text-01": {
     "description": "在 MiniMax-01系列模型中，我們做了大膽創新：首次大規模實現線性注意力機制，傳統 Transformer架構不再是唯一的選擇。這個模型的參數量高達4560億，其中單次激活459億。模型綜合性能比肩海外頂尖模型，同時能夠高效處理全球最長400萬token的上下文，是GPT-4o的32倍，Claude-3.5-Sonnet的20倍。"
+  },
+  "MiniMaxAI/MiniMax-M1-80k": {
+    "description": "MiniMax-M1 是開源權重的大規模混合注意力推理模型，擁有 4560 億參數，每個 Token 可激活約 459 億參數。模型原生支援 100 萬 Token 的超長上下文，並透過閃電注意力機制，在 10 萬 Token 的生成任務中相比 DeepSeek R1 節省 75% 的浮點運算量。同時，MiniMax-M1 採用 MoE（混合專家）架構，結合 CISPO 演算法與混合注意力設計的高效強化學習訓練，在長輸入推理與真實軟體工程場景中實現了業界領先的性能。"
   },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) 是高精度的指令模型，適用於複雜計算。"
@@ -659,6 +665,9 @@
   "codestral-latest": {
     "description": "Codestral 是專注於代碼生成的尖端生成模型，優化了中間填充和代碼補全任務。"
   },
+  "codex-mini-latest": {
+    "description": "codex-mini-latest 是 o4-mini 的微調版本，專門用於 Codex CLI。對於直接透過 API 使用，我們推薦從 gpt-4.1 開始。"
+  },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B 是一款為指令遵循、對話和編程設計的模型。"
   },
@@ -715,6 +724,9 @@
   },
   "compound-beta-mini": {
     "description": "Compound-beta-mini 是一個複合 AI 系統，由 GroqCloud 中已經支持的公開可用模型提供支持，可以智能地、有選擇地使用工具來回答用戶查詢。"
+  },
+  "computer-use-preview": {
+    "description": "computer-use-preview 模型是專為「電腦使用工具」設計的專用模型，經過訓練以理解並執行電腦相關任務。"
   },
   "dall-e-2": {
     "description": "第二代 DALL·E 模型，支持更真實、準確的圖像生成，解析度是第一代的4倍"
@@ -905,6 +917,15 @@
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite 全新升級的多模態大模型，支持任意解析度和極端長寬比圖像識別，增強視覺推理、文檔識別、細節信息理解和指令遵循能力。支持 128k 上下文窗口，輸出長度支持最大 16k tokens。"
   },
+  "doubao-seed-1.6": {
+    "description": "Doubao-Seed-1.6 全新多模態深度思考模型，同時支援 auto/thinking/non-thinking 三種思考模式。non-thinking 模式下，模型效果相較 Doubao-1.5-pro/250115 大幅提升。支援 256k 上下文視窗，輸出長度支援最大 16k tokens。"
+  },
+  "doubao-seed-1.6-flash": {
+    "description": "Doubao-Seed-1.6-flash 推理速度極致的多模態深度思考模型，TPOT 僅需 10ms；同時支援文本和視覺理解，文本理解能力超越上一代 lite，視覺理解媲美友商 pro 系列模型。支援 256k 上下文視窗，輸出長度支援最大 16k tokens。"
+  },
+  "doubao-seed-1.6-thinking": {
+    "description": "Doubao-Seed-1.6-thinking 模型思考能力大幅強化，相較 Doubao-1.5-thinking-pro，在 Coding、Math、邏輯推理等基礎能力上進一步提升，支援視覺理解。支援 256k 上下文視窗，輸出長度支援最大 16k tokens。"
+  },
   "emohaa": {
     "description": "Emohaa是一個心理模型，具備專業諮詢能力，幫助用戶理解情感問題。"
   },
@@ -1043,6 +1064,12 @@
   "gemini-2.0-flash-preview-image-generation": {
     "description": "Gemini 2.0 Flash 預覽模型，支持圖像生成"
   },
+  "gemini-2.5-flash": {
+    "description": "Gemini 2.5 Flash 是 Google 性價比最高的模型，提供全面的功能。"
+  },
+  "gemini-2.5-flash-lite-preview-06-17": {
+    "description": "Gemini 2.5 Flash-Lite Preview 是 Google 最小、性價比最高的模型，專為大規模使用而設計。"
+  },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview 是 Google 性價比最高的模型，提供全面的功能。"
   },
@@ -1051,6 +1078,9 @@
   },
   "gemini-2.5-flash-preview-05-20": {
     "description": "Gemini 2.5 Flash Preview 是 Google 性價比最高的模型，提供全面的功能。"
+  },
+  "gemini-2.5-pro": {
+    "description": "Gemini 2.5 Pro 是 Google 最先進的思維模型，能夠對程式碼、數學和 STEM 領域的複雜問題進行推理，以及使用長上下文分析大型資料集、程式碼庫和文件。"
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro 實驗版是 Google 最先進的思維模型，能夠對代碼、數學和 STEM 領域的複雜問題進行推理，還能利用長上下文來分析大型數據集、代碼庫和文檔。"
@@ -1157,8 +1187,8 @@
   "google/gemini-2.5-flash-preview:thinking": {
     "description": "Gemini 2.5 Flash 是 Google 最先進的主力模型，專為高級推理、編碼、數學和科學任務而設計。它包含內建的「思考」能力，使其能夠提供具有更高準確性和細緻上下文處理的回應。\n\n注意：此模型有兩個變體：思考和非思考。輸出定價根據思考能力是否啟用而有顯著差異。如果您選擇標準變體（不帶「:thinking」後綴），模型將明確避免生成思考令牌。\n\n要利用思考能力並接收思考令牌，您必須選擇「:thinking」變體，這將產生更高的思考輸出定價。\n\n此外，Gemini 2.5 Flash 可通過「推理最大令牌數」參數進行配置，如文檔中所述 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)。"
   },
-  "google/gemini-2.5-pro-preview-03-25": {
-    "description": "Gemini 2.5 Pro 是 Google 最先進的 AI 模型，專為高級推理、編碼、數學和科學任務而設計。它採用「思考」能力，使其能夠以更高的準確性和細緻的上下文處理來推理回應。Gemini 2.5 Pro 在多個基準測試中取得了頂級性能，包括在 LMArena 排行榜上排名第一，反映了卓越的人類偏好對齊和複雜問題解決能力。"
+  "google/gemini-2.5-pro-preview": {
+    "description": "Gemini 2.5 Pro Preview 是 Google 最先進的思維模型，能夠對程式碼、數學和 STEM 領域的複雜問題進行推理，以及使用長上下文分析大型資料集、程式碼庫和文件。"
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash 提供了優化後的多模態處理能力，適用於多種複雜任務場景。"
@@ -1267,6 +1297,9 @@
   },
   "gpt-4o-mini": {
     "description": "GPT-4o mini是OpenAI在GPT-4 Omni之後推出的最新模型，支持圖文輸入並輸出文本。作為他們最先進的小型模型，它比其他近期的前沿模型便宜很多，並且比GPT-3.5 Turbo便宜超過60%。它保持了最先進的智能，同時具有顯著的性價比。GPT-4o mini在MMLU測試中獲得了82%的得分，目前在聊天偏好上排名高於GPT-4。"
+  },
+  "gpt-4o-mini-audio-preview": {
+    "description": "GPT-4o mini Audio 模型，支援音訊輸入輸出"
   },
   "gpt-4o-mini-realtime-preview": {
     "description": "GPT-4o-mini 實時版本，支持音頻和文本實時輸入輸出"
@@ -1420,6 +1453,9 @@
   },
   "kimi-latest": {
     "description": "Kimi 智能助手產品使用最新的 Kimi 大模型，可能包含尚未穩定的特性。支持圖片理解，同時會自動根據請求的上下文長度選擇 8k/32k/128k 模型作為計費模型"
+  },
+  "kimi-thinking-preview": {
+    "description": "kimi-thinking-preview 模型是月之暗面提供的具有多模態推理能力和通用推理能力的多模態思考模型，它擅長深度推理，幫助解決更多更難的事情"
   },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM 是一個實驗性的、特定於任務的語言模型，經過訓練以符合學習科學原則，可在教學和學習場景中遵循系統指令，充當專家導師等。"
@@ -1823,11 +1859,17 @@
   "o1-preview": {
     "description": "o1是OpenAI新的推理模型，適用於需要廣泛通用知識的複雜任務。該模型具有128K上下文和2023年10月的知識截止日期。"
   },
+  "o1-pro": {
+    "description": "o1 系列模型經過強化學習訓練，能夠在回答前進行思考，並執行複雜的推理任務。o1-pro 模型使用了更多計算資源，以進行更深入的思考，從而持續提供更優質的回答。"
+  },
   "o3": {
     "description": "o3 是一款全能強大的模型，在多個領域表現出色。它為數學、科學、程式設計和視覺推理任務樹立了新標杆。它也擅長技術寫作和指令遵循。用戶可利用它分析文本、程式碼和圖像，解決多步驟的複雜問題。"
   },
   "o3-mini": {
     "description": "o3-mini 是我們最新的小型推理模型，在與 o1-mini 相同的成本和延遲目標下提供高智能。"
+  },
+  "o3-pro": {
+    "description": "o3-pro 模型使用更多的計算來更深入地思考並始終提供更好的答案，僅支援 Responses API 下使用。"
   },
   "o4-mini": {
     "description": "o4-mini 是我們最新的小型 o 系列模型。它專為快速有效的推理而優化，在編碼和視覺任務中表現出極高的效率和性能。"
