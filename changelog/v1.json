@@ -1,6 +1,21 @@
 [
   {
     "children": {
+      "features": ["Add v0 (Vercel) provider support."],
+      "fixes": ["Fix inputTemplate behavior."]
+    },
+    "date": "2025-06-20",
+    "version": "1.96.0"
+  },
+  {
+    "children": {
+      "features": ["Add Brave & Google PSE & Kagi as build-in Search Provider."]
+    },
+    "date": "2025-06-20",
+    "version": "1.95.0"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-06-20",

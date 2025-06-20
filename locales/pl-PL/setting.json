@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "Ostatnia wiadomość użytkownika zostanie wypełniona w tym szablonie",
-      "placeholder": "Szablon wejściowy {{input_template}} zostanie zastąpiony rzeczywistą wiadomością",
+      "placeholder": "Szablon wejściowy {{text}} zostanie zastąpiony rzeczywistą wiadomością",
       "title": "Szablon wejściowy"
     },
     "submit": "Zaktualizuj preferencje czatu",
