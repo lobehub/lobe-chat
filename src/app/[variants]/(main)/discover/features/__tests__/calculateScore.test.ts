@@ -43,7 +43,7 @@ describe('calculateScore', () => {
       const result = calculateScore(scoreItems);
 
       expect(result.grade).toBe('a');
-      expect(result.percentage).toBeGreaterThanOrEqual(85);
+      expect(result.percentage).toBeGreaterThanOrEqual(80);
     });
   });
 
@@ -65,7 +65,7 @@ describe('calculateScore', () => {
 
       expect(result.grade).toBe('b');
       expect(result.percentage).toBeGreaterThanOrEqual(60);
-      expect(result.percentage).toBeLessThan(85);
+      expect(result.percentage).toBeLessThan(80);
     });
   });
 

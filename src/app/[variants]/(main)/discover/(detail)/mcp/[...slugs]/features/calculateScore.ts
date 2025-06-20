@@ -286,10 +286,10 @@ export function calculateScore(
     grade = 'f';
   } else {
     // 必需项全部满足的情况下，根据总分百分比评级
-    if (percentage >= 85) {
-      grade = 'a'; // 85% 以上为 A
+    if (percentage >= 80) {
+      grade = 'a'; // 80% 以上为 A
     } else if (percentage >= 60) {
-      grade = 'b'; // 60-84% 为 B
+      grade = 'b'; // 60-79% 为 B
     } else {
       grade = 'f'; // 60% 以下为 F
     }
