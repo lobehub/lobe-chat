@@ -48,15 +48,15 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['qvq', 'qwq', 'qwen3'],
     visionKeywords: ['qvq', 'vl'],
   },
-  volcengine: {
-    functionCallKeywords: ['doubao-1.5'],
-    reasoningKeywords: ['thinking', '-r1'],
-    visionKeywords: ['vision', '-m'],
-  },
   v0: {
     functionCallKeywords: ['v0'],
     reasoningKeywords: ['v0-1.5'],
     visionKeywords: ['v0'],
+  },
+  volcengine: {
+    functionCallKeywords: ['doubao-1.5'],
+    reasoningKeywords: ['thinking', '-r1'],
+    visionKeywords: ['vision', '-m'],
   },
   zeroone: {
     functionCallKeywords: ['fc'],
