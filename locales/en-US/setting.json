@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "The user's latest message will be filled into this template",
-      "placeholder": "Preprocessing template {{input_template}} will be replaced with real-time input information",
+      "placeholder": "Preprocessing template {{text}} will be replaced with real-time input information",
       "title": "User Input Preprocessing"
     },
     "submit": "Update Chat Preferences",
