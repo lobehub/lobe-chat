@@ -40,7 +40,7 @@ export class SessionGroupController extends BaseController {
    */
   async getSessionGroupById(c: Context): Promise<Response> {
     try {
-      const { id: groupId } = this.getParams<{ id: string }>(c);
+      const groupId = c.req.param('id');
 
       if (!groupId) {
         return this.error(c, '会话组 ID 是必需的', 400);
@@ -68,7 +68,7 @@ export class SessionGroupController extends BaseController {
    */
   async createSessionGroup(c: Context): Promise<Response> {
     try {
-      const body = await this.getBody<CreateSessionGroupRequest>(c);
+      const body = await c.req.json<CreateSessionGroupRequest>();
 
       const db = await this.getDatabase();
       const sessionGroupService = new SessionGroupService(db, this.getUserId(c));
@@ -96,8 +96,8 @@ export class SessionGroupController extends BaseController {
    */
   async updateSessionGroup(c: Context): Promise<Response> {
     try {
-      const { id: groupId } = this.getParams<{ id: string }>(c);
-      const body = await this.getBody<Omit<UpdateSessionGroupRequest, 'id'>>(c);
+      const groupId = c.req.param('id');
+      const body = await c.req.json<Omit<UpdateSessionGroupRequest, 'id'>>();
 
       if (!groupId) {
         return this.error(c, '会话组 ID 是必需的', 400);
@@ -120,13 +120,14 @@ export class SessionGroupController extends BaseController {
 
   /**
    * 删除会话组
-   * DELETE /api/v1/session-groups/:id
+   * DELETE /api/v1/sessions/groups/:id
    * @param c Hono Context
    * @returns 删除结果响应
    */
   async deleteSessionGroup(c: Context): Promise<Response> {
     try {
-      const { id: groupId } = this.getParams<{ id: string }>(c);
+      const groupId = c.req.param('id');
+      const query = c.req.query();
 
       if (!groupId) {
         return this.error(c, '会话组 ID 是必需的', 400);
@@ -134,6 +135,7 @@ export class SessionGroupController extends BaseController {
 
       const request: DeleteSessionGroupRequest = {
         id: groupId,
+        removeChildren: query.removeChildren === 'true',
       };
 
       const db = await this.getDatabase();
@@ -154,7 +156,7 @@ export class SessionGroupController extends BaseController {
    */
   async updateSessionGroupOrder(c: Context): Promise<Response> {
     try {
-      const body = await this.getBody<UpdateSessionGroupOrderRequest>(c);
+      const body = await c.req.json<UpdateSessionGroupOrderRequest>();
 
       if (!body.sortMap || !Array.isArray(body.sortMap)) {
         return this.error(c, '排序映射数据是必需的', 400);

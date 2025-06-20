@@ -124,7 +124,7 @@ export class SessionGroupService extends BaseService {
    * @returns 删除结果
    */
   async deleteSessionGroup(request: DeleteSessionGroupRequest): ServiceResult<void> {
-    this.log('info', '删除会话组', { id: request.id });
+    this.log('info', '删除会话组', { id: request.id, removeChildren: request.removeChildren });
 
     try {
       // 检查会话组是否存在
@@ -133,7 +133,9 @@ export class SessionGroupService extends BaseService {
         throw this.createBusinessError(`会话组 ID "${request.id}" 不存在`);
       }
 
-      // 删除会话组，组内会话的 groupId 会通过数据库外键约束自动设为 null
+      // TODO: 如果需要处理子会话的迁移逻辑，可以在这里实现
+      // 目前先直接删除，依赖数据库的外键约束处理
+
       await this.sessionGroupModel.delete(request.id);
 
       this.log('info', '会话组删除成功', { id: request.id });
