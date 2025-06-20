@@ -176,8 +176,14 @@
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3 is het meest geavanceerde meertalige open-source grote taalmiddel in de Llama-serie, dat prestaties biedt die vergelijkbaar zijn met die van een 405B-model tegen zeer lage kosten. Gebaseerd op de Transformer-structuur en verbeterd door middel van supervisie-fijnstelling (SFT) en versterkend leren met menselijke feedback (RLHF) voor nuttigheid en veiligheid. De instructie-geoptimaliseerde versie is speciaal geoptimaliseerd voor meertalige gesprekken en presteert beter dan veel open-source en gesloten chatmodellen op verschillende industriële benchmarks. Kennisafkapdatum is december 2023."
   },
+  "MiniMax-M1": {
+    "description": "Een gloednieuw zelfontwikkeld redeneermodel. Wereldwijd toonaangevend: 80K denkpatronen x 1M invoer, prestaties vergelijkbaar met topmodellen uit het buitenland."
+  },
   "MiniMax-Text-01": {
     "description": "In de MiniMax-01-serie modellen hebben we gedurfde innovaties doorgevoerd: voor het eerst op grote schaal een lineaire aandachtmechanisme geïmplementeerd, waardoor de traditionele Transformer-architectuur niet langer de enige keuze is. Dit model heeft een parameterhoeveelheid van maar liefst 456 miljard, met een enkele activatie van 45,9 miljard. De algehele prestaties van het model zijn vergelijkbaar met die van de beste modellen in het buitenland, terwijl het efficiënt de wereldwijd langste context van 4 miljoen tokens kan verwerken, wat 32 keer de capaciteit van GPT-4o en 20 keer die van Claude-3.5-Sonnet is."
+  },
+  "MiniMaxAI/MiniMax-M1-80k": {
+    "description": "MiniMax-M1 is een open-source gewichtenschaalmodel met gemengde aandacht, met 456 miljard parameters, waarbij elke token ongeveer 45,9 miljard parameters activeert. Het model ondersteunt native een ultralange context van 1 miljoen tokens en bespaart dankzij het bliksemaandachtmechanisme 75% van de floating-point-bewerkingen bij generatietaken van 100.000 tokens vergeleken met DeepSeek R1. Tegelijkertijd maakt MiniMax-M1 gebruik van een MoE (Mixture of Experts) architectuur, gecombineerd met het CISPO-algoritme en een efficiënt versterkend leermodel met gemengde aandacht, wat leidt tot toonaangevende prestaties bij lange invoerredenering en echte software-engineering scenario's."
   },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) is een hoogprecisie instructiemodel, geschikt voor complexe berekeningen."
@@ -659,6 +665,9 @@
   "codestral-latest": {
     "description": "Codestral is een geavanceerd generatief model dat zich richt op codegeneratie, geoptimaliseerd voor tussentijdse invulling en code-aanvultaken."
   },
+  "codex-mini-latest": {
+    "description": "codex-mini-latest is een verfijnde versie van o4-mini, speciaal ontworpen voor Codex CLI. Voor direct gebruik via de API raden we aan te beginnen met gpt-4.1."
+  },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B is een model ontworpen voor instructievolging, gesprekken en programmeren."
   },
@@ -715,6 +724,9 @@
   },
   "compound-beta-mini": {
     "description": "Compound-beta-mini is een samengesteld AI-systeem dat wordt ondersteund door open beschikbare modellen in GroqCloud, en kan intelligent en selectief tools gebruiken om gebruikersvragen te beantwoorden."
+  },
+  "computer-use-preview": {
+    "description": "Het computer-use-preview model is een speciaal model ontworpen voor 'computergebruiktools', getraind om computergerelateerde taken te begrijpen en uit te voeren."
   },
   "dall-e-2": {
     "description": "De tweede generatie DALL·E model, ondersteunt realistischere en nauwkeurigere beeldgeneratie, met een resolutie die vier keer zo hoog is als die van de eerste generatie."
@@ -905,6 +917,15 @@
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite is een nieuw geüpgradede multimodale groot model, dat ondersteuning biedt voor beeldherkenning met willekeurige resoluties en extreme beeldverhoudingen, en de visuele redenering, documentherkenning, begrip van gedetailleerde informatie en het volgen van instructies verbetert. Ondersteunt een contextvenster van 128k en een maximale outputlengte van 16k tokens."
   },
+  "doubao-seed-1.6": {
+    "description": "Doubao-Seed-1.6 is een gloednieuw multimodaal diepdenkend model dat drie denkwijzen ondersteunt: auto, thinking en non-thinking. In de non-thinking modus is de modelprestatie aanzienlijk verbeterd ten opzichte van Doubao-1.5-pro/250115. Ondersteunt een contextvenster van 256k en een maximale uitvoerlengte van 16k tokens."
+  },
+  "doubao-seed-1.6-flash": {
+    "description": "Doubao-Seed-1.6-flash is een multimodaal diepdenkend model met extreem snelle inferentiesnelheid, TPOT slechts 10ms; ondersteunt zowel tekst- als visueel begrip, met tekstbegrip dat beter is dan de vorige lite-generatie en visueel begrip dat vergelijkbaar is met concurrerende pro-serie modellen. Ondersteunt een contextvenster van 256k en een maximale uitvoerlengte van 16k tokens."
+  },
+  "doubao-seed-1.6-thinking": {
+    "description": "Doubao-Seed-1.6-thinking model heeft sterk verbeterde denkvermogens. Vergeleken met Doubao-1.5-thinking-pro zijn de basisvaardigheden in coderen, wiskunde en logisch redeneren verder verbeterd, met ondersteuning voor visueel begrip. Ondersteunt een contextvenster van 256k en een maximale uitvoerlengte van 16k tokens."
+  },
   "emohaa": {
     "description": "Emohaa is een psychologisch model met professionele adviescapaciteiten, dat gebruikers helpt emotionele problemen te begrijpen."
   },
@@ -1043,6 +1064,12 @@
   "gemini-2.0-flash-preview-image-generation": {
     "description": "Gemini 2.0 Flash previewmodel, ondersteunt beeldgeneratie"
   },
+  "gemini-2.5-flash": {
+    "description": "Gemini 2.5 Flash is het meest kosteneffectieve model van Google en biedt uitgebreide functionaliteiten."
+  },
+  "gemini-2.5-flash-lite-preview-06-17": {
+    "description": "Gemini 2.5 Flash-Lite Preview is het kleinste en meest kosteneffectieve model van Google, speciaal ontworpen voor grootschalig gebruik."
+  },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview is het meest kosteneffectieve model van Google, dat uitgebreide functionaliteit biedt."
   },
@@ -1051,6 +1078,9 @@
   },
   "gemini-2.5-flash-preview-05-20": {
     "description": "Gemini 2.5 Flash Preview is het meest kosteneffectieve model van Google en biedt uitgebreide functionaliteiten."
+  },
+  "gemini-2.5-pro": {
+    "description": "Gemini 2.5 Pro is het meest geavanceerde denkmodel van Google, in staat om complexe problemen op het gebied van code, wiskunde en STEM te redeneren, en grote datasets, codebases en documenten te analyseren met lange context."
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental is Google's meest geavanceerde denkmodel, dat in staat is om te redeneren over complexe problemen in code, wiskunde en STEM-gebieden, en bovendien gebruik maakt van lange contexten om grote datasets, codebases en documenten te analyseren."
@@ -1157,8 +1187,8 @@
   "google/gemini-2.5-flash-preview:thinking": {
     "description": "Gemini 2.5 Flash is Google's meest geavanceerde hoofmodel, ontworpen voor geavanceerde redenering, codering, wiskunde en wetenschappelijke taken. Het bevat ingebouwde 'denkkracht', waardoor het in staat is om antwoorden te geven met een hogere nauwkeurigheid en gedetailleerde contextverwerking.\n\nLet op: dit model heeft twee varianten: denken en niet-denken. De outputprijs verschilt aanzienlijk afhankelijk van of de denkkracht is geactiveerd. Als u de standaardvariant kiest (zonder de ':thinking' suffix), zal het model expliciet vermijden om denk-tokens te genereren.\n\nOm gebruik te maken van de denkkracht en denk-tokens te ontvangen, moet u de ':thinking' variant kiezen, wat resulteert in hogere prijzen voor denk-output.\n\nBovendien kan Gemini 2.5 Flash worden geconfigureerd via de parameter 'max tokens for reasoning', zoals beschreven in de documentatie (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
-  "google/gemini-2.5-pro-preview-03-25": {
-    "description": "Gemini 2.5 Pro is Google's meest geavanceerde AI-model, ontworpen voor geavanceerde redenering, codering, wiskunde en wetenschappelijke taken. Het beschikt over 'denkkracht', waardoor het in staat is om antwoorden te redeneren met een hogere nauwkeurigheid en gedetailleerde contextverwerking. Gemini 2.5 Pro heeft top prestaties behaald in meerdere benchmarktests, waaronder de eerste plaats op de LMArena-ranglijst, wat de uitstekende afstemming op menselijke voorkeuren en het vermogen om complexe problemen op te lossen weerspiegelt."
+  "google/gemini-2.5-pro-preview": {
+    "description": "Gemini 2.5 Pro Preview is het meest geavanceerde denkkader van Google, dat in staat is om complexe problemen op het gebied van code, wiskunde en STEM te redeneren, en grote datasets, codebases en documenten te analyseren met behulp van lange context."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash biedt geoptimaliseerde multimodale verwerkingscapaciteiten, geschikt voor verschillende complexe taakscenario's."
@@ -1267,6 +1297,9 @@
   },
   "gpt-4o-mini": {
     "description": "GPT-4o mini is het nieuwste model van OpenAI, gelanceerd na GPT-4 Omni, en ondersteunt zowel tekst- als beeldinvoer met tekstuitvoer. Als hun meest geavanceerde kleine model is het veel goedkoper dan andere recente toonaangevende modellen en meer dan 60% goedkoper dan GPT-3.5 Turbo. Het behoudt de meest geavanceerde intelligentie met een aanzienlijke prijs-kwaliteitverhouding. GPT-4o mini behaalde 82% op de MMLU-test en staat momenteel hoger in chatvoorkeuren dan GPT-4."
+  },
+  "gpt-4o-mini-audio-preview": {
+    "description": "GPT-4o mini Audio model, ondersteunt audio-invoer en -uitvoer."
   },
   "gpt-4o-mini-realtime-preview": {
     "description": "GPT-4o-mini realtime versie, ondersteunt audio en tekst realtime invoer en uitvoer."
@@ -1420,6 +1453,9 @@
   },
   "kimi-latest": {
     "description": "Kimi slimme assistent product maakt gebruik van het nieuwste Kimi grote model, dat mogelijk nog niet stabiele functies bevat. Ondersteunt beeldbegrip en kiest automatisch het 8k/32k/128k model als factureringsmodel op basis van de lengte van de context van het verzoek."
+  },
+  "kimi-thinking-preview": {
+    "description": "kimi-thinking-preview model is een multimodaal denkmodel met multimodale en algemene redeneervaardigheden, aangeboden door de donkere zijde van de maan. Het blinkt uit in diep redeneren en helpt bij het oplossen van complexere problemen."
   },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM is een experimenteel, taak-specifiek taalmodel dat is getraind volgens de principes van de leerwetenschap, en kan systeeminstructies volgen in onderwijs- en leeromgevingen, en fungeert als een expertmentor."
@@ -1823,11 +1859,17 @@
   "o1-preview": {
     "description": "o1 is het nieuwe redeneermodel van OpenAI, geschikt voor complexe taken die uitgebreide algemene kennis vereisen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
   },
+  "o1-pro": {
+    "description": "De o1-serie modellen zijn getraind met versterkend leren, kunnen nadenken voordat ze antwoorden en complexe redeneertaken uitvoeren. Het o1-pro model gebruikt meer rekenkracht voor diepgaander denken, waardoor het continu betere antwoorden levert."
+  },
   "o3": {
     "description": "o3 is een veelzijdig en krachtig model dat uitblinkt in verschillende domeinen. Het stelt nieuwe normen voor wiskunde, wetenschap, programmeren en visuele redeneringstaken. Het is ook bedreven in technische schrijfvaardigheid en het volgen van instructies. Gebruikers kunnen het gebruiken om teksten, code en afbeeldingen te analyseren en complexe meerstapsproblemen op te lossen."
   },
   "o3-mini": {
     "description": "o3-mini is ons nieuwste kleine inferentiemodel dat hoge intelligentie biedt met dezelfde kosten- en vertragingdoelen als o1-mini."
+  },
+  "o3-pro": {
+    "description": "Het o3-pro model gebruikt meer rekenkracht om dieper na te denken en altijd betere antwoorden te bieden, alleen ondersteund onder de Responses API."
   },
   "o4-mini": {
     "description": "o4-mini is ons nieuwste compacte model uit de o-serie. Het is geoptimaliseerd voor snelle en efficiënte inferentie, met een hoge efficiëntie en prestaties in codering en visuele taken."

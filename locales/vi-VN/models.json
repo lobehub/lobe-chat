@@ -176,8 +176,14 @@
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3 là mô hình ngôn ngữ lớn mã nguồn mở đa ngôn ngữ tiên tiến nhất trong dòng Llama, mang đến trải nghiệm hiệu suất tương đương mô hình 405B với chi phí cực thấp. Dựa trên cấu trúc Transformer, và được cải thiện tính hữu ích và an toàn thông qua tinh chỉnh giám sát (SFT) và học tăng cường từ phản hồi của con người (RLHF). Phiên bản tinh chỉnh theo chỉ dẫn của nó được tối ưu hóa cho các cuộc đối thoại đa ngôn ngữ, thể hiện tốt hơn nhiều mô hình trò chuyện mã nguồn mở và đóng trong nhiều tiêu chuẩn ngành. Ngày cắt đứt kiến thức là tháng 12 năm 2023."
   },
+  "MiniMax-M1": {
+    "description": "Mô hình suy luận tự phát triển hoàn toàn mới. Dẫn đầu toàn cầu: 80K chuỗi tư duy x 1 triệu đầu vào, hiệu quả sánh ngang các mô hình hàng đầu quốc tế."
+  },
   "MiniMax-Text-01": {
     "description": "Trong dòng mô hình MiniMax-01, chúng tôi đã thực hiện những đổi mới táo bạo: lần đầu tiên hiện thực hóa quy mô lớn cơ chế chú ý tuyến tính, kiến trúc Transformer truyền thống không còn là lựa chọn duy nhất. Mô hình này có số lượng tham số lên tới 4560 tỷ, trong đó kích hoạt một lần là 45,9 tỷ. Hiệu suất tổng hợp của mô hình tương đương với các mô hình hàng đầu quốc tế, đồng thời có khả năng xử lý hiệu quả ngữ cảnh dài nhất toàn cầu lên tới 4 triệu token, gấp 32 lần GPT-4o và 20 lần Claude-3.5-Sonnet."
+  },
+  "MiniMaxAI/MiniMax-M1-80k": {
+    "description": "MiniMax-M1 là mô hình suy luận chú ý hỗn hợp quy mô lớn với trọng số mã nguồn mở, sở hữu 456 tỷ 600 triệu tham số, mỗi Token có thể kích hoạt khoảng 45,9 tỷ tham số. Mô hình hỗ trợ ngữ cảnh siêu dài lên đến 1 triệu Token một cách nguyên bản, và thông qua cơ chế chú ý chớp nhoáng, trong các tác vụ sinh 100.000 Token tiết kiệm 75% lượng phép tính dấu chấm động so với DeepSeek R1. Đồng thời, MiniMax-M1 áp dụng kiến trúc MoE (chuyên gia hỗn hợp), kết hợp thuật toán CISPO và thiết kế chú ý hỗn hợp trong huấn luyện tăng cường hiệu quả, đạt hiệu suất hàng đầu trong ngành khi suy luận đầu vào dài và các kịch bản kỹ thuật phần mềm thực tế."
   },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) là mô hình chỉ dẫn chính xác cao, phù hợp cho tính toán phức tạp."
@@ -659,6 +665,9 @@
   "codestral-latest": {
     "description": "Codestral là mô hình sinh mã tiên tiến tập trung vào việc sinh mã, tối ưu hóa cho các nhiệm vụ điền vào khoảng trống và hoàn thiện mã."
   },
+  "codex-mini-latest": {
+    "description": "codex-mini-latest là phiên bản tinh chỉnh của o4-mini, được thiết kế đặc biệt cho Codex CLI. Đối với việc sử dụng trực tiếp qua API, chúng tôi khuyến nghị bắt đầu từ gpt-4.1."
+  },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B là mô hình được thiết kế cho việc tuân thủ hướng dẫn, đối thoại và lập trình."
   },
@@ -715,6 +724,9 @@
   },
   "compound-beta-mini": {
     "description": "Compound-beta-mini là một hệ thống AI phức hợp, được hỗ trợ bởi các mô hình có sẵn công khai trong GroqCloud, có khả năng thông minh và chọn lọc sử dụng công cụ để trả lời các truy vấn của người dùng."
+  },
+  "computer-use-preview": {
+    "description": "Mô hình computer-use-preview được thiết kế chuyên biệt cho \"công cụ sử dụng máy tính\", được huấn luyện để hiểu và thực hiện các nhiệm vụ liên quan đến máy tính."
   },
   "dall-e-2": {
     "description": "Mô hình DALL·E thế hệ thứ hai, hỗ trợ tạo hình ảnh chân thực và chính xác hơn, với độ phân giải gấp 4 lần thế hệ đầu tiên."
@@ -905,6 +917,15 @@
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite là mô hình đa phương tiện lớn được nâng cấp mới, hỗ trợ nhận diện hình ảnh với bất kỳ độ phân giải nào và tỷ lệ dài rộng cực đoan, tăng cường khả năng suy luận hình ảnh, nhận diện tài liệu, hiểu thông tin chi tiết và tuân thủ hướng dẫn. Hỗ trợ cửa sổ ngữ cảnh 128k, độ dài đầu ra tối đa 16k tokens."
   },
+  "doubao-seed-1.6": {
+    "description": "Doubao-Seed-1.6 là mô hình suy nghĩ sâu đa phương thức hoàn toàn mới, hỗ trợ ba chế độ suy nghĩ auto/thinking/non-thinking. Ở chế độ non-thinking, hiệu quả mô hình cải thiện đáng kể so với Doubao-1.5-pro/250115. Hỗ trợ cửa sổ ngữ cảnh 256k, độ dài đầu ra tối đa 16k tokens."
+  },
+  "doubao-seed-1.6-flash": {
+    "description": "Doubao-Seed-1.6-flash là mô hình suy nghĩ sâu đa phương thức với tốc độ suy luận tối ưu, TPOT chỉ cần 10ms; đồng thời hỗ trợ hiểu văn bản và hình ảnh, khả năng hiểu văn bản vượt trội so với thế hệ lite trước, khả năng hiểu hình ảnh sánh ngang với các mô hình pro của đối thủ. Hỗ trợ cửa sổ ngữ cảnh 256k, độ dài đầu ra tối đa 16k tokens."
+  },
+  "doubao-seed-1.6-thinking": {
+    "description": "Mô hình Doubao-Seed-1.6-thinking có khả năng suy nghĩ được tăng cường đáng kể, so với Doubao-1.5-thinking-pro, nâng cao hơn nữa các năng lực cơ bản như Lập trình, Toán học, Lý luận logic, đồng thời hỗ trợ hiểu hình ảnh. Hỗ trợ cửa sổ ngữ cảnh 256k, độ dài đầu ra tối đa 16k tokens."
+  },
   "emohaa": {
     "description": "Emohaa là mô hình tâm lý, có khả năng tư vấn chuyên nghiệp, giúp người dùng hiểu các vấn đề cảm xúc."
   },
@@ -1043,6 +1064,12 @@
   "gemini-2.0-flash-preview-image-generation": {
     "description": "Mô hình xem trước Gemini 2.0 Flash, hỗ trợ tạo hình ảnh"
   },
+  "gemini-2.5-flash": {
+    "description": "Gemini 2.5 Flash là mô hình có hiệu suất chi phí tốt nhất của Google, cung cấp đầy đủ các chức năng."
+  },
+  "gemini-2.5-flash-lite-preview-06-17": {
+    "description": "Gemini 2.5 Flash-Lite Preview là mô hình nhỏ nhất và có hiệu suất chi phí tốt nhất của Google, được thiết kế dành cho sử dụng quy mô lớn."
+  },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview là mô hình có giá trị tốt nhất của Google, cung cấp đầy đủ các tính năng."
   },
@@ -1051,6 +1078,9 @@
   },
   "gemini-2.5-flash-preview-05-20": {
     "description": "Gemini 2.5 Flash Preview là mô hình có hiệu suất chi phí tốt nhất của Google, cung cấp các tính năng toàn diện."
+  },
+  "gemini-2.5-pro": {
+    "description": "Gemini 2.5 Pro là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận các vấn đề phức tạp trong lĩnh vực mã nguồn, toán học và STEM, cũng như phân tích các bộ dữ liệu lớn, kho mã và tài liệu bằng ngữ cảnh dài."
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận về mã, toán học và các vấn đề phức tạp trong lĩnh vực STEM, đồng thời có thể phân tích các tập dữ liệu lớn, kho mã và tài liệu bằng cách sử dụng ngữ cảnh dài."
@@ -1157,8 +1187,8 @@
   "google/gemini-2.5-flash-preview:thinking": {
     "description": "Gemini 2.5 Flash là mô hình chủ lực tiên tiến nhất của Google, được thiết kế cho suy luận nâng cao, lập trình, toán học và các nhiệm vụ khoa học. Nó bao gồm khả năng 'suy nghĩ' tích hợp, cho phép nó cung cấp phản hồi với độ chính xác cao hơn và xử lý ngữ cảnh chi tiết hơn.\n\nLưu ý: Mô hình này có hai biến thể: suy nghĩ và không suy nghĩ. Giá đầu ra có sự khác biệt đáng kể tùy thuộc vào việc khả năng suy nghĩ có được kích hoạt hay không. Nếu bạn chọn biến thể tiêu chuẩn (không có hậu tố ':thinking'), mô hình sẽ rõ ràng tránh việc tạo ra các token suy nghĩ.\n\nĐể tận dụng khả năng suy nghĩ và nhận các token suy nghĩ, bạn phải chọn biến thể ':thinking', điều này sẽ tạo ra giá đầu ra suy nghĩ cao hơn.\n\nNgoài ra, Gemini 2.5 Flash có thể được cấu hình thông qua tham số 'số token tối đa cho suy luận', như đã mô tả trong tài liệu (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
-  "google/gemini-2.5-pro-preview-03-25": {
-    "description": "Gemini 2.5 Pro là mô hình AI tiên tiến nhất của Google, được thiết kế cho suy luận nâng cao, lập trình, toán học và các nhiệm vụ khoa học. Nó có khả năng 'suy nghĩ', cho phép nó suy luận với độ chính xác cao hơn và xử lý ngữ cảnh chi tiết hơn. Gemini 2.5 Pro đạt hiệu suất hàng đầu trong nhiều bài kiểm tra chuẩn, bao gồm vị trí số một trong bảng xếp hạng LMArena, phản ánh sự phù hợp xuất sắc với sở thích của con người và khả năng giải quyết vấn đề phức tạp."
+  "google/gemini-2.5-pro-preview": {
+    "description": "Gemini 2.5 Pro Preview là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận các vấn đề phức tạp trong lĩnh vực mã hóa, toán học và STEM, cũng như phân tích các bộ dữ liệu lớn, kho mã và tài liệu bằng ngữ cảnh dài."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash cung cấp khả năng xử lý đa phương thức được tối ưu hóa, phù hợp cho nhiều tình huống nhiệm vụ phức tạp."
@@ -1267,6 +1297,9 @@
   },
   "gpt-4o-mini": {
     "description": "GPT-4o mini là mô hình mới nhất do OpenAI phát hành sau GPT-4 Omni, hỗ trợ đầu vào hình ảnh và đầu ra văn bản. Là mô hình nhỏ gọn tiên tiến nhất của họ, nó rẻ hơn nhiều so với các mô hình tiên tiến gần đây khác và rẻ hơn hơn 60% so với GPT-3.5 Turbo. Nó giữ lại trí thông minh tiên tiến nhất trong khi có giá trị sử dụng đáng kể. GPT-4o mini đạt 82% điểm trong bài kiểm tra MMLU và hiện đứng cao hơn GPT-4 về sở thích trò chuyện."
+  },
+  "gpt-4o-mini-audio-preview": {
+    "description": "Mô hình GPT-4o mini Audio, hỗ trợ đầu vào và đầu ra âm thanh."
   },
   "gpt-4o-mini-realtime-preview": {
     "description": "Phiên bản thời gian thực của GPT-4o-mini, hỗ trợ đầu vào và đầu ra âm thanh và văn bản theo thời gian thực."
@@ -1420,6 +1453,9 @@
   },
   "kimi-latest": {
     "description": "Sản phẩm trợ lý thông minh Kimi sử dụng mô hình lớn Kimi mới nhất, có thể chứa các tính năng chưa ổn định. Hỗ trợ hiểu hình ảnh, đồng thời tự động chọn mô hình 8k/32k/128k làm mô hình tính phí dựa trên độ dài ngữ cảnh yêu cầu."
+  },
+  "kimi-thinking-preview": {
+    "description": "Mô hình kimi-thinking-preview do Moon's Dark Side cung cấp, có khả năng suy luận đa phương thức và suy luận tổng quát, nổi bật với khả năng suy luận sâu, giúp giải quyết nhiều vấn đề khó khăn hơn."
   },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM là một mô hình ngôn ngữ thử nghiệm, chuyên biệt cho các nhiệm vụ, được đào tạo để tuân theo các nguyên tắc khoa học học tập, có thể tuân theo các chỉ dẫn hệ thống trong các tình huống giảng dạy và học tập, đóng vai trò như một người hướng dẫn chuyên gia."
@@ -1823,11 +1859,17 @@
   "o1-preview": {
     "description": "o1 là mô hình suy diễn mới của OpenAI, phù hợp cho các nhiệm vụ phức tạp cần kiến thức tổng quát rộng rãi. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."
   },
+  "o1-pro": {
+    "description": "Dòng mô hình o1 được huấn luyện qua học tăng cường, có khả năng suy nghĩ trước khi trả lời và thực hiện các nhiệm vụ suy luận phức tạp. Mô hình o1-pro sử dụng nhiều tài nguyên tính toán hơn để suy nghĩ sâu hơn, từ đó liên tục cung cấp câu trả lời chất lượng cao hơn."
+  },
   "o3": {
     "description": "o3 là một mô hình toàn năng mạnh mẽ, thể hiện xuất sắc trong nhiều lĩnh vực. Nó thiết lập tiêu chuẩn mới cho các nhiệm vụ toán học, khoa học, lập trình và suy luận hình ảnh. Nó cũng giỏi trong việc viết kỹ thuật và tuân thủ hướng dẫn. Người dùng có thể sử dụng nó để phân tích văn bản, mã và hình ảnh, giải quyết các vấn đề phức tạp nhiều bước."
   },
   "o3-mini": {
     "description": "o3-mini là mô hình suy diễn nhỏ gọn mới nhất của chúng tôi, cung cấp trí thông minh cao với chi phí và độ trễ tương tự như o1-mini."
+  },
+  "o3-pro": {
+    "description": "Mô hình o3-pro sử dụng nhiều tài nguyên tính toán hơn để suy nghĩ sâu hơn và luôn cung cấp câu trả lời tốt hơn, chỉ hỗ trợ sử dụng dưới API Responses."
   },
   "o4-mini": {
     "description": "o4-mini là mô hình nhỏ gọn mới nhất trong dòng o của chúng tôi. Nó được tối ưu hóa cho suy luận nhanh chóng và hiệu quả, thể hiện hiệu suất và hiệu quả cao trong các nhiệm vụ mã hóa và hình ảnh."
