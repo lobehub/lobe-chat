@@ -1,11 +1,11 @@
 'use client';
 
 import { ActionIcon, Input } from '@lobehub/ui';
-import { InputRef, App } from 'antd';
+import { App, InputRef } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs, { Dayjs } from 'dayjs';
 import { Check, Edit, X } from 'lucide-react';
-import React, { memo, useCallback, useRef, useState } from 'react';
+import React, { memo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ApiKeyDatePicker from '../ApiKeyDatePicker';
@@ -89,28 +89,25 @@ const EditableCell = memo<EditableCellProps>(
     const inputRef = useRef<InputRef>(null);
 
     // 格式化显示值
-    const formatDisplayValue = useCallback(
-      (val: string | null) => {
-        if (type === 'date' && val) {
-          const date = dayjs(val);
+    const formatDisplayValue = (val: string | null) => {
+      if (type === 'date' && val) {
+        const date = dayjs(val);
 
-          return date.isValid() ? date.format('YYYY-MM-DD') : val || placeholder || '';
-        }
+        return date.isValid() ? date.format('YYYY-MM-DD') : val || placeholder || '';
+      }
 
-        return val || placeholder || '';
-      },
-      [type, placeholder],
-    );
+      return val || placeholder || '';
+    };
 
     // 开始编辑
-    const handleEdit = useCallback(() => {
+    const handleEdit = () => {
       if (disabled) return;
 
       setIsEditing(true);
-    }, [disabled, value, type]);
+    };
 
     // 提交编辑
-    const handleSubmit = useCallback(() => {
+    const handleSubmit = () => {
       if (type === 'text') {
         const inputValue = inputRef.current?.input?.value;
 
@@ -123,27 +120,23 @@ const EditableCell = memo<EditableCellProps>(
       }
 
       setIsEditing(false);
-    }, [onSubmit, type, t]);
+    };
 
     // 取消编辑
-    const handleCancel = useCallback(() => {
+    const handleCancel = () => {
       setIsEditing(false);
-    }, [value]);
+    };
 
     // 输入框组件的键盘事件处理
-    const handleKeyDown = useCallback(
-      (e: React.KeyboardEvent) => {
-        console.log(e);
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          handleSubmit();
-        } else if (e.key === 'Escape') {
-          e.preventDefault();
-          handleCancel();
-        }
-      },
-      [handleSubmit, handleCancel, type],
-    );
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleSubmit();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        handleCancel();
+      }
+    };
 
     // 日期选择器提交
     const handleDatePickerSubmit = (date: Dayjs | null) => {
@@ -153,7 +146,7 @@ const EditableCell = memo<EditableCellProps>(
     };
 
     // 渲染编辑模式
-    const renderEditMode = useCallback(() => {
+    const renderEditMode = () => {
       switch (type) {
         case 'text': {
           return (
@@ -161,7 +154,6 @@ const EditableCell = memo<EditableCellProps>(
               <Input
                 autoFocus
                 defaultValue={value as string}
-                onBlur={handleSubmit}
                 onKeyDown={handleKeyDown}
                 placeholder={placeholder}
                 ref={inputRef}
@@ -191,7 +183,7 @@ const EditableCell = memo<EditableCellProps>(
           return null;
         }
       }
-    }, [type, handleKeyDown, placeholder, handleSubmit, formatDisplayValue, styles]);
+    };
 
     // 文本类型的编辑模式，展示保存和取消按钮
     if (type === 'text' && isEditing) {
