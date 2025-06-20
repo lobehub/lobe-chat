@@ -1,6 +1,6 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
-const vercelChatModels: AIChatModelCard[] = [
+const v0ChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
@@ -57,6 +57,6 @@ const vercelChatModels: AIChatModelCard[] = [
   },
 ];
 
-export const allModels = [...vercelChatModels];
+export const allModels = [...v0ChatModels];
 
 export default allModels;

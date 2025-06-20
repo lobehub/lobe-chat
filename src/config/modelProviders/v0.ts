@@ -1,6 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
-const Vercel: ModelProviderCard = {
+const V0: ModelProviderCard = {
   chatModels: [],
   checkModel: 'v0-1.5-md',
   description:
@@ -14,4 +14,4 @@ const Vercel: ModelProviderCard = {
   url: 'https://v0.dev',
 };
 
-export default Vercel;
+export default V0;
