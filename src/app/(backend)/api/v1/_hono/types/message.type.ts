@@ -11,8 +11,8 @@ export const MessagesCreateRequestSchema = z.object({
   fromModel: z.string().min(1, '模型名称不能为空'),
   fromProvider: z.string().min(1, '提供商不能为空'),
   role: z.enum(['assistant', 'user'], { required_error: '角色必须为assistant或user' }),
-  sessionId: z.string().min(1, '会话ID不能为空'),
-  topic: z.string().min(1, '话题ID不能为空'),
+  sessionId: z.string().nullable().optional().default(null),
+  topic: z.string().nullable().optional().default(null),
 });
 
 // TypeScript types
@@ -26,8 +26,8 @@ export interface MessagesCreateRequest {
   fromModel: string;
   fromProvider: string;
   role: 'assistant' | 'user';
-  sessionId: string;
-  topic: string;
+  sessionId: string | null;
+  topic: string | null;
 }
 
 // Response type (represents the message table structure)

@@ -1,4 +1,3 @@
-
 /**
  * 聊天服务参数
  */
@@ -36,7 +35,7 @@ export interface MessageGenerationParams {
   }>;
   model?: string;
   provider?: string;
-  sessionId?: string;
+  sessionId: string | null;
   userMessage: string;
 }
 
