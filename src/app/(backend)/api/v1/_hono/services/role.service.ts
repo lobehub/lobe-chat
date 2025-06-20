@@ -1,6 +1,12 @@
 import { eq } from 'drizzle-orm';
 
-import { RoleItem, roles } from '@/database/schemas/rbac';
+import {
+  PermissionItem,
+  RoleItem,
+  permissions,
+  rolePermissions,
+  roles,
+} from '@/database/schemas/rbac';
 import { LobeChatDatabase } from '@/database/type';
 
 import { BaseService } from '../common/base.service';
@@ -50,5 +56,27 @@ export class RoleService extends BaseService {
     const result = await this.db.select().from(roles).where(eq(roles.name, name)).limit(1);
 
     return result[0];
+  }
+
+  /**
+   * Get role permissions by role ID
+   * @param id - Role ID
+   * @returns Promise<PermissionItem[]> - Array of permissions
+   */
+  async getRolePermissions(id: number): Promise<Partial<PermissionItem>[]> {
+    const result = await this.db
+      .select({
+        category: permissions.category,
+        code: permissions.code,
+        description: permissions.description,
+        id: permissions.id,
+        isActive: permissions.isActive,
+        name: permissions.name,
+      })
+      .from(permissions)
+      .innerJoin(rolePermissions, eq(rolePermissions.permissionId, permissions.id))
+      .where(eq(rolePermissions.roleId, id));
+
+    return result;
   }
 }

@@ -43,11 +43,9 @@ export type CreateRoleRequest = {
  */
 export type UpdateRoleRequest = Partial<CreateRoleRequest>;
 
-export { type RoleItem } from '@/database/schemas/rbac';
-
 // Zod Schemas for validation
 export const RoleIdParamSchema = z.object({
-  id: z.coerce.number().int().positive('角色 ID 必须是正整数'),
+  id: z.coerce.number().int().positive('角色 ID 不正确'),
 });
 
 export const RoleQueryParamsSchema = z.object({
