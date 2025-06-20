@@ -73,6 +73,7 @@ export const LobeSenseNovaAI = createOpenAICompatibleRuntime({
             reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
             knownModel?.abilities?.reasoning ||
             false,
+          search: knownModel?.abilities?.search || false,
           vision:
             visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
             knownModel?.abilities?.vision ||
