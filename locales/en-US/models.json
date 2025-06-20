@@ -1187,8 +1187,8 @@
   "google/gemini-2.5-flash-preview:thinking": {
     "description": "Gemini 2.5 Flash is Google's most advanced flagship model, designed for advanced reasoning, coding, mathematics, and scientific tasks. It includes built-in 'thinking' capabilities that allow it to provide responses with higher accuracy and detailed context handling.\n\nNote: This model has two variants: thinking and non-thinking. Output pricing varies significantly based on whether the thinking capability is activated. If you choose the standard variant (without the ':thinking' suffix), the model will explicitly avoid generating thinking tokens.\n\nTo leverage the thinking capability and receive thinking tokens, you must select the ':thinking' variant, which will incur higher thinking output pricing.\n\nAdditionally, Gemini 2.5 Flash can be configured via the 'maximum tokens for reasoning' parameter, as described in the documentation (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
-  "google/gemini-2.5-pro-preview-03-25": {
-    "description": "Gemini 2.5 Pro is Google's cutting-edge AI model designed for advanced reasoning, coding, mathematics, and scientific tasks. It features 'thinking' capabilities that enable it to reason responses with higher accuracy and detailed context handling. Gemini 2.5 Pro has achieved top performance in multiple benchmark tests, including ranking first on the LMArena leaderboard, reflecting exceptional human preference alignment and complex problem-solving abilities."
+  "google/gemini-2.5-pro-preview": {
+    "description": "Gemini 2.5 Pro Preview is Google's most advanced thinking model, capable of reasoning through complex problems in code, mathematics, and STEM fields, as well as analyzing large datasets, codebases, and documents using extended context."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash offers optimized multimodal processing capabilities, suitable for various complex task scenarios."
