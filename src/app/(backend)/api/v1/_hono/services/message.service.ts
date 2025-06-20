@@ -1,7 +1,7 @@
 import { count } from 'drizzle-orm';
-import { and, desc, eq, inArray } from 'drizzle-orm/expressions';
+import { and, desc, eq, inArray, isNull } from 'drizzle-orm/expressions';
 
-import { messages } from '@/database/schemas';
+import { messages, messagesFiles } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 
 import { BaseService } from '../common/base.service';
@@ -83,17 +83,13 @@ export class MessageService extends BaseService {
    * @returns 消息列表
    */
   async getMessagesByTopicId(topicId: string): ServiceResult<MessageResponse[]> {
-    if (!this.userId) {
-      throw this.createAuthError('未授权操作');
-    }
-
     this.log('info', '根据话题ID获取消息列表', { topicId, userId: this.userId });
 
     try {
       const result = await this.db
         .select()
         .from(messages)
-        .where(and(eq(messages.topicId, topicId), eq(messages.userId, this.userId)))
+        .where(and(eq(messages.topicId, topicId), eq(messages.userId, this.userId!)))
         .orderBy(desc(messages.createdAt));
 
       const messageList = result.map((message) => ({
@@ -136,10 +132,6 @@ export class MessageService extends BaseService {
    * @returns 创建的消息ID
    */
   async createMessage(messageData: MessagesCreateRequest): ServiceResult<MessageCreateResponse> {
-    if (!this.userId) {
-      throw this.createAuthError('未授权操作');
-    }
-
     this.log('info', '创建新消息', {
       role: messageData.role,
       sessionId: messageData.sessionId,
@@ -158,18 +150,25 @@ export class MessageService extends BaseService {
           role: messageData.role,
           sessionId: messageData.sessionId,
           topicId: messageData.topic,
-          userId: this.userId,
+          userId: this.userId!,
         })
         .returning({ id: messages.id });
 
-      // TODO: Handle file attachments if provided
+      // 处理文件附件
       if (messageData.files && messageData.files.length > 0) {
         this.log('info', '消息包含文件附件', {
           files: messageData.files,
           messageId: newMessage.id,
         });
-        // This would require implementing file attachment logic
-        // which involves the messages_files junction table
+
+        // 更新 messages_files 表
+        await this.db.insert(messagesFiles).values(
+          messageData.files.map((fileId) => ({
+            fileId,
+            messageId: newMessage.id,
+            userId: this.userId!,
+          })),
+        );
       }
 
       this.log('info', '创建消息完成', { messageId: newMessage.id });
@@ -190,10 +189,6 @@ export class MessageService extends BaseService {
     aiReplyId: string;
     userMessageId: string;
   }> {
-    if (!this.userId) {
-      throw this.createAuthError('未授权操作');
-    }
-
     this.log('info', '创建消息并生成AI回复', {
       role: messageData.role,
       sessionId: messageData.sessionId,
@@ -267,10 +262,10 @@ export class MessageService extends BaseService {
    * @returns 对话历史
    */
   private async getConversationHistory(
-    sessionId: string,
-    topicId: string,
+    sessionId: string | null,
+    topicId: string | null,
     limit: number = 10,
-  ): Promise<Array<{ content: string, role: 'user' | 'assistant' | 'system'; }>> {
+  ): Promise<Array<{ content: string; role: 'user' | 'assistant' | 'system' }>> {
     try {
       const result = await this.db
         .select({
@@ -280,8 +275,8 @@ export class MessageService extends BaseService {
         .from(messages)
         .where(
           and(
-            eq(messages.sessionId, sessionId),
-            eq(messages.topicId, topicId),
+            sessionId === null ? isNull(messages.sessionId) : eq(messages.sessionId, sessionId),
+            topicId === null ? isNull(messages.topicId) : eq(messages.topicId, topicId),
             eq(messages.userId, this.userId!),
           ),
         )
