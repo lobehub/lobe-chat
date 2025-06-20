@@ -7,7 +7,6 @@ import {
   CountSessionsRequest,
   CreateSessionRequest,
   GetSessionsRequest,
-  RankSessionsRequest,
   SearchSessionsRequest,
   UpdateSessionConfigRequest,
   UpdateSessionRequest,
@@ -69,11 +68,6 @@ export class SessionController extends BaseController {
   async getSessionById(c: Context): Promise<Response> {
     try {
       const sessionId = c.req.param('id');
-
-      if (!sessionId) {
-        return this.error(c, '会话 ID 是必需的', 400);
-      }
-
       const db = await this.getDatabase();
       const sessionService = new SessionService(db, this.getUserId(c));
       const session = await sessionService.getSessionById(sessionId);
@@ -97,11 +91,6 @@ export class SessionController extends BaseController {
   async getSessionConfig(c: Context): Promise<Response> {
     try {
       const sessionId = c.req.param('id');
-
-      if (!sessionId) {
-        return this.error(c, '会话 ID 是必需的', 400);
-      }
-
       const db = await this.getDatabase();
       const sessionService = new SessionService(db, this.getUserId(c));
       const config = await sessionService.getSessionConfig(sessionId);
@@ -155,10 +144,6 @@ export class SessionController extends BaseController {
       const sessionId = c.req.param('id');
       const body = await c.req.json<Omit<UpdateSessionRequest, 'id'>>();
 
-      if (!sessionId) {
-        return this.error(c, '会话 ID 是必需的', 400);
-      }
-
       const request: UpdateSessionRequest = {
         id: sessionId,
         ...body,
@@ -185,10 +170,6 @@ export class SessionController extends BaseController {
       const sessionId = c.req.param('id');
       const body = await c.req.json<Omit<UpdateSessionConfigRequest, 'id'>>();
 
-      if (!sessionId) {
-        return this.error(c, '会话 ID 是必需的', 400);
-      }
-
       const request: UpdateSessionConfigRequest = {
         id: sessionId,
         ...body,
@@ -213,11 +194,6 @@ export class SessionController extends BaseController {
   async deleteSession(c: Context): Promise<Response> {
     try {
       const sessionId = c.req.param('id');
-
-      if (!sessionId) {
-        return this.error(c, '会话 ID 是必需的', 400);
-      }
-
       const db = await this.getDatabase();
       const sessionService = new SessionService(db, this.getUserId(c));
       await sessionService.deleteSession(sessionId);
@@ -238,10 +214,6 @@ export class SessionController extends BaseController {
     try {
       const sessionId = c.req.param('id');
       const body = await c.req.json<Omit<CloneSessionRequest, 'id'>>();
-
-      if (!sessionId) {
-        return this.error(c, '会话 ID 是必需的', 400);
-      }
 
       const request: CloneSessionRequest = {
         id: sessionId,
@@ -279,11 +251,6 @@ export class SessionController extends BaseController {
   async searchSessions(c: Context): Promise<Response> {
     try {
       const query = c.req.query();
-
-      if (!query.keywords) {
-        return this.error(c, '搜索关键词是必需的', 400);
-      }
-
       const request: SearchSessionsRequest = {
         current: query.current ? Number(query.current) : undefined,
         keywords: query.keywords,
@@ -295,29 +262,6 @@ export class SessionController extends BaseController {
       const sessions = await sessionService.searchSessions(request);
 
       return this.success(c, sessions, '搜索会话成功');
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  /**
-   * 获取会话排行
-   * GET /api/v1/sessions/rank
-   * @param c Hono Context
-   * @returns 会话排行响应
-   */
-  async rankSessions(c: Context): Promise<Response> {
-    try {
-      const query = c.req.query();
-      const request: RankSessionsRequest = {
-        limit: query.limit ? Number(query.limit) : undefined,
-      };
-
-      const db = await this.getDatabase();
-      const sessionService = new SessionService(db, this.getUserId(c));
-      const rankData = await sessionService.rankSessions(request);
-
-      return this.success(c, rankData, '获取会话排行成功');
     } catch (error) {
       return this.handleError(c, error);
     }

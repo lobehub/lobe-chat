@@ -1,6 +1,5 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
-import { z } from 'zod';
 
 import { RBAC_PERMISSIONS } from '@/const/rbac';
 import { getAllScopePermissions, getScopePermissions } from '@/utils/rbac';
@@ -9,18 +8,11 @@ import { MessageController } from '../controllers';
 import { requireAuth } from '../middleware';
 import { requireAnyPermission } from '../middleware/permission-check';
 import {
+  CountByTopicsRequestSchema,
+  CountByUserRequestSchema,
   MessagesCreateRequestSchema,
   MessagesQueryByTopicRequestSchema,
 } from '../types/message.type';
-
-// 参数校验 Schema
-const countByTopicsSchema = z.object({
-  topicIds: z.array(z.string()).min(1, '话题ID数组不能为空'),
-});
-
-const countByUserSchema = z.object({
-  userId: z.string().min(1, '用户ID不能为空'),
-});
 
 // Topic 相关路由
 const MessageRoutes = new Hono();
@@ -47,7 +39,7 @@ MessageRoutes.post(
     getAllScopePermissions('MESSAGE_READ'),
     'You do not have permission to read message statistics',
   ),
-  zValidator('json', countByTopicsSchema),
+  zValidator('json', CountByTopicsRequestSchema),
   (c) => {
     const controller = new MessageController();
     return controller.handleCountMessagesByTopics(c);
@@ -62,7 +54,7 @@ MessageRoutes.post(
     [RBAC_PERMISSIONS.MESSAGE_READ_ALL],
     'You do not have permission to read user message statistics',
   ),
-  zValidator('json', countByUserSchema),
+  zValidator('json', CountByUserRequestSchema),
   (c) => {
     const controller = new MessageController();
     return controller.handleCountMessagesByUser(c);

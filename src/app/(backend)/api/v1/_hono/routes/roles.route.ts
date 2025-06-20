@@ -1,11 +1,12 @@
+import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 
-import { RBAC_PERMISSIONS } from '@/const/rbac';
-import { getAllScopePermissions, getScopePermissions } from '@/utils/rbac';
+import { getScopePermissions } from '@/utils/rbac';
 
 import { RoleController } from '../controllers/role.controller';
 import { requireAuth } from '../middleware/oidc-auth';
 import { requireAnyPermission } from '../middleware/permission-check';
+import { RoleIdParamSchema } from '../types/role.type';
 
 const RolesRoutes = new Hono();
 
@@ -36,7 +37,7 @@ RolesRoutes.get(
   '/active',
   requireAuth,
   requireAnyPermission(
-    [RBAC_PERMISSIONS.RBAC_ROLE_READ_ALL],
+    getScopePermissions('RBAC_ROLE_READ', ['ALL', 'WORKSPACE']),
     'You do not have permission to view active roles',
   ),
   async (c) => {
@@ -57,6 +58,7 @@ RolesRoutes.get(
     getScopePermissions('RBAC_ROLE_READ', ['ALL', 'WORKSPACE']),
     'You do not have permission to view role details',
   ),
+  zValidator('param', RoleIdParamSchema),
   async (c) => {
     const roleController = new RoleController();
     return await roleController.getRoleById(c);
@@ -66,15 +68,15 @@ RolesRoutes.get(
 /**
  * Get role permissions mapping
  * GET /api/v1/roles/:id/permissions
- * Requires role read permission (all scopes) - 这里演示全量权限的场景
  */
 RolesRoutes.get(
   '/:id/permissions',
   requireAuth,
   requireAnyPermission(
-    getAllScopePermissions('RBAC_ROLE_READ'),
+    getScopePermissions('RBAC_ROLE_READ', ['ALL', 'WORKSPACE']),
     'You do not have permission to view role permissions',
   ),
+  zValidator('param', RoleIdParamSchema),
   async (c) => {
     const roleController = new RoleController();
     // 这里可以添加获取角色权限的逻辑

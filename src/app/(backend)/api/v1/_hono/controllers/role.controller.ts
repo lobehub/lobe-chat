@@ -52,12 +52,6 @@ export class RoleController extends BaseController {
   async getRoleById(c: Context): Promise<Response> {
     try {
       const roleId = parseInt(c.req.param('id'));
-
-      if (isNaN(roleId)) {
-        return this.error(c, 'Invalid role ID', 400);
-      }
-
-      // Get database connection and create service instance
       const db = await this.getDatabase();
       const roleService = new RoleService(db, this.getUserId(c));
       const role = await roleService.getRoleById(roleId);
