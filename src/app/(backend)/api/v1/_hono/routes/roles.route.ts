@@ -24,6 +24,7 @@ RolesRoutes.get(
   ),
   async (c) => {
     const roleController = new RoleController();
+
     return await roleController.getAllRoles(c);
   },
 );
@@ -42,6 +43,7 @@ RolesRoutes.get(
   ),
   async (c) => {
     const roleController = new RoleController();
+
     return await roleController.getActiveRoles(c);
   },
 );
@@ -61,6 +63,7 @@ RolesRoutes.get(
   zValidator('param', RoleIdParamSchema),
   async (c) => {
     const roleController = new RoleController();
+
     return await roleController.getRoleById(c);
   },
 );
@@ -79,8 +82,8 @@ RolesRoutes.get(
   zValidator('param', RoleIdParamSchema),
   async (c) => {
     const roleController = new RoleController();
-    // 这里可以添加获取角色权限的逻辑
-    return roleController.getRoleById(c);
+
+    return roleController.getRolePermissions(c);
   },
 );
 

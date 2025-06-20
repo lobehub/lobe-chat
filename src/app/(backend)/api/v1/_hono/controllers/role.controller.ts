@@ -65,4 +65,22 @@ export class RoleController extends BaseController {
       return this.handleError(c, error);
     }
   }
+
+  /**
+   * Get role permissions by role ID
+   * @param c Hono Context
+   * @returns Role permissions response
+   */
+  async getRolePermissions(c: Context): Promise<Response> {
+    try {
+      const roleId = parseInt(c.req.param('id'));
+      const db = await this.getDatabase();
+      const roleService = new RoleService(db, this.getUserId(c));
+      const permissions = await roleService.getRolePermissions(roleId);
+
+      return this.success(c, permissions, 'Get role permissions successfully');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
 }
