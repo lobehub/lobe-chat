@@ -153,6 +153,7 @@ describe('LobeOllamaAI', () => {
           functionCall: false,
           id: 'model-1',
           reasoning: false,
+          search: false,
           vision: false,
         },
         {
@@ -162,6 +163,7 @@ describe('LobeOllamaAI', () => {
           functionCall: false,
           id: 'model-2',
           reasoning: false,
+          search: false,
           vision: false,
         },
       ]);
