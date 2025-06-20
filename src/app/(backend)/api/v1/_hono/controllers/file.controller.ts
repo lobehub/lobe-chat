@@ -2,12 +2,7 @@ import { Context } from 'hono';
 
 import { BaseController } from '../common/base.controller';
 import { FileUploadService } from '../services/file.service';
-import {
-  BatchFileUploadRequest,
-  FileListQuery,
-  FileUploadRequest,
-  PreSignedUrlRequest,
-} from '../types/file.type';
+import { BatchFileUploadRequest, FileListQuery, FileUploadRequest } from '../types/file.type';
 
 /**
  * 文件上传控制器
@@ -103,35 +98,6 @@ export class FileController extends BaseController {
   }
 
   /**
-   * 创建预签名URL
-   * POST /files/presigned-url
-   */
-  async createPreSignedUrl(c: Context) {
-    try {
-      const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
-
-      const body = await this.getBody<PreSignedUrlRequest>(c);
-      if (!body) {
-        return this.error(c, 'Invalid request body', 400);
-      }
-
-      // 验证必填字段
-      if (!body.filename || !body.fileType || !body.size) {
-        return this.error(c, 'Missing required fields: filename, fileType, size', 400);
-      }
-
-      const db = await this.getDatabase();
-      const fileService = new FileUploadService(db, userId);
-
-      const result = await fileService.createPreSignedUrl(body);
-
-      return this.success(c, result, 'Pre-signed URL created successfully');
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
-
-  /**
    * 获取文件列表
    * GET /files
    */
@@ -168,12 +134,7 @@ export class FileController extends BaseController {
   async getFile(c: Context) {
     try {
       const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
-
       const { id } = this.getParams(c);
-      if (!id) {
-        return this.error(c, 'File ID is required', 400);
-      }
-
       const db = await this.getDatabase();
       const fileService = new FileUploadService(db, userId);
 
@@ -192,12 +153,7 @@ export class FileController extends BaseController {
   async deleteFile(c: Context) {
     try {
       const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
-
       const { id } = this.getParams(c);
-      if (!id) {
-        return this.error(c, 'File ID is required', 400);
-      }
-
       const db = await this.getDatabase();
       const fileService = new FileUploadService(db, userId);
 
@@ -207,21 +163,5 @@ export class FileController extends BaseController {
     } catch (error) {
       return this.handleError(c, error);
     }
-  }
-
-  /**
-   * 健康检查
-   * GET /files/health
-   */
-  async health(c: Context) {
-    return this.success(
-      c,
-      {
-        service: 'file-upload-service',
-        status: 'healthy',
-        timestamp: new Date().toISOString(),
-      },
-      'File service is healthy',
-    );
   }
 }

@@ -11,11 +11,9 @@ import {
   CreateSessionRequest,
   GetSessionsRequest,
   GroupedSessionsResponse,
-  RankSessionsRequest,
   SearchSessionsRequest,
   SessionDetailResponse,
   SessionListResponse,
-  SessionRankResponse,
   UpdateSessionConfigRequest,
   UpdateSessionRequest,
 } from '../types/session.type';
@@ -261,25 +259,6 @@ export class SessionService extends BaseService {
     } catch (error) {
       this.log('error', '搜索会话失败', { error });
       throw this.createBusinessError('搜索会话失败');
-    }
-  }
-
-  /**
-   * 获取会话排行
-   * @param request 排行请求参数
-   * @returns 会话排行列表
-   */
-  async rankSessions(request: RankSessionsRequest = {}): ServiceResult<SessionRankResponse[]> {
-    this.log('info', '获取会话排行', { limit: request.limit });
-
-    try {
-      const rankData = await this.sessionModel.rank(request.limit);
-
-      this.log('info', `获取到 ${rankData.length} 个排行数据`);
-      return rankData;
-    } catch (error) {
-      this.log('error', '获取会话排行失败', { error });
-      throw this.createBusinessError('获取会话排行失败');
     }
   }
 
