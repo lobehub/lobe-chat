@@ -1,6 +1,7 @@
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import { AiModelModel } from '@/database/models/aiModel';
-import { CreateSpendLogParams, UsageModel } from '@/database/models/usage';
+import { UsageModel } from '@/database/models/usage';
+import { NewSpendLog } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { getDetailsToken } from '@/features/Conversation/Extras/Usage/UsageDetail/tokens';
 import { AiProviderModelListItem, LobeDefaultAiModelListItem } from '@/types/aiModel';
@@ -46,7 +47,7 @@ export class UsageService {
             }
         }
 
-        const params: CreateSpendLogParams = {
+        const params: NewSpendLog = {
             model: data.model,
             provider: data.provider,
             spend: spend, // Default to 0 if spend is not provided
@@ -61,6 +62,7 @@ export class UsageService {
             totalOutputTokens: data.usage?.totalOutputTokens || 0,
             totalTokens: (data.usage?.totalInputTokens || 0) + (data.usage?.totalOutputTokens || 0),
             metadata: data?.usage && data?.speed ? { ...data?.usage, ...data?.speed } : {},
+            userId: data.userId,
         }
         return await usageModel.createSpendLog(params)
     }

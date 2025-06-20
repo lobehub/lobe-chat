@@ -1,23 +1,8 @@
 import { MessageMetadata } from "@/types/message";
-import { spendLogs } from "../schemas/usage";
+import { NewSpendLog, SpendLogItem, spendLogs } from "../schemas/usage";
 import { LobeChatDatabase } from "../type";
-
-export interface CreateSpendLogParams {
-    model: string;
-    provider: string;
-    spend: number;
-    callType: 'chat' | 'history_summary';
-    ipAddress: string;
-    ttft?: number;
-    tps?: number;
-    inputStartAt?: Date;
-    outputStartAt?: Date;
-    outputFinishAt?: Date;
-    totalInputTokens?: number;
-    totalOutputTokens?: number;
-    totalTokens?: number;
-    metadata?: MessageMetadata;
-}
+import { desc, eq } from "drizzle-orm";
+import { UsageLog } from "@/types/usage";
 
 export class UsageModel {
     private userId: string;
@@ -27,7 +12,7 @@ export class UsageModel {
         this.db = db;
     }
 
-    createSpendLog = async (params: CreateSpendLogParams) => {
+    createSpendLog = async (params: NewSpendLog) => {
         // Should find org_id, team_id from userId first ...
         const [result] = await this.db
             .insert(spendLogs)
@@ -35,5 +20,45 @@ export class UsageModel {
             .onConflictDoNothing()
             .returning();
         return result;
+    }
+
+    getSpendLogs = async () => {
+        return await this.db.query.spendLogs.findMany({
+            where: eq(spendLogs.userId, this.userId),
+            orderBy: desc(spendLogs.updatedAt),
+        })
+    }
+
+    getUsages = async () => {
+        const spends = await this.db.query.spendLogs.findMany({
+            where: eq(spendLogs.userId, this.userId),
+            orderBy: desc(spendLogs.updatedAt),
+        })
+        // Clustering by time
+        let usages = new Map<number, SpendLogItem[]>()
+        spends.forEach((spend) => {
+            const date = Math.floor(spend.createdAt.getTime() / 1000);
+            if (!usages.has(date)){
+                usages.set(date, [spend]);
+                return;
+            }
+            usages.get(date)?.push(spend);
+        })
+        // Calculate usage
+        let usageLogs: UsageLog[] = [];
+        usages.forEach((spends, date) => {
+            const totalSpend = spends.reduce((acc, spend) => acc + spend.spend, 0);
+            const totalTokens = spends.reduce((acc, spend) => (spend.totalTokens || 0) + acc, 0);
+            const totalRequests = spends.length;
+            console.log('date', date, 'totalSpend', totalSpend, 'totalTokens', totalTokens, 'totalRequests', totalRequests);
+            usageLogs.push({
+                requestLogs: spends,
+                totalSpend,
+                totalTokens,
+                totalRequests,
+                date,
+            });
+        })
+        return usageLogs;
     }
 }
