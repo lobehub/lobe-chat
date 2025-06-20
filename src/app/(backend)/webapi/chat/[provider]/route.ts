@@ -1,5 +1,8 @@
+import { ipAddress } from '@vercel/functions'
+
 import {
   AGENT_RUNTIME_ERROR_SET,
+  ChatMethodOptions,
   ChatCompletionErrorPayload,
   ModelRuntime,
 } from '@lobechat/model-runtime';
@@ -10,6 +13,7 @@ import { createTraceOptions, createUsageTracker, initModelRuntimeWithUserPayload
 import { ChatStreamPayload } from '@/types/openai/chat';
 import { createErrorResponse } from '@/utils/errorResponse';
 import { getTracePayload } from '@/utils/trace';
+import { mergeMultipleCompletionOptions } from './util';
 
 export const runtime = 'edge';
 
@@ -31,17 +35,23 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload, createR
 
     const tracePayload = getTracePayload(req);
 
-    let traceOptions = {};
+    let traceOptions = [];
     // If user enable trace
     if (tracePayload?.enabled) {
-      traceOptions = createTraceOptions(data, { provider, trace: tracePayload });
-    } else if (jwtPayload?.userId) {
-      traceOptions = createUsageTracker(data, jwtPayload.userId);
+      traceOptions.push(createTraceOptions(data, { provider, trace: tracePayload }));
     }
+    if (jwtPayload?.userId) {
+      traceOptions.push(createUsageTracker(data, { userId: jwtPayload.userId, provider, ip: ipAddress(req) }));
+    }
+
+    let completionOptions: ChatMethodOptions = {}
+
+    if (traceOptions.length > 0)
+      completionOptions = mergeMultipleCompletionOptions(traceOptions)
 
     return await modelRuntime.chat(data, {
       user: jwtPayload.userId,
-      ...traceOptions,
+      ...completionOptions,
       signal: req.signal,
     });
   } catch (e) {
