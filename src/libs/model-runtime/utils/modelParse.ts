@@ -55,7 +55,7 @@ export const MODEL_LIST_CONFIGS = {
   },
   v0: {
     functionCallKeywords: ['v0'],
-    reasoningKeywords: ['v0-1.5-lg'],
+    reasoningKeywords: ['v0-1.5'],
     visionKeywords: ['v0'],
   },
   zeroone: {
