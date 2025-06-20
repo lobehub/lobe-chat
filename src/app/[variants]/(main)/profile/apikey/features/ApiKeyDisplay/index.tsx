@@ -1,6 +1,6 @@
 import { CopyOutlined, EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import { Button } from '@lobehub/ui';
-import { Flex, message } from 'antd';
+import { App, Flex } from 'antd';
 import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,6 +11,7 @@ interface ApiKeyDisplayProps {
 const ApiKeyDisplay: FC<ApiKeyDisplayProps> = ({ apiKey }) => {
   const { t } = useTranslation('auth');
   const [isVisible, setIsVisible] = useState(false);
+      const { message } = App.useApp();
 
   const toggleVisibility = () => {
     setIsVisible(!isVisible);

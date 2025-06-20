@@ -1,7 +1,7 @@
 'use client';
 
 import { ActionIcon, Input } from '@lobehub/ui';
-import { InputRef, message } from 'antd';
+import { InputRef, App } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs, { Dayjs } from 'dayjs';
 import { Check, Edit, X } from 'lucide-react';
@@ -80,6 +80,7 @@ const EditableCell = memo<EditableCellProps>(
   ({ value, type, onSubmit, placeholder, disabled = false }) => {
     const { styles, cx } = useStyles();
     const { t } = useTranslation('auth');
+    const { message } = App.useApp();
 
     // 编辑状态管理
     const [isEditing, setIsEditing] = useState(false);
