@@ -104,11 +104,6 @@ export class AgentController extends BaseController {
   async getAgentById(c: Context): Promise<Response> {
     try {
       const agentId = c.req.param('id');
-
-      if (!agentId) {
-        return this.error(c, 'Agent ID 是必需的', 400);
-      }
-
       const db = await this.getDatabase();
       const agentService = new AgentService(db, this.getUserId(c));
       const agent = await agentService.getAgentById(agentId);
