@@ -20,6 +20,9 @@ const vertexaiChatModels: AIChatModelCard[] = [
       output: 10, // prompts <= 200k tokens
     },
     releasedAt: '2025-06-17',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -78,6 +81,9 @@ const vertexaiChatModels: AIChatModelCard[] = [
       output: 2.5,
     },
     releasedAt: '2025-06-17',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -117,6 +123,9 @@ const vertexaiChatModels: AIChatModelCard[] = [
       output: 0.4,
     },
     releasedAt: '2025-06-17',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
