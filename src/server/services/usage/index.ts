@@ -18,7 +18,7 @@ export class UsageService {
         log('Creating spend log with usage:', data);
         if (!data?.userId) {
             log('User ID is required to create a spend log');
-            return
+            throw new Error('User ID is required to create a spend log');
         }
         const usageModel = new UsageModel(this.db, data.userId);
         const aiModelModel = new AiModelModel(this.db, data.userId);
@@ -35,7 +35,7 @@ export class UsageService {
             } catch { }
             if (!model || !model?.pricing) {
                 log(`Model with ID ${data.model} not found in default models for provider ${data.provider}`);
-                return;
+                throw new Error(`Model with ID ${data.model} not found for provider ${data.provider}`);
             }
         }
         let spend = 0;
@@ -52,9 +52,9 @@ export class UsageService {
             spend: spend, // Default to 0 if spend is not provided
             callType: 'chat', // Assuming this is a chat log, adjust as necessary
             ipAddress: data?.ipAddress || '', // Default to empty string if not provided
-            ttft: data.usage?.ttft || 0, // Total time from first token to last token
-            tps: data.usage?.tps || 0, // Total processing speed
-            inputStartAt: data?.speed?.inputStartAt ? new Date(data?.spped?.inputStartAt) : undefined,
+            ttft: data?.speed?.ttft || 0, // Total time from first token to last token
+            tps: data?.speed?.tps || 0, // Total processing speed
+            inputStartAt: data?.speed?.inputStartAt ? new Date(data?.speed?.inputStartAt) : undefined,
             outputStartAt: data?.speed?.outputStartAt ? new Date(data?.speed?.outputStartAt) : undefined,
             outputFinishAt: data?.speed?.outputFinishAt ? new Date(data?.speed?.outputFinishAt) : undefined,
             totalInputTokens: data.usage?.totalInputTokens || 0,

@@ -33,14 +33,16 @@ export async function POST(req: NextRequest) {
         // Process the request based on the action
         switch (ev.action) {
             case 'createSpendLog':
-                await usageService.createSpendLog(ev.data);
+                result = await usageService.createSpendLog(ev.data);
                 break;
             default:
                 log('Invalid action:', ev.action);
                 return NextResponse.json({ success: false, error: 'Invalid action' }, { status: 400 })
         }
+        log('Processed request successfully:', result);
         return NextResponse.json({ success: true, data: result });
     } catch (error) {
+        log('Error processing request:', error);
         return NextResponse.json({ success: false, error }, { status: 400 });
     }
 }
