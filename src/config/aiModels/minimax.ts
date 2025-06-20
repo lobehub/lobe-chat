@@ -5,6 +5,29 @@ const minimaxChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       search: true,
+    },
+    contextWindowTokens: 1_000_192,
+    description:
+      '全新自研推理模型。全球领先：80K思维链 x 1M输入，效果比肩海外顶尖模型。',
+    displayName: 'MiniMax-M1',
+    enabled: true,
+    id: 'MiniMax-M1',
+    maxOutput: 40_000,
+    pricing: {
+      currency: 'CNY',
+      input: 1.2, // 输入长度 32-128k
+      output: 16,
+    },
+    releasedAt: '2025-06-16',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 1_000_192,
@@ -13,7 +36,7 @@ const minimaxChatModels: AIChatModelCard[] = [
     displayName: 'MiniMax-Text-01',
     enabled: true,
     id: 'MiniMax-Text-01',
-    maxOutput: 1_000_192,
+    maxOutput: 40_000,
     pricing: {
       currency: 'CNY',
       input: 1,
@@ -34,7 +57,6 @@ const minimaxChatModels: AIChatModelCard[] = [
     contextWindowTokens: 245_760,
     description: '适用于广泛的自然语言处理任务，包括文本生成、对话系统等。',
     displayName: 'abab6.5s',
-    enabled: true,
     id: 'abab6.5s-chat',
     maxOutput: 245_760,
     pricing: {
