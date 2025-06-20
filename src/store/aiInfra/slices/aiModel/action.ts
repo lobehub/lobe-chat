@@ -80,7 +80,7 @@ export const createAiModelSlice: StateCreator<
             files: model.files,
             functionCall: model.functionCall,
             reasoning: model.reasoning,
-            search: model.search,
+            search: model.search || false,
             vision: model.vision,
           },
           enabled: model.enabled || false,
