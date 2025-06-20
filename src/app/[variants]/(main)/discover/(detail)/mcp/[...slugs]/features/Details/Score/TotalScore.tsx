@@ -112,7 +112,7 @@ const TotalScore = memo<TotalScoreProps>(({ scoreResult, scoreItems = [], isVali
 
   // 使用主题颜色的段级颜色配置
   const SEGMENT_COLORS = {
-    // 绿色 (85-100%)
+    // 绿色 (80-100%)
     A_COLOR: theme.colorSuccess,
 
     // 黄色 (60-85%)
@@ -247,7 +247,7 @@ const TotalScore = memo<TotalScoreProps>(({ scoreResult, scoreItems = [], isVali
             strokeColor={{
               '0%': SEGMENT_COLORS.F_COLOR,
               '60%': SEGMENT_COLORS.B_COLOR,
-              '85%': SEGMENT_COLORS.A_COLOR,
+              '80%': SEGMENT_COLORS.A_COLOR,
             }}
           />
         </Popover>
@@ -260,12 +260,12 @@ const TotalScore = memo<TotalScoreProps>(({ scoreResult, scoreItems = [], isVali
           <div className={styles.legendItem}>
             <div className={styles.colorDot} style={{ backgroundColor: SEGMENT_COLORS.B_COLOR }} />
             <span>
-              {t('mcp.details.totalScore.legend.bGrade', { maxPercent: 85, minPercent: 60 })}
+              {t('mcp.details.totalScore.legend.bGrade', { maxPercent: 80, minPercent: 60 })}
             </span>
           </div>
           <div className={styles.legendItem}>
             <div className={styles.colorDot} style={{ backgroundColor: SEGMENT_COLORS.A_COLOR }} />
-            <span>{t('mcp.details.totalScore.legend.aGrade', { minPercent: 85 })}</span>
+            <span>{t('mcp.details.totalScore.legend.aGrade', { minPercent: 80 })}</span>
           </div>
         </div>
       </div>
