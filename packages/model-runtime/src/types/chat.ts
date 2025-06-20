@@ -180,6 +180,7 @@ interface OnFinishData {
   thinking?: string;
   toolsCalling?: MessageToolCall[];
   usage?: ModelTokensUsage;
+  speed?: ModelSpeed;
 }
 
 export interface ChatStreamCallbacks {
