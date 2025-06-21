@@ -33,6 +33,7 @@ const nextConfig: NextConfig = {
       '@lobehub/ui',
       'gpt-tokenizer',
     ],
+    reactCompiler: true,
     // oidc provider depend on constructor.name
     // but swc minification will remove the name
     // so we need to disable it
