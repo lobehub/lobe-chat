@@ -1,18 +1,27 @@
 'use client';
 
-import { FormGroup, Grid } from '@lobehub/ui';
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { FORM_STYLE } from '@/const/layoutTokens';
 import { Col, Row } from 'antd';
 
 import TotalSpend from './features/TotalSpend';
 import TotalRequest from './features/TotalRequest';
+import { UsageLog } from '@/types/usage';
+import { useClientDataSWR } from '@/libs/swr';
+import { usageService } from '@/services/usage';
+
+export interface UsageChartProps {
+  data?: UsageLog[]
+  inShare?: boolean;
+  isLoading?: boolean;
+  mobile?: boolean;
+}
 
 const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
-  const { t } = useTranslation('auth');
+  const { data, isLoading } = useClientDataSWR('stats-heatmaps', async () =>
+    usageService.getUsages()
+  );
 
   return (
     <Flexbox gap={mobile ? 0 : 24} >
@@ -21,11 +30,11 @@ const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
       </Flexbox>
       <Row gutter={[16, 16]} style={{ padding: mobile ? '0 16px' : '0 24px' }}>
         <Col span={12}>
-          <TotalSpend mobile={mobile} />
+          {data && <TotalSpend data={data} isLoading={isLoading} mobile={mobile} />}
         </Col>
         <Col span={12}>
           <Flexbox>
-              <TotalRequest mobile={mobile} />
+            {data && <TotalRequest data={data} isLoading={isLoading} mobile={mobile} />}
           </Flexbox>
         </Col>
       </Row>
