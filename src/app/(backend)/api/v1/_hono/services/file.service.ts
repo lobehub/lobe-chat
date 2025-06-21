@@ -3,6 +3,7 @@ import { sha256 } from 'js-sha256';
 import { FileModel } from '@/database/models/file';
 import { FileItem } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
+import { idGenerator } from '@/database/utils/idGenerator';
 import { S3 } from '@/server/modules/S3';
 import { FileService as CoreFileService } from '@/server/services/file';
 import { FileMetadata } from '@/types/files';
@@ -190,7 +191,7 @@ export class FileUploadService extends BaseService {
         throw this.createAuthError('User authentication required');
       }
 
-      const fileId = nanoid();
+      const fileId = idGenerator('files');
       const metadata = this.generateFileMetadata(
         {
           name: request.filename,

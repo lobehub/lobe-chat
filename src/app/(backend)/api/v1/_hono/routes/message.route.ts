@@ -76,9 +76,9 @@ MessageRoutes.get(
   },
 );
 
-// POST /api/v1/messages/create - 创建新消息 (需要消息写入权限)
+// POST /api/v1/messages - 创建新消息 (需要消息写入权限)
 MessageRoutes.post(
-  '/create',
+  '/',
   requireAuth,
   requireAnyPermission(
     getScopePermissions('MESSAGE_CREATE', ['ALL', 'WORKSPACE', 'OWNER']),
@@ -91,9 +91,9 @@ MessageRoutes.post(
   },
 );
 
-// POST /api/v1/messages/create-with-reply - 创建用户消息并生成AI回复 (需要消息写入权限)
+// POST /api/v1/messages/reply - 创建用户消息并生成AI回复 (需要消息写入权限)
 MessageRoutes.post(
-  '/create-with-reply',
+  '/reply',
   requireAuth,
   requireAnyPermission(
     getScopePermissions('MESSAGE_CREATE', ['ALL', 'WORKSPACE', 'OWNER']),

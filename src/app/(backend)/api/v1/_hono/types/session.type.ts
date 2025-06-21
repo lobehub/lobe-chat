@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { SessionItem } from '@/database/schemas';
+import { SessionGroupItem, SessionItem } from '@/database/schemas';
 import { LobeAgentConfig } from '@/types/agent';
 import { MetaData } from '@/types/meta';
 
@@ -8,6 +8,7 @@ import { MetaData } from '@/types/meta';
  * 创建会话请求参数
  */
 export interface CreateSessionRequest {
+  agentId?: string; // 关联的 Agent ID，用于创建基于 Agent 的会话
   avatar?: string;
   backgroundColor?: string;
   config?: LobeAgentConfig;
@@ -115,26 +116,39 @@ export interface SessionWithAgent extends SessionItem {
 }
 
 /**
+ * 会话列表项类型
+ */
+export interface SessionListItem extends SessionItem {
+  agentsToSessions?: Array<{
+    agent: {
+      avatar: string | null;
+      id: string;
+      title: string | null;
+    };
+  }>;
+}
+
+/**
  * 会话列表响应类型
  */
-export type SessionListResponse = any[];
+export type SessionListResponse = SessionListItem[];
 
 /**
  * 会话详情响应类型
  */
-export type SessionDetailResponse = any;
+export type SessionDetailResponse = SessionWithAgent;
 
 /**
  * 会话组列表响应类型
  */
-export type SessionGroupListResponse = any[];
+export type SessionGroupListResponse = SessionGroupItem[];
 
 /**
  * 分组会话列表响应类型
  */
 export interface GroupedSessionsResponse {
-  sessionGroups: any[];
-  sessions: any[];
+  sessionGroups: SessionGroupItem[];
+  sessions: SessionListItem[];
 }
 
 /**
@@ -156,9 +170,9 @@ export interface CountResponse {
 }
 
 /**
- * 批量操作结果类型
+ * 会话批量操作结果类型
  */
-export interface BatchOperationResult {
+export interface SessionBatchOperationResult {
   added: number;
   failed: number;
   removed: number;
@@ -168,6 +182,7 @@ export interface BatchOperationResult {
 
 // Zod Schemas for validation
 export const CreateSessionRequestSchema = z.object({
+  agentId: z.string().optional(),
   avatar: z.string().optional(),
   backgroundColor: z.string().optional(),
   config: z.object({}).passthrough().optional(),
