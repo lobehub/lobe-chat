@@ -81,6 +81,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   tencentcloud?: OpenAICompatibleKeyVault;
   togetherai?: OpenAICompatibleKeyVault;
   upstage?: OpenAICompatibleKeyVault;
+  v0?: OpenAICompatibleKeyVault;
   vertexai?: OpenAICompatibleKeyVault;
   vllm?: OpenAICompatibleKeyVault;
   volcengine?: OpenAICompatibleKeyVault;

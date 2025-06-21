@@ -14,6 +14,7 @@ const xaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'grok-3',
     pricing: {
+      cachedInput: 0.75,
       input: 3,
       output: 15,
     },
@@ -34,6 +35,7 @@ const xaiChatModels: AIChatModelCard[] = [
     displayName: 'Grok 3 (Fast mode)',
     id: 'grok-3-fast',
     pricing: {
+      cachedInput: 1.25,
       input: 5,
       output: 25,
     },
@@ -56,6 +58,7 @@ const xaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'grok-3-mini',
     pricing: {
+      cachedInput: 0.075,
       input: 0.3,
       output: 0.5,
     },
@@ -78,6 +81,7 @@ const xaiChatModels: AIChatModelCard[] = [
     displayName: 'Grok 3 Mini (Fast mode)',
     id: 'grok-3-mini-fast',
     pricing: {
+      cachedInput: 0.15,
       input: 0.6,
       output: 4,
     },

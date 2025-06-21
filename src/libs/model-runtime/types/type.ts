@@ -68,6 +68,7 @@ export enum ModelProvider {
   TencentCloud = 'tencentcloud',
   TogetherAI = 'togetherai',
   Upstage = 'upstage',
+  V0 = 'v0',
   VLLM = 'vllm',
   VertexAI = 'vertexai',
   Volcengine = 'volcengine',

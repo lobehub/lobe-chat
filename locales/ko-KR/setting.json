@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "사용자의 최신 메시지가이 템플릿에 채워집니다",
-      "placeholder": "입력 템플릿 {{input_template}}은 실시간 입력 정보로 대체됩니다",
+      "placeholder": "입력 템플릿 {{text}}은 실시간 입력 정보로 대체됩니다",
       "title": "사용자 입력 전처리"
     },
     "submit": "채팅 선호도 업데이트",
