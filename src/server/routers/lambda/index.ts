@@ -6,6 +6,7 @@ import { publicProcedure, router } from '@/libs/trpc/lambda';
 import { agentRouter } from './agent';
 import { aiModelRouter } from './aiModel';
 import { aiProviderRouter } from './aiProvider';
+import { apiKeyRouter } from './apiKey';
 import { chunkRouter } from './chunk';
 import { documentRouter } from './document';
 import { exporterRouter } from './exporter';
@@ -25,6 +26,7 @@ export const lambdaRouter = router({
   agent: agentRouter,
   aiModel: aiModelRouter,
   aiProvider: aiProviderRouter,
+  apiKey: apiKeyRouter,
   chunk: chunkRouter,
   document: documentRouter,
   exporter: exporterRouter,
