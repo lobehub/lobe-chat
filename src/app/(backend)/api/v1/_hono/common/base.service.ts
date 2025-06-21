@@ -43,12 +43,55 @@ export abstract class BaseService implements IBaseService {
   }
 
   /**
-   * Common error class for other scenarios
+   * Not found error class
    */
-  protected createCommonError(message: string): Error {
+  protected createNotFoundError(message: string): Error {
     const error = new Error(message);
     error.name = 'NotFoundError';
     return error;
+  }
+
+  /**
+   * Validation error class
+   */
+  protected createValidationError(message: string): Error {
+    const error = new Error(message);
+    error.name = 'ValidationError';
+    return error;
+  }
+
+  /**
+   * Common error class (alias for business error)
+   */
+  protected createCommonError(message: string): Error {
+    return this.createBusinessError(message);
+  }
+
+  /**
+   * 统一错误处理方法
+   * @param error 捕获的错误
+   * @param operation 操作名称
+   * @param fallbackMessage 默认错误消息
+   */
+  protected handleServiceError(error: unknown, operation: string, fallbackMessage?: string): never {
+    this.log('error', `${operation}失败`, { error });
+
+    // 如果是已知的业务错误，直接抛出
+    if (
+      error instanceof Error &&
+      [
+        'BusinessError',
+        'AuthenticationError',
+        'AuthorizationError',
+        'NotFoundError',
+        'ValidationError',
+      ].includes(error.name)
+    ) {
+      throw error;
+    }
+
+    // 其他错误统一包装为业务错误
+    throw this.createBusinessError(fallbackMessage || `${operation}失败`);
   }
 
   /**

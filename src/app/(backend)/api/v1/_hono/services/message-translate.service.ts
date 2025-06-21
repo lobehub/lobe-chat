@@ -29,18 +29,16 @@ export class MessageTranslateService extends BaseService {
     this.log('info', '根据消息ID获取翻译信息', { messageId, userId: this.userId });
 
     try {
-      const result = await this.db
-        .select()
-        .from(messageTranslates)
-        .where(eq(messageTranslates.id, messageId))
-        .limit(1);
+      const result = await this.db.query.messageTranslates.findFirst({
+        where: eq(messageTranslates.id, messageId),
+      });
 
-      if (result.length === 0) {
+      if (!result) {
         this.log('info', '未找到翻译信息', { messageId });
         return null;
       }
 
-      const translate = result[0];
+      const translate = result;
 
       // 检查是否属于当前用户
       if (translate.userId !== this.userId) {
@@ -138,13 +136,12 @@ export class MessageTranslateService extends BaseService {
    */
   private async getOriginalMessageContent(messageId: string): Promise<string | null> {
     try {
-      const result = await this.db
-        .select({ content: messages.content })
-        .from(messages)
-        .where(eq(messages.id, messageId))
-        .limit(1);
+      const result = await this.db.query.messages.findFirst({
+        columns: { content: true },
+        where: eq(messages.id, messageId),
+      });
 
-      return result[0]?.content || null;
+      return result?.content || null;
     } catch (error) {
       this.log('error', '获取原始消息内容失败', {
         error: error instanceof Error ? error.message : String(error),
