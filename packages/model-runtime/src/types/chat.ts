@@ -176,11 +176,11 @@ export interface ChatCompletionTool {
 
 interface OnFinishData {
   grounding?: any;
+  speed?: ModelSpeed;
   text: string;
   thinking?: string;
   toolsCalling?: MessageToolCall[];
   usage?: ModelTokensUsage;
-  speed?: ModelSpeed;
 }
 
 export interface ChatStreamCallbacks {
