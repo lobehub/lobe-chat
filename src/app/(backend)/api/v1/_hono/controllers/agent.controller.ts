@@ -2,7 +2,16 @@ import { Context } from 'hono';
 
 import { BaseController } from '../common/base.controller';
 import { AgentService } from '../services/agent.service';
-import { AgentDeleteRequest, CreateAgentRequest, UpdateAgentRequest } from '../types/agent.type';
+import {
+  AgentDeleteRequest,
+  AgentSessionBatchLinkRequest,
+  AgentSessionLinkRequest,
+  BatchDeleteAgentsRequest,
+  BatchUpdateAgentsRequest,
+  CreateAgentRequest,
+  CreateSessionForAgentRequest,
+  UpdateAgentRequest,
+} from '../types/agent.type';
 
 /**
  * Agent 控制器类
@@ -113,6 +122,162 @@ export class AgentController extends BaseController {
       }
 
       return this.success(c, agent, '获取 Agent 详情成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 为 Agent 创建新的 Session
+   * POST /api/v1/agents/:id/sessions
+   * @param c Hono Context
+   * @returns 新创建的 Session ID 响应
+   */
+  async createSessionForAgent(c: Context): Promise<Response> {
+    try {
+      const agentId = c.req.param('id');
+      const body = await c.req.json<Omit<CreateSessionForAgentRequest, 'agentId'>>();
+
+      const request: CreateSessionForAgentRequest = {
+        agentId,
+        ...body,
+      };
+
+      const db = await this.getDatabase();
+      const agentService = new AgentService(db, this.getUserId(c));
+      const sessionId = await agentService.createSessionForAgent(request);
+
+      return c.json(
+        {
+          data: { id: sessionId },
+          message: 'Agent Session 创建成功',
+          success: true,
+          timestamp: new Date().toISOString(),
+        },
+        201,
+      );
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 获取 Agent 关联的所有 Session
+   * GET /api/v1/agents/:id/sessions
+   * @param c Hono Context
+   * @returns Agent 关联的 Session 列表响应
+   */
+  async getAgentSessions(c: Context): Promise<Response> {
+    try {
+      const agentId = c.req.param('id');
+      const db = await this.getDatabase();
+      const agentService = new AgentService(db, this.getUserId(c));
+      const sessions = await agentService.getAgentSessions(agentId);
+
+      return this.success(c, sessions, '获取 Agent 关联的 Session 成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 关联 Agent 和 Session
+   * POST /api/v1/agents/:id/sessions/link
+   * @param c Hono Context
+   * @returns 关联结果响应
+   */
+  async linkAgentSession(c: Context): Promise<Response> {
+    try {
+      const agentId = c.req.param('id');
+      const body = await c.req.json<AgentSessionLinkRequest>();
+
+      const db = await this.getDatabase();
+      const agentService = new AgentService(db, this.getUserId(c));
+      await agentService.linkAgentSession(agentId, body);
+
+      return this.success(c, null, 'Agent Session 关联成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 取消 Agent 和 Session 的关联
+   * DELETE /api/v1/agents/:id/sessions/:sessionId
+   * @param c Hono Context
+   * @returns 取消关联结果响应
+   */
+  async unlinkAgentSession(c: Context): Promise<Response> {
+    try {
+      const agentId = c.req.param('id');
+      const sessionId = c.req.param('sessionId');
+
+      const db = await this.getDatabase();
+      const agentService = new AgentService(db, this.getUserId(c));
+      await agentService.unlinkAgentSession(agentId, sessionId);
+
+      return this.success(c, null, 'Agent Session 关联取消成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 批量关联 Agent 和多个 Session
+   * POST /api/v1/agents/:id/sessions/batch-link
+   * @param c Hono Context
+   * @returns 批量关联结果响应
+   */
+  async batchLinkAgentSessions(c: Context): Promise<Response> {
+    try {
+      const agentId = c.req.param('id');
+      const body = await c.req.json<AgentSessionBatchLinkRequest>();
+
+      const db = await this.getDatabase();
+      const agentService = new AgentService(db, this.getUserId(c));
+      await agentService.batchLinkAgentSessions(agentId, body);
+
+      return this.success(c, null, 'Agent Session 批量关联成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 批量删除 Agent
+   * DELETE /api/v1/agents/batch
+   * @param c Hono Context
+   * @returns 批量删除结果响应
+   */
+  async batchDeleteAgents(c: Context): Promise<Response> {
+    try {
+      const body = await c.req.json<BatchDeleteAgentsRequest>();
+
+      const db = await this.getDatabase();
+      const agentService = new AgentService(db, this.getUserId(c));
+      const result = await agentService.batchDeleteAgents(body);
+
+      return this.success(c, result, '批量删除 Agent 完成');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 批量更新 Agent
+   * PUT /api/v1/agents/batch
+   * @param c Hono Context
+   * @returns 批量更新结果响应
+   */
+  async batchUpdateAgents(c: Context): Promise<Response> {
+    try {
+      const body = await c.req.json<BatchUpdateAgentsRequest>();
+
+      const db = await this.getDatabase();
+      const agentService = new AgentService(db, this.getUserId(c));
+      const result = await agentService.batchUpdateAgents(body);
+
+      return this.success(c, result, '批量更新 Agent 完成');
     } catch (error) {
       return this.handleError(c, error);
     }

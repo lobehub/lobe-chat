@@ -15,9 +15,9 @@ import {
 // Topic 相关路由
 const TopicsRoutes = new Hono();
 
-// GET /api/v1/topics/list - 获取指定会话的所有话题
+// GET /api/v1/topics - 获取指定会话的所有话题
 TopicsRoutes.get(
-  '/list',
+  '/',
   requireAuth,
   requireAnyPermission(
     getScopePermissions('TOPIC_READ', ['ALL', 'WORKSPACE', 'OWNER']),
@@ -30,9 +30,9 @@ TopicsRoutes.get(
   },
 );
 
-// POST /api/v1/topics/create - 创建新的话题
+// POST /api/v1/topics - 创建新的话题
 TopicsRoutes.post(
-  '/create',
+  '/',
   requireAuth,
   requireAnyPermission(
     getScopePermissions('TOPIC_CREATE', ['ALL', 'WORKSPACE', 'OWNER']),
@@ -45,9 +45,9 @@ TopicsRoutes.post(
   },
 );
 
-// POST /api/v1/topics/summary - 总结对应的话题
+// POST /api/v1/topics/:id/summary - 总结对应的话题
 TopicsRoutes.post(
-  '/summary',
+  '/:id/summary',
   requireAuth,
   requireAnyPermission(
     getScopePermissions('TOPIC_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),

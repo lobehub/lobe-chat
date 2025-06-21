@@ -142,7 +142,7 @@ export default {
 3. 参数验证：使用 zValidator 进行请求参数验证
 4. 响应格式：统一使用 success () 和 error () 方法
 5. 日志记录：使用 BaseService 的 log () 方法
-6. Controller 层：只负责参数校验、业务逻辑组织和调用 Service 层
+6. Controller 层：不对入参或者用户是否登陆做校验，只负责业务逻辑组织和调用 Service 层
 7. Service 层：在 Service 中按照最小粒度封装业务逻辑，如果涉及数据库操作，尽可能复用 `src/database/models` 下对应的模型
 
 ### HTTP 接口测试规范

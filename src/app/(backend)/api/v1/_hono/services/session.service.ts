@@ -1,6 +1,10 @@
+import { and, eq } from 'drizzle-orm';
+
 import { SessionModel } from '@/database/models/session';
+import { SessionItem, agents, agentsToSessions } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { LobeAgentConfig } from '@/types/agent';
+import { ChatSessionList, LobeAgentSession } from '@/types/session';
 
 import { BaseService } from '../common/base.service';
 import { ServiceResult } from '../types';
@@ -10,10 +14,7 @@ import {
   CountSessionsRequest,
   CreateSessionRequest,
   GetSessionsRequest,
-  GroupedSessionsResponse,
   SearchSessionsRequest,
-  SessionDetailResponse,
-  SessionListResponse,
   UpdateSessionConfigRequest,
   UpdateSessionRequest,
 } from '../types/session.type';
@@ -34,11 +35,11 @@ export class SessionService extends BaseService {
    * @param request 分页参数
    * @returns 会话列表
    */
-  async getSessions(request: GetSessionsRequest = {}): ServiceResult<SessionListResponse> {
+  async getSessions(request: GetSessionsRequest = {}): ServiceResult<SessionItem[]> {
     this.log('info', '获取会话列表', { request });
 
     try {
-      const { current = 0, pageSize = 9999 } = request;
+      const { current = 0, pageSize = 20 } = request;
       const sessions = await this.sessionModel.query({ current, pageSize });
 
       this.log('info', `查询到 ${sessions.length} 个会话`);
@@ -54,7 +55,7 @@ export class SessionService extends BaseService {
    * 获取分组的会话列表
    * @returns 分组会话列表
    */
-  async getGroupedSessions(): ServiceResult<GroupedSessionsResponse> {
+  async getGroupedSessions(): ServiceResult<ChatSessionList> {
     this.log('info', '获取分组的会话列表');
 
     try {
@@ -77,7 +78,7 @@ export class SessionService extends BaseService {
    * @param sessionId 会话 ID
    * @returns 会话详情
    */
-  async getSessionById(sessionId: string): ServiceResult<SessionDetailResponse | null> {
+  async getSessionById(sessionId: string): ServiceResult<SessionItem> {
     this.log('info', '根据 ID 获取会话详情', { sessionId });
 
     try {
@@ -85,7 +86,7 @@ export class SessionService extends BaseService {
 
       if (!session) {
         this.log('warn', '会话不存在', { sessionId });
-        return null;
+        throw this.createNotFoundError('会话不存在');
       }
 
       return session;
@@ -124,29 +125,69 @@ export class SessionService extends BaseService {
    * @returns 创建完成的会话 ID
    */
   async createSession(request: CreateSessionRequest): ServiceResult<string> {
-    this.log('info', '创建会话', { title: request.title, type: request.type });
+    this.log('info', '创建会话', {
+      agentId: request.agentId,
+      title: request.title,
+      type: request.type,
+    });
 
     try {
-      const { config, meta, ...sessionData } = request;
-
-      const result = await this.sessionModel.create({
-        config: { ...config, ...meta } as any,
-        session: {
-          ...sessionData,
-          type: request.type || 'agent',
-        },
-        type: (request.type || 'agent') as 'agent' | 'group',
-      });
-
-      if (!result) {
-        throw this.createBusinessError('会话创建失败');
+      if (!this.userId) {
+        throw this.createAuthError('用户未认证');
       }
 
-      this.log('info', '会话创建成功', { id: result.id, title: request.title });
-      return result.id;
+      return await this.db.transaction(async (tx) => {
+        // 如果指定了 agentId，验证 Agent 是否存在且属于当前用户
+        if (request.agentId) {
+          const agent = await tx.query.agents.findFirst({
+            where: and(eq(agents.id, request.agentId), eq(agents.userId, this.userId!)),
+          });
+
+          if (!agent) {
+            throw this.createNotFoundError(`Agent ID "${request.agentId}" 不存在或无权限访问`);
+          }
+        }
+
+        const { config, meta, agentId, ...sessionData } = request;
+
+        // 创建 Session
+        const result = await this.sessionModel.create({
+          config: { ...config, ...meta } as any,
+          session: {
+            ...sessionData,
+            type: request.type || 'agent',
+          },
+          type: (request.type || 'agent') as 'agent' | 'group',
+        });
+
+        if (!result) {
+          throw this.createBusinessError('会话创建失败');
+        }
+
+        // 如果指定了 agentId，创建 Agent-Session 关联
+        if (agentId) {
+          await tx.insert(agentsToSessions).values({
+            agentId,
+            sessionId: result.id,
+            userId: this.userId!,
+          });
+
+          this.log('info', '会话与 Agent 关联成功', {
+            agentId,
+            sessionId: result.id,
+          });
+        }
+
+        this.log('info', '会话创建成功', {
+          agentId: agentId || null,
+          id: result.id,
+          title: request.title,
+        });
+
+        return result.id;
+      });
     } catch (error) {
-      this.log('error', '创建会话失败', { error });
-      throw this.createBusinessError('创建会话失败');
+      this.handleServiceError(error, '创建会话');
     }
   }
 
@@ -248,13 +289,14 @@ export class SessionService extends BaseService {
    * @param request 搜索请求参数
    * @returns 搜索结果
    */
-  async searchSessions(request: SearchSessionsRequest): ServiceResult<SessionListResponse> {
+  async searchSessions(request: SearchSessionsRequest): ServiceResult<LobeAgentSession[]> {
     this.log('info', '搜索会话', { keywords: request.keywords });
 
     try {
       const sessions = await this.sessionModel.queryByKeyword(request.keywords);
 
       this.log('info', `搜索到 ${sessions.length} 个会话`, { keywords: request.keywords });
+
       return sessions;
     } catch (error) {
       this.log('error', '搜索会话失败', { error });
