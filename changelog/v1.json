@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix MiniMax-M1 reasoning tag missing."]
+    },
+    "date": "2025-06-21",
+    "version": "1.96.1"
+  },
+  {
+    "children": {
       "features": ["Add v0 (Vercel) provider support."],
       "fixes": ["Fix inputTemplate behavior."]
     },
