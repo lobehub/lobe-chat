@@ -40,12 +40,11 @@ export interface LobeToolCustomPlugin {
   type: 'customPlugin';
 }
 
-export interface InstallPluginMeta {
+export interface InstallPluginMeta extends Partial<Meta> {
   author?: string;
   createdAt?: string;
   homepage?: string;
   identifier: string;
-  meta?: Meta;
   type: LobeToolType;
 }
 

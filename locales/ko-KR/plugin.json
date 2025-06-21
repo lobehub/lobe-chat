@@ -291,8 +291,9 @@
     "placeholder": "플러그인 이름 또는 키워드를 검색하세요...",
     "releasedAt": "{{createdAt}}에 출시",
     "tabs": {
-      "all": "모두",
-      "installed": "설치됨"
+      "installed": "설치됨",
+      "mcp": "MCP 플러그인",
+      "old": "구버전 플러그인"
     },
     "title": "플러그인 스토어"
   },

@@ -1,5 +1,4 @@
-import { Icon, Tooltip } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Icon, Text, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { HelpCircleIcon } from 'lucide-react';
 import { CSSProperties, ReactNode, memo } from 'react';
@@ -51,15 +50,15 @@ const Statistic = memo<StatisticProps>(
     const { cx, styles } = useStyles();
     const isTop = valuePlacement === 'top';
     const valueContent = (
-      <Typography.Paragraph className={styles.number} ellipsis={{ rows: 1 }} style={valueStyle}>
+      <Text className={styles.number} ellipsis={{ rows: 1 }} style={valueStyle}>
         {value}
-      </Typography.Paragraph>
+      </Text>
     );
     const titleContent = (
-      <Typography.Paragraph className={styles.title} ellipsis={{ rows: 1 }} style={titleStyle}>
+      <Text className={styles.title} ellipsis={{ rows: 1 }} style={titleStyle}>
         {title}
         {tooltip && <Icon icon={HelpCircleIcon} style={{ marginLeft: '0.4em' }} />}
-      </Typography.Paragraph>
+      </Text>
     );
     const content = (
       <Flexbox

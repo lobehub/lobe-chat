@@ -52,8 +52,8 @@ const installedPluginMetaList = (s: ToolStoreState) =>
     createdAt: p.manifest?.createdAt || (p.manifest as any)?.createAt,
     homepage: p.manifest?.homepage,
     identifier: p.identifier,
-    meta: getPluginMetaById(p.identifier)(s),
     type: p.type,
+    ...getPluginMetaById(p.identifier)(s),
   }));
 const installedCustomPluginMetaList = (s: ToolStoreState) =>
   installedPluginMetaList(s).filter((p) => p.type === 'customPlugin');

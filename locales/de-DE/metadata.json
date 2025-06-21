@@ -13,6 +13,10 @@
       "title": "KI-Assistenten"
     },
     "description": "Inhaltserstellung, Textverfassung, Fragen und Antworten, Bildgenerierung, Videoerstellung, Sprachsynthese, intelligente Agenten, automatisierte Workflows, benutzerdefinierte AI-Anwendungen, passe deine eigene AI-Anwendungsplattform an",
+    "mcp": {
+      "description": "Durchsuchen, vergleichen und verbinden Sie Tausende von MCP-Servern, um KI-Systemen den einfachen Zugriff auf Dateisysteme, Datenbanken, APIs und andere wichtige Ressourcen zu ermöglichen und Ihre KI-Fähigkeiten umfassend zu erweitern.",
+      "title": "MCP-Server-Marktplatz"
+    },
     "models": {
       "description": "Entdecke gängige AI-Modelle wie OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek",
       "title": "KI-Modelle"

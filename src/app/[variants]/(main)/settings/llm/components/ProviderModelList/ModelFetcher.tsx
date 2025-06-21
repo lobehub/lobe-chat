@@ -1,5 +1,4 @@
-import { ActionIcon, Icon, Tooltip } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { ActionIcon, Icon, Text, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import isEqual from 'fast-deep-equal';
@@ -61,7 +60,7 @@ const ModelFetcher = memo<ModelFetcherProps>(({ provider }) => {
   const { mutate, isValidating } = useFetchProviderModelList(provider, enabledAutoFetch);
 
   return (
-    <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
+    <Text style={{ fontSize: 12 }} type={'secondary'}>
       <Flexbox align={'center'} gap={0} horizontal justify={'space-between'}>
         <div style={{ display: 'flex', lineHeight: '24px' }}>
           {t('llm.modelList.total', { count: totalModels })}
@@ -100,7 +99,7 @@ const ModelFetcher = memo<ModelFetcherProps>(({ provider }) => {
           </Flexbox>
         </Tooltip>
       </Flexbox>
-    </Typography.Text>
+    </Text>
   );
 });
 export default ModelFetcher;

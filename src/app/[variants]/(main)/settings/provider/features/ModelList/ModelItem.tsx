@@ -1,6 +1,6 @@
 import { ModelIcon } from '@lobehub/icons';
-import { ActionIcon, Tag, copyToClipboard } from '@lobehub/ui';
-import { App, Switch, Typography } from 'antd';
+import { ActionIcon, Tag, Text, copyToClipboard } from '@lobehub/ui';
+import { App, Switch } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { LucidePencil, TrashIcon } from 'lucide-react';
 import { memo, use, useState } from 'react';
@@ -297,11 +297,9 @@ const ModelItem = memo<ModelItemProps>(
             </Flexbox>
             <Flexbox align={'baseline'} gap={8} horizontal>
               {content.length > 0 && (
-                <Typography.Text
-                  style={{ color: theme.colorTextSecondary, fontSize: 12, marginBottom: 0 }}
-                >
+                <Text style={{ color: theme.colorTextSecondary, fontSize: 12, marginBottom: 0 }}>
                   {content.join(' · ')}
-                </Typography.Text>
+                </Text>
               )}
             </Flexbox>
           </Flexbox>

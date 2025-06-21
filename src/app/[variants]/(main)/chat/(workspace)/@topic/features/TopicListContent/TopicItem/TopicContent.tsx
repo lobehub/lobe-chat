@@ -1,5 +1,5 @@
-import { ActionIcon, Dropdown, EditableText, Icon, type MenuProps } from '@lobehub/ui';
-import { App, Typography } from 'antd';
+import { ActionIcon, Dropdown, EditableText, Icon, type MenuProps, Text } from '@lobehub/ui';
+import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import {
   LucideCopy,
@@ -32,7 +32,6 @@ const useStyles = createStyles(({ css }) => ({
     text-align: start;
   `,
 }));
-const { Paragraph } = Typography;
 
 interface TopicContentProps {
   fav?: boolean;
@@ -167,13 +166,13 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
             <BubblesLoading />
           </Flexbox>
         ) : (
-          <Paragraph
+          <Text
             className={styles.title}
             ellipsis={{ rows: 1, tooltip: { placement: 'left', title } }}
             style={{ margin: 0 }}
           >
             {title}
-          </Paragraph>
+          </Text>
         )
       ) : (
         <EditableText

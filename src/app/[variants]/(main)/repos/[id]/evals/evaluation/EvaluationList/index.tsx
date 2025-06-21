@@ -2,9 +2,10 @@
 
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import { ActionIcon, Button, ButtonProps, Icon } from '@lobehub/ui';
-import { App, Typography } from 'antd';
+import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import { DownloadIcon, PlayIcon, RotateCcwIcon, Trash2Icon } from 'lucide-react';
+import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -57,13 +58,13 @@ const EvaluationList = ({ knowledgeBaseId }: { knowledgeBaseId: string }) => {
       dataIndex: ['dataset', 'id'],
       render: (dom, entity) => {
         return (
-          <Typography.Link
+          <Link
             href={`/repos/${knowledgeBaseId}/evals/dataset?id=${entity.dataset.id}`}
             style={{ color: 'initial' }}
             target={'_blank'}
           >
             {entity.dataset.name}
-          </Typography.Link>
+          </Link>
         );
       },
       title: t('evaluation.table.columns.datasetId.title'),

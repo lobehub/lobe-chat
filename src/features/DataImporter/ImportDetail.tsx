@@ -1,7 +1,7 @@
 'use client';
 
-import { Button, Modal } from '@lobehub/ui';
-import { Table, Typography } from 'antd';
+import { Button, Modal, Text } from '@lobehub/ui';
+import { Table } from 'antd';
 import { createStyles } from 'antd-style';
 import { Info } from 'lucide-react';
 import { useState } from 'react';
@@ -9,8 +9,6 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { ImportPgDataStructure } from '@/types/export';
-
-const { Text } = Typography;
 
 const getNonEmptyTables = (data: ImportPgDataStructure) => {
   const result = [];

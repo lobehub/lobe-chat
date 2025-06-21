@@ -1,5 +1,4 @@
-import { Icon } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Icon, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { CheckIcon, RouterIcon, TerminalIcon } from 'lucide-react';
 import React, { memo } from 'react';
@@ -161,9 +160,9 @@ const MCPTypeSelect = ({ value, onChange }: MCPTypeSelectProps) => {
               ))}
             </Flexbox>
             {disabled && (
-              <Typography.Text style={{ fontSize: 12, marginTop: 8 }} type="warning">
+              <Text style={{ fontSize: 12, marginTop: 8 }} type="warning">
                 {t('dev.mcp.type.stdioNotAvailable')}
-              </Typography.Text>
+              </Text>
             )}
           </Flexbox>
         );

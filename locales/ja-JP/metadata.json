@@ -13,6 +13,10 @@
       "title": "AIアシスタント"
     },
     "description": "コンテンツ作成、コピーライティング、Q&A、画像生成、動画生成、音声生成、インテリジェントエージェント、自動化ワークフロー、カスタムAIアプリケーション、あなた専用のAIアプリケーションワークスペースをカスタマイズ",
+    "mcp": {
+      "description": "数千のMCPサーバーを検索、比較、接続し、AIシステムがファイルシステム、データベース、APIなどの重要なリソースに簡単にアクセスできるよう支援し、あなたのAI能力を全面的に拡張します。",
+      "title": "MCPサーバーマーケット"
+    },
     "models": {
       "description": "主流のAIモデルを探索 OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek",
       "title": "AIモデル"
