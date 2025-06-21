@@ -36,10 +36,6 @@ export class ChatService extends BaseService {
    * @returns 聊天响应
    */
   async chat(params: ChatServiceParams): ServiceResult<ChatServiceResponse> {
-    if (!this.userId) {
-      throw this.createAuthError('未授权操作');
-    }
-
     const provider = params.provider || this.config.defaultProvider!;
     const model = params.model || this.config.defaultModel!;
 
@@ -53,7 +49,7 @@ export class ChatService extends BaseService {
     try {
       // 创建 AgentRuntime 实例
       const agentRuntime = await initAgentRuntimeWithUserPayload(provider, {
-        userId: this.userId,
+        userId: this.userId!,
       });
 
       // 构建 ChatStreamPayload
@@ -67,7 +63,7 @@ export class ChatService extends BaseService {
 
       // 调用聊天 API
       const response = await agentRuntime.chat(chatPayload, {
-        user: this.userId,
+        user: this.userId!,
       });
 
       // 处理流式响应

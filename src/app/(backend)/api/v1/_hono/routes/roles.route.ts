@@ -12,11 +12,11 @@ const RolesRoutes = new Hono();
 
 /**
  * Get all roles in the system
- * GET /api/v1/roles/list
+ * GET /api/v1/roles
  * Requires role read permission (specific scopes)
  */
 RolesRoutes.get(
-  '/list',
+  '/',
   requireAuth,
   requireAnyPermission(
     getScopePermissions('RBAC_ROLE_READ', ['ALL', 'WORKSPACE']),
@@ -31,7 +31,7 @@ RolesRoutes.get(
 
 /**
  * Get all active roles in the system
- * GET /api/v1/roles/active
+ * GET /api/v1/roles?status=active
  * Requires role read permission (only admin level)
  */
 RolesRoutes.get(
