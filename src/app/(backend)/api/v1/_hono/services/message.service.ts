@@ -3,6 +3,7 @@ import { and, desc, eq, inArray, isNull } from 'drizzle-orm/expressions';
 
 import { messages, messagesFiles } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
+import { idGenerator } from '@/database/utils/idGenerator';
 
 import { BaseService } from '../common/base.service';
 import { ServiceResult } from '../types';
@@ -86,11 +87,10 @@ export class MessageService extends BaseService {
     this.log('info', '根据话题ID获取消息列表', { topicId, userId: this.userId });
 
     try {
-      const result = await this.db
-        .select()
-        .from(messages)
-        .where(and(eq(messages.topicId, topicId), eq(messages.userId, this.userId!)))
-        .orderBy(desc(messages.createdAt));
+      const result = await this.db.query.messages.findMany({
+        orderBy: desc(messages.createdAt),
+        where: and(eq(messages.topicId, topicId), eq(messages.userId, this.userId!)),
+      });
 
       const messageList = result.map((message) => ({
         agentId: message.agentId,
@@ -145,6 +145,7 @@ export class MessageService extends BaseService {
         .values({
           content: messageData.content,
           favorite: false,
+          id: idGenerator('messages'),
           model: messageData.fromModel,
           provider: messageData.fromProvider,
           role: messageData.role,
@@ -267,21 +268,19 @@ export class MessageService extends BaseService {
     limit: number = 10,
   ): Promise<Array<{ content: string; role: 'user' | 'assistant' | 'system' }>> {
     try {
-      const result = await this.db
-        .select({
-          content: messages.content,
-          role: messages.role,
-        })
-        .from(messages)
-        .where(
-          and(
-            sessionId === null ? isNull(messages.sessionId) : eq(messages.sessionId, sessionId),
-            topicId === null ? isNull(messages.topicId) : eq(messages.topicId, topicId),
-            eq(messages.userId, this.userId!),
-          ),
-        )
-        .orderBy(desc(messages.createdAt))
-        .limit(limit);
+      const result = await this.db.query.messages.findMany({
+        columns: {
+          content: true,
+          role: true,
+        },
+        limit: limit,
+        orderBy: desc(messages.createdAt),
+        where: and(
+          sessionId === null ? isNull(messages.sessionId) : eq(messages.sessionId, sessionId),
+          topicId === null ? isNull(messages.topicId) : eq(messages.topicId, topicId),
+          eq(messages.userId, this.userId!),
+        ),
+      });
 
       // 反转顺序，使最新的消息在后面
       return result
