@@ -7,8 +7,7 @@ const minimaxChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 1_000_192,
-    description:
-      '全新自研推理模型。全球领先：80K思维链 x 1M输入，效果比肩海外顶尖模型。',
+    description: '全新自研推理模型。全球领先：80K思维链 x 1M输入，效果比肩海外顶尖模型。',
     displayName: 'MiniMax-M1',
     enabled: true,
     id: 'MiniMax-M1',
