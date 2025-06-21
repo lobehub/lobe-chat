@@ -14,9 +14,9 @@ import {
 // Message Translate 相关路由
 const MessageTranslatesRoutes = new Hono();
 
-// GET /api/v1/message_translates/query - 获取指定消息的翻译信息
+// GET /api/v1/message-translates - 获取指定消息的翻译信息
 MessageTranslatesRoutes.get(
-  '/query',
+  '/',
   requireAuth,
   requireAnyPermission(
     getScopePermissions('MESSAGE_READ', ['ALL', 'WORKSPACE', 'OWNER']),
@@ -29,9 +29,9 @@ MessageTranslatesRoutes.get(
   },
 );
 
-// POST /api/v1/message_translates/translate - 翻译指定消息
+// POST /api/v1/message-translates - 翻译指定消息
 MessageTranslatesRoutes.post(
-  '/translate',
+  '/',
   requireAuth,
   requireAnyPermission(
     getScopePermissions('MESSAGE_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),

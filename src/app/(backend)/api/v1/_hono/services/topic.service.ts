@@ -2,6 +2,7 @@ import { eq } from 'drizzle-orm';
 
 import { topics } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
+import { idGenerator } from '@/database/utils/idGenerator';
 
 import { BaseService } from '../common/base.service';
 import { TopicResponse } from '../types/topic.type';
@@ -22,11 +23,10 @@ export class TopicService extends BaseService {
     }
 
     try {
-      const result = await this.db
-        .select()
-        .from(topics)
-        .where(eq(topics.sessionId, sessionId))
-        .orderBy(topics.createdAt);
+      const result = await this.db.query.topics.findMany({
+        orderBy: topics.createdAt,
+        where: eq(topics.sessionId, sessionId),
+      });
 
       return result.map((topic) => ({
         clientId: topic.clientId,
@@ -62,6 +62,7 @@ export class TopicService extends BaseService {
         .insert(topics)
         .values({
           favorite: false,
+          id: idGenerator('topics'),
           sessionId,
           title,
           userId: this.userId,
@@ -98,23 +99,21 @@ export class TopicService extends BaseService {
 
     try {
       // 首先检查话题是否存在且属于当前用户
-      const existingTopic = await this.db
-        .select()
-        .from(topics)
-        .where(eq(topics.id, topicId))
-        .limit(1);
+      const existingTopic = await this.db.query.topics.findFirst({
+        where: eq(topics.id, topicId),
+      });
 
-      if (existingTopic.length === 0) {
+      if (!existingTopic) {
         throw this.createCommonError('话题不存在');
       }
 
-      if (existingTopic[0].userId !== this.userId) {
+      if (existingTopic.userId !== this.userId) {
         throw this.createAuthorizationError('无权限操作此话题');
       }
 
       // TODO: 这里应该集成AI服务来生成真正的摘要
       // 目前先使用一个简单的摘要逻辑
-      const summary = `${existingTopic[0].title || '未命名话题'} 的对话摘要`;
+      const summary = `${existingTopic.title || '未命名话题'} 的对话摘要`;
 
       const [updatedTopic] = await this.db
         .update(topics)
