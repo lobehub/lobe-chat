@@ -1,4 +1,22 @@
 {
+  "proxy": {
+    "auth": "Autenticazione necessaria",
+    "bypass": "Indirizzi da escludere dal proxy",
+    "enable": "Abilita proxy",
+    "password": "Password",
+    "password_placeholder": "Inserisci la password",
+    "port": "Porta",
+    "server": "Indirizzo del server",
+    "testButton": "Testa connessione",
+    "testFailed": "Connessione fallita: {{error}}",
+    "testSuccess": "Connessione riuscita",
+    "testUrl": "Indirizzo di test",
+    "testUrlPlaceholder": "Inserisci l'URL da testare",
+    "testing": "Testando la connessione...",
+    "type": "Tipo di proxy",
+    "username": "Nome utente",
+    "username_placeholder": "Inserisci il nome utente"
+  },
   "remoteServer": {
     "authError": "Autenticazione fallita: {{error}}",
     "authPending": "Completa l'autenticazione nel browser",
