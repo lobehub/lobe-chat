@@ -26,10 +26,8 @@
   "defaultSession": "Default Assistant",
   "duplicateSession": {
     "loading": "Copying...",
-    "success": "Copy successful",
-    "title": "{{title}} Copy"
+    "success": "Copy successful"
   },
-  "duplicateTitle": "{{title}} Copy",
   "emptyAgent": "No assistant available",
   "extendParams": {
     "disableContextCaching": {
