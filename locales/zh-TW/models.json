@@ -2321,6 +2321,15 @@
   "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
     "description": "Claude 3.7 sonnet 是 Anthropic 最快速的下一代模型。與 Claude 3 Haiku 相比，Claude 3.7 Sonnet 在各項技能上都有所提升，並在許多智力基準測試中超越了上一代最大的模型 Claude 3 Opus。"
   },
+  "v0-1.0-md": {
+    "description": "v0-1.0-md 模型是透過 v0 API 提供服務的舊版模型"
+  },
+  "v0-1.5-lg": {
+    "description": "v0-1.5-lg 模型適用於高階思考或推理任務"
+  },
+  "v0-1.5-md": {
+    "description": "v0-1.5-md 模型適用於日常任務和使用者介面（UI）生成"
+  },
   "whisper-1": {
     "description": "通用語音識別模型，支持多語言語音識別、語音翻譯和語言識別"
   },
