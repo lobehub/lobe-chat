@@ -202,6 +202,7 @@
     "lodash-es": "^4.17.21",
     "lucide-react": "^0.509.0",
     "mammoth": "^1.9.1",
+    "word-extractor": "^1.0.4",
     "mdast-util-to-markdown": "^2.1.2",
     "modern-screenshot": "^4.6.0",
     "nanoid": "^5.1.5",
