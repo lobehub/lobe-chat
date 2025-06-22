@@ -200,7 +200,7 @@
     "langfuse": "^3.37.3",
     "langfuse-core": "^3.37.3",
     "lodash-es": "^4.17.21",
-    "lucide-react": "^0.509.0",
+    "lucide-react": "^0.522.0",
     "mammoth": "^1.9.1",
     "mdast-util-to-markdown": "^2.1.2",
     "modern-screenshot": "^4.6.0",
