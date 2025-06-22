@@ -8,12 +8,10 @@ import { requireAuth } from '../middleware/oidc-auth';
 import { requireAnyPermission } from '../middleware/permission-check';
 import {
   CloneSessionRequestSchema,
-  CountSessionsRequestSchema,
   CreateSessionRequestSchema,
   GetSessionsRequestSchema,
   SearchSessionsRequestSchema,
   SessionIdParamSchema,
-  UpdateSessionConfigRequestSchema,
   UpdateSessionRequestSchema,
 } from '../types/session.type';
 
@@ -79,25 +77,6 @@ SessionRoutes.get(
 );
 
 /**
- * 统计会话数量
- * GET /api/v1/sessions/count
- * 需要会话读取权限
- */
-SessionRoutes.get(
-  '/count',
-  requireAuth,
-  requireAnyPermission(
-    getScopePermissions('SESSION_READ', ['ALL', 'WORKSPACE', 'OWNER']),
-    '您没有权限查看会话统计',
-  ),
-  zValidator('query', CountSessionsRequestSchema),
-  async (c) => {
-    const controller = new SessionController();
-    return await controller.countSessions(c);
-  },
-);
-
-/**
  * 创建会话
  * POST /api/v1/sessions
  * 需要会话创建权限
@@ -136,25 +115,6 @@ SessionRoutes.get(
 );
 
 /**
- * 获取会话配置
- * GET /api/v1/sessions/:id/config
- * 需要会话读取权限
- */
-SessionRoutes.get(
-  '/:id/config',
-  requireAuth,
-  requireAnyPermission(
-    getScopePermissions('SESSION_READ', ['ALL', 'WORKSPACE', 'OWNER']),
-    '您没有权限查看会话配置',
-  ),
-  zValidator('param', SessionIdParamSchema),
-  async (c) => {
-    const controller = new SessionController();
-    return await controller.getSessionConfig(c);
-  },
-);
-
-/**
  * 更新会话
  * PUT /api/v1/sessions/:id
  * 需要会话更新权限
@@ -171,26 +131,6 @@ SessionRoutes.put(
   async (c) => {
     const controller = new SessionController();
     return await controller.updateSession(c);
-  },
-);
-
-/**
- * 更新会话配置
- * PUT /api/v1/sessions/:id/config
- * 需要会话更新权限
- */
-SessionRoutes.put(
-  '/:id/config',
-  requireAuth,
-  requireAnyPermission(
-    getScopePermissions('SESSION_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),
-    '您没有权限更新会话配置',
-  ),
-  zValidator('param', SessionIdParamSchema),
-  zValidator('json', UpdateSessionConfigRequestSchema),
-  async (c) => {
-    const controller = new SessionController();
-    return await controller.updateSessionConfig(c);
   },
 );
 
@@ -230,24 +170,6 @@ SessionRoutes.post(
   async (c) => {
     const controller = new SessionController();
     return await controller.cloneSession(c);
-  },
-);
-
-/**
- * 删除所有会话
- * DELETE /api/v1/sessions
- * 需要会话删除权限
- */
-SessionRoutes.delete(
-  '/',
-  requireAuth,
-  requireAnyPermission(
-    getScopePermissions('SESSION_DELETE', ['ALL', 'WORKSPACE']),
-    '您没有权限删除所有会话',
-  ),
-  async (c) => {
-    const controller = new SessionController();
-    return await controller.deleteAllSessions(c);
   },
 );
 

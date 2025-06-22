@@ -477,6 +477,7 @@ export class SessionModel {
       ),
       with: { agentsToSessions: { columns: {}, with: { session: true } } },
     });
+
     try {
       // @ts-expect-error
       return results.map((item) => item.agentsToSessions[0].session);

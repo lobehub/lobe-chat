@@ -111,8 +111,8 @@ export class FileController extends BaseController {
       const fileListQuery: FileListQuery = {
         fileType: query.fileType as string,
         knowledgeBaseId: query.knowledgeBaseId as string,
-        page: query.page ? parseInt(query.page as string, 10) : undefined,
-        pageSize: query.pageSize ? parseInt(query.pageSize as string, 10) : undefined,
+        page: query.page,
+        pageSize: query.pageSize,
         search: query.search as string,
       };
 

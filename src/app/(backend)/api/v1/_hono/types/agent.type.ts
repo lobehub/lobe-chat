@@ -23,7 +23,6 @@ export interface CreateAgentRequest {
   model?: string;
   params?: Record<string, unknown>;
   provider?: string;
-  slug: string;
   systemRole?: string;
   title: string;
 }
@@ -192,7 +191,6 @@ export const CreateAgentRequestSchema = z.object({
   model: z.string().optional(),
   params: z.record(z.unknown()).optional(),
   provider: z.string().optional(),
-  slug: z.string().min(1, 'slug 不能为空'),
   systemRole: z.string().optional(),
   title: z.string().min(1, '标题不能为空'),
 });
