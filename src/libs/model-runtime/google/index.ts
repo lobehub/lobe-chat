@@ -493,12 +493,18 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   ): GoogleFunctionCallTool[] | undefined {
     // 目前 Tools (例如 googleSearch) 无法与其他 FunctionCall 同时使用
     if (payload?.messages?.some((m) => m.tool_calls?.length)) {
-      return; // 若历史消息中已有 function calling，则不再注入任何 Tools
+      return this.buildFunctionDeclarations(tools);
     }
     if (payload?.enabledSearch) {
       return [{ googleSearch: {} } as GoogleSearchRetrievalTool];
     }
 
+    return this.buildFunctionDeclarations(tools);
+  }
+
+  private buildFunctionDeclarations(
+    tools: ChatCompletionTool[] | undefined,
+  ): GoogleFunctionCallTool[] | undefined {
     if (!tools || tools.length === 0) return;
 
     return [
