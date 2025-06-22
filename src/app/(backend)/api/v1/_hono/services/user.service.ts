@@ -1,12 +1,13 @@
 import { eq } from 'drizzle-orm/expressions';
 
 import { RbacModel } from '@/database/models/rbac';
-import { RoleItem, users } from '@/database/schemas';
+import { NewUser, RoleItem, users } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
+import { uuid } from '@/utils/uuid';
 
 import { BaseService } from '../common/base.service';
 import { ServiceResult } from '../types';
-import { UserWithRoles } from '../types/user.type';
+import { CreateUserRequest, UpdateUserRequest, UserWithRoles } from '../types/user.type';
 
 /**
  * 用户服务实现类
@@ -92,6 +93,214 @@ export class UserService extends BaseService {
     } catch (error) {
       this.log('error', '获取用户列表失败', { error });
       throw this.createBusinessError('获取用户列表失败');
+    }
+  }
+
+  /**
+   * 创建新用户
+   * @param userData 用户创建数据
+   * @returns 创建的用户信息（包含角色信息）
+   */
+  async createUser(userData: CreateUserRequest): ServiceResult<UserWithRoles> {
+    this.log('info', '创建新用户', { userData });
+
+    try {
+      // 检查用户名和邮箱是否已存在
+      if (userData.username) {
+        const existingUserByUsername = await this.db.query.users.findFirst({
+          where: eq(users.username, userData.username),
+        });
+        if (existingUserByUsername) {
+          throw this.createBusinessError('用户名已存在');
+        }
+      }
+
+      if (userData.email) {
+        const existingUserByEmail = await this.db.query.users.findFirst({
+          where: eq(users.email, userData.email),
+        });
+        if (existingUserByEmail) {
+          throw this.createBusinessError('邮箱已存在');
+        }
+      }
+
+      // 生成新用户ID
+      const userId = uuid();
+      const currentTime = new Date();
+
+      // 构建新用户数据
+      const newUser: NewUser = {
+        id: userId,
+        ...userData,
+        createdAt: currentTime,
+        updatedAt: currentTime,
+      };
+
+      // 插入新用户
+      const [createdUser] = await this.db.insert(users).values(newUser).returning();
+
+      this.log('info', '用户创建成功', { userId: createdUser.id });
+
+      // 返回包含角色信息的用户数据
+      return {
+        ...createdUser,
+        roles: [], // 新用户暂时没有角色
+      };
+    } catch (error) {
+      this.log('error', '创建用户失败', { error });
+      if (error instanceof Error && error.name === 'BusinessError') {
+        throw error;
+      }
+      throw this.createBusinessError('创建用户失败');
+    }
+  }
+
+  /**
+   * 更新用户信息
+   * @param userId 用户ID
+   * @param userData 更新数据
+   * @returns 更新后的用户信息（包含角色信息）
+   */
+  async updateUser(userId: string, userData: UpdateUserRequest): ServiceResult<UserWithRoles> {
+    this.log('info', '更新用户信息', { userData, userId });
+
+    try {
+      // 检查用户是否存在
+      const existingUser = await this.db.query.users.findFirst({
+        where: eq(users.id, userId),
+      });
+
+      if (!existingUser) {
+        throw this.createBusinessError('用户不存在');
+      }
+
+      // 检查用户名和邮箱是否被其他用户使用
+      if (userData.username && userData.username !== existingUser.username) {
+        const existingUserByUsername = await this.db.query.users.findFirst({
+          where: eq(users.username, userData.username),
+        });
+        if (existingUserByUsername && existingUserByUsername.id !== userId) {
+          throw this.createBusinessError('用户名已被其他用户使用');
+        }
+      }
+
+      if (userData.email && userData.email !== existingUser.email) {
+        const existingUserByEmail = await this.db.query.users.findFirst({
+          where: eq(users.email, userData.email),
+        });
+        if (existingUserByEmail && existingUserByEmail.id !== userId) {
+          throw this.createBusinessError('邮箱已被其他用户使用');
+        }
+      }
+
+      // 更新用户信息
+      const [updatedUser] = await this.db
+        .update(users)
+        .set({
+          ...userData,
+          updatedAt: new Date(),
+        })
+        .where(eq(users.id, userId))
+        .returning();
+
+      this.log('info', '用户信息更新成功', { userId });
+
+      // 获取用户角色信息
+      let roles: RoleItem[] = [];
+      try {
+        const rbacModel = new RbacModel(this.db, userId);
+        roles = await rbacModel.getUserRoles();
+      } catch (error) {
+        this.log('warn', '获取用户角色信息失败', {
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
+
+      return {
+        ...updatedUser,
+        roles,
+      };
+    } catch (error) {
+      this.log('error', '更新用户失败', { error });
+      if (error instanceof Error && error.name === 'BusinessError') {
+        throw error;
+      }
+      throw this.createBusinessError('更新用户失败');
+    }
+  }
+
+  /**
+   * 删除用户
+   * @param userId 用户ID
+   * @returns 删除操作结果
+   */
+  async deleteUser(userId: string): ServiceResult<{ success: boolean }> {
+    this.log('info', '删除用户', { userId });
+
+    try {
+      // 检查用户是否存在
+      const existingUser = await this.db.query.users.findFirst({
+        where: eq(users.id, userId),
+      });
+
+      if (!existingUser) {
+        throw this.createBusinessError('用户不存在');
+      }
+
+      // 执行删除操作
+      await this.db.delete(users).where(eq(users.id, userId));
+
+      this.log('info', '用户删除成功', { userId });
+
+      return { success: true };
+    } catch (error) {
+      this.log('error', '删除用户失败', { error });
+      if (error instanceof Error && error.name === 'BusinessError') {
+        throw error;
+      }
+      throw this.createBusinessError('删除用户失败');
+    }
+  }
+
+  /**
+   * 根据ID获取用户信息
+   * @param userId 用户ID
+   * @returns 用户信息（包含角色信息）
+   */
+  async getUserById(userId: string): ServiceResult<UserWithRoles> {
+    this.log('info', '根据ID获取用户信息', { userId });
+
+    try {
+      // 查询用户基本信息
+      const user = await this.db.query.users.findFirst({
+        where: eq(users.id, userId),
+      });
+
+      if (!user) {
+        throw this.createBusinessError('用户不存在');
+      }
+
+      // 获取用户角色信息
+      let roles: RoleItem[] = [];
+      try {
+        const rbacModel = new RbacModel(this.db, userId);
+        roles = await rbacModel.getUserRoles();
+      } catch (error) {
+        this.log('warn', '获取用户角色信息失败', {
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
+
+      return {
+        ...user,
+        roles,
+      };
+    } catch (error) {
+      this.log('error', '获取用户信息失败', { error });
+      if (error instanceof Error && error.name === 'BusinessError') {
+        throw error;
+      }
+      throw this.createBusinessError('获取用户信息失败');
     }
   }
 }
