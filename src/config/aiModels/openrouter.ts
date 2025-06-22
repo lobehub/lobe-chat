@@ -235,6 +235,24 @@ const openrouterChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 1_048_576,
     description:
+      'Gemini 2.5 Pro 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
+    displayName: 'Gemini 2.5 Pro',
+    id: 'google/gemini-2.5-pro',
+    maxOutput: 65_536,
+    pricing: {
+      input: 1.25,
+      output: 10,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576,
+    description:
       'Gemini 2.5 Pro Preview 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
     displayName: 'Gemini 2.5 Pro Preview',
     id: 'google/gemini-2.5-pro-preview',
@@ -242,6 +260,24 @@ const openrouterChatModels: AIChatModelCard[] = [
     pricing: {
       input: 1.25,
       output: 10,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576,
+    description:
+      'Gemini 2.5 Flash 是 Google 最先进的主力模型，专为高级推理、编码、数学和科学任务而设计。它包含内置的“思考”能力，使其能够提供具有更高准确性和细致上下文处理的响应。\n\n注意：此模型有两个变体：思考和非思考。输出定价根据思考能力是否激活而有显著差异。如果您选择标准变体（不带“:thinking”后缀），模型将明确避免生成思考令牌。\n\n要利用思考能力并接收思考令牌，您必须选择“:thinking”变体，这将产生更高的思考输出定价。\n\n此外，Gemini 2.5 Flash 可通过“推理最大令牌数”参数进行配置，如文档中所述 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)。',
+    displayName: 'Gemini 2.5 Flash',
+    id: 'google/gemini-2.5-flash',
+    maxOutput: 65_535,
+    pricing: {
+      input: 0.15,
+      output: 0.6,
     },
     type: 'chat',
   },

@@ -2321,6 +2321,15 @@
   "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
     "description": "Claude 3.7 sonnet là mô hình thế hệ tiếp theo nhanh nhất của Anthropic. So với Claude 3 Haiku, Claude 3.7 Sonnet đã cải thiện ở nhiều kỹ năng và vượt qua mô hình lớn nhất thế hệ trước là Claude 3 Opus trong nhiều bài kiểm tra trí tuệ."
   },
+  "v0-1.0-md": {
+    "description": "Mô hình v0-1.0-md là phiên bản cũ được cung cấp dịch vụ qua API v0"
+  },
+  "v0-1.5-lg": {
+    "description": "Mô hình v0-1.5-lg phù hợp cho các nhiệm vụ suy nghĩ hoặc lý luận nâng cao"
+  },
+  "v0-1.5-md": {
+    "description": "Mô hình v0-1.5-md phù hợp cho các nhiệm vụ hàng ngày và tạo giao diện người dùng (UI)"
+  },
   "whisper-1": {
     "description": "Mô hình nhận diện giọng nói đa năng, hỗ trợ nhận diện giọng nói đa ngôn ngữ, dịch giọng nói và nhận diện ngôn ngữ."
   },
