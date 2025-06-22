@@ -40,7 +40,7 @@ export class SessionGroupController extends BaseController {
    */
   async getSessionGroupById(c: Context): Promise<Response> {
     try {
-      const groupId = c.req.param('id');
+      const { id: groupId } = this.getParams<{ id: string }>(c);
 
       if (!groupId) {
         return this.error(c, '会话组 ID 是必需的', 400);
@@ -68,7 +68,7 @@ export class SessionGroupController extends BaseController {
    */
   async createSessionGroup(c: Context): Promise<Response> {
     try {
-      const body = await c.req.json<CreateSessionGroupRequest>();
+      const body = await this.getBody<CreateSessionGroupRequest>(c);
 
       const db = await this.getDatabase();
       const sessionGroupService = new SessionGroupService(db, this.getUserId(c));
@@ -96,8 +96,8 @@ export class SessionGroupController extends BaseController {
    */
   async updateSessionGroup(c: Context): Promise<Response> {
     try {
-      const groupId = c.req.param('id');
-      const body = await c.req.json<Omit<UpdateSessionGroupRequest, 'id'>>();
+      const { id: groupId } = this.getParams<{ id: string }>(c);
+      const body = await this.getBody<Omit<UpdateSessionGroupRequest, 'id'>>(c);
 
       if (!groupId) {
         return this.error(c, '会话组 ID 是必需的', 400);
@@ -126,8 +126,8 @@ export class SessionGroupController extends BaseController {
    */
   async deleteSessionGroup(c: Context): Promise<Response> {
     try {
-      const groupId = c.req.param('id');
-      const query = c.req.query();
+      const { id: groupId } = this.getParams<{ id: string }>(c);
+      const query = this.getQuery(c);
 
       if (!groupId) {
         return this.error(c, '会话组 ID 是必需的', 400);
@@ -156,7 +156,7 @@ export class SessionGroupController extends BaseController {
    */
   async updateSessionGroupOrder(c: Context): Promise<Response> {
     try {
-      const body = await c.req.json<UpdateSessionGroupOrderRequest>();
+      const body = await this.getBody<UpdateSessionGroupOrderRequest>(c);
 
       if (!body.sortMap || !Array.isArray(body.sortMap)) {
         return this.error(c, '排序映射数据是必需的', 400);

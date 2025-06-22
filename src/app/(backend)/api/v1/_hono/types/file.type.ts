@@ -182,8 +182,16 @@ export const PreSignedUrlRequestSchema = z.object({
 export const FileListQuerySchema = z.object({
   fileType: z.string().optional(),
   knowledgeBaseId: z.string().optional(),
-  page: z.number().min(1).optional(),
-  pageSize: z.number().min(1).max(100).optional(),
+  page: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().min(1))
+    .optional(),
+  pageSize: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().min(1).max(100))
+    .optional(),
   search: z.string().optional(),
 });
 
