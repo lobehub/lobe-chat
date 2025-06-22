@@ -1,21 +1,19 @@
-import { and, eq } from 'drizzle-orm';
+import { Column, and, desc, eq, like, not, or, sql } from 'drizzle-orm';
 
+import { INBOX_SESSION_ID } from '@/const/session';
 import { SessionModel } from '@/database/models/session';
-import { SessionItem, agents, agentsToSessions } from '@/database/schemas';
+import { SessionItem, agents, agentsToSessions, sessions } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { LobeAgentConfig } from '@/types/agent';
-import { ChatSessionList, LobeAgentSession } from '@/types/session';
+import { ChatSessionList } from '@/types/session';
 
 import { BaseService } from '../common/base.service';
 import { ServiceResult } from '../types';
 import {
   CloneSessionRequest,
-  CountResponse,
-  CountSessionsRequest,
   CreateSessionRequest,
   GetSessionsRequest,
   SearchSessionsRequest,
-  UpdateSessionConfigRequest,
   UpdateSessionRequest,
 } from '../types/session.type';
 
@@ -39,12 +37,32 @@ export class SessionService extends BaseService {
     this.log('info', '获取会话列表', { request });
 
     try {
-      const { current = 0, pageSize = 20 } = request;
-      const sessions = await this.sessionModel.query({ current, pageSize });
+      const { current = 1, pageSize = 20, userId } = request;
 
-      this.log('info', `查询到 ${sessions.length} 个会话`);
+      // 构建查询条件
+      let whereConditions = [not(eq(sessions.slug, INBOX_SESSION_ID))];
 
-      return sessions;
+      if (userId === null) {
+        // 查询所有用户的会话
+        this.log('info', '获取所有用户的会话列表');
+      } else {
+        // 查询特定用户的会话
+        const targetUserId = userId || this.userId;
+        whereConditions.push(eq(sessions.userId, targetUserId));
+        this.log('info', '根据用户 ID 获取会话列表', { userId: targetUserId });
+      }
+
+      const sessionsList = await this.db.query.sessions.findMany({
+        limit: pageSize,
+        offset: (current - 1) * pageSize,
+        orderBy: [desc(sessions.updatedAt)],
+        where: and(...whereConditions),
+        with: { agentsToSessions: { columns: {}, with: { agent: true } }, group: true },
+      });
+
+      this.log('info', `查询到 ${sessionsList.length} 个会话`);
+
+      return sessionsList;
     } catch (error) {
       this.log('error', '获取会话列表失败', { error });
       throw this.createBusinessError('获取会话列表失败');
@@ -215,34 +233,6 @@ export class SessionService extends BaseService {
   }
 
   /**
-   * 更新会话配置
-   * @param request 更新配置请求参数
-   * @returns 更新结果
-   */
-  async updateSessionConfig(request: UpdateSessionConfigRequest): ServiceResult<void> {
-    this.log('info', '更新会话配置', { id: request.id });
-
-    try {
-      const { id, config, meta } = request;
-
-      const updateData: any = {};
-      if (config) {
-        updateData.chatConfig = config.chatConfig;
-      }
-      if (meta) {
-        Object.assign(updateData, meta);
-      }
-
-      await this.sessionModel.updateConfig(id, updateData);
-
-      this.log('info', '会话配置更新成功', { id });
-    } catch (error) {
-      this.log('error', '更新会话配置失败', { error });
-      throw this.createBusinessError('更新会话配置失败');
-    }
-  }
-
-  /**
    * 删除会话
    * @param sessionId 会话 ID
    * @returns 删除结果
@@ -289,54 +279,28 @@ export class SessionService extends BaseService {
    * @param request 搜索请求参数
    * @returns 搜索结果
    */
-  async searchSessions(request: SearchSessionsRequest): ServiceResult<LobeAgentSession[]> {
-    this.log('info', '搜索会话', { keywords: request.keywords });
+  async searchSessions(request: SearchSessionsRequest): ServiceResult<SessionItem[]> {
+    const { keywords } = request;
+
+    this.log('info', '搜索会话', { keywords });
 
     try {
-      const sessions = await this.sessionModel.queryByKeyword(request.keywords);
+      // 直接从 sessions 表里查询
+      const sessionsList = await this.db.query.sessions.findMany({
+        where: and(
+          eq(sessions.userId, this.userId!),
+          or(
+            like(sql`lower(${sessions.title})` as unknown as Column, `%${keywords.toLowerCase()}%`),
+          ),
+        ),
+      });
 
-      this.log('info', `搜索到 ${sessions.length} 个会话`, { keywords: request.keywords });
+      this.log('info', `搜索到 ${sessionsList.length} 个会话`, { keywords: request.keywords });
 
-      return sessions;
+      return sessionsList;
     } catch (error) {
       this.log('error', '搜索会话失败', { error });
       throw this.createBusinessError('搜索会话失败');
-    }
-  }
-
-  /**
-   * 统计会话数量
-   * @param request 统计请求参数
-   * @returns 会话数量
-   */
-  async countSessions(request: CountSessionsRequest = {}): ServiceResult<CountResponse> {
-    this.log('info', '统计会话数量', { request });
-
-    try {
-      const count = await this.sessionModel.count(request);
-
-      this.log('info', '会话数量统计完成', { count });
-      return { count };
-    } catch (error) {
-      this.log('error', '统计会话数量失败', { error });
-      throw this.createBusinessError('统计会话数量失败');
-    }
-  }
-
-  /**
-   * 删除所有会话
-   * @returns 删除结果
-   */
-  async deleteAllSessions(): ServiceResult<void> {
-    this.log('info', '删除所有会话');
-
-    try {
-      await this.sessionModel.deleteAll();
-
-      this.log('info', '所有会话删除成功');
-    } catch (error) {
-      this.log('error', '删除所有会话失败', { error });
-      throw this.createBusinessError('删除所有会话失败');
     }
   }
 }

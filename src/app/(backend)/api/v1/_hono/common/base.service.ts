@@ -7,12 +7,12 @@ import { IBaseService } from '../types';
  * Provides unified service layer base functionality, consistent with the project's existing service layer pattern
  */
 export abstract class BaseService implements IBaseService {
-  protected userId: string | null;
+  protected userId: string;
   public db: LobeChatDatabase;
 
   constructor(db: LobeChatDatabase, userId: string | null) {
     this.db = db;
-    this.userId = userId;
+    this.userId = userId || '';
   }
 
   /**

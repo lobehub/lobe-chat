@@ -44,7 +44,7 @@ export class AgentController extends BaseController {
    */
   async createAgent(c: Context): Promise<Response> {
     try {
-      const body = await c.req.json<CreateAgentRequest>();
+      const body = await this.getBody<CreateAgentRequest>(c);
 
       const db = await this.getDatabase();
       const agentService = new AgentService(db, this.getUserId(c));
@@ -72,7 +72,7 @@ export class AgentController extends BaseController {
    */
   async updateAgent(c: Context): Promise<Response> {
     try {
-      const body = await c.req.json<UpdateAgentRequest>();
+      const body = await this.getBody<UpdateAgentRequest>(c);
 
       const db = await this.getDatabase();
       const agentService = new AgentService(db, this.getUserId(c));
@@ -92,11 +92,12 @@ export class AgentController extends BaseController {
    */
   async deleteAgent(c: Context): Promise<Response> {
     try {
-      const body = await c.req.json<AgentDeleteRequest>();
+      const { id } = this.getParams<{ id: string }>(c);
+      const request: AgentDeleteRequest = { agentId: id };
 
       const db = await this.getDatabase();
       const agentService = new AgentService(db, this.getUserId(c));
-      await agentService.deleteAgent(body);
+      await agentService.deleteAgent(request);
 
       return this.success(c, null, 'Agent 删除成功');
     } catch (error) {
@@ -112,7 +113,7 @@ export class AgentController extends BaseController {
    */
   async getAgentById(c: Context): Promise<Response> {
     try {
-      const agentId = c.req.param('id');
+      const { id: agentId } = this.getParams<{ id: string }>(c);
       const db = await this.getDatabase();
       const agentService = new AgentService(db, this.getUserId(c));
       const agent = await agentService.getAgentById(agentId);
@@ -135,8 +136,8 @@ export class AgentController extends BaseController {
    */
   async createSessionForAgent(c: Context): Promise<Response> {
     try {
-      const agentId = c.req.param('id');
-      const body = await c.req.json<Omit<CreateSessionForAgentRequest, 'agentId'>>();
+      const { id: agentId } = this.getParams<{ id: string }>(c);
+      const body = await this.getBody<Omit<CreateSessionForAgentRequest, 'agentId'>>(c);
 
       const request: CreateSessionForAgentRequest = {
         agentId,
@@ -169,7 +170,7 @@ export class AgentController extends BaseController {
    */
   async getAgentSessions(c: Context): Promise<Response> {
     try {
-      const agentId = c.req.param('id');
+      const { id: agentId } = this.getParams<{ id: string }>(c);
       const db = await this.getDatabase();
       const agentService = new AgentService(db, this.getUserId(c));
       const sessions = await agentService.getAgentSessions(agentId);
@@ -188,8 +189,8 @@ export class AgentController extends BaseController {
    */
   async linkAgentSession(c: Context): Promise<Response> {
     try {
-      const agentId = c.req.param('id');
-      const body = await c.req.json<AgentSessionLinkRequest>();
+      const { id: agentId } = this.getParams<{ id: string }>(c);
+      const body = await this.getBody<AgentSessionLinkRequest>(c);
 
       const db = await this.getDatabase();
       const agentService = new AgentService(db, this.getUserId(c));
@@ -209,8 +210,8 @@ export class AgentController extends BaseController {
    */
   async unlinkAgentSession(c: Context): Promise<Response> {
     try {
-      const agentId = c.req.param('id');
-      const sessionId = c.req.param('sessionId');
+      const { id: agentId } = this.getParams<{ id: string }>(c);
+      const { sessionId } = this.getParams<{ sessionId: string }>(c);
 
       const db = await this.getDatabase();
       const agentService = new AgentService(db, this.getUserId(c));
@@ -230,8 +231,8 @@ export class AgentController extends BaseController {
    */
   async batchLinkAgentSessions(c: Context): Promise<Response> {
     try {
-      const agentId = c.req.param('id');
-      const body = await c.req.json<AgentSessionBatchLinkRequest>();
+      const { id: agentId } = this.getParams<{ id: string }>(c);
+      const body = await this.getBody<AgentSessionBatchLinkRequest>(c);
 
       const db = await this.getDatabase();
       const agentService = new AgentService(db, this.getUserId(c));
@@ -251,7 +252,7 @@ export class AgentController extends BaseController {
    */
   async batchDeleteAgents(c: Context): Promise<Response> {
     try {
-      const body = await c.req.json<BatchDeleteAgentsRequest>();
+      const body = await this.getBody<BatchDeleteAgentsRequest>(c);
 
       const db = await this.getDatabase();
       const agentService = new AgentService(db, this.getUserId(c));
@@ -271,7 +272,7 @@ export class AgentController extends BaseController {
    */
   async batchUpdateAgents(c: Context): Promise<Response> {
     try {
-      const body = await c.req.json<BatchUpdateAgentsRequest>();
+      const body = await this.getBody<BatchUpdateAgentsRequest>(c);
 
       const db = await this.getDatabase();
       const agentService = new AgentService(db, this.getUserId(c));
