@@ -65,15 +65,7 @@ export interface SearchSessionsRequest {
 export interface GetSessionsRequest {
   current?: number;
   pageSize?: number;
-}
-
-/**
- * 统计会话请求参数
- */
-export interface CountSessionsRequest {
-  endDate?: string;
-  range?: [string, string];
-  startDate?: string;
+  userId?: string | null;
 }
 
 /**
@@ -213,14 +205,31 @@ export const CloneSessionRequestSchema = z.object({
 });
 
 export const SearchSessionsRequestSchema = z.object({
-  current: z.number().min(1).optional(),
+  current: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().min(1))
+    .optional(),
   keywords: z.string().min(1, '搜索关键词不能为空'),
-  pageSize: z.number().min(1).max(100).optional(),
+  pageSize: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().min(1).max(100))
+    .optional(),
 });
 
 export const GetSessionsRequestSchema = z.object({
-  current: z.number().min(1).optional(),
-  pageSize: z.number().min(1).max(100).optional(),
+  current: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().min(1))
+    .optional(),
+  pageSize: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().min(1).max(100))
+    .optional(),
+  userId: z.string().optional(),
 });
 
 export const CountSessionsRequestSchema = z.object({
