@@ -1,6 +1,6 @@
 'use client';
 
-import { Typography } from 'antd';
+import { Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import React, { memo } from 'react';
 import { Center } from 'react-layout-kit';
@@ -11,8 +11,6 @@ interface ClientProps {
     title: string;
   };
 }
-
-const { Title, Paragraph } = Typography;
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -32,10 +30,10 @@ const ConsentClientError = memo<ClientProps>(({ error }) => {
   return (
     <Center className={styles.container}>
       <div className={styles.error}>
-        <Title level={2} style={{ color: 'inherit' }}>
+        <Text as={'h2'} style={{ color: 'inherit' }}>
           {error.title}
-        </Title>
-        <Paragraph style={{ color: 'inherit' }}>{error.message}</Paragraph>
+        </Text>
+        <Text style={{ color: 'inherit' }}>{error.message}</Text>
       </div>
     </Center>
   );

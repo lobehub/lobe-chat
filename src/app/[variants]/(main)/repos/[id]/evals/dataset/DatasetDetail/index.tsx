@@ -1,8 +1,8 @@
 'use client';
 
 import { ProColumns, ProTable } from '@ant-design/pro-components';
-import { ActionIcon, Button } from '@lobehub/ui';
-import { Typography, Upload } from 'antd';
+import { ActionIcon, Button, Text } from '@lobehub/ui';
+import { Upload } from 'antd';
 import { createStyles } from 'antd-style';
 import { Edit2Icon, Trash2Icon } from 'lucide-react';
 import { parseAsInteger, useQueryState } from 'nuqs';
@@ -64,7 +64,7 @@ const DatasetDetail = () => {
               {referenceFiles?.map((file) => (
                 <Flexbox gap={4} horizontal key={file.id}>
                   <FileIcon fileName={file.name} fileType={file.fileType} size={20} />
-                  <Typography.Text ellipsis={{ tooltip: true }}>{file.name}</Typography.Text>
+                  <Text ellipsis={{ tooltip: true }}>{file.name}</Text>
                 </Flexbox>
               ))}
             </Flexbox>
