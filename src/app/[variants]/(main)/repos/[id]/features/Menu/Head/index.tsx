@@ -1,6 +1,6 @@
 'use client';
 
-import { Typography } from 'antd';
+import { Text } from '@lobehub/ui';
 import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -16,7 +16,9 @@ const Head = memo<{ name?: string }>(({ name }) => {
           <RepoIcon />
         </Center>
 
-        <Typography.Text style={{ fontSize: 16, fontWeight: 'bold' }}>{name}</Typography.Text>
+        <Text ellipsis strong style={{ fontSize: 16 }}>
+          {name}
+        </Text>
       </Flexbox>
     </Flexbox>
   );

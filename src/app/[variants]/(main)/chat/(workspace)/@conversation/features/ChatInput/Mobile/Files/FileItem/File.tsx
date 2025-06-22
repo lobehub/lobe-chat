@@ -1,5 +1,4 @@
-import { ActionIcon } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { ActionIcon, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Trash } from 'lucide-react';
 import { memo } from 'react';
@@ -53,7 +52,7 @@ const FileItem = memo<FileItemProps>(({ id, onRemove, file, status, uploadState,
     <Flexbox align={'center'} className={styles.container} gap={12} horizontal key={id}>
       <FileIcon fileName={file.name} fileType={file.type} />
       <Flexbox style={{ overflow: 'hidden' }}>
-        <Typography.Text ellipsis={{ tooltip: false }}>{file.name}</Typography.Text>
+        <Text ellipsis>{file.name}</Text>
         <UploadDetail size={file.size} status={status} tasks={tasks} uploadState={uploadState} />
       </Flexbox>
       <ActionIcon

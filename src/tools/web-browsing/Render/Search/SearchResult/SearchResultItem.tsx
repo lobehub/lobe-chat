@@ -1,4 +1,4 @@
-import { Typography } from 'antd';
+import { Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
@@ -54,9 +54,9 @@ const SearchResultItem = memo<UniformSearchResult>(({ url, title }) => {
         <div className={styles.title}>{title}</div>
         <Flexbox align={'center'} gap={4} horizontal>
           <WebFavicon size={14} title={title} url={url} />
-          <Typography.Text className={styles.url} type={'secondary'}>
+          <Text className={styles.url} type={'secondary'}>
             {host.replace('www.', '')}
-          </Typography.Text>
+          </Text>
         </Flexbox>
       </Flexbox>
     </Link>
