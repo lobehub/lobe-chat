@@ -51,7 +51,8 @@ export class RoleController extends BaseController {
    */
   async getRoleById(c: Context): Promise<Response> {
     try {
-      const roleId = parseInt(c.req.param('id'));
+      const { id } = this.getParams<{ id: number }>(c);
+      const roleId = id;
       const db = await this.getDatabase();
       const roleService = new RoleService(db, this.getUserId(c));
       const role = await roleService.getRoleById(roleId);
@@ -73,7 +74,8 @@ export class RoleController extends BaseController {
    */
   async getRolePermissions(c: Context): Promise<Response> {
     try {
-      const roleId = parseInt(c.req.param('id'));
+      const { id } = this.getParams<{ id: number }>(c);
+      const roleId = id;
       const db = await this.getDatabase();
       const roleService = new RoleService(db, this.getUserId(c));
       const permissions = await roleService.getRolePermissions(roleId);
