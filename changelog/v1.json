@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-06-22",
+    "version": "1.96.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix MiniMax-M1 reasoning tag missing."]
     },
     "date": "2025-06-21",

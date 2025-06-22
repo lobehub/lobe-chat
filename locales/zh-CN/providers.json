@@ -134,6 +134,9 @@
   "upstage": {
     "description": "Upstage 专注于为各种商业需求开发AI模型，包括 Solar LLM 和文档 AI，旨在实现工作的人造通用智能（AGI）。通过 Chat API 创建简单的对话代理，并支持功能调用、翻译、嵌入以及特定领域应用。"
   },
+  "v0": {
+    "description": "v0 是一个配对编程助手，你只需用自然语言描述想法，它就能为你的项目生成代码和用户界面（UI）"
+  },
   "vertexai": {
     "description": "Google 的 Gemini 系列是其最先进、通用的 AI模型，由 Google DeepMind 打造，专为多模态设计，支持文本、代码、图像、音频和视频的无缝理解与处理。适用于从数据中心到移动设备的多种环境，极大提升了AI模型的效率与应用广泛性。"
   },
