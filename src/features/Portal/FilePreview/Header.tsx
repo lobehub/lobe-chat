@@ -1,5 +1,5 @@
-import { ActionIcon } from '@lobehub/ui';
-import { Skeleton, Typography } from 'antd';
+import { ActionIcon, Text } from '@lobehub/ui';
+import { Skeleton } from 'antd';
 import { ArrowLeft } from 'lucide-react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -25,9 +25,9 @@ const Header = () => {
       {isLoading ? (
         <Skeleton.Button active style={{ height: 28 }} />
       ) : (
-        <Typography.Text className={oneLineEllipsis} style={{ fontSize: 16 }} type={'secondary'}>
+        <Text className={oneLineEllipsis} style={{ fontSize: 16 }} type={'secondary'}>
           {data?.name}
-        </Typography.Text>
+        </Text>
       )}
     </Flexbox>
   );
