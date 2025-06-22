@@ -21,13 +21,13 @@ config.rules['unicorn/prefer-query-selector'] = 0;
 config.rules['unicorn/no-array-callback-reference'] = 0;
 // FIXME: Linting error in src/app/[variants]/(main)/chat/features/Migration/DBReader.ts, the fundamental solution should be upgrading typescript-eslint
 config.rules['@typescript-eslint/no-useless-constructor'] = 0;
-config.rules['@typescript-eslint/no-unused-vars'] = 0;
 
 config.overrides = [
   {
     extends: ['plugin:mdx/recommended'],
     files: ['*.mdx'],
     rules: {
+      '@typescript-eslint/no-unused-vars': 1,
       'no-undef': 0,
       'react/jsx-no-undef': 0,
       'react/no-unescaped-entities': 0,

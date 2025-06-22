@@ -11,6 +11,7 @@ export const LobeHunyuanAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.hunyuan.cloud.tencent.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
+      // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
       const { enabledSearch, frequency_penalty, presence_penalty, ...rest } = payload;
 
       return {
