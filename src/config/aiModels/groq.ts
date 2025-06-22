@@ -56,6 +56,7 @@ const groqChatModels: AIChatModelCard[] = [
     displayName: 'Qwen QwQ 32B',
     enabled: true,
     id: 'qwen-qwq-32b',
+    maxOutput: 131_072,
     pricing: {
       input: 0.29,
       output: 0.39,
@@ -69,7 +70,7 @@ const groqChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     displayName: 'Qwen3 32B',
     id: 'qwen/qwen3-32b',
-    maxOutput: 16_384,
+    maxOutput: 40_960,
     pricing: {
       input: 0.29,
       output: 0.59,
@@ -84,6 +85,7 @@ const groqChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     displayName: 'DeepSeek R1 Distill Llama 70B',
     id: 'deepseek-r1-distill-llama-70b',
+    maxOutput: 131_072,
     pricing: {
       input: 0.75, // 0.75 - 5.00
       output: 0.99, // 0.99 - 5.00
@@ -98,6 +100,7 @@ const groqChatModels: AIChatModelCard[] = [
     description: 'Gemma 2 9B 是一款优化用于特定任务和工具整合的模型。',
     displayName: 'Gemma 2 9B',
     id: 'gemma2-9b-it',
+    maxOutput: 8192,
     pricing: {
       input: 0.2,
       output: 0.2,
@@ -113,7 +116,7 @@ const groqChatModels: AIChatModelCard[] = [
       'Llama 3.1 8B 是一款高效能模型，提供了快速的文本生成能力，非常适合需要大规模效率和成本效益的应用场景。',
     displayName: 'Llama 3.1 8B Instant',
     id: 'llama-3.1-8b-instant',
-    maxOutput: 8192,
+    maxOutput: 131_072,
     pricing: {
       input: 0.05,
       output: 0.08,
@@ -137,31 +140,10 @@ const groqChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 8192,
-    description: 'Meta Llama 3 70B 提供无与伦比的复杂性处理能力，为高要求项目量身定制。',
-    displayName: 'Llama 3 70B',
-    id: 'llama3-70b-8192',
-    pricing: {
-      input: 0.59,
-      output: 0.79,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 8192,
-    description: 'Meta Llama 3 8B 带来优质的推理效能，适合多场景应用需求。',
-    displayName: 'Llama 3 8B',
-    id: 'llama3-8b-8192',
-    pricing: {
-      input: 0.05,
-      output: 0.08,
-    },
-    type: 'chat',
-  },
-  {
     contextWindowTokens: 32_768,
     displayName: 'Mistral Saba 24B',
     id: 'mistral-saba-24b',
+    maxOutput: 32_768,
     pricing: {
       input: 0.79,
       output: 0.79,
@@ -172,39 +154,25 @@ const groqChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     displayName: 'Llama Guard 4 12B',
     id: 'meta-llama/llama-guard-4-12b',
-    maxOutput: 128,
+    maxOutput: 1024,
     pricing: {
       input: 0.2,
       output: 0.2,
     },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 8192,
-    displayName: 'Llama Guard 3 8B',
-    id: 'llama-guard-3-8b',
-    pricing: {
-      input: 0.2,
-      output: 0.2,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 4096,
-    displayName: 'ALLaM 2 7B',
-    id: 'allam-2-7b',
     type: 'chat',
   },
   {
     contextWindowTokens: 512,
     displayName: 'Llama Prompt Guard 2 22M',
     id: 'meta-llama/llama-prompt-guard-2-22m',
+    maxOutput: 512,
     type: 'chat',
   },
   {
     contextWindowTokens: 512,
     displayName: 'Llama Prompt Guard 2 86M',
     id: 'meta-llama/llama-prompt-guard-2-86m',
+    maxOutput: 512,
     type: 'chat',
   },
 ];
