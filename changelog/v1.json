@@ -1,5 +1,15 @@
 [
   {
+    "children": {},
+    "date": "2025-06-22",
+    "version": "1.96.4"
+  },
+  {
+    "children": {},
+    "date": "2025-06-22",
+    "version": "1.96.3"
+  },
+  {
     "children": {
       "improvements": ["Update i18n."]
     },
