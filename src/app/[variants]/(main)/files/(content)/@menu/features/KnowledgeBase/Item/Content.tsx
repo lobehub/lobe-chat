@@ -1,5 +1,5 @@
-import { ActionIcon, Dropdown, EditableText, Icon, type MenuProps } from '@lobehub/ui';
-import { App, Typography } from 'antd';
+import { ActionIcon, Dropdown, EditableText, Icon, type MenuProps, Text } from '@lobehub/ui';
+import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import { LucideLoader2, MoreVertical, PencilLine, Trash } from 'lucide-react';
 import { memo, useMemo } from 'react';
@@ -30,8 +30,6 @@ const useStyles = createStyles(({ css }) => ({
     text-align: start;
   `,
 }));
-
-const { Paragraph } = Typography;
 
 interface KnowledgeBaseItemProps {
   id: string;
@@ -118,13 +116,13 @@ const Content = memo<KnowledgeBaseItemProps>(({ id, name, showMore }) => {
             <BubblesLoading />
           </Flexbox>
         ) : (
-          <Paragraph
+          <Text
             className={styles.title}
             ellipsis={{ rows: 1, tooltip: { placement: 'left', title: name } }}
             style={{ margin: 0, opacity: isLoading ? 0.6 : undefined }}
           >
             {name}
-          </Paragraph>
+          </Text>
         )
       ) : (
         <EditableText

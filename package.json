@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "1.96.1",
+  "version": "1.96.3",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -150,7 +150,7 @@
     "@lobehub/chat-plugins-gateway": "^1.9.0",
     "@lobehub/icons": "^2.2.0",
     "@lobehub/tts": "^2.0.1",
-    "@lobehub/ui": "^2.1.15",
+    "@lobehub/ui": "^2.5.6",
     "@modelcontextprotocol/sdk": "^1.12.1",
     "@neondatabase/serverless": "^1.0.0",
     "@next/third-parties": "^15.3.3",
@@ -186,6 +186,7 @@
     "file-type": "^20.5.0",
     "framer-motion": "^12.15.0",
     "gpt-tokenizer": "^2.9.0",
+    "gray-matter": "^4.0.3",
     "html-to-text": "^9.0.5",
     "i18next": "^24.2.3",
     "i18next-browser-languagedetector": "^8.1.0",
@@ -200,8 +201,9 @@
     "langfuse": "^3.37.3",
     "langfuse-core": "^3.37.3",
     "lodash-es": "^4.17.21",
-    "lucide-react": "^0.509.0",
+    "lucide-react": "^0.522.0",
     "mammoth": "^1.9.1",
+    "markdown-to-txt": "^2.0.1",
     "mdast-util-to-markdown": "^2.1.2",
     "modern-screenshot": "^4.6.0",
     "nanoid": "^5.1.5",
@@ -232,7 +234,7 @@
     "react-confetti": "^6.4.0",
     "react-dom": "^19.1.0",
     "react-fast-marquee": "^1.6.5",
-    "react-hotkeys-hook": "^4.6.2",
+    "react-hotkeys-hook": "^5.1.0",
     "react-i18next": "^15.5.2",
     "react-layout-kit": "^1.9.1",
     "react-lazy-load": "^4.0.1",
@@ -276,7 +278,7 @@
     "@commitlint/cli": "^19.8.1",
     "@edge-runtime/vm": "^5.0.0",
     "@huggingface/tasks": "^0.15.9",
-    "@lobehub/i18n-cli": "^1.22.0",
+    "@lobehub/i18n-cli": "^1.23.0",
     "@lobehub/lint": "^1.26.2",
     "@lobehub/seo-cli": "^1.6.0",
     "@next/bundle-analyzer": "^15.3.3",
@@ -325,14 +327,12 @@
     "fake-indexeddb": "^6.0.1",
     "fs-extra": "^11.3.0",
     "glob": "^11.0.2",
-    "gray-matter": "^4.0.3",
     "happy-dom": "^17.5.6",
     "husky": "^9.1.7",
     "just-diff": "^6.0.2",
     "lint-staged": "^15.5.2",
     "lodash": "^4.17.21",
     "markdown-table": "^3.0.4",
-    "markdown-to-txt": "^2.0.1",
     "mcp-hello-world": "^1.1.2",
     "mime": "^4.0.7",
     "node-fetch": "^3.3.2",
@@ -366,13 +366,6 @@
     ],
     "overrides": {
       "mdast-util-gfm-autolink-literal": "2.0.0"
-    },
-    "packageExtensions": {
-      "@inkjs/ui": {
-        "dependencies": {
-          "react": "^18"
-        }
-      }
     }
   }
 }

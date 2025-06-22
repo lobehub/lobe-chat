@@ -134,6 +134,9 @@
   "upstage": {
     "description": "Upstage tập trung vào việc phát triển các mô hình AI cho nhiều nhu cầu thương mại khác nhau, bao gồm Solar LLM và AI tài liệu, nhằm đạt được trí thông minh nhân tạo tổng quát (AGI) cho công việc. Tạo ra các đại lý đối thoại đơn giản thông qua Chat API, và hỗ trợ gọi chức năng, dịch thuật, nhúng và ứng dụng trong các lĩnh vực cụ thể."
   },
+  "v0": {
+    "description": "v0 là một trợ lý lập trình theo cặp, bạn chỉ cần mô tả ý tưởng bằng ngôn ngữ tự nhiên, nó sẽ tạo mã và giao diện người dùng (UI) cho dự án của bạn"
+  },
   "vertexai": {
     "description": "Dòng sản phẩm Gemini của Google là mô hình AI tiên tiến và đa năng nhất của họ, được phát triển bởi Google DeepMind, được thiết kế đặc biệt cho đa phương thức, hỗ trợ hiểu và xử lý liền mạch văn bản, mã, hình ảnh, âm thanh và video. Phù hợp với nhiều môi trường từ trung tâm dữ liệu đến thiết bị di động, nâng cao đáng kể hiệu quả và tính ứng dụng của mô hình AI."
   },
