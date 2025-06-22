@@ -2321,6 +2321,15 @@
   "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
     "description": "Claude 3.7 sonet to najszybszy model następnej generacji od Anthropic. W porównaniu do Claude 3 Haiku, Claude 3.7 Sonet wykazuje poprawę w różnych umiejętnościach i przewyższa największy model poprzedniej generacji, Claude 3 Opus, w wielu testach inteligencji."
   },
+  "v0-1.0-md": {
+    "description": "Model v0-1.0-md to starsza wersja modelu udostępniana przez API v0"
+  },
+  "v0-1.5-lg": {
+    "description": "Model v0-1.5-lg jest przeznaczony do zaawansowanych zadań myślenia lub rozumowania"
+  },
+  "v0-1.5-md": {
+    "description": "Model v0-1.5-md jest odpowiedni do codziennych zadań i generowania interfejsu użytkownika (UI)"
+  },
   "whisper-1": {
     "description": "Uniwersalny model rozpoznawania mowy, obsługujący rozpoznawanie mowy w wielu językach, tłumaczenie mowy i rozpoznawanie języków."
   },

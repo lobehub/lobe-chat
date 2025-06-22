@@ -1,13 +1,12 @@
 'use client';
 
-import { Spin, Typography } from 'antd';
+import { Text } from '@lobehub/ui';
+import { Spin } from 'antd';
 import { createStyles } from 'antd-style';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
-
-const { Title, Paragraph } = Typography;
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -30,6 +29,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   title: css`
     margin-block-end: ${token.marginLG}px;
+    font-size: 24px;
   `,
 }));
 
@@ -86,10 +86,10 @@ const AuthHandoffPage = () => {
     <Center className={styles.container} gap={12}>
       {!isError && <Spin size="large" />}
       <Flexbox align="center" className={styles.content} gap={16}>
-        <Title className={styles.title} level={3}>
+        <Text as={'h3'} className={styles.title}>
           {status.title}
-        </Title>
-        <Paragraph className={styles.message}>{status.desc}</Paragraph>
+        </Text>
+        <Text className={styles.message}>{status.desc}</Text>
       </Flexbox>
     </Center>
   );
