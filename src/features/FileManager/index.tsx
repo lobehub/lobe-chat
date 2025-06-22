@@ -1,6 +1,6 @@
 'use client';
 
-import { Typography } from 'antd';
+import { Text } from '@lobehub/ui';
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -21,11 +21,9 @@ const FileManager = memo<FileManagerProps>(({ title, knowledgeBaseId, category }
     <>
       <Header knowledgeBaseId={knowledgeBaseId} />
       <Flexbox gap={12} height={'100%'}>
-        <Typography.Text
-          style={{ fontSize: 16, fontWeight: 'bold', marginBlock: 16, marginInline: 24 }}
-        >
+        <Text strong style={{ fontSize: 16, marginBlock: 16, marginInline: 24 }}>
           {title}
-        </Typography.Text>
+        </Text>
         <FileList category={category} knowledgeBaseId={knowledgeBaseId} />
       </Flexbox>
       <UploadDock />

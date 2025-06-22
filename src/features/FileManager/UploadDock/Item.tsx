@@ -1,4 +1,4 @@
-import { Typography } from 'antd';
+import { Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ReactNode, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -52,41 +52,41 @@ const UploadItem = memo<UploadItemProps>(({ file, status, uploadState }) => {
         ].filter(Boolean);
 
         return (
-          <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
+          <Text style={{ fontSize: 12 }} type={'secondary'}>
             {uploadState?.progress ? formatSize(size * (uploadState.progress / 100)) : '-'}/
             {formatSize(size)}
             {textArray.length === 0 ? '' : ' · ' + textArray.join(' · ')}
-          </Typography.Text>
+          </Text>
         );
       }
       case 'pending': {
         return (
-          <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
+          <Text style={{ fontSize: 12 }} type={'secondary'}>
             {formatSize(size)} · {t('uploadDock.body.item.pending')}
-          </Typography.Text>
+          </Text>
         );
       }
 
       case 'processing': {
         return (
-          <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
+          <Text style={{ fontSize: 12 }} type={'secondary'}>
             {formatSize(size)} · {t('uploadDock.body.item.processing')}
-          </Typography.Text>
+          </Text>
         );
       }
 
       case 'success': {
         return (
-          <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
+          <Text style={{ fontSize: 12 }} type={'secondary'}>
             {formatSize(size)} · {t('uploadDock.body.item.done')}
-          </Typography.Text>
+          </Text>
         );
       }
       case 'error': {
         return (
-          <Typography.Text style={{ fontSize: 12 }} type={'danger'}>
+          <Text style={{ fontSize: 12 }} type={'danger'}>
             {formatSize(size)} · {t('uploadDock.body.item.error')}
-          </Typography.Text>
+          </Text>
         );
       }
       default: {

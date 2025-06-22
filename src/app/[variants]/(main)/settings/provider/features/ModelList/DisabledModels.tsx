@@ -1,5 +1,4 @@
-import { Button } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Button, Text } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { ChevronDown } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -22,9 +21,9 @@ const DisabledModels = memo(() => {
   return (
     disabledModels.length > 0 && (
       <Flexbox>
-        <Typography.Text style={{ fontSize: 12, marginTop: 8 }} type={'secondary'}>
+        <Text style={{ fontSize: 12, marginTop: 8 }} type={'secondary'}>
           {t('providerModels.list.disabled')}
-        </Typography.Text>
+        </Text>
         {displayModels.map((item) => (
           <ModelItem {...item} key={item.id} />
         ))}

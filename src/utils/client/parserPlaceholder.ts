@@ -5,9 +5,6 @@ import { uuid } from '@/utils/uuid';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 
-import { getAgentStoreState } from '@/store/agent/store';
-import { agentChatConfigSelectors } from '@/store/agent/selectors';
-
 const placeholderVariablesRegex = /{{(.*?)}}/g;
 
 /* eslint-disable sort-keys-fix/sort-keys-fix */
@@ -108,16 +105,6 @@ export const VARIABLE_GENERATORS = {
   language: () => typeof navigator !== 'undefined' ? navigator.language : '',
   platform: () => typeof navigator !== 'undefined' ? navigator.platform : '',
   user_agent: () => typeof navigator !== 'undefined' ? navigator.userAgent : '',
-
-  /**
-  * LobeChat 模板变量
-  *
-  * | Value | Example |
-  * |-------|---------|
-  * | `{{input_template}}` | Some contents |
-  *
-  */
-  input_template: () => agentChatConfigSelectors.currentChatConfig(getAgentStoreState()).inputTemplate || '',
 } as Record<string, () => string>;
 
 /**
@@ -133,13 +120,13 @@ const extractPlaceholderVariables = (text: string): string[] => {
 /**
  * 将模板变量替换为实际值，并支持递归解析嵌套变量
  * @param text - 含变量的原始文本
- * @param depth - 递归深度，默认 1，设置更高可支持 {{input_template}} 中的 {{date}} 等
+ * @param depth - 递归深度，默认 1，设置更高可支持 {{text}} 中的 {{date}} 等
  * @returns 替换后的文本
  */
 export const parsePlaceholderVariables = (text: string, depth = 2): string => {
   let result = text;
 
-  // 递归解析，用于处理如 {{input_template}} 存在额外预设变量
+  // 递归解析，用于处理如 {{text}} 存在额外预设变量
   for (let i = 0; i < depth; i++) {
     try {
       const variables = Object.fromEntries(
