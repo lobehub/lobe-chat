@@ -2321,6 +2321,15 @@
   "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
     "description": "Claude 3.7 소네트는 Anthropic의 가장 빠른 차세대 모델입니다. Claude 3 하이쿠와 비교할 때, Claude 3.7 소네트는 모든 기술에서 향상되었으며, 많은 지능 기준 테스트에서 이전 세대의 가장 큰 모델인 Claude 3 오푸스를 초월했습니다."
   },
+  "v0-1.0-md": {
+    "description": "v0-1.0-md 모델은 v0 API를 통해 제공되는 구버전 모델입니다"
+  },
+  "v0-1.5-lg": {
+    "description": "v0-1.5-lg 모델은 고급 사고 또는 추론 작업에 적합합니다"
+  },
+  "v0-1.5-md": {
+    "description": "v0-1.5-md 모델은 일상 작업 및 사용자 인터페이스(UI) 생성에 적합합니다"
+  },
   "whisper-1": {
     "description": "범용 음성 인식 모델로, 다국어 음성 인식, 음성 번역 및 언어 인식을 지원합니다."
   },
