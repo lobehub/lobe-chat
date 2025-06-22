@@ -1,7 +1,6 @@
 'use client';
 
-import { ActionIcon, ScrollShadow } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { ActionIcon, ScrollShadow, Text } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { ArrowDownUpIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -39,9 +38,9 @@ const ProviderList = () => {
         justify={'space-between'}
         style={{ fontSize: 12, marginTop: 8 }}
       >
-        <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
+        <Text style={{ fontSize: 12 }} type={'secondary'}>
           {t('menu.list.enabled')}
-        </Typography.Text>
+        </Text>
         <ActionIcon
           icon={ArrowDownUpIcon}
           onClick={() => {
@@ -63,9 +62,9 @@ const ProviderList = () => {
       {enabledModelProviderList.map((item) => (
         <ProviderItem {...item} key={item.id} />
       ))}
-      <Typography.Text style={{ fontSize: 12, marginTop: 8 }} type={'secondary'}>
+      <Text style={{ fontSize: 12, marginTop: 8 }} type={'secondary'}>
         {t('menu.list.disabled')}
-      </Typography.Text>
+      </Text>
       {disabledModelProviderList.map((item) => (
         <ProviderItem {...item} key={item.id} />
       ))}
