@@ -1,7 +1,9 @@
 import { Context } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 
+import { RBAC_PERMISSIONS } from '@/const/rbac';
 import { getServerDB } from '@/database/core/db-adaptor';
+import { RbacModel } from '@/database/models/rbac';
 import { LobeChatDatabase } from '@/database/type';
 
 import { ApiResponse } from '../types';
@@ -108,10 +110,9 @@ export abstract class BaseController {
    * @param c Hono Context
    * @returns Request parameters object
    */
-  protected getParams(c: Context): Record<string, string> {
-    return Object.fromEntries(
-      Object.entries(c.req.param()).map(([key, value]) => [key, String(value)]),
-    );
+  protected getParams<T = any>(c: Context): T {
+    // @ts-ignore
+    return c.req.valid('param') as T;
   }
 
   /**
@@ -119,24 +120,9 @@ export abstract class BaseController {
    * @param c Hono Context
    * @returns Query parameters object
    */
-  protected getQuery(c: Context): Record<string, string | string[]> {
-    const url = new URL(c.req.url);
-    const params: Record<string, string | string[]> = {};
-
-    for (const [key, value] of url.searchParams.entries()) {
-      if (params[key]) {
-        // If already exists, convert to array
-        if (Array.isArray(params[key])) {
-          (params[key] as string[]).push(value);
-        } else {
-          params[key] = [params[key] as string, value];
-        }
-      } else {
-        params[key] = value;
-      }
-    }
-
-    return params;
+  protected getQuery<T = any>(c: Context): T {
+    // @ts-ignore
+    return c.req.valid('query') as T;
   }
 
   /**
@@ -144,28 +130,19 @@ export abstract class BaseController {
    * @param c Hono Context
    * @returns Request body object
    */
-  protected async getBody<T = any>(c: Context): Promise<T | null> {
-    try {
-      const contentType = c.req.header('content-type');
+  protected async getBody<T = any>(c: Context): Promise<T> {
+    // @ts-ignore
+    return c.req.valid('json') as T;
+  }
 
-      if (contentType?.includes('application/json')) {
-        return await c.req.json<T>();
-      }
-
-      if (contentType?.includes('application/x-www-form-urlencoded')) {
-        const formData = await c.req.formData();
-        const body: any = {};
-        for (const [key, value] of formData.entries()) {
-          body[key] = value;
-        }
-        return body as T;
-      }
-
-      return null;
-    } catch (error) {
-      console.warn('Failed to parse request body:', error);
-      return null;
-    }
+  /**
+   * Get request form data
+   * @param c Hono Context
+   * @returns Request form data object
+   */
+  protected async getFormData<T = any>(c: Context): Promise<T> {
+    // @ts-ignore
+    return c.req.valid('form') as T;
   }
 
   /**
@@ -193,5 +170,90 @@ export abstract class BaseController {
    */
   protected getAuthData(c: Context): any | null {
     return c.get('authData') || null;
+  }
+
+  /**
+   * Get RBAC model instance
+   * @param c Hono Context
+   * @returns RBAC model instance
+   */
+  protected async getRbacModel(c: Context): Promise<RbacModel> {
+    const db = await this.getDatabase();
+    return new RbacModel(db, this.getUserId(c)!);
+  }
+
+  /**
+   * Check if user has specific permission
+   * @param c Hono Context
+   * @param permission Permission string (e.g., 'session:read:all')
+   * @returns Promise<boolean>
+   */
+  protected async hasPermission(
+    c: Context,
+    permissionKey: keyof typeof RBAC_PERMISSIONS,
+  ): Promise<boolean> {
+    const rbacModel = await this.getRbacModel(c);
+
+    return await rbacModel.hasPermission(RBAC_PERMISSIONS[permissionKey], this.getUserId(c)!);
+  }
+
+  /**
+   * Check permission and throw error if not authorized
+   * @param c Hono Context
+   * @param permission Permission string
+   * @param errorMessage Custom error message
+   * @throws HTTPException if permission denied
+   */
+  protected async requirePermission(
+    c: Context,
+    permission: keyof typeof RBAC_PERMISSIONS,
+    errorMessage?: string,
+  ): Promise<void> {
+    const hasPermission = await this.hasPermission(c, permission);
+    if (!hasPermission) {
+      throw new HTTPException(403, {
+        message: errorMessage || `您没有权限执行此操作：${permission}`,
+      });
+    }
+  }
+
+  /**
+   * Check if user has any of the specified permissions
+   * @param c Hono Context
+   * @param permissions Array of permission strings
+   * @returns Promise<boolean>
+   */
+  protected async hasAnyPermission(
+    c: Context,
+    permissionKeys: (keyof typeof RBAC_PERMISSIONS)[],
+  ): Promise<boolean> {
+    const permissions = permissionKeys.map((permission) => RBAC_PERMISSIONS[permission]);
+
+    const rbacModel = await this.getRbacModel(c);
+    return await rbacModel.hasAnyPermission(permissions, this.getUserId(c)!);
+  }
+
+  /**
+   * Check any permission and throw error if not authorized
+   * @param c Hono Context
+   * @param permissions Array of permission strings
+   * @param errorMessage Custom error message
+   * @throws HTTPException if permission denied
+   */
+  protected async requireAnyPermission(
+    c: Context,
+    permissionKeys: (keyof typeof RBAC_PERMISSIONS)[],
+    errorMessage?: string,
+  ): Promise<void> {
+    const hasPermission = await this.hasAnyPermission(c, permissionKeys);
+    if (!hasPermission) {
+      throw new HTTPException(403, {
+        message:
+          errorMessage ||
+          `您没有权限执行此操作，需要以下权限之一：${permissionKeys
+            .map((key) => RBAC_PERMISSIONS[key])
+            .join(', ')}`,
+      });
+    }
   }
 }

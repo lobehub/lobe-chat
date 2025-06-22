@@ -72,23 +72,10 @@ export class AgentService extends BaseService {
    * @returns 创建完成的 Agent 信息
    */
   async createAgent(request: CreateAgentRequest): ServiceResult<AgentDetailResponse> {
-    this.log('info', '创建智能体', { slug: request.slug, title: request.title });
+    this.log('info', '创建智能体', { title: request.title });
 
     try {
-      if (!this.userId) {
-        throw this.createAuthError('用户未认证');
-      }
-
       return await this.db.transaction(async (tx) => {
-        // 检查 slug 是否已存在（在事务中检查避免并发冲突）
-        const existingAgent = await tx.query.agents.findFirst({
-          where: eq(agents.slug, request.slug),
-        });
-
-        if (existingAgent) {
-          throw this.createBusinessError(`Agent slug "${request.slug}" 已存在`);
-        }
-
         // 准备创建数据
         const newAgentData: NewAgent = {
           accessedAt: new Date(),
@@ -100,7 +87,7 @@ export class AgentService extends BaseService {
           model: request.model || null,
           params: request.params ? JSON.stringify(request.params) : '{}',
           provider: request.provider || null,
-          slug: request.slug,
+          slug: randomSlug(4), // 系统自动生成 slug
           systemRole: request.systemRole || null,
           title: request.title,
           updatedAt: new Date(),
@@ -127,10 +114,6 @@ export class AgentService extends BaseService {
     this.log('info', '更新智能体', { id: request.id, title: request.title });
 
     try {
-      if (!this.userId) {
-        throw this.createAuthError('用户未认证');
-      }
-
       return await this.db.transaction(async (tx) => {
         // 检查 Agent 是否存在且属于当前用户
         const existingAgent = await tx.query.agents.findFirst({
@@ -141,17 +124,6 @@ export class AgentService extends BaseService {
           throw this.createBusinessError(`Agent ID "${request.id}" 不存在或无权限访问`);
         }
 
-        // 如果修改了 slug，检查新的 slug 是否已被其他 Agent 使用
-        if (request.slug !== existingAgent.slug) {
-          const slugConflict = await tx.query.agents.findFirst({
-            where: eq(agents.slug, request.slug),
-          });
-
-          if (slugConflict && slugConflict.id !== request.id) {
-            throw this.createBusinessError(`Agent slug "${request.slug}" 已被其他 Agent 使用`);
-          }
-        }
-
         // 准备更新数据
         const updateData = {
           avatar: request.avatar || null,
@@ -160,7 +132,6 @@ export class AgentService extends BaseService {
           model: request.model || null,
           params: request.params ? JSON.stringify(request.params) : '{}',
           provider: request.provider || null,
-          slug: request.slug,
           systemRole: request.systemRole || null,
           title: request.title,
           updatedAt: new Date(),
@@ -299,10 +270,6 @@ export class AgentService extends BaseService {
     this.log('info', '为 Agent 创建 Session', { agentId: request.agentId });
 
     try {
-      if (!this.userId) {
-        throw this.createAuthError('用户未认证');
-      }
-
       return await this.db.transaction(async (tx) => {
         // 验证 Agent 存在且属于当前用户
         const agent = await tx.query.agents.findFirst({
