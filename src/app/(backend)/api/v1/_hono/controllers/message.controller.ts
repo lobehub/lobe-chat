@@ -66,8 +66,7 @@ export class MessageController extends BaseController {
   async handleGetMessagesByTopic(c: Context) {
     try {
       const userId = this.getUserId(c)!;
-      const query = this.getQuery(c);
-      const topicId = query.topicId as string;
+      const { topicId } = this.getParams<{ topicId: string }>(c);
 
       const db = await this.getDatabase();
       const messageService = new MessageService(db, userId);
@@ -117,10 +116,5 @@ export class MessageController extends BaseController {
     } catch (error) {
       return this.handleError(c, error);
     }
-  }
-
-  // 保留原有的示例方法
-  handleGetExample(c: Context) {
-    return this.success(c, { message: 'Message API is working' }, '示例接口调用成功');
   }
 }
