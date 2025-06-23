@@ -98,7 +98,7 @@ export interface StreamProtocolToolCallChunk {
 }
 
 export const generateToolCallId = (index: number, functionName?: string) =>
-  `${functionName || 'unknown_tool_call'}_${index}`;
+  `${functionName || 'unknown_tool_call'}_${index}_${Math.random().toString(36).slice(2, 10)}`;
 
 const chatStreamable = async function* <T>(stream: AsyncIterable<T>) {
   for await (const response of stream) {
