@@ -10,8 +10,12 @@ export const TopicCreateRequestSchema = z.object({
   title: z.string().min(1, '标题不能为空'),
 });
 
-export const TopicSummaryRequestSchema = z.object({
-  topicId: z.string().min(1, '话题ID不能为空'),
+export const TopicSummaryParamSchema = z.object({
+  id: z.string().min(1, '话题ID不能为空'),
+});
+
+export const TopicDeleteParamSchema = z.object({
+  id: z.string().min(1, '话题ID不能为空'),
 });
 
 // TypeScript types
@@ -25,7 +29,7 @@ export interface TopicCreateRequest {
 }
 
 export interface TopicSummaryRequest {
-  topicId: string;
+  id: string;
 }
 
 // Response type (represents the topic table structure)
@@ -33,7 +37,6 @@ export interface TopicResponse {
   clientId: string | null;
   createdAt: string;
   favorite: boolean;
-  historySummary: string | null;
   id: string;
   metadata: any | null;
   sessionId: string | null;

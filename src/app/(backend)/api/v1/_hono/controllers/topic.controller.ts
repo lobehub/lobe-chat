@@ -47,6 +47,26 @@ export class TopicController extends BaseController {
   }
 
   /**
+   * 删除话题
+   * DELETE /api/v1/topics/:id
+   * Params: { id: string }
+   */
+  async handleDeleteTopic(c: Context) {
+    try {
+      const userId = this.getUserId(c)!;
+      const topicId = c.req.param('id');
+
+      const db = await this.getDatabase();
+      const topicService = new TopicService(db, userId);
+      await topicService.deleteTopic(topicId);
+
+      return this.success(c, null, '删除话题成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
    * 总结对应的话题
    * POST /api/v1/topics/summary
    * Body: { topicId: string }
@@ -54,11 +74,11 @@ export class TopicController extends BaseController {
   async handleSummarizeTopic(c: Context) {
     try {
       const userId = this.getUserId(c)!;
-      const { topicId } = (await this.getBody<TopicSummaryRequest>(c))!;
+      const { id } = (await this.getParams<TopicSummaryRequest>(c))!;
 
       const db = await this.getDatabase();
       const topicService = new TopicService(db, userId);
-      const updatedTopic = await topicService.summarizeTopic(topicId);
+      const updatedTopic = await topicService.summarizeTopic(id);
 
       return this.success(c, updatedTopic, '话题总结成功');
     } catch (error) {
