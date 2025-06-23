@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Google Gemini tools declarations."]
+    },
+    "date": "2025-06-23",
+    "version": "1.96.9"
+  },
+  {
+    "children": {
       "improvements": ["Optimized Gemini thinkingBudget configuration."]
     },
     "date": "2025-06-23",
