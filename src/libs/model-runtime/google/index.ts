@@ -122,26 +122,33 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const payload = this.buildPayload(rawPayload);
       const { model, thinking } = payload;
 
+      const thinkingBudget =
+        thinking?.type === 'enabled'
+          ? (() => {
+              const budget = thinking.budget_tokens;
+              if (model.includes('-2.5-flash')) {
+                return Math.min(budget, 24_576);
+              } else if (model.includes('-2.5-pro')) {
+                return Math.max(128, Math.min(budget, 32_768));
+              }
+              return Math.min(budget, 24_576);
+            })()
+          : thinking?.type === 'disabled'
+            ? model.includes('-2.5-pro')
+              ? 128
+              : 0
+            : undefined;
+
       const thinkingConfig: GoogleAIThinkingConfig = {
         includeThoughts:
           thinking?.type === 'enabled' ||
-          (!thinking && model && (model.includes('-2.5-') || model.includes('thinking')))
+          (!thinking &&
+            model &&
+            (model.includes('-2.5-') || model.includes('thinking')) &&
+            thinkingBudget !== 0)
             ? true
             : undefined,
-        thinkingBudget:
-          thinking?.type === 'enabled'
-            ? (() => {
-                const budget = thinking.budget_tokens;
-                if (model.includes('-2.5-flash')) {
-                  return Math.min(budget, 24_576);
-                } else if (model.includes('-2.5-pro')) {
-                  return Math.max(128, Math.min(budget, 32_768));
-                }
-                return Math.min(budget, 24_576);
-              })()
-            : thinking?.type === 'disabled'
-              ? model.includes('-2.5-pro') ? 128 : 0
-              : undefined,
+        thinkingBudget,
       };
 
       const contents = await this.buildGoogleMessages(payload.messages);
