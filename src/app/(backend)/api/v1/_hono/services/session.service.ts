@@ -175,6 +175,9 @@ export class SessionService extends BaseService {
             ...sessionData,
             type: request.type || 'agent',
           },
+          // 如果传入了 agentId，跳过创建新的 Agent
+skipAgentCreation: !!agentId,
+          
           type: (request.type || 'agent') as 'agent' | 'group',
         });
 

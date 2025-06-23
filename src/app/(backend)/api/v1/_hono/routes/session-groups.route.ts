@@ -115,6 +115,10 @@ SessionGroupRoutes.put(
  * 删除会话组
  * DELETE /api/v1/session-groups/:id
  * 需要会话组删除权限
+ *
+ * 行为说明:
+ * - 删除指定的会话组
+ * - 组内会话不会被删除，会自动变为未分组状态（groupId 设为 null）
  */
 SessionGroupRoutes.delete(
   '/:id',

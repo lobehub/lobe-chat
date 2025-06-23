@@ -120,14 +120,13 @@ export class SessionGroupController extends BaseController {
 
   /**
    * 删除会话组
-   * DELETE /api/v1/sessions/groups/:id
+   * DELETE /api/v1/session-groups/:id
    * @param c Hono Context
    * @returns 删除结果响应
    */
   async deleteSessionGroup(c: Context): Promise<Response> {
     try {
       const { id: groupId } = this.getParams<{ id: string }>(c);
-      const query = this.getQuery(c);
 
       if (!groupId) {
         return this.error(c, '会话组 ID 是必需的', 400);
@@ -135,7 +134,6 @@ export class SessionGroupController extends BaseController {
 
       const request: DeleteSessionGroupRequest = {
         id: groupId,
-        removeChildren: query.removeChildren === 'true',
       };
 
       const db = await this.getDatabase();
