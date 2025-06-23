@@ -742,7 +742,7 @@ describe('LobeGoogleAI', () => {
 
         const converted = await instance['convertOAIMessagesToGoogleMessage'](message);
         expect(converted).toEqual({
-          role: 'function',
+          role: 'model',
           parts: [
             {
               functionCall: {
