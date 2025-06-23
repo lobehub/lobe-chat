@@ -18,13 +18,13 @@ const TopicsRoutes = new Hono();
 
 // GET /api/v1/topics - 获取指定会话的所有话题
 TopicsRoutes.get(
-  '/',
+  '/:sessionId',
   requireAuth,
   requireAnyPermission(
     getScopePermissions('TOPIC_READ', ['ALL', 'WORKSPACE', 'OWNER']),
     'You do not have permission to read topics',
   ),
-  zValidator('query', TopicListRequestSchema),
+  zValidator('param', TopicListRequestSchema),
   (c) => {
     const controller = new TopicController();
     return controller.handleGetTopicsBySession(c);
