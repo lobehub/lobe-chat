@@ -100,7 +100,7 @@ export abstract class BaseService implements IBaseService {
    * @param message Log message
    * @param data Additional data
    */
-  protected log(level: 'info' | 'warn' | 'error', message: string, data?: any): void {
+  protected log(level: 'info' | 'warn' | 'error' | 'debug', message: string, data?: any): void {
     const logMessage = `[${this.constructor.name}] ${message}`;
 
     switch (level) {
@@ -114,6 +114,10 @@ export abstract class BaseService implements IBaseService {
       }
       case 'error': {
         console.error(logMessage, data);
+        break;
+      }
+      case 'debug': {
+        console.debug(logMessage, data);
         break;
       }
     }
