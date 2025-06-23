@@ -84,6 +84,40 @@ BROWSERLESS_URL=https://chrome.browserless.io
 
 ---
 
+## `BROWSERLESS_BLOCK_ADS`
+
+启用广告拦截功能，在使用 [Browserless](https://www.browserless.io/) 进行网页抓取时自动屏蔽常见广告资源（如脚本、图片、追踪器等），提高抓取速度与页面清晰度。
+
+```env
+BROWSERLESS_BLOCK_ADS=1
+```
+
+> 📌 支持的值：
+>
+> * `1`：启用广告拦截（推荐）；
+> * `0`：禁用广告拦截（默认）。
+
+> ✅ 建议与 `BROWSERLESS_STEALTH_MODE=1` 一起使用，提高爬虫的隐蔽性和成功率。
+
+---
+
+## `BROWSERLESS_STEALTH_MODE`
+
+启用隐身模式，在使用 [Browserless](https://www.browserless.io/) 抓取网页时，通过一系列防检测手段（如修改 UA、移除 webdriver 特征、模拟用户操作）来规避反爬虫机制。
+
+```env
+BROWSERLESS_STEALTH_MODE=1
+```
+
+> 📌 支持的值：
+>
+> * `1`：启用隐身模式（推荐）；
+> * `0`：禁用隐身模式（默认）。
+
+> ⚠️ 某些网站存在高级反爬机制，启用隐身模式可以显著提升抓取成功率。
+
+---
+
 ## `GOOGLE_PSE_ENGINE_ID`
 
 配置 Google Programmable Search Engine（Google PSE）的搜索引擎 ID，用于限定搜索范围。需配合 `GOOGLE_PSE_API_KEY` 一起使用。
