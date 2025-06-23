@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-06-23",
+    "version": "1.96.6"
+  },
+  {
+    "children": {
       "fixes": ["Remove unsupported parameters of Hunyuan."]
     },
     "date": "2025-06-22",
