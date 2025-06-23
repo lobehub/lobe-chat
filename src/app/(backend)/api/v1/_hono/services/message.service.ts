@@ -135,7 +135,7 @@ export class MessageService extends BaseService {
     this.log('info', '创建新消息', {
       role: messageData.role,
       sessionId: messageData.sessionId,
-      topicId: messageData.topic,
+      topicId: messageData.topicId,
       userId: this.userId,
     });
 
@@ -146,11 +146,11 @@ export class MessageService extends BaseService {
           content: messageData.content,
           favorite: false,
           id: idGenerator('messages'),
-          model: messageData.fromModel,
-          provider: messageData.fromProvider,
+          model: messageData.model,
+          provider: messageData.provider,
           role: messageData.role,
           sessionId: messageData.sessionId,
-          topicId: messageData.topic,
+          topicId: messageData.topicId,
           userId: this.userId!,
         })
         .returning({ id: messages.id });
@@ -193,7 +193,7 @@ export class MessageService extends BaseService {
     this.log('info', '创建消息并生成AI回复', {
       role: messageData.role,
       sessionId: messageData.sessionId,
-      topicId: messageData.topic,
+      topicId: messageData.topicId,
       userId: this.userId,
     });
 
@@ -205,28 +205,28 @@ export class MessageService extends BaseService {
       if (messageData.role === 'user') {
         // 获取对话历史
         const conversationHistory = await this.getConversationHistory(
-          messageData.sessionId,
-          messageData.topic,
+          messageData.sessionId || null,
+          messageData.topicId,
         );
 
         // 使用ChatService生成回复
         const chatService = new ChatService(this.db, this.userId);
         const aiReplyContent = await chatService.generateReply({
           conversationHistory,
-          model: messageData.fromModel,
-          provider: messageData.fromProvider,
-          sessionId: messageData.sessionId,
+          model: messageData.model,
+          provider: messageData.provider,
+          sessionId: messageData.sessionId!,
           userMessage: messageData.content,
         });
 
         // 3. 创建AI回复消息
         const aiReplyData: MessagesCreateRequest = {
           content: aiReplyContent,
-          fromModel: messageData.fromModel,
-          fromProvider: messageData.fromProvider,
+          model: messageData.model,
+          provider: messageData.provider,
           role: 'assistant',
           sessionId: messageData.sessionId,
-          topic: messageData.topic,
+          topicId: messageData.topicId,
         };
 
         const aiReply = await this.createMessage(aiReplyData);
