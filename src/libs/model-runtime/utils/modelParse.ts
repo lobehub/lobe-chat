@@ -48,6 +48,11 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['qvq', 'qwq', 'qwen3'],
     visionKeywords: ['qvq', 'vl'],
   },
+  v0: {
+    functionCallKeywords: ['v0'],
+    reasoningKeywords: ['v0-1.5'],
+    visionKeywords: ['v0'],
+  },
   volcengine: {
     functionCallKeywords: ['doubao-1.5'],
     reasoningKeywords: ['thinking', '-r1'],
@@ -72,6 +77,7 @@ export const PROVIDER_DETECTION_CONFIG = {
   llama: ['llama'],
   openai: ['o1', 'o3', 'o4', 'gpt-'],
   qwen: ['qwen', 'qwq', 'qvq'],
+  v0: ['v0'],
   volcengine: ['doubao'],
   zeroone: ['yi-'],
   zhipu: ['glm'],

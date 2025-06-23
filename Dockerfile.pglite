@@ -224,6 +224,8 @@ ENV \
     TOGETHERAI_API_KEY="" TOGETHERAI_MODEL_LIST="" \
     # Upstage
     UPSTAGE_API_KEY="" UPSTAGE_MODEL_LIST="" \
+    # v0 (Vercel)
+    V0_API_KEY="" V0_MODEL_LIST="" \
     # vLLM
     VLLM_API_KEY="" VLLM_MODEL_LIST="" VLLM_PROXY_URL="" \
     # Wenxin

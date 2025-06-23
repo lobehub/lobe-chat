@@ -2,12 +2,11 @@ import {
   StatisticCard as AntdStatisticCard,
   StatisticCardProps as AntdStatisticCardProps,
 } from '@ant-design/pro-components';
-import { Spin, Typography } from 'antd';
+import { Text } from '@lobehub/ui';
+import { Spin } from 'antd';
 import { createStyles, useResponsive } from 'antd-style';
 import { adjustHue } from 'polished';
 import { memo } from 'react';
-
-const { Title } = Typography;
 
 const useStyles = createStyles(
   ({ isDarkMode, css, token, prefixCls, responsive }, highlight: string = '#000') => ({
@@ -182,9 +181,9 @@ const StatisticCard = memo<StatisticCardProps>(
         extra={loading ? <Spin percent={'auto'} size={'small'} /> : extra}
         title={
           typeof title === 'string' ? (
-            <Title
-              ellipsis={{ rows: 1, tooltip: title }}
-              level={2}
+            <Text
+              as={'h2'}
+              ellipsis={{ rows: 1, tooltip: true }}
               style={{
                 fontSize: 'inherit',
                 fontWeight: 'inherit',
@@ -194,7 +193,7 @@ const StatisticCard = memo<StatisticCardProps>(
               }}
             >
               {title}
-            </Title>
+            </Text>
           ) : (
             title
           )

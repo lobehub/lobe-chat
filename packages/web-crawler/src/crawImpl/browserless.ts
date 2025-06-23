@@ -10,6 +10,9 @@ const REJECT_REQUEST_PATTERN =
   '.*\\.(?!(html|css|js|json|xml|webmanifest|txt|md)(\\?|#|$))[\\w-]+(?:[\\?#].*)?$';
 const BROWSERLESS_TOKEN = process.env.BROWSERLESS_TOKEN;
 
+const BROWSERLESS_BLOCK_ADS = process.env.BROWSERLESS_BLOCK_ADS === '1';
+const BROWSERLESS_STEALTH_MODE = process.env.BROWSERLESS_STEALTH_MODE === '1';
+
 class BrowserlessInitError extends Error {
   constructor() {
     super('`BROWSERLESS_URL` or `BROWSERLESS_TOKEN` are required');
@@ -30,7 +33,14 @@ export const browserless: CrawlImpl = async (url, { filterOptions }) => {
 
   try {
     const res = await fetch(
-      qs.stringifyUrl({ query: { token: BROWSERLESS_TOKEN }, url: urlJoin(BASE_URL, '/content') }),
+      qs.stringifyUrl({
+        query: {
+          blockAds: BROWSERLESS_BLOCK_ADS,
+          launch: JSON.stringify({ stealth: BROWSERLESS_STEALTH_MODE }),
+          token: BROWSERLESS_TOKEN,
+        },
+        url: urlJoin(BASE_URL, '/content'),
+      }),
       {
         body: JSON.stringify(input),
         headers: {

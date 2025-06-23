@@ -1,5 +1,4 @@
-import { Icon } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Icon, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ListTree } from 'lucide-react';
@@ -20,7 +19,7 @@ const Active = memo(() => {
     currentThread && (
       <Flexbox align={'center'} gap={8} horizontal style={{ marginInlineStart: 4 }}>
         <Icon color={theme.colorTextSecondary} icon={ListTree} size={18} />
-        <Typography.Text
+        <Text
           className={oneLineEllipsis}
           ellipsis={true}
           style={{ color: theme.colorTextSecondary, fontSize: 14 }}
@@ -32,7 +31,7 @@ const Active = memo(() => {
           ) : (
             currentThread?.title
           )}
-        </Typography.Text>
+        </Text>
       </Flexbox>
     )
   );

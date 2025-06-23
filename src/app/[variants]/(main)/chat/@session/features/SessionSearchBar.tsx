@@ -1,7 +1,7 @@
 'use client';
 
 import { SearchBar } from '@lobehub/ui';
-import { memo } from 'react';
+import { type ChangeEvent, memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useSessionStore } from '@/store/session';
@@ -11,6 +11,7 @@ import { HotkeyEnum } from '@/types/hotkey';
 
 const SessionSearchBar = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('chat');
+  const isLoaded = useUserStore((s) => s.isLoaded);
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.Search));
 
   const [keywords, useSearchSessions, updateSearchKeywords] = useSessionStore((s) => [
@@ -21,14 +22,19 @@ const SessionSearchBar = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   const { isValidating } = useSearchSessions(keywords);
 
+  const handleChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      updateSearchKeywords(e.target.value);
+    },
+    [updateSearchKeywords],
+  );
+
   return (
     <SearchBar
       allowClear
       enableShortKey={!mobile}
-      loading={isValidating}
-      onChange={(e) => {
-        updateSearchKeywords(e.target.value);
-      }}
+      loading={!isLoaded || isValidating}
+      onChange={handleChange}
       placeholder={t('searchAgentPlaceholder')}
       shortKey={hotkey}
       spotlight={!mobile}

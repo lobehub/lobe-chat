@@ -1,4 +1,4 @@
-import { Typography } from 'antd';
+import { Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -43,8 +43,8 @@ const FileItem = memo<ChatFileItem>(({ id, fileType, size, name }) => {
     >
       <FileIcon fileName={name} fileType={fileType} />
       <Flexbox style={{ overflow: 'hidden' }}>
-        <Typography.Text ellipsis>{name}</Typography.Text>
-        <Typography.Text type={'secondary'}>{formatSize(size)}</Typography.Text>
+        <Text ellipsis>{name}</Text>
+        <Text type={'secondary'}>{formatSize(size)}</Text>
       </Flexbox>
     </Flexbox>
   );

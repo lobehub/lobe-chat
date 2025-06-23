@@ -1,5 +1,5 @@
-import { Icon } from '@lobehub/ui';
-import { Switch, Typography } from 'antd';
+import { Icon, Text } from '@lobehub/ui';
+import { Switch } from 'antd';
 import { GitBranch } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -17,9 +17,9 @@ const NewThreadHeader = () => {
   return (
     <Flexbox align={'center'} gap={8} horizontal style={{ marginInlineStart: 4 }}>
       <Icon icon={GitBranch} size={18} />
-      <Typography.Text className={oneLineEllipsis} ellipsis={true} style={{ fontSize: 14 }}>
+      <Text className={oneLineEllipsis} ellipsis style={{ fontSize: 14 }}>
         {t('newPortalThread.title')}
-      </Typography.Text>
+      </Text>
       <Flexbox align={'center'} gap={8} horizontal>
         <Switch
           checked={newThreadMode === ThreadType.Continuation}

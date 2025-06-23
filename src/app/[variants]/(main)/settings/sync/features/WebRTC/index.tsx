@@ -1,8 +1,8 @@
 'use client';
 
 import { SiWebrtc } from '@icons-pack/react-simple-icons';
-import { Form, type FormGroupItemType, Input, InputPassword, Tooltip } from '@lobehub/ui';
-import { Form as AntForm, Switch, Typography } from 'antd';
+import { Form, type FormGroupItemType, Input, InputPassword, Text, Tooltip } from '@lobehub/ui';
+import { Form as AntForm, Switch } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -80,9 +80,9 @@ const WebRTC = memo(() => {
           <SiWebrtc style={{ flex: 'none' }} />
           {t('sync.webrtc.title')}
         </Flexbox>
-        <Typography.Text style={{ fontWeight: 'normal' }} type={'secondary'}>
+        <Text style={{ fontWeight: 'normal' }} type={'secondary'}>
           {t('sync.webrtc.desc')}
-        </Typography.Text>
+        </Text>
       </Flexbox>
     ),
   };

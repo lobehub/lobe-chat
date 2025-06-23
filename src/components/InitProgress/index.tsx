@@ -1,5 +1,5 @@
-import { Icon } from '@lobehub/ui';
-import { Progress, Typography } from 'antd';
+import { Icon, Text } from '@lobehub/ui';
+import { Progress } from 'antd';
 import { useTheme } from 'antd-style';
 import { Loader2 } from 'lucide-react';
 import { ReactNode, memo } from 'react';
@@ -33,7 +33,7 @@ const InitProgress = memo<InitingProps>(({ activeStage, stages }) => {
       />
       <Flexbox align={'center'} gap={4} horizontal>
         {stage?.icon ? stage?.icon : <Icon icon={Loader2} spin />}
-        <Typography.Text type={'secondary'}>{stage?.text}</Typography.Text>
+        <Text type={'secondary'}>{stage?.text}</Text>
       </Flexbox>
     </Center>
   );

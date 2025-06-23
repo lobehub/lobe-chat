@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "Kullanıcının son mesajı bu şablona doldurulur",
-      "placeholder": "Ön işleme şablonu {{input_template}}, gerçek zamanlı giriş bilgileri ile değiştirilir",
+      "placeholder": "Ön işleme şablonu {{text}}, gerçek zamanlı giriş bilgileri ile değiştirilir",
       "title": "Kullanıcı Girişi Ön İşleme"
     },
     "submit": "Sohbet tercihlerini güncelle",

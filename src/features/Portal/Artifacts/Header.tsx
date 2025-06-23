@@ -1,5 +1,5 @@
-import { ActionIcon, Icon, Segmented } from '@lobehub/ui';
-import { ConfigProvider, Typography } from 'antd';
+import { ActionIcon, Icon, Segmented, Text } from '@lobehub/ui';
+import { ConfigProvider } from 'antd';
 import { cx } from 'antd-style';
 import { ArrowLeft, CodeIcon, EyeIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -34,9 +34,9 @@ const Header = () => {
     <Flexbox align={'center'} flex={1} gap={12} horizontal justify={'space-between'} width={'100%'}>
       <Flexbox align={'center'} gap={4} horizontal>
         <ActionIcon icon={ArrowLeft} onClick={() => closeArtifact()} size={'small'} />
-        <Typography.Text className={cx(oneLineEllipsis)} type={'secondary'}>
+        <Text className={cx(oneLineEllipsis)} type={'secondary'}>
           {artifactTitle}
-        </Typography.Text>
+        </Text>
       </Flexbox>
       <ConfigProvider
         theme={{

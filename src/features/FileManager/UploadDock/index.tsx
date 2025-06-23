@@ -1,6 +1,5 @@
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons';
-import { ActionIcon, Icon } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { ActionIcon, Icon, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { UploadIcon, XIcon } from 'lucide-react';
@@ -149,7 +148,7 @@ const UploadDock = memo(() => {
             ))}
           </Flexbox>
           <Center style={{ height: 40, minHeight: 40 }}>
-            <Typography.Text
+            <Text
               onClick={() => {
                 setExpand(false);
               }}
@@ -157,7 +156,7 @@ const UploadDock = memo(() => {
               type={'secondary'}
             >
               {t('uploadDock.body.collapse')}
-            </Typography.Text>
+            </Text>
           </Center>
         </Flexbox>
       ) : (

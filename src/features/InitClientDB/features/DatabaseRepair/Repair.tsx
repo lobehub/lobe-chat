@@ -1,7 +1,7 @@
 'use client';
 
-import { Alert, Button, CodeEditor, Icon } from '@lobehub/ui';
-import { Card, List, Typography } from 'antd';
+import { Alert, Button, CodeEditor, Icon, Text } from '@lobehub/ui';
+import { Card, List } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import isEqual from 'fast-deep-equal';
@@ -13,8 +13,6 @@ import { Flexbox } from 'react-layout-kit';
 import { clientDB, updateMigrationRecord } from '@/database/client/db';
 import { useGlobalStore } from '@/store/global';
 import { clientDBSelectors } from '@/store/global/selectors';
-
-const { Text } = Typography;
 
 // 使用 antd-style 创建样式
 const useStyles = createStyles(({ css, token }) => ({

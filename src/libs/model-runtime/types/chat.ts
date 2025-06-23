@@ -126,6 +126,7 @@ export interface ChatStreamPayload {
     budget_tokens: number;
     type: 'enabled' | 'disabled';
   };
+  thinkingBudget?: number;
   tool_choice?: string;
   tools?: ChatCompletionTool[];
   /**

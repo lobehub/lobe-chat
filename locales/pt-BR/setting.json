@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "A última mensagem do usuário será preenchida neste modelo",
-      "placeholder": "O modelo de pré-processamento {{input_template}} será substituído pela entrada em tempo real",
+      "placeholder": "O modelo de pré-processamento {{text}} será substituído pela entrada em tempo real",
       "title": "Pré-processamento de entrada do usuário"
     },
     "submit": "Atualizar preferências de chat",

@@ -1,6 +1,6 @@
 'use client';
 
-import { Typography } from 'antd';
+import { Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { useQueryState } from 'nuqs';
 import { rgba } from 'polished';
@@ -109,9 +109,9 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
           components={{
             Footer: () => (
               <Center style={{ height: 64 }}>
-                <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
+                <Text style={{ fontSize: 12 }} type={'secondary'}>
                   {t('FileManager.bottom')}
-                </Typography.Text>
+                </Text>
               </Center>
             ),
           }}

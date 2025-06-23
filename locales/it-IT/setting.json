@@ -220,7 +220,7 @@
     },
     "inputTemplate": {
       "desc": "Il template verrà popolato con l'ultimo messaggio dell'utente",
-      "placeholder": "Il modello di input {{input_template}} verrà sostituito con le informazioni in tempo reale",
+      "placeholder": "Il modello di input {{text}} verrà sostituito con le informazioni in tempo reale",
       "title": "Pre-elaborazione dell'input dell'utente"
     },
     "submit": "Aggiorna preferenze chat",

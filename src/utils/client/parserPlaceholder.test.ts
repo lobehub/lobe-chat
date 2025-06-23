@@ -21,18 +21,6 @@ vi.mock('@/store/user/selectors', () => ({
   },
 }));
 
-vi.mock('@/store/agent/store', () => ({
-  getAgentStoreState: () => ({}),
-}));
-
-vi.mock('@/store/agent/selectors', () => ({
-  agentChatConfigSelectors: {
-    currentChatConfig: () => ({
-      inputTemplate: 'Hello {{username}}!',
-    }),
-  },
-}));
-
 describe('parsePlaceholderVariablesMessages', () => {
   beforeEach(() => {
     // Mock Date for consistent testing
@@ -237,15 +225,6 @@ describe('parsePlaceholderVariablesMessages', () => {
 
       // Unknown variables should remain unchanged
       expect(result[0].content).toBe('Hello {{unknown_variable}}!');
-    });
-
-    it('should handle nested variables (input_template)', () => {
-      const messages = [{ id: '1', content: 'Template: {{input_template}}' }];
-
-      const result = parsePlaceholderVariablesMessages(messages);
-
-      // Should resolve nested variables in input_template
-      expect(result[0].content).toBe('Template: Hello testuser!');
     });
   });
 

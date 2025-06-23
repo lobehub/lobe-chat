@@ -134,6 +134,9 @@
   "upstage": {
     "description": "Upstage, çeşitli ticari ihtiyaçlar için yapay zeka modelleri geliştirmeye odaklanmaktadır. Solar LLM ve belge AI gibi modeller, insan yapımı genel zeka (AGI) hedeflemektedir. Chat API aracılığıyla basit diyalog ajanları oluşturmakta ve işlev çağrısı, çeviri, gömme ve belirli alan uygulamalarını desteklemektedir."
   },
+  "v0": {
+    "description": "v0, eşli programlama asistanıdır; sadece doğal dilde fikirlerinizi tanımlamanız yeterlidir, o da projeniz için kod ve kullanıcı arayüzü (UI) oluşturur"
+  },
   "vertexai": {
     "description": "Google'un Gemini serisi, Google DeepMind tarafından geliştirilen en gelişmiş ve genel amaçlı AI modelleridir. Çok modlu tasarım için özel olarak oluşturulmuş olup, metin, kod, görüntü, ses ve video gibi içeriklerin kesintisiz anlaşılması ve işlenmesini destekler. Veri merkezlerinden mobil cihazlara kadar çeşitli ortamlarda kullanılabilir, AI modellerinin verimliliğini ve uygulama kapsamını büyük ölçüde artırır."
   },

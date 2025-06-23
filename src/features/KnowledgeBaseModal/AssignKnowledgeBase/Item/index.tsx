@@ -1,4 +1,4 @@
-import { Typography } from 'antd';
+import { Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -7,8 +7,6 @@ import KnowledgeIcon from '@/components/KnowledgeIcon';
 import { KnowledgeItem } from '@/types/knowledgeBase';
 
 import Actions from './Action';
-
-const { Paragraph } = Typography;
 
 const useStyles = createStyles(({ css, token }) => ({
   desc: css`
@@ -51,14 +49,14 @@ const PluginItem = memo<KnowledgeItem>(({ id, fileType, name, type, description,
         <KnowledgeIcon fileType={fileType} name={name} size={{ file: 40, repo: 40 }} type={type} />
         <Flexbox flex={1} gap={4} style={{ overflow: 'hidden', position: 'relative' }}>
           <Flexbox align={'center'} gap={8} horizontal>
-            <Paragraph className={styles.title} ellipsis={{ rows: 1 }}>
+            <Text className={styles.title} ellipsis>
               {name}
-            </Paragraph>
+            </Text>
           </Flexbox>
           {description && (
-            <Paragraph className={styles.desc} ellipsis={{ rows: 1 }}>
+            <Text className={styles.desc} ellipsis>
               {description}
-            </Paragraph>
+            </Text>
           )}
         </Flexbox>
       </Flexbox>

@@ -1,5 +1,5 @@
-import { Alert, CopyButton, Highlighter, Icon, Markdown, Segmented } from '@lobehub/ui';
-import { Descriptions, Typography } from 'antd';
+import { Alert, CopyButton, Highlighter, Icon, Markdown, Segmented, Text } from '@lobehub/ui';
+import { Descriptions } from 'antd';
 import { createStyles } from 'antd-style';
 import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
@@ -148,12 +148,9 @@ const PageContent = memo<PageContentProps>(({ result }) => {
           </Flexbox>
         </Flexbox>
         {description && (
-          <Typography.Paragraph
-            className={styles.description}
-            ellipsis={{ expandable: false, rows: 4 }}
-          >
+          <Text className={styles.description} ellipsis={{ rows: 4 }}>
             {description}
-          </Typography.Paragraph>
+          </Text>
         )}
         <Flexbox align={'center'} className={styles.url} gap={4} horizontal>
           {result.data.siteName && <div>{result.data.siteName} · </div>}
