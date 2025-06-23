@@ -1,5 +1,6 @@
 import { LobeChatDatabase } from '@/database/type';
 import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
+import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { ChatStreamPayload } from '@/types/openai/chat';
 
 import { BaseService } from '../common/base.service';
@@ -31,6 +32,134 @@ export class ChatService extends BaseService {
   }
 
   /**
+   * 获取AI Provider的API Key
+   * @param provider 提供商ID
+   * @returns API Key
+   */
+  private async getApiKey(provider: string) {
+    const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
+
+    const aiProviderConfigs = await this.db.query.aiProviders.findMany({
+      where: (aiProviders, { eq, and }) =>
+        and(
+          eq(aiProviders.userId, this.userId!),
+          eq(aiProviders.id, provider),
+          eq(aiProviders.enabled, true),
+        ),
+    });
+
+    if (!aiProviderConfigs || aiProviderConfigs.length === 0) {
+      this.log('info', '未找到有效的AI Provider配置，使用兜底环境变量配置', {
+        provider,
+        userId: this.userId,
+      });
+
+      return '{}';
+    }
+
+    const providerConfig = aiProviderConfigs[0];
+    const { plaintext } = await gateKeeper.decrypt(providerConfig.keyVaults!);
+
+    return plaintext;
+  }
+
+  /**
+   * 解析SSE格式的响应内容
+   * @param text SSE格式的文本
+   * @returns 解析出的内容
+   */
+  private parseSSEContent(text: string): string {
+    const lines = text.split('\n');
+    let content = '';
+
+    for (const line of lines) {
+      if (line.startsWith('data: ') && !line.includes('[DONE]') && !line.includes('STOP')) {
+        try {
+          const dataJson = line.slice(6);
+          const data = JSON.parse(dataJson);
+
+          // 处理标准的OpenAI Chat Completion格式
+          if (data.choices?.[0]?.delta?.content) {
+            content += data.choices[0].delta.content;
+          } else if (data.choices?.[0]?.message?.content) {
+            content = data.choices[0].message.content;
+          }
+          // 处理直接字符串内容（OpenAI Reasoning模式）
+          else if (typeof data === 'string') {
+            content += data;
+          }
+        } catch {
+          // 忽略解析错误
+        }
+      }
+    }
+
+    return content;
+  }
+
+  /**
+   * 处理流式响应
+   * @param response 响应对象
+   * @returns 完整的响应内容
+   */
+  private async handleStreamResponse(response: Response): Promise<string> {
+    const reader = response.body?.getReader();
+    if (!reader) throw new Error('无法获取响应流');
+
+    let finalContent = '';
+    const decoder = new TextDecoder();
+
+    try {
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        const parsedContent = this.parseSSEContent(chunk);
+        finalContent += parsedContent;
+      }
+    } finally {
+      reader.releaseLock();
+    }
+
+    // 移除可能的结尾控制字符
+    return finalContent.replace(/\s*stop\s*$/i, '').trim();
+  }
+
+  /**
+   * 处理非流式响应
+   * @param response 响应对象
+   * @returns 解析后的JSON数据
+   */
+  private async handleNonStreamResponse(response: Response): Promise<any> {
+    try {
+      return await response.json();
+    } catch {
+      // 如果JSON解析失败，尝试读取文本内容
+      const text = await response.text();
+
+      // 尝试从文本中提取内容
+      if (text.includes('data: ')) {
+        const content = this.parseSSEContent(text);
+        if (content) {
+          return {
+            choices: [
+              {
+                message: {
+                  content,
+                  role: 'assistant',
+                },
+              },
+            ],
+          };
+        }
+      }
+
+      throw new Error(`响应解析失败: ${text.slice(0, 100)}`);
+    }
+  }
+
+  /**
    * 通用聊天接口
    * @param params 聊天参数
    * @returns 聊天响应
@@ -47,8 +176,11 @@ export class ChatService extends BaseService {
     });
 
     try {
+      const { apiKey } = JSON.parse(await this.getApiKey(provider));
+
       // 创建 AgentRuntime 实例
       const agentRuntime = await initAgentRuntimeWithUserPayload(provider, {
+        apiKey,
         userId: this.userId!,
       });
 
@@ -57,7 +189,7 @@ export class ChatService extends BaseService {
         max_tokens: params.max_tokens,
         messages: params.messages,
         model,
-        stream: params.stream || false,
+        stream: params.stream,
         temperature: params.temperature || 1,
       };
 
@@ -66,14 +198,26 @@ export class ChatService extends BaseService {
         user: this.userId!,
       });
 
-      // 处理流式响应
-      if (params.stream) {
-        // 对于流式响应，直接返回 Response 对象
-        return response as any;
-      }
+      // 检查响应类型
+      const contentType = response.headers.get('content-type') || '';
 
-      // 处理非流式响应
-      const result = await response.json();
+      // 统一处理流式和非流式响应
+      let result;
+      if (contentType.includes('text/stream') || contentType.includes('text/event-stream')) {
+        const content = await this.handleStreamResponse(response);
+        result = {
+          choices: [
+            {
+              message: {
+                content,
+                role: 'assistant',
+              },
+            },
+          ],
+        };
+      } else {
+        result = await this.handleNonStreamResponse(response);
+      }
 
       this.log('info', '聊天对话完成', {
         hasContent: !!result.choices?.[0]?.message?.content,
@@ -88,8 +232,26 @@ export class ChatService extends BaseService {
         usage: result.usage,
       };
     } catch (error) {
+      // 改进错误日志记录，提供更详细的错误信息
+      let errorDetails: any;
+
+      if (error instanceof Error) {
+        errorDetails = {
+          message: error.message,
+          name: error.name,
+        };
+      } else if (typeof error === 'object' && error !== null) {
+        try {
+          errorDetails = structuredClone(error);
+        } catch {
+          errorDetails = { rawError: String(error) };
+        }
+      } else {
+        errorDetails = { rawError: String(error) };
+      }
+
       this.log('error', '聊天对话失败', {
-        error: error instanceof Error ? error.message : String(error),
+        error: errorDetails,
         model,
         provider,
       });
