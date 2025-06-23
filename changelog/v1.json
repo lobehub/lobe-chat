@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add blockAds & stealth params for Browserless."]
+    },
+    "date": "2025-06-23",
+    "version": "1.96.7"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-06-23",
