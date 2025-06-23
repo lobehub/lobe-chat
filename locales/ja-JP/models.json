@@ -1181,11 +1181,17 @@
   "google/gemini-2.0-flash-exp:free": {
     "description": "Gemini 2.0 Flash Experimentalは、Googleの最新の実験的なマルチモーダルAIモデルであり、歴史的なバージョンと比較して特に世界知識、コード、長いコンテキストにおいて品質が向上しています。"
   },
+  "google/gemini-2.5-flash": {
+    "description": "Gemini 2.5 Flash は、Google の最先端の主力モデルであり、高度な推論、コーディング、数学および科学タスク向けに設計されています。内蔵の「思考」機能を備えており、より高い精度と詳細なコンテキスト処理を伴う応答を提供できます。\n\n注意：このモデルには「思考」バリアントと非「思考」バリアントの2種類があります。出力の価格は思考機能の有効化により大きく異なります。標準バリアント（「:thinking」サフィックスなし）を選択した場合、モデルは明確に思考トークンの生成を回避します。\n\n思考機能を利用し思考トークンを受け取るには、「:thinking」バリアントを選択する必要があり、これにより思考出力の価格が高くなります。\n\nさらに、Gemini 2.5 Flash はドキュメントに記載されている「推論最大トークン数」パラメータ（https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning）を通じて設定可能です。"
+  },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flashは、Googleの最先端の主力モデルであり、高度な推論、コーディング、数学、科学タスクのために設計されています。内蔵の「思考」能力を備えており、より高い精度と詳細なコンテキスト処理で応答を提供します。\n\n注意：このモデルには、思考と非思考の2つのバリアントがあります。出力の価格は、思考能力が有効かどうかによって大きく異なります。標準バリアント（「:thinking」サフィックスなし）を選択すると、モデルは明示的に思考トークンの生成を避けます。\n\n思考能力を利用して思考トークンを受け取るには、「:thinking」バリアントを選択する必要があり、これにより思考出力の価格が高くなります。\n\nさらに、Gemini 2.5 Flashは、「推論最大トークン数」パラメータを介して構成可能であり、文書に記載されています (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)。"
   },
   "google/gemini-2.5-flash-preview:thinking": {
     "description": "Gemini 2.5 Flashは、Googleの最先端の主力モデルであり、高度な推論、コーディング、数学、科学タスクのために設計されています。内蔵の「思考」能力を備えており、より高い精度と詳細なコンテキスト処理で応答を提供します。\n\n注意：このモデルには、思考と非思考の2つのバリアントがあります。出力の価格は、思考能力が有効かどうかによって大きく異なります。標準バリアント（「:thinking」サフィックスなし）を選択すると、モデルは明示的に思考トークンの生成を避けます。\n\n思考能力を利用して思考トークンを受け取るには、「:thinking」バリアントを選択する必要があり、これにより思考出力の価格が高くなります。\n\nさらに、Gemini 2.5 Flashは、「推論最大トークン数」パラメータを介して構成可能であり、文書に記載されています (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)。"
+  },
+  "google/gemini-2.5-pro": {
+    "description": "Gemini 2.5 Pro は、Google の最先端の思考モデルであり、コード、数学、STEM分野の複雑な問題に対して推論を行い、長いコンテキストを用いて大規模なデータセット、コードベース、ドキュメントを分析できます。"
   },
   "google/gemini-2.5-pro-preview": {
     "description": "Gemini 2.5 Pro Preview は、Google の最先端の思考モデルであり、コード、数学、STEM 分野の複雑な問題を推論し、長いコンテキストを用いて大規模なデータセット、コードベース、ドキュメントを分析することができます。"
