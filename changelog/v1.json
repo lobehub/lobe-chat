@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Optimized Gemini thinkingBudget configuration."]
+    },
+    "date": "2025-06-23",
+    "version": "1.96.8"
+  },
+  {
+    "children": {
       "improvements": ["Add blockAds & stealth params for Browserless."]
     },
     "date": "2025-06-23",
