@@ -198,10 +198,12 @@ export class SessionModel {
     session = {},
     config = {},
     slug,
+    skipAgentCreation = false,
   }: {
     config?: Partial<NewAgent>;
     id?: string;
     session?: Partial<NewSession>;
+    skipAgentCreation?: boolean;
     slug?: string;
     type: 'agent' | 'group';
   }): Promise<SessionItem> => {
@@ -214,16 +216,23 @@ export class SessionModel {
         if (existResult) return existResult;
       }
 
-      const newAgents = await trx
-        .insert(agents)
-        .values({
-          ...config,
-          createdAt: new Date(),
-          id: idGenerator('agents'),
-          updatedAt: new Date(),
-          userId: this.userId,
-        })
-        .returning();
+      let agentId: string | undefined;
+
+      // 只有在不跳过 Agent 创建时才创建新的 Agent
+      if (!skipAgentCreation) {
+        const newAgents = await trx
+          .insert(agents)
+          .values({
+            ...config,
+            createdAt: new Date(),
+            id: idGenerator('agents'),
+            updatedAt: new Date(),
+            userId: this.userId,
+          })
+          .returning();
+
+        agentId = newAgents[0].id;
+      }
 
       const result = await trx
         .insert(sessions)
@@ -238,11 +247,14 @@ export class SessionModel {
         })
         .returning();
 
-      await trx.insert(agentsToSessions).values({
-        agentId: newAgents[0].id,
-        sessionId: id,
-        userId: this.userId,
-      });
+      // 只有在创建了新 Agent 时才创建关联
+      if (agentId) {
+        await trx.insert(agentsToSessions).values({
+          agentId,
+          sessionId: id,
+          userId: this.userId,
+        });
+      }
 
       return result[0];
     });
