@@ -16,13 +16,13 @@ const MessageTranslatesRoutes = new Hono();
 
 // GET /api/v1/message-translates - 获取指定消息的翻译信息
 MessageTranslatesRoutes.get(
-  '/',
+  '/:messageId',
   requireAuth,
   requireAnyPermission(
     getScopePermissions('MESSAGE_READ', ['ALL', 'WORKSPACE', 'OWNER']),
     'You do not have permission to read message translations',
   ),
-  zValidator('query', MessageTranslateQueryRequestSchema),
+  zValidator('param', MessageTranslateQueryRequestSchema),
   (c) => {
     const controller = new MessageTranslateController();
     return controller.handleGetTranslateByMessage(c);
