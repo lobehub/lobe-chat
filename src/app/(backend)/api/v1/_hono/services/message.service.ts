@@ -205,21 +205,39 @@ export class MessageService extends BaseService {
 
       // 2. 如果是用户消息，生成AI回复
       if (messageData.role === 'user') {
+        this.log('info', '开始获取对话历史');
         // 获取对话历史
         const conversationHistory = await this.getConversationHistory(
           messageData.sessionId || null,
           messageData.topicId,
         );
+        this.log('info', '对话历史获取完成', { historyLength: conversationHistory.length });
 
         // 使用ChatService生成回复
-        const chatService = new ChatService(this.db, this.userId);
-        const aiReplyContent = await chatService.generateReply({
-          conversationHistory,
+        this.log('info', '开始生成AI回复', {
           model: messageData.model,
           provider: messageData.provider,
-          sessionId: messageData.sessionId!,
-          userMessage: messageData.content,
+          userId: this.userId,
         });
+
+        const chatService = new ChatService(this.db, this.userId);
+        let aiReplyContent = '';
+
+        try {
+          aiReplyContent = await chatService.generateReply({
+            conversationHistory,
+            model: messageData.model,
+            provider: messageData.provider,
+            sessionId: messageData.sessionId!,
+            userMessage: messageData.content,
+          });
+          this.log('info', 'AI回复生成完成', { replyLength: aiReplyContent.length });
+        } catch (replyError) {
+          this.log('error', 'AI回复生成失败，使用默认回复', {
+            error: replyError instanceof Error ? replyError.message : String(replyError),
+          });
+          aiReplyContent = '抱歉，AI 服务暂时不可用，请稍后再试。';
+        }
 
         // 3. 创建AI回复消息
         const aiReplyData: MessagesCreateRequest = {
@@ -231,7 +249,9 @@ export class MessageService extends BaseService {
           topicId: messageData.topicId,
         };
 
+        this.log('info', '开始创建AI回复消息');
         const aiReply = await this.createMessage(aiReplyData);
+        this.log('info', 'AI回复消息创建完成', { aiReplyId: aiReply.id });
 
         this.log('info', '创建消息和AI回复完成', {
           aiReplyId: aiReply.id,
@@ -252,7 +272,36 @@ export class MessageService extends BaseService {
         userMessageId: userMessage.id,
       };
     } catch (error) {
-      this.log('error', '创建消息和AI回复失败', { error });
+      // 改进错误日志记录，提供更详细的错误信息
+      let errorDetails: any;
+
+      if (error instanceof Error) {
+        errorDetails = {
+          message: error.message,
+          name: error.name,
+          stack: error.stack,
+        };
+      } else if (typeof error === 'object' && error !== null) {
+        try {
+          errorDetails = structuredClone(error);
+        } catch {
+          errorDetails = { rawError: String(error) };
+        }
+      } else {
+        errorDetails = { rawError: String(error) };
+      }
+
+      this.log('error', '创建消息和AI回复失败', {
+        error: errorDetails,
+        messageData: {
+          contentLength: messageData.content?.length,
+          model: messageData.model,
+          provider: messageData.provider,
+          role: messageData.role,
+          sessionId: messageData.sessionId,
+          topicId: messageData.topicId,
+        },
+      });
       throw this.createCommonError('创建消息和AI回复失败');
     }
   }

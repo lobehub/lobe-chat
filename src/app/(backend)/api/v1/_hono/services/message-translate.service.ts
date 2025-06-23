@@ -121,8 +121,27 @@ export class MessageTranslateService extends BaseService {
 
       this.log('info', '翻译消息完成', { messageId: translateData.messageId });
     } catch (error) {
+      // 改进错误日志记录，提供更详细的错误信息
+      let errorDetails: any;
+
+      if (error instanceof Error) {
+        errorDetails = {
+          message: error.message,
+          name: error.name,
+          stack: error.stack,
+        };
+      } else if (typeof error === 'object' && error !== null) {
+        try {
+          errorDetails = structuredClone(error);
+        } catch {
+          errorDetails = { rawError: String(error) };
+        }
+      } else {
+        errorDetails = { rawError: String(error) };
+      }
+
       this.log('error', '翻译消息失败', {
-        error: error instanceof Error ? error.message : String(error),
+        error: errorDetails,
         messageId: translateData.messageId,
       });
       throw this.createCommonError('翻译消息失败');
