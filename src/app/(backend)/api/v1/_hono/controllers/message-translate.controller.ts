@@ -2,21 +2,18 @@ import { Context } from 'hono';
 
 import { BaseController } from '../common/base.controller';
 import { MessageTranslateService } from '../services/message-translate.service';
-import {
-  MessageTranslateTriggerRequest,
-} from '../types/message-translate.type';
+import { MessageTranslateTriggerRequest } from '../types/message-translate.type';
 
 export class MessageTranslateController extends BaseController {
   /**
    * 获取指定消息的翻译信息
-   * GET /api/v1/message_translates/query
-   * Query: { messageId: string }
+   * GET /api/v1/message_translates/:messageId
+   * Param: { messageId: string }
    */
   async handleGetTranslateByMessage(c: Context) {
     try {
       const userId = this.getUserId(c)!;
-      const query = this.getQuery(c);
-      const messageId = query.messageId as string;
+      const { messageId } = this.getParams<{ messageId: string }>(c);
 
       const db = await this.getDatabase();
       const translateService = new MessageTranslateService(db, userId);
@@ -30,8 +27,8 @@ export class MessageTranslateController extends BaseController {
 
   /**
    * 翻译指定消息
-   * POST /api/v1/message_translates/translate
-   * Body: { messageId: string, from?: string, to: string }
+   * POST /api/v1/message_translates/:messageId
+   * Body: { from?: string, to: string }
    */
   async handleTranslateMessage(c: Context) {
     try {

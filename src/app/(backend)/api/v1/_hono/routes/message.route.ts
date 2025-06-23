@@ -17,20 +17,6 @@ import {
 // Topic 相关路由
 const MessageRoutes = new Hono();
 
-// GET /api/v1/message - 获取示例数据 (需要消息读取权限)
-MessageRoutes.get(
-  '/',
-  requireAuth,
-  requireAnyPermission(
-    getScopePermissions('MESSAGE_READ', ['ALL', 'WORKSPACE', 'OWNER']),
-    'You do not have permission to read messages',
-  ),
-  (c) => {
-    const controller = new MessageController();
-    return controller.handleGetExample(c);
-  },
-);
-
 // POST /api/v1/message/count/by-topics - 根据话题ID数组统计消息数量 (需要消息读取权限)
 MessageRoutes.post(
   '/count/by-topics',
@@ -63,13 +49,13 @@ MessageRoutes.post(
 
 // GET /api/v1/messages/queryByTopic - 根据话题ID获取消息列表 (需要消息读取权限)
 MessageRoutes.get(
-  '/queryByTopic',
+  '/queryByTopic/:topicId',
   requireAuth,
   requireAnyPermission(
     getScopePermissions('MESSAGE_READ', ['ALL', 'WORKSPACE', 'OWNER']),
     'You do not have permission to read messages',
   ),
-  zValidator('query', MessagesQueryByTopicRequestSchema),
+  zValidator('param', MessagesQueryByTopicRequestSchema),
   (c) => {
     const controller = new MessageController();
     return controller.handleGetMessagesByTopic(c);

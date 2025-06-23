@@ -13,8 +13,7 @@ export class TopicController extends BaseController {
   async handleGetTopicsBySession(c: Context) {
     try {
       const userId = this.getUserId(c)!;
-      const query = this.getQuery(c);
-      const sessionId = query.sessionId as string;
+      const { sessionId } = this.getParams<{ sessionId: string }>(c);
 
       const db = await this.getDatabase();
       const topicService = new TopicService(db, userId);
