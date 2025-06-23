@@ -88,6 +88,40 @@ BROWSERLESS_URL=https://chrome.browserless.io
 
 ---
 
+## `BROWSERLESS_BLOCK_ADS`
+
+Enables ad blocking functionality. When using [Browserless](https://www.browserless.io/) for web scraping, it automatically blocks common ad resources (such as scripts, images, trackers, etc.), improving scraping speed and page clarity.
+
+```env
+BROWSERLESS_BLOCK_ADS=1
+```
+
+> 📌 Supported values:
+>
+> * `1`: Enable ad blocking (recommended);
+> * `0`: Disable ad blocking (default).
+
+> ✅ It is recommended to use with `BROWSERLESS_STEALTH_MODE=1` to enhance stealth and scraping success rate.
+
+---
+
+## `BROWSERLESS_STEALTH_MODE`
+
+Enables stealth mode. When using [Browserless](https://www.browserless.io/) for web scraping, it applies various anti-detection techniques (such as modifying the user agent, removing webdriver traits, simulating user interactions) to bypass anti-bot mechanisms.
+
+```env
+BROWSERLESS_STEALTH_MODE=1
+```
+
+> 📌 Supported values:
+>
+> * `1`: Enable stealth mode (recommended);
+> * `0`: Disable stealth mode (default).
+
+> ⚠️ Some websites use advanced anti-scraping techniques. Enabling stealth mode can significantly improve scraping success rate.
+
+---
+
 ## `GOOGLE_PSE_ENGINE_ID`
 
 Configure the Search Engine ID for Google Programmable Search Engine (Google PSE), used to restrict the search scope. Must be used alongside `GOOGLE_PSE_API_KEY`.
