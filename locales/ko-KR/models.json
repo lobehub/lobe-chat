@@ -1181,11 +1181,17 @@
   "google/gemini-2.0-flash-exp:free": {
     "description": "Gemini 2.0 Flash Experimental은 Google의 최신 실험적 다중 모달 AI 모델로, 역사적 버전과 비교하여 품질이 향상되었으며, 특히 세계 지식, 코드 및 긴 맥락에 대해 개선되었습니다."
   },
+  "google/gemini-2.5-flash": {
+    "description": "Gemini 2.5 Flash는 Google의 최첨단 주력 모델로, 고급 추론, 코딩, 수학 및 과학 작업을 위해 설계되었습니다. 내장된 '사고' 능력을 포함하여 더 높은 정확도와 세밀한 문맥 처리가 가능한 응답을 제공합니다.\n\n참고: 이 모델에는 사고형과 비사고형 두 가지 변형이 있습니다. 출력 가격은 사고 능력 활성화 여부에 따라 크게 다릅니다. 표준 변형(‘:thinking’ 접미사 없음)을 선택하면 모델이 명확히 사고 토큰 생성을 피합니다.\n\n사고 능력을 활용하고 사고 토큰을 받으려면 ‘:thinking’ 변형을 선택해야 하며, 이 경우 더 높은 사고 출력 가격이 적용됩니다.\n\n또한, Gemini 2.5 Flash는 문서(https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)에 설명된 대로 '최대 추론 토큰 수' 매개변수를 통해 구성할 수 있습니다."
+  },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash는 Google의 최첨단 주력 모델로, 고급 추론, 코딩, 수학 및 과학 작업을 위해 설계되었습니다. 내장된 '사고' 능력을 포함하고 있어 더 높은 정확성과 세밀한 맥락 처리를 통해 응답을 제공합니다.\n\n주의: 이 모델에는 두 가지 변형이 있습니다: 사고 및 비사고. 출력 가격은 사고 능력이 활성화되었는지 여부에 따라 크게 다릅니다. 표준 변형(‘:thinking’ 접미사가 없는)을 선택하면 모델이 사고 토큰 생성을 명확히 피합니다.\n\n사고 능력을 활용하고 사고 토큰을 수신하려면 ‘:thinking’ 변형을 선택해야 하며, 이는 더 높은 사고 출력 가격을 발생시킵니다.\n\n또한, Gemini 2.5 Flash는 문서에 설명된 대로 '추론 최대 토큰 수' 매개변수를 통해 구성할 수 있습니다 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
   "google/gemini-2.5-flash-preview:thinking": {
     "description": "Gemini 2.5 Flash는 Google의 최첨단 주력 모델로, 고급 추론, 코딩, 수학 및 과학 작업을 위해 설계되었습니다. 내장된 '사고' 능력을 포함하고 있어 더 높은 정확성과 세밀한 맥락 처리를 통해 응답을 제공합니다.\n\n주의: 이 모델에는 두 가지 변형이 있습니다: 사고 및 비사고. 출력 가격은 사고 능력이 활성화되었는지 여부에 따라 크게 다릅니다. 표준 변형(‘:thinking’ 접미사가 없는)을 선택하면 모델이 사고 토큰 생성을 명확히 피합니다.\n\n사고 능력을 활용하고 사고 토큰을 수신하려면 ‘:thinking’ 변형을 선택해야 하며, 이는 더 높은 사고 출력 가격을 발생시킵니다.\n\n또한, Gemini 2.5 Flash는 문서에 설명된 대로 '추론 최대 토큰 수' 매개변수를 통해 구성할 수 있습니다 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
+  },
+  "google/gemini-2.5-pro": {
+    "description": "Gemini 2.5 Pro는 Google의 최첨단 사고 모델로, 코드, 수학 및 STEM 분야의 복잡한 문제를 추론할 수 있으며, 긴 문맥을 사용해 대규모 데이터 세트, 코드베이스 및 문서를 분석합니다."
   },
   "google/gemini-2.5-pro-preview": {
     "description": "Gemini 2.5 Pro Preview는 Google의 최첨단 사고 모델로, 코드, 수학 및 STEM 분야의 복잡한 문제를 추론할 수 있으며, 긴 문맥을 사용하여 대규모 데이터 세트, 코드베이스 및 문서를 분석할 수 있습니다."
