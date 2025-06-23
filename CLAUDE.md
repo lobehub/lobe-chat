@@ -1,6 +1,6 @@
-# CLAUDE.md
+查看 @README 获取项目概述，查看 @package.json 获取此项目可用的 npm 命令。
 
-This document serves as a shared guideline for all team members when using Claude Code in this repository.
+# 附加说明
 
 ## Tech Stack
 
