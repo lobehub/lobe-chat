@@ -90,7 +90,6 @@ export interface UpdateSessionGroupRequest {
  */
 export interface DeleteSessionGroupRequest {
   id: string;
-  removeChildren?: boolean;
 }
 
 /**
@@ -98,6 +97,13 @@ export interface DeleteSessionGroupRequest {
  */
 export interface UpdateSessionGroupOrderRequest {
   sortMap: { id: string; sort: number }[];
+}
+
+/**
+ * 更新会话分组请求参数
+ */
+export interface UpdateSessionGroupAssignmentRequest {
+  groupId: string | null; // null 表示移除分组
 }
 
 /**
@@ -263,4 +269,8 @@ export const SessionIdParamSchema = z.object({
 
 export const SessionGroupIdParamSchema = z.object({
   id: z.string().min(1, '会话组 ID 不能为空'),
+});
+
+export const UpdateSessionGroupAssignmentRequestSchema = z.object({
+  groupId: z.string().nullable(), // 允许 null 来移除分组
 });

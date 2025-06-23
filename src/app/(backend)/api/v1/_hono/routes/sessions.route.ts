@@ -12,6 +12,7 @@ import {
   GetSessionsRequestSchema,
   SearchSessionsRequestSchema,
   SessionIdParamSchema,
+  UpdateSessionGroupAssignmentRequestSchema,
   UpdateSessionRequestSchema,
 } from '../types/session.type';
 
@@ -170,6 +171,26 @@ SessionRoutes.post(
   async (c) => {
     const controller = new SessionController();
     return await controller.cloneSession(c);
+  },
+);
+
+/**
+ * 更新会话分组关联
+ * PUT /api/v1/sessions/:id/group
+ * 需要会话更新权限
+ */
+SessionRoutes.put(
+  '/:id/group',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('SESSION_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),
+    '您没有权限更新会话分组',
+  ),
+  zValidator('param', SessionIdParamSchema),
+  zValidator('json', UpdateSessionGroupAssignmentRequestSchema),
+  async (c) => {
+    const controller = new SessionController();
+    return await controller.updateSessionGroupAssignment(c);
   },
 );
 
