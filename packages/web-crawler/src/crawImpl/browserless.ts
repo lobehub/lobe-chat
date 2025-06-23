@@ -36,7 +36,7 @@ export const browserless: CrawlImpl = async (url, { filterOptions }) => {
       qs.stringifyUrl({
         query: {
           blockAds: BROWSERLESS_BLOCK_ADS,
-          launch: `{"stealth":${BROWSERLESS_STEALTH_MODE}}`,
+          launch: JSON.stringify({ stealth: BROWSERLESS_STEALTH_MODE }),
           token: BROWSERLESS_TOKEN,
         },
         url: urlJoin(BASE_URL, '/content'),
