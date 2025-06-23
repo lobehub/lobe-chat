@@ -8,8 +8,9 @@ import { requireAuth } from '../middleware';
 import { requireAnyPermission } from '../middleware/permission-check';
 import {
   TopicCreateRequestSchema,
+  TopicDeleteParamSchema,
   TopicListRequestSchema,
-  TopicSummaryRequestSchema,
+  TopicSummaryParamSchema,
 } from '../types/topic.type';
 
 // Topic 相关路由
@@ -45,6 +46,21 @@ TopicsRoutes.post(
   },
 );
 
+// DELETE /api/v1/topics/:id - 删除话题
+TopicsRoutes.delete(
+  '/:id',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('TOPIC_DELETE', ['ALL', 'WORKSPACE', 'OWNER']),
+    'You do not have permission to delete topics',
+  ),
+  zValidator('param', TopicDeleteParamSchema),
+  (c) => {
+    const controller = new TopicController();
+    return controller.handleDeleteTopic(c);
+  },
+);
+
 // POST /api/v1/topics/:id/summary - 总结对应的话题
 TopicsRoutes.post(
   '/:id/summary',
@@ -53,7 +69,7 @@ TopicsRoutes.post(
     getScopePermissions('TOPIC_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),
     'You do not have permission to summarize topics',
   ),
-  zValidator('json', TopicSummaryRequestSchema),
+  zValidator('param', TopicSummaryParamSchema),
   (c) => {
     const controller = new TopicController();
     return controller.handleSummarizeTopic(c);

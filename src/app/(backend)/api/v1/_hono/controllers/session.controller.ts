@@ -2,11 +2,13 @@ import { Context } from 'hono';
 
 import { BaseController } from '../common/base.controller';
 import { SessionService } from '../services/session.service';
+import { SessionGroupService } from '../services/sessionGroup.service';
 import {
   CloneSessionRequest,
   CreateSessionRequest,
   GetSessionsRequest,
   SearchSessionsRequest,
+  UpdateSessionGroupAssignmentRequest,
   UpdateSessionRequest,
 } from '../types/session.type';
 
@@ -239,6 +241,47 @@ export class SessionController extends BaseController {
       const sessions = await sessionService.searchSessions(request);
 
       return this.success(c, sessions, '搜索会话成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 更新会话分组关联
+   * PUT /api/v1/sessions/:id/group
+   * @param c Hono Context
+   * @returns 更新结果响应
+   */
+  async updateSessionGroupAssignment(c: Context): Promise<Response> {
+    try {
+      const { id: sessionId } = this.getParams<{ id: string }>(c);
+      const body = await this.getBody<UpdateSessionGroupAssignmentRequest>(c);
+
+      const db = await this.getDatabase();
+      const sessionService = new SessionService(db, this.getUserId(c));
+
+      // 验证会话是否存在
+      const session = await sessionService.getSessionById(sessionId);
+      if (!session) {
+        return this.error(c, '会话不存在', 404);
+      }
+
+      // 如果提供了 groupId，验证分组是否存在
+      if (body.groupId) {
+        const groupService = new SessionGroupService(db, this.getUserId(c));
+        const group = await groupService.getSessionGroupById(body.groupId);
+        if (!group) {
+          return this.error(c, '会话组不存在', 404);
+        }
+      }
+
+      // 更新会话分组
+      await sessionService.updateSession({
+        groupId: body.groupId || undefined,
+        id: sessionId,
+      });
+
+      return this.success(c, null, '会话分组更新成功');
     } catch (error) {
       return this.handleError(c, error);
     }

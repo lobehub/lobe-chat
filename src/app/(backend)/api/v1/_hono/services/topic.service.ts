@@ -73,7 +73,6 @@ export class TopicService extends BaseService {
         clientId: newTopic.clientId,
         createdAt: newTopic.createdAt.toISOString(),
         favorite: newTopic.favorite || false,
-        historySummary: newTopic.historySummary,
         id: newTopic.id,
         metadata: newTopic.metadata,
         sessionId: newTopic.sessionId,
@@ -84,6 +83,50 @@ export class TopicService extends BaseService {
     } catch (error) {
       this.log('error', 'Failed to create topic', { error, sessionId, title });
       throw this.createCommonError('创建话题失败');
+    }
+  }
+
+  /**
+   * 删除话题
+   * @param topicId 话题ID
+   */
+  async deleteTopic(topicId: string): Promise<void> {
+    if (!this.userId) {
+      throw this.createAuthError('未授权操作');
+    }
+
+    try {
+      // 首先检查话题是否存在且属于当前用户
+      const existingTopic = await this.db.query.topics.findFirst({
+        where: eq(topics.id, topicId),
+      });
+
+      console.log('this.userId', this.userId);
+      console.log('existingTopic', existingTopic);
+
+      if (!existingTopic) {
+        throw this.createCommonError('话题不存在');
+      }
+
+      if (existingTopic.userId !== this.userId) {
+        throw this.createAuthorizationError('无权限删除此话题');
+      }
+
+      await this.db.delete(topics).where(eq(topics.id, topicId));
+
+      this.log('info', 'Topic deleted successfully', { topicId });
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        (error.name === 'BusinessError' || error.name === 'AuthorizationError')
+      ) {
+        throw error;
+      }
+      this.log('error', 'Failed to delete topic', {
+        error: error instanceof Error ? error.message : String(error),
+        topicId,
+      });
+      throw this.createCommonError('删除话题失败');
     }
   }
 
@@ -113,12 +156,12 @@ export class TopicService extends BaseService {
 
       // TODO: 这里应该集成AI服务来生成真正的摘要
       // 目前先使用一个简单的摘要逻辑
-      const summary = `${existingTopic.title || '未命名话题'} 的对话摘要`;
+      const title = `${existingTopic.title || '未命名话题'} 的对话摘要`;
 
       const [updatedTopic] = await this.db
         .update(topics)
         .set({
-          historySummary: summary,
+          title,
           updatedAt: new Date(),
         })
         .where(eq(topics.id, topicId))
@@ -128,7 +171,6 @@ export class TopicService extends BaseService {
         clientId: updatedTopic.clientId,
         createdAt: updatedTopic.createdAt.toISOString(),
         favorite: updatedTopic.favorite || false,
-        historySummary: updatedTopic.historySummary,
         id: updatedTopic.id,
         metadata: updatedTopic.metadata,
         sessionId: updatedTopic.sessionId,
