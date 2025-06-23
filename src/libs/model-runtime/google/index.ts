@@ -353,6 +353,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       system: system_message?.content,
     };
   }
+
   private convertContentToGooglePart = async (
     content: UserMessageContentPart,
   ): Promise<Part | undefined> => {
@@ -399,6 +400,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
   private convertOAIMessagesToGoogleMessage = async (
     message: OpenAIChatMessage,
+    toolCallNameMap?: Map<string, string>,
   ): Promise<Content> => {
     const content = message.content as string | UserMessageContentPart[];
     if (!!message.tool_calls) {
@@ -409,8 +411,26 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             name: tool.function.name,
           },
         })),
-        role: 'function',
+        role: 'model',
       };
+    }
+
+    // 将 tool_call result 转成 functionResponse part
+    if (message.role === 'tool' && toolCallNameMap && message.tool_call_id) {
+      const functionName = toolCallNameMap.get(message.tool_call_id);
+      if (functionName) {
+        return {
+          parts: [
+            {
+              functionResponse: {
+                name: functionName,
+                response: { result: message.content },
+              },
+            },
+          ],
+          role: 'user',
+        };
+      }
     }
 
     const getParts = async () => {
@@ -430,9 +450,20 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
   // convert messages from the OpenAI format to Google GenAI SDK
   private buildGoogleMessages = async (messages: OpenAIChatMessage[]): Promise<Content[]> => {
+    const toolCallNameMap = new Map<string, string>();
+    messages.forEach((message) => {
+      if (message.role === 'assistant' && message.tool_calls) {
+        message.tool_calls.forEach((toolCall) => {
+          if (toolCall.type === 'function') {
+            toolCallNameMap.set(toolCall.id, toolCall.function.name);
+          }
+        });
+      }
+    });
+
     const pools = messages
       .filter((message) => message.role !== 'function')
-      .map(async (msg) => await this.convertOAIMessagesToGoogleMessage(msg));
+      .map(async (msg) => await this.convertOAIMessagesToGoogleMessage(msg, toolCallNameMap));
 
     return Promise.all(pools);
   };
@@ -493,12 +524,18 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   ): GoogleFunctionCallTool[] | undefined {
     // 目前 Tools (例如 googleSearch) 无法与其他 FunctionCall 同时使用
     if (payload?.messages?.some((m) => m.tool_calls?.length)) {
-      return; // 若历史消息中已有 function calling，则不再注入任何 Tools
+      return this.buildFunctionDeclarations(tools);
     }
     if (payload?.enabledSearch) {
       return [{ googleSearch: {} } as GoogleSearchRetrievalTool];
     }
 
+    return this.buildFunctionDeclarations(tools);
+  }
+
+  private buildFunctionDeclarations(
+    tools: ChatCompletionTool[] | undefined,
+  ): GoogleFunctionCallTool[] | undefined {
     if (!tools || tools.length === 0) return;
 
     return [
