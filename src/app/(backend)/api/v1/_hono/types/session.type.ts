@@ -54,8 +54,8 @@ export interface CloneSessionRequest {
  * 搜索会话请求参数
  */
 export interface SearchSessionsRequest {
-  current?: number;
-  keywords: string;
+  keyword: string;
+  page?: number;
   pageSize?: number;
 }
 
@@ -63,7 +63,7 @@ export interface SearchSessionsRequest {
  * 获取会话列表请求参数
  */
 export interface GetSessionsRequest {
-  current?: number;
+  page?: number;
   pageSize?: number;
   userId?: string | null;
 }
@@ -168,6 +168,23 @@ export interface CountResponse {
 }
 
 /**
+ * 批量查询会话请求参数
+ */
+export interface BatchGetSessionsRequest {
+  sessionIds: string[];
+}
+
+/**
+ * 批量查询会话响应类型
+ */
+export interface BatchGetSessionsResponse {
+  found: SessionListItem[];
+  notFound: string[];
+  totalFound: number;
+  totalRequested: number;
+}
+
+/**
  * 会话批量操作结果类型
  */
 export interface SessionBatchOperationResult {
@@ -211,12 +228,12 @@ export const CloneSessionRequestSchema = z.object({
 });
 
 export const SearchSessionsRequestSchema = z.object({
-  current: z
+  keyword: z.string().min(1, '搜索关键词不能为空'),
+  page: z
     .string()
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().min(1))
     .optional(),
-  keywords: z.string().min(1, '搜索关键词不能为空'),
   pageSize: z
     .string()
     .transform((val) => parseInt(val, 10))
@@ -225,7 +242,7 @@ export const SearchSessionsRequestSchema = z.object({
 });
 
 export const GetSessionsRequestSchema = z.object({
-  current: z
+  page: z
     .string()
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().min(1))
@@ -273,4 +290,11 @@ export const SessionGroupIdParamSchema = z.object({
 
 export const UpdateSessionGroupAssignmentRequestSchema = z.object({
   groupId: z.string().nullable(), // 允许 null 来移除分组
+});
+
+export const BatchGetSessionsRequestSchema = z.object({
+  sessionIds: z
+    .array(z.string().min(1, '会话 ID 不能为空'))
+    .min(1, '至少需要提供一个会话 ID')
+    .max(100, '单次最多查询 100 个会话'),
 });
