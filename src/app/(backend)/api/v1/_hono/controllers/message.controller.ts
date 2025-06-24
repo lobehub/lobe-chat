@@ -2,7 +2,7 @@ import { Context } from 'hono';
 
 import { BaseController } from '../common/base.controller';
 import { MessageService } from '../services/message.service';
-import { MessagesCreateRequest } from '../types/message.type';
+import { MessagesCreateRequest, SearchMessagesByKeywordRequest } from '../types/message.type';
 
 export class MessageController extends BaseController {
   /**
@@ -116,5 +116,36 @@ export class MessageController extends BaseController {
     } catch (error) {
       return this.handleError(c, error);
     }
+  }
+
+  /**
+   * 根据关键词搜索消息及对应话题
+   * GET /api/v1/messages/search
+   * Query: { keyword: string, limit?: number, offset?: number }
+   */
+  async handleSearchMessagesByKeyword(c: Context) {
+    try {
+      const userId = this.getUserId(c)!;
+      const query = this.getQuery(c);
+
+      const searchRequest: SearchMessagesByKeywordRequest = {
+        keyword: query.keyword as string,
+        limit: query.limit ? parseInt(query.limit as string) : 20,
+        offset: query.offset ? parseInt(query.offset as string) : 0,
+      };
+
+      const db = await this.getDatabase();
+      const messageService = new MessageService(db, userId);
+      const results = await messageService.searchMessagesByKeyword(searchRequest);
+
+      return this.success(c, results, '搜索消息成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  // 保留原有的示例方法
+  handleGetExample(c: Context) {
+    return this.success(c, { message: 'Message API is working' }, '示例接口调用成功');
   }
 }

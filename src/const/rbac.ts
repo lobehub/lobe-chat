@@ -22,6 +22,8 @@ export const PERMISSION_ACTIONS = {
   // ==================== AI Infrastructure Management ====================
   AI_MODEL_CONFIGURE: 'ai_model:configure',
 
+  AI_MODEL_READ: 'ai_model:read',
+
   AI_MODEL_USE: 'ai_model:use',
 
   AI_PROVIDER_CREATE: 'ai_provider:create',

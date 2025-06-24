@@ -2,6 +2,8 @@
 /* eslint-disable typescript-sort-keys/interface */
 import { z } from 'zod';
 
+import { TopicResponse } from './topic.type';
+
 // Request schemas
 export const MessagesQueryByTopicRequestSchema = z.object({
   topicId: z.string().min(1, '话题ID不能为空'),
@@ -175,4 +177,23 @@ export interface MessageIdParam {
 
 export interface MessagesDeleteBatchRequest {
   messageIds: string[];
+}
+
+// Search messages by keyword request schema
+export const SearchMessagesByKeywordRequestSchema = z.object({
+  keyword: z.string().min(1, '搜索关键词不能为空'),
+  limit: z.number().min(1).max(100).optional().default(20),
+  offset: z.number().min(0).optional().default(0),
+});
+
+export interface SearchMessagesByKeywordRequest {
+  keyword: string;
+  limit?: number;
+  offset?: number;
+}
+
+// Search messages by keyword response type
+export interface MessageWithTopicResponse {
+  message: MessageResponse;
+  topic: TopicResponse | null;
 }
