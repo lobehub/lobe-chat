@@ -1,4 +1,4 @@
-import { and, desc, eq } from 'drizzle-orm/expressions';
+import { and, desc, eq, sql } from 'drizzle-orm';
 
 import { aiModels, aiProviders } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
@@ -6,15 +6,15 @@ import { LobeChatDatabase } from '@/database/type';
 import { BaseService } from '../common/base.service';
 import { ServiceResult } from '../types';
 import {
-  EnabledModelItem,
-  GetEnabledModelsRequest,
-  GetEnabledModelsResponse,
+  GetModelsRequest,
+  GetModelsResponse,
+  ModelItem,
   ProviderWithModels,
 } from '../types/model.type';
 
 /**
  * 模型服务实现类 (Hono API 专用)
- * 提供启用模型的查询和分组功能
+ * 提供模型的查询和分组功能
  */
 export class ModelService extends BaseService {
   constructor(db: LobeChatDatabase, userId: string | null) {
@@ -22,24 +22,30 @@ export class ModelService extends BaseService {
   }
 
   /**
-   * 获取启用的模型并按 provider 分组
+   * 获取模型列表（按 provider 分组）
    * @param request 查询请求参数
-   * @returns 按 provider 分组的启用模型列表
+   * @returns 按 provider 分组的模型列表
    */
-  async getEnabledModelsByProvider(
-    request: GetEnabledModelsRequest = {},
-  ): ServiceResult<GetEnabledModelsResponse> {
-    this.log('info', '获取启用模型列表并按 provider 分组', {
-      type: request.type,
+  async getModels(request: GetModelsRequest = {}): ServiceResult<GetModelsResponse> {
+    this.log('info', '获取模型列表', {
+      ...request,
       userId: this.userId,
     });
 
     try {
       // 构建查询条件
-      const whereConditions = [eq(aiModels.userId, this.userId!), eq(aiModels.enabled, true)];
+      const whereConditions = [eq(aiModels.userId, this.userId!)];
 
       if (request.type) {
         whereConditions.push(eq(aiModels.type, request.type));
+      }
+
+      if (typeof request.enabled === 'boolean') {
+        whereConditions.push(eq(aiModels.enabled, request.enabled));
+      }
+
+      if (request.providerId) {
+        whereConditions.push(eq(aiModels.providerId, request.providerId));
       }
 
       // 使用 JOIN 查询获取模型和对应的 provider 信息
@@ -58,6 +64,7 @@ export class ModelService extends BaseService {
           modelEnabled: aiModels.enabled,
           // 模型字段
           modelId: aiModels.id,
+          modelProviderId: aiModels.providerId,
           modelSort: aiModels.sort,
           modelSource: aiModels.source,
           modelType: aiModels.type,
@@ -77,14 +84,26 @@ export class ModelService extends BaseService {
         .where(and(...whereConditions))
         .orderBy(desc(aiProviders.sort), desc(aiModels.sort), aiModels.id);
 
+      // 获取总数量
+      const [countResult] = await this.db
+        .select({ count: sql<number>`count(*)` })
+        .from(aiModels)
+        .leftJoin(
+          aiProviders,
+          and(eq(aiModels.providerId, aiProviders.id), eq(aiProviders.userId, this.userId!)),
+        )
+        .where(and(...whereConditions));
+
+      const total = Number(countResult.count);
+
       // 按 provider 分组处理数据
       const providerMap = new Map<string, ProviderWithModels>();
 
       for (const row of result) {
-        const providerId = row.providerId || row.modelId.split('-')[0] || 'unknown';
+        const providerId = row.providerId || row.modelProviderId || 'unknown';
 
         // 创建模型项
-        const modelItem: EnabledModelItem = {
+        const modelItem: ModelItem = {
           abilities: row.modelAbilities as any,
           config: row.modelConfig as any,
           contextWindowTokens: row.modelContextWindowTokens || undefined,
@@ -128,26 +147,22 @@ export class ModelService extends BaseService {
         return aSortValue - bSortValue;
       });
 
-      // 计算统计数据
-      const totalProviders = providers.length;
-      const totalModels = providers.reduce((sum, provider) => sum + provider.modelCount, 0);
-
-      const response: GetEnabledModelsResponse = {
+      const response: GetModelsResponse = {
         providers,
-        totalModels,
-        totalProviders,
+        totalModels: total,
+        totalProviders: providers.length,
       };
 
-      this.log('info', '获取启用模型列表完成', {
-        totalModels,
-        totalProviders,
+      this.log('info', '获取模型列表完成', {
+        totalModels: total,
+        totalProviders: providers.length,
         type: request.type,
       });
 
       return response;
     } catch (error) {
-      this.log('error', '获取启用模型列表失败', { error, type: request.type });
-      throw this.createCommonError('获取启用模型列表失败');
+      this.log('error', '获取模型列表失败', { error, request });
+      throw this.createCommonError('获取模型列表失败');
     }
   }
 }

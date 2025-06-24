@@ -4,6 +4,7 @@ import { BaseController } from '../common/base.controller';
 import { SessionService } from '../services/session.service';
 import { SessionGroupService } from '../services/sessionGroup.service';
 import {
+  BatchGetSessionsRequest,
   CloneSessionRequest,
   CreateSessionRequest,
   GetSessionsRequest,
@@ -282,6 +283,26 @@ export class SessionController extends BaseController {
       });
 
       return this.success(c, null, '会话分组更新成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 批量查询指定的会话
+   * POST /api/v1/sessions/batch
+   * @param c Hono Context
+   * @returns 批量查询结果响应
+   */
+  async batchGetSessions(c: Context): Promise<Response> {
+    try {
+      const body = await this.getBody<BatchGetSessionsRequest>(c);
+
+      const db = await this.getDatabase();
+      const sessionService = new SessionService(db, this.getUserId(c));
+      const result = await sessionService.batchGetSessions(body);
+
+      return this.success(c, result, '批量查询会话成功');
     } catch (error) {
       return this.handleError(c, error);
     }
