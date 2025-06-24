@@ -644,7 +644,7 @@ describe('LobeGoogleAI', () => {
         });
       });
 
-      it('should only add tools once', () => {
+      it('should also add tools when tool_calls exists', () => {
         const tools: OpenAI.ChatCompletionTool[] = [
           {
             function: {
@@ -679,7 +679,19 @@ describe('LobeGoogleAI', () => {
 
         const googleTools = instance['buildGoogleTools'](tools, payload);
 
-        expect(googleTools).toBeUndefined();
+        expect(googleTools).toHaveLength(1);
+        expect((googleTools![0] as Tool).functionDeclarations![0]).toEqual({
+          name: 'testTool',
+          description: 'A test tool',
+          parameters: {
+            type: 'OBJECT',
+            properties: {
+              param1: { type: 'string' },
+              param2: { type: 'number' },
+            },
+            required: ['param1'],
+          },
+        });
       });
 
       it('should handle googleSearch', () => {
