@@ -20,11 +20,13 @@ export const PERMISSION_ACTIONS = {
   AGENT_UPDATE: 'agent:update',
 
   // ==================== AI Infrastructure Management ====================
-  AI_MODEL_CONFIGURE: 'ai_model:configure',
+  AI_MODEL_CREATE: 'ai_model:create',
+
+  AI_MODEL_DELETE: 'ai_model:delete',
 
   AI_MODEL_READ: 'ai_model:read',
 
-  AI_MODEL_USE: 'ai_model:use',
+  AI_MODEL_UPDATE: 'ai_model:update',
 
   AI_PROVIDER_CREATE: 'ai_provider:create',
 

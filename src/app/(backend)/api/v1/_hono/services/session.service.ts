@@ -1,4 +1,4 @@
-import { Column, and, desc, eq, like, not, or, sql } from 'drizzle-orm';
+import { Column, and, desc, eq, inArray, like, not, or, sql } from 'drizzle-orm';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SessionModel } from '@/database/models/session';
@@ -10,6 +10,8 @@ import { ChatSessionList } from '@/types/session';
 import { BaseService } from '../common/base.service';
 import { ServiceResult } from '../types';
 import {
+  BatchGetSessionsRequest,
+  BatchGetSessionsResponse,
   CloneSessionRequest,
   CreateSessionRequest,
   GetSessionsRequest,
@@ -37,7 +39,7 @@ export class SessionService extends BaseService {
     this.log('info', '获取会话列表', { request });
 
     try {
-      const { current = 1, pageSize = 20, userId } = request;
+      const { page = 1, pageSize = 20, userId } = request;
 
       // 构建查询条件
       let whereConditions = [not(eq(sessions.slug, INBOX_SESSION_ID))];
@@ -54,7 +56,7 @@ export class SessionService extends BaseService {
 
       const sessionsList = await this.db.query.sessions.findMany({
         limit: pageSize,
-        offset: (current - 1) * pageSize,
+        offset: (page - 1) * pageSize,
         orderBy: [desc(sessions.updatedAt)],
         where: and(...whereConditions),
         with: { agentsToSessions: { columns: {}, with: { agent: true } }, group: true },
@@ -176,8 +178,8 @@ export class SessionService extends BaseService {
             type: request.type || 'agent',
           },
           // 如果传入了 agentId，跳过创建新的 Agent
-skipAgentCreation: !!agentId,
-          
+          skipAgentCreation: !!agentId,
+
           type: (request.type || 'agent') as 'agent' | 'group',
         });
 
@@ -283,9 +285,9 @@ skipAgentCreation: !!agentId,
    * @returns 搜索结果
    */
   async searchSessions(request: SearchSessionsRequest): ServiceResult<SessionItem[]> {
-    const { keywords } = request;
+    const { keyword } = request;
 
-    this.log('info', '搜索会话', { keywords });
+    this.log('info', '搜索会话', { keyword });
 
     try {
       // 直接从 sessions 表里查询
@@ -293,17 +295,65 @@ skipAgentCreation: !!agentId,
         where: and(
           eq(sessions.userId, this.userId!),
           or(
-            like(sql`lower(${sessions.title})` as unknown as Column, `%${keywords.toLowerCase()}%`),
+            like(sql`lower(${sessions.title})` as unknown as Column, `%${keyword.toLowerCase()}%`),
           ),
         ),
       });
 
-      this.log('info', `搜索到 ${sessionsList.length} 个会话`, { keywords: request.keywords });
+      this.log('info', `搜索到 ${sessionsList.length} 个会话`, { keyword: request.keyword });
 
       return sessionsList;
     } catch (error) {
       this.log('error', '搜索会话失败', { error });
       throw this.createBusinessError('搜索会话失败');
+    }
+  }
+
+  /**
+   * 批量查询指定的会话
+   * @param request 批量查询请求参数
+   * @returns 批量查询结果
+   */
+  async batchGetSessions(
+    request: BatchGetSessionsRequest,
+  ): ServiceResult<BatchGetSessionsResponse> {
+    const { sessionIds } = request;
+
+    this.log('info', '批量查询会话', { count: sessionIds.length, sessionIds });
+
+    try {
+      // 去重处理
+      const uniqueSessionIds = Array.from(new Set(sessionIds));
+
+      // 查询指定的会话列表
+      const foundSessions = await this.db.query.sessions.findMany({
+        orderBy: [desc(sessions.updatedAt)],
+        where: inArray(sessions.id, uniqueSessionIds),
+      });
+
+      // 找出存在的会话 ID
+      const foundSessionIds = new Set(foundSessions.map((session) => session.id));
+
+      // 找出不存在的会话 ID
+      const notFoundSessionIds = uniqueSessionIds.filter((id) => !foundSessionIds.has(id));
+
+      const result: BatchGetSessionsResponse = {
+        found: foundSessions,
+        notFound: notFoundSessionIds,
+        totalFound: foundSessions.length,
+        totalRequested: uniqueSessionIds.length,
+      };
+
+      this.log('info', '批量查询会话完成', {
+        notFoundCount: result.notFound.length,
+        totalFound: result.totalFound,
+        totalRequested: result.totalRequested,
+      });
+
+      return result;
+    } catch (error) {
+      this.log('error', '批量查询会话失败', { error });
+      throw this.createBusinessError('批量查询会话失败');
     }
   }
 }
