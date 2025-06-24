@@ -1,7 +1,7 @@
 import { count } from 'drizzle-orm';
-import { and, desc, eq, inArray, isNull } from 'drizzle-orm/expressions';
+import { and, desc, eq, ilike, inArray, isNull, or } from 'drizzle-orm/expressions';
 
-import { messages, messagesFiles } from '@/database/schemas';
+import { messages, messagesFiles, topics } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
 
@@ -10,7 +10,9 @@ import { ServiceResult } from '../types';
 import {
   MessageCreateResponse,
   MessageResponse,
+  MessageWithTopicResponse,
   MessagesCreateRequest,
+  SearchMessagesByKeywordRequest,
 } from '../types/message.type';
 import { ChatService } from './chat.service';
 
@@ -297,6 +299,71 @@ export class MessageService extends BaseService {
         topicId,
       });
       return [];
+    }
+  }
+
+  /**
+   * 根据关键词模糊搜索消息及对应话题
+   * @param searchRequest 搜索请求参数
+   * @returns 包含消息和话题信息的结果列表
+   */
+  async searchMessagesByKeyword(
+    searchRequest: SearchMessagesByKeywordRequest,
+  ): ServiceResult<MessageWithTopicResponse[]> {
+    this.log('info', '根据关键词搜索消息', {
+      keyword: searchRequest.keyword,
+      limit: searchRequest.limit,
+      offset: searchRequest.offset,
+      userId: this.userId,
+    });
+
+    try {
+      const { keyword, limit = 20, offset = 0 } = searchRequest;
+
+      // 使用 JOIN 查询来支持跨表搜索，但使用更简洁的 select 语法
+      const result = await this.db
+        .select({
+          message: messages,
+          topic: topics,
+        })
+        .from(messages)
+        .leftJoin(topics, eq(messages.topicId, topics.id))
+        .where(
+          and(
+            eq(messages.userId, this.userId!),
+            or(ilike(messages.content, `%${keyword}%`), ilike(topics.title, `%${keyword}%`)),
+          ),
+        )
+        .orderBy(desc(messages.createdAt))
+        .limit(limit)
+        .offset(offset);
+
+      const searchResults: MessageWithTopicResponse[] = result.map((row) => ({
+        message: {
+          ...row.message,
+          createdAt: row.message.createdAt.toISOString(),
+          favorite: !!row.message.favorite,
+          updatedAt: row.message.updatedAt.toISOString(),
+        },
+        topic: row.topic
+          ? {
+              ...row.topic,
+              createdAt: row.topic.createdAt.toISOString(),
+              favorite: !!row.topic.favorite,
+              updatedAt: row.topic.updatedAt.toISOString(),
+            }
+          : null,
+      }));
+
+      this.log('info', '关键词搜索消息完成', {
+        keyword,
+        resultCount: searchResults.length,
+      });
+
+      return searchResults;
+    } catch (error) {
+      this.log('error', '关键词搜索消息失败', { error, keyword: searchRequest.keyword });
+      throw this.createCommonError('搜索消息失败');
     }
   }
 }
