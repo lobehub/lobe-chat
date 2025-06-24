@@ -1,40 +1,66 @@
 import { z } from 'zod';
 
 // Request schemas
-export const GetEnabledModelsRequestSchema = z.object({
+export const GetModelsRequestSchema = z.object({
+  enabled: z
+    .string()
+    .transform((val) => val === 'true')
+    .pipe(z.boolean())
+    .optional(),
+  page: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().min(1))
+    .optional(),
+  pageSize: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().min(1).max(200))
+    .optional(),
+  providerId: z.string().optional(),
   type: z
     .enum(['chat', 'embedding', 'tts', 'stt', 'image', 'text2video', 'text2music', 'realtime'])
     .optional(),
 });
 
-export interface GetEnabledModelsRequest {
+export interface GetModelsRequest {
+  enabled?: boolean;
+  page?: number;
+  pageSize?: number;
+  providerId?: string;
   type?: 'chat' | 'embedding' | 'tts' | 'stt' | 'image' | 'text2video' | 'text2music' | 'realtime';
 }
 
 // Response types
-export interface EnabledModelItem {
-  abilities?: {
-    files?: boolean;
-    functionCall?: boolean;
-    imageOutput?: boolean;
-    reasoning?: boolean;
-    search?: boolean;
-    vision?: boolean;
-  };
-  config?: {
-    deploymentName?: string;
-    enabledSearch?: boolean;
-  };
+export interface ModelAbilities {
+  files?: boolean;
+  functionCall?: boolean;
+  imageOutput?: boolean;
+  reasoning?: boolean;
+  search?: boolean;
+  vision?: boolean;
+}
+
+export interface ModelConfig {
+  deploymentName?: string;
+  enabledSearch?: boolean;
+}
+
+export interface ModelSettings {
+  extendParams?: string[];
+  searchImpl?: string;
+  searchProvider?: string;
+}
+
+export interface ModelItem {
+  abilities?: ModelAbilities;
+  config?: ModelConfig;
   contextWindowTokens?: number;
   createdAt: string;
   displayName?: string;
   enabled: boolean;
   id: string;
-  settings?: {
-    extendParams?: string[];
-    searchImpl?: string;
-    searchProvider?: string;
-  };
+  settings?: ModelSettings;
   sort?: number;
   source: 'builtin' | 'custom' | 'remote';
   type: string;
@@ -43,15 +69,15 @@ export interface EnabledModelItem {
 
 export interface ProviderWithModels {
   modelCount: number;
-  models: EnabledModelItem[];
+  models: ModelItem[];
   providerEnabled: boolean;
   providerId: string;
   providerName?: string;
   providerSort?: number;
 }
 
-export interface GetEnabledModelsResponse {
-  providers: ProviderWithModels[];
+export interface GetModelsResponse {
+  providers?: ProviderWithModels[];
   totalModels: number;
   totalProviders: number;
 }
