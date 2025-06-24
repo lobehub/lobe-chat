@@ -5,6 +5,7 @@ export * from './chat.type';
 export * from './file.type';
 export * from './message.type';
 export * from './message-translate.type';
+export * from './model.type';
 export * from './role.type';
 export * from './session.type';
 export * from './topic.type';
