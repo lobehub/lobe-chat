@@ -7,6 +7,7 @@ import { SessionController } from '../controllers/session.controller';
 import { requireAuth } from '../middleware/oidc-auth';
 import { requireAnyPermission } from '../middleware/permission-check';
 import {
+  BatchGetSessionsRequestSchema,
   CloneSessionRequestSchema,
   CreateSessionRequestSchema,
   GetSessionsRequestSchema,
@@ -191,6 +192,25 @@ SessionRoutes.put(
   async (c) => {
     const controller = new SessionController();
     return await controller.updateSessionGroupAssignment(c);
+  },
+);
+
+/**
+ * 批量查询指定的会话
+ * POST /api/v1/sessions/batch
+ * 需要会话读取权限
+ */
+SessionRoutes.post(
+  '/batch',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('SESSION_READ', ['ALL', 'WORKSPACE']),
+    '您没有权限批量查询会话',
+  ),
+  zValidator('json', BatchGetSessionsRequestSchema),
+  async (c) => {
+    const controller = new SessionController();
+    return await controller.batchGetSessions(c);
   },
 );
 
