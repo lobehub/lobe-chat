@@ -1,5 +1,6 @@
 import { CitationItem, ModelSpeed, ModelTokensUsage } from '@/types/message';
 import { safeParseJSON } from '@/utils/safeParseJSON';
+import { nanoid } from '@/utils/uuid';
 
 import { AgentRuntimeErrorType } from '../../error';
 import { parseToolCalls } from '../../helpers';
@@ -98,7 +99,7 @@ export interface StreamProtocolToolCallChunk {
 }
 
 export const generateToolCallId = (index: number, functionName?: string) =>
-  `${functionName || 'unknown_tool_call'}_${index}`;
+  `${functionName || 'unknown_tool_call'}_${index}_${nanoid()}`;
 
 const chatStreamable = async function* <T>(stream: AsyncIterable<T>) {
   for await (const response of stream) {

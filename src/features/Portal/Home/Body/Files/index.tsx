@@ -1,4 +1,4 @@
-import { Typography } from 'antd';
+import { Text } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -10,9 +10,9 @@ export const Files = memo(() => {
 
   return (
     <Flexbox gap={8}>
-      <Typography.Title level={5} style={{ marginInline: 12 }}>
+      <Text as={'h5'} style={{ marginInline: 12 }}>
         {t('files')}
-      </Typography.Title>
+      </Text>
       <FileList />
     </Flexbox>
   );

@@ -1,21 +1,19 @@
 'use client';
 
-import { Button } from '@lobehub/ui';
-import { Col, Flex, Row, Skeleton, Typography } from 'antd';
+import { Button, Text } from '@lobehub/ui';
+import { LobeChat } from '@lobehub/ui/brand';
+import { Col, Flex, Row, Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { AuthError } from 'next-auth';
 import { signIn } from 'next-auth/react';
-import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+
 import BrandWatermark from '@/components/BrandWatermark';
 import AuthIcons from '@/components/NextAuth/AuthIcons';
-import { BRANDING_LOGO_URL, BRANDING_NAME } from '@/const/branding';
 import { DOCUMENTS_REFER_URL, PRIVACY_URL, TERMS_URL } from '@/const/url';
 import { useUserStore } from '@/store/user';
-
-const { Title, Paragraph } = Typography;
 
 const useStyles = createStyles(({ css, token }) => ({
   button: css`
@@ -98,15 +96,6 @@ export default memo(() => {
     }
   };
 
-  // Auto-click the sign-in button when there's only one provider
-  useEffect(() => {
-    // Only auto-click when oAuthSSOProviders is loaded and has exactly one provider
-    if (oAuthSSOProviders && oAuthSSOProviders.length === 1) {
-      // useLayoutEffect ensures the component is fully rendered before this runs
-      handleSignIn(oAuthSSOProviders[0]);
-    }
-  }, [oAuthSSOProviders]); // Only re-run when oAuthSSOProviders changes
-
   const footerBtns = [
     { href: DOCUMENTS_REFER_URL, id: 0, label: t('footerPageLink__help') },
     { href: PRIVACY_URL, id: 1, label: t('footerPageLink__privacy') },
@@ -120,13 +109,15 @@ export default memo(() => {
         <Flex gap="large" vertical>
           {/* Header */}
           <div className={styles.text}>
-            <Title className={styles.title} level={4}>
+            <Text as={'h4'} className={styles.title}>
               <div>
-                <Image alt={BRANDING_NAME} height={32} src={BRANDING_LOGO_URL} style={{ height: 48 }} width={48} />
+                <LobeChat size={48} />
               </div>
-              {t('signIn.start.title', { applicationName: BRANDING_NAME })}
-            </Title>
-            <Paragraph className={styles.description}>{t('signIn.start.subtitle')}</Paragraph>
+              {t('signIn.start.title', { applicationName: 'LobeChat' })}
+            </Text>
+            <Text as={'p'} className={styles.description}>
+              {t('signIn.start.subtitle')}
+            </Text>
           </div>
           {/* Content */}
           <Flex gap="small" vertical>

@@ -1,5 +1,4 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { ActionIcon, Icon, Text } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { ArrowLeft, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -27,9 +26,9 @@ const Header = () => {
       <Flexbox align={'center'} gap={8} horizontal>
         <ActionIcon icon={ArrowLeft} onClick={() => closeToolUI()} size={'small'} />
         <Icon icon={Globe} size={16} />
-        <Typography.Text style={{ fontSize: 16 }} type={'secondary'}>
+        <Text style={{ fontSize: 16 }} type={'secondary'}>
           {t('search.title')}
-        </Typography.Text>
+        </Text>
       </Flexbox>
     );
   }
@@ -37,9 +36,9 @@ const Header = () => {
     <Flexbox align={'center'} gap={4} horizontal>
       <ActionIcon icon={ArrowLeft} onClick={() => closeToolUI()} size={'small'} />
       <PluginAvatar identifier={toolUIIdentifier} size={28} />
-      <Typography.Text style={{ fontSize: 16 }} type={'secondary'}>
+      <Text style={{ fontSize: 16 }} type={'secondary'}>
         {pluginTitle}
-      </Typography.Text>
+      </Text>
     </Flexbox>
   );
 };

@@ -1,4 +1,4 @@
-import { Typography } from 'antd';
+import { Text } from '@lobehub/ui';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -9,9 +9,9 @@ const Header = () => {
 
   return (
     <Flexbox align={'center'} gap={4} horizontal>
-      <Typography.Text className={oneLineEllipsis} style={{ fontSize: 16 }} type={'secondary'}>
+      <Text className={oneLineEllipsis} style={{ fontSize: 16 }} type={'secondary'}>
         {t('messageDetail')}
-      </Typography.Text>
+      </Text>
     </Flexbox>
   );
 };
