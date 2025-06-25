@@ -132,9 +132,26 @@ export interface SessionListItem extends SessionItem {
 export type SessionListResponse = SessionListItem[];
 
 /**
+ * Agent 信息类型
+ */
+export interface AgentInfo {
+  avatar: string | null;
+  backgroundColor: string | null;
+  chatConfig: any | null;
+  description: string | null;
+  id: string;
+  model: string | null;
+  provider: string | null;
+  systemRole: string | null;
+  title: string | null;
+}
+
+/**
  * 会话详情响应类型
  */
-export type SessionDetailResponse = SessionWithAgent;
+export interface SessionDetailResponse extends SessionItem {
+  agent?: AgentInfo | null;
+}
 
 /**
  * 会话组列表响应类型
