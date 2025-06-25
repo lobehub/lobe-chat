@@ -1,4 +1,5 @@
 import AgentRoutes from './agents.route';
+import AiInfraRoutes from './ai-infra.route';
 import ChatRoutes from './chat.route';
 import FileRoutes from './files.route';
 import MessageTranslatesRoutes from './message-translates.route';
@@ -12,6 +13,7 @@ import UserRoutes from './users.route';
 
 export default {
   'agents': AgentRoutes,
+  'ai-infra': AiInfraRoutes,
   'chat': ChatRoutes,
   'files': FileRoutes,
   'message-translates': MessageTranslatesRoutes,
