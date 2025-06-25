@@ -1,6 +1,6 @@
-import { eq } from 'drizzle-orm';
+import { count, eq } from 'drizzle-orm';
 
-import { topics } from '@/database/schemas';
+import { messages, topics, users } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
 
@@ -23,10 +23,35 @@ export class TopicService extends BaseService {
     }
 
     try {
-      const result = await this.db.query.topics.findMany({
-        orderBy: topics.createdAt,
-        where: eq(topics.sessionId, sessionId),
-      });
+      // 使用联查和子查询来统计每个话题的消息数量，并获取用户信息
+      const result = await this.db
+        .select({
+          clientId: topics.clientId,
+          createdAt: topics.createdAt,
+          favorite: topics.favorite,
+          historySummary: topics.historySummary,
+          id: topics.id,
+          messageCount: count(messages.id),
+          metadata: topics.metadata,
+          sessionId: topics.sessionId,
+          title: topics.title,
+          updatedAt: topics.updatedAt,
+          
+          userAvatar: users.avatar,
+          
+userEmail: users.email,
+          
+userFullName: users.fullName,
+          // 用户信息
+userId: users.id,
+          userUsername: users.username,
+        })
+        .from(topics)
+        .leftJoin(messages, eq(topics.id, messages.topicId))
+        .innerJoin(users, eq(topics.userId, users.id))
+        .where(eq(topics.sessionId, sessionId))
+        .groupBy(topics.id, users.id)
+        .orderBy(topics.createdAt);
 
       return result.map((topic) => ({
         clientId: topic.clientId,
@@ -34,11 +59,18 @@ export class TopicService extends BaseService {
         favorite: topic.favorite || false,
         historySummary: topic.historySummary,
         id: topic.id,
+        messageCount: topic.messageCount,
         metadata: topic.metadata,
         sessionId: topic.sessionId,
         title: topic.title,
         updatedAt: topic.updatedAt.toISOString(),
-        userId: topic.userId,
+        user: {
+          avatar: topic.userAvatar,
+          email: topic.userEmail,
+          fullName: topic.userFullName,
+          id: topic.userId,
+          username: topic.userUsername,
+        },
       }));
     } catch (error) {
       this.log('error', 'Failed to get topics by session ID', { error, sessionId });
@@ -69,16 +101,39 @@ export class TopicService extends BaseService {
         })
         .returning();
 
+      // 获取用户信息
+      const user = await this.db.query.users.findFirst({
+        columns: {
+          avatar: true,
+          email: true,
+          fullName: true,
+          id: true,
+          username: true,
+        },
+        where: eq(users.id, this.userId),
+      });
+
+      if (!user) {
+        throw this.createCommonError('用户不存在');
+      }
+
       return {
         clientId: newTopic.clientId,
         createdAt: newTopic.createdAt.toISOString(),
         favorite: newTopic.favorite || false,
         id: newTopic.id,
+        messageCount: 0, // 新创建的话题消息数量为0
         metadata: newTopic.metadata,
         sessionId: newTopic.sessionId,
         title: newTopic.title,
         updatedAt: newTopic.updatedAt.toISOString(),
-        userId: newTopic.userId,
+        user: {
+          avatar: user.avatar,
+          email: user.email,
+          fullName: user.fullName,
+          id: user.id,
+          username: user.username,
+        },
       };
     } catch (error) {
       this.log('error', 'Failed to create topic', { error, sessionId, title });
@@ -167,16 +222,47 @@ export class TopicService extends BaseService {
         .where(eq(topics.id, topicId))
         .returning();
 
+      // 获取该话题的消息数量
+      const messageCountResult = await this.db
+        .select({ count: count(messages.id) })
+        .from(messages)
+        .where(eq(messages.topicId, topicId));
+
+      const messageCount = messageCountResult[0]?.count || 0;
+
+      // 获取用户信息
+      const user = await this.db.query.users.findFirst({
+        columns: {
+          avatar: true,
+          email: true,
+          fullName: true,
+          id: true,
+          username: true,
+        },
+        where: eq(users.id, this.userId),
+      });
+
+      if (!user) {
+        throw this.createCommonError('用户不存在');
+      }
+
       return {
         clientId: updatedTopic.clientId,
         createdAt: updatedTopic.createdAt.toISOString(),
         favorite: updatedTopic.favorite || false,
         id: updatedTopic.id,
+        messageCount: messageCount,
         metadata: updatedTopic.metadata,
         sessionId: updatedTopic.sessionId,
         title: updatedTopic.title,
         updatedAt: updatedTopic.updatedAt.toISOString(),
-        userId: updatedTopic.userId,
+        user: {
+          avatar: user.avatar,
+          email: user.email,
+          fullName: user.fullName,
+          id: user.id,
+          username: user.username,
+        },
       };
     } catch (error) {
       if (
