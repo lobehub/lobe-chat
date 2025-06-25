@@ -1,4 +1,5 @@
 export * from './agent.controller';
+export * from './ai-infra.controller';
 export * from './chat.controller';
 export * from './file.controller';
 export * from './message.controller';
