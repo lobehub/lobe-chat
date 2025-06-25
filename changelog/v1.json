@@ -1,6 +1,21 @@
 [
   {
     "children": {
+      "features": [
+        "Add Brave & Google PSE & Kagi as build-in Search Provider, add v0 (Vercel) provider support."
+      ],
+      "fixes": [
+        "Fix MiniMax-M1 reasoning tag missing, fix inputTemplate behavior, Google Gemini tools declarations, Remove unsupported parameters of Hunyuan."
+      ],
+      "improvements": [
+        "Add blockAds & stealth params for Browserless, Optimized Gemini thinkingBudget configuration, update i18n, update i18n."
+      ]
+    },
+    "date": "2025-06-25",
+    "version": "1.95.0"
+  },
+  {
+    "children": {
       "improvements": [
         "Support web_search_preview & fix some bug form OpenAI Response API."
       ]
