@@ -16,6 +16,7 @@ import {
   CreateSessionRequest,
   GetSessionsRequest,
   SearchSessionsRequest,
+  SessionDetailResponse,
   UpdateSessionRequest,
 } from '../types/session.type';
 
@@ -98,18 +99,49 @@ export class SessionService extends BaseService {
    * @param sessionId 会话 ID
    * @returns 会话详情
    */
-  async getSessionById(sessionId: string): ServiceResult<SessionItem> {
+  async getSessionById(sessionId: string): ServiceResult<SessionDetailResponse> {
     this.log('info', '根据 ID 获取会话详情', { sessionId });
 
     try {
-      const session = await this.sessionModel.findByIdOrSlug(sessionId);
+      // 查询会话信息，包含关联的 agent 信息
+      const sessionWithAgent = await this.db.query.sessions.findFirst({
+        where: eq(sessions.id, sessionId),
+        with: {
+          agentsToSessions: {
+            with: {
+              agent: {
+                columns: {
+                  avatar: true,
+                  backgroundColor: true,
+                  chatConfig: true,
+                  description: true,
+                  id: true,
+                  model: true,
+                  provider: true,
+                  systemRole: true,
+                  title: true,
+                },
+              },
+            },
+          },
+        },
+      });
 
-      if (!session) {
+      if (!sessionWithAgent) {
         this.log('warn', '会话不存在', { sessionId });
         throw this.createNotFoundError('会话不存在');
       }
 
-      return session;
+      // 构造返回数据
+      const result: SessionDetailResponse = {
+        ...sessionWithAgent,
+        agent: sessionWithAgent.agentsToSessions?.[0]?.agent || null,
+      };
+
+      // 移除 agentsToSessions 字段，因为我们已经提取了 agent 信息
+      delete (result as any).agentsToSessions;
+
+      return result;
     } catch (error) {
       this.log('error', '获取会话详情失败', { error });
       throw this.createBusinessError('获取会话详情失败');
