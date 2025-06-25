@@ -2,6 +2,68 @@
 
 # Changelog
 
+## [Version&nbsp;1.95.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.94.5...v1.95.0)
+<sup>Released on **2025-06-25**</sup>
+
+
+#### ✨ Features
+
+- **misc**: Add Brave & Google PSE & Kagi as build-in Search Provider, add v0 (Vercel) provider support.
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `MiniMax-M1` reasoning tag missing, fix inputTemplate behavior, Google Gemini tools declarations, Remove unsupported parameters of Hunyuan.
+
+
+#### 💄 Styles
+
+- **openrouter**: Add stable versions of Gemini 2.5 models.
+- **misc**: Add `blockAds` & `stealth` params for Browserless, Optimized Gemini thinkingBudget configuration, update i18n, update i18n.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's improved
+
+* **misc**: Add Brave & Google PSE & Kagi as build-in Search Provider, closes [#8172](https://github.com/jaworldwideorg/OneJA-Bot/issues/8172) ([16ae521](https://github.com/jaworldwideorg/OneJA-Bot/commit/16ae521))
+* **misc**: Add v0 (Vercel) provider support, closes [#8235](https://github.com/jaworldwideorg/OneJA-Bot/issues/8235) ([5842a18](https://github.com/jaworldwideorg/OneJA-Bot/commit/5842a18))
+
+
+
+#### What's fixed
+
+* **misc**: Fix `MiniMax-M1` reasoning tag missing, closes [#8240](https://github.com/jaworldwideorg/OneJA-Bot/issues/8240) ([ea76c11](https://github.com/jaworldwideorg/OneJA-Bot/commit/ea76c11))
+* **misc**: Fix inputTemplate behavior, closes [#8204](https://github.com/jaworldwideorg/OneJA-Bot/issues/8204) ([61c2c3c](https://github.com/jaworldwideorg/OneJA-Bot/commit/61c2c3c))
+* **misc**: Google Gemini tools declarations, closes [#8256](https://github.com/jaworldwideorg/OneJA-Bot/issues/8256) ([08f5d73](https://github.com/jaworldwideorg/OneJA-Bot/commit/08f5d73))
+* **misc**: Remove unsupported parameters of Hunyuan, closes [#8247](https://github.com/jaworldwideorg/OneJA-Bot/issues/8247) ([826d724](https://github.com/jaworldwideorg/OneJA-Bot/commit/826d724))
+
+
+
+#### Styles
+
+* **openrouter**: Add stable versions of Gemini 2.5 models, closes [#8239](https://github.com/jaworldwideorg/OneJA-Bot/issues/8239) ([d34ecab](https://github.com/jaworldwideorg/OneJA-Bot/commit/d34ecab))
+* **misc**: Add `blockAds` & `stealth` params for Browserless, closes [#8255](https://github.com/jaworldwideorg/OneJA-Bot/issues/8255) ([2ff3efa](https://github.com/jaworldwideorg/OneJA-Bot/commit/2ff3efa))
+* **misc**: Optimized Gemini thinkingBudget configuration, closes [#8224](https://github.com/jaworldwideorg/OneJA-Bot/issues/8224) ([03625e8](https://github.com/jaworldwideorg/OneJA-Bot/commit/03625e8))
+* **misc**: Update i18n, closes [#8253](https://github.com/jaworldwideorg/OneJA-Bot/issues/8253) ([b86dc9b](https://github.com/jaworldwideorg/OneJA-Bot/commit/b86dc9b))
+* **misc**: Update i18n, closes [#8242](https://github.com/jaworldwideorg/OneJA-Bot/issues/8242) ([2d1babc](https://github.com/jaworldwideorg/OneJA-Bot/commit/2d1babc))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.94.5](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.94.4...v1.94.5)
 <sup>Released on **2025-06-20**</sup>
 
