@@ -32,15 +32,25 @@ export interface TopicSummaryRequest {
   id: string;
 }
 
+// User info for topic response
+export interface TopicUserInfo {
+  avatar: string | null;
+  email: string | null;
+  fullName: string | null;
+  id: string;
+  username: string | null;
+}
+
 // Response type (represents the topic table structure)
 export interface TopicResponse {
   clientId: string | null;
   createdAt: string;
   favorite: boolean;
   id: string;
+  messageCount: number;
   metadata: any | null;
   sessionId: string | null;
   title: string | null;
   updatedAt: string;
-  userId: string;
+  user: TopicUserInfo;
 }

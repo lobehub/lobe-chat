@@ -1,7 +1,7 @@
 import { count } from 'drizzle-orm';
 import { and, desc, eq, ilike, inArray, isNull, or } from 'drizzle-orm/expressions';
 
-import { messages, messagesFiles, topics } from '@/database/schemas';
+import { messages, messagesFiles, topics, users } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
 
@@ -369,14 +369,38 @@ export class MessageService extends BaseService {
     try {
       const { keyword, limit = 20, offset = 0 } = searchRequest;
 
-      // 使用 JOIN 查询来支持跨表搜索，但使用更简洁的 select 语法
+      // 使用 JOIN 查询来支持跨表搜索，获取话题用户信息和消息数量
       const result = await this.db
         .select({
           message: messages,
-          topic: topics,
+          
+          topicClientId: topics.clientId,
+          
+topicCreatedAt: topics.createdAt,
+          
+topicFavorite: topics.favorite,
+          
+topicHistorySummary: topics.historySummary,
+          // Topic 字段
+topicId: topics.id,
+          topicMetadata: topics.metadata,
+          topicSessionId: topics.sessionId,
+          topicTitle: topics.title,
+          topicUpdatedAt: topics.updatedAt,
+          topicUserId: topics.userId,
+          
+          userAvatar: users.avatar,
+          
+userEmail: users.email,
+          
+userFullName: users.fullName,
+          // 用户信息
+userId: users.id,
+          userUsername: users.username,
         })
         .from(messages)
         .leftJoin(topics, eq(messages.topicId, topics.id))
+        .leftJoin(users, eq(topics.userId, users.id))
         .where(
           and(
             eq(messages.userId, this.userId!),
@@ -387,6 +411,26 @@ export class MessageService extends BaseService {
         .limit(limit)
         .offset(offset);
 
+      // 获取每个话题的消息数量
+      const topicIds = [
+        ...new Set(result.map((row) => row.topicId).filter(Boolean)),
+      ];
+      const messageCountsResult =
+        topicIds.length > 0
+          ? await this.db
+              .select({
+                count: count(messages.id),
+                topicId: messages.topicId,
+              })
+              .from(messages)
+              .where(inArray(messages.topicId, topicIds))
+              .groupBy(messages.topicId)
+          : [];
+
+      const messageCountsMap = new Map(
+        messageCountsResult.map((item) => [item.topicId, item.count]),
+      );
+
       const searchResults: MessageWithTopicResponse[] = result.map((row) => ({
         message: {
           ...row.message,
@@ -394,14 +438,28 @@ export class MessageService extends BaseService {
           favorite: !!row.message.favorite,
           updatedAt: row.message.updatedAt.toISOString(),
         },
-        topic: row.topic
-          ? {
-              ...row.topic,
-              createdAt: row.topic.createdAt.toISOString(),
-              favorite: !!row.topic.favorite,
-              updatedAt: row.topic.updatedAt.toISOString(),
-            }
-          : null,
+        topic:
+          row.topicId && row.userId
+            ? {
+                clientId: row.topicClientId,
+                createdAt: row.topicCreatedAt!.toISOString(),
+                favorite: !!row.topicFavorite,
+                historySummary: row.topicHistorySummary,
+                id: row.topicId,
+                messageCount: messageCountsMap.get(row.topicId) || 0,
+                metadata: row.topicMetadata,
+                sessionId: row.topicSessionId,
+                title: row.topicTitle,
+                updatedAt: row.topicUpdatedAt!.toISOString(),
+                user: {
+                  avatar: row.userAvatar,
+                  email: row.userEmail,
+                  fullName: row.userFullName,
+                  id: row.userId,
+                  username: row.userUsername,
+                },
+              }
+            : null,
       }));
 
       this.log('info', '关键词搜索消息完成', {
