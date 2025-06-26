@@ -78,6 +78,13 @@ export const generateViewport = async (props: DynamicLayoutProps): ResolvingView
 };
 
 export const generateStaticParams = () => {
+  // if in dev mode or in vercel preview mode, use ISR to speed up
+  const isVercelPreview = process.env.VERCEL === '1' && process.env.VERCEL_ENV !== 'production';
+
+  if (process.env.NODE_ENV !== 'production' || isVercelPreview) {
+    return [];
+  }
+
   const themes: ThemeAppearance[] = ['dark', 'light'];
   const mobileOptions = isDesktop ? [false] : [true, false];
   // only static for serveral page, other go to dynamtic

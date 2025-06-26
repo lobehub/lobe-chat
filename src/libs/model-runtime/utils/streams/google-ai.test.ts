@@ -7,7 +7,7 @@ import { GoogleGenerativeAIStream } from './google-ai';
 
 describe('GoogleGenerativeAIStream', () => {
   it('should transform Google Generative AI stream to protocol stream', async () => {
-    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1').mockReturnValueOnce('abcd1234');
 
     const mockGenerateContentResponse = (text: string, functionCalls?: any[]) =>
       ({
@@ -59,7 +59,7 @@ describe('GoogleGenerativeAIStream', () => {
       // tool call
       'id: chat_1\n',
       'event: tool_calls\n',
-      `data: [{"function":{"arguments":"{\\"arg1\\":\\"value1\\"}","name":"testFunction"},"id":"testFunction_0","index":0,"type":"function"}]\n\n`,
+      `data: [{"function":{"arguments":"{\\"arg1\\":\\"value1\\"}","name":"testFunction"},"id":"testFunction_0_abcd1234","index":0,"type":"function"}]\n\n`,
 
       // text
       'id: chat_1\n',
