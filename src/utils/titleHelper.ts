@@ -1,23 +1,16 @@
 export const findNextAvailableTitle = (
   baseTitle: string,
   titleSet: ReadonlySet<string>,
-  duplicateSymbol?: string
+  duplicateSymbol?: string,
 ): string => {
-  if (!titleSet.has(baseTitle)) {
-    return baseTitle;
-  }
+  if (!titleSet.has(baseTitle)) return baseTitle;
 
   let strippedBase = baseTitle;
   let startCount = 1;
 
   if (duplicateSymbol) {
-    // Regex to match " (copy)" or " (copy 1)"
-    const matchWithNumber = baseTitle.match(
-      new RegExp(`^(.*?)(\\s${duplicateSymbol}\\s(\\d+))$`),
-    );
-    const matchWithoutNumber = baseTitle.match(
-      new RegExp(`^(.*?)(\\s${duplicateSymbol})$`),
-    );
+    const matchWithNumber = baseTitle.match(new RegExp(`^(.*?)(\\s${duplicateSymbol}\\s(\\d+))$`));
+    const matchWithoutNumber = baseTitle.match(new RegExp(`^(.*?)(\\s${duplicateSymbol})$`));
 
     if (matchWithNumber) {
       strippedBase = matchWithNumber[1];
@@ -27,30 +20,22 @@ export const findNextAvailableTitle = (
     }
 
     const noNumberTitle = `${strippedBase} ${duplicateSymbol}`;
-    if (!titleSet.has(noNumberTitle) && startCount <= 1) {
-      return noNumberTitle;
-    }
+    if (!titleSet.has(noNumberTitle) && startCount <= 1) return noNumberTitle;
 
-    while (true) {
-      const numberedTitle = `${strippedBase} ${duplicateSymbol} ${startCount}`;
-      if (!titleSet.has(numberedTitle)) {
-        return numberedTitle;
-      }
-      startCount++;
+    for (let i = startCount; ; i++) {
+      const numberedTitle = `${strippedBase} ${duplicateSymbol} ${i}`;
+      if (!titleSet.has(numberedTitle)) return numberedTitle;
     }
-  } else {
-    const matchWithNumber = baseTitle.match(/^(.*?)(\s(\d+))$/);
-    if (matchWithNumber) {
-      strippedBase = matchWithNumber[1];
-      startCount = parseInt(matchWithNumber[3], 10) + 1;
-    }
+  }
 
-    while (true) {
-      const numberedTitle = `${strippedBase} ${startCount}`;
-      if (!titleSet.has(numberedTitle)) {
-        return numberedTitle;
-      }
-      startCount++;
-    }
+  const matchWithNumber = baseTitle.match(/^(.*?)(\s(\d+))$/);
+  if (matchWithNumber) {
+    strippedBase = matchWithNumber[1];
+    startCount = parseInt(matchWithNumber[3], 10) + 1;
+  }
+
+  for (let i = startCount; ; i++) {
+    const numberedTitle = `${strippedBase} ${i}`;
+    if (!titleSet.has(numberedTitle)) return numberedTitle;
   }
 };
