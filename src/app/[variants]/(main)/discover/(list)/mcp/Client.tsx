@@ -13,7 +13,7 @@ import Loading from './loading';
 
 const Client = memo<{ mobile?: boolean }>(() => {
   const { q, page, category, sort, order } = useQuery() as McpQueryParams;
-  const useMcpList = useDiscoverStore((s) => s.useMcpList);
+  const useMcpList = useDiscoverStore((s) => s.useFetchMcpList);
   const { data, isLoading } = useMcpList({
     category,
     order,

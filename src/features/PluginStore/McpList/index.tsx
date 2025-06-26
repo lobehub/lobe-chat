@@ -5,9 +5,10 @@ import dynamic from 'next/dynamic';
 import { memo, useRef, useState } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import DetailLoading from './Detail/Loading';
 import List from './List';
 
-const Detail = dynamic(() => import('./Detail'), { ssr: false });
+const Detail = dynamic(() => import('./Detail'), { loading: DetailLoading, ssr: false });
 
 export const MCPPluginList = memo<{ keywords?: string }>(({ keywords }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -16,7 +17,7 @@ export const MCPPluginList = memo<{ keywords?: string }>(({ keywords }) => {
 
   return (
     <Flexbox
-      height={`75vh`}
+      height={'75vh'}
       horizontal
       style={{
         borderTop: `1px solid ${theme.colorBorderSecondary}`,
@@ -25,7 +26,7 @@ export const MCPPluginList = memo<{ keywords?: string }>(({ keywords }) => {
       }}
       width={'100%'}
     >
-      <DraggablePanel maxWidth={1024} minWidth={320} placement={'left'}>
+      <DraggablePanel maxWidth={1024} minWidth={420} placement={'left'}>
         <List
           identifier={identifier}
           keywords={keywords}

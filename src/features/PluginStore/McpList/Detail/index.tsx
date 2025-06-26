@@ -15,8 +15,9 @@ import DetailsLoading from './Loading';
 
 const Detail = memo<{ identifier: string }>(({ identifier }) => {
   const [activeTab, setActiveTab] = useState(McpNavKey.Overview);
-  const useMcpDetail = useDiscoverStore((s) => s.useMcpDetail);
+  const useMcpDetail = useDiscoverStore((s) => s.useFetchMcpDetail);
   const { data, isLoading } = useMcpDetail({ identifier });
+
   if (isLoading) return <DetailsLoading />;
 
   return (
