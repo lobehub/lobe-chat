@@ -1,6 +1,94 @@
 [
   {
     "children": {
+      "fixes": ["Google Gemini tools declarations."]
+    },
+    "date": "2025-06-23",
+    "version": "1.96.9"
+  },
+  {
+    "children": {
+      "improvements": ["Optimized Gemini thinkingBudget configuration."]
+    },
+    "date": "2025-06-23",
+    "version": "1.96.8"
+  },
+  {
+    "children": {
+      "improvements": ["Add blockAds & stealth params for Browserless."]
+    },
+    "date": "2025-06-23",
+    "version": "1.96.7"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-06-23",
+    "version": "1.96.6"
+  },
+  {
+    "children": {
+      "fixes": ["Remove unsupported parameters of Hunyuan."]
+    },
+    "date": "2025-06-22",
+    "version": "1.96.5"
+  },
+  {
+    "children": {},
+    "date": "2025-06-22",
+    "version": "1.96.4"
+  },
+  {
+    "children": {},
+    "date": "2025-06-22",
+    "version": "1.96.3"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-06-22",
+    "version": "1.96.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix MiniMax-M1 reasoning tag missing."]
+    },
+    "date": "2025-06-21",
+    "version": "1.96.1"
+  },
+  {
+    "children": {
+      "features": ["Add v0 (Vercel) provider support."],
+      "fixes": ["Fix inputTemplate behavior."]
+    },
+    "date": "2025-06-20",
+    "version": "1.96.0"
+  },
+  {
+    "children": {
+      "features": ["Add Brave & Google PSE & Kagi as build-in Search Provider."]
+    },
+    "date": "2025-06-20",
+    "version": "1.95.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-06-20",
+    "version": "1.94.17"
+  },
+  {
+    "children": {
+      "fixes": ["Correctly pass reasoning.summary."]
+    },
+    "date": "2025-06-19",
+    "version": "1.94.16"
+  },
+  {
+    "children": {
       "improvements": ["Update model card for Gemini 2.5 Pro via OpenRouter."]
     },
     "date": "2025-06-19",

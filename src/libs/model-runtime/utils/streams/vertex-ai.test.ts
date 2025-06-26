@@ -137,7 +137,7 @@ describe('VertexAIStream', () => {
   });
 
   it('tool_calls', async () => {
-    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1').mockReturnValueOnce('abcd1234');
 
     const rawChunks = [
       {
@@ -227,7 +227,7 @@ describe('VertexAIStream', () => {
       // text
       'id: chat_1\n',
       'event: tool_calls\n',
-      `data: [{"function":{"arguments":"{\\"city\\":\\"杭州\\"}","name":"realtime-weather____fetchCurrentWeather"},"id":"realtime-weather____fetchCurrentWeather_0","index":0,"type":"function"}]\n\n`,
+      `data: [{"function":{"arguments":"{\\"city\\":\\"杭州\\"}","name":"realtime-weather____fetchCurrentWeather"},"id":"realtime-weather____fetchCurrentWeather_0_abcd1234","index":0,"type":"function"}]\n\n`,
       'id: chat_1\n',
       'event: stop\n',
       'data: "STOP"\n\n',

@@ -30,7 +30,7 @@ describe('OllamaStream', () => {
       });
 
       const protocolStream = OllamaStream(mockOllamaStream);
-    
+
       const decoder = new TextDecoder();
       const chunks = [];
 
@@ -62,7 +62,7 @@ describe('OllamaStream', () => {
           'id: chat_2',
           'event: stop',
           `data: "finished"\n`,
-        ].map((line) => `${line}\n`)
+        ].map((line) => `${line}\n`),
       );
     });
 
@@ -116,7 +116,7 @@ describe('OllamaStream', () => {
     });
 
     it('tools use', async () => {
-      vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+      vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1').mockReturnValueOnce('abcd1234');
 
       const mockOllamaStream = new ReadableStream<ChatResponse>({
         start(controller) {
@@ -178,7 +178,7 @@ describe('OllamaStream', () => {
         [
           'id: chat_1',
           'event: tool_calls',
-          `data: [{"function":{"arguments":"{\\"city\\":\\"杭州\\"}","name":"realtime-weather____fetchCurrentWeather"},"id":"realtime-weather____fetchCurrentWeather_0","index":0,"type":"function"}]\n`,
+          `data: [{"function":{"arguments":"{\\"city\\":\\"杭州\\"}","name":"realtime-weather____fetchCurrentWeather"},"id":"realtime-weather____fetchCurrentWeather_0_abcd1234","index":0,"type":"function"}]\n`,
           'id: chat_1',
           'event: stop',
           `data: "finished"\n`,

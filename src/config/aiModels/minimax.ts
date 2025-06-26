@@ -4,6 +4,7 @@ const minimaxChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
       search: true,
     },
     contextWindowTokens: 1_000_192,
@@ -45,44 +46,6 @@ const minimaxChatModels: AIChatModelCard[] = [
     releasedAt: '2025-01-15',
     settings: {
       searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 245_760,
-    description: '适用于广泛的自然语言处理任务，包括文本生成、对话系统等。',
-    displayName: 'abab6.5s',
-    id: 'abab6.5s-chat',
-    maxOutput: 245_760,
-    pricing: {
-      currency: 'CNY',
-      input: 1,
-      output: 1,
-    },
-    settings: {
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 64_000,
-    description:
-      'DeepSeek 推出的推理模型。在输出最终回答之前，模型会先输出一段思维链内容，以提升最终答案的准确性。',
-    displayName: 'DeepSeek R1',
-    id: 'DeepSeek-R1',
-    maxOutput: 64_000,
-    pricing: {
-      currency: 'CNY',
-      input: 4,
-      output: 16,
     },
     type: 'chat',
   },

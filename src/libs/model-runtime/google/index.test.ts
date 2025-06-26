@@ -560,6 +560,58 @@ describe('LobeGoogleAI', () => {
           },
         ]);
       });
+
+      it('should correctly convert function response message', async () => {
+        const messages: OpenAIChatMessage[] = [
+          {
+            content: '',
+            role: 'assistant',
+            tool_calls: [
+              {
+                id: 'call_1',
+                function: {
+                  name: 'get_current_weather',
+                  arguments: JSON.stringify({ location: 'London', unit: 'celsius' }),
+                },
+                type: 'function',
+              },
+            ],
+          },
+          {
+            content: '{"success":true,"data":{"temperature":"14°C"}}',
+            name: 'get_current_weather',
+            role: 'tool',
+            tool_call_id: 'call_1',
+          },
+        ];
+
+        const contents = await instance['buildGoogleMessages'](messages);
+        expect(contents).toHaveLength(2);
+        expect(contents).toEqual([
+          {
+            parts: [
+              {
+                functionCall: {
+                  args: { location: 'London', unit: 'celsius' },
+                  name: 'get_current_weather',
+                },
+              },
+            ],
+            role: 'model',
+          },
+          {
+            parts: [
+              {
+                functionResponse: {
+                  name: 'get_current_weather',
+                  response: { result: '{"success":true,"data":{"temperature":"14°C"}}' },
+                },
+              },
+            ],
+            role: 'user',
+          },
+        ]);
+      });
     });
 
     describe('buildGoogleTools', () => {
@@ -690,7 +742,7 @@ describe('LobeGoogleAI', () => {
 
         const converted = await instance['convertOAIMessagesToGoogleMessage'](message);
         expect(converted).toEqual({
-          role: 'function',
+          role: 'model',
           parts: [
             {
               functionCall: {

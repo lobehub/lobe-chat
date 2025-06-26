@@ -1,16 +1,13 @@
 'use client';
 
 import { useWatchBroadcast } from '@lobechat/electron-client-ipc';
-import { Button, Icon } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Button, Icon, Text } from '@lobehub/ui';
 import { createStyles, cx, keyframes } from 'antd-style';
 import { WifiIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useElectronStore } from '@/store/electron';
-
-const { Text, Title } = Typography;
 
 const airdropPulse = keyframes`
     0% {
@@ -189,9 +186,9 @@ const WaitingOAuth = memo<WaitingOAuthProps>(({ setWaiting, setIsOpen }) => {
 
           <Icon className={styles.radarIcon} icon={WifiIcon} size={40} />
         </div>
-        <Title className={styles.title} level={4}>
+        <Text as={'h4'} className={styles.title}>
           {t('waitingOAuth.title')}
-        </Title>
+        </Text>
         <Text className={styles.description}>{t('waitingOAuth.description')}</Text>
         <Button onClick={handleCancel}>{t('waitingOAuth.cancel')}</Button>{' '}
         <Text className={styles.helpText}>{t('waitingOAuth.helpText')}</Text>
