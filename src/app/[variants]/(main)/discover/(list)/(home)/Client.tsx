@@ -13,7 +13,7 @@ import Loading from './loading';
 const Client = memo<{ mobile?: boolean }>(() => {
   const { t } = useTranslation('discover');
   const useAssistantList = useDiscoverStore((s) => s.useAssistantList);
-  const useMcpList = useDiscoverStore((s) => s.useMcpList);
+  const useMcpList = useDiscoverStore((s) => s.useFetchMcpList);
 
   const { data: assistantList, isLoading: assistantLoading } = useAssistantList({
     page: 1,

@@ -18,7 +18,7 @@ const Item = memo<PluginItemProps>(({ name, description, icon, onClick, active, 
     <Block
       align={'center'}
       clickable
-      gap={8}
+      gap={16}
       horizontal
       justify={'space-between'}
       onClick={onClick}

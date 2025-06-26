@@ -17,7 +17,7 @@ import Loading from './loading';
 
 const Client = memo<{ identifier: string; mobile?: boolean }>(({ identifier, mobile }) => {
   const { version } = useQuery() as { version?: string };
-  const useMcpDetail = useDiscoverStore((s) => s.useMcpDetail);
+  const useMcpDetail = useDiscoverStore((s) => s.useFetchMcpDetail);
   const { data, isLoading } = useMcpDetail({ identifier, version });
 
   if (isLoading) return <Loading />;

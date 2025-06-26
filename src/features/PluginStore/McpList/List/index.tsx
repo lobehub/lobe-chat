@@ -23,7 +23,7 @@ export const List = memo<{
   const [allItems, setAllItems] = useState<DiscoverMcpItem[]>([]);
   const pageSize = 20;
 
-  const useMcpList = useDiscoverStore((s) => s.useMcpList);
+  const useMcpList = useDiscoverStore((s) => s.useFetchMcpList);
 
   const { data, isLoading, error } = useMcpList({ page, pageSize, q: keywords });
 
