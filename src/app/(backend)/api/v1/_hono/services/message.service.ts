@@ -8,7 +8,6 @@ import { idGenerator } from '@/database/utils/idGenerator';
 import { BaseService } from '../common/base.service';
 import { ServiceResult } from '../types';
 import {
-  MessageCreateResponse,
   MessageResponse,
   MessageWithTopicResponse,
   MessagesCreateRequest,
@@ -133,7 +132,7 @@ export class MessageService extends BaseService {
    * @param messageData 消息数据
    * @returns 创建的消息ID
    */
-  async createMessage(messageData: MessagesCreateRequest): ServiceResult<MessageCreateResponse> {
+  async createMessage(messageData: MessagesCreateRequest): ServiceResult<MessageResponse> {
     this.log('info', '创建新消息', {
       role: messageData.role,
       sessionId: messageData.sessionId,
@@ -155,7 +154,31 @@ export class MessageService extends BaseService {
           topicId: messageData.topicId,
           userId: this.userId!,
         })
-        .returning({ id: messages.id });
+        .returning({
+          agentId: messages.agentId,
+          clientId: messages.clientId,
+          content: messages.content,
+          createdAt: messages.createdAt,
+          error: messages.error,
+          favorite: messages.favorite,
+          id: messages.id,
+          metadata: messages.metadata,
+          model: messages.model,
+          observationId: messages.observationId,
+          parentId: messages.parentId,
+          provider: messages.provider,
+          quotaId: messages.quotaId,
+          reasoning: messages.reasoning,
+          role: messages.role,
+          search: messages.search,
+          sessionId: messages.sessionId,
+          threadId: messages.threadId,
+          tools: messages.tools,
+          topicId: messages.topicId,
+          traceId: messages.traceId,
+          updatedAt: messages.updatedAt,
+          userId: messages.userId,
+        });
 
       // 处理文件附件
       if (messageData.files && messageData.files.length > 0) {
@@ -175,7 +198,11 @@ export class MessageService extends BaseService {
       }
 
       this.log('info', '创建消息完成', { messageId: newMessage.id });
-      return { id: newMessage.id };
+      return {
+        ...newMessage,
+        createdAt: newMessage.createdAt.toISOString(),
+        updatedAt: newMessage.updatedAt.toISOString(),
+      };
     } catch (error) {
       this.log('error', '创建消息失败', { error });
       throw this.createCommonError('创建消息失败');
@@ -373,29 +400,29 @@ export class MessageService extends BaseService {
       const result = await this.db
         .select({
           message: messages,
-          
+
           topicClientId: topics.clientId,
-          
-topicCreatedAt: topics.createdAt,
-          
-topicFavorite: topics.favorite,
-          
-topicHistorySummary: topics.historySummary,
+
+          topicCreatedAt: topics.createdAt,
+
+          topicFavorite: topics.favorite,
+
+          topicHistorySummary: topics.historySummary,
           // Topic 字段
-topicId: topics.id,
+          topicId: topics.id,
           topicMetadata: topics.metadata,
           topicSessionId: topics.sessionId,
           topicTitle: topics.title,
           topicUpdatedAt: topics.updatedAt,
           topicUserId: topics.userId,
-          
+
           userAvatar: users.avatar,
-          
-userEmail: users.email,
-          
-userFullName: users.fullName,
+
+          userEmail: users.email,
+
+          userFullName: users.fullName,
           // 用户信息
-userId: users.id,
+          userId: users.id,
           userUsername: users.username,
         })
         .from(messages)
@@ -412,9 +439,7 @@ userId: users.id,
         .offset(offset);
 
       // 获取每个话题的消息数量
-      const topicIds = [
-        ...new Set(result.map((row) => row.topicId).filter(Boolean)),
-      ];
+      const topicIds = [...new Set(result.map((row) => row.topicId).filter(Boolean))] as string[];
       const messageCountsResult =
         topicIds.length > 0
           ? await this.db
