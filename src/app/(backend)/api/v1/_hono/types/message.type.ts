@@ -97,7 +97,7 @@ export interface MessageResponse {
   content: string | null;
   createdAt: string;
   error: any | null;
-  favorite: boolean;
+  favorite: boolean | null;
   id: string;
   metadata: any | null;
   model: string | null;
@@ -115,11 +115,6 @@ export interface MessageResponse {
   traceId: string | null;
   updatedAt: string;
   userId: string;
-}
-
-// Create response type (only returns the ID)
-export interface MessageCreateResponse {
-  id: string;
 }
 
 // Additional schemas for message routes

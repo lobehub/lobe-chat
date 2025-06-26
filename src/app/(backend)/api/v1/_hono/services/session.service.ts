@@ -60,7 +60,10 @@ export class SessionService extends BaseService {
         offset: (page - 1) * pageSize,
         orderBy: [desc(sessions.updatedAt)],
         where: and(...whereConditions),
-        with: { agentsToSessions: { columns: {}, with: { agent: true } }, group: true },
+        with: {
+          agentsToSessions: { columns: {}, with: { agent: true } },
+          group: true,
+        },
       });
 
       this.log('info', `查询到 ${sessionsList.length} 个会话`);
