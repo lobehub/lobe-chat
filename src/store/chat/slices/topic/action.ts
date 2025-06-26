@@ -22,11 +22,11 @@ import { ChatMessage } from '@/types/message';
 import { ChatTopic } from '@/types/topic';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
+import { findNextAvailableTitle } from '@/utils/titleHelper';
 
 import { chatSelectors } from '../message/selectors';
 import { ChatTopicDispatch, topicReducer } from './reducer';
 import { topicSelectors } from './selectors';
-import { findNextAvailableTitle } from '@/utils/titleHelper';
 
 const n = setNamespace('t');
 
@@ -57,7 +57,7 @@ export interface ChatTopicAction {
   internal_createTopic: (params: CreateTopicParams) => Promise<string>;
   internal_updateTopic: (id: string, data: Partial<ChatTopic>) => Promise<void>;
   internal_dispatchTopic: (payload: ChatTopicDispatch, action?: any) => void;
-  internal_findNextAvailableTopicTitle: (topic: ChatTopic) => string;
+  internal_duplicateTopicTitle: (topic: CreateTopicParams) => string;
 }
 
 export const chatTopic: StateCreator<
@@ -121,7 +121,7 @@ export const chatTopic: StateCreator<
     const topic = topicSelectors.getTopicById(id)(get());
     if (!topic) return;
 
-    const newTitle = get().internal_findNextAvailableTopicTitle(topic);
+    const newTitle = get().internal_duplicateTopicTitle(topic);
 
     message.loading({
       content: t('duplicateLoading', { ns: 'topic' }),
@@ -337,7 +337,7 @@ export const chatTopic: StateCreator<
 
     set({ topicMaps: nextMap }, false, action ?? n(`dispatchTopic/${payload.type}`));
   },
-  internal_findNextAvailableTopicTitle: ({ title }) => {
+  internal_duplicateTopicTitle: ({ title }) => {
     const titleSet = new Set<string>();
 
     const topics = topicSelectors.currentTopics(get()) || [];
@@ -347,6 +347,6 @@ export const chatTopic: StateCreator<
       }
     });
 
-    return findNextAvailableTitle(title, titleSet);
-  }
+    return findNextAvailableTitle(title, titleSet, t('duplicateSymbol', { ns: 'common' }));
+  },
 });

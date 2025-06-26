@@ -19,6 +19,7 @@ import {
   LobeSessionGroups,
   LobeSessionType,
   LobeSessions,
+  SessionDefaultGroup,
   UpdateSessionParams,
 } from '@/types/session';
 import { merge } from '@/utils/merge';
@@ -87,7 +88,7 @@ export interface SessionAction {
     customGroups: LobeSessionGroups,
     actions?: string,
   ) => void;
-  internal_findNextAvailableSessionTitle: (session: LobeAgentSession) => string;
+  internal_findNextAvailableSessionTitle: (session: LobeAgentSession, isNew?: boolean) => string;
 }
 
 export const createSessionSlice: StateCreator<
@@ -110,7 +111,13 @@ export const createSessionSlice: StateCreator<
       settingsSelectors.defaultAgent(useUserStore.getState()),
     );
 
-    const newSession: LobeAgentSession = merge(defaultAgent, agent);
+    const initializedAgentSession: LobeAgentSession = merge(defaultAgent, agent);
+
+    const nextTitle = get().internal_findNextAvailableSessionTitle(initializedAgentSession, true);
+
+    const newSession = merge(initializedAgentSession, {
+      meta: { title: nextTitle },
+    });
 
     const id = await sessionService.createSession(LobeSessionType.Agent, newSession);
     await refreshSessions();
@@ -276,19 +283,18 @@ export const createSessionSlice: StateCreator<
     await mutate([FETCH_SESSIONS_KEY, true]);
   },
 
-  internal_findNextAvailableSessionTitle: (session) => {
+  internal_findNextAvailableSessionTitle: (session, isNew) => {
     const title = sessionMetaSelectors.getTitle(session.meta);
 
-    const sessions = sessionSelectors.getSessionsByGroupId(session.group)(get());
+    const sessions = sessionSelectors.getSessionsByGroupId(
+      session.group || SessionDefaultGroup.Default,
+    )(get());
+    const titleSet = new Set(sessions.map((s) => sessionMetaSelectors.getTitle(s.meta)));
 
-    const titleSet = new Set<string>();
-    sessions.forEach((session) => {
-      const title = session.meta?.title;
-      if (title) {
-        titleSet.add(title);
-      }
-    });
-
-    return findNextAvailableTitle(title, titleSet);
+    return findNextAvailableTitle(
+      title,
+      titleSet,
+      isNew ? '' : t('duplicateSymbol', { ns: 'common' }),
+    );
   },
 });
