@@ -7,7 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useAgentStore } from '@/store/agent';
 import { useToolStore } from '@/store/tool';
-import { pluginSelectors, pluginStoreSelectors } from '@/store/tool/selectors';
+import { mcpStoreSelectors, pluginSelectors } from '@/store/tool/selectors';
 
 interface ActionsProps {
   identifier: string;
@@ -16,7 +16,7 @@ interface ActionsProps {
 const Actions = memo<ActionsProps>(({ identifier }) => {
   const [installed, installing, unInstallPlugin, installMCPPlugin] = useToolStore((s) => [
     pluginSelectors.isPluginInstalled(identifier)(s),
-    pluginStoreSelectors.isPluginInstallLoading(identifier)(s),
+    mcpStoreSelectors.isMCPInstalling(identifier)(s),
     s.uninstallPlugin,
     s.installMCPPlugin,
   ]);
@@ -51,7 +51,13 @@ const Actions = memo<ActionsProps>(({ identifier }) => {
           placement="bottomRight"
           trigger={['click']}
         >
-          <ActionIcon icon={MoreVerticalIcon} loading={installing} />
+          <ActionIcon
+            icon={MoreVerticalIcon}
+            loading={installing}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          />
         </Dropdown>
       ) : (
         <Button

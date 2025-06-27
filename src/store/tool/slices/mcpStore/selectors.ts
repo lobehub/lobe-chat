@@ -26,6 +26,10 @@ const mcpPluginList = (s: ToolStoreState) => {
 
 const isPluginInstallLoading = (id: string) => (s: ToolStoreState) => s.pluginInstallLoading[id];
 
+const getMCPInstallProgress = (id: string) => (s: ToolStoreState) => s.mcpInstallProgress[id];
+
+const isMCPInstalling = (id: string) => (s: ToolStoreState) => !!s.mcpInstallProgress[id];
+
 const getPluginById = (id: string) => (s: ToolStoreState) => {
   return s.mcpPluginItems.find((i) => i.identifier === id);
 };
@@ -34,7 +38,9 @@ const activeMCPPluginIdentifier = (s: ToolStoreState) => s.activeMCPIdentifier;
 
 export const mcpStoreSelectors = {
   activeMCPPluginIdentifier,
+  getMCPInstallProgress,
   getPluginById,
+  isMCPInstalling,
   isPluginInstallLoading,
   mcpPluginList,
 };

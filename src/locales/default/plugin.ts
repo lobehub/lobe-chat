@@ -231,6 +231,13 @@ export default {
     },
     title: '本地文件',
   },
+  mcpInstall: {
+    '0': '获取插件描述文件...',
+    '1': '检查安装环境...',
+    '2': '初始化 MCP 服务器...',
+    '3': '正在安装插件...',
+    '4': '安装完成',
+  },
   pluginList: '插件列表',
   search: {
     apiName: {
@@ -294,7 +301,7 @@ export default {
     tabs: {
       installed: '已安装',
       mcp: 'MCP 插件',
-      old: '旧版插件',
+      old: 'LobeChat 插件',
     },
     title: '插件商店',
   },
