@@ -5,6 +5,7 @@ import { SessionService } from '../services/session.service';
 import { SessionGroupService } from '../services/sessionGroup.service';
 import {
   BatchGetSessionsRequest,
+  BatchUpdateSessionsRequest,
   CloneSessionRequest,
   CreateSessionRequest,
   GetSessionsRequest,
@@ -72,6 +73,24 @@ export class SessionController extends BaseController {
       const result = await sessionService.getGroupedSessions();
 
       return this.success(c, result, '获取分组会话列表成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 获取按Agent分组的会话列表
+   * GET /api/v1/sessions/grouped-by-agent
+   * @param c Hono Context
+   * @returns 按Agent分组的会话列表响应
+   */
+  async getSessionsGroupedByAgent(c: Context): Promise<Response> {
+    try {
+      const db = await this.getDatabase();
+      const sessionService = new SessionService(db, this.getUserId(c));
+      const result = await sessionService.getSessionsGroupedByAgent();
+
+      return this.success(c, result, '获取按Agent分组的会话列表成功');
     } catch (error) {
       return this.handleError(c, error);
     }
@@ -303,6 +322,27 @@ export class SessionController extends BaseController {
       const result = await sessionService.batchGetSessions(body);
 
       return this.success(c, result, '批量查询会话成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 批量更新会话
+   * PUT /api/v1/sessions/batch-update
+   * @param c Hono Context
+   * @returns 批量更新结果响应
+   */
+  async batchUpdateSessions(c: Context): Promise<Response> {
+    try {
+      const body = await this.getBody<BatchUpdateSessionsRequest>(c);
+      const currentUserId = this.getUserId(c)!;
+
+      const db = await this.getDatabase();
+      const sessionService = new SessionService(db, currentUserId);
+      const result = await sessionService.batchUpdateSessions(body);
+
+      return this.success(c, result, '批量更新会话成功');
     } catch (error) {
       return this.handleError(c, error);
     }

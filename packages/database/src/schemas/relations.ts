@@ -186,6 +186,10 @@ export const sessionsRelations = relations(sessions, ({ many, one }) => ({
     fields: [sessions.groupId],
     references: [sessionGroups.id],
   }),
+  user: one(users, {
+    fields: [sessions.userId],
+    references: [users.id],
+  }),
 }));
 
 export const chunksRelations = relations(unstructuredChunks, ({ one }) => ({
@@ -305,4 +309,8 @@ export const chatGroupsAgentsRelations = relations(chatGroupsAgents, ({ one }) =
     fields: [chatGroupsAgents.userId],
     references: [users.id],
   }),
+}));
+
+export const usersRelations = relations(users, ({ many }) => ({
+  sessions: many(sessions),
 }));
