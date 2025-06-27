@@ -8,15 +8,17 @@ import { notification } from '@/components/AntdStaticMethods';
 import { mcpService } from '@/services/mcp';
 import { pluginService } from '@/services/plugin';
 import { toolService } from '@/services/tool';
+import { globalHelpers } from '@/store/global/helpers';
 import { mcpStoreSelectors } from '@/store/tool/selectors';
+import { MCPPluginListParams } from '@/types/plugins';
 import { PluginInstallError } from '@/types/tool/plugin';
 
 import { ToolStore } from '../../store';
 
 export interface PluginMCPStoreAction {
-  installMCPPlugin: (identifier: string) => Promise<void>;
+  installMCPPlugin: (identifier: string) => Promise<boolean | undefined>;
   uninstallMCPPlugin: (identifier: string) => Promise<void>;
-  useFetchMCPPluginStore: (params: { keywords?: string }) => SWRResponse<PluginListResponse>;
+  useFetchMCPPluginList: (params: MCPPluginListParams) => SWRResponse<PluginListResponse>;
 }
 
 export const createMCPPluginStoreSlice: StateCreator<
@@ -73,6 +75,8 @@ export const createMCPPluginStoreSlice: StateCreator<
       await refreshPlugins();
 
       updateInstallLoadingState(identifier, undefined);
+
+      return true;
     } catch (error) {
       console.error(error);
       updateInstallLoadingState(identifier, undefined);
@@ -88,15 +92,23 @@ export const createMCPPluginStoreSlice: StateCreator<
     await pluginService.uninstallPlugin(identifier);
     await get().refreshPlugins();
   },
-  useFetchMCPPluginStore: ({ keywords }) =>
-    useSWR<PluginListResponse>(
-      ['loadMCPPluginStore', keywords].filter(Boolean).join('-'),
-      () => toolService.getMCPPluginList({ q: keywords }),
+
+  useFetchMCPPluginList: (params) => {
+    const locale = globalHelpers.getCurrentLanguage();
+
+    return useSWR<PluginListResponse>(
+      ['useFetchMCPPluginList', locale, ...Object.values(params)].filter(Boolean).join('-'),
+      () => toolService.getMCPPluginList(params),
       {
         onSuccess(data) {
-          set({ categories: data.categories, mcpPluginItems: data.items });
+          set({
+            activeMCPIdentifier: data.items?.[0]?.identifier,
+            categories: data.categories,
+            mcpPluginItems: data.items,
+          });
         },
         revalidateOnFocus: false,
       },
-    ),
+    );
+  },
 });

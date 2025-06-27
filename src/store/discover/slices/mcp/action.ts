@@ -15,7 +15,7 @@ import {
 
 export interface MCPAction {
   useFetchMcpDetail: (params: {
-    identifier: string;
+    identifier?: string;
     version?: string;
   }) => SWRResponse<DiscoverMcpDetail>;
   useFetchMcpList: (params: McpQueryParams) => SWRResponse<McpListResponse>;
@@ -29,15 +29,13 @@ export const createMCPSlice: StateCreator<
   [],
   MCPAction
 > = () => ({
-  useFetchMcpDetail: (params) => {
+  useFetchMcpDetail: ({ identifier, version }) => {
     const locale = globalHelpers.getCurrentLanguage();
 
     return useClientDataSWR(
-      ['mcp-detail', locale, ...Object.values(params)].filter(Boolean).join('-'),
-      async () => edgeClient.market.getMcpDetail.query({ ...params, locale }),
-      {
-        revalidateOnFocus: false,
-      },
+      !identifier ? null : ['mcp-detail', locale, identifier, version].filter(Boolean).join('-'),
+      async () =>
+        edgeClient.market.getMcpDetail.query({ identifier: identifier!, locale, version }),
     );
   },
 
@@ -52,9 +50,6 @@ export const createMCPSlice: StateCreator<
           page: params.page ? Number(params.page) : 1,
           pageSize: params.pageSize ? Number(params.pageSize) : 21,
         }),
-      {
-        revalidateOnFocus: false,
-      },
     );
   },
 

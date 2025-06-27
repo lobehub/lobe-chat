@@ -30,7 +30,10 @@ const getPluginById = (id: string) => (s: ToolStoreState) => {
   return s.mcpPluginItems.find((i) => i.identifier === id);
 };
 
+const activeMCPPluginIdentifier = (s: ToolStoreState) => s.activeMCPIdentifier;
+
 export const mcpStoreSelectors = {
+  activeMCPPluginIdentifier,
   getPluginById,
   isPluginInstallLoading,
   mcpPluginList,

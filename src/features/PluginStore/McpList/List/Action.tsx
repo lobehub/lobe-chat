@@ -56,9 +56,14 @@ const Actions = memo<ActionsProps>(({ identifier }) => {
       ) : (
         <Button
           loading={installing}
-          onClick={async () => {
-            await installMCPPlugin(identifier);
-            await togglePlugin(identifier);
+          onClick={async (e) => {
+            e.stopPropagation();
+
+            const isSuccess = await installMCPPlugin(identifier);
+
+            if (isSuccess) {
+              await togglePlugin(identifier);
+            }
           }}
           variant={'filled'}
         >

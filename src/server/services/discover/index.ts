@@ -49,9 +49,7 @@ export class DiscoverService {
   market: MarketSDK;
 
   constructor() {
-    this.market = new MarketSDK({
-      baseURL: process.env.MARKET_BASE_URL || 'http://localhost:8787/api',
-    });
+    this.market = new MarketSDK({ baseURL: process.env.MARKET_BASE_URL });
   }
 
   // ============================== Helper Methods ==============================
