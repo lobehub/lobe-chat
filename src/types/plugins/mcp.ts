@@ -1,4 +1,4 @@
-import { SystemDependency } from '@lobehub/market-sdk';
+import { PluginQueryParams, SystemDependency } from '@lobehub/market-sdk';
 
 export interface CheckMcpInstallParams {
   /**
@@ -82,3 +82,5 @@ export interface CheckMcpInstallResult {
     version?: string;
   }>;
 }
+
+export type MCPPluginListParams = Pick<PluginQueryParams, 'locale' | 'pageSize' | 'page' | 'q'>;

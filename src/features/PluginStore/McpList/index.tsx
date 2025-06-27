@@ -1,9 +1,10 @@
 import { DraggablePanel } from '@lobehub/ui';
-import { Empty } from 'antd';
 import { useTheme } from 'antd-style';
 import dynamic from 'next/dynamic';
-import { memo, useRef, useState } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
+import { memo, useRef } from 'react';
+import { Flexbox } from 'react-layout-kit';
+
+import { useToolStore } from '@/store/tool';
 
 import DetailLoading from './Detail/Loading';
 import List from './List';
@@ -12,7 +13,6 @@ const Detail = dynamic(() => import('./Detail'), { loading: DetailLoading, ssr: 
 
 export const MCPPluginList = memo<{ keywords?: string }>(({ keywords }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [identifier, setIdentifier] = useState<string>();
   const theme = useTheme();
 
   return (
@@ -28,39 +28,26 @@ export const MCPPluginList = memo<{ keywords?: string }>(({ keywords }) => {
     >
       <DraggablePanel maxWidth={1024} minWidth={420} placement={'left'}>
         <List
-          identifier={identifier}
           keywords={keywords}
           setIdentifier={(identifier) => {
-            setIdentifier(identifier);
+            useToolStore.setState({ activeMCPIdentifier: identifier });
             ref?.current?.scrollTo({ top: 0 });
           }}
         />
       </DraggablePanel>
-      {identifier ? (
-        <Flexbox
-          height={'100%'}
-          padding={16}
-          ref={ref}
-          style={{
-            background: theme.colorBgContainerSecondary,
-            overflowX: 'hidden',
-            overflowY: 'auto',
-          }}
-          width={'100%'}
-        >
-          <Detail identifier={identifier} />
-        </Flexbox>
-      ) : (
-        <Center
-          height={'100%'}
-          style={{
-            background: theme.colorBgContainerSecondary,
-          }}
-          width={'100%'}
-        >
-          <Empty description={'选择插件以预览详细信息'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
-        </Center>
-      )}
+      <Flexbox
+        height={'100%'}
+        padding={16}
+        ref={ref}
+        style={{
+          background: theme.colorBgContainerSecondary,
+          overflowX: 'hidden',
+          overflowY: 'auto',
+        }}
+        width={'100%'}
+      >
+        <Detail />
+      </Flexbox>
     </Flexbox>
   );
 });

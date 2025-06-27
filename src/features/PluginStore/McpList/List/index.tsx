@@ -7,25 +7,29 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
 
-import { useDiscoverStore } from '@/store/discover';
+import { useToolStore } from '@/store/tool';
 import { DiscoverMcpItem } from '@/types/discover';
 
 import VirtuosoLoading from '../../VirtuosoLoading';
 import Item from './Item';
 
-export const List = memo<{
-  identifier?: string;
+interface ListProps {
   keywords?: string;
-  setIdentifier?: (identifier?: string) => void;
-}>(({ keywords, identifier, setIdentifier }) => {
+  setIdentifier: (identifier?: string) => void;
+}
+
+export const List = memo<ListProps>(({ keywords, setIdentifier }) => {
   const { t } = useTranslation('plugin');
   const [page, setPage] = useState(1);
   const [allItems, setAllItems] = useState<DiscoverMcpItem[]>([]);
   const pageSize = 20;
 
-  const useMcpList = useDiscoverStore((s) => s.useFetchMcpList);
+  const [identifier, useFetchMCPPluginList] = useToolStore((s) => [
+    s.activeMCPIdentifier,
+    s.useFetchMCPPluginList,
+  ]);
 
-  const { data, isLoading, error } = useMcpList({ page, pageSize, q: keywords });
+  const { data, isLoading, error } = useFetchMCPPluginList({ page, pageSize, q: keywords });
 
   useEffect(() => {
     setAllItems([]);
@@ -73,15 +77,8 @@ export const List = memo<{
       endReached={loadMore}
       itemContent={(_, item) => {
         return (
-          <Flexbox
-            key={item.identifier}
-            onClick={() => {
-              setIdentifier?.(item.identifier);
-            }}
-            paddingBlock={2}
-            paddingInline={4}
-          >
-            <Item active={identifier === item.identifier} {...item} />
+          <Flexbox key={item.identifier} paddingBlock={2} paddingInline={4}>
+            <Item active={identifier === item.identifier} {...item} setIdentifier={setIdentifier} />
           </Flexbox>
         );
       }}
