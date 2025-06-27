@@ -36,14 +36,11 @@ export class TopicService extends BaseService {
           sessionId: topics.sessionId,
           title: topics.title,
           updatedAt: topics.updatedAt,
-          
           userAvatar: users.avatar,
-          
-userEmail: users.email,
-          
-userFullName: users.fullName,
+          userEmail: users.email,
+          userFullName: users.fullName,
           // 用户信息
-userId: users.id,
+          userId: users.id,
           userUsername: users.username,
         })
         .from(topics)
