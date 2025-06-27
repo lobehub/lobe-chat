@@ -13,6 +13,7 @@ import { default as bfl } from './bfl';
 import { default as cloudflare } from './cloudflare';
 import { default as cohere } from './cohere';
 import { default as deepseek } from './deepseek';
+import { default as featherlessai } from './featherlessai';
 import { default as fal } from './fal';
 import { default as fireworksai } from './fireworksai';
 import { default as giteeai } from './giteeai';
@@ -92,6 +93,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   cloudflare,
   cohere,
   deepseek,
+  featherlessai,
   fal,
   fireworksai,
   giteeai,
@@ -152,6 +154,7 @@ export { default as bfl } from './bfl';
 export { default as cloudflare } from './cloudflare';
 export { default as cohere } from './cohere';
 export { default as deepseek } from './deepseek';
+export { default as featherlessai } from './featherlessai';
 export { default as fal } from './fal';
 export { default as fireworksai } from './fireworksai';
 export { default as giteeai } from './giteeai';
