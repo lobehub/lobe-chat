@@ -1,4 +1,4 @@
-import { Block, Collapse, Highlighter, Icon, Markdown } from '@lobehub/ui';
+import { Block, Collapse, Highlighter, Icon, Markdown, Tag } from '@lobehub/ui';
 import { Empty } from 'antd';
 import { CheckIcon, MinusIcon } from 'lucide-react';
 import { markdownToTxt } from 'markdown-to-txt';
@@ -7,27 +7,27 @@ import { useTranslation } from 'react-i18next';
 
 import InlineTable from '@/components/InlineTable';
 
-import Title from '../../../../../../features/Title';
-import { useDetailContext } from '../../DetailProvider';
+import Title from '../../../app/[variants]/(main)/discover/features/Title';
 import CollapseDesc from '../CollapseDesc';
 import CollapseLayout from '../CollapseLayout';
+import { useDetailContext } from '../DetailProvider';
 import { useStyles } from './style';
 import { ModeType } from './types';
 
-const Prompts = memo<{
+const Tools = memo<{
   activeKey?: string[];
   mode?: ModeType;
   setActiveKey?: (key: string[]) => void;
 }>(({ mode, activeKey = [], setActiveKey }) => {
   const { t } = useTranslation('discover');
-  const { prompts } = useDetailContext();
+  const { tools } = useDetailContext();
   const { styles, theme } = useStyles();
 
-  if (!prompts)
+  if (!tools)
     return (
       <Block variant={'outlined'}>
         <Empty
-          description={t('mcp.details.schema.prompts.empty')}
+          description={t('mcp.details.schema.tools.empty')}
           image={Empty.PRESENTED_IMAGE_SIMPLE}
         />
       </Block>
@@ -38,7 +38,23 @@ const Prompts = memo<{
       activeKey={activeKey}
       expandIconPosition={'end'}
       gap={8}
-      items={prompts.map((item) => {
+      items={tools.map((item) => {
+        let properties: {
+          description?: string;
+          name: string;
+          required?: boolean;
+          type: string;
+        }[] = [];
+        if (item.inputSchema?.properties) {
+          properties = Object.entries(item.inputSchema.properties).map(([key, value]: any) => {
+            const required = item.inputSchema?.required?.includes(key);
+            return {
+              name: key,
+              required,
+              ...value,
+            };
+          });
+        }
         return {
           children: (
             <CollapseLayout
@@ -46,7 +62,7 @@ const Prompts = memo<{
                 {
                   children: <Markdown>{item.description || ''}</Markdown>,
                   key: 'instructions',
-                  title: t('mcp.details.schema.prompts.instructions'),
+                  title: t('mcp.details.schema.tools.instructions'),
                 },
                 {
                   children:
@@ -65,7 +81,12 @@ const Prompts = memo<{
                                 {record.name}
                               </span>
                             ),
-                            title: t('mcp.details.schema.prompts.table.name'),
+                            title: t('mcp.details.schema.tools.table.name'),
+                          },
+                          {
+                            dataIndex: 'type',
+                            render: (_, record) => <Tag className={styles.code}>{record.type}</Tag>,
+                            title: t('mcp.details.schema.tools.table.type'),
                           },
                           {
                             dataIndex: 'required',
@@ -77,14 +98,14 @@ const Prompts = memo<{
                                 icon={record.required ? CheckIcon : MinusIcon}
                               />
                             ),
-                            title: t('mcp.details.schema.prompts.table.required'),
+                            title: t('mcp.details.schema.tools.table.required'),
                           },
                           {
                             dataIndex: 'description',
-                            title: t('mcp.details.schema.prompts.table.description'),
+                            title: t('mcp.details.schema.tools.table.description'),
                           },
                         ]}
-                        dataSource={item.arguments}
+                        dataSource={properties}
                         pagination={false}
                         rowKey={'name'}
                       />
@@ -94,11 +115,11 @@ const Prompts = memo<{
                         style={{ fontSize: 12 }}
                         variant={'borderless'}
                       >
-                        {JSON.stringify(item.arguments, null, 2)}
+                        {JSON.stringify(item.inputSchema, null, 2)}
                       </Highlighter>
                     ),
-                  key: 'arguments',
-                  title: t('mcp.details.schema.prompts.arguments'),
+                  key: 'inputSchema',
+                  title: t('mcp.details.schema.tools.inputSchema'),
                 },
               ]}
             />
@@ -110,7 +131,7 @@ const Prompts = memo<{
           ),
           key: item.name,
           label: (
-            <Title id={`prompts-${item.name}`} level={3}>
+            <Title id={`tools-${item.name}`} level={3}>
               {item.name}
             </Title>
           ),
@@ -122,4 +143,4 @@ const Prompts = memo<{
   );
 });
 
-export default Prompts;
+export default Tools;

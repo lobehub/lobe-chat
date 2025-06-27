@@ -4,10 +4,10 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import McpList from '../../../../../../(list)/mcp/features/List';
-import Title from '../../../../../../features/Title';
-import MarkdownRender from '../../../../../features/MakedownRender';
-import { useDetailContext } from '../../DetailProvider';
+import MarkdownRender from '../../../app/[variants]/(main)/discover/(detail)/features/MakedownRender';
+import McpList from '../../../app/[variants]/(main)/discover/(list)/mcp/features/List';
+import Title from '../../../app/[variants]/(main)/discover/features/Title';
+import { useDetailContext } from '../DetailProvider';
 import TagList from './TagList';
 
 const Overview = memo<{ inModal?: boolean }>(({ inModal }) => {

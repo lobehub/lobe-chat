@@ -19,7 +19,7 @@ import urlJoin from 'url-join';
 import { SOCIAL_URL } from '@/const/branding';
 import { McpNavKey } from '@/types/discover';
 
-import { useDetailContext } from '../DetailProvider';
+import { useDetailContext } from './DetailProvider';
 
 const useStyles = createStyles(({ css, token }) => {
   return {

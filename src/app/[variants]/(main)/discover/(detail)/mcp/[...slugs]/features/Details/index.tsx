@@ -5,15 +5,15 @@ import { useQueryState } from 'nuqs';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import Deployment from '@/features/MCPPluginDetail/Deployment';
+import Nav from '@/features/MCPPluginDetail/Nav';
+import Overview from '@/features/MCPPluginDetail/Overview';
+import Schema from '@/features/MCPPluginDetail/Schema';
+import Score from '@/features/MCPPluginDetail/Score';
 import { McpNavKey } from '@/types/discover';
 
 import Sidebar from '../Sidebar';
-import Deployment from './Deployment';
-import Nav from './Nav';
-import Overview from './Overview';
 import Related from './Related';
-import Schema from './Schema';
-import Score from './Score';
 import Versions from './Versions';
 
 const Details = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {

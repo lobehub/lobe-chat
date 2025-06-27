@@ -4,11 +4,11 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import Platform from '@/features/MCPPluginDetail/Deployment/Platform';
 import { McpNavKey } from '@/types/discover';
 
+import { useDetailContext } from '../../../../../../../../../features/MCPPluginDetail/DetailProvider';
 import Title from '../../../../../features/Title';
-import { useDetailContext } from '../DetailProvider';
-import Platform from '../Details/Deployment/Platform';
 import { getRecommendedDeployment } from '../utils';
 
 const ServerConfig = memo(() => {

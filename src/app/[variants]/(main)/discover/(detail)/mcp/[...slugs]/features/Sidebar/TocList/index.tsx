@@ -10,9 +10,9 @@ import { useToc } from '@/app/[variants]/(main)/discover/(detail)/features/Toc/u
 import { useQuery } from '@/hooks/useQuery';
 import { McpNavKey } from '@/types/discover';
 
+import { useDetailContext } from '../../../../../../../../../../features/MCPPluginDetail/DetailProvider';
 import Title from '../../../../../../features/Title';
 import Toc from '../../../../../features/Toc';
-import { useDetailContext } from '../../DetailProvider';
 
 const TocList = memo(() => {
   const { t } = useTranslation('discover');
