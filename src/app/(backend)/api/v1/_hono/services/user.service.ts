@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm/expressions';
 
 import { RbacModel } from '@/database/models/rbac';
-import { NewUser, RoleItem, users } from '@/database/schemas';
+import { NewUser, RoleItem, SessionItem, users } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { uuid } from '@/utils/uuid';
 
@@ -59,9 +59,14 @@ export class UserService extends BaseService {
     this.log('info', '获取系统中所有用户列表');
 
     try {
-      // 查询所有用户基本信息
+      // 使用关系查询一次性获取用户和sessions信息
       const allUsers = await this.db.query.users.findMany({
         orderBy: (users, { desc }) => [desc(users.createdAt)],
+        with: {
+          sessions: {
+            orderBy: (sessions, { desc }) => [desc(sessions.updatedAt)],
+          },
+        },
       });
 
       this.log('info', `查询到 ${allUsers.length} 个用户`);
@@ -85,10 +90,11 @@ export class UserService extends BaseService {
         usersWithRoles.push({
           ...user,
           roles,
+          sessions: user.sessions as SessionItem[],
         });
       }
 
-      this.log('info', '成功获取所有用户信息及其角色');
+      this.log('info', '成功获取所有用户信息及其角色和sessions');
       return usersWithRoles;
     } catch (error) {
       this.log('error', '获取用户列表失败', { error });
