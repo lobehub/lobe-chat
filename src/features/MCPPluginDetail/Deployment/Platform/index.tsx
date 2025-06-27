@@ -7,8 +7,8 @@ import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import Title from '../../../../../../../features/Title';
-import { genServerConfig } from '../../../utils';
+import { genServerConfig } from '../../../../app/[variants]/(main)/discover/(detail)/mcp/[...slugs]/features/utils';
+import Title from '../../../../app/[variants]/(main)/discover/features/Title';
 import VsCode from './VsCode';
 
 enum PlatformType {

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import InlineTable from '@/components/InlineTable';
 
-import { useDetailContext } from '../../DetailProvider';
+import { useDetailContext } from '../DetailProvider';
 import { useStyles } from './style';
 import { ModeType } from './types';
 

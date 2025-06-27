@@ -7,7 +7,7 @@ import urlJoin from 'url-join';
 
 import { OFFICIAL_SITE } from '@/const/url';
 
-import { useDetailContext } from '../../../DetailProvider';
+import { useDetailContext } from '../../DetailProvider';
 
 type BadgeStyle = 'flat' | 'flat-square' | 'plastic' | 'for-the-badge';
 type BadgeTheme = 'dark' | 'light';

@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useDetailContext } from '../DetailProvider';
+import { useDetailContext } from '../../../../../../../../../features/MCPPluginDetail/DetailProvider';
 
 const icons = {
   hybrid: Blend,

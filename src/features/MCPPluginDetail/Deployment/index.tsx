@@ -20,11 +20,11 @@ import { Flexbox } from 'react-layout-kit';
 import Descriptions from '@/components/Descriptions';
 import InlineTable from '@/components/InlineTable';
 
-import InstallationIcon from '../../../../../../features/InstallationIcon';
-import Title from '../../../../../../features/Title';
-import { useDetailContext } from '../../DetailProvider';
+import InstallationIcon from '../../../app/[variants]/(main)/discover/features/InstallationIcon';
+import Title from '../../../app/[variants]/(main)/discover/features/Title';
 import CollapseDesc from '../CollapseDesc';
 import CollapseLayout from '../CollapseLayout';
+import { useDetailContext } from '../DetailProvider';
 import Platform from './Platform';
 
 const useStyles = createStyles(({ css, token }) => {

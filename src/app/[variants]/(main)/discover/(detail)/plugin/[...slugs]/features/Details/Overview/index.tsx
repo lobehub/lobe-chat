@@ -4,8 +4,9 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import Block from '../../../../../mcp/[...slugs]/features/Details/Schema/Block';
-import { ModeType } from '../../../../../mcp/[...slugs]/features/Details/Schema/types';
+import Block from '@/features/MCPPluginDetail/Schema/Block';
+import { ModeType } from '@/features/MCPPluginDetail/Schema/types';
+
 import { useDetailContext } from '../../DetailProvider';
 import TagList from './TagList';
 import Tools from './Tools';

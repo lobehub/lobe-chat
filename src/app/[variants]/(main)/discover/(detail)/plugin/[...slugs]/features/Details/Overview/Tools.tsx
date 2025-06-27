@@ -6,11 +6,11 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import InlineTable from '@/components/InlineTable';
+import CollapseDesc from '@/features/MCPPluginDetail/CollapseDesc';
+import CollapseLayout from '@/features/MCPPluginDetail/CollapseLayout';
+import { ModeType } from '@/features/MCPPluginDetail/Schema/types';
 
 import Title from '../../../../../../features/Title';
-import CollapseDesc from '../../../../../mcp/[...slugs]/features/Details/CollapseDesc';
-import CollapseLayout from '../../../../../mcp/[...slugs]/features/Details/CollapseLayout';
-import { ModeType } from '../../../../../mcp/[...slugs]/features/Details/Schema/types';
 import { useDetailContext } from '../../DetailProvider';
 
 const Tools = memo<{

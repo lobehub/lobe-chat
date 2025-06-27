@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
-import { useDetailContext } from './DetailProvider';
+import { useDetailContext } from '@/features/MCPPluginDetail/DetailProvider';
+
 import { DEFAULT_WEIGHTS, ScoreListItem, calculateScoreFlags } from './calculateScore';
 
 /**

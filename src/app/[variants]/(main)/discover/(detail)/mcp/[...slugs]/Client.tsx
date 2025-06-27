@@ -4,15 +4,15 @@ import { notFound } from 'next/navigation';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { DetailProvider } from '@/features/MCPPluginDetail/DetailProvider';
+import Header from '@/features/MCPPluginDetail/Header';
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
 import { DiscoverTab } from '@/types/discover';
 
 import Breadcrumb from '../../features/Breadcrumb';
 import { TocProvider } from '../../features/Toc/useToc';
-import { DetailProvider } from './features/DetailProvider';
 import Details from './features/Details';
-import Header from './features/Header';
 import Loading from './loading';
 
 const Client = memo<{ identifier: string; mobile?: boolean }>(({ identifier, mobile }) => {

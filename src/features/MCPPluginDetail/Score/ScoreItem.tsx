@@ -4,7 +4,7 @@ import { BanIcon, CircleCheckBigIcon, CircleDashedIcon } from 'lucide-react';
 import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import Title from '../../../../../../features/Title';
+import Title from '../../../app/[variants]/(main)/discover/features/Title';
 
 export interface ScoreItemProps {
   check: boolean;

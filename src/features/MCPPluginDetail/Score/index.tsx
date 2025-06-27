@@ -3,15 +3,15 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import Title from '../../../../../../features/Title';
-import { useDetailContext } from '../../DetailProvider';
 import {
   calculateScore,
   calculateScoreFlags,
   createScoreItems,
   sortItemsByPriority,
-} from '../../calculateScore';
-import { useScoreList } from '../../useScoreList';
+} from '../../../app/[variants]/(main)/discover/(detail)/mcp/[...slugs]/features/calculateScore';
+import { useScoreList } from '../../../app/[variants]/(main)/discover/(detail)/mcp/[...slugs]/features/useScoreList';
+import Title from '../../../app/[variants]/(main)/discover/features/Title';
+import { useDetailContext } from '../DetailProvider';
 import GithubBadge from './GithubBadge';
 import ScoreList from './ScoreList';
 import TotalScore from './TotalScore';

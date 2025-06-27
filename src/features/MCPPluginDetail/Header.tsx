@@ -9,12 +9,15 @@ import qs from 'query-string';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { useCategory } from '../../../../(list)/mcp/features/Category/useCategory';
-import InstallationIcon from '../../../../features/InstallationIcon';
-import PublishedTime from '../../../../features/PublishedTime';
+import Scores from '../../app/[variants]/(main)/discover/(detail)/mcp/[...slugs]/features/Scores';
+import {
+  getLanguageColor,
+  getRecommendedDeployment,
+} from '../../app/[variants]/(main)/discover/(detail)/mcp/[...slugs]/features/utils';
+import { useCategory } from '../../app/[variants]/(main)/discover/(list)/mcp/features/Category/useCategory';
+import InstallationIcon from '../../app/[variants]/(main)/discover/features/InstallationIcon';
+import PublishedTime from '../../app/[variants]/(main)/discover/features/PublishedTime';
 import { useDetailContext } from './DetailProvider';
-import Scores from './Scores';
-import { getLanguageColor, getRecommendedDeployment } from './utils';
 
 const useStyles = createStyles(({ css, token }) => {
   return {
