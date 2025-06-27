@@ -6,7 +6,7 @@ const FeatherlessAI: ModelProviderCard = {
   description: 'Featherless AI 通过单一 API 提供对超过 10,000 个开源模型的访问，并采用订阅式定价。',
   disableBrowserRequest: true,
   id: 'featherlessai',
-  modelsUrl: 'https://featherless.ai/models',
+  modelsUrl: 'https://api.featherless.ai/v1/models',
   name: 'Featherless AI',
   settings: {
     disableBrowserRequest: true,
