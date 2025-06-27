@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { SessionGroupItem, SessionItem } from '@/database/schemas';
+import { AgentItem, SessionGroupItem, SessionItem } from '@/database/schemas';
 import { LobeAgentConfig } from '@/types/agent';
 import { MetaData } from '@/types/meta';
 
@@ -107,23 +107,10 @@ export interface UpdateSessionGroupAssignmentRequest {
 }
 
 /**
- * 扩展的会话信息类型，包含代理配置
- */
-export interface SessionWithAgent extends SessionItem {
-  agent?: LobeAgentConfig;
-}
-
-/**
  * 会话列表项类型
  */
 export interface SessionListItem extends SessionItem {
-  agentsToSessions?: Array<{
-    agent: {
-      avatar: string | null;
-      id: string;
-      title: string | null;
-    };
-  }>;
+  agentsToSessions?: Array<AgentItem>;
 }
 
 /**
@@ -150,7 +137,7 @@ export interface AgentInfo {
  * 会话详情响应类型
  */
 export interface SessionDetailResponse extends SessionItem {
-  agent?: AgentInfo | null;
+  agent?: AgentItem | null;
 }
 
 /**
@@ -165,6 +152,14 @@ export interface GroupedSessionsResponse {
   sessionGroups: SessionGroupItem[];
   sessions: SessionListItem[];
 }
+
+/**
+ * 按Agent分组的会话响应类型
+ */
+export type SessionsByAgentResponse = {
+  agent: AgentItem | null;
+  sessions: SessionListItem[];
+};
 
 /**
  * 会话排行响应类型
@@ -189,6 +184,21 @@ export interface CountResponse {
  */
 export interface BatchGetSessionsRequest {
   sessionIds: string[];
+}
+
+/**
+ * 批量更新会话请求参数
+ */
+export interface BatchUpdateSessionsRequest {
+  sessions: Array<{
+    avatar?: string;
+    backgroundColor?: string;
+    description?: string;
+    groupId?: string;
+    id: string;
+    pinned?: boolean;
+    title?: string;
+  }>;
 }
 
 /**
@@ -314,4 +324,20 @@ export const BatchGetSessionsRequestSchema = z.object({
     .array(z.string().min(1, '会话 ID 不能为空'))
     .min(1, '至少需要提供一个会话 ID')
     .max(100, '单次最多查询 100 个会话'),
+});
+
+export const BatchUpdateSessionsRequestSchema = z.object({
+  sessions: z
+    .array(
+      z.object({
+        avatar: z.string().optional(),
+        backgroundColor: z.string().optional(),
+        description: z.string().optional(),
+        groupId: z.string().optional(),
+        id: z.string().min(1, '会话 ID 不能为空'),
+        pinned: z.boolean().optional(),
+        title: z.string().optional(),
+      }),
+    )
+    .min(1, '至少需要提供一个要更新的会话'),
 });
