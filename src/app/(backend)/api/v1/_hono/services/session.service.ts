@@ -1,4 +1,5 @@
 import { Column, and, desc, eq, inArray, like, not, or, sql } from 'drizzle-orm';
+import { groupBy } from 'lodash';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SessionModel } from '@/database/models/session';
@@ -12,11 +13,13 @@ import { ServiceResult } from '../types';
 import {
   BatchGetSessionsRequest,
   BatchGetSessionsResponse,
+  BatchUpdateSessionsRequest,
   CloneSessionRequest,
   CreateSessionRequest,
   GetSessionsRequest,
   SearchSessionsRequest,
   SessionDetailResponse,
+  SessionsByAgentResponse,
   UpdateSessionRequest,
 } from '../types/session.type';
 
@@ -63,6 +66,7 @@ export class SessionService extends BaseService {
         with: {
           agentsToSessions: { columns: {}, with: { agent: true } },
           group: true,
+          user: true,
         },
       });
 
@@ -94,6 +98,55 @@ export class SessionService extends BaseService {
     } catch (error) {
       this.log('error', '获取分组会话列表失败', { error });
       throw this.createBusinessError('获取分组会话列表失败');
+    }
+  }
+
+  /**
+   * 获取按Agent分组的会话列表
+   * @returns 按Agent分组的会话列表
+   */
+  async getSessionsGroupedByAgent(): ServiceResult<SessionsByAgentResponse> {
+    this.log('info', '获取按Agent分组的会话列表');
+
+    try {
+      if (!this.userId) {
+        throw this.createAuthError('用户未认证');
+      }
+
+      // 查询当前用户的所有会话，包含关联的agent信息
+      const sessionsList = await this.db.query.sessions.findMany({
+        orderBy: [desc(sessions.updatedAt)],
+        where: and(eq(sessions.userId, this.userId), not(eq(sessions.slug, INBOX_SESSION_ID))),
+        with: {
+          agentsToSessions: {
+            with: {
+              agent: true,
+            },
+          },
+        },
+      });
+
+      // 按agent进行分组
+      const groupByAgent = groupBy(sessionsList, (session) => session.agentsToSessions?.[0]?.id);
+
+      // @ts-ignore
+      const groupedSessions: SessionsByAgentResponse = Object.values(groupByAgent).map(
+        (sessions) => {
+          const agent = sessions[0].agentsToSessions?.[0]?.agent ?? null;
+
+          return { agent, sessions };
+        },
+      );
+
+      this.log('info', '成功获取按Agent分组的会话列表', {
+        groupCount: Object.keys(groupedSessions).length,
+        totalSessions: sessionsList.length,
+      });
+
+      return groupedSessions;
+    } catch (error) {
+      this.log('error', '获取按Agent分组的会话列表失败', { error });
+      throw this.createBusinessError('获取按Agent分组的会话列表失败');
     }
   }
 
@@ -389,6 +442,95 @@ export class SessionService extends BaseService {
     } catch (error) {
       this.log('error', '批量查询会话失败', { error });
       throw this.createBusinessError('批量查询会话失败');
+    }
+  }
+
+  /**
+   * 批量更新会话
+   * @param request 批量更新请求参数
+   * @returns 批量更新结果
+   */
+  async batchUpdateSessions(request: BatchUpdateSessionsRequest): ServiceResult<{
+    errors: Array<{ error: string; id: string }>;
+    failed: number;
+    success: boolean;
+    updated: number;
+  }> {
+    const { sessions: sessionsToUpdate } = request;
+
+    this.log('info', '批量更新会话', { count: sessionsToUpdate.length });
+
+    try {
+      if (!this.userId) {
+        throw this.createAuthError('用户未认证');
+      }
+
+      let updated = 0;
+      let failed = 0;
+      const errors: Array<{ error: string; id: string }> = [];
+
+      // 使用事务批量更新
+      await this.db.transaction(async (tx) => {
+        for (const sessionData of sessionsToUpdate) {
+          try {
+            // 首先检查会话是否存在且属于当前用户
+            const existingSession = await tx.query.sessions.findFirst({
+              where: and(eq(sessions.id, sessionData.id), eq(sessions.userId, this.userId!)),
+            });
+
+            if (!existingSession) {
+              errors.push({ error: '会话不存在或无权限访问', id: sessionData.id });
+              failed++;
+              continue;
+            }
+
+            // 执行更新
+            const { id, ...updateData } = sessionData;
+
+            // 过滤掉未定义的字段
+            const filteredUpdateData = Object.fromEntries(
+              Object.entries(updateData).filter(([, value]) => value !== undefined),
+            );
+
+            if (Object.keys(filteredUpdateData).length > 0) {
+              await tx
+                .update(sessions)
+                .set({
+                  ...filteredUpdateData,
+                  groupId: updateData.groupId === 'default' ? null : updateData.groupId,
+                  updatedAt: new Date(),
+                })
+                .where(eq(sessions.id, id));
+
+              updated++;
+              this.log('info', '会话更新成功', { id });
+            } else {
+              // 没有任何字段需要更新
+              errors.push({ error: '没有提供要更新的字段', id: sessionData.id });
+              failed++;
+            }
+          } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : '未知错误';
+            errors.push({ error: errorMessage, id: sessionData.id });
+            failed++;
+            this.log('error', '会话更新失败', { error: errorMessage, id: sessionData.id });
+          }
+        }
+      });
+
+      const result = {
+        errors,
+        failed,
+        success: failed === 0,
+        updated,
+      };
+
+      this.log('info', '批量更新会话完成', result);
+
+      return result;
+    } catch (error) {
+      this.log('error', '批量更新会话失败', { error });
+      throw this.createBusinessError('批量更新会话失败');
     }
   }
 }
