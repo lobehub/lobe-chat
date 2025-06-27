@@ -17,6 +17,7 @@ export const LobeHunyuanAI = createOpenAICompatibleRuntime({
       return {
         ...rest,
         frequency_penalty: undefined,
+        model,
         presence_penalty: undefined,
         stream: true,
         ...(enabledSearch && {
