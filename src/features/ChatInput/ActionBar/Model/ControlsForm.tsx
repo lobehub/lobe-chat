@@ -13,6 +13,7 @@ import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 import ContextCachingSwitch from './ContextCachingSwitch';
 import ReasoningEffortSlider from './ReasoningEffortSlider';
 import ReasoningTokenSlider from './ReasoningTokenSlider';
+import ThinkingBudgetSlider from './ThinkingBudgetSlider';
 import ThinkingSlider from './ThinkingSlider';
 
 const ControlsForm = memo(() => {
@@ -93,6 +94,17 @@ const ControlsForm = memo(() => {
       style: {
         paddingBottom: 0,
       },
+    },
+    {
+      children: <ThinkingBudgetSlider />,
+      label: t('extendParams.reasoningBudgetToken.title'),
+      layout: 'vertical',
+      minWidth: 500,
+      name: 'thinkingBudget',
+      style: {
+        paddingBottom: 0,
+      },
+      tag: 'thinkingBudget',
     },
     {
       children: <ThinkingSlider />,
