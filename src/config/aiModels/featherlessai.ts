@@ -56,6 +56,18 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     type: 'chat'
   },
   {
+    contextWindowTokens: 16_000,
+    description: 'Qwen 是 Qwen 团队开发的最新一代大模型，具有强大的语言理解、推理和生成能力。',
+    displayName: 'Qwen/Qwen2.5-32B-Instruct',
+    enabled: true,
+    id: 'Qwen/Qwen2.5-32B-Instruct',
+    pricing: {
+      input: 0,
+      output: 0
+    },
+    type: 'chat'
+  },
+  {
     contextWindowTokens: 32_000,
     description: 'DeepSeek V3 是 DeepSeek 团队开发的最新一代大模型，具有强大的语言理解、推理和生成能力。',
     displayName: 'deepseek-ai/DeepSeek-V3-0324',
