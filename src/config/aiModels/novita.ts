@@ -163,6 +163,17 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    contextWindowTokens: 32_768,
+    description: 'Gemma 3 1B 是谷歌的一款开源语言模型，以其在效率和性能方面设立了新的标准。',
+    displayName: 'Gemma 3 1B',
+    id: 'google/gemma-3-1b-it',
+    pricing: {
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
     contextWindowTokens: 60_288,
     description: 'Mistral Nemo 是多语言支持和高性能编程的7.3B参数模型。',
     displayName: 'Mistral Nemo',
