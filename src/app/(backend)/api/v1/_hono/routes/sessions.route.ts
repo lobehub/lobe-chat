@@ -8,6 +8,7 @@ import { requireAuth } from '../middleware/oidc-auth';
 import { requireAnyPermission } from '../middleware/permission-check';
 import {
   BatchGetSessionsRequestSchema,
+  BatchUpdateSessionsRequestSchema,
   CloneSessionRequestSchema,
   CreateSessionRequestSchema,
   GetSessionsRequestSchema,
@@ -56,6 +57,24 @@ SessionRoutes.get(
   async (c) => {
     const controller = new SessionController();
     return await controller.getGroupedSessions(c);
+  },
+);
+
+/**
+ * 获取按Agent分组的会话列表
+ * GET /api/v1/sessions/grouped-by-agent
+ * 需要会话读取权限
+ */
+SessionRoutes.get(
+  '/grouped-by-agent',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('SESSION_READ', ['ALL', 'WORKSPACE', 'OWNER']),
+    '您没有权限查看按Agent分组的会话列表',
+  ),
+  async (c) => {
+    const controller = new SessionController();
+    return await controller.getSessionsGroupedByAgent(c);
   },
 );
 
@@ -211,6 +230,25 @@ SessionRoutes.post(
   async (c) => {
     const controller = new SessionController();
     return await controller.batchGetSessions(c);
+  },
+);
+
+/**
+ * 批量更新会话
+ * PUT /api/v1/sessions/batch-update
+ * 需要会话更新权限
+ */
+SessionRoutes.put(
+  '/batch-update',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('SESSION_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),
+    '您没有权限批量更新会话',
+  ),
+  zValidator('json', BatchUpdateSessionsRequestSchema),
+  async (c) => {
+    const controller = new SessionController();
+    return await controller.batchUpdateSessions(c);
   },
 );
 
