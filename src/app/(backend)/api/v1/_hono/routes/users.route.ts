@@ -10,6 +10,7 @@ import {
   CreateUserRequestSchema,
   UpdateUserRequestSchema,
   UserIdParamSchema,
+  UserSearchRequestSchema,
 } from '../types/user.type';
 
 const UserRoutes = new Hono();
@@ -58,6 +59,26 @@ UserRoutes.post(
   async (c) => {
     const userController = new UserController();
     return await userController.createUser(c);
+  },
+);
+
+/**
+ * 搜索用户
+ * GET /api/v1/users/search?keyword=xxx
+ * 需要用户读取权限
+ * 注意：此路由必须在 /:id 路由之前定义，避免路径冲突
+ */
+UserRoutes.get(
+  '/search',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('USER_READ', ['ALL', 'WORKSPACE']),
+    '您没有权限搜索用户',
+  ),
+  zValidator('query', UserSearchRequestSchema),
+  async (c) => {
+    const userController = new UserController();
+    return await userController.searchUsers(c);
   },
 );
 
