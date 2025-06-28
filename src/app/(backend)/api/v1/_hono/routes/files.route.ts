@@ -3,7 +3,7 @@ import { Hono } from 'hono';
 
 import { FileController } from '../controllers/file.controller';
 import { requireAuth } from '../middleware/oidc-auth';
-import { FileIdParamSchema, FileListQuerySchema } from '../types/file.type';
+import { FileIdParamSchema, FileListQuerySchema, FileUrlRequestSchema } from '../types/file.type';
 
 /**
  * 文件管理路由
@@ -24,6 +24,24 @@ const app = new Hono();
  * - directory: string (optional) - 上传目录
  */
 app.post('/upload', requireAuth, (c) => fileController.uploadFile(c));
+
+/**
+ * 公共文件上传
+ * POST /files/upload-public
+ * Content-Type: multipart/form-data
+ *
+ * Form fields:
+ * - file: File (required) - 要上传的文件
+ * - knowledgeBaseId: string (optional) - 知识库ID
+ * - skipCheckFileType: boolean (optional) - 是否跳过文件类型检查
+ * - directory: string (optional) - 上传目录
+ *
+ * 特点：
+ * - 自动设置为公共读取权限（public-read ACL）
+ * - 返回永久可访问的URL
+ * - 适用于头像、公共资源等需要长期访问的文件
+ */
+app.post('/upload-public', requireAuth, (c) => fileController.uploadPublicFile(c));
 
 /**
  * 批量文件上传
@@ -62,6 +80,40 @@ app.get('/', requireAuth, zValidator('query', FileListQuerySchema), (c) =>
  */
 app.get('/:id', requireAuth, zValidator('param', FileIdParamSchema), (c) =>
   fileController.getFile(c),
+);
+
+/**
+ * 获取文件访问URL
+ * GET /files/:id/url
+ *
+ * Path parameters:
+ * - id: string (required) - 文件ID
+ *
+ * Query parameters:
+ * - expiresIn: number (optional) - URL过期时间（秒），范围60-7200，默认3600
+ */
+app.get(
+  '/:id/url',
+  requireAuth,
+  zValidator('param', FileIdParamSchema),
+  zValidator('query', FileUrlRequestSchema),
+  (c) => fileController.getFileUrl(c),
+);
+
+/**
+ * 获取文件永久访问URL
+ * GET /files/:id/permanent-url
+ *
+ * Path parameters:
+ * - id: string (required) - 文件ID
+ *
+ * 特点：
+ * - 返回永久可访问的公共URL
+ * - 适用于头像等需要长期访问的文件
+ * - 需要文件设置了public-read ACL
+ */
+app.get('/:id/permanent-url', requireAuth, zValidator('param', FileIdParamSchema), (c) =>
+  fileController.getPermanentFileUrl(c),
 );
 
 /**
