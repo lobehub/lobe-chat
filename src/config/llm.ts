@@ -58,6 +58,9 @@ export const getLLMConfig = () => {
       ENABLED_TOGETHERAI: z.boolean(),
       TOGETHERAI_API_KEY: z.string().optional(),
 
+      ENABLED_FEATHERLESSAI: z.boolean(),
+      FEATHERLESSAI_API_KEY: z.string().optional(),
+
       ENABLED_FIREWORKSAI: z.boolean(),
       FIREWORKSAI_API_KEY: z.string().optional(),
 
