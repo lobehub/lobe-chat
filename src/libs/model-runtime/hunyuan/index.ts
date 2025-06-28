@@ -64,6 +64,7 @@ export const LobeHunyuanAI = createOpenAICompatibleRuntime({
             reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
             knownModel?.abilities?.reasoning ||
             false,
+          search: knownModel?.abilities?.search || false,
           vision:
             model.id.toLowerCase().includes('vision') || knownModel?.abilities?.vision || false,
         };

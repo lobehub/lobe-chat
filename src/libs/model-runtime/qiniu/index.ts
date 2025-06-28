@@ -38,6 +38,7 @@ export const LobeQiniuAI = createOpenAICompatibleRuntime({
           functionCall: abilities?.functionCall || false,
           id: model.id,
           reasoning: abilities?.reasoning || false,
+          search: abilities?.search || false,
           vision: abilities?.vision || false,
         };
       })
