@@ -16,6 +16,10 @@ interface AssistantActionProps extends FlexboxProps {
 }
 
 const AssistantAction = memo<AssistantActionProps>(({ identifier, data }) => {
+  const baseUrl = OFFICIAL_URL.includes(location.host)
+    ? OFFICIAL_URL
+    : `${location.protocol}//${location.host}`;
+
   return (
     <Flexbox align={'center'} gap={8} horizontal>
       <AddAgent data={data} />
@@ -25,7 +29,7 @@ const AssistantAction = memo<AssistantActionProps>(({ identifier, data }) => {
           desc: data.meta.description,
           hashtags: data.meta.tags,
           title: data.meta.title,
-          url: urlJoin(OFFICIAL_URL, '/discover/assistant', identifier),
+          url: urlJoin(baseUrl, '/discover/assistant', identifier),
         }}
       />
     </Flexbox>
