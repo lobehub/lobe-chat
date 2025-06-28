@@ -49,23 +49,13 @@ export class SessionService extends BaseService {
     this.log('info', '获取会话列表', { request });
 
     try {
-      const { page = 1, pageSize = 20, userId, agentId } = request;
+      const { page = 1, pageSize = 20, agentId } = request;
 
       // 构建查询条件
       let whereConditions = [not(eq(sessions.slug, INBOX_SESSION_ID))];
 
-      if (userId === null) {
-        // 查询所有用户的会话
-        this.log('info', '获取所有用户的会话列表');
-      } else {
-        // 查询特定用户的会话
-        const targetUserId = userId || this.userId;
-        whereConditions.push(eq(sessions.userId, targetUserId));
-        this.log('info', '根据用户 ID 获取会话列表', { userId: targetUserId });
-      }
-
       // 如果指定了 agentId，需要通过 agentsToSessions 表进行过滤
-      if (agentId) {
+      if (agentId && agentId !== 'ALL') {
         this.log('info', '根据 Agent ID 过滤会话', { agentId });
 
         // 首先查询具有指定 agent 的 session ID
@@ -232,7 +222,7 @@ export class SessionService extends BaseService {
 
       // 查询当前用户的所有会话，包含关联的agent信息
       const sessionsList = await this.db.query.sessions.findMany({
-        where: and(eq(sessions.userId, this.userId), not(eq(sessions.slug, INBOX_SESSION_ID))),
+        where: and(not(eq(sessions.slug, INBOX_SESSION_ID))),
         with: {
           agentsToSessions: {
             with: {
