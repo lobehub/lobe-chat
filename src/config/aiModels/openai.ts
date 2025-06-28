@@ -12,6 +12,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -34,6 +35,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -58,6 +60,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -652,7 +655,8 @@ export const openaiChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 200_000,
-    description: 'codex-mini-latest 是 o4-mini 的微调版本，专门用于 Codex CLI。对于直接通过 API 使用，我们推荐从 gpt-4.1 开始。',
+    description:
+      'codex-mini-latest 是 o4-mini 的微调版本，专门用于 Codex CLI。对于直接通过 API 使用，我们推荐从 gpt-4.1 开始。',
     displayName: 'Codex mini',
     id: 'codex-mini-latest',
     maxOutput: 100_000,
@@ -673,7 +677,8 @@ export const openaiChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 8192,
-    description: 'computer-use-preview 模型是专为“计算机使用工具”设计的专用模型，经过训练以理解并执行计算机相关任务。',
+    description:
+      'computer-use-preview 模型是专为“计算机使用工具”设计的专用模型，经过训练以理解并执行计算机相关任务。',
     displayName: 'Computer Use Preview',
     id: 'computer-use-preview',
     maxOutput: 1024,

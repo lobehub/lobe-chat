@@ -31,6 +31,9 @@ export const responsesAPIModels = new Set([
   'codex-mini-latest',
   'computer-use-preview',
   'computer-use-preview-2025-03-11',
+  'o4-mini',
+  'o3',
+  'o3-pro',
 ]);
 
 /**
