@@ -79,18 +79,18 @@ export class SessionController extends BaseController {
   }
 
   /**
-   * 获取按Agent分组的会话列表
+   * 获取按Agent分组的会话数量
    * GET /api/v1/sessions/grouped-by-agent
    * @param c Hono Context
-   * @returns 按Agent分组的会话列表响应
+   * @returns 按Agent分组的会话数量响应
    */
   async getSessionsGroupedByAgent(c: Context): Promise<Response> {
     try {
       const db = await this.getDatabase();
       const sessionService = new SessionService(db, this.getUserId(c));
-      const result = await sessionService.getSessionsGroupedByAgent();
+      const result = await sessionService.getSessionCountGroupedByAgent();
 
-      return this.success(c, result, '获取按Agent分组的会话列表成功');
+      return this.success(c, result, '获取按Agent分组的会话数量成功');
     } catch (error) {
       return this.handleError(c, error);
     }
