@@ -78,5 +78,21 @@ export const UpdateUserRequestSchema = z.object({
  * 用户搜索请求验证Schema
  */
 export const UserSearchRequestSchema = z.object({
-  keyword: z.string().min(1, '搜索关键词不能为空').max(100, '搜索关键词长度不能超过100个字符'),
+  keyword: z
+    .string()
+    .optional()
+    .transform((val) => {
+      if (!val) return ''; // 允许为空，转换为空字符串
+      return val.trim();
+    })
+    .refine((val) => val.length <= 100, '搜索关键词长度不能超过100个字符'),
+  pageSize: z
+    .string()
+    .optional()
+    .transform((val) => {
+      if (!val) return 10; // 默认值
+      const num = parseInt(val, 10);
+      if (isNaN(num) || num <= 0) return 10;
+      return Math.min(num, 100); // 最大限制100
+    }),
 });

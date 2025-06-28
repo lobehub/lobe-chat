@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { AgentItem, SessionGroupItem, SessionItem } from '@/database/schemas';
+import { AgentItem, SessionGroupItem, SessionItem, UserItem } from '@/database/schemas';
 import { LobeAgentConfig } from '@/types/agent';
 import { MetaData } from '@/types/meta';
 
@@ -31,6 +31,7 @@ export interface UpdateSessionRequest {
   id: string;
   pinned?: boolean;
   title?: string;
+  userId?: string;
 }
 
 /**
@@ -143,6 +144,7 @@ export interface AgentInfo {
  */
 export interface SessionDetailResponse extends SessionItem {
   agent?: AgentItem | null;
+  user?: UserItem | null;
 }
 
 /**
@@ -257,6 +259,7 @@ export const UpdateSessionRequestSchema = z.object({
   groupId: z.string().optional(),
   pinned: z.boolean().optional(),
   title: z.string().optional(),
+  userId: z.string().optional(),
 });
 
 export const UpdateSessionConfigRequestSchema = z.object({
