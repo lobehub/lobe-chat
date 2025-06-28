@@ -63,6 +63,7 @@ export interface SearchSessionsRequest {
  * 获取会话列表请求参数
  */
 export interface GetSessionsRequest {
+  agentId?: string;
   page?: number;
   pageSize?: number;
   userId?: string | null;
@@ -110,13 +111,17 @@ export interface UpdateSessionGroupAssignmentRequest {
  * 会话列表项类型
  */
 export interface SessionListItem extends SessionItem {
-  agentsToSessions?: Array<AgentItem>;
+  agentsToSessions?: Array<{ agent: AgentItem }>;
+  messageCount?: number;
 }
 
 /**
  * 会话列表响应类型
  */
-export type SessionListResponse = SessionListItem[];
+export interface SessionListResponse {
+  sessions: SessionListItem[];
+  total: number;
+}
 
 /**
  * Agent 信息类型
@@ -160,6 +165,14 @@ export type SessionsByAgentResponse = {
   agent: AgentItem | null;
   sessions: SessionListItem[];
 };
+
+/**
+ * 按Agent分组的会话数量响应类型
+ */
+export interface SessionCountByAgentResponse {
+  agent: AgentItem | null;
+  count: number;
+}
 
 /**
  * 会话排行响应类型
@@ -269,6 +282,7 @@ export const SearchSessionsRequestSchema = z.object({
 });
 
 export const GetSessionsRequestSchema = z.object({
+  agentId: z.string().optional(),
   page: z
     .string()
     .transform((val) => parseInt(val, 10))
