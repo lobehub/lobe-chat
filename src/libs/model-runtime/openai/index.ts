@@ -17,7 +17,10 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.openai.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { enabledSearch, model, ...rest } = payload;
+      const { enabledSearch: originalEnabledSearch, model, ...rest } = payload;
+      const enabledSearch = ['o4-mini', 'o3', 'o3-pro'].includes(model)
+        ? true
+        : originalEnabledSearch;
 
       if (responsesAPIModels.has(model) || enabledSearch) {
         return { ...rest, apiMode: 'responses', enabledSearch, model } as ChatStreamPayload;
