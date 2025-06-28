@@ -46,6 +46,9 @@
     "reasoningEffort": {
       "title": "Argumentationsstärke"
     },
+    "thinking": {
+      "title": "Tiefdenk-Schalter"
+    },
     "title": "Modell Erweiterungsfunktionen"
   },
   "history": {
