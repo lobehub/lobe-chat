@@ -30,29 +30,9 @@ export class SessionController extends BaseController {
       const request = this.getQuery<GetSessionsRequest>(c);
       const currentUserId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
 
-      // 1. 设置默认查询条件
-      let targetUserId: string | null = request.userId || currentUserId;
-
-      // 2. 权限检查
-      if (request.userId === 'ALL' || request.userId === 'WORKSPACE') {
-        // 检查用户是否有查看所有会话的权限
-        await this.requirePermission(c, 'SESSION_READ_ALL', '您没有权限查看所有用户的会话');
-
-        // 查看所有用户的会话
-        targetUserId = null;
-      } else if (request.userId && request.userId !== currentUserId) {
-        // 查询其他特定用户的会话，也需要 ALL 权限
-        await this.requirePermission(c, 'SESSION_READ_ALL', '您没有权限查看其他用户的会话');
-
-        targetUserId = request.userId;
-      }
-
       const db = await this.getDatabase();
       const sessionService = new SessionService(db, currentUserId);
-      const sessions = await sessionService.getSessions({
-        ...request,
-        userId: targetUserId,
-      });
+      const sessions = await sessionService.getSessions(request);
 
       return this.success(c, sessions, '获取会话列表成功');
     } catch (error) {

@@ -136,6 +136,25 @@ SessionRoutes.get(
 );
 
 /**
+ * 批量查询指定的会话
+ * POST /api/v1/sessions/batch
+ * 需要会话读取权限
+ */
+SessionRoutes.post(
+  '/batch',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('SESSION_READ', ['ALL', 'WORKSPACE']),
+    '您没有权限批量查询会话',
+  ),
+  zValidator('json', BatchGetSessionsRequestSchema),
+  async (c) => {
+    const controller = new SessionController();
+    return await controller.batchGetSessions(c);
+  },
+);
+
+/**
  * 批量更新会话
  * PUT /api/v1/sessions/batch-update
  * 需要会话更新权限
@@ -230,25 +249,6 @@ SessionRoutes.put(
   async (c) => {
     const controller = new SessionController();
     return await controller.updateSessionGroupAssignment(c);
-  },
-);
-
-/**
- * 批量查询指定的会话
- * POST /api/v1/sessions/batch
- * 需要会话读取权限
- */
-SessionRoutes.post(
-  '/batch',
-  requireAuth,
-  requireAnyPermission(
-    getScopePermissions('SESSION_READ', ['ALL', 'WORKSPACE']),
-    '您没有权限批量查询会话',
-  ),
-  zValidator('json', BatchGetSessionsRequestSchema),
-  async (c) => {
-    const controller = new SessionController();
-    return await controller.batchGetSessions(c);
   },
 );
 
