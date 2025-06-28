@@ -1,4 +1,22 @@
 {
+  "proxy": {
+    "auth": "인증 필요",
+    "bypass": "프록시를 사용하지 않는 주소",
+    "enable": "프록시 활성화",
+    "password": "비밀번호",
+    "password_placeholder": "비밀번호를 입력하세요",
+    "port": "포트",
+    "server": "서버 주소",
+    "testButton": "연결 테스트",
+    "testFailed": "연결 실패: {{error}}",
+    "testSuccess": "연결 성공",
+    "testUrl": "테스트 주소",
+    "testUrlPlaceholder": "테스트할 URL을 입력하세요",
+    "testing": "연결 테스트 중...",
+    "type": "프록시 유형",
+    "username": "사용자 이름",
+    "username_placeholder": "사용자 이름을 입력하세요"
+  },
   "remoteServer": {
     "authError": "인증 실패: {{error}}",
     "authPending": "브라우저에서 인증을 완료하세요",
