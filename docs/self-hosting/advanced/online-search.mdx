@@ -58,19 +58,19 @@ SEARCH_PROVIDERS="searxng"
 
 Supported search engines include:
 
-| Value        | Description                                                                              | Environment Variable                        |
-| ------------ | ---------------------------------------------------------------------------------------- | ------------------------------------------- |
-| `anspire`    | Search service provided by [Anspire](https://anspire.ai/).                               | `ANSPIRE_API_KEY`                           |
-| `bocha`      | Search service from [Bocha](https://open.bochaai.com/).                                  | `BOCHA_API_KEY`                             |
-| `brave`      | [Brave](https://search.brave.com/help/api), a privacy-friendly search source.            | `BRAVE_API_KEY`                             |
-| `exa`        | [Exa](https://exa.ai/), a search API designed for AI.                                    | `EXA_API_KEY`                               |
-| `firecrawl`  | Search capabilities via [Firecrawl](https://firecrawl.dev/).                             | `FIRECRAWL_API_KEY`                         |
-| `google`     | Uses [Google Programmable Search Engine](https://programmablesearchengine.google.com/).  | `GOOGLE_PSE_API_KEY` `GOOGLE_PSE_ENGINE_ID` |
-| `jina`       | Semantic search provided by [Jina AI](https://jina.ai/).                                 | `JINA_READER_API_KEY`                       |
-| `kagi`       | Premium search API by [Kagi](https://kagi.com/), requires a subscription key.            | `KAGI_API_KEY`                              |
-| `search1api` | Aggregated search capabilities from [Search1API](https://www.search1api.com).            | `SEARCH1API_CRAWL_API_KEY`                  |
-| `searxng`    | Use a self-hosted or public [SearXNG](https://searx.space/) instance.                    | `SEARXNG_URL`                               |
-| `tavily`     | [Tavily](https://www.tavily.com/), offers fast web summaries and answers.                | `TAVILY_API_KEY`                            |
+| Value        | Description                                                                             | Environment Variable                        |
+| ------------ | --------------------------------------------------------------------------------------- | ------------------------------------------- |
+| `anspire`    | Search service provided by [Anspire](https://anspire.ai/).                              | `ANSPIRE_API_KEY`                           |
+| `bocha`      | Search service from [Bocha](https://open.bochaai.com/).                                 | `BOCHA_API_KEY`                             |
+| `brave`      | [Brave](https://search.brave.com/help/api), a privacy-friendly search source.           | `BRAVE_API_KEY`                             |
+| `exa`        | [Exa](https://exa.ai/), a search API designed for AI.                                   | `EXA_API_KEY`                               |
+| `firecrawl`  | Search capabilities via [Firecrawl](https://firecrawl.dev/).                            | `FIRECRAWL_API_KEY`                         |
+| `google`     | Uses [Google Programmable Search Engine](https://programmablesearchengine.google.com/). | `GOOGLE_PSE_API_KEY` `GOOGLE_PSE_ENGINE_ID` |
+| `jina`       | Semantic search provided by [Jina AI](https://jina.ai/).                                | `JINA_READER_API_KEY`                       |
+| `kagi`       | Premium search API by [Kagi](https://kagi.com/), requires a subscription key.           | `KAGI_API_KEY`                              |
+| `search1api` | Aggregated search capabilities from [Search1API](https://www.search1api.com).           | `SEARCH1API_CRAWL_API_KEY`                  |
+| `searxng`    | Use a self-hosted or public [SearXNG](https://searx.space/) instance.                   | `SEARXNG_URL`                               |
+| `tavily`     | [Tavily](https://www.tavily.com/), offers fast web summaries and answers.               | `TAVILY_API_KEY`                            |
 
 > ⚠️ Some search providers require you to apply for an API Key and configure it in your `.env` file.
 
@@ -98,8 +98,8 @@ BROWSERLESS_BLOCK_ADS=1
 
 > 📌 Supported values:
 >
-> * `1`: Enable ad blocking (recommended);
-> * `0`: Disable ad blocking (default).
+> - `1`: Enable ad blocking (recommended);
+> - `0`: Disable ad blocking (default).
 
 > ✅ It is recommended to use with `BROWSERLESS_STEALTH_MODE=1` to enhance stealth and scraping success rate.
 
@@ -115,8 +115,8 @@ BROWSERLESS_STEALTH_MODE=1
 
 > 📌 Supported values:
 >
-> * `1`: Enable stealth mode (recommended);
-> * `0`: Disable stealth mode (default).
+> - `1`: Enable stealth mode (recommended);
+> - `0`: Disable stealth mode (default).
 
 > ⚠️ Some websites use advanced anti-scraping techniques. Enabling stealth mode can significantly improve scraping success rate.
 
@@ -156,8 +156,8 @@ TAVILY_SEARCH_DEPTH=basic
 
 Supported values:
 
-* `basic`: Fast search, returns brief results;
-* `advanced`: Deep search, returns more context and web page details.
+- `basic`: Fast search, returns brief results;
+- `advanced`: Deep search, returns more context and web page details.
 
 ---
 
@@ -171,8 +171,8 @@ TAVILY_EXTRACT_DEPTH=basic
 
 Supported values:
 
-* `basic`: Extracts basic info like title and content summary;
-* `advanced`: Extracts structured data, lists, charts, and more from web pages.
+- `basic`: Extracts basic info like title and content summary;
+- `advanced`: Extracts structured data, lists, charts, and more from web pages.
 
 ---
 
