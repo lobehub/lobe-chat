@@ -17,6 +17,57 @@ export const openaiChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
+      'o4-mini 是我们最新的小型 o 系列模型。 它专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。',
+    displayName: 'o4-mini',
+    enabled: true,
+    id: 'o4-mini',
+    maxOutput: 100_000,
+    pricing: {
+      cachedInput: 0.275,
+      input: 1.1,
+      output: 4.4,
+    },
+    releasedAt: '2025-04-17',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'o4-mini-deep-research 是我们更快速、更实惠的深度研究模型——非常适合处理复杂的多步骤研究任务。它可以从互联网上搜索和综合信息，也可以通过 MCP 连接器访问并利用你的自有数据。',
+    displayName: 'o4-mini Deep Research',
+    id: 'o4-mini-deep-research',
+    maxOutput: 100_000,
+    pricing: {
+      cachedInput: 0.5,
+      input: 2,
+      output: 8,
+    },
+    releasedAt: '2025-06-26',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'internal',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
       'o3-pro 模型使用更多的计算来更深入地思考并始终提供更好的答案，仅支持 Responses API 下使用。',
     displayName: 'o3-pro',
     id: 'o3-pro',
@@ -69,7 +120,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     description:
       'o3-deep-research 是我们最先进的深度研究模型，专为处理复杂的多步骤研究任务而设计。它可以从互联网上搜索和综合信息，也可以通过 MCP 连接器访问并利用你的自有数据。',
     displayName: 'o3 Deep Research',
-    enabled: true,
     id: 'o3-deep-research',
     maxOutput: 100_000,
     pricing: {
@@ -82,123 +132,6 @@ export const openaiChatModels: AIChatModelCard[] = [
       extendParams: ['reasoningEffort'],
       searchImpl: 'internal',
     },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 200_000,
-    description:
-      'o4-mini 是我们最新的小型 o 系列模型。 它专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。',
-    displayName: 'o4-mini',
-    enabled: true,
-    id: 'o4-mini',
-    maxOutput: 100_000,
-    pricing: {
-      cachedInput: 0.275,
-      input: 1.1,
-      output: 4.4,
-    },
-    releasedAt: '2025-04-17',
-    settings: {
-      extendParams: ['reasoningEffort'],
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 200_000,
-    description:
-      'o4-mini-deep-research 是我们更快速、更实惠的深度研究模型——非常适合处理复杂的多步骤研究任务。它可以从互联网上搜索和综合信息，也可以通过 MCP 连接器访问并利用你的自有数据。',
-    displayName: 'o4-mini Deep Research',
-    enabled: true,
-    id: 'o4-mini-deep-research',
-    maxOutput: 100_000,
-    pricing: {
-      cachedInput: 0.5,
-      input: 2,
-      output: 8,
-    },
-    releasedAt: '2025-06-26',
-    settings: {
-      extendParams: ['reasoningEffort'],
-      searchImpl: 'internal',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_047_576,
-    description: 'GPT-4.1 是我们用于复杂任务的旗舰模型。它非常适合跨领域解决问题。',
-    displayName: 'GPT-4.1',
-    enabled: true,
-    id: 'gpt-4.1',
-    maxOutput: 32_768,
-    pricing: {
-      cachedInput: 0.5,
-      input: 2,
-      output: 8,
-    },
-    releasedAt: '2025-04-14',
-    settings: {
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_047_576,
-    description:
-      'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
-    displayName: 'GPT-4.1 mini',
-    enabled: true,
-    id: 'gpt-4.1-mini',
-    maxOutput: 32_768,
-    pricing: {
-      cachedInput: 0.1,
-      input: 0.4,
-      output: 1.6,
-    },
-    releasedAt: '2025-04-14',
-    settings: {
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_047_576,
-    description: 'GPT-4.1 nano 是最快，最具成本效益的GPT-4.1模型。',
-    displayName: 'GPT-4.1 nano',
-    id: 'gpt-4.1-nano',
-    maxOutput: 32_768,
-    pricing: {
-      cachedInput: 0.025,
-      input: 0.1,
-      output: 0.4,
-    },
-    releasedAt: '2025-04-14',
     type: 'chat',
   },
   {
@@ -307,6 +240,71 @@ export const openaiChatModels: AIChatModelCard[] = [
     settings: {
       extendParams: ['reasoningEffort'],
     },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_047_576,
+    description: 'GPT-4.1 是我们用于复杂任务的旗舰模型。它非常适合跨领域解决问题。',
+    displayName: 'GPT-4.1',
+    enabled: true,
+    id: 'gpt-4.1',
+    maxOutput: 32_768,
+    pricing: {
+      cachedInput: 0.5,
+      input: 2,
+      output: 8,
+    },
+    releasedAt: '2025-04-14',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_047_576,
+    description:
+      'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
+    displayName: 'GPT-4.1 mini',
+    enabled: true,
+    id: 'gpt-4.1-mini',
+    maxOutput: 32_768,
+    pricing: {
+      cachedInput: 0.1,
+      input: 0.4,
+      output: 1.6,
+    },
+    releasedAt: '2025-04-14',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_047_576,
+    description: 'GPT-4.1 nano 是最快，最具成本效益的GPT-4.1模型。',
+    displayName: 'GPT-4.1 nano',
+    id: 'gpt-4.1-nano',
+    maxOutput: 32_768,
+    pricing: {
+      cachedInput: 0.025,
+      input: 0.1,
+      output: 0.4,
+    },
+    releasedAt: '2025-04-14',
     type: 'chat',
   },
   {
