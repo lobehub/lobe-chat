@@ -6,6 +6,7 @@ import { RoleItem, SessionItem, UserItem } from '@/database/schemas';
  * 扩展的用户信息类型，包含角色信息
  */
 export type UserWithRoles = UserItem & {
+  messageCount?: number;
   roles?: RoleItem[];
   sessions?: SessionItem[];
 };
@@ -71,4 +72,11 @@ export const UpdateUserRequestSchema = z.object({
   phone: z.string().optional(),
   preference: z.any().optional(),
   username: z.string().min(1, '用户名不能为空').optional(),
+});
+
+/**
+ * 用户搜索请求验证Schema
+ */
+export const UserSearchRequestSchema = z.object({
+  keyword: z.string().min(1, '搜索关键词不能为空').max(100, '搜索关键词长度不能超过100个字符'),
 });

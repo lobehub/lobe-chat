@@ -2,7 +2,13 @@ import { Context } from 'hono';
 
 import { BaseController } from '../common/base.controller';
 import { FileUploadService } from '../services/file.service';
-import { BatchFileUploadRequest, FileListQuery, FileUploadRequest } from '../types/file.type';
+import {
+  BatchFileUploadRequest,
+  FileListQuery,
+  FileUploadRequest,
+  FileUrlRequest,
+  PublicFileUploadRequest,
+} from '../types/file.type';
 
 /**
  * 文件上传控制器
@@ -141,6 +147,89 @@ export class FileController extends BaseController {
       const result = await fileService.getFileDetail(id);
 
       return this.success(c, result, 'File details retrieved successfully');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 获取文件访问URL
+   * GET /files/:id/url
+   */
+  async getFileUrl(c: Context) {
+    try {
+      const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
+      const { id } = this.getParams(c);
+      const query = this.getQuery(c);
+
+      // 解析查询参数
+      const options: FileUrlRequest = {
+        expiresIn: query.expiresIn ? parseInt(query.expiresIn as string, 10) : undefined,
+      };
+
+      const db = await this.getDatabase();
+      const fileService = new FileUploadService(db, userId);
+
+      const result = await fileService.getFileUrl(id, options);
+
+      return this.success(c, result, 'File URL generated successfully');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 获取文件永久访问URL
+   * GET /files/:id/permanent-url
+   */
+  async getPermanentFileUrl(c: Context) {
+    try {
+      const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
+      const { id } = this.getParams(c);
+      const db = await this.getDatabase();
+      const fileService = new FileUploadService(db, userId);
+
+      const result = await fileService.getPermanentFileUrl(id);
+
+      return this.success(c, result, 'Permanent file URL generated successfully');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 公共文件上传
+   * POST /files/upload-public
+   */
+  async uploadPublicFile(c: Context) {
+    try {
+      const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
+
+      const db = await this.getDatabase();
+      const fileService = new FileUploadService(db, userId);
+
+      // 处理 multipart/form-data
+      const formData = await c.req.formData();
+      const file = formData.get('file') as File;
+
+      if (!file) {
+        return this.error(c, 'No file provided', 400);
+      }
+
+      // 获取其他参数
+      const knowledgeBaseId = formData.get('knowledgeBaseId') as string | null;
+      const skipCheckFileType = formData.get('skipCheckFileType') === 'true';
+      const directory = formData.get('directory') as string | null;
+
+      const options: PublicFileUploadRequest = {
+        directory: directory || undefined,
+        knowledgeBaseId: knowledgeBaseId || undefined,
+        skipCheckFileType,
+      };
+
+      const result = await fileService.uploadPublicFile(file, options);
+
+      return this.success(c, result, 'Public file uploaded successfully');
     } catch (error) {
       return this.handleError(c, error);
     }
