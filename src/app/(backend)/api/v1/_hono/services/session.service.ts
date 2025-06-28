@@ -596,7 +596,7 @@ export class SessionService extends BaseService {
           try {
             // 首先检查会话是否存在且属于当前用户
             const existingSession = await tx.query.sessions.findFirst({
-              where: and(eq(sessions.id, sessionData.id), eq(sessions.userId, this.userId!)),
+              where: and(eq(sessions.id, sessionData.id)),
             });
 
             if (!existingSession) {
