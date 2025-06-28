@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix desktop chunk issue."]
+    },
+    "date": "2025-06-28",
+    "version": "1.96.10"
+  },
+  {
+    "children": {
       "fixes": ["Google Gemini tools declarations."]
     },
     "date": "2025-06-23",
