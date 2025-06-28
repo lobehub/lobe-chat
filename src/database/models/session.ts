@@ -398,11 +398,7 @@ export class SessionModel {
   // **************** Update *************** //
 
   update = async (id: string, data: Partial<SessionItem>) => {
-    return this.db
-      .update(sessions)
-      .set(data)
-      .where(and(eq(sessions.id, id), eq(sessions.userId, this.userId)))
-      .returning();
+    return this.db.update(sessions).set(data).where(eq(sessions.id, id)).returning();
   };
 
   updateConfig = async (sessionId: string, data: DeepPartial<AgentItem> | undefined | null) => {
