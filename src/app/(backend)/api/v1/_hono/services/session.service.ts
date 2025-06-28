@@ -4,6 +4,7 @@ import { groupBy } from 'lodash';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SessionModel } from '@/database/models/session';
 import { SessionItem, agents, agentsToSessions, messages, sessions } from '@/database/schemas';
+import { UserItem } from '@/database/schemas/user';
 import { LobeChatDatabase } from '@/database/type';
 import { LobeAgentConfig } from '@/types/agent';
 import { ChatSessionList } from '@/types/session';
@@ -280,7 +281,7 @@ export class SessionService extends BaseService {
     this.log('info', '根据 ID 获取会话详情', { sessionId });
 
     try {
-      // 查询会话信息，包含关联的 agent 信息
+      // 查询会话信息，包含关联的 agent 和 user 信息
       const sessionWithAgent = await this.db.query.sessions.findFirst({
         where: eq(sessions.id, sessionId),
         with: {
@@ -301,6 +302,7 @@ export class SessionService extends BaseService {
               },
             },
           },
+          user: true,
         },
       });
 
@@ -313,6 +315,7 @@ export class SessionService extends BaseService {
       const result: SessionDetailResponse = {
         ...sessionWithAgent,
         agent: sessionWithAgent.agentsToSessions?.[0]?.agent || null,
+        user: sessionWithAgent.user as UserItem,
       };
 
       // 移除 agentsToSessions 字段，因为我们已经提取了 agent 信息
@@ -429,7 +432,7 @@ export class SessionService extends BaseService {
    * @returns 更新结果
    */
   async updateSession(request: UpdateSessionRequest): ServiceResult<void> {
-    this.log('info', '更新会话', { id: request.id, title: request.title });
+    this.log('info', '更新会话', { id: request.id });
 
     try {
       const { id, ...updateData } = request;
