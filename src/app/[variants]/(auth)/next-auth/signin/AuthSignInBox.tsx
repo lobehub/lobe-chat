@@ -76,7 +76,7 @@ export default memo(() => {
   const searchParams = useSearchParams();
 
   // Redirect back to the page url
-  const callbackUrl = searchParams.get('callbackUrl') ?? '';
+  const callbackUrl = searchParams.get('callbackUrl') ?? '/';
 
   const handleSignIn = async (provider: string) => {
     try {
