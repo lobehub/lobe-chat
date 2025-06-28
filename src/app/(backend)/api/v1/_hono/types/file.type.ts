@@ -123,6 +123,78 @@ export interface FileDeleteResponse {
 }
 
 /**
+ * 获取文件URL请求类型
+ */
+export interface FileUrlRequest {
+  /** 过期时间（秒），默认为系统配置值 */
+  expiresIn?: number;
+}
+
+/**
+ * 获取文件URL响应类型
+ */
+export interface FileUrlResponse {
+  /** URL过期时间戳 */
+  expiresAt: string;
+  /** URL过期时间（秒） */
+  expiresIn: number;
+  /** 文件ID */
+  fileId: string;
+  /** 文件名 */
+  filename: string;
+  /** 预签名访问URL */
+  url: string;
+}
+
+/**
+ * 公共文件上传请求类型
+ */
+export interface PublicFileUploadRequest {
+  /** 文件目录（可选） */
+  directory?: string;
+  /** 知识库ID（可选） */
+  knowledgeBaseId?: string;
+  /** 是否跳过文件类型检查 */
+  skipCheckFileType?: boolean;
+}
+
+/**
+ * 公共文件上传响应类型
+ */
+export interface PublicFileUploadResponse {
+  /** 文件MIME类型 */
+  fileType: string;
+  /** 文件名 */
+  filename: string;
+  /** 文件哈希值 */
+  hash: string;
+  /** 文件ID */
+  id: string;
+  /** 文件元数据 */
+  metadata: FileMetadata;
+  /** 文件大小（字节） */
+  size: number;
+  /** 上传时间 */
+  uploadedAt: string;
+  /** 永久访问URL */
+  url: string;
+}
+
+/**
+ * 永久文件URL响应类型
+ */
+export interface PermanentFileUrlResponse {
+  /** 文件ID */
+  fileId: string;
+  /** 文件名 */
+  filename: string;
+  /** 永久访问URL */
+  url: string;
+  /** URL类型 */
+  urlType: 'public' | 'permanent';
+}
+
+/**
  * 批量文件上传请求类型
  */
 export interface BatchFileUploadRequest {
@@ -197,4 +269,12 @@ export const FileListQuerySchema = z.object({
 
 export const FileIdParamSchema = z.object({
   id: z.string().min(1, '文件 ID 不能为空'),
+});
+
+export const FileUrlRequestSchema = z.object({
+  expiresIn: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().min(60).max(7200)) // 1分钟到2小时
+    .optional(),
 });

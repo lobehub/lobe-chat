@@ -20,8 +20,13 @@ import {
   FileListResponse,
   FileUploadRequest,
   FileUploadResponse,
+  FileUrlRequest,
+  FileUrlResponse,
+  PermanentFileUrlResponse,
   PreSignedUrlRequest,
   PreSignedUrlResponse,
+  PublicFileUploadRequest,
+  PublicFileUploadResponse,
 } from '../types/file.type';
 
 /**
@@ -274,6 +279,168 @@ export class FileUploadService extends BaseService {
       };
     } catch (error) {
       this.log('error', 'Get file detail failed', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 获取文件预签名访问URL
+   */
+  async getFileUrl(fileId: string, options: FileUrlRequest = {}): Promise<FileUrlResponse> {
+    try {
+      if (!this.userId) {
+        throw this.createAuthError('User authentication required');
+      }
+
+      const file = await this.fileModel.findById(fileId);
+      if (!file) {
+        throw this.createCommonError('File not found');
+      }
+
+      // 检查权限
+      if (file.userId !== this.userId) {
+        throw this.createAuthorizationError('Access denied');
+      }
+
+      // 设置过期时间（默认1小时）
+      const expiresIn = options.expiresIn || 3600;
+
+      // 使用S3服务生成预签名URL
+      const signedUrl = await this.s3Service.createPreSignedUrlForPreview(file.url, expiresIn);
+
+      // 计算过期时间戳
+      const expiresAt = new Date(Date.now() + expiresIn * 1000).toISOString();
+
+      this.log('info', 'File URL generated successfully', {
+        expiresIn,
+        fileId,
+        filename: file.name,
+      });
+
+      return {
+        expiresAt,
+        expiresIn,
+        fileId,
+        filename: file.name,
+        url: signedUrl,
+      };
+    } catch (error) {
+      this.log('error', 'Get file URL failed', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 公共文件上传（设置为公共可读）
+   */
+  async uploadPublicFile(
+    file: File,
+    options: PublicFileUploadRequest = {},
+  ): Promise<PublicFileUploadResponse> {
+    try {
+      if (!this.userId) {
+        throw this.createAuthError('User authentication required');
+      }
+
+      this.log('info', 'Starting public file upload', {
+        directory: options.directory,
+        filename: file.name,
+        size: file.size,
+        type: file.type,
+      });
+
+      // 1. 验证文件
+      await this.validateFile(file, options.skipCheckFileType);
+
+      // 2. 计算文件哈希
+      const fileArrayBuffer = await file.arrayBuffer();
+      const hash = sha256(fileArrayBuffer);
+
+      // 3. 生成文件元数据
+      const metadata = this.generateFileMetadata(file, options.directory);
+
+      // 4. 上传到S3（设置为公共可读）
+      const fileBuffer = Buffer.from(fileArrayBuffer);
+      await this.s3Service.uploadBuffer(metadata.path, fileBuffer, file.type);
+
+      // 5. 生成公共访问URL
+      const publicUrl = this.s3Service.getPublicUrl(metadata.path);
+
+      // 6. 保存文件记录到数据库
+      const fileRecord = {
+        chunkTaskId: null,
+        clientId: null,
+        embeddingTaskId: null,
+        fileHash: hash,
+        fileType: file.type,
+        knowledgeBaseId: options.knowledgeBaseId,
+        metadata: metadata,
+        name: file.name,
+        size: file.size,
+        url: metadata.path, // 存储S3键名
+      };
+
+      const createResult = await this.fileModel.create(fileRecord, true);
+
+      this.log('info', 'Public file uploaded successfully', {
+        fileId: createResult.id,
+        path: metadata.path,
+        publicUrl,
+        size: file.size,
+      });
+
+      return {
+        fileType: file.type,
+        filename: file.name,
+        hash,
+        id: createResult.id,
+        metadata,
+        size: file.size,
+        uploadedAt: new Date().toISOString(),
+        url: publicUrl, // 返回永久可访问的URL
+      };
+    } catch (error) {
+      this.log('error', 'Public file upload failed', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 获取文件的永久访问URL
+   */
+  async getPermanentFileUrl(fileId: string): Promise<PermanentFileUrlResponse> {
+    try {
+      if (!this.userId) {
+        throw this.createAuthError('User authentication required');
+      }
+
+      const file = await this.fileModel.findById(fileId);
+      if (!file) {
+        throw this.createCommonError('File not found');
+      }
+
+      // 检查权限
+      if (file.userId !== this.userId) {
+        throw this.createAuthorizationError('Access denied');
+      }
+
+      // 生成公共访问URL
+      const publicUrl = this.s3Service.getPublicUrl(file.url);
+
+      this.log('info', 'Permanent file URL generated successfully', {
+        fileId,
+        filename: file.name,
+        publicUrl,
+      });
+
+      return {
+        fileId,
+        filename: file.name,
+        url: publicUrl,
+        urlType: 'public',
+      };
+    } catch (error) {
+      this.log('error', 'Get permanent file URL failed', error);
       throw error;
     }
   }
