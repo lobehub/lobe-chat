@@ -19,10 +19,12 @@ import {
   LobeSessionGroups,
   LobeSessionType,
   LobeSessions,
+  SessionDefaultGroup,
   UpdateSessionParams,
 } from '@/types/session';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
+import { findNextAvailableTitle } from '@/utils/titleHelper';
 
 import { SessionDispatch, sessionsReducer } from './reducers';
 import { sessionSelectors } from './selectors';
@@ -86,7 +88,7 @@ export interface SessionAction {
     customGroups: LobeSessionGroups,
     actions?: string,
   ) => void;
-  /* eslint-enable */
+  internal_findNextAvailableSessionTitle: (session: LobeAgentSession, isNew?: boolean) => string;
 }
 
 export const createSessionSlice: StateCreator<
@@ -109,7 +111,13 @@ export const createSessionSlice: StateCreator<
       settingsSelectors.defaultAgent(useUserStore.getState()),
     );
 
-    const newSession: LobeAgentSession = merge(defaultAgent, agent);
+    const initializedAgentSession: LobeAgentSession = merge(defaultAgent, agent);
+
+    const nextTitle = get().internal_findNextAvailableSessionTitle(initializedAgentSession, true);
+
+    const newSession = merge(initializedAgentSession, {
+      meta: { title: nextTitle },
+    });
 
     const id = await sessionService.createSession(LobeSessionType.Agent, newSession);
     await refreshSessions();
@@ -124,9 +132,8 @@ export const createSessionSlice: StateCreator<
     const session = sessionSelectors.getSessionById(id)(get());
 
     if (!session) return;
-    const title = sessionMetaSelectors.getTitle(session.meta);
 
-    const newTitle = t('duplicateSession.title', { ns: 'chat', title: title });
+    const newTitle = get().internal_findNextAvailableSessionTitle(session);
 
     const messageLoadingKey = 'duplicateSession.loading';
 
@@ -274,5 +281,20 @@ export const createSessionSlice: StateCreator<
   },
   refreshSessions: async () => {
     await mutate([FETCH_SESSIONS_KEY, true]);
+  },
+
+  internal_findNextAvailableSessionTitle: (session, isNew) => {
+    const title = sessionMetaSelectors.getTitle(session.meta);
+
+    const sessions = sessionSelectors.getSessionsByGroupId(
+      session.group || SessionDefaultGroup.Default,
+    )(get());
+    const titleSet = new Set(sessions.map((s) => sessionMetaSelectors.getTitle(s.meta)));
+
+    return findNextAvailableTitle(
+      title,
+      titleSet,
+      isNew ? '' : t('duplicateSymbol', { ns: 'common' }),
+    );
   },
 });

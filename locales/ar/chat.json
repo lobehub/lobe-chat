@@ -26,10 +26,8 @@
   "defaultSession": "المساعد الافتراضي",
   "duplicateSession": {
     "loading": "جاري النسخ...",
-    "success": "تم النسخ بنجاح",
-    "title": "{{title}} نسخة"
+    "success": "تم النسخ بنجاح"
   },
-  "duplicateTitle": "{{title}} نسخة",
   "emptyAgent": "لا يوجد مساعد",
   "extendParams": {
     "disableContextCaching": {

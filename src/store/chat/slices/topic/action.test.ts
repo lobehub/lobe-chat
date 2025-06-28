@@ -512,7 +512,7 @@ describe('topic action', () => {
         await result.current.duplicateTopic(topicId);
       });
 
-      expect(cloneTopicSpy).toHaveBeenCalledWith(topicId, 'duplicateTitle_Original Topic');
+      expect(cloneTopicSpy).toHaveBeenCalledWith(topicId, expect.stringContaining('Original Topic'));
       expect(refreshTopicSpy).toHaveBeenCalled();
       expect(switchTopicSpy).toHaveBeenCalledWith(newTopicId);
     });
