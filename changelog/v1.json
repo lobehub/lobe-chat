@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-06-28",
+    "version": "1.96.11"
+  },
+  {
     "children": {
       "fixes": ["Fix desktop chunk issue."]
     },
