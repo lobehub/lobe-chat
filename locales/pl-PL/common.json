@@ -324,6 +324,7 @@
     }
   },
   "tab": {
+    "aiImage": "AI Rysowanie",
     "chat": "Czat",
     "discover": "Odkryj",
     "files": "Pliki",

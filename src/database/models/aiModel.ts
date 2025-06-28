@@ -71,6 +71,7 @@ export class AiModelModel {
         releasedAt: aiModels.releasedAt,
         source: aiModels.source,
         type: aiModels.type,
+        parameters: aiModels.parameters,
       })
       .from(aiModels)
       .where(and(eq(aiModels.providerId, providerId), eq(aiModels.userId, this.userId)))
@@ -97,6 +98,7 @@ export class AiModelModel {
         sort: aiModels.sort,
         source: aiModels.source,
         type: aiModels.type,
+        parameters: aiModels.parameters,
       })
       .from(aiModels)
       .where(and(eq(aiModels.userId, this.userId)));

@@ -28,6 +28,11 @@ export interface FileServiceImpl {
   getFileByteArray(key: string): Promise<Uint8Array>;
 
   /**
+   * 获取文件Buffer
+   */
+  getFileBuffer(key: string): Promise<Buffer>;
+
+  /**
    * 获取文件内容
    */
   getFileContent(key: string): Promise<string>;
@@ -41,4 +46,14 @@ export interface FileServiceImpl {
    * 上传内容
    */
   uploadContent(path: string, content: string): Promise<any>;
+
+  /**
+   * 从完整URL中提取key
+   */
+  getKeyFromFullUrl(url: string): string;
+
+  /**
+   * 上传媒体文件
+   */
+  uploadMedia(key: string, buffer: Buffer): Promise<{ key: string }>;
 }

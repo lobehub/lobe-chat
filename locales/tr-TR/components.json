@@ -91,6 +91,25 @@
     "provider": "Sağlayıcı",
     "title": "Model"
   },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "Daha fazla yüklemek için tıklayın"
+    },
+    "modal": {
+      "complete": "Tamamla",
+      "newFileIndicator": "Yeni",
+      "selectImageToPreview": "Önizlemek için resim seçin",
+      "title": "Resimleri Yönet ({{count}})",
+      "upload": "Resim Yükle"
+    },
+    "placeholder": {
+      "primary": "Resim yüklemek için tıklayın",
+      "secondary": "Birden fazla resim seçimi desteklenir"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} yüklendi"
+    }
+  },
   "OllamaSetupGuide": {
     "action": {
       "close": "Uyarıyı Kapat",

@@ -1,0 +1,20 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Cursor Rules Manifest
+
+This file acts as an index for supplementary Cursor rules available in this project.
+
+All rule files live in the `.cursor/rules/` directory at the project root.
+
+Refer to the following documents as needed:
+
+- `backend-architecture.mdc` – Guidelines for backend layer architecture and design.
+- `zustand-action-patterns.mdc` – Recommended patterns for organizing Zustand actions.
+- `zustand-slice-organization.mdc` – Best practices for structuring Zustand slices.
+- `drizzle-schema-style-guide.mdc` – Style guide for defining Drizzle ORM schemas.
+- `react-component.mdc` – React component style guide and conventions.
+
+note: read above rules by `read_file` tool instead of `fetch_rules` tool.

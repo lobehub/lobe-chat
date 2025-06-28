@@ -53,6 +53,13 @@ export class FileService {
   }
 
   /**
+   * 获取文件Buffer
+   */
+  public async getFileBuffer(key: string): Promise<Buffer> {
+    return this.impl.getFileBuffer(key);
+  }
+
+  /**
    * 创建预签名上传URL
    */
   public async createPreSignedUrl(key: string): Promise<string> {
@@ -78,6 +85,20 @@ export class FileService {
    */
   public async getFullFileUrl(url?: string | null, expiresIn?: number): Promise<string> {
     return this.impl.getFullFileUrl(url, expiresIn);
+  }
+
+  /**
+   * 从完整 URL中 提取 key
+   */
+  public getKeyFromFullUrl(url: string): string {
+    return this.impl.getKeyFromFullUrl(url);
+  }
+
+  /**
+   * 上传媒体文件
+   */
+  public async uploadMedia(key: string, buffer: Buffer): Promise<{ key: string }> {
+    return this.impl.uploadMedia(key, buffer);
   }
 
   async downloadFileToLocal(

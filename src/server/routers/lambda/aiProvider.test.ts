@@ -38,6 +38,7 @@ describe('aiProviderRouter', () => {
     enabledAiModels: [],
     enabledAiProviders: [],
     runtimeConfig: {},
+    enabledImageAiProviders: [],
   };
 
   beforeEach(() => {

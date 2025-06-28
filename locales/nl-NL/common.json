@@ -324,6 +324,7 @@
     }
   },
   "tab": {
+    "aiImage": "AI-afbeelding",
     "chat": "Chat",
     "discover": "Ontdekken",
     "files": "Bestanden",
