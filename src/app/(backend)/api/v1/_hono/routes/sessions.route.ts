@@ -136,6 +136,25 @@ SessionRoutes.get(
 );
 
 /**
+ * 批量更新会话
+ * PUT /api/v1/sessions/batch-update
+ * 需要会话更新权限
+ */
+SessionRoutes.put(
+  '/batch-update',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('SESSION_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),
+    '您没有权限批量更新会话',
+  ),
+  zValidator('json', BatchUpdateSessionsRequestSchema),
+  async (c) => {
+    const controller = new SessionController();
+    return await controller.batchUpdateSessions(c);
+  },
+);
+
+/**
  * 更新会话
  * PUT /api/v1/sessions/:id
  * 需要会话更新权限
@@ -230,25 +249,6 @@ SessionRoutes.post(
   async (c) => {
     const controller = new SessionController();
     return await controller.batchGetSessions(c);
-  },
-);
-
-/**
- * 批量更新会话
- * PUT /api/v1/sessions/batch-update
- * 需要会话更新权限
- */
-SessionRoutes.put(
-  '/batch-update',
-  requireAuth,
-  requireAnyPermission(
-    getScopePermissions('SESSION_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),
-    '您没有权限批量更新会话',
-  ),
-  zValidator('json', BatchUpdateSessionsRequestSchema),
-  async (c) => {
-    const controller = new SessionController();
-    return await controller.batchUpdateSessions(c);
   },
 );
 
