@@ -67,6 +67,32 @@ export const openaiChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
+      'o3-deep-research 是我们最先进的深度研究模型，专为处理复杂的多步骤研究任务而设计。它可以从互联网上搜索和综合信息，也可以通过 MCP 连接器访问并利用你的自有数据。',
+    displayName: 'o3 Deep Research',
+    enabled: true,
+    id: 'o3-deep-research',
+    maxOutput: 100_000,
+    pricing: {
+      cachedInput: 2.5,
+      input: 10,
+      output: 40,
+    },
+    releasedAt: '2025-06-26',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'internal',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
       'o4-mini 是我们最新的小型 o 系列模型。 它专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。',
     displayName: 'o4-mini',
     enabled: true,
@@ -81,6 +107,32 @@ export const openaiChatModels: AIChatModelCard[] = [
     settings: {
       extendParams: ['reasoningEffort'],
       searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'o4-mini-deep-research 是我们更快速、更实惠的深度研究模型——非常适合处理复杂的多步骤研究任务。它可以从互联网上搜索和综合信息，也可以通过 MCP 连接器访问并利用你的自有数据。',
+    displayName: 'o4-mini Deep Research',
+    enabled: true,
+    id: 'o4-mini-deep-research',
+    maxOutput: 100_000,
+    pricing: {
+      cachedInput: 0.5,
+      input: 2,
+      output: 8,
+    },
+    releasedAt: '2025-06-26',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'internal',
     },
     type: 'chat',
   },
