@@ -2,6 +2,10 @@ import { and, asc, count, desc, eq, ilike, inArray, like, notExists, or, sum } f
 import type { PgTransaction } from 'drizzle-orm/pg-core';
 
 import { LobeChatDatabase, Transaction } from '@/database/type';
+import {
+  generateSecureFileHash,
+  inferAccessType,
+} from '@/database/utils/secureFileHash';
 import { FilesTabs, QueryFileListParams, SortType } from '@/types/files';
 
 import {
@@ -26,34 +30,36 @@ export class FileModel {
   }
 
   create = async (
-    params: Omit<NewFile, 'id' | 'userId'> & { knowledgeBaseId?: string },
+    params: Omit<NewFile, 'id' | 'userId'> & { knowledgeBaseId?: string; originalHash?: string },
     insertToGlobalFiles?: boolean,
     trx?: Transaction,
   ) => {
     const executeInTransaction = async (tx: Transaction) => {
       if (insertToGlobalFiles) {
-        // 使用原有的 fileHash
-        const hashToUse = params.fileHash!;
+        // 如果提供了原始哈希，使用安全哈希；否则使用原有的 fileHash
+        const hashToUse = params.originalHash
+          ? this.generateSecureHash(params.originalHash, params.url, params.metadata)
+          : params.fileHash!;
 
-        await tx
-          .insert(globalFiles)
-          .values({
-            creator: this.userId,
-            fileType: params.fileType,
-            hashId: hashToUse,
-            metadata: params.metadata,
-            size: params.size,
-            url: params.url,
-          })
+        await tx.insert(globalFiles).values({
+          creator: this.userId,
+          fileType: params.fileType,
+          hashId: hashToUse,
+          metadata: params.metadata,
+          size: params.size,
+          url: params.url,
+        })
           .onConflictDoNothing({ target: globalFiles.hashId });
       }
 
-      // 使用原有的 fileHash
-      const fileHash = params.fileHash;
+      // 确保 files 表中也使用安全哈希
+      const secureFileHash = params.originalHash
+        ? this.generateSecureHash(params.originalHash, params.url, params.metadata)
+        : params.fileHash;
 
       const result = await tx
         .insert(files)
-        .values({ ...params, fileHash: fileHash, userId: this.userId })
+        .values({ ...params, fileHash: secureFileHash, userId: this.userId })
         .returning();
 
       const item = result[0];
@@ -92,6 +98,31 @@ export class FileModel {
       size: item.size,
       url: item.url,
     };
+  };
+
+
+  /**
+   * 生成安全的文件哈希，考虑访问权限
+   * @param originalHash 原始文件内容哈希
+   * @param url 文件URL
+   * @param metadata 文件元数据
+   * @returns 安全的复合哈希
+   */
+  generateSecureHash = (originalHash: string, url: string, metadata?: any): string => {
+    const accessType = inferAccessType(url, metadata);
+    return generateSecureFileHash(originalHash, accessType, this.userId);
+  };
+
+  /**
+   * 检查安全哈希，支持访问权限隔离
+   * @param originalHash 原始文件内容哈希
+   * @param url 文件URL
+   * @param metadata 文件元数据
+   * @returns 检查结果
+   */
+  checkSecureHash = async (originalHash: string, url: string, metadata?: any) => {
+    const secureHash = this.generateSecureHash(originalHash, url, metadata);
+    return this.checkHash(secureHash);
   };
 
   delete = async (id: string, removeGlobalFile: boolean = true, trx?: Transaction) => {
