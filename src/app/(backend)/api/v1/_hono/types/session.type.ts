@@ -211,6 +211,7 @@ export interface BatchUpdateSessionsRequest {
     id: string;
     pinned?: boolean;
     title?: string;
+    userId?: string;
   }>;
 }
 
