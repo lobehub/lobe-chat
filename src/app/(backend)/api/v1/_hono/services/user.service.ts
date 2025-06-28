@@ -351,24 +351,31 @@ export class UserService extends BaseService {
 
   /**
    * 搜索用户
-   * @param keyword 搜索关键词
+   * @param keyword 搜索关键词，为空时返回用户列表
+   * @param pageSize 页面大小，限制返回的用户数量
    * @returns 匹配的用户列表（包含角色信息和消息数量）
    */
-  async searchUsers(keyword: string): ServiceResult<UserWithRoles[]> {
-    this.log('info', '搜索用户', { keyword });
+  async searchUsers(keyword: string, pageSize: number = 10): ServiceResult<UserWithRoles[]> {
+    this.log('info', '搜索用户', { keyword, pageSize });
 
     try {
+      let searchResults;
+
       if (!keyword || keyword.trim().length === 0) {
-        throw this.createBusinessError('搜索关键词不能为空');
+        // 当关键词为空时，返回按创建时间倒序排列的用户列表
+        searchResults = await this.db.query.users.findMany({
+          limit: pageSize,
+          orderBy: (users, { desc }) => [desc(users.createdAt)],
+        });
+      } else {
+        // 有关键词时进行模糊搜索
+        const searchTerm = `%${keyword.trim()}%`;
+        searchResults = await this.db.query.users.findMany({
+          limit: pageSize,
+          orderBy: (users, { asc }) => [asc(users.fullName), asc(users.email)],
+          where: or(ilike(users.fullName, searchTerm), ilike(users.email, searchTerm)),
+        });
       }
-
-      const searchTerm = `%${keyword.trim()}%`;
-
-      // 模糊匹配 fullName 和 email 字段
-      const searchResults = await this.db.query.users.findMany({
-        orderBy: (users, { asc }) => [asc(users.fullName), asc(users.email)],
-        where: or(ilike(users.fullName, searchTerm), ilike(users.email, searchTerm)),
-      });
 
       this.log('info', `搜索到 ${searchResults.length} 个匹配用户`, { keyword });
 
