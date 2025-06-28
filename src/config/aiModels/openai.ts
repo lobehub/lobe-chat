@@ -12,6 +12,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -27,6 +28,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     releasedAt: '2025-06-10',
     settings: {
       extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -34,6 +36,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -51,6 +54,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     releasedAt: '2025-04-16',
     settings: {
       extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -58,6 +62,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -75,6 +80,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     releasedAt: '2025-04-17',
     settings: {
       extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
     },
     type: 'chat',
   },
