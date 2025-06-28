@@ -61,7 +61,7 @@ SessionRoutes.get(
 );
 
 /**
- * 获取按Agent分组的会话列表
+ * 获取按Agent分组的会话数量
  * GET /api/v1/sessions/grouped-by-agent
  * 需要会话读取权限
  */
@@ -70,7 +70,7 @@ SessionRoutes.get(
   requireAuth,
   requireAnyPermission(
     getScopePermissions('SESSION_READ', ['ALL', 'WORKSPACE', 'OWNER']),
-    '您没有权限查看按Agent分组的会话列表',
+    '您没有权限查看按Agent分组的会话数量',
   ),
   async (c) => {
     const controller = new SessionController();

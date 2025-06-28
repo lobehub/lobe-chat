@@ -3,7 +3,7 @@ import { groupBy } from 'lodash';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SessionModel } from '@/database/models/session';
-import { SessionItem, agents, agentsToSessions, sessions } from '@/database/schemas';
+import { SessionItem, agents, agentsToSessions, messages, sessions } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { LobeAgentConfig } from '@/types/agent';
 import { ChatSessionList } from '@/types/session';
@@ -18,7 +18,9 @@ import {
   CreateSessionRequest,
   GetSessionsRequest,
   SearchSessionsRequest,
+  SessionCountByAgentResponse,
   SessionDetailResponse,
+  SessionListItem,
   SessionsByAgentResponse,
   UpdateSessionRequest,
 } from '../types/session.type';
@@ -37,13 +39,16 @@ export class SessionService extends BaseService {
   /**
    * 获取会话列表
    * @param request 分页参数
-   * @returns 会话列表
+   * @returns 会话列表和总数
    */
-  async getSessions(request: GetSessionsRequest = {}): ServiceResult<SessionItem[]> {
+  async getSessions(request: GetSessionsRequest = {}): ServiceResult<{
+    sessions: SessionListItem[];
+    total: number;
+  }> {
     this.log('info', '获取会话列表', { request });
 
     try {
-      const { page = 1, pageSize = 20, userId } = request;
+      const { page = 1, pageSize = 20, userId, agentId } = request;
 
       // 构建查询条件
       let whereConditions = [not(eq(sessions.slug, INBOX_SESSION_ID))];
@@ -58,21 +63,83 @@ export class SessionService extends BaseService {
         this.log('info', '根据用户 ID 获取会话列表', { userId: targetUserId });
       }
 
+      // 如果指定了 agentId，需要通过 agentsToSessions 表进行过滤
+      if (agentId) {
+        this.log('info', '根据 Agent ID 过滤会话', { agentId });
+
+        // 首先查询具有指定 agent 的 session ID
+        const agentSessions = await this.db.query.agentsToSessions.findMany({
+          columns: { sessionId: true },
+          where: eq(agentsToSessions.agentId, agentId),
+        });
+
+        const sessionIds = agentSessions.map((item) => item.sessionId);
+
+        if (sessionIds.length === 0) {
+          this.log('info', '未找到关联该 Agent 的会话');
+          return { sessions: [], total: 0 };
+        }
+
+        // 添加 session ID 过滤条件
+        whereConditions.push(inArray(sessions.id, sessionIds));
+      }
+
+      // 获取总数
+      const totalResult = await this.db
+        .select({ count: sql<number>`count(*)` })
+        .from(sessions)
+        .where(and(...whereConditions));
+
+      const total = Number(totalResult[0]?.count || 0);
+
+      // 获取分页数据
       const sessionsList = await this.db.query.sessions.findMany({
         limit: pageSize,
         offset: (page - 1) * pageSize,
         orderBy: [desc(sessions.updatedAt)],
         where: and(...whereConditions),
         with: {
-          agentsToSessions: { columns: {}, with: { agent: true } },
+          agentsToSessions: { with: { agent: true } },
           group: true,
           user: true,
         },
       });
 
-      this.log('info', `查询到 ${sessionsList.length} 个会话`);
+      // 获取每个会话的消息数量
+      const sessionIds = sessionsList.map((session) => session.id);
+      let messageCountsResult: Array<{ count: number; sessionId: string | null }> = [];
 
-      return sessionsList;
+      if (sessionIds.length > 0) {
+        messageCountsResult = await this.db
+          .select({
+            count: sql<number>`count(*)`,
+            sessionId: messages.sessionId,
+          })
+          .from(messages)
+          .where(inArray(messages.sessionId, sessionIds))
+          .groupBy(messages.sessionId);
+      }
+
+      // 创建消息数量映射
+      const messageCountMap = new Map<string, number>();
+      messageCountsResult.forEach((row) => {
+        if (row.sessionId) {
+          messageCountMap.set(row.sessionId, Number(row.count));
+        }
+      });
+
+      // 添加消息数量到会话列表
+      const sessionsWithMessageCount: SessionListItem[] = sessionsList.map(
+        (session) =>
+          ({
+            ...session,
+            messageCount: messageCountMap.get(session.id) || 0,
+          }) as unknown as SessionListItem,
+      );
+
+      this.log('info', `查询到 ${sessionsList.length} 个会话，总数: ${total}`, { agentId });
+
+      return { sessions: sessionsWithMessageCount, total };
     } catch (error) {
       this.log('error', '获取会话列表失败', { error });
       throw this.createBusinessError('获取会话列表失败');
@@ -147,6 +214,60 @@ export class SessionService extends BaseService {
     } catch (error) {
       this.log('error', '获取按Agent分组的会话列表失败', { error });
       throw this.createBusinessError('获取按Agent分组的会话列表失败');
+    }
+  }
+
+  /**
+   * 获取按Agent分组的会话数量
+   * @returns 按Agent分组的会话数量
+   */
+  async getSessionCountGroupedByAgent(): ServiceResult<SessionCountByAgentResponse[]> {
+    this.log('info', '获取按Agent分组的会话数量');
+
+    try {
+      if (!this.userId) {
+        throw this.createAuthError('用户未认证');
+      }
+
+      // 查询当前用户的所有会话，包含关联的agent信息
+      const sessionsList = await this.db.query.sessions.findMany({
+        where: and(eq(sessions.userId, this.userId), not(eq(sessions.slug, INBOX_SESSION_ID))),
+        with: {
+          agentsToSessions: {
+            with: {
+              agent: true,
+            },
+          },
+        },
+      });
+
+      // 按agent进行分组
+      const groupByAgent = groupBy(sessionsList, (session) => {
+        return session.agentsToSessions?.[0]?.agent?.id || 'no_agent';
+      });
+
+      // 转换为数量统计
+      const countByAgent: SessionCountByAgentResponse[] = Object.entries(groupByAgent).map(
+        ([agentId, sessionsList]) => {
+          const agent =
+            agentId === 'no_agent' ? null : (sessionsList[0]?.agentsToSessions?.[0]?.agent ?? null);
+
+          return {
+            agent,
+            count: sessionsList.length,
+          };
+        },
+      );
+
+      this.log('info', '成功获取按Agent分组的会话数量', {
+        agentCount: countByAgent.length,
+        totalSessions: sessionsList.length,
+      });
+
+      return countByAgent;
+    } catch (error) {
+      this.log('error', '获取按Agent分组的会话数量失败', { error });
+      throw this.createBusinessError('获取按Agent分组的会话数量失败');
     }
   }
 
