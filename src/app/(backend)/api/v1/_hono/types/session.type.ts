@@ -352,6 +352,7 @@ export const BatchUpdateSessionsRequestSchema = z.object({
         id: z.string().min(1, '会话 ID 不能为空'),
         pinned: z.boolean().optional(),
         title: z.string().optional(),
+        userId: z.string().optional(),
       }),
     )
     .min(1, '至少需要提供一个要更新的会话'),
