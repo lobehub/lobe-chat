@@ -17,10 +17,13 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.openai.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
+      console.log('Handle OpenAI Chat Completion payload:', payload);
       const { enabledSearch: originalEnabledSearch, model, ...rest } = payload;
+      console.log('OpenAI Chat Completion model:', model);
       const enabledSearch = ['o4-mini', 'o3', 'o3-pro'].includes(model)
         ? true
         : originalEnabledSearch;
+      console.log('OpenAI Chat Completion enabledSearch:', enabledSearch);
 
       if (responsesAPIModels.has(model) || enabledSearch) {
         return { ...rest, apiMode: 'responses', enabledSearch, model } as ChatStreamPayload;
@@ -64,7 +67,11 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
   provider: ModelProvider.OpenAI,
   responses: {
     handlePayload: (payload) => {
-      const { enabledSearch, model, tools, ...rest } = payload;
+      const { enabledSearch: originalEnabledSearch, model, tools, ...rest } = payload;
+
+      const enabledSearch = ['o4-mini', 'o3', 'o3-pro'].includes(model)
+        ? true
+        : originalEnabledSearch;
 
       const openaiTools = enabledSearch
         ? [
@@ -78,6 +85,9 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
           ]
         : tools;
 
+      console.log('OpenAI Responses model:', model);
+      console.log('OpenAI Responses Tools:', openaiTools);
+
       if (prunePrefixes.some((prefix) => model.startsWith(prefix))) {
         if (!payload.reasoning) {
           payload.reasoning = { summary: 'auto' };
@@ -90,7 +100,12 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
           payload.truncation = 'auto';
         }
 
-        return pruneReasoningPayload(payload) as any;
+        // return pruneReasoningPayload(payload) as any;
+        let base = pruneReasoningPayload(payload);
+
+        base.tools = openaiTools;
+
+        return base;
       }
 
       return { ...rest, model, stream: payload.stream ?? true, tools: openaiTools } as any;
