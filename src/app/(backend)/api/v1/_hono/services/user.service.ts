@@ -1,7 +1,7 @@
-import { eq } from 'drizzle-orm/expressions';
+import { eq, ilike, or, sql } from 'drizzle-orm';
 
 import { RbacModel } from '@/database/models/rbac';
-import { NewUser, RoleItem, SessionItem, users } from '@/database/schemas';
+import { NewUser, RoleItem, SessionItem, messages, users } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { uuid } from '@/utils/uuid';
 
@@ -18,8 +18,30 @@ export class UserService extends BaseService {
   }
 
   /**
+   * 获取用户的消息数量
+   * @param userId 用户ID
+   * @returns 消息数量
+   */
+  private async getUserMessageCount(userId: string): Promise<number> {
+    try {
+      const result = await this.db
+        .select({ count: sql<number>`count(*)` })
+        .from(messages)
+        .where(eq(messages.userId, userId));
+
+      return Number(result[0]?.count || 0);
+    } catch (error) {
+      this.log('warn', '获取用户消息数量失败', {
+        error: error instanceof Error ? error.message : String(error),
+        userId,
+      });
+      return 0;
+    }
+  }
+
+  /**
    * 获取当前登录用户信息
-   * @returns 用户信息（包含角色信息）
+   * @returns 用户信息（包含角色信息和消息数量）
    */
   async getCurrentUser(): ServiceResult<UserWithRoles> {
     this.log('info', '获取当前登录用户信息及角色信息');
@@ -45,15 +67,19 @@ export class UserService extends BaseService {
       });
     }
 
+    // 获取用户消息数量
+    const messageCount = await this.getUserMessageCount(this.userId!);
+
     return {
       ...user,
+      messageCount,
       roles,
     };
   }
 
   /**
    * 获取系统中所有用户列表
-   * @returns 用户列表（包含角色信息）
+   * @returns 用户列表（包含角色信息和消息数量）
    */
   async getAllUsers(): ServiceResult<UserWithRoles[]> {
     this.log('info', '获取系统中所有用户列表');
@@ -71,7 +97,7 @@ export class UserService extends BaseService {
 
       this.log('info', `查询到 ${allUsers.length} 个用户`);
 
-      // 为每个用户获取角色信息
+      // 为每个用户获取角色信息和消息数量
       const usersWithRoles: UserWithRoles[] = [];
 
       for (const user of allUsers) {
@@ -87,14 +113,18 @@ export class UserService extends BaseService {
           });
         }
 
+        // 获取用户消息数量
+        const messageCount = await this.getUserMessageCount(user.id);
+
         usersWithRoles.push({
           ...user,
+          messageCount,
           roles,
           sessions: user.sessions as SessionItem[],
         });
       }
 
-      this.log('info', '成功获取所有用户信息及其角色和sessions');
+      this.log('info', '成功获取所有用户信息及其角色、sessions和消息数量');
       return usersWithRoles;
     } catch (error) {
       this.log('error', '获取用户列表失败', { error });
@@ -150,6 +180,7 @@ export class UserService extends BaseService {
       // 返回包含角色信息的用户数据
       return {
         ...createdUser,
+        messageCount: 0, // 新用户没有消息
         roles: [], // 新用户暂时没有角色
       };
     } catch (error) {
@@ -222,8 +253,12 @@ export class UserService extends BaseService {
         });
       }
 
+      // 获取用户消息数量
+      const messageCount = await this.getUserMessageCount(userId);
+
       return {
         ...updatedUser,
+        messageCount,
         roles,
       };
     } catch (error) {
@@ -271,7 +306,7 @@ export class UserService extends BaseService {
   /**
    * 根据ID获取用户信息
    * @param userId 用户ID
-   * @returns 用户信息（包含角色信息）
+   * @returns 用户信息（包含角色信息和消息数量）
    */
   async getUserById(userId: string): ServiceResult<UserWithRoles> {
     this.log('info', '根据ID获取用户信息', { userId });
@@ -297,8 +332,12 @@ export class UserService extends BaseService {
         });
       }
 
+      // 获取用户消息数量
+      const messageCount = await this.getUserMessageCount(userId);
+
       return {
         ...user,
+        messageCount,
         roles,
       };
     } catch (error) {
@@ -307,6 +346,70 @@ export class UserService extends BaseService {
         throw error;
       }
       throw this.createBusinessError('获取用户信息失败');
+    }
+  }
+
+  /**
+   * 搜索用户
+   * @param keyword 搜索关键词
+   * @returns 匹配的用户列表（包含角色信息和消息数量）
+   */
+  async searchUsers(keyword: string): ServiceResult<UserWithRoles[]> {
+    this.log('info', '搜索用户', { keyword });
+
+    try {
+      if (!keyword || keyword.trim().length === 0) {
+        throw this.createBusinessError('搜索关键词不能为空');
+      }
+
+      const searchTerm = `%${keyword.trim()}%`;
+
+      // 模糊匹配 fullName 和 email 字段
+      const searchResults = await this.db.query.users.findMany({
+        orderBy: (users, { asc }) => [asc(users.fullName), asc(users.email)],
+        where: or(ilike(users.fullName, searchTerm), ilike(users.email, searchTerm)),
+      });
+
+      this.log('info', `搜索到 ${searchResults.length} 个匹配用户`, { keyword });
+
+      // 为每个用户获取角色信息和消息数量
+      const usersWithRoles: UserWithRoles[] = [];
+
+      for (const user of searchResults) {
+        let roles: RoleItem[] = [];
+
+        try {
+          const rbacModel = new RbacModel(this.db, user.id);
+          roles = await rbacModel.getUserRoles();
+        } catch (error) {
+          // 单个用户角色查询失败不影响整体结果
+          this.log('warn', `获取用户 ${user.id} 的角色信息失败`, {
+            error: error instanceof Error ? error.message : String(error),
+          });
+        }
+
+        // 获取用户消息数量
+        const messageCount = await this.getUserMessageCount(user.id);
+
+        usersWithRoles.push({
+          ...user,
+          messageCount,
+          roles,
+        });
+      }
+
+      this.log('info', '用户搜索完成', {
+        keyword,
+        resultCount: usersWithRoles.length,
+      });
+
+      return usersWithRoles;
+    } catch (error) {
+      this.log('error', '搜索用户失败', { error, keyword });
+      if (error instanceof Error && error.name === 'BusinessError') {
+        throw error;
+      }
+      throw this.createBusinessError('搜索用户失败');
     }
   }
 }
