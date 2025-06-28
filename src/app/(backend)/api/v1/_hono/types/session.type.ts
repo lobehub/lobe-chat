@@ -67,7 +67,6 @@ export interface GetSessionsRequest {
   agentId?: string;
   page?: number;
   pageSize?: number;
-  userId?: string | null;
 }
 
 /**
@@ -297,7 +296,6 @@ export const GetSessionsRequestSchema = z.object({
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().min(1).max(100))
     .optional(),
-  userId: z.string().optional(),
 });
 
 export const CountSessionsRequestSchema = z.object({
