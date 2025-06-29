@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { RoleItem, SessionItem, UserItem } from '@/database/schemas';
+import { RoleItem, SessionItem, UserItem, UserRoleItem } from '@/database/schemas';
 
 /**
  * 扩展的用户信息类型，包含角色信息
@@ -96,3 +96,90 @@ export const UserSearchRequestSchema = z.object({
       return Math.min(num, 100); // 最大限制100
     }),
 });
+
+/**
+ * 单个添加角色的请求
+ */
+export interface AddRoleRequest {
+  expiresAt?: string;
+  roleId: number; // ISO 8601 格式的过期时间
+}
+
+/**
+ * 更新用户角色的请求参数
+ */
+export interface UpdateUserRolesRequest {
+  addRoles?: AddRoleRequest[]; // 要添加的角色
+  removeRoles?: number[]; // 要移除的角色ID
+}
+
+/**
+ * 用户角色详情，包含角色信息和关联信息
+ */
+export interface UserRoleDetail extends UserRoleItem {
+  role: RoleItem;
+}
+
+/**
+ * 用户角色操作响应
+ */
+export interface UserRolesResponse {
+  roles: UserRoleDetail[];
+  totalCount: number;
+  userId: string;
+}
+
+/**
+ * 用户角色操作结果
+ */
+export interface UserRoleOperationResult {
+  added: number;
+  errors?: string[];
+  removed: number;
+}
+
+// ================= Zod Validation Schemas =================
+
+/**
+ * 添加角色请求验证Schema
+ */
+export const AddRoleRequestSchema = z.object({
+  expiresAt: z.string().datetime('过期时间必须是有效的ISO 8601格式').optional(),
+  roleId: z.number().int().positive('角色ID必须是正整数'),
+});
+
+/**
+ * 更新用户角色请求验证Schema
+ */
+export const UpdateUserRolesRequestSchema = z
+  .object({
+    addRoles: z.array(AddRoleRequestSchema).optional(),
+    removeRoles: z.array(z.number().int().positive('角色ID必须是正整数')).optional(),
+  })
+  .refine(
+    (data) => {
+      // 至少要有一个操作（添加或移除）
+      return (
+        (data.addRoles && data.addRoles.length > 0) ||
+        (data.removeRoles && data.removeRoles.length > 0)
+      );
+    },
+    {
+      message: '必须指定要添加或移除的角色',
+    },
+  )
+  .refine(
+    (data) => {
+      // 检查添加和移除的角色之间不能有重复
+      if (!data.addRoles || !data.removeRoles) return true;
+
+      const addRoleIds = data.addRoles.map((r) => r.roleId);
+      const removeRoleIds = data.removeRoles;
+
+      const overlap = addRoleIds.filter((id) => removeRoleIds.includes(id));
+      return overlap.length === 0;
+    },
+    {
+      message: '不能同时添加和移除同一个角色',
+    },
+  );

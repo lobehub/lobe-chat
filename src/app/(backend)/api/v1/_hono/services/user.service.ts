@@ -1,13 +1,22 @@
-import { eq, ilike, or, sql } from 'drizzle-orm';
+import { and, eq, ilike, inArray, or, sql } from 'drizzle-orm';
 
 import { RbacModel } from '@/database/models/rbac';
 import { NewUser, RoleItem, SessionItem, messages, users } from '@/database/schemas';
+import { roles, userRoles } from '@/database/schemas/rbac';
 import { LobeChatDatabase } from '@/database/type';
 import { uuid } from '@/utils/uuid';
 
 import { BaseService } from '../common/base.service';
 import { ServiceResult } from '../types';
-import { CreateUserRequest, UpdateUserRequest, UserWithRoles } from '../types/user.type';
+import {
+  CreateUserRequest,
+  UpdateUserRequest,
+  UpdateUserRolesRequest,
+  UserRoleDetail,
+  UserRoleOperationResult,
+  UserRolesResponse,
+  UserWithRoles,
+} from '../types/user.type';
 
 /**
  * 用户服务实现类
@@ -417,6 +426,227 @@ export class UserService extends BaseService {
         throw error;
       }
       throw this.createBusinessError('搜索用户失败');
+    }
+  }
+
+  /**
+   * 更新用户角色
+   * @param userId 目标用户ID
+   * @param request 更新角色请求
+   * @returns 操作结果和最新的用户角色信息
+   */
+  async updateUserRoles(
+    userId: string,
+    request: UpdateUserRolesRequest,
+  ): ServiceResult<UserRolesResponse> {
+    this.log('info', '更新用户角色', {
+      addRoles: request.addRoles?.length || 0,
+      removeRoles: request.removeRoles?.length || 0,
+      userId,
+    });
+
+    try {
+      return await this.db.transaction(async (tx) => {
+        // 1. 验证目标用户存在
+        const targetUser = await tx.query.users.findFirst({
+          where: eq(users.id, userId),
+        });
+
+        if (!targetUser) {
+          throw this.createNotFoundError(`用户 ID "${userId}" 不存在`);
+        }
+
+        // 2. 收集所有需要验证的角色ID
+        const allRoleIds = new Set<number>();
+        request.addRoles?.forEach((role) => allRoleIds.add(role.roleId));
+        request.removeRoles?.forEach((roleId) => allRoleIds.add(roleId));
+
+        // 3. 验证所有角色存在且激活
+        if (allRoleIds.size > 0) {
+          const existingRoles = await tx.query.roles.findMany({
+            where: and(inArray(roles.id, Array.from(allRoleIds)), eq(roles.isActive, true)),
+          });
+
+          const existingRoleIds = new Set(existingRoles.map((r) => r.id));
+          const missingRoleIds = Array.from(allRoleIds).filter((id) => !existingRoleIds.has(id));
+
+          if (missingRoleIds.length > 0) {
+            throw this.createBusinessError(`以下角色不存在或未激活: ${missingRoleIds.join(', ')}`);
+          }
+
+          // 4. 权限检查：验证操作者是否有权限分配这些角色
+          // 这里可以添加更复杂的权限检查逻辑
+          // 例如：不允许分配比操作者权限更高的角色
+        }
+
+        // 5. 获取用户当前的角色关联
+        const currentUserRoles = await tx.query.userRoles.findMany({
+          where: eq(userRoles.userId, userId),
+        });
+        const currentRoleIds = new Set(currentUserRoles.map((ur) => ur.roleId));
+
+        const result: UserRoleOperationResult = {
+          added: 0,
+          errors: [],
+          removed: 0,
+        };
+
+        // 6. 处理移除角色
+        if (request.removeRoles && request.removeRoles.length > 0) {
+          const rolesToRemove = request.removeRoles.filter((roleId) => currentRoleIds.has(roleId));
+
+          if (rolesToRemove.length > 0) {
+            await tx
+              .delete(userRoles)
+              .where(and(eq(userRoles.userId, userId), inArray(userRoles.roleId, rolesToRemove)));
+
+            result.removed = rolesToRemove.length;
+            this.log('info', '移除用户角色', { removedRoles: rolesToRemove, userId });
+          }
+
+          // 记录无效的移除操作
+          const invalidRemoves = request.removeRoles.filter(
+            (roleId) => !currentRoleIds.has(roleId),
+          );
+          if (invalidRemoves.length > 0) {
+            result.errors?.push(`用户没有以下角色，无法移除: ${invalidRemoves.join(', ')}`);
+          }
+        }
+
+        // 7. 处理添加角色
+        if (request.addRoles && request.addRoles.length > 0) {
+          const rolesToAdd = request.addRoles.filter((role) => !currentRoleIds.has(role.roleId));
+
+          if (rolesToAdd.length > 0) {
+            const insertData = rolesToAdd.map((role) => ({
+              createdAt: new Date(),
+              expiresAt: role.expiresAt ? new Date(role.expiresAt) : null,
+              roleId: role.roleId,
+              userId: userId,
+            }));
+
+            await tx.insert(userRoles).values(insertData);
+
+            result.added = rolesToAdd.length;
+            this.log('info', '添加用户角色', {
+              addedRoles: rolesToAdd.map((r) => r.roleId),
+              userId,
+            });
+          }
+
+          // 记录重复的添加操作
+          const duplicateAdds = request.addRoles.filter((role) => currentRoleIds.has(role.roleId));
+          if (duplicateAdds.length > 0) {
+            result.errors?.push(
+              `用户已拥有以下角色: ${duplicateAdds.map((r) => r.roleId).join(', ')}`,
+            );
+          }
+        }
+
+        // 8. 获取更新后的用户角色信息
+        const updatedUserRoles = await tx
+          .select({
+            createdAt: userRoles.createdAt,
+            expiresAt: userRoles.expiresAt,
+            role: {
+              accessedAt: roles.accessedAt,
+              createdAt: roles.createdAt,
+              description: roles.description,
+              displayName: roles.displayName,
+              id: roles.id,
+              isActive: roles.isActive,
+              isSystem: roles.isSystem,
+              name: roles.name,
+              updatedAt: roles.updatedAt,
+            },
+            roleId: userRoles.roleId,
+            userId: userRoles.userId,
+          })
+          .from(userRoles)
+          .innerJoin(roles, eq(userRoles.roleId, roles.id))
+          .where(eq(userRoles.userId, userId));
+
+        const userRoleDetails: UserRoleDetail[] = updatedUserRoles.map((ur) => ({
+          createdAt: ur.createdAt,
+          expiresAt: ur.expiresAt,
+          role: ur.role,
+          roleId: ur.roleId,
+          userId: ur.userId,
+        }));
+
+        this.log('info', '用户角色更新完成', {
+          result,
+          totalRoles: userRoleDetails.length,
+          userId,
+        });
+
+        return {
+          roles: userRoleDetails,
+          totalCount: userRoleDetails.length,
+          userId,
+        };
+      });
+    } catch (error) {
+      this.handleServiceError(error, '更新用户角色');
+    }
+  }
+
+  /**
+   * 获取用户的角色信息
+   * @param userId 用户ID
+   * @returns 用户角色详情
+   */
+  async getUserRoles(userId: string): ServiceResult<UserRolesResponse> {
+    this.log('info', '获取用户角色信息', { userId });
+
+    try {
+      // 验证用户存在
+      const user = await this.db.query.users.findFirst({
+        where: eq(users.id, userId),
+      });
+
+      if (!user) {
+        throw this.createNotFoundError(`用户 ID "${userId}" 不存在`);
+      }
+
+      // 获取用户的角色信息
+      const userRoleData = await this.db
+        .select({
+          createdAt: userRoles.createdAt,
+          expiresAt: userRoles.expiresAt,
+          role: {
+            accessedAt: roles.accessedAt,
+            createdAt: roles.createdAt,
+            description: roles.description,
+            displayName: roles.displayName,
+            id: roles.id,
+            isActive: roles.isActive,
+            isSystem: roles.isSystem,
+            name: roles.name,
+            updatedAt: roles.updatedAt,
+          },
+          roleId: userRoles.roleId,
+          userId: userRoles.userId,
+        })
+        .from(userRoles)
+        .innerJoin(roles, eq(userRoles.roleId, roles.id))
+        .where(eq(userRoles.userId, userId));
+
+      const userRoleDetails: UserRoleDetail[] = userRoleData.map((ur) => ({
+        createdAt: ur.createdAt,
+        expiresAt: ur.expiresAt,
+        role: ur.role,
+        roleId: ur.roleId,
+        userId: ur.userId,
+      }));
+
+      return {
+        roles: userRoleDetails,
+        totalCount: userRoleDetails.length,
+        userId,
+      };
+    } catch (error) {
+      this.handleServiceError(error, '获取用户角色');
     }
   }
 }
