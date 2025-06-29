@@ -291,8 +291,9 @@
     "placeholder": "プラグイン名、説明、またはキーワードで検索...",
     "releasedAt": "{{createdAt}} にリリース",
     "tabs": {
-      "all": "すべて",
-      "installed": "インストール済み"
+      "installed": "インストール済み",
+      "mcp": "MCPプラグイン",
+      "old": "旧バージョンプラグイン"
     },
     "title": "プラグインストア"
   },

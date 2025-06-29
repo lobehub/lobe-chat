@@ -39,7 +39,7 @@ const AddPluginButton = forwardRef<HTMLButtonElement>((props, ref) => {
         }}
         ref={ref}
       >
-        {t('plugin.addTooltip')}
+        {t('plugin.addMCPPlugin')}
       </Button>
     </div>
   );

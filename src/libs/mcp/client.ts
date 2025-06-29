@@ -8,7 +8,7 @@ import type { Transport } from '@modelcontextprotocol/sdk/shared/transport.d.ts'
 import type { Progress } from '@modelcontextprotocol/sdk/types.js';
 import debug from 'debug';
 
-import { MCPClientParams, McpTool } from './types';
+import { MCPClientParams, McpPrompt, McpResource, McpTool } from './types';
 
 const log = debug('lobe-mcp:client');
 
@@ -84,6 +84,31 @@ export class MCPClient {
     const { tools } = await this.mcp.listTools();
     log('Listed tools: %O', tools);
     return tools as McpTool[];
+  }
+
+  async listResources() {
+    log('Listing resources...');
+    const { resources } = await this.mcp.listResources();
+    log('Listed resources: %O', resources);
+    return resources as McpResource[];
+  }
+
+  async listPrompts() {
+    log('Listing prompts...');
+    const { prompts } = await this.mcp.listPrompts();
+    log('Listed prompts: %O', prompts);
+    return prompts as McpPrompt[];
+  }
+
+  async listManifests() {
+    const capabilities = this.mcp.getServerCapabilities();
+    const [tools, prompts, resources] = await Promise.all([
+      capabilities?.tools ? this.listTools() : async () => undefined,
+      capabilities?.prompts ? this.listPrompts() : async () => undefined,
+      capabilities?.resources ? this.listResources() : async () => undefined,
+    ]);
+
+    return { prompts, resources, tools };
   }
 
   async callTool(toolName: string, args: any) {

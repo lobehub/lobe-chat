@@ -41,6 +41,22 @@ export const mcpRouter = router({
       return await mcpService.listTools(input);
     }),
 
+  // listResources now accepts MCPClientParams directly
+  listResources: mcpProcedure
+    .input(stdioParamsSchema) // Use the unified schema
+    .query(async ({ input }) => {
+      // Pass the validated MCPClientParams to the service
+      return await mcpService.listResources(input);
+    }),
+
+  // listPrompts now accepts MCPClientParams directly
+  listPrompts: mcpProcedure
+    .input(stdioParamsSchema) // Use the unified schema
+    .query(async ({ input }) => {
+      // Pass the validated MCPClientParams to the service
+      return await mcpService.listPrompts(input);
+    }),
+
   // callTool now accepts MCPClientParams, toolName, and args
   callTool: mcpProcedure
     .input(
@@ -55,5 +71,17 @@ export const mcpRouter = router({
       const data = await mcpService.callTool(input.params, input.toolName, input.args);
 
       return JSON.stringify(data);
+    }),
+
+  validMcpServerInstallable: mcpProcedure
+    .input(
+      z.object({
+        deploymentOptions: z.array(z.object({}).passthrough()),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      log('checkMcpInstall input: %O', input);
+
+      return await mcpService.checkMcpInstall(input as any);
     }),
 });

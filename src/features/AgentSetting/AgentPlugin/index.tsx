@@ -9,10 +9,10 @@ import { memo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import PluginAvatar from '@/components/Plugins/PluginAvatar';
+import PluginTag from '@/components/Plugins/PluginTag';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import PluginStore from '@/features/PluginStore';
-import PluginAvatar from '@/features/PluginStore/PluginItem/PluginAvatar';
-import PluginTag from '@/features/PluginStore/PluginItem/PluginTag';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { pluginHelpers, useToolStore } from '@/store/tool';
