@@ -139,7 +139,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             } else if (model.includes('-2.5-flash')) {
               return Math.min(thinkingBudget, 24_576);
             } else if (model.includes('-2.5-pro')) {
-              return Math.max(128, Math.min(thinkingBudget, 32_768));
+              return thinkingBudget === -1 ? -1 : Math.max(128, Math.min(thinkingBudget, 32_768));
             }
             return Math.min(thinkingBudget, 24_576);
           }
