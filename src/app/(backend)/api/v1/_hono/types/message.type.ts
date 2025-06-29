@@ -2,7 +2,8 @@
 /* eslint-disable typescript-sort-keys/interface */
 import { z } from 'zod';
 
-import { TopicResponse } from './topic.type';
+import { SessionItem, TopicItem, UserItem } from '@/database/schemas';
+import { MessageItem } from '@/types/message';
 
 // Request schemas
 export const MessagesQueryByTopicRequestSchema = z.object({
@@ -90,31 +91,11 @@ export interface MessagesCreateRequest {
   favorite?: boolean;
 }
 
-// Response type (represents the message table structure)
-export interface MessageResponse {
-  agentId: string | null;
-  clientId: string | null;
-  content: string | null;
-  createdAt: string;
-  error: any | null;
-  favorite: boolean | null;
-  id: string;
-  metadata: any | null;
-  model: string | null;
-  observationId: string | null;
-  parentId: string | null;
-  provider: string | null;
-  quotaId: string | null;
-  reasoning: any | null;
-  role: string;
-  search: any | null;
-  sessionId: string | null;
-  threadId: string | null;
-  tools: any | null;
-  topicId: string | null;
-  traceId: string | null;
-  updatedAt: string;
-  userId: string;
+// 消息查询时的返回类型，包含关联的 session 和 user 信息
+export interface MessageResponse extends MessageItem {
+  session: SessionItem | null;
+  user: UserItem;
+  topic: TopicItem | null;
 }
 
 // Additional schemas for message routes
@@ -179,16 +160,12 @@ export const SearchMessagesByKeywordRequestSchema = z.object({
   keyword: z.string().min(1, '搜索关键词不能为空'),
   limit: z.number().min(1).max(100).optional().default(20),
   offset: z.number().min(0).optional().default(0),
+  sessionId: z.string().min(1, '会话ID不能为空'),
 });
 
 export interface SearchMessagesByKeywordRequest {
   keyword: string;
   limit?: number;
   offset?: number;
-}
-
-// Search messages by keyword response type
-export interface MessageWithTopicResponse {
-  message: MessageResponse;
-  topic: TopicResponse | null;
+  sessionId: string;
 }
