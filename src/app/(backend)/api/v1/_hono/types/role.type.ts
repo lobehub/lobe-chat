@@ -43,6 +43,13 @@ export type CreateRoleRequest = {
  */
 export type UpdateRoleRequest = Partial<CreateRoleRequest>;
 
+/**
+ * Role update request with ID
+ */
+export type UpdateRoleWithIdRequest = UpdateRoleRequest & {
+  id: number;
+};
+
 // Zod Schemas for validation
 export const RoleIdParamSchema = z.object({
   id: z.coerce.number().int().positive('角色 ID 不正确'),
@@ -64,3 +71,7 @@ export const CreateRoleRequestSchema = z.object({
 });
 
 export const UpdateRoleRequestSchema = CreateRoleRequestSchema.partial();
+
+export const UpdateRoleWithIdRequestSchema = UpdateRoleRequestSchema.extend({
+  id: z.number().int().positive('角色 ID 不正确'),
+});
