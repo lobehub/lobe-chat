@@ -2,7 +2,7 @@ import { Context } from 'hono';
 
 import { BaseController } from '../common/base.controller';
 import { UserService } from '../services';
-import { CreateUserRequest, UpdateUserRequest } from '../types/user.type';
+import { CreateUserRequest, UpdateUserRequest, UpdateUserRolesRequest } from '../types/user.type';
 
 /**
  * 用户控制器类
@@ -141,6 +141,53 @@ export class UserController extends BaseController {
       const searchResults = await userService.searchUsers(keyword || '', pageSize);
 
       return this.success(c, searchResults, `搜索到 ${searchResults.length} 个匹配用户`);
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 更新用户角色
+   * PUT /api/v1/users/:id/roles
+   * @param c Hono Context
+   * @returns 用户角色更新响应
+   */
+  async updateUserRoles(c: Context): Promise<Response> {
+    try {
+      const { id } = this.getParams<{ id: string }>(c);
+      const body = await this.getBody<UpdateUserRolesRequest>(c);
+
+      if (!body) {
+        return this.error(c, '请求体不能为空', 400);
+      }
+
+      // 获取数据库连接并创建服务实例
+      const db = await this.getDatabase();
+      const userService = new UserService(db, this.getUserId(c));
+      const result = await userService.updateUserRoles(id, body);
+
+      return this.success(c, result, '用户角色更新成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 获取用户角色信息
+   * GET /api/v1/users/:id/roles
+   * @param c Hono Context
+   * @returns 用户角色信息响应
+   */
+  async getUserRoles(c: Context): Promise<Response> {
+    try {
+      const { id } = this.getParams<{ id: string }>(c);
+
+      // 获取数据库连接并创建服务实例
+      const db = await this.getDatabase();
+      const userService = new UserService(db, this.getUserId(c));
+      const userRoles = await userService.getUserRoles(id);
+
+      return this.success(c, userRoles, '获取用户角色成功');
     } catch (error) {
       return this.handleError(c, error);
     }
