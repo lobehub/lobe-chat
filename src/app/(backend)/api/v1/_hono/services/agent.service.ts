@@ -117,7 +117,7 @@ export class AgentService extends BaseService {
       return await this.db.transaction(async (tx) => {
         // 检查 Agent 是否存在且属于当前用户
         const existingAgent = await tx.query.agents.findFirst({
-          where: eq(agents.id, request.id) && eq(agents.userId, this.userId!),
+          where: and(eq(agents.id, request.id), eq(agents.userId, this.userId!)),
         });
 
         if (!existingAgent) {
@@ -141,7 +141,7 @@ export class AgentService extends BaseService {
         const [updatedAgent] = await tx
           .update(agents)
           .set(updateData)
-          .where(eq(agents.id, request.id) && eq(agents.userId, this.userId!))
+          .where(and(eq(agents.id, request.id), eq(agents.userId, this.userId!)))
           .returning();
 
         this.log('info', 'Agent 更新成功', { id: updatedAgent.id, slug: updatedAgent.slug });
@@ -273,7 +273,7 @@ export class AgentService extends BaseService {
       return await this.db.transaction(async (tx) => {
         // 验证 Agent 存在且属于当前用户
         const agent = await tx.query.agents.findFirst({
-          where: eq(agents.id, request.agentId) && eq(agents.userId, this.userId!),
+          where: and(eq(agents.id, request.agentId), eq(agents.userId, this.userId!)),
         });
 
         if (!agent) {
@@ -382,10 +382,10 @@ export class AgentService extends BaseService {
         // 验证 Agent 和 Session 都存在且属于当前用户
         const [agent, session] = await Promise.all([
           tx.query.agents.findFirst({
-            where: eq(agents.id, agentId) && eq(agents.userId, this.userId!),
+            where: and(eq(agents.id, agentId), eq(agents.userId, this.userId!)),
           }),
           tx.query.sessions.findFirst({
-            where: eq(sessions.id, request.sessionId) && eq(sessions.userId, this.userId!),
+            where: and(eq(sessions.id, request.sessionId), eq(sessions.userId, this.userId!)),
           }),
         ]);
 
@@ -478,7 +478,7 @@ export class AgentService extends BaseService {
       await this.db.transaction(async (tx) => {
         // 验证 Agent 存在且属于当前用户
         const agent = await tx.query.agents.findFirst({
-          where: eq(agents.id, agentId) && eq(agents.userId, this.userId!),
+          where: and(eq(agents.id, agentId), eq(agents.userId, this.userId!)),
         });
 
         if (!agent) {
@@ -564,7 +564,7 @@ export class AgentService extends BaseService {
         // 验证迁移目标 Agent（如果指定）
         if (request.migrateTo) {
           const migrateTarget = await tx.query.agents.findFirst({
-            where: eq(agents.id, request.migrateTo) && eq(agents.userId, this.userId!),
+            where: and(eq(agents.id, request.migrateTo), eq(agents.userId, this.userId!)),
           });
 
           if (!migrateTarget) {
@@ -579,7 +579,7 @@ export class AgentService extends BaseService {
           try {
             // 检查 Agent 是否存在且属于当前用户
             const agent = await tx.query.agents.findFirst({
-              where: eq(agents.id, agentId) && eq(agents.userId, this.userId!),
+              where: and(eq(agents.id, agentId), eq(agents.userId, this.userId!)),
             });
 
             if (!agent) {
@@ -599,7 +599,7 @@ export class AgentService extends BaseService {
             // 删除 Agent
             await tx
               .delete(agents)
-              .where(eq(agents.id, agentId) && eq(agents.userId, this.userId!));
+              .where(and(eq(agents.id, agentId), eq(agents.userId, this.userId!)));
 
             result.success++;
             this.log('info', 'Agent 删除成功', { agentId });
@@ -648,7 +648,7 @@ export class AgentService extends BaseService {
           try {
             // 检查 Agent 是否存在且属于当前用户
             const agent = await tx.query.agents.findFirst({
-              where: eq(agents.id, agentId) && eq(agents.userId, this.userId!),
+              where: and(eq(agents.id, agentId), eq(agents.userId, this.userId!)),
             });
 
             if (!agent) {
@@ -670,7 +670,7 @@ export class AgentService extends BaseService {
             await tx
               .update(agents)
               .set(updateData)
-              .where(eq(agents.id, agentId) && eq(agents.userId, this.userId!));
+              .where(and(eq(agents.id, agentId), eq(agents.userId, this.userId!)));
 
             result.success++;
             this.log('info', 'Agent 更新成功', { agentId });
