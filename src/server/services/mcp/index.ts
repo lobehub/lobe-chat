@@ -4,7 +4,14 @@ import { McpError } from '@modelcontextprotocol/sdk/types.js';
 import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 
-import { MCPClient, MCPClientParams, StdioMCPParams } from '@/libs/mcp';
+import {
+  MCPClient,
+  MCPClientParams,
+  McpPrompt,
+  McpResource,
+  McpTool,
+  StdioMCPParams,
+} from '@/libs/mcp';
 import { mcpSystemDepsCheckService } from '@/server/services/mcp/deps';
 import { CheckMcpInstallResult } from '@/types/plugins';
 import { CustomPluginMetadata } from '@/types/tool/plugin';
@@ -41,6 +48,66 @@ class MCPService {
         cause: error,
         code: 'INTERNAL_SERVER_ERROR',
         message: `Error listing tools from MCP server: ${(error as Error).message}`,
+      });
+    }
+  }
+
+  // listTools now accepts MCPClientParams
+  async listRawTools(params: MCPClientParams): Promise<McpTool[]> {
+    const client = await this.getClient(params); // Get client using params
+    log(`Listing tools using client for params: %O`, params);
+
+    try {
+      const result = await client.listTools();
+      log(`Tools listed successfully for params: %O, result count: %d`, params, result.length);
+      return result;
+    } catch (error) {
+      console.error(`Error listing tools for params %O:`, params, error);
+      // Propagate a TRPCError for better handling upstream
+      throw new TRPCError({
+        cause: error,
+        code: 'INTERNAL_SERVER_ERROR',
+        message: `Error listing tools from MCP server: ${(error as Error).message}`,
+      });
+    }
+  }
+
+  // listResources now accepts MCPClientParams
+  async listResources(params: MCPClientParams): Promise<McpResource[]> {
+    const client = await this.getClient(params); // Get client using params
+    log(`Listing resources using client for params: %O`, params);
+
+    try {
+      const result = await client.listResources();
+      log(`Resources listed successfully for params: %O, result count: %d`, params, result.length);
+      return result;
+    } catch (error) {
+      console.error(`Error listing resources for params %O:`, params, error);
+      // Propagate a TRPCError for better handling upstream
+      throw new TRPCError({
+        cause: error,
+        code: 'INTERNAL_SERVER_ERROR',
+        message: `Error listing resources from MCP server: ${(error as Error).message}`,
+      });
+    }
+  }
+
+  // listPrompts now accepts MCPClientParams
+  async listPrompts(params: MCPClientParams): Promise<McpPrompt[]> {
+    const client = await this.getClient(params); // Get client using params
+    log(`Listing prompts using client for params: %O`, params);
+
+    try {
+      const result = await client.listPrompts();
+      log(`Prompts listed successfully for params: %O, result count: %d`, params, result.length);
+      return result;
+    } catch (error) {
+      console.error(`Error listing prompts for params %O:`, params, error);
+      // Propagate a TRPCError for better handling upstream
+      throw new TRPCError({
+        cause: error,
+        code: 'INTERNAL_SERVER_ERROR',
+        message: `Error listing prompts from MCP server: ${(error as Error).message}`,
       });
     }
   }
@@ -165,7 +232,15 @@ class MCPService {
     params: Omit<StdioMCPParams, 'type'>,
     metadata?: CustomPluginMetadata,
   ): Promise<LobeChatPluginManifest> {
-    const tools = await this.listTools({
+    const client = await this.getClient({
+      args: params.args,
+      command: params.command,
+      env: params.env,
+      name: params.name,
+      type: 'stdio',
+    }); // Get client using params
+
+    const apis = await this.listTools({
       args: params.args,
       command: params.command,
       env: params.env,
@@ -173,20 +248,24 @@ class MCPService {
       type: 'stdio',
     });
 
+    const manifest = await client.listManifests();
+
     const identifier = params.name;
+
     return {
-      api: tools,
+      api: apis,
       identifier,
       meta: {
         avatar: metadata?.avatar || 'MCP_AVATAR',
         description:
           metadata?.description ||
-          `${identifier} MCP server has ${tools.length} tools, like "${tools[0]?.name}"`,
+          `${identifier} MCP server has ${apis.length} tools, like "${apis[0]?.name}"`,
         title: identifier,
       },
+      ...manifest,
       // TODO: temporary
       type: 'mcp' as any,
-    };
+    } as LobeChatPluginManifest;
   }
 
   /**

@@ -38,6 +38,9 @@ export const createMCPPluginStoreSlice: StateCreator<
 
     const { updateInstallLoadingState, refreshPlugins, updateMCPInstallProgress } = get();
 
+    // 记录安装开始时间
+    const installStartTime = Date.now();
+
     try {
       // 步骤 1: 获取插件清单
       updateMCPInstallProgress(identifier, {
@@ -113,6 +116,21 @@ export const createMCPPluginStoreSlice: StateCreator<
         step: MCPInstallStep.COMPLETED,
       });
 
+      // 计算安装持续时间
+      const installDurationMs = Date.now() - installStartTime;
+
+      mcpService.reportMcpInstallResult({
+        identifier: plugin.identifier,
+        installDurationMs,
+        manifest: {
+          prompts: (manifest as any).prompts,
+          resources: (manifest as any).resources,
+          tools: (manifest as any).tools,
+        },
+        success: true,
+        version: data.version,
+      });
+
       // 短暂显示完成状态后清除进度
       await sleep(1000);
 
@@ -122,6 +140,18 @@ export const createMCPPluginStoreSlice: StateCreator<
       return true;
     } catch (error) {
       console.error(error);
+
+      // 计算安装持续时间（失败情况）
+      const installDurationMs = Date.now() - installStartTime;
+
+      // 上报安装失败结果
+      mcpService.reportMcpInstallResult({
+        error: error instanceof Error ? error.message : 'Unknown error',
+        identifier: plugin.identifier,
+        installDurationMs,
+        success: false,
+      });
+
       updateInstallLoadingState(identifier, undefined);
       updateMCPInstallProgress(identifier, undefined);
     }
