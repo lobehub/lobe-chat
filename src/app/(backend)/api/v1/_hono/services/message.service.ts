@@ -1,7 +1,7 @@
 import { count } from 'drizzle-orm';
-import { and, desc, eq, ilike, inArray, isNull, or } from 'drizzle-orm/expressions';
+import { and, desc, eq, ilike, inArray, isNull } from 'drizzle-orm/expressions';
 
-import { messages, messagesFiles, topics, users } from '@/database/schemas';
+import { messages, messagesFiles, topics } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
 
@@ -9,7 +9,6 @@ import { BaseService } from '../common/base.service';
 import { ServiceResult } from '../types';
 import {
   MessageResponse,
-  MessageWithTopicResponse,
   MessagesCreateRequest,
   SearchMessagesByKeywordRequest,
 } from '../types/message.type';
@@ -88,39 +87,18 @@ export class MessageService extends BaseService {
     this.log('info', '根据话题ID获取消息列表', { topicId, userId: this.userId });
 
     try {
-      const result = await this.db.query.messages.findMany({
+      const messageList = await this.db.query.messages.findMany({
         orderBy: desc(messages.createdAt),
         where: and(eq(messages.topicId, topicId), eq(messages.userId, this.userId!)),
+        with: {
+          session: true,
+          topic: true,
+          user: true,
+        },
       });
 
-      const messageList = result.map((message) => ({
-        agentId: message.agentId,
-        clientId: message.clientId,
-        content: message.content,
-        createdAt: message.createdAt.toISOString(),
-        error: message.error,
-        favorite: message.favorite || false,
-        id: message.id,
-        metadata: message.metadata,
-        model: message.model,
-        observationId: message.observationId,
-        parentId: message.parentId,
-        provider: message.provider,
-        quotaId: message.quotaId,
-        reasoning: message.reasoning,
-        role: message.role,
-        search: message.search,
-        sessionId: message.sessionId,
-        threadId: message.threadId,
-        tools: message.tools,
-        topicId: message.topicId,
-        traceId: message.traceId,
-        updatedAt: message.updatedAt.toISOString(),
-        userId: message.userId,
-      }));
-
       this.log('info', '获取话题消息列表完成', { count: messageList.length });
-      return messageList;
+      return messageList as MessageResponse[];
     } catch (error) {
       this.log('error', '获取话题消息列表失败', { error });
       throw this.createCommonError('查询话题消息列表失败');
@@ -130,7 +108,7 @@ export class MessageService extends BaseService {
   /**
    * 创建新消息
    * @param messageData 消息数据
-   * @returns 创建的消息ID
+   * @returns 创建的消息（包含 session 和 user 信息）
    */
   async createMessage(messageData: MessagesCreateRequest): ServiceResult<MessageResponse> {
     this.log('info', '创建新消息', {
@@ -155,29 +133,7 @@ export class MessageService extends BaseService {
           userId: this.userId!,
         })
         .returning({
-          agentId: messages.agentId,
-          clientId: messages.clientId,
-          content: messages.content,
-          createdAt: messages.createdAt,
-          error: messages.error,
-          favorite: messages.favorite,
           id: messages.id,
-          metadata: messages.metadata,
-          model: messages.model,
-          observationId: messages.observationId,
-          parentId: messages.parentId,
-          provider: messages.provider,
-          quotaId: messages.quotaId,
-          reasoning: messages.reasoning,
-          role: messages.role,
-          search: messages.search,
-          sessionId: messages.sessionId,
-          threadId: messages.threadId,
-          tools: messages.tools,
-          topicId: messages.topicId,
-          traceId: messages.traceId,
-          updatedAt: messages.updatedAt,
-          userId: messages.userId,
         });
 
       // 处理文件附件
@@ -197,12 +153,23 @@ export class MessageService extends BaseService {
         );
       }
 
+      // 重新查询包含 session 和 user 信息的完整消息
+      const completeMessage = await this.db.query.messages.findFirst({
+        where: and(eq(messages.id, newMessage.id), eq(messages.userId, this.userId!)),
+        with: {
+          session: true,
+          topic: true,
+          user: true,
+        },
+      });
+
+      if (!completeMessage) {
+        throw new Error('无法查询到刚创建的消息');
+      }
+
       this.log('info', '创建消息完成', { messageId: newMessage.id });
-      return {
-        ...newMessage,
-        createdAt: newMessage.createdAt.toISOString(),
-        updatedAt: newMessage.updatedAt.toISOString(),
-      };
+
+      return completeMessage as MessageResponse;
     } catch (error) {
       this.log('error', '创建消息失败', { error });
       throw this.createCommonError('创建消息失败');
@@ -385,114 +352,70 @@ export class MessageService extends BaseService {
    */
   async searchMessagesByKeyword(
     searchRequest: SearchMessagesByKeywordRequest,
-  ): ServiceResult<MessageWithTopicResponse[]> {
+  ): ServiceResult<MessageResponse[]> {
     this.log('info', '根据关键词搜索消息', {
-      keyword: searchRequest.keyword,
-      limit: searchRequest.limit,
-      offset: searchRequest.offset,
+      ...searchRequest,
       userId: this.userId,
     });
 
     try {
-      const { keyword, limit = 20, offset = 0 } = searchRequest;
+      const { keyword, limit = 20, offset = 0, sessionId } = searchRequest;
 
-      // 使用 JOIN 查询来支持跨表搜索，获取话题用户信息和消息数量
-      const result = await this.db
-        .select({
-          message: messages,
-
-          topicClientId: topics.clientId,
-
-          topicCreatedAt: topics.createdAt,
-
-          topicFavorite: topics.favorite,
-
-          topicHistorySummary: topics.historySummary,
-          // Topic 字段
-          topicId: topics.id,
-          topicMetadata: topics.metadata,
-          topicSessionId: topics.sessionId,
-          topicTitle: topics.title,
-          topicUpdatedAt: topics.updatedAt,
-          topicUserId: topics.userId,
-
-          userAvatar: users.avatar,
-
-          userEmail: users.email,
-
-          userFullName: users.fullName,
-          // 用户信息
-          userId: users.id,
-          userUsername: users.username,
-        })
+      // 步骤1: 查询内容匹配关键词的消息ID
+      const contentMatchedMessages = await this.db
+        .select({ id: messages.id })
         .from(messages)
-        .leftJoin(topics, eq(messages.topicId, topics.id))
-        .leftJoin(users, eq(topics.userId, users.id))
+        .where(and(eq(messages.sessionId, sessionId), ilike(messages.content, `%${keyword}%`)));
+
+      // 步骤2: 查询标题匹配关键词的话题，并获取这些话题下的消息ID
+      const titleMatchedTopics = await this.db
+        .select({ id: topics.id })
+        .from(topics)
         .where(
-          and(
-            eq(messages.userId, this.userId!),
-            or(ilike(messages.content, `%${keyword}%`), ilike(topics.title, `%${keyword}%`)),
-          ),
-        )
-        .orderBy(desc(messages.createdAt))
-        .limit(limit)
-        .offset(offset);
+          and(eq(topics.sessionId, searchRequest.sessionId), ilike(topics.title, `%${keyword}%`)),
+        );
 
-      // 获取每个话题的消息数量
-      const topicIds = [...new Set(result.map((row) => row.topicId).filter(Boolean))] as string[];
-      const messageCountsResult =
-        topicIds.length > 0
-          ? await this.db
-              .select({
-                count: count(messages.id),
-                topicId: messages.topicId,
-              })
-              .from(messages)
-              .where(inArray(messages.topicId, topicIds))
-              .groupBy(messages.topicId)
-          : [];
+      let topicMatchedMessages: { id: string }[] = [];
+      if (titleMatchedTopics.length > 0) {
+        const topicIds = titleMatchedTopics.map((topic) => topic.id);
+        topicMatchedMessages = await this.db
+          .select({ id: messages.id })
+          .from(messages)
+          .where(and(inArray(messages.topicId, topicIds)));
+      }
 
-      const messageCountsMap = new Map(
-        messageCountsResult.map((item) => [item.topicId, item.count]),
-      );
+      // 步骤3: 合并并去重消息ID列表
+      const allMessageIds = [
+        ...new Set([
+          ...contentMatchedMessages.map((msg) => msg.id),
+          ...topicMatchedMessages.map((msg) => msg.id),
+        ]),
+      ];
 
-      const searchResults: MessageWithTopicResponse[] = result.map((row) => ({
-        message: {
-          ...row.message,
-          createdAt: row.message.createdAt.toISOString(),
-          favorite: !!row.message.favorite,
-          updatedAt: row.message.updatedAt.toISOString(),
+      if (allMessageIds.length === 0) {
+        this.log('info', '关键词搜索消息完成', { keyword, resultCount: 0 });
+        return [];
+      }
+
+      // 步骤4: 使用 with 关联查询获取完整的消息信息
+      const result = await this.db.query.messages.findMany({
+        limit: limit,
+        offset: offset,
+        orderBy: desc(messages.createdAt),
+        where: and(eq(messages.userId, this.userId!), inArray(messages.id, allMessageIds)),
+        with: {
+          session: true,
+          topic: true,
+          user: true,
         },
-        topic:
-          row.topicId && row.userId
-            ? {
-                clientId: row.topicClientId,
-                createdAt: row.topicCreatedAt!.toISOString(),
-                favorite: !!row.topicFavorite,
-                historySummary: row.topicHistorySummary,
-                id: row.topicId,
-                messageCount: messageCountsMap.get(row.topicId) || 0,
-                metadata: row.topicMetadata,
-                sessionId: row.topicSessionId,
-                title: row.topicTitle,
-                updatedAt: row.topicUpdatedAt!.toISOString(),
-                user: {
-                  avatar: row.userAvatar,
-                  email: row.userEmail,
-                  fullName: row.userFullName,
-                  id: row.userId,
-                  username: row.userUsername,
-                },
-              }
-            : null,
-      }));
+      });
 
       this.log('info', '关键词搜索消息完成', {
         keyword,
-        resultCount: searchResults.length,
+        resultCount: result.length,
       });
 
-      return searchResults;
+      return result as MessageResponse[];
     } catch (error) {
       this.log('error', '关键词搜索消息失败', { error, keyword: searchRequest.keyword });
       throw this.createCommonError('搜索消息失败');
