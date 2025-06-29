@@ -11,6 +11,25 @@ export interface McpTool {
   name: string;
 }
 
+export interface McpResource {
+  description?: string;
+  mimeType?: string;
+  name: string;
+  uri: string;
+}
+
+export interface McpPromptArgument {
+  description?: string;
+  name: string;
+  required?: boolean;
+}
+
+export interface McpPrompt {
+  arguments?: McpPromptArgument[];
+  description?: string;
+  name: string;
+}
+
 interface HttpMCPClientParams {
   name: string;
   type: 'http';

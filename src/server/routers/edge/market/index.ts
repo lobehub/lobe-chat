@@ -469,4 +469,32 @@ export const marketRouter = router({
         });
       }
     }),
+
+  // ============================== Analytics ==============================
+
+  reportMcpInstallResult: publicProcedure
+    .input(
+      z.object({
+        error: z.any().optional(),
+        identifier: z.string(),
+        installDurationMs: z.number().optional(),
+        manifest: z.any().optional(),
+        metadata: z.any().optional(),
+        platform: z.string().optional(),
+        success: z.boolean(),
+        version: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      log('reportMcpInstallResult input: %O', input);
+
+      try {
+        await discoverService.reportPluginInstallation(input);
+        return { success: true };
+      } catch (error) {
+        log('Error reporting MCP installation result: %O', error);
+        // 不抛出错误，因为上报失败不应影响主流程
+        return { success: false };
+      }
+    }),
 });

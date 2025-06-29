@@ -41,6 +41,22 @@ export const mcpRouter = router({
       return await mcpService.listTools(input);
     }),
 
+  // listResources now accepts MCPClientParams directly
+  listResources: mcpProcedure
+    .input(stdioParamsSchema) // Use the unified schema
+    .query(async ({ input }) => {
+      // Pass the validated MCPClientParams to the service
+      return await mcpService.listResources(input);
+    }),
+
+  // listPrompts now accepts MCPClientParams directly
+  listPrompts: mcpProcedure
+    .input(stdioParamsSchema) // Use the unified schema
+    .query(async ({ input }) => {
+      // Pass the validated MCPClientParams to the service
+      return await mcpService.listPrompts(input);
+    }),
+
   // callTool now accepts MCPClientParams, toolName, and args
   callTool: mcpProcedure
     .input(

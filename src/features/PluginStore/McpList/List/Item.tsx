@@ -70,14 +70,14 @@ const Item = memo<PluginItemProps>(
           <Flexbox paddingBlock={4} paddingInline={12}>
             <Progress
               percent={installProgress.progress}
+              showInfo={false}
               size="small"
               status="active"
               strokeColor={{ '0%': theme.blue, '100%': theme.geekblue }}
             />
-
             {stepText && (
               <Text fontSize={11} style={{ marginTop: 4 }} type={'secondary'}>
-                {stepText}
+                ({installProgress.progress}%) {stepText}
               </Text>
             )}
           </Flexbox>

@@ -1,10 +1,11 @@
 import { PluginManifest } from '@lobehub/market-sdk';
 
 import { isDesktop } from '@/const/version';
-import { desktopClient, toolsClient } from '@/libs/trpc/client';
+import { desktopClient, edgeClient, toolsClient } from '@/libs/trpc/client';
 import { ChatToolPayload } from '@/types/message';
 import { CheckMcpInstallResult } from '@/types/plugins';
 import { CustomPluginMetadata } from '@/types/tool/plugin';
+import { cleanObject } from '@/utils/object';
 
 class MCPService {
   async invokeMcpToolCall(payload: ChatToolPayload, { signal }: { signal?: AbortSignal }) {
@@ -83,6 +84,41 @@ class MCPService {
       };
     }
   }
+
+  /**
+   * 上报 MCP 插件安装结果
+   */
+  reportMcpInstallResult = ({
+    identifier,
+    version,
+    installDurationMs,
+    success,
+    manifest,
+    error,
+  }: {
+    error?: string;
+    identifier: string;
+    installDurationMs?: number;
+    manifest?: any;
+    success: boolean;
+    version?: string;
+  }) => {
+    const reportData = {
+      error: success ? undefined : error,
+      identifier,
+      installDurationMs,
+      manifest: success ? manifest : undefined,
+      success,
+      version,
+    };
+    console.log('reportData:', reportData);
+
+    edgeClient.market.reportMcpInstallResult
+      .mutate(cleanObject(reportData))
+      .catch((reportError) => {
+        console.warn('Failed to report MCP installation result:', reportError);
+      });
+  };
 }
 
 export const mcpService = new MCPService();

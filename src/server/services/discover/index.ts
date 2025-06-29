@@ -396,6 +396,37 @@ export class DiscoverService {
     );
   };
 
+  // ============================== MCP Analytics ==============================
+
+  /**
+   * report MCP plugin result marketplace
+   */
+  reportPluginInstallation = async (params: {
+    error?: string;
+    identifier: string;
+    installDurationMs?: number;
+    manifest?: any;
+    metadata?: any;
+    platform?: string;
+    success: boolean;
+    version?: string;
+  }) => {
+    // 检查是否启用上报功能
+    if (process.env.DISABLE_MARKETPLACE_ANALYTICS === '1') {
+      return;
+    }
+
+    try {
+      await this.market.plugins.reportInstallation({
+        ...params,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      // 上报失败不影响主流程，只记录日志
+      console.warn('Failed to report MCP installation result:', error);
+    }
+  };
+
   // ============================== Plugin Market ==============================
 
   private _getPluginList = async (locale?: string): Promise<DiscoverPluginItem[]> => {
