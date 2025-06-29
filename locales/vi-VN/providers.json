@@ -20,6 +20,9 @@
   "bedrock": {
     "description": "Bedrock là dịch vụ do Amazon AWS cung cấp, tập trung vào việc cung cấp các mô hình ngôn ngữ AI và mô hình hình ảnh tiên tiến cho doanh nghiệp. Gia đình mô hình của nó bao gồm dòng Claude của Anthropic, dòng Llama 3.1 của Meta, v.v., bao quát nhiều lựa chọn từ nhẹ đến hiệu suất cao, hỗ trợ nhiều nhiệm vụ như tạo văn bản, đối thoại, xử lý hình ảnh, phù hợp cho các ứng dụng doanh nghiệp với quy mô và nhu cầu khác nhau."
   },
+  "burncloud": {
+    "description": "BurnCloud là nền tảng dịch vụ AI hiệu suất cao cung cấp quyền truy cập API đến nhiều mô hình lớn hàng đầu trong ngành, bao gồm dòng Claude, dòng GPT, Gemini và DeepSeek. Nền tảng này nổi bật với độ tin cậy ổn định và thời gian phản hồi nhanh, cho phép tích hợp liền mạch các khả năng trí tuệ nhân tạo tiên tiến."
+  },
   "cloudflare": {
     "description": "Chạy các mô hình học máy được hỗ trợ bởi GPU không máy chủ trên mạng lưới toàn cầu của Cloudflare."
   },

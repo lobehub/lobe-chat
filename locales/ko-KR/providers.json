@@ -20,6 +20,9 @@
   "bedrock": {
     "description": "Bedrock은 아마존 AWS가 제공하는 서비스로, 기업에 고급 AI 언어 모델과 비주얼 모델을 제공합니다. 그 모델 가족에는 Anthropic의 Claude 시리즈, Meta의 Llama 3.1 시리즈 등이 포함되어 있으며, 경량형부터 고성능까지 다양한 선택지를 제공하고 텍스트 생성, 대화, 이미지 처리 등 여러 작업을 지원하여 다양한 규모와 요구의 기업 응용 프로그램에 적합합니다."
   },
+  "burncloud": {
+    "description": "BurnCloud는 Claude 시리즈, GPT 시리즈, Gemini 및 DeepSeek 등 다양한 업계 선도 대형 모델에 API 액세스를 제공하는 고성능 AI 서비스 플랫폼입니다. 안정적인 신뢰성과 빠른 응답 시간으로 고급 인공지능 기능의 원활한 통합을 가능하게 합니다."
+  },
   "cloudflare": {
     "description": "Cloudflare의 글로벌 네트워크에서 서버리스 GPU로 구동되는 머신러닝 모델을 실행합니다."
   },

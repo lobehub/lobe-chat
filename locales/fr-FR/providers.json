@@ -20,6 +20,9 @@
   "bedrock": {
     "description": "Bedrock est un service proposé par Amazon AWS, axé sur la fourniture de modèles linguistiques et visuels avancés pour les entreprises. Sa famille de modèles comprend la série Claude d'Anthropic, la série Llama 3.1 de Meta, etc., offrant une variété d'options allant des modèles légers aux modèles haute performance, prenant en charge des tâches telles que la génération de texte, les dialogues et le traitement d'images, adaptées aux applications d'entreprise de différentes tailles et besoins."
   },
+  "burncloud": {
+    "description": "BurnCloud est une plateforme de services IA haute performance offrant un accès API à une large gamme de grands modèles de pointe, notamment les séries Claude, GPT, Gemini et DeepSeek. Elle se caractérise par une fiabilité stable et des temps de réponse rapides pour une intégration transparente des capacités IA avancées."
+  },
   "cloudflare": {
     "description": "Exécutez des modèles d'apprentissage automatique alimentés par GPU sans serveur sur le réseau mondial de Cloudflare."
   },
