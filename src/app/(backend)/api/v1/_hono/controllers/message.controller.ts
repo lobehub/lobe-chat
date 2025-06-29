@@ -129,7 +129,7 @@ export class MessageController extends BaseController {
       const query = this.getQuery(c);
 
       const searchRequest: SearchMessagesByKeywordRequest = {
-        keyword: query.keyword as string,
+        ...query,
         limit: query.limit ? parseInt(query.limit as string) : 20,
         offset: query.offset ? parseInt(query.offset as string) : 0,
       };
