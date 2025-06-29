@@ -89,6 +89,11 @@ export const messagesRelations = relations(messages, ({ many, one }) => ({
     references: [sessions.id],
   }),
 
+  user: one(users, {
+    fields: [messages.userId],
+    references: [users.id],
+  }),
+
   parent: one(messages, {
     fields: [messages.parentId],
     references: [messages.id],

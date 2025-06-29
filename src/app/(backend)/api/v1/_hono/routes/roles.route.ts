@@ -6,7 +6,7 @@ import { getScopePermissions } from '@/utils/rbac';
 import { RoleController } from '../controllers/role.controller';
 import { requireAuth } from '../middleware/oidc-auth';
 import { requireAnyPermission } from '../middleware/permission-check';
-import { RoleIdParamSchema } from '../types/role.type';
+import { RoleIdParamSchema, UpdateRoleRequestSchema } from '../types/role.type';
 
 const RolesRoutes = new Hono();
 
@@ -84,6 +84,24 @@ RolesRoutes.get(
     const roleController = new RoleController();
 
     return roleController.getRolePermissions(c);
+  },
+);
+
+/**
+ * Update role information
+ * PUT /api/v1/roles/:id
+ * Requires role update permission (admin only)
+ */
+RolesRoutes.put(
+  '/:id',
+  requireAuth,
+  requireAnyPermission(getScopePermissions('RBAC_ROLE_UPDATE', ['ALL']), '您没有权限更新角色信息'),
+  zValidator('param', RoleIdParamSchema),
+  zValidator('json', UpdateRoleRequestSchema),
+  async (c) => {
+    const roleController = new RoleController();
+
+    return await roleController.updateRole(c);
   },
 );
 
