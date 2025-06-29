@@ -50,15 +50,7 @@ export class AgentController extends BaseController {
       const agentService = new AgentService(db, this.getUserId(c));
       const createdAgent = await agentService.createAgent(body);
 
-      return c.json(
-        {
-          data: createdAgent,
-          message: 'Agent 创建成功',
-          success: true,
-          timestamp: new Date().toISOString(),
-        },
-        201,
-      );
+      return this.success(c, createdAgent, 'Agent 创建成功');
     } catch (error) {
       return this.handleError(c, error);
     }
