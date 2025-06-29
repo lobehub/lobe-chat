@@ -32,6 +32,9 @@
   "bfl": {
     "description": "Wiodące, przełomowe laboratorium badawcze sztucznej inteligencji, tworzące wizualną infrastrukturę jutra."
   },
+  "burncloud": {
+    "description": "BurnCloud to wysokowydajna platforma usług AI, zapewniająca dostęp API do szerokiej gamy wiodących w branży dużych modeli, w tym serii Claude, GPT, Gemini i DeepSeek. Wyróżnia się stabilną niezawodnością i szybkim czasem odpowiedzi, umożliwiając bezproblemową integrację zaawansowanych możliwości sztucznej inteligencji."
+  },
   "cloudflare": {
     "description": "Uruchamiaj modele uczenia maszynowego napędzane przez GPU w globalnej sieci Cloudflare."
   },

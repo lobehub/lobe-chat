@@ -32,6 +32,9 @@
   "bfl": {
     "description": "Phòng thí nghiệm nghiên cứu trí tuệ nhân tạo tiên phong dẫn đầu, kiến tạo cơ sở hạ tầng thị giác cho ngày mai."
   },
+  "burncloud": {
+    "description": "BurnCloud là nền tảng dịch vụ AI hiệu suất cao cung cấp quyền truy cập API đến nhiều mô hình lớn hàng đầu trong ngành, bao gồm dòng Claude, dòng GPT, Gemini và DeepSeek. Nền tảng này nổi bật với độ tin cậy ổn định và thời gian phản hồi nhanh, cho phép tích hợp liền mạch các khả năng trí tuệ nhân tạo tiên tiến."
+  },
   "cloudflare": {
     "description": "Chạy các mô hình học máy được hỗ trợ bởi GPU không máy chủ trên mạng lưới toàn cầu của Cloudflare."
   },

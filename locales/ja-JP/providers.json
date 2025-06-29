@@ -32,6 +32,9 @@
   "bfl": {
     "description": "最先端の人工知能研究ラボで、次世代の視覚インフラを構築します。"
   },
+  "burncloud": {
+    "description": "BurnCloudは、ClaudeシリーズやGPTシリーズ、Gemini、DeepSeekなど、業界をリードする多様な大規模モデルへのAPIアクセスを提供する高性能AIサービスプラットフォームです。安定した信頼性と迅速な応答時間を特徴とし、先進的なAI機能をシームレスに統合できます。"
+  },
   "cloudflare": {
     "description": "Cloudflareのグローバルネットワーク上で、サーバーレスGPUによって駆動される機械学習モデルを実行します。"
   },

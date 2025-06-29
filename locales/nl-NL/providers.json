@@ -32,6 +32,9 @@
   "bfl": {
     "description": "Een toonaangevend, grensverleggend onderzoeksinstituut voor kunstmatige intelligentie dat de visuele infrastructuur van morgen bouwt."
   },
+  "burncloud": {
+    "description": "BurnCloud is een hoogwaardige AI-dienstenplatform dat API-toegang biedt tot een breed scala aan toonaangevende grote modellen, waaronder de Claude-serie, GPT-serie, Gemini en DeepSeek. Het onderscheidt zich door stabiele betrouwbaarheid en snelle responstijden voor naadloze integratie van geavanceerde kunstmatige intelligentie mogelijkheden."
+  },
   "cloudflare": {
     "description": "Voer machine learning-modellen aan, aangedreven door serverloze GPU's, uit op het wereldwijde netwerk van Cloudflare."
   },
