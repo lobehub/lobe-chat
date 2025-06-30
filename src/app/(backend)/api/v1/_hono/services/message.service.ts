@@ -93,6 +93,7 @@ export class MessageService extends BaseService {
         with: {
           session: true,
           topic: true,
+          translation: true,
           user: true,
         },
       });
