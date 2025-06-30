@@ -333,3 +333,17 @@ export const chatGroupsAgentsRelations = relations(chatGroupsAgents, ({ one }) =
 export const usersRelations = relations(users, ({ many }) => ({
   sessions: many(sessions),
 }));
+
+export const messageTranslatesRelations = relations(messageTranslates, ({ one }) => ({
+  message: one(messages, {
+    fields: [messageTranslates.id],
+    references: [messages.id],
+  }),
+}));
+
+export const messageTTSRelations = relations(messageTTS, ({ one }) => ({
+  message: one(messages, {
+    fields: [messageTTS.id],
+    references: [messages.id],
+  }),
+}));
