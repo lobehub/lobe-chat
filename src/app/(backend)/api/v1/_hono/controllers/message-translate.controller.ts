@@ -37,9 +37,9 @@ export class MessageTranslateController extends BaseController {
 
       const db = await this.getDatabase();
       const translateService = new MessageTranslateService(db, userId);
-      await translateService.translateMessage(translateData);
+      const result = await translateService.translateMessage(translateData);
 
-      return this.success(c, null, '翻译消息成功');
+      return this.success(c, result, '翻译消息成功');
     } catch (error) {
       return this.handleError(c, error);
     }
