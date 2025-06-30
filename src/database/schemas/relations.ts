@@ -9,7 +9,7 @@ import { asyncTasks } from './asyncTask';
 import { documentChunks, documents } from './document';
 import { files, knowledgeBases } from './file';
 import { generationBatches, generationTopics, generations } from './generation';
-import { messages, messagesFiles } from './message';
+import { messageTTS, messageTranslates, messages, messagesFiles } from './message';
 import { chunks, unstructuredChunks } from './rag';
 import { sessionGroups, sessions } from './session';
 import { threads, topicDocuments, topics } from './topic';
@@ -108,6 +108,16 @@ export const messagesRelations = relations(messages, ({ many, one }) => ({
   thread: one(threads, {
     fields: [messages.threadId],
     references: [threads.id],
+  }),
+
+  translation: one(messageTranslates, {
+    fields: [messages.id],
+    references: [messageTranslates.id],
+  }),
+
+  tts: one(messageTTS, {
+    fields: [messages.id],
+    references: [messageTTS.id],
   }),
 }));
 
@@ -293,4 +303,18 @@ export const generationsRelations = relations(generations, ({ one }) => ({
 
 export const usersRelations = relations(users, ({ many }) => ({
   sessions: many(sessions),
+}));
+
+export const messageTranslatesRelations = relations(messageTranslates, ({ one }) => ({
+  message: one(messages, {
+    fields: [messageTranslates.id],
+    references: [messages.id],
+  }),
+}));
+
+export const messageTTSRelations = relations(messageTTS, ({ one }) => ({
+  message: one(messages, {
+    fields: [messageTTS.id],
+    references: [messages.id],
+  }),
 }));
