@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.96.12](https://github.com/lobehub/lobe-chat/compare/v1.96.11...v1.96.12)
+
+<sup>Released on **2025-06-30**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Pin `antd@5.26.2` to fix build error.
+
+#### 💄 Styles
+
+- **misc**: Add DeepResearch models from OpenAI.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Pin `antd@5.26.2` to fix build error, closes [#8303](https://github.com/lobehub/lobe-chat/issues/8303) ([44b6b01](https://github.com/lobehub/lobe-chat/commit/44b6b01))
+
+#### Styles
+
+- **misc**: Add DeepResearch models from OpenAI, closes [#8291](https://github.com/lobehub/lobe-chat/issues/8291) ([87a5cbc](https://github.com/lobehub/lobe-chat/commit/87a5cbc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.96.11](https://github.com/lobehub/lobe-chat/compare/v1.96.10...v1.96.11)
 
 <sup>Released on **2025-06-28**</sup>
