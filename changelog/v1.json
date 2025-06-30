@@ -1,5 +1,13 @@
 [
   {
+    "children": {
+      "fixes": ["Pin antd@5.26.2 to fix build error."],
+      "improvements": ["Add DeepResearch models from OpenAI."]
+    },
+    "date": "2025-06-30",
+    "version": "1.96.12"
+  },
+  {
     "children": {},
     "date": "2025-06-28",
     "version": "1.96.11"
