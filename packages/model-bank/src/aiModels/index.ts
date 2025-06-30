@@ -10,6 +10,7 @@ import { default as azureai } from './azureai';
 import { default as baichuan } from './baichuan';
 import { default as bedrock } from './bedrock';
 import { default as bfl } from './bfl';
+import { default as burncloud } from './burncloud';
 import { default as cloudflare } from './cloudflare';
 import { default as cohere } from './cohere';
 import { default as deepseek } from './deepseek';
@@ -92,6 +93,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   baichuan,
   bedrock,
   bfl,
+  burncloud,
   cloudflare,
   cohere,
   deepseek,
@@ -155,6 +157,7 @@ export { default as azureai } from './azureai';
 export { default as baichuan } from './baichuan';
 export { default as bedrock } from './bedrock';
 export { default as bfl } from './bfl';
+export { default as burncloud } from './burncloud';
 export { default as cloudflare } from './cloudflare';
 export { default as cohere } from './cohere';
 export { default as deepseek } from './deepseek';

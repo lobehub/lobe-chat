@@ -99,6 +99,9 @@ export const getLLMConfig = () => {
       ENABLED_BAICHUAN: z.boolean(),
       BAICHUAN_API_KEY: z.string().optional(),
 
+      ENABLED_BURNCLOUD: z.boolean(),
+      BURNCLOUD_API_KEY: z.string().optional(),
+
       ENABLED_TAICHU: z.boolean(),
       TAICHU_API_KEY: z.string().optional(),
 
@@ -281,6 +284,9 @@ export const getLLMConfig = () => {
 
       ENABLED_BAICHUAN: !!process.env.BAICHUAN_API_KEY,
       BAICHUAN_API_KEY: process.env.BAICHUAN_API_KEY,
+
+      ENABLED_BURNCLOUD: !!process.env.BURNCLOUD_API_KEY,
+      BURNCLOUD_API_KEY: process.env.BURNCLOUD_API_KEY,
 
       ENABLED_TAICHU: !!process.env.TAICHU_API_KEY,
       TAICHU_API_KEY: process.env.TAICHU_API_KEY,

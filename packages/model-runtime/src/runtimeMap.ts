@@ -9,6 +9,7 @@ import { LobeAzureAI } from './azureai';
 import { LobeBaichuanAI } from './baichuan';
 import { LobeBedrockAI } from './bedrock';
 import { LobeBflAI } from './bfl';
+import { LobeBurnCloudAI } from './burncloud';
 import { LobeCloudflareAI } from './cloudflare';
 import { LobeCohereAI } from './cohere';
 import { LobeDeepSeekAI } from './deepseek';
@@ -71,6 +72,7 @@ export const providerRuntimeMap = {
   baichuan: LobeBaichuanAI,
   bedrock: LobeBedrockAI,
   bfl: LobeBflAI,
+  burncloud: LobeBurnCloudAI,
   cloudflare: LobeCloudflareAI,
   cohere: LobeCohereAI,
   deepseek: LobeDeepSeekAI,
