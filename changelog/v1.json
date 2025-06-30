@@ -1,5 +1,17 @@
 [
   {
+    "children": {},
+    "date": "2025-06-28",
+    "version": "1.96.11"
+  },
+  {
+    "children": {
+      "fixes": ["Fix desktop chunk issue."]
+    },
+    "date": "2025-06-28",
+    "version": "1.96.10"
+  },
+  {
     "children": {
       "features": [
         "Add Brave & Google PSE & Kagi as build-in Search Provider, add v0 (Vercel) provider support."
