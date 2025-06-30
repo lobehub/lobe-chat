@@ -8,7 +8,7 @@ import { agents, agentsFiles, agentsKnowledgeBases } from './agent';
 import { asyncTasks } from './asyncTask';
 import { documentChunks, documents } from './document';
 import { files, knowledgeBases } from './file';
-import { messages, messagesFiles } from './message';
+import { messageTTS, messageTranslates, messages, messagesFiles } from './message';
 import { chunks, unstructuredChunks } from './rag';
 import { sessionGroups, sessions } from './session';
 import { threads, topicDocuments, topics } from './topic';
@@ -108,6 +108,16 @@ export const messagesRelations = relations(messages, ({ many, one }) => ({
     fields: [messages.threadId],
     references: [threads.id],
   }),
+
+  translation: one(messageTranslates, {
+    fields: [messages.id],
+    references: [messageTranslates.id],
+  }),
+
+  tts: one(messageTTS, {
+    fields: [messages.id],
+    references: [messageTTS.id],
+  }),
 }));
 
 export const agentsRelations = relations(agents, ({ many }) => ({
@@ -205,4 +215,18 @@ export const documentChunksRelations = relations(documentChunks, ({ one }) => ({
 
 export const usersRelations = relations(users, ({ many }) => ({
   sessions: many(sessions),
+}));
+
+export const messageTranslatesRelations = relations(messageTranslates, ({ one }) => ({
+  message: one(messages, {
+    fields: [messageTranslates.id],
+    references: [messages.id],
+  }),
+}));
+
+export const messageTTSRelations = relations(messageTTS, ({ one }) => ({
+  message: one(messages, {
+    fields: [messageTTS.id],
+    references: [messages.id],
+  }),
 }));
