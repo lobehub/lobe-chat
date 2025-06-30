@@ -157,6 +157,8 @@ export const messageTranslates = pgTable(
   }),
 );
 
+export type MessageTranslateItem = typeof messageTranslates.$inferSelect;
+
 // if the message contains a file
 // save the file id and message id
 export const messagesFiles = pgTable(

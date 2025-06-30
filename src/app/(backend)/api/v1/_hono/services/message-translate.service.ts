@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 
-import { messageTranslates, messages } from '@/database/schemas';
+import { MessageTranslateItem, messageTranslates, messages } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 
 import { BaseService } from '../common/base.service';
@@ -73,7 +73,9 @@ export class MessageTranslateService extends BaseService {
    * @param translateData 翻译数据
    * @returns 翻译结果
    */
-  async translateMessage(translateData: MessageTranslateTriggerRequest): ServiceResult<void> {
+  async translateMessage(
+    translateData: MessageTranslateTriggerRequest,
+  ): ServiceResult<Partial<MessageTranslateItem>> {
     if (!this.userId) {
       throw this.createAuthError('未授权操作');
     }
@@ -120,6 +122,14 @@ export class MessageTranslateService extends BaseService {
         });
 
       this.log('info', '翻译消息完成', { messageId: translateData.messageId });
+
+      return {
+        content: translatedContent,
+        from: translateData.from,
+        id: translateData.messageId,
+        to: translateData.to || null,
+        userId: this.userId,
+      };
     } catch (error) {
       // 改进错误日志记录，提供更详细的错误信息
       let errorDetails: any;
