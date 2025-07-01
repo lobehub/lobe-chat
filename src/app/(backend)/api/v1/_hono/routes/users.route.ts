@@ -84,6 +84,45 @@ UserRoutes.get(
 );
 
 /**
+ * 获取用户角色信息
+ * GET /api/v1/users/:id/roles
+ * 需要用户角色查看权限
+ */
+UserRoutes.get(
+  '/:id/roles',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('RBAC_USER_PERMISSION_VIEW', ['ALL', 'WORKSPACE']),
+    '您没有权限查看用户角色',
+  ),
+  zValidator('param', UserIdParamSchema),
+  async (c) => {
+    const userController = new UserController();
+    return await userController.getUserRoles(c);
+  },
+);
+
+/**
+ * 更新用户关联的角色
+ * PUT /api/v1/users/:id/roles
+ * 需要用户角色分配权限
+ */
+UserRoutes.put(
+  '/:id/roles',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('RBAC_USER_ROLE_ASSIGN', ['ALL', 'WORKSPACE']),
+    '您没有权限分配用户角色',
+  ),
+  zValidator('param', UserIdParamSchema),
+  zValidator('json', UpdateUserRolesRequestSchema),
+  async (c) => {
+    const userController = new UserController();
+    return await userController.updateUserRoles(c);
+  },
+);
+
+/**
  * 根据ID获取用户详情
  * GET /api/v1/users/:id
  * 需要用户读取权限
@@ -138,45 +177,6 @@ UserRoutes.delete(
   async (c) => {
     const userController = new UserController();
     return await userController.deleteUser(c);
-  },
-);
-
-/**
- * 获取用户角色信息
- * GET /api/v1/users/:id/roles
- * 需要用户角色查看权限
- */
-UserRoutes.get(
-  '/:id/roles',
-  requireAuth,
-  requireAnyPermission(
-    getScopePermissions('RBAC_USER_PERMISSION_VIEW', ['ALL', 'WORKSPACE']),
-    '您没有权限查看用户角色',
-  ),
-  zValidator('param', UserIdParamSchema),
-  async (c) => {
-    const userController = new UserController();
-    return await userController.getUserRoles(c);
-  },
-);
-
-/**
- * 更新用户关联的角色
- * PUT /api/v1/users/:id/roles
- * 需要用户角色分配权限
- */
-UserRoutes.put(
-  '/:id/roles',
-  requireAuth,
-  requireAnyPermission(
-    getScopePermissions('RBAC_USER_ROLE_ASSIGN', ['ALL', 'WORKSPACE']),
-    '您没有权限分配用户角色',
-  ),
-  zValidator('param', UserIdParamSchema),
-  zValidator('json', UpdateUserRolesRequestSchema),
-  async (c) => {
-    const userController = new UserController();
-    return await userController.updateUserRoles(c);
   },
 );
 

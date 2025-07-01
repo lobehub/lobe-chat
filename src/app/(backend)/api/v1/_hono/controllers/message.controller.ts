@@ -79,6 +79,30 @@ export class MessageController extends BaseController {
   }
 
   /**
+   * 根据消息ID获取消息详情
+   * GET /api/v1/messages/:id
+   * Params: { id: string }
+   */
+  async handleGetMessageById(c: Context) {
+    try {
+      const userId = this.getUserId(c)!;
+      const { id } = this.getParams<{ id: string }>(c);
+
+      const db = await this.getDatabase();
+      const messageService = new MessageService(db, userId);
+      const message = await messageService.getMessageById(id);
+
+      if (!message) {
+        return this.error(c, '消息不存在或无权限访问', 404);
+      }
+
+      return this.success(c, message, '获取消息详情成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
    * 创建新消息
    * POST /api/v1/messages/create
    * Body: { content: string, role: 'assistant'|'user', sessionId: string, topic: string, fromModel: string, fromProvider: string, files?: string[] }
