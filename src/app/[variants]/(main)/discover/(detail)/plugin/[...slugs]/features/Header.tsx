@@ -90,18 +90,20 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
                 {title}
               </Text>
             </Flexbox>
-            <Flexbox align={'center'} gap={6} horizontal>
-              <Link
-                href={urlJoin(
-                  'https://github.com/lobehub/lobe-chat-agents/tree/main/locales',
-                  identifier as string,
-                )}
-                onClick={(e) => e.stopPropagation()}
-                target={'_blank'}
-              >
-                <ActionIcon fill={theme.colorTextDescription} icon={Github} />
-              </Link>
-            </Flexbox>
+            {identifier && (
+              <Flexbox align={'center'} gap={6} horizontal>
+                <Link
+                  href={urlJoin(
+                    'https://github.com/lobehub/lobe-chat-agents/tree/main/locales',
+                    identifier,
+                  )}
+                  onClick={(e) => e.stopPropagation()}
+                  target={'_blank'}
+                >
+                  <ActionIcon fill={theme.colorTextDescription} icon={Github} />
+                </Link>
+              </Flexbox>
+            )}
           </Flexbox>
           <Flexbox align={'center'} gap={4} horizontal>
             {author && (

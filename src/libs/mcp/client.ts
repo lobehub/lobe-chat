@@ -26,8 +26,9 @@ export class MCPClient {
         this.transport = new StreamableHTTPClientTransport(new URL(params.url));
         break;
       }
+
       case 'stdio': {
-        log('Using Stdio transport with command: %s and args: %O', params.command, params.args);
+        log('Using Stdio transport with command: %s , args: %O', params.command, params.args);
 
         this.transport = new StdioClientTransport({
           args: params.args,
@@ -39,6 +40,7 @@ export class MCPClient {
         });
         break;
       }
+
       default: {
         const err = new Error(`Unsupported MCP connection type: ${(params as any).type}`);
         log('Error creating client: %O', err);
@@ -80,35 +82,60 @@ export class MCPClient {
   }
 
   async listTools() {
-    log('Listing tools...');
-    const { tools } = await this.mcp.listTools();
-    log('Listed tools: %O', tools);
-    return tools as McpTool[];
+    try {
+      log('Listing tools...');
+      const { tools } = await this.mcp.listTools();
+      log('Listed tools: %O', tools);
+      return tools as McpTool[];
+    } catch (e) {
+      log('Listed tools error: %O', e);
+      return [];
+    }
   }
 
   async listResources() {
-    log('Listing resources...');
-    const { resources } = await this.mcp.listResources();
-    log('Listed resources: %O', resources);
-    return resources as McpResource[];
+    try {
+      log('Listing resources...');
+      const { resources } = await this.mcp.listResources();
+      log('Listed resources: %O', resources);
+      return resources as McpResource[];
+    } catch (e) {
+      log('Listed resources: %O', e);
+      return [];
+    }
   }
 
   async listPrompts() {
-    log('Listing prompts...');
-    const { prompts } = await this.mcp.listPrompts();
-    log('Listed prompts: %O', prompts);
-    return prompts as McpPrompt[];
+    try {
+      log('Listing prompts...');
+      const { prompts } = await this.mcp.listPrompts();
+      log('Listed prompts: %O', prompts);
+      return prompts as McpPrompt[];
+    } catch (e) {
+      log('Listed prompts: %O', e);
+      return [];
+    }
   }
 
   async listManifests() {
     const capabilities = this.mcp.getServerCapabilities();
+    log('get capabilities: %O', capabilities);
+
     const [tools, prompts, resources] = await Promise.all([
-      capabilities?.tools ? this.listTools() : async () => undefined,
-      capabilities?.prompts ? this.listPrompts() : async () => undefined,
-      capabilities?.resources ? this.listResources() : async () => undefined,
+      this.listTools(),
+      this.listPrompts(),
+      this.listResources(),
     ]);
 
-    return { prompts, resources, tools };
+    const manifest = {
+      prompts: prompts.length === 0 ? undefined : prompts,
+      resources: resources.length === 0 ? undefined : resources,
+      tools: tools.length === 0 ? undefined : tools,
+    };
+
+    log('Listed Manifest: %O', manifest);
+
+    return manifest;
   }
 
   async callTool(toolName: string, args: any) {

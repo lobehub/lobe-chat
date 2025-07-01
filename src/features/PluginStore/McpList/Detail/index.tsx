@@ -10,6 +10,7 @@ import Nav from '@/features/MCPPluginDetail/Nav';
 import Overview from '@/features/MCPPluginDetail/Overview';
 import Schema from '@/features/MCPPluginDetail/Schema';
 import Score from '@/features/MCPPluginDetail/Score';
+import Settings from '@/features/MCPPluginDetail/Settings';
 import { useDiscoverStore } from '@/store/discover';
 import { useToolStore } from '@/store/tool';
 import { McpNavKey } from '@/types/discover';
@@ -51,6 +52,7 @@ const Detail = memo<DetailProps>(({ identifier: defaultIdentifier }) => {
         <Header inModal />
         <Nav activeTab={activeTab as McpNavKey} inModal setActiveTab={setActiveTab} />
         <Flexbox gap={24}>
+          {activeTab === McpNavKey.Settings && <Settings />}
           {activeTab === McpNavKey.Overview && <Overview inModal />}
           {activeTab === McpNavKey.Deployment && <Deployment />}
           {activeTab === McpNavKey.Schema && <Schema />}

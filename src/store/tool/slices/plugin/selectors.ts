@@ -10,8 +10,11 @@ const installedPlugins = (s: ToolStoreState) => s.installedPlugins;
 const isPluginInstalled = (id: string) => (s: ToolStoreState) =>
   installedPlugins(s).some((i) => i.identifier === id);
 
-const getInstalledPluginById = (id: string) => (s: ToolStoreState) =>
-  installedPlugins(s).find((p) => p.identifier === id);
+const getInstalledPluginById = (id?: string) => (s: ToolStoreState) => {
+  if (!id) return;
+
+  return installedPlugins(s).find((p) => p.identifier === id);
+};
 
 const getPluginMetaById = (id: string) => (s: ToolStoreState) => {
   // first try to find meta from store
@@ -52,7 +55,7 @@ const installedPluginMetaList = (s: ToolStoreState) =>
     createdAt: p.manifest?.createdAt || (p.manifest as any)?.createAt,
     homepage: p.manifest?.homepage,
     identifier: p.identifier,
-    type: p.type,
+    type: p.source || p.type,
     ...getPluginMetaById(p.identifier)(s),
   }));
 const installedCustomPluginMetaList = (s: ToolStoreState) =>

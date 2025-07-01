@@ -44,7 +44,6 @@ export const List = memo<{
     <Virtuoso
       data={filteredPluginList}
       itemContent={(_, item) => {
-        console.log(item);
         return (
           <Flexbox
             key={item.identifier}

@@ -7,6 +7,7 @@ export type PluginManifestMap = Record<string, LobeChatPluginManifest>;
 export interface CustomPluginMetadata {
   avatar?: string;
   description?: string;
+  name?: string;
 }
 
 export interface CustomPluginParams {

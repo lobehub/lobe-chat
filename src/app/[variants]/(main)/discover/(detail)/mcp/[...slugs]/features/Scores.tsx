@@ -196,16 +196,18 @@ const Scores = memo<ScoresProps>(
         horizontal
         onClick={(e) => e.stopPropagation()}
       >
-        <Link
-          href={qs.stringifyUrl({
-            query: {
-              activeTab: McpNavKey.Score,
-            },
-            url: urlJoin('/discover/mcp', identifier),
-          })}
-        >
-          {isValidated ? scoreTag : unvalidatedTag}
-        </Link>
+        {identifier && (
+          <Link
+            href={qs.stringifyUrl({
+              query: {
+                activeTab: McpNavKey.Score,
+              },
+              url: urlJoin('/discover/mcp', identifier),
+            })}
+          >
+            {isValidated ? scoreTag : unvalidatedTag}
+          </Link>
+        )}
         {showExtra && (
           <Link
             href={qs.stringifyUrl({

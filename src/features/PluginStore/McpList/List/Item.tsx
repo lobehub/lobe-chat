@@ -2,6 +2,7 @@ import { Block, Text } from '@lobehub/ui';
 import { Progress } from 'antd';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
+import { motion } from 'framer-motion';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -13,6 +14,7 @@ import { DiscoverMcpItem } from '@/types/discover';
 import { LobeToolType } from '@/types/tool/tool';
 
 import Actions from './Action';
+import MCPConfigForm from './MCPConfigForm';
 
 interface PluginItemProps extends DiscoverMcpItem {
   active?: boolean;
@@ -31,6 +33,7 @@ const Item = memo<PluginItemProps>(
     );
 
     const stepText = installProgress ? t(`mcpInstall.${installProgress.step}` as any) : undefined;
+    const needsConfig = installProgress?.needsConfig;
 
     return (
       <Flexbox gap={0}>
@@ -81,6 +84,23 @@ const Item = memo<PluginItemProps>(
               </Text>
             )}
           </Flexbox>
+        )}
+
+        {needsConfig && installProgress && (
+          <motion.div
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            initial={{ height: 0, opacity: 0 }}
+            transition={{
+              duration: 0.3,
+              ease: [0.4, 0, 0.2, 1],
+              height: { duration: 0.2 },
+            }}
+          >
+            <Flexbox paddingInline={12}>
+              <MCPConfigForm configSchema={installProgress.configSchema} identifier={identifier} />
+            </Flexbox>
+          </motion.div>
         )}
       </Flexbox>
     );

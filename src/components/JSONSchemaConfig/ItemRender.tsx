@@ -3,7 +3,7 @@ import { Slider, Switch } from 'antd';
 import { JSONSchema7Type } from 'json-schema';
 import { memo } from 'react';
 
-interface PluginSettingsProps {
+interface JSONSchemaItemRenderProps {
   defaultValue?: any;
   enum?: JSONSchema7Type[];
   format?: string;
@@ -15,7 +15,7 @@ interface PluginSettingsProps {
   value?: any;
 }
 
-const PluginSettingRender = memo<PluginSettingsProps>(
+const JSONSchemaItemRender = memo<JSONSchemaItemRenderProps>(
   ({ type, enum: enumItems, format, minimum, maximum, ...props }) => {
     switch (type) {
       case 'string': {
@@ -51,4 +51,4 @@ const PluginSettingRender = memo<PluginSettingsProps>(
   },
 );
 
-export default PluginSettingRender;
+export default JSONSchemaItemRender;

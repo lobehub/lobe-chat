@@ -240,27 +240,22 @@ class MCPService {
       type: 'stdio',
     }); // Get client using params
 
-    const apis = await this.listTools({
-      args: params.args,
-      command: params.command,
-      env: params.env,
-      name: params.name,
-      type: 'stdio',
-    });
-
     const manifest = await client.listManifests();
 
     const identifier = params.name;
 
     return {
-      api: apis,
+      api: manifest.tools ? this.transformMCPToolToLobeAPI(manifest.tools) : [],
       identifier,
       meta: {
         avatar: metadata?.avatar || 'MCP_AVATAR',
         description:
           metadata?.description ||
-          `${identifier} MCP server has ${apis.length} tools, like "${apis[0]?.name}"`,
-        title: identifier,
+          `${identifier} MCP server has ` +
+            Object.entries(manifest)
+              .map(([key, item]) => `${item?.length} ${key},like ${item?.[0]?.name}`)
+              .join(';'),
+        title: metadata?.name || identifier,
       },
       ...manifest,
       // TODO: temporary
@@ -294,11 +289,21 @@ class MCPService {
 
       log('Check completed, best result: %O', bestResult);
 
-      return {
+      // 构造返回结果，确保包含配置检查信息
+      const checkResult: CheckMcpInstallResult = {
         ...bestResult,
         allOptions: results,
         success: true,
       };
+
+      // 如果最佳结果需要配置，确保在顶层设置相关字段
+      if (bestResult?.needsConfig) {
+        checkResult.needsConfig = true;
+        checkResult.configSchema = bestResult.configSchema;
+        log('Configuration required for best deployment option: %O', bestResult.configSchema);
+      }
+
+      return checkResult;
     } catch (error) {
       log('Check failed: %O', error);
       return {
@@ -310,6 +315,15 @@ class MCPService {
       };
     }
   }
+
+  private transformMCPToolToLobeAPI = (data: McpTool[]) => {
+    return data.map<LobeChatPluginApi>((item) => ({
+      // Assuming identifier is the unique name/id
+      description: item.description,
+      name: item.name,
+      parameters: item.inputSchema as PluginSchema,
+    }));
+  };
 }
 
 // Export a singleton instance

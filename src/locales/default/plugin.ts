@@ -235,8 +235,12 @@ export default {
     '0': '获取插件描述文件...',
     '1': '检查安装环境...',
     '2': '初始化 MCP 服务器...',
-    '3': '正在安装插件...',
-    '4': '安装完成',
+    '3': '请完成相关配置后继续安装',
+    '4': '正在安装插件...',
+    '5': '安装完成',
+    'configurationDescription': '该 MCP 插件需要配置参数才能正常使用，请填写必要的配置信息',
+    'configurationRequired': '配置插件参数',
+    'continueInstall': '继续安装',
   },
   pluginList: '插件列表',
   search: {
@@ -274,11 +278,28 @@ export default {
   },
   setting: '插件设置',
   settings: {
+    capabilities: {
+      prompts: '提示词',
+      resources: '资源',
+      title: '插件能力',
+      tools: '工具',
+    },
+    configuration: {
+      title: '插件配置',
+    },
+    connection: {
+      args: '启动参数',
+      command: '启动命令',
+      title: '连接信息',
+      type: '连接类型',
+      url: '服务地址',
+    },
     indexUrl: {
       title: '市场索引',
       tooltip: '暂不支持在线编辑，请通过部署时环境变量进行设置',
     },
     modalDesc: '配置插件市场的地址后，可以使用自定义的插件市场',
+    saveSettings: '保存设置',
     title: '设置插件市场',
   },
   showInPortal: '请在工作区中查看详情',
