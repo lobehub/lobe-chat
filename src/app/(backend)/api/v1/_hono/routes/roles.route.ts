@@ -95,7 +95,10 @@ RolesRoutes.get(
 RolesRoutes.put(
   '/:id',
   requireAuth,
-  requireAnyPermission(getScopePermissions('RBAC_ROLE_UPDATE', ['ALL']), '您没有权限更新角色信息'),
+  requireAnyPermission(
+    getScopePermissions('RBAC_ROLE_UPDATE', ['ALL', 'WORKSPACE']),
+    '您没有权限更新角色信息',
+  ),
   zValidator('param', RoleIdParamSchema),
   zValidator('json', UpdateRoleRequestSchema),
   async (c) => {
