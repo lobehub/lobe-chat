@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-01",
+    "version": "1.96.13"
+  },
+  {
+    "children": {
       "fixes": ["Pin antd@5.26.2 to fix build error."],
       "improvements": ["Add DeepResearch models from OpenAI."]
     },
