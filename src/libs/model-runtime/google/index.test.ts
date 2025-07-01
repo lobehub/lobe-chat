@@ -1,9 +1,10 @@
 // @vitest-environment edge-runtime
-import { FunctionDeclarationsTool } from '@google/generative-ai';
+import { GenerateContentResponse, Tool } from '@google/genai';
 import OpenAI from 'openai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { OpenAIChatMessage } from '@/libs/model-runtime';
+import { ChatStreamPayload } from '@/types/openai/chat';
 import * as imageToBase64Module from '@/utils/imageToBase64';
 
 import * as debugStreamModule from '../utils/debugStream';
@@ -22,9 +23,8 @@ beforeEach(() => {
   instance = new LobeGoogleAI({ apiKey: 'test' });
 
   // 使用 vi.spyOn 来模拟 chat.completions.create 方法
-  vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-    generateContentStream: vi.fn().mockResolvedValue(new ReadableStream()),
-  } as any);
+  const mockStreamData = (async function* (): AsyncGenerator<GenerateContentResponse> {})();
+  vi.spyOn(instance['client'].models, 'generateContentStream').mockResolvedValue(mockStreamData);
 });
 
 afterEach(() => {
@@ -60,9 +60,9 @@ describe('LobeGoogleAI', () => {
           controller.close();
         },
       });
-      vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-        generateContentStream: vi.fn().mockResolvedValueOnce(mockStream),
-      } as any);
+      vi.spyOn(instance['client'].models, 'generateContentStream').mockResolvedValue(
+        mockStream as any,
+      );
 
       const result = await instance.chat({
         messages: [{ content: 'Hello', role: 'user' }],
@@ -208,9 +208,9 @@ describe('LobeGoogleAI', () => {
         },
       });
 
-      vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-        generateContentStream: vi.fn().mockResolvedValueOnce(mockStream),
-      } as any);
+      vi.spyOn(instance['client'].models, 'generateContentStream').mockResolvedValue(
+        mockStream as any,
+      );
     });
 
     it('should call debugStream in DEBUG mode', async () => {
@@ -224,9 +224,9 @@ describe('LobeGoogleAI', () => {
           controller.close();
         },
       });
-      vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-        generateContentStream: vi.fn().mockResolvedValueOnce(mockStream),
-      } as any);
+      vi.spyOn(instance['client'].models, 'generateContentStream').mockResolvedValue(
+        mockStream as any,
+      );
       const debugStreamSpy = vi
         .spyOn(debugStreamModule, 'debugStream')
         .mockImplementation(() => Promise.resolve());
@@ -250,9 +250,7 @@ describe('LobeGoogleAI', () => {
 
         const apiError = new Error(message);
 
-        vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-          generateContentStream: vi.fn().mockRejectedValue(apiError),
-        } as any);
+        vi.spyOn(instance['client'].models, 'generateContentStream').mockRejectedValue(apiError);
 
         try {
           await instance.chat({
@@ -271,9 +269,7 @@ describe('LobeGoogleAI', () => {
 
         const apiError = new Error(message);
 
-        vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-          generateContentStream: vi.fn().mockRejectedValue(apiError),
-        } as any);
+        vi.spyOn(instance['client'].models, 'generateContentStream').mockRejectedValue(apiError);
 
         try {
           await instance.chat({
@@ -292,9 +288,7 @@ describe('LobeGoogleAI', () => {
 
         const apiError = new Error(message);
 
-        vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-          generateContentStream: vi.fn().mockRejectedValue(apiError),
-        } as any);
+        vi.spyOn(instance['client'].models, 'generateContentStream').mockRejectedValue(apiError);
 
         try {
           await instance.chat({
@@ -326,9 +320,7 @@ describe('LobeGoogleAI', () => {
 
         const apiError = new Error(message);
 
-        vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-          generateContentStream: vi.fn().mockRejectedValue(apiError),
-        } as any);
+        vi.spyOn(instance['client'].models, 'generateContentStream').mockRejectedValue(apiError);
 
         try {
           await instance.chat({
@@ -354,9 +346,7 @@ describe('LobeGoogleAI', () => {
         const apiError = new Error('Error message');
 
         // 使用 vi.spyOn 来模拟 chat.completions.create 方法
-        vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-          generateContentStream: vi.fn().mockRejectedValue(apiError),
-        } as any);
+        vi.spyOn(instance['client'].models, 'generateContentStream').mockRejectedValue(apiError);
 
         // Act
         try {
@@ -392,9 +382,7 @@ describe('LobeGoogleAI', () => {
         };
         const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
 
-        vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-          generateContentStream: vi.fn().mockRejectedValue(apiError),
-        } as any);
+        vi.spyOn(instance['client'].models, 'generateContentStream').mockRejectedValue(apiError);
 
         // Act
         try {
@@ -418,9 +406,9 @@ describe('LobeGoogleAI', () => {
         // Arrange
         const genericError = new Error('Generic Error');
 
-        vi.spyOn(instance['client'], 'getGenerativeModel').mockReturnValue({
-          generateContentStream: vi.fn().mockRejectedValue(genericError),
-        } as any);
+        vi.spyOn(instance['client'].models, 'generateContentStream').mockRejectedValue(
+          genericError,
+        );
 
         // Act
         try {
@@ -642,11 +630,11 @@ describe('LobeGoogleAI', () => {
         const googleTools = instance['buildGoogleTools'](tools);
 
         expect(googleTools).toHaveLength(1);
-        expect((googleTools![0] as FunctionDeclarationsTool).functionDeclarations![0]).toEqual({
+        expect((googleTools![0] as Tool).functionDeclarations![0]).toEqual({
           name: 'testTool',
           description: 'A test tool',
           parameters: {
-            type: 'object',
+            type: 'OBJECT',
             properties: {
               param1: { type: 'string' },
               param2: { type: 'number' },
@@ -654,6 +642,75 @@ describe('LobeGoogleAI', () => {
             required: ['param1'],
           },
         });
+      });
+
+      it('should also add tools when tool_calls exists', () => {
+        const tools: OpenAI.ChatCompletionTool[] = [
+          {
+            function: {
+              name: 'testTool',
+              description: 'A test tool',
+              parameters: {
+                type: 'object',
+                properties: {
+                  param1: { type: 'string' },
+                  param2: { type: 'number' },
+                },
+                required: ['param1'],
+              },
+            },
+            type: 'function',
+          },
+        ];
+
+        const payload: ChatStreamPayload = {
+          messages: [
+            {
+              role: 'user',
+              content: '',
+              tool_calls: [
+                { function: { name: 'some_func', arguments: '' }, id: 'func_1', type: 'function' },
+              ],
+            },
+          ],
+          model: 'gemini-2.5-flash-preview-04-17',
+          temperature: 1,
+        };
+
+        const googleTools = instance['buildGoogleTools'](tools, payload);
+
+        expect(googleTools).toHaveLength(1);
+        expect((googleTools![0] as Tool).functionDeclarations![0]).toEqual({
+          name: 'testTool',
+          description: 'A test tool',
+          parameters: {
+            type: 'OBJECT',
+            properties: {
+              param1: { type: 'string' },
+              param2: { type: 'number' },
+            },
+            required: ['param1'],
+          },
+        });
+      });
+
+      it('should handle googleSearch', () => {
+        const payload: ChatStreamPayload = {
+          messages: [
+            {
+              role: 'user',
+              content: '',
+            },
+          ],
+          model: 'gemini-2.5-flash-preview-04-17',
+          temperature: 1,
+          enabledSearch: true,
+        };
+
+        const googleTools = instance['buildGoogleTools'](undefined, payload);
+
+        expect(googleTools).toHaveLength(1);
+        expect(googleTools![0] as Tool).toEqual({ googleSearch: {} });
       });
     });
 
