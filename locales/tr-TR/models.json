@@ -1871,6 +1871,9 @@
   "o3": {
     "description": "o3, çok çeşitli alanlarda mükemmel performans gösteren çok yönlü güçlü bir modeldir. Matematik, bilim, programlama ve görsel çıkarım görevlerinde yeni standartlar belirler. Ayrıca teknik yazım ve talimat takibi konusunda da uzmandır. Kullanıcılar, metin, kod ve görüntüleri analiz ederek çok adımlı karmaşık sorunları çözebilir."
   },
+  "o3-deep-research": {
+    "description": "o3-derin-arama, karmaşık çok adımlı araştırma görevlerini işlemek için özel olarak tasarlanmış en gelişmiş derin araştırma modelimizdir. İnternetten bilgi arayıp sentezleyebilir ve MCP bağlayıcısı aracılığıyla kendi verilerinize erişip bunları kullanabilir."
+  },
   "o3-mini": {
     "description": "o3-mini, aynı maliyet ve gecikme hedefleriyle yüksek zeka sunan en yeni küçük ölçekli çıkarım modelimizdir."
   },
@@ -1879,6 +1882,9 @@
   },
   "o4-mini": {
     "description": "o4-mini, en yeni küçük o serisi modelimizdir. Hızlı ve etkili çıkarım için optimize edilmiştir ve kodlama ile görsel görevlerde son derece yüksek verimlilik ve performans sergiler."
+  },
+  "o4-mini-deep-research": {
+    "description": "o4-mini-derin-arama, daha hızlı ve uygun maliyetli derin araştırma modelimizdir — karmaşık çok adımlı araştırma görevleri için idealdir. İnternetten bilgi arayıp sentezleyebilir ve MCP bağlayıcısı aracılığıyla kendi verilerinize erişip bunları kullanabilir."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba, kod üretimine odaklanan Mamba 2 dil modelidir ve ileri düzey kod ve akıl yürütme görevlerine güçlü destek sunar."
