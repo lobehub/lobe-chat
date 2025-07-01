@@ -94,6 +94,8 @@ export class MessageTranslateService extends BaseService {
         throw this.createCommonError('未找到要翻译的消息');
       }
 
+      this.log('info', '原始消息内容', { originalMessage });
+
       // 使用ChatService进行翻译
       const chatService = new ChatService(this.db, this.userId);
       const translatedContent = await chatService.translate({
