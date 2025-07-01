@@ -17,7 +17,11 @@ import { pluginSelectors } from './selectors';
 export interface PluginAction {
   checkPluginsIsInstalled: (plugins: string[]) => Promise<void>;
   removeAllPlugins: () => Promise<void>;
-  updatePluginSettings: <T>(id: string, settings: Partial<T>) => Promise<void>;
+  updatePluginSettings: <T>(
+    id: string,
+    settings: Partial<T>,
+    options?: { override?: boolean },
+  ) => Promise<void>;
   useCheckPluginsIsInstalled: (enable: boolean, plugins: string[]) => SWRResponse;
   validatePluginSettings: (identifier: string) => Promise<ValidationResult | undefined>;
 }
@@ -46,14 +50,14 @@ export const createPluginSlice: StateCreator<
     await pluginService.removeAllPlugins();
     await get().refreshPlugins();
   },
-  updatePluginSettings: async (id, settings) => {
+  updatePluginSettings: async (id, settings, { override } = {}) => {
     const signal = get().updatePluginSettingsSignal;
     if (signal) signal.abort(MESSAGE_CANCEL_FLAT);
 
     const newSignal = new AbortController();
 
     const previousSettings = pluginSelectors.getPluginSettingsById(id)(get());
-    const nextSettings = merge(previousSettings, settings);
+    const nextSettings = override ? settings : merge(previousSettings, settings);
 
     set({ updatePluginSettingsSignal: newSignal }, false, 'create new Signal');
     await pluginService.updatePluginSettings(id, nextSettings, newSignal.signal);

@@ -3,7 +3,7 @@ import { Progress } from 'antd';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { motion } from 'framer-motion';
-import { memo } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -35,8 +35,16 @@ const Item = memo<PluginItemProps>(
     const stepText = installProgress ? t(`mcpInstall.${installProgress.step}` as any) : undefined;
     const needsConfig = installProgress?.needsConfig;
 
+    const containerRef = useRef<HTMLButtonElement | null>(null);
+
+    useEffect(() => {
+      if (!needsConfig || !containerRef.current) return;
+
+      containerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, [needsConfig]);
+
     return (
-      <Flexbox gap={0}>
+      <Flexbox gap={0} ref={containerRef}>
         <Block
           align={'center'}
           clickable

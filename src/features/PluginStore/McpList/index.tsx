@@ -11,7 +11,7 @@ import List from './List';
 
 const Detail = dynamic(() => import('./Detail'), { loading: DetailLoading, ssr: false });
 
-export const MCPPluginList = memo<{ keywords?: string }>(({ keywords }) => {
+export const MCPPluginList = memo(() => {
   const ref = useRef<HTMLDivElement>(null);
   const theme = useTheme();
 
@@ -28,7 +28,6 @@ export const MCPPluginList = memo<{ keywords?: string }>(({ keywords }) => {
     >
       <DraggablePanel maxWidth={1024} minWidth={420} placement={'left'}>
         <List
-          keywords={keywords}
           setIdentifier={(identifier) => {
             useToolStore.setState({ activeMCPIdentifier: identifier });
             ref?.current?.scrollTo({ top: 0 });

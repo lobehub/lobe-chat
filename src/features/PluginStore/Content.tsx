@@ -17,7 +17,7 @@ export const Content = memo(() => {
   const { t } = useTranslation('plugin');
   const mobile = useServerConfigStore((s) => s.isMobile);
   const [listType] = useToolStore((s) => [s.listType]);
-  const [keywords, setKeywords] = useState<string>();
+  const [keywords] = useState<string>();
   return (
     <Flexbox
       gap={8}
@@ -42,9 +42,9 @@ export const Content = memo(() => {
           />
           <AddPluginButton />
         </Flexbox>
-        <Search keywords={keywords} setKeywords={setKeywords} />
+        <Search />
       </Flexbox>
-      {listType === PluginStoreTabs.MCP && <McpList keywords={keywords} />}
+      {listType === PluginStoreTabs.MCP && <McpList />}
       {listType === PluginStoreTabs.Plugin && <PluginList keywords={keywords} />}
       {listType === PluginStoreTabs.Installed && <InstalledList keywords={keywords} />}
     </Flexbox>
