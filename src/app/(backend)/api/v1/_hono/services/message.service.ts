@@ -107,6 +107,38 @@ export class MessageService extends BaseService {
   }
 
   /**
+   * 根据消息ID获取消息详情
+   * @param messageId 消息ID
+   * @returns 消息详情
+   */
+  async getMessageById(messageId: string): ServiceResult<MessageResponse | null> {
+    this.log('info', '根据消息ID获取消息详情', { messageId, userId: this.userId });
+
+    try {
+      const message = await this.db.query.messages.findFirst({
+        where: and(eq(messages.id, messageId), eq(messages.userId, this.userId!)),
+        with: {
+          session: true,
+          topic: true,
+          translation: true,
+          user: true,
+        },
+      });
+
+      if (!message) {
+        this.log('info', '消息不存在或无权限访问', { messageId });
+        return null;
+      }
+
+      this.log('info', '获取消息详情完成', { messageId });
+      return message as MessageResponse;
+    } catch (error) {
+      this.log('error', '获取消息详情失败', { error });
+      throw this.createCommonError('查询消息详情失败');
+    }
+  }
+
+  /**
    * 创建新消息
    * @param messageData 消息数据
    * @returns 创建的消息（包含 session 和 user 信息）
