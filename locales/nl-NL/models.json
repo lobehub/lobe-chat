@@ -1871,6 +1871,9 @@
   "o3": {
     "description": "o3 is een veelzijdig en krachtig model dat uitblinkt in verschillende domeinen. Het stelt nieuwe normen voor wiskunde, wetenschap, programmeren en visuele redeneringstaken. Het is ook bedreven in technische schrijfvaardigheid en het volgen van instructies. Gebruikers kunnen het gebruiken om teksten, code en afbeeldingen te analyseren en complexe meerstapsproblemen op te lossen."
   },
+  "o3-deep-research": {
+    "description": "o3-deep-research is ons meest geavanceerde diepgaand onderzoeksmodel, speciaal ontworpen voor het verwerken van complexe, meerstaps onderzoeksopdrachten. Het kan informatie zoeken en samenvoegen van het internet, en kan ook via de MCP-connector toegang krijgen tot en gebruikmaken van jouw eigen gegevens."
+  },
   "o3-mini": {
     "description": "o3-mini is ons nieuwste kleine inferentiemodel dat hoge intelligentie biedt met dezelfde kosten- en vertragingdoelen als o1-mini."
   },
@@ -1879,6 +1882,9 @@
   },
   "o4-mini": {
     "description": "o4-mini is ons nieuwste compacte model uit de o-serie. Het is geoptimaliseerd voor snelle en efficiënte inferentie, met een hoge efficiëntie en prestaties in codering en visuele taken."
+  },
+  "o4-mini-deep-research": {
+    "description": "o4-mini-deep-research is ons snellere en betaalbaardere diepgaand onderzoeksmodel — perfect voor het verwerken van complexe, meerstaps onderzoeksopdrachten. Het kan informatie zoeken en samenvoegen van het internet, en kan ook via de MCP-connector toegang krijgen tot en gebruikmaken van jouw eigen gegevens."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba is een Mamba 2-taalmodel dat zich richt op codegeneratie en krachtige ondersteuning biedt voor geavanceerde code- en inferentietaken."
