@@ -1,4 +1,4 @@
-import { EnhancedGenerateContentResponse, GenerateContentResponse } from '@google/generative-ai';
+import { GenerateContentResponse } from '@google/genai';
 
 import { ModelTokensUsage } from '@/types/message';
 import { nanoid } from '@/utils/uuid';
@@ -22,8 +22,9 @@ const transformVertexAIStream = (
   const usage = chunk.usageMetadata;
   const usageChunks: StreamProtocolChunk[] = [];
   if (candidate?.finishReason && usage) {
-    const outputReasoningTokens = (usage as any).thoughtsTokenCount || undefined;
-    const totalOutputTokens = (usage.candidatesTokenCount ?? 0) + (outputReasoningTokens ?? 0);
+    const outputReasoningTokens = usage.thoughtsTokenCount || undefined;
+    const outputTextTokens = usage.candidatesTokenCount ?? 0;
+    const totalOutputTokens = outputTextTokens + (outputReasoningTokens ?? 0);
 
     usageChunks.push(
       { data: candidate.finishReason, id: context?.id, type: 'stop' },
@@ -37,7 +38,7 @@ const transformVertexAIStream = (
             (i: any) => i.modality === 'TEXT',
           )?.tokenCount,
           outputReasoningTokens,
-          outputTextTokens: totalOutputTokens - (outputReasoningTokens ?? 0),
+          outputTextTokens,
           totalInputTokens: usage.promptTokenCount,
           totalOutputTokens,
           totalTokens: usage.totalTokenCount,
@@ -50,7 +51,7 @@ const transformVertexAIStream = (
 
   if (
     candidate && // 首先检查是否为 reasoning 内容 (thought: true)
-    Array.isArray(candidate.content.parts) &&
+    Array.isArray(candidate.content?.parts) &&
     candidate.content.parts.length > 0
   ) {
     for (const part of candidate.content.parts) {
@@ -60,19 +61,18 @@ const transformVertexAIStream = (
     }
   }
 
-  const candidates = chunk.candidates;
-  if (!candidates)
+  if (!candidate) {
     return {
       data: '',
       id: context?.id,
       type: 'text',
     };
+  }
 
-  const item = candidates[0];
-  if (item.content) {
-    const part = item.content.parts[0];
+  if (candidate.content) {
+    const part = candidate.content.parts?.[0];
 
-    if (part.functionCall) {
+    if (part?.functionCall) {
       const functionCall = part.functionCall;
 
       return [
@@ -95,18 +95,18 @@ const transformVertexAIStream = (
       ];
     }
 
-    if (item.finishReason) {
+    if (candidate.finishReason) {
       if (chunk.usageMetadata) {
         return [
-          !!part.text ? { data: part.text, id: context?.id, type: 'text' } : undefined,
+          !!part?.text ? { data: part.text, id: context?.id, type: 'text' } : undefined,
           ...usageChunks,
         ].filter(Boolean) as StreamProtocolChunk[];
       }
-      return { data: item.finishReason, id: context?.id, type: 'stop' };
+      return { data: candidate.finishReason, id: context?.id, type: 'stop' };
     }
 
     return {
-      data: part.text,
+      data: part?.text,
       id: context?.id,
       type: 'text',
     };
@@ -120,7 +120,7 @@ const transformVertexAIStream = (
 };
 
 export const VertexAIStream = (
-  rawStream: ReadableStream<EnhancedGenerateContentResponse>,
+  rawStream: ReadableStream<GenerateContentResponse>,
   { callbacks, inputStartAt }: GoogleAIStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: 'chat_' + nanoid() };
