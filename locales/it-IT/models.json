@@ -1871,6 +1871,9 @@
   "o3": {
     "description": "o3 è un modello versatile e potente, che si distingue in vari campi. Stabilisce nuovi standard per compiti di matematica, scienza, programmazione e ragionamento visivo. È anche abile nella scrittura tecnica e nel seguire istruzioni. Gli utenti possono utilizzarlo per analizzare testi, codici e immagini, risolvendo problemi complessi in più passaggi."
   },
+  "o3-deep-research": {
+    "description": "o3-deep-research è il nostro modello di ricerca approfondita più avanzato, progettato specificamente per gestire compiti di ricerca complessi e articolati. Può cercare e sintetizzare informazioni da Internet, oltre a poter accedere e utilizzare i tuoi dati tramite il connettore MCP."
+  },
   "o3-mini": {
     "description": "o3-mini è il nostro ultimo modello di inferenza compatto, che offre un'intelligenza elevata con gli stessi obiettivi di costo e latenza di o1-mini."
   },
@@ -1879,6 +1882,9 @@
   },
   "o4-mini": {
     "description": "o4-mini è il nostro ultimo modello della serie o in formato ridotto. È ottimizzato per un'inferenza rapida ed efficace, mostrando un'elevata efficienza e prestazioni in compiti di codifica e visivi."
+  },
+  "o4-mini-deep-research": {
+    "description": "o4-mini-deep-research è il nostro modello di ricerca approfondita più rapido ed economico, ideale per gestire compiti di ricerca complessi e articolati. Può cercare e sintetizzare informazioni da Internet, oltre a poter accedere e utilizzare i tuoi dati tramite il connettore MCP."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba è un modello linguistico Mamba 2 focalizzato sulla generazione di codice, offre un forte supporto per compiti avanzati di codifica e ragionamento."
