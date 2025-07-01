@@ -86,13 +86,38 @@ const doubaoChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
+      deploymentName: 'doubao-1-5-ui-tars-250428',
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Doubao-1.5-UI-TARS 是一款原生面向图形界面交互（GUI）的Agent模型。通过感知、推理和行动等类人的能力，与 GUI 进行无缝交互。',
+    displayName: 'Doubao 1.5 UI TARS',
+    id: 'doubao-1.5-ui-tars',
+    maxOutput: 16_000,
+    pricing: {
+      currency: 'CNY',
+      input: 3.5,
+      output: 12,
+    },
+    settings: {
+      extendParams: ['thinking'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    config: {
       deploymentName: 'doubao-1-5-thinking-vision-pro-250428',
     },
     contextWindowTokens: 131_072,
     description:
       '全新视觉深度思考模型，具备更强的通用多模态理解和推理能力，在 59 个公开评测基准中的 37 个上取得 SOTA 表现。',
     displayName: 'Doubao 1.5 Thinking Vision Pro',
-    id: 'Doubao-1.5-thinking-vision-pro',
+    id: 'doubao-1.5-thinking-vision-pro',
     maxOutput: 16_000,
     pricing: {
       currency: 'CNY',
@@ -100,7 +125,7 @@ const doubaoChatModels: AIChatModelCard[] = [
       output: 9,
     },
     settings: {
-      extendParams: ['enableReasoning'],
+      extendParams: ['thinking'],
     },
     type: 'chat',
   },
@@ -138,12 +163,15 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       'Doubao-1.5全新深度思考模型 (m 版本自带原生多模态深度推理能力)，在数学、编程、科学推理等专业领域及创意写作等通用任务中表现突出，在AIME 2024、Codeforces、GPQA等多项权威基准上达到或接近业界第一梯队水平。支持128k上下文窗口，16k输出。',
     displayName: 'Doubao 1.5 Thinking Pro M',
-    id: 'Doubao-1.5-thinking-pro-m',
+    id: 'doubao-1.5-thinking-pro-m',
     maxOutput: 16_000,
     pricing: {
       currency: 'CNY',
       input: 4,
       output: 16,
+    },
+    settings: {
+      extendParams: ['enableReasoning'],
     },
     type: 'chat',
   },
@@ -298,7 +326,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       'Doubao-1.5-vision-pro 全新升级的多模态大模型，支持任意分辨率和极端长宽比图像识别，增强视觉推理、文档识别、细节信息理解和指令遵循能力。',
     displayName: 'Doubao 1.5 Vision Pro 32k',
-    id: 'Doubao-1.5-vision-pro-32k',
+    id: 'doubao-1.5-vision-pro-32k',
     maxOutput: 12_288,
     pricing: {
       currency: 'CNY',
@@ -320,7 +348,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       'Doubao-1.5-vision-pro 全新升级的多模态大模型，支持任意分辨率和极端长宽比图像识别，增强视觉推理、文档识别、细节信息理解和指令遵循能力。',
     displayName: 'Doubao 1.5 Vision Pro',
-    id: 'Doubao-1.5-vision-pro',
+    id: 'doubao-1.5-vision-pro',
     maxOutput: 16_384,
     pricing: {
       currency: 'CNY',
@@ -363,7 +391,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       'Doubao-vision 模型是豆包推出的多模态大模型，具备强大的图片理解与推理能力，以及精准的指令理解能力。模型在图像文本信息抽取、基于图像的推理任务上有展现出了强大的性能，能够应用于更复杂、更广泛的视觉问答任务。',
     displayName: 'Doubao Vision Pro 32k',
-    id: 'Doubao-vision-pro-32k',
+    id: 'doubao-vision-pro-32k',
     maxOutput: 4096,
     pricing: {
       currency: 'CNY',
@@ -384,7 +412,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       'Doubao-vision 模型是豆包推出的多模态大模型，具备强大的图片理解与推理能力，以及精准的指令理解能力。模型在图像文本信息抽取、基于图像的推理任务上有展现出了强大的性能，能够应用于更复杂、更广泛的视觉问答任务。',
     displayName: 'Doubao Vision Lite 32k',
-    id: 'Doubao-vision-lite-32k',
+    id: 'doubao-vision-lite-32k',
     maxOutput: 4096,
     pricing: {
       currency: 'CNY',
@@ -402,7 +430,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       '拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持 4k 上下文窗口的推理和精调。',
     displayName: 'Doubao Lite 4k',
-    id: 'Doubao-lite-4k',
+    id: 'doubao-lite-4k',
     maxOutput: 4096,
     pricing: {
       currency: 'CNY',
@@ -419,7 +447,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       '拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持 32k 上下文窗口的推理和精调。',
     displayName: 'Doubao Lite 32k',
-    id: 'Doubao-lite-32k',
+    id: 'doubao-lite-32k',
     maxOutput: 4096,
     pricing: {
       currency: 'CNY',
@@ -436,7 +464,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       '拥有极致的响应速度，更好的性价比，为客户不同场景提供更灵活的选择。支持 128k 上下文窗口的推理和精调。',
     displayName: 'Doubao Lite 128k',
-    id: 'Doubao-lite-128k',
+    id: 'doubao-lite-128k',
     maxOutput: 4096,
     pricing: {
       currency: 'CNY',
@@ -453,7 +481,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       '效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持 32k 上下文窗口的推理和精调。',
     displayName: 'Doubao Pro 32k',
-    id: 'Doubao-pro-32k',
+    id: 'doubao-pro-32k',
     maxOutput: 4096,
     pricing: {
       currency: 'CNY',
@@ -470,7 +498,7 @@ const doubaoChatModels: AIChatModelCard[] = [
     description:
       '效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持 256k 上下文窗口的推理和精调。',
     displayName: 'Doubao Pro 256k',
-    id: 'Doubao-pro-256k',
+    id: 'doubao-pro-256k',
     maxOutput: 4096,
     pricing: {
       currency: 'CNY',
