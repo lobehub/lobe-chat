@@ -1,6 +1,7 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { PluginListResponse } from '@lobehub/market-sdk';
 import { produce } from 'immer';
+import { uniqBy } from 'lodash-es';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -23,6 +24,8 @@ export interface PluginMCPStoreAction {
     identifier: string,
     options?: { config?: Record<string, any>; resume?: boolean },
   ) => Promise<boolean | undefined>;
+  loadMoreMCPPlugins: () => void;
+  resetMCPPluginList: (keywords?: string) => void;
   uninstallMCPPlugin: (identifier: string) => Promise<void>;
   updateMCPInstallProgress: (identifier: string, progress: MCPInstallProgress | undefined) => void;
   useFetchMCPPluginList: (params: MCPPluginListParams) => SWRResponse<PluginListResponse>;
@@ -208,6 +211,33 @@ export const createMCPPluginStoreSlice: StateCreator<
     }
   },
 
+  loadMoreMCPPlugins: () => {
+    const { mcpPluginItems, totalCount, currentPage } = get();
+
+    // 检查是否还有更多数据可以加载
+    if (mcpPluginItems.length < (totalCount || 0)) {
+      set(
+        produce((draft: MCPStoreState) => {
+          draft.currentPage = currentPage + 1;
+        }),
+        false,
+        n('loadMoreMCPPlugins'),
+      );
+    }
+  },
+
+  resetMCPPluginList: (keywords) => {
+    set(
+      produce((draft: MCPStoreState) => {
+        draft.mcpPluginItems = [];
+        draft.currentPage = 1;
+        draft.mcpSearchKeywords = keywords;
+      }),
+      false,
+      n('resetMCPPluginList'),
+    );
+  },
+
   uninstallMCPPlugin: async (identifier) => {
     await pluginService.uninstallPlugin(identifier);
     await get().refreshPlugins();
@@ -231,11 +261,35 @@ export const createMCPPluginStoreSlice: StateCreator<
       () => toolService.getMCPPluginList(params),
       {
         onSuccess(data) {
-          set({
-            activeMCPIdentifier: data.items?.[0]?.identifier,
-            categories: data.categories,
-            mcpPluginItems: data.items,
-          });
+          set(
+            produce((draft: MCPStoreState) => {
+              draft.searchLoading = false;
+
+              // 设置基础信息
+              if (!draft.isMcpListInit) {
+                draft.activeMCPIdentifier = data.items?.[0]?.identifier;
+
+                draft.isMcpListInit = true;
+                draft.categories = data.categories;
+                draft.totalCount = data.totalCount;
+                draft.totalPages = data.totalPages;
+              }
+
+              // 累积数据逻辑
+              if (params.page === 1) {
+                // 第一页，直接设置
+                draft.mcpPluginItems = uniqBy(data.items, 'identifier');
+              } else {
+                // 后续页面，累积数据
+                draft.mcpPluginItems = uniqBy(
+                  [...draft.mcpPluginItems, ...data.items],
+                  'identifier',
+                );
+              }
+            }),
+            false,
+            n('useFetchMCPPluginList/onSuccess'),
+          );
         },
         revalidateOnFocus: false,
       },

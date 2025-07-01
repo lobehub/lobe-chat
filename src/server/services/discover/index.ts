@@ -312,7 +312,6 @@ export class DiscoverService {
         locale: normalizedLocale,
       },
       {
-        cache: 'force-cache',
         next: {
           revalidate: CacheRevalidate.List,
           tags: [CacheTag.Discover, CacheTag.MCP],
@@ -331,7 +330,6 @@ export class DiscoverService {
     const mcp = await this.market.plugins.getPluginDetail(
       { ...params, locale: normalizedLocale },
       {
-        cache: 'force-cache',
         next: {
           revalidate: CacheRevalidate.Details,
           tags: [CacheTag.Discover, CacheTag.MCP],
@@ -369,7 +367,6 @@ export class DiscoverService {
         locale: normalizedLocale,
       },
       {
-        cache: 'force-cache',
         next: {
           revalidate: CacheRevalidate.List,
           tags: [CacheTag.Discover, CacheTag.MCP],
@@ -387,7 +384,6 @@ export class DiscoverService {
         locale: normalizedLocale,
       },
       {
-        cache: 'force-cache',
         next: {
           revalidate: CacheRevalidate.List,
           tags: [CacheTag.Discover, CacheTag.MCP],
@@ -629,7 +625,6 @@ export class DiscoverService {
             normalizedLocale === 'zh-CN' ? `${identifier}.zh-CN.mdx` : `${identifier}.mdx`,
           ),
           {
-            cache: 'force-cache',
             next: {
               tags: [CacheTag.Discover, CacheTag.Providers],
             },

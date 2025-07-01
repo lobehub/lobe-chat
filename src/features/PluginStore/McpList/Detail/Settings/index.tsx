@@ -1,25 +1,16 @@
-import {
-  SiBun,
-  SiDocker,
-  SiNodedotjs,
-  SiNpm,
-  SiPnpm,
-  SiPython,
-} from '@icons-pack/react-simple-icons';
-import { AutoComplete, Input } from '@lobehub/ui';
-import { Form as AForm, Button, Space, Tag, Typography, message } from 'antd';
+import { Icon, Input, Text } from '@lobehub/ui';
+import { Form as AForm, App, Button, Space, Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import { CpuIcon, EditIcon, LinkIcon, SaveIcon, Settings2Icon } from 'lucide-react';
+import { EditIcon, LinkIcon, SaveIcon, Settings2Icon, TerminalIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import MCPStdioCommandInput from '@/components/MCPStdioCommandInput';
 import ArgsInput from '@/features/PluginDevModal/MCPManifestForm/ArgsInput';
 import EnvEditor from '@/features/PluginDevModal/MCPManifestForm/EnvEditor';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
-
-import { useDetailContext } from '../DetailProvider';
 
 const useStyles = createStyles(({ css, token }) => ({
   compactForm: css`
@@ -67,11 +58,6 @@ const useStyles = createStyles(({ css, token }) => ({
     background: ${token.colorFillAlter};
   `,
 
-  container: css`
-    padding-block: ${token.paddingLG}px;
-padding-inline: 0;
-  `,
-
   editButton: css`
     position: absolute;
     inset-block-start: ${token.paddingXS}px;
@@ -92,11 +78,7 @@ padding-inline: 0;
   footer: css`
     display: flex;
     gap: ${token.marginSM}px;
-    justify-content: flex-end;
-
     margin-block-start: ${token.marginLG}px;
-    padding-block-start: ${token.paddingMD}px;
-    border-block-start: 1px solid ${token.colorBorderSecondary};
   `,
 
   markdown: css`
@@ -132,8 +114,6 @@ padding-inline: 0;
   previewValue: css`
     padding-block: ${token.paddingXXS}px;
     padding-inline: ${token.paddingXS}px;
-    border: 1px solid ${token.colorBorder};
-    border-radius: ${token.borderRadiusSM}px;
 
     font-family: ${token.fontFamilyCode};
     font-size: ${token.fontSizeSM}px;
@@ -143,14 +123,6 @@ padding-inline: 0;
     background: ${token.colorFillQuaternary};
   `,
 
-  section: css`
-    margin-block-end: ${token.marginXL}px;
-
-    &:last-child {
-      margin-block-end: 0;
-    }
-  `,
-
   sectionTitle: css`
     position: relative;
 
@@ -158,7 +130,7 @@ padding-inline: 0;
     gap: ${token.marginXS}px;
     align-items: center;
 
-    margin-block-end: ${token.marginLG}px;
+    height: 32px;
 
     font-size: ${token.fontSizeLG}px;
     font-weight: 600;
@@ -177,21 +149,7 @@ padding-inline: 0;
   `,
 }));
 
-// 预设的命令选项
-const STDIO_COMMAND_OPTIONS = [
-  { color: '#CB3837', icon: SiNpm, value: 'npx' },
-  { color: '#CB3837', icon: SiNpm, value: 'npm' },
-  { color: '#F69220', icon: SiPnpm, value: 'pnpm' },
-  { color: '#F69220', icon: SiPnpm, value: 'pnpx' },
-  { color: '#339933', icon: SiNodedotjs, value: 'node' },
-  { color: '#efe2d2', icon: SiBun, value: 'bun' },
-  { color: '#efe2d2', icon: SiBun, value: 'bunx' },
-  { color: '#DE5FE9', icon: SiPython, value: 'uv' },
-  { color: '#3776AB', icon: SiPython, value: 'python' },
-  { color: '#2496ED', icon: SiDocker, value: 'docker' },
-];
-
-const Settings = memo(() => {
+const Settings = memo<{ identifier: string }>(({ identifier }) => {
   const { styles } = useStyles();
   const { t } = useTranslation(['discover', 'plugin', 'common']);
   const [connectionForm] = AForm.useForm();
@@ -200,15 +158,15 @@ const Settings = memo(() => {
   const [connectionLoading, setConnectionLoading] = useState(false);
   const [isEditingConnection, setIsEditingConnection] = useState(false);
 
-  const { identifier } = useDetailContext();
   const [updatePluginSettings, updateInstallPlugin] = useToolStore((s) => [
     s.updatePluginSettings,
     s.updatePluginSettings,
   ]);
+  const { message } = App.useApp();
 
   // 获取已安装插件信息
   const installedPlugin = useToolStore(pluginSelectors.getInstalledPluginById(identifier));
-  const pluginSettings = useToolStore(pluginSelectors.getPluginSettingsById(identifier!));
+  const pluginSettings = useToolStore(pluginSelectors.getPluginSettingsById(identifier));
 
   if (!installedPlugin) {
     return null;
@@ -229,7 +187,6 @@ const Settings = memo(() => {
       };
 
       await updateInstallPlugin(identifier!, {
-        ...installedPlugin,
         customParams: newCustomParams,
       });
 
@@ -251,7 +208,7 @@ const Settings = memo(() => {
   const handleEnvSubmit = async (values: { env?: Record<string, string> }) => {
     setLoading(true);
     try {
-      await updatePluginSettings(identifier!, values.env || {});
+      await updatePluginSettings(identifier!, values.env || {}, { override: true });
       message.success('环境变量保存成功');
     } catch (error) {
       console.error('Settings update failed:', error);
@@ -262,10 +219,9 @@ const Settings = memo(() => {
   };
 
   return (
-    <div className={styles.container}>
+    <Flexbox paddingBlock={8} paddingInline={12}>
       <Flexbox gap={24}>
-        {/* 连接信息配置 */}
-        <div className={styles.section}>
+        <Flexbox gap={24}>
           <div className={styles.sectionTitle}>
             <LinkIcon size={16} />
             {t('mcp.details.settings.connection.title')}
@@ -284,15 +240,15 @@ const Settings = memo(() => {
 
           {!isEditingConnection ? (
             // 预览模式
-            <div className={styles.connectionPreview}>
+            <Flexbox paddingInline={8}>
               <div className={styles.previewItem}>
-                <span className={styles.previewLabel}>
-                  <CpuIcon size={14} />
-                  连接类型
-                </span>
-                <Tag color={customParams?.type === 'stdio' ? 'blue' : 'green'}>
-                  {customParams?.type?.toUpperCase() || 'Unknown'}
-                </Tag>
+                <span className={styles.previewLabel}>连接类型</span>
+                <Flexbox horizontal>
+                  <Icon icon={TerminalIcon} />
+                  <Text className={styles.previewValue}>
+                    {customParams?.type?.toUpperCase() || 'Unknown'}
+                  </Text>
+                </Flexbox>
               </div>
 
               {customParams?.type === 'http' && customParams?.url && (
@@ -319,7 +275,7 @@ const Settings = memo(() => {
                   )}
                 </>
               )}
-            </div>
+            </Flexbox>
           ) : (
             // 编辑模式
             <div className={styles.connectionForm}>
@@ -329,7 +285,6 @@ const Settings = memo(() => {
                 initialValues={{ mcp: customParams }}
                 layout="vertical"
                 onFinish={handleConnectionSubmit}
-                size="small"
               >
                 {customParams?.type === 'http' && (
                   <AForm.Item
@@ -348,19 +303,7 @@ const Settings = memo(() => {
                       name={['mcp', 'command']}
                       rules={[{ message: '请输入启动命令', required: true }]}
                     >
-                      <AutoComplete
-                        options={STDIO_COMMAND_OPTIONS.map(({ value, icon: Icon, color }) => ({
-                          label: (
-                            <Flexbox align={'center'} gap={8} horizontal>
-                              {Icon && <Icon color={color} size={14} />}
-                              {value}
-                            </Flexbox>
-                          ),
-                          value: value,
-                        }))}
-                        placeholder="npx, uv, python..."
-                        size="small"
-                      />
+                      <MCPStdioCommandInput placeholder="npx, uv, python..." />
                     </AForm.Item>
 
                     <AForm.Item
@@ -372,74 +315,63 @@ const Settings = memo(() => {
                     </AForm.Item>
                   </>
                 )}
-
                 <div className={styles.footer}>
                   <Space>
-                    <Button onClick={handleCancelEdit} size="small">
-                      取消
-                    </Button>
                     <Button
                       htmlType="submit"
                       icon={<SaveIcon size={12} />}
                       loading={connectionLoading}
-                      size="small"
                       type="primary"
                     >
-                      保存
+                      {t('common:save')}
                     </Button>
+                    <Button onClick={handleCancelEdit}>取消</Button>
                   </Space>
                 </div>
               </AForm>
             </div>
           )}
-        </div>
+        </Flexbox>
 
         {/* 环境变量配置（仅 stdio 类型） */}
         {isStdioType && (
-          <div className={styles.section}>
+          <Flexbox gap={12}>
             <div className={styles.sectionTitle}>
               <Settings2Icon size={16} />
               {t('mcp.details.settings.configuration.title')}
             </div>
-            <div className={styles.configFormContainer}>
-              <div className={styles.configHeader}>
-                <Typography.Title level={5}>环境变量配置</Typography.Title>
-                <Typography.Text style={{ fontSize: 12 }} type="secondary">
-                  这些环境变量将在 MCP 服务器启动时传递给进程
-                </Typography.Text>
+            <Text style={{ fontSize: 12 }} type="secondary">
+              这些配置将作为环境变量在 MCP 服务器启动时传递给进程
+            </Text>
+            <AForm
+              form={envForm}
+              initialValues={{ env: pluginSettings }}
+              layout="vertical"
+              onFinish={handleEnvSubmit}
+            >
+              <AForm.Item name="env" style={{ marginBottom: 0 }}>
+                <EnvEditor />
+              </AForm.Item>
+              <div className={styles.footer}>
+                <Space>
+                  <Button
+                    htmlType="submit"
+                    icon={<SaveIcon size={14} />}
+                    loading={loading}
+                    type="primary"
+                  >
+                    {t('common:save')}
+                  </Button>
+                  <Button onClick={() => envForm.resetFields()}>重置</Button>
+                </Space>
               </div>
-
-              <AForm
-                form={envForm}
-                initialValues={{ env: pluginSettings }}
-                layout="vertical"
-                onFinish={handleEnvSubmit}
-              >
-                <AForm.Item name="env" style={{ marginBottom: 0 }}>
-                  <EnvEditor />
-                </AForm.Item>
-
-                <div className={styles.footer}>
-                  <Space>
-                    <Button onClick={() => envForm.resetFields()}>重置</Button>
-                    <Button
-                      htmlType="submit"
-                      icon={<SaveIcon size={14} />}
-                      loading={loading}
-                      type="primary"
-                    >
-                      {t('mcp.details.settings.saveSettings')}
-                    </Button>
-                  </Space>
-                </div>
-              </AForm>
-            </div>
-          </div>
+            </AForm>
+          </Flexbox>
         )}
 
         {/* HTTP 类型提示 */}
         {!isStdioType && (
-          <div className={styles.section}>
+          <div>
             <div className={styles.sectionTitle}>
               <Settings2Icon size={16} />
               {t('mcp.details.settings.configuration.title')}
@@ -452,7 +384,7 @@ const Settings = memo(() => {
           </div>
         )}
       </Flexbox>
-    </div>
+    </Flexbox>
   );
 });
 

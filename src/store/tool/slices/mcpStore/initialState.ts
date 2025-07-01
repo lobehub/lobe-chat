@@ -26,10 +26,13 @@ export type MCPInstallProgressMap = Record<string, MCPInstallProgress | undefine
 export interface MCPStoreState {
   activeMCPIdentifier?: string;
   categories: string[];
-  currentPage?: number;
+  currentPage: number;
+  isLoadingMore?: boolean;
+  isMcpListInit?: boolean;
   mcpInstallProgress: MCPInstallProgressMap;
   mcpPluginItems: PluginItem[];
-  pageSize?: number;
+  mcpSearchKeywords?: string;
+  searchLoading?: boolean;
   tags?: string[];
   totalCount?: number;
   totalPages?: number;
@@ -37,6 +40,7 @@ export interface MCPStoreState {
 
 export const initialMCPStoreState: MCPStoreState = {
   categories: [],
+  currentPage: 1,
   mcpInstallProgress: {},
   mcpPluginItems: [],
 };
