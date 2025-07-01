@@ -123,8 +123,10 @@ class MCPSystemDepsCheckService {
    */
   async checkDeployOption(option: DeploymentOption): Promise<{
     allDependenciesMet: boolean;
+    configSchema?: any;
     connection: any;
     isRecommended?: boolean;
+    needsConfig?: boolean;
     packageInstalled: boolean;
     systemDependencies: SystemDependencyCheckResult[];
   }> {
@@ -154,6 +156,22 @@ class MCPSystemDepsCheckService {
     // Check if all system dependencies meet requirements
     const allDependenciesMet = systemDependenciesResults.every((dep) => dep.meetRequirement);
 
+    // Check if configuration is required (有必填项)
+    const configSchema = option.connection?.configSchema;
+    const needsConfig = Boolean(
+      configSchema &&
+        // 检查是否有 required 数组且不为空
+        ((Array.isArray(configSchema.required) && configSchema.required.length > 0) ||
+          // 检查 properties 中是否有字段标记为 required
+          (configSchema.properties &&
+            Object.values(configSchema.properties).some((prop: any) => prop.required === true))),
+    );
+
+    log(
+      `Configuration check result: needsConfig=${needsConfig}, required=${configSchema?.required}, configSchema=%O`,
+      configSchema,
+    );
+
     // Create connection info
     const connection = option.connection.url
       ? {
@@ -167,8 +185,10 @@ class MCPSystemDepsCheckService {
 
     return {
       allDependenciesMet,
+      configSchema,
       connection,
       isRecommended: option.isRecommended,
+      needsConfig,
       packageInstalled,
       systemDependencies: systemDependenciesResults,
     };

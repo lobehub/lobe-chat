@@ -9,6 +9,7 @@ import {
   HistoryIcon,
   ListIcon,
   PackageCheckIcon,
+  SettingsIcon,
 } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
@@ -17,6 +18,8 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { SOCIAL_URL } from '@/const/branding';
+import { useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 import { McpNavKey } from '@/types/discover';
 
 import { useDetailContext } from './DetailProvider';
@@ -43,9 +46,19 @@ const Nav = memo<{
   setActiveTab?: (tab: McpNavKey) => void;
 }>(({ mobile, setActiveTab, activeTab = McpNavKey.Overview, inModal }) => {
   const { t } = useTranslation('discover');
-  const { versions, deploymentOptions, toolsCount, resourcesCount, promptsCount, github } =
-    useDetailContext();
+  const {
+    versions,
+    deploymentOptions,
+    toolsCount,
+    resourcesCount,
+    promptsCount,
+    github,
+    identifier,
+  } = useDetailContext();
   const { styles } = useStyles();
+
+  // 检查插件是否已安装
+  const installedPlugin = useToolStore(pluginSelectors.getInstalledPluginById(identifier));
 
   const deploymentCount = deploymentOptions?.length || 0;
   const schemaCount = Number(toolsCount) + Number(promptsCount) + Number(resourcesCount);
@@ -57,6 +70,12 @@ const Nav = memo<{
       compact={mobile}
       items={
         [
+          // 只有已安装的插件才显示设置 tab
+          installedPlugin && {
+            icon: <Icon icon={SettingsIcon} size={16} />,
+            key: McpNavKey.Settings,
+            label: t('mcp.details.settings.title'),
+          },
           {
             icon: <Icon icon={BookOpenIcon} size={16} />,
             key: McpNavKey.Overview,
@@ -112,6 +131,7 @@ const Nav = memo<{
             key: McpNavKey.Score,
             label: t('mcp.details.score.title'),
           },
+
           !inModal && {
             icon: <Icon icon={HistoryIcon} size={16} />,
             key: McpNavKey.Version,

@@ -16,6 +16,7 @@ const stdioParamsSchema = z.object({
     .object({
       avatar: z.string().optional(),
       description: z.string().optional(),
+      name: z.string().optional(),
     })
     .optional(),
   name: z.string().min(1),
@@ -63,12 +64,17 @@ export const mcpRouter = router({
       z.object({
         params: stdioParamsSchema, // Use the unified schema for client params
         args: z.any(), // Arguments for the tool call
+        env: z.any(), // Arguments for the tool call
         toolName: z.string(),
       }),
     )
     .mutation(async ({ input }) => {
       // Pass the validated params, toolName, and args to the service
-      const data = await mcpService.callTool(input.params, input.toolName, input.args);
+      const data = await mcpService.callTool(
+        { ...input.params, env: input.env },
+        input.toolName,
+        input.args,
+      );
 
       return JSON.stringify(data);
     }),

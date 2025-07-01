@@ -20,7 +20,7 @@ const n = setNamespace('pluginStore');
 const INSTALLED_PLUGINS = 'loadInstalledPlugins';
 
 export interface PluginStoreAction {
-  installPlugin: (identifier: string, type?: 'plugin' | 'customPlugin') => Promise<void>;
+  installPlugin: (identifier: string, source?: 'plugin' | 'customPlugin') => Promise<void>;
   installPlugins: (plugins: string[]) => Promise<void>;
   loadPluginStore: () => Promise<LobeChatPluginMeta[]>;
   refreshPlugins: () => Promise<void>;

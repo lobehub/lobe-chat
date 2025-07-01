@@ -35,6 +35,7 @@ export enum McpNavKey {
   Related = 'related',
   Schema = 'schema',
   Score = 'score',
+  Settings = 'settings',
   Version = 'version',
 }
 

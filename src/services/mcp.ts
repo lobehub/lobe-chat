@@ -24,6 +24,7 @@ class MCPService {
 
     const data = {
       args,
+      env: plugin.settings,
       params: { ...plugin.customParams?.mcp, name: identifier } as any,
       toolName: apiName,
     };
@@ -111,7 +112,6 @@ class MCPService {
       success,
       version,
     };
-    console.log('reportData:', reportData);
 
     edgeClient.market.reportMcpInstallResult
       .mutate(cleanObject(reportData))

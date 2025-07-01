@@ -19,7 +19,10 @@ import { MCPInstallProgress, MCPInstallStep, MCPStoreState } from './initialStat
 const n = setNamespace('mcpStore');
 
 export interface PluginMCPStoreAction {
-  installMCPPlugin: (identifier: string) => Promise<boolean | undefined>;
+  installMCPPlugin: (
+    identifier: string,
+    options?: { config?: Record<string, any>; resume?: boolean },
+  ) => Promise<boolean | undefined>;
   uninstallMCPPlugin: (identifier: string) => Promise<void>;
   updateMCPInstallProgress: (identifier: string, progress: MCPInstallProgress | undefined) => void;
   useFetchMCPPluginList: (params: MCPPluginListParams) => SWRResponse<PluginListResponse>;
@@ -31,7 +34,8 @@ export const createMCPPluginStoreSlice: StateCreator<
   [],
   PluginMCPStoreAction
 > = (set, get) => ({
-  installMCPPlugin: async (identifier) => {
+  installMCPPlugin: async (identifier, options = {}) => {
+    const { resume = false, config } = options;
     const plugin = mcpStoreSelectors.getPluginById(identifier)(get());
 
     if (!plugin || !plugin.manifestUrl) return;
@@ -41,52 +45,97 @@ export const createMCPPluginStoreSlice: StateCreator<
     // 记录安装开始时间
     const installStartTime = Date.now();
 
+    let data: any;
+
     try {
-      // 步骤 1: 获取插件清单
-      updateMCPInstallProgress(identifier, {
-        progress: 20,
-        step: MCPInstallStep.FETCHING_MANIFEST,
-      });
+      let result: any;
+      let connection: any;
 
-      updateInstallLoadingState(identifier, true);
-      const data = await toolService.getMCPPluginManifest(plugin.identifier, { install: true });
+      if (resume) {
+        // 恢复模式：从存储中获取之前的信息
+        const configInfo = get().mcpInstallProgress[identifier];
+        if (!configInfo) {
+          console.error('No config info found for resume');
+          return;
+        }
 
-      // 步骤 2: 检查安装环境
-      updateMCPInstallProgress(identifier, {
-        progress: 40,
-        step: MCPInstallStep.CHECKING_INSTALLATION,
-      });
+        data = configInfo.manifest;
+        connection = {
+          ...configInfo.connection,
+          config, // 合并用户提供的配置
+        };
+      } else {
+        // 正常模式：从头开始安装
 
-      const result = await mcpService.checkInstallation(data);
-      let manifest: LobeChatPluginManifest | undefined;
+        // 步骤 1: 获取插件清单
+        updateMCPInstallProgress(identifier, {
+          progress: 20,
+          step: MCPInstallStep.FETCHING_MANIFEST,
+        });
 
-      if (!result.success) {
-        updateMCPInstallProgress(identifier, undefined);
-        return;
+        updateInstallLoadingState(identifier, true);
+        data = await toolService.getMCPPluginManifest(plugin.identifier, { install: true });
+
+        // 步骤 2: 检查安装环境
+        updateMCPInstallProgress(identifier, {
+          progress: 30,
+          step: MCPInstallStep.CHECKING_INSTALLATION,
+        });
+
+        result = await mcpService.checkInstallation(data);
+
+        if (!result.success) {
+          updateMCPInstallProgress(identifier, undefined);
+          return;
+        }
+
+        // 步骤 3: 检查是否需要配置
+        if (result.needsConfig) {
+          // 需要配置，暂停安装流程
+          updateMCPInstallProgress(identifier, {
+            configSchema: result.configSchema,
+            connection: result.connection,
+            manifest: data,
+            needsConfig: true,
+            progress: 50,
+            step: MCPInstallStep.CONFIGURATION_REQUIRED,
+          });
+
+          // 暂停安装流程，等待用户配置
+          updateInstallLoadingState(identifier, undefined);
+          return false; // 返回 false 表示需要配置
+        }
+
+        connection = result.connection;
       }
 
-      // 步骤 3: 获取服务器清单
+      // 共同的获取服务器清单逻辑
+      updateInstallLoadingState(identifier, true);
+
+      // 步骤 4: 获取服务器清单
       updateMCPInstallProgress(identifier, {
-        progress: 60,
+        progress: 70,
         step: MCPInstallStep.GETTING_SERVER_MANIFEST,
       });
 
-      if (result.connection?.type === 'stdio') {
+      let manifest: LobeChatPluginManifest | undefined;
+
+      if (connection?.type === 'stdio') {
         manifest = await mcpService.getStdioMcpServerManifest(
           {
-            args: result.connection.args,
-            command: result.connection.command!,
-            name: identifier,
+            args: connection.args,
+            command: connection.command!,
+            env: config,
+            name: identifier, // 将配置作为环境变量传递（resume 模式下）
           },
-          { avatar: plugin.icon, description: plugin.description },
+          { avatar: plugin.icon, description: plugin.description, name: data.name },
         );
       }
-      if (result.connection?.type === 'http') {
-        manifest = await mcpService.getStreamableMcpServerManifest(
-          identifier,
-          result.connection.url!,
-          { avatar: plugin.icon, description: plugin.description },
-        );
+      if (connection?.type === 'http') {
+        manifest = await mcpService.getStreamableMcpServerManifest(identifier, connection.url!, {
+          avatar: plugin.icon,
+          description: plugin.description,
+        });
       }
 
       if (!manifest) {
@@ -94,23 +143,24 @@ export const createMCPPluginStoreSlice: StateCreator<
         return;
       }
 
-      // 步骤 4: 安装插件
+      // 步骤 5: 安装插件
       updateMCPInstallProgress(identifier, {
-        progress: 80,
+        progress: 90,
         step: MCPInstallStep.INSTALLING_PLUGIN,
       });
 
       await pluginService.installPlugin({
         // 针对 mcp 先将 connection 信息存到 customParams 字段里
-        customParams: { mcp: result.connection },
+        customParams: { mcp: connection },
         identifier: plugin.identifier,
         manifest: manifest,
+        settings: config,
         type: 'plugin',
       });
 
       await refreshPlugins();
 
-      // 步骤 5: 完成安装
+      // 步骤 6: 完成安装
       updateMCPInstallProgress(identifier, {
         progress: 100,
         step: MCPInstallStep.COMPLETED,
@@ -150,12 +200,14 @@ export const createMCPPluginStoreSlice: StateCreator<
         identifier: plugin.identifier,
         installDurationMs,
         success: false,
+        version: data.version,
       });
 
       updateInstallLoadingState(identifier, undefined);
       updateMCPInstallProgress(identifier, undefined);
     }
   },
+
   uninstallMCPPlugin: async (identifier) => {
     await pluginService.uninstallPlugin(identifier);
     await get().refreshPlugins();

@@ -36,11 +36,19 @@ const getPluginById = (id: string) => (s: ToolStoreState) => {
 
 const activeMCPPluginIdentifier = (s: ToolStoreState) => s.activeMCPIdentifier;
 
+const getMCPPluginRequiringConfig = (id: string) => (s: ToolStoreState) =>
+  s.mcpInstallProgress[id]?.configSchema;
+
+const isMCPPluginRequiringConfig = (id: string) => (s: ToolStoreState) =>
+  !!s.mcpInstallProgress[id]?.configSchema;
+
 export const mcpStoreSelectors = {
   activeMCPPluginIdentifier,
   getMCPInstallProgress,
+  getMCPPluginRequiringConfig,
   getPluginById,
   isMCPInstalling,
+  isMCPPluginRequiringConfig,
   isPluginInstallLoading,
   mcpPluginList,
 };

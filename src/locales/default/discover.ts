@@ -397,6 +397,26 @@ export default {
           title: '欠佳',
         },
       },
+      settings: {
+        capabilities: {
+          prompts: '提示词',
+          resources: '资源',
+          title: '插件能力',
+          tools: '工具',
+        },
+        configuration: {
+          title: '插件配置',
+        },
+        connection: {
+          args: '启动参数',
+          command: '启动命令',
+          title: '连接信息',
+          type: '连接类型',
+          url: '服务地址',
+        },
+        saveSettings: '保存设置',
+        title: '插件设置',
+      },
       sidebar: {
         install: '安装 MCP Server',
         meta: {

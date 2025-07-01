@@ -47,6 +47,10 @@ export interface CheckMcpInstallResult {
     }>;
   }>;
   /**
+   * 配置模式，提到顶层方便访问
+   */
+  configSchema?: any;
+  /**
    * 连接信息，用于后续连接使用
    */
   connection?: {
@@ -63,6 +67,10 @@ export interface CheckMcpInstallResult {
    * 是否为推荐选项
    */
   isRecommended?: boolean;
+  /**
+   * 是否需要配置（如 API key 等）
+   */
+  needsConfig?: boolean;
   /**
    * 插件安装检测结果
    */
