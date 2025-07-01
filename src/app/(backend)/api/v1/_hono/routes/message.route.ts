@@ -10,6 +10,7 @@ import { requireAnyPermission } from '../middleware/permission-check';
 import {
   CountByTopicsRequestSchema,
   CountByUserRequestSchema,
+  MessageIdParamSchema,
   MessagesCreateRequestSchema,
   MessagesQueryByTopicRequestSchema,
   SearchMessagesByKeywordRequestSchema,
@@ -60,6 +61,21 @@ MessageRoutes.get(
   (c) => {
     const controller = new MessageController();
     return controller.handleGetMessagesByTopic(c);
+  },
+);
+
+// GET /api/v1/messages/:id - 根据消息ID获取消息详情 (需要消息读取权限)
+MessageRoutes.get(
+  '/:id',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('MESSAGE_READ', ['ALL', 'WORKSPACE', 'OWNER']),
+    'You do not have permission to read message details',
+  ),
+  zValidator('param', MessageIdParamSchema),
+  (c) => {
+    const controller = new MessageController();
+    return controller.handleGetMessageById(c);
   },
 );
 
