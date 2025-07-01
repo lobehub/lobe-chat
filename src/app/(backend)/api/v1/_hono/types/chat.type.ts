@@ -107,5 +107,5 @@ export const MessageGenerationParamsSchema = z.object({
   model: z.string().optional(),
   provider: z.string().optional(),
   sessionId: z.string().nullable(),
-  userMessage: z.string().min(1, '用户消息不能为空'),
+  userMessage: z.string().optional(),
 });
