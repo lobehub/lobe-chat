@@ -55,6 +55,10 @@ const installedPluginMetaList = (s: ToolStoreState) =>
     createdAt: p.manifest?.createdAt || (p.manifest as any)?.createAt,
     homepage: p.manifest?.homepage,
     identifier: p.identifier,
+    /*
+     * should remove meta
+     */
+    meta: getPluginMetaById(p.identifier)(s),
     type: p.source || p.type,
     ...getPluginMetaById(p.identifier)(s),
   }));

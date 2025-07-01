@@ -17,7 +17,6 @@ export class MCPClient {
   private transport: Transport;
 
   constructor(params: MCPClientParams) {
-    log('Creating MCPClient with connection: %O', params);
     this.mcp = new Client({ name: 'lobehub-mcp-client', version: '1.0.0' });
 
     switch (params.type) {

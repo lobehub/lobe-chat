@@ -159,14 +159,12 @@ class MCPService {
   // Private method to get or initialize a client based on parameters
   private async getClient(params: MCPClientParams): Promise<MCPClient> {
     const key = this.serializeParams(params); // Use custom serialization
-    log(`Attempting to get client for key: ${key} (params: %O)`, params);
 
     if (this.clients.has(key)) {
-      log(`Returning cached client for key: ${key}`);
       return this.clients.get(key)!;
     }
 
-    log(`No cached client found for key: ${key}. Initializing new client.`);
+    log(`No cached client found, Initializing new client.`);
     try {
       const client = new MCPClient(params);
       await client.initialize({
@@ -175,7 +173,7 @@ class MCPService {
         },
       }); // Initialization logic should be within MCPClient
       this.clients.set(key, client);
-      log(`New client initialized and cached for key: ${key}`);
+      log(`New client initialized and cached for key: ${key.slice(0, 20)}`);
       return client;
     } catch (error) {
       console.error(`Failed to initialize MCP client for key ${key}:`, error);
