@@ -87,16 +87,17 @@ export class FileModel {
   };
 
   delete = async (id: string, removeGlobalFile: boolean = true, trx?: Transaction) => {
-    const file = await this.findById(id);
-    if (!file) return;
-
-    const fileHash = file.fileHash!;
-
     const executeInTransaction = async (tx: Transaction) => {
-      // 1. Delete related chunks
+      // pglite 环境下不能再 transaction 中使用非事务操作，会阻塞住
+      const file = await this.findById(id, tx);
+      if (!file) return;
+
+      const fileHash = file.fileHash!;
+
+      // 2. Delete related chunks
       await this.deleteFileChunks(tx as any, [id]);
 
-      // 2. Delete file record
+      // 3. Delete file record
       await tx.delete(files).where(and(eq(files.id, id), eq(files.userId, this.userId)));
 
       const result = await tx
@@ -267,8 +268,9 @@ export class FileModel {
     });
   };
 
-  findById = async (id: string) => {
-    return this.db.query.files.findFirst({
+  findById = async (id: string, trx?: Transaction) => {
+    const database = trx || this.db;
+    return database.query.files.findFirst({
       where: and(eq(files.id, id), eq(files.userId, this.userId)),
     });
   };
