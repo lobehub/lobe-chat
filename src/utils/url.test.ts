@@ -1,5 +1,7 @@
+import { vi } from 'vitest';
+
 import { pathString } from './url';
-import { getFileExtensionFromUrl, inferContentTypeFromImageUrl } from './url';
+import { inferContentTypeFromImageUrl, inferFileExtensionFromImageUrl } from './url';
 
 describe('pathString', () => {
   it('should handle basic path', () => {
@@ -214,140 +216,144 @@ describe('inferContentTypeFromImageUrl', () => {
   });
 });
 
-describe('getFileExtensionFromUrl', () => {
+describe('inferFileExtensionFromImageUrl', () => {
   it('should return jpg extension', () => {
-    const result = getFileExtensionFromUrl('https://example.com/image.jpg');
+    const result = inferFileExtensionFromImageUrl('https://example.com/image.jpg');
     expect(result).toBe('jpg');
   });
 
   it('should return png extension', () => {
-    const result = getFileExtensionFromUrl('https://example.com/image.png');
+    const result = inferFileExtensionFromImageUrl('https://example.com/image.png');
     expect(result).toBe('png');
   });
 
   it('should return webp extension', () => {
-    const result = getFileExtensionFromUrl('https://example.com/image.webp');
+    const result = inferFileExtensionFromImageUrl('https://example.com/image.webp');
     expect(result).toBe('webp');
   });
 
   it('should handle jpeg extension', () => {
-    const result = getFileExtensionFromUrl('https://example.com/image.jpeg');
+    const result = inferFileExtensionFromImageUrl('https://example.com/image.jpeg');
     expect(result).toBe('jpeg');
   });
 
   it('should handle gif extension', () => {
-    const result = getFileExtensionFromUrl('https://example.com/image.gif');
+    const result = inferFileExtensionFromImageUrl('https://example.com/image.gif');
     expect(result).toBe('gif');
   });
 
   it('should handle svg extension', () => {
-    const result = getFileExtensionFromUrl('https://example.com/image.svg');
+    const result = inferFileExtensionFromImageUrl('https://example.com/image.svg');
     expect(result).toBe('svg');
   });
 
   it('should handle uppercase extensions and convert to lowercase', () => {
-    const result = getFileExtensionFromUrl('https://example.com/image.PNG');
+    const result = inferFileExtensionFromImageUrl('https://example.com/image.PNG');
     expect(result).toBe('png');
   });
 
   it('should handle mixed case extensions', () => {
-    const result = getFileExtensionFromUrl('https://example.com/image.JpEg');
+    const result = inferFileExtensionFromImageUrl('https://example.com/image.JpEg');
     expect(result).toBe('jpeg');
   });
 
   it('should handle URLs with query parameters', () => {
-    const result = getFileExtensionFromUrl('https://example.com/image.jpg?v=123&size=large');
+    const result = inferFileExtensionFromImageUrl('https://example.com/image.jpg?v=123&size=large');
     expect(result).toBe('jpg');
   });
 
   it('should handle URLs with hash fragments', () => {
-    const result = getFileExtensionFromUrl('https://example.com/image.png#section');
+    const result = inferFileExtensionFromImageUrl('https://example.com/image.png#section');
     expect(result).toBe('png');
   });
 
   it('should handle multiple dots in path', () => {
-    const result = getFileExtensionFromUrl('https://example.com/my.folder/image.test.webp');
+    const result = inferFileExtensionFromImageUrl('https://example.com/my.folder/image.test.webp');
     expect(result).toBe('webp');
   });
 
-  it('should return default png when no extension', () => {
-    const result = getFileExtensionFromUrl('https://example.com/image');
-    expect(result).toBe('png');
+  it('should return empty string when no extension', () => {
+    const result = inferFileExtensionFromImageUrl('https://example.com/image');
+    expect(result).toBe('');
   });
 
-  it('should return default png when only dot without extension', () => {
-    const result = getFileExtensionFromUrl('https://example.com/image.');
-    expect(result).toBe('png');
+  it('should return empty string when only dot without extension', () => {
+    const result = inferFileExtensionFromImageUrl('https://example.com/image.');
+    expect(result).toBe('');
   });
 
-  it('should return default png for non-image extensions', () => {
-    const result = getFileExtensionFromUrl('https://example.com/document.txt');
-    expect(result).toBe('png');
+  it('should return empty string for non-image extensions', () => {
+    const result = inferFileExtensionFromImageUrl('https://example.com/document.txt');
+    expect(result).toBe('');
   });
 
-  it('should return default png for other format extensions', () => {
-    const result = getFileExtensionFromUrl('https://example.com/video.mp4');
-    expect(result).toBe('png');
+  it('should return empty string for other format extensions', () => {
+    const result = inferFileExtensionFromImageUrl('https://example.com/video.mp4');
+    expect(result).toBe('');
   });
 
-  it('should handle invalid URLs and return default', () => {
-    const result = getFileExtensionFromUrl('invalid-url');
-    expect(result).toBe('png');
+  it('should handle invalid URLs and return empty string', () => {
+    const result = inferFileExtensionFromImageUrl('invalid-url');
+    expect(result).toBe('');
   });
 
-  it('should handle empty string URLs and return default', () => {
-    const result = getFileExtensionFromUrl('');
-    expect(result).toBe('png');
+  it('should handle empty string URLs and return empty string', () => {
+    const result = inferFileExtensionFromImageUrl('');
+    expect(result).toBe('');
   });
 
   it('should handle all supported image extensions', () => {
     const supportedExtensions = ['webp', 'jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'tiff', 'tif'];
 
     supportedExtensions.forEach((ext) => {
-      const result = getFileExtensionFromUrl(`https://example.com/image.${ext}`);
+      const result = inferFileExtensionFromImageUrl(`https://example.com/image.${ext}`);
       expect(result).toBe(ext);
     });
   });
 
   it('should handle URLs with port numbers', () => {
-    const result = getFileExtensionFromUrl('https://example.com:8080/image.jpg');
+    const result = inferFileExtensionFromImageUrl('https://example.com:8080/image.jpg');
     expect(result).toBe('jpg');
   });
 
   it('should handle subdomain URLs', () => {
-    const result = getFileExtensionFromUrl('https://cdn.example.com/images/photo.webp');
+    const result = inferFileExtensionFromImageUrl('https://cdn.example.com/images/photo.webp');
     expect(result).toBe('webp');
   });
 
   it('should handle deep path URLs', () => {
-    const result = getFileExtensionFromUrl('https://example.com/assets/images/gallery/photo.png');
+    const result = inferFileExtensionFromImageUrl(
+      'https://example.com/assets/images/gallery/photo.png',
+    );
     expect(result).toBe('png');
   });
 
   it('should handle encoded URLs', () => {
-    const result = getFileExtensionFromUrl('https://example.com/images/%E5%9B%BE%E7%89%87.jpg');
+    const result = inferFileExtensionFromImageUrl(
+      'https://example.com/images/%E5%9B%BE%E7%89%87.jpg',
+    );
     expect(result).toBe('jpg');
   });
 
   it('should handle relative paths', () => {
-    const result = getFileExtensionFromUrl('generations/images/photo.jpg');
+    const result = inferFileExtensionFromImageUrl('generations/images/photo.jpg');
     expect(result).toBe('jpg');
   });
 
   it('should handle relative paths with complex filenames', () => {
-    const result = getFileExtensionFromUrl(
+    const result = inferFileExtensionFromImageUrl(
       'generations/images/2NPfAQAMNxXPi82mzOHog_1056x1136_20250702_110911_raw.png',
     );
     expect(result).toBe('png');
   });
 
   it('should handle relative paths with query parameters', () => {
-    const result = getFileExtensionFromUrl('images/photo.webp?v=123');
+    const result = inferFileExtensionFromImageUrl('images/photo.webp?v=123');
     expect(result).toBe('webp');
   });
 
   it('should handle relative paths with hash fragments', () => {
-    const result = getFileExtensionFromUrl('assets/images/banner.gif#preview');
+    const result = inferFileExtensionFromImageUrl('assets/images/banner.gif#preview');
     expect(result).toBe('gif');
   });
 });
