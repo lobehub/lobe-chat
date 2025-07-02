@@ -1,12 +1,26 @@
-import { PropsWithChildren } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
-import NProgress from '@/components/NProgress';
+import ImagePanel from '@/features/ImageSidePanel';
+import ImageTopicPanel from '@/features/ImageTopicPanel';
 
-const Layout = ({ children }: PropsWithChildren) => {
+import { LayoutProps } from '../type';
+import Container from './Container';
+import RegisterHotkeys from './RegisterHotkeys';
+
+const Layout = ({ children, menu, topic }: LayoutProps) => {
   return (
     <>
-      <NProgress />
-      {children}
+      <Flexbox
+        height={'100%'}
+        horizontal
+        style={{ maxWidth: '100%', overflow: 'hidden', position: 'relative' }}
+        width={'100%'}
+      >
+        <ImagePanel>{menu}</ImagePanel>
+        <Container>{children}</Container>
+        <ImageTopicPanel>{topic}</ImageTopicPanel>
+      </Flexbox>
+      <RegisterHotkeys />
     </>
   );
 };

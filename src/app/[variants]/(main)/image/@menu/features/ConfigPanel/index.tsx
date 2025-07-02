@@ -66,7 +66,6 @@ const ConfigItemLayout = memo<ConfigItemLayoutProps>(({ label, children }) => {
 const isSupportParamSelector = imageGenerationConfigSelectors.isSupportParam;
 
 const ConfigPanel = memo(() => {
-  const { styles } = useStyles();
   const { t } = useTranslation('image');
 
   const isSupportImageUrl = useImageStore(isSupportParamSelector('imageUrl'));
@@ -79,65 +78,63 @@ const ConfigPanel = memo(() => {
   const isSupportImageUrls = useImageStore(isSupportParamSelector('imageUrls'));
 
   return (
-    <aside className={styles.container}>
-      <Flexbox gap={0}>
-        <ConfigItemLayout label={t('config.model.label')}>
-          <ModelSelect />
+    <Flexbox padding={16}>
+      <ConfigItemLayout label={t('config.model.label')}>
+        <ModelSelect />
+      </ConfigItemLayout>
+
+      {isSupportImageUrl && (
+        <ConfigItemLayout label={t('config.imageUrl.label')}>
+          <ImageUrl />
         </ConfigItemLayout>
+      )}
 
-        {isSupportImageUrl && (
-          <ConfigItemLayout label={t('config.imageUrl.label')}>
-            <ImageUrl />
-          </ConfigItemLayout>
-        )}
-
-        {isSupportImageUrls && (
-          <ConfigItemLayout label={t('config.imageUrls.label')}>
-            <ImageUrlsUpload />
-          </ConfigItemLayout>
-        )}
-
-        {isSupportSize && (
-          <ConfigItemLayout label={t('config.size.label')}>
-            <SizeSelect />
-          </ConfigItemLayout>
-        )}
-
-        {isSupportAspectRatio && (
-          <ConfigItemLayout label={t('config.aspectRatio.label')}>
-            <AspectRatioSelect />
-          </ConfigItemLayout>
-        )}
-
-        {isSupportWidth && (
-          <ConfigItemLayout label={t('config.width.label')}>
-            <SizeSliderInput paramName="width" />
-          </ConfigItemLayout>
-        )}
-
-        {isSupportHeight && (
-          <ConfigItemLayout label={t('config.height.label')}>
-            <SizeSliderInput paramName="height" />
-          </ConfigItemLayout>
-        )}
-
-        {isSupportSteps && (
-          <ConfigItemLayout label={t('config.steps.label')}>
-            <StepsSliderInput />
-          </ConfigItemLayout>
-        )}
-
-        {isSupportSeed && (
-          <ConfigItemLayout label={t('config.seed.label')}>
-            <SeedNumberInput />
-          </ConfigItemLayout>
-        )}
-
-        <ConfigItemLayout label={t('config.imageNum.label')}>
-          <ImageNum />
+      {isSupportImageUrls && (
+        <ConfigItemLayout label={t('config.imageUrls.label')}>
+          <ImageUrlsUpload />
         </ConfigItemLayout>
-      </Flexbox>
-    </aside>
+      )}
+
+      {isSupportSize && (
+        <ConfigItemLayout label={t('config.size.label')}>
+          <SizeSelect />
+        </ConfigItemLayout>
+      )}
+
+      {isSupportAspectRatio && (
+        <ConfigItemLayout label={t('config.aspectRatio.label')}>
+          <AspectRatioSelect />
+        </ConfigItemLayout>
+      )}
+
+      {isSupportWidth && (
+        <ConfigItemLayout label={t('config.width.label')}>
+          <SizeSliderInput paramName="width" />
+        </ConfigItemLayout>
+      )}
+
+      {isSupportHeight && (
+        <ConfigItemLayout label={t('config.height.label')}>
+          <SizeSliderInput paramName="height" />
+        </ConfigItemLayout>
+      )}
+
+      {isSupportSteps && (
+        <ConfigItemLayout label={t('config.steps.label')}>
+          <StepsSliderInput />
+        </ConfigItemLayout>
+      )}
+
+      {isSupportSeed && (
+        <ConfigItemLayout label={t('config.seed.label')}>
+          <SeedNumberInput />
+        </ConfigItemLayout>
+      )}
+
+      <ConfigItemLayout label={t('config.imageNum.label')}>
+        <ImageNum />
+      </ConfigItemLayout>
+    </Flexbox>
   );
 });
 

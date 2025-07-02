@@ -1,5 +1,9 @@
-export const image = {
+export default {
   config: {
+    header: {
+      title: '绘画',
+      desc: '简单描述，即刻创作',
+    },
     title: 'AI 绘画',
     model: {
       label: '模型',
@@ -88,4 +92,4 @@ export const image = {
     },
     title: '当前部署模式不支持 AI 绘画',
   },
-} as const;
+};

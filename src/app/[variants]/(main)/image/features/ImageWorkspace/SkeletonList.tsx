@@ -44,7 +44,7 @@ const SkeletonList = memo(() => {
   const { styles } = useStyles();
 
   return (
-    <Flexbox gap={16} width="100%">
+    <>
       {Array.from({ length: 3 }).map((_, index) => (
         <div className={styles.skeletonContainer} key={index}>
           <Flexbox gap={12}>
@@ -72,7 +72,7 @@ const SkeletonList = memo(() => {
           </Flexbox>
         </div>
       ))}
-    </Flexbox>
+    </>
   );
 });
 

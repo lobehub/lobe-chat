@@ -24,35 +24,24 @@ const ImageWorkspaceContent = () => {
     return <SkeletonList />;
   }
 
-  return (
-    <Flexbox
-      flex={1}
-      height="100%"
-      style={{
-        overflow: 'hidden',
-        padding: 24,
-      }}
-    >
-      {hasGenerations ? (
-        <>
-          {/* 生成结果展示区 */}
-          <Flexbox flex={1} style={{ overflowY: 'auto' }}>
-            {/* 切换 topic 时，GenerationFeed 重新渲染，简化 feed 列表滚动逻辑 */}
-            <GenerationFeed key={activeTopicId} />
-          </Flexbox>
+  return hasGenerations ? (
+    <>
+      {/* 生成结果展示区 */}
+      <Flexbox flex={1} style={{ overflowY: 'auto' }}>
+        {/* 切换 topic 时，GenerationFeed 重新渲染，简化 feed 列表滚动逻辑 */}
+        <GenerationFeed key={activeTopicId} />
+      </Flexbox>
 
-          {/* 底部输入框 */}
-          <Center>
-            <PromptInput disableAnimation={true} showTitle={false} />
-          </Center>
-        </>
-      ) : (
-        // 当没有生成结果时，将输入框完整居中显示
-        <Center flex={1}>
-          <PromptInput disableAnimation={true} showTitle={true} />
-        </Center>
-      )}
-    </Flexbox>
+      {/* 底部输入框 */}
+      <Center>
+        <PromptInput disableAnimation={true} showTitle={false} />
+      </Center>
+    </>
+  ) : (
+    // 当没有生成结果时，将输入框完整居中显示
+    <Center flex={1}>
+      <PromptInput disableAnimation={true} showTitle={true} />
+    </Center>
   );
 };
 
