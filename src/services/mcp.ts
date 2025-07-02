@@ -121,7 +121,7 @@ class MCPService {
     manifest?: any;
     metadata?: any;
     success: boolean;
-    version?: string;
+    version: string;
   }) => {
     const reportData = {
       errorCode: success ? undefined : errorCode,

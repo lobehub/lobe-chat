@@ -405,7 +405,7 @@ export class DiscoverService {
     metadata?: any;
     platform?: string;
     success: boolean;
-    version?: string;
+    version: string;
   }) => {
     // 检查是否启用上报功能
     if (process.env.DISABLE_MARKETPLACE_ANALYTICS === '1') {
