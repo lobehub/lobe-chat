@@ -2,24 +2,32 @@
 
 import { useTheme } from 'antd-style';
 import { PropsWithChildren, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 
 const Container = memo<PropsWithChildren>(({ children }) => {
   const theme = useTheme();
 
   return (
-    <Flexbox
+    <Center
       flex={1}
-      gap={16}
-      padding={24}
       style={{
         background: theme.colorBgContainerSecondary,
         overflow: 'hidden',
         position: 'relative',
       }}
     >
-      {children}
-    </Flexbox>
+      <Flexbox
+        gap={16}
+        height={'100%'}
+        padding={24}
+        style={{
+          maxWidth: 906,
+        }}
+        width={'100%'}
+      >
+        {children}
+      </Flexbox>
+    </Center>
   );
 });
 

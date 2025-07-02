@@ -13,7 +13,7 @@ const SkeletonList = memo(() => {
   const theme = useTheme();
 
   return (
-    <Flexbox align="center" gap={6}>
+    <Flexbox align="center" gap={6} width={'100%'}>
       <Center
         style={{
           width: size,

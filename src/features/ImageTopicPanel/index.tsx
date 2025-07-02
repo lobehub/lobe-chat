@@ -54,12 +54,13 @@ const ImageTopicPanel = memo<PropsWithChildren>(({ children }) => {
       className={styles.panel}
       defaultSize={{ width: tmpWidth }}
       expand={showImageTopicPanel}
-      maxWidth={160}
+      maxWidth={80}
       minWidth={80}
       mode={md ? 'fixed' : 'float'}
       onExpandChange={handleExpand}
       onSizeChange={handleSizeChange}
       placement="right"
+      resize={false}
       size={{ height: '100%', width: imageTopicPanelWidth }}
     >
       <DraggablePanelContainer
@@ -67,6 +68,7 @@ const ImageTopicPanel = memo<PropsWithChildren>(({ children }) => {
           flex: 'none',
           height: '100%',
           minWidth: 80,
+          padding: 16,
         }}
       >
         {children}

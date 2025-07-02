@@ -136,7 +136,7 @@ const TopicItem = memo<TopicItemProps>(({ topic }) => {
         bordered={isActive}
         loading={isLoading}
         shape="square"
-        size={50}
+        size={48}
       />
     </TopicItemContainer>
   );
