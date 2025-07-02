@@ -21,32 +21,6 @@ export interface InstallCheckResult {
 }
 
 /**
- * System Dependency Check Result
- */
-export interface SystemDependencyCheckResult {
-  /**
-   * Error message
-   */
-  error?: string;
-  /**
-   * Whether installed
-   */
-  installed: boolean;
-  /**
-   * Whether meets version requirements
-   */
-  meetRequirement: boolean;
-  /**
-   * Dependency name
-   */
-  name: string;
-  /**
-   * Version information
-   */
-  version?: string;
-}
-
-/**
  * Package Installation Check Result
  */
 export interface PackageInstallCheckResult {

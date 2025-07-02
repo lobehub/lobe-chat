@@ -232,16 +232,25 @@ export default {
     title: '本地文件',
   },
   mcpInstall: {
-    '0': '获取插件描述文件...',
-    '1': '检查安装环境...',
-    '2': '初始化 MCP 服务器...',
-    '3': '请完成相关配置后继续安装',
-    '4': '正在安装插件...',
-    '5': '安装完成',
-    'configurationDescription': '该 MCP 插件需要配置参数才能正常使用，请填写必要的配置信息',
-    'configurationRequired': '配置插件参数',
-    'continueInstall': '继续安装',
-    'errorDetails': {
+    CHECKING_INSTALLATION: '检查安装环境...',
+    COMPLETED: '安装完成',
+    CONFIGURATION_REQUIRED: '请完成相关配置后继续安装',
+    ERROR: '安装错误',
+    FETCHING_MANIFEST: '获取插件描述文件...',
+    GETTING_SERVER_MANIFEST: '初始化 MCP 服务器...',
+    INSTALLING_PLUGIN: '正在安装插件...',
+    configurationDescription: '该 MCP 插件需要配置参数才能正常使用，请填写必要的配置信息',
+    configurationRequired: '配置插件参数',
+    continueInstall: '继续安装',
+    dependenciesDescription:
+      '此插件需要安装以下系统依赖才能正常工作，请按照指引安装缺失的依赖项，然后点击重新检查继续安装。',
+    dependenciesRequired: '请安装插件的系统依赖',
+    dependencyStatus: {
+      installed: '已安装',
+      notInstalled: '未安装',
+      requiredVersion: '需要版本: {{version}}',
+    },
+    errorDetails: {
       args: '参数',
       command: '命令',
       connectionParams: '连接参数',
@@ -252,14 +261,20 @@ export default {
       originalError: '原始错误',
       showDetails: '查看详情',
     },
-    'errorTypes': {
+    errorTypes: {
       CONNECTION_FAILED: '连接失败',
       INITIALIZATION_TIMEOUT: '初始化超时',
       PROCESS_SPAWN_ERROR: '进程启动失败',
       UNKNOWN_ERROR: '未知错误',
       VALIDATION_ERROR: '参数验证失败',
     },
-    'installError': 'MCP 插件安装失败，失败原因： {{detail}}',
+    installError: 'MCP 插件安装失败，失败原因： {{detail}}',
+    installMethods: {
+      manual: '手动安装:',
+      recommended: '推荐安装方式:',
+    },
+    recheckDependencies: '重新检查',
+    skipDependencies: '跳过检查',
   },
   pluginList: '插件列表',
   search: {

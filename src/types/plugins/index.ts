@@ -50,3 +50,4 @@ export interface PluginListResponse {
 }
 
 export * from './mcp';
+export * from './mcpDeps';

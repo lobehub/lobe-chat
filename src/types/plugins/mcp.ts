@@ -77,6 +77,7 @@ export interface CheckMcpInstallResult {
    * 插件安装检测结果
    */
   packageInstalled?: boolean;
+  platform: string;
   /**
    * 检测结果是否成功
    */
@@ -166,6 +167,21 @@ export interface MCPInstallProgress {
   // 0-100
   progress: number;
   step: MCPInstallStep;
+  // 系统依赖检测结果，当需要安装依赖时显示
+  systemDependencies?: Array<{
+    error?: string;
+    installInstructions?: {
+      current?: string; // 当前系统的安装指令
+      manual?: string; // 手动安装指令
+    };
+    installed: boolean;
+    meetRequirement: boolean;
+    name: string;
+    requiredVersion?: string;
+    type?: string;
+    version?: string;
+    versionParsingRequired?: boolean;
+  }>;
 }
 
 export type MCPInstallProgressMap = Record<string, MCPInstallProgress | undefined>;
