@@ -50,36 +50,37 @@ One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/
 
 #### TOC
 
-- [👋🏻 Getting Started & Join Our Community](#-getting-started--join-our-community)
-- [✨ Features](#-features)
-  - [`1` Chain of Thought](#1-chain-of-thought)
-  - [`2` Branching Conversations](#2-branching-conversations)
-  - [`3` Artifacts Support](#3-artifacts-support)
-  - [`4` File Upload /Knowledge Base](#4-file-upload-knowledge-base)
-  - [`5` Multi-Model Service Provider Support](#5-multi-model-service-provider-support)
-  - [`6` Local Large Language Model (LLM) Support](#6-local-large-language-model-llm-support)
-  - [`7` Model Visual Recognition](#7-model-visual-recognition)
-  - [`8` TTS & STT Voice Conversation](#8-tts--stt-voice-conversation)
-  - [`9` Text to Image Generation](#9-text-to-image-generation)
-  - [`10` Plugin System (Function Calling)](#10-plugin-system-function-calling)
-  - [`11` Agent Market (GPTs)](#11-agent-market-gpts)
-  - [`12` Support Local / Remote Database](#12-support-local--remote-database)
-  - [`13` Support Multi-User Management](#13-support-multi-user-management)
-  - [`14` Progressive Web App (PWA)](#14-progressive-web-app-pwa)
-  - [`15` Mobile Device Adaptation](#15-mobile-device-adaptation)
-  - [`16` Custom Themes](#16-custom-themes)
-  - [`*` What's more](#-whats-more)
-- [⚡️ Performance](#️-performance)
-- [🛳 Self Hosting](#-self-hosting)
-  - [`A` Deploying with Vercel, Zeabur , Sealos or Alibaba Cloud](#a-deploying-with-vercel-zeabur--sealos-or-alibaba-cloud)
-  - [`B` Deploying with Docker](#b-deploying-with-docker)
-  - [Environment Variable](#environment-variable)
-- [📦 Ecosystem](#-ecosystem)
-- [🧩 Plugins](#-plugins)
-- [⌨️ Local Development](#️-local-development)
-- [🤝 Contributing](#-contributing)
-- [❤️ Sponsor](#️-sponsor)
-- [🔗 More Products](#-more-products)
+- - [👋🏻 Getting Started & Join Our Community](#-getting-started--join-our-community)
+  - [✨ Features](#-features)
+    - [`1` Chain of Thought](#1-chain-of-thought)
+    - [`2` Branching Conversations](#2-branching-conversations)
+    - [`3` Artifacts Support](#3-artifacts-support)
+    - [`4` File Upload /Knowledge Base](#4-file-upload-knowledge-base)
+    - [`5` Multi-Model Service Provider Support](#5-multi-model-service-provider-support)
+    - [`6` Local Large Language Model (LLM) Support](#6-local-large-language-model-llm-support)
+    - [`7` Model Visual Recognition](#7-model-visual-recognition)
+    - [`8` TTS & STT Voice Conversation](#8-tts--stt-voice-conversation)
+    - [`9` Text to Image Generation](#9-text-to-image-generation)
+    - [`10` Plugin System (Function Calling)](#10-plugin-system-function-calling)
+    - [`11` Agent Market (GPTs)](#11-agent-market-gpts)
+    - [`12` Support Local / Remote Database](#12-support-local--remote-database)
+    - [`13` Support Multi-User Management](#13-support-multi-user-management)
+    - [`14` Progressive Web App (PWA)](#14-progressive-web-app-pwa)
+    - [`15` Mobile Device Adaptation](#15-mobile-device-adaptation)
+    - [`16` Custom Themes](#16-custom-themes)
+    - [`*` What's more](#-whats-more)
+  - [⚡️ Performance](#️-performance)
+  - [🛳 Self Hosting](#-self-hosting)
+    - [`A` Deploying with Vercel, Zeabur , Sealos or Alibaba Cloud](#a-deploying-with-vercel-zeabur--sealos-or-alibaba-cloud)
+    - [`B` Deploying with Docker](#b-deploying-with-docker)
+    - [Environment Variable](#environment-variable)
+  - [📦 Ecosystem](#-ecosystem)
+  - [🧩 Plugins](#-plugins)
+  - [⌨️ Local Development](#️-local-development)
+  - [🤝 Contributing](#-contributing)
+  - [❤️ Sponsor](#️-sponsor)
+  - [🔗 More Products](#-more-products)
+- [Arab-AI-1-3](#arab-ai-1-3)
 
 ####
 
@@ -767,6 +768,8 @@ Copyright © 2025 [LobeHub][profile-link]. <br />
 This project is [Apache 2.0](./LICENSE) licensed.
 
 <!-- LINK GROUP -->
+
+# Arab-AI-1-3
 
 [back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
 [blog]: https://lobehub.com/blog
