@@ -6,8 +6,7 @@ import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
-import { useChatStore } from '@/store/chat';
-import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { chatSelectors, getChatStoreState, useChatStore } from '@/store/chat';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
@@ -19,10 +18,6 @@ const Inbox = memo(() => {
   const activeId = useSessionStore((s) => s.activeId);
   const switchSession = useSwitchSession();
 
-  const activeTopicId = useChatStore((s) => s.activeTopicId);
-  const inboxMessages = useChatStore(
-    (s) => s.messagesMap[messageMapKey(INBOX_SESSION_ID, activeTopicId)] || [],
-  );
   const openNewTopicOrSaveTopic = useChatStore((s) => s.openNewTopicOrSaveTopic);
 
   return (
@@ -31,9 +26,13 @@ const Inbox = memo(() => {
       href={SESSION_CHAT_URL(INBOX_SESSION_ID, mobile)}
       onClick={async (e) => {
         e.preventDefault();
-        if (activeId === INBOX_SESSION_ID && inboxMessages.length > 0) {
+        if (activeId === INBOX_SESSION_ID) {
           // If user tap the inbox again, open a new topic
-          await openNewTopicOrSaveTopic();
+          const inboxMessages = chatSelectors.inboxActiveTopicMessages(getChatStoreState());
+
+          if (inboxMessages.length > 0) {
+            await openNewTopicOrSaveTopic();
+          }
         } else {
           switchSession(INBOX_SESSION_ID);
         }
