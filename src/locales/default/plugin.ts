@@ -324,6 +324,7 @@ export default {
   showInPortal: '请在工作区中查看详情',
   store: {
     actions: {
+      cancel: '取消安装',
       confirmUninstall: '即将卸载该插件，卸载后将清除该插件配置，请确认你的操作',
       detail: '详情',
       install: '安装',

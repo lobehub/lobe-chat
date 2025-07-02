@@ -14,12 +14,14 @@ interface ActionsProps {
 }
 
 const Actions = memo<ActionsProps>(({ identifier }) => {
-  const [installed, installing, unInstallPlugin, installMCPPlugin] = useToolStore((s) => [
-    pluginSelectors.isPluginInstalled(identifier)(s),
-    mcpStoreSelectors.isPluginInstallLoading(identifier)(s),
-    s.uninstallPlugin,
-    s.installMCPPlugin,
-  ]);
+  const [installed, installing, unInstallPlugin, installMCPPlugin, cancelInstallMCPPlugin] =
+    useToolStore((s) => [
+      pluginSelectors.isPluginInstalled(identifier)(s),
+      mcpStoreSelectors.isMCPInstalling(identifier)(s),
+      s.uninstallPlugin,
+      s.installMCPPlugin,
+      s.cancelInstallMCPPlugin,
+    ]);
 
   const { t } = useTranslation('plugin');
   const togglePlugin = useAgentStore((s) => s.togglePlugin);
@@ -59,9 +61,18 @@ const Actions = memo<ActionsProps>(({ identifier }) => {
             }}
           />
         </Dropdown>
+      ) : installing ? (
+        <Button
+          onClick={async (e) => {
+            e.stopPropagation();
+            await cancelInstallMCPPlugin(identifier);
+          }}
+          variant={'filled'}
+        >
+          {t('store.actions.cancel')}
+        </Button>
       ) : (
         <Button
-          loading={installing}
           onClick={async (e) => {
             e.stopPropagation();
 

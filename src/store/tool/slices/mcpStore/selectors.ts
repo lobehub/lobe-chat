@@ -42,11 +42,19 @@ const getMCPPluginRequiringConfig = (id: string) => (s: ToolStoreState) =>
 const isMCPPluginRequiringConfig = (id: string) => (s: ToolStoreState) =>
   !!s.mcpInstallProgress[id]?.configSchema;
 
+// 检查插件是否正在安装中（有安装进度且不是配置阶段）
+const isMCPInstallInProgress = (id: string) => (s: ToolStoreState) => {
+  const progress = s.mcpInstallProgress[id];
+
+  return !!progress && !progress.needsConfig && progress.step !== 'Error';
+};
+
 export const mcpStoreSelectors = {
   activeMCPPluginIdentifier,
   getMCPInstallProgress,
   getMCPPluginRequiringConfig,
   getPluginById,
+  isMCPInstallInProgress,
   isMCPInstalling,
   isMCPPluginRequiringConfig,
   isPluginInstallLoading,
