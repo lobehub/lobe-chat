@@ -483,7 +483,7 @@ export const marketRouter = router({
         metadata: z.any().optional(),
         platform: z.string().optional(),
         success: z.boolean(),
-        version: z.string().optional(),
+        version: z.string(),
       }),
     )
     .mutation(async ({ input }) => {
