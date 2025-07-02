@@ -102,6 +102,7 @@ class MCPService {
     metadata?: any;
     platform: string;
     success: boolean;
+    userAgent?: string;
     version: string;
   }) => {
     const reportData = {

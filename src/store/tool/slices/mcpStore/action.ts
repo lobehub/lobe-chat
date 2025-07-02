@@ -6,6 +6,7 @@ import { uniqBy } from 'lodash-es';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
+import { CURRENT_VERSION } from '@/const/version';
 import { MCPErrorData } from '@/libs/mcp/types';
 import { mcpService } from '@/services/mcp';
 import { pluginService } from '@/services/plugin';
@@ -86,6 +87,7 @@ export const createMCPPluginStoreSlice: StateCreator<
 
     let data: any;
     let result: any;
+    const userAgent = `LobeHub Desktop/${CURRENT_VERSION}`;
 
     try {
       let connection: any;
@@ -278,6 +280,7 @@ export const createMCPPluginStoreSlice: StateCreator<
         },
         platform: result.platform,
         success: true,
+        userAgent,
         version: data.version,
       });
 
@@ -352,6 +355,7 @@ export const createMCPPluginStoreSlice: StateCreator<
         metadata: errorInfo.metadata,
         platform: result?.platform,
         success: false,
+        userAgent,
         version: data?.version,
       });
 
