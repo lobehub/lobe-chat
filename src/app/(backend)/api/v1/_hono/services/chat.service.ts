@@ -1,6 +1,8 @@
+import { DEFAULT_AGENT_CHAT_CONFIG } from '@/const/settings';
 import { LobeChatDatabase } from '@/database/type';
 import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
+import { LobeAgentChatConfig } from '@/types/agent/chatConfig';
 import { ChatStreamPayload } from '@/types/openai/chat';
 
 import { BaseService } from '../common/base.service';
@@ -28,6 +30,61 @@ export class ChatService extends BaseService {
       defaultProvider: 'openai',
       timeout: 30_000,
       ...config,
+    };
+  }
+
+  /**
+   * 获取 Agent 的配置信息
+   * @param agentId Agent ID
+   * @returns Agent 配置
+   */
+  private async getAgentConfig(agentId: string): Promise<LobeAgentChatConfig | null> {
+    try {
+      const agent = await this.db.query.agents.findFirst({
+        where: (agents, { eq, and }) => and(eq(agents.id, agentId)),
+      });
+
+      return agent?.chatConfig || null;
+    } catch (error) {
+      this.log('warn', '获取 Agent 配置失败', {
+        agentId,
+        error: error instanceof Error ? error.message : String(error),
+        userId: this.userId,
+      });
+      return null;
+    }
+  }
+
+  /**
+   * 合并 chatConfig 配置
+   * @param agentConfig Agent 的配置
+   * @param userConfig 用户传入的配置
+   * @returns 合并后的配置
+   */
+  private mergeChatConfig(
+    agentConfig: LobeAgentChatConfig | null,
+    userConfig?: Partial<LobeAgentChatConfig>,
+  ): LobeAgentChatConfig {
+    // 按优先级合并：用户配置 > Agent配置 > 默认配置
+    return {
+      ...DEFAULT_AGENT_CHAT_CONFIG,
+      ...agentConfig,
+      ...userConfig,
+    };
+  }
+
+  /**
+   * 根据 chatConfig 构建搜索相关参数
+   * @param chatConfig 聊天配置
+   * @returns 搜索参数
+   */
+  private buildSearchParams(chatConfig: LobeAgentChatConfig) {
+    const enabledSearch = chatConfig.searchMode !== 'off';
+    const useModelBuiltinSearch = chatConfig.useModelBuiltinSearch;
+
+    return {
+      enabledSearch: enabledSearch && useModelBuiltinSearch,
+      searchFCModel: chatConfig.searchFCModel,
     };
   }
 
@@ -162,9 +219,13 @@ export class ChatService extends BaseService {
   /**
    * 通用聊天接口
    * @param params 聊天参数
+   * @param options 附加选项
    * @returns 聊天响应
    */
-  async chat(params: ChatServiceParams): ServiceResult<ChatServiceResponse> {
+  async chat(
+    params: ChatServiceParams,
+    options?: { enabledSearch?: boolean },
+  ): ServiceResult<ChatServiceResponse> {
     const provider = params.provider || this.config.defaultProvider!;
     const model = params.model || this.config.defaultModel!;
 
@@ -191,6 +252,9 @@ export class ChatService extends BaseService {
         model,
         stream: params.stream,
         temperature: params.temperature || 1,
+        ...(options?.enabledSearch && {
+          enabledSearch: options.enabledSearch,
+        }),
       };
 
       // 调用聊天 API
@@ -234,6 +298,8 @@ export class ChatService extends BaseService {
     } catch (error) {
       // 改进错误日志记录，提供更详细的错误信息
       let errorDetails: any;
+
+      console.log('error', error);
 
       if (error instanceof Error) {
         errorDetails = {
@@ -324,49 +390,66 @@ export class ChatService extends BaseService {
    * @returns 生成的回复内容
    */
   async generateReply(params: MessageGenerationParams): ServiceResult<string> {
-    if (!this.userId) {
-      throw this.createAuthError('未授权操作');
-    }
-
-    const provider = params.provider || this.config.defaultProvider!;
-    const model = params.model || this.config.defaultModel!;
-
     this.log('info', '开始生成消息回复', {
+      agentId: params.agentId,
+      hasUserChatConfig: !!params.chatConfig,
       historyLength: params.conversationHistory.length,
-      model,
-      provider,
       sessionId: params.sessionId,
       userId: this.userId,
     });
 
     try {
-      // 构建对话历史
+      // 1. 获取 Agent 配置（如果有 agentId）
+      let agentConfig: LobeAgentChatConfig | null = null;
+      if (params.agentId) {
+        agentConfig = await this.getAgentConfig(params.agentId);
+      }
+
+      // 2. 合并配置：用户配置 > Agent配置 > 默认配置
+      const mergedChatConfig = this.mergeChatConfig(agentConfig, params.chatConfig);
+
+      // 3. 构建搜索参数
+      const searchParams = this.buildSearchParams(mergedChatConfig);
+
+      this.log('info', '会话配置合并完成', {
+        enabledSearch: searchParams.enabledSearch,
+        searchMode: mergedChatConfig.searchMode,
+        useModelBuiltinSearch: mergedChatConfig.useModelBuiltinSearch,
+      });
+
+      // 5. 构建对话历史
       const messages = [
         ...params.conversationHistory,
         { content: params.userMessage, role: 'user' as const },
       ];
 
-      // 调用聊天服务生成回复
-      const response = await this.chat({
-        messages,
-        model,
-        provider,
-        stream: false,
-        temperature: 0.7, // 适中的温度以保持回复的创造性
-      });
+      // 6. 调用聊天服务生成回复，传递搜索参数
+      const response = await this.chat(
+        {
+          messages,
+          model: params.model,
+          provider: params.provider,
+          stream: false,
+          temperature: 0.7, // 适中的温度以保持回复的创造性
+        },
+        {
+          enabledSearch: searchParams.enabledSearch,
+        },
+      );
 
       this.log('info', '生成消息回复完成', {
-        model,
-        provider,
+        model: params.model,
+        provider: params.provider,
         replyLength: response.content.length,
+        usedSearch: searchParams.enabledSearch,
       });
 
       return response.content;
     } catch (error) {
       this.log('error', '生成消息回复失败', {
+        agentId: params.agentId,
         error: error instanceof Error ? error.message : String(error),
-        model,
-        provider,
+        hasUserChatConfig: !!params.chatConfig,
       });
       throw this.createCommonError('生成回复失败');
     }
