@@ -3,6 +3,20 @@ import { AIChatModelCard } from '@/types/aiModel';
 // https://siliconflow.cn/zh-cn/models
 const siliconcloudChatModels: AIChatModelCard[] = [
   {
+    contextWindowTokens: 131_072,
+    description:
+      'ERNIE-4.5-300B-A47B 是由百度公司开发的一款基于混合专家（MoE）架构的大语言模型。该模型总参数量为 3000 亿，但在推理时每个 token 仅激活 470 亿参数，从而在保证强大性能的同时兼顾了计算效率。作为 ERNIE 4.5 系列的核心模型之一，在文本理解、生成、推理和编程等任务上展现出卓越的能力。该模型采用了一种创新的多模态异构 MoE 预训练方法，通过文本与视觉模态的联合训练，有效提升了模型的综合能力，尤其在指令遵循和世界知识记忆方面效果突出。',
+    displayName: 'ERNIE 4.5 300B A47B',
+    id: 'baidu/ERNIE-4.5-300B-A47B',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 8,
+    },
+    releasedAt: '2025-06-30',
+    type: 'chat',
+  },
+  {
     abilities: {
       reasoning: true,
     },
