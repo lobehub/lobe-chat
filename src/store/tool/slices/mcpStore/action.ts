@@ -25,7 +25,7 @@ export interface PluginMCPStoreAction {
   cancelInstallMCPPlugin: (identifier: string) => Promise<void>;
   installMCPPlugin: (
     identifier: string,
-    options?: { config?: Record<string, any>; resume?: boolean },
+    options?: { config?: Record<string, any>; resume?: boolean; skipDepsCheck?: boolean },
   ) => Promise<boolean | undefined>;
   loadMoreMCPPlugins: () => void;
   resetMCPPluginList: (keywords?: string) => void;
@@ -62,7 +62,7 @@ export const createMCPPluginStoreSlice: StateCreator<
   },
 
   installMCPPlugin: async (identifier, options = {}) => {
-    const { resume = false, config } = options;
+    const { resume = false, config, skipDepsCheck } = options;
     const plugin = mcpStoreSelectors.getPluginById(identifier)(get());
 
     if (!plugin || !plugin.manifestUrl) return;
@@ -85,9 +85,9 @@ export const createMCPPluginStoreSlice: StateCreator<
     const installStartTime = Date.now();
 
     let data: any;
+    let result: any;
 
     try {
-      let result: any;
       let connection: any;
 
       // 检查是否已被取消
@@ -113,7 +113,7 @@ export const createMCPPluginStoreSlice: StateCreator<
 
         // 步骤 1: 获取插件清单
         updateMCPInstallProgress(identifier, {
-          progress: 20,
+          progress: 15,
           step: MCPInstallStep.FETCHING_MANIFEST,
         });
 
@@ -146,7 +146,23 @@ export const createMCPPluginStoreSlice: StateCreator<
           return;
         }
 
-        // 步骤 3: 检查是否需要配置
+        // 步骤 3: 检查系统依赖是否满足
+        if (!skipDepsCheck && !result.allDependenciesMet) {
+          // 依赖不满足，暂停安装流程并显示依赖安装引导
+          updateMCPInstallProgress(identifier, {
+            connection: result.connection,
+            manifest: data,
+            progress: 40,
+            step: MCPInstallStep.DEPENDENCIES_REQUIRED,
+            systemDependencies: result.systemDependencies,
+          });
+
+          // 暂停安装流程，等待用户安装依赖
+          updateInstallLoadingState(identifier, undefined);
+          return false; // 返回 false 表示需要安装依赖
+        }
+
+        // 步骤 4: 检查是否需要配置
         if (result.needsConfig) {
           // 需要配置，暂停安装流程
           updateMCPInstallProgress(identifier, {
@@ -169,7 +185,7 @@ export const createMCPPluginStoreSlice: StateCreator<
       // 获取服务器清单逻辑
       updateInstallLoadingState(identifier, true);
 
-      // 步骤 4: 获取服务器清单
+      // 步骤 5: 获取服务器清单
       updateMCPInstallProgress(identifier, {
         progress: 70,
         step: MCPInstallStep.GETTING_SERVER_MANIFEST,
@@ -216,7 +232,7 @@ export const createMCPPluginStoreSlice: StateCreator<
         return;
       }
 
-      // 步骤 5: 安装插件
+      // 步骤 6: 安装插件
       updateMCPInstallProgress(identifier, {
         progress: 90,
         step: MCPInstallStep.INSTALLING_PLUGIN,
@@ -243,7 +259,7 @@ export const createMCPPluginStoreSlice: StateCreator<
 
       await refreshPlugins();
 
-      // 步骤 6: 完成安装
+      // 步骤 7: 完成安装
       updateMCPInstallProgress(identifier, {
         progress: 100,
         step: MCPInstallStep.COMPLETED,
@@ -260,6 +276,7 @@ export const createMCPPluginStoreSlice: StateCreator<
           resources: (manifest as any).resources,
           tools: (manifest as any).tools,
         },
+        platform: result.platform,
         success: true,
         version: data.version,
       });
@@ -333,6 +350,7 @@ export const createMCPPluginStoreSlice: StateCreator<
         identifier: plugin.identifier,
         installDurationMs,
         metadata: errorInfo.metadata,
+        platform: result?.platform,
         success: false,
         version: data?.version,
       });

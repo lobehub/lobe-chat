@@ -17,6 +17,7 @@ import { LobeToolType } from '@/types/tool/tool';
 import Actions from './Action';
 import InstallError from './InstallError';
 import MCPConfigForm from './MCPConfigForm';
+import MCPDependenciesGuide from './MCPDependenciesGuide';
 
 interface PluginItemProps extends DiscoverMcpItem {
   active?: boolean;
@@ -36,16 +37,17 @@ const Item = memo<PluginItemProps>(
 
     const stepText = installProgress ? t(`mcpInstall.${installProgress.step}` as any) : undefined;
     const needsConfig = installProgress?.needsConfig;
+    const needsDependencies = installProgress?.step === MCPInstallStep.DEPENDENCIES_REQUIRED;
     const hasError = installProgress?.step === MCPInstallStep.ERROR;
     const errorInfo = installProgress?.errorInfo;
 
     const containerRef = useRef<HTMLButtonElement | null>(null);
 
     useEffect(() => {
-      if (!needsConfig || !containerRef.current) return;
+      if ((!needsConfig && !needsDependencies) || !containerRef.current) return;
 
       containerRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, [needsConfig]);
+    }, [needsConfig, needsDependencies]);
 
     return (
       <Flexbox gap={0} ref={containerRef}>
@@ -81,7 +83,7 @@ const Item = memo<PluginItemProps>(
           <Actions identifier={identifier} />
         </Block>
 
-        {installProgress && !hasError && (
+        {installProgress && !hasError && !needsDependencies && (
           <Flexbox paddingBlock={4} paddingInline={12}>
             <Progress
               percent={installProgress.progress}
@@ -111,6 +113,26 @@ const Item = memo<PluginItemProps>(
           >
             <Flexbox paddingBlock={8} paddingInline={12}>
               <InstallError errorInfo={errorInfo} identifier={identifier} />
+            </Flexbox>
+          </motion.div>
+        )}
+
+        {needsDependencies && installProgress?.systemDependencies && (
+          <motion.div
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            initial={{ height: 0, opacity: 0 }}
+            transition={{
+              duration: 0.3,
+              ease: [0.4, 0, 0.2, 1],
+              height: { duration: 0.2 },
+            }}
+          >
+            <Flexbox paddingInline={12}>
+              <MCPDependenciesGuide
+                identifier={identifier}
+                systemDependencies={installProgress.systemDependencies}
+              />
             </Flexbox>
           </motion.div>
         )}

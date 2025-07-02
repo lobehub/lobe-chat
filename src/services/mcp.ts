@@ -77,42 +77,22 @@ class MCPService {
     manifest: PluginManifest,
     signal?: AbortSignal,
   ): Promise<CheckMcpInstallResult> {
-    try {
-      // 确保有部署选项
-      if (!manifest.deploymentOptions?.length) {
-        return {
-          error: '未找到有效的部署选项',
-          success: false,
-        };
-      }
-
-      // 将所有部署选项传递给主进程进行检查
-      return desktopClient.mcp.validMcpServerInstallable.mutate(
-        {
-          deploymentOptions: manifest.deploymentOptions as any,
-        },
-        { signal },
-      );
-    } catch (error) {
-      return {
-        error: error instanceof Error ? error.message : '未知错误',
-        success: false,
-      };
-    }
+    // 将所有部署选项传递给主进程进行检查
+    return desktopClient.mcp.validMcpServerInstallable.mutate(
+      { deploymentOptions: manifest.deploymentOptions as any },
+      { signal },
+    );
   }
 
   /**
    * 上报 MCP 插件安装结果
    */
   reportMcpInstallResult = ({
-    identifier,
-    version,
-    installDurationMs,
     success,
     manifest,
-    metadata,
     errorMessage,
     errorCode,
+    ...params
   }: {
     errorCode?: string;
     errorMessage?: string;
@@ -120,18 +100,16 @@ class MCPService {
     installDurationMs?: number;
     manifest?: any;
     metadata?: any;
+    platform: string;
     success: boolean;
     version: string;
   }) => {
     const reportData = {
       errorCode: success ? undefined : errorCode,
       errorMessage: success ? undefined : errorMessage,
-      identifier,
-      installDurationMs,
       manifest: success ? manifest : undefined,
-      metadata,
       success,
-      version,
+      ...params,
     };
 
     edgeClient.market.reportMcpInstallResult

@@ -309,6 +309,7 @@ class MCPService {
       const checkResult: CheckMcpInstallResult = {
         ...bestResult,
         allOptions: results,
+        platform: process.platform,
         success: true,
       };
 
@@ -327,6 +328,7 @@ class MCPService {
           error instanceof Error
             ? error.message
             : 'Unknown error when checking MCP plugin installation status',
+        platform: process.platform,
         success: false,
       };
     }

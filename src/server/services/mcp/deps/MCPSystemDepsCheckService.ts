@@ -3,14 +3,41 @@ import debug from 'debug';
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
 
-import {
-  InstallationChecker,
-  PackageInstallCheckResult,
-  SystemDependencyCheckResult,
-} from './types';
+import { SystemDependencyCheckResult } from '@/types/plugins';
+
+import { InstallationChecker, PackageInstallCheckResult } from './types';
 
 const execPromise = promisify(exec);
 const log = debug('lobe-mcp:deps-check');
+
+// Helper function to get current platform install instructions
+const getCurrentPlatformInstructions = (installInstructions: any) => {
+  if (!installInstructions) return undefined;
+
+  const platform = process.platform;
+  let current: string | undefined;
+
+  // Map platform to instruction key
+  switch (platform) {
+    case 'darwin': {
+      current = installInstructions.macos;
+      break;
+    }
+    case 'linux': {
+      current = installInstructions.linux_debian || installInstructions.linux;
+      break;
+    }
+    case 'win32': {
+      current = installInstructions.windows;
+      break;
+    }
+  }
+
+  return {
+    current,
+    manual: installInstructions.manual,
+  };
+};
 
 /**
  * MCP System Dependency Check Service
@@ -40,9 +67,13 @@ class MCPSystemDepsCheckService {
       if (stderr && !stdout) {
         return {
           error: stderr,
+          installInstructions: getCurrentPlatformInstructions(
+            (dependency as any).installInstructions,
+          ),
           installed: false,
           meetRequirement: false,
           name: dependency.name,
+          requiredVersion: (dependency as any).requiredVersion,
         };
       }
 
@@ -102,18 +133,26 @@ class MCPSystemDepsCheckService {
         `System dependency check result: ${dependency.name}, installed: ${true}, meets requirement: ${meetRequirement}, version: ${version}`,
       );
       return {
+        installInstructions: getCurrentPlatformInstructions(
+          (dependency as any).installInstructions,
+        ),
         installed: true,
         meetRequirement,
         name: dependency.name,
+        requiredVersion: (dependency as any).requiredVersion,
         version,
       };
     } catch (error) {
       log(`System dependency check error: ${dependency.name}, ${error}`);
       return {
         error: error instanceof Error ? error.message : 'Unknown error',
+        installInstructions: getCurrentPlatformInstructions(
+          (dependency as any).installInstructions,
+        ),
         installed: false,
         meetRequirement: false,
         name: dependency.name,
+        requiredVersion: (dependency as any).requiredVersion,
       };
     }
   }
