@@ -49,9 +49,9 @@ export const pathString = (
  * Infer content type (MIME type) from an image URL
  *
  * This function extracts the file extension from a URL and returns the corresponding MIME type.
- * It properly handles URLs with query parameters, hash fragments, and various edge cases.
+ * It properly handles URLs with query parameters, hash fragments, relative paths, and various edge cases.
  *
- * @param url - The image URL to analyze (can include query parameters and hash fragments)
+ * @param url - The image URL to analyze (can be relative, absolute, or include query parameters and hash fragments)
  * @returns MIME type string (e.g., 'image/jpeg', 'image/png')
  * @throws {Error} When the URL doesn't contain a valid file extension
  *
@@ -60,6 +60,7 @@ export const pathString = (
  * inferContentTypeFromImageUrl('https://example.com/image.jpg') // 'image/jpeg'
  * inferContentTypeFromImageUrl('https://example.com/image.png?v=123') // 'image/png'
  * inferContentTypeFromImageUrl('https://example.com/image.webp#section') // 'image/webp'
+ * inferContentTypeFromImageUrl('generations/images/photo.png') // 'image/png'
  * ```
  */
 export function inferContentTypeFromImageUrl(url: string) {
@@ -67,8 +68,9 @@ export function inferContentTypeFromImageUrl(url: string) {
     // Handle protocol-relative URLs by adding https: prefix
     const normalizedUrl = url.startsWith('//') ? `https:${url}` : url;
 
-    // Use URL constructor to properly parse the URL and extract pathname
-    const urlObj = new URL(normalizedUrl);
+    // Use a temporary base URL for proper URL parsing and formatting (handles relative paths)
+    const tempBase = 'https://a.com';
+    const urlObj = new URL(normalizedUrl, tempBase);
     const pathname = urlObj.pathname;
 
     // Find the last dot in the pathname to get the file extension
@@ -109,10 +111,10 @@ export function inferContentTypeFromImageUrl(url: string) {
  *
  * This function extracts the file extension from a URL's pathname and validates it against
  * common image formats. It properly handles URLs with query parameters, hash fragments,
- * and various edge cases. Unlike inferContentTypeFromImageUrl, this function is more
+ * relative paths, and various edge cases. Unlike inferContentTypeFromImageUrl, this function is more
  * lenient and returns a default value for invalid cases.
  *
- * @param url - The URL to extract extension from (can include query parameters and hash fragments)
+ * @param url - The URL to extract extension from (can be relative, absolute, or include query parameters and hash fragments)
  * @returns file extension without dot (e.g., 'jpg', 'png', 'webp'), or 'png' as default fallback
  *
  * @example
@@ -120,14 +122,16 @@ export function inferContentTypeFromImageUrl(url: string) {
  * getFileExtensionFromUrl('https://example.com/image.jpg') // 'jpg'
  * getFileExtensionFromUrl('https://example.com/image.png?v=123') // 'png'
  * getFileExtensionFromUrl('https://example.com/image.webp#section') // 'webp'
+ * getFileExtensionFromUrl('generations/images/photo.png') // 'png'
  * getFileExtensionFromUrl('https://example.com/document.txt') // 'png' (fallback)
  * getFileExtensionFromUrl('invalid-url') // 'png' (fallback)
  * ```
  */
 export const getFileExtensionFromUrl = (url: string): string => {
   try {
-    // Parse URL to extract pathname, which excludes query parameters and hash
-    const urlObj = new URL(url);
+    // Use a temporary base URL for proper URL parsing and formatting (handles relative paths)
+    const tempBase = 'https://a.com';
+    const urlObj = new URL(url, tempBase);
     const pathname = urlObj.pathname;
 
     // Find the last dot in the pathname to get the file extension

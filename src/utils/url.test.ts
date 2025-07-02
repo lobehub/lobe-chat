@@ -179,6 +179,28 @@ describe('inferContentTypeFromImageUrl', () => {
     expect(result).toBe('image/webp');
   });
 
+  it('should handle relative paths', () => {
+    const result = inferContentTypeFromImageUrl('generations/images/photo.jpg');
+    expect(result).toBe('image/jpeg');
+  });
+
+  it('should handle relative paths with complex filenames', () => {
+    const result = inferContentTypeFromImageUrl(
+      'generations/images/2NPfAQAMNxXPi82mzOHog_1056x1136_20250702_110911_raw.png',
+    );
+    expect(result).toBe('image/png');
+  });
+
+  it('should handle relative paths with query parameters', () => {
+    const result = inferContentTypeFromImageUrl('images/photo.webp?v=123');
+    expect(result).toBe('image/webp');
+  });
+
+  it('should handle relative paths with hash fragments', () => {
+    const result = inferContentTypeFromImageUrl('assets/images/banner.gif#preview');
+    expect(result).toBe('image/gif');
+  });
+
   it('should throw error for single character extensions (if no valid MIME type)', () => {
     expect(() => {
       inferContentTypeFromImageUrl('https://example.com/file.x');
@@ -305,5 +327,27 @@ describe('getFileExtensionFromUrl', () => {
   it('should handle encoded URLs', () => {
     const result = getFileExtensionFromUrl('https://example.com/images/%E5%9B%BE%E7%89%87.jpg');
     expect(result).toBe('jpg');
+  });
+
+  it('should handle relative paths', () => {
+    const result = getFileExtensionFromUrl('generations/images/photo.jpg');
+    expect(result).toBe('jpg');
+  });
+
+  it('should handle relative paths with complex filenames', () => {
+    const result = getFileExtensionFromUrl(
+      'generations/images/2NPfAQAMNxXPi82mzOHog_1056x1136_20250702_110911_raw.png',
+    );
+    expect(result).toBe('png');
+  });
+
+  it('should handle relative paths with query parameters', () => {
+    const result = getFileExtensionFromUrl('images/photo.webp?v=123');
+    expect(result).toBe('webp');
+  });
+
+  it('should handle relative paths with hash fragments', () => {
+    const result = getFileExtensionFromUrl('assets/images/banner.gif#preview');
+    expect(result).toBe('gif');
   });
 });
