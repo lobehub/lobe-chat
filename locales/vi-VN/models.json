@@ -1871,6 +1871,9 @@
   "o3": {
     "description": "o3 là một mô hình toàn năng mạnh mẽ, thể hiện xuất sắc trong nhiều lĩnh vực. Nó thiết lập tiêu chuẩn mới cho các nhiệm vụ toán học, khoa học, lập trình và suy luận hình ảnh. Nó cũng giỏi trong việc viết kỹ thuật và tuân thủ hướng dẫn. Người dùng có thể sử dụng nó để phân tích văn bản, mã và hình ảnh, giải quyết các vấn đề phức tạp nhiều bước."
   },
+  "o3-deep-research": {
+    "description": "o3-deep-research là mô hình nghiên cứu sâu tiên tiến nhất của chúng tôi, được thiết kế đặc biệt để xử lý các nhiệm vụ nghiên cứu phức tạp nhiều bước. Nó có thể tìm kiếm và tổng hợp thông tin từ Internet, cũng như truy cập và tận dụng dữ liệu riêng của bạn thông qua kết nối MCP."
+  },
   "o3-mini": {
     "description": "o3-mini là mô hình suy diễn nhỏ gọn mới nhất của chúng tôi, cung cấp trí thông minh cao với chi phí và độ trễ tương tự như o1-mini."
   },
@@ -1879,6 +1882,9 @@
   },
   "o4-mini": {
     "description": "o4-mini là mô hình nhỏ gọn mới nhất trong dòng o của chúng tôi. Nó được tối ưu hóa cho suy luận nhanh chóng và hiệu quả, thể hiện hiệu suất và hiệu quả cao trong các nhiệm vụ mã hóa và hình ảnh."
+  },
+  "o4-mini-deep-research": {
+    "description": "o4-mini-deep-research là mô hình nghiên cứu sâu nhanh hơn và tiết kiệm hơn của chúng tôi — rất phù hợp để xử lý các nhiệm vụ nghiên cứu phức tạp nhiều bước. Nó có thể tìm kiếm và tổng hợp thông tin từ Internet, cũng như truy cập và tận dụng dữ liệu riêng của bạn thông qua kết nối MCP."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba là mô hình ngôn ngữ Mamba 2 tập trung vào sinh mã, cung cấp hỗ trợ mạnh mẽ cho các nhiệm vụ mã và suy luận tiên tiến."
