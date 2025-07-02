@@ -483,6 +483,7 @@ export const marketRouter = router({
         metadata: z.any().optional(),
         platform: z.string().optional(),
         success: z.boolean(),
+        userAgent: z.string().optional(),
         version: z.string(),
       }),
     )
