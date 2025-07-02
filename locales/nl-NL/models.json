@@ -998,6 +998,9 @@
   "ernie-x1-turbo-32k": {
     "description": "In vergelijking met ERNIE-X1-32K biedt dit model betere prestaties en effectiviteit."
   },
+  "flux/schnell": {
+    "description": "FLUX.1 [schnell] is een streaming transformer-model met 12 miljard parameters, dat in 1 tot 4 stappen hoogwaardige afbeeldingen uit tekst kan genereren, geschikt voor zowel persoonlijk als commercieel gebruik."
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) biedt stabiele en afstelbare prestaties, ideaal voor oplossingen voor complexe taken."
   },
@@ -1328,6 +1331,9 @@
   "gpt-4o-search-preview": {
     "description": "GPT-4o zoekpreview is een model dat speciaal is getraind om webzoekopdrachten te begrijpen en uit te voeren, gebruikmakend van de Chat Completions API. Naast tokenkosten worden webzoekopdrachten ook per toolaanroep in rekening gebracht."
   },
+  "gpt-image-1": {
+    "description": "ChatGPT's native multimodale afbeeldingsgeneratiemodel"
+  },
   "grok-2-1212": {
     "description": "Dit model heeft verbeteringen aangebracht in nauwkeurigheid, instructievolging en meertalige capaciteiten."
   },
@@ -1432,6 +1438,9 @@
   },
   "hunyuan-vision": {
     "description": "Het nieuwste multimodale model van Hunyuan, ondersteunt het genereren van tekstinhoud op basis van afbeelding + tekstinvoer."
+  },
+  "imagen4/preview": {
+    "description": "Google's hoogste kwaliteit afbeeldingsgeneratiemodel"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 biedt intelligente gespreksoplossingen voor meerdere scenario's."

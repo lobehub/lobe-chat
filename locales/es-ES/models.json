@@ -998,6 +998,9 @@
   "ernie-x1-turbo-32k": {
     "description": "Mejora en comparación con ERNIE-X1-32K, con mejores resultados y rendimiento."
   },
+  "flux/schnell": {
+    "description": "FLUX.1 [schnell] es un modelo transformador de flujo con 12 mil millones de parámetros, capaz de generar imágenes de alta calidad a partir de texto en 1 a 4 pasos, adecuado para uso personal y comercial."
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Ajuste) ofrece un rendimiento estable y ajustable, siendo una opción ideal para soluciones de tareas complejas."
   },
@@ -1328,6 +1331,9 @@
   "gpt-4o-search-preview": {
     "description": "GPT-4o versión preliminar de búsqueda es un modelo entrenado específicamente para comprender y ejecutar consultas de búsqueda web, utilizando la API de Chat Completions. Además de los costos por tokens, las consultas de búsqueda web incurren en cargos por cada llamada a la herramienta."
   },
+  "gpt-image-1": {
+    "description": "Modelo nativo multimodal de generación de imágenes de ChatGPT"
+  },
   "grok-2-1212": {
     "description": "Este modelo ha mejorado en precisión, cumplimiento de instrucciones y capacidades multilingües."
   },
@@ -1432,6 +1438,9 @@
   },
   "hunyuan-vision": {
     "description": "El último modelo multimodal de Hunyuan, que admite la entrada de imágenes y texto para generar contenido textual."
+  },
+  "imagen4/preview": {
+    "description": "El modelo de generación de imágenes de mayor calidad de Google"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 ofrece soluciones de diálogo inteligente en múltiples escenarios."

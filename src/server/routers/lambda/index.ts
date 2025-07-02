@@ -10,6 +10,10 @@ import { chunkRouter } from './chunk';
 import { documentRouter } from './document';
 import { exporterRouter } from './exporter';
 import { fileRouter } from './file';
+import { generationRouter } from './generation';
+import { generationBatchRouter } from './generationBatch';
+import { generationTopicRouter } from './generationTopic';
+import { imageRouter } from './image';
 import { importerRouter } from './importer';
 import { knowledgeBaseRouter } from './knowledgeBase';
 import { messageRouter } from './message';
@@ -29,7 +33,11 @@ export const lambdaRouter = router({
   document: documentRouter,
   exporter: exporterRouter,
   file: fileRouter,
+  generation: generationRouter,
+  generationBatch: generationBatchRouter,
+  generationTopic: generationTopicRouter,
   healthcheck: publicProcedure.query(() => "i'm live!"),
+  image: imageRouter,
   importer: importerRouter,
   knowledgeBase: knowledgeBaseRouter,
   message: messageRouter,

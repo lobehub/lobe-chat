@@ -998,6 +998,9 @@
   "ernie-x1-turbo-32k": {
     "description": "ERNIE-X1-32K ile karşılaştırıldığında, modelin etkisi ve performansı daha iyidir."
   },
+  "flux/schnell": {
+    "description": "FLUX.1 [schnell], 12 milyar parametreye sahip bir akış dönüştürücü modelidir ve 1 ila 4 adımda metinden yüksek kaliteli görüntüler üretebilir, kişisel ve ticari kullanım için uygundur."
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning), kararlı ve ayarlanabilir bir performans sunar, karmaşık görev çözümleri için ideal bir seçimdir."
   },
@@ -1328,6 +1331,9 @@
   "gpt-4o-search-preview": {
     "description": "GPT-4o arama önizleme sürümü, web arama sorgularını anlama ve yürütme için özel olarak eğitilmiş bir modeldir ve Chat Completions API kullanır. Jeton ücretlerinin yanı sıra, web arama sorguları her araç çağrısı başına ücretlendirilir."
   },
+  "gpt-image-1": {
+    "description": "ChatGPT'nin yerel çok modlu görüntü oluşturma modeli"
+  },
   "grok-2-1212": {
     "description": "Bu model, doğruluk, talimat takibi ve çok dilli yetenekler açısından geliştirilmiştir."
   },
@@ -1432,6 +1438,9 @@
   },
   "hunyuan-vision": {
     "description": "Hunyuan'ın en son çok modlu modeli, resim + metin girişi ile metin içeriği oluşturmayı destekler."
+  },
+  "imagen4/preview": {
+    "description": "Google'ın en yüksek kaliteli görüntü oluşturma modeli"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5, çoklu senaryolarda akıllı diyalog çözümleri sunar."

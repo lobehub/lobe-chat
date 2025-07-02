@@ -91,6 +91,25 @@
     "provider": "Nhà cung cấp",
     "title": "Mô hình"
   },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "Nhấn để tải thêm"
+    },
+    "modal": {
+      "complete": "Hoàn thành",
+      "newFileIndicator": "Mới thêm",
+      "selectImageToPreview": "Vui lòng chọn hình ảnh để xem trước",
+      "title": "Quản lý hình ảnh ({{count}})",
+      "upload": "Tải lên hình ảnh"
+    },
+    "placeholder": {
+      "primary": "Nhấn để tải lên hình ảnh",
+      "secondary": "Hỗ trợ chọn nhiều hình ảnh"
+    },
+    "progress": {
+      "uploadingWithCount": "Đã tải lên {{completed}}/{{total}}"
+    }
+  },
   "OllamaSetupGuide": {
     "action": {
       "close": "Đóng thông báo",

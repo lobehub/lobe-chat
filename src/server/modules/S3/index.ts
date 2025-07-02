@@ -9,6 +9,8 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { z } from 'zod';
 
 import { fileEnv } from '@/config/file';
+import { YEAR } from '@/utils/units';
+import { inferContentTypeFromImageUrl } from '@/utils/url';
 
 export const fileSchema = z.object({
   Key: z.string(),
@@ -98,6 +100,23 @@ export class S3 {
     return response.Body.transformToByteArray();
   }
 
+  public async getFileBuffer(key: string): Promise<Buffer> {
+    const command = new GetObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+    });
+
+    const response = await this.client.send(command);
+
+    if (!response.Body) {
+      throw new Error(`No body in response with ${key}`);
+    }
+
+    // 将 Uint8Array 转换为 Buffer
+    const uint8Array = await response.Body.transformToByteArray();
+    return Buffer.from(uint8Array);
+  }
+
   public async createPreSignedUrl(key: string): Promise<string> {
     const command = new PutObjectCommand({
       ACL: this.setAcl ? 'public-read' : undefined,
@@ -141,5 +160,18 @@ export class S3 {
     });
 
     return this.client.send(command);
+  }
+
+  public async uploadMedia(key: string, buffer: Buffer) {
+    const command = new PutObjectCommand({
+      ACL: this.setAcl ? 'public-read' : undefined,
+      Bucket: this.bucket,
+      Key: key,
+      Body: buffer,
+      CacheControl: `public, max-age=${YEAR}`,
+      ContentType: inferContentTypeFromImageUrl(key)!,
+    });
+
+    await this.client.send(command);
   }
 }

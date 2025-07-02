@@ -22,6 +22,7 @@ import {
   TextToSpeechOptions,
   TextToSpeechPayload,
 } from '../../types';
+import { CreateImagePayload, CreateImageResponse } from '../../types/image';
 import { AgentRuntimeError } from '../createError';
 import { debugResponse, debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
@@ -80,6 +81,7 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
     ) => ReadableStream<OpenAI.ChatCompletionChunk>;
     noUserId?: boolean;
   };
+  createImage?: (payload: CreateImagePayload & { client: OpenAI }) => Promise<CreateImageResponse>;
   constructorOptions?: ConstructorOptions<T>;
   customClient?: CustomClientOptions<T>;
   debug?: {
@@ -166,6 +168,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
   debug,
   constructorOptions,
   chatCompletion,
+  createImage,
   models,
   customClient,
   responses,
@@ -305,6 +308,13 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       } catch (error) {
         throw this.handleError(error);
       }
+    }
+
+    async createImage(payload: CreateImagePayload) {
+      return createImage!({
+        ...payload,
+        client: this.client,
+      });
     }
 
     async models() {

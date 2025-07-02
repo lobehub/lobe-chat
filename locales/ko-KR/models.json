@@ -998,6 +998,9 @@
   "ernie-x1-turbo-32k": {
     "description": "ERNIE-X1-32K에 비해 모델의 효과와 성능이 더 우수합니다."
   },
+  "flux/schnell": {
+    "description": "FLUX.1 [schnell]은 120억 개의 매개변수를 가진 스트림 변환기 모델로, 1~4단계 내에 텍스트에서 고품질 이미지를 생성할 수 있으며 개인 및 상업적 용도에 적합합니다."
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning)은 안정적이고 조정 가능한 성능을 제공하며, 복잡한 작업 솔루션의 이상적인 선택입니다."
   },
@@ -1328,6 +1331,9 @@
   "gpt-4o-search-preview": {
     "description": "GPT-4o 검색 미리보기 버전은 웹 검색 쿼리 이해 및 실행을 위해 특별히 훈련된 모델로, Chat Completions API를 사용합니다. 토큰 비용 외에 웹 검색 쿼리는 도구 호출당 별도의 비용이 부과됩니다."
   },
+  "gpt-image-1": {
+    "description": "ChatGPT의 기본 다중 모달 이미지 생성 모델"
+  },
   "grok-2-1212": {
     "description": "이 모델은 정확성, 지시 준수 및 다국어 능력에서 개선되었습니다."
   },
@@ -1432,6 +1438,9 @@
   },
   "hunyuan-vision": {
     "description": "혼원 최신 다중 모달 모델로, 이미지와 텍스트 입력을 지원하여 텍스트 콘텐츠를 생성합니다."
+  },
+  "imagen4/preview": {
+    "description": "Google의 최고 품질 이미지 생성 모델"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5는 다양한 시나리오에서 스마트 대화 솔루션을 제공합니다."
