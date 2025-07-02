@@ -32,6 +32,10 @@
     "search": "Ara",
     "title": "Keşfet"
   },
+  "image": {
+    "description": "{{appName}} size en iyi GPT Image, Flux, Midjourney, Stable Diffusion deneyimini sunar",
+    "title": "Yapay Zeka Resim"
+  },
   "plugins": {
     "description": "Arama, grafik oluşturma, akademik, görsel oluşturma, video oluşturma, ses oluşturma, otomatik iş akışları, ChatGPT / Claude için özel ToolCall eklenti yeteneklerini özelleştirin",
     "title": "Eklenti Pazarı"

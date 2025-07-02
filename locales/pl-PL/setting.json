@@ -484,6 +484,11 @@
       "placeholder": "Wprowadź niestandardowe słowo podpowiedzi",
       "title": "Niestandardowe słowo podpowiedzi"
     },
+    "generationTopic": {
+      "label": "Model nazewnictwa tematów do AI w malarstwie",
+      "modelDesc": "Model przeznaczony do automatycznego nadawania nazw tematom w AI malarskim",
+      "title": "Automatyczne nadawanie nazw tematom w AI malarskim"
+    },
     "helpInfo": "Podczas tworzenia nowego asystenta, domyślne ustawienia asystenta będą używane jako wartości wstępne.",
     "historyCompress": {
       "label": "Model historii rozmów",

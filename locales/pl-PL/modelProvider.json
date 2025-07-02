@@ -66,6 +66,7 @@
       "customRegion": "Niestandardowy region usługi",
       "customSessionToken": "Niestandardowy token sesji",
       "description": "Wprowadź swój AWS AccessKeyId / SecretAccessKey, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojej konfiguracji uwierzytelniania",
+      "imageGenerationDescription": "Wprowadź swój AWS AccessKeyId / SecretAccessKey, aby rozpocząć generowanie. Aplikacja nie będzie zapisywać Twoich danych uwierzytelniających",
       "title": "Użyj niestandardowych informacji uwierzytelniających Bedrock"
     }
   },

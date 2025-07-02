@@ -1,19 +1,13 @@
-import { GoogleGenAI, GoogleGenAIOptions } from '@google/genai';
+import { VertexAI, VertexInit } from '@google-cloud/vertexai';
 
 import { AgentRuntimeErrorType } from '../error';
 import { LobeGoogleAI } from '../google';
 import { AgentRuntimeError } from '../utils/createError';
 
-const DEFAULT_VERTEXAI_LOCATION = 'global';
-
 export class LobeVertexAI extends LobeGoogleAI {
-  static initFromVertexAI(params?: GoogleGenAIOptions) {
+  static initFromVertexAI(params?: VertexInit) {
     try {
-      const client = new GoogleGenAI({
-        ...params,
-        location: params?.location ?? DEFAULT_VERTEXAI_LOCATION, // @google/genai 不传 location 会报错
-        vertexai: true,
-      });
+      const client = new VertexAI({ ...params });
 
       return new LobeGoogleAI({ apiKey: 'avoid-error', client, isVertexAi: true });
     } catch (e) {

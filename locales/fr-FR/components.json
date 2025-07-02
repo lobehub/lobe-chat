@@ -91,6 +91,25 @@
     "provider": "Fournisseur",
     "title": "Modèle"
   },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "Cliquez pour télécharger plus"
+    },
+    "modal": {
+      "complete": "Terminé",
+      "newFileIndicator": "Nouveau",
+      "selectImageToPreview": "Veuillez sélectionner une image à prévisualiser",
+      "title": "Gérer les images ({{count}})",
+      "upload": "Télécharger des images"
+    },
+    "placeholder": {
+      "primary": "Cliquez pour télécharger des images",
+      "secondary": "Prise en charge de la sélection de plusieurs images"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} téléchargées"
+    }
+  },
   "OllamaSetupGuide": {
     "action": {
       "close": "Fermer l'invite",

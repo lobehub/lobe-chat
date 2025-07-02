@@ -91,6 +91,25 @@
     "provider": "Anbieter",
     "title": "Modell"
   },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "Klicken Sie, um weitere hochzuladen"
+    },
+    "modal": {
+      "complete": "Fertig",
+      "newFileIndicator": "Neu",
+      "selectImageToPreview": "Bitte wählen Sie ein Bild zur Vorschau aus",
+      "title": "Bilder verwalten ({{count}})",
+      "upload": "Bild hochladen"
+    },
+    "placeholder": {
+      "primary": "Klicken Sie, um Bilder hochzuladen",
+      "secondary": "Mehrere Bilder können ausgewählt werden"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} hochgeladen"
+    }
+  },
   "OllamaSetupGuide": {
     "action": {
       "close": "Hinweis schließen",

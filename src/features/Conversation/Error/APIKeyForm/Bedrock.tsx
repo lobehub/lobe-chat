@@ -11,7 +11,7 @@ import { keyVaultsConfigSelectors } from '@/store/user/selectors';
 
 import { FormAction } from '../style';
 
-const BedrockForm = memo(() => {
+const BedrockForm = memo<{ description: string }>(({ description }) => {
   const { t } = useTranslation('modelProvider');
   const [showRegion, setShow] = useState(false);
   const [showSessionToken, setShowSessionToken] = useState(false);
@@ -28,7 +28,7 @@ const BedrockForm = memo(() => {
   return (
     <FormAction
       avatar={<Aws.Color color={theme.colorText} size={56} />}
-      description={t('bedrock.unlock.description')}
+      description={description}
       title={t('bedrock.unlock.title')}
     >
       <InputPassword

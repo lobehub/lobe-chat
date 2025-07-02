@@ -43,6 +43,7 @@ test-output
 
 # misc
 # add other ignore file below
+CLAUDE.md
 
 # local env files
 .env*.local

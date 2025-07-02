@@ -17,10 +17,11 @@ interface ProviderApiKeyFormProps {
   avatar?: ReactNode;
   provider: GlobalLLMProviderKey;
   showEndpoint?: boolean;
+  description: string;
 }
 
 const ProviderApiKeyForm = memo<ProviderApiKeyFormProps>(
-  ({ provider, avatar, showEndpoint = false, apiKeyPlaceholder }) => {
+  ({ provider, avatar, showEndpoint = false, apiKeyPlaceholder, description }) => {
     const { t } = useTranslation(['modelProvider', 'error']);
     const { t: errorT } = useTranslation('error');
     const [showProxy, setShow] = useState(false);
@@ -33,7 +34,7 @@ const ProviderApiKeyForm = memo<ProviderApiKeyFormProps>(
     return (
       <FormAction
         avatar={avatar}
-        description={t(`unlock.apiKey.description`, { name: providerName, ns: 'error' })}
+        description={description}
         title={t(`unlock.apiKey.title`, { name: providerName, ns: 'error' })}
       >
         <FormPassword

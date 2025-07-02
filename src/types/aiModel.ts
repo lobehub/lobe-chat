@@ -186,15 +186,16 @@ export interface AIEmbeddingModelCard extends AIBaseModelCard {
   type: 'embedding';
 }
 
-export interface AIText2ImageModelCard extends AIBaseModelCard {
+export interface AIImageModelCard extends AIBaseModelCard {
+  parameters?: Record<string, any>;
   pricing?: {
     /**
      * the currency of the pricing
      * @default USD
      */
     currency?: ModelPriceCurrency;
-  } & Record<string, number>; // [resolution: string]: number;
-  resolutions: string[];
+  } & Record<string, number>;
+  resolutions?: string[];
   type: 'image';
 }
 
@@ -304,6 +305,7 @@ export interface AiProviderModelListItem {
   settings?: AiModelSettings;
   source?: AiModelSourceType;
   type: AiModelType;
+  parameters?: Record<string, any>;
 }
 
 // Update
@@ -354,4 +356,5 @@ export interface EnabledAiModel {
   settings?: AiModelSettings;
   sort?: number;
   type: AiModelType;
+  parameters?: Record<string, any>;
 }

@@ -37,6 +37,10 @@ export default {
     search: '搜索',
     title: '发现',
   },
+  image: {
+    description: '{{appName}} 带给你最好的 GPT Image, Flux, Midjourney, Stable Diffusion 使用体验',
+    title: 'AI 绘画',
+  },
   plugins: {
     description:
       '搜素、图表生成、学术、图像生成、视频生成、语音生成、自动化工作流，定制 ChatGPT / Claude 专属的 ToolCall 插件能力',

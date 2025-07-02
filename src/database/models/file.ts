@@ -2,7 +2,7 @@ import { count, sum } from 'drizzle-orm';
 import { and, asc, desc, eq, ilike, inArray, like, notExists, or } from 'drizzle-orm/expressions';
 import type { PgTransaction } from 'drizzle-orm/pg-core';
 
-import { LobeChatDatabase } from '@/database/type';
+import { LobeChatDatabase, Transaction } from '@/database/type';
 import { FilesTabs, QueryFileListParams, SortType } from '@/types/files';
 
 import {
@@ -29,10 +29,11 @@ export class FileModel {
   create = async (
     params: Omit<NewFile, 'id' | 'userId'> & { knowledgeBaseId?: string },
     insertToGlobalFiles?: boolean,
+    trx?: Transaction,
   ) => {
-    const result = await this.db.transaction(async (trx) => {
+    const executeInTransaction = async (tx: Transaction) => {
       if (insertToGlobalFiles) {
-        await trx.insert(globalFiles).values({
+        await tx.insert(globalFiles).values({
           creator: this.userId,
           fileType: params.fileType,
           hashId: params.fileHash!,
@@ -42,7 +43,7 @@ export class FileModel {
         });
       }
 
-      const result = await trx
+      const result = await tx
         .insert(files)
         .values({ ...params, userId: this.userId })
         .returning();
@@ -50,7 +51,7 @@ export class FileModel {
       const item = result[0];
 
       if (params.knowledgeBaseId) {
-        await trx.insert(knowledgeBaseFiles).values({
+        await tx.insert(knowledgeBaseFiles).values({
           fileId: item.id,
           knowledgeBaseId: params.knowledgeBaseId,
           userId: this.userId,
@@ -58,8 +59,11 @@ export class FileModel {
       }
 
       return item;
-    });
+    };
 
+    const result = await (trx
+      ? executeInTransaction(trx)
+      : this.db.transaction(executeInTransaction));
     return { id: result.id };
   };
 
@@ -82,20 +86,20 @@ export class FileModel {
     };
   };
 
-  delete = async (id: string, removeGlobalFile: boolean = true) => {
+  delete = async (id: string, removeGlobalFile: boolean = true, trx?: Transaction) => {
     const file = await this.findById(id);
     if (!file) return;
 
     const fileHash = file.fileHash!;
 
-    return await this.db.transaction(async (trx) => {
-      // 1. 删除相关的 chunks
-      await this.deleteFileChunks(trx as any, [id]);
+    const executeInTransaction = async (tx: Transaction) => {
+      // 1. Delete related chunks
+      await this.deleteFileChunks(tx as any, [id]);
 
-      // 2. 删除文件记录
-      await trx.delete(files).where(and(eq(files.id, id), eq(files.userId, this.userId)));
+      // 2. Delete file record
+      await tx.delete(files).where(and(eq(files.id, id), eq(files.userId, this.userId)));
 
-      const result = await trx
+      const result = await tx
         .select({ count: count() })
         .from(files)
         .where(and(eq(files.fileHash, fileHash)));
@@ -105,11 +109,13 @@ export class FileModel {
       // delete the file from global file if it is not used by other files
       // if `DISABLE_REMOVE_GLOBAL_FILE` is true, we will not remove the global file
       if (fileCount === 0 && removeGlobalFile) {
-        await trx.delete(globalFiles).where(eq(globalFiles.hashId, fileHash));
+        await tx.delete(globalFiles).where(eq(globalFiles.hashId, fileHash));
 
         return file;
       }
-    });
+    };
+
+    return await (trx ? executeInTransaction(trx) : this.db.transaction(executeInTransaction));
   };
 
   deleteGlobalFile = async (hashId: string) => {

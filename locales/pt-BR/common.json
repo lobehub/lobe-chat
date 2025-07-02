@@ -324,6 +324,7 @@
     }
   },
   "tab": {
+    "aiImage": "Pintura AI",
     "chat": "Chat",
     "discover": "Descobrir",
     "files": "Arquivos",

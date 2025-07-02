@@ -32,6 +32,10 @@
     "search": "Zoeken",
     "title": "Ontdekken"
   },
+  "image": {
+    "description": "{{appName}} biedt je de beste ervaring met GPT Image, Flux, Midjourney en Stable Diffusion",
+    "title": "AI Schilderen"
+  },
   "plugins": {
     "description": "Zoeken, grafiekgeneratie, academisch, beeldgeneratie, video-generatie, spraakgeneratie, geautomatiseerde workflows, pas de ToolCall-pluginmogelijkheden van ChatGPT / Claude aan",
     "title": "Pluginmarkt"
