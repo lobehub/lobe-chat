@@ -1,25 +1,28 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { PluginListResponse } from '@lobehub/market-sdk';
+import { TRPCClientError } from '@trpc/client';
 import { produce } from 'immer';
 import { uniqBy } from 'lodash-es';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
+import { MCPErrorData } from '@/libs/mcp/types';
 import { mcpService } from '@/services/mcp';
 import { pluginService } from '@/services/plugin';
 import { toolService } from '@/services/tool';
 import { globalHelpers } from '@/store/global/helpers';
 import { mcpStoreSelectors } from '@/store/tool/selectors';
-import { MCPPluginListParams } from '@/types/plugins';
+import { MCPErrorInfo, MCPInstallProgress, MCPPluginListParams } from '@/types/plugins';
 import { sleep } from '@/utils/sleep';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { ToolStore } from '../../store';
-import { MCPInstallProgress, MCPInstallStep, MCPStoreState } from './initialState';
+import { MCPInstallStep, MCPStoreState } from './initialState';
 
 const n = setNamespace('mcpStore');
 
 export interface PluginMCPStoreAction {
+  cancelInstallMCPPlugin: (identifier: string) => Promise<void>;
   installMCPPlugin: (
     identifier: string,
     options?: { config?: Record<string, any>; resume?: boolean },
@@ -37,6 +40,11 @@ export const createMCPPluginStoreSlice: StateCreator<
   [],
   PluginMCPStoreAction
 > = (set, get) => ({
+  cancelInstallMCPPlugin: async (identifier) => {
+    get().updateMCPInstallProgress(identifier, undefined);
+    get().updateInstallLoadingState(identifier, undefined);
+  },
+
   installMCPPlugin: async (identifier, options = {}) => {
     const { resume = false, config } = options;
     const plugin = mcpStoreSelectors.getPluginById(identifier)(get());
@@ -112,7 +120,7 @@ export const createMCPPluginStoreSlice: StateCreator<
         connection = result.connection;
       }
 
-      // 共同的获取服务器清单逻辑
+      // 获取服务器清单逻辑
       updateInstallLoadingState(identifier, true);
 
       // 步骤 4: 获取服务器清单
@@ -191,23 +199,58 @@ export const createMCPPluginStoreSlice: StateCreator<
       updateInstallLoadingState(identifier, undefined);
 
       return true;
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      const error = e as TRPCClientError<any>;
+
+      console.error('MCP plugin installation failed:', error);
 
       // 计算安装持续时间（失败情况）
       const installDurationMs = Date.now() - installStartTime;
 
+      // 处理结构化错误信息
+      let errorInfo: MCPErrorInfo;
+
+      // 如果是结构化的 MCPError
+      if (!!error.data && 'errorData' in error.data) {
+        const mcpError = error.data.errorData as MCPErrorData;
+
+        errorInfo = {
+          message: mcpError.message,
+          metadata: mcpError.metadata,
+          type: mcpError.type,
+        };
+      } else {
+        // 兜底处理普通错误
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        errorInfo = {
+          message: errorMessage,
+          metadata: {
+            step: 'installation_error',
+            timestamp: Date.now(),
+          },
+          type: 'UNKNOWN_ERROR',
+        };
+      }
+
+      // 设置错误状态，显示结构化错误信息
+      updateMCPInstallProgress(identifier, {
+        errorInfo,
+        progress: 0,
+        step: MCPInstallStep.ERROR,
+      });
+
       // 上报安装失败结果
       mcpService.reportMcpInstallResult({
-        error: error instanceof Error ? error.message : 'Unknown error',
+        errorCode: errorInfo.type,
+        errorMessage: errorInfo.message,
         identifier: plugin.identifier,
         installDurationMs,
+        metadata: errorInfo.metadata,
         success: false,
-        version: data.version,
+        version: data?.version,
       });
 
       updateInstallLoadingState(identifier, undefined);
-      updateMCPInstallProgress(identifier, undefined);
     }
   },
 

@@ -475,7 +475,8 @@ export const marketRouter = router({
   reportMcpInstallResult: publicProcedure
     .input(
       z.object({
-        error: z.any().optional(),
+        errorCode: z.any().optional(),
+        errorMessage: z.any().optional(),
         identifier: z.string(),
         installDurationMs: z.number().optional(),
         manifest: z.any().optional(),

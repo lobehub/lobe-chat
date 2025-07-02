@@ -95,20 +95,26 @@ class MCPService {
     installDurationMs,
     success,
     manifest,
-    error,
+    metadata,
+    errorMessage,
+    errorCode,
   }: {
-    error?: string;
+    errorCode?: string;
+    errorMessage?: string;
     identifier: string;
     installDurationMs?: number;
     manifest?: any;
+    metadata?: any;
     success: boolean;
     version?: string;
   }) => {
     const reportData = {
-      error: success ? undefined : error,
+      errorCode: success ? undefined : errorCode,
+      errorMessage: success ? undefined : errorMessage,
       identifier,
       installDurationMs,
       manifest: success ? manifest : undefined,
+      metadata,
       success,
       version,
     };

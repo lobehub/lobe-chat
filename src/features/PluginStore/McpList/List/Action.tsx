@@ -16,7 +16,7 @@ interface ActionsProps {
 const Actions = memo<ActionsProps>(({ identifier }) => {
   const [installed, installing, unInstallPlugin, installMCPPlugin] = useToolStore((s) => [
     pluginSelectors.isPluginInstalled(identifier)(s),
-    mcpStoreSelectors.isMCPInstalling(identifier)(s),
+    mcpStoreSelectors.isPluginInstallLoading(identifier)(s),
     s.uninstallPlugin,
     s.installMCPPlugin,
   ]);
