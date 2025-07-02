@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { withSuspense } from '@/components/withSuspense';
 import { DetailProvider } from '@/features/MCPPluginDetail/DetailProvider';
 import Header from '@/features/MCPPluginDetail/Header';
 import { useQuery } from '@/hooks/useQuery';
@@ -36,4 +37,4 @@ const Client = memo<{ identifier: string; mobile?: boolean }>(({ identifier, mob
   );
 });
 
-export default Client;
+export default withSuspense(Client);
