@@ -10,10 +10,12 @@ import { Flexbox } from 'react-layout-kit';
 import PluginAvatar from '@/components/Plugins/PluginAvatar';
 import { useToolStore } from '@/store/tool';
 import { mcpStoreSelectors } from '@/store/tool/selectors';
+import { MCPInstallStep } from '@/store/tool/slices/mcpStore/initialState';
 import { DiscoverMcpItem } from '@/types/discover';
 import { LobeToolType } from '@/types/tool/tool';
 
 import Actions from './Action';
+import InstallError from './InstallError';
 import MCPConfigForm from './MCPConfigForm';
 
 interface PluginItemProps extends DiscoverMcpItem {
@@ -34,6 +36,8 @@ const Item = memo<PluginItemProps>(
 
     const stepText = installProgress ? t(`mcpInstall.${installProgress.step}` as any) : undefined;
     const needsConfig = installProgress?.needsConfig;
+    const hasError = installProgress?.step === MCPInstallStep.ERROR;
+    const errorInfo = installProgress?.errorInfo;
 
     const containerRef = useRef<HTMLButtonElement | null>(null);
 
@@ -77,7 +81,7 @@ const Item = memo<PluginItemProps>(
           <Actions identifier={identifier} />
         </Block>
 
-        {installProgress && (
+        {installProgress && !hasError && (
           <Flexbox paddingBlock={4} paddingInline={12}>
             <Progress
               percent={installProgress.progress}
@@ -92,6 +96,23 @@ const Item = memo<PluginItemProps>(
               </Text>
             )}
           </Flexbox>
+        )}
+
+        {hasError && errorInfo && (
+          <motion.div
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            initial={{ height: 0, opacity: 0 }}
+            transition={{
+              duration: 0.3,
+              ease: [0.4, 0, 0.2, 1],
+              height: { duration: 0.2 },
+            }}
+          >
+            <Flexbox paddingBlock={8} paddingInline={12}>
+              <InstallError errorInfo={errorInfo} identifier={identifier} />
+            </Flexbox>
+          </motion.div>
         )}
 
         {needsConfig && installProgress && (

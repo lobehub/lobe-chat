@@ -398,7 +398,7 @@ export class DiscoverService {
    * report MCP plugin result marketplace
    */
   reportPluginInstallation = async (params: {
-    error?: string;
+    errorMessage?: string;
     identifier: string;
     installDurationMs?: number;
     manifest?: any;

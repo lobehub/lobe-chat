@@ -177,11 +177,29 @@ class MCPService {
       return client;
     } catch (error) {
       console.error(`Failed to initialize MCP client for key ${key}:`, error);
-      // Do not cache failed initializations
+
+      // 保留完整的错误信息，特别是详细的 stderr 输出
+      const errorMessage = error instanceof Error ? error.message : String(error);
+
+      if (typeof error === 'object' && !!error && 'data' in error) {
+        throw new TRPCError({
+          cause: error,
+          code: 'SERVICE_UNAVAILABLE',
+          message: errorMessage,
+        });
+      }
+
+      // 记录详细的错误信息用于调试
+      log('Detailed initialization error: %O', {
+        error: errorMessage,
+        params,
+        stack: error instanceof Error ? error.stack : undefined,
+      });
+
       throw new TRPCError({
         cause: error,
         code: 'INTERNAL_SERVER_ERROR',
-        message: `Failed to initialize MCP client, reason: ${(error as Error).message}`,
+        message: errorMessage, // 直接使用完整的错误信息
       });
     }
   }
