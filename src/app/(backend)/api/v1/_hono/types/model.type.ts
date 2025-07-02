@@ -1,6 +1,21 @@
 import { z } from 'zod';
 
+import { AiFullModelCard, AiModelSourceType } from '@/types/aiModel';
+
 // Request schemas
+export const GetModelConfigRequestSchema = z.object({
+  model: z.string().min(1, '模型名称不能为空'),
+  provider: z.string().min(1, '提供商不能为空'),
+});
+
+export type GetModelConfigRequest = z.infer<typeof GetModelConfigRequestSchema>;
+
+export const GetModelConfigBySessionRequestSchema = z.object({
+  sessionId: z.string().min(1, '会话ID不能为空'),
+});
+
+export type GetModelConfigBySessionRequest = z.infer<typeof GetModelConfigBySessionRequestSchema>;
+
 export const GetModelsRequestSchema = z.object({
   enabled: z
     .string()
@@ -80,4 +95,30 @@ export interface GetModelsResponse {
   providers?: ProviderWithModels[];
   totalModels: number;
   totalProviders: number;
+}
+
+// Model config response types
+export interface ModelConfigResponse extends AiFullModelCard {
+  providerId: string;
+  source: AiModelSourceType;
+}
+
+export interface DatabaseModelItem {
+  abilities?: any;
+  config?: any;
+  contextWindowTokens?: number;
+  createdAt?: Date;
+  description?: string;
+  displayName?: string;
+  enabled?: boolean;
+  id: string;
+  organization?: string;
+  parameters?: any;
+  pricing?: any;
+  providerId: string;
+  releasedAt?: string;
+  sort?: number;
+  source?: AiModelSourceType;
+  type: string;
+  updatedAt?: Date;
 }
