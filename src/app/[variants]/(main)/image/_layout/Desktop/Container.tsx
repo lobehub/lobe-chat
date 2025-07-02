@@ -12,7 +12,8 @@ const Container = memo<PropsWithChildren>(({ children }) => {
       flex={1}
       style={{
         background: theme.colorBgContainerSecondary,
-        overflow: 'hidden',
+        overflowX: 'hidden',
+        overflowY: 'auto',
         position: 'relative',
       }}
     >
@@ -22,6 +23,7 @@ const Container = memo<PropsWithChildren>(({ children }) => {
         padding={24}
         style={{
           maxWidth: 906,
+          position: 'relative',
         }}
         width={'100%'}
       >

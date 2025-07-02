@@ -40,6 +40,7 @@ export default {
     },
   },
   topic: {
+    title: '绘画主题',
     createNew: '新建主题',
     untitled: '默认主题',
     empty: '暂无生成主题',

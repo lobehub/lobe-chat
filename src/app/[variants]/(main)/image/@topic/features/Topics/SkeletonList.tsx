@@ -1,37 +1,24 @@
 'use client';
 
 import { Skeleton } from 'antd';
-import { useTheme } from 'antd-style';
-import { Plus } from 'lucide-react';
 import { memo } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
+
+import NewTopicButton from './NewTopicButton';
 
 const borderRadius = 6;
-const size = 50;
 
 const SkeletonList = memo(() => {
-  const theme = useTheme();
-
   return (
     <Flexbox align="center" gap={6} width={'100%'}>
-      <Center
-        style={{
-          width: size,
-          height: size,
-          background: theme.colorFillSecondary,
-          border: `1px solid ${theme.colorBorder}`,
-          borderRadius,
-        }}
-      >
-        <Plus size={12} />
-      </Center>
+      <NewTopicButton />
 
       {/* Topic items skeleton */}
       {Array.from({ length: 5 }).map((_, index) => (
         <div key={index}>
           <Skeleton.Avatar
             active
-            size={size}
+            size={48}
             style={{
               borderRadius,
             }}

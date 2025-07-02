@@ -1,7 +1,8 @@
 'use client';
 
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { memo } from 'react';
+import { useSize } from 'ahooks';
+import { memo, useRef } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useFetchGenerationTopics } from '@/hooks/useFetchGenerationTopics';
@@ -13,9 +14,13 @@ import TopicItem from './TopicItem';
 
 const TopicsList = memo(() => {
   useFetchGenerationTopics();
+  const ref = useRef(null);
+  const { width = 80 } = useSize(ref) || {};
   const [parent] = useAutoAnimate();
   const generationTopics = useImageStore(generationTopicSelectors.generationTopics);
   const openNewGenerationTopic = useImageStore((s) => s.openNewGenerationTopic);
+
+  const showMoreInfo = Boolean(width > 120);
 
   const isEmpty = !generationTopics || generationTopics.length === 0;
   if (isEmpty) {
@@ -23,14 +28,15 @@ const TopicsList = memo(() => {
   }
 
   return (
-    <Flexbox align="center" gap={12}>
-      <NewTopicButton onClick={openNewGenerationTopic} />
-
-      <Flexbox align="center" gap={16} ref={parent}>
+    <Flexbox align="center" gap={12} ref={ref} width={'100%'}>
+      <NewTopicButton
+        count={generationTopics?.length}
+        onClick={openNewGenerationTopic}
+        showMoreInfo={showMoreInfo}
+      />
+      <Flexbox align="center" gap={12} ref={parent} width={'100%'}>
         {generationTopics.map((topic) => (
-          <div key={topic.id}>
-            <TopicItem topic={topic} />
-          </div>
+          <TopicItem key={topic.id} showMoreInfo={showMoreInfo} topic={topic} />
         ))}
       </Flexbox>
     </Flexbox>

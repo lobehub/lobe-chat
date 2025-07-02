@@ -45,12 +45,10 @@ const useStyles = createStyles(({ css, token }) => ({
     }
 
     &:hover {
-      transform: scale(1.05);
       background: ${token.colorFillSecondary};
     }
 
     &:active {
-      transform: scale(0.98);
       background: ${token.colorFillTertiary};
     }
 

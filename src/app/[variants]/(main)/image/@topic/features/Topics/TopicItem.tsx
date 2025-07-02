@@ -1,62 +1,18 @@
 'use client';
 
-import { ActionIcon, Avatar } from '@lobehub/ui';
-import { App } from 'antd';
-import { createStyles, useTheme } from 'antd-style';
+import { ActionIcon, Avatar, Text } from '@lobehub/ui';
+import { App, Popover } from 'antd';
+import { useTheme } from 'antd-style';
 import { Trash } from 'lucide-react';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import { useGlobalStore } from '@/store/global';
 import { globalGeneralSelectors } from '@/store/global/selectors';
 import { useImageStore } from '@/store/image';
 import { generationTopicSelectors } from '@/store/image/slices/generationTopic/selectors';
 import { ImageGenerationTopic } from '@/types/generation';
-
-import TopicItemContainer from './TopicItemContainer';
-
-const useStyles = createStyles(({ css, token }) => ({
-  container: css`
-    overflow: hidden;
-  `,
-  deleteButton: css`
-    color: ${token.colorTextSecondary};
-    opacity: 0;
-    transition: opacity 0.2s ease-in-out;
-  `,
-  time: css`
-    flex: 1;
-    margin: 0;
-    font-size: 12px;
-    color: ${token.colorTextSecondary};
-  `,
-  timeRow: css`
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    justify-content: space-between;
-  `,
-  title: css`
-    margin: 0;
-    font-size: 14px;
-    font-weight: 500;
-  `,
-  tooltipContent: css`
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-
-    min-width: 150px;
-    padding-block: 8px;
-    padding-inline: 12px;
-    border-radius: ${token.borderRadius}px;
-  `,
-  tooltipContentHover: css`
-    &:hover .delete-button {
-      opacity: 1;
-    }
-  `,
-}));
 
 const formatTime = (date: Date, locale: string) => {
   return new Intl.DateTimeFormat(locale, {
@@ -67,12 +23,12 @@ const formatTime = (date: Date, locale: string) => {
 
 interface TopicItemProps {
   topic: ImageGenerationTopic;
+  showMoreInfo?: boolean;
 }
 
-const TopicItem = memo<TopicItemProps>(({ topic }) => {
+const TopicItem = memo<TopicItemProps>(({ topic, showMoreInfo }) => {
   const theme = useTheme();
   const { t } = useTranslation('image');
-  const { styles, cx } = useStyles();
   const { modal } = App.useApp();
   const locale = useGlobalStore(globalGeneralSelectors.currentLanguage);
 
@@ -108,37 +64,70 @@ const TopicItem = memo<TopicItemProps>(({ topic }) => {
   };
 
   const tooltipContent = (
-    <div className={cx(styles.tooltipContent, styles.tooltipContentHover)}>
-      <h4 className={styles.title}>{topic.title || t('topic.untitled')}</h4>
-      <div className={styles.timeRow}>
-        <p className={styles.time}>{formatTime(topic.updatedAt, locale)}</p>
-        <ActionIcon
-          className={cx(styles.deleteButton, 'delete-button')}
-          danger
-          icon={Trash}
-          onClick={handleDelete}
-          size="small"
-        />
-      </div>
-    </div>
+    <Flexbox
+      align={'center'}
+      flex={1}
+      gap={16}
+      horizontal
+      justify={'space-between'}
+      style={{
+        overflow: 'hidden',
+      }}
+    >
+      <Flexbox
+        flex={1}
+        style={{
+          overflow: 'hidden',
+        }}
+      >
+        <Text ellipsis fontSize={14} weight={500}>
+          {topic.title || t('topic.untitled')}
+        </Text>
+        <Text ellipsis fontSize={12} type={'secondary'}>
+          {formatTime(topic.updatedAt, locale)}
+        </Text>
+      </Flexbox>
+      <ActionIcon danger icon={Trash} onClick={handleDelete} size="small" />
+    </Flexbox>
   );
 
   return (
-    <TopicItemContainer
-      active={isActive}
-      className={styles.container}
-      onClick={handleClick}
-      tooltip={tooltipContent}
+    <Popover
+      arrow={false}
+      content={tooltipContent}
+      placement={'left'}
+      styles={{
+        body: {
+          width: 200,
+        },
+      }}
+      trigger={showMoreInfo ? [] : ['hover']}
     >
-      <Avatar
-        avatar={topic.coverUrl ?? ''}
-        background={theme.colorBgElevated}
-        bordered={isActive}
-        loading={isLoading}
-        shape="square"
-        size={48}
-      />
-    </TopicItemContainer>
+      <Flexbox
+        align={'center'}
+        gap={12}
+        horizontal
+        justify={'center'}
+        onClick={handleClick}
+        style={{
+          cursor: 'pointer',
+        }}
+        width={'100%'}
+      >
+        <Avatar
+          avatar={topic.coverUrl ?? ''}
+          background={theme.colorFillSecondary}
+          bordered={isActive}
+          loading={isLoading}
+          shape="square"
+          size={48}
+          style={{
+            flex: 'none',
+          }}
+        />
+        {showMoreInfo && tooltipContent}
+      </Flexbox>
+    </Popover>
   );
 });
 
