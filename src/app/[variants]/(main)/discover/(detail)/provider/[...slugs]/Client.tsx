@@ -5,6 +5,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import Breadcrumb from '@/app/[variants]/(main)/discover/(detail)/features/Breadcrumb';
+import { withSuspense } from '@/components/withSuspense';
 import { useDiscoverStore } from '@/store/discover';
 import { DiscoverTab } from '@/types/discover';
 
@@ -36,4 +37,4 @@ const Client = memo<ClientProps>(({ identifier, mobile }) => {
   );
 });
 
-export default Client;
+export default withSuspense(Client);
