@@ -18,6 +18,7 @@ export interface MCPStoreState {
   currentPage: number;
   isLoadingMore?: boolean;
   isMcpListInit?: boolean;
+  mcpInstallAbortControllers: Record<string, AbortController>;
   mcpInstallProgress: MCPInstallProgressMap;
   mcpPluginItems: PluginItem[];
   mcpSearchKeywords?: string;
@@ -30,6 +31,7 @@ export interface MCPStoreState {
 export const initialMCPStoreState: MCPStoreState = {
   categories: [],
   currentPage: 1,
+  mcpInstallAbortControllers: {},
   mcpInstallProgress: {},
   mcpPluginItems: [],
 };

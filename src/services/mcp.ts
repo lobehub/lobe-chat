@@ -43,8 +43,12 @@ class MCPService {
     identifier: string,
     url: string,
     metadata?: CustomPluginMetadata,
+    signal?: AbortSignal,
   ) {
-    return toolsClient.mcp.getStreamableMcpServerManifest.query({ identifier, metadata, url });
+    return toolsClient.mcp.getStreamableMcpServerManifest.query(
+      { identifier, metadata, url },
+      { signal },
+    );
   }
 
   async getStdioMcpServerManifest(
@@ -55,16 +59,24 @@ class MCPService {
       name: string;
     },
     metadata?: CustomPluginMetadata,
+    signal?: AbortSignal,
   ) {
-    return desktopClient.mcp.getStdioMcpServerManifest.query({ ...stdioParams, metadata });
+    return desktopClient.mcp.getStdioMcpServerManifest.query(
+      { ...stdioParams, metadata },
+      { signal },
+    );
   }
 
   /**
    * 检查 MCP 插件安装状态
    * @param manifest MCP 插件清单
+   * @param signal AbortSignal 用于取消请求
    * @returns 安装检测结果
    */
-  async checkInstallation(manifest: PluginManifest): Promise<CheckMcpInstallResult> {
+  async checkInstallation(
+    manifest: PluginManifest,
+    signal?: AbortSignal,
+  ): Promise<CheckMcpInstallResult> {
     try {
       // 确保有部署选项
       if (!manifest.deploymentOptions?.length) {
@@ -75,9 +87,12 @@ class MCPService {
       }
 
       // 将所有部署选项传递给主进程进行检查
-      return desktopClient.mcp.validMcpServerInstallable.mutate({
-        deploymentOptions: manifest.deploymentOptions as any,
-      });
+      return desktopClient.mcp.validMcpServerInstallable.mutate(
+        {
+          deploymentOptions: manifest.deploymentOptions as any,
+        },
+        { signal },
+      );
     } catch (error) {
       return {
         error: error instanceof Error ? error.message : '未知错误',
