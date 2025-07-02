@@ -413,10 +413,7 @@ export class DiscoverService {
     }
 
     try {
-      await this.market.plugins.reportInstallation({
-        ...params,
-        timestamp: new Date().toISOString(),
-      });
+      await this.market.plugins.reportInstallation(params);
     } catch (error) {
       // 上报失败不影响主流程，只记录日志
       console.warn('Failed to report MCP installation result:', error);
