@@ -147,6 +147,9 @@ export default {
     featuredTools: '推荐插件',
     more: '发现更多',
   },
+  isClaimed: '已认领',
+  isFeatured: '推荐',
+  isOfficial: '官方认证',
   like: '喜欢',
   mcp: {
     categories: {

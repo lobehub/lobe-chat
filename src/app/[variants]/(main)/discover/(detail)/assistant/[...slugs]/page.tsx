@@ -53,7 +53,7 @@ export const generateMetadata = async (props: DiscoverPageProps) => {
     keywords: tags,
     ...metadataModule.generate({
       alternate: true,
-      canonical: urlJoin('https://lobehub.com/assistant', identifier),
+      canonical: urlJoin('https://lobehub.com/agent', identifier),
       description: description,
       locale,
       tags: tags,
