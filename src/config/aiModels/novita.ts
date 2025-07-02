@@ -27,8 +27,8 @@ const novitaChatModels: AIChatModelCard[] = [
     displayName: 'ERNIE 4.5 300B A47B Paddle',
     id: 'baidu/ernie-4.5-300b-a47b-paddle',
     pricing: {
-      input: 0.3,
-      output: 1,
+      input: 0.28,
+      output: 1.1,
     },
     type: 'chat',
   },
@@ -329,8 +329,8 @@ const novitaChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek/deepseek-v3-0324',
     pricing: {
-      input: 0.33,
-      output: 1.3,
+      input: 0.28,
+      output: 1.14,
     },
     type: 'chat',
   },
