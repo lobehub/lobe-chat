@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Wrong Gemini 2.5 Pro thinkbudget."]
+    },
+    "date": "2025-07-02",
+    "version": "1.96.15"
+  },
+  {
+    "children": {
       "improvements": ["Migrate to @google/genai SDK for Google Gemini API and Vertex AI."]
     },
     "date": "2025-07-01",
