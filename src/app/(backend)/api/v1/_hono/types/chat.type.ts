@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { LobeAgentChatConfig } from '@/types/agent/chatConfig';
+
 /**
  * 聊天服务参数
  */
@@ -31,6 +33,7 @@ export interface TranslateServiceParams {
  */
 export interface MessageGenerationParams {
   agentId?: string;
+  chatConfig?: Partial<LobeAgentChatConfig>;
   conversationHistory: Array<{
     content: string;
     role: 'user' | 'assistant' | 'system';
@@ -98,6 +101,26 @@ export const TranslateServiceParamsSchema = z.object({
 
 export const MessageGenerationParamsSchema = z.object({
   agentId: z.string().optional(),
+  chatConfig: z
+    .object({
+      autoCreateTopicThreshold: z.number().optional(),
+      disableContextCaching: z.boolean().optional(),
+      displayMode: z.enum(['chat', 'docs']).optional(),
+      enableAutoCreateTopic: z.boolean().optional(),
+      enableCompressHistory: z.boolean().optional(),
+      enableHistoryCount: z.boolean().optional(),
+      enableMaxTokens: z.boolean().optional(),
+      enableReasoning: z.boolean().optional(),
+      enableReasoningEffort: z.boolean().optional(),
+      historyCount: z.number().optional(),
+      inputTemplate: z.string().optional(),
+      reasoningBudgetToken: z.number().optional(),
+      reasoningEffort: z.enum(['low', 'medium', 'high']).optional(),
+      searchMode: z.enum(['off', 'on', 'auto']).optional(),
+      thinkingBudget: z.number().optional(),
+      useModelBuiltinSearch: z.boolean().optional(),
+    })
+    .optional(),
   conversationHistory: z.array(
     z.object({
       content: z.string().min(1, '消息内容不能为空'),
