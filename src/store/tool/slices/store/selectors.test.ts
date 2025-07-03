@@ -5,6 +5,7 @@ import { pluginStoreSelectors } from './selectors';
 
 const mockState = {
   ...initialState,
+  listType: 'old',
   pluginStoreList: [
     {
       identifier: 'plugin-1',
