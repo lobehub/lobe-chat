@@ -76,7 +76,7 @@ const ImageItem = memo<ImageItemProps>(
         preview={preview}
         size={IMAGE_SIZE as any}
         src={url}
-        style={{ height: isSafari ? 'auto' : '100%', ...style }}
+        style={{ height: isSafari ? 'auto' : '100%', width: '100%', ...style }}
         wrapperClassName={cx(styles.image, editable && styles.editableImage)}
       />
     );

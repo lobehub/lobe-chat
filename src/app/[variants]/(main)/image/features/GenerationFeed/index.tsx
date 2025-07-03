@@ -17,6 +17,28 @@ const GenerationFeed = memo(() => {
 
   const currentGenerationBatches = useImageStore(generationBatchSelectors.currentGenerationBatches);
 
+  // Smart scroll function that accounts for sticky elements
+  const scrollToBottom = (behavior: 'smooth' | 'auto' = 'smooth') => {
+    if (!containerRef.current) return;
+
+    // Find the main scrollable container (usually the parent of the sticky element)
+    const scrollableParent =
+      containerRef.current.closest('[style*="overflow"]') || document.documentElement;
+
+    // Get the position of our target element
+    const targetRect = containerRef.current.getBoundingClientRect();
+    const scrollableRect = scrollableParent.getBoundingClientRect();
+
+    // Calculate the scroll position, adding extra offset for sticky elements
+    // The 120px accounts for typical sticky input height + some padding
+    const scrollTop = scrollableParent.scrollTop + targetRect.bottom - scrollableRect.bottom + 120;
+
+    scrollableParent.scrollTo({
+      top: scrollTop,
+      behavior: behavior,
+    });
+  };
+
   // Auto-scroll to bottom, with different behavior for initial load vs. updates
   useEffect(() => {
     const currentBatches = currentGenerationBatches || [];
@@ -30,17 +52,14 @@ const GenerationFeed = memo(() => {
 
     if (isInitialLoadRef.current) {
       // On initial load, scroll instantly to the end.
-      containerRef.current?.scrollIntoView({ behavior: 'auto', block: 'end' });
+      scrollToBottom('auto');
       isInitialLoadRef.current = false;
     } else if (currentBatchesCount > prevBatchesCount) {
       // For subsequent updates where a batch was ADDED, scroll smoothly.
       enableAnimations(false);
       // Wait for React to re-render without animations.
       const timer = setTimeout(() => {
-        containerRef.current?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'end',
-        });
+        scrollToBottom('smooth');
         // Re-enable animations for future interactions like deleting items.
         enableAnimations(true);
       }, 50); // A small delay is enough.
@@ -57,13 +76,15 @@ const GenerationFeed = memo(() => {
   }
 
   return (
-    <Flexbox gap={16} ref={parent} width="100%">
-      {currentGenerationBatches.map((batch) => (
-        <GenerationBatchItem batch={batch} key={batch.id} />
-      ))}
+    <>
+      <Flexbox flex={1} gap={16} ref={parent} width="100%">
+        {currentGenerationBatches.map((batch) => (
+          <GenerationBatchItem batch={batch} key={batch.id} />
+        ))}
+      </Flexbox>
       {/* Invisible element for scroll target */}
       <div ref={containerRef} style={{ height: 1 }} />
-    </Flexbox>
+    </>
   );
 });
 

@@ -28,18 +28,12 @@ const ImageWorkspaceContent = () => {
     <>
       {/* 生成结果展示区 */}
       <GenerationFeed key={activeTopicId} />
-      <div
-        style={{
-          flex: 1,
-          minHeight: 100,
-        }}
-      />
 
       {/* 底部输入框 */}
       <Center
         style={{
           position: 'sticky',
-          bottom: 16,
+          bottom: 24,
           width: '100%',
         }}
       >
