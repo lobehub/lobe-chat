@@ -2,7 +2,6 @@
 import { PluginErrorType } from '@lobehub/chat-plugin-sdk';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
-import { Md5 } from 'ts-md5';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT } from '@/const/message';
@@ -25,6 +24,7 @@ import {
 import { merge } from '@/utils/merge';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 import { setNamespace } from '@/utils/storeDebug';
+import { genToolCallShortMD5Hash } from '@/utils/toolCall';
 
 import { chatSelectors } from '../message/selectors';
 import { threadSelectors } from '../thread/selectors';
@@ -515,7 +515,7 @@ export const chatPlugin: StateCreator<
           const md5 = apiName.replace(PLUGIN_SCHEMA_API_MD5_PREFIX, '');
           const manifest = pluginSelectors.getToolManifestById(identifier)(useToolStore.getState());
 
-          const api = manifest?.api.find((api) => Md5.hashStr(api.name).toString() === md5);
+          const api = manifest?.api.find((api) => genToolCallShortMD5Hash(api.name) === md5);
           if (api) {
             payload.apiName = api.name;
           }

@@ -182,6 +182,7 @@ describe('pluginSelectors', () => {
         identifier: p.identifier,
         meta: pluginSelectors.getPluginMetaById(p.identifier)(mockState),
         type: p.type,
+        ...pluginSelectors.getPluginMetaById(p.identifier)(mockState),
       }));
       expect(result).toEqual(expectedMetaList);
     });

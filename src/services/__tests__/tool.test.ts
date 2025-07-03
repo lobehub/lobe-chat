@@ -18,7 +18,7 @@ vi.mock('@/store/global/helpers', () => ({
 vi.mock('@/libs/trpc/client', () => ({
   edgeClient: {
     market: {
-      getPluginIndex: {
+      getLegacyPluginList: {
         query: vi.fn(),
       },
     },

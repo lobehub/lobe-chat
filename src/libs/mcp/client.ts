@@ -177,9 +177,13 @@ export class MCPClient {
       }
 
       default: {
-        const err = createMCPError('VALIDATION_ERROR', 'Unsupported MCP connection type', {
-          params: { type: (params as any).type },
-        });
+        const err = createMCPError(
+          'VALIDATION_ERROR',
+          `Unsupported MCP connection type: ${(params as any).type}`,
+          {
+            params: { type: (params as any).type },
+          },
+        );
         log('Error creating client: %O', err);
         throw err;
       }
