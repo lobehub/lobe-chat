@@ -12,16 +12,18 @@ import { pluginStoreSelectors } from '@/store/tool/selectors';
 import { DiscoverPluginItem, PluginListResponse, PluginQueryParams } from '@/types/discover';
 import { LobeTool } from '@/types/tool';
 import { PluginInstallError } from '@/types/tool/plugin';
+import { sleep } from '@/utils/sleep';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { ToolStore } from '../../store';
-import { PluginStoreState } from './initialState';
+import { PluginInstallProgress, PluginInstallStep, PluginStoreState } from './initialState';
 
 const n = setNamespace('pluginStore');
 
 const INSTALLED_PLUGINS = 'loadInstalledPlugins';
 
 export interface PluginStoreAction {
+  installOldPlugin: (identifier: string, source?: 'plugin' | 'customPlugin') => Promise<void>;
   installPlugin: (identifier: string, source?: 'plugin' | 'customPlugin') => Promise<void>;
   installPlugins: (plugins: string[]) => Promise<void>;
   loadMorePlugins: () => void;
@@ -31,6 +33,10 @@ export interface PluginStoreAction {
   resetPluginList: (keywords?: string) => void;
   uninstallPlugin: (identifier: string) => Promise<void>;
   updateInstallLoadingState: (key: string, value: boolean | undefined) => void;
+  updatePluginInstallProgress: (
+    identifier: string,
+    progress: PluginInstallProgress | undefined,
+  ) => void;
 
   useFetchInstalledPlugins: (enabled: boolean) => SWRResponse<LobeTool[]>;
   useFetchPluginList: (params: PluginQueryParams) => SWRResponse<PluginListResponse>;
@@ -43,6 +49,70 @@ export const createPluginStoreSlice: StateCreator<
   [],
   PluginStoreAction
 > = (set, get) => ({
+  installOldPlugin: async (name, type = 'plugin') => {
+    const plugin = pluginStoreSelectors.getPluginById(name)(get());
+    if (!plugin) return;
+
+    const { updateInstallLoadingState, refreshPlugins, updatePluginInstallProgress } = get();
+
+    try {
+      // 开始安装流程
+      updateInstallLoadingState(name, true);
+
+      // 步骤 1: 获取插件清单
+      updatePluginInstallProgress(name, {
+        progress: 25,
+        step: PluginInstallStep.FETCHING_MANIFEST,
+      });
+
+      const data = await toolService.getToolManifest(plugin.manifest);
+
+      // 步骤 2: 安装插件
+      updatePluginInstallProgress(name, {
+        progress: 60,
+        step: PluginInstallStep.INSTALLING_PLUGIN,
+      });
+
+      await pluginService.installPlugin({ identifier: plugin.identifier, manifest: data, type });
+
+      updatePluginInstallProgress(name, {
+        progress: 85,
+        step: PluginInstallStep.INSTALLING_PLUGIN,
+      });
+
+      await refreshPlugins();
+
+      // 步骤 4: 完成安装
+      updatePluginInstallProgress(name, {
+        progress: 100,
+        step: PluginInstallStep.COMPLETED,
+      });
+
+      // 短暂显示完成状态后清除进度
+      await sleep(1000);
+
+      updatePluginInstallProgress(name, undefined);
+      updateInstallLoadingState(name, undefined);
+    } catch (error) {
+      console.error(error);
+
+      const err = error as PluginInstallError;
+
+      // 设置错误状态
+      updatePluginInstallProgress(name, {
+        error: err.message,
+        progress: 0,
+        step: PluginInstallStep.ERROR,
+      });
+
+      updateInstallLoadingState(name, undefined);
+
+      notification.error({
+        description: t(`error.${err.message}`, { ns: 'plugin' }),
+        message: t('error.installError', { name: plugin.title, ns: 'plugin' }),
+      });
+    }
+  },
   installPlugin: async (name, type = 'plugin') => {
     const plugin = pluginStoreSelectors.getPluginById(name)(get());
     if (!plugin) return;
@@ -52,16 +122,16 @@ export const createPluginStoreSlice: StateCreator<
       updateInstallLoadingState(name, true);
       const data = await toolService.getToolManifest(plugin.manifest);
 
-      // 4. 存储 manifest 信息
       await pluginService.installPlugin({ identifier: plugin.identifier, manifest: data, type });
       await refreshPlugins();
 
       updateInstallLoadingState(name, undefined);
     } catch (error) {
       console.error(error);
-      updateInstallLoadingState(name, undefined);
 
       const err = error as PluginInstallError;
+
+      updateInstallLoadingState(name, undefined);
 
       notification.error({
         description: t(`error.${err.message}`, { ns: 'plugin' }),
@@ -128,6 +198,15 @@ export const createPluginStoreSlice: StateCreator<
       }),
       false,
       n('updateInstallLoadingState'),
+    );
+  },
+  updatePluginInstallProgress: (identifier, progress) => {
+    set(
+      produce((draft: PluginStoreState) => {
+        draft.pluginInstallProgress[identifier] = progress;
+      }),
+      false,
+      n(`updatePluginInstallProgress/${progress?.step || 'clear'}`),
     );
   },
 
