@@ -1844,6 +1844,9 @@
   "moonshot-v1-auto": {
     "description": "Moonshot V1 Auto peut choisir le modèle approprié en fonction du nombre de tokens utilisés dans le contexte actuel."
   },
+  "moonshotai/Kimi-Dev-72B": {
+    "description": "Kimi-Dev-72B est un grand modèle de code open source, optimisé par un apprentissage par renforcement à grande échelle, capable de générer des correctifs robustes et directement exploitables en production. Ce modèle a atteint un nouveau score record de 60,4 % sur SWE-bench Verified, établissant un nouveau standard pour les modèles open source dans les tâches d'ingénierie logicielle automatisée telles que la correction de bugs et la revue de code."
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B est une version améliorée de Nous Hermes 2, intégrant les derniers ensembles de données développés en interne."
   },
@@ -1871,6 +1874,9 @@
   "o3": {
     "description": "o3 est un modèle polyvalent et puissant, performant dans de nombreux domaines. Il établit de nouvelles normes pour les tâches de mathématiques, de sciences, de programmation et de raisonnement visuel. Il excelle également dans la rédaction technique et le respect des instructions. Les utilisateurs peuvent l'utiliser pour analyser des textes, du code et des images, et résoudre des problèmes complexes en plusieurs étapes."
   },
+  "o3-deep-research": {
+    "description": "o3-deep-research est notre modèle de recherche approfondie le plus avancé, conçu spécialement pour gérer des tâches de recherche complexes en plusieurs étapes. Il peut rechercher et synthétiser des informations sur Internet, ainsi qu'accéder et exploiter vos propres données via le connecteur MCP."
+  },
   "o3-mini": {
     "description": "o3-mini est notre dernier modèle d'inférence compact, offrant une grande intelligence avec les mêmes objectifs de coût et de latence que o1-mini."
   },
@@ -1879,6 +1885,9 @@
   },
   "o4-mini": {
     "description": "o4-mini est notre dernier modèle de la série o de petite taille. Il est optimisé pour une inférence rapide et efficace, offrant une grande efficacité et performance dans les tâches de codage et visuelles."
+  },
+  "o4-mini-deep-research": {
+    "description": "o4-mini-deep-research est notre modèle de recherche approfondie plus rapide et plus abordable — idéal pour traiter des tâches de recherche complexes en plusieurs étapes. Il peut rechercher et synthétiser des informations sur Internet, ainsi qu'accéder et exploiter vos propres données via le connecteur MCP."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba est un modèle de langage Mamba 2 axé sur la génération de code, offrant un soutien puissant pour des tâches avancées de codage et de raisonnement."
@@ -2275,6 +2284,9 @@
   },
   "taichu_vl": {
     "description": "Intègre des capacités de compréhension d'image, de transfert de connaissances et de raisonnement logique, se distinguant dans le domaine des questions-réponses textuelles et visuelles."
+  },
+  "tencent/Hunyuan-A13B-Instruct": {
+    "description": "Hunyuan-A13B-Instruct compte 80 milliards de paramètres, avec seulement 13 milliards activés pour rivaliser avec des modèles plus grands, supportant un raisonnement hybride « pensée rapide/pensée lente » ; compréhension stable des textes longs ; validé par BFCL-v3 et τ-Bench, ses capacités d’agent sont en avance ; combinant GQA et plusieurs formats de quantification, il réalise un raisonnement efficace."
   },
   "text-embedding-3-large": {
     "description": "Le modèle de vectorisation le plus puissant, adapté aux tâches en anglais et non-anglais."

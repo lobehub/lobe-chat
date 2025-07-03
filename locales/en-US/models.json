@@ -1844,6 +1844,9 @@
   "moonshot-v1-auto": {
     "description": "Moonshot V1 Auto can select the appropriate model based on the number of tokens used in the current context."
   },
+  "moonshotai/Kimi-Dev-72B": {
+    "description": "Kimi-Dev-72B is an open-source large code model optimized through extensive reinforcement learning, capable of producing robust, production-ready patches. This model achieved a new high score of 60.4% on SWE-bench Verified, setting a record for open-source models in automated software engineering tasks such as defect repair and code review."
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B is an upgraded version of Nous Hermes 2, featuring the latest internally developed datasets."
   },
@@ -1871,6 +1874,9 @@
   "o3": {
     "description": "o3 is a versatile and powerful model that excels across multiple domains. It sets new benchmarks for tasks in mathematics, science, programming, and visual reasoning. It is also skilled in technical writing and instruction following, allowing users to analyze text, code, and images to solve complex multi-step problems."
   },
+  "o3-deep-research": {
+    "description": "o3-deep-research is our most advanced deep research model, specifically designed to handle complex multi-step research tasks. It can search and synthesize information from the internet, as well as access and utilize your proprietary data through the MCP connector."
+  },
   "o3-mini": {
     "description": "o3-mini is our latest small inference model that delivers high intelligence while maintaining the same cost and latency targets as o1-mini."
   },
@@ -1879,6 +1885,9 @@
   },
   "o4-mini": {
     "description": "o4-mini is our latest small model in the o series. It is optimized for fast and efficient inference, demonstrating high efficiency and performance in coding and visual tasks."
+  },
+  "o4-mini-deep-research": {
+    "description": "o4-mini-deep-research is our faster and more affordable deep research model—ideal for tackling complex multi-step research tasks. It can search and synthesize information from the internet, as well as access and utilize your proprietary data through the MCP connector."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba is a language model focused on code generation, providing strong support for advanced coding and reasoning tasks."
@@ -2275,6 +2284,9 @@
   },
   "taichu_vl": {
     "description": "Integrates capabilities in image understanding, knowledge transfer, and logical attribution, excelling in the field of image-text question answering."
+  },
+  "tencent/Hunyuan-A13B-Instruct": {
+    "description": "Hunyuan-A13B-Instruct has 80 billion parameters, with 13 billion activated parameters matching the performance of larger models. It supports hybrid reasoning with 'fast thinking/slow thinking'; offers stable long-text comprehension; validated by BFCL-v3 and τ-Bench, demonstrating leading agent capabilities; integrates GQA and multiple quantization formats for efficient inference."
   },
   "text-embedding-3-large": {
     "description": "The most powerful vectorization model, suitable for both English and non-English tasks."
