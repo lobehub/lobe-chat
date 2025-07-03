@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-03",
+    "version": "1.96.16"
+  },
+  {
+    "children": {
       "fixes": ["Wrong Gemini 2.5 Pro thinkbudget."]
     },
     "date": "2025-07-02",
