@@ -1,10 +1,12 @@
 import { sha256 } from 'js-sha256';
 
+import { DocumentModel } from '@/database/models/document';
 import { FileModel } from '@/database/models/file';
 import { FileItem } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
 import { S3 } from '@/server/modules/S3';
+import { DocumentService } from '@/server/services/document';
 import { FileService as CoreFileService } from '@/server/services/file';
 import { FileMetadata } from '@/types/files';
 import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
@@ -18,6 +20,8 @@ import {
   FileDetailResponse,
   FileListQuery,
   FileListResponse,
+  FileParseRequest,
+  FileParseResponse,
   FileUploadRequest,
   FileUploadResponse,
   FileUrlRequest,
@@ -35,13 +39,17 @@ import {
  */
 export class FileUploadService extends BaseService {
   private fileModel: FileModel;
+  private documentModel: DocumentModel;
   private coreFileService: CoreFileService;
+  private documentService: DocumentService;
   private s3Service: S3;
 
   constructor(db: LobeChatDatabase, userId: string) {
     super(db, userId);
     this.fileModel = new FileModel(db, userId);
+    this.documentModel = new DocumentModel(db, userId);
     this.coreFileService = new CoreFileService(db, userId!);
+    this.documentService = new DocumentService(db, userId);
     this.s3Service = new S3();
   }
 
@@ -480,6 +488,119 @@ export class FileUploadService extends BaseService {
       };
     } catch (error) {
       this.log('error', 'Get permanent file URL failed', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 解析文件内容
+   */
+  async parseFile(
+    fileId: string,
+    options: Partial<FileParseRequest> = {},
+  ): Promise<FileParseResponse> {
+    try {
+      if (!this.userId) {
+        throw this.createAuthError('User authentication required');
+      }
+
+      // 1. 获取文件信息
+      const file = await this.fileModel.findById(fileId);
+      if (!file) {
+        throw this.createCommonError('File not found');
+      }
+
+      // 2. 检查权限
+      if (file.userId !== this.userId) {
+        throw this.createAuthorizationError('Access denied');
+      }
+
+      // 3. 检查文件类型是否支持解析
+      if (isChunkingUnsupported(file.fileType)) {
+        throw this.createBusinessError(
+          `File type '${file.fileType}' does not support content parsing`,
+        );
+      }
+
+      // 4. 检查是否已经解析过（如果不跳过已存在的）
+      if (!options.skipExist) {
+        const existingDocument = await this.documentModel.findByFileId(fileId);
+        if (existingDocument) {
+          this.log('info', 'File already parsed, returning existing result', { fileId });
+
+          return {
+            content: existingDocument.content as string,
+            fileId,
+            fileType: file.fileType,
+            filename: file.name,
+            metadata: {
+              pages: existingDocument.pages?.length || 0,
+              title: existingDocument.title || undefined,
+              totalCharCount: existingDocument.totalCharCount || undefined,
+              totalLineCount: existingDocument.totalLineCount || undefined,
+            },
+            parseStatus: 'completed',
+            parsedAt: existingDocument.createdAt.toISOString(),
+          };
+        }
+      }
+
+      this.log('info', 'Starting file parsing', {
+        fileId,
+        fileType: file.fileType,
+        filename: file.name,
+        skipExist: options.skipExist,
+      });
+
+      try {
+        // 5. 使用 DocumentService 解析文件
+        const document = await this.documentService.parseFile(fileId);
+
+        this.log('info', 'File parsed successfully', {
+          contentLength: document.content?.length || 0,
+          fileId,
+          pages: document.pages,
+          totalCharCount: document.totalCharCount,
+        });
+
+        // 6. 返回解析结果
+        return {
+          content: document.content || '',
+          fileId,
+          fileType: file.fileType,
+          filename: file.name,
+          metadata: {
+            pages: document.pages?.length || 0,
+            title: document.title || undefined,
+            totalCharCount: document.totalCharCount || undefined,
+            totalLineCount: document.totalLineCount || undefined,
+          },
+          parseStatus: 'completed',
+          parsedAt: new Date().toISOString(),
+        };
+      } catch (parseError) {
+        const errorMessage =
+          parseError instanceof Error ? parseError.message : 'Unknown parsing error';
+
+        this.log('error', 'File parsing failed', {
+          error: errorMessage,
+          fileId,
+          filename: file.name,
+        });
+
+        // 返回失败结果
+        return {
+          content: '',
+          error: errorMessage,
+          fileId,
+          fileType: file.fileType,
+          filename: file.name,
+          parseStatus: 'failed',
+          parsedAt: new Date().toISOString(),
+        };
+      }
+    } catch (error) {
+      this.log('error', 'Parse file request failed', error);
       throw error;
     }
   }
