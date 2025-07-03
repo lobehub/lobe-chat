@@ -46,6 +46,7 @@ export interface InstallPluginMeta extends Partial<Meta> {
   createdAt?: string;
   homepage?: string;
   identifier: string;
+  runtimeType?: 'mcp' | 'default' | 'markdown' | 'standalone' | undefined;
   type: LobeToolType;
 }
 

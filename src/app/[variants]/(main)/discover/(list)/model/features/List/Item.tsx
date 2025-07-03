@@ -16,7 +16,7 @@ import urlJoin from 'url-join';
 import { ModelInfoTags } from '@/components/ModelSelect';
 import { DiscoverModelItem } from '@/types/discover';
 
-import PublishedTime from '../../../../features/PublishedTime';
+import PublishedTime from '../../../../../../../../components/PublishedTime';
 import ModelTypeIcon from './ModelTypeIcon';
 
 const useStyles = createStyles(({ css, token }) => {

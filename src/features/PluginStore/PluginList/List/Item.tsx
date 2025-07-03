@@ -3,6 +3,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import PluginAvatar from '@/components/Plugins/PluginAvatar';
+import PluginTag from '@/components/Plugins/PluginTag';
 import { DiscoverPluginItem } from '@/types/discover';
 import { LobeToolType } from '@/types/tool/tool';
 
@@ -14,7 +15,7 @@ interface PluginItemProps extends DiscoverPluginItem {
   type?: LobeToolType;
 }
 const Item = memo<PluginItemProps>(
-  ({ title, description, avatar, onClick, active, identifier }) => {
+  ({ title, description, avatar, onClick, active, identifier, author }) => {
     return (
       <Block
         align={'center'}
@@ -37,9 +38,12 @@ const Item = memo<PluginItemProps>(
         >
           <PluginAvatar avatar={avatar} />
           <Flexbox flex={1} gap={4} style={{ overflow: 'hidden', position: 'relative' }}>
-            <Text ellipsis strong>
-              {title}
-            </Text>
+            <Flexbox align={'center'} gap={4} horizontal>
+              <Text ellipsis strong>
+                {title}
+              </Text>
+              <PluginTag author={author} type={'plugin'} />
+            </Flexbox>
             <Text ellipsis fontSize={12} type={'secondary'}>
               {description}
             </Text>

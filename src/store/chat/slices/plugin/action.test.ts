@@ -9,7 +9,6 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { useChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { useToolStore } from '@/store/tool';
-import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage, ChatToolPayload, MessageToolCall } from '@/types/message';
 import { genToolCallShortMD5Hash } from '@/utils/toolCall';
 

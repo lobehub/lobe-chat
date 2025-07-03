@@ -1,4 +1,3 @@
-import { LobeChatPluginMeta } from '@lobehub/chat-plugin-sdk';
 import { t } from 'i18next';
 import { produce } from 'immer';
 import { uniqBy } from 'lodash-es';
@@ -10,7 +9,7 @@ import { pluginService } from '@/services/plugin';
 import { toolService } from '@/services/tool';
 import { globalHelpers } from '@/store/global/helpers';
 import { pluginStoreSelectors } from '@/store/tool/selectors';
-import { PluginListResponse, PluginQueryParams } from '@/types/discover';
+import { DiscoverPluginItem, PluginListResponse, PluginQueryParams } from '@/types/discover';
 import { LobeTool } from '@/types/tool';
 import { PluginInstallError } from '@/types/tool/plugin';
 import { setNamespace } from '@/utils/storeDebug';
@@ -26,7 +25,7 @@ export interface PluginStoreAction {
   installPlugin: (identifier: string, source?: 'plugin' | 'customPlugin') => Promise<void>;
   installPlugins: (plugins: string[]) => Promise<void>;
   loadMorePlugins: () => void;
-  loadPluginStore: () => Promise<LobeChatPluginMeta[]>;
+  loadPluginStore: () => Promise<DiscoverPluginItem[]>;
   refreshPlugins: () => Promise<void>;
 
   resetPluginList: (keywords?: string) => void;
@@ -35,7 +34,7 @@ export interface PluginStoreAction {
 
   useFetchInstalledPlugins: (enabled: boolean) => SWRResponse<LobeTool[]>;
   useFetchPluginList: (params: PluginQueryParams) => SWRResponse<PluginListResponse>;
-  useFetchPluginStore: () => SWRResponse<LobeChatPluginMeta[]>;
+  useFetchPluginStore: () => SWRResponse<DiscoverPluginItem[]>;
 }
 
 export const createPluginStoreSlice: StateCreator<
@@ -63,9 +62,10 @@ export const createPluginStoreSlice: StateCreator<
       updateInstallLoadingState(name, undefined);
 
       const err = error as PluginInstallError;
+
       notification.error({
         description: t(`error.${err.message}`, { ns: 'plugin' }),
-        message: t('error.installError', { name: plugin.meta.title, ns: 'plugin' }),
+        message: t('error.installError', { name: plugin.title, ns: 'plugin' }),
       });
     }
   },
@@ -75,10 +75,10 @@ export const createPluginStoreSlice: StateCreator<
     await Promise.all(plugins.map((identifier) => installPlugin(identifier)));
   },
   loadMorePlugins: () => {
-    const { pluginItems, pluginTotalCount, currentPluginPage } = get();
+    const { oldPluginItems, pluginTotalCount, currentPluginPage } = get();
 
     // 检查是否还有更多数据可以加载
-    if (pluginItems.length < (pluginTotalCount || 0)) {
+    if (oldPluginItems.length < (pluginTotalCount || 0)) {
       set(
         produce((draft: PluginStoreState) => {
           draft.currentPluginPage = currentPluginPage + 1;
@@ -89,11 +89,19 @@ export const createPluginStoreSlice: StateCreator<
     }
   },
   loadPluginStore: async () => {
-    const pluginMarketIndex = await toolService.getToolList();
+    const locale = globalHelpers.getCurrentLanguage();
 
-    set({ pluginStoreList: pluginMarketIndex || [] }, false, n('loadPluginList'));
+    // 使用 edgeClient 调用 market API
+    const { edgeClient } = await import('@/libs/trpc/client');
+    const data = await edgeClient.market.getPluginList.query({
+      locale,
+      page: 1,
+      pageSize: 50,
+    });
 
-    return pluginMarketIndex;
+    set({ oldPluginItems: data.items }, false, n('loadPluginList'));
+
+    return data.items;
   },
   refreshPlugins: async () => {
     await mutate(INSTALLED_PLUGINS);
@@ -101,7 +109,7 @@ export const createPluginStoreSlice: StateCreator<
   resetPluginList: (keywords) => {
     set(
       produce((draft: PluginStoreState) => {
-        draft.pluginItems = [];
+        draft.oldPluginItems = [];
         draft.currentPluginPage = 1;
         draft.pluginSearchKeywords = keywords;
       }),
@@ -167,10 +175,13 @@ export const createPluginStoreSlice: StateCreator<
               // 累积数据逻辑
               if (params.page === 1) {
                 // 第一页，直接设置
-                draft.pluginItems = uniqBy(data.items, 'identifier');
+                draft.oldPluginItems = uniqBy(data.items, 'identifier');
               } else {
                 // 后续页面，累积数据
-                draft.pluginItems = uniqBy([...draft.pluginItems, ...data.items], 'identifier');
+                draft.oldPluginItems = uniqBy(
+                  [...draft.oldPluginItems, ...data.items],
+                  'identifier',
+                );
               }
             }),
             false,
@@ -182,7 +193,7 @@ export const createPluginStoreSlice: StateCreator<
     );
   },
   useFetchPluginStore: () =>
-    useSWR<LobeChatPluginMeta[]>('loadPluginStore', get().loadPluginStore, {
+    useSWR<DiscoverPluginItem[]>('loadPluginStore', get().loadPluginStore, {
       fallbackData: [],
       revalidateOnFocus: false,
       suspense: true,

@@ -1,51 +1,49 @@
 import { Icon } from '@lobehub/ui';
 import { Empty } from 'antd';
-import { uniqBy } from 'lodash-es';
 import { ServerCrash } from 'lucide-react';
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
 
-import { useDiscoverStore } from '@/store/discover';
-import { DiscoverPluginItem } from '@/types/discover';
+import { useToolStore } from '@/store/tool';
 
+import SearchLoading from '../../Loading';
 import VirtuosoLoading from '../../VirtuosoLoading';
 import Item from './Item';
 
-export const List = memo<{
-  identifier?: string;
-  keywords?: string;
-  setIdentifier?: (identifier?: string) => void;
-}>(({ keywords, identifier, setIdentifier }) => {
+export const List = memo(() => {
   const { t } = useTranslation('plugin');
-  const [page, setPage] = useState(1);
-  const [allItems, setAllItems] = useState<DiscoverPluginItem[]>([]);
-  const pageSize = 20;
 
-  const usePluginList = useDiscoverStore((s) => s.usePluginList);
+  const [
+    isPluginListInit,
+    identifier,
+    allItems,
+    totalCount,
+    currentPage,
+    keywords,
+    searchLoading,
+    useFetchPluginList,
+    loadMorePlugins,
+  ] = useToolStore((s) => [
+    s.isPluginListInit,
+    s.activePluginIdentifier,
+    s.oldPluginItems,
+    s.pluginTotalCount,
+    s.currentPluginPage,
+    s.pluginSearchKeywords,
+    s.pluginSearchLoading,
+    s.useFetchPluginList,
+    s.loadMorePlugins,
+  ]);
 
-  const { data, isLoading, error } = usePluginList({ page, pageSize, q: keywords });
+  const { isLoading, error } = useFetchPluginList({
+    page: currentPage,
+    pageSize: 20,
+    q: keywords,
+  });
 
-  useEffect(() => {
-    setAllItems([]);
-    setPage(1);
-  }, [keywords]);
-
-  // 当新数据加载完成时，更新累积列表
-  useEffect(() => {
-    if (data?.items) {
-      if (page === 1) {
-        setAllItems(uniqBy(data.items, 'identifier'));
-      } else {
-        setAllItems((prev) => uniqBy([...prev, ...data.items], 'identifier'));
-      }
-    }
-  }, [data?.items, page]);
-
-  const loadMore = useCallback(() => {
-    if (data && allItems.length < data.totalCount) setPage((prev) => prev + 1);
-  }, [data, allItems.length]);
+  if (searchLoading || !isPluginListInit) return <SearchLoading />;
 
   if (error)
     return (
@@ -70,24 +68,22 @@ export const List = memo<{
         Footer: isLoading ? VirtuosoLoading : undefined,
       }}
       data={allItems}
-      endReached={loadMore}
-      itemContent={(_, item) => {
-        return (
-          <Flexbox
-            key={item.identifier}
-            onClick={() => {
-              setIdentifier?.(item.identifier);
-            }}
-            paddingBlock={2}
-            paddingInline={4}
-          >
-            <Item active={identifier === item.identifier} {...item} />
-          </Flexbox>
-        );
-      }}
+      endReached={loadMorePlugins}
+      itemContent={(_, item) => (
+        <Flexbox
+          key={item.identifier}
+          onClick={() => {
+            useToolStore.setState({ activePluginIdentifier: item.identifier });
+          }}
+          paddingBlock={2}
+          paddingInline={4}
+        >
+          <Item active={identifier === item.identifier} {...item} />
+        </Flexbox>
+      )}
       overscan={400}
       style={{ height: '100%', width: '100%' }}
-      totalCount={data?.totalCount || 0}
+      totalCount={totalCount || 0}
     />
   );
 });

@@ -15,9 +15,9 @@ import urlJoin from 'url-join';
 import { DiscoverMcpItem } from '@/types/discover';
 
 import Scores from '../../../../(detail)/mcp/[...slugs]/features/Scores';
+import PublishedTime from '../../../../../../../../components/PublishedTime';
 import InstallationIcon from '../../../../features/InstallationIcon';
 import OfficialIcon from '../../../../features/OfficialIcon';
-import PublishedTime from '../../../../features/PublishedTime';
 import ConnectionTypeTag from './ConnectionTypeTag';
 import MetaInfo from './MetaInfo';
 

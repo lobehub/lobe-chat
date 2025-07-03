@@ -1,6 +1,6 @@
 import { MCP } from '@lobehub/icons';
-import { Dropdown, Icon } from '@lobehub/ui';
-import { Bot, Brain, BrainCircuit, House, Puzzle } from 'lucide-react';
+import { Icon } from '@lobehub/ui';
+import { Bot, Brain, BrainCircuit, House } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ReactNode, useMemo } from 'react';
@@ -51,43 +51,9 @@ export const useNav = () => {
         icon: <MCP className={'anticon'} size={ICON_SIZE} />,
         key: DiscoverTab.Mcp,
         label: (
-          <Dropdown
-            menu={{
-              items: [
-                {
-                  icon: <MCP className={'anticon'} size={ICON_SIZE} />,
-                  key: DiscoverTab.Mcp,
-                  label: (
-                    <Link
-                      href={urlJoin('/discover', DiscoverTab.Mcp)}
-                      onClick={(e) => e.stopPropagation()}
-                      style={{ color: 'inherit' }}
-                    >
-                      {'MCP Servers'}
-                    </Link>
-                  ),
-                },
-                {
-                  icon: <Icon icon={Puzzle} size={ICON_SIZE} />,
-                  key: DiscoverTab.Plugins,
-                  label: (
-                    <Link
-                      href={urlJoin('/discover', DiscoverTab.Plugins)}
-                      onClick={(e) => e.stopPropagation()}
-                      style={{ color: 'inherit' }}
-                    >
-                      {t('tab.plugin')}
-                    </Link>
-                  ),
-                },
-              ],
-            }}
-            placement={'bottom'}
-          >
-            <Link href={urlJoin('/discover', DiscoverTab.Mcp)} style={{ color: 'inherit' }}>
-              {`MCP ${t('tab.plugin')}`}
-            </Link>
-          </Dropdown>
+          <Link href={urlJoin('/discover', DiscoverTab.Mcp)} style={{ color: 'inherit' }}>
+            {`MCP ${t('tab.plugin')}`}
+          </Link>
         ),
       },
       {

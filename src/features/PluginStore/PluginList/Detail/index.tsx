@@ -1,27 +1,34 @@
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { DetailProvider } from '@/app/[variants]/(main)/discover/(detail)/plugin/[...slugs]/features/DetailProvider';
-import Nav from '@/app/[variants]/(main)/discover/(detail)/plugin/[...slugs]/features/Details/Nav';
-import Overview from '@/app/[variants]/(main)/discover/(detail)/plugin/[...slugs]/features/Details/Overview';
-import Header from '@/app/[variants]/(main)/discover/(detail)/plugin/[...slugs]/features/Header';
 import { useDiscoverStore } from '@/store/discover';
-import { PluginNavKey } from '@/types/discover';
+import { useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 
+import { DetailProvider } from './DetailProvider';
+import EmptyState from './EmptyState';
+import Header from './Header';
+import InstallDetail from './InstallDetail';
 import DetailsLoading from './Loading';
 
-const Detail = memo<{ identifier: string }>(({ identifier }) => {
-  const [activeTab, setActiveTab] = useState(PluginNavKey.Overview);
+const Detail = memo(() => {
+  const [identifier, isPluginListInit] = useToolStore((s) => [
+    s.activePluginIdentifier,
+    s.isPluginListInit,
+  ]);
+
+  const isPluginInstalled = useToolStore(pluginSelectors.isPluginInstalled(identifier!));
   const usePluginDetail = useDiscoverStore((s) => s.usePluginDetail);
+
   const { data, isLoading } = usePluginDetail({ identifier });
-  if (isLoading) return <DetailsLoading />;
+
+  if (!isPluginListInit || isLoading) return <DetailsLoading />;
 
   return (
     <DetailProvider config={data}>
       <Flexbox gap={16}>
         <Header inModal />
-        <Nav activeTab={activeTab as PluginNavKey} inModal setActiveTab={setActiveTab} />
-        <Flexbox gap={24}>{activeTab === PluginNavKey.Overview && <Overview />}</Flexbox>
+        {isPluginInstalled ? <InstallDetail /> : <EmptyState />}
       </Flexbox>
     </DetailProvider>
   );

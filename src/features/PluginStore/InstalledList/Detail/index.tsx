@@ -1,14 +1,18 @@
 import { memo } from 'react';
 
-import { LobeToolType } from '@/types/tool/tool';
-
 import McpDetail from '../../McpList/Detail';
 import PluginDetail from '../../PluginList/Detail';
 
-const Detail = memo<{ identifier: string; type?: LobeToolType }>(({ identifier, type }) => {
-  if (type === 'plugin') return <PluginDetail identifier={identifier} />;
-  if (type === 'customPlugin') return <div>TODO:customPlugin</div>;
-  return <McpDetail identifier={identifier} />;
+interface DetailProps {
+  identifier: string;
+  runtimeType?: 'mcp' | 'default';
+  type?: 'plugin' | 'customPlugin' | 'builtin';
+}
+
+const Detail = memo<DetailProps>(({ identifier, type, runtimeType }) => {
+  if (runtimeType === 'mcp') return <McpDetail identifier={identifier} />;
+
+  if (type === 'plugin') return <PluginDetail />;
 });
 
 export default Detail;

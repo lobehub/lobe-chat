@@ -15,7 +15,7 @@ import {
 export interface PluginAction {
   usePluginCategories: (params: CategoryListQuery) => SWRResponse<CategoryItem[]>;
   usePluginDetail: (params: {
-    identifier: string;
+    identifier?: string;
     withManifest?: boolean;
   }) => SWRResponse<DiscoverPluginDetail | undefined>;
   usePluginIdentifiers: () => SWRResponse<IdentifiersResponse>;
@@ -43,11 +43,14 @@ export const createPluginSlice: StateCreator<
     );
   },
 
-  usePluginDetail: (params) => {
+  usePluginDetail: ({ identifier, withManifest }) => {
     const locale = globalHelpers.getCurrentLanguage();
     return useSWR(
-      ['plugin-details', locale, ...Object.values(params)].filter(Boolean).join('-'),
-      async () => edgeClient.market.getPluginDetail.query({ ...params, locale }),
+      !identifier
+        ? null
+        : ['plugin-details', locale, identifier, withManifest].filter(Boolean).join('-'),
+      async () =>
+        edgeClient.market.getPluginDetail.query({ identifier: identifier!, locale, withManifest }),
       {
         revalidateOnFocus: false,
       },
