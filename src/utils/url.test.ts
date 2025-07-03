@@ -128,6 +128,11 @@ describe('inferContentTypeFromImageUrl', () => {
     expect(result).toBe('image/tiff');
   });
 
+  it('should handle TIF format', () => {
+    const result = inferContentTypeFromImageUrl('https://example.com/image.tif');
+    expect(result).toBe('image/tiff');
+  });
+
   it('should handle SVG format', () => {
     const result = inferContentTypeFromImageUrl('https://example.com/image.svg');
     expect(result).toBe('image/svg+xml');
@@ -213,6 +218,42 @@ describe('inferContentTypeFromImageUrl', () => {
     expect(() => {
       inferContentTypeFromImageUrl('https://example.com/path/.');
     }).toThrow('Invalid image url: https://example.com/path/.');
+  });
+
+  it('should handle malformed URLs that result in no valid extension', () => {
+    // These URLs will be processed by inferFileExtensionFromImageUrl and return empty string
+    const invalidUrls = [
+      'data:image/jpeg;base64,invalid', // No file extension in path
+      'javascript:alert("test")', // No file extension
+      'https://example.com/file', // No extension
+      'https://example.com/file.', // Dot without extension
+      'ftp://example.com/document.pdf', // Valid URL but non-image extension
+    ];
+
+    invalidUrls.forEach((url) => {
+      expect(() => {
+        inferContentTypeFromImageUrl(url);
+      }).toThrow(/Invalid image url:/);
+    });
+  });
+
+  it('should handle all supported image formats consistently', () => {
+    const testCases = [
+      { extension: 'jpg', expected: 'image/jpeg' },
+      { extension: 'jpeg', expected: 'image/jpeg' },
+      { extension: 'png', expected: 'image/png' },
+      { extension: 'webp', expected: 'image/webp' },
+      { extension: 'gif', expected: 'image/gif' },
+      { extension: 'bmp', expected: 'image/bmp' },
+      { extension: 'svg', expected: 'image/svg+xml' },
+      { extension: 'tiff', expected: 'image/tiff' },
+      { extension: 'tif', expected: 'image/tiff' },
+    ];
+
+    testCases.forEach(({ extension, expected }) => {
+      const result = inferContentTypeFromImageUrl(`https://example.com/image.${extension}`);
+      expect(result).toBe(expected);
+    });
   });
 });
 

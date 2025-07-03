@@ -66,29 +66,25 @@ export const pathString = (
  * ```
  */
 export const inferFileExtensionFromImageUrl = (url: string): string => {
-  try {
-    // Use a temporary base URL for proper URL parsing and formatting (handles relative paths)
-    const tempBase = 'https://a.com';
-    const urlObj = new URL(url, tempBase);
-    const pathname = urlObj.pathname;
+  // Use a temporary base URL for proper URL parsing and formatting (handles relative paths)
+  const tempBase = 'https://a.com';
+  const urlObj = new URL(url, tempBase);
+  const pathname = urlObj.pathname;
 
-    // Find the last dot in the pathname to get the file extension
-    const lastDotIndex = pathname.lastIndexOf('.');
-    if (lastDotIndex === -1) return ''; // No extension found, return empty string
+  // Find the last dot in the pathname to get the file extension
+  const lastDotIndex = pathname.lastIndexOf('.');
+  if (lastDotIndex === -1) return ''; // No extension found, return empty string
 
-    // Extract extension after the last dot and convert to lowercase
-    const extension = pathname.slice(Math.max(0, lastDotIndex + 1)).toLowerCase();
+  // Extract extension after the last dot and convert to lowercase
+  const extension = pathname.slice(Math.max(0, lastDotIndex + 1)).toLowerCase();
 
-    // Validate against common image extensions
-    const validImageExtensions = ['webp', 'jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'tiff', 'tif'];
-    if (validImageExtensions.includes(extension)) {
-      return extension;
-    }
-  } catch {
-    // URL parsing failed or any other error occurred, fall through to default
+  // Validate against common image extensions
+  const validImageExtensions = ['webp', 'jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'tiff', 'tif'];
+  if (validImageExtensions.includes(extension)) {
+    return extension;
   }
 
-  // Default fallback for invalid URLs or non-image extensions
+  // Default fallback for non-image extensions
   return '';
 };
 
@@ -111,33 +107,19 @@ export const inferFileExtensionFromImageUrl = (url: string): string => {
  * ```
  */
 export function inferContentTypeFromImageUrl(url: string) {
-  try {
-    // Get the file extension using the dedicated function
-    const extension = inferFileExtensionFromImageUrl(url);
+  // Get the file extension using the dedicated function
+  // inferFileExtensionFromImageUrl only returns valid image extensions or empty string
+  const extension = inferFileExtensionFromImageUrl(url);
 
-    // If no valid extension found, throw error
-    if (!extension) {
-      throw new Error(`Invalid image url: ${url}`);
-    }
-
-    // Get MIME type using the mime library
-    const mimeType = mime.getType(extension);
-    if (!mimeType) {
-      throw new Error(`Invalid image url: ${url}`);
-    }
-
-    // Verify that the MIME type is actually an image type
-    if (!mimeType.startsWith('image/')) {
-      throw new Error(`Invalid image url: ${url}`);
-    }
-
-    return mimeType;
-  } catch (error) {
-    // If it's already our custom error, re-throw it
-    if (error instanceof Error && error.message.includes('Invalid image url')) {
-      throw error;
-    }
-    // For any other error, throw with original URL
+  // If no valid extension found, throw error
+  if (!extension) {
     throw new Error(`Invalid image url: ${url}`);
   }
+
+  // Get MIME type using the mime library
+  // Since extension is guaranteed to be a valid image extension from the whitelist,
+  // mime.getType() will always return a valid image MIME type
+  const mimeType = mime.getType(extension);
+
+  return mimeType!; // Non-null assertion is safe due to whitelist validation
 }
