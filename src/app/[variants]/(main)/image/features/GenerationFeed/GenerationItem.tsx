@@ -14,7 +14,7 @@ import { useImageStore } from '@/store/image';
 import { imageGenerationConfigSelectors } from '@/store/image/slices/generationConfig/selectors';
 import { AsyncTaskStatus } from '@/types/asyncTask';
 import { Generation } from '@/types/generation';
-import { getFileExtensionFromUrl } from '@/utils/url';
+import { inferFileExtensionFromImageUrl } from '@/utils/url';
 
 import { ElapsedTime } from './ElapsedTime';
 import { calculateImageSize } from './utils';
@@ -167,7 +167,7 @@ export const GenerationItem = memo<GenerationItemProps>(({ generation, prompt })
       .trim();
 
     // Detect file extension from URL
-    const fileExtension = getFileExtensionFromUrl(generation.asset.url);
+    const fileExtension = inferFileExtensionFromImageUrl(generation.asset.url);
     const fileName = `${safePrompt}_${timestamp}.${fileExtension}`;
 
     await downloadImage(generation.asset.url, fileName);
