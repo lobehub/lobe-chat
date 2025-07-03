@@ -10,9 +10,9 @@ import {
 
 export class ModelController extends BaseController {
   /**
-   * 获取模型列表（按 provider 分组）
+   * 获取模型列表
    * GET /api/v1/models
-   * Query: { type?: string, enabled?: boolean, providerId?: string }
+   * Query: { type?: string, enabled?: boolean, provider?: string, groupedByProvider?: boolean }
    */
   async handleGetModels(c: Context) {
     try {
@@ -21,7 +21,8 @@ export class ModelController extends BaseController {
 
       const request: GetModelsRequest = {
         enabled: validatedQuery.enabled,
-        providerId: validatedQuery.providerId,
+        groupedByProvider: validatedQuery.groupedByProvider ?? true,
+        provider: validatedQuery.provider,
         type: validatedQuery.type,
       };
 
