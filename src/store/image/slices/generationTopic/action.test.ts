@@ -399,17 +399,23 @@ describe('GenerationTopicAction', () => {
 
       vi.mocked(generationTopicService.getAllGenerationTopics).mockResolvedValue(topics);
 
-      const { result } = renderHook(() => {
-        const store = useImageStore();
-        // Actually call the SWR hook to trigger the service call
-        const swrResult = store.useFetchGenerationTopics(true, true);
+      let hookResult: any;
 
-        // Simulate the SWR onSuccess callback behavior
-        React.useEffect(() => {
-          useImageStore.setState({ generationTopics: topics });
-        }, []);
+      await act(async () => {
+        const { result } = renderHook(() => {
+          const store = useImageStore();
+          // Actually call the SWR hook to trigger the service call
+          const swrResult = store.useFetchGenerationTopics(true, true);
 
-        return swrResult;
+          // Simulate the SWR onSuccess callback behavior
+          React.useEffect(() => {
+            useImageStore.setState({ generationTopics: topics });
+          }, []);
+
+          return swrResult;
+        });
+
+        hookResult = result;
       });
 
       // Wait for service to be called and state to be updated
