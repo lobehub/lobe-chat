@@ -348,45 +348,12 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      reasoning: true,
-    },
-    contextWindowTokens: 98_304,
-    description:
-      'DeepSeek-R1 是一款强化学习（RL）驱动的推理模型，解决了模型中的重复性和可读性问题。在 RL 之前，DeepSeek-R1 引入了冷启动数据，进一步优化了推理性能。它在数学、代码和推理任务中与 OpenAI-o1 表现相当，并且通过精心设计的训练方法，提升了整体效果。',
-    displayName: 'DeepSeek R1 0120 (Pro)',
-    id: 'Pro/deepseek-ai/DeepSeek-R1-0120',
-    pricing: {
-      currency: 'CNY',
-      input: 4,
-      output: 16,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
     },
     contextWindowTokens: 65_536,
     description:
       'DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。',
     displayName: 'DeepSeek V3 (Pro)',
     id: 'Pro/deepseek-ai/DeepSeek-V3',
-    pricing: {
-      currency: 'CNY',
-      input: 2,
-      output: 8,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 65_536,
-    description:
-      'DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。',
-    displayName: 'DeepSeek V3 1226 (Pro)',
-    id: 'Pro/deepseek-ai/DeepSeek-V3-1226',
     pricing: {
       currency: 'CNY',
       input: 2,
@@ -525,22 +492,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 1,
       output: 4,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 32_768,
-    description:
-      'QwQ-32B-Preview 是 Qwen 最新的实验性研究模型，专注于提升AI推理能力。通过探索语言混合、递归推理等复杂机制，主要优势包括强大的推理分析能力、数学和编程能力。与此同时，也存在语言切换问题、推理循环、安全性考虑、其他能力方面的差异。',
-    displayName: 'QwQ 32B Preview',
-    id: 'Qwen/QwQ-32B-Preview',
-    pricing: {
-      currency: 'CNY',
-      input: 1.26,
-      output: 1.26,
     },
     type: 'chat',
   },
