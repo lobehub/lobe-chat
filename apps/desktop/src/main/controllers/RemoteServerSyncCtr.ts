@@ -9,6 +9,7 @@ import { URL } from 'node:url';
 
 import { createLogger } from '@/utils/logger';
 
+import AuthCtr from './AuthCtr';
 import RemoteServerConfigCtr from './RemoteServerConfigCtr';
 import { ControllerModule, ipcClientEvent } from './index';
 
@@ -283,7 +284,7 @@ export default class RemoteServerSyncCtr extends ControllerModule {
   }
 
   /**
-   * Attempts to refresh the access token by calling the RemoteServerConfigCtr.
+   * Attempts to refresh the access token by calling the AuthCtr.
    * @returns Whether token refresh was successful
    */
   private async refreshTokenIfNeeded(callerLogPrefix: string = '[RefreshToken]'): Promise<boolean> {
@@ -292,8 +293,9 @@ export default class RemoteServerSyncCtr extends ControllerModule {
     logger.debug(`${logPrefix} Entered refreshTokenIfNeeded.`);
 
     try {
-      logger.info(`${logPrefix} Triggering refreshAccessToken in RemoteServerConfigCtr.`);
-      const result = await this.remoteServerConfigCtr.refreshAccessToken();
+      logger.info(`${logPrefix} Triggering refreshAccessToken in AuthCtr.`);
+      const authCtr = this.app.getController(AuthCtr);
+      const result = await authCtr.refreshAccessToken();
 
       if (result.success) {
         logger.info(`${logPrefix} refreshAccessToken call completed successfully.`);
