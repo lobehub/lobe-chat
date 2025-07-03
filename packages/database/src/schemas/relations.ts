@@ -4,6 +4,7 @@ import { pgTable, primaryKey, text, uuid, varchar } from 'drizzle-orm/pg-core';
 
 import { createdAt } from './_helpers';
 import { agents, agentsFiles, agentsKnowledgeBases } from './agent';
+import { aiModels, aiProviders } from './aiInfra';
 import { asyncTasks } from './asyncTask';
 import { chatGroups, chatGroupsAgents } from './chatGroup';
 import { documentChunks, documents } from './document';
@@ -341,5 +342,25 @@ export const messageTTSRelations = relations(messageTTS, ({ one }) => ({
   message: one(messages, {
     fields: [messageTTS.id],
     references: [messages.id],
+  }),
+}));
+
+// AI 基础设施关系定义
+export const aiProvidersRelations = relations(aiProviders, ({ many, one }) => ({
+  models: many(aiModels),
+  user: one(users, {
+    fields: [aiProviders.userId],
+    references: [users.id],
+  }),
+}));
+
+export const aiModelsRelations = relations(aiModels, ({ one }) => ({
+  provider: one(aiProviders, {
+    fields: [aiModels.providerId, aiModels.userId],
+    references: [aiProviders.id, aiProviders.userId],
+  }),
+  user: one(users, {
+    fields: [aiModels.userId],
+    references: [users.id],
   }),
 }));

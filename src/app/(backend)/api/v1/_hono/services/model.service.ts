@@ -1,8 +1,12 @@
-import { and, desc, eq, sql } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { agents, agentsToSessions, aiModels, aiProviders } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
+import { AIChatModelCard, AiModelSourceEnum, AiProviderModelListItem } from '@/types/aiModel';
+import { AiProviderListItem } from '@/types/aiProvider';
+import { mergeArrayById } from '@/utils/merge';
 
 import { BaseService } from '../common/base.service';
 import { ServiceResult } from '../types';
@@ -13,7 +17,6 @@ import {
   GetModelsRequest,
   GetModelsResponse,
   ModelConfigResponse,
-  ModelItem,
   ProviderWithModels,
 } from '../types/model.type';
 
@@ -28,6 +31,7 @@ export class ModelService extends BaseService {
 
   /**
    * 获取模型列表（按 provider 分组）
+   * 优先从已启用的提供商中获取内置模型配置，然后与数据库中的用户自定义配置合并
    * @param request 查询请求参数
    * @returns 按 provider 分组的模型列表
    */
@@ -38,133 +42,118 @@ export class ModelService extends BaseService {
     });
 
     try {
-      // 构建查询条件
-      const whereConditions = [eq(aiModels.userId, this.userId!)];
+      // 1. 获取已启用的提供商列表
+      const enabledProviders = await this.getEnabledProviders();
 
-      if (request.type) {
-        whereConditions.push(eq(aiModels.type, request.type));
-      }
-
-      if (typeof request.enabled === 'boolean') {
-        whereConditions.push(eq(aiModels.enabled, request.enabled));
-      }
-
-      if (request.providerId) {
-        whereConditions.push(eq(aiModels.providerId, request.providerId));
-      }
-
-      // 使用 JOIN 查询获取模型和对应的 provider 信息
-      const result = await this.db
-        .select({
-          modelAbilities: aiModels.abilities,
-
-          modelConfig: aiModels.config,
-
-          modelContextWindowTokens: aiModels.contextWindowTokens,
-
-          modelCreatedAt: aiModels.createdAt,
-
-          modelDisplayName: aiModels.displayName,
-
-          modelEnabled: aiModels.enabled,
-          // 模型字段
-          modelId: aiModels.id,
-          modelProviderId: aiModels.providerId,
-          modelSort: aiModels.sort,
-          modelSource: aiModels.source,
-          modelType: aiModels.type,
-          modelUpdatedAt: aiModels.updatedAt,
-
-          providerEnabled: aiProviders.enabled,
-          // Provider 字段
-          providerId: aiProviders.id,
-          providerName: aiProviders.name,
-          providerSort: aiProviders.sort,
-        })
-        .from(aiModels)
-        .leftJoin(
-          aiProviders,
-          and(eq(aiModels.providerId, aiProviders.id), eq(aiProviders.userId, this.userId!)),
-        )
-        .where(and(...whereConditions))
-        .orderBy(desc(aiProviders.sort), desc(aiModels.sort), aiModels.id);
-
-      // 获取总数量
-      const [countResult] = await this.db
-        .select({ count: sql<number>`count(*)` })
-        .from(aiModels)
-        .leftJoin(
-          aiProviders,
-          and(eq(aiModels.providerId, aiProviders.id), eq(aiProviders.userId, this.userId!)),
-        )
-        .where(and(...whereConditions));
-
-      const total = Number(countResult.count);
-
-      // 按 provider 分组处理数据
+      // 2. 按 provider 分组处理数据
       const providerMap = new Map<string, ProviderWithModels>();
+      let totalModels = 0;
 
-      for (const row of result) {
-        const providerId = row.providerId || row.modelProviderId || 'unknown';
+      // 3. 遍历每个已启用的提供商
+      for (const provider of enabledProviders) {
+        const providerId = provider.id;
 
-        // 创建模型项
-        const modelItem: ModelItem = {
-          abilities: row.modelAbilities as any,
-          config: row.modelConfig as any,
-          contextWindowTokens: row.modelContextWindowTokens || undefined,
-          createdAt: row.modelCreatedAt.toISOString(),
-          displayName: row.modelDisplayName || undefined,
-          enabled: row.modelEnabled || false,
-          id: row.modelId,
-          sort: row.modelSort || undefined,
-          source: (row.modelSource as any) || 'builtin',
-          type: row.modelType,
-          updatedAt: row.modelUpdatedAt.toISOString(),
-        };
+        // 3.1 获取该提供商的内置模型配置
+        const builtinModels = await this.fetchBuiltinModels(providerId);
 
-        // 如果 provider 不存在，创建新的
-        if (!providerMap.has(providerId)) {
+        // 3.2 获取数据库中该提供商的用户自定义模型配置
+        const userModels = await this.getUserModels(providerId);
+
+        // 3.3 合并内置配置和用户配置（用户配置优先）
+        const mergedModels = mergeArrayById(builtinModels, userModels);
+
+        // 3.4 根据请求参数过滤模型（排除provider过滤，在这里单独处理）
+        const filteredModels = this.filterModels(mergedModels, { ...request, provider: undefined });
+
+        if (filteredModels.length > 0) {
+          totalModels += filteredModels.length;
           providerMap.set(providerId, {
-            modelCount: 0,
-            models: [],
-            providerEnabled: row.providerEnabled || false,
-            providerId,
-            providerName: row.providerName || undefined,
-            providerSort: row.providerSort || undefined,
+            modelCount: filteredModels.length,
+            models: filteredModels as any[], // 临时类型转换
+            providerEnabled: provider.enabled,
+            providerId: provider.id,
+            providerName: provider.name,
+            providerSort: provider.sort,
           });
         }
-
-        // 添加模型到对应的 provider
-        const provider = providerMap.get(providerId)!;
-        provider.models.push(modelItem);
-        provider.modelCount = provider.models.length;
       }
 
-      // 转换为数组并排序
-      const providers = Array.from(providerMap.values()).sort((a, b) => {
-        // 先按 provider 启用状态排序（启用的在前）
-        if (a.providerEnabled !== b.providerEnabled) {
-          return a.providerEnabled ? -1 : 1;
+      // 4. 按请求参数过滤 provider
+      let finalProviderMap = providerMap;
+      if (request.provider) {
+        const filteredMap = new Map<string, ProviderWithModels>();
+        if (providerMap.has(request.provider)) {
+          filteredMap.set(request.provider, providerMap.get(request.provider)!);
+          totalModels = providerMap.get(request.provider)!.modelCount;
+        } else {
+          totalModels = 0;
         }
-        // 再按 provider sort 排序
-        const aSortValue = a.providerSort || 999;
-        const bSortValue = b.providerSort || 999;
-        return aSortValue - bSortValue;
-      });
+        finalProviderMap = filteredMap;
+      }
 
-      const response: GetModelsResponse = {
-        providers,
-        totalModels: total,
-        totalProviders: providers.length,
-      };
+      // 5. 根据 groupedByProvider 决定返回格式
+      if (request.groupedByProvider !== false) {
+        // 分组返回（默认行为）
+        const providers = Array.from(finalProviderMap.values()).sort((a, b) => {
+          // 先按 provider 启用状态排序（启用的在前）
+          if (a.providerEnabled !== b.providerEnabled) {
+            return a.providerEnabled ? -1 : 1;
+          }
 
-      this.log('info', '获取模型列表完成', {
-        totalModels: total,
-        totalProviders: providers.length,
-        type: request.type,
-      });
+          // 再按 provider sort 排序
+          const aSortValue = a.providerSort || 999;
+          const bSortValue = b.providerSort || 999;
+          return aSortValue - bSortValue;
+        });
 
-      return response;
+        const response: GetModelsResponse = {
+          providers,
+          totalModels,
+          totalProviders: providers.length,
+        };
+
+        this.log('info', '获取模型列表完成（分组模式）', {
+          totalModels,
+          totalProviders: providers.length,
+          type: request.type,
+        });
+
+        return response;
+      } else {
+        // 扁平化返回
+        const allModels = finalProviderMap.values().reduce((acc, provider) => {
+          const { providerId, providerName } = provider;
+
+          return acc.concat(
+            provider.models.map((model) => ({
+              ...model,
+              providerId,
+              providerName,
+            })),
+          );
+        }, [] as any[]);
+
+        // 按模型排序
+        allModels.sort((a, b) => {
+          const aSort = a.sort || 999;
+          const bSort = b.sort || 999;
+          return aSort - bSort;
+        });
+
+        const response: GetModelsResponse = {
+          models: allModels,
+          totalModels: allModels.length,
+          totalProviders: finalProviderMap.size,
+        };
+
+        this.log('info', '获取模型列表完成（扁平化模式）', {
+          totalModels: allModels.length,
+          totalProviders: finalProviderMap.size,
+          type: request.type,
+        });
+
+        return response;
+      }
     } catch (error) {
       this.log('error', '获取模型列表失败', { error, request });
       throw this.createCommonError('获取模型列表失败');
@@ -358,5 +347,130 @@ export class ModelService extends BaseService {
       source: (dbModel.source as any) || 'custom',
       type: dbModel.type as any,
     };
+  }
+
+  /**
+   * 获取已启用的提供商列表
+   */
+  private async getEnabledProviders(): Promise<AiProviderListItem[]> {
+    // 获取数据库中用户配置的提供商
+    const userProviders = await this.db
+      .select({
+        description: aiProviders.description,
+        enabled: aiProviders.enabled,
+        id: aiProviders.id,
+        logo: aiProviders.logo,
+        name: aiProviders.name,
+        sort: aiProviders.sort,
+        source: aiProviders.source,
+      })
+      .from(aiProviders)
+      .where(eq(aiProviders.userId, this.userId!))
+      .orderBy(aiProviders.sort, aiProviders.id);
+
+    // 创建基于 DEFAULT_MODEL_PROVIDER_LIST 的排序映射
+    const orderMap = new Map(DEFAULT_MODEL_PROVIDER_LIST.map((item, index) => [item.id, index]));
+
+    // 构建内置提供商列表
+    const builtinProviders = DEFAULT_MODEL_PROVIDER_LIST.map((item, index) => ({
+      description: item.description,
+      enabled: userProviders.some((provider) => provider.id === item.id && provider.enabled),
+      id: item.id,
+      logo: undefined, // ModelProviderCard 没有 logo 属性
+      name: item.name,
+      sort: index, // 使用索引作为排序
+      source: 'builtin' as const,
+    })) as AiProviderListItem[];
+
+    // 合并内置和用户配置的提供商
+    const userProvidersFormatted = userProviders.map((p) => ({
+      ...p,
+      description: p.description ?? undefined,
+      enabled: p.enabled ?? false,
+      logo: p.logo ?? undefined,
+      name: p.name ?? undefined,
+      sort: p.sort ?? 999,
+      source: p.source ?? ('custom' as const),
+    }));
+    const mergedProviders = mergeArrayById(builtinProviders, userProvidersFormatted);
+
+    // 过滤出已启用的提供商并按顺序排序
+    return mergedProviders
+      .filter((provider) => provider.enabled)
+      .sort((a, b) => {
+        const orderA = orderMap.get(a.id) ?? Number.MAX_SAFE_INTEGER;
+        const orderB = orderMap.get(b.id) ?? Number.MAX_SAFE_INTEGER;
+        return orderA - orderB;
+      });
+  }
+
+  /**
+   * 获取指定提供商的内置模型配置
+   */
+  private async fetchBuiltinModels(providerId: string): Promise<AiProviderModelListItem[]> {
+    try {
+      const { default: providerModels } = await import(`@/config/aiModels/${providerId}`);
+      return (providerModels as AIChatModelCard[]).map<AiProviderModelListItem>((m) => ({
+        ...m,
+        enabled: m.enabled || false,
+        source: AiModelSourceEnum.Builtin,
+      }));
+    } catch (error) {
+      this.log('warn', `无法加载提供商 ${providerId} 的内置模型配置`, { error });
+      return [];
+    }
+  }
+
+  /**
+   * 获取指定提供商的用户自定义模型配置
+   */
+  private async getUserModels(providerId: string): Promise<AiProviderModelListItem[]> {
+    const result = await this.db
+      .select({
+        abilities: aiModels.abilities,
+        config: aiModels.config,
+        contextWindowTokens: aiModels.contextWindowTokens,
+        description: aiModels.description,
+        displayName: aiModels.displayName,
+        enabled: aiModels.enabled,
+        id: aiModels.id,
+        pricing: aiModels.pricing,
+        releasedAt: aiModels.releasedAt,
+        source: aiModels.source,
+        type: aiModels.type,
+      })
+      .from(aiModels)
+      .where(and(eq(aiModels.providerId, providerId), eq(aiModels.userId, this.userId!)))
+      .orderBy(aiModels.sort, aiModels.id);
+
+    return result as AiProviderModelListItem[];
+  }
+
+  /**
+   * 根据请求参数过滤模型
+   */
+  private filterModels(
+    models: AiProviderModelListItem[],
+    request: GetModelsRequest,
+  ): AiProviderModelListItem[] {
+    let filtered = models;
+
+    // 按类型过滤
+    if (request.type) {
+      filtered = filtered.filter((model) => model.type === request.type);
+    }
+
+    // 按启用状态过滤
+    if (typeof request.enabled === 'boolean') {
+      // 明确指定了 enabled 参数
+      filtered = filtered.filter((model) => model.enabled === request.enabled);
+    }
+
+    // 按模型排序
+    return filtered.sort((a, b) => {
+      const aSort = (a as any).sort || 999;
+      const bSort = (b as any).sort || 999;
+      return aSort - bSort;
+    });
   }
 }
