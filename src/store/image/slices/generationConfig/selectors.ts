@@ -10,7 +10,14 @@ const parameters = (s: GenerationConfigState) => s.parameters;
 const paramsSchema = (s: GenerationConfigState) => s.parameterSchema;
 const paramsProperties = (s: GenerationConfigState) => {
   const _paramsSchema = paramsSchema(s);
-  return _paramsSchema ? parseParamsSchema(_paramsSchema).properties : undefined;
+  if (!_paramsSchema) return undefined;
+
+  try {
+    return parseParamsSchema(_paramsSchema).properties;
+  } catch {
+    // Return undefined if schema is invalid
+    return undefined;
+  }
 };
 const isSupportParam = (paramName: StdImageGenParamsKeys) => {
   return (s: GenerationConfigState) => {

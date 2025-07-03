@@ -18,7 +18,12 @@ export interface GenerationConfigAction {
   reuseSeed: (seed: number) => void;
 }
 
-function getModelAndDefaults(model: string, provider: string) {
+/**
+ * @internal
+ * This function is exported only for testing purposes.
+ * Do not use this function directly in application code.
+ */
+export function getModelAndDefaults(model: string, provider: string) {
   const enabledImageModelList = aiProviderSelectors.enabledImageModelList(getAiInfraStoreState());
   const activeModel = enabledImageModelList
     .find((providerItem) => providerItem.id === provider)
