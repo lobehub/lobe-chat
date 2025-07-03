@@ -14,8 +14,8 @@ export enum PluginCategory {
 }
 
 export enum PluginNavKey {
-  Overview = 'overview',
-  Related = 'related',
+  Settings = 'settings',
+  Tools = 'tools',
 }
 
 export enum PluginSorts {

@@ -4,16 +4,18 @@ import { Flexbox } from 'react-layout-kit';
 import { PluginNavKey } from '@/types/discover';
 
 import Nav from './Nav';
-import Overview from './Overview';
+import Tools from './Overview/Tools';
 
 const InstallDetail = memo(() => {
-  const [activeTab, setActiveTab] = useState(PluginNavKey.Overview);
+  const [activeTab, setActiveTab] = useState(PluginNavKey.Tools);
 
   return (
-    <Flexbox>
-      <Nav activeTab={activeTab as PluginNavKey} inModal setActiveTab={setActiveTab} />
-
-      <Flexbox gap={24}>{activeTab === PluginNavKey.Overview && <Overview />}</Flexbox>
+    <Flexbox gap={16}>
+      <Nav activeTab={activeTab as PluginNavKey} setActiveTab={setActiveTab} />
+      <Flexbox>
+        {activeTab === PluginNavKey.Tools && <Tools />}
+        {activeTab === PluginNavKey.Settings && <Tools />}
+      </Flexbox>
     </Flexbox>
   );
 });
