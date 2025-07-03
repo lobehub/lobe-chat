@@ -3,7 +3,12 @@ import { Hono } from 'hono';
 
 import { FileController } from '../controllers/file.controller';
 import { requireAuth } from '../middleware/oidc-auth';
-import { FileIdParamSchema, FileListQuerySchema, FileUrlRequestSchema } from '../types/file.type';
+import {
+  FileIdParamSchema,
+  FileListQuerySchema,
+  FileParseRequestSchema,
+  FileUrlRequestSchema,
+} from '../types/file.type';
 
 const app = new Hono();
 
@@ -125,6 +130,32 @@ app.get('/:id/permanent-url', requireAuth, zValidator('param', FileIdParamSchema
   const fileController = new FileController();
   return await fileController.getPermanentFileUrl(c);
 });
+
+/**
+ * 解析文件内容
+ * POST /files/:id/parse
+ *
+ * Path parameters:
+ * - id: string (required) - 文件ID
+ *
+ * Query parameters:
+ * - skipExist: boolean (optional) - 是否跳过已存在的解析结果，默认false
+ *
+ * 功能：
+ * - 解析文档文件的文本内容（PDF、Word、Excel等）
+ * - 支持跳过已解析的文件，避免重复解析
+ * - 返回解析后的文本内容和元数据
+ */
+app.post(
+  '/:id/parse',
+  requireAuth,
+  zValidator('param', FileIdParamSchema),
+  zValidator('query', FileParseRequestSchema),
+  async (c) => {
+    const fileController = new FileController();
+    return await fileController.parseFile(c);
+  },
+);
 
 /**
  * 删除文件
