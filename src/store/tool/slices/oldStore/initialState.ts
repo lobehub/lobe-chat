@@ -9,6 +9,25 @@ export enum PluginStoreTabs {
   Plugin = 'old',
 }
 
+/* eslint-disable typescript-sort-keys/string-enum */
+export enum PluginInstallStep {
+  FETCHING_MANIFEST = 'FETCHING_MANIFEST',
+  INSTALLING_PLUGIN = 'INSTALLING_PLUGIN',
+  COMPLETED = 'COMPLETED',
+  ERROR = 'ERROR',
+}
+/* eslint-enable */
+
+export interface PluginInstallProgress {
+  // 错误信息
+  error?: string;
+  // 0-100
+  progress: number;
+  step: PluginInstallStep;
+}
+
+export type PluginInstallProgressMap = Record<string, PluginInstallProgress | undefined>;
+
 export interface PluginStoreState {
   activePluginIdentifier?: string;
   currentPluginPage: number;
@@ -18,6 +37,7 @@ export interface PluginStoreState {
   listType: PluginStoreTabs;
   oldPluginItems: DiscoverPluginItem[];
   pluginInstallLoading: PluginInstallLoadingMap;
+  pluginInstallProgress: PluginInstallProgressMap;
   pluginSearchKeywords?: string;
   pluginSearchLoading?: boolean;
   pluginTotalCount?: number;
@@ -30,4 +50,5 @@ export const initialPluginStoreState: PluginStoreState = {
   listType: isDesktop ? PluginStoreTabs.MCP : PluginStoreTabs.Plugin,
   oldPluginItems: [],
   pluginInstallLoading: {},
+  pluginInstallProgress: {},
 };

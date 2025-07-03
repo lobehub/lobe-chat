@@ -27,12 +27,19 @@ const onlinePluginStore = (s: ToolStoreState) => {
 
 const isPluginInstallLoading = (id: string) => (s: ToolStoreState) => s.pluginInstallLoading[id];
 
+const getPluginInstallProgress = (id: string) => (s: ToolStoreState) => s.pluginInstallProgress[id];
+
+const isOldPluginInInstallProgress = (id: string) => (s: ToolStoreState) =>
+  !!s.pluginInstallProgress[id];
+
 const getPluginById = (id: string) => (s: ToolStoreState) => {
   return s.oldPluginItems.find((i) => i.identifier === id);
 };
 
 export const pluginStoreSelectors = {
   getPluginById,
+  getPluginInstallProgress,
+  isOldPluginInInstallProgress,
   isPluginInstallLoading,
   onlinePluginStore,
 };

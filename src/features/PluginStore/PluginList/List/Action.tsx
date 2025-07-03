@@ -16,8 +16,8 @@ interface ActionsProps {
 const Actions = memo<ActionsProps>(({ identifier }) => {
   const [installed, installing, installPlugin, unInstallPlugin] = useToolStore((s) => [
     pluginSelectors.isPluginInstalled(identifier)(s),
-    pluginStoreSelectors.isPluginInstallLoading(identifier)(s),
-    s.installPlugin,
+    pluginStoreSelectors.isOldPluginInInstallProgress(identifier)(s),
+    s.installOldPlugin,
     s.uninstallPlugin,
   ]);
 
