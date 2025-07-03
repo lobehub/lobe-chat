@@ -5,6 +5,7 @@ import { FileUploadService } from '../services/file.service';
 import {
   BatchFileUploadRequest,
   FileListQuery,
+  FileParseRequest,
   FileUploadRequest,
   FileUrlRequest,
   PublicFileUploadRequest,
@@ -230,6 +231,32 @@ export class FileController extends BaseController {
       const result = await fileService.uploadPublicFile(file, options);
 
       return this.success(c, result, 'Public file uploaded successfully');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 解析文件内容
+   * POST /files/:id/parse
+   */
+  async parseFile(c: Context) {
+    try {
+      const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
+      const { id } = this.getParams(c);
+      const query = this.getQuery(c);
+
+      // 解析查询参数
+      const options: Partial<FileParseRequest> = {
+        skipExist: query.skipExist === 'true',
+      };
+
+      const db = await this.getDatabase();
+      const fileService = new FileUploadService(db, userId);
+
+      const result = await fileService.parseFile(id, options);
+
+      return this.success(c, result, 'File parsed successfully');
     } catch (error) {
       return this.handleError(c, error);
     }
