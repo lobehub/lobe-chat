@@ -147,6 +147,9 @@
     "featuredTools": "Plugin nổi bật",
     "more": "Khám phá thêm"
   },
+  "isClaimed": "Đã nhận",
+  "isFeatured": "Đề xuất",
+  "isOfficial": "Chính thức",
   "like": "Thích",
   "mcp": {
     "categories": {
@@ -390,6 +393,26 @@
           "fullTitle": "Chất lượng kém",
           "title": "Kém"
         }
+      },
+      "settings": {
+        "capabilities": {
+          "prompts": "Từ khóa gợi ý",
+          "resources": "Tài nguyên",
+          "title": "Khả năng plugin",
+          "tools": "Công cụ"
+        },
+        "configuration": {
+          "title": "Cấu hình plugin"
+        },
+        "connection": {
+          "args": "Tham số khởi động",
+          "command": "Lệnh khởi động",
+          "title": "Thông tin kết nối",
+          "type": "Loại kết nối",
+          "url": "Địa chỉ dịch vụ"
+        },
+        "saveSettings": "Lưu cài đặt",
+        "title": "Cài đặt plugin"
       },
       "sidebar": {
         "install": "Cài đặt MCP Server",

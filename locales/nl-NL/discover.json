@@ -147,6 +147,9 @@
     "featuredTools": "Aanbevolen plugins",
     "more": "Ontdek meer"
   },
+  "isClaimed": "Geclaimd",
+  "isFeatured": "Aanbevolen",
+  "isOfficial": "Officieel gecertificeerd",
   "like": "Leuk",
   "mcp": {
     "categories": {
@@ -268,8 +271,7 @@
         "title": "Installatiemethode"
       },
       "githubBadge": {
-        "desc": "LobeHub scant regelmatig de codebase en documentatie om:\n\n- Te bevestigen dat de MCP-server correct werkt.\n- Serverkenmerken te extraheren, zoals tools, bronnen, prompts en vereiste parameters.\n- Onze badge helpt gebruikers snel de veiligheid, functionaliteit en installatiehandleiding van de MCP-server te beoordelen.\n\nKopieer de volgende code naar je `README.md` bestand:",
-        "title": "GitHub-badge"
+        "desc": "LobeHub scant regelmatig de codebase en documentatie om:\n\n- Te bevestigen dat de MCP-server correct werkt.\n- Serverkenmerken te extraheren, zoals tools, bronnen, prompts en vereiste parameters.\n- Onze badge helpt gebruikers snel de veiligheid, functionaliteit en installatiehandleiding van de MCP-server te beoordelen.\n\nKopieer de volgende code naar je `README.md` bestand:"
       },
       "nav": {
         "needHelp": "Hulp nodig?",
@@ -391,6 +393,26 @@
           "fullTitle": "Matige kwaliteit",
           "title": "Matig"
         }
+      },
+      "settings": {
+        "capabilities": {
+          "prompts": "Promptwoorden",
+          "resources": "Middelen",
+          "title": "Plugin-mogelijkheden",
+          "tools": "Gereedschappen"
+        },
+        "configuration": {
+          "title": "Plugin-configuratie"
+        },
+        "connection": {
+          "args": "Startparameters",
+          "command": "Startcommando",
+          "title": "Verbindingsinformatie",
+          "type": "Verbindingstype",
+          "url": "Serviceadres"
+        },
+        "saveSettings": "Instellingen opslaan",
+        "title": "Plugin-instellingen"
       },
       "sidebar": {
         "install": "Installeer MCP-server",

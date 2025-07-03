@@ -147,6 +147,9 @@
     "featuredTools": "إضافات مميزة",
     "more": "اكتشف المزيد"
   },
+  "isClaimed": "تم المطالبة",
+  "isFeatured": "مميز",
+  "isOfficial": "معتمد رسميًا",
   "like": "أحب",
   "mcp": {
     "categories": {
@@ -390,6 +393,26 @@
           "fullTitle": "جودة ضعيفة",
           "title": "ضعيف"
         }
+      },
+      "settings": {
+        "capabilities": {
+          "prompts": "التلميحات",
+          "resources": "الموارد",
+          "title": "قدرات الإضافة",
+          "tools": "الأدوات"
+        },
+        "configuration": {
+          "title": "تكوين الإضافة"
+        },
+        "connection": {
+          "args": "معاملات التشغيل",
+          "command": "أمر التشغيل",
+          "title": "معلومات الاتصال",
+          "type": "نوع الاتصال",
+          "url": "عنوان الخدمة"
+        },
+        "saveSettings": "حفظ الإعدادات",
+        "title": "إعدادات الإضافة"
       },
       "sidebar": {
         "install": "تثبيت خادم MCP",

@@ -129,6 +129,7 @@
     "waitingForMore": "Daha fazla model eklenmesi planlanıyor"
   },
   "plugin": {
+    "addMCPPlugin": "MCP Eklentisi Ekle",
     "addTooltip": "Eklenti Ekle",
     "clearDeprecated": "Kullanım Dışı Eklentileri Kaldır",
     "empty": "Henüz eklenti yok, <1>Eklenti Mağazası</1>'nı keşfetmekten çekinmeyin",

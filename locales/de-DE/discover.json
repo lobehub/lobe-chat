@@ -147,6 +147,9 @@
     "featuredTools": "Empfohlene Plugins",
     "more": "Mehr entdecken"
   },
+  "isClaimed": "Beansprucht",
+  "isFeatured": "Empfohlen",
+  "isOfficial": "Offiziell zertifiziert",
   "like": "Mögen",
   "mcp": {
     "categories": {
@@ -390,6 +393,26 @@
           "fullTitle": "Mangelhafte Qualität",
           "title": "Mangelhaft"
         }
+      },
+      "settings": {
+        "capabilities": {
+          "prompts": "Eingabeaufforderungen",
+          "resources": "Ressourcen",
+          "title": "Plugin-Fähigkeiten",
+          "tools": "Werkzeuge"
+        },
+        "configuration": {
+          "title": "Plugin-Konfiguration"
+        },
+        "connection": {
+          "args": "Startparameter",
+          "command": "Startbefehl",
+          "title": "Verbindungsinformationen",
+          "type": "Verbindungstyp",
+          "url": "Dienstadresse"
+        },
+        "saveSettings": "Einstellungen speichern",
+        "title": "Plugin-Einstellungen"
       },
       "sidebar": {
         "install": "MCP-Server installieren",

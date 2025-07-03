@@ -147,6 +147,9 @@
     "featuredTools": "推薦插件",
     "more": "發現更多"
   },
+  "isClaimed": "已認領",
+  "isFeatured": "推薦",
+  "isOfficial": "官方認證",
   "like": "喜歡",
   "mcp": {
     "categories": {
@@ -390,6 +393,26 @@
           "fullTitle": "品質欠佳",
           "title": "欠佳"
         }
+      },
+      "settings": {
+        "capabilities": {
+          "prompts": "提示詞",
+          "resources": "資源",
+          "title": "外掛能力",
+          "tools": "工具"
+        },
+        "configuration": {
+          "title": "外掛配置"
+        },
+        "connection": {
+          "args": "啟動參數",
+          "command": "啟動命令",
+          "title": "連線資訊",
+          "type": "連線類型",
+          "url": "服務地址"
+        },
+        "saveSettings": "儲存設定",
+        "title": "外掛設定"
       },
       "sidebar": {
         "install": "安裝 MCP Server",

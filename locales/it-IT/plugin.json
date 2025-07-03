@@ -230,6 +230,50 @@
     },
     "title": "File locali"
   },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "Verifica dell'ambiente di installazione...",
+    "COMPLETED": "Installazione completata",
+    "CONFIGURATION_REQUIRED": "Si prega di completare la configurazione prima di continuare l'installazione",
+    "ERROR": "Errore di installazione",
+    "FETCHING_MANIFEST": "Recupero del file di descrizione del plugin...",
+    "GETTING_SERVER_MANIFEST": "Inizializzazione del server MCP...",
+    "INSTALLING_PLUGIN": "Installazione del plugin in corso...",
+    "configurationDescription": "Questo plugin MCP richiede la configurazione dei parametri per funzionare correttamente, si prega di inserire le informazioni di configurazione necessarie",
+    "configurationRequired": "Configurazione dei parametri del plugin",
+    "continueInstall": "Continua installazione",
+    "dependenciesDescription": "Questo plugin necessita dell'installazione delle seguenti dipendenze di sistema per funzionare correttamente. Si prega di installare le dipendenze mancanti seguendo le istruzioni, quindi cliccare su 'Riprova' per continuare l'installazione.",
+    "dependenciesRequired": "Si prega di installare le dipendenze di sistema del plugin",
+    "dependencyStatus": {
+      "installed": "Installato",
+      "notInstalled": "Non installato",
+      "requiredVersion": "Versione richiesta: {{version}}"
+    },
+    "errorDetails": {
+      "args": "Parametri",
+      "command": "Comando",
+      "connectionParams": "Parametri di connessione",
+      "env": "Variabili d'ambiente",
+      "errorOutput": "Log degli errori",
+      "exitCode": "Codice di uscita",
+      "hideDetails": "Nascondi dettagli",
+      "originalError": "Errore originale",
+      "showDetails": "Mostra dettagli"
+    },
+    "errorTypes": {
+      "CONNECTION_FAILED": "Connessione fallita",
+      "INITIALIZATION_TIMEOUT": "Timeout di inizializzazione",
+      "PROCESS_SPAWN_ERROR": "Errore nell'avvio del processo",
+      "UNKNOWN_ERROR": "Errore sconosciuto",
+      "VALIDATION_ERROR": "Validazione dei parametri fallita"
+    },
+    "installError": "Installazione del plugin MCP fallita, motivo: {{detail}}",
+    "installMethods": {
+      "manual": "Installazione manuale:",
+      "recommended": "Metodo di installazione consigliato:"
+    },
+    "recheckDependencies": "Riprova",
+    "skipDependencies": "Salta verifica"
+  },
   "pluginList": "Elenco dei plugin",
   "search": {
     "apiName": {
@@ -266,16 +310,34 @@
   },
   "setting": "Impostazioni del plugin",
   "settings": {
+    "capabilities": {
+      "prompts": "Prompt",
+      "resources": "Risorse",
+      "title": "Capacità del plugin",
+      "tools": "Strumenti"
+    },
+    "configuration": {
+      "title": "Configurazione del plugin"
+    },
+    "connection": {
+      "args": "Parametri di avvio",
+      "command": "Comando di avvio",
+      "title": "Informazioni di connessione",
+      "type": "Tipo di connessione",
+      "url": "Indirizzo del servizio"
+    },
     "indexUrl": {
       "title": "Indice di mercato",
       "tooltip": "Modifica non supportata online. Imposta tramite variabili d'ambiente durante il deploy"
     },
     "modalDesc": "Dopo aver configurato l'indirizzo del mercato dei plugin, è possibile utilizzare un mercato dei plugin personalizzato",
+    "saveSettings": "Salva impostazioni",
     "title": "Impostazioni del mercato dei plugin"
   },
   "showInPortal": "Si prega di visualizzare i dettagli nell'area di lavoro",
   "store": {
     "actions": {
+      "cancel": "Annulla installazione",
       "confirmUninstall": "Stai per disinstallare questo plugin. La disinstallazione cancellerà la configurazione del plugin. Conferma l'operazione",
       "detail": "Dettagli",
       "install": "Installa",
@@ -293,7 +355,7 @@
     "tabs": {
       "installed": "Installati",
       "mcp": "Plugin MCP",
-      "old": "Plugin vecchio"
+      "old": "Plugin LobeChat"
     },
     "title": "Negozio dei plugin"
   },

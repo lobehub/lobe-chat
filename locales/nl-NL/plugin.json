@@ -230,6 +230,50 @@
     },
     "title": "Lokale bestanden"
   },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "Installatieomgeving controleren...",
+    "COMPLETED": "Installatie voltooid",
+    "CONFIGURATION_REQUIRED": "Voltooi de configuratie voordat u doorgaat met de installatie",
+    "ERROR": "Installatiefout",
+    "FETCHING_MANIFEST": "Plugin manifest ophalen...",
+    "GETTING_SERVER_MANIFEST": "MCP-server initialiseren...",
+    "INSTALLING_PLUGIN": "Plugin wordt geïnstalleerd...",
+    "configurationDescription": "Deze MCP-plugin vereist configuratieparameters om correct te functioneren. Vul de benodigde configuratiegegevens in.",
+    "configurationRequired": "Pluginparameters configureren",
+    "continueInstall": "Installatie voortzetten",
+    "dependenciesDescription": "Deze plugin vereist de installatie van de volgende systeemafhankelijkheden om correct te werken. Installeer de ontbrekende afhankelijkheden volgens de instructies en klik vervolgens op 'Opnieuw controleren' om door te gaan met de installatie.",
+    "dependenciesRequired": "Installeer de systeemafhankelijkheden van de plugin",
+    "dependencyStatus": {
+      "installed": "Geïnstalleerd",
+      "notInstalled": "Niet geïnstalleerd",
+      "requiredVersion": "Vereiste versie: {{version}}"
+    },
+    "errorDetails": {
+      "args": "Parameters",
+      "command": "Opdracht",
+      "connectionParams": "Verbindingsparameters",
+      "env": "Omgevingsvariabelen",
+      "errorOutput": "Foutlogboek",
+      "exitCode": "Exitcode",
+      "hideDetails": "Details verbergen",
+      "originalError": "Oorspronkelijke fout",
+      "showDetails": "Details weergeven"
+    },
+    "errorTypes": {
+      "CONNECTION_FAILED": "Verbinding mislukt",
+      "INITIALIZATION_TIMEOUT": "Initialisatie time-out",
+      "PROCESS_SPAWN_ERROR": "Proces starten mislukt",
+      "UNKNOWN_ERROR": "Onbekende fout",
+      "VALIDATION_ERROR": "Parametervalidatie mislukt"
+    },
+    "installError": "MCP-plugin installatie mislukt, reden: {{detail}}",
+    "installMethods": {
+      "manual": "Handmatige installatie:",
+      "recommended": "Aanbevolen installatiemethode:"
+    },
+    "recheckDependencies": "Opnieuw controleren",
+    "skipDependencies": "Controle overslaan"
+  },
   "pluginList": "Lijst met plugins",
   "search": {
     "apiName": {
@@ -266,16 +310,34 @@
   },
   "setting": "Plugin-instellingen",
   "settings": {
+    "capabilities": {
+      "prompts": "Promptwoorden",
+      "resources": "Middelen",
+      "title": "Pluginmogelijkheden",
+      "tools": "Hulpmiddelen"
+    },
+    "configuration": {
+      "title": "Pluginconfiguratie"
+    },
+    "connection": {
+      "args": "Startparameters",
+      "command": "Startopdracht",
+      "title": "Verbindingsinformatie",
+      "type": "Verbindingstype",
+      "url": "Serviceadres"
+    },
     "indexUrl": {
       "title": "Marktindex",
       "tooltip": "Online bewerken wordt momenteel niet ondersteund. Stel in via omgevingsvariabelen tijdens implementatie."
     },
     "modalDesc": "Na het instellen van de marktlocatie voor plugins, kunt u een aangepaste pluginmarkt gebruiken.",
+    "saveSettings": "Instellingen opslaan",
     "title": "Instellingen voor pluginmarkt"
   },
   "showInPortal": "Gelieve de details in het portaal te bekijken",
   "store": {
     "actions": {
+      "cancel": "Installatie annuleren",
       "confirmUninstall": "Deze plugin wordt binnenkort verwijderd. Na verwijdering worden de configuraties gewist. Weet u zeker dat u door wilt gaan?",
       "detail": "Details",
       "install": "Installeren",
@@ -293,7 +355,7 @@
     "tabs": {
       "installed": "Geïnstalleerd",
       "mcp": "MCP-plug-in",
-      "old": "Oude plug-in"
+      "old": "LobeChat-plugin"
     },
     "title": "Pluginwinkel"
   },

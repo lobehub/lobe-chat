@@ -147,6 +147,9 @@
     "featuredTools": "افزونه‌های پیشنهادی",
     "more": "کشف بیشتر"
   },
+  "isClaimed": "ادعا شده",
+  "isFeatured": "پیشنهاد شده",
+  "isOfficial": "تأیید شده رسمی",
   "like": "دوست داشتن",
   "mcp": {
     "categories": {
@@ -390,6 +393,26 @@
           "fullTitle": "کیفیت پایین",
           "title": "ضعیف"
         }
+      },
+      "settings": {
+        "capabilities": {
+          "prompts": "عبارات راهنما",
+          "resources": "منابع",
+          "title": "قابلیت‌های افزونه",
+          "tools": "ابزارها"
+        },
+        "configuration": {
+          "title": "پیکربندی افزونه"
+        },
+        "connection": {
+          "args": "پارامترهای راه‌اندازی",
+          "command": "دستور راه‌اندازی",
+          "title": "اطلاعات اتصال",
+          "type": "نوع اتصال",
+          "url": "آدرس سرویس"
+        },
+        "saveSettings": "ذخیره تنظیمات",
+        "title": "تنظیمات افزونه"
       },
       "sidebar": {
         "install": "نصب سرور MCP",

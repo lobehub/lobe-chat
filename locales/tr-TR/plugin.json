@@ -230,6 +230,50 @@
     },
     "title": "Yerel Dosya"
   },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "Kurulum ortamı kontrol ediliyor...",
+    "COMPLETED": "Kurulum tamamlandı",
+    "CONFIGURATION_REQUIRED": "Devam etmek için lütfen ilgili yapılandırmayı tamamlayın",
+    "ERROR": "Kurulum hatası",
+    "FETCHING_MANIFEST": "Eklenti tanımlama dosyası alınıyor...",
+    "GETTING_SERVER_MANIFEST": "MCP sunucusu başlatılıyor...",
+    "INSTALLING_PLUGIN": "Eklenti kuruluyor...",
+    "configurationDescription": "Bu MCP eklentisinin düzgün çalışması için yapılandırma parametreleri gereklidir, lütfen gerekli yapılandırma bilgilerini doldurun",
+    "configurationRequired": "Eklenti parametrelerini yapılandır",
+    "continueInstall": "Kuruluma devam et",
+    "dependenciesDescription": "Bu eklentinin düzgün çalışması için aşağıdaki sistem bağımlılıklarının kurulması gerekmektedir, lütfen eksik bağımlılıkları talimatlara göre kurduktan sonra yeniden kontrol ederek kuruluma devam edin.",
+    "dependenciesRequired": "Lütfen eklentinin sistem bağımlılıklarını kurun",
+    "dependencyStatus": {
+      "installed": "Yüklendi",
+      "notInstalled": "Yüklenmedi",
+      "requiredVersion": "Gerekli sürüm: {{version}}"
+    },
+    "errorDetails": {
+      "args": "Parametreler",
+      "command": "Komut",
+      "connectionParams": "Bağlantı parametreleri",
+      "env": "Ortam değişkenleri",
+      "errorOutput": "Hata günlükleri",
+      "exitCode": "Çıkış kodu",
+      "hideDetails": "Detayları gizle",
+      "originalError": "Orijinal hata",
+      "showDetails": "Detayları göster"
+    },
+    "errorTypes": {
+      "CONNECTION_FAILED": "Bağlantı başarısız",
+      "INITIALIZATION_TIMEOUT": "Başlatma zaman aşımı",
+      "PROCESS_SPAWN_ERROR": "İşlem başlatılamadı",
+      "UNKNOWN_ERROR": "Bilinmeyen hata",
+      "VALIDATION_ERROR": "Parametre doğrulama hatası"
+    },
+    "installError": "MCP eklenti kurulumu başarısız oldu, hata nedeni: {{detail}}",
+    "installMethods": {
+      "manual": "Manuel kurulum:",
+      "recommended": "Önerilen kurulum yöntemi:"
+    },
+    "recheckDependencies": "Yeniden kontrol et",
+    "skipDependencies": "Kontrolü atla"
+  },
   "pluginList": "Eklenti Listesi",
   "search": {
     "apiName": {
@@ -266,16 +310,34 @@
   },
   "setting": "Eklenti Ayarları",
   "settings": {
+    "capabilities": {
+      "prompts": "İstekler",
+      "resources": "Kaynaklar",
+      "title": "Eklenti yetenekleri",
+      "tools": "Araçlar"
+    },
+    "configuration": {
+      "title": "Eklenti yapılandırması"
+    },
+    "connection": {
+      "args": "Başlatma parametreleri",
+      "command": "Başlatma komutu",
+      "title": "Bağlantı bilgileri",
+      "type": "Bağlantı türü",
+      "url": "Sunucu adresi"
+    },
     "indexUrl": {
       "title": "Pazar Endeksi",
       "tooltip": "Çevrimiçi düzenleme şu anda desteklenmiyor. Lütfen dağıtım sırasında çevre değişkenleri üzerinden ayarlayın."
     },
     "modalDesc": "Eklenti pazarı adresini yapılandırdıktan sonra, özel bir eklenti pazarı kullanabilirsiniz.",
+    "saveSettings": "Ayarları kaydet",
     "title": "Eklenti Pazarı Ayarla"
   },
   "showInPortal": "Detayları çalışma alanında görüntüleyin",
   "store": {
     "actions": {
+      "cancel": "Kurulumu iptal et",
       "confirmUninstall": "Bu eklentiyi kaldırmak üzeresiniz, kaldırdıktan sonra eklenti yapılandırması temizlenecektir, işleminizi onaylayın",
       "detail": "Detay",
       "install": "Yükle",
@@ -293,7 +355,7 @@
     "tabs": {
       "installed": "Yüklü",
       "mcp": "MCP Eklentisi",
-      "old": "Eski Sürüm Eklentisi"
+      "old": "LobeChat Eklentisi"
     },
     "title": "Eklenti Mağazası"
   },

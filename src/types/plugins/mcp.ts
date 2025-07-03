@@ -156,6 +156,7 @@ export interface MCPErrorInfo {
 }
 
 export interface MCPInstallProgress {
+  checkResult?: CheckMcpInstallResult;
   configSchema?: any;
   // connection info from checkInstallation
   connection?: any;
