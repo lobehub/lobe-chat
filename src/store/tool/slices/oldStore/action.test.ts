@@ -1,4 +1,4 @@
-import { LobeChatPluginManifest, LobeChatPluginMeta } from '@lobehub/chat-plugin-sdk';
+import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { act, renderHook } from '@testing-library/react';
 import useSWR from 'swr';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -28,6 +28,7 @@ vi.mock('@/services/tool', () => ({
   toolService: {
     getToolManifest: vi.fn(),
     getToolList: vi.fn(),
+    getOldPluginList: vi.fn(),
   },
 }));
 
@@ -104,7 +105,7 @@ describe('useToolStore:pluginStore', () => {
     it('should load plugin list and update state', async () => {
       // Given
       const pluginListMock = [{ identifier: 'plugin1' }, { identifier: 'plugin2' }];
-      (toolService.getToolList as Mock).mockResolvedValue(pluginListMock);
+      (toolService.getOldPluginList as Mock).mockResolvedValue({ items: pluginListMock });
 
       // When
       let pluginList;
@@ -113,7 +114,7 @@ describe('useToolStore:pluginStore', () => {
       });
 
       // Then
-      expect(toolService.getToolList).toHaveBeenCalled();
+      expect(toolService.getOldPluginList).toHaveBeenCalled();
       expect(pluginList).toEqual(pluginListMock);
       expect(useToolStore.getState().oldPluginItems).toEqual(pluginListMock);
     });
@@ -121,7 +122,7 @@ describe('useToolStore:pluginStore', () => {
     it('should handle errors when loading plugin list', async () => {
       // Given
       const error = new Error('Failed to load plugin list');
-      (toolService.getToolList as Mock).mockRejectedValue(error);
+      (toolService.getOldPluginList as Mock).mockRejectedValue(error);
 
       // When
       let pluginList;
@@ -135,7 +136,7 @@ describe('useToolStore:pluginStore', () => {
       }
 
       // Then
-      expect(toolService.getToolList).toHaveBeenCalled();
+      expect(toolService.getOldPluginList).toHaveBeenCalled();
       expect(errorOccurred).toBe(true);
       expect(pluginList).toBeUndefined();
       // Ensure the state is not updated with an undefined value

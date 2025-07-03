@@ -161,9 +161,7 @@ export const createPluginStoreSlice: StateCreator<
   loadPluginStore: async () => {
     const locale = globalHelpers.getCurrentLanguage();
 
-    // 使用 edgeClient 调用 market API
-    const { edgeClient } = await import('@/libs/trpc/client');
-    const data = await edgeClient.market.getPluginList.query({
+    const data = await toolService.getOldPluginList({
       locale,
       page: 1,
       pageSize: 50,
@@ -228,16 +226,7 @@ export const createPluginStoreSlice: StateCreator<
 
     return useSWR<PluginListResponse>(
       ['useFetchPluginList', locale, ...Object.values(params)].filter(Boolean).join('-'),
-      async () => {
-        // 使用 edgeClient 调用 market API
-        const { edgeClient } = await import('@/libs/trpc/client');
-        return edgeClient.market.getPluginList.query({
-          ...params,
-          locale,
-          page: params.page ? Number(params.page) : 1,
-          pageSize: params.pageSize ? Number(params.pageSize) : 20,
-        });
-      },
+      async () => toolService.getOldPluginList(params),
       {
         onSuccess(data) {
           set(
