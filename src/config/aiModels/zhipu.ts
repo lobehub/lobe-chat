@@ -30,8 +30,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     contextWindowTokens: 64_000,
     description: 'GLM-4.1V-Thinking 系列模型是目前已知10B级别的VLM模型中性能最强的视觉模型，融合了同级别SOTA的各项视觉语言任务，包括视频理解、图片问答、学科解题、OCR文字识别、文档和图表解读、GUI Agent、前端网页Coding、Grounding等，多项任务能力甚至超过8倍参数量的Qwen2.5-VL-72B。通过领先的强化学习技术，模型掌握了通过思维链推理的方式提升回答的准确性和丰富度，从最终效果和可解释性等维度都显著超过传统的非thinking模型。',
     displayName: 'GLM-4.1V-Thinking-Flash',
-    id: 'glm-4.1v-thinking-flash',
     enabled: true,
+    id: 'glm-4.1v-thinking-flash',
     pricing: {
       currency: 'CNY',
       input: 0,
