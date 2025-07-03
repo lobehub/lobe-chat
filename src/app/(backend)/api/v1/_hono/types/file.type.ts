@@ -241,6 +241,47 @@ export interface FileUploadProgress {
   total: number;
 }
 
+/**
+ * 文件解析请求类型
+ */
+export interface FileParseRequest {
+  /** 文件ID */
+  fileId: string;
+  /** 是否跳过已存在的解析结果 */
+  skipExist?: boolean;
+}
+
+/**
+ * 文件解析响应类型
+ */
+export interface FileParseResponse {
+  /** 解析后的文本内容 */
+  content: string;
+  /** 解析错误信息 */
+  error?: string;
+  /** 文件ID */
+  fileId: string;
+  /** 文件类型 */
+  fileType: string;
+  /** 文件名 */
+  filename: string;
+  /** 文档元数据 */
+  metadata?: {
+    /** 页数 */
+    pages?: number;
+    /** 文档标题 */
+    title?: string;
+    /** 字符总数 */
+    totalCharCount?: number;
+    /** 行总数 */
+    totalLineCount?: number;
+  };
+  /** 解析状态 */
+  parseStatus: 'completed' | 'failed';
+  /** 解析时间 */
+  parsedAt: string;
+}
+
 // Zod Schemas for validation
 export const PreSignedUrlRequestSchema = z.object({
   fileType: z.string().min(1, '文件类型不能为空'),
@@ -274,5 +315,13 @@ export const FileUrlRequestSchema = z.object({
     .string()
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().min(60).max(7200)) // 1分钟到2小时
+    .optional(),
+});
+
+export const FileParseRequestSchema = z.object({
+  skipExist: z
+    .string()
+    .transform((val) => val === 'true')
+    .pipe(z.boolean())
     .optional(),
 });
