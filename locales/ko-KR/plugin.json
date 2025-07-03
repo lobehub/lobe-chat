@@ -12,6 +12,10 @@
     "tool_call": "도구 호출"
   },
   "detailModal": {
+    "emptyState": {
+      "description": "이 플러그인을 설치한 후 플러그인 기능과 설정 옵션을 확인하세요",
+      "title": "설치 후 플러그인 세부 정보 보기"
+    },
     "info": {
       "description": "API 설명",
       "name": "API 이름"

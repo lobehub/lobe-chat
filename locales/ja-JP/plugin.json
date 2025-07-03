@@ -12,6 +12,10 @@
     "tool_call": "ツール呼び出し"
   },
   "detailModal": {
+    "emptyState": {
+      "description": "このプラグインをインストールしてから、プラグインの機能と設定オプションを確認してください",
+      "title": "インストール後にプラグインの詳細を表示"
+    },
     "info": {
       "description": "API 説明",
       "name": "API 名"

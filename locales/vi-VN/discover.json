@@ -573,16 +573,14 @@
   "plugins": {
     "community": "Plugin cộng đồng",
     "details": {
-      "overview": {
-        "title": "Tổng quan"
-      },
-      "related": {
-        "listTitle": "Plugin liên quan",
-        "more": "Xem thêm",
-        "title": "Gợi ý liên quan"
+      "settings": {
+        "title": "Cài đặt plugin"
       },
       "summary": {
         "title": "Bạn có thể làm gì với plugin này?"
+      },
+      "tools": {
+        "title": "Công cụ plugin"
       }
     },
     "install": "Cài đặt plugin",

@@ -573,16 +573,14 @@
   "plugins": {
     "community": "社區插件",
     "details": {
-      "overview": {
-        "title": "概覽"
-      },
-      "related": {
-        "listTitle": "相關外掛",
-        "more": "查看更多",
-        "title": "相關推薦"
+      "settings": {
+        "title": "外掛設定"
       },
       "summary": {
         "title": "你可以使用該外掛做什麼？"
+      },
+      "tools": {
+        "title": "外掛工具"
       }
     },
     "install": "安裝插件",

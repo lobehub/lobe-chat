@@ -573,16 +573,14 @@
   "plugins": {
     "community": "Community Plugins",
     "details": {
-      "overview": {
-        "title": "Overview"
-      },
-      "related": {
-        "listTitle": "Related Plugins",
-        "more": "View More",
-        "title": "Related Recommendations"
+      "settings": {
+        "title": "Plugin Settings"
       },
       "summary": {
         "title": "What can you do with this plugin?"
+      },
+      "tools": {
+        "title": "Plugin Tools"
       }
     },
     "install": "Install Plugin",

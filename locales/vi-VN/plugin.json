@@ -12,6 +12,10 @@
     "tool_call": "Yêu cầu công cụ"
   },
   "detailModal": {
+    "emptyState": {
+      "description": "Vui lòng cài đặt plugin này trước để xem các tính năng và tùy chọn cấu hình của plugin",
+      "title": "Xem chi tiết plugin sau khi cài đặt"
+    },
     "info": {
       "description": "Mô tả API",
       "name": "Tên API"

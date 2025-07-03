@@ -573,16 +573,14 @@
   "plugins": {
     "community": "Topluluk Eklentisi",
     "details": {
-      "overview": {
-        "title": "Genel Bakış"
-      },
-      "related": {
-        "listTitle": "İlgili Eklentiler",
-        "more": "Daha Fazla Görüntüle",
-        "title": "İlgili Öneriler"
+      "settings": {
+        "title": "Eklenti Ayarları"
       },
       "summary": {
         "title": "Bu eklenti ile neler yapabilirsiniz?"
+      },
+      "tools": {
+        "title": "Eklenti Araçları"
       }
     },
     "install": "Eklenti Yükle",

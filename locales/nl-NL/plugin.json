@@ -12,6 +12,10 @@
     "tool_call": "Tool-oproepverzoek"
   },
   "detailModal": {
+    "emptyState": {
+      "description": "Installeer deze plug-in eerst om de mogelijkheden en configuratieopties te bekijken",
+      "title": "Bekijk plug-in details na installatie"
+    },
     "info": {
       "description": "API-beschrijving",
       "name": "API-naam"

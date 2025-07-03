@@ -12,6 +12,10 @@
     "tool_call": "żądanie wywołania narzędzia"
   },
   "detailModal": {
+    "emptyState": {
+      "description": "Zainstaluj najpierw tę wtyczkę, aby zobaczyć jej funkcje i opcje konfiguracji",
+      "title": "Zobacz szczegóły wtyczki po instalacji"
+    },
     "info": {
       "description": "Opis interfejsu API",
       "name": "Nazwa interfejsu API"
