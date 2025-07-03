@@ -88,19 +88,20 @@ export class MessageTranslateService extends BaseService {
     });
 
     try {
-      // 首先获取原始消息内容
-      const originalMessage = await this.getOriginalMessageContent(translateData.messageId);
-      if (!originalMessage) {
+      // 首先获取原始消息内容和 sessionId
+      const messageInfo = await this.getMessageWithSessionId(translateData.messageId);
+      if (!messageInfo) {
         throw this.createCommonError('未找到要翻译的消息');
       }
 
-      this.log('info', '原始消息内容', { originalMessage });
+      this.log('info', '原始消息内容', { originalMessage: messageInfo.content });
 
-      // 使用ChatService进行翻译
+      // 使用ChatService进行翻译，传递 sessionId 以使用正确的模型配置
       const chatService = new ChatService(this.db, this.userId);
       const translatedContent = await chatService.translate({
         fromLanguage: translateData.from,
-        text: originalMessage,
+        sessionId: messageInfo.sessionId,
+        text: messageInfo.content,
         toLanguage: translateData.to,
       });
 
@@ -157,6 +158,37 @@ export class MessageTranslateService extends BaseService {
         messageId: translateData.messageId,
       });
       throw this.createCommonError('翻译消息失败');
+    }
+  }
+
+  /**
+   * 获取消息内容和 sessionId
+   * @param messageId 消息ID
+   * @returns 消息内容和 sessionId
+   */
+  private async getMessageWithSessionId(
+    messageId: string,
+  ): Promise<{ content: string; sessionId: string } | null> {
+    try {
+      const result = await this.db.query.messages.findFirst({
+        columns: { content: true, sessionId: true },
+        where: eq(messages.id, messageId),
+      });
+
+      if (!result?.content || !result?.sessionId) {
+        return null;
+      }
+
+      return {
+        content: result.content,
+        sessionId: result.sessionId,
+      };
+    } catch (error) {
+      this.log('error', '获取消息内容和 sessionId 失败', {
+        error: error instanceof Error ? error.message : String(error),
+        messageId,
+      });
+      return null;
     }
   }
 
