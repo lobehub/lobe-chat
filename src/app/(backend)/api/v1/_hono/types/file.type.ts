@@ -29,7 +29,7 @@ export interface FileUploadResponse {
   /** 文件哈希值 */
   hash: string;
   /** 文件ID */
-  id: string;
+  id?: string;
   /** 文件元数据 */
   metadata: FileMetadata;
   /** 文件大小（字节） */
@@ -91,13 +91,11 @@ export interface FileListResponse {
   /** 文件列表 */
   files: FileUploadResponse[];
   /** 当前页 */
-  page: number;
+  page?: number;
   /** 每页数量 */
-  pageSize: number;
+  pageSize?: number;
   /** 总数 */
   total: number;
-  /** 总页数 */
-  totalPages: number;
 }
 
 /**

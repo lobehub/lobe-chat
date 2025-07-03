@@ -230,20 +230,59 @@ export class FileUploadService extends BaseService {
    */
   async getFileList(query: FileListQuery): Promise<FileListResponse> {
     try {
-      if (!this.userId) {
-        throw this.createAuthError('User authentication required');
+      // 获取用户上传的全局文件
+      const originalGlobalFiles = await this.db.query.globalFiles.findMany({
+        where: (globalFile, { eq }) => eq(globalFile.creator, this.userId),
+      });
+
+      const globalFiles = originalGlobalFiles.map((file) => {
+        return {
+          ...file,
+          filename: (file.metadata as FileMetadata)?.filename,
+          hash: file.hashId || '',
+          metadata: file.metadata as FileMetadata,
+          uploadedAt: file.createdAt.toISOString(),
+        } satisfies FileUploadResponse;
+      });
+
+      // 获取用户上传的会话文件
+      const sessionFileRelations = await this.db.query.filesToSessions.findMany({
+        where: (sessionFile, { eq }) => eq(sessionFile.userId, this.userId),
+      });
+
+      const sessionFileIds = sessionFileRelations?.map((sessionFile) => sessionFile.fileId);
+
+      const originalSessionFiles = await this.db.query.files.findMany({
+        where: (file, { inArray }) => inArray(file.id, sessionFileIds),
+      });
+
+      const sessionFiles = originalSessionFiles.map((file) => {
+        return {
+          ...file,
+          filename: file.name,
+          hash: file.fileHash || '',
+          metadata: file.metadata as FileMetadata,
+          uploadedAt: file.createdAt.toISOString(),
+        } satisfies FileUploadResponse;
+      });
+
+      let responseFiles = [...globalFiles, ...sessionFiles].sort((a, b) => {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      });
+
+      const total = responseFiles.length;
+
+      if (query.page && query.pageSize) {
+        const start = (query.page - 1) * query.pageSize;
+        const end = start + query.pageSize;
+        responseFiles = responseFiles.slice(start, end);
       }
 
-      // 暂时返回简单的响应，后续可以扩展
-      const page = Math.max(1, query.page || 1);
-      const pageSize = Math.min(100, Math.max(1, query.pageSize || 20));
-
       return {
-        files: [],
-        page,
-        pageSize,
-        total: 0,
-        totalPages: 0,
+        files: responseFiles,
+        page: query.page,
+        pageSize: query.pageSize,
+        total,
       };
     } catch (error) {
       this.log('error', 'Get file list failed', error);
