@@ -2,6 +2,65 @@
 
 # Changelog
 
+### [Version&nbsp;1.95.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.95.0...v1.95.1)
+<sup>Released on **2025-07-03**</sup>
+
+
+#### ♻ Code Refactoring
+
+- **misc**: Migrate to `@google/genai` SDK for Google Gemini API and Vertex AI.
+
+
+#### 🐛 Bug Fixes
+
+- **mermaid**: Firefox mermaid show error.
+- **misc**: Fix desktop chunk issue, pin `antd@5.26.2` to fix build error, Wrong Gemini 2.5 Pro thinkbudget.
+
+
+#### 💄 Styles
+
+- **misc**: Add DeepResearch models from OpenAI, update i18n, update i18n.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Code refactoring
+
+* **misc**: Migrate to `@google/genai` SDK for Google Gemini API and Vertex AI, closes [#7884](https://github.com/jaworldwideorg/OneJA-Bot/issues/7884) ([fef3e5f](https://github.com/jaworldwideorg/OneJA-Bot/commit/fef3e5f))
+
+
+
+#### What's fixed
+
+* **mermaid**: Firefox mermaid show error, closes [#8270](https://github.com/jaworldwideorg/OneJA-Bot/issues/8270) ([d9c5e7b](https://github.com/jaworldwideorg/OneJA-Bot/commit/d9c5e7b))
+* **misc**: Fix desktop chunk issue, closes [#8280](https://github.com/jaworldwideorg/OneJA-Bot/issues/8280) ([c193e65](https://github.com/jaworldwideorg/OneJA-Bot/commit/c193e65))
+* **misc**: Pin `antd@5.26.2` to fix build error, closes [#8303](https://github.com/jaworldwideorg/OneJA-Bot/issues/8303) ([44b6b01](https://github.com/jaworldwideorg/OneJA-Bot/commit/44b6b01))
+* **misc**: Wrong Gemini 2.5 Pro thinkbudget, closes [#8296](https://github.com/jaworldwideorg/OneJA-Bot/issues/8296) ([18920c5](https://github.com/jaworldwideorg/OneJA-Bot/commit/18920c5))
+
+
+
+#### Styles
+
+* **misc**: Add DeepResearch models from OpenAI, closes [#8291](https://github.com/jaworldwideorg/OneJA-Bot/issues/8291) ([87a5cbc](https://github.com/jaworldwideorg/OneJA-Bot/commit/87a5cbc))
+* **misc**: Update i18n, closes [#8322](https://github.com/jaworldwideorg/OneJA-Bot/issues/8322) ([0c6b885](https://github.com/jaworldwideorg/OneJA-Bot/commit/0c6b885))
+* **misc**: Update i18n, closes [#8306](https://github.com/jaworldwideorg/OneJA-Bot/issues/8306) ([80aad1d](https://github.com/jaworldwideorg/OneJA-Bot/commit/80aad1d))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version&nbsp;1.95.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.94.5...v1.95.0)
 <sup>Released on **2025-06-25**</sup>
 
