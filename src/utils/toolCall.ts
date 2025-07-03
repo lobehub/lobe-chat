@@ -4,7 +4,7 @@ import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@/const/p
 
 // OpenAI GPT function_call name can't be longer than 64 characters
 // So we need to use md5 to shorten the name
-export const genToolCallShortMD5Hash = (name: string) => Md5.hashStr(name).toString().slice(0, 32);
+export const genToolCallShortMD5Hash = (name: string) => Md5.hashStr(name).toString().slice(0, 16);
 
 export const genToolCallingName = (identifier: string, name: string, type: string = 'default') => {
   const pluginType = type && type !== 'default' ? `${PLUGIN_SCHEMA_SEPARATOR + type}` : '';
