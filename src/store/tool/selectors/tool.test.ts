@@ -123,7 +123,7 @@ describe('toolSelectors', () => {
         {
           type: 'function',
           function: {
-            name: 'long-long-plugin-with-id____MD5HASH_396eae4c671da3fb642c49ad2b9e8790',
+            name: 'long-long-plugin-with-id____MD5HASH_396eae4c671da3fb',
           },
         },
       ]);
