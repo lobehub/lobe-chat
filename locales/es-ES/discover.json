@@ -147,6 +147,9 @@
     "featuredTools": "Plugins recomendados",
     "more": "Descubre más"
   },
+  "isClaimed": "Reclamado",
+  "isFeatured": "Destacado",
+  "isOfficial": "Certificado oficial",
   "like": "Me gusta",
   "mcp": {
     "categories": {
@@ -390,6 +393,26 @@
           "fullTitle": "Calidad Deficiente",
           "title": "Deficiente"
         }
+      },
+      "settings": {
+        "capabilities": {
+          "prompts": "Indicaciones",
+          "resources": "Recursos",
+          "title": "Capacidades del complemento",
+          "tools": "Herramientas"
+        },
+        "configuration": {
+          "title": "Configuración del complemento"
+        },
+        "connection": {
+          "args": "Parámetros de inicio",
+          "command": "Comando de inicio",
+          "title": "Información de conexión",
+          "type": "Tipo de conexión",
+          "url": "Dirección del servicio"
+        },
+        "saveSettings": "Guardar configuración",
+        "title": "Configuración del complemento"
       },
       "sidebar": {
         "install": "Instalar servidor MCP",

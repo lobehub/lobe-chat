@@ -147,6 +147,9 @@
     "featuredTools": "Öne Çıkan Araçlar",
     "more": "Daha Fazla Keşfet"
   },
+  "isClaimed": "Talep Edildi",
+  "isFeatured": "Öne Çıkan",
+  "isOfficial": "Resmi Onaylı",
   "like": "Beğendim",
   "mcp": {
     "categories": {
@@ -390,6 +393,26 @@
           "fullTitle": "Düşük Kalite",
           "title": "Zayıf"
         }
+      },
+      "settings": {
+        "capabilities": {
+          "prompts": "İstekler",
+          "resources": "Kaynaklar",
+          "title": "Eklenti Yetkinlikleri",
+          "tools": "Araçlar"
+        },
+        "configuration": {
+          "title": "Eklenti Yapılandırması"
+        },
+        "connection": {
+          "args": "Başlatma Parametreleri",
+          "command": "Başlatma Komutu",
+          "title": "Bağlantı Bilgileri",
+          "type": "Bağlantı Türü",
+          "url": "Hizmet Adresi"
+        },
+        "saveSettings": "Ayarları Kaydet",
+        "title": "Eklenti Ayarları"
       },
       "sidebar": {
         "install": "MCP Sunucusunu Kur",

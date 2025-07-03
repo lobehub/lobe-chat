@@ -147,6 +147,9 @@
     "featuredTools": "Plugins recommandés",
     "more": "Découvrez plus"
   },
+  "isClaimed": "Réclamé",
+  "isFeatured": "Recommandé",
+  "isOfficial": "Certifié officiel",
   "like": "J'aime",
   "mcp": {
     "categories": {
@@ -390,6 +393,26 @@
           "fullTitle": "Qualité insuffisante",
           "title": "Insuffisant"
         }
+      },
+      "settings": {
+        "capabilities": {
+          "prompts": "Invite",
+          "resources": "Ressources",
+          "title": "Capacités du plugin",
+          "tools": "Outils"
+        },
+        "configuration": {
+          "title": "Configuration du plugin"
+        },
+        "connection": {
+          "args": "Paramètres de démarrage",
+          "command": "Commande de démarrage",
+          "title": "Informations de connexion",
+          "type": "Type de connexion",
+          "url": "Adresse du service"
+        },
+        "saveSettings": "Enregistrer les paramètres",
+        "title": "Paramètres du plugin"
       },
       "sidebar": {
         "install": "Installer le serveur MCP",

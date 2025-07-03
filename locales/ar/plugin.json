@@ -230,6 +230,50 @@
     },
     "title": "الملفات المحلية"
   },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "جارٍ فحص بيئة التثبيت...",
+    "COMPLETED": "اكتمل التثبيت",
+    "CONFIGURATION_REQUIRED": "يرجى إكمال التكوينات المطلوبة للمتابعة في التثبيت",
+    "ERROR": "خطأ في التثبيت",
+    "FETCHING_MANIFEST": "جارٍ جلب ملف وصف الإضافة...",
+    "GETTING_SERVER_MANIFEST": "جارٍ تهيئة خادم MCP...",
+    "INSTALLING_PLUGIN": "جارٍ تثبيت الإضافة...",
+    "configurationDescription": "تتطلب هذه الإضافة من MCP إعداد معلمات لتعمل بشكل صحيح، يرجى ملء المعلومات الضرورية.",
+    "configurationRequired": "تكوين معلمات الإضافة",
+    "continueInstall": "متابعة التثبيت",
+    "dependenciesDescription": "تتطلب هذه الإضافة تثبيت الاعتمادات النظامية التالية لتعمل بشكل صحيح، يرجى تثبيت الاعتمادات المفقودة حسب التعليمات ثم النقر على إعادة الفحص للمتابعة.",
+    "dependenciesRequired": "يرجى تثبيت الاعتمادات النظامية للإضافة",
+    "dependencyStatus": {
+      "installed": "مثبّت",
+      "notInstalled": "غير مثبّت",
+      "requiredVersion": "الإصدار المطلوب: {{version}}"
+    },
+    "errorDetails": {
+      "args": "المعطيات",
+      "command": "الأمر",
+      "connectionParams": "معلمات الاتصال",
+      "env": "متغيرات البيئة",
+      "errorOutput": "سجل الأخطاء",
+      "exitCode": "رمز الخروج",
+      "hideDetails": "إخفاء التفاصيل",
+      "originalError": "الخطأ الأصلي",
+      "showDetails": "عرض التفاصيل"
+    },
+    "errorTypes": {
+      "CONNECTION_FAILED": "فشل الاتصال",
+      "INITIALIZATION_TIMEOUT": "انتهت مهلة التهيئة",
+      "PROCESS_SPAWN_ERROR": "فشل بدء العملية",
+      "UNKNOWN_ERROR": "خطأ غير معروف",
+      "VALIDATION_ERROR": "فشل التحقق من المعطيات"
+    },
+    "installError": "فشل تثبيت إضافة MCP، سبب الفشل: {{detail}}",
+    "installMethods": {
+      "manual": "التثبيت اليدوي:",
+      "recommended": "طريقة التثبيت الموصى بها:"
+    },
+    "recheckDependencies": "إعادة فحص",
+    "skipDependencies": "تخطي الفحص"
+  },
   "pluginList": "قائمة الإضافات",
   "search": {
     "apiName": {
@@ -266,16 +310,34 @@
   },
   "setting": "إعدادات الإضافة",
   "settings": {
+    "capabilities": {
+      "prompts": "نصوص التوجيه",
+      "resources": "الموارد",
+      "title": "قدرات الإضافة",
+      "tools": "الأدوات"
+    },
+    "configuration": {
+      "title": "تكوين الإضافة"
+    },
+    "connection": {
+      "args": "معطيات التشغيل",
+      "command": "أمر التشغيل",
+      "title": "معلومات الاتصال",
+      "type": "نوع الاتصال",
+      "url": "عنوان الخدمة"
+    },
     "indexUrl": {
       "title": "فهرس السوق",
       "tooltip": "غير مدعوم حاليا للتحرير عبر الإنترنت، يرجى ضبطه عند نشر المتغيرات البيئية"
     },
     "modalDesc": "بعد ضبط عنوان سوق الإضافات، يمكن استخدام سوق الإضافات المخصص",
+    "saveSettings": "حفظ الإعدادات",
     "title": "ضبط سوق الإضافات"
   },
   "showInPortal": "يرجى الاطلاع على التفاصيل في مساحة العمل",
   "store": {
     "actions": {
+      "cancel": "إلغاء التثبيت",
       "confirmUninstall": "سيتم إلغاء تثبيت الإضافة، وسيتم مسح تكوين الإضافة، يرجى تأكيد العملية",
       "detail": "التفاصيل",
       "install": "تثبيت",
@@ -293,7 +355,7 @@
     "tabs": {
       "installed": "مثبتة",
       "mcp": "إضافة MCP",
-      "old": "الإضافة القديمة"
+      "old": "إضافة LobeChat"
     },
     "title": "متجر الإضافات"
   },

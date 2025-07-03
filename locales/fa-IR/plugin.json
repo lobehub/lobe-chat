@@ -230,6 +230,50 @@
     },
     "title": "فایل‌های محلی"
   },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "در حال بررسی محیط نصب...",
+    "COMPLETED": "نصب کامل شد",
+    "CONFIGURATION_REQUIRED": "لطفاً پیکربندی‌های لازم را انجام دهید و سپس نصب را ادامه دهید",
+    "ERROR": "خطای نصب",
+    "FETCHING_MANIFEST": "در حال دریافت فایل توضیحات افزونه...",
+    "GETTING_SERVER_MANIFEST": "در حال راه‌اندازی سرور MCP...",
+    "INSTALLING_PLUGIN": "در حال نصب افزونه...",
+    "configurationDescription": "این افزونه MCP نیاز به پارامترهای پیکربندی دارد تا به درستی کار کند، لطفاً اطلاعات پیکربندی لازم را وارد کنید",
+    "configurationRequired": "پیکربندی پارامترهای افزونه",
+    "continueInstall": "ادامه نصب",
+    "dependenciesDescription": "این افزونه برای عملکرد صحیح نیاز به نصب وابستگی‌های سیستمی زیر دارد، لطفاً وابستگی‌های گمشده را طبق راهنما نصب کرده و سپس برای ادامه نصب روی بررسی مجدد کلیک کنید.",
+    "dependenciesRequired": "لطفاً وابستگی‌های سیستمی افزونه را نصب کنید",
+    "dependencyStatus": {
+      "installed": "نصب شده",
+      "notInstalled": "نصب نشده",
+      "requiredVersion": "نسخه مورد نیاز: {{version}}"
+    },
+    "errorDetails": {
+      "args": "پارامترها",
+      "command": "دستور",
+      "connectionParams": "پارامترهای اتصال",
+      "env": "متغیرهای محیطی",
+      "errorOutput": "گزارش خطا",
+      "exitCode": "کد خروج",
+      "hideDetails": "پنهان کردن جزئیات",
+      "originalError": "خطای اصلی",
+      "showDetails": "نمایش جزئیات"
+    },
+    "errorTypes": {
+      "CONNECTION_FAILED": "اتصال ناموفق بود",
+      "INITIALIZATION_TIMEOUT": "زمان راه‌اندازی به پایان رسید",
+      "PROCESS_SPAWN_ERROR": "خطا در راه‌اندازی فرآیند",
+      "UNKNOWN_ERROR": "خطای ناشناخته",
+      "VALIDATION_ERROR": "اعتبارسنجی پارامترها ناموفق بود"
+    },
+    "installError": "نصب افزونه MCP ناموفق بود، دلیل خطا: {{detail}}",
+    "installMethods": {
+      "manual": "نصب دستی:",
+      "recommended": "روش نصب پیشنهادی:"
+    },
+    "recheckDependencies": "بررسی مجدد",
+    "skipDependencies": "رد بررسی"
+  },
   "pluginList": "فهرست افزونه‌ها",
   "search": {
     "apiName": {
@@ -266,16 +310,34 @@
   },
   "setting": "تنظیمات افزونه",
   "settings": {
+    "capabilities": {
+      "prompts": "عبارات راهنما",
+      "resources": "منابع",
+      "title": "قابلیت‌های افزونه",
+      "tools": "ابزارها"
+    },
+    "configuration": {
+      "title": "پیکربندی افزونه"
+    },
+    "connection": {
+      "args": "پارامترهای راه‌اندازی",
+      "command": "دستور راه‌اندازی",
+      "title": "اطلاعات اتصال",
+      "type": "نوع اتصال",
+      "url": "آدرس سرویس"
+    },
     "indexUrl": {
       "title": "شاخص بازار",
       "tooltip": "ویرایش آنلاین در حال حاضر پشتیبانی نمی‌شود، لطفاً از طریق متغیرهای محیطی در زمان استقرار تنظیم کنید"
     },
     "modalDesc": "پس از پیکربندی آدرس بازار افزونه، می‌توانید از بازار افزونه سفارشی استفاده کنید",
+    "saveSettings": "ذخیره تنظیمات",
     "title": "تنظیمات بازار افزونه"
   },
   "showInPortal": "لطفاً جزئیات را در فضای کاری مشاهده کنید",
   "store": {
     "actions": {
+      "cancel": "لغو نصب",
       "confirmUninstall": "در حال حذف این افزونه هستید. پس از حذف، تنظیمات افزونه پاک خواهد شد. لطفاً عملیات خود را تأیید کنید.",
       "detail": "جزئیات",
       "install": "نصب",
@@ -293,7 +355,7 @@
     "tabs": {
       "installed": "نصب شده",
       "mcp": "افزونه MCP",
-      "old": "افزونه نسخه قدیمی"
+      "old": "افزونه LobeChat"
     },
     "title": "فروشگاه افزونه‌ها"
   },

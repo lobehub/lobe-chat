@@ -147,6 +147,9 @@
     "featuredTools": "추천 플러그인",
     "more": "더 많은 발견"
   },
+  "isClaimed": "인증됨",
+  "isFeatured": "추천",
+  "isOfficial": "공식 인증",
   "like": "좋아요",
   "mcp": {
     "categories": {
@@ -390,6 +393,26 @@
           "fullTitle": "품질 미흡",
           "title": "미흡"
         }
+      },
+      "settings": {
+        "capabilities": {
+          "prompts": "프롬프트",
+          "resources": "리소스",
+          "title": "플러그인 기능",
+          "tools": "도구"
+        },
+        "configuration": {
+          "title": "플러그인 구성"
+        },
+        "connection": {
+          "args": "시작 매개변수",
+          "command": "시작 명령",
+          "title": "연결 정보",
+          "type": "연결 유형",
+          "url": "서비스 주소"
+        },
+        "saveSettings": "설정 저장",
+        "title": "플러그인 설정"
       },
       "sidebar": {
         "install": "MCP 서버 설치",

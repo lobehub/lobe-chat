@@ -147,6 +147,9 @@
     "featuredTools": "Polecane wtyczki",
     "more": "Odkryj więcej"
   },
+  "isClaimed": "Zgłoszono",
+  "isFeatured": "Polecane",
+  "isOfficial": "Oficjalne",
   "like": "Lubię",
   "mcp": {
     "categories": {
@@ -390,6 +393,26 @@
           "fullTitle": "Niska jakość",
           "title": "Słaba"
         }
+      },
+      "settings": {
+        "capabilities": {
+          "prompts": "Podpowiedzi",
+          "resources": "Zasoby",
+          "title": "Funkcje wtyczki",
+          "tools": "Narzędzia"
+        },
+        "configuration": {
+          "title": "Konfiguracja wtyczki"
+        },
+        "connection": {
+          "args": "Parametry uruchomienia",
+          "command": "Polecenie uruchomienia",
+          "title": "Informacje o połączeniu",
+          "type": "Typ połączenia",
+          "url": "Adres usługi"
+        },
+        "saveSettings": "Zapisz ustawienia",
+        "title": "Ustawienia wtyczki"
       },
       "sidebar": {
         "install": "Zainstaluj serwer MCP",

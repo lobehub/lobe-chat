@@ -13,7 +13,12 @@ import { pluginService } from '@/services/plugin';
 import { toolService } from '@/services/tool';
 import { globalHelpers } from '@/store/global/helpers';
 import { mcpStoreSelectors } from '@/store/tool/selectors';
-import { MCPErrorInfo, MCPInstallProgress, MCPPluginListParams } from '@/types/plugins';
+import {
+  CheckMcpInstallResult,
+  MCPErrorInfo,
+  MCPInstallProgress,
+  MCPPluginListParams,
+} from '@/types/plugins';
 import { sleep } from '@/utils/sleep';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -86,7 +91,7 @@ export const createMCPPluginStoreSlice: StateCreator<
     const installStartTime = Date.now();
 
     let data: any;
-    let result: any;
+    let result: CheckMcpInstallResult | undefined;
     const userAgent = `LobeHub Desktop/${CURRENT_VERSION}`;
 
     try {
@@ -110,6 +115,7 @@ export const createMCPPluginStoreSlice: StateCreator<
           ...configInfo.connection,
           config, // 合并用户提供的配置
         };
+        result = configInfo.checkResult;
       } else {
         // 正常模式：从头开始安装
 
@@ -168,6 +174,7 @@ export const createMCPPluginStoreSlice: StateCreator<
         if (result.needsConfig) {
           // 需要配置，暂停安装流程
           updateMCPInstallProgress(identifier, {
+            checkResult: result,
             configSchema: result.configSchema,
             connection: result.connection,
             manifest: data,
@@ -278,7 +285,7 @@ export const createMCPPluginStoreSlice: StateCreator<
           resources: (manifest as any).resources,
           tools: (manifest as any).tools,
         },
-        platform: result.platform,
+        platform: result!.platform,
         success: true,
         userAgent,
         version: data.version,
@@ -353,7 +360,7 @@ export const createMCPPluginStoreSlice: StateCreator<
         identifier: plugin.identifier,
         installDurationMs,
         metadata: errorInfo.metadata,
-        platform: result?.platform,
+        platform: result!.platform,
         success: false,
         userAgent,
         version: data?.version,
