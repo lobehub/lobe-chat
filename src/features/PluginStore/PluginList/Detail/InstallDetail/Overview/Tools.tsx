@@ -2,26 +2,28 @@ import { Block, Collapse, Highlighter, Markdown, Tag } from '@lobehub/ui';
 import { Empty } from 'antd';
 import { isString } from 'lodash-es';
 import { markdownToTxt } from 'markdown-to-txt';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import InlineTable from '@/components/InlineTable';
 import CollapseDesc from '@/features/MCPPluginDetail/CollapseDesc';
 import CollapseLayout from '@/features/MCPPluginDetail/CollapseLayout';
 import { ModeType } from '@/features/MCPPluginDetail/Schema/types';
+import { useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 
 import Title from '../../../../../../app/[variants]/(main)/discover/features/Title';
-import { useDetailContext } from '../../DetailProvider';
 
 interface ToolProps {
-  activeKey?: string[];
   mode?: ModeType;
-  setActiveKey?: (key: string[]) => void;
 }
 
-const Tools = memo<ToolProps>(({ mode, activeKey = [], setActiveKey }) => {
+const Tools = memo<ToolProps>(({ mode }) => {
   const { t } = useTranslation('discover');
-  const { manifest } = useDetailContext();
+  const [identifier] = useToolStore((s) => [s.activePluginIdentifier]);
+  const plugin = useToolStore(pluginSelectors.getInstalledPluginById(identifier));
+  const [activeKey, setActiveKey] = useState<string[]>([]);
+  const { manifest } = plugin || {};
 
   if (!manifest || isString(manifest))
     return (

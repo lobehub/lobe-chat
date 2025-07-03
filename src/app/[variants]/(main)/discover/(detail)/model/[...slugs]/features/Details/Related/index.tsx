@@ -13,7 +13,7 @@ const Related = memo(() => {
   return (
     <Flexbox gap={16}>
       <Title
-        more={t('plugins.details.related.more')}
+        more={t('assistants.details.related.more')}
         moreLink={qs.stringifyUrl({
           query: {
             category,
@@ -21,7 +21,7 @@ const Related = memo(() => {
           url: '/discover/plugin',
         })}
       >
-        {t('plugins.details.related.listTitle')}
+        {t('assistants.details.related.listTitle')}
       </Title>
       <List data={related} />
     </Flexbox>

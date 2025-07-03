@@ -12,7 +12,7 @@ interface DetailProps {
 const Detail = memo<DetailProps>(({ identifier, type, runtimeType }) => {
   if (runtimeType === 'mcp') return <McpDetail identifier={identifier} />;
 
-  if (type === 'plugin') return <PluginDetail />;
+  if (type === 'plugin') return <PluginDetail identifier={identifier} />;
 });
 
 export default Detail;

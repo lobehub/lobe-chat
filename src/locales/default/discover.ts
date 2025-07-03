@@ -579,16 +579,14 @@ export default {
   plugins: {
     community: '社区插件',
     details: {
-      overview: {
-        title: '概览',
-      },
-      related: {
-        listTitle: '相关插件',
-        more: '查看更多',
-        title: '相关推荐',
+      settings: {
+        title: '插件设置',
       },
       summary: {
         title: '你可以使用该插件做什么？',
+      },
+      tools: {
+        title: '插件工具',
       },
     },
     install: '安装插件',

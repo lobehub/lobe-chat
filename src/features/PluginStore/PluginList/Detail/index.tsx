@@ -11,11 +11,13 @@ import Header from './Header';
 import InstallDetail from './InstallDetail';
 import DetailsLoading from './Loading';
 
-const Detail = memo(() => {
-  const [identifier, isPluginListInit] = useToolStore((s) => [
+const Detail = memo<{ identifier?: string }>(({ identifier: defaultIdentifier }) => {
+  const [activeMCPIdentifier, isPluginListInit] = useToolStore((s) => [
     s.activePluginIdentifier,
     s.isPluginListInit,
   ]);
+
+  const identifier = defaultIdentifier ?? activeMCPIdentifier;
 
   const isPluginInstalled = useToolStore(pluginSelectors.isPluginInstalled(identifier!));
   const usePluginDetail = useDiscoverStore((s) => s.usePluginDetail);
