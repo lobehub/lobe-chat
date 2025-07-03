@@ -573,16 +573,14 @@
   "plugins": {
     "community": "Gemeenschapsplugins",
     "details": {
-      "overview": {
-        "title": "Overzicht"
-      },
-      "related": {
-        "listTitle": "Gerelateerde plugins",
-        "more": "Meer bekijken",
-        "title": "Aanbevolen"
+      "settings": {
+        "title": "Plug-in instellingen"
       },
       "summary": {
         "title": "Wat kun je met deze plugin doen?"
+      },
+      "tools": {
+        "title": "Plug-in hulpmiddelen"
       }
     },
     "install": "Plugin installeren",

@@ -12,6 +12,10 @@
     "tool_call": "aracı çağrı"
   },
   "detailModal": {
+    "emptyState": {
+      "description": "Lütfen eklentinin yeteneklerini ve yapılandırma seçeneklerini görmek için önce bu eklentiyi yükleyin",
+      "title": "Yükledikten Sonra Eklenti Detaylarını Görüntüleyin"
+    },
     "info": {
       "description": "API Açıklaması",
       "name": "API Adı"

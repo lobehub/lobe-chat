@@ -573,16 +573,14 @@
   "plugins": {
     "community": "커뮤니티 플러그인",
     "details": {
-      "overview": {
-        "title": "개요"
-      },
-      "related": {
-        "listTitle": "관련 플러그인",
-        "more": "더 보기",
-        "title": "관련 추천"
+      "settings": {
+        "title": "플러그인 설정"
       },
       "summary": {
         "title": "이 플러그인으로 할 수 있는 일"
+      },
+      "tools": {
+        "title": "플러그인 도구"
       }
     },
     "install": "플러그인 설치",

@@ -12,6 +12,10 @@
     "tool_call": "工具调用请求"
   },
   "detailModal": {
+    "emptyState": {
+      "description": "请先安装此插件，以查看插件能力和配置选项",
+      "title": "安装后查看插件详情"
+    },
     "info": {
       "description": "API 描述",
       "name": "API 名称"

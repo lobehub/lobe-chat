@@ -573,16 +573,14 @@
   "plugins": {
     "community": "コミュニティプラグイン",
     "details": {
-      "overview": {
-        "title": "概要"
-      },
-      "related": {
-        "listTitle": "関連プラグイン",
-        "more": "もっと見る",
-        "title": "関連おすすめ"
+      "settings": {
+        "title": "プラグイン設定"
       },
       "summary": {
         "title": "このプラグインで何ができるか？"
+      },
+      "tools": {
+        "title": "プラグインツール"
       }
     },
     "install": "プラグインをインストール",

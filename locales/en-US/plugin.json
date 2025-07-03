@@ -12,6 +12,10 @@
     "tool_call": "tool call request"
   },
   "detailModal": {
+    "emptyState": {
+      "description": "Please install this plugin first to view its capabilities and configuration options",
+      "title": "View Plugin Details After Installation"
+    },
     "info": {
       "description": "API Description",
       "name": "API Name"

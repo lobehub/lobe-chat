@@ -12,6 +12,10 @@
     "tool_call": "richiesta di chiamata dello strumento"
   },
   "detailModal": {
+    "emptyState": {
+      "description": "Si prega di installare questo plugin per visualizzare le funzionalità e le opzioni di configurazione del plugin",
+      "title": "Visualizza i dettagli del plugin dopo l'installazione"
+    },
     "info": {
       "description": "Descrizione API",
       "name": "Nome API"

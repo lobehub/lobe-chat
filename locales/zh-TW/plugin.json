@@ -12,6 +12,10 @@
     "tool_call": "工具呼叫"
   },
   "detailModal": {
+    "emptyState": {
+      "description": "請先安裝此外掛，以查看外掛功能和設定選項",
+      "title": "安裝後查看外掛詳情"
+    },
     "info": {
       "description": "API 描述",
       "name": "API 名稱"

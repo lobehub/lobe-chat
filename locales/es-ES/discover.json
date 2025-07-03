@@ -573,16 +573,14 @@
   "plugins": {
     "community": "Complementos de la comunidad",
     "details": {
-      "overview": {
-        "title": "Resumen"
-      },
-      "related": {
-        "listTitle": "Complementos relacionados",
-        "more": "Ver más",
-        "title": "Recomendaciones relacionadas"
+      "settings": {
+        "title": "Configuración del complemento"
       },
       "summary": {
         "title": "¿Qué puedes hacer con este complemento?"
+      },
+      "tools": {
+        "title": "Herramientas del complemento"
       }
     },
     "install": "Instalar complemento",

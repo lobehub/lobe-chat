@@ -573,16 +573,14 @@
   "plugins": {
     "community": "Wtyczki społecznościowe",
     "details": {
-      "overview": {
-        "title": "Przegląd"
-      },
-      "related": {
-        "listTitle": "Powiązane wtyczki",
-        "more": "Zobacz więcej",
-        "title": "Powiązane rekomendacje"
+      "settings": {
+        "title": "Ustawienia wtyczek"
       },
       "summary": {
         "title": "Co możesz zrobić z tą wtyczką?"
+      },
+      "tools": {
+        "title": "Narzędzia wtyczek"
       }
     },
     "install": "Zainstaluj wtyczkę",
