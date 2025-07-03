@@ -51,16 +51,18 @@ export const createGenerationTopicSlice: StateCreator<
   GenerationTopicAction
 > = (set, get) => ({
   createGenerationTopic: async (prompts: string[]) => {
+    // Validate prompts - cannot be empty
+    if (!prompts || prompts.length === 0) {
+      throw new Error('Prompts cannot be empty when creating a generation topic');
+    }
+
     const { internal_createGenerationTopic, summaryGenerationTopicTitle } = get();
 
     // Create topic with default title
     const topicId = await internal_createGenerationTopic();
 
     // Auto-generate title from prompts
-    if (prompts.length > 0) {
-      // Run summary async, don't wait for it
-      summaryGenerationTopicTitle(topicId, prompts);
-    }
+    summaryGenerationTopicTitle(topicId, prompts);
 
     return topicId;
   },

@@ -56,9 +56,7 @@ export const generationTopicReducer = (
     }
 
     case 'deleteTopic': {
-      return produce(state, (draftState) => {
-        return draftState.filter((topic) => topic.id !== payload.id);
-      });
+      return state.filter((topic) => topic.id !== payload.id);
     }
 
     default: {
