@@ -3,6 +3,7 @@
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { withSuspense } from '@/components/withSuspense';
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
 import { DiscoverTab, ModelQueryParams } from '@/types/discover';
@@ -40,4 +41,4 @@ const Client = memo<{ mobile?: boolean }>(() => {
   );
 });
 
-export default Client;
+export default withSuspense(Client);
