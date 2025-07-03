@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import ImageItem from '@/components/ImageItem';
 import { useDownloadImage } from '@/hooks/useDownloadImage';
 import { useImageStore } from '@/store/image';
-import { imageGenerationConfigSelectors } from '@/store/image/slices/generationConfig/selectors';
+import { imageGenerationConfigSelectors } from '@/store/image/selectors';
 import { AsyncTaskStatus } from '@/types/asyncTask';
 import { Generation } from '@/types/generation';
 import { inferFileExtensionFromImageUrl } from '@/utils/url';

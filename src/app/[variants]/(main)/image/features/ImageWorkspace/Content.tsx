@@ -2,12 +2,12 @@
 
 import { Center } from 'react-layout-kit';
 
-import GenerationFeed from '@/app/[variants]/(main)/image/features/GenerationFeed';
-import PromptInput from '@/app/[variants]/(main)/image/features/PromptInput';
 import { useImageStore } from '@/store/image';
-import { generationBatchSelectors } from '@/store/image/selectors';
-import { generationTopicSelectors } from '@/store/image/slices/generationTopic/selectors';
+import { generationBatchSelectors, generationTopicSelectors } from '@/store/image/selectors';
 
+import GenerationFeed from '../GenerationFeed';
+import PromptInput from '../PromptInput';
+import EmptyState from './EmptyState';
 import SkeletonList from './SkeletonList';
 
 const ImageWorkspaceContent = () => {
@@ -24,7 +24,9 @@ const ImageWorkspaceContent = () => {
     return <SkeletonList />;
   }
 
-  return hasGenerations ? (
+  if (!hasGenerations) return <EmptyState />;
+
+  return (
     <>
       {/* 生成结果展示区 */}
       <GenerationFeed key={activeTopicId} />
@@ -40,11 +42,6 @@ const ImageWorkspaceContent = () => {
         <PromptInput disableAnimation={true} showTitle={false} />
       </Center>
     </>
-  ) : (
-    // 当没有生成结果时，将输入框完整居中显示
-    <Center>
-      <PromptInput disableAnimation={true} showTitle={true} />
-    </Center>
   );
 };
 

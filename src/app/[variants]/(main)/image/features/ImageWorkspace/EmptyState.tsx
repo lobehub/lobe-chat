@@ -1,9 +1,9 @@
 import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import PromptInput from '@/app/[variants]/(main)/image/features/PromptInput';
+import PromptInput from '../PromptInput';
 
-const EmptyLayout = memo(() => {
+const EmptyState = memo(() => {
   return (
     <Flexbox
       flex={1}
@@ -19,4 +19,4 @@ const EmptyLayout = memo(() => {
   );
 });
 
-export default EmptyLayout;
+export default EmptyState;

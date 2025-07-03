@@ -5,7 +5,7 @@ import { memo, useEffect, useRef } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useImageStore } from '@/store/image';
-import { generationBatchSelectors } from '@/store/image/slices/generationBatch/selectors';
+import { generationBatchSelectors } from '@/store/image/selectors';
 
 import { GenerationBatchItem } from './components/BatchItem';
 
