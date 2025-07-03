@@ -11,7 +11,7 @@ import { useImageStore } from '@/store/image';
 import { createImageSelectors } from '@/store/image/selectors';
 import { useGenerationConfigParam } from '@/store/image/slices/generationConfig/hooks';
 
-import PromptInputHero from './Hero';
+import PromptTitle from './Title';
 
 interface PromptInputProps {
   showTitle?: boolean;
@@ -59,7 +59,7 @@ const PromptInput = ({ showTitle = false }: PromptInputProps) => {
 
   return (
     <Flexbox gap={24} width={'100%'}>
-      {showTitle && <PromptInputHero />}
+      {showTitle && <PromptTitle />}
 
       <Flexbox
         align="flex-end"

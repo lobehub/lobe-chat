@@ -7,7 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useImageStore } from '@/store/image';
 import { generationBatchSelectors } from '@/store/image/slices/generationBatch/selectors';
 
-import { GenerationBatchItem } from './GenerationBatchItem';
+import { GenerationBatchItem } from './components/BatchItem';
 
 const GenerationFeed = memo(() => {
   const [parent, enableAnimations] = useAutoAnimate();

@@ -5,7 +5,7 @@ import { Palette } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
-const PromptInputHero = () => {
+const PromptTitle = () => {
   const { t } = useTranslation('image');
 
   return (
@@ -23,4 +23,4 @@ const PromptInputHero = () => {
   );
 };
 
-export default PromptInputHero;
+export default PromptTitle;
