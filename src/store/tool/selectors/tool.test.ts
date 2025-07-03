@@ -185,6 +185,8 @@ describe('toolSelectors', () => {
           identifier: 'plugin-1',
           type: 'plugin',
           meta: { title: 'Plugin 1', description: 'Plugin 1 description' },
+          title: 'Plugin 1',
+          description: 'Plugin 1 description',
         },
         {
           type: 'plugin',
