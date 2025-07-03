@@ -1,11 +1,13 @@
 import { Segmented } from '@lobehub/ui';
+import { SegmentedOptions } from 'antd/es/segmented';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { isDesktop } from '@/const/version';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { useToolStore } from '@/store/tool';
-import { PluginStoreTabs } from '@/store/tool/slices/store';
+import { PluginStoreTabs } from '@/store/tool/slices/oldStore';
 
 import AddPluginButton from './AddPluginButton';
 import InstalledList from './InstalledList';
@@ -18,6 +20,13 @@ export const Content = memo(() => {
   const mobile = useServerConfigStore((s) => s.isMobile);
   const [listType] = useToolStore((s) => [s.listType]);
   const [keywords] = useState<string>();
+
+  const options = [
+    isDesktop ? { label: t('store.tabs.mcp'), value: PluginStoreTabs.MCP } : undefined,
+    { label: t('store.tabs.old'), value: PluginStoreTabs.Plugin },
+    { label: t('store.tabs.installed'), value: PluginStoreTabs.Installed },
+  ].filter(Boolean) as SegmentedOptions;
+
   return (
     <Flexbox
       gap={8}
@@ -31,11 +40,7 @@ export const Content = memo(() => {
             onChange={(v) => {
               useToolStore.setState({ listType: v as PluginStoreTabs });
             }}
-            options={[
-              { label: t('store.tabs.mcp'), value: PluginStoreTabs.MCP },
-              { label: t('store.tabs.old'), value: PluginStoreTabs.Plugin },
-              { label: t('store.tabs.installed'), value: PluginStoreTabs.Installed },
-            ]}
+            options={options}
             style={{ flex: 1 }}
             value={listType}
             variant={'filled'}
@@ -45,7 +50,7 @@ export const Content = memo(() => {
         <Search />
       </Flexbox>
       {listType === PluginStoreTabs.MCP && <McpList />}
-      {listType === PluginStoreTabs.Plugin && <PluginList keywords={keywords} />}
+      {listType === PluginStoreTabs.Plugin && <PluginList />}
       {listType === PluginStoreTabs.Installed && <InstalledList keywords={keywords} />}
     </Flexbox>
   );

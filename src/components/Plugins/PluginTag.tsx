@@ -3,11 +3,11 @@ import { BadgeCheck, CircleUser, Package } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { InstallPluginMeta } from '@/types/tool/plugin';
-
-interface PluginTagProps extends Pick<InstallPluginMeta, 'author' | 'type'> {
+interface PluginTagProps {
+  author?: string;
   showIcon?: boolean;
   showText?: boolean;
+  type: 'builtin' | 'customPlugin' | 'plugin';
 }
 
 const PluginTag = memo<PluginTagProps>(({ showIcon = true, author, type, showText = true }) => {

@@ -6,6 +6,7 @@ import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { notification } from '@/components/AntdStaticMethods';
 import { pluginService } from '@/services/plugin';
 import { toolService } from '@/services/tool';
+import { DiscoverPluginItem } from '@/types/discover';
 
 import { useToolStore } from '../../store';
 
@@ -83,13 +84,13 @@ const logError = console.error;
 beforeEach(() => {
   vi.restoreAllMocks();
   useToolStore.setState({
-    pluginStoreList: [
+    oldPluginItems: [
       {
         identifier: 'plugin1',
-        meta: { title: 'plugin1', avatar: '🍏' },
+        title: 'plugin1',
+        avatar: '🍏',
         manifest: 'https://abc.com/manifest.json',
-        schemaVersion: 1,
-      } as LobeChatPluginMeta,
+      } as DiscoverPluginItem,
     ],
   });
   console.error = () => {};
@@ -114,7 +115,7 @@ describe('useToolStore:pluginStore', () => {
       // Then
       expect(toolService.getToolList).toHaveBeenCalled();
       expect(pluginList).toEqual(pluginListMock);
-      expect(useToolStore.getState().pluginStoreList).toEqual(pluginListMock);
+      expect(useToolStore.getState().oldPluginItems).toEqual(pluginListMock);
     });
 
     it('should handle errors when loading plugin list', async () => {
@@ -138,7 +139,7 @@ describe('useToolStore:pluginStore', () => {
       expect(errorOccurred).toBe(true);
       expect(pluginList).toBeUndefined();
       // Ensure the state is not updated with an undefined value
-      expect(useToolStore.getState().pluginStoreList).not.toBeUndefined();
+      expect(useToolStore.getState().oldPluginItems).not.toBeUndefined();
     });
   });
 
@@ -270,11 +271,12 @@ describe('useToolStore:pluginStore', () => {
       (toolService.getToolManifest as Mock).mockRejectedValue(error);
 
       useToolStore.setState({
-        pluginStoreList: [
+        oldPluginItems: [
           {
             identifier: 'plugin1',
-            meta: { title: 'plugin1', avatar: '🍏' },
-          } as LobeChatPluginMeta,
+            title: 'plugin1',
+            avatar: '🍏',
+          } as DiscoverPluginItem,
         ],
       });
 
@@ -294,17 +296,19 @@ describe('useToolStore:pluginStore', () => {
       // Given
       act(() => {
         useToolStore.setState({
-          pluginStoreList: [
+          oldPluginItems: [
             {
               identifier: 'plugin1',
-              meta: { title: 'plugin1', avatar: '🍏' },
+              title: 'plugin1',
+              avatar: '🍏',
               manifest: 'https://abc.com/manifest.json',
-            } as LobeChatPluginMeta,
+            } as DiscoverPluginItem,
             {
               identifier: 'plugin2',
-              meta: { title: 'plugin2', avatar: '🍏' },
+              title: 'plugin2',
+              avatar: '🍏',
               manifest: 'https://abc.com/manifest.json',
-            } as LobeChatPluginMeta,
+            } as DiscoverPluginItem,
           ],
         });
       });

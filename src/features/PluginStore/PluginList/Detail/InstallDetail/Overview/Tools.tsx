@@ -10,14 +10,16 @@ import CollapseDesc from '@/features/MCPPluginDetail/CollapseDesc';
 import CollapseLayout from '@/features/MCPPluginDetail/CollapseLayout';
 import { ModeType } from '@/features/MCPPluginDetail/Schema/types';
 
-import Title from '../../../../../../features/Title';
+import Title from '../../../../../../app/[variants]/(main)/discover/features/Title';
 import { useDetailContext } from '../../DetailProvider';
 
-const Tools = memo<{
+interface ToolProps {
   activeKey?: string[];
   mode?: ModeType;
   setActiveKey?: (key: string[]) => void;
-}>(({ mode, activeKey = [], setActiveKey }) => {
+}
+
+const Tools = memo<ToolProps>(({ mode, activeKey = [], setActiveKey }) => {
   const { t } = useTranslation('discover');
   const { manifest } = useDetailContext();
 

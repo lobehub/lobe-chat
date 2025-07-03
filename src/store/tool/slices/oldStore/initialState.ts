@@ -1,5 +1,3 @@
-import { LobeChatPluginMeta } from '@lobehub/chat-plugin-sdk';
-
 import { isDesktop } from '@/const/version';
 import { DiscoverPluginItem } from '@/types/discover';
 
@@ -12,18 +10,16 @@ export enum PluginStoreTabs {
 }
 
 export interface PluginStoreState {
-  // Plugin list state management (similar to MCP)
   activePluginIdentifier?: string;
   currentPluginPage: number;
   displayMode: 'grid' | 'list';
   isPluginListInit?: boolean;
 
   listType: PluginStoreTabs;
+  oldPluginItems: DiscoverPluginItem[];
   pluginInstallLoading: PluginInstallLoadingMap;
-  pluginItems: DiscoverPluginItem[];
   pluginSearchKeywords?: string;
   pluginSearchLoading?: boolean;
-  pluginStoreList: LobeChatPluginMeta[];
   pluginTotalCount?: number;
 }
 
@@ -32,7 +28,6 @@ export const initialPluginStoreState: PluginStoreState = {
   currentPluginPage: 1,
   displayMode: 'grid',
   listType: isDesktop ? PluginStoreTabs.MCP : PluginStoreTabs.Plugin,
+  oldPluginItems: [],
   pluginInstallLoading: {},
-  pluginItems: [],
-  pluginStoreList: [],
 };

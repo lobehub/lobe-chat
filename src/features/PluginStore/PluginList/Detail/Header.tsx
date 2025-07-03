@@ -1,18 +1,21 @@
 'use client';
 
 import { Github } from '@lobehub/icons';
-import { ActionIcon, Avatar, Button, Icon, Text } from '@lobehub/ui';
+import { ActionIcon, Avatar, Button, Collapse, Icon, Text } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import { DotIcon } from 'lucide-react';
 import Link from 'next/link';
 import qs from 'query-string';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import { useCategory } from '../../../../(list)/plugin/features/Category/useCategory';
-import PublishedTime from '../../../../features/PublishedTime';
+import PublishedTime from '@/components/PublishedTime';
+
 import { useDetailContext } from './DetailProvider';
+import TagList from './TagList';
+import { useCategory } from './useCategory';
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -31,11 +34,13 @@ const useStyles = createStyles(({ css, token }) => {
 });
 
 const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile, inModal }) => {
-  const { author, identifier, createdAt, category, avatar, title } = useDetailContext();
+  const { author, identifier, createdAt, category, avatar, title, tags, description } =
+    useDetailContext();
   const { styles, theme } = useStyles();
   const { mobile = isMobile } = useResponsive();
   const categories = useCategory();
   const cate = categories.find((c) => c.key === category);
+  const { t } = useTranslation('discover');
 
   const cateButton = (
     <Link
@@ -51,7 +56,7 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
   );
 
   return (
-    <Flexbox gap={12}>
+    <Flexbox gap={24}>
       <Flexbox align={'flex-start'} gap={16} horizontal width={'100%'}>
         <Avatar avatar={avatar} size={mobile ? 48 : 64} />
         <Flexbox
@@ -105,31 +110,49 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
               </Flexbox>
             )}
           </Flexbox>
-          <Flexbox align={'center'} gap={4} horizontal>
-            {author && (
-              <Link href={urlJoin('https://github.com', author)} target={'_blank'}>
-                {author}
-              </Link>
-            )}
-            <Icon icon={DotIcon} />
-            <PublishedTime
-              className={styles.time}
-              date={createdAt as string}
-              template={'MMM DD, YYYY'}
-            />
+          <Flexbox horizontal justify={'space-between'}>
+            <Flexbox>
+              <Flexbox align={'center'} gap={4} horizontal>
+                {author && (
+                  <Link href={urlJoin('https://github.com', author)} target={'_blank'}>
+                    {author}
+                  </Link>
+                )}
+                <Icon icon={DotIcon} />
+                <PublishedTime
+                  className={styles.time}
+                  date={createdAt as string}
+                  template={'MMM DD, YYYY'}
+                />
+              </Flexbox>
+              {tags && <TagList tags={tags} />}
+            </Flexbox>
+            <Flexbox
+              align={'center'}
+              gap={mobile ? 12 : 24}
+              horizontal
+              style={{
+                color: theme.colorTextSecondary,
+              }}
+            >
+              {!mobile && cateButton}
+            </Flexbox>
           </Flexbox>
         </Flexbox>
       </Flexbox>
-      <Flexbox
-        align={'center'}
-        gap={mobile ? 12 : 24}
-        horizontal
-        style={{
-          color: theme.colorTextSecondary,
-        }}
-      >
-        {!mobile && cateButton}
-      </Flexbox>
+
+      <Collapse
+        defaultActiveKey={['summary']}
+        expandIconPosition={'end'}
+        items={[
+          {
+            children: description,
+            key: 'summary',
+            label: t('plugins.details.summary.title'),
+          },
+        ]}
+        variant={'outlined'}
+      />
     </Flexbox>
   );
 });

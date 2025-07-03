@@ -18,8 +18,14 @@ const getInstalledPluginById = (id?: string) => (s: ToolStoreState) => {
 
 const getPluginMetaById = (id: string) => (s: ToolStoreState) => {
   // first try to find meta from store
-  const storeMeta = s.pluginStoreList.find((i) => i.identifier === id)?.meta;
-  if (storeMeta) return storeMeta;
+  const item = s.oldPluginItems.find((i) => i.identifier === id);
+  if (item)
+    return {
+      avatar: item.avatar,
+      description: item.description,
+      tags: item.tags,
+      title: item.title,
+    };
 
   // then use installed meta
   return getInstalledPluginById(id)(s)?.manifest?.meta;
@@ -38,10 +44,7 @@ const getPluginSettingsById = (id: string) => (s: ToolStoreState) =>
 
 const storeAndInstallPluginsIdList = (s: ToolStoreState) =>
   uniq(
-    [
-      s.installedPlugins.map((i) => i.identifier),
-      s.pluginStoreList.map((i) => i.identifier),
-    ].flat(),
+    [s.installedPlugins.map((i) => i.identifier), s.oldPluginItems.map((i) => i.identifier)].flat(),
   );
 
 const installedPluginManifestList = (s: ToolStoreState) =>
@@ -59,6 +62,7 @@ const installedPluginMetaList = (s: ToolStoreState) =>
      * should remove meta
      */
     meta: getPluginMetaById(p.identifier)(s),
+    runtimeType: p.runtimeType,
     type: p.source || p.type,
     ...getPluginMetaById(p.identifier)(s),
   }));

@@ -11,11 +11,17 @@ import { LobeToolType } from '@/types/tool/tool';
 
 import PluginItem from '../../PluginList/List/Item';
 
-export const List = memo<{
+interface ListProps {
   identifier?: string;
   keywords?: string;
-  setIdentifier?: (props: { identifier?: string; type?: LobeToolType }) => void;
-}>(({ keywords, identifier, setIdentifier }) => {
+  setIdentifier?: (props: {
+    identifier?: string;
+    runtimeType: 'mcp' | 'default';
+    type?: LobeToolType;
+  }) => void;
+}
+
+export const List = memo<ListProps>(({ keywords, identifier, setIdentifier }) => {
   const { t } = useTranslation('plugin');
   const installedPlugins = useToolStore(pluginSelectors.installedPluginMetaList, isEqual);
 
@@ -50,6 +56,7 @@ export const List = memo<{
             onClick={() => {
               setIdentifier?.({
                 identifier: item.identifier,
+                runtimeType: item.runtimeType as any,
                 type: item.type,
               });
             }}

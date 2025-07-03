@@ -19,7 +19,7 @@ import {
 } from '../../app/[variants]/(main)/discover/(detail)/mcp/[...slugs]/features/utils';
 import { useCategory } from '../../app/[variants]/(main)/discover/(list)/mcp/features/Category/useCategory';
 import InstallationIcon from '../../app/[variants]/(main)/discover/features/InstallationIcon';
-import PublishedTime from '../../app/[variants]/(main)/discover/features/PublishedTime';
+import PublishedTime from '../../components/PublishedTime';
 import { useDetailContext } from './DetailProvider';
 
 const useStyles = createStyles(({ css, token }) => {

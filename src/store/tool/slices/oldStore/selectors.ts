@@ -7,15 +7,20 @@ const onlinePluginStore = (s: ToolStoreState) => {
   const installedPluginIds = new Set(s.installedPlugins.map((i) => i.identifier));
   const list =
     s.listType === PluginStoreTabs.Plugin
-      ? s.pluginStoreList
-      : s.pluginStoreList.filter((p) => installedPluginIds.has(p.identifier));
+      ? s.oldPluginItems
+      : s.oldPluginItems.filter((p) => installedPluginIds.has(p.identifier));
 
   return list.map<InstallPluginMeta>((p) => ({
     author: p.author,
     createdAt: p.createdAt,
     homepage: p.homepage,
     identifier: p.identifier,
-    meta: p.meta,
+    meta: {
+      avatar: p.avatar,
+      description: p.description,
+      tags: p.tags,
+      title: p.title,
+    },
     type: 'plugin',
   }));
 };
@@ -23,7 +28,7 @@ const onlinePluginStore = (s: ToolStoreState) => {
 const isPluginInstallLoading = (id: string) => (s: ToolStoreState) => s.pluginInstallLoading[id];
 
 const getPluginById = (id: string) => (s: ToolStoreState) => {
-  return s.pluginStoreList.find((i) => i.identifier === id);
+  return s.oldPluginItems.find((i) => i.identifier === id);
 };
 
 export const pluginStoreSelectors = {

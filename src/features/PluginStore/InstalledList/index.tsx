@@ -1,25 +1,24 @@
 import { DraggablePanel } from '@lobehub/ui';
 import { Empty } from 'antd';
 import { useTheme } from 'antd-style';
-import dynamic from 'next/dynamic';
 import { memo, useRef, useState } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { LobeToolType } from '@/types/tool/tool';
 
+import Detail from './Detail';
 import List from './List';
-
-const Detail = dynamic(() => import('./Detail'), { ssr: false });
 
 export const PluginList = memo<{ keywords?: string }>(({ keywords }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [identifier, setIdentifier] = useState<string>();
   const [type, setType] = useState<LobeToolType>();
+  const [runtimeType, setRuntimeType] = useState<'mcp' | 'default'>();
   const theme = useTheme();
 
   return (
     <Flexbox
-      height={`75vh`}
+      height={'75vh'}
       horizontal
       style={{
         borderTop: `1px solid ${theme.colorBorderSecondary}`,
@@ -32,9 +31,10 @@ export const PluginList = memo<{ keywords?: string }>(({ keywords }) => {
         <List
           identifier={identifier}
           keywords={keywords}
-          setIdentifier={({ identifier, type }) => {
+          setIdentifier={({ identifier, type, runtimeType }) => {
             setIdentifier(identifier);
             setType(type);
+            setRuntimeType(runtimeType);
             ref?.current?.scrollTo({ top: 0 });
           }}
         />
@@ -51,7 +51,7 @@ export const PluginList = memo<{ keywords?: string }>(({ keywords }) => {
           }}
           width={'100%'}
         >
-          <Detail identifier={identifier} type={type} />
+          <Detail identifier={identifier} runtimeType={runtimeType} type={type} />
         </Flexbox>
       ) : (
         <Center

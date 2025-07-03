@@ -14,7 +14,7 @@ import urlJoin from 'url-join';
 import { formatIntergerNumber } from '@/utils/format';
 
 import { useCategory } from '../../../../(list)/assistant/features/Category/useCategory';
-import PublishedTime from '../../../../features/PublishedTime';
+import PublishedTime from '../../../../../../../../components/PublishedTime';
 import { useDetailContext } from './DetailProvider';
 
 const useStyles = createStyles(({ css, token }) => {

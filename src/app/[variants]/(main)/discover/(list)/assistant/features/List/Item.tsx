@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import PublishedTime from '@/app/[variants]/(main)/discover/features/PublishedTime';
+import PublishedTime from '@/components/PublishedTime';
 import { DiscoverAssistantItem } from '@/types/discover';
 
 import TokenTag from './TokenTag';
