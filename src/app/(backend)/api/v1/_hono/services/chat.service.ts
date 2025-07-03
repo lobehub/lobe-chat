@@ -1,9 +1,10 @@
 import { DEFAULT_AGENT_CHAT_CONFIG } from '@/const/settings';
 import { LobeChatDatabase } from '@/database/type';
+import { ChatStreamPayload } from '@/libs/model-runtime/types/chat';
 import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
+import { LobeAgentConfig } from '@/types/agent';
 import { LobeAgentChatConfig } from '@/types/agent/chatConfig';
-import { ChatStreamPayload } from '@/types/openai/chat';
 
 import { BaseService } from '../common/base.service';
 import { ServiceResult } from '../types';
@@ -15,6 +16,7 @@ import {
   MessageGenerationParams,
   TranslateServiceParams,
 } from '../types/chat.type';
+import { ModelService } from './model.service';
 
 /**
  * 聊天服务类
@@ -224,7 +226,7 @@ export class ChatService extends BaseService {
    */
   async chat(
     params: ChatServiceParams,
-    options?: { enabledSearch?: boolean },
+    options?: Partial<ChatStreamPayload>,
   ): ServiceResult<ChatServiceResponse> {
     const provider = params.provider || this.config.defaultProvider!;
     const model = params.model || this.config.defaultModel!;
@@ -247,14 +249,15 @@ export class ChatService extends BaseService {
 
       // 构建 ChatStreamPayload
       const chatPayload: ChatStreamPayload = {
+        frequency_penalty: params.frequency_penalty,
         max_tokens: params.max_tokens,
         messages: params.messages,
         model,
+        presence_penalty: params.presence_penalty,
         stream: params.stream,
         temperature: params.temperature || 1,
-        ...(options?.enabledSearch && {
-          enabledSearch: options.enabledSearch,
-        }),
+        top_p: params.top_p,
+        ...options,
       };
 
       // 调用聊天 API
@@ -335,13 +338,21 @@ export class ChatService extends BaseService {
       throw this.createAuthError('未授权操作');
     }
 
-    const provider = params.provider || this.config.defaultProvider!;
-    const model = params.model || this.config.defaultModel!;
+    // 获取最终使用的模型配置
+    const modelConfig = await this.resolveModelConfig({
+      model: params.model,
+      provider: params.provider,
+      sessionId: params.sessionId,
+    });
+
+    const finalProvider = modelConfig.provider || this.config.defaultProvider!;
+    const finalModel = modelConfig.model || this.config.defaultModel!;
 
     this.log('info', '开始翻译文本', {
       fromLanguage: params.fromLanguage,
-      model,
-      provider,
+      model: finalModel,
+      provider: finalProvider,
+      sessionId: params.sessionId,
       textLength: params.text.length,
       toLanguage: params.toLanguage,
       userId: this.userId,
@@ -359,17 +370,27 @@ export class ChatService extends BaseService {
       ];
 
       // 调用聊天服务进行翻译
-      const response = await this.chat({
-        messages,
-        model,
-        provider,
-        stream: false,
-        temperature: 0.3, // 较低的温度以确保翻译的一致性
-      });
+      const response = await this.chat(
+        {
+          frequency_penalty: 0,
+          messages,
+          model: finalModel,
+          presence_penalty: 0,
+          provider: finalProvider,
+          stream: false,
+          temperature: 0.3, // 较低的温度以确保翻译的一致性
+        },
+        // 翻译不使用思考
+        {
+          thinking: { budget_tokens: 0, type: 'disabled' },
+          thinkingBudget: 0,
+          tool_choice: 'none',
+        },
+      );
 
       this.log('info', '翻译文本完成', {
-        model,
-        provider,
+        model: finalModel,
+        provider: finalProvider,
         resultLength: response.content.length,
       });
 
@@ -377,8 +398,8 @@ export class ChatService extends BaseService {
     } catch (error) {
       this.log('error', '翻译文本失败', {
         error: error instanceof Error ? error.message : String(error),
-        model,
-        provider,
+        model: finalModel,
+        provider: finalProvider,
       });
       throw this.createCommonError('翻译失败');
     }
@@ -399,13 +420,21 @@ export class ChatService extends BaseService {
     });
 
     try {
-      // 1. 获取 Agent 配置（如果有 agentId）
+      // 1. 获取最终使用的模型配置
+      const modelConfig = await this.resolveModelConfig({
+        agentId: params.agentId,
+        model: params.model,
+        provider: params.provider,
+        sessionId: params.sessionId,
+      });
+
+      // 2. 获取 Agent 配置（如果有 agentId）
       let agentConfig: LobeAgentChatConfig | null = null;
       if (params.agentId) {
         agentConfig = await this.getAgentConfig(params.agentId);
       }
 
-      // 2. 合并配置：用户配置 > Agent配置 > 默认配置
+      // 3. 合并配置：用户配置 > Agent配置 > 默认配置
       const mergedChatConfig = this.mergeChatConfig(agentConfig, params.chatConfig);
 
       // 3. 构建搜索参数
@@ -423,14 +452,27 @@ export class ChatService extends BaseService {
         { content: params.userMessage, role: 'user' as const },
       ];
 
+      this.log('info', '使用模型配置', {
+        model: modelConfig.model,
+        provider: modelConfig.provider,
+        source: params.provider
+          ? 'user-specified'
+          : modelConfig.provider
+            ? 'session-config'
+            : 'default',
+      });
+
       // 6. 调用聊天服务生成回复，传递搜索参数
       const response = await this.chat(
         {
+          frequency_penalty: modelConfig.agent?.params?.frequency_penalty || 0,
           messages,
-          model: params.model,
-          provider: params.provider,
+          model: modelConfig.model,
+          presence_penalty: modelConfig.agent?.params?.presence_penalty || 0,
+          provider: modelConfig.provider,
           stream: false,
-          temperature: 0.7, // 适中的温度以保持回复的创造性
+          temperature: modelConfig.agent?.params?.temperature || 0.7,
+          top_p: modelConfig.agent?.params?.top_p || 1,
         },
         {
           enabledSearch: searchParams.enabledSearch,
@@ -438,8 +480,8 @@ export class ChatService extends BaseService {
       );
 
       this.log('info', '生成消息回复完成', {
-        model: params.model,
-        provider: params.provider,
+        model: modelConfig.model,
+        provider: modelConfig.provider,
         replyLength: response.content.length,
         usedSearch: searchParams.enabledSearch,
       });
@@ -453,6 +495,69 @@ export class ChatService extends BaseService {
       });
       throw this.createCommonError('生成回复失败');
     }
+  }
+
+  /**
+   * 获取最终使用的模型配置（优先级：用户指定 > sessionId配置 > 默认配置）
+   */
+  private async resolveModelConfig(params: {
+    agentId?: string;
+    model?: string;
+    provider?: string;
+    sessionId?: string | null;
+  }): Promise<{ agent?: LobeAgentConfig; model?: string; provider?: string }> {
+    // 如果用户已经指定了 provider 和 model，直接使用
+    if (params.provider && params.model) {
+      return { model: params.model, provider: params.provider };
+    }
+
+    let modelConfig: { agent?: LobeAgentConfig; model?: string; provider?: string } = {};
+
+    // 尝试根据 sessionId 或 agentId 获取模型配置
+    if (params.sessionId) {
+      try {
+        const modelService = new ModelService(this.db, this.userId);
+        const sessionModelConfig = await modelService.getModelConfigBySession({
+          sessionId: params.sessionId,
+        });
+
+        // 查找会话对应的 agent
+        const agentToSession = await this.db.query.agentsToSessions.findFirst({
+          where: (agentsToSessions, { eq }) => eq(agentsToSessions.sessionId, params.sessionId!),
+        });
+
+        if (!agentToSession) {
+          throw this.createNotFoundError('会话对应的 agent 不存在');
+        }
+
+        const agent = (await this.db.query.agents.findFirst({
+          where: (agents, { eq }) => eq(agents.id, agentToSession.agentId),
+        })) as LobeAgentConfig;
+
+        modelConfig = {
+          agent,
+          model: sessionModelConfig.id,
+          provider: sessionModelConfig.providerId,
+        };
+
+        this.log('info', '根据 sessionId 获取模型配置成功', {
+          model: modelConfig.model,
+          provider: modelConfig.provider,
+          sessionId: params.sessionId,
+        });
+      } catch (error) {
+        this.log('warn', '根据 sessionId 获取模型配置失败', {
+          error: error instanceof Error ? error.message : String(error),
+          sessionId: params.sessionId,
+        });
+      }
+    }
+
+    // 返回最终配置（用户指定 > session配置 > 默认）
+    return {
+      model: params.model || modelConfig.model,
+      provider: params.provider || modelConfig.provider,
+    };
   }
 
   /**

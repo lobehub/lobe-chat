@@ -6,15 +6,19 @@ import { LobeAgentChatConfig } from '@/types/agent/chatConfig';
  * 聊天服务参数
  */
 export interface ChatServiceParams {
+  frequency_penalty?: number;
   max_tokens?: number;
   messages: Array<{
     content: string;
     role: 'user' | 'assistant' | 'system';
   }>;
   model?: string;
+  n?: number;
+  presence_penalty?: number;
   provider?: string;
   stream?: boolean;
   temperature?: number;
+  top_p?: number;
 }
 
 /**
@@ -24,6 +28,7 @@ export interface TranslateServiceParams {
   fromLanguage?: string;
   model?: string;
   provider?: string;
+  sessionId?: string | null;
   text: string;
   toLanguage: string;
 }
