@@ -8,6 +8,7 @@ import { memo, useState } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
+import { withSuspense } from '@/components/withSuspense';
 import { useQuery } from '@/hooks/useQuery';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { DiscoverTab } from '@/types/discover';
@@ -97,4 +98,4 @@ const Nav = memo(() => {
   );
 });
 
-export default Nav;
+export default withSuspense(Nav);

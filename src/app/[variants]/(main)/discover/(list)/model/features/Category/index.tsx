@@ -7,6 +7,7 @@ import qs from 'query-string';
 import { memo, useMemo } from 'react';
 
 import { SCROLL_PARENT_ID } from '@/app/[variants]/(main)/discover/features/const';
+import { withSuspense } from '@/components/withSuspense';
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
 
@@ -78,4 +79,4 @@ const Category = memo(() => {
   );
 });
 
-export default Category;
+export default withSuspense(Category);
