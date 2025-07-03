@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "1.96.16",
+  "version": "1.96.17",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -76,7 +76,7 @@
     "test-server": "TEST_SERVER_DB=1 vitest run --config vitest.server.config.ts",
     "test-server:coverage": "TEST_SERVER_DB=1 vitest run --config vitest.server.config.ts --coverage",
     "test:update": "vitest -u",
-    "type-check": "tsc --noEmit",
+    "type-check": "tsgo --noEmit",
     "webhook:ngrok": "ngrok http http://localhost:3011",
     "workflow:cdn": "tsx ./scripts/cdnWorkflow/index.ts",
     "workflow:changelog": "tsx ./scripts/changelogWorkflow/index.ts",
@@ -310,6 +310,7 @@
     "@types/unist": "^3.0.3",
     "@types/uuid": "^10.0.0",
     "@types/ws": "^8.18.1",
+    "@typescript/native-preview": "latest",
     "@vitest/coverage-v8": "^3.1.4",
     "ajv-keywords": "^5.1.0",
     "commitlint": "^19.8.1",
