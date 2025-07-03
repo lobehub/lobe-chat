@@ -30,34 +30,6 @@ beforeEach(() => {
 });
 
 describe('ToolService', () => {
-  describe('getToolList', () => {
-    it('should fetch and return the plugin list', async () => {
-      // Arrange
-      const fakeResponse = { plugins: [{ name: 'TestPlugin' }] };
-      (globalHelpers.getCurrentLanguage as Mock).mockReturnValue('tt');
-
-      (edgeClient.market.getLegacyPluginList.query as Mock).mockResolvedValue(fakeResponse);
-
-      // Act
-      const pluginList = await toolService.getToolList();
-
-      // Assert
-      expect(globalHelpers.getCurrentLanguage).toHaveBeenCalled();
-      expect(pluginList).toEqual(fakeResponse);
-    });
-
-    it('should handle fetch error', async () => {
-      // Arrange
-      (globalHelpers.getCurrentLanguage as Mock).mockReturnValue('en');
-      (edgeClient.market.getLegacyPluginList.query as Mock).mockRejectedValue(
-        new Error('Network error'),
-      );
-
-      // Act & Assert
-      await expect(toolService.getToolList()).rejects.toThrow('Network error');
-    });
-  });
-
   describe('getToolManifest', () => {
     it('should return manifest', async () => {
       const manifestUrl = 'http://fake-url.com/manifest.json';

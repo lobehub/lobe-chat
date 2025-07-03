@@ -2,14 +2,20 @@ import { PluginListResponse, PluginManifest } from '@lobehub/market-sdk';
 
 import { edgeClient } from '@/libs/trpc/client';
 import { globalHelpers } from '@/store/global/helpers';
+import { PluginQueryParams } from '@/types/discover';
 import { MCPPluginListParams } from '@/types/plugins';
 import { convertOpenAIManifestToLobeManifest, getToolManifest } from '@/utils/toolManifest';
 
 class ToolService {
-  getToolList = async (): Promise<any> => {
+  getOldPluginList = async (params: PluginQueryParams): Promise<any> => {
     const locale = globalHelpers.getCurrentLanguage();
 
-    return edgeClient.market.getLegacyPluginList.query({ locale });
+    return edgeClient.market.getPluginList.query({
+      ...params,
+      locale,
+      page: params.page ? Number(params.page) : 1,
+      pageSize: params.pageSize ? Number(params.pageSize) : 20,
+    });
   };
 
   getMCPPluginList = async (params: MCPPluginListParams): Promise<PluginListResponse> => {
