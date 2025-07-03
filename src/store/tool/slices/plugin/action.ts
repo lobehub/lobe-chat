@@ -8,7 +8,7 @@ import { pluginService } from '@/services/plugin';
 import { merge } from '@/utils/merge';
 
 import { ToolStore } from '../../store';
-import { pluginStoreSelectors } from '../store/selectors';
+import { pluginStoreSelectors } from '../oldStore/selectors';
 import { pluginSelectors } from './selectors';
 
 /**

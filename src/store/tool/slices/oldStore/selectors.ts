@@ -1,4 +1,4 @@
-import { PluginStoreTabs } from '@/store/tool/slices/store/initialState';
+import { PluginStoreTabs } from '@/store/tool/slices/oldStore/initialState';
 import { InstallPluginMeta } from '@/types/tool/plugin';
 
 import type { ToolStoreState } from '../../initialState';
