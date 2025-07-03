@@ -7,6 +7,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 import { PluginNavKey } from '@/types/discover';
 
 const useStyles = createStyles(({ css, token }) => {
@@ -33,6 +35,11 @@ interface NavProps {
 const Nav = memo<NavProps>(({ mobile, setActiveTab, activeTab = PluginNavKey.Tools }) => {
   const { t } = useTranslation('discover');
   const { styles } = useStyles();
+  const [identifier] = useToolStore((s) => [s.activePluginIdentifier]);
+  const plugin = useToolStore(pluginSelectors.getInstalledPluginById(identifier));
+
+  const hasSettings =
+    plugin?.manifest?.settings && Object.keys(plugin?.manifest?.settings.properties).length > 0;
 
   const nav = (
     <Tabs
@@ -45,7 +52,7 @@ const Nav = memo<NavProps>(({ mobile, setActiveTab, activeTab = PluginNavKey.Too
             key: PluginNavKey.Tools,
             label: t('plugins.details.tools.title'),
           },
-          {
+          hasSettings && {
             icon: <Icon icon={BookOpenIcon} size={16} />,
             key: PluginNavKey.Settings,
             label: t('plugins.details.settings.title'),

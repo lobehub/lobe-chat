@@ -4,6 +4,7 @@ import { useTheme } from 'antd-style';
 import { memo, useRef, useState } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import { useToolStore } from '@/store/tool';
 import { LobeToolType } from '@/types/tool/tool';
 
 import Detail from './Detail';
@@ -11,11 +12,12 @@ import List from './List';
 
 export const PluginList = memo<{ keywords?: string }>(({ keywords }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [identifier, setIdentifier] = useState<string>();
+
   const [type, setType] = useState<LobeToolType>();
   const [runtimeType, setRuntimeType] = useState<'mcp' | 'default'>();
   const theme = useTheme();
 
+  const [identifier] = useToolStore((s) => [s.activePluginIdentifier]);
   return (
     <Flexbox
       height={'75vh'}
@@ -32,7 +34,7 @@ export const PluginList = memo<{ keywords?: string }>(({ keywords }) => {
           identifier={identifier}
           keywords={keywords}
           setIdentifier={({ identifier, type, runtimeType }) => {
-            setIdentifier(identifier);
+            useToolStore.setState({ activePluginIdentifier: identifier });
             setType(type);
             setRuntimeType(runtimeType);
             ref?.current?.scrollTo({ top: 0 });

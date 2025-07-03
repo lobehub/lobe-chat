@@ -12,7 +12,7 @@ import { ModeType } from '@/features/MCPPluginDetail/Schema/types';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
-import Title from '../../../../../../app/[variants]/(main)/discover/features/Title';
+import Title from '../../../../../app/[variants]/(main)/discover/features/Title';
 
 interface ToolProps {
   mode?: ModeType;
@@ -20,9 +20,9 @@ interface ToolProps {
 
 const Tools = memo<ToolProps>(({ mode }) => {
   const { t } = useTranslation('discover');
+  const [activeKey, setActiveKey] = useState<string[]>([]);
   const [identifier] = useToolStore((s) => [s.activePluginIdentifier]);
   const plugin = useToolStore(pluginSelectors.getInstalledPluginById(identifier));
-  const [activeKey, setActiveKey] = useState<string[]>([]);
   const { manifest } = plugin || {};
 
   if (!manifest || isString(manifest))
