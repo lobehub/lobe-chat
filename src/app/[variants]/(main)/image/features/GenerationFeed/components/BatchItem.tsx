@@ -18,7 +18,7 @@ import { StdImageGenParams } from '@/store/image/utils/StandardParameters';
 import { AsyncTaskErrorType } from '@/types/asyncTask';
 import { GenerationBatch } from '@/types/generation';
 
-import { GenerationItem } from './GenerationItem';
+import { GenerationItem } from './GenerationItem/';
 
 const useStyles = createStyles(({ css, token }) => ({
   prompt: css`
@@ -120,7 +120,7 @@ export const GenerationBatchItem = memo<GenerationBatchItemProps>(({ batch }) =>
   }
 
   return (
-    <Block className={styles.container} gap={8} variant="borderless">
+    <Block className={styles.container} gap={12} variant="borderless">
       <Highlighter
         actionIconSize={'small'}
         className={styles.prompt}
