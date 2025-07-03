@@ -5,11 +5,6 @@ import { FileController } from '../controllers/file.controller';
 import { requireAuth } from '../middleware/oidc-auth';
 import { FileIdParamSchema, FileListQuerySchema, FileUrlRequestSchema } from '../types/file.type';
 
-/**
- * 文件管理路由
- * 提供完整的文件上传和管理功能的RESTful API
- */
-const fileController = new FileController();
 const app = new Hono();
 
 /**
@@ -23,7 +18,10 @@ const app = new Hono();
  * - skipCheckFileType: boolean (optional) - 是否跳过文件类型检查
  * - directory: string (optional) - 上传目录
  */
-app.post('/upload', requireAuth, (c) => fileController.uploadFile(c));
+app.post('/upload', requireAuth, async (c) => {
+  const fileController = new FileController();
+  return await fileController.uploadFile(c);
+});
 
 /**
  * 公共文件上传
@@ -41,7 +39,10 @@ app.post('/upload', requireAuth, (c) => fileController.uploadFile(c));
  * - 返回永久可访问的URL
  * - 适用于头像、公共资源等需要长期访问的文件
  */
-app.post('/upload-public', requireAuth, (c) => fileController.uploadPublicFile(c));
+app.post('/upload-public', requireAuth, async (c) => {
+  const fileController = new FileController();
+  return await fileController.uploadPublicFile(c);
+});
 
 /**
  * 批量文件上传
@@ -54,7 +55,10 @@ app.post('/upload-public', requireAuth, (c) => fileController.uploadPublicFile(c
  * - skipCheckFileType: boolean (optional) - 是否跳过文件类型检查
  * - directory: string (optional) - 上传目录
  */
-app.post('/batch-upload', requireAuth, (c) => fileController.batchUploadFiles(c));
+app.post('/batch-upload', requireAuth, async (c) => {
+  const fileController = new FileController();
+  return await fileController.batchUploadFiles(c);
+});
 
 /**
  * 获取文件列表
@@ -67,9 +71,10 @@ app.post('/batch-upload', requireAuth, (c) => fileController.batchUploadFiles(c)
  * - knowledgeBaseId: string (optional) - 知识库ID过滤
  * - search: string (optional) - 搜索关键词
  */
-app.get('/', requireAuth, zValidator('query', FileListQuerySchema), (c) =>
-  fileController.getFiles(c),
-);
+app.get('/', requireAuth, zValidator('query', FileListQuerySchema), async (c) => {
+  const fileController = new FileController();
+  return await fileController.getFiles(c);
+});
 
 /**
  * 获取文件详情
@@ -78,9 +83,10 @@ app.get('/', requireAuth, zValidator('query', FileListQuerySchema), (c) =>
  * Path parameters:
  * - id: string (required) - 文件ID
  */
-app.get('/:id', requireAuth, zValidator('param', FileIdParamSchema), (c) =>
-  fileController.getFile(c),
-);
+app.get('/:id', requireAuth, zValidator('param', FileIdParamSchema), async (c) => {
+  const fileController = new FileController();
+  return await fileController.getFile(c);
+});
 
 /**
  * 获取文件访问URL
@@ -97,7 +103,10 @@ app.get(
   requireAuth,
   zValidator('param', FileIdParamSchema),
   zValidator('query', FileUrlRequestSchema),
-  (c) => fileController.getFileUrl(c),
+  async (c) => {
+    const fileController = new FileController();
+    return await fileController.getFileUrl(c);
+  },
 );
 
 /**
@@ -112,9 +121,10 @@ app.get(
  * - 适用于头像等需要长期访问的文件
  * - 需要文件设置了public-read ACL
  */
-app.get('/:id/permanent-url', requireAuth, zValidator('param', FileIdParamSchema), (c) =>
-  fileController.getPermanentFileUrl(c),
-);
+app.get('/:id/permanent-url', requireAuth, zValidator('param', FileIdParamSchema), async (c) => {
+  const fileController = new FileController();
+  return await fileController.getPermanentFileUrl(c);
+});
 
 /**
  * 删除文件
@@ -123,8 +133,9 @@ app.get('/:id/permanent-url', requireAuth, zValidator('param', FileIdParamSchema
  * Path parameters:
  * - id: string (required) - 文件ID
  */
-app.delete('/:id', requireAuth, zValidator('param', FileIdParamSchema), (c) =>
-  fileController.deleteFile(c),
-);
+app.delete('/:id', requireAuth, zValidator('param', FileIdParamSchema), async (c) => {
+  const fileController = new FileController();
+  return await fileController.deleteFile(c);
+});
 
 export default app;
