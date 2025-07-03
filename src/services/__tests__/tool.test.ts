@@ -43,7 +43,7 @@ describe('ToolService', () => {
 
       // Assert
       expect(globalHelpers.getCurrentLanguage).toHaveBeenCalled();
-      expect(pluginList).toEqual(fakeResponse.plugins);
+      expect(pluginList).toEqual(fakeResponse);
     });
 
     it('should handle fetch error', async () => {
