@@ -1844,6 +1844,9 @@
   "moonshot-v1-auto": {
     "description": "Moonshot V1 Auto kan het geschikte model kiezen op basis van het aantal Tokens dat momenteel door de context wordt gebruikt."
   },
+  "moonshotai/Kimi-Dev-72B": {
+    "description": "Kimi-Dev-72B is een open source code groot model, geoptimaliseerd door grootschalige versterkte leerprocessen, dat robuuste en direct inzetbare patches kan genereren. Dit model behaalde een nieuwe recordscore van 60,4% op SWE-bench Verified en vestigde daarmee een nieuw hoogtepunt voor open source modellen bij geautomatiseerde software engineering taken zoals defectherstel en code review."
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B is een upgrade van Nous Hermes 2, met de nieuwste intern ontwikkelde datasets."
   },
@@ -2281,6 +2284,9 @@
   },
   "taichu_vl": {
     "description": "Integreert beeldbegrip, kennisoverdracht en logische toerekening, en presteert uitstekend in het domein van vraag-en-antwoord met tekst en afbeeldingen."
+  },
+  "tencent/Hunyuan-A13B-Instruct": {
+    "description": "Hunyuan-A13B-Instruct heeft 80 miljard parameters, waarbij het activeren van 13 miljard parameters al vergelijkbare prestaties levert als grotere modellen. Het ondersteunt een hybride redeneermethode van 'snelle denkwijze/langzame denkwijze'; stabiele lange tekstbegrip; geverifieerd door BFCL-v3 en τ-Bench, met leidende agentcapaciteiten; gecombineerd met GQA en meerdere kwantisatieformaten voor efficiënte inferentie."
   },
   "text-embedding-3-large": {
     "description": "Het krachtigste vectorisatie model, geschikt voor Engelse en niet-Engelse taken."

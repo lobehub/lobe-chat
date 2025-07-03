@@ -1844,6 +1844,9 @@
   "moonshot-v1-auto": {
     "description": "Moonshot V1 Auto có thể chọn mô hình phù hợp dựa trên số lượng Tokens hiện tại đang chiếm dụng trong ngữ cảnh."
   },
+  "moonshotai/Kimi-Dev-72B": {
+    "description": "Kimi-Dev-72B là một mô hình mã nguồn mở lớn, được tối ưu hóa qua học tăng cường quy mô lớn, có khả năng tạo ra các bản vá ổn định và có thể triển khai trực tiếp. Mô hình này đã đạt điểm cao kỷ lục 60,4% trên SWE-bench Verified, phá vỡ các kỷ lục của mô hình mã nguồn mở trong các nhiệm vụ kỹ thuật phần mềm tự động như sửa lỗi và đánh giá mã."
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B là phiên bản nâng cấp của Nous Hermes 2, bao gồm bộ dữ liệu phát triển nội bộ mới nhất."
   },
@@ -2281,6 +2284,9 @@
   },
   "taichu_vl": {
     "description": "Kết hợp khả năng hiểu hình ảnh, chuyển giao kiến thức, suy luận logic, thể hiện xuất sắc trong lĩnh vực hỏi đáp hình ảnh và văn bản."
+  },
+  "tencent/Hunyuan-A13B-Instruct": {
+    "description": "Hunyuan-A13B-Instruct có 80 tỷ tham số, kích hoạt 13 tỷ tham số để đạt hiệu năng tương đương các mô hình lớn hơn, hỗ trợ suy luận kết hợp “tư duy nhanh/tư duy chậm”; khả năng hiểu văn bản dài ổn định; được xác nhận qua BFCL-v3 và τ-Bench, năng lực Agent dẫn đầu; kết hợp GQA và nhiều định dạng lượng tử hóa, đạt hiệu quả suy luận cao."
   },
   "text-embedding-3-large": {
     "description": "Mô hình vector hóa mạnh mẽ nhất, phù hợp cho các nhiệm vụ tiếng Anh và không phải tiếng Anh."

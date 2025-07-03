@@ -1844,6 +1844,9 @@
   "moonshot-v1-auto": {
     "description": "Moonshot V1 Auto, mevcut bağlamın kullandığı Token sayısına göre uygun modeli seçebilir."
   },
+  "moonshotai/Kimi-Dev-72B": {
+    "description": "Kimi-Dev-72B, büyük ölçekli pekiştirmeli öğrenme ile optimize edilmiş açık kaynaklı bir kod modeli olup, sağlam ve doğrudan üretime uygun yamalar üretebilir. Bu model, SWE-bench Verified üzerinde %60,4 ile yeni bir rekor kırarak, açık kaynak modeller arasında hata düzeltme, kod incelemesi gibi otomatik yazılım mühendisliği görevlerinde en yüksek puanı elde etmiştir."
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B, Nous Hermes 2'nin güncellenmiş versiyonudur ve en son iç geliştirme veri setlerini içermektedir."
   },
@@ -2281,6 +2284,9 @@
   },
   "taichu_vl": {
     "description": "Görüntü anlama, bilgi transferi, mantıksal çıkarım gibi yetenekleri birleştirir ve görsel-işitsel soru-cevap alanında öne çıkar."
+  },
+  "tencent/Hunyuan-A13B-Instruct": {
+    "description": "Hunyuan-A13B-Instruct, 80 milyar parametreye sahip olup, 13 milyar parametre etkinleştirilerek daha büyük modellerle rekabet edebilir; \"hızlı düşünme/yavaş düşünme\" karma akıl yürütmeyi destekler; uzun metin anlama kararlıdır; BFCL-v3 ve τ-Bench ile doğrulanmış, ajan yeteneklerinde liderdir; GQA ve çoklu kuantizasyon formatlarıyla birleşerek verimli akıl yürütme sağlar."
   },
   "text-embedding-3-large": {
     "description": "En güçlü vektörleştirme modeli, İngilizce ve diğer dillerdeki görevler için uygundur."

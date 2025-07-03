@@ -2,6 +2,98 @@
 
 # Changelog
 
+### [Version 1.96.17](https://github.com/lobehub/lobe-chat/compare/v1.96.16...v1.96.17)
+
+<sup>Released on **2025-07-03**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.16](https://github.com/lobehub/lobe-chat/compare/v1.96.15...v1.96.16)
+
+<sup>Released on **2025-07-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#8322](https://github.com/lobehub/lobe-chat/issues/8322) ([0c6b885](https://github.com/lobehub/lobe-chat/commit/0c6b885))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.15](https://github.com/lobehub/lobe-chat/compare/v1.96.14...v1.96.15)
+
+<sup>Released on **2025-07-02**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Wrong Gemini 2.5 Pro thinkbudget.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Wrong Gemini 2.5 Pro thinkbudget, closes [#8296](https://github.com/lobehub/lobe-chat/issues/8296) ([18920c5](https://github.com/lobehub/lobe-chat/commit/18920c5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.14](https://github.com/lobehub/lobe-chat/compare/v1.96.13...v1.96.14)
+
+<sup>Released on **2025-07-01**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Migrate to `@google/genai` SDK for Google Gemini API and Vertex AI.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Migrate to `@google/genai` SDK for Google Gemini API and Vertex AI, closes [#7884](https://github.com/lobehub/lobe-chat/issues/7884) ([fef3e5f](https://github.com/lobehub/lobe-chat/commit/fef3e5f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.96.13](https://github.com/lobehub/lobe-chat/compare/v1.96.12...v1.96.13)
 
 <sup>Released on **2025-07-01**</sup>

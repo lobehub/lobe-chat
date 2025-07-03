@@ -1844,6 +1844,9 @@
   "moonshot-v1-auto": {
     "description": "Moonshot V1 Auto는 현재 맥락에서 사용되는 토큰 수에 따라 적합한 모델을 선택할 수 있습니다."
   },
+  "moonshotai/Kimi-Dev-72B": {
+    "description": "Kimi-Dev-72B는 대규모 강화 학습 최적화를 거친 오픈소스 코드 대형 모델로, 안정적이고 바로 생산에 투입 가능한 패치를 출력할 수 있습니다. 이 모델은 SWE-bench Verified에서 60.4%의 신기록을 세우며, 결함 수정, 코드 리뷰 등 자동화 소프트웨어 엔지니어링 작업에서 오픈소스 모델의 기록을 경신했습니다."
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B는 Nous Hermes 2의 업그레이드 버전으로, 최신 내부 개발 데이터 세트를 포함하고 있습니다."
   },
@@ -2281,6 +2284,9 @@
   },
   "taichu_vl": {
     "description": "이미지 이해, 지식 이전, 논리 귀속 등의 능력을 통합하여, 이미지-텍스트 질문 응답 분야에서 뛰어난 성능을 보입니다."
+  },
+  "tencent/Hunyuan-A13B-Instruct": {
+    "description": "Hunyuan-A13B-Instruct는 800억 개의 매개변수를 보유하며, 130억 개의 활성화 매개변수만으로 더 큰 모델과 견줄 수 있습니다. '빠른 사고/느린 사고' 혼합 추론을 지원하며, 긴 문서 이해가 안정적입니다. BFCL-v3와 τ-Bench 검증을 통해 에이전트 능력이 선도적임을 입증했으며, GQA와 다중 양자화 포맷을 결합해 효율적인 추론을 실현합니다."
   },
   "text-embedding-3-large": {
     "description": "가장 강력한 벡터화 모델로, 영어 및 비영어 작업에 적합합니다."

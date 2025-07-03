@@ -1844,6 +1844,9 @@
   "moonshot-v1-auto": {
     "description": "Moonshot V1 Auto は、現在のコンテキストで使用されているトークンの数に基づいて適切なモデルを選択できます。"
   },
+  "moonshotai/Kimi-Dev-72B": {
+    "description": "Kimi-Dev-72B はオープンソースの大規模コードモデルであり、大規模な強化学習によって最適化されており、堅牢で直接本番投入可能なパッチを出力できます。このモデルは SWE-bench Verified で 60.4% の新記録を達成し、欠陥修正やコードレビューなどの自動化ソフトウェア工学タスクにおけるオープンソースモデルの記録を更新しました。"
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8BはNous Hermes 2のアップグレード版で、最新の内部開発データセットを含んでいます。"
   },
@@ -2281,6 +2284,9 @@
   },
   "taichu_vl": {
     "description": "画像理解、知識移転、論理帰納などの能力を融合し、画像とテキストの質問応答分野で優れたパフォーマンスを発揮します。"
+  },
+  "tencent/Hunyuan-A13B-Instruct": {
+    "description": "Hunyuan-A13B-Instruct はパラメータ数8000億で、130億のパラメータを活性化するだけでより大きなモデルに匹敵し、「速考え／遅考え」のハイブリッド推論をサポートします。長文理解が安定しており、BFCL-v3 と τ-Bench による検証でエージェント能力が先行しています。GQA と多量子化フォーマットを組み合わせ、高効率な推論を実現しています。"
   },
   "text-embedding-3-large": {
     "description": "最も強力なベクトル化モデル、英語および非英語のタスクに適しています"
