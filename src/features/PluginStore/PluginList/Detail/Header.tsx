@@ -1,11 +1,10 @@
 'use client';
 
 import { Github } from '@lobehub/icons';
-import { ActionIcon, Avatar, Button, Collapse, Icon, Text } from '@lobehub/ui';
+import { ActionIcon, Avatar, Collapse, Icon, Text } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import { DotIcon } from 'lucide-react';
 import Link from 'next/link';
-import qs from 'query-string';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -15,7 +14,6 @@ import PublishedTime from '@/components/PublishedTime';
 
 import { useDetailContext } from './DetailProvider';
 import TagList from './TagList';
-import { useCategory } from './useCategory';
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -34,26 +32,10 @@ const useStyles = createStyles(({ css, token }) => {
 });
 
 const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile, inModal }) => {
-  const { author, identifier, createdAt, category, avatar, title, tags, description } =
-    useDetailContext();
+  const { author, identifier, createdAt, avatar, title, tags, description } = useDetailContext();
   const { styles, theme } = useStyles();
   const { mobile = isMobile } = useResponsive();
-  const categories = useCategory();
-  const cate = categories.find((c) => c.key === category);
   const { t } = useTranslation('discover');
-
-  const cateButton = (
-    <Link
-      href={qs.stringifyUrl({
-        query: { category: cate?.key },
-        url: '/discover/plugin',
-      })}
-    >
-      <Button icon={cate?.icon} size={'middle'} variant={'outlined'}>
-        {cate?.label}
-      </Button>
-    </Link>
-  );
 
   return (
     <Flexbox gap={24}>
@@ -126,16 +108,6 @@ const Header = memo<{ inModal?: boolean; mobile?: boolean }>(({ mobile: isMobile
                 />
               </Flexbox>
               {tags && <TagList tags={tags} />}
-            </Flexbox>
-            <Flexbox
-              align={'center'}
-              gap={mobile ? 12 : 24}
-              horizontal
-              style={{
-                color: theme.colorTextSecondary,
-              }}
-            >
-              {!mobile && cateButton}
             </Flexbox>
           </Flexbox>
         </Flexbox>
