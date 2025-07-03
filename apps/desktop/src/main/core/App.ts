@@ -356,13 +356,23 @@ export class App {
     this.ipcClientEventMap.forEach((eventInfo, key) => {
       const { controller, methodName } = eventInfo;
 
-      ipcMain.handle(key, async (e, data) => {
+      ipcMain.handle(key, async (e, ...args) => {
         // 从 WebContents 获取对应的 BrowserWindow id
         const senderIdentifier = this.browserManager.getIdentifierByWebContents(e.sender);
         try {
-          return await controller[methodName](data, {
-            identifier: senderIdentifier,
-          } as IpcClientEventSender);
+          // 兼容处理：对于多参数的事件，直接传递所有参数
+          // 对于单参数的事件，传递第一个参数（保持向后兼容）
+          if (args.length <= 1) {
+            // 传统的单参数处理
+            return await controller[methodName](args[0], {
+              identifier: senderIdentifier,
+            } as IpcClientEventSender);
+          } else {
+            // 多参数处理，将sender添加到末尾
+            return await controller[methodName](...args, {
+              identifier: senderIdentifier,
+            } as IpcClientEventSender);
+          }
         } catch (error) {
           logger.error(`Error handling IPC event ${key}:`, error);
           return { error: error.message };

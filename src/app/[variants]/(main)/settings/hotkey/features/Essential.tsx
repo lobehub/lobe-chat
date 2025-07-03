@@ -13,7 +13,7 @@ import { isDesktop } from '@/const/version';
 import hotkeyMeta from '@/locales/default/hotkey';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
-import { HotkeyGroupEnum, HotkeyItem } from '@/types/hotkey';
+import { HotkeyGroupEnum, HotkeyId, HotkeyItem } from '@/types/hotkey';
 
 const filterByDesktop = (item: HotkeyItem) => {
   if (isDesktop) return true;
@@ -29,6 +29,39 @@ const HotkeySetting = memo(() => {
   const { hotkey } = useUserStore(settingsSelectors.currentSettings, isEqual);
   const [setSettings, isUserStateInit] = useUserStore((s) => [s.setSettings, s.isUserStateInit]);
   const [loading, setLoading] = useState(false);
+
+  const handleValuesChange = async (values: Record<string, string>) => {
+    setLoading(true);
+
+    try {
+      // 更新Web端配置
+      await setSettings({ hotkey: values });
+
+      // 如果是桌面端，同步更新桌面端配置
+      if (isDesktop) {
+        const { electronShortcutService } = await import('@/services/electron/shortcut');
+        for (const [webId, accelerator] of Object.entries(values)) {
+          const id = webId as HotkeyId;
+
+          // 检查快捷键是否需要桌面端同步
+          const hotkeyConfig = HOTKEYS_REGISTRATION.find((item) => item.id === id);
+          if (!hotkeyConfig?.isDesktop) {
+            continue;
+          }
+
+          const currentValue = hotkey[id];
+
+          if (currentValue !== accelerator) {
+            await electronShortcutService.updateMappedShortcutConfig(webId, accelerator);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('[Web] Essential: Failed to update shortcuts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (!isUserStateInit) return <Skeleton active paragraph={{ rows: 5 }} title={false} />;
 
@@ -74,11 +107,7 @@ const HotkeySetting = memo(() => {
       initialValues={hotkey}
       items={[essential]}
       itemsType={'group'}
-      onValuesChange={async (values) => {
-        setLoading(true);
-        await setSettings({ hotkey: values });
-        setLoading(false);
-      }}
+      onValuesChange={handleValuesChange}
       variant={'borderless'}
       {...FORM_STYLE}
     />

@@ -13,7 +13,7 @@ export default class BrowserWindowsCtr extends ControllerModule {
     mainWindow.toggleVisible();
   }
 
-  @ipcClientEvent('openSettingsWindow')
+  @shortcut('openSettingsWindow')
   async openSettingsWindow(tab?: string) {
     console.log('[BrowserWindowsCtr] Received request to open settings window', tab);
 
