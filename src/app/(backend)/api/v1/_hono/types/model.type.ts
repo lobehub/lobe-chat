@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { AiModelSelectItem } from '@/database/schemas';
 import { AiFullModelCard, AiModelSourceType } from '@/types/aiModel';
 
 // Request schemas
@@ -22,6 +23,11 @@ export const GetModelsRequestSchema = z.object({
     .transform((val) => val === 'true')
     .pipe(z.boolean())
     .optional(),
+  groupedByProvider: z
+    .string()
+    .optional()
+    .default('true')
+    .transform((val) => val === 'true'),
   page: z
     .string()
     .transform((val) => parseInt(val, 10))
@@ -32,7 +38,7 @@ export const GetModelsRequestSchema = z.object({
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().min(1).max(200))
     .optional(),
-  providerId: z.string().optional(),
+  provider: z.string().optional(),
   type: z
     .enum(['chat', 'embedding', 'tts', 'stt', 'image', 'text2video', 'text2music', 'realtime'])
     .optional(),
@@ -40,9 +46,10 @@ export const GetModelsRequestSchema = z.object({
 
 export interface GetModelsRequest {
   enabled?: boolean;
+  groupedByProvider?: boolean;
   page?: number;
   pageSize?: number;
-  providerId?: string;
+  provider?: string;
   type?: 'chat' | 'embedding' | 'tts' | 'stt' | 'image' | 'text2video' | 'text2music' | 'realtime';
 }
 
@@ -84,7 +91,7 @@ export interface ModelItem {
 
 export interface ProviderWithModels {
   modelCount: number;
-  models: ModelItem[];
+  models: AiModelSelectItem[];
   providerEnabled: boolean;
   providerId: string;
   providerName?: string;
@@ -92,7 +99,8 @@ export interface ProviderWithModels {
 }
 
 export interface GetModelsResponse {
-  providers?: ProviderWithModels[];
+  models?: ModelItem[];
+  providers?: ProviderWithModels[]; // 扁平化的模型列表
   totalModels: number;
   totalProviders: number;
 }
