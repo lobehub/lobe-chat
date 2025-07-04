@@ -7,6 +7,7 @@ import { agentRouter } from './agent';
 import { aiModelRouter } from './aiModel';
 import { aiProviderRouter } from './aiProvider';
 import { chunkRouter } from './chunk';
+import { configRouter } from './config';
 import { documentRouter } from './document';
 import { exporterRouter } from './exporter';
 import { fileRouter } from './file';
@@ -27,6 +28,7 @@ export const lambdaRouter = router({
   aiModel: aiModelRouter,
   aiProvider: aiProviderRouter,
   chunk: chunkRouter,
+  config: configRouter,
   document: documentRouter,
   exporter: exporterRouter,
   file: fileRouter,

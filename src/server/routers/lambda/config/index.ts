@@ -1,5 +1,5 @@
 import { getServerFeatureFlagsValue } from '@/config/featureFlags';
-import { publicProcedure, router } from '@/libs/trpc/edge';
+import { publicProcedure, router } from '@/libs/trpc/lambda';
 import { getServerDefaultAgentConfig, getServerGlobalConfig } from '@/server/globalConfig';
 import { GlobalRuntimeConfig } from '@/types/serverConfig';
 
