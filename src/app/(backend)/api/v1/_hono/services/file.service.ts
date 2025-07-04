@@ -747,11 +747,56 @@ export class FileUploadService extends BaseService {
       });
 
       return {
-        uploadResult,
         parseResult,
+        uploadResult,
       };
     } catch (error) {
       this.log('error', 'File retrieval and parsing failed', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 上传文件并解析文件内容
+   */
+  async uploadAndParseFile(
+    file: File,
+    uploadOptions: Partial<FileUploadRequest> = {},
+    parseOptions: Partial<FileParseRequest> = {},
+  ): Promise<FileUploadAndParseResponse> {
+    try {
+      if (!this.userId) {
+        throw this.createAuthError('User authentication required');
+      }
+
+      this.log('info', 'Starting file upload and parsing', {
+        filename: file.name,
+        size: file.size,
+        skipExist: parseOptions.skipExist,
+        type: file.type,
+      });
+
+      // 1. 上传文件
+      const uploadResult = await this.uploadFile(file, uploadOptions);
+
+      // 2. 解析文件内容
+      const parseResult = await this.parseFile(uploadResult.id!, parseOptions);
+
+      this.log('info', 'File upload and parsing completed successfully', {
+        fileId: uploadResult.id,
+        filename: uploadResult.filename,
+        parseStatus: parseResult.parseStatus,
+      });
+
+      // 3. 构造详细的上传结果
+      const detailResult = await this.getFileDetail(uploadResult.id!);
+
+      return {
+        parseResult,
+        uploadResult: detailResult,
+      };
+    } catch (error) {
+      this.log('error', 'File upload and parsing failed', error);
       throw error;
     }
   }
