@@ -36,7 +36,6 @@ export const generateSecureFileHash = (
 
 /**
  * 根据文件访问权限推断访问类型
- *
  * @param url - 文件URL或存储路径
  * @param metadata - 文件元数据
  * @returns 推断的访问类型
