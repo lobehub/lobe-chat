@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { useToolStore } from '@/store/tool';
+import { pluginSelectors } from '@/store/tool/selectors';
 import { LobeToolType } from '@/types/tool/tool';
 
 import Detail from './Detail';
@@ -20,6 +21,14 @@ const PluginList = memo<{ keywords?: string }>(({ keywords }) => {
   const theme = useTheme();
 
   const [identifier] = useToolStore((s) => [s.activePluginIdentifier]);
+  const isEmpty = useToolStore((s) => pluginSelectors.installedPluginMetaList(s).length === 0);
+
+  if (isEmpty)
+    return (
+      <Center height={'75vh'} paddingBlock={40}>
+        <Empty description={t('store.empty')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      </Center>
+    );
 
   return (
     <Flexbox
