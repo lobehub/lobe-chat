@@ -86,9 +86,8 @@ const transformGoogleGenerativeAIStream = (
     }
 
     // return the grounding
-    if (candidate.groundingMetadata) {
-      const { webSearchQueries, groundingChunks } = candidate.groundingMetadata;
-
+    const { groundingChunks, webSearchQueries } = candidate.groundingMetadata ?? {};
+    if (groundingChunks) {
       return [
         { data: text, id: context.id, type: 'text' },
         {
