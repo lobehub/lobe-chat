@@ -33,7 +33,8 @@ const useStyles = createStyles(({ css, token }) => ({
     background-color: ${token.colorBgContainer};
     box-shadow:
       ${token.boxShadowTertiary},
-      0 24px 32px 24px ${token.colorBgContainerSecondary};
+      0 0 48px 32px ${token.colorBgContainerSecondary},
+      0 32px 0 ${token.colorBgContainerSecondary};
   `,
 }));
 
