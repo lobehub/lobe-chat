@@ -96,7 +96,7 @@ export class FileService {
       // if file not found, delete it from db
       if ((e as any).Code === 'NoSuchKey') {
         await this.fileModel.delete(fileId, serverDBEnv.REMOVE_GLOBAL_FILE);
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'File not found' });
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Origin File Not Found' });
       }
     }
 
