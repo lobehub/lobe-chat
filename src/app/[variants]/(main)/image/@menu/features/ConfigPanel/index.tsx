@@ -5,18 +5,18 @@ import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { imageGenerationConfigSelectors } from '@/store/image/slices/generationConfig/selectors';
+import { imageGenerationConfigSelectors } from '@/store/image/selectors';
 import { useImageStore } from '@/store/image/store';
 
-import AspectRatioSelect from './AspectRatioSelect';
-import ImageNum from './ImageNum';
-import ImageUrl from './ImageUrl';
-import ImageUrlsUpload from './ImageUrlsUpload';
-import ModelSelect from './ModelSelect';
-import SeedNumberInput from './SeedNumberInput';
-import SizeSelect from './SizeSelect';
-import SizeSliderInput from './SizeSliderInput';
-import StepsSliderInput from './StepsSliderInput';
+import AspectRatioSelect from './components/AspectRatioSelect';
+import ImageNum from './components/ImageNum';
+import ImageUrl from './components/ImageUrl';
+import ImageUrlsUpload from './components/ImageUrlsUpload';
+import ModelSelect from './components/ModelSelect';
+import SeedNumberInput from './components/SeedNumberInput';
+import SizeSelect from './components/SizeSelect';
+import SizeSliderInput from './components/SizeSliderInput';
+import StepsSliderInput from './components/StepsSliderInput';
 import { CONFIG_PANEL_WIDTH } from './constants';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -78,7 +78,7 @@ const ConfigPanel = memo(() => {
   const isSupportImageUrls = useImageStore(isSupportParamSelector('imageUrls'));
 
   return (
-    <Flexbox padding={16}>
+    <Flexbox padding={12}>
       <ConfigItemLayout label={t('config.model.label')}>
         <ModelSelect />
       </ConfigItemLayout>

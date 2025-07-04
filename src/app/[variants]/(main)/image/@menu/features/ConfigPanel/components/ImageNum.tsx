@@ -7,7 +7,7 @@ import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useImageStore } from '@/store/image';
-import { imageGenerationConfigSelectors } from '@/store/image/slices/generationConfig/selectors';
+import { imageGenerationConfigSelectors } from '@/store/image/selectors';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`

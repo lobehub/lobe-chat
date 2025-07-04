@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 import { useGenerationConfigParam } from '@/store/image/slices/generationConfig/hooks';
 
-import MultiImagesUpload from './base/MultiImagesUpload';
+import MultiImagesUpload from './MultiImagesUpload';
 
 const ImageUrlsUpload = memo(() => {
   const { value, setValue } = useGenerationConfigParam('imageUrls');

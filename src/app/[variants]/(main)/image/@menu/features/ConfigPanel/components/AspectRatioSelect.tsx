@@ -1,7 +1,8 @@
-import { Select } from '@lobehub/ui';
 import { memo } from 'react';
 
 import { useGenerationConfigParam } from '@/store/image/slices/generationConfig/hooks';
+
+import Select from '../../../components/AspectRatioSelect';
 
 const AspectRatioSelect = memo(() => {
   const { value, setValue, enumValues } = useGenerationConfigParam('aspectRatio');
@@ -13,15 +14,7 @@ const AspectRatioSelect = memo(() => {
       value: ratio,
     }));
 
-    return (
-      <Select
-        onChange={setValue}
-        options={options}
-        placeholder="选择纵横比"
-        style={{ width: '100%' }}
-        value={value}
-      />
-    );
+    return <Select onChange={setValue} options={options} style={{ width: '100%' }} value={value} />;
   }
 
   // 如果模型不支持 ratio 参数，返回 null（由外部处理是否显示）
