@@ -20,13 +20,13 @@ type DiscoverPageProps = PageProps<
 >;
 
 const getSharedProps = async (props: DiscoverPageProps) => {
-  const [params, searchParams] = await Promise.all([props.params, props.searchParams]);
+  const params = await props.params;
   const { slugs } = params;
   const identifier = decodeURIComponent(slugs.join('/'));
   const { isMobile, locale: hl } = await RouteVariants.getVariantsFromProps(props);
   const discoverService = new DiscoverService();
   const [{ t, locale }, data] = await Promise.all([
-    translation('metadata', searchParams?.hl || hl),
+    translation('metadata', hl),
     discoverService.getAssistantDetail({ identifier, locale: hl }),
   ]);
   return {

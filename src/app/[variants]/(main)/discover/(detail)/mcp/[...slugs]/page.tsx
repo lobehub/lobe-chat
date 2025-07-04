@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation';
 import urlJoin from 'url-join';
 
 import StructuredData from '@/components/StructuredData';
-import { Locales } from '@/locales/resources';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { DiscoverService } from '@/server/services/discover';
@@ -12,19 +11,16 @@ import { RouteVariants } from '@/utils/server/routeVariants';
 
 import Client from './Client';
 
-type DiscoverPageProps = PageProps<
-  { slugs: string[]; variants: string },
-  { hl?: Locales; version?: string }
->;
+type DiscoverPageProps = PageProps<{ slugs: string[]; variants: string }>;
 
 const getSharedProps = async (props: DiscoverPageProps) => {
-  const [params, searchParams] = await Promise.all([props.params, props.searchParams]);
+  const params = await props.params;
   const { slugs } = params;
   const identifier = decodeURIComponent(slugs.join('/'));
   const { isMobile, locale: hl } = await RouteVariants.getVariantsFromProps(props);
   const discoverService = new DiscoverService();
   const [{ t, locale }, data] = await Promise.all([
-    translation('metadata', searchParams?.hl || hl),
+    translation('metadata', hl),
     discoverService.getMcpDetail({ identifier, locale: hl }),
   ]);
   return {

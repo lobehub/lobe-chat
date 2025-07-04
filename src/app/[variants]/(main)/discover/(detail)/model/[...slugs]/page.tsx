@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation';
 import urlJoin from 'url-join';
 
 import StructuredData from '@/components/StructuredData';
-import { Locales } from '@/locales/resources';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { DiscoverService } from '@/server/services/discover';
@@ -12,17 +11,16 @@ import { RouteVariants } from '@/utils/server/routeVariants';
 
 import Client from './Client';
 
-type DiscoverPageProps = PageProps<{ slugs: string[]; variants: string }, { hl?: Locales }>;
+type DiscoverPageProps = PageProps<{ slugs: string[]; variants: string }>;
 
 const getSharedProps = async (props: DiscoverPageProps) => {
   const params = await props.params;
-  const searchParams = await props.searchParams;
   const { isMobile, locale: hl } = await RouteVariants.getVariantsFromProps(props);
 
   const { slugs } = params;
   const identifier = decodeURIComponent(slugs.join('/'));
-  const { t, locale } = await translation('metadata', searchParams?.hl || hl);
-  const { t: td } = await translation('models', searchParams?.hl || hl);
+  const { t, locale } = await translation('metadata', hl);
+  const { t: td } = await translation('models', hl);
 
   const discoverService = new DiscoverService();
   const data = await discoverService.getModelDetail({ identifier });
