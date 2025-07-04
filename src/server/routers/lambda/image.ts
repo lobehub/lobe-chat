@@ -215,7 +215,7 @@ export const imageRouter = router({
               .update(asyncTaskId, {
                 error: new AsyncTaskError(
                   AsyncTaskErrorType.ServerError,
-                  e.message || 'Unknown error',
+                  'async task error: ' + e.message || 'Unknown error',
                 ),
                 status: AsyncTaskStatus.Error,
               })
@@ -237,7 +237,7 @@ export const imageRouter = router({
             asyncTaskModel.update(asyncTaskId, {
               error: new AsyncTaskError(
                 AsyncTaskErrorType.ServerError,
-                e instanceof Error ? e.message : 'Failed to process async tasks',
+                'start async task error: ' + (e instanceof Error ? e.message : 'Unknown error'),
               ),
               status: AsyncTaskStatus.Error,
             }),
