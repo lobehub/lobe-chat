@@ -36,7 +36,7 @@ export const GenerationItem = memo<GenerationItemProps>(({ generation, prompt })
   const shouldPoll = !isFinalized;
   useCheckGenerationStatus(generation.id, generation.task.id, activeTopicId!, shouldPoll);
 
-  const aspectRatio = getAspectRatio(generation);
+  const aspectRatio = getAspectRatio(generation.asset);
 
   // 事件处理函数
   const handleDeleteGeneration = async () => {

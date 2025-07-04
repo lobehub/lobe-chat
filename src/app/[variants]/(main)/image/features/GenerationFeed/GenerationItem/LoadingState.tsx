@@ -1,35 +1,42 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
-import { Loader2 } from 'lucide-react';
+import { Block } from '@lobehub/ui';
+import { Spin } from 'antd';
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Center } from 'react-layout-kit';
 
 import { AsyncTaskStatus } from '@/types/asyncTask';
 
-import { ElapsedTime } from '../ElapsedTime';
 import { ActionButtons } from './ActionButtons';
+import { ElapsedTime } from './ElapsedTime';
 import { useStyles } from './styles';
 import { LoadingStateProps } from './types';
 
 // 加载状态组件
 export const LoadingState = memo<LoadingStateProps>(({ generation, aspectRatio, onDelete }) => {
   const { styles } = useStyles();
-  const { t } = useTranslation('image');
 
   const isGenerating =
     generation.task.status === AsyncTaskStatus.Processing ||
     generation.task.status === AsyncTaskStatus.Pending;
 
   return (
-    <div className={styles.placeholderContainer} style={{ aspectRatio }}>
-      <div className={styles.loadingContent}>
-        <Icon className={styles.spinIcon} icon={Loader2} size={20} spin />
-        <div>{t('generation.status.generating')}</div>
+    <Block
+      align={'center'}
+      className={styles.placeholderContainer}
+      justify={'center'}
+      style={{
+        aspectRatio,
+        maxWidth: generation.asset?.width ? generation.asset.width / 2 : 'unset',
+      }}
+      variant={'filled'}
+    >
+      <Center gap={8}>
+        <Spin percent={'auto'} />
         <ElapsedTime generationId={generation.id} isActive={isGenerating} />
-      </div>
+      </Center>
       <ActionButtons onDelete={onDelete} />
-    </div>
+    </Block>
   );
 });
 

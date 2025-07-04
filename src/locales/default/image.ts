@@ -66,6 +66,7 @@ export default {
       promptCopied: '提示词已复制到剪贴板',
       promptCopyFailed: '复制提示词失败',
       reuseSettings: '复用设置',
+      copyPrompt: '复制提示词',
       deleteBatch: '删除批次',
       copyError: '复制错误信息',
       errorCopied: '错误信息已复制到剪贴板',

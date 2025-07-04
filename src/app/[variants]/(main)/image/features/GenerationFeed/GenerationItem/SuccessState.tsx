@@ -1,5 +1,6 @@
 'use client';
 
+import { Block } from '@lobehub/ui';
 import { memo } from 'react';
 
 import ImageItem from '@/components/ImageItem';
@@ -14,7 +15,16 @@ export const SuccessState = memo<SuccessStateProps>(
     const { styles } = useStyles();
 
     return (
-      <div className={styles.imageContainer} style={{ aspectRatio }}>
+      <Block
+        align={'center'}
+        className={styles.imageContainer}
+        justify={'center'}
+        style={{
+          aspectRatio,
+          maxWidth: generation.asset?.width ? generation.asset.width / 2 : 'unset',
+        }}
+        variant={'filled'}
+      >
         <ImageItem
           alt={prompt}
           preview={{
@@ -31,7 +41,7 @@ export const SuccessState = memo<SuccessStateProps>(
           showCopySeed={!!generation.seed}
           showDownload
         />
-      </div>
+      </Block>
     );
   },
 );

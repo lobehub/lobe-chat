@@ -1,13 +1,14 @@
 'use client';
 
 import { useAutoAnimate } from '@formkit/auto-animate/react';
-import { memo, useEffect, useRef } from 'react';
+import { Divider } from 'antd';
+import { Fragment, memo, useEffect, useRef } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useImageStore } from '@/store/image';
 import { generationBatchSelectors } from '@/store/image/selectors';
 
-import { GenerationBatchItem } from './components/BatchItem';
+import { GenerationBatchItem } from './BatchItem';
 
 const GenerationFeed = memo(() => {
   const [parent, enableAnimations] = useAutoAnimate();
@@ -78,8 +79,11 @@ const GenerationFeed = memo(() => {
   return (
     <>
       <Flexbox flex={1} gap={16} ref={parent} width="100%">
-        {currentGenerationBatches.map((batch) => (
-          <GenerationBatchItem batch={batch} key={batch.id} />
+        {currentGenerationBatches.map((batch, index) => (
+          <Fragment key={batch.id}>
+            {Boolean(index !== 0) && <Divider dashed style={{ margin: 0 }} />}
+            <GenerationBatchItem batch={batch} key={batch.id} />
+          </Fragment>
         ))}
       </Flexbox>
       {/* Invisible element for scroll target */}

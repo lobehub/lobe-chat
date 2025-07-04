@@ -1,8 +1,5 @@
 import { Suspense } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
-import TopicUrlSync from '@/app/[variants]/(main)/image/@topic/features/Topics/TopicUrlSync';
-import ImageWorkspace from '@/app/[variants]/(main)/image/features/ImageWorkspace';
 import StructuredData from '@/components/StructuredData';
 import { BRANDING_NAME } from '@/const/branding';
 import InitClientDB from '@/features/InitClientDB';
@@ -11,6 +8,9 @@ import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
 import { DynamicLayoutProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';
+
+import ImageWorkspace from './features/ImageWorkspace';
+import SkeletonList from './features/ImageWorkspace/SkeletonList';
 
 export const generateMetadata = async (props: DynamicLayoutProps) => {
   const locale = await RouteVariants.getLocale(props);
@@ -35,8 +35,7 @@ const AiImage = async (props: DynamicLayoutProps) => {
     <>
       <StructuredData ld={ld} />
       <InitClientDB bottom={100} />
-      <TopicUrlSync />
-      <Suspense fallback={<Flexbox flex={1} />}>
+      <Suspense fallback={<SkeletonList />}>
         <ImageWorkspace />
       </Suspense>
     </>

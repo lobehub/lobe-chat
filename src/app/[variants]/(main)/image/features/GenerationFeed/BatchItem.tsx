@@ -2,12 +2,13 @@
 
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { ModelTag } from '@lobehub/icons';
-import { ActionIcon, Block, Grid, Highlighter, Tag, Text } from '@lobehub/ui';
+import { ActionIconGroup, Block, Grid, Markdown, Tag, Text } from '@lobehub/ui';
+import { App } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { omit } from 'lodash-es';
-import { Settings, Trash2 } from 'lucide-react';
+import { CopyIcon, RotateCcwSquareIcon, Trash2 } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -18,9 +19,9 @@ import { StdImageGenParams } from '@/store/image/utils/StandardParameters';
 import { AsyncTaskErrorType } from '@/types/asyncTask';
 import { GenerationBatch } from '@/types/generation';
 
-import { GenerationItem } from './GenerationItem/';
+import { GenerationItem } from './GenerationItem';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ cx, css, token }) => ({
   prompt: css`
     pre {
       overflow: hidden !important;
@@ -29,21 +30,19 @@ const useStyles = createStyles(({ css, token }) => ({
     }
   `,
   container: css`
-    time {
-      opacity: 0;
-    }
-
     &:hover {
-      time {
+      .batch-actions {
         opacity: 1;
       }
     }
   `,
-  batchActions: css`
-    display: flex;
-    gap: 8px;
-    justify-content: flex-start;
-  `,
+  batchActions: cx(
+    'batch-actions',
+    css`
+      opacity: 0;
+      transition: opacity 0.1s ${token.motionEaseInOut};
+    `,
+  ),
 
   batchDeleteButton: css`
     &:hover {
@@ -63,9 +62,8 @@ interface GenerationBatchItemProps {
 
 export const GenerationBatchItem = memo<GenerationBatchItemProps>(({ batch }) => {
   const { styles } = useStyles();
-  const { t } = useTranslation('image');
-  const { t: modelProviderT } = useTranslation('modelProvider');
-  const { t: errorT } = useTranslation('error');
+  const { t } = useTranslation(['image', 'modelProvider', 'error']);
+  const { message } = App.useApp();
 
   const [imageGridRef] = useAutoAnimate();
 
@@ -77,6 +75,16 @@ export const GenerationBatchItem = memo<GenerationBatchItemProps>(({ batch }) =>
   const time = useMemo(() => {
     return dayjs(batch.createdAt).format('YYYY-MM-DD HH:mm:ss');
   }, [batch.createdAt]);
+
+  const handleCopyPrompt = async () => {
+    try {
+      await navigator.clipboard.writeText(batch.prompt);
+      message.success(t('generation.actions.promptCopied'));
+    } catch (error) {
+      console.error('Failed to copy prompt:', error);
+      message.error(t('generation.actions.promptCopyFailed'));
+    }
+  };
 
   const handleReuseSettings = () => {
     reuseSettings(batch.model, batch.provider, omit(batch.config as StdImageGenParams, ['seed']));
@@ -103,9 +111,10 @@ export const GenerationBatchItem = memo<GenerationBatchItemProps>(({ batch }) =>
   if (isInvalidApiKey) {
     return (
       <InvalidAPIKey
-        bedrockDescription={modelProviderT('bedrock.unlock.imageGenerationDescription')}
-        description={errorT('unlock.apiKey.imageGenerationDescription', {
+        bedrockDescription={t('bedrock.unlock.imageGenerationDescription', { ns: 'modelProvider' })}
+        description={t('unlock.apiKey.imageGenerationDescription', {
           name: batch.provider,
+          ns: 'error',
         })}
         id={batch.id}
         onClose={() => {
@@ -120,18 +129,9 @@ export const GenerationBatchItem = memo<GenerationBatchItemProps>(({ batch }) =>
   }
 
   return (
-    <Block className={styles.container} gap={12} variant="borderless">
-      <Highlighter
-        actionIconSize={'small'}
-        className={styles.prompt}
-        language={'md'}
-        showLanguage={false}
-        variant={'borderless'}
-        wrap
-      >
-        {batch.prompt}
-      </Highlighter>
-      <Flexbox gap={4} horizontal justify="space-between">
+    <Block className={styles.container} gap={8} variant="borderless">
+      <Markdown variant={'chat'}>{batch.prompt}</Markdown>
+      <Flexbox gap={4} horizontal justify="space-between" style={{ marginBottom: 10 }}>
         <Flexbox gap={4} horizontal>
           <ModelTag model={batch.model} />
           {batch.width && batch.height && (
@@ -141,32 +141,45 @@ export const GenerationBatchItem = memo<GenerationBatchItemProps>(({ batch }) =>
           )}
           <Tag>{t('generation.metadata.count', { count: batch.generations.length })}</Tag>
         </Flexbox>
-        <Text as={'time'} fontSize={12} type={'secondary'}>
-          {time}
-        </Text>
       </Flexbox>
-
-      <Grid maxItemWidth={200} ref={imageGridRef} rows={4}>
+      <Grid maxItemWidth={200} ref={imageGridRef} rows={batch.generations.length || 4}>
         {batch.generations.map((generation) => (
           <GenerationItem generation={generation} key={generation.id} prompt={batch.prompt} />
         ))}
       </Grid>
-
-      <div className={styles.batchActions}>
-        <ActionIcon
-          icon={Settings}
-          onClick={handleReuseSettings}
-          size={{ blockSize: 32, size: 16 }}
-          title={t('generation.actions.reuseSettings')}
+      <Flexbox
+        align={'center'}
+        className={styles.batchActions}
+        horizontal
+        justify={'space-between'}
+      >
+        <Text as={'time'} fontSize={12} type={'secondary'}>
+          {time}
+        </Text>
+        <ActionIconGroup
+          items={[
+            {
+              icon: RotateCcwSquareIcon,
+              onClick: handleReuseSettings,
+              label: t('generation.actions.reuseSettings'),
+              key: 'reuseSettings',
+            },
+            {
+              icon: CopyIcon,
+              onClick: handleCopyPrompt,
+              label: t('generation.actions.copyPrompt'),
+              key: 'copyPrompt',
+            },
+            {
+              icon: Trash2,
+              onClick: handleDeleteBatch,
+              label: t('generation.actions.deleteBatch'),
+              key: 'deleteBatch',
+              danger: true,
+            },
+          ]}
         />
-        <ActionIcon
-          className={styles.batchDeleteButton}
-          icon={Trash2}
-          onClick={handleDeleteBatch}
-          size={{ blockSize: 32, size: 16 }}
-          title={t('generation.actions.deleteBatch')}
-        />
-      </div>
+      </Flexbox>
     </Block>
   );
 });

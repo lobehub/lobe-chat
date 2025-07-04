@@ -1,5 +1,6 @@
 'use client';
 
+import { Text } from '@lobehub/ui';
 import { useEffect, useRef, useState } from 'react';
 
 interface ElapsedTimeProps {
@@ -81,5 +82,9 @@ export function ElapsedTime({ generationId, isActive }: ElapsedTimeProps) {
     return `${minutes.toFixed(1)}min`;
   })();
 
-  return <span style={{ fontSize: '10px', opacity: 0.8 }}>{formattedTime}</span>;
+  return (
+    <Text code fontSize={10} type={'secondary'}>
+      {formattedTime}
+    </Text>
+  );
 }

@@ -1,9 +1,15 @@
 'use client';
 
 import Topics from './features/Topics';
+import TopicUrlSync from './features/Topics/TopicUrlSync';
 
 const page = () => {
-  return <Topics />;
+  return (
+    <>
+      <TopicUrlSync />
+      <Topics />
+    </>
+  );
 };
 
 page.displayName = 'ImageTopics';
