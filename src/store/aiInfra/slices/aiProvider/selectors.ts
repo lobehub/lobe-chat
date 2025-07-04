@@ -1,4 +1,5 @@
 import { isProviderDisableBrowserRequest } from '@/config/modelProviders';
+import { isDesktop } from '@/const/version';
 import { AIProviderStoreState } from '@/store/aiInfra/initialState';
 import { AiProviderRuntimeConfig } from '@/types/aiProvider';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
@@ -57,6 +58,9 @@ const isProviderConfigUpdating = (id: string) => (s: AIProviderStoreState) =>
  */
 const isProviderFetchOnClient =
   (provider: GlobalLLMProviderKey | string) => (s: AIProviderStoreState) => {
+    // if is desktop, force on Server.
+    if (isDesktop) return false;
+
     const config = providerConfigById(provider)(s);
 
     // If the provider already disable browser request in model config, force on Server.
