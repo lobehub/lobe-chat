@@ -2,8 +2,6 @@
 
 import { Tag } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import Link from 'next/link';
-import qs from 'query-string';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -27,17 +25,9 @@ const TagList = memo<{ tags: string[] }>(({ tags }) => {
     showTags && (
       <Flexbox gap={8} horizontal wrap={'wrap'}>
         {tags.map((tag) => (
-          <Link
-            href={qs.stringifyUrl({
-              query: {
-                q: tag,
-              },
-              url: '/discover/plugin',
-            })}
-            key={tag}
-          >
-            <Tag className={styles.tag}>{tag}</Tag>
-          </Link>
+          <Tag className={styles.tag} key={tag}>
+            {tag}
+          </Tag>
         ))}
       </Flexbox>
     )
