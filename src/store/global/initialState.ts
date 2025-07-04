@@ -93,6 +93,9 @@ export interface GlobalState {
   isStatusInit?: boolean;
   latestVersion?: string;
   router?: AppRouterInstance;
+  // Settings state managed by createSettingsSlice
+  // This will be populated by the settings slice itself.
+  // settings: SettingsState; // This line might be removed if settings are directly part of GlobalState via the slice.
   sidebarKey: SidebarTabKey;
   status: SystemStatus;
   statusStorage: AsyncLocalStorage<SystemStatus>;
@@ -125,4 +128,8 @@ export const initialState: GlobalState = {
   sidebarKey: SidebarTabKey.Chat,
   status: INITIAL_STATUS,
   statusStorage: new AsyncLocalStorage('LOBE_SYSTEM_STATUS'),
+  // settings: initialSettingsState, // Initialize settings state here
+  // Note: If SettingsSlice is directly merged, its own initialState will be used.
+  // It's often cleaner to have settings as a top-level property initialized by its slice.
+  // Let's assume createSettingsSlice handles its own initial state merging.
 };
