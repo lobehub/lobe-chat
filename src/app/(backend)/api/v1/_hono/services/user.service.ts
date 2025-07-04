@@ -170,7 +170,7 @@ export class UserService extends BaseService {
       }
 
       // 生成新用户ID
-      const userId = uuid();
+      const userId = userData.id || uuid();
       const currentTime = new Date();
 
       // 构建新用户数据
