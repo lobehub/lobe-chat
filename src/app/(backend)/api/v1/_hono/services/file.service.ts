@@ -747,8 +747,8 @@ export class FileUploadService extends BaseService {
       });
 
       return {
+        fileItem: uploadResult,
         parseResult,
-        uploadResult,
       };
     } catch (error) {
       this.log('error', 'File retrieval and parsing failed', error);
@@ -792,8 +792,8 @@ export class FileUploadService extends BaseService {
       const detailResult = await this.getFileDetail(uploadResult.id!);
 
       return {
+        fileItem: detailResult,
         parseResult,
-        uploadResult: detailResult,
       };
     } catch (error) {
       this.log('error', 'File upload and parsing failed', error);
