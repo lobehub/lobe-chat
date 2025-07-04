@@ -1844,6 +1844,9 @@
   "moonshot-v1-auto": {
     "description": "Moonshot V1 Auto 可以根據當前上下文佔用的 Tokens 數量來選擇合適的模型"
   },
+  "moonshotai/Kimi-Dev-72B": {
+    "description": "Kimi-Dev-72B 是一款開源程式碼大型模型，經過大規模強化學習優化，能輸出穩健、可直接投產的補丁。該模型在 SWE-bench Verified 上取得 60.4 % 的新高分，刷新了開源模型在缺陷修復、程式碼審查等自動化軟體工程任務上的紀錄。"
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B 是 Nous Hermes 2 的升級版本，包含最新的內部開發的數據集。"
   },
@@ -1871,6 +1874,9 @@
   "o3": {
     "description": "o3 是一款全能強大的模型，在多個領域表現出色。它為數學、科學、程式設計和視覺推理任務樹立了新標杆。它也擅長技術寫作和指令遵循。用戶可利用它分析文本、程式碼和圖像，解決多步驟的複雜問題。"
   },
+  "o3-deep-research": {
+    "description": "o3-deep-research 是我們最先進的深度研究模型，專為處理複雜的多步驟研究任務而設計。它可以從網際網路搜尋和綜合資訊，也可以透過 MCP 連接器存取並利用你的自有資料。"
+  },
   "o3-mini": {
     "description": "o3-mini 是我們最新的小型推理模型，在與 o1-mini 相同的成本和延遲目標下提供高智能。"
   },
@@ -1879,6 +1885,9 @@
   },
   "o4-mini": {
     "description": "o4-mini 是我們最新的小型 o 系列模型。它專為快速有效的推理而優化，在編碼和視覺任務中表現出極高的效率和性能。"
+  },
+  "o4-mini-deep-research": {
+    "description": "o4-mini-deep-research 是我們更快速、更實惠的深度研究模型——非常適合處理複雜的多步驟研究任務。它可以從網際網路搜尋和綜合資訊，也可以透過 MCP 連接器存取並利用你的自有資料。"
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba 是專注於代碼生成的 Mamba 2 語言模型，為先進的代碼和推理任務提供強力支持。"
@@ -2275,6 +2284,9 @@
   },
   "taichu_vl": {
     "description": "融合了圖像理解、知識遷移、邏輯歸因等能力，在圖文問答領域表現突出。"
+  },
+  "tencent/Hunyuan-A13B-Instruct": {
+    "description": "Hunyuan-A13B-Instruct 參數量800 億，啟動 130 億參數即可對標更大模型，支援「快思考/慢思考」混合推理；長文理解穩定；經 BFCL-v3 與 τ-Bench 驗證，Agent 能力領先；結合 GQA 與多量化格式，實現高效推理。"
   },
   "text-embedding-3-large": {
     "description": "最強大的向量化模型，適用於英文和非英文任務"
