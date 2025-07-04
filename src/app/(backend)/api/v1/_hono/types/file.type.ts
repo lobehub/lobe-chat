@@ -286,8 +286,8 @@ export interface FileParseResponse {
  * 文件上传并解析响应类型
  */
 export interface FileUploadAndParseResponse {
-  /** 上传结果 */
-  uploadResult: FileDetailResponse;
+  /** 文件项 */
+  fileItem: FileDetailResponse;
   /** 解析结果 */
   parseResult: FileParseResponse;
 }
