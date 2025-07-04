@@ -73,6 +73,34 @@ export default {
   MaxTokenSlider: {
     unlimited: '无限制',
   },
+  ImageUpload: {
+    placeholder: {
+      primary: '添加图片',
+      secondary: '点击上传',
+    },
+    actions: {
+      changeImage: '点击更换图片',
+    },
+  },
+  MultiImagesUpload: {
+    placeholder: {
+      primary: '点击上传图片',
+      secondary: '支持多张图片选择',
+    },
+    progress: {
+      uploadingWithCount: '{{completed}}/{{total}} 已上传',
+    },
+    actions: {
+      uploadMore: '点击上传更多',
+    },
+    modal: {
+      title: '管理图片 ({{count}})',
+      upload: '上传图片',
+      complete: '完成',
+      newFileIndicator: '新增',
+      selectImageToPreview: '请选择要预览的图片',
+    },
+  },
   ModelSelect: {
     featureTag: {
       custom: '自定义模型，默认设定同时支持函数调用与视觉识别，请根据实际情况验证上述能力的可用性',

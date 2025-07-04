@@ -66,6 +66,7 @@
       "customRegion": "사용자 정의 서비스 지역",
       "customSessionToken": "사용자 정의 세션 토큰",
       "description": "AWS AccessKeyId / SecretAccessKey를 입력하면 세션이 시작됩니다. 애플리케이션은 인증 구성을 기록하지 않습니다.",
+      "imageGenerationDescription": "AWS AccessKeyId / SecretAccessKey를 입력하면 생성이 시작됩니다. 애플리케이션은 인증 구성을 기록하지 않습니다.",
       "title": "사용자 정의 Bedrock 인증 정보 사용"
     }
   },

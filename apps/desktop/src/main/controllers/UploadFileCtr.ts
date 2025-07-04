@@ -1,14 +1,9 @@
+import { UploadFileParams } from '@lobechat/electron-client-ipc';
+import { CreateFileParams } from '@lobechat/electron-server-ipc';
+
 import FileService from '@/services/fileSrv';
 
 import { ControllerModule, ipcClientEvent, ipcServerEvent } from './index';
-
-interface UploadFileParams {
-  content: ArrayBuffer;
-  filename: string;
-  hash: string;
-  path: string;
-  type: string;
-}
 
 export default class UploadFileCtr extends ControllerModule {
   private get fileService() {
@@ -27,8 +22,18 @@ export default class UploadFileCtr extends ControllerModule {
     return this.fileService.getFilePath(id);
   }
 
+  @ipcServerEvent('getFileHTTPURL')
+  async getFileHTTPURL(path: string) {
+    return this.fileService.getFileHTTPURL(path);
+  }
+
   @ipcServerEvent('deleteFiles')
   async deleteFiles(paths: string[]) {
     return this.fileService.deleteFiles(paths);
+  }
+
+  @ipcServerEvent('createFile')
+  async createFile(params: CreateFileParams) {
+    return this.fileService.uploadFile(params);
   }
 }

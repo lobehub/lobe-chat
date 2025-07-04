@@ -1,13 +1,14 @@
+import type { VertexAI } from '@google-cloud/vertexai';
 import {
   Content,
+  FunctionCallPart,
   FunctionDeclaration,
-  GenerateContentConfig,
   Tool as GoogleFunctionCallTool,
-  GoogleGenAI,
+  GoogleGenerativeAI,
+  GoogleSearchRetrievalTool,
   Part,
-  Type as SchemaType,
-  ThinkingConfig,
-} from '@google/genai';
+  SchemaType,
+} from '@google/generative-ai';
 
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
 import { safeParseJSON } from '@/utils/safeParseJSON';
@@ -76,9 +77,14 @@ const DEFAULT_BASE_URL = 'https://generativelanguage.googleapis.com';
 interface LobeGoogleAIParams {
   apiKey?: string;
   baseURL?: string;
-  client?: GoogleGenAI;
+  client?: GoogleGenerativeAI | VertexAI;
   id?: string;
   isVertexAi?: boolean;
+}
+
+interface GoogleAIThinkingConfig {
+  includeThoughts?: boolean;
+  thinkingBudget?: number;
 }
 
 const isAbortError = (error: Error): boolean => {
@@ -93,7 +99,7 @@ const isAbortError = (error: Error): boolean => {
 };
 
 export class LobeGoogleAI implements LobeRuntimeAI {
-  private client: GoogleGenAI;
+  private client: GoogleGenerativeAI;
   private isVertexAi: boolean;
   baseURL?: string;
   apiKey?: string;
@@ -102,10 +108,9 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   constructor({ apiKey, baseURL, client, isVertexAi, id }: LobeGoogleAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
-    const httpOptions = baseURL ? { baseUrl: baseURL } : undefined;
-
+    this.client = new GoogleGenerativeAI(apiKey);
     this.apiKey = apiKey;
-    this.client = client ? client : new GoogleGenAI({ apiKey, httpOptions });
+    this.client = client ? (client as GoogleGenerativeAI) : new GoogleGenerativeAI(apiKey);
     this.baseURL = client ? undefined : baseURL || DEFAULT_BASE_URL;
     this.isVertexAi = isVertexAi || false;
 
@@ -117,7 +122,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const payload = this.buildPayload(rawPayload);
       const { model, thinkingBudget } = payload;
 
-      const thinkingConfig: ThinkingConfig = {
+      const thinkingConfig: GoogleAIThinkingConfig = {
         includeThoughts:
           !!thinkingBudget ||
           (!thinkingBudget && model && (model.includes('-2.5-') || model.includes('thinking')))
@@ -150,6 +155,8 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       const contents = await this.buildGoogleMessages(payload.messages);
 
+      const inputStartAt = Date.now();
+
       const controller = new AbortController();
       const originalSignal = options?.signal;
 
@@ -163,50 +170,57 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         }
       }
 
-      const config: GenerateContentConfig = {
-        abortSignal: originalSignal,
-        maxOutputTokens: payload.max_tokens,
-        responseModalities: modelsWithModalities.has(model) ? ['Text', 'Image'] : undefined,
-        // avoid wide sensitive words
-        // refs: https://github.com/lobehub/lobe-chat/pull/1418
-        safetySettings: [
+      const geminiStreamResult = await this.client
+        .getGenerativeModel(
           {
-            category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-            threshold: getThreshold(model),
+            generationConfig: {
+              maxOutputTokens: payload.max_tokens,
+              // @ts-expect-error - Google SDK 0.24.0 doesn't have this property for now with
+              response_modalities: modelsWithModalities.has(model) ? ['Text', 'Image'] : undefined,
+              temperature: payload.temperature,
+              topP: payload.top_p,
+              ...(modelsDisableInstuction.has(model) || model.toLowerCase().includes('learnlm')
+                ? {}
+                : { thinkingConfig }),
+            },
+            model,
+            // avoid wide sensitive words
+            // refs: https://github.com/lobehub/lobe-chat/pull/1418
+            safetySettings: [
+              {
+                category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+                threshold: getThreshold(model),
+              },
+              {
+                category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+                threshold: getThreshold(model),
+              },
+              {
+                category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+                threshold: getThreshold(model),
+              },
+              {
+                category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+                threshold: getThreshold(model),
+              },
+            ],
+          },
+          { apiVersion: 'v1beta', baseUrl: this.baseURL },
+        )
+        .generateContentStream(
+          {
+            contents,
+            systemInstruction: modelsDisableInstuction.has(model)
+              ? undefined
+              : (payload.system as string),
+            tools: this.buildGoogleTools(payload.tools, payload),
           },
           {
-            category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-            threshold: getThreshold(model),
+            signal: controller.signal,
           },
-          {
-            category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-            threshold: getThreshold(model),
-          },
-          {
-            category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-            threshold: getThreshold(model),
-          },
-        ],
-        systemInstruction: modelsDisableInstuction.has(model)
-          ? undefined
-          : (payload.system as string),
-        temperature: payload.temperature,
-        thinkingConfig:
-          modelsDisableInstuction.has(model) || model.toLowerCase().includes('learnlm')
-            ? undefined
-            : thinkingConfig,
-        tools: this.buildGoogleTools(payload.tools, payload),
-        topP: payload.top_p,
-      };
+        );
 
-      const inputStartAt = Date.now();
-      const geminiStreamResponse = await this.client.models.generateContentStream({
-        config,
-        contents,
-        model,
-      });
-
-      const googleStream = this.createEnhancedStream(geminiStreamResponse, controller.signal);
+      const googleStream = this.createEnhancedStream(geminiStreamResult.stream, controller.signal);
       const [prod, useForDebug] = googleStream.tee();
 
       const key = this.isVertexAi
@@ -391,7 +405,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     const content = message.content as string | UserMessageContentPart[];
     if (!!message.tool_calls) {
       return {
-        parts: message.tool_calls.map<Part>((tool) => ({
+        parts: message.tool_calls.map<FunctionCallPart>((tool) => ({
           functionCall: {
             args: safeParseJSON(tool.function.arguments)!,
             name: tool.function.name,
@@ -513,7 +527,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       return this.buildFunctionDeclarations(tools);
     }
     if (payload?.enabledSearch) {
-      return [{ googleSearch: {} }];
+      return [{ googleSearch: {} } as GoogleSearchRetrievalTool];
     }
 
     return this.buildFunctionDeclarations(tools);

@@ -80,6 +80,20 @@ export class FileService {
     return this.impl.getFullFileUrl(url, expiresIn);
   }
 
+  /**
+   * 从完整 URL中 提取 key
+   */
+  public getKeyFromFullUrl(url: string): string {
+    return this.impl.getKeyFromFullUrl(url);
+  }
+
+  /**
+   * 上传媒体文件
+   */
+  public async uploadMedia(key: string, buffer: Buffer): Promise<{ key: string }> {
+    return this.impl.uploadMedia(key, buffer);
+  }
+
   async downloadFileToLocal(
     fileId: string,
   ): Promise<{ cleanup: () => void; file: FileItem; filePath: string }> {

@@ -10,6 +10,7 @@ export enum SidebarTabKey {
   Chat = 'chat',
   Discover = 'discover',
   Files = 'files',
+  Image = 'image',
   Me = 'me',
   Setting = 'settings',
 }
@@ -47,6 +48,8 @@ export interface SystemStatus {
   // which sessionGroup should expand
   expandSessionGroupKeys: string[];
   filePanelWidth: number;
+  imagePanelWidth: number;
+  imageTopicPanelWidth?: number;
   hidePWAInstaller?: boolean;
   hideThreadLimitAlert?: boolean;
   inputHeight: number;
@@ -63,6 +66,8 @@ export interface SystemStatus {
   sessionsWidth: number;
   showChatSideBar?: boolean;
   showFilePanel?: boolean;
+  showImagePanel?: boolean;
+  showImageTopicPanel?: boolean;
   showHotkeyHelper?: boolean;
   showSessionPanel?: boolean;
   showSystemRole?: boolean;
@@ -101,6 +106,8 @@ export interface GlobalState {
 export const INITIAL_STATUS = {
   expandSessionGroupKeys: [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default],
   filePanelWidth: 320,
+  imagePanelWidth: 320,
+  imageTopicPanelWidth: 80,
   hidePWAInstaller: false,
   hideThreadLimitAlert: false,
   inputHeight: 200,
@@ -109,6 +116,8 @@ export const INITIAL_STATUS = {
   sessionsWidth: 320,
   showChatSideBar: true,
   showFilePanel: true,
+  showImagePanel: true,
+  showImageTopicPanel: true,
   showHotkeyHelper: false,
   showSessionPanel: true,
   showSystemRole: false,

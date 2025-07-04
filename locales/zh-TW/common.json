@@ -324,6 +324,7 @@
     }
   },
   "tab": {
+    "aiImage": "AI 繪畫",
     "chat": "對話",
     "discover": "發現",
     "files": "檔案",

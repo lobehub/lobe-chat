@@ -2,6 +2,7 @@
 
 # Changelog
 
+<<<<<<< HEAD
 ### [Version 1.96.17](https://github.com/lobehub/lobe-chat/compare/v1.96.16...v1.96.17)
 
 <sup>Released on **2025-07-03**</sup>
@@ -94,6 +95,8 @@
 
 </div>
 
+=======
+>>>>>>> ff2155bc8 (feat: ai image)
 ### [Version 1.96.13](https://github.com/lobehub/lobe-chat/compare/v1.96.12...v1.96.13)
 
 <sup>Released on **2025-07-01**</sup>

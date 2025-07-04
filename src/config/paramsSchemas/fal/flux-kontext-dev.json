@@ -1,0 +1,18 @@
+{
+  "properties": {
+    "prompt": {},
+    "imageUrl": {
+      "default": null
+    },
+    "steps": {
+      "minimum": 10,
+      "maximum": 50,
+      "default": 28
+    },
+    "seed": {
+      "default": null
+    }
+  },
+  "required": ["prompt", "imageUrl"],
+  "type": "object"
+}

@@ -130,6 +130,7 @@
     "addProxyUrl": "OpenAI vekil adresi ekle (isteğe bağlı)",
     "apiKey": {
       "description": "{{name}} API Anahtarınızı girerek oturumu başlatabilirsiniz",
+      "imageGenerationDescription": "{{name}} API Anahtarınızı girerek oluşturma işlemine başlayabilirsiniz",
       "title": "Özel {{name}} API Anahtarını kullan"
     },
     "closeMessage": "Mesajı kapat",
