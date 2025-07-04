@@ -103,6 +103,8 @@ const Page = async (props: DiscoverPageProps) => {
   );
 };
 
+export const generateStaticParams = async () => [];
+
 Page.DisplayName = 'DiscoverAssistantsDetail';
 
 export default Page;

@@ -69,6 +69,8 @@ export const generateMetadata = async (props: DiscoverPageProps) => {
   };
 };
 
+export const generateStaticParams = async () => [];
+
 const Page = async (props: DiscoverPageProps) => {
   const { data, locale, identifier, t, td, isMobile } = await getSharedProps(props);
   if (!data) return notFound();
