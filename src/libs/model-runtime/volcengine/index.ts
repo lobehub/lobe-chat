@@ -2,6 +2,13 @@ import { ModelProvider } from '../types';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { MODEL_LIST_CONFIGS, processModelList } from '../utils/modelParse';
 
+const THINKING_MODELS = [
+  'thinking-vision-pro',
+  'thinking-pro-m', 
+  'doubao-seed-1-6',
+  'doubao-1-5-ui-tars'
+];
+
 export interface VolcengineModelCard {
   id: string;
 }
@@ -15,12 +22,9 @@ export const LobeVolcengineAI = createOpenAICompatibleRuntime({
       return {
         ...rest,
         model,
-        ...(['thinking-vision-pro'].some((keyword) => model.toLowerCase().includes(keyword))
+        ...(THINKING_MODELS.some((keyword) => model.toLowerCase().includes(keyword))
           ? {
-              thinking:
-                thinking !== undefined && thinking.type === 'enabled'
-                  ? { type: 'enabled' }
-                  : { type: 'disabled' },
+              thinking: { type: thinking?.type }
             }
           : {}),
       } as any;
