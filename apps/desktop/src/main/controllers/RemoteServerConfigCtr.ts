@@ -209,7 +209,6 @@ export default class RemoteServerConfigCtr extends ControllerModule {
    * 使用存储的刷新令牌获取新的访问令牌
    * Handles concurrent requests by returning the existing refresh promise if one is in progress.
    */
-  @ipcClientEvent('refreshAccessToken')
   async refreshAccessToken(): Promise<{ error?: string; success: boolean }> {
     // If a refresh is already in progress, return the existing promise
     if (this.refreshPromise) {
