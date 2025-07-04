@@ -12,6 +12,11 @@
     "tool_call": "Tool Call Request"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "Bitte gehen Sie zur Bearbeitungsseite, um Details anzuzeigen",
+      "editBtn": "Jetzt bearbeiten",
+      "title": "Dies ist ein benutzerdefiniertes Plugin"
+    },
     "emptyState": {
       "description": "Bitte installieren Sie dieses Plugin, um die Funktionen und Konfigurationsoptionen anzuzeigen",
       "title": "Nach der Installation Plugin-Details anzeigen"
@@ -330,11 +335,25 @@
       "type": "Verbindungstyp",
       "url": "Dienstadresse"
     },
+    "edit": "Bearbeiten",
+    "envConfigDescription": "Diese Konfigurationen werden als Umgebungsvariablen beim Start des MCP-Servers an den Prozess übergeben",
+    "httpTypeNotice": "Für HTTP-Typ MCP-Plugins sind derzeit keine Umgebungsvariablen zu konfigurieren",
     "indexUrl": {
       "title": "Marktindex",
       "tooltip": "Online-Bearbeitung wird derzeit nicht unterstützt. Bitte über Umgebungsvariablen bei der Bereitstellung festlegen."
     },
+    "messages": {
+      "connectionUpdateFailed": "Aktualisierung der Verbindungsinformationen fehlgeschlagen",
+      "connectionUpdateSuccess": "Verbindungsinformationen erfolgreich aktualisiert",
+      "envUpdateFailed": "Speichern der Umgebungsvariablen fehlgeschlagen",
+      "envUpdateSuccess": "Umgebungsvariablen erfolgreich gespeichert"
+    },
     "modalDesc": "Nachdem Sie die Adresse des Plugin-Marktes konfiguriert haben, können Sie den benutzerdefinierten Plugin-Markt verwenden.",
+    "rules": {
+      "argsRequired": "Bitte Startparameter eingeben",
+      "commandRequired": "Bitte Startbefehl eingeben",
+      "urlRequired": "Bitte Dienstadresse eingeben"
+    },
     "saveSettings": "Einstellungen speichern",
     "title": "Plugin-Markteinstellungen"
   },
@@ -352,6 +371,7 @@
     "communityPlugin": "Community",
     "customPlugin": "Benutzerdefiniert",
     "empty": "Keine installierten Plugins vorhanden",
+    "emptySelectHint": "Wählen Sie ein Plugin aus, um Details anzuzeigen",
     "installAllPlugins": "Alle installieren",
     "networkError": "Fehler beim Abrufen des Plugin-Shops. Bitte überprüfen Sie die Netzwerkverbindung und versuchen Sie es erneut.",
     "placeholder": "Suche nach Plugin-Namen, Beschreibung oder Stichwort...",

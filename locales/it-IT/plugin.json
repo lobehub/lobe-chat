@@ -12,6 +12,11 @@
     "tool_call": "richiesta di chiamata dello strumento"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "Per favore, vai alla pagina di modifica per vedere i dettagli",
+      "editBtn": "Modifica ora",
+      "title": "Questo è un plugin personalizzato"
+    },
     "emptyState": {
       "description": "Si prega di installare questo plugin per visualizzare le funzionalità e le opzioni di configurazione del plugin",
       "title": "Visualizza i dettagli del plugin dopo l'installazione"
@@ -330,11 +335,25 @@
       "type": "Tipo di connessione",
       "url": "Indirizzo del servizio"
     },
+    "edit": "Modifica",
+    "envConfigDescription": "Queste configurazioni saranno passate come variabili d'ambiente al processo all'avvio del server MCP",
+    "httpTypeNotice": "I plugin MCP di tipo HTTP non richiedono variabili d'ambiente da configurare",
     "indexUrl": {
       "title": "Indice di mercato",
       "tooltip": "Modifica non supportata online. Imposta tramite variabili d'ambiente durante il deploy"
     },
+    "messages": {
+      "connectionUpdateFailed": "Aggiornamento delle informazioni di connessione fallito",
+      "connectionUpdateSuccess": "Informazioni di connessione aggiornate con successo",
+      "envUpdateFailed": "Salvataggio delle variabili d'ambiente fallito",
+      "envUpdateSuccess": "Variabili d'ambiente salvate con successo"
+    },
     "modalDesc": "Dopo aver configurato l'indirizzo del mercato dei plugin, è possibile utilizzare un mercato dei plugin personalizzato",
+    "rules": {
+      "argsRequired": "Inserisci i parametri di avvio",
+      "commandRequired": "Inserisci il comando di avvio",
+      "urlRequired": "Inserisci l'indirizzo del servizio"
+    },
     "saveSettings": "Salva impostazioni",
     "title": "Impostazioni del mercato dei plugin"
   },
@@ -352,6 +371,7 @@
     "communityPlugin": "Plugin della community",
     "customPlugin": "Personalizzato",
     "empty": "Nessun plugin installato al momento",
+    "emptySelectHint": "Seleziona un plugin per visualizzare i dettagli",
     "installAllPlugins": "Installa tutti",
     "networkError": "Impossibile recuperare il negozio dei plugin. Controlla la connessione di rete e riprova",
     "placeholder": "Cerca per nome, descrizione o parola chiave del plugin...",

@@ -12,6 +12,11 @@
     "tool_call": "Yêu cầu công cụ"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "Vui lòng truy cập trang chỉnh sửa để xem chi tiết",
+      "editBtn": "Chỉnh sửa ngay",
+      "title": "Đây là một plugin tùy chỉnh"
+    },
     "emptyState": {
       "description": "Vui lòng cài đặt plugin này trước để xem các tính năng và tùy chọn cấu hình của plugin",
       "title": "Xem chi tiết plugin sau khi cài đặt"
@@ -330,11 +335,25 @@
       "type": "Loại kết nối",
       "url": "Địa chỉ dịch vụ"
     },
+    "edit": "Chỉnh sửa",
+    "envConfigDescription": "Các cấu hình này sẽ được truyền dưới dạng biến môi trường khi máy chủ MCP khởi động",
+    "httpTypeNotice": "Plugin MCP loại HTTP hiện không có biến môi trường cần cấu hình",
     "indexUrl": {
       "title": "Chỉ mục thị trường",
       "tooltip": "Hiện không hỗ trợ chỉnh sửa trực tuyến, vui lòng thiết lập thông qua biến môi trường khi triển khai"
     },
+    "messages": {
+      "connectionUpdateFailed": "Cập nhật thông tin kết nối thất bại",
+      "connectionUpdateSuccess": "Cập nhật thông tin kết nối thành công",
+      "envUpdateFailed": "Lưu biến môi trường thất bại",
+      "envUpdateSuccess": "Lưu biến môi trường thành công"
+    },
     "modalDesc": "Sau khi cấu hình địa chỉ thị trường plugin, bạn có thể sử dụng thị trường plugin tùy chỉnh",
+    "rules": {
+      "argsRequired": "Vui lòng nhập tham số khởi động",
+      "commandRequired": "Vui lòng nhập lệnh khởi động",
+      "urlRequired": "Vui lòng nhập địa chỉ dịch vụ"
+    },
     "saveSettings": "Lưu cài đặt",
     "title": "Cài đặt thị trường plugin"
   },
@@ -352,6 +371,7 @@
     "communityPlugin": "Cộng đồng bên thứ ba",
     "customPlugin": "Tùy chỉnh",
     "empty": "Hiện chưa có plugin được cài đặt",
+    "emptySelectHint": "Chọn plugin để xem trước thông tin chi tiết",
     "installAllPlugins": "Cài đặt tất cả",
     "networkError": "Lấy cửa hàng plugin thất bại, vui lòng kiểm tra kết nối mạng và thử lại",
     "placeholder": "Tìm kiếm tên hoặc mô tả plugin...",

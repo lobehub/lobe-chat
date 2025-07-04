@@ -12,6 +12,11 @@
     "tool_call": "aracı çağrı"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "Detaylar için lütfen düzenleme sayfasına gidin",
+      "editBtn": "Hemen Düzenle",
+      "title": "Bu bir özel eklentidir"
+    },
     "emptyState": {
       "description": "Lütfen eklentinin yeteneklerini ve yapılandırma seçeneklerini görmek için önce bu eklentiyi yükleyin",
       "title": "Yükledikten Sonra Eklenti Detaylarını Görüntüleyin"
@@ -330,11 +335,25 @@
       "type": "Bağlantı türü",
       "url": "Sunucu adresi"
     },
+    "edit": "Düzenle",
+    "envConfigDescription": "Bu yapılandırmalar MCP sunucusu başlatılırken ortam değişkenleri olarak işleme aktarılacaktır",
+    "httpTypeNotice": "HTTP türündeki MCP eklentileri için yapılandırılması gereken ortam değişkeni yoktur",
     "indexUrl": {
       "title": "Pazar Endeksi",
       "tooltip": "Çevrimiçi düzenleme şu anda desteklenmiyor. Lütfen dağıtım sırasında çevre değişkenleri üzerinden ayarlayın."
     },
+    "messages": {
+      "connectionUpdateFailed": "Bağlantı bilgisi güncellenemedi",
+      "connectionUpdateSuccess": "Bağlantı bilgisi başarıyla güncellendi",
+      "envUpdateFailed": "Ortam değişkeni kaydedilemedi",
+      "envUpdateSuccess": "Ortam değişkeni başarıyla kaydedildi"
+    },
     "modalDesc": "Eklenti pazarı adresini yapılandırdıktan sonra, özel bir eklenti pazarı kullanabilirsiniz.",
+    "rules": {
+      "argsRequired": "Lütfen başlatma parametrelerini girin",
+      "commandRequired": "Lütfen başlatma komutunu girin",
+      "urlRequired": "Lütfen servis adresini girin"
+    },
     "saveSettings": "Ayarları kaydet",
     "title": "Eklenti Pazarı Ayarla"
   },
@@ -352,6 +371,7 @@
     "communityPlugin": "Topluluk Eklentisi",
     "customPlugin": "Özel",
     "empty": "Henüz yüklenmiş eklenti yok",
+    "emptySelectHint": "Detayları önizlemek için bir eklenti seçin",
     "installAllPlugins": "Tümünü Yükle",
     "networkError": "Eklenti mağazası alınamadı. Lütfen ağ bağlantınızı kontrol edin ve tekrar deneyin.",
     "placeholder": "Eklenti adını, açıklamasını veya anahtar kelimeleri ara...",

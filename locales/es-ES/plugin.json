@@ -12,6 +12,11 @@
     "tool_call": "solicitud de llamada de herramienta"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "Por favor, visite la página de edición para ver los detalles",
+      "editBtn": "Editar ahora",
+      "title": "Este es un complemento personalizado"
+    },
     "emptyState": {
       "description": "Por favor, instale este complemento para ver sus capacidades y opciones de configuración",
       "title": "Ver detalles del complemento después de la instalación"
@@ -330,11 +335,25 @@
       "type": "Tipo de conexión",
       "url": "Dirección del servicio"
     },
+    "edit": "Editar",
+    "envConfigDescription": "Estas configuraciones se pasarán como variables de entorno al proceso cuando se inicie el servidor MCP",
+    "httpTypeNotice": "Los complementos MCP de tipo HTTP no requieren variables de entorno configurables",
     "indexUrl": {
       "title": "Índice de mercado",
       "tooltip": "No se admite la edición en línea. Configure a través de variables de entorno al implementar."
     },
+    "messages": {
+      "connectionUpdateFailed": "Error al actualizar la información de conexión",
+      "connectionUpdateSuccess": "Información de conexión actualizada con éxito",
+      "envUpdateFailed": "Error al guardar las variables de entorno",
+      "envUpdateSuccess": "Variables de entorno guardadas con éxito"
+    },
     "modalDesc": "Después de configurar la dirección del mercado de complementos, puede utilizar un mercado personalizado de complementos.",
+    "rules": {
+      "argsRequired": "Por favor, introduzca los parámetros de inicio",
+      "commandRequired": "Por favor, introduzca el comando de inicio",
+      "urlRequired": "Por favor, introduzca la dirección del servicio"
+    },
     "saveSettings": "Guardar configuración",
     "title": "Configuración del mercado de complementos"
   },
@@ -352,6 +371,7 @@
     "communityPlugin": "Comunidad",
     "customPlugin": "Personalizado",
     "empty": "No hay complementos instalados",
+    "emptySelectHint": "Seleccione un complemento para previsualizar los detalles",
     "installAllPlugins": "Instalar todos",
     "networkError": "Error al obtener la tienda de complementos. Verifique la conexión a internet e inténtelo de nuevo.",
     "placeholder": "Buscar por nombre, descripción o palabra clave del complemento...",

@@ -12,6 +12,11 @@
     "tool_call": "Tool-oproepverzoek"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "Ga naar de bewerkingspagina voor meer details",
+      "editBtn": "Nu bewerken",
+      "title": "Dit is een aangepaste plugin"
+    },
     "emptyState": {
       "description": "Installeer deze plug-in eerst om de mogelijkheden en configuratieopties te bekijken",
       "title": "Bekijk plug-in details na installatie"
@@ -330,11 +335,25 @@
       "type": "Verbindingstype",
       "url": "Serviceadres"
     },
+    "edit": "Bewerken",
+    "envConfigDescription": "Deze configuraties worden als omgevingsvariabelen doorgegeven aan het proces bij het opstarten van de MCP-server",
+    "httpTypeNotice": "HTTP-type MCP-plugins hebben momenteel geen omgevingsvariabelen die geconfigureerd moeten worden",
     "indexUrl": {
       "title": "Marktindex",
       "tooltip": "Online bewerken wordt momenteel niet ondersteund. Stel in via omgevingsvariabelen tijdens implementatie."
     },
+    "messages": {
+      "connectionUpdateFailed": "Bijwerken van verbindingsinformatie mislukt",
+      "connectionUpdateSuccess": "Verbindingsinformatie succesvol bijgewerkt",
+      "envUpdateFailed": "Opslaan van omgevingsvariabelen mislukt",
+      "envUpdateSuccess": "Omgevingsvariabelen succesvol opgeslagen"
+    },
     "modalDesc": "Na het instellen van de marktlocatie voor plugins, kunt u een aangepaste pluginmarkt gebruiken.",
+    "rules": {
+      "argsRequired": "Voer opstartparameters in",
+      "commandRequired": "Voer het opstartcommando in",
+      "urlRequired": "Voer het serviceadres in"
+    },
     "saveSettings": "Instellingen opslaan",
     "title": "Instellingen voor pluginmarkt"
   },
@@ -352,6 +371,7 @@
     "communityPlugin": "Community",
     "customPlugin": "Aangepast",
     "empty": "Geen geïnstalleerde plugins beschikbaar",
+    "emptySelectHint": "Selecteer een plugin om details te bekijken",
     "installAllPlugins": "Allemaal installeren",
     "networkError": "Kan de pluginwinkel niet laden. Controleer de netwerkverbinding en probeer het opnieuw.",
     "placeholder": "Zoek plugin op naam, beschrijving of trefwoord...",

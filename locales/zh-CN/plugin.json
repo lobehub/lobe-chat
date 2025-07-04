@@ -12,6 +12,11 @@
     "tool_call": "工具调用请求"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "请前往编辑页面查看详情",
+      "editBtn": "立即编辑",
+      "title": "这是一个自定义插件"
+    },
     "emptyState": {
       "description": "请先安装此插件，以查看插件能力和配置选项",
       "title": "安装后查看插件详情"
@@ -330,11 +335,25 @@
       "type": "连接类型",
       "url": "服务地址"
     },
+    "edit": "编辑",
+    "envConfigDescription": "这些配置将作为环境变量在 MCP 服务器启动时传递给进程",
+    "httpTypeNotice": "HTTP 类型的 MCP 插件暂无需要配置的环境变量",
     "indexUrl": {
       "title": "市场索引",
       "tooltip": "暂不支持在线编辑，请通过部署时环境变量进行设置"
     },
+    "messages": {
+      "connectionUpdateFailed": "连接信息更新失败",
+      "connectionUpdateSuccess": "连接信息更新成功",
+      "envUpdateFailed": "环境变量保存失败",
+      "envUpdateSuccess": "环境变量保存成功"
+    },
     "modalDesc": "配置插件市场的地址后，可以使用自定义的插件市场",
+    "rules": {
+      "argsRequired": "请输入启动参数",
+      "commandRequired": "请输入启动命令",
+      "urlRequired": "请输入服务地址"
+    },
     "saveSettings": "保存设置",
     "title": "设置插件市场"
   },
@@ -352,6 +371,7 @@
     "communityPlugin": "三方社区",
     "customPlugin": "自定义",
     "empty": "暂无已安装插件",
+    "emptySelectHint": "选择插件以预览详细信息",
     "installAllPlugins": "安装全部",
     "networkError": "获取插件商店失败，请检测网络连接后重试",
     "placeholder": "搜索插件名称介绍或关键词...",

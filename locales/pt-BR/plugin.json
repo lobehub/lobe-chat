@@ -12,6 +12,11 @@
     "tool_call": "solicitação de chamada de ferramenta"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "Por favor, vá para a página de edição para ver os detalhes",
+      "editBtn": "Editar agora",
+      "title": "Este é um plugin personalizado"
+    },
     "emptyState": {
       "description": "Por favor, instale este plugin para visualizar suas funcionalidades e opções de configuração",
       "title": "Veja os detalhes do plugin após a instalação"
@@ -330,11 +335,25 @@
       "type": "Tipo de conexão",
       "url": "Endereço do serviço"
     },
+    "edit": "Editar",
+    "envConfigDescription": "Estas configurações serão passadas como variáveis de ambiente para o processo ao iniciar o servidor MCP",
+    "httpTypeNotice": "Plugins MCP do tipo HTTP não possuem variáveis de ambiente para configurar no momento",
     "indexUrl": {
       "title": "Índice do Mercado",
       "tooltip": "Edição online não suportada. Configure através de variáveis de ambiente durante a implantação."
     },
+    "messages": {
+      "connectionUpdateFailed": "Falha ao atualizar as informações de conexão",
+      "connectionUpdateSuccess": "Informações de conexão atualizadas com sucesso",
+      "envUpdateFailed": "Falha ao salvar as variáveis de ambiente",
+      "envUpdateSuccess": "Variáveis de ambiente salvas com sucesso"
+    },
     "modalDesc": "Após configurar o endereço do mercado de plugins, você poderá usar um mercado personalizado de plugins.",
+    "rules": {
+      "argsRequired": "Por favor, insira os parâmetros de inicialização",
+      "commandRequired": "Por favor, insira o comando de inicialização",
+      "urlRequired": "Por favor, insira o endereço do serviço"
+    },
     "saveSettings": "Salvar configurações",
     "title": "Configurações do Mercado de Plugins"
   },
@@ -352,6 +371,7 @@
     "communityPlugin": "Plugin da Comunidade",
     "customPlugin": "Personalizado",
     "empty": "Nenhum plugin instalado",
+    "emptySelectHint": "Selecione um plugin para visualizar detalhes",
     "installAllPlugins": "Instalar todos os plugins",
     "networkError": "Falha ao obter a loja de plugins. Verifique a conexão de rede e tente novamente.",
     "placeholder": "Pesquisar por nome, descrição ou palavra-chave do plugin...",

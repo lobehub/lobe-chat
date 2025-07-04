@@ -12,6 +12,11 @@
     "tool_call": "demande d'appel d'outil"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "Veuillez consulter la page d'édition pour plus de détails",
+      "editBtn": "Modifier maintenant",
+      "title": "Ceci est un plugin personnalisé"
+    },
     "emptyState": {
       "description": "Veuillez installer ce plugin pour voir ses fonctionnalités et options de configuration",
       "title": "Voir les détails du plugin après installation"
@@ -330,11 +335,25 @@
       "type": "Type de connexion",
       "url": "Adresse du service"
     },
+    "edit": "Modifier",
+    "envConfigDescription": "Ces configurations seront transmises en tant que variables d'environnement au processus lors du démarrage du serveur MCP",
+    "httpTypeNotice": "Les plugins MCP de type HTTP n'ont actuellement pas de variables d'environnement à configurer",
     "indexUrl": {
       "title": "Index du marché",
       "tooltip": "L'édition en ligne n'est pas encore prise en charge. Veuillez configurer via les variables d'environnement lors du déploiement."
     },
+    "messages": {
+      "connectionUpdateFailed": "Échec de la mise à jour des informations de connexion",
+      "connectionUpdateSuccess": "Mise à jour des informations de connexion réussie",
+      "envUpdateFailed": "Échec de l'enregistrement des variables d'environnement",
+      "envUpdateSuccess": "Enregistrement des variables d'environnement réussi"
+    },
     "modalDesc": "Une fois l'adresse du marché des plugins configurée, vous pourrez utiliser un marché de plugins personnalisé.",
+    "rules": {
+      "argsRequired": "Veuillez saisir les paramètres de démarrage",
+      "commandRequired": "Veuillez saisir la commande de démarrage",
+      "urlRequired": "Veuillez saisir l'adresse du service"
+    },
     "saveSettings": "Enregistrer les paramètres",
     "title": "Paramètres du marché des plugins"
   },
@@ -352,6 +371,7 @@
     "communityPlugin": "Plugin communautaire",
     "customPlugin": "Plugin personnalisé",
     "empty": "Aucun plugin installé pour le moment",
+    "emptySelectHint": "Sélectionnez un plugin pour prévisualiser les détails",
     "installAllPlugins": "Installer tous les plugins",
     "networkError": "Échec de la récupération de la boutique de plugins. Veuillez vérifier votre connexion réseau et réessayer.",
     "placeholder": "Rechercher le nom ou les mots-clés de l'extension...",

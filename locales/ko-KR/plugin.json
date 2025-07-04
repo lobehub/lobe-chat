@@ -12,6 +12,11 @@
     "tool_call": "도구 호출"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "자세한 내용은 편집 페이지에서 확인하세요",
+      "editBtn": "지금 편집",
+      "title": "이것은 사용자 정의 플러그인입니다"
+    },
     "emptyState": {
       "description": "이 플러그인을 설치한 후 플러그인 기능과 설정 옵션을 확인하세요",
       "title": "설치 후 플러그인 세부 정보 보기"
@@ -330,11 +335,25 @@
       "type": "연결 유형",
       "url": "서비스 주소"
     },
+    "edit": "편집",
+    "envConfigDescription": "이 구성은 MCP 서버 시작 시 환경 변수로 프로세스에 전달됩니다",
+    "httpTypeNotice": "HTTP 유형의 MCP 플러그인은 현재 구성할 환경 변수가 없습니다",
     "indexUrl": {
       "title": "마켓 인덱스",
       "tooltip": "온라인 편집은 지원되지 않습니다. 배포 환경 변수를 통해 설정해주세요."
     },
+    "messages": {
+      "connectionUpdateFailed": "연결 정보 업데이트 실패",
+      "connectionUpdateSuccess": "연결 정보 업데이트 성공",
+      "envUpdateFailed": "환경 변수 저장 실패",
+      "envUpdateSuccess": "환경 변수 저장 성공"
+    },
     "modalDesc": "플러그인 마켓의 주소를 구성하면 사용자 정의 플러그인 마켓을 사용할 수 있습니다.",
+    "rules": {
+      "argsRequired": "시작 매개변수를 입력하세요",
+      "commandRequired": "시작 명령어를 입력하세요",
+      "urlRequired": "서비스 주소를 입력하세요"
+    },
     "saveSettings": "설정 저장",
     "title": "플러그인 마켓 설정"
   },
@@ -352,6 +371,7 @@
     "communityPlugin": "커뮤니티 플러그인",
     "customPlugin": "사용자 정의 플러그인",
     "empty": "설치된 플러그인이 없습니다",
+    "emptySelectHint": "플러그인을 선택하여 자세한 정보를 미리보기 하세요",
     "installAllPlugins": "모두 설치",
     "networkError": "플러그인 스토어를 가져오는 데 실패했습니다. 네트워크 연결을 확인한 후 다시 시도하십시오",
     "placeholder": "플러그인 이름 또는 키워드를 검색하세요...",

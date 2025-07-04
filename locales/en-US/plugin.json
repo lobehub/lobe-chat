@@ -12,6 +12,11 @@
     "tool_call": "tool call request"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "Please visit the edit page to view details",
+      "editBtn": "Edit Now",
+      "title": "This is a Custom Plugin"
+    },
     "emptyState": {
       "description": "Please install this plugin first to view its capabilities and configuration options",
       "title": "View Plugin Details After Installation"
@@ -330,11 +335,25 @@
       "type": "Connection type",
       "url": "Service address"
     },
+    "edit": "Edit",
+    "envConfigDescription": "These configurations will be passed as environment variables to the process when the MCP server starts",
+    "httpTypeNotice": "No environment variables need to be configured for HTTP type MCP plugins",
     "indexUrl": {
       "title": "Marketplace Index",
       "tooltip": "Editing is not supported at the moment"
     },
+    "messages": {
+      "connectionUpdateFailed": "Failed to update connection information",
+      "connectionUpdateSuccess": "Connection information updated successfully",
+      "envUpdateFailed": "Failed to save environment variables",
+      "envUpdateSuccess": "Environment variables saved successfully"
+    },
     "modalDesc": "After configuring the address of the plugin marketplace, you can use a custom plugin marketplace",
+    "rules": {
+      "argsRequired": "Please enter startup arguments",
+      "commandRequired": "Please enter the startup command",
+      "urlRequired": "Please enter the service address"
+    },
     "saveSettings": "Save settings",
     "title": "Configure Plugin Marketplace"
   },
@@ -352,6 +371,7 @@
     "communityPlugin": "Third-party",
     "customPlugin": "Custom Plugin",
     "empty": "No installed plugins yet",
+    "emptySelectHint": "Select a plugin to preview detailed information",
     "installAllPlugins": "Install All",
     "networkError": "Failed to fetch plugin store. Please check your network connection and try again",
     "placeholder": "Search for plugin name, description, or keyword...",
