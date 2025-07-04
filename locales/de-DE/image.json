@@ -3,11 +3,18 @@
     "aspectRatio": {
       "label": "Seitenverhältnis"
     },
+    "header": {
+      "desc": "Einfache Beschreibung, sofortige Kreation",
+      "title": "Malerei"
+    },
     "height": {
       "label": "Höhe"
     },
     "imageNum": {
       "label": "Anzahl der Bilder"
+    },
+    "imageUrl": {
+      "label": "Referenzbild"
     },
     "imageUrls": {
       "label": "Referenzbilder"
@@ -36,6 +43,7 @@
     "actions": {
       "applySeed": "Saatgut anwenden",
       "copyError": "Fehlermeldung kopieren",
+      "copyPrompt": "Prompt kopieren",
       "copySeed": "Seed kopieren",
       "delete": "Löschen",
       "deleteBatch": "Batch löschen",
@@ -43,6 +51,7 @@
       "downloadFailed": "Bild-Download fehlgeschlagen",
       "errorCopied": "Fehlermeldung wurde in die Zwischenablage kopiert",
       "errorCopyFailed": "Fehlermeldung kopieren fehlgeschlagen",
+      "generate": "Generieren",
       "promptCopied": "Prompt wurde in die Zwischenablage kopiert",
       "promptCopyFailed": "Prompt-Kopieren fehlgeschlagen",
       "reuseSettings": "Einstellungen wiederverwenden",
@@ -82,6 +91,7 @@
     "deleteConfirm": "Generiertes Thema löschen",
     "deleteConfirmDesc": "Das generierte Thema wird gelöscht und kann nicht wiederhergestellt werden. Bitte vorsichtig vorgehen.",
     "empty": "Keine generierten Themen vorhanden",
+    "title": "Malthema",
     "untitled": "Standardthema"
   }
 }

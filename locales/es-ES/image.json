@@ -3,11 +3,18 @@
     "aspectRatio": {
       "label": "Proporción"
     },
+    "header": {
+      "desc": "Descripción simple, crea al instante",
+      "title": "Pintura"
+    },
     "height": {
       "label": "Alto"
     },
     "imageNum": {
       "label": "Cantidad de imágenes"
+    },
+    "imageUrl": {
+      "label": "Imagen de referencia"
     },
     "imageUrls": {
       "label": "Imágenes de referencia"
@@ -36,6 +43,7 @@
     "actions": {
       "applySeed": "Aplicar semilla",
       "copyError": "Copiar mensaje de error",
+      "copyPrompt": "Copiar indicación",
       "copySeed": "Copiar semilla",
       "delete": "Eliminar",
       "deleteBatch": "Eliminar lote",
@@ -43,6 +51,7 @@
       "downloadFailed": "Error al descargar la imagen",
       "errorCopied": "Mensaje de error copiado al portapapeles",
       "errorCopyFailed": "Error al copiar el mensaje de error",
+      "generate": "Generar",
       "promptCopied": "Texto de indicación copiado al portapapeles",
       "promptCopyFailed": "Error al copiar el texto de indicación",
       "reuseSettings": "Reutilizar configuración",
@@ -82,6 +91,7 @@
     "deleteConfirm": "Eliminar tema generado",
     "deleteConfirmDesc": "Estás a punto de eliminar este tema generado. Esta acción es irreversible, por favor procede con precaución.",
     "empty": "No hay temas generados",
+    "title": "Tema de pintura",
     "untitled": "Tema predeterminado"
   }
 }

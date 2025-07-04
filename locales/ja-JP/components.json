@@ -68,6 +68,15 @@
   "GoBack": {
     "back": "戻る"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "クリックして画像を変更"
+    },
+    "placeholder": {
+      "primary": "画像を追加",
+      "secondary": "クリックしてアップロード"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "無制限"
   },

@@ -68,6 +68,15 @@
   "GoBack": {
     "back": "بازگشت"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "برای تغییر تصویر کلیک کنید"
+    },
+    "placeholder": {
+      "primary": "افزودن تصویر",
+      "secondary": "برای بارگذاری کلیک کنید"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "نامحدود"
   },

@@ -68,6 +68,15 @@
   "GoBack": {
     "back": "Quay lại"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "Nhấn để thay đổi hình ảnh"
+    },
+    "placeholder": {
+      "primary": "Thêm hình ảnh",
+      "secondary": "Nhấn để tải lên"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "Không giới hạn"
   },

@@ -3,11 +3,18 @@
     "aspectRatio": {
       "label": "Proporcje"
     },
+    "header": {
+      "desc": "Prosty opis, twórz natychmiast",
+      "title": "Malarstwo"
+    },
     "height": {
       "label": "Wysokość"
     },
     "imageNum": {
       "label": "Liczba obrazów"
+    },
+    "imageUrl": {
+      "label": "Obraz referencyjny"
     },
     "imageUrls": {
       "label": "Obrazy referencyjne"
@@ -36,6 +43,7 @@
     "actions": {
       "applySeed": "Zastosuj nasiono",
       "copyError": "Kopiuj błąd",
+      "copyPrompt": "Kopiuj podpowiedź",
       "copySeed": "Kopiuj ziarno",
       "delete": "Usuń",
       "deleteBatch": "Usuń partię",
@@ -43,6 +51,7 @@
       "downloadFailed": "Pobieranie obrazu nie powiodło się",
       "errorCopied": "Informacja o błędzie skopiowana do schowka",
       "errorCopyFailed": "Kopiowanie informacji o błędzie nie powiodło się",
+      "generate": "Generuj",
       "promptCopied": "Tekst podpowiedzi skopiowany do schowka",
       "promptCopyFailed": "Kopiowanie tekstu podpowiedzi nie powiodło się",
       "reuseSettings": "Użyj ponownie ustawień",
@@ -82,6 +91,7 @@
     "deleteConfirm": "Usuń temat generowania",
     "deleteConfirmDesc": "Temat generowania zostanie usunięty i nie będzie można go przywrócić. Proszę zachować ostrożność.",
     "empty": "Brak wygenerowanych tematów",
+    "title": "Temat malarski",
     "untitled": "Domyślny temat"
   }
 }

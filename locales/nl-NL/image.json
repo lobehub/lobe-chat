@@ -3,11 +3,18 @@
     "aspectRatio": {
       "label": "Verhouding"
     },
+    "header": {
+      "desc": "Eenvoudige beschrijving, direct creëren",
+      "title": "Schilderen"
+    },
     "height": {
       "label": "Hoogte"
     },
     "imageNum": {
       "label": "Aantal afbeeldingen"
+    },
+    "imageUrl": {
+      "label": "Referentieafbeelding"
     },
     "imageUrls": {
       "label": "Referentieafbeeldingen"
@@ -36,6 +43,7 @@
     "actions": {
       "applySeed": "Zaad toepassen",
       "copyError": "Foutmelding kopiëren",
+      "copyPrompt": "Prompt kopiëren",
       "copySeed": "Zaad kopiëren",
       "delete": "Verwijderen",
       "deleteBatch": "Batch verwijderen",
@@ -43,6 +51,7 @@
       "downloadFailed": "Afbeelding downloaden mislukt",
       "errorCopied": "Foutmelding gekopieerd naar klembord",
       "errorCopyFailed": "Foutmelding kopiëren mislukt",
+      "generate": "Genereren",
       "promptCopied": "Prompt gekopieerd naar klembord",
       "promptCopyFailed": "Prompt kopiëren mislukt",
       "reuseSettings": "Instellingen hergebruiken",
@@ -82,6 +91,7 @@
     "deleteConfirm": "Onderwerp verwijderen",
     "deleteConfirmDesc": "U staat op het punt dit gegenereerde onderwerp te verwijderen. Verwijdering is onomkeerbaar, wees voorzichtig.",
     "empty": "Geen gegenereerde onderwerpen",
+    "title": "Schilderthema",
     "untitled": "Standaard onderwerp"
   }
 }

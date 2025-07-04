@@ -68,6 +68,15 @@
   "GoBack": {
     "back": "Terug"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "Klik om afbeelding te wijzigen"
+    },
+    "placeholder": {
+      "primary": "Afbeelding toevoegen",
+      "secondary": "Klik om te uploaden"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "Onbeperkt"
   },

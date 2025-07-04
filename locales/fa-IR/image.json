@@ -3,11 +3,18 @@
     "aspectRatio": {
       "label": "نسبت ابعاد"
     },
+    "header": {
+      "desc": "توضیح ساده، خلق فوری",
+      "title": "نقاشی"
+    },
     "height": {
       "label": "ارتفاع"
     },
     "imageNum": {
       "label": "تعداد تصاویر"
+    },
+    "imageUrl": {
+      "label": "تصویر مرجع"
     },
     "imageUrls": {
       "label": "تصاویر مرجع"
@@ -36,6 +43,7 @@
     "actions": {
       "applySeed": "اعمال بذر",
       "copyError": "کپی خطا",
+      "copyPrompt": "کپی عبارت راهنما",
       "copySeed": "کپی بذر",
       "delete": "حذف",
       "deleteBatch": "حذف دسته‌ای",
@@ -43,6 +51,7 @@
       "downloadFailed": "دانلود تصویر ناموفق بود",
       "errorCopied": "اطلاعات خطا به کلیپ‌بورد کپی شد",
       "errorCopyFailed": "کپی اطلاعات خطا ناموفق بود",
+      "generate": "تولید",
       "promptCopied": "عبارت راهنما به کلیپ‌بورد کپی شد",
       "promptCopyFailed": "کپی عبارت راهنما ناموفق بود",
       "reuseSettings": "استفاده مجدد از تنظیمات",
@@ -82,6 +91,7 @@
     "deleteConfirm": "حذف موضوع تولید شده",
     "deleteConfirmDesc": "موضوع تولید شده در حال حذف است، پس از حذف قابل بازیابی نیست، لطفاً با دقت اقدام کنید.",
     "empty": "موضوع تولید شده‌ای وجود ندارد",
+    "title": "موضوع نقاشی",
     "untitled": "موضوع پیش‌فرض"
   }
 }

@@ -3,11 +3,18 @@
     "aspectRatio": {
       "label": "比例"
     },
+    "header": {
+      "desc": "簡單描述，即刻創作",
+      "title": "繪畫"
+    },
     "height": {
       "label": "高度"
     },
     "imageNum": {
       "label": "圖片數量"
+    },
+    "imageUrl": {
+      "label": "參考圖"
     },
     "imageUrls": {
       "label": "參考圖"
@@ -36,6 +43,7 @@
     "actions": {
       "applySeed": "應用種子",
       "copyError": "複製錯誤訊息",
+      "copyPrompt": "複製提示詞",
       "copySeed": "複製種子",
       "delete": "刪除",
       "deleteBatch": "刪除批次",
@@ -43,6 +51,7 @@
       "downloadFailed": "下載圖片失敗",
       "errorCopied": "錯誤訊息已複製到剪貼簿",
       "errorCopyFailed": "複製錯誤訊息失敗",
+      "generate": "生成",
       "promptCopied": "提示詞已複製到剪貼簿",
       "promptCopyFailed": "複製提示詞失敗",
       "reuseSettings": "重用設定",
@@ -82,6 +91,7 @@
     "deleteConfirm": "刪除生成主題",
     "deleteConfirmDesc": "即將刪除該生成主題，刪除後將無法復原，請謹慎操作。",
     "empty": "暫無生成主題",
+    "title": "繪畫主題",
     "untitled": "預設主題"
   }
 }

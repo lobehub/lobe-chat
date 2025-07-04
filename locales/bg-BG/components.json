@@ -68,6 +68,15 @@
   "GoBack": {
     "back": "Назад"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "Кликнете, за да смените изображението"
+    },
+    "placeholder": {
+      "primary": "Добавяне на изображение",
+      "secondary": "Кликнете, за да качите"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "Неограничено"
   },

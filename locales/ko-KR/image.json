@@ -3,11 +3,18 @@
     "aspectRatio": {
       "label": "비율"
     },
+    "header": {
+      "desc": "간단한 설명, 즉시 창작",
+      "title": "그림 그리기"
+    },
     "height": {
       "label": "높이"
     },
     "imageNum": {
       "label": "이미지 수"
+    },
+    "imageUrl": {
+      "label": "참고 이미지"
     },
     "imageUrls": {
       "label": "참고 이미지"
@@ -36,6 +43,7 @@
     "actions": {
       "applySeed": "시드 적용",
       "copyError": "오류 정보 복사",
+      "copyPrompt": "프롬프트 복사",
       "copySeed": "시드 복사",
       "delete": "삭제",
       "deleteBatch": "배치 삭제",
@@ -43,6 +51,7 @@
       "downloadFailed": "이미지 다운로드 실패",
       "errorCopied": "오류 정보가 클립보드에 복사되었습니다",
       "errorCopyFailed": "오류 정보 복사 실패",
+      "generate": "생성",
       "promptCopied": "프롬프트가 클립보드에 복사되었습니다",
       "promptCopyFailed": "프롬프트 복사 실패",
       "reuseSettings": "설정 재사용",
@@ -82,6 +91,7 @@
     "deleteConfirm": "생성 주제 삭제",
     "deleteConfirmDesc": "이 생성 주제를 삭제하면 복구할 수 없습니다. 신중히 진행해 주세요.",
     "empty": "생성된 주제가 없습니다",
+    "title": "그림 주제",
     "untitled": "기본 주제"
   }
 }

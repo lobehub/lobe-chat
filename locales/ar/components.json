@@ -68,6 +68,15 @@
   "GoBack": {
     "back": "عودة"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "انقر لتغيير الصورة"
+    },
+    "placeholder": {
+      "primary": "إضافة صورة",
+      "secondary": "انقر للتحميل"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "غير محدود"
   },

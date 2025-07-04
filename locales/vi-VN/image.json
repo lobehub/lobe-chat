@@ -3,11 +3,18 @@
     "aspectRatio": {
       "label": "Tỷ lệ"
     },
+    "header": {
+      "desc": "Mô tả ngắn gọn, sáng tạo ngay lập tức",
+      "title": "Vẽ tranh"
+    },
     "height": {
       "label": "Chiều cao"
     },
     "imageNum": {
       "label": "Số lượng ảnh"
+    },
+    "imageUrl": {
+      "label": "Hình tham khảo"
     },
     "imageUrls": {
       "label": "Ảnh tham khảo"
@@ -36,6 +43,7 @@
     "actions": {
       "applySeed": "Áp dụng hạt giống",
       "copyError": "Sao chép lỗi",
+      "copyPrompt": "Sao chép lời nhắc",
       "copySeed": "Sao chép hạt giống",
       "delete": "Xóa",
       "deleteBatch": "Xóa lô",
@@ -43,6 +51,7 @@
       "downloadFailed": "Tải ảnh thất bại",
       "errorCopied": "Thông tin lỗi đã được sao chép vào bộ nhớ tạm",
       "errorCopyFailed": "Sao chép thông tin lỗi thất bại",
+      "generate": "Tạo",
       "promptCopied": "Từ khóa đã được sao chép vào bộ nhớ tạm",
       "promptCopyFailed": "Sao chép từ khóa thất bại",
       "reuseSettings": "Tái sử dụng cài đặt",
@@ -82,6 +91,7 @@
     "deleteConfirm": "Xác nhận xóa chủ đề tạo",
     "deleteConfirmDesc": "Bạn sắp xóa chủ đề tạo này, hành động này không thể hoàn tác, vui lòng cân nhắc kỹ.",
     "empty": "Chưa có chủ đề tạo",
+    "title": "Chủ đề vẽ tranh",
     "untitled": "Chủ đề mặc định"
   }
 }

@@ -3,11 +3,18 @@
     "aspectRatio": {
       "label": "Ratio"
     },
+    "header": {
+      "desc": "Description simple, création immédiate",
+      "title": "Peinture"
+    },
     "height": {
       "label": "Hauteur"
     },
     "imageNum": {
       "label": "Nombre d'images"
+    },
+    "imageUrl": {
+      "label": "Image de référence"
     },
     "imageUrls": {
       "label": "Images de référence"
@@ -36,6 +43,7 @@
     "actions": {
       "applySeed": "Appliquer la graine",
       "copyError": "Copier l'erreur",
+      "copyPrompt": "Copier l'invite",
       "copySeed": "Copier la graine",
       "delete": "Supprimer",
       "deleteBatch": "Supprimer le lot",
@@ -43,6 +51,7 @@
       "downloadFailed": "Échec du téléchargement de l'image",
       "errorCopied": "Message d'erreur copié dans le presse-papiers",
       "errorCopyFailed": "Échec de la copie du message d'erreur",
+      "generate": "Générer",
       "promptCopied": "Invite copiée dans le presse-papiers",
       "promptCopyFailed": "Échec de la copie de l'invite",
       "reuseSettings": "Réutiliser les paramètres",
@@ -82,6 +91,7 @@
     "deleteConfirm": "Supprimer le sujet généré",
     "deleteConfirmDesc": "Vous êtes sur le point de supprimer ce sujet généré. Cette action est irréversible, veuillez procéder avec prudence.",
     "empty": "Aucun sujet généré",
+    "title": "Thème de peinture",
     "untitled": "Sujet par défaut"
   }
 }

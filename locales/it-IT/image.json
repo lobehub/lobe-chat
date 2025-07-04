@@ -3,11 +3,18 @@
     "aspectRatio": {
       "label": "Rapporto"
     },
+    "header": {
+      "desc": "Descrizione semplice, crea subito",
+      "title": "Pittura"
+    },
     "height": {
       "label": "Altezza"
     },
     "imageNum": {
       "label": "Numero di immagini"
+    },
+    "imageUrl": {
+      "label": "Immagine di riferimento"
     },
     "imageUrls": {
       "label": "Immagini di riferimento"
@@ -36,6 +43,7 @@
     "actions": {
       "applySeed": "Applica seme",
       "copyError": "Copia errore",
+      "copyPrompt": "Copia suggerimento",
       "copySeed": "Copia seed",
       "delete": "Elimina",
       "deleteBatch": "Elimina batch",
@@ -43,6 +51,7 @@
       "downloadFailed": "Download immagine fallito",
       "errorCopied": "Messaggio di errore copiato negli appunti",
       "errorCopyFailed": "Copia messaggio di errore fallita",
+      "generate": "Genera",
       "promptCopied": "Prompt copiato negli appunti",
       "promptCopyFailed": "Copia prompt fallita",
       "reuseSettings": "Riutilizza impostazioni",
@@ -82,6 +91,7 @@
     "deleteConfirm": "Elimina argomento generato",
     "deleteConfirmDesc": "Stai per eliminare questo argomento generato. L'eliminazione è irreversibile, procedi con cautela.",
     "empty": "Nessun argomento generato",
+    "title": "Tema della pittura",
     "untitled": "Argomento predefinito"
   }
 }

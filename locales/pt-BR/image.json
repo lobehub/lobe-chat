@@ -3,11 +3,18 @@
     "aspectRatio": {
       "label": "Proporção"
     },
+    "header": {
+      "desc": "Descrição simples, crie imediatamente",
+      "title": "Pintura"
+    },
     "height": {
       "label": "Altura"
     },
     "imageNum": {
       "label": "Quantidade de Imagens"
+    },
+    "imageUrl": {
+      "label": "Imagem de referência"
     },
     "imageUrls": {
       "label": "Imagem de Referência"
@@ -36,6 +43,7 @@
     "actions": {
       "applySeed": "Aplicar semente",
       "copyError": "Copiar erro",
+      "copyPrompt": "Copiar prompt",
       "copySeed": "Copiar semente",
       "delete": "Excluir",
       "deleteBatch": "Excluir lote",
@@ -43,6 +51,7 @@
       "downloadFailed": "Falha ao baixar a imagem",
       "errorCopied": "Informação de erro copiada para a área de transferência",
       "errorCopyFailed": "Falha ao copiar a informação de erro",
+      "generate": "Gerar",
       "promptCopied": "Prompt copiado para a área de transferência",
       "promptCopyFailed": "Falha ao copiar o prompt",
       "reuseSettings": "Reutilizar configurações",
@@ -82,6 +91,7 @@
     "deleteConfirm": "Excluir tópico gerado",
     "deleteConfirmDesc": "Você está prestes a excluir este tópico gerado. Após a exclusão, não poderá ser recuperado. Por favor, proceda com cautela.",
     "empty": "Nenhum tópico gerado",
+    "title": "Tema da pintura",
     "untitled": "Tópico padrão"
   }
 }

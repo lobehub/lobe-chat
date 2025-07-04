@@ -3,11 +3,18 @@
     "aspectRatio": {
       "label": "Aspect Ratio"
     },
+    "header": {
+      "desc": "Brief description, create instantly",
+      "title": "Painting"
+    },
     "height": {
       "label": "Height"
     },
     "imageNum": {
       "label": "Number of Images"
+    },
+    "imageUrl": {
+      "label": "Reference Image"
     },
     "imageUrls": {
       "label": "Reference Images"
@@ -36,6 +43,7 @@
     "actions": {
       "applySeed": "Apply Seed",
       "copyError": "Copy Error Message",
+      "copyPrompt": "Copy Prompt",
       "copySeed": "Copy Seed",
       "delete": "Delete",
       "deleteBatch": "Delete Batch",
@@ -83,6 +91,7 @@
     "deleteConfirm": "Delete Generation Topic",
     "deleteConfirmDesc": "You are about to delete this generation topic. This action cannot be undone, please proceed with caution.",
     "empty": "No generation topics",
+    "title": "Painting Theme",
     "untitled": "Default Topic"
   }
 }

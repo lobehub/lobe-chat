@@ -68,6 +68,15 @@
   "GoBack": {
     "back": "返回"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "點擊更換圖片"
+    },
+    "placeholder": {
+      "primary": "新增圖片",
+      "secondary": "點擊上傳"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "無限制"
   },

@@ -68,6 +68,15 @@
   "GoBack": {
     "back": "Indietro"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "Clicca per cambiare immagine"
+    },
+    "placeholder": {
+      "primary": "Aggiungi immagine",
+      "secondary": "Clicca per caricare"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "Illimitato"
   },

@@ -3,11 +3,18 @@
     "aspectRatio": {
       "label": "Oran"
     },
+    "header": {
+      "desc": "Basit açıklama, hemen yarat",
+      "title": "Resim"
+    },
     "height": {
       "label": "Yükseklik"
     },
     "imageNum": {
       "label": "Resim Sayısı"
+    },
+    "imageUrl": {
+      "label": "Referans Görsel"
     },
     "imageUrls": {
       "label": "Referans Görseller"
@@ -36,6 +43,7 @@
     "actions": {
       "applySeed": "Tohum Uygula",
       "copyError": "Hata Mesajını Kopyala",
+      "copyPrompt": "İpucunu Kopyala",
       "copySeed": "Tohumu Kopyala",
       "delete": "Sil",
       "deleteBatch": "Toplu Silme",
@@ -43,6 +51,7 @@
       "downloadFailed": "Resim indirilemedi",
       "errorCopied": "Hata mesajı panoya kopyalandı",
       "errorCopyFailed": "Hata mesajı kopyalanamadı",
+      "generate": "Oluştur",
       "promptCopied": "İpucu panoya kopyalandı",
       "promptCopyFailed": "İpucu kopyalanamadı",
       "reuseSettings": "Ayarları Yeniden Kullan",
@@ -82,6 +91,7 @@
     "deleteConfirm": "Oluşturulan Konuyu Sil",
     "deleteConfirmDesc": "Bu oluşturulan konu silinecek, silme işlemi geri alınamaz, lütfen dikkatli olun.",
     "empty": "Oluşturulmuş konu yok",
+    "title": "Resim Konusu",
     "untitled": "Varsayılan Konu"
   }
 }

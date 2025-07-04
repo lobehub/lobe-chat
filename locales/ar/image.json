@@ -3,11 +3,18 @@
     "aspectRatio": {
       "label": "النسبة"
     },
+    "header": {
+      "desc": "وصف بسيط، ابتكر فورًا",
+      "title": "الرسم"
+    },
     "height": {
       "label": "الارتفاع"
     },
     "imageNum": {
       "label": "عدد الصور"
+    },
+    "imageUrl": {
+      "label": "صورة مرجعية"
     },
     "imageUrls": {
       "label": "صور مرجعية"
@@ -36,6 +43,7 @@
     "actions": {
       "applySeed": "تطبيق البذرة",
       "copyError": "نسخ رسالة الخطأ",
+      "copyPrompt": "نسخ العبارة التحفيزية",
       "copySeed": "نسخ البذرة",
       "delete": "حذف",
       "deleteBatch": "حذف الدفعة",
@@ -43,6 +51,7 @@
       "downloadFailed": "فشل تنزيل الصورة",
       "errorCopied": "تم نسخ رسالة الخطأ إلى الحافظة",
       "errorCopyFailed": "فشل نسخ رسالة الخطأ",
+      "generate": "إنشاء",
       "promptCopied": "تم نسخ النص التوجيهي إلى الحافظة",
       "promptCopyFailed": "فشل نسخ النص التوجيهي",
       "reuseSettings": "إعادة استخدام الإعدادات",
@@ -82,6 +91,7 @@
     "deleteConfirm": "تأكيد حذف الموضوع",
     "deleteConfirmDesc": "سيتم حذف هذا الموضوع نهائيًا ولن يمكن استعادته، يرجى توخي الحذر.",
     "empty": "لا توجد مواضيع تم إنشاؤها",
+    "title": "موضوع الرسم",
     "untitled": "الموضوع الافتراضي"
   }
 }

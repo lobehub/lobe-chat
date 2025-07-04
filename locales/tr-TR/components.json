@@ -68,6 +68,15 @@
   "GoBack": {
     "back": "Geri dön"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "Resmi değiştirmek için tıklayın"
+    },
+    "placeholder": {
+      "primary": "Resim ekle",
+      "secondary": "Yüklemek için tıklayın"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "Sınırsız"
   },
