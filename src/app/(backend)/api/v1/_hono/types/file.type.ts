@@ -282,6 +282,16 @@ export interface FileParseResponse {
   parsedAt: string;
 }
 
+/**
+ * 文件上传并解析响应类型
+ */
+export interface FileUploadAndParseResponse {
+  /** 上传结果 */
+  uploadResult: FileDetailResponse;
+  /** 解析结果 */
+  parseResult: FileParseResponse;
+}
+
 // Zod Schemas for validation
 export const PreSignedUrlRequestSchema = z.object({
   fileType: z.string().min(1, '文件类型不能为空'),
