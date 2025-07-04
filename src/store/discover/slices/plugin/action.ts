@@ -2,7 +2,7 @@ import { CategoryItem, CategoryListQuery } from '@lobehub/market-sdk';
 import useSWR, { type SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
-import { edgeClient } from '@/libs/trpc/client';
+import { discoverService } from '@/services/discover';
 import { DiscoverStore } from '@/store/discover';
 import { globalHelpers } from '@/store/global/helpers';
 import {
@@ -32,11 +32,7 @@ export const createPluginSlice: StateCreator<
     const locale = globalHelpers.getCurrentLanguage();
     return useSWR(
       ['plugin-categories', locale, ...Object.values(params)].filter(Boolean).join('-'),
-      async () =>
-        edgeClient.market.getPluginCategories.query({
-          ...params,
-          locale,
-        }),
+      async () => discoverService.getPluginCategories(params),
       {
         revalidateOnFocus: false,
       },
@@ -49,8 +45,7 @@ export const createPluginSlice: StateCreator<
       !identifier
         ? null
         : ['plugin-details', locale, identifier, withManifest].filter(Boolean).join('-'),
-      async () =>
-        edgeClient.market.getPluginDetail.query({ identifier: identifier!, locale, withManifest }),
+      async () => discoverService.getPluginDetail({ identifier: identifier!, withManifest }),
       {
         revalidateOnFocus: false,
       },
@@ -58,13 +53,9 @@ export const createPluginSlice: StateCreator<
   },
 
   usePluginIdentifiers: () => {
-    return useSWR(
-      'plugin-identifiers',
-      async () => edgeClient.market.getPluginIdentifiers.query(),
-      {
-        revalidateOnFocus: false,
-      },
-    );
+    return useSWR('plugin-identifiers', async () => discoverService.getPluginIdentifiers(), {
+      revalidateOnFocus: false,
+    });
   },
 
   usePluginList: (params = {}) => {
@@ -72,9 +63,8 @@ export const createPluginSlice: StateCreator<
     return useSWR(
       ['plugin-list', locale, ...Object.values(params)].filter(Boolean).join('-'),
       async () =>
-        edgeClient.market.getPluginList.query({
+        discoverService.getPluginList({
           ...params,
-          locale,
           page: params.page ? Number(params.page) : 1,
           pageSize: params.pageSize ? Number(params.pageSize) : 21,
         }),

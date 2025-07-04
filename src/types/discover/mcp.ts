@@ -1,4 +1,4 @@
-import { PluginItem, PluginListResponse, PluginQueryParams } from '@lobehub/market-sdk';
+import { PluginItem, PluginListResponse } from '@lobehub/market-sdk';
 import { PluginItemDetail } from '@lobehub/market-types';
 
 export enum McpCategory {
@@ -41,7 +41,15 @@ export enum McpNavKey {
 
 export type DiscoverMcpItem = PluginItem;
 
-export type McpQueryParams = PluginQueryParams;
+export interface McpQueryParams {
+  category?: string;
+  locale?: string;
+  order?: 'asc' | 'desc';
+  page?: number;
+  pageSize?: number;
+  q?: string;
+  sort?: McpSorts;
+}
 
 export type McpListResponse = PluginListResponse;
 

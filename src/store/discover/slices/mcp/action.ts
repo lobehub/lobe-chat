@@ -3,7 +3,7 @@ import { type SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { useClientDataSWR } from '@/libs/swr';
-import { edgeClient } from '@/libs/trpc/client';
+import { discoverService } from '@/services/discover';
 import { DiscoverStore } from '@/store/discover';
 import { globalHelpers } from '@/store/global/helpers';
 import {
@@ -34,8 +34,7 @@ export const createMCPSlice: StateCreator<
 
     return useClientDataSWR(
       !identifier ? null : ['mcp-detail', locale, identifier, version].filter(Boolean).join('-'),
-      async () =>
-        edgeClient.market.getMcpDetail.query({ identifier: identifier!, locale, version }),
+      async () => discoverService.getMcpDetail({ identifier: identifier!, version }),
     );
   },
 
@@ -44,9 +43,8 @@ export const createMCPSlice: StateCreator<
     return useClientDataSWR(
       ['mcp-list', locale, ...Object.values(params)].filter(Boolean).join('-'),
       async () =>
-        edgeClient.market.getMcpList.query({
+        discoverService.getMcpList({
           ...params,
-          locale,
           page: params.page ? Number(params.page) : 1,
           pageSize: params.pageSize ? Number(params.pageSize) : 21,
         }),
@@ -57,11 +55,7 @@ export const createMCPSlice: StateCreator<
     const locale = globalHelpers.getCurrentLanguage();
     return useClientDataSWR(
       ['mcp-categories', locale, ...Object.values(params)].join('-'),
-      async () =>
-        edgeClient.market.getMcpCategories.query({
-          ...params,
-          locale,
-        }),
+      async () => discoverService.getMcpCategories(params),
       {
         revalidateOnFocus: false,
       },
@@ -69,12 +63,8 @@ export const createMCPSlice: StateCreator<
   },
 
   useMcpIdentifiers: () => {
-    return useClientDataSWR(
-      'mcp-identifiers',
-      async () => edgeClient.market.getMcpIdentifiers.query(),
-      {
-        revalidateOnFocus: false,
-      },
-    );
+    return useClientDataSWR('mcp-identifiers', async () => discoverService.getMcpIdentifiers(), {
+      revalidateOnFocus: false,
+    });
   },
 });

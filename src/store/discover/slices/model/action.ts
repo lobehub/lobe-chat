@@ -2,7 +2,7 @@ import { CategoryItem, CategoryListQuery } from '@lobehub/market-sdk';
 import useSWR, { type SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
-import { edgeClient } from '@/libs/trpc/client';
+import { discoverService } from '@/services/discover';
 import { DiscoverStore } from '@/store/discover';
 import { globalHelpers } from '@/store/global/helpers';
 import {
@@ -28,7 +28,7 @@ export const createModelSlice: StateCreator<
   useModelCategories: (params) => {
     return useSWR(
       ['model-categories', ...Object.values(params)].filter(Boolean).join('-'),
-      async () => edgeClient.market.getModelCategories.query(params),
+      async () => discoverService.getModelCategories(params),
       {
         revalidateOnFocus: false,
       },
@@ -39,7 +39,7 @@ export const createModelSlice: StateCreator<
     const locale = globalHelpers.getCurrentLanguage();
     return useSWR(
       ['model-details', locale, params.identifier].filter(Boolean).join('-'),
-      async () => edgeClient.market.getModelDetail.query({ ...params, locale }),
+      async () => discoverService.getModelDetail(params),
       {
         revalidateOnFocus: false,
       },
@@ -47,7 +47,7 @@ export const createModelSlice: StateCreator<
   },
 
   useModelIdentifiers: () => {
-    return useSWR('model-identifiers', async () => edgeClient.market.getModelIdentifiers.query(), {
+    return useSWR('model-identifiers', async () => discoverService.getModelIdentifiers(), {
       revalidateOnFocus: false,
     });
   },
@@ -57,9 +57,8 @@ export const createModelSlice: StateCreator<
     return useSWR(
       ['model-list', locale, ...Object.values(params)].filter(Boolean).join('-'),
       async () =>
-        edgeClient.market.getModelList.query({
+        discoverService.getModelList({
           ...params,
-          locale,
           page: params.page ? Number(params.page) : 1,
           pageSize: params.pageSize ? Number(params.pageSize) : 21,
         }),

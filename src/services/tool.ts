@@ -1,6 +1,6 @@
 import { PluginListResponse, PluginManifest } from '@lobehub/market-sdk';
 
-import { edgeClient } from '@/libs/trpc/client';
+import { lambdaClient } from '@/libs/trpc/client';
 import { globalHelpers } from '@/store/global/helpers';
 import { PluginQueryParams } from '@/types/discover';
 import { MCPPluginListParams } from '@/types/plugins';
@@ -10,7 +10,7 @@ class ToolService {
   getOldPluginList = async (params: PluginQueryParams): Promise<any> => {
     const locale = globalHelpers.getCurrentLanguage();
 
-    return edgeClient.market.getPluginList.query({
+    return lambdaClient.market.getPluginList.query({
       ...params,
       locale,
       page: params.page ? Number(params.page) : 1,
@@ -21,7 +21,7 @@ class ToolService {
   getMCPPluginList = async (params: MCPPluginListParams): Promise<PluginListResponse> => {
     const locale = globalHelpers.getCurrentLanguage();
 
-    return edgeClient.market.getMcpList.query({
+    return lambdaClient.market.getMcpList.query({
       ...params,
       locale,
       page: params.page ? Number(params.page) : 1,
@@ -35,7 +35,11 @@ class ToolService {
   ): Promise<PluginManifest> => {
     const locale = globalHelpers.getCurrentLanguage();
 
-    return edgeClient.market.getMcpManifest.query({ identifier, install: options.install, locale });
+    return lambdaClient.market.getMcpManifest.query({
+      identifier,
+      install: options.install,
+      locale,
+    });
   };
 
   getToolManifest = getToolManifest;

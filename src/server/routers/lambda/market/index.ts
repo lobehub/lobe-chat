@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server';
 import debug from 'debug';
 import { z } from 'zod';
 
-import { publicProcedure, router } from '@/libs/trpc/edge';
+import { publicProcedure, router } from '@/libs/trpc/lambda';
 import { DiscoverService } from '@/server/services/discover';
 import { AssistantSorts, McpSorts, ModelSorts, PluginSorts, ProviderSorts } from '@/types/discover';
 

@@ -2,7 +2,7 @@ import { CategoryItem, CategoryListQuery } from '@lobehub/market-sdk';
 import useSWR, { type SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
-import { edgeClient } from '@/libs/trpc/client';
+import { discoverService } from '@/services/discover';
 import { DiscoverStore } from '@/store/discover';
 import { globalHelpers } from '@/store/global/helpers';
 import {
@@ -31,11 +31,7 @@ export const createAssistantSlice: StateCreator<
     const locale = globalHelpers.getCurrentLanguage();
     return useSWR(
       ['assistant-categories', locale, ...Object.values(params)].filter(Boolean).join('-'),
-      async () =>
-        edgeClient.market.getAssistantCategories.query({
-          ...params,
-          locale,
-        }),
+      async () => discoverService.getAssistantCategories(params),
       {
         revalidateOnFocus: false,
       },
@@ -46,7 +42,7 @@ export const createAssistantSlice: StateCreator<
     const locale = globalHelpers.getCurrentLanguage();
     return useSWR(
       ['assistant-details', locale, params.identifier].filter(Boolean).join('-'),
-      async () => edgeClient.market.getAssistantDetail.query({ ...params, locale }),
+      async () => discoverService.getAssistantDetail(params),
       {
         revalidateOnFocus: false,
       },
@@ -54,13 +50,9 @@ export const createAssistantSlice: StateCreator<
   },
 
   useAssistantIdentifiers: () => {
-    return useSWR(
-      'assistant-identifiers',
-      async () => edgeClient.market.getAssistantIdentifiers.query(),
-      {
-        revalidateOnFocus: false,
-      },
-    );
+    return useSWR('assistant-identifiers', async () => discoverService.getAssistantIdentifiers(), {
+      revalidateOnFocus: false,
+    });
   },
 
   useAssistantList: (params = {}) => {
@@ -68,9 +60,8 @@ export const createAssistantSlice: StateCreator<
     return useSWR(
       ['assistant-list', locale, ...Object.values(params)].filter(Boolean).join('-'),
       async () =>
-        edgeClient.market.getAssistantList.query({
+        discoverService.getAssistantList({
           ...params,
-          locale,
           page: params.page ? Number(params.page) : 1,
           pageSize: params.pageSize ? Number(params.pageSize) : 21,
         }),

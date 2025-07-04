@@ -1,7 +1,7 @@
 import { PluginManifest } from '@lobehub/market-sdk';
 
 import { isDesktop } from '@/const/version';
-import { desktopClient, edgeClient, toolsClient } from '@/libs/trpc/client';
+import { desktopClient, lambdaClient, toolsClient } from '@/libs/trpc/client';
 import { ChatToolPayload } from '@/types/message';
 import { CheckMcpInstallResult } from '@/types/plugins';
 import { CustomPluginMetadata } from '@/types/tool/plugin';
@@ -113,7 +113,7 @@ class MCPService {
       ...params,
     };
 
-    edgeClient.market.reportMcpInstallResult
+    lambdaClient.market.reportMcpInstallResult
       .mutate(cleanObject(reportData))
       .catch((reportError) => {
         console.warn('Failed to report MCP installation result:', reportError);

@@ -1,7 +1,7 @@
 import useSWR, { type SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
-import { edgeClient } from '@/libs/trpc/client';
+import { discoverService } from '@/services/discover';
 import { DiscoverStore } from '@/store/discover';
 import { globalHelpers } from '@/store/global/helpers';
 import {
@@ -30,7 +30,7 @@ export const createProviderSlice: StateCreator<
     const locale = globalHelpers.getCurrentLanguage();
     return useSWR(
       ['provider-details', locale, params.identifier].filter(Boolean).join('-'),
-      async () => edgeClient.market.getProviderDetail.query({ locale, ...params }),
+      async () => discoverService.getProviderDetail(params),
       {
         revalidateOnFocus: false,
       },
@@ -38,13 +38,9 @@ export const createProviderSlice: StateCreator<
   },
 
   useProviderIdentifiers: () => {
-    return useSWR(
-      'provider-identifiers',
-      async () => edgeClient.market.getProviderIdentifiers.query(),
-      {
-        revalidateOnFocus: false,
-      },
-    );
+    return useSWR('provider-identifiers', async () => discoverService.getProviderIdentifiers(), {
+      revalidateOnFocus: false,
+    });
   },
 
   useProviderList: (params = {}) => {
@@ -52,9 +48,8 @@ export const createProviderSlice: StateCreator<
     return useSWR(
       ['provider-list', locale, ...Object.values(params)].filter(Boolean).join('-'),
       async () =>
-        edgeClient.market.getProviderList.query({
+        discoverService.getProviderList({
           ...params,
-          locale,
           page: params.page ? Number(params.page) : 1,
           pageSize: params.pageSize ? Number(params.pageSize) : 21,
         }),

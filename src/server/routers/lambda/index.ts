@@ -12,6 +12,7 @@ import { exporterRouter } from './exporter';
 import { fileRouter } from './file';
 import { importerRouter } from './importer';
 import { knowledgeBaseRouter } from './knowledgeBase';
+import { marketRouter } from './market';
 import { messageRouter } from './message';
 import { pluginRouter } from './plugin';
 import { ragEvalRouter } from './ragEval';
@@ -32,6 +33,7 @@ export const lambdaRouter = router({
   healthcheck: publicProcedure.query(() => "i'm live!"),
   importer: importerRouter,
   knowledgeBase: knowledgeBaseRouter,
+  market: marketRouter,
   message: messageRouter,
   plugin: pluginRouter,
   ragEval: ragEvalRouter,
