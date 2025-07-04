@@ -9,7 +9,7 @@ import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { LobeToolType } from '@/types/tool/tool';
 
-import PluginItem from '../../PluginList/List/Item';
+import PluginItem from './Item';
 
 interface ListProps {
   identifier?: string;

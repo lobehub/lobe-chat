@@ -1,6 +1,6 @@
 import { ActionIcon, Button, Dropdown, Icon } from '@lobehub/ui';
 import { App } from 'antd';
-import { InfoIcon, MoreVerticalIcon, Settings, Trash2 } from 'lucide-react';
+import { InfoIcon, MoreVerticalIcon, PackageSearch, Settings, Trash2 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -12,7 +12,7 @@ import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors, pluginStoreSelectors } from '@/store/tool/selectors';
 import { LobeToolType } from '@/types/tool/tool';
 
-import EditCustomPlugin from './EditCustomPlugin';
+import EditCustomPlugin from '../../EditCustomPlugin';
 
 interface ActionsProps {
   identifier: string;
@@ -41,12 +41,24 @@ const Actions = memo<ActionsProps>(({ identifier, type, isMCP }) => {
   const [tab, setTab] = useState('info');
   const hasSettings = pluginHelpers.isSettingSchemaNonEmpty(plugin?.settings);
 
+  const [showModal, setModal] = useState(false);
+
   return (
     <>
       <Flexbox align={'center'} horizontal>
         {installed ? (
           <>
-            {isCustomPlugin && <EditCustomPlugin identifier={identifier} />}
+            {isCustomPlugin && (
+              <EditCustomPlugin identifier={identifier} onOpenChange={setModal} open={showModal}>
+                <ActionIcon
+                  icon={PackageSearch}
+                  onClick={() => {
+                    setModal(true);
+                  }}
+                  title={t('store.actions.manifest')}
+                />
+              </EditCustomPlugin>
+            )}
             {hasSettings && (
               <ActionIcon
                 icon={Settings}

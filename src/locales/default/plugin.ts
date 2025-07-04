@@ -12,6 +12,11 @@ export default {
     tool_call: '工具调用请求',
   },
   detailModal: {
+    customPlugin: {
+      description: '请前往编辑页面查看详情',
+      editBtn: '立即编辑',
+      title: '这是一个自定义插件',
+    },
     emptyState: {
       description: '请先安装此插件，以查看插件能力和配置选项',
       title: '安装后查看插件详情',
