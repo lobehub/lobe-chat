@@ -23,11 +23,9 @@ if (typeof window === 'undefined' && isServerMode && !APP_URL) {
   throw new Error('`APP_URL` is required in server mode');
 }
 
-const ASSISTANT_INDEX_URL =
-  'https://registry.npmmirror.com/@lobehub/agents-index/latest/files/public';
+const ASSISTANT_INDEX_URL = 'https://registry.npmmirror.com/@lobehub/agents-index/v1/files/public';
 
-const PLUGINS_INDEX_URL =
-  'https://registry.npmmirror.com/@lobehub/plugins-index/latest/files/public';
+const PLUGINS_INDEX_URL = 'https://registry.npmmirror.com/@lobehub/plugins-index/v1/files/public';
 
 export const getAppConfig = () => {
   const ACCESS_CODES = process.env.ACCESS_CODE?.split(',').filter(Boolean) || [];
