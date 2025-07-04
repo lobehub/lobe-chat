@@ -1,5 +1,5 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
-import { PluginListResponse } from '@lobehub/market-sdk';
+import { PluginItem, PluginListResponse } from '@lobehub/market-sdk';
 import { TRPCClientError } from '@trpc/client';
 import { produce } from 'immer';
 import { uniqBy } from 'lodash-es';
@@ -8,6 +8,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { CURRENT_VERSION } from '@/const/version';
 import { MCPErrorData } from '@/libs/mcp/types';
+import { discoverService } from '@/services/discover';
 import { mcpService } from '@/services/mcp';
 import { pluginService } from '@/services/plugin';
 import { toolService } from '@/services/tool';
@@ -69,9 +70,16 @@ export const createMCPPluginStoreSlice: StateCreator<
 
   installMCPPlugin: async (identifier, options = {}) => {
     const { resume = false, config, skipDepsCheck } = options;
-    const plugin = mcpStoreSelectors.getPluginById(identifier)(get());
+    let plugin = mcpStoreSelectors.getPluginById(identifier)(get());
 
-    if (!plugin || !plugin.manifestUrl) return;
+    if (!plugin || !plugin.manifestUrl) {
+      const data = await discoverService.getMcpDetail({ identifier });
+      if (!data) return;
+
+      plugin = data as unknown as PluginItem;
+    }
+
+    if (!plugin) return;
 
     const { updateInstallLoadingState, refreshPlugins, updateMCPInstallProgress } = get();
 

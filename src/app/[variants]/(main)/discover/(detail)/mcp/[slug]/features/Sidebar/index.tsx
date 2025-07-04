@@ -2,9 +2,11 @@ import { ScrollShadow } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { isDesktop } from '@/const/version';
 import { useQuery } from '@/hooks/useQuery';
 import { McpNavKey } from '@/types/discover';
 
+import ActionButton from './ActionButton';
 import ConnectionTypeAlert from './ConnectionTypeAlert';
 import Related from './Related';
 import ServerConfig from './ServerConfig';
@@ -37,7 +39,13 @@ const Sidebar = memo<{ mobile?: boolean }>(({ mobile }) => {
       }}
       width={360}
     >
-      <ConnectionTypeAlert />
+      {isDesktop ? (
+        <Flexbox>
+          <ActionButton />
+        </Flexbox>
+      ) : (
+        <ConnectionTypeAlert />
+      )}
       {activeTab !== McpNavKey.Deployment && <ServerConfig />}
       <TocList />
       {![McpNavKey.Overview, McpNavKey.Schema, McpNavKey.Related].includes(activeTab) && (

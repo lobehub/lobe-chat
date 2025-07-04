@@ -1,4 +1,4 @@
-import { Collapse } from '@lobehub/ui';
+import { Collapse, Markdown } from '@lobehub/ui';
 import qs from 'query-string';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +13,9 @@ import TagList from './TagList';
 const Overview = memo<{ inModal?: boolean }>(({ inModal }) => {
   const { t } = useTranslation('discover');
   const { related = [], category, tags = [], description, overview } = useDetailContext();
+
+  const summary = overview?.summary || description;
+
   return (
     <Flexbox gap={48}>
       <Collapse
@@ -20,7 +23,7 @@ const Overview = memo<{ inModal?: boolean }>(({ inModal }) => {
         expandIconPosition={'end'}
         items={[
           {
-            children: description,
+            children: !!summary ? <Markdown>{summary}</Markdown> : summary,
             key: 'summary',
             label: t('mcp.details.summary.title'),
           },

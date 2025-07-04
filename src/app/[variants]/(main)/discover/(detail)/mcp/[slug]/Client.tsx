@@ -7,6 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 import { withSuspense } from '@/components/withSuspense';
 import { DetailProvider } from '@/features/MCPPluginDetail/DetailProvider';
 import Header from '@/features/MCPPluginDetail/Header';
+import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { useQuery } from '@/hooks/useQuery';
 import { useDiscoverStore } from '@/store/discover';
 import { DiscoverTab } from '@/types/discover';
@@ -20,6 +21,8 @@ const Client = memo<{ identifier: string; mobile?: boolean }>(({ identifier, mob
   const { version } = useQuery() as { version?: string };
   const useMcpDetail = useDiscoverStore((s) => s.useFetchMcpDetail);
   const { data, isLoading } = useMcpDetail({ identifier, version });
+
+  useFetchInstalledPlugins();
 
   if (isLoading) return <Loading />;
   if (!data) return notFound();
