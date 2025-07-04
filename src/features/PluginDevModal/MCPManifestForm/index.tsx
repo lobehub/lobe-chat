@@ -1,18 +1,11 @@
-import {
-  SiBun,
-  SiDocker,
-  SiNodedotjs,
-  SiNpm,
-  SiPnpm,
-  SiPython,
-} from '@icons-pack/react-simple-icons';
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
-import { Alert, AutoComplete, FormItem, Input, TextArea } from '@lobehub/ui';
+import { Alert, FormItem, Input, TextArea } from '@lobehub/ui';
 import { Button, Divider, Form, FormInstance } from 'antd';
-import { FC, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import MCPStdioCommandInput from '@/components/MCPStdioCommandInput';
 import { isDesktop } from '@/const/version';
 import { mcpService } from '@/services/mcp';
 import { useToolStore } from '@/store/tool';
@@ -28,25 +21,6 @@ interface MCPManifestFormProps {
   form: FormInstance;
   isEditMode?: boolean;
 }
-
-// 定义预设的命令选项
-const STDIO_COMMAND_OPTIONS: {
-  // 假设图标是 React 函数组件
-  color?: string;
-  icon?: FC<{ color?: string; size?: number }>;
-  value: string;
-}[] = [
-  { color: '#CB3837', icon: SiNpm, value: 'npx' },
-  { color: '#CB3837', icon: SiNpm, value: 'npm' },
-  { color: '#F69220', icon: SiPnpm, value: 'pnpm' },
-  { color: '#F69220', icon: SiPnpm, value: 'pnpx' },
-  { color: '#339933', icon: SiNodedotjs, value: 'node' },
-  { color: '#efe2d2', icon: SiBun, value: 'bun' },
-  { color: '#efe2d2', icon: SiBun, value: 'bunx' },
-  { color: '#DE5FE9', icon: SiPython, value: 'uv' },
-  { color: '#3776AB', icon: SiPython, value: 'python' },
-  { color: '#2496ED', icon: SiDocker, value: 'docker' },
-];
 
 const HTTP_URL_KEY = ['customParams', 'mcp', 'url'];
 const STDIO_COMMAND = ['customParams', 'mcp', 'command'];
@@ -324,18 +298,7 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
                 rules={[{ message: t('dev.mcp.command.required'), required: true }]}
                 tag={'command'}
               >
-                <AutoComplete
-                  options={STDIO_COMMAND_OPTIONS.map(({ value, icon: Icon, color }) => ({
-                    label: (
-                      <Flexbox align={'center'} gap={8} horizontal>
-                        {Icon && <Icon color={color} size={16} />}
-                        {value}
-                      </Flexbox>
-                    ),
-                    value: value,
-                  }))}
-                  placeholder={t('dev.mcp.command.placeholder')}
-                />
+                <MCPStdioCommandInput placeholder={t('dev.mcp.command.placeholder')} />
               </FormItem>
               <FormItem
                 desc={t('dev.mcp.args.desc')}

@@ -129,6 +129,7 @@
     "waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待"
   },
   "plugin": {
+    "addMCPPlugin": "新增 MCP 外掛",
     "addTooltip": "新增自訂外掛程式",
     "clearDeprecated": "清除已棄用的外掛",
     "empty": "目前沒有安裝任何外掛，歡迎前往 <1>外掛商店</1> 探索",

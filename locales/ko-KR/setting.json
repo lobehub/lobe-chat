@@ -129,6 +129,7 @@
     "waitingForMore": "<1>계획에 따라 더 많은 모델이 추가될 예정</1>이니 기대해 주세요"
   },
   "plugin": {
+    "addMCPPlugin": "MCP 플러그인 추가",
     "addTooltip": "플러그인 추가",
     "clearDeprecated": "사용되지 않는 플러그인 제거",
     "empty": "설치된 플러그인이 없습니다. <1>플러그인 스토어</1>에서 새로운 플러그인을 찾아보세요.",

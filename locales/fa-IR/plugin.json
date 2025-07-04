@@ -12,6 +12,15 @@
     "tool_call": "درخواست فراخوانی ابزار"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "لطفاً برای مشاهده جزئیات به صفحه ویرایش مراجعه کنید",
+      "editBtn": "ویرایش اکنون",
+      "title": "این یک افزونه سفارشی است"
+    },
+    "emptyState": {
+      "description": "لطفاً ابتدا این افزونه را نصب کنید تا قابلیت‌ها و گزینه‌های پیکربندی آن را مشاهده کنید",
+      "title": "پس از نصب، جزئیات افزونه را مشاهده کنید"
+    },
     "info": {
       "description": "توضیحات API",
       "name": "نام API"
@@ -230,6 +239,50 @@
     },
     "title": "فایل‌های محلی"
   },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "در حال بررسی محیط نصب...",
+    "COMPLETED": "نصب کامل شد",
+    "CONFIGURATION_REQUIRED": "لطفاً پیکربندی‌های لازم را انجام دهید و سپس نصب را ادامه دهید",
+    "ERROR": "خطای نصب",
+    "FETCHING_MANIFEST": "در حال دریافت فایل توضیحات افزونه...",
+    "GETTING_SERVER_MANIFEST": "در حال راه‌اندازی سرور MCP...",
+    "INSTALLING_PLUGIN": "در حال نصب افزونه...",
+    "configurationDescription": "این افزونه MCP نیاز به پارامترهای پیکربندی دارد تا به درستی کار کند، لطفاً اطلاعات پیکربندی لازم را وارد کنید",
+    "configurationRequired": "پیکربندی پارامترهای افزونه",
+    "continueInstall": "ادامه نصب",
+    "dependenciesDescription": "این افزونه برای عملکرد صحیح نیاز به نصب وابستگی‌های سیستمی زیر دارد، لطفاً وابستگی‌های گمشده را طبق راهنما نصب کرده و سپس برای ادامه نصب روی بررسی مجدد کلیک کنید.",
+    "dependenciesRequired": "لطفاً وابستگی‌های سیستمی افزونه را نصب کنید",
+    "dependencyStatus": {
+      "installed": "نصب شده",
+      "notInstalled": "نصب نشده",
+      "requiredVersion": "نسخه مورد نیاز: {{version}}"
+    },
+    "errorDetails": {
+      "args": "پارامترها",
+      "command": "دستور",
+      "connectionParams": "پارامترهای اتصال",
+      "env": "متغیرهای محیطی",
+      "errorOutput": "گزارش خطا",
+      "exitCode": "کد خروج",
+      "hideDetails": "پنهان کردن جزئیات",
+      "originalError": "خطای اصلی",
+      "showDetails": "نمایش جزئیات"
+    },
+    "errorTypes": {
+      "CONNECTION_FAILED": "اتصال ناموفق بود",
+      "INITIALIZATION_TIMEOUT": "زمان راه‌اندازی به پایان رسید",
+      "PROCESS_SPAWN_ERROR": "خطا در راه‌اندازی فرآیند",
+      "UNKNOWN_ERROR": "خطای ناشناخته",
+      "VALIDATION_ERROR": "اعتبارسنجی پارامترها ناموفق بود"
+    },
+    "installError": "نصب افزونه MCP ناموفق بود، دلیل خطا: {{detail}}",
+    "installMethods": {
+      "manual": "نصب دستی:",
+      "recommended": "روش نصب پیشنهادی:"
+    },
+    "recheckDependencies": "بررسی مجدد",
+    "skipDependencies": "رد بررسی"
+  },
   "pluginList": "فهرست افزونه‌ها",
   "search": {
     "apiName": {
@@ -266,16 +319,48 @@
   },
   "setting": "تنظیمات افزونه",
   "settings": {
+    "capabilities": {
+      "prompts": "عبارات راهنما",
+      "resources": "منابع",
+      "title": "قابلیت‌های افزونه",
+      "tools": "ابزارها"
+    },
+    "configuration": {
+      "title": "پیکربندی افزونه"
+    },
+    "connection": {
+      "args": "پارامترهای راه‌اندازی",
+      "command": "دستور راه‌اندازی",
+      "title": "اطلاعات اتصال",
+      "type": "نوع اتصال",
+      "url": "آدرس سرویس"
+    },
+    "edit": "ویرایش",
+    "envConfigDescription": "این تنظیمات به عنوان متغیرهای محیطی هنگام راه‌اندازی سرور MCP به فرآیند منتقل می‌شوند",
+    "httpTypeNotice": "افزونه‌های MCP با نوع HTTP در حال حاضر نیازی به تنظیم متغیرهای محیطی ندارند",
     "indexUrl": {
       "title": "شاخص بازار",
       "tooltip": "ویرایش آنلاین در حال حاضر پشتیبانی نمی‌شود، لطفاً از طریق متغیرهای محیطی در زمان استقرار تنظیم کنید"
     },
+    "messages": {
+      "connectionUpdateFailed": "به‌روزرسانی اطلاعات اتصال ناموفق بود",
+      "connectionUpdateSuccess": "اطلاعات اتصال با موفقیت به‌روزرسانی شد",
+      "envUpdateFailed": "ذخیره متغیرهای محیطی ناموفق بود",
+      "envUpdateSuccess": "متغیرهای محیطی با موفقیت ذخیره شدند"
+    },
     "modalDesc": "پس از پیکربندی آدرس بازار افزونه، می‌توانید از بازار افزونه سفارشی استفاده کنید",
+    "rules": {
+      "argsRequired": "لطفاً پارامترهای راه‌اندازی را وارد کنید",
+      "commandRequired": "لطفاً دستور راه‌اندازی را وارد کنید",
+      "urlRequired": "لطفاً آدرس سرویس را وارد کنید"
+    },
+    "saveSettings": "ذخیره تنظیمات",
     "title": "تنظیمات بازار افزونه"
   },
   "showInPortal": "لطفاً جزئیات را در فضای کاری مشاهده کنید",
   "store": {
     "actions": {
+      "cancel": "لغو نصب",
       "confirmUninstall": "در حال حذف این افزونه هستید. پس از حذف، تنظیمات افزونه پاک خواهد شد. لطفاً عملیات خود را تأیید کنید.",
       "detail": "جزئیات",
       "install": "نصب",
@@ -286,13 +371,15 @@
     "communityPlugin": "افزونه‌های جامعه",
     "customPlugin": "افزونه سفارشی",
     "empty": "هیچ افزونه‌ای نصب نشده است",
+    "emptySelectHint": "برای پیش‌نمایش جزئیات، افزونه‌ای را انتخاب کنید",
     "installAllPlugins": "نصب همه",
     "networkError": "دریافت فروشگاه افزونه‌ها ناموفق بود. لطفاً اتصال شبکه خود را بررسی کرده و دوباره تلاش کنید.",
     "placeholder": "نام افزونه، توضیحات یا کلمات کلیدی را جستجو کنید...",
     "releasedAt": "منتشر شده در {{createdAt}}",
     "tabs": {
-      "all": "همه",
-      "installed": "نصب شده"
+      "installed": "نصب شده",
+      "mcp": "افزونه MCP",
+      "old": "افزونه LobeChat"
     },
     "title": "فروشگاه افزونه‌ها"
   },

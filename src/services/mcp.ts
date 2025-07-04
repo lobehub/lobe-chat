@@ -1,7 +1,12 @@
+import { PluginManifest } from '@lobehub/market-sdk';
+import { InstallReportRequest } from '@lobehub/market-types';
+
 import { isDesktop } from '@/const/version';
-import { desktopClient, toolsClient } from '@/libs/trpc/client';
+import { desktopClient, lambdaClient, toolsClient } from '@/libs/trpc/client';
 import { ChatToolPayload } from '@/types/message';
+import { CheckMcpInstallResult } from '@/types/plugins';
 import { CustomPluginMetadata } from '@/types/tool/plugin';
+import { cleanObject } from '@/utils/object';
 
 class MCPService {
   async invokeMcpToolCall(payload: ChatToolPayload, { signal }: { signal?: AbortSignal }) {
@@ -11,12 +16,16 @@ class MCPService {
     const s = getToolStoreState();
     const { identifier, arguments: args, apiName } = payload;
 
-    const plugin = pluginSelectors.getCustomPluginById(identifier)(s);
+    const installPlugin = pluginSelectors.getInstalledPluginById(identifier)(s);
+    const customPlugin = pluginSelectors.getCustomPluginById(identifier)(s);
+
+    const plugin = installPlugin || customPlugin;
 
     if (!plugin) return;
 
     const data = {
       args,
+      env: plugin.settings,
       params: { ...plugin.customParams?.mcp, name: identifier } as any,
       toolName: apiName,
     };
@@ -35,8 +44,12 @@ class MCPService {
     identifier: string,
     url: string,
     metadata?: CustomPluginMetadata,
+    signal?: AbortSignal,
   ) {
-    return toolsClient.mcp.getStreamableMcpServerManifest.query({ identifier, metadata, url });
+    return toolsClient.mcp.getStreamableMcpServerManifest.query(
+      { identifier, metadata, url },
+      { signal },
+    );
   }
 
   async getStdioMcpServerManifest(
@@ -47,9 +60,55 @@ class MCPService {
       name: string;
     },
     metadata?: CustomPluginMetadata,
+    signal?: AbortSignal,
   ) {
-    return desktopClient.mcp.getStdioMcpServerManifest.query({ ...stdioParams, metadata });
+    return desktopClient.mcp.getStdioMcpServerManifest.query(
+      { ...stdioParams, metadata },
+      { signal },
+    );
   }
+
+  /**
+   * 检查 MCP 插件安装状态
+   * @param manifest MCP 插件清单
+   * @param signal AbortSignal 用于取消请求
+   * @returns 安装检测结果
+   */
+  async checkInstallation(
+    manifest: PluginManifest,
+    signal?: AbortSignal,
+  ): Promise<CheckMcpInstallResult> {
+    // 将所有部署选项传递给主进程进行检查
+    return desktopClient.mcp.validMcpServerInstallable.mutate(
+      { deploymentOptions: manifest.deploymentOptions as any },
+      { signal },
+    );
+  }
+
+  /**
+   * 上报 MCP 插件安装结果
+   */
+  reportMcpInstallResult = ({
+    success,
+    manifest,
+    errorMessage,
+    errorCode,
+    ...params
+  }: InstallReportRequest) => {
+    const reportData = {
+      errorCode: success ? undefined : errorCode,
+      errorMessage: success ? undefined : errorMessage,
+      manifest: success ? manifest : undefined,
+      success,
+      ...params,
+    };
+
+    lambdaClient.market.reportMcpInstallResult
+      .mutate(cleanObject(reportData))
+      .catch((reportError) => {
+        console.warn('Failed to report MCP installation result:', reportError);
+      });
+  };
 }
 
 export const mcpService = new MCPService();

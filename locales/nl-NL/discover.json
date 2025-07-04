@@ -10,13 +10,57 @@
     },
     "description": "Assistent introductie",
     "detail": "Details",
+    "details": {
+      "capabilities": {
+        "knowledge": {
+          "desc": "De assistent bevat de volgende kennisbanken om je te helpen meer vragen te beantwoorden.",
+          "title": "Kennisbank"
+        },
+        "plugin": {
+          "desc": "De assistent bevat de volgende plugins om je te helpen meer taken uit te voeren.",
+          "title": "Ingebouwde plugins"
+        },
+        "title": "Assistent mogelijkheden"
+      },
+      "overview": {
+        "example": "Assistent demonstratie",
+        "title": "Overzicht"
+      },
+      "related": {
+        "listTitle": "Gerelateerde assistenten",
+        "more": "Meer bekijken",
+        "title": "Aanbevolen"
+      },
+      "sidebar": {
+        "toc": "Inhoudsopgave"
+      },
+      "summary": {
+        "title": "Wat kun je met deze assistent doen?"
+      },
+      "systemRole": {
+        "openingMessage": "Openingsbericht",
+        "openingQuestions": "Openingsvragen",
+        "title": "Assistent instellingen"
+      }
+    },
     "list": "Assistentenlijst",
     "more": "Meer",
     "plugins": "Geïntegreerde plugins",
     "recentSubmits": "Recent bijgewerkt",
+    "sorts": {
+      "createdAt": "Recent gepubliceerd",
+      "identifier": "Assistent ID",
+      "knowledgeCount": "Aantal kennisbanken",
+      "pluginCount": "Aantal plugins",
+      "title": "Assistent naam",
+      "tokenUsage": "Token gebruik"
+    },
     "suggestions": "Gerelateerde aanbevelingen",
     "systemRole": "Assistent instellingen",
-    "try": "Probeer het"
+    "tokenUsage": "Token gebruik van assistent prompt",
+    "try": "Probeer het",
+    "withKnowledge": "Deze assistent bevat kennisbanken",
+    "withPlugin": "Deze assistent bevat plugins"
   },
   "back": "Terug naar Ontdekken",
   "category": {
@@ -41,6 +85,7 @@
       "all": "Alles",
       "gaming-entertainment": "Gaming en Entertainment",
       "life-style": "Levensstijl",
+      "lifestyle": "Levensstijl",
       "media-generate": "Media Generatie",
       "science-education": "Wetenschap en Educatie",
       "social": "Sociale Media",
@@ -102,10 +147,368 @@
     "featuredTools": "Aanbevolen plugins",
     "more": "Ontdek meer"
   },
+  "isClaimed": "Geclaimd",
+  "isFeatured": "Aanbevolen",
+  "isOfficial": "Officieel gecertificeerd",
   "like": "Leuk",
+  "mcp": {
+    "categories": {
+      "all": {
+        "description": "Alle MCP-servers",
+        "name": "Alles"
+      },
+      "business": {
+        "description": "Zakelijke en ondernemingsdiensten",
+        "name": "Zakelijke diensten"
+      },
+      "developer": {
+        "description": "Ontwikkelaar gerelateerde tools en diensten",
+        "name": "Ontwikkeltools"
+      },
+      "gaming-entertainment": {
+        "description": "Spelletjes, entertainment en recreatie",
+        "name": "Spel en entertainment"
+      },
+      "health-wellness": {
+        "description": "Gezondheid, fitness en welzijn",
+        "name": "Gezondheid en welzijn"
+      },
+      "lifestyle": {
+        "description": "Persoonlijke levensstijl, gewoonten en dagelijkse activiteiten",
+        "name": "Levensstijl"
+      },
+      "media-generate": {
+        "description": "Genereren, bewerken en verwerken van media",
+        "name": "Mediaproductie"
+      },
+      "news": {
+        "description": "Nieuwsaggregatie, verslaggeving en informatiediensten",
+        "name": "Nieuws en informatie"
+      },
+      "productivity": {
+        "description": "Taakbeheer, notities en efficiëntietools",
+        "name": "Efficiëntietools"
+      },
+      "science-education": {
+        "description": "Wetenschappelijk onderzoek, leren en educatieve tools",
+        "name": "Wetenschap en educatie"
+      },
+      "social": {
+        "description": "Sociale netwerken en communicatie",
+        "name": "Sociale media"
+      },
+      "stocks-finance": {
+        "description": "Financiële markten, handel en investeringen",
+        "name": "Aandelen en financiën"
+      },
+      "tools": {
+        "description": "Algemene praktische tools en diensten",
+        "name": "Handige tools"
+      },
+      "travel-transport": {
+        "description": "Reisplanning en vervoer",
+        "name": "Reizen en vervoer"
+      },
+      "weather": {
+        "description": "Weersvoorspellingen en meteorologische diensten",
+        "name": "Weer en meteorologie"
+      },
+      "web-search": {
+        "description": "Webzoekopdrachten en informatieopvraging",
+        "name": "Informatieopvraging"
+      }
+    },
+    "details": {
+      "connectionType": {
+        "hybrid": {
+          "desc": "Deze service kan, afhankelijk van configuratie of gebruikssituatie, lokaal of in de cloud draaien en heeft dubbele uitvoeringsmogelijkheden.",
+          "title": "Hybride service"
+        },
+        "local": {
+          "desc": "Deze server draait alleen op het lokale apparaat van de cliënt en vereist installatie en lokale bronnen.",
+          "title": "Lokale service"
+        },
+        "remote": {
+          "desc": "Deze server wordt op afstand gehost en draait omdat het voornamelijk afhankelijk is van externe diensten en niet van de lokale omgeving.",
+          "title": "Cloudservice"
+        }
+      },
+      "deployment": {
+        "args": "Argumenten",
+        "checkCommand": "Controleer commando",
+        "command": "Commando",
+        "commandLine": "Systeemafhankelijkheden",
+        "connection": "Verbindingsmethode",
+        "connectionType": "Verbindingstype",
+        "description": "Installatie- en implementatiemethode van de plugin",
+        "descriptionPlaceholder": "Optionele beschrijving",
+        "empty": "Geen implementatieopties beschikbaar",
+        "env": "Omgevingsvariabelen",
+        "guide": "Installatiehandleiding",
+        "installation": "Installatie via {{method}}",
+        "installationMethod": "Installatiemethode",
+        "other": "Andere instellingen",
+        "packageName": "Pakketnaam",
+        "platform": {
+          "steps": {
+            "claude": "- Open de **Claude Desktop** applicatie\n- Ga naar **Instellingen** en kies **Ontwikkelaar**\n- Klik op **Configuratie bewerken**\n- Open het bestand **claude_desktop_config.json**\n- Kopieer en plak de serverconfiguratie in het bestaande bestand en sla op",
+            "cline": "- Open VS Code met de Cline-extensie geïnstalleerd\n- Klik op het Cline-icoon in de zijbalk\n- Selecteer **MCP Servers** in het dropdownmenu\n- Voer de servernaam en jouw MCP-server URL in onder het tabblad **Remote Servers**\n- Klik op **Add Server** om te verbinden",
+            "cursor": "- Navigeer naar **Instellingen** en kies Cursor-instellingen\n- Selecteer aan de linkerkant **MCP**\n- Klik rechtsboven op **Nieuwe globale MCP-server toevoegen**\n- Kopieer en plak de serverconfiguratie in het bestaande bestand en sla op",
+            "lobeChat": "- Open de **LobeChat desktop** applicatie\n- Ga naar **Instellingen** - **Standaard assistent**\n- Kies vervolgens **Plugin instellingen** - **Aangepaste plugins**\n- Klik op **Snelle import JSON-configuratie**\n- Kopieer en plak de serverconfiguratie in het tekstvak en installeer",
+            "openai": "- Open je **OpenAI-app** of ontwikkelomgeving\n- Configureer MCP-tools in de **Responses API**\n- Voeg een MCP-blok toe aan de **tools** array in de API-aanvraag\n- Stel **server_url** in op jouw MCP-server endpoint\n- Voeg de benodigde authenticatieheaders toe (API-sleutel, token, etc.)\n- Gebruik de parameter `allowed_tools` om blootgestelde tools te beperken\n- Stel `require_approval` in om goedkeuring voor tooluitvoering te regelen",
+            "vscode": "- Open VS Code\n- Open het commandopalet (`Ctrl+Shift+P` / `Cmd+Shift+P`)\n- Typ **MCP: Add Server** en selecteer het\n- Kies toevoegen aan werkruimte of gebruikersinstellingen\n- Kopieer en plak de serverconfiguratie"
+          },
+          "title": "Installeren in {{platform}}"
+        },
+        "recommended": "Aanbevolen",
+        "systemDependencies": "Systeemafhankelijkheden",
+        "table": {
+          "description": "Beschrijving",
+          "name": "Naam",
+          "required": "Verplicht",
+          "type": "Type"
+        },
+        "title": "Installatiemethode"
+      },
+      "githubBadge": {
+        "desc": "LobeHub scant regelmatig de codebase en documentatie om:\n\n- Te bevestigen dat de MCP-server correct werkt.\n- Serverkenmerken te extraheren, zoals tools, bronnen, prompts en vereiste parameters.\n- Onze badge helpt gebruikers snel de veiligheid, functionaliteit en installatiehandleiding van de MCP-server te beoordelen.\n\nKopieer de volgende code naar je `README.md` bestand:"
+      },
+      "nav": {
+        "needHelp": "Hulp nodig?",
+        "reportIssue": "Probleem melden",
+        "viewSourceCode": "Bekijk broncode"
+      },
+      "overview": {
+        "title": "Overzicht"
+      },
+      "related": {
+        "listTitle": "Gerelateerde MCP-servers",
+        "more": "Meer bekijken",
+        "title": "Aanbevolen"
+      },
+      "schema": {
+        "mode": {
+          "docs": "Documentatie"
+        },
+        "prompts": {
+          "arguments": "Parameterconfiguratie",
+          "desc": "Interactieve sjablonen die door gebruikers worden gekozen om te activeren",
+          "empty": "Geen prompts beschikbaar",
+          "instructions": "Instructies",
+          "table": {
+            "description": "Beschrijving",
+            "name": "Naam",
+            "required": "Verplicht"
+          },
+          "title": "Promptlijst"
+        },
+        "resources": {
+          "desc": "Contextgegevens die door de client worden toegevoegd en beheerd",
+          "empty": "Geen bronnen beschikbaar",
+          "table": {
+            "description": "Beschrijving",
+            "mineType": "MIME-type",
+            "name": "Naam",
+            "uri": "URI"
+          },
+          "title": "Bronnenlijst"
+        },
+        "title": "Plugin functies",
+        "tools": {
+          "desc": "Functionele interfaces die aan het grote taalmodel (LLM) worden blootgesteld om acties uit te voeren",
+          "empty": "Geen tools beschikbaar",
+          "inputSchema": "Invoerbeschrijving",
+          "instructions": "Instructies",
+          "table": {
+            "description": "Beschrijving",
+            "name": "Naam",
+            "required": "Verplicht",
+            "type": "Type"
+          },
+          "title": "Toollijst"
+        }
+      },
+      "score": {
+        "claimed": {
+          "desc": "Deze MCP-server is opgeëist door de eigenaar, wat eigendom en beheer garandeert.",
+          "title": "Opgeëist door eigenaar"
+        },
+        "deployMoreThanManual": {
+          "desc": "Deze MCP-server biedt gebruiksvriendelijkere installatiemethoden dan alleen handmatig, waardoor gebruikers eenvoudig kunnen implementeren en gebruiken.",
+          "title": "Biedt gebruiksvriendelijke installatiemethoden"
+        },
+        "deployment": {
+          "desc": "Deze MCP-server biedt ten minste één installatiemethode waarmee gebruikers kunnen implementeren en gebruiken.",
+          "descWithCount": "Deze MCP-server biedt {{number}} installatiemethoden waarmee gebruikers kunnen implementeren en gebruiken.",
+          "title": "Biedt ten minste één installatiemethode"
+        },
+        "license": {
+          "desc": "Deze repository bevat een LICENSE-bestand.",
+          "descWithlicense": "De licentie van deze repository is {{license}}.",
+          "title": "Bevat LICENSE"
+        },
+        "listTitle": "Score details",
+        "notClaimed": {
+          "desc": "Als je de eigenaar bent van deze MCP-server, kun je deze op de volgende manier opeisen.",
+          "title": "Niet opgeëist door eigenaar"
+        },
+        "prompts": {
+          "desc": "Deze MCP-server biedt prompts waarmee gebruikers met de service kunnen interageren.",
+          "descWithCount": "Deze MCP-server biedt {{number}} prompts waarmee gebruikers met de service kunnen interageren.",
+          "title": "Bevat prompts"
+        },
+        "readme": {
+          "desc": "Deze repository bevat een README.md-bestand.",
+          "title": "Bevat README"
+        },
+        "resources": {
+          "desc": "Deze MCP-server biedt bronnen waarmee gebruikers contextgegevens kunnen toevoegen en beheren.",
+          "descWithCount": "Deze MCP-server biedt {{number}} bronnen waarmee gebruikers contextgegevens kunnen toevoegen en beheren.",
+          "title": "Bevat bronnen"
+        },
+        "title": "Score",
+        "tools": {
+          "desc": "De service moet ten minste één tool bieden waarmee gebruikers specifieke acties kunnen uitvoeren.",
+          "descWithCount": "Deze MCP-server biedt {{number}} toolfuncties waarmee gebruikers specifieke acties kunnen uitvoeren.",
+          "title": "Bevat ten minste één tool"
+        },
+        "validated": {
+          "desc": "Deze MCP-server is geïnstalleerd en gevalideerd om kwaliteit en betrouwbaarheid te garanderen.",
+          "title": "Gevalideerd"
+        }
+      },
+      "scoreLevel": {
+        "a": {
+          "desc": "Deze MCP-server is streng gevalideerd en biedt uitgebreide functionaliteit en een hoogwaardige gebruikerservaring.",
+          "fullTitle": "Uitstekende plugin",
+          "title": "Uitstekend"
+        },
+        "b": {
+          "desc": "Deze MCP-server biedt goede functionaliteit en gebruikerservaring, maar kan op sommige punten verbeterd worden.",
+          "fullTitle": "Goede functionaliteit",
+          "title": "Goed"
+        },
+        "f": {
+          "desc": "Deze MCP-server is incompleet of van lage kwaliteit; gebruikers wordt aangeraden voorzichtig te zijn.",
+          "fullTitle": "Matige kwaliteit",
+          "title": "Matig"
+        }
+      },
+      "settings": {
+        "capabilities": {
+          "prompts": "Promptwoorden",
+          "resources": "Middelen",
+          "title": "Plugin-mogelijkheden",
+          "tools": "Gereedschappen"
+        },
+        "configuration": {
+          "title": "Plugin-configuratie"
+        },
+        "connection": {
+          "args": "Startparameters",
+          "command": "Startcommando",
+          "title": "Verbindingsinformatie",
+          "type": "Verbindingstype",
+          "url": "Serviceadres"
+        },
+        "saveSettings": "Instellingen opslaan",
+        "title": "Plugin-instellingen"
+      },
+      "sidebar": {
+        "install": "Installeer MCP-server",
+        "meta": {
+          "homepage": "Officiële website",
+          "installCount": "Aantal installaties",
+          "language": "Broncode taal",
+          "license": "Licentie",
+          "published": "Publicatiedatum",
+          "repo": "Broncode repository",
+          "stars": "Aantal sterren",
+          "title": "Details",
+          "updated": "Laatst bijgewerkt"
+        },
+        "moreServerConfig": "Bekijk details",
+        "recommendServers": "Gerelateerde MCP's",
+        "serverConfig": "Installatieconfiguratie",
+        "toc": "Inhoudsopgave"
+      },
+      "summary": {
+        "title": "Wat kun je met deze MCP-server doen?"
+      },
+      "totalScore": {
+        "description": "Totale score berekend op basis van verschillende indicatoren",
+        "legend": {
+          "aGrade": "Cijfer A ({{minPercent}}-100%)",
+          "bGrade": "Cijfer B ({{minPercent}}-{{maxPercent}}%)",
+          "fGrade": "Cijfer F (0-{{maxPercent}}%)"
+        },
+        "pointsFormat": "{{score}}/{{total}} punten",
+        "popover": {
+          "completedOptional": "✅ Optionele items voltooid ({{count}} items)",
+          "completedRequired": "✅ Verplichte items voltooid ({{count}} items)",
+          "incompleteOptional": "⏸️ Optionele items niet voltooid ({{count}} items)",
+          "incompleteRequired": "❌ Verplichte items niet voltooid ({{count}} items)",
+          "title": "Score details"
+        },
+        "ratingFormat": "Beoordeling: {{level}}",
+        "scoreInfo": {
+          "items": "Items",
+          "points": "Punten",
+          "requiredItems": "Verplichte items"
+        },
+        "title": "Totale score"
+      },
+      "versions": {
+        "table": {
+          "isLatest": "Laatste versie",
+          "isValidated": "Gevalideerd",
+          "publishAt": "Publicatiedatum",
+          "version": "Versie"
+        },
+        "title": "Versiegeschiedenis"
+      }
+    },
+    "hero": {
+      "desc": "Open source, implementeerbaar MCP-servers platform dat AI-systemen helpt eenvoudig toegang te krijgen tot bestandssystemen, databases, API's en andere essentiële bronnen, waarmee je AI-capaciteiten volledig worden uitgebreid.",
+      "subTitle": "Open source & direct gebruiksklaar",
+      "title": "Open source MCP-marktplaats voor AI"
+    },
+    "sorts": {
+      "createdAt": "Recent toegevoegd",
+      "installCount": "Aantal installaties",
+      "isFeatured": "Aanbevolen plugin",
+      "isValidated": "Gevalideerde plugin",
+      "promptsCount": "Aantal prompts",
+      "ratingCount": "Aantal beoordelingen",
+      "resourcesCount": "Aantal bronnen",
+      "toolsCount": "Aantal tools",
+      "updatedAt": "Laatst bijgewerkt"
+    },
+    "title": "MCP-markt",
+    "unvalidated": {
+      "desc": "Deze MCP-server is nog niet gevalideerd",
+      "title": "Niet gevalideerd"
+    },
+    "validated": {
+      "desc": "Deze MCP-server is gevalideerd om kwaliteit en betrouwbaarheid te waarborgen.",
+      "descWithDate": "Deze MCP-server is op {{date}} gevalideerd om kwaliteit en betrouwbaarheid te waarborgen.",
+      "title": "Gevalideerd"
+    }
+  },
   "models": {
+    "abilities": "Modelmogelijkheden",
     "chat": "Begin gesprek",
     "contentLength": "Maximale contextlengte",
+    "details": {
+      "overview": {
+        "title": "Overzicht"
+      },
+      "related": {
+        "listTitle": "Gerelateerde modellen",
+        "more": "Meer bekijken",
+        "title": "Aanbevolen"
+      }
+    },
     "free": "Gratis",
     "guide": "Configuratiegids",
     "list": "Modellenlijst",
@@ -156,11 +559,30 @@
       "throughput": "Doorvoer",
       "throughputTooltip": "Gemiddeld aantal tokens dat per seconde wordt verzonden in stream aanvragen"
     },
+    "sorts": {
+      "contextWindowTokens": "Contextlengte",
+      "identifier": "Model ID",
+      "inputPrice": "Invoerprijs",
+      "outputPrice": "Uitvoerprijs",
+      "providerCount": "Aantal aanbieders",
+      "releasedAt": "Recent uitgebracht"
+    },
     "suggestions": "Gerelateerde modellen",
     "supportedProviders": "Providers die dit model ondersteunen"
   },
   "plugins": {
     "community": "Gemeenschapsplugins",
+    "details": {
+      "settings": {
+        "title": "Plug-in instellingen"
+      },
+      "summary": {
+        "title": "Wat kun je met deze plugin doen?"
+      },
+      "tools": {
+        "title": "Plug-in hulpmiddelen"
+      }
+    },
     "install": "Plugin installeren",
     "installed": "Geïnstalleerd",
     "list": "Pluginlijst",
@@ -173,36 +595,54 @@
     "more": "Meer",
     "official": "Officiële plugins",
     "recentSubmits": "Recent ingediend",
+    "sorts": {
+      "createdAt": "Recent gepubliceerd",
+      "identifier": "Plugin ID",
+      "title": "Plugin naam"
+    },
     "suggestions": "Gerelateerde aanbevelingen"
   },
   "providers": {
     "config": "Configuratie aanbieder",
+    "details": {
+      "guide": {
+        "title": "Integratiehandleiding"
+      },
+      "overview": {
+        "title": "Overzicht"
+      },
+      "related": {
+        "listTitle": "Gerelateerde aanbieders",
+        "more": "Meer bekijken",
+        "title": "Aanbevolen"
+      }
+    },
     "list": "Lijst van modelproviders",
     "modelCount": "{{count}} modellen",
+    "modelName": "Modelnaam",
     "modelSite": "Modeldocumentatie",
     "more": "Meer",
     "officialSite": "Officiële website",
     "showAllModels": "Toon alle modellen",
+    "sorts": {
+      "default": "Standaard sortering",
+      "identifier": "Aanbieder ID",
+      "modelCount": "Aantal modellen"
+    },
     "suggestions": "Gerelateerde aanbieders",
     "supportedModels": "Ondersteunde modellen"
   },
+  "publishedTime": "Gepubliceerd op",
   "search": {
     "placeholder": "Zoek naam, beschrijving of trefwoord...",
     "result": "{{count}} resultaten over <highlight>{{keyword}}</highlight>",
     "searching": "Zoeken..."
   },
-  "sort": {
-    "mostLiked": "Meest Geliket",
-    "mostUsed": "Meest Gebruikt",
-    "newest": "Nieuwste Eerst",
-    "oldest": "Oudste Eerst",
-    "recommended": "Aanbevolen"
-  },
   "tab": {
-    "assistants": "Assistenten",
+    "assistant": "Assistent",
     "home": "Startpagina",
-    "models": "Modellen",
-    "plugins": "Plugins",
-    "providers": "Modelleveranciers"
+    "model": "Model",
+    "plugin": "Plugin",
+    "provider": "Model aanbieder"
   }
 }

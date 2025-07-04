@@ -12,6 +12,15 @@
     "tool_call": "tool call request"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "Please visit the edit page to view details",
+      "editBtn": "Edit Now",
+      "title": "This is a Custom Plugin"
+    },
+    "emptyState": {
+      "description": "Please install this plugin first to view its capabilities and configuration options",
+      "title": "View Plugin Details After Installation"
+    },
     "info": {
       "description": "API Description",
       "name": "API Name"
@@ -230,6 +239,50 @@
     },
     "title": "Local Files"
   },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "Checking installation environment...",
+    "COMPLETED": "Installation completed",
+    "CONFIGURATION_REQUIRED": "Please complete the necessary configuration before continuing the installation",
+    "ERROR": "Installation error",
+    "FETCHING_MANIFEST": "Fetching plugin manifest...",
+    "GETTING_SERVER_MANIFEST": "Initializing MCP server...",
+    "INSTALLING_PLUGIN": "Installing plugin...",
+    "configurationDescription": "This MCP plugin requires configuration parameters to function properly. Please fill in the necessary configuration information.",
+    "configurationRequired": "Configure plugin parameters",
+    "continueInstall": "Continue installation",
+    "dependenciesDescription": "This plugin requires the following system dependencies to work properly. Please install the missing dependencies as instructed, then click recheck to continue the installation.",
+    "dependenciesRequired": "Please install the plugin's system dependencies",
+    "dependencyStatus": {
+      "installed": "Installed",
+      "notInstalled": "Not installed",
+      "requiredVersion": "Required version: {{version}}"
+    },
+    "errorDetails": {
+      "args": "Arguments",
+      "command": "Command",
+      "connectionParams": "Connection parameters",
+      "env": "Environment variables",
+      "errorOutput": "Error log",
+      "exitCode": "Exit code",
+      "hideDetails": "Hide details",
+      "originalError": "Original error",
+      "showDetails": "Show details"
+    },
+    "errorTypes": {
+      "CONNECTION_FAILED": "Connection failed",
+      "INITIALIZATION_TIMEOUT": "Initialization timeout",
+      "PROCESS_SPAWN_ERROR": "Process spawn error",
+      "UNKNOWN_ERROR": "Unknown error",
+      "VALIDATION_ERROR": "Parameter validation failed"
+    },
+    "installError": "MCP plugin installation failed. Reason: {{detail}}",
+    "installMethods": {
+      "manual": "Manual installation:",
+      "recommended": "Recommended installation method:"
+    },
+    "recheckDependencies": "Recheck",
+    "skipDependencies": "Skip check"
+  },
   "pluginList": "Plugin List",
   "search": {
     "apiName": {
@@ -266,16 +319,48 @@
   },
   "setting": "Plugin Settings",
   "settings": {
+    "capabilities": {
+      "prompts": "Prompts",
+      "resources": "Resources",
+      "title": "Plugin Capabilities",
+      "tools": "Tools"
+    },
+    "configuration": {
+      "title": "Plugin Configuration"
+    },
+    "connection": {
+      "args": "Startup arguments",
+      "command": "Startup command",
+      "title": "Connection Information",
+      "type": "Connection type",
+      "url": "Service address"
+    },
+    "edit": "Edit",
+    "envConfigDescription": "These configurations will be passed as environment variables to the process when the MCP server starts",
+    "httpTypeNotice": "No environment variables need to be configured for HTTP type MCP plugins",
     "indexUrl": {
       "title": "Marketplace Index",
       "tooltip": "Editing is not supported at the moment"
     },
+    "messages": {
+      "connectionUpdateFailed": "Failed to update connection information",
+      "connectionUpdateSuccess": "Connection information updated successfully",
+      "envUpdateFailed": "Failed to save environment variables",
+      "envUpdateSuccess": "Environment variables saved successfully"
+    },
     "modalDesc": "After configuring the address of the plugin marketplace, you can use a custom plugin marketplace",
+    "rules": {
+      "argsRequired": "Please enter startup arguments",
+      "commandRequired": "Please enter the startup command",
+      "urlRequired": "Please enter the service address"
+    },
+    "saveSettings": "Save settings",
     "title": "Configure Plugin Marketplace"
   },
   "showInPortal": "Please check the details in the Portal view",
   "store": {
     "actions": {
+      "cancel": "Cancel installation",
       "confirmUninstall": "The plugin is about to be uninstalled. After uninstalling, the plugin configuration will be cleared. Please confirm your operation.",
       "detail": "Details",
       "install": "Install",
@@ -286,13 +371,15 @@
     "communityPlugin": "Third-party",
     "customPlugin": "Custom Plugin",
     "empty": "No installed plugins yet",
+    "emptySelectHint": "Select a plugin to preview detailed information",
     "installAllPlugins": "Install All",
     "networkError": "Failed to fetch plugin store. Please check your network connection and try again",
     "placeholder": "Search for plugin name, description, or keyword...",
     "releasedAt": "Released at {{createdAt}}",
     "tabs": {
-      "all": "All",
-      "installed": "Installed"
+      "installed": "Installed",
+      "mcp": "MCP Plugins",
+      "old": "LobeChat Plugins"
     },
     "title": "Plugin Store"
   },

@@ -12,6 +12,15 @@
     "tool_call": "工具呼叫"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "請前往編輯頁面查看詳情",
+      "editBtn": "立即編輯",
+      "title": "這是一個自訂插件"
+    },
+    "emptyState": {
+      "description": "請先安裝此外掛，以查看外掛功能和設定選項",
+      "title": "安裝後查看外掛詳情"
+    },
     "info": {
       "description": "API 描述",
       "name": "API 名稱"
@@ -230,6 +239,50 @@
     },
     "title": "本地檔案"
   },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "檢查安裝環境...",
+    "COMPLETED": "安裝完成",
+    "CONFIGURATION_REQUIRED": "請完成相關配置後繼續安裝",
+    "ERROR": "安裝錯誤",
+    "FETCHING_MANIFEST": "獲取插件描述檔...",
+    "GETTING_SERVER_MANIFEST": "初始化 MCP 伺服器...",
+    "INSTALLING_PLUGIN": "正在安裝插件...",
+    "configurationDescription": "該 MCP 插件需要配置參數才能正常使用，請填寫必要的配置信息",
+    "configurationRequired": "配置插件參數",
+    "continueInstall": "繼續安裝",
+    "dependenciesDescription": "此插件需要安裝以下系統依賴才能正常工作，請按照指引安裝缺失的依賴項，然後點擊重新檢查繼續安裝。",
+    "dependenciesRequired": "請安裝插件的系統依賴",
+    "dependencyStatus": {
+      "installed": "已安裝",
+      "notInstalled": "未安裝",
+      "requiredVersion": "需要版本: {{version}}"
+    },
+    "errorDetails": {
+      "args": "參數",
+      "command": "命令",
+      "connectionParams": "連接參數",
+      "env": "環境變數",
+      "errorOutput": "錯誤日誌",
+      "exitCode": "退出碼",
+      "hideDetails": "收起詳情",
+      "originalError": "原始錯誤",
+      "showDetails": "查看詳情"
+    },
+    "errorTypes": {
+      "CONNECTION_FAILED": "連接失敗",
+      "INITIALIZATION_TIMEOUT": "初始化逾時",
+      "PROCESS_SPAWN_ERROR": "進程啟動失敗",
+      "UNKNOWN_ERROR": "未知錯誤",
+      "VALIDATION_ERROR": "參數驗證失敗"
+    },
+    "installError": "MCP 插件安裝失敗，失敗原因： {{detail}}",
+    "installMethods": {
+      "manual": "手動安裝:",
+      "recommended": "推薦安裝方式:"
+    },
+    "recheckDependencies": "重新檢查",
+    "skipDependencies": "跳過檢查"
+  },
   "pluginList": "外掛清單",
   "search": {
     "apiName": {
@@ -266,16 +319,48 @@
   },
   "setting": "插件設置",
   "settings": {
+    "capabilities": {
+      "prompts": "提示詞",
+      "resources": "資源",
+      "title": "插件能力",
+      "tools": "工具"
+    },
+    "configuration": {
+      "title": "插件配置"
+    },
+    "connection": {
+      "args": "啟動參數",
+      "command": "啟動命令",
+      "title": "連接資訊",
+      "type": "連接類型",
+      "url": "服務地址"
+    },
+    "edit": "編輯",
+    "envConfigDescription": "這些配置將作為環境變數在 MCP 伺服器啟動時傳遞給進程",
+    "httpTypeNotice": "HTTP 類型的 MCP 插件暫無需要配置的環境變數",
     "indexUrl": {
       "title": "外掛市集索引",
       "tooltip": "目前不支援編輯"
     },
+    "messages": {
+      "connectionUpdateFailed": "連線資訊更新失敗",
+      "connectionUpdateSuccess": "連線資訊更新成功",
+      "envUpdateFailed": "環境變數保存失敗",
+      "envUpdateSuccess": "環境變數保存成功"
+    },
     "modalDesc": "設定外掛市集的網址後，您可以使用自訂的外掛市集",
+    "rules": {
+      "argsRequired": "請輸入啟動參數",
+      "commandRequired": "請輸入啟動命令",
+      "urlRequired": "請輸入服務地址"
+    },
+    "saveSettings": "保存設置",
     "title": "設定外掛市集"
   },
   "showInPortal": "請在入口網站中查看",
   "store": {
     "actions": {
+      "cancel": "取消安裝",
       "confirmUninstall": "即將卸載該插件，卸載後將清除該插件配置，請確認你的操作",
       "detail": "詳情",
       "install": "安裝",
@@ -286,13 +371,15 @@
     "communityPlugin": "社群外掛",
     "customPlugin": "自訂插件",
     "empty": "暫無已安裝插件",
+    "emptySelectHint": "選擇插件以預覽詳細資訊",
     "installAllPlugins": "安裝全部",
     "networkError": "獲取插件商店失敗，請檢查網路連線後重試",
     "placeholder": "搜尋插件名稱介紹或關鍵字...",
     "releasedAt": "發佈於 {{createdAt}}",
     "tabs": {
-      "all": "全部",
-      "installed": "已安裝"
+      "installed": "已安裝",
+      "mcp": "MCP 外掛",
+      "old": "LobeChat 插件"
     },
     "title": "插件商店"
   },

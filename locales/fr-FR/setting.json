@@ -129,6 +129,7 @@
     "waitingForMore": "Plus de modèles sont en cours de <1>planification pour être ajoutés</1>, restez à l'écoute"
   },
   "plugin": {
+    "addMCPPlugin": "Ajouter un plugin MCP",
     "addTooltip": "Ajouter un plugin personnalisé",
     "clearDeprecated": "Effacer les plugins obsolètes",
     "empty": "Aucun plugin installé pour le moment, veuillez visiter <1>la boutique de plugins</1> pour explorer",

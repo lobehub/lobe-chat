@@ -12,6 +12,15 @@
     "tool_call": "demande d'appel d'outil"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "Veuillez consulter la page d'édition pour plus de détails",
+      "editBtn": "Modifier maintenant",
+      "title": "Ceci est un plugin personnalisé"
+    },
+    "emptyState": {
+      "description": "Veuillez installer ce plugin pour voir ses fonctionnalités et options de configuration",
+      "title": "Voir les détails du plugin après installation"
+    },
     "info": {
       "description": "Description de l'API",
       "name": "Nom de l'API"
@@ -230,6 +239,50 @@
     },
     "title": "Fichiers locaux"
   },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "Vérification de l'environnement d'installation...",
+    "COMPLETED": "Installation terminée",
+    "CONFIGURATION_REQUIRED": "Veuillez compléter la configuration requise avant de continuer l'installation",
+    "ERROR": "Erreur d'installation",
+    "FETCHING_MANIFEST": "Récupération du fichier manifeste du plugin...",
+    "GETTING_SERVER_MANIFEST": "Initialisation du serveur MCP...",
+    "INSTALLING_PLUGIN": "Installation du plugin en cours...",
+    "configurationDescription": "Ce plugin MCP nécessite des paramètres de configuration pour fonctionner correctement, veuillez remplir les informations nécessaires.",
+    "configurationRequired": "Configurer les paramètres du plugin",
+    "continueInstall": "Continuer l'installation",
+    "dependenciesDescription": "Ce plugin nécessite l'installation des dépendances système suivantes pour fonctionner correctement. Veuillez installer les dépendances manquantes selon les instructions, puis cliquez sur 'Re-vérifier' pour continuer l'installation.",
+    "dependenciesRequired": "Veuillez installer les dépendances système du plugin",
+    "dependencyStatus": {
+      "installed": "Installé",
+      "notInstalled": "Non installé",
+      "requiredVersion": "Version requise : {{version}}"
+    },
+    "errorDetails": {
+      "args": "Arguments",
+      "command": "Commande",
+      "connectionParams": "Paramètres de connexion",
+      "env": "Variables d'environnement",
+      "errorOutput": "Journal des erreurs",
+      "exitCode": "Code de sortie",
+      "hideDetails": "Masquer les détails",
+      "originalError": "Erreur originale",
+      "showDetails": "Afficher les détails"
+    },
+    "errorTypes": {
+      "CONNECTION_FAILED": "Échec de la connexion",
+      "INITIALIZATION_TIMEOUT": "Délai d'initialisation dépassé",
+      "PROCESS_SPAWN_ERROR": "Échec du démarrage du processus",
+      "UNKNOWN_ERROR": "Erreur inconnue",
+      "VALIDATION_ERROR": "Échec de la validation des paramètres"
+    },
+    "installError": "Échec de l'installation du plugin MCP, raison : {{detail}}",
+    "installMethods": {
+      "manual": "Installation manuelle :",
+      "recommended": "Méthode d'installation recommandée :"
+    },
+    "recheckDependencies": "Re-vérifier",
+    "skipDependencies": "Ignorer la vérification"
+  },
   "pluginList": "Liste des plugins",
   "search": {
     "apiName": {
@@ -266,16 +319,48 @@
   },
   "setting": "Paramètres des plugins",
   "settings": {
+    "capabilities": {
+      "prompts": "Invites",
+      "resources": "Ressources",
+      "title": "Capacités du plugin",
+      "tools": "Outils"
+    },
+    "configuration": {
+      "title": "Configuration du plugin"
+    },
+    "connection": {
+      "args": "Arguments de démarrage",
+      "command": "Commande de démarrage",
+      "title": "Informations de connexion",
+      "type": "Type de connexion",
+      "url": "Adresse du service"
+    },
+    "edit": "Modifier",
+    "envConfigDescription": "Ces configurations seront transmises en tant que variables d'environnement au processus lors du démarrage du serveur MCP",
+    "httpTypeNotice": "Les plugins MCP de type HTTP n'ont actuellement pas de variables d'environnement à configurer",
     "indexUrl": {
       "title": "Index du marché",
       "tooltip": "L'édition en ligne n'est pas encore prise en charge. Veuillez configurer via les variables d'environnement lors du déploiement."
     },
+    "messages": {
+      "connectionUpdateFailed": "Échec de la mise à jour des informations de connexion",
+      "connectionUpdateSuccess": "Mise à jour des informations de connexion réussie",
+      "envUpdateFailed": "Échec de l'enregistrement des variables d'environnement",
+      "envUpdateSuccess": "Enregistrement des variables d'environnement réussi"
+    },
     "modalDesc": "Une fois l'adresse du marché des plugins configurée, vous pourrez utiliser un marché de plugins personnalisé.",
+    "rules": {
+      "argsRequired": "Veuillez saisir les paramètres de démarrage",
+      "commandRequired": "Veuillez saisir la commande de démarrage",
+      "urlRequired": "Veuillez saisir l'adresse du service"
+    },
+    "saveSettings": "Enregistrer les paramètres",
     "title": "Paramètres du marché des plugins"
   },
   "showInPortal": "Veuillez consulter les détails dans l'espace de travail",
   "store": {
     "actions": {
+      "cancel": "Annuler l'installation",
       "confirmUninstall": "Vous êtes sur le point de désinstaller ce plugin. Une fois désinstallé, sa configuration sera effacée. Veuillez confirmer votre action.",
       "detail": "Détails",
       "install": "Installer",
@@ -286,13 +371,15 @@
     "communityPlugin": "Plugin communautaire",
     "customPlugin": "Plugin personnalisé",
     "empty": "Aucun plugin installé pour le moment",
+    "emptySelectHint": "Sélectionnez un plugin pour prévisualiser les détails",
     "installAllPlugins": "Installer tous les plugins",
     "networkError": "Échec de la récupération de la boutique de plugins. Veuillez vérifier votre connexion réseau et réessayer.",
     "placeholder": "Rechercher le nom ou les mots-clés de l'extension...",
     "releasedAt": "Publié le {{createdAt}}",
     "tabs": {
-      "all": "Tous",
-      "installed": "Installés"
+      "installed": "Installés",
+      "mcp": "Plugin MCP",
+      "old": "Plugin LobeChat"
     },
     "title": "Boutique de plugins"
   },

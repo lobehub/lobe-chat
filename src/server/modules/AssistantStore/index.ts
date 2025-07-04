@@ -4,8 +4,7 @@ import { DEFAULT_LANG, isLocaleNotSupport } from '@/const/locale';
 import { appEnv } from '@/envs/app';
 import { Locales, normalizeLocale } from '@/locales/resources';
 import { EdgeConfig } from '@/server/modules/EdgeConfig';
-import { AgentStoreIndex } from '@/types/discover';
-import { RevalidateTag } from '@/types/requestCache';
+import { CacheRevalidate, CacheTag } from '@/types/discover';
 
 export class AssistantStore {
   private readonly baseUrl: string;
@@ -26,29 +25,31 @@ export class AssistantStore {
     return urlJoin(this.baseUrl, `${identifier}.${normalizeLocale(lang)}.json`);
   };
 
-  getAgentIndex = async (
-    locale: Locales = DEFAULT_LANG,
-    revalidate?: number,
-  ): Promise<AgentStoreIndex> => {
+  getAgentIndex = async (locale: Locales = DEFAULT_LANG): Promise<any[]> => {
     try {
       let res: Response;
 
       res = await fetch(this.getAgentIndexUrl(locale as any), {
-        next: { revalidate, tags: [RevalidateTag.AgentIndex] },
+        cache: 'force-cache',
+        next: { revalidate: CacheRevalidate.List, tags: [CacheTag.Discover, CacheTag.Assistants] },
       });
 
       if (res.status === 404) {
         res = await fetch(this.getAgentIndexUrl(DEFAULT_LANG), {
-          next: { revalidate, tags: [RevalidateTag.AgentIndex] },
+          cache: 'force-cache',
+          next: {
+            revalidate: CacheRevalidate.List,
+            tags: [CacheTag.Discover, CacheTag.Assistants],
+          },
         });
       }
 
       if (!res.ok) {
         console.warn('fetch agent index error:', await res.text());
-        return { agents: [], schemaVersion: 1 };
+        return [];
       }
 
-      const data: AgentStoreIndex = await res.json();
+      const data: any = await res.json();
 
       if (EdgeConfig.isEnabled()) {
         // Get the assistant whitelist from Edge Config
@@ -58,23 +59,20 @@ export class AssistantStore {
 
         // use whitelist mode first
         if (whitelist && whitelist?.length > 0) {
-          data.agents = data.agents.filter((item) => whitelist.includes(item.identifier));
+          data.agents = data.agents.filter((item: any) => whitelist.includes(item.identifier));
         }
 
         // if no whitelist, use blacklist mode
         else if (blacklist && blacklist?.length > 0) {
-          data.agents = data.agents.filter((item) => !blacklist.includes(item.identifier));
+          data.agents = data.agents.filter((item: any) => !blacklist.includes(item.identifier));
         }
       }
 
-      return data;
+      return data.agents;
     } catch (e) {
       // it means failed to fetch
       if ((e as Error).message.includes('fetch failed')) {
-        return {
-          agents: [],
-          schemaVersion: 1,
-        };
+        return [];
       }
 
       console.error('[AgentIndexFetchError] failed to fetch agent index, error detail:');
@@ -82,5 +80,27 @@ export class AssistantStore {
 
       throw e;
     }
+  };
+
+  getAgent = async (identifier: string, lang: Locales = DEFAULT_LANG): Promise<any> => {
+    let res = await fetch(this.getAgentUrl(identifier, lang), {
+      cache: 'force-cache',
+      next: {
+        revalidate: CacheRevalidate.Details,
+        tags: [CacheTag.Discover, CacheTag.Assistants],
+      },
+    });
+    if (!res.ok) {
+      res = await fetch(this.getAgentUrl(DEFAULT_LANG), {
+        cache: 'force-cache',
+        next: {
+          revalidate: CacheRevalidate.Details,
+          tags: [CacheTag.Discover, CacheTag.Assistants],
+        },
+      });
+    }
+    if (!res.ok) return;
+    let data = await res.json();
+    return data;
   };
 }

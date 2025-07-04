@@ -1,6 +1,6 @@
 import { DeepPartial } from 'utility-types';
 
-import { edgeClient } from '@/libs/trpc/client';
+import { lambdaClient } from '@/libs/trpc/client';
 import { LobeAgentConfig } from '@/types/agent';
 import { GlobalRuntimeConfig } from '@/types/serverConfig';
 
@@ -18,11 +18,11 @@ class GlobalService {
   };
 
   getGlobalConfig = async (): Promise<GlobalRuntimeConfig> => {
-    return edgeClient.config.getGlobalConfig.query();
+    return lambdaClient.config.getGlobalConfig.query();
   };
 
   getDefaultAgentConfig = async (): Promise<DeepPartial<LobeAgentConfig>> => {
-    return edgeClient.config.getDefaultAgentConfig.query();
+    return lambdaClient.config.getDefaultAgentConfig.query();
   };
 }
 

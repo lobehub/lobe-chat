@@ -1,85 +1,110 @@
 'use client';
 
 import { ModelIcon } from '@lobehub/icons';
-import { Button } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
-import dayjs from 'dayjs';
-import Link from 'next/link';
+import { Icon, Text } from '@lobehub/ui';
+import { createStyles, useResponsive } from 'antd-style';
+import { DotIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import ModelTypeIcon from '@/app/[variants]/(main)/discover/(list)/model/features/List/ModelTypeIcon';
 import { ModelInfoTags } from '@/components/ModelSelect';
-import { DiscoverModelItem } from '@/types/discover';
 
-import Back from '../../../features/Back';
+import PublishedTime from '../../../../../../../../components/PublishedTime';
+import { useDetailContext } from './DetailProvider';
 
-export const useStyles = createStyles(({ css, token }) => ({
-  tag: css`
-    border: none;
-    color: ${token.colorTextSecondary};
-    background: ${token.colorFillSecondary};
-  `,
-  time: css`
-    display: flex;
-    font-size: 12px;
-    line-height: 22px;
-    color: ${token.colorTextDescription};
-  `,
-  title: css`
-    margin-block: 0;
-    font-size: 18px;
-    font-weight: bold;
-    line-height: 1.2;
-  `,
-}));
+const useStyles = createStyles(({ css, token }) => {
+  return {
+    desc: css`
+      color: ${token.colorTextSecondary};
+    `,
+    time: css`
+      font-size: 12px;
+      color: ${token.colorTextDescription};
+    `,
+    version: css`
+      font-family: ${token.fontFamilyCode};
+      font-size: 13px;
+    `,
+  };
+});
 
-interface HeaderProps {
-  data: DiscoverModelItem;
-  identifier: string;
-  mobile?: boolean;
-}
-
-const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
+const Header = memo<{ mobile?: boolean }>(({ mobile: isMobile }) => {
+  const { identifier, releasedAt, displayName, type, abilities, contextWindowTokens } =
+    useDetailContext();
   const { styles, theme } = useStyles();
-  const { t } = useTranslation(['discover', 'models']);
+  const { mobile = isMobile } = useResponsive();
+  const { t } = useTranslation('models');
 
-  const releasedAt = data.meta.releasedAt;
   return (
-    <Flexbox gap={12} width={'100%'}>
-      {!mobile && <Back href={'/discover/models'} />}
-      <Flexbox align={'center'} gap={8} horizontal justify={'space-between'} width={'100%'}>
-        <Flexbox align={'center'} gap={16} horizontal justify={'flex-start'}>
-          <ModelIcon model={identifier} size={48} type={'avatar'} />
-          <Flexbox gap={2}>
-            <h1 className={styles.title}>{data.meta.title}</h1>
+    <Flexbox gap={12}>
+      <Flexbox align={'flex-start'} gap={16} horizontal width={'100%'}>
+        <ModelIcon model={identifier} size={mobile ? 48 : 64} />
+        <Flexbox
+          flex={1}
+          gap={4}
+          style={{
+            overflow: 'hidden',
+          }}
+        >
+          <Flexbox
+            align={'center'}
+            gap={8}
+            horizontal
+            justify={'space-between'}
+            style={{
+              overflow: 'hidden',
+              position: 'relative',
+            }}
+          >
             <Flexbox
               align={'center'}
+              flex={1}
               gap={12}
               horizontal
-              style={{ color: theme.colorTextSecondary }}
+              style={{
+                overflow: 'hidden',
+                position: 'relative',
+              }}
             >
-              <div>{identifier}</div>
-              {releasedAt && (
-                <time className={styles.time} dateTime={dayjs(releasedAt).toISOString()}>
-                  {releasedAt}
-                </time>
-              )}
+              <Text
+                as={'h1'}
+                ellipsis={{ rows: 1 }}
+                style={{ fontSize: mobile ? 18 : 24, margin: 0 }}
+                title={identifier}
+              >
+                {displayName || identifier}
+              </Text>
+            </Flexbox>
+            <Flexbox align={'center'} gap={6} horizontal>
+              {type && <ModelTypeIcon type={type} />}
             </Flexbox>
           </Flexbox>
-        </Flexbox>
-        {!mobile && (
-          <Flexbox align={'center'} gap={4} horizontal justify={'flex-end'}>
-            <Link href={'/discover/models'}>
-              <Button className={styles.tag} shape={'round'} size={'small'}>
-                {t('tab.models')}
-              </Button>
-            </Link>
+          <Flexbox align={'center'} gap={4} horizontal>
+            <span>{identifier}</span>
+            <Icon icon={DotIcon} />
+            <ModelInfoTags
+              contextWindowTokens={contextWindowTokens}
+              directionReverse
+              {...abilities}
+            />
+            <Icon icon={DotIcon} />
+            <PublishedTime
+              className={styles.time}
+              date={releasedAt as string}
+              template={'MMM DD, YYYY'}
+            />
           </Flexbox>
-        )}
+        </Flexbox>
       </Flexbox>
-      {data.meta.description && <div>{t(`${identifier}.description`, { ns: 'models' })}</div>}
-      <ModelInfoTags directionReverse {...data.meta} />
+      <div
+        style={{
+          color: theme.colorTextSecondary,
+        }}
+      >
+        {t(`${identifier}.description`)}
+      </div>
     </Flexbox>
   );
 });

@@ -89,7 +89,6 @@ export const getToolManifest = async (
   }
 
   // 2. 发送请求
-
   let data = await fetchJSON<LobeChatPluginManifest>(url, useProxy);
 
   // @ts-ignore
@@ -98,7 +97,6 @@ export const getToolManifest = async (
   if (data['description_for_model']) {
     data = convertOpenAIManifestToLobeManifest(data as any);
   }
-
   // 3. 校验插件文件格式规范
   const parser = pluginManifestSchema.safeParse(data);
 
@@ -115,6 +113,7 @@ export const getToolManifest = async (
 
       const convertor = new OpenAPIConvertor(openapiJson);
       const openAPIs = await convertor.convertOpenAPIToPluginSchema();
+
       data.api = [...data.api, ...openAPIs];
 
       data.settings = await convertor.convertAuthToSettingsSchema(data.settings);

@@ -12,6 +12,15 @@
     "tool_call": "도구 호출"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "자세한 내용은 편집 페이지에서 확인하세요",
+      "editBtn": "지금 편집",
+      "title": "이것은 사용자 정의 플러그인입니다"
+    },
+    "emptyState": {
+      "description": "이 플러그인을 설치한 후 플러그인 기능과 설정 옵션을 확인하세요",
+      "title": "설치 후 플러그인 세부 정보 보기"
+    },
     "info": {
       "description": "API 설명",
       "name": "API 이름"
@@ -230,6 +239,50 @@
     },
     "title": "로컬 파일"
   },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "설치 환경 확인 중...",
+    "COMPLETED": "설치 완료",
+    "CONFIGURATION_REQUIRED": "관련 구성을 완료한 후 설치를 계속 진행하세요",
+    "ERROR": "설치 오류",
+    "FETCHING_MANIFEST": "플러그인 설명 파일 가져오는 중...",
+    "GETTING_SERVER_MANIFEST": "MCP 서버 초기화 중...",
+    "INSTALLING_PLUGIN": "플러그인 설치 중...",
+    "configurationDescription": "이 MCP 플러그인은 정상 작동을 위해 구성 매개변수가 필요합니다. 필수 구성 정보를 입력하세요.",
+    "configurationRequired": "플러그인 매개변수 구성",
+    "continueInstall": "설치 계속하기",
+    "dependenciesDescription": "이 플러그인은 정상 작동을 위해 다음 시스템 종속 항목 설치가 필요합니다. 안내에 따라 누락된 종속 항목을 설치한 후 다시 확인하여 설치를 계속 진행하세요.",
+    "dependenciesRequired": "플러그인 시스템 종속 항목을 설치하세요",
+    "dependencyStatus": {
+      "installed": "설치됨",
+      "notInstalled": "설치되지 않음",
+      "requiredVersion": "필요 버전: {{version}}"
+    },
+    "errorDetails": {
+      "args": "매개변수",
+      "command": "명령어",
+      "connectionParams": "연결 매개변수",
+      "env": "환경 변수",
+      "errorOutput": "오류 로그",
+      "exitCode": "종료 코드",
+      "hideDetails": "세부 정보 숨기기",
+      "originalError": "원본 오류",
+      "showDetails": "세부 정보 보기"
+    },
+    "errorTypes": {
+      "CONNECTION_FAILED": "연결 실패",
+      "INITIALIZATION_TIMEOUT": "초기화 시간 초과",
+      "PROCESS_SPAWN_ERROR": "프로세스 시작 실패",
+      "UNKNOWN_ERROR": "알 수 없는 오류",
+      "VALIDATION_ERROR": "매개변수 검증 실패"
+    },
+    "installError": "MCP 플러그인 설치 실패, 실패 원인: {{detail}}",
+    "installMethods": {
+      "manual": "수동 설치:",
+      "recommended": "권장 설치 방법:"
+    },
+    "recheckDependencies": "다시 확인",
+    "skipDependencies": "확인 건너뛰기"
+  },
   "pluginList": "플러그인 목록",
   "search": {
     "apiName": {
@@ -266,16 +319,48 @@
   },
   "setting": "플러그인 설정",
   "settings": {
+    "capabilities": {
+      "prompts": "프롬프트",
+      "resources": "리소스",
+      "title": "플러그인 기능",
+      "tools": "도구"
+    },
+    "configuration": {
+      "title": "플러그인 구성"
+    },
+    "connection": {
+      "args": "시작 매개변수",
+      "command": "시작 명령어",
+      "title": "연결 정보",
+      "type": "연결 유형",
+      "url": "서비스 주소"
+    },
+    "edit": "편집",
+    "envConfigDescription": "이 구성은 MCP 서버 시작 시 환경 변수로 프로세스에 전달됩니다",
+    "httpTypeNotice": "HTTP 유형의 MCP 플러그인은 현재 구성할 환경 변수가 없습니다",
     "indexUrl": {
       "title": "마켓 인덱스",
       "tooltip": "온라인 편집은 지원되지 않습니다. 배포 환경 변수를 통해 설정해주세요."
     },
+    "messages": {
+      "connectionUpdateFailed": "연결 정보 업데이트 실패",
+      "connectionUpdateSuccess": "연결 정보 업데이트 성공",
+      "envUpdateFailed": "환경 변수 저장 실패",
+      "envUpdateSuccess": "환경 변수 저장 성공"
+    },
     "modalDesc": "플러그인 마켓의 주소를 구성하면 사용자 정의 플러그인 마켓을 사용할 수 있습니다.",
+    "rules": {
+      "argsRequired": "시작 매개변수를 입력하세요",
+      "commandRequired": "시작 명령어를 입력하세요",
+      "urlRequired": "서비스 주소를 입력하세요"
+    },
+    "saveSettings": "설정 저장",
     "title": "플러그인 마켓 설정"
   },
   "showInPortal": "작업 영역에서 자세히 확인하세요",
   "store": {
     "actions": {
+      "cancel": "설치 취소",
       "confirmUninstall": "이 플러그인을 제거하려고 합니다. 제거하면 플러그인 구성이 지워지므로 작업을 확인하세요.",
       "detail": "상세정보",
       "install": "설치",
@@ -286,13 +371,15 @@
     "communityPlugin": "커뮤니티 플러그인",
     "customPlugin": "사용자 정의 플러그인",
     "empty": "설치된 플러그인이 없습니다",
+    "emptySelectHint": "플러그인을 선택하여 자세한 정보를 미리보기 하세요",
     "installAllPlugins": "모두 설치",
     "networkError": "플러그인 스토어를 가져오는 데 실패했습니다. 네트워크 연결을 확인한 후 다시 시도하십시오",
     "placeholder": "플러그인 이름 또는 키워드를 검색하세요...",
     "releasedAt": "{{createdAt}}에 출시",
     "tabs": {
-      "all": "모두",
-      "installed": "설치됨"
+      "installed": "설치됨",
+      "mcp": "MCP 플러그인",
+      "old": "LobeChat 플러그인"
     },
     "title": "플러그인 스토어"
   },

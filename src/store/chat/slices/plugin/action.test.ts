@@ -1,5 +1,4 @@
 import { act, renderHook } from '@testing-library/react';
-import { Md5 } from 'ts-md5';
 import { Mock, afterEach, describe, expect, it, vi } from 'vitest';
 
 import { LOADING_FLAT } from '@/const/message';
@@ -10,8 +9,8 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { useChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { useToolStore } from '@/store/tool';
-import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage, ChatToolPayload, MessageToolCall } from '@/types/message';
+import { genToolCallShortMD5Hash } from '@/utils/toolCall';
 
 const invokeStandaloneTypePlugin = useChatStore.getState().invokeStandaloneTypePlugin;
 
@@ -1045,7 +1044,7 @@ describe('ChatPluginAction', () => {
 
     it('should handle MD5 hashed API names', () => {
       const apiName = 'testApi';
-      const md5Hash = Md5.hashStr(apiName);
+      const md5Hash = genToolCallShortMD5Hash(apiName);
       const toolCalls: MessageToolCall[] = [
         {
           id: 'tool1',

@@ -1,61 +1,35 @@
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import {
-  DiscoverAssistantItem,
-  DiscoverModelItem,
-  DiscoverPlugintem,
-  DiscoverProviderItem,
+  DiscoverAssistantDetail,
+  DiscoverModelDetail,
+  DiscoverPluginDetail,
+  DiscoverProviderDetail,
 } from '@/types/discover';
 
 const DEFAULT_CREATED_AT = new Date().toISOString();
 
-export const DEFAULT_DISCOVER_ASSISTANT_ITEM: Partial<DiscoverAssistantItem> = {
+export const DEFAULT_DISCOVER_ASSISTANT_ITEM: Partial<DiscoverAssistantDetail> = {
   author: '',
   config: DEFAULT_AGENT_CONFIG,
   createdAt: DEFAULT_CREATED_AT,
   homepage: '',
   identifier: '',
-  schemaVersion: 1,
-  socialData: {
-    conversations: 0,
-    likes: 0,
-    users: 0,
-  },
 };
 
-export const DEFAULT_DISCOVER_PLUGIN_ITEM: Partial<DiscoverPlugintem> = {
+export const DEFAULT_DISCOVER_PLUGIN_ITEM: Partial<DiscoverPluginDetail> = {
   author: '',
   createdAt: DEFAULT_CREATED_AT,
   homepage: '',
   identifier: '',
   schemaVersion: 1,
-  socialData: {
-    called: 0,
-    executionTime: 0,
-    likes: 0,
-    relatedAssistants: 0,
-    successRate: 1,
-    users: 0,
-  },
 };
 
-export const DEFAULT_DISCOVER_MODEL_ITEM: Partial<DiscoverModelItem> = {
-  createdAt: DEFAULT_CREATED_AT,
+export const DEFAULT_DISCOVER_MODEL_ITEM: Partial<DiscoverModelDetail> = {
   identifier: '',
   providers: [],
-  socialData: {
-    conversations: 0,
-    likes: 0,
-    tokens: 0,
-  },
 };
 
-export const DEFAULT_DISCOVER_PROVIDER_ITEM: Partial<DiscoverProviderItem> = {
-  createdAt: DEFAULT_CREATED_AT,
+export const DEFAULT_DISCOVER_PROVIDER_ITEM: Partial<DiscoverProviderDetail> = {
   identifier: '',
   models: [],
-  socialData: {
-    conversations: 0,
-    likes: 0,
-    users: 0,
-  },
 };

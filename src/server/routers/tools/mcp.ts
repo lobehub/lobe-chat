@@ -68,6 +68,28 @@ export const mcpRouter = router({
       return await mcpService.listTools(input);
     }),
 
+  // listResources now accepts MCPClientParams directly
+  listResources: mcpProcedure
+    .input(mcpClientParamsSchema) // Use the unified schema
+    .query(async ({ input }) => {
+      // Stdio check can be done here or rely on the service/client layer
+      checkStdioEnvironment(input);
+
+      // Pass the validated MCPClientParams to the service
+      return await mcpService.listResources(input);
+    }),
+
+  // listPrompts now accepts MCPClientParams directly
+  listPrompts: mcpProcedure
+    .input(mcpClientParamsSchema) // Use the unified schema
+    .query(async ({ input }) => {
+      // Stdio check can be done here or rely on the service/client layer
+      checkStdioEnvironment(input);
+
+      // Pass the validated MCPClientParams to the service
+      return await mcpService.listPrompts(input);
+    }),
+
   // callTool now accepts MCPClientParams, toolName, and args
   callTool: mcpProcedure
     .input(

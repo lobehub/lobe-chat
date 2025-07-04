@@ -12,6 +12,15 @@
     "tool_call": "Tool-oproepverzoek"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "Ga naar de bewerkingspagina voor meer details",
+      "editBtn": "Nu bewerken",
+      "title": "Dit is een aangepaste plugin"
+    },
+    "emptyState": {
+      "description": "Installeer deze plug-in eerst om de mogelijkheden en configuratieopties te bekijken",
+      "title": "Bekijk plug-in details na installatie"
+    },
     "info": {
       "description": "API-beschrijving",
       "name": "API-naam"
@@ -230,6 +239,50 @@
     },
     "title": "Lokale bestanden"
   },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "Installatieomgeving controleren...",
+    "COMPLETED": "Installatie voltooid",
+    "CONFIGURATION_REQUIRED": "Voltooi de configuratie voordat u doorgaat met de installatie",
+    "ERROR": "Installatiefout",
+    "FETCHING_MANIFEST": "Plugin manifest ophalen...",
+    "GETTING_SERVER_MANIFEST": "MCP-server initialiseren...",
+    "INSTALLING_PLUGIN": "Plugin wordt geïnstalleerd...",
+    "configurationDescription": "Deze MCP-plugin vereist configuratieparameters om correct te functioneren. Vul de benodigde configuratiegegevens in.",
+    "configurationRequired": "Pluginparameters configureren",
+    "continueInstall": "Installatie voortzetten",
+    "dependenciesDescription": "Deze plugin vereist de installatie van de volgende systeemafhankelijkheden om correct te werken. Installeer de ontbrekende afhankelijkheden volgens de instructies en klik vervolgens op 'Opnieuw controleren' om door te gaan met de installatie.",
+    "dependenciesRequired": "Installeer de systeemafhankelijkheden van de plugin",
+    "dependencyStatus": {
+      "installed": "Geïnstalleerd",
+      "notInstalled": "Niet geïnstalleerd",
+      "requiredVersion": "Vereiste versie: {{version}}"
+    },
+    "errorDetails": {
+      "args": "Parameters",
+      "command": "Opdracht",
+      "connectionParams": "Verbindingsparameters",
+      "env": "Omgevingsvariabelen",
+      "errorOutput": "Foutlogboek",
+      "exitCode": "Exitcode",
+      "hideDetails": "Details verbergen",
+      "originalError": "Oorspronkelijke fout",
+      "showDetails": "Details weergeven"
+    },
+    "errorTypes": {
+      "CONNECTION_FAILED": "Verbinding mislukt",
+      "INITIALIZATION_TIMEOUT": "Initialisatie time-out",
+      "PROCESS_SPAWN_ERROR": "Proces starten mislukt",
+      "UNKNOWN_ERROR": "Onbekende fout",
+      "VALIDATION_ERROR": "Parametervalidatie mislukt"
+    },
+    "installError": "MCP-plugin installatie mislukt, reden: {{detail}}",
+    "installMethods": {
+      "manual": "Handmatige installatie:",
+      "recommended": "Aanbevolen installatiemethode:"
+    },
+    "recheckDependencies": "Opnieuw controleren",
+    "skipDependencies": "Controle overslaan"
+  },
   "pluginList": "Lijst met plugins",
   "search": {
     "apiName": {
@@ -266,16 +319,48 @@
   },
   "setting": "Plugin-instellingen",
   "settings": {
+    "capabilities": {
+      "prompts": "Promptwoorden",
+      "resources": "Middelen",
+      "title": "Pluginmogelijkheden",
+      "tools": "Hulpmiddelen"
+    },
+    "configuration": {
+      "title": "Pluginconfiguratie"
+    },
+    "connection": {
+      "args": "Startparameters",
+      "command": "Startopdracht",
+      "title": "Verbindingsinformatie",
+      "type": "Verbindingstype",
+      "url": "Serviceadres"
+    },
+    "edit": "Bewerken",
+    "envConfigDescription": "Deze configuraties worden als omgevingsvariabelen doorgegeven aan het proces bij het opstarten van de MCP-server",
+    "httpTypeNotice": "HTTP-type MCP-plugins hebben momenteel geen omgevingsvariabelen die geconfigureerd moeten worden",
     "indexUrl": {
       "title": "Marktindex",
       "tooltip": "Online bewerken wordt momenteel niet ondersteund. Stel in via omgevingsvariabelen tijdens implementatie."
     },
+    "messages": {
+      "connectionUpdateFailed": "Bijwerken van verbindingsinformatie mislukt",
+      "connectionUpdateSuccess": "Verbindingsinformatie succesvol bijgewerkt",
+      "envUpdateFailed": "Opslaan van omgevingsvariabelen mislukt",
+      "envUpdateSuccess": "Omgevingsvariabelen succesvol opgeslagen"
+    },
     "modalDesc": "Na het instellen van de marktlocatie voor plugins, kunt u een aangepaste pluginmarkt gebruiken.",
+    "rules": {
+      "argsRequired": "Voer opstartparameters in",
+      "commandRequired": "Voer het opstartcommando in",
+      "urlRequired": "Voer het serviceadres in"
+    },
+    "saveSettings": "Instellingen opslaan",
     "title": "Instellingen voor pluginmarkt"
   },
   "showInPortal": "Gelieve de details in het portaal te bekijken",
   "store": {
     "actions": {
+      "cancel": "Installatie annuleren",
       "confirmUninstall": "Deze plugin wordt binnenkort verwijderd. Na verwijdering worden de configuraties gewist. Weet u zeker dat u door wilt gaan?",
       "detail": "Details",
       "install": "Installeren",
@@ -286,13 +371,15 @@
     "communityPlugin": "Community",
     "customPlugin": "Aangepast",
     "empty": "Geen geïnstalleerde plugins beschikbaar",
+    "emptySelectHint": "Selecteer een plugin om details te bekijken",
     "installAllPlugins": "Allemaal installeren",
     "networkError": "Kan de pluginwinkel niet laden. Controleer de netwerkverbinding en probeer het opnieuw.",
     "placeholder": "Zoek plugin op naam, beschrijving of trefwoord...",
     "releasedAt": "Uitgebracht op {{createdAt}}",
     "tabs": {
-      "all": "Alle",
-      "installed": "Geïnstalleerd"
+      "installed": "Geïnstalleerd",
+      "mcp": "MCP-plug-in",
+      "old": "LobeChat-plugin"
     },
     "title": "Pluginwinkel"
   },

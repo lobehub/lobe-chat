@@ -12,6 +12,15 @@
     "tool_call": "ツール呼び出し"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "詳細は編集ページでご確認ください",
+      "editBtn": "今すぐ編集",
+      "title": "これはカスタムプラグインです"
+    },
+    "emptyState": {
+      "description": "このプラグインをインストールしてから、プラグインの機能と設定オプションを確認してください",
+      "title": "インストール後にプラグインの詳細を表示"
+    },
     "info": {
       "description": "API 説明",
       "name": "API 名"
@@ -230,6 +239,50 @@
     },
     "title": "ローカルファイル"
   },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "インストール環境を確認しています...",
+    "COMPLETED": "インストール完了",
+    "CONFIGURATION_REQUIRED": "関連設定を完了してからインストールを続行してください",
+    "ERROR": "インストールエラー",
+    "FETCHING_MANIFEST": "プラグインマニフェストを取得しています...",
+    "GETTING_SERVER_MANIFEST": "MCPサーバーを初期化しています...",
+    "INSTALLING_PLUGIN": "プラグインをインストールしています...",
+    "configurationDescription": "このMCPプラグインは正常に動作するために設定パラメータが必要です。必要な設定情報を入力してください。",
+    "configurationRequired": "プラグインパラメータの設定が必要です",
+    "continueInstall": "インストールを続行",
+    "dependenciesDescription": "このプラグインは正常に動作するために以下のシステム依存関係のインストールが必要です。指示に従って不足している依存関係をインストールし、再確認をクリックしてインストールを続行してください。",
+    "dependenciesRequired": "プラグインのシステム依存関係をインストールしてください",
+    "dependencyStatus": {
+      "installed": "インストール済み",
+      "notInstalled": "未インストール",
+      "requiredVersion": "必要なバージョン: {{version}}"
+    },
+    "errorDetails": {
+      "args": "引数",
+      "command": "コマンド",
+      "connectionParams": "接続パラメータ",
+      "env": "環境変数",
+      "errorOutput": "エラーログ",
+      "exitCode": "終了コード",
+      "hideDetails": "詳細を隠す",
+      "originalError": "元のエラー",
+      "showDetails": "詳細を表示"
+    },
+    "errorTypes": {
+      "CONNECTION_FAILED": "接続失敗",
+      "INITIALIZATION_TIMEOUT": "初期化タイムアウト",
+      "PROCESS_SPAWN_ERROR": "プロセス起動失敗",
+      "UNKNOWN_ERROR": "不明なエラー",
+      "VALIDATION_ERROR": "パラメータ検証失敗"
+    },
+    "installError": "MCPプラグインのインストールに失敗しました。原因：{{detail}}",
+    "installMethods": {
+      "manual": "手動インストール:",
+      "recommended": "推奨インストール方法:"
+    },
+    "recheckDependencies": "再確認",
+    "skipDependencies": "チェックをスキップ"
+  },
   "pluginList": "プラグインリスト",
   "search": {
     "apiName": {
@@ -266,16 +319,48 @@
   },
   "setting": "プラグインの設定",
   "settings": {
+    "capabilities": {
+      "prompts": "プロンプト",
+      "resources": "リソース",
+      "title": "プラグイン機能",
+      "tools": "ツール"
+    },
+    "configuration": {
+      "title": "プラグイン設定"
+    },
+    "connection": {
+      "args": "起動引数",
+      "command": "起動コマンド",
+      "title": "接続情報",
+      "type": "接続タイプ",
+      "url": "サービスアドレス"
+    },
+    "edit": "編集",
+    "envConfigDescription": "これらの設定は MCP サーバー起動時に環境変数としてプロセスに渡されます",
+    "httpTypeNotice": "HTTP タイプの MCP プラグインには現在設定が必要な環境変数はありません",
     "indexUrl": {
       "title": "マーケットインデックス",
       "tooltip": "オンライン編集は現在サポートされていません。デプロイ時の環境変数を使用して設定してください"
     },
+    "messages": {
+      "connectionUpdateFailed": "接続情報の更新に失敗しました",
+      "connectionUpdateSuccess": "接続情報が正常に更新されました",
+      "envUpdateFailed": "環境変数の保存に失敗しました",
+      "envUpdateSuccess": "環境変数が正常に保存されました"
+    },
     "modalDesc": "プラグインマーケットのアドレスを設定すると、カスタムのプラグインマーケットを使用できます",
+    "rules": {
+      "argsRequired": "起動パラメータを入力してください",
+      "commandRequired": "起動コマンドを入力してください",
+      "urlRequired": "サービスアドレスを入力してください"
+    },
+    "saveSettings": "設定を保存",
     "title": "プラグインマーケットの設定"
   },
   "showInPortal": "詳細はワークスペースで表示してください",
   "store": {
     "actions": {
+      "cancel": "インストールをキャンセル",
       "confirmUninstall": "このプラグインをアンインストールします。アンインストール後、プラグインの設定がクリアされます。操作を確認してください。",
       "detail": "詳細",
       "install": "インストール",
@@ -286,13 +371,15 @@
     "communityPlugin": "コミュニティプラグイン",
     "customPlugin": "カスタムプラグイン",
     "empty": "インストールされたプラグインはありません",
+    "emptySelectHint": "プラグインを選択して詳細情報をプレビューしてください",
     "installAllPlugins": "すべてのプラグインをインストール",
     "networkError": "プラグインストアの取得に失敗しました。ネットワーク接続を確認してから再試行してください",
     "placeholder": "プラグイン名、説明、またはキーワードで検索...",
     "releasedAt": "{{createdAt}} にリリース",
     "tabs": {
-      "all": "すべて",
-      "installed": "インストール済み"
+      "installed": "インストール済み",
+      "mcp": "MCPプラグイン",
+      "old": "LobeChatプラグイン"
     },
     "title": "プラグインストア"
   },

@@ -1,6 +1,8 @@
 import { LobeChatPluginManifest, LobeChatPluginMeta } from '@lobehub/chat-plugin-sdk';
 import { describe, expect, it } from 'vitest';
 
+import { DiscoverPluginItem } from '@/types/discover';
+
 import { initialState } from '../../initialState';
 import { ToolStoreState } from '../../initialState';
 import { pluginSelectors } from './selectors';
@@ -39,14 +41,15 @@ const mockState = {
       type: 'customPlugin',
     },
   ],
-  pluginStoreList: [
+  oldPluginItems: [
     {
       identifier: 'plugin-1',
       author: 'Author 1',
       createdAt: '2021-01-01',
-      meta: { avatar: 'avatar-url-1', title: 'Plugin 1' },
+      avatar: 'avatar-url-1',
+      title: 'Plugin 1',
       homepage: 'http://homepage-1.com',
-    } as LobeChatPluginMeta,
+    } as DiscoverPluginItem,
     {
       identifier: 'plugin-2',
       author: 'Author 2',
@@ -68,7 +71,11 @@ describe('pluginSelectors', () => {
   describe('getPluginMetaById', () => {
     it('should return the plugin metadata by id', () => {
       const result = pluginSelectors.getPluginMetaById('plugin-1')(mockState);
-      expect(result).toEqual(mockState.pluginStoreList[0].meta);
+      const item = mockState.oldPluginItems[0];
+      expect(result).toEqual({
+        title: item.title,
+        avatar: item.avatar,
+      });
     });
   });
 
@@ -182,6 +189,7 @@ describe('pluginSelectors', () => {
         identifier: p.identifier,
         meta: pluginSelectors.getPluginMetaById(p.identifier)(mockState),
         type: p.type,
+        ...pluginSelectors.getPluginMetaById(p.identifier)(mockState),
       }));
       expect(result).toEqual(expectedMetaList);
     });

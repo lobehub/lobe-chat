@@ -4,13 +4,13 @@ import { ArrowRight, Store, ToyBrick } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import PluginAvatar from '@/features/PluginStore/PluginItem/PluginAvatar';
+import PluginAvatar from '@/components/Plugins/PluginAvatar';
 import { useCheckPluginsIsInstalled } from '@/hooks/useCheckPluginsIsInstalled';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
-import { pluginHelpers, useToolStore } from '@/store/tool';
+import { useToolStore } from '@/store/tool';
 import { builtinToolSelectors, pluginSelectors } from '@/store/tool/selectors';
 
 import ToolItem from './ToolItem';
@@ -69,8 +69,8 @@ export const useControls = ({
     },
     {
       children: list.map((item) => ({
-        icon: item.meta?.avatar ? (
-          <PluginAvatar avatar={pluginHelpers.getPluginAvatar(item.meta)} size={20} />
+        icon: item?.avatar ? (
+          <PluginAvatar avatar={item.avatar} size={20} />
         ) : (
           <Icon icon={ToyBrick} size={20} />
         ),
@@ -79,7 +79,7 @@ export const useControls = ({
           <ToolItem
             checked={checked.includes(item.identifier)}
             id={item.identifier}
-            label={pluginHelpers.getPluginTitle(item?.meta)}
+            label={item.title}
             onUpdate={async () => {
               setUpdating(true);
               await togglePlugin(item.identifier);

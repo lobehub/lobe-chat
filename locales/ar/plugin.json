@@ -12,6 +12,15 @@
     "tool_call": "طلب استدعاء الأداة"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "يرجى الانتقال إلى صفحة التحرير لمشاهدة التفاصيل",
+      "editBtn": "حرر الآن",
+      "title": "هذه إضافة مخصصة"
+    },
+    "emptyState": {
+      "description": "يرجى تثبيت هذه الإضافة أولاً لعرض قدرات الإضافة وخيارات التكوين",
+      "title": "عرض تفاصيل الإضافة بعد التثبيت"
+    },
     "info": {
       "description": "وصف واجهة برمجة التطبيقات",
       "name": "اسم واجهة برمجة التطبيقات"
@@ -230,6 +239,50 @@
     },
     "title": "الملفات المحلية"
   },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "جارٍ فحص بيئة التثبيت...",
+    "COMPLETED": "اكتمل التثبيت",
+    "CONFIGURATION_REQUIRED": "يرجى إكمال التكوينات المطلوبة للمتابعة في التثبيت",
+    "ERROR": "خطأ في التثبيت",
+    "FETCHING_MANIFEST": "جارٍ جلب ملف وصف الإضافة...",
+    "GETTING_SERVER_MANIFEST": "جارٍ تهيئة خادم MCP...",
+    "INSTALLING_PLUGIN": "جارٍ تثبيت الإضافة...",
+    "configurationDescription": "تتطلب هذه الإضافة من MCP إعداد معلمات لتعمل بشكل صحيح، يرجى ملء المعلومات الضرورية.",
+    "configurationRequired": "تكوين معلمات الإضافة",
+    "continueInstall": "متابعة التثبيت",
+    "dependenciesDescription": "تتطلب هذه الإضافة تثبيت الاعتمادات النظامية التالية لتعمل بشكل صحيح، يرجى تثبيت الاعتمادات المفقودة حسب التعليمات ثم النقر على إعادة الفحص للمتابعة.",
+    "dependenciesRequired": "يرجى تثبيت الاعتمادات النظامية للإضافة",
+    "dependencyStatus": {
+      "installed": "مثبّت",
+      "notInstalled": "غير مثبّت",
+      "requiredVersion": "الإصدار المطلوب: {{version}}"
+    },
+    "errorDetails": {
+      "args": "المعطيات",
+      "command": "الأمر",
+      "connectionParams": "معلمات الاتصال",
+      "env": "متغيرات البيئة",
+      "errorOutput": "سجل الأخطاء",
+      "exitCode": "رمز الخروج",
+      "hideDetails": "إخفاء التفاصيل",
+      "originalError": "الخطأ الأصلي",
+      "showDetails": "عرض التفاصيل"
+    },
+    "errorTypes": {
+      "CONNECTION_FAILED": "فشل الاتصال",
+      "INITIALIZATION_TIMEOUT": "انتهت مهلة التهيئة",
+      "PROCESS_SPAWN_ERROR": "فشل بدء العملية",
+      "UNKNOWN_ERROR": "خطأ غير معروف",
+      "VALIDATION_ERROR": "فشل التحقق من المعطيات"
+    },
+    "installError": "فشل تثبيت إضافة MCP، سبب الفشل: {{detail}}",
+    "installMethods": {
+      "manual": "التثبيت اليدوي:",
+      "recommended": "طريقة التثبيت الموصى بها:"
+    },
+    "recheckDependencies": "إعادة فحص",
+    "skipDependencies": "تخطي الفحص"
+  },
   "pluginList": "قائمة الإضافات",
   "search": {
     "apiName": {
@@ -266,16 +319,48 @@
   },
   "setting": "إعدادات الإضافة",
   "settings": {
+    "capabilities": {
+      "prompts": "نصوص التوجيه",
+      "resources": "الموارد",
+      "title": "قدرات الإضافة",
+      "tools": "الأدوات"
+    },
+    "configuration": {
+      "title": "تكوين الإضافة"
+    },
+    "connection": {
+      "args": "معطيات التشغيل",
+      "command": "أمر التشغيل",
+      "title": "معلومات الاتصال",
+      "type": "نوع الاتصال",
+      "url": "عنوان الخدمة"
+    },
+    "edit": "تحرير",
+    "envConfigDescription": "سيتم تمرير هذه الإعدادات كمتغيرات بيئية إلى العملية عند بدء تشغيل خادم MCP",
+    "httpTypeNotice": "لا توجد متغيرات بيئية تحتاج إلى التكوين لإضافات MCP من نوع HTTP",
     "indexUrl": {
       "title": "فهرس السوق",
       "tooltip": "غير مدعوم حاليا للتحرير عبر الإنترنت، يرجى ضبطه عند نشر المتغيرات البيئية"
     },
+    "messages": {
+      "connectionUpdateFailed": "فشل تحديث معلومات الاتصال",
+      "connectionUpdateSuccess": "تم تحديث معلومات الاتصال بنجاح",
+      "envUpdateFailed": "فشل حفظ متغيرات البيئة",
+      "envUpdateSuccess": "تم حفظ متغيرات البيئة بنجاح"
+    },
     "modalDesc": "بعد ضبط عنوان سوق الإضافات، يمكن استخدام سوق الإضافات المخصص",
+    "rules": {
+      "argsRequired": "يرجى إدخال معلمات التشغيل",
+      "commandRequired": "يرجى إدخال أمر التشغيل",
+      "urlRequired": "يرجى إدخال عنوان الخدمة"
+    },
+    "saveSettings": "حفظ الإعدادات",
     "title": "ضبط سوق الإضافات"
   },
   "showInPortal": "يرجى الاطلاع على التفاصيل في مساحة العمل",
   "store": {
     "actions": {
+      "cancel": "إلغاء التثبيت",
       "confirmUninstall": "سيتم إلغاء تثبيت الإضافة، وسيتم مسح تكوين الإضافة، يرجى تأكيد العملية",
       "detail": "التفاصيل",
       "install": "تثبيت",
@@ -286,13 +371,15 @@
     "communityPlugin": "مجتمع ثالث",
     "customPlugin": "مخصص",
     "empty": "لا توجد إضافات مثبتة حاليا",
+    "emptySelectHint": "اختر إضافة لمعاينة التفاصيل",
     "installAllPlugins": "تثبيت الكل",
     "networkError": "فشل الحصول على متجر الإضافات، يرجى التحقق من الاتصال بالشبكة وإعادة المحاولة",
     "placeholder": "ابحث عن اسم الإضافة أو الكلمات الرئيسية...",
     "releasedAt": "صدر في {{createdAt}}",
     "tabs": {
-      "all": "الكل",
-      "installed": "مثبتة"
+      "installed": "مثبتة",
+      "mcp": "إضافة MCP",
+      "old": "إضافة LobeChat"
     },
     "title": "متجر الإضافات"
   },

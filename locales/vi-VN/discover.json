@@ -10,13 +10,57 @@
     },
     "description": "Giới thiệu trợ lý",
     "detail": "Chi tiết",
+    "details": {
+      "capabilities": {
+        "knowledge": {
+          "desc": "Trợ lý được tích hợp các kho tri thức sau, giúp bạn trả lời nhiều câu hỏi hơn.",
+          "title": "Kho tri thức"
+        },
+        "plugin": {
+          "desc": "Trợ lý được tích hợp các plugin sau, giúp bạn hoàn thành nhiều nhiệm vụ hơn.",
+          "title": "Plugin tích hợp"
+        },
+        "title": "Khả năng của trợ lý"
+      },
+      "overview": {
+        "example": "Trình diễn trợ lý",
+        "title": "Tổng quan"
+      },
+      "related": {
+        "listTitle": "Trợ lý liên quan",
+        "more": "Xem thêm",
+        "title": "Gợi ý liên quan"
+      },
+      "sidebar": {
+        "toc": "Mục lục"
+      },
+      "summary": {
+        "title": "Bạn có thể làm gì với trợ lý này?"
+      },
+      "systemRole": {
+        "openingMessage": "Tin nhắn mở đầu",
+        "openingQuestions": "Câu hỏi mở đầu",
+        "title": "Cài đặt trợ lý"
+      }
+    },
     "list": "Danh sách trợ lý",
     "more": "Thêm",
     "plugins": "Tích hợp plugin",
     "recentSubmits": "Cập nhật gần đây",
+    "sorts": {
+      "createdAt": "Mới phát hành",
+      "identifier": "ID trợ lý",
+      "knowledgeCount": "Số kho tri thức",
+      "pluginCount": "Số plugin",
+      "title": "Tên trợ lý",
+      "tokenUsage": "Lượng Token sử dụng"
+    },
     "suggestions": "Gợi ý liên quan",
     "systemRole": "Cài đặt trợ lý",
-    "try": "Thử ngay"
+    "tokenUsage": "Lượng Token sử dụng cho lời nhắc trợ lý",
+    "try": "Thử ngay",
+    "withKnowledge": "Trợ lý này đi kèm kho tri thức",
+    "withPlugin": "Trợ lý này đi kèm plugin"
   },
   "back": "Quay lại khám phá",
   "category": {
@@ -41,6 +85,7 @@
       "all": "Tất cả",
       "gaming-entertainment": "Giải trí trò chơi",
       "life-style": "Phong cách sống",
+      "lifestyle": "Lối sống",
       "media-generate": "Tạo nội dung truyền thông",
       "science-education": "Khoa học và giáo dục",
       "social": "Mạng xã hội",
@@ -102,10 +147,368 @@
     "featuredTools": "Plugin nổi bật",
     "more": "Khám phá thêm"
   },
+  "isClaimed": "Đã nhận",
+  "isFeatured": "Đề xuất",
+  "isOfficial": "Chính thức",
   "like": "Thích",
+  "mcp": {
+    "categories": {
+      "all": {
+        "description": "Tất cả MCP Servers",
+        "name": "Tất cả"
+      },
+      "business": {
+        "description": "Dịch vụ kinh doanh và doanh nghiệp",
+        "name": "Dịch vụ kinh doanh"
+      },
+      "developer": {
+        "description": "Công cụ và dịch vụ liên quan đến phát triển",
+        "name": "Công cụ phát triển"
+      },
+      "gaming-entertainment": {
+        "description": "Trò chơi, giải trí và hoạt động thư giãn",
+        "name": "Giải trí trò chơi"
+      },
+      "health-wellness": {
+        "description": "Sức khỏe, thể dục và chăm sóc tinh thần",
+        "name": "Sức khỏe và chăm sóc"
+      },
+      "lifestyle": {
+        "description": "Lối sống cá nhân, thói quen và hoạt động hàng ngày",
+        "name": "Lối sống"
+      },
+      "media-generate": {
+        "description": "Tạo, chỉnh sửa và xử lý phương tiện truyền thông",
+        "name": "Tạo phương tiện"
+      },
+      "news": {
+        "description": "Tổng hợp tin tức, báo cáo và dịch vụ thông tin",
+        "name": "Tin tức và thông tin"
+      },
+      "productivity": {
+        "description": "Quản lý công việc, ghi chú và công cụ hiệu suất",
+        "name": "Công cụ hiệu suất"
+      },
+      "science-education": {
+        "description": "Nghiên cứu khoa học, học tập và công cụ giáo dục",
+        "name": "Khoa học và giáo dục"
+      },
+      "social": {
+        "description": "Mạng xã hội và giao tiếp",
+        "name": "Mạng xã hội"
+      },
+      "stocks-finance": {
+        "description": "Thị trường tài chính, giao dịch và đầu tư",
+        "name": "Chứng khoán và tài chính"
+      },
+      "tools": {
+        "description": "Công cụ và dịch vụ tiện ích chung",
+        "name": "Công cụ tiện ích"
+      },
+      "travel-transport": {
+        "description": "Lập kế hoạch du lịch và phương tiện đi lại",
+        "name": "Du lịch và giao thông"
+      },
+      "weather": {
+        "description": "Dự báo thời tiết và dịch vụ khí tượng",
+        "name": "Thời tiết và khí tượng"
+      },
+      "web-search": {
+        "description": "Tìm kiếm web và truy xuất thông tin",
+        "name": "Tìm kiếm thông tin"
+      }
+    },
+    "details": {
+      "connectionType": {
+        "hybrid": {
+          "desc": "Dịch vụ này có thể chạy cả trên thiết bị cục bộ hoặc trên đám mây tùy theo cấu hình hoặc tình huống sử dụng, có khả năng vận hành kép.",
+          "title": "Dịch vụ hỗn hợp"
+        },
+        "local": {
+          "desc": "Máy chủ này chỉ chạy trên thiết bị cục bộ của khách hàng, cần cài đặt và phụ thuộc vào tài nguyên cục bộ.",
+          "title": "Dịch vụ cục bộ"
+        },
+        "remote": {
+          "desc": "Máy chủ này được lưu trữ và vận hành từ xa, chủ yếu dựa vào dịch vụ từ xa, không phụ thuộc môi trường cục bộ.",
+          "title": "Dịch vụ đám mây"
+        }
+      },
+      "deployment": {
+        "args": "Tham số",
+        "checkCommand": "Lệnh kiểm tra",
+        "command": "Lệnh",
+        "commandLine": "Phụ thuộc hệ thống",
+        "connection": "Phương thức kết nối",
+        "connectionType": "Loại kết nối",
+        "description": "Cách cài đặt và triển khai plugin",
+        "descriptionPlaceholder": "Mô tả tùy chọn",
+        "empty": "Chưa có tùy chọn triển khai",
+        "env": "Biến môi trường",
+        "guide": "Hướng dẫn cài đặt",
+        "installation": "Cài đặt qua {{method}}",
+        "installationMethod": "Phương thức cài đặt",
+        "other": "Cài đặt khác",
+        "packageName": "Tên gói",
+        "platform": {
+          "steps": {
+            "claude": "- Mở ứng dụng **Claude Desktop**\n- Vào **Cài đặt**, chọn **Nhà phát triển**\n- Nhấn **Chỉnh sửa cấu hình**\n- Mở file **claude_desktop_config.json**\n- Sao chép và dán cấu hình máy chủ vào file hiện có, sau đó lưu lại",
+            "cline": "- Mở VS Code đã cài tiện ích mở rộng Cline\n- Nhấn biểu tượng Cline ở thanh bên\n- Chọn **MCP Servers** từ menu thả xuống\n- Trong tab **Remote Servers**, nhập tên máy chủ và URL MCP Server của bạn\n- Nhấn **Add Server** để kết nối",
+            "cursor": "- Vào **Cài đặt**, chọn phần cài đặt Cursor\n- Chọn **MCP** ở bên trái\n- Nhấn **Thêm MCP Server toàn cục mới** ở góc trên bên phải\n- Sao chép và dán cấu hình máy chủ vào file hiện có, sau đó lưu lại",
+            "lobeChat": "- Mở ứng dụng **LobeChat Desktop**\n- Vào **Cài đặt** - **Trợ lý mặc định**\n- Chọn **Cài đặt plugin** - **Plugin tùy chỉnh**\n- Nhấn **Nhập nhanh cấu hình JSON**\n- Sao chép và dán cấu hình máy chủ vào ô văn bản, sau đó cài đặt",
+            "openai": "- Mở ứng dụng hoặc môi trường phát triển **OpenAI** của bạn\n- Cấu hình MCP tool trong **Responses API**\n- Thêm khối MCP vào mảng **tools** trong yêu cầu API\n- Đặt **server_url** thành điểm cuối MCP Server của bạn\n- Bao gồm các header xác thực cần thiết (API key, token, v.v.)\n- Sử dụng tham số `allowed_tools` để giới hạn công cụ được phơi bày\n- Đặt `require_approval` để kiểm soát phê duyệt thực thi công cụ",
+            "vscode": "- Mở VS Code\n- Mở bảng lệnh (Ctrl+Shift+P / Cmd+Shift+P)\n- Gõ **MCP: Add Server** và chọn\n- Chọn thêm vào workspace hoặc cài đặt người dùng\n- Sao chép và dán cấu hình máy chủ"
+          },
+          "title": "Cài đặt trên {{platform}}"
+        },
+        "recommended": "Đề xuất",
+        "systemDependencies": "Phụ thuộc hệ thống",
+        "table": {
+          "description": "Mô tả",
+          "name": "Tên",
+          "required": "Bắt buộc",
+          "type": "Loại"
+        },
+        "title": "Phương thức cài đặt"
+      },
+      "githubBadge": {
+        "desc": "LobeHub định kỳ quét kho mã và tài liệu để:\n\n- Xác nhận MCP Server hoạt động bình thường.\n- Trích xuất đặc tính máy chủ như công cụ, tài nguyên, lời nhắc và tham số cần thiết.\n- Badge của chúng tôi giúp người dùng nhanh chóng đánh giá độ an toàn, tính năng và hướng dẫn cài đặt MCP Server.\n\nVui lòng sao chép đoạn mã sau vào file `README.md` của bạn:"
+      },
+      "nav": {
+        "needHelp": "Cần trợ giúp?",
+        "reportIssue": "Báo cáo sự cố",
+        "viewSourceCode": "Xem mã nguồn"
+      },
+      "overview": {
+        "title": "Tổng quan"
+      },
+      "related": {
+        "listTitle": "MCP Server liên quan",
+        "more": "Xem thêm",
+        "title": "Gợi ý liên quan"
+      },
+      "schema": {
+        "mode": {
+          "docs": "Tài liệu"
+        },
+        "prompts": {
+          "arguments": "Cấu hình tham số",
+          "desc": "Mẫu tương tác do người dùng chọn để kích hoạt",
+          "empty": "Chưa có lời nhắc",
+          "instructions": "Hướng dẫn",
+          "table": {
+            "description": "Mô tả",
+            "name": "Tên",
+            "required": "Bắt buộc"
+          },
+          "title": "Danh sách lời nhắc"
+        },
+        "resources": {
+          "desc": "Dữ liệu ngữ cảnh được đính kèm và quản lý bởi client",
+          "empty": "Chưa có tài nguyên",
+          "table": {
+            "description": "Mô tả",
+            "mineType": "Loại MIME",
+            "name": "Tên",
+            "uri": "URI"
+          },
+          "title": "Danh sách tài nguyên"
+        },
+        "title": "Chức năng plugin",
+        "tools": {
+          "desc": "Giao diện chức năng phơi bày cho mô hình ngôn ngữ lớn (LLM) để thực thi thao tác",
+          "empty": "Chưa có công cụ",
+          "inputSchema": "Mô tả đầu vào",
+          "instructions": "Hướng dẫn",
+          "table": {
+            "description": "Mô tả",
+            "name": "Tên",
+            "required": "Bắt buộc",
+            "type": "Loại"
+          },
+          "title": "Danh sách công cụ"
+        }
+      },
+      "score": {
+        "claimed": {
+          "desc": "MCP Server này đã được chủ sở hữu xác nhận, đảm bảo quyền sở hữu và quản lý.",
+          "title": "Đã được chủ sở hữu xác nhận"
+        },
+        "deployMoreThanManual": {
+          "desc": "MCP Server này cung cấp phương thức cài đặt thân thiện hơn Manual, giúp người dùng dễ dàng triển khai và sử dụng.",
+          "title": "Cung cấp phương thức cài đặt thân thiện"
+        },
+        "deployment": {
+          "desc": "MCP Server này cung cấp ít nhất một phương thức cài đặt, cho phép người dùng triển khai và sử dụng.",
+          "descWithCount": "MCP Server này cung cấp {{number}} phương thức cài đặt, cho phép người dùng triển khai và sử dụng.",
+          "title": "Cung cấp ít nhất một phương thức cài đặt"
+        },
+        "license": {
+          "desc": "Kho mã này có tệp LICENSE.",
+          "descWithlicense": "Giấy phép kho mã này là {{license}}.",
+          "title": "Có giấy phép"
+        },
+        "listTitle": "Chi tiết đánh giá",
+        "notClaimed": {
+          "desc": "Nếu bạn là chủ sở hữu MCP Server này, có thể xác nhận bằng cách sau.",
+          "title": "Chưa được chủ sở hữu xác nhận"
+        },
+        "prompts": {
+          "desc": "MCP Server này cung cấp lời nhắc, cho phép người dùng tương tác với dịch vụ.",
+          "descWithCount": "MCP Server này cung cấp {{number}} lời nhắc, cho phép người dùng tương tác với dịch vụ.",
+          "title": "Có lời nhắc"
+        },
+        "readme": {
+          "desc": "Kho mã này có tệp README.md.",
+          "title": "Có README"
+        },
+        "resources": {
+          "desc": "MCP Server này cung cấp tài nguyên, cho phép người dùng đính kèm và quản lý dữ liệu ngữ cảnh.",
+          "descWithCount": "MCP Server này cung cấp {{number}} tài nguyên, cho phép người dùng đính kèm và quản lý dữ liệu ngữ cảnh.",
+          "title": "Có tài nguyên"
+        },
+        "title": "Đánh giá",
+        "tools": {
+          "desc": "Dịch vụ cần cung cấp ít nhất một công cụ, cho phép người dùng thực hiện thao tác cụ thể.",
+          "descWithCount": "MCP Server này cung cấp {{number}} công cụ, cho phép người dùng thực hiện thao tác cụ thể.",
+          "title": "Có ít nhất một công cụ"
+        },
+        "validated": {
+          "desc": "MCP Server này đã được xác minh cài đặt, đảm bảo chất lượng và độ tin cậy.",
+          "title": "Đã được xác minh"
+        }
+      },
+      "scoreLevel": {
+        "a": {
+          "desc": "MCP Server này được kiểm tra nghiêm ngặt, cung cấp đầy đủ chức năng và trải nghiệm người dùng chất lượng cao.",
+          "fullTitle": "Plugin xuất sắc",
+          "title": "Xuất sắc"
+        },
+        "b": {
+          "desc": "MCP Server này cung cấp chức năng và trải nghiệm người dùng tốt, nhưng có thể cần cải thiện một số điểm.",
+          "fullTitle": "Chức năng tốt",
+          "title": "Tốt"
+        },
+        "f": {
+          "desc": "MCP Server này có chức năng chưa đầy đủ hoặc chất lượng thấp, khuyến nghị người dùng cân nhắc khi sử dụng.",
+          "fullTitle": "Chất lượng kém",
+          "title": "Kém"
+        }
+      },
+      "settings": {
+        "capabilities": {
+          "prompts": "Từ khóa gợi ý",
+          "resources": "Tài nguyên",
+          "title": "Khả năng plugin",
+          "tools": "Công cụ"
+        },
+        "configuration": {
+          "title": "Cấu hình plugin"
+        },
+        "connection": {
+          "args": "Tham số khởi động",
+          "command": "Lệnh khởi động",
+          "title": "Thông tin kết nối",
+          "type": "Loại kết nối",
+          "url": "Địa chỉ dịch vụ"
+        },
+        "saveSettings": "Lưu cài đặt",
+        "title": "Cài đặt plugin"
+      },
+      "sidebar": {
+        "install": "Cài đặt MCP Server",
+        "meta": {
+          "homepage": "Trang chủ",
+          "installCount": "Số lượt cài đặt",
+          "language": "Ngôn ngữ nguồn",
+          "license": "Giấy phép",
+          "published": "Ngày phát hành",
+          "repo": "Kho mã nguồn",
+          "stars": "Số sao",
+          "title": "Thông tin chi tiết",
+          "updated": "Cập nhật gần nhất"
+        },
+        "moreServerConfig": "Xem chi tiết",
+        "recommendServers": "MCP liên quan",
+        "serverConfig": "Cấu hình cài đặt",
+        "toc": "Mục lục"
+      },
+      "summary": {
+        "title": "Bạn có thể làm gì với MCP Server này?"
+      },
+      "totalScore": {
+        "description": "Tổng điểm được tính dựa trên các chỉ số tổng hợp",
+        "legend": {
+          "aGrade": "Cấp A ({{minPercent}}-100%)",
+          "bGrade": "Cấp B ({{minPercent}}-{{maxPercent}}%)",
+          "fGrade": "Cấp F (0-{{maxPercent}}%)"
+        },
+        "pointsFormat": "{{score}}/{{total}} điểm",
+        "popover": {
+          "completedOptional": "✅ Đã hoàn thành mục tùy chọn ({{count}} mục)",
+          "completedRequired": "✅ Đã hoàn thành mục bắt buộc ({{count}} mục)",
+          "incompleteOptional": "⏸️ Chưa hoàn thành mục tùy chọn ({{count}} mục)",
+          "incompleteRequired": "❌ Chưa hoàn thành mục bắt buộc ({{count}} mục)",
+          "title": "Chi tiết đánh giá"
+        },
+        "ratingFormat": "Xếp hạng: {{level}}",
+        "scoreInfo": {
+          "items": "mục",
+          "points": "điểm",
+          "requiredItems": "mục bắt buộc"
+        },
+        "title": "Tổng điểm"
+      },
+      "versions": {
+        "table": {
+          "isLatest": "Phiên bản mới nhất",
+          "isValidated": "Đã xác minh",
+          "publishAt": "Ngày phát hành",
+          "version": "Phiên bản"
+        },
+        "title": "Lịch sử phiên bản"
+      }
+    },
+    "hero": {
+      "desc": "Nền tảng MCP Servers mã nguồn mở, có thể triển khai, giúp hệ thống AI dễ dàng truy cập hệ thống tập tin, cơ sở dữ liệu, API và các tài nguyên quan trọng khác, mở rộng toàn diện khả năng AI của bạn.",
+      "subTitle": "Mã nguồn mở & Sẵn sàng sử dụng",
+      "title": "Thị trường MCP mã nguồn mở dành cho AI"
+    },
+    "sorts": {
+      "createdAt": "Mới thêm",
+      "installCount": "Số lượt cài đặt",
+      "isFeatured": "Plugin đề xuất",
+      "isValidated": "Plugin đã xác minh",
+      "promptsCount": "Số lời nhắc",
+      "ratingCount": "Số đánh giá",
+      "resourcesCount": "Số tài nguyên",
+      "toolsCount": "Số công cụ",
+      "updatedAt": "Cập nhật gần nhất"
+    },
+    "title": "Thị trường MCP",
+    "unvalidated": {
+      "desc": "MCP Server này chưa được xác minh",
+      "title": "Chưa xác minh"
+    },
+    "validated": {
+      "desc": "MCP Server này đã được xác minh, đảm bảo chất lượng và độ tin cậy.",
+      "descWithDate": "MCP Server này đã được xác minh vào {{date}}, đảm bảo chất lượng và độ tin cậy.",
+      "title": "Đã xác minh"
+    }
+  },
   "models": {
+    "abilities": "Khả năng mô hình",
     "chat": "Bắt đầu cuộc trò chuyện",
     "contentLength": "Độ dài ngữ cảnh tối đa",
+    "details": {
+      "overview": {
+        "title": "Tổng quan"
+      },
+      "related": {
+        "listTitle": "Mô hình liên quan",
+        "more": "Xem thêm",
+        "title": "Gợi ý liên quan"
+      }
+    },
     "free": "Miễn phí",
     "guide": "Hướng dẫn cấu hình",
     "list": "Danh sách mô hình",
@@ -156,11 +559,30 @@
       "throughput": "Thông lượng",
       "throughputTooltip": "Số Token trung bình được truyền trong mỗi yêu cầu luồng mỗi giây"
     },
+    "sorts": {
+      "contextWindowTokens": "Độ dài ngữ cảnh",
+      "identifier": "ID mô hình",
+      "inputPrice": "Giá đầu vào",
+      "outputPrice": "Giá đầu ra",
+      "providerCount": "Số nhà cung cấp",
+      "releasedAt": "Mới phát hành"
+    },
     "suggestions": "Mô hình liên quan",
     "supportedProviders": "Nhà cung cấp hỗ trợ mô hình này"
   },
   "plugins": {
     "community": "Plugin cộng đồng",
+    "details": {
+      "settings": {
+        "title": "Cài đặt plugin"
+      },
+      "summary": {
+        "title": "Bạn có thể làm gì với plugin này?"
+      },
+      "tools": {
+        "title": "Công cụ plugin"
+      }
+    },
     "install": "Cài đặt plugin",
     "installed": "Đã cài đặt",
     "list": "Danh sách plugin",
@@ -173,36 +595,54 @@
     "more": "Thêm",
     "official": "Plugin chính thức",
     "recentSubmits": "Cập nhật gần đây",
+    "sorts": {
+      "createdAt": "Mới phát hành",
+      "identifier": "ID plugin",
+      "title": "Tên plugin"
+    },
     "suggestions": "Gợi ý liên quan"
   },
   "providers": {
     "config": "Cấu hình nhà cung cấp",
+    "details": {
+      "guide": {
+        "title": "Hướng dẫn kết nối"
+      },
+      "overview": {
+        "title": "Tổng quan"
+      },
+      "related": {
+        "listTitle": "Nhà cung cấp liên quan",
+        "more": "Xem thêm",
+        "title": "Gợi ý liên quan"
+      }
+    },
     "list": "Danh sách nhà cung cấp mô hình",
     "modelCount": "{{count}} mô hình",
+    "modelName": "Tên mô hình",
     "modelSite": "Tài liệu mô hình",
     "more": "Thêm",
     "officialSite": "Trang web chính thức",
     "showAllModels": "Hiển thị tất cả các mô hình",
+    "sorts": {
+      "default": "Sắp xếp mặc định",
+      "identifier": "ID nhà cung cấp",
+      "modelCount": "Số mô hình"
+    },
     "suggestions": "Nhà cung cấp liên quan",
     "supportedModels": "Mô hình được hỗ trợ"
   },
+  "publishedTime": "Đã phát hành",
   "search": {
     "placeholder": "Tìm kiếm tên, mô tả hoặc từ khóa...",
     "result": "{{count}} kết quả tìm kiếm về <highlight>{{keyword}}</highlight>",
     "searching": "Đang tìm kiếm..."
   },
-  "sort": {
-    "mostLiked": "Nhiều người thích nhất",
-    "mostUsed": "Sử dụng nhiều nhất",
-    "newest": "Mới nhất",
-    "oldest": "Cũ nhất",
-    "recommended": "Được đề xuất"
-  },
   "tab": {
-    "assistants": "Trợ lý",
+    "assistant": "Trợ lý",
     "home": "Trang chủ",
-    "models": "Mô hình",
-    "plugins": "Plugin",
-    "providers": "Nhà cung cấp mô hình"
+    "model": "Mô hình",
+    "plugin": "Plugin",
+    "provider": "Nhà cung cấp mô hình"
   }
 }

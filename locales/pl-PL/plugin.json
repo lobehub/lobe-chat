@@ -12,6 +12,15 @@
     "tool_call": "żądanie wywołania narzędzia"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "Proszę przejść do strony edycji, aby zobaczyć szczegóły",
+      "editBtn": "Edytuj teraz",
+      "title": "To jest niestandardowa wtyczka"
+    },
+    "emptyState": {
+      "description": "Zainstaluj najpierw tę wtyczkę, aby zobaczyć jej funkcje i opcje konfiguracji",
+      "title": "Zobacz szczegóły wtyczki po instalacji"
+    },
     "info": {
       "description": "Opis interfejsu API",
       "name": "Nazwa interfejsu API"
@@ -230,6 +239,50 @@
     },
     "title": "Pliki lokalne"
   },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "Sprawdzanie środowiska instalacji...",
+    "COMPLETED": "Instalacja zakończona",
+    "CONFIGURATION_REQUIRED": "Proszę ukończyć odpowiednią konfigurację, aby kontynuować instalację",
+    "ERROR": "Błąd instalacji",
+    "FETCHING_MANIFEST": "Pobieranie pliku manifestu wtyczki...",
+    "GETTING_SERVER_MANIFEST": "Inicjalizacja serwera MCP...",
+    "INSTALLING_PLUGIN": "Instalowanie wtyczki...",
+    "configurationDescription": "Ta wtyczka MCP wymaga skonfigurowania parametrów, aby działać poprawnie. Proszę wprowadzić niezbędne informacje konfiguracyjne",
+    "configurationRequired": "Konfiguracja parametrów wtyczki",
+    "continueInstall": "Kontynuuj instalację",
+    "dependenciesDescription": "Ta wtyczka wymaga zainstalowania następujących zależności systemowych, aby działać poprawnie. Proszę zainstalować brakujące zależności zgodnie z instrukcjami, a następnie kliknąć, aby ponownie sprawdzić i kontynuować instalację.",
+    "dependenciesRequired": "Proszę zainstalować zależności systemowe wtyczki",
+    "dependencyStatus": {
+      "installed": "Zainstalowano",
+      "notInstalled": "Nie zainstalowano",
+      "requiredVersion": "Wymagana wersja: {{version}}"
+    },
+    "errorDetails": {
+      "args": "Argumenty",
+      "command": "Polecenie",
+      "connectionParams": "Parametry połączenia",
+      "env": "Zmienne środowiskowe",
+      "errorOutput": "Dziennik błędów",
+      "exitCode": "Kod wyjścia",
+      "hideDetails": "Ukryj szczegóły",
+      "originalError": "Oryginalny błąd",
+      "showDetails": "Pokaż szczegóły"
+    },
+    "errorTypes": {
+      "CONNECTION_FAILED": "Nieudane połączenie",
+      "INITIALIZATION_TIMEOUT": "Przekroczono czas inicjalizacji",
+      "PROCESS_SPAWN_ERROR": "Błąd uruchomienia procesu",
+      "UNKNOWN_ERROR": "Nieznany błąd",
+      "VALIDATION_ERROR": "Błąd walidacji parametrów"
+    },
+    "installError": "Instalacja wtyczki MCP nie powiodła się, powód: {{detail}}",
+    "installMethods": {
+      "manual": "Instalacja ręczna:",
+      "recommended": "Zalecany sposób instalacji:"
+    },
+    "recheckDependencies": "Sprawdź ponownie",
+    "skipDependencies": "Pomiń sprawdzanie"
+  },
   "pluginList": "Lista wtyczek",
   "search": {
     "apiName": {
@@ -266,16 +319,48 @@
   },
   "setting": "Ustawienia wtyczki",
   "settings": {
+    "capabilities": {
+      "prompts": "Podpowiedzi",
+      "resources": "Zasoby",
+      "title": "Możliwości wtyczki",
+      "tools": "Narzędzia"
+    },
+    "configuration": {
+      "title": "Konfiguracja wtyczki"
+    },
+    "connection": {
+      "args": "Parametry uruchomienia",
+      "command": "Polecenie uruchomienia",
+      "title": "Informacje o połączeniu",
+      "type": "Typ połączenia",
+      "url": "Adres usługi"
+    },
+    "edit": "Edytuj",
+    "envConfigDescription": "Te ustawienia zostaną przekazane jako zmienne środowiskowe podczas uruchamiania serwera MCP",
+    "httpTypeNotice": "Wtyczki MCP typu HTTP nie wymagają obecnie konfiguracji zmiennych środowiskowych",
     "indexUrl": {
       "title": "Indeks sklepu",
       "tooltip": "Edycja nie jest obecnie obsługiwana"
     },
+    "messages": {
+      "connectionUpdateFailed": "Aktualizacja informacji o połączeniu nie powiodła się",
+      "connectionUpdateSuccess": "Informacje o połączeniu zostały pomyślnie zaktualizowane",
+      "envUpdateFailed": "Zapis zmiennych środowiskowych nie powiódł się",
+      "envUpdateSuccess": "Zmienna środowiskowa została pomyślnie zapisana"
+    },
     "modalDesc": "Po skonfigurowaniu adresu sklepu wtyczek możesz korzystać z niestandardowego sklepu wtyczek",
+    "rules": {
+      "argsRequired": "Proszę wprowadzić parametry uruchamiania",
+      "commandRequired": "Proszę wprowadzić polecenie uruchamiania",
+      "urlRequired": "Proszę wprowadzić adres usługi"
+    },
+    "saveSettings": "Zapisz ustawienia",
     "title": "Skonfiguruj sklep wtyczek"
   },
   "showInPortal": "Proszę sprawdzić szczegóły w obszarze roboczym",
   "store": {
     "actions": {
+      "cancel": "Anuluj instalację",
       "confirmUninstall": "Wtyczka zostanie odinstalowana. Po odinstalowaniu konfiguracja wtyczki zostanie wyczyszczona. Potwierdź swoje działanie.",
       "detail": "Szczegóły",
       "install": "Instaluj",
@@ -286,13 +371,15 @@
     "communityPlugin": "Wtyczka społecznościowa",
     "customPlugin": "Niestandardowa wtyczka",
     "empty": "Brak zainstalowanych wtyczek",
+    "emptySelectHint": "Wybierz wtyczkę, aby wyświetlić szczegóły",
     "installAllPlugins": "Zainstaluj wszystkie",
     "networkError": "Nie udało się pobrać sklepu wtyczek. Sprawdź swoje połączenie sieciowe i spróbuj ponownie",
     "placeholder": "Szukaj nazwy wtyczki, opisu lub słowa kluczowego...",
     "releasedAt": "Wydane {{createdAt}}",
     "tabs": {
-      "all": "Wszystkie",
-      "installed": "Zainstalowane"
+      "installed": "Zainstalowane",
+      "mcp": "Wtyczka MCP",
+      "old": "Wtyczki LobeChat"
     },
     "title": "Sklep wtyczek"
   },

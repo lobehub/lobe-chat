@@ -1,6 +1,6 @@
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { edgeClient } from '@/libs/trpc/client';
+import { lambdaClient } from '@/libs/trpc/client';
 import { GlobalRuntimeConfig } from '@/types/serverConfig';
 
 import { globalService } from '../global';
@@ -13,13 +13,10 @@ beforeEach(() => {
 
 vi.mock('@/libs/trpc/client', () => {
   return {
-    edgeClient: {
+    lambdaClient: {
       config: {
         getGlobalConfig: { query: vi.fn() },
         getDefaultAgentConfig: { query: vi.fn() },
-      },
-      appStatus: {
-        getLatestChangelogId: { query: vi.fn() },
       },
     },
   };
@@ -81,7 +78,7 @@ describe('GlobalService', () => {
         serverConfig: { enabledOAuthSSO: true },
         serverFeatureFlags: {},
       } as GlobalRuntimeConfig;
-      vi.spyOn(edgeClient.config.getGlobalConfig, 'query').mockResolvedValue(mockConfig);
+      vi.spyOn(lambdaClient.config.getGlobalConfig, 'query').mockResolvedValue(mockConfig);
 
       // Act
       const config = await globalService.getGlobalConfig();
@@ -92,7 +89,7 @@ describe('GlobalService', () => {
 
     it('should return the defaultAgentConfig when fetch is successful', async () => {
       // Arrange
-      vi.spyOn(edgeClient.config.getDefaultAgentConfig, 'query').mockResolvedValue({
+      vi.spyOn(lambdaClient.config.getDefaultAgentConfig, 'query').mockResolvedValue({
         model: 'gemini-pro',
       });
 
