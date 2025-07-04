@@ -60,6 +60,7 @@ const Actions = memo<ActionsProps>(({ identifier }) => {
             await installPlugin(identifier);
             await togglePlugin(identifier);
           }}
+          variant={'filled'}
         >
           {t('store.actions.install')}
         </Button>

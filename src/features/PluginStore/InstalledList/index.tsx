@@ -11,7 +11,7 @@ import { LobeToolType } from '@/types/tool/tool';
 import Detail from './Detail';
 import List from './List';
 
-export const PluginList = memo<{ keywords?: string }>(({ keywords }) => {
+const PluginList = memo<{ keywords?: string }>(({ keywords }) => {
   const { t } = useTranslation('plugin');
   const ref = useRef<HTMLDivElement>(null);
 
