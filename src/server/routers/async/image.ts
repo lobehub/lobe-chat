@@ -13,6 +13,10 @@ import { AsyncTaskError, AsyncTaskErrorType, AsyncTaskStatus } from '@/types/asy
 
 const log = debug('lobe-image:async');
 
+// Constants for better maintainability
+const FILENAME_MAX_LENGTH = 50;
+const IMAGE_URL_PREVIEW_LENGTH = 100;
+
 const imageProcedure = asyncAuthedProcedure.use(async (opts) => {
   const { ctx } = opts;
 
@@ -44,6 +48,63 @@ const createImageInputSchema = z.object({
     .passthrough(),
 });
 
+/**
+ * Checks if the abort signal has been triggered and throws an error if so
+ */
+const checkAbortSignal = (signal: AbortSignal) => {
+  if (signal.aborted) {
+    throw new Error('Operation was aborted');
+  }
+};
+
+/**
+ * Categorizes errors into appropriate AsyncTaskErrorType
+ */
+const categorizeError = (
+  error: any,
+  isAborted: boolean,
+): { errorType: AsyncTaskErrorType; errorMessage: string } => {
+  if (error.errorType === AgentRuntimeErrorType.InvalidProviderAPIKey) {
+    return {
+      errorType: AsyncTaskErrorType.InvalidProviderAPIKey,
+      errorMessage: 'Invalid provider API key, please check your API key',
+    };
+  }
+
+  if (error instanceof AsyncTaskError) {
+    return {
+      errorType: error.name as AsyncTaskErrorType,
+      errorMessage: typeof error.body === 'string' ? error.body : error.body.detail,
+    };
+  }
+
+  if (isAborted || error.message?.includes('aborted')) {
+    return {
+      errorType: AsyncTaskErrorType.Timeout,
+      errorMessage: 'Image generation task timed out, please try again',
+    };
+  }
+
+  if (error.message?.includes('timeout') || error.name === 'TimeoutError') {
+    return {
+      errorType: AsyncTaskErrorType.Timeout,
+      errorMessage: 'Image generation task timed out, please try again',
+    };
+  }
+
+  if (error.message?.includes('network') || error.name === 'NetworkError') {
+    return {
+      errorType: AsyncTaskErrorType.ServerError,
+      errorMessage: error.message || 'Network error occurred during image generation',
+    };
+  }
+
+  return {
+    errorType: AsyncTaskErrorType.ServerError,
+    errorMessage: error.message || 'Unknown error occurred during image generation',
+  };
+};
+
 export const imageRouter = router({
   createImage: imageProcedure.input(createImageInputSchema).mutation(async ({ input, ctx }) => {
     const { taskId, generationId, provider, model, params } = input;
@@ -60,21 +121,17 @@ export const imageRouter = router({
     log('Updating task status to Processing: %s', taskId);
     await ctx.asyncTaskModel.update(taskId, { status: AsyncTaskStatus.Processing });
 
-    try {
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => {
-          reject(
-            new AsyncTaskError(
-              AsyncTaskErrorType.Timeout,
-              'image generation task is timeout, please try again',
-            ),
-          );
-        }, ASYNC_TASK_TIMEOUT);
-      });
+    // Use AbortController to prevent resource leaks
+    const abortController = new AbortController();
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
-      const imageGenerationPromise = async () => {
+    try {
+      const imageGenerationPromise = async (signal: AbortSignal) => {
         log('Initializing agent runtime for provider: %s', provider);
         const agentRuntime = await initAgentRuntimeWithUserPayload(provider, ctx.jwtPayload);
+
+        // Check if operation has been cancelled
+        checkAbortSignal(signal);
 
         log('Agent runtime initialized, calling createImage');
         const response = await agentRuntime.createImage({
@@ -87,9 +144,12 @@ export const imageRouter = router({
           throw new Error('Create image response is empty');
         }
 
+        // Check if operation has been cancelled
+        checkAbortSignal(signal);
+
         log('Image generation successful: %O', {
           imageUrl: response.imageUrl.startsWith('data:')
-            ? response.imageUrl.slice(0, 100) + '...'
+            ? response.imageUrl.slice(0, IMAGE_URL_PREVIEW_LENGTH) + '...'
             : response.imageUrl,
           width: response.width,
           height: response.height,
@@ -99,9 +159,16 @@ export const imageRouter = router({
         const { imageUrl, width, height } = response;
         const { image, thumbnailImage } =
           await ctx.generationService.transformImageForGeneration(imageUrl);
+
+        // Check if operation has been cancelled
+        checkAbortSignal(signal);
+
         log('Uploading image for generation');
         const { imageUrl: uploadedImageUrl, thumbnailImageUrl } =
           await ctx.generationService.uploadImageForGeneration(image, thumbnailImage);
+
+        // Check if operation has been cancelled
+        checkAbortSignal(signal);
 
         log('Updating generation asset and file');
         await ctx.generationModel.updateAssetAndFile(
@@ -116,7 +183,7 @@ export const imageRouter = router({
           {
             fileType: image.mime,
             fileHash: image.hash,
-            name: `${params.prompt.slice(0, 50)}.${image.extension}`, // 使用 prompt 前50个字符作为文件名
+            name: `${params.prompt.slice(0, FILENAME_MAX_LENGTH)}.${image.extension}`, // Use first 50 characters of prompt as filename
             size: image.size,
             url: uploadedImageUrl,
             metadata: {
@@ -136,35 +203,46 @@ export const imageRouter = router({
         return { success: true };
       };
 
-      // Race between the image generation process and the timeout
-      return await Promise.race([imageGenerationPromise(), timeoutPromise]);
-    } catch (e: any) {
+      // Set timeout to cancel operation and prevent resource leaks
+      timeoutId = setTimeout(() => {
+        log('Image generation timeout, aborting operation: %s', taskId);
+        abortController.abort();
+      }, ASYNC_TASK_TIMEOUT);
+
+      const result = await imageGenerationPromise(abortController.signal);
+
+      // Clean up timeout timer
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+
+      return result;
+    } catch (error: any) {
+      // Clean up timeout timer
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+
       log('Async image generation failed: %O', {
         taskId,
         generationId,
-        error: e,
+        error: error.message || error,
       });
 
-      // error from model runtime
-      if (e.errorType === AgentRuntimeErrorType.InvalidProviderAPIKey) {
-        await ctx.asyncTaskModel.update(taskId, {
-          error: new AsyncTaskError(
-            AsyncTaskErrorType.InvalidProviderAPIKey,
-            'Invalid provider API key, please check your API key',
-          ),
-          status: AsyncTaskStatus.Error,
-        });
-      } else {
-        await ctx.asyncTaskModel.update(taskId, {
-          error: new AsyncTaskError((e as Error).name, (e as Error).message),
-          status: AsyncTaskStatus.Error,
-        });
-      }
+      // Improved error categorization logic
+      const { errorType, errorMessage } = categorizeError(error, abortController.signal.aborted);
 
-      log('Task status updated to Error: %s', taskId);
+      await ctx.asyncTaskModel.update(taskId, {
+        error: new AsyncTaskError(errorType, errorMessage),
+        status: AsyncTaskStatus.Error,
+      });
+
+      log('Task status updated to Error: %s, errorType: %s', taskId, errorType);
 
       return {
-        message: `Image generation ${taskId} failed: ${(e as Error).message}`,
+        message: `Image generation ${taskId} failed: ${errorMessage}`,
         success: false,
       };
     }
