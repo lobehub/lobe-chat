@@ -31,6 +31,7 @@ export enum SettingsTabs {
   Hotkey = 'hotkey',
   LLM = 'llm',
   Provider = 'provider',
+  Search = 'search',
   Storage = 'storage',
   Sync = 'sync',
   SystemAgent = 'system-agent',
