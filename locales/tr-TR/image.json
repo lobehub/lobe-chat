@@ -26,7 +26,8 @@
       "placeholder": "Oluşturmak istediğiniz içeriği tanımlayın"
     },
     "seed": {
-      "label": "Tohum"
+      "label": "Tohum",
+      "random": "Rastgele Tohum"
     },
     "size": {
       "label": "Boyut"

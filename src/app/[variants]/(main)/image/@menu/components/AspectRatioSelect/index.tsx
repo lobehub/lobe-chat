@@ -14,7 +14,7 @@ export interface AspectRatioSelectProps extends Omit<GridProps, 'children' | 'on
 }
 
 const AspectRatioSelect = memo<AspectRatioSelectProps>(
-  ({ options, onChange, value, defaultValue }) => {
+  ({ options, onChange, value, defaultValue, ...rest }) => {
     const theme = useTheme();
     const [active, setActive] = useMergeState('', {
       defaultValue,
@@ -22,7 +22,7 @@ const AspectRatioSelect = memo<AspectRatioSelectProps>(
       onChange,
     });
     return (
-      <Block padding={4} variant={'filled'}>
+      <Block padding={4} variant={'filled'} {...rest}>
         <Grid gap={4} maxItemWidth={48} rows={16}>
           {options?.map((item) => {
             const isActive = active === item.value;

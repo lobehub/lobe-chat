@@ -26,7 +26,8 @@
       "placeholder": "Opisz, co chcesz wygenerować"
     },
     "seed": {
-      "label": "Ziarno"
+      "label": "Ziarno",
+      "random": "Losowy seed"
     },
     "size": {
       "label": "Rozmiar"

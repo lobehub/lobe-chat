@@ -26,7 +26,8 @@
       "placeholder": "Describe what you want to generate"
     },
     "seed": {
-      "label": "Seed"
+      "label": "Seed",
+      "random": "Random Seed"
     },
     "size": {
       "label": "Size"

@@ -26,7 +26,8 @@
       "placeholder": "Descreva o conteúdo que deseja gerar"
     },
     "seed": {
-      "label": "Semente"
+      "label": "Semente",
+      "random": "Semente aleatória"
     },
     "size": {
       "label": "Tamanho"

@@ -26,7 +26,8 @@
       "placeholder": "描述你想要生成的內容"
     },
     "seed": {
-      "label": "種子"
+      "label": "種子",
+      "random": "隨機種子"
     },
     "size": {
       "label": "尺寸"

@@ -1,27 +1,21 @@
-import { InputNumber } from '@lobehub/ui';
-import { memo, useCallback, useMemo } from 'react';
+import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useGenerationConfigParam } from '@/store/image/slices/generationConfig/hooks';
 
+import InputNumber from '../../../components/SeedNumberInput';
+
 const SeedNumberInput = memo(() => {
-  const { value, setValue, min, max, step } = useGenerationConfigParam('seed');
-
-  const handleChange = useCallback(
-    (v: number | string | null) => {
-      setValue(v as number | null);
-    },
-    [setValue],
-  );
-
-  const style = useMemo(() => ({ width: '100%' }), []);
+  const { t } = useTranslation('image');
+  const { value, setValue, min, max, step = 1 } = useGenerationConfigParam('seed');
 
   return (
     <InputNumber
       max={max}
       min={min}
-      onChange={handleChange}
+      onChange={setValue as any}
+      placeholder={t('config.seed.random')}
       step={step}
-      style={style}
       value={value}
     />
   );

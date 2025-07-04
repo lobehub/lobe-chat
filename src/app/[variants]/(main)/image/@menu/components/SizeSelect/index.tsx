@@ -13,7 +13,7 @@ export interface SizeSelectProps extends Omit<GridProps, 'children' | 'onChange'
   options?: { label?: string; value: 'auto' | string }[];
 }
 
-const SizeSelect = memo<SizeSelectProps>(({ options, onChange, value, defaultValue }) => {
+const SizeSelect = memo<SizeSelectProps>(({ options, onChange, value, defaultValue, ...rest }) => {
   const theme = useTheme();
   const [active, setActive] = useMergeState('auto', {
     defaultValue,
@@ -21,14 +21,14 @@ const SizeSelect = memo<SizeSelectProps>(({ options, onChange, value, defaultVal
     onChange,
   });
   return (
-    <Block padding={4} variant={'filled'}>
-      <Grid gap={4} maxItemWidth={64} rows={16}>
+    <Block padding={4} variant={'filled'} {...rest}>
+      <Grid gap={4} maxItemWidth={72} rows={16}>
         {options?.map((item) => {
           const isActive = active === item.value;
-          let conetnt: ReactNode;
+          let content: ReactNode;
 
           if (item.value === 'auto') {
-            conetnt = (
+            content = (
               <div
                 style={{
                   border: `2px dashed ${isActive ? theme.colorText : theme.colorTextDescription}`,
@@ -41,7 +41,7 @@ const SizeSelect = memo<SizeSelectProps>(({ options, onChange, value, defaultVal
           } else {
             const [width, height] = item.value.split('x').map(Number);
             const isWidthGreater = width > height;
-            conetnt = (
+            content = (
               <div
                 style={{
                   border: `2px solid ${isActive ? theme.colorText : theme.colorTextDescription}`,
@@ -73,7 +73,7 @@ const SizeSelect = memo<SizeSelectProps>(({ options, onChange, value, defaultVal
               variant={'filled'}
             >
               <Center height={16} style={{ marginTop: 4 }} width={16}>
-                {conetnt}
+                {content}
               </Center>
               <Text fontSize={12} type={isActive ? undefined : 'secondary'}>
                 {item.label || item.value}

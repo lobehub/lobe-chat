@@ -142,6 +142,7 @@ const ModelSelect = memo(() => {
         }
       }}
       options={options}
+      shadow
       size={'large'}
       style={{
         width: '100%',

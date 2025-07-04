@@ -26,7 +26,8 @@
       "placeholder": "生成したい内容を記述してください"
     },
     "seed": {
-      "label": "シード"
+      "label": "シード",
+      "random": "ランダムシード"
     },
     "size": {
       "label": "サイズ"

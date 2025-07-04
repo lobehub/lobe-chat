@@ -26,7 +26,8 @@
       "placeholder": "Beschrijf wat je wilt genereren"
     },
     "seed": {
-      "label": "Zaad"
+      "label": "Zaad",
+      "random": "Willekeurige zaad"
     },
     "size": {
       "label": "Afmeting"

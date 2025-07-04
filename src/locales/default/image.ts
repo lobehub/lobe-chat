@@ -31,6 +31,7 @@ export default {
     },
     seed: {
       label: '种子',
+      random: '随机种子',
     },
     imageUrls: {
       label: '参考图',

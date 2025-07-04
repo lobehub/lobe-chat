@@ -26,7 +26,8 @@
       "placeholder": "Mô tả nội dung bạn muốn tạo"
     },
     "seed": {
-      "label": "Hạt giống"
+      "label": "Hạt giống",
+      "random": "Hạt giống ngẫu nhiên"
     },
     "size": {
       "label": "Kích thước"

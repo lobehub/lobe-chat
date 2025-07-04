@@ -1,6 +1,6 @@
 'use client';
 
-import { createStyles } from 'antd-style';
+import { Text } from '@lobehub/ui';
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -17,49 +17,18 @@ import SeedNumberInput from './components/SeedNumberInput';
 import SizeSelect from './components/SizeSelect';
 import SizeSliderInput from './components/SizeSliderInput';
 import StepsSliderInput from './components/StepsSliderInput';
-import { CONFIG_PANEL_WIDTH } from './constants';
-
-const useStyles = createStyles(({ css, token }) => ({
-  container: css`
-    overflow-y: auto;
-    flex-shrink: 0;
-
-    width: ${CONFIG_PANEL_WIDTH}px;
-    height: 100%;
-    padding: 16px;
-    padding-block-start: ${token.paddingXL}px;
-    border-inline-start: 1px solid ${token.colorBorderSecondary};
-  `,
-  configItem: css`
-    margin-block-end: 24px;
-
-    &:last-child {
-      margin-block-end: 0;
-    }
-  `,
-  label: css`
-    margin-block-end: 8px;
-
-    font-size: ${token.fontSize}px;
-    font-weight: ${token.fontWeightStrong};
-    line-height: ${token.lineHeight};
-    color: ${token.colorText};
-  `,
-}));
 
 interface ConfigItemLayoutProps {
-  label: string;
+  label?: string;
   children: ReactNode;
 }
 
 const ConfigItemLayout = memo<ConfigItemLayoutProps>(({ label, children }) => {
-  const { styles } = useStyles();
-
   return (
-    <div className={styles.configItem}>
-      <div className={styles.label}>{label}</div>
-      <div>{children}</div>
-    </div>
+    <Flexbox gap={8}>
+      {label && <Text weight={500}>{label.toUpperCase()}</Text>}
+      {children}
+    </Flexbox>
   );
 });
 
@@ -78,8 +47,8 @@ const ConfigPanel = memo(() => {
   const isSupportImageUrls = useImageStore(isSupportParamSelector('imageUrls'));
 
   return (
-    <Flexbox padding={12}>
-      <ConfigItemLayout label={t('config.model.label')}>
+    <Flexbox gap={32} padding={12}>
+      <ConfigItemLayout>
         <ModelSelect />
       </ConfigItemLayout>
 

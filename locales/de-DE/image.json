@@ -26,7 +26,8 @@
       "placeholder": "Beschreiben Sie den Inhalt, den Sie generieren möchten"
     },
     "seed": {
-      "label": "Seed"
+      "label": "Seed",
+      "random": "Zufälliger Seed"
     },
     "size": {
       "label": "Größe"

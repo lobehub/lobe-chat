@@ -26,7 +26,8 @@
       "placeholder": "Décrivez ce que vous souhaitez générer"
     },
     "seed": {
-      "label": "Graine"
+      "label": "Graine",
+      "random": "Graine aléatoire"
     },
     "size": {
       "label": "Taille"

@@ -26,7 +26,8 @@
       "placeholder": "생성하고 싶은 내용을 설명하세요"
     },
     "seed": {
-      "label": "시드"
+      "label": "시드",
+      "random": "무작위 시드"
     },
     "size": {
       "label": "크기"
