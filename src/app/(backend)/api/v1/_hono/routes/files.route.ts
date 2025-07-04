@@ -158,30 +158,26 @@ app.post(
 );
 
 /**
- * 获取文件详情并解析文件内容
- * GET /files/:id/upload-and-parse
+ * 上传文件并解析文件内容
+ * POST /files/upload-and-parse
+ * Content-Type: multipart/form-data
  *
- * Path parameters:
- * - id: string (required) - 文件ID
- *
- * Query parameters:
+ * Form fields:
+ * - file: File (required) - 要上传的文件
+ * - knowledgeBaseId: string (optional) - 知识库ID
+ * - skipCheckFileType: boolean (optional) - 是否跳过文件类型检查
+ * - directory: string (optional) - 上传目录
  * - skipExist: boolean (optional) - 是否跳过已存在的解析结果，默认false
  *
  * 功能：
- * - 根据文件ID获取文件详情（上传结果）
- * - 同时解析文件内容（解析结果）
+ * - 上传文件并自动生成文件ID
+ * - 同时解析文件内容
  * - 返回包含上传结果和解析结果的组合对象
  */
-app.get(
-  '/:id/upload-and-parse',
-  requireAuth,
-  zValidator('param', FileIdParamSchema),
-  zValidator('query', FileParseRequestSchema),
-  async (c) => {
-    const fileController = new FileController();
-    return await fileController.getFileAndParse(c);
-  },
-);
+app.post('/upload-and-parse', requireAuth, async (c) => {
+  const fileController = new FileController();
+  return await fileController.uploadAndParseFile(c);
+});
 
 /**
  * 删除文件
