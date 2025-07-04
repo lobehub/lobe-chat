@@ -32,7 +32,7 @@ const GenerationFeed = memo(() => {
 
     // Calculate the scroll position, adding extra offset for sticky elements
     // The 120px accounts for typical sticky input height + some padding
-    const scrollTop = scrollableParent.scrollTop + targetRect.bottom - scrollableRect.bottom + 120;
+    const scrollTop = scrollableParent.scrollTop + targetRect.bottom - scrollableRect.bottom + 999;
 
     scrollableParent.scrollTo({
       top: scrollTop,
