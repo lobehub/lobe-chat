@@ -151,7 +151,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
 const Settings = memo<{ identifier: string }>(({ identifier }) => {
   const { styles } = useStyles();
-  const { t } = useTranslation(['discover', 'plugin', 'common']);
+  const { t } = useTranslation(['plugin', 'common']);
   const [connectionForm] = AForm.useForm();
   const [envForm] = AForm.useForm();
   const [loading, setLoading] = useState(false);
@@ -190,11 +190,11 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
         customParams: newCustomParams,
       });
 
-      message.success('连接信息更新成功');
+      message.success(t('settings.messages.connectionUpdateSuccess'));
       setIsEditingConnection(false);
     } catch (error) {
       console.error('Connection update failed:', error);
-      message.error('连接信息更新失败');
+      message.error(t('settings.messages.connectionUpdateFailed'));
     } finally {
       setConnectionLoading(false);
     }
@@ -209,10 +209,10 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
     setLoading(true);
     try {
       await updatePluginSettings(identifier!, values.env || {}, { override: true });
-      message.success('环境变量保存成功');
+      message.success(t('settings.messages.envUpdateSuccess'));
     } catch (error) {
       console.error('Settings update failed:', error);
-      message.error('环境变量保存失败');
+      message.error(t('settings.messages.envUpdateFailed'));
     } finally {
       setLoading(false);
     }
@@ -224,7 +224,7 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
         <Flexbox gap={24}>
           <div className={styles.sectionTitle}>
             <LinkIcon size={16} />
-            {t('mcp.details.settings.connection.title')}
+            {t('settings.connection.title')}
             {!isEditingConnection && (
               <Button
                 className={styles.editButton}
@@ -233,7 +233,7 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
                 size="small"
                 type="text"
               >
-                编辑
+                {t('settings.edit')}
               </Button>
             )}
           </div>
@@ -242,7 +242,7 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
             // 预览模式
             <Flexbox paddingInline={8}>
               <div className={styles.previewItem}>
-                <span className={styles.previewLabel}>连接类型</span>
+                <span className={styles.previewLabel}>{t('settings.connection.type')}</span>
                 <Flexbox horizontal>
                   <Icon icon={TerminalIcon} />
                   <Text className={styles.previewValue}>
@@ -253,7 +253,7 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
 
               {customParams?.type === 'http' && customParams?.url && (
                 <div className={styles.previewItem}>
-                  <span className={styles.previewLabel}>服务地址</span>
+                  <span className={styles.previewLabel}>{t('settings.connection.url')}</span>
                   <span className={styles.previewValue}>{customParams.url}</span>
                 </div>
               )}
@@ -262,14 +262,16 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
                 <>
                   {customParams?.command && (
                     <div className={styles.previewItem}>
-                      <span className={styles.previewLabel}>启动命令</span>
+                      <span className={styles.previewLabel}>
+                        {t('settings.connection.command')}
+                      </span>
                       <span className={styles.previewValue}>{customParams.command}</span>
                     </div>
                   )}
 
                   {customParams?.args && customParams.args.length > 0 && (
                     <div className={styles.previewItem}>
-                      <span className={styles.previewLabel}>启动参数</span>
+                      <span className={styles.previewLabel}>{t('settings.connection.args')}</span>
                       <span className={styles.previewValue}>{customParams.args.join(' ')}</span>
                     </div>
                   )}
@@ -288,9 +290,9 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
               >
                 {customParams?.type === 'http' && (
                   <AForm.Item
-                    label="服务地址"
+                    label={t('settings.connection.url')}
                     name={['mcp', 'url']}
-                    rules={[{ message: '请输入服务地址', required: true }]}
+                    rules={[{ message: t('settings.rules.urlRequired'), required: true }]}
                   >
                     <Input placeholder="https://mcp.example.com/server" size="small" />
                   </AForm.Item>
@@ -299,17 +301,17 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
                 {customParams?.type === 'stdio' && (
                   <>
                     <AForm.Item
-                      label="启动命令"
+                      label={t('settings.connection.command')}
                       name={['mcp', 'command']}
-                      rules={[{ message: '请输入启动命令', required: true }]}
+                      rules={[{ message: t('settings.rules.commandRequired'), required: true }]}
                     >
                       <MCPStdioCommandInput placeholder="npx, uv, python..." />
                     </AForm.Item>
 
                     <AForm.Item
-                      label="启动参数"
+                      label={t('settings.connection.args')}
                       name={['mcp', 'args']}
-                      rules={[{ message: '请输入启动参数', required: true }]}
+                      rules={[{ message: t('settings.rules.argsRequired'), required: true }]}
                     >
                       <ArgsInput placeholder="例如：mcp-hello-world" />
                     </AForm.Item>
@@ -325,7 +327,7 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
                     >
                       {t('common:save')}
                     </Button>
-                    <Button onClick={handleCancelEdit}>取消</Button>
+                    <Button onClick={handleCancelEdit}>{t('common:cancel')}</Button>
                   </Space>
                 </div>
               </AForm>
@@ -338,10 +340,10 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
           <Flexbox gap={12}>
             <div className={styles.sectionTitle}>
               <Settings2Icon size={16} />
-              {t('mcp.details.settings.configuration.title')}
+              {t('settings.configuration.title')}
             </div>
             <Text style={{ fontSize: 12 }} type="secondary">
-              这些配置将作为环境变量在 MCP 服务器启动时传递给进程
+              {t('settings.envConfigDescription')}
             </Text>
             <AForm
               form={envForm}
@@ -362,7 +364,7 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
                   >
                     {t('common:save')}
                   </Button>
-                  <Button onClick={() => envForm.resetFields()}>重置</Button>
+                  <Button onClick={() => envForm.resetFields()}>{t('common:reset')}</Button>
                 </Space>
               </div>
             </AForm>
@@ -374,12 +376,10 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
           <div>
             <div className={styles.sectionTitle}>
               <Settings2Icon size={16} />
-              {t('mcp.details.settings.configuration.title')}
+              {t('settings.configuration.title')}
             </div>
             <div className={styles.emptyState}>
-              <Typography.Text type="secondary">
-                HTTP 类型的 MCP 插件暂无需要配置的环境变量
-              </Typography.Text>
+              <Typography.Text type="secondary">{t('settings.httpTypeNotice')}</Typography.Text>
             </div>
           </div>
         )}

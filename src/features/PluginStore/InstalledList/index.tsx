@@ -2,6 +2,7 @@ import { DraggablePanel } from '@lobehub/ui';
 import { Empty } from 'antd';
 import { useTheme } from 'antd-style';
 import { memo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { useToolStore } from '@/store/tool';
@@ -11,6 +12,7 @@ import Detail from './Detail';
 import List from './List';
 
 export const PluginList = memo<{ keywords?: string }>(({ keywords }) => {
+  const { t } = useTranslation('plugin');
   const ref = useRef<HTMLDivElement>(null);
 
   const [type, setType] = useState<LobeToolType>();
@@ -18,6 +20,7 @@ export const PluginList = memo<{ keywords?: string }>(({ keywords }) => {
   const theme = useTheme();
 
   const [identifier] = useToolStore((s) => [s.activePluginIdentifier]);
+
   return (
     <Flexbox
       height={'75vh'}
@@ -63,7 +66,7 @@ export const PluginList = memo<{ keywords?: string }>(({ keywords }) => {
           }}
           width={'100%'}
         >
-          <Empty description={'选择插件以预览详细信息'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+          <Empty description={t('store.emptySelectHint')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
         </Center>
       )}
     </Flexbox>

@@ -1,6 +1,7 @@
 import { Empty } from 'antd';
 import { useTheme } from 'antd-style';
 import { memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import Deployment from '@/features/MCPPluginDetail/Deployment';
@@ -22,6 +23,7 @@ interface DetailProps {
 }
 const Detail = memo<DetailProps>(({ identifier: defaultIdentifier }) => {
   const [activeTab, setActiveTab] = useState(McpNavKey.Overview);
+  const { t } = useTranslation('plugin');
 
   const theme = useTheme();
   const [activeMCPIdentifier] = useToolStore((s) => [s.activeMCPIdentifier]);
@@ -40,7 +42,7 @@ const Detail = memo<DetailProps>(({ identifier: defaultIdentifier }) => {
         }}
         width={'100%'}
       >
-        <Empty description={'选择插件以预览详细信息'} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty description={t('store.emptySelectHint')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
       </Center>
     );
 
