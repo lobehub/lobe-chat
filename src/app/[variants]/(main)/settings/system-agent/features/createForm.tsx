@@ -86,10 +86,11 @@ const SystemAgentForm = memo(
         }) as FormItemProps,
       ].filter(Boolean),
       extra: (
-        <Flexbox>
+        <Flexbox direction="horizontal" gap={8}>
           {loading && <Icon icon={Loader2Icon} size={16} spin style={{ opacity: 0.5 }} />}
           {allowDisable && (
             <Switch
+              disabled={loading}
               onChange={async (enabled) => {
                 setLoading(true);
                 await updateSystemAgent(systemAgentKey, { enabled });
