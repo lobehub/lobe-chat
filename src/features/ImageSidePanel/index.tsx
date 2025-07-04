@@ -70,6 +70,7 @@ const ImageSidePanel = memo<PropsWithChildren>(({ children }) => {
           flex: 'none',
           height: '100%',
           minWidth: FOLDER_WIDTH,
+          zIndex: 10,
         }}
       >
         <PanelTitle desc={t('config.header.desc')} title={t('config.header.title')} />

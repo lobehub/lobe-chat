@@ -1,6 +1,5 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
-import { ItemType } from 'antd/es/menu/interface';
+import { ActionIcon, Icon, Select, type SelectProps } from '@lobehub/ui';
+import { createStyles, useTheme } from 'antd-style';
 import { LucideArrowRight, LucideBolt } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -10,7 +9,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
 import { isDeprecatedEdition } from '@/const/version';
-import ActionDropdown from '@/features/ChatInput/ActionBar/components/ActionDropdown';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { aiProviderSelectors } from '@/store/aiInfra/slices/aiProvider/selectors';
 import { useImageStore } from '@/store/image';
@@ -18,28 +16,24 @@ import { imageGenerationConfigSelectors } from '@/store/image/slices/generationC
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { EnabledProviderWithModels } from '@/types/aiProvider';
 
-const useStyles = createStyles(({ css, token }) => ({
-  menu: css`
-    overflow-y: scroll;
-    max-height: 500px;
-  `,
-  modelSelect: css`
-    cursor: pointer;
-    padding: ${token.paddingSM}px;
-    border: 1px solid ${token.colorBorder};
-    border-radius: ${token.borderRadius}px;
-
-    &:hover {
-      background-color: ${token.colorFillTertiary};
+const useStyles = createStyles(({ css, prefixCls }) => ({
+  popup: css`
+    &.${prefixCls}-select-dropdown .${prefixCls}-select-item-option-grouped {
+      padding-inline-start: 12px;
     }
   `,
 }));
 
-const menuKey = (provider: string, model: string) => `${provider}-${model}`;
+interface ModelOption {
+  label: any;
+  provider: string;
+  value: string;
+}
 
 const ModelSelect = memo(() => {
+  const { styles } = useStyles();
   const { t } = useTranslation('components');
-  const { styles, theme } = useStyles();
+  const theme = useTheme();
   const { showLLM } = useServerConfigStore(featureFlagsSelectors);
   const router = useRouter();
 
@@ -51,60 +45,63 @@ const ModelSelect = memo(() => {
 
   const enabledImageModelList = useAiInfraStore(aiProviderSelectors.enabledImageModelList);
 
-  const items = useMemo<ItemType[]>(() => {
-    const getModelItems = (provider: EnabledProviderWithModels) => {
-      const items = provider.children.map((model) => ({
-        key: menuKey(provider.id, model.id),
-        label: <ModelItemRender {...model} {...model.abilities} />,
-        onClick: async () => {
-          if (model.id !== currentModel || provider.id !== currentProvider) {
-            setModelAndProviderOnSelect(model.id, provider.id);
-          }
-        },
+  const options = useMemo<SelectProps['options']>(() => {
+    const getImageModels = (provider: EnabledProviderWithModels) => {
+      const modelOptions = provider.children.map((model) => ({
+        label: <ModelItemRender {...model} {...model.abilities} showInfoTag={false} />,
+        provider: provider.id,
+        value: `${provider.id}/${model.id}`,
       }));
 
-      // if there is empty items, add a placeholder guide
-      if (items.length === 0)
+      // if there are no models, add a placeholder guide
+      if (modelOptions.length === 0) {
         return [
           {
-            key: `${provider.id}-empty`,
             label: (
               <Flexbox gap={8} horizontal style={{ color: theme.colorTextTertiary }}>
                 {t('ModelSwitchPanel.emptyModel')}
                 <Icon icon={LucideArrowRight} />
               </Flexbox>
             ),
+            value: `${provider.id}/empty`,
             onClick: () => {
               router.push(
                 isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${provider.id}`,
               );
             },
+            disabled: true,
           },
         ];
+      }
 
-      return items;
+      return modelOptions;
     };
 
-    if (enabledImageModelList.length === 0)
+    // if there are no providers at all
+    if (enabledImageModelList.length === 0) {
       return [
         {
-          key: `no-provider`,
           label: (
             <Flexbox gap={8} horizontal style={{ color: theme.colorTextTertiary }}>
               {t('ModelSwitchPanel.emptyProvider')}
               <Icon icon={LucideArrowRight} />
             </Flexbox>
           ),
+          value: 'no-provider',
           onClick: () => {
-            router.push(isDeprecatedEdition ? '/settings/llm' : `/settings/provider`);
+            router.push(isDeprecatedEdition ? '/settings/llm' : '/settings/provider');
           },
+          disabled: true,
         },
       ];
+    }
 
-    // otherwise show with provider group
+    if (enabledImageModelList.length === 1) {
+      const provider = enabledImageModelList[0];
+      return getImageModels(provider);
+    }
+
     return enabledImageModelList.map((provider) => ({
-      children: getModelItems(provider),
-      key: provider.id,
       label: (
         <Flexbox horizontal justify="space-between">
           <ProviderItemRender
@@ -126,24 +123,31 @@ const ModelSelect = memo(() => {
           )}
         </Flexbox>
       ),
-      type: 'group',
+      options: getImageModels(provider),
     }));
-  }, [enabledImageModelList, router, t, theme.colorTextTertiary, currentModel, currentProvider]);
+  }, [enabledImageModelList, showLLM, t, theme.colorTextTertiary, router]);
 
   return (
-    <ActionDropdown
-      menu={{
-        className: styles.menu,
-        items,
+    <Select
+      classNames={{
+        root: styles.popup,
       }}
-      placement={'bottom'}
-      trigger={['click']}
-    >
-      {/* FIXME: 不包一层没法触发 dropdown展开 */}
-      <Flexbox align="center" className={styles.modelSelect} horizontal justify="space-between">
-        <ModelItemRender displayName={currentModel} id={currentModel} showInfoTag={false} />
-      </Flexbox>
-    </ActionDropdown>
+      onChange={(value, option) => {
+        // Skip onChange for disabled options (empty states)
+        if (value === 'no-provider' || value.includes('/empty')) return;
+        const model = value.split('/').slice(1).join('/');
+        const provider = (option as unknown as ModelOption).provider;
+        if (model !== currentModel || provider !== currentProvider) {
+          setModelAndProviderOnSelect(model, provider);
+        }
+      }}
+      options={options}
+      size={'large'}
+      style={{
+        width: '100%',
+      }}
+      value={currentProvider && currentModel ? `${currentProvider}/${currentModel}` : undefined}
+    />
   );
 });
 

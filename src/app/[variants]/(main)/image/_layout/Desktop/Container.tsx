@@ -23,7 +23,6 @@ const Container = memo<PropsWithChildren>(({ children }) => {
         padding={24}
         style={{
           maxWidth: 906,
-          position: 'relative',
         }}
         width={'100%'}
       >
