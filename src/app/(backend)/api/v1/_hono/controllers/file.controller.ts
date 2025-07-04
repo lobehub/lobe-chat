@@ -280,4 +280,30 @@ export class FileController extends BaseController {
       return this.handleError(c, error);
     }
   }
+
+  /**
+   * 获取文件详情并解析文件内容
+   * GET /files/:id/upload-and-parse
+   */
+  async getFileAndParse(c: Context) {
+    try {
+      const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
+      const { id } = this.getParams(c);
+      const query = this.getQuery(c);
+
+      const db = await this.getDatabase();
+      const fileService = new FileUploadService(db, userId);
+
+      // 解析查询参数
+      const parseOptions = {
+        skipExist: query.skipExist === 'true',
+      };
+
+      const result = await fileService.getFileAndParse(id, parseOptions);
+
+      return this.success(c, result, 'File retrieved and parsed successfully');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
 }
