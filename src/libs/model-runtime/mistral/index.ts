@@ -53,6 +53,7 @@ export const LobeMistralAI = createOpenAICompatibleRuntime({
           functionCall: model.capabilities.function_calling,
           id: model.id,
           reasoning: knownModel?.abilities?.reasoning || false,
+          search: knownModel?.abilities?.search || false,
           vision: model.capabilities.vision,
         };
       })

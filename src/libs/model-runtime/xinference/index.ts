@@ -43,6 +43,7 @@ export const LobeXinferenceAI = createOpenAICompatibleRuntime({
             (model.model_ability && model.model_ability.includes('reasoning')) ||
             knownModel?.abilities?.reasoning ||
             false,
+          search: knownModel?.abilities?.search || false,
           vision:
             (model.model_ability && model.model_ability.includes('vision')) ||
             knownModel?.abilities?.vision ||
