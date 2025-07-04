@@ -10,15 +10,12 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import OfficialIcon from '@/app/[variants]/(main)/discover/features/OfficialIcon';
+import OfficialIcon from '@/components/OfficialIcon';
+import Scores from '@/features/MCP/Scores';
+import { getLanguageColor, getRecommendedDeployment } from '@/features/MCP/utils';
+import { useCategory } from '@/hooks/useMCPCategory';
 
-import Scores from '../../app/[variants]/(main)/discover/(detail)/mcp/[...slugs]/features/Scores';
-import {
-  getLanguageColor,
-  getRecommendedDeployment,
-} from '../../app/[variants]/(main)/discover/(detail)/mcp/[...slugs]/features/utils';
-import { useCategory } from '../../app/[variants]/(main)/discover/(list)/mcp/features/Category/useCategory';
-import InstallationIcon from '../../app/[variants]/(main)/discover/features/InstallationIcon';
+import InstallationIcon from '../../components/MCPDepsIcon';
 import PublishedTime from '../../components/PublishedTime';
 import { useDetailContext } from './DetailProvider';
 

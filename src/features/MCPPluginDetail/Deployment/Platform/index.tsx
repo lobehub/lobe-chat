@@ -3,7 +3,7 @@ import { Block, Highlighter } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
-import { genServerConfig } from '../../../../app/[variants]/(main)/discover/(detail)/mcp/[...slugs]/features/utils';
+import { genServerConfig } from '@/features/MCP/utils';
 
 const useStyles = createStyles(({ css }) => {
   return {

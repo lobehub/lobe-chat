@@ -8,8 +8,9 @@ import {
   calculateScoreFlags,
   createScoreItems,
   sortItemsByPriority,
-} from '../../../app/[variants]/(main)/discover/(detail)/mcp/[...slugs]/features/calculateScore';
-import { useScoreList } from '../../../app/[variants]/(main)/discover/(detail)/mcp/[...slugs]/features/useScoreList';
+} from '@/features/MCP/calculateScore';
+import { useScoreList } from '@/features/MCP/useScoreList';
+
 import Title from '../../../app/[variants]/(main)/discover/features/Title';
 import { useDetailContext } from '../DetailProvider';
 import GithubBadge from './GithubBadge';

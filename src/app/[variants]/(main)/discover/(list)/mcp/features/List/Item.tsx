@@ -12,12 +12,12 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
+import InstallationIcon from '@/components/MCPDepsIcon';
+import OfficialIcon from '@/components/OfficialIcon';
+import PublishedTime from '@/components/PublishedTime';
+import Scores from '@/features/MCP/Scores';
 import { DiscoverMcpItem } from '@/types/discover';
 
-import Scores from '../../../../(detail)/mcp/[...slugs]/features/Scores';
-import PublishedTime from '../../../../../../../../components/PublishedTime';
-import InstallationIcon from '../../../../features/InstallationIcon';
-import OfficialIcon from '../../../../features/OfficialIcon';
 import ConnectionTypeTag from './ConnectionTypeTag';
 import MetaInfo from './MetaInfo';
 

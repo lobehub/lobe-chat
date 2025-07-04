@@ -5,11 +5,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import {
-  ScoreResult,
-  getGradeColor,
-  sortItemsByPriority,
-} from '../../../app/[variants]/(main)/discover/(detail)/mcp/[...slugs]/features/calculateScore';
+import { ScoreResult, getGradeColor, sortItemsByPriority } from '../../MCP/calculateScore';
 
 const useStyles = createStyles(({ css, token }) => ({
   colorDot: css`

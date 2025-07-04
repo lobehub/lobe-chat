@@ -2,7 +2,7 @@ import {
   DEFAULT_WEIGHTS,
   calculateScore,
   createScoreItems,
-} from '../../(detail)/mcp/[...slugs]/features/calculateScore';
+} from '../../../../../../features/MCP/calculateScore';
 
 describe('calculateScore', () => {
   describe('Grade A scenarios', () => {

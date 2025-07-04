@@ -7,10 +7,10 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useToc } from '@/app/[variants]/(main)/discover/(detail)/features/Toc/useToc';
+import { useDetailContext } from '@/features/MCPPluginDetail/DetailProvider';
 import { useQuery } from '@/hooks/useQuery';
 import { McpNavKey } from '@/types/discover';
 
-import { useDetailContext } from '../../../../../../../../../../features/MCPPluginDetail/DetailProvider';
 import Title from '../../../../../../features/Title';
 import Toc from '../../../../../features/Toc';
 

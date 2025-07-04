@@ -4,12 +4,12 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { getRecommendedDeployment } from '@/features/MCP/utils';
 import Platform from '@/features/MCPPluginDetail/Deployment/Platform';
+import { useDetailContext } from '@/features/MCPPluginDetail/DetailProvider';
 import { McpNavKey } from '@/types/discover';
 
-import { useDetailContext } from '../../../../../../../../../features/MCPPluginDetail/DetailProvider';
 import Title from '../../../../../features/Title';
-import { getRecommendedDeployment } from '../utils';
 
 const ServerConfig = memo(() => {
   const { t } = useTranslation('discover');
