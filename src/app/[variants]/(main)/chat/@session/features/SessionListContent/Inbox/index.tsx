@@ -6,7 +6,8 @@ import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
-import { chatSelectors, getChatStoreState, useChatStore } from '@/store/chat';
+import { getChatStoreState, useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
