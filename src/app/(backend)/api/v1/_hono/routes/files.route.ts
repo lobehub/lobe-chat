@@ -158,6 +158,32 @@ app.post(
 );
 
 /**
+ * 获取文件详情并解析文件内容
+ * GET /files/:id/upload-and-parse
+ *
+ * Path parameters:
+ * - id: string (required) - 文件ID
+ *
+ * Query parameters:
+ * - skipExist: boolean (optional) - 是否跳过已存在的解析结果，默认false
+ *
+ * 功能：
+ * - 根据文件ID获取文件详情（上传结果）
+ * - 同时解析文件内容（解析结果）
+ * - 返回包含上传结果和解析结果的组合对象
+ */
+app.get(
+  '/:id/upload-and-parse',
+  requireAuth,
+  zValidator('param', FileIdParamSchema),
+  zValidator('query', FileParseRequestSchema),
+  async (c) => {
+    const fileController = new FileController();
+    return await fileController.getFileAndParse(c);
+  },
+);
+
+/**
  * 删除文件
  * DELETE /files/:id
  *
