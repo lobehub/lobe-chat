@@ -22,6 +22,7 @@ import {
   FileListResponse,
   FileParseRequest,
   FileParseResponse,
+  FileUploadAndParseResponse,
   FileUploadRequest,
   FileUploadResponse,
   FileUrlRequest,
@@ -714,5 +715,44 @@ export class FileUploadService extends BaseService {
       uploadedAt: file.createdAt.toISOString(),
       url: file.url,
     };
+  }
+
+  /**
+   * 获取文件详情并解析文件内容
+   */
+  async getFileAndParse(
+    fileId: string,
+    options: Partial<FileParseRequest> = {},
+  ): Promise<FileUploadAndParseResponse> {
+    try {
+      if (!this.userId) {
+        throw this.createAuthError('User authentication required');
+      }
+
+      this.log('info', 'Starting file retrieval and parsing', {
+        fileId,
+        skipExist: options.skipExist,
+      });
+
+      // 1. 获取文件详情（上传结果）
+      const uploadResult = await this.getFileDetail(fileId);
+
+      // 2. 解析文件内容（解析结果）
+      const parseResult = await this.parseFile(fileId, options);
+
+      this.log('info', 'File retrieval and parsing completed successfully', {
+        fileId,
+        filename: uploadResult.filename,
+        parseStatus: parseResult.parseStatus,
+      });
+
+      return {
+        uploadResult,
+        parseResult,
+      };
+    } catch (error) {
+      this.log('error', 'File retrieval and parsing failed', error);
+      throw error;
+    }
   }
 }
