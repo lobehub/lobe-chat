@@ -195,34 +195,14 @@ export const imageRouter = router({
         log('Starting background async task %s for generation %s', asyncTaskId, generation.id);
 
         // 不使用 await，让任务在后台异步执行
-        asyncCaller.image
-          .createImage({
-            taskId: asyncTaskId,
-            generationId: generation.id,
-            provider,
-            model,
-            params, // 使用原始参数
-          })
-          .then(() => {
-            log('Background async task %s completed successfully', asyncTaskId);
-          })
-          .catch((e: any) => {
-            console.error(`[createImage] Background async task ${asyncTaskId} execution error:`, e);
-            log('Background async task %s execution failed: %O', asyncTaskId, e);
-
-            // 更新任务状态为失败
-            asyncTaskModel
-              .update(asyncTaskId, {
-                error: new AsyncTaskError(
-                  AsyncTaskErrorType.ServerError,
-                  'async task error: ' + e.message || 'Unknown error',
-                ),
-                status: AsyncTaskStatus.Error,
-              })
-              .catch((updateError) => {
-                console.error(`Failed to update task ${asyncTaskId} status:`, updateError);
-              });
-          });
+        // 这里不应该 await 也不应该 .then.catch，让 runtime 早点释放计算资源
+        asyncCaller.image.createImage({
+          taskId: asyncTaskId,
+          generationId: generation.id,
+          provider,
+          model,
+          params, // 使用原始参数
+        });
       });
 
       log('All %d background async image generation tasks started', generationsWithTasks.length);
