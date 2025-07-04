@@ -1,4 +1,5 @@
 import { CategoryItem, CategoryListQuery, MarketSDK } from '@lobehub/market-sdk';
+import { InstallReportRequest } from '@lobehub/market-types';
 import dayjs from 'dayjs';
 import debug from 'debug';
 import matter from 'gray-matter';
@@ -467,17 +468,7 @@ export class DiscoverService {
   /**
    * report MCP plugin result marketplace
    */
-  reportPluginInstallation = async (params: {
-    errorMessage?: string;
-    identifier: string;
-    installDurationMs?: number;
-    manifest?: any;
-    metadata?: any;
-    platform?: string;
-    success: boolean;
-    userAgent?: string;
-    version: string;
-  }) => {
+  reportPluginInstallation = async (params: InstallReportRequest) => {
     log('reportPluginInstallation: params=%O', params);
     try {
       await this.market.plugins.reportInstallation(params);

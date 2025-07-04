@@ -479,6 +479,7 @@ export const marketRouter = router({
         errorMessage: z.any().optional(),
         identifier: z.string(),
         installDurationMs: z.number().optional(),
+        installParams: z.any().optional(),
         manifest: z.any().optional(),
         metadata: z.any().optional(),
         platform: z.string().optional(),

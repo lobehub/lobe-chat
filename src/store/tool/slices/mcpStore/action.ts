@@ -100,11 +100,10 @@ export const createMCPPluginStoreSlice: StateCreator<
 
     let data: any;
     let result: CheckMcpInstallResult | undefined;
+    let connection: any;
     const userAgent = `LobeHub Desktop/${CURRENT_VERSION}`;
 
     try {
-      let connection: any;
-
       // 检查是否已被取消
       if (abortController.signal.aborted) {
         return;
@@ -124,6 +123,7 @@ export const createMCPPluginStoreSlice: StateCreator<
           config, // 合并用户提供的配置
         };
         result = configInfo.checkResult;
+        connection = configInfo.connection;
       } else {
         // 正常模式：从头开始安装
 
@@ -288,6 +288,7 @@ export const createMCPPluginStoreSlice: StateCreator<
       mcpService.reportMcpInstallResult({
         identifier: plugin.identifier,
         installDurationMs,
+        installParams: connection,
         manifest: {
           prompts: (manifest as any).prompts,
           resources: (manifest as any).resources,
@@ -367,6 +368,7 @@ export const createMCPPluginStoreSlice: StateCreator<
         errorMessage: errorInfo.message,
         identifier: plugin.identifier,
         installDurationMs,
+        installParams: connection,
         metadata: errorInfo.metadata,
         platform: result!.platform,
         success: false,

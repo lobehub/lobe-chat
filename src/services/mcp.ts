@@ -1,4 +1,5 @@
 import { PluginManifest } from '@lobehub/market-sdk';
+import { InstallReportRequest } from '@lobehub/market-types';
 
 import { isDesktop } from '@/const/version';
 import { desktopClient, lambdaClient, toolsClient } from '@/libs/trpc/client';
@@ -93,18 +94,7 @@ class MCPService {
     errorMessage,
     errorCode,
     ...params
-  }: {
-    errorCode?: string;
-    errorMessage?: string;
-    identifier: string;
-    installDurationMs?: number;
-    manifest?: any;
-    metadata?: any;
-    platform: string;
-    success: boolean;
-    userAgent?: string;
-    version: string;
-  }) => {
+  }: InstallReportRequest) => {
     const reportData = {
       errorCode: success ? undefined : errorCode,
       errorMessage: success ? undefined : errorMessage,
