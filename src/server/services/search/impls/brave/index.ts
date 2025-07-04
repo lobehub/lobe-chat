@@ -5,7 +5,7 @@ import urlJoin from 'url-join';
 import { SearchParams, UniformSearchResponse, UniformSearchResult } from '@/types/tool/search';
 
 import { SearchServiceImpl } from '../type';
-import { BraveSearchParameters, BraveResponse } from './type';
+import { BraveResponse, BraveSearchParameters } from './type';
 
 const log = debug('lobe-search:Brave');
 
@@ -44,7 +44,7 @@ export class BraveImpl implements SearchServiceImpl {
       ...defaultQueryParams,
       freshness:
         params?.searchTimeRange && params.searchTimeRange !== 'anytime'
-          ? timeRangeMapping[params.searchTimeRange as keyof typeof timeRangeMapping] ?? undefined
+          ? (timeRangeMapping[params.searchTimeRange as keyof typeof timeRangeMapping] ?? undefined)
           : undefined,
     };
 
