@@ -18,7 +18,7 @@ interface PromptInputProps {
   disableAnimation?: boolean;
 }
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   wrapper: css`
     display: flex;
     flex-direction: column;
@@ -33,7 +33,9 @@ const useStyles = createStyles(({ css, token }) => ({
     background-color: ${token.colorBgContainer};
     box-shadow:
       ${token.boxShadowTertiary},
-      0 0 48px 32px ${token.colorBgContainerSecondary},
+      ${isDarkMode
+        ? `0 0 48px 32px ${token.colorBgContainerSecondary}`
+        : `0 0 0  ${token.colorBgContainerSecondary}`},
       0 32px 0 ${token.colorBgContainerSecondary};
   `,
 }));
