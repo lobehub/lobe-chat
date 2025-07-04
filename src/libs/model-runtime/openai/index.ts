@@ -1,8 +1,9 @@
+import { responsesAPIModels } from '@/const/models';
+
 import { ChatStreamPayload, ModelProvider } from '../types';
 import { processMultiProviderModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { pruneReasoningPayload } from '../utils/openaiHelpers';
-import { responsesAPIModels } from '@/const/models';
 
 export interface OpenAIModelCard {
   id: string;
@@ -75,18 +76,17 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
         : tools;
 
       if (prunePrefixes.some((prefix) => model.startsWith(prefix))) {
-        if (!payload.reasoning) {
-          payload.reasoning = { summary: 'auto' };
-        } else {
-          payload.reasoning.summary = 'auto';
-        }
-
-        // computer-use series must set truncation as auto
-        if (model.startsWith('computer-use')) {
-          payload.truncation = 'auto';
-        }
-
-        return pruneReasoningPayload(payload) as any;
+        return pruneReasoningPayload({
+          ...rest,
+          model,
+          reasoning: payload.reasoning ? 
+            { ...payload.reasoning, summary: 'auto' } : 
+            { summary: 'auto' },
+          stream: payload.stream ?? true,
+          tools: openaiTools as any,
+          // computer-use series must set truncation as auto
+          ...(model.startsWith('computer-use') && { truncation: 'auto' }),
+        }) as any;
       }
 
       return { ...rest, model, stream: payload.stream ?? true, tools: openaiTools } as any;

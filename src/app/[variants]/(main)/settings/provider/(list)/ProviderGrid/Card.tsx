@@ -1,6 +1,6 @@
 import { ProviderCombine, ProviderIcon } from '@lobehub/icons';
-import { Avatar } from '@lobehub/ui';
-import { Divider, Skeleton, Typography } from 'antd';
+import { Avatar, Text } from '@lobehub/ui';
+import { Divider, Skeleton } from 'antd';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,8 +10,6 @@ import { AiProviderListItem } from '@/types/aiProvider';
 
 import EnableSwitch from './EnableSwitch';
 import { useStyles } from './style';
-
-const { Paragraph } = Typography;
 
 interface ProviderCardProps extends AiProviderListItem {
   loading?: boolean;
@@ -57,23 +55,18 @@ const ProviderCard = memo<ProviderCardProps>(
                         type={'avatar'}
                       />
                     )}
-                    <Typography.Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                      {name || id}
-                    </Typography.Text>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{name || id}</Text>
                   </Flexbox>
                 )}
               </Flexbox>
-              <Paragraph
+              <Text
                 className={styles.desc}
                 ellipsis={{
                   rows: 2,
-                  tooltip: {
-                    arrow: false,
-                  },
                 }}
               >
                 {source === 'custom' ? description : t(`${id}.description`)}
-              </Paragraph>
+              </Text>
             </Flexbox>
           </Link>
           <Divider style={{ margin: '4px 0' }} />

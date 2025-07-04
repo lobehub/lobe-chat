@@ -3,6 +3,80 @@ import { AIChatModelCard } from '@/types/aiModel';
 // https://novita.ai/pricing
 const novitaChatModels: AIChatModelCard[] = [
   {
+    contextWindowTokens: 120_000,
+    displayName: 'ERNIE 4.5 0.3B',
+    id: 'baidu/ernie-4.5-0.3b',
+    pricing: {
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 120_000,
+    displayName: 'ERNIE 4.5 21B A3B',
+    id: 'baidu/ernie-4.5-21B-a3b',
+    pricing: {
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 123_000,
+    displayName: 'ERNIE 4.5 300B A47B Paddle',
+    id: 'baidu/ernie-4.5-300b-a47b-paddle',
+    pricing: {
+      input: 0.3,
+      output: 1,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 30_000,
+    displayName: 'ERNIE 4.5 VL 28B A3B',
+    id: 'baidu/ernie-4.5-vl-28b-a3b',
+    pricing: {
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 123_000,
+    displayName: 'ERNIE 4.5 VL 424B A47B',
+    id: 'baidu/ernie-4.5-vl-424b-a47b',
+    pricing: {
+      input: 0.42,
+      output: 1.25,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 128_000,
+    displayName: 'MiniMax M1 80K',
+    id: 'minimaxai/minimax-m1-80k',
+    pricing: {
+      input: 0.55,
+      output: 2.2,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
     contextWindowTokens: 128_000,
     displayName: 'Qwen3 4B FP8',
     id: 'qwen/qwen3-4b-fp8',
@@ -13,6 +87,9 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     contextWindowTokens: 40_960,
     displayName: 'Qwen3 235B A22B FP8',
     id: 'qwen/qwen3-235b-a22b-fp8',
@@ -23,6 +100,9 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     contextWindowTokens: 40_960,
     displayName: 'Qwen3 30B A3B FP8',
     id: 'qwen/qwen3-30b-a3b-fp8',
@@ -33,6 +113,9 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     contextWindowTokens: 40_960,
     displayName: 'Qwen3 32B FP8',
     id: 'qwen/qwen3-32b-fp8',
@@ -230,7 +313,7 @@ const novitaChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 163_840,
     displayName: 'Deepseek V3 0324',
     enabled: true,
     id: 'deepseek/deepseek-v3-0324',
@@ -245,7 +328,7 @@ const novitaChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 163_840,
     displayName: 'Deepseek R1 0528',
     enabled: true,
     id: 'deepseek/deepseek-r1-0528',

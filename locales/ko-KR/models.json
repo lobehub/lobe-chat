@@ -176,8 +176,14 @@
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3은 Llama 시리즈에서 가장 진보된 다국어 오픈 소스 대형 언어 모델로, 매우 낮은 비용으로 405B 모델의 성능을 경험할 수 있습니다. Transformer 구조를 기반으로 하며, 감독 미세 조정(SFT)과 인간 피드백 강화 학습(RLHF)을 통해 유용성과 안전성을 향상시켰습니다. 그 지시 조정 버전은 다국어 대화를 위해 최적화되어 있으며, 여러 산업 기준에서 많은 오픈 소스 및 폐쇄형 채팅 모델보다 우수한 성능을 보입니다. 지식 마감일은 2023년 12월입니다."
   },
+  "MiniMax-M1": {
+    "description": "완전히 새로 개발된 추론 모델입니다. 세계 최고 수준: 80K 사고 체인 x 1M 입력, 해외 최상위 모델과 견줄 만한 성능을 자랑합니다."
+  },
   "MiniMax-Text-01": {
     "description": "MiniMax-01 시리즈 모델에서는 대담한 혁신을 이루었습니다: 대규모로 선형 주의 메커니즘을 처음으로 구현하였으며, 전통적인 Transformer 아키텍처가 더 이상 유일한 선택이 아닙니다. 이 모델의 파라미터 수는 4560억에 달하며, 단일 활성화는 45.9억입니다. 모델의 종합 성능은 해외 최고의 모델과 견줄 수 있으며, 전 세계에서 가장 긴 400만 토큰의 문맥을 효율적으로 처리할 수 있습니다. 이는 GPT-4o의 32배, Claude-3.5-Sonnet의 20배에 해당합니다."
+  },
+  "MiniMaxAI/MiniMax-M1-80k": {
+    "description": "MiniMax-M1은 오픈 소스 가중치를 가진 대규모 혼합 주의 추론 모델로, 4,560억 개의 파라미터를 보유하고 있으며, 각 토큰당 약 459억 개의 파라미터가 활성화됩니다. 모델은 100만 토큰의 초장기 문맥을 원활히 지원하며, 번개 주의 메커니즘을 통해 10만 토큰 생성 작업에서 DeepSeek R1 대비 75%의 부동 소수점 연산량을 절감합니다. 또한 MiniMax-M1은 MoE(혼합 전문가) 아키텍처를 채택하고, CISPO 알고리즘과 혼합 주의 설계가 결합된 효율적인 강화 학습 훈련을 통해 긴 입력 추론과 실제 소프트웨어 엔지니어링 환경에서 업계 선도적인 성능을 구현합니다."
   },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B)는 고정밀 지시 모델로, 복잡한 계산에 적합합니다."
@@ -1058,6 +1064,12 @@
   "gemini-2.0-flash-preview-image-generation": {
     "description": "Gemini 2.0 Flash 미리보기 모델로, 이미지 생성을 지원합니다."
   },
+  "gemini-2.5-flash": {
+    "description": "Gemini 2.5 Flash는 구글에서 가장 가성비가 뛰어난 모델로, 포괄적인 기능을 제공합니다."
+  },
+  "gemini-2.5-flash-lite-preview-06-17": {
+    "description": "Gemini 2.5 Flash-Lite Preview는 구글의 가장 작고 가성비가 뛰어난 모델로, 대규모 사용을 위해 설계되었습니다."
+  },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview는 Google의 가장 가성비 높은 모델로, 포괄적인 기능을 제공합니다."
   },
@@ -1066,6 +1078,9 @@
   },
   "gemini-2.5-flash-preview-05-20": {
     "description": "Gemini 2.5 Flash Preview는 Google의 최고의 가성비 모델로, 포괄적인 기능을 제공합니다."
+  },
+  "gemini-2.5-pro": {
+    "description": "Gemini 2.5 Pro는 구글의 최첨단 사고 모델로, 코드, 수학 및 STEM 분야의 복잡한 문제를 추론할 수 있으며, 긴 문맥을 활용해 대규모 데이터셋, 코드베이스 및 문서를 분석합니다."
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental은 Google의 최첨단 사고 모델로, 코드, 수학 및 STEM 분야의 복잡한 문제를 추론할 수 있으며, 긴 문맥을 활용하여 대규모 데이터 세트, 코드베이스 및 문서를 분석할 수 있습니다."
@@ -1166,14 +1181,20 @@
   "google/gemini-2.0-flash-exp:free": {
     "description": "Gemini 2.0 Flash Experimental은 Google의 최신 실험적 다중 모달 AI 모델로, 역사적 버전과 비교하여 품질이 향상되었으며, 특히 세계 지식, 코드 및 긴 맥락에 대해 개선되었습니다."
   },
+  "google/gemini-2.5-flash": {
+    "description": "Gemini 2.5 Flash는 Google의 최첨단 주력 모델로, 고급 추론, 코딩, 수학 및 과학 작업을 위해 설계되었습니다. 내장된 '사고' 능력을 포함하여 더 높은 정확도와 세밀한 문맥 처리가 가능한 응답을 제공합니다.\n\n참고: 이 모델에는 사고형과 비사고형 두 가지 변형이 있습니다. 출력 가격은 사고 능력 활성화 여부에 따라 크게 다릅니다. 표준 변형(‘:thinking’ 접미사 없음)을 선택하면 모델이 명확히 사고 토큰 생성을 피합니다.\n\n사고 능력을 활용하고 사고 토큰을 받으려면 ‘:thinking’ 변형을 선택해야 하며, 이 경우 더 높은 사고 출력 가격이 적용됩니다.\n\n또한, Gemini 2.5 Flash는 문서(https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)에 설명된 대로 '최대 추론 토큰 수' 매개변수를 통해 구성할 수 있습니다."
+  },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash는 Google의 최첨단 주력 모델로, 고급 추론, 코딩, 수학 및 과학 작업을 위해 설계되었습니다. 내장된 '사고' 능력을 포함하고 있어 더 높은 정확성과 세밀한 맥락 처리를 통해 응답을 제공합니다.\n\n주의: 이 모델에는 두 가지 변형이 있습니다: 사고 및 비사고. 출력 가격은 사고 능력이 활성화되었는지 여부에 따라 크게 다릅니다. 표준 변형(‘:thinking’ 접미사가 없는)을 선택하면 모델이 사고 토큰 생성을 명확히 피합니다.\n\n사고 능력을 활용하고 사고 토큰을 수신하려면 ‘:thinking’ 변형을 선택해야 하며, 이는 더 높은 사고 출력 가격을 발생시킵니다.\n\n또한, Gemini 2.5 Flash는 문서에 설명된 대로 '추론 최대 토큰 수' 매개변수를 통해 구성할 수 있습니다 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
   "google/gemini-2.5-flash-preview:thinking": {
     "description": "Gemini 2.5 Flash는 Google의 최첨단 주력 모델로, 고급 추론, 코딩, 수학 및 과학 작업을 위해 설계되었습니다. 내장된 '사고' 능력을 포함하고 있어 더 높은 정확성과 세밀한 맥락 처리를 통해 응답을 제공합니다.\n\n주의: 이 모델에는 두 가지 변형이 있습니다: 사고 및 비사고. 출력 가격은 사고 능력이 활성화되었는지 여부에 따라 크게 다릅니다. 표준 변형(‘:thinking’ 접미사가 없는)을 선택하면 모델이 사고 토큰 생성을 명확히 피합니다.\n\n사고 능력을 활용하고 사고 토큰을 수신하려면 ‘:thinking’ 변형을 선택해야 하며, 이는 더 높은 사고 출력 가격을 발생시킵니다.\n\n또한, Gemini 2.5 Flash는 문서에 설명된 대로 '추론 최대 토큰 수' 매개변수를 통해 구성할 수 있습니다 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
-  "google/gemini-2.5-pro-preview-03-25": {
-    "description": "Gemini 2.5 Pro는 Google의 최첨단 AI 모델로, 고급 추론, 코딩, 수학 및 과학 작업을 위해 설계되었습니다. '사고' 능력을 갖추고 있어 더 높은 정확성과 세밀한 맥락 처리를 통해 추론 응답을 제공합니다. Gemini 2.5 Pro는 여러 벤치마크 테스트에서 최고 성능을 기록했으며, LMArena 순위에서 1위를 차지하여 뛰어난 인간 선호 정렬 및 복잡한 문제 해결 능력을 반영합니다."
+  "google/gemini-2.5-pro": {
+    "description": "Gemini 2.5 Pro는 Google의 최첨단 사고 모델로, 코드, 수학 및 STEM 분야의 복잡한 문제를 추론할 수 있으며, 긴 문맥을 사용해 대규모 데이터 세트, 코드베이스 및 문서를 분석합니다."
+  },
+  "google/gemini-2.5-pro-preview": {
+    "description": "Gemini 2.5 Pro Preview는 Google의 최첨단 사고 모델로, 코드, 수학 및 STEM 분야의 복잡한 문제를 추론할 수 있으며, 긴 문맥을 사용하여 대규모 데이터 세트, 코드베이스 및 문서를 분석할 수 있습니다."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash는 최적화된 다중 모달 처리 능력을 제공하며, 다양한 복잡한 작업 시나리오에 적합합니다."
@@ -1823,6 +1844,9 @@
   "moonshot-v1-auto": {
     "description": "Moonshot V1 Auto는 현재 맥락에서 사용되는 토큰 수에 따라 적합한 모델을 선택할 수 있습니다."
   },
+  "moonshotai/Kimi-Dev-72B": {
+    "description": "Kimi-Dev-72B는 대규모 강화 학습 최적화를 거친 오픈소스 코드 대형 모델로, 안정적이고 바로 생산에 투입 가능한 패치를 출력할 수 있습니다. 이 모델은 SWE-bench Verified에서 60.4%의 신기록을 세우며, 결함 수정, 코드 리뷰 등 자동화 소프트웨어 엔지니어링 작업에서 오픈소스 모델의 기록을 경신했습니다."
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B는 Nous Hermes 2의 업그레이드 버전으로, 최신 내부 개발 데이터 세트를 포함하고 있습니다."
   },
@@ -1850,6 +1874,9 @@
   "o3": {
     "description": "o3는 다재다능한 강력한 모델로, 여러 분야에서 뛰어난 성능을 발휘합니다. 수학, 과학, 프로그래밍 및 시각적 추론 작업에서 새로운 기준을 세웠습니다. 기술 작문 및 지시 준수에도 능숙합니다. 사용자는 이를 통해 텍스트, 코드 및 이미지를 분석하고, 다단계 복잡한 문제를 해결할 수 있습니다."
   },
+  "o3-deep-research": {
+    "description": "o3-deep-research는 복잡한 다단계 연구 작업을 처리하도록 설계된 당사의 최첨단 심층 연구 모델입니다. 인터넷에서 정보를 검색하고 종합할 수 있으며, MCP 커넥터를 통해 귀하의 자체 데이터를 액세스하고 활용할 수도 있습니다."
+  },
   "o3-mini": {
     "description": "o3-mini는 최신 소형 추론 모델로, o1-mini와 동일한 비용과 지연 목표에서 높은 지능을 제공합니다."
   },
@@ -1858,6 +1885,9 @@
   },
   "o4-mini": {
     "description": "o4-mini는 최신 소형 o 시리즈 모델로, 빠르고 효율적인 추론을 위해 최적화되어 있으며, 코딩 및 시각적 작업에서 매우 높은 효율성과 성능을 자랑합니다."
+  },
+  "o4-mini-deep-research": {
+    "description": "o4-mini-deep-research는 더 빠르고 경제적인 심층 연구 모델로, 복잡한 다단계 연구 작업에 매우 적합합니다. 인터넷에서 정보를 검색하고 종합할 수 있으며, MCP 커넥터를 통해 귀하의 자체 데이터를 액세스하고 활용할 수도 있습니다."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba는 코드 생성을 전문으로 하는 Mamba 2 언어 모델로, 고급 코드 및 추론 작업에 강력한 지원을 제공합니다."
@@ -2255,6 +2285,9 @@
   "taichu_vl": {
     "description": "이미지 이해, 지식 이전, 논리 귀속 등의 능력을 통합하여, 이미지-텍스트 질문 응답 분야에서 뛰어난 성능을 보입니다."
   },
+  "tencent/Hunyuan-A13B-Instruct": {
+    "description": "Hunyuan-A13B-Instruct는 800억 개의 매개변수를 보유하며, 130억 개의 활성화 매개변수만으로 더 큰 모델과 견줄 수 있습니다. '빠른 사고/느린 사고' 혼합 추론을 지원하며, 긴 문서 이해가 안정적입니다. BFCL-v3와 τ-Bench 검증을 통해 에이전트 능력이 선도적임을 입증했으며, GQA와 다중 양자화 포맷을 결합해 효율적인 추론을 실현합니다."
+  },
   "text-embedding-3-large": {
     "description": "가장 강력한 벡터화 모델로, 영어 및 비영어 작업에 적합합니다."
   },
@@ -2305,6 +2338,15 @@
   },
   "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
     "description": "Claude 3.7 소네트는 Anthropic의 가장 빠른 차세대 모델입니다. Claude 3 하이쿠와 비교할 때, Claude 3.7 소네트는 모든 기술에서 향상되었으며, 많은 지능 기준 테스트에서 이전 세대의 가장 큰 모델인 Claude 3 오푸스를 초월했습니다."
+  },
+  "v0-1.0-md": {
+    "description": "v0-1.0-md 모델은 v0 API를 통해 제공되는 구버전 모델입니다"
+  },
+  "v0-1.5-lg": {
+    "description": "v0-1.5-lg 모델은 고급 사고 또는 추론 작업에 적합합니다"
+  },
+  "v0-1.5-md": {
+    "description": "v0-1.5-md 모델은 일상 작업 및 사용자 인터페이스(UI) 생성에 적합합니다"
   },
   "whisper-1": {
     "description": "범용 음성 인식 모델로, 다국어 음성 인식, 음성 번역 및 언어 인식을 지원합니다."
