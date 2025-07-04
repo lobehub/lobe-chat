@@ -24,12 +24,13 @@ export const documentRouter = router({
   parseFileContent: documentProcedure
     .input(
       z.object({
+        hash: z.string(),
         id: z.string(),
         skipExist: z.boolean().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const lobeDocument = await ctx.documentService.parseFile(input.id);
+      const lobeDocument = await ctx.documentService.parseFile(input.id, input.hash);
 
       return lobeDocument;
     }),
