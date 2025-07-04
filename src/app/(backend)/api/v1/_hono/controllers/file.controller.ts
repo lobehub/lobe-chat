@@ -282,26 +282,43 @@ export class FileController extends BaseController {
   }
 
   /**
-   * 获取文件详情并解析文件内容
-   * GET /files/:id/upload-and-parse
+   * 上传文件并解析文件内容
+   * POST /files/upload-and-parse
    */
-  async getFileAndParse(c: Context) {
+  async uploadAndParseFile(c: Context) {
     try {
       const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
-      const { id } = this.getParams(c);
-      const query = this.getQuery(c);
 
       const db = await this.getDatabase();
       const fileService = new FileUploadService(db, userId);
 
-      // 解析查询参数
-      const parseOptions = {
-        skipExist: query.skipExist === 'true',
+      // 处理 multipart/form-data
+      const formData = await c.req.formData();
+      const file = formData.get('file') as File;
+
+      if (!file) {
+        return this.error(c, 'No file provided', 400);
+      }
+
+      // 获取其他参数
+      const knowledgeBaseId = formData.get('knowledgeBaseId') as string | null;
+      const skipCheckFileType = formData.get('skipCheckFileType') === 'true';
+      const directory = formData.get('directory') as string | null;
+      const skipExist = formData.get('skipExist') === 'true';
+
+      const uploadOptions: Partial<FileUploadRequest> = {
+        directory: directory || undefined,
+        knowledgeBaseId: knowledgeBaseId || undefined,
+        skipCheckFileType,
       };
 
-      const result = await fileService.getFileAndParse(id, parseOptions);
+      const parseOptions = {
+        skipExist,
+      };
 
-      return this.success(c, result, 'File retrieved and parsed successfully');
+      const result = await fileService.uploadAndParseFile(file, uploadOptions, parseOptions);
+
+      return this.success(c, result, 'File uploaded and parsed successfully');
     } catch (error) {
       return this.handleError(c, error);
     }
