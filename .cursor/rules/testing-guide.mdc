@@ -1,0 +1,881 @@
+---
+description: 
+globs: *.test.ts,*.test.tsx
+alwaysApply: false
+---
+---
+type: agent-requested
+title: 测试指南 - LobeChat Testing Guide
+description: LobeChat 项目的 Vitest 测试环境配置、运行方式、修复原则指南
+---
+
+# 测试指南 - LobeChat Testing Guide
+
+## 🧪 测试环境概览
+
+LobeChat 项目使用 Vitest 测试库，配置了两种不同的测试环境：
+
+### 客户端测试环境 (DOM Environment)
+
+- **配置文件**: [vitest.config.ts](mdc:vitest.config.ts)
+- **环境**: Happy DOM (浏览器环境模拟)
+- **数据库**: PGLite (浏览器环境的 PostgreSQL)
+- **用途**: 测试前端组件、客户端逻辑、React 组件等
+- **设置文件**: [tests/setup.ts](mdc:tests/setup.ts)
+
+### 服务端测试环境 (Node Environment)
+
+- **配置文件**: [vitest.config.server.ts](mdc:vitest.config.server.ts)
+- **环境**: Node.js
+- **数据库**: 真实的 PostgreSQL 数据库
+- **并发限制**: 单线程运行 (`singleFork: true`)
+- **用途**: 测试数据库模型、服务端逻辑、API 端点等
+- **设置文件**: [tests/setup-db.ts](mdc:tests/setup-db.ts)
+
+## 🚀 测试运行命令
+
+### package.json 脚本说明
+
+查看 [package.json](mdc:package.json) 中的测试相关脚本：
+
+```json
+{
+    "test": "npm run test-app && npm run test-server",
+    "test-app": "vitest run --config vitest.config.ts",
+    "test-app:coverage": "vitest run --config vitest.config.ts --coverage",
+    "test-server": "vitest run --config vitest.config.server.ts",
+    "test-server:coverage": "vitest run --config vitest.config.server.ts --coverage"
+}
+```
+
+### 推荐的测试运行方式
+
+#### ✅ 正确的命令格式
+
+```bash
+# 运行所有客户端测试
+npx vitest run --config vitest.config.ts
+
+# 运行所有服务端测试
+npx vitest run --config vitest.config.server.ts
+
+# 运行特定测试文件 (支持模糊匹配)
+npx vitest run --config vitest.config.ts basic
+npx vitest run --config vitest.config.ts user.test.ts
+
+# 运行特定文件的特定行号
+npx vitest run --config vitest.config.ts src/utils/helper.test.ts:25
+npx vitest run --config vitest.config.ts basic/foo.test.ts:10,basic/foo.test.ts:25
+
+# 过滤特定测试用例名称
+npx vitest -t "test case name" --config vitest.config.ts
+
+# 组合使用文件和测试名称过滤
+npx vitest run --config vitest.config.ts filename.test.ts -t "specific test"
+```
+
+#### ❌ 避免的命令格式
+
+```bash
+# ❌ 不要使用 pnpm test xxx (这不是有效的 vitest 命令)
+pnpm test some-file
+
+# ❌ 不要使用裸 vitest (会进入 watch 模式)
+vitest test-file.test.ts
+
+# ❌ 不要混淆测试环境
+npx vitest run --config vitest.config.server.ts client-component.test.ts
+```
+
+### 关键运行参数说明
+
+- **`vitest run`**: 运行一次测试然后退出 (避免 watch 模式)
+- **`vitest`**: 默认进入 watch 模式，持续监听文件变化
+- **`--config`**: 指定配置文件，选择正确的测试环境
+- **`-t`**: 过滤测试用例名称，支持正则表达式
+- **`--coverage`**: 生成测试覆盖率报告
+
+## 🔧 测试修复原则
+
+### 核心原则 ⚠️
+
+1. **充分阅读测试代码**: 在修复测试之前，必须完整理解测试的意图和实现
+2. **测试优先修复**: 如果是测试本身写错了，修改测试而不是实现代码
+3. **专注单一问题**: 只修复指定的测试，不要添加额外测试或功能
+4. **不自作主张**: 不要因为发现其他问题就直接修改，先提出再讨论
+
+### 测试修复流程
+
+```mermaid
+flowchart TD
+    subgraph "阶段一：分析与复现"
+        A[开始：收到测试失败报告] --> B[定位并运行失败的测试];
+        B --> C{是否能在本地复现?};
+        C -->|否| D[检查测试环境/配置/依赖];
+        C -->|是| E[分析：阅读测试代码、错误日志、Git 历史];
+    end
+
+    subgraph "阶段二：诊断与调试"
+        E --> F[建立假设：问题出在测试、代码还是环境?];
+        F --> G["调试：使用 console.log 或 debugger 深入检查"];
+        G --> H{假设是否被证实?};
+        H -->|否, 重新假设| F;
+    end
+
+    subgraph "阶段三：修复与验证"
+        H -->|是| I{确定根本原因};
+        I -->|测试逻辑错误| J[修复测试代码];
+        I -->|实现代码 Bug| K[修复实现代码];
+        I -->|环境/配置问题| L[修复配置或依赖];
+        J --> M[验证修复：重新运行失败的测试];
+        K --> M;
+        L --> M;
+        M --> N{测试是否通过?};
+        N -->|否, 修复无效| F;
+        N -->|是| O[扩大验证：运行当前文件内所有测试];
+        O --> P{是否全部通过?};
+        P -->|否, 引入新问题| F;
+    end
+
+    subgraph "阶段四：总结"
+        P -->|是| Q[完成：撰写修复总结];
+    end
+
+    D --> F;
+```
+
+### 修复完成后的总结
+
+测试修复完成后，应该提供简要说明，包括：
+
+1. **错误原因分析**: 说明测试失败的根本原因
+    - 测试逻辑错误
+    - 实现代码bug
+    - 环境配置问题
+    - 依赖变更导致的问题
+
+2. **修复方法说明**: 简述采用的修复方式
+    - 修改了哪些文件
+    - 采用了什么解决方案
+    - 为什么选择这种修复方式
+
+**示例格式**:
+
+```markdown
+## 测试修复总结
+
+**错误原因**: 测试中的 mock 数据格式与实际 API 返回格式不匹配，导致断言失败。
+
+**修复方法**: 更新了测试文件中的 mock 数据结构，使其与最新的 API 响应格式保持一致。具体修改了 `user.test.ts` 中的 `mockUserData` 对象结构。
+```
+
+## 📂 测试文件组织
+
+### 文件命名约定
+
+- **客户端测试**: `*.test.ts`, `*.test.tsx` (任意位置)
+- **服务端测试**: `src/database/models/**/*.test.ts`, `src/database/server/**/*.test.ts` (限定路径)
+
+### 测试文件组织风格
+
+项目采用 **测试文件与源文件同目录** 的组织风格：
+
+- 测试文件放在对应源文件的同一目录下
+- 命名格式：`原文件名.test.ts` 或 `原文件名.test.tsx`
+
+例如：
+
+```
+src/components/Button/
+├── index.tsx           # 源文件
+└── index.test.tsx      # 测试文件
+```
+
+## 🛠️ 测试调试技巧
+
+### 运行失败测试的步骤
+
+1. **确定测试类型**: 查看文件路径确定使用哪个配置
+2. **运行单个测试**: 使用 `-t` 参数隔离问题
+3. **检查错误日志**: 仔细阅读错误信息和堆栈跟踪
+4. **查看最近修改记录**: 检查相关文件的最近变更情况
+5. **添加调试日志**: 在测试中添加 `console.log` 了解执行流程
+
+### Electron IPC 接口测试策略 🖥️
+
+对于涉及 Electron IPC 接口的测试，由于提供真实的 Electron 环境比较复杂，采用 **Mock 返回值** 的方式进行测试。
+
+#### 基本 Mock 设置
+
+```typescript
+import { vi } from "vitest";
+import { electronIpcClient } from "@/server/modules/ElectronIPCClient";
+
+// Mock Electron IPC 客户端
+vi.mock("@/server/modules/ElectronIPCClient", () => ({
+    electronIpcClient: {
+        getFilePathById: vi.fn(),
+        deleteFiles: vi.fn(),
+        // 根据需要添加其他 IPC 方法
+    },
+}));
+```
+
+#### 在测试中设置 Mock 行为
+
+```typescript
+beforeEach(() => {
+    // 重置所有 Mock
+    vi.resetAllMocks();
+
+    // 设置默认的 Mock 返回值
+    vi.mocked(electronIpcClient.getFilePathById).mockResolvedValue(
+        "/path/to/file.txt"
+    );
+    vi.mocked(electronIpcClient.deleteFiles).mockResolvedValue({
+        success: true,
+    });
+});
+```
+
+#### 测试不同场景的示例
+
+```typescript
+it("应该处理文件删除成功的情况", async () => {
+    // 设置成功场景的 Mock
+    vi.mocked(electronIpcClient.deleteFiles).mockResolvedValue({
+        success: true,
+    });
+
+    const result = await service.deleteFiles(["desktop://file1.txt"]);
+
+    expect(electronIpcClient.deleteFiles).toHaveBeenCalledWith([
+        "desktop://file1.txt",
+    ]);
+    expect(result.success).toBe(true);
+});
+
+it("应该处理文件删除失败的情况", async () => {
+    // 设置失败场景的 Mock
+    vi.mocked(electronIpcClient.deleteFiles).mockRejectedValue(
+        new Error("删除失败")
+    );
+
+    const result = await service.deleteFiles(["desktop://file1.txt"]);
+
+    expect(result.success).toBe(false);
+    expect(result.errors).toBeDefined();
+});
+```
+
+#### Mock 策略的优势
+
+1. **环境简化**: 避免了复杂的 Electron 环境搭建
+2. **测试可控**: 可以精确控制 IPC 调用的返回值和行为
+3. **场景覆盖**: 容易测试各种成功/失败场景
+4. **执行速度**: Mock 调用比真实 IPC 调用更快
+
+#### 注意事项
+
+- **Mock 准确性**: 确保 Mock 的行为与真实 IPC 接口行为一致
+- **类型安全**: 使用 `vi.mocked()` 确保类型安全
+- **Mock 重置**: 在 `beforeEach` 中重置 Mock 状态，避免测试间干扰
+- **调用验证**: 不仅要验证返回值，还要验证 IPC 方法是否被正确调用
+
+### 检查最近修改记录 🔍
+
+为了更好地判断测试失败的根本原因，需要**系统性地检查相关文件的修改历史**。这是问题定位的关键步骤。
+
+#### 第一步：确定需要检查的文件范围
+
+1. **测试文件本身**: `path/to/component.test.ts`
+2. **对应的实现文件**: `path/to/component.ts` 或 `path/to/component/index.ts`
+3. **相关依赖文件**: 测试或实现中导入的其他模块
+
+#### 第二步：检查当前工作目录状态
+
+```bash
+# 查看所有未提交的修改状态
+git status
+
+# 重点关注测试文件和实现文件是否有未提交的修改
+git status | grep -E "(test|spec)"
+```
+
+#### 第三步：检查未提交的修改内容
+
+```bash
+# 查看测试文件的未提交修改 (工作区 vs 暂存区)
+git diff path/to/component.test.ts | cat
+
+# 查看对应实现文件的未提交修改
+git diff path/to/component.ts | cat
+
+# 查看已暂存但未提交的修改
+git diff --cached path/to/component.test.ts | cat
+git diff --cached path/to/component.ts | cat
+```
+
+#### 第四步：检查提交历史和时间相关性
+
+**首先查看提交时间，判断修改的时效性**：
+
+```bash
+# 查看测试文件的最近提交历史，包含提交时间
+git log --pretty=format:"%h %ad %s" --date=relative -5 path/to/component.test.ts | cat
+
+# 查看实现文件的最近提交历史，包含提交时间
+git log --pretty=format:"%h %ad %s" --date=relative -5 path/to/component.ts | cat
+
+# 查看详细的提交时间（ISO格式，便于精确判断）
+git log --pretty=format:"%h %ad %an %s" --date=iso -3 path/to/component.ts | cat
+git log --pretty=format:"%h %ad %an %s" --date=iso -3 path/to/component.test.ts | cat
+```
+
+**判断提交的参考价值**：
+
+1. **最近提交（24小时内）**: 🔴 **高度相关** - 很可能是导致测试失败的直接原因
+2. **近期提交（1-7天内）**: 🟡 **中等相关** - 可能相关，需要仔细分析修改内容
+3. **较早提交（超过1周）**: ⚪ **低相关性** - 除非是重大重构，否则不太可能是直接原因
+
+#### 第五步：基于时间相关性查看具体修改内容
+
+**根据提交时间的远近，优先查看最近的修改**：
+
+```bash
+# 如果有24小时内的提交，重点查看这些修改
+git show HEAD -- path/to/component.test.ts | cat
+git show HEAD -- path/to/component.ts | cat
+
+# 查看次新的提交（如果最新提交时间较远）
+git show HEAD~1 -- path/to/component.ts | cat
+git show <recent-commit-hash> -- path/to/component.ts | cat
+
+# 对比最近两次提交的差异
+git diff HEAD~1 HEAD -- path/to/component.ts | cat
+```
+
+#### 第六步：分析修改与测试失败的关系
+
+基于修改记录和时间相关性判断：
+
+1. **最近修改了实现代码**:
+
+    ```bash
+    # 重点检查实现逻辑的变化
+    git diff HEAD~1 path/to/component.ts | cat
+    ```
+
+    - 很可能是实现代码的变更导致测试失败
+    - 检查实现逻辑是否正确
+    - 确认测试是否需要相应更新
+
+2. **最近修改了测试代码**:
+
+    ```bash
+    # 重点检查测试逻辑的变化
+    git diff HEAD~1 path/to/component.test.ts | cat
+    ```
+
+    - 可能是测试本身写错了
+    - 检查测试逻辑和断言是否正确
+    - 确认测试是否符合实现的预期行为
+
+3. **两者都有最近修改**:
+
+    ```bash
+    # 对比两个文件的修改时间
+    git log --pretty=format:"%ad %f" --date=iso -1 path/to/component.ts | cat
+    git log --pretty=format:"%ad %f" --date=iso -1 path/to/component.test.ts | cat
+    ```
+
+    - 需要综合分析两者的修改
+    - 确定哪个修改更可能导致问题
+    - 优先检查时间更近的修改
+
+4. **都没有最近修改**:
+    - 可能是依赖变更或环境问题
+    - 检查 `package.json`、配置文件等的修改
+    - 查看是否有全局性的代码重构
+
+#### 修改记录检查示例
+
+```bash
+# 完整的检查流程示例
+echo "=== 检查文件修改状态 ==="
+git status | grep component
+
+echo "=== 检查未提交修改 ==="
+git diff src/components/Button/index.test.tsx | cat
+git diff src/components/Button/index.tsx | cat
+
+echo "=== 检查提交历史和时间 ==="
+git log --pretty=format:"%h %ad %s" --date=relative -3 src/components/Button/index.test.tsx | cat
+git log --pretty=format:"%h %ad %s" --date=relative -3 src/components/Button/index.tsx | cat
+
+echo "=== 根据时间优先级查看修改内容 ==="
+# 如果有24小时内的提交，重点查看
+git show HEAD -- src/components/Button/index.tsx | cat
+```
+
+## 🗃️ 数据库 Model 测试指南
+
+### 测试环境选择 💡
+
+数据库 Model 层通过环境变量控制数据库类型，在两种测试环境下有不同的数据库后端：客户端环境 (PGLite) 和 服务端环境 (PostgreSQL)
+
+### ⚠️ 双环境验证要求
+
+**对于所有 Model 测试，必须在两个环境下都验证通过**：
+
+#### 完整验证流程
+
+```bash
+# 1. 先在客户端环境测试（快速验证）
+npx vitest run --config vitest.config.ts src/database/models/__tests__/myModel.test.ts
+
+# 2. 再在服务端环境测试（兼容性验证）
+npx vitest run --config vitest.config.server.ts src/database/models/__tests__/myModel.test.ts
+```
+
+### 创建新 Model 测试的最佳实践 📋
+
+#### 1. 参考现有实现和测试模板
+
+创建新 Model 测试前，**必须先参考现有的实现模式**：
+
+- **Model 实现参考**: 
+- **测试模板参考**: 
+- **复杂示例参考**: 
+
+#### 2. 用户权限检查 - 安全第一 🔒
+
+这是**最关键的安全要求**。所有涉及用户数据的操作都必须包含用户权限检查：
+
+**❌ 错误示例 - 存在安全漏洞**:
+
+```typescript
+// 危险：缺少用户权限检查，任何用户都能操作任何数据
+update = async (id: string, data: Partial<MyModel>) => {
+    return this.db
+        .update(myTable)
+        .set(data)
+        .where(eq(myTable.id, id)) // ❌ 只检查 ID，没有检查 userId
+        .returning();
+};
+```
+
+**✅ 正确示例 - 安全的实现**:
+
+```typescript
+// 安全：必须同时匹配 ID 和 userId
+update = async (id: string, data: Partial<MyModel>) => {
+    return this.db
+        .update(myTable)
+        .set(data)
+        .where(
+            and(
+                eq(myTable.id, id),
+                eq(myTable.userId, this.userId) // ✅ 用户权限检查
+            )
+        )
+        .returning();
+};
+```
+
+**必须进行用户权限检查的方法**：
+
+- `update()` - 更新操作
+- `delete()` - 删除操作
+- `findById()` - 查找特定记录
+- 任何涉及特定记录的查询或修改操作
+
+#### 3. 测试文件结构和必测场景
+
+**基本测试结构**:
+
+```typescript
+// @vitest-environment node
+describe("MyModel", () => {
+    describe("create", () => {
+        it("should create a new record");
+        it("should handle edge cases");
+    });
+
+    describe("queryAll", () => {
+        it("should return records for current user only");
+        it("should handle empty results");
+    });
+
+    describe("update", () => {
+        it("should update own records");
+        it("should NOT update other users records"); // 🔒 安全测试
+    });
+
+    describe("delete", () => {
+        it("should delete own records");
+        it("should NOT delete other users records"); // 🔒 安全测试
+    });
+
+    describe("user isolation", () => {
+        it("should enforce user data isolation"); // 🔒 核心安全测试
+    });
+});
+```
+
+**必须测试的安全场景** 🔒:
+
+```typescript
+it("should not update records of other users", async () => {
+    // 创建其他用户的记录
+    const [otherUserRecord] = await serverDB
+        .insert(myTable)
+        .values({ userId: "other-user", data: "original" })
+        .returning();
+
+    // 尝试更新其他用户的记录
+    const result = await myModel.update(otherUserRecord.id, { data: "hacked" });
+
+    // 应该返回 undefined 或空数组（因为权限检查失败）
+    expect(result).toBeUndefined();
+
+    // 验证原始数据未被修改
+    const unchanged = await serverDB.query.myTable.findFirst({
+        where: eq(myTable.id, otherUserRecord.id),
+    });
+    expect(unchanged?.data).toBe("original"); // 数据应该保持不变
+});
+```
+
+#### 4. Mock 外部依赖服务
+
+如果 Model 依赖外部服务（如 FileService），需要正确 Mock：
+
+**设置 Mock**:
+
+```typescript
+// 在文件顶部设置 Mock
+const mockGetFullFileUrl = vi.fn();
+vi.mock("@/server/services/file", () => ({
+    FileService: vi.fn().mockImplementation(() => ({
+        getFullFileUrl: mockGetFullFileUrl,
+    })),
+}));
+
+// 在 beforeEach 中重置和配置 Mock
+beforeEach(async () => {
+    vi.clearAllMocks();
+    mockGetFullFileUrl.mockImplementation(
+        (url: string) => `https://example.com/${url}`
+    );
+});
+```
+
+**验证 Mock 调用**:
+
+```typescript
+it("should process URLs through FileService", async () => {
+    // ... 测试逻辑
+
+    // 验证 Mock 被正确调用
+    expect(mockGetFullFileUrl).toHaveBeenCalledWith("expected-url");
+    expect(mockGetFullFileUrl).toHaveBeenCalledTimes(1);
+});
+```
+
+#### 5. 数据库状态管理
+
+**正确的数据清理模式**:
+
+```typescript
+const userId = "test-user";
+const otherUserId = "other-user";
+
+beforeEach(async () => {
+    // 清理用户表（级联删除相关数据）
+    await serverDB.delete(users);
+
+    // 创建测试用户
+    await serverDB.insert(users).values([{ id: userId }, { id: otherUserId }]);
+});
+
+afterEach(async () => {
+    // 清理测试数据
+    await serverDB.delete(users);
+});
+```
+
+#### 6. 测试数据类型和外键约束处理 ⚠️
+
+**必须使用 Schema 导出的类型**:
+
+```typescript
+// ✅ 正确：使用 schema 导出的类型
+import { NewGenerationBatch, NewGeneration } from '../../schemas';
+
+const testBatch: NewGenerationBatch = {
+    userId,
+    generationTopicId: 'test-topic-id',
+    provider: 'test-provider',
+    model: 'test-model',
+    prompt: 'Test prompt for image generation',
+    width: 1024,
+    height: 1024,
+    config: { /* ... */ },
+};
+
+const testGeneration: NewGeneration = {
+    id: 'test-gen-id',
+    generationBatchId: 'test-batch-id',
+    asyncTaskId: null, // 处理外键约束
+    fileId: null,      // 处理外键约束
+    seed: 12345,
+    userId,
+};
+```
+
+```typescript
+// ❌ 错误：没有类型声明或使用错误类型
+const testBatch = {  // 缺少类型声明
+    generationTopicId: 'test-topic-id',
+    // ...
+};
+
+const testGeneration = {  // 缺少类型声明
+    asyncTaskId: 'invalid-uuid',  // 外键约束错误
+    fileId: 'non-existent-file',  // 外键约束错误
+    // ...
+};
+```
+
+**外键约束处理策略**:
+
+1. **使用 null 值**: 对于可选的外键字段，使用 null 避免约束错误
+2. **创建关联记录**: 如果需要测试关联关系，先创建被引用的记录
+3. **理解约束关系**: 了解哪些字段有外键约束，避免引用不存在的记录
+
+```typescript
+// 外键约束处理示例
+beforeEach(async () => {
+    // 清理数据库
+    await serverDB.delete(users);
+    
+    // 创建测试用户
+    await serverDB.insert(users).values([{ id: userId }]);
+    
+    // 如果需要测试文件关联，创建文件记录
+    if (needsFileAssociation) {
+        await serverDB.insert(files).values({
+            id: 'test-file-id',
+            userId,
+            name: 'test.jpg',
+            url: 'test-url',
+            size: 1024,
+            fileType: 'image/jpeg',
+        });
+    }
+});
+```
+
+**排序测试的可预测性**:
+
+```typescript
+// ✅ 正确：使用明确的时间戳确保排序结果可预测
+it('should find batches by topic id in correct order', async () => {
+    const oldDate = new Date('2024-01-01T10:00:00Z');
+    const newDate = new Date('2024-01-02T10:00:00Z');
+    
+    const batch1 = { ...testBatch, prompt: 'First batch', userId, createdAt: oldDate };
+    const batch2 = { ...testBatch, prompt: 'Second batch', userId, createdAt: newDate };
+
+    await serverDB.insert(generationBatches).values([batch1, batch2]);
+
+    const results = await generationBatchModel.findByTopicId(testTopic.id);
+
+    expect(results[0].prompt).toBe('Second batch'); // 最新优先 (desc order)
+    expect(results[1].prompt).toBe('First batch');
+});
+```
+
+```typescript
+// ❌ 错误：依赖数据库的默认时间戳，结果不可预测
+it('should find batches by topic id', async () => {
+    const batch1 = { ...testBatch, prompt: 'First batch', userId };
+    const batch2 = { ...testBatch, prompt: 'Second batch', userId };
+
+    await serverDB.insert(generationBatches).values([batch1, batch2]);
+    
+    // 插入顺序和数据库时间戳可能不一致，导致测试不稳定
+    const results = await generationBatchModel.findByTopicId(testTopic.id);
+    expect(results[0].prompt).toBe('Second batch'); // 可能失败
+});
+```
+
+
+
+### 常见问题和解决方案 💡
+
+#### 问题 1：权限检查缺失导致安全漏洞
+
+**现象**: 测试失败，用户能修改其他用户的数据
+**解决**: 在 Model 的 `update` 和 `delete` 方法中添加 `and(eq(table.id, id), eq(table.userId, this.userId))`
+
+#### 问题 2：Mock 未生效或验证失败
+
+**现象**: `undefined is not a spy` 错误
+**解决**: 检查 Mock 设置位置和方式，确保在测试文件顶部设置，在 `beforeEach` 中重置
+
+#### 问题 3：测试数据污染
+
+**现象**: 测试间相互影响，结果不稳定
+**解决**: 在 `beforeEach` 和 `afterEach` 中正确清理数据库状态
+
+#### 问题 4：外部依赖导致测试失败
+
+**现象**: 因为真实的外部服务调用导致测试不稳定
+**解决**: Mock 所有外部依赖，使测试更可控和快速
+
+#### 问题 5：外键约束违反导致测试失败
+
+**现象**: `insert or update on table "xxx" violates foreign key constraint`
+**解决**: 
+- 将可选外键字段设为 `null` 而不是无效的字符串值
+- 或者先创建被引用的记录，再创建当前记录
+
+```typescript
+// ❌ 错误：无效的外键值
+const testData = {
+    asyncTaskId: 'invalid-uuid',  // 表中不存在此记录
+    fileId: 'non-existent-file',  // 表中不存在此记录
+};
+
+// ✅ 正确：使用 null 值
+const testData = {
+    asyncTaskId: null,  // 避免外键约束
+    fileId: null,       // 避免外键约束
+};
+
+// ✅ 或者：先创建被引用的记录
+beforeEach(async () => {
+    const [asyncTask] = await serverDB.insert(asyncTasks).values({
+        id: 'valid-task-id',
+        status: 'pending',
+        type: 'generation',
+    }).returning();
+    
+    const testData = {
+        asyncTaskId: asyncTask.id,  // 使用有效的外键值
+    };
+});
+```
+
+#### 问题 6：排序测试结果不一致
+
+**现象**: 相同的测试有时通过，有时失败，特别是涉及排序的测试
+**解决**: 使用明确的时间戳，不要依赖数据库的默认时间戳
+
+```typescript
+// ❌ 错误：依赖插入顺序和默认时间戳
+await serverDB.insert(table).values([data1, data2]);  // 时间戳不可预测
+
+// ✅ 正确：明确指定时间戳
+const oldDate = new Date('2024-01-01T10:00:00Z');
+const newDate = new Date('2024-01-02T10:00:00Z');
+await serverDB.insert(table).values([
+    { ...data1, createdAt: oldDate },
+    { ...data2, createdAt: newDate },
+]);
+```
+
+#### 问题 7：Mock 验证失败或调用次数不匹配
+
+**现象**: `expect(mockFunction).toHaveBeenCalledWith(...)` 失败
+**解决**: 
+- 检查 Mock 函数的实际调用参数和期望参数是否完全匹配
+- 确认 Mock 在正确的时机被重置和配置
+- 使用 `toHaveBeenCalledTimes()` 验证调用次数
+
+```typescript
+// 在 beforeEach 中正确配置 Mock
+beforeEach(() => {
+    vi.clearAllMocks();  // 重置所有 Mock
+    
+    mockGetFullFileUrl.mockImplementation((url: string) => `https://example.com/${url}`);
+    mockTransformGeneration.mockResolvedValue({
+        id: 'test-id',
+        // ... 其他字段
+    });
+});
+
+// 测试中验证 Mock 调用
+it('should call FileService with correct parameters', async () => {
+    await model.someMethod();
+    
+    // 验证调用参数
+    expect(mockGetFullFileUrl).toHaveBeenCalledWith('expected-url');
+    // 验证调用次数
+    expect(mockGetFullFileUrl).toHaveBeenCalledTimes(1);
+});
+```
+
+### Model 测试检查清单 ✅
+
+创建 Model 测试时，请确保以下各项都已完成：
+
+#### 🔧 基础配置
+- [ ] **双环境验证** - 在客户端环境 (vitest.config.ts) 和服务端环境 (vitest.config.server.ts) 下都测试通过
+- [ ] 参考了 `_template.ts` 和现有 Model 的实现模式
+- [ ] **使用正确的 Schema 类型** - 测试数据使用 `NewXxx` 类型声明，如 `NewGenerationBatch`、`NewGeneration`
+
+#### 🔒 安全测试
+- [ ] **所有涉及用户数据的操作都包含用户权限检查**
+- [ ] 包含了用户权限隔离的安全测试
+- [ ] 测试了用户无法访问其他用户数据的场景
+
+#### 🗃️ 数据处理
+- [ ] **正确处理外键约束** - 使用 `null` 值或先创建被引用记录
+- [ ] **排序测试使用明确时间戳** - 不依赖数据库默认时间，确保结果可预测
+- [ ] 在 `beforeEach` 和 `afterEach` 中正确管理数据库状态
+- [ ] 所有测试都能独立运行且互不干扰
+
+#### 🎭 Mock 和外部依赖
+- [ ] 正确 Mock 了外部依赖服务 (如 FileService、GenerationModel)
+- [ ] 在 `beforeEach` 中重置和配置 Mock
+- [ ] 验证了 Mock 服务的调用参数和次数
+- [ ] 测试了外部服务错误场景的处理
+
+#### 📋 测试覆盖
+- [ ] 测试覆盖了所有主要方法 (create, query, update, delete)
+- [ ] 测试了边界条件和错误场景
+- [ ] 包含了空结果处理的测试
+- [ ] **确认两个环境下的测试结果一致**
+
+#### 🚨 常见问题检查
+- [ ] 没有外键约束违反错误
+- [ ] 排序测试结果稳定可预测
+- [ ] Mock 验证无失败
+- [ ] 无测试数据污染问题
+
+### 安全警告 ⚠️
+
+**数据库 Model 层是安全的第一道防线**。如果 Model 层缺少用户权限检查：
+
+1. **任何用户都能访问和修改其他用户的数据**
+2. **即使上层有权限检查，也可能被绕过**
+3. **可能导致严重的数据泄露和安全事故**
+
+因此，**每个涉及用户数据的 Model 方法都必须包含用户权限检查，且必须有对应的安全测试来验证这些检查的有效性**。
+
+## 🎯 总结
+
+修复测试时，记住以下关键点：
+
+- **使用正确的命令**: `npx vitest run --config [config-file]`
+- **理解测试意图**: 先读懂测试再修复
+- **查看最近修改**: 检查相关文件的 git 修改记录，判断问题根源
+- **选择正确环境**: 客户端测试用 `vitest.config.ts`，服务端用 `vitest.config.server.ts`
+- **专注单一问题**: 只修复当前的测试失败
+- **验证修复结果**: 确保修复后测试通过且无副作用
+- **提供修复总结**: 说明错误原因和修复方法
+- **Model 测试安全第一**: 必须包含用户权限检查和对应的安全测试
+- **Model 双环境验证**: 必须在 PGLite 和 PostgreSQL 两个环境下都验证通过
