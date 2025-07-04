@@ -22,7 +22,7 @@ export const PluginList = memo(() => {
       }}
       width={'100%'}
     >
-      <DraggablePanel maxWidth={1024} minWidth={500} placement={'left'}>
+      <DraggablePanel maxWidth={1024} minWidth={420} placement={'left'}>
         <List />
       </DraggablePanel>
       <Flexbox

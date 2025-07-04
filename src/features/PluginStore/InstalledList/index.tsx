@@ -41,7 +41,7 @@ const PluginList = memo<{ keywords?: string }>(({ keywords }) => {
       }}
       width={'100%'}
     >
-      <DraggablePanel maxWidth={1024} minWidth={320} placement={'left'}>
+      <DraggablePanel maxWidth={1024} minWidth={420} placement={'left'}>
         <List
           identifier={identifier}
           keywords={keywords}
