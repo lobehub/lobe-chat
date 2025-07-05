@@ -9,7 +9,6 @@ import { LobeAgentChatConfig } from '@/types/agent/chatConfig';
 import { BaseService } from '../common/base.service';
 import { ServiceResult } from '../types';
 import {
-  AIProvider,
   ChatServiceConfig,
   ChatServiceParams,
   ChatServiceResponse,
@@ -500,7 +499,7 @@ export class ChatService extends BaseService {
   /**
    * 获取最终使用的模型配置（优先级：用户指定 > sessionId配置 > 默认配置）
    */
-  private async resolveModelConfig(params: {
+  async resolveModelConfig(params: {
     agentId?: string;
     model?: string;
     provider?: string;
@@ -558,28 +557,5 @@ export class ChatService extends BaseService {
       model: params.model || modelConfig.model,
       provider: params.provider || modelConfig.provider,
     };
-  }
-
-  /**
-   * 检查服务可用性
-   * @param provider AI提供商
-   * @returns 是否可用
-   */
-  async checkAvailability(provider?: AIProvider): ServiceResult<boolean> {
-    const targetProvider = provider || this.config.defaultProvider!;
-
-    try {
-      const agentRuntime = await initAgentRuntimeWithUserPayload(targetProvider, {
-        userId: this.userId || 'test',
-      });
-
-      return !!agentRuntime;
-    } catch (error) {
-      this.log('warn', '检查服务可用性失败', {
-        error: error instanceof Error ? error.message : String(error),
-        provider: targetProvider,
-      });
-      return false;
-    }
   }
 }

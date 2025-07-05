@@ -73,33 +73,4 @@ export class ChatController extends BaseController {
       return this.handleError(c, error);
     }
   }
-
-  /**
-   * 检查AI服务可用性
-   * GET /api/v1/chat/health
-   * Query: { provider?: string }
-   */
-  async handleHealthCheck(c: Context) {
-    try {
-      const userId = this.getUserId(c);
-      const query = this.getQuery(c);
-      const provider = query.provider as string;
-
-      const db = await this.getDatabase();
-      const chatService = new ChatService(db, userId);
-      const isAvailable = await chatService.checkAvailability(provider as any);
-
-      return this.success(
-        c,
-        {
-          available: isAvailable,
-          provider: provider || 'default',
-          timestamp: new Date().toISOString(),
-        },
-        isAvailable ? '服务可用' : '服务不可用',
-      );
-    } catch (error) {
-      return this.handleError(c, error);
-    }
-  }
 }
