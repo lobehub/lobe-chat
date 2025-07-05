@@ -553,60 +553,8 @@ const novitaChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     contextWindowTokens: 32_000,
-    displayName: 'GLM 4 9B 0414',
-    id: 'thudm/glm-4-9b-0414',
-    pricing: {
-      input: 0,
-      output: 0,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 32_000,
-    displayName: 'GLM Z1 9B 0414',
-    id: 'thudm/glm-z1-9b-0414',
-    pricing: {
-      input: 0,
-      output: 0,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 32_000,
-    displayName: 'GLM Z1 32B 0414',
-    id: 'thudm/glm-z1-32b-0414',
-    pricing: {
-      input: 0.24,
-      output: 0.24,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 32_000,
     displayName: 'GLM 4 32B 0414',
     id: 'thudm/glm-4-32b-0414',
-    pricing: {
-      input: 0.24,
-      output: 0.24,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 32_000,
-    displayName: 'GLM Z1 Rumination 32B 0414',
-    id: 'thudm/glm-z1-rumination-32b-0414',
     pricing: {
       input: 0.24,
       output: 0.24,
