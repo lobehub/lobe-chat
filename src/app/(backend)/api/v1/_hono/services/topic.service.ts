@@ -1,11 +1,13 @@
 import { count, eq } from 'drizzle-orm';
 
+import { chainSummaryTitle } from '@/chains/summaryTitle';
 import { messages, topics, users } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
 
 import { BaseService } from '../common/base.service';
 import { TopicResponse } from '../types/topic.type';
+import { ChatService } from './chat.service';
 
 export class TopicService extends BaseService {
   constructor(db: LobeChatDatabase, userId: string | null) {
@@ -118,6 +120,7 @@ export class TopicService extends BaseService {
         clientId: newTopic.clientId,
         createdAt: newTopic.createdAt.toISOString(),
         favorite: newTopic.favorite || false,
+        historySummary: newTopic.historySummary,
         id: newTopic.id,
         messageCount: 0, // 新创建的话题消息数量为0
         metadata: newTopic.metadata,
@@ -187,7 +190,7 @@ export class TopicService extends BaseService {
    * @param topicId 话题ID
    * @returns 更新后的话题信息
    */
-  async summarizeTopic(topicId: string): Promise<TopicResponse> {
+  async summarizeTopicTitle(topicId: string): Promise<TopicResponse> {
     if (!this.userId) {
       throw this.createAuthError('未授权操作');
     }
@@ -206,61 +209,68 @@ export class TopicService extends BaseService {
         throw this.createAuthorizationError('无权限操作此话题');
       }
 
-      // TODO: 这里应该集成AI服务来生成真正的摘要
-      // 目前先使用一个简单的摘要逻辑
-      const title = `${existingTopic.title || '未命名话题'} 的对话摘要`;
+      // 获取话题下的所有消息，按时间顺序排序
+      const topicMessages = await this.db
+        .select({
+          content: messages.content,
+          createdAt: messages.createdAt,
+          id: messages.id,
+          role: messages.role,
+        })
+        .from(messages)
+        .where(eq(messages.topicId, topicId))
+        .orderBy(messages.createdAt);
 
-      const [updatedTopic] = await this.db
+      this.log('info', '获取话题消息', {
+        messageCount: topicMessages.length,
+        topicId,
+        userId: this.userId,
+      });
+
+      // 如果没有消息，返回错误
+      if (topicMessages.length === 0) {
+        throw this.createCommonError('话题中没有消息，无法生成摘要');
+      }
+
+      // 构建消息历史用于摘要生成
+      const summaryTitleMessages = chainSummaryTitle(
+        topicMessages.map((message) => ({
+          content: message.content || '',
+          role: message.role,
+        })),
+      ).messages;
+
+      const chatService = new ChatService(this.db, this.userId);
+
+      const { model, provider } = await chatService.resolveModelConfig({
+        sessionId: existingTopic.sessionId,
+      });
+
+      this.log('info', '生成话题摘要', {
+        summaryLength: summaryTitleMessages?.length,
+        topicId,
+        userId: this.userId,
+      });
+
+      const { content: summaryTitle } = await chatService.chat({
+        messages: summaryTitleMessages || [],
+        model,
+        provider,
+      });
+
+      // 更新话题的摘要信息
+      await this.db
         .update(topics)
         .set({
-          title,
+          title: summaryTitle,
           updatedAt: new Date(),
         })
         .where(eq(topics.id, topicId))
         .returning();
 
-      // 获取该话题的消息数量
-      const messageCountResult = await this.db
-        .select({ count: count(messages.id) })
-        .from(messages)
-        .where(eq(messages.topicId, topicId));
+      const updatedTopic = await this.getTopicsBySessionId(existingTopic.sessionId!);
 
-      const messageCount = messageCountResult[0]?.count || 0;
-
-      // 获取用户信息
-      const user = await this.db.query.users.findFirst({
-        columns: {
-          avatar: true,
-          email: true,
-          fullName: true,
-          id: true,
-          username: true,
-        },
-        where: eq(users.id, this.userId),
-      });
-
-      if (!user) {
-        throw this.createCommonError('用户不存在');
-      }
-
-      return {
-        clientId: updatedTopic.clientId,
-        createdAt: updatedTopic.createdAt.toISOString(),
-        favorite: updatedTopic.favorite || false,
-        id: updatedTopic.id,
-        messageCount: messageCount,
-        metadata: updatedTopic.metadata,
-        sessionId: updatedTopic.sessionId,
-        title: updatedTopic.title,
-        updatedAt: updatedTopic.updatedAt.toISOString(),
-        user: {
-          avatar: user.avatar,
-          email: user.email,
-          fullName: user.fullName,
-          id: user.id,
-          username: user.username,
-        },
-      };
+      return updatedTopic[0];
     } catch (error) {
       if (
         error instanceof Error &&
