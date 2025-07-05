@@ -70,14 +70,14 @@ export class TopicController extends BaseController {
    * POST /api/v1/topics/summary
    * Body: { topicId: string }
    */
-  async handleSummarizeTopic(c: Context) {
+  async handleSummarizeTopicTitle(c: Context) {
     try {
       const userId = this.getUserId(c)!;
       const { id } = (await this.getParams<TopicSummaryRequest>(c))!;
 
       const db = await this.getDatabase();
       const topicService = new TopicService(db, userId);
-      const updatedTopic = await topicService.summarizeTopic(id);
+      const updatedTopic = await topicService.summarizeTopicTitle(id);
 
       return this.success(c, updatedTopic, '话题总结成功');
     } catch (error) {
