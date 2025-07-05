@@ -217,6 +217,24 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      'GLM-4.1V-9B-Thinking 是由智谱 AI 和清华大学 KEG 实验室联合发布的一款开源视觉语言模型（VLM），专为处理复杂的多模态认知任务而设计。该模型基于 GLM-4-9B-0414 基础模型，通过引入“思维链”（Chain-of-Thought）推理机制和采用强化学习策略，显著提升了其跨模态的推理能力和稳定性。',
+    displayName: 'GLM-4.1V 9B Thinking (Pro)',
+    id: 'Pro/THUDM/GLM-4.1V-9B-Thinking',
+    pricing: {
+      currency: 'CNY',
+      input: 0.25,
+      output: 1,
+    },
+    releasedAt: '2025-07-02',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
     },
     contextWindowTokens: 131_072,
     description:
