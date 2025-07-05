@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { LobeAgentChatConfig } from '@/types/agent/chatConfig';
+import { OpenAIChatMessage } from '@/types/openai/chat';
 
 /**
  * 聊天服务参数
@@ -8,10 +9,7 @@ import { LobeAgentChatConfig } from '@/types/agent/chatConfig';
 export interface ChatServiceParams {
   frequency_penalty?: number;
   max_tokens?: number;
-  messages: Array<{
-    content: string;
-    role: 'user' | 'assistant' | 'system';
-  }>;
+  messages: OpenAIChatMessage[];
   model?: string;
   n?: number;
   presence_penalty?: number;
