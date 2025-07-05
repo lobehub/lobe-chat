@@ -46,6 +46,7 @@ export interface TopicResponse {
   clientId: string | null;
   createdAt: string;
   favorite: boolean;
+  historySummary: string | null;
   id: string;
   messageCount: number;
   metadata: any | null;
