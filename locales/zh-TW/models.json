@@ -1844,6 +1844,9 @@
   "moonshot-v1-auto": {
     "description": "Moonshot V1 Auto 可以根據當前上下文佔用的 Tokens 數量來選擇合適的模型"
   },
+  "moonshotai/Kimi-Dev-72B": {
+    "description": "Kimi-Dev-72B 是一款開源程式碼大型模型，經過大規模強化學習優化，能輸出穩健、可直接投產的補丁。該模型在 SWE-bench Verified 上取得 60.4 % 的新高分，刷新了開源模型在缺陷修復、程式碼審查等自動化軟體工程任務上的紀錄。"
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B 是 Nous Hermes 2 的升級版本，包含最新的內部開發的數據集。"
   },
@@ -2281,6 +2284,9 @@
   },
   "taichu_vl": {
     "description": "融合了圖像理解、知識遷移、邏輯歸因等能力，在圖文問答領域表現突出。"
+  },
+  "tencent/Hunyuan-A13B-Instruct": {
+    "description": "Hunyuan-A13B-Instruct 參數量800 億，啟動 130 億參數即可對標更大模型，支援「快思考/慢思考」混合推理；長文理解穩定；經 BFCL-v3 與 τ-Bench 驗證，Agent 能力領先；結合 GQA 與多量化格式，實現高效推理。"
   },
   "text-embedding-3-large": {
     "description": "最強大的向量化模型，適用於英文和非英文任務"
