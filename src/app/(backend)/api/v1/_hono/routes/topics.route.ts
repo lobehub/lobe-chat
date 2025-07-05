@@ -61,9 +61,9 @@ TopicsRoutes.delete(
   },
 );
 
-// POST /api/v1/topics/:id/summary - 总结对应的话题
+// POST /api/v1/topics/:id/summary-title - 总结对应的话题标题
 TopicsRoutes.post(
-  '/:id/summary',
+  '/:id/summary-title',
   requireAuth,
   requireAnyPermission(
     getScopePermissions('TOPIC_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),
@@ -72,7 +72,7 @@ TopicsRoutes.post(
   zValidator('param', TopicSummaryParamSchema),
   (c) => {
     const controller = new TopicController();
-    return controller.handleSummarizeTopic(c);
+    return controller.handleSummarizeTopicTitle(c);
   },
 );
 
