@@ -9,29 +9,16 @@ import { requireAnyPermission } from '../middleware/permission-check';
 import {
   TopicCreateRequestSchema,
   TopicDeleteParamSchema,
+  TopicGetParamSchema,
   TopicListParamSchema,
   TopicListQuerySchema,
   TopicSummaryParamSchema,
+  TopicUpdateParamSchema,
+  TopicUpdateRequestSchema,
 } from '../types/topic.type';
 
 // Topic 相关路由
 const TopicsRoutes = new Hono();
-
-// GET /api/v1/topics/:sessionId - 获取指定会话的所有话题
-TopicsRoutes.get(
-  '/:sessionId',
-  requireAuth,
-  requireAnyPermission(
-    getScopePermissions('TOPIC_READ', ['ALL', 'WORKSPACE', 'OWNER']),
-    'You do not have permission to read topics',
-  ),
-  zValidator('param', TopicListParamSchema),
-  zValidator('query', TopicListQuerySchema),
-  (c) => {
-    const controller = new TopicController();
-    return controller.handleGetTopicsBySession(c);
-  },
-);
 
 // POST /api/v1/topics - 创建新的话题
 TopicsRoutes.post(
@@ -48,6 +35,37 @@ TopicsRoutes.post(
   },
 );
 
+// GET /api/v1/topics/:id - 获取指定话题
+TopicsRoutes.get(
+  '/:id',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('TOPIC_READ', ['ALL', 'WORKSPACE', 'OWNER']),
+    'You do not have permission to read topics',
+  ),
+  zValidator('param', TopicGetParamSchema),
+  (c) => {
+    const controller = new TopicController();
+    return controller.handleGetTopicById(c);
+  },
+);
+
+// PUT /api/v1/topics/:id - 更新话题
+TopicsRoutes.put(
+  '/:id',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('TOPIC_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),
+    'You do not have permission to update topics',
+  ),
+  zValidator('param', TopicUpdateParamSchema),
+  zValidator('json', TopicUpdateRequestSchema),
+  (c) => {
+    const controller = new TopicController();
+    return controller.handleUpdateTopic(c);
+  },
+);
+
 // DELETE /api/v1/topics/:id - 删除话题
 TopicsRoutes.delete(
   '/:id',
@@ -60,6 +78,22 @@ TopicsRoutes.delete(
   (c) => {
     const controller = new TopicController();
     return controller.handleDeleteTopic(c);
+  },
+);
+
+// GET /api/v1/topics/:sessionId - 获取指定会话的所有话题
+TopicsRoutes.get(
+  '/session/:sessionId',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('TOPIC_READ', ['ALL', 'WORKSPACE', 'OWNER']),
+    'You do not have permission to read topics',
+  ),
+  zValidator('param', TopicListParamSchema),
+  zValidator('query', TopicListQuerySchema),
+  (c) => {
+    const controller = new TopicController();
+    return controller.handleGetTopicsBySession(c);
   },
 );
 

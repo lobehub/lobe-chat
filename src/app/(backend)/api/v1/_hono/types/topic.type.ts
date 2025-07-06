@@ -9,6 +9,10 @@ export const TopicListQuerySchema = z.object({
   keyword: z.string().optional(),
 });
 
+export const TopicGetParamSchema = z.object({
+  id: z.string().min(1, '话题ID不能为空'),
+});
+
 export const TopicCreateRequestSchema = z.object({
   sessionId: z.string().min(1, '会话ID不能为空'),
   title: z.string().min(1, '标题不能为空'),
@@ -21,6 +25,14 @@ export const TopicSummaryParamSchema = z.object({
 
 export const TopicDeleteParamSchema = z.object({
   id: z.string().min(1, '话题ID不能为空'),
+});
+
+export const TopicUpdateParamSchema = z.object({
+  id: z.string().min(1, '话题ID不能为空'),
+});
+
+export const TopicUpdateRequestSchema = z.object({
+  title: z.string().min(1, '标题不能为空'),
 });
 
 // TypeScript types
@@ -40,6 +52,10 @@ export interface TopicCreateRequest {
 export interface TopicSummaryRequest {
   id: string;
   lang?: string;
+}
+
+export interface TopicUpdateRequest {
+  title: string;
 }
 
 // User info for topic response
