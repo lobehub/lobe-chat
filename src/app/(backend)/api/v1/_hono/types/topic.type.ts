@@ -1,8 +1,12 @@
 import { z } from 'zod';
 
 // Request schemas
-export const TopicListRequestSchema = z.object({
+export const TopicListParamSchema = z.object({
   sessionId: z.string().min(1, '会话ID不能为空'),
+});
+
+export const TopicListQuerySchema = z.object({
+  keyword: z.string().optional(),
 });
 
 export const TopicCreateRequestSchema = z.object({
@@ -20,8 +24,12 @@ export const TopicDeleteParamSchema = z.object({
 });
 
 // TypeScript types
-export interface TopicListRequest {
+export interface TopicListParam {
   sessionId: string;
+}
+
+export interface TopicListQuery {
+  keyword?: string;
 }
 
 export interface TopicCreateRequest {

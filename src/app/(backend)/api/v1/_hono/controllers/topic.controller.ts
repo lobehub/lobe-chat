@@ -7,17 +7,18 @@ import { TopicCreateRequest, TopicSummaryRequest } from '../types/topic.type';
 export class TopicController extends BaseController {
   /**
    * 获取指定会话的所有话题
-   * GET /api/v1/topics/list
-   * Query: { sessionId: string }
+   * GET /api/v1/topics/:sessionId
+   * Query: { keyword?: string }
    */
   async handleGetTopicsBySession(c: Context) {
     try {
       const userId = this.getUserId(c)!;
       const { sessionId } = this.getParams<{ sessionId: string }>(c);
+      const { keyword } = this.getQuery<{ keyword?: string }>(c);
 
       const db = await this.getDatabase();
       const topicService = new TopicService(db, userId);
-      const topics = await topicService.getTopicsBySessionId(sessionId);
+      const topics = await topicService.getTopicsBySessionId(sessionId, keyword);
 
       return this.success(c, topics, '获取话题列表成功');
     } catch (error) {

@@ -1,4 +1,4 @@
-import { asc, count, eq } from 'drizzle-orm';
+import { asc, count, eq, sql } from 'drizzle-orm';
 
 import { MessageItem, messages, topics, users } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
@@ -18,16 +18,17 @@ export class TopicService extends BaseService {
   /**
    * 获取指定会话的所有话题
    * @param sessionId 会话ID
+   * @param keyword 可选的搜索关键词
    * @returns 话题列表
    */
-  async getTopicsBySessionId(sessionId: string): Promise<TopicResponse[]> {
+  async getTopicsBySessionId(sessionId: string, keyword?: string): Promise<TopicResponse[]> {
     if (!this.userId) {
       throw this.createAuthError('未授权操作');
     }
 
     try {
       // 使用联查和子查询来统计每个话题的消息数量，并获取用户信息
-      const result = await this.db
+      const query = this.db
         .select({
           clientId: topics.clientId,
           createdAt: topics.createdAt,
@@ -49,9 +50,15 @@ export class TopicService extends BaseService {
         .from(topics)
         .leftJoin(messages, eq(topics.id, messages.topicId))
         .innerJoin(users, eq(topics.userId, users.id))
-        .where(eq(topics.sessionId, sessionId))
+        .where(
+          keyword
+            ? sql`${topics.sessionId} = ${sessionId} AND ${topics.title} LIKE ${`%${keyword}%`}`
+            : eq(topics.sessionId, sessionId),
+        );
+
+      const result = await query
         .groupBy(topics.id, users.id)
-        .orderBy(topics.createdAt);
+        .orderBy(asc(topics.createdAt));
 
       return result.map((topic) => ({
         clientId: topic.clientId,
@@ -73,7 +80,7 @@ export class TopicService extends BaseService {
         },
       }));
     } catch (error) {
-      this.log('error', 'Failed to get topics by session ID', { error, sessionId });
+      this.log('error', 'Failed to get topics by session ID', { error, keyword, sessionId });
       throw this.createCommonError('获取话题列表失败');
     }
   }
