@@ -714,10 +714,55 @@ export class FileUploadService extends BaseService {
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         'application/vnd.ms-powerpoint',
         'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'application/x-yaml',
+        'application/yaml',
+        'application/json',
+      ];
+
+      // 基于文件扩展名的额外验证（用于处理 application/octet-stream 等通用类型）
+      const allowedExtensions = [
+        '.yaml',
+        '.yml',
+        '.json',
+        '.txt',
+        '.md',
+        '.xml',
+        '.csv',
+        '.tsv',
+        '.pdf',
+        '.doc',
+        '.docx',
+        '.xls',
+        '.xlsx',
+        '.ppt',
+        '.pptx',
+        '.jpg',
+        '.jpeg',
+        '.png',
+        '.gif',
+        '.bmp',
+        '.webp',
+        '.svg',
+        '.mp4',
+        '.avi',
+        '.mov',
+        '.wmv',
+        '.flv',
+        '.webm',
+        '.mp3',
+        '.wav',
+        '.ogg',
+        '.aac',
+        '.flac',
+        '.m4a',
       ];
 
       const isAllowed = allowedTypes.some((type) => file.type.startsWith(type));
-      if (!isAllowed) {
+      const fileExtension = file.name.toLowerCase().slice(Math.max(0, file.name.lastIndexOf('.')));
+      const isExtensionAllowed = allowedExtensions.includes(fileExtension);
+
+      // 如果文件类型不被允许，但扩展名是允许的（处理 application/octet-stream 等情况）
+      if (!isAllowed && !isExtensionAllowed) {
         throw this.createBusinessError(`File type '${file.type}' is not supported`);
       }
     }

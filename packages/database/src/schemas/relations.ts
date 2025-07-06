@@ -349,6 +349,17 @@ export const messageTTSRelations = relations(messageTTS, ({ one }) => ({
   }),
 }));
 
+export const messagesFilesRelations = relations(messagesFiles, ({ one }) => ({
+  message: one(messages, {
+    fields: [messagesFiles.messageId],
+    references: [messages.id],
+  }),
+  file: one(files, {
+    fields: [messagesFiles.fileId],
+    references: [files.id],
+  }),
+}));
+
 // AI 基础设施关系定义
 export const aiProvidersRelations = relations(aiProviders, ({ many, one }) => ({
   models: many(aiModels),

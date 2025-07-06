@@ -6,6 +6,7 @@ import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
 
 import { BaseService } from '../common/base.service';
+import { transformMessageToResponse } from '../helpers/message';
 import { ServiceResult } from '../types';
 import {
   MessageResponse,
@@ -91,6 +92,11 @@ export class MessageService extends BaseService {
         orderBy: desc(messages.createdAt),
         where: and(eq(messages.topicId, topicId), eq(messages.userId, this.userId!)),
         with: {
+          messagesFiles: {
+            with: {
+              file: true,
+            },
+          },
           session: true,
           topic: true,
           translation: true,
@@ -98,8 +104,12 @@ export class MessageService extends BaseService {
         },
       });
 
-      this.log('info', '获取话题消息列表完成', { count: messageList.length });
-      return messageList as MessageResponse[];
+      // 将 messagesFiles 转换为 files 字段
+      const messageListWithFiles = messageList.map(transformMessageToResponse);
+
+      this.log('info', '获取话题消息列表完成', { count: messageListWithFiles.length });
+
+      return messageListWithFiles;
     } catch (error) {
       this.log('error', '获取话题消息列表失败', { error });
       throw this.createCommonError('查询话题消息列表失败');
@@ -118,6 +128,11 @@ export class MessageService extends BaseService {
       const message = await this.db.query.messages.findFirst({
         where: and(eq(messages.id, messageId), eq(messages.userId, this.userId!)),
         with: {
+          messagesFiles: {
+            with: {
+              file: true,
+            },
+          },
           session: true,
           topic: true,
           translation: true,
@@ -131,7 +146,7 @@ export class MessageService extends BaseService {
       }
 
       this.log('info', '获取消息详情完成', { messageId });
-      return message as MessageResponse;
+      return transformMessageToResponse(message);
     } catch (error) {
       this.log('error', '获取消息详情失败', { error });
       throw this.createCommonError('查询消息详情失败');
@@ -190,6 +205,11 @@ export class MessageService extends BaseService {
       const completeMessage = await this.db.query.messages.findFirst({
         where: and(eq(messages.id, newMessage.id), eq(messages.userId, this.userId!)),
         with: {
+          messagesFiles: {
+            with: {
+              file: true,
+            },
+          },
           session: true,
           topic: true,
           user: true,
@@ -202,7 +222,7 @@ export class MessageService extends BaseService {
 
       this.log('info', '创建消息完成', { messageId: newMessage.id });
 
-      return completeMessage as MessageResponse;
+      return transformMessageToResponse(completeMessage);
     } catch (error) {
       this.log('error', '创建消息失败', { error });
       throw this.createCommonError('创建消息失败');
@@ -437,6 +457,11 @@ export class MessageService extends BaseService {
         orderBy: desc(messages.createdAt),
         where: and(eq(messages.userId, this.userId!), inArray(messages.id, allMessageIds)),
         with: {
+          messagesFiles: {
+            with: {
+              file: true,
+            },
+          },
           session: true,
           topic: true,
           user: true,
@@ -448,7 +473,7 @@ export class MessageService extends BaseService {
         resultCount: result.length,
       });
 
-      return result as MessageResponse[];
+      return result.map(transformMessageToResponse);
     } catch (error) {
       this.log('error', '关键词搜索消息失败', { error, keyword: searchRequest.keyword });
       throw this.createCommonError('搜索消息失败');
