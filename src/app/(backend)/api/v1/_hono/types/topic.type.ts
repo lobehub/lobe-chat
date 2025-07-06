@@ -12,6 +12,7 @@ export const TopicCreateRequestSchema = z.object({
 
 export const TopicSummaryParamSchema = z.object({
   id: z.string().min(1, '话题ID不能为空'),
+  lang: z.string().optional(),
 });
 
 export const TopicDeleteParamSchema = z.object({
@@ -30,6 +31,7 @@ export interface TopicCreateRequest {
 
 export interface TopicSummaryRequest {
   id: string;
+  lang?: string;
 }
 
 // User info for topic response
