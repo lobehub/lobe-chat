@@ -9,14 +9,15 @@ import { requireAnyPermission } from '../middleware/permission-check';
 import {
   TopicCreateRequestSchema,
   TopicDeleteParamSchema,
-  TopicListRequestSchema,
+  TopicListParamSchema,
+  TopicListQuerySchema,
   TopicSummaryParamSchema,
 } from '../types/topic.type';
 
 // Topic 相关路由
 const TopicsRoutes = new Hono();
 
-// GET /api/v1/topics - 获取指定会话的所有话题
+// GET /api/v1/topics/:sessionId - 获取指定会话的所有话题
 TopicsRoutes.get(
   '/:sessionId',
   requireAuth,
@@ -24,7 +25,8 @@ TopicsRoutes.get(
     getScopePermissions('TOPIC_READ', ['ALL', 'WORKSPACE', 'OWNER']),
     'You do not have permission to read topics',
   ),
-  zValidator('param', TopicListRequestSchema),
+  zValidator('param', TopicListParamSchema),
+  zValidator('query', TopicListQuerySchema),
   (c) => {
     const controller = new TopicController();
     return controller.handleGetTopicsBySession(c);
