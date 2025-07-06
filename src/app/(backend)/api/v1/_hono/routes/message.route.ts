@@ -64,6 +64,21 @@ MessageRoutes.get(
   },
 );
 
+// GET /api/v1/messages/search - 根据关键词搜索消息及对应话题 (需要消息读取权限)
+MessageRoutes.get(
+  '/search',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('MESSAGE_READ', ['ALL', 'WORKSPACE', 'OWNER']),
+    'You do not have permission to search messages',
+  ),
+  zValidator('query', SearchMessagesByKeywordRequestSchema),
+  (c) => {
+    const controller = new MessageController();
+    return controller.handleSearchMessagesByKeyword(c);
+  },
+);
+
 // GET /api/v1/messages/:id - 根据消息ID获取消息详情 (需要消息读取权限)
 MessageRoutes.get(
   '/:id',
@@ -106,21 +121,6 @@ MessageRoutes.post(
   (c) => {
     const controller = new MessageController();
     return controller.handleCreateMessageWithAIReply(c);
-  },
-);
-
-// GET /api/v1/messages/search - 根据关键词搜索消息及对应话题 (需要消息读取权限)
-MessageRoutes.get(
-  '/search',
-  requireAuth,
-  requireAnyPermission(
-    getScopePermissions('MESSAGE_READ', ['ALL', 'WORKSPACE', 'OWNER']),
-    'You do not have permission to search messages',
-  ),
-  zValidator('query', SearchMessagesByKeywordRequestSchema),
-  (c) => {
-    const controller = new MessageController();
-    return controller.handleSearchMessagesByKeyword(c);
   },
 );
 
