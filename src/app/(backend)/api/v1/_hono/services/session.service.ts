@@ -1,4 +1,4 @@
-import { Column, and, desc, eq, inArray, like, not, or, sql } from 'drizzle-orm';
+import { Column, SQL, and, desc, eq, inArray, like, not, or, sql } from 'drizzle-orm';
 import { groupBy } from 'lodash';
 
 import { INBOX_SESSION_ID } from '@/const/session';
@@ -49,7 +49,7 @@ export class SessionService extends BaseService {
     this.log('info', '获取会话列表', { request });
 
     try {
-      const { page = 1, pageSize = 20, agentId } = request;
+      const { page = 1, pageSize = 20, agentId, keyword = '' } = request;
 
       // 构建查询条件
       let whereConditions = [not(eq(sessions.slug, INBOX_SESSION_ID))];
@@ -73,6 +73,17 @@ export class SessionService extends BaseService {
 
         // 添加 session ID 过滤条件
         whereConditions.push(inArray(sessions.id, sessionIds));
+      }
+
+      // 如果有关键词，添加标题和描述的模糊搜索条件
+      if (keyword) {
+        this.log('info', '根据关键词过滤会话', { keyword });
+        whereConditions.push(
+          or(
+            like(sessions.title, `%${keyword}%`),
+            like(sessions.description, `%${keyword}%`),
+          ) as SQL<unknown>,
+        );
       }
 
       // 获取总数
