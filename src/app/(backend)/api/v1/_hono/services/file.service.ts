@@ -14,6 +14,7 @@ import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 import { nanoid } from '@/utils/uuid';
 
 import { BaseService } from '../common/base.service';
+import { addFileUrlPrefix } from '../helpers/file';
 import {
   BatchFileUploadRequest,
   BatchFileUploadResponse,
@@ -57,15 +58,6 @@ export class FileUploadService extends BaseService {
     this.documentService = new DocumentService(db, userId);
     this.s3Service = new S3();
     this.s3PublicDomain = process.env.S3_PUBLIC_DOMAIN || '';
-  }
-
-  /**
-   * 格式化文件URL，添加域名前缀
-   */
-  private formatFileUrl(path: string): string {
-    if (!path) return '';
-    if (path.startsWith('http://') || path.startsWith('https://')) return path;
-    return `${this.s3PublicDomain}${path.startsWith('/') ? '' : '/'}${path}`;
   }
 
   async uploadToServerS3(
@@ -413,7 +405,7 @@ export class FileUploadService extends BaseService {
         expiresIn,
         fileId,
         filename: file.name,
-        url: this.formatFileUrl(signedUrl),
+        url: signedUrl,
       };
     } catch (error) {
       this.log('error', 'Get file URL failed', error);
@@ -498,7 +490,7 @@ export class FileUploadService extends BaseService {
         metadata,
         size: file.size,
         uploadedAt: new Date().toISOString(),
-        url: this.formatFileUrl(publicUrl), // 返回永久可访问的URL
+        url: publicUrl, // 返回永久可访问的URL
       };
     } catch (error) {
       this.log('error', 'Public file upload failed', error);
@@ -537,7 +529,7 @@ export class FileUploadService extends BaseService {
       return {
         fileId,
         filename: file.name,
-        url: this.formatFileUrl(publicUrl),
+        url: publicUrl,
         urlType: 'public',
       };
     } catch (error) {
@@ -811,7 +803,7 @@ export class FileUploadService extends BaseService {
       metadata: file.metadata as FileMetadata,
       size: file.size,
       uploadedAt: file.createdAt.toISOString(),
-      url: this.formatFileUrl(file.url),
+      url: addFileUrlPrefix({ path: file.url, url: file.url }).url || file.url,
     };
   }
 
