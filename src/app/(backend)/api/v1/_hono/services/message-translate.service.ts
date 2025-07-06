@@ -4,6 +4,7 @@ import { MessageTranslateItem, messageTranslates, messages } from '@/database/sc
 import { LobeChatDatabase } from '@/database/type';
 
 import { BaseService } from '../common/base.service';
+import { removeSystemContext } from '../helpers/translate';
 import { ServiceResult } from '../types';
 import {
   MessageTranslateResponse,
@@ -101,7 +102,7 @@ export class MessageTranslateService extends BaseService {
       const translatedContent = await chatService.translate({
         fromLanguage: translateData.from,
         sessionId: messageInfo.sessionId,
-        text: messageInfo.content,
+        text: removeSystemContext(messageInfo.content),
         toLanguage: translateData.to,
       });
 
