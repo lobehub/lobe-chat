@@ -62,9 +62,32 @@ export class DiscoverService {
   }
 
   async registerClient({ userAgent }: { userAgent?: string }) {
+    const getDeviceId = async (): Promise<string> => {
+      // 1. Vercel 环境下使用 VERCEL_PROJECT_ID
+      if (process.env.VERCEL_PROJECT_ID) {
+        return process.env.VERCEL_PROJECT_ID;
+      }
+
+      // 2. 桌面端使用 machine-id
+      if (isDesktop) {
+        try {
+          // 动态导入
+          const { machineId } = await import('node-machine-id');
+          return await machineId();
+        } catch (error) {
+          console.error('Failed to get machine-id:', error);
+        }
+      }
+
+      return 'unknown-device';
+    };
+
+    const deviceId = await getDeviceId();
+
     const { client_id, client_secret } = await this.market.registerClient({
       clientName: `LobeHub ${isDesktop ? 'Desktop' : 'Web'}`,
       clientType: isDesktop ? 'desktop' : 'web',
+      deviceId,
       platform: isDesktop ? process.platform : userAgent,
       version: CURRENT_VERSION,
     });

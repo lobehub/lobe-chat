@@ -202,7 +202,6 @@ export const marketRouter = router({
     )
     .query(async ({ input, ctx }) => {
       log('getMcpList input: %O', input);
-      console.log('marketAccessToken:', ctx.marketAccessToken);
 
       try {
         return await ctx.discoverService.getMcpList(input);
@@ -477,7 +476,6 @@ export const marketRouter = router({
     }),
 
   registerClientInMarketplace: marketProcedure.input(z.object({})).mutation(async ({ ctx }) => {
-    console.log('userAgent:', ctx.userAgent);
     return ctx.discoverService.registerClient({
       userAgent: ctx.userAgent,
     });
