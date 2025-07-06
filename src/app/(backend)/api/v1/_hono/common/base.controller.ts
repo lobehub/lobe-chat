@@ -141,8 +141,7 @@ export abstract class BaseController {
    * @returns Request form data object
    */
   protected async getFormData<T = any>(c: Context): Promise<T> {
-    // @ts-ignore
-    return c.req.valid('form') as T;
+    return c.req.formData() as T;
   }
 
   /**
