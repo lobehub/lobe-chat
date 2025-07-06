@@ -39,10 +39,12 @@ export class FileController extends BaseController {
       const knowledgeBaseId = formData.get('knowledgeBaseId') as string | null;
       const skipCheckFileType = formData.get('skipCheckFileType') === 'true';
       const directory = formData.get('directory') as string | null;
+      const sessionId = formData.get('sessionId') as string | null;
 
       const options: Partial<FileUploadRequest> = {
         directory: directory || undefined,
         knowledgeBaseId: knowledgeBaseId || undefined,
+        sessionId: sessionId || undefined,
         skipCheckFileType,
       };
 
@@ -84,11 +86,13 @@ export class FileController extends BaseController {
       const knowledgeBaseId = formData.get('knowledgeBaseId') as string | null;
       const skipCheckFileType = formData.get('skipCheckFileType') === 'true';
       const directory = formData.get('directory') as string | null;
+      const sessionId = formData.get('sessionId') as string | null;
 
       const request: BatchFileUploadRequest = {
         directory: directory || undefined,
         files,
         knowledgeBaseId: knowledgeBaseId || undefined,
+        sessionId: sessionId || undefined,
         skipCheckFileType,
       };
 
@@ -221,10 +225,12 @@ export class FileController extends BaseController {
       const knowledgeBaseId = formData.get('knowledgeBaseId') as string | null;
       const skipCheckFileType = formData.get('skipCheckFileType') === 'true';
       const directory = formData.get('directory') as string | null;
+      const sessionId = formData.get('sessionId') as string | null;
 
       const options: PublicFileUploadRequest = {
         directory: directory || undefined,
         knowledgeBaseId: knowledgeBaseId || undefined,
+        sessionId: sessionId || undefined,
         skipCheckFileType,
       };
 
@@ -304,11 +310,13 @@ export class FileController extends BaseController {
       const knowledgeBaseId = formData.get('knowledgeBaseId') as string | null;
       const skipCheckFileType = formData.get('skipCheckFileType') === 'true';
       const directory = formData.get('directory') as string | null;
+      const sessionId = formData.get('sessionId') as string | null;
       const skipExist = formData.get('skipExist') === 'true';
 
       const uploadOptions: Partial<FileUploadRequest> = {
         directory: directory || undefined,
         knowledgeBaseId: knowledgeBaseId || undefined,
+        sessionId: sessionId || undefined,
         skipCheckFileType,
       };
 
