@@ -201,10 +201,15 @@ app.post('/upload-and-parse', requireAuth, async (c) => {
  * - 支持并行处理，提高性能
  * - 返回成功和失败的统计信息
  */
-app.post('/batch-get', requireAuth, zValidator('json', BatchGetFilesRequestSchema), async (c) => {
-  const fileController = new FileController();
-  return await fileController.batchGetFiles(c);
-});
+app.post(
+  '/batch-get-parsed-files',
+  requireAuth,
+  zValidator('json', BatchGetFilesRequestSchema),
+  async (c) => {
+    const fileController = new FileController();
+    return await fileController.batchGetFiles(c);
+  },
+);
 
 /**
  * 删除文件
