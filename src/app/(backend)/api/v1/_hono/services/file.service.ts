@@ -47,6 +47,7 @@ export class FileUploadService extends BaseService {
   private coreFileService: CoreFileService;
   private documentService: DocumentService;
   private s3Service: S3;
+  private s3PublicDomain: string;
 
   constructor(db: LobeChatDatabase, userId: string) {
     super(db, userId);
@@ -55,6 +56,16 @@ export class FileUploadService extends BaseService {
     this.coreFileService = new CoreFileService(db, userId!);
     this.documentService = new DocumentService(db, userId);
     this.s3Service = new S3();
+    this.s3PublicDomain = process.env.S3_PUBLIC_DOMAIN || '';
+  }
+
+  /**
+   * 格式化文件URL，添加域名前缀
+   */
+  private formatFileUrl(path: string): string {
+    if (!path) return '';
+    if (path.startsWith('http://') || path.startsWith('https://')) return path;
+    return `${this.s3PublicDomain}${path.startsWith('/') ? '' : '/'}${path}`;
   }
 
   async uploadToServerS3(
@@ -402,7 +413,7 @@ export class FileUploadService extends BaseService {
         expiresIn,
         fileId,
         filename: file.name,
-        url: signedUrl,
+        url: this.formatFileUrl(signedUrl),
       };
     } catch (error) {
       this.log('error', 'Get file URL failed', error);
@@ -487,7 +498,7 @@ export class FileUploadService extends BaseService {
         metadata,
         size: file.size,
         uploadedAt: new Date().toISOString(),
-        url: publicUrl, // 返回永久可访问的URL
+        url: this.formatFileUrl(publicUrl), // 返回永久可访问的URL
       };
     } catch (error) {
       this.log('error', 'Public file upload failed', error);
@@ -526,7 +537,7 @@ export class FileUploadService extends BaseService {
       return {
         fileId,
         filename: file.name,
-        url: publicUrl,
+        url: this.formatFileUrl(publicUrl),
         urlType: 'public',
       };
     } catch (error) {
@@ -800,7 +811,7 @@ export class FileUploadService extends BaseService {
       metadata: file.metadata as FileMetadata,
       size: file.size,
       uploadedAt: file.createdAt.toISOString(),
-      url: file.url,
+      url: this.formatFileUrl(file.url),
     };
   }
 
