@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server';
+import { serialize } from 'cookie';
 import debug from 'debug';
 import { z } from 'zod';
 
@@ -8,12 +9,17 @@ import { AssistantSorts, McpSorts, ModelSorts, PluginSorts, ProviderSorts } from
 
 const log = debug('lobe-edge-router:market');
 
-const discoverService = new DiscoverService();
+const marketProcedure = publicProcedure.use(async ({ ctx, next }) => {
+  return next({
+    ctx: {
+      discoverService: new DiscoverService({ accessToken: ctx.marketAccessToken }),
+    },
+  });
+});
 
 export const marketRouter = router({
   // ============================== Assistant Market ==============================
-
-  getAssistantCategories: publicProcedure
+  getAssistantCategories: marketProcedure
     .input(
       z
         .object({
@@ -22,11 +28,11 @@ export const marketRouter = router({
         })
         .optional(),
     )
-    .query(async ({ input }) => {
-      log('  getAssistantCategories: publicProcedure\n input: %O', input);
+    .query(async ({ input, ctx }) => {
+      log('  getAssistantCategories: marketProcedure\n input: %O', input);
 
       try {
-        return await discoverService.getAssistantCategories(input);
+        return await ctx.discoverService.getAssistantCategories(input);
       } catch (error) {
         log('Error fetching assistant categories: %O', error);
         throw new TRPCError({
@@ -36,18 +42,18 @@ export const marketRouter = router({
       }
     }),
 
-  getAssistantDetail: publicProcedure
+  getAssistantDetail: marketProcedure
     .input(
       z.object({
         identifier: z.string(),
         locale: z.string().optional(),
       }),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       log('getAssistantDetail input: %O', input);
 
       try {
-        return await discoverService.getAssistantDetail(input);
+        return await ctx.discoverService.getAssistantDetail(input);
       } catch (error) {
         log('Error fetching assistants detail: %O', error);
         throw new TRPCError({
@@ -57,11 +63,11 @@ export const marketRouter = router({
       }
     }),
 
-  getAssistantIdentifiers: publicProcedure.query(async () => {
+  getAssistantIdentifiers: marketProcedure.query(async ({ ctx }) => {
     log('getAssistantIdentifiers called');
 
     try {
-      return await discoverService.getAssistantIdentifiers();
+      return await ctx.discoverService.getAssistantIdentifiers();
     } catch (error) {
       log('Error fetching assistant identifiers: %O', error);
       throw new TRPCError({
@@ -71,7 +77,7 @@ export const marketRouter = router({
     }
   }),
 
-  getAssistantList: publicProcedure
+  getAssistantList: marketProcedure
     .input(
       z
         .object({
@@ -85,11 +91,11 @@ export const marketRouter = router({
         })
         .optional(),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       log('getAssistantList input: %O', input);
 
       try {
-        return await discoverService.getAssistantList(input);
+        return await ctx.discoverService.getAssistantList(input);
       } catch (error) {
         log('Error fetching assistant list: %O', error);
         throw new TRPCError({
@@ -99,7 +105,7 @@ export const marketRouter = router({
       }
     }),
 
-  getLegacyPluginList: publicProcedure
+  getLegacyPluginList: marketProcedure
     .input(
       z
         .object({
@@ -107,11 +113,10 @@ export const marketRouter = router({
         })
         .optional(),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       log('getLegacyPluginList input: %O', input);
-
       try {
-        return await discoverService.getLegacyPluginList(input);
+        return await ctx.discoverService.getLegacyPluginList(input);
       } catch (error) {
         log('Error fetching legacy plugin list: %O', error);
         throw new TRPCError({
@@ -122,7 +127,7 @@ export const marketRouter = router({
     }),
 
   // ============================== MCP Market ==============================
-  getMcpCategories: publicProcedure
+  getMcpCategories: marketProcedure
     .input(
       z
         .object({
@@ -131,11 +136,11 @@ export const marketRouter = router({
         })
         .optional(),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       log('getMcpCategories input: %O', input);
 
       try {
-        return await discoverService.getMcpCategories(input);
+        return await ctx.discoverService.getMcpCategories(input);
       } catch (error) {
         log('Error fetching mcp categories: %O', error);
         throw new TRPCError({
@@ -145,7 +150,7 @@ export const marketRouter = router({
       }
     }),
 
-  getMcpDetail: publicProcedure
+  getMcpDetail: marketProcedure
     .input(
       z.object({
         identifier: z.string(),
@@ -153,13 +158,13 @@ export const marketRouter = router({
         version: z.string().optional(),
       }),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       log('getMcpDetail input: %O', input);
 
       try {
-        return await discoverService.getMcpDetail(input);
+        return await ctx.discoverService.getMcpDetail(input);
       } catch (error) {
-        log('Error fetching mcp detail: %O', error);
+        console.error('Error fetching mcp detail: %O', error);
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to fetch mcp detail',
@@ -167,11 +172,11 @@ export const marketRouter = router({
       }
     }),
 
-  getMcpIdentifiers: publicProcedure.query(async () => {
+  getMcpIdentifiers: marketProcedure.query(async ({ ctx }) => {
     log('getMcpIdentifiers called');
 
     try {
-      return await discoverService.getMcpIdentifiers();
+      return await ctx.discoverService.getMcpIdentifiers();
     } catch (error) {
       log('Error fetching mcp identifiers: %O', error);
       throw new TRPCError({
@@ -181,7 +186,7 @@ export const marketRouter = router({
     }
   }),
 
-  getMcpList: publicProcedure
+  getMcpList: marketProcedure
     .input(
       z
         .object({
@@ -195,11 +200,12 @@ export const marketRouter = router({
         })
         .optional(),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       log('getMcpList input: %O', input);
+      console.log('marketAccessToken:', ctx.marketAccessToken);
 
       try {
-        return await discoverService.getMcpList(input);
+        return await ctx.discoverService.getMcpList(input);
       } catch (error) {
         log('Error fetching mcp list: %O', error);
         throw new TRPCError({
@@ -209,7 +215,7 @@ export const marketRouter = router({
       }
     }),
 
-  getMcpManifest: publicProcedure
+  getMcpManifest: marketProcedure
     .input(
       z.object({
         identifier: z.string(),
@@ -218,11 +224,11 @@ export const marketRouter = router({
         version: z.string().optional(),
       }),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       log('getMcpManifest input: %O', input);
 
       try {
-        return await discoverService.getMcpManifest(input);
+        return await ctx.discoverService.getMcpManifest(input);
       } catch (error) {
         log('Error fetching mcp manifest: %O', error);
         throw new TRPCError({
@@ -233,7 +239,7 @@ export const marketRouter = router({
     }),
 
   // ============================== Models ==============================
-  getModelCategories: publicProcedure
+  getModelCategories: marketProcedure
     .input(
       z
         .object({
@@ -241,11 +247,11 @@ export const marketRouter = router({
         })
         .optional(),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       log('getModelCategories input: %O', input);
 
       try {
-        return await discoverService.getModelCategories(input);
+        return await ctx.discoverService.getModelCategories(input);
       } catch (error) {
         log('Error fetching model categories: %O', error);
         throw new TRPCError({
@@ -255,18 +261,18 @@ export const marketRouter = router({
       }
     }),
 
-  getModelDetail: publicProcedure
+  getModelDetail: marketProcedure
     .input(
       z.object({
         identifier: z.string(),
         locale: z.string().optional(),
       }),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       log('getModelDetail input: %O', input);
 
       try {
-        return await discoverService.getModelDetail(input);
+        return await ctx.discoverService.getModelDetail(input);
       } catch (error) {
         log('Error fetching model details: %O', error);
         throw new TRPCError({
@@ -276,11 +282,11 @@ export const marketRouter = router({
       }
     }),
 
-  getModelIdentifiers: publicProcedure.query(async () => {
+  getModelIdentifiers: marketProcedure.query(async ({ ctx }) => {
     log('getModelIdentifiers called');
 
     try {
-      return await discoverService.getModelIdentifiers();
+      return await ctx.discoverService.getModelIdentifiers();
     } catch (error) {
       log('Error fetching model identifiers: %O', error);
       throw new TRPCError({
@@ -290,7 +296,7 @@ export const marketRouter = router({
     }
   }),
 
-  getModelList: publicProcedure
+  getModelList: marketProcedure
     .input(
       z
         .object({
@@ -304,11 +310,11 @@ export const marketRouter = router({
         })
         .optional(),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       log('getModelList input: %O', input);
 
       try {
-        return await discoverService.getModelList(input);
+        return await ctx.discoverService.getModelList(input);
       } catch (error) {
         log('Error fetching model list: %O', error);
         throw new TRPCError({
@@ -319,7 +325,7 @@ export const marketRouter = router({
     }),
 
   // ============================== Plugin Market ==============================
-  getPluginCategories: publicProcedure
+  getPluginCategories: marketProcedure
     .input(
       z
         .object({
@@ -328,11 +334,11 @@ export const marketRouter = router({
         })
         .optional(),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       log('getPluginCategories input: %O', input);
 
       try {
-        return await discoverService.getPluginCategories(input);
+        return await ctx.discoverService.getPluginCategories(input);
       } catch (error) {
         log('Error fetching plugin categories: %O', error);
         throw new TRPCError({
@@ -342,7 +348,7 @@ export const marketRouter = router({
       }
     }),
 
-  getPluginDetail: publicProcedure
+  getPluginDetail: marketProcedure
     .input(
       z.object({
         identifier: z.string(),
@@ -350,11 +356,11 @@ export const marketRouter = router({
         withManifest: z.boolean().optional(),
       }),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       log('getPluginDetail input: %O', input);
 
       try {
-        return await discoverService.getPluginDetail(input);
+        return await ctx.discoverService.getPluginDetail(input);
       } catch (error) {
         log('Error fetching plugin details: %O', error);
         throw new TRPCError({
@@ -364,11 +370,11 @@ export const marketRouter = router({
       }
     }),
 
-  getPluginIdentifiers: publicProcedure.query(async () => {
+  getPluginIdentifiers: marketProcedure.query(async ({ ctx }) => {
     log('getPluginIdentifiers called');
 
     try {
-      return await discoverService.getPluginIdentifiers();
+      return await ctx.discoverService.getPluginIdentifiers();
     } catch (error) {
       log('Error fetching plugin identifiers: %O', error);
       throw new TRPCError({
@@ -378,7 +384,7 @@ export const marketRouter = router({
     }
   }),
 
-  getPluginList: publicProcedure
+  getPluginList: marketProcedure
     .input(
       z
         .object({
@@ -392,11 +398,11 @@ export const marketRouter = router({
         })
         .optional(),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       log('getPluginList input: %O', input);
 
       try {
-        return await discoverService.getPluginList(input);
+        return await ctx.discoverService.getPluginList(input);
       } catch (error) {
         log('Error fetching plugin list: %O', error);
         throw new TRPCError({
@@ -407,7 +413,7 @@ export const marketRouter = router({
     }),
 
   // ============================== Providers ==============================
-  getProviderDetail: publicProcedure
+  getProviderDetail: marketProcedure
     .input(
       z.object({
         identifier: z.string(),
@@ -415,11 +421,11 @@ export const marketRouter = router({
         withReadme: z.boolean().optional(),
       }),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       log('getProviderDetail input: %O', input);
 
       try {
-        return await discoverService.getProviderDetail(input);
+        return await ctx.discoverService.getProviderDetail(input);
       } catch (error) {
         log('Error fetching provider details: %O', error);
         throw new TRPCError({
@@ -429,11 +435,11 @@ export const marketRouter = router({
       }
     }),
 
-  getProviderIdentifiers: publicProcedure.query(async () => {
+  getProviderIdentifiers: marketProcedure.query(async ({ ctx }) => {
     log('getProviderIdentifiers called');
 
     try {
-      return await discoverService.getProviderIdentifiers();
+      return await ctx.discoverService.getProviderIdentifiers();
     } catch (error) {
       log('Error fetching provider identifiers: %O', error);
       throw new TRPCError({
@@ -443,7 +449,7 @@ export const marketRouter = router({
     }
   }),
 
-  getProviderList: publicProcedure
+  getProviderList: marketProcedure
     .input(
       z
         .object({
@@ -456,11 +462,11 @@ export const marketRouter = router({
         })
         .optional(),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       log('getProviderList input: %O', input);
 
       try {
-        return await discoverService.getProviderList(input);
+        return await ctx.discoverService.getProviderList(input);
       } catch (error) {
         log('Error fetching provider list: %O', error);
         throw new TRPCError({
@@ -470,9 +476,64 @@ export const marketRouter = router({
       }
     }),
 
-  // ============================== Analytics ==============================
+  registerClientInMarketplace: marketProcedure.input(z.object({})).mutation(async ({ ctx }) => {
+    console.log('userAgent:', ctx.userAgent);
+    return ctx.discoverService.registerClient({
+      userAgent: ctx.userAgent,
+    });
+  }),
 
-  reportMcpInstallResult: publicProcedure
+  registerM2MToken: marketProcedure
+    .input(
+      z.object({
+        clientId: z.string(),
+        clientSecret: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      log('registerM2MToken input: %O', { clientId: input.clientId, clientSecret: '[HIDDEN]' });
+
+      try {
+        const { accessToken, expiresIn } = await ctx.discoverService.fetchM2MToken(input);
+
+        console.log('fetchM2MToken', accessToken);
+        // 设置 HTTP-Only Cookie 存储实际的 access token
+        const tokenCookie = serialize('mp_token', accessToken, {
+          httpOnly: true,
+          maxAge: expiresIn - 60,
+          path: '/',
+          sameSite: 'lax',
+          secure: process.env.NODE_ENV === 'production', // 提前 60 秒过期
+        });
+
+        // 设置客户端可读的状态标记 cookie（不包含实际 token）
+        const statusCookie = serialize('mp_token_status', 'active', {
+          httpOnly: false,
+          maxAge: expiresIn - 60,
+          path: '/',
+          sameSite: 'lax',
+          secure: process.env.NODE_ENV === 'production', // 与 token cookie 同步过期
+        });
+
+        // 通过 context 的 resHeaders 设置 Set-Cookie 头
+        ctx.resHeaders?.append('Set-Cookie', tokenCookie);
+        ctx.resHeaders?.append('Set-Cookie', statusCookie);
+
+        return {
+          expiresIn: expiresIn - 60,
+          success: true,
+        };
+      } catch (error) {
+        console.error('Error fetching M2M token: %O', error);
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch M2M token',
+        });
+      }
+    }),
+
+  // ============================== Analytics ==============================
+  reportMcpInstallResult: marketProcedure
     .input(
       z.object({
         errorCode: z.any().optional(),
@@ -488,11 +549,10 @@ export const marketRouter = router({
         version: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       log('reportMcpInstallResult input: %O', input);
-
       try {
-        await discoverService.reportPluginInstallation(input);
+        await ctx.discoverService.reportPluginInstallation(input);
         return { success: true };
       } catch (error) {
         log('Error reporting MCP installation result: %O', error);

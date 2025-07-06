@@ -1,4 +1,5 @@
-import { CategoryItem, CategoryListQuery } from '@lobehub/market-sdk';
+import { CategoryItem, CategoryListQuery, PluginManifest } from '@lobehub/market-sdk';
+import { InstallReportRequest } from '@lobehub/market-types';
 
 import { lambdaClient } from '@/libs/trpc/client';
 import { globalHelpers } from '@/store/global/helpers';
@@ -20,6 +21,8 @@ import {
   ProviderListResponse,
   ProviderQueryParams,
 } from '@/types/discover';
+import { MCPPluginListParams } from '@/types/plugins';
+import { cleanObject } from '@/utils/object';
 
 class DiscoverService {
   // ============================== Assistant Market ==============================
@@ -93,6 +96,19 @@ class DiscoverService {
     });
   };
 
+  getMCPPluginList = async (params: MCPPluginListParams): Promise<McpListResponse> => {
+    await this.injectMPToken();
+
+    const locale = globalHelpers.getCurrentLanguage();
+
+    return lambdaClient.market.getMcpList.query({
+      ...params,
+      locale,
+      page: params.page ? Number(params.page) : 1,
+      pageSize: params.pageSize ? Number(params.pageSize) : 21,
+    });
+  };
+
   getMcpManifest = async (params: { identifier: string; locale?: string; version?: string }) => {
     const locale = globalHelpers.getCurrentLanguage();
     return lambdaClient.market.getMcpManifest.query({
@@ -101,18 +117,48 @@ class DiscoverService {
     });
   };
 
-  reportMcpInstallResult = async (params: {
-    errorMessage?: string;
-    identifier: string;
-    installDurationMs?: number;
-    manifest?: any;
-    metadata?: any;
-    platform?: string;
-    success: boolean;
-    userAgent?: string;
-    version: string;
-  }) => {
-    return lambdaClient.market.reportMcpInstallResult.mutate(params);
+  getMCPPluginManifest = async (
+    identifier: string,
+    options: { install?: boolean } = {},
+  ): Promise<PluginManifest> => {
+    const locale = globalHelpers.getCurrentLanguage();
+
+    return lambdaClient.market.getMcpManifest.query({
+      identifier,
+      install: options.install,
+      locale,
+    });
+  };
+
+  registerClient = () => {
+    return lambdaClient.market.registerClientInMarketplace.mutate({});
+  };
+
+  /**
+   * 上报 MCP 插件安装结果
+   */
+  reportMcpInstallResult = async ({
+    success,
+    manifest,
+    errorMessage,
+    errorCode,
+    ...params
+  }: InstallReportRequest) => {
+    await this.injectMPToken();
+
+    const reportData = {
+      errorCode: success ? undefined : errorCode,
+      errorMessage: success ? undefined : errorMessage,
+      manifest: success ? manifest : undefined,
+      success,
+      ...params,
+    };
+
+    lambdaClient.market.reportMcpInstallResult
+      .mutate(cleanObject(reportData))
+      .catch((reportError) => {
+        console.warn('Failed to report MCP installation result:', reportError);
+      });
   };
 
   // ============================== Models ==============================
@@ -209,6 +255,79 @@ class DiscoverService {
       pageSize: params.pageSize ? Number(params.pageSize) : 20,
     });
   };
+
+  // ============================== Helpers ==============================
+
+  private async injectMPToken() {
+    if (typeof localStorage === 'undefined') return;
+
+    // 检查服务端设置的状态标记 cookie
+    const tokenStatus = this.getTokenStatusFromCookie();
+    if (tokenStatus === 'active') {
+      return;
+    }
+
+    let clientId: string;
+    let clientSecret: string;
+
+    // 1. 从 localStorage 获取客户端信息
+    const item = localStorage.getItem('_mpc');
+    if (!item) {
+      // 2. 如果没有，则注册客户端
+      const clientInfo = await this.registerClient();
+      clientId = clientInfo.clientId;
+      clientSecret = clientInfo.clientSecret;
+
+      // 3. Base64 编码并保存到 localStorage
+      const clientData = JSON.stringify({ clientId, clientSecret });
+      const encodedData = btoa(clientData);
+      localStorage.setItem('_mpc', encodedData);
+    } else {
+      // 4. 如果有，则解码获取客户端信息
+      try {
+        const decodedData = atob(item);
+        const clientData = JSON.parse(decodedData);
+        clientId = clientData.clientId;
+        clientSecret = clientData.clientSecret;
+      } catch (error) {
+        console.error('Failed to decode client data:', error);
+        // 如果解码失败，重新注册
+        const clientInfo = await this.registerClient();
+        clientId = clientInfo.clientId;
+        clientSecret = clientInfo.clientSecret;
+
+        const clientData = JSON.stringify({ clientId, clientSecret });
+        const encodedData = btoa(clientData);
+        localStorage.setItem('_mpc', encodedData);
+      }
+    }
+
+    // 5. 获取访问令牌（服务端会自动设置 HTTP-Only cookie）
+    try {
+      const result = await lambdaClient.market.registerM2MToken.query({
+        clientId,
+        clientSecret,
+      });
+
+      console.log('M2M Token registered successfully:', result);
+    } catch (error) {
+      console.error('Failed to register M2M token:', error);
+      return null;
+    }
+  }
+
+  private getTokenStatusFromCookie(): string | null {
+    if (typeof document === 'undefined') return null;
+
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+      const [name, value] = cookie.trim().split('=');
+      if (name === 'mp_token_status') {
+        return value;
+      }
+    }
+    return null;
+  }
 }
 
 export const discoverService = new DiscoverService();

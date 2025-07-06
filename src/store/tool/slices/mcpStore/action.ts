@@ -11,7 +11,6 @@ import { MCPErrorData } from '@/libs/mcp/types';
 import { discoverService } from '@/services/discover';
 import { mcpService } from '@/services/mcp';
 import { pluginService } from '@/services/plugin';
-import { toolService } from '@/services/tool';
 import { globalHelpers } from '@/store/global/helpers';
 import { mcpStoreSelectors } from '@/store/tool/selectors';
 import {
@@ -140,7 +139,7 @@ export const createMCPPluginStoreSlice: StateCreator<
           return;
         }
 
-        data = await toolService.getMCPPluginManifest(plugin.identifier, {
+        data = await discoverService.getMCPPluginManifest(plugin.identifier, {
           install: true,
         });
 
@@ -285,7 +284,7 @@ export const createMCPPluginStoreSlice: StateCreator<
       // 计算安装持续时间
       const installDurationMs = Date.now() - installStartTime;
 
-      mcpService.reportMcpInstallResult({
+      discoverService.reportMcpInstallResult({
         identifier: plugin.identifier,
         installDurationMs,
         installParams: connection,
@@ -363,7 +362,7 @@ export const createMCPPluginStoreSlice: StateCreator<
       });
 
       // 上报安装失败结果
-      mcpService.reportMcpInstallResult({
+      discoverService.reportMcpInstallResult({
         errorCode: errorInfo.type,
         errorMessage: errorInfo.message,
         identifier: plugin.identifier,
@@ -436,7 +435,7 @@ export const createMCPPluginStoreSlice: StateCreator<
 
     return useSWR<PluginListResponse>(
       ['useFetchMCPPluginList', locale, ...Object.values(params)].filter(Boolean).join('-'),
-      () => toolService.getMCPPluginList(params),
+      () => discoverService.getMCPPluginList(params),
       {
         onSuccess(data) {
           set(

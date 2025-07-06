@@ -13,6 +13,7 @@ import {
   DEFAULT_DISCOVER_PLUGIN_ITEM,
   DEFAULT_DISCOVER_PROVIDER_ITEM,
 } from '@/const/discover';
+import { CURRENT_VERSION, isDesktop } from '@/const/version';
 import { normalizeLocale } from '@/locales/resources';
 import { AssistantStore } from '@/server/modules/AssistantStore';
 import { PluginStore } from '@/server/modules/PluginStore';
@@ -52,9 +53,39 @@ export class DiscoverService {
   pluginStore = new PluginStore();
   market: MarketSDK;
 
-  constructor() {
-    this.market = new MarketSDK({ baseURL: process.env.MARKET_BASE_URL });
+  constructor({ accessToken }: { accessToken?: string } = {}) {
+    this.market = new MarketSDK({
+      accessToken,
+      baseURL: process.env.MARKET_BASE_URL,
+    });
     log('DiscoverService initialized with market baseURL: %s', process.env.MARKET_BASE_URL);
+  }
+
+  async registerClient({ userAgent }: { userAgent?: string }) {
+    const { client_id, client_secret } = await this.market.registerClient({
+      clientName: `LobeHub ${isDesktop ? 'Desktop' : 'Web'}`,
+      clientType: isDesktop ? 'desktop' : 'web',
+      platform: isDesktop ? process.platform : userAgent,
+      version: CURRENT_VERSION,
+    });
+
+    return { clientId: client_id, clientSecret: client_secret };
+  }
+
+  async fetchM2MToken(params: { clientId: string; clientSecret: string }) {
+    // 使用传入的客户端凭证创建新的 MarketSDK 实例
+    const tokenMarket = new MarketSDK({
+      baseURL: process.env.MARKET_BASE_URL,
+      clientId: params.clientId,
+      clientSecret: params.clientSecret,
+    });
+
+    const tokenInfo = await tokenMarket.fetchM2MToken();
+
+    return {
+      accessToken: tokenInfo.accessToken,
+      expiresIn: tokenInfo.expiresIn,
+    };
   }
 
   // ============================== Helper Methods ==============================
@@ -469,19 +500,7 @@ export class DiscoverService {
    * report MCP plugin result marketplace
    */
   reportPluginInstallation = async (params: InstallReportRequest) => {
-    log('reportPluginInstallation: params=%O', params);
-    try {
-      await this.market.plugins.reportInstallation(params);
-      log('reportPluginInstallation: successfully reported installation for %s', params.identifier);
-    } catch (error) {
-      // 上报失败不影响主流程，只记录日志
-      log(
-        'reportPluginInstallation: failed to report installation for %s, error: %O',
-        params.identifier,
-        error,
-      );
-      console.warn('Failed to report MCP installation result:', error);
-    }
+    await this.market.plugins.reportInstallation(params);
   };
 
   // ============================== Plugin Market ==============================

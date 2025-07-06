@@ -1,9 +1,6 @@
-import { PluginListResponse, PluginManifest } from '@lobehub/market-sdk';
-
 import { lambdaClient } from '@/libs/trpc/client';
 import { globalHelpers } from '@/store/global/helpers';
 import { PluginQueryParams } from '@/types/discover';
-import { MCPPluginListParams } from '@/types/plugins';
 import { convertOpenAIManifestToLobeManifest, getToolManifest } from '@/utils/toolManifest';
 
 class ToolService {
@@ -15,30 +12,6 @@ class ToolService {
       locale,
       page: params.page ? Number(params.page) : 1,
       pageSize: params.pageSize ? Number(params.pageSize) : 20,
-    });
-  };
-
-  getMCPPluginList = async (params: MCPPluginListParams): Promise<PluginListResponse> => {
-    const locale = globalHelpers.getCurrentLanguage();
-
-    return lambdaClient.market.getMcpList.query({
-      ...params,
-      locale,
-      page: params.page ? Number(params.page) : 1,
-      pageSize: params.pageSize ? Number(params.pageSize) : 21,
-    });
-  };
-
-  getMCPPluginManifest = async (
-    identifier: string,
-    options: { install?: boolean } = {},
-  ): Promise<PluginManifest> => {
-    const locale = globalHelpers.getCurrentLanguage();
-
-    return lambdaClient.market.getMcpManifest.query({
-      identifier,
-      install: options.install,
-      locale,
     });
   };
 
