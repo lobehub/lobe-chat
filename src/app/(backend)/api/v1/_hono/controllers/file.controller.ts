@@ -27,19 +27,20 @@ export class FileController extends BaseController {
       const db = await this.getDatabase();
       const fileService = new FileUploadService(db, userId);
 
-      // 处理 multipart/form-data
-      const formData = await c.req.formData();
-      const file = formData.get('file') as File;
+      // 处理 multipart/form-data，支持中文文件名
+      const formData = await c.req.parseBody();
+
+      const file = formData['file'] as File;
 
       if (!file) {
         return this.error(c, 'No file provided', 400);
       }
 
       // 获取其他参数
-      const knowledgeBaseId = formData.get('knowledgeBaseId') as string | null;
-      const skipCheckFileType = formData.get('skipCheckFileType') === 'true';
-      const directory = formData.get('directory') as string | null;
-      const sessionId = formData.get('sessionId') as string | null;
+      const knowledgeBaseId = formData['knowledgeBaseId'] as string | null;
+      const skipCheckFileType = formData['skipCheckFileType'] === 'true';
+      const directory = formData['directory'] as string | null;
+      const sessionId = formData['sessionId'] as string | null;
 
       const options: Partial<FileUploadRequest> = {
         directory: directory || undefined,
@@ -67,14 +68,19 @@ export class FileController extends BaseController {
       const db = await this.getDatabase();
       const fileService = new FileUploadService(db, userId);
 
-      // 处理 multipart/form-data
+      // 处理 multipart/form-data，支持中文文件名
       const formData = await c.req.formData();
+
       const files: File[] = [];
 
       // 收集所有文件
-      for (const [key, value] of formData.entries()) {
-        if (key === 'files' && value instanceof File) {
-          files.push(value);
+      const fileEntries = formData.getAll('files');
+
+      for (const file of fileEntries) {
+        if (file instanceof File) {
+          files.push(file);
+        } else {
+          return this.error(c, 'Invalid file format', 400);
         }
       }
 
@@ -213,8 +219,7 @@ export class FileController extends BaseController {
       const db = await this.getDatabase();
       const fileService = new FileUploadService(db, userId);
 
-      // 处理 multipart/form-data
-      const formData = await c.req.formData();
+      const formData = await this.getFormData(c);
       const file = formData.get('file') as File;
 
       if (!file) {
@@ -298,8 +303,7 @@ export class FileController extends BaseController {
       const db = await this.getDatabase();
       const fileService = new FileUploadService(db, userId);
 
-      // 处理 multipart/form-data
-      const formData = await c.req.formData();
+      const formData = await this.getFormData(c);
       const file = formData.get('file') as File;
 
       if (!file) {
