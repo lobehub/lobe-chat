@@ -56,9 +56,7 @@ export class TopicService extends BaseService {
             : eq(topics.sessionId, sessionId),
         );
 
-      const result = await query
-        .groupBy(topics.id, users.id)
-        .orderBy(asc(topics.createdAt));
+      const result = await query.groupBy(topics.id, users.id).orderBy(asc(topics.createdAt));
 
       return result.map((topic) => ({
         clientId: topic.clientId,
@@ -85,6 +83,54 @@ export class TopicService extends BaseService {
     }
   }
 
+  async getTopicById(topicId: string): Promise<TopicResponse> {
+    try {
+      const topic = await this.db.query.topics.findFirst({
+        where: eq(topics.id, topicId),
+      });
+
+      if (!topic) {
+        throw this.createCommonError('话题不存在');
+      }
+
+      // 获取用户信息
+      const user = await this.db.query.users.findFirst({
+        columns: {
+          avatar: true,
+          email: true,
+          fullName: true,
+          id: true,
+          username: true,
+        },
+        where: eq(users.id, this.userId),
+      });
+
+      if (!user) {
+        throw this.createCommonError('用户不存在');
+      }
+
+      const countResult = await this.db
+        .select({
+          count: count(messages.id),
+        })
+        .from(messages)
+        .where(eq(messages.topicId, topicId))
+        .limit(1);
+
+      return {
+        ...topic,
+        createdAt: topic.createdAt.toISOString(),
+        favorite: topic.favorite || false,
+        messageCount: countResult[0].count,
+        updatedAt: topic.updatedAt.toISOString(),
+        user,
+      };
+    } catch (error) {
+      this.log('error', 'Failed to get topic by id', { error, topicId });
+      throw this.createCommonError('获取话题失败');
+    }
+  }
+
   /**
    * 创建新的话题
    * @param sessionId 会话ID
@@ -108,44 +154,27 @@ export class TopicService extends BaseService {
         })
         .returning();
 
-      // 获取用户信息
-      const user = await this.db.query.users.findFirst({
-        columns: {
-          avatar: true,
-          email: true,
-          fullName: true,
-          id: true,
-          username: true,
-        },
-        where: eq(users.id, this.userId),
-      });
-
-      if (!user) {
-        throw this.createCommonError('用户不存在');
-      }
-
-      return {
-        clientId: newTopic.clientId,
-        createdAt: newTopic.createdAt.toISOString(),
-        favorite: newTopic.favorite || false,
-        historySummary: newTopic.historySummary,
-        id: newTopic.id,
-        messageCount: 0, // 新创建的话题消息数量为0
-        metadata: newTopic.metadata,
-        sessionId: newTopic.sessionId,
-        title: newTopic.title,
-        updatedAt: newTopic.updatedAt.toISOString(),
-        user: {
-          avatar: user.avatar,
-          email: user.email,
-          fullName: user.fullName,
-          id: user.id,
-          username: user.username,
-        },
-      };
+      return this.getTopicById(newTopic.id);
     } catch (error) {
       this.log('error', 'Failed to create topic', { error, sessionId, title });
       throw this.createCommonError('创建话题失败');
+    }
+  }
+
+  /**
+   * 更新话题
+   * @param topicId 话题ID
+   * @param title 话题标题
+   * @returns 更新后的话题信息
+   */
+  async updateTopic(topicId: string, title: string): Promise<Partial<TopicResponse>> {
+    try {
+      await this.db.update(topics).set({ title }).where(eq(topics.id, topicId)).returning();
+
+      return this.getTopicById(topicId);
+    } catch (error) {
+      this.log('error', 'Failed to update topic', { error, title, topicId });
+      throw this.createCommonError('更新话题失败');
     }
   }
 
