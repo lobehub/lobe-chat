@@ -25,8 +25,9 @@ import { MCPPluginListParams } from '@/types/plugins';
 import { cleanObject } from '@/utils/object';
 
 class DiscoverService {
-  // ============================== Assistant Market ==============================
+  private _isRetrying = false;
 
+  // ============================== Assistant Market ==============================
   getAssistantCategories = async (params: CategoryListQuery = {}): Promise<CategoryItem[]> => {
     const locale = globalHelpers.getCurrentLanguage();
     return lambdaClient.market.getAssistantCategories.query({
@@ -263,9 +264,7 @@ class DiscoverService {
 
     // 检查服务端设置的状态标记 cookie
     const tokenStatus = this.getTokenStatusFromCookie();
-    if (tokenStatus === 'active') {
-      return;
-    }
+    if (tokenStatus === 'active') return;
 
     let clientId: string;
     let clientSecret: string;
@@ -309,7 +308,29 @@ class DiscoverService {
         clientSecret,
       });
 
-      console.log('M2M Token registered successfully:', result);
+      // 检查服务端返回的结果
+      if (!result.success) {
+        console.warn(
+          'Token registration failed, client credentials may be invalid. Clearing and retrying...',
+        );
+
+        // 清空相关的本地存储数据
+        localStorage.removeItem('_mpc');
+
+        // 重新执行完整的注册流程（但只重试一次）
+        if (!this._isRetrying) {
+          this._isRetrying = true;
+          try {
+            await this.injectMPToken();
+          } finally {
+            this._isRetrying = false;
+          }
+        } else {
+          console.error('Failed to re-register after credential invalidation');
+        }
+
+        return;
+      }
     } catch (error) {
       console.error('Failed to register M2M token:', error);
       return null;

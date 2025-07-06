@@ -1,3 +1,4 @@
+import { parse } from 'cookie';
 import debug from 'debug';
 import { User } from 'next-auth';
 import { NextRequest } from 'next/server';
@@ -79,7 +80,13 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
 
   const authorization = request.headers.get(LOBE_CHAT_AUTH_HEADER);
   const userAgent = request.headers.get('user-agent') || undefined;
-  const marketAccessToken = request.headers.get('mp_token') || undefined;
+
+  // get marketAccessToken from cookies
+  const cookieHeader = request.headers.get('cookie');
+  const cookies = cookieHeader ? parse(cookieHeader) : {};
+  const marketAccessToken = cookies['mp_token'];
+
+  log('marketAccessToken from cookie:', marketAccessToken ? '[HIDDEN]' : 'undefined');
   const commonContext = {
     authorizationHeader: authorization,
     marketAccessToken,

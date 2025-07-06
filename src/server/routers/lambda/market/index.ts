@@ -496,7 +496,16 @@ export const marketRouter = router({
       try {
         const { accessToken, expiresIn } = await ctx.discoverService.fetchM2MToken(input);
 
-        console.log('fetchM2MToken', accessToken);
+        // check accessToken
+        if (!accessToken) {
+          // clean Cookies
+
+          ctx.resHeaders?.append('Set-Cookie', serialize('mp_token_status', '', { maxAge: 0 }));
+          ctx.resHeaders?.append('Set-Cookie', serialize('mp_token', '', { maxAge: 0 }));
+
+          return { success: false };
+        }
+
         // 设置 HTTP-Only Cookie 存储实际的 access token
         const tokenCookie = serialize('mp_token', accessToken, {
           httpOnly: true,
