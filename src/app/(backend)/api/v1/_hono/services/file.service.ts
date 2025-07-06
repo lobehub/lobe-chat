@@ -145,6 +145,7 @@ export class FileUploadService extends BaseService {
 
       // 获取完整的文件信息
       const savedFile = await this.fileModel.findById(createResult.id);
+
       if (!savedFile) {
         throw this.createBusinessError('Failed to retrieve uploaded file');
       }

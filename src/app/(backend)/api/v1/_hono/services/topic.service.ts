@@ -1,12 +1,13 @@
-import { count, eq } from 'drizzle-orm';
+import { asc, count, eq } from 'drizzle-orm';
 
-import { chainSummaryTitle } from '@/chains/summaryTitle';
-import { messages, topics, users } from '@/database/schemas';
+import { MessageItem, messages, topics, users } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
+import { LLMRoleType } from '@/types/llm';
 
 import { BaseService } from '../common/base.service';
-import { TopicResponse } from '../types/topic.type';
+import { NO_THINKING_CHAT_OPTIONS } from '../constant/chat';
+import { TopicResponse, TopicSummaryRequest } from '../types/topic.type';
 import { ChatService } from './chat.service';
 
 export class TopicService extends BaseService {
@@ -190,10 +191,12 @@ export class TopicService extends BaseService {
    * @param topicId 话题ID
    * @returns 更新后的话题信息
    */
-  async summarizeTopicTitle(topicId: string): Promise<TopicResponse> {
+  async summarizeTopicTitle(params: TopicSummaryRequest): Promise<TopicResponse> {
     if (!this.userId) {
       throw this.createAuthError('未授权操作');
     }
+
+    const { id: topicId, lang = 'zh-CN' } = params;
 
     try {
       // 首先检查话题是否存在且属于当前用户
@@ -210,16 +213,10 @@ export class TopicService extends BaseService {
       }
 
       // 获取话题下的所有消息，按时间顺序排序
-      const topicMessages = await this.db
-        .select({
-          content: messages.content,
-          createdAt: messages.createdAt,
-          id: messages.id,
-          role: messages.role,
-        })
-        .from(messages)
-        .where(eq(messages.topicId, topicId))
-        .orderBy(messages.createdAt);
+      const topicMessages: MessageItem[] = await this.db.query.messages.findMany({
+        orderBy: [asc(messages.createdAt)],
+        where: eq(messages.topicId, topicId),
+      });
 
       this.log('info', '获取话题消息', {
         messageCount: topicMessages.length,
@@ -233,12 +230,18 @@ export class TopicService extends BaseService {
       }
 
       // 构建消息历史用于摘要生成
-      const summaryTitleMessages = chainSummaryTitle(
-        topicMessages.map((message) => ({
-          content: message.content || '',
-          role: message.role,
-        })),
-      ).messages;
+      const summaryTitleMessages = [
+        {
+          content: '你是一名擅长会话的助理，你需要将用户的会话总结为 10 个字以内的标题',
+          role: 'system' as LLMRoleType,
+        },
+        {
+          content: `${topicMessages.map((message) => `${message.role}: ${message.content}`).join('\n')}
+
+  请总结上述对话为10个字以内的标题，不需要包含标点符号，输出语言语种为：${lang}`,
+          role: 'user' as LLMRoleType,
+        },
+      ];
 
       const chatService = new ChatService(this.db, this.userId);
 
@@ -252,11 +255,14 @@ export class TopicService extends BaseService {
         userId: this.userId,
       });
 
-      const { content: summaryTitle } = await chatService.chat({
-        messages: summaryTitleMessages || [],
-        model,
-        provider,
-      });
+      const { content: summaryTitle } = await chatService.chat(
+        {
+          messages: summaryTitleMessages || [],
+          model,
+          provider,
+        },
+        NO_THINKING_CHAT_OPTIONS,
+      );
 
       // 更新话题的摘要信息
       await this.db
