@@ -340,18 +340,12 @@ export class FileUploadService extends BaseService {
    */
   async getFileDetail(fileId: string): Promise<FileDetailResponse> {
     try {
-      if (!this.userId) {
-        throw this.createAuthError('User authentication required');
-      }
+      const file = await this.db.query.files.findFirst({
+        where: (files, { eq }) => eq(files.id, fileId),
+      });
 
-      const file = await this.fileModel.findById(fileId);
       if (!file) {
         throw this.createCommonError('File not found');
-      }
-
-      // 检查权限
-      if (file.userId !== this.userId) {
-        throw this.createAuthorizationError('Access denied');
       }
 
       const baseResponse = this.convertToUploadResponse(file);
