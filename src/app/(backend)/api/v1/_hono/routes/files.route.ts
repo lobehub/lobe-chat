@@ -13,6 +13,22 @@ import {
 const app = new Hono();
 
 /**
+ * 获取文件列表
+ * GET /files
+ *
+ * Query parameters:
+ * - page: number (optional) - 页码，默认1
+ * - pageSize: number (optional) - 每页数量，默认20，最大100
+ * - fileType: string (optional) - 文件类型过滤
+ * - knowledgeBaseId: string (optional) - 知识库ID过滤
+ * - search: string (optional) - 搜索关键词
+ */
+app.get('/', requireAuth, zValidator('query', FileListQuerySchema), async (c) => {
+  const fileController = new FileController();
+  return await fileController.getFiles(c);
+});
+
+/**
  * 单文件上传
  * POST /files/upload
  * Content-Type: multipart/form-data
@@ -20,6 +36,7 @@ const app = new Hono();
  * Form fields:
  * - file: File (required) - 要上传的文件
  * - knowledgeBaseId: string (optional) - 知识库ID
+ * - sessionId: string (optional) - 会话ID，如果提供则创建文件和会话的关联关系
  * - skipCheckFileType: boolean (optional) - 是否跳过文件类型检查
  * - directory: string (optional) - 上传目录
  */
@@ -36,6 +53,7 @@ app.post('/upload', requireAuth, async (c) => {
  * Form fields:
  * - file: File (required) - 要上传的文件
  * - knowledgeBaseId: string (optional) - 知识库ID
+ * - sessionId: string (optional) - 会话ID，如果提供则创建文件和会话的关联关系
  * - skipCheckFileType: boolean (optional) - 是否跳过文件类型检查
  * - directory: string (optional) - 上传目录
  *
@@ -57,28 +75,13 @@ app.post('/upload-public', requireAuth, async (c) => {
  * Form fields:
  * - files: File[] (required) - 要上传的文件列表
  * - knowledgeBaseId: string (optional) - 知识库ID
+ * - sessionId: string (optional) - 会话ID，如果提供则创建文件和会话的关联关系
  * - skipCheckFileType: boolean (optional) - 是否跳过文件类型检查
  * - directory: string (optional) - 上传目录
  */
 app.post('/batch-upload', requireAuth, async (c) => {
   const fileController = new FileController();
   return await fileController.batchUploadFiles(c);
-});
-
-/**
- * 获取文件列表
- * GET /files
- *
- * Query parameters:
- * - page: number (optional) - 页码，默认1
- * - pageSize: number (optional) - 每页数量，默认20，最大100
- * - fileType: string (optional) - 文件类型过滤
- * - knowledgeBaseId: string (optional) - 知识库ID过滤
- * - search: string (optional) - 搜索关键词
- */
-app.get('/', requireAuth, zValidator('query', FileListQuerySchema), async (c) => {
-  const fileController = new FileController();
-  return await fileController.getFiles(c);
 });
 
 /**
@@ -165,6 +168,7 @@ app.post(
  * Form fields:
  * - file: File (required) - 要上传的文件
  * - knowledgeBaseId: string (optional) - 知识库ID
+ * - sessionId: string (optional) - 会话ID，如果提供则创建文件和会话的关联关系
  * - skipCheckFileType: boolean (optional) - 是否跳过文件类型检查
  * - directory: string (optional) - 上传目录
  * - skipExist: boolean (optional) - 是否跳过已存在的解析结果，默认false
