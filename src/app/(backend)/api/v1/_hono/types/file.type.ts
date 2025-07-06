@@ -104,6 +104,8 @@ export interface FileListResponse {
  * 文件详情响应类型
  */
 export interface FileDetailResponse extends FileUploadResponse {
+  /** Base64编码的文件内容（仅图片文件） */
+  base64?: string;
   /** 解析错误信息 */
   parseError?: string;
   /** 解析状态 */
@@ -340,4 +342,39 @@ export const FileParseRequestSchema = z.object({
     .transform((val) => val === 'true')
     .pipe(z.boolean())
     .optional(),
+});
+
+/**
+ * 批量获取文件请求类型
+ */
+export interface BatchGetFilesRequest {
+  /** 文件ID列表 */
+  fileIds: string[];
+}
+
+/**
+ * 批量获取文件响应类型
+ */
+export interface BatchGetFilesResponse {
+  /** 失败的文件及错误信息 */
+  failed: Array<{
+    error: string;
+    fileId: string;
+  }>;
+  /** 文件列表 */
+  files: Array<{
+    /** 文件详情（图片文件会包含base64字段） */
+    fileItem: FileDetailResponse;
+    /** 解析结果（非图片文件） */
+    parseResult?: FileParseResponse;
+  }>;
+  /** 成功获取的文件数 */
+  success: number;
+  /** 请求总数 */
+  total: number;
+}
+
+// Zod Schema for validation
+export const BatchGetFilesRequestSchema = z.object({
+  fileIds: z.array(z.string().min(1, '文件ID不能为空')).min(1, '文件ID列表不能为空'),
 });
