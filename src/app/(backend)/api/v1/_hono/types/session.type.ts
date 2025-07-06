@@ -65,6 +65,7 @@ export interface SearchSessionsRequest {
  */
 export interface GetSessionsRequest {
   agentId?: string;
+  keyword?: string;
   page?: number;
   pageSize?: number;
 }
@@ -286,6 +287,7 @@ export const SearchSessionsRequestSchema = z.object({
 
 export const GetSessionsRequestSchema = z.object({
   agentId: z.string().optional(),
+  keyword: z.string().optional(),
   page: z
     .string()
     .transform((val) => parseInt(val, 10))
