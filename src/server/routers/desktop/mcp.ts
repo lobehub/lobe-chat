@@ -27,7 +27,9 @@ const mcpProcedure = isServerMode ? authedProcedure : passwordProcedure;
 
 export const mcpRouter = router({
   getStdioMcpServerManifest: mcpProcedure.input(stdioParamsSchema).query(async ({ input }) => {
-    log('getStdioMcpServerManifest input: %O', input);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { env: _, ...rest } = input;
+    log('getStdioMcpServerManifest input: %O', rest);
 
     return await mcpService.getStdioMcpServerManifest(input, input.metadata);
   }),
@@ -86,8 +88,6 @@ export const mcpRouter = router({
       }),
     )
     .mutation(async ({ input }) => {
-      log('checkMcpInstall input: %O', input);
-
       return await mcpService.checkMcpInstall(input as any);
     }),
 });

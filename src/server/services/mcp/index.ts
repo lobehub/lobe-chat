@@ -25,16 +25,28 @@ class MCPService {
   // Store instances of the custom MCPClient, keyed by serialized MCPClientParams
   private clients: Map<string, MCPClient> = new Map();
 
+  private sanitizeForLogging = <T extends Record<string, any>>(obj: T): Omit<T, 'env'> => {
+    if (!obj) return obj;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { env: _, ...rest } = obj;
+    return rest as Omit<T, 'env'>;
+  };
+
   // --- MCP Interaction ---
 
   // listTools now accepts MCPClientParams
   async listTools(params: MCPClientParams): Promise<LobeChatPluginApi[]> {
     const client = await this.getClient(params); // Get client using params
-    log(`Listing tools using client for params: %O`, params);
+    const loggableParams = this.sanitizeForLogging(params);
+    log(`Listing tools using client for params: %O`, loggableParams);
 
     try {
       const result = await client.listTools();
-      log(`Tools listed successfully for params: %O, result count: %d`, params, result.length);
+      log(
+        `Tools listed successfully for params: %O, result count: %d`,
+        loggableParams,
+        result.length,
+      );
       return result.map<LobeChatPluginApi>((item) => ({
         // Assuming identifier is the unique name/id
         description: item.description,
@@ -42,7 +54,7 @@ class MCPService {
         parameters: item.inputSchema as PluginSchema,
       }));
     } catch (error) {
-      console.error(`Error listing tools for params %O:`, params, error);
+      console.error(`Error listing tools for params %O:`, loggableParams, error);
       // Propagate a TRPCError for better handling upstream
       throw new TRPCError({
         cause: error,
@@ -55,14 +67,19 @@ class MCPService {
   // listTools now accepts MCPClientParams
   async listRawTools(params: MCPClientParams): Promise<McpTool[]> {
     const client = await this.getClient(params); // Get client using params
-    log(`Listing tools using client for params: %O`, params);
+    const loggableParams = this.sanitizeForLogging(params);
+    log(`Listing tools using client for params: %O`, loggableParams);
 
     try {
       const result = await client.listTools();
-      log(`Tools listed successfully for params: %O, result count: %d`, params, result.length);
+      log(
+        `Tools listed successfully for params: %O, result count: %d`,
+        loggableParams,
+        result.length,
+      );
       return result;
     } catch (error) {
-      console.error(`Error listing tools for params %O:`, params, error);
+      console.error(`Error listing tools for params %O:`, loggableParams, error);
       // Propagate a TRPCError for better handling upstream
       throw new TRPCError({
         cause: error,
@@ -75,14 +92,19 @@ class MCPService {
   // listResources now accepts MCPClientParams
   async listResources(params: MCPClientParams): Promise<McpResource[]> {
     const client = await this.getClient(params); // Get client using params
-    log(`Listing resources using client for params: %O`, params);
+    const loggableParams = this.sanitizeForLogging(params);
+    log(`Listing resources using client for params: %O`, loggableParams);
 
     try {
       const result = await client.listResources();
-      log(`Resources listed successfully for params: %O, result count: %d`, params, result.length);
+      log(
+        `Resources listed successfully for params: %O, result count: %d`,
+        loggableParams,
+        result.length,
+      );
       return result;
     } catch (error) {
-      console.error(`Error listing resources for params %O:`, params, error);
+      console.error(`Error listing resources for params %O:`, loggableParams, error);
       // Propagate a TRPCError for better handling upstream
       throw new TRPCError({
         cause: error,
@@ -95,14 +117,19 @@ class MCPService {
   // listPrompts now accepts MCPClientParams
   async listPrompts(params: MCPClientParams): Promise<McpPrompt[]> {
     const client = await this.getClient(params); // Get client using params
-    log(`Listing prompts using client for params: %O`, params);
+    const loggableParams = this.sanitizeForLogging(params);
+    log(`Listing prompts using client for params: %O`, loggableParams);
 
     try {
       const result = await client.listPrompts();
-      log(`Prompts listed successfully for params: %O, result count: %d`, params, result.length);
+      log(
+        `Prompts listed successfully for params: %O, result count: %d`,
+        loggableParams,
+        result.length,
+      );
       return result;
     } catch (error) {
-      console.error(`Error listing prompts for params %O:`, params, error);
+      console.error(`Error listing prompts for params %O:`, loggableParams, error);
       // Propagate a TRPCError for better handling upstream
       throw new TRPCError({
         cause: error,
@@ -117,13 +144,22 @@ class MCPService {
     const client = await this.getClient(params); // Get client using params
 
     const args = safeParseJSON(argsStr);
+    const loggableParams = this.sanitizeForLogging(params);
 
-    log(`Calling tool "${toolName}" using client for params: %O with args: %O`, params, args);
+    log(
+      `Calling tool "${toolName}" using client for params: %O with args: %O`,
+      loggableParams,
+      args,
+    );
 
     try {
       // Delegate the call to the MCPClient instance
       const result = await client.callTool(toolName, args); // Pass args directly
-      log(`Tool "${toolName}" called successfully for params: %O, result: %O`, params, result);
+      log(
+        `Tool "${toolName}" called successfully for params: %O, result: %O`,
+        loggableParams,
+        result,
+      );
       const { content, isError } = result;
 
       if (isError) return result;
@@ -146,7 +182,11 @@ class MCPService {
         return mcpError.message;
       }
 
-      console.error(`Error calling tool "${toolName}" for params %O:`, params, error);
+      console.error(
+        `Error calling tool "${toolName}" for params %O:`,
+        this.sanitizeForLogging(params),
+        error,
+      );
       // Propagate a TRPCError
       throw new TRPCError({
         cause: error,
@@ -192,7 +232,7 @@ class MCPService {
       // 记录详细的错误信息用于调试
       log('Detailed initialization error: %O', {
         error: errorMessage,
-        params,
+        params: this.sanitizeForLogging(params),
         stack: error instanceof Error ? error.stack : undefined,
       });
 
@@ -286,7 +326,10 @@ class MCPService {
     deploymentOptions: DeploymentOption[];
   }): Promise<CheckMcpInstallResult> {
     try {
-      log('Checking MCP plugin installation status: %O', input);
+      const loggableInput = {
+        deploymentOptions: input.deploymentOptions.map((o) => this.sanitizeForLogging(o)),
+      };
+      log('Checking MCP plugin installation status: %O', loggableInput);
       const results = [];
 
       // 检查每个部署选项
