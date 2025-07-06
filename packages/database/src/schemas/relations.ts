@@ -84,7 +84,7 @@ export const threadsRelations = relations(threads, ({ one }) => ({
 }));
 
 export const messagesRelations = relations(messages, ({ many, one }) => ({
-  filesToMessages: many(messagesFiles),
+  messagesFiles: many(messagesFiles),
 
   session: one(sessions, {
     fields: [messages.sessionId],
@@ -342,6 +342,17 @@ export const messageTTSRelations = relations(messageTTS, ({ one }) => ({
   message: one(messages, {
     fields: [messageTTS.id],
     references: [messages.id],
+  }),
+}));
+
+export const messagesFilesRelations = relations(messagesFiles, ({ one }) => ({
+  message: one(messages, {
+    fields: [messagesFiles.messageId],
+    references: [messages.id],
+  }),
+  file: one(files, {
+    fields: [messagesFiles.fileId],
+    references: [files.id],
   }),
 }));
 
