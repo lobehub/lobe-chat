@@ -63,13 +63,13 @@ TopicsRoutes.delete(
 
 // POST /api/v1/topics/:id/summary-title - 总结对应的话题标题
 TopicsRoutes.post(
-  '/:id/summary-title',
+  '/summary-title',
   requireAuth,
   requireAnyPermission(
     getScopePermissions('TOPIC_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),
     'You do not have permission to summarize topics',
   ),
-  zValidator('param', TopicSummaryParamSchema),
+  zValidator('json', TopicSummaryParamSchema),
   (c) => {
     const controller = new TopicController();
     return controller.handleSummarizeTopicTitle(c);

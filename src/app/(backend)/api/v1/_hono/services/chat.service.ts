@@ -7,6 +7,7 @@ import { LobeAgentConfig } from '@/types/agent';
 import { LobeAgentChatConfig } from '@/types/agent/chatConfig';
 
 import { BaseService } from '../common/base.service';
+import { NO_THINKING_CHAT_OPTIONS } from '../constant/chat';
 import { ServiceResult } from '../types';
 import {
   ChatServiceConfig,
@@ -380,11 +381,7 @@ export class ChatService extends BaseService {
           temperature: 0.3, // 较低的温度以确保翻译的一致性
         },
         // 翻译不使用思考
-        {
-          thinking: { budget_tokens: 0, type: 'disabled' },
-          thinkingBudget: 0,
-          tool_choice: 'none',
-        },
+        NO_THINKING_CHAT_OPTIONS,
       );
 
       this.log('info', '翻译文本完成', {
