@@ -46,6 +46,23 @@ app.post('/upload', requireAuth, async (c) => {
 });
 
 /**
+ * 批量文件上传
+ * POST /files/batch-upload
+ * Content-Type: multipart/form-data
+ *
+ * Form fields:
+ * - files: File[] (required) - 要上传的文件列表
+ * - knowledgeBaseId: string (optional) - 知识库ID
+ * - sessionId: string (optional) - 会话ID，如果提供则创建文件和会话的关联关系
+ * - skipCheckFileType: boolean (optional) - 是否跳过文件类型检查
+ * - directory: string (optional) - 上传目录
+ */
+app.post('/batch-upload', requireAuth, async (c) => {
+  const fileController = new FileController();
+  return await fileController.batchUploadFiles(c);
+});
+
+/**
  * 公共文件上传
  * POST /files/upload-public
  * Content-Type: multipart/form-data
@@ -65,23 +82,6 @@ app.post('/upload', requireAuth, async (c) => {
 app.post('/upload-public', requireAuth, async (c) => {
   const fileController = new FileController();
   return await fileController.uploadPublicFile(c);
-});
-
-/**
- * 批量文件上传
- * POST /files/batch-upload
- * Content-Type: multipart/form-data
- *
- * Form fields:
- * - files: File[] (required) - 要上传的文件列表
- * - knowledgeBaseId: string (optional) - 知识库ID
- * - sessionId: string (optional) - 会话ID，如果提供则创建文件和会话的关联关系
- * - skipCheckFileType: boolean (optional) - 是否跳过文件类型检查
- * - directory: string (optional) - 上传目录
- */
-app.post('/batch-upload', requireAuth, async (c) => {
-  const fileController = new FileController();
-  return await fileController.batchUploadFiles(c);
 });
 
 /**
