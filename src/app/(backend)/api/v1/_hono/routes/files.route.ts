@@ -4,6 +4,7 @@ import { Hono } from 'hono';
 import { FileController } from '../controllers/file.controller';
 import { requireAuth } from '../middleware/oidc-auth';
 import {
+  BatchGetFilesRequestSchema,
   FileIdParamSchema,
   FileListQuerySchema,
   FileParseRequestSchema,
@@ -181,6 +182,28 @@ app.post(
 app.post('/upload-and-parse', requireAuth, async (c) => {
   const fileController = new FileController();
   return await fileController.uploadAndParseFile(c);
+});
+
+/**
+ * 批量获取文件详情和内容
+ * POST /files/batch-get
+ * Content-Type: application/json
+ *
+ * Request body:
+ * {
+ *   "fileIds": ["file1", "file2", "file3"]
+ * }
+ *
+ * 功能：
+ * - 根据文件ID列表批量获取文件详情
+ * - 图片文件：返回base64编码的文件内容
+ * - 非图片文件：返回解析后的文本内容
+ * - 支持并行处理，提高性能
+ * - 返回成功和失败的统计信息
+ */
+app.post('/batch-get', requireAuth, zValidator('json', BatchGetFilesRequestSchema), async (c) => {
+  const fileController = new FileController();
+  return await fileController.batchGetFiles(c);
 });
 
 /**

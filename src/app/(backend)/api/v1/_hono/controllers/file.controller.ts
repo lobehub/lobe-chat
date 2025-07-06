@@ -4,6 +4,7 @@ import { BaseController } from '../common/base.controller';
 import { FileUploadService } from '../services/file.service';
 import {
   BatchFileUploadRequest,
+  BatchGetFilesRequest,
   FileListQuery,
   FileParseRequest,
   FileUploadRequest,
@@ -331,6 +332,30 @@ export class FileController extends BaseController {
       const result = await fileService.uploadAndParseFile(file, uploadOptions, parseOptions);
 
       return this.success(c, result, 'File uploaded and parsed successfully');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 批量获取文件详情和内容
+   * POST /files/batch-get
+   */
+  async batchGetFiles(c: Context) {
+    try {
+      const userId = this.getUserId(c)!; // requireAuth 中间件已确保 userId 存在
+      const body = await this.getBody<BatchGetFilesRequest>(c);
+
+      if (!body || !body.fileIds || body.fileIds.length === 0) {
+        return this.error(c, 'File IDs are required', 400);
+      }
+
+      const db = await this.getDatabase();
+      const fileService = new FileUploadService(db, userId);
+
+      const result = await fileService.batchGetFiles(body);
+
+      return this.success(c, result, 'Files retrieved successfully');
     } catch (error) {
       return this.handleError(c, error);
     }

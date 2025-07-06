@@ -17,6 +17,8 @@ import { BaseService } from '../common/base.service';
 import {
   BatchFileUploadRequest,
   BatchFileUploadResponse,
+  BatchGetFilesRequest,
+  BatchGetFilesResponse,
   FileDeleteResponse,
   FileDetailResponse,
   FileListQuery,
@@ -913,6 +915,115 @@ export class FileUploadService extends BaseService {
         userId: this.userId,
       });
       throw this.createBusinessError('Failed to associate file with session');
+    }
+  }
+
+  /**
+   * 批量获取文件详情和内容
+   */
+  async batchGetFiles(request: BatchGetFilesRequest): Promise<BatchGetFilesResponse> {
+    try {
+      if (!this.userId) {
+        throw this.createAuthError('User authentication required');
+      }
+
+      this.log('info', 'Starting batch file retrieval', {
+        count: request.fileIds.length,
+        fileIds: request.fileIds,
+      });
+
+      const files: BatchGetFilesResponse['files'] = [];
+      const failed: BatchGetFilesResponse['failed'] = [];
+
+      // 并行处理所有文件
+      const promises = request.fileIds.map(async (fileId) => {
+        try {
+          // 获取文件详情
+          const fileDetail = await this.getFileDetail(fileId);
+
+          // 检查是否为图片文件
+          const isImage = fileDetail.fileType.startsWith('image/');
+
+          if (isImage) {
+            // 图片文件：获取base64内容
+            try {
+              const fileBuffer = await this.s3Service.getFileByteArray(fileDetail.metadata.path);
+              const base64 = Buffer.from(fileBuffer).toString('base64');
+
+              // 将base64添加到fileItem中
+              const fileItemWithBase64: FileDetailResponse = {
+                ...fileDetail,
+                base64,
+              };
+
+              files.push({
+                fileItem: fileItemWithBase64,
+              });
+            } catch (error) {
+              // 如果获取图片内容失败，仍然返回文件详情，但不包含base64
+              this.log('warn', 'Failed to get image content for file', {
+                error,
+                fileId,
+              });
+
+              files.push({
+                fileItem: fileDetail,
+              });
+            }
+          } else {
+            // 非图片文件：获取解析结果
+            try {
+              const parseResult = await this.parseFile(fileId, { skipExist: true });
+
+              files.push({
+                fileItem: fileDetail,
+                parseResult,
+              });
+            } catch (parseError) {
+              // 如果解析失败，仍然返回文件详情，但不包含解析结果
+              this.log('warn', 'Failed to parse file content', {
+                error: parseError,
+                fileId,
+              });
+
+              files.push({
+                fileItem: fileDetail,
+              });
+            }
+          }
+        } catch (error) {
+          this.log('error', 'Failed to get file detail', {
+            error,
+            fileId,
+          });
+
+          failed.push({
+            error: error instanceof Error ? error.message : 'Unknown error',
+            fileId,
+          });
+        }
+      });
+
+      // 等待所有异步操作完成
+      await Promise.all(promises);
+
+      const result: BatchGetFilesResponse = {
+        failed,
+        files,
+        success: files.length,
+        total: request.fileIds.length,
+      };
+
+      this.log('info', 'Batch file retrieval completed', {
+        failed: result.failed.length,
+        success: result.success,
+        total: result.total,
+      });
+
+      return result;
+    } catch (error) {
+      this.log('error', 'Batch file retrieval failed', error);
+      throw error;
     }
   }
 
