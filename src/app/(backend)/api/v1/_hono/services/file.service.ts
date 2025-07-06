@@ -1,8 +1,9 @@
+import { and, count, desc, ilike } from 'drizzle-orm';
 import { sha256 } from 'js-sha256';
 
 import { DocumentModel } from '@/database/models/document';
 import { FileModel } from '@/database/models/file';
-import { FileItem } from '@/database/schemas';
+import { FileItem, files, filesToSessions } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 import { idGenerator } from '@/database/utils/idGenerator';
 import { S3 } from '@/server/modules/S3';
@@ -137,9 +138,19 @@ export class FileUploadService extends BaseService {
 
       const createResult = await this.fileModel.create(fileRecord, true);
 
+      // 如果提供了 sessionId，创建文件和会话的关联关系
+      if (options.sessionId) {
+        await this.createFileSessionRelation(createResult.id, options.sessionId);
+        this.log('info', 'File associated with session', {
+          fileId: createResult.id,
+          sessionId: options.sessionId,
+        });
+      }
+
       this.log('info', 'File uploaded successfully', {
         fileId: createResult.id,
         path: metadata.path,
+        sessionId: options.sessionId,
         size: file.size,
       });
 
@@ -176,6 +187,7 @@ export class FileUploadService extends BaseService {
         const result = await this.uploadFile(file, {
           directory: request.directory,
           knowledgeBaseId: request.knowledgeBaseId,
+          sessionId: request.sessionId,
           skipCheckFileType: request.skipCheckFileType,
         });
         results.successful.push(result);
@@ -240,59 +252,82 @@ export class FileUploadService extends BaseService {
    */
   async getFileList(query: FileListQuery): Promise<FileListResponse> {
     try {
-      // 获取用户上传的全局文件
-      const originalGlobalFiles = await this.db.query.globalFiles.findMany({
-        where: (globalFile, { eq }) => eq(globalFile.creator, this.userId),
-      });
-
-      const globalFiles = originalGlobalFiles.map((file) => {
-        return {
-          ...file,
-          filename: (file.metadata as FileMetadata)?.filename,
-          hash: file.hashId || '',
-          metadata: file.metadata as FileMetadata,
-          uploadedAt: file.createdAt.toISOString(),
-        } satisfies FileUploadResponse;
-      });
-
-      // 获取用户上传的会话文件
-      const sessionFileRelations = await this.db.query.filesToSessions.findMany({
-        where: (sessionFile, { eq }) => eq(sessionFile.userId, this.userId),
-      });
-
-      const sessionFileIds = sessionFileRelations?.map((sessionFile) => sessionFile.fileId);
-
-      const originalSessionFiles = await this.db.query.files.findMany({
-        where: (file, { inArray }) => inArray(file.id, sessionFileIds),
-      });
-
-      const sessionFiles = originalSessionFiles.map((file) => {
-        return {
-          ...file,
-          filename: file.name,
-          hash: file.fileHash || '',
-          metadata: file.metadata as FileMetadata,
-          uploadedAt: file.createdAt.toISOString(),
-        } satisfies FileUploadResponse;
-      });
-
-      let responseFiles = [...globalFiles, ...sessionFiles].sort((a, b) => {
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-      });
-
-      const total = responseFiles.length;
-
-      if (query.page && query.pageSize) {
-        const start = (query.page - 1) * query.pageSize;
-        const end = start + query.pageSize;
-        responseFiles = responseFiles.slice(start, end);
+      if (!this.userId) {
+        throw this.createAuthError('User authentication required');
       }
+
+      this.log('info', 'Getting file list', {
+        fileType: query.fileType,
+        knowledgeBaseId: query.knowledgeBaseId,
+        page: query.page,
+        pageSize: query.pageSize,
+        search: query.search,
+      });
+
+      // 计算分页参数
+      const page = query.page || 1;
+      const pageSize = Math.min(query.pageSize || 20, 100); // 限制最大每页数量为100
+      const offset = (page - 1) * pageSize;
+
+      // 构建 WHERE 条件
+      const whereConditions = [];
+
+      // 添加模糊查询条件
+      if (query.search) {
+        whereConditions.push(ilike(files.name, `%${query.search}%`));
+      }
+
+      // 添加文件类型过滤
+      if (query.fileType) {
+        whereConditions.push(ilike(files.fileType, `${query.fileType}%`));
+      }
+
+      const whereClause = and(...whereConditions);
+
+      // 执行分页查询
+      const filesResult = await this.db
+        .select({
+          accessedAt: files.accessedAt,
+          chunkTaskId: files.chunkTaskId,
+          clientId: files.clientId,
+          createdAt: files.createdAt,
+          embeddingTaskId: files.embeddingTaskId,
+          fileHash: files.fileHash,
+          fileType: files.fileType,
+          id: files.id,
+          metadata: files.metadata,
+          name: files.name,
+          size: files.size,
+          updatedAt: files.updatedAt,
+          url: files.url,
+          userId: files.userId,
+        })
+        .from(files)
+        .where(whereClause)
+        .orderBy(desc(files.createdAt))
+        .limit(pageSize)
+        .offset(offset);
+
+      // 查询总数
+      const totalResult = await this.db.select({ count: count() }).from(files).where(whereClause);
+
+      const totalCount = totalResult[0]?.count || 0;
+
+      // 转换为响应格式
+      const responseFiles = filesResult.map((file) => this.convertToUploadResponse(file));
+
+      this.log('info', 'File list retrieved successfully', {
+        count: filesResult.length,
+        page,
+        pageSize,
+        total: totalCount,
+      });
 
       return {
         files: responseFiles,
-        page: query.page,
-        pageSize: query.pageSize,
-        total,
+        page,
+        pageSize,
+        total: totalCount,
       };
     } catch (error) {
       this.log('error', 'Get file list failed', error);
@@ -431,10 +466,20 @@ export class FileUploadService extends BaseService {
 
       const createResult = await this.fileModel.create(fileRecord, true);
 
+      // 如果提供了 sessionId，创建文件和会话的关联关系
+      if (options.sessionId) {
+        await this.createFileSessionRelation(createResult.id, options.sessionId);
+        this.log('info', 'Public file associated with session', {
+          fileId: createResult.id,
+          sessionId: options.sessionId,
+        });
+      }
+
       this.log('info', 'Public file uploaded successfully', {
         fileId: createResult.id,
         path: metadata.path,
         publicUrl,
+        sessionId: options.sessionId,
         size: file.size,
       });
 
@@ -800,5 +845,54 @@ export class FileUploadService extends BaseService {
       this.log('error', 'File upload and parsing failed', error);
       throw error;
     }
+  }
+
+  /**
+   * 创建文件和会话的关联关系
+   */
+  private async createFileSessionRelation(fileId: string, sessionId: string): Promise<void> {
+    try {
+      await this.db
+        .insert(filesToSessions)
+        .values({
+          fileId,
+          sessionId,
+          userId: this.userId,
+        })
+        .onConflictDoNothing();
+
+      this.log('info', 'File-session relation created', {
+        fileId,
+        sessionId,
+        userId: this.userId,
+      });
+    } catch (error) {
+      this.log('error', 'Failed to create file-session relation', {
+        error,
+        fileId,
+        sessionId,
+        userId: this.userId,
+      });
+      throw this.createBusinessError('Failed to associate file with session');
+    }
+  }
+
+  /**
+   * 根据文件类型获取对应的分类
+   */
+  private getFileCategoryByType(fileType: string): string | undefined {
+    if (fileType.startsWith('image/')) {
+      return 'Images';
+    }
+    if (fileType.startsWith('video/')) {
+      return 'Videos';
+    }
+    if (fileType.startsWith('audio/')) {
+      return 'Audios';
+    }
+    if (fileType.startsWith('application/')) {
+      return 'Documents';
+    }
+    return undefined;
   }
 }

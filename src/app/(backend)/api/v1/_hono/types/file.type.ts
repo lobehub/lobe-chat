@@ -14,6 +14,8 @@ export interface FileUploadRequest {
   knowledgeBaseId?: string;
   /** 自定义路径（可选） */
   pathname?: string;
+  /** 会话ID（可选） */
+  sessionId?: string;
   /** 是否跳过文件类型检查 */
   skipCheckFileType?: boolean;
 }
@@ -152,6 +154,8 @@ export interface PublicFileUploadRequest {
   directory?: string;
   /** 知识库ID（可选） */
   knowledgeBaseId?: string;
+  /** 会话ID（可选） */
+  sessionId?: string;
   /** 是否跳过文件类型检查 */
   skipCheckFileType?: boolean;
 }
@@ -202,6 +206,8 @@ export interface BatchFileUploadRequest {
   files: File[];
   /** 知识库ID（可选） */
   knowledgeBaseId?: string;
+  /** 会话ID（可选） */
+  sessionId?: string;
   /** 是否跳过文件类型检查 */
   skipCheckFileType?: boolean;
 }
