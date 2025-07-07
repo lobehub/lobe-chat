@@ -3,7 +3,6 @@ import { serialize } from 'cookie';
 import debug from 'debug';
 import { z } from 'zod';
 
-import { isDesktop } from '@/const/version';
 import { publicProcedure, router } from '@/libs/trpc/lambda';
 import { DiscoverService } from '@/server/services/discover';
 import { AssistantSorts, McpSorts, ModelSorts, PluginSorts, ProviderSorts } from '@/types/discover';
@@ -505,24 +504,29 @@ export const marketRouter = router({
           return { success: false };
         }
 
-        log('get access token, expiresIn: %ss', expiresIn);
+        log('get access token, expiresIn value:', expiresIn);
+        log('expiresIn type:', typeof expiresIn);
+
+        const expirationTime = new Date(Date.now() + (expiresIn - 60) * 1000); // 提前 60 秒过期
+
+        log('expirationTime:', expirationTime.toISOString());
 
         // 设置 HTTP-Only Cookie 存储实际的 access token
         const tokenCookie = serialize('mp_token', accessToken, {
+          expires: expirationTime,
           httpOnly: true,
-          maxAge: expiresIn - 60, // 提前 60 秒过期
           path: '/',
           sameSite: 'lax',
-          secure: isDesktop ? false : process.env.NODE_ENV === 'production',
+          secure: process.env.NODE_ENV === 'production',
         });
 
         // 设置客户端可读的状态标记 cookie（不包含实际 token）
         const statusCookie = serialize('mp_token_status', 'active', {
+          expires: expirationTime,
           httpOnly: false,
-          maxAge: expiresIn - 60,
           path: '/',
           sameSite: 'lax',
-          secure: isDesktop ? false : process.env.NODE_ENV === 'production',
+          secure: process.env.NODE_ENV === 'production',
         });
 
         // 通过 context 的 resHeaders 设置 Set-Cookie 头
