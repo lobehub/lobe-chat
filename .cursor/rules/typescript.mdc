@@ -1,0 +1,19 @@
+---
+description: 
+globs: *.ts,*.tsx,*.mts
+alwaysApply: false
+---
+
+TypeScript Code Style Guide:
+
+- Avoid explicit type annotations when TypeScript can infer types.
+- Avoid defining `any` type variables (e.g., `let a: number;` instead of `let a;`).
+- Use the most accurate type possible (e.g., use `Record<PropertyKey, unknown>` instead of `object`).
+- Prefer `interface` over `type` (e.g., define react component props).
+- Use `as const satisfies XyzInterface` instead of `as const` when suitable
+- import index.ts module(directory module) like `@/db/index` instead of `@/db`
+- Instead of calling Date.now() multiple times, assign it to a constant once and reuse it. This ensures consistency and improves readability
+- Always refactor repeated logic into a reusable function
+- Don't remove meaningful code comments, be sure to keep original comments when providing applied code
+- Update the code comments when needed after you modify the related code
+- Please respect my prettier preferences when you provide code
