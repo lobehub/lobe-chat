@@ -3,11 +3,12 @@ import { serialize } from 'cookie';
 import debug from 'debug';
 import { z } from 'zod';
 
+import { isDesktop } from '@/const/version';
 import { publicProcedure, router } from '@/libs/trpc/lambda';
 import { DiscoverService } from '@/server/services/discover';
 import { AssistantSorts, McpSorts, ModelSorts, PluginSorts, ProviderSorts } from '@/types/discover';
 
-const log = debug('lobe-edge-router:market');
+const log = debug('lambda-router:market');
 
 const marketProcedure = publicProcedure.use(async ({ ctx, next }) => {
   return next({
@@ -498,19 +499,21 @@ export const marketRouter = router({
         if (!accessToken) {
           // clean Cookies
 
-          ctx.resHeaders?.append('Set-Cookie', serialize('mp_token_status', '', { maxAge: 0 }));
-          ctx.resHeaders?.append('Set-Cookie', serialize('mp_token', '', { maxAge: 0 }));
+          ctx.resHeaders?.append('Set-Cookie', serialize('mp_token_status', '', { maxAge: -1 }));
+          ctx.resHeaders?.append('Set-Cookie', serialize('mp_token', '', { maxAge: -1 }));
 
           return { success: false };
         }
 
+        log('get access token, expiresIn: %ss', expiresIn);
+
         // 设置 HTTP-Only Cookie 存储实际的 access token
         const tokenCookie = serialize('mp_token', accessToken, {
           httpOnly: true,
-          maxAge: expiresIn - 60,
+          maxAge: expiresIn - 60, // 提前 60 秒过期
           path: '/',
           sameSite: 'lax',
-          secure: process.env.NODE_ENV === 'production', // 提前 60 秒过期
+          secure: isDesktop ? false : process.env.NODE_ENV === 'production',
         });
 
         // 设置客户端可读的状态标记 cookie（不包含实际 token）
@@ -519,7 +522,7 @@ export const marketRouter = router({
           maxAge: expiresIn - 60,
           path: '/',
           sameSite: 'lax',
-          secure: process.env.NODE_ENV === 'production', // 与 token cookie 同步过期
+          secure: isDesktop ? false : process.env.NODE_ENV === 'production',
         });
 
         // 通过 context 的 resHeaders 设置 Set-Cookie 头
