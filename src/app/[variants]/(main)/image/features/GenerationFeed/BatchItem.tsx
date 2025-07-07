@@ -144,7 +144,12 @@ export const GenerationBatchItem = memo<GenerationBatchItemProps>(({ batch }) =>
       </Flexbox>
       <Grid maxItemWidth={200} ref={imageGridRef} rows={batch.generations.length || 4}>
         {batch.generations.map((generation) => (
-          <GenerationItem generation={generation} key={generation.id} prompt={batch.prompt} />
+          <GenerationItem
+            generation={generation}
+            generationBatch={batch}
+            key={generation.id}
+            prompt={batch.prompt}
+          />
         ))}
       </Grid>
       <Flexbox
