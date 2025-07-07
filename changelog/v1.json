@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Pin officeparser@5.1.1 to fix server error."]
+    },
+    "date": "2025-07-07",
+    "version": "1.96.19"
+  },
+  {
+    "children": {
       "fixes": ["Change the wrong github checkmodel name."],
       "improvements": ["Files hello pages should scroll."]
     },
