@@ -3,6 +3,7 @@ import { PluginItem, PluginListResponse } from '@lobehub/market-sdk';
 import { TRPCClientError } from '@trpc/client';
 import { produce } from 'immer';
 import { uniqBy } from 'lodash-es';
+import { gt, valid } from 'semver';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -240,8 +241,22 @@ export const createMCPPluginStoreSlice: StateCreator<
 
       // set version
       if (manifest) {
-        // set Version
-        manifest.version = data?.version || manifest.version;
+        // set Version - 使用 semver 比较版本号并取更大的值
+        const dataVersion = data?.version;
+        const manifestVersion = manifest.version;
+
+        if (dataVersion && manifestVersion) {
+          // 如果两个版本都存在，比较并取更大的值
+          if (valid(dataVersion) && valid(manifestVersion)) {
+            manifest.version = gt(dataVersion, manifestVersion) ? dataVersion : manifestVersion;
+          } else {
+            // 如果版本号格式不正确，优先使用 dataVersion
+            manifest.version = dataVersion;
+          }
+        } else {
+          // 如果只有一个版本存在，使用存在的版本
+          manifest.version = dataVersion || manifestVersion;
+        }
       }
 
       // 检查是否已被取消
