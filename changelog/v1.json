@@ -1,5 +1,13 @@
 [
   {
+    "children": {
+      "fixes": ["Change the wrong github checkmodel name."],
+      "improvements": ["Files hello pages should scroll."]
+    },
+    "date": "2025-07-06",
+    "version": "1.96.18"
+  },
+  {
     "children": {},
     "date": "2025-07-03",
     "version": "1.96.17"
