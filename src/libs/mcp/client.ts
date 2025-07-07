@@ -11,6 +11,8 @@ import debug from 'debug';
 import { MCPClientParams, McpTool } from './types';
 
 const log = debug('lobe-mcp:client');
+// MCP tool call timeout (milliseconds), configurable via the environment variable MCP_TOOL_TIMEOUT, default is 60000
+const MCP_TOOL_TIMEOUT = Number(process.env.MCP_TOOL_TIMEOUT) || 60_000;
 
 export class MCPClient {
   private mcp: Client;
@@ -51,7 +53,7 @@ export class MCPClient {
     log('Initializing MCP connection...');
 
     try {
-      await this.mcp.connect(this.transport, { onprogress: options.onProgress });
+      await this.mcp.connect(this.transport, { onprogress: options.onProgress, timeout: 300_000 });
       log('MCP connection initialized.');
     } catch (e) {
       if ((e as any).code === -32_000) {
@@ -87,8 +89,10 @@ export class MCPClient {
   }
 
   async callTool(toolName: string, args: any) {
-    log('Calling tool: %s with args: %O', toolName, args);
-    const result = await this.mcp.callTool({ arguments: args, name: toolName });
+    log('Calling tool: %s with args: %O, timeout: %O', toolName, args, MCP_TOOL_TIMEOUT);
+    const result = await this.mcp.callTool({ arguments: args, name: toolName }, undefined, {
+      timeout: MCP_TOOL_TIMEOUT,
+    });
     log('Tool call result: %O', result);
     return result;
   }
