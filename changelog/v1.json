@@ -63,6 +63,18 @@
   },
   {
     "children": {
+      "fixes": [
+        "Change the wrong github checkmodel name, pin officeparser@5.1.1 to fix server error."
+      ],
+      "improvements": [
+        "Files hello pages should scroll."
+      ]
+    },
+    "date": "2025-07-07",
+    "version": "1.95.2"
+  },
+  {
+    "children": {
       "improvements": [
         "Add DeepResearch models from OpenAI, update i18n, update i18n."
       ],
