@@ -51,6 +51,7 @@ export class MCPClient {
 
   async initialize(options: { onProgress?: (progress: Progress) => void } = {}) {
     log('Initializing MCP connection...');
+
     try {
       await this.mcp.connect(this.transport, { onprogress: options.onProgress });
       log('MCP connection initialized.');
@@ -58,6 +59,7 @@ export class MCPClient {
       if ((e as any).code === -32_000) {
         throw new Error('Fail to connecting MCP Server, please check your configuration.');
       }
+
       log('MCP connection failed:', e);
       throw e;
     }
