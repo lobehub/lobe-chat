@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.96.19](https://github.com/lobehub/lobe-chat/compare/v1.96.18...v1.96.19)
+
+<sup>Released on **2025-07-07**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Pin `officeparser@5.1.1` to fix server error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Pin `officeparser@5.1.1` to fix server error, closes [#8354](https://github.com/lobehub/lobe-chat/issues/8354) ([3f4e935](https://github.com/lobehub/lobe-chat/commit/3f4e935))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.96.18](https://github.com/lobehub/lobe-chat/compare/v1.96.17...v1.96.18)
 
 <sup>Released on **2025-07-06**</sup>
