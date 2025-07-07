@@ -20,6 +20,7 @@ import {
   ChatToolPayload,
   CreateMessageParams,
   MessageToolCall,
+  ToolsCallingContext,
 } from '@/types/message';
 import { merge } from '@/utils/merge';
 import { safeParseJSON } from '@/utils/safeParseJSON';
@@ -79,6 +80,7 @@ export interface ChatPluginAction {
   ) => AbortController | undefined;
   internal_transformToolCalls: (toolCalls: MessageToolCall[]) => ChatToolPayload[];
   internal_updatePluginError: (id: string, error: ChatMessageError) => Promise<void>;
+  internal_constructToolsCallingContext: (id: string) => ToolsCallingContext | undefined;
 }
 
 export const chatPlugin: StateCreator<
@@ -453,8 +455,12 @@ export const chatPlugin: StateCreator<
     }
   },
   invokeMCPTypePlugin: async (id, payload) => {
-    const { internal_updateMessageContent, refreshMessages, internal_togglePluginApiCalling } =
-      get();
+    const {
+      internal_updateMessageContent,
+      refreshMessages,
+      internal_togglePluginApiCalling,
+      internal_constructToolsCallingContext,
+    } = get();
     let data: string = '';
 
     try {
@@ -464,8 +470,10 @@ export const chatPlugin: StateCreator<
         n('fetchPlugin/start') as string,
       );
 
+      const context = internal_constructToolsCallingContext(id);
       const result = await mcpService.invokeMcpToolCall(payload, {
         signal: abortController?.signal,
+        topicId: context?.topicId,
       });
 
       if (!!result) data = result;
@@ -531,5 +539,14 @@ export const chatPlugin: StateCreator<
     get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } });
     await messageService.updateMessage(id, { error });
     await refreshMessages();
+  },
+
+  internal_constructToolsCallingContext: (id: string) => {
+    const message = chatSelectors.getMessageById(id)(get());
+    if (!message) return;
+
+    return {
+      topicId: message.topicId,
+    };
   },
 });

@@ -165,7 +165,7 @@ class DiscoverService {
   /**
    * 上报插件调用结果
    */
-  reportCall = async (reportData: CallReportRequest) => {
+  reportPluginCall = async (reportData: CallReportRequest) => {
     await this.injectMPToken();
 
     lambdaClient.market.reportCall.mutate(cleanObject(reportData)).catch((reportError) => {

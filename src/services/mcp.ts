@@ -10,8 +10,26 @@ import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { discoverService } from './discover';
 
+/**
+ * 计算对象的字节大小
+ * @param obj 要计算大小的对象
+ * @returns 字节大小
+ */
+function calculateObjectSizeBytes(obj: any): number {
+  try {
+    const jsonString = JSON.stringify(obj);
+    return new TextEncoder().encode(jsonString).length;
+  } catch (error) {
+    console.warn('Failed to calculate object size:', error);
+    return 0;
+  }
+}
+
 class MCPService {
-  async invokeMcpToolCall(payload: ChatToolPayload, { signal }: { signal?: AbortSignal }) {
+  async invokeMcpToolCall(
+    payload: ChatToolPayload,
+    { signal, topicId }: { signal?: AbortSignal; topicId?: string },
+  ) {
     const { pluginSelectors } = await import('@/store/tool/selectors');
     const { getToolStoreState } = await import('@/store/tool/store');
 
@@ -64,13 +82,20 @@ class MCPService {
       const callEndTime = Date.now();
       const callDurationMs = callEndTime - callStartTime;
 
+      // 计算请求大小
+      const inputParams = safeParseJSON(args) || args;
+
+      const requestSizeBytes = calculateObjectSizeBytes(inputParams);
+      // 计算响应大小
+      const responseSizeBytes = success ? calculateObjectSizeBytes(result) : 0;
+
       // 构造上报数据
       const reportData: CallReportRequest = {
         callDurationMs,
         errorCode,
         errorMessage,
         identifier,
-        inputParams: safeParseJSON(args) || args,
+        inputParams,
         isCustomPlugin: !!customPlugin,
         metadata: {
           appVersion: CURRENT_VERSION,
@@ -81,12 +106,15 @@ class MCPService {
         methodName: apiName,
         methodType: 'tool' as const,
         outputResult: success ? result : undefined,
+        requestSizeBytes,
+        responseSizeBytes,
+        sessionId: topicId,
         success,
         version: plugin.manifest!.version || 'unknown',
       };
 
       // 异步上报，不影响主流程
-      discoverService.reportCall(reportData).catch((reportError) => {
+      discoverService.reportPluginCall(reportData).catch((reportError) => {
         console.warn('Failed to report MCP tool call:', reportError);
       });
     }

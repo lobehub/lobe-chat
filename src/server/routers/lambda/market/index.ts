@@ -570,7 +570,7 @@ export const marketRouter = router({
     .mutation(async ({ input, ctx }) => {
       log('reportCall input: %O', input);
       try {
-        await ctx.discoverService.reportCall(input);
+        await ctx.discoverService.reportCall({ ...input, userAgent: ctx.userAgent });
         return { success: true };
       } catch (error) {
         console.error('Error reporting call: %O', error);

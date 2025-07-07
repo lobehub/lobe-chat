@@ -19,6 +19,9 @@ export interface ChatToolPayload {
   type: LobeToolRenderType;
 }
 
+export interface ToolsCallingContext {
+  topicId?: string;
+}
 /**
  * The function that the model called.
  */
