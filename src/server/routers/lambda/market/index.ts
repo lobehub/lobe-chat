@@ -540,6 +540,45 @@ export const marketRouter = router({
     }),
 
   // ============================== Analytics ==============================
+
+  reportCall: marketProcedure
+    .input(
+      z.object({
+        callDurationMs: z.number(),
+        clientId: z.string().optional(),
+        clientIp: z.string().optional(),
+        customPluginInfo: z.any().optional(),
+        errorCode: z.string().optional(),
+        errorMessage: z.string().optional(),
+        identifier: z.string(),
+        inputParams: z.any().optional(),
+        isCustomPlugin: z.boolean().optional(),
+        metadata: z.record(z.any()).optional(),
+        methodName: z.string(),
+        methodType: z.enum(['tool', 'prompt', 'resource']),
+        outputResult: z.any().optional(),
+        platform: z.string().optional(),
+        requestSizeBytes: z.number().optional(),
+        responseSizeBytes: z.number().optional(),
+        sessionId: z.string().optional(),
+        success: z.boolean(),
+        traceId: z.string().optional(),
+        userAgent: z.string().optional(),
+        version: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      log('reportCall input: %O', input);
+      try {
+        await ctx.discoverService.reportCall(input);
+        return { success: true };
+      } catch (error) {
+        console.error('Error reporting call: %O', error);
+        // 不抛出错误，因为上报失败不应影响主流程
+        return { success: false };
+      }
+    }),
+
   reportMcpInstallResult: marketProcedure
     .input(
       z.object({

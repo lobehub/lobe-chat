@@ -238,6 +238,12 @@ export const createMCPPluginStoreSlice: StateCreator<
         );
       }
 
+      // set version
+      if (manifest) {
+        // set Version
+        manifest.version = data?.version || manifest.version;
+      }
+
       // 检查是否已被取消
       if (abortController.signal.aborted) {
         return;

@@ -320,7 +320,9 @@ export class MCPClient {
     const manifest = {
       prompts: prompts.length === 0 ? undefined : prompts,
       resources: resources.length === 0 ? undefined : resources,
+      title: this.mcp.getServerVersion()?.title,
       tools: tools.length === 0 ? undefined : tools,
+      version: this.mcp.getServerVersion()?.version,
     };
 
     log('Listed Manifest: %O', manifest);

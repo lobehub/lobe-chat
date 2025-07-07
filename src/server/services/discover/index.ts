@@ -1,5 +1,5 @@
 import { CategoryItem, CategoryListQuery, MarketSDK } from '@lobehub/market-sdk';
-import { InstallReportRequest } from '@lobehub/market-types';
+import { CallReportRequest, InstallReportRequest } from '@lobehub/market-types';
 import dayjs from 'dayjs';
 import debug from 'debug';
 import matter from 'gray-matter';
@@ -424,8 +424,7 @@ export class DiscoverService {
       },
       {
         next: {
-          revalidate: CacheRevalidate.List,
-          tags: [CacheTag.Discover, CacheTag.MCP],
+          revalidate: 3600,
         },
       },
     );
@@ -445,8 +444,7 @@ export class DiscoverService {
       { ...params, locale: normalizedLocale },
       {
         next: {
-          revalidate: CacheRevalidate.Details,
-          tags: [CacheTag.Discover, CacheTag.MCP],
+          revalidate: 3600,
         },
       },
     );
@@ -524,6 +522,13 @@ export class DiscoverService {
    */
   reportPluginInstallation = async (params: InstallReportRequest) => {
     await this.market.plugins.reportInstallation(params);
+  };
+
+  /**
+   * report plugin call result to marketplace
+   */
+  reportCall = async (params: CallReportRequest) => {
+    await this.market.plugins.reportCall(params);
   };
 
   // ============================== Plugin Market ==============================

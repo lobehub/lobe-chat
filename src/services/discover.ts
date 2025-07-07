@@ -1,5 +1,5 @@
 import { CategoryItem, CategoryListQuery, PluginManifest } from '@lobehub/market-sdk';
-import { InstallReportRequest } from '@lobehub/market-types';
+import { CallReportRequest, InstallReportRequest } from '@lobehub/market-types';
 
 import { lambdaClient } from '@/libs/trpc/client';
 import { globalHelpers } from '@/store/global/helpers';
@@ -160,6 +160,17 @@ class DiscoverService {
       .catch((reportError) => {
         console.warn('Failed to report MCP installation result:', reportError);
       });
+  };
+
+  /**
+   * 上报插件调用结果
+   */
+  reportCall = async (reportData: CallReportRequest) => {
+    await this.injectMPToken();
+
+    lambdaClient.market.reportCall.mutate(cleanObject(reportData)).catch((reportError) => {
+      console.warn('Failed to report call:', reportError);
+    });
   };
 
   // ============================== Models ==============================
