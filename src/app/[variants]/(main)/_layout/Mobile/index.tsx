@@ -14,10 +14,11 @@ const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
 const MOBILE_NAV_ROUTES = new Set([
   '/chat',
   '/discover',
-  '/discover/assistants',
-  '/discover/plugins',
-  '/discover/models',
-  '/discover/providers',
+  '/discover/assistant',
+  '/discover/mcp',
+  '/discover/plugin',
+  '/discover/model',
+  '/discover/provider',
   '/me',
 ]);
 

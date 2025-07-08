@@ -1,0 +1,94 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Guide to Optimize Output(Response) Rendering
+
+## File Path and Code Symbol Rendering
+
+- When rendering file paths, use backtick wrapping instead of markdown links so they can be parsed as clickable links in Cursor IDE.
+
+    - Good: `src/components/Button.tsx`
+    - Bad: [src/components/Button.tsx](mdc:src/components/Button.tsx)
+
+- When rendering functions, variables, or other code symbols, use backtick wrapping so they can be parsed as navigable links in Cursor IDE
+    - Good: The `useState` hook in `MyComponent`
+    - Bad: The useState hook in MyComponent
+     
+## Markdown Render
+
+- don't use br tag to wrap in table cell
+
+## Terminal Command Output
+
+- If terminal commands don't produce output, it's likely due to paging issues. Try piping the command to `cat` to ensure full output is displayed.
+    - Good: `git show commit_hash -- file.txt | cat`
+    - Good: `git log --oneline | cat`
+    - Reason: Some git commands use pagers by default, which may prevent output from being captured properly
+
+## Mermaid Diagram Generation: Strict Syntax Validation Checklist
+
+Before producing any Mermaid diagram, you **must** compare your final code line-by-line against every rule in the following checklist to ensure 100% compliance. **This is a hard requirement and takes precedence over other stylistic suggestions.** Please follow these action steps:
+
+1.  Plan the Mermaid diagram logic in your mind.
+2.  Write the Mermaid code.
+3.  **Carefully review your code line-by-line against the entire checklist below.**
+4.  Fix any aspect of your code that doesn't comply.
+5.  Use the `validateMermaid` tool to check your code for syntax errors. Only proceed if validation passes.
+6.  Output the final, compliant, and copy-ready Mermaid code block.
+7.  Immediately after the Mermaid code block, output:  
+    I have checked that the Mermaid syntax fully complies with the validation checklist.
+
+---
+
+### Checklist Details
+
+#### Rule 1: Edge Labels – Must Be Plain Text Only  
+> **Essence:** Anything inside `|...|` must contain pure, unformatted text. Absolutely NO Markdown, list markers, or parentheses/brackets allowed—these often cause rendering failures.
+
+-   **✅ Do:** `A -->|Process plain text data| B`
+-   **❌ Don't:** `A -->|1. Ordered list item| B`    (No numbered lists)
+-   **❌ Don't:** `CC --"1. fetch('/api/...')"--> API`   (No square brackets)
+-   **❌ Don't:** `A -->|- Unordered list item| B`   (No hyphen lists)
+-   **❌ Don't:** `A -->|Transform (important)| B`   (No parentheses)
+-   **❌ Don't:** `A -->|Transform [important]| B`   (No square brackets)
+
+#### Rule 2: Node Definition – Handle Special Characters with Care  
+> **Essence:** When node text or subgraph titles contain special characters like `()` or `[]`, wrap the text in quotes to avoid conflicts with Mermaid shape syntax.
+
+-   **When your node text includes parentheses (e.g., 'React (JSX)'):**
+    -   **✅ Do:** `I_REACT["<b>React component (JSX)</b>"]` (Quotes wrap all text)
+    -   **❌ Don't:** `I_REACT(<b>React component (JSX)</b>)` (Wrong, Mermaid parses this as a shape)
+    -   **❌ Don't:** `subgraph Plugin Features (Plugins)` (Wrong, subgraph titles with parentheses must also be wrapped in quotes)
+
+#### Rule 3: Double Quotes in Text – Must Be Escaped  
+> **Essence:** Use `&quot;` for double quotes **inside node text**.
+
+-   **✅ Do:** `A[This node contains &quot;quotes&quot;]`
+-   **❌ Don't:** `A[This node contains "quotes"]`
+
+#### Rule 4: All Formatting Must Use HTML Tags (NOT Markdown!)  
+> **Essence:** For newlines, bold, and other text formatting in nodes, use HTML tags only. Markdown is not supported.
+
+-   **✅ Do (robust):** `A["<b>Bold</b> and <code>code</code><br>This is a new line"]`
+-   **❌ Don't (not rendered):** `C["# This is a heading"]`
+-   **❌ Don't (not rendered):** ``C["`const` means constant"]``
+-   **⚠️ Warning (unreliable):** `B["Markdown **bold** might sometimes work but DON'T rely on it"]`
+
+#### Rule 5: No HTML Tags for Participants and Message Labels (Sequence Diagrams)  
+> **Important Addition:**  
+> In Mermaid sequence diagrams, you MUST NOT use any HTML tags (such as `<b>`, `<code>`, etc.) in:
+> - `participant` display names (`as` part)
+> - Message labels (the text after `:` in diagram flows)
+>
+> These tags are generally not rendered—they may appear as-is or cause compatibility issues.
+
+-   **✅ Do:** `participant A as Client`
+-   **❌ Don't:** `participant A as <b>Client</b>`
+-   **✅ Do:** `A->>B: 1. Establish connection`
+-   **❌ Don't:** `A->>B: 1. <code>Establish connection</code>`
+
+---
+
+**Validate each Mermaid code block by running it through the `validateMermaid` tool before delivering your output!**
