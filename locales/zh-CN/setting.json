@@ -129,6 +129,7 @@
     "waitingForMore": "更多模型正在 <1>计划接入</1> 中，敬请期待"
   },
   "plugin": {
+    "addMCPPlugin": "添加 MCP 插件",
     "addTooltip": "自定义插件",
     "clearDeprecated": "移除无效插件",
     "empty": "暂无已安装插件，欢迎前往 <1>插件商店</1> 探索",

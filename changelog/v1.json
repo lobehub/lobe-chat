@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Add MCP marketplace and mcp plugin one-click installation in desktop."]
+    },
+    "date": "2025-07-08",
+    "version": "1.97.0"
+  },
+  {
+    "children": {
       "improvements": ["Add MCP_TOOL_TIMEOUT env and improve debug usage guide."]
     },
     "date": "2025-07-08",
