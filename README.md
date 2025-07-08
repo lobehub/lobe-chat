@@ -56,22 +56,22 @@ One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/
   - [🏪 MCP Marketplace](#-mcp-marketplace)
   - [🖥️ Desktop App](#️-desktop-app)
   - [🌐 Smart Internet Search](#-smart-internet-search)
-  - [`1` Chain of Thought](#1-chain-of-thought)
-  - [`2` Branching Conversations](#2-branching-conversations)
-  - [`3` Artifacts Support](#3-artifacts-support)
-  - [`4` File Upload /Knowledge Base](#4-file-upload-knowledge-base)
-  - [`5` Multi-Model Service Provider Support](#5-multi-model-service-provider-support)
-  - [`6` Local Large Language Model (LLM) Support](#6-local-large-language-model-llm-support)
-  - [`7` Model Visual Recognition](#7-model-visual-recognition)
-  - [`8` TTS & STT Voice Conversation](#8-tts--stt-voice-conversation)
-  - [`9` Text to Image Generation](#9-text-to-image-generation)
-  - [`10` Plugin System (Function Calling)](#10-plugin-system-function-calling)
-  - [`11` Agent Market (GPTs)](#11-agent-market-gpts)
-  - [`12` Support Local / Remote Database](#12-support-local--remote-database)
-  - [`13` Support Multi-User Management](#13-support-multi-user-management)
-  - [`14` Progressive Web App (PWA)](#14-progressive-web-app-pwa)
-  - [`15` Mobile Device Adaptation](#15-mobile-device-adaptation)
-  - [`16` Custom Themes](#16-custom-themes)
+  - [Chain of Thought](#chain-of-thought)
+  - [Branching Conversations](#branching-conversations)
+  - [Artifacts Support](#artifacts-support)
+  - [File Upload /Knowledge Base](#file-upload-knowledge-base)
+  - [Multi-Model Service Provider Support](#multi-model-service-provider-support)
+  - [Local Large Language Model (LLM) Support](#local-large-language-model-llm-support)
+  - [Model Visual Recognition](#model-visual-recognition)
+  - [TTS & STT Voice Conversation](#tts--stt-voice-conversation)
+  - [Text to Image Generation](#text-to-image-generation)
+  - [Plugin System (Function Calling)](#plugin-system-function-calling)
+  - [Agent Market (GPTs)](#agent-market-gpts)
+  - [Support Local / Remote Database](#support-local--remote-database)
+  - [Support Multi-User Management](#support-multi-user-management)
+  - [Progressive Web App (PWA)](#progressive-web-app-pwa)
+  - [Mobile Device Adaptation](#mobile-device-adaptation)
+  - [Custom Themes](#custom-themes)
   - [`*` What's more](#-whats-more)
 - [⚡️ Performance](#️-performance)
 - [🛳 Self Hosting](#-self-hosting)
@@ -170,7 +170,7 @@ Access live information, verify facts, and explore current events without leavin
 
 [![][image-feat-cot]][docs-feat-cot]
 
-### `1` [Chain of Thought][docs-feat-cot]
+### [Chain of Thought][docs-feat-cot]
 
 Experience AI reasoning like never before. Watch as complex problems unfold step by step through our innovative Chain of Thought (CoT) visualization. This breakthrough feature provides unprecedented transparency into AI's decision-making process, allowing you to observe how conclusions are reached in real-time.
 
@@ -180,7 +180,7 @@ By breaking down complex reasoning into clear, logical steps, you can better und
 
 [![][image-feat-branch]][docs-feat-branch]
 
-### `2` [Branching Conversations][docs-feat-branch]
+### [Branching Conversations][docs-feat-branch]
 
 Introducing a more natural and flexible way to chat with AI. With Branch Conversations, your discussions can flow in multiple directions, just like human conversations do. Create new conversation branches from any message, giving you the freedom to explore different paths while preserving the original context.
 
@@ -195,7 +195,7 @@ This groundbreaking feature transforms linear conversations into dynamic, tree-l
 
 [![][image-feat-artifacts]][docs-feat-artifacts]
 
-### `3` [Artifacts Support][docs-feat-artifacts]
+### [Artifacts Support][docs-feat-artifacts]
 
 Experience the power of Claude Artifacts, now integrated into LobeChat. This revolutionary feature expands the boundaries of AI-human interaction, enabling real-time creation and visualization of diverse content formats.
 
@@ -209,7 +209,7 @@ Create and visualize with unprecedented flexibility:
 
 [![][image-feat-knowledgebase]][docs-feat-knowledgebase]
 
-### `4` [File Upload /Knowledge Base][docs-feat-knowledgebase]
+### [File Upload /Knowledge Base][docs-feat-knowledgebase]
 
 LobeChat supports file upload and knowledge base functionality. You can upload various types of files including documents, images, audio, and video, as well as create knowledge bases, making it convenient for users to manage and search for files. Additionally, you can utilize files and knowledge base features during conversations, enabling a richer dialogue experience.
 
@@ -227,7 +227,7 @@ LobeChat supports file upload and knowledge base functionality. You can upload v
 
 [![][image-feat-privoder]][docs-feat-provider]
 
-### `5` [Multi-Model Service Provider Support][docs-feat-provider]
+### [Multi-Model Service Provider Support][docs-feat-provider]
 
 In the continuous development of LobeChat, we deeply understand the importance of diversity in model service providers for meeting the needs of the community when providing AI conversation services. Therefore, we have expanded our support to multiple model service providers, rather than being limited to a single one, in order to offer users a more diverse and rich selection of conversations.
 
@@ -300,7 +300,7 @@ At the same time, we are also planning to support more model service providers. 
 
 [![][image-feat-local]][docs-feat-local]
 
-### `6` [Local Large Language Model (LLM) Support][docs-feat-local]
+### [Local Large Language Model (LLM) Support][docs-feat-local]
 
 To meet the specific needs of users, LobeChat also supports the use of local models based on [Ollama](https://ollama.ai), allowing users to flexibly use their own or third-party models.
 
@@ -316,7 +316,7 @@ To meet the specific needs of users, LobeChat also supports the use of local mod
 
 [![][image-feat-vision]][docs-feat-vision]
 
-### `7` [Model Visual Recognition][docs-feat-vision]
+### [Model Visual Recognition][docs-feat-vision]
 
 LobeChat now supports OpenAI's latest [`gpt-4-vision`](https://platform.openai.com/docs/guides/vision) model with visual recognition capabilities,
 a multimodal intelligence that can perceive visuals. Users can easily upload or drag and drop images into the dialogue box,
@@ -334,7 +334,7 @@ Whether it's sharing images in daily use or interpreting images within specific 
 
 [![][image-feat-tts]][docs-feat-tts]
 
-### `8` [TTS & STT Voice Conversation][docs-feat-tts]
+### [TTS & STT Voice Conversation][docs-feat-tts]
 
 LobeChat supports Text-to-Speech (TTS) and Speech-to-Text (STT) technologies, enabling our application to convert text messages into clear voice outputs,
 allowing users to interact with our conversational agent as if they were talking to a real person. Users can choose from a variety of voices to pair with the agent.
@@ -351,7 +351,7 @@ Users can choose the voice that suits their personal preferences or specific sce
 
 [![][image-feat-t2i]][docs-feat-t2i]
 
-### `9` [Text to Image Generation][docs-feat-t2i]
+### [Text to Image Generation][docs-feat-t2i]
 
 With support for the latest text-to-image generation technology, LobeChat now allows users to invoke image creation tools directly within conversations with the agent. By leveraging the capabilities of AI tools such as [`DALL-E 3`](https://openai.com/dall-e-3), [`MidJourney`](https://www.midjourney.com/), and [`Pollinations`](https://pollinations.ai/), the agents are now equipped to transform your ideas into images.
 
@@ -365,7 +365,7 @@ This enables a more private and immersive creative process, allowing for the sea
 
 [![][image-feat-plugin]][docs-feat-plugin]
 
-### `10` [Plugin System (Function Calling)][docs-feat-plugin]
+### [Plugin System (Function Calling)][docs-feat-plugin]
 
 The plugin ecosystem of LobeChat is an important extension of its core functionality, greatly enhancing the practicality and flexibility of the LobeChat assistant.
 
@@ -400,7 +400,7 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 
 [![][image-feat-agent]][docs-feat-agent]
 
-### `11` [Agent Market (GPTs)][docs-feat-agent]
+### [Agent Market (GPTs)][docs-feat-agent]
 
 In LobeChat Agent Marketplace, creators can discover a vibrant and innovative community that brings together a multitude of well-designed agents,
 which not only play an important role in work scenarios but also offer great convenience in learning processes.
@@ -439,7 +439,7 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 [![][image-feat-database]][docs-feat-database]
 
-### `12` [Support Local / Remote Database][docs-feat-database]
+### [Support Local / Remote Database][docs-feat-database]
 
 LobeChat supports the use of both server-side and local databases. Depending on your needs, you can choose the appropriate deployment solution:
 
@@ -456,7 +456,7 @@ Regardless of which database you choose, LobeChat can provide you with an excell
 
 [![][image-feat-auth]][docs-feat-auth]
 
-### `13` [Support Multi-User Management][docs-feat-auth]
+### [Support Multi-User Management][docs-feat-auth]
 
 LobeChat supports multi-user management and provides two main user authentication and management solutions to meet different needs:
 
@@ -474,7 +474,7 @@ Regardless of which user management solution you choose, LobeChat can provide yo
 
 [![][image-feat-pwa]][docs-feat-pwa]
 
-### `14` [Progressive Web App (PWA)][docs-feat-pwa]
+### [Progressive Web App (PWA)][docs-feat-pwa]
 
 We deeply understand the importance of providing a seamless experience for users in today's multi-device environment.
 Therefore, we have adopted Progressive Web Application ([PWA](https://support.google.com/chrome/answer/9658361)) technology,
@@ -501,7 +501,7 @@ providing smooth animations, responsive layouts, and adapting to different devic
 
 [![][image-feat-mobile]][docs-feat-mobile]
 
-### `15` [Mobile Device Adaptation][docs-feat-mobile]
+### [Mobile Device Adaptation][docs-feat-mobile]
 
 We have carried out a series of optimization designs for mobile devices to enhance the user's mobile experience. Currently, we are iterating on the mobile user experience to achieve smoother and more intuitive interactions. If you have any suggestions or ideas, we welcome you to provide feedback through GitHub Issues or Pull Requests.
 
@@ -513,7 +513,7 @@ We have carried out a series of optimization designs for mobile devices to enhan
 
 [![][image-feat-theme]][docs-feat-theme]
 
-### `16` [Custom Themes][docs-feat-theme]
+### [Custom Themes][docs-feat-theme]
 
 As a design-engineering-oriented application, LobeChat places great emphasis on users' personalized experiences,
 hence introducing flexible and diverse theme modes, including a light mode for daytime and a dark mode for nighttime.
