@@ -7,6 +7,7 @@ import { GenerationBatchDispatch, generationBatchReducer } from './reducer';
 const createMockGeneration = (overrides: Partial<Generation> = {}): Generation => ({
   id: 'gen1',
   asset: {
+    type: 'image',
     originalUrl: 'https://example.com/image1.jpg',
     url: 'files/image1.jpg',
     thumbnailUrl: 'files/image1_thumb.jpg',
@@ -54,6 +55,7 @@ describe('generationBatchReducer', () => {
           createMockGeneration({
             id: 'gen2',
             asset: {
+              type: 'image',
               originalUrl: 'https://example.com/image2.jpg',
               url: 'files/image2.jpg',
               thumbnailUrl: 'files/image2_thumb.jpg',
@@ -83,6 +85,7 @@ describe('generationBatchReducer', () => {
           createMockGeneration({
             id: 'gen3',
             asset: {
+              type: 'image',
               originalUrl: 'https://example.com/image3.jpg',
               url: 'files/image3.jpg',
               thumbnailUrl: 'files/image3_thumb.jpg',
@@ -111,6 +114,7 @@ describe('generationBatchReducer', () => {
         generationId: 'gen1',
         value: {
           asset: {
+            type: 'image',
             url: 'files/newFile1.jpg',
             width: 2048,
             height: 2048,
@@ -179,6 +183,7 @@ describe('generationBatchReducer', () => {
         generationId: 'gen1',
         value: {
           asset: {
+            type: 'image',
             originalUrl: 'https://example.com/new-image.jpg',
             url: 'files/new-image.jpg',
             thumbnailUrl: 'files/new-image_thumb.jpg',
@@ -194,6 +199,7 @@ describe('generationBatchReducer', () => {
         ?.generations.find((gen) => gen.id === 'gen1');
 
       expect(updatedGeneration?.asset).toEqual({
+        type: 'image',
         originalUrl: 'https://example.com/new-image.jpg',
         url: 'files/new-image.jpg',
         thumbnailUrl: 'files/new-image_thumb.jpg',
@@ -419,6 +425,7 @@ describe('generationBatchReducer', () => {
           {
             id: 'gen4',
             asset: {
+              type: 'image',
               originalUrl: 'https://example.com/image4.jpg',
               url: 'files/image4.jpg',
               thumbnailUrl: 'files/image4_thumb.jpg',

@@ -8,7 +8,11 @@ export interface ImageGenerationTopic {
   updatedAt: Date;
 }
 
-export interface GenerationAsset {
+export interface BaseGenerationAsset {
+  type: string;
+}
+
+export interface ImageGenerationAsset extends BaseGenerationAsset {
   /**
    * api provider 家的 cdn url，一般很快就会失效
    */
@@ -30,6 +34,8 @@ export interface GenerationAsset {
    */
   height?: number;
 }
+
+export type GenerationAsset = ImageGenerationAsset;
 
 export interface GenerationConfig {
   prompt: string;

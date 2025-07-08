@@ -18,6 +18,7 @@ const mockGenerations: Generation[] = [
     createdAt: new Date('2024-01-01'),
     asyncTaskId: null,
     asset: {
+      type: 'image',
       url: 'image1.jpg',
       width: 1024,
       height: 1024,
@@ -33,6 +34,7 @@ const mockGenerations: Generation[] = [
     createdAt: new Date('2024-01-01'),
     asyncTaskId: null,
     asset: {
+      type: 'image',
       url: 'image2.jpg',
       width: 1024,
       height: 1024,
@@ -48,6 +50,7 @@ const mockGenerations: Generation[] = [
     createdAt: new Date('2024-01-02'),
     asyncTaskId: null,
     asset: {
+      type: 'image',
       url: 'image3.jpg',
       width: 1024,
       height: 1024,

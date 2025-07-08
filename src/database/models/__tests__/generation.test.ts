@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LobeChatDatabase } from '@/database/type';
 import { AsyncTaskStatus } from '@/types/asyncTask';
-import { GenerationAsset } from '@/types/generation';
+import { ImageGenerationAsset } from '@/types/generation';
 
 import { FileSource } from '../../schemas';
 import {
@@ -80,7 +80,7 @@ const testGeneration: Omit<NewGeneration, 'userId'> = {
     thumbnailUrl: 'thumbnail-url.jpg',
     width: 1024,
     height: 1024,
-  } as GenerationAsset,
+  } as ImageGenerationAsset,
 };
 
 const testFile = {
@@ -260,7 +260,7 @@ describe('GenerationModel', () => {
           thumbnailUrl: 'updated-thumbnail.jpg',
           width: 512,
           height: 512,
-        } as GenerationAsset,
+        } as ImageGenerationAsset,
       };
 
       await generationModel.update(createdGeneration.id, updateData);
@@ -324,7 +324,7 @@ describe('GenerationModel', () => {
         thumbnailUrl: 'new-thumbnail.jpg',
         width: 2048,
         height: 2048,
-      } as GenerationAsset;
+      } as ImageGenerationAsset;
 
       const newFileData = {
         name: 'new-generated-image.jpg',
@@ -369,7 +369,7 @@ describe('GenerationModel', () => {
         thumbnailUrl: 'hacked-thumbnail.jpg',
         width: 1,
         height: 1,
-      } as GenerationAsset;
+      } as ImageGenerationAsset;
 
       const newFileData = {
         name: 'hacked-file.jpg',
@@ -401,7 +401,7 @@ describe('GenerationModel', () => {
         thumbnailUrl: 'thumbnail.jpg',
         width: 1024,
         height: 1024,
-      } as GenerationAsset;
+      } as ImageGenerationAsset;
 
       const newFileData = {
         name: 'image.jpg',
@@ -523,7 +523,7 @@ describe('GenerationModel', () => {
           thumbnailUrl: 'original-thumbnail.jpg',
           width: 1024,
           height: 1024,
-        } as GenerationAsset,
+        } as ImageGenerationAsset,
         accessedAt: new Date(),
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -649,7 +649,7 @@ describe('GenerationModel', () => {
           thumbnailUrl: 'failing-thumbnail.jpg',
           width: 1024,
           height: 1024,
-        } as GenerationAsset,
+        } as ImageGenerationAsset,
         accessedAt: new Date(),
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -748,7 +748,7 @@ describe('GenerationModel', () => {
         thumbnailUrl: 'new-thumbnail.jpg',
         width: 1024,
         height: 1024,
-      } as GenerationAsset;
+      } as ImageGenerationAsset;
 
       const fileData = {
         name: 'test-image.jpg',

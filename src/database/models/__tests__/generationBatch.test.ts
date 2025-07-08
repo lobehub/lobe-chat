@@ -69,6 +69,7 @@ const testGeneration = {
   fileId: null, // Use null instead of invalid foreign key
   seed: 12345,
   asset: {
+    type: 'image',
     url: 'asset-url.jpg',
     thumbnailUrl: 'thumbnail-url.jpg',
     width: 1024,

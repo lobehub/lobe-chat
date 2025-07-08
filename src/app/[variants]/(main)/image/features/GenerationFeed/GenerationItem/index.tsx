@@ -39,6 +39,7 @@ export const GenerationItem = memo<GenerationItemProps>(
 
     const aspectRatio = getAspectRatio(
       generation.asset ?? {
+        type: 'image',
         width: generationBatch.config?.width,
         height: generationBatch.config?.height,
       },

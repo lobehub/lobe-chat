@@ -4,7 +4,7 @@ import { and, eq } from 'drizzle-orm';
 import { LobeChatDatabase, Transaction } from '@/database/type';
 import { FileService } from '@/server/services/file';
 import { AsyncTaskError, AsyncTaskStatus } from '@/types/asyncTask';
-import { Generation, GenerationAsset } from '@/types/generation';
+import { Generation, ImageGenerationAsset } from '@/types/generation';
 
 import { FileSource, NewFile } from '../schemas';
 import {
@@ -92,7 +92,7 @@ export class GenerationModel {
 
   async updateAssetAndFile(
     id: string,
-    asset: GenerationAsset,
+    asset: ImageGenerationAsset,
     file: Omit<NewFile, 'id' | 'userId'>,
   ) {
     log('Updating generation asset and file with transaction: %s', id);
@@ -166,7 +166,7 @@ export class GenerationModel {
    */
   async transformGeneration(generation: GenerationWithAsyncTask): Promise<Generation> {
     // Process asset URLs if they exist, following the same logic as in generationBatch.ts
-    const asset = generation.asset as GenerationAsset | null;
+    const asset = generation.asset as ImageGenerationAsset | null;
     if (asset && asset.url && asset.thumbnailUrl) {
       const [url, thumbnailUrl] = await Promise.all([
         this.fileService.getFullFileUrl(asset.url),

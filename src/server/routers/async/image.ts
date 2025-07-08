@@ -174,6 +174,7 @@ export const imageRouter = router({
         await ctx.generationModel.updateAssetAndFile(
           generationId,
           {
+            type: 'image',
             originalUrl: imageUrl,
             url: uploadedImageUrl,
             width: width ?? image.width,
