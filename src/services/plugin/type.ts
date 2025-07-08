@@ -17,7 +17,7 @@ export interface IPluginService {
   installPlugin: (plugin: InstallPluginParams) => Promise<void>;
   removeAllPlugins: () => Promise<void>;
   uninstallPlugin: (identifier: string) => Promise<void>;
-  updatePlugin: (id: string, value: LobeToolCustomPlugin) => Promise<void>;
+  updatePlugin: (id: string, value: Partial<LobeToolCustomPlugin>) => Promise<void>;
   updatePluginManifest: (id: string, manifest: LobeChatPluginManifest) => Promise<void>;
   updatePluginSettings: (id: string, settings: any, signal?: AbortSignal) => Promise<void>;
 }

@@ -11,11 +11,11 @@ import Nav from '@/features/MCPPluginDetail/Nav';
 import Overview from '@/features/MCPPluginDetail/Overview';
 import Schema from '@/features/MCPPluginDetail/Schema';
 import Score from '@/features/MCPPluginDetail/Score';
+import DetailLoading from '@/features/PluginStore/McpList/Detail/Loading';
 import { useDiscoverStore } from '@/store/discover';
 import { useToolStore } from '@/store/tool';
 import { McpNavKey } from '@/types/discover';
 
-import DetailsLoading from './Loading';
 import Settings from './Settings';
 
 interface DetailProps {
@@ -26,12 +26,17 @@ const Detail = memo<DetailProps>(({ identifier: defaultIdentifier }) => {
   const { t } = useTranslation('plugin');
 
   const theme = useTheme();
-  const [activeMCPIdentifier] = useToolStore((s) => [s.activeMCPIdentifier]);
+  const [activeMCPIdentifier, isMcpListInit] = useToolStore((s) => [
+    s.activeMCPIdentifier,
+    s.isMcpListInit,
+  ]);
 
   const identifier = defaultIdentifier ?? activeMCPIdentifier;
 
   const useMcpDetail = useDiscoverStore((s) => s.useFetchMcpDetail);
   const { data, isLoading } = useMcpDetail({ identifier });
+
+  if (!isMcpListInit || isLoading) return <DetailLoading />;
 
   if (!identifier)
     return (
@@ -45,8 +50,6 @@ const Detail = memo<DetailProps>(({ identifier: defaultIdentifier }) => {
         <Empty description={t('store.emptySelectHint')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
       </Center>
     );
-
-  if (isLoading) return <DetailsLoading />;
 
   return (
     <DetailProvider config={data}>

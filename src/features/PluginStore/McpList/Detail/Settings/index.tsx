@@ -160,7 +160,7 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
 
   const [updatePluginSettings, updateInstallPlugin] = useToolStore((s) => [
     s.updatePluginSettings,
-    s.updatePluginSettings,
+    s.updateInstallMcpPlugin,
   ]);
   const { message } = App.useApp();
 
@@ -178,17 +178,7 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
   const handleConnectionSubmit = async (values: any) => {
     setConnectionLoading(true);
     try {
-      const newCustomParams = {
-        ...installedPlugin.customParams,
-        mcp: {
-          ...customParams,
-          ...values.mcp,
-        },
-      };
-
-      await updateInstallPlugin(identifier!, {
-        customParams: newCustomParams,
-      });
+      await updateInstallPlugin(identifier!, values);
 
       message.success(t('settings.messages.connectionUpdateSuccess'));
       setIsEditingConnection(false);
@@ -284,14 +274,14 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
               <AForm
                 className={styles.compactForm}
                 form={connectionForm}
-                initialValues={{ mcp: customParams }}
+                initialValues={customParams}
                 layout="vertical"
                 onFinish={handleConnectionSubmit}
               >
                 {customParams?.type === 'http' && (
                   <AForm.Item
                     label={t('settings.connection.url')}
-                    name={['mcp', 'url']}
+                    name={'url'}
                     rules={[{ message: t('settings.rules.urlRequired'), required: true }]}
                   >
                     <Input placeholder="https://mcp.example.com/server" size="small" />
@@ -302,7 +292,7 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
                   <>
                     <AForm.Item
                       label={t('settings.connection.command')}
-                      name={['mcp', 'command']}
+                      name={'command'}
                       rules={[{ message: t('settings.rules.commandRequired'), required: true }]}
                     >
                       <MCPStdioCommandInput placeholder="npx, uv, python..." />
@@ -310,10 +300,10 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
 
                     <AForm.Item
                       label={t('settings.connection.args')}
-                      name={['mcp', 'args']}
+                      name={'args'}
                       rules={[{ message: t('settings.rules.argsRequired'), required: true }]}
                     >
-                      <ArgsInput placeholder="例如：mcp-hello-world" />
+                      <ArgsInput placeholder="e.g: mcp-hello-world" />
                     </AForm.Item>
                   </>
                 )}
