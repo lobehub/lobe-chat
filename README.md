@@ -52,6 +52,10 @@ One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/
 
 - [👋🏻 Getting Started & Join Our Community](#-getting-started--join-our-community)
 - [✨ Features](#-features)
+  - [✨ MCP Plugin One-Click Installation](#-mcp-plugin-one-click-installation)
+  - [🏪 MCP Marketplace](#-mcp-marketplace)
+  - [🖥️ Desktop App](#️-desktop-app)
+  - [🌐 Smart Internet Search](#-smart-internet-search)
   - [`1` Chain of Thought](#1-chain-of-thought)
   - [`2` Branching Conversations](#2-branching-conversations)
   - [`3` Artifacts Support](#3-artifacts-support)
@@ -113,6 +117,56 @@ Whether for users or professional developers, LobeHub will be your AI Agent play
 </details>
 
 ## ✨ Features
+
+Transform your AI experience with LobeChat's powerful features designed for seamless connectivity, enhanced productivity, and unlimited creativity.
+
+### ✨ MCP Plugin One-Click Installation
+
+[![][image-feat-mcp]][docs-feat-mcp]
+
+**Seamlessly Connect Your AI to the World**
+
+Unlock the full potential of your AI by enabling smooth, secure, and dynamic interactions with external tools, data sources, and services. LobeChat's MCP (Model Context Protocol) plugin system breaks down the barriers between your AI and the digital ecosystem, allowing for unprecedented connectivity and functionality.
+
+Transform your conversations into powerful workflows by connecting to databases, APIs, file systems, and more. Experience the freedom of AI that truly understands and interacts with your world.
+
+[![][back-to-top]](#readme-top)
+
+### 🏪 MCP Marketplace
+
+[![][image-feat-mcp-market]][docs-feat-mcp-market]
+
+**Discover, Connect, Extend**
+
+Browse a growing library of MCP plugins to expand your AI's capabilities and streamline your workflows effortlessly. Visit [lobehub.com/mcp](https://lobehub.com/mcp) to explore the MCP Marketplace, which offers a curated collection of integrations that enhance your AI's ability to work with various tools and services.
+
+From productivity tools to development environments, discover new ways to extend your AI's reach and effectiveness. Connect with the community and find the perfect plugins for your specific needs.
+
+[![][back-to-top]](#readme-top)
+
+### 🖥️ Desktop App
+
+[![][image-feat-desktop]][docs-feat-desktop]
+
+**Peak Performance, Zero Distractions**
+
+Get the full LobeChat experience without browser limitations—lightweight, focused, and always ready to go. Our desktop application provides a dedicated environment for your AI interactions, ensuring optimal performance and minimal distractions.
+
+Experience faster response times, better resource management, and a more stable connection to your AI assistant. The desktop app is designed for users who demand the best performance from their AI tools.
+
+[![][back-to-top]](#readme-top)
+
+### 🌐 Smart Internet Search
+
+[![][image-feat-web-search]][docs-feat-web-search]
+
+**Online Knowledge On Demand**
+
+With real-time internet access, your AI keeps up with the world—news, data, trends, and more. Stay informed and get the most current information available, enabling your AI to provide accurate and up-to-date responses.
+
+Access live information, verify facts, and explore current events without leaving your conversation. Your AI becomes a gateway to the world's knowledge, always current and comprehensive.
+
+[![][back-to-top]](#readme-top)
 
 [![][image-feat-cot]][docs-feat-cot]
 
@@ -811,8 +865,11 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [docs-feat-branch]: https://lobehub.com/docs/usage/features/branching-conversations
 [docs-feat-cot]: https://lobehub.com/docs/usage/features/cot
 [docs-feat-database]: https://lobehub.com/docs/usage/features/database
+[docs-feat-desktop]: https://lobehub.com/docs/usage/features/desktop
 [docs-feat-knowledgebase]: https://lobehub.com/blog/knowledge-base
 [docs-feat-local]: https://lobehub.com/docs/usage/features/local-llm
+[docs-feat-mcp]: https://lobehub.com/docs/usage/features/mcp
+[docs-feat-mcp-market]: https://lobehub.com/docs/usage/features/mcp-marketplace
 [docs-feat-mobile]: https://lobehub.com/docs/usage/features/mobile
 [docs-feat-plugin]: https://lobehub.com/docs/usage/features/plugin-system
 [docs-feat-provider]: https://lobehub.com/docs/usage/features/multi-ai-providers
@@ -821,6 +878,7 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [docs-feat-theme]: https://lobehub.com/docs/usage/features/theme
 [docs-feat-tts]: https://lobehub.com/docs/usage/features/tts
 [docs-feat-vision]: https://lobehub.com/docs/usage/features/vision
+[docs-feat-web-search]: https://lobehub.com/docs/usage/features/web-search
 [docs-function-call]: https://lobehub.com/blog/openai-function-call
 [docs-lighthouse]: https://github.com/lobehub/lobe-chat/wiki/Lighthouse
 [docs-plugin-dev]: https://lobehub.com/docs/usage/plugins/development
@@ -858,8 +916,11 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [image-feat-branch]: https://github.com/user-attachments/assets/92f72082-02bd-4835-9c54-b089aad7fd41
 [image-feat-cot]: https://github.com/user-attachments/assets/f74f1139-d115-4e9c-8c43-040a53797a5e
 [image-feat-database]: https://github.com/user-attachments/assets/f1697c8b-d1fb-4dac-ba05-153c6295d91d
+[image-feat-desktop]: https://github.com/user-attachments/assets/a7bac8d3-ea96-4000-bb39-fadc9b610f96
 [image-feat-knowledgebase]: https://github.com/user-attachments/assets/7da7a3b2-92fd-4630-9f4e-8560c74955ae
 [image-feat-local]: https://github.com/user-attachments/assets/1239da50-d832-4632-a7ef-bd754c0f3850
+[image-feat-mcp]: https://github.com/user-attachments/assets/1be85d36-3975-4413-931f-27e05e440995
+[image-feat-mcp-market]: https://github.com/user-attachments/assets/bb114f9f-24c5-4000-a984-c10d187da5a0
 [image-feat-mobile]: https://github.com/user-attachments/assets/32cf43c4-96bd-4a4c-bfb6-59acde6fe380
 [image-feat-plugin]: https://github.com/user-attachments/assets/66a891ac-01b6-4e3f-b978-2eb07b489b1b
 [image-feat-privoder]: https://github.com/user-attachments/assets/e553e407-42de-4919-977d-7dbfcf44a821
@@ -868,6 +929,7 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [image-feat-theme]: https://github.com/user-attachments/assets/b47c39f1-806f-492b-8fcb-b0fa973937c1
 [image-feat-tts]: https://github.com/user-attachments/assets/50189597-2cc3-4002-b4c8-756a52ad5c0a
 [image-feat-vision]: https://github.com/user-attachments/assets/18574a1f-46c2-4cbc-af2c-35a86e128a07
+[image-feat-web-search]: https://github.com/user-attachments/assets/cfdc48ac-b5f8-4a00-acee-db8f2eba09ad
 [image-overview]: https://github.com/user-attachments/assets/dbfaa84a-2c82-4dd9-815c-5be616f264a4
 [image-star]: https://github.com/user-attachments/assets/c3b482e7-cef5-4e94-bef9-226900ecfaab
 [issues-link]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat

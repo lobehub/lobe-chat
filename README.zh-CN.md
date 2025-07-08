@@ -52,6 +52,10 @@
 
 - [👋🏻 开始使用 & 交流](#-开始使用--交流)
 - [✨ 特性一览](#-特性一览)
+  - [✨ MCP 插件一键安装](#-mcp-插件一键安装)
+  - [🏪 MCP 市场](#-mcp-市场)
+  - [🖥️ 桌面应用](#️-桌面应用)
+  - [🌐 智能联网搜索](#-智能联网搜索)
   - [`1` 思维链 (CoT)](#1-思维链-cot)
   - [`2` 分支对话](#2-分支对话)
   - [`3` 支持白板 (Artifacts)](#3-支持白板-artifacts)
@@ -113,6 +117,56 @@
 </details>
 
 ## ✨ 特性一览
+
+通过 LobeChat 的强大功能，体验为无缝连接、提升效率和无限创意而设计的全新 AI 体验。
+
+### ✨ MCP 插件一键安装
+
+\[![][image-feat-mcp]]\[docs-feat-mcp]
+
+**无缝连接你的 AI 与世界**
+
+通过启用与外部工具、数据源和服务的平滑、安全和动态交互，释放你的 AI 的全部潜力。基于 MCP（模型上下文协议）的插件系统打破了 AI 与数字生态系统之间的壁垒，实现了前所未有的连接性和功能性。
+
+将对话转化为强大的工作流程，连接数据库、API、文件系统等。体验真正理解并与你的世界互动的 AI Agent。
+
+[![][back-to-top]](#readme-top)
+
+### 🏪 MCP 市场
+
+\[![][image-feat-mcp-market]]\[docs-feat-mcp-market]
+
+**发现、连接、扩展**
+
+浏览不断增长的 MCP 插件库，轻松扩展你的 AI 能力并简化工作流程。访问 [lobehub.com/mcp](https://lobehub.com/mcp) 探索 MCP 市场，提供精选的集成集合，增强你的 AI 与各种工具和服务协作的能力。
+
+从生产力工具到开发环境，发现扩展 AI 覆盖范围和效率的新方式。与社区连接，找到满足特定需求的完美插件。
+
+[![][back-to-top]](#readme-top)
+
+### 🖥️ 桌面应用
+
+\[![][image-feat-desktop]]\[docs-feat-desktop]
+
+**巅峰性能，零干扰**
+
+获得完整的 LobeChat 体验，摆脱浏览器限制 —— 轻量级、专注且随时就绪。我们的桌面应用程序为你的 AI 交互提供专用环境，确保最佳性能和最小干扰。
+
+体验更快的响应时间、更好的资源管理和与 AI 助手的更稳定连接。桌面应用专为要求 AI 工具最佳性能的用户设计。
+
+[![][back-to-top]](#readme-top)
+
+### 🌐 智能联网搜索
+
+\[![][image-feat-web-search]]\[docs-feat-web-search]
+
+**在线知识，按需获取**
+
+通过实时联网访问，你的 AI 与世界保持同步 —— 新闻、数据、趋势等。保持信息更新，获取最新可用信息，使你的 AI 能够提供准确和最新的回复。
+
+访问实时信息，验证事实，探索当前事件，无需离开对话。你的 AI 成为通向世界知识的门户，始终保持最新和全面。
+
+[![][back-to-top]](#readme-top)
 
 [![][image-feat-cot]][docs-feat-cot]
 
@@ -422,7 +476,6 @@ LobeChat 支持多用户管理，提供了两种主要的用户认证和管理�
 > - 在电脑上运行 Chrome 或 Edge 浏览器 .
 > - 访问 LobeChat 网页 .
 > - 在地址栏的右上角，单击 <kbd>安装</kbd> 图标 .
-> - 根据屏幕上的指示完成 PWA 的安装 .
 
 <div align="right">
 
@@ -531,7 +584,7 @@ LobeChat 提供了 Vercel 的 自托管版本 和 [Docker 镜像][docker-release
 
 #### 保持更新
 
-如果你根据 README 中的一键部署步骤部署了自己的项目，你可能会发现总是被提示 “有可用更新”。这是因为 Vercel 默认为你创建新项目而非 fork 本项目，这将导致无法准确检测更新。
+如果你根据 README 中的一键部署步骤部署了自己的项目，你可能会发现总是被提示 "有可用更新"。这是因为 Vercel 默认为你创建新项目而非 fork 本项目，这将导致无法准确检测更新。
 
 > \[!TIP]
 >
@@ -880,8 +933,11 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [image-feat-branch]: https://github.com/user-attachments/assets/92f72082-02bd-4835-9c54-b089aad7fd41
 [image-feat-cot]: https://github.com/user-attachments/assets/f74f1139-d115-4e9c-8c43-040a53797a5e
 [image-feat-database]: https://github.com/user-attachments/assets/f1697c8b-d1fb-4dac-ba05-153c6295d91d
+[image-feat-desktop]: https://github.com/user-attachments/assets/a7bac8d3-ea96-4000-bb39-fadc9b610f96
 [image-feat-knowledgebase]: https://github.com/user-attachments/assets/7da7a3b2-92fd-4630-9f4e-8560c74955ae
 [image-feat-local]: https://github.com/user-attachments/assets/1239da50-d832-4632-a7ef-bd754c0f3850
+[image-feat-mcp]: https://github.com/user-attachments/assets/1be85d36-3975-4413-931f-27e05e440995
+[image-feat-mcp-market]: https://github.com/user-attachments/assets/bb114f9f-24c5-4000-a984-c10d187da5a0
 [image-feat-mobile]: https://github.com/user-attachments/assets/32cf43c4-96bd-4a4c-bfb6-59acde6fe380
 [image-feat-plugin]: https://github.com/user-attachments/assets/66a891ac-01b6-4e3f-b978-2eb07b489b1b
 [image-feat-privoder]: https://github.com/user-attachments/assets/e553e407-42de-4919-977d-7dbfcf44a821
@@ -890,6 +946,7 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [image-feat-theme]: https://github.com/user-attachments/assets/b47c39f1-806f-492b-8fcb-b0fa973937c1
 [image-feat-tts]: https://github.com/user-attachments/assets/50189597-2cc3-4002-b4c8-756a52ad5c0a
 [image-feat-vision]: https://github.com/user-attachments/assets/18574a1f-46c2-4cbc-af2c-35a86e128a07
+[image-feat-web-search]: https://github.com/user-attachments/assets/cfdc48ac-b5f8-4a00-acee-db8f2eba09ad
 [image-overview]: https://github.com/user-attachments/assets/dbfaa84a-2c82-4dd9-815c-5be616f264a4
 [image-star]: https://github.com/user-attachments/assets/c3b482e7-cef5-4e94-bef9-226900ecfaab
 [issues-link]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
