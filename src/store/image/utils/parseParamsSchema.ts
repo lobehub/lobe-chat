@@ -1,4 +1,4 @@
-import { StdImageGenParams, StdParamsZodSchema } from './StandardParameters';
+import { StdImageGenParams, StdParamsZodSchema } from '@/libs/standard-parameters/image';
 
 export function parseParamsSchema(schema: Record<string, any>) {
   const paramsSchema = StdParamsZodSchema.parse(schema);

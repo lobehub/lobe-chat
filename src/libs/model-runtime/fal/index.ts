@@ -3,7 +3,7 @@ import debug from 'debug';
 import { pick } from 'lodash-es';
 import { ClientOptions } from 'openai';
 
-import { StdImageGenParamsKeys } from '@/store/image/utils/StandardParameters';
+import { StdImageGenParamsKeys } from '@/libs/standard-parameters/image';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';

@@ -2,8 +2,8 @@ import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import FluxSchnellSchema from '@/config/paramsSchemas/fal/flux-schnell.json';
+import { StdImageGenParams } from '@/libs/standard-parameters/image';
 import { useImageStore } from '@/store/image';
-import { StdImageGenParams } from '@/store/image/utils/StandardParameters';
 // Update parseParamsSchema mock to handle different schemas
 import { parseParamsSchema } from '@/store/image/utils/parseParamsSchema';
 import { AIImageModelCard } from '@/types/aiModel';

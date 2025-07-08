@@ -1,10 +1,10 @@
 import { StateCreator } from 'zustand/vanilla';
 
+import { StdImageGenParams, StdImageGenParamsKeys } from '@/libs/standard-parameters/image';
 import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { AIImageModelCard } from '@/types/aiModel';
 
 import type { ImageStore } from '../../store';
-import { StdImageGenParams, StdImageGenParamsKeys } from '../../utils/StandardParameters';
 import { parseParamsSchema } from '../../utils/parseParamsSchema';
 
 export interface GenerationConfigAction {

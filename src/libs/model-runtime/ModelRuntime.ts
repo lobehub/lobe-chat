@@ -1,4 +1,4 @@
-import debug from 'debug';
+import { log } from 'debug';
 import { ClientOptions } from 'openai';
 
 import type { TracePayload } from '@/const/trace';
@@ -25,8 +25,6 @@ export interface AgentChatOptions {
   provider: string;
   trace?: TracePayload;
 }
-
-const log = debug('lobe-image:async');
 
 class ModelRuntime {
   private _runtime: LobeRuntimeAI;
@@ -73,7 +71,6 @@ class ModelRuntime {
   }
 
   async createImage(payload: CreateImagePayload) {
-    log('had createImage method: ', !!this._runtime.createImage);
     return this._runtime.createImage?.(payload);
   }
 

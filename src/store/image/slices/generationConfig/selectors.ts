@@ -1,4 +1,4 @@
-import { StdImageGenParamsKeys } from '../../utils/StandardParameters';
+import { StdImageGenParamsKeys } from '../../../../libs/standard-parameters/image';
 import { parseParamsSchema } from '../../utils/parseParamsSchema';
 import { GenerationConfigState } from './initialState';
 

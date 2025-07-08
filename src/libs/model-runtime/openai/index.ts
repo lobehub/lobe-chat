@@ -3,7 +3,7 @@ import { toFile } from 'openai';
 import { FileLike } from 'openai/uploads';
 
 import { responsesAPIModels } from '@/const/models';
-import { StdImageGenParamsKeys } from '@/store/image/utils/StandardParameters';
+import { StdImageGenParamsKeys } from '@/libs/standard-parameters/image';
 
 import { ChatStreamPayload, ModelProvider } from '../types';
 import { processMultiProviderModelList } from '../utils/modelParse';

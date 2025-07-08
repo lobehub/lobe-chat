@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import FluxSchnellSchema from '@/config/paramsSchemas/fal/flux-schnell.json';
 import { merge } from '@/utils/merge';
 
-import { StdImageGenParamsKeys } from '../../utils/StandardParameters';
+import { StdImageGenParamsKeys } from '../../../../libs/standard-parameters/image';
 import { parseParamsSchema } from '../../utils/parseParamsSchema';
 import { GenerationConfigState, initialGenerationConfigState } from './initialState';
 import { imageGenerationConfigSelectors } from './selectors';

@@ -1,4 +1,4 @@
-import { StdImageGenParams } from '@/store/image/utils/StandardParameters';
+import { StdImageGenParams } from '@/libs/standard-parameters/image';
 
 export type CreateImageParams = Partial<Omit<StdImageGenParams, 'prompt'>> & {
   prompt: string;

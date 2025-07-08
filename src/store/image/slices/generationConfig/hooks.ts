@@ -1,7 +1,8 @@
 import { useCallback, useMemo } from 'react';
 
+import { StdImageGenParams, StdImageGenParamsKeys } from '@/libs/standard-parameters/image';
+
 import { useImageStore } from '../../store';
-import { StdImageGenParams, StdImageGenParamsKeys } from '../../utils/StandardParameters';
 import { imageGenerationConfigSelectors } from './selectors';
 
 export function useGenerationConfigParam<N extends StdImageGenParamsKeys>(paramName: N) {

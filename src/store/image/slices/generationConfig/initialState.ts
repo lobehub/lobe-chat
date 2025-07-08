@@ -2,7 +2,7 @@
 import FluxSchnellSchema from '@/config/paramsSchemas/fal/flux-schnell.json';
 import { ModelProvider } from '@/libs/model-runtime/types/type';
 
-import { StdImageGenParams } from '../../utils/StandardParameters';
+import { StdImageGenParams } from '../../../../libs/standard-parameters/image';
 import { parseParamsSchema } from '../../utils/parseParamsSchema';
 
 export const DEFAULT_AI_IMAGE_PROVIDER = ModelProvider.Fal;

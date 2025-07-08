@@ -14,8 +14,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import InvalidAPIKey from '@/features/Conversation/Error/InvalidAPIKey';
+import { StdImageGenParams } from '@/libs/standard-parameters/image';
 import { useImageStore } from '@/store/image';
-import { StdImageGenParams } from '@/store/image/utils/StandardParameters';
 import { AsyncTaskErrorType } from '@/types/asyncTask';
 import { GenerationBatch } from '@/types/generation';
 
