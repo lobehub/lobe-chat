@@ -1,8 +1,8 @@
 import isEqual from 'fast-deep-equal';
-import { parseAsBoolean, useQueryState } from 'nuqs';
 import { useHotkeys } from 'react-hotkeys-hook';
 
 import { INBOX_SESSION_ID } from '@/const/session';
+import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useGlobalStore } from '@/store/global';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -17,18 +17,13 @@ import { useHotkeyById } from './useHotkeyById';
 export const useSwitchAgentHotkey = () => {
   const { showPinList } = useServerConfigStore(featureFlagsSelectors);
   const list = useSessionStore(sessionSelectors.pinnedSessions, isEqual);
-  const currentSessionId = useSessionStore((s) => s.activeId);
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.SwitchAgent));
   const switchSession = useSwitchSession();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setPinned] = useQueryState(
-    'pinned',
-    parseAsBoolean.withDefault(false).withOptions({ clearOnDefault: true }),
-  );
+  const [, { pinAgent }] = usePinnedAgentState();
 
   const switchAgent = (id: string) => {
     switchSession(id);
-    setPinned(true);
+    pinAgent();
   };
 
   const ref = useHotkeys(
@@ -48,21 +43,31 @@ export const useSwitchAgentHotkey = () => {
     },
   );
 
-  // 仅切换到会话标签
-  useHotkeyById(HotkeyEnum.SwitchToChat, () => {
-    switchSession(currentSessionId);
-    setPinned(false);
-  });
-  // 切换到默认会话
-  useHotkeyById(HotkeyEnum.SwitchToDefaultAgent, () => {
-    switchSession(INBOX_SESSION_ID);
-    setPinned(false);
-  });
-
   return {
     id: HotkeyEnum.SwitchAgent,
     ref,
   };
+};
+
+// 仅切换到会话标签
+export const useSwitchToChatHotkey = () => {
+  const currentSessionId = useSessionStore((s) => s.activeId);
+  const switchSession = useSwitchSession();
+  const [, { unpinAgent }] = usePinnedAgentState();
+
+  return useHotkeyById(HotkeyEnum.SwitchToChat, () => {
+    switchSession(currentSessionId);
+    unpinAgent();
+  });
+};
+
+export const useSwitchToDefaultAgentHotkey = () => {
+  const switchSession = useSwitchSession();
+  const [, { unpinAgent }] = usePinnedAgentState();
+  return useHotkeyById(HotkeyEnum.SwitchToDefaultAgent, () => {
+    switchSession(INBOX_SESSION_ID);
+    unpinAgent();
+  });
 };
 
 export const useOpenHotkeyHelperHotkey = () => {
@@ -81,5 +86,7 @@ export const useOpenHotkeyHelperHotkey = () => {
 export const useRegisterGlobalHotkeys = () => {
   // 全局自动注册不需要 enableScope
   useSwitchAgentHotkey();
+  useSwitchToChatHotkey();
+  useSwitchToDefaultAgentHotkey();
   useOpenHotkeyHelperHotkey();
 };
