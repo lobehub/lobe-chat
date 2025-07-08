@@ -1,5 +1,5 @@
 import useSWR, { SWRResponse, mutate } from 'swr';
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_PREFERENCE } from '@/const/user';
@@ -76,7 +76,7 @@ export const createCommonSlice: StateCreator<
 
           if (data) {
             // merge settings
-            const serverSettings: DeepPartial<UserSettings> = {
+            const serverSettings: PartialDeep<UserSettings> = {
               defaultAgent: serverConfig.defaultAgent,
               languageModel: serverConfig.languageModel,
               systemAgent: serverConfig.systemAgent,

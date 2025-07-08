@@ -1,4 +1,4 @@
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 import { StateCreator } from 'zustand/vanilla';
 
 import { chainPickEmoji } from '@/chains/pickEmoji';
@@ -56,7 +56,7 @@ export interface Action extends PublicAction {
   resetAgentConfig: () => Promise<void>;
 
   resetAgentMeta: () => Promise<void>;
-  setAgentConfig: (config: DeepPartial<LobeAgentConfig>) => Promise<void>;
+  setAgentConfig: (config: PartialDeep<LobeAgentConfig>) => Promise<void>;
   setAgentMeta: (meta: Partial<MetaData>) => Promise<void>;
 
   setChatConfig: (config: Partial<LobeAgentChatConfig>) => Promise<void>;
