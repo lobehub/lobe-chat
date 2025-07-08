@@ -322,7 +322,7 @@ export class MCPClient {
       resources: resources.length === 0 ? undefined : resources,
       title: this.mcp.getServerVersion()?.title,
       tools: tools.length === 0 ? undefined : tools,
-      version: this.mcp.getServerVersion()?.version,
+      version: this.mcp.getServerVersion()?.version?.replace('v', ''),
     };
 
     log('Listed Manifest: %O', manifest);

@@ -317,7 +317,7 @@ export const createMCPPluginStoreSlice: StateCreator<
         platform: result!.platform,
         success: true,
         userAgent,
-        version: data.version,
+        version: manifest.version || data.version,
       });
 
       // 短暂显示完成状态后清除进度
