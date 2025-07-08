@@ -2,6 +2,49 @@
 
 # Changelog
 
+### [Version&nbsp;1.95.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.95.1...v1.95.2)
+<sup>Released on **2025-07-07**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Change the wrong github checkmodel name, pin `officeparser@5.1.1` to fix server error.
+
+
+#### 💄 Styles
+
+- **misc**: Files hello pages should scroll.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **misc**: Change the wrong github checkmodel name, closes [#8339](https://github.com/jaworldwideorg/OneJA-Bot/issues/8339) ([f07d912](https://github.com/jaworldwideorg/OneJA-Bot/commit/f07d912))
+* **misc**: Pin `officeparser@5.1.1` to fix server error, closes [#8354](https://github.com/jaworldwideorg/OneJA-Bot/issues/8354) ([3f4e935](https://github.com/jaworldwideorg/OneJA-Bot/commit/3f4e935))
+
+
+
+#### Styles
+
+* **misc**: Files hello pages should scroll, closes [#8340](https://github.com/jaworldwideorg/OneJA-Bot/issues/8340) ([df9b7df](https://github.com/jaworldwideorg/OneJA-Bot/commit/df9b7df))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.95.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.95.0...v1.95.1)
 <sup>Released on **2025-07-03**</sup>
 
