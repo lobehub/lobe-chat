@@ -1,15 +1,18 @@
-import { edgeClient } from '@/libs/trpc/client';
+import { lambdaClient } from '@/libs/trpc/client';
 import { globalHelpers } from '@/store/global/helpers';
-import { DiscoverPlugintem } from '@/types/discover';
+import { PluginQueryParams } from '@/types/discover';
 import { convertOpenAIManifestToLobeManifest, getToolManifest } from '@/utils/toolManifest';
 
 class ToolService {
-  getToolList = async (): Promise<DiscoverPlugintem[]> => {
+  getOldPluginList = async (params: PluginQueryParams): Promise<any> => {
     const locale = globalHelpers.getCurrentLanguage();
 
-    const data = await edgeClient.market.getPluginIndex.query({ locale });
-
-    return data.plugins;
+    return lambdaClient.market.getPluginList.query({
+      ...params,
+      locale,
+      page: params.page ? Number(params.page) : 1,
+      pageSize: params.pageSize ? Number(params.pageSize) : 20,
+    });
   };
 
   getToolManifest = getToolManifest;

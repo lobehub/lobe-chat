@@ -152,7 +152,8 @@ export default class Browser {
 
   show() {
     logger.debug(`Showing window: ${this.identifier}`);
-    this.determineWindowPosition();
+    if (!this._browserWindow.isDestroyed()) this.determineWindowPosition();
+
     this.browserWindow.show();
   }
 
