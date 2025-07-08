@@ -54,6 +54,7 @@ export const KeyEnum = {
   Space: 'space',
   Tab: 'tab',
   Up: 'up',
+  Zero: '0',
 } as const;
 
 export const HotkeyEnum = {
@@ -68,6 +69,8 @@ export const HotkeyEnum = {
   Search: 'search',
   ShowApp: 'showApp',
   SwitchAgent: 'switchAgent',
+  SwitchToChat: 'switchToChat',
+  SwitchToDefaultAgent: 'switchToDefaultAgent',
   ToggleLeftPanel: 'toggleLeftPanel',
   ToggleRightPanel: 'toggleRightPanel',
   ToggleZenMode: 'toggleZenMode',

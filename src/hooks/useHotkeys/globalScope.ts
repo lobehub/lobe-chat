@@ -2,6 +2,7 @@ import isEqual from 'fast-deep-equal';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 import { useHotkeys } from 'react-hotkeys-hook';
 
+import { INBOX_SESSION_ID } from '@/const/session';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useGlobalStore } from '@/store/global';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -16,10 +17,14 @@ import { useHotkeyById } from './useHotkeyById';
 export const useSwitchAgentHotkey = () => {
   const { showPinList } = useServerConfigStore(featureFlagsSelectors);
   const list = useSessionStore(sessionSelectors.pinnedSessions, isEqual);
+  const currentSessionId = useSessionStore((s) => s.activeId);
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.SwitchAgent));
   const switchSession = useSwitchSession();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [_, setPinned] = useQueryState('pinned', parseAsBoolean);
+  const [_, setPinned] = useQueryState(
+    'pinned',
+    parseAsBoolean.withDefault(false).withOptions({ clearOnDefault: true }),
+  );
 
   const switchAgent = (id: string) => {
     switchSession(id);
@@ -42,6 +47,17 @@ export const useSwitchAgentHotkey = () => {
       scopes: [HotkeyScopeEnum.Global, HotkeyEnum.SwitchAgent],
     },
   );
+
+  // 仅切换到会话标签
+  useHotkeyById(HotkeyEnum.SwitchToChat, () => {
+    switchSession(currentSessionId);
+    setPinned(false);
+  });
+  // 切换到默认会话
+  useHotkeyById(HotkeyEnum.SwitchToDefaultAgent, () => {
+    switchSession(INBOX_SESSION_ID);
+    setPinned(false);
+  });
 
   return {
     id: HotkeyEnum.SwitchAgent,
