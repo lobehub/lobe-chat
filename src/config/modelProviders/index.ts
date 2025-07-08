@@ -1,6 +1,7 @@
 import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 
 import Ai21Provider from './ai21';
+import Ai302Provider from './ai302';
 import Ai360Provider from './ai360';
 import AnthropicProvider from './anthropic';
 import AzureProvider from './azure';
@@ -164,6 +165,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Search1APIProvider,
   InfiniAIProvider,
   QiniuProvider,
+  Ai302Provider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -176,6 +178,7 @@ export const isProviderDisableBrowserRequest = (id: string) => {
 };
 
 export { default as Ai21ProviderCard } from './ai21';
+export { default as Ai302ProviderCard } from './ai302';
 export { default as Ai360ProviderCard } from './ai360';
 export { default as AnthropicProviderCard } from './anthropic';
 export { default as AzureProviderCard } from './azure';
