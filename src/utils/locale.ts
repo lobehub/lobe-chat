@@ -1,11 +1,10 @@
 import { resolveAcceptLanguage } from 'resolve-accept-language';
 
 import { DEFAULT_LANG } from '@/const/locale';
-import { Locales, locales, normalizeLocale } from '@/locales/resources';
-import { RouteVariants } from '@/utils/server/routeVariants';
+import { locales, normalizeLocale } from '@/locales/resources';
 
 export const getAntdLocale = async (lang?: string) => {
-  let normalLang = normalizeLocale(lang);
+  let normalLang: any = normalizeLocale(lang);
 
   // due to antd only have ar-EG locale, we need to convert ar to ar-EG
   // refs: https://ant.design/docs/react/i18n
@@ -44,18 +43,4 @@ export const parseBrowserLanguage = (headers: Headers, defaultLang: string = DEF
   if (browserLang === 'ar-EG') browserLang = 'ar';
 
   return browserLang;
-};
-
-/**
- * Parse the page locale from the URL and search params
- * @param props
- */
-export const parsePageLocale = async (props: {
-  params: Promise<{ variants: string }>;
-  searchParams: Promise<any>;
-}) => {
-  const searchParams = await props.searchParams;
-
-  const browserLocale = await RouteVariants.getLocale(props);
-  return normalizeLocale(searchParams?.hl || browserLocale) as Locales;
 };

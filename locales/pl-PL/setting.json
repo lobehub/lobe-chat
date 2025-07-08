@@ -129,6 +129,7 @@
     "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość"
   },
   "plugin": {
+    "addMCPPlugin": "Dodaj wtyczkę MCP",
     "addTooltip": "Dodaj niestandardowy dodatek",
     "clearDeprecated": "Usuń przestarzałe dodatki",
     "empty": "Brak zainstalowanych dodatków, zapraszamy do odwiedzenia <1>sklepu z dodatkami</1>",
