@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add MCP_TOOL_TIMEOUT env and improve debug usage guide."]
+    },
+    "date": "2025-07-08",
+    "version": "1.96.20"
+  },
+  {
+    "children": {
       "fixes": ["Pin officeparser@5.1.1 to fix server error."]
     },
     "date": "2025-07-07",
