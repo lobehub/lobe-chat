@@ -1,4 +1,5 @@
 import { isEqual } from 'lodash-es';
+import { useRef } from 'react';
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand';
 
@@ -196,25 +197,57 @@ export const createGenerationBatchSlice: StateCreator<
       },
     ),
 
-  useCheckGenerationStatus: (generationId, asyncTaskId, topicId, enable = true) =>
-    useClientDataSWR(
+  useCheckGenerationStatus: (generationId, asyncTaskId, topicId, enable = true) => {
+    const requestCountRef = useRef(0);
+    const isErrorRef = useRef(false);
+
+    return useClientDataSWR<GetGenerationStatusResult>(
       enable && generationId && !generationId.startsWith('temp-') && asyncTaskId
         ? [SWR_USE_CHECK_GENERATION_STATUS, generationId, asyncTaskId]
         : null,
       async ([, generationId, asyncTaskId]: [string, string, string]) => {
+        // 增加请求计数
+        requestCountRef.current += 1;
         return generationService.getGenerationStatus(generationId, asyncTaskId);
       },
       {
+        refreshWhenHidden: false,
         refreshInterval: (data: GetGenerationStatusResult | undefined) => {
           // 如果状态是 success 或 error，停止轮询
           if (data?.status === AsyncTaskStatus.Success || data?.status === AsyncTaskStatus.Error) {
             return 0; // 停止轮询
           }
-          // 否则每 2 秒轮询一次
-          return 2000;
+
+          // 根据请求次数动态调整间隔：使用指数退避算法
+          // 基础间隔 1 秒，最大间隔 30 秒
+          const baseInterval = 1000;
+          const maxInterval = 30_000;
+          const currentCount = requestCountRef.current;
+
+          // 指数退避：每 5 次请求后间隔翻倍
+          const backoffMultiplier = Math.floor(currentCount / 5);
+          let dynamicInterval = Math.min(
+            baseInterval * Math.pow(2, backoffMultiplier),
+            maxInterval,
+          );
+
+          // 如果之前有错误，使用更长的间隔（乘以 2）
+          if (isErrorRef.current) {
+            dynamicInterval = Math.min(dynamicInterval * 2, maxInterval);
+          }
+
+          return dynamicInterval;
+        },
+        onError: (error) => {
+          // 发生错误时设置错误状态
+          isErrorRef.current = true;
+          console.error('Generation status check error:', error);
         },
         onSuccess: async (data: GetGenerationStatusResult) => {
           if (!data) return;
+
+          // 成功时重置错误状态
+          isErrorRef.current = false;
 
           // 找到对应的 batch，generation 数据库记录包含 generationBatchId
           const currentBatches = get().generationBatchesMap[topicId] || [];
@@ -227,6 +260,9 @@ export const createGenerationBatchSlice: StateCreator<
             (data.status === AsyncTaskStatus.Success || data.status === AsyncTaskStatus.Error) &&
             targetBatch
           ) {
+            // 重置请求计数器，因为任务已完成
+            requestCountRef.current = 0;
+
             if (data.generation) {
               // 更新 generation 数据
               get().internal_dispatchGenerationBatch(
@@ -262,5 +298,6 @@ export const createGenerationBatchSlice: StateCreator<
           }
         },
       },
-    ),
+    );
+  },
 });
