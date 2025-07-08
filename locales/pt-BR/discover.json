@@ -10,13 +10,57 @@
     },
     "description": "Introdução ao Assistente",
     "detail": "Detalhes",
+    "details": {
+      "capabilities": {
+        "knowledge": {
+          "desc": "O assistente possui as seguintes bases de conhecimento integradas para ajudar a responder a mais perguntas.",
+          "title": "Base de Conhecimento"
+        },
+        "plugin": {
+          "desc": "O assistente possui os seguintes plugins integrados para ajudar a realizar mais tarefas.",
+          "title": "Plugins Integrados"
+        },
+        "title": "Capacidades do Assistente"
+      },
+      "overview": {
+        "example": "Demonstração do Assistente",
+        "title": "Visão Geral"
+      },
+      "related": {
+        "listTitle": "Assistentes Relacionados",
+        "more": "Ver Mais",
+        "title": "Recomendações Relacionadas"
+      },
+      "sidebar": {
+        "toc": "Sumário"
+      },
+      "summary": {
+        "title": "O que você pode fazer com este assistente?"
+      },
+      "systemRole": {
+        "openingMessage": "Mensagem de Abertura",
+        "openingQuestions": "Perguntas Iniciais",
+        "title": "Configuração do Assistente"
+      }
+    },
     "list": "Lista de Assistentes",
     "more": "Mais",
     "plugins": "Integrar plugins",
     "recentSubmits": "Atualizações Recentes",
+    "sorts": {
+      "createdAt": "Publicado Recentemente",
+      "identifier": "ID do Assistente",
+      "knowledgeCount": "Quantidade de Bases de Conhecimento",
+      "pluginCount": "Quantidade de Plugins",
+      "title": "Nome do Assistente",
+      "tokenUsage": "Uso de Tokens"
+    },
     "suggestions": "Sugestões Relacionadas",
     "systemRole": "Configuração do Assistente",
-    "try": "Experimente"
+    "tokenUsage": "Uso de Tokens no Prompt do Assistente",
+    "try": "Experimente",
+    "withKnowledge": "Este assistente inclui base de conhecimento",
+    "withPlugin": "Este assistente inclui plugins"
   },
   "back": "Voltar à descoberta",
   "category": {
@@ -41,6 +85,7 @@
       "all": "Todos",
       "gaming-entertainment": "Jogos e Entretenimento",
       "life-style": "Estilo de Vida",
+      "lifestyle": "Estilo de Vida",
       "media-generate": "Geração de Mídia",
       "science-education": "Ciência e Educação",
       "social": "Mídias Sociais",
@@ -102,10 +147,368 @@
     "featuredTools": "Plugins Recomendados",
     "more": "Descubra Mais"
   },
+  "isClaimed": "Reivindicado",
+  "isFeatured": "Recomendado",
+  "isOfficial": "Certificado Oficial",
   "like": "Gosto",
+  "mcp": {
+    "categories": {
+      "all": {
+        "description": "Todos os Servidores MCP",
+        "name": "Todos"
+      },
+      "business": {
+        "description": "Serviços Comerciais e Corporativos",
+        "name": "Serviços Comerciais"
+      },
+      "developer": {
+        "description": "Ferramentas e Serviços Relacionados ao Desenvolvimento",
+        "name": "Ferramentas de Desenvolvimento"
+      },
+      "gaming-entertainment": {
+        "description": "Jogos, Entretenimento e Lazer",
+        "name": "Jogos e Entretenimento"
+      },
+      "health-wellness": {
+        "description": "Saúde, Fitness e Bem-estar Mental",
+        "name": "Saúde e Bem-estar"
+      },
+      "lifestyle": {
+        "description": "Estilo de Vida Pessoal, Hábitos e Atividades Diárias",
+        "name": "Estilo de Vida"
+      },
+      "media-generate": {
+        "description": "Geração, Edição e Processamento de Mídia",
+        "name": "Geração de Mídia"
+      },
+      "news": {
+        "description": "Agregação de Notícias, Reportagens e Serviços de Informação",
+        "name": "Notícias e Informações"
+      },
+      "productivity": {
+        "description": "Gerenciamento de Tarefas, Notas e Ferramentas de Produtividade",
+        "name": "Ferramentas de Produtividade"
+      },
+      "science-education": {
+        "description": "Pesquisa Científica, Aprendizado e Ferramentas Educacionais",
+        "name": "Ciência e Educação"
+      },
+      "social": {
+        "description": "Redes Sociais e Comunicação",
+        "name": "Mídias Sociais"
+      },
+      "stocks-finance": {
+        "description": "Mercados Financeiros, Negociação e Investimentos",
+        "name": "Ações e Finanças"
+      },
+      "tools": {
+        "description": "Ferramentas e Serviços Utilitários Gerais",
+        "name": "Ferramentas Utilitárias"
+      },
+      "travel-transport": {
+        "description": "Planejamento de Viagens e Transporte",
+        "name": "Viagem e Transporte"
+      },
+      "weather": {
+        "description": "Previsão do Tempo e Serviços Meteorológicos",
+        "name": "Clima e Meteorologia"
+      },
+      "web-search": {
+        "description": "Busca na Web e Recuperação de Informações",
+        "name": "Recuperação de Informações"
+      }
+    },
+    "details": {
+      "connectionType": {
+        "hybrid": {
+          "desc": "Este serviço pode operar localmente ou na nuvem conforme configuração ou cenário de uso, oferecendo capacidade dupla de operação.",
+          "title": "Serviço Híbrido"
+        },
+        "local": {
+          "desc": "Este servidor só pode ser executado localmente no dispositivo do cliente, requer instalação e depende de recursos locais.",
+          "title": "Serviço Local"
+        },
+        "remote": {
+          "desc": "Este servidor é hospedado remotamente, pois depende principalmente de serviços remotos e não do ambiente local.",
+          "title": "Serviço na Nuvem"
+        }
+      },
+      "deployment": {
+        "args": "Parâmetros",
+        "checkCommand": "Comando de Verificação",
+        "command": "Comando",
+        "commandLine": "Dependências do Sistema",
+        "connection": "Modo de Conexão",
+        "connectionType": "Tipo de Conexão",
+        "description": "Método de Instalação e Implantação do Plugin",
+        "descriptionPlaceholder": "Descrição Opcional",
+        "empty": "Nenhuma opção de implantação disponível",
+        "env": "Variáveis de Ambiente",
+        "guide": "Instruções de Instalação",
+        "installation": "Instalado via {{method}}",
+        "installationMethod": "Método de Instalação",
+        "other": "Outras Configurações",
+        "packageName": "Nome do Pacote",
+        "platform": {
+          "steps": {
+            "claude": "- Abra o aplicativo **Claude Desktop**\n- Vá para **Configurações** e selecione **Desenvolvedor**\n- Clique em **Editar Configuração**\n- Abra o arquivo **claude_desktop_config.json**\n- Copie e cole a configuração do servidor no arquivo existente e salve",
+            "cline": "- Abra o VS Code com a extensão Cline instalada\n- Clique no ícone Cline na barra lateral\n- Selecione **MCP Servers** no menu suspenso\n- Na aba **Remote Servers**, insira o nome do servidor e a URL do seu servidor MCP\n- Clique em **Add Server** para conectar",
+            "cursor": "- Navegue até **Configurações** e selecione as configurações do Cursor\n- No lado esquerdo, escolha **MCP**\n- Clique em **Adicionar novo servidor global MCP** no canto superior direito\n- Copie e cole a configuração do servidor no arquivo existente e salve",
+            "lobeChat": "- Abra o aplicativo **LobeChat Desktop**\n- Vá para **Configurações** - **Assistente Padrão**\n- Selecione **Configurações de Plugin** - **Plugin Personalizado**\n- Clique em **Importação rápida de configuração JSON**\n- Copie e cole a configuração do servidor na caixa de texto e instale",
+            "openai": "- Abra seu aplicativo ou ambiente de desenvolvimento **OpenAI**\n- Configure a ferramenta MCP na **API de Respostas**\n- Adicione o bloco MCP no array **tools** da requisição API\n- Defina **server_url** para o endpoint do seu servidor MCP\n- Inclua os cabeçalhos de autenticação necessários (chave API, token, etc.)\n- Use o parâmetro `allowed_tools` para limitar as ferramentas expostas\n- Configure `require_approval` para controlar a aprovação da execução das ferramentas",
+            "vscode": "- Abra o VS Code\n- Abra o painel de comandos (`Ctrl+Shift+P` / `Cmd+Shift+P`)\n- Digite **MCP: Add Server** e selecione\n- Escolha adicionar nas configurações do espaço de trabalho ou do usuário\n- Copie e cole a configuração do servidor"
+          },
+          "title": "Instalação no {{platform}}"
+        },
+        "recommended": "Recomendado",
+        "systemDependencies": "Dependências do Sistema",
+        "table": {
+          "description": "Descrição",
+          "name": "Nome",
+          "required": "Obrigatório",
+          "type": "Tipo"
+        },
+        "title": "Método de Instalação"
+      },
+      "githubBadge": {
+        "desc": "O LobeHub realiza varreduras regulares no repositório e documentação para:\n\n- Confirmar que o servidor MCP está funcionando corretamente.\n- Extrair características do servidor, como ferramentas, recursos, prompts e parâmetros necessários.\n- Nosso Badge ajuda os usuários a avaliar rapidamente a segurança, funcionalidades e instruções de instalação do servidor MCP.\n\nPor favor, copie o código abaixo para o seu arquivo `README.md`:"
+      },
+      "nav": {
+        "needHelp": "Precisa de ajuda?",
+        "reportIssue": "Reportar Problema",
+        "viewSourceCode": "Ver Código Fonte"
+      },
+      "overview": {
+        "title": "Visão Geral"
+      },
+      "related": {
+        "listTitle": "Servidores MCP Relacionados",
+        "more": "Ver Mais",
+        "title": "Recomendações Relacionadas"
+      },
+      "schema": {
+        "mode": {
+          "docs": "Documentação"
+        },
+        "prompts": {
+          "arguments": "Configuração de Parâmetros",
+          "desc": "Modelos interativos acionados pela escolha do usuário",
+          "empty": "Nenhum prompt disponível",
+          "instructions": "Instruções",
+          "table": {
+            "description": "Descrição",
+            "name": "Nome",
+            "required": "Obrigatório"
+          },
+          "title": "Lista de Prompts"
+        },
+        "resources": {
+          "desc": "Dados contextuais anexados e gerenciados pelo cliente",
+          "empty": "Nenhum recurso disponível",
+          "table": {
+            "description": "Descrição",
+            "mineType": "Tipo MIME",
+            "name": "Nome",
+            "uri": "URI"
+          },
+          "title": "Lista de Recursos"
+        },
+        "title": "Funcionalidades do Plugin",
+        "tools": {
+          "desc": "Interfaces funcionais expostas ao modelo de linguagem (LLM) para executar operações",
+          "empty": "Nenhuma ferramenta disponível",
+          "inputSchema": "Descrição da Entrada",
+          "instructions": "Instruções",
+          "table": {
+            "description": "Descrição",
+            "name": "Nome",
+            "required": "Obrigatório",
+            "type": "Tipo"
+          },
+          "title": "Lista de Ferramentas"
+        }
+      },
+      "score": {
+        "claimed": {
+          "desc": "Este servidor MCP foi reivindicado pelo proprietário, garantindo sua propriedade e gerenciamento.",
+          "title": "Reivindicado pelo Proprietário"
+        },
+        "deployMoreThanManual": {
+          "desc": "Este servidor MCP oferece métodos de instalação mais amigáveis além do Manual, permitindo fácil implantação e uso.",
+          "title": "Oferece Métodos de Instalação Amigáveis"
+        },
+        "deployment": {
+          "desc": "Este servidor MCP oferece pelo menos um método de instalação, permitindo implantação e uso.",
+          "descWithCount": "Este servidor MCP oferece {{number}} métodos de instalação, permitindo implantação e uso.",
+          "title": "Oferece Pelo Menos Um Método de Instalação"
+        },
+        "license": {
+          "desc": "Este repositório contém um arquivo LICENSE.",
+          "descWithlicense": "A licença deste repositório é {{license}}.",
+          "title": "Possui LICENSE"
+        },
+        "listTitle": "Detalhes da Avaliação",
+        "notClaimed": {
+          "desc": "Se você é o proprietário deste servidor MCP, pode reivindicá-lo da seguinte forma.",
+          "title": "Não Reivindicado pelo Proprietário"
+        },
+        "prompts": {
+          "desc": "Este servidor MCP oferece prompts que permitem interação com o serviço.",
+          "descWithCount": "Este servidor MCP oferece {{number}} prompts que permitem interação com o serviço.",
+          "title": "Contém Prompts"
+        },
+        "readme": {
+          "desc": "Este repositório contém um arquivo README.md.",
+          "title": "Possui README"
+        },
+        "resources": {
+          "desc": "Este servidor MCP oferece recursos que permitem anexar e gerenciar dados contextuais.",
+          "descWithCount": "Este servidor MCP oferece {{number}} recursos que permitem anexar e gerenciar dados contextuais.",
+          "title": "Contém Recursos"
+        },
+        "title": "Avaliação",
+        "tools": {
+          "desc": "O serviço deve fornecer pelo menos uma ferramenta que permita executar operações específicas.",
+          "descWithCount": "Este servidor MCP oferece {{number}} funcionalidades de ferramentas que permitem executar operações específicas.",
+          "title": "Contém Pelo Menos Uma Ferramenta"
+        },
+        "validated": {
+          "desc": "Este servidor MCP passou pela validação de instalação, garantindo sua qualidade e confiabilidade.",
+          "title": "Validado"
+        }
+      },
+      "scoreLevel": {
+        "a": {
+          "desc": "Este servidor MCP foi rigorosamente validado, oferecendo funcionalidades completas e experiência de usuário de alta qualidade.",
+          "fullTitle": "Plugin Excelente",
+          "title": "Excelente"
+        },
+        "b": {
+          "desc": "Este servidor MCP oferece boas funcionalidades e experiência de usuário, mas pode precisar de melhorias em alguns aspectos.",
+          "fullTitle": "Funcionalidade Boa",
+          "title": "Bom"
+        },
+        "f": {
+          "desc": "Este servidor MCP tem funcionalidades incompletas ou qualidade inferior, recomenda-se cautela ao usar.",
+          "fullTitle": "Qualidade Insuficiente",
+          "title": "Insuficiente"
+        }
+      },
+      "settings": {
+        "capabilities": {
+          "prompts": "Sugestões",
+          "resources": "Recursos",
+          "title": "Capacidades do Plugin",
+          "tools": "Ferramentas"
+        },
+        "configuration": {
+          "title": "Configuração do Plugin"
+        },
+        "connection": {
+          "args": "Parâmetros de Inicialização",
+          "command": "Comando de Inicialização",
+          "title": "Informações de Conexão",
+          "type": "Tipo de Conexão",
+          "url": "Endereço do Serviço"
+        },
+        "saveSettings": "Salvar Configurações",
+        "title": "Configurações do Plugin"
+      },
+      "sidebar": {
+        "install": "Instalar Servidor MCP",
+        "meta": {
+          "homepage": "Página Inicial",
+          "installCount": "Número de Instalações",
+          "language": "Linguagem do Código Fonte",
+          "license": "Licença",
+          "published": "Data de Publicação",
+          "repo": "Repositório do Código Fonte",
+          "stars": "Número de Estrelas",
+          "title": "Detalhes",
+          "updated": "Última Atualização"
+        },
+        "moreServerConfig": "Ver Detalhes",
+        "recommendServers": "MCPs Relacionados",
+        "serverConfig": "Configuração de Instalação",
+        "toc": "Sumário"
+      },
+      "summary": {
+        "title": "O que você pode fazer com este Servidor MCP?"
+      },
+      "totalScore": {
+        "description": "Pontuação total calculada com base em vários indicadores",
+        "legend": {
+          "aGrade": "Grau A ({{minPercent}}-100%)",
+          "bGrade": "Grau B ({{minPercent}}-{{maxPercent}}%)",
+          "fGrade": "Grau F (0-{{maxPercent}}%)"
+        },
+        "pointsFormat": "{{score}}/{{total}} pontos",
+        "popover": {
+          "completedOptional": "✅ Itens opcionais concluídos ({{count}})",
+          "completedRequired": "✅ Itens obrigatórios concluídos ({{count}})",
+          "incompleteOptional": "⏸️ Itens opcionais não concluídos ({{count}})",
+          "incompleteRequired": "❌ Itens obrigatórios não concluídos ({{count}})",
+          "title": "Detalhes da Avaliação"
+        },
+        "ratingFormat": "Classificação: {{level}}",
+        "scoreInfo": {
+          "items": "Itens",
+          "points": "Pontos",
+          "requiredItems": "Itens Obrigatórios"
+        },
+        "title": "Pontuação Total"
+      },
+      "versions": {
+        "table": {
+          "isLatest": "Última Versão",
+          "isValidated": "Validado",
+          "publishAt": "Data de Publicação",
+          "version": "Versão"
+        },
+        "title": "Histórico de Versões"
+      }
+    },
+    "hero": {
+      "desc": "Plataforma open source e implantável de Servidores MCP que ajuda sistemas de IA a acessar facilmente sistemas de arquivos, bancos de dados, APIs e outros recursos essenciais, expandindo amplamente suas capacidades de IA.",
+      "subTitle": "Open Source & Pronto para Uso",
+      "title": "Mercado Open Source MCP para IA"
+    },
+    "sorts": {
+      "createdAt": "Adicionado Recentemente",
+      "installCount": "Número de Instalações",
+      "isFeatured": "Plugin Recomendado",
+      "isValidated": "Plugin Validado",
+      "promptsCount": "Número de Prompts",
+      "ratingCount": "Número de Avaliações",
+      "resourcesCount": "Número de Recursos",
+      "toolsCount": "Número de Ferramentas",
+      "updatedAt": "Atualizado Recentemente"
+    },
+    "title": "Mercado MCP",
+    "unvalidated": {
+      "desc": "Este servidor MCP ainda não foi validado",
+      "title": "Não Validado"
+    },
+    "validated": {
+      "desc": "Este servidor MCP foi validado, garantindo sua qualidade e confiabilidade.",
+      "descWithDate": "Este servidor MCP foi validado em {{date}}, garantindo sua qualidade e confiabilidade.",
+      "title": "Validado"
+    }
+  },
   "models": {
+    "abilities": "Capacidades do Modelo",
     "chat": "Iniciar Conversa",
     "contentLength": "Comprimento Máximo do Contexto",
+    "details": {
+      "overview": {
+        "title": "Visão Geral"
+      },
+      "related": {
+        "listTitle": "Modelos Relacionados",
+        "more": "Ver Mais",
+        "title": "Recomendações Relacionadas"
+      }
+    },
     "free": "Gratuito",
     "guide": "Guia de Configuração",
     "list": "Lista de Modelos",
@@ -156,11 +559,30 @@
       "throughput": "Taxa de Transferência",
       "throughputTooltip": "Número médio de Tokens transmitidos por segundo em solicitações de fluxo"
     },
+    "sorts": {
+      "contextWindowTokens": "Janela de Contexto (Tokens)",
+      "identifier": "ID do Modelo",
+      "inputPrice": "Preço de Entrada",
+      "outputPrice": "Preço de Saída",
+      "providerCount": "Número de Provedores",
+      "releasedAt": "Publicado Recentemente"
+    },
     "suggestions": "Modelos Relacionados",
     "supportedProviders": "Provedores que suportam este modelo"
   },
   "plugins": {
     "community": "Plugins da Comunidade",
+    "details": {
+      "settings": {
+        "title": "Configurações do Plugin"
+      },
+      "summary": {
+        "title": "O que você pode fazer com este plugin?"
+      },
+      "tools": {
+        "title": "Ferramentas do Plugin"
+      }
+    },
     "install": "Instalar Plugin",
     "installed": "Instalado",
     "list": "Lista de Plugins",
@@ -173,36 +595,54 @@
     "more": "Mais",
     "official": "Plugins Oficiais",
     "recentSubmits": "Atualizações Recentes",
+    "sorts": {
+      "createdAt": "Publicado Recentemente",
+      "identifier": "ID do Plugin",
+      "title": "Nome do Plugin"
+    },
     "suggestions": "Sugestões Relacionadas"
   },
   "providers": {
     "config": "Configurar Provedor",
+    "details": {
+      "guide": {
+        "title": "Guia de Integração"
+      },
+      "overview": {
+        "title": "Visão Geral"
+      },
+      "related": {
+        "listTitle": "Provedores Relacionados",
+        "more": "Ver Mais",
+        "title": "Recomendações Relacionadas"
+      }
+    },
     "list": "Lista de Provedores de Modelos",
     "modelCount": "{{count}} modelos",
+    "modelName": "Nome do Modelo",
     "modelSite": "Documentação do modelo",
     "more": "Mais",
     "officialSite": "Site oficial",
     "showAllModels": "Mostrar todos os modelos",
+    "sorts": {
+      "default": "Ordenação Padrão",
+      "identifier": "ID do Provedor",
+      "modelCount": "Número de Modelos"
+    },
     "suggestions": "Provedores Relacionados",
     "supportedModels": "Modelos Suportados"
   },
+  "publishedTime": "Publicado em",
   "search": {
     "placeholder": "Pesquisar nome, descrição ou palavras-chave...",
     "result": "{{count}} resultados de busca sobre <highlight>{{keyword}}</highlight>",
     "searching": "Buscando..."
   },
-  "sort": {
-    "mostLiked": "Mais Curtido",
-    "mostUsed": "Mais Usado",
-    "newest": "Mais Novo",
-    "oldest": "Mais Antigo",
-    "recommended": "Recomendado"
-  },
   "tab": {
-    "assistants": "Assistentes",
+    "assistant": "Assistente",
     "home": "Início",
-    "models": "Modelos",
-    "plugins": "Plugins",
-    "providers": "Provedores de Modelos"
+    "model": "Modelo",
+    "plugin": "Plugin",
+    "provider": "Provedor de Modelo"
   }
 }

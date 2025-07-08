@@ -8,11 +8,14 @@ import { memo, useState } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
+import { withSuspense } from '@/components/withSuspense';
+import { useQuery } from '@/hooks/useQuery';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { DiscoverTab } from '@/types/discover';
 
-import { MAX_WIDTH } from '../../../features/const';
+import { MAX_WIDTH, SCROLL_PARENT_ID } from '../../../features/const';
 import { useNav } from '../../../features/useNav';
+import SortButton from '../../features/SortButton';
 import { useScroll } from './useScroll';
 
 export const useStyles = createStyles(({ cx, stylish, css, token }) => ({
@@ -42,6 +45,7 @@ const Nav = memo(() => {
   const pathname = usePathname();
   const { cx, styles } = useStyles();
   const { items, activeKey } = useNav();
+  const { q } = useQuery() as { q?: string };
   const router = useQueryRoute();
 
   useScroll((scroll, delta) => {
@@ -55,11 +59,13 @@ const Nav = memo(() => {
   });
 
   const isHome = pathname === '/discover';
-  const isProviders = pathname === '/discover/providers';
 
   return (
     <Center className={cx(styles.container, hide && styles.hide)} height={46}>
       <Flexbox
+        align={'center'}
+        horizontal
+        justify={'space-between'}
         style={{
           maxWidth: MAX_WIDTH,
           width: '100%',
@@ -72,18 +78,19 @@ const Nav = memo(() => {
             items={items as any}
             onChange={(key) => {
               const href = key === DiscoverTab.Home ? '/discover' : urlJoin('/discover', key);
-              router.push(href);
+              router.push(href, { query: q ? { q } : {}, replace: true });
+              const scrollableElement = document?.querySelector(`#${SCROLL_PARENT_ID}`);
+              if (!scrollableElement) return;
+              scrollableElement.scrollTo({ behavior: 'smooth', top: 0 });
             }}
             style={{
               fontWeight: 500,
             }}
           />
         </Flexbox>
-        {!isHome && !isProviders && (
+        {!isHome && (
           <Flexbox align={'center'} gap={4} horizontal>
-            {/* ↓ cloud slot ↓ */}
-
-            {/* ↑ cloud slot ↑ */}
+            <SortButton />
           </Flexbox>
         )}
       </Flexbox>
@@ -91,4 +98,4 @@ const Nav = memo(() => {
   );
 });
 
-export default Nav;
+export default withSuspense(Nav);
