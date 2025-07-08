@@ -1,4 +1,5 @@
-import { ActionIcon, Avatar, Icon, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Avatar, Tooltip } from '@lobehub/ui';
+import { useBoolean } from 'ahooks';
 import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
@@ -13,6 +14,8 @@ import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 import { HotkeyEnum, KeyEnum } from '@/types/hotkey';
+
+import ListModal from './ListModal';
 
 const HANDLER_WIDTH = 4;
 
@@ -88,6 +91,7 @@ const PinList = () => {
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.SwitchAgent));
   const hasList = list.length > 0;
   const [isPinned, setPinned] = useQueryState('pinned', parseAsBoolean);
+  const [isEditModalOpen, { setFalse: closeEditModal, setTrue: openEditModal }] = useBoolean(false);
 
   const switchAgent = (id: string) => {
     switchSession(id);
@@ -126,15 +130,14 @@ const PinList = () => {
           ))}
           <Center as="li">
             <ActionIcon
-              icon={<Icon icon={Settings2} />}
-              onClick={() => {
-                console.log('Edit Pinned Sessions');
-              }}
+              icon={Settings2}
+              onClick={openEditModal}
               title="Edit Pinned Sessions"
               tooltipProps={{ placement: 'right' }}
             />
           </Center>
         </Flexbox>
+        <ListModal onCancel={closeEditModal} open={isEditModalOpen} />
       </>
     )
   );
