@@ -8,7 +8,7 @@ import { ProductLogo } from '@/components/Branding';
 import { isCustomBranding } from '@/const/version';
 
 import CreateButton from '../../features/CreateButton';
-import StoreSearchBar from '../../features/StoreSearchBar';
+import StoreSearchBar from '../../features/Search';
 
 const Header = memo(() => {
   return (

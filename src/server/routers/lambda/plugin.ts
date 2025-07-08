@@ -21,6 +21,7 @@ export const pluginRouter = router({
         customParams: z.any(),
         identifier: z.string(),
         manifest: z.any(),
+        settings: z.any(),
         type: z.enum(['plugin', 'customPlugin']),
       }),
     )
@@ -33,6 +34,7 @@ export const pluginRouter = router({
           customParams: input.customParams,
           identifier: input.identifier,
           manifest: input.manifest,
+          settings: input.settings,
           type: input.type,
         });
 
