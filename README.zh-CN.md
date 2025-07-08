@@ -122,7 +122,7 @@
 
 ### ✨ MCP 插件一键安装
 
-\[![][image-feat-mcp]]\[docs-feat-mcp]
+[![](https://github.com/user-attachments/assets/1be85d36-3975-4413-931f-27e05e440995)](https://lobehub.com/mcp)
 
 **无缝连接你的 AI 与世界**
 
@@ -134,7 +134,7 @@
 
 ### 🏪 MCP 市场
 
-\[![][image-feat-mcp-market]]\[docs-feat-mcp-market]
+[![][image-feat-mcp-market]][docs-feat-mcp-market]
 
 **发现、连接、扩展**
 
@@ -936,7 +936,7 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [image-feat-desktop]: https://github.com/user-attachments/assets/a7bac8d3-ea96-4000-bb39-fadc9b610f96
 [image-feat-knowledgebase]: https://github.com/user-attachments/assets/7da7a3b2-92fd-4630-9f4e-8560c74955ae
 [image-feat-local]: https://github.com/user-attachments/assets/1239da50-d832-4632-a7ef-bd754c0f3850
-[image-feat-mcp]: https://github.com/user-attachments/assets/1be85d36-3975-4413-931f-27e05e440995
+
 [image-feat-mcp-market]: https://github.com/user-attachments/assets/bb114f9f-24c5-4000-a984-c10d187da5a0
 [image-feat-mobile]: https://github.com/user-attachments/assets/32cf43c4-96bd-4a4c-bfb6-59acde6fe380
 [image-feat-plugin]: https://github.com/user-attachments/assets/66a891ac-01b6-4e3f-b978-2eb07b489b1b
