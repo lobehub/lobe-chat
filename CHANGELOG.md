@@ -2,6 +2,48 @@
 
 # Changelog
 
+## [Version&nbsp;1.96.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.95.2...v1.96.0)
+<sup>Released on **2025-07-08**</sup>
+
+
+#### ✨ Features
+
+- **misc**: Add MCP marketplace and mcp plugin one-click installation in desktop.
+
+
+#### 💄 Styles
+
+- **misc**: Add `MCP_TOOL_TIMEOUT` env and improve debug usage guide.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's improved
+
+* **misc**: Add MCP marketplace and mcp plugin one-click installation in desktop, closes [#8334](https://github.com/jaworldwideorg/OneJA-Bot/issues/8334) ([416a4b1](https://github.com/jaworldwideorg/OneJA-Bot/commit/416a4b1))
+
+
+
+#### Styles
+
+* **misc**: Add `MCP_TOOL_TIMEOUT` env and improve debug usage guide, closes [#8357](https://github.com/jaworldwideorg/OneJA-Bot/issues/8357) ([d4baae5](https://github.com/jaworldwideorg/OneJA-Bot/commit/d4baae5))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.95.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.95.1...v1.95.2)
 <sup>Released on **2025-07-07**</sup>
 
