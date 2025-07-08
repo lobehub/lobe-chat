@@ -13,6 +13,10 @@
       "title": "Yapay Zeka Asistanları"
     },
     "description": "İçerik oluşturma, metin yazımı, soru-cevap, görsel oluşturma, video oluşturma, ses oluşturma, akıllı Ajan, otomatik iş akışları, özelleştirilmiş AI uygulamaları, size özel AI uygulama çalışma alanınızı oluşturun.",
+    "mcp": {
+      "description": "Binlerce MCP Sunucusunu arayın, karşılaştırın ve bağlanın; AI sistemlerinin dosya sistemleri, veritabanları, API'ler ve diğer önemli kaynaklara kolayca erişmesini sağlayarak AI yeteneklerinizi kapsamlı şekilde genişletin",
+      "title": "MCP Sunucuları Pazarı"
+    },
     "models": {
       "description": "Ana akım AI modellerini keşfedin: OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek.",
       "title": "Yapay Zeka Modelleri"
