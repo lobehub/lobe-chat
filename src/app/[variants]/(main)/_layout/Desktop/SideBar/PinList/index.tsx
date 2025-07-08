@@ -1,9 +1,10 @@
-import { Avatar, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Avatar, Icon, Tooltip } from '@lobehub/ui';
 import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
+import { Settings2 } from 'lucide-react';
 import { parseAsBoolean, useQueryState } from 'nuqs';
-import { Flexbox } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useSessionStore } from '@/store/session';
@@ -15,8 +16,8 @@ import { HotkeyEnum, KeyEnum } from '@/types/hotkey';
 
 const HANDLER_WIDTH = 4;
 
-const useStyles = createStyles(({ css, token }) => ({
-  ink: css`
+const useStyles = createStyles(({ css, token }) => {
+  const ink = css`
     &::before {
       content: '';
 
@@ -46,8 +47,9 @@ const useStyles = createStyles(({ css, token }) => ({
         opacity: 1;
       }
     }
-  `,
-  inkActive: css`
+  `;
+
+  const inkActive = css`
     &::before {
       width: ${HANDLER_WIDTH}px;
       height: 40px;
@@ -61,8 +63,22 @@ const useStyles = createStyles(({ css, token }) => ({
         opacity: 1;
       }
     }
-  `,
-}));
+  `;
+
+  const list = css`
+    padding: 0;
+    & > li:last-child {
+      opacity: 0;
+      transition: opacity 200ms ${token.motionEaseInOut};
+    }
+
+    &:hover > li:last-child {
+      opacity: 1;
+    }
+  `;
+
+  return { ink, inkActive, list };
+});
 
 const PinList = () => {
   const { styles, cx } = useStyles();
@@ -82,9 +98,9 @@ const PinList = () => {
     hasList && (
       <>
         <Divider style={{ marginBottom: 8, marginTop: 4 }} />
-        <Flexbox flex={1} gap={12} height={'100%'}>
+        <Flexbox as="ul" className={styles.list} flex={1} gap={12} height={'100%'}>
           {list.slice(0, 9).map((item, index) => (
-            <Flexbox key={item.id} style={{ position: 'relative' }}>
+            <Flexbox as="li" key={item.id} style={{ position: 'relative' }}>
               <Tooltip
                 hotkey={hotkey.replaceAll(KeyEnum.Number, String(index + 1))}
                 placement={'right'}
@@ -108,6 +124,16 @@ const PinList = () => {
               </Tooltip>
             </Flexbox>
           ))}
+          <Center as="li">
+            <ActionIcon
+              icon={<Icon icon={Settings2} />}
+              onClick={() => {
+                console.log('Edit Pinned Sessions');
+              }}
+              title="Edit Pinned Sessions"
+              tooltipProps={{ placement: 'right' }}
+            />
+          </Center>
         </Flexbox>
       </>
     )
