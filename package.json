@@ -137,7 +137,6 @@
     "@electric-sql/pglite": "0.2.17",
     "@fal-ai/client": "^1.5.0",
     "@formkit/auto-animate": "^0.8.2",
-    "@google-cloud/vertexai": "^1.10.0",
     "@google/genai": "^1.6.0",
     "@huggingface/inference": "^2.8.1",
     "@icons-pack/react-simple-icons": "9.6.0",
