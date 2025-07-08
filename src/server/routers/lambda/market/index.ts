@@ -3,6 +3,7 @@ import { serialize } from 'cookie';
 import debug from 'debug';
 import { z } from 'zod';
 
+import { isDesktop } from '@/const/version';
 import { publicProcedure, router } from '@/libs/trpc/lambda';
 import { DiscoverService } from '@/server/services/discover';
 import { AssistantSorts, McpSorts, ModelSorts, PluginSorts, ProviderSorts } from '@/types/discover';
@@ -577,7 +578,11 @@ export const marketRouter = router({
     .mutation(async ({ input, ctx }) => {
       log('reportCall input: %O', input);
       try {
-        await ctx.discoverService.reportCall({ ...input, userAgent: ctx.userAgent });
+        await ctx.discoverService.reportCall({
+          ...input,
+          platform: isDesktop ? process.platform : 'web',
+          userAgent: ctx.userAgent,
+        });
         return { success: true };
       } catch (error) {
         console.error('Error reporting call: %O', error);
