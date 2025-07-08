@@ -129,6 +129,7 @@
     "waitingForMore": "<1>계획에 따라 더 많은 모델이 추가될 예정</1>이니 기대해 주세요"
   },
   "plugin": {
+    "addMCPPlugin": "MCP 플러그인 추가",
     "addTooltip": "플러그인 추가",
     "clearDeprecated": "사용되지 않는 플러그인 제거",
     "empty": "설치된 플러그인이 없습니다. <1>플러그인 스토어</1>에서 새로운 플러그인을 찾아보세요.",
@@ -220,7 +221,7 @@
     },
     "inputTemplate": {
       "desc": "사용자의 최신 메시지가이 템플릿에 채워집니다",
-      "placeholder": "입력 템플릿 {{input_template}}은 실시간 입력 정보로 대체됩니다",
+      "placeholder": "입력 템플릿 {{text}}은 실시간 입력 정보로 대체됩니다",
       "title": "사용자 입력 전처리"
     },
     "submit": "채팅 선호도 업데이트",

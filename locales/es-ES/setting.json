@@ -129,6 +129,7 @@
     "waitingForMore": "Más modelos están en <1>planificación para su incorporación</1>, ¡estén atentos!"
   },
   "plugin": {
+    "addMCPPlugin": "Agregar complemento MCP",
     "addTooltip": "Agregar complemento personalizado",
     "clearDeprecated": "Eliminar complementos obsoletos",
     "empty": "No hay complementos instalados actualmente, visita la <1>tienda de complementos</1> para explorar",
@@ -220,7 +221,7 @@
     },
     "inputTemplate": {
       "desc": "El último mensaje del usuario se completará en esta plantilla",
-      "placeholder": "La plantilla de preprocesamiento {{input_template}} se reemplazará por la información de entrada en tiempo real",
+      "placeholder": "La plantilla de preprocesamiento {{text}} se reemplazará por la información de entrada en tiempo real",
       "title": "Preprocesamiento de entrada del usuario"
     },
     "submit": "Actualizar preferencias de chat",

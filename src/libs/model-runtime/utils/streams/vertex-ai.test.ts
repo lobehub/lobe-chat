@@ -137,7 +137,7 @@ describe('VertexAIStream', () => {
   });
 
   it('tool_calls', async () => {
-    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1').mockReturnValueOnce('abcd1234');
 
     const rawChunks = [
       {
@@ -227,7 +227,7 @@ describe('VertexAIStream', () => {
       // text
       'id: chat_1\n',
       'event: tool_calls\n',
-      `data: [{"function":{"arguments":"{\\"city\\":\\"杭州\\"}","name":"realtime-weather____fetchCurrentWeather"},"id":"realtime-weather____fetchCurrentWeather_0","index":0,"type":"function"}]\n\n`,
+      `data: [{"function":{"arguments":"{\\"city\\":\\"杭州\\"}","name":"realtime-weather____fetchCurrentWeather"},"id":"realtime-weather____fetchCurrentWeather_0_abcd1234","index":0,"type":"function"}]\n\n`,
       'id: chat_1\n',
       'event: stop\n',
       'data: "STOP"\n\n',
@@ -328,6 +328,135 @@ describe('VertexAIStream', () => {
         'event: usage',
         `data: {"inputTextTokens":19,"outputTextTokens":11,"totalInputTokens":19,"totalOutputTokens":11,"totalTokens":30}\n`,
       ].map((i) => i + '\n'),
+    );
+  });
+
+  it('should return empty text chunk without candidates', async () => {
+    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
+    const data = [
+      {
+        candidates: [
+          {
+            content: { parts: [{ text: '234' }], role: 'model' },
+            safetyRatings: [
+              { category: 'HARM_CATEGORY_HATE_SPEECH', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_HARASSMENT', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', probability: 'NEGLIGIBLE' },
+            ],
+          },
+        ],
+        usageMetadata: {
+          promptTokenCount: 20,
+          candidatesTokenCount: 3,
+          totalTokenCount: 23,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 20 }],
+          candidatesTokensDetails: [{ modality: 'TEXT', tokenCount: 3 }],
+        },
+        modelVersion: 'gemini-2.5-flash-preview-04-17',
+      },
+      {
+        usageMetadata: {
+          promptTokenCount: 20,
+          candidatesTokenCount: 3,
+          totalTokenCount: 23,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 20 }],
+          candidatesTokensDetails: [{ modality: 'TEXT', tokenCount: 3 }],
+        },
+        modelVersion: 'gemini-2.5-flash-preview-04-17',
+      },
+    ];
+
+    const mockGoogleStream = new ReadableStream({
+      start(controller) {
+        data.forEach((item) => {
+          controller.enqueue(item);
+        });
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = VertexAIStream(mockGoogleStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual(
+      ['id: chat_1', 'event: text', 'data: "234"\n', 'id: chat_1', 'event: text', `data: ""\n`].map(
+        (i) => i + '\n',
+      ),
+    );
+  });
+
+  it('should return stop chunk with empty content candidates', async () => {
+    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
+    const data = [
+      {
+        candidates: [
+          {
+            content: { parts: [{ text: '234' }], role: 'model' },
+            safetyRatings: [
+              { category: 'HARM_CATEGORY_HATE_SPEECH', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_HARASSMENT', probability: 'NEGLIGIBLE' },
+              { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', probability: 'NEGLIGIBLE' },
+            ],
+          },
+        ],
+        usageMetadata: {
+          promptTokenCount: 20,
+          candidatesTokenCount: 3,
+          totalTokenCount: 23,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 20 }],
+          candidatesTokensDetails: [{ modality: 'TEXT', tokenCount: 3 }],
+        },
+        modelVersion: 'gemini-2.5-flash-preview-04-17',
+      },
+      {
+        candidates: [{}],
+        usageMetadata: {
+          promptTokenCount: 20,
+          candidatesTokenCount: 3,
+          totalTokenCount: 23,
+          promptTokensDetails: [{ modality: 'TEXT', tokenCount: 20 }],
+          candidatesTokensDetails: [{ modality: 'TEXT', tokenCount: 3 }],
+        },
+        modelVersion: 'gemini-2.5-flash-preview-04-17',
+      },
+    ];
+
+    const mockGoogleStream = new ReadableStream({
+      start(controller) {
+        data.forEach((item) => {
+          controller.enqueue(item);
+        });
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = VertexAIStream(mockGoogleStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual(
+      ['id: chat_1', 'event: text', 'data: "234"\n', 'id: chat_1', 'event: stop', `data: ""\n`].map(
+        (i) => i + '\n',
+      ),
     );
   });
 });

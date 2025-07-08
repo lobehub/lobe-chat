@@ -7,6 +7,7 @@ export type PluginManifestMap = Record<string, LobeChatPluginManifest>;
 export interface CustomPluginMetadata {
   avatar?: string;
   description?: string;
+  name?: string;
 }
 
 export interface CustomPluginParams {
@@ -40,12 +41,12 @@ export interface LobeToolCustomPlugin {
   type: 'customPlugin';
 }
 
-export interface InstallPluginMeta {
+export interface InstallPluginMeta extends Partial<Meta> {
   author?: string;
   createdAt?: string;
   homepage?: string;
   identifier: string;
-  meta?: Meta;
+  runtimeType?: 'mcp' | 'default' | 'markdown' | 'standalone' | undefined;
   type: LobeToolType;
 }
 

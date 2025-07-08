@@ -1,12 +1,9 @@
-import { Tag } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Tag, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { CSSProperties, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { calcGrowthPercentage } from './growthPercentage';
-
-const { Title } = Typography;
 
 interface TitleWithPercentageProps {
   count?: number;
@@ -43,9 +40,9 @@ const TitleWithPercentage = memo<TitleWithPercentageProps>(
           position: 'inherit',
         }}
       >
-        <Title
+        <Text
+          as={'h2'}
           ellipsis={{ rows: 1, tooltip: title }}
-          level={2}
           style={{
             fontSize: 'inherit',
             fontWeight: 'inherit',
@@ -55,7 +52,7 @@ const TitleWithPercentage = memo<TitleWithPercentageProps>(
           }}
         >
           {title}
-        </Title>
+        </Text>
         {count && prvCount && percentage && percentage !== 0 ? (
           <Tag
             style={{

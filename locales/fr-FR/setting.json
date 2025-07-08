@@ -129,6 +129,7 @@
     "waitingForMore": "Plus de modèles sont en cours de <1>planification pour être ajoutés</1>, restez à l'écoute"
   },
   "plugin": {
+    "addMCPPlugin": "Ajouter un plugin MCP",
     "addTooltip": "Ajouter un plugin personnalisé",
     "clearDeprecated": "Effacer les plugins obsolètes",
     "empty": "Aucun plugin installé pour le moment, veuillez visiter <1>la boutique de plugins</1> pour explorer",
@@ -220,7 +221,7 @@
     },
     "inputTemplate": {
       "desc": "Le dernier message de l'utilisateur sera rempli dans ce modèle",
-      "placeholder": "Le modèle de prétraitement {{input_template}} sera remplacé par les informations d'entrée en temps réel",
+      "placeholder": "Le modèle de prétraitement {{text}} sera remplacé par les informations d'entrée en temps réel",
       "title": "Modèle de prétraitement de l'entrée utilisateur"
     },
     "submit": "Mettre à jour les préférences de chat",

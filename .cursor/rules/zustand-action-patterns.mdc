@@ -87,7 +87,7 @@ internal_dispatchTopic: (payload, action) => {
 
 ### 使用 Reducer 模式的场景
 
-**适用于复杂的数据结构管理**，特别是：
+适用于复杂的数据结构管理，特别是：
 - 管理对象列表或映射（如 `messagesMap`, `topicMaps`）
 - 需要乐观更新的场景
 - 状态转换逻辑复杂
@@ -125,7 +125,7 @@ export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch):
 
 ### 使用简单 `set` 的场景
 
-**适用于简单状态更新**：
+适用于简单状态更新：
 - 切换布尔值
 - 更新简单字符串/数字
 - 设置单一状态字段
@@ -203,6 +203,43 @@ internal_createMessage: async (message, context) => {
   }
 },
 ```
+
+### 删除操作模式（不使用乐观更新）
+
+删除操作通常不适合乐观更新，因为：
+- 删除是破坏性操作，错误恢复复杂
+- 用户对删除操作的即时反馈期望较低
+- 删除失败时恢复原状态会造成困惑
+
+```typescript
+// 删除操作的标准模式 - 无乐观更新
+removeGenerationTopic: async (id: string) => {
+  const { internal_removeGenerationTopic } = get();
+  await internal_removeGenerationTopic(id);
+},
+
+internal_removeGenerationTopic: async (id: string) => {
+  // 1. 显示加载状态
+  get().internal_updateGenerationTopicLoading(id, true);
+  
+  try {
+    // 2. 直接调用后端服务
+    await generationTopicService.deleteTopic(id);
+    
+    // 3. 刷新数据获取最新状态
+    await get().refreshGenerationTopics();
+  } finally {
+    // 4. 确保清除加载状态（无论成功或失败）
+    get().internal_updateGenerationTopicLoading(id, false);
+  }
+},
+```
+
+删除操作的特点：
+- 直接调用服务，不预先更新状态
+- 依赖 loading 状态提供用户反馈
+- 操作完成后刷新整个列表确保一致性
+- 使用 `try/finally` 确保 loading 状态总是被清理
 
 ## 加载状态管理模式
 
@@ -292,27 +329,32 @@ refreshTopic: async () => {
 ## 命名规范总结
 
 ### Action 命名模式
-- **Public Actions**: 动词形式，描述用户意图
+- Public Actions: 动词形式，描述用户意图
   - `createTopic`, `sendMessage`, `regenerateMessage`
-- **Internal Actions**: `internal_` + 动词，描述内部操作
+- Internal Actions: `internal_` + 动词，描述内部操作
   - `internal_createTopic`, `internal_updateMessageContent`
-- **Dispatch Methods**: `internal_dispatch` + 实体名
+- Dispatch Methods: `internal_dispatch` + 实体名
   - `internal_dispatchTopic`, `internal_dispatchMessage`
-- **Toggle Methods**: `internal_toggle` + 状态名
+- Toggle Methods: `internal_toggle` + 状态名
   - `internal_toggleMessageLoading`, `internal_toggleChatLoading`
 
 ### 状态命名模式
-- **ID 数组**: `[entity]LoadingIds`, `[entity]EditingIds`
-- **映射结构**: `[entity]Maps`, `[entity]Map`
-- **当前激活**: `active[Entity]Id`
-- **初始化标记**: `[entity]sInit`
+- ID 数组: `[entity]LoadingIds`, `[entity]EditingIds`
+- 映射结构: `[entity]Maps`, `[entity]Map`
+- 当前激活: `active[Entity]Id`
+- 初始化标记: `[entity]sInit`
 
 ## 最佳实践
 
-1. **始终实现乐观更新**：对于用户交互频繁的操作
-2. **加载状态管理**：使用统一的加载状态数组管理并发操作
-3. **类型安全**：为所有 action payload 定义 TypeScript 接口
-4. **SWR 集成**：使用 SWR 管理数据获取和缓存失效
-5. **AbortController**：为长时间运行的操作提供取消能力
+1. 合理使用乐观更新：
+   - ✅ 适用：创建、更新操作（用户交互频繁）
+   - ❌ 避免：删除操作（破坏性操作，错误恢复复杂）
+2. 加载状态管理：使用统一的加载状态数组管理并发操作
+3. 类型安全：为所有 action payload 定义 TypeScript 接口
+4. SWR 集成：使用 SWR 管理数据获取和缓存失效
+5. AbortController：为长时间运行的操作提供取消能力
+6. 操作模式选择：
+   - 创建/更新：乐观更新 + 最终一致性
+   - 删除：加载状态 + 服务调用 + 数据刷新
 
 这套 Action 组织模式确保了代码的一致性、可维护性，并提供了优秀的用户体验。

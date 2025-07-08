@@ -1,17 +1,18 @@
 'use client';
 
 import { Avatar, Button, Form, type FormGroupItemType, Tag, Tooltip } from '@lobehub/ui';
-import { Empty, Space, Switch, Typography } from 'antd';
+import { Empty, Space, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { LucideTrash2, Store } from 'lucide-react';
+import Link from 'next/link';
 import { memo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import PluginAvatar from '@/components/Plugins/PluginAvatar';
+import PluginTag from '@/components/Plugins/PluginTag';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import PluginStore from '@/features/PluginStore';
-import PluginAvatar from '@/features/PluginStore/PluginItem/PluginAvatar';
-import PluginTag from '@/features/PluginStore/PluginItem/PluginTag';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { pluginHelpers, useToolStore } from '@/store/tool';
@@ -130,7 +131,7 @@ const AgentPlugin = memo(() => {
         description={
           <Trans i18nKey={'plugin.empty'} ns={'setting'}>
             暂无安装插件，
-            <Typography.Link
+            <Link
               href={'/'}
               onClick={(e) => {
                 e.preventDefault();
@@ -138,7 +139,7 @@ const AgentPlugin = memo(() => {
               }}
             >
               前往插件市场
-            </Typography.Link>
+            </Link>
             安装
           </Trans>
         }
