@@ -120,9 +120,9 @@ Whether for users or professional developers, LobeHub will be your AI Agent play
 
 Transform your AI experience with LobeChat's powerful features designed for seamless connectivity, enhanced productivity, and unlimited creativity.
 
-### ✨ MCP Plugin One-Click Installation
-
 [![][image-feat-mcp]][docs-feat-mcp]
+
+### ✨ MCP Plugin One-Click Installation
 
 **Seamlessly Connect Your AI to the World**
 
@@ -132,9 +132,9 @@ Transform your conversations into powerful workflows by connecting to databases,
 
 [![][back-to-top]](#readme-top)
 
-### 🏪 MCP Marketplace
-
 [![][image-feat-mcp-market]][docs-feat-mcp-market]
+
+### 🏪 MCP Marketplace
 
 **Discover, Connect, Extend**
 
@@ -144,9 +144,9 @@ From productivity tools to development environments, discover new ways to extend
 
 [![][back-to-top]](#readme-top)
 
-### 🖥️ Desktop App
-
 [![][image-feat-desktop]][docs-feat-desktop]
+
+### 🖥️ Desktop App
 
 **Peak Performance, Zero Distractions**
 
@@ -156,9 +156,9 @@ Experience faster response times, better resource management, and a more stable 
 
 [![][back-to-top]](#readme-top)
 
-### 🌐 Smart Internet Search
-
 [![][image-feat-web-search]][docs-feat-web-search]
+
+### 🌐 Smart Internet Search
 
 **Online Knowledge On Demand**
 
