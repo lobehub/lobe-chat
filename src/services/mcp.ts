@@ -89,19 +89,26 @@ class MCPService {
       // 计算响应大小
       const responseSizeBytes = success ? calculateObjectSizeBytes(result) : 0;
 
+      const isCustomPlugin = !!customPlugin;
       // 构造上报数据
       const reportData: CallReportRequest = {
         callDurationMs,
+        customPluginInfo: isCustomPlugin
+          ? {
+              avatar: plugin.manifest?.meta.avatar,
+              description: plugin.manifest?.meta.description,
+              name: plugin.manifest?.meta.title,
+            }
+          : undefined,
         errorCode,
         errorMessage,
         identifier,
         inputParams,
-        isCustomPlugin: !!customPlugin,
+        isCustomPlugin,
         metadata: {
           appVersion: CURRENT_VERSION,
           command: plugin.customParams?.mcp?.command,
           mcpType: plugin.customParams?.mcp?.type,
-          runtimeType: plugin.type,
         },
         methodName: apiName,
         methodType: 'tool' as const,

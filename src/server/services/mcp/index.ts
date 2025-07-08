@@ -310,7 +310,7 @@ class MCPService {
           `${identifier} MCP server has ` +
             Object.entries(manifest)
               .filter(([key]) => ['tools', 'prompts', 'resources'].includes(key))
-              .map(([key, item]) => `${item?.length} ${key}`)
+              .map(([key, item]) => `${(item as Array<any>)?.length} ${key}`)
               .join(','),
         title: metadata?.name || identifier,
       },
