@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.96.20](https://github.com/lobehub/lobe-chat/compare/v1.96.19...v1.96.20)
+
+<sup>Released on **2025-07-08**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add `MCP_TOOL_TIMEOUT` env and improve debug usage guide.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add `MCP_TOOL_TIMEOUT` env and improve debug usage guide, closes [#8357](https://github.com/lobehub/lobe-chat/issues/8357) ([d4baae5](https://github.com/lobehub/lobe-chat/commit/d4baae5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.96.19](https://github.com/lobehub/lobe-chat/compare/v1.96.18...v1.96.19)
 
 <sup>Released on **2025-07-07**</sup>
