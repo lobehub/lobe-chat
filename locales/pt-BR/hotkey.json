@@ -43,6 +43,14 @@
     "desc": "Troque o assistente fixo na barra lateral pressionando Ctrl e um número de 0 a 9",
     "title": "Troca rápida de assistente"
   },
+  "switchToChat": {
+    "desc": "Alternar para a aba de conversas",
+    "title": "Alternar para a aba de conversas"
+  },
+  "switchToDefaultAgent": {
+    "desc": "Alternar para o assistente padrão",
+    "title": "Alternar para o assistente padrão"
+  },
   "toggleLeftPanel": {
     "desc": "Mostrar ou ocultar o painel de assistente à esquerda",
     "title": "Mostrar/Ocultar painel do assistente"

@@ -43,6 +43,14 @@
     "desc": "Chuyển đổi giữa các trợ lý cố định ở thanh bên bằng cách giữ phím Ctrl và nhấn số 0~9",
     "title": "Chuyển đổi nhanh trợ lý"
   },
+  "switchToChat": {
+    "desc": "Chuyển sang tab hội thoại",
+    "title": "Chuyển sang tab hội thoại"
+  },
+  "switchToDefaultAgent": {
+    "desc": "Chuyển sang trợ lý mặc định",
+    "title": "Chuyển sang trợ lý mặc định"
+  },
   "toggleLeftPanel": {
     "desc": "Hiện hoặc ẩn bảng trợ giúp bên trái",
     "title": "Hiện/Ẩn bảng trợ lý"

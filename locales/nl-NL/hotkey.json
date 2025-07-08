@@ -43,6 +43,14 @@
     "desc": "Schakel tussen de in de zijbalk vastgezette assistenten door Ctrl ingedrukt te houden en een cijfer van 0~9 te drukken",
     "title": "Snel wisselen van assistent"
   },
+  "switchToChat": {
+    "desc": "Overschakelen naar het gesprekstabblad",
+    "title": "Overschakelen naar het gesprekstabblad"
+  },
+  "switchToDefaultAgent": {
+    "desc": "Overschakelen naar de standaardassistent",
+    "title": "Overschakelen naar de standaardassistent"
+  },
   "toggleLeftPanel": {
     "desc": "Toon of verberg het linker assistentpaneel",
     "title": "Toon/verberg assistentpaneel"

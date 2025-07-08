@@ -43,6 +43,14 @@
     "desc": "通過按住 Ctrl 加數字 0~9 切換固定在側邊欄的助手",
     "title": "快捷切換助手"
   },
+  "switchToChat": {
+    "desc": "切換到會話標籤頁",
+    "title": "切換到會話標籤"
+  },
+  "switchToDefaultAgent": {
+    "desc": "切換到預設助理",
+    "title": "切換到預設助理"
+  },
   "toggleLeftPanel": {
     "desc": "顯示或隱藏左側助手面板",
     "title": "顯示/隱藏助手面板"

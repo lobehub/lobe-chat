@@ -43,6 +43,14 @@
     "desc": "Yan panelde sabitlenmiş asistanı değiştirmek için Ctrl tuşuna basılı tutarak 0~9 sayısına basın",
     "title": "Asistanı hızlıca değiştir"
   },
+  "switchToChat": {
+    "desc": "Sohbet sekmesine geç",
+    "title": "Sohbet sekmesine geç"
+  },
+  "switchToDefaultAgent": {
+    "desc": "Varsayılan asistana geç",
+    "title": "Varsayılan asistana geç"
+  },
   "toggleLeftPanel": {
     "desc": "Sol yan paneli göster veya gizle",
     "title": "Asistan panelini göster/gizle"

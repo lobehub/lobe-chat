@@ -43,6 +43,14 @@
     "desc": "Switch between pinned assistants in the sidebar by holding Ctrl and pressing numbers 0-9",
     "title": "Quick Switch Assistant"
   },
+  "switchToChat": {
+    "desc": "Switch to the conversation tab",
+    "title": "Switch to Conversation Tab"
+  },
+  "switchToDefaultAgent": {
+    "desc": "Switch to the default assistant",
+    "title": "Switch to Default Assistant"
+  },
   "toggleLeftPanel": {
     "desc": "Show or hide the left assistant panel",
     "title": "Show/Hide Assistant Panel"

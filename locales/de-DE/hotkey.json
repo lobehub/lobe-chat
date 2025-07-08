@@ -43,6 +43,14 @@
     "desc": "Wechseln Sie zwischen den im Seitenbereich fixierten Assistenten, indem Sie die Strg-Taste gedrückt halten und eine Zahl von 0 bis 9 drücken",
     "title": "Schnell zwischen Assistenten wechseln"
   },
+  "switchToChat": {
+    "desc": "Zum Chat-Tab wechseln",
+    "title": "Zum Chat-Tab wechseln"
+  },
+  "switchToDefaultAgent": {
+    "desc": "Zum Standardassistenten wechseln",
+    "title": "Zum Standardassistenten wechseln"
+  },
   "toggleLeftPanel": {
     "desc": "Linkes Hilfepanel ein- oder ausblenden",
     "title": "Assistentenpanel ein-/ausblenden"

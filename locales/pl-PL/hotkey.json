@@ -43,6 +43,14 @@
     "desc": "Przełączaj przypiętego asystenta w pasku bocznym, przytrzymując Ctrl i naciskając numery 0-9",
     "title": "Szybkie przełączanie asystenta"
   },
+  "switchToChat": {
+    "desc": "Przełącz na kartę rozmowy",
+    "title": "Przełącz na kartę rozmowy"
+  },
+  "switchToDefaultAgent": {
+    "desc": "Przełącz na domyślnego asystenta",
+    "title": "Przełącz na domyślnego asystenta"
+  },
   "toggleLeftPanel": {
     "desc": "Pokaż lub ukryj lewy panel asystenta",
     "title": "Pokaż/ukryj panel asystenta"
