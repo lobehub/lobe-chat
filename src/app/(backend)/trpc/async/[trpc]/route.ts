@@ -6,8 +6,6 @@ import { pino } from '@/libs/logger';
 import { createAsyncRouteContext } from '@/libs/trpc/async/context';
 import { asyncRouter } from '@/server/routers/async';
 
-export const maxDuration = 60;
-
 const log = debug('lobe-async:route-handler');
 
 const handler = (req: NextRequest) => {

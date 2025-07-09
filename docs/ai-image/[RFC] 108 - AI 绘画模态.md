@@ -382,6 +382,9 @@ export const generations = pgTable('generations', {
     .notNull()
     .references(() => generationBatches.id, { onDelete: 'cascade' }),
 
+  // for webhook - 后续实现
+  // inferenceId: text('inference_id'),
+
   // inference related
   // 复用已有的 async_tasks 表
   asyncTaskId: uuid('async_task_id').references(() => asyncTasks.id, { onDelete: 'cascade' }),
@@ -398,7 +401,18 @@ export const generations = pgTable('generations', {
   // enhancedPrompt: text();
 
   // 直接对图片的 upscale 可以考虑把升级后的地址放 asset
-  asset: jsonb('asset'),
+  asset: jsonb('asset').$type<ImageGenerationAsset>(),
+  // like:
+  /*
+  {
+    "type": "image",
+    "url": "...",
+    "thumbnailUrl": "...",
+    "originalUrl": "...",
+    "width": 1024,
+    "height": 1024
+  }
+  */
   // { imageUrl: '', thumbnailUrl: '', image2x: '', width: 1024, height: 1024 }
   fileId: text('file_id').references(() => files.id, { onDelete: 'set null' }),
 
@@ -515,7 +529,9 @@ midjourney 它的生成和其它生成不一样，webhook 回调返回得是一�
 
 ### 模型参数示例
 
-新增一个模型支持需要到对应的文件夹新增 json 文件，例如 fal 新增 flux-schnell 支持需要新增 `src/config/paramsSchemas/fal/flux-schnell.json`：
+以 `fal-ai/flux-dev` 为例，一个模型的参数 schema 定义如下，它将决定在前端配置面板中渲染出哪些配置项。
+
+新增模型支持需要在 `src/config/paramsSchemas` 目录下新增 json 文件，例如 `fal/flux-dev.json`：
 
 ```json
 {
@@ -535,28 +551,36 @@ midjourney 它的生成和其它生成不一样，webhook 回调返回得是一�
     },
     "steps": {
       "minimum": 1,
-      "maximum": 12,
-      "default": 4
+      "maximum": 50,
+      "default": 25
     },
-    "seed": {}
+    "cfg": {
+      "minimum": 0,
+      "maximum": 20,
+      "default": 7,
+      "step": 0.1
+    },
+    "seed": {
+      "default": null
+    }
   },
   "required": ["prompt"],
   "type": "object"
 }
 ```
 
-然后在 `src/config/aiModels/fal.ts` 中使用：
+然后在 `src/config/aiModels/fal.ts` 中使用这个 schema：
 
 ```typescript
-import FluxSchnellParamsSchema from '../paramsSchemas/fal/flux-schnell.json';
+import FluxDevParamsSchema from '../paramsSchemas/fal/flux-dev.json';
 
-const googleChatModels: AIImageModelCard[] = [
+const falImageModels: AIImageModelCard[] = [
   {
     description: '...',
-    displayName: 'FLUX.1 [schnell]',
+    displayName: 'FLUX.1 Dev',
     enabled: true,
-    id: 'flux/schnell',
-    parameters: FluxSchnellParamsSchema,
+    id: 'flux/dev',
+    parameters: FluxDevParamsSchema,
     releasedAt: '2024-08-01',
     type: 'image',
   },
