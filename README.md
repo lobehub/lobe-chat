@@ -120,7 +120,7 @@ Whether for users or professional developers, LobeHub will be your AI Agent play
 
 Transform your AI experience with LobeChat's powerful features designed for seamless connectivity, enhanced productivity, and unlimited creativity.
 
-[![][image-feat-mcp]][docs-feat-mcp]
+![][image-feat-mcp]
 
 ### ✨ MCP Plugin One-Click Installation
 
@@ -132,7 +132,7 @@ Transform your conversations into powerful workflows by connecting to databases,
 
 [![][back-to-top]](#readme-top)
 
-[![][image-feat-mcp-market]][docs-feat-mcp-market]
+![][image-feat-mcp-market]
 
 ### 🏪 MCP Marketplace
 
@@ -144,7 +144,7 @@ From productivity tools to development environments, discover new ways to extend
 
 [![][back-to-top]](#readme-top)
 
-[![][image-feat-desktop]][docs-feat-desktop]
+![][image-feat-desktop]
 
 ### 🖥️ Desktop App
 
@@ -156,7 +156,7 @@ Experience faster response times, better resource management, and a more stable 
 
 [![][back-to-top]](#readme-top)
 
-[![][image-feat-web-search]][docs-feat-web-search]
+![][image-feat-web-search]
 
 ### 🌐 Smart Internet Search
 
@@ -865,11 +865,8 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [docs-feat-branch]: https://lobehub.com/docs/usage/features/branching-conversations
 [docs-feat-cot]: https://lobehub.com/docs/usage/features/cot
 [docs-feat-database]: https://lobehub.com/docs/usage/features/database
-[docs-feat-desktop]: https://lobehub.com/docs/usage/features/desktop
 [docs-feat-knowledgebase]: https://lobehub.com/blog/knowledge-base
 [docs-feat-local]: https://lobehub.com/docs/usage/features/local-llm
-[docs-feat-mcp]: https://lobehub.com/docs/usage/features/mcp
-[docs-feat-mcp-market]: https://lobehub.com/docs/usage/features/mcp-marketplace
 [docs-feat-mobile]: https://lobehub.com/docs/usage/features/mobile
 [docs-feat-plugin]: https://lobehub.com/docs/usage/features/plugin-system
 [docs-feat-provider]: https://lobehub.com/docs/usage/features/multi-ai-providers
@@ -878,7 +875,6 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [docs-feat-theme]: https://lobehub.com/docs/usage/features/theme
 [docs-feat-tts]: https://lobehub.com/docs/usage/features/tts
 [docs-feat-vision]: https://lobehub.com/docs/usage/features/vision
-[docs-feat-web-search]: https://lobehub.com/docs/usage/features/web-search
 [docs-function-call]: https://lobehub.com/blog/openai-function-call
 [docs-lighthouse]: https://github.com/lobehub/lobe-chat/wiki/Lighthouse
 [docs-plugin-dev]: https://lobehub.com/docs/usage/plugins/development

@@ -134,7 +134,7 @@
 
 ### 🏪 MCP 市场
 
-\[![][image-feat-mcp-market]]\[docs-feat-mcp-market]
+![][image-feat-mcp-market]
 
 **发现、连接、扩展**
 
@@ -146,7 +146,7 @@
 
 ### 🖥️ 桌面应用
 
-\[![][image-feat-desktop]]\[docs-feat-desktop]
+![][image-feat-desktop]
 
 **巅峰性能，零干扰**
 
@@ -158,7 +158,7 @@
 
 ### 🌐 智能联网搜索
 
-\[![][image-feat-web-search]]\[docs-feat-web-search]
+![][image-feat-web-search]
 
 **在线知识，按需获取**
 
