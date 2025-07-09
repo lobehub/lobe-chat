@@ -1,13 +1,8 @@
-import { Modal, Segmented } from '@lobehub/ui';
+import { Modal } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
-import { useServerConfigStore } from '@/store/serverConfig';
-import { useToolStore } from '@/store/tool';
-
-import InstalledPluginList from './InstalledPluginList';
-import OnlineList from './OnlineList';
+import Content from './Content';
 
 interface PluginStoreProps {
   open?: boolean;
@@ -15,8 +10,6 @@ interface PluginStoreProps {
 }
 export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
   const { t } = useTranslation('plugin');
-  const mobile = useServerConfigStore((s) => s.isMobile);
-  const [listType] = useToolStore((s) => [s.listType]);
 
   return (
     <Modal
@@ -26,30 +19,13 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
         setOpen(false);
       }}
       open={open}
-      styles={{ body: { overflow: 'hidden' } }}
+      styles={{
+        body: { overflow: 'hidden', padding: 0 },
+      }}
       title={t('store.title')}
-      width={800}
+      width={'min(90%, 1280px)'}
     >
-      <Flexbox
-        gap={mobile ? 8 : 16}
-        style={{ maxHeight: mobile ? '-webkit-fill-available' : 'inherit' }}
-        width={'100%'}
-      >
-        <Segmented
-          block
-          onChange={(v) => {
-            useToolStore.setState({ listType: v as any });
-          }}
-          options={[
-            { label: t('store.tabs.all'), value: 'all' },
-            { label: t('store.tabs.installed'), value: 'installed' },
-          ]}
-          style={{ flex: 1 }}
-          value={listType}
-          variant={'filled'}
-        />
-        {listType === 'all' ? <OnlineList /> : <InstalledPluginList />}
-      </Flexbox>
+      <Content />
     </Modal>
   );
 });

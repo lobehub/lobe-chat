@@ -26,7 +26,7 @@ export const router = trpc.router;
  **/
 export const publicProcedure = trpc.procedure.use(({ next, ctx }) => {
   return next({
-    ctx: { userId: isDesktop ? DESKTOP_USER_ID : ctx.userId },
+    ctx: { ...ctx, userId: isDesktop ? DESKTOP_USER_ID : ctx.userId },
   });
 });
 

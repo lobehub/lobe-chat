@@ -10,13 +10,57 @@
     },
     "description": "助手介紹",
     "detail": "詳情",
+    "details": {
+      "capabilities": {
+        "knowledge": {
+          "desc": "助理內建以下知識庫，幫助你回答更多問題。",
+          "title": "知識庫"
+        },
+        "plugin": {
+          "desc": "助理內建以下外掛，幫助你完成更多任務。",
+          "title": "內建外掛"
+        },
+        "title": "助理能力"
+      },
+      "overview": {
+        "example": "助理示範",
+        "title": "概覽"
+      },
+      "related": {
+        "listTitle": "相關助理",
+        "more": "查看更多",
+        "title": "相關推薦"
+      },
+      "sidebar": {
+        "toc": "目錄"
+      },
+      "summary": {
+        "title": "你可以使用該助理做什麼？"
+      },
+      "systemRole": {
+        "openingMessage": "開場訊息",
+        "openingQuestions": "開場問題",
+        "title": "助理設定"
+      }
+    },
     "list": "助手列表",
     "more": "更多",
     "plugins": "集成插件",
     "recentSubmits": "最近更新",
+    "sorts": {
+      "createdAt": "最近發布",
+      "identifier": "助理 ID",
+      "knowledgeCount": "知識庫數量",
+      "pluginCount": "外掛數量",
+      "title": "助理名稱",
+      "tokenUsage": "Token 使用量"
+    },
     "suggestions": "相關推薦",
     "systemRole": "助手設定",
-    "try": "試一下"
+    "tokenUsage": "助理提示詞 Token 使用量",
+    "try": "試一下",
+    "withKnowledge": "該助理附帶知識庫",
+    "withPlugin": "該助理附帶外掛"
   },
   "back": "返回發現",
   "category": {
@@ -41,6 +85,7 @@
       "all": "全部",
       "gaming-entertainment": "遊戲娛樂",
       "life-style": "生活方式",
+      "lifestyle": "生活方式",
       "media-generate": "媒體生成",
       "science-education": "科學教育",
       "social": "社交媒體",
@@ -102,10 +147,368 @@
     "featuredTools": "推薦插件",
     "more": "發現更多"
   },
+  "isClaimed": "已認領",
+  "isFeatured": "推薦",
+  "isOfficial": "官方認證",
   "like": "喜歡",
+  "mcp": {
+    "categories": {
+      "all": {
+        "description": "全部 MCP Servers",
+        "name": "全部"
+      },
+      "business": {
+        "description": "商業與企業服務",
+        "name": "商業服務"
+      },
+      "developer": {
+        "description": "開發相關的工具與服務",
+        "name": "開發工具"
+      },
+      "gaming-entertainment": {
+        "description": "遊戲、娛樂和休閒活動",
+        "name": "遊戲娛樂"
+      },
+      "health-wellness": {
+        "description": "健康、健身與身心養護",
+        "name": "健康養生"
+      },
+      "lifestyle": {
+        "description": "個人生活方式、習慣與日常活動",
+        "name": "生活方式"
+      },
+      "media-generate": {
+        "description": "媒體的生成、編輯與處理",
+        "name": "媒體生成"
+      },
+      "news": {
+        "description": "新聞聚合、報導與資訊服務",
+        "name": "新聞諮詢"
+      },
+      "productivity": {
+        "description": "任務管理、筆記與效率工具",
+        "name": "效率工具"
+      },
+      "science-education": {
+        "description": "科學研究、學習與教育工具",
+        "name": "科學教育"
+      },
+      "social": {
+        "description": "社交網絡與溝通交流",
+        "name": "社交媒體"
+      },
+      "stocks-finance": {
+        "description": "金融市場、交易與投資",
+        "name": "股票金融"
+      },
+      "tools": {
+        "description": "通用實用工具與服務",
+        "name": "實用工具"
+      },
+      "travel-transport": {
+        "description": "旅行規劃與交通出行",
+        "name": "旅行交通"
+      },
+      "weather": {
+        "description": "天氣預報與氣象服務",
+        "name": "氣象天氣"
+      },
+      "web-search": {
+        "description": "網頁搜尋與資訊檢索",
+        "name": "資訊檢索"
+      }
+    },
+    "details": {
+      "connectionType": {
+        "hybrid": {
+          "desc": "該服務可根據配置或使用場景，在本地或雲端運行，具備雙重運行能力。",
+          "title": "混合型服務"
+        },
+        "local": {
+          "desc": "該伺服器只能在用戶端本地設備上運行，需安裝並依賴本地資源。",
+          "title": "本地服務"
+        },
+        "remote": {
+          "desc": "該伺服器託管於遠端運行，因為它主要依賴遠端服務，不依賴本地環境。",
+          "title": "雲服務"
+        }
+      },
+      "deployment": {
+        "args": "參數",
+        "checkCommand": "檢查命令",
+        "command": "命令",
+        "commandLine": "系統依賴",
+        "connection": "連接方式",
+        "connectionType": "連接類型",
+        "description": "外掛的安裝和部署方式",
+        "descriptionPlaceholder": "可選的描述資訊",
+        "empty": "暫無部署選項",
+        "env": "環境變數",
+        "guide": "安裝說明",
+        "installation": "透過 {{method}} 安裝",
+        "installationMethod": "安裝方式",
+        "other": "其他設定",
+        "packageName": "套件名稱",
+        "platform": {
+          "steps": {
+            "claude": "- 打開 **Claude Desktop** 應用\n- 前往 **設定**，然後選擇 **開發者**\n- 點擊 **編輯配置**\n- 打開 **claude_desktop_config.json** 檔案\n- 複製並貼上伺服器配置到現有檔案中，然後儲存",
+            "cline": "- 打開安裝了 Cline 擴充功能的 VS Code\n- 點擊側邊欄中的 Cline 圖示\n- 從下拉選單中選擇 **MCP Servers**\n- 在 **Remote Servers** 標籤頁中，輸入伺服器名稱和您的 MCP 伺服器 URL\n- 點擊 **Add Server** 進行連接",
+            "cursor": "- 導航到 **設定**，然後選擇 Cursor 設定\n- 在左側選擇 **MCP**\n- 點擊右上角的 **新增全域 MCP 伺服器**\n- 複製並貼上伺服器配置到現有檔案中，然後儲存",
+            "lobeChat": "- 打開 **LobeChat 桌面版** 應用\n- 前往 **設定** - **預設助理**\n- 然後選擇 **外掛設定** - **自訂外掛**\n- 點擊 **快速匯入 JSON 配置**\n- 複製並貼上伺服器配置到文字框，然後安裝",
+            "openai": "- 打開您的 **OpenAI 應用** 或開發環境\n- 在 **Responses API** 中配置 MCP 工具\n- 在 API 請求的 **tools** 陣列中新增 MCP 區塊\n- 設定 **server_url** 為您的 MCP 伺服器端點\n- 包含認證所需的標頭資訊（API 金鑰、令牌等）\n- 使用 `allowed_tools` 參數限制暴露的工具\n- 設定 `require_approval` 來控制工具執行審批",
+            "vscode": "- 打開 VS Code\n- 打開命令面板（`Ctrl+Shift+P` / `Cmd+Shift+P`）\n- 輸入 **MCP: Add Server** 並選擇它\n- 選擇新增到工作區或使用者設定\n- 複製並貼上伺服器配置"
+          },
+          "title": "在 {{platform}} 中安裝"
+        },
+        "recommended": "推薦",
+        "systemDependencies": "系統依賴",
+        "table": {
+          "description": "描述",
+          "name": "名稱",
+          "required": "必填",
+          "type": "類型"
+        },
+        "title": "安裝方式"
+      },
+      "githubBadge": {
+        "desc": "LobeHub 定期對程式庫和文件進行掃描，以便於：\n\n- 確認 MCP 伺服器正常運行。\n- 擷取伺服器特性，例如工具、資源、提示資訊以及所需參數。\n- 我們的徽章幫助使用者快速評估 MCP 伺服器的安全性、功能特性以及安裝指南。\n\n請將以下程式碼複製到你的 `README.md` 檔案中："
+      },
+      "nav": {
+        "needHelp": "需要幫助？",
+        "reportIssue": "回報問題",
+        "viewSourceCode": "查看原始碼"
+      },
+      "overview": {
+        "title": "概覽"
+      },
+      "related": {
+        "listTitle": "相關 MCP Server",
+        "more": "查看更多",
+        "title": "相關推薦"
+      },
+      "schema": {
+        "mode": {
+          "docs": "文件"
+        },
+        "prompts": {
+          "arguments": "參數配置",
+          "desc": "由使用者選擇觸發的互動式範本",
+          "empty": "暫無提示詞",
+          "instructions": "指令說明",
+          "table": {
+            "description": "描述",
+            "name": "名稱",
+            "required": "必填"
+          },
+          "title": "提示詞列表"
+        },
+        "resources": {
+          "desc": "由用戶端附加和管理的上下文資料",
+          "empty": "暫無資源",
+          "table": {
+            "description": "描述",
+            "mineType": "MIME 類型",
+            "name": "名稱",
+            "uri": "URI"
+          },
+          "title": "資源列表"
+        },
+        "title": "外掛功能",
+        "tools": {
+          "desc": "向大型語言模型（LLM）暴露的功能介面以執行操作",
+          "empty": "暫無工具",
+          "inputSchema": "輸入描述",
+          "instructions": "指令說明",
+          "table": {
+            "description": "描述",
+            "name": "名稱",
+            "required": "必填",
+            "type": "類型"
+          },
+          "title": "工具列表"
+        }
+      },
+      "score": {
+        "claimed": {
+          "desc": "此 MCP Server 已被所有者認領，確保其所有權和管理。",
+          "title": "已被所有者認領"
+        },
+        "deployMoreThanManual": {
+          "desc": "該 MCP Server 提供了除 Manual 外更友善的安裝方式，允許使用者輕鬆部署和使用。",
+          "title": "提供友善的安裝方式"
+        },
+        "deployment": {
+          "desc": "該 MCP Server 提供了至少一種安裝方式，允許使用者部署和使用。",
+          "descWithCount": "該 MCP Server 提供了 {{number}} 種安裝方式，允許使用者部署和使用。",
+          "title": "提供至少一種安裝方式"
+        },
+        "license": {
+          "desc": "該程式庫包含一個 LICENSE 檔案。",
+          "descWithlicense": "該程式庫授權為 {{license}}。",
+          "title": "具有 LICENSE"
+        },
+        "listTitle": "評分明細",
+        "notClaimed": {
+          "desc": "如果您是此 MCP Server 所有者，可透過以下方式認領。",
+          "title": "未被所有者認領"
+        },
+        "prompts": {
+          "desc": "該 MCP Server 提供了提示詞，允許使用者與服務進行互動。",
+          "descWithCount": "該 MCP Server 提供了 {{number}} 個提示詞，允許使用者與服務進行互動。",
+          "title": "包含提示詞"
+        },
+        "readme": {
+          "desc": "該程式庫包含一個 README.md 檔案。",
+          "title": "具有 README"
+        },
+        "resources": {
+          "desc": "該 MCP Server 提供了資源，允許使用者附加和管理上下文資料。",
+          "descWithCount": "該 MCP Server 提供了 {{number}} 個資源，允許使用者附加和管理上下文資料。",
+          "title": "包含資源"
+        },
+        "title": "評分",
+        "tools": {
+          "desc": "服務需提供至少一個工具，允許使用者執行特定操作。",
+          "descWithCount": "該 MCP Server 提供了 {{number}} 個工具功能，允許使用者執行特定操作。",
+          "title": "包含至少一個工具"
+        },
+        "validated": {
+          "desc": "該 MCP Server 已通過安裝驗證，確保其品質和可靠性。",
+          "title": "已通過驗證"
+        }
+      },
+      "scoreLevel": {
+        "a": {
+          "desc": "該 MCP Server 經過嚴格驗證，提供了全面的功能和高品質的使用者體驗。",
+          "fullTitle": "優秀外掛",
+          "title": "優質"
+        },
+        "b": {
+          "desc": "該 MCP Server 提供了良好的功能和使用者體驗，但可能在某些方面需要改進。",
+          "fullTitle": "功能良好",
+          "title": "良好"
+        },
+        "f": {
+          "desc": "該 MCP Server 功能不完整或品質較低，建議使用者謹慎使用。",
+          "fullTitle": "品質欠佳",
+          "title": "欠佳"
+        }
+      },
+      "settings": {
+        "capabilities": {
+          "prompts": "提示詞",
+          "resources": "資源",
+          "title": "外掛能力",
+          "tools": "工具"
+        },
+        "configuration": {
+          "title": "外掛配置"
+        },
+        "connection": {
+          "args": "啟動參數",
+          "command": "啟動命令",
+          "title": "連線資訊",
+          "type": "連線類型",
+          "url": "服務地址"
+        },
+        "saveSettings": "儲存設定",
+        "title": "外掛設定"
+      },
+      "sidebar": {
+        "install": "安裝 MCP Server",
+        "meta": {
+          "homepage": "官方首頁",
+          "installCount": "安裝數",
+          "language": "原始碼語言",
+          "license": "授權證書",
+          "published": "發布時間",
+          "repo": "原始碼倉庫",
+          "stars": "星標數",
+          "title": "詳細資訊",
+          "updated": "最近更新"
+        },
+        "moreServerConfig": "查看詳情",
+        "recommendServers": "相關 MCP",
+        "serverConfig": "安裝配置",
+        "toc": "目錄"
+      },
+      "summary": {
+        "title": "你可以使用該 MCP Server 做什麼？"
+      },
+      "totalScore": {
+        "description": "根據各項指標綜合計算得出的總分",
+        "legend": {
+          "aGrade": "A級 ({{minPercent}}-100%)",
+          "bGrade": "B級 ({{minPercent}}-{{maxPercent}}%)",
+          "fGrade": "F級 (0-{{maxPercent}}%)"
+        },
+        "pointsFormat": "{{score}}/{{total}} 分",
+        "popover": {
+          "completedOptional": "✅ 已完成可選項 ({{count}}項)",
+          "completedRequired": "✅ 已完成必需項 ({{count}}項)",
+          "incompleteOptional": "⏸️ 未完成可選項 ({{count}}項)",
+          "incompleteRequired": "❌ 未完成必需項 ({{count}}項)",
+          "title": "評分詳情"
+        },
+        "ratingFormat": "評級: {{level}}",
+        "scoreInfo": {
+          "items": "項",
+          "points": "分",
+          "requiredItems": "必需項"
+        },
+        "title": "總分"
+      },
+      "versions": {
+        "table": {
+          "isLatest": "最新版本",
+          "isValidated": "通過驗證",
+          "publishAt": "發布時間",
+          "version": "版本"
+        },
+        "title": "版本歷史"
+      }
+    },
+    "hero": {
+      "desc": "開源、可部署的 MCP Servers 平台，幫助 AI 系統輕鬆存取檔案系統、資料庫、API 等關鍵資源，全面擴展你的 AI 能力。",
+      "subTitle": "開源 & 開箱即用",
+      "title": "面向 AI 的開源 MCP 市場"
+    },
+    "sorts": {
+      "createdAt": "最近新增",
+      "installCount": "安裝數",
+      "isFeatured": "推薦外掛",
+      "isValidated": "已驗證外掛",
+      "promptsCount": "提示詞數",
+      "ratingCount": "評分數",
+      "resourcesCount": "資源數",
+      "toolsCount": "工具數",
+      "updatedAt": "最近更新"
+    },
+    "title": "MCP 市場",
+    "unvalidated": {
+      "desc": "此 MCP Server 暫未經過驗證",
+      "title": "未驗證"
+    },
+    "validated": {
+      "desc": "此 MCP Server 經過驗證，確保其品質和可靠性。",
+      "descWithDate": "此 MCP Server 於 {{date}} 經過驗證，確保其品質和可靠性。",
+      "title": "已驗證"
+    }
+  },
   "models": {
+    "abilities": "模型能力",
     "chat": "開始會話",
     "contentLength": "最大上下文長度",
+    "details": {
+      "overview": {
+        "title": "概覽"
+      },
+      "related": {
+        "listTitle": "相關模型",
+        "more": "查看更多",
+        "title": "相關推薦"
+      }
+    },
     "free": "免費",
     "guide": "配置指南",
     "list": "模型列表",
@@ -156,11 +559,30 @@
       "throughput": "吞吐量",
       "throughputTooltip": "流請求每秒傳輸的平均 Token 數"
     },
+    "sorts": {
+      "contextWindowTokens": "上下文長度",
+      "identifier": "模型 ID",
+      "inputPrice": "輸入價格",
+      "outputPrice": "輸出價格",
+      "providerCount": "服務商數量",
+      "releasedAt": "最近發布"
+    },
     "suggestions": "相關模型",
     "supportedProviders": "支持該模型的服務商"
   },
   "plugins": {
     "community": "社區插件",
+    "details": {
+      "settings": {
+        "title": "外掛設定"
+      },
+      "summary": {
+        "title": "你可以使用該外掛做什麼？"
+      },
+      "tools": {
+        "title": "外掛工具"
+      }
+    },
     "install": "安裝插件",
     "installed": "已安裝",
     "list": "插件列表",
@@ -173,36 +595,54 @@
     "more": "更多",
     "official": "官方插件",
     "recentSubmits": "最近更新",
+    "sorts": {
+      "createdAt": "最近發布",
+      "identifier": "外掛 ID",
+      "title": "外掛名稱"
+    },
     "suggestions": "相關推薦"
   },
   "providers": {
     "config": "配置服務商",
+    "details": {
+      "guide": {
+        "title": "接入指南"
+      },
+      "overview": {
+        "title": "概覽"
+      },
+      "related": {
+        "listTitle": "相關服務商",
+        "more": "查看更多",
+        "title": "相關推薦"
+      }
+    },
     "list": "模型服務商列表",
     "modelCount": "{{count}} 個模型",
+    "modelName": "模型名稱",
     "modelSite": "模型文件",
     "more": "更多",
     "officialSite": "官方網站",
     "showAllModels": "顯示所有模型",
+    "sorts": {
+      "default": "預設排序",
+      "identifier": "服務商 ID",
+      "modelCount": "模型數量"
+    },
     "suggestions": "相關服務商",
     "supportedModels": "支持模型"
   },
+  "publishedTime": "發布於",
   "search": {
     "placeholder": "搜索名稱介紹或關鍵詞...",
     "result": "{{count}} 個關於 <highlight>{{keyword}}</highlight> 的搜索結果",
     "searching": "搜索中..."
   },
-  "sort": {
-    "mostLiked": "最多喜愛",
-    "mostUsed": "最多使用",
-    "newest": "從新到舊",
-    "oldest": "從舊到新",
-    "recommended": "推薦"
-  },
   "tab": {
-    "assistants": "助手",
+    "assistant": "助理",
     "home": "首頁",
-    "models": "模型",
-    "plugins": "插件",
-    "providers": "模型服務商"
+    "model": "模型",
+    "plugin": "外掛",
+    "provider": "模型服務商"
   }
 }

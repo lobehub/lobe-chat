@@ -8,11 +8,13 @@ import { aiModelRouter } from './aiModel';
 import { aiProviderRouter } from './aiProvider';
 import { apiKeyRouter } from './apiKey';
 import { chunkRouter } from './chunk';
+import { configRouter } from './config';
 import { documentRouter } from './document';
 import { exporterRouter } from './exporter';
 import { fileRouter } from './file';
 import { importerRouter } from './importer';
 import { knowledgeBaseRouter } from './knowledgeBase';
+import { marketRouter } from './market';
 import { messageRouter } from './message';
 import { pluginRouter } from './plugin';
 import { ragEvalRouter } from './ragEval';
@@ -28,12 +30,14 @@ export const lambdaRouter = router({
   aiProvider: aiProviderRouter,
   apiKey: apiKeyRouter,
   chunk: chunkRouter,
+  config: configRouter,
   document: documentRouter,
   exporter: exporterRouter,
   file: fileRouter,
   healthcheck: publicProcedure.query(() => "i'm live!"),
   importer: importerRouter,
   knowledgeBase: knowledgeBaseRouter,
+  market: marketRouter,
   message: messageRouter,
   plugin: pluginRouter,
   ragEval: ragEvalRouter,
