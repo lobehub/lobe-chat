@@ -37,4 +37,5 @@ export type UsageLog = {
     totalTokens: number;
     totalRequests: number;
     date: number;
+    day: string;
 }
