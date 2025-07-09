@@ -1181,11 +1181,17 @@
   "google/gemini-2.0-flash-exp:free": {
     "description": "Gemini 2.0 Flash Experimental ist Googles neuestes experimentelles multimodales KI-Modell, das im Vergleich zu früheren Versionen eine gewisse Qualitätsverbesserung aufweist, insbesondere in Bezug auf Weltwissen, Code und langen Kontext."
   },
+  "google/gemini-2.5-flash": {
+    "description": "Gemini 2.5 Flash ist Googles fortschrittlichstes Hauptmodell, speziell entwickelt für anspruchsvolle Aufgaben in den Bereichen logisches Denken, Programmierung, Mathematik und Wissenschaft. Es verfügt über eingebaute \"Denkfähigkeiten\", die es ermöglichen, Antworten mit höherer Genauigkeit und detaillierter Kontextverarbeitung zu liefern.\n\nHinweis: Dieses Modell gibt es in zwei Varianten: mit und ohne Denkfähigkeit. Die Preisgestaltung für die Ausgabe variiert erheblich, je nachdem, ob die Denkfähigkeit aktiviert ist. Wenn Sie die Standardvariante (ohne den Suffix \":thinking\") wählen, vermeidet das Modell ausdrücklich die Erzeugung von Denk-Token.\n\nUm die Denkfähigkeit zu nutzen und Denk-Token zu erhalten, müssen Sie die \":thinking\"-Variante wählen, was zu höheren Kosten für die Denk-Ausgabe führt.\n\nDarüber hinaus kann Gemini 2.5 Flash über den Parameter \"Maximale Tokenanzahl für das Denken\" konfiguriert werden, wie in der Dokumentation beschrieben (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
+  },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash ist Googles fortschrittlichstes Hauptmodell, das für fortgeschrittenes Denken, Codierung, Mathematik und wissenschaftliche Aufgaben entwickelt wurde. Es enthält die eingebaute Fähigkeit zu \"denken\", was es ihm ermöglicht, Antworten mit höherer Genauigkeit und detaillierter Kontextverarbeitung zu liefern.\n\nHinweis: Dieses Modell hat zwei Varianten: Denken und Nicht-Denken. Die Ausgabepreise variieren erheblich, je nachdem, ob die Denkfähigkeit aktiviert ist oder nicht. Wenn Sie die Standardvariante (ohne den Suffix \":thinking\") wählen, wird das Modell ausdrücklich vermeiden, Denk-Tokens zu generieren.\n\nUm die Denkfähigkeit zu nutzen und Denk-Tokens zu erhalten, müssen Sie die \":thinking\"-Variante wählen, was zu höheren Preisen für Denk-Ausgaben führt.\n\nDarüber hinaus kann Gemini 2.5 Flash über den Parameter \"maximale Tokenanzahl für das Denken\" konfiguriert werden, wie in der Dokumentation beschrieben (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
   "google/gemini-2.5-flash-preview:thinking": {
     "description": "Gemini 2.5 Flash ist Googles fortschrittlichstes Hauptmodell, das für fortgeschrittenes Denken, Codierung, Mathematik und wissenschaftliche Aufgaben entwickelt wurde. Es enthält die eingebaute Fähigkeit zu \"denken\", was es ihm ermöglicht, Antworten mit höherer Genauigkeit und detaillierter Kontextverarbeitung zu liefern.\n\nHinweis: Dieses Modell hat zwei Varianten: Denken und Nicht-Denken. Die Ausgabepreise variieren erheblich, je nachdem, ob die Denkfähigkeit aktiviert ist oder nicht. Wenn Sie die Standardvariante (ohne den Suffix \":thinking\") wählen, wird das Modell ausdrücklich vermeiden, Denk-Tokens zu generieren.\n\nUm die Denkfähigkeit zu nutzen und Denk-Tokens zu erhalten, müssen Sie die \":thinking\"-Variante wählen, was zu höheren Preisen für Denk-Ausgaben führt.\n\nDarüber hinaus kann Gemini 2.5 Flash über den Parameter \"maximale Tokenanzahl für das Denken\" konfiguriert werden, wie in der Dokumentation beschrieben (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
+  },
+  "google/gemini-2.5-pro": {
+    "description": "Gemini 2.5 Pro ist Googles fortschrittlichstes Denkmodell, das in der Lage ist, komplexe Probleme in den Bereichen Code, Mathematik und MINT-Fächer zu analysieren sowie große Datensätze, Codebasen und Dokumente mit langem Kontext zu untersuchen."
   },
   "google/gemini-2.5-pro-preview": {
     "description": "Gemini 2.5 Pro Preview ist Googles fortschrittlichstes Denkmodell, das in der Lage ist, komplexe Probleme in den Bereichen Code, Mathematik und MINT zu analysieren sowie große Datensätze, Codebasen und Dokumente mit langem Kontext zu untersuchen."
@@ -1838,6 +1844,9 @@
   "moonshot-v1-auto": {
     "description": "Moonshot V1 Auto kann basierend auf der Anzahl der im aktuellen Kontext verwendeten Tokens das geeignete Modell auswählen."
   },
+  "moonshotai/Kimi-Dev-72B": {
+    "description": "Kimi-Dev-72B ist ein Open-Source-Großmodell für Quellcode, das durch umfangreiche Verstärkungslernoptimierung robuste und direkt produktionsreife Patches erzeugen kann. Dieses Modell erreichte auf SWE-bench Verified eine neue Höchstpunktzahl von 60,4 % und stellte damit einen Rekord für Open-Source-Modelle bei automatisierten Software-Engineering-Aufgaben wie Fehlerbehebung und Code-Review auf."
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B ist die aktualisierte Version von Nous Hermes 2 und enthält die neuesten intern entwickelten Datensätze."
   },
@@ -1865,6 +1874,9 @@
   "o3": {
     "description": "o3 ist ein vielseitiges und leistungsstarkes Modell, das in mehreren Bereichen hervorragende Leistungen zeigt. Es setzt neue Maßstäbe für mathematische, wissenschaftliche, programmiertechnische und visuelle Schlussfolgerungsaufgaben. Es ist auch versiert in technischer Schreibweise und der Befolgung von Anweisungen. Benutzer können es nutzen, um Texte, Code und Bilder zu analysieren und komplexe Probleme mit mehreren Schritten zu lösen."
   },
+  "o3-deep-research": {
+    "description": "o3-deep-research ist unser fortschrittlichstes Deep-Research-Modell, das speziell für die Bearbeitung komplexer, mehrstufiger Forschungsaufgaben entwickelt wurde. Es kann Informationen aus dem Internet suchen und zusammenfassen sowie über den MCP-Connector auf Ihre eigenen Daten zugreifen und diese nutzen."
+  },
   "o3-mini": {
     "description": "o3-mini ist unser neuestes kompaktes Inferenzmodell, das bei den gleichen Kosten- und Verzögerungszielen wie o1-mini hohe Intelligenz bietet."
   },
@@ -1873,6 +1885,9 @@
   },
   "o4-mini": {
     "description": "o4-mini ist unser neuestes kompaktes Modell der o-Serie. Es wurde für schnelle und effektive Inferenz optimiert und zeigt in Programmier- und visuellen Aufgaben eine hohe Effizienz und Leistung."
+  },
+  "o4-mini-deep-research": {
+    "description": "o4-mini-deep-research ist unser schnelleres und kostengünstigeres Deep-Research-Modell – ideal für die Bearbeitung komplexer, mehrstufiger Forschungsaufgaben. Es kann Informationen aus dem Internet suchen und zusammenfassen sowie über den MCP-Connector auf Ihre eigenen Daten zugreifen und diese nutzen."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba ist ein auf die Codegenerierung spezialisiertes Mamba 2-Sprachmodell, das starke Unterstützung für fortschrittliche Code- und Schlussfolgerungsaufgaben bietet."
@@ -2270,6 +2285,9 @@
   "taichu_vl": {
     "description": "Integriert Fähigkeiten wie Bildverständnis, Wissensübertragung und logische Attribution und zeigt herausragende Leistungen im Bereich der Bild-Text-Fragen."
   },
+  "tencent/Hunyuan-A13B-Instruct": {
+    "description": "Hunyuan-A13B-Instruct verfügt über 80 Milliarden Parameter, von denen 13 Milliarden aktiviert werden können, um mit größeren Modellen zu konkurrieren. Es unterstützt eine hybride Denkweise aus „schnellem Denken/langsamem Denken“; die Verarbeitung langer Texte ist stabil; durch BFCL-v3 und τ-Bench validiert, übertrifft die Agentenfähigkeit andere Modelle; in Kombination mit GQA und mehreren Quantisierungsformaten ermöglicht es effiziente Inferenz."
+  },
   "text-embedding-3-large": {
     "description": "Das leistungsstärkste Vektormodell, geeignet für englische und nicht-englische Aufgaben."
   },
@@ -2320,6 +2338,15 @@
   },
   "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
     "description": "Claude 3.7 Sonett ist das schnellste nächste Modell von Anthropic. Im Vergleich zu Claude 3 Haiku hat Claude 3.7 Sonett in allen Fähigkeiten Verbesserungen erfahren und übertrifft in vielen intellektuellen Benchmark-Tests das größte Modell der vorherigen Generation, Claude 3 Opus."
+  },
+  "v0-1.0-md": {
+    "description": "Das Modell v0-1.0-md ist ein älteres Modell, das über die v0 API bereitgestellt wird"
+  },
+  "v0-1.5-lg": {
+    "description": "Das Modell v0-1.5-lg eignet sich für anspruchsvolle Denk- oder Schlussfolgerungsaufgaben"
+  },
+  "v0-1.5-md": {
+    "description": "Das Modell v0-1.5-md ist für alltägliche Aufgaben und die Generierung von Benutzeroberflächen (UI) geeignet"
   },
   "whisper-1": {
     "description": "Allgemeines Spracherkennungsmodell, unterstützt mehrsprachige Spracherkennung, Sprachübersetzung und Spracherkennung."

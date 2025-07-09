@@ -16,6 +16,12 @@ vi.mock('next/navigation', () => ({
     replace: vi.fn((href) => href),
   })),
 }));
+vi.mock('nextjs-toploader/app', () => ({
+  useRouter: vi.fn(() => ({
+    push: vi.fn((href) => href),
+    replace: vi.fn((href) => href),
+  })),
+}));
 vi.mock('@/hooks/useQuery', () => ({
   useQuery: vi.fn(() => ({})),
 }));
