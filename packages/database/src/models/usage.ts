@@ -1,9 +1,10 @@
-import { MessageMetadata } from "@/types/message";
 import { NewSpendLog, SpendLogItem, spendLogs } from "../schemas/usage";
 import { LobeChatDatabase } from "../type";
-import { desc, eq } from "drizzle-orm";
+import { eq, gt, lt, and, asc, desc } from "drizzle-orm";
 import { UsageLog } from "@/types/usage";
 import { formatDate } from "@/utils/format";
+import dayjs from "dayjs";
+import { genRangeWhere, genWhere } from "../utils/genWhere";
 
 export class UsageModel {
     private userId: string;
@@ -26,19 +27,36 @@ export class UsageModel {
     getSpendLogs = async () => {
         return await this.db.query.spendLogs.findMany({
             where: eq(spendLogs.userId, this.userId),
-            orderBy: desc(spendLogs.updatedAt),
+            orderBy: asc(spendLogs.updatedAt),
         })
     }
 
-    getUsages = async () => {
+    getUsages = async (mo?: string) => {
+        // 设置 startAt 和 endAt
+        let startAt: string;
+        let endAt: string;
+        if (mo) {
+            // mo 格式: "YYYY-MM"
+            startAt = dayjs(mo, "YYYY-MM").startOf("month").format("YYYY-MM-DD");
+            endAt = dayjs(mo, "YYYY-MM").endOf("month").format("YYYY-MM-DD");
+        } else {
+            startAt = dayjs().startOf("month").format("YYYY-MM-DD");
+            endAt = dayjs().endOf("month").format("YYYY-MM-DD");
+        }
+        console.log('getUsages', 'mo', mo, 'startAt', startAt, 'endAt', endAt);
         const spends = await this.db.query.spendLogs.findMany({
-            where: eq(spendLogs.userId, this.userId),
+            where: and(
+                genWhere([
+                    eq(spendLogs.userId, this.userId),
+                    genRangeWhere([startAt, endAt], spendLogs.createdAt, (date) => date.toDate()),
+                ])
+            ),
             orderBy: desc(spendLogs.updatedAt),
         })
         // Clustering by time
-        let usages = new Map<string, { date: Date, logs: SpendLogItem[]}>()
+        let usages = new Map<string, { date: Date, logs: SpendLogItem[] }>()
         spends.forEach((spend) => {
-            if (!usages.has(formatDate(spend.createdAt))){
+            if (!usages.has(formatDate(spend.createdAt))) {
                 usages.set(formatDate(spend.createdAt), { date: spend.createdAt, logs: [spend] });
                 return;
             }
@@ -56,9 +74,31 @@ export class UsageModel {
                 totalSpend,
                 totalTokens,
                 totalRequests,
-                date: spends.date.getTime() / 1000, // Convert to seconds
+                date: spends.date.getTime(),
+                day: date, // Store the formatted date as a string
             });
         })
-        return usageLogs;
+        // Padding to ensure the date range is complete
+        const startDate = dayjs(startAt);
+        const endDate = dayjs(endAt);
+        const paddedUsageLogs: UsageLog[] = [];
+        // For every day in the range, check if it exists in usageLogs
+        // If exists, use it; if not, create a new log with 0 values
+        for (let date = startDate; date.isBefore(endDate); date = date.add(1, 'day')) {
+            const log = usageLogs.find(log => log.day === date.format('YYYY-MM-DD'));
+            if (log) {
+                paddedUsageLogs.push(log);
+            } else {
+                paddedUsageLogs.push({
+                    requestLogs: [],
+                    totalSpend: 0,
+                    totalTokens: 0,
+                    totalRequests: 0,
+                    date: date.toDate().getTime(),
+                    day: date.format('YYYY-MM-DD'),
+                });
+            }
+        }
+        return paddedUsageLogs;
     }
 }
