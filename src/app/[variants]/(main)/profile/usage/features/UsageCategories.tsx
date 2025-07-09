@@ -1,4 +1,4 @@
-import { BarChart, BarChartProps } from '@lobehub/charts';
+import { BarChartProps } from '@lobehub/charts';
 import { FormGroup, Grid, Tabs } from '@lobehub/ui';
 import { memo } from 'react';
 
@@ -6,7 +6,7 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { UsageLog } from '@/types/usage';
 
 import { UsageChartProps } from '../Client';
-import { Flexbox } from 'react-layout-kit';
+import { UsageBarChart } from './components/UsageBarChart';
 
 const CateByProvider = memo(({ data, isLoading }: { data: UsageLog[]; isLoading: boolean }) => {
   const formatData = (
@@ -55,7 +55,7 @@ const CateByProvider = memo(({ data, isLoading }: { data: UsageLog[]; isLoading:
     <Grid gap={16} rows={1} width={'100%'}>
       {formattedData &&
         formattedData.map((item) => (
-          <BarChart
+          <UsageBarChart
             title={item.provider}
             categories={item.categories}
             data={item.data}
@@ -116,7 +116,7 @@ const CateByModel = memo(({ data, isLoading }: { data: UsageLog[]; isLoading: bo
     <Grid gap={16} rows={1} width={'100%'}>
       {formattedData &&
         formattedData.map((item) => (
-          <BarChart
+          <UsageBarChart
             title={item.model}
             categories={item.categories}
             data={item.data}
