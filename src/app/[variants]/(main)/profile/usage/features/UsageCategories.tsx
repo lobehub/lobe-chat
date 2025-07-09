@@ -52,7 +52,7 @@ const CateByProvider = memo(({ data, isLoading }: { data: UsageLog[]; isLoading:
   const formattedData = formatData(data);
 
   return (
-    <Grid gap={16} rows={1} width={'100%'}>
+    <Grid gap={16} rows={2} width={'100%'}>
       {formattedData &&
         formattedData.map((item) => (
           <UsageBarChart
@@ -113,7 +113,7 @@ const CateByModel = memo(({ data, isLoading }: { data: UsageLog[]; isLoading: bo
   const formattedData = formatData(data);
 
   return (
-    <Grid gap={16} rows={1} width={'100%'}>
+    <Grid gap={16} rows={2} width={'100%'}>
       {formattedData &&
         formattedData.map((item) => (
           <UsageBarChart
