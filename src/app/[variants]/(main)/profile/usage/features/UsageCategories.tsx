@@ -60,6 +60,7 @@ const CateByProvider = memo(({ data, isLoading }: { data: UsageLog[]; isLoading:
             categories={item.categories}
             data={item.data}
             index={'day'}
+            key={item.provider}
             loading={isLoading || !data}
             stack
           />
@@ -120,6 +121,7 @@ const CateByModel = memo(({ data, isLoading }: { data: UsageLog[]; isLoading: bo
             categories={item.categories}
             data={item.data}
             index={'day'}
+            key={item.model}
             loading={isLoading || !data}
             stack
           />
