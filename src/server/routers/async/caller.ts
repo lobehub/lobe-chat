@@ -1,4 +1,4 @@
-import { createTRPCClient, httpBatchLink } from '@trpc/client';
+import { createTRPCClient, httpLink } from '@trpc/client';
 import superjson from 'superjson';
 import urlJoin from 'url-join';
 
@@ -26,7 +26,7 @@ export const createAsyncServerClient = async (userId: string, payload: JWTPayloa
 
   return createTRPCClient<AsyncRouter>({
     links: [
-      httpBatchLink({
+      httpLink({
         headers,
         transformer: superjson,
         url: urlJoin(appEnv.APP_URL!, '/trpc/async'),
