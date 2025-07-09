@@ -32,7 +32,7 @@ describe('AssistantStore', () => {
   it('should return the index URL for a not supported language', () => {
     const agentMarket = new AssistantStore();
     const url = agentMarket['getAgentIndexUrl']('xxx' as any);
-    expect(url).toBe('https://registry.npmmirror.com/@lobehub/agents-index/v1/files/public');
+    expect(url).toBe(baseURL);
   });
 
   it('should return the zh-CN URL for zh locale', () => {
@@ -75,7 +75,7 @@ describe('AssistantStore', () => {
     global.fetch = vi.fn().mockRejectedValue(new Error('fetch failed'));
     const store = new AssistantStore();
     const result = await store.getAgentIndex();
-    expect(result).toEqual({ agents: [], schemaVersion: 1 });
+    expect(result).toEqual([]);
   });
 
   it('should handle fetch error and return empty agents with schema version when error.ok is false', async () => {
@@ -85,7 +85,7 @@ describe('AssistantStore', () => {
     });
     const store = new AssistantStore();
     const result = await store.getAgentIndex();
-    expect(result).toEqual({ agents: [], schemaVersion: 1 });
+    expect(result).toEqual([]);
   });
 
   it('should filter agents by whitelist when EdgeConfig is enabled', async () => {
@@ -114,8 +114,8 @@ describe('AssistantStore', () => {
 
     const result = await store.getAgentIndex();
 
-    expect(result.agents).toHaveLength(1);
-    expect(result.agents[0].identifier).toBe('agent1');
+    expect(result).toHaveLength(1);
+    expect(result[0].identifier).toBe('agent1');
   });
 
   it('should filter agents by blacklist when EdgeConfig is enabled and no whitelist', async () => {
@@ -144,8 +144,8 @@ describe('AssistantStore', () => {
 
     const result = await store.getAgentIndex();
 
-    expect(result.agents).toHaveLength(1);
-    expect(result.agents[0].identifier).toBe('agent1');
+    expect(result).toHaveLength(1);
+    expect(result[0].identifier).toBe('agent1');
   });
 
   it('should fallback to default language if fetch returns 404', async () => {
@@ -176,7 +176,9 @@ describe('AssistantStore', () => {
 
     const store = new AssistantStore();
     const result = await store.getAgentIndex('zh-CN');
-    expect(result).toEqual(mockAgents);
+    expect(result).toEqual([
+      { identifier: 'agent1', meta: {}, author: '', createAt: '', createdAt: '', homepage: '' },
+    ]);
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
