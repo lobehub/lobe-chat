@@ -377,23 +377,85 @@ describe('LobeOpenAI', () => {
 
     it('should throw an error if convertImageUrlToFile fails', async () => {
       // Arrange
-      const error = new Error('conversion failed');
-      // Make sure the spy is mocked to reject with the error
-      convertImageUrlToFileSpy.mockReset();
-      convertImageUrlToFileSpy.mockRejectedValue(error);
-      const imageUrl = 'https://lobehub.com/invalid-image.png';
+      const imageUrl = 'https://example.com/test-image.png';
+
+      // Mock fetch to fail for the image URL, which will cause convertImageUrlToFile to fail
+      vi.mocked(global.fetch).mockRejectedValueOnce(new Error('Network error'));
+
+      // Mock the OpenAI API methods to ensure they don't get called
+      const generateSpy = vi.spyOn(instance['client'].images, 'generate');
+      const editSpy = vi.spyOn(instance['client'].images, 'edit');
+
+      // Act & Assert - Note: imageUrls must be non-empty array to trigger isImageEdit = true
+      await expect(
+        instance.createImage({
+          model: 'gpt-image-1',
+          params: {
+            prompt: 'A cat in a hat',
+            imageUrls: [imageUrl], // This is the key - non-empty array
+          },
+        }),
+      ).rejects.toThrow('Failed to convert image URLs to File objects: Error: Network error');
+
+      // Verify that OpenAI API methods were not called since conversion failed
+      expect(generateSpy).not.toHaveBeenCalled();
+      expect(editSpy).not.toHaveBeenCalled();
+    });
+
+    it('should throw an error when image response is missing data array', async () => {
+      // Arrange
+      const mockInvalidResponse = {}; // missing data property
+      vi.spyOn(instance['client'].images, 'generate').mockResolvedValue(mockInvalidResponse as any);
 
       // Act & Assert
       await expect(
         instance.createImage({
           model: 'gpt-image-1',
-          params: {
-            ...mockParams,
-            prompt: 'A cat in a hat',
-            imageUrls: [imageUrl],
-          },
+          params: { ...mockParams, prompt: 'A cute cat' },
         }),
-      ).rejects.toThrow(); // Just check that an error is thrown
+      ).rejects.toThrow('Invalid image response: missing or empty data array');
+    });
+
+    it('should throw an error when image response data array is empty', async () => {
+      // Arrange
+      const mockInvalidResponse = { data: [] }; // empty data array
+      vi.spyOn(instance['client'].images, 'generate').mockResolvedValue(mockInvalidResponse as any);
+
+      // Act & Assert
+      await expect(
+        instance.createImage({
+          model: 'gpt-image-1',
+          params: { ...mockParams, prompt: 'A cute cat' },
+        }),
+      ).rejects.toThrow('Invalid image response: missing or empty data array');
+    });
+
+    it('should throw an error when first data item is null', async () => {
+      // Arrange
+      const mockInvalidResponse = { data: [null] }; // first item is null
+      vi.spyOn(instance['client'].images, 'generate').mockResolvedValue(mockInvalidResponse as any);
+
+      // Act & Assert
+      await expect(
+        instance.createImage({
+          model: 'gpt-image-1',
+          params: { ...mockParams, prompt: 'A cute cat' },
+        }),
+      ).rejects.toThrow('Invalid image response: first data item is null or undefined');
+    });
+
+    it('should throw an error when first data item is undefined', async () => {
+      // Arrange
+      const mockInvalidResponse = { data: [undefined] }; // first item is undefined
+      vi.spyOn(instance['client'].images, 'generate').mockResolvedValue(mockInvalidResponse as any);
+
+      // Act & Assert
+      await expect(
+        instance.createImage({
+          model: 'gpt-image-1',
+          params: { ...mockParams, prompt: 'A cute cat' },
+        }),
+      ).rejects.toThrow('Invalid image response: first data item is null or undefined');
     });
 
     it('should re-throw OpenAI API errors during image generation', async () => {
