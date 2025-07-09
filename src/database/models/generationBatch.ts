@@ -3,7 +3,7 @@ import { and, eq } from 'drizzle-orm';
 
 import { LobeChatDatabase } from '@/database/type';
 import { FileService } from '@/server/services/file';
-import { Generation, GenerationBatch, GenerationConfig } from '@/types/generation';
+import { Generation, GenerationAsset, GenerationBatch, GenerationConfig } from '@/types/generation';
 
 import {
   GenerationBatchItem,
@@ -148,13 +148,60 @@ export class GenerationBatchModel {
     return result;
   }
 
-  async delete(id: string) {
+  /**
+   * Delete a generation batch and return associated file URLs for cleanup
+   *
+   * This method follows the "database first, files second" deletion principle:
+   * 1. First queries the batch with its generations to collect thumbnail URLs
+   * 2. Then deletes the database record (cascade delete handles related generations)
+   * 3. Returns the deleted batch data and thumbnail URLs for file cleanup
+   *
+   * @param id - The batch ID to delete
+   * @returns Object containing deleted batch data and thumbnail URLs to clean
+   */
+  async delete(
+    id: string,
+  ): Promise<{ deletedBatch: GenerationBatchItem | undefined; thumbnailUrls: string[] }> {
     log('Deleting generation batch: %s for user: %s', id, this.userId);
 
-    await this.db
-      .delete(generationBatches)
-      .where(and(eq(generationBatches.id, id), eq(generationBatches.userId, this.userId)));
+    // 1. First, get generations with their assets to collect thumbnail URLs
+    const batchWithGenerations = await this.db.query.generationBatches.findFirst({
+      where: and(eq(generationBatches.id, id), eq(generationBatches.userId, this.userId)),
+      with: {
+        generations: {
+          columns: {
+            asset: true,
+          },
+        },
+      },
+    });
 
-    log('Generation batch %s deleted successfully', id);
+    // 2. Collect thumbnail URLs that need to be deleted
+    const thumbnailUrls: string[] = [];
+    if (batchWithGenerations?.generations) {
+      for (const gen of batchWithGenerations.generations) {
+        const asset = gen.asset as GenerationAsset;
+        if (asset?.thumbnailUrl) {
+          thumbnailUrls.push(asset.thumbnailUrl);
+        }
+      }
+    }
+
+    // 3. Delete the batch record (this will cascade delete all associated generations)
+    const [deletedBatch] = await this.db
+      .delete(generationBatches)
+      .where(and(eq(generationBatches.id, id), eq(generationBatches.userId, this.userId)))
+      .returning();
+
+    log(
+      'Generation batch %s deleted successfully with %d thumbnails to clean',
+      id,
+      thumbnailUrls.length,
+    );
+
+    return {
+      deletedBatch,
+      thumbnailUrls,
+    };
   }
 }

@@ -58,12 +58,20 @@ export const generationTopicRouter = router({
   deleteTopic: generationTopicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      // Delete the topic from database and get the deleted topic data
-      const deletedTopic = await ctx.generationTopicModel.delete(input.id);
+      // 1. Delete database records and get file URLs to clean
+      const { deletedTopic, filesToDelete } = await ctx.generationTopicModel.delete(input.id);
 
-      // If topic had a cover image, delete it from S3
-      if (deletedTopic && deletedTopic.coverUrl) {
-        await ctx.fileService.deleteFile(deletedTopic.coverUrl);
+      // 2. Clean up all files from S3 (cover image and thumbnails)
+      // Note: Even if file deletion fails, we consider the topic deletion successful
+      // since the database record has been removed and users won't see the topic anymore
+      if (filesToDelete.length > 0) {
+        try {
+          await ctx.fileService.deleteFiles(filesToDelete);
+        } catch (error) {
+          // Log the error but don't throw - file cleanup failure shouldn't affect
+          // the user experience since the database operation succeeded
+          console.error('Failed to delete files from S3:', error);
+        }
       }
 
       return deletedTopic;
