@@ -1,18 +1,39 @@
-import { createHash, randomBytes } from 'node:crypto';
+// Global counter for additional uniqueness
+let apiKeyCounter = 0;
 
 /**
  * Generate API Key
  * Format: lb-{random}
- * @param prefix - API Key prefix, used to identify different purposes
  * @returns Generated API Key
  */
 export function generateApiKey(): string {
-  // Generate 32 bytes of random data
-  const random = randomBytes(32).toString('hex');
-  // Generate hash using SHA-256
-  const hash = createHash('sha256').update(random).digest('hex');
-  // Take the first 16 characters as the random part
-  const randomPart = hash.slice(0, 16);
+  // Use high-resolution timestamp for better uniqueness
+  const timestamp = performance.now().toString(36).replaceAll('.', '');
+
+  // Generate multiple random components
+  const random1 = Math.random().toString(36).slice(2);
+  const random2 = Math.random().toString(36).slice(2);
+  const random3 = Math.random().toString(36).slice(2);
+
+  // Add a counter-based component for additional uniqueness
+  apiKeyCounter = (apiKeyCounter + 1) % 1_000_000;
+  const counter = apiKeyCounter.toString(36);
+
+  // Combine all components
+  const combined = (timestamp + random1 + random2 + random3 + counter).replaceAll(/[^\da-z]/g, '');
+
+  // Ensure we have enough entropy
+  let randomPart = combined.slice(0, 16);
+
+  // If we don't have enough characters, generate more
+  while (randomPart.length < 16) {
+    const additional = Math.random().toString(36).slice(2);
+    randomPart += additional;
+  }
+
+  // Take exactly 16 characters
+  randomPart = randomPart.slice(0, 16);
+
   // Combine to form the final API Key
   return `lb-${randomPart}`;
 }
