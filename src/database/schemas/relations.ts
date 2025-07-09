@@ -122,6 +122,17 @@ export const agentsToSessionsRelations = relations(agentsToSessions, ({ one }) =
   }),
 }));
 
+export const filesToSessionsRelations = relations(filesToSessions, ({ one }) => ({
+  file: one(files, {
+    fields: [filesToSessions.fileId],
+    references: [files.id],
+  }),
+  session: one(sessions, {
+    fields: [filesToSessions.sessionId],
+    references: [sessions.id],
+  }),
+}));
+
 export const agentsKnowledgeBasesRelations = relations(agentsKnowledgeBases, ({ one }) => ({
   knowledgeBase: one(knowledgeBases, {
     fields: [agentsKnowledgeBases.knowledgeBaseId],
@@ -130,6 +141,39 @@ export const agentsKnowledgeBasesRelations = relations(agentsKnowledgeBases, ({ 
   agent: one(agents, {
     fields: [agentsKnowledgeBases.agentId],
     references: [agents.id],
+  }),
+}));
+
+export const agentsFilesRelations = relations(agentsFiles, ({ one }) => ({
+  file: one(files, {
+    fields: [agentsFiles.fileId],
+    references: [files.id],
+  }),
+  agent: one(agents, {
+    fields: [agentsFiles.agentId],
+    references: [agents.id],
+  }),
+}));
+
+export const messagesFilesRelations = relations(messagesFiles, ({ one }) => ({
+  file: one(files, {
+    fields: [messagesFiles.fileId],
+    references: [files.id],
+  }),
+  message: one(messages, {
+    fields: [messagesFiles.messageId],
+    references: [messages.id],
+  }),
+}));
+
+export const fileChunksRelations = relations(fileChunks, ({ one }) => ({
+  file: one(files, {
+    fields: [fileChunks.fileId],
+    references: [files.id],
+  }),
+  chunk: one(chunks, {
+    fields: [fileChunks.chunkId],
+    references: [chunks.id],
   }),
 }));
 
