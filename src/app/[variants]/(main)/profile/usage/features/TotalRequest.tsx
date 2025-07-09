@@ -1,4 +1,4 @@
-import { AreaChart, type AreaChartProps } from '@lobehub/charts';
+import { type BarChartProps } from '@lobehub/charts';
 import { FormGroup } from '@lobehub/ui';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -6,10 +6,11 @@ import { Flexbox } from 'react-layout-kit';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { UsageLog } from '@/types/usage';
 import { UsageChartProps } from '../Client';
+import { UsageBarChart } from './components/UsageBarChart';
 
-const formatData = (data: UsageLog[]): { categories: string[], data: AreaChartProps['data'] } => {
+const formatData = (data: UsageLog[]): { categories: string[], data: BarChartProps['data'] } => {
     if (!data || data.length === 0) return { categories: [], data: [] };
-    let formattedData: AreaChartProps['data'] = [];
+    let formattedData: BarChartProps['data'] = [];
     let cateByProvider: Map<string, number> = data.reduce((acc, log) => {
         if (log.requestLogs) {
             for (const item of log.requestLogs) {
@@ -21,7 +22,6 @@ const formatData = (data: UsageLog[]): { categories: string[], data: AreaChartPr
         return acc;
     }, new Map<string, number>());
     const categories: string[] = Array.from(cateByProvider.keys());
-    categories.push('total');
     formattedData = data.map((log) => {
         const totalObj = {
             day: log.day,
@@ -45,17 +45,6 @@ const formatData = (data: UsageLog[]): { categories: string[], data: AreaChartPr
 const AiRequest = memo<UsageChartProps>(
     ({ isLoading, ...rest }) => {
         const { categories, data } = formatData(rest?.data || [])
-        const barChart = (
-            data &&
-            <AreaChart
-                categories={categories}
-                data={data}
-                index={'day'}
-                loading={isLoading || !data}
-                style={{ maxHeight: 250 }}
-            />
-        );
-
         return (
             <FormGroup
                 style={FORM_STYLE.style}
@@ -63,7 +52,16 @@ const AiRequest = memo<UsageChartProps>(
                 variant={'borderless'}
             >
                 <Flexbox paddingBlock={24}>
-                    {barChart}
+                    {data &&
+                        <UsageBarChart
+                            categories={categories}
+                            data={data}
+                            index={'day'}
+                            loading={isLoading || !data}
+                            style={{ maxHeight: 250 }}
+                            stack
+                            showTooltip={true}
+                        />}
                 </Flexbox>
             </FormGroup>
         );
