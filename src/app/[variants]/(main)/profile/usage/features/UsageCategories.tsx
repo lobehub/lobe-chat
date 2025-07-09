@@ -35,7 +35,7 @@ const CateByProvider = memo(({ data, isLoading }: { data: UsageLog[]; isLoading:
           .reduce((sum, item) => sum + item.spend, 0);
 
         return {
-          date: new Date(log.date * 1000).toLocaleDateString(),
+          day: log.day,
           [provider]: providerSpend,
         };
       });
@@ -56,9 +56,10 @@ const CateByProvider = memo(({ data, isLoading }: { data: UsageLog[]; isLoading:
           <BarChart
             categories={item.categories}
             data={item.data}
-            index={'date'}
-            key={'date'}
+            index={'day'}
+            key={'day'}
             loading={isLoading || !data}
+            stack={true}
           />
         ))}
     </Grid>
@@ -93,7 +94,7 @@ const CateByModel = memo(({ data, isLoading }: { data: UsageLog[]; isLoading: bo
           .reduce((sum, item) => sum + item.spend, 0);
 
         return {
-          date: new Date(log.date * 1000).toLocaleDateString(),
+          day: log.day,
           [model]: modelSpend,
         };
       });
@@ -114,8 +115,8 @@ const CateByModel = memo(({ data, isLoading }: { data: UsageLog[]; isLoading: bo
           <BarChart
             categories={item.categories}
             data={item.data}
-            index={'date'}
-            key={'date'}
+            index={'day'}
+            key={'day'}
             loading={isLoading || !data}
           />
         ))}

@@ -1,8 +1,8 @@
 import { lambdaClient } from "@/libs/trpc/client";
 
 class UsageService {
-    getUsages = async () => {
-        return lambdaClient.usage.getUsages.query();
+    getUsages = async (mo?: string) => {
+        return lambdaClient.usage.getUsages.query({ mo });
     };
 }
 
