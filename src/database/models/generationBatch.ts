@@ -157,11 +157,11 @@ export class GenerationBatchModel {
    * 3. Returns the deleted batch data and thumbnail URLs for file cleanup
    *
    * @param id - The batch ID to delete
-   * @returns Object containing deleted batch data and thumbnail URLs to clean
+   * @returns Object containing deleted batch data and thumbnail URLs to clean, or undefined if batch not found or access denied
    */
   async delete(
     id: string,
-  ): Promise<{ deletedBatch: GenerationBatchItem | undefined; thumbnailUrls: string[] }> {
+  ): Promise<{ deletedBatch: GenerationBatchItem; thumbnailUrls: string[] } | undefined> {
     log('Deleting generation batch: %s for user: %s', id, this.userId);
 
     // 1. First, get generations with their assets to collect thumbnail URLs
@@ -176,9 +176,14 @@ export class GenerationBatchModel {
       },
     });
 
+    // If batch doesn't exist or doesn't belong to user, return undefined
+    if (!batchWithGenerations) {
+      return undefined;
+    }
+
     // 2. Collect thumbnail URLs that need to be deleted
     const thumbnailUrls: string[] = [];
-    if (batchWithGenerations?.generations) {
+    if (batchWithGenerations.generations) {
       for (const gen of batchWithGenerations.generations) {
         const asset = gen.asset as GenerationAsset;
         if (asset?.thumbnailUrl) {
@@ -192,6 +197,11 @@ export class GenerationBatchModel {
       .delete(generationBatches)
       .where(and(eq(generationBatches.id, id), eq(generationBatches.userId, this.userId)))
       .returning();
+
+    // deletedBatch should exist since we found the batch above, but be safe
+    if (!deletedBatch) {
+      return undefined;
+    }
 
     log(
       'Generation batch %s deleted successfully with %d thumbnails to clean',

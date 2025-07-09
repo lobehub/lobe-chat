@@ -27,7 +27,14 @@ export const generationBatchRouter = router({
     .input(z.object({ batchId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       // 1. Delete database records and get thumbnail URLs to clean
-      const { thumbnailUrls } = await ctx.generationBatchModel.delete(input.batchId);
+      const result = await ctx.generationBatchModel.delete(input.batchId);
+
+      // If batch not found, return early
+      if (!result) {
+        return;
+      }
+
+      const { deletedBatch, thumbnailUrls } = result;
 
       // 2. Clean up thumbnail files from S3
       // Note: Even if file deletion fails, we consider the batch deletion successful
@@ -41,6 +48,8 @@ export const generationBatchRouter = router({
           console.error('Failed to delete thumbnail files from S3:', error);
         }
       }
+
+      return deletedBatch;
     }),
 });
 

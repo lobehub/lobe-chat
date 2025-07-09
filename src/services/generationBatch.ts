@@ -1,3 +1,4 @@
+import { GenerationBatchItem } from '@/database/schemas';
 import { lambdaClient } from '@/libs/trpc/client';
 import { Generation, GenerationBatch } from '@/types/generation';
 
@@ -16,7 +17,7 @@ class GenerationBatchService {
   /**
    * Delete a generation batch
    */
-  async deleteGenerationBatch(batchId: string): Promise<void> {
+  async deleteGenerationBatch(batchId: string): Promise<GenerationBatchItem | undefined> {
     return lambdaClient.generationBatch.deleteGenerationBatch.mutate({ batchId });
   }
 }

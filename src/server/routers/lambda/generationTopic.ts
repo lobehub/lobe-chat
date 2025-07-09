@@ -59,7 +59,14 @@ export const generationTopicRouter = router({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       // 1. Delete database records and get file URLs to clean
-      const { deletedTopic, filesToDelete } = await ctx.generationTopicModel.delete(input.id);
+      const result = await ctx.generationTopicModel.delete(input.id);
+
+      // If topic not found, throw an error instead of returning undefined
+      if (!result) {
+        return;
+      }
+
+      const { deletedTopic, filesToDelete } = result;
 
       // 2. Clean up all files from S3 (cover image and thumbnails)
       // Note: Even if file deletion fails, we consider the topic deletion successful

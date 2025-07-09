@@ -49,7 +49,10 @@ export class GenerationTopicModel {
     return newGenerationTopic;
   };
 
-  update = async (id: string, data: Partial<ImageGenerationTopic>) => {
+  update = async (
+    id: string,
+    data: Partial<ImageGenerationTopic>,
+  ): Promise<GenerationTopicItem | undefined> => {
     const [updatedTopic] = await this.db
       .update(generationTopics)
       .set({ ...data, updatedAt: new Date() })
@@ -68,11 +71,11 @@ export class GenerationTopicModel {
    * 3. Returns the deleted topic data and file URLs for cleanup
    *
    * @param id - The topic ID to delete
-   * @returns Object containing deleted topic data and file URLs to clean
+   * @returns Object containing deleted topic data and file URLs to clean, or undefined if topic not found or access denied
    */
   delete = async (
     id: string,
-  ): Promise<{ deletedTopic: GenerationTopicItem | undefined; filesToDelete: string[] }> => {
+  ): Promise<{ deletedTopic: GenerationTopicItem; filesToDelete: string[] } | undefined> => {
     // 1. First, get the topic with all its batches and generations to collect file URLs
     const topicWithBatches = await this.db.query.generationTopics.findFirst({
       where: and(eq(generationTopics.id, id), eq(generationTopics.userId, this.userId)),
@@ -89,16 +92,21 @@ export class GenerationTopicModel {
       },
     });
 
+    // If topic doesn't exist or doesn't belong to user, return undefined
+    if (!topicWithBatches) {
+      return undefined;
+    }
+
     // 2. Collect all file URLs that need to be deleted
     const filesToDelete: string[] = [];
 
     // Add cover image URL if exists
-    if (topicWithBatches?.coverUrl) {
+    if (topicWithBatches.coverUrl) {
       filesToDelete.push(topicWithBatches.coverUrl);
     }
 
     // Add thumbnail URLs from all generations
-    if (topicWithBatches?.batches) {
+    if (topicWithBatches.batches) {
       for (const batch of topicWithBatches.batches) {
         for (const gen of batch.generations) {
           const asset = gen.asset as GenerationAsset;
@@ -114,6 +122,11 @@ export class GenerationTopicModel {
       .delete(generationTopics)
       .where(and(eq(generationTopics.id, id), eq(generationTopics.userId, this.userId)))
       .returning();
+
+    // deletedTopic should exist since we found the topic above, but be safe
+    if (!deletedTopic) {
+      return undefined;
+    }
 
     return {
       deletedTopic,

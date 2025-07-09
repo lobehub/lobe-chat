@@ -407,21 +407,104 @@ describe('GenerationBatchModel', () => {
   });
 
   describe('delete', () => {
-    it('should delete a generation batch', async () => {
+    it('should delete a generation batch and return batch data with thumbnail URLs', async () => {
       const [createdBatch] = await serverDB
         .insert(generationBatches)
         .values({ ...testBatch, userId })
         .returning();
 
-      await generationBatchModel.delete(createdBatch.id);
+      // Create generation with thumbnail URL
+      await serverDB.insert(generations).values({
+        ...testGeneration,
+        generationBatchId: createdBatch.id,
+        asset: {
+          type: 'image',
+          url: 'asset-url.jpg',
+          thumbnailUrl: 'thumbnail-url.jpg',
+          width: 1024,
+          height: 1024,
+        },
+      });
 
+      const result = await generationBatchModel.delete(createdBatch.id);
+
+      // Verify return value structure
+      expect(result).toBeDefined();
+      expect(result!.deletedBatch).toMatchObject({
+        id: createdBatch.id,
+        ...testBatch,
+        userId,
+      });
+      expect(result!.thumbnailUrls).toEqual(['thumbnail-url.jpg']);
+
+      // Verify batch was actually deleted from database
       const deletedBatch = await serverDB.query.generationBatches.findFirst({
         where: eq(generationBatches.id, createdBatch.id),
       });
       expect(deletedBatch).toBeUndefined();
     });
 
-    it('should NOT delete batches from other users', async () => {
+    it('should collect multiple thumbnail URLs from multiple generations', async () => {
+      const [createdBatch] = await serverDB
+        .insert(generationBatches)
+        .values({ ...testBatch, userId })
+        .returning();
+
+      // Create multiple generations with different thumbnail URLs
+      await serverDB.insert(generations).values([
+        {
+          ...testGeneration,
+          id: 'gen1',
+          generationBatchId: createdBatch.id,
+          asset: {
+            type: 'image',
+            url: 'asset1.jpg',
+            thumbnailUrl: 'thumbnail1.jpg',
+            width: 1024,
+            height: 1024,
+          },
+        },
+        {
+          ...testGeneration,
+          id: 'gen2',
+          generationBatchId: createdBatch.id,
+          asset: {
+            type: 'image',
+            url: 'asset2.jpg',
+            thumbnailUrl: 'thumbnail2.jpg',
+            width: 1024,
+            height: 1024,
+          },
+        },
+      ]);
+
+      const result = await generationBatchModel.delete(createdBatch.id);
+
+      expect(result).toBeDefined();
+      expect(result!.thumbnailUrls).toHaveLength(2);
+      expect(result!.thumbnailUrls).toContain('thumbnail1.jpg');
+      expect(result!.thumbnailUrls).toContain('thumbnail2.jpg');
+    });
+
+    it('should return empty thumbnail URLs when no generations have thumbnails', async () => {
+      const [createdBatch] = await serverDB
+        .insert(generationBatches)
+        .values({ ...testBatch, userId })
+        .returning();
+
+      const result = await generationBatchModel.delete(createdBatch.id);
+
+      expect(result).toBeDefined();
+      expect(result!.deletedBatch.id).toBe(createdBatch.id);
+      expect(result!.thumbnailUrls).toEqual([]);
+    });
+
+    it('should return undefined when trying to delete non-existent batch', async () => {
+      const result = await generationBatchModel.delete('non-existent-id');
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined when trying to delete batch from other user', async () => {
       // Create batch for other user
       const [otherUserBatch] = await serverDB
         .insert(generationBatches)
@@ -429,7 +512,8 @@ describe('GenerationBatchModel', () => {
         .returning();
 
       // Try to delete using current user's model
-      await generationBatchModel.delete(otherUserBatch.id);
+      const result = await generationBatchModel.delete(otherUserBatch.id);
+      expect(result).toBeUndefined();
 
       // Verify batch still exists
       const stillExists = await serverDB.query.generationBatches.findFirst({

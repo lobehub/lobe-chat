@@ -172,8 +172,12 @@ describe('generationTopicRouter', () => {
       updatedAt: new Date(),
     };
 
-    const mockDelete = vi.fn().mockResolvedValue(mockDeletedTopic);
-    const mockDeleteFile = vi.fn();
+    // 修复 Mock 返回结构以匹配新的实现
+    const mockDelete = vi.fn().mockResolvedValue({
+      deletedTopic: mockDeletedTopic,
+      filesToDelete: [], // 没有封面时，文件列表为空
+    });
+    const mockDeleteFiles = vi.fn();
 
     vi.mocked(GenerationTopicModel).mockImplementation(
       () =>
@@ -185,7 +189,7 @@ describe('generationTopicRouter', () => {
     vi.mocked(FileService).mockImplementation(
       () =>
         ({
-          deleteFile: mockDeleteFile,
+          deleteFiles: mockDeleteFiles,
         }) as any,
     );
 
@@ -194,7 +198,7 @@ describe('generationTopicRouter', () => {
 
     expect(result).toEqual(mockDeletedTopic);
     expect(mockDelete).toHaveBeenCalledWith(mockTopicId);
-    expect(mockDeleteFile).not.toHaveBeenCalled();
+    expect(mockDeleteFiles).not.toHaveBeenCalled(); // 没有文件要删除
   });
 
   it('should delete a topic with cover and remove the cover file', async () => {
@@ -210,8 +214,12 @@ describe('generationTopicRouter', () => {
       updatedAt: new Date(),
     };
 
-    const mockDelete = vi.fn().mockResolvedValue(mockDeletedTopic);
-    const mockDeleteFile = vi.fn().mockResolvedValue(true);
+    // 修复 Mock 返回结构以匹配新的实现
+    const mockDelete = vi.fn().mockResolvedValue({
+      deletedTopic: mockDeletedTopic,
+      filesToDelete: [mockCoverUrl], // 包含需要删除的封面文件
+    });
+    const mockDeleteFiles = vi.fn().mockResolvedValue(true);
 
     vi.mocked(GenerationTopicModel).mockImplementation(
       () =>
@@ -223,7 +231,7 @@ describe('generationTopicRouter', () => {
     vi.mocked(FileService).mockImplementation(
       () =>
         ({
-          deleteFile: mockDeleteFile,
+          deleteFiles: mockDeleteFiles,
         }) as any,
     );
 
@@ -232,7 +240,179 @@ describe('generationTopicRouter', () => {
 
     expect(result).toEqual(mockDeletedTopic);
     expect(mockDelete).toHaveBeenCalledWith(mockTopicId);
-    expect(mockDeleteFile).toHaveBeenCalledWith(mockCoverUrl);
+    expect(mockDeleteFiles).toHaveBeenCalledWith([mockCoverUrl]); // 验证文件删除调用
+  });
+
+  it('should still return deleted topic when file deletion fails', async () => {
+    const mockTopicId = 'topic-123';
+    const mockCoverUrl = 'generations/covers/cover-key.webp';
+    const mockDeletedTopic = {
+      id: mockTopicId,
+      title: 'Deleted Topic',
+      userId: 'test-user',
+      coverUrl: mockCoverUrl,
+      accessedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const mockDelete = vi.fn().mockResolvedValue({
+      deletedTopic: mockDeletedTopic,
+      filesToDelete: [mockCoverUrl],
+    });
+
+    // Mock file deletion to fail
+    const mockDeleteFiles = vi.fn().mockRejectedValue(new Error('S3 deletion failed'));
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    vi.mocked(GenerationTopicModel).mockImplementation(
+      () =>
+        ({
+          delete: mockDelete,
+        }) as any,
+    );
+
+    vi.mocked(FileService).mockImplementation(
+      () =>
+        ({
+          deleteFiles: mockDeleteFiles,
+        }) as any,
+    );
+
+    const caller = generationTopicRouter.createCaller(mockCtx);
+    const result = await caller.deleteTopic({ id: mockTopicId });
+
+    // Database deletion should succeed even if file deletion fails
+    expect(result).toEqual(mockDeletedTopic);
+    expect(mockDelete).toHaveBeenCalledWith(mockTopicId);
+    expect(mockDeleteFiles).toHaveBeenCalledWith([mockCoverUrl]);
+    expect(consoleSpy).toHaveBeenCalledWith('Failed to delete files from S3:', expect.any(Error));
+
+    consoleSpy.mockRestore();
+  });
+
+  it('should handle topic with multiple files (cover + thumbnails)', async () => {
+    const mockTopicId = 'topic-123';
+    const mockCoverUrl = 'generations/covers/cover-key.webp';
+    const mockThumbnailUrls = ['thumb1.jpg', 'thumb2.jpg', 'thumb3.jpg'];
+    const mockDeletedTopic = {
+      id: mockTopicId,
+      title: 'Deleted Topic with Multiple Files',
+      userId: 'test-user',
+      coverUrl: mockCoverUrl,
+      accessedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const mockDelete = vi.fn().mockResolvedValue({
+      deletedTopic: mockDeletedTopic,
+      filesToDelete: [mockCoverUrl, ...mockThumbnailUrls], // 包含封面和缩略图
+    });
+    const mockDeleteFiles = vi.fn().mockResolvedValue(true);
+
+    vi.mocked(GenerationTopicModel).mockImplementation(
+      () =>
+        ({
+          delete: mockDelete,
+        }) as any,
+    );
+
+    vi.mocked(FileService).mockImplementation(
+      () =>
+        ({
+          deleteFiles: mockDeleteFiles,
+        }) as any,
+    );
+
+    const caller = generationTopicRouter.createCaller(mockCtx);
+    const result = await caller.deleteTopic({ id: mockTopicId });
+
+    expect(result).toEqual(mockDeletedTopic);
+    expect(mockDelete).toHaveBeenCalledWith(mockTopicId);
+    expect(mockDeleteFiles).toHaveBeenCalledWith([mockCoverUrl, ...mockThumbnailUrls]);
+  });
+
+  it('should handle partial file deletion failure gracefully', async () => {
+    const mockTopicId = 'topic-123';
+    const mockCoverUrl = 'generations/covers/cover-key.webp';
+    const mockThumbnailUrls = ['thumb1.jpg', 'thumb2.jpg'];
+    const mockDeletedTopic = {
+      id: mockTopicId,
+      title: 'Deleted Topic',
+      userId: 'test-user',
+      coverUrl: mockCoverUrl,
+      accessedAt: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const mockDelete = vi.fn().mockResolvedValue({
+      deletedTopic: mockDeletedTopic,
+      filesToDelete: [mockCoverUrl, ...mockThumbnailUrls],
+    });
+
+    // Mock partial failure - some files deleted, others failed
+    const mockDeleteFiles = vi
+      .fn()
+      .mockRejectedValue(new Error('Some files could not be deleted from S3'));
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    vi.mocked(GenerationTopicModel).mockImplementation(
+      () =>
+        ({
+          delete: mockDelete,
+        }) as any,
+    );
+
+    vi.mocked(FileService).mockImplementation(
+      () =>
+        ({
+          deleteFiles: mockDeleteFiles,
+        }) as any,
+    );
+
+    const caller = generationTopicRouter.createCaller(mockCtx);
+    const result = await caller.deleteTopic({ id: mockTopicId });
+
+    // Even with partial file deletion failure, topic deletion should succeed
+    expect(result).toEqual(mockDeletedTopic);
+    expect(mockDelete).toHaveBeenCalledWith(mockTopicId);
+    expect(mockDeleteFiles).toHaveBeenCalledWith([mockCoverUrl, ...mockThumbnailUrls]);
+    expect(consoleSpy).toHaveBeenCalledWith('Failed to delete files from S3:', expect.any(Error));
+
+    consoleSpy.mockRestore();
+  });
+
+  it('should return undefined when deleting non-existent topic', async () => {
+    const mockTopicId = 'non-existent-topic';
+
+    // Mock delete method to return undefined for non-existent topic
+    const mockDelete = vi.fn().mockResolvedValue(undefined);
+    const mockDeleteFiles = vi.fn();
+
+    vi.mocked(GenerationTopicModel).mockImplementation(
+      () =>
+        ({
+          delete: mockDelete,
+        }) as any,
+    );
+
+    vi.mocked(FileService).mockImplementation(
+      () =>
+        ({
+          deleteFiles: mockDeleteFiles,
+        }) as any,
+    );
+
+    const caller = generationTopicRouter.createCaller(mockCtx);
+
+    // Expect the function to return undefined for non-existent topic
+    const result = await caller.deleteTopic({ id: mockTopicId });
+    expect(result).toBeUndefined();
+
+    expect(mockDelete).toHaveBeenCalledWith(mockTopicId);
+    expect(mockDeleteFiles).not.toHaveBeenCalled(); // 没有文件要删除
   });
 
   it('should handle edge cases for update with partial data', async () => {
@@ -299,6 +479,30 @@ describe('generationTopicRouter', () => {
     });
 
     expect(result).toEqual(mockUpdatedTopic);
+    expect(mockUpdate).toHaveBeenCalledWith(mockTopicId, mockUpdateValue);
+  });
+
+  it('should return undefined when updating non-existent topic', async () => {
+    const mockTopicId = 'non-existent-topic';
+    const mockUpdateValue = {
+      title: 'New Title',
+    };
+
+    const mockUpdate = vi.fn().mockResolvedValue(undefined);
+    vi.mocked(GenerationTopicModel).mockImplementation(
+      () =>
+        ({
+          update: mockUpdate,
+        }) as any,
+    );
+
+    const caller = generationTopicRouter.createCaller(mockCtx);
+    const result = await caller.updateTopic({
+      id: mockTopicId,
+      value: mockUpdateValue,
+    });
+
+    expect(result).toBeUndefined();
     expect(mockUpdate).toHaveBeenCalledWith(mockTopicId, mockUpdateValue);
   });
 });

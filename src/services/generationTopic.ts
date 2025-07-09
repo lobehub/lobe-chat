@@ -1,3 +1,4 @@
+import { GenerationTopicItem } from '@/database/schemas';
 import { lambdaClient } from '@/libs/trpc/client';
 import { UpdateTopicValue } from '@/server/routers/lambda/generationTopic';
 import { ImageGenerationTopic } from '@/types/generation';
@@ -11,15 +12,15 @@ export class ServerService {
     return lambdaClient.generationTopic.createTopic.mutate(undefined);
   }
 
-  async updateTopic(id: string, data: UpdateTopicValue): Promise<ImageGenerationTopic> {
+  async updateTopic(id: string, data: UpdateTopicValue): Promise<GenerationTopicItem | undefined> {
     return lambdaClient.generationTopic.updateTopic.mutate({ id, value: data });
   }
 
-  async updateTopicCover(id: string, coverUrl: string): Promise<ImageGenerationTopic> {
+  async updateTopicCover(id: string, coverUrl: string): Promise<GenerationTopicItem | undefined> {
     return lambdaClient.generationTopic.updateTopicCover.mutate({ id, coverUrl });
   }
 
-  async deleteTopic(id: string): Promise<ImageGenerationTopic> {
+  async deleteTopic(id: string): Promise<GenerationTopicItem | undefined> {
     return lambdaClient.generationTopic.deleteTopic.mutate({ id });
   }
 }

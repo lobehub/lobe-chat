@@ -7,6 +7,7 @@ import { FileService } from '@/server/services/file';
 import { ImageGenerationTopic } from '@/types/generation';
 
 import { generationTopics, users } from '../../schemas';
+import { GenerationTopicItem } from '../../schemas/generation';
 import { GenerationTopicModel } from '../generationTopic';
 import { getTestDB } from './_util';
 
@@ -155,10 +156,11 @@ describe('GenerationTopicModel', () => {
 
       const result = await generationTopicModel.update(id, updateData);
 
-      expect(result.id).toBe(id);
-      expect(result.title).toBe('Updated Title');
-      expect(result.coverUrl).toBe('new-cover-key');
-      expect(result.updatedAt).toBeInstanceOf(Date);
+      expect(result).toBeDefined();
+      expect(result!.id).toBe(id);
+      expect(result!.title).toBe('Updated Title');
+      expect(result!.coverUrl).toBe('new-cover-key');
+      expect(result!.updatedAt).toBeInstanceOf(Date);
 
       // Verify in database
       const updatedTopic = await serverDB.query.generationTopics.findFirst({
@@ -197,8 +199,9 @@ describe('GenerationTopicModel', () => {
       // Update only title
       const result = await generationTopicModel.update(id, { title: 'Only Title Updated' });
 
-      expect(result.title).toBe('Only Title Updated');
-      expect(result.coverUrl).toBeNull(); // Should remain unchanged
+      expect(result).toBeDefined();
+      expect(result!.title).toBe('Only Title Updated');
+      expect(result!.coverUrl).toBeNull(); // Should remain unchanged
     });
   });
 
@@ -208,8 +211,11 @@ describe('GenerationTopicModel', () => {
 
       const result = await generationTopicModel.delete(id);
 
-      expect(result.id).toBe(id);
-      expect(result.title).toBe('Topic to Delete');
+      expect(result).toBeDefined();
+      const deleteResult = result!;
+      expect(deleteResult.deletedTopic.id).toBe(id);
+      expect(deleteResult.deletedTopic.title).toBe('Topic to Delete');
+      expect(deleteResult.filesToDelete).toEqual([]);
 
       // Verify it's deleted from database
       const deletedTopic = await serverDB.query.generationTopics.findFirst({
@@ -250,12 +256,15 @@ describe('GenerationTopicModel', () => {
 
       const result = await generationTopicModel.delete(id);
 
-      expect(result).toMatchObject({
+      expect(result).toBeDefined();
+      const deleteResult = result!;
+      expect(deleteResult.deletedTopic).toMatchObject({
         id,
         title: 'Updated Topic',
         coverUrl: 'cover-key',
         userId,
       });
+      expect(deleteResult.filesToDelete).toContain('cover-key');
     });
   });
 
@@ -296,7 +305,8 @@ describe('GenerationTopicModel', () => {
 
       const result = await generationTopicModel.update(id, { coverUrl: null });
 
-      expect(result.coverUrl).toBeNull();
+      expect(result).toBeDefined();
+      expect(result!.coverUrl).toBeNull();
     });
 
     it('should handle non-existent topic operations gracefully', async () => {
