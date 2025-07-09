@@ -4,10 +4,8 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { formatDate } from '@/utils/format';
 import { UsageLog } from '@/types/usage';
 import { UsageChartProps } from '../Client';
-
 
 const formatData = (data: UsageLog[]): { categories: string[], data: AreaChartProps['data'] } => {
     if (!data || data.length === 0) return { categories: [], data: [] };
@@ -26,7 +24,7 @@ const formatData = (data: UsageLog[]): { categories: string[], data: AreaChartPr
     categories.push('total');
     formattedData = data.map((log) => {
         const totalObj = {
-            date: formatDate(new Date(log.date * 1000)),
+            day: log.day,
             total: log.totalTokens,
         }
         let todayCateProvider = new Map<string, number>(cateByProvider);
@@ -52,8 +50,9 @@ const AiRequest = memo<UsageChartProps>(
             <AreaChart
                 categories={categories}
                 data={data}
-                index={'date'}
+                index={'day'}
                 loading={isLoading || !data}
+                style={{ maxHeight: 250 }}
             />
         );
 

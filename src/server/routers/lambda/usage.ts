@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { UsageModel } from '@/database/models/usage';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { serverDatabase } from '@/libs/trpc/lambda/middleware';
@@ -16,7 +17,9 @@ export const usageRouter = router({
         return await ctx.usageModel.getSpendLogs();
     }),
 
-    getUsages: usageProcedure.query(async ({ ctx }) => {
-        return await ctx.usageModel.getUsages();
+    getUsages: usageProcedure.input(z.object({
+        mo: z.string().optional(),
+    })).query(async ({ ctx, input }) => {
+        return await ctx.usageModel.getUsages(input.mo);
     }),
 })
