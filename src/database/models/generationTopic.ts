@@ -123,11 +123,6 @@ export class GenerationTopicModel {
       .where(and(eq(generationTopics.id, id), eq(generationTopics.userId, this.userId)))
       .returning();
 
-    // deletedTopic should exist since we found the topic above, but be safe
-    if (!deletedTopic) {
-      return undefined;
-    }
-
     return {
       deletedTopic,
       filesToDelete,

@@ -198,11 +198,6 @@ export class GenerationBatchModel {
       .where(and(eq(generationBatches.id, id), eq(generationBatches.userId, this.userId)))
       .returning();
 
-    // deletedBatch should exist since we found the batch above, but be safe
-    if (!deletedBatch) {
-      return undefined;
-    }
-
     log(
       'Generation batch %s deleted successfully with %d thumbnails to clean',
       id,

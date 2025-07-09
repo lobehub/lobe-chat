@@ -6,7 +6,7 @@ import { LobeChatDatabase } from '@/database/type';
 import { FileService } from '@/server/services/file';
 import { ImageGenerationTopic } from '@/types/generation';
 
-import { generationTopics, users } from '../../schemas';
+import { generationBatches, generationTopics, generations, users } from '../../schemas';
 import { GenerationTopicItem } from '../../schemas/generation';
 import { GenerationTopicModel } from '../generationTopic';
 import { getTestDB } from './_util';
@@ -266,6 +266,97 @@ describe('GenerationTopicModel', () => {
       });
       expect(deleteResult.filesToDelete).toContain('cover-key');
     });
+
+    it('should return undefined when trying to delete non-existent topic', async () => {
+      const nonExistentId = 'non-existent-topic-id';
+
+      const result = await generationTopicModel.delete(nonExistentId);
+
+      // Should return undefined because topic doesn't exist
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined when trying to delete topic with invalid format id', async () => {
+      const invalidId = 'invalid-format-id';
+
+      const result = await generationTopicModel.delete(invalidId);
+
+      // Should return undefined because topic doesn't exist with this invalid ID
+      expect(result).toBeUndefined();
+    });
+
+    it('should collect file URLs from batches and generations when deleting topic with data', async () => {
+      // Create a topic with cover image
+      const { id: topicId } = await generationTopicModel.create(
+        'Topic with batches and generations',
+      );
+      await generationTopicModel.update(topicId, { coverUrl: 'topic-cover.jpg' });
+
+      // Create a generation batch associated with this topic
+      const [batch] = await serverDB
+        .insert(generationBatches)
+        .values({
+          userId,
+          generationTopicId: topicId,
+          provider: 'test-provider',
+          model: 'test-model',
+          prompt: 'Test generation prompt',
+          width: 1024,
+          height: 1024,
+        })
+        .returning();
+
+      // Create generations with asset data containing thumbnail URLs
+      await serverDB.insert(generations).values([
+        {
+          userId,
+          generationBatchId: batch.id,
+          asyncTaskId: null,
+          fileId: null,
+          seed: 12345,
+          asset: {
+            type: 'image',
+            thumbnailUrl: 'thumbnail1.jpg',
+            originalUrl: 'original1.jpg',
+            width: 1024,
+            height: 1024,
+          },
+        },
+        {
+          userId,
+          generationBatchId: batch.id,
+          asyncTaskId: null,
+          fileId: null,
+          seed: 12346,
+          asset: {
+            type: 'image',
+            thumbnailUrl: 'thumbnail2.jpg',
+            originalUrl: 'original2.jpg',
+            width: 1024,
+            height: 1024,
+          },
+        },
+      ]);
+
+      // Now delete the topic - this should collect all file URLs from cover + generations
+      const result = await generationTopicModel.delete(topicId);
+
+      expect(result).toBeDefined();
+      const deleteResult = result!;
+      expect(deleteResult.deletedTopic.id).toBe(topicId);
+
+      // Should collect cover URL and thumbnail URLs from generations (lines 111-117)
+      expect(deleteResult.filesToDelete).toContain('topic-cover.jpg');
+      expect(deleteResult.filesToDelete).toContain('thumbnail1.jpg');
+      expect(deleteResult.filesToDelete).toContain('thumbnail2.jpg');
+      expect(deleteResult.filesToDelete).toHaveLength(3);
+
+      // Verify topic is actually deleted from database
+      const deletedTopic = await serverDB.query.generationTopics.findFirst({
+        where: eq(generationTopics.id, topicId),
+      });
+      expect(deletedTopic).toBeUndefined();
+    });
   });
 
   describe('user isolation', () => {
@@ -309,15 +400,12 @@ describe('GenerationTopicModel', () => {
       expect(result!.coverUrl).toBeNull();
     });
 
-    it('should handle non-existent topic operations gracefully', async () => {
+    it('should return undefined when updating non-existent topic', async () => {
       const nonExistentId = 'non-existent-topic';
 
-      // These operations should return undefined for non-existent topics
       const updateResult = await generationTopicModel.update(nonExistentId, { title: 'New Title' });
-      const deleteResult = await generationTopicModel.delete(nonExistentId);
 
       expect(updateResult).toBeUndefined();
-      expect(deleteResult).toBeUndefined();
     });
   });
 });
