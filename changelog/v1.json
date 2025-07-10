@@ -1,5 +1,45 @@
 [
   {
+    "children": {
+      "improvements": ["Integrate Amazon Cognito for user authentication."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.9"
+  },
+  {
+    "children": {},
+    "date": "2025-07-10",
+    "version": "1.97.8"
+  },
+  {
+    "children": {
+      "improvements": ["Add google search grounding for Vertex AI."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.7"
+  },
+  {
+    "children": {
+      "improvements": ["Replace utility-types with type-fest."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.6"
+  },
+  {
+    "children": {
+      "improvements": ["Fix: solve the loading was strange spin when switch show."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.5"
+  },
+  {
+    "children": {
+      "improvements": ["Add grok-4-0709 model from xAI, fix theme issue in desktop."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.4"
+  },
+  {
     "children": {},
     "date": "2025-07-10",
     "version": "1.97.3"
