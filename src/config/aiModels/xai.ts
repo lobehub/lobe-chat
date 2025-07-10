@@ -7,6 +7,7 @@ const xaiChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
       search: true,
+      vision: true,
     },
     contextWindowTokens: 256_000,
     description:
