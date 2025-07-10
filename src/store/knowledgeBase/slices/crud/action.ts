@@ -58,8 +58,14 @@ export const createCrudSlice: StateCreator<
   },
 
   useFetchKnowledgeBaseItem: (id) =>
-    useClientDataSWR<KnowledgeBaseItem | undefined>([FETCH_KNOWLEDGE_BASE_ITEM_KEY, id], () =>
-      knowledgeBaseService.getKnowledgeBaseById(id),
+    useClientDataSWR<KnowledgeBaseItem | undefined>(
+      [FETCH_KNOWLEDGE_BASE_ITEM_KEY, id],
+      () => knowledgeBaseService.getKnowledgeBaseById(id),
+      {
+        onSuccess: (item) => {
+          set({ activeKnowledgeBaseId: id, activeKnowledgeBaseItem: item });
+        },
+      },
     ),
 
   useFetchKnowledgeBaseList: (params = {}) =>
