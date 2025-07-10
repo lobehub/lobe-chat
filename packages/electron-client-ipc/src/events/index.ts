@@ -1,3 +1,4 @@
+import { ClaudeCodeBroadcastEvents, ClaudeCodeDispatchEvents } from './claudeCode';
 import { LocalFilesDispatchEvents } from './localFile';
 import { MenuDispatchEvents } from './menu';
 import { RemoteServerBroadcastEvents, RemoteServerDispatchEvents } from './remoteServer';
@@ -21,7 +22,8 @@ export interface ClientDispatchEvents
     ShortcutDispatchEvents,
     RemoteServerDispatchEvents,
     UploadFilesDispatchEvents,
-    TrayDispatchEvents {}
+    TrayDispatchEvents,
+    ClaudeCodeDispatchEvents {}
 
 export type ClientDispatchEventKey = keyof ClientDispatchEvents;
 
@@ -36,7 +38,8 @@ export type ClientEventReturnType<T extends ClientDispatchEventKey> = ReturnType
 export interface MainBroadcastEvents
   extends AutoUpdateBroadcastEvents,
     RemoteServerBroadcastEvents,
-    SystemBroadcastEvents {}
+    SystemBroadcastEvents,
+    ClaudeCodeBroadcastEvents {}
 
 export type MainBroadcastEventKey = keyof MainBroadcastEvents;
 

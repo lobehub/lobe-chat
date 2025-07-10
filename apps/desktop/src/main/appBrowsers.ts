@@ -13,7 +13,7 @@ export const appBrowsers = {
     identifier: 'chat',
     keepAlive: true,
     minWidth: 400,
-    path: '/chat',
+    path: '/claude-code',
     showOnInit: true,
     titleBarStyle: 'hidden',
     vibrancy: 'under-window',

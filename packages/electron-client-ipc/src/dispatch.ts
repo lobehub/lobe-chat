@@ -11,7 +11,7 @@ declare global {
 }
 
 /**
- * client 端请求 sketch 端 event 数据的方法
+ * client 端请求 main 端 event 数据的方法
  */
 export const dispatch: DispatchInvoke = async (event, ...data) => {
   if (!window.electronAPI || !window.electronAPI.invoke)

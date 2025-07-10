@@ -1,25 +1,24 @@
-import { ActionIcon, ActionIconProps } from '@lobehub/ui';
-import { Compass, FolderClosed, MessageSquare } from 'lucide-react';
+'use client';
+
+import { ActionIcon } from '@lobehub/ui';
+import { Code2, Compass, FolderClosed, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { isDesktop } from '@/const/version';
 import { useGlobalStore } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
-const ICON_SIZE: ActionIconProps['size'] = {
-  blockSize: 40,
-  size: 24,
-  strokeWidth: 2,
-};
-
-export interface TopActionProps {
-  isPinned?: boolean | null;
+interface TopActionProps {
+  isPinned?: boolean;
   tab?: SidebarTabKey;
 }
+
+const ICON_SIZE = { fontSize: 20 };
 
 const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
   const { t } = useTranslation('common');
@@ -29,6 +28,7 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
   const isChatActive = tab === SidebarTabKey.Chat && !isPinned;
   const isFilesActive = tab === SidebarTabKey.Files;
   const isDiscoverActive = tab === SidebarTabKey.Discover;
+  const isClaudeCodeActive = tab === SidebarTabKey.ClaudeCode;
 
   return (
     <Flexbox gap={8}>
@@ -54,6 +54,17 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
           tooltipProps={{ placement: 'right' }}
         />
       </Link>
+      {isDesktop && (
+        <Link aria-label={'Claude Code'} href={'/claude-code'}>
+          <ActionIcon
+            active={isClaudeCodeActive}
+            icon={Code2}
+            size={ICON_SIZE}
+            title={'Claude Code'}
+            tooltipProps={{ placement: 'right' }}
+          />
+        </Link>
+      )}
       {enableKnowledgeBase && (
         <Link aria-label={t('tab.files')} href={'/files'}>
           <ActionIcon

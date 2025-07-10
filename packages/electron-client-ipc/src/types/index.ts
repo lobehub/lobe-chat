@@ -1,3 +1,4 @@
+export * from './claudeCode';
 export * from './dataSync';
 export * from './dispatch';
 export * from './localFile';

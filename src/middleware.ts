@@ -33,6 +33,7 @@ export const config = {
     '/',
     '/discover',
     '/discover(.*)',
+    '/claude-code',
     '/chat',
     '/chat(.*)',
     '/changelog(.*)',
