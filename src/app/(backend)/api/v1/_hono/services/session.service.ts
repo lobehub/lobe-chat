@@ -436,14 +436,41 @@ export class SessionService extends BaseService {
     this.log('info', '更新会话', { id: request.id });
 
     try {
-      const { id, ...updateData } = request;
+      const { id, agentId, ...updateData } = request;
 
-      await this.sessionModel.update(id, {
-        ...updateData,
-        groupId: updateData.groupId === 'default' ? null : updateData.groupId,
+      await this.db.transaction(async (tx) => {
+        // 更新会话基本信息
+        await this.sessionModel.update(id, {
+          ...updateData,
+          groupId: updateData.groupId === 'default' ? null : updateData.groupId,
+        });
+
+        // 如果提供了 agentId，更新会话与 Agent 的关联
+        if (agentId) {
+          // 验证 Agent 是否存在
+          const agent = await tx.query.agents.findFirst({
+            where: eq(agents.id, agentId),
+          });
+
+          if (!agent) {
+            throw this.createNotFoundError(`Agent ID "${agentId}" 不存在`);
+          }
+
+          // 先删除现有的关联
+          await tx
+            .delete(agentsToSessions)
+            .where(eq(agentsToSessions.sessionId, id));
+
+          // 创建新的关联
+          await tx.insert(agentsToSessions).values({
+            agentId,
+            sessionId: id,
+            userId: this.userId!,
+          });
+        }
       });
 
-      this.log('info', '会话更新成功', { id });
+      this.log('info', '会话更新成功', { agentId, id });
     } catch (error) {
       this.log('error', '更新会话失败', { error });
       throw this.createBusinessError('更新会话失败');

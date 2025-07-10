@@ -24,6 +24,7 @@ export interface CreateSessionRequest {
  * 更新会话请求参数
  */
 export interface UpdateSessionRequest {
+  agentId?: string;
   avatar?: string;
   backgroundColor?: string;
   description?: string;
@@ -253,6 +254,7 @@ export const CreateSessionRequestSchema = z.object({
 });
 
 export const UpdateSessionRequestSchema = z.object({
+  agentId: z.string().optional(),
   avatar: z.string().optional(),
   backgroundColor: z.string().optional(),
   description: z.string().optional(),
