@@ -280,7 +280,7 @@
     "@commitlint/cli": "^19.8.1",
     "@edge-runtime/vm": "^5.0.0",
     "@huggingface/tasks": "^0.15.9",
-    "@lobehub/i18n-cli": "^1.23.0",
+    "@lobehub/i18n-cli": "^1.25.1",
     "@lobehub/lint": "^1.26.2",
     "@lobehub/market-types": "^1.11.2",
     "@lobehub/seo-cli": "^1.6.0",
