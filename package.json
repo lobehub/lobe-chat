@@ -278,6 +278,7 @@
     "zustand-utils": "^2.1.0"
   },
   "devDependencies": {
+    "@codecov/nextjs-webpack-plugin": "^1.9.0",
     "@commitlint/cli": "^19.8.1",
     "@edge-runtime/vm": "^5.0.0",
     "@huggingface/tasks": "^0.15.9",

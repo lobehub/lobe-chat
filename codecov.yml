@@ -9,3 +9,11 @@ coverage:
         flags:
           - app
     patch: off
+
+comment:
+  layout: "bundle"
+  require_changes: true
+  require_base: true
+  require_head: true
+  require_bundle_changes: true
+  bundle_change_threshold: "10Kb"
