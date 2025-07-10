@@ -2,6 +2,149 @@
 
 # Changelog
 
+### [Version 1.97.9](https://github.com/lobehub/lobe-chat/compare/v1.97.8...v1.97.9)
+
+<sup>Released on **2025-07-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Integrate Amazon Cognito for user authentication.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Integrate Amazon Cognito for user authentication, closes [#7472](https://github.com/lobehub/lobe-chat/issues/7472) ([56f4e98](https://github.com/lobehub/lobe-chat/commit/56f4e98))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.97.8](https://github.com/lobehub/lobe-chat/compare/v1.97.7...v1.97.8)
+
+<sup>Released on **2025-07-10**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.97.7](https://github.com/lobehub/lobe-chat/compare/v1.97.6...v1.97.7)
+
+<sup>Released on **2025-07-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add google search grounding for Vertex AI.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add google search grounding for Vertex AI, closes [#8313](https://github.com/lobehub/lobe-chat/issues/8313) ([afd5900](https://github.com/lobehub/lobe-chat/commit/afd5900))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.97.6](https://github.com/lobehub/lobe-chat/compare/v1.97.5...v1.97.6)
+
+<sup>Released on **2025-07-10**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Replace `utility-types` with `type-fest`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Replace `utility-types` with `type-fest`, closes [#8370](https://github.com/lobehub/lobe-chat/issues/8370) ([a072b53](https://github.com/lobehub/lobe-chat/commit/a072b53))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.97.5](https://github.com/lobehub/lobe-chat/compare/v1.97.4...v1.97.5)
+
+<sup>Released on **2025-07-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix: solve the loading was strange spin when switch show.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix: solve the loading was strange spin when switch show, closes [#8333](https://github.com/lobehub/lobe-chat/issues/8333) ([07197e7](https://github.com/lobehub/lobe-chat/commit/07197e7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.97.4](https://github.com/lobehub/lobe-chat/compare/v1.97.3...v1.97.4)
+
+<sup>Released on **2025-07-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add `grok-4-0709` model from xAI, fix theme issue in desktop.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add `grok-4-0709` model from xAI, closes [#8379](https://github.com/lobehub/lobe-chat/issues/8379) ([b7ca447](https://github.com/lobehub/lobe-chat/commit/b7ca447))
+- **misc**: Fix theme issue in desktop, closes [#8380](https://github.com/lobehub/lobe-chat/issues/8380) ([c7ae78b](https://github.com/lobehub/lobe-chat/commit/c7ae78b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.97.3](https://github.com/lobehub/lobe-chat/compare/v1.97.2...v1.97.3)
 
 <sup>Released on **2025-07-10**</sup>

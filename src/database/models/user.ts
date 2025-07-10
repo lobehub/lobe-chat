@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server';
 import dayjs from 'dayjs';
 import { eq } from 'drizzle-orm/expressions';
 import type { AdapterAccount } from 'next-auth/adapters';
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 
 import { LobeChatDatabase } from '@/database/type';
 import { UserGuide, UserPreference } from '@/types/user';
@@ -99,7 +99,7 @@ export class UserModel {
       /* empty */
     }
 
-    const settings: DeepPartial<UserSettings> = {
+    const settings: PartialDeep<UserSettings> = {
       defaultAgent: state.settingsDefaultAgent || {},
       general: state.settingsGeneral || {},
       hotkey: state.settingsHotkey || {},

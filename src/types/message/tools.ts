@@ -1,5 +1,5 @@
 import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 import { z } from 'zod';
 
 import { LobeToolRenderType } from '@/types/tool';
@@ -57,7 +57,7 @@ export interface MessageToolCall {
   type: 'function' | string;
 }
 
-export type MessageToolCallChunk = DeepPartial<MessageToolCall> & { index: number };
+export type MessageToolCallChunk = PartialDeep<MessageToolCall> & { index: number };
 
 export const MessageToolCallSchema = z.object({
   function: z.object({

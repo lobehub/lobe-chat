@@ -1,4 +1,4 @@
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 
 import { BaseModel } from '@/database/_deprecated/core';
 import { LobeAgentConfig } from '@/types/agent';
@@ -41,7 +41,7 @@ class _UserModel extends BaseModel {
 
   // **************** Update *************** //
 
-  async updateSettings(settings: DeepPartial<DB_Settings>) {
+  async updateSettings(settings: PartialDeep<DB_Settings>) {
     const user = await this.getUser();
 
     return this.update(user.id, { settings: settings as any });
@@ -61,7 +61,7 @@ class _UserModel extends BaseModel {
 
   // **************** Helper *************** //
 
-  private update = async (id: number, value: DeepPartial<DB_User>) => {
+  private update = async (id: number, value: PartialDeep<DB_User>) => {
     return this.table.update(id, value);
   };
 }
