@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "improvements": ["Integrate Amazon Cognito for user authentication."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.9"
+  },
+  {
     "children": {},
     "date": "2025-07-10",
     "version": "1.97.8"
