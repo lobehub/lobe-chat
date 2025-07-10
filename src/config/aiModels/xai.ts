@@ -5,13 +5,37 @@ const xaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
+      search: true,
+    },
+    contextWindowTokens: 256_000,
+    description:
+      '我们最新最强大的旗舰模型，在自然语言处理、数学计算和推理方面表现卓越 —— 是一款完美的全能型选手。',
+    displayName: 'Grok 4 0709',
+    enabled: true,
+    id: 'grok-4-0709',
+    pricing: {
+      cachedInput: 0.75,
+      input: 3,
+      output: 15,
+    },
+    releasedAt: '2025-07-09',
+    settings: {
+      // reasoning_effort is not supported by grok-4. Specifying reasoning_effort parameter will get an error response.
+      // extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       search: true,
     },
     contextWindowTokens: 131_072,
     description:
       '旗舰级模型，擅长数据提取、编程和文本摘要等企业级应用，拥有金融、医疗、法律和科学等领域的深厚知识。',
     displayName: 'Grok 3',
-    enabled: true,
     id: 'grok-3',
     pricing: {
       cachedInput: 0.75,

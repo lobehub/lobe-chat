@@ -1,3 +1,4 @@
+import { getSingletonAnalyticsOptional } from '@lobehub/analytics';
 import { DeepPartial } from 'utility-types';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -260,7 +261,31 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
     await get().dispatchConfig({ config, type: 'update' });
   },
   setAgentMeta: async (meta) => {
-    await get().dispatchMeta({ type: 'update', value: meta });
+    const { dispatchMeta, id, meta: currentMeta } = get();
+    const mergedMeta = merge(currentMeta, meta);
+
+    try {
+      const analytics = getSingletonAnalyticsOptional();
+      if (analytics) {
+        analytics.track({
+          name: 'agent_meta_updated',
+          properties: {
+            assistant_avatar: mergedMeta.avatar,
+            assistant_background_color: mergedMeta.backgroundColor,
+            assistant_description: mergedMeta.description,
+            assistant_name: mergedMeta.title,
+            assistant_tags: mergedMeta.tags,
+            is_inbox: id === 'inbox',
+            session_id: id || 'unknown',
+            timestamp: Date.now(),
+            user_id: useUserStore.getState().user?.id || 'anonymous',
+          },
+        });
+      }
+    } catch (error) {
+      console.warn('Failed to track agent meta update:', error);
+    }
+    await dispatchMeta({ type: 'update', value: meta });
   },
 
   setChatConfig: async (config) => {
