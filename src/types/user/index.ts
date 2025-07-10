@@ -1,4 +1,4 @@
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 import { z } from 'zod';
 
 import { TopicDisplayMode } from '@/types/topic';
@@ -55,7 +55,7 @@ export interface UserInitializationState {
   isOnboard?: boolean;
   lastName?: string;
   preference: UserPreference;
-  settings: DeepPartial<UserSettings>;
+  settings: PartialDeep<UserSettings>;
   userId?: string;
   username?: string;
 }

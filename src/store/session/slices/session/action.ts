@@ -2,7 +2,7 @@ import { getSingletonAnalyticsOptional } from '@lobehub/analytics';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import useSWR, { SWRResponse, mutate } from 'swr';
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 import { StateCreator } from 'zustand/vanilla';
 
 import { message } from '@/components/AntdStaticMethods';
@@ -51,7 +51,7 @@ export interface SessionAction {
    * @returns sessionId
    */
   createSession: (
-    session?: DeepPartial<LobeAgentSession>,
+    session?: PartialDeep<LobeAgentSession>,
     isSwitchSession?: boolean,
   ) => Promise<string>;
   duplicateSession: (id: string) => Promise<void>;
