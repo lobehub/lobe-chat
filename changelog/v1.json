@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-07-10",
+    "version": "1.97.3"
+  },
+  {
     "children": {
       "improvements": ["Implement data analytics event tracking framework."]
     },
