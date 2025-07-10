@@ -1,7 +1,12 @@
+import { Skeleton } from 'antd';
+import { Suspense } from 'react';
+
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
 import { DynamicLayoutProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';
+
+import Page from './index';
 
 export const generateMetadata = async (props: DynamicLayoutProps) => {
   const locale = await RouteVariants.getLocale(props);
@@ -13,6 +18,12 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
   });
 };
 
-export { default } from './index';
+export default () => {
+  return (
+    <Suspense fallback={<Skeleton active paragraph={{ rows: 5 }} title={false} />}>
+      <Page />
+    </Suspense>
+  );
+};
 
 export const dynamic = 'force-static';

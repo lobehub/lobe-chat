@@ -10,7 +10,7 @@ const FETCH_KNOWLEDGE_BASE_LIST_KEY = 'FETCH_KNOWLEDGE_BASE';
 const FETCH_KNOWLEDGE_BASE_ITEM_KEY = 'FETCH_KNOWLEDGE_BASE_ITEM';
 
 export interface KnowledgeBaseCrudAction {
-  createNewKnowledgeBase: (params: CreateKnowledgeBaseParams) => Promise<void>;
+  createNewKnowledgeBase: (params: CreateKnowledgeBaseParams) => Promise<string>;
   internal_toggleKnowledgeBaseLoading: (id: string, loading: boolean) => void;
   refreshKnowledgeBaseList: () => Promise<void>;
 
@@ -28,8 +28,11 @@ export const createCrudSlice: StateCreator<
   KnowledgeBaseCrudAction
 > = (set, get) => ({
   createNewKnowledgeBase: async (params) => {
-    await knowledgeBaseService.createKnowledgeBase(params);
+    const id = await knowledgeBaseService.createKnowledgeBase(params);
+
     await get().refreshKnowledgeBaseList();
+
+    return id;
   },
   internal_toggleKnowledgeBaseLoading: (id, loading) => {
     set(
