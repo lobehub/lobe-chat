@@ -66,7 +66,15 @@ export const createCrudSlice: StateCreator<
       () => knowledgeBaseService.getKnowledgeBaseById(id),
       {
         onSuccess: (item) => {
-          set({ activeKnowledgeBaseId: id, activeKnowledgeBaseItem: item });
+          if (!item) return;
+
+          set({
+            activeKnowledgeBaseId: id,
+            activeKnowledgeBaseItems: {
+              ...get().activeKnowledgeBaseItems,
+              [id]: item,
+            },
+          });
         },
       },
     ),

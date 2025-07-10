@@ -1,11 +1,14 @@
 import { KnowledgeBaseStoreState } from '@/store/knowledgeBase/initialState';
 
 const activeKnowledgeBaseId = (s: KnowledgeBaseStoreState) => s.activeKnowledgeBaseId;
-const activeKnowledgeBaseItem = (s: KnowledgeBaseStoreState) => s.activeKnowledgeBaseItem;
-const activeKnowledgeBaseName = (s: KnowledgeBaseStoreState) => s.activeKnowledgeBaseItem?.name;
+
+const getKnowledgeBaseById = (id: string) => (s: KnowledgeBaseStoreState) =>
+  s.activeKnowledgeBaseItems[id];
+
+const getKnowledgeBaseNameById = (id: string) => (s: KnowledgeBaseStoreState) =>
+  getKnowledgeBaseById(id)(s)?.name;
 
 export const knowledgeBaseSelectors = {
   activeKnowledgeBaseId,
-  activeKnowledgeBaseItem,
-  activeKnowledgeBaseName,
+  getKnowledgeBaseNameById,
 };

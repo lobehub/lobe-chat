@@ -9,8 +9,8 @@ import GoBack from '@/components/GoBack';
 import RepoIcon from '@/components/RepoIcon';
 import { knowledgeBaseSelectors, useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
-const Head = memo(() => {
-  const name = useKnowledgeBaseStore(knowledgeBaseSelectors.activeKnowledgeBaseName);
+const Head = memo<{ id: string }>(({ id }) => {
+  const name = useKnowledgeBaseStore(knowledgeBaseSelectors.getKnowledgeBaseNameById(id));
 
   return (
     <Flexbox gap={8}>

@@ -2,7 +2,7 @@ import { KnowledgeBaseItem } from '@/types/knowledgeBase';
 
 export interface KnowledgeBaseState {
   activeKnowledgeBaseId: string | null;
-  activeKnowledgeBaseItem?: KnowledgeBaseItem;
+  activeKnowledgeBaseItems: Record<string, KnowledgeBaseItem>;
   initKnowledgeBaseList: boolean;
   knowledgeBaseLoadingIds: string[];
   knowledgeBaseRenamingId?: string | null;
@@ -10,6 +10,7 @@ export interface KnowledgeBaseState {
 
 export const initialKnowledgeBaseState: KnowledgeBaseState = {
   activeKnowledgeBaseId: null,
+  activeKnowledgeBaseItems: {},
   initKnowledgeBaseList: false,
   knowledgeBaseLoadingIds: [],
 };

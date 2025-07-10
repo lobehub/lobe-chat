@@ -12,15 +12,15 @@ import { useKnowledgeBaseItem } from './hooks/useKnowledgeItem';
 
 const RepoClientPage = memo<{ id: string }>(({ id }) => {
   useKnowledgeBaseItem(id);
-  const name = useKnowledgeBaseStore(knowledgeBaseSelectors.activeKnowledgeBaseName);
+  const name = useKnowledgeBaseStore(knowledgeBaseSelectors.getKnowledgeBaseNameById(id));
 
   return (
     <>
       <FilePanel>
-        <Menu />
+        <Menu id={id} />
       </FilePanel>
       <Flexbox flex={1} style={{ overflow: 'hidden', position: 'relative' }}>
-        <FileManager knowledgeBaseId={id} title={name!} />
+        <FileManager knowledgeBaseId={id} title={name} />
       </Flexbox>
     </>
   );
