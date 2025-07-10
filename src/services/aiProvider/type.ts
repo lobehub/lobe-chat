@@ -1,4 +1,5 @@
 import {
+  AiProviderDetailItem,
   AiProviderRuntimeState,
   AiProviderSortMap,
   CreateAiProviderParams,
@@ -10,7 +11,7 @@ export interface IAiProviderService {
 
   deleteAiProvider: (id: string) => Promise<any>;
 
-  getAiProviderById: (id: string) => Promise<any>;
+  getAiProviderById: (id: string) => Promise<AiProviderDetailItem | undefined>;
 
   getAiProviderList: () => Promise<any>;
 

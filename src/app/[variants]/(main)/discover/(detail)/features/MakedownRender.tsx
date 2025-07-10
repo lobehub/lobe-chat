@@ -13,6 +13,7 @@ const MarkdownRender = memo<{ children?: string }>(({ children }) => {
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
       </Center>
     );
+
   return (
     <Markdown
       allowHtml
@@ -29,6 +30,8 @@ const MarkdownRender = memo<{ children?: string }>(({ children }) => {
         h5: H5,
         img: ({ src, ...rest }: { src: string }) => {
           if (src.includes('glama.ai')) return;
+
+          // eslint-disable-next-line @next/next/no-img-element
           if (src && src.startsWith('http')) return <img src={src} {...rest} />;
           return;
         },

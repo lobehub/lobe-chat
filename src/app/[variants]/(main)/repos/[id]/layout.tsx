@@ -9,3 +9,5 @@ const Layout = ServerLayout<LayoutProps>({ Desktop, Mobile });
 Layout.displayName = 'RepoLayout';
 
 export default (props: LayoutProps) => <Layout {...props} />;
+
+export const dynamic = 'force-static';
