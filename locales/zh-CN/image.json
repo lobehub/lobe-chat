@@ -24,7 +24,9 @@
       "label": "尺寸"
     },
     "aspectRatio": {
-      "label": "比例"
+      "label": "宽高比",
+      "lock": "锁定宽高比",
+      "unlock": "解锁宽高比"
     },
     "steps": {
       "label": "步数"

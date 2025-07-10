@@ -1,7 +1,9 @@
 {
   "config": {
     "aspectRatio": {
-      "label": "Aspect Ratio"
+      "label": "Aspect Ratio",
+      "lock": "Lock Aspect Ratio",
+      "unlock": "Unlock Aspect Ratio"
     },
     "header": {
       "desc": "Brief description, create instantly",

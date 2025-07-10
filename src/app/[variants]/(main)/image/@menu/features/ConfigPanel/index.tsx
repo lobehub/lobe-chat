@@ -6,16 +6,16 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { imageGenerationConfigSelectors } from '@/store/image/selectors';
+import { useSizeControl } from '@/store/image/slices/generationConfig/hooks';
 import { useImageStore } from '@/store/image/store';
 
-import AspectRatioSelect from './components/AspectRatioSelect';
 import ImageNum from './components/ImageNum';
 import ImageUrl from './components/ImageUrl';
 import ImageUrlsUpload from './components/ImageUrlsUpload';
 import ModelSelect from './components/ModelSelect';
 import SeedNumberInput from './components/SeedNumberInput';
+import SizeControlGroup from './components/SizeControlGroup';
 import SizeSelect from './components/SizeSelect';
-import SizeSliderInput from './components/SizeSliderInput';
 import StepsSliderInput from './components/StepsSliderInput';
 
 interface ConfigItemLayoutProps {
@@ -38,13 +38,12 @@ const ConfigPanel = memo(() => {
   const { t } = useTranslation('image');
 
   const isSupportImageUrl = useImageStore(isSupportParamSelector('imageUrl'));
-  const isSupportWidth = useImageStore(isSupportParamSelector('width'));
-  const isSupportHeight = useImageStore(isSupportParamSelector('height'));
   const isSupportSize = useImageStore(isSupportParamSelector('size'));
-  const isSupportAspectRatio = useImageStore(isSupportParamSelector('aspectRatio'));
   const isSupportSeed = useImageStore(isSupportParamSelector('seed'));
   const isSupportSteps = useImageStore(isSupportParamSelector('steps'));
   const isSupportImageUrls = useImageStore(isSupportParamSelector('imageUrls'));
+
+  const { showSizeControl } = useSizeControl();
 
   return (
     <Flexbox gap={32} padding={12}>
@@ -70,23 +69,7 @@ const ConfigPanel = memo(() => {
         </ConfigItemLayout>
       )}
 
-      {isSupportAspectRatio && (
-        <ConfigItemLayout label={t('config.aspectRatio.label')}>
-          <AspectRatioSelect />
-        </ConfigItemLayout>
-      )}
-
-      {isSupportWidth && (
-        <ConfigItemLayout label={t('config.width.label')}>
-          <SizeSliderInput paramName="width" />
-        </ConfigItemLayout>
-      )}
-
-      {isSupportHeight && (
-        <ConfigItemLayout label={t('config.height.label')}>
-          <SizeSliderInput paramName="height" />
-        </ConfigItemLayout>
-      )}
+      {showSizeControl && <SizeControlGroup />}
 
       {isSupportSteps && (
         <ConfigItemLayout label={t('config.steps.label')}>

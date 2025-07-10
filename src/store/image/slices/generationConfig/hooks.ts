@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 
+import { PRESET_ASPECT_RATIOS } from '@/const/image';
 import { StdImageGenParams, StdImageGenParamsKeys } from '@/libs/standard-parameters/image';
 
 import { useImageStore } from '../../store';
@@ -42,5 +43,53 @@ export function useGenerationConfigParam<N extends StdImageGenParamsKeys>(paramN
     value: paramValue,
     setValue,
     ...paramConstraints,
+  };
+}
+
+export function useSizeControl() {
+  const store = useImageStore();
+  const paramsProperties = useImageStore(imageGenerationConfigSelectors.paramsProperties);
+
+  const modelAspectRatio = useImageStore((s) => s.parameters?.aspectRatio);
+  const currentAspectRatio = store.activeAspectRatio ?? modelAspectRatio ?? '1:1';
+
+  const isSupportWidth = useImageStore(imageGenerationConfigSelectors.isSupportParam('width'));
+  const isSupportHeight = useImageStore(imageGenerationConfigSelectors.isSupportParam('height'));
+  const isSupportSize = useImageStore(imageGenerationConfigSelectors.isSupportParam('size'));
+
+  const aspectRatioOptions = useMemo(() => {
+    const modelOptions = paramsProperties?.aspectRatio?.enum || [];
+
+    // 合并选项，优先使用预设选项，然后添加模型特有的选项
+    const allOptions = [...PRESET_ASPECT_RATIOS];
+
+    // 添加模型选项中不在预设中的选项
+    modelOptions.forEach((option) => {
+      if (!allOptions.includes(option)) {
+        allOptions.push(option);
+      }
+    });
+
+    return allOptions;
+  }, [paramsProperties]);
+
+  return {
+    isLocked: store.isAspectRatioLocked,
+    toggleLock: store.toggleAspectRatioLock,
+
+    width: store.parameters?.width,
+    height: store.parameters?.height,
+    aspectRatio: currentAspectRatio,
+
+    setWidth: store.setWidth,
+    setHeight: store.setHeight,
+    setAspectRatio: store.setAspectRatio,
+
+    widthSchema: paramsProperties?.width,
+    heightSchema: paramsProperties?.height,
+
+    options: aspectRatioOptions,
+
+    showSizeControl: isSupportWidth && isSupportHeight && !isSupportSize,
   };
 }

@@ -20,6 +20,10 @@ export interface GenerationConfigState {
    */
   parameters?: Partial<StdImageGenParams>;
   parameterSchema?: Record<string, any>;
+
+  // 新增状态
+  isAspectRatioLocked: boolean;
+  activeAspectRatio: string | null; // string - 虚拟比例; null - 原生比例
 }
 
 export const DEFAULT_IMAGE_GENERATION_PARAMETERS: Partial<StdImageGenParams> =
@@ -73,4 +77,8 @@ export const initialGenerationConfigState: GenerationConfigState = {
   imageNum: DEFAULT_IMAGE_NUM,
   parameters: DEFAULT_IMAGE_GENERATION_PARAMETERS,
   parameterSchema: FluxSchnellSchema,
+
+  // 新增状态的初始值
+  isAspectRatioLocked: false,
+  activeAspectRatio: '1:1', // 默认激活 1:1
 };
