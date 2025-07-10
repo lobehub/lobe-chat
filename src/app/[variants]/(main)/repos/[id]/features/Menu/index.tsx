@@ -4,14 +4,14 @@ import { Flexbox } from 'react-layout-kit';
 import Head from './Head';
 import Menu from './Menu';
 
-type Props = { id: string; name: string };
-
-const ComposeMenu = memo<Props>(({ id, name }) => (
-  <Flexbox gap={16} height={'100%'} paddingInline={12} style={{ paddingTop: 12 }}>
-    <Head name={name} />
-    <Menu id={id} />
-  </Flexbox>
-));
+const ComposeMenu = memo<{ id: string }>(({ id }) => {
+  return (
+    <Flexbox gap={16} height={'100%'} paddingInline={12} style={{ paddingTop: 12 }}>
+      <Head id={id} />
+      <Menu />
+    </Flexbox>
+  );
+});
 
 ComposeMenu.displayName = 'ComposeMenu';
 

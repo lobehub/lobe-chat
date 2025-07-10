@@ -167,6 +167,7 @@ const SortButton = memo(() => {
   return (
     <Dropdown
       menu={{
+        // @ts-expect-error 等待 antd 修复
         activeKey: activeItem.key,
         items: items as DropdownMenuItemType[],
         onClick: ({ key }) => handleSort(key),
