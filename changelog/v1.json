@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Replace utility-types with type-fest."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.6"
+  },
+  {
+    "children": {
       "improvements": ["Fix: solve the loading was strange spin when switch show."]
     },
     "date": "2025-07-10",
