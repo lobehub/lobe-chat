@@ -1,5 +1,4 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
-import { Button } from 'antd';
+import { ActionIcon, Button } from '@lobehub/ui';
 import { Share2 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +16,7 @@ const SubmitAgentButton = memo<{ modal?: boolean }>(({ modal }) => {
   return (
     <>
       {modal ? (
-        <Button block icon={<Icon icon={Share2} />} onClick={() => setIsModalOpen(true)}>
+        <Button block icon={Share2} onClick={() => setIsModalOpen(true)} variant={'filled'}>
           {t('submitAgentModal.tooltips')}
         </Button>
       ) : (

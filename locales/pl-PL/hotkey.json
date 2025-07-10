@@ -35,6 +35,10 @@
     "desc": "Wywołaj główne pole wyszukiwania na bieżącej stronie",
     "title": "Szukaj"
   },
+  "showApp": {
+    "desc": "Szybkie otwarcie głównego okna aplikacji",
+    "title": "Pokaż główne okno"
+  },
   "switchAgent": {
     "desc": "Przełączaj przypiętego asystenta w pasku bocznym, przytrzymując Ctrl i naciskając numery 0-9",
     "title": "Szybkie przełączanie asystenta"

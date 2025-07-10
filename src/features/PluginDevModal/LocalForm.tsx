@@ -114,6 +114,7 @@ const LocalForm = memo<{ form: FormInstance; mode?: 'edit' | 'create' }>(({ form
           title: t('dev.metaConfig'),
         },
       ]}
+      layout={'vertical'}
       validateMessages={{
         required: () => t('dev.meta.formFieldRequired'),
       }}

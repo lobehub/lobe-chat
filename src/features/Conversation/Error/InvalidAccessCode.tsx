@@ -1,5 +1,4 @@
-import { Icon } from '@lobehub/ui';
-import { Segmented } from 'antd';
+import { Icon, Segmented } from '@lobehub/ui';
 import { SegmentedLabeledOption } from 'antd/es/segmented';
 import { AsteriskSquare, KeySquare, ScanFace } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -64,6 +63,7 @@ const InvalidAccessCode = memo<InvalidAccessCodeProps>(({ id, provider }) => {
           }
           style={{ width: '100%' }}
           value={mode}
+          variant={'filled'}
         />
       )}
 

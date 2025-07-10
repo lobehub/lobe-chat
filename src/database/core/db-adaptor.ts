@@ -1,5 +1,8 @@
+import { isDesktop } from '@/const/version';
 import { getDBInstance } from '@/database/core/web-server';
 import { LobeChatDatabase } from '@/database/type';
+
+import { getPgliteInstance } from './electron';
 
 /**
  * 懒加载数据库实例
@@ -13,7 +16,7 @@ export const getServerDB = async (): Promise<LobeChatDatabase> => {
 
   try {
     // 根据环境选择合适的数据库实例
-    cachedDB = getDBInstance();
+    cachedDB = isDesktop ? await getPgliteInstance() : getDBInstance();
     return cachedDB;
   } catch (error) {
     console.error('❌ Failed to initialize database:', error);

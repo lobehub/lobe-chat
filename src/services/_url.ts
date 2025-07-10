@@ -19,13 +19,8 @@ export const API_ENDPOINTS = mapWithBasePath({
 
   proxy: '/webapi/proxy',
 
-  // assistant
-  assistantStore: '/webapi/assistant/store',
-  assistant: (identifier: string) => withBasePath(`/webapi/assistant/${identifier}`),
-
   // plugins
   gateway: '/webapi/plugin/gateway',
-  pluginStore: '/webapi/plugin/store',
 
   // trace
   trace: '/webapi/trace',

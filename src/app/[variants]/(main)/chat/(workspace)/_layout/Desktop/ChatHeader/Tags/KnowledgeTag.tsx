@@ -1,7 +1,6 @@
 'use client';
 
-import { Icon, Tag } from '@lobehub/ui';
-import { Dropdown, MenuProps } from 'antd';
+import { Dropdown, Icon, type MenuProps, Tag } from '@lobehub/ui';
 import { LibraryBig } from 'lucide-react';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';

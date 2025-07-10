@@ -2,12 +2,11 @@ import {
   StatisticCard as AntdStatisticCard,
   StatisticCardProps as AntdStatisticCardProps,
 } from '@ant-design/pro-components';
-import { Spin, Typography } from 'antd';
+import { Text } from '@lobehub/ui';
+import { Spin } from 'antd';
 import { createStyles, useResponsive } from 'antd-style';
 import { adjustHue } from 'polished';
 import { memo } from 'react';
-
-const { Title } = Typography;
 
 const useStyles = createStyles(
   ({ isDarkMode, css, token, prefixCls, responsive }, highlight: string = '#000') => ({
@@ -153,7 +152,7 @@ const useStyles = createStyles(
       border-radius: ${token.borderRadius}px;
       background: ${token.colorFillSecondary};
     `,
-    pure: css`
+    raw: css`
       border: none !important;
       background: transparent !important;
     `,
@@ -162,29 +161,29 @@ const useStyles = createStyles(
 
 interface StatisticCardProps extends AntdStatisticCardProps {
   highlight?: string;
-  variant?: 'pure' | 'card';
+  variant?: 'raw' | 'card';
 }
 
 const StatisticCard = memo<StatisticCardProps>(
   ({ title, className, highlight, variant, loading, extra, ...rest }) => {
     const { cx, styles } = useStyles(highlight);
     const { mobile } = useResponsive();
-    const isPure = variant === 'pure';
+    const isPure = variant === 'raw';
     return (
       <AntdStatisticCard
         bordered={!mobile}
         className={cx(
           styles.container,
-          isPure ? styles.pure : styles.card,
+          isPure ? styles.raw : styles.card,
           highlight && styles.highlight,
           className,
         )}
         extra={loading ? <Spin percent={'auto'} size={'small'} /> : extra}
         title={
           typeof title === 'string' ? (
-            <Title
-              ellipsis={{ rows: 1, tooltip: title }}
-              level={2}
+            <Text
+              as={'h2'}
+              ellipsis={{ rows: 1, tooltip: true }}
               style={{
                 fontSize: 'inherit',
                 fontWeight: 'inherit',
@@ -194,7 +193,7 @@ const StatisticCard = memo<StatisticCardProps>(
               }}
             >
               {title}
-            </Title>
+            </Text>
           ) : (
             title
           )

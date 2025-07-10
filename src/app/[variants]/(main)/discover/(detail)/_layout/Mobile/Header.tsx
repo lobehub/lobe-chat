@@ -1,7 +1,8 @@
 'use client';
 
-import { MobileNavBar } from '@lobehub/ui';
-import { usePathname, useRouter } from 'next/navigation';
+import { ChatHeader } from '@lobehub/ui/mobile';
+import { usePathname } from 'next/navigation';
+import { useRouter } from 'nextjs-toploader/app';
 import { memo } from 'react';
 import urlJoin from 'url-join';
 
@@ -14,8 +15,8 @@ const Header = memo(() => {
   const path = pathname.split('/').filter(Boolean)[1];
 
   return (
-    <MobileNavBar
-      onBackClick={() => router.push(urlJoin('/discover', `${path}s`))}
+    <ChatHeader
+      onBackClick={() => router.push(urlJoin('/discover', path))}
       showBackButton
       style={mobileHeaderSticky}
     />

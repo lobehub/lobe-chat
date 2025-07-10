@@ -1,7 +1,7 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
-import { Button, Card, Result } from 'antd';
+import { Button, Icon } from '@lobehub/ui';
+import { Card, Result } from 'antd';
 import { XCircle } from 'lucide-react';
 import Link from 'next/link';
 import React, { memo } from 'react';

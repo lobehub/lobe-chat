@@ -1,6 +1,6 @@
 'use client';
 
-import { DraggablePanelBody } from '@lobehub/ui';
+import { ScrollShadow } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { PropsWithChildren, memo } from 'react';
 
@@ -18,7 +18,11 @@ const useStyles = createStyles(
 const PanelBody = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
 
-  return <DraggablePanelBody className={styles}>{children}</DraggablePanelBody>;
+  return (
+    <ScrollShadow className={styles} size={8}>
+      {children}
+    </ScrollShadow>
+  );
 });
 
 export default PanelBody;

@@ -8,7 +8,7 @@ interface FileListProps {
   fileType?: string;
   isDirectory?: boolean;
   size?: number;
-  variant?: 'pure' | 'file' | 'folder';
+  variant?: 'raw' | 'file' | 'folder';
 }
 
 const FileIcon = memo<FileListProps>(({ fileName, size, variant = 'file', isDirectory }) => {

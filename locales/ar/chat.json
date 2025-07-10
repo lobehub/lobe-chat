@@ -43,6 +43,9 @@
     "reasoningBudgetToken": {
       "title": "استهلاك توكن التفكير"
     },
+    "reasoningEffort": {
+      "title": "شدة الاستدلال"
+    },
     "title": "وظائف توسيع النموذج"
   },
   "history": {

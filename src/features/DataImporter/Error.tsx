@@ -1,5 +1,5 @@
-import { Alert, Highlighter, Icon } from '@lobehub/ui';
-import { Button, Result } from 'antd';
+import { Alert, Button, Highlighter, Icon } from '@lobehub/ui';
+import { Result } from 'antd';
 import { ShieldAlert } from 'lucide-react';
 import Link from 'next/link';
 import React, { memo } from 'react';
@@ -24,7 +24,7 @@ const Error = memo<ErrorProps>(({ error, onClick }) => {
         <Flexbox gap={12} style={{ textAlign: 'start' }}>
           <Alert
             extra={
-              <Highlighter copyButtonSize={'small'} language={'json'}>
+              <Highlighter actionIconSize={'small'} language={'json'}>
                 {JSON.stringify(error, null, 2)}
               </Highlighter>
             }

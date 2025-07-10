@@ -1,5 +1,4 @@
-import { Icon } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Icon, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { CheckIcon, RouterIcon, TerminalIcon } from 'lucide-react';
 import React, { memo } from 'react';
@@ -65,7 +64,7 @@ const useStyles = createStyles(({ token, css }) => ({
   disabled: css`
     cursor: not-allowed;
     border-color: ${token.colorBorder};
-    opacity: 0.6;
+    opacity: 0.5;
     background-color: ${token.colorBgContainerDisabled};
 
     &:hover {
@@ -88,11 +87,11 @@ const useStyles = createStyles(({ token, css }) => ({
 
 // Helper component for feature list items (moved from MCPManifestForm)
 const FeatureItem = memo(({ children }: { children: React.ReactNode }) => {
-  const { styles } = useStyles();
+  const { styles, theme } = useStyles();
   return (
     <div className={styles.featureItem}>
       <Center className={styles.featureIcon}>
-        <CheckIcon size={16} />
+        <CheckIcon color={theme.colorSuccess} size={16} />
       </Center>
       <div className={styles.featureText}>{children}</div>
     </div>
@@ -161,9 +160,9 @@ const MCPTypeSelect = ({ value, onChange }: MCPTypeSelectProps) => {
               ))}
             </Flexbox>
             {disabled && (
-              <Typography.Text style={{ fontSize: 12, marginTop: 8 }} type="warning">
+              <Text style={{ fontSize: 12, marginTop: 8 }} type="warning">
                 {t('dev.mcp.type.stdioNotAvailable')}
-              </Typography.Text>
+              </Text>
             )}
           </Flexbox>
         );

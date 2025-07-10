@@ -1,4 +1,5 @@
-import { Button, Space } from 'antd';
+import { Button } from '@lobehub/ui';
+import { Space } from 'antd';
 import { createStyles } from 'antd-style';
 import { rgba } from 'polished';
 import { Suspense, memo, useEffect, useState } from 'react';
@@ -79,7 +80,7 @@ const Footer = memo<FooterProps>(({ onExpandChange, expand }) => {
         flex={'none'}
         gap={8}
         horizontal
-        padding={'0 24px'}
+        paddingInline={16}
       >
         <Flexbox align={'center'} gap={8} horizontal style={{ overflow: 'hidden' }}>
           {expand && <LocalFiles />}
@@ -91,7 +92,7 @@ const Footer = memo<FooterProps>(({ onExpandChange, expand }) => {
             {isAIGenerating ? (
               <Button
                 className={styles.loadingButton}
-                icon={<StopLoadingIcon />}
+                icon={StopLoadingIcon}
                 onClick={stopGenerateMessage}
               >
                 {t('input.stop')}

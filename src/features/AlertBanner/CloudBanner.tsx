@@ -1,8 +1,7 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
+import { Button, Icon } from '@lobehub/ui';
 import { useSize } from 'ahooks';
-import { Button } from 'antd';
 import { createStyles } from 'antd-style';
 import { ArrowRightIcon } from 'lucide-react';
 import Link from 'next/link';

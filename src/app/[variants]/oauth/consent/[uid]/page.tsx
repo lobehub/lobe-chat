@@ -4,8 +4,9 @@ import { oidcEnv } from '@/envs/oidc';
 import { defaultClients } from '@/libs/oidc-provider/config';
 import { OIDCService } from '@/server/services/oidc';
 
-import ConsentClient from './Client';
 import ConsentClientError from './ClientError';
+import Consent from './Consent';
+import Login from './Login';
 
 const InteractionPage = async (props: { params: Promise<{ uid: string }> }) => {
   if (!oidcEnv.ENABLE_OIDC) return notFound();
@@ -37,15 +38,19 @@ const InteractionPage = async (props: { params: Promise<{ uid: string }> }) => {
 
     const clientDetail = await oidcService.getClientMetadata(clientId);
 
+    const clientMetadata = {
+      clientName: clientDetail?.client_name,
+      isFirstParty: defaultClients.map((c) => c.client_id).includes(clientId),
+      logo: clientDetail?.logo_uri,
+    };
     // 渲染客户端组件，无论是 login 还是 consent 类型
+    if (details.prompt.name === 'login')
+      return <Login clientMetadata={clientMetadata} uid={params.uid} />;
+
     return (
-      <ConsentClient
+      <Consent
         clientId={clientId}
-        clientMetadata={{
-          clientName: clientDetail?.client_name,
-          isFirstParty: defaultClients.map((c) => c.client_id).includes(clientId),
-          logo: clientDetail?.logo_uri,
-        }}
+        clientMetadata={clientMetadata}
         redirectUri={details.params.redirect_uri as string}
         scopes={scopes}
         uid={params.uid}

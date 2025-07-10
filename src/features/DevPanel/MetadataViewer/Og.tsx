@@ -1,5 +1,4 @@
-import { Form } from '@lobehub/ui';
-import { Input } from 'antd';
+import { Form, Input, TextArea } from '@lobehub/ui';
 import Image from 'next/image';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -20,7 +19,7 @@ const MetaData = memo(() => {
           label: `OG Title (${ogTitle.length})`,
         },
         {
-          children: <Input.TextArea rows={2} value={ogDescription} variant={'filled'} />,
+          children: <TextArea rows={2} value={ogDescription} variant={'filled'} />,
           label: `OG Description (${ogDescription.length})`,
         },
         {
@@ -67,7 +66,7 @@ const MetaData = memo(() => {
         },
       ]}
       itemsType={'flat'}
-      variant={'pure'}
+      variant={'borderless'}
     />
   );
 });

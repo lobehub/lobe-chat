@@ -129,6 +129,7 @@
     "waitingForMore": "Daha fazla model eklenmesi planlanıyor"
   },
   "plugin": {
+    "addMCPPlugin": "MCP Eklentisi Ekle",
     "addTooltip": "Eklenti Ekle",
     "clearDeprecated": "Kullanım Dışı Eklentileri Kaldır",
     "empty": "Henüz eklenti yok, <1>Eklenti Mağazası</1>'nı keşfetmekten çekinmeyin",
@@ -150,6 +151,7 @@
       "title": "Arka Plan Rengi"
     },
     "description": {
+      "desc": "Asistanınızı basitçe tanıtın, karakter ayarı olarak kullanılmaz",
       "placeholder": "Asistan açıklamasını girin",
       "title": "Asistan Açıklaması"
     },
@@ -161,11 +163,27 @@
       "placeholder": "Prompt girin",
       "title": "Rol Ayarı"
     },
+    "submit": "Asistan bilgilerini güncelle",
     "tag": {
+      "desc": "Asistan etiketleri, asistan pazarında gösterilecektir",
       "placeholder": "Etiket girin",
       "title": "Etiket"
     },
     "title": "Asistan Bilgileri"
+  },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Farklı renk eğilimlerine sahip gri tonları özelleştirme",
+      "title": "Nötr Renk"
+    },
+    "preview": {
+      "title": "Renk Paleti"
+    },
+    "primaryColor": {
+      "desc": "Özelleştirilebilir tema rengi",
+      "title": "Tema Rengi"
+    },
+    "title": "Uygulama Görünümü"
   },
   "settingChat": {
     "autoCreateTopicThreshold": {
@@ -206,14 +224,56 @@
       "placeholder": "Ön işleme şablonu {{text}}, gerçek zamanlı giriş bilgileri ile değiştirilir",
       "title": "Kullanıcı Girişi Ön İşleme"
     },
+    "submit": "Sohbet tercihlerini güncelle",
     "title": "Sohbet Ayarları"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Sohbet içeriğinin yazı tipi boyutu",
+      "marks": {
+        "normal": "Standart"
+      },
+      "title": "Yazı Tipi Boyutu"
+    },
+    "highlighterTheme": {
+      "title": "Kod Vurgulama Teması"
+    },
+    "mermaidTheme": {
+      "title": "Deniz Kızı Teması"
+    },
+    "title": "Sohbet Görünümü",
+    "transitionMode": {
+      "desc": "Sohbet mesajlarının geçiş animasyonu",
+      "options": {
+        "fadeIn": "Solma",
+        "none": {
+          "desc": "Bu, modelin yanıt çıktısına bağlıdır, lütfen kendiniz test edin.",
+          "value": "Yok"
+        },
+        "smooth": "Yumuşak"
+      },
+      "title": "Geçiş Animasyonu"
+    }
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Sistemi Takip Et",
+      "title": "Dil"
+    },
+    "themeMode": {
+      "auto": "Otomatik",
+      "dark": "Karanlık",
+      "light": "Açık",
+      "title": "Tema"
+    },
+    "title": "Genel Ayarlar"
   },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Max Token Sınırlamasını Etkinleştir"
     },
     "enableReasoningEffort": {
-      "title": "Akıl yürütme yoğunluğunu ayarla"
+      "title": "Akıl Yürütme Gücü Ayarını Etkinleştir"
     },
     "frequencyPenalty": {
       "desc": "Değer ne kadar büyükse, kelime dağarcığı o kadar zengin ve çeşitli olur; değer ne kadar düşükse, kelimeler o kadar sade ve basit olur.",
@@ -235,14 +295,15 @@
       "title": "İfade Çeşitliliği"
     },
     "reasoningEffort": {
-      "desc": "Değer ne kadar yüksekse, akıl yürütme yeteneği o kadar güçlüdür, ancak yanıt süresi ve Token tüketimini artırabilir",
+      "desc": "Değer ne kadar yüksekse, akıl yürütme yeteneği o kadar güçlü olur, ancak yanıt süresi ve Token tüketimi artabilir",
       "options": {
         "high": "Yüksek",
         "low": "Düşük",
         "medium": "Orta"
       },
-      "title": "Akıl yürütme yoğunluğu"
+      "title": "Akıl Yürütme Gücü"
     },
+    "submit": "Model ayarlarını güncelle",
     "temperature": {
       "desc": "Değer ne kadar büyükse, cevap o kadar yaratıcı ve hayal gücü dolu olur; değer ne kadar küçükse, cevap o kadar titizdir.",
       "title": "Yaratıcılık Aktifliği",
@@ -319,6 +380,7 @@
       "desc": "'Tarayıcı' yerel konuşmadan metin hizmeti olduğundan",
       "title": "Konuşmadan Metin Hizmeti"
     },
+    "submit": "Ses hizmetini güncelle",
     "title": "Konuşma Hizmeti",
     "tts": "Metin Seslendirme Ayarlar",
     "ttsService": {
@@ -330,37 +392,6 @@
       "preview": "Ses Önizlemesi",
       "title": "Metin Seslendirme"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Avatar"
-    },
-    "fontSize": {
-      "desc": "Sohbet içeriği için yazı boyutu",
-      "marks": {
-        "normal": "Normal"
-      },
-      "title": "Yazı Boyutu"
-    },
-    "lang": {
-      "autoMode": "Sistem Takibi",
-      "title": "Dil"
-    },
-    "neutralColor": {
-      "desc": "Farklı renk eğilimleri için özel nötr renk",
-      "title": "Nötr Renk"
-    },
-    "primaryColor": {
-      "desc": "Özel ana tema rengi",
-      "title": "Ana Renk"
-    },
-    "themeMode": {
-      "auto": "Oto",
-      "dark": "Karanlık",
-      "light": "Açık",
-      "title": "Tema"
-    },
-    "title": "Tema Ayarları"
   },
   "storage": {
     "actions": {
@@ -395,6 +426,12 @@
     "metaMiss": "Lütfen göndermeden önce asistan bilgilerini tamamlayın. Bu, ad, açıklama ve etiketleri içermelidir.",
     "placeholder": "Asistan için benzersiz bir kimlik girin, örneğin web-geliştirme",
     "tooltips": "Asistan pazarına paylaşın"
+  },
+  "submitFooter": {
+    "reset": "Sıfırla",
+    "submit": "Kaydet",
+    "unSaved": "Kaydedilmemiş değişiklikler",
+    "unSavedWarning": "Şu anda kaydedilmemiş değişiklikler var"
   },
   "sync": {
     "device": {
@@ -447,6 +484,7 @@
       "placeholder": "Lütfen özel ipucu kelimelerini girin",
       "title": "Özel İpucu"
     },
+    "helpInfo": "Yeni bir asistan oluşturduğunuzda, varsayılan asistan ayarları ön ayar olarak kullanılacaktır.",
     "historyCompress": {
       "label": "Oturum Geçmişi Modeli",
       "modelDesc": "Oturum geçmişini sıkıştırmak için kullanılan modeli belirtin",

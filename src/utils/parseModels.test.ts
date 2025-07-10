@@ -306,16 +306,13 @@ describe('parseModelString', () => {
   });
 
   describe('deployment name', () => {
-    it('should have same deployment name as id', () => {
+    it('should have no deployment name', () => {
       const result = parseModelString('model1=Model 1', true);
       expect(result.add[0]).toEqual({
         id: 'model1',
         displayName: 'Model 1',
         abilities: {},
         type: 'chat',
-        config: {
-          deploymentName: 'model1',
-        },
       });
     });
 
@@ -453,6 +450,61 @@ describe('transformToChatModelCards', () => {
     });
 
     expect(result).toMatchSnapshot();
+  });
+
+  it('should use default deploymentName from known model when not specified in string (VolcEngine case)', () => {
+    const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+      (m) => m.id === 'deepseek-r1' && m.providerId === 'volcengine',
+    );
+    const defaultChatModels: AiFullModelCard[] = [];
+    const result = transformToAiChatModelList({
+      modelString: '+deepseek-r1',
+      defaultChatModels,
+      providerId: 'volcengine',
+      withDeploymentName: true,
+    });
+    expect(result).toContainEqual({
+      ...knownModel,
+      enabled: true,
+    });
+  });
+
+  it('should use deploymentName from modelString when specified (VolcEngine case)', () => {
+    const defaultChatModels: AiFullModelCard[] = [];
+    const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+      (m) => m.id === 'deepseek-r1' && m.providerId === 'volcengine',
+    );
+    const result = transformToAiChatModelList({
+      modelString: `+deepseek-r1->my-custom-deploy`,
+      defaultChatModels,
+      providerId: 'volcengine',
+      withDeploymentName: true,
+    });
+    expect(result).toContainEqual({
+      ...knownModel,
+      enabled: true,
+      config: { deploymentName: 'my-custom-deploy' },
+    });
+  });
+
+  it('should set both id and deploymentName to the full string when no -> is used and withDeploymentName is true', () => {
+    const defaultChatModels: AiFullModelCard[] = [];
+    const result = transformToAiChatModelList({
+      modelString: `+my_model`,
+      defaultChatModels,
+      providerId: 'volcengine',
+      withDeploymentName: true,
+    });
+    expect(result).toContainEqual({
+      id: `my_model`,
+      displayName: `my_model`,
+      type: 'chat',
+      abilities: {},
+      enabled: true,
+      config: {
+        deploymentName: `my_model`,
+      },
+    });
   });
 
   it('should handle azure real case', () => {

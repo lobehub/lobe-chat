@@ -1,0 +1,70 @@
+{
+  "common": {
+    "checkUpdates": "التحقق من التحديثات..."
+  },
+  "dev": {
+    "devPanel": "لوحة المطور",
+    "devTools": "أدوات المطور",
+    "forceReload": "إعادة تحميل قسري",
+    "openStore": "فتح ملف التخزين",
+    "refreshMenu": "تحديث القائمة",
+    "reload": "إعادة تحميل",
+    "title": "تطوير"
+  },
+  "edit": {
+    "copy": "نسخ",
+    "cut": "قص",
+    "paste": "لصق",
+    "redo": "إعادة",
+    "selectAll": "تحديد الكل",
+    "speech": "صوت",
+    "startSpeaking": "بدء القراءة",
+    "stopSpeaking": "إيقاف القراءة",
+    "title": "تحرير",
+    "undo": "تراجع"
+  },
+  "file": {
+    "preferences": "التفضيلات",
+    "quit": "خروج",
+    "title": "ملف"
+  },
+  "help": {
+    "about": "حول",
+    "githubRepo": "مستودع GitHub",
+    "reportIssue": "الإبلاغ عن مشكلة",
+    "title": "مساعدة",
+    "visitWebsite": "زيارة الموقع الرسمي"
+  },
+  "macOS": {
+    "about": "حول {{appName}}",
+    "devTools": "أدوات مطور LobeHub",
+    "hide": "إخفاء {{appName}}",
+    "hideOthers": "إخفاء الآخرين",
+    "preferences": "إعدادات مفضلة...",
+    "services": "خدمات",
+    "unhide": "إظهار الكل"
+  },
+  "tray": {
+    "open": "فتح {{appName}}",
+    "quit": "خروج",
+    "show": "عرض {{appName}}"
+  },
+  "view": {
+    "forceReload": "إعادة تحميل قسري",
+    "reload": "إعادة تحميل",
+    "resetZoom": "إعادة تعيين التكبير",
+    "title": "عرض",
+    "toggleFullscreen": "تبديل وضع ملء الشاشة",
+    "zoomIn": "تكبير",
+    "zoomOut": "تصغير"
+  },
+  "window": {
+    "bringAllToFront": "إحضار جميع النوافذ إلى الأمام",
+    "close": "إغلاق",
+    "front": "إحضار جميع النوافذ إلى الأمام",
+    "minimize": "تصغير",
+    "title": "نافذة",
+    "toggleFullscreen": "تبديل وضع ملء الشاشة",
+    "zoom": "تكبير"
+  }
+}

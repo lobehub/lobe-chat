@@ -29,7 +29,7 @@ const RenameGroupModal = memo<RenameGroupModalProps>(({ id, open, onCancel }) =>
   return (
     <Modal
       allowFullscreen
-      destroyOnClose
+      destroyOnHidden
       okButtonProps={{ loading }}
       onCancel={(e) => {
         setInput(group?.name ?? '');

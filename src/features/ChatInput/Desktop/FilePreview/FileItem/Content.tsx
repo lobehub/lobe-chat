@@ -31,7 +31,7 @@ const Content = memo<UploadFileItem>(({ file, previewUrl }) => {
     return <video className={styles.video} src={previewUrl} width={'100%'} />;
   }
 
-  return <FileIcon fileName={file.name} fileType={file.type} size={100} />;
+  return <FileIcon fileName={file.name} fileType={file.type} size={48} />;
 });
 
 export default Content;

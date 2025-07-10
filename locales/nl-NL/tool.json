@@ -54,7 +54,16 @@
       "title": "Zoekmachine:"
     },
     "searchResult": "Aantal zoekresultaten:",
-    "searchTimeRange": "Tijdspanne:",
+    "searchTimeRange": {
+      "title": "Tijdspanne:",
+      "value": {
+        "anytime": "Geen tijdslimiet",
+        "day": "Binnen een dag",
+        "month": "Binnen een maand",
+        "week": "Binnen een week",
+        "year": "Binnen een jaar"
+      }
+    },
     "summary": "Samenvatting",
     "summaryTooltip": "Samenvatting van de huidige inhoud",
     "viewMoreResults": "Bekijk meer {{results}} resultaten"

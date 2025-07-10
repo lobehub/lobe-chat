@@ -71,6 +71,9 @@
     "websites": "Веб-сайты"
   },
   "title": "Файлы",
+  "toggleLeftPanel": {
+    "title": "Показать/Скрыть левую панель"
+  },
   "uploadDock": {
     "body": {
       "collapse": "Свернуть",

@@ -1,4 +1,5 @@
 import { AIChatModelCard } from '@/types/aiModel';
+
 // https://cloud.tencent.com/document/product/1772/115969
 const tencentCloudChatModels: AIChatModelCard[] = [
   {
@@ -36,8 +37,7 @@ const tencentCloudChatModels: AIChatModelCard[] = [
   },
   {
     contextWindowTokens: 65_536,
-    description:
-      'DeepSeek-V3 为671B 参数 MoE 模型，在百科知识、数学推理等多项任务上优势突出。',
+    description: 'DeepSeek-V3 为671B 参数 MoE 模型，在百科知识、数学推理等多项任务上优势突出。',
     displayName: 'DeepSeek V3',
     id: 'deepseek-v3',
     maxOutput: 16_000,

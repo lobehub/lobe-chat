@@ -1,7 +1,6 @@
 'use client';
 
-import { Icon, Tooltip } from '@lobehub/ui';
-import { Button } from 'antd';
+import { Button, Tooltip } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { SettingsIcon } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -21,15 +20,14 @@ const UpdateProviderInfo = memo(() => {
     <>
       <Tooltip title={t('updateAiProvider.tooltip')}>
         <Button
-          color={'default'}
-          icon={<Icon icon={SettingsIcon} />}
+          icon={SettingsIcon}
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
             setOpen(true);
           }}
           size={'small'}
-          variant={'text'}
+          type={'text'}
         />
       </Tooltip>
       {open && providerConfig && (

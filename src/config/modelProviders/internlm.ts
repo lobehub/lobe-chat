@@ -40,6 +40,9 @@ const InternLM: ModelProviderCard = {
   name: 'InternLM',
   settings: {
     disableBrowserRequest: true,
+    proxyUrl: {
+      placeholder: 'https://internlm-chat.intern-ai.org.cn/puyu/api/v1',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
   },

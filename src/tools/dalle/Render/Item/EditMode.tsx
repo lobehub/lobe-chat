@@ -1,5 +1,5 @@
-import { TextArea } from '@lobehub/ui';
-import { Button, Radio, Select } from 'antd';
+import { Button, Select, TextArea } from '@lobehub/ui';
+import { Radio } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -15,7 +15,7 @@ const EditMode = memo<EditModeProps>(({ prompt, setEdit, style, size, quality })
 
   return (
     <Flexbox gap={16}>
-      <TextArea style={{ minHeight: 120 }} type={'block'} value={prompt} />
+      <TextArea style={{ minHeight: 120 }} value={prompt} variant={'filled'} />
       <Flexbox horizontal justify={'space-between'}>
         风格
         <Radio.Group

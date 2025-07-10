@@ -14,7 +14,7 @@ import {
   AgentRuntimeError,
   ChatCompletionErrorPayload,
   ModelProvider,
-} from '@/libs/agent-runtime';
+} from '@/libs/model-runtime';
 import { filesPrompts } from '@/prompts/files';
 import { BuiltinSystemRolePrompts } from '@/prompts/systemRole';
 import { getAgentStoreState } from '@/store/agent';
@@ -29,6 +29,7 @@ import {
   modelConfigSelectors,
   modelProviderSelectors,
   preferenceSelectors,
+  userGeneralSettingsSelectors,
   userProfileSelectors,
 } from '@/store/user/selectors';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
@@ -37,8 +38,14 @@ import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage, MessageToolCall } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
+import { parsePlaceholderVariablesMessages } from '@/utils/client/parserPlaceholder';
 import { createErrorResponse } from '@/utils/errorResponse';
-import { FetchSSEOptions, fetchSSE, getMessageError } from '@/utils/fetch';
+import {
+  FetchSSEOptions,
+  fetchSSE,
+  getMessageError,
+  standardizeAnimationStyle,
+} from '@/utils/fetch';
 import { genToolCallingName } from '@/utils/toolCall';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
 
@@ -172,14 +179,18 @@ class ChatService {
 
     // =================== 0. process search =================== //
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
-
+    const aiInfraStoreState = getAiInfraStoreState();
     const enabledSearch = chatConfig.searchMode !== 'off';
+    const isProviderHasBuiltinSearch = aiProviderSelectors.isProviderHasBuiltinSearch(
+      payload.provider!,
+    )(aiInfraStoreState);
     const isModelHasBuiltinSearch = aiModelSelectors.isModelHasBuiltinSearch(
       payload.model,
       payload.provider!,
-    )(getAiInfraStoreState());
+    )(aiInfraStoreState);
 
-    const useModelSearch = isModelHasBuiltinSearch && chatConfig.useModelBuiltinSearch;
+    const useModelSearch =
+      (isProviderHasBuiltinSearch || isModelHasBuiltinSearch) && chatConfig.useModelBuiltinSearch;
 
     const useApplicationBuiltinSearchTool = enabledSearch && !useModelSearch;
 
@@ -189,11 +200,14 @@ class ChatService {
       pluginIds.push(WebBrowsingManifest.identifier);
     }
 
-    // ============  1. preprocess messages   ============ //
+    // ============  1. preprocess placeholder variables   ============ //
+    const parsedMessages = parsePlaceholderVariablesMessages(messages);
+
+    // ============  2. preprocess messages   ============ //
 
     const oaiMessages = this.processMessages(
       {
-        messages,
+        messages: parsedMessages,
         model: payload.model,
         provider: payload.provider!,
         tools: pluginIds,
@@ -201,41 +215,60 @@ class ChatService {
       options,
     );
 
-    // ============  2. preprocess tools   ============ //
+    // ============  3. preprocess tools   ============ //
 
     const tools = this.prepareTools(pluginIds, {
       model: payload.model,
       provider: payload.provider!,
     });
 
-    // ============  3. process extend params   ============ //
+    // ============  4. process extend params   ============ //
 
     let extendParams: Record<string, any> = {};
 
     const isModelHasExtendParams = aiModelSelectors.isModelHasExtendParams(
       payload.model,
       payload.provider!,
-    )(getAiInfraStoreState());
+    )(aiInfraStoreState);
 
     // model
     if (isModelHasExtendParams) {
       const modelExtendParams = aiModelSelectors.modelExtendParams(
         payload.model,
         payload.provider!,
-      )(getAiInfraStoreState());
+      )(aiInfraStoreState);
       // if model has extended params, then we need to check if the model can use reasoning
 
-      if (modelExtendParams!.includes('enableReasoning') && chatConfig.enableReasoning) {
-        extendParams.thinking = {
-          budget_tokens: chatConfig.reasoningBudgetToken || 1024,
-          type: 'enabled',
-        };
+      if (modelExtendParams!.includes('enableReasoning')) {
+        if (chatConfig.enableReasoning) {
+          extendParams.thinking = {
+            budget_tokens: chatConfig.reasoningBudgetToken || 1024,
+            type: 'enabled',
+          };
+        } else {
+          extendParams.thinking = {
+            budget_tokens: 0,
+            type: 'disabled',
+          };
+        }
       }
+
       if (
         modelExtendParams!.includes('disableContextCaching') &&
         chatConfig.disableContextCaching
       ) {
         extendParams.enabledContextCaching = false;
+      }
+
+      if (modelExtendParams!.includes('reasoningEffort') && chatConfig.reasoningEffort) {
+        extendParams.reasoning_effort = chatConfig.reasoningEffort;
+      }
+
+      if (
+        modelExtendParams!.includes('thinkingBudget') &&
+        chatConfig.thinkingBudget !== undefined
+      ) {
+        extendParams.thinkingBudget = chatConfig.thinkingBudget;
       }
     }
 
@@ -275,7 +308,7 @@ class ChatService {
   };
 
   getChatCompletion = async (params: Partial<ChatStreamPayload>, options?: FetchOptions) => {
-    const { signal } = options ?? {};
+    const { signal, responseAnimation } = options ?? {};
 
     const { provider = ModelProvider.OpenAI, ...res } = params;
 
@@ -287,17 +320,23 @@ class ChatService {
     const providersWithDeploymentName = [
       ModelProvider.Azure,
       ModelProvider.Volcengine,
-      ModelProvider.Doubao,
       ModelProvider.AzureAI,
+      ModelProvider.Qwen,
     ] as string[];
 
     if (providersWithDeploymentName.includes(provider)) {
       model = findDeploymentName(model, provider);
     }
 
+    const apiMode = aiProviderSelectors.isProviderEnableResponseApi(provider)(
+      getAiInfraStoreState(),
+    )
+      ? 'responses'
+      : undefined;
+
     const payload = merge(
       { model: DEFAULT_AGENT_CONFIG.model, stream: true, ...DEFAULT_AGENT_CONFIG.params },
-      { ...res, model },
+      { ...res, apiMode, model },
     );
 
     /**
@@ -353,6 +392,16 @@ class ChatService {
       sdkType = providerConfig?.settings.sdkType || 'openai';
     }
 
+    const userPreferTransitionMode =
+      userGeneralSettingsSelectors.transitionMode(getUserStoreState());
+
+    // The order of the array is very important.
+    const mergedResponseAnimation = [
+      providerConfig?.settings?.responseAnimation || {},
+      userPreferTransitionMode,
+      responseAnimation,
+    ].reduce((acc, cur) => merge(acc, standardizeAnimationStyle(cur)), {});
+
     return fetchSSE(API_ENDPOINTS.chat(sdkType), {
       body: JSON.stringify(payload),
       fetcher: fetcher,
@@ -362,11 +411,8 @@ class ChatService {
       onErrorHandle: options?.onErrorHandle,
       onFinish: options?.onFinish,
       onMessageHandle: options?.onMessageHandle,
+      responseAnimation: mergedResponseAnimation,
       signal,
-      smoothing:
-        providerConfig?.settings?.smoothing ||
-        // @deprecated in V2
-        providerConfig?.smoothing,
     });
   };
 

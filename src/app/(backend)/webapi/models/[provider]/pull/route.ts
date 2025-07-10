@@ -1,5 +1,5 @@
 import { checkAuth } from '@/app/(backend)/middleware/auth';
-import { ChatCompletionErrorPayload, PullModelParams } from '@/libs/agent-runtime';
+import { ChatCompletionErrorPayload, PullModelParams } from '@/libs/model-runtime';
 import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { ChatErrorType } from '@/types/fetch';
 import { createErrorResponse } from '@/utils/errorResponse';

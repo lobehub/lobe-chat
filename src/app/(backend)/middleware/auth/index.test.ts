@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AgentRuntimeError } from '@/libs/agent-runtime';
+import { AgentRuntimeError } from '@/libs/model-runtime';
 import { ChatErrorType } from '@/types/fetch';
 import { createErrorResponse } from '@/utils/errorResponse';
 import { getJWTPayload } from '@/utils/server/jwt';

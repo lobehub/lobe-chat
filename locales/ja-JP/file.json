@@ -71,6 +71,9 @@
     "websites": "ウェブサイト"
   },
   "title": "ファイル",
+  "toggleLeftPanel": {
+    "title": "左側パネルの表示/非表示"
+  },
   "uploadDock": {
     "body": {
       "collapse": "折りたたむ",

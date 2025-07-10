@@ -110,7 +110,7 @@ const GiteeAI: ModelProviderCard = {
       enabled: true,
       id: 'Yi-34B-Chat',
     },
-/*
+    /*
     // not compatible with OpenAI SDK
     {
       description:
@@ -146,6 +146,9 @@ const GiteeAI: ModelProviderCard = {
   name: 'Gitee AI',
   settings: {
     disableBrowserRequest: true,
+    proxyUrl: {
+      placeholder: 'https://ai.gitee.com/v1',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
   },

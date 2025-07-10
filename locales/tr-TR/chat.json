@@ -43,6 +43,9 @@
     "reasoningBudgetToken": {
       "title": "Düşünme Tüketim Tokeni"
     },
+    "reasoningEffort": {
+      "title": "Akıl Yürütme Gücü"
+    },
     "title": "Model Genişletme Özellikleri"
   },
   "history": {

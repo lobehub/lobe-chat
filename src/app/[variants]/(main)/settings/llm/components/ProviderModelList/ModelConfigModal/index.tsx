@@ -1,11 +1,11 @@
-import { Modal } from '@lobehub/ui';
-import { Button, FormInstance } from 'antd';
+import { Button, Modal } from '@lobehub/ui';
+import { FormInstance } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useUserStore } from '@/store/user';
-import { modelConfigSelectors } from '@/store/user/slices/modelList/selectors';
+import { modelConfigSelectors } from '@/store/user/selectors';
 
 import ModelConfigForm from './Form';
 
@@ -39,12 +39,11 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
 
   return (
     <Modal
-      destroyOnClose
+      destroyOnHidden
       footer={[
         <Button key="cancel" onClick={closeModal}>
           {tc('cancel')}
         </Button>,
-
         <Button
           key="ok"
           onClick={() => {

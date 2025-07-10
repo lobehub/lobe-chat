@@ -140,6 +140,9 @@ const Hunyuan: ModelProviderCard = {
   name: 'Hunyuan',
   settings: {
     disableBrowserRequest: true,
+    proxyUrl: {
+      placeholder: 'https://api.hunyuan.cloud.tencent.com/v1',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
   },

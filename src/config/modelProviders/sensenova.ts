@@ -126,6 +126,9 @@ const SenseNova: ModelProviderCard = {
   name: 'SenseNova',
   settings: {
     disableBrowserRequest: true,
+    proxyUrl: {
+      placeholder: 'https://api.sensenova.cn/compatible-mode/v1',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
   },

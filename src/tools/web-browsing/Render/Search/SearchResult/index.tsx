@@ -1,5 +1,5 @@
-import { Icon } from '@lobehub/ui';
-import { Button, Empty, Skeleton } from 'antd';
+import { Button } from '@lobehub/ui';
+import { Empty, Skeleton } from 'antd';
 import { uniq } from 'lodash-es';
 import { Edit2Icon } from 'lucide-react';
 import { memo } from 'react';
@@ -58,7 +58,7 @@ const SearchResult = memo<SearchResultProps>(
                 {!editing && (
                   <div>
                     <Button
-                      icon={<Icon icon={Edit2Icon} />}
+                      icon={Edit2Icon}
                       onClick={() => {
                         setEditing(true);
                       }}

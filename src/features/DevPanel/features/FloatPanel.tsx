@@ -166,13 +166,14 @@ const CollapsibleFloatPanel = memo<CollapsibleFloatPanelProps>(({ items }) => {
               topActions={items.map((item) => (
                 <ActionIcon
                   active={tab === item.key}
+                  icon={item.icon}
                   key={item.key}
                   onClick={() => setTab(item.key)}
-                  placement={'right'}
                   title={item.key}
-                >
-                  {item.icon}
-                </ActionIcon>
+                  tooltipProps={{
+                    placement: 'right',
+                  }}
+                />
               ))}
             />
             <Flexbox

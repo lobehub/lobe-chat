@@ -28,13 +28,12 @@ const ImageWrapper: FC<{ alt: string; src: string }> = async ({ alt, src, ...res
       <Image
         alt={alt}
         height={height}
-        // @ts-ignore
         placeholder={
           <Img
             alt={alt}
             height={height}
             src={base64}
-            style={{ filter: 'blur(24px)', scale: 1.2 }}
+            style={{ filter: 'blur(24px)', height: 'auto', scale: 1.2, width: '100%' }}
             width={DEFAULT_WIDTH}
           />
         }

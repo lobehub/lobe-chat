@@ -1,6 +1,6 @@
 import { createStyles } from 'antd-style';
-import { CSSProperties, type ReactNode, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { type ReactNode, memo } from 'react';
+import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css }) => ({
   header: css`
@@ -8,14 +8,13 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
-interface SidebarHeaderProps {
+interface SidebarHeaderProps extends Omit<FlexboxProps, 'title'> {
   actions?: ReactNode;
   onClick?: () => void;
-  style?: CSSProperties;
   title: ReactNode;
 }
 
-const SidebarHeader = memo<SidebarHeaderProps>(({ title, style, actions, onClick }) => {
+const SidebarHeader = memo<SidebarHeaderProps>(({ title, style, actions, onClick, ...rest }) => {
   const { styles } = useStyles();
 
   return (
@@ -25,9 +24,10 @@ const SidebarHeader = memo<SidebarHeaderProps>(({ title, style, actions, onClick
       distribution={'space-between'}
       horizontal
       onClick={onClick}
-      padding={14}
+      paddingBlock={14}
       paddingInline={16}
       style={style}
+      {...rest}
     >
       <Flexbox align={'center'} gap={4} horizontal width={'100%'}>
         {title}

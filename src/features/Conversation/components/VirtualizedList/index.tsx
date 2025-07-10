@@ -60,12 +60,7 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
     ) : (
       // in client mode and switch page, using the center loading for smooth transition
       <Center height={'100%'} width={'100%'}>
-        <Icon
-          icon={Loader2Icon}
-          size={{ fontSize: 32 }}
-          spin
-          style={{ color: theme.colorTextTertiary }}
-        />
+        <Icon icon={Loader2Icon} size={32} spin style={{ color: theme.colorTextTertiary }} />
       </Center>
     );
 

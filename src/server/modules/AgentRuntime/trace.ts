@@ -7,7 +7,7 @@ import {
   TracePayload,
   TraceTagMap,
 } from '@/const/trace';
-import { ChatStreamCallbacks, ChatStreamPayload } from '@/libs/agent-runtime';
+import { ChatStreamCallbacks, ChatStreamPayload } from '@/libs/model-runtime';
 import { TraceClient } from '@/libs/traces';
 
 export interface AgentChatOptions {

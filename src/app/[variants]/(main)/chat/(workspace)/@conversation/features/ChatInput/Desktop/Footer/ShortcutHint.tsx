@@ -28,10 +28,10 @@ const ShortcutHint = memo(() => {
       horizontal
       style={{ color: theme.colorTextDescription, fontSize: 12, marginRight: 12 }}
     >
-      <Hotkey keys={sendShortcut} style={{ color: 'inherit' }} variant={'pure'} />
+      <Hotkey keys={sendShortcut} style={{ color: 'inherit' }} variant={'borderless'} />
       <span>{t('input.send')}</span>
       <span>/</span>
-      <Hotkey keys={wrapperShortcut} style={{ color: 'inherit' }} variant={'pure'} />
+      <Hotkey keys={wrapperShortcut} style={{ color: 'inherit' }} variant={'borderless'} />
       <span>{t('input.warp')}</span>
     </Flexbox>
   );

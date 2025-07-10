@@ -83,7 +83,7 @@ const Stepfun: ModelProviderCard = {
     },
     {
       contextWindowTokens: 8000,
-      description: 
+      description:
         '基于新一代自研Attention架构MFA的极速大模型，用极低成本达到和step1类似的效果，同时保持了更高的吞吐和更快响应时延。能够处理通用任务，在代码能力上具备特长。',
       displayName: 'Step 2 Mini',
       enabled: true,
@@ -167,24 +167,21 @@ const Stepfun: ModelProviderCard = {
   // after test, currently https://api.stepfun.com/v1/chat/completions has the CORS issue
   // So we should close the browser request mode
   disableBrowserRequest: true,
-
   id: 'stepfun',
-
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://platform.stepfun.com/docs/llm/text',
   name: 'Stepfun',
   settings: {
     disableBrowserRequest: true,
+    proxyUrl: {
+      placeholder: 'https://api.stepfun.com/v1',
+    },
+    responseAnimation: {
+      speed: 2,
+      text: 'smooth',
+    },
     sdkType: 'openai',
     showModelFetcher: true,
-    smoothing: {
-      speed: 2,
-      text: true,
-    },
-  },
-  smoothing: {
-    speed: 2,
-    text: true,
   },
   url: 'https://stepfun.com',
 };

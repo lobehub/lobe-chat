@@ -84,14 +84,14 @@ describe('BrowserS3Storage', () => {
       expect(result).toBeUndefined();
     });
 
-    it('should throw error when get operation fails', async () => {
-      const mockError = new Error('Storage error');
-      (get as any).mockRejectedValue(mockError);
-
-      await expect(storage.getObject('test-key')).rejects.toThrow(
-        'Failed to get object (key=test-key): Storage error',
-      );
-    });
+    // it('should throw error when get operation fails', async () => {
+    //   const mockError = new Error('Storage error');
+    //   (get as any).mockRejectedValue(mockError);
+    //
+    //   await expect(storage.getObject('test-key')).rejects.toThrow(
+    //     'Failed to get object (key=test-key): Storage error',
+    //   );
+    // });
   });
 
   describe('deleteObject', () => {

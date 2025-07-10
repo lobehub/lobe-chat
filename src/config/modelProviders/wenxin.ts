@@ -139,8 +139,7 @@ const BaiduWenxin: ModelProviderCard = {
     },
     {
       contextWindowTokens: 8192,
-      description:
-        'ERNIE Tiny是百度自研的超高性能大语言模型，部署与精调成本在文心系列模型中最低。',
+      description: 'ERNIE Tiny是百度自研的超高性能大语言模型，部署与精调成本在文心系列模型中最低。',
       displayName: 'ERNIE Tiny 8K',
       id: 'ernie-tiny-8k',
       pricing: {
@@ -199,8 +198,7 @@ const BaiduWenxin: ModelProviderCard = {
     },
     {
       contextWindowTokens: 8192,
-      description:
-        '百度自研通用大语言模型，在小说续写能力上有明显优势，也可用在短剧、电影等场景。',
+      description: '百度自研通用大语言模型，在小说续写能力上有明显优势，也可用在短剧、电影等场景。',
       displayName: 'ERNIE Novel 8K',
       id: 'ernie-novel-8k',
       pricing: {
@@ -241,15 +239,14 @@ const BaiduWenxin: ModelProviderCard = {
   modelsUrl: 'https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Nlks5zkzu#%E5%AF%B9%E8%AF%9Dchat',
   name: 'Wenxin',
   settings: {
-    sdkType: 'openai',
-    smoothing: {
-      speed: 2,
-      text: true,
+    proxyUrl: {
+      placeholder: 'https://qianfan.baidubce.com/v2',
     },
-  },
-  smoothing: {
-    speed: 2,
-    text: true,
+    responseAnimation: {
+      speed: 2,
+      text: 'smooth',
+    },
+    sdkType: 'openai',
   },
   url: 'https://cloud.baidu.com/wenxin.html',
 };

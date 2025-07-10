@@ -129,6 +129,7 @@
     "waitingForMore": "More models are <1>planned to be added</1>, stay tuned"
   },
   "plugin": {
+    "addMCPPlugin": "Add MCP Plugin",
     "addTooltip": "Custom Plugin",
     "clearDeprecated": "Remove Deprecated Plugins",
     "empty": "No installed plugins yet, feel free to explore the <1>Plugin Store</1>",
@@ -150,6 +151,7 @@
       "title": "Background Color"
     },
     "description": {
+      "desc": "A brief introduction to your assistant, not for character setting",
       "placeholder": "Enter assistant description",
       "title": "Assistant Description"
     },
@@ -161,11 +163,27 @@
       "placeholder": "Enter role prompt word",
       "title": "Role Setting"
     },
+    "submit": "Update Assistant Information",
     "tag": {
+      "desc": "Assistant tags will be displayed in the assistant marketplace",
       "placeholder": "Enter tag",
       "title": "Tag"
     },
     "title": "Assistant Information"
+  },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Custom grayscale with different color tendencies",
+      "title": "Neutral Color"
+    },
+    "preview": {
+      "title": "Color Palette"
+    },
+    "primaryColor": {
+      "desc": "Custom theme color",
+      "title": "Theme Color"
+    },
+    "title": "Application Appearance"
   },
   "settingChat": {
     "autoCreateTopicThreshold": {
@@ -206,7 +224,49 @@
       "placeholder": "Preprocessing template {{text}} will be replaced with real-time input information",
       "title": "User Input Preprocessing"
     },
+    "submit": "Update Chat Preferences",
     "title": "Chat Settings"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Font size of chat content",
+      "marks": {
+        "normal": "Standard"
+      },
+      "title": "Font Size"
+    },
+    "highlighterTheme": {
+      "title": "Code Highlight Theme"
+    },
+    "mermaidTheme": {
+      "title": "Mermaid Theme"
+    },
+    "title": "Chat Appearance",
+    "transitionMode": {
+      "desc": "Transition animation for chat messages",
+      "options": {
+        "fadeIn": "Fade In",
+        "none": {
+          "desc": "This depends on the model's response output method; please test it yourself.",
+          "value": "None"
+        },
+        "smooth": "Smooth"
+      },
+      "title": "Transition Animation"
+    }
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Follow System",
+      "title": "Language"
+    },
+    "themeMode": {
+      "auto": "Automatic",
+      "dark": "Dark",
+      "light": "Light",
+      "title": "Theme"
+    },
+    "title": "General Settings"
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -235,7 +295,7 @@
       "title": "Expression Divergence"
     },
     "reasoningEffort": {
-      "desc": "The higher the value, the stronger the reasoning ability, but it may increase response time and token consumption.",
+      "desc": "Higher values enhance reasoning ability but may increase response time and token usage.",
       "options": {
         "high": "High",
         "low": "Low",
@@ -243,6 +303,7 @@
       },
       "title": "Reasoning Effort"
     },
+    "submit": "Update Model Settings",
     "temperature": {
       "desc": "The higher the value, the more creative and imaginative the responses; the lower the value, the more rigorous the responses.",
       "title": "Creativity Level",
@@ -319,6 +380,7 @@
       "desc": "Where 'browser' is the native speech recognition service of the browser",
       "title": "Speech Recognition Service"
     },
+    "submit": "Update Voice Service",
     "title": "Speech Service",
     "tts": "Text-to-Speech Settings",
     "ttsService": {
@@ -330,37 +392,6 @@
       "preview": "Voice Preview",
       "title": "Text-to-Speech Voice"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Avatar"
-    },
-    "fontSize": {
-      "desc": "Font size for chat content",
-      "marks": {
-        "normal": "Normal"
-      },
-      "title": "Font Size"
-    },
-    "lang": {
-      "autoMode": "Follow System",
-      "title": "Language"
-    },
-    "neutralColor": {
-      "desc": "Custom neutral color for different color tendencies",
-      "title": "Neutral Color"
-    },
-    "primaryColor": {
-      "desc": "Custom primary theme color",
-      "title": "Primary Color"
-    },
-    "themeMode": {
-      "auto": "Auto",
-      "dark": "Dark",
-      "light": "Light",
-      "title": "Theme"
-    },
-    "title": "Theme Settings"
   },
   "storage": {
     "actions": {
@@ -395,6 +426,12 @@
     "metaMiss": "Please complete the assistant information before submitting. It should include name, description, and tags",
     "placeholder": "Enter a unique identifier for the assistant, e.g. web-development",
     "tooltips": "Share to the assistant marketplace"
+  },
+  "submitFooter": {
+    "reset": "Reset",
+    "submit": "Save",
+    "unSaved": "Unsaved Changes",
+    "unSavedWarning": "There are currently unsaved changes"
   },
   "sync": {
     "device": {
@@ -447,6 +484,7 @@
       "placeholder": "Please enter custom prompt",
       "title": "Custom Prompt"
     },
+    "helpInfo": "When creating a new assistant, the default assistant settings will be used as preset values.",
     "historyCompress": {
       "label": "Conversation History Model",
       "modelDesc": "Specify the model used to compress conversation history",

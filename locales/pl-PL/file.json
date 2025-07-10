@@ -71,6 +71,9 @@
     "websites": "Strony internetowe"
   },
   "title": "Pliki",
+  "toggleLeftPanel": {
+    "title": "Pokaż/ukryj panel po lewej stronie"
+  },
   "uploadDock": {
     "body": {
       "collapse": "Zwiń",

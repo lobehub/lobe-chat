@@ -1,6 +1,6 @@
 'use client';
 
-import { TabsNav } from '@lobehub/ui';
+import { Tabs } from '@lobehub/ui';
 import { useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -20,8 +20,9 @@ const SystemInspector = () => {
 
   return (
     <Flexbox gap={4} height={'100%'}>
-      <TabsNav
+      <Tabs
         activeKey={activeTab}
+        compact
         items={[
           {
             key: TabKey.AiProviderRuntimeConfig,
@@ -46,7 +47,6 @@ const SystemInspector = () => {
           },
         ]}
         onChange={(activeTab) => setActiveTab(activeTab as TabKey)}
-        variant={'compact'}
       />
 
       {activeTab === TabKey.AiProviderRuntimeConfig && <AiProviderRuntimeConfig />}

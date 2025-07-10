@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { checkAuth } from '@/app/(backend)/middleware/auth';
-import { ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
+import { ChatCompletionErrorPayload, ModelProvider } from '@/libs/model-runtime';
 import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { ChatErrorType } from '@/types/fetch';
 import { createErrorResponse } from '@/utils/errorResponse';

@@ -48,7 +48,7 @@ const CollapseGroup = memo<CollapseProps>((props) => {
         <Icon
           className={styles.icon}
           icon={ChevronDown}
-          size={{ fontSize: 16 }}
+          size={16}
           style={isActive ? {} : { rotate: '-90deg' }}
         />
       )}

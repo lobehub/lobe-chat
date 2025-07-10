@@ -5,7 +5,6 @@ import { ElementsConfig } from '@clerk/types';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
-
 export const useStyles = createStyles(
   ({ css, responsive, token }) =>
     ({
@@ -51,10 +50,7 @@ export const useStyles = createStyles(
       scrollBox: css`
         background: transparent;
       `,
-    }) as Partial<{
-      // eslint-disable-next-line unused-imports/no-unused-vars
-      [k in keyof ElementsConfig]: any;
-    }>,
+    }) as Partial<Record<keyof ElementsConfig, any>>,
 );
 
 const Client = memo<{ mobile?: boolean }>(({ mobile }) => {

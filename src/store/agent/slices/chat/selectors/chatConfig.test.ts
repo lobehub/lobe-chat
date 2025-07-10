@@ -88,7 +88,7 @@ describe('agentChatConfigSelectors', () => {
   describe('historyCount', () => {
     it('should return undefined when historyCount is not defined', () => {
       const state = createMockState();
-      expect(agentChatConfigSelectors.historyCount(state)).toBe(8);
+      expect(agentChatConfigSelectors.historyCount(state)).toBe(20);
     });
 
     it('should return the historyCount value when defined', () => {

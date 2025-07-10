@@ -37,12 +37,16 @@ const infiniaiChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 65_536,
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 128_000,
     description:
-      'QwQ 是 Qwen 系列的推理模型，相比传统指令调优模型，QwQ 具备思考和推理能力，在下游任务尤其是难题上能取得显著性能提升。QwQ-32B 是一款中等规模的推理模型，其性能可与最先进的推理模型相媲美，例如 DeepSeek-R1 和 o1-mini。',
-    displayName: 'QwQ 32B',
+      'Qwen3-235B-A22B 是 Qwen 系列第三代的大型语言模型，采用混合专家（MoE）架构，总计 2350 亿参数，每 token 激活 220 亿参数。支持无缝切换思考模式（复杂推理）和非思考模式（通用对话），在数学、编码、常识推理及多语言指令执行中表现出色。',
+    displayName: 'Qwen3 235B A22B',
     enabled: true,
-    id: 'qwq-32b',
+    id: 'qwen3-235b-a22b',
     pricing: {
       currency: 'CNY',
       input: 0,
@@ -51,11 +55,70 @@ const infiniaiChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 32_768,
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 128_000,
     description:
-      'DeepSeek-R1-Distill-Qwen-32B 是基于 DeepSeek-R1 蒸馏而来的模型，在 Qwen2.5-32B 的基础上使用 DeepSeek-R1 生成的样本进行微调。该模型在各种基准测试中表现出色，保持了强大的推理能力。',
-    displayName: 'DeepSeek R1 Distill Qwen 32B',
-    id: 'deepseek-r1-distill-qwen-32b',
+      'Qwen3-30B-A3B 是 Qwen 系列第三代的大型语言模型，采用混合专家（MoE）架构，总计 305 亿参数，每 token 激活 33 亿参数。支持无缝切换思维模式（复杂推理）和非思维模式（通用对话），在数学、编码、常识推理及多语言指令执行中表现出色。',
+    displayName: 'Qwen3 30B A3B',
+    enabled: true,
+    id: 'qwen3-30b-a3b',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'Qwen3-32B 是 Qwen 系列第三代的大型语言模型，拥有 328 亿参数，专为高效推理和多语言任务设计。支持无缝切换思考模式（复杂推理）和非思考模式（通用对话），在数学、编码、常识推理及多语言指令执行中表现出色。',
+    displayName: 'Qwen3 32B',
+    enabled: true,
+    id: 'qwen3-32b',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'Qwen3-14B 是 Qwen 系列第三代的大型语言模型，拥有 148 亿参数，专为高效推理和多语言任务设计。支持无缝切换思维模式（复杂推理）和非思维模式（通用对话），在数学、编码、常识推理及多语言指令执行中表现出色。',
+    displayName: 'Qwen3 14B',
+    enabled: false,
+    id: 'qwen3-14b',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'Qwen3-8B 是 Qwen 系列第三代的大型语言模型，拥有 82 亿参数，专为高效推理和多语言任务设计。支持无缝切换思考模式（复杂推理）和非思考模式（通用对话），在数学、编码、常识推理及多语言指令执行中表现出色。',
+    displayName: 'Qwen3 8B',
+    enabled: false,
+    id: 'qwen3-8b',
     pricing: {
       currency: 'CNY',
       input: 0,
@@ -114,6 +177,9 @@ const infiniaiChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 32_768,
     description:
       'Qwen2.5 是 Qwen 大型语言模型系列的最新成果。Qwen2.5 发布了从 0.5 到 720 亿参数不等的基础语言模型及指令调优语言模型。Qwen2.5 相比 Qwen2 带来了以下改进：\n显著增加知识量，在编程与数学领域的能力得到极大提升。\n在遵循指令、生成长文本、理解结构化数据 (例如，表格) 以及生成结构化输出特别是 JSON 方面有显著提升。对系统提示的多样性更具韧性，增强了聊天机器人中的角色扮演实现和条件设定。\n支持长上下文处理。\n支持超过 29 种语言的多语言功能，包括中文、英语、法语、西班牙语、葡萄牙语、德语、意大利语、俄语、日语、韩语、越南语、泰语、阿拉伯语等。',
@@ -128,6 +194,9 @@ const infiniaiChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 32_768,
     description:
       'Qwen2.5 是 Qwen 大型语言模型系列的最新成果。Qwen2.5 发布了从 0.5 到 720 亿参数不等的基础语言模型及指令调优语言模型。Qwen2.5 相比 Qwen2 带来了以下改进：\n显著增加知识量，在编程与数学领域的能力得到极大提升。\n在遵循指令、生成长文本、理解结构化数据 (例如，表格) 以及生成结构化输出特别是 JSON 方面有显著提升。对系统提示的多样性更具韧性，增强了聊天机器人中的角色扮演实现和条件设定。\n支持长上下文处理。\n支持超过 29 种语言的多语言功能，包括中文、英语、法语、西班牙语、葡萄牙语、德语、意大利语、俄语、日语、韩语、越南语、泰语、阿拉伯语等。',
@@ -168,6 +237,9 @@ const infiniaiChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 32_768,
     description:
       'Qwen2.5 是 Qwen 大型语言模型系列的最新成果。Qwen2.5 发布了从 0.5 到 720 亿参数不等的基础语言模型及指令调优语言模型。Qwen2.5 相比 Qwen2 带来了以下改进：\n显著增加知识量，在编程与数学领域的能力得到极大提升。\n在遵循指令、生成长文本、理解结构化数据 (例如，表格) 以及生成结构化输出特别是 JSON 方面有显著提升。对系统提示的多样性更具韧性，增强了聊天机器人中的角色扮演实现和条件设定。\n支持长上下文处理。\n支持超过 29 种语言的多语言功能，包括中文、英语、法语、西班牙语、葡萄牙语、德语、意大利语、俄语、日语、韩语、越南语、泰语、阿拉伯语等。',
@@ -181,11 +253,43 @@ const infiniaiChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      'QwQ 是 Qwen 系列的推理模型，相比传统指令调优模型，QwQ 具备思考和推理能力，在下游任务尤其是难题上能取得显著性能提升。QwQ-32B 是一款中等规模的推理模型，其性能可与最先进的推理模型相媲美，例如 DeepSeek-R1 和 o1-mini。',
+    displayName: 'QwQ 32B',
+    enabled: false,
+    id: 'qwq-32b',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 32_768,
+    description:
+      'DeepSeek-R1-Distill-Qwen-32B 是基于 DeepSeek-R1 蒸馏而来的模型，在 Qwen2.5-32B 的基础上使用 DeepSeek-R1 生成的样本进行微调。该模型在各种基准测试中表现出色，保持了强大的推理能力。',
+    displayName: 'DeepSeek R1 Distill Qwen 32B',
+    enabled: false,
+    id: 'deepseek-r1-distill-qwen-32b',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
     contextWindowTokens: 8192,
     description:
       'Meta 发布的 LLaMA 3.3 多语言大规模语言模型（LLMs）是一个经过预训练和指令微调的生成模型，提供 70B 规模（文本输入/文本输出）。该模型使用超过 15T 的数据进行训练，支持英语、德语、法语、意大利语、葡萄牙语、印地语、西班牙语和泰语，知识更新截止于 2023 年 12 月。',
     displayName: 'LLaMA 3.3 70B',
-    enabled: true,
+    enabled: false,
     id: 'llama-3.3-70b-instruct',
     pricing: {
       currency: 'CNY',

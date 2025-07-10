@@ -1,5 +1,5 @@
 import { OpenAI } from '@lobehub/icons';
-import { SelectProps } from 'antd';
+import type { SelectProps } from '@lobehub/ui';
 
 import { LabelRenderer } from '@/components/ModelSelect';
 

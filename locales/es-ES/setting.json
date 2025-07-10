@@ -129,6 +129,7 @@
     "waitingForMore": "Más modelos están en <1>planificación para su incorporación</1>, ¡estén atentos!"
   },
   "plugin": {
+    "addMCPPlugin": "Agregar complemento MCP",
     "addTooltip": "Agregar complemento personalizado",
     "clearDeprecated": "Eliminar complementos obsoletos",
     "empty": "No hay complementos instalados actualmente, visita la <1>tienda de complementos</1> para explorar",
@@ -150,6 +151,7 @@
       "title": "Color de fondo"
     },
     "description": {
+      "desc": "Una breve introducción a tu asistente, no como una configuración de personaje",
       "placeholder": "Ingresa la descripción del asistente",
       "title": "Descripción del asistente"
     },
@@ -161,11 +163,27 @@
       "placeholder": "Ingresa la palabra de aviso del rol",
       "title": "Configuración del rol"
     },
+    "submit": "Actualizar información del asistente",
     "tag": {
+      "desc": "Las etiquetas del asistente se mostrarán en el mercado de asistentes",
       "placeholder": "Ingresa la etiqueta",
       "title": "Etiqueta"
     },
     "title": "Información del asistente"
+  },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Personalización de escalas de grises con diferentes inclinaciones de color",
+      "title": "Color Neutro"
+    },
+    "preview": {
+      "title": "Paleta de Colores"
+    },
+    "primaryColor": {
+      "desc": "Color del tema personalizado",
+      "title": "Color del Tema"
+    },
+    "title": "Apariencia de la Aplicación"
   },
   "settingChat": {
     "autoCreateTopicThreshold": {
@@ -206,7 +224,49 @@
       "placeholder": "La plantilla de preprocesamiento {{text}} se reemplazará por la información de entrada en tiempo real",
       "title": "Preprocesamiento de entrada del usuario"
     },
+    "submit": "Actualizar preferencias de chat",
     "title": "Configuración de chat"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Tamaño de fuente del contenido del chat",
+      "marks": {
+        "normal": "Estándar"
+      },
+      "title": "Tamaño de Fuente"
+    },
+    "highlighterTheme": {
+      "title": "Tema de Resaltado de Código"
+    },
+    "mermaidTheme": {
+      "title": "Tema Sirena"
+    },
+    "title": "Apariencia del Chat",
+    "transitionMode": {
+      "desc": "Animación de transición de los mensajes de chat",
+      "options": {
+        "fadeIn": "Aparecer gradualmente",
+        "none": {
+          "desc": "Depende de la forma en que el modelo genera la respuesta, por favor pruébelo usted mismo.",
+          "value": "Ninguna"
+        },
+        "smooth": "Suave"
+      },
+      "title": "Animación de transición"
+    }
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Seguir el sistema",
+      "title": "Idioma"
+    },
+    "themeMode": {
+      "auto": "Automático",
+      "dark": "Oscuro",
+      "light": "Claro",
+      "title": "Tema"
+    },
+    "title": "Configuración Común"
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -235,7 +295,7 @@
       "title": "Diversidad de expresión"
     },
     "reasoningEffort": {
-      "desc": "Cuanto mayor sea el valor, más fuerte será la capacidad de razonamiento, pero puede aumentar el tiempo de respuesta y el consumo de tokens.",
+      "desc": "Cuanto mayor sea el valor, más fuerte será la capacidad de razonamiento, pero puede aumentar el tiempo de respuesta y el consumo de tokens",
       "options": {
         "high": "Alto",
         "low": "Bajo",
@@ -243,6 +303,7 @@
       },
       "title": "Intensidad de razonamiento"
     },
+    "submit": "Actualizar configuración del modelo",
     "temperature": {
       "desc": "Cuanto mayor sea el valor, más creativas e imaginativas serán las respuestas; cuanto menor sea el valor, más rigurosas serán las respuestas",
       "title": "Nivel de creatividad",
@@ -319,6 +380,7 @@
       "desc": "El servicio de reconocimiento de voz, donde el navegador es el servicio nativo de reconocimiento de voz del navegador",
       "title": "Servicio de reconocimiento de voz"
     },
+    "submit": "Actualizar servicio de voz",
     "title": "Servicio de voz",
     "tts": "Configuración de síntesis de voz",
     "ttsService": {
@@ -330,37 +392,6 @@
       "preview": "Vista previa de la voz",
       "title": "Voz de síntesis de voz"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Avatar"
-    },
-    "fontSize": {
-      "desc": "Tamaño de fuente para el contenido del chat",
-      "marks": {
-        "normal": "Normal"
-      },
-      "title": "Tamaño de fuente"
-    },
-    "lang": {
-      "autoMode": "Seguir sistema",
-      "title": "Idioma"
-    },
-    "neutralColor": {
-      "desc": "Personalización de la escala de grises para diferentes tendencias de color",
-      "title": "Color neutro"
-    },
-    "primaryColor": {
-      "desc": "Color principal personalizado",
-      "title": "Color principal"
-    },
-    "themeMode": {
-      "auto": "Automático",
-      "dark": "Oscuro",
-      "light": "Claro",
-      "title": "Tema"
-    },
-    "title": "Configuración de tema"
   },
   "storage": {
     "actions": {
@@ -395,6 +426,12 @@
     "metaMiss": "Por favor complete la información del asistente antes de enviar, debe incluir nombre, descripción y etiquetas",
     "placeholder": "Ingrese el identificador único del asistente, por ejemplo desarrollo-web",
     "tooltips": "Compartir en el mercado de asistentes"
+  },
+  "submitFooter": {
+    "reset": "Restablecer",
+    "submit": "Guardar",
+    "unSaved": "Cambios no guardados",
+    "unSavedWarning": "Actualmente hay cambios no guardados"
   },
   "sync": {
     "device": {
@@ -447,6 +484,7 @@
       "placeholder": "Introduce la palabra clave personalizada",
       "title": "Palabra clave personalizada"
     },
+    "helpInfo": "Al crear un nuevo asistente, se utilizarán los ajustes predeterminados del asistente como valores predeterminados.",
     "historyCompress": {
       "label": "Modelo de historial de conversación",
       "modelDesc": "Especifica el modelo utilizado para comprimir el historial de conversación",

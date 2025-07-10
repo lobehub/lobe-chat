@@ -54,7 +54,16 @@
       "title": "搜尋引擎："
     },
     "searchResult": "搜尋數量：",
-    "searchTimeRange": "時間範圍：",
+    "searchTimeRange": {
+      "title": "時間範圍：",
+      "value": {
+        "anytime": "時間不限",
+        "day": "一天內",
+        "month": "一個月內",
+        "week": "一周內",
+        "year": "一年內"
+      }
+    },
     "summary": "總結",
     "summaryTooltip": "總結當前內容",
     "viewMoreResults": "查看更多 {{results}} 個結果"

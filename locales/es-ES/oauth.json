@@ -33,6 +33,22 @@
     "subTitle": "Ha denegado el acceso de la aplicación a su cuenta de LobeChat",
     "title": "Autorización denegada"
   },
+  "handoff": {
+    "desc": {
+      "processing": "La aplicación está procesando la autorización, redirigiendo a la siguiente página...",
+      "success": "Se ha intentado abrir la aplicación de escritorio. Si la aplicación no se abre automáticamente, cambie manualmente. Puede cerrar esta ventana del navegador más tarde."
+    },
+    "title": {
+      "processing": "Procesando autorización...",
+      "success": "Autorización completada"
+    }
+  },
+  "login": {
+    "button": "Confirmar inicio de sesión",
+    "description": "La aplicación {{clientName}} solicita usar su cuenta para iniciar sesión",
+    "title": "Iniciar sesión en {{clientName}}",
+    "userWelcome": "Bienvenido de nuevo, "
+  },
   "success": {
     "subTitle": "Ha autorizado con éxito a la aplicación para acceder a su cuenta de LobeChat, puede cerrar esta página",
     "title": "Autorización exitosa"

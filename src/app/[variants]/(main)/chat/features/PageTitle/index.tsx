@@ -3,6 +3,7 @@
 import { memo } from 'react';
 
 import PageTitle from '@/components/PageTitle';
+import { withSuspense } from '@/components/withSuspense';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
@@ -15,4 +16,4 @@ const Title = memo(() => {
   return <PageTitle title={[topicTitle, agentTitle].filter(Boolean).join(' · ')} />;
 });
 
-export default Title;
+export default withSuspense(Title);

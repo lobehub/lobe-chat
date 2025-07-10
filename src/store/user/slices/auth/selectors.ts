@@ -2,21 +2,33 @@ import { t } from 'i18next';
 
 import { enableAuth, enableClerk, enableNextAuth } from '@/const/auth';
 import { BRANDING_NAME } from '@/const/branding';
+import { isDesktop } from '@/const/version';
 import { UserStore } from '@/store/user';
 import { LobeUser } from '@/types/user';
 
 const DEFAULT_USERNAME = BRANDING_NAME;
 
 const nickName = (s: UserStore) => {
-  if (!enableAuth) return t('userPanel.defaultNickname', { ns: 'common' });
+  const defaultNickName = s.user?.fullName || s.user?.username;
+  if (!enableAuth) {
+    if (isDesktop) {
+      return defaultNickName;
+    }
+    return t('userPanel.defaultNickname', { ns: 'common' });
+  }
 
-  if (s.isSignedIn) return s.user?.fullName || s.user?.username;
+  if (s.isSignedIn) return defaultNickName;
 
   return t('userPanel.anonymousNickName', { ns: 'common' });
 };
 
 const username = (s: UserStore) => {
-  if (!enableAuth) return DEFAULT_USERNAME;
+  if (!enableAuth) {
+    if (isDesktop) {
+      return s.user?.username;
+    }
+    return DEFAULT_USERNAME;
+  }
 
   if (s.isSignedIn) return s.user?.username;
 
@@ -24,6 +36,9 @@ const username = (s: UserStore) => {
 };
 
 export const userProfileSelectors = {
+  displayUserName: (s: UserStore): string => username(s) || s.user?.email || '',
+  email: (s: UserStore): string => s.user?.email || '',
+  fullName: (s: UserStore): string => s.user?.fullName || '',
   nickName,
   userAvatar: (s: UserStore): string => s.user?.avatar || '',
   userId: (s: UserStore) => s.user?.id,

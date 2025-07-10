@@ -41,6 +41,7 @@ describe('chatToolSlice - dalle', () => {
       vi.spyOn(uploadService, 'getImageFileByUrlWithCORS').mockResolvedValue(
         new File(['1'], 'file.png', { type: 'image/png' }),
       );
+      // @ts-ignore
       vi.spyOn(uploadService, 'uploadToClientS3').mockResolvedValue({} as any);
       vi.spyOn(ClientService.prototype, 'createFile').mockResolvedValue({
         id: mockId,
@@ -56,6 +57,7 @@ describe('chatToolSlice - dalle', () => {
       });
       // For each prompt, loading is toggled on and then off
       expect(imageGenerationService.generateImage).toHaveBeenCalledTimes(prompts.length);
+      // @ts-ignore
       expect(uploadService.uploadToClientS3).toHaveBeenCalledTimes(prompts.length);
       expect(result.current.toggleDallEImageLoading).toHaveBeenCalledTimes(prompts.length * 2);
     });

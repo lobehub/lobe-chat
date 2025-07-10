@@ -129,6 +129,7 @@
     "waitingForMore": "Mais modelos estão sendo <1>planejados para serem adicionados</1>, aguarde ansiosamente"
   },
   "plugin": {
+    "addMCPPlugin": "Adicionar plugin MCP",
     "addTooltip": "Adicionar plug-in personalizado",
     "clearDeprecated": "Remover plug-ins inválidos",
     "empty": "Nenhum plug-in instalado no momento, visite a <1>loja de plug-ins</1> para explorar",
@@ -150,6 +151,7 @@
       "title": "Cor de fundo"
     },
     "description": {
+      "desc": "Uma breve introdução ao seu assistente, não como uma definição de personagem",
       "placeholder": "Digite a descrição do assistente",
       "title": "Descrição do assistente"
     },
@@ -161,11 +163,27 @@
       "placeholder": "Digite a palavra de prompt do papel",
       "title": "Configuração do papel"
     },
+    "submit": "Atualizar informações do assistente",
     "tag": {
+      "desc": "As etiquetas do assistente serão exibidas no mercado de assistentes",
       "placeholder": "Digite a etiqueta",
       "title": "Etiqueta"
     },
     "title": "Informações do assistente"
+  },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Personalização de escala de cinza com diferentes inclinações de cor",
+      "title": "Cor Neutra"
+    },
+    "preview": {
+      "title": "Paleta de Cores"
+    },
+    "primaryColor": {
+      "desc": "Cor do tema personalizada",
+      "title": "Cor do Tema"
+    },
+    "title": "Aparência do Aplicativo"
   },
   "settingChat": {
     "autoCreateTopicThreshold": {
@@ -206,7 +224,49 @@
       "placeholder": "O modelo de pré-processamento {{text}} será substituído pela entrada em tempo real",
       "title": "Pré-processamento de entrada do usuário"
     },
+    "submit": "Atualizar preferências de chat",
     "title": "Configurações de chat"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Tamanho da fonte do conteúdo do chat",
+      "marks": {
+        "normal": "Padrão"
+      },
+      "title": "Tamanho da Fonte"
+    },
+    "highlighterTheme": {
+      "title": "Tema de Destaque de Código"
+    },
+    "mermaidTheme": {
+      "title": "Tema Sereia"
+    },
+    "title": "Aparência do Chat",
+    "transitionMode": {
+      "desc": "Animação de transição das mensagens do chat",
+      "options": {
+        "fadeIn": "Desvanecer",
+        "none": {
+          "desc": "Depende da forma como o modelo responde, por favor teste por conta própria.",
+          "value": "Nenhuma"
+        },
+        "smooth": "Suave"
+      },
+      "title": "Animação de transição"
+    }
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Seguir o Sistema",
+      "title": "Idioma"
+    },
+    "themeMode": {
+      "auto": "Automático",
+      "dark": "Escuro",
+      "light": "Claro",
+      "title": "Tema"
+    },
+    "title": "Configurações Comuns"
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -235,14 +295,15 @@
       "title": "Diversidade de Expressão"
     },
     "reasoningEffort": {
-      "desc": "Quanto maior o valor, mais forte será a capacidade de raciocínio, mas isso pode aumentar o tempo de resposta e o consumo de tokens",
+      "desc": "Quanto maior o valor, mais forte é a capacidade de raciocínio, mas pode aumentar o tempo de resposta e o consumo de tokens",
       "options": {
         "high": "Alto",
         "low": "Baixo",
         "medium": "Médio"
       },
-      "title": "Intensidade de raciocínio"
+      "title": "Intensidade do raciocínio"
     },
+    "submit": "Atualizar configurações do modelo",
     "temperature": {
       "desc": "Quanto maior o valor, mais criativas e imaginativas serão as respostas; quanto menor o valor, mais rigorosas serão as respostas",
       "title": "Atividade Criativa",
@@ -319,6 +380,7 @@
       "desc": "Onde 'browser' é o serviço nativo de reconhecimento de fala do navegador",
       "title": "Serviço de reconhecimento de fala"
     },
+    "submit": "Atualizar serviço de voz",
     "title": "Serviço de fala",
     "tts": "Configurações de síntese de fala",
     "ttsService": {
@@ -330,37 +392,6 @@
       "preview": "Ouvir voz",
       "title": "Voz de síntese de fala"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Avatar"
-    },
-    "fontSize": {
-      "desc": "Tamanho da fonte do conteúdo do chat",
-      "marks": {
-        "normal": "Normal"
-      },
-      "title": "Tamanho da Fonte"
-    },
-    "lang": {
-      "autoMode": "Seguir sistema",
-      "title": "Idioma"
-    },
-    "neutralColor": {
-      "desc": "Personalização de tons de cinza com diferentes tendências de cores",
-      "title": "Cor Neutra"
-    },
-    "primaryColor": {
-      "desc": "Cor do tema personalizado",
-      "title": "Cor Principal"
-    },
-    "themeMode": {
-      "auto": "Automático",
-      "dark": "Escuro",
-      "light": "Claro",
-      "title": "Tema"
-    },
-    "title": "Configurações de Tema"
   },
   "storage": {
     "actions": {
@@ -395,6 +426,12 @@
     "metaMiss": "Por favor, complete as informações do assistente antes de enviar, incluindo nome, descrição e etiqueta",
     "placeholder": "Insira o identificador único do assistente, como por exemplo, desenvolvimento-web",
     "tooltips": "Compartilhar no mercado de assistentes"
+  },
+  "submitFooter": {
+    "reset": "Redefinir",
+    "submit": "Salvar",
+    "unSaved": "Alterações não salvas",
+    "unSavedWarning": "Atualmente há alterações não salvas"
   },
   "sync": {
     "device": {
@@ -447,6 +484,7 @@
       "placeholder": "Digite a palavra-chave personalizada",
       "title": "Palavra-chave personalizada"
     },
+    "helpInfo": "Ao criar um novo assistente, as configurações padrão do assistente serão usadas como valores predefinidos.",
     "historyCompress": {
       "label": "Modelo de Histórico de Conversa",
       "modelDesc": "Especifica o modelo usado para comprimir o histórico de conversa",

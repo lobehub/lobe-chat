@@ -1,0 +1,70 @@
+{
+  "common": {
+    "checkUpdates": "Güncellemeleri kontrol et..."
+  },
+  "dev": {
+    "devPanel": "Geliştirici Paneli",
+    "devTools": "Geliştirici Araçları",
+    "forceReload": "Zorla Yenile",
+    "openStore": "Depolama dosyasını aç",
+    "refreshMenu": "Menüyü yenile",
+    "reload": "Yenile",
+    "title": "Geliştir"
+  },
+  "edit": {
+    "copy": "Kopyala",
+    "cut": "Kes",
+    "paste": "Yapıştır",
+    "redo": "Yinele",
+    "selectAll": "Tümünü Seç",
+    "speech": "Ses",
+    "startSpeaking": "Okumaya Başla",
+    "stopSpeaking": "Okumayı Durdur",
+    "title": "Düzenle",
+    "undo": "Geri Al"
+  },
+  "file": {
+    "preferences": "Tercihler",
+    "quit": "Çık",
+    "title": "Dosya"
+  },
+  "help": {
+    "about": "Hakkında",
+    "githubRepo": "GitHub Deposu",
+    "reportIssue": "Sorun Bildir",
+    "title": "Yardım",
+    "visitWebsite": "Resmi Web Sitesini Ziyaret Et"
+  },
+  "macOS": {
+    "about": "{{appName}} Hakkında",
+    "devTools": "LobeHub Geliştirici Araçları",
+    "hide": "{{appName}}'i Gizle",
+    "hideOthers": "Diğerlerini Gizle",
+    "preferences": "Tercihler...",
+    "services": "Hizmetler",
+    "unhide": "Hepsini Göster"
+  },
+  "tray": {
+    "open": "{{appName}}'i Aç",
+    "quit": "Çık",
+    "show": "{{appName}}'i Göster"
+  },
+  "view": {
+    "forceReload": "Zorla Yenile",
+    "reload": "Yenile",
+    "resetZoom": "Yakınlaştırmayı Sıfırla",
+    "title": "Görünüm",
+    "toggleFullscreen": "Tam Ekrana Geç",
+    "zoomIn": "Büyüt",
+    "zoomOut": "Küçült"
+  },
+  "window": {
+    "bringAllToFront": "Tüm Pencereleri Öne Getir",
+    "close": "Kapat",
+    "front": "Tüm Pencereleri Öne Getir",
+    "minimize": "Küçült",
+    "title": "Pencere",
+    "toggleFullscreen": "Tam Ekrana Geç",
+    "zoom": "Yakınlaştır"
+  }
+}

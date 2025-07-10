@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LobeChatDatabase } from '@/database/type';
-import { ModelProvider } from '@/libs/agent-runtime';
+import { ModelProvider } from '@/libs/model-runtime';
 import { sleep } from '@/utils/sleep';
 
 import { aiProviders, users } from '../../schemas';
@@ -361,12 +361,14 @@ describe('AiProviderModel', () => {
       const config = await aiProviderModel.getAiProviderRuntimeConfig(mockDecryptor);
 
       expect(config.provider1).toEqual({
+        config: {},
         fetchOnClient: true,
         keyVaults: { decryptedKey: 'value' },
         settings: { setting1: true },
       });
 
       expect(config.provider2).toEqual({
+        config: {},
         fetchOnClient: undefined,
         keyVaults: {},
         settings: {},

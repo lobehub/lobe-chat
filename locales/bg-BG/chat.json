@@ -43,6 +43,9 @@
     "reasoningBudgetToken": {
       "title": "Токени за разходи при мислене"
     },
+    "reasoningEffort": {
+      "title": "Интензитет на разсъждение"
+    },
     "title": "Разширени функции на модела"
   },
   "history": {

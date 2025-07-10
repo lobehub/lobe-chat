@@ -24,7 +24,7 @@ interface CreateDatasetModalProps {
 
 export const useCreateDatasetModal = createModal<CreateDatasetModalProps>((instance, params) => ({
   content: (
-    <Flexbox paddingInline={16} style={{ marginBlock: 24 }}>
+    <Flexbox paddingInline={16} style={{ paddingBottom: 16 }}>
       <CreateForm
         knowledgeBaseId={params!.knowledgeBaseId}
         onClose={() => {

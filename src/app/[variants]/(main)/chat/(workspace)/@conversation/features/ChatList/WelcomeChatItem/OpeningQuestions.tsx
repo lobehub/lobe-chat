@@ -1,5 +1,6 @@
 'use client';
 
+import { Block } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,19 +11,10 @@ import { useChatStore } from '@/store/chat';
 
 const useStyles = createStyles(({ css, token, responsive }) => ({
   card: css`
-    cursor: pointer;
-
-    padding-block: 12px;
-    padding-inline: 24px;
+    padding-block: 8px;
+    padding-inline: 16px;
     border-radius: 48px;
-
-    color: ${token.colorText};
-
     background: ${token.colorBgContainer};
-
-    &:hover {
-      background: ${token.colorBgElevated};
-    }
 
     ${responsive.mobile} {
       padding-block: 8px;
@@ -32,7 +24,7 @@ const useStyles = createStyles(({ css, token, responsive }) => ({
 
   container: css`
     padding-block: 0;
-    padding-inline: 20px;
+    padding-inline: 64px 16px;
   `,
 
   title: css`
@@ -58,16 +50,20 @@ const OpeningQuestions = memo<OpeningQuestionsProps>(({ mobile, questions }) => 
       <Flexbox gap={8} horizontal wrap={'wrap'}>
         {questions.slice(0, mobile ? 2 : 5).map((question) => {
           return (
-            <div
+            <Block
               className={styles.card}
+              clickable
               key={question}
               onClick={() => {
                 updateInputMessage(question);
                 sendMessage({ isWelcomeQuestion: true });
               }}
+              paddingBlock={8}
+              paddingInline={12}
+              variant={'outlined'}
             >
               {question}
-            </div>
+            </Block>
           );
         })}
       </Flexbox>

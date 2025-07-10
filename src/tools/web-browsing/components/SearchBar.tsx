@@ -1,5 +1,5 @@
-import { Icon, Tooltip } from '@lobehub/ui';
-import { Button, Checkbox, Input, Radio, Select, Space, Typography } from 'antd';
+import { Button, Input, Select, Text, Tooltip } from '@lobehub/ui';
+import { Checkbox, Radio, Space } from 'antd';
 import { SearchIcon } from 'lucide-react';
 import { ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -59,12 +59,7 @@ const SearchBar = memo<SearchBarProps>(
     };
 
     const searchButton = (
-      <Button
-        icon={<Icon icon={SearchIcon} />}
-        loading={loading}
-        onClick={updateAndSearch}
-        type={'primary'}
-      >
+      <Button icon={SearchIcon} loading={loading} onClick={updateAndSearch} type={'primary'}>
         {isMobile ? undefined : t('search.searchBar.button')}
       </Button>
     );
@@ -120,9 +115,9 @@ const SearchBar = memo<SearchBarProps>(
           />
         ) : (
           <Flexbox align={'flex-start'} gap={8} horizontal>
-            <Typography.Text style={{ marginTop: 2, wordBreak: 'keep-all' }} type={'secondary'}>
+            <Text style={{ marginTop: 2, wordBreak: 'keep-all' }} type={'secondary'}>
               {t('search.searchEngine.title')}
-            </Typography.Text>
+            </Text>
             <Checkbox.Group
               onChange={(checkedValue) => {
                 setEngines(checkedValue);
@@ -169,9 +164,9 @@ const SearchBar = memo<SearchBarProps>(
           />
         ) : (
           <Flexbox align="flex-start" gap={8} horizontal>
-            <Typography.Text style={{ marginTop: 2, wordBreak: 'keep-all' }} type={'secondary'}>
+            <Text style={{ marginTop: 2, wordBreak: 'keep-all' }} type={'secondary'}>
               {t('search.searchCategory.title')}
-            </Typography.Text>
+            </Text>
             <Checkbox.Group
               onChange={(checkedValue) => setCategories(checkedValue)}
               options={Object.keys(CATEGORY_ICON_MAP).map((item) => ({
@@ -189,7 +184,7 @@ const SearchBar = memo<SearchBarProps>(
         )}
 
         <Flexbox align={'center'} gap={16} horizontal wrap={'wrap'}>
-          <Typography.Text type={'secondary'}>{t('search.searchTimeRange.title')}</Typography.Text>
+          <Text type={'secondary'}>{t('search.searchTimeRange.title')}</Text>
           <Radio.Group
             onChange={(e) => setTimeRange(e.target.value)}
             optionType="button"

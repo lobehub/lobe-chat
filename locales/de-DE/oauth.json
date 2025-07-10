@@ -33,6 +33,22 @@
     "subTitle": "Sie haben die Autorisierung für die Anwendung zum Zugriff auf Ihr LobeChat-Konto abgelehnt",
     "title": "Autorisierung abgelehnt"
   },
+  "handoff": {
+    "desc": {
+      "processing": "Die Anwendung verarbeitet die Autorisierung und wird gleich zur nächsten Seite weitergeleitet...",
+      "success": "Es wurde versucht, die Desktop-Anwendung zu öffnen. Wenn die Anwendung nicht automatisch geöffnet wird, wechseln Sie bitte manuell. Sie können dieses Browserfenster später schließen."
+    },
+    "title": {
+      "processing": "Autorisation wird bearbeitet...",
+      "success": "Autorisation abgeschlossen"
+    }
+  },
+  "login": {
+    "button": "Login bestätigen",
+    "description": "Die Anwendung {{clientName}} beantragt die Nutzung Ihres Kontos für den Login",
+    "title": "Login bei {{clientName}}",
+    "userWelcome": "Willkommen zurück, "
+  },
   "success": {
     "subTitle": "Sie haben der Anwendung erfolgreich Zugriff auf Ihr LobeChat-Konto gewährt. Sie können diese Seite jetzt schließen.",
     "title": "Autorisierung erfolgreich"

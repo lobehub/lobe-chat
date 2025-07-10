@@ -1,8 +1,8 @@
-import { appEnv } from '@/config/app';
 import { BRANDING_LOGO_URL, BRANDING_NAME, ORG_NAME } from '@/const/branding';
 import { DEFAULT_LANG } from '@/const/locale';
 import { OFFICIAL_URL, OG_URL } from '@/const/url';
 import { isCustomBranding, isCustomORG } from '@/const/version';
+import { appEnv } from '@/envs/app';
 import { translation } from '@/server/translation';
 import { DynamicLayoutProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';

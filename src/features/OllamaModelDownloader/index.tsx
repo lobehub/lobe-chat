@@ -1,6 +1,6 @@
 import { Ollama } from '@lobehub/icons';
-import { Alert } from '@lobehub/ui';
-import { Button, Input, Progress } from 'antd';
+import { Alert, Button, Input } from '@lobehub/ui';
+import { Progress } from 'antd';
 import { useTheme } from 'antd-style';
 import { ReactNode, memo, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -54,7 +54,16 @@
       "title": "Search Engine:"
     },
     "searchResult": "Number of searches:",
-    "searchTimeRange": "Time Range:",
+    "searchTimeRange": {
+      "title": "Time Range:",
+      "value": {
+        "anytime": "Anytime",
+        "day": "Within a day",
+        "month": "Within a month",
+        "week": "Within a week",
+        "year": "Within a year"
+      }
+    },
     "summary": "Summary",
     "summaryTooltip": "Summarize the current content",
     "viewMoreResults": "View {{results}} more results"

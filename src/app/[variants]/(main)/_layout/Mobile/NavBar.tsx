@@ -1,7 +1,7 @@
 'use client';
 
 import { Icon } from '@lobehub/ui';
-import { MobileTabBar, type MobileTabBarProps } from '@lobehub/ui/mobile';
+import { TabBar, type TabBarProps } from '@lobehub/ui/mobile';
 import { createStyles } from 'antd-style';
 import { Compass, MessageSquare, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -9,6 +9,7 @@ import { rgba } from 'polished';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { MOBILE_TABBAR_HEIGHT } from '@/const/layoutTokens';
 import { useActiveTabKey } from '@/hooks/useActiveTabKey';
 import { SidebarTabKey } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -35,7 +36,7 @@ const NavBar = memo(() => {
 
   const { showMarket } = useServerConfigStore(featureFlagsSelectors);
 
-  const items: MobileTabBarProps['items'] = useMemo(
+  const items: TabBarProps['items'] = useMemo(
     () =>
       [
         {
@@ -68,11 +69,18 @@ const NavBar = memo(() => {
           },
           title: t('tab.me'),
         },
-      ].filter(Boolean) as MobileTabBarProps['items'],
+      ].filter(Boolean) as TabBarProps['items'],
     [t],
   );
 
-  return <MobileTabBar activeKey={activeKey} className={styles.container} items={items} />;
+  return (
+    <TabBar
+      activeKey={activeKey}
+      className={styles.container}
+      height={MOBILE_TABBAR_HEIGHT}
+      items={items}
+    />
+  );
 });
 
 NavBar.displayName = 'NavBar';

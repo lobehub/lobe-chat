@@ -1,51 +1,228 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
 // https://siliconflow.cn/zh-cn/models
-
 const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 131_072,
+    description:
+      'Kimi-Dev-72B 是一款开源代码大模型，经过大规模强化学习优化，能输出稳健、可直接投产的补丁。该模型在 SWE-bench Verified 上取得 60.4 % 的新高分，刷新了开源模型在缺陷修复、代码评审等自动化软件工程任务上的纪录。',
+    displayName: 'Kimi Dev 72B',
+    id: 'moonshotai/Kimi-Dev-72B',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 8,
+    },
+    releasedAt: '2025-06-17',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Hunyuan-A13B-Instruct 参数量800 亿，激活 130 亿参数即可对标更大模型，支持“快思考/慢思考”混合推理；长文理解稳定；经 BFCL-v3 与 τ-Bench 验证，Agent 能力领先；结合 GQA 与多量化格式，实现高效推理。',
+    displayName: 'Hunyuan A13B Instruct',
+    id: 'tencent/Hunyuan-A13B-Instruct',
+    pricing: {
+      currency: 'CNY',
+      input: 1,
+      output: 4,
+    },
+    releasedAt: '2025-06-27',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'MiniMax-M1 是开源权重的大规模混合注意力推理模型，拥有 4560 亿参数，每个 Token 可激活约 459 亿参数。模型原生支持 100 万 Token 的超长上下文，并通过闪电注意力机制，在 10 万 Token 的生成任务中相比 DeepSeek R1 节省 75% 的浮点运算量。同时，MiniMax-M1 采用 MoE（混合专家）架构，结合 CISPO 算法与混合注意力设计的高效强化学习训练，在长输入推理与真实软件工程场景中实现了业界领先的性能。',
+    displayName: 'MiniMax M1 80K',
+    id: 'MiniMaxAI/MiniMax-M1-80k',
+    pricing: {
+      currency: 'CNY',
+      input: 4,
+      output: 16,
+    },
+    releasedAt: '2025-06-16',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'QwenLong-L1-32B 是首个使用强化学习训练的长上下文大型推理模型（LRM），专门针对长文本推理任务进行优化。该模型通过渐进式上下文扩展的强化学习框架，实现了从短上下文到长上下文的稳定迁移。在七个长上下文文档问答基准测试中，QwenLong-L1-32B 超越了 OpenAI-o3-mini 和 Qwen3-235B-A22B 等旗舰模型，性能可媲美 Claude-3.7-Sonnet-Thinking。该模型特别擅长数学推理、逻辑推理和多跳推理等复杂任务。',
+    displayName: 'QwenLong L1 32B',
+    id: 'Tongyi-Zhiwen/QwenLong-L1-32B',
+    pricing: {
+      currency: 'CNY',
+      input: 1,
+      output: 4,
+    },
+    releasedAt: '2025-05-26',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 235B A22B',
+    id: 'Qwen/Qwen3-235B-A22B',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 2.5,
+      output: 10,
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 32B',
+    id: 'Qwen/Qwen3-32B',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 1,
+      output: 4,
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 30B A3B',
+    id: 'Qwen/Qwen3-30B-A3B',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.7,
+      output: 2.8,
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 14B',
+    id: 'Qwen/Qwen3-14B',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.5,
+      output: 2,
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
+    displayName: 'Qwen3 8B',
+    enabled: true,
+    id: 'Qwen/Qwen3-8B',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    releasedAt: '2025-04-28',
+    settings: {
+      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
     description:
       'GLM-Z1-Rumination-32B-0414 是一个具有沉思能力的深度推理模型（与 OpenAI 的 Deep Research 对标）。与典型的深度思考模型不同，沉思模型采用更长时间的深度思考来解决更开放和复杂的问题。',
     displayName: 'GLM-Z1-Rumination 32B 0414',
-    enabled: true,
     id: 'THUDM/GLM-Z1-Rumination-32B-0414',
     pricing: {
       currency: 'CNY',
-      input: 0.5,
-      output: 0.5,
+      input: 1,
+      output: 4,
     },
     type: 'chat',
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 131_072,
     description:
       'GLM-Z1-32B-0414 是一个具有深度思考能力的推理模型。该模型基于 GLM-4-32B-0414 通过冷启动和扩展强化学习开发，并在数学、代码和逻辑任务上进行了进一步训练。与基础模型相比，GLM-Z1-32B-0414 显著提升了数学能力和解决复杂任务的能力。',
     displayName: 'GLM-Z1 32B 0414',
-    enabled: true,
     id: 'THUDM/GLM-Z1-32B-0414',
     pricing: {
       currency: 'CNY',
-      input: 0.5,
-      output: 0.5,
+      input: 1,
+      output: 4,
     },
     type: 'chat',
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 131_072,
     description:
       'GLM-Z1-9B-0414 是 GLM 系列的小型模型，仅有 90 亿参数，但保持了开源传统的同时展现出惊人的能力。尽管规模较小，该模型在数学推理和通用任务上仍表现出色，其总体性能在同等规模的开源模型中已处于领先水平。',
     displayName: 'GLM-Z1 9B 0414',
-    enabled: true,
     id: 'THUDM/GLM-Z1-9B-0414',
     pricing: {
       currency: 'CNY',
@@ -55,20 +232,25 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 32_768,
     description:
       'GLM-4-32B-0414 是 GLM 系列的新一代开源模型，拥有 320 亿参数。该模型性能可与 OpenAI 的 GPT 系列和 DeepSeek 的 V3/R1 系列相媲美。',
     displayName: 'GLM-4 32B 0414',
-    enabled: true,
     id: 'THUDM/GLM-4-32B-0414',
     pricing: {
       currency: 'CNY',
-      input: 0.5,
-      output: 0.5,
+      input: 1.89,
+      output: 1.89,
     },
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 32_768,
     description:
       'GLM-4-9B-0414 是 GLM 系列的小型模型，拥有 90 亿参数。该模型继承了 GLM-4-32B 系列的技术特点，但提供了更轻量级的部署选择。尽管规模较小，GLM-4-9B-0414 仍在代码生成、网页设计、SVG 图形生成和基于搜索的写作等任务上展现出色能力。',
@@ -84,14 +266,30 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'DeepSeek-R1-0528-Qwen3-8B 是通过从 DeepSeek-R1-0528 模型蒸馏思维链到 Qwen3 8B Base 获得的模型。该模型在开源模型中达到了最先进（SOTA）的性能，在 AIME 2024 测试中超越了 Qwen3 8B 10%，并达到了 Qwen3-235B-thinking 的性能水平。该模型在数学推理、编程和通用逻辑等多个基准测试中表现出色，其架构与 Qwen3-8B 相同，但共享 DeepSeek-R1-0528 的分词器配置。',
+    displayName: 'DeepSeek R1 0528 Qwen3 8B',
+    enabled: true,
+    id: 'deepseek-ai/DeepSeek-R1-0528-Qwen3-8B',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       functionCall: true,
       reasoning: true,
     },
-    contextWindowTokens: 65_536,
+    contextWindowTokens: 98_304,
     description:
       'DeepSeek-R1 是一款强化学习（RL）驱动的推理模型，解决了模型中的重复性和可读性问题。在 RL 之前，DeepSeek-R1 引入了冷启动数据，进一步优化了推理性能。它在数学、代码和推理任务中与 OpenAI-o1 表现相当，并且通过精心设计的训练方法，提升了整体效果。',
     displayName: 'DeepSeek R1',
-    enabled: true,
     id: 'deepseek-ai/DeepSeek-R1',
     pricing: {
       currency: 'CNY',
@@ -108,7 +306,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。',
     displayName: 'DeepSeek V3',
-    enabled: true,
     id: 'deepseek-ai/DeepSeek-V3',
     pricing: {
       currency: 'CNY',
@@ -122,11 +319,28 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
     },
-    contextWindowTokens: 65_536,
+    contextWindowTokens: 98_304,
     description:
       'DeepSeek-R1 是一款强化学习（RL）驱动的推理模型，解决了模型中的重复性和可读性问题。在 RL 之前，DeepSeek-R1 引入了冷启动数据，进一步优化了推理性能。它在数学、代码和推理任务中与 OpenAI-o1 表现相当，并且通过精心设计的训练方法，提升了整体效果。',
     displayName: 'DeepSeek R1 (Pro)',
     id: 'Pro/deepseek-ai/DeepSeek-R1',
+    pricing: {
+      currency: 'CNY',
+      input: 4,
+      output: 16,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 98_304,
+    description:
+      'DeepSeek-R1 是一款强化学习（RL）驱动的推理模型，解决了模型中的重复性和可读性问题。在 RL 之前，DeepSeek-R1 引入了冷启动数据，进一步优化了推理性能。它在数学、代码和推理任务中与 OpenAI-o1 表现相当，并且通过精心设计的训练方法，提升了整体效果。',
+    displayName: 'DeepSeek R1 0120 (Pro)',
+    id: 'Pro/deepseek-ai/DeepSeek-R1-0120',
     pricing: {
       currency: 'CNY',
       input: 4,
@@ -143,7 +357,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       'DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。',
     displayName: 'DeepSeek V3 (Pro)',
     id: 'Pro/deepseek-ai/DeepSeek-V3',
-    pricing: { 
+    pricing: {
       currency: 'CNY',
       input: 2,
       output: 8,
@@ -158,8 +372,8 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。',
     displayName: 'DeepSeek V3 1226 (Pro)',
-    id: 'Pro/deepseek-ai/DeepSeek-V3-1226', // 将于 2025 年 4 月 30 日废弃
-    pricing: { 
+    id: 'Pro/deepseek-ai/DeepSeek-V3-1226',
+    pricing: {
       currency: 'CNY',
       input: 2,
       output: 8,
@@ -168,99 +382,71 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      reasoning: true
+      functionCall: true,
+      reasoning: true,
     },
-    contextWindowTokens: 32_768,
-    description: 
-      "DeepSeek-R1-Distill-Qwen-32B 是基于 Qwen2.5-32B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，在数学、编程和推理等多个领域展现出卓越的性能。在 AIME 2024、MATH-500、GPQA Diamond 等多个基准测试中都取得了优异成绩，其中在 MATH-500 上达到了 94.3% 的准确率，展现出强大的数学推理能力。",
-    displayName: "DeepSeek R1 Distill Qwen 32B",
-    id: "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+    contextWindowTokens: 131_072,
+    description:
+      'DeepSeek-R1-Distill-Qwen-32B 是基于 Qwen2.5-32B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，在数学、编程和推理等多个领域展现出卓越的性能。在 AIME 2024、MATH-500、GPQA Diamond 等多个基准测试中都取得了优异成绩，其中在 MATH-500 上达到了 94.3% 的准确率，展现出强大的数学推理能力。',
+    displayName: 'DeepSeek R1 Distill Qwen 32B',
+    id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
     pricing: {
-      currency: "CNY",
+      currency: 'CNY',
       input: 1.26,
-      output: 1.26
+      output: 1.26,
     },
-    type: "chat"
+    type: 'chat',
   },
   {
     abilities: {
-      reasoning: true
+      functionCall: true,
+      reasoning: true,
     },
-    contextWindowTokens: 32_768,
-    description: 
-      "DeepSeek-R1-Distill-Qwen-14B 是基于 Qwen2.5-14B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，展现出优秀的推理能力。在多个基准测试中表现出色，其中在 MATH-500 上达到了 93.9% 的准确率，在 AIME 2024 上达到了 69.7% 的通过率，在 CodeForces 上获得了 1481 的评分，显示出在数学和编程领域的强大实力。",
-    displayName: "DeepSeek R1 Distill Qwen 14B",
-    id: "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
+    contextWindowTokens: 131_072,
+    description:
+      'DeepSeek-R1-Distill-Qwen-14B 是基于 Qwen2.5-14B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，展现出优秀的推理能力。在多个基准测试中表现出色，其中在 MATH-500 上达到了 93.9% 的准确率，在 AIME 2024 上达到了 69.7% 的通过率，在 CodeForces 上获得了 1481 的评分，显示出在数学和编程领域的强大实力。',
+    displayName: 'DeepSeek R1 Distill Qwen 14B',
+    id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
     pricing: {
-      currency: "CNY",
+      currency: 'CNY',
       input: 0.7,
-      output: 0.7
+      output: 0.7,
     },
-    type: "chat"
+    type: 'chat',
   },
   {
     abilities: {
-      reasoning: true
+      functionCall: true,
+      reasoning: true,
     },
-    contextWindowTokens: 32_768,
-    description: 
-      "DeepSeek-R1-Distill-Qwen-7B 是基于 Qwen2.5-Math-7B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，展现出优秀的推理能力。在多个基准测试中表现出色，其中在 MATH-500 上达到了 92.8% 的准确率，在 AIME 2024 上达到了 55.5% 的通过率，在 CodeForces 上获得了 1189 的评分，作为 7B 规模的模型展示了较强的数学和编程能力。",
-    displayName: "DeepSeek R1 Distill Qwen 7B (Free)",
-    id: "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+    contextWindowTokens: 131_072,
+    description:
+      'DeepSeek-R1-Distill-Qwen-7B 是基于 Qwen2.5-Math-7B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，展现出优秀的推理能力。在多个基准测试中表现出色，其中在 MATH-500 上达到了 92.8% 的准确率，在 AIME 2024 上达到了 55.5% 的通过率，在 CodeForces 上获得了 1189 的评分，作为 7B 规模的模型展示了较强的数学和编程能力。',
+    displayName: 'DeepSeek R1 Distill Qwen 7B (Free)',
+    id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B',
     pricing: {
-      currency: "CNY",
+      currency: 'CNY',
       input: 0,
-      output: 0
+      output: 0,
     },
-    type: "chat",
+    type: 'chat',
   },
   {
     abilities: {
-      reasoning: true
+      functionCall: true,
+      reasoning: true,
     },
-    contextWindowTokens: 32_768,
-    description: 
-      "DeepSeek-R1-Distill-Qwen-1.5B 是基于 Qwen2.5-Math-1.5B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，在多个基准测试中展现出不错的性能。作为一个轻量级模型，在 MATH-500 上达到了 83.9% 的准确率，在 AIME 2024 上达到了 28.9% 的通过率，在 CodeForces 上获得了 954 的评分，显示出超出其参数规模的推理能力。",
-    displayName: "DeepSeek-R1-Distill-Qwen-1.5B (Free)",
-    id: "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+    contextWindowTokens: 131_072,
+    description:
+      'DeepSeek-R1-Distill-Qwen-7B 是基于 Qwen2.5-Math-7B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，展现出优秀的推理能力。在多个基准测试中表现出色，其中在 MATH-500 上达到了 92.8% 的准确率，在 AIME 2024 上达到了 55.5% 的通过率，在 CodeForces 上获得了 1189 的评分，作为 7B 规模的模型展示了较强的数学和编程能力。',
+    displayName: 'DeepSeek R1 Distill Qwen 7B (Pro)',
+    id: 'Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B',
     pricing: {
-      currency: "CNY",
-      input: 0,
-      output: 0
-    },
-    type: "chat"
-  },
-  {
-    abilities: {
-      reasoning: true
-    },
-    contextWindowTokens: 32_768,
-    description: 
-      "DeepSeek-R1-Distill-Qwen-7B 是基于 Qwen2.5-Math-7B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，展现出优秀的推理能力。在多个基准测试中表现出色，其中在 MATH-500 上达到了 92.8% 的准确率，在 AIME 2024 上达到了 55.5% 的通过率，在 CodeForces 上获得了 1189 的评分，作为 7B 规模的模型展示了较强的数学和编程能力。",
-    displayName: "DeepSeek R1 Distill Qwen 7B (Pro)",
-    id: "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
-    pricing: {
-      currency: "CNY",
+      currency: 'CNY',
       input: 0.35,
-      output: 0.35
+      output: 0.35,
     },
-    type: "chat",
-  },
-  {
-    abilities: {
-      reasoning: true
-    },
-    contextWindowTokens: 32_768,
-    description: 
-      "DeepSeek-R1-Distill-Qwen-1.5B 是基于 Qwen2.5-Math-1.5B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，在多个基准测试中展现出不错的性能。作为一个轻量级模型，在 MATH-500 上达到了 83.9% 的准确率，在 AIME 2024 上达到了 28.9% 的通过率，在 CodeForces 上获得了 954 的评分，显示出超出其参数规模的推理能力。",
-    displayName: "DeepSeek-R1-Distill-Qwen-1.5B (Pro)",
-    id: "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
-    pricing: {
-      currency: "CNY",
-      input: 0.14,
-      output: 0.14
-    },
-    type: "chat"
+    type: 'chat',
   },
   {
     abilities: {
@@ -303,7 +489,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     description:
       'QVQ-72B-Preview 是由 Qwen 团队开发的专注于视觉推理能力的研究型模型，其在复杂场景理解和解决视觉相关的数学问题方面具有独特优势。',
     displayName: 'QVQ 72B Preview',
-    enabled: true,
     id: 'Qwen/QVQ-72B-Preview',
     pricing: {
       currency: 'CNY',
@@ -314,13 +499,13 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
     },
-    contextWindowTokens: 32_768,
+    contextWindowTokens: 131_072,
     description:
       'QwQ 是 Qwen 系列的推理模型。与传统的指令调优模型相比，QwQ 具备思考和推理能力，能够在下游任务中实现显著增强的性能，尤其是在解决困难问题方面。QwQ-32B 是中型推理模型，能够在与最先进的推理模型（如 DeepSeek-R1、o1-mini）的对比中取得有竞争力的性能。该模型采用 RoPE、SwiGLU、RMSNorm 和 Attention QKV bias 等技术，具有 64 层网络结构和 40 个 Q 注意力头（GQA 架构中 KV 为 8 个）。',
     displayName: 'QwQ 32B',
-    enabled: true,
     id: 'Qwen/QwQ-32B',
     pricing: {
       currency: 'CNY',
@@ -429,22 +614,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 32_768,
-    description:
-      'Qwen2.5-72B-Instruct 是阿里云发布的最新大语言模型系列之一。该 72B 模型在编码和数学等领域具有显著改进的能力。该模型还提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升',
-    displayName: 'Qwen2.5 72B Instruct (Vendor-A)',
-    id: 'Vendor-A/Qwen/Qwen2.5-72B-Instruct',
-    pricing: {
-      currency: 'CNY',
-      input: 1,
-      output: 1,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
     contextWindowTokens: 131_072,
     description:
       'Qwen2.5-72B-Instruct 是阿里云发布的最新大语言模型系列之一。该 72B 模型在编码和数学等领域具有显著改进的能力。它支持长达 128K tokens 的输入，可以生成超过 8K tokens 的长文本。该模型还提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升',
@@ -499,32 +668,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   {
     contextWindowTokens: 32_768,
     description:
-      'Qwen2-1.5B-Instruct 是 Qwen2 系列中的指令微调大语言模型，参数规模为 1.5B。该模型基于 Transformer 架构，采用了 SwiGLU 激活函数、注意力 QKV 偏置和组查询注意力等技术。它在语言理解、生成、多语言能力、编码、数学和推理等多个基准测试中表现出色，超越了大多数开源模型。与 Qwen1.5-1.8B-Chat 相比，Qwen2-1.5B-Instruct 在 MMLU、HumanEval、GSM8K、C-Eval 和 IFEval 等测试中均显示出显著的性能提升，尽管参数量略少',
-    displayName: 'Qwen2 1.5B Instruct (Free)',
-    id: 'Qwen/Qwen2-1.5B-Instruct',
-    pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 32_768,
-    description:
-      'Qwen2-1.5B-Instruct 是 Qwen2 系列中的指令微调大语言模型，参数规模为 1.5B。该模型基于 Transformer 架构，采用了 SwiGLU 激活函数、注意力 QKV 偏置和组查询注意力等技术。它在语言理解、生成、多语言能力、编码、数学和推理等多个基准测试中表现出色，超越了大多数开源模型。与 Qwen1.5-1.8B-Chat 相比，Qwen2-1.5B-Instruct 在 MMLU、HumanEval、GSM8K、C-Eval 和 IFEval 等测试中均显示出显著的性能提升，尽管参数量略少',
-    displayName: 'Qwen2 1.5B Instruct (Pro)',
-    id: 'Pro/Qwen/Qwen2-1.5B-Instruct',
-    pricing: {
-      currency: 'CNY',
-      input: 0.14,
-      output: 0.14,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 32_768,
-    description:
       'Qwen2-7B-Instruct 是 Qwen2 系列中的指令微调大语言模型，参数规模为 7B。该模型基于 Transformer 架构，采用了 SwiGLU 激活函数、注意力 QKV 偏置和组查询注意力等技术。它能够处理大规模输入。该模型在语言理解、生成、多语言能力、编码、数学和推理等多个基准测试中表现出色，超越了大多数开源模型，并在某些任务上展现出与专有模型相当的竞争力。Qwen2-7B-Instruct 在多项评测中均优于 Qwen1.5-7B-Chat，显示出显著的性能提升',
     displayName: 'Qwen2 7B Instruct (Free)',
     id: 'Qwen/Qwen2-7B-Instruct',
@@ -541,22 +684,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       'Qwen2-7B-Instruct 是 Qwen2 系列中的指令微调大语言模型，参数规模为 7B。该模型基于 Transformer 架构，采用了 SwiGLU 激活函数、注意力 QKV 偏置和组查询注意力等技术。它能够处理大规模输入。该模型在语言理解、生成、多语言能力、编码、数学和推理等多个基准测试中表现出色，超越了大多数开源模型，并在某些任务上展现出与专有模型相当的竞争力。Qwen2-7B-Instruct 在多项评测中均优于 Qwen1.5-7B-Chat，显示出显著的性能提升',
     displayName: 'Qwen2 7B Instruct (Pro)',
     id: 'Pro/Qwen/Qwen2-7B-Instruct',
-    pricing: {
-      currency: 'CNY',
-      input: 0.35,
-      output: 0.35,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      vision: true,
-    },
-    contextWindowTokens: 32_768,
-    description:
-      'Qwen2-VL-7B-Instruct 是 Qwen-VL 模型的最新迭代版本，在视觉理解基准测试中达到了最先进的性能，包括 MathVista、DocVQA、RealWorldQA 和 MTVQA 等。Qwen2-VL 能够用于高质量的基于视频的问答、对话和内容创作，还具备复杂推理和决策能力，可以与移动设备、机器人等集成，基于视觉环境和文本指令进行自动操作。除了英语和中文，Qwen2-VL 现在还支持理解图像中不同语言的文本，包括大多数欧洲语言、日语、韩语、阿拉伯语和越南语等',
-    displayName: 'Qwen2 VL 7B Instruct (Pro)',
-    id: 'Pro/Qwen/Qwen2-VL-7B-Instruct',
     pricing: {
       currency: 'CNY',
       input: 0.35,
@@ -648,22 +775,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 32_768,
-    description:
-      'InternLM2.5-20B-Chat 是一个开源的大规模对话模型，基于 InternLM2 架构开发。该模型拥有 200 亿参数，在数学推理方面表现出色，超越了同量级的 Llama3 和 Gemma2-27B 模型。InternLM2.5-20B-Chat 在工具调用能力方面有显著提升，支持从上百个网页收集信息进行分析推理，并具备更强的指令理解、工具选择和结果反思能力。它适用于构建复杂智能体，可进行多轮工具调用以完成复杂任务',
-    displayName: 'InternLM2.5 20B Chat',
-    id: 'internlm/internlm2_5-20b-chat',
-    pricing: {
-      currency: 'CNY',
-      input: 1,
-      output: 1,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
     contextWindowTokens: 131_072,
     description:
       'GLM-4-9B-Chat 是智谱 AI 推出的 GLM-4 系列预训练模型中的开源版本。该模型在语义、数学、推理、代码和知识等多个方面表现出色。除了支持多轮对话外，GLM-4-9B-Chat 还具备网页浏览、代码执行、自定义工具调用（Function Call）和长文本推理等高级功能。模型支持 26 种语言，包括中文、英文、日语、韩语和德语等。在多项基准测试中，GLM-4-9B-Chat 展现了优秀的性能，如 AlignBench-v2、MT-Bench、MMLU 和 C-Eval 等。该模型支持最大 128K 的上下文长度，适用于学术研究和商业应用',
@@ -689,32 +800,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 0.6,
       output: 0.6,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 32_768,
-    description:
-      'ChatGLM3-6B 是 ChatGLM 系列的开源模型，由智谱 AI 开发。该模型保留了前代模型的优秀特性，如对话流畅和部署门槛低，同时引入了新的特性。它采用了更多样的训练数据、更充分的训练步数和更合理的训练策略，在 10B 以下的预训练模型中表现出色。ChatGLM3-6B 支持多轮对话、工具调用、代码执行和 Agent 任务等复杂场景。除对话模型外，还开源了基础模型 ChatGLM-6B-Base 和长文本对话模型 ChatGLM3-6B-32K。该模型对学术研究完全开放，在登记后也允许免费商业使用',
-    displayName: 'ChatGLM3 6B (Free)',
-    id: 'THUDM/chatglm3-6b',
-    pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 8192,
-    description:
-      'TeleChat2大模型是由中国电信从0到1自主研发的生成式语义大模型，支持百科问答、代码生成、长文生成等功能，为用户提供对话咨询服务，能够与用户进行对话互动，回答问题，协助创作，高效便捷地帮助用户获取信息、知识和灵感。模型在幻觉问题、长文生成、逻辑理解等方面均有较出色表现。',
-    displayName: 'TeleChat2',
-    id: 'TeleAI/TeleChat2',
-    pricing: {
-      currency: 'CNY',
-      input: 1.33,
-      output: 1.33,
     },
     type: 'chat',
   },

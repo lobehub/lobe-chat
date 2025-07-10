@@ -1,6 +1,4 @@
-import { ActionIcon } from '@lobehub/ui';
-import { Select, SelectProps } from 'antd';
-import { useTheme } from 'antd-style';
+import { ActionIcon, Select, type SelectProps } from '@lobehub/ui';
 import { isString } from 'lodash-es';
 import { Wand2 } from 'lucide-react';
 import { memo } from 'react';
@@ -13,26 +11,26 @@ export interface AutoGenerateInputProps extends SelectProps {
 }
 
 const AutoGenerateSelect = memo<AutoGenerateInputProps>(
-  ({ loading, onGenerate, value, canAutoGenerate, ...props }) => {
+  ({ loading, onGenerate, value, canAutoGenerate, onChange, ...props }) => {
     const { t } = useTranslation('common');
-    const theme = useTheme();
 
     return (
       <Select
         mode="tags"
+        onChange={(v) => {
+          onChange?.(isString(v) ? v.split(',') : v);
+        }}
         open={false}
         style={{ width: '100%' }}
         suffixIcon={
           onGenerate && (
             <ActionIcon
-              active
-              disable={!canAutoGenerate}
+              disabled={!canAutoGenerate}
               icon={Wand2}
               loading={loading}
               onClick={onGenerate}
               size={'small'}
               style={{
-                color: theme.colorInfo,
                 marginRight: -4,
               }}
               title={!canAutoGenerate ? t('autoGenerateTooltipDisabled') : t('autoGenerate')}

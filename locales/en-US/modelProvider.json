@@ -208,6 +208,10 @@
         "title": "Use Client Request Mode"
       },
       "helpDoc": "Configuration Guide",
+      "responsesApi": {
+        "desc": "Utilizes OpenAI's next-generation request format specification to unlock advanced features like chain of thought",
+        "title": "Use Responses API Specification"
+      },
       "waitingForMore": "More models are currently <1>planned for integration</1>, please stay tuned"
     },
     "createNew": {

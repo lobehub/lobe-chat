@@ -29,9 +29,6 @@
   "deepseek": {
     "description": "DeepSeek ist ein Unternehmen, das sich auf die Forschung und Anwendung von KI-Technologien spezialisiert hat. Ihr neuestes Modell, DeepSeek-V2.5, kombiniert allgemeine Dialog- und Codeverarbeitungsfähigkeiten und hat signifikante Fortschritte in den Bereichen menschliche Präferenzanpassung, Schreibaufgaben und Befehlsbefolgung erzielt."
   },
-  "doubao": {
-    "description": "Ein von ByteDance entwickeltes großes Modell. Durch die praktische Validierung in über 50 internen Geschäftsszenarien und die kontinuierliche Verfeinerung mit täglich Billionen von Tokens bietet es vielfältige Modalitäten und schafft mit hochwertigen Modellergebnissen ein reichhaltiges Geschäftserlebnis für Unternehmen."
-  },
   "fireworksai": {
     "description": "Fireworks AI ist ein führender Anbieter von fortschrittlichen Sprachmodellen, der sich auf Funktionsaufrufe und multimodale Verarbeitung spezialisiert hat. Ihr neuestes Modell, Firefunction V2, basiert auf Llama-3 und ist für Funktionsaufrufe, Dialoge und Befehlsbefolgung optimiert. Das visuelle Sprachmodell FireLLaVA-13B unterstützt gemischte Eingaben von Bildern und Text. Weitere bemerkenswerte Modelle sind die Llama-Serie und die Mixtral-Serie, die effiziente mehrsprachige Befehlsbefolgung und Generierungsunterstützung bieten."
   },
@@ -74,6 +71,9 @@
   "mistral": {
     "description": "Mistral bietet fortschrittliche allgemeine, spezialisierte und forschungsorientierte Modelle an, die in Bereichen wie komplexe Schlussfolgerungen, mehrsprachige Aufgaben und Code-Generierung weit verbreitet sind. Durch Funktionsaufrufschnittstellen können Benutzer benutzerdefinierte Funktionen integrieren und spezifische Anwendungen realisieren."
   },
+  "modelscope": {
+    "description": "ModelScope ist eine von Alibaba Cloud eingeführte Plattform für Modelle als Dienstleistung, die eine Vielzahl von KI-Modellen und Inferenzdiensten anbietet."
+  },
   "moonshot": {
     "description": "Moonshot ist eine Open-Source-Plattform, die von Beijing Dark Side Technology Co., Ltd. eingeführt wurde und eine Vielzahl von Modellen zur Verarbeitung natürlicher Sprache anbietet, die in vielen Bereichen Anwendung finden, darunter, aber nicht beschränkt auf, Inhaltserstellung, akademische Forschung, intelligente Empfehlungen und medizinische Diagnosen, und unterstützt die Verarbeitung langer Texte und komplexer Generierungsaufgaben."
   },
@@ -97,6 +97,9 @@
   },
   "ppio": {
     "description": "PPIO Paiou Cloud bietet stabile und kosteneffiziente Open-Source-Modell-API-Dienste und unterstützt die gesamte DeepSeek-Serie, Llama, Qwen und andere führende große Modelle der Branche."
+  },
+  "qiniu": {
+    "description": "Qiniu ist ein führender Anbieter von Cloud-Diensten, der schnelle und effiziente API-Dienste für große Modelle bereitstellt, einschließlich der von Alibaba, mit flexiblen Optionen für das Entwickeln und Anwenden von AI-Anwendungen."
   },
   "qwen": {
     "description": "Tongyi Qianwen ist ein von Alibaba Cloud selbst entwickeltes, groß angelegtes Sprachmodell mit starken Fähigkeiten zur Verarbeitung und Generierung natürlicher Sprache. Es kann eine Vielzahl von Fragen beantworten, Texte erstellen, Meinungen äußern und Code schreiben und spielt in mehreren Bereichen eine Rolle."
@@ -130,6 +133,9 @@
   },
   "upstage": {
     "description": "Upstage konzentriert sich auf die Entwicklung von KI-Modellen für verschiedene geschäftliche Anforderungen, einschließlich Solar LLM und Dokumenten-KI, mit dem Ziel, künstliche allgemeine Intelligenz (AGI) zu erreichen. Es ermöglicht die Erstellung einfacher Dialogagenten über die Chat-API und unterstützt Funktionsaufrufe, Übersetzungen, Einbettungen und spezifische Anwendungsbereiche."
+  },
+  "v0": {
+    "description": "v0 ist ein Pair-Programming-Assistent, bei dem Sie Ihre Ideen einfach in natürlicher Sprache beschreiben können, und er generiert Code und Benutzeroberflächen (UI) für Ihr Projekt."
   },
   "vertexai": {
     "description": "Die Gemini-Serie von Google ist das fortschrittlichste, universelle KI-Modell, das von Google DeepMind entwickelt wurde. Es ist speziell für multimodale Anwendungen konzipiert und unterstützt das nahtlose Verständnis und die Verarbeitung von Text, Code, Bildern, Audio und Video. Es eignet sich für eine Vielzahl von Umgebungen, von Rechenzentren bis hin zu mobilen Geräten, und verbessert erheblich die Effizienz und Anwendbarkeit von KI-Modellen."

@@ -29,6 +29,11 @@ const FrequencyPenalty = memo<FrequencyPenaltyProps>(({ value, onChange }) => {
         onChange={onChange}
         size={'small'}
         step={0.1}
+        styles={{
+          input: {
+            maxWidth: 64,
+          },
+        }}
         value={value}
       />
     </Flexbox>

@@ -168,9 +168,6 @@ const InfiniAI: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://cloud.infini-ai.com/genstudio/model',
   name: 'InfiniAI',
-  proxyUrl: {
-    placeholder: 'https://cloud.infini-ai.com/maas/v1',
-  },
   settings: {
     proxyUrl: {
       placeholder: 'https://cloud.infini-ai.com/maas/v1',

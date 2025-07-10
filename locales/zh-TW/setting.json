@@ -129,6 +129,7 @@
     "waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待"
   },
   "plugin": {
+    "addMCPPlugin": "新增 MCP 外掛",
     "addTooltip": "新增自訂外掛程式",
     "clearDeprecated": "清除已棄用的外掛",
     "empty": "目前沒有安裝任何外掛，歡迎前往 <1>外掛商店</1> 探索",
@@ -150,6 +151,7 @@
       "title": "背景色"
     },
     "description": {
+      "desc": "簡單介紹你的助手，不作為角色設定",
       "placeholder": "請輸入助手描述",
       "title": "助手描述"
     },
@@ -161,11 +163,27 @@
       "placeholder": "請輸入角色 Prompt 提示詞",
       "title": "角色設定"
     },
+    "submit": "更新助手資訊",
     "tag": {
+      "desc": "助手標籤將在助手市場中展示",
       "placeholder": "請輸入標籤",
       "title": "標籤"
     },
     "title": "助手資訊"
+  },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "不同色彩傾向的灰階自訂",
+      "title": "中性色"
+    },
+    "preview": {
+      "title": "調色盤"
+    },
+    "primaryColor": {
+      "desc": "自訂主題色",
+      "title": "主題色"
+    },
+    "title": "應用外觀"
   },
   "settingChat": {
     "autoCreateTopicThreshold": {
@@ -206,7 +224,49 @@
       "placeholder": "預處理模板 {{text}} 將替換為實時輸入資訊",
       "title": "使用者輸入預處理"
     },
+    "submit": "更新聊天偏好",
     "title": "聊天設定"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "聊天內容的字體大小",
+      "marks": {
+        "normal": "標準"
+      },
+      "title": "字體大小"
+    },
+    "highlighterTheme": {
+      "title": "程式碼高亮主題"
+    },
+    "mermaidTheme": {
+      "title": "美人魚主題"
+    },
+    "title": "聊天外觀",
+    "transitionMode": {
+      "desc": "聊天訊息的過渡動畫",
+      "options": {
+        "fadeIn": "淡入",
+        "none": {
+          "desc": "這取決於模型的回應輸出方式，請自行測試。",
+          "value": "無"
+        },
+        "smooth": "平滑"
+      },
+      "title": "過渡動畫"
+    }
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "跟隨系統",
+      "title": "語言"
+    },
+    "themeMode": {
+      "auto": "自動",
+      "dark": "深色",
+      "light": "淺色",
+      "title": "主題"
+    },
+    "title": "通用設定"
   },
   "settingModel": {
     "enableMaxTokens": {
@@ -235,7 +295,7 @@
       "title": "表述發散度"
     },
     "reasoningEffort": {
-      "desc": "值越大，推理能力越強，但可能會增加回應時間和 Token 消耗",
+      "desc": "數值越大，推理能力越強，但可能會增加回應時間和 Token 消耗",
       "options": {
         "high": "高",
         "low": "低",
@@ -243,6 +303,7 @@
       },
       "title": "推理強度"
     },
+    "submit": "更新模型設定",
     "temperature": {
       "desc": "數值越大，回答越有創意和想像力；數值越小，回答越嚴謹",
       "title": "創意活躍度",
@@ -319,6 +380,7 @@
       "desc": "其中 browser 為瀏覽器原生的語音識別服務",
       "title": "語音識別服務"
     },
+    "submit": "更新語音服務",
     "title": "語音服務",
     "tts": "語音合成設定",
     "ttsService": {
@@ -330,37 +392,6 @@
       "preview": "試聽聲源",
       "title": "語音合成聲源"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "頭像"
-    },
-    "fontSize": {
-      "desc": "聊天內容的字體大小",
-      "marks": {
-        "normal": "標準"
-      },
-      "title": "字體大小"
-    },
-    "lang": {
-      "autoMode": "跟隨系統",
-      "title": "語言"
-    },
-    "neutralColor": {
-      "desc": "不同色彩傾向的灰階自定義",
-      "title": "中性色"
-    },
-    "primaryColor": {
-      "desc": "自定義主題色",
-      "title": "主題色"
-    },
-    "themeMode": {
-      "auto": "自動",
-      "dark": "深色",
-      "light": "淺色",
-      "title": "主題"
-    },
-    "title": "主題設定"
   },
   "storage": {
     "actions": {
@@ -395,6 +426,12 @@
     "metaMiss": "請補全助手信息後提交，需要包含名稱、描述和標籤",
     "placeholder": "請輸入助手的標識符，需要是唯一的，比如 web-development",
     "tooltips": "分享到助手市場"
+  },
+  "submitFooter": {
+    "reset": "重置",
+    "submit": "保存",
+    "unSaved": "未保存更改",
+    "unSavedWarning": "當前有未保存的更改"
   },
   "sync": {
     "device": {
@@ -447,6 +484,7 @@
       "placeholder": "請輸入自訂提示詞",
       "title": "自訂提示詞"
     },
+    "helpInfo": "當創建新助手時，將以預設助手設定作為預設值。",
     "historyCompress": {
       "label": "會話歷史模型",
       "modelDesc": "指定用於壓縮會話歷史的模型",

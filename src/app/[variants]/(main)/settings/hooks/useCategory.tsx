@@ -1,5 +1,4 @@
-import { Icon } from '@lobehub/ui';
-import { Tag } from 'antd';
+import { Icon, Tag } from '@lobehub/ui';
 import {
   Bot,
   Brain,

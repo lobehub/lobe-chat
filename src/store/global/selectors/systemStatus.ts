@@ -17,6 +17,7 @@ const showFilePanel = (s: GlobalState) => s.status.showFilePanel;
 const hidePWAInstaller = (s: GlobalState) => s.status.hidePWAInstaller;
 const isShowCredit = (s: GlobalState) => s.status.isShowCredit;
 const themeMode = (s: GlobalState) => s.status.themeMode || 'auto';
+const language = (s: GlobalState) => s.status.language || 'auto';
 
 const showChatHeader = (s: GlobalState) => !s.status.zenMode;
 const inZenMode = (s: GlobalState) => s.status.zenMode;
@@ -68,6 +69,7 @@ export const systemStatusSelectors = {
   isPgliteNotEnabled,
   isPgliteNotInited,
   isShowCredit,
+  language,
   mobileShowPortal,
   mobileShowTopic,
   portalWidth,

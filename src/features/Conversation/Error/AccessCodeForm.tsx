@@ -1,4 +1,4 @@
-import { Button, Input } from 'antd';
+import { Button, InputPassword } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -28,14 +28,14 @@ const AccessCodeForm = memo<AccessCodeFormProps>(({ id }) => {
         description={t('unlock.password.description')}
         title={t('unlock.password.title')}
       >
-        <Input.Password
+        <InputPassword
           autoComplete={'new-password'}
           onChange={(e) => {
             updateKeyVaults({ password: e.target.value });
           }}
           placeholder={t('unlock.password.placeholder')}
-          type={'block'}
           value={password}
+          variant={'filled'}
         />
       </FormAction>
       <Flexbox gap={12}>

@@ -208,6 +208,10 @@
         "title": "İstemci İstek Modunu Kullan"
       },
       "helpDoc": "Yapılandırma Kılavuzu",
+      "responsesApi": {
+        "desc": "OpenAI'nin yeni nesil istek formatı standardını kullanarak düşünce zinciri gibi gelişmiş özelliklerin kilidini açın",
+        "title": "Responses API Standardını Kullan"
+      },
       "waitingForMore": "Daha fazla model <1>planlanıyor</1>, lütfen bekleyin"
     },
     "createNew": {

@@ -35,6 +35,10 @@
     "desc": "Kích hoạt hộp tìm kiếm chính của trang hiện tại",
     "title": "Tìm kiếm"
   },
+  "showApp": {
+    "desc": "Mở nhanh cửa sổ chính của ứng dụng",
+    "title": "Hiển thị cửa sổ chính"
+  },
   "switchAgent": {
     "desc": "Chuyển đổi giữa các trợ lý cố định ở thanh bên bằng cách giữ phím Ctrl và nhấn số 0~9",
     "title": "Chuyển đổi nhanh trợ lý"

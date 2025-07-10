@@ -262,7 +262,8 @@ const togetheraiChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 32_768,
-    description: 'DeepSeek-R1 系列通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆，超越 OpenAI-o1-mini 水平。',
+    description:
+      'DeepSeek-R1 系列通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆，超越 OpenAI-o1-mini 水平。',
     displayName: 'DeepSeek-R1',
     enabled: true,
     id: 'deepseek-ai/DeepSeek-R1',
@@ -273,7 +274,8 @@ const togetheraiChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 131_072,
-    description: 'DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。',
+    description:
+      'DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。',
     displayName: 'DeepSeek R1 Distill Qwen 1.5B',
     id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B',
     type: 'chat',
@@ -283,7 +285,8 @@ const togetheraiChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 131_072,
-    description: 'DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。',
+    description:
+      'DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。',
     displayName: 'DeepSeek R1 Distill Qwen 14B',
     id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
     type: 'chat',
@@ -293,14 +296,16 @@ const togetheraiChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 131_072,
-    description: 'DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。',
+    description:
+      'DeepSeek-R1 蒸馏模型，通过强化学习与冷启动数据优化推理性能，开源模型刷新多任务标杆。',
     displayName: 'DeepSeek R1 Distill Llama 70B',
     id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
     type: 'chat',
   },
   {
     contextWindowTokens: 16_384,
-    description: '最新模型 DeepSeek-V3 多项评测成绩超越 Qwen2.5-72B 和 Llama-3.1-405B 等开源模型，性能对齐领军闭源模型 GPT-4o 与 Claude-3.5-Sonnet。',
+    description:
+      '最新模型 DeepSeek-V3 多项评测成绩超越 Qwen2.5-72B 和 Llama-3.1-405B 等开源模型，性能对齐领军闭源模型 GPT-4o 与 Claude-3.5-Sonnet。',
     displayName: 'DeepSeek-V3',
     enabled: true,
     id: 'deepseek-ai/DeepSeek-V3',

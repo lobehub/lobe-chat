@@ -1,5 +1,5 @@
-import { Icon, Tooltip } from '@lobehub/ui';
-import { Button, Space } from 'antd';
+import { Button, Icon, Tooltip } from '@lobehub/ui';
+import { Space } from 'antd';
 import { ThumbsDownIcon, ThumbsUpIcon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -28,12 +28,13 @@ const LikeButton = memo<LikeButtonProps>(
         <Space.Compact style={{ flex: 1.75 }}>
           <Tooltip title={t('like')}>
             <Button
+              block
               className={styles.number}
-              icon={<Icon icon={ThumbsUpIcon} />}
+              icon={ThumbsUpIcon}
               onClick={() => onLikeClick?.(!isLiked)}
               size={'large'}
               style={{ flex: 1 }}
-              type={isLiked ? 'primary' : 'default'}
+              type={isLiked ? 'primary' : undefined}
             >
               {formatShortenNumber(count)}
             </Button>

@@ -1,7 +1,7 @@
 'use client';
 
-import { type FormItemProps, FormModal, FormModalProps } from '@lobehub/ui';
-import { Segmented, Skeleton } from 'antd';
+import { type FormItemProps, FormModal, FormModalProps, Segmented } from '@lobehub/ui';
+import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import dynamic from 'next/dynamic';
 import { memo, useState } from 'react';

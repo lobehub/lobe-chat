@@ -25,18 +25,7 @@ export const WebBrowsingManifest: BuiltinToolManifest = {
           searchCategories: {
             description: 'The search categories you can set:',
             items: {
-              enum: [
-                'files',
-                'general',
-                'images',
-                'it',
-                'map',
-                'music',
-                'news',
-                'science',
-                'social_media',
-                'videos',
-              ],
+              enum: ['general', 'images', 'news', 'science', 'videos'],
               type: 'string',
             },
             type: 'array',

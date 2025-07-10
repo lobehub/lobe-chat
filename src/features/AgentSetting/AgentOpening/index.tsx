@@ -43,7 +43,7 @@ const AgentOpening = memo(() => {
         },
       ]}
       itemsType={'group'}
-      variant={'pure'}
+      variant={'borderless'}
       {...FORM_STYLE}
     />
   );

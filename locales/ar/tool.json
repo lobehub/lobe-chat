@@ -54,7 +54,16 @@
       "title": "محرك البحث:"
     },
     "searchResult": "عدد النتائج:",
-    "searchTimeRange": "نطاق الوقت:",
+    "searchTimeRange": {
+      "title": "نطاق الوقت:",
+      "value": {
+        "anytime": "في أي وقت",
+        "day": "خلال يوم واحد",
+        "month": "خلال شهر واحد",
+        "week": "خلال أسبوع واحد",
+        "year": "خلال سنة واحدة"
+      }
+    },
     "summary": "ملخص",
     "summaryTooltip": "تلخيص المحتوى الحالي",
     "viewMoreResults": "عرض المزيد من {{results}} نتيجة"

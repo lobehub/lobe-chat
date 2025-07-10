@@ -1,5 +1,5 @@
-import { ActionIcon, Icon, Modal } from '@lobehub/ui';
-import { Button, Skeleton } from 'antd';
+import { ActionIcon, Button, Modal } from '@lobehub/ui';
+import { Skeleton } from 'antd';
 import { useResponsive } from 'antd-style';
 import { Brush } from 'lucide-react';
 import dynamic from 'next/dynamic';
@@ -26,7 +26,7 @@ const CreateButton = memo<{ mobile?: boolean }>(({ mobile }) => {
         title={t('create')}
       />
     ) : (
-      <Button icon={<Icon icon={Brush} />} onClick={() => setIsModalOpen(true)}>
+      <Button icon={Brush} onClick={() => setIsModalOpen(true)}>
         {t('create')}
       </Button>
     );

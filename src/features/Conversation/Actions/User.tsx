@@ -1,5 +1,5 @@
 import { ActionIconGroup } from '@lobehub/ui';
-import { ActionIconGroupItems } from '@lobehub/ui/es/ActionIconGroup';
+import { ActionIconGroupItemType } from '@lobehub/ui/es/ActionIconGroup';
 import { memo, useContext, useMemo } from 'react';
 
 import { useChatStore } from '@/store/chat';
@@ -22,16 +22,18 @@ export const UserActionsBar: RenderAction = memo(({ onActionClick, id }) => {
   const inThread = isThreadMode || inPortalThread;
 
   const items = useMemo(
-    () => [regenerate, edit, inThread ? null : branching].filter(Boolean) as ActionIconGroupItems[],
+    () =>
+      [regenerate, edit, inThread ? null : branching].filter(Boolean) as ActionIconGroupItemType[],
     [inThread],
   );
 
   return (
     <ActionIconGroup
-      dropdownMenu={[edit, copy, divider, tts, translate, divider, regenerate, del]}
       items={items}
+      menu={{
+        items: [edit, copy, divider, tts, translate, divider, regenerate, del],
+      }}
       onActionClick={onActionClick}
-      type="ghost"
     />
   );
 });

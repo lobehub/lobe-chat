@@ -1,6 +1,6 @@
 'use client';
 
-import { Typography } from 'antd';
+import { Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { useQueryState } from 'nuqs';
 import { rgba } from 'polished';
@@ -90,7 +90,7 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
           total={data?.length}
           totalFileIds={data?.map((item) => item.id) || []}
         />
-        <Flexbox align={'center'} className={styles.header} horizontal>
+        <Flexbox align={'center'} className={styles.header} horizontal paddingInline={8}>
           <Flexbox className={styles.headerItem} flex={1} style={{ paddingInline: 32 }}>
             {t('FileManager.title.title')}
           </Flexbox>
@@ -109,9 +109,9 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
           components={{
             Footer: () => (
               <Center style={{ height: 64 }}>
-                <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
+                <Text style={{ fontSize: 12 }} type={'secondary'}>
                   {t('FileManager.bottom')}
-                </Typography.Text>
+                </Text>
               </Center>
             ),
           }}

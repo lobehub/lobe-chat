@@ -1,5 +1,5 @@
-import { Icon, Tooltip } from '@lobehub/ui';
-import { App, Button, Dropdown, Space } from 'antd';
+import { Button, Dropdown, Tooltip } from '@lobehub/ui';
+import { App, Space } from 'antd';
 import { css, cx } from 'antd-style';
 import { CopyIcon, DownloadIcon } from 'lucide-react';
 import { domToPng } from 'modern-screenshot';
@@ -89,11 +89,11 @@ const SVGRenderer = ({ content }: SVGRendererProps) => {
               },
             }}
           >
-            <Button icon={<Icon icon={DownloadIcon} />} />
+            <Button icon={DownloadIcon} />
           </Dropdown>
           <Tooltip title={t('artifacts.svg.copyAsImage')}>
             <Button
-              icon={<Icon icon={CopyIcon} />}
+              icon={CopyIcon}
               onClick={async () => {
                 const dataUrl = await generatePng();
                 try {

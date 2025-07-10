@@ -71,11 +71,11 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 là một mô hình MoE do công ty DeepSeek tự phát triển. Nhiều kết quả đánh giá của DeepSeek-V3 đã vượt qua các mô hình mã nguồn mở khác như Qwen2.5-72B và Llama-3.1-405B, và về hiệu suất không thua kém các mô hình đóng nguồn hàng đầu thế giới như GPT-4o và Claude-3.5-Sonnet."
   },
-  "Doubao-1.5-thinking-pro": {
-    "description": "Doubao-1.5 là mô hình suy nghĩ sâu mới, thể hiện xuất sắc trong các lĩnh vực chuyên môn như toán học, lập trình, suy luận khoa học và các nhiệm vụ chung như viết sáng tạo, đạt hoặc gần đạt mức hàng đầu trong nhiều tiêu chuẩn uy tín như AIME 2024, Codeforces, GPQA. Hỗ trợ cửa sổ ngữ cảnh 128k, đầu ra 16k."
+  "Doubao-1.5-thinking-pro-m": {
+    "description": "Doubao-1.5 là mô hình suy nghĩ sâu mới (phiên bản m đi kèm khả năng suy luận đa phương thức nguyên bản), thể hiện xuất sắc trong các lĩnh vực chuyên môn như toán học, lập trình, suy luận khoa học và các nhiệm vụ chung như viết sáng tạo, đạt hoặc gần đạt trình độ hàng đầu trong nhiều bài kiểm tra chuẩn uy tín như AIME 2024, Codeforces, GPQA. Hỗ trợ cửa sổ ngữ cảnh 128k, đầu ra 16k."
   },
-  "Doubao-1.5-thinking-pro-vision": {
-    "description": "Doubao-1.5 là mô hình suy nghĩ sâu mới, thể hiện xuất sắc trong các lĩnh vực chuyên môn như toán học, lập trình, suy luận khoa học và các nhiệm vụ chung như viết sáng tạo, đạt hoặc gần đạt mức hàng đầu trong nhiều tiêu chuẩn uy tín như AIME 2024, Codeforces, GPQA. Hỗ trợ cửa sổ ngữ cảnh 128k, đầu ra 16k."
+  "Doubao-1.5-thinking-vision-pro": {
+    "description": "Mô hình tư duy sâu mới với thị giác, có khả năng hiểu và suy luận đa phương thức mạnh mẽ hơn, đạt được hiệu suất SOTA trong 37 trên 59 tiêu chuẩn đánh giá công khai."
   },
   "Doubao-1.5-vision-pro": {
     "description": "Doubao-1.5-vision-pro là mô hình đa phương tiện lớn được nâng cấp mới, hỗ trợ nhận diện hình ảnh với bất kỳ độ phân giải nào và tỷ lệ dài rộng cực đoan, tăng cường khả năng suy luận hình ảnh, nhận diện tài liệu, hiểu thông tin chi tiết và tuân thủ hướng dẫn."
@@ -176,8 +176,14 @@
   "Meta-Llama-3.3-70B-Instruct": {
     "description": "Llama 3.3 là mô hình ngôn ngữ lớn mã nguồn mở đa ngôn ngữ tiên tiến nhất trong dòng Llama, mang đến trải nghiệm hiệu suất tương đương mô hình 405B với chi phí cực thấp. Dựa trên cấu trúc Transformer, và được cải thiện tính hữu ích và an toàn thông qua tinh chỉnh giám sát (SFT) và học tăng cường từ phản hồi của con người (RLHF). Phiên bản tinh chỉnh theo chỉ dẫn của nó được tối ưu hóa cho các cuộc đối thoại đa ngôn ngữ, thể hiện tốt hơn nhiều mô hình trò chuyện mã nguồn mở và đóng trong nhiều tiêu chuẩn ngành. Ngày cắt đứt kiến thức là tháng 12 năm 2023."
   },
+  "MiniMax-M1": {
+    "description": "Mô hình suy luận tự phát triển hoàn toàn mới. Dẫn đầu toàn cầu: 80K chuỗi tư duy x 1 triệu đầu vào, hiệu quả sánh ngang các mô hình hàng đầu quốc tế."
+  },
   "MiniMax-Text-01": {
     "description": "Trong dòng mô hình MiniMax-01, chúng tôi đã thực hiện những đổi mới táo bạo: lần đầu tiên hiện thực hóa quy mô lớn cơ chế chú ý tuyến tính, kiến trúc Transformer truyền thống không còn là lựa chọn duy nhất. Mô hình này có số lượng tham số lên tới 4560 tỷ, trong đó kích hoạt một lần là 45,9 tỷ. Hiệu suất tổng hợp của mô hình tương đương với các mô hình hàng đầu quốc tế, đồng thời có khả năng xử lý hiệu quả ngữ cảnh dài nhất toàn cầu lên tới 4 triệu token, gấp 32 lần GPT-4o và 20 lần Claude-3.5-Sonnet."
+  },
+  "MiniMaxAI/MiniMax-M1-80k": {
+    "description": "MiniMax-M1 là mô hình suy luận chú ý hỗn hợp quy mô lớn với trọng số mã nguồn mở, sở hữu 456 tỷ 600 triệu tham số, mỗi Token có thể kích hoạt khoảng 45,9 tỷ tham số. Mô hình hỗ trợ ngữ cảnh siêu dài lên đến 1 triệu Token một cách nguyên bản, và thông qua cơ chế chú ý chớp nhoáng, trong các tác vụ sinh 100.000 Token tiết kiệm 75% lượng phép tính dấu chấm động so với DeepSeek R1. Đồng thời, MiniMax-M1 áp dụng kiến trúc MoE (chuyên gia hỗn hợp), kết hợp thuật toán CISPO và thiết kế chú ý hỗn hợp trong huấn luyện tăng cường hiệu quả, đạt hiệu suất hàng đầu trong ngành khi suy luận đầu vào dài và các kịch bản kỹ thuật phần mềm thực tế."
   },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) là mô hình chỉ dẫn chính xác cao, phù hợp cho tính toán phức tạp."
@@ -206,14 +212,8 @@
   "Phi-3.5-vision-instrust": {
     "description": "Phi-3-vision là phiên bản cập nhật của mô hình."
   },
-  "Pro/Qwen/Qwen2-1.5B-Instruct": {
-    "description": "Qwen2-1.5B-Instruct là mô hình ngôn ngữ lớn được tinh chỉnh theo chỉ dẫn trong loạt Qwen2, với quy mô tham số là 1.5B. Mô hình này dựa trên kiến trúc Transformer, sử dụng hàm kích hoạt SwiGLU, độ lệch QKV trong chú ý và chú ý theo nhóm. Nó thể hiện xuất sắc trong nhiều bài kiểm tra chuẩn về hiểu ngôn ngữ, sinh ngôn ngữ, khả năng đa ngôn ngữ, mã hóa, toán học và suy luận, vượt qua hầu hết các mô hình mã nguồn mở. So với Qwen1.5-1.8B-Chat, Qwen2-1.5B-Instruct cho thấy sự cải thiện đáng kể về hiệu suất trong các bài kiểm tra MMLU, HumanEval, GSM8K, C-Eval và IFEval, mặc dù số lượng tham số hơi ít hơn."
-  },
   "Pro/Qwen/Qwen2-7B-Instruct": {
     "description": "Qwen2-7B-Instruct là mô hình ngôn ngữ lớn được tinh chỉnh theo chỉ dẫn trong loạt Qwen2, với quy mô tham số là 7B. Mô hình này dựa trên kiến trúc Transformer, sử dụng hàm kích hoạt SwiGLU, độ lệch QKV trong chú ý và chú ý theo nhóm. Nó có khả năng xử lý đầu vào quy mô lớn. Mô hình thể hiện xuất sắc trong nhiều bài kiểm tra chuẩn về hiểu ngôn ngữ, sinh ngôn ngữ, khả năng đa ngôn ngữ, mã hóa, toán học và suy luận, vượt qua hầu hết các mô hình mã nguồn mở và thể hiện sức cạnh tranh tương đương với các mô hình độc quyền trong một số nhiệm vụ. Qwen2-7B-Instruct đã thể hiện sự cải thiện đáng kể về hiệu suất trong nhiều bài kiểm tra so với Qwen1.5-7B-Chat."
-  },
-  "Pro/Qwen/Qwen2-VL-7B-Instruct": {
-    "description": "Qwen2-VL là phiên bản mới nhất của mô hình Qwen-VL, đạt được hiệu suất hàng đầu trong các thử nghiệm chuẩn hiểu biết hình ảnh."
   },
   "Pro/Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5-7B-Instruct là một trong những mô hình ngôn ngữ lớn mới nhất do Alibaba Cloud phát hành. Mô hình 7B này có khả năng cải thiện đáng kể trong các lĩnh vực mã hóa và toán học. Mô hình cũng cung cấp hỗ trợ đa ngôn ngữ, bao gồm hơn 29 ngôn ngữ, bao gồm tiếng Trung, tiếng Anh, v.v. Mô hình đã có sự cải thiện đáng kể trong việc tuân theo chỉ dẫn, hiểu dữ liệu có cấu trúc và tạo ra đầu ra có cấu trúc (đặc biệt là JSON)."
@@ -230,8 +230,8 @@
   "Pro/deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 là một mô hình suy diễn được điều khiển bởi học tăng cường (RL), giải quyết các vấn đề về tính lặp lại và khả năng đọc trong mô hình. Trước khi áp dụng RL, DeepSeek-R1 đã giới thiệu dữ liệu khởi động lạnh, tối ưu hóa thêm hiệu suất suy diễn. Nó thể hiện hiệu suất tương đương với OpenAI-o1 trong các nhiệm vụ toán học, mã và suy diễn, và thông qua phương pháp đào tạo được thiết kế cẩn thận, nâng cao hiệu quả tổng thể."
   },
-  "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B": {
-    "description": "DeepSeek-R1-Distill-Qwen-1.5B là mô hình được tạo ra từ Qwen2.5-Math-1.5B thông qua quá trình chưng cất kiến thức. Mô hình này được tinh chỉnh bằng 800.000 mẫu được chọn lọc từ DeepSeek-R1, thể hiện hiệu suất tốt trong nhiều bài kiểm tra chuẩn. Là một mô hình nhẹ, nó đạt được độ chính xác 83,9% trên MATH-500, tỷ lệ vượt qua 28,9% trên AIME 2024, và đạt điểm 954 trên CodeForces, cho thấy khả năng suy luận vượt quá quy mô tham số của nó."
+  "Pro/deepseek-ai/DeepSeek-R1-0120": {
+    "description": "DeepSeek-R1 là mô hình suy luận được điều khiển bằng học tăng cường (RL), giải quyết các vấn đề về tính lặp lại và khả năng đọc hiểu của mô hình. Trước khi áp dụng RL, DeepSeek-R1 đã giới thiệu dữ liệu khởi động lạnh để tối ưu hóa hiệu suất suy luận. Mô hình đạt hiệu quả tương đương OpenAI-o1 trong các nhiệm vụ toán học, mã hóa và suy luận, đồng thời nâng cao tổng thể nhờ phương pháp huấn luyện tinh tế."
   },
   "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": {
     "description": "DeepSeek-R1-Distill-Qwen-7B là mô hình được tạo ra từ Qwen2.5-Math-7B thông qua quá trình chưng cất kiến thức. Mô hình này được tinh chỉnh bằng 800.000 mẫu được chọn lọc từ DeepSeek-R1, thể hiện khả năng suy luận xuất sắc. Nó đã đạt được hiệu suất tốt trong nhiều bài kiểm tra chuẩn, trong đó có độ chính xác 92,8% trên MATH-500, tỷ lệ vượt qua 55,5% trên AIME 2024, và điểm số 1189 trên CodeForces, thể hiện khả năng toán học và lập trình mạnh mẽ cho một mô hình có quy mô 7B."
@@ -253,9 +253,6 @@
   },
   "Qwen/QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview là mô hình nghiên cứu thử nghiệm mới nhất của Qwen, tập trung vào việc nâng cao khả năng suy luận của AI. Thông qua việc khám phá các cơ chế phức tạp như trộn ngôn ngữ và suy luận đệ quy, những lợi thế chính bao gồm khả năng phân tích suy luận mạnh mẽ, khả năng toán học và lập trình. Tuy nhiên, cũng có những vấn đề về chuyển đổi ngôn ngữ, vòng lặp suy luận, các vấn đề an toàn và sự khác biệt về các khả năng khác."
-  },
-  "Qwen/Qwen2-1.5B-Instruct": {
-    "description": "Qwen2-1.5B-Instruct là mô hình ngôn ngữ lớn được tinh chỉnh theo chỉ dẫn trong loạt Qwen2, với quy mô tham số là 1.5B. Mô hình này dựa trên kiến trúc Transformer, sử dụng hàm kích hoạt SwiGLU, độ lệch QKV trong chú ý và chú ý theo nhóm. Nó thể hiện xuất sắc trong nhiều bài kiểm tra chuẩn về hiểu ngôn ngữ, sinh ngôn ngữ, khả năng đa ngôn ngữ, mã hóa, toán học và suy luận, vượt qua hầu hết các mô hình mã nguồn mở. So với Qwen1.5-1.8B-Chat, Qwen2-1.5B-Instruct cho thấy sự cải thiện đáng kể về hiệu suất trong các bài kiểm tra MMLU, HumanEval, GSM8K, C-Eval và IFEval, mặc dù số lượng tham số hơi ít hơn."
   },
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2 là mô hình ngôn ngữ tổng quát tiên tiến, hỗ trợ nhiều loại chỉ dẫn."
@@ -299,6 +296,21 @@
   "Qwen/Qwen2.5-VL-72B-Instruct": {
     "description": "Qwen2.5-VL là mô hình ngôn ngữ thị giác trong loạt Qwen2.5. Mô hình này có những cải tiến đáng kể: có khả năng hiểu thị giác mạnh hơn, có thể nhận diện các vật thể thông thường, phân tích văn bản, biểu đồ và bố cục; hoạt động như một đại lý thị giác có thể suy luận và hướng dẫn sử dụng công cụ một cách động; hỗ trợ hiểu các video dài hơn 1 giờ và bắt các sự kiện quan trọng; có thể định vị chính xác các vật thể trong hình ảnh thông qua việc tạo khung giới hạn hoặc điểm; hỗ trợ tạo ra đầu ra có cấu trúc, đặc biệt phù hợp với dữ liệu quét như hóa đơn, bảng biểu."
   },
+  "Qwen/Qwen3-14B": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới của Tongyi Qianwen với khả năng nâng cao đáng kể, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "Qwen/Qwen3-235B-A22B": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới của Tongyi Qianwen với khả năng nâng cao đáng kể, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "Qwen/Qwen3-30B-A3B": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới của Tongyi Qianwen với khả năng nâng cao đáng kể, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "Qwen/Qwen3-32B": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới của Tongyi Qianwen với khả năng nâng cao đáng kể, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "Qwen/Qwen3-8B": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới của Tongyi Qianwen với khả năng nâng cao đáng kể, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
   "Qwen2-72B-Instruct": {
     "description": "Qwen2 là dòng mô hình mới nhất của Qwen, hỗ trợ ngữ cảnh 128k, so với các mô hình mã nguồn mở tốt nhất hiện tại, Qwen2-72B vượt trội hơn hẳn trong nhiều khả năng như hiểu ngôn ngữ tự nhiên, kiến thức, mã, toán học và đa ngôn ngữ."
   },
@@ -339,10 +351,13 @@
     "description": "Phiên bản mô hình mới nhất (V5.5), độ dài ngữ cảnh 128K, khả năng cải thiện đáng kể trong suy luận toán học, đối thoại tiếng Anh, theo dõi chỉ dẫn và hiểu biết văn bản dài, ngang tầm với GPT-4o."
   },
   "SenseChat-5-1202": {
-    "description": "Là phiên bản mới nhất dựa trên V5.5, có sự cải thiện đáng kể về khả năng cơ bản giữa tiếng Trung và tiếng Anh, trò chuyện, kiến thức khoa học, kiến thức nhân văn, viết lách, logic toán học, kiểm soát số lượng từ và một số khía cạnh khác so với phiên bản trước."
+    "description": "Phiên bản mới nhất dựa trên V5.5, cải thiện đáng kể về năng lực cơ bản tiếng Trung và tiếng Anh, trò chuyện, kiến thức khoa học tự nhiên, khoa học xã hội, viết lách, logic toán học và kiểm soát số lượng từ so với phiên bản trước."
   },
   "SenseChat-5-Cantonese": {
     "description": "Độ dài ngữ cảnh 32K, vượt qua GPT-4 trong hiểu biết đối thoại tiếng Quảng Đông, có thể so sánh với GPT-4 Turbo trong nhiều lĩnh vực như kiến thức, suy luận, toán học và lập trình mã."
+  },
+  "SenseChat-5-beta": {
+    "description": "Một số hiệu suất vượt trội hơn SenseCat-5-1202"
   },
   "SenseChat-Character": {
     "description": "Mô hình phiên bản tiêu chuẩn, độ dài ngữ cảnh 8K, tốc độ phản hồi cao."
@@ -398,17 +413,11 @@
   "THUDM/GLM-Z1-Rumination-32B-0414": {
     "description": "GLM-Z1-Rumination-32B-0414 là một mô hình suy luận sâu có khả năng suy tư (đối thủ của Deep Research của OpenAI). Khác với các mô hình suy tư sâu điển hình, mô hình suy tư này sử dụng thời gian suy tư sâu hơn để giải quyết các vấn đề mở và phức tạp hơn."
   },
-  "THUDM/chatglm3-6b": {
-    "description": "ChatGLM3-6B là mô hình mã nguồn mở trong loạt ChatGLM, được phát triển bởi Zhizhu AI. Mô hình này giữ lại những đặc điểm xuất sắc của thế hệ trước, như khả năng đối thoại mượt mà và ngưỡng triển khai thấp, đồng thời giới thiệu các tính năng mới. Nó sử dụng dữ liệu đào tạo đa dạng hơn, số bước đào tạo đầy đủ hơn và chiến lược đào tạo hợp lý hơn, thể hiện xuất sắc trong các mô hình tiền huấn luyện dưới 10B. ChatGLM3-6B hỗ trợ đối thoại nhiều vòng, gọi công cụ, thực thi mã và các nhiệm vụ Agent trong các tình huống phức tạp. Ngoài mô hình đối thoại, còn có mô hình cơ bản ChatGLM-6B-Base và mô hình đối thoại văn bản dài ChatGLM3-6B-32K. Mô hình hoàn toàn mở cho nghiên cứu học thuật và cho phép sử dụng thương mại miễn phí sau khi đăng ký."
-  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B là phiên bản mã nguồn mở, cung cấp trải nghiệm đối thoại tối ưu cho các ứng dụng hội thoại."
   },
-  "TeleAI/TeleChat2": {
-    "description": "Mô hình lớn TeleChat2 được phát triển độc lập từ 0 đến 1 bởi China Telecom, là một mô hình ngữ nghĩa sinh sinh, hỗ trợ các chức năng như hỏi đáp bách khoa, tạo mã, sinh văn bản dài, cung cấp dịch vụ tư vấn đối thoại cho người dùng, có khả năng tương tác đối thoại với người dùng, trả lời câu hỏi, hỗ trợ sáng tạo, giúp người dùng nhanh chóng và hiệu quả trong việc thu thập thông tin, kiến thức và cảm hứng. Mô hình thể hiện xuất sắc trong các vấn đề ảo giác, sinh văn bản dài và hiểu logic."
-  },
-  "Vendor-A/Qwen/Qwen2.5-72B-Instruct": {
-    "description": "Qwen2.5-72B-Instruct là một trong những mô hình ngôn ngữ lớn mới nhất do Alibaba Cloud phát hành. Mô hình 72B này có khả năng cải thiện đáng kể trong các lĩnh vực mã hóa và toán học. Mô hình cũng cung cấp hỗ trợ đa ngôn ngữ, bao gồm hơn 29 ngôn ngữ, bao gồm tiếng Trung, tiếng Anh, v.v. Mô hình đã có sự cải thiện đáng kể trong việc tuân theo chỉ dẫn, hiểu dữ liệu có cấu trúc và tạo ra đầu ra có cấu trúc (đặc biệt là JSON)."
+  "Tongyi-Zhiwen/QwenLong-L1-32B": {
+    "description": "QwenLong-L1-32B là mô hình suy luận lớn có ngữ cảnh dài đầu tiên được huấn luyện bằng học tăng cường (LRM), tối ưu hóa cho các nhiệm vụ suy luận văn bản dài. Mô hình sử dụng khung học tăng cường mở rộng ngữ cảnh tiến dần, đạt được chuyển đổi ổn định từ ngữ cảnh ngắn sang dài. Trong bảy bài kiểm tra chuẩn hỏi đáp tài liệu ngữ cảnh dài, QwenLong-L1-32B vượt qua các mô hình hàng đầu như OpenAI-o3-mini và Qwen3-235B-A22B, hiệu suất tương đương Claude-3.7-Sonnet-Thinking. Mô hình đặc biệt mạnh về suy luận toán học, logic và suy luận đa bước."
   },
   "Yi-34B-Chat": {
     "description": "Yi-1.5-34B, trong khi vẫn giữ được khả năng ngôn ngữ chung xuất sắc của dòng mô hình gốc, đã tăng cường đào tạo với 500 tỷ token chất lượng cao, nâng cao đáng kể khả năng logic toán học và mã."
@@ -500,6 +509,12 @@
   "ai21-jamba-1.5-mini": {
     "description": "Mô hình đa ngôn ngữ với 52B tham số (12B hoạt động), cung cấp cửa sổ ngữ cảnh dài 256K, gọi hàm, đầu ra có cấu trúc và tạo ra nội dung có căn cứ."
   },
+  "ai21-labs/AI21-Jamba-1.5-Large": {
+    "description": "Một mô hình đa ngôn ngữ với 398 tỷ tham số (94 tỷ tham số hoạt động), cung cấp cửa sổ ngữ cảnh dài 256K, gọi hàm, đầu ra có cấu trúc và sinh dựa trên sự thật."
+  },
+  "ai21-labs/AI21-Jamba-1.5-Mini": {
+    "description": "Một mô hình đa ngôn ngữ với 52 tỷ tham số (12 tỷ tham số hoạt động), cung cấp cửa sổ ngữ cảnh dài 256K, gọi hàm, đầu ra có cấu trúc và sinh dựa trên sự thật."
+  },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet nâng cao tiêu chuẩn ngành, hiệu suất vượt trội hơn các mô hình cạnh tranh và Claude 3 Opus, thể hiện xuất sắc trong nhiều đánh giá, đồng thời có tốc độ và chi phí của mô hình tầm trung của chúng tôi."
   },
@@ -538,6 +553,12 @@
   },
   "anthropic/claude-3.7-sonnet": {
     "description": "Claude 3.7 Sonnet là mô hình thông minh nhất của Anthropic cho đến nay, và cũng là mô hình suy luận hỗn hợp đầu tiên trên thị trường. Claude 3.7 Sonnet có khả năng tạo ra phản hồi gần như ngay lập tức hoặc suy nghĩ từng bước kéo dài, cho phép người dùng thấy rõ những quá trình này. Sonnet đặc biệt xuất sắc trong lập trình, khoa học dữ liệu, xử lý hình ảnh và các nhiệm vụ đại diện."
+  },
+  "anthropic/claude-opus-4": {
+    "description": "Claude Opus 4 là mô hình mạnh mẽ nhất của Anthropic dùng để xử lý các nhiệm vụ phức tạp cao. Nó thể hiện xuất sắc về hiệu suất, trí tuệ, sự mượt mà và khả năng hiểu biết."
+  },
+  "anthropic/claude-sonnet-4": {
+    "description": "Claude Sonnet 4 có thể tạo ra phản hồi gần như tức thì hoặc suy nghĩ từng bước kéo dài, người dùng có thể rõ ràng quan sát quá trình này. Người dùng API cũng có thể kiểm soát chi tiết thời gian suy nghĩ của mô hình."
   },
   "aya": {
     "description": "Aya 23 là mô hình đa ngôn ngữ do Cohere phát hành, hỗ trợ 23 ngôn ngữ, tạo điều kiện thuận lợi cho các ứng dụng ngôn ngữ đa dạng."
@@ -602,6 +623,12 @@
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet cung cấp sự cân bằng lý tưởng giữa trí thông minh và tốc độ cho khối lượng công việc doanh nghiệp. Nó cung cấp hiệu suất tối đa với mức giá thấp hơn, đáng tin cậy và phù hợp cho triển khai quy mô lớn."
   },
+  "claude-opus-4-20250514": {
+    "description": "Claude Opus 4 là mô hình mạnh mẽ nhất của Anthropic được sử dụng để xử lý các nhiệm vụ phức tạp cao. Nó thể hiện xuất sắc về hiệu suất, trí tuệ, sự trôi chảy và khả năng hiểu biết."
+  },
+  "claude-sonnet-4-20250514": {
+    "description": "Claude 4 Sonnet có thể tạo ra phản hồi gần như ngay lập tức hoặc suy nghĩ dần dần kéo dài, người dùng có thể thấy rõ những quá trình này. Người dùng API cũng có thể kiểm soát chi tiết thời gian suy nghĩ của mô hình."
+  },
   "codegeex-4": {
     "description": "CodeGeeX-4 là trợ lý lập trình AI mạnh mẽ, hỗ trợ nhiều ngôn ngữ lập trình với câu hỏi thông minh và hoàn thành mã, nâng cao hiệu suất phát triển."
   },
@@ -638,6 +665,9 @@
   "codestral-latest": {
     "description": "Codestral là mô hình sinh mã tiên tiến tập trung vào việc sinh mã, tối ưu hóa cho các nhiệm vụ điền vào khoảng trống và hoàn thiện mã."
   },
+  "codex-mini-latest": {
+    "description": "codex-mini-latest là phiên bản tinh chỉnh của o4-mini, được thiết kế đặc biệt cho Codex CLI. Đối với việc sử dụng trực tiếp qua API, chúng tôi khuyến nghị bắt đầu từ gpt-4.1."
+  },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B là mô hình được thiết kế cho việc tuân thủ hướng dẫn, đối thoại và lập trình."
   },
@@ -646,6 +676,12 @@
   },
   "cohere-command-r-plus": {
     "description": "Command R+ là mô hình tối ưu hóa RAG hiện đại, được thiết kế để xử lý khối lượng công việc cấp doanh nghiệp."
+  },
+  "cohere/Cohere-command-r": {
+    "description": "Command R là một mô hình sinh có thể mở rộng, được thiết kế cho việc sử dụng RAG và công cụ, giúp doanh nghiệp triển khai AI cấp sản xuất."
+  },
+  "cohere/Cohere-command-r-plus": {
+    "description": "Command R+ là mô hình tối ưu RAG tiên tiến nhất, được thiết kế để xử lý khối lượng công việc cấp doanh nghiệp."
   },
   "command": {
     "description": "Một mô hình đối thoại tuân theo chỉ dẫn, thể hiện chất lượng cao và đáng tin cậy trong các nhiệm vụ ngôn ngữ, đồng thời có độ dài ngữ cảnh dài hơn so với mô hình sinh cơ bản của chúng tôi."
@@ -689,6 +725,9 @@
   "compound-beta-mini": {
     "description": "Compound-beta-mini là một hệ thống AI phức hợp, được hỗ trợ bởi các mô hình có sẵn công khai trong GroqCloud, có khả năng thông minh và chọn lọc sử dụng công cụ để trả lời các truy vấn của người dùng."
   },
+  "computer-use-preview": {
+    "description": "Mô hình computer-use-preview được thiết kế chuyên biệt cho \"công cụ sử dụng máy tính\", được huấn luyện để hiểu và thực hiện các nhiệm vụ liên quan đến máy tính."
+  },
   "dall-e-2": {
     "description": "Mô hình DALL·E thế hệ thứ hai, hỗ trợ tạo hình ảnh chân thực và chính xác hơn, với độ phân giải gấp 4 lần thế hệ đầu tiên."
   },
@@ -700,6 +739,12 @@
   },
   "deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 là một mô hình suy diễn được điều khiển bởi học tăng cường (RL), giải quyết các vấn đề về tính lặp lại và khả năng đọc hiểu trong mô hình. Trước khi áp dụng RL, DeepSeek-R1 đã giới thiệu dữ liệu khởi động lạnh, tối ưu hóa thêm hiệu suất suy diễn. Nó thể hiện hiệu suất tương đương với OpenAI-o1 trong các nhiệm vụ toán học, mã và suy diễn, và thông qua phương pháp đào tạo được thiết kế cẩn thận, nâng cao hiệu quả tổng thể."
+  },
+  "deepseek-ai/DeepSeek-R1-0528": {
+    "description": "DeepSeek R1 đã nâng cao đáng kể chiều sâu khả năng suy luận và phán đoán nhờ tận dụng tài nguyên tính toán tăng thêm và cơ chế tối ưu thuật toán trong quá trình huấn luyện sau. Mô hình thể hiện xuất sắc trong nhiều bài đánh giá chuẩn, bao gồm toán học, lập trình và logic chung. Hiệu suất tổng thể hiện gần đạt các mô hình hàng đầu như O3 và Gemini 2.5 Pro."
+  },
+  "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B": {
+    "description": "DeepSeek-R1-0528-Qwen3-8B là mô hình được chưng cất chuỗi suy nghĩ từ DeepSeek-R1-0528 sang Qwen3 8B Base. Mô hình đạt hiệu suất tiên tiến nhất (SOTA) trong các mô hình mã nguồn mở, vượt Qwen3 8B 10% trong bài kiểm tra AIME 2024 và đạt mức hiệu suất của Qwen3-235B-thinking. Mô hình thể hiện xuất sắc trong suy luận toán học, lập trình và logic chung, có kiến trúc giống Qwen3-8B nhưng dùng chung cấu hình tokenizer của DeepSeek-R1-0528."
   },
   "deepseek-ai/DeepSeek-R1-Distill-Llama-70B": {
     "description": "Mô hình chưng cất DeepSeek-R1, tối ưu hóa hiệu suất suy luận thông qua học tăng cường và dữ liệu khởi động lạnh, mô hình mã nguồn mở làm mới tiêu chuẩn đa nhiệm."
@@ -745,6 +790,9 @@
   },
   "deepseek-r1": {
     "description": "DeepSeek-R1 là một mô hình suy diễn được điều khiển bởi học tăng cường (RL), giải quyết các vấn đề về tính lặp lại và khả năng đọc hiểu trong mô hình. Trước khi áp dụng RL, DeepSeek-R1 đã giới thiệu dữ liệu khởi động lạnh, tối ưu hóa thêm hiệu suất suy diễn. Nó thể hiện hiệu suất tương đương với OpenAI-o1 trong các nhiệm vụ toán học, mã và suy diễn, và thông qua phương pháp đào tạo được thiết kế cẩn thận, nâng cao hiệu quả tổng thể."
+  },
+  "deepseek-r1-0528": {
+    "description": "Mô hình phiên bản đầy đủ 685 tỷ tham số, phát hành ngày 28 tháng 5 năm 2025. DeepSeek-R1 sử dụng rộng rãi kỹ thuật học tăng cường trong giai đoạn huấn luyện sau, nâng cao đáng kể khả năng suy luận của mô hình dù có rất ít dữ liệu gán nhãn. Hiệu suất cao và năng lực mạnh mẽ trong các nhiệm vụ toán học, lập trình, suy luận ngôn ngữ tự nhiên."
   },
   "deepseek-r1-70b-fast-online": {
     "description": "DeepSeek R1 70B phiên bản nhanh, hỗ trợ tìm kiếm trực tuyến theo thời gian thực, cung cấp tốc độ phản hồi nhanh hơn trong khi vẫn giữ hiệu suất của mô hình."
@@ -803,11 +851,20 @@
   "deepseek-v3-0324": {
     "description": "DeepSeek-V3-0324 là mô hình MoE với 671B tham số, nổi bật trong khả năng lập trình và kỹ thuật, hiểu ngữ cảnh và xử lý văn bản dài."
   },
-  "deepseek/deepseek-chat": {
-    "description": "Mô hình mã nguồn mở mới kết hợp khả năng tổng quát và mã, không chỉ giữ lại khả năng đối thoại tổng quát của mô hình Chat ban đầu và khả năng xử lý mã mạnh mẽ của mô hình Coder, mà còn tốt hơn trong việc phù hợp với sở thích của con người. Hơn nữa, DeepSeek-V2.5 cũng đã đạt được sự cải thiện lớn trong nhiều lĩnh vực như nhiệm vụ viết, theo dõi chỉ dẫn."
+  "deepseek/deepseek-chat-v3-0324": {
+    "description": "DeepSeek V3 là một mô hình hỗn hợp chuyên gia với 685B tham số, là phiên bản mới nhất trong dòng mô hình trò chuyện flagship của đội ngũ DeepSeek.\n\nNó kế thừa mô hình [DeepSeek V3](/deepseek/deepseek-chat-v3) và thể hiện xuất sắc trong nhiều nhiệm vụ."
+  },
+  "deepseek/deepseek-chat-v3-0324:free": {
+    "description": "DeepSeek V3 là một mô hình hỗn hợp chuyên gia với 685B tham số, là phiên bản mới nhất trong dòng mô hình trò chuyện flagship của đội ngũ DeepSeek.\n\nNó kế thừa mô hình [DeepSeek V3](/deepseek/deepseek-chat-v3) và thể hiện xuất sắc trong nhiều nhiệm vụ."
   },
   "deepseek/deepseek-r1": {
     "description": "DeepSeek-R1 đã nâng cao khả năng suy luận của mô hình một cách đáng kể với rất ít dữ liệu được gán nhãn. Trước khi đưa ra câu trả lời cuối cùng, mô hình sẽ xuất ra một chuỗi suy nghĩ để nâng cao độ chính xác của câu trả lời cuối cùng."
+  },
+  "deepseek/deepseek-r1-0528": {
+    "description": "DeepSeek-R1 đã cải thiện đáng kể khả năng suy luận của mô hình ngay cả khi có rất ít dữ liệu gán nhãn. Trước khi đưa ra câu trả lời cuối cùng, mô hình sẽ xuất ra một chuỗi suy nghĩ nhằm nâng cao độ chính xác của câu trả lời cuối."
+  },
+  "deepseek/deepseek-r1-0528:free": {
+    "description": "DeepSeek-R1 đã cải thiện đáng kể khả năng suy luận của mô hình ngay cả khi có rất ít dữ liệu gán nhãn. Trước khi đưa ra câu trả lời cuối cùng, mô hình sẽ xuất ra một chuỗi suy nghĩ nhằm nâng cao độ chính xác của câu trả lời cuối."
   },
   "deepseek/deepseek-r1-distill-llama-70b": {
     "description": "DeepSeek R1 Distill Llama 70B là mô hình ngôn ngữ lớn dựa trên Llama3.3 70B, mô hình này sử dụng đầu ra tinh chỉnh từ DeepSeek R1 để đạt được hiệu suất cạnh tranh tương đương với các mô hình tiên tiến lớn."
@@ -854,8 +911,20 @@
   "doubao-1.5-pro-32k": {
     "description": "Doubao-1.5-pro là mô hình chủ lực thế hệ mới, hiệu suất được nâng cấp toàn diện, thể hiện xuất sắc trong các lĩnh vực kiến thức, mã nguồn, suy luận, và nhiều hơn nữa."
   },
+  "doubao-1.5-thinking-pro": {
+    "description": "Mô hình tư duy sâu mới Doubao-1.5, nổi bật trong các lĩnh vực chuyên môn như toán học, lập trình, suy luận khoa học và các nhiệm vụ viết sáng tạo, đạt hoặc gần đạt trình độ hàng đầu trong ngành trên nhiều tiêu chuẩn uy tín như AIME 2024, Codeforces, GPQA. Hỗ trợ cửa sổ ngữ cảnh 128k, đầu ra 16k."
+  },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite là mô hình đa phương tiện lớn được nâng cấp mới, hỗ trợ nhận diện hình ảnh với bất kỳ độ phân giải nào và tỷ lệ dài rộng cực đoan, tăng cường khả năng suy luận hình ảnh, nhận diện tài liệu, hiểu thông tin chi tiết và tuân thủ hướng dẫn. Hỗ trợ cửa sổ ngữ cảnh 128k, độ dài đầu ra tối đa 16k tokens."
+  },
+  "doubao-seed-1.6": {
+    "description": "Doubao-Seed-1.6 là mô hình suy nghĩ sâu đa phương thức hoàn toàn mới, hỗ trợ ba chế độ suy nghĩ auto/thinking/non-thinking. Ở chế độ non-thinking, hiệu quả mô hình cải thiện đáng kể so với Doubao-1.5-pro/250115. Hỗ trợ cửa sổ ngữ cảnh 256k, độ dài đầu ra tối đa 16k tokens."
+  },
+  "doubao-seed-1.6-flash": {
+    "description": "Doubao-Seed-1.6-flash là mô hình suy nghĩ sâu đa phương thức với tốc độ suy luận tối ưu, TPOT chỉ cần 10ms; đồng thời hỗ trợ hiểu văn bản và hình ảnh, khả năng hiểu văn bản vượt trội so với thế hệ lite trước, khả năng hiểu hình ảnh sánh ngang với các mô hình pro của đối thủ. Hỗ trợ cửa sổ ngữ cảnh 256k, độ dài đầu ra tối đa 16k tokens."
+  },
+  "doubao-seed-1.6-thinking": {
+    "description": "Mô hình Doubao-Seed-1.6-thinking có khả năng suy nghĩ được tăng cường đáng kể, so với Doubao-1.5-thinking-pro, nâng cao hơn nữa các năng lực cơ bản như Lập trình, Toán học, Lý luận logic, đồng thời hỗ trợ hiểu hình ảnh. Hỗ trợ cửa sổ ngữ cảnh 256k, độ dài đầu ra tối đa 16k tokens."
   },
   "emohaa": {
     "description": "Emohaa là mô hình tâm lý, có khả năng tư vấn chuyên nghiệp, giúp người dùng hiểu các vấn đề cảm xúc."
@@ -887,6 +956,15 @@
   "ernie-4.5-8k-preview": {
     "description": "Mô hình lớn văn tâm 4.5 là thế hệ mới của mô hình nền tảng đa phương tiện tự phát triển của Baidu, đạt được tối ưu hóa hợp tác thông qua mô hình hóa đa phương tiện, có khả năng hiểu đa phương tiện xuất sắc; có khả năng ngôn ngữ tinh vi hơn, khả năng hiểu, tạo ra, logic và ghi nhớ được cải thiện toàn diện, giảm ảo giác, khả năng suy luận logic và mã được nâng cao rõ rệt."
   },
+  "ernie-4.5-turbo-128k": {
+    "description": "Wenxin 4.5 Turbo có sự cải thiện rõ rệt trong việc giảm ảo giác, suy luận logic và khả năng lập trình. So với Wenxin 4.5, tốc độ nhanh hơn và giá cả thấp hơn. Khả năng của mô hình được nâng cao toàn diện, đáp ứng tốt hơn cho việc xử lý đối thoại dài với nhiều vòng và nhiệm vụ hiểu biết hỏi đáp tài liệu dài."
+  },
+  "ernie-4.5-turbo-32k": {
+    "description": "Wenxin 4.5 Turbo cũng có sự cải thiện rõ rệt trong việc giảm ảo giác, suy luận logic và khả năng lập trình. So với Wenxin 4.5, tốc độ nhanh hơn và giá cả thấp hơn. Khả năng sáng tác văn bản, hỏi đáp kiến thức được nâng cao đáng kể. Độ dài đầu ra và độ trễ câu hoàn chỉnh so với ERNIE 4.5 có sự gia tăng."
+  },
+  "ernie-4.5-turbo-vl-32k": {
+    "description": "Phiên bản hoàn toàn mới của mô hình lớn Wenxin, khả năng hiểu, sáng tác, dịch thuật và lập trình được cải thiện đáng kể, lần đầu tiên hỗ trợ độ dài ngữ cảnh 32K, độ trễ của token đầu tiên giảm đáng kể."
+  },
   "ernie-char-8k": {
     "description": "Mô hình ngôn ngữ lớn theo ngữ cảnh tự phát triển của Baidu, phù hợp cho các ứng dụng như NPC trong trò chơi, đối thoại dịch vụ khách hàng, và vai trò trong đối thoại, có phong cách nhân vật rõ ràng và nhất quán, khả năng tuân theo lệnh mạnh mẽ, hiệu suất suy luận tốt hơn."
   },
@@ -911,8 +989,14 @@
   "ernie-tiny-8k": {
     "description": "ERNIE Tiny là mô hình ngôn ngữ lớn hiệu suất siêu cao tự phát triển của Baidu, có chi phí triển khai và tinh chỉnh thấp nhất trong dòng sản phẩm văn tâm."
   },
+  "ernie-x1-32k": {
+    "description": "Có khả năng hiểu, lập kế hoạch, phản ánh và tiến hóa mạnh mẽ hơn. Là một mô hình tư duy sâu sắc toàn diện hơn, Wenxin X1 kết hợp độ chính xác, sự sáng tạo và văn phong, thể hiện xuất sắc trong các lĩnh vực như hỏi đáp kiến thức tiếng Trung, sáng tác văn học, viết tài liệu, đối thoại hàng ngày, suy luận logic, tính toán phức tạp và gọi công cụ."
+  },
   "ernie-x1-32k-preview": {
     "description": "Mô hình lớn Wenxin X1 có khả năng hiểu, lập kế hoạch, phản ánh và tiến hóa mạnh mẽ hơn. Là một mô hình tư duy sâu sắc toàn diện hơn, Wenxin X1 kết hợp độ chính xác, sự sáng tạo và văn phong, đặc biệt xuất sắc trong các lĩnh vực như hỏi đáp kiến thức tiếng Trung, sáng tác văn học, viết tài liệu, đối thoại hàng ngày, suy luận logic, tính toán phức tạp và gọi công cụ."
+  },
+  "ernie-x1-turbo-32k": {
+    "description": "So với ERNIE-X1-32K, mô hình này có hiệu suất và hiệu quả tốt hơn."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) cung cấp hiệu suất ổn định và có thể điều chỉnh, là lựa chọn lý tưởng cho các giải pháp nhiệm vụ phức tạp."
@@ -977,20 +1061,38 @@
   "gemini-2.0-flash-lite-001": {
     "description": "Biến thể mô hình Gemini 2.0 Flash được tối ưu hóa cho hiệu quả chi phí và độ trễ thấp."
   },
-  "gemini-2.0-flash-thinking-exp-01-21": {
-    "description": "Gemini 2.0 Flash Exp là mô hình AI đa phương thức thử nghiệm mới nhất của Google, sở hữu các tính năng thế hệ tiếp theo, tốc độ vượt trội, gọi công cụ bản địa và sinh ra đa phương thức."
+  "gemini-2.0-flash-preview-image-generation": {
+    "description": "Mô hình xem trước Gemini 2.0 Flash, hỗ trợ tạo hình ảnh"
   },
-  "gemini-2.0-pro-exp-02-05": {
-    "description": "Gemini 2.0 Pro Experimental là mô hình AI đa phương tiện thử nghiệm mới nhất của Google, có sự cải thiện chất lượng nhất định so với các phiên bản trước, đặc biệt là về kiến thức thế giới, mã và ngữ cảnh dài."
+  "gemini-2.5-flash": {
+    "description": "Gemini 2.5 Flash là mô hình có hiệu suất chi phí tốt nhất của Google, cung cấp đầy đủ các chức năng."
+  },
+  "gemini-2.5-flash-lite-preview-06-17": {
+    "description": "Gemini 2.5 Flash-Lite Preview là mô hình nhỏ nhất và có hiệu suất chi phí tốt nhất của Google, được thiết kế dành cho sử dụng quy mô lớn."
   },
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview là mô hình có giá trị tốt nhất của Google, cung cấp đầy đủ các tính năng."
+  },
+  "gemini-2.5-flash-preview-04-17-thinking": {
+    "description": "Gemini 2.5 Flash Preview là mô hình có hiệu suất chi phí tốt nhất của Google, cung cấp các tính năng toàn diện."
+  },
+  "gemini-2.5-flash-preview-05-20": {
+    "description": "Gemini 2.5 Flash Preview là mô hình có hiệu suất chi phí tốt nhất của Google, cung cấp các tính năng toàn diện."
+  },
+  "gemini-2.5-pro": {
+    "description": "Gemini 2.5 Pro là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận các vấn đề phức tạp trong lĩnh vực mã nguồn, toán học và STEM, cũng như phân tích các bộ dữ liệu lớn, kho mã và tài liệu bằng ngữ cảnh dài."
   },
   "gemini-2.5-pro-exp-03-25": {
     "description": "Gemini 2.5 Pro Experimental là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận về mã, toán học và các vấn đề phức tạp trong lĩnh vực STEM, đồng thời có thể phân tích các tập dữ liệu lớn, kho mã và tài liệu bằng cách sử dụng ngữ cảnh dài."
   },
   "gemini-2.5-pro-preview-03-25": {
     "description": "Gemini 2.5 Pro Preview là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận về mã, toán học và các vấn đề phức tạp trong lĩnh vực STEM, cũng như phân tích các tập dữ liệu lớn, kho mã và tài liệu bằng cách sử dụng ngữ cảnh dài."
+  },
+  "gemini-2.5-pro-preview-05-06": {
+    "description": "Gemini 2.5 Pro Preview là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận về mã, toán học và các vấn đề phức tạp trong lĩnh vực STEM, cũng như phân tích các tập dữ liệu lớn, kho mã và tài liệu bằng cách sử dụng ngữ cảnh dài."
+  },
+  "gemini-2.5-pro-preview-06-05": {
+    "description": "Gemini 2.5 Pro Preview là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận các vấn đề phức tạp trong lĩnh vực mã nguồn, toán học và STEM, cũng như phân tích dữ liệu lớn, kho mã và tài liệu với ngữ cảnh dài."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B phù hợp cho việc xử lý các nhiệm vụ quy mô vừa và nhỏ, đồng thời mang lại hiệu quả chi phí."
@@ -1076,8 +1178,23 @@
   "google/gemini-2.0-flash-001": {
     "description": "Gemini 2.0 Flash cung cấp các tính năng và cải tiến thế hệ tiếp theo, bao gồm tốc độ vượt trội, sử dụng công cụ bản địa, tạo đa phương tiện và cửa sổ ngữ cảnh 1M token."
   },
-  "google/gemini-2.0-pro-exp-02-05:free": {
-    "description": "Gemini 2.0 Pro Experimental là mô hình AI đa phương tiện thử nghiệm mới nhất của Google, có sự cải thiện chất lượng nhất định so với các phiên bản trước, đặc biệt là về kiến thức thế giới, mã và ngữ cảnh dài."
+  "google/gemini-2.0-flash-exp:free": {
+    "description": "Gemini 2.0 Flash Experimental là mô hình AI đa phương tiện thử nghiệm mới nhất của Google, có sự cải thiện về chất lượng so với các phiên bản trước, đặc biệt là đối với kiến thức thế giới, mã và ngữ cảnh dài."
+  },
+  "google/gemini-2.5-flash": {
+    "description": "Gemini 2.5 Flash là mô hình chủ lực tiên tiến nhất của Google, được thiết kế dành riêng cho các nhiệm vụ suy luận nâng cao, mã hóa, toán học và khoa học. Nó bao gồm khả năng \"suy nghĩ\" tích hợp, cho phép cung cấp các phản hồi với độ chính xác cao hơn và xử lý ngữ cảnh tinh tế hơn.\n\nLưu ý: Mô hình này có hai biến thể: có suy nghĩ và không suy nghĩ. Giá đầu ra có sự khác biệt đáng kể tùy thuộc vào việc khả năng suy nghĩ có được kích hoạt hay không. Nếu bạn chọn biến thể tiêu chuẩn (không có hậu tố \":thinking\"), mô hình sẽ rõ ràng tránh tạo ra các token suy nghĩ.\n\nĐể tận dụng khả năng suy nghĩ và nhận các token suy nghĩ, bạn phải chọn biến thể \":thinking\", điều này sẽ dẫn đến giá đầu ra suy nghĩ cao hơn.\n\nNgoài ra, Gemini 2.5 Flash có thể được cấu hình thông qua tham số \"Số token suy luận tối đa\", như được mô tả trong tài liệu (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
+  },
+  "google/gemini-2.5-flash-preview": {
+    "description": "Gemini 2.5 Flash là mô hình chủ lực tiên tiến nhất của Google, được thiết kế cho suy luận nâng cao, lập trình, toán học và các nhiệm vụ khoa học. Nó bao gồm khả năng 'suy nghĩ' tích hợp, cho phép nó cung cấp phản hồi với độ chính xác cao hơn và xử lý ngữ cảnh chi tiết hơn.\n\nLưu ý: Mô hình này có hai biến thể: suy nghĩ và không suy nghĩ. Giá đầu ra có sự khác biệt đáng kể tùy thuộc vào việc khả năng suy nghĩ có được kích hoạt hay không. Nếu bạn chọn biến thể tiêu chuẩn (không có hậu tố ':thinking'), mô hình sẽ rõ ràng tránh việc tạo ra các token suy nghĩ.\n\nĐể tận dụng khả năng suy nghĩ và nhận các token suy nghĩ, bạn phải chọn biến thể ':thinking', điều này sẽ tạo ra giá đầu ra suy nghĩ cao hơn.\n\nNgoài ra, Gemini 2.5 Flash có thể được cấu hình thông qua tham số 'số token tối đa cho suy luận', như đã mô tả trong tài liệu (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
+  },
+  "google/gemini-2.5-flash-preview:thinking": {
+    "description": "Gemini 2.5 Flash là mô hình chủ lực tiên tiến nhất của Google, được thiết kế cho suy luận nâng cao, lập trình, toán học và các nhiệm vụ khoa học. Nó bao gồm khả năng 'suy nghĩ' tích hợp, cho phép nó cung cấp phản hồi với độ chính xác cao hơn và xử lý ngữ cảnh chi tiết hơn.\n\nLưu ý: Mô hình này có hai biến thể: suy nghĩ và không suy nghĩ. Giá đầu ra có sự khác biệt đáng kể tùy thuộc vào việc khả năng suy nghĩ có được kích hoạt hay không. Nếu bạn chọn biến thể tiêu chuẩn (không có hậu tố ':thinking'), mô hình sẽ rõ ràng tránh việc tạo ra các token suy nghĩ.\n\nĐể tận dụng khả năng suy nghĩ và nhận các token suy nghĩ, bạn phải chọn biến thể ':thinking', điều này sẽ tạo ra giá đầu ra suy nghĩ cao hơn.\n\nNgoài ra, Gemini 2.5 Flash có thể được cấu hình thông qua tham số 'số token tối đa cho suy luận', như đã mô tả trong tài liệu (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
+  },
+  "google/gemini-2.5-pro": {
+    "description": "Gemini 2.5 Pro là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận các vấn đề phức tạp trong mã hóa, toán học và lĩnh vực STEM, cũng như sử dụng ngữ cảnh dài để phân tích các bộ dữ liệu lớn, kho mã và tài liệu."
+  },
+  "google/gemini-2.5-pro-preview": {
+    "description": "Gemini 2.5 Pro Preview là mô hình tư duy tiên tiến nhất của Google, có khả năng suy luận các vấn đề phức tạp trong lĩnh vực mã hóa, toán học và STEM, cũng như phân tích các bộ dữ liệu lớn, kho mã và tài liệu bằng ngữ cảnh dài."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash cung cấp khả năng xử lý đa phương thức được tối ưu hóa, phù hợp cho nhiều tình huống nhiệm vụ phức tạp."
@@ -1187,8 +1304,14 @@
   "gpt-4o-mini": {
     "description": "GPT-4o mini là mô hình mới nhất do OpenAI phát hành sau GPT-4 Omni, hỗ trợ đầu vào hình ảnh và đầu ra văn bản. Là mô hình nhỏ gọn tiên tiến nhất của họ, nó rẻ hơn nhiều so với các mô hình tiên tiến gần đây khác và rẻ hơn hơn 60% so với GPT-3.5 Turbo. Nó giữ lại trí thông minh tiên tiến nhất trong khi có giá trị sử dụng đáng kể. GPT-4o mini đạt 82% điểm trong bài kiểm tra MMLU và hiện đứng cao hơn GPT-4 về sở thích trò chuyện."
   },
+  "gpt-4o-mini-audio-preview": {
+    "description": "Mô hình GPT-4o mini Audio, hỗ trợ đầu vào và đầu ra âm thanh."
+  },
   "gpt-4o-mini-realtime-preview": {
     "description": "Phiên bản thời gian thực của GPT-4o-mini, hỗ trợ đầu vào và đầu ra âm thanh và văn bản theo thời gian thực."
+  },
+  "gpt-4o-mini-search-preview": {
+    "description": "GPT-4o mini phiên bản xem trước tìm kiếm là mô hình được huấn luyện chuyên biệt để hiểu và thực thi các truy vấn tìm kiếm trên web, sử dụng API Chat Completions. Ngoài phí token, truy vấn tìm kiếm trên web còn tính phí theo mỗi lần gọi công cụ."
   },
   "gpt-4o-mini-tts": {
     "description": "GPT-4o mini TTS là mô hình chuyển văn bản thành giọng nói dựa trên GPT-4o mini, cung cấp sinh âm thanh cao cấp với chi phí thấp hơn."
@@ -1202,29 +1325,26 @@
   "gpt-4o-realtime-preview-2024-12-17": {
     "description": "Phiên bản thời gian thực của GPT-4o, hỗ trợ đầu vào và đầu ra âm thanh và văn bản theo thời gian thực."
   },
+  "gpt-4o-search-preview": {
+    "description": "GPT-4o phiên bản xem trước tìm kiếm là mô hình được huấn luyện chuyên biệt để hiểu và thực thi các truy vấn tìm kiếm trên web, sử dụng API Chat Completions. Ngoài phí token, truy vấn tìm kiếm trên web còn tính phí theo mỗi lần gọi công cụ."
+  },
   "grok-2-1212": {
     "description": "Mô hình này đã được cải thiện về độ chính xác, khả năng tuân thủ hướng dẫn và khả năng đa ngôn ngữ."
   },
   "grok-2-vision-1212": {
     "description": "Mô hình này đã được cải thiện về độ chính xác, khả năng tuân thủ hướng dẫn và khả năng đa ngôn ngữ."
   },
-  "grok-3-beta": {
-    "description": "Mô hình hàng đầu, chuyên về trích xuất dữ liệu, lập trình và tóm tắt văn bản cho các ứng dụng doanh nghiệp, có kiến thức sâu rộng trong các lĩnh vực tài chính, y tế, pháp lý và khoa học."
+  "grok-3": {
+    "description": "Mô hình chủ lực, xuất sắc trong trích xuất dữ liệu, lập trình và tóm tắt văn bản cho các ứng dụng doanh nghiệp, sở hữu kiến thức sâu rộng trong các lĩnh vực tài chính, y tế, pháp lý và khoa học."
   },
-  "grok-3-fast-beta": {
-    "description": "Mô hình hàng đầu, chuyên về trích xuất dữ liệu, lập trình và tóm tắt văn bản cho các ứng dụng doanh nghiệp, có kiến thức sâu rộng trong các lĩnh vực tài chính, y tế, pháp lý và khoa học."
+  "grok-3-fast": {
+    "description": "Mô hình chủ lực, xuất sắc trong trích xuất dữ liệu, lập trình và tóm tắt văn bản cho các ứng dụng doanh nghiệp, sở hữu kiến thức sâu rộng trong các lĩnh vực tài chính, y tế, pháp lý và khoa học."
   },
-  "grok-3-mini-beta": {
-    "description": "Mô hình nhẹ, sẽ suy nghĩ trước khi trò chuyện. Chạy nhanh, thông minh, phù hợp cho các nhiệm vụ logic không cần kiến thức chuyên sâu, và có thể thu thập được các dấu vết tư duy ban đầu."
+  "grok-3-mini": {
+    "description": "Mô hình nhẹ, suy nghĩ trước khi trả lời. Chạy nhanh, thông minh, phù hợp cho các nhiệm vụ logic không đòi hỏi kiến thức chuyên sâu và có thể truy xuất được chuỗi suy nghĩ gốc."
   },
-  "grok-3-mini-fast-beta": {
-    "description": "Mô hình nhẹ, sẽ suy nghĩ trước khi trò chuyện. Chạy nhanh, thông minh, phù hợp cho các nhiệm vụ logic không cần kiến thức chuyên sâu, và có thể thu thập được các dấu vết tư duy ban đầu."
-  },
-  "grok-beta": {
-    "description": "Có hiệu suất tương đương với Grok 2, nhưng hiệu quả, tốc độ và tính năng cao hơn."
-  },
-  "grok-vision-beta": {
-    "description": "Mô hình hiểu hình ảnh mới nhất, có khả năng xử lý nhiều loại thông tin hình ảnh khác nhau, bao gồm tài liệu, biểu đồ, ảnh chụp màn hình và ảnh."
+  "grok-3-mini-fast": {
+    "description": "Mô hình nhẹ, suy nghĩ trước khi trả lời. Chạy nhanh, thông minh, phù hợp cho các nhiệm vụ logic không đòi hỏi kiến thức chuyên sâu và có thể truy xuất được chuỗi suy nghĩ gốc."
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B là mô hình ngôn ngữ kết hợp giữa sáng tạo và trí thông minh, kết hợp nhiều mô hình hàng đầu."
@@ -1240,6 +1360,9 @@
   },
   "hunyuan-large-longcontext": {
     "description": "Chuyên xử lý các nhiệm vụ văn bản dài như tóm tắt tài liệu và hỏi đáp tài liệu, đồng thời cũng có khả năng xử lý các nhiệm vụ tạo văn bản chung. Thể hiện xuất sắc trong phân tích và tạo nội dung văn bản dài, có thể đáp ứng hiệu quả các yêu cầu xử lý nội dung dài phức tạp và chi tiết."
+  },
+  "hunyuan-large-vision": {
+    "description": "Mô hình này phù hợp với các kịch bản hiểu hình ảnh và văn bản, là mô hình ngôn ngữ thị giác lớn dựa trên Hunyuan Large, hỗ trợ đầu vào nhiều hình ảnh với độ phân giải tùy ý cùng văn bản, tạo ra nội dung văn bản, tập trung vào các nhiệm vụ liên quan đến hiểu hình ảnh và văn bản, có sự cải thiện đáng kể về khả năng hiểu đa ngôn ngữ hình ảnh và văn bản."
   },
   "hunyuan-lite": {
     "description": "Nâng cấp lên cấu trúc MOE, với cửa sổ ngữ cảnh 256k, dẫn đầu nhiều mô hình mã nguồn mở trong các bộ đánh giá NLP, mã, toán học, ngành nghề, v.v."
@@ -1265,14 +1388,17 @@
   "hunyuan-t1-20250321": {
     "description": "Xây dựng toàn diện khả năng mô hình cho cả khoa học tự nhiên và khoa học xã hội, khả năng nắm bắt thông tin văn bản dài mạnh mẽ. Hỗ trợ suy luận và giải đáp các vấn đề khoa học như toán học, logic, khoa học và mã với nhiều độ khó khác nhau."
   },
+  "hunyuan-t1-20250403": {
+    "description": "Nâng cao khả năng tạo mã cấp dự án; cải thiện chất lượng viết văn bản; nâng cao khả năng hiểu chủ đề văn bản đa vòng, tuân thủ chỉ thị toB và hiểu từ ngữ; tối ưu hóa vấn đề đầu ra hỗn hợp phồn thể và giản thể, cũng như hỗn hợp tiếng Trung và tiếng Anh."
+  },
+  "hunyuan-t1-20250529": {
+    "description": "Tối ưu hóa sáng tạo văn bản, viết luận, cải thiện khả năng lập trình frontend, toán học, suy luận logic và các kỹ năng khoa học tự nhiên, nâng cao khả năng tuân thủ chỉ dẫn."
+  },
   "hunyuan-t1-latest": {
     "description": "Mô hình suy luận Hybrid-Transformer-Mamba quy mô siêu lớn đầu tiên trong ngành, mở rộng khả năng suy luận, tốc độ giải mã cực nhanh, và tiếp tục điều chỉnh theo sở thích của con người."
   },
-  "hunyuan-translation": {
-    "description": "Hỗ trợ dịch giữa 15 ngôn ngữ bao gồm tiếng Trung, tiếng Anh, tiếng Nhật, tiếng Pháp, tiếng Bồ Đào Nha, tiếng Tây Ban Nha, tiếng Thổ Nhĩ Kỳ, tiếng Nga, tiếng Ả Rập, tiếng Hàn, tiếng Ý, tiếng Đức, tiếng Việt, tiếng Mã Lai và tiếng Indonesia, dựa trên bộ đánh giá dịch tự động hóa COMET, có khả năng dịch giữa các ngôn ngữ phổ biến tốt hơn so với các mô hình cùng quy mô trên thị trường."
-  },
-  "hunyuan-translation-lite": {
-    "description": "Mô hình dịch Hỗn Nguyên hỗ trợ dịch theo kiểu đối thoại ngôn ngữ tự nhiên; hỗ trợ dịch giữa 15 ngôn ngữ bao gồm tiếng Trung, tiếng Anh, tiếng Nhật, tiếng Pháp, tiếng Bồ Đào Nha, tiếng Tây Ban Nha, tiếng Thổ Nhĩ Kỳ, tiếng Nga, tiếng Ả Rập, tiếng Hàn, tiếng Ý, tiếng Đức, tiếng Việt, tiếng Mã Lai và tiếng Indonesia."
+  "hunyuan-t1-vision": {
+    "description": "Mô hình suy nghĩ sâu đa phương thức Hunyuan, hỗ trợ chuỗi suy nghĩ dài nguyên bản đa phương thức, xuất sắc trong các tình huống suy luận hình ảnh đa dạng, cải thiện toàn diện so với mô hình suy nghĩ nhanh trong các bài toán khoa học tự nhiên."
   },
   "hunyuan-turbo": {
     "description": "Phiên bản xem trước của thế hệ mới mô hình ngôn ngữ lớn Hunyuan, sử dụng cấu trúc mô hình chuyên gia hỗn hợp (MoE) hoàn toàn mới, so với hunyuan-pro, hiệu suất suy diễn nhanh hơn và hiệu quả mạnh mẽ hơn."
@@ -1286,8 +1412,14 @@
   "hunyuan-turbo-vision": {
     "description": "Mô hình ngôn ngữ hình ảnh thế hệ mới của Hunyuan, sử dụng cấu trúc mô hình chuyên gia hỗn hợp (MoE) hoàn toàn mới, nâng cao toàn diện khả năng nhận diện cơ bản, sáng tạo nội dung, hỏi đáp kiến thức, và phân tích suy luận so với mô hình thế hệ trước."
   },
-  "hunyuan-turbos-20250226": {
-    "description": "hunyuan-TurboS pv2.1.2 phiên bản cố định, nâng cấp số lượng token trong đào tạo nền tảng; nâng cao khả năng tư duy về toán học/logic/mã; cải thiện trải nghiệm chung cho cả tiếng Trung và tiếng Anh, bao gồm sáng tác văn bản, hiểu văn bản, hỏi đáp kiến thức, trò chuyện, v.v."
+  "hunyuan-turbos-20250313": {
+    "description": "Thống nhất phong cách các bước giải toán, tăng cường hỏi đáp toán học đa vòng. Tối ưu hóa phong cách trả lời trong sáng tác văn bản, loại bỏ cảm giác AI, tăng thêm tính văn chương."
+  },
+  "hunyuan-turbos-20250416": {
+    "description": "Nâng cấp nền tảng tiền huấn luyện, tăng cường khả năng hiểu và tuân thủ chỉ thị của nền tảng; tăng cường năng lực các môn khoa học tự nhiên như toán học, lập trình, logic, khoa học trong giai đoạn căn chỉnh; cải thiện chất lượng sáng tạo văn học, hiểu văn bản, độ chính xác dịch thuật, hỏi đáp kiến thức và các năng lực khoa học xã hội; tăng cường năng lực Agent trong các lĩnh vực, đặc biệt là khả năng hiểu đối thoại đa vòng."
+  },
+  "hunyuan-turbos-20250604": {
+    "description": "Nâng cấp nền tảng tiền huấn luyện, cải thiện khả năng viết và đọc hiểu, tăng cường đáng kể năng lực lập trình và khoa học tự nhiên, tiếp tục nâng cao khả năng tuân thủ các chỉ dẫn phức tạp."
   },
   "hunyuan-turbos-latest": {
     "description": "hunyuan-TurboS là phiên bản mới nhất của mô hình lớn hỗn hợp Hunyuan, có khả năng tư duy mạnh mẽ hơn và trải nghiệm tốt hơn."
@@ -1295,26 +1427,26 @@
   "hunyuan-turbos-longtext-128k-20250325": {
     "description": "Chuyên xử lý các nhiệm vụ văn bản dài như tóm tắt tài liệu và hỏi đáp tài liệu, đồng thời cũng có khả năng xử lý các nhiệm vụ tạo văn bản chung. Nó thể hiện xuất sắc trong việc phân tích và tạo ra văn bản dài, có khả năng đáp ứng hiệu quả các yêu cầu xử lý nội dung dài phức tạp và chi tiết."
   },
-  "hunyuan-turbos-vision": {
-    "description": "Mô hình này phù hợp cho các tình huống hiểu hình ảnh và văn bản, là mô hình ngôn ngữ hình ảnh thế hệ mới dựa trên turbos mới nhất của Hỗn Nguyên, tập trung vào các nhiệm vụ liên quan đến hiểu hình ảnh và văn bản, bao gồm nhận diện thực thể dựa trên hình ảnh, hỏi đáp kiến thức, sáng tạo nội dung, giải quyết vấn đề qua hình ảnh, v.v., với sự cải thiện toàn diện so với thế hệ trước."
+  "hunyuan-turbos-role-plus": {
+    "description": "Mô hình nhập vai phiên bản mới nhất của Hunyuan, được tinh chỉnh chính thức bởi Hunyuan, dựa trên mô hình Hunyuan kết hợp với bộ dữ liệu kịch bản nhập vai để tăng cường huấn luyện, mang lại hiệu quả cơ bản tốt hơn trong các kịch bản nhập vai."
   },
   "hunyuan-vision": {
     "description": "Mô hình đa phương thức mới nhất của Hunyuan, hỗ trợ đầu vào hình ảnh + văn bản để tạo ra nội dung văn bản."
   },
-  "internlm/internlm2_5-20b-chat": {
-    "description": "Mô hình mã nguồn mở sáng tạo InternLM2.5, thông qua số lượng tham số lớn, nâng cao trí thông minh trong đối thoại."
-  },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 cung cấp giải pháp đối thoại thông minh cho nhiều tình huống."
-  },
-  "internlm2-pro-chat": {
-    "description": "Mô hình phiên bản cũ mà chúng tôi vẫn đang duy trì, có sẵn với nhiều tùy chọn tham số 7B và 20B."
   },
   "internlm2.5-latest": {
     "description": "Dòng mô hình mới nhất của chúng tôi, có hiệu suất suy luận xuất sắc, hỗ trợ độ dài ngữ cảnh 1M và khả năng theo dõi chỉ dẫn và gọi công cụ mạnh mẽ hơn."
   },
   "internlm3-latest": {
     "description": "Dòng mô hình mới nhất của chúng tôi, có hiệu suất suy luận xuất sắc, dẫn đầu trong số các mô hình mã nguồn mở cùng cấp. Mặc định chỉ đến mô hình InternLM3 mới nhất mà chúng tôi đã phát hành."
+  },
+  "internvl2.5-latest": {
+    "description": "Phiên bản InternVL2.5 mà chúng tôi vẫn đang duy trì, có hiệu suất xuất sắc và ổn định. Mặc định chỉ đến mô hình InternVL2.5 mới nhất của chúng tôi, hiện tại chỉ đến internvl2.5-78b."
+  },
+  "internvl3-latest": {
+    "description": "Chúng tôi vừa phát hành mô hình lớn đa phương thức mới nhất, có khả năng hiểu hình ảnh và văn bản mạnh mẽ hơn, khả năng hiểu hình ảnh theo chuỗi thời gian dài, hiệu suất tương đương với các mô hình đóng nguồn hàng đầu. Mặc định chỉ đến mô hình InternVL mới nhất của chúng tôi, hiện tại chỉ đến internvl3-78b."
   },
   "jamba-large": {
     "description": "Mô hình mạnh mẽ và tiên tiến nhất của chúng tôi, được thiết kế đặc biệt để xử lý các nhiệm vụ phức tạp cấp doanh nghiệp, với hiệu suất xuất sắc."
@@ -1328,8 +1460,14 @@
   "kimi-latest": {
     "description": "Sản phẩm trợ lý thông minh Kimi sử dụng mô hình lớn Kimi mới nhất, có thể chứa các tính năng chưa ổn định. Hỗ trợ hiểu hình ảnh, đồng thời tự động chọn mô hình 8k/32k/128k làm mô hình tính phí dựa trên độ dài ngữ cảnh yêu cầu."
   },
+  "kimi-thinking-preview": {
+    "description": "Mô hình kimi-thinking-preview do Moon's Dark Side cung cấp, có khả năng suy luận đa phương thức và suy luận tổng quát, nổi bật với khả năng suy luận sâu, giúp giải quyết nhiều vấn đề khó khăn hơn."
+  },
   "learnlm-1.5-pro-experimental": {
     "description": "LearnLM là một mô hình ngôn ngữ thử nghiệm, chuyên biệt cho các nhiệm vụ, được đào tạo để tuân theo các nguyên tắc khoa học học tập, có thể tuân theo các chỉ dẫn hệ thống trong các tình huống giảng dạy và học tập, đóng vai trò như một người hướng dẫn chuyên gia."
+  },
+  "learnlm-2.0-flash-experimental": {
+    "description": "LearnLM là một mô hình ngôn ngữ thử nghiệm, chuyên biệt cho nhiệm vụ, được đào tạo để tuân theo các nguyên tắc khoa học học tập, có thể tuân theo hướng dẫn hệ thống trong các tình huống giảng dạy và học tập, đóng vai trò như một người hướng dẫn chuyên gia."
   },
   "lite": {
     "description": "Spark Lite là một mô hình ngôn ngữ lớn nhẹ, có độ trễ cực thấp và khả năng xử lý hiệu quả, hoàn toàn miễn phí và mở, hỗ trợ chức năng tìm kiếm trực tuyến theo thời gian thực. Đặc điểm phản hồi nhanh của nó giúp nó nổi bật trong các ứng dụng suy diễn trên thiết bị có công suất thấp và tinh chỉnh mô hình, mang lại hiệu quả chi phí và trải nghiệm thông minh xuất sắc cho người dùng, đặc biệt trong các tình huống hỏi đáp kiến thức, tạo nội dung và tìm kiếm."
@@ -1526,6 +1664,30 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 là một mô hình ngôn ngữ lớn (LLM) mở dành cho các nhà phát triển, nhà nghiên cứu và doanh nghiệp, nhằm giúp họ xây dựng, thử nghiệm và mở rộng ý tưởng AI sinh một cách có trách nhiệm. Là một phần của hệ thống cơ sở hạ tầng đổi mới toàn cầu, nó rất phù hợp cho các thiết bị biên và thời gian huấn luyện nhanh hơn với khả năng tính toán và tài nguyên hạn chế."
   },
+  "meta/Llama-3.2-11B-Vision-Instruct": {
+    "description": "Khả năng suy luận hình ảnh xuất sắc trên hình ảnh độ phân giải cao, phù hợp cho các ứng dụng hiểu biết thị giác."
+  },
+  "meta/Llama-3.2-90B-Vision-Instruct": {
+    "description": "Khả năng suy luận hình ảnh nâng cao dành cho các ứng dụng đại lý hiểu biết thị giác."
+  },
+  "meta/Llama-3.3-70B-Instruct": {
+    "description": "Llama 3.3 là mô hình ngôn ngữ lớn đa ngôn ngữ mã nguồn mở tiên tiến nhất trong dòng Llama, mang lại hiệu suất tương đương mô hình 405 tỷ tham số với chi phí rất thấp. Dựa trên kiến trúc Transformer, được cải thiện qua huấn luyện giám sát (SFT) và học tăng cường từ phản hồi con người (RLHF) để nâng cao tính hữu ích và an toàn. Phiên bản tinh chỉnh chỉ dẫn được tối ưu cho đối thoại đa ngôn ngữ, vượt trội trên nhiều chuẩn mực ngành so với nhiều mô hình trò chuyện mã nguồn mở và đóng. Kiến thức cập nhật đến tháng 12 năm 2023."
+  },
+  "meta/Meta-Llama-3-70B-Instruct": {
+    "description": "Một mô hình mạnh mẽ với 70 tỷ tham số, thể hiện xuất sắc trong suy luận, mã hóa và các ứng dụng ngôn ngữ đa dạng."
+  },
+  "meta/Meta-Llama-3-8B-Instruct": {
+    "description": "Một mô hình đa năng với 8 tỷ tham số, được tối ưu cho các nhiệm vụ đối thoại và tạo văn bản."
+  },
+  "meta/Meta-Llama-3.1-405B-Instruct": {
+    "description": "Mô hình văn bản Llama 3.1 được tinh chỉnh chỉ dẫn, tối ưu cho các trường hợp sử dụng đối thoại đa ngôn ngữ, thể hiện xuất sắc trên nhiều chuẩn mực ngành so với nhiều mô hình trò chuyện mã nguồn mở và đóng hiện có."
+  },
+  "meta/Meta-Llama-3.1-70B-Instruct": {
+    "description": "Mô hình văn bản Llama 3.1 được tinh chỉnh chỉ dẫn, tối ưu cho các trường hợp sử dụng đối thoại đa ngôn ngữ, thể hiện xuất sắc trên nhiều chuẩn mực ngành so với nhiều mô hình trò chuyện mã nguồn mở và đóng hiện có."
+  },
+  "meta/Meta-Llama-3.1-8B-Instruct": {
+    "description": "Mô hình văn bản Llama 3.1 được tinh chỉnh chỉ dẫn, tối ưu cho các trường hợp sử dụng đối thoại đa ngôn ngữ, thể hiện xuất sắc trên nhiều chuẩn mực ngành so với nhiều mô hình trò chuyện mã nguồn mở và đóng hiện có."
+  },
   "meta/llama-3.1-405b-instruct": {
     "description": "LLM cao cấp, hỗ trợ tạo dữ liệu tổng hợp, chưng cất kiến thức và suy luận, phù hợp cho chatbot, lập trình và các nhiệm vụ chuyên biệt."
   },
@@ -1550,6 +1712,30 @@
   "meta/llama-3.3-70b-instruct": {
     "description": "Mô hình LLM tiên tiến, xuất sắc trong suy luận, toán học, kiến thức chung và gọi hàm."
   },
+  "microsoft/Phi-3-medium-128k-instruct": {
+    "description": "Cùng mô hình Phi-3-medium nhưng với kích thước ngữ cảnh lớn hơn, phù hợp cho RAG hoặc ít gợi ý."
+  },
+  "microsoft/Phi-3-medium-4k-instruct": {
+    "description": "Mô hình 14 tỷ tham số, chất lượng vượt trội so với Phi-3-mini, tập trung vào dữ liệu suy luận chất lượng cao."
+  },
+  "microsoft/Phi-3-mini-128k-instruct": {
+    "description": "Cùng mô hình Phi-3-mini nhưng với kích thước ngữ cảnh lớn hơn, phù hợp cho RAG hoặc ít gợi ý."
+  },
+  "microsoft/Phi-3-mini-4k-instruct": {
+    "description": "Thành viên nhỏ nhất trong gia đình Phi-3, được tối ưu cho chất lượng và độ trễ thấp."
+  },
+  "microsoft/Phi-3-small-128k-instruct": {
+    "description": "Cùng mô hình Phi-3-small nhưng với kích thước ngữ cảnh lớn hơn, phù hợp cho RAG hoặc ít gợi ý."
+  },
+  "microsoft/Phi-3-small-8k-instruct": {
+    "description": "Mô hình 7 tỷ tham số, chất lượng vượt trội so với Phi-3-mini, tập trung vào dữ liệu suy luận chất lượng cao."
+  },
+  "microsoft/Phi-3.5-mini-instruct": {
+    "description": "Phiên bản cập nhật của mô hình Phi-3-mini."
+  },
+  "microsoft/Phi-3.5-vision-instruct": {
+    "description": "Phiên bản cập nhật của mô hình Phi-3-vision."
+  },
   "microsoft/WizardLM-2-8x22B": {
     "description": "WizardLM 2 là mô hình ngôn ngữ do AI của Microsoft cung cấp, thể hiện xuất sắc trong các lĩnh vực đối thoại phức tạp, đa ngôn ngữ, suy luận và trợ lý thông minh."
   },
@@ -1568,6 +1754,15 @@
   "mistral": {
     "description": "Mistral là mô hình 7B do Mistral AI phát hành, phù hợp cho các nhu cầu xử lý ngôn ngữ đa dạng."
   },
+  "mistral-ai/Mistral-Large-2411": {
+    "description": "Mô hình chủ lực của Mistral, phù hợp cho các nhiệm vụ phức tạp cần khả năng suy luận quy mô lớn hoặc chuyên môn cao (tổng hợp văn bản, tạo mã, RAG hoặc đại lý)."
+  },
+  "mistral-ai/Mistral-Nemo": {
+    "description": "Mistral Nemo là một mô hình ngôn ngữ tiên tiến (LLM), sở hữu khả năng suy luận, kiến thức thế giới và mã hóa hàng đầu trong phân khúc kích thước của nó."
+  },
+  "mistral-ai/mistral-small-2503": {
+    "description": "Mistral Small phù hợp cho bất kỳ nhiệm vụ dựa trên ngôn ngữ nào cần hiệu quả cao và độ trễ thấp."
+  },
   "mistral-large": {
     "description": "Mixtral Large là mô hình hàng đầu của Mistral, kết hợp khả năng sinh mã, toán học và suy luận, hỗ trợ cửa sổ ngữ cảnh 128k."
   },
@@ -1576,6 +1771,9 @@
   },
   "mistral-large-latest": {
     "description": "Mistral Large là mô hình lớn hàng đầu, chuyên về các nhiệm vụ đa ngôn ngữ, suy luận phức tạp và sinh mã, là lựa chọn lý tưởng cho các ứng dụng cao cấp."
+  },
+  "mistral-medium-latest": {
+    "description": "Mistral Medium 3 cung cấp hiệu suất tiên tiến với chi phí gấp 8 lần và đơn giản hóa việc triển khai doanh nghiệp."
   },
   "mistral-nemo": {
     "description": "Mistral Nemo được phát triển hợp tác giữa Mistral AI và NVIDIA, là mô hình 12B hiệu suất cao."
@@ -1646,6 +1844,9 @@
   "moonshot-v1-auto": {
     "description": "Moonshot V1 Auto có thể chọn mô hình phù hợp dựa trên số lượng Tokens hiện tại đang chiếm dụng trong ngữ cảnh."
   },
+  "moonshotai/Kimi-Dev-72B": {
+    "description": "Kimi-Dev-72B là một mô hình mã nguồn mở lớn, được tối ưu hóa qua học tăng cường quy mô lớn, có khả năng tạo ra các bản vá ổn định và có thể triển khai trực tiếp. Mô hình này đã đạt điểm cao kỷ lục 60,4% trên SWE-bench Verified, phá vỡ các kỷ lục của mô hình mã nguồn mở trong các nhiệm vụ kỹ thuật phần mềm tự động như sửa lỗi và đánh giá mã."
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B là phiên bản nâng cấp của Nous Hermes 2, bao gồm bộ dữ liệu phát triển nội bộ mới nhất."
   },
@@ -1667,17 +1868,26 @@
   "o1-preview": {
     "description": "o1 là mô hình suy diễn mới của OpenAI, phù hợp cho các nhiệm vụ phức tạp cần kiến thức tổng quát rộng rãi. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."
   },
+  "o1-pro": {
+    "description": "Dòng mô hình o1 được huấn luyện qua học tăng cường, có khả năng suy nghĩ trước khi trả lời và thực hiện các nhiệm vụ suy luận phức tạp. Mô hình o1-pro sử dụng nhiều tài nguyên tính toán hơn để suy nghĩ sâu hơn, từ đó liên tục cung cấp câu trả lời chất lượng cao hơn."
+  },
   "o3": {
     "description": "o3 là một mô hình toàn năng mạnh mẽ, thể hiện xuất sắc trong nhiều lĩnh vực. Nó thiết lập tiêu chuẩn mới cho các nhiệm vụ toán học, khoa học, lập trình và suy luận hình ảnh. Nó cũng giỏi trong việc viết kỹ thuật và tuân thủ hướng dẫn. Người dùng có thể sử dụng nó để phân tích văn bản, mã và hình ảnh, giải quyết các vấn đề phức tạp nhiều bước."
+  },
+  "o3-deep-research": {
+    "description": "o3-deep-research là mô hình nghiên cứu sâu tiên tiến nhất của chúng tôi, được thiết kế đặc biệt để xử lý các nhiệm vụ nghiên cứu phức tạp nhiều bước. Nó có thể tìm kiếm và tổng hợp thông tin từ Internet, cũng như truy cập và tận dụng dữ liệu riêng của bạn thông qua kết nối MCP."
   },
   "o3-mini": {
     "description": "o3-mini là mô hình suy diễn nhỏ gọn mới nhất của chúng tôi, cung cấp trí thông minh cao với chi phí và độ trễ tương tự như o1-mini."
   },
-  "o3-mini-high": {
-    "description": "o3-mini phiên bản cao cấp, cung cấp trí thông minh cao dưới cùng chi phí và mục tiêu độ trễ như o1-mini."
+  "o3-pro": {
+    "description": "Mô hình o3-pro sử dụng nhiều tài nguyên tính toán hơn để suy nghĩ sâu hơn và luôn cung cấp câu trả lời tốt hơn, chỉ hỗ trợ sử dụng dưới API Responses."
   },
   "o4-mini": {
     "description": "o4-mini là mô hình nhỏ gọn mới nhất trong dòng o của chúng tôi. Nó được tối ưu hóa cho suy luận nhanh chóng và hiệu quả, thể hiện hiệu suất và hiệu quả cao trong các nhiệm vụ mã hóa và hình ảnh."
+  },
+  "o4-mini-deep-research": {
+    "description": "o4-mini-deep-research là mô hình nghiên cứu sâu nhanh hơn và tiết kiệm hơn của chúng tôi — rất phù hợp để xử lý các nhiệm vụ nghiên cứu phức tạp nhiều bước. Nó có thể tìm kiếm và tổng hợp thông tin từ Internet, cũng như truy cập và tận dụng dữ liệu riêng của bạn thông qua kết nối MCP."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba là mô hình ngôn ngữ Mamba 2 tập trung vào sinh mã, cung cấp hỗ trợ mạnh mẽ cho các nhiệm vụ mã và suy luận tiên tiến."
@@ -1694,17 +1904,38 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B là một mô hình chuyên gia thưa thớt, sử dụng nhiều tham số để tăng tốc độ suy luận, phù hợp cho việc xử lý đa ngôn ngữ và sinh mã."
   },
+  "openai/gpt-4.1": {
+    "description": "GPT-4.1 là mô hình hàng đầu của chúng tôi cho các nhiệm vụ phức tạp. Nó rất phù hợp để giải quyết vấn đề xuyên lĩnh vực."
+  },
+  "openai/gpt-4.1-mini": {
+    "description": "GPT-4.1 mini cung cấp sự cân bằng giữa trí tuệ, tốc độ và chi phí, khiến nó trở thành một mô hình hấp dẫn cho nhiều trường hợp sử dụng."
+  },
+  "openai/gpt-4.1-nano": {
+    "description": "GPT-4.1 nano là mô hình GPT-4.1 nhanh nhất và tiết kiệm chi phí nhất."
+  },
   "openai/gpt-4o": {
     "description": "ChatGPT-4o là một mô hình động, cập nhật theo thời gian để giữ phiên bản mới nhất. Nó kết hợp khả năng hiểu và tạo ngôn ngữ mạnh mẽ, phù hợp với các tình huống ứng dụng quy mô lớn, bao gồm dịch vụ khách hàng, giáo dục và hỗ trợ kỹ thuật."
   },
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini là mô hình mới nhất của OpenAI, được phát hành sau GPT-4 Omni, hỗ trợ đầu vào hình ảnh và văn bản, và đầu ra văn bản. Là mô hình nhỏ tiên tiến nhất của họ, nó rẻ hơn nhiều so với các mô hình tiên tiến gần đây khác và rẻ hơn hơn 60% so với GPT-3.5 Turbo. Nó giữ lại trí thông minh tiên tiến nhất trong khi có giá trị sử dụng đáng kể. GPT-4o mini đạt 82% điểm trong bài kiểm tra MMLU và hiện đứng đầu về sở thích trò chuyện so với GPT-4."
   },
+  "openai/o1": {
+    "description": "o1 là mô hình suy luận mới của OpenAI, hỗ trợ đầu vào hình ảnh và văn bản, đồng thời xuất ra văn bản, phù hợp cho các nhiệm vụ phức tạp đòi hỏi kiến thức phổ quát rộng rãi. Mô hình này có ngữ cảnh 200K và kiến thức cập nhật đến tháng 10 năm 2023."
+  },
   "openai/o1-mini": {
     "description": "o1-mini là một mô hình suy diễn nhanh chóng và tiết kiệm chi phí, được thiết kế cho các ứng dụng lập trình, toán học và khoa học. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."
   },
   "openai/o1-preview": {
     "description": "o1 là mô hình suy diễn mới của OpenAI, phù hợp cho các nhiệm vụ phức tạp cần kiến thức tổng quát rộng rãi. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."
+  },
+  "openai/o3": {
+    "description": "o3 là một mô hình mạnh mẽ toàn diện, thể hiện xuất sắc trong nhiều lĩnh vực. Nó thiết lập tiêu chuẩn mới cho các nhiệm vụ toán học, khoa học, lập trình và suy luận hình ảnh. Nó cũng giỏi trong việc viết kỹ thuật và tuân thủ hướng dẫn. Người dùng có thể sử dụng nó để phân tích văn bản, mã và hình ảnh, giải quyết các vấn đề phức tạp nhiều bước."
+  },
+  "openai/o3-mini": {
+    "description": "o3-mini cung cấp trí tuệ cao với cùng chi phí và mục tiêu độ trễ như o1-mini."
+  },
+  "openai/o3-mini-high": {
+    "description": "o3-mini phiên bản cao cấp về suy luận, cung cấp trí tuệ cao với cùng chi phí và mục tiêu độ trễ như o1-mini."
   },
   "openai/o4-mini": {
     "description": "o4-mini được tối ưu hóa cho suy luận nhanh chóng và hiệu quả, thể hiện hiệu suất và hiệu quả cao trong các nhiệm vụ mã hóa và hình ảnh."
@@ -1734,10 +1965,16 @@
     "description": "Mô hình QVQ là mô hình nghiên cứu thử nghiệm do đội ngũ Qwen phát triển, tập trung vào việc nâng cao khả năng suy luận hình ảnh, đặc biệt trong lĩnh vực suy luận toán học."
   },
   "qvq-max": {
-    "description": "Mô hình suy luận thị giác QVQ của Tongyi Qianwen hỗ trợ đầu vào thị giác và đầu ra chuỗi tư duy, thể hiện khả năng mạnh mẽ hơn trong toán học, lập trình, phân tích thị giác, sáng tạo và các nhiệm vụ chung."
+    "description": "Mô hình suy luận thị giác QVQ của Tongyi Qianwen, hỗ trợ đầu vào thị giác và xuất ra chuỗi suy nghĩ, thể hiện năng lực mạnh mẽ trong toán học, lập trình, phân tích thị giác, sáng tạo và các nhiệm vụ chung."
   },
-  "qwen-coder-plus-latest": {
-    "description": "Mô hình mã Qwen."
+  "qvq-plus": {
+    "description": "Mô hình suy luận thị giác. Hỗ trợ đầu vào hình ảnh và đầu ra chuỗi suy nghĩ, phiên bản plus ra mắt sau mô hình qvq-max, với tốc độ suy luận nhanh hơn, hiệu quả và chi phí cân bằng hơn so với qvq-max."
+  },
+  "qwen-coder-plus": {
+    "description": "Mô hình mã hóa Tongyi Qianwen."
+  },
+  "qwen-coder-turbo": {
+    "description": "Mô hình mã hóa Tongyi Qianwen."
   },
   "qwen-coder-turbo-latest": {
     "description": "Mô hình mã Qwen."
@@ -1745,8 +1982,14 @@
   "qwen-long": {
     "description": "Mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ ngữ cảnh văn bản dài và chức năng đối thoại dựa trên tài liệu dài, nhiều tài liệu."
   },
+  "qwen-math-plus": {
+    "description": "Mô hình toán học Tongyi Qianwen được thiết kế chuyên biệt cho việc giải toán."
+  },
   "qwen-math-plus-latest": {
     "description": "Mô hình toán học Qwen được thiết kế đặc biệt để giải quyết các bài toán toán học."
+  },
+  "qwen-math-turbo": {
+    "description": "Mô hình toán học Tongyi Qianwen được thiết kế chuyên biệt cho việc giải toán."
   },
   "qwen-math-turbo-latest": {
     "description": "Mô hình toán học Qwen được thiết kế đặc biệt để giải quyết các bài toán toán học."
@@ -1754,32 +1997,29 @@
   "qwen-max": {
     "description": "Mô hình ngôn ngữ quy mô lớn Qwen cấp tỷ, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và nhiều ngôn ngữ khác, là mô hình API đằng sau phiên bản sản phẩm Qwen 2.5 hiện tại."
   },
-  "qwen-max-latest": {
-    "description": "Mô hình ngôn ngữ quy mô lớn Qwen với hàng trăm tỷ tham số, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và nhiều ngôn ngữ khác, là mô hình API đứng sau phiên bản sản phẩm Qwen 2.5 hiện tại."
-  },
-  "qwen-omni-turbo-latest": {
-    "description": "Mô hình Qwen-Omni hỗ trợ đầu vào từ nhiều loại dữ liệu khác nhau, bao gồm video, âm thanh, hình ảnh, văn bản, và xuất ra âm thanh và văn bản."
+  "qwen-omni-turbo": {
+    "description": "Dòng mô hình Qwen-Omni hỗ trợ đầu vào đa dạng các loại dữ liệu đa phương thức, bao gồm video, âm thanh, hình ảnh, văn bản, và xuất ra âm thanh cùng văn bản."
   },
   "qwen-plus": {
     "description": "Mô hình ngôn ngữ quy mô lớn Qwen phiên bản nâng cao, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và nhiều ngôn ngữ khác."
   },
-  "qwen-plus-latest": {
-    "description": "Phiên bản nâng cao của mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và nhiều ngôn ngữ khác."
-  },
   "qwen-turbo": {
     "description": "Mô hình ngôn ngữ quy mô lớn Qwen hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và nhiều ngôn ngữ khác."
-  },
-  "qwen-turbo-latest": {
-    "description": "Mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và nhiều ngôn ngữ khác."
   },
   "qwen-vl-chat-v1": {
     "description": "Mô hình Qwen VL hỗ trợ các phương thức tương tác linh hoạt, bao gồm nhiều hình ảnh, nhiều vòng hỏi đáp, sáng tạo, v.v."
   },
+  "qwen-vl-max": {
+    "description": "Mô hình ngôn ngữ thị giác quy mô siêu lớn Tongyi Qianwen. So với phiên bản nâng cao, tiếp tục cải thiện khả năng suy luận thị giác và tuân thủ chỉ thị, cung cấp mức độ nhận thức và cảm nhận thị giác cao hơn."
+  },
   "qwen-vl-max-latest": {
     "description": "Mô hình ngôn ngữ hình ảnh quy mô siêu lớn của Tongyi Qianwen. So với phiên bản nâng cao, nó lại nâng cao khả năng suy luận hình ảnh và khả năng tuân thủ chỉ dẫn, cung cấp mức độ nhận thức và cảm nhận hình ảnh cao hơn."
   },
-  "qwen-vl-ocr-latest": {
-    "description": "Công Nghệ Qianwen OCR là mô hình chuyên dụng cho việc trích xuất văn bản, tập trung vào khả năng trích xuất văn bản từ các loại hình ảnh như tài liệu, bảng biểu, đề thi, chữ viết tay, v.v. Nó có thể nhận diện nhiều loại văn bản, hiện hỗ trợ các ngôn ngữ: tiếng Trung, tiếng Anh, tiếng Pháp, tiếng Nhật, tiếng Hàn, tiếng Đức, tiếng Nga, tiếng Ý, tiếng Việt, tiếng Ả Rập."
+  "qwen-vl-ocr": {
+    "description": "Tongyi Qianwen OCR là mô hình chuyên biệt cho trích xuất văn bản, tập trung vào khả năng trích xuất chữ viết từ các loại hình ảnh như tài liệu, bảng biểu, đề thi, chữ viết tay. Mô hình có thể nhận diện nhiều ngôn ngữ, hiện hỗ trợ: tiếng Trung, tiếng Anh, tiếng Pháp, tiếng Nhật, tiếng Hàn, tiếng Đức, tiếng Nga, tiếng Ý, tiếng Việt, tiếng Ả Rập."
+  },
+  "qwen-vl-plus": {
+    "description": "Phiên bản nâng cao của mô hình ngôn ngữ thị giác quy mô lớn Tongyi Qianwen. Nâng cao đáng kể khả năng nhận diện chi tiết và nhận dạng văn bản, hỗ trợ hình ảnh có độ phân giải trên một triệu điểm ảnh và tỷ lệ khung hình tùy ý."
   },
   "qwen-vl-plus-latest": {
     "description": "Mô hình ngôn ngữ hình ảnh quy mô lớn phiên bản nâng cao của Tongyi Qianwen. Nâng cao khả năng nhận diện chi tiết và nhận diện văn bản, hỗ trợ độ phân giải trên một triệu pixel và các tỷ lệ chiều dài và chiều rộng tùy ý."
@@ -1811,6 +2051,33 @@
   "qwen/qwen2.5-coder-7b-instruct": {
     "description": "Mô hình mã mạnh mẽ cỡ trung, hỗ trợ độ dài ngữ cảnh 32K, xuất sắc trong lập trình đa ngôn ngữ."
   },
+  "qwen/qwen3-14b": {
+    "description": "Qwen3-14B là một mô hình ngôn ngữ nguyên nhân dày đặc với 14,8 tỷ tham số trong dòng Qwen3, được thiết kế cho suy luận phức tạp và đối thoại hiệu quả. Nó hỗ trợ chuyển đổi liền mạch giữa chế độ \"suy nghĩ\" cho các nhiệm vụ như toán học, lập trình và suy luận logic với chế độ \"không suy nghĩ\" cho đối thoại thông thường. Mô hình này đã được tinh chỉnh để sử dụng cho việc tuân theo chỉ dẫn, sử dụng công cụ đại lý, viết sáng tạo và các nhiệm vụ đa ngôn ngữ trên hơn 100 ngôn ngữ và phương ngữ. Nó xử lý ngữ cảnh 32K token một cách tự nhiên và có thể mở rộng lên 131K token bằng cách sử dụng mở rộng dựa trên YaRN."
+  },
+  "qwen/qwen3-14b:free": {
+    "description": "Qwen3-14B là một mô hình ngôn ngữ nguyên nhân dày đặc với 14,8 tỷ tham số trong dòng Qwen3, được thiết kế cho suy luận phức tạp và đối thoại hiệu quả. Nó hỗ trợ chuyển đổi liền mạch giữa chế độ \"suy nghĩ\" cho các nhiệm vụ như toán học, lập trình và suy luận logic với chế độ \"không suy nghĩ\" cho đối thoại thông thường. Mô hình này đã được tinh chỉnh để sử dụng cho việc tuân theo chỉ dẫn, sử dụng công cụ đại lý, viết sáng tạo và các nhiệm vụ đa ngôn ngữ trên hơn 100 ngôn ngữ và phương ngữ. Nó xử lý ngữ cảnh 32K token một cách tự nhiên và có thể mở rộng lên 131K token bằng cách sử dụng mở rộng dựa trên YaRN."
+  },
+  "qwen/qwen3-235b-a22b": {
+    "description": "Qwen3-235B-A22B là mô hình hỗn hợp chuyên gia (MoE) với 235B tham số được phát triển bởi Qwen, kích hoạt 22B tham số mỗi lần truyền tiến. Nó hỗ trợ chuyển đổi liền mạch giữa chế độ \"suy nghĩ\" cho suy luận phức tạp, toán học và các nhiệm vụ mã với chế độ \"không suy nghĩ\" cho hiệu suất đối thoại thông thường. Mô hình này thể hiện khả năng suy luận mạnh mẽ, hỗ trợ đa ngôn ngữ (hơn 100 ngôn ngữ và phương ngữ), tuân theo chỉ dẫn nâng cao và khả năng gọi công cụ đại lý. Nó xử lý cửa sổ ngữ cảnh 32K token một cách tự nhiên và có thể mở rộng lên 131K token bằng cách sử dụng mở rộng dựa trên YaRN."
+  },
+  "qwen/qwen3-235b-a22b:free": {
+    "description": "Qwen3-235B-A22B là mô hình hỗn hợp chuyên gia (MoE) với 235B tham số được phát triển bởi Qwen, kích hoạt 22B tham số mỗi lần truyền tiến. Nó hỗ trợ chuyển đổi liền mạch giữa chế độ \"suy nghĩ\" cho suy luận phức tạp, toán học và các nhiệm vụ mã với chế độ \"không suy nghĩ\" cho hiệu suất đối thoại thông thường. Mô hình này thể hiện khả năng suy luận mạnh mẽ, hỗ trợ đa ngôn ngữ (hơn 100 ngôn ngữ và phương ngữ), tuân theo chỉ dẫn nâng cao và khả năng gọi công cụ đại lý. Nó xử lý cửa sổ ngữ cảnh 32K token một cách tự nhiên và có thể mở rộng lên 131K token bằng cách sử dụng mở rộng dựa trên YaRN."
+  },
+  "qwen/qwen3-30b-a3b": {
+    "description": "Qwen3 là thế hệ mới nhất trong dòng mô hình ngôn ngữ lớn Qwen, với kiến trúc hỗn hợp chuyên gia (MoE) dày đặc, thể hiện xuất sắc trong suy luận, hỗ trợ đa ngôn ngữ và các nhiệm vụ đại lý nâng cao. Khả năng chuyển đổi liền mạch giữa chế độ suy nghĩ cho suy luận phức tạp và chế độ không suy nghĩ cho đối thoại hiệu quả đảm bảo hiệu suất đa chức năng và chất lượng cao.\n\nQwen3 vượt trội hơn hẳn các mô hình trước như QwQ và Qwen2.5, cung cấp khả năng toán học, lập trình, suy luận thông thường, viết sáng tạo và đối thoại tương tác xuất sắc. Biến thể Qwen3-30B-A3B chứa 30,5 tỷ tham số (3,3 tỷ tham số kích hoạt), 48 lớp, 128 chuyên gia (mỗi nhiệm vụ kích hoạt 8), và hỗ trợ ngữ cảnh lên đến 131K token (sử dụng YaRN), thiết lập tiêu chuẩn mới cho các mô hình mã nguồn mở."
+  },
+  "qwen/qwen3-30b-a3b:free": {
+    "description": "Qwen3 là thế hệ mới nhất trong dòng mô hình ngôn ngữ lớn Qwen, với kiến trúc hỗn hợp chuyên gia (MoE) dày đặc, thể hiện xuất sắc trong suy luận, hỗ trợ đa ngôn ngữ và các nhiệm vụ đại lý nâng cao. Khả năng chuyển đổi liền mạch giữa chế độ suy nghĩ cho suy luận phức tạp và chế độ không suy nghĩ cho đối thoại hiệu quả đảm bảo hiệu suất đa chức năng và chất lượng cao.\n\nQwen3 vượt trội hơn hẳn các mô hình trước như QwQ và Qwen2.5, cung cấp khả năng toán học, lập trình, suy luận thông thường, viết sáng tạo và đối thoại tương tác xuất sắc. Biến thể Qwen3-30B-A3B chứa 30,5 tỷ tham số (3,3 tỷ tham số kích hoạt), 48 lớp, 128 chuyên gia (mỗi nhiệm vụ kích hoạt 8), và hỗ trợ ngữ cảnh lên đến 131K token (sử dụng YaRN), thiết lập tiêu chuẩn mới cho các mô hình mã nguồn mở."
+  },
+  "qwen/qwen3-32b": {
+    "description": "Qwen3-32B là một mô hình ngôn ngữ nguyên nhân dày đặc với 32,8 tỷ tham số trong dòng Qwen3, được tối ưu hóa cho suy luận phức tạp và đối thoại hiệu quả. Nó hỗ trợ chuyển đổi liền mạch giữa chế độ \"suy nghĩ\" cho các nhiệm vụ như toán học, lập trình và suy luận logic với chế độ \"không suy nghĩ\" cho đối thoại nhanh hơn và thông thường. Mô hình này thể hiện hiệu suất mạnh mẽ trong việc tuân theo chỉ dẫn, sử dụng công cụ đại lý, viết sáng tạo và các nhiệm vụ đa ngôn ngữ trên hơn 100 ngôn ngữ và phương ngữ. Nó xử lý ngữ cảnh 32K token một cách tự nhiên và có thể mở rộng lên 131K token bằng cách sử dụng mở rộng dựa trên YaRN."
+  },
+  "qwen/qwen3-32b:free": {
+    "description": "Qwen3-32B là một mô hình ngôn ngữ nguyên nhân dày đặc với 32,8 tỷ tham số trong dòng Qwen3, được tối ưu hóa cho suy luận phức tạp và đối thoại hiệu quả. Nó hỗ trợ chuyển đổi liền mạch giữa chế độ \"suy nghĩ\" cho các nhiệm vụ như toán học, lập trình và suy luận logic với chế độ \"không suy nghĩ\" cho đối thoại nhanh hơn và thông thường. Mô hình này thể hiện hiệu suất mạnh mẽ trong việc tuân theo chỉ dẫn, sử dụng công cụ đại lý, viết sáng tạo và các nhiệm vụ đa ngôn ngữ trên hơn 100 ngôn ngữ và phương ngữ. Nó xử lý ngữ cảnh 32K token một cách tự nhiên và có thể mở rộng lên 131K token bằng cách sử dụng mở rộng dựa trên YaRN."
+  },
+  "qwen/qwen3-8b:free": {
+    "description": "Qwen3-8B là một mô hình ngôn ngữ nguyên nhân dày đặc với 8,2 tỷ tham số trong dòng Qwen3, được thiết kế cho các nhiệm vụ yêu cầu suy luận dày đặc và đối thoại hiệu quả. Nó hỗ trợ chuyển đổi liền mạch giữa chế độ \"suy nghĩ\" cho toán học, lập trình và suy luận logic với chế độ \"không suy nghĩ\" cho đối thoại thông thường. Mô hình này đã được tinh chỉnh để sử dụng cho việc tuân theo chỉ dẫn, tích hợp đại lý, viết sáng tạo và sử dụng đa ngôn ngữ trên hơn 100 ngôn ngữ và phương ngữ. Nó hỗ trợ cửa sổ ngữ cảnh 32K token và có thể mở rộng lên 131K token thông qua YaRN."
+  },
   "qwen2": {
     "description": "Qwen2 là mô hình ngôn ngữ quy mô lớn thế hệ mới của Alibaba, hỗ trợ các nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
   },
@@ -1840,6 +2107,9 @@
   },
   "qwen2.5-coder-1.5b-instruct": {
     "description": "Phiên bản mã nguồn mở của mô hình mã Qwen."
+  },
+  "qwen2.5-coder-14b-instruct": {
+    "description": "Phiên bản mã nguồn mở của mô hình mã hóa Tongyi Qianwen."
   },
   "qwen2.5-coder-32b-instruct": {
     "description": "Phiên bản mã nguồn mở của mô hình mã Qwen."
@@ -1895,6 +2165,33 @@
   "qwen2:72b": {
     "description": "Qwen2 là mô hình ngôn ngữ quy mô lớn thế hệ mới của Alibaba, hỗ trợ các nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
   },
+  "qwen3": {
+    "description": "Qwen3 là mô hình ngôn ngữ quy mô lớn thế hệ mới của Alibaba, hỗ trợ nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
+  },
+  "qwen3-0.6b": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "qwen3-1.7b": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "qwen3-14b": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "qwen3-235b-a22b": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "qwen3-30b-a3b": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "qwen3-32b": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "qwen3-4b": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "qwen3-8b": {
+    "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
   "qwq": {
     "description": "QwQ là một mô hình nghiên cứu thử nghiệm, tập trung vào việc nâng cao khả năng suy luận của AI."
   },
@@ -1904,8 +2201,8 @@
   "qwq-32b-preview": {
     "description": "Mô hình QwQ là một mô hình nghiên cứu thử nghiệm được phát triển bởi đội ngũ Qwen, tập trung vào việc nâng cao khả năng suy luận của AI."
   },
-  "qwq-plus-latest": {
-    "description": "Mô hình suy diễn QwQ được đào tạo dựa trên mô hình Qwen2.5, đã được cải thiện đáng kể khả năng suy diễn của mô hình thông qua học tăng cường. Các chỉ số cốt lõi của mô hình như mã toán (AIME 24/25, LiveCodeBench) và một số chỉ số chung (IFEval, LiveBench, v.v.) đạt đến mức độ của phiên bản đầy đủ DeepSeek-R1."
+  "qwq-plus": {
+    "description": "Mô hình suy luận QwQ dựa trên mô hình Qwen2.5, đã nâng cao đáng kể khả năng suy luận thông qua học tăng cường. Các chỉ số cốt lõi về toán học, mã hóa (AIME 24/25, LiveCodeBench) và một số chỉ số chung (IFEval, LiveBench, v.v.) đạt mức tương đương phiên bản đầy đủ của DeepSeek-R1."
   },
   "qwq_32b": {
     "description": "Mô hình suy luận có quy mô trung bình trong dòng Qwen. So với các mô hình tinh chỉnh hướng dẫn truyền thống, QwQ có khả năng suy nghĩ và suy luận, có thể nâng cao hiệu suất đáng kể trong các nhiệm vụ hạ nguồn, đặc biệt là trong việc giải quyết các vấn đề khó khăn."
@@ -1988,14 +2285,41 @@
   "taichu_vl": {
     "description": "Kết hợp khả năng hiểu hình ảnh, chuyển giao kiến thức, suy luận logic, thể hiện xuất sắc trong lĩnh vực hỏi đáp hình ảnh và văn bản."
   },
+  "tencent/Hunyuan-A13B-Instruct": {
+    "description": "Hunyuan-A13B-Instruct có 80 tỷ tham số, kích hoạt 13 tỷ tham số để đạt hiệu năng tương đương các mô hình lớn hơn, hỗ trợ suy luận kết hợp “tư duy nhanh/tư duy chậm”; khả năng hiểu văn bản dài ổn định; được xác nhận qua BFCL-v3 và τ-Bench, năng lực Agent dẫn đầu; kết hợp GQA và nhiều định dạng lượng tử hóa, đạt hiệu quả suy luận cao."
+  },
   "text-embedding-3-large": {
     "description": "Mô hình vector hóa mạnh mẽ nhất, phù hợp cho các nhiệm vụ tiếng Anh và không phải tiếng Anh."
   },
   "text-embedding-3-small": {
     "description": "Mô hình Embedding thế hệ mới hiệu quả và tiết kiệm, phù hợp cho tìm kiếm kiến thức, ứng dụng RAG và các tình huống khác."
   },
+  "thudm/glm-4-32b": {
+    "description": "GLM-4-32B-0414 là một mô hình ngôn ngữ mở với trọng số 32B song ngữ (Trung-Anh), được tối ưu hóa cho việc tạo mã, gọi hàm và các nhiệm vụ theo kiểu đại lý. Nó đã được huấn luyện trước trên 15T dữ liệu chất lượng cao và dữ liệu suy luận lại, và được hoàn thiện thêm bằng cách sử dụng sự phù hợp với sở thích của con người, lấy mẫu từ chối và học tăng cường. Mô hình này thể hiện xuất sắc trong suy luận phức tạp, tạo ra sản phẩm và các nhiệm vụ đầu ra có cấu trúc, đạt được hiệu suất tương đương với GPT-4o và DeepSeek-V3-0324 trong nhiều bài kiểm tra chuẩn."
+  },
+  "thudm/glm-4-32b:free": {
+    "description": "GLM-4-32B-0414 là một mô hình ngôn ngữ mở với trọng số 32B song ngữ (Trung-Anh), được tối ưu hóa cho việc tạo mã, gọi hàm và các nhiệm vụ theo kiểu đại lý. Nó đã được huấn luyện trước trên 15T dữ liệu chất lượng cao và dữ liệu suy luận lại, và được hoàn thiện thêm bằng cách sử dụng sự phù hợp với sở thích của con người, lấy mẫu từ chối và học tăng cường. Mô hình này thể hiện xuất sắc trong suy luận phức tạp, tạo ra sản phẩm và các nhiệm vụ đầu ra có cấu trúc, đạt được hiệu suất tương đương với GPT-4o và DeepSeek-V3-0324 trong nhiều bài kiểm tra chuẩn."
+  },
   "thudm/glm-4-9b-chat": {
     "description": "Phiên bản mã nguồn mở của thế hệ mô hình tiền huấn luyện GLM-4 mới nhất được phát hành bởi Zhiyu AI."
+  },
+  "thudm/glm-4-9b:free": {
+    "description": "GLM-4-9B-0414 là mô hình ngôn ngữ 9 tỷ tham số trong dòng GLM-4 được phát triển bởi THUDM. GLM-4-9B-0414 sử dụng cùng một chiến lược học tăng cường và căn chỉnh như mô hình tương ứng lớn hơn 32B, đạt được hiệu suất cao so với quy mô của nó, khiến nó phù hợp cho các triển khai hạn chế tài nguyên nhưng vẫn cần khả năng hiểu và tạo ngôn ngữ mạnh mẽ."
+  },
+  "thudm/glm-z1-32b": {
+    "description": "GLM-Z1-32B-0414 là biến thể suy luận nâng cao của GLM-4-32B, được xây dựng cho việc giải quyết các vấn đề sâu về toán học, logic và lập trình. Nó áp dụng học tăng cường mở rộng (cụ thể cho nhiệm vụ và dựa trên sở thích cặp chung) để cải thiện hiệu suất cho các nhiệm vụ phức tạp nhiều bước. So với mô hình GLM-4-32B cơ bản, Z1 đã nâng cao đáng kể khả năng suy luận có cấu trúc và trong các lĩnh vực chính thức.\n\nMô hình này hỗ trợ thực hiện các bước 'suy nghĩ' thông qua kỹ thuật nhắc nhở và cung cấp tính liên kết cải thiện cho đầu ra định dạng dài. Nó được tối ưu hóa cho quy trình làm việc của đại lý và hỗ trợ ngữ cảnh dài (thông qua YaRN), gọi công cụ JSON và cấu hình lấy mẫu chi tiết cho suy luận ổn định. Rất phù hợp cho các trường hợp cần suy nghĩ sâu sắc, suy luận nhiều bước hoặc suy diễn chính thức."
+  },
+  "thudm/glm-z1-32b:free": {
+    "description": "GLM-Z1-32B-0414 là biến thể suy luận nâng cao của GLM-4-32B, được xây dựng cho việc giải quyết các vấn đề sâu về toán học, logic và lập trình. Nó áp dụng học tăng cường mở rộng (cụ thể cho nhiệm vụ và dựa trên sở thích cặp chung) để cải thiện hiệu suất cho các nhiệm vụ phức tạp nhiều bước. So với mô hình GLM-4-32B cơ bản, Z1 đã nâng cao đáng kể khả năng suy luận có cấu trúc và trong các lĩnh vực chính thức.\n\nMô hình này hỗ trợ thực hiện các bước 'suy nghĩ' thông qua kỹ thuật nhắc nhở và cung cấp tính liên kết cải thiện cho đầu ra định dạng dài. Nó được tối ưu hóa cho quy trình làm việc của đại lý và hỗ trợ ngữ cảnh dài (thông qua YaRN), gọi công cụ JSON và cấu hình lấy mẫu chi tiết cho suy luận ổn định. Rất phù hợp cho các trường hợp cần suy nghĩ sâu sắc, suy luận nhiều bước hoặc suy diễn chính thức."
+  },
+  "thudm/glm-z1-9b:free": {
+    "description": "GLM-Z1-9B-0414 là mô hình ngôn ngữ 9B trong dòng GLM-4 được phát triển bởi THUDM. Nó áp dụng các kỹ thuật ban đầu được sử dụng cho mô hình GLM-Z1 lớn hơn, bao gồm học tăng cường mở rộng, căn chỉnh xếp hạng cặp và đào tạo cho các nhiệm vụ yêu cầu suy luận dày đặc như toán học, mã và logic. Mặc dù quy mô nhỏ hơn, nhưng nó thể hiện hiệu suất mạnh mẽ trong các nhiệm vụ suy luận tổng quát và vượt trội hơn nhiều mô hình mã nguồn mở ở cấp độ trọng số của nó."
+  },
+  "thudm/glm-z1-rumination-32b": {
+    "description": "THUDM: GLM Z1 Rumination 32B là mô hình suy luận sâu với 32B tham số trong dòng GLM-4-Z1, được tối ưu hóa cho các nhiệm vụ phức tạp, mở cần suy nghĩ lâu dài. Nó được xây dựng trên nền tảng glm-4-32b-0414, tăng cường thêm giai đoạn học tăng cường và chiến lược căn chỉnh đa giai đoạn, giới thiệu khả năng \"phản tư\" nhằm mô phỏng quá trình xử lý nhận thức mở rộng. Điều này bao gồm suy luận lặp đi lặp lại, phân tích đa bước và quy trình làm việc tăng cường công cụ như tìm kiếm, truy xuất và tổng hợp nhận thức trích dẫn.\n\nMô hình này thể hiện xuất sắc trong viết nghiên cứu, phân tích so sánh và câu hỏi phức tạp. Nó hỗ trợ gọi hàm cho các nguyên ngữ tìm kiếm và điều hướng (`search`, `click`, `open`, `finish`), cho phép sử dụng trong quy trình đại lý. Hành vi phản tư được hình thành bởi các phần thưởng dựa trên quy tắc và cơ chế quyết định trì hoãn trong kiểm soát vòng lặp đa vòng, và được chuẩn hóa theo các khung nghiên cứu sâu như ngăn xếp căn chỉnh nội bộ của OpenAI. Biến thể này phù hợp cho các tình huống cần độ sâu hơn là tốc độ."
+  },
+  "tngtech/deepseek-r1t-chimera:free": {
+    "description": "DeepSeek-R1T-Chimera được tạo ra bằng cách kết hợp DeepSeek-R1 và DeepSeek-V3 (0324), kết hợp khả năng suy luận của R1 và cải tiến hiệu quả token của V3. Nó dựa trên kiến trúc DeepSeek-MoE Transformer và được tối ưu hóa cho các nhiệm vụ tạo văn bản tổng quát.\n\nMô hình này kết hợp trọng số tiền huấn luyện của hai mô hình nguồn để cân bằng hiệu suất trong suy luận, hiệu quả và các nhiệm vụ tuân theo chỉ dẫn. Nó được phát hành theo giấy phép MIT, nhằm mục đích sử dụng cho nghiên cứu và thương mại."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) cung cấp khả năng tính toán nâng cao thông qua chiến lược và kiến trúc mô hình hiệu quả."
@@ -2015,6 +2339,15 @@
   "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
     "description": "Claude 3.7 sonnet là mô hình thế hệ tiếp theo nhanh nhất của Anthropic. So với Claude 3 Haiku, Claude 3.7 Sonnet đã cải thiện ở nhiều kỹ năng và vượt qua mô hình lớn nhất thế hệ trước là Claude 3 Opus trong nhiều bài kiểm tra trí tuệ."
   },
+  "v0-1.0-md": {
+    "description": "Mô hình v0-1.0-md là phiên bản cũ được cung cấp dịch vụ qua API v0"
+  },
+  "v0-1.5-lg": {
+    "description": "Mô hình v0-1.5-lg phù hợp cho các nhiệm vụ suy nghĩ hoặc lý luận nâng cao"
+  },
+  "v0-1.5-md": {
+    "description": "Mô hình v0-1.5-md phù hợp cho các nhiệm vụ hàng ngày và tạo giao diện người dùng (UI)"
+  },
   "whisper-1": {
     "description": "Mô hình nhận diện giọng nói đa năng, hỗ trợ nhận diện giọng nói đa ngôn ngữ, dịch giọng nói và nhận diện ngôn ngữ."
   },
@@ -2023,6 +2356,9 @@
   },
   "wizardlm2:8x22b": {
     "description": "WizardLM 2 là mô hình ngôn ngữ do Microsoft AI cung cấp, đặc biệt xuất sắc trong các lĩnh vực đối thoại phức tạp, đa ngôn ngữ, suy luận và trợ lý thông minh."
+  },
+  "x1": {
+    "description": "Mô hình Spark X1 sẽ được nâng cấp thêm, trên nền tảng dẫn đầu trong các nhiệm vụ toán học trong nước, đạt được hiệu quả trong các nhiệm vụ chung như suy luận, tạo văn bản, hiểu ngôn ngữ tương đương với OpenAI o1 và DeepSeek R1."
   },
   "yi-1.5-34b-chat": {
     "description": "Yi-1.5 là phiên bản nâng cấp của Yi. Nó sử dụng 500B token từ cơ sở dữ liệu chất lượng cao để tiếp tục tiền huấn luyện trên Yi, và được tinh chỉnh trên 3M mẫu đa dạng."

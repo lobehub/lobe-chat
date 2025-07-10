@@ -2,12 +2,24 @@
 import fs from 'fs-extra';
 import path from 'node:path';
 
+type ReleaseType = 'stable' | 'beta' | 'nightly';
+
 // 获取脚本的命令行参数
 const version = process.argv[2];
-const isPr = process.argv[3] === 'true';
+const releaseType = process.argv[3] as ReleaseType;
 
-if (!version) {
-  console.error('Missing version parameter, usage: bun run setDesktopVersion.ts <version> [isPr]');
+// 验证参数
+if (!version || !releaseType) {
+  console.error(
+    'Missing parameters. Usage: bun run setDesktopVersion.ts <version> <stable|beta|nightly>',
+  );
+  process.exit(1);
+}
+
+if (!['stable', 'beta', 'nightly'].includes(releaseType)) {
+  console.error(
+    `Invalid release type: ${releaseType}. Must be one of 'stable', 'beta', 'nightly'.`,
+  );
   process.exit(1);
 }
 
@@ -16,81 +28,86 @@ const rootDir = path.resolve(__dirname, '../..');
 
 // 桌面应用 package.json 的路径
 const desktopPackageJsonPath = path.join(rootDir, 'apps/desktop/package.json');
+const buildDir = path.join(rootDir, 'apps/desktop/build');
 
 // 更新应用图标
-function updateAppIcon() {
+function updateAppIcon(type: 'beta' | 'nightly') {
+  console.log(`📦 Updating app icon for ${type} version...`);
   try {
-    const buildDir = path.join(rootDir, 'apps/desktop/build');
-
-    // 定义需要处理的图标映射，考虑到大小写敏感性
+    const iconSuffix = type === 'beta' ? 'beta' : 'nightly';
     const iconMappings = [
-      // { ext: '.ico', nightly: 'icon-nightly.ico', normal: 'icon.ico' },
-      { ext: '.png', nightly: 'icon-nightly.png', normal: 'icon.png' },
-      { ext: '.icns', nightly: 'Icon-nightly.icns', normal: 'Icon.icns' },
+      { ext: '.png', source: `icon-${iconSuffix}.png`, target: 'icon.png' },
+      { ext: '.icns', source: `Icon-${iconSuffix}.icns`, target: 'Icon.icns' },
+      { ext: '.ico', source: `icon-${iconSuffix}.ico`, target: 'icon.ico' },
     ];
 
-    // 处理每种图标格式
     for (const mapping of iconMappings) {
-      const sourceFile = path.join(buildDir, mapping.nightly);
-      const targetFile = path.join(buildDir, mapping.normal);
+      const sourceFile = path.join(buildDir, mapping.source);
+      const targetFile = path.join(buildDir, mapping.target);
 
-      // 检查源文件是否存在
       if (fs.existsSync(sourceFile)) {
-        // 只有当源文件和目标文件不同，才进行复制
         if (sourceFile !== targetFile) {
           fs.copyFileSync(sourceFile, targetFile);
-          console.log(`Updated app icon: ${targetFile}`);
+          console.log(`  ✅ Copied ${mapping.source} to ${mapping.target}`);
         }
       } else {
-        console.warn(`Warning: Source icon not found: ${sourceFile}`);
+        console.warn(`  ⚠️ Warning: Source icon not found: ${sourceFile}`);
       }
     }
   } catch (error) {
-    console.error('Error updating icons:', error);
-    // 继续处理，不终止程序
+    console.error('  ❌ Error updating icons:', error);
+    // 不终止程序，继续处理 package.json
   }
 }
 
-function updateVersion() {
+function updatePackageJson() {
+  console.log(`⚙️ Updating ${desktopPackageJsonPath} for ${releaseType} version ${version}...`);
   try {
-    // 确保文件存在
     if (!fs.existsSync(desktopPackageJsonPath)) {
-      console.error(`Error: File not found ${desktopPackageJsonPath}`);
+      console.error(`❌ Error: File not found ${desktopPackageJsonPath}`);
       process.exit(1);
     }
 
-    // 读取 package.json 文件
     const packageJson = fs.readJSONSync(desktopPackageJsonPath);
 
-    // 更新版本号
+    // 始终更新版本号
     packageJson.version = version;
-    packageJson.productName = 'LobeHub';
-    packageJson.name = 'lobehub-desktop';
 
-    // 如果是 PR 构建，设置为 Nightly 版本
-    if (isPr) {
-      // 修改包名，添加 -nightly 后缀
-      if (!packageJson.name.endsWith('-nightly')) {
-        packageJson.name = `${packageJson.name}-nightly`;
+    // 根据 releaseType 修改其他字段
+    switch (releaseType) {
+      case 'stable': {
+        packageJson.productName = 'LobeHub';
+        packageJson.name = 'lobehub-desktop';
+        console.log('🌟 Setting as Stable version.');
+        break;
       }
-
-      // 修改产品名称为 LobeHub Nightly
-      packageJson.productName = 'LobeHub-Nightly';
-
-      console.log('🌙 Setting as Nightly version with modified package name and productName');
-
-      // 使用 nightly 图标替换常规图标
-      updateAppIcon();
+      case 'beta': {
+        packageJson.productName = 'LobeHub-Beta'; // Or 'LobeHub-Beta' if preferred
+        packageJson.name = 'lobehub-desktop-beta'; // Or 'lobehub-desktop' if preferred
+        console.log('🧪 Setting as Beta version.');
+        updateAppIcon('beta');
+        break;
+      }
+      case 'nightly': {
+        packageJson.productName = 'LobeHub-Nightly'; // Or 'LobeHub-Nightly'
+        packageJson.name = 'lobehub-desktop-nightly'; // Or 'lobehub-desktop-nightly'
+        console.log('🌙 Setting as Nightly version.');
+        updateAppIcon('nightly');
+        break;
+      }
     }
 
     // 写回文件
     fs.writeJsonSync(desktopPackageJsonPath, packageJson, { spaces: 2 });
 
-    console.log(`Desktop app version updated to: ${version}, isPr: ${isPr}`);
+    console.log(
+      `✅ Desktop app package.json updated successfully for ${releaseType} version ${version}.`,
+    );
   } catch (error) {
-    console.error('Error updating version:', error);
+    console.error('❌ Error updating package.json:', error);
     process.exit(1);
   }
 }
 
-updateVersion();
+// 执行更新
+updatePackageJson();

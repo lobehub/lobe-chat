@@ -4,7 +4,7 @@
       "replaceBtn": "Trocar",
       "title": "Recomendação de assistentes adicionais:"
     },
-    "defaultMessage": "Eu sou seu assistente inteligente pessoal {{appName}}. Como posso ajudá-lo agora?\nSe você precisar de um assistente mais profissional ou personalizado, clique em `+` para criar um assistente personalizado.",
+    "defaultMessage": "Eu sou seu assistente inteligente pessoal {{appName}}. Como posso ajudá-lo agora?<br />Se você precisar de um assistente mais profissional ou personalizado, clique em <plus /> para criar um assistente personalizado.",
     "defaultMessageWithoutCreate": "Eu sou seu assistente inteligente pessoal {{appName}}. Como posso ajudá-lo agora?",
     "qa": {
       "q01": "O que é o LobeHub?",

@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getAppConfig } from '../app';
+import { getAppConfig } from '../../envs/app';
 
 // Stub the global process object to safely mock environment variables
 vi.stubGlobal('process', {
@@ -27,7 +27,9 @@ describe('getServerConfig', () => {
       expect(config.AGENTS_INDEX_URL).toBe(
         'https://registry.npmmirror.com/@lobehub/agents-index/v1/files/public',
       );
-      expect(config.PLUGINS_INDEX_URL).toBe('https://chat-plugins.lobehub.com');
+      expect(config.PLUGINS_INDEX_URL).toBe(
+        'https://registry.npmmirror.com/@lobehub/plugins-index/v1/files/public',
+      );
     });
 
     it('should return custom URLs when environment variables are set', () => {
@@ -46,7 +48,9 @@ describe('getServerConfig', () => {
       expect(config.AGENTS_INDEX_URL).toBe(
         'https://registry.npmmirror.com/@lobehub/agents-index/v1/files/public',
       );
-      expect(config.PLUGINS_INDEX_URL).toBe('https://chat-plugins.lobehub.com');
+      expect(config.PLUGINS_INDEX_URL).toBe(
+        'https://registry.npmmirror.com/@lobehub/plugins-index/v1/files/public',
+      );
     });
   });
 });

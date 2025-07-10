@@ -1,3 +1,12 @@
+import { TRPCError } from '@trpc/server';
+
+import { serverDBEnv } from '@/config/db';
+import { FileModel } from '@/database/models/file';
+import { FileItem } from '@/database/schemas';
+import { LobeChatDatabase } from '@/database/type';
+import { TempFileManager } from '@/server/utils/tempFileManager';
+import { nanoid } from '@/utils/uuid';
+
 import { FileServiceImpl, createFileServiceModule } from './impls';
 
 /**
@@ -5,7 +14,15 @@ import { FileServiceImpl, createFileServiceModule } from './impls';
  * 使用模块化实现方式，提供文件操作服务
  */
 export class FileService {
+  private userId: string;
+  private fileModel: FileModel;
+
   private impl: FileServiceImpl = createFileServiceModule();
+
+  constructor(db: LobeChatDatabase, userId: string) {
+    this.userId = userId;
+    this.fileModel = new FileModel(db, userId);
+  }
 
   /**
    * 删除文件
@@ -61,5 +78,34 @@ export class FileService {
    */
   public async getFullFileUrl(url?: string | null, expiresIn?: number): Promise<string> {
     return this.impl.getFullFileUrl(url, expiresIn);
+  }
+
+  async downloadFileToLocal(
+    fileId: string,
+  ): Promise<{ cleanup: () => void; file: FileItem; filePath: string }> {
+    const file = await this.fileModel.findById(fileId);
+    if (!file) {
+      throw new TRPCError({ code: 'BAD_REQUEST', message: 'File not found' });
+    }
+
+    let content: Uint8Array | undefined;
+    try {
+      content = await this.getFileByteArray(file.url);
+    } catch (e) {
+      console.error(e);
+      // if file not found, delete it from db
+      if ((e as any).Code === 'NoSuchKey') {
+        await this.fileModel.delete(fileId, serverDBEnv.REMOVE_GLOBAL_FILE);
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'File not found' });
+      }
+    }
+
+    if (!content) throw new TRPCError({ code: 'BAD_REQUEST', message: 'File content is empty' });
+
+    const dir = nanoid();
+    const tempManager = new TempFileManager(dir);
+
+    const filePath = await tempManager.writeTempFile(content, file.name);
+    return { cleanup: () => tempManager.cleanup(), file, filePath };
   }
 }

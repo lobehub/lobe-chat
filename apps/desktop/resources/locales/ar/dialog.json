@@ -1,0 +1,31 @@
+{
+  "about": {
+    "button": "تأكيد",
+    "detail": "تطبيق دردشة يعتمد على نموذج لغة كبير",
+    "message": "{{appName}} {{appVersion}}",
+    "title": "حول"
+  },
+  "confirm": {
+    "cancel": "إلغاء",
+    "no": "لا",
+    "title": "تأكيد",
+    "yes": "نعم"
+  },
+  "error": {
+    "button": "تأكيد",
+    "detail": "حدث خطأ أثناء العملية، يرجى المحاولة لاحقًا",
+    "message": "حدث خطأ",
+    "title": "خطأ"
+  },
+  "update": {
+    "downloadAndInstall": "تنزيل وتثبيت",
+    "downloadComplete": "اكتمل التنزيل",
+    "downloadCompleteMessage": "تم تنزيل حزمة التحديث، هل ترغب في التثبيت الآن؟",
+    "installLater": "تثبيت لاحقًا",
+    "installNow": "تثبيت الآن",
+    "later": "تذكير لاحقًا",
+    "newVersion": "تم اكتشاف إصدار جديد",
+    "newVersionAvailable": "تم اكتشاف إصدار جديد: {{version}}",
+    "skipThisVersion": "تخطي هذا الإصدار"
+  }
+}

@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button } from '@lobehub/ui';
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -57,10 +57,10 @@ const UpgradeButton = memo<UpgradeButtonProps>(
 
     return (
       <Button
+        color={primary ? undefined : 'default'}
         loading={upgradeStatus === UpgradeStatus.UPGRADING}
         onClick={upgrade}
         size={'large'}
-        type={primary ? 'primary' : undefined}
       >
         {children ?? t('dbV1.action.upgrade')}
       </Button>

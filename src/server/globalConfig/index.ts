@@ -1,10 +1,10 @@
-import { appEnv, getAppConfig } from '@/config/app';
 import { authEnv } from '@/config/auth';
 import { fileEnv } from '@/config/file';
 import { knowledgeEnv } from '@/config/knowledge';
 import { langfuseEnv } from '@/config/langfuse';
 import { enableNextAuth } from '@/const/auth';
 import { isDesktop } from '@/const/version';
+import { appEnv, getAppConfig } from '@/envs/app';
 import { parseSystemAgent } from '@/server/globalConfig/parseSystemAgent';
 import { GlobalServerConfig } from '@/types/serverConfig';
 
@@ -26,12 +26,12 @@ export const getServerGlobalConfig = async () => {
         enabledKey: 'ENABLED_AWS_BEDROCK',
         modelListKey: 'AWS_BEDROCK_MODEL_LIST',
       },
-      doubao: {
-        withDeploymentName: true,
-      },
       giteeai: {
         enabledKey: 'ENABLED_GITEE_AI',
         modelListKey: 'GITEE_AI_MODEL_LIST',
+      },
+      lmstudio: {
+        fetchOnClient: isDesktop ? false : undefined,
       },
       /* ↓ cloud slot ↓ */
 
@@ -40,8 +40,8 @@ export const getServerGlobalConfig = async () => {
         enabled: isDesktop ? true : undefined,
         fetchOnClient: isDesktop ? false : !process.env.OLLAMA_PROXY_URL,
       },
-      openai: {
-        enabled: isDesktop ? false : undefined,
+      qwen: {
+        withDeploymentName: true,
       },
       tencentcloud: {
         enabledKey: 'ENABLED_TENCENT_CLOUD',

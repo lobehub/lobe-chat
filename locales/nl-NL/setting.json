@@ -129,6 +129,7 @@
     "waitingForMore": "Meer modellen worden <1>gepland om te worden toegevoegd</1>, dus blijf op de hoogte"
   },
   "plugin": {
+    "addMCPPlugin": "MCP-plug-in toevoegen",
     "addTooltip": "Voeg aangepaste plug-in toe",
     "clearDeprecated": "Verwijder verouderde plug-ins",
     "empty": "Geen geïnstalleerde plug-ins, ga naar de <1>plug-in store</1> om te verkennen",
@@ -150,6 +151,7 @@
       "title": "Achtergrondkleur"
     },
     "description": {
+      "desc": "Een korte introductie van je assistent, niet als karakterinstelling",
       "placeholder": "Voer assistentbeschrijving in",
       "title": "Assistentbeschrijving"
     },
@@ -161,11 +163,27 @@
       "placeholder": "Voer rol Prompt-woord in",
       "title": "Rolinstelling"
     },
+    "submit": "Assistentinformatie bijwerken",
     "tag": {
+      "desc": "Assistentlabels worden weergegeven in de assistentmarkt",
       "placeholder": "Voer tag in",
       "title": "Tag"
     },
     "title": "Assistentinformatie"
+  },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Aangepaste grijstinten met verschillende kleurvoorkeuren",
+      "title": "Neutrale kleur"
+    },
+    "preview": {
+      "title": "Kleurpalet"
+    },
+    "primaryColor": {
+      "desc": "Aangepaste themakleur",
+      "title": "Themakleur"
+    },
+    "title": "Toepassing uiterlijk"
   },
   "settingChat": {
     "autoCreateTopicThreshold": {
@@ -206,14 +224,56 @@
       "placeholder": "Voorbewerkingssjabloon {{text}} wordt vervangen door realtime invoer",
       "title": "Voorbewerking van gebruikersinvoer"
     },
+    "submit": "Chatvoorkeuren bijwerken",
     "title": "Chatinstellingen"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "De lettergrootte van de chatinhoud",
+      "marks": {
+        "normal": "Standaard"
+      },
+      "title": "Lettergrootte"
+    },
+    "highlighterTheme": {
+      "title": "Code markeer thema"
+    },
+    "mermaidTheme": {
+      "title": "Mermaid-thema"
+    },
+    "title": "Chat uiterlijk",
+    "transitionMode": {
+      "desc": "Overgangsanimatie van chatberichten",
+      "options": {
+        "fadeIn": "Vervagen",
+        "none": {
+          "desc": "Dit hangt af van de manier waarop het model reageert; test dit zelf.",
+          "value": "Geen"
+        },
+        "smooth": "Vloeiend"
+      },
+      "title": "Overgangsanimatie"
+    }
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Volg systeem",
+      "title": "Taal"
+    },
+    "themeMode": {
+      "auto": "Automatisch",
+      "dark": "Donker",
+      "light": "Licht",
+      "title": "Thema"
+    },
+    "title": "Algemene instellingen"
   },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Limiet voor enkele reacties inschakelen"
     },
     "enableReasoningEffort": {
-      "title": "Inschakelen van redeneringsinspanningsaanpassing"
+      "title": "Schakel redeneerkracht aanpassing in"
     },
     "frequencyPenalty": {
       "desc": "Hoe hoger de waarde, hoe rijker en gevarieerder de woordkeuze; hoe lager de waarde, hoe eenvoudiger en directer de woordkeuze",
@@ -235,14 +295,15 @@
       "title": "Uitdrukkingsdiversiteit"
     },
     "reasoningEffort": {
-      "desc": "Hoe hoger de waarde, hoe sterker de redeneringscapaciteit, maar dit kan de responstijd en het tokenverbruik verhogen",
+      "desc": "Hoe hoger de waarde, hoe sterker het redeneervermogen, maar dit kan de reactietijd en het tokenverbruik verhogen",
       "options": {
         "high": "Hoog",
         "low": "Laag",
         "medium": "Gemiddeld"
       },
-      "title": "Redeneringsinspanningsniveau"
+      "title": "Redeneerkracht"
     },
+    "submit": "Modelinstellingen bijwerken",
     "temperature": {
       "desc": "Hoe hoger de waarde, hoe creatiever en fantasierijker het antwoord; hoe lager de waarde, hoe strikter het antwoord.",
       "title": "Creativiteit Activiteit",
@@ -319,6 +380,7 @@
       "desc": "Browser staat voor de native spraakherkenningsservice van de browser",
       "title": "Spraakherkenningsservice"
     },
+    "submit": "Spraakdienst bijwerken",
     "title": "Spraakdienst",
     "tts": "Spraaksynthese-instellingen",
     "ttsService": {
@@ -330,37 +392,6 @@
       "preview": "Stem voorbeluisteren",
       "title": "Spraaksynthese stem"
     }
-  },
-  "settingTheme": {
-    "avatar": {
-      "title": "Profielfoto"
-    },
-    "fontSize": {
-      "desc": "Lettergrootte van chatberichten",
-      "marks": {
-        "normal": "Normaal"
-      },
-      "title": "Lettergrootte"
-    },
-    "lang": {
-      "autoMode": "Volg systeem",
-      "title": "Taal"
-    },
-    "neutralColor": {
-      "desc": "Aangepaste grijstinten voor verschillende kleurvoorkeuren",
-      "title": "Neutrale kleur"
-    },
-    "primaryColor": {
-      "desc": "Aangepaste themakleur",
-      "title": "Themakleur"
-    },
-    "themeMode": {
-      "auto": "Automatisch",
-      "dark": "Donker",
-      "light": "Licht",
-      "title": "Thema"
-    },
-    "title": "Thema-instellingen"
   },
   "storage": {
     "actions": {
@@ -395,6 +426,12 @@
     "metaMiss": "Vul alstublieft de assistentinformatie in voordat u deze indient. Dit moet de naam, beschrijving en labels bevatten",
     "placeholder": "Voer de identificatie van de assistent in, deze moet uniek zijn, bijvoorbeeld web-ontwikkeling",
     "tooltips": "Delen op de assistentenmarkt"
+  },
+  "submitFooter": {
+    "reset": "Resetten",
+    "submit": "Opslaan",
+    "unSaved": "Onopgeslagen wijzigingen",
+    "unSavedWarning": "Er zijn momenteel onopgeslagen wijzigingen"
   },
   "sync": {
     "device": {
@@ -447,6 +484,7 @@
       "placeholder": "Voer aangepaste prompt in",
       "title": "Aangepaste prompt"
     },
+    "helpInfo": "Wanneer je een nieuwe assistent maakt, worden de standaard assistentinstellingen als standaardwaarden gebruikt.",
     "historyCompress": {
       "label": "Gespreksgeschiedenismodel",
       "modelDesc": "Specificeer het model dat wordt gebruikt voor het comprimeren van gespreksgeschiedenis",

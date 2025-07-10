@@ -1,0 +1,32 @@
+{
+  "actions": {
+    "add": "إضافة",
+    "back": "عودة",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "confirm": "تأكيد",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "more": "المزيد",
+    "next": "التالي",
+    "ok": "حسناً",
+    "previous": "السابق",
+    "refresh": "تحديث",
+    "remove": "إزالة",
+    "retry": "إعادة المحاولة",
+    "save": "حفظ",
+    "search": "بحث",
+    "submit": "إرسال"
+  },
+  "app": {
+    "description": "منصة تعاون مساعدك الذكي",
+    "name": "LobeHub"
+  },
+  "status": {
+    "error": "خطأ",
+    "info": "معلومات",
+    "loading": "جارٍ التحميل",
+    "success": "نجاح",
+    "warning": "تحذير"
+  }
+}

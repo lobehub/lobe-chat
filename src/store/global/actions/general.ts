@@ -21,7 +21,7 @@ const n = setNamespace('g');
 
 export interface GlobalGeneralAction {
   switchLocale: (locale: LocaleMode) => void;
-  switchThemeMode: (themeMode: ThemeMode) => void;
+  switchThemeMode: (themeMode: ThemeMode, params?: { skipBroadcast?: boolean }) => void;
   updateSystemStatus: (status: Partial<SystemStatus>, action?: any) => void;
   useCheckLatestVersion: (enabledCheck?: boolean) => SWRResponse<string>;
   useInitSystemStatus: () => SWRResponse;
@@ -50,10 +50,21 @@ export const generalActionSlice: StateCreator<
       })();
     }
   },
-  switchThemeMode: (themeMode) => {
+  switchThemeMode: (themeMode, { skipBroadcast } = {}) => {
     get().updateSystemStatus({ themeMode });
 
     setCookie(LOBE_THEME_APPEARANCE, themeMode === 'auto' ? undefined : themeMode);
+
+    if (isDesktop && !skipBroadcast) {
+      (async () => {
+        try {
+          const { dispatch } = await import('@lobechat/electron-client-ipc');
+          await dispatch('updateThemeMode', themeMode);
+        } catch (error) {
+          console.error('Failed to update theme in main process:', error);
+        }
+      })();
+    }
   },
   updateSystemStatus: (status, action) => {
     if (!get().isStatusInit) return;

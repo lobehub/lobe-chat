@@ -10,7 +10,6 @@ import { AgentChatConfigSchema } from '@/types/agent';
 import { LobeMetaDataSchema } from '@/types/meta';
 import { BatchTaskResult } from '@/types/service';
 import { ChatSessionList } from '@/types/session';
-import { merge } from '@/utils/merge';
 
 const sessionProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
@@ -156,12 +155,8 @@ export const sessionRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const session = await ctx.sessionModel.findByIdOrSlug(input.id);
-
-      if (!session) return;
-
-      return ctx.sessionModel.updateConfig(session.agent.id, {
-        chatConfig: merge(session.agent.chatConfig, input.value),
+      return ctx.sessionModel.updateConfig(input.id, {
+        chatConfig: input.value,
       });
     }),
   updateSessionConfig: sessionProcedure
@@ -172,18 +167,7 @@ export const sessionRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const session = await ctx.sessionModel.findByIdOrSlug(input.id);
-
-      if (!session || !input.value) return;
-
-      if (!session.agent) {
-        throw new Error(
-          'this session is not assign with agent, please contact with admin to fix this issue.',
-        );
-      }
-
-      const mergedValue = merge(session.agent, input.value);
-      return ctx.sessionModel.updateConfig(session.agent.id, mergedValue);
+      return ctx.sessionModel.updateConfig(input.id, input.value);
     }),
 });
 

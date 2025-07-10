@@ -747,18 +747,35 @@ describe('SessionModel', () => {
   });
 
   describe('updateConfig', () => {
-    it('should update agent config', async () => {
-      // Create test agent
+    it('should update agent config via sessionId', async () => {
+      // Create test session with agent
+      const sessionId = 'test-session';
       const agentId = 'test-agent';
-      await serverDB.insert(agents).values({
-        id: agentId,
-        userId,
-        model: 'gpt-3.5-turbo',
-        title: 'Original Title',
+
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values({
+          id: sessionId,
+          userId,
+          type: 'agent',
+        });
+
+        await trx.insert(agents).values({
+          id: agentId,
+          userId,
+          model: 'gpt-3.5-turbo',
+          title: 'Original Title',
+          description: 'Original description',
+        });
+
+        await trx.insert(agentsToSessions).values({
+          sessionId,
+          agentId,
+          userId,
+        });
       });
 
-      // Update config
-      await sessionModel.updateConfig(agentId, {
+      // Update config using sessionId
+      await sessionModel.updateConfig(sessionId, {
         model: 'gpt-4',
         title: 'Updated Title',
         description: 'New description',
@@ -777,22 +794,161 @@ describe('SessionModel', () => {
       });
     });
 
-    it('should not update config for other users agents', async () => {
-      // Create agent for another user
-      const agentId = 'other-agent';
-      await serverDB.insert(users).values([{ id: 'other-user' }]);
-      await serverDB.insert(agents).values({
-        id: agentId,
-        userId: 'other-user',
-        model: 'gpt-3.5-turbo',
-        title: 'Original Title',
+    it('should merge config with existing agent config', async () => {
+      // Create test session with agent having existing config
+      const sessionId = 'test-session-merge';
+      const agentId = 'test-agent-merge';
+
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values({
+          id: sessionId,
+          userId,
+          type: 'agent',
+        });
+
+        await trx.insert(agents).values({
+          id: agentId,
+          userId,
+          model: 'gpt-3.5-turbo',
+          title: 'Original Title',
+          description: 'Original description',
+          systemRole: 'Original role',
+        });
+
+        await trx.insert(agentsToSessions).values({
+          sessionId,
+          agentId,
+          userId,
+        });
       });
 
-      // Try to update other user's agent
-      await sessionModel.updateConfig(agentId, {
+      // Update only some fields
+      await sessionModel.updateConfig(sessionId, {
+        model: 'gpt-4',
+        title: 'Updated Title',
+        // Don't update description and systemRole
+      });
+
+      // Verify merge behavior - updated fields changed, others preserved
+      const updatedAgent = await serverDB
+        .select()
+        .from(agents)
+        .where(and(eq(agents.id, agentId), eq(agents.userId, userId)));
+
+      expect(updatedAgent[0]).toMatchObject({
+        model: 'gpt-4',
+        title: 'Updated Title',
+        description: 'Original description', // Should be preserved
+        systemRole: 'Original role', // Should be preserved
+      });
+    });
+
+    it('should return early if session does not exist', async () => {
+      // Try to update config for non-existent session
+      const result = await sessionModel.updateConfig('non-existent-session', {
         model: 'gpt-4',
         title: 'Updated Title',
       });
+
+      // Should return undefined/early without throwing
+      expect(result).toBeUndefined();
+    });
+
+    it('should throw error if session has no associated agent', async () => {
+      // Create session without agent
+      const sessionId = 'session-no-agent';
+
+      await serverDB.insert(sessions).values({
+        id: sessionId,
+        userId,
+        type: 'agent',
+      });
+
+      // Try to update config - should throw error
+      await expect(
+        sessionModel.updateConfig(sessionId, {
+          model: 'gpt-4',
+          title: 'Updated Title',
+        }),
+      ).rejects.toThrow(
+        'this session is not assign with agent, please contact with admin to fix this issue.',
+      );
+    });
+
+    it('should return early if data is null or undefined', async () => {
+      // Create test session with agent
+      const sessionId = 'test-session-null';
+      const agentId = 'test-agent-null';
+
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values({
+          id: sessionId,
+          userId,
+          type: 'agent',
+        });
+
+        await trx.insert(agents).values({
+          id: agentId,
+          userId,
+          model: 'gpt-3.5-turbo',
+          title: 'Original Title',
+        });
+
+        await trx.insert(agentsToSessions).values({
+          sessionId,
+          agentId,
+          userId,
+        });
+      });
+
+      // Test with null data
+      const result1 = await sessionModel.updateConfig(sessionId, null);
+      expect(result1).toBeUndefined();
+
+      // Test with undefined data
+      const result2 = await sessionModel.updateConfig(sessionId, undefined);
+      expect(result2).toBeUndefined();
+
+      // Test with empty object
+      const result3 = await sessionModel.updateConfig(sessionId, {});
+      expect(result3).toBeUndefined();
+    });
+
+    it('should not update config for other users sessions', async () => {
+      // Create agent for another user
+      const sessionId = 'other-session';
+      const agentId = 'other-agent';
+      await serverDB.insert(users).values([{ id: 'other-user' }]);
+
+      await serverDB.transaction(async (trx) => {
+        await trx.insert(sessions).values({
+          id: sessionId,
+          userId: 'other-user',
+          type: 'agent',
+        });
+
+        await trx.insert(agents).values({
+          id: agentId,
+          userId: 'other-user',
+          model: 'gpt-3.5-turbo',
+          title: 'Original Title',
+        });
+
+        await trx.insert(agentsToSessions).values({
+          sessionId,
+          agentId,
+          userId: 'other-user',
+        });
+      });
+
+      // Try to update other user's session - should return early
+      const result = await sessionModel.updateConfig(sessionId, {
+        model: 'gpt-4',
+        title: 'Updated Title',
+      });
+
+      // Should return undefined as session doesn't belong to current user
+      expect(result).toBeUndefined();
 
       // Verify no changes were made
       const agent = await serverDB.select().from(agents).where(eq(agents.id, agentId));

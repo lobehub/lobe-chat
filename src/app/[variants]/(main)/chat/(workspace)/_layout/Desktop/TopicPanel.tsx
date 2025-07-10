@@ -18,11 +18,11 @@ const useStyles = createStyles(({ css, token }) => ({
     height: 100% !important;
   `,
   drawer: css`
-    z-index: 10;
-    background: ${token.colorBgLayout};
+    z-index: 20;
+    background: ${token.colorBgContainerSecondary};
   `,
   header: css`
-    border-block-end: 1px solid ${token.colorBorder};
+    border-block-end: 1px solid ${token.colorBorderSecondary};
   `,
 }));
 
@@ -59,7 +59,7 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
       mode={md ? 'fixed' : 'float'}
       onExpandChange={handleExpand}
       placement={'right'}
-      showHandlerWideArea={false}
+      showHandleWideArea={false}
     >
       <DraggablePanelContainer
         style={{

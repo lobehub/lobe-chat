@@ -88,7 +88,8 @@
     "emptyModel": "有効なモデルがありません。設定に移動して有効にしてください。",
     "emptyProvider": "有効なサービスプロバイダーがありません。設定に移動して有効にしてください。",
     "goToSettings": "設定に移動",
-    "provider": "プロバイダー"
+    "provider": "プロバイダー",
+    "title": "モデル"
   },
   "OllamaSetupGuide": {
     "action": {

@@ -17,6 +17,7 @@ const CategoryContent = memo(() => {
 
   return (
     <Menu
+      compact
       items={cateItems}
       onClick={({ key }) => {
         const activeKey = key === ProfileTabs.Profile ? '/' : key;
@@ -25,7 +26,6 @@ const CategoryContent = memo(() => {
       }}
       selectable
       selectedKeys={[activeTab]}
-      variant={'compact'}
     />
   );
 });

@@ -12,27 +12,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
-      vision: true,
-    },
-    contextWindowTokens: 200_000,
-    description:
-      'o3 是一款全能强大的模型，在多个领域表现出色。它为数学、科学、编程和视觉推理任务树立了新标杆。它也擅长技术写作和指令遵循。用户可利用它分析文本、代码和图像，解决多步骤的复杂问题。',
-    displayName: 'o3',
-    enabled: true,
-    id: 'o3',
-    maxOutput: 100_000,
-    pricing: {
-      cachedInput: 2.5,
-      input: 10,
-      output: 40,
-    },
-    releasedAt: '2025-04-17',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -48,65 +28,110 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 4.4,
     },
     releasedAt: '2025-04-17',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
+      search: true,
       vision: true,
     },
-    contextWindowTokens: 1_047_576,
+    contextWindowTokens: 200_000,
     description:
-      'GPT-4.1 是我们用于复杂任务的旗舰模型。它非常适合跨领域解决问题。',
-    displayName: 'GPT-4.1',
-    enabled: true,
-    id: 'gpt-4.1',
-    maxOutput: 32_768,
+      'o4-mini-deep-research 是我们更快速、更实惠的深度研究模型——非常适合处理复杂的多步骤研究任务。它可以从互联网上搜索和综合信息，也可以通过 MCP 连接器访问并利用你的自有数据。',
+    displayName: 'o4-mini Deep Research',
+    id: 'o4-mini-deep-research',
+    maxOutput: 100_000,
     pricing: {
       cachedInput: 0.5,
       input: 2,
       output: 8,
     },
-    releasedAt: '2025-04-14',
+    releasedAt: '2025-06-26',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
+      search: true,
       vision: true,
     },
-    contextWindowTokens: 1_047_576,
+    contextWindowTokens: 200_000,
     description:
-      'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
-    displayName: 'GPT-4.1 mini',
+      'o3-pro 模型使用更多的计算来更深入地思考并始终提供更好的答案，仅支持 Responses API 下使用。',
+    displayName: 'o3-pro',
+    id: 'o3-pro',
+    maxOutput: 100_000,
+    pricing: {
+      input: 20,
+      output: 80,
+    },
+    releasedAt: '2025-06-10',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'o3 是一款全能强大的模型，在多个领域表现出色。它为数学、科学、编程和视觉推理任务树立了新标杆。它也擅长技术写作和指令遵循。用户可利用它分析文本、代码和图像，解决多步骤的复杂问题。',
+    displayName: 'o3',
     enabled: true,
-    id: 'gpt-4.1-mini',
-    maxOutput: 32_768,
+    id: 'o3',
+    maxOutput: 100_000,
     pricing: {
-      cachedInput: 0.1,
-      input: 0.4,
-      output: 1.6,
+      cachedInput: 0.5,
+      input: 2,
+      output: 8,
     },
-    releasedAt: '2025-04-14',
+    releasedAt: '2025-04-16',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
+      search: true,
       vision: true,
     },
-    contextWindowTokens: 1_047_576,
+    contextWindowTokens: 200_000,
     description:
-      'GPT-4.1 nano 是最快，最具成本效益的GPT-4.1模型。',
-    displayName: 'GPT-4.1 nano',
-    id: 'gpt-4.1-nano',
-    maxOutput: 32_768,
+      'o3-deep-research 是我们最先进的深度研究模型，专为处理复杂的多步骤研究任务而设计。它可以从互联网上搜索和综合信息，也可以通过 MCP 连接器访问并利用你的自有数据。',
+    displayName: 'o3 Deep Research',
+    id: 'o3-deep-research',
+    maxOutput: 100_000,
     pricing: {
-      cachedInput: 0.025,
-      input: 0.1,
-      output: 0.4,
+      cachedInput: 2.5,
+      input: 10,
+      output: 40,
     },
-    releasedAt: '2025-04-14',
+    releasedAt: '2025-06-26',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
@@ -126,6 +151,31 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 4.4,
     },
     releasedAt: '2025-01-31',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'o1 系列模型经过强化学习训练，能够在回答前进行思考，并执行复杂的推理任务。o1-pro 模型使用了更多计算资源，以进行更深入的思考，从而持续提供更优质的回答。',
+    displayName: 'o1-pro',
+    id: 'o1-pro',
+    maxOutput: 100_000,
+    pricing: {
+      input: 150,
+      output: 600,
+    },
+    releasedAt: '2025-03-19',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {
@@ -144,10 +194,14 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 4.4,
     },
     releasedAt: '2024-09-12',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
       vision: true,
     },
@@ -163,6 +217,9 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 60,
     },
     releasedAt: '2024-12-17',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
     type: 'chat',
   },
   {
@@ -180,6 +237,74 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 60,
     },
     releasedAt: '2024-09-12',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_047_576,
+    description: 'GPT-4.1 是我们用于复杂任务的旗舰模型。它非常适合跨领域解决问题。',
+    displayName: 'GPT-4.1',
+    enabled: true,
+    id: 'gpt-4.1',
+    maxOutput: 32_768,
+    pricing: {
+      cachedInput: 0.5,
+      input: 2,
+      output: 8,
+    },
+    releasedAt: '2025-04-14',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_047_576,
+    description:
+      'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
+    displayName: 'GPT-4.1 mini',
+    enabled: true,
+    id: 'gpt-4.1-mini',
+    maxOutput: 32_768,
+    pricing: {
+      cachedInput: 0.1,
+      input: 0.4,
+      output: 1.6,
+    },
+    releasedAt: '2025-04-14',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_047_576,
+    description: 'GPT-4.1 nano 是最快，最具成本效益的GPT-4.1模型。',
+    displayName: 'GPT-4.1 nano',
+    id: 'gpt-4.1-nano',
+    maxOutput: 32_768,
+    pricing: {
+      cachedInput: 0.025,
+      input: 0.1,
+      output: 0.4,
+    },
+    releasedAt: '2025-04-14',
     type: 'chat',
   },
   {
@@ -204,6 +329,7 @@ export const openaiChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 128_000,
@@ -218,29 +344,57 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 0.6,
     },
     releasedAt: '2024-07-18',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
     abilities: {
-      functionCall: true,
-      vision: true,
+      search: true,
     },
     contextWindowTokens: 128_000,
     description:
-      'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
-    displayName: 'GPT-4o 1120',
-    id: 'gpt-4o-2024-11-20',
+      'GPT-4o mini 搜索预览版是一个专门训练用于理解和执行网页搜索查询的模型，使用的是 Chat Completions API。除了令牌费用之外，网页搜索查询还会按每次工具调用收取费用。',
+    displayName: 'GPT-4o mini Search Preview',
+    id: 'gpt-4o-mini-search-preview',
+    maxOutput: 16_384,
     pricing: {
-      cachedInput: 1.25,
-      input: 2.5,
-      output: 10,
+      input: 0.15,
+      output: 0.6,
     },
-    releasedAt: '2024-11-20',
+    releasedAt: '2025-03-11',
+    settings: {
+      searchImpl: 'internal',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      //search: true,
+    },
+    contextWindowTokens: 128_000,
+    description: 'GPT-4o mini Audio 模型，支持音频输入输出',
+    displayName: 'GPT-4o mini Audio',
+    id: 'gpt-4o-mini-audio-preview',
+    maxOutput: 16_384,
+    pricing: {
+      input: 0.15,
+      output: 0.6,
+    },
+    releasedAt: '2024-12-17',
+    /*
+    settings: {
+      searchImpl: 'params',
+    },
+    */
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 128_000,
@@ -254,11 +408,57 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 10,
     },
     releasedAt: '2024-05-13',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      search: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'GPT-4o 搜索预览版是一个专门训练用于理解和执行网页搜索查询的模型，使用的是 Chat Completions API。除了令牌费用之外，网页搜索查询还会按每次工具调用收取费用。',
+    displayName: 'GPT-4o Search Preview',
+    id: 'gpt-4o-search-preview',
+    maxOutput: 16_384,
+    pricing: {
+      input: 2.5,
+      output: 10,
+    },
+    releasedAt: '2025-03-11',
+    settings: {
+      searchImpl: 'internal',
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
+    displayName: 'GPT-4o 1120',
+    id: 'gpt-4o-2024-11-20',
+    pricing: {
+      cachedInput: 1.25,
+      input: 2.5,
+      output: 10,
+    },
+    releasedAt: '2024-11-20',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 128_000,
@@ -271,9 +471,16 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 15,
     },
     releasedAt: '2024-05-13',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+      //search: true,
+    },
     contextWindowTokens: 128_000,
     description: 'GPT-4o Audio 模型，支持音频输入输出',
     displayName: 'GPT-4o Audio',
@@ -284,6 +491,11 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 10,
     },
     releasedAt: '2024-10-01',
+    /*
+    settings: {
+      searchImpl: 'params',
+    },
+    */
     type: 'chat',
   },
   {
@@ -480,13 +692,54 @@ export const openaiChatModels: AIChatModelCard[] = [
   },
   {
     contextWindowTokens: 4096,
-    description:
-      'GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125',
+    description: 'GPT 3.5 Turbo，适用于各种文本生成和理解任务，对指令遵循的优化',
     displayName: 'GPT-3.5 Turbo Instruct',
     id: 'gpt-3.5-turbo-instruct',
     pricing: {
       input: 1.5,
       output: 2,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description: 'codex-mini-latest 是 o4-mini 的微调版本，专门用于 Codex CLI。对于直接通过 API 使用，我们推荐从 gpt-4.1 开始。',
+    displayName: 'Codex mini',
+    id: 'codex-mini-latest',
+    maxOutput: 100_000,
+    pricing: {
+      input: 1.5,
+      output: 6,
+    },
+    releasedAt: '2025-06-01',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 8192,
+    description: 'computer-use-preview 模型是专为“计算机使用工具”设计的专用模型，经过训练以理解并执行计算机相关任务。',
+    displayName: 'Computer Use Preview',
+    id: 'computer-use-preview',
+    maxOutput: 1024,
+    pricing: {
+      input: 3,
+      output: 12,
+    },
+    releasedAt: '2025-03-11',
+    settings: {
+      extendParams: ['reasoningEffort'],
     },
     type: 'chat',
   },
