@@ -126,7 +126,7 @@ services:
         /bin/node /app/startServer.js &
         LOBE_PID=\$!
         sleep 3
-        if [ $(wget --timeout=5 --spider --server-response ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration 2>&1 | grep -E -c 'HTTP/[0-9.]+ 200') -eq 0 ]; then
+        if [ $(wget --timeout=15 --spider --server-response http://localhost:${CASDOOR_PORT}/.well-known/openid-configuration 2>&1 | grep -c 'HTTP/1.1 200 OK') -eq 0 ]; then
           echo '⚠️Warning: Unable to fetch OIDC configuration from Casdoor'
           echo 'Request URL: ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration'
           echo 'Read more at: https://lobehub.com/docs/self-hosting/server-database/docker-compose#necessary-configuration'
@@ -136,7 +136,7 @@ services:
           echo '了解更多：https://lobehub.com/zh/docs/self-hosting/server-database/docker-compose#necessary-configuration'
           echo ''
         else
-          if ! wget -O - --timeout=5 ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration 2>&1 | grep 'issuer' | grep ${AUTH_CASDOOR_ISSUER}; then
+          if ! wget -O - --timeout=15 http://localhost:${CASDOOR_PORT}/.well-known/openid-configuration 2>&1 | grep 'issuer' | grep ${AUTH_CASDOOR_ISSUER}; then
             printf '❌Error: The Auth issuer is conflict, Issuer in OIDC configuration is: %s' \$(wget -O - --timeout=5 ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration 2>&1 | grep -E 'issuer.*' | awk -F '\"' '{print \$4}')
             echo ' , but the issuer in .env file is: ${AUTH_CASDOOR_ISSUER} '
             echo 'Request URL: ${AUTH_CASDOOR_ISSUER}/.well-known/openid-configuration'
@@ -149,7 +149,7 @@ services:
             echo ''
           fi
         fi
-        if [ $(wget --timeout=5 --spider --server-response ${S3_ENDPOINT}/minio/health/live 2>&1 | grep -E -c 'HTTP/[0-9.]+ 200') -eq 0 ]; then
+        if [ $(wget --timeout=15 --spider --server-response http://localhost:${MINIO_PORT}/minio/health/live 2>&1 | grep -c 'HTTP/1.1 200 OK') -eq 0 ]; then
           echo '⚠️Warning: Unable to fetch MinIO health status'
           echo 'Request URL: ${S3_ENDPOINT}/minio/health/live'
           echo 'Read more at: https://lobehub.com/docs/self-hosting/server-database/docker-compose#necessary-configuration'
