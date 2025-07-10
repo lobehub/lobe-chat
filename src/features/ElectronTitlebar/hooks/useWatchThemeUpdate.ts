@@ -26,7 +26,7 @@ export const useWatchThemeUpdate = () => {
   useEffect(() => {
     document.documentElement.style.background = 'none';
 
-    //
+    // https://x.com/alanblogsooo/status/1939208908993896684
     const isNotSameTheme = !systemAppearance ? true : theme.appearance !== systemAppearance;
 
     document.body.style.background = rgba(theme.colorBgLayout, isNotSameTheme ? 0.95 : 0.66);
