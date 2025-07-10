@@ -6,21 +6,27 @@
   },
   {
     "children": {
-      "improvements": ["Add google search grounding for Vertex AI."]
+      "improvements": [
+        "Add google search grounding for Vertex AI."
+      ]
     },
     "date": "2025-07-10",
     "version": "1.97.7"
   },
   {
     "children": {
-      "improvements": ["Replace utility-types with type-fest."]
+      "improvements": [
+        "Replace utility-types with type-fest."
+      ]
     },
     "date": "2025-07-10",
     "version": "1.97.6"
   },
   {
     "children": {
-      "improvements": ["Fix: solve the loading was strange spin when switch show."]
+      "improvements": [
+        "Fix: solve the loading was strange spin when switch show."
+      ]
     },
     "date": "2025-07-10",
     "version": "1.97.5"
@@ -86,6 +92,15 @@
     },
     "date": "2025-06-28",
     "version": "1.96.10"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add google search grounding for Vertex AI, fix: solve the loading was strange spin when switch show, integrate Amazon Cognito for user authentication."
+      ]
+    },
+    "date": "2025-07-10",
+    "version": "1.96.2"
   },
   {
     "children": {
