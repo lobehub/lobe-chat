@@ -1,6 +1,7 @@
 'use client';
 
 import { Text } from '@lobehub/ui';
+import { Skeleton } from 'antd';
 import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -19,9 +20,13 @@ const Head = memo(() => {
           <RepoIcon />
         </Center>
 
-        <Text ellipsis strong style={{ fontSize: 16 }}>
-          {name}
-        </Text>
+        {!name ? (
+          <Skeleton active paragraph={false} title={{ style: { marginBottom: 0 }, width: 80 }} />
+        ) : (
+          <Text ellipsis strong style={{ fontSize: 16 }}>
+            {name}
+          </Text>
+        )}
       </Flexbox>
     </Flexbox>
   );
