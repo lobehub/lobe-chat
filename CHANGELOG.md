@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.97.4](https://github.com/lobehub/lobe-chat/compare/v1.97.3...v1.97.4)
+
+<sup>Released on **2025-07-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add `grok-4-0709` model from xAI, fix theme issue in desktop.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add `grok-4-0709` model from xAI, closes [#8379](https://github.com/lobehub/lobe-chat/issues/8379) ([b7ca447](https://github.com/lobehub/lobe-chat/commit/b7ca447))
+- **misc**: Fix theme issue in desktop, closes [#8380](https://github.com/lobehub/lobe-chat/issues/8380) ([c7ae78b](https://github.com/lobehub/lobe-chat/commit/c7ae78b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.97.3](https://github.com/lobehub/lobe-chat/compare/v1.97.2...v1.97.3)
 
 <sup>Released on **2025-07-10**</sup>
