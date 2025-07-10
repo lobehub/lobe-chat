@@ -598,9 +598,9 @@ LobeChat 提供了 Vercel 的 自托管版本 和 [Docker 镜像][docker-release
 [![][docker-size-shield]][docker-size-link]
 [![][docker-pulls-shield]][docker-pulls-link]
 
-We provide a Docker image for deploying the LobeChat service on your own private device. Use the following command to start the LobeChat service:
+我们提供了一个用于在您自己的私有设备上部署 LobeChat 服务的 Docker 镜像。请使用以下命令启动 LobeChat 服务：
 
-1. create a folder to for storage files
+1. 创建一个用于存储文件的文件夹
 
 ```fish
 $ mkdir lobe-chat-db && cd lobe-chat-db
