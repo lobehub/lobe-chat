@@ -2,6 +2,50 @@
 
 # Changelog
 
+### [Version&nbsp;1.96.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.96.0...v1.96.1)
+<sup>Released on **2025-07-10**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix locale hydration error in SSR.
+
+
+#### 💄 Styles
+
+- **misc**: Add `grok-4-0709` model from xAI, fix theme issue in desktop, implement data analytics event tracking framework.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **misc**: Fix locale hydration error in SSR, closes [#8365](https://github.com/jaworldwideorg/OneJA-Bot/issues/8365) ([63f482a](https://github.com/jaworldwideorg/OneJA-Bot/commit/63f482a))
+
+
+
+#### Styles
+
+* **misc**: Add `grok-4-0709` model from xAI, closes [#8379](https://github.com/jaworldwideorg/OneJA-Bot/issues/8379) ([b7ca447](https://github.com/jaworldwideorg/OneJA-Bot/commit/b7ca447))
+* **misc**: Fix theme issue in desktop, closes [#8380](https://github.com/jaworldwideorg/OneJA-Bot/issues/8380) ([c7ae78b](https://github.com/jaworldwideorg/OneJA-Bot/commit/c7ae78b))
+* **misc**: Implement data analytics event tracking framework, closes [#8352](https://github.com/jaworldwideorg/OneJA-Bot/issues/8352) ([f433aca](https://github.com/jaworldwideorg/OneJA-Bot/commit/f433aca))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version&nbsp;1.96.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.95.2...v1.96.0)
 <sup>Released on **2025-07-08**</sup>
 
