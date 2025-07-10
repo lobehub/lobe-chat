@@ -72,3 +72,7 @@ public/swe-worker*
 vertex-ai-key.json
 .pnpm-store
 ./packages/lobe-ui
+
+
+# for local prd docs
+docs/prd
