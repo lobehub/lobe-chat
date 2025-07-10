@@ -30,6 +30,6 @@ export const ssoProviders = [
   WeChat,
   Keycloak,
   Google,
-  Okta
+  Okta,
   Cognito
 ];
