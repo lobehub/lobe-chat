@@ -63,6 +63,18 @@
   },
   {
     "children": {
+      "fixes": [
+        "Fix locale hydration error in SSR."
+      ],
+      "improvements": [
+        "Add grok-4-0709 model from xAI, fix theme issue in desktop, implement data analytics event tracking framework."
+      ]
+    },
+    "date": "2025-07-10",
+    "version": "1.96.1"
+  },
+  {
+    "children": {
       "features": [
         "Add MCP marketplace and mcp plugin one-click installation in desktop."
       ],
