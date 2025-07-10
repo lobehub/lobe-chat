@@ -5,6 +5,17 @@ import { theme } from 'antd';
 // refs: https://github.com/dumbmatter/fakeIndexedDB#dexie-and-other-indexeddb-api-wrappers
 import 'fake-indexeddb/auto';
 import React from 'react';
+import { vi } from 'vitest';
+
+// Global mock for @lobehub/analytics/react to avoid AnalyticsProvider dependency
+// This prevents tests from failing when components use useAnalytics hook
+vi.mock('@lobehub/analytics/react', () => ({
+  useAnalytics: () => ({
+    analytics: {
+      track: vi.fn(),
+    },
+  }),
+}));
 
 // only inject in the dom environment
 if (

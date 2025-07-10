@@ -1,5 +1,6 @@
 import { ReactNode, Suspense } from 'react';
 
+import { LobeAnalyticsProviderWrapper } from '@/components/Analytics/LobeAnalyticsProviderWrapper';
 import { getServerFeatureFlagsValue } from '@/config/featureFlags';
 import { appEnv } from '@/envs/app';
 import DevPanel from '@/features/DevPanel';
@@ -54,7 +55,9 @@ const GlobalLayout = async ({
             isMobile={isMobile}
             serverConfig={serverConfig}
           >
-            <QueryProvider>{children}</QueryProvider>
+            <QueryProvider>
+              <LobeAnalyticsProviderWrapper>{children}</LobeAnalyticsProviderWrapper>
+            </QueryProvider>
             <StoreInitialization />
             <Suspense>
               <ImportSettings />
