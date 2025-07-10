@@ -2,6 +2,50 @@
 
 # Changelog
 
+### [Version&nbsp;1.96.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.96.1...v1.96.2)
+<sup>Released on **2025-07-10**</sup>
+
+
+#### ♻ Code Refactoring
+
+- **misc**: Replace `utility-types` with `type-fest`.
+
+
+#### 💄 Styles
+
+- **misc**: Add google search grounding for Vertex AI, fix: solve the loading was strange spin when switch show, integrate Amazon Cognito for user authentication.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Code refactoring
+
+* **misc**: Replace `utility-types` with `type-fest`, closes [#8370](https://github.com/jaworldwideorg/OneJA-Bot/issues/8370) ([a072b53](https://github.com/jaworldwideorg/OneJA-Bot/commit/a072b53))
+
+
+
+#### Styles
+
+* **misc**: Add google search grounding for Vertex AI, closes [#8313](https://github.com/jaworldwideorg/OneJA-Bot/issues/8313) ([afd5900](https://github.com/jaworldwideorg/OneJA-Bot/commit/afd5900))
+* **misc**: Fix: solve the loading was strange spin when switch show, closes [#8333](https://github.com/jaworldwideorg/OneJA-Bot/issues/8333) ([07197e7](https://github.com/jaworldwideorg/OneJA-Bot/commit/07197e7))
+* **misc**: Integrate Amazon Cognito for user authentication, closes [#7472](https://github.com/jaworldwideorg/OneJA-Bot/issues/7472) ([56f4e98](https://github.com/jaworldwideorg/OneJA-Bot/commit/56f4e98))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.96.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.96.0...v1.96.1)
 <sup>Released on **2025-07-10**</sup>
 
