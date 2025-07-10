@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "improvements": ["Add grok-4-0709 model from xAI, fix theme issue in desktop."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.4"
+  },
+  {
     "children": {},
     "date": "2025-07-10",
     "version": "1.97.3"
