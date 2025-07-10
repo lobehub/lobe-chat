@@ -1,5 +1,6 @@
+import { getSingletonAnalyticsOptional } from '@lobehub/analytics';
 import useSWR, { SWRResponse, mutate } from 'swr';
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_PREFERENCE } from '@/const/user';
@@ -22,7 +23,6 @@ const GET_USER_STATE_KEY = 'initUserState';
  */
 export interface CommonAction {
   refreshUserState: () => Promise<void>;
-
   updateAvatar: (avatar: string) => Promise<void>;
   useCheckTrace: (shouldFetch: boolean) => SWRResponse;
   useInitUserState: (
@@ -76,7 +76,7 @@ export const createCommonSlice: StateCreator<
 
           if (data) {
             // merge settings
-            const serverSettings: DeepPartial<UserSettings> = {
+            const serverSettings: PartialDeep<UserSettings> = {
               defaultAgent: serverConfig.defaultAgent,
               languageModel: serverConfig.languageModel,
               systemAgent: serverConfig.systemAgent,
@@ -118,7 +118,14 @@ export const createCommonSlice: StateCreator<
               false,
               n('initUserState'),
             );
-
+            //analytics
+            const analytics = getSingletonAnalyticsOptional();
+            analytics?.identify(data.userId || '', {
+              email: data.email,
+              firstName: data.firstName,
+              lastName: data.lastName,
+              username: data.username,
+            });
             get().refreshDefaultModelProviderList({ trigger: 'fetchUserState' });
           }
         },

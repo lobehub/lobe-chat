@@ -1,3 +1,4 @@
+import { useAnalytics } from '@lobehub/analytics/react';
 import { Empty } from 'antd';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
@@ -9,8 +10,10 @@ import LazyLoad from 'react-lazy-load';
 import { SESSION_CHAT_URL } from '@/const/url';
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
+import { getSessionStoreState, useSessionStore } from '@/store/session';
+import { sessionGroupSelectors, sessionSelectors } from '@/store/session/selectors';
+import { getUserStoreState } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
 import { LobeAgentSession } from '@/types/session';
 
 import SkeletonList from '../../SkeletonList';
@@ -29,6 +32,7 @@ interface SessionListProps {
 }
 const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton = true }) => {
   const { t } = useTranslation('chat');
+  const { analytics } = useAnalytics();
   const { styles } = useStyles();
 
   const isInit = useSessionStore(sessionSelectors.isSessionListInit);
@@ -49,6 +53,35 @@ const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton
           onClick={(e) => {
             e.preventDefault();
             switchSession(id);
+
+            // Enhanced analytics tracking
+            if (analytics) {
+              const userStore = getUserStoreState();
+              const sessionStore = getSessionStoreState();
+
+              const userId = userProfileSelectors.userId(userStore);
+              const session = sessionSelectors.getSessionById(id)(sessionStore);
+
+              if (session) {
+                const sessionGroupId = session.group || 'default';
+                const group = sessionGroupSelectors.getGroupById(sessionGroupId)(sessionStore);
+                const groupName =
+                  group?.name || (sessionGroupId === 'default' ? 'Default' : 'Unknown');
+
+                analytics?.track({
+                  name: 'switch_session',
+                  properties: {
+                    assistant_name: session.meta?.title || 'Untitled Agent',
+                    assistant_tags: session.meta?.tags || [],
+                    group_id: sessionGroupId,
+                    group_name: groupName,
+                    session_id: id,
+                    spm: 'homepage.chat.session_list_item.click',
+                    user_id: userId || 'anonymous',
+                  },
+                });
+              }
+            }
           }}
         >
           <SessionItem id={id} />
