@@ -51,6 +51,7 @@ const CommonSTT = memo<{
     return (
       <Dropdown
         menu={{
+          // @ts-expect-error 等待 antd 修复
           activeKey: 'time',
           items: [
             {

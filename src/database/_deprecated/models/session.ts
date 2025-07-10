@@ -1,4 +1,4 @@
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 
 import { DEFAULT_AGENT_LOBE_SESSION } from '@/const/session';
 import { BaseModel } from '@/database/_deprecated/core';
@@ -232,7 +232,7 @@ class _SessionModel extends BaseModel {
     return super._updateWithSync(id, data);
   }
 
-  async updateConfig(id: string, data: DeepPartial<LobeAgentConfig>) {
+  async updateConfig(id: string, data: PartialDeep<LobeAgentConfig>) {
     const session = await this.findById(id);
     if (!session) return;
 

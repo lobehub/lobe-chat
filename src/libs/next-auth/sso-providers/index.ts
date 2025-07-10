@@ -13,6 +13,7 @@ import MicrosoftEntraID from './microsoft-entra-id';
 import WeChat from './wechat';
 import Zitadel from './zitadel';
 import Okta from './okta';
+import Cognito from "./cognito";
 
 export const ssoProviders = [
   Auth0,
@@ -30,4 +31,5 @@ export const ssoProviders = [
   Keycloak,
   Google,
   Okta
+  Cognito
 ];
