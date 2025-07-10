@@ -1,4 +1,4 @@
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { UserModel } from '@/database/_deprecated/models/user';
@@ -57,7 +57,7 @@ describe('ClientService', () => {
   });
 
   it('should update user settings correctly', async () => {
-    const settingsPatch: DeepPartial<UserSettings> = { general: { fontSize: 12 } };
+    const settingsPatch: PartialDeep<UserSettings> = { general: { fontSize: 12 } };
     (UserModel.updateSettings as Mock).mockResolvedValue(undefined);
 
     await clientService.updateUserSettings(settingsPatch);
