@@ -2,6 +2,73 @@
 
 # Changelog
 
+### [Version 1.97.3](https://github.com/lobehub/lobe-chat/compare/v1.97.2...v1.97.3)
+
+<sup>Released on **2025-07-10**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.97.2](https://github.com/lobehub/lobe-chat/compare/v1.97.1...v1.97.2)
+
+<sup>Released on **2025-07-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Implement data analytics event tracking framework.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Implement data analytics event tracking framework, closes [#8352](https://github.com/lobehub/lobe-chat/issues/8352) ([f433aca](https://github.com/lobehub/lobe-chat/commit/f433aca))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.97.1](https://github.com/lobehub/lobe-chat/compare/v1.97.0...v1.97.1)
+
+<sup>Released on **2025-07-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix locale hydration error in SSR.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix locale hydration error in SSR, closes [#8365](https://github.com/lobehub/lobe-chat/issues/8365) ([63f482a](https://github.com/lobehub/lobe-chat/commit/63f482a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.97.0](https://github.com/lobehub/lobe-chat/compare/v1.96.20...v1.97.0)
 
 <sup>Released on **2025-07-08**</sup>
