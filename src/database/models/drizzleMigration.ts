@@ -1,3 +1,5 @@
+import { sql } from 'drizzle-orm';
+
 import { LobeChatDatabase } from '@/database/type';
 import { MigrationTableItem } from '@/types/clientDB';
 
@@ -7,6 +9,19 @@ export class DrizzleMigrationModel {
   constructor(db: LobeChatDatabase) {
     this.db = db;
   }
+
+  getTableCounts = async () => {
+    // 这里使用 pg_tables 系统表查询用户表数量
+    const result = await this.db.execute(
+      sql`
+        SELECT COUNT(*) as table_count
+        FROM information_schema.tables
+        WHERE table_schema = 'public'
+      `,
+    );
+
+    return parseInt((result.rows[0] as any).table_count || '0');
+  };
 
   getMigrationList = async () => {
     const res = await this.db.execute(

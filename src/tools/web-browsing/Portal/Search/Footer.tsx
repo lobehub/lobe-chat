@@ -1,5 +1,4 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
-import { Button } from 'antd';
+import { ActionIcon, Button } from '@lobehub/ui';
 import { LucideNotepadText, PlusSquareIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -12,7 +11,7 @@ const Footer = () => {
     chatPortalSelectors.toolMessageId(s),
     chatSelectors.isAIGenerating(s),
     s.triggerAIMessage,
-    s.saveSearXNGSearchResult,
+    s.saveSearchResult,
   ]);
 
   const { t } = useTranslation('tool');
@@ -20,7 +19,7 @@ const Footer = () => {
   return (
     <Flexbox gap={8} horizontal paddingBlock={12} paddingInline={12}>
       <Button
-        icon={<Icon icon={LucideNotepadText} />}
+        icon={LucideNotepadText}
         loading={isAIGenerating}
         onClick={() => {
           if (!messageId) return;

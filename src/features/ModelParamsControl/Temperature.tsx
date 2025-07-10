@@ -34,7 +34,7 @@ const Warning = memo(() => {
         message={t('settingModel.temperature.warning')}
         style={{ fontSize: 12 }}
         type={'warning'}
-        variant={'pure'}
+        variant={'borderless'}
       />
     )
   );
@@ -61,6 +61,11 @@ const Temperature = memo<TemperatureProps>(({ value, onChange }) => {
         size={'small'}
         step={0.1}
         style={{ height: 48 }}
+        styles={{
+          input: {
+            maxWidth: 64,
+          },
+        }}
         value={value}
       />
       <Warning />

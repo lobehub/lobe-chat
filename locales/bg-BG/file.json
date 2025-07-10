@@ -71,6 +71,9 @@
     "websites": "Уебсайтове"
   },
   "title": "Файлове",
+  "toggleLeftPanel": {
+    "title": "Покажи/Скрий лявото панел"
+  },
   "uploadDock": {
     "body": {
       "collapse": "Скрий",

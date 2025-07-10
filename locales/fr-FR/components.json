@@ -88,9 +88,14 @@
     "emptyModel": "Aucun modèle activé. Veuillez vous rendre dans les paramètres pour l'activer.",
     "emptyProvider": "Aucun fournisseur activé, veuillez aller dans les paramètres pour l'activer",
     "goToSettings": "Aller aux paramètres",
-    "provider": "Fournisseur"
+    "provider": "Fournisseur",
+    "title": "Modèle"
   },
   "OllamaSetupGuide": {
+    "action": {
+      "close": "Fermer l'invite",
+      "start": "Installé et en cours d'exécution, commencer la conversation"
+    },
     "cors": {
       "description": "En raison des restrictions de sécurité des navigateurs, vous devez configurer les paramètres CORS pour utiliser Ollama correctement.",
       "linux": {

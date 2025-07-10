@@ -4,7 +4,10 @@ import { useState } from 'react';
 
 import { ImageType, getImageUrl } from './useScreenshot';
 
-export const useImgToClipboard = ({ id = '#preview', width }: { id?: string; width?: number }) => {
+export const useImgToClipboard = ({
+  id = '#preview',
+  width,
+}: { id?: string; width?: number } = {}) => {
   const [loading, setLoading] = useState(false);
   const { message } = App.useApp();
 

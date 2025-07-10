@@ -166,6 +166,7 @@ export default {
     },
     download: {
       desc: 'Ollama 正在下载该模型，请尽量不要关闭本页面。重新下载时将会中断处继续',
+      failed: '模型下载失败，请检查网络或者 Ollama 设置后重试',
       remainingTime: '剩余时间',
       speed: '下载速度',
       title: '正在下载模型 {{model}} ',
@@ -209,6 +210,10 @@ export default {
         title: '使用客户端请求模式',
       },
       helpDoc: '配置教程',
+      responsesApi: {
+        desc: '采用 OpenAI 新一代请求格式规范，解锁思维链等进阶特性',
+        title: '使用 Responses API 规范',
+      },
       waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待',
     },
     createNew: {

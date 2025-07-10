@@ -1,16 +1,18 @@
 'use client';
 
-import { Avatar, Form, Icon, ItemGroup, Tooltip } from '@lobehub/ui';
-import { Button, Empty, Space, Switch, Tag, Typography } from 'antd';
+import { Avatar, Button, Form, type FormGroupItemType, Tag, Tooltip } from '@lobehub/ui';
+import { Empty, Space, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { LucideTrash2, Store } from 'lucide-react';
+import Link from 'next/link';
 import { memo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import PluginAvatar from '@/components/Plugins/PluginAvatar';
+import PluginTag from '@/components/Plugins/PluginTag';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import PluginStore from '@/features/PluginStore';
-import PluginTag from '@/features/PluginStore/PluginItem/PluginTag';
 import { useFetchInstalledPlugins } from '@/hooks/useFetchInstalledPlugins';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { pluginHelpers, useToolStore } from '@/store/tool';
@@ -45,7 +47,7 @@ const AgentPlugin = memo(() => {
     const isCustomPlugin = type === 'customPlugin';
 
     return {
-      avatar: <Avatar avatar={pluginHelpers.getPluginAvatar(meta)} style={{ flex: 'none' }} />,
+      avatar: <PluginAvatar avatar={pluginHelpers.getPluginAvatar(meta)} size={40} />,
       children: isCustomPlugin ? (
         <LocalPluginItem id={identifier} />
       ) : (
@@ -58,6 +60,7 @@ const AgentPlugin = memo(() => {
           <PluginTag author={author} type={type} />
         </Flexbox>
       ),
+      layout: 'horizontal',
       minWidth: undefined,
     };
   });
@@ -68,7 +71,7 @@ const AgentPlugin = memo(() => {
   const deprecatedList = userEnabledPlugins
     .filter((pluginId) => !installedPlugins.some((p) => p.identifier === pluginId))
     .map((id) => ({
-      avatar: <Avatar avatar={'♻️'} />,
+      avatar: <Avatar avatar={'♻️'} size={40} />,
       children: (
         <Switch
           checked={true}
@@ -80,11 +83,10 @@ const AgentPlugin = memo(() => {
       label: (
         <Flexbox align={'center'} gap={8} horizontal>
           {id}
-          <Tag bordered={false} color={'red'}>
-            {t('plugin.installStatus.deprecated')}
-          </Tag>
+          <Tag color={'red'}>{t('plugin.installStatus.deprecated')}</Tag>
         </Flexbox>
       ),
+      layout: 'horizontal',
       minWidth: undefined,
       tag: id,
     }));
@@ -99,7 +101,7 @@ const AgentPlugin = memo(() => {
       {hasDeprecated ? (
         <Tooltip title={t('plugin.clearDeprecated')}>
           <Button
-            icon={<Icon icon={LucideTrash2} />}
+            icon={LucideTrash2}
             onClick={(e) => {
               e.stopPropagation();
               for (const i of deprecatedList) {
@@ -112,7 +114,7 @@ const AgentPlugin = memo(() => {
       ) : null}
       <Tooltip title={t('plugin.store')}>
         <Button
-          icon={<Icon icon={Store} />}
+          icon={Store}
           onClick={(e) => {
             e.stopPropagation();
             setShowStore(true);
@@ -129,7 +131,7 @@ const AgentPlugin = memo(() => {
         description={
           <Trans i18nKey={'plugin.empty'} ns={'setting'}>
             暂无安装插件，
-            <Typography.Link
+            <Link
               href={'/'}
               onClick={(e) => {
                 e.preventDefault();
@@ -137,7 +139,7 @@ const AgentPlugin = memo(() => {
               }}
             >
               前往插件市场
-            </Typography.Link>
+            </Link>
             安装
           </Trans>
         }
@@ -146,7 +148,7 @@ const AgentPlugin = memo(() => {
     </Center>
   );
 
-  const plugin: ItemGroup = {
+  const plugin: FormGroupItemType = {
     children: isLoading ? loadingSkeleton : isEmpty ? empty : [...deprecatedList, ...list],
     extra,
     title: t('settingPlugin.title'),
@@ -155,7 +157,7 @@ const AgentPlugin = memo(() => {
   return (
     <>
       <PluginStore open={showStore} setOpen={setShowStore} />
-      <Form items={[plugin]} itemsType={'group'} variant={'pure'} {...FORM_STYLE} />
+      <Form items={[plugin]} itemsType={'group'} variant={'borderless'} {...FORM_STYLE} />
     </>
   );
 });

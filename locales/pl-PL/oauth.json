@@ -1,0 +1,56 @@
+{
+  "consent": {
+    "buttons": {
+      "accept": "Zgoda",
+      "deny": "Odmowa"
+    },
+    "description": "Aplikacja {{clientName}} prosi o autoryzację Twojego konta",
+    "error": {
+      "sessionInvalid": {
+        "message": "Sesja autoryzacyjna wygasła lub jest nieprawidłowa, proszę ponownie rozpocząć proces autoryzacji.",
+        "title": "Sesja autoryzacyjna nieprawidłowa"
+      },
+      "title": "Wystąpił błąd",
+      "unsupportedInteraction": {
+        "message": "Nieobsługiwany typ interakcji: {promptName}",
+        "title": "Nieobsługiwany typ interakcji"
+      }
+    },
+    "permissionsTitle": "Proszę o następujące uprawnienia:",
+    "redirectUri": "Zostaniesz przekierowany po pomyślnym autoryzowaniu",
+    "scope": {
+      "email": "Dostęp do Twojego adresu e-mail",
+      "offline_access": "Zezwól klientowi na dostęp do Twoich danych",
+      "openid": "Uwierzytelnienie za pomocą Twojego konta LobeChat",
+      "profile": "Dostęp do Twoich podstawowych informacji (imię, zdjęcie profilowe itp.)",
+      "sync-read": "Odczytaj swoje dane synchronizacyjne",
+      "sync-write": "Zapisz i zaktualizuj swoje dane synchronizacyjne"
+    },
+    "title": "Autoryzacja {{clientName}}"
+  },
+  "failed": {
+    "backToHome": "Powrót do strony głównej",
+    "subTitle": "Odmówiłeś autoryzacji aplikacji do dostępu do Twojego konta LobeChat",
+    "title": "Autoryzacja odrzucona"
+  },
+  "handoff": {
+    "desc": {
+      "processing": "Aplikacja przetwarza autoryzację, wkrótce przejdzie do następnej strony...",
+      "success": "Próbowano otworzyć aplikację desktopową. Jeśli aplikacja nie otworzyła się automatycznie, przełącz się ręcznie. Możesz zamknąć to okno przeglądarki później."
+    },
+    "title": {
+      "processing": "Przetwarzanie autoryzacji...",
+      "success": "Autoryzacja zakończona"
+    }
+  },
+  "login": {
+    "button": "Potwierdź logowanie",
+    "description": "Aplikacja {{clientName}} prosi o użycie Twojego konta do logowania",
+    "title": "Logowanie do {{clientName}}",
+    "userWelcome": "Witaj z powrotem, "
+  },
+  "success": {
+    "subTitle": "Pomyślnie autoryzowałeś aplikację do dostępu do Twojego konta LobeChat, możesz zamknąć tę stronę",
+    "title": "Autoryzacja zakończona sukcesem"
+  }
+}

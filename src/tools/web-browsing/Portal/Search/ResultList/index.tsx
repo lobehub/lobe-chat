@@ -1,17 +1,17 @@
 import React, { memo, useCallback } from 'react';
 import { Virtuoso } from 'react-virtuoso';
 
-import { SearchResult } from '@/types/tool/search';
+import { UniformSearchResult } from '@/types/tool/search';
 
 import Item from './SearchItem';
 
 interface ResultListProps {
-  dataSources: SearchResult[];
+  dataSources: UniformSearchResult[];
 }
 
 const ResultList = memo<ResultListProps>(({ dataSources }) => {
   const itemContent = useCallback(
-    (index: number, result: SearchResult) => <Item {...result} highlight={index < 15} />,
+    (index: number, result: UniformSearchResult) => <Item {...result} highlight={index < 15} />,
     [],
   );
 

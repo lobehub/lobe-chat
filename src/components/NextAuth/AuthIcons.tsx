@@ -1,3 +1,4 @@
+import { Google } from '@lobehub/icons';
 import {
   Auth0,
   Authelia,
@@ -20,6 +21,7 @@ const iconComponents: { [key: string]: React.ElementType } = {
   'cloudflare': Cloudflare.Color,
   'default': NextAuth.Color,
   'github': Github,
+  'google': Google.Color,
   'logto': Logto.Color,
   'microsoft-entra-id': MicrosoftEntra.Color,
   'zitadel': Zitadel.Color,
@@ -27,13 +29,13 @@ const iconComponents: { [key: string]: React.ElementType } = {
 
 /**
  * Get the auth icons component for the given id
- * @param id 
+ * @param id
  * @param size default is 36
- * @returns 
+ * @returns
  */
 const AuthIcons = (id: string, size = 36) => {
   const IconComponent = iconComponents[id] || iconComponents.default;
-  return <IconComponent size={size}/>;
+  return <IconComponent size={size} />;
 };
 
 export default AuthIcons;

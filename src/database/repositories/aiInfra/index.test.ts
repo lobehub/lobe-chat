@@ -300,7 +300,7 @@ describe('AiInfraRepos', () => {
     });
 
     it('should use builtin models', async () => {
-      const providerId = 'taichu';
+      const providerId = 'ai21';
 
       vi.spyOn(repo.aiModelModel, 'getModelListByProviderId').mockResolvedValue([]);
 
@@ -309,8 +309,8 @@ describe('AiInfraRepos', () => {
       expect(result).toHaveLength(2);
       expect(result).toEqual(
         expect.arrayContaining([
-          expect.objectContaining({ id: 'taichu_llm' }),
-          expect.objectContaining({ id: 'taichu_vl' }),
+          expect.objectContaining({ id: 'jamba-mini' }),
+          expect.objectContaining({ id: 'jamba-large' }),
         ]),
       );
     });

@@ -1,4 +1,5 @@
 import { isProviderDisableBrowserRequest } from '@/config/modelProviders';
+import { isDesktop } from '@/const/version';
 import { UserStore } from '@/store/user';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 
@@ -18,6 +19,9 @@ const providerWhitelist = new Set(['ollama']);
  */
 const isProviderFetchOnClient = (provider: GlobalLLMProviderKey | string) => (s: UserStore) => {
   const config = getProviderConfigById(provider)(s);
+
+  // if is desktop, force on Server.
+  if (isDesktop) return false;
 
   // If the provider already disable browser request in model config, force on Server.
   if (isProviderDisableBrowserRequest(provider)) return false;

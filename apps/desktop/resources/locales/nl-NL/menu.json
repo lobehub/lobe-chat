@@ -1,0 +1,70 @@
+{
+  "common": {
+    "checkUpdates": "Updates controleren..."
+  },
+  "dev": {
+    "devPanel": "Ontwikkelaarspaneel",
+    "devTools": "Ontwikkelaarstools",
+    "forceReload": "Forceer herladen",
+    "openStore": "Open opslagbestand",
+    "refreshMenu": "Menu verversen",
+    "reload": "Herladen",
+    "title": "Ontwikkeling"
+  },
+  "edit": {
+    "copy": "Kopiëren",
+    "cut": "Knippen",
+    "paste": "Plakken",
+    "redo": "Opnieuw doen",
+    "selectAll": "Alles selecteren",
+    "speech": "Spraak",
+    "startSpeaking": "Begin met voorlezen",
+    "stopSpeaking": "Stop met voorlezen",
+    "title": "Bewerken",
+    "undo": "Ongedaan maken"
+  },
+  "file": {
+    "preferences": "Voorkeuren",
+    "quit": "Afsluiten",
+    "title": "Bestand"
+  },
+  "help": {
+    "about": "Over",
+    "githubRepo": "GitHub-repo",
+    "reportIssue": "Probleem melden",
+    "title": "Hulp",
+    "visitWebsite": "Bezoek de website"
+  },
+  "macOS": {
+    "about": "Over {{appName}}",
+    "devTools": "LobeHub Ontwikkelaarstools",
+    "hide": "Verberg {{appName}}",
+    "hideOthers": "Verberg anderen",
+    "preferences": "Voorkeuren...",
+    "services": "Diensten",
+    "unhide": "Toon alles"
+  },
+  "tray": {
+    "open": "Open {{appName}}",
+    "quit": "Afsluiten",
+    "show": "Toon {{appName}}"
+  },
+  "view": {
+    "forceReload": "Forceer herladen",
+    "reload": "Herladen",
+    "resetZoom": "Zoom resetten",
+    "title": "Weergave",
+    "toggleFullscreen": "Schakel volledig scherm in/uit",
+    "zoomIn": "Inzoomen",
+    "zoomOut": "Uitzoomen"
+  },
+  "window": {
+    "bringAllToFront": "Breng alle vensters naar voren",
+    "close": "Sluiten",
+    "front": "Breng alle vensters naar voren",
+    "minimize": "Minimaliseren",
+    "title": "Venster",
+    "toggleFullscreen": "Schakel volledig scherm in/uit",
+    "zoom": "Inzoomen"
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "common": {
+    "checkUpdates": "Controlla aggiornamenti..."
+  },
+  "dev": {
+    "devPanel": "Pannello sviluppatore",
+    "devTools": "Strumenti per sviluppatori",
+    "forceReload": "Ricarica forzata",
+    "openStore": "Apri il file di archiviazione",
+    "refreshMenu": "Aggiorna menu",
+    "reload": "Ricarica",
+    "title": "Sviluppo"
+  },
+  "edit": {
+    "copy": "Copia",
+    "cut": "Taglia",
+    "paste": "Incolla",
+    "redo": "Ripeti",
+    "selectAll": "Seleziona tutto",
+    "speech": "Voce",
+    "startSpeaking": "Inizia a leggere",
+    "stopSpeaking": "Ferma la lettura",
+    "title": "Modifica",
+    "undo": "Annulla"
+  },
+  "file": {
+    "preferences": "Preferenze",
+    "quit": "Esci",
+    "title": "File"
+  },
+  "help": {
+    "about": "Informazioni",
+    "githubRepo": "Repository GitHub",
+    "reportIssue": "Segnala un problema",
+    "title": "Aiuto",
+    "visitWebsite": "Visita il sito ufficiale"
+  },
+  "macOS": {
+    "about": "Informazioni su {{appName}}",
+    "devTools": "Strumenti per sviluppatori LobeHub",
+    "hide": "Nascondi {{appName}}",
+    "hideOthers": "Nascondi altri",
+    "preferences": "Impostazioni...",
+    "services": "Servizi",
+    "unhide": "Mostra tutto"
+  },
+  "tray": {
+    "open": "Apri {{appName}}",
+    "quit": "Esci",
+    "show": "Mostra {{appName}}"
+  },
+  "view": {
+    "forceReload": "Ricarica forzata",
+    "reload": "Ricarica",
+    "resetZoom": "Reimposta zoom",
+    "title": "Visualizza",
+    "toggleFullscreen": "Attiva/disattiva schermo intero",
+    "zoomIn": "Ingrandisci",
+    "zoomOut": "Riduci"
+  },
+  "window": {
+    "bringAllToFront": "Porta tutte le finestre in primo piano",
+    "close": "Chiudi",
+    "front": "Porta tutte le finestre in primo piano",
+    "minimize": "Minimizza",
+    "title": "Finestra",
+    "toggleFullscreen": "Attiva/disattiva schermo intero",
+    "zoom": "Zoom"
+  }
+}

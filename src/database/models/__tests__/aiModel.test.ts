@@ -6,7 +6,7 @@ import { LobeChatDatabase } from '@/database/type';
 import { AiProviderModelListItem } from '@/types/aiModel';
 
 import { AiModelSelectItem, NewAiModelItem, aiModels, users } from '../../schemas';
-import { AiModelModel } from '../../server/models/aiModel';
+import { AiModelModel } from '../aiModel';
 import { getTestDB } from './_util';
 
 const serverDB: LobeChatDatabase = await getTestDB();

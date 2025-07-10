@@ -133,6 +133,55 @@
       "when": 1742616026643,
       "tag": "0018_add_client_id_for_entities",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1742806552131,
+      "tag": "0019_add_hotkey_user_settings",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1744458287757,
+      "tag": "0020_add_oidc",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1744602998656,
+      "tag": "0021_add_agent_opening_settings",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1746724476380,
+      "tag": "0022_add_documents",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1748925630721,
+      "tag": "0023_remove_param_and_doubao",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1749301573666,
+      "tag": "0024_add_rbac_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1749309388370,
+      "tag": "0025_add_provider_config",
+      "breakpoints": true
     }
   ],
   "version": "6"

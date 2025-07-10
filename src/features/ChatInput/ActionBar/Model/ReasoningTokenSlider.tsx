@@ -1,4 +1,5 @@
-import { InputNumber, Slider } from 'antd';
+import { InputNumber } from '@lobehub/ui';
+import { Slider } from 'antd';
 import { memo, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import useMergeState from 'use-merge-value';
@@ -70,8 +71,7 @@ const ReasoningTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defau
           min={0}
           onChange={(e) => {
             if (!e && e !== 0) return;
-
-            updateWithRealValue(e);
+            updateWithRealValue(e as number);
           }}
           step={4 * Kibi}
           style={{ width: 60 }}

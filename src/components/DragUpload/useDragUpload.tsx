@@ -37,18 +37,22 @@ const getFileListFromDataTransferItems = async (items: DataTransferItem[]) => {
   const filePromises: Promise<File[]>[] = [];
   for (const item of items) {
     if (item.kind === 'file') {
-      const entry = item.webkitGetAsEntry();
-      if (entry) {
-        filePromises.push(processEntry(entry));
-      } else {
-        const file = item.getAsFile();
+      // Safari browser may throw error when using FileSystemFileEntry.file()
+      // So we prioritize using getAsFile() method first for better browser compatibility
+      const file = item.getAsFile();
 
-        if (file)
-          filePromises.push(
-            new Promise((resolve) => {
-              resolve([file]);
-            }),
-          );
+      if (file) {
+        filePromises.push(
+          new Promise((resolve) => {
+            resolve([file]);
+          }),
+        );
+      } else {
+        const entry = item.webkitGetAsEntry();
+
+        if (entry) {
+          filePromises.push(processEntry(entry));
+        }
       }
     }
   }

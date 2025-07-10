@@ -1,5 +1,5 @@
 import { ActionIconGroup } from '@lobehub/ui';
-import { ActionIconGroupItems } from '@lobehub/ui/es/ActionIconGroup';
+import type { ActionIconGroupItemType } from '@lobehub/ui';
 import { memo, useContext, useMemo } from 'react';
 
 import { useChatStore } from '@/store/chat';
@@ -17,8 +17,17 @@ export const AssistantActionsBar: RenderAction = memo(({ onActionClick, error, t
     threadSelectors.hasThreadBySourceMsgId(id)(s),
   ]);
 
-  const { regenerate, edit, delAndRegenerate, copy, divider, del, branching } =
-    useChatListActionsBar({ hasThread });
+  const {
+    regenerate,
+    edit,
+    delAndRegenerate,
+    copy,
+    divider,
+    del,
+    branching,
+    // export: exportPDF,
+    share,
+  } = useChatListActionsBar({ hasThread });
 
   const { translate, tts } = useCustomActions();
   const hasTools = !!tools;
@@ -29,27 +38,31 @@ export const AssistantActionsBar: RenderAction = memo(({ onActionClick, error, t
   const items = useMemo(() => {
     if (hasTools) return [delAndRegenerate, copy];
 
-    return [edit, copy, inThread ? null : branching].filter(Boolean) as ActionIconGroupItems[];
+    return [edit, copy, inThread ? null : branching].filter(Boolean) as ActionIconGroupItemType[];
   }, [inThread, hasTools]);
 
   if (error) return <ErrorActionsBar onActionClick={onActionClick} />;
 
   return (
     <ActionIconGroup
-      dropdownMenu={[
-        edit,
-        copy,
-        divider,
-        tts,
-        translate,
-        divider,
-        regenerate,
-        delAndRegenerate,
-        del,
-      ]}
       items={items}
+      menu={{
+        items: [
+          edit,
+          copy,
+          divider,
+          tts,
+          translate,
+          divider,
+          share,
+          // exportPDF,
+          divider,
+          regenerate,
+          delAndRegenerate,
+          del,
+        ],
+      }}
       onActionClick={onActionClick}
-      type="ghost"
     />
   );
 });

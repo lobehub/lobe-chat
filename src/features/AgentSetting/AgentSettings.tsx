@@ -1,26 +1,30 @@
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+import { Skeleton } from 'antd';
+import { Suspense, memo } from 'react';
 
-import AgentChat from './AgentChat';
-import AgentMeta from './AgentMeta';
-import AgentModal from './AgentModal';
-import AgentPlugin from './AgentPlugin';
-import AgentPrompt from './AgentPrompt';
+import { ChatSettingsTabs } from '@/store/global/initialState';
+import { useServerConfigStore } from '@/store/serverConfig';
+
+import AgentSettingsContent from './AgentSettingsContent';
 import { AgentSettingsProvider } from './AgentSettingsProvider';
-import AgentTTS from './AgentTTS';
 import { StoreUpdaterProps } from './StoreUpdater';
 
-type AgentSettingsProps = StoreUpdaterProps;
+export interface AgentSettingsProps extends StoreUpdaterProps {
+  tab: ChatSettingsTabs;
+}
 
-export const AgentSettings = (props: AgentSettingsProps) => {
-  const { enablePlugins } = useServerConfigStore(featureFlagsSelectors);
+const AgentSettings = memo<AgentSettingsProps>(({ tab = ChatSettingsTabs.Meta, ...rest }) => {
+  const isMobile = useServerConfigStore((s) => s.isMobile);
+  const loadingSkeleton = (
+    <Skeleton active paragraph={{ rows: 6 }} style={{ padding: isMobile ? 16 : 0 }} title={false} />
+  );
+
   return (
-    <AgentSettingsProvider {...props}>
-      <AgentPrompt />
-      <AgentMeta />
-      <AgentChat />
-      <AgentModal />
-      <AgentTTS />
-      {enablePlugins && <AgentPlugin />}
+    <AgentSettingsProvider {...rest}>
+      <Suspense fallback={loadingSkeleton}>
+        <AgentSettingsContent loadingSkeleton={loadingSkeleton} tab={tab} />
+      </Suspense>
     </AgentSettingsProvider>
   );
-};
+});
+
+export default AgentSettings;

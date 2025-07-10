@@ -1,6 +1,6 @@
 'use client';
 
-import { MobileNavBar, MobileNavBarTitle } from '@lobehub/ui/mobile';
+import { ChatHeader } from '@lobehub/ui/mobile';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,9 +13,9 @@ const Header = memo(() => {
 
   const router = useRouter();
   return (
-    <MobileNavBar
+    <ChatHeader
       center={
-        <MobileNavBarTitle
+        <ChatHeader.Title
           title={
             <Flexbox align={'center'} gap={4} horizontal>
               {t('userPanel.data')}

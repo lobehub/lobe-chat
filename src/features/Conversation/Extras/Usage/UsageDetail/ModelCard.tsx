@@ -1,6 +1,5 @@
 import { ModelIcon } from '@lobehub/icons';
-import { Icon, Tooltip } from '@lobehub/ui';
-import { Segmented } from 'antd';
+import { Icon, Segmented, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ArrowDownToDot, ArrowUpFromDot, BookUp2Icon, CircleFadingArrowUp } from 'lucide-react';
 import { memo } from 'react';

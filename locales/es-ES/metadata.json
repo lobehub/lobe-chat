@@ -13,6 +13,10 @@
       "title": "Asistentes de IA"
     },
     "description": "Creación de contenido, redacción, preguntas y respuestas, generación de imágenes, generación de videos, generación de voz, Agentes inteligentes, flujos de trabajo automatizados, aplicaciones de IA personalizadas, personaliza tu espacio de trabajo de aplicaciones AI",
+    "mcp": {
+      "description": "Busca, compara y conecta miles de servidores MCP, ayudando a los sistemas de IA a acceder fácilmente a sistemas de archivos, bases de datos, API y otros recursos clave, ampliando integralmente tus capacidades de IA",
+      "title": "Mercado de Servidores MCP"
+    },
     "models": {
       "description": "Explora los modelos de IA más populares OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek",
       "title": "Modelos de IA"

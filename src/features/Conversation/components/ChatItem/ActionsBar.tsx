@@ -1,15 +1,17 @@
-import { ActionEvent, ActionIconGroup, type ActionIconGroupProps } from '@lobehub/ui';
+import { ActionIconGroup, type ActionIconGroupEvent, type ActionIconGroupProps } from '@lobehub/ui';
 import { App } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { memo, useCallback } from 'react';
+import { memo, use, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { VirtuosoContext } from '@/features/Conversation/components/VirtualizedList/VirtuosoContext';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { MessageRoleType } from '@/types/message';
 
 import { renderActions } from '../../Actions';
 import { useChatListActionsBar } from '../../hooks/useChatListActionsBar';
+import ShareMessageModal from './ShareMessageModal';
 
 export type ActionsBarProps = ActionIconGroupProps;
 
@@ -18,9 +20,10 @@ const ActionsBar = memo<ActionsBarProps>((props) => {
 
   return (
     <ActionIconGroup
-      dropdownMenu={[edit, copy, regenerate, divider, del]}
       items={[regenerate, edit]}
-      type="ghost"
+      menu={{
+        items: [edit, copy, regenerate, divider, del],
+      }}
       {...props}
     />
   );
@@ -29,9 +32,10 @@ const ActionsBar = memo<ActionsBarProps>((props) => {
 interface ActionsProps {
   id: string;
   inPortalThread?: boolean;
+  index: number;
 }
 
-const Actions = memo<ActionsProps>(({ id, inPortalThread }) => {
+const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
   const item = useChatStore(chatSelectors.getMessageById(id), isEqual);
   const { t } = useTranslation('common');
   const [
@@ -58,12 +62,17 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread }) => {
     s.toggleMessageEditing,
   ]);
   const { message } = App.useApp();
+  const virtuosoRef = use(VirtuosoContext);
+
+  const [showShareModal, setShareModal] = useState(false);
 
   const handleActionClick = useCallback(
-    async (action: ActionEvent) => {
+    async (action: ActionIconGroupEvent) => {
       switch (action.key) {
         case 'edit': {
           toggleMessageEditing(id, true);
+
+          virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
         }
       }
       if (!item) return;
@@ -107,6 +116,16 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread }) => {
           ttsMessage(id);
           break;
         }
+
+        // case 'export': {
+        //   setModal(true);
+        //   break;
+        // }
+
+        case 'share': {
+          setShareModal(true);
+          break;
+        }
       }
 
       if (action.keyPath.at(-1) === 'translate') {
@@ -122,7 +141,23 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread }) => {
 
   const RenderFunction = renderActions[(item?.role || '') as MessageRoleType] ?? ActionsBar;
 
-  return <RenderFunction {...item!} onActionClick={handleActionClick} />;
+  if (!item) return null;
+
+  return (
+    <>
+      <RenderFunction {...item} onActionClick={handleActionClick} />
+      {/*{showModal && (*/}
+      {/*  <ExportPreview content={item.content} onClose={() => setModal(false)} open={showModal} />*/}
+      {/*)}*/}
+      <ShareMessageModal
+        message={item}
+        onCancel={() => {
+          setShareModal(false);
+        }}
+        open={showShareModal}
+      />
+    </>
+  );
 });
 
 export default Actions;

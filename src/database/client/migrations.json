@@ -383,37 +383,136 @@
   },
   {
     "sql": [
-      "ALTER TABLE \"session_groups\" DROP CONSTRAINT \"session_group_client_id_user_unique\";",
-      "\nALTER TABLE \"sessions\" DROP CONSTRAINT \"sessions_client_id_user_id_unique\";",
-      "\nALTER TABLE \"topics\" DROP CONSTRAINT \"topic_client_id_user_id_unique\";",
-      "\nALTER TABLE \"agents\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"files\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"knowledge_bases\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"message_plugins\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"message_queries\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"message_tts\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"message_translates\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"chunks\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"embeddings\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"unstructured_chunks\" ADD COLUMN \"client_id\" text;",
-      "\nALTER TABLE \"threads\" ADD COLUMN \"client_id\" text;",
-      "\nCREATE UNIQUE INDEX \"client_id_user_id_unique\" ON \"agents\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"files_client_id_user_id_unique\" ON \"files\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"knowledge_bases_client_id_user_id_unique\" ON \"knowledge_bases\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"message_plugins_client_id_user_id_unique\" ON \"message_plugins\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"message_queries_client_id_user_id_unique\" ON \"message_queries\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"message_tts_client_id_user_id_unique\" ON \"message_tts\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"message_translates_client_id_user_id_unique\" ON \"message_translates\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"chunks_client_id_user_id_unique\" ON \"chunks\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"embeddings_client_id_user_id_unique\" ON \"embeddings\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"unstructured_chunks_client_id_user_id_unique\" ON \"unstructured_chunks\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"session_groups_client_id_user_id_unique\" ON \"session_groups\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"sessions_client_id_user_id_unique\" ON \"sessions\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"threads_client_id_user_id_unique\" ON \"threads\" USING btree (\"client_id\",\"user_id\");",
-      "\nCREATE UNIQUE INDEX \"topics_client_id_user_id_unique\" ON \"topics\" USING btree (\"client_id\",\"user_id\");"
+      "ALTER TABLE \"session_groups\" DROP CONSTRAINT IF EXISTS \"session_group_client_id_user_unique\";",
+      "\nALTER TABLE \"sessions\" DROP CONSTRAINT IF EXISTS \"sessions_client_id_user_id_unique\";",
+      "\nALTER TABLE \"topics\" DROP CONSTRAINT IF EXISTS \"topic_client_id_user_id_unique\";",
+      "\n\n-- add client_id column\nALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"files\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"knowledge_bases\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"message_plugins\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"message_queries\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"message_tts\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"message_translates\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"chunks\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"embeddings\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"unstructured_chunks\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\nALTER TABLE \"threads\" ADD COLUMN IF NOT EXISTS \"client_id\" text;",
+      "\n\n-- Create unique index（using IF NOT EXISTS）\nCREATE UNIQUE INDEX IF NOT EXISTS \"client_id_user_id_unique\" ON \"agents\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"files_client_id_user_id_unique\" ON \"files\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"knowledge_bases_client_id_user_id_unique\" ON \"knowledge_bases\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"message_plugins_client_id_user_id_unique\" ON \"message_plugins\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"message_queries_client_id_user_id_unique\" ON \"message_queries\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"message_tts_client_id_user_id_unique\" ON \"message_tts\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"message_translates_client_id_user_id_unique\" ON \"message_translates\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"chunks_client_id_user_id_unique\" ON \"chunks\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"embeddings_client_id_user_id_unique\" ON \"embeddings\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"unstructured_chunks_client_id_user_id_unique\" ON \"unstructured_chunks\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"session_groups_client_id_user_id_unique\" ON \"session_groups\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"sessions_client_id_user_id_unique\" ON \"sessions\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"threads_client_id_user_id_unique\" ON \"threads\" USING btree (\"client_id\",\"user_id\");",
+      "\nCREATE UNIQUE INDEX IF NOT EXISTS \"topics_client_id_user_id_unique\" ON \"topics\" USING btree (\"client_id\",\"user_id\");\n"
     ],
     "bps": true,
     "folderMillis": 1742616026643,
-    "hash": "f885f1b1467b6564498f0d54ac2366c2d596f59bdd63a0feb63810c2ba346ae5"
+    "hash": "110a49a1a7c42ded9a9613edb8dc15fee0b4b3dd8061f871b7b42241f29987b5"
+  },
+  {
+    "sql": [
+      "-- Add hotkey column to user_settings table\nALTER TABLE \"user_settings\" ADD COLUMN IF NOT EXISTS \"hotkey\" jsonb;",
+      "\n"
+    ],
+    "bps": true,
+    "folderMillis": 1742806552131,
+    "hash": "d9032edf59f717e0e71da5a95b3545ec251c311155cafe14df01a12800a9eae0"
+  },
+  {
+    "sql": [
+      "CREATE TABLE IF NOT EXISTS \"oidc_access_tokens\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"data\" jsonb NOT NULL,\n\t\"expires_at\" timestamp with time zone NOT NULL,\n\t\"consumed_at\" timestamp with time zone,\n\t\"user_id\" text NOT NULL,\n\t\"client_id\" varchar(255) NOT NULL,\n\t\"grant_id\" varchar(255),\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"oidc_authorization_codes\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"data\" jsonb NOT NULL,\n\t\"expires_at\" timestamp with time zone NOT NULL,\n\t\"consumed_at\" timestamp with time zone,\n\t\"user_id\" text NOT NULL,\n\t\"client_id\" varchar(255) NOT NULL,\n\t\"grant_id\" varchar(255),\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"oidc_clients\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"name\" text NOT NULL,\n\t\"description\" text,\n\t\"client_secret\" varchar(255),\n\t\"redirect_uris\" text[] NOT NULL,\n\t\"grants\" text[] NOT NULL,\n\t\"response_types\" text[] NOT NULL,\n\t\"scopes\" text[] NOT NULL,\n\t\"token_endpoint_auth_method\" varchar(20),\n\t\"application_type\" varchar(20),\n\t\"client_uri\" text,\n\t\"logo_uri\" text,\n\t\"policy_uri\" text,\n\t\"tos_uri\" text,\n\t\"is_first_party\" boolean DEFAULT false,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"oidc_consents\" (\n\t\"user_id\" text NOT NULL,\n\t\"client_id\" varchar(255) NOT NULL,\n\t\"scopes\" text[] NOT NULL,\n\t\"expires_at\" timestamp with time zone,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\tCONSTRAINT \"oidc_consents_user_id_client_id_pk\" PRIMARY KEY(\"user_id\",\"client_id\")\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"oidc_device_codes\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"data\" jsonb NOT NULL,\n\t\"expires_at\" timestamp with time zone NOT NULL,\n\t\"consumed_at\" timestamp with time zone,\n\t\"user_id\" text,\n\t\"client_id\" varchar(255) NOT NULL,\n\t\"grant_id\" varchar(255),\n\t\"user_code\" varchar(255),\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"oidc_grants\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"data\" jsonb NOT NULL,\n\t\"expires_at\" timestamp with time zone NOT NULL,\n\t\"consumed_at\" timestamp with time zone,\n\t\"user_id\" text NOT NULL,\n\t\"client_id\" varchar(255) NOT NULL,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"oidc_interactions\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"data\" jsonb NOT NULL,\n\t\"expires_at\" timestamp with time zone NOT NULL,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"oidc_refresh_tokens\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"data\" jsonb NOT NULL,\n\t\"expires_at\" timestamp with time zone NOT NULL,\n\t\"consumed_at\" timestamp with time zone,\n\t\"user_id\" text NOT NULL,\n\t\"client_id\" varchar(255) NOT NULL,\n\t\"grant_id\" varchar(255),\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"oidc_sessions\" (\n\t\"id\" varchar(255) PRIMARY KEY NOT NULL,\n\t\"data\" jsonb NOT NULL,\n\t\"expires_at\" timestamp with time zone NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nALTER TABLE \"oidc_access_tokens\" ADD CONSTRAINT \"oidc_access_tokens_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"oidc_authorization_codes\" ADD CONSTRAINT \"oidc_authorization_codes_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"oidc_consents\" ADD CONSTRAINT \"oidc_consents_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"oidc_consents\" ADD CONSTRAINT \"oidc_consents_client_id_oidc_clients_id_fk\" FOREIGN KEY (\"client_id\") REFERENCES \"public\".\"oidc_clients\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"oidc_device_codes\" ADD CONSTRAINT \"oidc_device_codes_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"oidc_grants\" ADD CONSTRAINT \"oidc_grants_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"oidc_refresh_tokens\" ADD CONSTRAINT \"oidc_refresh_tokens_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"oidc_sessions\" ADD CONSTRAINT \"oidc_sessions_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;\n"
+    ],
+    "bps": true,
+    "folderMillis": 1744458287757,
+    "hash": "f3a80b900906b54ba658208cd448610647fc03f1f4d51963509c07f4e53ef4de"
+  },
+  {
+    "sql": [
+      "ALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"opening_message\" text;",
+      "\nALTER TABLE \"agents\" ADD COLUMN IF NOT EXISTS \"opening_questions\" text[] DEFAULT '{}';"
+    ],
+    "bps": true,
+    "folderMillis": 1744602998656,
+    "hash": "fdbac49ffdbe759234e760d0d48cdc1854028ea70d756a12b72f24305b4f3072"
+  },
+  {
+    "sql": [
+      "CREATE TABLE IF NOT EXISTS \"document_chunks\" (\n\t\"document_id\" varchar(30) NOT NULL,\n\t\"chunk_id\" uuid NOT NULL,\n\t\"page_index\" integer,\n\t\"user_id\" text NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\tCONSTRAINT \"document_chunks_document_id_chunk_id_pk\" PRIMARY KEY(\"document_id\",\"chunk_id\")\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"documents\" (\n\t\"id\" varchar(30) PRIMARY KEY NOT NULL,\n\t\"title\" text,\n\t\"content\" text,\n\t\"file_type\" varchar(255) NOT NULL,\n\t\"filename\" text,\n\t\"total_char_count\" integer NOT NULL,\n\t\"total_line_count\" integer NOT NULL,\n\t\"metadata\" jsonb,\n\t\"pages\" jsonb,\n\t\"source_type\" text NOT NULL,\n\t\"source\" text NOT NULL,\n\t\"file_id\" text,\n\t\"user_id\" text NOT NULL,\n\t\"client_id\" text,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
+      "\nCREATE TABLE IF NOT EXISTS \"topic_documents\" (\n\t\"document_id\" text NOT NULL,\n\t\"topic_id\" text NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\tCONSTRAINT \"topic_documents_document_id_topic_id_pk\" PRIMARY KEY(\"document_id\",\"topic_id\")\n);\n",
+      "\nALTER TABLE \"document_chunks\" ADD CONSTRAINT \"document_chunks_document_id_documents_id_fk\" FOREIGN KEY (\"document_id\") REFERENCES \"public\".\"documents\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"document_chunks\" ADD CONSTRAINT \"document_chunks_chunk_id_chunks_id_fk\" FOREIGN KEY (\"chunk_id\") REFERENCES \"public\".\"chunks\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"document_chunks\" ADD CONSTRAINT \"document_chunks_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"documents\" ADD CONSTRAINT \"documents_file_id_files_id_fk\" FOREIGN KEY (\"file_id\") REFERENCES \"public\".\"files\"(\"id\") ON DELETE set null ON UPDATE no action;",
+      "\nALTER TABLE \"documents\" ADD CONSTRAINT \"documents_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"topic_documents\" ADD CONSTRAINT \"topic_documents_document_id_documents_id_fk\" FOREIGN KEY (\"document_id\") REFERENCES \"public\".\"documents\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"topic_documents\" ADD CONSTRAINT \"topic_documents_topic_id_topics_id_fk\" FOREIGN KEY (\"topic_id\") REFERENCES \"public\".\"topics\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"topic_documents\" ADD CONSTRAINT \"topic_documents_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nCREATE INDEX \"documents_source_idx\" ON \"documents\" USING btree (\"source\");",
+      "\nCREATE INDEX \"documents_file_type_idx\" ON \"documents\" USING btree (\"file_type\");",
+      "\nCREATE INDEX \"documents_file_id_idx\" ON \"documents\" USING btree (\"file_id\");",
+      "\nCREATE UNIQUE INDEX \"documents_client_id_user_id_unique\" ON \"documents\" USING btree (\"client_id\",\"user_id\");\n"
+    ],
+    "bps": true,
+    "folderMillis": 1746724476380,
+    "hash": "0518cd9882f7ea38eb498b31c8dda73fb56bbc3aa55445ecbc7a9e716631d047"
+  },
+  {
+    "sql": [
+      "-- Custom SQL migration file, put your code below! --\nUPDATE agents SET chat_config = jsonb_set(chat_config, '{enableReasoningEffort}', 'false') WHERE chat_config ->> 'enableReasoningEffort' = 'true';\n",
+      "\nUPDATE agents SET params = params - 'reasoning_effort' WHERE params ? 'reasoning_effort';\n",
+      "\nDELETE FROM ai_providers WHERE id = 'doubao';"
+    ],
+    "bps": true,
+    "folderMillis": 1748925630721,
+    "hash": "15815e06e3b188933119f380ae12ef8694f2c5f8003cebb397ed00053a065be4"
+  },
+  {
+    "sql": [
+      "CREATE TABLE \"rbac_permissions\" (\n\t\"id\" integer PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY (sequence name \"rbac_permissions_id_seq\" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),\n\t\"code\" text NOT NULL,\n\t\"name\" text NOT NULL,\n\t\"description\" text,\n\t\"category\" text NOT NULL,\n\t\"is_active\" boolean DEFAULT true NOT NULL,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\tCONSTRAINT \"rbac_permissions_code_unique\" UNIQUE(\"code\")\n);\n",
+      "\nCREATE TABLE \"rbac_role_permissions\" (\n\t\"role_id\" integer NOT NULL,\n\t\"permission_id\" integer NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\tCONSTRAINT \"rbac_role_permissions_role_id_permission_id_pk\" PRIMARY KEY(\"role_id\",\"permission_id\")\n);\n",
+      "\nCREATE TABLE \"rbac_roles\" (\n\t\"id\" integer PRIMARY KEY GENERATED BY DEFAULT AS IDENTITY (sequence name \"rbac_roles_id_seq\" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),\n\t\"name\" text NOT NULL,\n\t\"display_name\" text NOT NULL,\n\t\"description\" text,\n\t\"is_system\" boolean DEFAULT false NOT NULL,\n\t\"is_active\" boolean DEFAULT true NOT NULL,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\tCONSTRAINT \"rbac_roles_name_unique\" UNIQUE(\"name\")\n);\n",
+      "\nCREATE TABLE \"rbac_user_roles\" (\n\t\"user_id\" text NOT NULL,\n\t\"role_id\" integer NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"expires_at\" timestamp with time zone,\n\tCONSTRAINT \"rbac_user_roles_user_id_role_id_pk\" PRIMARY KEY(\"user_id\",\"role_id\")\n);\n",
+      "\nALTER TABLE \"rbac_role_permissions\" ADD CONSTRAINT \"rbac_role_permissions_role_id_rbac_roles_id_fk\" FOREIGN KEY (\"role_id\") REFERENCES \"public\".\"rbac_roles\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"rbac_role_permissions\" ADD CONSTRAINT \"rbac_role_permissions_permission_id_rbac_permissions_id_fk\" FOREIGN KEY (\"permission_id\") REFERENCES \"public\".\"rbac_permissions\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"rbac_user_roles\" ADD CONSTRAINT \"rbac_user_roles_user_id_users_id_fk\" FOREIGN KEY (\"user_id\") REFERENCES \"public\".\"users\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nALTER TABLE \"rbac_user_roles\" ADD CONSTRAINT \"rbac_user_roles_role_id_rbac_roles_id_fk\" FOREIGN KEY (\"role_id\") REFERENCES \"public\".\"rbac_roles\"(\"id\") ON DELETE cascade ON UPDATE no action;",
+      "\nCREATE INDEX \"rbac_role_permissions_role_id_idx\" ON \"rbac_role_permissions\" USING btree (\"role_id\");",
+      "\nCREATE INDEX \"rbac_role_permissions_permission_id_idx\" ON \"rbac_role_permissions\" USING btree (\"permission_id\");",
+      "\nCREATE INDEX \"rbac_user_roles_user_id_idx\" ON \"rbac_user_roles\" USING btree (\"user_id\");",
+      "\nCREATE INDEX \"rbac_user_roles_role_id_idx\" ON \"rbac_user_roles\" USING btree (\"role_id\");"
+    ],
+    "bps": true,
+    "folderMillis": 1749301573666,
+    "hash": "a7ccf007fd185ff922823148d1eae6fafe652fc98d2fd2793f84a84f29e93cd1"
+  },
+  {
+    "sql": ["ALTER TABLE \"ai_providers\" ADD COLUMN \"config\" jsonb;"],
+    "bps": true,
+    "folderMillis": 1749309388370,
+    "hash": "39cea379f08ee4cb944875c0b67f7791387b508c2d47958bb4cd501ed1ef33eb"
   }
 ]

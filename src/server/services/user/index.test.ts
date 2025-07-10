@@ -1,15 +1,23 @@
 import { UserJSON } from '@clerk/backend';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { UserModel } from '@/database/models/user';
 import { UserItem } from '@/database/schemas';
-import { UserModel } from '@/database/server/models/user';
 import { pino } from '@/libs/logger';
 import { AgentService } from '@/server/services/agent';
 
 import { UserService } from './index';
 
+// Mock @/libs/analytics to avoid server-side environment variable access in client test environment
+vi.mock('@/libs/analytics', () => ({
+  initializeServerAnalytics: vi.fn().mockResolvedValue({
+    identify: vi.fn(),
+    track: vi.fn(),
+  }),
+}));
+
 // Mock dependencies
-vi.mock('@/database/server/models/user', () => {
+vi.mock('@/database/models/user', () => {
   const MockUserModel = vi.fn();
   // @ts-ignore
   MockUserModel.findById = vi.fn();

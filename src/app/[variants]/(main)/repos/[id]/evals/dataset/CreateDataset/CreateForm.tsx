@@ -1,21 +1,9 @@
-import { Button, Form, Input } from 'antd';
-import { css, cx } from 'antd-style';
+import { Button, Form, Input } from '@lobehub/ui';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 import { CreateNewEvalDatasets } from '@/types/eval';
-
-const formItem = css`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-
-  .ant-form-item {
-    margin-block-end: 0;
-  }
-`;
 
 interface CreateFormProps {
   knowledgeBaseId: string;
@@ -41,31 +29,30 @@ const CreateForm = memo<CreateFormProps>(({ onClose, knowledgeBaseId }) => {
   };
 
   return (
-    <Flexbox gap={8}>
-      <Form className={cx(formItem)} onFinish={onFinish}>
-        <Form.Item
-          name={'name'}
-          rules={[{ message: t('addDataset.name.required'), required: true }]}
-        >
-          <Input autoFocus placeholder={t('addDataset.name.placeholder')} />
-        </Form.Item>
-        <Form.Item name={'description'}>
-          <Input.TextArea
-            placeholder={t('addDataset.description.placeholder')}
-            style={{ minHeight: 120 }}
-          />
-        </Form.Item>
-        <Button
-          block
-          htmlType={'submit'}
-          loading={loading}
-          style={{ marginTop: 16 }}
-          type={'primary'}
-        >
+    <Form
+      footer={
+        <Button block htmlType={'submit'} loading={loading} type={'primary'}>
           {t('addDataset.confirm')}
         </Button>
-      </Form>
-    </Flexbox>
+      }
+      gap={16}
+      items={[
+        {
+          children: <Input autoFocus placeholder={t('addDataset.name.placeholder')} />,
+          label: t('addDataset.name.placeholder'),
+          name: 'name',
+          rules: [{ message: t('addDataset.name.required'), required: true }],
+        },
+        {
+          children: <Input placeholder={t('addDataset.description.placeholder')} />,
+          label: t('addDataset.description.placeholder'),
+          name: 'description',
+        },
+      ]}
+      itemsType={'flat'}
+      layout={'vertical'}
+      onFinish={onFinish}
+    />
   );
 });
 

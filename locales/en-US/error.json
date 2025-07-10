@@ -16,6 +16,16 @@
     "detail": "Error details",
     "title": "Request failed"
   },
+  "import": {
+    "importConfigFile": {
+      "description": "Error reason: {{reason}}",
+      "title": "Import Failed"
+    },
+    "incompatible": {
+      "description": "This file was exported from a higher version. Please try upgrading to the latest version and then re-importing.",
+      "title": "Current application does not support importing this file"
+    }
+  },
   "loginRequired": {
     "desc": "You will be redirected to the login page shortly",
     "title": "Please log in to use this feature"
@@ -56,6 +66,7 @@
     "429": "Sorry, your request is too frequent and the server is a bit tired. Please try again later.",
     "431": "Sorry, the header fields of your request are too large for the server to process",
     "451": "Sorry, the server refuses to provide this resource due to legal reasons",
+    "499": "We apologize, your request was unexpectedly interrupted while being processed by the server, possibly due to your cancellation of the operation or an unstable network connection. Please check your network status and try again.",
     "500": "Sorry, the server seems to be experiencing some difficulties and is temporarily unable to complete your request. Please try again later.",
     "501": "Sorry, the server does not know how to handle this request yet. Please confirm that your operation is correct.",
     "502": "Sorry, the server seems to be lost and is temporarily unable to provide service. Please try again later.",
@@ -66,9 +77,12 @@
     "507": "Sorry, the server has insufficient storage space to process your request. Please try again later.",
     "509": "Sorry, the server's bandwidth has been exhausted. Please try again later.",
     "510": "Sorry, the server does not support the requested extension. Please contact the administrator.",
-    "524": "Sorry, the server timed out while waiting for a response, possibly due to a slow reply. Please try again later.",
+    "520": "We apologize, the server encountered an unexpected issue that prevented it from completing your request. Please try again later; we are working to resolve this issue.",
+    "522": "We apologize, the server connection timed out and was unable to respond to your request in a timely manner. This may be due to an unstable network or the server being temporarily inaccessible. Please try again later; we are working to restore service.",
+    "524": "We apologize, the server timed out while waiting for a response, possibly due to a slow reply. Please try again later.",
     "AgentRuntimeError": "Lobe language model runtime execution error. Please troubleshoot or retry based on the following information.",
     "ConnectionCheckFailed": "The request returned empty. Please check if the API proxy address does not end with `/v1`.",
+    "CreateMessageError": "Sorry, the message could not be sent successfully. Please copy the content and try sending it again. This message will not be retained after refreshing the page.",
     "ExceededContextWindow": "The current request content exceeds the length that the model can handle. Please reduce the amount of content and try again.",
     "FreePlanLimit": "You are currently a free user and cannot use this feature. Please upgrade to a paid plan to continue using it.",
     "InsufficientQuota": "Sorry, the quota for this key has been reached. Please check your account balance or increase the key quota and try again.",

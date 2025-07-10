@@ -1,4 +1,5 @@
 import { createStyles } from 'antd-style';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -30,7 +31,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const FCSearchModel = () => {
+const FCSearchModel = memo(() => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
   const [searchFCModel, updateAgentChatConfig] = useAgentStore((s) => [
@@ -44,13 +45,17 @@ const FCSearchModel = () => {
         <InfoTooltip title={t('search.searchModel.desc')} />
       </Flexbox>
       <FunctionCallingModelSelect
-        onChange={(value) => {
-          updateAgentChatConfig({ searchFCModel: value });
+        onChange={async (value) => {
+          await updateAgentChatConfig({ searchFCModel: value });
+        }}
+        style={{
+          maxWidth: 160,
+          width: 160,
         }}
         value={searchFCModel}
       />
     </Flexbox>
   );
-};
+});
 
 export default FCSearchModel;

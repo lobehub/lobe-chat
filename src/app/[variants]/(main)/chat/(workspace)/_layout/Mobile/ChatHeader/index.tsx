@@ -1,6 +1,6 @@
 'use client';
 
-import { MobileNavBar } from '@lobehub/ui/mobile';
+import { ChatHeader } from '@lobehub/ui/mobile';
 import { memo, useState } from 'react';
 
 import { INBOX_SESSION_ID } from '@/const/session';
@@ -18,7 +18,7 @@ const MobileHeader = memo(() => {
   const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);
 
   return (
-    <MobileNavBar
+    <ChatHeader
       center={<ChatHeaderTitle />}
       onBackClick={() =>
         router.push('/chat', { query: { session: INBOX_SESSION_ID }, replace: true })

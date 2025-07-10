@@ -6,6 +6,7 @@
     "chat": "Preferencje czatu",
     "meta": "Informacje o asystencie",
     "modal": "Ustawienia modalne",
+    "opening": "Ustawienia otwarcia",
     "plugin": "Ustawienia wtyczki",
     "prompt": "Ustawienia roli",
     "tts": "Usługi głosowe"
@@ -41,6 +42,17 @@
     "sessionDesc": "Ustawienia postaci i preferencje sesji.",
     "sessionWithName": "Ustawienia sesji · {{name}}",
     "title": "Ustawienia"
+  },
+  "hotkey": {
+    "conflicts": "Kolizja z istniejącymi skrótami klawiszowymi",
+    "group": {
+      "conversation": "Rozmowa",
+      "essential": "Podstawowy"
+    },
+    "invalidCombination": "Skrót klawiszowy musi zawierać przynajmniej jeden klawisz modyfikujący (Ctrl, Alt, Shift) oraz jeden klawisz zwykły",
+    "record": "Naciśnij klawisz, aby nagrać skrót klawiszowy",
+    "reset": "Przywróć domyślne skróty klawiszowe",
+    "title": "Skróty klawiszowe"
   },
   "llm": {
     "aesGcm": "Twój klucz, adres proxy i inne będą szyfrowane za pomocą algorytmu szyfrowania <1>AES-GCM</1>",
@@ -117,6 +129,7 @@
     "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość"
   },
   "plugin": {
+    "addMCPPlugin": "Dodaj wtyczkę MCP",
     "addTooltip": "Dodaj niestandardowy dodatek",
     "clearDeprecated": "Usuń przestarzałe dodatki",
     "empty": "Brak zainstalowanych dodatków, zapraszamy do odwiedzenia <1>sklepu z dodatkami</1>",
@@ -138,6 +151,7 @@
       "title": "Kolor tła"
     },
     "description": {
+      "desc": "Krótki opis twojego asystenta, nie jako ustawienie postaci",
       "placeholder": "Proszę wprowadzić opis asystenta",
       "title": "Opis asystenta"
     },
@@ -149,11 +163,27 @@
       "placeholder": "Proszę wprowadzić słowo kluczowe dla roli Prompt",
       "title": "Ustawienia roli"
     },
+    "submit": "Zaktualizuj informacje o asystencie",
     "tag": {
+      "desc": "Tagi asystenta będą wyświetlane na rynku asystentów",
       "placeholder": "Proszę wprowadzić tag",
       "title": "Tag"
     },
     "title": "Informacje o asystencie"
+  },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Dostosowanie odcieni szarości w różnych kolorach",
+      "title": "Kolor neutralny"
+    },
+    "preview": {
+      "title": "Paleta kolorów"
+    },
+    "primaryColor": {
+      "desc": "Dostosowanie koloru motywu",
+      "title": "Kolor motywu"
+    },
+    "title": "Wygląd aplikacji"
   },
   "settingChat": {
     "autoCreateTopicThreshold": {
@@ -194,14 +224,56 @@
       "placeholder": "Szablon wejściowy {{text}} zostanie zastąpiony rzeczywistą wiadomością",
       "title": "Szablon wejściowy"
     },
+    "submit": "Zaktualizuj preferencje czatu",
     "title": "Ustawienia czatu"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Rozmiar czcionki w treści czatu",
+      "marks": {
+        "normal": "Standardowy"
+      },
+      "title": "Rozmiar czcionki"
+    },
+    "highlighterTheme": {
+      "title": "Motyw podświetlania kodu"
+    },
+    "mermaidTheme": {
+      "title": "Motyw Syreny"
+    },
+    "title": "Wygląd czatu",
+    "transitionMode": {
+      "desc": "Animacja przejścia wiadomości czatu",
+      "options": {
+        "fadeIn": "Pojawianie się",
+        "none": {
+          "desc": "To zależy od sposobu generowania odpowiedzi przez model, proszę przetestować samodzielnie.",
+          "value": "Brak"
+        },
+        "smooth": "Płynne"
+      },
+      "title": "Animacja przejścia"
+    }
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Podążaj za systemem",
+      "title": "Język"
+    },
+    "themeMode": {
+      "auto": "Automatyczny",
+      "dark": "Ciemny",
+      "light": "Jasny",
+      "title": "Motyw"
+    },
+    "title": "Ustawienia ogólne"
   },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Włącz limit jednorazowej odpowiedzi"
     },
     "enableReasoningEffort": {
-      "title": "Włącz dostosowanie intensywności rozumowania"
+      "title": "Włącz regulację intensywności wnioskowania"
     },
     "frequencyPenalty": {
       "desc": "Im większa wartość, tym bardziej zróżnicowane i bogate słownictwo; im mniejsza wartość, tym prostsze i bardziej bezpośrednie słownictwo",
@@ -223,14 +295,15 @@
       "title": "Różnorodność wyrażeń"
     },
     "reasoningEffort": {
-      "desc": "Im wyższa wartość, tym silniejsza zdolność rozumowania, ale może to zwiększyć czas odpowiedzi i zużycie tokenów",
+      "desc": "Im wyższa wartość, tym silniejsza zdolność wnioskowania, ale może to zwiększyć czas odpowiedzi i zużycie tokenów",
       "options": {
-        "high": "Wysoki",
-        "low": "Niski",
-        "medium": "Średni"
+        "high": "Wysoka",
+        "low": "Niska",
+        "medium": "Średnia"
       },
-      "title": "Intensywność rozumowania"
+      "title": "Intensywność wnioskowania"
     },
+    "submit": "Zaktualizuj ustawienia modelu",
     "temperature": {
       "desc": "Im większa wartość, tym bardziej kreatywne i wyobrażeniowe będą odpowiedzi; im mniejsza wartość, tym bardziej rygorystyczne odpowiedzi",
       "title": "Aktywność kreatywna",
@@ -241,6 +314,21 @@
       "desc": "Ile możliwości należy rozważyć, im większa wartość, tym więcej możliwych odpowiedzi; im mniejsza wartość, tym większa tendencja do wyboru najbardziej prawdopodobnej odpowiedzi. Nie zaleca się jednoczesnej zmiany z aktywnością kreatywną",
       "title": "Otwartość myślenia"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "Wiadomość powitalna wyświetlana przy otwarciu rozmowy, służąca do przedstawienia funkcji asystenta",
+      "placeholder": "Cześć, jestem dostosowanym asystentem, możesz od razu rozpocząć rozmowę lub przejść do ustawień asystenta, aby uzupełnić moje informacje.",
+      "title": "Wiadomość powitalna"
+    },
+    "openingQuestions": {
+      "desc": "Pytania wprowadzające wyświetlane na początku rozmowy",
+      "empty": "Brak pytań",
+      "placeholder": "Wprowadź pytanie",
+      "repeat": "Pytanie już istnieje",
+      "title": "Pytania powitalne"
+    },
+    "title": "Ustawienia otwarcia"
   },
   "settingPlugin": {
     "title": "Lista wtyczek"
@@ -292,6 +380,7 @@
       "desc": "Dla przeglądarki używana jest wbudowana usługa rozpoznawania mowy",
       "title": "Usługa rozpoznawania mowy"
     },
+    "submit": "Zaktualizuj usługę głosową",
     "title": "Usługi mowy",
     "tts": "Ustawienia syntezy mowy",
     "ttsService": {
@@ -304,36 +393,32 @@
       "title": "Głos syntezy mowy"
     }
   },
-  "settingTheme": {
-    "avatar": {
-      "title": "Awatar"
-    },
-    "fontSize": {
-      "desc": "Rozmiar czcionki wiadomości",
-      "marks": {
-        "normal": "Standardowy"
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Eksportuj",
+        "exportType": {
+          "agent": "Eksportuj ustawienia agenta",
+          "agentWithMessage": "Eksportuj ustawienia agenta i wiadomości",
+          "all": "Eksportuj globalne ustawienia i wszystkie dane agenta",
+          "allAgent": "Eksportuj wszystkie ustawienia agenta",
+          "allAgentWithMessage": "Eksportuj wszystkie agentów i wiadomości",
+          "globalSetting": "Eksportuj globalne ustawienia"
+        },
+        "title": "Eksportuj dane"
       },
-      "title": "Rozmiar czcionki"
+      "import": {
+        "button": "Importuj",
+        "title": "Importuj dane"
+      },
+      "title": "Zaawansowane operacje"
     },
-    "lang": {
-      "autoMode": "Automatycznie",
-      "title": "Język"
+    "desc": "Aktualne zużycie pamięci w przeglądarce",
+    "embeddings": {
+      "used": "Przechowywanie wektorów"
     },
-    "neutralColor": {
-      "desc": "Dostosowanie odcieni szarości z różnymi kolorami",
-      "title": "Kolor neutralny"
-    },
-    "primaryColor": {
-      "desc": "Dostosowywanie koloru motywu",
-      "title": "Kolor motywu"
-    },
-    "themeMode": {
-      "auto": "Automatyczny",
-      "dark": "Ciemny",
-      "light": "Jasny",
-      "title": "Motyw"
-    },
-    "title": "Ustawienia motywu"
+    "title": "Przechowywanie danych",
+    "used": "Zużycie pamięci"
   },
   "submitAgentModal": {
     "button": "Prześlij asystenta",
@@ -341,6 +426,12 @@
     "metaMiss": "Proszę uzupełnić informacje o asystencie przed przesłaniem, należy podać nazwę, opis i tagi",
     "placeholder": "Wprowadź identyfikator asystenta, musi być unikalny, na przykład web-development",
     "tooltips": "Udostępnij na rynku asystentów"
+  },
+  "submitFooter": {
+    "reset": "Resetuj",
+    "submit": "Zapisz",
+    "unSaved": "Nie zapisane zmiany",
+    "unSavedWarning": "Obecnie są niezapisane zmiany"
   },
   "sync": {
     "device": {
@@ -393,6 +484,7 @@
       "placeholder": "Wprowadź niestandardowe słowo podpowiedzi",
       "title": "Niestandardowe słowo podpowiedzi"
     },
+    "helpInfo": "Podczas tworzenia nowego asystenta, domyślne ustawienia asystenta będą używane jako wartości wstępne.",
     "historyCompress": {
       "label": "Model historii rozmów",
       "modelDesc": "Model używany do kompresji historii rozmów",
@@ -425,8 +517,10 @@
     "agent": "Domyślny asystent",
     "common": "Ustawienia ogólne",
     "experiment": "Eksperyment",
+    "hotkey": "Skróty klawiszowe",
     "llm": "Model językowy",
     "provider": "Dostawca usług AI",
+    "storage": "Przechowywanie danych",
     "sync": "Synchronizacja w chmurze",
     "system-agent": "System Agent",
     "tts": "Usługa głosowa"

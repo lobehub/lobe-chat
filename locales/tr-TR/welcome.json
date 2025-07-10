@@ -4,7 +4,7 @@
       "replaceBtn": "Başka bir grup",
       "title": "Yeni Asistan Önerileri:"
     },
-    "defaultMessage": "Ben sizin özel akıllı asistanınız {{appName}}. Şu anda size nasıl yardımcı olabilirim?\nDaha profesyonel veya özel bir asistan istiyorsanız, özel asistan oluşturmak için `+` butonuna tıklayabilirsiniz.",
+    "defaultMessage": "Ben sizin özel akıllı asistanınız {{appName}}. Şu anda size nasıl yardımcı olabilirim?<br />Daha profesyonel veya özel bir asistan istiyorsanız, özel asistan oluşturmak için <plus /> butonuna tıklayabilirsiniz.",
     "defaultMessageWithoutCreate": "Ben sizin özel akıllı asistanınız {{appName}}. Şu anda size nasıl yardımcı olabilirim?",
     "qa": {
       "q01": "LobeHub nedir?",

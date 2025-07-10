@@ -164,6 +164,7 @@
     },
     "download": {
       "desc": "Ollama đang tải xuống mô hình này, vui lòng không đóng trang này. Quá trình tải xuống sẽ tiếp tục từ nơi đã bị gián đoạn khi tải lại",
+      "failed": "Tải mô hình không thành công, vui lòng kiểm tra kết nối mạng hoặc cài đặt Ollama và thử lại",
       "remainingTime": "Thời gian còn lại",
       "speed": "Tốc độ tải xuống",
       "title": "Đang tải mô hình {{model}}"
@@ -207,6 +208,10 @@
         "title": "Sử dụng chế độ yêu cầu từ khách hàng"
       },
       "helpDoc": "Hướng dẫn cấu hình",
+      "responsesApi": {
+        "desc": "Sử dụng định dạng yêu cầu thế hệ mới của OpenAI, mở khóa các tính năng nâng cao như chuỗi suy nghĩ",
+        "title": "Sử dụng chuẩn Responses API"
+      },
       "waitingForMore": "Nhiều mô hình hơn đang <1>được lên kế hoạch</1>, xin hãy chờ đợi"
     },
     "createNew": {

@@ -1,9 +1,10 @@
+import { isString } from 'lodash-es';
 import qs from 'query-string';
 import urlJoin from 'url-join';
 
-import { BRANDING_NAME } from '@/const/branding';
+import { BRANDING_EMAIL, BRANDING_NAME, SOCIAL_URL } from '@/const/branding';
 import { DEFAULT_LANG } from '@/const/locale';
-import { EMAIL_BUSINESS, EMAIL_SUPPORT, OFFICIAL_SITE, OFFICIAL_URL, X } from '@/const/url';
+import { OFFICIAL_SITE, OFFICIAL_URL } from '@/const/url';
 import { Locales } from '@/locales/resources';
 import { getCanonicalUrl } from '@/server/utils/url';
 
@@ -58,7 +59,7 @@ export class Ld {
     url: string;
     webpage?: {
       enable?: boolean;
-      search?: string;
+      search?: boolean | string;
     };
   }) {
     return {
@@ -90,11 +91,11 @@ export class Ld {
       'contactPoint': {
         '@type': 'ContactPoint',
         'contactType': 'customer support',
-        'email': EMAIL_SUPPORT,
+        'email': BRANDING_EMAIL.support,
       },
       'description':
         'We are a group of e/acc design-engineers, hoping to provide modern design components and tools for AIGC, and creating a technology-driven forum, fostering knowledge interaction and the exchange of ideas that may culminate in mutual inspiration and collaborative innovation.',
-      'email': EMAIL_BUSINESS,
+      'email': BRANDING_EMAIL.business,
       'founders': [this.getAuthors(['arvinxx']), this.getAuthors(['canisminor'])],
       'image': urlJoin(OFFICIAL_SITE, '/icon-512x512.png'),
       'logo': {
@@ -104,12 +105,7 @@ export class Ld {
         'width': 512,
       },
       'name': 'LobeHub',
-      'sameAs': [
-        X,
-        'https://github.com/lobehub',
-        'https://medium.com/@lobehub',
-        'https://www.youtube.com/@lobehub',
-      ],
+      'sameAs': [SOCIAL_URL.x, SOCIAL_URL.github, SOCIAL_URL.medium, SOCIAL_URL.youtube],
       'url': OFFICIAL_SITE,
     };
   }
@@ -146,7 +142,7 @@ export class Ld {
     description: string;
     image?: string;
     locale?: Locales;
-    search?: string;
+    search?: boolean | string;
     title: string;
     url: string;
   }) {
@@ -186,7 +182,7 @@ export class Ld {
         'query-input': 'required name=search_term_string',
         'target': qs.stringifyUrl({
           query: { q: '{search_term_string}' },
-          url: getCanonicalUrl(search),
+          url: isString(search) ? getCanonicalUrl(search) : fixedUrl,
         }),
       };
 

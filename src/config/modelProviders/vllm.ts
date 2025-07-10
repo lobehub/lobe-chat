@@ -17,4 +17,4 @@ const VLLM: ModelProviderCard = {
   url: 'https://docs.vllm.ai',
 };
 
-export default VLLM; 
+export default VLLM;

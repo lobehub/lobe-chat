@@ -1,8 +1,8 @@
-import { Button } from 'antd';
+import { Button } from '@lobehub/ui';
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { configService } from '@/services/config';
+import { ClientService } from '@/services/import/_deprecated';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 
@@ -31,6 +31,7 @@ const UpgradeButton = memo<UpgradeButtonProps>(
       try {
         setUpgradeStatus(UpgradeStatus.UPGRADING);
 
+        const configService = new ClientService();
         await configService.importConfigState({
           exportType: 'sessions',
           state: state,
@@ -56,10 +57,10 @@ const UpgradeButton = memo<UpgradeButtonProps>(
 
     return (
       <Button
+        color={primary ? undefined : 'default'}
         loading={upgradeStatus === UpgradeStatus.UPGRADING}
         onClick={upgrade}
         size={'large'}
-        type={primary ? 'primary' : undefined}
       >
         {children ?? t('dbV1.action.upgrade')}
       </Button>

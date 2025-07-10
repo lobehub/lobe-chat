@@ -28,6 +28,8 @@ export const AgentSchema = z.object({
   chatConfig: AgentChatConfigSchema,
   fewShots: fewShotsSchema.optional(),
   model: z.string().default(DEFAULT_MODEL),
+  openingMessage: z.string().optional(),
+  openingQuestions: z.array(z.string()).default([]).optional(),
   params: z.object({
     frequency_penalty: z.number().default(0).optional(),
     max_tokens: z.number().optional(),

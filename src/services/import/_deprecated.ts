@@ -2,10 +2,24 @@ import { MessageModel } from '@/database/_deprecated/models/message';
 import { SessionModel } from '@/database/_deprecated/models/session';
 import { SessionGroupModel } from '@/database/_deprecated/models/sessionGroup';
 import { TopicModel } from '@/database/_deprecated/models/topic';
-import { ImportResult, ImportResults } from '@/services/config';
 import { useUserStore } from '@/store/user';
+import { ConfigFile } from '@/types/exportConfig';
 import { ImportStage, ImporterEntryData, OnImportCallbacks } from '@/types/importer';
 import { UserSettings } from '@/types/user/settings';
+
+export interface ImportResult {
+  added: number;
+  errors: number;
+  skips: number;
+  updated?: number;
+}
+export interface ImportResults {
+  messages?: ImportResult;
+  sessionGroups?: ImportResult;
+  sessions?: ImportResult;
+  topics?: ImportResult;
+  type?: string;
+}
 
 export class ClientService {
   importSettings = async (settings: UserSettings) => {
@@ -70,5 +84,32 @@ export class ClientService {
       errors: input.errors?.length || 0,
       skips: input.skips.length,
     };
+  };
+
+  importConfigState = async (config: ConfigFile, callbacks?: OnImportCallbacks): Promise<void> => {
+    if (config.exportType === 'settings') {
+      await this.importSettings(config.state.settings);
+      callbacks?.onStageChange?.(ImportStage.Success);
+      return;
+    }
+
+    if (config.exportType === 'all') {
+      await this.importSettings(config.state.settings);
+    }
+
+    await this.importData(
+      {
+        messages: (config.state as any).messages || [],
+        sessionGroups: (config.state as any).sessionGroups || [],
+        sessions: (config.state as any).sessions || [],
+        topics: (config.state as any).topics || [],
+        version: config.version,
+      },
+      callbacks,
+    );
+  };
+
+  importPgData = async () => {
+    throw new Error('Not implemented');
   };
 }

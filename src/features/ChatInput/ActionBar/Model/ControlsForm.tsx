@@ -11,7 +11,9 @@ import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selector
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 
 import ContextCachingSwitch from './ContextCachingSwitch';
+import ReasoningEffortSlider from './ReasoningEffortSlider';
 import ReasoningTokenSlider from './ReasoningTokenSlider';
+import ThinkingBudgetSlider from './ThinkingBudgetSlider';
 
 const ControlsForm = memo(() => {
   const { t } = useTranslation('chat');
@@ -67,6 +69,7 @@ const ControlsForm = memo(() => {
         </span>
       ),
       label: t('extendParams.enableReasoning.title'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'enableReasoning',
     },
@@ -79,6 +82,28 @@ const ControlsForm = memo(() => {
       style: {
         paddingBottom: 0,
       },
+    },
+    {
+      children: <ReasoningEffortSlider />,
+      desc: 'reasoning_effort',
+      label: t('extendParams.reasoningEffort.title'),
+      layout: 'horizontal',
+      minWidth: undefined,
+      name: 'reasoningEffort',
+      style: {
+        paddingBottom: 0,
+      },
+    },
+    {
+      children: <ThinkingBudgetSlider />,
+      label: t('extendParams.reasoningBudgetToken.title'),
+      layout: 'vertical',
+      minWidth: 500,
+      name: 'thinkingBudget',
+      style: {
+        paddingBottom: 0,
+      },
+      tag: 'thinkingBudget',
     },
   ].filter(Boolean) as FormItemProps[];
 
@@ -97,7 +122,7 @@ const ControlsForm = memo(() => {
       }}
       size={'small'}
       style={{ fontSize: 12 }}
-      variant={'pure'}
+      variant={'borderless'}
     />
   );
 });

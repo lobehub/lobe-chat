@@ -75,6 +75,12 @@ export const getLLMConfig = () => {
       ENABLED_VLLM: z.boolean(),
       VLLM_API_KEY: z.string().optional(),
 
+      ENABLED_XINFERENCE: z.boolean(),
+      XINFERENCE_API_KEY: z.string().optional(),
+
+      ENABLED_QINIU: z.boolean(),
+      QINIU_API_KEY: z.string().optional(),
+
       ENABLED_QWEN: z.boolean(),
       QWEN_API_KEY: z.string().optional(),
 
@@ -133,9 +139,6 @@ export const getLLMConfig = () => {
       ENABLED_HIGRESS: z.boolean(),
       HIGRESS_API_KEY: z.string().optional(),
 
-      ENABLED_DOUBAO: z.boolean(),
-      DOUBAO_API_KEY: z.string().optional(),
-
       ENABLED_VOLCENGINE: z.boolean(),
       VOLCENGINE_API_KEY: z.string().optional(),
 
@@ -159,6 +162,12 @@ export const getLLMConfig = () => {
 
       ENABLED_INFINIAI: z.boolean(),
       INFINIAI_API_KEY: z.string().optional(),
+
+      ENABLED_MODELSCOPE: z.boolean(),
+      MODELSCOPE_API_KEY: z.string().optional(),
+
+      ENABLED_V0: z.boolean(),
+      V0_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -234,6 +243,12 @@ export const getLLMConfig = () => {
       ENABLED_VLLM: !!process.env.VLLM_API_KEY,
       VLLM_API_KEY: process.env.VLLM_API_KEY,
 
+      ENABLED_XINFERENCE: !!process.env.XINFERENCE_API_KEY,
+      XINFERENCE_API_KEY: process.env.XINFERENCE_API_KEY,
+
+      ENABLED_QINIU: !!process.env.QINIU_API_KEY,
+      QINIU_API_KEY: process.env.QINIU_API_KEY,
+
       ENABLED_QWEN: !!process.env.QWEN_API_KEY,
       QWEN_API_KEY: process.env.QWEN_API_KEY,
 
@@ -293,9 +308,6 @@ export const getLLMConfig = () => {
       ENABLED_HIGRESS: !!process.env.HIGRESS_API_KEY,
       HIGRESS_API_KEY: process.env.HIGRESS_API_KEY,
 
-      ENABLED_DOUBAO: !!process.env.DOUBAO_API_KEY,
-      DOUBAO_API_KEY: process.env.DOUBAO_API_KEY,
-
       ENABLED_TENCENT_CLOUD: !!process.env.TENCENT_CLOUD_API_KEY,
       TENCENT_CLOUD_API_KEY: process.env.TENCENT_CLOUD_API_KEY,
 
@@ -316,6 +328,12 @@ export const getLLMConfig = () => {
 
       ENABLED_INFINIAI: !!process.env.INFINIAI_API_KEY,
       INFINIAI_API_KEY: process.env.INFINIAI_API_KEY,
+
+      ENABLED_MODELSCOPE: !!process.env.MODELSCOPE_API_KEY,
+      MODELSCOPE_API_KEY: process.env.MODELSCOPE_API_KEY,
+
+      ENABLED_V0: !!process.env.V0_API_KEY,
+      V0_API_KEY: process.env.V0_API_KEY,
     },
   });
 };

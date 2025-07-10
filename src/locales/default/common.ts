@@ -26,8 +26,8 @@ export default {
     showDetail: '查看详情',
   },
   autoGenerate: '自动补全',
-  autoGenerateTooltip: '基于提示词自动补全助手描述',
-  autoGenerateTooltipDisabled: '请填写提示词后使用自动补全功能',
+  autoGenerateTooltip: '基于角色设定自动补全助手描述',
+  autoGenerateTooltipDisabled: '请填写角色设定后使用自动补全功能',
   back: '返回',
   batchDelete: '批量删除',
   blog: '产品博客',
@@ -186,7 +186,7 @@ export default {
   },
   fullscreen: '全屏模式',
   historyRange: '历史范围',
-  import: '导入配置',
+  importData: '导入数据',
   importModal: {
     error: {
       desc: '非常抱歉，数据导入过程发生异常。请尝试重新导入，或 <1>提交问题</1>，我们将会第一时间帮你排查问题。',
@@ -209,6 +209,7 @@ export default {
       skips: '重复跳过',
       topics: '话题',
       type: '数据类型',
+      update: '记录更新',
     },
     title: '导入数据',
     uploading: {
@@ -216,6 +217,16 @@ export default {
       restTime: '剩余时间',
       speed: '上传速度',
     },
+  },
+  importPreview: {
+    confirmImport: '确认导入',
+    tables: {
+      count: '记录数',
+      name: '表名',
+    },
+    title: '导入数据预览',
+    totalRecords: '总计将导入 {{count}} 条记录',
+    totalTables: '{{count}} 个表',
   },
   information: '社区与资讯',
   installPWA: '安装浏览器应用 (PWA)',
@@ -276,6 +287,8 @@ export default {
   rename: '重命名',
   reset: '重置',
   retry: '重试',
+  run: '运行',
+  save: '保存',
   send: '发送',
   setting: '设置',
   share: '分享',

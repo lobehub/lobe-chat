@@ -1,4 +1,4 @@
-import { Avatar, List, ListItemProps } from '@lobehub/ui';
+import { Avatar, List, type ListItemProps } from '@lobehub/ui';
 import { useHover } from 'ahooks';
 import { createStyles } from 'antd-style';
 import { memo, useMemo, useRef } from 'react';
@@ -40,7 +40,7 @@ const ListItem = memo<ListItemProps & { avatar: string; avatarBackground?: strin
           avatar={avatar}
           background={avatarBackground}
           shape="circle"
-          size={46}
+          size={40}
         />
       ),
       [isHovering, avatar, avatarBackground],

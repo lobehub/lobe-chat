@@ -1,0 +1,70 @@
+{
+  "common": {
+    "checkUpdates": "更新を確認しています..."
+  },
+  "dev": {
+    "devPanel": "開発者パネル",
+    "devTools": "開発者ツール",
+    "forceReload": "強制再読み込み",
+    "openStore": "ストレージファイルを開く",
+    "refreshMenu": "メニューを更新",
+    "reload": "再読み込み",
+    "title": "開発"
+  },
+  "edit": {
+    "copy": "コピー",
+    "cut": "切り取り",
+    "paste": "貼り付け",
+    "redo": "やり直し",
+    "selectAll": "すべて選択",
+    "speech": "音声",
+    "startSpeaking": "読み上げ開始",
+    "stopSpeaking": "読み上げ停止",
+    "title": "編集",
+    "undo": "元に戻す"
+  },
+  "file": {
+    "preferences": "設定",
+    "quit": "終了",
+    "title": "ファイル"
+  },
+  "help": {
+    "about": "について",
+    "githubRepo": "GitHub リポジトリ",
+    "reportIssue": "問題を報告",
+    "title": "ヘルプ",
+    "visitWebsite": "公式ウェブサイトを訪問"
+  },
+  "macOS": {
+    "about": "{{appName}} について",
+    "devTools": "LobeHub 開発者ツール",
+    "hide": "{{appName}} を隠す",
+    "hideOthers": "他を隠す",
+    "preferences": "環境設定...",
+    "services": "サービス",
+    "unhide": "すべて表示"
+  },
+  "tray": {
+    "open": "{{appName}} を開く",
+    "quit": "終了",
+    "show": "{{appName}} を表示"
+  },
+  "view": {
+    "forceReload": "強制再読み込み",
+    "reload": "再読み込み",
+    "resetZoom": "ズームをリセット",
+    "title": "ビュー",
+    "toggleFullscreen": "フルスクリーン切替",
+    "zoomIn": "ズームイン",
+    "zoomOut": "ズームアウト"
+  },
+  "window": {
+    "bringAllToFront": "すべてのウィンドウを前面に",
+    "close": "閉じる",
+    "front": "すべてのウィンドウを前面に",
+    "minimize": "最小化",
+    "title": "ウィンドウ",
+    "toggleFullscreen": "フルスクリーン切替",
+    "zoom": "ズーム"
+  }
+}

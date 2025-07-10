@@ -328,7 +328,7 @@ describe('LLMSettingsSliceAction', () => {
 
       const spyOn = vi.spyOn(result.current, 'refreshDefaultModelProviderList');
 
-      vi.spyOn(modelsService, 'getChatModels').mockResolvedValueOnce([]);
+      vi.spyOn(modelsService, 'getModels').mockResolvedValueOnce([]);
 
       renderHook(() => result.current.useFetchProviderModelList(provider, enabledAutoFetch));
 
@@ -347,7 +347,7 @@ describe('LLMSettingsSliceAction', () => {
 
       const spyOn = vi.spyOn(result.current, 'refreshDefaultModelProviderList');
 
-      vi.spyOn(modelsService, 'getChatModels').mockResolvedValueOnce([]);
+      vi.spyOn(modelsService, 'getModels').mockResolvedValueOnce([]);
 
       renderHook(() => result.current.useFetchProviderModelList(provider, enabledAutoFetch));
 

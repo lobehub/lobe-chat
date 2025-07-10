@@ -8,10 +8,10 @@
 # ref: https://github.com/lobehub/lobe-chat/pull/5247
 if [[ "$OSTYPE" == "darwin"* ]]; then
     # macOS
-    SED_COMMAND="sed -i ''"
+    SED_INPLACE_ARGS=('-i' '')
 else
     # not macOS
-    SED_COMMAND="sed -i"
+    SED_INPLACE_ARGS=('-i')
 fi
 
 # ======================
@@ -519,12 +519,12 @@ section_configurate_host() {
         if [[ "$ask_result" == "y" ]]; then
             PROTOCOL="https"
             # Replace all http with https
-            $SED_COMMAND "s#http://#https://#" .env
+            sed "${SED_INPLACE_ARGS[@]}" "s#http://#https://#" .env
         fi
     fi
     
     # Check if sed is installed
-    if ! command -v $SED_COMMAND &> /dev/null ; then
+    if ! command -v sed "${SED_INPLACE_ARGS[@]}" &> /dev/null ; then
         echo "sed" $(show_message "tips_no_executable")
         exit 1
     fi
@@ -553,7 +553,7 @@ section_configurate_host() {
             ask "(auth.example.com)"
             CASDOOR_HOST="$ask_result"
             # Setup callback url for Casdoor
-            $SED_COMMAND "s/"example.com"/${LOBE_HOST}/" init_data.json
+            sed "${SED_INPLACE_ARGS[@]}" "s/"example.com"/${LOBE_HOST}/" init_data.json
         ;;
         1)
             DEPLOY_MODE="ip"
@@ -566,7 +566,7 @@ section_configurate_host() {
             MINIO_HOST="${HOST}:9000"
             CASDOOR_HOST="${HOST}:8000"
             # Setup callback url for Casdoor
-            $SED_COMMAND "s/"localhost:3210"/${LOBE_HOST}/" init_data.json
+            sed "${SED_INPLACE_ARGS[@]}" "s/"localhost:3210"/${LOBE_HOST}/" init_data.json
         ;;
         *)
             echo "Invalid deploy mode: $ask_result"
@@ -575,14 +575,14 @@ section_configurate_host() {
     esac
     
     # lobe host
-    $SED_COMMAND "s#^APP_URL=.*#APP_URL=$PROTOCOL://$LOBE_HOST#" .env
+    sed "${SED_INPLACE_ARGS[@]}" "s#^APP_URL=.*#APP_URL=$PROTOCOL://$LOBE_HOST#" .env
     # auth related
-    $SED_COMMAND "s#^AUTH_URL=.*#AUTH_URL=$PROTOCOL://$LOBE_HOST/api/auth#" .env
-    $SED_COMMAND "s#^AUTH_CASDOOR_ISSUER=.*#AUTH_CASDOOR_ISSUER=$PROTOCOL://$CASDOOR_HOST#" .env
-    $SED_COMMAND "s#^origin=.*#origin=$PROTOCOL://$CASDOOR_HOST#" .env
+    sed "${SED_INPLACE_ARGS[@]}" "s#^AUTH_URL=.*#AUTH_URL=$PROTOCOL://$LOBE_HOST/api/auth#" .env
+    sed "${SED_INPLACE_ARGS[@]}" "s#^AUTH_CASDOOR_ISSUER=.*#AUTH_CASDOOR_ISSUER=$PROTOCOL://$CASDOOR_HOST#" .env
+    sed "${SED_INPLACE_ARGS[@]}" "s#^origin=.*#origin=$PROTOCOL://$CASDOOR_HOST#" .env
     # s3 related
-    $SED_COMMAND "s#^S3_PUBLIC_DOMAIN=.*#S3_PUBLIC_DOMAIN=$PROTOCOL://$MINIO_HOST#" .env
-    $SED_COMMAND "s#^S3_ENDPOINT=.*#S3_ENDPOINT=$PROTOCOL://$MINIO_HOST#" .env
+    sed "${SED_INPLACE_ARGS[@]}" "s#^S3_PUBLIC_DOMAIN=.*#S3_PUBLIC_DOMAIN=$PROTOCOL://$MINIO_HOST#" .env
+    sed "${SED_INPLACE_ARGS[@]}" "s#^S3_ENDPOINT=.*#S3_ENDPOINT=$PROTOCOL://$MINIO_HOST#" .env
     
 
     # Check if env modified success
@@ -641,12 +641,12 @@ section_regenerate_secrets() {
         echo $(show_message "security_secrect_regenerate_failed") "CASDOOR_SECRET"
     else
         # Search and replace the value of CASDOOR_SECRET in .env
-        $SED_COMMAND "s#^AUTH_CASDOOR_SECRET=.*#AUTH_CASDOOR_SECRET=${CASDOOR_SECRET}#" .env
+        sed "${SED_INPLACE_ARGS[@]}" "s#^AUTH_CASDOOR_SECRET=.*#AUTH_CASDOOR_SECRET=${CASDOOR_SECRET}#" .env
         if [ $? -ne 0 ]; then
             echo $(show_message "security_secrect_regenerate_failed") "AUTH_CASDOOR_SECRET in \`.env\`"
         fi
         # replace `clientSecrect` in init_data.json
-        $SED_COMMAND "s#dbf205949d704de81b0b5b3603174e23fbecc354#${CASDOOR_SECRET}#" init_data.json
+        sed "${SED_INPLACE_ARGS[@]}" "s#dbf205949d704de81b0b5b3603174e23fbecc354#${CASDOOR_SECRET}#" init_data.json
         if [ $? -ne 0 ]; then
             echo $(show_message "security_secrect_regenerate_failed") "AUTH_CASDOOR_SECRET in \`init_data.json\`"
         fi
@@ -660,7 +660,7 @@ section_regenerate_secrets() {
         CASDOOR_PASSWORD="123"
     else
         # replace `password` in init_data.json
-        $SED_COMMAND "s/"123"/${CASDOOR_PASSWORD}/" init_data.json
+        sed "${SED_INPLACE_ARGS[@]}" "s/"123"/${CASDOOR_PASSWORD}/" init_data.json
         if [ $? -ne 0 ]; then
             echo $(show_message "security_secrect_regenerate_failed") "CASDOOR_PASSWORD in \`init_data.json\`"
         fi
@@ -672,7 +672,7 @@ section_regenerate_secrets() {
         MINIO_ROOT_PASSWORD="YOUR_MINIO_PASSWORD"
     else
         # Search and replace the value of S3_SECRET_ACCESS_KEY in .env
-        $SED_COMMAND "s#^MINIO_ROOT_PASSWORD=.*#MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}#" .env
+        sed "${SED_INPLACE_ARGS[@]}" "s#^MINIO_ROOT_PASSWORD=.*#MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}#" .env
         if [ $? -ne 0 ]; then
             echo $(show_message "security_secrect_regenerate_failed") "MINIO_ROOT_PASSWORD in \`.env\`"
         fi

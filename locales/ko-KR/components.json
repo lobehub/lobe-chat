@@ -88,9 +88,14 @@
     "emptyModel": "활성화된 모델이 없습니다. 설정으로 이동하여 활성화하세요",
     "emptyProvider": "활성화된 서비스 제공자가 없습니다. 설정으로 가서 활성화하세요.",
     "goToSettings": "설정으로 가기",
-    "provider": "제공자"
+    "provider": "제공자",
+    "title": "모델"
   },
   "OllamaSetupGuide": {
+    "action": {
+      "close": "팝업 닫기",
+      "start": "설치 및 실행 완료, 대화 시작"
+    },
     "cors": {
       "description": "브라우저 보안 제한으로 인해 Ollama를 사용하기 위해서는 교차 출처 구성이 필요합니다.",
       "linux": {

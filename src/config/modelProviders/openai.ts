@@ -4,6 +4,23 @@ import { ModelProviderCard } from '@/types/llm';
 const OpenAI: ModelProviderCard = {
   chatModels: [
     {
+      contextWindowTokens: 1_047_576,
+      description:
+        'GPT-4.1 mini 提供了智能、速度和成本之间的平衡，使其成为许多用例中有吸引力的模型。',
+      displayName: 'GPT-4.1 mini',
+      enabled: true,
+      functionCall: true,
+      id: 'gpt-4.1-mini',
+      maxOutput: 32_768,
+      pricing: {
+        cachedInput: 0.1,
+        input: 0.4,
+        output: 1.6,
+      },
+      releasedAt: '2025-04-14',
+      vision: true,
+    },
+    {
       contextWindowTokens: 128_000,
       description:
         'o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。',
@@ -59,6 +76,21 @@ const OpenAI: ModelProviderCard = {
         input: 0.15,
         output: 0.6,
       },
+      vision: true,
+    },
+    {
+      contextWindowTokens: 128_000,
+      description:
+        'GPT-4o mini search preview 是一个专门为搜索功能优化的预览版本，具有增强的网络搜索能力和实时信息检索功能。',
+      displayName: 'GPT-4o mini Search Preview',
+      functionCall: true,
+      id: 'gpt-4o-mini-search-preview',
+      maxOutput: 16_384,
+      pricing: {
+        input: 0.15,
+        output: 0.6,
+      },
+      releasedAt: '2024-12-01',
       vision: true,
     },
     {
@@ -291,7 +323,7 @@ const OpenAI: ModelProviderCard = {
       },
     },
   ],
-  checkModel: 'gpt-4o-mini',
+  checkModel: 'gpt-4.1-nano',
   description:
     'OpenAI 是全球领先的人工智能研究机构，其开发的模型如GPT系列推动了自然语言处理的前沿。OpenAI 致力于通过创新和高效的AI解决方案改变多个行业。他们的产品具有显著的性能和经济性，广泛用于研究、商业和创新应用。',
   enabled: true,
@@ -300,10 +332,9 @@ const OpenAI: ModelProviderCard = {
   modelsUrl: 'https://platform.openai.com/docs/models',
   name: 'OpenAI',
   settings: {
+    responseAnimation: 'smooth',
     showModelFetcher: true,
-    smoothing: {
-      text: true,
-    },
+    supportResponsesApi: true,
   },
   url: 'https://openai.com',
 };

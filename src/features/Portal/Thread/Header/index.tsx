@@ -1,4 +1,5 @@
 import { ActionIcon } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import { ArrowLeftRight, XIcon } from 'lucide-react';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
@@ -9,6 +10,7 @@ import { useChatStore } from '@/store/chat';
 import Title from './Title';
 
 const Header = memo(() => {
+  const theme = useTheme();
   const [hasPortal, portalThreadId, closeThreadPortal, switchThread] = useChatStore((s) => [
     !!s.portalThreadId,
     s.portalThreadId,
@@ -19,7 +21,7 @@ const Header = memo(() => {
   return (
     <SidebarHeader
       actions={
-        <Flexbox horizontal>
+        <Flexbox gap={4} horizontal>
           {hasPortal && (
             <ActionIcon
               icon={ArrowLeftRight}
@@ -29,12 +31,17 @@ const Header = memo(() => {
                 switchThread(portalThreadId);
                 closeThreadPortal();
               }}
+              size={'small'}
             />
           )}
-          <ActionIcon icon={XIcon} onClick={closeThreadPortal} />
+          <ActionIcon icon={XIcon} onClick={closeThreadPortal} size={'small'} />
         </Flexbox>
       }
-      style={{ paddingBlock: 8, paddingInline: 8 }}
+      paddingBlock={6}
+      paddingInline={8}
+      style={{
+        background: `linear-gradient(to bottom, ${theme.colorBgContainerSecondary}, ${theme.colorFillQuaternary})`,
+      }}
       title={<Title />}
     />
   );

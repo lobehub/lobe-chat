@@ -79,6 +79,7 @@ describe('ChangelogService', () => {
   describe('getChangelogIndex', () => {
     it('should fetch and merge changelog data', async () => {
       const mockResponse = {
+        ok: true,
         json: vi.fn().mockResolvedValue({
           cloud: [{ id: 'cloud1', date: '2023-01-01', versionRange: ['1.0.0'] }],
           community: [{ id: 'community1', date: '2023-01-02', versionRange: ['1.1.0'] }],
@@ -104,6 +105,7 @@ describe('ChangelogService', () => {
     it('should return only community items when config type is community', async () => {
       service.config.type = 'community';
       const mockResponse = {
+        ok: true,
         json: vi.fn().mockResolvedValue({
           cloud: [{ id: 'cloud1', date: '2023-01-01', versionRange: ['1.0.0'] }],
           community: [{ id: 'community1', date: '2023-01-02', versionRange: ['1.1.0'] }],

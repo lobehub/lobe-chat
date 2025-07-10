@@ -88,9 +88,14 @@
     "emptyModel": "Nenhum modelo habilitado. Por favor, vá para as configurações e habilite um.",
     "emptyProvider": "Nenhum provedor ativado, por favor vá para as configurações para ativar",
     "goToSettings": "Ir para as configurações",
-    "provider": "Fornecedor"
+    "provider": "Fornecedor",
+    "title": "Modelo"
   },
   "OllamaSetupGuide": {
+    "action": {
+      "close": "Fechar aviso",
+      "start": "Instalado e em execução, iniciar conversa"
+    },
     "cors": {
       "description": "Devido a restrições de segurança do navegador, você precisa configurar o CORS para o Ollama antes de usá-lo normalmente.",
       "linux": {

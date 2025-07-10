@@ -164,6 +164,7 @@
     },
     "download": {
       "desc": "Ollama pobiera ten model, proszę nie zamykać tej strony. Wznowienie pobierania nastąpi od miejsca przerwania",
+      "failed": "Pobieranie modelu nie powiodło się, sprawdź połączenie sieciowe lub ustawienia Ollama, a następnie spróbuj ponownie",
       "remainingTime": "Pozostały czas",
       "speed": "Prędkość pobierania",
       "title": "Pobieranie modelu {{model}}"
@@ -207,6 +208,10 @@
         "title": "Użyj trybu żądania klienta"
       },
       "helpDoc": "Dokumentacja konfiguracyjna",
+      "responsesApi": {
+        "desc": "Wykorzystuje nową generację formatu zapytań OpenAI, odblokowując zaawansowane funkcje, takie jak łańcuchy myślowe",
+        "title": "Użyj specyfikacji Responses API"
+      },
       "waitingForMore": "Więcej modeli jest w <1>planach integracji</1>, proszę czekać"
     },
     "createNew": {

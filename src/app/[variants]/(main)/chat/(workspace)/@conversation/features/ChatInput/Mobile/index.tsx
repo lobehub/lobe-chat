@@ -7,8 +7,8 @@ import { memo, useRef, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import ActionBar from '@/features/ChatInput/ActionBar';
+import STT from '@/features/ChatInput/ActionBar/STT';
 import { ActionKeys } from '@/features/ChatInput/ActionBar/config';
-import STT from '@/features/ChatInput/STT';
 import SaveTopic from '@/features/ChatInput/Topic';
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';

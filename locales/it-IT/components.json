@@ -88,9 +88,14 @@
     "emptyModel": "Nessun modello attivo. Vai alle impostazioni per attivarne uno.",
     "emptyProvider": "Nessun fornitore attivo, vai alle impostazioni per attivarlo",
     "goToSettings": "Vai alle impostazioni",
-    "provider": "Provider"
+    "provider": "Provider",
+    "title": "Modello"
   },
   "OllamaSetupGuide": {
+    "action": {
+      "close": "Chiudi avviso",
+      "start": "Installato e in esecuzione, inizia la conversazione"
+    },
     "cors": {
       "description": "A causa delle restrizioni di sicurezza del browser, è necessario configurare il cross-origin per utilizzare Ollama correttamente.",
       "linux": {

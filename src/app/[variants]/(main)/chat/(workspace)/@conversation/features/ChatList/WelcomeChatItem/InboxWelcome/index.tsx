@@ -3,7 +3,7 @@
 import { FluentEmoji, Markdown } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { BRANDING_NAME } from '@/const/branding';
@@ -11,6 +11,7 @@ import { isCustomBranding } from '@/const/version';
 import { useGreeting } from '@/hooks/useGreeting';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
+import AddButton from './AddButton';
 import AgentsSuggest from './AgentsSuggest';
 import QuestionSuggest from './QuestionSuggest';
 
@@ -53,7 +54,26 @@ const InboxWelcome = memo(() => {
           <FluentEmoji emoji={'👋'} size={40} type={'anim'} />
           <h1 className={styles.title}>{greeting}</h1>
         </Flexbox>
-        <Markdown className={styles.desc} variant={'chat'}>
+        <Markdown
+          className={styles.desc}
+          customRender={(dom, context) => {
+            if (context.text.includes('<plus />')) {
+              return (
+                <Trans
+                  components={{
+                    br: <br />,
+                    plus: <AddButton />,
+                  }}
+                  i18nKey="guide.defaultMessage"
+                  ns="welcome"
+                  values={{ appName: BRANDING_NAME }}
+                />
+              );
+            }
+            return dom;
+          }}
+          variant={'chat'}
+        >
           {t(showCreateSession ? 'guide.defaultMessage' : 'guide.defaultMessageWithoutCreate', {
             appName: BRANDING_NAME,
           })}

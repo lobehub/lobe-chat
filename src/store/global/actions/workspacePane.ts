@@ -10,6 +10,7 @@ const n = setNamespace('w');
 
 export interface GlobalWorkspacePaneAction {
   switchBackToChat: (sessionId?: string) => void;
+  toggleAgentSystemRoleExpand: (agentId: string, expanded?: boolean) => void;
   toggleChatSideBar: (visible?: boolean) => void;
   toggleExpandSessionGroup: (id: string, expand: boolean) => void;
   toggleMobilePortal: (visible?: boolean) => void;
@@ -28,6 +29,21 @@ export const globalWorkspaceSlice: StateCreator<
     get().router?.push(SESSION_CHAT_URL(sessionId || INBOX_SESSION_ID, get().isMobile));
   },
 
+  toggleAgentSystemRoleExpand: (agentId, expanded) => {
+    const { status } = get();
+    const systemRoleExpandedMap = status.systemRoleExpandedMap || {};
+    const nextExpanded = typeof expanded === 'boolean' ? expanded : !systemRoleExpandedMap[agentId];
+
+    get().updateSystemStatus(
+      {
+        systemRoleExpandedMap: {
+          ...systemRoleExpandedMap,
+          [agentId]: nextExpanded,
+        },
+      },
+      n('toggleAgentSystemRoleExpand', { agentId, expanded: nextExpanded }),
+    );
+  },
   toggleChatSideBar: (newValue) => {
     const showChatSideBar =
       typeof newValue === 'boolean' ? newValue : !get().status.showChatSideBar;

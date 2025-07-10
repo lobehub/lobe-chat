@@ -88,9 +88,14 @@
     "emptyModel": "No enabled model, please go to settings to enable.",
     "emptyProvider": "Geen ingeschakelde provider, ga naar instellingen om deze in te schakelen",
     "goToSettings": "Ga naar instellingen",
-    "provider": "Provider"
+    "provider": "Provider",
+    "title": "Model"
   },
   "OllamaSetupGuide": {
+    "action": {
+      "close": "Sluit melding",
+      "start": "Geïnstalleerd en actief, begin gesprek"
+    },
     "cors": {
       "description": "Vanwege beveiligingsbeperkingen in de browser moet je cross-origin configuratie voor Ollama instellen om het correct te kunnen gebruiken.",
       "linux": {

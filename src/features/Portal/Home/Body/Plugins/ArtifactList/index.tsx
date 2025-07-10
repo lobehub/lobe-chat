@@ -1,5 +1,5 @@
-import { Avatar, Icon } from '@lobehub/ui';
-import { Skeleton, Typography } from 'antd';
+import { Avatar, Icon, Text } from '@lobehub/ui';
+import { Skeleton } from 'antd';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { Origami } from 'lucide-react';
@@ -41,7 +41,7 @@ const ArtifactList = () => {
         size={48}
       />
       <Balancer>
-        <Typography.Text type={'secondary'}>{t('emptyArtifactList')}</Typography.Text>
+        <Text type={'secondary'}>{t('emptyArtifactList')}</Text>
       </Balancer>
     </Center>
   ) : (

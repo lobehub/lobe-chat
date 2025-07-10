@@ -2,8 +2,7 @@
 
 import { CheckCircleFilled } from '@ant-design/icons';
 import { ModelIcon } from '@lobehub/icons';
-import { Alert, Highlighter, Icon } from '@lobehub/ui';
-import { Button, Select, Space } from 'antd';
+import { Alert, Button, Highlighter, Icon, Select } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { Loader2Icon } from 'lucide-react';
 import { ReactNode, memo, useState } from 'react';
@@ -25,7 +24,7 @@ const Error = memo<{ error: ChatMessageError }>(({ error }) => {
       <Alert
         extra={
           <Flexbox>
-            <Highlighter copyButtonSize={'small'} language={'json'} type={'pure'}>
+            <Highlighter actionIconSize={'small'} language={'json'} variant={'borderless'}>
               {JSON.stringify(error.body || error, null, 2)}
             </Highlighter>
           </Flexbox>
@@ -72,7 +71,7 @@ const Checker = memo<ConnectionCheckerProps>(
       // Clear previous check results immediately
       setPass(false);
       setError(undefined);
-      
+
       let isError = false;
 
       await chatService.fetchPresetTaskResult({
@@ -126,7 +125,7 @@ const Checker = memo<ConnectionCheckerProps>(
 
     return (
       <Flexbox gap={8}>
-        <Space.Compact block>
+        <Flexbox gap={8} horizontal>
           <Select
             listItemHeight={36}
             onSelect={async (value) => {
@@ -145,6 +144,10 @@ const Checker = memo<ConnectionCheckerProps>(
               );
             }}
             options={totalModels.map((id) => ({ label: id, value: id }))}
+            style={{
+              flex: 1,
+              overflow: 'hidden',
+            }}
             suffixIcon={isProviderConfigUpdating && <Icon icon={Loader2Icon} spin />}
             value={checkModel}
             virtual
@@ -152,7 +155,7 @@ const Checker = memo<ConnectionCheckerProps>(
           <Button disabled={isProviderConfigUpdating} loading={loading} onClick={checkConnection}>
             {t('llm.checker.button')}
           </Button>
-        </Space.Compact>
+        </Flexbox>
 
         {pass && (
           <Flexbox gap={4} horizontal>

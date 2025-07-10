@@ -1,4 +1,4 @@
-import { Google } from '@lobehub/icons';
+import { Exa, Google } from '@lobehub/icons';
 import { Icon } from '@lobehub/ui';
 import { Switch } from 'antd';
 import { Search } from 'lucide-react';
@@ -10,8 +10,6 @@ import { useAgentStore } from '@/store/agent';
 import { agentChatConfigSelectors, agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 
-import ExaIcon from './ExaIcon';
-
 interface SearchEngineIconProps {
   icon?: string;
 }
@@ -19,15 +17,15 @@ interface SearchEngineIconProps {
 const SearchEngineIcon = ({ icon }: SearchEngineIconProps) => {
   switch (icon) {
     case 'google': {
-      return <Google.Color />;
+      return <Google.Avatar size={20} />;
     }
 
     case 'exa': {
-      return <ExaIcon />;
+      return <Exa.Avatar size={20} />;
     }
 
     default: {
-      return <Icon icon={Search} size={{ fontSize: 16 }} />;
+      return <Icon icon={Search} size={14} />;
     }
   }
 };
@@ -57,7 +55,7 @@ const ModelBuiltinSearch = memo(() => {
       padding={'8px 12px'}
       style={{ cursor: 'pointer', userSelect: 'none' }}
     >
-      <Flexbox align={'center'} gap={4} horizontal>
+      <Flexbox align={'center'} gap={8} horizontal>
         <SearchEngineIcon icon={modelCard?.settings?.searchProvider} />
         {t('search.mode.useModelBuiltin')}
       </Flexbox>

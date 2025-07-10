@@ -1,0 +1,68 @@
+{
+  "remoteServer": {
+    "authError": "Échec de l'autorisation : {{error}}",
+    "authPending": "Veuillez terminer l'autorisation dans le navigateur",
+    "configDesc": "Connectez-vous au serveur LobeChat distant pour activer la synchronisation des données",
+    "configError": "Erreur de configuration",
+    "configTitle": "Configurer la synchronisation dans le cloud",
+    "connect": "Se connecter et autoriser",
+    "connected": "Connecté",
+    "disconnect": "Déconnexion",
+    "disconnectError": "Échec de la déconnexion",
+    "disconnected": "Déconnecté",
+    "fetchError": "Échec de la récupération de la configuration",
+    "invalidUrl": "Veuillez entrer une URL valide",
+    "serverUrl": "Adresse du serveur",
+    "statusConnected": "Connecté",
+    "statusDisconnected": "Déconnecté",
+    "urlRequired": "Veuillez entrer l'adresse du serveur"
+  },
+  "sync": {
+    "continue": "Continuer",
+    "inCloud": "Utilisation actuelle de la synchronisation dans le cloud",
+    "inLocalStorage": "Utilisation actuelle du stockage local",
+    "isIniting": "Initialisation en cours...",
+    "lobehubCloud": {
+      "description": "Version cloud fournie par l'éditeur",
+      "title": "LobeHub Cloud"
+    },
+    "local": {
+      "description": "Utilise une base de données locale, entièrement hors ligne",
+      "title": "Base de données locale"
+    },
+    "mode": {
+      "cloudSync": "Synchronisation dans le cloud",
+      "localStorage": "Stockage local",
+      "title": "Choisissez votre mode de connexion",
+      "useSelfHosted": "Utiliser une instance auto-hébergée ?"
+    },
+    "selfHosted": {
+      "description": "Version communautaire déployée par vos soins",
+      "title": "Instance auto-hébergée"
+    }
+  },
+  "updater": {
+    "checkingUpdate": "Vérification des mises à jour",
+    "checkingUpdateDesc": "Récupération des informations de version...",
+    "downloadNewVersion": "Télécharger la nouvelle version",
+    "downloadingUpdate": "Téléchargement de la mise à jour",
+    "downloadingUpdateDesc": "La mise à jour est en cours de téléchargement, veuillez patienter...",
+    "installLater": "Mettre à jour au prochain démarrage",
+    "isLatestVersion": "Vous utilisez déjà la dernière version",
+    "isLatestVersionDesc": "Super, la version {{version}} que vous utilisez est à la pointe de la technologie.",
+    "later": "Mettre à jour plus tard",
+    "newVersionAvailable": "Nouvelle version disponible",
+    "newVersionAvailableDesc": "Une nouvelle version {{version}} a été trouvée, souhaitez-vous la télécharger maintenant ?",
+    "restartAndInstall": "Installer la mise à jour et redémarrer",
+    "updateError": "Erreur de mise à jour",
+    "updateReady": "Mise à jour prête",
+    "updateReadyDesc": "La nouvelle version {{version}} a été téléchargée avec succès, redémarrez l'application pour terminer l'installation.",
+    "upgradeNow": "Mettre à jour maintenant"
+  },
+  "waitingOAuth": {
+    "cancel": "Annuler",
+    "description": "La page d'autorisation a été ouverte dans le navigateur, veuillez compléter l'autorisation dans le navigateur",
+    "helpText": "Si le navigateur ne s'est pas ouvert automatiquement, veuillez cliquer sur annuler puis réessayer",
+    "title": "En attente de connexion d'autorisation"
+  }
+}

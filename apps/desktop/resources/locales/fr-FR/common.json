@@ -1,0 +1,32 @@
+{
+  "actions": {
+    "add": "Ajouter",
+    "back": "Retour",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "delete": "Supprimer",
+    "edit": "Éditer",
+    "more": "Plus",
+    "next": "Suivant",
+    "ok": "D'accord",
+    "previous": "Précédent",
+    "refresh": "Rafraîchir",
+    "remove": "Retirer",
+    "retry": "Réessayer",
+    "save": "Enregistrer",
+    "search": "Rechercher",
+    "submit": "Soumettre"
+  },
+  "app": {
+    "description": "Votre plateforme de collaboration avec l'assistant IA",
+    "name": "LobeHub"
+  },
+  "status": {
+    "error": "Erreur",
+    "info": "Information",
+    "loading": "Chargement",
+    "success": "Succès",
+    "warning": "Avertissement"
+  }
+}

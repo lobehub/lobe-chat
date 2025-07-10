@@ -6,6 +6,7 @@
     "chat": "Préférences de discussion",
     "meta": "Informations de l'agent",
     "modal": "Paramètres du modèle",
+    "opening": "Paramètres d'ouverture",
     "plugin": "Paramètres du plugin",
     "prompt": "Configuration du rôle",
     "tts": "Service vocal"
@@ -41,6 +42,17 @@
     "sessionDesc": "Paramètres de personnage et préférences de session.",
     "sessionWithName": "Paramètres de session · {{name}}",
     "title": "Paramètres"
+  },
+  "hotkey": {
+    "conflicts": "Conflit avec les raccourcis existants",
+    "group": {
+      "conversation": "Conversation",
+      "essential": "Essentiel"
+    },
+    "invalidCombination": "Le raccourci doit contenir au moins une touche de modification (Ctrl, Alt, Shift) et une touche normale",
+    "record": "Appuyez sur une touche pour enregistrer le raccourci",
+    "reset": "Réinitialiser aux raccourcis par défaut",
+    "title": "Raccourcis clavier"
   },
   "llm": {
     "aesGcm": "Votre clé, votre adresse de proxy, etc. seront cryptées à l'aide de l'algorithme de chiffrement <1>AES-GCM</1>",
@@ -117,6 +129,7 @@
     "waitingForMore": "Plus de modèles sont en cours de <1>planification pour être ajoutés</1>, restez à l'écoute"
   },
   "plugin": {
+    "addMCPPlugin": "Ajouter un plugin MCP",
     "addTooltip": "Ajouter un plugin personnalisé",
     "clearDeprecated": "Effacer les plugins obsolètes",
     "empty": "Aucun plugin installé pour le moment, veuillez visiter <1>la boutique de plugins</1> pour explorer",
@@ -138,6 +151,7 @@
       "title": "Couleur de fond"
     },
     "description": {
+      "desc": "Une brève introduction à votre assistant, sans être une caractéristique de personnage",
       "placeholder": "Veuillez saisir la description de l'agent",
       "title": "Description de l'agent"
     },
@@ -149,11 +163,27 @@
       "placeholder": "Veuillez saisir le mot de prompt du rôle",
       "title": "Paramètre du rôle"
     },
+    "submit": "Mettre à jour les informations de l'assistant",
     "tag": {
+      "desc": "Les étiquettes de l'assistant seront affichées sur le marché des assistants",
       "placeholder": "Veuillez saisir l'étiquette",
       "title": "Étiquette"
     },
     "title": "Informations sur l'agent"
+  },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Personnalisation des nuances de gris selon les tendances de couleur",
+      "title": "Couleur neutre"
+    },
+    "preview": {
+      "title": "Palette de couleurs"
+    },
+    "primaryColor": {
+      "desc": "Couleur de thème personnalisée",
+      "title": "Couleur du thème"
+    },
+    "title": "Apparence de l'application"
   },
   "settingChat": {
     "autoCreateTopicThreshold": {
@@ -194,14 +224,56 @@
       "placeholder": "Le modèle de prétraitement {{text}} sera remplacé par les informations d'entrée en temps réel",
       "title": "Modèle de prétraitement de l'entrée utilisateur"
     },
+    "submit": "Mettre à jour les préférences de chat",
     "title": "Paramètres de chat"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Taille de la police du contenu de chat",
+      "marks": {
+        "normal": "Standard"
+      },
+      "title": "Taille de la police"
+    },
+    "highlighterTheme": {
+      "title": "Thème de surlignage de code"
+    },
+    "mermaidTheme": {
+      "title": "Thème Sirène"
+    },
+    "title": "Apparence du chat",
+    "transitionMode": {
+      "desc": "Animation de transition des messages de chat",
+      "options": {
+        "fadeIn": "Fondu en entrée",
+        "none": {
+          "desc": "Cela dépend de la manière dont le modèle génère la réponse, veuillez tester par vous-même.",
+          "value": "Aucun"
+        },
+        "smooth": "Fluide"
+      },
+      "title": "Animation de transition"
+    }
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Suivre le système",
+      "title": "Langue"
+    },
+    "themeMode": {
+      "auto": "Automatique",
+      "dark": "Sombre",
+      "light": "Clair",
+      "title": "Thème"
+    },
+    "title": "Paramètres généraux"
   },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Activer la limite de tokens par réponse"
     },
     "enableReasoningEffort": {
-      "title": "Activer l'ajustement de l'intensité de raisonnement"
+      "title": "Activer l'ajustement de l'intensité du raisonnement"
     },
     "frequencyPenalty": {
       "desc": "Plus la valeur est élevée, plus le vocabulaire est riche et varié ; plus la valeur est basse, plus le vocabulaire est simple et direct",
@@ -226,11 +298,12 @@
       "desc": "Plus la valeur est élevée, plus la capacité de raisonnement est forte, mais cela peut augmenter le temps de réponse et la consommation de jetons",
       "options": {
         "high": "Élevé",
-        "low": "Bas",
+        "low": "Faible",
         "medium": "Moyen"
       },
-      "title": "Intensité de raisonnement"
+      "title": "Intensité du raisonnement"
     },
+    "submit": "Mettre à jour les paramètres du modèle",
     "temperature": {
       "desc": "Plus la valeur est élevée, plus les réponses sont créatives et imaginatives ; plus la valeur est basse, plus les réponses sont rigoureuses",
       "title": "Niveau de créativité",
@@ -241,6 +314,21 @@
       "desc": "Considère combien de possibilités, plus la valeur est élevée, plus il accepte de réponses possibles ; plus la valeur est basse, plus il a tendance à choisir la réponse la plus probable. Il n'est pas recommandé de modifier cela en même temps que le niveau de créativité",
       "title": "Ouverture d'esprit"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "Message d'ouverture lors de l'initiation de la conversation, utilisé pour présenter les fonctionnalités de l'assistant",
+      "placeholder": "Bonjour, je suis l'assistant personnalisé, vous pouvez commencer à discuter avec moi immédiatement ou aller dans les paramètres de l'assistant pour compléter mes informations.",
+      "title": "Message d'ouverture"
+    },
+    "openingQuestions": {
+      "desc": "Questions d'orientation affichées au début de la conversation",
+      "empty": "Aucune question pour le moment",
+      "placeholder": "Veuillez entrer une question",
+      "repeat": "La question existe déjà",
+      "title": "Questions d'ouverture"
+    },
+    "title": "Paramètres d'ouverture"
   },
   "settingPlugin": {
     "title": "Liste des plugins"
@@ -292,6 +380,7 @@
       "desc": "Le service de reconnaissance vocale, où 'browser' est le service natif de reconnaissance vocale du navigateur",
       "title": "Service de reconnaissance vocale"
     },
+    "submit": "Mettre à jour le service vocal",
     "title": "Services vocaux",
     "tts": "Paramètres de synthèse vocale",
     "ttsService": {
@@ -304,36 +393,32 @@
       "title": "Voix de synthèse vocale"
     }
   },
-  "settingTheme": {
-    "avatar": {
-      "title": "Avatar"
-    },
-    "fontSize": {
-      "desc": "Taille de la police du contenu du chat",
-      "marks": {
-        "normal": "Normal"
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Exporter",
+        "exportType": {
+          "agent": "Exporter les paramètres de l'agent",
+          "agentWithMessage": "Exporter les paramètres de l'agent et les messages",
+          "all": "Exporter les paramètres globaux et toutes les données des agents",
+          "allAgent": "Exporter tous les paramètres des agents",
+          "allAgentWithMessage": "Exporter tous les agents et les messages",
+          "globalSetting": "Exporter les paramètres globaux"
+        },
+        "title": "Exporter les données"
       },
-      "title": "Taille de la police"
+      "import": {
+        "button": "Importer",
+        "title": "Importer les données"
+      },
+      "title": "Opérations avancées"
     },
-    "lang": {
-      "autoMode": "Suivre le système",
-      "title": "Langue"
+    "desc": "Utilisation du stockage dans le navigateur actuel",
+    "embeddings": {
+      "used": "Stockage des vecteurs"
     },
-    "neutralColor": {
-      "desc": "Personnalisation des nuances de gris pour différentes tendances de couleur",
-      "title": "Couleur neutre"
-    },
-    "primaryColor": {
-      "desc": "Couleur de thème personnalisée",
-      "title": "Couleur principale"
-    },
-    "themeMode": {
-      "auto": "Automatique",
-      "dark": "Sombre",
-      "light": "Clair",
-      "title": "Thème"
-    },
-    "title": "Paramètres du thème"
+    "title": "Stockage des données",
+    "used": "Utilisation du stockage"
   },
   "submitAgentModal": {
     "button": "Soumettre l'agent",
@@ -341,6 +426,12 @@
     "metaMiss": "Veuillez compléter les informations de l'agent avant de soumettre. Elles doivent inclure le nom, la description et les balises.",
     "placeholder": "Veuillez entrer l'identifiant de l'agent, qui doit être unique, par exemple développement-web",
     "tooltips": "Partager sur le marché des agents"
+  },
+  "submitFooter": {
+    "reset": "Réinitialiser",
+    "submit": "Enregistrer",
+    "unSaved": "Modifications non enregistrées",
+    "unSavedWarning": "Il y a actuellement des modifications non enregistrées"
   },
   "sync": {
     "device": {
@@ -393,6 +484,7 @@
       "placeholder": "Veuillez entrer le mot-clé personnalisé",
       "title": "Mot-clé personnalisé"
     },
+    "helpInfo": "Lors de la création d'un nouvel assistant, les paramètres par défaut de l'assistant seront utilisés comme valeurs par défaut.",
     "historyCompress": {
       "label": "Modèle d'historique de conversation",
       "modelDesc": "Modèle utilisé pour compresser l'historique des conversations",
@@ -425,8 +517,10 @@
     "agent": "Agent par défaut",
     "common": "Paramètres généraux",
     "experiment": "Expérience",
+    "hotkey": "Raccourcis clavier",
     "llm": "Modèle de langue",
     "provider": "Fournisseur de services d'IA",
+    "storage": "Stockage des données",
     "sync": "Synchronisation cloud",
     "system-agent": "Agent système",
     "tts": "Service vocal"

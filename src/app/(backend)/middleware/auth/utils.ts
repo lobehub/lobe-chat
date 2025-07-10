@@ -1,8 +1,8 @@
 import { type AuthObject } from '@clerk/backend';
 
-import { getAppConfig } from '@/config/app';
 import { enableClerk, enableNextAuth } from '@/const/auth';
-import { AgentRuntimeError } from '@/libs/agent-runtime';
+import { getAppConfig } from '@/envs/app';
+import { AgentRuntimeError } from '@/libs/model-runtime';
 import { ChatErrorType } from '@/types/fetch';
 
 interface CheckAuthParams {
@@ -28,7 +28,8 @@ export const checkAuthMethod = ({
   // clerk auth handler
   if (enableClerk) {
     // if there is no userId, means the use is not login, just throw error
-    if (!clerkAuth?.userId) throw AgentRuntimeError.createError(ChatErrorType.InvalidClerkUser);
+    if (!(clerkAuth as any)?.userId)
+      throw AgentRuntimeError.createError(ChatErrorType.InvalidClerkUser);
     // if the user is login, just return
     else return;
   }

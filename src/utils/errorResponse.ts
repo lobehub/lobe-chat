@@ -1,4 +1,4 @@
-import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
+import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/model-runtime';
 import { ChatErrorType, ErrorResponse, ErrorType } from '@/types/fetch';
 
 const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
@@ -40,6 +40,8 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
       return 471;
     }
 
+    // all local provider connection error
+    case AgentRuntimeErrorType.OllamaServiceUnavailable:
     case ChatErrorType.OllamaServiceUnavailable:
     case AgentRuntimeErrorType.OllamaBizError: {
       return 472;

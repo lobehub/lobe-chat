@@ -2,12 +2,12 @@
 import { PluginErrorType } from '@lobehub/chat-plugin-sdk';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
-import { Md5 } from 'ts-md5';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT } from '@/const/message';
 import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { chatService } from '@/services/chat';
+import { mcpService } from '@/services/mcp';
 import { messageService } from '@/services/message';
 import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
@@ -20,10 +20,12 @@ import {
   ChatToolPayload,
   CreateMessageParams,
   MessageToolCall,
+  ToolsCallingContext,
 } from '@/types/message';
 import { merge } from '@/utils/merge';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 import { setNamespace } from '@/utils/storeDebug';
+import { genToolCallShortMD5Hash } from '@/utils/toolCall';
 
 import { chatSelectors } from '../message/selectors';
 import { threadSelectors } from '../thread/selectors';
@@ -41,6 +43,7 @@ export interface ChatPluginAction {
   invokeBuiltinTool: (id: string, payload: ChatToolPayload) => Promise<void>;
   invokeDefaultTypePlugin: (id: string, payload: any) => Promise<string | undefined>;
   invokeMarkdownTypePlugin: (id: string, payload: ChatToolPayload) => Promise<void>;
+  invokeMCPTypePlugin: (id: string, payload: ChatToolPayload) => Promise<string | undefined>;
 
   invokeStandaloneTypePlugin: (id: string, payload: ChatToolPayload) => Promise<void>;
 
@@ -59,7 +62,7 @@ export interface ChatPluginAction {
     params?: { threadId?: string; inPortalThread?: boolean; inSearchWorkflow?: boolean },
   ) => Promise<void>;
   updatePluginState: (id: string, value: any) => Promise<void>;
-  updatePluginArguments: <T = any>(id: string, value: T) => Promise<void>;
+  updatePluginArguments: <T = any>(id: string, value: T, replace?: boolean) => Promise<void>;
 
   internal_addToolToAssistantMessage: (id: string, tool: ChatToolPayload) => Promise<void>;
   internal_removeToolToAssistantMessage: (id: string, tool_call_id?: string) => Promise<void>;
@@ -77,6 +80,7 @@ export interface ChatPluginAction {
   ) => AbortController | undefined;
   internal_transformToolCalls: (toolCalls: MessageToolCall[]) => ChatToolPayload[];
   internal_updatePluginError: (id: string, error: ChatMessageError) => Promise<void>;
+  internal_constructToolsCallingContext: (id: string) => ToolsCallingContext | undefined;
 }
 
 export const chatPlugin: StateCreator<
@@ -266,11 +270,12 @@ export const chatPlugin: StateCreator<
       };
 
       const id = await get().internal_createMessage(toolMessage);
+      if (!id) return;
 
       // trigger the plugin call
       const data = await get().internal_invokeDifferentTypePlugin(id, payload);
 
-      if ((payload.type === 'default' || payload.type === 'builtin') && data) {
+      if (data && !['markdown', 'standalone'].includes(payload.type)) {
         shouldCreateMessage = true;
         latestToolId = id;
       }
@@ -295,7 +300,7 @@ export const chatPlugin: StateCreator<
     await refreshMessages();
   },
 
-  updatePluginArguments: async (id, value) => {
+  updatePluginArguments: async (id, value, replace = false) => {
     const { refreshMessages } = get();
     const toolMessage = chatSelectors.getMessageById(id)(get());
     if (!toolMessage || !toolMessage?.tool_call_id) return;
@@ -304,7 +309,7 @@ export const chatPlugin: StateCreator<
 
     const prevArguments = toolMessage?.plugin?.arguments;
     const prevJson = safeParseJSON(prevArguments || '');
-    const nextValue = merge(prevJson || {}, value);
+    const nextValue = replace ? (value as any) : merge(prevJson || {}, value);
     if (isEqual(prevJson, nextValue)) return;
 
     // optimistic update
@@ -327,7 +332,9 @@ export const chatPlugin: StateCreator<
 
     const updateAssistantMessage = async () => {
       if (!assistantMessage) return;
-      await messageService.updateMessage(assistantMessage!.id, { tools: assistantMessage?.tools });
+      await messageService.updateMessage(assistantMessage!.id, {
+        tools: assistantMessage?.tools,
+      });
     };
 
     await Promise.all([
@@ -437,10 +444,57 @@ export const chatPlugin: StateCreator<
         return await get().invokeBuiltinTool(id, payload);
       }
 
+      // @ts-ignore
+      case 'mcp': {
+        return await get().invokeMCPTypePlugin(id, payload);
+      }
+
       default: {
         return await get().invokeDefaultTypePlugin(id, payload);
       }
     }
+  },
+  invokeMCPTypePlugin: async (id, payload) => {
+    const {
+      internal_updateMessageContent,
+      refreshMessages,
+      internal_togglePluginApiCalling,
+      internal_constructToolsCallingContext,
+    } = get();
+    let data: string = '';
+
+    try {
+      const abortController = internal_togglePluginApiCalling(
+        true,
+        id,
+        n('fetchPlugin/start') as string,
+      );
+
+      const context = internal_constructToolsCallingContext(id);
+      const result = await mcpService.invokeMcpToolCall(payload, {
+        signal: abortController?.signal,
+        topicId: context?.topicId,
+      });
+
+      if (!!result) data = result;
+    } catch (error) {
+      console.log(error);
+      const err = error as Error;
+
+      // ignore the aborted request error
+      if (!err.message.includes('The user aborted a request.')) {
+        await messageService.updateMessageError(id, error as any);
+        await refreshMessages();
+      }
+    }
+
+    internal_togglePluginApiCalling(false, id, n('fetchPlugin/end') as string);
+    // 如果报错则结束了
+    if (!data) return;
+
+    await internal_updateMessageContent(id, data);
+
+    return data;
   },
 
   internal_togglePluginApiCalling: (loading, id, action) => {
@@ -469,7 +523,7 @@ export const chatPlugin: StateCreator<
           const md5 = apiName.replace(PLUGIN_SCHEMA_API_MD5_PREFIX, '');
           const manifest = pluginSelectors.getToolManifestById(identifier)(useToolStore.getState());
 
-          const api = manifest?.api.find((api) => Md5.hashStr(api.name).toString() === md5);
+          const api = manifest?.api.find((api) => genToolCallShortMD5Hash(api.name) === md5);
           if (api) {
             payload.apiName = api.name;
           }
@@ -485,5 +539,14 @@ export const chatPlugin: StateCreator<
     get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } });
     await messageService.updateMessage(id, { error });
     await refreshMessages();
+  },
+
+  internal_constructToolsCallingContext: (id: string) => {
+    const message = chatSelectors.getMessageById(id)(get());
+    if (!message) return;
+
+    return {
+      topicId: message.topicId,
+    };
   },
 });
