@@ -12,4 +12,7 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
     url: '/settings/agent',
   });
 };
+
 export { default } from './index';
+
+export const dynamic = 'force-static';

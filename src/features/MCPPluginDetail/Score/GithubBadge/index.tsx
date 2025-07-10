@@ -74,6 +74,7 @@ const GithubBadge = memo(() => {
       <Snippet language={'md'} style={{ fontSize: 12 }} variant={'outlined'}>
         {badge}
       </Snippet>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img alt="MCP Badge" src={styledBadgeFullUrl} />
     </>
   );
