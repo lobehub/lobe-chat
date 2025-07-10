@@ -1,3 +1,4 @@
+import MainInterfaceTracker from '@/components/Analytics/MainInterfaceTracker';
 import MobileContentLayout from '@/components/server/MobileNavLayout';
 
 import { LayoutProps } from '../type';
@@ -13,6 +14,7 @@ const Layout = ({ children, topic, conversation, portal }: LayoutProps) => {
       </MobileContentLayout>
       <TopicModal>{topic}</TopicModal>
       {portal}
+      <MainInterfaceTracker />
     </>
   );
 };
