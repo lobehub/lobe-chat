@@ -5,7 +5,7 @@ import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '@/database/models/asyncTask'
 import { FileModel } from '@/database/models/file';
 import { GenerationModel } from '@/database/models/generation';
 import { AgentRuntimeErrorType } from '@/libs/model-runtime/error';
-import { CreateImageParams } from '@/libs/model-runtime/types/image';
+import { RuntimeImageGenParams } from '@/libs/standard-parameters/meta-schema';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
 import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { GenerationService } from '@/server/services/generation';
@@ -136,7 +136,7 @@ export const imageRouter = router({
         log('Agent runtime initialized, calling createImage');
         const response = await agentRuntime.createImage({
           model,
-          params: params as unknown as CreateImageParams,
+          params: params as unknown as RuntimeImageGenParams,
         });
 
         if (!response) {
@@ -171,7 +171,7 @@ export const imageRouter = router({
         checkAbortSignal(signal);
 
         log('Updating generation asset and file');
-        await ctx.generationModel.updateAssetAndFile(
+        await ctx.generationModel.createAssetAndFile(
           generationId,
           {
             type: 'image',

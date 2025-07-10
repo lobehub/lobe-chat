@@ -1,12 +1,8 @@
-import { StdImageGenParams } from '@/libs/standard-parameters/image';
-
-export type CreateImageParams = Partial<Omit<StdImageGenParams, 'prompt'>> & {
-  prompt: string;
-};
+import { RuntimeImageGenParams } from '@/libs/standard-parameters/meta-schema';
 
 export type CreateImagePayload = {
   model: string;
-  params: CreateImageParams;
+  params: RuntimeImageGenParams;
 };
 
 export type CreateImageResponse = {

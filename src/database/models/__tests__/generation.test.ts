@@ -116,7 +116,7 @@ beforeEach(async () => {
   // Create test file
   await serverDB.insert(files).values(testFile);
 
-  // Create a file that will be returned by the mock for updateAssetAndFile tests
+  // Create a file that will be returned by the mock for createAssetAndFile tests
   const mockFileForUpdateTest = {
     id: 'new-file-id',
     name: 'mock-generated-image.jpg',
@@ -312,7 +312,7 @@ describe('GenerationModel', () => {
     });
   });
 
-  describe('updateAssetAndFile', () => {
+  describe('createAssetAndFile', () => {
     it('should update generation asset and create file in transaction', async () => {
       const [createdGeneration] = await serverDB
         .insert(generations)
@@ -333,7 +333,7 @@ describe('GenerationModel', () => {
         fileType: 'image/jpeg',
       };
 
-      const result = await generationModel.updateAssetAndFile(
+      const result = await generationModel.createAssetAndFile(
         createdGeneration.id,
         newAsset,
         newFileData,
@@ -378,7 +378,7 @@ describe('GenerationModel', () => {
         fileType: 'image/jpeg',
       };
 
-      await generationModel.updateAssetAndFile(otherUserGeneration.id, newAsset, newFileData);
+      await generationModel.createAssetAndFile(otherUserGeneration.id, newAsset, newFileData);
 
       // Verify no changes to other user's generation
       const unchanged = await serverDB.query.generations.findFirst({
@@ -411,7 +411,7 @@ describe('GenerationModel', () => {
       };
 
       await expect(
-        generationModel.updateAssetAndFile(createdGeneration.id, newAsset, newFileData),
+        generationModel.createAssetAndFile(createdGeneration.id, newAsset, newFileData),
       ).rejects.toThrow('File creation failed');
 
       // Verify generation was not updated due to transaction rollback
@@ -737,7 +737,7 @@ describe('GenerationModel', () => {
       expect(mockGetFullFileUrl).toHaveBeenCalledTimes(2);
     });
 
-    it('should call FileModel.create with correct parameters during updateAssetAndFile', async () => {
+    it('should call FileModel.create with correct parameters during createAssetAndFile', async () => {
       const [createdGeneration] = await serverDB
         .insert(generations)
         .values({ ...testGeneration, userId, asset: null, fileId: null })
@@ -757,7 +757,7 @@ describe('GenerationModel', () => {
         fileType: 'image/jpeg',
       };
 
-      await generationModel.updateAssetAndFile(createdGeneration.id, asset, fileData);
+      await generationModel.createAssetAndFile(createdGeneration.id, asset, fileData);
 
       expect(mockFileModelCreate).toHaveBeenCalledWith(
         {

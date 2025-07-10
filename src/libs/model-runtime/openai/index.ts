@@ -3,7 +3,7 @@ import { toFile } from 'openai';
 import { FileLike } from 'openai/uploads';
 
 import { responsesAPIModels } from '@/const/models';
-import { StdImageGenParamsKeys } from '@/libs/standard-parameters/image';
+import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/meta-schema';
 
 import { ChatStreamPayload, ModelProvider } from '../types';
 import { processMultiProviderModelList } from '../utils/modelParse';
@@ -97,10 +97,10 @@ export const LobeOpenAI = createOpenAICompatibleRuntime({
     };
 
     // 映射参数名称，将 imageUrls 映射为 image
-    const paramsMap = new Map<StdImageGenParamsKeys, string>([['imageUrls', 'image']]);
+    const paramsMap = new Map<RuntimeImageGenParamsValue, string>([['imageUrls', 'image']]);
     const userInput: Record<string, any> = Object.fromEntries(
       Object.entries(params).map(([key, value]) => [
-        paramsMap.get(key as StdImageGenParamsKeys) ?? key,
+        paramsMap.get(key as RuntimeImageGenParamsValue) ?? key,
         value,
       ]),
     );

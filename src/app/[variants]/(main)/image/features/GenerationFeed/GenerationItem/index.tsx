@@ -17,7 +17,7 @@ import { SuccessState } from './SuccessState';
 import { GenerationItemProps } from './types';
 import { getAspectRatio } from './utils';
 
-const isSupportParamSelector = imageGenerationConfigSelectors.isSupportParam;
+const isSupportedParamSelector = imageGenerationConfigSelectors.isSupportedParam;
 
 export const GenerationItem = memo<GenerationItemProps>(
   ({ generationBatch, generation, prompt }) => {
@@ -27,7 +27,7 @@ export const GenerationItem = memo<GenerationItemProps>(
     const deleteGeneration = useImageStore((s) => s.removeGeneration);
     const reuseSeed = useImageStore((s) => s.reuseSeed);
     const activeTopicId = useImageStore((s) => s.activeGenerationTopicId);
-    const isSupportSeed = useImageStore(isSupportParamSelector('seed'));
+    const isSupportSeed = useImageStore(isSupportedParamSelector('seed'));
     const { downloadImage } = useDownloadImage();
 
     const isFinalized =

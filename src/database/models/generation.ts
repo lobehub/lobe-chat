@@ -90,12 +90,12 @@ export class GenerationModel {
     return result;
   }
 
-  async updateAssetAndFile(
+  async createAssetAndFile(
     id: string,
     asset: ImageGenerationAsset,
     file: Omit<NewFile, 'id' | 'userId'>,
   ) {
-    log('Updating generation asset and file with transaction: %s', id);
+    log('Creating generation asset and file with transaction: %s', id);
 
     return await this.db.transaction(async (tx: Transaction) => {
       // Create file first using transaction

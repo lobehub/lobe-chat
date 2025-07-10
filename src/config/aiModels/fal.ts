@@ -1,9 +1,9 @@
 import { AIImageModelCard } from '@/types/aiModel';
 
-import FluxKontextDevParamsSchema from '../paramsSchemas/fal/flux-kontext-dev.json';
-import FluxKontextProParamsSchema from '../paramsSchemas/fal/flux-pro-kontext.json';
-import FluxSchnellParamsSchema from '../paramsSchemas/fal/flux-schnell.json';
-import Imagen4ParamsSchema from '../paramsSchemas/fal/imagen4.json';
+import { fluxKontextDevParamsDefinition } from '../paramsSchemas/fal/flux-kontext-dev';
+import { fluxProKontextParamsDefinition } from '../paramsSchemas/fal/flux-pro-kontext';
+import { fluxSchnellParamsDefinition } from '../paramsSchemas/fal/flux-schnell';
+import { imagen4ParamsDefinition } from '../paramsSchemas/fal/imagen4';
 
 const googleChatModels: AIImageModelCard[] = [
   {
@@ -11,7 +11,7 @@ const googleChatModels: AIImageModelCard[] = [
     displayName: 'FLUX.1 Kontext Dev',
     enabled: true,
     id: 'flux-kontext/dev',
-    parameters: FluxKontextDevParamsSchema,
+    parameters: fluxKontextDevParamsDefinition,
     releasedAt: '2025-06-28',
     type: 'image',
   },
@@ -21,7 +21,7 @@ const googleChatModels: AIImageModelCard[] = [
     displayName: 'FLUX.1 Kontext [pro]',
     enabled: true,
     id: 'flux-pro/kontext',
-    parameters: FluxKontextProParamsSchema,
+    parameters: fluxProKontextParamsDefinition,
     releasedAt: '2025-05-01',
     type: 'image',
   },
@@ -31,7 +31,7 @@ const googleChatModels: AIImageModelCard[] = [
     displayName: 'FLUX.1 Schnell',
     enabled: true,
     id: 'flux/schnell',
-    parameters: FluxSchnellParamsSchema,
+    parameters: fluxSchnellParamsDefinition,
     releasedAt: '2024-08-01',
     type: 'image',
   },
@@ -40,7 +40,7 @@ const googleChatModels: AIImageModelCard[] = [
     displayName: 'Imagen 4',
     enabled: true,
     id: 'imagen4/preview',
-    parameters: Imagen4ParamsSchema,
+    parameters: imagen4ParamsDefinition,
     releasedAt: '2025-05-21',
     type: 'image',
     organization: 'Deepmind',

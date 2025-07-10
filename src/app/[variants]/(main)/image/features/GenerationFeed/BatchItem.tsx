@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import InvalidAPIKey from '@/features/Conversation/Error/InvalidAPIKey';
-import { StdImageGenParams } from '@/libs/standard-parameters/image';
+import { RuntimeImageGenParams } from '@/libs/standard-parameters/meta-schema';
 import { useImageStore } from '@/store/image';
 import { AsyncTaskErrorType } from '@/types/asyncTask';
 import { GenerationBatch } from '@/types/generation';
@@ -87,7 +87,11 @@ export const GenerationBatchItem = memo<GenerationBatchItemProps>(({ batch }) =>
   };
 
   const handleReuseSettings = () => {
-    reuseSettings(batch.model, batch.provider, omit(batch.config as StdImageGenParams, ['seed']));
+    reuseSettings(
+      batch.model,
+      batch.provider,
+      omit(batch.config as RuntimeImageGenParams, ['seed']),
+    );
   };
 
   const handleDeleteBatch = async () => {

@@ -1,9 +1,11 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-import FluxSchnellSchema from '@/config/paramsSchemas/fal/flux-schnell.json';
+import { fluxSchnellParamsDefinition } from '@/config/paramsSchemas/fal/flux-schnell';
 import { ModelProvider } from '@/libs/model-runtime/types/type';
-
-import { StdImageGenParams } from '../../../../libs/standard-parameters/image';
-import { parseParamsSchema } from '../../utils/parseParamsSchema';
+import {
+  ModelParamsDefinition,
+  RuntimeImageGenParams,
+  extractDefaultValues,
+} from '@/libs/standard-parameters/meta-schema';
 
 export const DEFAULT_AI_IMAGE_PROVIDER = ModelProvider.Fal;
 export const DEFAULT_AI_IMAGE_MODEL = 'flux/schnell';
@@ -12,22 +14,20 @@ export const DEFAULT_IMAGE_NUM = 4;
 const STORAGE_KEY = 'lobe-chat-image-generation-config';
 
 export interface GenerationConfigState {
-  model: string;
-  provider: string;
-  imageNum: number;
-  /**
-   * store the params pass the generation api
-   */
-  parameters?: Partial<StdImageGenParams>;
-  parameterSchema?: Record<string, any>;
+  parameters: RuntimeImageGenParams;
+  parametersDefinition: ModelParamsDefinition;
 
-  // 新增状态
+  provider: string;
+  model: string;
+  imageNum: number;
+
   isAspectRatioLocked: boolean;
   activeAspectRatio: string | null; // string - 虚拟比例; null - 原生比例
 }
 
-export const DEFAULT_IMAGE_GENERATION_PARAMETERS: Partial<StdImageGenParams> =
-  parseParamsSchema(FluxSchnellSchema).defaultValues;
+export const DEFAULT_IMAGE_GENERATION_PARAMETERS: RuntimeImageGenParams = extractDefaultValues(
+  fluxSchnellParamsDefinition,
+);
 
 // localStorage utility functions
 interface StoredConfig {
@@ -76,9 +76,7 @@ export const initialGenerationConfigState: GenerationConfigState = {
   provider: DEFAULT_AI_IMAGE_PROVIDER,
   imageNum: DEFAULT_IMAGE_NUM,
   parameters: DEFAULT_IMAGE_GENERATION_PARAMETERS,
-  parameterSchema: FluxSchnellSchema,
-
-  // 新增状态的初始值
+  parametersDefinition: fluxSchnellParamsDefinition,
   isAspectRatioLocked: false,
-  activeAspectRatio: '1:1', // 默认激活 1:1
+  activeAspectRatio: '1:1',
 };

@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { ModelParamsDefinition } from '@/libs/standard-parameters';
+
 export type ModelPriceCurrency = 'CNY' | 'USD';
 
 export const AiModelSourceEnum = {
@@ -187,7 +189,7 @@ export interface AIEmbeddingModelCard extends AIBaseModelCard {
 }
 
 export interface AIImageModelCard extends AIBaseModelCard {
-  parameters?: Record<string, any>;
+  parameters?: ModelParamsDefinition;
   pricing?: {
     /**
      * the currency of the pricing

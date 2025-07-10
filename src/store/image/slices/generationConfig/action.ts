@@ -1,21 +1,33 @@
 import { StateCreator } from 'zustand/vanilla';
 
-import { StdImageGenParams, StdImageGenParamsKeys } from '@/libs/standard-parameters/image';
+import {
+  ModelParamsDefinition,
+  RuntimeImageGenParams,
+  RuntimeImageGenParamsKeys,
+  RuntimeImageGenParamsValue,
+  extractDefaultValues,
+} from '@/libs/standard-parameters/meta-schema';
 import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { AIImageModelCard } from '@/types/aiModel';
 
 import type { ImageStore } from '../../store';
-import { parseParamsSchema } from '../../utils/parseParamsSchema';
 import { adaptSizeToRatio, parseRatio } from '../../utils/size';
 
 export interface GenerationConfigAction {
-  setParamOnInput<K extends StdImageGenParamsKeys>(paramName: K, value: StdImageGenParams[K]): void;
+  setParamOnInput<K extends RuntimeImageGenParamsKeys>(
+    paramName: K,
+    value: RuntimeImageGenParamsValue,
+  ): void;
 
   setModelAndProviderOnSelect(model: string, provider: string): void;
 
   setImageNum: (imageNum: number) => void;
 
-  reuseSettings: (model: string, provider: string, settings: Partial<StdImageGenParams>) => void;
+  reuseSettings: (
+    model: string,
+    provider: string,
+    settings: Partial<RuntimeImageGenParams>,
+  ) => void;
   reuseSeed: (seed: number) => void;
 
   // 新增方法
@@ -36,9 +48,10 @@ export function getModelAndDefaults(model: string, provider: string) {
     .find((providerItem) => providerItem.id === provider)
     ?.children.find((modelItem) => modelItem.id === model) as unknown as AIImageModelCard;
 
-  const { defaultValues } = parseParamsSchema(activeModel.parameters!);
+  const parametersDefinition = activeModel.parameters as ModelParamsDefinition;
+  const defaultValues = extractDefaultValues(parametersDefinition);
 
-  return { defaultValues, activeModel };
+  return { defaultValues, activeModel, parametersDefinition };
 }
 
 export const createGenerationConfigSlice: StateCreator<
@@ -63,25 +76,21 @@ export const createGenerationConfigSlice: StateCreator<
   setWidth: (width) => {
     set(
       (state) => {
-        const { parameters, isAspectRatioLocked, activeAspectRatio, parameterSchema } = state;
-        if (!parameters || !parameterSchema) throw new Error('parameters is not initialized');
+        const { parameters, isAspectRatioLocked, activeAspectRatio, parametersDefinition } = state;
+        if (!parameters || !parametersDefinition) throw new Error('parameters is not initialized');
 
         const newParams = { ...parameters, width };
 
         if (isAspectRatioLocked && activeAspectRatio) {
           const ratio = parseRatio(activeAspectRatio);
-          const { properties } = parseParamsSchema(parameterSchema);
-          const heightSchema = properties?.height;
+          const heightSchema = parametersDefinition?.height;
           if (
             heightSchema &&
-            typeof heightSchema.maximum === 'number' &&
-            typeof heightSchema.minimum === 'number'
+            typeof heightSchema.max === 'number' &&
+            typeof heightSchema.min === 'number'
           ) {
             const newHeight = Math.round(width / ratio);
-            newParams.height = Math.max(
-              Math.min(newHeight, heightSchema.maximum),
-              heightSchema.minimum,
-            );
+            newParams.height = Math.max(Math.min(newHeight, heightSchema.max), heightSchema.min);
           }
         }
 
@@ -95,24 +104,20 @@ export const createGenerationConfigSlice: StateCreator<
   setHeight: (height) => {
     set(
       (state) => {
-        const { parameters, isAspectRatioLocked, activeAspectRatio, parameterSchema } = state;
-        if (!parameters || !parameterSchema) throw new Error('parameters is not initialized');
+        const { parameters, isAspectRatioLocked, activeAspectRatio, parametersDefinition } = state;
+        if (!parameters || !parametersDefinition) throw new Error('parameters is not initialized');
         const newParams = { ...parameters, height };
 
         if (isAspectRatioLocked && activeAspectRatio) {
           const ratio = parseRatio(activeAspectRatio);
-          const { properties } = parseParamsSchema(parameterSchema);
-          const widthSchema = properties?.width;
+          const widthSchema = parametersDefinition?.width;
           if (
             widthSchema &&
-            typeof widthSchema.maximum === 'number' &&
-            typeof widthSchema.minimum === 'number'
+            typeof widthSchema.max === 'number' &&
+            typeof widthSchema.min === 'number'
           ) {
             const newWidth = Math.round(height * ratio);
-            newParams.width = Math.max(
-              Math.min(newWidth, widthSchema.maximum),
-              widthSchema.minimum,
-            );
+            newParams.width = Math.max(Math.min(newWidth, widthSchema.max), widthSchema.min);
           }
         }
 
@@ -126,12 +131,11 @@ export const createGenerationConfigSlice: StateCreator<
   toggleAspectRatioLock: () => {
     set(
       (state) => {
-        const { isAspectRatioLocked, activeAspectRatio, parameters, parameterSchema } = state;
+        const { isAspectRatioLocked, activeAspectRatio, parameters, parametersDefinition } = state;
         const newLockState = !isAspectRatioLocked;
 
         // 如果是从解锁变为锁定，且有活动的宽高比，则立即调整尺寸
-        if (newLockState && activeAspectRatio && parameters && parameterSchema) {
-          const { properties } = parseParamsSchema(parameterSchema);
+        if (newLockState && activeAspectRatio && parameters && parametersDefinition) {
           const currentWidth = parameters.width;
           const currentHeight = parameters.height;
 
@@ -139,8 +143,8 @@ export const createGenerationConfigSlice: StateCreator<
           if (
             typeof currentWidth === 'number' &&
             typeof currentHeight === 'number' &&
-            properties?.width &&
-            properties?.height
+            parametersDefinition?.width &&
+            parametersDefinition?.height
           ) {
             const targetRatio = parseRatio(activeAspectRatio);
             const currentRatio = currentWidth / currentHeight;
@@ -148,34 +152,31 @@ export const createGenerationConfigSlice: StateCreator<
             // 如果当前比例与目标比例不匹配，则需要调整
             if (Math.abs(currentRatio - targetRatio) > 0.01) {
               // 允许小误差
-              const widthSchema = properties.width;
-              const heightSchema = properties.height;
+              const widthSchema = parametersDefinition.width;
+              const heightSchema = parametersDefinition.height;
 
               if (
                 widthSchema &&
                 heightSchema &&
-                typeof widthSchema.maximum === 'number' &&
-                typeof widthSchema.minimum === 'number' &&
-                typeof heightSchema.maximum === 'number' &&
-                typeof heightSchema.minimum === 'number'
+                typeof widthSchema.max === 'number' &&
+                typeof widthSchema.min === 'number' &&
+                typeof heightSchema.max === 'number' &&
+                typeof heightSchema.min === 'number'
               ) {
                 // 优先保持宽度，调整高度
                 let newWidth = currentWidth;
                 let newHeight = Math.round(currentWidth / targetRatio);
 
                 // 如果计算出的高度超出范围，则改为保持高度，调整宽度
-                if (newHeight > heightSchema.maximum || newHeight < heightSchema.minimum) {
+                if (newHeight > heightSchema.max || newHeight < heightSchema.min) {
                   newHeight = currentHeight;
                   newWidth = Math.round(currentHeight * targetRatio);
 
                   // 确保宽度也在范围内
-                  newWidth = Math.max(Math.min(newWidth, widthSchema.maximum), widthSchema.minimum);
+                  newWidth = Math.max(Math.min(newWidth, widthSchema.max), widthSchema.min);
                 } else {
                   // 确保高度在范围内
-                  newHeight = Math.max(
-                    Math.min(newHeight, heightSchema.maximum),
-                    heightSchema.minimum,
-                  );
+                  newHeight = Math.max(Math.min(newHeight, heightSchema.max), heightSchema.min);
                 }
 
                 return {
@@ -195,16 +196,16 @@ export const createGenerationConfigSlice: StateCreator<
   },
 
   setAspectRatio: (aspectRatio) => {
-    const { parameters, parameterSchema } = get();
-    if (!parameters || !parameterSchema) return;
+    const { parameters, parametersDefinition } = get();
+    if (!parameters || !parametersDefinition) return;
 
-    const { properties, defaultValues } = parseParamsSchema(parameterSchema);
+    const defaultValues = extractDefaultValues(parametersDefinition);
     const newParams = { ...parameters };
 
     // 如果模型支持 width/height，则计算新尺寸
     if (
-      properties?.width &&
-      properties?.height &&
+      parametersDefinition?.width &&
+      parametersDefinition?.height &&
       typeof defaultValues.width === 'number' &&
       typeof defaultValues.height === 'number'
     ) {
@@ -215,7 +216,7 @@ export const createGenerationConfigSlice: StateCreator<
     }
 
     // 如果模型本身支持 aspectRatio，则更新它
-    if (properties?.aspectRatio) {
+    if (parametersDefinition?.aspectRatio) {
       newParams.aspectRatio = aspectRatio;
     }
 
@@ -228,13 +229,18 @@ export const createGenerationConfigSlice: StateCreator<
 
   setModelAndProviderOnSelect: (model, provider) => {
     const { defaultValues, activeModel } = getModelAndDefaults(model, provider);
-    const schema = activeModel.parameters || {};
-    const props = schema.properties || {};
+    const parametersDefinition = activeModel.parameters;
+    const props = parametersDefinition;
 
     let initialActiveRatio: string | null = null;
 
     // 如果模型没有原生比例或尺寸参数，但有宽高，则启用虚拟比例控制
-    if (!props.aspectRatio && !props.size && props.width && props.height) {
+    if (
+      !parametersDefinition?.aspectRatio &&
+      !parametersDefinition?.size &&
+      parametersDefinition?.width &&
+      parametersDefinition?.height
+    ) {
       const { width, height } = defaultValues;
       if (typeof width === 'number' && typeof height === 'number' && width > 0 && height > 0) {
         initialActiveRatio = `${width}:${height}`;
@@ -248,7 +254,7 @@ export const createGenerationConfigSlice: StateCreator<
         model,
         provider,
         parameters: defaultValues,
-        parameterSchema: schema,
+        parametersDefinition,
         isAspectRatioLocked: false,
         activeAspectRatio: initialActiveRatio,
       },
@@ -261,14 +267,14 @@ export const createGenerationConfigSlice: StateCreator<
     set(() => ({ imageNum }), false, `setImageNum/${imageNum}`);
   },
 
-  reuseSettings: (model: string, provider: string, settings: Partial<StdImageGenParams>) => {
-    const { defaultValues, activeModel } = getModelAndDefaults(model, provider);
+  reuseSettings: (model: string, provider: string, settings: Partial<RuntimeImageGenParams>) => {
+    const { defaultValues, parametersDefinition } = getModelAndDefaults(model, provider);
     set(
       () => ({
         model,
         provider,
         parameters: { ...defaultValues, ...settings },
-        parameterSchema: activeModel.parameters,
+        parametersDefinition,
       }),
       false,
       `reuseSettings/${model}/${provider}`,

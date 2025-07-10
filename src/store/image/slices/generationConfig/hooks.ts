@@ -1,34 +1,52 @@
 import { useCallback, useMemo } from 'react';
 
 import { PRESET_ASPECT_RATIOS } from '@/const/image';
-import { StdImageGenParams, StdImageGenParamsKeys } from '@/libs/standard-parameters/image';
+import {
+  RuntimeImageGenParams,
+  RuntimeImageGenParamsKeys,
+} from '@/libs/standard-parameters/meta-schema';
 
 import { useImageStore } from '../../store';
 import { imageGenerationConfigSelectors } from './selectors';
 
-export function useGenerationConfigParam<N extends StdImageGenParamsKeys>(paramName: N) {
-  type ValueType = StdImageGenParams[N];
-
+export function useGenerationConfigParam<
+  N extends RuntimeImageGenParamsKeys,
+  V extends RuntimeImageGenParams[N],
+>(paramName: N) {
   const parameters = useImageStore(imageGenerationConfigSelectors.parameters);
-  const paramsProperties = useImageStore(imageGenerationConfigSelectors.paramsProperties);
+  const parametersDefinition = useImageStore(imageGenerationConfigSelectors.parametersDefinition);
 
-  const paramValue = parameters?.[paramName] as ValueType;
+  const paramValue = parameters?.[paramName] as V;
   const setParamsValue = useImageStore((s) => s.setParamOnInput<N>);
   const setValue = useCallback(
-    (value: ValueType) => {
+    (value: V) => {
       setParamsValue(paramName, value);
     },
     [paramName, setParamsValue],
   );
 
-  const paramSchema = paramsProperties?.[paramName];
+  const paramConfig = parametersDefinition?.[paramName];
   const paramConstraints = useMemo(() => {
-    const min = paramSchema && 'minimum' in paramSchema ? paramSchema.minimum : undefined;
-    const max = paramSchema && 'maximum' in paramSchema ? paramSchema.maximum : undefined;
-    const step = paramSchema && 'step' in paramSchema ? paramSchema.step : undefined;
+    const min =
+      paramConfig && typeof paramConfig === 'object' && 'min' in paramConfig
+        ? paramConfig.min
+        : undefined;
+    const max =
+      paramConfig && typeof paramConfig === 'object' && 'max' in paramConfig
+        ? paramConfig.max
+        : undefined;
+    const step =
+      paramConfig && typeof paramConfig === 'object' && 'step' in paramConfig
+        ? paramConfig.step
+        : undefined;
     const description =
-      paramSchema && 'description' in paramSchema ? paramSchema.description : undefined;
-    const enumValues = paramSchema && 'enum' in paramSchema ? paramSchema.enum : undefined;
+      paramConfig && typeof paramConfig === 'object' && 'description' in paramConfig
+        ? paramConfig.description
+        : undefined;
+    const enumValues =
+      paramConfig && typeof paramConfig === 'object' && 'enum' in paramConfig
+        ? paramConfig.enum
+        : undefined;
 
     return {
       description,
@@ -37,10 +55,10 @@ export function useGenerationConfigParam<N extends StdImageGenParamsKeys>(paramN
       step,
       enumValues,
     };
-  }, [paramSchema]);
+  }, [paramConfig]);
 
   return {
-    value: paramValue,
+    value: paramValue as V,
     setValue,
     ...paramConstraints,
   };
@@ -48,14 +66,14 @@ export function useGenerationConfigParam<N extends StdImageGenParamsKeys>(paramN
 
 export function useSizeControl() {
   const store = useImageStore();
-  const paramsProperties = useImageStore(imageGenerationConfigSelectors.paramsProperties);
+  const paramsProperties = useImageStore(imageGenerationConfigSelectors.parametersDefinition);
 
   const modelAspectRatio = useImageStore((s) => s.parameters?.aspectRatio);
   const currentAspectRatio = store.activeAspectRatio ?? modelAspectRatio ?? '1:1';
 
-  const isSupportWidth = useImageStore(imageGenerationConfigSelectors.isSupportParam('width'));
-  const isSupportHeight = useImageStore(imageGenerationConfigSelectors.isSupportParam('height'));
-  const isSupportSize = useImageStore(imageGenerationConfigSelectors.isSupportParam('size'));
+  const isSupportWidth = useImageStore(imageGenerationConfigSelectors.isSupportedParam('width'));
+  const isSupportHeight = useImageStore(imageGenerationConfigSelectors.isSupportedParam('height'));
+  const isSupportSize = useImageStore(imageGenerationConfigSelectors.isSupportedParam('size'));
 
   const aspectRatioOptions = useMemo(() => {
     const modelOptions = paramsProperties?.aspectRatio?.enum || [];

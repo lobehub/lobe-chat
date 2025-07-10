@@ -3,7 +3,7 @@ import debug from 'debug';
 import { pick } from 'lodash-es';
 import { ClientOptions } from 'openai';
 
-import { StdImageGenParamsKeys } from '@/libs/standard-parameters/image';
+import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/meta-schema';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
@@ -29,7 +29,7 @@ export class LobeFalAI implements LobeRuntimeAI {
     const { model, params } = payload;
     log('Creating image with model: %s and params: %O', model, params);
 
-    const paramsMap = new Map<StdImageGenParamsKeys, string>([
+    const paramsMap = new Map<RuntimeImageGenParamsValue, string>([
       ['steps', 'num_inference_steps'],
       ['cfg', 'guidance_scale'],
       ['imageUrl', 'image_url'],

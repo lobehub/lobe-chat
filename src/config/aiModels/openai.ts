@@ -1,4 +1,4 @@
-import GptImage1ParamsSchema from '@/config/paramsSchemas/openai/gpt-image-1.json';
+import { gptImage1ParamsDefinition } from '@/config/paramsSchemas/openai/gpt-image-1';
 import {
   AIChatModelCard,
   AIEmbeddingModelCard,
@@ -861,7 +861,7 @@ export const openaiImageModels: AIImageModelCard[] = [
     description: 'ChatGPT 原生多模态图片生成模型',
     displayName: 'GPT Image 1',
     id: 'gpt-image-1',
-    parameters: GptImage1ParamsSchema,
+    parameters: gptImage1ParamsDefinition,
     type: 'image',
   },
 ];

@@ -32,16 +32,16 @@ const ConfigItemLayout = memo<ConfigItemLayoutProps>(({ label, children }) => {
   );
 });
 
-const isSupportParamSelector = imageGenerationConfigSelectors.isSupportParam;
+const isSupportedParamSelector = imageGenerationConfigSelectors.isSupportedParam;
 
 const ConfigPanel = memo(() => {
   const { t } = useTranslation('image');
 
-  const isSupportImageUrl = useImageStore(isSupportParamSelector('imageUrl'));
-  const isSupportSize = useImageStore(isSupportParamSelector('size'));
-  const isSupportSeed = useImageStore(isSupportParamSelector('seed'));
-  const isSupportSteps = useImageStore(isSupportParamSelector('steps'));
-  const isSupportImageUrls = useImageStore(isSupportParamSelector('imageUrls'));
+  const isSupportImageUrl = useImageStore(isSupportedParamSelector('imageUrl'));
+  const isSupportSize = useImageStore(isSupportedParamSelector('size'));
+  const isSupportSeed = useImageStore(isSupportedParamSelector('seed'));
+  const isSupportSteps = useImageStore(isSupportedParamSelector('steps'));
+  const isSupportImageUrls = useImageStore(isSupportedParamSelector('imageUrls'));
 
   const { showSizeControl } = useSizeControl();
 

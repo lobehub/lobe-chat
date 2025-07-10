@@ -1,54 +1,31 @@
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import FluxSchnellSchema from '@/config/paramsSchemas/fal/flux-schnell.json';
-import { StdImageGenParams } from '@/libs/standard-parameters/image';
+import { fluxSchnellParamsDefinition } from '@/config/paramsSchemas/fal/flux-schnell';
+import {
+  ModelParamsDefinition,
+  RuntimeImageGenParams,
+  extractDefaultValues,
+} from '@/libs/standard-parameters/meta-schema';
 import { useImageStore } from '@/store/image';
-// Update parseParamsSchema mock to handle different schemas
-import { parseParamsSchema } from '@/store/image/utils/parseParamsSchema';
 import { AIImageModelCard } from '@/types/aiModel';
 
-// Mock parseParamsSchema to avoid module initialization errors
-vi.mock('@/store/image/utils/parseParamsSchema', () => ({
-  parseParamsSchema: vi.fn(() => ({
-    defaultValues: {
-      prompt: '',
-      width: 1024,
-      height: 1024,
-      seed: null,
-      steps: 4,
-    },
-    properties: FluxSchnellSchema.properties,
-  })),
-}));
-
-// Based on real flux-schnell data
-const fluxSchnellModel: AIImageModelCard = {
-  id: 'flux/schnell',
-  displayName: 'FLUX.1 Schnell',
-  description:
-    'FLUX.1 [schnell] is a 12 billion parameter stream transformer model that can generate high-quality images from text in 1 to 4 steps, suitable for personal and commercial use.',
-  type: 'image',
-  parameters: FluxSchnellSchema,
-  releasedAt: '2024-08-01',
-};
-
-const fluxSchnellDefaultValues: Partial<StdImageGenParams> = {
-  prompt: '',
-  width: 1024,
-  height: 1024,
-  seed: null,
-  steps: 4,
-};
-
-// Mock external dependencies to make getModelAndDefaults work properly
+// Mock external dependencies
 vi.mock('@/store/aiInfra', () => ({
   aiProviderSelectors: {
     enabledImageModelList: vi.fn(() => [
       {
         id: 'fal',
         name: 'Fal',
-        children: [fluxSchnellModel],
+        children: [
+          {
+            id: 'flux/schnell',
+            displayName: 'FLUX.1 Schnell',
+            type: 'image',
+            parameters: fluxSchnellParamsDefinition,
+            releasedAt: '2024-08-01',
+          } as AIImageModelCard,
+        ],
       },
       {
         id: 'custom-provider',
@@ -59,17 +36,13 @@ vi.mock('@/store/aiInfra', () => ({
             displayName: 'Custom Model',
             type: 'image',
             parameters: {
-              type: 'object',
-              required: ['prompt'],
-              properties: {
-                prompt: { type: 'string', default: '' },
-                width: { type: 'number', default: 1024, minimum: 256, maximum: 2048, step: 64 },
-                height: { type: 'number', default: 1024, minimum: 256, maximum: 2048, step: 64 },
-                customParam: { type: 'string', default: 'custom' },
-              },
-            },
+              prompt: { default: '' },
+              width: { default: 1024, min: 256, max: 2048, step: 64 },
+              height: { default: 1024, min: 256, max: 2048, step: 64 },
+              steps: { default: 20, min: 1, max: 50 },
+            } as ModelParamsDefinition,
             releasedAt: '2024-01-01',
-          },
+          } as AIImageModelCard,
         ],
       },
     ]),
@@ -77,37 +50,17 @@ vi.mock('@/store/aiInfra', () => ({
   getAiInfraStoreState: vi.fn(() => ({})),
 }));
 
-const mockParseParamsSchema = vi.mocked(parseParamsSchema);
+const fluxSchnellDefaultValues = extractDefaultValues(fluxSchnellParamsDefinition);
+
+const customModelDefinition: ModelParamsDefinition = {
+  prompt: { default: '' },
+  width: { default: 1024, min: 256, max: 2048, step: 64 },
+  height: { default: 1024, min: 256, max: 2048, step: 64 },
+  steps: { default: 20, min: 1, max: 50 },
+};
 
 beforeEach(() => {
   vi.clearAllMocks();
-
-  // Setup parseParamsSchema mock behavior
-  mockParseParamsSchema.mockImplementation((schema: any) => {
-    if (schema === FluxSchnellSchema) {
-      return {
-        defaultValues: fluxSchnellDefaultValues,
-        properties: FluxSchnellSchema.properties,
-      };
-    }
-    // Handle custom model schema
-    if (schema?.properties?.customParam) {
-      return {
-        defaultValues: {
-          prompt: '',
-          width: 1024,
-          height: 1024,
-          customParam: 'custom',
-        } as any,
-        properties: schema.properties,
-      };
-    }
-    // Default return
-    return {
-      defaultValues: fluxSchnellDefaultValues,
-      properties: schema?.properties || {},
-    };
-  });
 
   // Reset store state
   useImageStore.setState({
@@ -118,8 +71,12 @@ beforeEach(() => {
       prompt: 'initial prompt',
       width: 512,
       height: 512,
+    } as RuntimeImageGenParams,
+    parametersDefinition: {
+      prompt: { default: '' },
+      width: { default: 512, min: 256, max: 1024 },
+      height: { default: 512, min: 256, max: 1024 },
     },
-    parameterSchema: {},
   });
 });
 
@@ -157,6 +114,26 @@ describe('GenerationConfigAction', () => {
       });
     });
 
+    it('should handle null values correctly', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      act(() => {
+        result.current.setParamOnInput('seed', null);
+      });
+
+      expect(result.current.parameters?.seed).toBeNull();
+    });
+
+    it('should handle array values correctly', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      act(() => {
+        result.current.setParamOnInput('imageUrls', ['test1.jpg', 'test2.jpg']);
+      });
+
+      expect(result.current.parameters?.imageUrls).toEqual(['test1.jpg', 'test2.jpg']);
+    });
+
     it('should throw error when parameters is not initialized', async () => {
       const { result } = renderHook(() => useImageStore());
 
@@ -174,7 +151,7 @@ describe('GenerationConfigAction', () => {
   });
 
   describe('setModelAndProviderOnSelect', () => {
-    it('should set model, provider, parameters and parameterSchema', async () => {
+    it('should set model, provider, parameters and parametersDefinition for flux/schnell', async () => {
       const { result } = renderHook(() => useImageStore());
 
       act(() => {
@@ -184,7 +161,7 @@ describe('GenerationConfigAction', () => {
       expect(result.current.model).toBe('flux/schnell');
       expect(result.current.provider).toBe('fal');
       expect(result.current.parameters).toEqual(fluxSchnellDefaultValues);
-      expect(result.current.parameterSchema).toEqual(FluxSchnellSchema);
+      expect(result.current.parametersDefinition).toEqual(fluxSchnellParamsDefinition);
     });
 
     it('should handle model selection with custom parameters', async () => {
@@ -194,20 +171,31 @@ describe('GenerationConfigAction', () => {
         result.current.setModelAndProviderOnSelect('custom-model', 'custom-provider');
       });
 
+      const expectedParams = extractDefaultValues(customModelDefinition);
+
       expect(result.current.model).toBe('custom-model');
       expect(result.current.provider).toBe('custom-provider');
-      expect(result.current.parameters).toMatchObject({
-        prompt: '',
-        width: 1024,
-        height: 1024,
-        customParam: 'custom',
+      expect(result.current.parameters).toEqual(expectedParams);
+      expect(result.current.parametersDefinition).toEqual(customModelDefinition);
+    });
+
+    it('should replace all previous parameters with new model defaults', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      // First set some custom parameters
+      act(() => {
+        result.current.setParamOnInput('prompt', 'custom prompt');
+        result.current.setParamOnInput('steps', 50);
       });
-      expect(result.current.parameterSchema).toMatchObject({
-        type: 'object',
-        properties: {
-          customParam: { type: 'string', default: 'custom' },
-        },
+
+      // Then switch model
+      act(() => {
+        result.current.setModelAndProviderOnSelect('flux/schnell', 'fal');
       });
+
+      // Should completely replace parameters with model defaults
+      expect(result.current.parameters).toEqual(fluxSchnellDefaultValues);
+      expect(result.current.parameters?.prompt).toBe(''); // Default value, not 'custom prompt'
     });
   });
 
@@ -237,12 +225,22 @@ describe('GenerationConfigAction', () => {
 
       expect(result.current.imageNum).toBe(1);
     });
+
+    it('should handle edge case values', async () => {
+      const { result } = renderHook(() => useImageStore());
+
+      act(() => {
+        result.current.setImageNum(0);
+      });
+
+      expect(result.current.imageNum).toBe(0);
+    });
   });
 
   describe('reuseSettings', () => {
     it('should set model, provider and merge settings with default values', async () => {
       const { result } = renderHook(() => useImageStore());
-      const customSettings: Partial<StdImageGenParams> = {
+      const customSettings: Partial<RuntimeImageGenParams> = {
         prompt: 'custom prompt',
         steps: 8,
         seed: 54321,
@@ -258,12 +256,12 @@ describe('GenerationConfigAction', () => {
         ...fluxSchnellDefaultValues,
         ...customSettings,
       });
-      expect(result.current.parameterSchema).toEqual(FluxSchnellSchema);
+      expect(result.current.parametersDefinition).toEqual(fluxSchnellParamsDefinition);
     });
 
     it('should override default values with provided settings', async () => {
       const { result } = renderHook(() => useImageStore());
-      const customSettings: Partial<StdImageGenParams> = {
+      const customSettings: Partial<RuntimeImageGenParams> = {
         width: 1536,
         height: 1536,
       };
@@ -287,6 +285,21 @@ describe('GenerationConfigAction', () => {
       });
 
       expect(result.current.parameters).toEqual(fluxSchnellDefaultValues);
+    });
+
+    it('should handle partial settings with null values', async () => {
+      const { result } = renderHook(() => useImageStore());
+      const customSettings: Partial<RuntimeImageGenParams> = {
+        seed: null,
+        imageUrl: null,
+      };
+
+      act(() => {
+        result.current.reuseSettings('flux/schnell', 'fal', customSettings);
+      });
+
+      expect(result.current.parameters?.seed).toBeNull();
+      expect(result.current.parameters?.imageUrl).toBeNull();
     });
   });
 
@@ -337,6 +350,17 @@ describe('GenerationConfigAction', () => {
       });
 
       expect(result.current.parameters?.seed).toBe(0);
+    });
+
+    it('should handle large seed values within range', async () => {
+      const { result } = renderHook(() => useImageStore());
+      const largeSeed = 2147483647; // MAX_SEED
+
+      act(() => {
+        result.current.reuseSeed(largeSeed);
+      });
+
+      expect(result.current.parameters?.seed).toBe(largeSeed);
     });
   });
 });
