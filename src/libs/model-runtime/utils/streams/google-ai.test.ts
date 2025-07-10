@@ -753,10 +753,6 @@ describe('GoogleGenerativeAIStream', () => {
         'data: "123"\n',
 
         'id: chat_1',
-        'event: grounding',
-        'data: {}\n',
-
-        'id: chat_1',
         'event: text',
         'data: "45678"\n',
 
