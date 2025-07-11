@@ -186,8 +186,8 @@
     {
       "idx": 26,
       "version": "7",
-      "when": 1749744907891,
-      "tag": "0026_add_apikey_table",
+      "when": 1752212281564,
+      "tag": "0026_add_autovacuum_tuning",
       "breakpoints": true
     }
   ],
