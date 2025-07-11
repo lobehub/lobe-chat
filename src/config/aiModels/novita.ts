@@ -3,6 +3,20 @@ import { AIChatModelCard } from '@/types/aiModel';
 // https://novita.ai/pricing
 const novitaChatModels: AIChatModelCard[] = [
   {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 65_536,
+    displayName: 'GLM 4.1V 9B Thinking',
+    id: 'thudm/glm-4.1v-9b-thinking',
+    pricing: {
+      input: 0.035,
+      output: 0.138,
+    },
+    type: 'chat',
+  },
+  {
     contextWindowTokens: 120_000,
     displayName: 'ERNIE 4.5 0.3B',
     id: 'baidu/ernie-4.5-0.3b',
