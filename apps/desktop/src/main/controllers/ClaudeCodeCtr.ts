@@ -1,4 +1,3 @@
-import { type SDKMessage, query } from '@anthropic-ai/claude-code';
 import {
   ClaudeCodeMessage,
   ClaudeCodeOptions,
@@ -10,6 +9,7 @@ import {
 import { app } from 'electron';
 import { join } from 'node:path';
 
+import { createClaudeCodeModule } from '@/modules/claudeCode';
 import { createLogger } from '@/utils/logger';
 
 import { ControllerModule, ipcClientEvent } from './index';
@@ -23,6 +23,9 @@ interface StreamingSession {
 }
 
 export default class ClaudeCodeCtr extends ControllerModule {
+  private claudeCodeModule = createClaudeCodeModule({
+    debugMode: Boolean(process.env.DEBUG),
+  });
   private streamingSessions = new Map<string, StreamingSession>();
   private abortControllers = new Map<string, AbortController>();
   private sessionHistory = new Map<string, ClaudeCodeSessionInfo>();
@@ -38,34 +41,7 @@ export default class ClaudeCodeCtr extends ControllerModule {
     version?: string;
   }> {
     try {
-      // 检查环境变量
-      const apiKey = process.env.ANTHROPIC_API_KEY;
-      const useBedrock = process.env.CLAUDE_CODE_USE_BEDROCK === '1';
-      const useVertex = process.env.CLAUDE_CODE_USE_VERTEX === '1';
-
-      if (!apiKey && !useBedrock && !useVertex) {
-        return {
-          available: false,
-          error:
-            'No API credentials found. Please set ANTHROPIC_API_KEY or configure third-party provider.',
-        };
-      }
-
-      let apiKeySource = 'unknown';
-      if (apiKey) apiKeySource = 'anthropic';
-      else if (useBedrock) apiKeySource = 'bedrock';
-      else if (useVertex) apiKeySource = 'vertex';
-
-      // 获取包版本
-      const packagePath = require.resolve('@anthropic-ai/claude-code/package.json');
-      const packageJson = require(packagePath);
-      const version = packageJson.version;
-
-      return {
-        apiKeySource,
-        available: true,
-        version,
-      };
+      return await this.claudeCodeModule.checkAvailability();
     } catch (error) {
       logger.error('Error checking Claude Code availability:', error);
       return {
@@ -90,15 +66,14 @@ export default class ClaudeCodeCtr extends ControllerModule {
       const messages: ClaudeCodeMessage[] = [];
       let sessionId: string | undefined;
 
-      const options = this.buildOptions(params.options);
-
-      for await (const message of query({
+      const queryParams = {
         abortController,
-        options,
+        options: this.buildOptions(params.options),
         prompt: params.prompt,
-      })) {
-        const claudeMessage = this.convertSDKMessage(message);
-        messages.push(claudeMessage);
+      };
+
+      for await (const message of this.claudeCodeModule.query(queryParams)) {
+        messages.push(message);
 
         if (message.session_id) {
           sessionId = message.session_id;
@@ -147,10 +122,8 @@ export default class ClaudeCodeCtr extends ControllerModule {
 
       this.streamingSessions.set(params.streamId, session);
 
-      const options = this.buildOptions(params.options);
-
       // 在后台执行流式查询
-      this.executeStreamingQuery(params, abortController, options);
+      this.executeStreamingQuery(params, abortController);
 
       return { success: true };
     } catch (error) {
@@ -255,32 +228,46 @@ export default class ClaudeCodeCtr extends ControllerModule {
   private async executeStreamingQuery(
     params: ClaudeCodeStreamingParams,
     abortController: AbortController,
-    options: any,
   ) {
     try {
       const { streamId } = params;
       let sessionId: string | undefined;
+      let messageCount = 0;
 
-      for await (const message of query({
+      logger.debug('Starting streaming query execution for stream:', streamId);
+
+      const queryParams = {
         abortController,
-        options,
+        options: this.buildOptions(params.options),
         prompt: params.prompt,
-      })) {
-        const claudeMessage = this.convertSDKMessage(message);
+      };
 
-        // 广播消息到渲染进程
-        this.app.browserManager.broadcastToWindow('chat', 'claudeCodeStreamMessage', {
-          message: claudeMessage,
-          streamId,
-        });
+      try {
+        for await (const message of this.claudeCodeModule.query(queryParams)) {
+          messageCount++;
 
-        if (message.session_id) {
-          sessionId = message.session_id;
-          const session = this.streamingSessions.get(streamId);
-          if (session) {
-            session.sessionId = sessionId;
+          logger.debug(`Stream ${streamId} - Message ${messageCount}:`, message.type);
+          console.log('output message:', message);
+
+          // 广播消息到渲染进程
+          this.app.browserManager.broadcastToAllWindows('claudeCodeStreamMessage', {
+            message,
+            streamId,
+          });
+
+          if (message.session_id) {
+            sessionId = message.session_id;
+            const session = this.streamingSessions.get(streamId);
+            if (session) {
+              session.sessionId = sessionId;
+            }
           }
         }
+
+        logger.debug(`Stream ${streamId} completed with ${messageCount} messages`);
+      } catch (queryError) {
+        logger.error('Error in Claude Code query:', queryError);
+        throw queryError;
       }
 
       // 更新会话历史
@@ -301,10 +288,12 @@ export default class ClaudeCodeCtr extends ControllerModule {
       }
 
       // 广播完成事件
-      this.app.browserManager.broadcastToWindow('chat', 'claudeCodeStreamComplete', {
+      this.app.browserManager.broadcastToAllWindows('claudeCodeStreamComplete', {
         sessionId: sessionId || '',
         streamId,
       });
+
+      logger.debug('Stream completed successfully:', streamId);
 
       // 清理
       this.streamingSessions.delete(streamId);
@@ -312,7 +301,7 @@ export default class ClaudeCodeCtr extends ControllerModule {
       logger.error('Error in streaming query:', error);
 
       // 广播错误事件
-      this.app.browserManager.broadcastToWindow('chat', 'claudeCodeStreamError', {
+      this.app.browserManager.broadcastToAllWindows('claudeCodeStreamError', {
         error: error.message,
         streamId: params.streamId,
       });
@@ -325,9 +314,8 @@ export default class ClaudeCodeCtr extends ControllerModule {
   /**
    * 构建选项对象
    */
-  private buildOptions(options?: ClaudeCodeOptions): any {
-    const defaultOptions = {
-      // cwd: app.getPath('userData'),
+  private buildOptions(options?: ClaudeCodeOptions): ClaudeCodeOptions {
+    const defaultOptions: ClaudeCodeOptions = {
       maxTurns: 5,
       outputFormat: 'stream-json',
     };
@@ -336,10 +324,8 @@ export default class ClaudeCodeCtr extends ControllerModule {
       return defaultOptions;
     }
 
-    // 处理 allowedTools 和 disallowedTools
-    const processedOptions: any = { ...defaultOptions, ...options };
-
-    // 如果 allowedTools 是数组，转换为空格分隔的字符串
+    // 处理选项
+    const processedOptions: ClaudeCodeOptions = { ...defaultOptions, ...options };
 
     // 如果提供了 mcpConfig 路径，确保它是绝对路径
     if (options.mcpConfig && !join(options.mcpConfig).startsWith('/')) {
@@ -347,14 +333,6 @@ export default class ClaudeCodeCtr extends ControllerModule {
     }
 
     return processedOptions;
-  }
-
-  /**
-   * 转换 SDK 消息为 ClaudeCode 消息
-   */
-  private convertSDKMessage(sdkMessage: SDKMessage): ClaudeCodeMessage {
-    // SDKMessage 已经是正确的格式，直接返回
-    return sdkMessage as ClaudeCodeMessage;
   }
 
   /**
@@ -379,5 +357,12 @@ export default class ClaudeCodeCtr extends ControllerModule {
         turnCount: 1,
       });
     }
+  }
+
+  /**
+   * 清理资源
+   */
+  override destroy(): void {
+    this.claudeCodeModule.cleanup();
   }
 }

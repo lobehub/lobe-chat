@@ -1,50 +1,50 @@
 export interface ClaudeCodeMessage {
-  type: 'assistant' | 'user' | 'system' | 'result';
-  message?: any;
-  session_id?: string;
-  subtype?: string;
-  duration_ms?: number;
-  duration_api_ms?: number;
-  is_error?: boolean;
-  num_turns?: number;
-  result?: string;
-  total_cost_usd?: number;
   apiKeySource?: string;
   cwd?: string;
-  tools?: string[];
+  duration_api_ms?: number;
+  duration_ms?: number;
+  is_error?: boolean;
   mcp_servers?: Array<{ name: string; status: string }>;
+  message?: any;
   model?: string;
+  num_turns?: number;
   permissionMode?: 'default' | 'acceptEdits' | 'bypassPermissions' | 'plan';
+  result?: string;
+  session_id?: string;
+  subtype?: string;
+  tools?: string[];
+  total_cost_usd?: number;
+  type: 'assistant' | 'user' | 'system' | 'result';
 }
 
 export interface ClaudeCodeOptions {
-  maxTurns?: number;
-  systemPrompt?: string;
-  appendSystemPrompt?: string;
-  cwd?: string;
   allowedTools?: string[] | string;
-  disallowedTools?: string[] | string;
-  permissionMode?: 'default' | 'acceptEdits' | 'bypassPermissions' | 'plan';
-  outputFormat?: 'text' | 'json' | 'stream-json';
-  inputFormat?: 'text' | 'stream-json';
-  mcpConfig?: string;
-  permissionPromptTool?: string;
-  verbose?: boolean;
+  appendSystemPrompt?: string;
   continueLastSession?: boolean;
+  cwd?: string;
+  disallowedTools?: string[] | string;
+  inputFormat?: 'text' | 'stream-json';
+  maxTurns?: number;
+  mcpConfig?: string;
+  outputFormat?: 'text' | 'json' | 'stream-json';
+  permissionMode?: 'default' | 'acceptEdits' | 'bypassPermissions' | 'plan';
+  permissionPromptTool?: string;
   resumeSessionId?: string;
+  systemPrompt?: string;
+  verbose?: boolean;
 }
 
 export interface ClaudeCodeQueryParams {
-  prompt: string;
+  abortSignal?: string;
   options?: ClaudeCodeOptions;
-  abortSignal?: string; // Signal ID for abort functionality
+  prompt: string; // Signal ID for abort functionality
 }
 
 export interface ClaudeCodeQueryResult {
+  error?: string;
   messages: ClaudeCodeMessage[];
   sessionId: string;
   success: boolean;
-  error?: string;
 }
 
 export interface ClaudeCodeStreamingParams extends ClaudeCodeQueryParams {
@@ -52,9 +52,9 @@ export interface ClaudeCodeStreamingParams extends ClaudeCodeQueryParams {
 }
 
 export interface ClaudeCodeSessionInfo {
-  sessionId: string;
   createdAt: number;
   lastActiveAt: number;
-  turnCount: number;
+  sessionId: string;
   totalCost?: number;
-} 
+  turnCount: number;
+}

@@ -1,18 +1,17 @@
 'use client';
 
 import { ClaudeCodeMessage } from '@lobechat/electron-client-ipc';
-import { CodeEditor } from '@lobehub/ui';
-import { Button, Card, Empty, List, Space, Tabs, Tag, Typography, message } from 'antd';
-import { createStyles, useTheme } from 'antd-style';
-import { memo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { CodeEditor, Markdown, Text } from '@lobehub/ui';
+import { Button, Card, Empty, List, Space, Tabs, Tag, message } from 'antd';
+import { createStyles } from 'antd-style';
+import { memo, useEffect, useState } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import PageTitle from '@/components/PageTitle';
 import { isDesktop } from '@/const/version';
-import { useClaudeCode } from '@/hooks/useClaudeCode';
-
-const { Text, Title } = Typography;
+import { useElectronStore } from '@/store/electron';
+import { useClaudeCodeListeners } from '@/store/electron/actions/claudeCode';
+import { claudeCodeSelectors } from '@/store/electron/selectors';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -48,33 +47,45 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface ClientProps {
-  mobile?: boolean;
-}
-
-const Client = memo<ClientProps>(({ mobile }) => {
+const Client = memo(() => {
   const { styles } = useStyles();
-  const theme = useTheme();
-  const { t } = useTranslation('common');
 
   const [prompt, setPrompt] = useState('');
   const [messages, setMessages] = useState<ClaudeCodeMessage[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string>('');
   const [activeTab, setActiveTab] = useState('query');
 
-  const {
-    isAvailable,
-    isLoading,
-    error,
-    apiKeySource,
-    version,
-    recentSessions,
+  // 获取操作方法
+  const [
     startStreamingQuery,
-    stopStreaming,
+    // stopStreaming,
     abort,
     fetchRecentSessions,
     clearSession,
-  } = useClaudeCode({
+    checkAvailability,
+  ] = useElectronStore((s) => [
+    s.startStreamingQuery,
+    // s.stopStreaming,
+    s.abort,
+    s.fetchRecentSessions,
+    s.clearSession,
+    s.checkAvailability,
+  ]);
+
+  // 获取状态
+  const { isAvailable, isLoading, error, apiKeySource, version, recentSessions } = useElectronStore(
+    (state) => ({
+      apiKeySource: claudeCodeSelectors.apiKeySource(state),
+      error: claudeCodeSelectors.error(state),
+      isAvailable: claudeCodeSelectors.isAvailable(state),
+      isLoading: claudeCodeSelectors.isLoading(state),
+      recentSessions: claudeCodeSelectors.recentSessions(state),
+      version: claudeCodeSelectors.version(state),
+    }),
+  );
+
+  // 设置监听器
+  useClaudeCodeListeners({
     onStreamComplete: (sessionId) => {
       setCurrentSessionId(sessionId);
       message.success('Query completed');
@@ -87,6 +98,11 @@ const Client = memo<ClientProps>(({ mobile }) => {
       setMessages((prev) => [...prev, msg]);
     },
   });
+
+  // 初始化时检查可用性
+  useEffect(() => {
+    checkAvailability();
+  }, []);
 
   // 执行查询
   const handleQuery = async () => {
@@ -103,7 +119,7 @@ const Client = memo<ClientProps>(({ mobile }) => {
         outputFormat: 'stream-json',
       });
     } catch (err) {
-      message.error(`Query failed: ${err.message}`);
+      message.error(`Query failed: ${(err as Error).message}`);
     }
   };
 
@@ -117,12 +133,12 @@ const Client = memo<ClientProps>(({ mobile }) => {
         resumeSessionId: sessionId,
       });
     } catch (err) {
-      message.error(`Failed to continue session: ${err.message}`);
+      message.error(`Failed to continue session: ${(err as Error).message}`);
     }
   };
 
   // 渲染消息
-  const renderMessage = (msg: ClaudeCodeMessage, index: number) => {
+  const renderMessage = (msg: ClaudeCodeMessage) => {
     if (msg.type === 'result') {
       return (
         <div className={styles.messageCard}>
@@ -160,13 +176,7 @@ const Client = memo<ClientProps>(({ mobile }) => {
         <div className={styles.messageCard}>
           <Space direction="vertical" size="small" style={{ width: '100%' }}>
             <Text strong>{msg.type === 'assistant' ? '🤖 Assistant' : '👤 User'}</Text>
-            <CodeEditor
-              height="auto"
-              language="markdown"
-              readonly
-              style={{ fontSize: 14 }}
-              value={content}
-            />
+            <Markdown>{content}</Markdown>
           </Space>
         </div>
       );
@@ -191,7 +201,7 @@ const Client = memo<ClientProps>(({ mobile }) => {
       <Center height="100%" width="100%">
         <Card className={styles.statusCard}>
           <Space align="center" direction="vertical">
-            <Title level={4}>Claude Code is not available</Title>
+            <Text as={'h4'}>Claude Code is not available</Text>
             {error && <Text type="danger">{error}</Text>}
             <Text type="secondary">
               Please ensure you have set ANTHROPIC_API_KEY environment variable
@@ -253,7 +263,7 @@ const Client = memo<ClientProps>(({ mobile }) => {
       children: (
         <Flexbox gap={16} height="100%">
           <Flexbox align="center" horizontal justify="space-between">
-            <Title level={5}>Recent Sessions</Title>
+            <Text as={'h5'}>Recent Sessions</Text>
             <Button onClick={fetchRecentSessions} size="small">
               Refresh
             </Button>
