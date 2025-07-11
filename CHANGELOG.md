@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.97.11](https://github.com/lobehub/lobe-chat/compare/v1.97.10...v1.97.11)
+
+<sup>Released on **2025-07-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Open new topic by tap Just Chat again.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Open new topic by tap Just Chat again, closes [#8311](https://github.com/lobehub/lobe-chat/issues/8311) ([7e2f4ce](https://github.com/lobehub/lobe-chat/commit/7e2f4ce))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.97.10](https://github.com/lobehub/lobe-chat/compare/v1.97.9...v1.97.10)
 
 <sup>Released on **2025-07-11**</sup>
