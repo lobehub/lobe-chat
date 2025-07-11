@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Grok-4 reasoning model universal matching."]
+    },
+    "date": "2025-07-11",
+    "version": "1.97.12"
+  },
+  {
+    "children": {
       "improvements": ["Open new topic by tap Just Chat again."]
     },
     "date": "2025-07-11",
