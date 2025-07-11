@@ -1,7 +1,12 @@
+import { notFound } from 'next/navigation';
+
+import { isDesktop } from '@/const/version';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
 import { DynamicLayoutProps } from '@/types/next';
 import { RouteVariants } from '@/utils/server/routeVariants';
+
+import Client from './index';
 
 export const generateMetadata = async (props: DynamicLayoutProps) => {
   const locale = await RouteVariants.getLocale(props);
@@ -14,4 +19,10 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
   });
 };
 
-export { default } from './index';
+const Page = () => {
+  if (!isDesktop) return notFound();
+
+  return <Client />;
+};
+
+export default Page;

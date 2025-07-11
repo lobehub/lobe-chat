@@ -1,18 +1,33 @@
 'use client';
 
 import { NetworkProxySettings } from '@lobechat/electron-client-ipc';
-import { Button, Form, Input, Radio, Skeleton, Space, Switch, message } from 'antd';
+import { Alert, Block, Text } from '@lobehub/ui';
+import { App, Button, Divider, Form, Input, Radio, Skeleton, Space, Switch } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import { desktopSettingsService } from '@/services/electron/settings';
 import { useElectronStore } from '@/store/electron';
 
+interface ProxyTestResult {
+  message?: string;
+  responseTime?: number;
+  success: boolean;
+}
+
 const ProxyForm = () => {
   const { t } = useTranslation('electron');
   const [form] = Form.useForm();
+  const { message } = App.useApp();
   const [testUrl, setTestUrl] = useState('https://www.google.com');
   const [isTesting, setIsTesting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [testResult, setTestResult] = useState<ProxyTestResult | null>(null);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  const isEnableProxy = Form.useWatch('enableProxy', form);
+  const proxyRequireAuth = Form.useWatch('proxyRequireAuth', form);
 
   const [setProxySettings, useGetProxySettings] = useElectronStore((s) => [
     s.setProxySettings,
@@ -23,91 +38,322 @@ const ProxyForm = () => {
   useEffect(() => {
     if (proxySettings) {
       form.setFieldsValue(proxySettings);
+      setHasUnsavedChanges(false);
     }
   }, [form, proxySettings]);
 
-  const handleValuesChange = useCallback((changedValues: Partial<NetworkProxySettings>) => {
-    setProxySettings(changedValues);
+  // 监听表单变化
+  const handleValuesChange = useCallback(() => {
+    setHasUnsavedChanges(true);
+    setTestResult(null); // 清除之前的测试结果
   }, []);
+
+  // 保存配置
+  const handleSave = useCallback(async () => {
+    try {
+      setIsSaving(true);
+      const values = await form.validateFields();
+      await setProxySettings(values);
+      setHasUnsavedChanges(false);
+      message.success(t('proxy.saveSuccess'));
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(t('proxy.saveFailed', { error: error.message }));
+      }
+    } finally {
+      setIsSaving(false);
+    }
+  }, [form, setProxySettings, t, message]);
+
+  // 重置配置
+  const handleReset = useCallback(() => {
+    if (proxySettings) {
+      form.setFieldsValue(proxySettings);
+      setHasUnsavedChanges(false);
+      setTestResult(null);
+    }
+  }, [form, proxySettings]);
+
+  // 测试代理配置
+  const handleTest = useCallback(async () => {
+    try {
+      setIsTesting(true);
+      setTestResult(null);
+
+      // 验证表单并获取当前配置
+      const values = await form.validateFields();
+      const config: NetworkProxySettings = {
+        ...proxySettings,
+        ...values,
+      };
+
+      // 使用新的 testProxyConfig 方法测试用户正在配置的代理
+      const result = await desktopSettingsService.testProxyConfig(config, testUrl);
+
+      setTestResult(result);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const result: ProxyTestResult = {
+        message: errorMessage,
+        success: false,
+      };
+      setTestResult(result);
+      message.error(t('proxy.testFailed'));
+    } finally {
+      setIsTesting(false);
+    }
+  }, [form, proxySettings, testUrl, t]);
 
   if (isLoading) return <Skeleton />;
 
   return (
-    <Form disabled={isLoading} form={form} layout="vertical" onValuesChange={handleValuesChange}>
-      <Form.Item label={t('proxy.enable')} name="enableProxy" valuePropName="checked">
-        <Switch />
-      </Form.Item>
-      <Form.Item dependencies={['enableProxy']} label={t('proxy.type')} name="proxyType">
-        <Radio.Group disabled={!form.getFieldValue('enableProxy')}>
-          <Radio value="http">HTTP</Radio>
-          <Radio value="https">HTTPS</Radio>
-          <Radio value="socks5">SOCKS5</Radio>
-        </Radio.Group>
-      </Form.Item>
-      <Form.Item dependencies={['enableProxy']} label={t('proxy.server')} name="proxyServer">
-        <Input disabled={!form.getFieldValue('enableProxy')} placeholder="127.0.0.1" />
-      </Form.Item>
-      <Form.Item dependencies={['enableProxy']} label={t('proxy.port')} name="proxyPort">
-        <Input disabled={!form.getFieldValue('enableProxy')} placeholder="7890" />
-      </Form.Item>
-      <Form.Item
-        dependencies={['enableProxy']}
-        label={t('proxy.auth')}
-        name="proxyRequireAuth"
-        valuePropName="checked"
-      >
-        <Switch disabled={!form.getFieldValue('enableProxy')} />
-      </Form.Item>
-      <Form.Item
-        dependencies={['proxyRequireAuth', 'enableProxy']}
-        hidden={!form.getFieldValue('proxyRequireAuth') || !form.getFieldValue('enableProxy')}
-        label={t('proxy.username')}
-        name="proxyUsername"
-      >
-        <Input placeholder={t('proxy.username_placeholder')} />
-      </Form.Item>
-      <Form.Item
-        dependencies={['proxyRequireAuth', 'enableProxy']}
-        hidden={!form.getFieldValue('proxyRequireAuth') || !form.getFieldValue('enableProxy')}
-        label={t('proxy.password')}
-        name="proxyPassword"
-      >
-        <Input.Password placeholder={t('proxy.password_placeholder')} />
-      </Form.Item>
-      {/*<Form.Item dependencies={['enableProxy']} label={t('proxy.bypass')} name="proxyBypass">*/}
-      {/*  <Input.TextArea*/}
-      {/*    disabled={!form.getFieldValue('enableProxy')}*/}
-      {/*    placeholder="localhost, 127.0.0.1, ::1"*/}
-      {/*  />*/}
-      {/*</Form.Item>*/}
+    <Form
+      disabled={isSaving}
+      form={form}
+      layout="vertical"
+      onValuesChange={handleValuesChange}
+      requiredMark={false}
+    >
+      <Flexbox gap={24}>
+        {/* 基本代理设置 */}
+        <Block
+          paddingBlock={16}
+          paddingInline={24}
+          style={{ borderRadius: 12 }}
+          variant={'outlined'}
+        >
+          <Form.Item name="enableProxy" noStyle valuePropName="checked">
+            <Flexbox align={'center'} horizontal justify={'space-between'}>
+              <Flexbox>
+                <Text as={'h4'}>{t('proxy.enable')}</Text>
+                <Text type={'secondary'}>开启后将通过代理服务器访问网络</Text>
+              </Flexbox>
+              <Switch
+                checked={isEnableProxy}
+                onChange={(checked) => {
+                  form.setFieldValue('enableProxy', checked);
+                }}
+              />
+            </Flexbox>
+          </Form.Item>
+        </Block>
 
-      <Form.Item label={t('proxy.testUrl')}>
-        <Space.Compact style={{ width: '100%' }}>
-          <Input
-            onChange={(e) => setTestUrl(e.target.value)}
-            placeholder={t('proxy.testUrlPlaceholder')}
-            value={testUrl}
-          />
+        {/* 认证设置 */}
+        <Block
+          paddingBlock={16}
+          paddingInline={24}
+          style={{ borderRadius: 12 }}
+          variant={'outlined'}
+        >
+          <Flexbox gap={24}>
+            <Flexbox>
+              <Text as={'h4'}>{t('proxy.basicSettings')}</Text>
+              <Text type={'secondary'}>配置代理服务器的连接参数</Text>
+            </Flexbox>
+            <Flexbox>
+              <Form.Item
+                dependencies={['enableProxy']}
+                label={t('proxy.type')}
+                name="proxyType"
+                rules={[
+                  ({ getFieldValue }) => ({
+                    message: t('proxy.validation.typeRequired'),
+                    required: getFieldValue('enableProxy'),
+                  }),
+                ]}
+              >
+                <Radio.Group disabled={!form.getFieldValue('enableProxy')}>
+                  <Radio value="http">HTTP</Radio>
+                  <Radio value="https">HTTPS</Radio>
+                  <Radio value="socks5">SOCKS5</Radio>
+                </Radio.Group>
+              </Form.Item>
+
+              <Space.Compact style={{ width: '100%' }}>
+                <Form.Item
+                  dependencies={['enableProxy']}
+                  label={t('proxy.server')}
+                  name="proxyServer"
+                  rules={[
+                    ({ getFieldValue }) => ({
+                      message: t('proxy.validation.serverRequired'),
+                      required: getFieldValue('enableProxy'),
+                    }),
+                    {
+                      message: t('proxy.validation.serverInvalid'),
+                      pattern:
+                        /^((25[0-5]|2[0-4]\d|[01]?\d{1,2})\.){3}(25[0-5]|2[0-4]\d|[01]?\d{1,2})$|^[\dA-Za-z]([\dA-Za-z-]*[\dA-Za-z])?(\.[\dA-Za-z]([\dA-Za-z-]*[\dA-Za-z])?)*$/,
+                    },
+                  ]}
+                  style={{ flex: 1, marginBottom: 0 }}
+                >
+                  <Input disabled={!form.getFieldValue('enableProxy')} placeholder="127.0.0.1" />
+                </Form.Item>
+
+                <Form.Item
+                  dependencies={['enableProxy']}
+                  label={t('proxy.port')}
+                  name="proxyPort"
+                  rules={[
+                    ({ getFieldValue }) => ({
+                      message: t('proxy.validation.portRequired'),
+                      required: getFieldValue('enableProxy'),
+                    }),
+                    {
+                      message: t('proxy.validation.portInvalid'),
+                      pattern:
+                        /^([1-9]\d{0,3}|[1-5]\d{4}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/,
+                    },
+                  ]}
+                  style={{ marginBottom: 0, width: 120 }}
+                >
+                  <Input disabled={!form.getFieldValue('enableProxy')} placeholder="7890" />
+                </Form.Item>
+              </Space.Compact>
+            </Flexbox>
+            <Divider size={'small'} />
+            <Form.Item
+              dependencies={['enableProxy']}
+              name="proxyRequireAuth"
+              noStyle
+              valuePropName="checked"
+            >
+              <Flexbox align={'center'} horizontal justify={'space-between'}>
+                <Flexbox>
+                  <Text as={'h5'}>{t('proxy.auth')}</Text>
+                  <Text type={'secondary'}>如果代理服务器需要用户名和密码</Text>
+                </Flexbox>
+                <Switch
+                  checked={proxyRequireAuth}
+                  disabled={!isEnableProxy}
+                  onChange={(checked) => {
+                    form.setFieldValue('proxyRequireAuth', checked);
+                  }}
+                />
+              </Flexbox>
+            </Form.Item>
+
+            <Flexbox>
+              <Form.Item
+                dependencies={['proxyRequireAuth', 'enableProxy']}
+                label={t('proxy.username')}
+                name="proxyUsername"
+                rules={[
+                  ({ getFieldValue }) => ({
+                    message: t('proxy.validation.usernameRequired'),
+                    required: getFieldValue('proxyRequireAuth') && getFieldValue('enableProxy'),
+                  }),
+                ]}
+                style={{
+                  display:
+                    form.getFieldValue('proxyRequireAuth') && form.getFieldValue('enableProxy')
+                      ? 'block'
+                      : 'none',
+                }}
+              >
+                <Input placeholder={t('proxy.username_placeholder')} />
+              </Form.Item>
+
+              <Form.Item
+                dependencies={['proxyRequireAuth', 'enableProxy']}
+                label={t('proxy.password')}
+                name="proxyPassword"
+                rules={[
+                  ({ getFieldValue }) => ({
+                    message: t('proxy.validation.passwordRequired'),
+                    required: getFieldValue('proxyRequireAuth') && getFieldValue('enableProxy'),
+                  }),
+                ]}
+                style={{
+                  display:
+                    form.getFieldValue('proxyRequireAuth') && form.getFieldValue('enableProxy')
+                      ? 'block'
+                      : 'none',
+                }}
+              >
+                <Input.Password placeholder={t('proxy.password_placeholder')} />
+              </Form.Item>
+            </Flexbox>
+          </Flexbox>
+        </Block>
+
+        {/* 连接测试 */}
+
+        <Block
+          paddingBlock={16}
+          paddingInline={24}
+          style={{ borderRadius: 12 }}
+          variant={'outlined'}
+        >
+          <Flexbox gap={24}>
+            <Flexbox>
+              <Text as={'h4'}>{t('proxy.connectionTest')}</Text>
+              <Text type={'secondary'}>{t('proxy.testDescription')}</Text>
+            </Flexbox>
+            <Form.Item label={t('proxy.testUrl')}>
+              <Flexbox gap={8}>
+                <Space.Compact style={{ width: '100%' }}>
+                  <Input
+                    onChange={(e) => setTestUrl(e.target.value)}
+                    placeholder={t('proxy.testUrlPlaceholder')}
+                    style={{ flex: 1 }}
+                    value={testUrl}
+                  />
+                  <Button loading={isTesting} onClick={handleTest} type="default">
+                    {t('proxy.testButton')}
+                  </Button>
+                </Space.Compact>
+                {/* 测试结果显示 */}
+                {!testResult ? null : testResult.success ? (
+                  <Alert
+                    closable
+                    message={
+                      <Flexbox align="center" gap={8} horizontal>
+                        <Text style={{ fontWeight: 500 }}>{t('proxy.testSuccess')}</Text>
+                        {testResult.responseTime && <Text>({testResult.responseTime}ms)</Text>}
+                      </Flexbox>
+                    }
+                    type={'success'}
+                  />
+                ) : (
+                  <Alert
+                    closable
+                    message={
+                      <Flexbox align="center" gap={8} horizontal>
+                        {testResult.message}
+                        {t('proxy.testFailed')}
+                      </Flexbox>
+                    }
+                    type={testResult.success ? 'success' : 'error'}
+                    variant={'outlined'}
+                  />
+                )}
+              </Flexbox>
+            </Form.Item>
+          </Flexbox>
+        </Block>
+        {/* 操作按钮 */}
+        <Space>
           <Button
-            loading={isTesting}
-            onClick={async () => {
-              setIsTesting(true);
-              try {
-                // 使用服务方法测试连接
-                await desktopSettingsService.testProxyConnection(testUrl);
-                message.success(t('proxy.testSuccess'));
-              } catch (error) {
-                message.error(t('proxy.testFailed', { error: (error as Error).message }));
-              } finally {
-                setIsTesting(false);
-              }
-            }}
+            disabled={!hasUnsavedChanges}
+            loading={isSaving}
+            onClick={handleSave}
             type="primary"
           >
-            {t('proxy.testButton')}
+            {t('proxy.saveButton')}
           </Button>
-        </Space.Compact>
-      </Form.Item>
+
+          <Button disabled={!hasUnsavedChanges || isSaving} onClick={handleReset}>
+            {t('proxy.resetButton')}
+          </Button>
+
+          {hasUnsavedChanges && (
+            <Text style={{ marginLeft: 8 }} type="warning">
+              {t('proxy.unsavedChanges')}
+            </Text>
+          )}
+        </Space>
+      </Flexbox>
     </Form>
   );
 };
