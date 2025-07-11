@@ -1346,6 +1346,9 @@
   "grok-3-mini-fast": {
     "description": "Hafif model olup, konuşma öncesi düşünür. Hızlı ve akıllı çalışır, derin alan bilgisi gerektirmeyen mantıksal görevler için uygundur ve orijinal düşünce izlerini elde edebilir."
   },
+  "grok-4-0709": {
+    "description": "En yeni ve en güçlü amiral gemisi modelimiz, doğal dil işleme, matematiksel hesaplama ve akıl yürütme alanlarında üstün performans sergiliyor — mükemmel bir çok yönlü oyuncu."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B, birden fazla üst düzey modelin birleşimiyle yaratıcı ve zeka odaklı bir dil modelidir."
   },

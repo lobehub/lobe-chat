@@ -2,43 +2,166 @@
 
 # Changelog
 
-### [Version&nbsp;1.96.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.96.1...v1.96.2)
+### [Version 1.97.12](https://github.com/lobehub/lobe-chat/compare/v1.97.11...v1.97.12)
+
+<sup>Released on **2025-07-11**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Grok-4 reasoning model universal matching.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Grok-4 reasoning model universal matching, closes [#8390](https://github.com/lobehub/lobe-chat/issues/8390) ([d6f17f8](https://github.com/lobehub/lobe-chat/commit/d6f17f8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.97.11](https://github.com/lobehub/lobe-chat/compare/v1.97.10...v1.97.11)
+
+<sup>Released on **2025-07-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Open new topic by tap Just Chat again.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Open new topic by tap Just Chat again, closes [#8311](https://github.com/lobehub/lobe-chat/issues/8311) ([7e2f4ce](https://github.com/lobehub/lobe-chat/commit/7e2f4ce))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.97.10](https://github.com/lobehub/lobe-chat/compare/v1.97.9...v1.97.10)
+
+<sup>Released on **2025-07-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#8387](https://github.com/lobehub/lobe-chat/issues/8387) ([00215c0](https://github.com/lobehub/lobe-chat/commit/00215c0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.97.9](https://github.com/lobehub/lobe-chat/compare/v1.97.8...v1.97.9)
+
 <sup>Released on **2025-07-10**</sup>
 
+#### 💄 Styles
+
+- **misc**: Integrate Amazon Cognito for user authentication.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Integrate Amazon Cognito for user authentication, closes [#7472](https://github.com/lobehub/lobe-chat/issues/7472) ([56f4e98](https://github.com/lobehub/lobe-chat/commit/56f4e98))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.97.8](https://github.com/lobehub/lobe-chat/compare/v1.97.7...v1.97.8)
+
+<sup>Released on **2025-07-10**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.97.7](https://github.com/lobehub/lobe-chat/compare/v1.97.6...v1.97.7)
+
+<sup>Released on **2025-07-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add google search grounding for Vertex AI.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add google search grounding for Vertex AI, closes [#8313](https://github.com/lobehub/lobe-chat/issues/8313) ([afd5900](https://github.com/lobehub/lobe-chat/commit/afd5900))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.97.6](https://github.com/lobehub/lobe-chat/compare/v1.97.5...v1.97.6)
+
+<sup>Released on **2025-07-10**</sup>
 
 #### ♻ Code Refactoring
 
 - **misc**: Replace `utility-types` with `type-fest`.
 
-
-#### 💄 Styles
-
-- **misc**: Add google search grounding for Vertex AI, fix: solve the loading was strange spin when switch show, integrate Amazon Cognito for user authentication.
-
-
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-
-
 #### Code refactoring
 
-* **misc**: Replace `utility-types` with `type-fest`, closes [#8370](https://github.com/jaworldwideorg/OneJA-Bot/issues/8370) ([a072b53](https://github.com/jaworldwideorg/OneJA-Bot/commit/a072b53))
-
-
-
-#### Styles
-
-* **misc**: Add google search grounding for Vertex AI, closes [#8313](https://github.com/jaworldwideorg/OneJA-Bot/issues/8313) ([afd5900](https://github.com/jaworldwideorg/OneJA-Bot/commit/afd5900))
-* **misc**: Fix: solve the loading was strange spin when switch show, closes [#8333](https://github.com/jaworldwideorg/OneJA-Bot/issues/8333) ([07197e7](https://github.com/jaworldwideorg/OneJA-Bot/commit/07197e7))
-* **misc**: Integrate Amazon Cognito for user authentication, closes [#7472](https://github.com/jaworldwideorg/OneJA-Bot/issues/7472) ([56f4e98](https://github.com/jaworldwideorg/OneJA-Bot/commit/56f4e98))
+- **misc**: Replace `utility-types` with `type-fest`, closes [#8370](https://github.com/lobehub/lobe-chat/issues/8370) ([a072b53](https://github.com/lobehub/lobe-chat/commit/a072b53))
 
 </details>
-
 
 <div align="right">
 
@@ -46,43 +169,117 @@
 
 </div>
 
-### [Version&nbsp;1.96.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.96.0...v1.96.1)
+### [Version 1.97.5](https://github.com/lobehub/lobe-chat/compare/v1.97.4...v1.97.5)
+
 <sup>Released on **2025-07-10**</sup>
 
+#### 💄 Styles
+
+- **misc**: Fix: solve the loading was strange spin when switch show.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix: solve the loading was strange spin when switch show, closes [#8333](https://github.com/lobehub/lobe-chat/issues/8333) ([07197e7](https://github.com/lobehub/lobe-chat/commit/07197e7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.97.4](https://github.com/lobehub/lobe-chat/compare/v1.97.3...v1.97.4)
+
+<sup>Released on **2025-07-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add `grok-4-0709` model from xAI, fix theme issue in desktop.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add `grok-4-0709` model from xAI, closes [#8379](https://github.com/lobehub/lobe-chat/issues/8379) ([b7ca447](https://github.com/lobehub/lobe-chat/commit/b7ca447))
+- **misc**: Fix theme issue in desktop, closes [#8380](https://github.com/lobehub/lobe-chat/issues/8380) ([c7ae78b](https://github.com/lobehub/lobe-chat/commit/c7ae78b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.97.3](https://github.com/lobehub/lobe-chat/compare/v1.97.2...v1.97.3)
+
+<sup>Released on **2025-07-10**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.97.2](https://github.com/lobehub/lobe-chat/compare/v1.97.1...v1.97.2)
+
+<sup>Released on **2025-07-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Implement data analytics event tracking framework.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Implement data analytics event tracking framework, closes [#8352](https://github.com/lobehub/lobe-chat/issues/8352) ([f433aca](https://github.com/lobehub/lobe-chat/commit/f433aca))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.97.1](https://github.com/lobehub/lobe-chat/compare/v1.97.0...v1.97.1)
+
+<sup>Released on **2025-07-10**</sup>
 
 #### 🐛 Bug Fixes
 
 - **misc**: Fix locale hydration error in SSR.
 
-
-#### 💄 Styles
-
-- **misc**: Add `grok-4-0709` model from xAI, fix theme issue in desktop, implement data analytics event tracking framework.
-
-
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-
-
 #### What's fixed
 
-* **misc**: Fix locale hydration error in SSR, closes [#8365](https://github.com/jaworldwideorg/OneJA-Bot/issues/8365) ([63f482a](https://github.com/jaworldwideorg/OneJA-Bot/commit/63f482a))
-
-
-
-#### Styles
-
-* **misc**: Add `grok-4-0709` model from xAI, closes [#8379](https://github.com/jaworldwideorg/OneJA-Bot/issues/8379) ([b7ca447](https://github.com/jaworldwideorg/OneJA-Bot/commit/b7ca447))
-* **misc**: Fix theme issue in desktop, closes [#8380](https://github.com/jaworldwideorg/OneJA-Bot/issues/8380) ([c7ae78b](https://github.com/jaworldwideorg/OneJA-Bot/commit/c7ae78b))
-* **misc**: Implement data analytics event tracking framework, closes [#8352](https://github.com/jaworldwideorg/OneJA-Bot/issues/8352) ([f433aca](https://github.com/jaworldwideorg/OneJA-Bot/commit/f433aca))
+- **misc**: Fix locale hydration error in SSR, closes [#8365](https://github.com/lobehub/lobe-chat/issues/8365) ([63f482a](https://github.com/lobehub/lobe-chat/commit/63f482a))
 
 </details>
-
 
 <div align="right">
 
@@ -90,41 +287,49 @@
 
 </div>
 
-## [Version&nbsp;1.96.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.95.2...v1.96.0)
-<sup>Released on **2025-07-08**</sup>
+## [Version 1.97.0](https://github.com/lobehub/lobe-chat/compare/v1.96.20...v1.97.0)
 
+<sup>Released on **2025-07-08**</sup>
 
 #### ✨ Features
 
 - **misc**: Add MCP marketplace and mcp plugin one-click installation in desktop.
 
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add MCP marketplace and mcp plugin one-click installation in desktop, closes [#8334](https://github.com/lobehub/lobe-chat/issues/8334) ([416a4b1](https://github.com/lobehub/lobe-chat/commit/416a4b1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.20](https://github.com/lobehub/lobe-chat/compare/v1.96.19...v1.96.20)
+
+<sup>Released on **2025-07-08**</sup>
 
 #### 💄 Styles
 
 - **misc**: Add `MCP_TOOL_TIMEOUT` env and improve debug usage guide.
 
-
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-
-
-#### What's improved
-
-* **misc**: Add MCP marketplace and mcp plugin one-click installation in desktop, closes [#8334](https://github.com/jaworldwideorg/OneJA-Bot/issues/8334) ([416a4b1](https://github.com/jaworldwideorg/OneJA-Bot/commit/416a4b1))
-
-
-
 #### Styles
 
-* **misc**: Add `MCP_TOOL_TIMEOUT` env and improve debug usage guide, closes [#8357](https://github.com/jaworldwideorg/OneJA-Bot/issues/8357) ([d4baae5](https://github.com/jaworldwideorg/OneJA-Bot/commit/d4baae5))
+- **misc**: Add `MCP_TOOL_TIMEOUT` env and improve debug usage guide, closes [#8357](https://github.com/lobehub/lobe-chat/issues/8357) ([d4baae5](https://github.com/lobehub/lobe-chat/commit/d4baae5))
 
 </details>
-
 
 <div align="right">
 
@@ -132,42 +337,57 @@
 
 </div>
 
-### [Version&nbsp;1.95.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.95.1...v1.95.2)
-<sup>Released on **2025-07-07**</sup>
+### [Version 1.96.19](https://github.com/lobehub/lobe-chat/compare/v1.96.18...v1.96.19)
 
+<sup>Released on **2025-07-07**</sup>
 
 #### 🐛 Bug Fixes
 
-- **misc**: Change the wrong github checkmodel name, pin `officeparser@5.1.1` to fix server error.
+- **misc**: Pin `officeparser@5.1.1` to fix server error.
 
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Pin `officeparser@5.1.1` to fix server error, closes [#8354](https://github.com/lobehub/lobe-chat/issues/8354) ([3f4e935](https://github.com/lobehub/lobe-chat/commit/3f4e935))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.18](https://github.com/lobehub/lobe-chat/compare/v1.96.17...v1.96.18)
+
+<sup>Released on **2025-07-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Change the wrong github checkmodel name.
 
 #### 💄 Styles
 
 - **misc**: Files hello pages should scroll.
 
-
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-
-
 #### What's fixed
 
-* **misc**: Change the wrong github checkmodel name, closes [#8339](https://github.com/jaworldwideorg/OneJA-Bot/issues/8339) ([f07d912](https://github.com/jaworldwideorg/OneJA-Bot/commit/f07d912))
-* **misc**: Pin `officeparser@5.1.1` to fix server error, closes [#8354](https://github.com/jaworldwideorg/OneJA-Bot/issues/8354) ([3f4e935](https://github.com/jaworldwideorg/OneJA-Bot/commit/3f4e935))
-
-
+- **misc**: Change the wrong github checkmodel name, closes [#8339](https://github.com/lobehub/lobe-chat/issues/8339) ([f07d912](https://github.com/lobehub/lobe-chat/commit/f07d912))
 
 #### Styles
 
-* **misc**: Files hello pages should scroll, closes [#8340](https://github.com/jaworldwideorg/OneJA-Bot/issues/8340) ([df9b7df](https://github.com/jaworldwideorg/OneJA-Bot/commit/df9b7df))
+- **misc**: Files hello pages should scroll, closes [#8340](https://github.com/lobehub/lobe-chat/issues/8340) ([df9b7df](https://github.com/lobehub/lobe-chat/commit/df9b7df))
 
 </details>
-
 
 <div align="right">
 
@@ -175,58 +395,174 @@
 
 </div>
 
-### [Version&nbsp;1.95.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.95.0...v1.95.1)
+### [Version 1.96.17](https://github.com/lobehub/lobe-chat/compare/v1.96.16...v1.96.17)
+
 <sup>Released on **2025-07-03**</sup>
 
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.16](https://github.com/lobehub/lobe-chat/compare/v1.96.15...v1.96.16)
+
+<sup>Released on **2025-07-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#8322](https://github.com/lobehub/lobe-chat/issues/8322) ([0c6b885](https://github.com/lobehub/lobe-chat/commit/0c6b885))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.15](https://github.com/lobehub/lobe-chat/compare/v1.96.14...v1.96.15)
+
+<sup>Released on **2025-07-02**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Wrong Gemini 2.5 Pro thinkbudget.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Wrong Gemini 2.5 Pro thinkbudget, closes [#8296](https://github.com/lobehub/lobe-chat/issues/8296) ([18920c5](https://github.com/lobehub/lobe-chat/commit/18920c5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.14](https://github.com/lobehub/lobe-chat/compare/v1.96.13...v1.96.14)
+
+<sup>Released on **2025-07-01**</sup>
 
 #### ♻ Code Refactoring
 
 - **misc**: Migrate to `@google/genai` SDK for Google Gemini API and Vertex AI.
 
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Migrate to `@google/genai` SDK for Google Gemini API and Vertex AI, closes [#7884](https://github.com/lobehub/lobe-chat/issues/7884) ([fef3e5f](https://github.com/lobehub/lobe-chat/commit/fef3e5f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.13](https://github.com/lobehub/lobe-chat/compare/v1.96.12...v1.96.13)
+
+<sup>Released on **2025-07-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#8306](https://github.com/lobehub/lobe-chat/issues/8306) ([80aad1d](https://github.com/lobehub/lobe-chat/commit/80aad1d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.12](https://github.com/lobehub/lobe-chat/compare/v1.96.11...v1.96.12)
+
+<sup>Released on **2025-06-30**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Pin `antd@5.26.2` to fix build error.
+
+#### 💄 Styles
+
+- **misc**: Add DeepResearch models from OpenAI.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Pin `antd@5.26.2` to fix build error, closes [#8303](https://github.com/lobehub/lobe-chat/issues/8303) ([44b6b01](https://github.com/lobehub/lobe-chat/commit/44b6b01))
+
+#### Styles
+
+- **misc**: Add DeepResearch models from OpenAI, closes [#8291](https://github.com/lobehub/lobe-chat/issues/8291) ([87a5cbc](https://github.com/lobehub/lobe-chat/commit/87a5cbc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.11](https://github.com/lobehub/lobe-chat/compare/v1.96.10...v1.96.11)
+
+<sup>Released on **2025-06-28**</sup>
 
 #### 🐛 Bug Fixes
 
 - **mermaid**: Firefox mermaid show error.
-- **misc**: Fix desktop chunk issue, pin `antd@5.26.2` to fix build error, Wrong Gemini 2.5 Pro thinkbudget.
-
-
-#### 💄 Styles
-
-- **misc**: Add DeepResearch models from OpenAI, update i18n, update i18n.
-
 
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-
-
-#### Code refactoring
-
-* **misc**: Migrate to `@google/genai` SDK for Google Gemini API and Vertex AI, closes [#7884](https://github.com/jaworldwideorg/OneJA-Bot/issues/7884) ([fef3e5f](https://github.com/jaworldwideorg/OneJA-Bot/commit/fef3e5f))
-
-
-
 #### What's fixed
 
-* **mermaid**: Firefox mermaid show error, closes [#8270](https://github.com/jaworldwideorg/OneJA-Bot/issues/8270) ([d9c5e7b](https://github.com/jaworldwideorg/OneJA-Bot/commit/d9c5e7b))
-* **misc**: Fix desktop chunk issue, closes [#8280](https://github.com/jaworldwideorg/OneJA-Bot/issues/8280) ([c193e65](https://github.com/jaworldwideorg/OneJA-Bot/commit/c193e65))
-* **misc**: Pin `antd@5.26.2` to fix build error, closes [#8303](https://github.com/jaworldwideorg/OneJA-Bot/issues/8303) ([44b6b01](https://github.com/jaworldwideorg/OneJA-Bot/commit/44b6b01))
-* **misc**: Wrong Gemini 2.5 Pro thinkbudget, closes [#8296](https://github.com/jaworldwideorg/OneJA-Bot/issues/8296) ([18920c5](https://github.com/jaworldwideorg/OneJA-Bot/commit/18920c5))
-
-
-
-#### Styles
-
-* **misc**: Add DeepResearch models from OpenAI, closes [#8291](https://github.com/jaworldwideorg/OneJA-Bot/issues/8291) ([87a5cbc](https://github.com/jaworldwideorg/OneJA-Bot/commit/87a5cbc))
-* **misc**: Update i18n, closes [#8322](https://github.com/jaworldwideorg/OneJA-Bot/issues/8322) ([0c6b885](https://github.com/jaworldwideorg/OneJA-Bot/commit/0c6b885))
-* **misc**: Update i18n, closes [#8306](https://github.com/jaworldwideorg/OneJA-Bot/issues/8306) ([80aad1d](https://github.com/jaworldwideorg/OneJA-Bot/commit/80aad1d))
+- **mermaid**: Firefox mermaid show error, closes [#8270](https://github.com/lobehub/lobe-chat/issues/8270) ([d9c5e7b](https://github.com/lobehub/lobe-chat/commit/d9c5e7b))
 
 </details>
-
 
 <div align="right">
 
@@ -234,61 +570,210 @@
 
 </div>
 
-## [Version&nbsp;1.95.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.94.5...v1.95.0)
-<sup>Released on **2025-06-25**</sup>
+### [Version 1.96.10](https://github.com/lobehub/lobe-chat/compare/v1.96.9...v1.96.10)
 
-
-#### ✨ Features
-
-- **misc**: Add Brave & Google PSE & Kagi as build-in Search Provider, add v0 (Vercel) provider support.
-
+<sup>Released on **2025-06-28**</sup>
 
 #### 🐛 Bug Fixes
 
-- **misc**: Fix `MiniMax-M1` reasoning tag missing, fix inputTemplate behavior, Google Gemini tools declarations, Remove unsupported parameters of Hunyuan.
+- **misc**: Fix desktop chunk issue.
 
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix desktop chunk issue, closes [#8280](https://github.com/lobehub/lobe-chat/issues/8280) ([c193e65](https://github.com/lobehub/lobe-chat/commit/c193e65))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.9](https://github.com/lobehub/lobe-chat/compare/v1.96.8...v1.96.9)
+
+<sup>Released on **2025-06-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Google Gemini tools declarations.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Google Gemini tools declarations, closes [#8256](https://github.com/lobehub/lobe-chat/issues/8256) ([08f5d73](https://github.com/lobehub/lobe-chat/commit/08f5d73))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.8](https://github.com/lobehub/lobe-chat/compare/v1.96.7...v1.96.8)
+
+<sup>Released on **2025-06-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Optimized Gemini thinkingBudget configuration.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Optimized Gemini thinkingBudget configuration, closes [#8224](https://github.com/lobehub/lobe-chat/issues/8224) ([03625e8](https://github.com/lobehub/lobe-chat/commit/03625e8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.7](https://github.com/lobehub/lobe-chat/compare/v1.96.6...v1.96.7)
+
+<sup>Released on **2025-06-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add `blockAds` & `stealth` params for Browserless.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add `blockAds` & `stealth` params for Browserless, closes [#8255](https://github.com/lobehub/lobe-chat/issues/8255) ([2ff3efa](https://github.com/lobehub/lobe-chat/commit/2ff3efa))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.6](https://github.com/lobehub/lobe-chat/compare/v1.96.5...v1.96.6)
+
+<sup>Released on **2025-06-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#8253](https://github.com/lobehub/lobe-chat/issues/8253) ([b86dc9b](https://github.com/lobehub/lobe-chat/commit/b86dc9b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.5](https://github.com/lobehub/lobe-chat/compare/v1.96.4...v1.96.5)
+
+<sup>Released on **2025-06-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Remove unsupported parameters of Hunyuan.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Remove unsupported parameters of Hunyuan, closes [#8247](https://github.com/lobehub/lobe-chat/issues/8247) ([826d724](https://github.com/lobehub/lobe-chat/commit/826d724))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.4](https://github.com/lobehub/lobe-chat/compare/v1.96.3...v1.96.4)
+
+<sup>Released on **2025-06-22**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.3](https://github.com/lobehub/lobe-chat/compare/v1.96.2...v1.96.3)
+
+<sup>Released on **2025-06-22**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.96.2](https://github.com/lobehub/lobe-chat/compare/v1.96.1...v1.96.2)
+
+<sup>Released on **2025-06-22**</sup>
 
 #### 💄 Styles
 
 - **openrouter**: Add stable versions of Gemini 2.5 models.
-- **misc**: Add `blockAds` & `stealth` params for Browserless, Optimized Gemini thinkingBudget configuration, update i18n, update i18n.
-
+- **misc**: Update i18n.
 
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-
-
-#### What's improved
-
-* **misc**: Add Brave & Google PSE & Kagi as build-in Search Provider, closes [#8172](https://github.com/jaworldwideorg/OneJA-Bot/issues/8172) ([16ae521](https://github.com/jaworldwideorg/OneJA-Bot/commit/16ae521))
-* **misc**: Add v0 (Vercel) provider support, closes [#8235](https://github.com/jaworldwideorg/OneJA-Bot/issues/8235) ([5842a18](https://github.com/jaworldwideorg/OneJA-Bot/commit/5842a18))
-
-
-
-#### What's fixed
-
-* **misc**: Fix `MiniMax-M1` reasoning tag missing, closes [#8240](https://github.com/jaworldwideorg/OneJA-Bot/issues/8240) ([ea76c11](https://github.com/jaworldwideorg/OneJA-Bot/commit/ea76c11))
-* **misc**: Fix inputTemplate behavior, closes [#8204](https://github.com/jaworldwideorg/OneJA-Bot/issues/8204) ([61c2c3c](https://github.com/jaworldwideorg/OneJA-Bot/commit/61c2c3c))
-* **misc**: Google Gemini tools declarations, closes [#8256](https://github.com/jaworldwideorg/OneJA-Bot/issues/8256) ([08f5d73](https://github.com/jaworldwideorg/OneJA-Bot/commit/08f5d73))
-* **misc**: Remove unsupported parameters of Hunyuan, closes [#8247](https://github.com/jaworldwideorg/OneJA-Bot/issues/8247) ([826d724](https://github.com/jaworldwideorg/OneJA-Bot/commit/826d724))
-
-
-
 #### Styles
 
-* **openrouter**: Add stable versions of Gemini 2.5 models, closes [#8239](https://github.com/jaworldwideorg/OneJA-Bot/issues/8239) ([d34ecab](https://github.com/jaworldwideorg/OneJA-Bot/commit/d34ecab))
-* **misc**: Add `blockAds` & `stealth` params for Browserless, closes [#8255](https://github.com/jaworldwideorg/OneJA-Bot/issues/8255) ([2ff3efa](https://github.com/jaworldwideorg/OneJA-Bot/commit/2ff3efa))
-* **misc**: Optimized Gemini thinkingBudget configuration, closes [#8224](https://github.com/jaworldwideorg/OneJA-Bot/issues/8224) ([03625e8](https://github.com/jaworldwideorg/OneJA-Bot/commit/03625e8))
-* **misc**: Update i18n, closes [#8253](https://github.com/jaworldwideorg/OneJA-Bot/issues/8253) ([b86dc9b](https://github.com/jaworldwideorg/OneJA-Bot/commit/b86dc9b))
-* **misc**: Update i18n, closes [#8242](https://github.com/jaworldwideorg/OneJA-Bot/issues/8242) ([2d1babc](https://github.com/jaworldwideorg/OneJA-Bot/commit/2d1babc))
+- **openrouter**: Add stable versions of Gemini 2.5 models, closes [#8239](https://github.com/lobehub/lobe-chat/issues/8239) ([d34ecab](https://github.com/lobehub/lobe-chat/commit/d34ecab))
+- **misc**: Update i18n, closes [#8242](https://github.com/lobehub/lobe-chat/issues/8242) ([2d1babc](https://github.com/lobehub/lobe-chat/commit/2d1babc))
 
 </details>
-
 
 <div align="right">
 
@@ -296,45 +781,132 @@
 
 </div>
 
-### [Version&nbsp;1.94.5](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.94.4...v1.94.5)
+### [Version 1.96.1](https://github.com/lobehub/lobe-chat/compare/v1.96.0...v1.96.1)
+
+<sup>Released on **2025-06-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `MiniMax-M1` reasoning tag missing.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `MiniMax-M1` reasoning tag missing, closes [#8240](https://github.com/lobehub/lobe-chat/issues/8240) ([ea76c11](https://github.com/lobehub/lobe-chat/commit/ea76c11))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.96.0](https://github.com/lobehub/lobe-chat/compare/v1.95.0...v1.96.0)
+
 <sup>Released on **2025-06-20**</sup>
 
+#### ✨ Features
+
+- **misc**: Add v0 (Vercel) provider support.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix inputTemplate behavior.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add v0 (Vercel) provider support, closes [#8235](https://github.com/lobehub/lobe-chat/issues/8235) ([5842a18](https://github.com/lobehub/lobe-chat/commit/5842a18))
+
+#### What's fixed
+
+- **misc**: Fix inputTemplate behavior, closes [#8204](https://github.com/lobehub/lobe-chat/issues/8204) ([61c2c3c](https://github.com/lobehub/lobe-chat/commit/61c2c3c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.95.0](https://github.com/lobehub/lobe-chat/compare/v1.94.17...v1.95.0)
+
+<sup>Released on **2025-06-20**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Brave & Google PSE & Kagi as build-in Search Provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Brave & Google PSE & Kagi as build-in Search Provider, closes [#8172](https://github.com/lobehub/lobe-chat/issues/8172) ([16ae521](https://github.com/lobehub/lobe-chat/commit/16ae521))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.94.17](https://github.com/lobehub/lobe-chat/compare/v1.94.16...v1.94.17)
+
+<sup>Released on **2025-06-20**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#8233](https://github.com/lobehub/lobe-chat/issues/8233) ([88c4362](https://github.com/lobehub/lobe-chat/commit/88c4362))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.94.16](https://github.com/lobehub/lobe-chat/compare/v1.94.15...v1.94.16)
+
+<sup>Released on **2025-06-19**</sup>
 
 #### 🐛 Bug Fixes
 
 - **misc**: Correctly pass `reasoning.summary`.
 
-
-#### 💄 Styles
-
-- **misc**: Add MiniMax-M1 model, Update Gemini 2.5 Pro, Flash GA models. Add Gemini 2.5 Flash-Lite Preview model, update i18n, update i18n, update model card for Gemini 2.5 Pro via OpenRouter.
-
-
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-
-
 #### What's fixed
 
-* **misc**: Correctly pass `reasoning.summary`, closes [#8221](https://github.com/jaworldwideorg/OneJA-Bot/issues/8221) ([da79815](https://github.com/jaworldwideorg/OneJA-Bot/commit/da79815))
-
-
-
-#### Styles
-
-* **misc**: Add MiniMax-M1 model, closes [#8209](https://github.com/jaworldwideorg/OneJA-Bot/issues/8209) ([41a0178](https://github.com/jaworldwideorg/OneJA-Bot/commit/41a0178))
-* **misc**: Update Gemini 2.5 Pro, Flash GA models. Add Gemini 2.5 Flash-Lite Preview model, closes [#8213](https://github.com/jaworldwideorg/OneJA-Bot/issues/8213) ([39ef8be](https://github.com/jaworldwideorg/OneJA-Bot/commit/39ef8be))
-* **misc**: Update i18n, closes [#8233](https://github.com/jaworldwideorg/OneJA-Bot/issues/8233) ([88c4362](https://github.com/jaworldwideorg/OneJA-Bot/commit/88c4362))
-* **misc**: Update i18n, closes [#8225](https://github.com/jaworldwideorg/OneJA-Bot/issues/8225) ([53e1784](https://github.com/jaworldwideorg/OneJA-Bot/commit/53e1784))
-* **misc**: Update model card for Gemini 2.5 Pro via OpenRouter, closes [#8129](https://github.com/jaworldwideorg/OneJA-Bot/issues/8129) ([c96d9ef](https://github.com/jaworldwideorg/OneJA-Bot/commit/c96d9ef))
+- **misc**: Correctly pass `reasoning.summary`, closes [#8221](https://github.com/lobehub/lobe-chat/issues/8221) ([da79815](https://github.com/lobehub/lobe-chat/commit/da79815))
 
 </details>
-
 
 <div align="right">
 
@@ -342,30 +914,124 @@
 
 </div>
 
-### [Version&nbsp;1.94.4](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.94.3...v1.94.4)
+### [Version 1.94.15](https://github.com/lobehub/lobe-chat/compare/v1.94.14...v1.94.15)
+
+<sup>Released on **2025-06-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update model card for Gemini 2.5 Pro via OpenRouter.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update model card for Gemini 2.5 Pro via OpenRouter, closes [#8129](https://github.com/lobehub/lobe-chat/issues/8129) ([c96d9ef](https://github.com/lobehub/lobe-chat/commit/c96d9ef))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.94.14](https://github.com/lobehub/lobe-chat/compare/v1.94.13...v1.94.14)
+
+<sup>Released on **2025-06-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#8225](https://github.com/lobehub/lobe-chat/issues/8225) ([53e1784](https://github.com/lobehub/lobe-chat/commit/53e1784))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.94.13](https://github.com/lobehub/lobe-chat/compare/v1.94.12...v1.94.13)
+
 <sup>Released on **2025-06-18**</sup>
 
+#### 💄 Styles
+
+- **misc**: Update Gemini 2.5 Pro, Flash GA models. Add Gemini 2.5 Flash-Lite Preview model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Gemini 2.5 Pro, Flash GA models. Add Gemini 2.5 Flash-Lite Preview model, closes [#8213](https://github.com/lobehub/lobe-chat/issues/8213) ([39ef8be](https://github.com/lobehub/lobe-chat/commit/39ef8be))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.94.12](https://github.com/lobehub/lobe-chat/compare/v1.94.11...v1.94.12)
+
+<sup>Released on **2025-06-18**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add MiniMax-M1 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add MiniMax-M1 model, closes [#8209](https://github.com/lobehub/lobe-chat/issues/8209) ([41a0178](https://github.com/lobehub/lobe-chat/commit/41a0178))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.94.11](https://github.com/lobehub/lobe-chat/compare/v1.94.10...v1.94.11)
+
+<sup>Released on **2025-06-17**</sup>
 
 #### 🐛 Bug Fixes
 
 - **misc**: Enhance the multi-display window opening experience.
 
-
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-
-
 #### What's fixed
 
-* **misc**: Enhance the multi-display window opening experience, closes [#8176](https://github.com/jaworldwideorg/OneJA-Bot/issues/8176) ([b132e66](https://github.com/jaworldwideorg/OneJA-Bot/commit/b132e66))
+- **misc**: Enhance the multi-display window opening experience, closes [#8176](https://github.com/lobehub/lobe-chat/issues/8176) ([b132e66](https://github.com/lobehub/lobe-chat/commit/b132e66))
 
 </details>
-
 
 <div align="right">
 
@@ -373,42 +1039,49 @@
 
 </div>
 
-### [Version&nbsp;1.94.3](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.94.2...v1.94.3)
-<sup>Released on **2025-06-16**</sup>
+### [Version 1.94.10](https://github.com/lobehub/lobe-chat/compare/v1.94.9...v1.94.10)
 
+<sup>Released on **2025-06-15**</sup>
 
 #### 🐛 Bug Fixes
 
-- **misc**: Correctly handle `reasoning_effort`, improve chat selectors and enhance topic handling logic.
+- **misc**: Improve chat selectors and enhance topic handling logic.
 
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Improve chat selectors and enhance topic handling logic, closes [#8133](https://github.com/lobehub/lobe-chat/issues/8133) [#8117](https://github.com/lobehub/lobe-chat/issues/8117) ([15b24f1](https://github.com/lobehub/lobe-chat/commit/15b24f1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.94.9](https://github.com/lobehub/lobe-chat/compare/v1.94.8...v1.94.9)
+
+<sup>Released on **2025-06-15**</sup>
 
 #### 💄 Styles
 
 - **misc**: Add `kimi-thinking-preview` model from Moonshot.
 
-
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-
-
-#### What's fixed
-
-* **misc**: Correctly handle `reasoning_effort`, closes [#8180](https://github.com/jaworldwideorg/OneJA-Bot/issues/8180) ([1c04736](https://github.com/jaworldwideorg/OneJA-Bot/commit/1c04736))
-* **misc**: Improve chat selectors and enhance topic handling logic, closes [#8133](https://github.com/jaworldwideorg/OneJA-Bot/issues/8133) [#8117](https://github.com/jaworldwideorg/OneJA-Bot/issues/8117) ([15b24f1](https://github.com/jaworldwideorg/OneJA-Bot/commit/15b24f1))
-
-
-
 #### Styles
 
-* **misc**: Add `kimi-thinking-preview` model from Moonshot, closes [#8171](https://github.com/jaworldwideorg/OneJA-Bot/issues/8171) ([93d677c](https://github.com/jaworldwideorg/OneJA-Bot/commit/93d677c))
+- **misc**: Add `kimi-thinking-preview` model from Moonshot, closes [#8171](https://github.com/lobehub/lobe-chat/issues/8171) ([93d677c](https://github.com/lobehub/lobe-chat/commit/93d677c))
 
 </details>
-
 
 <div align="right">
 
@@ -416,41 +1089,49 @@
 
 </div>
 
-### [Version&nbsp;1.94.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.94.1...v1.94.2)
-<sup>Released on **2025-06-13**</sup>
+### [Version 1.94.8](https://github.com/lobehub/lobe-chat/compare/v1.94.7...v1.94.8)
 
+<sup>Released on **2025-06-15**</sup>
 
 #### 🐛 Bug Fixes
 
-- **misc**: Abort the Gemini request correctly & Add openai o3-pro.
+- **misc**: Correctly handle `reasoning_effort`.
 
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Correctly handle `reasoning_effort`, closes [#8180](https://github.com/lobehub/lobe-chat/issues/8180) ([1c04736](https://github.com/lobehub/lobe-chat/commit/1c04736))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.94.7](https://github.com/lobehub/lobe-chat/compare/v1.94.6...v1.94.7)
+
+<sup>Released on **2025-06-12**</sup>
 
 #### 💄 Styles
 
 - **misc**: Add Doubao Seed 1.6 model.
 
-
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-
-
-#### What's fixed
-
-* **misc**: Abort the Gemini request correctly & Add openai o3-pro, closes [#8135](https://github.com/jaworldwideorg/OneJA-Bot/issues/8135) ([c79f1b9](https://github.com/jaworldwideorg/OneJA-Bot/commit/c79f1b9))
-
-
-
 #### Styles
 
-* **misc**: Add Doubao Seed 1.6 model, closes [#8167](https://github.com/jaworldwideorg/OneJA-Bot/issues/8167) ([bdfa44b](https://github.com/jaworldwideorg/OneJA-Bot/commit/bdfa44b))
+- **misc**: Add Doubao Seed 1.6 model, closes [#8167](https://github.com/lobehub/lobe-chat/issues/8167) ([bdfa44b](https://github.com/lobehub/lobe-chat/commit/bdfa44b))
 
 </details>
-
 
 <div align="right">
 
@@ -458,47 +1139,24 @@
 
 </div>
 
-### [Version&nbsp;1.94.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.94.0...v1.94.1)
-<sup>Released on **2025-06-12**</sup>
+### [Version 1.94.6](https://github.com/lobehub/lobe-chat/compare/v1.94.5...v1.94.6)
 
+<sup>Released on **2025-06-12**</sup>
 
 #### 🐛 Bug Fixes
 
-- **chat**: Improve response animation merging logic.
-- **misc**: Update Gemini range of thinkingBudget.
-
-
-#### 💄 Styles
-
-- **ModelSelect**: Improve mobile layout and text overflow handling.
-- **misc**: Support `web_search_preview` & fix some bug form OpenAI Response API, Transition animation switch, update pplx abilities tags, support `vision`.
-
+- **misc**: Abort the Gemini request correctly & Add openai o3-pro.
 
 <br/>
-
-
 
 <details>
 <summary><kbd>Improvements and Fixes</kbd></summary>
 
-
-
 #### What's fixed
 
-* **chat**: Improve response animation merging logic, closes [#8160](https://github.com/jaworldwideorg/OneJA-Bot/issues/8160) ([9d81cdc](https://github.com/jaworldwideorg/OneJA-Bot/commit/9d81cdc))
-* **misc**: Update Gemini range of thinkingBudget, closes [#8122](https://github.com/jaworldwideorg/OneJA-Bot/issues/8122) ([7331e8a](https://github.com/jaworldwideorg/OneJA-Bot/commit/7331e8a))
-
-
-
-#### Styles
-
-* **ModelSelect**: Improve mobile layout and text overflow handling, closes [#8118](https://github.com/jaworldwideorg/OneJA-Bot/issues/8118) ([d97aa49](https://github.com/jaworldwideorg/OneJA-Bot/commit/d97aa49))
-* **misc**: Support `web_search_preview` & fix some bug form OpenAI Response API, closes [#8131](https://github.com/jaworldwideorg/OneJA-Bot/issues/8131) ([b2983f0](https://github.com/jaworldwideorg/OneJA-Bot/commit/b2983f0))
-* **misc**: Transition animation switch, closes [#7981](https://github.com/jaworldwideorg/OneJA-Bot/issues/7981) ([dd4ab3f](https://github.com/jaworldwideorg/OneJA-Bot/commit/dd4ab3f))
-* **misc**: Update pplx abilities tags, support `vision`, closes [#8119](https://github.com/jaworldwideorg/OneJA-Bot/issues/8119) ([5c2e5f7](https://github.com/jaworldwideorg/OneJA-Bot/commit/5c2e5f7))
+- **misc**: Abort the Gemini request correctly & Add openai o3-pro, closes [#8135](https://github.com/lobehub/lobe-chat/issues/8135) ([c79f1b9](https://github.com/lobehub/lobe-chat/commit/c79f1b9))
 
 </details>
-
 
 <div align="right">
 
