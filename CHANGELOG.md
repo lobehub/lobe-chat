@@ -2,6 +2,49 @@
 
 # Changelog
 
+### [Version&nbsp;1.96.3](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.96.2...v1.96.3)
+<sup>Released on **2025-07-11**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Grok-4 reasoning model universal matching.
+
+
+#### 💄 Styles
+
+- **misc**: Open new topic by tap Just Chat again, update i18n.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **misc**: Grok-4 reasoning model universal matching, closes [#8390](https://github.com/jaworldwideorg/OneJA-Bot/issues/8390) ([d6f17f8](https://github.com/jaworldwideorg/OneJA-Bot/commit/d6f17f8))
+
+
+
+#### Styles
+
+* **misc**: Open new topic by tap Just Chat again, closes [#8311](https://github.com/jaworldwideorg/OneJA-Bot/issues/8311) ([7e2f4ce](https://github.com/jaworldwideorg/OneJA-Bot/commit/7e2f4ce))
+* **misc**: Update i18n, closes [#8387](https://github.com/jaworldwideorg/OneJA-Bot/issues/8387) ([00215c0](https://github.com/jaworldwideorg/OneJA-Bot/commit/00215c0))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.97.12](https://github.com/lobehub/lobe-chat/compare/v1.97.11...v1.97.12)
 
 <sup>Released on **2025-07-11**</sup>
