@@ -6,18 +6,15 @@ import { useOnlyFetchOnceSWR } from '@/libs/swr';
 // Import for type usage
 import { electronSystemService } from '@/services/electron/system';
 import { globalAgentContextManager } from '@/utils/client/GlobalAgentContextManager';
+import { merge } from '@/utils/merge';
 
 import { ElectronStore } from '../store';
-
-// Import the new service
-
-// ======== State ======== //
-
-// Note: Actual state is defined in initialState.ts and ElectronState interface
 
 // ======== Action Interface ======== //
 
 export interface ElectronAppAction {
+  updateElectronAppState: (state: ElectronAppState) => void;
+
   /**
    * Initializes the basic Electron application state, including system info and special paths.
    * Should be called once when the application starts.
@@ -32,7 +29,12 @@ export const createElectronAppSlice: StateCreator<
   [['zustand/devtools', never]],
   [],
   ElectronAppAction
-> = (set) => ({
+> = (set, get) => ({
+  updateElectronAppState: (state: ElectronAppState) => {
+    const prevState = get().appState;
+    set({ appState: merge(prevState, state) });
+  },
+
   useInitElectronAppState: () =>
     useOnlyFetchOnceSWR<ElectronAppState>(
       'initElectronAppState',

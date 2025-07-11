@@ -1,7 +1,8 @@
+import { getSingletonAnalyticsOptional } from '@lobehub/analytics';
 import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import useSWR, { SWRResponse, mutate } from 'swr';
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 import { StateCreator } from 'zustand/vanilla';
 
 import { message } from '@/components/AntdStaticMethods';
@@ -10,8 +11,8 @@ import { DEFAULT_AGENT_LOBE_SESSION, INBOX_SESSION_ID } from '@/const/session';
 import { useClientDataSWR } from '@/libs/swr';
 import { sessionService } from '@/services/session';
 import { SessionStore } from '@/store/session';
-import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/selectors';
+import { getUserStoreState, useUserStore } from '@/store/user';
+import { settingsSelectors, userProfileSelectors } from '@/store/user/selectors';
 import { MetaData } from '@/types/meta';
 import {
   ChatSessionList,
@@ -24,6 +25,7 @@ import {
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
+import { sessionGroupSelectors } from '../sessionGroup/selectors';
 import { SessionDispatch, sessionsReducer } from './reducers';
 import { sessionSelectors } from './selectors';
 import { sessionMetaSelectors } from './selectors/meta';
@@ -49,7 +51,7 @@ export interface SessionAction {
    * @returns sessionId
    */
   createSession: (
-    session?: DeepPartial<LobeAgentSession>,
+    session?: PartialDeep<LobeAgentSession>,
     isSwitchSession?: boolean,
   ) => Promise<string>;
   duplicateSession: (id: string) => Promise<void>;
@@ -113,6 +115,30 @@ export const createSessionSlice: StateCreator<
 
     const id = await sessionService.createSession(LobeSessionType.Agent, newSession);
     await refreshSessions();
+
+    // Track new agent creation analytics
+    const analytics = getSingletonAnalyticsOptional();
+    if (analytics) {
+      const userStore = getUserStoreState();
+      const userId = userProfileSelectors.userId(userStore);
+
+      // Get group information
+      const groupId = newSession.group || 'default';
+      const group = sessionGroupSelectors.getGroupById(groupId)(get());
+      const groupName = group?.name || (groupId === 'default' ? 'Default' : 'Unknown');
+
+      analytics.track({
+        name: 'new_agent_created',
+        properties: {
+          assistant_name: newSession.meta?.title || 'Untitled Agent',
+          assistant_tags: newSession.meta?.tags || [],
+          group_id: groupId,
+          group_name: groupName,
+          session_id: id,
+          user_id: userId || 'anonymous',
+        },
+      });
+    }
 
     // Whether to goto  to the new session after creation, the default is to switch to
     if (isSwitchSession) switchSession(id);

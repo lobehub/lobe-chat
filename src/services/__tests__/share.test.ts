@@ -1,4 +1,4 @@
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LOBE_URL_IMPORT_NAME } from '@/const/url';
@@ -20,7 +20,7 @@ describe('ShareGPTService', () => {
   describe('ShareViaUrl', () => {
     describe('createShareSettingsUrl', () => {
       it('should create a share settings URL with the provided settings', () => {
-        const settings: DeepPartial<UserSettings> = {
+        const settings: PartialDeep<UserSettings> = {
           keyVaults: {
             openai: {
               apiKey: 'user-key',

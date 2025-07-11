@@ -129,6 +129,7 @@
     "waitingForMore": "Altri modelli sono in fase di <1> pianificazione per l'integrazione </1>, resta sintonizzato"
   },
   "plugin": {
+    "addMCPPlugin": "Aggiungi plugin MCP",
     "addTooltip": "Aggiungi plugin personalizzato",
     "clearDeprecated": "Rimuovi plugin non validi",
     "empty": "Nessun plugin installato al momento, visita il <1>negozio dei plugin</1> per esplorare",

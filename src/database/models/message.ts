@@ -86,6 +86,7 @@ export class MessageModel {
         createdAt: messages.createdAt,
         updatedAt: messages.updatedAt,
 
+        topicId: messages.topicId,
         parentId: messages.parentId,
         threadId: messages.threadId,
 

@@ -1,6 +1,120 @@
 [
   {
     "children": {
+      "improvements": ["Integrate Amazon Cognito for user authentication."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.9"
+  },
+  {
+    "children": {},
+    "date": "2025-07-10",
+    "version": "1.97.8"
+  },
+  {
+    "children": {
+      "improvements": ["Add google search grounding for Vertex AI."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.7"
+  },
+  {
+    "children": {
+      "improvements": ["Replace utility-types with type-fest."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.6"
+  },
+  {
+    "children": {
+      "improvements": ["Fix: solve the loading was strange spin when switch show."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.5"
+  },
+  {
+    "children": {
+      "improvements": ["Add grok-4-0709 model from xAI, fix theme issue in desktop."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.4"
+  },
+  {
+    "children": {},
+    "date": "2025-07-10",
+    "version": "1.97.3"
+  },
+  {
+    "children": {
+      "improvements": ["Implement data analytics event tracking framework."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix locale hydration error in SSR."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.1"
+  },
+  {
+    "children": {
+      "features": ["Add MCP marketplace and mcp plugin one-click installation in desktop."]
+    },
+    "date": "2025-07-08",
+    "version": "1.97.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add MCP_TOOL_TIMEOUT env and improve debug usage guide."]
+    },
+    "date": "2025-07-08",
+    "version": "1.96.20"
+  },
+  {
+    "children": {
+      "fixes": ["Pin officeparser@5.1.1 to fix server error."]
+    },
+    "date": "2025-07-07",
+    "version": "1.96.19"
+  },
+  {
+    "children": {
+      "fixes": ["Change the wrong github checkmodel name."],
+      "improvements": ["Files hello pages should scroll."]
+    },
+    "date": "2025-07-06",
+    "version": "1.96.18"
+  },
+  {
+    "children": {},
+    "date": "2025-07-03",
+    "version": "1.96.17"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-03",
+    "version": "1.96.16"
+  },
+  {
+    "children": {
+      "fixes": ["Wrong Gemini 2.5 Pro thinkbudget."]
+    },
+    "date": "2025-07-02",
+    "version": "1.96.15"
+  },
+  {
+    "children": {
+      "improvements": ["Migrate to @google/genai SDK for Google Gemini API and Vertex AI."]
+    },
+    "date": "2025-07-01",
+    "version": "1.96.14"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-07-01",
