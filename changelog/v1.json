@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-11",
+    "version": "1.97.10"
+  },
+  {
+    "children": {
       "improvements": ["Integrate Amazon Cognito for user authentication."]
     },
     "date": "2025-07-10",
