@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Open new topic by tap Just Chat again."]
+    },
+    "date": "2025-07-11",
+    "version": "1.97.11"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-07-11",
