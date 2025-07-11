@@ -1346,6 +1346,9 @@
   "grok-3-mini-fast": {
     "description": "Lekki model, który najpierw analizuje przed rozmową. Działa szybko i inteligentnie, odpowiedni do zadań logicznych nie wymagających głębokiej wiedzy dziedzinowej, z możliwością śledzenia pierwotnego toku myślenia."
   },
+  "grok-4-0709": {
+    "description": "Nasz najnowszy i najpotężniejszy model flagowy, który wyróżnia się doskonałymi wynikami w przetwarzaniu języka naturalnego, obliczeniach matematycznych i rozumowaniu — to idealny wszechstronny zawodnik."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B to model językowy łączący kreatywność i inteligencję, zintegrowany z wieloma wiodącymi modelami."
   },
