@@ -9,8 +9,11 @@ export interface XAIModelCard {
 
 export const GrokReasoningModels = new Set([
   'grok-3-mini',
-  'grok-4-0709',
+  'grok-4',
 ]);
+
+export const isGrokReasoningModel = (model: string) =>
+  Array.from(GrokReasoningModels).some((id) => model.includes(id));
 
 export const LobeXAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.x.ai/v1',
@@ -20,9 +23,9 @@ export const LobeXAI = createOpenAICompatibleRuntime({
 
       return {
         ...rest,
-        frequency_penalty: GrokReasoningModels.has(model) ? undefined : frequency_penalty,
+        frequency_penalty: isGrokReasoningModel(model) ? undefined : frequency_penalty,
         model,
-        presence_penalty: GrokReasoningModels.has(model) ? undefined : presence_penalty,
+        presence_penalty: isGrokReasoningModel(model) ? undefined : presence_penalty,
         stream: true,
         ...(enabledSearch && {
           search_parameters: {
