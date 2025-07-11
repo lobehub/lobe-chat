@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "1.97.9",
+  "version": "1.97.12",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -41,11 +41,8 @@
     "db:generate": "drizzle-kit generate && npm run db:generate-client && npm run workflow:dbml",
     "db:generate-client": "tsx ./scripts/migrateClientDB/compile-migrations.ts",
     "db:migrate": "MIGRATION_DB=1 tsx ./scripts/migrateServerDB/index.ts",
-    "db:push": "drizzle-kit push",
-    "db:push-test": "NODE_ENV=test drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:visualize": "dbdocs build docs/development/database-schema.dbml --project lobe-chat",
-    "db:z-pull": "drizzle-kit introspect",
     "desktop:build": "npm run desktop:build-next && npm run desktop:prepare-dist && npm run desktop:build-electron",
     "desktop:build-electron": "tsx scripts/electronWorkflow/buildElectron.ts",
     "desktop:build-next": "npm run build:electron",
@@ -170,7 +167,6 @@
     "@vercel/speed-insights": "^1.2.0",
     "@xterm/xterm": "^5.5.0",
     "ahooks": "^3.8.5",
-    "ai": "^3.4.33",
     "antd": "^5.26.4",
     "antd-style": "^3.7.1",
     "brotli-wasm": "^3.0.1",

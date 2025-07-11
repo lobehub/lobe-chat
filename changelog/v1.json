@@ -1,6 +1,27 @@
 [
   {
     "children": {
+      "fixes": ["Grok-4 reasoning model universal matching."]
+    },
+    "date": "2025-07-11",
+    "version": "1.97.12"
+  },
+  {
+    "children": {
+      "improvements": ["Open new topic by tap Just Chat again."]
+    },
+    "date": "2025-07-11",
+    "version": "1.97.11"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-11",
+    "version": "1.97.10"
+  },
+  {
+    "children": {
       "improvements": ["Integrate Amazon Cognito for user authentication."]
     },
     "date": "2025-07-10",
