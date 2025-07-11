@@ -1,6 +1,8 @@
-import { ChatCompletionContentPartText } from 'ai/prompts';
 import OpenAI from 'openai';
-import { ChatCompletionContentPart } from 'openai/resources/index.mjs';
+import {
+  ChatCompletionContentPart,
+  ChatCompletionContentPartText,
+} from 'openai/resources/index.mjs';
 import type { Stream } from 'openai/streaming';
 
 import { ChatStreamCallbacks } from '../../types';
