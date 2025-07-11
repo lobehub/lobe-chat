@@ -10,7 +10,6 @@ import { Center, Flexbox } from 'react-layout-kit';
 import PageTitle from '@/components/PageTitle';
 import { isDesktop } from '@/const/version';
 import { useElectronStore } from '@/store/electron';
-import { useClaudeCodeListeners } from '@/store/electron/actions/claudeCode';
 import { claudeCodeSelectors } from '@/store/electron/selectors';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -73,16 +72,23 @@ const Client = memo(() => {
   ]);
 
   // 获取状态
-  const { isAvailable, isLoading, error, apiKeySource, version, recentSessions } = useElectronStore(
-    (state) => ({
-      apiKeySource: claudeCodeSelectors.apiKeySource(state),
-      error: claudeCodeSelectors.error(state),
-      isAvailable: claudeCodeSelectors.isAvailable(state),
-      isLoading: claudeCodeSelectors.isLoading(state),
-      recentSessions: claudeCodeSelectors.recentSessions(state),
-      version: claudeCodeSelectors.version(state),
-    }),
-  );
+  const [
+    isAvailable,
+    isLoading,
+    error,
+    apiKeySource,
+    version,
+    recentSessions,
+    useClaudeCodeListeners,
+  ] = useElectronStore((s) => [
+    claudeCodeSelectors.isAvailable(s),
+    claudeCodeSelectors.isLoading(s),
+    claudeCodeSelectors.error(s),
+    claudeCodeSelectors.apiKeySource(s),
+    claudeCodeSelectors.version(s),
+    claudeCodeSelectors.recentSessions(s),
+    s.useClaudeCodeListeners,
+  ]);
 
   // 设置监听器
   useClaudeCodeListeners({

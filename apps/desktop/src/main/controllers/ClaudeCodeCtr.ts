@@ -247,7 +247,7 @@ export default class ClaudeCodeCtr extends ControllerModule {
           messageCount++;
 
           logger.debug(`Stream ${streamId} - Message ${messageCount}:`, message.type);
-          console.log('output message:', message);
+          logger.debug('output message:', message);
 
           // 广播消息到渲染进程
           this.app.browserManager.broadcastToAllWindows('claudeCodeStreamMessage', {
@@ -357,12 +357,5 @@ export default class ClaudeCodeCtr extends ControllerModule {
         turnCount: 1,
       });
     }
-  }
-
-  /**
-   * 清理资源
-   */
-  override destroy(): void {
-    this.claudeCodeModule.cleanup();
   }
 }

@@ -1,17 +1,12 @@
-import { spawn, type ChildProcess } from 'node:child_process';
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
-import { createInterface, type Interface } from 'node:readline';
-import { promisify } from 'node:util';
-
-import { ClaudeCodeMessage, ClaudeCodeOptions } from '@lobechat/electron-client-ipc';
+import { ClaudeCodeMessage } from '@lobechat/electron-client-ipc';
+import { type ChildProcess, spawn } from 'node:child_process';
+import { type Interface, createInterface } from 'node:readline';
 
 import { createLogger } from '@/utils/logger';
 
 import {
   ClaudeCodeImpl,
   ClaudeCodeProcessOptions,
-  ClaudeCodeProcessResult,
   ClaudeCodeQueryParams,
   ClaudeCodeRuntimeConfig,
 } from './type';
@@ -49,13 +44,13 @@ export class ClaudeCodeServiceImpl extends ClaudeCodeImpl {
 
     // Build process options
     const processOptions = this.buildProcessOptions(params);
-    
+
     // Spawn child process using claude command directly
     childProcess = spawn('claude', processOptions.args, {
       cwd: processOptions.cwd,
       env: { ...process.env, ...processOptions.env },
-      stdio: ['pipe', 'pipe', 'pipe'],
       signal: params.abortController?.signal,
+      stdio: ['pipe', 'pipe', 'pipe'],
     });
 
     // Register process
@@ -135,7 +130,6 @@ export class ClaudeCodeServiceImpl extends ClaudeCodeImpl {
 
       // Wait for process to complete
       await processExitPromise;
-
     } finally {
       // Cleanup
       if (readline) {
@@ -164,7 +158,8 @@ export class ClaudeCodeServiceImpl extends ClaudeCodeImpl {
       if (!apiKey && !useBedrock && !useVertex) {
         return {
           available: false,
-          error: 'No API credentials found. Please set ANTHROPIC_API_KEY or configure third-party provider.',
+          error:
+            'No API credentials found. Please set ANTHROPIC_API_KEY or configure third-party provider.',
         };
       }
 
@@ -226,11 +221,11 @@ export class ClaudeCodeServiceImpl extends ClaudeCodeImpl {
   private async checkClaudeCommandExists(): Promise<boolean> {
     return new Promise((resolve) => {
       const testProcess = spawn('which', ['claude'], { stdio: 'pipe' });
-      
+
       testProcess.on('close', (code) => {
         resolve(code === 0);
       });
-      
+
       testProcess.on('error', () => {
         resolve(false);
       });
@@ -242,7 +237,7 @@ export class ClaudeCodeServiceImpl extends ClaudeCodeImpl {
    */
   private buildProcessOptions(params: ClaudeCodeQueryParams): ClaudeCodeProcessOptions {
     const args = ['--output-format', 'stream-json'];
-    
+
     if (this.config.debugMode) {
       args.push('--verbose');
     }
@@ -269,7 +264,7 @@ export class ClaudeCodeServiceImpl extends ClaudeCodeImpl {
       args.push('--resume', options.resumeSessionId);
     }
     if (options.allowedTools) {
-      const tools = Array.isArray(options.allowedTools) 
+      const tools = Array.isArray(options.allowedTools)
         ? options.allowedTools.join(',')
         : options.allowedTools;
       args.push('--allowedTools', tools);
@@ -314,7 +309,7 @@ export class ClaudeCodeServiceImpl extends ClaudeCodeImpl {
   private async streamToStdin(
     stream: any,
     stdin: any,
-    abortController?: AbortController
+    abortController?: AbortController,
   ): Promise<void> {
     try {
       for await (const message of stream) {
@@ -334,12 +329,12 @@ export class ClaudeCodeServiceImpl extends ClaudeCodeImpl {
   private async getVersion(): Promise<string> {
     return new Promise((resolve) => {
       const versionProcess = spawn('claude', ['--version'], { stdio: 'pipe' });
-      
+
       let output = '';
       versionProcess.stdout?.on('data', (data) => {
         output += data.toString();
       });
-      
+
       versionProcess.on('close', (code) => {
         if (code === 0) {
           // Extract version from output
@@ -349,7 +344,7 @@ export class ClaudeCodeServiceImpl extends ClaudeCodeImpl {
           resolve('unknown');
         }
       });
-      
+
       versionProcess.on('error', () => {
         resolve('unknown');
       });

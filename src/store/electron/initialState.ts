@@ -1,4 +1,10 @@
-import { DataSyncConfig, ElectronAppState, ClaudeCodeSessionInfo } from '@lobehub/electron-client-ipc';
+import {
+  ClaudeCodeSessionInfo,
+  DataSyncConfig,
+  ElectronAppState,
+} from '@lobechat/electron-client-ipc';
+
+import { initialClaudeCodeState } from './claudeCode/initialState';
 
 export type RemoteServerError = 'CONFIG_ERROR' | 'AUTH_ERROR' | 'DISCONNECT_ERROR';
 
@@ -25,17 +31,10 @@ export interface ElectronState {
 
 export const initialState: ElectronState = {
   appState: {},
-  claudeCode: {
-    apiKeySource: '',
-    error: null,
-    isAvailable: false,
-    isLoading: false,
-    recentSessions: [],
-    version: '',
-  },
   dataSyncConfig: { storageMode: 'local' },
   isAppStateInit: false,
   isConnectingServer: false,
   isInitRemoteServerConfig: false,
   isSyncActive: false,
+  ...initialClaudeCodeState,
 };

@@ -4,7 +4,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { createDevtools } from '../middleware/createDevtools';
 import { type ElectronAppAction, createElectronAppSlice } from './actions/app';
-import { type ClaudeCodeAction, createClaudeCodeSlice } from './actions/claudeCode';
+import { type ClaudeCodeAction, createClaudeCodeSlice } from './claudeCode/action';
 import { type ElectronRemoteServerAction, remoteSyncSlice } from './actions/sync';
 import { type ElectronState, initialState } from './initialState';
 
