@@ -78,7 +78,7 @@ const novitaChatModels: AIChatModelCard[] = [
     abilities: {
       reasoning: true,
     },
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 1_000_000,
     displayName: 'MiniMax M1 80K',
     id: 'minimaxai/minimax-m1-80k',
     pricing: {
