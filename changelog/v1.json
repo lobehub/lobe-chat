@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Support new Doubao thinking models, update i18n."]
+    },
+    "date": "2025-07-12",
+    "version": "1.97.13"
+  },
+  {
+    "children": {
       "fixes": ["Grok-4 reasoning model universal matching."]
     },
     "date": "2025-07-11",
