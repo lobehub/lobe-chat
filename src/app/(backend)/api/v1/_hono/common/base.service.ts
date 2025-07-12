@@ -136,10 +136,12 @@ export abstract class BaseService implements IBaseService {
     permissionKey: keyof typeof PERMISSION_ACTIONS,
   ): Promise<boolean> {
     const result = await this.rbacModel.hasAnyPermission(
-      [permissionKey + '_ALL', permissionKey + '_WORKSPACE'],
+      [
+        PERMISSION_ACTIONS[permissionKey] + ':all',
+        PERMISSION_ACTIONS[permissionKey] + ':workspace',
+      ],
       this.userId,
     );
-    console.log('挽歌测试>>>', permissionKey, result);
     return result;
   }
 
@@ -161,13 +163,12 @@ export abstract class BaseService implements IBaseService {
     targetUserId: string | undefined,
     permissionKey: keyof typeof PERMISSION_ACTIONS,
   ): Promise<{
-    condition?: { userId: string };
+    condition?: { userId?: string };
     isPermitted: boolean;
     message?: string;
   }> {
     // 检查是否有全局访问权限
-    const hasGlobalAccess = true;
-    // const hasGlobalAccess = await this.hasGlobalPermission(permissionKey);
+    const hasGlobalAccess = await this.hasGlobalPermission(permissionKey);
 
     // 记录权限检查的上下文信息
     const logContext = {
