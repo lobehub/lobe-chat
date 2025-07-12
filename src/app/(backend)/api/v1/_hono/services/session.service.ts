@@ -49,10 +49,22 @@ export class SessionService extends BaseService {
     this.log('info', '获取会话列表', { request });
 
     try {
-      const { page = 1, pageSize = 20, agentId, keyword = '' } = request;
+      const { page = 1, pageSize = 20, agentId, keyword = '', targetUserId } = request;
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission(targetUserId, 'SESSION_READ');
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '没有权限访问会话列表');
+      }
 
       // 构建查询条件
       let whereConditions = [not(eq(sessions.slug, INBOX_SESSION_ID))];
+
+      // 添加权限相关的查询条件
+      if (permissionResult?.condition?.userId) {
+        whereConditions.push(eq(sessions.userId, permissionResult.condition.userId));
+      }
 
       // 如果指定了 agentId，需要通过 agentsToSessions 表进行过滤
       if (agentId && agentId !== 'ALL') {
@@ -457,9 +469,7 @@ export class SessionService extends BaseService {
           }
 
           // 先删除现有的关联
-          await tx
-            .delete(agentsToSessions)
-            .where(eq(agentsToSessions.sessionId, id));
+          await tx.delete(agentsToSessions).where(eq(agentsToSessions.sessionId, id));
 
           // 创建新的关联
           await tx.insert(agentsToSessions).values({
