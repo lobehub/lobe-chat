@@ -2,6 +2,64 @@
 
 # Changelog
 
+### [Version 1.97.15](https://github.com/lobehub/lobe-chat/compare/v1.97.14...v1.97.15)
+
+<sup>Released on **2025-07-12**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add vision support to Grok 4.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Add vision support to Grok 4, closes [#8386](https://github.com/lobehub/lobe-chat/issues/8386) ([8512f5a](https://github.com/lobehub/lobe-chat/commit/8512f5a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.97.14](https://github.com/lobehub/lobe-chat/compare/v1.97.13...v1.97.14)
+
+<sup>Released on **2025-07-12**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Revert "💄 style: Open new topic by tap Just Chat again".
+
+#### 💄 Styles
+
+- **misc**: Add Kimi K2 model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Revert "💄 style: Open new topic by tap Just Chat again", closes [#8402](https://github.com/lobehub/lobe-chat/issues/8402) ([55462b9](https://github.com/lobehub/lobe-chat/commit/55462b9))
+
+#### Styles
+
+- **misc**: Add Kimi K2 model, closes [#8401](https://github.com/lobehub/lobe-chat/issues/8401) ([4cb1a18](https://github.com/lobehub/lobe-chat/commit/4cb1a18))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.97.13](https://github.com/lobehub/lobe-chat/compare/v1.97.12...v1.97.13)
 
 <sup>Released on **2025-07-12**</sup>
