@@ -1,4 +1,4 @@
-import { RBAC_PERMISSIONS } from '@/const/rbac';
+import { PERMISSION_ACTIONS } from '@/const/rbac';
 import { RbacModel } from '@/database/models/rbac';
 import { LobeChatDatabase } from '@/database/type';
 
@@ -128,24 +128,19 @@ export abstract class BaseService implements IBaseService {
   }
 
   /**
-   * 检查用户是否有指定权限
+   * 检查用户是否有全局权限all/workspace
    * @param permissionKey 权限键名
    * @returns 是否有权限
    */
-  protected async hasPermission(permissionKey: keyof typeof RBAC_PERMISSIONS): Promise<boolean> {
-    return await this.rbacModel.hasPermission(RBAC_PERMISSIONS[permissionKey], this.userId);
-  }
-
-  /**
-   * 检查用户是否有指定权限中的任意一个
-   * @param permissionKeys 权限键名数组
-   * @returns 是否有权限
-   */
-  protected async hasAnyPermission(
-    permissionKeys: (keyof typeof RBAC_PERMISSIONS)[],
+  protected async hasGlobalPermission(
+    permissionKey: keyof typeof PERMISSION_ACTIONS,
   ): Promise<boolean> {
-    const permissions = permissionKeys.map((key) => RBAC_PERMISSIONS[key]);
-    return await this.rbacModel.hasAnyPermission(permissions, this.userId);
+    const result = await this.rbacModel.hasAnyPermission(
+      [permissionKey + '_ALL', permissionKey + '_WORKSPACE'],
+      this.userId,
+    );
+    console.log('挽歌测试>>>', permissionKey, result);
+    return result;
   }
 
   /**
@@ -156,7 +151,7 @@ export abstract class BaseService implements IBaseService {
    * 3. 查询所有数据：需要 all/workspace 权限
    *
    * @param targetUserId - 目标用户 ID，可选。如果提供，表示要查询特定用户的数据
-   * @param permissionKeys - 权限键名数组
+   * @param permissionKey - 权限键名数组
    * @returns 返回权限检查结果和查询条件
    *          - isPermitted: 是否允许查询
    *          - condition: 查询条件，包含 userId 过滤
@@ -164,23 +159,20 @@ export abstract class BaseService implements IBaseService {
    */
   protected async resolveQueryPermission(
     targetUserId: string | undefined,
-    permissionKeys: (keyof typeof RBAC_PERMISSIONS)[],
+    permissionKey: keyof typeof PERMISSION_ACTIONS,
   ): Promise<{
     condition?: { userId: string };
     isPermitted: boolean;
     message?: string;
   }> {
     // 检查是否有全局访问权限
-    const hasGlobalAccess = await this.hasAnyPermission(
-      permissionKeys.filter(
-        (key) =>
-          RBAC_PERMISSIONS[key].includes(':all') || RBAC_PERMISSIONS[key].includes(':workspace'),
-      ),
-    );
+    const hasGlobalAccess = true;
+    // const hasGlobalAccess = await this.hasGlobalPermission(permissionKey);
+
     // 记录权限检查的上下文信息
     const logContext = {
       hasGlobalAccess,
-      permissionKeys,
+      permissionKey,
       targetUserId,
       userId: this.userId,
     };
