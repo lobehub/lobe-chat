@@ -301,6 +301,7 @@ export const GetSessionsRequestSchema = z.object({
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().min(1).max(100))
     .optional(),
+  targetUserId: z.string().optional(),
 });
 
 export const CountSessionsRequestSchema = z.object({
