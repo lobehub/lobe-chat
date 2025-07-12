@@ -94,9 +94,9 @@ export const ModelParamsMetaSchema = z.object({
     .optional(),
 });
 // 导出推断出的类型，供定义对象使用
-export type ModelParamsDefinition = z.input<typeof ModelParamsMetaSchema>;
-export type ModelParamsDefinitionParsed = z.output<typeof ModelParamsMetaSchema>;
-export type ModelParamsKeys = Simplify<keyof ModelParamsDefinitionParsed>;
+export type ModelParamsSchema = z.input<typeof ModelParamsMetaSchema>;
+export type ModelParamsOutputSchema = z.output<typeof ModelParamsMetaSchema>;
+export type ModelParamsKeys = Simplify<keyof ModelParamsOutputSchema>;
 
 type TypeMapping<T> = T extends 'string'
   ? string
@@ -111,10 +111,8 @@ type TypeMapping<T> = T extends 'string'
           : T extends 'boolean'
             ? boolean
             : never;
-type TypeType<K extends ModelParamsKeys> = NonNullable<ModelParamsDefinitionParsed[K]>['type'];
-type DefaultType<K extends ModelParamsKeys> = NonNullable<
-  ModelParamsDefinitionParsed[K]
->['default'];
+type TypeType<K extends ModelParamsKeys> = NonNullable<ModelParamsOutputSchema[K]>['type'];
+type DefaultType<K extends ModelParamsKeys> = NonNullable<ModelParamsOutputSchema[K]>['default'];
 type _StandardImageGenerationParameters<P extends ModelParamsKeys = ModelParamsKeys> = {
   [key in P]: NonNullable<TypeType<key>> extends 'array'
     ? DefaultType<key>
@@ -127,20 +125,18 @@ export type RuntimeImageGenParamsKeys = keyof RuntimeImageGenParams;
 export type RuntimeImageGenParamsValue = RuntimeImageGenParams[RuntimeImageGenParamsKeys];
 
 // 验证函数
-export function validateModelParamsDefinition(
-  paramsDefinition: unknown,
-): ModelParamsDefinitionParsed {
-  return ModelParamsMetaSchema.parse(paramsDefinition);
+export function validateModelParamsSchema(paramsSchema: unknown): ModelParamsOutputSchema {
+  return ModelParamsMetaSchema.parse(paramsSchema);
 }
 
 /**
  * 从参数定义对象提取默认值
  */
-export function extractDefaultValues(definition: ModelParamsDefinition) {
+export function extractDefaultValues(paramsSchema: ModelParamsSchema) {
   // 部分默认值从 ModelParamsMetaSchema 中获取
-  const definitionWithDefault = ModelParamsMetaSchema.parse(definition);
+  const schemaWithDefault = ModelParamsMetaSchema.parse(paramsSchema);
   return Object.fromEntries(
-    Object.entries(definitionWithDefault).map(([key, value]) => {
+    Object.entries(schemaWithDefault).map(([key, value]) => {
       return [key, value.default];
     }),
   ) as RuntimeImageGenParams;

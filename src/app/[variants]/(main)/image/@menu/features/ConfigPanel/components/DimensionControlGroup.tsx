@@ -6,7 +6,7 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useSizeControl } from '@/store/image/slices/generationConfig/hooks';
+import { useDimensionControl } from '@/store/image/slices/generationConfig/hooks';
 
 import AspectRatioSelect from '../../../components/AspectRatioSelect';
 
@@ -21,7 +21,7 @@ const styles = {
   },
 } as const;
 
-const SizeControlGroup = memo(() => {
+const DimensionControlGroup = memo(() => {
   const { t } = useTranslation('image');
   const {
     isLocked,
@@ -35,7 +35,7 @@ const SizeControlGroup = memo(() => {
     widthSchema,
     heightSchema,
     options,
-  } = useSizeControl();
+  } = useDimensionControl();
 
   // 构建宽高比选择器的选项
   const aspectRatioOptions = useMemo(
@@ -78,10 +78,10 @@ const SizeControlGroup = memo(() => {
         <Flexbox gap={8}>
           <span style={styles.label}>{t('config.width.label')}</span>
           <SliderWithInput
-            max={widthSchema.maximum}
-            min={widthSchema.minimum}
+            max={widthSchema.max}
+            min={widthSchema.min}
             onChange={setWidth}
-            value={width ?? widthSchema.minimum}
+            value={width ?? widthSchema.min}
           />
         </Flexbox>
       )}
@@ -91,10 +91,10 @@ const SizeControlGroup = memo(() => {
         <Flexbox gap={8}>
           <span style={styles.label}>{t('config.height.label')}</span>
           <SliderWithInput
-            max={heightSchema.maximum}
-            min={heightSchema.minimum}
+            max={heightSchema.max}
+            min={heightSchema.min}
             onChange={setHeight}
-            value={height ?? heightSchema.minimum}
+            value={height ?? heightSchema.min}
           />
         </Flexbox>
       )}
@@ -102,6 +102,6 @@ const SizeControlGroup = memo(() => {
   );
 });
 
-SizeControlGroup.displayName = 'SizeControlGroup';
+DimensionControlGroup.displayName = 'DimensionControlGroup';
 
-export default SizeControlGroup;
+export default DimensionControlGroup;

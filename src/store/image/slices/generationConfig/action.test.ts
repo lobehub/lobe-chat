@@ -1,9 +1,9 @@
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { fluxSchnellParamsDefinition } from '@/config/paramsSchemas/fal/flux-schnell';
+import { fluxSchnellParamsSchema } from '@/config/paramsSchemas/fal/flux-schnell';
 import {
-  ModelParamsDefinition,
+  ModelParamsSchema,
   RuntimeImageGenParams,
   extractDefaultValues,
 } from '@/libs/standard-parameters/meta-schema';
@@ -22,7 +22,7 @@ vi.mock('@/store/aiInfra', () => ({
             id: 'flux/schnell',
             displayName: 'FLUX.1 Schnell',
             type: 'image',
-            parameters: fluxSchnellParamsDefinition,
+            parameters: fluxSchnellParamsSchema,
             releasedAt: '2024-08-01',
           } as AIImageModelCard,
         ],
@@ -40,7 +40,7 @@ vi.mock('@/store/aiInfra', () => ({
               width: { default: 1024, min: 256, max: 2048, step: 64 },
               height: { default: 1024, min: 256, max: 2048, step: 64 },
               steps: { default: 20, min: 1, max: 50 },
-            } as ModelParamsDefinition,
+            } as ModelParamsSchema,
             releasedAt: '2024-01-01',
           } as AIImageModelCard,
         ],
@@ -50,9 +50,9 @@ vi.mock('@/store/aiInfra', () => ({
   getAiInfraStoreState: vi.fn(() => ({})),
 }));
 
-const fluxSchnellDefaultValues = extractDefaultValues(fluxSchnellParamsDefinition);
+const fluxSchnellDefaultValues = extractDefaultValues(fluxSchnellParamsSchema);
 
-const customModelDefinition: ModelParamsDefinition = {
+const customModelSchema: ModelParamsSchema = {
   prompt: { default: '' },
   width: { default: 1024, min: 256, max: 2048, step: 64 },
   height: { default: 1024, min: 256, max: 2048, step: 64 },
@@ -72,7 +72,7 @@ beforeEach(() => {
       width: 512,
       height: 512,
     } as RuntimeImageGenParams,
-    parametersDefinition: {
+    parametersSchema: {
       prompt: { default: '' },
       width: { default: 512, min: 256, max: 1024 },
       height: { default: 512, min: 256, max: 1024 },
@@ -151,7 +151,7 @@ describe('GenerationConfigAction', () => {
   });
 
   describe('setModelAndProviderOnSelect', () => {
-    it('should set model, provider, parameters and parametersDefinition for flux/schnell', async () => {
+    it('should set model, provider, parameters and parametersSchema for flux/schnell', async () => {
       const { result } = renderHook(() => useImageStore());
 
       act(() => {
@@ -161,7 +161,7 @@ describe('GenerationConfigAction', () => {
       expect(result.current.model).toBe('flux/schnell');
       expect(result.current.provider).toBe('fal');
       expect(result.current.parameters).toEqual(fluxSchnellDefaultValues);
-      expect(result.current.parametersDefinition).toEqual(fluxSchnellParamsDefinition);
+      expect(result.current.parametersSchema).toEqual(fluxSchnellParamsSchema);
     });
 
     it('should handle model selection with custom parameters', async () => {
@@ -171,12 +171,12 @@ describe('GenerationConfigAction', () => {
         result.current.setModelAndProviderOnSelect('custom-model', 'custom-provider');
       });
 
-      const expectedParams = extractDefaultValues(customModelDefinition);
+      const expectedParams = extractDefaultValues(customModelSchema);
 
       expect(result.current.model).toBe('custom-model');
       expect(result.current.provider).toBe('custom-provider');
       expect(result.current.parameters).toEqual(expectedParams);
-      expect(result.current.parametersDefinition).toEqual(customModelDefinition);
+      expect(result.current.parametersSchema).toEqual(customModelSchema);
     });
 
     it('should replace all previous parameters with new model defaults', async () => {
@@ -256,7 +256,7 @@ describe('GenerationConfigAction', () => {
         ...fluxSchnellDefaultValues,
         ...customSettings,
       });
-      expect(result.current.parametersDefinition).toEqual(fluxSchnellParamsDefinition);
+      expect(result.current.parametersSchema).toEqual(fluxSchnellParamsSchema);
     });
 
     it('should override default values with provided settings', async () => {

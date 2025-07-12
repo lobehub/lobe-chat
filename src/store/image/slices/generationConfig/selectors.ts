@@ -7,11 +7,11 @@ export const provider = (s: GenerationConfigState) => s.provider;
 export const imageNum = (s: GenerationConfigState) => s.imageNum;
 
 const parameters = (s: GenerationConfigState) => s.parameters;
-const parametersDefinition = (s: GenerationConfigState) => s.parametersDefinition;
+const parametersSchema = (s: GenerationConfigState) => s.parametersSchema;
 const isSupportedParam = (paramName: RuntimeImageGenParamsKeys) => {
   return (s: GenerationConfigState) => {
-    const _parametersDefinition = parametersDefinition(s);
-    return Boolean(paramName in _parametersDefinition);
+    const _parametersSchema = parametersSchema(s);
+    return Boolean(paramName in _parametersSchema);
   };
 };
 
@@ -21,5 +21,5 @@ export const imageGenerationConfigSelectors = {
   imageNum,
   isSupportedParam,
   parameters,
-  parametersDefinition,
+  parametersSchema,
 };

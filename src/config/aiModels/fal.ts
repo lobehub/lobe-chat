@@ -1,17 +1,17 @@
 import { AIImageModelCard } from '@/types/aiModel';
 
-import { fluxKontextDevParamsDefinition } from '../paramsSchemas/fal/flux-kontext-dev';
-import { fluxProKontextParamsDefinition } from '../paramsSchemas/fal/flux-pro-kontext';
-import { fluxSchnellParamsDefinition } from '../paramsSchemas/fal/flux-schnell';
-import { imagen4ParamsDefinition } from '../paramsSchemas/fal/imagen4';
+import { fluxKontextDevParamsSchema } from '../paramsSchemas/fal/flux-kontext-dev';
+import { fluxProKontextParamsSchema } from '../paramsSchemas/fal/flux-pro-kontext';
+import { fluxSchnellParamsSchema } from '../paramsSchemas/fal/flux-schnell';
+import { imagen4ParamsSchema } from '../paramsSchemas/fal/imagen4';
 
-const googleChatModels: AIImageModelCard[] = [
+const falImageModels: AIImageModelCard[] = [
   {
     description: 'Frontier image editing model.',
     displayName: 'FLUX.1 Kontext Dev',
     enabled: true,
     id: 'flux-kontext/dev',
-    parameters: fluxKontextDevParamsDefinition,
+    parameters: fluxKontextDevParamsSchema,
     releasedAt: '2025-06-28',
     type: 'image',
   },
@@ -21,7 +21,7 @@ const googleChatModels: AIImageModelCard[] = [
     displayName: 'FLUX.1 Kontext [pro]',
     enabled: true,
     id: 'flux-pro/kontext',
-    parameters: fluxProKontextParamsDefinition,
+    parameters: fluxProKontextParamsSchema,
     releasedAt: '2025-05-01',
     type: 'image',
   },
@@ -31,7 +31,7 @@ const googleChatModels: AIImageModelCard[] = [
     displayName: 'FLUX.1 Schnell',
     enabled: true,
     id: 'flux/schnell',
-    parameters: fluxSchnellParamsDefinition,
+    parameters: fluxSchnellParamsSchema,
     releasedAt: '2024-08-01',
     type: 'image',
   },
@@ -40,13 +40,13 @@ const googleChatModels: AIImageModelCard[] = [
     displayName: 'Imagen 4',
     enabled: true,
     id: 'imagen4/preview',
-    parameters: imagen4ParamsDefinition,
+    parameters: imagen4ParamsSchema,
     releasedAt: '2025-05-21',
     type: 'image',
     organization: 'Deepmind',
   },
 ];
 
-export const allModels = [...googleChatModels];
+export const allModels = [...falImageModels];
 
 export default allModels;

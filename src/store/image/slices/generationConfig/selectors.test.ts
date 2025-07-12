@@ -1,10 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { fluxSchnellParamsDefinition } from '@/config/paramsSchemas/fal/flux-schnell';
-import {
-  ModelParamsDefinition,
-  RuntimeImageGenParams,
-} from '@/libs/standard-parameters/meta-schema';
+import { fluxSchnellParamsSchema } from '@/config/paramsSchemas/fal/flux-schnell';
+import { ModelParamsSchema, RuntimeImageGenParams } from '@/libs/standard-parameters/meta-schema';
 import { ImageStore } from '@/store/image';
 import { initialState } from '@/store/image/initialState';
 import { AIImageModelCard } from '@/types/aiModel';
@@ -24,7 +21,7 @@ vi.mock('@/store/aiInfra', () => ({
             id: 'flux/schnell',
             displayName: 'FLUX.1 Schnell',
             type: 'image',
-            parameters: fluxSchnellParamsDefinition,
+            parameters: fluxSchnellParamsSchema,
             releasedAt: '2024-08-01',
           } as AIImageModelCard,
         ],
@@ -36,7 +33,7 @@ vi.mock('@/store/aiInfra', () => ({
 
 const initialStore = initialState as ImageStore;
 
-const testModelDefinition: ModelParamsDefinition = {
+const testModelSchema: ModelParamsSchema = {
   prompt: { default: '' },
   width: { default: 1024, min: 512, max: 2048, step: 64 },
   height: { default: 1024, min: 512, max: 2048, step: 64 },
@@ -123,27 +120,27 @@ describe('imageGenerationConfigSelectors', () => {
     });
   });
 
-  describe('parametersDefinition', () => {
-    it('should return the current parametersDefinition', () => {
-      const state = merge(initialStore, { parametersDefinition: testModelDefinition });
-      const result = imageGenerationConfigSelectors.parametersDefinition(state);
-      expect(result).toEqual(testModelDefinition);
+  describe('parametersSchema', () => {
+    it('should return the current parametersSchema', () => {
+      const state = merge(initialStore, { parametersSchema: testModelSchema });
+      const result = imageGenerationConfigSelectors.parametersSchema(state);
+      expect(result).toEqual(testModelSchema);
     });
 
-    it('should return default parametersDefinition when not explicitly overridden', () => {
+    it('should return default parametersSchema when not explicitly overridden', () => {
       // merge function doesn't override with undefined, so we get the default from initialState
-      const result = imageGenerationConfigSelectors.parametersDefinition(initialStore);
+      const result = imageGenerationConfigSelectors.parametersSchema(initialStore);
       expect(result).toBeDefined();
       expect(result.prompt).toBeDefined();
     });
 
-    it('should handle parametersDefinition deep merge', () => {
-      const customDefinition: ModelParamsDefinition = {
+    it('should handle parametersSchema deep merge', () => {
+      const customSchema: ModelParamsSchema = {
         prompt: { default: 'custom prompt' },
         width: { default: 512, min: 256, max: 1024 },
       };
-      const state = merge(initialStore, { parametersDefinition: customDefinition });
-      const result = imageGenerationConfigSelectors.parametersDefinition(state);
+      const state = merge(initialStore, { parametersSchema: customSchema });
+      const result = imageGenerationConfigSelectors.parametersSchema(state);
 
       // merge function does deep merge, so we should expect merged result
       expect(result.prompt.default).toBe('custom prompt');
@@ -157,25 +154,25 @@ describe('imageGenerationConfigSelectors', () => {
   });
 
   describe('isSupportParam', () => {
-    it('should return true when parameter exists in parametersDefinition', () => {
-      const state = merge(initialStore, { parametersDefinition: testModelDefinition });
+    it('should return true when parameter exists in parametersSchema', () => {
+      const state = merge(initialStore, { parametersSchema: testModelSchema });
       const result = imageGenerationConfigSelectors.isSupportedParam('width')(state);
       expect(result).toBe(true);
     });
 
-    it('should return false when parameter does not exist in parametersDefinition', () => {
-      const state = merge(initialStore, { parametersDefinition: testModelDefinition });
+    it('should return false when parameter does not exist in parametersSchema', () => {
+      const state = merge(initialStore, { parametersSchema: testModelSchema });
       const result = imageGenerationConfigSelectors.isSupportedParam('nonexistent' as any)(state);
       expect(result).toBe(false);
     });
 
-    it('should return true for supported params in default parametersDefinition', () => {
-      // Since merge doesn't override with undefined, we get the default parametersDefinition from initialState
+    it('should return true for supported params in default parametersSchema', () => {
+      // Since merge doesn't override with undefined, we get the default parametersSchema from initialState
       const result = imageGenerationConfigSelectors.isSupportedParam('prompt')(initialStore);
       expect(result).toBe(true);
     });
 
-    it('should return false when parameter does not exist in merged parametersDefinition', () => {
+    it('should return false when parameter does not exist in merged parametersSchema', () => {
       // Since merge does deep merge, original params still exist, so test a param that truly doesn't exist
       const result = imageGenerationConfigSelectors.isSupportedParam('nonExistentParam' as any)(
         initialStore,
@@ -184,7 +181,7 @@ describe('imageGenerationConfigSelectors', () => {
     });
 
     it('should handle various parameter types', () => {
-      const state = merge(initialStore, { parametersDefinition: testModelDefinition });
+      const state = merge(initialStore, { parametersSchema: testModelSchema });
 
       expect(imageGenerationConfigSelectors.isSupportedParam('prompt')(state)).toBe(true);
       expect(imageGenerationConfigSelectors.isSupportedParam('width')(state)).toBe(true);
@@ -195,7 +192,7 @@ describe('imageGenerationConfigSelectors', () => {
     });
 
     it('should work correctly with flux/schnell parameters', () => {
-      const state = merge(initialStore, { parametersDefinition: fluxSchnellParamsDefinition });
+      const state = merge(initialStore, { parametersSchema: fluxSchnellParamsSchema });
 
       // Test some known flux/schnell parameters
       expect(imageGenerationConfigSelectors.isSupportedParam('prompt')(state)).toBe(true);

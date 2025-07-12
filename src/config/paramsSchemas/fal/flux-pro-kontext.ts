@@ -1,9 +1,9 @@
-import { type ModelParamsDefinition } from '@/libs/standard-parameters/meta-schema';
+import { type ModelParamsSchema } from '@/libs/standard-parameters/meta-schema';
 
-export const fluxProKontextParamsDefinition: ModelParamsDefinition = {
+export const fluxProKontextParamsSchema: ModelParamsSchema = {
   prompt: { default: '' },
   imageUrl: { default: null },
-  aspectRatio: { 
+  aspectRatio: {
     default: '1:1',
     enum: ['21:9', '16:9', '4:3', '3:2', '1:1', '2:3', '3:4', '9:16', '9:21'],
   },

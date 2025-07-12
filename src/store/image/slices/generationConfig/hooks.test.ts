@@ -1,11 +1,8 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { fluxSchnellParamsDefinition } from '@/config/paramsSchemas/fal/flux-schnell';
-import {
-  ModelParamsDefinition,
-  RuntimeImageGenParams,
-} from '@/libs/standard-parameters/meta-schema';
+import { fluxSchnellParamsSchema } from '@/config/paramsSchemas/fal/flux-schnell';
+import { ModelParamsSchema, RuntimeImageGenParams } from '@/libs/standard-parameters/meta-schema';
 import { useImageStore } from '@/store/image';
 import { AIImageModelCard } from '@/types/aiModel';
 
@@ -23,7 +20,7 @@ vi.mock('@/store/aiInfra', () => ({
             id: 'flux/schnell',
             displayName: 'FLUX.1 Schnell',
             type: 'image',
-            parameters: fluxSchnellParamsDefinition,
+            parameters: fluxSchnellParamsSchema,
             releasedAt: '2024-08-01',
           } as AIImageModelCard,
         ],
@@ -33,7 +30,7 @@ vi.mock('@/store/aiInfra', () => ({
   getAiInfraStoreState: vi.fn(() => ({})),
 }));
 
-const testModelDefinition: ModelParamsDefinition = {
+const testModelSchema: ModelParamsSchema = {
   prompt: { default: '', description: 'The text prompt for image generation' },
   width: { default: 1024, min: 512, max: 2048, step: 64, description: 'Image width' },
   height: { default: 768, min: 256, max: 1536, step: 32, description: 'Image height' },
@@ -63,7 +60,7 @@ describe('useGenerationConfigParam', () => {
 
     // Reset store state before each test
     useImageStore.setState({
-      parametersDefinition: testModelDefinition,
+      parametersSchema: testModelSchema,
       parameters: testParameters,
     });
   });
@@ -180,8 +177,8 @@ describe('useGenerationConfigParam', () => {
       expect(result.current.value).toBeUndefined();
     });
 
-    it('should handle undefined parametersDefinition', () => {
-      useImageStore.setState({ parametersDefinition: undefined });
+    it('should handle undefined parametersSchema', () => {
+      useImageStore.setState({ parametersSchema: undefined });
 
       const { result } = renderHook(() => useGenerationConfigParam('width'));
 
@@ -192,9 +189,9 @@ describe('useGenerationConfigParam', () => {
       expect(result.current.enumValues).toBeUndefined();
     });
 
-    it('should handle parameter not in current parametersDefinition', () => {
+    it('should handle parameter not in current parametersSchema', () => {
       useImageStore.setState({
-        parametersDefinition: { prompt: { default: '' } }, // Only prompt defined
+        parametersSchema: { prompt: { default: '' } }, // Only prompt defined
       });
 
       const { result } = renderHook(() => useGenerationConfigParam('width'));
@@ -209,7 +206,7 @@ describe('useGenerationConfigParam', () => {
   describe('flux/schnell real-world parameters', () => {
     it('should work with actual flux/schnell parameters', () => {
       useImageStore.setState({
-        parametersDefinition: fluxSchnellParamsDefinition,
+        parametersSchema: fluxSchnellParamsSchema,
         parameters: {
           prompt: 'A beautiful landscape',
           width: 1024,
@@ -243,7 +240,7 @@ describe('useGenerationConfigParam', () => {
 
     it('should update flux/schnell parameters correctly', () => {
       useImageStore.setState({
-        parametersDefinition: fluxSchnellParamsDefinition,
+        parametersSchema: fluxSchnellParamsSchema,
         parameters: {
           prompt: 'original prompt',
           width: 512,

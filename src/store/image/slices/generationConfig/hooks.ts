@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 
-import { PRESET_ASPECT_RATIOS } from '@/const/image';
+import { DEFAULT_ASPECT_RATIO, PRESET_ASPECT_RATIOS } from '@/const/image';
 import {
   RuntimeImageGenParams,
   RuntimeImageGenParamsKeys,
@@ -14,7 +14,7 @@ export function useGenerationConfigParam<
   V extends RuntimeImageGenParams[N],
 >(paramName: N) {
   const parameters = useImageStore(imageGenerationConfigSelectors.parameters);
-  const parametersDefinition = useImageStore(imageGenerationConfigSelectors.parametersDefinition);
+  const parametersSchema = useImageStore(imageGenerationConfigSelectors.parametersSchema);
 
   const paramValue = parameters?.[paramName] as V;
   const setParamsValue = useImageStore((s) => s.setParamOnInput<N>);
@@ -25,7 +25,7 @@ export function useGenerationConfigParam<
     [paramName, setParamsValue],
   );
 
-  const paramConfig = parametersDefinition?.[paramName];
+  const paramConfig = parametersSchema?.[paramName];
   const paramConstraints = useMemo(() => {
     const min =
       paramConfig && typeof paramConfig === 'object' && 'min' in paramConfig
@@ -64,19 +64,21 @@ export function useGenerationConfigParam<
   };
 }
 
-export function useSizeControl() {
+export function useDimensionControl() {
   const store = useImageStore();
-  const paramsProperties = useImageStore(imageGenerationConfigSelectors.parametersDefinition);
+  const paramsSchema = useImageStore(imageGenerationConfigSelectors.parametersSchema);
 
   const modelAspectRatio = useImageStore((s) => s.parameters?.aspectRatio);
-  const currentAspectRatio = store.activeAspectRatio ?? modelAspectRatio ?? '1:1';
+  const currentAspectRatio = store.activeAspectRatio ?? modelAspectRatio ?? DEFAULT_ASPECT_RATIO;
 
   const isSupportWidth = useImageStore(imageGenerationConfigSelectors.isSupportedParam('width'));
   const isSupportHeight = useImageStore(imageGenerationConfigSelectors.isSupportedParam('height'));
-  const isSupportSize = useImageStore(imageGenerationConfigSelectors.isSupportedParam('size'));
+  const isSupportAspectRatio = useImageStore(
+    imageGenerationConfigSelectors.isSupportedParam('aspectRatio'),
+  );
 
   const aspectRatioOptions = useMemo(() => {
-    const modelOptions = paramsProperties?.aspectRatio?.enum || [];
+    const modelOptions = paramsSchema?.aspectRatio?.enum || [];
 
     // 合并选项，优先使用预设选项，然后添加模型特有的选项
     const allOptions = [...PRESET_ASPECT_RATIOS];
@@ -89,7 +91,10 @@ export function useSizeControl() {
     });
 
     return allOptions;
-  }, [paramsProperties]);
+  }, [paramsSchema]);
+
+  // 只要不是所有维度相关的控件都不显示，那么这个容器就应该显示
+  const showDimensionControl = !(!isSupportAspectRatio && !isSupportWidth && !isSupportHeight);
 
   return {
     isLocked: store.isAspectRatioLocked,
@@ -103,11 +108,11 @@ export function useSizeControl() {
     setHeight: store.setHeight,
     setAspectRatio: store.setAspectRatio,
 
-    widthSchema: paramsProperties?.width,
-    heightSchema: paramsProperties?.height,
+    widthSchema: paramsSchema?.width,
+    heightSchema: paramsSchema?.height,
 
     options: aspectRatioOptions,
 
-    showSizeControl: isSupportWidth && isSupportHeight && !isSupportSize,
+    showDimensionControl,
   };
 }

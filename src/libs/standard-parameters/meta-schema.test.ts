@@ -1,17 +1,17 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  ModelParamsDefinition,
   ModelParamsMetaSchema,
+  ModelParamsSchema,
   type RuntimeImageGenParams,
   extractDefaultValues,
-  validateModelParamsDefinition,
+  validateModelParamsSchema,
 } from './meta-schema';
 
 describe('meta-schema', () => {
   describe('ModelParamsMetaSchema', () => {
-    it('should validate a complete parameter definition', () => {
-      const validDefinition: ModelParamsDefinition = {
+    it('should validate a complete parameter schema', () => {
+      const validSchema: ModelParamsSchema = {
         prompt: { default: 'test prompt' },
         width: { default: 1024, min: 512, max: 2048, step: 64 },
         height: { default: 1024, min: 512, max: 2048, step: 64 },
@@ -24,25 +24,25 @@ describe('meta-schema', () => {
         imageUrls: { default: [] },
       };
 
-      expect(() => ModelParamsMetaSchema.parse(validDefinition)).not.toThrow();
+      expect(() => ModelParamsMetaSchema.parse(validSchema)).not.toThrow();
     });
 
-    it('should validate minimal parameter definition with only prompt', () => {
-      const minimalDefinition: ModelParamsDefinition = {
+    it('should validate minimal parameter schema with only prompt', () => {
+      const minimalSchema: ModelParamsSchema = {
         prompt: { default: '' },
       };
 
-      expect(() => ModelParamsMetaSchema.parse(minimalDefinition)).not.toThrow();
+      expect(() => ModelParamsMetaSchema.parse(minimalSchema)).not.toThrow();
     });
 
     it('should apply default values for optional properties', () => {
-      const definition: ModelParamsDefinition = {
+      const schema: ModelParamsSchema = {
         prompt: {},
         width: { default: 1024, min: 512, max: 2048 },
         seed: {},
       };
 
-      const result = ModelParamsMetaSchema.parse(definition);
+      const result = ModelParamsMetaSchema.parse(schema);
 
       expect(result.prompt.default).toBe('');
       expect(result.width?.step).toBe(1);
@@ -50,60 +50,60 @@ describe('meta-schema', () => {
       expect(result.seed?.min).toBe(0);
     });
 
-    it('should reject invalid parameter definitions', () => {
-      const invalidDefinition = {
+    it('should reject invalid parameter schemas', () => {
+      const invalidSchema = {
         prompt: { default: 123 }, // Should be string
         width: { min: 'invalid' }, // Should be number
       };
 
-      expect(() => ModelParamsMetaSchema.parse(invalidDefinition)).toThrow();
+      expect(() => ModelParamsMetaSchema.parse(invalidSchema)).toThrow();
     });
 
     it('should handle optional parameters correctly', () => {
-      const partialDefinition: ModelParamsDefinition = {
+      const partialSchema: ModelParamsSchema = {
         prompt: { default: 'test' },
         width: { default: 512, min: 256, max: 1024 },
       };
 
-      const result = ModelParamsMetaSchema.parse(partialDefinition);
+      const result = ModelParamsMetaSchema.parse(partialSchema);
       expect(result.prompt.default).toBe('test');
       expect(result.width?.default).toBe(512);
       expect(result.height).toBeUndefined();
     });
   });
 
-  describe('validateModelParamsDefinition', () => {
-    it('should validate correct parameter definition', () => {
-      const definition = {
+  describe('validateModelParamsSchema', () => {
+    it('should validate correct parameter schema', () => {
+      const schema = {
         prompt: { default: 'test' },
         width: { default: 1024, min: 512, max: 2048 },
       };
 
-      expect(() => validateModelParamsDefinition(definition)).not.toThrow();
+      expect(() => validateModelParamsSchema(schema)).not.toThrow();
     });
 
-    it('should throw error for invalid parameter definition', () => {
-      const invalidDefinition = {
+    it('should throw error for invalid parameter schema', () => {
+      const invalidSchema = {
         prompt: { default: 123 }, // Invalid type
       };
 
-      expect(() => validateModelParamsDefinition(invalidDefinition)).toThrow();
+      expect(() => validateModelParamsSchema(invalidSchema)).toThrow();
     });
 
     it('should handle unknown properties gracefully', () => {
-      const definitionWithExtra = {
+      const schemaWithExtra = {
         prompt: { default: 'test' },
         unknownParam: { default: 'value' },
       };
 
       // Should not throw since schema uses passthrough
-      expect(() => validateModelParamsDefinition(definitionWithExtra)).not.toThrow();
+      expect(() => validateModelParamsSchema(schemaWithExtra)).not.toThrow();
     });
   });
 
   describe('extractDefaultValues', () => {
-    it('should extract default values from parameter definition', () => {
-      const definition: ModelParamsDefinition = {
+    it('should extract default values from parameter schema', () => {
+      const schema: ModelParamsSchema = {
         prompt: { default: 'test prompt' },
         width: { default: 1024, min: 512, max: 2048 },
         height: { default: 768, min: 512, max: 2048 },
@@ -111,7 +111,7 @@ describe('meta-schema', () => {
         seed: { default: null },
       };
 
-      const result = extractDefaultValues(definition);
+      const result = extractDefaultValues(schema);
 
       expect(result).toEqual({
         prompt: 'test prompt',
@@ -123,25 +123,25 @@ describe('meta-schema', () => {
     });
 
     it('should apply schema defaults for missing properties', () => {
-      const definition: ModelParamsDefinition = {
+      const schema: ModelParamsSchema = {
         prompt: {},
         width: { default: 1024, min: 512, max: 2048 },
         seed: {},
       };
 
-      const result = extractDefaultValues(definition);
+      const result = extractDefaultValues(schema);
 
       expect(result.prompt).toBe(''); // Schema default
       expect(result.width).toBe(1024);
       expect(result.seed).toBeNull(); // Schema default
     });
 
-    it('should handle empty definition gracefully', () => {
-      const definition: ModelParamsDefinition = {
+    it('should handle empty schema gracefully', () => {
+      const schema: ModelParamsSchema = {
         prompt: { default: '' },
       };
 
-      const result = extractDefaultValues(definition);
+      const result = extractDefaultValues(schema);
 
       expect(result).toEqual({
         prompt: '',
@@ -149,7 +149,7 @@ describe('meta-schema', () => {
     });
 
     it('should preserve all parameter types correctly', () => {
-      const definition: ModelParamsDefinition = {
+      const schema: ModelParamsSchema = {
         prompt: { default: 'test' },
         width: { default: 1024, min: 512, max: 2048 },
         seed: { default: 12345 },
@@ -159,7 +159,7 @@ describe('meta-schema', () => {
         imageUrl: { default: 'test.jpg' },
       };
 
-      const result = extractDefaultValues(definition);
+      const result = extractDefaultValues(schema);
 
       expect(typeof result.prompt).toBe('string');
       expect(typeof result.width).toBe('number');
@@ -171,13 +171,13 @@ describe('meta-schema', () => {
     });
 
     it('should handle null values properly', () => {
-      const definition: ModelParamsDefinition = {
+      const schema: ModelParamsSchema = {
         prompt: { default: 'test' },
         seed: { default: null },
         imageUrl: { default: null },
       };
 
-      const result = extractDefaultValues(definition);
+      const result = extractDefaultValues(schema);
 
       expect(result.seed).toBeNull();
       expect(result.imageUrl).toBeNull();

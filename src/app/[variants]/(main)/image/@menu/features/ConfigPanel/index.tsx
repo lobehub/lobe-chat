@@ -6,15 +6,15 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { imageGenerationConfigSelectors } from '@/store/image/selectors';
-import { useSizeControl } from '@/store/image/slices/generationConfig/hooks';
+import { useDimensionControl } from '@/store/image/slices/generationConfig/hooks';
 import { useImageStore } from '@/store/image/store';
 
+import DimensionControlGroup from './components/DimensionControlGroup';
 import ImageNum from './components/ImageNum';
 import ImageUrl from './components/ImageUrl';
 import ImageUrlsUpload from './components/ImageUrlsUpload';
 import ModelSelect from './components/ModelSelect';
 import SeedNumberInput from './components/SeedNumberInput';
-import SizeControlGroup from './components/SizeControlGroup';
 import SizeSelect from './components/SizeSelect';
 import StepsSliderInput from './components/StepsSliderInput';
 
@@ -43,7 +43,7 @@ const ConfigPanel = memo(() => {
   const isSupportSteps = useImageStore(isSupportedParamSelector('steps'));
   const isSupportImageUrls = useImageStore(isSupportedParamSelector('imageUrls'));
 
-  const { showSizeControl } = useSizeControl();
+  const { showDimensionControl } = useDimensionControl();
 
   return (
     <Flexbox gap={32} padding={12}>
@@ -69,7 +69,7 @@ const ConfigPanel = memo(() => {
         </ConfigItemLayout>
       )}
 
-      {showSizeControl && <SizeControlGroup />}
+      {showDimensionControl && <DimensionControlGroup />}
 
       {isSupportSteps && (
         <ConfigItemLayout label={t('config.steps.label')}>

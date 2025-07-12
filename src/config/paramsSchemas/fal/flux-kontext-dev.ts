@@ -1,6 +1,6 @@
-import { type ModelParamsDefinition } from '@/libs/standard-parameters/meta-schema';
+import { type ModelParamsSchema } from '@/libs/standard-parameters/meta-schema';
 
-export const fluxKontextDevParamsDefinition: ModelParamsDefinition = {
+export const fluxKontextDevParamsSchema: ModelParamsSchema = {
   prompt: { default: '' },
   imageUrl: { default: null },
   steps: { default: 28, max: 50, min: 10 },
