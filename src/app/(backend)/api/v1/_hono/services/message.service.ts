@@ -90,7 +90,7 @@ export class MessageService extends BaseService {
     try {
       const messageList = await this.db.query.messages.findMany({
         orderBy: desc(messages.createdAt),
-        where: and(eq(messages.topicId, topicId), eq(messages.userId, this.userId!)),
+        where: eq(messages.topicId, topicId),
         with: {
           messagesFiles: {
             with: {
