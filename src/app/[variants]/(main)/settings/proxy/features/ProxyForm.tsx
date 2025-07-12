@@ -3,6 +3,7 @@
 import { NetworkProxySettings } from '@lobechat/electron-client-ipc';
 import { Alert, Block, Text } from '@lobehub/ui';
 import { App, Button, Divider, Form, Input, Radio, Skeleton, Space, Switch } from 'antd';
+import isEqual from 'fast-deep-equal';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -48,11 +49,21 @@ const ProxyForm = () => {
     setTestResult(null); // 清除之前的测试结果
   }, []);
 
+  const updateFormValue = (value: any) => {
+    const preValues = form.getFieldsValue();
+    form.setFieldsValue(value);
+    const newValues = form.getFieldsValue();
+    if (isEqual(newValues, preValues)) return;
+
+    handleValuesChange();
+  };
+
   // 保存配置
   const handleSave = useCallback(async () => {
     try {
       setIsSaving(true);
       const values = await form.validateFields();
+      console.log(values);
       await setProxySettings(values);
       setHasUnsavedChanges(false);
       message.success(t('proxy.saveSuccess'));
@@ -89,6 +100,7 @@ const ProxyForm = () => {
 
       // 使用新的 testProxyConfig 方法测试用户正在配置的代理
       const result = await desktopSettingsService.testProxyConfig(config, testUrl);
+      console.log(result);
 
       setTestResult(result);
     } catch (error) {
@@ -102,7 +114,7 @@ const ProxyForm = () => {
     } finally {
       setIsTesting(false);
     }
-  }, [form, proxySettings, testUrl, t]);
+  }, [proxySettings, testUrl]);
 
   if (isLoading) return <Skeleton />;
 
@@ -131,7 +143,7 @@ const ProxyForm = () => {
               <Switch
                 checked={isEnableProxy}
                 onChange={(checked) => {
-                  form.setFieldValue('enableProxy', checked);
+                  updateFormValue({ enableProxy: checked });
                 }}
               />
             </Flexbox>
@@ -212,28 +224,28 @@ const ProxyForm = () => {
               </Space.Compact>
             </Flexbox>
             <Divider size={'small'} />
-            <Form.Item
-              dependencies={['enableProxy']}
-              name="proxyRequireAuth"
-              noStyle
-              valuePropName="checked"
-            >
-              <Flexbox align={'center'} horizontal justify={'space-between'}>
-                <Flexbox>
-                  <Text as={'h5'}>{t('proxy.auth')}</Text>
-                  <Text type={'secondary'}>如果代理服务器需要用户名和密码</Text>
+            <Flexbox gap={12}>
+              <Form.Item
+                dependencies={['enableProxy']}
+                name="proxyRequireAuth"
+                noStyle
+                valuePropName="checked"
+              >
+                <Flexbox align={'center'} horizontal justify={'space-between'}>
+                  <Flexbox>
+                    <Text as={'h5'}>{t('proxy.auth')}</Text>
+                    <Text type={'secondary'}>如果代理服务器需要用户名和密码</Text>
+                  </Flexbox>
+                  <Switch
+                    checked={proxyRequireAuth}
+                    disabled={!isEnableProxy}
+                    onChange={(checked) => {
+                      updateFormValue({ proxyRequireAuth: checked });
+                    }}
+                  />
                 </Flexbox>
-                <Switch
-                  checked={proxyRequireAuth}
-                  disabled={!isEnableProxy}
-                  onChange={(checked) => {
-                    form.setFieldValue('proxyRequireAuth', checked);
-                  }}
-                />
-              </Flexbox>
-            </Form.Item>
+              </Form.Item>
 
-            <Flexbox>
               <Form.Item
                 dependencies={['proxyRequireAuth', 'enableProxy']}
                 label={t('proxy.username')}

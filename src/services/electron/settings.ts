@@ -26,7 +26,7 @@ class DesktopSettingsService {
    * 测试指定的代理配置
    */
   testProxyConfig = async (config: NetworkProxySettings, testUrl?: string) => {
-    return dispatch('testProxyConfig', config, testUrl);
+    return dispatch('testProxyConfig', { config, testUrl });
   };
 }
 

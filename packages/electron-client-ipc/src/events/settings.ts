@@ -3,10 +3,7 @@ import { NetworkProxySettings } from '../types';
 export interface DesktopSettingsDispatchEvents {
   getProxySettings: () => NetworkProxySettings;
   setProxySettings: (settings: Partial<NetworkProxySettings>) => void;
-  testProxyConfig: (
-    config: NetworkProxySettings,
-    testUrl?: string,
-  ) => Promise<{
+  testProxyConfig: (data: { config: NetworkProxySettings; testUrl?: string }) => Promise<{
     message?: string;
     responseTime?: number;
     success: boolean;

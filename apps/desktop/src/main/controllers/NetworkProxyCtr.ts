@@ -4,7 +4,7 @@ import { HttpsProxyAgent } from 'https-proxy-agent';
 import { merge } from 'lodash';
 import { isEqual } from 'lodash-es';
 import { SocksProxyAgent } from 'socks-proxy-agent';
-import { getGlobalDispatcher, setGlobalDispatcher } from 'undici';
+import { fetch, getGlobalDispatcher, setGlobalDispatcher } from 'undici';
 
 import { defaultProxySettings } from '@/const/store';
 import { createLogger } from '@/utils/logger';
@@ -206,7 +206,7 @@ class ProxyDispatcherManager {
   /**
    * 创建代理 agent
    */
-  private static createProxyAgent(proxyType: string, proxyUrl: string): any {
+  private static createProxyAgent(proxyType: string, proxyUrl: string) {
     switch (proxyType) {
       case 'http': {
         return new HttpProxyAgent(proxyUrl);
@@ -318,7 +318,9 @@ class ProxyConnectionTester {
     // 创建临时代理 agent 进行测试
     try {
       const proxyUrl = ProxyUrlBuilder.build(config);
+      console.log(testUrl);
       const agent = ProxyDispatcherManager['createProxyAgent'](config.proxyType, proxyUrl);
+      console.log('agent:', agent);
 
       const startTime = Date.now();
       const controller = new AbortController();
@@ -326,9 +328,6 @@ class ProxyConnectionTester {
 
       const response = await fetch(testUrl, {
         dispatcher: agent,
-        headers: {
-          'User-Agent': 'LobeChat-Desktop/1.0.0',
-        },
         signal: controller.signal,
       });
 
@@ -345,6 +344,7 @@ class ProxyConnectionTester {
         success: true,
       };
     } catch (error) {
+      console.log(error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
       return {
@@ -452,10 +452,17 @@ export default class NetworkProxyCtr extends ControllerModule {
    * 测试指定代理配置
    */
   @ipcClientEvent('testProxyConfig')
-  async testProxyConfig(config: NetworkProxySettings, testUrl?: string): Promise<ProxyTestResult> {
+  async testProxyConfig({
+    config,
+    testUrl,
+  }: {
+    config: NetworkProxySettings;
+    testUrl?: string;
+  }): Promise<ProxyTestResult> {
     try {
       return await ProxyConnectionTester.testProxyConfig(config, testUrl);
     } catch (error) {
+      console.log(error);
       logger.error('Proxy config test failed:', error);
       return {
         message: error instanceof Error ? error.message : 'Unknown error',
