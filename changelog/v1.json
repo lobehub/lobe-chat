@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Add vision support to Grok 4."]
+    },
+    "date": "2025-07-12",
+    "version": "1.97.15"
+  },
+  {
+    "children": {
       "fixes": ["Revert \"💄 style: Open new topic by tap Just Chat again\"."],
       "improvements": ["Add Kimi K2 model."]
     },
