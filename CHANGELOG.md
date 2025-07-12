@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.97.13](https://github.com/lobehub/lobe-chat/compare/v1.97.12...v1.97.13)
+
+<sup>Released on **2025-07-12**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support new Doubao thinking models, update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support new Doubao thinking models, closes [#8174](https://github.com/lobehub/lobe-chat/issues/8174) ([637d75c](https://github.com/lobehub/lobe-chat/commit/637d75c))
+- **misc**: Update i18n, closes [#8400](https://github.com/lobehub/lobe-chat/issues/8400) ([790eeb8](https://github.com/lobehub/lobe-chat/commit/790eeb8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.97.12](https://github.com/lobehub/lobe-chat/compare/v1.97.11...v1.97.12)
 
 <sup>Released on **2025-07-11**</sup>
