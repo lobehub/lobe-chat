@@ -1,8 +1,10 @@
+import { isEmpty } from 'lodash';
+
 import { PERMISSION_ACTIONS } from '@/const/rbac';
 import { RbacModel } from '@/database/models/rbac';
 import { LobeChatDatabase } from '@/database/type';
 
-import { IBaseService } from '../types';
+import { IBaseService, TTarget } from '../types';
 
 /**
  * Base service class
@@ -145,6 +147,34 @@ export abstract class BaseService implements IBaseService {
     return result;
   }
 
+  protected async getTargetUserId(target: string | TTarget): Promise<string> {
+    if (isEmpty(target)) {
+      return '';
+    }
+    if (typeof target === 'string') {
+      return target;
+    }
+    if (target.targetSessionId) {
+      const targetSession = await this.db.query.sessions.findFirst({
+        where: eq(sessions.id, target.targetSessionId),
+      });
+      return targetSession?.userId || '';
+    }
+    if (target.targetAgentId) {
+      const targetAgent = await this.db.query.agents.findFirst({
+        where: eq(agents.id, target.targetAgentId),
+      });
+      return targetAgent?.userId || '';
+    }
+    if (target.targetTopicId) {
+      const targetTopic = await this.db.query.topics.findFirst({
+        where: eq(topics.id, target.targetTopicId),
+      });
+      return targetTopic?.userId || '';
+    }
+    return '';
+  }
+
   /**
    * 解析查询权限并返回查询条件
    * 用于处理数据访问权限的通用逻辑，支持以下场景：
@@ -160,8 +190,8 @@ export abstract class BaseService implements IBaseService {
    *          - message: 权限被拒绝时的错误信息
    */
   protected async resolveQueryPermission(
-    targetUserId: string | undefined,
     permissionKey: keyof typeof PERMISSION_ACTIONS,
+    targetInfoId: string | TTarget,
   ): Promise<{
     condition?: { userId?: string };
     isPermitted: boolean;
@@ -169,6 +199,7 @@ export abstract class BaseService implements IBaseService {
   }> {
     // 检查是否有全局访问权限
     const hasGlobalAccess = await this.hasGlobalPermission(permissionKey);
+    const targetUserId = await this.getTargetUserId(targetInfoId);
 
     // 记录权限检查的上下文信息
     const logContext = {
