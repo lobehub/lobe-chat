@@ -1346,7 +1346,7 @@
   "grok-3-mini-fast": {
     "description": "Mô hình nhẹ, suy nghĩ trước khi trả lời. Chạy nhanh, thông minh, phù hợp cho các nhiệm vụ logic không đòi hỏi kiến thức chuyên sâu và có thể truy xuất được chuỗi suy nghĩ gốc."
   },
-  "grok-4-0709": {
+  "grok-4": {
     "description": "Mô hình hàng đầu mới nhất và mạnh mẽ nhất của chúng tôi, thể hiện xuất sắc trong xử lý ngôn ngữ tự nhiên, tính toán toán học và suy luận — một lựa chọn toàn diện hoàn hảo."
   },
   "gryphe/mythomax-l2-13b": {
