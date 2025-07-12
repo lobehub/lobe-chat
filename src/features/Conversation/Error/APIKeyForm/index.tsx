@@ -76,7 +76,7 @@ const APIKeyForm = memo<APIKeyFormProps>(
               avatar={<ProviderIcon provider={provider} size={80} type={'avatar'} />}
               description={description}
               provider={provider as GlobalLLMProviderKey}
-              showEndpoint={provider === ModelProvider.OpenAI}
+              showEndpoint
             />
           )}
           <Flexbox gap={12} width={'100%'}>
