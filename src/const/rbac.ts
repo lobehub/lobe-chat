@@ -264,6 +264,8 @@ export const RBAC_PERMISSIONS = Object.entries(PERMISSION_ACTIONS).reduce(
  */
 export type RBAC_PERMISSIONS_KEY = keyof typeof RBAC_PERMISSIONS;
 
+export const ALL = 'ALL';
+
 /**
  * RBAC Role Constants Definition
  */
