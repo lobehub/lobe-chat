@@ -918,13 +918,13 @@
     "description": "Doubao-1.5-vision-lite to nowo zaktualizowany model multimodalny, który obsługuje rozpoznawanie obrazów o dowolnej rozdzielczości i ekstremalnych proporcjach, wzmacniając zdolności wnioskowania wizualnego, rozpoznawania dokumentów, rozumienia szczegółowych informacji i przestrzegania instrukcji. Obsługuje okno kontekstowe 128k, maksymalna długość wyjścia to 16k tokenów."
   },
   "doubao-seed-1.6": {
-    "description": "Doubao-Seed-1.6 to nowy, multimodalny model głębokiego myślenia, obsługujący trzy tryby myślenia: auto, thinking i non-thinking. W trybie non-thinking model osiąga znacznie lepsze wyniki w porównaniu z Doubao-1.5-pro/250115. Obsługuje kontekst do 256k oraz maksymalną długość wyjścia do 16k tokenów."
+    "description": "Doubao-Seed-1.6 to nowy, wielomodalny model głębokiego myślenia, obsługujący trzy tryby myślenia: auto, thinking i non-thinking. W trybie non-thinking model osiąga znacznie lepsze wyniki w porównaniu do Doubao-1.5-pro/250115. Obsługuje kontekst do 256k oraz maksymalną długość wyjścia do 16k tokenów."
   },
   "doubao-seed-1.6-flash": {
-    "description": "Doubao-Seed-1.6-flash to ultraszybki multimodalny model głębokiego myślenia, z czasem TPOT wynoszącym zaledwie 10 ms; obsługuje zarówno rozumienie tekstu, jak i obrazu, z lepszymi zdolnościami tekstowymi niż poprzednia generacja lite oraz wizualnymi porównywalnymi do modeli pro konkurencji. Obsługuje kontekst do 256k oraz maksymalną długość wyjścia do 16k tokenów."
+    "description": "Doubao-Seed-1.6-flash to ultraszybki model wielomodalnego głębokiego myślenia, z czasem TPOT zaledwie 10 ms; obsługuje zarówno rozumienie tekstu, jak i obrazu, z lepszymi zdolnościami tekstowymi niż poprzednia generacja lite oraz wizualnymi porównywalnymi do modeli pro konkurencji. Obsługuje kontekst do 256k oraz maksymalną długość wyjścia do 16k tokenów."
   },
   "doubao-seed-1.6-thinking": {
-    "description": "Model Doubao-Seed-1.6-thinking ma znacznie wzmocnione zdolności myślenia, w porównaniu z Doubao-1.5-thinking-pro osiąga dalsze ulepszenia w podstawowych umiejętnościach takich jak kodowanie, matematyka i rozumowanie logiczne, wspiera również rozumienie wizualne. Obsługuje kontekst do 256k oraz maksymalną długość wyjścia do 16k tokenów."
+    "description": "Model Doubao-Seed-1.6-thinking ma znacznie wzmocnione zdolności myślenia, w porównaniu do Doubao-1.5-thinking-pro osiąga dalsze ulepszenia w podstawowych umiejętnościach takich jak kodowanie, matematyka i rozumowanie logiczne, wspiera również rozumienie wizualne. Obsługuje kontekst do 256k oraz maksymalną długość wyjścia do 16k tokenów."
   },
   "emohaa": {
     "description": "Emohaa to model psychologiczny, posiadający profesjonalne umiejętności doradcze, pomagający użytkownikom zrozumieć problemy emocjonalne."
@@ -1346,7 +1346,7 @@
   "grok-3-mini-fast": {
     "description": "Lekki model, który najpierw analizuje przed rozmową. Działa szybko i inteligentnie, odpowiedni do zadań logicznych nie wymagających głębokiej wiedzy dziedzinowej, z możliwością śledzenia pierwotnego toku myślenia."
   },
-  "grok-4-0709": {
+  "grok-4": {
     "description": "Nasz najnowszy i najpotężniejszy model flagowy, który wyróżnia się doskonałymi wynikami w przetwarzaniu języka naturalnego, obliczeniach matematycznych i rozumowaniu — to idealny wszechstronny zawodnik."
   },
   "gryphe/mythomax-l2-13b": {
@@ -1872,7 +1872,7 @@
     "description": "o1 to nowy model wnioskowania OpenAI, odpowiedni do złożonych zadań wymagających szerokiej wiedzy ogólnej. Model ten ma kontekst 128K i datę graniczną wiedzy z października 2023 roku."
   },
   "o1-pro": {
-    "description": "Modele serii o1 są trenowane z wykorzystaniem uczenia ze wzmocnieniem, potrafią myśleć przed udzieleniem odpowiedzi i wykonywać złożone zadania rozumowania. Model o1-pro wykorzystuje więcej zasobów obliczeniowych do głębszego myślenia, co pozwala na ciągłe dostarczanie lepszych odpowiedzi."
+    "description": "Modele z serii o1 są trenowane z wykorzystaniem uczenia ze wzmocnieniem, potrafią myśleć przed udzieleniem odpowiedzi i wykonywać złożone zadania rozumowania. Model o1-pro wykorzystuje więcej zasobów obliczeniowych, aby prowadzić głębsze rozważania i stale dostarczać lepsze odpowiedzi."
   },
   "o3": {
     "description": "o3 to wszechstronny i potężny model, który doskonale sprawdza się w wielu dziedzinach. Ustanawia nowe standardy w zadaniach matematycznych, naukowych, programistycznych i wizualnych. Jest również biegły w pisaniu technicznym i przestrzeganiu instrukcji. Użytkownicy mogą go wykorzystać do analizy tekstów, kodów i obrazów, rozwiązując złożone problemy wieloetapowe."
@@ -1884,7 +1884,7 @@
     "description": "o3-mini to nasz najnowszy mały model wnioskowania, który oferuje wysoką inteligencję przy tych samych kosztach i celach opóźnienia co o1-mini."
   },
   "o3-pro": {
-    "description": "Model o3-pro wykorzystuje większą moc obliczeniową do głębszego myślenia i zawsze dostarcza lepsze odpowiedzi, jest dostępny wyłącznie przez API Responses."
+    "description": "Model o3-pro wykorzystuje większą moc obliczeniową do głębszego myślenia i zawsze dostarcza lepsze odpowiedzi, dostępny wyłącznie przez API Responses."
   },
   "o4-mini": {
     "description": "o4-mini to nasz najnowszy mały model z serii o. Został zoptymalizowany do szybkiego i efektywnego wnioskowania, osiągając wysoką wydajność i efektywność w zadaniach kodowania i wizualnych."

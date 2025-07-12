@@ -1346,8 +1346,8 @@
   "grok-3-mini-fast": {
     "description": "Modello leggero che riflette prima di rispondere. Veloce e intelligente, adatto a compiti logici che non richiedono conoscenze di dominio profonde, con tracciamento del processo di pensiero originale."
   },
-  "grok-4-0709": {
-    "description": "Il nostro modello di punta più recente e potente, eccellente nell'elaborazione del linguaggio naturale, nel calcolo matematico e nel ragionamento — un vero campione versatile e perfetto."
+  "grok-4": {
+    "description": "Il nostro modello di punta più recente e potente, eccellente nell'elaborazione del linguaggio naturale, nel calcolo matematico e nel ragionamento — un vero campione versatile e completo."
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B è un modello linguistico che combina creatività e intelligenza, unendo diversi modelli di punta."
@@ -1872,7 +1872,7 @@
     "description": "o1 è il nuovo modello di inferenza di OpenAI, adatto a compiti complessi che richiedono una vasta conoscenza generale. Questo modello ha un contesto di 128K e una data di cutoff della conoscenza di ottobre 2023."
   },
   "o1-pro": {
-    "description": "La serie di modelli o1 è stata addestrata con apprendimento rinforzato, in grado di riflettere prima di rispondere ed eseguire compiti di ragionamento complessi. Il modello o1-pro utilizza più risorse computazionali per un pensiero più approfondito, offrendo risposte di qualità superiore in modo costante."
+    "description": "La serie di modelli o1 è stata addestrata con apprendimento rinforzato, in grado di riflettere prima di rispondere ed eseguire compiti di ragionamento complessi. Il modello o1-pro utilizza più risorse computazionali per un pensiero più approfondito, offrendo risposte di qualità superiore in modo continuo."
   },
   "o3": {
     "description": "o3 è un modello versatile e potente, che si distingue in vari campi. Stabilisce nuovi standard per compiti di matematica, scienza, programmazione e ragionamento visivo. È anche abile nella scrittura tecnica e nel seguire istruzioni. Gli utenti possono utilizzarlo per analizzare testi, codici e immagini, risolvendo problemi complessi in più passaggi."

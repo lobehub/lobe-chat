@@ -665,9 +665,6 @@
   "codestral-latest": {
     "description": "Codestral é um modelo gerador de ponta focado em geração de código, otimizado para preenchimento intermediário e tarefas de conclusão de código."
   },
-  "codex-mini-latest": {
-    "description": "codex-mini-latest é uma versão ajustada do o4-mini, especialmente para o Codex CLI. Para uso direto via API, recomendamos começar com o gpt-4.1."
-  },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B é um modelo projetado para seguir instruções, diálogos e programação."
   },
@@ -916,15 +913,6 @@
   },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite é um modelo multimodal atualizado, suportando reconhecimento de imagens de qualquer resolução e proporções extremas, melhorando a capacidade de raciocínio visual, reconhecimento de documentos, compreensão de informações detalhadas e seguimento de instruções. Suporta uma janela de contexto de 128k, com comprimento de saída de até 16k tokens."
-  },
-  "doubao-seed-1.6": {
-    "description": "Doubao-Seed-1.6 é um novo modelo multimodal de pensamento profundo, suportando três modos de pensamento: auto, thinking e non-thinking. No modo non-thinking, o desempenho do modelo melhora significativamente em comparação com Doubao-1.5-pro/250115. Suporta janela de contexto de 256k e comprimento máximo de saída de 16k tokens."
-  },
-  "doubao-seed-1.6-flash": {
-    "description": "Doubao-Seed-1.6-flash é um modelo multimodal de pensamento profundo com velocidade de inferência extrema, TPOT de apenas 10ms; suporta compreensão de texto e visual, com capacidade de compreensão textual superior à geração lite anterior e compreensão visual comparável aos modelos pro da concorrência. Suporta janela de contexto de 256k e comprimento máximo de saída de 16k tokens."
-  },
-  "doubao-seed-1.6-thinking": {
-    "description": "O modelo Doubao-Seed-1.6-thinking tem capacidade de pensamento significativamente reforçada, melhorando ainda mais as habilidades básicas em Coding, Matemática e raciocínio lógico em comparação com Doubao-1.5-thinking-pro, além de suportar compreensão visual. Suporta janela de contexto de 256k e comprimento máximo de saída de 16k tokens."
   },
   "emohaa": {
     "description": "O Emohaa é um modelo psicológico com capacidade de consultoria profissional, ajudando os usuários a entender questões emocionais."
@@ -1346,8 +1334,8 @@
   "grok-3-mini-fast": {
     "description": "Modelo leve que pensa antes de responder. Rápido e inteligente, adequado para tarefas lógicas que não exigem conhecimento profundo de domínio, e capaz de fornecer o rastro original do pensamento."
   },
-  "grok-4-0709": {
-    "description": "Nosso modelo mais recente e poderoso, com desempenho excepcional em processamento de linguagem natural, cálculo matemático e raciocínio — um competidor versátil perfeito."
+  "grok-4": {
+    "description": "Nosso mais recente e poderoso modelo principal, com desempenho excepcional em processamento de linguagem natural, cálculo matemático e raciocínio — um competidor versátil perfeito."
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B é um modelo de linguagem que combina criatividade e inteligência, integrando vários modelos de ponta."
@@ -1871,9 +1859,6 @@
   "o1-preview": {
     "description": "o1 é o novo modelo de raciocínio da OpenAI, adequado para tarefas complexas que exigem amplo conhecimento geral. Este modelo possui um contexto de 128K e uma data limite de conhecimento em outubro de 2023."
   },
-  "o1-pro": {
-    "description": "A série de modelos o1 é treinada com aprendizado por reforço, capaz de pensar antes de responder e executar tarefas complexas de raciocínio. O modelo o1-pro utiliza mais recursos computacionais para um pensamento mais profundo, oferecendo respostas de qualidade superior de forma contínua."
-  },
   "o3": {
     "description": "o3 é um modelo versátil e poderoso, com excelente desempenho em várias áreas. Ele estabelece novos padrões para tarefas de matemática, ciência, programação e raciocínio visual. Também é bom em redação técnica e seguimento de instruções. Os usuários podem utilizá-lo para analisar textos, códigos e imagens, resolvendo problemas complexos em múltiplas etapas."
   },
@@ -1882,9 +1867,6 @@
   },
   "o3-mini": {
     "description": "o3-mini é nosso mais recente modelo de inferência em miniatura, oferecendo alta inteligência com os mesmos custos e metas de latência que o o1-mini."
-  },
-  "o3-pro": {
-    "description": "O modelo o3-pro utiliza mais computação para pensar mais profundamente e sempre fornecer melhores respostas, suportado apenas para uso via Responses API."
   },
   "o4-mini": {
     "description": "o4-mini é nosso mais recente modelo compacto da série o. Ele é otimizado para inferência rápida e eficaz, apresentando alta eficiência e desempenho em tarefas de codificação e visuais."

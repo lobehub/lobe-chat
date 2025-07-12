@@ -46,6 +46,9 @@
     "reasoningEffort": {
       "title": "Intensité du raisonnement"
     },
+    "thinking": {
+      "title": "Interrupteur de réflexion approfondie"
+    },
     "title": "Fonctionnalités d'extension du modèle"
   },
   "history": {

@@ -46,6 +46,9 @@
     "reasoningEffort": {
       "title": "推論の強度"
     },
+    "thinking": {
+      "title": "深い思考のスイッチ"
+    },
     "title": "モデル拡張機能"
   },
   "history": {
