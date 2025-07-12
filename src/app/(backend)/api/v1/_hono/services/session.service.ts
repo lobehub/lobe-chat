@@ -52,7 +52,7 @@ export class SessionService extends BaseService {
       const { page = 1, pageSize = 20, agentId, keyword = '', targetUserId } = request;
 
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission(targetUserId, 'SESSION_READ');
+      const permissionResult = await this.resolveQueryPermission('SESSION_READ', targetUserId);
 
       if (!permissionResult.isPermitted) {
         throw this.createAuthorizationError(permissionResult.message || '没有权限访问会话列表');
