@@ -924,7 +924,7 @@
     "description": "Doubao-Seed-1.6-flash est un modèle multimodal de réflexion profonde à vitesse d'inférence extrême, avec un TPOT de seulement 10 ms ; il supporte à la fois la compréhension textuelle et visuelle, avec une capacité de compréhension textuelle supérieure à la génération lite précédente, et une compréhension visuelle comparable aux modèles pro des concurrents. Il prend en charge une fenêtre contextuelle de 256k et une longueur de sortie maximale de 16k tokens."
   },
   "doubao-seed-1.6-thinking": {
-    "description": "Le modèle Doubao-Seed-1.6-thinking a une capacité de réflexion considérablement renforcée. Par rapport à Doubao-1.5-thinking-pro, il améliore davantage les compétences de base telles que le codage, les mathématiques et le raisonnement logique, tout en supportant la compréhension visuelle. Il prend en charge une fenêtre contextuelle de 256k et une longueur de sortie maximale de 16k tokens."
+    "description": "Le modèle Doubao-Seed-1.6-thinking a une capacité de réflexion considérablement renforcée. Par rapport à Doubao-1.5-thinking-pro, il améliore davantage les compétences fondamentales telles que le codage, les mathématiques et le raisonnement logique, tout en supportant la compréhension visuelle. Il prend en charge une fenêtre contextuelle de 256k et une longueur de sortie maximale de 16k tokens."
   },
   "emohaa": {
     "description": "Emohaa est un modèle psychologique, doté de compétences de conseil professionnel, aidant les utilisateurs à comprendre les problèmes émotionnels."
@@ -1346,8 +1346,8 @@
   "grok-3-mini-fast": {
     "description": "Modèle léger, réfléchit avant de répondre. Rapide et intelligent, adapté aux tâches logiques ne nécessitant pas de connaissances approfondies, avec accès à la trace de pensée originale."
   },
-  "grok-4-0709": {
-    "description": "Notre tout dernier et plus puissant modèle phare, excellent en traitement du langage naturel, calcul mathématique et raisonnement — un véritable champion polyvalent."
+  "grok-4": {
+    "description": "Notre tout dernier modèle phare, le plus puissant, excelle dans le traitement du langage naturel, le calcul mathématique et le raisonnement — un véritable champion polyvalent."
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B est un modèle linguistique combinant créativité et intelligence, intégrant plusieurs modèles de pointe."

@@ -918,10 +918,10 @@
     "description": "Doubao-1.5-vision-lite ist ein neu verbessertes multimodales großes Modell, das beliebige Auflösungen und extreme Seitenverhältnisse bei der Bilderkennung unterstützt und die Fähigkeiten in visueller Schlussfolgerung, Dokumentenerkennung, Detailverständnis und Befolgung von Anweisungen verbessert. Es unterstützt ein Kontextfenster von 128k und eine maximale Ausgabelänge von 16k Tokens."
   },
   "doubao-seed-1.6": {
-    "description": "Doubao-Seed-1.6 ist ein neues multimodales Modell für tiefgehendes Denken, das drei Denkmodi unterstützt: auto, thinking und non-thinking. Im non-thinking-Modus ist die Leistung im Vergleich zu Doubao-1.5-pro/250115 deutlich verbessert. Unterstützt ein Kontextfenster von 256k und eine maximale Ausgabelänge von 16k Tokens."
+    "description": "Doubao-Seed-1.6 ist ein neues multimodales Modell für tiefgehendes Denken, das drei Denkmodi unterstützt: auto, thinking und non-thinking. Im non-thinking-Modus ist die Modellleistung im Vergleich zu Doubao-1.5-pro/250115 deutlich verbessert. Unterstützt ein Kontextfenster von 256k und eine maximale Ausgabelänge von 16k Tokens."
   },
   "doubao-seed-1.6-flash": {
-    "description": "Doubao-Seed-1.6-flash ist ein multimodales Modell für tiefgehendes Denken mit extrem schneller Inferenzgeschwindigkeit, TPOT benötigt nur 10 ms; unterstützt sowohl Text- als auch visuelle Verarbeitung, die Textverständnisfähigkeit übertrifft die vorherige Lite-Generation, das visuelle Verständnis ist vergleichbar mit den Pro-Modellen der Konkurrenz. Unterstützt ein Kontextfenster von 256k und eine maximale Ausgabelänge von 16k Tokens."
+    "description": "Doubao-Seed-1.6-flash ist ein multimodales Modell für tiefgehendes Denken mit extrem schneller Inferenzgeschwindigkeit, TPOT benötigt nur 10 ms; unterstützt sowohl Text- als auch visuelles Verständnis, die Textverständnisfähigkeit übertrifft die vorherige Lite-Generation, das visuelle Verständnis ist vergleichbar mit den Pro-Modellen der Konkurrenz. Unterstützt ein Kontextfenster von 256k und eine maximale Ausgabelänge von 16k Tokens."
   },
   "doubao-seed-1.6-thinking": {
     "description": "Das Doubao-Seed-1.6-thinking Modell verfügt über stark verbesserte Denkfähigkeiten. Im Vergleich zu Doubao-1.5-thinking-pro wurden die Grundfähigkeiten in Coding, Mathematik und logischem Denken weiter verbessert und unterstützt visuelles Verständnis. Unterstützt ein Kontextfenster von 256k und eine maximale Ausgabelänge von 16k Tokens."
@@ -1346,7 +1346,7 @@
   "grok-3-mini-fast": {
     "description": "Ein leichtgewichtiges Modell, das vor der Antwort nachdenkt. Es arbeitet schnell und intelligent, eignet sich für logische Aufgaben ohne tiefgehendes Fachwissen und ermöglicht die Nachverfolgung des ursprünglichen Denkprozesses."
   },
-  "grok-4-0709": {
+  "grok-4": {
     "description": "Unser neuestes und leistungsstärkstes Flaggschiffmodell, das in der Verarbeitung natürlicher Sprache, mathematischen Berechnungen und logischem Denken herausragende Leistungen erbringt – ein perfekter Allrounder."
   },
   "gryphe/mythomax-l2-13b": {
@@ -1872,7 +1872,7 @@
     "description": "o1 ist OpenAIs neues Inferenzmodell, das für komplexe Aufgaben geeignet ist, die umfangreiches Allgemeinwissen erfordern. Das Modell hat einen Kontext von 128K und einen Wissensstand bis Oktober 2023."
   },
   "o1-pro": {
-    "description": "Die o1-Modellreihe wurde durch verstärkendes Lernen trainiert, um vor der Antwort nachzudenken und komplexe logische Aufgaben auszuführen. Das o1-pro Modell nutzt mehr Rechenressourcen für tiefere Überlegungen und liefert dadurch kontinuierlich qualitativ hochwertigere Antworten."
+    "description": "Die o1-Serie wurde durch verstärkendes Lernen trainiert, um vor der Antwort nachzudenken und komplexe Schlussfolgerungen zu ziehen. Das o1-pro Modell nutzt mehr Rechenressourcen für tiefere Überlegungen und liefert dadurch kontinuierlich qualitativ hochwertigere Antworten."
   },
   "o3": {
     "description": "o3 ist ein vielseitiges und leistungsstarkes Modell, das in mehreren Bereichen hervorragende Leistungen zeigt. Es setzt neue Maßstäbe für mathematische, wissenschaftliche, programmiertechnische und visuelle Schlussfolgerungsaufgaben. Es ist auch versiert in technischer Schreibweise und der Befolgung von Anweisungen. Benutzer können es nutzen, um Texte, Code und Bilder zu analysieren und komplexe Probleme mit mehreren Schritten zu lösen."

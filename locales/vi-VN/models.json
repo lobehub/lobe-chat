@@ -726,7 +726,7 @@
     "description": "Compound-beta-mini là một hệ thống AI phức hợp, được hỗ trợ bởi các mô hình có sẵn công khai trong GroqCloud, có khả năng thông minh và chọn lọc sử dụng công cụ để trả lời các truy vấn của người dùng."
   },
   "computer-use-preview": {
-    "description": "Mô hình computer-use-preview được thiết kế chuyên biệt cho \"công cụ sử dụng máy tính\", được huấn luyện để hiểu và thực hiện các nhiệm vụ liên quan đến máy tính."
+    "description": "Mô hình computer-use-preview được thiết kế chuyên biệt cho “công cụ sử dụng máy tính”, được huấn luyện để hiểu và thực hiện các nhiệm vụ liên quan đến máy tính."
   },
   "dall-e-2": {
     "description": "Mô hình DALL·E thế hệ thứ hai, hỗ trợ tạo hình ảnh chân thực và chính xác hơn, với độ phân giải gấp 4 lần thế hệ đầu tiên."
@@ -924,7 +924,7 @@
     "description": "Doubao-Seed-1.6-flash là mô hình suy nghĩ sâu đa phương thức với tốc độ suy luận tối ưu, TPOT chỉ cần 10ms; đồng thời hỗ trợ hiểu văn bản và hình ảnh, khả năng hiểu văn bản vượt trội so với thế hệ lite trước, khả năng hiểu hình ảnh sánh ngang với các mô hình pro của đối thủ. Hỗ trợ cửa sổ ngữ cảnh 256k, độ dài đầu ra tối đa 16k tokens."
   },
   "doubao-seed-1.6-thinking": {
-    "description": "Mô hình Doubao-Seed-1.6-thinking có khả năng suy nghĩ được tăng cường đáng kể, so với Doubao-1.5-thinking-pro, nâng cao hơn nữa các năng lực cơ bản như Lập trình, Toán học, Lý luận logic, đồng thời hỗ trợ hiểu hình ảnh. Hỗ trợ cửa sổ ngữ cảnh 256k, độ dài đầu ra tối đa 16k tokens."
+    "description": "Mô hình Doubao-Seed-1.6-thinking có khả năng suy nghĩ được tăng cường đáng kể, so với Doubao-1.5-thinking-pro, nâng cao hơn nữa các năng lực cơ bản như lập trình, toán học, suy luận logic, đồng thời hỗ trợ hiểu hình ảnh. Hỗ trợ cửa sổ ngữ cảnh 256k, độ dài đầu ra tối đa 16k tokens."
   },
   "emohaa": {
     "description": "Emohaa là mô hình tâm lý, có khả năng tư vấn chuyên nghiệp, giúp người dùng hiểu các vấn đề cảm xúc."
@@ -1346,7 +1346,7 @@
   "grok-3-mini-fast": {
     "description": "Mô hình nhẹ, suy nghĩ trước khi trả lời. Chạy nhanh, thông minh, phù hợp cho các nhiệm vụ logic không đòi hỏi kiến thức chuyên sâu và có thể truy xuất được chuỗi suy nghĩ gốc."
   },
-  "grok-4-0709": {
+  "grok-4": {
     "description": "Mô hình hàng đầu mới nhất và mạnh mẽ nhất của chúng tôi, thể hiện xuất sắc trong xử lý ngôn ngữ tự nhiên, tính toán toán học và suy luận — một lựa chọn toàn diện hoàn hảo."
   },
   "gryphe/mythomax-l2-13b": {
@@ -1884,7 +1884,7 @@
     "description": "o3-mini là mô hình suy diễn nhỏ gọn mới nhất của chúng tôi, cung cấp trí thông minh cao với chi phí và độ trễ tương tự như o1-mini."
   },
   "o3-pro": {
-    "description": "Mô hình o3-pro sử dụng nhiều tài nguyên tính toán hơn để suy nghĩ sâu hơn và luôn cung cấp câu trả lời tốt hơn, chỉ hỗ trợ sử dụng dưới API Responses."
+    "description": "Mô hình o3-pro sử dụng nhiều tài nguyên tính toán hơn để suy nghĩ sâu sắc hơn và luôn cung cấp câu trả lời tốt hơn, chỉ hỗ trợ sử dụng dưới API Responses."
   },
   "o4-mini": {
     "description": "o4-mini là mô hình nhỏ gọn mới nhất trong dòng o của chúng tôi. Nó được tối ưu hóa cho suy luận nhanh chóng và hiệu quả, thể hiện hiệu suất và hiệu quả cao trong các nhiệm vụ mã hóa và hình ảnh."
