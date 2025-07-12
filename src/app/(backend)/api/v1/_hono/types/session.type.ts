@@ -69,6 +69,7 @@ export interface GetSessionsRequest {
   keyword?: string;
   page?: number;
   pageSize?: number;
+  targetUserId?: string;
 }
 
 /**
