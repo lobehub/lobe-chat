@@ -15,9 +15,9 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "baseUrl": ".",
     "types": ["vitest/globals", "@serwist/next/typings"],
     "paths": {
-      "*": ["./*"],
       "@/*": ["./src/*"],
       "~test-utils": ["./tests/utils.tsx"]
     },
