@@ -666,7 +666,7 @@
     "description": "Codestral, kod üretimine odaklanan son teknoloji bir üretim modelidir, ara doldurma ve kod tamamlama görevlerini optimize etmiştir."
   },
   "codex-mini-latest": {
-    "description": "codex-mini-latest, Codex CLI için özel olarak tasarlanmış o4-mini'nin ince ayar versiyonudur. API üzerinden doğrudan kullanım için, gpt-4.1'den başlamanızı öneririz."
+    "description": "codex-mini-latest, Codex CLI için özel olarak ince ayarlanmış o4-mini versiyonudur. API üzerinden doğrudan kullanım için, gpt-4.1'den başlamanızı öneririz."
   },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B, talimat takibi, diyalog ve programlama için tasarlanmış bir modeldir."
@@ -726,7 +726,7 @@
     "description": "Compound-beta-mini, GroqCloud'da desteklenen açık kullanılabilir modellerden güç alan bir bileşik AI sistemidir, kullanıcı sorgularını yanıtlamak için araçları akıllıca ve seçici bir şekilde kullanabilir."
   },
   "computer-use-preview": {
-    "description": "computer-use-preview modeli, \"Bilgisayar Kullanım Araçları\" için özel olarak tasarlanmış bir modeldir ve bilgisayarla ilgili görevleri anlama ve yerine getirme konusunda eğitilmiştir."
+    "description": "computer-use-preview modeli, \"Bilgisayar Kullanım Araçları\" için özel olarak tasarlanmış ve bilgisayarla ilgili görevleri anlama ve yerine getirme konusunda eğitilmiş özel bir modeldir."
   },
   "dall-e-2": {
     "description": "İkinci nesil DALL·E modeli, daha gerçekçi ve doğru görüntü üretimi destekler, çözünürlüğü birinci neslin 4 katıdır."
@@ -924,7 +924,7 @@
     "description": "Doubao-Seed-1.6-flash, TPOT sadece 10ms olan son derece hızlı çok modlu derin düşünme modelidir; hem metin hem de görsel anlayışı destekler, metin anlama yeteneği önceki lite neslini aşar, görsel anlama ise rakiplerin pro serisi modelleriyle eşdeğerdir. 256k bağlam penceresini destekler ve çıktı uzunluğu maksimum 16k token olabilir."
   },
   "doubao-seed-1.6-thinking": {
-    "description": "Doubao-Seed-1.6-thinking modeli düşünme yeteneğinde büyük gelişme göstermiştir; Doubao-1.5-thinking-pro ile karşılaştırıldığında Kodlama, Matematik ve mantıksal akıl yürütme gibi temel yeteneklerde daha da iyileşmiştir ve görsel anlayışı destekler. 256k bağlam penceresini destekler ve çıktı uzunluğu maksimum 16k token olabilir."
+    "description": "Doubao-Seed-1.6-thinking modeli düşünme yeteneğinde büyük gelişme göstermiştir, Doubao-1.5-thinking-pro ile karşılaştırıldığında Kodlama, Matematik ve mantıksal akıl yürütme gibi temel yeteneklerde daha da iyileşmiştir, görsel anlayışı destekler. 256k bağlam penceresini destekler ve çıktı uzunluğu maksimum 16k token olabilir."
   },
   "emohaa": {
     "description": "Emohaa, duygusal sorunları anlamalarına yardımcı olmak için profesyonel danışmanlık yeteneklerine sahip bir psikolojik modeldir."
@@ -1305,7 +1305,7 @@
     "description": "GPT-4o mini, OpenAI'nin GPT-4 Omni'den sonra tanıttığı en yeni modeldir. Görsel ve metin girişi destekler ve metin çıktısı verir. En gelişmiş küçük model olarak, diğer son zamanlardaki öncü modellere göre çok daha ucuzdur ve GPT-3.5 Turbo'dan %60'tan fazla daha ucuzdur. En son teknolojiyi korurken, önemli bir maliyet etkinliği sunar. GPT-4o mini, MMLU testinde %82 puan almış olup, şu anda sohbet tercihleri açısından GPT-4'ün üzerinde yer almaktadır."
   },
   "gpt-4o-mini-audio-preview": {
-    "description": "GPT-4o mini Ses modeli, ses giriş ve çıkışını destekler."
+    "description": "GPT-4o mini Ses modeli, sesli giriş ve çıkışı destekler."
   },
   "gpt-4o-mini-realtime-preview": {
     "description": "GPT-4o-mini gerçek zamanlı versiyonu, ses ve metin için gerçek zamanlı giriş ve çıkış desteği sunar."
@@ -1346,7 +1346,7 @@
   "grok-3-mini-fast": {
     "description": "Hafif model olup, konuşma öncesi düşünür. Hızlı ve akıllı çalışır, derin alan bilgisi gerektirmeyen mantıksal görevler için uygundur ve orijinal düşünce izlerini elde edebilir."
   },
-  "grok-4-0709": {
+  "grok-4": {
     "description": "En yeni ve en güçlü amiral gemisi modelimiz, doğal dil işleme, matematiksel hesaplama ve akıl yürütme alanlarında üstün performans sergiliyor — mükemmel bir çok yönlü oyuncu."
   },
   "gryphe/mythomax-l2-13b": {
@@ -1872,7 +1872,7 @@
     "description": "o1, OpenAI'nin geniş genel bilgiye ihtiyaç duyan karmaşık görevler için uygun yeni bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."
   },
   "o1-pro": {
-    "description": "o1 serisi modeller, güçlendirilmiş öğrenme ile eğitilmiş olup, yanıtlamadan önce düşünme yapabilir ve karmaşık akıl yürütme görevlerini yerine getirebilir. o1-pro modeli, daha derin düşünme için daha fazla hesaplama kaynağı kullanır ve böylece sürekli olarak daha kaliteli yanıtlar sunar."
+    "description": "o1 serisi modeller, yanıtlamadan önce düşünme yapabilen ve karmaşık akıl yürütme görevlerini yerine getirebilen pekiştirmeli öğrenme ile eğitilmiştir. o1-pro modeli, daha derin düşünme için daha fazla hesaplama kaynağı kullanır ve böylece sürekli olarak daha kaliteli yanıtlar sunar."
   },
   "o3": {
     "description": "o3, çok çeşitli alanlarda mükemmel performans gösteren çok yönlü güçlü bir modeldir. Matematik, bilim, programlama ve görsel çıkarım görevlerinde yeni standartlar belirler. Ayrıca teknik yazım ve talimat takibi konusunda da uzmandır. Kullanıcılar, metin, kod ve görüntüleri analiz ederek çok adımlı karmaşık sorunları çözebilir."
@@ -1884,7 +1884,7 @@
     "description": "o3-mini, aynı maliyet ve gecikme hedefleriyle yüksek zeka sunan en yeni küçük ölçekli çıkarım modelimizdir."
   },
   "o3-pro": {
-    "description": "o3-pro modeli, daha derin düşünmek ve her zaman daha iyi yanıtlar sunmak için daha fazla hesaplama kullanır; yalnızca Responses API altında kullanılabilir."
+    "description": "o3-pro modeli, daha derin düşünmek ve her zaman daha iyi yanıtlar sunmak için daha fazla hesaplama kullanır, yalnızca Responses API altında kullanılabilir."
   },
   "o4-mini": {
     "description": "o4-mini, en yeni küçük o serisi modelimizdir. Hızlı ve etkili çıkarım için optimize edilmiştir ve kodlama ile görsel görevlerde son derece yüksek verimlilik ve performans sergiler."
