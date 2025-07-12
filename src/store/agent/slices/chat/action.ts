@@ -1,7 +1,7 @@
 import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 import { SWRResponse, mutate } from 'swr';
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 import { StateCreator } from 'zustand/vanilla';
 
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
@@ -28,14 +28,14 @@ export interface AgentChatAction {
 
   internal_dispatchAgentMap: (
     id: string,
-    config: DeepPartial<LobeAgentConfig>,
+    config: PartialDeep<LobeAgentConfig>,
     actions?: string,
   ) => void;
   internal_refreshAgentConfig: (id: string) => Promise<void>;
   internal_refreshAgentKnowledge: () => Promise<void>;
   internal_updateAgentConfig: (
     id: string,
-    data: DeepPartial<LobeAgentConfig>,
+    data: PartialDeep<LobeAgentConfig>,
     signal?: AbortSignal,
   ) => Promise<void>;
   removeFileFromAgent: (fileId: string) => Promise<void>;
@@ -47,13 +47,13 @@ export interface AgentChatAction {
 
   togglePlugin: (id: string, open?: boolean) => Promise<void>;
   updateAgentChatConfig: (config: Partial<LobeAgentChatConfig>) => Promise<void>;
-  updateAgentConfig: (config: DeepPartial<LobeAgentConfig>) => Promise<void>;
+  updateAgentConfig: (config: PartialDeep<LobeAgentConfig>) => Promise<void>;
   useFetchAgentConfig: (isLogin: boolean | undefined, id: string) => SWRResponse<LobeAgentConfig>;
   useFetchFilesAndKnowledgeBases: () => SWRResponse<KnowledgeItem[]>;
   useInitInboxAgentStore: (
     isLogin: boolean | undefined,
-    defaultAgentConfig?: DeepPartial<LobeAgentConfig>,
-  ) => SWRResponse<DeepPartial<LobeAgentConfig>>;
+    defaultAgentConfig?: PartialDeep<LobeAgentConfig>,
+  ) => SWRResponse<PartialDeep<LobeAgentConfig>>;
 }
 
 const FETCH_AGENT_CONFIG_KEY = 'FETCH_AGENT_CONFIG';
@@ -189,7 +189,7 @@ export const createChatSlice: StateCreator<
   },
 
   useInitInboxAgentStore: (isLogin, defaultAgentConfig) =>
-    useOnlyFetchOnceSWR<DeepPartial<LobeAgentConfig>>(
+    useOnlyFetchOnceSWR<PartialDeep<LobeAgentConfig>>(
       !!isLogin ? 'fetchInboxAgentConfig' : null,
       () => sessionService.getSessionConfig(INBOX_SESSION_ID),
       {

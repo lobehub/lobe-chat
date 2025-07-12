@@ -129,6 +129,7 @@
     "waitingForMore": "更多模型正在 <1>计划接入</1> 中，敬请期待"
   },
   "plugin": {
+    "addMCPPlugin": "添加 MCP 插件",
     "addTooltip": "自定义插件",
     "clearDeprecated": "移除无效插件",
     "empty": "暂无已安装插件，欢迎前往 <1>插件商店</1> 探索",
@@ -220,7 +221,7 @@
     },
     "inputTemplate": {
       "desc": "用户最新的一条消息会填充到此模板",
-      "placeholder": "预处理模版 {{input_template}} 将替换为实时输入信息",
+      "placeholder": "预处理模版 {{text}} 将替换为实时输入信息",
       "title": "用户输入预处理"
     },
     "submit": "更新聊天偏好",

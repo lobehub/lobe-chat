@@ -1,7 +1,7 @@
 'use client';
 
-import { Avatar, Button } from '@lobehub/ui';
-import { Card, Skeleton, Typography } from 'antd';
+import { Avatar, Button, Text } from '@lobehub/ui';
+import { Card, Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,8 +20,6 @@ interface LoginConfirmProps {
   };
   uid: string;
 }
-
-const { Title } = Typography;
 
 const useStyles = createStyles(({ css, token }) => ({
   authButton: css`
@@ -75,9 +73,9 @@ const LoginConfirmClient = memo<LoginConfirmProps>(({ uid, clientMetadata }) => 
           logoUrl={clientMetadata.logo}
         />
       </Flexbox>
-      <Title className={styles.title} level={3}>
+      <Text as={'h3'} className={styles.title}>
         {titleText}
-      </Title>
+      </Text>
 
       <Card className={styles.card}>
         <Flexbox gap={64}>

@@ -129,6 +129,7 @@
     "waitingForMore": "More models are <1>planned to be added</1>, stay tuned"
   },
   "plugin": {
+    "addMCPPlugin": "Add MCP Plugin",
     "addTooltip": "Custom Plugin",
     "clearDeprecated": "Remove Deprecated Plugins",
     "empty": "No installed plugins yet, feel free to explore the <1>Plugin Store</1>",
@@ -220,7 +221,7 @@
     },
     "inputTemplate": {
       "desc": "The user's latest message will be filled into this template",
-      "placeholder": "Preprocessing template {{input_template}} will be replaced with real-time input information",
+      "placeholder": "Preprocessing template {{text}} will be replaced with real-time input information",
       "title": "User Input Preprocessing"
     },
     "submit": "Update Chat Preferences",

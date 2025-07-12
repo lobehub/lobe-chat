@@ -665,9 +665,6 @@
   "codestral-latest": {
     "description": "Codestral é um modelo gerador de ponta focado em geração de código, otimizado para preenchimento intermediário e tarefas de conclusão de código."
   },
-  "codex-mini-latest": {
-    "description": "codex-mini-latest é uma versão ajustada do o4-mini, especialmente para o Codex CLI. Para uso direto via API, recomendamos começar com o gpt-4.1."
-  },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B é um modelo projetado para seguir instruções, diálogos e programação."
   },
@@ -916,15 +913,6 @@
   },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite é um modelo multimodal atualizado, suportando reconhecimento de imagens de qualquer resolução e proporções extremas, melhorando a capacidade de raciocínio visual, reconhecimento de documentos, compreensão de informações detalhadas e seguimento de instruções. Suporta uma janela de contexto de 128k, com comprimento de saída de até 16k tokens."
-  },
-  "doubao-seed-1.6": {
-    "description": "Doubao-Seed-1.6 é um novo modelo multimodal de pensamento profundo, suportando três modos de pensamento: auto, thinking e non-thinking. No modo non-thinking, o desempenho do modelo melhora significativamente em comparação com Doubao-1.5-pro/250115. Suporta janela de contexto de 256k e comprimento máximo de saída de 16k tokens."
-  },
-  "doubao-seed-1.6-flash": {
-    "description": "Doubao-Seed-1.6-flash é um modelo multimodal de pensamento profundo com velocidade de inferência extrema, TPOT de apenas 10ms; suporta compreensão de texto e visual, com capacidade de compreensão textual superior à geração lite anterior e compreensão visual comparável aos modelos pro da concorrência. Suporta janela de contexto de 256k e comprimento máximo de saída de 16k tokens."
-  },
-  "doubao-seed-1.6-thinking": {
-    "description": "O modelo Doubao-Seed-1.6-thinking tem capacidade de pensamento significativamente reforçada, melhorando ainda mais as habilidades básicas em Coding, Matemática e raciocínio lógico em comparação com Doubao-1.5-thinking-pro, além de suportar compreensão visual. Suporta janela de contexto de 256k e comprimento máximo de saída de 16k tokens."
   },
   "emohaa": {
     "description": "O Emohaa é um modelo psicológico com capacidade de consultoria profissional, ajudando os usuários a entender questões emocionais."
@@ -1181,14 +1169,20 @@
   "google/gemini-2.0-flash-exp:free": {
     "description": "O Gemini 2.0 Flash Experimental é o mais recente modelo de IA multimodal experimental do Google, com melhorias de qualidade em comparação com versões anteriores, especialmente em conhecimento do mundo, código e longos contextos."
   },
+  "google/gemini-2.5-flash": {
+    "description": "Gemini 2.5 Flash é o modelo principal mais avançado do Google, projetado para tarefas avançadas de raciocínio, codificação, matemática e ciências. Ele possui uma capacidade embutida de \"pensamento\", permitindo respostas com maior precisão e processamento detalhado do contexto.\n\nObservação: este modelo possui duas variantes: com pensamento e sem pensamento. O preço de saída varia significativamente dependendo se a capacidade de pensamento está ativada. Se você escolher a variante padrão (sem o sufixo \":thinking\"), o modelo evitará explicitamente gerar tokens de pensamento.\n\nPara utilizar a capacidade de pensamento e receber tokens de pensamento, você deve escolher a variante \":thinking\", o que resultará em um preço de saída mais alto para o pensamento.\n\nAlém disso, o Gemini 2.5 Flash pode ser configurado através do parâmetro \"máximo de tokens para raciocínio\", conforme descrito na documentação (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
+  },
   "google/gemini-2.5-flash-preview": {
     "description": "O Gemini 2.5 Flash é o modelo principal mais avançado do Google, projetado para raciocínio avançado, codificação, matemática e tarefas científicas. Ele possui a capacidade de 'pensar' embutida, permitindo que forneça respostas com maior precisão e um tratamento de contexto mais detalhado.\n\nNota: Este modelo possui duas variantes: com e sem 'pensamento'. A precificação da saída varia significativamente dependendo da ativação da capacidade de pensamento. Se você escolher a variante padrão (sem o sufixo ':thinking'), o modelo evitará explicitamente gerar tokens de pensamento.\n\nPara aproveitar a capacidade de pensamento e receber tokens de pensamento, você deve escolher a variante ':thinking', que resultará em uma precificação de saída de pensamento mais alta.\n\nAlém disso, o Gemini 2.5 Flash pode ser configurado através do parâmetro 'número máximo de tokens para raciocínio', conforme descrito na documentação (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
   "google/gemini-2.5-flash-preview:thinking": {
     "description": "O Gemini 2.5 Flash é o modelo principal mais avançado do Google, projetado para raciocínio avançado, codificação, matemática e tarefas científicas. Ele possui a capacidade de 'pensar' embutida, permitindo que forneça respostas com maior precisão e um tratamento de contexto mais detalhado.\n\nNota: Este modelo possui duas variantes: com e sem 'pensamento'. A precificação da saída varia significativamente dependendo da ativação da capacidade de pensamento. Se você escolher a variante padrão (sem o sufixo ':thinking'), o modelo evitará explicitamente gerar tokens de pensamento.\n\nPara aproveitar a capacidade de pensamento e receber tokens de pensamento, você deve escolher a variante ':thinking', que resultará em uma precificação de saída de pensamento mais alta.\n\nAlém disso, o Gemini 2.5 Flash pode ser configurado através do parâmetro 'número máximo de tokens para raciocínio', conforme descrito na documentação (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
-  "google/gemini-2.5-pro-preview-03-25": {
-    "description": "O Gemini 2.5 Pro é o modelo de IA mais avançado do Google, projetado para raciocínio avançado, codificação, matemática e tarefas científicas. Ele possui a capacidade de 'pensar', permitindo que raciocine com maior precisão e um tratamento de contexto mais detalhado. O Gemini 2.5 Pro obteve desempenho de topo em vários testes de referência, incluindo o primeiro lugar no ranking LMArena, refletindo uma excelente capacidade de alinhamento com preferências humanas e resolução de problemas complexos."
+  "google/gemini-2.5-pro": {
+    "description": "Gemini 2.5 Pro é o modelo de pensamento mais avançado do Google, capaz de raciocinar sobre problemas complexos em código, matemática e áreas STEM, além de analisar grandes conjuntos de dados, bases de código e documentos usando contexto extenso."
+  },
+  "google/gemini-2.5-pro-preview": {
+    "description": "Gemini 2.5 Pro Preview é o modelo de pensamento mais avançado do Google, capaz de raciocinar sobre problemas complexos em código, matemática e áreas STEM, além de analisar grandes conjuntos de dados, bases de código e documentos usando contexto extenso."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash oferece capacidades de processamento multimodal otimizadas, adequadas para uma variedade de cenários de tarefas complexas."
@@ -1339,6 +1333,9 @@
   },
   "grok-3-mini-fast": {
     "description": "Modelo leve que pensa antes de responder. Rápido e inteligente, adequado para tarefas lógicas que não exigem conhecimento profundo de domínio, e capaz de fornecer o rastro original do pensamento."
+  },
+  "grok-4": {
+    "description": "Nosso mais recente e poderoso modelo principal, com desempenho excepcional em processamento de linguagem natural, cálculo matemático e raciocínio — um competidor versátil perfeito."
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B é um modelo de linguagem que combina criatividade e inteligência, integrando vários modelos de ponta."
@@ -1838,6 +1835,9 @@
   "moonshot-v1-auto": {
     "description": "O Moonshot V1 Auto pode escolher o modelo adequado com base na quantidade de Tokens ocupados pelo contexto atual."
   },
+  "moonshotai/Kimi-Dev-72B": {
+    "description": "Kimi-Dev-72B é um modelo de código aberto de grande porte, otimizado por meio de aprendizado reforçado em larga escala, capaz de gerar patches robustos e prontos para produção. Este modelo alcançou uma nova pontuação máxima de 60,4% no SWE-bench Verified, estabelecendo um recorde entre modelos de código aberto em tarefas automatizadas de engenharia de software, como correção de defeitos e revisão de código."
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B é uma versão aprimorada do Nous Hermes 2, contendo os conjuntos de dados mais recentes desenvolvidos internamente."
   },
@@ -1859,20 +1859,20 @@
   "o1-preview": {
     "description": "o1 é o novo modelo de raciocínio da OpenAI, adequado para tarefas complexas que exigem amplo conhecimento geral. Este modelo possui um contexto de 128K e uma data limite de conhecimento em outubro de 2023."
   },
-  "o1-pro": {
-    "description": "A série de modelos o1 é treinada com aprendizado por reforço, capaz de pensar antes de responder e executar tarefas complexas de raciocínio. O modelo o1-pro utiliza mais recursos computacionais para um pensamento mais profundo, oferecendo respostas de qualidade superior de forma contínua."
-  },
   "o3": {
     "description": "o3 é um modelo versátil e poderoso, com excelente desempenho em várias áreas. Ele estabelece novos padrões para tarefas de matemática, ciência, programação e raciocínio visual. Também é bom em redação técnica e seguimento de instruções. Os usuários podem utilizá-lo para analisar textos, códigos e imagens, resolvendo problemas complexos em múltiplas etapas."
+  },
+  "o3-deep-research": {
+    "description": "o3-deep-research é o nosso modelo avançado de pesquisa profunda, projetado para lidar com tarefas complexas de pesquisa em múltiplas etapas. Ele pode buscar e sintetizar informações da internet, além de acessar e utilizar seus dados próprios por meio do conector MCP."
   },
   "o3-mini": {
     "description": "o3-mini é nosso mais recente modelo de inferência em miniatura, oferecendo alta inteligência com os mesmos custos e metas de latência que o o1-mini."
   },
-  "o3-pro": {
-    "description": "O modelo o3-pro utiliza mais computação para pensar mais profundamente e sempre fornecer melhores respostas, suportado apenas para uso via Responses API."
-  },
   "o4-mini": {
     "description": "o4-mini é nosso mais recente modelo compacto da série o. Ele é otimizado para inferência rápida e eficaz, apresentando alta eficiência e desempenho em tarefas de codificação e visuais."
+  },
+  "o4-mini-deep-research": {
+    "description": "o4-mini-deep-research é o nosso modelo de pesquisa profunda mais rápido e acessível — ideal para lidar com tarefas complexas de pesquisa em múltiplas etapas. Ele pode buscar e sintetizar informações da internet, além de acessar e utilizar seus dados próprios por meio do conector MCP."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba é um modelo de linguagem Mamba 2 focado em geração de código, oferecendo forte suporte para tarefas avançadas de codificação e raciocínio."
@@ -2270,6 +2270,9 @@
   "taichu_vl": {
     "description": "Integra capacidades de compreensão de imagens, transferência de conhecimento e atribuição lógica, destacando-se na área de perguntas e respostas baseadas em texto e imagem."
   },
+  "tencent/Hunyuan-A13B-Instruct": {
+    "description": "Hunyuan-A13B-Instruct possui 80 bilhões de parâmetros, ativando 13 bilhões para competir com modelos maiores, suportando raciocínio híbrido de “pensamento rápido/pensamento lento”; compreensão estável de textos longos; validado pelo BFCL-v3 e τ-Bench, com capacidades de agente líderes; combinando GQA e múltiplos formatos de quantização para inferência eficiente."
+  },
   "text-embedding-3-large": {
     "description": "O modelo de vetorização mais poderoso, adequado para tarefas em inglês e não inglês."
   },
@@ -2320,6 +2323,15 @@
   },
   "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
     "description": "Claude 3.7 sonnet é o modelo de próxima geração mais rápido da Anthropic. Em comparação com o Claude 3 Haiku, o Claude 3.7 Sonnet apresenta melhorias em várias habilidades e supera o maior modelo da geração anterior, o Claude 3 Opus, em muitos testes de referência de inteligência."
+  },
+  "v0-1.0-md": {
+    "description": "O modelo v0-1.0-md é uma versão antiga que oferece serviços através da API v0"
+  },
+  "v0-1.5-lg": {
+    "description": "O modelo v0-1.5-lg é adequado para tarefas avançadas de pensamento ou raciocínio"
+  },
+  "v0-1.5-md": {
+    "description": "O modelo v0-1.5-md é adequado para tarefas diárias e geração de interfaces de usuário (UI)"
   },
   "whisper-1": {
     "description": "Modelo de reconhecimento de voz universal, suporta reconhecimento de voz multilíngue, tradução de voz e identificação de idiomas."

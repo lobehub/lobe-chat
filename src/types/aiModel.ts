@@ -122,6 +122,7 @@ export interface AIBaseModelCard {
    * whether model is legacy (deprecated but not removed yet)
    */
   legacy?: boolean;
+  maxOutput?: number;
   /**
    * who create this model
    */
@@ -148,7 +149,9 @@ export type ExtendParamsType =
   | 'reasoningBudgetToken'
   | 'enableReasoning'
   | 'disableContextCaching'
-  | 'reasoningEffort';
+  | 'reasoningEffort'
+  | 'thinking'
+  | 'thinkingBudget';
 
 export interface AiModelSettings {
   extendParams?: ExtendParamsType[];
@@ -207,6 +210,7 @@ export interface AITTSModelCard extends AIBaseModelCard {
      * the input pricing, e.g. $1 / 1M tokens
      */
     input?: number;
+    output?: number;
   };
   type: 'tts';
 }
@@ -222,6 +226,7 @@ export interface AISTTModelCard extends AIBaseModelCard {
      * the input pricing, e.g. $1 / 1M tokens
      */
     input?: number;
+    output?: number;
   };
   type: 'stt';
 }

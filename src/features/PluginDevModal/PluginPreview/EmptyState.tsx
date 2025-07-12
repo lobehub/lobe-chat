@@ -1,10 +1,8 @@
-import { Icon } from '@lobehub/ui';
-import { Space, Typography } from 'antd';
+import { Icon, Text } from '@lobehub/ui';
+import { Space } from 'antd';
 import { createStyles } from 'antd-style';
 import { Puzzle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-
-const { Title, Paragraph } = Typography;
 
 // Create styles using antd-style
 const useStyles = createStyles(({ token, css }) => ({
@@ -63,10 +61,10 @@ export default function PluginEmptyState() {
       <div className={styles.iconWrapper}>
         <Icon icon={Puzzle} size={32} />
       </div>
-      <Title className={styles.title} level={4}>
+      <Text as={'h4'} className={styles.title}>
         {t('dev.preview.empty.title')}
-      </Title>
-      <Paragraph className={styles.description}>{t('dev.preview.empty.desc')}</Paragraph>
+      </Text>
+      <Text className={styles.description}>{t('dev.preview.empty.desc')}</Text>
       <Space align="center" direction="vertical">
         <div className={styles.line} style={{ width: 128 }} />
         <div className={styles.line} style={{ width: 96 }} />

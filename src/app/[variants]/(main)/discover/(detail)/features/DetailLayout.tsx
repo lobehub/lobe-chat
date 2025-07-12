@@ -41,7 +41,6 @@ const DetailLayout = memo<DetailLayoutProps>(
         <Flexbox gap={32} horizontal width={'100%'}>
           <Flexbox flex={1} gap={48} style={{ overflow: 'hidden', position: 'relative' }}>
             {children}
-            <Footer />
           </Flexbox>
           <SidebarContainer>
             <Flexbox gap={16} width={'100%'}>

@@ -1,12 +1,9 @@
-import { Icon, Tag } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Icon, Tag, Text } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import { MessageSquareDashed } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-
-const { Paragraph } = Typography;
 
 const DefaultContent = memo(() => {
   const { t } = useTranslation('topic');
@@ -18,9 +15,9 @@ const DefaultContent = memo(() => {
       <Flexbox align={'center'} height={24} justify={'center'} width={24}>
         <Icon color={theme.colorTextDescription} icon={MessageSquareDashed} />
       </Flexbox>
-      <Paragraph ellipsis={{ rows: 1 }} style={{ margin: 0 }}>
+      <Text ellipsis={{ rows: 1 }} style={{ margin: 0 }}>
         {t('defaultTitle')}
-      </Paragraph>
+      </Text>
       <Tag>{t('temp')}</Tag>
     </Flexbox>
   );

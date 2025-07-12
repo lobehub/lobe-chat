@@ -12,6 +12,15 @@
     "tool_call": "Tool Call Request"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "Bitte gehen Sie zur Bearbeitungsseite, um Details anzuzeigen",
+      "editBtn": "Jetzt bearbeiten",
+      "title": "Dies ist ein benutzerdefiniertes Plugin"
+    },
+    "emptyState": {
+      "description": "Bitte installieren Sie dieses Plugin, um die Funktionen und Konfigurationsoptionen anzuzeigen",
+      "title": "Nach der Installation Plugin-Details anzeigen"
+    },
     "info": {
       "description": "API-Beschreibung",
       "name": "API-Name"
@@ -230,6 +239,50 @@
     },
     "title": "Lokale Dateien"
   },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "Installationsumgebung wird überprüft...",
+    "COMPLETED": "Installation abgeschlossen",
+    "CONFIGURATION_REQUIRED": "Bitte schließen Sie die erforderliche Konfiguration ab, um mit der Installation fortzufahren",
+    "ERROR": "Installationsfehler",
+    "FETCHING_MANIFEST": "Plugin-Manifest wird abgerufen...",
+    "GETTING_SERVER_MANIFEST": "MCP-Server wird initialisiert...",
+    "INSTALLING_PLUGIN": "Plugin wird installiert...",
+    "configurationDescription": "Dieses MCP-Plugin benötigt Konfigurationsparameter, um ordnungsgemäß zu funktionieren. Bitte füllen Sie die notwendigen Konfigurationsinformationen aus.",
+    "configurationRequired": "Plugin-Parameter konfigurieren",
+    "continueInstall": "Installation fortsetzen",
+    "dependenciesDescription": "Dieses Plugin benötigt die Installation folgender Systemabhängigkeiten, um korrekt zu funktionieren. Bitte installieren Sie die fehlenden Abhängigkeiten gemäß Anleitung und klicken Sie anschließend auf 'Erneut prüfen', um die Installation fortzusetzen.",
+    "dependenciesRequired": "Bitte installieren Sie die Systemabhängigkeiten des Plugins",
+    "dependencyStatus": {
+      "installed": "Installiert",
+      "notInstalled": "Nicht installiert",
+      "requiredVersion": "Benötigte Version: {{version}}"
+    },
+    "errorDetails": {
+      "args": "Parameter",
+      "command": "Befehl",
+      "connectionParams": "Verbindungsparameter",
+      "env": "Umgebungsvariablen",
+      "errorOutput": "Fehlerprotokoll",
+      "exitCode": "Beendigungscode",
+      "hideDetails": "Details ausblenden",
+      "originalError": "Ursprünglicher Fehler",
+      "showDetails": "Details anzeigen"
+    },
+    "errorTypes": {
+      "CONNECTION_FAILED": "Verbindung fehlgeschlagen",
+      "INITIALIZATION_TIMEOUT": "Initialisierung zeitüberschritten",
+      "PROCESS_SPAWN_ERROR": "Prozessstart fehlgeschlagen",
+      "UNKNOWN_ERROR": "Unbekannter Fehler",
+      "VALIDATION_ERROR": "Parameterüberprüfung fehlgeschlagen"
+    },
+    "installError": "MCP-Plugin-Installation fehlgeschlagen, Grund: {{detail}}",
+    "installMethods": {
+      "manual": "Manuelle Installation:",
+      "recommended": "Empfohlene Installationsmethode:"
+    },
+    "recheckDependencies": "Erneut prüfen",
+    "skipDependencies": "Prüfung überspringen"
+  },
   "pluginList": "Plugin-Liste",
   "search": {
     "apiName": {
@@ -266,16 +319,48 @@
   },
   "setting": "Plugin-Einstellung",
   "settings": {
+    "capabilities": {
+      "prompts": "Eingabeaufforderungen",
+      "resources": "Ressourcen",
+      "title": "Plugin-Fähigkeiten",
+      "tools": "Werkzeuge"
+    },
+    "configuration": {
+      "title": "Plugin-Konfiguration"
+    },
+    "connection": {
+      "args": "Startparameter",
+      "command": "Startbefehl",
+      "title": "Verbindungsinformationen",
+      "type": "Verbindungstyp",
+      "url": "Dienstadresse"
+    },
+    "edit": "Bearbeiten",
+    "envConfigDescription": "Diese Konfigurationen werden als Umgebungsvariablen beim Start des MCP-Servers an den Prozess übergeben",
+    "httpTypeNotice": "Für HTTP-Typ MCP-Plugins sind derzeit keine Umgebungsvariablen zu konfigurieren",
     "indexUrl": {
       "title": "Marktindex",
       "tooltip": "Online-Bearbeitung wird derzeit nicht unterstützt. Bitte über Umgebungsvariablen bei der Bereitstellung festlegen."
     },
+    "messages": {
+      "connectionUpdateFailed": "Aktualisierung der Verbindungsinformationen fehlgeschlagen",
+      "connectionUpdateSuccess": "Verbindungsinformationen erfolgreich aktualisiert",
+      "envUpdateFailed": "Speichern der Umgebungsvariablen fehlgeschlagen",
+      "envUpdateSuccess": "Umgebungsvariablen erfolgreich gespeichert"
+    },
     "modalDesc": "Nachdem Sie die Adresse des Plugin-Marktes konfiguriert haben, können Sie den benutzerdefinierten Plugin-Markt verwenden.",
+    "rules": {
+      "argsRequired": "Bitte Startparameter eingeben",
+      "commandRequired": "Bitte Startbefehl eingeben",
+      "urlRequired": "Bitte Dienstadresse eingeben"
+    },
+    "saveSettings": "Einstellungen speichern",
     "title": "Plugin-Markteinstellungen"
   },
   "showInPortal": "Bitte überprüfen Sie die Details im Portal",
   "store": {
     "actions": {
+      "cancel": "Installation abbrechen",
       "confirmUninstall": "Das Plugin wird deinstalliert und alle Konfigurationen werden gelöscht. Bitte bestätigen Sie Ihre Aktion.",
       "detail": "Details",
       "install": "Installieren",
@@ -286,13 +371,15 @@
     "communityPlugin": "Community",
     "customPlugin": "Benutzerdefiniert",
     "empty": "Keine installierten Plugins vorhanden",
+    "emptySelectHint": "Wählen Sie ein Plugin aus, um Details anzuzeigen",
     "installAllPlugins": "Alle installieren",
     "networkError": "Fehler beim Abrufen des Plugin-Shops. Bitte überprüfen Sie die Netzwerkverbindung und versuchen Sie es erneut.",
     "placeholder": "Suche nach Plugin-Namen, Beschreibung oder Stichwort...",
     "releasedAt": "Veröffentlicht am {{createdAt}}",
     "tabs": {
-      "all": "Alle",
-      "installed": "Installiert"
+      "installed": "Installiert",
+      "mcp": "MCP-Plugin",
+      "old": "LobeChat-Plugin"
     },
     "title": "Plugin-Shop"
   },

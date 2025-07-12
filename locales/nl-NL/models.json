@@ -666,7 +666,7 @@
     "description": "Codestral is een geavanceerd generatief model dat zich richt op codegeneratie, geoptimaliseerd voor tussentijdse invulling en code-aanvultaken."
   },
   "codex-mini-latest": {
-    "description": "codex-mini-latest is een verfijnde versie van o4-mini, speciaal ontworpen voor Codex CLI. Voor direct gebruik via de API raden we aan te beginnen met gpt-4.1."
+    "description": "codex-mini-latest is een fijn afgestemde versie van o4-mini, speciaal ontworpen voor Codex CLI. Voor direct gebruik via de API raden we aan te beginnen met gpt-4.1."
   },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B is een model ontworpen voor instructievolging, gesprekken en programmeren."
@@ -924,7 +924,7 @@
     "description": "Doubao-Seed-1.6-flash is een multimodaal diepdenkend model met extreem snelle inferentiesnelheid, TPOT slechts 10ms; ondersteunt zowel tekst- als visueel begrip, met tekstbegrip dat beter is dan de vorige lite-generatie en visueel begrip dat vergelijkbaar is met concurrerende pro-serie modellen. Ondersteunt een contextvenster van 256k en een maximale uitvoerlengte van 16k tokens."
   },
   "doubao-seed-1.6-thinking": {
-    "description": "Doubao-Seed-1.6-thinking model heeft sterk verbeterde denkvermogens. Vergeleken met Doubao-1.5-thinking-pro zijn de basisvaardigheden in coderen, wiskunde en logisch redeneren verder verbeterd, met ondersteuning voor visueel begrip. Ondersteunt een contextvenster van 256k en een maximale uitvoerlengte van 16k tokens."
+    "description": "Doubao-Seed-1.6-thinking model heeft sterk verbeterde denkvermogens, met verdere verbeteringen in basisvaardigheden zoals coderen, wiskunde en logisch redeneren ten opzichte van Doubao-1.5-thinking-pro, en ondersteunt visueel begrip. Ondersteunt een contextvenster van 256k en een maximale uitvoerlengte van 16k tokens."
   },
   "emohaa": {
     "description": "Emohaa is een psychologisch model met professionele adviescapaciteiten, dat gebruikers helpt emotionele problemen te begrijpen."
@@ -1181,14 +1181,20 @@
   "google/gemini-2.0-flash-exp:free": {
     "description": "Gemini 2.0 Flash Experimental is Google's nieuwste experimentele multimodale AI-model, met een aanzienlijke kwaliteitsverbetering ten opzichte van eerdere versies, vooral voor wereldkennis, code en lange context."
   },
+  "google/gemini-2.5-flash": {
+    "description": "Gemini 2.5 Flash is het meest geavanceerde hoofdmodel van Google, speciaal ontworpen voor geavanceerde redenering, codering, wiskunde en wetenschappelijke taken. Het bevat ingebouwde 'denk'-mogelijkheden, waardoor het reacties kan leveren met hogere nauwkeurigheid en gedetailleerdere contextverwerking.\n\nLet op: dit model heeft twee varianten: denkend en niet-denkend. De prijsstelling van de output verschilt aanzienlijk afhankelijk van of de denkcapaciteit is geactiveerd. Als u de standaardvariant kiest (zonder de ':thinking' achtervoegsel), zal het model expliciet vermijden denk-tokens te genereren.\n\nOm gebruik te maken van de denkcapaciteit en denk-tokens te ontvangen, moet u de ':thinking' variant selecteren, wat resulteert in een hogere prijs voor denk-output.\n\nDaarnaast kan Gemini 2.5 Flash worden geconfigureerd via de parameter 'maximale tokens voor redenering', zoals beschreven in de documentatie (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
+  },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash is Google's meest geavanceerde hoofmodel, ontworpen voor geavanceerde redenering, codering, wiskunde en wetenschappelijke taken. Het bevat ingebouwde 'denkkracht', waardoor het in staat is om antwoorden te geven met een hogere nauwkeurigheid en gedetailleerde contextverwerking.\n\nLet op: dit model heeft twee varianten: denken en niet-denken. De outputprijs verschilt aanzienlijk afhankelijk van of de denkkracht is geactiveerd. Als u de standaardvariant kiest (zonder de ':thinking' suffix), zal het model expliciet vermijden om denk-tokens te genereren.\n\nOm gebruik te maken van de denkkracht en denk-tokens te ontvangen, moet u de ':thinking' variant kiezen, wat resulteert in hogere prijzen voor denk-output.\n\nBovendien kan Gemini 2.5 Flash worden geconfigureerd via de parameter 'max tokens for reasoning', zoals beschreven in de documentatie (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
   "google/gemini-2.5-flash-preview:thinking": {
     "description": "Gemini 2.5 Flash is Google's meest geavanceerde hoofmodel, ontworpen voor geavanceerde redenering, codering, wiskunde en wetenschappelijke taken. Het bevat ingebouwde 'denkkracht', waardoor het in staat is om antwoorden te geven met een hogere nauwkeurigheid en gedetailleerde contextverwerking.\n\nLet op: dit model heeft twee varianten: denken en niet-denken. De outputprijs verschilt aanzienlijk afhankelijk van of de denkkracht is geactiveerd. Als u de standaardvariant kiest (zonder de ':thinking' suffix), zal het model expliciet vermijden om denk-tokens te genereren.\n\nOm gebruik te maken van de denkkracht en denk-tokens te ontvangen, moet u de ':thinking' variant kiezen, wat resulteert in hogere prijzen voor denk-output.\n\nBovendien kan Gemini 2.5 Flash worden geconfigureerd via de parameter 'max tokens for reasoning', zoals beschreven in de documentatie (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)."
   },
-  "google/gemini-2.5-pro-preview-03-25": {
-    "description": "Gemini 2.5 Pro is Google's meest geavanceerde AI-model, ontworpen voor geavanceerde redenering, codering, wiskunde en wetenschappelijke taken. Het beschikt over 'denkkracht', waardoor het in staat is om antwoorden te redeneren met een hogere nauwkeurigheid en gedetailleerde contextverwerking. Gemini 2.5 Pro heeft top prestaties behaald in meerdere benchmarktests, waaronder de eerste plaats op de LMArena-ranglijst, wat de uitstekende afstemming op menselijke voorkeuren en het vermogen om complexe problemen op te lossen weerspiegelt."
+  "google/gemini-2.5-pro": {
+    "description": "Gemini 2.5 Pro is het meest geavanceerde denkmodel van Google, in staat om complexe problemen op het gebied van code, wiskunde en STEM te redeneren, en om met lange context grote datasets, codebases en documentatie te analyseren."
+  },
+  "google/gemini-2.5-pro-preview": {
+    "description": "Gemini 2.5 Pro Preview is het meest geavanceerde denkkader van Google, dat in staat is om complexe problemen op het gebied van code, wiskunde en STEM te redeneren, en grote datasets, codebases en documenten te analyseren met behulp van lange context."
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash biedt geoptimaliseerde multimodale verwerkingscapaciteiten, geschikt voor verschillende complexe taakscenario's."
@@ -1339,6 +1345,9 @@
   },
   "grok-3-mini-fast": {
     "description": "Lichtgewicht model dat eerst nadenkt voor het reageren. Snel en intelligent, geschikt voor logische taken zonder diepgaande domeinkennis en kan de oorspronkelijke denkprocessen vastleggen."
+  },
+  "grok-4": {
+    "description": "Ons nieuwste en krachtigste vlaggenschipmodel, uitmuntend in natuurlijke taalverwerking, wiskundige berekeningen en redeneren — een perfecte allrounder."
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B is een taalmodel dat creativiteit en intelligentie combineert door meerdere topmodellen te integreren."
@@ -1838,6 +1847,9 @@
   "moonshot-v1-auto": {
     "description": "Moonshot V1 Auto kan het geschikte model kiezen op basis van het aantal Tokens dat momenteel door de context wordt gebruikt."
   },
+  "moonshotai/Kimi-Dev-72B": {
+    "description": "Kimi-Dev-72B is een open source code groot model, geoptimaliseerd door grootschalige versterkte leerprocessen, dat robuuste en direct inzetbare patches kan genereren. Dit model behaalde een nieuwe recordscore van 60,4% op SWE-bench Verified en vestigde daarmee een nieuw hoogtepunt voor open source modellen bij geautomatiseerde software engineering taken zoals defectherstel en code review."
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B is een upgrade van Nous Hermes 2, met de nieuwste intern ontwikkelde datasets."
   },
@@ -1865,14 +1877,20 @@
   "o3": {
     "description": "o3 is een veelzijdig en krachtig model dat uitblinkt in verschillende domeinen. Het stelt nieuwe normen voor wiskunde, wetenschap, programmeren en visuele redeneringstaken. Het is ook bedreven in technische schrijfvaardigheid en het volgen van instructies. Gebruikers kunnen het gebruiken om teksten, code en afbeeldingen te analyseren en complexe meerstapsproblemen op te lossen."
   },
+  "o3-deep-research": {
+    "description": "o3-deep-research is ons meest geavanceerde diepgaand onderzoeksmodel, speciaal ontworpen voor het verwerken van complexe, meerstaps onderzoeksopdrachten. Het kan informatie zoeken en samenvoegen van het internet, en kan ook via de MCP-connector toegang krijgen tot en gebruikmaken van jouw eigen gegevens."
+  },
   "o3-mini": {
     "description": "o3-mini is ons nieuwste kleine inferentiemodel dat hoge intelligentie biedt met dezelfde kosten- en vertragingdoelen als o1-mini."
   },
   "o3-pro": {
-    "description": "Het o3-pro model gebruikt meer rekenkracht om dieper na te denken en altijd betere antwoorden te bieden, alleen ondersteund onder de Responses API."
+    "description": "Het o3-pro model gebruikt meer rekenkracht om dieper na te denken en altijd betere antwoorden te bieden, alleen te gebruiken onder de Responses API."
   },
   "o4-mini": {
     "description": "o4-mini is ons nieuwste compacte model uit de o-serie. Het is geoptimaliseerd voor snelle en efficiënte inferentie, met een hoge efficiëntie en prestaties in codering en visuele taken."
+  },
+  "o4-mini-deep-research": {
+    "description": "o4-mini-deep-research is ons snellere en betaalbaardere diepgaand onderzoeksmodel — perfect voor het verwerken van complexe, meerstaps onderzoeksopdrachten. Het kan informatie zoeken en samenvoegen van het internet, en kan ook via de MCP-connector toegang krijgen tot en gebruikmaken van jouw eigen gegevens."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba is een Mamba 2-taalmodel dat zich richt op codegeneratie en krachtige ondersteuning biedt voor geavanceerde code- en inferentietaken."
@@ -2270,6 +2288,9 @@
   "taichu_vl": {
     "description": "Integreert beeldbegrip, kennisoverdracht en logische toerekening, en presteert uitstekend in het domein van vraag-en-antwoord met tekst en afbeeldingen."
   },
+  "tencent/Hunyuan-A13B-Instruct": {
+    "description": "Hunyuan-A13B-Instruct heeft 80 miljard parameters, waarbij het activeren van 13 miljard parameters al vergelijkbare prestaties levert als grotere modellen. Het ondersteunt een hybride redeneermethode van 'snelle denkwijze/langzame denkwijze'; stabiele lange tekstbegrip; geverifieerd door BFCL-v3 en τ-Bench, met leidende agentcapaciteiten; gecombineerd met GQA en meerdere kwantisatieformaten voor efficiënte inferentie."
+  },
   "text-embedding-3-large": {
     "description": "Het krachtigste vectorisatie model, geschikt voor Engelse en niet-Engelse taken."
   },
@@ -2320,6 +2341,15 @@
   },
   "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
     "description": "Claude 3.7 sonnet is het snelste volgende generatie model van Anthropic. In vergelijking met Claude 3 Haiku heeft Claude 3.7 Sonnet verbeteringen in verschillende vaardigheden en overtreft het de grootste modellen van de vorige generatie, Claude 3 Opus, in veel intellectuele benchmarktests."
+  },
+  "v0-1.0-md": {
+    "description": "Het v0-1.0-md model is een oudere versie die via de v0 API wordt aangeboden"
+  },
+  "v0-1.5-lg": {
+    "description": "Het v0-1.5-lg model is geschikt voor geavanceerde denk- of redeneertaken"
+  },
+  "v0-1.5-md": {
+    "description": "Het v0-1.5-md model is geschikt voor dagelijkse taken en het genereren van gebruikersinterfaces (UI)"
   },
   "whisper-1": {
     "description": "Algemeen spraakherkenningsmodel, ondersteunt meertalige spraakherkenning, spraakvertaling en taalherkenning."

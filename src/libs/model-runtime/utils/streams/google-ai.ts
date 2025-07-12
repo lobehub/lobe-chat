@@ -1,4 +1,4 @@
-import { EnhancedGenerateContentResponse } from '@google/generative-ai';
+import { GenerateContentResponse } from '@google/genai';
 
 import { ModelTokensUsage } from '@/types/message';
 import { GroundingSearch } from '@/types/search';
@@ -16,7 +16,7 @@ import {
 } from './protocol';
 
 const transformGoogleGenerativeAIStream = (
-  chunk: EnhancedGenerateContentResponse,
+  chunk: GenerateContentResponse,
   context: StreamContext,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
   // maybe need another structure to add support for multiple choices
@@ -24,22 +24,22 @@ const transformGoogleGenerativeAIStream = (
   const usage = chunk.usageMetadata;
   const usageChunks: StreamProtocolChunk[] = [];
   if (candidate?.finishReason && usage) {
-    const outputReasoningTokens = (usage as any).thoughtsTokenCount || undefined;
-    const totalOutputTokens = (usage.candidatesTokenCount ?? 0) + (outputReasoningTokens ?? 0);
+    // totalTokenCount = promptTokenCount + candidatesTokenCount + thoughtsTokenCount
+    const reasoningTokens = usage.thoughtsTokenCount;
+    const outputTextTokens = usage.candidatesTokenCount ?? 0;
+    const totalOutputTokens = outputTextTokens + (reasoningTokens ?? 0);
 
     usageChunks.push(
       { data: candidate.finishReason, id: context?.id, type: 'stop' },
       {
         data: {
           // TODO: Google SDK 0.24.0 don't have promptTokensDetails types
-          inputImageTokens: (usage as any).promptTokensDetails?.find(
-            (i: any) => i.modality === 'IMAGE',
-          )?.tokenCount,
-          inputTextTokens: (usage as any).promptTokensDetails?.find(
-            (i: any) => i.modality === 'TEXT',
-          )?.tokenCount,
-          outputReasoningTokens,
-          outputTextTokens: totalOutputTokens - (outputReasoningTokens ?? 0),
+          inputImageTokens: usage.promptTokensDetails?.find((i: any) => i.modality === 'IMAGE')
+            ?.tokenCount,
+          inputTextTokens: usage.promptTokensDetails?.find((i: any) => i.modality === 'TEXT')
+            ?.tokenCount,
+          outputReasoningTokens: reasoningTokens,
+          outputTextTokens,
           totalInputTokens: usage.promptTokenCount,
           totalOutputTokens,
           totalTokens: usage.totalTokenCount,
@@ -50,7 +50,7 @@ const transformGoogleGenerativeAIStream = (
     );
   }
 
-  const functionCalls = chunk.functionCalls?.();
+  const functionCalls = chunk.functionCalls;
 
   if (functionCalls) {
     return [
@@ -73,11 +73,11 @@ const transformGoogleGenerativeAIStream = (
     ];
   }
 
-  const text = chunk.text?.();
+  const text = chunk.text;
 
   if (candidate) {
     // 首先检查是否为 reasoning 内容 (thought: true)
-    if (Array.isArray(candidate.content.parts) && candidate.content.parts.length > 0) {
+    if (Array.isArray(candidate.content?.parts) && candidate.content.parts.length > 0) {
       for (const part of candidate.content.parts) {
         if (part && part.text && (part as any).thought === true) {
           return { data: part.text, id: context.id, type: 'reasoning' };
@@ -86,9 +86,8 @@ const transformGoogleGenerativeAIStream = (
     }
 
     // return the grounding
-    if (candidate.groundingMetadata) {
-      const { webSearchQueries, groundingChunks } = candidate.groundingMetadata;
-
+    const { groundingChunks, webSearchQueries } = candidate.groundingMetadata ?? {};
+    if (groundingChunks) {
       return [
         { data: text, id: context.id, type: 'text' },
         {
@@ -122,7 +121,7 @@ const transformGoogleGenerativeAIStream = (
     if (!!text?.trim()) return { data: text, id: context?.id, type: 'text' };
 
     // streaming the image
-    if (Array.isArray(candidate.content.parts) && candidate.content.parts.length > 0) {
+    if (Array.isArray(candidate.content?.parts) && candidate.content.parts.length > 0) {
       const part = candidate.content.parts[0];
 
       if (part && part.inlineData && part.inlineData.data && part.inlineData.mimeType) {
@@ -148,7 +147,7 @@ export interface GoogleAIStreamOptions {
 }
 
 export const GoogleGenerativeAIStream = (
-  rawStream: ReadableStream<EnhancedGenerateContentResponse>,
+  rawStream: ReadableStream<GenerateContentResponse>,
   { callbacks, inputStartAt }: GoogleAIStreamOptions = {},
 ) => {
   const streamStack: StreamContext = { id: 'chat_' + nanoid() };

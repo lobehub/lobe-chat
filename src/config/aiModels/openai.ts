@@ -12,6 +12,58 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'o4-mini 是我们最新的小型 o 系列模型。 它专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。',
+    displayName: 'o4-mini',
+    enabled: true,
+    id: 'o4-mini',
+    maxOutput: 100_000,
+    pricing: {
+      cachedInput: 0.275,
+      input: 1.1,
+      output: 4.4,
+    },
+    releasedAt: '2025-04-17',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'o4-mini-deep-research 是我们更快速、更实惠的深度研究模型——非常适合处理复杂的多步骤研究任务。它可以从互联网上搜索和综合信息，也可以通过 MCP 连接器访问并利用你的自有数据。',
+    displayName: 'o4-mini Deep Research',
+    id: 'o4-mini-deep-research',
+    maxOutput: 100_000,
+    pricing: {
+      cachedInput: 0.5,
+      input: 2,
+      output: 8,
+    },
+    releasedAt: '2025-06-26',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -27,6 +79,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     releasedAt: '2025-06-10',
     settings: {
       extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
     },
     type: 'chat',
   },
@@ -34,6 +87,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
       reasoning: true,
+      search: true,
       vision: true,
     },
     contextWindowTokens: 200_000,
@@ -51,6 +105,54 @@ export const openaiChatModels: AIChatModelCard[] = [
     releasedAt: '2025-04-16',
     settings: {
       extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'o3-deep-research 是我们最先进的深度研究模型，专为处理复杂的多步骤研究任务而设计。它可以从互联网上搜索和综合信息，也可以通过 MCP 连接器访问并利用你的自有数据。',
+    displayName: 'o3 Deep Research',
+    id: 'o3-deep-research',
+    maxOutput: 100_000,
+    pricing: {
+      cachedInput: 2.5,
+      input: 10,
+      output: 40,
+    },
+    releasedAt: '2025-06-26',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'o3-mini 是我们最新的小型推理模型，在与 o1-mini 相同的成本和延迟目标下提供高智能。',
+    displayName: 'o3-mini',
+    id: 'o3-mini',
+    maxOutput: 100_000,
+    pricing: {
+      cachedInput: 0.55,
+      input: 1.1,
+      output: 4.4,
+    },
+    releasedAt: '2025-01-31',
+    settings: {
+      extendParams: ['reasoningEffort'],
     },
     type: 'chat',
   },
@@ -62,17 +164,79 @@ export const openaiChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 200_000,
     description:
-      'o4-mini 是我们最新的小型 o 系列模型。 它专为快速有效的推理而优化，在编码和视觉任务中表现出极高的效率和性能。',
-    displayName: 'o4-mini',
-    enabled: true,
-    id: 'o4-mini',
+      'o1 系列模型经过强化学习训练，能够在回答前进行思考，并执行复杂的推理任务。o1-pro 模型使用了更多计算资源，以进行更深入的思考，从而持续提供更优质的回答。',
+    displayName: 'o1-pro',
+    id: 'o1-pro',
     maxOutput: 100_000,
     pricing: {
-      cachedInput: 0.275,
+      input: 150,
+      output: 600,
+    },
+    releasedAt: '2025-03-19',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。',
+    displayName: 'o1-mini',
+    id: 'o1-mini', // deprecated on 2025-10-27
+    maxOutput: 65_536,
+    pricing: {
+      cachedInput: 0.55,
       input: 1.1,
       output: 4.4,
     },
-    releasedAt: '2025-04-17',
+    releasedAt: '2024-09-12',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 200_000,
+    description:
+      'o1是OpenAI新的推理模型，支持图文输入并输出文本，适用于需要广泛通用知识的复杂任务。该模型具有200K上下文和2023年10月的知识截止日期。',
+    displayName: 'o1',
+    id: 'o1',
+    maxOutput: 100_000,
+    pricing: {
+      cachedInput: 7.5,
+      input: 15,
+      output: 60,
+    },
+    releasedAt: '2024-12-17',
+    settings: {
+      extendParams: ['reasoningEffort'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。',
+    displayName: 'o1-preview',
+    id: 'o1-preview',
+    maxOutput: 32_768,
+    pricing: {
+      input: 15,
+      output: 60,
+    },
+    releasedAt: '2024-09-12',
     settings: {
       extendParams: ['reasoningEffort'],
     },
@@ -141,114 +305,6 @@ export const openaiChatModels: AIChatModelCard[] = [
       output: 0.4,
     },
     releasedAt: '2025-04-14',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-    },
-    contextWindowTokens: 200_000,
-    description:
-      'o3-mini 是我们最新的小型推理模型，在与 o1-mini 相同的成本和延迟目标下提供高智能。',
-    displayName: 'o3-mini',
-    id: 'o3-mini',
-    maxOutput: 100_000,
-    pricing: {
-      cachedInput: 0.55,
-      input: 1.1,
-      output: 4.4,
-    },
-    releasedAt: '2025-01-31',
-    settings: {
-      extendParams: ['reasoningEffort'],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      vision: true,
-    },
-    contextWindowTokens: 200_000,
-    description:
-      'o1 系列模型经过强化学习训练，能够在回答前进行思考，并执行复杂的推理任务。o1-pro 模型使用了更多计算资源，以进行更深入的思考，从而持续提供更优质的回答。',
-    displayName: 'o1-pro',
-    id: 'o1-pro',
-    maxOutput: 100_000,
-    pricing: {
-      input: 150,
-      output: 600,
-    },
-    releasedAt: '2025-03-19',
-    settings: {
-      extendParams: ['reasoningEffort'],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 128_000,
-    description:
-      'o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。',
-    displayName: 'o1-mini',
-    id: 'o1-mini',
-    maxOutput: 65_536,
-    pricing: {
-      cachedInput: 0.55,
-      input: 1.1,
-      output: 4.4,
-    },
-    releasedAt: '2024-09-12',
-    settings: {
-      extendParams: ['reasoningEffort'],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      vision: true,
-    },
-    contextWindowTokens: 200_000,
-    description:
-      'o1是OpenAI新的推理模型，支持图文输入并输出文本，适用于需要广泛通用知识的复杂任务。该模型具有200K上下文和2023年10月的知识截止日期。',
-    displayName: 'o1',
-    id: 'o1',
-    maxOutput: 100_000,
-    pricing: {
-      cachedInput: 7.5,
-      input: 15,
-      output: 60,
-    },
-    releasedAt: '2024-12-17',
-    settings: {
-      extendParams: ['reasoningEffort'],
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 128_000,
-    description:
-      'o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。',
-    displayName: 'o1-preview',
-    id: 'o1-preview',
-    maxOutput: 32_768,
-    pricing: {
-      input: 15,
-      output: 60,
-    },
-    releasedAt: '2024-09-12',
-    settings: {
-      extendParams: ['reasoningEffort'],
-    },
     type: 'chat',
   },
   {
@@ -434,7 +490,7 @@ export const openaiChatModels: AIChatModelCard[] = [
       input: 2.5,
       output: 10,
     },
-    releasedAt: '2024-10-01',
+    releasedAt: '2024-12-17',
     /*
     settings: {
       searchImpl: 'params',
@@ -574,23 +630,6 @@ export const openaiChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 32_768,
-
-    description:
-      'GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。',
-    displayName: 'GPT-4 32K',
-    id: 'gpt-4-32k', // deprecated on 2025-06-06
-    legacy: true,
-    pricing: {
-      input: 60,
-      output: 120,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
     contextWindowTokens: 16_384,
     description:
       'GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125',
@@ -657,6 +696,7 @@ export const openaiChatModels: AIChatModelCard[] = [
     id: 'codex-mini-latest',
     maxOutput: 100_000,
     pricing: {
+      cachedInput: 0.375,
       input: 1.5,
       output: 6,
     },
@@ -744,7 +784,8 @@ export const openaiTTSModels: AITTSModelCard[] = [
     displayName: 'GPT-4o Mini TTS',
     id: 'gpt-4o-mini-tts',
     pricing: {
-      input: 10,
+      input: 0.6,
+      output: 12,
     },
     type: 'tts',
   },
@@ -753,11 +794,35 @@ export const openaiTTSModels: AITTSModelCard[] = [
 // 语音识别模型
 export const openaiSTTModels: AISTTModelCard[] = [
   {
-    description: '通用语音识别模型，支持多语言语音识别、语音翻译和语言识别',
+    description: '通用语音识别模型，支持多语言语音识别、语音翻译和语言识别。',
     displayName: 'Whisper',
     id: 'whisper-1',
     pricing: {
       input: 0.006, // per minute
+    },
+    type: 'stt',
+  },
+  {
+    contextWindowTokens: 16_000,
+    description: 'GPT-4o Transcribe 是一种使用 GPT-4o 转录音频的语音转文本模型。与原始 Whisper 模型相比，它提高了单词错误率，并提高了语言识别和准确性。使用它来获得更准确的转录。',
+    displayName: 'GPT-4o Transcribe',
+    id: 'gpt-4o-transcribe',
+    maxOutput: 2000,
+    pricing: {
+      input: 6, // Audio
+      output: 10,
+    },
+    type: 'stt',
+  },
+  {
+    contextWindowTokens: 16_000,
+    description: 'GPT-4o Mini Transcribe 是一种使用 GPT-4o 转录音频的语音转文本模型。与原始 Whisper 模型相比，它提高了单词错误率，并提高了语言识别和准确性。使用它来获得更准确的转录。',
+    displayName: 'GPT-4o Mini Transcribe',
+    id: 'gpt-4o-mini-transcribe',
+    maxOutput: 2000,
+    pricing: {
+      input: 3, // Audio
+      output: 5,
     },
     type: 'stt',
   },
@@ -792,44 +857,10 @@ export const openaiImageModels: AIText2ImageModelCard[] = [
 // GPT-4o 和 GPT-4o-mini 实时模型
 export const openaiRealtimeModels: AIRealtimeModelCard[] = [
   {
-    contextWindowTokens: 128_000,
+    contextWindowTokens: 16_000,
     description: 'GPT-4o 实时版本，支持音频和文本实时输入输出',
-    displayName: 'GPT-4o Realtime',
+    displayName: 'GPT-4o Realtime 241217',
     id: 'gpt-4o-realtime-preview',
-    maxOutput: 4096,
-    pricing: {
-      audioInput: 100,
-      audioOutput: 200,
-      cachedAudioInput: 20,
-      cachedInput: 2.5,
-      input: 5,
-      output: 20,
-    },
-    releasedAt: '2024-10-01',
-    type: 'realtime',
-  },
-  {
-    contextWindowTokens: 128_000,
-    description: 'GPT-4o 实时版本，支持音频和文本实时输入输出',
-    displayName: 'GPT-4o Realtime 10-01',
-    id: 'gpt-4o-realtime-preview-2024-10-01',
-    maxOutput: 4096,
-    pricing: {
-      audioInput: 100,
-      audioOutput: 200,
-      cachedAudioInput: 20,
-      cachedInput: 2.5,
-      input: 5,
-      output: 20,
-    },
-    releasedAt: '2024-10-01',
-    type: 'realtime',
-  },
-  {
-    contextWindowTokens: 128_000,
-    description: 'GPT-4o 实时版本，支持音频和文本实时输入输出',
-    displayName: 'GPT-4o Realtime 12-17',
-    id: 'gpt-4o-realtime-preview-2024-12-17',
     maxOutput: 4096,
     pricing: {
       audioInput: 40,
@@ -840,6 +871,40 @@ export const openaiRealtimeModels: AIRealtimeModelCard[] = [
       output: 20,
     },
     releasedAt: '2024-12-17',
+    type: 'realtime',
+  },
+  {
+    contextWindowTokens: 32_000,
+    description: 'GPT-4o 实时版本，支持音频和文本实时输入输出',
+    displayName: 'GPT-4o Realtime 250603',
+    id: 'gpt-4o-realtime-preview-2025-06-03',
+    maxOutput: 4096,
+    pricing: {
+      audioInput: 40,
+      audioOutput: 80,
+      cachedAudioInput: 2.5,
+      cachedInput: 2.5,
+      input: 5,
+      output: 20,
+    },
+    releasedAt: '2025-06-03',
+    type: 'realtime',
+  },
+  {
+    contextWindowTokens: 16_000,
+    description: 'GPT-4o 实时版本，支持音频和文本实时输入输出',
+    displayName: 'GPT-4o Realtime 241001',
+    id: 'gpt-4o-realtime-preview-2024-10-01', // deprecated on 2025-09-10
+    maxOutput: 4096,
+    pricing: {
+      audioInput: 100,
+      audioOutput: 200,
+      cachedAudioInput: 20,
+      cachedInput: 2.5,
+      input: 5,
+      output: 20,
+    },
+    releasedAt: '2024-10-01',
     type: 'realtime',
   },
   {

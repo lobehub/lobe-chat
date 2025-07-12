@@ -1,5 +1,6 @@
 import { CitationItem, ModelSpeed, ModelTokensUsage } from '@/types/message';
 import { safeParseJSON } from '@/utils/safeParseJSON';
+import { nanoid } from '@/utils/uuid';
 
 import { AgentRuntimeErrorType } from '../../error';
 import { parseToolCalls } from '../../helpers';
@@ -98,7 +99,7 @@ export interface StreamProtocolToolCallChunk {
 }
 
 export const generateToolCallId = (index: number, functionName?: string) =>
-  `${functionName || 'unknown_tool_call'}_${index}`;
+  `${functionName || 'unknown_tool_call'}_${index}_${nanoid()}`;
 
 const chatStreamable = async function* <T>(stream: AsyncIterable<T>) {
   for await (const response of stream) {
@@ -107,6 +108,22 @@ const chatStreamable = async function* <T>(stream: AsyncIterable<T>) {
 };
 
 const ERROR_CHUNK_PREFIX = '%FIRST_CHUNK_ERROR%: ';
+
+export function readableFromAsyncIterable<T>(iterable: AsyncIterable<T>) {
+  let it = iterable[Symbol.asyncIterator]();
+  return new ReadableStream<T>({
+    async cancel(reason) {
+      await it.return?.(reason);
+    },
+
+    async pull(controller) {
+      const { done, value } = await it.next();
+      if (done) controller.close();
+      else controller.enqueue(value);
+    },
+  });
+}
+
 // make the response to the streamable format
 export const convertIterableToStream = <T>(stream: AsyncIterable<T>) => {
   const iterable = chatStreamable(stream);

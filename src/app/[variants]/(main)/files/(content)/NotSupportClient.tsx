@@ -1,7 +1,6 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Icon, Text } from '@lobehub/ui';
 import { createStyles, useTheme } from 'antd-style';
 import { Database, FileImage, FileText, FileUpIcon, LibraryBig, SearchCheck } from 'lucide-react';
 import Link from 'next/link';
@@ -89,7 +88,14 @@ const NotSupportClient = () => {
   ];
 
   return (
-    <Center gap={40} height={'100%'} width={'100%'}>
+    <Center
+      gap={40}
+      height={'100%'}
+      style={{
+        overflow: 'scroll',
+      }}
+      width={'100%'}
+    >
       <Flexbox className={styles.iconGroup} gap={12} horizontal>
         <Center
           className={styles.icon}
@@ -128,8 +134,10 @@ const NotSupportClient = () => {
       </Flexbox>
 
       <Flexbox justify={'center'} style={{ textAlign: 'center' }}>
-        <Typography.Title>{t('notSupportGuide.title')}</Typography.Title>
-        <Typography.Text type={'secondary'}>
+        <Text as={'h1'} style={{ fontSize: 32 }}>
+          {t('notSupportGuide.title')}
+        </Text>
+        <Text type={'secondary'}>
           <Trans i18nKey={'notSupportGuide.desc'} ns={'file'}>
             当前部署实例为客户端数据库模式，无法使用文件管理功能。请切换到
             <Link href={DATABASE_SELF_HOSTING_URL}>服务端数据库部署模式</Link>
@@ -140,7 +148,7 @@ const NotSupportClient = () => {
               {LOBE_CHAT_CLOUD}
             </Link>
           </Trans>
-        </Typography.Text>
+        </Text>
       </Flexbox>
 
       <Flexbox style={{ marginTop: 40 }}>

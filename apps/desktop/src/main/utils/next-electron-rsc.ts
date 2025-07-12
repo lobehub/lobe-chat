@@ -58,7 +58,7 @@ export const createRequest = async ({
 
       for (const cookie of cookies) {
         const { name, value } = cookie;
-        cookiesHeader.push(serializeCookie(name, value)); // ...(options as any)?
+        cookiesHeader.push(serializeCookie(name, value));
       }
 
       req.headers.cookie = cookiesHeader.join('; ');
@@ -305,20 +305,27 @@ export function createHandler({
         );
 
         for (const cookie of cookies) {
-          const expires = cookie.expires
-            ? cookie.expires.getTime()
-            : cookie.maxAge
-              ? Date.now() + cookie.maxAge * 1000
-              : undefined;
+          let expirationDate: number | undefined;
 
-          if (expires && expires < Date.now()) {
+          if (cookie.expires) {
+            // expires 是 Date 对象，转换为秒级时间戳
+            expirationDate = Math.floor(cookie.expires.getTime() / 1000);
+          } else if (cookie.maxAge) {
+            // maxAge 是秒数，计算过期时间戳
+            expirationDate = Math.floor(Date.now() / 1000) + cookie.maxAge;
+          }
+
+          // 如果都没有，则为 session cookie，不设置 expirationDate
+
+          // 检查是否已过期
+          if (expirationDate && expirationDate < Math.floor(Date.now() / 1000)) {
             await session.cookies.remove(request.url, cookie.name);
             continue;
           }
 
           await session.cookies.set({
             domain: cookie.domain,
-            expirationDate: expires,
+            expirationDate,
             httpOnly: cookie.httpOnly,
             name: cookie.name,
             path: cookie.path,

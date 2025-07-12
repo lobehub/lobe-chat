@@ -1181,14 +1181,20 @@
   "google/gemini-2.0-flash-exp:free": {
     "description": "Gemini 2.0 Flash Experimental 是 Google 最新的實驗性多模態 AI 模型，與歷史版本相比有一定的質量提升，特別是對於世界知識、程式碼和長上下文。"
   },
+  "google/gemini-2.5-flash": {
+    "description": "Gemini 2.5 Flash 是 Google 最先進的主力模型，專為高階推理、編碼、數學和科學任務而設計。它包含內建的「思考」能力，使其能夠提供具有更高準確性和細緻上下文處理的回應。\n\n注意：此模型有兩個變體：思考和非思考。輸出定價根據思考能力是否啟用而有顯著差異。如果您選擇標準變體（不帶「:thinking」後綴），模型將明確避免生成思考令牌。\n\n要利用思考能力並接收思考令牌，您必須選擇「:thinking」變體，這將產生較高的思考輸出定價。\n\n此外，Gemini 2.5 Flash 可透過「推理最大令牌數」參數進行配置，如文件中所述 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)。"
+  },
   "google/gemini-2.5-flash-preview": {
     "description": "Gemini 2.5 Flash 是 Google 最先進的主力模型，專為高級推理、編碼、數學和科學任務而設計。它包含內建的「思考」能力，使其能夠提供具有更高準確性和細緻上下文處理的回應。\n\n注意：此模型有兩個變體：思考和非思考。輸出定價根據思考能力是否啟用而有顯著差異。如果您選擇標準變體（不帶「:thinking」後綴），模型將明確避免生成思考令牌。\n\n要利用思考能力並接收思考令牌，您必須選擇「:thinking」變體，這將產生更高的思考輸出定價。\n\n此外，Gemini 2.5 Flash 可通過「推理最大令牌數」參數進行配置，如文檔中所述 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)。"
   },
   "google/gemini-2.5-flash-preview:thinking": {
     "description": "Gemini 2.5 Flash 是 Google 最先進的主力模型，專為高級推理、編碼、數學和科學任務而設計。它包含內建的「思考」能力，使其能夠提供具有更高準確性和細緻上下文處理的回應。\n\n注意：此模型有兩個變體：思考和非思考。輸出定價根據思考能力是否啟用而有顯著差異。如果您選擇標準變體（不帶「:thinking」後綴），模型將明確避免生成思考令牌。\n\n要利用思考能力並接收思考令牌，您必須選擇「:thinking」變體，這將產生更高的思考輸出定價。\n\n此外，Gemini 2.5 Flash 可通過「推理最大令牌數」參數進行配置，如文檔中所述 (https://openrouter.ai/docs/use-cases/reasoning-tokens#max-tokens-for-reasoning)。"
   },
-  "google/gemini-2.5-pro-preview-03-25": {
-    "description": "Gemini 2.5 Pro 是 Google 最先進的 AI 模型，專為高級推理、編碼、數學和科學任務而設計。它採用「思考」能力，使其能夠以更高的準確性和細緻的上下文處理來推理回應。Gemini 2.5 Pro 在多個基準測試中取得了頂級性能，包括在 LMArena 排行榜上排名第一，反映了卓越的人類偏好對齊和複雜問題解決能力。"
+  "google/gemini-2.5-pro": {
+    "description": "Gemini 2.5 Pro 是 Google 最先進的思維模型，能夠對程式碼、數學和 STEM 領域的複雜問題進行推理，以及使用長上下文分析大型資料集、程式碼庫和文件。"
+  },
+  "google/gemini-2.5-pro-preview": {
+    "description": "Gemini 2.5 Pro Preview 是 Google 最先進的思維模型，能夠對程式碼、數學和 STEM 領域的複雜問題進行推理，以及使用長上下文分析大型資料集、程式碼庫和文件。"
   },
   "google/gemini-flash-1.5": {
     "description": "Gemini 1.5 Flash 提供了優化後的多模態處理能力，適用於多種複雜任務場景。"
@@ -1339,6 +1345,9 @@
   },
   "grok-3-mini-fast": {
     "description": "輕量級模型，對話前會先思考。運行快速、智能，適用於不需要深層領域知識的邏輯任務，並能獲取原始的思維軌跡。"
+  },
+  "grok-4": {
+    "description": "我們最新最強大的旗艦模型，在自然語言處理、數學計算和推理方面表現卓越 —— 是一款完美的全能型選手。"
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B 是一款合併了多個頂尖模型的創意與智能相結合的語言模型。"
@@ -1838,6 +1847,9 @@
   "moonshot-v1-auto": {
     "description": "Moonshot V1 Auto 可以根據當前上下文佔用的 Tokens 數量來選擇合適的模型"
   },
+  "moonshotai/Kimi-Dev-72B": {
+    "description": "Kimi-Dev-72B 是一款開源程式碼大型模型，經過大規模強化學習優化，能輸出穩健、可直接投產的補丁。該模型在 SWE-bench Verified 上取得 60.4 % 的新高分，刷新了開源模型在缺陷修復、程式碼審查等自動化軟體工程任務上的紀錄。"
+  },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B 是 Nous Hermes 2 的升級版本，包含最新的內部開發的數據集。"
   },
@@ -1865,6 +1877,9 @@
   "o3": {
     "description": "o3 是一款全能強大的模型，在多個領域表現出色。它為數學、科學、程式設計和視覺推理任務樹立了新標杆。它也擅長技術寫作和指令遵循。用戶可利用它分析文本、程式碼和圖像，解決多步驟的複雜問題。"
   },
+  "o3-deep-research": {
+    "description": "o3-deep-research 是我們最先進的深度研究模型，專為處理複雜的多步驟研究任務而設計。它可以從網際網路搜尋和綜合資訊，也可以透過 MCP 連接器存取並利用你的自有資料。"
+  },
   "o3-mini": {
     "description": "o3-mini 是我們最新的小型推理模型，在與 o1-mini 相同的成本和延遲目標下提供高智能。"
   },
@@ -1873,6 +1888,9 @@
   },
   "o4-mini": {
     "description": "o4-mini 是我們最新的小型 o 系列模型。它專為快速有效的推理而優化，在編碼和視覺任務中表現出極高的效率和性能。"
+  },
+  "o4-mini-deep-research": {
+    "description": "o4-mini-deep-research 是我們更快速、更實惠的深度研究模型——非常適合處理複雜的多步驟研究任務。它可以從網際網路搜尋和綜合資訊，也可以透過 MCP 連接器存取並利用你的自有資料。"
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba 是專注於代碼生成的 Mamba 2 語言模型，為先進的代碼和推理任務提供強力支持。"
@@ -2270,6 +2288,9 @@
   "taichu_vl": {
     "description": "融合了圖像理解、知識遷移、邏輯歸因等能力，在圖文問答領域表現突出。"
   },
+  "tencent/Hunyuan-A13B-Instruct": {
+    "description": "Hunyuan-A13B-Instruct 參數量800 億，啟動 130 億參數即可對標更大模型，支援「快思考/慢思考」混合推理；長文理解穩定；經 BFCL-v3 與 τ-Bench 驗證，Agent 能力領先；結合 GQA 與多量化格式，實現高效推理。"
+  },
   "text-embedding-3-large": {
     "description": "最強大的向量化模型，適用於英文和非英文任務"
   },
@@ -2320,6 +2341,15 @@
   },
   "us.anthropic.claude-3-7-sonnet-20250219-v1:0": {
     "description": "Claude 3.7 sonnet 是 Anthropic 最快速的下一代模型。與 Claude 3 Haiku 相比，Claude 3.7 Sonnet 在各項技能上都有所提升，並在許多智力基準測試中超越了上一代最大的模型 Claude 3 Opus。"
+  },
+  "v0-1.0-md": {
+    "description": "v0-1.0-md 模型是透過 v0 API 提供服務的舊版模型"
+  },
+  "v0-1.5-lg": {
+    "description": "v0-1.5-lg 模型適用於高階思考或推理任務"
+  },
+  "v0-1.5-md": {
+    "description": "v0-1.5-md 模型適用於日常任務和使用者介面（UI）生成"
   },
   "whisper-1": {
     "description": "通用語音識別模型，支持多語言語音識別、語音翻譯和語言識別"

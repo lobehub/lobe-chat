@@ -129,6 +129,7 @@
     "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi"
   },
   "plugin": {
+    "addMCPPlugin": "Thêm plugin MCP",
     "addTooltip": "Thêm tiện ích",
     "clearDeprecated": "Xóa tiện ích không còn hỗ trợ",
     "empty": "Hiện chưa có tiện ích nào được cài đặt, hãy truy cập <1>cửa hàng tiện ích</1> để khám phá",
@@ -220,7 +221,7 @@
     },
     "inputTemplate": {
       "desc": "Tin nhắn mới nhất của người dùng sẽ được điền vào mẫu này",
-      "placeholder": "Mẫu xử lý trước {{input_template}} sẽ được thay thế bằng thông tin nhập thời gian thực",
+      "placeholder": "Mẫu xử lý trước {{text}} sẽ được thay thế bằng thông tin nhập thời gian thực",
       "title": "Mẫu xử lý đầu vào của người dùng"
     },
     "submit": "Cập nhật sở thích trò chuyện",

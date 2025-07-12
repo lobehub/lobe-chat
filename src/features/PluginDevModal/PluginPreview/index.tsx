@@ -1,6 +1,6 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
-import { Block, Icon } from '@lobehub/ui';
-import { Form as AForm, Button, FormInstance, Typography } from 'antd';
+import { Block, Icon, Text } from '@lobehub/ui';
+import { Form as AForm, Button, FormInstance } from 'antd';
 import { useTheme } from 'antd-style';
 import { FileCode } from 'lucide-react';
 import { memo } from 'react';
@@ -8,8 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import ManifestPreviewer from '@/components/ManifestPreviewer';
-import PluginAvatar from '@/features/PluginStore/PluginItem/PluginAvatar';
-import PluginTag from '@/features/PluginStore/PluginItem/PluginTag';
+import PluginAvatar from '@/components/Plugins/PluginAvatar';
+import PluginTag from '@/components/Plugins/PluginTag';
 import { pluginHelpers } from '@/store/tool';
 
 import ApiVisualizer from './ApiVisualizer';
@@ -50,9 +50,9 @@ const PluginPreview = memo<{ form: FormInstance }>(({ form }) => {
               {pluginHelpers.getPluginTitle(meta) || 'Plugin Title'}
               <PluginTag type={'customPlugin'} />
             </Flexbox>
-            <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
+            <Text style={{ fontSize: 12 }} type={'secondary'}>
               {pluginHelpers.getPluginDesc(meta) || 'Plugin Description'}
-            </Typography.Text>
+            </Text>
           </Flexbox>
         </Flexbox>
 

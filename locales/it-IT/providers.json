@@ -134,6 +134,9 @@
   "upstage": {
     "description": "Upstage si concentra sullo sviluppo di modelli AI per varie esigenze commerciali, inclusi Solar LLM e document AI, con l'obiettivo di realizzare un'intelligenza artificiale generale artificiale (AGI) per il lavoro. Crea semplici agenti di dialogo tramite Chat API e supporta chiamate funzionali, traduzioni, embedding e applicazioni specifiche del settore."
   },
+  "v0": {
+    "description": "v0 è un assistente di programmazione in coppia: basta descrivere le tue idee in linguaggio naturale e lui genererà codice e interfacce utente (UI) per il tuo progetto"
+  },
   "vertexai": {
     "description": "La serie Gemini di Google è il suo modello AI più avanzato e versatile, sviluppato da Google DeepMind, progettato per essere multimodale e supportare la comprensione e l'elaborazione senza soluzione di continuità di testo, codice, immagini, audio e video. Adatta a una varietà di ambienti, dai data center ai dispositivi mobili, migliora notevolmente l'efficienza e l'ampia applicabilità dei modelli AI."
   },

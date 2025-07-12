@@ -20,7 +20,7 @@ const googleChatModels: AIChatModelCard[] = [
     },
     releasedAt: '2025-06-17',
     settings: {
-      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+      extendParams: ['thinkingBudget'],
       searchImpl: 'params',
       searchProvider: 'google',
     },
@@ -40,12 +40,13 @@ const googleChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-pro-preview-06-05',
     maxOutput: 65_536,
     pricing: {
+      cachedInput: 0.31, // prompts <= 200k tokens
       input: 1.25, // prompts <= 200k tokens
       output: 10, // prompts <= 200k tokens
     },
     releasedAt: '2025-06-05',
     settings: {
-      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+      extendParams: ['thinkingBudget'],
       searchImpl: 'params',
       searchProvider: 'google',
     },
@@ -65,6 +66,7 @@ const googleChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-pro-preview-05-06',
     maxOutput: 65_536,
     pricing: {
+      cachedInput: 0.31, // prompts <= 200k tokens
       input: 1.25, // prompts <= 200k tokens
       output: 10, // prompts <= 200k tokens
     },
@@ -113,12 +115,13 @@ const googleChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-flash',
     maxOutput: 65_536,
     pricing: {
+      cachedInput: 0.075,
       input: 0.3,
       output: 2.5,
     },
     releasedAt: '2025-06-17',
     settings: {
-      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+      extendParams: ['thinkingBudget'],
       searchImpl: 'params',
       searchProvider: 'google',
     },
@@ -134,16 +137,16 @@ const googleChatModels: AIChatModelCard[] = [
     contextWindowTokens: 1_048_576 + 65_536,
     description: 'Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。',
     displayName: 'Gemini 2.5 Flash Preview 05-20',
-    enabled: true,
     id: 'gemini-2.5-flash-preview-05-20',
     maxOutput: 65_536,
     pricing: {
+      cachedInput: 0.0375,
       input: 0.15,
       output: 3.5, // Thinking
     },
     releasedAt: '2025-05-20',
     settings: {
-      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+      extendParams: ['thinkingBudget'],
       searchImpl: 'params',
       searchProvider: 'google',
     },
@@ -162,12 +165,13 @@ const googleChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-flash-preview-04-17',
     maxOutput: 65_536,
     pricing: {
+      cachedInput: 0.0375,
       input: 0.15,
       output: 3.5, // Thinking
     },
     releasedAt: '2025-04-17',
     settings: {
-      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+      extendParams: ['thinkingBudget'],
       searchImpl: 'params',
       searchProvider: 'google',
     },
@@ -187,7 +191,7 @@ const googleChatModels: AIChatModelCard[] = [
     maxOutput: 65_536,
     pricing: {
       input: 0.15,
-      output: 3.5, // Thinking
+      output: 3.5,
     },
     settings: {
       searchImpl: 'params',
@@ -202,20 +206,20 @@ const googleChatModels: AIChatModelCard[] = [
       search: true,
       vision: true,
     },
-    contextWindowTokens: 1_000_000 + 64_000,
+    contextWindowTokens: 65_536 + 65_536,
     description:
       'Gemini 2.5 Flash-Lite Preview 是 Google 最小、性价比最高的模型，专为大规模使用而设计。',
     displayName: 'Gemini 2.5 Flash-Lite Preview 06-17',
-    enabled: true,
     id: 'gemini-2.5-flash-lite-preview-06-17',
-    maxOutput: 64_000,
+    maxOutput: 65_536,
     pricing: {
+      cachedInput: 0.025,
       input: 0.1,
       output: 0.4,
     },
-    releasedAt: '2025-06-17',
+    releasedAt: '2025-06-11',
     settings: {
-      extendParams: ['enableReasoning', 'reasoningBudgetToken'],
+      extendParams: ['thinkingBudget'],
       searchImpl: 'params',
       searchProvider: 'google',
     },
@@ -314,7 +318,6 @@ const googleChatModels: AIChatModelCard[] = [
     id: 'gemini-2.0-flash-lite',
     maxOutput: 8192,
     pricing: {
-      cachedInput: 0.018_75,
       input: 0.075,
       output: 0.3,
     },
@@ -331,7 +334,6 @@ const googleChatModels: AIChatModelCard[] = [
     id: 'gemini-2.0-flash-lite-001',
     maxOutput: 8192,
     pricing: {
-      cachedInput: 0.018_75,
       input: 0.075,
       output: 0.3,
     },
@@ -366,7 +368,6 @@ const googleChatModels: AIChatModelCard[] = [
     id: 'learnlm-2.0-flash-experimental',
     maxOutput: 32_768,
     pricing: {
-      cachedInput: 0,
       input: 0,
       output: 0,
     },
@@ -383,7 +384,6 @@ const googleChatModels: AIChatModelCard[] = [
     id: 'learnlm-1.5-pro-experimental',
     maxOutput: 8192,
     pricing: {
-      cachedInput: 0,
       input: 0,
       output: 0,
     },
@@ -413,23 +413,6 @@ const googleChatModels: AIChatModelCard[] = [
       functionCall: true,
       vision: true,
     },
-    contextWindowTokens: 1_008_192,
-    description: 'Gemini 1.5 Flash 001 是一款高效的多模态模型，支持广泛应用的扩展。',
-    displayName: 'Gemini 1.5 Flash 001',
-    id: 'gemini-1.5-flash-001', // Deprecated on 2025-05-27
-    maxOutput: 8192,
-    pricing: {
-      cachedInput: 0.018_75,
-      input: 0.075,
-      output: 0.3,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
     contextWindowTokens: 2_008_192,
     description:
       'Gemini 1.5 Pro 002 是最新的生产就绪模型，提供更高质量的输出，特别在数学、长上下文和视觉任务方面有显著提升。',
@@ -442,24 +425,6 @@ const googleChatModels: AIChatModelCard[] = [
       output: 5,
     },
     releasedAt: '2024-09-24',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 2_008_192,
-    description: 'Gemini 1.5 Pro 001 是可扩展的多模态AI解决方案，支持广泛的复杂任务。',
-    displayName: 'Gemini 1.5 Pro 001 (Paid)',
-    id: 'gemini-1.5-pro-001', // Deprecated on 2025-05-27
-    maxOutput: 8192,
-    pricing: {
-      cachedInput: 0.3125,
-      input: 1.25,
-      output: 5,
-    },
-    releasedAt: '2024-02-15',
     type: 'chat',
   },
   {

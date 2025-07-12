@@ -1,6 +1,5 @@
 import { LocalReadFileResult } from '@lobechat/electron-client-ipc';
-import { ActionIcon, Icon, Markdown } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { ActionIcon, Icon, Markdown, Text } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { AlignLeft, Asterisk, ChevronDownIcon, ExternalLink, FolderOpen } from 'lucide-react';
 import React, { memo, useState } from 'react';
@@ -118,9 +117,9 @@ const ReadFileView = memo<ReadFileViewProps>(
           <Flexbox align={'center'} flex={1} gap={0} horizontal style={{ overflow: 'hidden' }}>
             <FileIcon fileName={filename} fileType={fileType} size={24} variant={'raw'} />
             <Flexbox horizontal>
-              <Typography.Text className={styles.fileName} ellipsis>
+              <Text className={styles.fileName} ellipsis>
                 {filename}
-              </Typography.Text>
+              </Text>
               {/* Actions on Hover */}
               <Flexbox className={styles.actions} gap={2} horizontal style={{ marginLeft: 8 }}>
                 <ActionIcon
@@ -174,9 +173,9 @@ const ReadFileView = memo<ReadFileViewProps>(
         </Flexbox>
 
         {/* Path */}
-        <Typography.Text className={styles.path} ellipsis type={'secondary'}>
+        <Text className={styles.path} ellipsis type={'secondary'}>
           {path}
-        </Typography.Text>
+        </Text>
 
         {isExpanded && (
           <Flexbox className={styles.previewBox} style={{ maxHeight: 240, overflow: 'auto' }}>
