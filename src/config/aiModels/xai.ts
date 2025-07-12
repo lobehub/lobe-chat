@@ -7,6 +7,7 @@ const xaiChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
       search: true,
+      vision: true,
     },
     contextWindowTokens: 256_000,
     description:
@@ -144,7 +145,6 @@ const xaiChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_768,
     description: '该模型在准确性、指令遵循和多语言能力方面有所改进。',
     displayName: 'Grok 2 Vision 1212',
-    enabled: true,
     id: 'grok-2-vision-1212',
     pricing: {
       input: 2,
