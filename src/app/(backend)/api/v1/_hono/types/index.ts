@@ -36,3 +36,9 @@ export interface IBaseService {
  * 服务方法返回类型
  */
 export type ServiceResult<T = any> = Promise<T>;
+
+export interface TTarget {
+  targetAgentId?: string;
+  targetSessionId?: string;
+  targetTopicId?: string;
+}
