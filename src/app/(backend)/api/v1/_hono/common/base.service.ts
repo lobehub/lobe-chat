@@ -1,7 +1,9 @@
+import { eq } from 'drizzle-orm';
 import { isEmpty } from 'lodash';
 
 import { PERMISSION_ACTIONS } from '@/const/rbac';
 import { RbacModel } from '@/database/models/rbac';
+import { agents, sessions, topics } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 
 import { IBaseService, TTarget } from '../types';
@@ -147,32 +149,50 @@ export abstract class BaseService implements IBaseService {
     return result;
   }
 
-  protected async getTargetUserId(target: string | TTarget): Promise<string> {
+  protected async getTargetUserId(target?: string | TTarget): Promise<string> {
     if (isEmpty(target)) {
       return '';
     }
+
+    // 如果是字符串，直接返回（假设是 userId）
     if (typeof target === 'string') {
       return target;
     }
-    if (target.targetSessionId) {
-      const targetSession = await this.db.query.sessions.findFirst({
-        where: eq(sessions.id, target.targetSessionId),
-      });
-      return targetSession?.userId || '';
+
+    try {
+      switch (true) {
+        // 查询 sessions 表
+        case !!target?.targetSessionId: {
+          const targetSession = await this.db.query.sessions.findFirst({
+            where: eq(sessions.id, target.targetSessionId),
+          });
+          return targetSession?.userId || '';
+        }
+
+        // 查询 agents 表
+        case !!target?.targetAgentId: {
+          const targetAgent = await this.db.query.agents.findFirst({
+            where: eq(agents.id, target.targetAgentId),
+          });
+          return targetAgent?.userId || '';
+        }
+
+        // 查询 topics 表
+        case !!target?.targetTopicId: {
+          const targetTopic = await this.db.query.topics.findFirst({
+            where: eq(topics.id, target.targetTopicId),
+          });
+          return targetTopic?.userId || '';
+        }
+
+        default: {
+          return '';
+        }
+      }
+    } catch (error) {
+      this.log('error', '获取目标用户ID失败', { error, target });
+      return '';
     }
-    if (target.targetAgentId) {
-      const targetAgent = await this.db.query.agents.findFirst({
-        where: eq(agents.id, target.targetAgentId),
-      });
-      return targetAgent?.userId || '';
-    }
-    if (target.targetTopicId) {
-      const targetTopic = await this.db.query.topics.findFirst({
-        where: eq(topics.id, target.targetTopicId),
-      });
-      return targetTopic?.userId || '';
-    }
-    return '';
   }
 
   /**
@@ -191,7 +211,7 @@ export abstract class BaseService implements IBaseService {
    */
   protected async resolveQueryPermission(
     permissionKey: keyof typeof PERMISSION_ACTIONS,
-    targetInfoId: string | TTarget,
+    targetInfoId?: string | TTarget,
   ): Promise<{
     condition?: { userId?: string };
     isPermitted: boolean;
@@ -200,6 +220,7 @@ export abstract class BaseService implements IBaseService {
     // 检查是否有全局访问权限
     const hasGlobalAccess = await this.hasGlobalPermission(permissionKey);
     const targetUserId = await this.getTargetUserId(targetInfoId);
+    console.log('挽歌测试targetUserId>>>', targetUserId);
 
     // 记录权限检查的上下文信息
     const logContext = {
