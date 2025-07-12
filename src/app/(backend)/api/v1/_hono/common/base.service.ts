@@ -1,3 +1,5 @@
+import { RBAC_PERMISSIONS } from '@/const/rbac';
+import { RbacModel } from '@/database/models/rbac';
 import { LobeChatDatabase } from '@/database/type';
 
 import { IBaseService } from '../types';
@@ -9,10 +11,12 @@ import { IBaseService } from '../types';
 export abstract class BaseService implements IBaseService {
   protected userId: string;
   public db: LobeChatDatabase;
+  private rbacModel: RbacModel;
 
   constructor(db: LobeChatDatabase, userId: string | null) {
     this.db = db;
     this.userId = userId || '';
+    this.rbacModel = new RbacModel(db, this.userId);
   }
 
   /**
@@ -121,5 +125,104 @@ export abstract class BaseService implements IBaseService {
         break;
       }
     }
+  }
+
+  /**
+   * 检查用户是否有指定权限
+   * @param permissionKey 权限键名
+   * @returns 是否有权限
+   */
+  protected async hasPermission(permissionKey: keyof typeof RBAC_PERMISSIONS): Promise<boolean> {
+    return await this.rbacModel.hasPermission(RBAC_PERMISSIONS[permissionKey], this.userId);
+  }
+
+  /**
+   * 检查用户是否有指定权限中的任意一个
+   * @param permissionKeys 权限键名数组
+   * @returns 是否有权限
+   */
+  protected async hasAnyPermission(
+    permissionKeys: (keyof typeof RBAC_PERMISSIONS)[],
+  ): Promise<boolean> {
+    const permissions = permissionKeys.map((key) => RBAC_PERMISSIONS[key]);
+    return await this.rbacModel.hasAnyPermission(permissions, this.userId);
+  }
+
+  /**
+   * 解析查询权限并返回查询条件
+   * 用于处理数据访问权限的通用逻辑，支持以下场景：
+   * 1. 查询自己的数据：永远允许
+   * 2. 查询指定用户的数据：需要 all/workspace 权限
+   * 3. 查询所有数据：需要 all/workspace 权限
+   *
+   * @param targetUserId - 目标用户 ID，可选。如果提供，表示要查询特定用户的数据
+   * @param permissionKeys - 权限键名数组
+   * @returns 返回权限检查结果和查询条件
+   *          - isPermitted: 是否允许查询
+   *          - condition: 查询条件，包含 userId 过滤
+   *          - message: 权限被拒绝时的错误信息
+   */
+  protected async resolveQueryPermission(
+    targetUserId: string | undefined,
+    permissionKeys: (keyof typeof RBAC_PERMISSIONS)[],
+  ): Promise<{
+    condition?: { userId: string };
+    isPermitted: boolean;
+    message?: string;
+  }> {
+    // 检查是否有全局访问权限
+    const hasGlobalAccess = await this.hasAnyPermission(
+      permissionKeys.filter(
+        (key) =>
+          RBAC_PERMISSIONS[key].includes(':all') || RBAC_PERMISSIONS[key].includes(':workspace'),
+      ),
+    );
+    // 记录权限检查的上下文信息
+    const logContext = {
+      hasGlobalAccess,
+      permissionKeys,
+      targetUserId,
+      userId: this.userId,
+    };
+
+    // 场景 1: 查询特定用户的数据
+    if (targetUserId) {
+      // 如果是查询自己的数据，直接允许
+      if (targetUserId === this.userId) {
+        this.log('info', '允许查询：用户查询自己的数据', logContext);
+        return {
+          condition: { userId: targetUserId },
+          isPermitted: true,
+        };
+      }
+
+      // 如果要查询其他用户的数据，需要检查全局权限
+      if (!hasGlobalAccess) {
+        this.log('warn', '拒绝查询：没有查询其他用户数据的权限', logContext);
+        return {
+          isPermitted: false,
+          message: '您没有权限查看其他用户的数据',
+        };
+      }
+
+      this.log('info', '允许查询：用户具有全局查询权限', logContext);
+      return {
+        condition: { userId: targetUserId },
+        isPermitted: true,
+      };
+    }
+
+    // 场景 2: 查询所有数据（未指定目标用户）
+    if (hasGlobalAccess) {
+      this.log('info', '允许查询：用户具有全局查询权限，可查询所有数据', logContext);
+      return { isPermitted: true };
+    }
+
+    // 场景 3: 默认只能查询自己的数据
+    this.log('info', '限制查询：用户只能查询自己的数据', logContext);
+    return {
+      condition: { userId: this.userId },
+      isPermitted: true,
+    };
   }
 }
