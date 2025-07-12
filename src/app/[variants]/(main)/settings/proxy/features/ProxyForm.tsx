@@ -63,7 +63,6 @@ const ProxyForm = () => {
     try {
       setIsSaving(true);
       const values = await form.validateFields();
-      console.log(values);
       await setProxySettings(values);
       setHasUnsavedChanges(false);
       message.success(t('proxy.saveSuccess'));
@@ -74,7 +73,7 @@ const ProxyForm = () => {
     } finally {
       setIsSaving(false);
     }
-  }, [form, setProxySettings, t, message]);
+  }, [form, t, message]);
 
   // 重置配置
   const handleReset = useCallback(() => {
@@ -100,7 +99,6 @@ const ProxyForm = () => {
 
       // 使用新的 testProxyConfig 方法测试用户正在配置的代理
       const result = await desktopSettingsService.testProxyConfig(config, testUrl);
-      console.log(result);
 
       setTestResult(result);
     } catch (error) {
@@ -138,7 +136,7 @@ const ProxyForm = () => {
             <Flexbox align={'center'} horizontal justify={'space-between'}>
               <Flexbox>
                 <Text as={'h4'}>{t('proxy.enable')}</Text>
-                <Text type={'secondary'}>开启后将通过代理服务器访问网络</Text>
+                <Text type={'secondary'}>{t('proxy.enableDesc')}</Text>
               </Flexbox>
               <Switch
                 checked={isEnableProxy}
@@ -160,7 +158,7 @@ const ProxyForm = () => {
           <Flexbox gap={24}>
             <Flexbox>
               <Text as={'h4'}>{t('proxy.basicSettings')}</Text>
-              <Text type={'secondary'}>配置代理服务器的连接参数</Text>
+              <Text type={'secondary'}>{t('proxy.basicSettingsDesc')}</Text>
             </Flexbox>
             <Flexbox>
               <Form.Item
@@ -234,7 +232,7 @@ const ProxyForm = () => {
                 <Flexbox align={'center'} horizontal justify={'space-between'}>
                   <Flexbox>
                     <Text as={'h5'}>{t('proxy.auth')}</Text>
-                    <Text type={'secondary'}>如果代理服务器需要用户名和密码</Text>
+                    <Text type={'secondary'}>{t('proxy.authDesc')}</Text>
                   </Flexbox>
                   <Switch
                     checked={proxyRequireAuth}
@@ -321,8 +319,7 @@ const ProxyForm = () => {
                     closable
                     message={
                       <Flexbox align="center" gap={8} horizontal>
-                        <Text style={{ fontWeight: 500 }}>{t('proxy.testSuccess')}</Text>
-                        {testResult.responseTime && <Text>({testResult.responseTime}ms)</Text>}
+                        {t('proxy.testSuccessWithTime', { time: testResult.responseTime })}
                       </Flexbox>
                     }
                     type={'success'}
@@ -332,11 +329,10 @@ const ProxyForm = () => {
                     closable
                     message={
                       <Flexbox align="center" gap={8} horizontal>
-                        {testResult.message}
-                        {t('proxy.testFailed')}
+                        {t('proxy.testFailed')}: {testResult.message}
                       </Flexbox>
                     }
-                    type={testResult.success ? 'success' : 'error'}
+                    type={'error'}
                     variant={'outlined'}
                   />
                 )}

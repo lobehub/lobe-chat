@@ -1,7 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NetworkProxySettings } from '@lobechat/electron-client-ipc';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { App } from '@/core/App';
+
+import NetworkProxyCtr from '../NetworkProxyCtr';
 
 // 模拟 logger
 vi.mock('@/utils/logger', () => ({
@@ -15,21 +17,10 @@ vi.mock('@/utils/logger', () => ({
 
 // 模拟 undici
 vi.mock('undici', () => ({
+  fetch: vi.fn(),
   getGlobalDispatcher: vi.fn(),
   setGlobalDispatcher: vi.fn(),
-}));
-
-// 模拟代理 agents
-vi.mock('http-proxy-agent', () => ({
-  HttpProxyAgent: vi.fn(),
-}));
-
-vi.mock('https-proxy-agent', () => ({
-  HttpsProxyAgent: vi.fn(),
-}));
-
-vi.mock('socks-proxy-agent', () => ({
-  SocksProxyAgent: vi.fn(),
+  ProxyAgent: vi.fn(),
 }));
 
 // 模拟 defaultProxySettings
@@ -46,8 +37,6 @@ vi.mock('@/const/store', () => ({
 
 // 模拟 fetch
 global.fetch = vi.fn();
-
-import NetworkProxyCtr from '../NetworkProxyCtr';
 
 // 模拟 App 及其依赖项
 const mockStoreManager = {
@@ -192,7 +181,10 @@ describe('NetworkProxyCtr', () => {
 
       await networkProxyCtr.setProxySettings(validConfig);
 
-      expect(mockStoreManager.set).toHaveBeenCalledWith('networkProxy', expect.objectContaining(validConfig));
+      expect(mockStoreManager.set).toHaveBeenCalledWith(
+        'networkProxy',
+        expect.objectContaining(validConfig),
+      );
     });
 
     it('should skip update if settings are unchanged', async () => {
