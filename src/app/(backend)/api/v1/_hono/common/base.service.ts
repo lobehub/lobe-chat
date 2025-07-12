@@ -194,7 +194,7 @@ export abstract class BaseService implements IBaseService {
         this.log('warn', '拒绝查询：没有查询其他用户数据的权限', logContext);
         return {
           isPermitted: false,
-          message: '您没有权限查看其他用户的数据',
+          message: '无权限',
         };
       }
 
