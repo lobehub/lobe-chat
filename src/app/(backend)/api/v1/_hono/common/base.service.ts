@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
 import { isEmpty } from 'lodash';
 
-import { PERMISSION_ACTIONS } from '@/const/rbac';
+import { ALL, PERMISSION_ACTIONS } from '@/const/rbac';
 import { RbacModel } from '@/database/models/rbac';
 import { agents, sessions, topics } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
@@ -202,8 +202,9 @@ export abstract class BaseService implements IBaseService {
    * 2. 查询指定用户的数据：需要 all/workspace 权限
    * 3. 查询所有数据：需要 all/workspace 权限
    *
-   * @param targetUserId - 目标用户 ID，可选。如果提供，表示要查询特定用户的数据
-   * @param permissionKey - 权限键名数组
+   * @param permissionKey - 权限键名
+   * @param targetInfoId - 目标用户 ID，可选。传入字符串表示查询特定用户的数据，传入对象键值表示查询特定对象的数据
+   * @param queryAll - 是否查询所有数据，可选。如果提供，表示要查询所有数据，否则只查询自己的数据
    * @returns 返回权限检查结果和查询条件
    *          - isPermitted: 是否允许查询
    *          - condition: 查询条件，包含 userId 过滤
@@ -211,7 +212,7 @@ export abstract class BaseService implements IBaseService {
    */
   protected async resolveQueryPermission(
     permissionKey: keyof typeof PERMISSION_ACTIONS,
-    targetInfoId?: string | TTarget,
+    targetInfoId?: string | TTarget | 'ALL',
   ): Promise<{
     condition?: { userId?: string };
     isPermitted: boolean;
@@ -220,7 +221,7 @@ export abstract class BaseService implements IBaseService {
     // 检查是否有全局访问权限
     const hasGlobalAccess = await this.hasGlobalPermission(permissionKey);
     const targetUserId = await this.getTargetUserId(targetInfoId);
-    console.log('挽歌测试targetUserId>>>', targetUserId);
+    const queryAll = hasGlobalAccess && targetInfoId === ALL;
 
     // 记录权限检查的上下文信息
     const logContext = {
@@ -231,7 +232,7 @@ export abstract class BaseService implements IBaseService {
     };
 
     // 场景 1: 查询特定用户的数据
-    if (targetUserId) {
+    if (targetUserId && !queryAll) {
       // 如果是查询自己的数据，直接允许
       if (targetUserId === this.userId) {
         this.log('info', '允许查询：用户查询自己的数据', logContext);
@@ -259,8 +260,12 @@ export abstract class BaseService implements IBaseService {
 
     // 场景 2: 查询所有数据（未指定目标用户）
     if (hasGlobalAccess) {
-      this.log('info', '允许查询：用户具有全局查询权限，可查询所有数据', logContext);
-      return { isPermitted: true };
+      this.log('info', '允许查询：用户具有全局查询权限，可查询所有数据 或 查询自己的数据', logContext);
+      if (queryAll) {
+        return { isPermitted: true };
+      } else {
+        return { condition: { userId: this.userId }, isPermitted: true };
+      }
     }
 
     // 场景 3: 默认只能查询自己的数据
