@@ -42,3 +42,9 @@ export interface TTarget {
   targetSessionId?: string;
   targetTopicId?: string;
 }
+
+export interface TBatchTarget {
+  targetAgentId?: string[];
+  targetSessionId?: string[];
+  targetTopicId?: string[];
+}
