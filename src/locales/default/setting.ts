@@ -524,6 +524,7 @@ export default {
     'hotkey': '快捷键',
     'llm': '语言模型',
     'provider': 'AI 服务商',
+    'proxy': '网络代理',
     'storage': '数据存储',
     'sync': '云端同步',
     'system-agent': '系统助手',

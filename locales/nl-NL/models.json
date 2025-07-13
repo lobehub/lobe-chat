@@ -71,44 +71,23 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 is een MoE-model dat zelf is ontwikkeld door DeepSeek Company. De prestaties van DeepSeek-V3 overtreffen die van andere open-source modellen zoals Qwen2.5-72B en Llama-3.1-405B, en presteert op het gebied van prestaties gelijkwaardig aan de wereldtop gesloten modellen zoals GPT-4o en Claude-3.5-Sonnet."
   },
-  "Doubao-1.5-thinking-pro-m": {
-    "description": "Doubao-1.5 is een nieuw diep denkmodel (de m-versie heeft ingebouwde multimodale diep redeneringscapaciteiten), dat uitblinkt in wiskunde, programmeren, wetenschappelijke redenering en creatieve schrijfopdrachten, en in verschillende autoritaire benchmarks zoals AIME 2024, Codeforces, GPQA, het niveau van de top van de industrie bereikt of benadert. Ondersteunt een contextvenster van 128k en 16k output."
-  },
-  "Doubao-1.5-thinking-vision-pro": {
-    "description": "Een nieuw visueel diepdenkend model, met sterkere algemene multimodale begrip- en redeneringscapaciteiten, dat SOTA-prestaties behaalt op 37 van de 59 openbare evaluatiestandaarden."
-  },
-  "Doubao-1.5-vision-pro": {
-    "description": "Doubao-1.5-vision-pro is een nieuw geüpgradede multimodale groot model, dat ondersteuning biedt voor beeldherkenning met willekeurige resoluties en extreme beeldverhoudingen, en de visuele redenering, documentherkenning, begrip van gedetailleerde informatie en het volgen van instructies verbetert."
-  },
-  "Doubao-1.5-vision-pro-32k": {
-    "description": "Doubao-1.5-vision-pro is een nieuw geüpgraded multimodaal groot model, dat ondersteuning biedt voor beeldherkenning met willekeurige resoluties en extreme beeldverhoudingen, en de visuele redenering, documentherkenning, begrip van gedetailleerde informatie en het volgen van instructies verbetert."
-  },
   "Doubao-lite-128k": {
-    "description": "Doubao-lite beschikt over een uitstekende responssnelheid en een goede prijs-kwaliteitverhouding, en biedt klanten flexibele keuzes voor verschillende scenario's. Ondersteunt inferentie en fine-tuning met een contextvenster van 128k."
+    "description": "Doubao-lite biedt een ultieme responssnelheid en een betere prijs-kwaliteitverhouding, waardoor het flexibele keuzes biedt voor verschillende klantenscenario's. Ondersteunt redeneren en fijn afstemmen met een contextvenster van 128k."
   },
   "Doubao-lite-32k": {
-    "description": "Doubao-lite beschikt over een uitstekende responssnelheid en een goede prijs-kwaliteitverhouding, en biedt klanten flexibele keuzes voor verschillende scenario's. Ondersteunt inferentie en fine-tuning met een contextvenster van 32k."
+    "description": "Doubao-lite biedt een ultieme responssnelheid en een betere prijs-kwaliteitverhouding, waardoor het flexibele keuzes biedt voor verschillende klantenscenario's. Ondersteunt redeneren en fijn afstemmen met een contextvenster van 32k."
   },
   "Doubao-lite-4k": {
-    "description": "Doubao-lite beschikt over een uitstekende responssnelheid en een goede prijs-kwaliteitverhouding, en biedt klanten flexibele keuzes voor verschillende scenario's. Ondersteunt inferentie en fine-tuning met een contextvenster van 4k."
+    "description": "Doubao-lite biedt een ultieme responssnelheid en een betere prijs-kwaliteitverhouding, waardoor het flexibele keuzes biedt voor verschillende klantenscenario's. Ondersteunt redeneren en fijn afstemmen met een contextvenster van 4k."
   },
   "Doubao-pro-128k": {
-    "description": "Het meest effectieve hoofmodel, geschikt voor het verwerken van complexe taken, met goede resultaten in referentievraag, samenvattingen, creatie, tekstclassificatie, rollenspellen en meer. Ondersteunt inferentie en fine-tuning met een contextvenster van 128k."
-  },
-  "Doubao-pro-256k": {
-    "description": "Het beste hoofdmachine model, geschikt voor het verwerken van complexe taken, met goede prestaties in referentievraag- en antwoordsituaties, samenvattingen, creatie, tekstclassificatie, rollenspellen, enz. Ondersteunt redenering en fine-tuning met een contextvenster van 256k."
+    "description": "Het beste hoofdmodel, geschikt voor het verwerken van complexe taken, met uitstekende prestaties in scenario's zoals referentievragen, samenvattingen, creatief schrijven, tekstclassificatie en rollenspellen. Ondersteunt redeneren en fijn afstemmen met een contextvenster van 128k."
   },
   "Doubao-pro-32k": {
-    "description": "Het meest effectieve hoofmodel, geschikt voor het verwerken van complexe taken, met goede resultaten in referentievraag, samenvattingen, creatie, tekstclassificatie, rollenspellen en meer. Ondersteunt inferentie en fine-tuning met een contextvenster van 32k."
+    "description": "Het beste hoofdmodel, geschikt voor het verwerken van complexe taken, met uitstekende prestaties in scenario's zoals referentievragen, samenvattingen, creatief schrijven, tekstclassificatie en rollenspellen. Ondersteunt redeneren en fijn afstemmen met een contextvenster van 32k."
   },
   "Doubao-pro-4k": {
-    "description": "Het meest effectieve hoofmodel, geschikt voor het verwerken van complexe taken, met goede resultaten in referentievraag, samenvattingen, creatie, tekstclassificatie, rollenspellen en meer. Ondersteunt inferentie en fine-tuning met een contextvenster van 4k."
-  },
-  "Doubao-vision-lite-32k": {
-    "description": "Het Doubao-vision model is een multimodaal groot model dat door Doubao is geïntroduceerd, met krachtige mogelijkheden voor beeldbegrip en redenering, evenals nauwkeurige instructiebegrip. Het model heeft sterke prestaties getoond in het extraheren van tekstinformatie uit afbeeldingen en op afbeeldingen gebaseerde redeneringstaken, en kan worden toegepast op complexere en bredere visuele vraag- en antwoordsituaties."
-  },
-  "Doubao-vision-pro-32k": {
-    "description": "Het Doubao-vision model is een multimodaal groot model dat door Doubao is geïntroduceerd, met krachtige mogelijkheden voor beeldbegrip en redenering, evenals nauwkeurige instructiebegrip. Het model heeft sterke prestaties getoond in het extraheren van tekstinformatie uit afbeeldingen en op afbeeldingen gebaseerde redeneringstaken, en kan worden toegepast op complexere en bredere visuele vraag- en antwoordsituaties."
+    "description": "Het beste hoofdmodel, geschikt voor het verwerken van complexe taken, met uitstekende prestaties in scenario's zoals referentievragen, samenvattingen, creatief schrijven, tekstclassificatie en rollenspellen. Ondersteunt redeneren en fijn afstemmen met een contextvenster van 4k."
   },
   "ERNIE-3.5-128K": {
     "description": "De door Baidu ontwikkelde vlaggenschip grote taalmodel, dat een enorme hoeveelheid Chinese en Engelse gegevens dekt, met krachtige algemene capaciteiten die voldoen aan de meeste eisen voor dialoogvragen, creatieve generatie en plug-in toepassingsscenario's; ondersteunt automatische integratie met de Baidu zoekplug-in, wat de actualiteit van vraag- en antwoordinformatie waarborgt."
@@ -914,8 +893,38 @@
   "doubao-1.5-thinking-pro": {
     "description": "Doubao-1.5 is een gloednieuw diepdenkend model dat uitblinkt in professionele gebieden zoals wiskunde, programmeren en wetenschappelijk redeneren, evenals in algemene taken zoals creatief schrijven. Het heeft op verschillende prestigieuze benchmarks zoals AIME 2024, Codeforces en GPQA niveaus bereikt die gelijk zijn aan of dicht bij de top van de industrie liggen. Ondersteunt een contextvenster van 128k en een output van 16k."
   },
+  "doubao-1.5-thinking-pro-m": {
+    "description": "Doubao-1.5 is een gloednieuw diepdenkend model (m-versie met native multimodale diepe redeneercapaciteiten), dat uitblinkt in vakgebieden zoals wiskunde, programmeren, wetenschappelijke redenering en creatieve schrijfopdrachten. Het behaalt of benadert de top van de industrie op gerenommeerde benchmarks zoals AIME 2024, Codeforces en GPQA. Ondersteunt een contextvenster van 128k en output van 16k."
+  },
+  "doubao-1.5-thinking-vision-pro": {
+    "description": "Een nieuw visueel diepdenkend model met sterkere algemene multimodale begrip- en redeneercapaciteiten, dat op 37 van de 59 openbare benchmarktests SOTA-prestaties behaalt."
+  },
+  "doubao-1.5-ui-tars": {
+    "description": "Doubao-1.5-UI-TARS is een native agentmodel gericht op grafische gebruikersinterface (GUI) interactie. Het biedt mensachtige capaciteiten zoals waarnemen, redeneren en handelen voor naadloze interactie met GUI's."
+  },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite is een nieuw geüpgradede multimodale groot model, dat ondersteuning biedt voor beeldherkenning met willekeurige resoluties en extreme beeldverhoudingen, en de visuele redenering, documentherkenning, begrip van gedetailleerde informatie en het volgen van instructies verbetert. Ondersteunt een contextvenster van 128k en een maximale outputlengte van 16k tokens."
+  },
+  "doubao-1.5-vision-pro": {
+    "description": "Doubao-1.5-vision-pro is een nieuw geüpgraded multimodaal groot model dat beeldherkenning ondersteunt met elke resolutie en extreme beeldverhoudingen, en verbeterde visuele redenering, documentherkenning, detailbegrip en instructienaleving biedt."
+  },
+  "doubao-1.5-vision-pro-32k": {
+    "description": "Doubao-1.5-vision-pro is een nieuw geüpgraded multimodaal groot model dat beeldherkenning ondersteunt met elke resolutie en extreme beeldverhoudingen, en verbeterde visuele redenering, documentherkenning, detailbegrip en instructienaleving biedt."
+  },
+  "doubao-lite-128k": {
+    "description": "Biedt ultieme responssnelheid en een betere prijs-kwaliteitverhouding, met flexibele keuzes voor verschillende klantenscenario's. Ondersteunt redeneren en fijn afstemmen met een contextvenster van 128k."
+  },
+  "doubao-lite-32k": {
+    "description": "Biedt ultieme responssnelheid en een betere prijs-kwaliteitverhouding, met flexibele keuzes voor verschillende klantenscenario's. Ondersteunt redeneren en fijn afstemmen met een contextvenster van 32k."
+  },
+  "doubao-lite-4k": {
+    "description": "Biedt ultieme responssnelheid en een betere prijs-kwaliteitverhouding, met flexibele keuzes voor verschillende klantenscenario's. Ondersteunt redeneren en fijn afstemmen met een contextvenster van 4k."
+  },
+  "doubao-pro-256k": {
+    "description": "Het beste hoofdmodel, geschikt voor het verwerken van complexe taken, met uitstekende prestaties in scenario's zoals referentievragen, samenvattingen, creatief schrijven, tekstclassificatie en rollenspellen. Ondersteunt redeneren en fijn afstemmen met een contextvenster van 256k."
+  },
+  "doubao-pro-32k": {
+    "description": "Het beste hoofdmodel, geschikt voor het verwerken van complexe taken, met uitstekende prestaties in scenario's zoals referentievragen, samenvattingen, creatief schrijven, tekstclassificatie en rollenspellen. Ondersteunt redeneren en fijn afstemmen met een contextvenster van 32k."
   },
   "doubao-seed-1.6": {
     "description": "Doubao-Seed-1.6 is een gloednieuw multimodaal diepdenkend model dat drie denkwijzen ondersteunt: auto, thinking en non-thinking. In de non-thinking modus is de modelprestatie aanzienlijk verbeterd ten opzichte van Doubao-1.5-pro/250115. Ondersteunt een contextvenster van 256k en een maximale uitvoerlengte van 16k tokens."
@@ -925,6 +934,12 @@
   },
   "doubao-seed-1.6-thinking": {
     "description": "Doubao-Seed-1.6-thinking model heeft sterk verbeterde denkvermogens, met verdere verbeteringen in basisvaardigheden zoals coderen, wiskunde en logisch redeneren ten opzichte van Doubao-1.5-thinking-pro, en ondersteunt visueel begrip. Ondersteunt een contextvenster van 256k en een maximale uitvoerlengte van 16k tokens."
+  },
+  "doubao-vision-lite-32k": {
+    "description": "Het Doubao-vision model is een multimodaal groot model van Doubao met krachtige beeldbegrip- en redeneercapaciteiten, evenals nauwkeurige instructiebegrip. Het model presteert sterk bij het extraheren van beeld- en tekstinformatie en bij beeldgebaseerde redeneertaken, en is toepasbaar op complexere en bredere visuele vraag-en-antwoord scenario's."
+  },
+  "doubao-vision-pro-32k": {
+    "description": "Het Doubao-vision model is een multimodaal groot model van Doubao met krachtige beeldbegrip- en redeneercapaciteiten, evenals nauwkeurige instructiebegrip. Het model presteert sterk bij het extraheren van beeld- en tekstinformatie en bij beeldgebaseerde redeneertaken, en is toepasbaar op complexere en bredere visuele vraag-en-antwoord scenario's."
   },
   "emohaa": {
     "description": "Emohaa is een psychologisch model met professionele adviescapaciteiten, dat gebruikers helpt emotionele problemen te begrijpen."
@@ -1313,6 +1328,9 @@
   "gpt-4o-mini-search-preview": {
     "description": "GPT-4o mini zoekpreview is een model dat speciaal is getraind om webzoekopdrachten te begrijpen en uit te voeren, gebruikmakend van de Chat Completions API. Naast tokenkosten worden webzoekopdrachten ook per toolaanroep in rekening gebracht."
   },
+  "gpt-4o-mini-transcribe": {
+    "description": "GPT-4o Mini Transcribe is een spraak-naar-tekstmodel dat GPT-4o gebruikt voor audiotranscriptie. Vergeleken met het originele Whisper-model verbetert het de woordfoutpercentage en verhoogt het de taalherkenning en nauwkeurigheid. Gebruik het voor nauwkeurigere transcripties."
+  },
   "gpt-4o-mini-tts": {
     "description": "GPT-4o mini TTS is een tekst-naar-spraak model dat is gebaseerd op GPT-4o mini, en biedt hoge kwaliteit spraakgeneratie tegen een lagere prijs."
   },
@@ -1322,11 +1340,14 @@
   "gpt-4o-realtime-preview-2024-10-01": {
     "description": "GPT-4o realtime versie, ondersteunt audio en tekst realtime invoer en uitvoer."
   },
-  "gpt-4o-realtime-preview-2024-12-17": {
-    "description": "GPT-4o realtime versie, ondersteunt audio en tekst realtime invoer en uitvoer."
+  "gpt-4o-realtime-preview-2025-06-03": {
+    "description": "GPT-4o realtime versie, ondersteunt realtime audio- en tekstinvoer en -uitvoer."
   },
   "gpt-4o-search-preview": {
     "description": "GPT-4o zoekpreview is een model dat speciaal is getraind om webzoekopdrachten te begrijpen en uit te voeren, gebruikmakend van de Chat Completions API. Naast tokenkosten worden webzoekopdrachten ook per toolaanroep in rekening gebracht."
+  },
+  "gpt-4o-transcribe": {
+    "description": "GPT-4o Transcribe is een spraak-naar-tekstmodel dat GPT-4o gebruikt voor audiotranscriptie. Vergeleken met het originele Whisper-model verbetert het de woordfoutpercentage en verhoogt het de taalherkenning en nauwkeurigheid. Gebruik het voor nauwkeurigere transcripties."
   },
   "grok-2-1212": {
     "description": "Dit model heeft verbeteringen aangebracht in nauwkeurigheid, instructievolging en meertalige capaciteiten."
@@ -1459,6 +1480,9 @@
   },
   "jina-deepsearch-v1": {
     "description": "Diepe zoekopdrachten combineren webzoekopdrachten, lezen en redeneren voor een uitgebreide verkenning. Je kunt het beschouwen als een agent die jouw onderzoeksopdracht aanneemt - het zal een uitgebreide zoektocht uitvoeren en meerdere iteraties doorlopen voordat het een antwoord geeft. Dit proces omvat voortdurende onderzoek, redeneren en het oplossen van problemen vanuit verschillende invalshoeken. Dit is fundamenteel anders dan het rechtstreeks genereren van antwoorden uit voorgetrainde gegevens door standaard grote modellen en het vertrouwen op eenmalige oppervlakkige zoekopdrachten van traditionele RAG-systemen."
+  },
+  "kimi-k2-0711-preview": {
+    "description": "kimi-k2 is een MoE-architectuurbasis model met krachtige codeer- en agentcapaciteiten, met in totaal 1 biljoen parameters en 32 miljard geactiveerde parameters. In benchmarktests voor algemene kennisredenering, programmeren, wiskunde en agenttaken overtreft het K2-model andere toonaangevende open-source modellen."
   },
   "kimi-latest": {
     "description": "Kimi slimme assistent product maakt gebruik van het nieuwste Kimi grote model, dat mogelijk nog niet stabiele functies bevat. Ondersteunt beeldbegrip en kiest automatisch het 8k/32k/128k model als factureringsmodel op basis van de lengte van de context van het verzoek."

@@ -1,6 +1,27 @@
 [
   {
     "children": {
+      "features": ["Add network proxy for desktop."]
+    },
+    "date": "2025-07-13",
+    "version": "1.98.0"
+  },
+  {
+    "children": {
+      "improvements": ["Support Hunyuan A13B thinking model."]
+    },
+    "date": "2025-07-13",
+    "version": "1.97.17"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-13",
+    "version": "1.97.16"
+  },
+  {
+    "children": {
       "fixes": ["Add vision support to Grok 4."]
     },
     "date": "2025-07-12",

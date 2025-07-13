@@ -71,44 +71,23 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 é um modelo MoE desenvolvido internamente pela DeepSeek. Os resultados de várias avaliações do DeepSeek-V3 superaram outros modelos de código aberto, como Qwen2.5-72B e Llama-3.1-405B, e seu desempenho é comparável aos melhores modelos fechados do mundo, como GPT-4o e Claude-3.5-Sonnet."
   },
-  "Doubao-1.5-thinking-pro-m": {
-    "description": "O Doubao-1.5 é um novo modelo de pensamento profundo (a versão m possui capacidade nativa de raciocínio multimodal), destacando-se em áreas profissionais como matemática, programação, raciocínio científico e tarefas gerais como escrita criativa, alcançando ou se aproximando do nível de elite em várias referências de prestígio como AIME 2024, Codeforces, GPQA."
-  },
-  "Doubao-1.5-thinking-vision-pro": {
-    "description": "Modelo de pensamento profundo visual totalmente novo, com habilidades aprimoradas de compreensão e raciocínio multimodal geral, alcançando desempenho SOTA em 37 dos 59 benchmarks públicos."
-  },
-  "Doubao-1.5-vision-pro": {
-    "description": "Doubao-1.5-vision-pro é um modelo multimodal atualizado, suportando reconhecimento de imagens de qualquer resolução e proporções extremas, melhorando a capacidade de raciocínio visual, reconhecimento de documentos, compreensão de informações detalhadas e seguimento de instruções."
-  },
-  "Doubao-1.5-vision-pro-32k": {
-    "description": "Doubao-1.5-vision-pro é um modelo multimodal de grande porte totalmente atualizado, que suporta reconhecimento de imagens em qualquer resolução e proporções extremas, melhorando a capacidade de raciocínio visual, reconhecimento de documentos, compreensão de informações detalhadas e seguimento de instruções."
-  },
   "Doubao-lite-128k": {
-    "description": "Doubao-lite possui uma velocidade de resposta excepcional e uma melhor relação custo-benefício, oferecendo opções mais flexíveis para diferentes cenários dos clientes. Suporta raciocínio e ajuste fino em janelas de contexto de 128k."
+    "description": "Doubao-lite oferece velocidade de resposta extrema e melhor custo-benefício, proporcionando opções mais flexíveis para diferentes cenários dos clientes. Suporta inferência e fine-tuning com janela de contexto de 128k."
   },
   "Doubao-lite-32k": {
-    "description": "Doubao-lite possui uma velocidade de resposta excepcional e uma melhor relação custo-benefício, oferecendo opções mais flexíveis para diferentes cenários dos clientes. Suporta raciocínio e ajuste fino em janelas de contexto de 32k."
+    "description": "Doubao-lite oferece velocidade de resposta extrema e melhor custo-benefício, proporcionando opções mais flexíveis para diferentes cenários dos clientes. Suporta inferência e fine-tuning com janela de contexto de 32k."
   },
   "Doubao-lite-4k": {
-    "description": "Doubao-lite possui uma velocidade de resposta excepcional e uma melhor relação custo-benefício, oferecendo opções mais flexíveis para diferentes cenários dos clientes. Suporta raciocínio e ajuste fino em janelas de contexto de 4k."
+    "description": "Doubao-lite oferece velocidade de resposta extrema e melhor custo-benefício, proporcionando opções mais flexíveis para diferentes cenários dos clientes. Suporta inferência e fine-tuning com janela de contexto de 4k."
   },
   "Doubao-pro-128k": {
-    "description": "O modelo principal com o melhor desempenho, adequado para tarefas complexas, apresentando excelentes resultados em cenários como perguntas e respostas, resumos, criação, classificação de texto e interpretação de papéis. Suporta raciocínio e ajuste fino em janelas de contexto de 128k."
-  },
-  "Doubao-pro-256k": {
-    "description": "O modelo principal com o melhor desempenho, adequado para lidar com tarefas complexas, apresentando bons resultados em cenários como perguntas e respostas de referência, resumos, criação, classificação de texto e interpretação de papéis. Suporta raciocínio e ajuste fino com janelas de contexto de 256k."
+    "description": "Modelo principal com melhor desempenho, adequado para tarefas complexas, apresentando ótimos resultados em perguntas de referência, resumos, criação, classificação de texto, interpretação de papéis e outros cenários. Suporta inferência e fine-tuning com janela de contexto de 128k."
   },
   "Doubao-pro-32k": {
-    "description": "O modelo principal com o melhor desempenho, adequado para tarefas complexas, apresentando excelentes resultados em cenários como perguntas e respostas, resumos, criação, classificação de texto e interpretação de papéis. Suporta raciocínio e ajuste fino em janelas de contexto de 32k."
+    "description": "Modelo principal com melhor desempenho, adequado para tarefas complexas, apresentando ótimos resultados em perguntas de referência, resumos, criação, classificação de texto, interpretação de papéis e outros cenários. Suporta inferência e fine-tuning com janela de contexto de 32k."
   },
   "Doubao-pro-4k": {
-    "description": "O modelo principal com o melhor desempenho, adequado para tarefas complexas, apresentando excelentes resultados em cenários como perguntas e respostas, resumos, criação, classificação de texto e interpretação de papéis. Suporta raciocínio e ajuste fino em janelas de contexto de 4k."
-  },
-  "Doubao-vision-lite-32k": {
-    "description": "O modelo Doubao-vision é um modelo multimodal de grande porte lançado pela Doubao, com poderosas capacidades de compreensão e raciocínio de imagens, além de uma compreensão precisa de instruções. O modelo demonstrou um desempenho robusto em extração de informações textuais de imagens e tarefas de raciocínio baseadas em imagens, podendo ser aplicado em tarefas de perguntas e respostas visuais mais complexas e abrangentes."
-  },
-  "Doubao-vision-pro-32k": {
-    "description": "O modelo Doubao-vision é um modelo multimodal de grande porte lançado pela Doubao, com poderosas capacidades de compreensão e raciocínio de imagens, além de uma compreensão precisa de instruções. O modelo demonstrou um desempenho robusto em extração de informações textuais de imagens e tarefas de raciocínio baseadas em imagens, podendo ser aplicado em tarefas de perguntas e respostas visuais mais complexas e abrangentes."
+    "description": "Modelo principal com melhor desempenho, adequado para tarefas complexas, apresentando ótimos resultados em perguntas de referência, resumos, criação, classificação de texto, interpretação de papéis e outros cenários. Suporta inferência e fine-tuning com janela de contexto de 4k."
   },
   "ERNIE-3.5-128K": {
     "description": "Modelo de linguagem de grande escala desenvolvido pela Baidu, cobrindo uma vasta quantidade de dados em chinês e inglês, com poderosas capacidades gerais, capaz de atender à maioria das demandas de perguntas e respostas em diálogos, geração de conteúdo e aplicações de plugins; suporta integração automática com o plugin de busca da Baidu, garantindo a atualidade das informações nas respostas."
@@ -665,6 +644,9 @@
   "codestral-latest": {
     "description": "Codestral é um modelo gerador de ponta focado em geração de código, otimizado para preenchimento intermediário e tarefas de conclusão de código."
   },
+  "codex-mini-latest": {
+    "description": "codex-mini-latest é uma versão ajustada do o4-mini, especialmente para Codex CLI. Para uso direto via API, recomendamos começar pelo gpt-4.1."
+  },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B é um modelo projetado para seguir instruções, diálogos e programação."
   },
@@ -911,8 +893,53 @@
   "doubao-1.5-thinking-pro": {
     "description": "O modelo de pensamento profundo Doubao-1.5 apresenta um desempenho excepcional em áreas especializadas como matemática, programação e raciocínio científico, além de tarefas gerais como escrita criativa. Ele alcançou ou se aproximou do nível de elite da indústria em várias referências respeitáveis, como AIME 2024, Codeforces e GPQA. Suporta uma janela de contexto de 128k e uma saída de 16k."
   },
+  "doubao-1.5-thinking-pro-m": {
+    "description": "Doubao-1.5 é um novo modelo de pensamento profundo (versão m com capacidade nativa de inferência multimodal profunda), destacando-se em matemática, programação, raciocínio científico e tarefas gerais como escrita criativa. Alcança ou se aproxima do topo da indústria em benchmarks como AIME 2024, Codeforces e GPQA. Suporta janela de contexto de 128k e saída de 16k."
+  },
+  "doubao-1.5-thinking-vision-pro": {
+    "description": "Novo modelo de pensamento profundo visual, com capacidades avançadas de compreensão e inferência multimodal geral, alcançando desempenho SOTA em 37 dos 59 benchmarks públicos."
+  },
+  "doubao-1.5-ui-tars": {
+    "description": "Doubao-1.5-UI-TARS é um modelo Agent nativo para interação com interfaces gráficas (GUI). Possui habilidades humanas de percepção, raciocínio e ação para interação fluida com GUIs."
+  },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite é um modelo multimodal atualizado, suportando reconhecimento de imagens de qualquer resolução e proporções extremas, melhorando a capacidade de raciocínio visual, reconhecimento de documentos, compreensão de informações detalhadas e seguimento de instruções. Suporta uma janela de contexto de 128k, com comprimento de saída de até 16k tokens."
+  },
+  "doubao-1.5-vision-pro": {
+    "description": "Doubao-1.5-vision-pro é um modelo multimodal avançado, suportando reconhecimento de imagens em qualquer resolução e proporção extrema, com capacidades aprimoradas de raciocínio visual, reconhecimento de documentos, compreensão de detalhes e seguimento de instruções."
+  },
+  "doubao-1.5-vision-pro-32k": {
+    "description": "Doubao-1.5-vision-pro é um modelo multimodal avançado, suportando reconhecimento de imagens em qualquer resolução e proporção extrema, com capacidades aprimoradas de raciocínio visual, reconhecimento de documentos, compreensão de detalhes e seguimento de instruções."
+  },
+  "doubao-lite-128k": {
+    "description": "Oferece velocidade de resposta extrema e melhor custo-benefício, proporcionando opções mais flexíveis para diferentes cenários dos clientes. Suporta inferência e fine-tuning com janela de contexto de 128k."
+  },
+  "doubao-lite-32k": {
+    "description": "Oferece velocidade de resposta extrema e melhor custo-benefício, proporcionando opções mais flexíveis para diferentes cenários dos clientes. Suporta inferência e fine-tuning com janela de contexto de 32k."
+  },
+  "doubao-lite-4k": {
+    "description": "Oferece velocidade de resposta extrema e melhor custo-benefício, proporcionando opções mais flexíveis para diferentes cenários dos clientes. Suporta inferência e fine-tuning com janela de contexto de 4k."
+  },
+  "doubao-pro-256k": {
+    "description": "Modelo principal com melhor desempenho, adequado para tarefas complexas, apresentando ótimos resultados em perguntas de referência, resumos, criação, classificação de texto, interpretação de papéis e outros cenários. Suporta inferência e fine-tuning com janela de contexto de 256k."
+  },
+  "doubao-pro-32k": {
+    "description": "Modelo principal com melhor desempenho, adequado para tarefas complexas, apresentando ótimos resultados em perguntas de referência, resumos, criação, classificação de texto, interpretação de papéis e outros cenários. Suporta inferência e fine-tuning com janela de contexto de 32k."
+  },
+  "doubao-seed-1.6": {
+    "description": "Doubao-Seed-1.6 é um novo modelo multimodal de pensamento profundo, suportando três modos de pensamento: auto, thinking e non-thinking. No modo non-thinking, o desempenho supera significativamente o Doubao-1.5-pro/250115. Suporta janela de contexto de 256k e saída de até 16k tokens."
+  },
+  "doubao-seed-1.6-flash": {
+    "description": "Doubao-Seed-1.6-flash é um modelo multimodal de pensamento profundo com velocidade de inferência extrema, TPOT de apenas 10ms; suporta compreensão textual e visual, com capacidade textual superior à geração lite anterior e compreensão visual comparável à série pro dos concorrentes. Suporta janela de contexto de 256k e saída de até 16k tokens."
+  },
+  "doubao-seed-1.6-thinking": {
+    "description": "Doubao-Seed-1.6-thinking tem capacidade de pensamento significativamente reforçada, melhorando ainda mais habilidades básicas como codificação, matemática e raciocínio lógico em comparação com Doubao-1.5-thinking-pro, além de suportar compreensão visual. Suporta janela de contexto de 256k e saída de até 16k tokens."
+  },
+  "doubao-vision-lite-32k": {
+    "description": "O modelo Doubao-vision é um grande modelo multimodal lançado pela Doubao, com forte capacidade de compreensão e inferência de imagens, além de compreensão precisa de instruções. O modelo demonstra desempenho robusto em extração de informações de texto em imagens e tarefas de inferência baseadas em imagens, podendo ser aplicado a tarefas visuais de perguntas e respostas mais complexas e amplas."
+  },
+  "doubao-vision-pro-32k": {
+    "description": "O modelo Doubao-vision é um grande modelo multimodal lançado pela Doubao, com forte capacidade de compreensão e inferência de imagens, além de compreensão precisa de instruções. O modelo demonstra desempenho robusto em extração de informações de texto em imagens e tarefas de inferência baseadas em imagens, podendo ser aplicado a tarefas visuais de perguntas e respostas mais complexas e amplas."
   },
   "emohaa": {
     "description": "O Emohaa é um modelo psicológico com capacidade de consultoria profissional, ajudando os usuários a entender questões emocionais."
@@ -1301,6 +1328,9 @@
   "gpt-4o-mini-search-preview": {
     "description": "A versão prévia do GPT-4o mini para busca é um modelo treinado especificamente para compreender e executar consultas de busca na web, utilizando a API Chat Completions. Além dos custos por token, as consultas de busca na web são cobradas por chamada da ferramenta."
   },
+  "gpt-4o-mini-transcribe": {
+    "description": "GPT-4o Mini Transcribe é um modelo de transcrição de áudio para texto que utiliza GPT-4o. Em comparação com o modelo Whisper original, melhora a taxa de erro de palavras, além do reconhecimento e precisão linguística. Use-o para obter transcrições mais precisas."
+  },
   "gpt-4o-mini-tts": {
     "description": "GPT-4o mini TTS é um modelo de texto para fala baseado em GPT-4o mini, oferecendo uma geração de voz de alta qualidade a um custo mais baixo."
   },
@@ -1310,11 +1340,14 @@
   "gpt-4o-realtime-preview-2024-10-01": {
     "description": "Versão em tempo real do GPT-4o, suporta entrada e saída de áudio e texto em tempo real."
   },
-  "gpt-4o-realtime-preview-2024-12-17": {
-    "description": "Versão em tempo real do GPT-4o, suporta entrada e saída de áudio e texto em tempo real."
+  "gpt-4o-realtime-preview-2025-06-03": {
+    "description": "Versão em tempo real do GPT-4o, suportando entrada e saída de áudio e texto em tempo real."
   },
   "gpt-4o-search-preview": {
     "description": "A versão prévia do GPT-4o para busca é um modelo treinado especificamente para compreender e executar consultas de busca na web, utilizando a API Chat Completions. Além dos custos por token, as consultas de busca na web são cobradas por chamada da ferramenta."
+  },
+  "gpt-4o-transcribe": {
+    "description": "GPT-4o Transcribe é um modelo de transcrição de áudio para texto que utiliza GPT-4o. Em comparação com o modelo Whisper original, melhora a taxa de erro de palavras, além do reconhecimento e precisão linguística. Use-o para obter transcrições mais precisas."
   },
   "grok-2-1212": {
     "description": "Este modelo apresenta melhorias em precisão, conformidade com instruções e capacidade multilíngue."
@@ -1447,6 +1480,9 @@
   },
   "jina-deepsearch-v1": {
     "description": "A busca profunda combina pesquisa na web, leitura e raciocínio para realizar investigações abrangentes. Você pode vê-la como um agente que aceita suas tarefas de pesquisa - ela realizará uma busca extensa e passará por várias iterações antes de fornecer uma resposta. Esse processo envolve pesquisa contínua, raciocínio e resolução de problemas sob diferentes ângulos. Isso é fundamentalmente diferente de gerar respostas diretamente a partir de dados pré-treinados de grandes modelos padrão e de sistemas RAG tradicionais que dependem de buscas superficiais únicas."
+  },
+  "kimi-k2-0711-preview": {
+    "description": "kimi-k2 é um modelo base com arquitetura MoE, com capacidades excepcionais em código e agentes, totalizando 1T de parâmetros e 32B de parâmetros ativados. Nos principais benchmarks de raciocínio de conhecimento geral, programação, matemática e agentes, o modelo K2 supera outros modelos open source populares."
   },
   "kimi-latest": {
     "description": "O produto assistente inteligente Kimi utiliza o mais recente modelo Kimi, que pode conter recursos ainda não estáveis. Suporta compreensão de imagens e seleciona automaticamente o modelo de cobrança de 8k/32k/128k com base no comprimento do contexto da solicitação."
@@ -1859,6 +1895,9 @@
   "o1-preview": {
     "description": "o1 é o novo modelo de raciocínio da OpenAI, adequado para tarefas complexas que exigem amplo conhecimento geral. Este modelo possui um contexto de 128K e uma data limite de conhecimento em outubro de 2023."
   },
+  "o1-pro": {
+    "description": "A série o1 é treinada com aprendizado por reforço, capaz de pensar antes de responder e executar tarefas complexas de raciocínio. O modelo o1-pro utiliza mais recursos computacionais para um pensamento mais profundo, oferecendo respostas de qualidade superior continuamente."
+  },
   "o3": {
     "description": "o3 é um modelo versátil e poderoso, com excelente desempenho em várias áreas. Ele estabelece novos padrões para tarefas de matemática, ciência, programação e raciocínio visual. Também é bom em redação técnica e seguimento de instruções. Os usuários podem utilizá-lo para analisar textos, códigos e imagens, resolvendo problemas complexos em múltiplas etapas."
   },
@@ -1867,6 +1906,9 @@
   },
   "o3-mini": {
     "description": "o3-mini é nosso mais recente modelo de inferência em miniatura, oferecendo alta inteligência com os mesmos custos e metas de latência que o o1-mini."
+  },
+  "o3-pro": {
+    "description": "O modelo o3-pro utiliza mais computação para pensar mais profundamente e sempre fornecer respostas melhores, suportado apenas via API Responses."
   },
   "o4-mini": {
     "description": "o4-mini é nosso mais recente modelo compacto da série o. Ele é otimizado para inferência rápida e eficaz, apresentando alta eficiência e desempenho em tarefas de codificação e visuais."
@@ -2334,7 +2376,7 @@
     "description": "O modelo v0-1.5-md é adequado para tarefas diárias e geração de interfaces de usuário (UI)"
   },
   "whisper-1": {
-    "description": "Modelo de reconhecimento de voz universal, suporta reconhecimento de voz multilíngue, tradução de voz e identificação de idiomas."
+    "description": "Modelo universal de reconhecimento de voz, suportando reconhecimento de voz multilíngue, tradução de voz e identificação de idioma."
   },
   "wizardlm2": {
     "description": "WizardLM 2 é um modelo de linguagem fornecido pela Microsoft AI, destacando-se em diálogos complexos, multilíngue, raciocínio e assistentes inteligentes."
