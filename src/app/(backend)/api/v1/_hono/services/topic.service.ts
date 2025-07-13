@@ -103,12 +103,25 @@ export class TopicService extends BaseService {
 
   async getTopicById(topicId: string): Promise<TopicResponse> {
     try {
+      if (!this.userId) {
+        throw this.createAuthError('未授权操作');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('TOPIC_READ', {
+        targetTopicId: topicId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '没有权限访问该话题');
+      }
+
       const topic = await this.db.query.topics.findFirst({
         where: eq(topics.id, topicId),
       });
 
       if (!topic) {
-        throw this.createCommonError('话题不存在');
+        throw this.createNotFoundError('话题不存在');
       }
 
       // 获取用户信息
@@ -120,11 +133,11 @@ export class TopicService extends BaseService {
           id: true,
           username: true,
         },
-        where: eq(users.id, this.userId),
+        where: eq(users.id, topic.userId),
       });
 
       if (!user) {
-        throw this.createCommonError('用户不存在');
+        throw this.createNotFoundError('用户不存在');
       }
 
       const countResult = await this.db
@@ -144,8 +157,7 @@ export class TopicService extends BaseService {
         user,
       };
     } catch (error) {
-      this.log('error', 'Failed to get topic by id', { error, topicId });
-      throw this.createCommonError('获取话题失败');
+      return this.handleServiceError(error, '获取话题');
     }
   }
 
