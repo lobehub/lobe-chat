@@ -413,6 +413,17 @@ export class UserService extends BaseService {
     this.log('info', '搜索用户', { keyword, pageSize });
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('未授权操作');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('USER_READ', 'ALL');
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '没有权限搜索用户');
+      }
+
       let searchResults;
 
       if (!keyword || keyword.trim().length === 0) {
@@ -466,11 +477,7 @@ export class UserService extends BaseService {
 
       return usersWithRoles;
     } catch (error) {
-      this.log('error', '搜索用户失败', { error, keyword });
-      if (error instanceof Error && error.name === 'BusinessError') {
-        throw error;
-      }
-      throw this.createBusinessError('搜索用户失败');
+      return this.handleServiceError(error, '搜索用户');
     }
   }
 
@@ -491,6 +498,17 @@ export class UserService extends BaseService {
     });
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('未授权操作');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('USER_UPDATE', userId);
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '没有权限更新用户角色');
+      }
+
       return await this.db.transaction(async (tx) => {
         // 1. 验证目标用户存在
         const targetUser = await tx.query.users.findFirst({
@@ -632,7 +650,7 @@ export class UserService extends BaseService {
         };
       });
     } catch (error) {
-      this.handleServiceError(error, '更新用户角色');
+      return this.handleServiceError(error, '更新用户角色');
     }
   }
 
@@ -645,6 +663,17 @@ export class UserService extends BaseService {
     this.log('info', '获取用户角色信息', { userId });
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('未授权操作');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('USER_READ', userId);
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '没有权限查看用户角色');
+      }
+
       // 验证用户存在
       const user = await this.db.query.users.findFirst({
         where: eq(users.id, userId),
@@ -691,7 +720,7 @@ export class UserService extends BaseService {
         userId,
       };
     } catch (error) {
-      this.handleServiceError(error, '获取用户角色');
+      return this.handleServiceError(error, '获取用户角色');
     }
   }
 }
