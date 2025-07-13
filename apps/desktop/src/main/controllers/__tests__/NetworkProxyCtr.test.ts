@@ -259,7 +259,7 @@ describe('NetworkProxyCtr', () => {
 
       (global.fetch as any).mockResolvedValueOnce(mockResponse);
 
-      const result = await networkProxyCtr.testProxyConfig(validConfig);
+      const result = await networkProxyCtr.testProxyConfig({ config: validConfig });
 
       expect(result.success).toBe(true);
       expect(result.responseTime).toBeGreaterThanOrEqual(0);
@@ -271,7 +271,7 @@ describe('NetworkProxyCtr', () => {
         proxyServer: '',
       };
 
-      const result = await networkProxyCtr.testProxyConfig(invalidConfig);
+      const result = await networkProxyCtr.testProxyConfig({ config: invalidConfig });
 
       expect(result.success).toBe(false);
       expect(result.message).toContain('Invalid proxy configuration');
@@ -291,7 +291,7 @@ describe('NetworkProxyCtr', () => {
 
       (global.fetch as any).mockResolvedValueOnce(mockResponse);
 
-      const result = await networkProxyCtr.testProxyConfig(disabledConfig);
+      const result = await networkProxyCtr.testProxyConfig({ config: disabledConfig });
 
       expect(result.success).toBe(true);
     });
@@ -299,7 +299,7 @@ describe('NetworkProxyCtr', () => {
     it('should return failure for connection error', async () => {
       (global.fetch as any).mockRejectedValueOnce(new Error('Connection failed'));
 
-      const result = await networkProxyCtr.testProxyConfig(validConfig);
+      const result = await networkProxyCtr.testProxyConfig({ config: validConfig });
 
       expect(result.success).toBe(false);
       expect(result.message).toContain('Connection failed');
