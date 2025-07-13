@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { isEmpty } from 'lodash';
 
 import { ALL, PERMISSION_ACTIONS } from '@/const/rbac';
@@ -6,7 +6,7 @@ import { RbacModel } from '@/database/models/rbac';
 import { agents, sessions, topics } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 
-import { IBaseService, TTarget } from '../types';
+import { IBaseService, TTarget, TBatchTarget } from '../types';
 import { getActionType, getResourceType } from '../utils/permission';
 
 /**
@@ -333,6 +333,121 @@ export abstract class BaseService implements IBaseService {
     return {
       condition: { userId: this.userId },
       isPermitted: true,
+    };
+  }
+
+  /**
+   * 解析批量操作的权限
+   * 用于处理批量数据访问权限的通用逻辑
+   * 1. 批量操作必须要有 all/workspace 权限
+   * 2. 如果所有资源都属于当前用户，且有 owner 权限，也允许操作
+   * 3. 如果有 all/workspace 权限，允许操作所有指定的资源
+   *
+   * @param permissionKey - 权限键名
+   * @param targetInfoIds - 目标资源 ID 数组
+   * @returns 返回权限检查结果
+   */
+  protected async resolveBatchQueryPermission(
+    permissionKey: keyof typeof PERMISSION_ACTIONS,
+    targetInfoIds: TBatchTarget,
+  ): Promise<{
+    isPermitted: boolean;
+    message?: string;
+  }> {
+    const hasGlobalAccess = await this.hasGlobalPermission(permissionKey);
+    const hasOwnerAccess = await this.hasOwnerPermission(permissionKey);
+    const resourceType = getResourceType(permissionKey);
+    const actionType = getActionType(permissionKey);
+
+    // 获取所有资源的用户 ID
+    let userIds: string[] = [];
+    try {
+      // 根据 targetInfoIds 中的属性自动判断资源类型
+      switch (true) {
+        case !!targetInfoIds.targetSessionId?.length: {
+          const sessionList = await this.db.query.sessions.findMany({
+            where: inArray(sessions.id, targetInfoIds.targetSessionId),
+          });
+          userIds = sessionList.map((s) => s.userId);
+          break;
+        }
+        case !!targetInfoIds.targetAgentId?.length: {
+          const agentList = await this.db.query.agents.findMany({
+            where: inArray(agents.id, targetInfoIds.targetAgentId),
+          });
+          userIds = agentList.map((a) => a.userId);
+          break;
+        }
+        case !!targetInfoIds.targetTopicId?.length: {
+          const topicList = await this.db.query.topics.findMany({
+            where: inArray(topics.id, targetInfoIds.targetTopicId),
+          });
+          userIds = topicList.map((t) => t.userId);
+          break;
+        }
+        default: {
+          return {
+            isPermitted: false,
+            message: '未提供有效的资源 ID',
+          };
+        }
+      }
+    } catch (error) {
+      this.log('error', '获取目标用户ID失败', { error, targetInfoIds });
+      return {
+        isPermitted: false,
+        message: '获取资源信息失败',
+      };
+    }
+
+    // 记录权限检查的上下文信息
+    const logContext = {
+      hasGlobalAccess,
+      hasOwnerAccess,
+      permissionKey,
+      targetInfoIds,
+      userIds,
+    };
+
+    // 如果找不到任何资源
+    if (userIds.length === 0) {
+      this.log('warn', '未找到任何目标资源', logContext);
+      return {
+        isPermitted: false,
+        message: '未找到任何目标资源',
+      };
+    }
+
+    // 如果有全局权限，允许操作所有指定的资源
+    if (hasGlobalAccess) {
+      this.log(
+        'info',
+        `权限通过：批量操作，当前user拥有${resourceType}的all/workspace级别${actionType}权限`,
+        logContext,
+      );
+      return { isPermitted: true };
+    }
+
+    // 如果所有资源都属于当前用户，且有 owner 权限
+    const allBelongToCurrentUser = userIds.every((id) => id === this.userId);
+    if (allBelongToCurrentUser && hasOwnerAccess) {
+      this.log(
+        'info',
+        `权限通过：批量操作，所有资源属于当前用户，且拥有${resourceType}的owner级别${actionType}权限`,
+        logContext,
+      );
+      return { isPermitted: true };
+    }
+
+    // 其他情况不允许批量操作
+    this.log(
+      'warn',
+      `权限拒绝：批量操作需要${resourceType}的all/workspace级别${actionType}权限`,
+      logContext,
+    );
+    return {
+      isPermitted: false,
+      message: `no permission for batch operation, current user has no ${resourceType} ${actionType} all/workspace permission`,
     };
   }
 }
