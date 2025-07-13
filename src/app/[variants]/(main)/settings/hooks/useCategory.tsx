@@ -4,6 +4,7 @@ import {
   Brain,
   Cloudy,
   Database,
+  EthernetPort,
   Info,
   KeyboardIcon,
   Mic2,
@@ -16,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import type { MenuProps } from '@/components/Menu';
-import { isDeprecatedEdition } from '@/const/version';
+import { isDeprecatedEdition, isDesktop } from '@/const/version';
 import { SettingsTabs } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
@@ -116,6 +117,15 @@ export const useCategory = () => {
         },
         {
           type: 'divider',
+        },
+        isDesktop && {
+          icon: <Icon icon={EthernetPort} />,
+          key: SettingsTabs.Proxy,
+          label: (
+            <Link href={'/settings/proxy'} onClick={(e) => e.preventDefault()}>
+              {t('tab.proxy')}
+            </Link>
+          ),
         },
         {
           icon: <Icon icon={Database} />,

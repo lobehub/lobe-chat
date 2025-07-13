@@ -520,6 +520,7 @@
     "hotkey": "Scorciatoie",
     "llm": "Modello linguistico",
     "provider": "Fornitore di servizi AI",
+    "proxy": "Proxy di rete",
     "storage": "Storage dati",
     "sync": "云端同步",
     "system-agent": "Assistente di sistema",

@@ -381,6 +381,8 @@ export default class Browser {
   }
 
   broadcast = <T extends MainBroadcastEventKey>(channel: T, data?: MainBroadcastParams<T>) => {
+    if (this._browserWindow.isDestroyed()) return;
+
     logger.debug(`Broadcasting to window ${this.identifier}, channel: ${channel}`);
     this._browserWindow.webContents.send(channel, data);
   };
