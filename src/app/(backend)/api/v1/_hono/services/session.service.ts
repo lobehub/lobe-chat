@@ -155,8 +155,7 @@ export class SessionService extends BaseService {
 
       return { sessions: sessionsWithMessageCount, total };
     } catch (error) {
-      this.log('error', '获取会话列表失败', { error });
-      throw this.createBusinessError('获取会话列表失败');
+      this.handleServiceError(error, '获取会话列表');
     }
   }
 
@@ -491,8 +490,7 @@ export class SessionService extends BaseService {
 
       this.log('info', '会话更新成功', { agentId, id });
     } catch (error) {
-      this.log('error', '更新会话失败', { error });
-      throw this.createBusinessError('更新会话失败');
+      this.handleServiceError(error, '更新会话');
     }
   }
 
@@ -518,8 +516,7 @@ export class SessionService extends BaseService {
 
       this.log('info', '会话删除成功', { sessionId });
     } catch (error) {
-      this.log('error', '删除会话失败', { error });
-      throw this.createBusinessError('删除会话失败');
+      this.handleServiceError(error, '删除会话');
     }
   }
 
