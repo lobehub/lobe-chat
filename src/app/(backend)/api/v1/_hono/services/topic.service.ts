@@ -271,24 +271,29 @@ export class TopicService extends BaseService {
    * @returns 更新后的话题信息
    */
   async summarizeTopicTitle(params: TopicSummaryRequest): Promise<TopicResponse> {
-    if (!this.userId) {
-      throw this.createAuthError('未授权操作');
-    }
-
-    const { id: topicId, lang = 'zh-CN' } = params;
-
     try {
-      // 首先检查话题是否存在且属于当前用户
+      if (!this.userId) {
+        throw this.createAuthError('未授权操作');
+      }
+
+      const { id: topicId, lang = 'zh-CN' } = params;
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('TOPIC_UPDATE', {
+        targetTopicId: topicId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '没有权限更新该话题');
+      }
+
+      // 检查话题是否存在
       const existingTopic = await this.db.query.topics.findFirst({
         where: eq(topics.id, topicId),
       });
 
       if (!existingTopic) {
-        throw this.createCommonError('话题不存在');
-      }
-
-      if (existingTopic.userId !== this.userId) {
-        throw this.createAuthorizationError('无权限操作此话题');
+        throw this.createNotFoundError('话题不存在');
       }
 
       // 获取话题下的所有消息，按时间顺序排序
@@ -357,17 +362,7 @@ export class TopicService extends BaseService {
 
       return updatedTopic[0];
     } catch (error) {
-      if (
-        error instanceof Error &&
-        (error.name === 'BusinessError' || error.name === 'AuthorizationError')
-      ) {
-        throw error;
-      }
-      this.log('error', 'Failed to summarize topic', {
-        error: error instanceof Error ? error.message : String(error),
-        topicId,
-      });
-      throw this.createCommonError('总结话题失败');
+      return this.handleServiceError(error, '总结话题');
     }
   }
 }
