@@ -1,4 +1,4 @@
-import { asc, count, eq, sql } from 'drizzle-orm';
+import { and, asc, count, eq, sql } from 'drizzle-orm';
 
 import { MessageItem, messages, topics, users } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
@@ -27,6 +27,28 @@ export class TopicService extends BaseService {
     }
 
     try {
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('TOPIC_READ', {
+        targetSessionId: sessionId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '没有权限访问话题列表');
+      }
+
+      // 构建基础查询条件
+      let whereConditions = [eq(topics.sessionId, sessionId)];
+
+      // 添加权限相关的查询条件
+      if (permissionResult?.condition?.userId) {
+        whereConditions.push(eq(topics.userId, permissionResult.condition.userId));
+      }
+
+      // 如果有关键词，添加标题的模糊搜索条件
+      if (keyword) {
+        whereConditions.push(sql`${topics.title} LIKE ${`%${keyword}%`}`);
+      }
+
       // 使用联查和子查询来统计每个话题的消息数量，并获取用户信息
       const query = this.db
         .select({
@@ -50,11 +72,7 @@ export class TopicService extends BaseService {
         .from(topics)
         .leftJoin(messages, eq(topics.id, messages.topicId))
         .innerJoin(users, eq(topics.userId, users.id))
-        .where(
-          keyword
-            ? sql`${topics.sessionId} = ${sessionId} AND ${topics.title} LIKE ${`%${keyword}%`}`
-            : eq(topics.sessionId, sessionId),
-        );
+        .where(and(...whereConditions));
 
       const result = await query.groupBy(topics.id, users.id).orderBy(asc(topics.createdAt));
 
