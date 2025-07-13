@@ -71,44 +71,23 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 is a MoE model developed in-house by Deep Seek Company. Its performance surpasses that of other open-source models such as Qwen2.5-72B and Llama-3.1-405B in multiple assessments, and it stands on par with the world's top proprietary models like GPT-4o and Claude-3.5-Sonnet."
   },
-  "Doubao-1.5-thinking-pro-m": {
-    "description": "Doubao-1.5 is a new deep thinking model (the m version comes with native multimodal deep reasoning capabilities) that excels in specialized fields such as mathematics, programming, scientific reasoning, and general tasks like creative writing, achieving or nearing top-tier performance in authoritative benchmarks such as AIME 2024, Codeforces, and GPQA. It supports a 128k context window and 16k output."
-  },
-  "Doubao-1.5-thinking-vision-pro": {
-    "description": "A brand new visual deep thinking model, equipped with stronger general multimodal understanding and reasoning capabilities, achieving SOTA performance in 37 out of 59 public evaluation benchmarks."
-  },
-  "Doubao-1.5-vision-pro": {
-    "description": "Doubao-1.5-vision-pro is a newly upgraded multimodal large model that supports image recognition at any resolution and extreme aspect ratios, enhancing visual reasoning, document recognition, detail comprehension, and instruction following capabilities."
-  },
-  "Doubao-1.5-vision-pro-32k": {
-    "description": "Doubao-1.5-vision-pro is a newly upgraded multimodal large model that supports image recognition at any resolution and extreme aspect ratios, enhancing visual reasoning, document recognition, detail understanding, and instruction-following capabilities."
-  },
   "Doubao-lite-128k": {
-    "description": "Doubao-lite provides extreme response speed and better cost-effectiveness, offering flexible options for various customer scenarios. It supports inference and fine-tuning with a 128k context window."
+    "description": "Doubao-lite offers ultra-fast response times and better cost-effectiveness, providing customers with more flexible options for different scenarios. Supports inference and fine-tuning with a 128k context window."
   },
   "Doubao-lite-32k": {
-    "description": "Doubao-lite offers extreme response speed and better cost-effectiveness, providing flexible options for various customer scenarios. It supports inference and fine-tuning with a 32k context window."
+    "description": "Doubao-lite offers ultra-fast response times and better cost-effectiveness, providing customers with more flexible options for different scenarios. Supports inference and fine-tuning with a 32k context window."
   },
   "Doubao-lite-4k": {
-    "description": "Doubao-lite boasts extreme response speed and better cost-effectiveness, providing flexible options for various customer scenarios. It supports inference and fine-tuning with a 4k context window."
+    "description": "Doubao-lite offers ultra-fast response times and better cost-effectiveness, providing customers with more flexible options for different scenarios. Supports inference and fine-tuning with a 4k context window."
   },
   "Doubao-pro-128k": {
-    "description": "The best-performing primary model designed to handle complex tasks, achieving strong performance in scenarios such as reference Q&A, summarization, creative writing, text classification, and role-playing. It supports inference and fine-tuning with a 128k context window."
-  },
-  "Doubao-pro-256k": {
-    "description": "The best-performing flagship model, suitable for handling complex tasks, with excellent results in reference Q&A, summarization, creative writing, text classification, role-playing, and more. It supports reasoning and fine-tuning with a 256k context window."
+    "description": "The best-performing flagship model, suitable for handling complex tasks. It excels in scenarios such as reference Q&A, summarization, creative writing, text classification, and role-playing. Supports inference and fine-tuning with a 128k context window."
   },
   "Doubao-pro-32k": {
-    "description": "The best-performing primary model suited for complex tasks, showing great results in reference Q&A, summarization, creative writing, text classification, and role-playing. It supports inference and fine-tuning with a 32k context window."
+    "description": "The best-performing flagship model, suitable for handling complex tasks. It excels in scenarios such as reference Q&A, summarization, creative writing, text classification, and role-playing. Supports inference and fine-tuning with a 32k context window."
   },
   "Doubao-pro-4k": {
-    "description": "The best-performing primary model suitable for handling complex tasks, demonstrating excellent performance in scenarios such as reference Q&A, summarization, creative writing, text classification, and role-playing. It supports inference and fine-tuning with a 4k context window."
-  },
-  "Doubao-vision-lite-32k": {
-    "description": "The Doubao-vision model is a multimodal large model launched by Doubao, featuring powerful image understanding and reasoning capabilities, as well as precise instruction comprehension. The model has demonstrated strong performance in image-text information extraction and image-based reasoning tasks, making it applicable to more complex and broader visual question-answering tasks."
-  },
-  "Doubao-vision-pro-32k": {
-    "description": "The Doubao-vision model is a multimodal large model launched by Doubao, featuring powerful image understanding and reasoning capabilities, as well as precise instruction comprehension. The model has demonstrated strong performance in image-text information extraction and image-based reasoning tasks, making it applicable to more complex and broader visual question-answering tasks."
+    "description": "The best-performing flagship model, suitable for handling complex tasks. It excels in scenarios such as reference Q&A, summarization, creative writing, text classification, and role-playing. Supports inference and fine-tuning with a 4k context window."
   },
   "ERNIE-3.5-128K": {
     "description": "Baidu's self-developed flagship large-scale language model, covering a vast amount of Chinese and English corpus. It possesses strong general capabilities, meeting the requirements for most dialogue Q&A, creative generation, and plugin application scenarios; it supports automatic integration with Baidu's search plugin to ensure the timeliness of Q&A information."
@@ -914,8 +893,38 @@
   "doubao-1.5-thinking-pro": {
     "description": "Doubao-1.5 is a brand new deep thinking model that excels in specialized fields such as mathematics, programming, and scientific reasoning, as well as in general tasks like creative writing. It has achieved or is close to the top tier of industry standards in several authoritative benchmarks, including AIME 2024, Codeforces, and GPQA. It supports a 128k context window and 16k output."
   },
+  "doubao-1.5-thinking-pro-m": {
+    "description": "Doubao-1.5 is a brand-new deep thinking model (the m version comes with native multimodal deep reasoning capabilities). It performs outstandingly in specialized fields such as mathematics, programming, scientific reasoning, as well as general tasks like creative writing. It achieves or approaches top-tier industry benchmarks on AIME 2024, Codeforces, GPQA, and more. Supports a 128k context window and 16k output."
+  },
+  "doubao-1.5-thinking-vision-pro": {
+    "description": "A new visual deep thinking model with enhanced general multimodal understanding and reasoning capabilities, achieving state-of-the-art (SOTA) results on 37 out of 59 public evaluation benchmarks."
+  },
+  "doubao-1.5-ui-tars": {
+    "description": "Doubao-1.5-UI-TARS is a native agent model designed for graphical user interface (GUI) interaction. It seamlessly interacts with GUIs through human-like abilities such as perception, reasoning, and action."
+  },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite is a newly upgraded multimodal large model that supports image recognition at any resolution and extreme aspect ratios, enhancing visual reasoning, document recognition, detail comprehension, and instruction following capabilities. It supports a context window of 128k and an output length of up to 16k tokens."
+  },
+  "doubao-1.5-vision-pro": {
+    "description": "Doubao-1.5-vision-pro is a newly upgraded multimodal large model supporting image recognition at any resolution and extreme aspect ratios. It enhances visual reasoning, document recognition, detailed information understanding, and instruction compliance."
+  },
+  "doubao-1.5-vision-pro-32k": {
+    "description": "Doubao-1.5-vision-pro is a newly upgraded multimodal large model supporting image recognition at any resolution and extreme aspect ratios. It enhances visual reasoning, document recognition, detailed information understanding, and instruction compliance."
+  },
+  "doubao-lite-128k": {
+    "description": "Offers ultra-fast response times and better cost-effectiveness, providing customers with more flexible options for different scenarios. Supports inference and fine-tuning with a 128k context window."
+  },
+  "doubao-lite-32k": {
+    "description": "Offers ultra-fast response times and better cost-effectiveness, providing customers with more flexible options for different scenarios. Supports inference and fine-tuning with a 32k context window."
+  },
+  "doubao-lite-4k": {
+    "description": "Offers ultra-fast response times and better cost-effectiveness, providing customers with more flexible options for different scenarios. Supports inference and fine-tuning with a 4k context window."
+  },
+  "doubao-pro-256k": {
+    "description": "The best-performing flagship model, suitable for handling complex tasks. It excels in scenarios such as reference Q&A, summarization, creative writing, text classification, and role-playing. Supports inference and fine-tuning with a 256k context window."
+  },
+  "doubao-pro-32k": {
+    "description": "The best-performing flagship model, suitable for handling complex tasks. It excels in scenarios such as reference Q&A, summarization, creative writing, text classification, and role-playing. Supports inference and fine-tuning with a 32k context window."
   },
   "doubao-seed-1.6": {
     "description": "Doubao-Seed-1.6 is a brand-new multimodal deep thinking model supporting auto, thinking, and non-thinking modes. In non-thinking mode, its performance significantly surpasses Doubao-1.5-pro/250115. It supports a 256k context window and output lengths up to 16k tokens."
@@ -925,6 +934,12 @@
   },
   "doubao-seed-1.6-thinking": {
     "description": "Doubao-Seed-1.6-thinking features greatly enhanced thinking capabilities. Compared to Doubao-1.5-thinking-pro, it further improves foundational skills such as coding, math, and logical reasoning, and supports visual understanding. It supports a 256k context window and output lengths up to 16k tokens."
+  },
+  "doubao-vision-lite-32k": {
+    "description": "The Doubao-vision model is a multimodal large model launched by Doubao, featuring powerful image understanding and reasoning capabilities along with precise instruction comprehension. It demonstrates strong performance in image-text information extraction and image-based reasoning tasks, applicable to more complex and diverse visual question answering scenarios."
+  },
+  "doubao-vision-pro-32k": {
+    "description": "The Doubao-vision model is a multimodal large model launched by Doubao, featuring powerful image understanding and reasoning capabilities along with precise instruction comprehension. It demonstrates strong performance in image-text information extraction and image-based reasoning tasks, applicable to more complex and diverse visual question answering scenarios."
   },
   "emohaa": {
     "description": "Emohaa is a psychological model with professional counseling capabilities, helping users understand emotional issues."
@@ -1313,6 +1328,9 @@
   "gpt-4o-mini-search-preview": {
     "description": "GPT-4o mini Search Preview is a model specifically trained to understand and execute web search queries, using the Chat Completions API. In addition to token fees, web search queries incur charges per tool invocation."
   },
+  "gpt-4o-mini-transcribe": {
+    "description": "GPT-4o Mini Transcribe is a speech-to-text model that uses GPT-4o to transcribe audio. Compared to the original Whisper model, it improves word error rate, language recognition, and accuracy. Use it for more precise transcriptions."
+  },
   "gpt-4o-mini-tts": {
     "description": "GPT-4o mini TTS is a text-to-speech model based on GPT-4o mini, providing high-quality speech generation at a lower cost."
   },
@@ -1322,11 +1340,14 @@
   "gpt-4o-realtime-preview-2024-10-01": {
     "description": "GPT-4o real-time version, supporting real-time audio and text input and output."
   },
-  "gpt-4o-realtime-preview-2024-12-17": {
-    "description": "GPT-4o real-time version, supporting real-time audio and text input and output."
+  "gpt-4o-realtime-preview-2025-06-03": {
+    "description": "GPT-4o real-time version supporting real-time audio and text input and output."
   },
   "gpt-4o-search-preview": {
     "description": "GPT-4o Search Preview is a model specifically trained to understand and execute web search queries, using the Chat Completions API. In addition to token fees, web search queries incur charges per tool invocation."
+  },
+  "gpt-4o-transcribe": {
+    "description": "GPT-4o Transcribe is a speech-to-text model that uses GPT-4o to transcribe audio. Compared to the original Whisper model, it improves word error rate, language recognition, and accuracy. Use it for more precise transcriptions."
   },
   "grok-2-1212": {
     "description": "This model has improved in accuracy, instruction adherence, and multilingual capabilities."
@@ -1459,6 +1480,9 @@
   },
   "jina-deepsearch-v1": {
     "description": "DeepSearch combines web search, reading, and reasoning for comprehensive investigations. You can think of it as an agent that takes on your research tasks—it conducts extensive searches and iterates multiple times before providing answers. This process involves ongoing research, reasoning, and problem-solving from various angles. This fundamentally differs from standard large models that generate answers directly from pre-trained data and traditional RAG systems that rely on one-time surface searches."
+  },
+  "kimi-k2-0711-preview": {
+    "description": "kimi-k2 is a MoE architecture base model with powerful coding and agent capabilities, totaling 1 trillion parameters with 32 billion active parameters. In benchmark tests across general knowledge reasoning, programming, mathematics, and agent tasks, the K2 model outperforms other mainstream open-source models."
   },
   "kimi-latest": {
     "description": "The Kimi Smart Assistant product uses the latest Kimi large model, which may include features that are not yet stable. It supports image understanding and will automatically select the 8k/32k/128k model as the billing model based on the length of the request context."
@@ -2352,7 +2376,7 @@
     "description": "The v0-1.5-md model is suitable for everyday tasks and user interface (UI) generation."
   },
   "whisper-1": {
-    "description": "A universal speech recognition model that supports multilingual speech recognition, speech translation, and language identification."
+    "description": "A general-purpose speech recognition model supporting multilingual speech recognition, speech translation, and language identification."
   },
   "wizardlm2": {
     "description": "WizardLM 2 is a language model provided by Microsoft AI, excelling in complex dialogues, multilingual capabilities, reasoning, and intelligent assistant applications."
