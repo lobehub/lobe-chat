@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-13",
+    "version": "1.97.16"
+  },
+  {
+    "children": {
       "fixes": ["Add vision support to Grok 4."]
     },
     "date": "2025-07-12",
