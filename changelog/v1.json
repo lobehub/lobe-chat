@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Support Hunyuan A13B thinking model."]
+    },
+    "date": "2025-07-13",
+    "version": "1.97.17"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-07-13",
