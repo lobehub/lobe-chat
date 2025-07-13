@@ -222,6 +222,7 @@ export abstract class BaseService implements IBaseService {
     const hasGlobalAccess = await this.hasGlobalPermission(permissionKey);
     const targetUserId = await this.getTargetUserId(targetInfoId);
     const queryAll = hasGlobalAccess && targetInfoId === ALL;
+    this.log('info', '权限检查', { hasGlobalAccess, targetUserId });
 
     // 记录权限检查的上下文信息
     const logContext = {
@@ -260,7 +261,11 @@ export abstract class BaseService implements IBaseService {
 
     // 场景 2: 查询所有数据（未指定目标用户）
     if (hasGlobalAccess) {
-      this.log('info', '允许查询：用户具有全局查询权限，可查询所有数据 或 查询自己的数据', logContext);
+      this.log(
+        'info',
+        '允许查询：用户具有全局查询权限，可查询所有数据 或 查询自己的数据',
+        logContext,
+      );
       if (queryAll) {
         return { isPermitted: true };
       } else {
