@@ -49,22 +49,6 @@ const groqChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
-      functionCall: true,
-      reasoning: true,
-    },
-    contextWindowTokens: 131_072,
-    displayName: 'Qwen QwQ 32B',
-    enabled: true,
-    id: 'qwen-qwq-32b',
-    maxOutput: 131_072,
-    pricing: {
-      input: 0.29,
-      output: 0.39,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
       reasoning: true,
     },
     contextWindowTokens: 131_072,

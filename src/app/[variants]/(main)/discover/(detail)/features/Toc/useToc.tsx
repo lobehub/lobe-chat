@@ -4,12 +4,19 @@ import { AnchorProps } from 'antd';
 import { unionBy } from 'lodash-es';
 import { FC, PropsWithChildren, createContext, useContext, useState } from 'react';
 
-const TocContext = createContext<{
+interface TocState {
   isLoading: boolean;
   setFinished: () => void;
   setToc: (data: any) => void;
   toc?: AnchorProps['items'];
-}>({ isLoading: true, setFinished: () => {}, setToc: () => {}, toc: [] });
+}
+
+const TocContext = createContext<TocState>({
+  isLoading: true,
+  setFinished: () => {},
+  setToc: () => {},
+  toc: [],
+});
 
 export interface TOCItem {
   href: string;
