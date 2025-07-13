@@ -450,6 +450,15 @@ export class SessionService extends BaseService {
     try {
       const { id, agentId, ...updateData } = request;
 
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('SESSION_UPDATE', {
+        targetSessionId: id,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权更新此会话');
+      }
+
       await this.db.transaction(async (tx) => {
         // 更新会话基本信息
         await this.sessionModel.update(id, {
