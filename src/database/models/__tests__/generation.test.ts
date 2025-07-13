@@ -4,9 +4,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LobeChatDatabase } from '@/database/type';
 import { AsyncTaskStatus } from '@/types/asyncTask';
+import { FileSource } from '@/types/files';
 import { ImageGenerationAsset } from '@/types/generation';
 
-import { FileSource } from '../../schemas';
 import {
   NewGeneration,
   asyncTasks,

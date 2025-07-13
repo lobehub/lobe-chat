@@ -4,9 +4,10 @@ import { and, eq } from 'drizzle-orm';
 import { LobeChatDatabase, Transaction } from '@/database/type';
 import { FileService } from '@/server/services/file';
 import { AsyncTaskError, AsyncTaskStatus } from '@/types/asyncTask';
+import { FileSource } from '@/types/files';
 import { Generation, ImageGenerationAsset } from '@/types/generation';
 
-import { FileSource, NewFile } from '../schemas';
+import { NewFile } from '../schemas';
 import {
   GenerationItem,
   GenerationWithAsyncTask,

@@ -7,6 +7,10 @@ export enum FilesTabs {
   Websites = 'websites',
 }
 
+export enum FileSource {
+  ImageGeneration = 'image_generation',
+}
+
 export interface FileItem {
   createdAt: Date;
   enabled?: boolean;
@@ -16,6 +20,7 @@ export interface FileItem {
   type: string;
   updatedAt: Date;
   url: string;
+  source?: FileSource | null;
 }
 
 export * from './list';

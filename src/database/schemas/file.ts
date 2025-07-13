@@ -12,9 +12,9 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
-import type { UnionToTuple } from 'type-fest';
 
 import { idGenerator } from '@/database/utils/idGenerator';
+import { FileSource } from '@/types/files';
 
 import { accessedAt, createdAt, timestamps } from './_helpers';
 import { asyncTasks } from './asyncTask';
@@ -35,11 +35,6 @@ export const globalFiles = pgTable('global_files', {
 
 export type NewGlobalFile = typeof globalFiles.$inferInsert;
 export type GlobalFileItem = typeof globalFiles.$inferSelect;
-
-export enum FileSource {
-  ImageGeneration = 'image_generation',
-}
-const fileSourceValues = Object.values(FileSource) as UnionToTuple<`${FileSource}`>;
 
 export const files = pgTable(
   'files',
@@ -64,7 +59,7 @@ export const files = pgTable(
     name: text('name').notNull(),
     size: integer('size').notNull(),
     url: text('url').notNull(),
-    source: text('source', { enum: fileSourceValues }),
+    source: text('source').$type<FileSource>(),
 
     clientId: text('client_id'),
     metadata: jsonb('metadata'),
