@@ -874,6 +874,10 @@ table users {
   updated_at "timestamp with time zone" [not null, default: `now()`]
 }
 
+ref: agents_files.file_id > files.id
+
+ref: agents_files.agent_id > agents.id
+
 ref: agents_knowledge_bases.knowledge_base_id - knowledge_bases.id
 
 ref: agents_knowledge_bases.agent_id > agents.id
@@ -888,9 +892,17 @@ ref: document_chunks.document_id > documents.id
 
 ref: documents.file_id > files.id
 
+ref: file_chunks.file_id - files.id
+
+ref: file_chunks.chunk_id - chunks.id
+
 ref: generations.file_id - files.id
 
 ref: files.embedding_task_id - async_tasks.id
+
+ref: files_to_sessions.file_id > files.id
+
+ref: files_to_sessions.session_id > sessions.id
 
 ref: generation_batches.user_id - users.id
 
@@ -903,6 +915,10 @@ ref: generations.user_id - users.id
 ref: generations.generation_batch_id > generation_batches.id
 
 ref: generations.async_task_id - async_tasks.id
+
+ref: messages_files.file_id > files.id
+
+ref: messages_files.message_id > messages.id
 
 ref: messages.session_id - sessions.id
 

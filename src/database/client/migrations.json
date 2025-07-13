@@ -524,6 +524,14 @@
   },
   {
     "sql": [
+      "-- Migration to apply specific autovacuum settings to high-traffic tables\n-- This is crucial to prevent table and TOAST bloat for 'embeddings' and 'chunks'\n-- https://github.com/lobehub/lobe-chat/issues/8316\n\n-- Tuning for the 'embeddings' table\n-- Default scale factor (0.2) is too high, leading to infrequent vacuuming.\n-- Lowering to 2% to ensure frequent cleanup.\nALTER TABLE \"embeddings\" SET (autovacuum_vacuum_scale_factor = 0.02, autovacuum_vacuum_threshold = 1000);\n\n-- Tuning for the 'chunks' table\n-- This table also experiences many updates/deletes and requires similar tuning.\nALTER TABLE \"chunks\" SET (autovacuum_vacuum_scale_factor = 0.02, autovacuum_vacuum_threshold = 1000);\n"
+    ],
+    "bps": true,
+    "folderMillis": 1752212281564,
+    "hash": "a64e2b85c6df855631302dc135b4de8257e74576859580516798bead488eba21"
+  },
+  {
+    "sql": [
       "CREATE TABLE \"generation_batches\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"generation_topic_id\" text NOT NULL,\n\t\"provider\" text NOT NULL,\n\t\"model\" text NOT NULL,\n\t\"prompt\" text NOT NULL,\n\t\"width\" integer,\n\t\"height\" integer,\n\t\"ratio\" varchar(64),\n\t\"config\" jsonb,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
       "\nCREATE TABLE \"generation_topics\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"title\" text,\n\t\"cover_url\" text,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
       "\nCREATE TABLE \"generations\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"user_id\" text NOT NULL,\n\t\"generation_batch_id\" varchar(64) NOT NULL,\n\t\"async_task_id\" uuid,\n\t\"file_id\" text,\n\t\"seed\" integer,\n\t\"asset\" jsonb,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n",
@@ -537,7 +545,7 @@
       "\nALTER TABLE \"generations\" ADD CONSTRAINT \"generations_file_id_files_id_fk\" FOREIGN KEY (\"file_id\") REFERENCES \"public\".\"files\"(\"id\") ON DELETE cascade ON UPDATE no action;"
     ],
     "bps": true,
-    "folderMillis": 1750303625758,
+    "folderMillis": 1752407276657,
     "hash": "abed92b1356df6d7eb35c03f47fbbdcdaf25aefda750dc3e4963c1c2a0d38b54"
   }
 ]
