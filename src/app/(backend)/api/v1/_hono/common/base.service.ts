@@ -290,17 +290,25 @@ export abstract class BaseService implements IBaseService {
       };
     }
 
-    // 场景 2: 查询/操作所有数据（未指定目标用户）
-    if (hasGlobalAccess) {
-      this.log(
-        'info',
-        `权限通过：当前user拥有${resourceType}的all/workspace级别${actionType}权限`,
-        logContext,
-      );
-      if (queryAll) {
+    // 场景 2: 查询/操作所有数据
+    if (queryAll) {
+      if (hasGlobalAccess) {
+        this.log(
+          'info',
+          `权限通过：当前user拥有${resourceType}的all/workspace级别${actionType}权限`,
+          logContext,
+        );
         return { isPermitted: true };
       } else {
-        return { condition: { userId: this.userId }, isPermitted: true };
+        this.log(
+          'info',
+          `权限拒绝：当前user没有${resourceType}的all/workspace级别${actionType}权限`,
+          logContext,
+        );
+        return {
+          isPermitted: false,
+          message: `no permission,current user has no ${resourceType} ${actionType} all/workspace permission`,
+        };
       }
     }
 
