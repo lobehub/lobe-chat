@@ -71,44 +71,23 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 是一款由深度求索公司自研的MoE模型。DeepSeek-V3 多項評測成績超越了 Qwen2.5-72B 和 Llama-3.1-405B 等其他開源模型，並在性能上和世界頂尖的閉源模型 GPT-4o 以及 Claude-3.5-Sonnet 不分伯仲。"
   },
-  "Doubao-1.5-thinking-pro-m": {
-    "description": "Doubao-1.5 全新深度思考模型 (m 版本自帶原生多模態深度推理能力)，在數學、程式設計、科學推理等專業領域及創意寫作等通用任務中表現突出，在 AIME 2024、Codeforces、GPQA 等多項權威基準上達到或接近業界第一梯隊水平。支持 128k 上下文窗口，16k 輸出。"
-  },
-  "Doubao-1.5-thinking-vision-pro": {
-    "description": "全新視覺深度思考模型，具備更強的通用多模態理解和推理能力，在 59 個公開評測基準中的 37 個上取得 SOTA 表現。"
-  },
-  "Doubao-1.5-vision-pro": {
-    "description": "Doubao-1.5-vision-pro 全新升級的多模態大模型，支持任意解析度和極端長寬比圖像識別，增強視覺推理、文檔識別、細節信息理解和指令遵循能力。"
-  },
-  "Doubao-1.5-vision-pro-32k": {
-    "description": "Doubao-1.5-vision-pro 全新升級的多模態大模型，支持任意解析度和極端長寬比圖像識別，增強視覺推理、文檔識別、細節信息理解和指令遵循能力。"
-  },
   "Doubao-lite-128k": {
-    "description": "Doubao-lite 擁有極致的回應速度，更好的性價比，為客戶不同場景提供更靈活的選擇。支持 128k 上下文窗口的推理和精調。"
+    "description": "Doubao-lite 擁有極致的響應速度，更好的性價比，為客戶不同場景提供更靈活的選擇。支持128k上下文視窗的推理和精調。"
   },
   "Doubao-lite-32k": {
-    "description": "Doubao-lite 擁有極致的回應速度，更好的性價比，為客戶不同場景提供更靈活的選擇。支持 32k 上下文窗口的推理和精調。"
+    "description": "Doubao-lite擁有極致的響應速度，更好的性價比，為客戶不同場景提供更靈活的選擇。支持32k上下文視窗的推理和精調。"
   },
   "Doubao-lite-4k": {
-    "description": "Doubao-lite 擁有極致的回應速度，更好的性價比，為客戶不同場景提供更靈活的選擇。支持 4k 上下文窗口的推理和精調。"
+    "description": "Doubao-lite擁有極致的響應速度，更好的性價比，為客戶不同場景提供更靈活的選擇。支持4k上下文視窗的推理和精調。"
   },
   "Doubao-pro-128k": {
-    "description": "效果最好的主力模型，適合處理複雜任務，在參考問答、總結摘要、創作、文本分類、角色扮演等場景都有很好的效果。支持 128k 上下文窗口的推理和精調。"
-  },
-  "Doubao-pro-256k": {
-    "description": "效果最好的主力模型，適合處理複雜任務，在參考問答、總結摘要、創作、文本分類、角色扮演等場景都有很好的效果。支持 256k 上下文窗口的推理和精調。"
+    "description": "效果最好的主力模型，適合處理複雜任務，在參考問答、總結摘要、創作、文本分類、角色扮演等場景都有很好的效果。支持128k上下文視窗的推理和精調。"
   },
   "Doubao-pro-32k": {
-    "description": "效果最好的主力模型，適合處理複雜任務，在參考問答、總結摘要、創作、文本分類、角色扮演等場景都有很好的效果。支持 32k 上下文窗口的推理和精調。"
+    "description": "效果最好的主力模型，適合處理複雜任務，在參考問答、總結摘要、創作、文本分類、角色扮演等場景都有很好的效果。支持32k上下文視窗的推理和精調。"
   },
   "Doubao-pro-4k": {
-    "description": "效果最好的主力模型，適合處理複雜任務，在參考問答、總結摘要、創作、文本分類、角色扮演等場景都有很好的效果。支持 4k 上下文窗口的推理和精調。"
-  },
-  "Doubao-vision-lite-32k": {
-    "description": "Doubao-vision 模型是豆包推出的多模態大模型，具備強大的圖片理解與推理能力，以及精準的指令理解能力。模型在圖像文本信息抽取、基於圖像的推理任務上展現出強大的性能，能夠應用於更複雜、更廣泛的視覺問答任務。"
-  },
-  "Doubao-vision-pro-32k": {
-    "description": "Doubao-vision 模型是豆包推出的多模態大模型，具備強大的圖片理解與推理能力，以及精準的指令理解能力。模型在圖像文本信息抽取、基於圖像的推理任務上展現出強大的性能，能夠應用於更複雜、更廣泛的視覺問答任務。"
+    "description": "效果最好的主力模型，適合處理複雜任務，在參考問答、總結摘要、創作、文本分類、角色扮演等場景都有很好的效果。支持4k上下文視窗的推理和精調。"
   },
   "ERNIE-3.5-128K": {
     "description": "百度自研的旗艦級大規模語言模型，覆蓋海量中英文語料，具有強大的通用能力，可滿足絕大部分對話問答、創作生成、插件應用場景要求；支持自動對接百度搜索插件，保障問答信息時效。"
@@ -914,8 +893,38 @@
   "doubao-1.5-thinking-pro": {
     "description": "Doubao-1.5全新深度思考模型，在數學、程式設計、科學推理等專業領域及創意寫作等通用任務中表現突出，在AIME 2024、Codeforces、GPQA等多項權威基準上達到或接近業界第一梯隊水平。支持128k上下文窗口，16k輸出。"
   },
+  "doubao-1.5-thinking-pro-m": {
+    "description": "Doubao-1.5全新深度思考模型（m 版本自帶原生多模態深度推理能力），在數學、程式設計、科學推理等專業領域及創意寫作等通用任務中表現突出，在AIME 2024、Codeforces、GPQA等多項權威基準上達到或接近業界第一梯隊水準。支持128k上下文視窗，16k輸出。"
+  },
+  "doubao-1.5-thinking-vision-pro": {
+    "description": "全新視覺深度思考模型，具備更強的通用多模態理解和推理能力，在59個公開評測基準中的37個上取得SOTA表現。"
+  },
+  "doubao-1.5-ui-tars": {
+    "description": "Doubao-1.5-UI-TARS 是一款原生面向圖形介面互動（GUI）的Agent模型。透過感知、推理和行動等類人能力，與 GUI 進行無縫互動。"
+  },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite 全新升級的多模態大模型，支持任意解析度和極端長寬比圖像識別，增強視覺推理、文檔識別、細節信息理解和指令遵循能力。支持 128k 上下文窗口，輸出長度支持最大 16k tokens。"
+  },
+  "doubao-1.5-vision-pro": {
+    "description": "Doubao-1.5-vision-pro 全新升級的多模態大模型，支持任意解析度和極端長寬比影像識別，增強視覺推理、文件識別、細節資訊理解和指令遵循能力。"
+  },
+  "doubao-1.5-vision-pro-32k": {
+    "description": "Doubao-1.5-vision-pro 全新升級的多模態大模型，支持任意解析度和極端長寬比影像識別，增強視覺推理、文件識別、細節資訊理解和指令遵循能力。"
+  },
+  "doubao-lite-128k": {
+    "description": "擁有極致的響應速度，更好的性價比，為客戶不同場景提供更靈活的選擇。支持128k上下文視窗的推理和精調。"
+  },
+  "doubao-lite-32k": {
+    "description": "擁有極致的響應速度，更好的性價比，為客戶不同場景提供更靈活的選擇。支持32k上下文視窗的推理和精調。"
+  },
+  "doubao-lite-4k": {
+    "description": "擁有極致的響應速度，更好的性價比，為客戶不同場景提供更靈活的選擇。支持4k上下文視窗的推理和精調。"
+  },
+  "doubao-pro-256k": {
+    "description": "效果最好的主力模型，適合處理複雜任務，在參考問答、總結摘要、創作、文本分類、角色扮演等場景都有很好的效果。支持256k上下文視窗的推理和精調。"
+  },
+  "doubao-pro-32k": {
+    "description": "效果最好的主力模型，適合處理複雜任務，在參考問答、總結摘要、創作、文本分類、角色扮演等場景都有很好的效果。支持32k上下文視窗的推理和精調。"
   },
   "doubao-seed-1.6": {
     "description": "Doubao-Seed-1.6 全新多模態深度思考模型，同時支援 auto/thinking/non-thinking 三種思考模式。non-thinking 模式下，模型效果相較 Doubao-1.5-pro/250115 大幅提升。支援 256k 上下文視窗，輸出長度支援最大 16k tokens。"
@@ -925,6 +934,12 @@
   },
   "doubao-seed-1.6-thinking": {
     "description": "Doubao-Seed-1.6-thinking 模型思考能力大幅強化，相較 Doubao-1.5-thinking-pro，在 Coding、Math、邏輯推理等基礎能力上進一步提升，支援視覺理解。支援 256k 上下文視窗，輸出長度支援最大 16k tokens。"
+  },
+  "doubao-vision-lite-32k": {
+    "description": "Doubao-vision 模型是豆包推出的多模態大模型，具備強大的圖片理解與推理能力，以及精準的指令理解能力。模型在影像文本資訊擷取、基於影像的推理任務上展現出強大的性能，能夠應用於更複雜、更廣泛的視覺問答任務。"
+  },
+  "doubao-vision-pro-32k": {
+    "description": "Doubao-vision 模型是豆包推出的多模態大模型，具備強大的圖片理解與推理能力，以及精準的指令理解能力。模型在影像文本資訊擷取、基於影像的推理任務上展現出強大的性能，能夠應用於更複雜、更廣泛的視覺問答任務。"
   },
   "emohaa": {
     "description": "Emohaa是一個心理模型，具備專業諮詢能力，幫助用戶理解情感問題。"
@@ -1313,6 +1328,9 @@
   "gpt-4o-mini-search-preview": {
     "description": "GPT-4o mini 搜尋預覽版是一個專門訓練用於理解和執行網頁搜尋查詢的模型，使用的是 Chat Completions API。除了代幣費用之外，網頁搜尋查詢還會按每次工具呼叫收取費用。"
   },
+  "gpt-4o-mini-transcribe": {
+    "description": "GPT-4o Mini Transcribe 是一種使用 GPT-4o 轉錄音訊的語音轉文字模型。與原始 Whisper 模型相比，它降低了字詞錯誤率，並提升了語言識別和準確性。使用它來獲得更準確的轉錄。"
+  },
   "gpt-4o-mini-tts": {
     "description": "GPT-4o mini TTS 是基於 GPT-4o mini 的文本轉語音模型，提供高品質的語音生成，同時降低成本。"
   },
@@ -1322,11 +1340,14 @@
   "gpt-4o-realtime-preview-2024-10-01": {
     "description": "GPT-4o 實時版本，支持音頻和文本實時輸入輸出"
   },
-  "gpt-4o-realtime-preview-2024-12-17": {
-    "description": "GPT-4o 實時版本，支持音頻和文本實時輸入輸出"
+  "gpt-4o-realtime-preview-2025-06-03": {
+    "description": "GPT-4o 即時版本，支持音訊和文字即時輸入輸出"
   },
   "gpt-4o-search-preview": {
     "description": "GPT-4o 搜尋預覽版是一個專門訓練用於理解和執行網頁搜尋查詢的模型，使用的是 Chat Completions API。除了代幣費用之外，網頁搜尋查詢還會按每次工具呼叫收取費用。"
+  },
+  "gpt-4o-transcribe": {
+    "description": "GPT-4o Transcribe 是一種使用 GPT-4o 轉錄音訊的語音轉文字模型。與原始 Whisper 模型相比，它降低了字詞錯誤率，並提升了語言識別和準確性。使用它來獲得更準確的轉錄。"
   },
   "grok-2-1212": {
     "description": "該模型在準確性、指令遵循和多語言能力方面有所改進。"
@@ -1459,6 +1480,9 @@
   },
   "jina-deepsearch-v1": {
     "description": "深度搜索結合了網路搜索、閱讀和推理，可進行全面調查。您可以將其視為一個代理，接受您的研究任務 - 它會進行廣泛搜索並經過多次迭代，然後才能給出答案。這個過程涉及持續的研究、推理和從各個角度解決問題。這與直接從預訓練數據生成答案的標準大模型以及依賴一次性表面搜索的傳統 RAG 系統有著根本的不同。"
+  },
+  "kimi-k2-0711-preview": {
+    "description": "kimi-k2 是一款具備超強程式碼和 Agent 能力的 MoE 架構基礎模型，總參數 1T，激活參數 32B。在通用知識推理、程式設計、數學、Agent 等主要類別的基準性能測試中，K2 模型的性能超越其他主流開源模型。"
   },
   "kimi-latest": {
     "description": "Kimi 智能助手產品使用最新的 Kimi 大模型，可能包含尚未穩定的特性。支持圖片理解，同時會自動根據請求的上下文長度選擇 8k/32k/128k 模型作為計費模型"
@@ -2352,7 +2376,7 @@
     "description": "v0-1.5-md 模型適用於日常任務和使用者介面（UI）生成"
   },
   "whisper-1": {
-    "description": "通用語音識別模型，支持多語言語音識別、語音翻譯和語言識別"
+    "description": "通用語音識別模型，支持多語言語音識別、語音翻譯和語言識別。"
   },
   "wizardlm2": {
     "description": "WizardLM 2 是微軟 AI 提供的語言模型，在複雜對話、多語言、推理和智能助手領域表現尤為出色。"
