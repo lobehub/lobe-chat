@@ -590,6 +590,15 @@ export class SessionService extends BaseService {
       // 去重处理
       const uniqueSessionIds = Array.from(new Set(sessionIds));
 
+      // 权限检查
+      const permissionResult = await this.resolveBatchQueryPermission('SESSION_READ', {
+        targetSessionId: uniqueSessionIds,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权限批量查询会话');
+      }
+
       // 查询指定的会话列表
       const foundSessions = await this.db.query.sessions.findMany({
         orderBy: [desc(sessions.updatedAt)],
@@ -617,8 +626,7 @@ export class SessionService extends BaseService {
 
       return result;
     } catch (error) {
-      this.log('error', '批量查询会话失败', { error });
-      throw this.createBusinessError('批量查询会话失败');
+      return this.handleServiceError(error, '批量查询会话');
     }
   }
 
@@ -642,6 +650,15 @@ export class SessionService extends BaseService {
         throw this.createAuthError('用户未认证');
       }
 
+      // 权限检查
+      const permissionResult = await this.resolveBatchQueryPermission('SESSION_UPDATE', {
+        targetSessionId: sessionsToUpdate.map((s) => s.id),
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权限批量更新会话');
+      }
+
       let updated = 0;
       let failed = 0;
       const errors: Array<{ error: string; id: string }> = [];
@@ -650,13 +667,13 @@ export class SessionService extends BaseService {
       await this.db.transaction(async (tx) => {
         for (const sessionData of sessionsToUpdate) {
           try {
-            // 首先检查会话是否存在且属于当前用户
+            // 首先检查会话是否存在
             const existingSession = await tx.query.sessions.findFirst({
-              where: and(eq(sessions.id, sessionData.id)),
+              where: eq(sessions.id, sessionData.id),
             });
 
             if (!existingSession) {
-              errors.push({ error: '会话不存在或无权限访问', id: sessionData.id });
+              errors.push({ error: '会话不存在', id: sessionData.id });
               failed++;
               continue;
             }
@@ -706,8 +723,7 @@ export class SessionService extends BaseService {
 
       return result;
     } catch (error) {
-      this.log('error', '批量更新会话失败', { error });
-      throw this.createBusinessError('批量更新会话失败');
+      return this.handleServiceError(error, '批量更新会话');
     }
   }
 }
