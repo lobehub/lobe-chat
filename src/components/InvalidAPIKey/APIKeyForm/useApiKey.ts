@@ -2,10 +2,11 @@ import isEqual from 'fast-deep-equal';
 import { useContext } from 'react';
 
 import { isDeprecatedEdition } from '@/const/version';
-import { LoadingContext } from '@/features/Conversation/Error/APIKeyForm/LoadingContext';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { useUserStore } from '@/store/user';
 import { keyVaultsConfigSelectors } from '@/store/user/selectors';
+
+import { LoadingContext } from './LoadingContext';
 
 export const useApiKey = (provider: string) => {
   const [apiKey, baseURL, setConfig] = useUserStore((s) => [

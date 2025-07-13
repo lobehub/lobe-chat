@@ -1,11 +1,10 @@
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import InvalidAPIKey from '@/components/InvalidAPIKey';
 import { useProviderName } from '@/hooks/useProviderName';
 import { useChatStore } from '@/store/chat';
 import { GlobalLLMProviderKey } from '@/types/user/settings/modelProvider';
-
-import InvalidAPIKey from './InvalidAPIKey';
 
 interface ChatInvalidAPIKeyProps {
   id: string;

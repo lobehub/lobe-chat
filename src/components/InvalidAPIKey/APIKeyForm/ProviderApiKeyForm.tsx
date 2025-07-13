@@ -4,12 +4,12 @@ import { ReactNode, memo, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FormInput, FormPassword } from '@/components/FormInput';
-import { LoadingContext } from '@/features/Conversation/Error/APIKeyForm/LoadingContext';
+import { FormAction } from '@/features/Conversation/Error/style';
 import { useProviderName } from '@/hooks/useProviderName';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 
-import { FormAction } from '../style';
+import { LoadingContext } from './LoadingContext';
 import { useApiKey } from './useApiKey';
 
 interface ProviderApiKeyFormProps {

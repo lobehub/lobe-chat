@@ -13,7 +13,7 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import InvalidAPIKey from '@/features/Conversation/Error/InvalidAPIKey';
+import InvalidAPIKey from '@/components/InvalidAPIKey';
 import { RuntimeImageGenParams } from '@/libs/standard-parameters/meta-schema';
 import { useImageStore } from '@/store/image';
 import { AsyncTaskErrorType } from '@/types/asyncTask';

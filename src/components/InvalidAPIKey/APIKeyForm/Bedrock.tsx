@@ -5,11 +5,10 @@ import { Network, ShieldPlus } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { FormAction } from '@/features/Conversation/Error/style';
 import { ModelProvider } from '@/libs/model-runtime';
 import { useUserStore } from '@/store/user';
 import { keyVaultsConfigSelectors } from '@/store/user/selectors';
-
-import { FormAction } from '../style';
 
 const BedrockForm = memo<{ description: string }>(({ description }) => {
   const { t } = useTranslation('modelProvider');
