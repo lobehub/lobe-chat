@@ -11,7 +11,15 @@ export const LobeMoonshotAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.moonshot.cn/v1',
   chatCompletion: {
     handlePayload: (payload: ChatStreamPayload) => {
-      const { enabledSearch, temperature, tools, ...rest } = payload;
+      const { enabledSearch, messages, temperature, tools, ...rest } = payload;
+
+      // 过滤掉空的 assistant 消息 (#8418)
+      const filteredMessages = messages.filter(message => {
+        if (message.role === 'assistant' && (!message.content || message.content === '')) {
+          return false;
+        }
+        return true;
+      });
 
       const moonshotTools = enabledSearch
         ? [
@@ -27,6 +35,7 @@ export const LobeMoonshotAI = createOpenAICompatibleRuntime({
 
       return {
         ...rest,
+        messages: filteredMessages,
         temperature: temperature !== undefined ? temperature / 2 : undefined,
         tools: moonshotTools,
       } as any;
