@@ -505,6 +505,15 @@ export class SessionService extends BaseService {
     this.log('info', '删除会话', { sessionId });
 
     try {
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('SESSION_DELETE', {
+        targetSessionId: sessionId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权删除此会话');
+      }
+
       await this.sessionModel.delete(sessionId);
 
       this.log('info', '会话删除成功', { sessionId });
