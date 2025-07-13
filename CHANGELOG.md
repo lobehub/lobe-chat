@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.97.17](https://github.com/lobehub/lobe-chat/compare/v1.97.16...v1.97.17)
+
+<sup>Released on **2025-07-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support Hunyuan A13B thinking model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support Hunyuan A13B thinking model, closes [#8278](https://github.com/lobehub/lobe-chat/issues/8278) ([09ca978](https://github.com/lobehub/lobe-chat/commit/09ca978))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.97.16](https://github.com/lobehub/lobe-chat/compare/v1.97.15...v1.97.16)
 
 <sup>Released on **2025-07-13**</sup>
