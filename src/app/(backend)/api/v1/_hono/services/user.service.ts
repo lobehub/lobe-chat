@@ -33,6 +33,13 @@ export class UserService extends BaseService {
    */
   private async getUserMessageCount(userId: string): Promise<number> {
     try {
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('MESSAGE_READ', userId);
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '没有权限获取用户消息数量');
+      }
+
       const result = await this.db
         .select({ count: sql<number>`count(*)` })
         .from(messages)
@@ -94,6 +101,17 @@ export class UserService extends BaseService {
     this.log('info', '获取系统中所有用户列表');
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('未授权操作');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('USER_READ', 'ALL');
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '没有权限查看用户列表');
+      }
+
       // 使用关系查询一次性获取用户和sessions信息
       const allUsers = await this.db.query.users.findMany({
         orderBy: (users, { desc }) => [desc(users.createdAt)],
@@ -136,8 +154,7 @@ export class UserService extends BaseService {
       this.log('info', '成功获取所有用户信息及其角色、sessions和消息数量');
       return usersWithRoles;
     } catch (error) {
-      this.log('error', '获取用户列表失败', { error });
-      throw this.createBusinessError('获取用户列表失败');
+      return this.handleServiceError(error, '获取用户列表');
     }
   }
 
@@ -150,6 +167,17 @@ export class UserService extends BaseService {
     this.log('info', '创建新用户', { userData });
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('未授权操作');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('USER_CREATE', 'ALL');
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '没有权限创建用户');
+      }
+
       // 检查用户名和邮箱是否已存在
       if (userData.username) {
         const existingUserByUsername = await this.db.query.users.findFirst({
@@ -193,11 +221,7 @@ export class UserService extends BaseService {
         roles: [], // 新用户暂时没有角色
       };
     } catch (error) {
-      this.log('error', '创建用户失败', { error });
-      if (error instanceof Error && error.name === 'BusinessError') {
-        throw error;
-      }
-      throw this.createBusinessError('创建用户失败');
+      return this.handleServiceError(error, '创建用户');
     }
   }
 
@@ -211,13 +235,24 @@ export class UserService extends BaseService {
     this.log('info', '更新用户信息', { userData, userId });
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('未授权操作');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('USER_UPDATE', userId);
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '没有权限更新该用户');
+      }
+
       // 检查用户是否存在
       const existingUser = await this.db.query.users.findFirst({
         where: eq(users.id, userId),
       });
 
       if (!existingUser) {
-        throw this.createBusinessError('用户不存在');
+        throw this.createNotFoundError('用户不存在');
       }
 
       // 检查用户名和邮箱是否被其他用户使用
@@ -271,11 +306,7 @@ export class UserService extends BaseService {
         roles,
       };
     } catch (error) {
-      this.log('error', '更新用户失败', { error });
-      if (error instanceof Error && error.name === 'BusinessError') {
-        throw error;
-      }
-      throw this.createBusinessError('更新用户失败');
+      return this.handleServiceError(error, '更新用户');
     }
   }
 
@@ -288,13 +319,24 @@ export class UserService extends BaseService {
     this.log('info', '删除用户', { userId });
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('未授权操作');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('USER_DELETE', userId);
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '没有权限删除该用户');
+      }
+
       // 检查用户是否存在
       const existingUser = await this.db.query.users.findFirst({
         where: eq(users.id, userId),
       });
 
       if (!existingUser) {
-        throw this.createBusinessError('用户不存在');
+        throw this.createNotFoundError('用户不存在');
       }
 
       // 执行删除操作
@@ -304,11 +346,7 @@ export class UserService extends BaseService {
 
       return { success: true };
     } catch (error) {
-      this.log('error', '删除用户失败', { error });
-      if (error instanceof Error && error.name === 'BusinessError') {
-        throw error;
-      }
-      throw this.createBusinessError('删除用户失败');
+      return this.handleServiceError(error, '删除用户');
     }
   }
 
@@ -321,13 +359,24 @@ export class UserService extends BaseService {
     this.log('info', '根据ID获取用户信息', { userId });
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('未授权操作');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('USER_READ', userId);
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '没有权限查看该用户信息');
+      }
+
       // 查询用户基本信息
       const user = await this.db.query.users.findFirst({
         where: eq(users.id, userId),
       });
 
       if (!user) {
-        throw this.createBusinessError('用户不存在');
+        throw this.createNotFoundError('用户不存在');
       }
 
       // 获取用户角色信息
@@ -350,11 +399,7 @@ export class UserService extends BaseService {
         roles,
       };
     } catch (error) {
-      this.log('error', '获取用户信息失败', { error });
-      if (error instanceof Error && error.name === 'BusinessError') {
-        throw error;
-      }
-      throw this.createBusinessError('获取用户信息失败');
+      return this.handleServiceError(error, '获取用户信息');
     }
   }
 
