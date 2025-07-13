@@ -81,7 +81,7 @@ TopicsRoutes.delete(
   },
 );
 
-// GET /api/v1/topics/:sessionId - 获取指定会话的所有话题
+// GET /api/v1/topics/session/:sessionId - 获取指定会话的所有话题
 TopicsRoutes.get(
   '/session/:sessionId',
   requireAuth,
