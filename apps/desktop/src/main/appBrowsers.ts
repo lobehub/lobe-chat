@@ -36,6 +36,7 @@ export const appBrowsers = {
     autoHideMenuBar: true,
     height: 800,
     identifier: 'settings',
+    keepAlive: true,
     minWidth: 600,
     parentIdentifier: 'chat',
     path: '/settings',
