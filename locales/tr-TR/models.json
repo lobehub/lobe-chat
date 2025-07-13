@@ -71,44 +71,23 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3, Derin Arayış şirketi tarafından geliştirilen bir MoE modelidir. DeepSeek-V3, birçok değerlendirmede Qwen2.5-72B ve Llama-3.1-405B gibi diğer açık kaynak modelleri geride bırakmış ve performans açısından dünya çapında en iyi kapalı kaynak model olan GPT-4o ve Claude-3.5-Sonnet ile eşit seviyededir."
   },
-  "Doubao-1.5-thinking-pro-m": {
-    "description": "Doubao-1.5, yeni derin düşünme modeli (m versiyonu yerel çok modlu derin akıl yürütme yeteneği ile birlikte gelir) ve matematik, programlama, bilimsel akıl yürütme gibi uzmanlık alanlarında ve yaratıcı yazım gibi genel görevlerde mükemmel performans sergilemektedir. AIME 2024, Codeforces, GPQA gibi birçok otoriter benchmarkta endüstri birinciliğine ulaşmakta veya yaklaşmaktadır. 128k bağlam penceresi ve 16k çıktı destekler."
-  },
-  "Doubao-1.5-thinking-vision-pro": {
-    "description": "Tamamen yeni bir görsel derin düşünme modeli, daha güçlü genel çok modlu anlama ve akıl yürütme yeteneğine sahiptir; 59 kamu değerlendirme ölçütünden 37'sinde SOTA performansı elde etmiştir."
-  },
-  "Doubao-1.5-vision-pro": {
-    "description": "Doubao-1.5-vision-pro, yeni güncellenmiş çok modlu büyük modeldir, herhangi bir çözünürlük ve aşırı en-boy oranı görüntü tanıma desteği sunar, görsel çıkarım, belge tanıma, detay bilgisi anlama ve talimat takibi yeteneklerini artırır."
-  },
-  "Doubao-1.5-vision-pro-32k": {
-    "description": "Doubao-1.5-vision-pro, tamamen yenilenen çok modlu büyük modeldir, herhangi bir çözünürlük ve aşırı en-boy oranına sahip görüntü tanıma desteği sunar, görsel akıl yürütme, belge tanıma, detay bilgisi anlama ve talimatları takip etme yeteneklerini artırır."
-  },
   "Doubao-lite-128k": {
-    "description": "Doubao-lite, mükemmel yanıt hızı ve daha iyi maliyet Performansı ile müşterilere farklı senaryolar için daha esnek seçenekler sunar. 128k bağlam penceresi çıkarım ve ince ayar destekler."
+    "description": "Doubao-lite, son derece hızlı yanıt süresi ve daha iyi fiyat-performans oranı ile müşterilere farklı senaryolar için daha esnek seçenekler sunar. 128k bağlam penceresi ile çıkarım ve ince ayar desteği sağlar."
   },
   "Doubao-lite-32k": {
-    "description": "Doubao-lite, mükemmel yanıt hızı ve daha iyi maliyet Performansı ile müşterilere farklı senaryolar için daha esnek seçenekler sunar. 32k bağlam penceresi çıkarım ve ince ayar destekler."
+    "description": "Doubao-lite, son derece hızlı yanıt süresi ve daha iyi fiyat-performans oranı ile müşterilere farklı senaryolar için daha esnek seçenekler sunar. 32k bağlam penceresi ile çıkarım ve ince ayar desteği sağlar."
   },
   "Doubao-lite-4k": {
-    "description": "Doubao-lite, mükemmel yanıt hızı ve daha iyi maliyet Performansı ile müşterilere farklı senaryolar için daha esnek seçenekler sunar. 4k bağlam penceresi çıkarım ve ince ayar destekler."
+    "description": "Doubao-lite, son derece hızlı yanıt süresi ve daha iyi fiyat-performans oranı ile müşterilere farklı senaryolar için daha esnek seçenekler sunar. 4k bağlam penceresi ile çıkarım ve ince ayar desteği sağlar."
   },
   "Doubao-pro-128k": {
-    "description": "En iyi performans gösteren ana model, karmaşık görevleri işlemek için uygundur; referanslı soru-cevap, özetleme, yaratım, metin sınıflandırma, rol yapma gibi senaryolar için iyi sonuçlar verir. 128k bağlam penceresi çıkarım ve ince ayar destekler."
-  },
-  "Doubao-pro-256k": {
-    "description": "En iyi performansa sahip ana modeldir, karmaşık görevleri işlemek için uygundur, referans cevaplama, özetleme, yaratım, metin sınıflandırma, rol oynama gibi senaryolarda oldukça iyi sonuçlar vermektedir. 256k bağlam penceresi ile akıl yürütme ve ince ayar desteği sunmaktadır."
+    "description": "En etkili ana model olup, karmaşık görevlerin işlenmesi için uygundur. Referans soru-cevap, özet çıkarma, yaratıcı yazım, metin sınıflandırma, rol yapma gibi senaryolarda mükemmel performans gösterir. 128k bağlam penceresi ile çıkarım ve ince ayar desteği sağlar."
   },
   "Doubao-pro-32k": {
-    "description": "En iyi performans gösteren ana model, karmaşık görevleri işlemek için uygundur; referanslı soru-cevap, özetleme, yaratım, metin sınıflandırma, rol yapma gibi senaryolar için iyi sonuçlar verir. 32k bağlam penceresi çıkarım ve ince ayar destekler."
+    "description": "En etkili ana model olup, karmaşık görevlerin işlenmesi için uygundur. Referans soru-cevap, özet çıkarma, yaratıcı yazım, metin sınıflandırma, rol yapma gibi senaryolarda mükemmel performans gösterir. 32k bağlam penceresi ile çıkarım ve ince ayar desteği sağlar."
   },
   "Doubao-pro-4k": {
-    "description": "En iyi performans gösteren ana model, karmaşık görevleri işlemek için uygundur; referanslı soru-cevap, özetleme, yaratım, metin sınıflandırma, rol yapma gibi senaryolar için iyi sonuçlar verir. 4k bağlam penceresi çıkarım ve ince ayar destekler."
-  },
-  "Doubao-vision-lite-32k": {
-    "description": "Doubao-vision modeli, Doubao tarafından sunulan çok modlu büyük modeldir, güçlü görüntü anlama ve akıl yürütme yeteneklerine sahip olup, kesin talimat anlama yeteneği sunmaktadır. Model, görüntü metin bilgisi çıkarımı ve görüntü tabanlı akıl yürütme görevlerinde güçlü bir performans sergilemekte, daha karmaşık ve daha geniş görsel soru-cevap görevlerine uygulanabilmektedir."
-  },
-  "Doubao-vision-pro-32k": {
-    "description": "Doubao-vision modeli, Doubao tarafından sunulan çok modlu büyük modeldir, güçlü görüntü anlama ve akıl yürütme yeteneklerine sahip olup, kesin talimat anlama yeteneği sunmaktadır. Model, görüntü metin bilgisi çıkarımı ve görüntü tabanlı akıl yürütme görevlerinde güçlü bir performans sergilemekte, daha karmaşık ve daha geniş görsel soru-cevap görevlerine uygulanabilmektedir."
+    "description": "En etkili ana model olup, karmaşık görevlerin işlenmesi için uygundur. Referans soru-cevap, özet çıkarma, yaratıcı yazım, metin sınıflandırma, rol yapma gibi senaryolarda mükemmel performans gösterir. 4k bağlam penceresi ile çıkarım ve ince ayar desteği sağlar."
   },
   "ERNIE-3.5-128K": {
     "description": "Baidu'nun kendi geliştirdiği, büyük ölçekli bir dil modeli olan ERNIE-3.5, geniş bir Çin ve İngilizce veri kümesini kapsar. Güçlü genel yeteneklere sahip olup, çoğu diyalog, soru-cevap, yaratıcı içerik üretimi ve eklenti uygulama senaryolarını karşılayabilir; ayrıca, Baidu arama eklentisi ile otomatik entegrasyonu destekleyerek, soru-cevap bilgilerinin güncelliğini sağlar."
@@ -914,8 +893,38 @@
   "doubao-1.5-thinking-pro": {
     "description": "Doubao-1.5, tamamen yeni bir derin düşünme modeli, matematik, programlama, bilimsel akıl yürütme gibi uzmanlık alanlarında ve yaratıcı yazım gibi genel görevlerde olağanüstü performans sergilemektedir. AIME 2024, Codeforces, GPQA gibi birçok saygın ölçekte sektörün en üst seviyelerine ulaşmakta veya bunlara yakın bir performans göstermektedir. 128k bağlam penceresi ve 16k çıktı desteği sunmaktadır."
   },
+  "doubao-1.5-thinking-pro-m": {
+    "description": "Doubao-1.5 yeni derin düşünme modeli (m versiyonu yerel çok modlu derin çıkarım yeteneği ile birlikte gelir), matematik, programlama, bilimsel çıkarım gibi uzmanlık alanlarında ve yaratıcı yazım gibi genel görevlerde üstün performans gösterir. AIME 2024, Codeforces, GPQA gibi birçok otoriter kıyaslamada sektörün ilk sıralarına ulaşmıştır veya yaklaşmıştır. 128k bağlam penceresi ve 16k çıktı desteği sağlar."
+  },
+  "doubao-1.5-thinking-vision-pro": {
+    "description": "Yeni görsel derin düşünme modeli, daha güçlü genel çok modlu anlama ve çıkarım yeteneklerine sahiptir ve 59 açık değerlendirme kıyaslamasından 37'sinde SOTA (en iyi) performans göstermiştir."
+  },
+  "doubao-1.5-ui-tars": {
+    "description": "Doubao-1.5-UI-TARS, grafik kullanıcı arayüzü (GUI) etkileşimine özgü yerel bir Agent modelidir. Algılama, çıkarım ve eylem gibi insan benzeri yeteneklerle GUI ile kesintisiz etkileşim sağlar."
+  },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite, yeni güncellenmiş çok modlu büyük modeldir, herhangi bir çözünürlük ve aşırı en-boy oranı görüntü tanıma desteği sunar, görsel çıkarım, belge tanıma, detay bilgisi anlama ve talimat takibi yeteneklerini artırır. 128k bağlam penceresi destekler, çıktı uzunluğu maksimum 16k token destekler."
+  },
+  "doubao-1.5-vision-pro": {
+    "description": "Doubao-1.5-vision-pro, tamamen yenilenmiş çok modlu büyük modeldir. Herhangi bir çözünürlükte ve aşırı en-boy oranlarındaki görüntüleri tanıyabilir, görsel çıkarımı, belge tanımayı, detaylı bilgi anlayışını ve komutlara uyumu artırır."
+  },
+  "doubao-1.5-vision-pro-32k": {
+    "description": "Doubao-1.5-vision-pro, tamamen yenilenmiş çok modlu büyük modeldir. Herhangi bir çözünürlükte ve aşırı en-boy oranlarındaki görüntüleri tanıyabilir, görsel çıkarımı, belge tanımayı, detaylı bilgi anlayışını ve komutlara uyumu artırır."
+  },
+  "doubao-lite-128k": {
+    "description": "Son derece hızlı yanıt süresi ve daha iyi fiyat-performans oranı ile müşterilere farklı senaryolar için daha esnek seçenekler sunar. 128k bağlam penceresi ile çıkarım ve ince ayar desteği sağlar."
+  },
+  "doubao-lite-32k": {
+    "description": "Son derece hızlı yanıt süresi ve daha iyi fiyat-performans oranı ile müşterilere farklı senaryolar için daha esnek seçenekler sunar. 32k bağlam penceresi ile çıkarım ve ince ayar desteği sağlar."
+  },
+  "doubao-lite-4k": {
+    "description": "Son derece hızlı yanıt süresi ve daha iyi fiyat-performans oranı ile müşterilere farklı senaryolar için daha esnek seçenekler sunar. 4k bağlam penceresi ile çıkarım ve ince ayar desteği sağlar."
+  },
+  "doubao-pro-256k": {
+    "description": "En etkili ana model olup, karmaşık görevlerin işlenmesi için uygundur. Referans soru-cevap, özet çıkarma, yaratıcı yazım, metin sınıflandırma, rol yapma gibi senaryolarda mükemmel performans gösterir. 256k bağlam penceresi ile çıkarım ve ince ayar desteği sağlar."
+  },
+  "doubao-pro-32k": {
+    "description": "En etkili ana model olup, karmaşık görevlerin işlenmesi için uygundur. Referans soru-cevap, özet çıkarma, yaratıcı yazım, metin sınıflandırma, rol yapma gibi senaryolarda mükemmel performans gösterir. 32k bağlam penceresi ile çıkarım ve ince ayar desteği sağlar."
   },
   "doubao-seed-1.6": {
     "description": "Doubao-Seed-1.6, auto/thinking/non-thinking olmak üzere üç düşünme modunu destekleyen tamamen yeni çok modlu derin düşünme modelidir. Non-thinking modunda, model performansı Doubao-1.5-pro/250115'e kıyasla büyük ölçüde artmıştır. 256k bağlam penceresini destekler ve çıktı uzunluğu maksimum 16k token olabilir."
@@ -925,6 +934,12 @@
   },
   "doubao-seed-1.6-thinking": {
     "description": "Doubao-Seed-1.6-thinking modeli düşünme yeteneğinde büyük gelişme göstermiştir, Doubao-1.5-thinking-pro ile karşılaştırıldığında Kodlama, Matematik ve mantıksal akıl yürütme gibi temel yeteneklerde daha da iyileşmiştir, görsel anlayışı destekler. 256k bağlam penceresini destekler ve çıktı uzunluğu maksimum 16k token olabilir."
+  },
+  "doubao-vision-lite-32k": {
+    "description": "Doubao-vision modeli, Doubao tarafından geliştirilen çok modlu büyük bir modeldir. Güçlü görüntü anlama ve çıkarım yeteneklerine ve hassas komut anlama becerisine sahiptir. Model, görüntü metin bilgisi çıkarımı ve görüntü tabanlı çıkarım görevlerinde güçlü performans sergiler ve daha karmaşık, geniş kapsamlı görsel soru-cevap görevlerinde kullanılabilir."
+  },
+  "doubao-vision-pro-32k": {
+    "description": "Doubao-vision modeli, Doubao tarafından geliştirilen çok modlu büyük bir modeldir. Güçlü görüntü anlama ve çıkarım yeteneklerine ve hassas komut anlama becerisine sahiptir. Model, görüntü metin bilgisi çıkarımı ve görüntü tabanlı çıkarım görevlerinde güçlü performans sergiler ve daha karmaşık, geniş kapsamlı görsel soru-cevap görevlerinde kullanılabilir."
   },
   "emohaa": {
     "description": "Emohaa, duygusal sorunları anlamalarına yardımcı olmak için profesyonel danışmanlık yeteneklerine sahip bir psikolojik modeldir."
@@ -1313,6 +1328,9 @@
   "gpt-4o-mini-search-preview": {
     "description": "GPT-4o mini arama önizleme sürümü, web arama sorgularını anlama ve yürütme için özel olarak eğitilmiş bir modeldir ve Chat Completions API kullanır. Jeton ücretlerinin yanı sıra, web arama sorguları her araç çağrısı başına ücretlendirilir."
   },
+  "gpt-4o-mini-transcribe": {
+    "description": "GPT-4o Mini Transcribe, GPT-4o kullanarak sesleri metne dönüştüren bir konuşma tanıma modelidir. Orijinal Whisper modeline kıyasla kelime hata oranını düşürür ve dil tanıma ile doğruluğu artırır. Daha doğru transkripsiyonlar için kullanın."
+  },
   "gpt-4o-mini-tts": {
     "description": "GPT-4o mini TTS, GPT-4o mini'ye dayalı bir metin-ses modeldir ve yüksek kaliteli ses üretimi, düşük maliyetli oluşturma sunar."
   },
@@ -1322,11 +1340,14 @@
   "gpt-4o-realtime-preview-2024-10-01": {
     "description": "GPT-4o gerçek zamanlı versiyonu, ses ve metin için gerçek zamanlı giriş ve çıkış desteği sunar."
   },
-  "gpt-4o-realtime-preview-2024-12-17": {
-    "description": "GPT-4o gerçek zamanlı versiyonu, ses ve metin için gerçek zamanlı giriş ve çıkış desteği sunar."
+  "gpt-4o-realtime-preview-2025-06-03": {
+    "description": "GPT-4o gerçek zamanlı sürümü, ses ve metin giriş-çıkışını gerçek zamanlı destekler."
   },
   "gpt-4o-search-preview": {
     "description": "GPT-4o arama önizleme sürümü, web arama sorgularını anlama ve yürütme için özel olarak eğitilmiş bir modeldir ve Chat Completions API kullanır. Jeton ücretlerinin yanı sıra, web arama sorguları her araç çağrısı başına ücretlendirilir."
+  },
+  "gpt-4o-transcribe": {
+    "description": "GPT-4o Transcribe, GPT-4o kullanarak sesleri metne dönüştüren bir konuşma tanıma modelidir. Orijinal Whisper modeline kıyasla kelime hata oranını düşürür ve dil tanıma ile doğruluğu artırır. Daha doğru transkripsiyonlar için kullanın."
   },
   "grok-2-1212": {
     "description": "Bu model, doğruluk, talimat takibi ve çok dilli yetenekler açısından geliştirilmiştir."
@@ -1459,6 +1480,9 @@
   },
   "jina-deepsearch-v1": {
     "description": "Derin arama, web araması, okuma ve akıl yürütmeyi birleştirerek kapsamlı bir araştırma yapar. Bunu, araştırma görevlerinizi kabul eden bir ajan olarak düşünebilirsiniz - geniş bir arama yapar ve birden fazla yineleme ile cevap verir. Bu süreç, sürekli araştırma, akıl yürütme ve sorunları çeşitli açılardan çözmeyi içerir. Bu, doğrudan önceden eğitilmiş verilerden cevaplar üreten standart büyük modellerle ve tek seferlik yüzey aramasına dayanan geleneksel RAG sistemleriyle temelde farklıdır."
+  },
+  "kimi-k2-0711-preview": {
+    "description": "kimi-k2, son derece güçlü kodlama ve Agent yeteneklerine sahip MoE mimarili temel bir modeldir. Toplam parametre sayısı 1T, aktif parametre sayısı 32B'dir. Genel bilgi çıkarımı, programlama, matematik, Agent gibi ana kategorilerde yapılan kıyaslama testlerinde K2 modeli, diğer önde gelen açık kaynak modelleri geride bırakmıştır."
   },
   "kimi-latest": {
     "description": "Kimi akıllı asistan ürünü, en son Kimi büyük modelini kullanır ve henüz kararlı olmayan özellikler içerebilir. Görüntü anlayışını desteklerken, isteğin bağlam uzunluğuna göre 8k/32k/128k modelini faturalama modeli olarak otomatik olarak seçecektir."
@@ -2352,7 +2376,7 @@
     "description": "v0-1.5-md modeli, günlük görevler ve kullanıcı arayüzü (UI) oluşturma için uygundur"
   },
   "whisper-1": {
-    "description": "Genel ses tanıma modeli, çok dilli ses tanıma, ses çevirisi ve dil tanıma desteği sunar."
+    "description": "Genel amaçlı konuşma tanıma modeli olup, çok dilli konuşma tanıma, konuşma çevirisi ve dil tanıma destekler."
   },
   "wizardlm2": {
     "description": "WizardLM 2, Microsoft AI tarafından sunulan bir dil modelidir, karmaşık diyaloglar, çok dilli, akıl yürütme ve akıllı asistan alanlarında özellikle başarılıdır."
