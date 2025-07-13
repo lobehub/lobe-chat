@@ -1,7 +1,6 @@
-import type { ChatModelCard } from '@/types/llm';
-
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { processMultiProviderModelList } from '../utils/modelParse';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { QwenAIStream } from '../utils/streams';
 
 export interface QwenModelCard {
@@ -20,7 +19,7 @@ export const QwenLegacyModels = new Set([
   'qwen-1.8b-longcontext-chat',
 ]);
 
-export const LobeQwenAI = LobeOpenAICompatibleFactory({
+export const LobeQwenAI = createOpenAICompatibleRuntime({
   baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -78,52 +77,10 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
     chatCompletion: () => process.env.DEBUG_QWEN_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
-
-    const functionCallKeywords = [
-      'qwen-max',
-      'qwen-plus',
-      'qwen-turbo',
-      'qwen-long',
-      'qwen1.5',
-      'qwen2',
-      'qwen2.5',
-      'qwen3',
-    ];
-
-    const visionKeywords = ['qvq', 'vl'];
-
-    const reasoningKeywords = ['qvq', 'qwq', 'deepseek-r1', 'qwen3'];
-
     const modelsPage = (await client.models.list()) as any;
     const modelList: QwenModelCard[] = modelsPage.data;
 
-    return modelList
-      .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
-          (m) => model.id.toLowerCase() === m.id.toLowerCase(),
-        );
-
-        return {
-          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
-          displayName: knownModel?.displayName ?? undefined,
-          enabled: knownModel?.enabled || false,
-          functionCall:
-            functionCallKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-            knownModel?.abilities?.functionCall ||
-            false,
-          id: model.id,
-          reasoning:
-            reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-            knownModel?.abilities?.reasoning ||
-            false,
-          vision:
-            visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-            knownModel?.abilities?.vision ||
-            false,
-        };
-      })
-      .filter(Boolean) as ChatModelCard[];
+    return processMultiProviderModelList(modelList);
   },
   provider: ModelProvider.Qwen,
 });

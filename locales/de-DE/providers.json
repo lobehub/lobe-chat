@@ -71,6 +71,9 @@
   "mistral": {
     "description": "Mistral bietet fortschrittliche allgemeine, spezialisierte und forschungsorientierte Modelle an, die in Bereichen wie komplexe Schlussfolgerungen, mehrsprachige Aufgaben und Code-Generierung weit verbreitet sind. Durch Funktionsaufrufschnittstellen können Benutzer benutzerdefinierte Funktionen integrieren und spezifische Anwendungen realisieren."
   },
+  "modelscope": {
+    "description": "ModelScope ist eine von Alibaba Cloud eingeführte Plattform für Modelle als Dienstleistung, die eine Vielzahl von KI-Modellen und Inferenzdiensten anbietet."
+  },
   "moonshot": {
     "description": "Moonshot ist eine Open-Source-Plattform, die von Beijing Dark Side Technology Co., Ltd. eingeführt wurde und eine Vielzahl von Modellen zur Verarbeitung natürlicher Sprache anbietet, die in vielen Bereichen Anwendung finden, darunter, aber nicht beschränkt auf, Inhaltserstellung, akademische Forschung, intelligente Empfehlungen und medizinische Diagnosen, und unterstützt die Verarbeitung langer Texte und komplexer Generierungsaufgaben."
   },
@@ -130,6 +133,9 @@
   },
   "upstage": {
     "description": "Upstage konzentriert sich auf die Entwicklung von KI-Modellen für verschiedene geschäftliche Anforderungen, einschließlich Solar LLM und Dokumenten-KI, mit dem Ziel, künstliche allgemeine Intelligenz (AGI) zu erreichen. Es ermöglicht die Erstellung einfacher Dialogagenten über die Chat-API und unterstützt Funktionsaufrufe, Übersetzungen, Einbettungen und spezifische Anwendungsbereiche."
+  },
+  "v0": {
+    "description": "v0 ist ein Pair-Programming-Assistent, bei dem Sie Ihre Ideen einfach in natürlicher Sprache beschreiben können, und er generiert Code und Benutzeroberflächen (UI) für Ihr Projekt."
   },
   "vertexai": {
     "description": "Die Gemini-Serie von Google ist das fortschrittlichste, universelle KI-Modell, das von Google DeepMind entwickelt wurde. Es ist speziell für multimodale Anwendungen konzipiert und unterstützt das nahtlose Verständnis und die Verarbeitung von Text, Code, Bildern, Audio und Video. Es eignet sich für eine Vielzahl von Umgebungen, von Rechenzentren bis hin zu mobilen Geräten, und verbessert erheblich die Effizienz und Anwendbarkeit von KI-Modellen."

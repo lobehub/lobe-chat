@@ -326,14 +326,10 @@ const OpenRouter: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://openrouter.ai/models',
   name: 'OpenRouter',
-  proxyUrl: {
-    placeholder: 'https://openrouter.ai/api/v1',
-  },
   settings: {
     // OpenRouter don't support browser request
     // https://github.com/lobehub/lobe-chat/issues/5900
     disableBrowserRequest: true,
-
     proxyUrl: {
       placeholder: 'https://openrouter.ai/api/v1',
     },

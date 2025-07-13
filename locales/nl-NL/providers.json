@@ -71,6 +71,9 @@
   "mistral": {
     "description": "Mistral biedt geavanceerde algemene, professionele en onderzoeksmodellen, die breed worden toegepast in complexe redenering, meertalige taken, codegeneratie en meer. Via functionele aanroepinterfaces kunnen gebruikers aangepaste functies integreren voor specifieke toepassingen."
   },
+  "modelscope": {
+    "description": "ModelScope is een door Alibaba Cloud gelanceerd platform voor model-als-een-service, dat een breed scala aan AI-modellen en inferentiediensten biedt."
+  },
   "moonshot": {
     "description": "Moonshot is een open platform gelanceerd door Beijing Dark Side Technology Co., Ltd., dat verschillende modellen voor natuurlijke taalverwerking biedt, met een breed toepassingsgebied, waaronder maar niet beperkt tot contentcreatie, academisch onderzoek, slimme aanbevelingen, medische diagnose, en ondersteunt lange tekstverwerking en complexe generatietaken."
   },
@@ -130,6 +133,9 @@
   },
   "upstage": {
     "description": "Upstage richt zich op het ontwikkelen van AI-modellen voor verschillende zakelijke behoeften, waaronder Solar LLM en document AI, met als doel het realiseren van kunstmatige algemene intelligentie (AGI). Het creëert eenvoudige dialoogagenten via de Chat API en ondersteunt functionele aanroepen, vertalingen, insluitingen en specifieke domeintoepassingen."
+  },
+  "v0": {
+    "description": "v0 is een pair programming-assistent; je hoeft alleen je ideeën in natuurlijke taal te beschrijven, en het genereert code en gebruikersinterfaces (UI) voor je project."
   },
   "vertexai": {
     "description": "De Gemini-serie van Google is zijn meest geavanceerde, algemene AI-modellen, ontwikkeld door Google DeepMind. Deze modellen zijn ontworpen voor multimodale toepassingen en ondersteunen naadloze begrip en verwerking van tekst, code, afbeeldingen, audio en video. Ze zijn geschikt voor verschillende omgevingen, van datacenters tot mobiele apparaten, en verbeteren aanzienlijk de efficiëntie en toepasbaarheid van AI-modellen."

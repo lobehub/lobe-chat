@@ -1,7 +1,7 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface FireworksAIModelCard {
   context_length: number;
@@ -10,7 +10,7 @@ export interface FireworksAIModelCard {
   supports_tools: boolean;
 }
 
-export const LobeFireworksAI = LobeOpenAICompatibleFactory({
+export const LobeFireworksAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.fireworks.ai/inference/v1',
   debug: {
     chatCompletion: () => process.env.DEBUG_FIREWORKSAI_CHAT_COMPLETION === '1',

@@ -1,4 +1,4 @@
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
@@ -108,7 +108,7 @@ export class ClientService implements ISessionService {
 
   async updateSessionConfig(
     activeId: string,
-    config: DeepPartial<LobeAgentConfig>,
+    config: PartialDeep<LobeAgentConfig>,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _?: AbortSignal,
   ) {
@@ -135,7 +135,7 @@ export class ClientService implements ISessionService {
 
   async updateSessionChatConfig(
     activeId: string,
-    config: DeepPartial<LobeAgentChatConfig>,
+    config: PartialDeep<LobeAgentChatConfig>,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _?: AbortSignal,
   ) {

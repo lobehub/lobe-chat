@@ -1,7 +1,7 @@
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
-export const LobeSambaNovaAI = LobeOpenAICompatibleFactory({
+export const LobeSambaNovaAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.sambanova.ai/v1',
   debug: {
     chatCompletion: () => process.env.DEBUG_SAMBANOVA_CHAT_COMPLETION === '1',

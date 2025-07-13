@@ -208,6 +208,10 @@
         "title": "Utiliser le mode de requête client"
       },
       "helpDoc": "Guide de configuration",
+      "responsesApi": {
+        "desc": "Utilise la nouvelle norme de format de requête d'OpenAI, débloquant des fonctionnalités avancées telles que les chaînes de pensée",
+        "title": "Utiliser la norme Responses API"
+      },
       "waitingForMore": "D'autres modèles sont en <1>planification d'intégration</1>, restez à l'écoute"
     },
     "createNew": {

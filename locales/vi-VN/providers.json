@@ -71,6 +71,9 @@
   "mistral": {
     "description": "Mistral cung cấp các mô hình tiên tiến cho mục đích chung, chuyên nghiệp và nghiên cứu, được ứng dụng rộng rãi trong suy diễn phức tạp, nhiệm vụ đa ngôn ngữ, tạo mã, v.v. Thông qua giao diện gọi chức năng, người dùng có thể tích hợp các chức năng tùy chỉnh để thực hiện các ứng dụng cụ thể."
   },
+  "modelscope": {
+    "description": "ModelScope là nền tảng mô hình như một dịch vụ do Alibaba Cloud phát triển, cung cấp nhiều mô hình AI và dịch vụ suy luận phong phú."
+  },
   "moonshot": {
     "description": "Moonshot là nền tảng mã nguồn mở do Công ty TNHH Công nghệ Mặt Trăng Bắc Kinh phát hành, cung cấp nhiều mô hình xử lý ngôn ngữ tự nhiên, ứng dụng rộng rãi trong nhiều lĩnh vực, bao gồm nhưng không giới hạn ở sáng tác nội dung, nghiên cứu học thuật, gợi ý thông minh, chẩn đoán y tế, v.v., hỗ trợ xử lý văn bản dài và nhiệm vụ tạo phức tạp."
   },
@@ -130,6 +133,9 @@
   },
   "upstage": {
     "description": "Upstage tập trung vào việc phát triển các mô hình AI cho nhiều nhu cầu thương mại khác nhau, bao gồm Solar LLM và AI tài liệu, nhằm đạt được trí thông minh nhân tạo tổng quát (AGI) cho công việc. Tạo ra các đại lý đối thoại đơn giản thông qua Chat API, và hỗ trợ gọi chức năng, dịch thuật, nhúng và ứng dụng trong các lĩnh vực cụ thể."
+  },
+  "v0": {
+    "description": "v0 là một trợ lý lập trình theo cặp, bạn chỉ cần mô tả ý tưởng bằng ngôn ngữ tự nhiên, nó sẽ tạo mã và giao diện người dùng (UI) cho dự án của bạn"
   },
   "vertexai": {
     "description": "Dòng sản phẩm Gemini của Google là mô hình AI tiên tiến và đa năng nhất của họ, được phát triển bởi Google DeepMind, được thiết kế đặc biệt cho đa phương thức, hỗ trợ hiểu và xử lý liền mạch văn bản, mã, hình ảnh, âm thanh và video. Phù hợp với nhiều môi trường từ trung tâm dữ liệu đến thiết bị di động, nâng cao đáng kể hiệu quả và tính ứng dụng của mô hình AI."

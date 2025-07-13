@@ -1,13 +1,13 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface JinaModelCard {
   id: string;
 }
 
-export const LobeJinaAI = LobeOpenAICompatibleFactory({
+export const LobeJinaAI = createOpenAICompatibleRuntime({
   baseURL: 'https://deepsearch.jina.ai/v1',
   debug: {
     chatCompletion: () => process.env.DEBUG_JINA_CHAT_COMPLETION === '1',

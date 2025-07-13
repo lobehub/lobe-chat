@@ -24,7 +24,7 @@
     "lint": "eslint --cache ",
     "pg-server": "bun run scripts/pglite-server.ts",
     "start": "electron-vite preview",
-    "typecheck": "tsc --noEmit -p tsconfig.json"
+    "typecheck": "tsgo --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "electron-updater": "^6.6.2",
@@ -45,9 +45,10 @@
     "@types/resolve": "^1.20.6",
     "@types/semver": "^7.7.0",
     "@types/set-cookie-parser": "^2.4.10",
+    "@typescript/native-preview": "latest",
     "consola": "^3.1.0",
     "cookie": "^1.0.2",
-    "electron": "^36.2.0",
+    "electron": "^37.2.0",
     "electron-builder": "^26.0.12",
     "electron-is": "^3.0.0",
     "electron-log": "^5.3.3",

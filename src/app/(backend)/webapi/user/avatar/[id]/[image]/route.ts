@@ -2,7 +2,7 @@ import { UserService } from '@/server/services/user';
 
 export const runtime = 'nodejs';
 
-type Params = Promise<{ id: string , image: string }>;
+type Params = Promise<{ id: string; image: string }>;
 
 // 扩展名到内容类型的映射
 const CONTENT_TYPE_MAP: Record<string, string> = {

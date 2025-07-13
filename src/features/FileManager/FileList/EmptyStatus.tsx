@@ -1,5 +1,5 @@
-import { FileTypeIcon, Icon } from '@lobehub/ui';
-import { Typography, Upload } from 'antd';
+import { FileTypeIcon, Icon, Text } from '@lobehub/ui';
+import { Upload } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { ArrowUpIcon, PlusIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -76,8 +76,8 @@ const EmptyStatus = ({ showKnowledgeBase, knowledgeBaseId }: EmptyStatusProps) =
   return (
     <Center gap={24} height={'100%'} style={{ paddingBottom: 100 }} width={'100%'}>
       <Flexbox justify={'center'} style={{ textAlign: 'center' }}>
-        <Typography.Title level={4}>{t('FileManager.emptyStatus.title')}</Typography.Title>
-        <Typography.Text type={'secondary'}>{t('FileManager.emptyStatus.or')}</Typography.Text>
+        <Text as={'h4'}>{t('FileManager.emptyStatus.title')}</Text>
+        <Text type={'secondary'}>{t('FileManager.emptyStatus.or')}</Text>
       </Flexbox>
       <Flexbox gap={12} horizontal>
         {showKnowledgeBase && (

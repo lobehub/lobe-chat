@@ -1,4 +1,4 @@
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 
 import { ModelTokensUsage, ToolFunction } from '@/types/message';
 
@@ -19,7 +19,7 @@ export interface MessageToolCall {
   type: 'function' | string;
 }
 
-export type MessageToolCallChunk = DeepPartial<MessageToolCall> & { index: number };
+export type MessageToolCallChunk = PartialDeep<MessageToolCall> & { index: number };
 
 export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function' | 'tool';
 
@@ -67,6 +67,7 @@ export interface OpenAIChatMessage {
  * @title Chat Stream Payload
  */
 export interface ChatStreamPayload {
+  apiMode?: 'chatCompletion' | 'responses';
   /**
    * 开启上下文缓存
    */
@@ -97,20 +98,17 @@ export interface ChatStreamPayload {
    */
   n?: number;
   /**
-   * 开启的插件列表
-   */
-  plugins?: string[];
-  /**
    * @title 控制生成文本中的惩罚系数，用于减少主题的变化
    * @default 0
    */
   presence_penalty?: number;
-
-  /**
-   * @default openai
-   */
   provider?: string;
-  responseMode?: 'streamText' | 'json';
+  reasoning?: {
+    effort?: string;
+    summary?: string;
+  };
+  reasoning_effort?: 'low' | 'medium' | 'high';
+  responseMode?: 'stream' | 'json';
   /**
    * @title 是否开启流式请求
    * @default true
@@ -128,6 +126,7 @@ export interface ChatStreamPayload {
     budget_tokens: number;
     type: 'enabled' | 'disabled';
   };
+  thinkingBudget?: number;
   tool_choice?: string;
   tools?: ChatCompletionTool[];
   /**
@@ -135,9 +134,10 @@ export interface ChatStreamPayload {
    * @default 1
    */
   top_p?: number;
+  truncation?: 'auto' | 'disabled';
 }
 
-export interface ChatCompetitionOptions {
+export interface ChatMethodOptions {
   callback?: ChatStreamCallbacks;
   /**
    * response headers

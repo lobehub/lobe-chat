@@ -104,8 +104,7 @@ describe('searchRouter', () => {
         query: 'test query',
       });
 
-      expect(result).toEqual({
-        costTime: 0,
+      expect(result).toMatchObject({
         query: 'test query',
         results: [
           {
@@ -139,8 +138,7 @@ describe('searchRouter', () => {
         query: 'test query',
       });
 
-      expect(result).toEqual({
-        costTime: 0,
+      expect(result).toMatchObject({
         query: 'test query',
         results: [
           {

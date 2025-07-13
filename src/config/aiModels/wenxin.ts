@@ -6,8 +6,7 @@ const wenxinChatModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 32_768,
-    description:
-      '与ERNIE-X1-32K相比，模型效果和性能更好。',
+    description: '与ERNIE-X1-32K相比，模型效果和性能更好。',
     displayName: 'ERNIE X1 Turbo 32K',
     enabled: true,
     id: 'ernie-x1-turbo-32k',

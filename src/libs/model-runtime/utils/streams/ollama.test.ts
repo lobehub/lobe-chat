@@ -7,6 +7,65 @@ import { OllamaStream } from './ollama';
 
 describe('OllamaStream', () => {
   describe('should transform Ollama stream to protocol stream', () => {
+    it('reasoning', async () => {
+      vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('2');
+
+      const messages = [
+        '<think>',
+        '这是一个思考过程',
+        '，需要仔细分析问题。',
+        '</think>',
+        '根据分析，我的答案是：',
+        '这是最终答案。',
+      ];
+
+      const mockOllamaStream = new ReadableStream<ChatResponse>({
+        start(controller) {
+          messages.forEach((content) => {
+            controller.enqueue({ message: { content }, done: false } as ChatResponse);
+          });
+          controller.enqueue({ message: { content: '' }, done: true } as ChatResponse);
+          controller.close();
+        },
+      });
+
+      const protocolStream = OllamaStream(mockOllamaStream);
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks).toEqual(
+        [
+          'id: chat_2',
+          'event: reasoning',
+          `data: ""\n`,
+          'id: chat_2',
+          'event: reasoning',
+          `data: "这是一个思考过程"\n`,
+          'id: chat_2',
+          'event: reasoning',
+          `data: "，需要仔细分析问题。"\n`,
+          'id: chat_2',
+          'event: text',
+          `data: ""\n`,
+          'id: chat_2',
+          'event: text',
+          `data: "根据分析，我的答案是："\n`,
+          'id: chat_2',
+          'event: text',
+          `data: "这是最终答案。"\n`,
+          'id: chat_2',
+          'event: stop',
+          `data: "finished"\n`,
+        ].map((line) => `${line}\n`),
+      );
+    });
+
     it('text', async () => {
       vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
 
@@ -57,7 +116,7 @@ describe('OllamaStream', () => {
     });
 
     it('tools use', async () => {
-      vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+      vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1').mockReturnValueOnce('abcd1234');
 
       const mockOllamaStream = new ReadableStream<ChatResponse>({
         start(controller) {
@@ -119,7 +178,7 @@ describe('OllamaStream', () => {
         [
           'id: chat_1',
           'event: tool_calls',
-          `data: [{"function":{"arguments":"{\\"city\\":\\"杭州\\"}","name":"realtime-weather____fetchCurrentWeather"},"id":"realtime-weather____fetchCurrentWeather_0","index":0,"type":"function"}]\n`,
+          `data: [{"function":{"arguments":"{\\"city\\":\\"杭州\\"}","name":"realtime-weather____fetchCurrentWeather"},"id":"realtime-weather____fetchCurrentWeather_0_abcd1234","index":0,"type":"function"}]\n`,
           'id: chat_1',
           'event: stop',
           `data: "finished"\n`,

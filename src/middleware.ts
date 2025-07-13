@@ -69,10 +69,20 @@ const defaultMiddleware = (request: NextRequest) => {
   const theme =
     request.cookies.get(LOBE_THEME_APPEARANCE)?.value || parseDefaultThemeFromCountry(request);
 
-  // if it's a new user, there's no cookie
-  // So we need to use the fallback language parsed by accept-language
+  // locale has three levels
+  // 1. search params
+  // 2. cookie
+  // 3. browser
+
+  // highest priority is explicitly in search params, like ?hl=zh-CN
+  const explicitlyLocale = (url.searchParams.get('hl') || undefined) as Locales | undefined;
+
+  // if it's a new user, there's no cookie, So we need to use the fallback language parsed by accept-language
   const browserLanguage = parseBrowserLanguage(request.headers);
-  const locale = (request.cookies.get(LOBE_LOCALE_COOKIE)?.value || browserLanguage) as Locales;
+
+  const locale =
+    explicitlyLocale ||
+    ((request.cookies.get(LOBE_LOCALE_COOKIE)?.value || browserLanguage) as Locales);
 
   const ua = request.headers.get('user-agent');
 
@@ -136,7 +146,7 @@ const defaultMiddleware = (request: NextRequest) => {
 
 const isPublicRoute = createRouteMatcher([
   '/api/auth(.*)',
-  '/trpc/edge(.*)',
+  '/trpc(.*)',
   // next auth
   '/next-auth/(.*)',
   // clerk
@@ -206,7 +216,9 @@ const clerkAuthMiddleware = clerkMiddleware(
   async (auth, req) => {
     logClerk('Clerk middleware processing request: %s %s', req.method, req.url);
 
-    const isProtected = isProtectedRoute(req);
+    // when enable auth protection, only public route is not protected, others are all protected
+    const isProtected = appEnv.ENABLE_AUTH_PROTECTION ? !isPublicRoute(req) : isProtectedRoute(req);
+
     logClerk('Route protection status: %s, %s', req.url, isProtected ? 'protected' : 'public');
 
     if (isProtected) {

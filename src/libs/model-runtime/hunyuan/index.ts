@@ -1,20 +1,23 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface HunyuanModelCard {
   id: string;
 }
 
-export const LobeHunyuanAI = LobeOpenAICompatibleFactory({
+export const LobeHunyuanAI = createOpenAICompatibleRuntime({
   baseURL: 'https://api.hunyuan.cloud.tencent.com/v1',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { enabledSearch, ...rest } = payload;
+      // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
+      const { enabledSearch, frequency_penalty, presence_penalty, ...rest } = payload;
 
       return {
         ...rest,
+        frequency_penalty: undefined,
+        presence_penalty: undefined,
         stream: true,
         ...(enabledSearch && {
           citation: true,

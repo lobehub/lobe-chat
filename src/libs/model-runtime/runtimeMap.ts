@@ -43,6 +43,7 @@ import { LobeTaichuAI } from './taichu';
 import { LobeTencentCloudAI } from './tencentcloud';
 import { LobeTogetherAI } from './togetherai';
 import { LobeUpstageAI } from './upstage';
+import { LobeV0AI } from './v0';
 import { LobeVLLMAI } from './vllm';
 import { LobeVolcengineAI } from './volcengine';
 import { LobeWenxinAI } from './wenxin';
@@ -97,6 +98,7 @@ export const providerRuntimeMap = {
   tencentcloud: LobeTencentCloudAI,
   togetherai: LobeTogetherAI,
   upstage: LobeUpstageAI,
+  v0: LobeV0AI,
   vllm: LobeVLLMAI,
   volcengine: LobeVolcengineAI,
   wenxin: LobeWenxinAI,

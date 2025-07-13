@@ -22,13 +22,13 @@ const Layout = memo<LayoutProps>(({ children }) => {
 
   return (
     <Flexbox
-        className={styles.main}
-        height="100%"
-        style={showMobileWorkspace ? { display: 'none' } : undefined}
-        width="100%"
-      >
-        {children}
-      </Flexbox>
+      className={styles.main}
+      height="100%"
+      style={showMobileWorkspace ? { display: 'none' } : undefined}
+      width="100%"
+    >
+      {children}
+    </Flexbox>
   );
 });
 

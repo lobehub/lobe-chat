@@ -1,9 +1,8 @@
 ---
 title: LobeChat Model Service Providers - Environment Variables and Configuration
 description: >-
-  Learn about the environment variables and configuration settings for various
-  model service providers like OpenAI, Google AI, AWS Bedrock, Ollama,
-  Perplexity AI, Anthropic AI, Mistral AI, Groq AI, OpenRouter AI, and 01.AI.
+  Learn about the environment variables and configuration settings for various model service providers like OpenAI, Google AI, AWS Bedrock, Ollama, Perplexity AI, Anthropic AI, Mistral AI, Groq AI, OpenRouter AI, and 01.AI.
+
 tags:
   - Model Service Providers
   - Environment Variables
@@ -458,9 +457,9 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `QWEN_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name->deploymentName=display_name` to customize the display name of a model, separated by commas. The deploymentName `->deploymentName` can be omitted, and it defaults to the latest model version. Definition syntax rules see [model-list][model-list]
 - Default: `-`
-- Example: `-all,+qwen-turbo-latest,+qwen-plus-latest`
+- Example: `-all,+qwen-turbo,+qwen-plus,+qwen-max->qwen-max-2025-01-25`
 
 ### `QWEN_PROXY_URL`
 

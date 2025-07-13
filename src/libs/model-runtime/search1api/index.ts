@@ -3,13 +3,13 @@ import OpenAI from 'openai';
 import type { ChatModelCard } from '@/types/llm';
 
 import { ChatStreamPayload, ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface Search1APIModelCard {
   id: string;
 }
 
-export const LobeSearch1API = LobeOpenAICompatibleFactory({
+export const LobeSearch1API = createOpenAICompatibleRuntime({
   baseURL: 'https://api.search1api.com/v1',
   chatCompletion: {
     handlePayload: (payload: ChatStreamPayload) => {

@@ -59,7 +59,7 @@ const qwenChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description:
       'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
-    displayName: 'Qwen3 30B',
+    displayName: 'Qwen3 30B A3B',
     enabled: true,
     id: 'qwen3-30b-a3b',
     maxOutput: 8192,
@@ -280,7 +280,7 @@ const qwenChatModels: AIChatModelCard[] = [
       search: true,
     },
     config: {
-      deploymentName: 'qwen-max-2025-01-25', 
+      deploymentName: 'qwen-max-2025-01-25',
     },
     contextWindowTokens: 131_072,
     description:
@@ -305,7 +305,7 @@ const qwenChatModels: AIChatModelCard[] = [
       functionCall: true,
     },
     config: {
-      deploymentName: 'qwen-long-latest', 
+      deploymentName: 'qwen-long-latest',
     },
     contextWindowTokens: 10_000_000,
     description:
@@ -327,7 +327,7 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'qwen-omni-turbo-latest', 
+      deploymentName: 'qwen-omni-turbo-latest',
     },
     contextWindowTokens: 32_768,
     description:
@@ -367,7 +367,7 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'qwen-vl-plus-2025-01-25', 
+      deploymentName: 'qwen-vl-plus-2025-01-25',
     },
     contextWindowTokens: 131_072,
     description:
@@ -388,7 +388,7 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'qwen-vl-max-2025-04-08', 
+      deploymentName: 'qwen-vl-max-2025-04-08',
     },
     contextWindowTokens: 131_072,
     description:
@@ -410,7 +410,7 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'qwen-vl-ocr-2025-04-13', 
+      deploymentName: 'qwen-vl-ocr-2025-04-13',
     },
     contextWindowTokens: 34_096,
     description:
@@ -428,7 +428,7 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     config: {
-      deploymentName: 'qwen-math-turbo-latest', 
+      deploymentName: 'qwen-math-turbo-latest',
     },
     contextWindowTokens: 4096,
     description: '通义千问数学模型是专门用于数学解题的语言模型。',
@@ -445,7 +445,7 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     config: {
-      deploymentName: 'qwen-math-plus-latest', 
+      deploymentName: 'qwen-math-plus-latest',
     },
     contextWindowTokens: 4096,
     description: '通义千问数学模型是专门用于数学解题的语言模型。',
@@ -462,7 +462,7 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     config: {
-      deploymentName: 'qwen-coder-turbo-latest', 
+      deploymentName: 'qwen-coder-turbo-latest',
     },
     contextWindowTokens: 131_072,
     description: '通义千问代码模型。',
@@ -479,7 +479,7 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     config: {
-      deploymentName: 'qwen-coder-plus-latest', 
+      deploymentName: 'qwen-coder-plus-latest',
     },
     contextWindowTokens: 131_072,
     description: '通义千问代码模型。',
@@ -541,9 +541,9 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'qvq-max-latest', 
+      deploymentName: 'qvq-max-latest',
     },
-    contextWindowTokens: 122_880,
+    contextWindowTokens: 131_072,
     description:
       '通义千问QVQ视觉推理模型，支持视觉输入及思维链输出，在数学、编程、视觉分析、创作以及通用任务上都表现了更强的能力。',
     displayName: 'QVQ Max',
@@ -555,7 +555,30 @@ const qwenChatModels: AIChatModelCard[] = [
       input: 8,
       output: 32,
     },
-    releasedAt: '2025-03-25',
+    releasedAt: '2025-05-15',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    config: {
+      deploymentName: 'qvq-plus-latest',
+    },
+    contextWindowTokens: 131_072,
+    description:
+      '视觉推理模型。支持视觉输入及思维链输出，继qvq-max模型后推出的plus版本，相较于qvq-max模型，qvq-plus系列模型推理速度更快，效果和成本更均衡。',
+    displayName: 'QVQ Plus',
+    id: 'qvq-plus',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 5,
+    },
+    releasedAt: '2025-05-15',
     type: 'chat',
   },
   {
@@ -795,9 +818,28 @@ const qwenChatModels: AIChatModelCard[] = [
     abilities: {
       reasoning: true,
     },
-    contextWindowTokens: 65_792,
+    contextWindowTokens: 65_536,
     description:
-      'DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能较高，能力较强。',
+      '685B 满血版模型，2025年5月28日发布。DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能较高，能力较强。',
+    displayName: 'DeepSeek R1 0528',
+    id: 'deepseek-r1-0528',
+    maxOutput: 8192,
+    organization: 'DeepSeek',
+    pricing: {
+      currency: 'CNY',
+      input: 4,
+      output: 16,
+    },
+    releasedAt: '2025-05-28',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      '671B 满血版模型，2025年1月20日发布。DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能较高，能力较强。',
     displayName: 'DeepSeek R1',
     id: 'deepseek-r1',
     maxOutput: 8192,
@@ -811,7 +853,7 @@ const qwenChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 65_792,
+    contextWindowTokens: 65_536,
     description:
       'DeepSeek-V3 为自研 MoE 模型，671B 参数，激活 37B，在 14.8T token 上进行了预训练，在长文本、代码、数学、百科、中文能力上表现优秀。',
     displayName: 'DeepSeek V3',

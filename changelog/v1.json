@@ -1,6 +1,495 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-13",
+    "version": "1.97.16"
+  },
+  {
+    "children": {
+      "fixes": ["Add vision support to Grok 4."]
+    },
+    "date": "2025-07-12",
+    "version": "1.97.15"
+  },
+  {
+    "children": {
+      "fixes": ["Revert \"💄 style: Open new topic by tap Just Chat again\"."],
+      "improvements": ["Add Kimi K2 model."]
+    },
+    "date": "2025-07-12",
+    "version": "1.97.14"
+  },
+  {
+    "children": {
+      "improvements": ["Support new Doubao thinking models, update i18n."]
+    },
+    "date": "2025-07-12",
+    "version": "1.97.13"
+  },
+  {
+    "children": {
+      "fixes": ["Grok-4 reasoning model universal matching."]
+    },
+    "date": "2025-07-11",
+    "version": "1.97.12"
+  },
+  {
+    "children": {
+      "improvements": ["Open new topic by tap Just Chat again."]
+    },
+    "date": "2025-07-11",
+    "version": "1.97.11"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-11",
+    "version": "1.97.10"
+  },
+  {
+    "children": {
+      "improvements": ["Integrate Amazon Cognito for user authentication."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.9"
+  },
+  {
+    "children": {},
+    "date": "2025-07-10",
+    "version": "1.97.8"
+  },
+  {
+    "children": {
+      "improvements": ["Add google search grounding for Vertex AI."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.7"
+  },
+  {
+    "children": {
+      "improvements": ["Replace utility-types with type-fest."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.6"
+  },
+  {
+    "children": {
+      "improvements": ["Fix: solve the loading was strange spin when switch show."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.5"
+  },
+  {
+    "children": {
+      "improvements": ["Add grok-4-0709 model from xAI, fix theme issue in desktop."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.4"
+  },
+  {
+    "children": {},
+    "date": "2025-07-10",
+    "version": "1.97.3"
+  },
+  {
+    "children": {
+      "improvements": ["Implement data analytics event tracking framework."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix locale hydration error in SSR."]
+    },
+    "date": "2025-07-10",
+    "version": "1.97.1"
+  },
+  {
+    "children": {
+      "features": ["Add MCP marketplace and mcp plugin one-click installation in desktop."]
+    },
+    "date": "2025-07-08",
+    "version": "1.97.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add MCP_TOOL_TIMEOUT env and improve debug usage guide."]
+    },
+    "date": "2025-07-08",
+    "version": "1.96.20"
+  },
+  {
+    "children": {
+      "fixes": ["Pin officeparser@5.1.1 to fix server error."]
+    },
+    "date": "2025-07-07",
+    "version": "1.96.19"
+  },
+  {
+    "children": {
+      "fixes": ["Change the wrong github checkmodel name."],
+      "improvements": ["Files hello pages should scroll."]
+    },
+    "date": "2025-07-06",
+    "version": "1.96.18"
+  },
+  {
+    "children": {},
+    "date": "2025-07-03",
+    "version": "1.96.17"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-03",
+    "version": "1.96.16"
+  },
+  {
+    "children": {
+      "fixes": ["Wrong Gemini 2.5 Pro thinkbudget."]
+    },
+    "date": "2025-07-02",
+    "version": "1.96.15"
+  },
+  {
+    "children": {
+      "improvements": ["Migrate to @google/genai SDK for Google Gemini API and Vertex AI."]
+    },
+    "date": "2025-07-01",
+    "version": "1.96.14"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-01",
+    "version": "1.96.13"
+  },
+  {
+    "children": {
+      "fixes": ["Pin antd@5.26.2 to fix build error."],
+      "improvements": ["Add DeepResearch models from OpenAI."]
+    },
+    "date": "2025-06-30",
+    "version": "1.96.12"
+  },
+  {
+    "children": {},
+    "date": "2025-06-28",
+    "version": "1.96.11"
+  },
+  {
+    "children": {
+      "fixes": ["Fix desktop chunk issue."]
+    },
+    "date": "2025-06-28",
+    "version": "1.96.10"
+  },
+  {
+    "children": {
+      "fixes": ["Google Gemini tools declarations."]
+    },
+    "date": "2025-06-23",
+    "version": "1.96.9"
+  },
+  {
+    "children": {
+      "improvements": ["Optimized Gemini thinkingBudget configuration."]
+    },
+    "date": "2025-06-23",
+    "version": "1.96.8"
+  },
+  {
+    "children": {
+      "improvements": ["Add blockAds & stealth params for Browserless."]
+    },
+    "date": "2025-06-23",
+    "version": "1.96.7"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-06-23",
+    "version": "1.96.6"
+  },
+  {
+    "children": {
+      "fixes": ["Remove unsupported parameters of Hunyuan."]
+    },
+    "date": "2025-06-22",
+    "version": "1.96.5"
+  },
+  {
+    "children": {},
+    "date": "2025-06-22",
+    "version": "1.96.4"
+  },
+  {
+    "children": {},
+    "date": "2025-06-22",
+    "version": "1.96.3"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-06-22",
+    "version": "1.96.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix MiniMax-M1 reasoning tag missing."]
+    },
+    "date": "2025-06-21",
+    "version": "1.96.1"
+  },
+  {
+    "children": {
+      "features": ["Add v0 (Vercel) provider support."],
+      "fixes": ["Fix inputTemplate behavior."]
+    },
+    "date": "2025-06-20",
+    "version": "1.96.0"
+  },
+  {
+    "children": {
+      "features": ["Add Brave & Google PSE & Kagi as build-in Search Provider."]
+    },
+    "date": "2025-06-20",
+    "version": "1.95.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-06-20",
+    "version": "1.94.17"
+  },
+  {
+    "children": {
+      "fixes": ["Correctly pass reasoning.summary."]
+    },
+    "date": "2025-06-19",
+    "version": "1.94.16"
+  },
+  {
+    "children": {
+      "improvements": ["Update model card for Gemini 2.5 Pro via OpenRouter."]
+    },
+    "date": "2025-06-19",
+    "version": "1.94.15"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-06-19",
+    "version": "1.94.14"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Update Gemini 2.5 Pro, Flash GA models. Add Gemini 2.5 Flash-Lite Preview model."
+      ]
+    },
+    "date": "2025-06-18",
+    "version": "1.94.13"
+  },
+  {
+    "children": {
+      "improvements": ["Add MiniMax-M1 model."]
+    },
+    "date": "2025-06-18",
+    "version": "1.94.12"
+  },
+  {
+    "children": {
+      "fixes": ["Enhance the multi-display window opening experience."]
+    },
+    "date": "2025-06-17",
+    "version": "1.94.11"
+  },
+  {
+    "children": {
+      "fixes": ["Improve chat selectors and enhance topic handling logic."]
+    },
+    "date": "2025-06-15",
+    "version": "1.94.10"
+  },
+  {
+    "children": {
+      "improvements": ["Add kimi-thinking-preview model from Moonshot."]
+    },
+    "date": "2025-06-15",
+    "version": "1.94.9"
+  },
+  {
+    "children": {
+      "fixes": ["Correctly handle reasoning_effort."]
+    },
+    "date": "2025-06-15",
+    "version": "1.94.8"
+  },
+  {
+    "children": {
+      "improvements": ["Add Doubao Seed 1.6 model."]
+    },
+    "date": "2025-06-12",
+    "version": "1.94.7"
+  },
+  {
+    "children": {
+      "fixes": ["Abort the Gemini request correctly & Add openai o3-pro."]
+    },
+    "date": "2025-06-12",
+    "version": "1.94.6"
+  },
+  {
+    "children": {
+      "improvements": ["Support web_search_preview & fix some bug form OpenAI Response API."]
+    },
+    "date": "2025-06-12",
+    "version": "1.94.5"
+  },
+  {
+    "children": {
+      "improvements": ["Transition animation switch."]
+    },
+    "date": "2025-06-11",
+    "version": "1.94.4"
+  },
+  {
+    "children": {},
+    "date": "2025-06-11",
+    "version": "1.94.3"
+  },
+  {
+    "children": {
+      "fixes": ["Update Gemini range of thinkingBudget."]
+    },
+    "date": "2025-06-11",
+    "version": "1.94.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update pplx abilities tags, support vision."]
+    },
+    "date": "2025-06-10",
+    "version": "1.94.1"
+  },
+  {
+    "children": {
+      "features": ["Support google sso as auth provider."],
+      "fixes": ["Restore reasoningEffort in setting."]
+    },
+    "date": "2025-06-10",
+    "version": "1.94.0"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor branding info."]
+    },
+    "date": "2025-06-10",
+    "version": "1.93.3"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor <think> & </think> handling."]
+    },
+    "date": "2025-06-09",
+    "version": "1.93.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix openai default Responses API issue."]
+    },
+    "date": "2025-06-08",
+    "version": "1.93.1"
+  },
+  {
+    "children": {
+      "features": ["Support OpenAI Responses API mode."]
+    },
+    "date": "2025-06-08",
+    "version": "1.93.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix client s3 getObject throw error."],
+      "improvements": ["Support OpenRouter Claude 4 reasoning."]
+    },
+    "date": "2025-06-08",
+    "version": "1.92.3"
+  },
+  {
+    "children": {
+      "improvements": ["Add support to azureopenai embedding."]
+    },
+    "date": "2025-06-07",
+    "version": "1.92.2"
+  },
+  {
+    "children": {
+      "improvements": ["Improve {{username}} placeholder variable, Update Gemini & Qwen models."]
+    },
+    "date": "2025-06-07",
+    "version": "1.92.1"
+  },
+  {
+    "children": {
+      "features": ["Support placeholder variables in prompts and input."],
+      "fixes": ["Some web search bugs."],
+      "improvements": ["Support Vertex AI thought summaries."]
+    },
+    "date": "2025-06-06",
+    "version": "1.92.0"
+  },
+  {
+    "children": {
+      "fixes": ["Correct deepseek R1 fc support display."],
+      "improvements": ["Add openAI websearch and claude 4 to modelproviders."]
+    },
+    "date": "2025-06-05",
+    "version": "1.91.3"
+  },
+  {
+    "children": {
+      "improvements": ["Add Volcengine & OpenAI-like Provider (e.g. oneapi) model fetch support."]
+    },
+    "date": "2025-06-05",
+    "version": "1.91.2"
+  },
+  {
+    "children": {
+      "improvements": ["Improve loading state."]
+    },
+    "date": "2025-06-04",
+    "version": "1.91.1"
+  },
+  {
+    "children": {
+      "features": ["Add more provider support for search & crawl."],
+      "improvements": ["Update modelscope models."]
+    },
+    "date": "2025-06-03",
+    "version": "1.91.0"
+  },
+  {
+    "children": {
+      "improvements": ["Rename the createOpenAICompatibleRuntime."],
+      "fixes": ["Update the clerk middleware to support route protection."]
+    },
+    "date": "2025-06-02",
+    "version": "1.90.4"
+  },
+  {
+    "children": {
       "improvements": ["Enable deploymentName for Aliyun Bailian."]
     },
     "date": "2025-06-01",

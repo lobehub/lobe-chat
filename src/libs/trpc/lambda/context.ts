@@ -1,3 +1,4 @@
+import { parse } from 'cookie';
 import debug from 'debug';
 import { User } from 'next-auth';
 import { NextRequest } from 'next/server';
@@ -23,9 +24,12 @@ export interface AuthContext {
   authorizationHeader?: string | null;
   clerkAuth?: IClerkAuth;
   jwtPayload?: JWTPayload | null;
+  marketAccessToken?: string;
   nextAuth?: User;
   // Add OIDC authentication information
   oidcAuth?: OIDCAuth | null;
+  resHeaders?: Headers;
+  userAgent?: string;
   userId?: string | null;
 }
 
@@ -36,16 +40,23 @@ export interface AuthContext {
 export const createContextInner = async (params?: {
   authorizationHeader?: string | null;
   clerkAuth?: IClerkAuth;
+  marketAccessToken?: string;
   nextAuth?: User;
   oidcAuth?: OIDCAuth | null;
+  userAgent?: string;
   userId?: string | null;
 }): Promise<AuthContext> => {
   log('createContextInner called with params: %O', params);
+  const responseHeaders = new Headers();
+
   return {
     authorizationHeader: params?.authorizationHeader,
     clerkAuth: params?.clerkAuth,
+    marketAccessToken: params?.marketAccessToken,
     nextAuth: params?.nextAuth,
     oidcAuth: params?.oidcAuth,
+    resHeaders: responseHeaders,
+    userAgent: params?.userAgent,
     userId: params?.userId,
   };
 };
@@ -68,6 +79,19 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
   // for API-response caching see https://trpc.io/docs/v11/caching
 
   const authorization = request.headers.get(LOBE_CHAT_AUTH_HEADER);
+  const userAgent = request.headers.get('user-agent') || undefined;
+
+  // get marketAccessToken from cookies
+  const cookieHeader = request.headers.get('cookie');
+  const cookies = cookieHeader ? parse(cookieHeader) : {};
+  const marketAccessToken = cookies['mp_token'];
+
+  log('marketAccessToken from cookie:', marketAccessToken ? '[HIDDEN]' : 'undefined');
+  const commonContext = {
+    authorizationHeader: authorization,
+    marketAccessToken,
+    userAgent,
+  };
   log('LobeChat Authorization header: %s', authorization ? 'exists' : 'not found');
 
   let userId;
@@ -105,9 +129,8 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
         // If OIDC authentication is successful, return context immediately
         log('OIDC authentication successful, creating context and returning');
         return createContextInner({
-          // Preserve original LobeChat Authorization Header (if any)
-          authorizationHeader: authorization,
           oidcAuth,
+          ...commonContext,
           userId,
         });
       }
@@ -129,7 +152,11 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
     userId = result.userId;
     log('Clerk authentication result, userId: %s', userId || 'not authenticated');
 
-    return createContextInner({ authorizationHeader: authorization, clerkAuth: auth, userId });
+    return createContextInner({
+      clerkAuth: auth,
+      ...commonContext,
+      userId,
+    });
   }
 
   if (enableNextAuth) {
@@ -145,7 +172,11 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
       } else {
         log('NextAuth authentication failed, no valid session');
       }
-      return createContextInner({ authorizationHeader: authorization, nextAuth: auth, userId });
+      return createContextInner({
+        nextAuth: auth,
+        ...commonContext,
+        userId,
+      });
     } catch (e) {
       log('NextAuth authentication error: %O', e);
       console.error('next auth err', e);
@@ -157,5 +188,5 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
     'All authentication methods attempted, returning final context, userId: %s',
     userId || 'not authenticated',
   );
-  return createContextInner({ authorizationHeader: authorization, userId });
+  return createContextInner({ ...commonContext, userId });
 };

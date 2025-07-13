@@ -1,9 +1,8 @@
 ---
 title: LobeChat Model Config Guide
 description: >-
-  Explore the capabilities of ChatGPT models from gpt-3.5-turbo to gpt-4-32k,
-  understanding their speed, context limits, and cost. Learn about model
-  parameters like temperature and top-p for better output.
+  Explore the capabilities of ChatGPT models from gpt-3.5-turbo to gpt-4-32k, understanding their speed, context limits, and cost. Learn about model parameters like temperature and top-p for better output.
+
 tags:
   - ChatGPT Models
   - Model Parameters
@@ -76,7 +75,7 @@ It is a mechanism that penalizes frequently occurring new vocabulary in the text
 - `-1.0` He always watches the news in the early morning, in front of the TV watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch watch **(The highest frequency word is "watch", accounting for 57.69%)**
 - `0.0` When the morning sun poured into the small diner, a tired postman appeared at the door, carrying a bag of letters in his hands. The owner warmly prepared a breakfast for him, and he started sorting the mail while enjoying his breakfast. **(The highest frequency word is "of", accounting for 8.45%)**
 - `1.0` A girl in deep sleep was woken up by a warm ray of sunshine, she saw the first ray of morning light, surrounded by birdsong and flowers, everything was full of vitality. (The highest frequency word is "of", accounting for 5.45%)
-- `2.0` Every morning, he would sit on the balcony to have breakfast. Under the soft setting sun, everything looked very peaceful. However, one day, when he was about to pick up his breakfast, an optimistic little bird flew by, bringing him a good mood for the day.  (The highest frequency word is "of", accounting for 4.94%)
+- `2.0` Every morning, he would sit on the balcony to have breakfast. Under the soft setting sun, everything looked very peaceful. However, one day, when he was about to pick up his breakfast, an optimistic little bird flew by, bringing him a good mood for the day. (The highest frequency word is "of", accounting for 4.94%)
 
 <br />
 
@@ -91,5 +90,6 @@ The `reasoning_effort` parameter controls the strength of the reasoning process.
 By adjusting the `reasoning_effort` parameter, you can find an appropriate balance between response speed and reasoning depth based on your needs. For example, in conversational scenarios, if fast responses are a priority, you can choose low reasoning effort; if more complex analysis or reasoning is needed, you can opt for high reasoning effort.
 
 <Callout>
-  This parameter is only applicable to reasoning models, such as OpenAI's `o1`, `o1-mini`, `o3-mini`, etc.
+  This parameter is only applicable to reasoning models, such as OpenAI's `o1`, `o1-mini`,
+  `o3-mini`, etc.
 </Callout>

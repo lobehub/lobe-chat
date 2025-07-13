@@ -26,9 +26,6 @@ const Qiniu: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://developer.qiniu.com/aitokenapi/12882/ai-inference-api',
   name: 'Qiniu',
-  proxyUrl: {
-    placeholder: 'https://api.qnaigc.com/v1',
-  },
   settings: {
     proxyUrl: {
       placeholder: 'https://api.qnaigc.com/v1',

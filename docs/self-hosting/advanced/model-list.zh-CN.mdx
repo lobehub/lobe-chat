@@ -18,7 +18,8 @@ LobeChat 支持在部署时自定义模型列表，详情请参考 [模型提供
 ```text
 id->deploymentName=displayName<maxToken:vision:reasoning:search:fc:file:imageOutput>,model2,model3
 ```
-部署名`->deploymentName`可以省略，默认为最新版本的模型。当前支持`->deploymentName`的模型服务商有：Azure和Volcengine。
+
+部署名`->deploymentName`可以省略，默认为最新版本的模型。当前支持`->deploymentName`的模型服务商有：Azure、Volcengine 和 Qwen。
 
 例如： `+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo`
 
@@ -46,11 +47,11 @@ id->deploymentName=displayName<maxToken:vision:reasoning:search:fc:file:imageOut
 
 目前支持的扩展能力有：
 
-| ---         | 描述                     |
-| ----------- | ---------------------- |
-| `fc`        | 函数调用（function calling） |
-| `vision`    | 视觉识别                   |
-| `imageOutput`      | 图像生成  |
-| `reasoning` | 支持推理                   |
-| `search`    | 支持联网搜索                   |
-| `file`      | 文件上传（比较 hack，不建议日常使用）  |
+| ---           | 描述                     |
+| ------------- | ---------------------- |
+| `fc`          | 函数调用（function calling） |
+| `vision`      | 视觉识别                   |
+| `imageOutput` | 图像生成                   |
+| `reasoning`   | 支持推理                   |
+| `search`      | 支持联网搜索                 |
+| `file`        | 文件上传（比较 hack，不建议日常使用）  |

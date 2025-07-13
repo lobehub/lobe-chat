@@ -1,7 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { Stream } from '@anthropic-ai/sdk/streaming';
 
-import { ModelTokensUsage, CitationItem } from '@/types/message';
+import { CitationItem, ModelTokensUsage } from '@/types/message';
 
 import { ChatStreamCallbacks } from '../../types';
 import {
@@ -180,7 +180,7 @@ export const transformAnthropicStream = (
             context.returnedCitationArray.push({
               title: citations.title,
               url: citations.url,
-            } as CitationItem)
+            } as CitationItem);
           }
 
           return { data: null, id: context.id, type: 'text' };
@@ -219,15 +219,16 @@ export const transformAnthropicStream = (
 
     case 'message_stop': {
       return [
-        ...(context.returnedCitationArray?.length 
-          ? [{ 
-              data: { citations: context.returnedCitationArray }, 
-              id: context.id, 
-              type: 'grounding' 
-            }] 
-          : []
-        ),
-        { data: 'message_stop', id: context.id, type: 'stop' }
+        ...(context.returnedCitationArray?.length
+          ? [
+              {
+                data: { citations: context.returnedCitationArray },
+                id: context.id,
+                type: 'grounding',
+              },
+            ]
+          : []),
+        { data: 'message_stop', id: context.id, type: 'stop' },
       ] as any;
     }
 

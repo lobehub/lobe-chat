@@ -1,7 +1,6 @@
-import type { ChatModelCard } from '@/types/llm';
-
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { MODEL_LIST_CONFIGS, processModelList } from '../utils/modelParse';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface ZhipuModelCard {
   description: string;
@@ -9,7 +8,7 @@ export interface ZhipuModelCard {
   modelName: string;
 }
 
-export const LobeZhipuAI = LobeOpenAICompatibleFactory({
+export const LobeZhipuAI = createOpenAICompatibleRuntime({
   baseURL: 'https://open.bigmodel.cn/api/paas/v4',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -60,10 +59,6 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
     chatCompletion: () => process.env.DEBUG_ZHIPU_CHAT_COMPLETION === '1',
   },
   models: async ({ client }) => {
-    const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
-
-    const reasoningKeywords = ['glm-zero', 'glm-z1'];
-
     // ref: https://open.bigmodel.cn/console/modelcenter/square
     const url = 'https://open.bigmodel.cn/api/fine-tuning/model_center/list?pageSize=100&pageNum=1';
     const response = await fetch(url, {
@@ -78,34 +73,12 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
 
     const modelList: ZhipuModelCard[] = json.rows;
 
-    return modelList
-      .map((model) => {
-        const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
-          (m) => model.modelCode.toLowerCase() === m.id.toLowerCase(),
-        );
-
-        return {
-          contextWindowTokens: knownModel?.contextWindowTokens ?? undefined,
-          description: model.description,
-          displayName: model.modelName,
-          enabled: knownModel?.enabled || false,
-          functionCall:
-            (model.modelCode.toLowerCase().includes('glm-4') &&
-              !model.modelCode.toLowerCase().includes('glm-4v')) ||
-            knownModel?.abilities?.functionCall ||
-            false,
-          id: model.modelCode,
-          reasoning:
-            reasoningKeywords.some((keyword) => model.modelCode.toLowerCase().includes(keyword)) ||
-            knownModel?.abilities?.reasoning ||
-            false,
-          vision:
-            model.modelCode.toLowerCase().includes('glm-4v') ||
-            knownModel?.abilities?.vision ||
-            false,
-        };
-      })
-      .filter(Boolean) as ChatModelCard[];
+    const standardModelList = modelList.map((model) => ({
+      description: model.description,
+      displayName: model.modelName,
+      id: model.modelCode,
+    }));
+    return processModelList(standardModelList, MODEL_LIST_CONFIGS.zhipu);
   },
   provider: ModelProvider.ZhiPu,
 });

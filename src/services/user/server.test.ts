@@ -1,4 +1,4 @@
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 import { describe, expect, it, vi } from 'vitest';
 
 import { lambdaClient } from '@/libs/trpc/client';
@@ -125,7 +125,7 @@ describe('ServerService', () => {
   });
 
   it('should update user settings', async () => {
-    const settings: DeepPartial<UserSettings> = {
+    const settings: PartialDeep<UserSettings> = {
       defaultAgent: {
         config: {
           model: 'gpt-4',

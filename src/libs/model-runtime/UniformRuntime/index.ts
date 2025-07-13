@@ -2,8 +2,8 @@ import { LobeRuntimeAI } from '../BaseAI';
 import { LobeOpenAI } from '../openai';
 import { providerRuntimeMap } from '../runtimeMap';
 import {
-  ChatCompetitionOptions,
   type ChatCompletionErrorPayload,
+  ChatMethodOptions,
   ChatStreamPayload,
   EmbeddingsOptions,
   EmbeddingsPayload,
@@ -70,7 +70,7 @@ class UniformRuntime {
     return runtimeItem.runtime;
   }
 
-  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
+  async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {
     try {
       const runtime = this.getRuntimeByModel(payload.model);
 

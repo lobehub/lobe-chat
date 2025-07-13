@@ -3,7 +3,7 @@ import { uniqueId } from 'lodash-es';
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface HigressModelCard {
   context_length: number;
@@ -15,7 +15,7 @@ export interface HigressModelCard {
   };
 }
 
-export const LobeHigressAI = LobeOpenAICompatibleFactory({
+export const LobeHigressAI = createOpenAICompatibleRuntime({
   constructorOptions: {
     defaultHeaders: {
       'HTTP-Referer': 'https://chat-preview.lobehub.com',

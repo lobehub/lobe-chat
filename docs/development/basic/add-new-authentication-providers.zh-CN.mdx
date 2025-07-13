@@ -120,8 +120,7 @@ authorize --> jwt --> session
 
 #### 自定义 `session` 返回
 
-如果您想在 `session` 中携带更多关于 `profile` 及 `account` 的信息，根据上面提到的 `Auth.js` 数据处理顺序，那必须先将该信息复制到 `token` 上。
-示例：把用户头像 URL：`profile.picture` 添加到`session` 中：
+如果您想在 `session` 中携带更多关于 `profile` 及 `account` 的信息，根据上面提到的 `Auth.js` 数据处理顺序，那必须先将该信息复制到 `token` 上。示例：把用户头像 URL：`profile.picture` 添加到`session` 中：
 
 ```diff
   callbacks: {

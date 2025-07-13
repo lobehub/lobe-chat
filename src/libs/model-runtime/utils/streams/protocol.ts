@@ -1,5 +1,6 @@
 import { CitationItem, ModelSpeed, ModelTokensUsage } from '@/types/message';
 import { safeParseJSON } from '@/utils/safeParseJSON';
+import { nanoid } from '@/utils/uuid';
 
 import { AgentRuntimeErrorType } from '../../error';
 import { parseToolCalls } from '../../helpers';
@@ -18,15 +19,31 @@ export interface StreamContext {
   returnedCitation?: boolean;
   /**
    * Claude's citations are inline and interleaved with text output.
-   * Each text segment may carry references to sources (e.g., web search results) 
+   * Each text segment may carry references to sources (e.g., web search results)
    * relevant to that specific portion of the generated content.
    * This array accumulates all citation items received during the streaming response.
    */
   returnedCitationArray?: CitationItem[];
+  /**
+   * O series models need a condition to separate part
+   */
+  startReasoning?: boolean;
   thinking?: {
     id: string;
     name: string;
   };
+  /**
+   * Indicates whether the current state is within a "thinking" segment of the model output
+   * (e.g., when processing lmstudio responses).
+   *
+   * When parsing output containing <think> and </think> tags:
+   * - Set to `true` upon encountering a <think> tag (entering reasoning mode)
+   * - Set to `false` upon encountering a </think> tag (exiting reasoning mode)
+   *
+   * While `thinkingInContent` is `true`, subsequent content should be stored in `reasoning_content`.
+   * When `false`, content should be stored in the regular `content` field.
+   */
+  thinkingInContent?: boolean;
   tool?: {
     id: string;
     index: number;
@@ -78,12 +95,11 @@ export interface StreamToolCallChunkData {
 export interface StreamProtocolToolCallChunk {
   data: StreamToolCallChunkData[];
   id: string;
-  index: number;
   type: 'tool_calls';
 }
 
 export const generateToolCallId = (index: number, functionName?: string) =>
-  `${functionName || 'unknown_tool_call'}_${index}`;
+  `${functionName || 'unknown_tool_call'}_${index}_${nanoid()}`;
 
 const chatStreamable = async function* <T>(stream: AsyncIterable<T>) {
   for await (const response of stream) {
@@ -92,6 +108,22 @@ const chatStreamable = async function* <T>(stream: AsyncIterable<T>) {
 };
 
 const ERROR_CHUNK_PREFIX = '%FIRST_CHUNK_ERROR%: ';
+
+export function readableFromAsyncIterable<T>(iterable: AsyncIterable<T>) {
+  let it = iterable[Symbol.asyncIterator]();
+  return new ReadableStream<T>({
+    async cancel(reason) {
+      await it.return?.(reason);
+    },
+
+    async pull(controller) {
+      const { done, value } = await it.next();
+      if (done) controller.close();
+      else controller.enqueue(value);
+    },
+  });
+}
+
 // make the response to the streamable format
 export const convertIterableToStream = <T>(stream: AsyncIterable<T>) => {
   const iterable = chatStreamable(stream);

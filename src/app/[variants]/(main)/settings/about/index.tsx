@@ -8,20 +8,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { BRANDING_NAME } from '@/const/branding';
-import {
-  BLOG,
-  DISCORD,
-  EMAIL_BUSINESS,
-  EMAIL_SUPPORT,
-  GITHUB,
-  MEDIDUM,
-  OFFICIAL_SITE,
-  PRIVACY_URL,
-  TERMS_URL,
-  X,
-  mailTo,
-} from '@/const/url';
+import { BRANDING_EMAIL, BRANDING_NAME, SOCIAL_URL } from '@/const/branding';
+import { BLOG, OFFICIAL_SITE, PRIVACY_URL, TERMS_URL, mailTo } from '@/const/url';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 
@@ -65,12 +53,12 @@ const Page = memo<{ mobile?: boolean }>(({ mobile }) => {
                 value: 'officialSite',
               },
               {
-                href: mailTo(EMAIL_SUPPORT),
+                href: mailTo(BRANDING_EMAIL.support),
                 label: t('mail.support'),
                 value: 'support',
               },
               {
-                href: mailTo(EMAIL_BUSINESS),
+                href: mailTo(BRANDING_EMAIL.business),
                 label: t('mail.business'),
                 value: 'business',
               },
@@ -89,26 +77,26 @@ const Page = memo<{ mobile?: boolean }>(({ mobile }) => {
                 value: 'blog',
               },
               {
-                href: GITHUB,
+                href: SOCIAL_URL.github,
                 icon: SiGithub,
                 label: 'GitHub',
                 value: 'feedback',
               },
               {
-                href: DISCORD,
+                href: SOCIAL_URL.discord,
                 icon: SiDiscord,
                 label: 'Discord',
                 value: 'discord',
               },
               {
-                href: X,
+                href: SOCIAL_URL.x,
                 icon: SiX as any,
                 label: 'X / Twitter',
                 value: 'x',
               },
 
               {
-                href: MEDIDUM,
+                href: SOCIAL_URL.medium,
                 icon: SiMedium,
                 label: 'Medium',
                 value: 'medium',

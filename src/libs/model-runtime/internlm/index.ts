@@ -1,13 +1,13 @@
 import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface InternLMModelCard {
   id: string;
 }
 
-export const LobeInternLMAI = LobeOpenAICompatibleFactory({
+export const LobeInternLMAI = createOpenAICompatibleRuntime({
   baseURL: 'https://internlm-chat.intern-ai.org.cn/puyu/api/v1',
   chatCompletion: {
     handlePayload: (payload) => {
@@ -23,9 +23,9 @@ export const LobeInternLMAI = LobeOpenAICompatibleFactory({
   models: async ({ client }) => {
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-    const functionCallKeywords = ['internlm']
+    const functionCallKeywords = ['internlm'];
 
-    const visionKeywords = ['internvl']
+    const visionKeywords = ['internvl'];
 
     const modelsPage = (await client.models.list()) as any;
     const modelList: InternLMModelCard[] = modelsPage.data;
@@ -41,15 +41,13 @@ export const LobeInternLMAI = LobeOpenAICompatibleFactory({
           displayName: knownModel?.displayName ?? undefined,
           enabled: knownModel?.enabled || false,
           functionCall:
-            functionCallKeywords.some(keyword => model.id.toLowerCase().includes(keyword)) ||
+            functionCallKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
             knownModel?.abilities?.functionCall ||
             false,
           id: model.id,
-          reasoning:
-            knownModel?.abilities?.reasoning ||
-            false,
+          reasoning: knownModel?.abilities?.reasoning || false,
           vision:
-            visionKeywords.some(keyword => model.id.toLowerCase().includes(keyword)) ||
+            visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
             knownModel?.abilities?.vision ||
             false,
         };
