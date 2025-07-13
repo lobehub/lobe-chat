@@ -257,7 +257,7 @@ export abstract class BaseService implements IBaseService {
       if (targetUserId === this.userId && hasOwnerAccess) {
         this.log(
           'info',
-          `权限通过：当前user拥有${resourceType}的${actionType} owner权限`,
+          `权限通过：当前user拥有${resourceType}的owner级别${actionType}权限`,
           logContext,
         );
         return {
@@ -270,7 +270,7 @@ export abstract class BaseService implements IBaseService {
       if (!hasGlobalAccess) {
         this.log(
           'warn',
-          `权限拒绝：当前user没有${resourceType}的${actionType} all/workspace权限`,
+          `权限拒绝：当前user没有${resourceType}的all/workspace级别${actionType}权限`,
           logContext,
         );
         return {
@@ -281,7 +281,7 @@ export abstract class BaseService implements IBaseService {
 
       this.log(
         'info',
-        `权限通过：当前user拥有${resourceType}的${actionType} all/workspace权限`,
+        `权限通过：当前user拥有${resourceType}的all/workspace级别${actionType}权限`,
         logContext,
       );
       return {
@@ -294,7 +294,7 @@ export abstract class BaseService implements IBaseService {
     if (hasGlobalAccess) {
       this.log(
         'info',
-        `权限通过：当前user拥有${resourceType}的${actionType} all/workspace权限`,
+        `权限通过：当前user拥有${resourceType}的all/workspace级别${actionType}权限`,
         logContext,
       );
       if (queryAll) {
@@ -308,7 +308,7 @@ export abstract class BaseService implements IBaseService {
     if (!hasOwnerAccess) {
       this.log(
         'info',
-        `权限拒绝：当前user没有${resourceType}的${actionType} owner权限`,
+        `权限拒绝：当前user没有${resourceType}的owner级别${actionType}权限`,
         logContext,
       );
       return {
@@ -317,7 +317,11 @@ export abstract class BaseService implements IBaseService {
       };
     }
 
-    this.log('info', `权限通过：当前user拥有${resourceType}的${actionType} owner权限`, logContext);
+    this.log(
+      'info',
+      `权限通过：当前user拥有${resourceType}的owner级别${actionType}权限`,
+      logContext,
+    );
     return {
       condition: { userId: this.userId },
       isPermitted: true,
