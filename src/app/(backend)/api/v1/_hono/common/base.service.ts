@@ -7,6 +7,7 @@ import { agents, sessions, topics } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 
 import { IBaseService, TTarget } from '../types';
+import { getActionType, getResourceType } from '../utils/permission';
 
 /**
  * Base service class
@@ -149,6 +150,21 @@ export abstract class BaseService implements IBaseService {
     return result;
   }
 
+  /**
+   * 检查用户是否有 owner 权限
+   * @param permissionKey 权限键名
+   * @returns 是否有权限
+   */
+  protected async hasOwnerPermission(
+    permissionKey: keyof typeof PERMISSION_ACTIONS,
+  ): Promise<boolean> {
+    const result = await this.rbacModel.hasAnyPermission(
+      [PERMISSION_ACTIONS[permissionKey] + ':owner'],
+      this.userId,
+    );
+    return result;
+  }
+
   protected async getTargetUserId(target?: string | TTarget): Promise<string> {
     if (isEmpty(target)) {
       return '';
@@ -196,18 +212,18 @@ export abstract class BaseService implements IBaseService {
   }
 
   /**
-   * 解析查询权限并返回查询条件
+   * 解析权限并返回目标信息
    * 用于处理数据访问权限的通用逻辑，支持以下场景：
-   * 1. 查询自己的数据：永远允许
-   * 2. 查询指定用户的数据：需要 all/workspace 权限
-   * 3. 查询所有数据：需要 all/workspace 权限
+   * 1. 查询/操作当前用户的数据：需要 all/workspace/owner 权限
+   * 2. 查询/操作指定用户的数据：需要 all/workspace 权限
+   * 3. 查询/操作所有数据：需要 all/workspace 权限
    *
    * @param permissionKey - 权限键名
-   * @param targetInfoId - 目标用户 ID，可选。传入字符串表示查询特定用户的数据，传入对象键值表示查询特定对象的数据
-   * @param queryAll - 是否查询所有数据，可选。如果提供，表示要查询所有数据，否则只查询自己的数据
-   * @returns 返回权限检查结果和查询条件
-   *          - isPermitted: 是否允许查询
-   *          - condition: 查询条件，包含 userId 过滤
+   * @param targetInfoId - 目标ID，可选。传入字符串表示查询/操作特定用户的数据，传入对象键值表示查询/操作特定对象的数据
+   * @param queryAll - 是否查询所有数据，可选。如果提供，表示要查询所有数据，否则只查询当前用户的数据
+   * @returns 返回权限检查结果和查询/操作条件
+   *          - isPermitted: 是否允许查询/操作
+   *          - condition: 目标信息，包含 userId 过滤条件
    *          - message: 权限被拒绝时的错误信息
    */
   protected async resolveQueryPermission(
@@ -220,8 +236,11 @@ export abstract class BaseService implements IBaseService {
   }> {
     // 检查是否有全局访问权限
     const hasGlobalAccess = await this.hasGlobalPermission(permissionKey);
+    const hasOwnerAccess = await this.hasOwnerPermission(permissionKey);
     const targetUserId = await this.getTargetUserId(targetInfoId);
     const queryAll = hasGlobalAccess && targetInfoId === ALL;
+    const resourceType = getResourceType(permissionKey);
+    const actionType = getActionType(permissionKey);
     this.log('info', '权限检查', { hasGlobalAccess, targetUserId });
 
     // 记录权限检查的上下文信息
@@ -232,38 +251,50 @@ export abstract class BaseService implements IBaseService {
       userId: this.userId,
     };
 
-    // 场景 1: 查询特定用户的数据
+    // 场景 1: 查询/操作特定用户的数据
     if (targetUserId && !queryAll) {
-      // 如果是查询自己的数据，直接允许
-      if (targetUserId === this.userId) {
-        this.log('info', '允许查询：用户查询自己的数据', logContext);
+      // 如果是查询/操作当前用户的数据，直接允许
+      if (targetUserId === this.userId && hasOwnerAccess) {
+        this.log(
+          'info',
+          `权限通过：当前user拥有${resourceType}的${actionType} owner权限`,
+          logContext,
+        );
         return {
           condition: { userId: targetUserId },
           isPermitted: true,
         };
       }
 
-      // 如果要查询其他用户的数据，需要检查全局权限
+      // 如果要查询/操作其他用户的数据，需要检查全局权限
       if (!hasGlobalAccess) {
-        this.log('warn', '拒绝查询：没有查询其他用户数据的权限', logContext);
+        this.log(
+          'warn',
+          `权限拒绝：当前user没有${resourceType}的${actionType} all/workspace权限`,
+          logContext,
+        );
         return {
           isPermitted: false,
-          message: '无权限',
+          message: `no permission,current user has no ${resourceType} ${actionType} all/workspace permission`,
         };
       }
 
-      this.log('info', '允许查询：用户具有全局查询权限', logContext);
+      this.log(
+        'info',
+        `权限通过：当前user拥有${resourceType}的${actionType} all/workspace权限`,
+        logContext,
+      );
       return {
         condition: { userId: targetUserId },
         isPermitted: true,
       };
     }
 
-    // 场景 2: 查询所有数据（未指定目标用户）
+    // 场景 2: 查询/操作所有数据（未指定目标用户）
     if (hasGlobalAccess) {
       this.log(
         'info',
-        '允许查询：用户具有全局查询权限，可查询所有数据 或 查询自己的数据',
+        `权限通过：当前user拥有${resourceType}的${actionType} all/workspace权限`,
         logContext,
       );
       if (queryAll) {
@@ -273,8 +304,20 @@ export abstract class BaseService implements IBaseService {
       }
     }
 
-    // 场景 3: 默认只能查询自己的数据
-    this.log('info', '限制查询：用户只能查询自己的数据', logContext);
+    // 场景 3: 默认只能查询/操作当前用户的数据
+    if (!hasOwnerAccess) {
+      this.log(
+        'info',
+        `权限拒绝：当前user没有${resourceType}的${actionType} owner权限`,
+        logContext,
+      );
+      return {
+        isPermitted: false,
+        message: `no permission,current user has no ${resourceType} ${actionType} owner permission`,
+      };
+    }
+
+    this.log('info', `权限通过：当前user拥有${resourceType}的${actionType} owner权限`, logContext);
     return {
       condition: { userId: this.userId },
       isPermitted: true,
