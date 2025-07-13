@@ -5,6 +5,19 @@ const novitaChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Kimi K2 Instruct',
+    id: 'moonshotai/kimi-k2-instruct',
+    pricing: {
+      input: 0.57,
+      output: 2.3,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
       vision: true,
     },
     contextWindowTokens: 65_536,
@@ -37,6 +50,9 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      reasoning: true,
+    },
     contextWindowTokens: 123_000,
     displayName: 'ERNIE 4.5 300B A47B Paddle',
     id: 'baidu/ernie-4.5-300b-a47b-paddle',
@@ -62,6 +78,7 @@ const novitaChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
       vision: true,
     },
@@ -76,6 +93,7 @@ const novitaChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 128_000,
@@ -553,6 +571,9 @@ const novitaChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 32_000,
     displayName: 'Qwen2.5 7B Instruct',
     id: 'qwen/qwen2.5-7b-instruct',
