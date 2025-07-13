@@ -4,6 +4,47 @@ const zhipuChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 64_000,
+    description: 'GLM-4.1V-Thinking 系列模型是目前已知10B级别的VLM模型中性能最强的视觉模型，融合了同级别SOTA的各项视觉语言任务，包括视频理解、图片问答、学科解题、OCR文字识别、文档和图表解读、GUI Agent、前端网页Coding、Grounding等，多项任务能力甚至超过8倍参数量的Qwen2.5-VL-72B。通过领先的强化学习技术，模型掌握了通过思维链推理的方式提升回答的准确性和丰富度，从最终效果和可解释性等维度都显著超过传统的非thinking模型。',
+    displayName: 'GLM-4.1V-Thinking-FlashX',
+    id: 'glm-4.1v-thinking-flashx',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 2,
+    },
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 64_000,
+    description: 'GLM-4.1V-Thinking 系列模型是目前已知10B级别的VLM模型中性能最强的视觉模型，融合了同级别SOTA的各项视觉语言任务，包括视频理解、图片问答、学科解题、OCR文字识别、文档和图表解读、GUI Agent、前端网页Coding、Grounding等，多项任务能力甚至超过8倍参数量的Qwen2.5-VL-72B。通过领先的强化学习技术，模型掌握了通过思维链推理的方式提升回答的准确性和丰富度，从最终效果和可解释性等维度都显著超过传统的非thinking模型。',
+    displayName: 'GLM-4.1V-Thinking-Flash',
+    enabled: true,
+    id: 'glm-4.1v-thinking-flash',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
     },
     contextWindowTokens: 16_384,
     description: 'GLM-Zero-Preview具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。',
@@ -21,11 +62,11 @@ const zhipuChatModels: AIChatModelCard[] = [
       reasoning: true,
       search: true,
     },
-    contextWindowTokens: 32_000,
+    contextWindowTokens: 128_000,
     description: '推理模型: 具备强大推理能力，适用于需要深度推理的任务。',
     displayName: 'GLM-Z1-Air',
     id: 'glm-z1-air',
-    maxOutput: 30_000,
+    maxOutput: 32_000,
     pricing: {
       currency: 'CNY',
       input: 0.5,
@@ -61,13 +102,34 @@ const zhipuChatModels: AIChatModelCard[] = [
       reasoning: true,
       search: true,
     },
-    contextWindowTokens: 32_000,
+    contextWindowTokens: 128_000,
+    description:
+      '高速低价：Flash增强版本，超快推理速度，更快并发保障。',
+    displayName: 'GLM-Z1-FlashX',
+    id: 'glm-z1-flashx',
+    maxOutput: 32_000,
+    pricing: {
+      currency: 'CNY',
+      input: 0.1,
+      output: 0.1,
+    },
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      search: true,
+    },
+    contextWindowTokens: 128_000,
     description:
       'GLM-Z1 系列具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。最大上下文长度为32K。',
     displayName: 'GLM-Z1-Flash',
     enabled: true,
     id: 'glm-z1-flash',
-    maxOutput: 30_000,
+    maxOutput: 32_000,
     pricing: {
       currency: 'CNY',
       input: 0,
@@ -88,7 +150,7 @@ const zhipuChatModels: AIChatModelCard[] = [
     displayName: 'GLM-4-Flash-250414',
     enabled: true,
     id: 'glm-4-flash-250414',
-    maxOutput: 4000,
+    maxOutput: 16_000,
     pricing: {
       currency: 'CNY',
       input: 0,
@@ -106,9 +168,9 @@ const zhipuChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 128_000,
     description: 'GLM-4-FlashX 是Flash的增强版本，超快推理速度。',
-    displayName: 'GLM-4-FlashX',
+    displayName: 'GLM-4-FlashX-250414',
     id: 'glm-4-flashx',
-    maxOutput: 4000,
+    maxOutput: 16_000,
     pricing: {
       currency: 'CNY',
       input: 0.1,
@@ -144,11 +206,11 @@ const zhipuChatModels: AIChatModelCard[] = [
       functionCall: true,
       search: true,
     },
-    contextWindowTokens: 32_000,
+    contextWindowTokens: 128_000,
     description: 'GLM-4-Air 是性价比高的版本，性能接近GLM-4，提供快速度和实惠的价格。',
     displayName: 'GLM-4-Air-250414',
     id: 'glm-4-air-250414',
-    maxOutput: 4000,
+    maxOutput: 16_000,
     pricing: {
       currency: 'CNY',
       input: 0.5,
@@ -211,8 +273,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     maxOutput: 4000,
     pricing: {
       currency: 'CNY',
-      input: 50,
-      output: 50,
+      input: 5,
+      output: 5,
     },
     settings: {
       searchImpl: 'params',
@@ -279,7 +341,7 @@ const zhipuChatModels: AIChatModelCard[] = [
     abilities: {
       vision: true,
     },
-    contextWindowTokens: 8192,
+    contextWindowTokens: 16_000,
     description: 'GLM-4V-Plus 具备对视频内容及多图片的理解能力，适合多模态任务。',
     displayName: 'GLM-4V-Plus-0111',
     id: 'glm-4v-plus-0111',
