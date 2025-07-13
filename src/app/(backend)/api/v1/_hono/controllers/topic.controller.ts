@@ -7,7 +7,7 @@ import { TopicCreateRequest, TopicSummaryRequest, TopicUpdateRequest } from '../
 export class TopicController extends BaseController {
   /**
    * 获取指定会话的所有话题
-   * GET /api/v1/topics/:sessionId
+   * GET /api/v1/topics/session/:sessionId
    * Query: { keyword?: string }
    */
   async handleGetTopicsBySession(c: Context) {
