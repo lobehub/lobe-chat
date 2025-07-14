@@ -517,11 +517,12 @@
   },
   {
     "sql": [
-      "-- Migration to apply specific autovacuum settings to high-traffic tables\n-- This is crucial to prevent table and TOAST bloat for 'embeddings' and 'chunks'\n-- https://github.com/lobehub/lobe-chat/issues/8316\n\n-- Tuning for the 'embeddings' table\n-- Default scale factor (0.2) is too high, leading to infrequent vacuuming.\n-- Lowering to 2% to ensure frequent cleanup.\nALTER TABLE \"embeddings\" SET (autovacuum_vacuum_scale_factor = 0.02, autovacuum_vacuum_threshold = 1000);\n\n-- Tuning for the 'chunks' table\n-- This table also experiences many updates/deletes and requires similar tuning.\nALTER TABLE \"chunks\" SET (autovacuum_vacuum_scale_factor = 0.02, autovacuum_vacuum_threshold = 1000);\n"
+      "-- Migration to apply specific autovacuum settings to high-traffic tables\n-- This is crucial to prevent table and TOAST bloat for 'embeddings' and 'chunks'\n-- https://github.com/lobehub/lobe-chat/issues/8316\n\n-- Tuning for the 'embeddings' table\n-- Default scale factor (0.2) is too high, leading to infrequent vacuuming.\n-- Lowering to 2% to ensure frequent cleanup.\nALTER TABLE \"embeddings\" SET (autovacuum_vacuum_scale_factor = 0.02, autovacuum_vacuum_threshold = 1000);\n\n",
+      "\n\n-- Tuning for the 'chunks' table\n-- This table also experiences many updates/deletes and requires similar tuning.\nALTER TABLE \"chunks\" SET (autovacuum_vacuum_scale_factor = 0.02, autovacuum_vacuum_threshold = 1000);\n"
     ],
     "bps": true,
     "folderMillis": 1752212281564,
-    "hash": "a64e2b85c6df855631302dc135b4de8257e74576859580516798bead488eba21"
+    "hash": "e445db851f792aac49482e04689569a37939f7d0a3851cbcdf10dc24e8943b2c"
   },
   {
     "sql": [
