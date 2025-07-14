@@ -59,12 +59,10 @@ export const GenerationItem = memo<GenerationItemProps>(
 
       // Generate filename with prompt and timestamp
       const timestamp = dayjs(generation.createdAt).format('YYYY-MM-DD_HH-mm-ss');
-      const safePrompt = prompt
-        .slice(0, 30)
-        .replaceAll(/[^\s\w-]/g, '')
-        .trim();
+      const baseName = prompt.slice(0, 30).trim();
+      const sanitizedBaseName = baseName.replaceAll(/["%*/:<>?\\|]/g, '').replaceAll(/\s+/g, '_');
+      const safePrompt = sanitizedBaseName || 'Untitled';
 
-      // Detect file extension from URL
       const fileExtension = inferFileExtensionFromImageUrl(generation.asset.url);
       const fileName = `${safePrompt}_${timestamp}.${fileExtension}`;
 
