@@ -30,7 +30,6 @@ const DESC_TYPE = ['customParams', 'description'];
 // 新增认证相关常量
 const AUTH_TYPE = ['customParams', 'mcp', 'auth', 'type'];
 const AUTH_TOKEN = ['customParams', 'mcp', 'auth', 'token'];
-const AUTH_ACCESS_TOKEN = ['customParams', 'mcp', 'auth', 'accessToken'];
 // 新增 headers 相关常量
 const HEADERS = ['customParams', 'mcp', 'headers'];
 
@@ -60,8 +59,6 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
         const currentAuthType = form.getFieldValue(AUTH_TYPE);
         if (currentAuthType === 'bearer') {
           fieldsToValidate.push(AUTH_TOKEN);
-        } else if (currentAuthType === 'oauth2') {
-          fieldsToValidate.push(AUTH_ACCESS_TOKEN);
         }
       }
 
