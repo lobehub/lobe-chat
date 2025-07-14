@@ -203,23 +203,20 @@
   "Pro/Qwen/Qwen2.5-VL-7B-Instruct": {
     "description": "Qwen2.5-VL 是 Qwen 系列的新成員，具備強大的視覺理解能力，能分析圖像中的文字、圖表和版面配置，並能理解長影片和捕捉事件。它可以進行推理、操作工具，支援多格式物件定位和生成結構化輸出，優化了影片理解的動態解析度與影格率訓練，並提升了視覺編碼器效率。"
   },
+  "Pro/THUDM/GLM-4.1V-9B-Thinking": {
+    "description": "GLM-4.1V-9B-Thinking 是由智譜 AI 和清華大學 KEG 實驗室聯合發布的一款開源視覺語言模型（VLM），專為處理複雜的多模態認知任務而設計。該模型基於 GLM-4-9B-0414 基礎模型，通過引入「思維鏈」（Chain-of-Thought）推理機制和採用強化學習策略，顯著提升了其跨模態的推理能力和穩定性。"
+  },
   "Pro/THUDM/glm-4-9b-chat": {
     "description": "GLM-4-9B-Chat 是智譜 AI 推出的 GLM-4 系列預訓練模型中的開源版本。該模型在語義、數學、推理、代碼和知識等多個方面表現出色。除了支持多輪對話外，GLM-4-9B-Chat 還具備網頁瀏覽、代碼執行、自定義工具調用（Function Call）和長文本推理等高級功能。模型支持 26 種語言，包括中文、英文、日文、韓文和德文等。在多項基準測試中，GLM-4-9B-Chat 展現了優秀的性能，如 AlignBench-v2、MT-Bench、MMLU 和 C-Eval 等。該模型支持最大 128K 的上下文長度，適用於學術研究和商業應用"
   },
   "Pro/deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 是一款強化學習（RL）驅動的推理模型，解決了模型中的重複性和可讀性問題。在 RL 之前，DeepSeek-R1 引入了冷啟動數據，進一步優化了推理性能。它在數學、代碼和推理任務中與 OpenAI-o1 表現相當，並且透過精心設計的訓練方法，提升了整體效果。"
   },
-  "Pro/deepseek-ai/DeepSeek-R1-0120": {
-    "description": "DeepSeek-R1 是一款強化學習（RL）驅動的推理模型，解決了模型中的重複性和可讀性問題。在 RL 之前，DeepSeek-R1 引入了冷啟動資料，進一步優化了推理性能。它在數學、程式碼和推理任務中與 OpenAI-o1 表現相當，並且透過精心設計的訓練方法，提升了整體效果。"
-  },
   "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": {
     "description": "DeepSeek-R1-Distill-Qwen-7B 是基於 Qwen2.5-Math-7B 透過知識蒸餾技術所獲得的模型。該模型使用 DeepSeek-R1 生成的 80 萬個精選樣本進行微調，展現出優異的推理能力。在多個基準測試中表現出色，其中在 MATH-500 上達到了 92.8% 的準確率，在 AIME 2024 上達到了 55.5% 的通過率，在 CodeForces 上獲得了 1189 的評分，作為 7B 規模的模型展示了較強的數學和程式設計能力。"
   },
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 是一款擁有 6710 億參數的混合專家（MoE）語言模型，採用多頭潛在注意力（MLA）和 DeepSeekMoE 架構，結合無輔助損失的負載平衡策略，優化推理和訓練效率。透過在 14.8 萬億高質量tokens上預訓練，並進行監督微調和強化學習，DeepSeek-V3 在性能上超越其他開源模型，接近領先閉源模型。"
-  },
-  "Pro/deepseek-ai/DeepSeek-V3-1226": {
-    "description": "DeepSeek-V3 是一款擁有 6710 億參數的混合專家（MoE）語言模型，採用多頭潛在注意力（MLA）和 DeepSeekMoE 架構，結合無輔助損失的負載平衡策略，優化推理和訓練效率。透過在 14.8 萬兆高品質 tokens 上預訓練，並進行監督微調和強化學習，DeepSeek-V3 在性能上超越其他開源模型，接近領先的閉源模型。"
   },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview 是一款獨具創新的自然語言處理模型，能夠高效處理複雜的對話生成與上下文理解任務。"
@@ -383,6 +380,9 @@
   "THUDM/GLM-4-9B-0414": {
     "description": "GLM-4-9B-0414 是 GLM 系列的小型模型，擁有 90 億參數。該模型繼承了 GLM-4-32B 系列的技術特點，但提供了更輕量級的部署選擇。儘管規模較小，GLM-4-9B-0414 仍在程式碼生成、網頁設計、SVG 圖形生成和基於搜索的寫作等任務上展現出色能力。"
   },
+  "THUDM/GLM-4.1V-9B-Thinking": {
+    "description": "GLM-4.1V-9B-Thinking 是由智譜 AI 和清華大學 KEG 實驗室聯合發布的一款開源視覺語言模型（VLM），專為處理複雜的多模態認知任務而設計。該模型基於 GLM-4-9B-0414 基礎模型，通過引入「思維鏈」（Chain-of-Thought）推理機制和採用強化學習策略，顯著提升了其跨模態的推理能力和穩定性。"
+  },
   "THUDM/GLM-Z1-32B-0414": {
     "description": "GLM-Z1-32B-0414 是一個具有深度思考能力的推理模型。該模型基於 GLM-4-32B-0414 通過冷啟動和擴展強化學習開發，並在數學、程式碼和邏輯任務上進行了進一步訓練。與基礎模型相比，GLM-Z1-32B-0414 顯著提升了數學能力和解決複雜任務的能力。"
   },
@@ -539,6 +539,9 @@
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4 可以產生近乎即時的回應或延長的逐步思考，使用者可以清楚地看到這些過程。API 使用者還可以對模型思考的時間進行細緻的控制。"
   },
+  "ascend-tribe/pangu-pro-moe": {
+    "description": "Pangu-Pro-MoE 72B-A16B 是一款 720 億參數、激活 160 億參的稀疏大型語言模型，它基於分組混合專家（MoGE）架構，它在專家選擇階段對專家進行分組，並約束 token 在每個組內激活等量專家，從而實現專家負載均衡，顯著提升模型在昇騰平台的部署效率。"
+  },
   "aya": {
     "description": "Aya 23 是 Cohere 推出的多語言模型，支持 23 種語言，為多元化語言應用提供便利。"
   },
@@ -547,6 +550,9 @@
   },
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B百川智能開發的包含130億參數的開源可商用的大規模語言模型，在權威的中文和英文benchmark上均取得同尺寸最好的效果。"
+  },
+  "baidu/ERNIE-4.5-300B-A47B": {
+    "description": "ERNIE-4.5-300B-A47B 是由百度公司開發的一款基於混合專家（MoE）架構的大型語言模型。該模型總參數量為 3000 億，但在推理時每個 token 僅激活 470 億參數，從而在保證強大性能的同時兼顧了計算效率。作為 ERNIE 4.5 系列的核心模型之一，在文本理解、生成、推理和程式設計等任務上展現出卓越的能力。該模型採用了一種創新的多模態異構 MoE 預訓練方法，通過文本與視覺模態的聯合訓練，有效提升了模型的綜合能力，尤其在指令遵循和世界知識記憶方面效果突出。"
   },
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanse 是一款高性能的 32B 多語言模型，旨在通過指令調優、數據套利、偏好訓練和模型合併的創新，挑戰單語言模型的表現。它支持 23 種語言。"
@@ -1097,9 +1103,6 @@
   "gemini-2.5-pro": {
     "description": "Gemini 2.5 Pro 是 Google 最先進的思維模型，能夠對程式碼、數學和 STEM 領域的複雜問題進行推理，以及使用長上下文分析大型資料集、程式碼庫和文件。"
   },
-  "gemini-2.5-pro-exp-03-25": {
-    "description": "Gemini 2.5 Pro 實驗版是 Google 最先進的思維模型，能夠對代碼、數學和 STEM 領域的複雜問題進行推理，還能利用長上下文來分析大型數據集、代碼庫和文檔。"
-  },
   "gemini-2.5-pro-preview-03-25": {
     "description": "Gemini 2.5 Pro Preview 是 Google 最先進的思維模型，能夠對程式碼、數學和STEM領域的複雜問題進行推理，以及使用長上下文分析大型數據集、程式庫和文檔。"
   },
@@ -1166,6 +1169,12 @@
   "glm-4-plus": {
     "description": "GLM-4-Plus作為高智能旗艦，具備強大的處理長文本和複雜任務的能力，性能全面提升。"
   },
+  "glm-4.1v-thinking-flash": {
+    "description": "GLM-4.1V-Thinking 系列模型是目前已知10B級別的VLM模型中性能最強的視覺模型，融合了同級別SOTA的各項視覺語言任務，包括影片理解、圖片問答、學科解題、OCR文字識別、文件和圖表解讀、GUI Agent、前端網頁程式設計、Grounding等，多項任務能力甚至超過8倍參數量的Qwen2.5-VL-72B。通過領先的強化學習技術，模型掌握了透過思維鏈推理的方式提升回答的準確性和豐富度，從最終效果和可解釋性等維度都顯著超過傳統的非thinking模型。"
+  },
+  "glm-4.1v-thinking-flashx": {
+    "description": "GLM-4.1V-Thinking 系列模型是目前已知10B級別的VLM模型中性能最強的視覺模型，融合了同級別SOTA的各項視覺語言任務，包括影片理解、圖片問答、學科解題、OCR文字識別、文件和圖表解讀、GUI Agent、前端網頁程式設計、Grounding等，多項任務能力甚至超過8倍參數量的Qwen2.5-VL-72B。通過領先的強化學習技術，模型掌握了透過思維鏈推理的方式提升回答的準確性和豐富度，從最終效果和可解釋性等維度都顯著超過傳統的非thinking模型。"
+  },
   "glm-4v": {
     "description": "GLM-4V提供強大的圖像理解與推理能力，支持多種視覺任務。"
   },
@@ -1186,6 +1195,9 @@
   },
   "glm-z1-flash": {
     "description": "GLM-Z1 系列具備強大的複雜推理能力，在邏輯推理、數學、程式設計等領域表現優異。最大上下文長度為32K。"
+  },
+  "glm-z1-flashx": {
+    "description": "高速低價：Flash增強版本，超快推理速度，更快並發保障。"
   },
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview具備強大的複雜推理能力，在邏輯推理、數學、程式設計等領域表現優異。"
@@ -1237,6 +1249,9 @@
   },
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B) 提供基本的指令處理能力，適合輕量級應用。"
+  },
+  "google/gemma-3-1b-it": {
+    "description": "Gemma 3 1B 是谷歌的一款開源語言模型，以其在效率和性能方面樹立了新的標準。"
   },
   "google/gemma-3-27b-it": {
     "description": "Gemma 3 27B 是谷歌的一款開源語言模型，以其在效率和性能方面設立了新的標準。"
@@ -1373,6 +1388,9 @@
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B 是一款合併了多個頂尖模型的創意與智能相結合的語言模型。"
   },
+  "hunyuan-a13b": {
+    "description": "混元第一個混合推理模型，hunyuan-standard-256K 的升級版本，總參數80B，激活13B，預設為慢思考模式，支持透過參數或指令進行快慢思考模式切換，慢快思考切換方式為 query 前加/ no_think；整體能力相較上一代全面提升，特別是數學、科學、長文理解和 Agent 能力提升顯著。"
+  },
   "hunyuan-code": {
     "description": "混元最新代碼生成模型，經過 200B 高質量代碼數據增訓基座模型，迭代半年高質量 SFT 數據訓練，上下文長窗口長度增大到 8K，五大語言代碼生成自動評測指標上位居前列；五大語言 10 項考量各方面綜合代碼任務人工高質量評測上，性能處於第一梯隊。"
   },
@@ -1424,6 +1442,9 @@
   "hunyuan-t1-vision": {
     "description": "混元多模態理解深度思考模型，支援多模態原生長思維鏈，擅長處理各種圖片推理場景，在理科難題上相比快思考模型全面提升。"
   },
+  "hunyuan-t1-vision-20250619": {
+    "description": "混元最新版 t1-vision 多模態理解深度思考模型，支持多模態原生長思維鏈，相較上一代預設版本模型全面提升。"
+  },
   "hunyuan-turbo": {
     "description": "混元全新一代大語言模型的預覽版，採用全新的混合專家模型（MoE）結構，相較於 hunyuan-pro 推理效率更快，效果表現更強。"
   },
@@ -1453,6 +1474,12 @@
   },
   "hunyuan-turbos-role-plus": {
     "description": "混元最新版角色扮演模型，混元官方精調訓練推出的角色扮演模型，基於混元模型結合角色扮演場景資料集進行增訓，在角色扮演場景具有更好的基礎效果。"
+  },
+  "hunyuan-turbos-vision": {
+    "description": "此模型適用於圖文理解場景，是基於混元最新 turbos 的新一代視覺語言旗艦大型模型，聚焦圖文理解相關任務，包括基於圖片的實體識別、知識問答、文案創作、拍照解題等方面，相較前一代模型全面提升。"
+  },
+  "hunyuan-turbos-vision-20250619": {
+    "description": "混元最新版 turbos-vision 視覺語言旗艦大型模型，在圖文理解相關的任務上，包括基於圖片的實體識別、知識問答、文案創作、拍照解題等方面，相較上一代預設版本模型全面提升。"
   },
   "hunyuan-vision": {
     "description": "混元最新多模態模型，支持圖片 + 文本輸入生成文本內容。"
