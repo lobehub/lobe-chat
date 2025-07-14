@@ -25,7 +25,7 @@ import {
 import { ChatImageItem } from '@/types/message/image';
 import { GroundingSearch } from '@/types/search';
 import { TraceEventPayloads } from '@/types/trace';
-import { setNamespace } from '@/utils/storeDebug';
+import { Action, setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
 import type { ChatStoreState } from '../../initialState';
@@ -130,7 +130,7 @@ export interface ChatMessageAction {
     key: keyof ChatStoreState,
     loading: boolean,
     id?: string,
-    action?: string,
+    action?: Action,
   ) => AbortController | undefined;
 }
 

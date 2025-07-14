@@ -324,6 +324,7 @@
     }
   },
   "tab": {
+    "aiImage": "AI 그림",
     "chat": "채팅",
     "discover": "발견하기",
     "files": "파일",

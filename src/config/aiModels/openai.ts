@@ -1,10 +1,11 @@
+import { gptImage1ParamsSchema } from '@/config/paramsSchemas/openai/gpt-image-1';
 import {
   AIChatModelCard,
   AIEmbeddingModelCard,
+  AIImageModelCard,
   AIRealtimeModelCard,
   AISTTModelCard,
   AITTSModelCard,
-  AIText2ImageModelCard,
 } from '@/types/aiModel';
 
 export const openaiChatModels: AIChatModelCard[] = [
@@ -691,7 +692,8 @@ export const openaiChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 200_000,
-    description: 'codex-mini-latest 是 o4-mini 的微调版本，专门用于 Codex CLI。对于直接通过 API 使用，我们推荐从 gpt-4.1 开始。',
+    description:
+      'codex-mini-latest 是 o4-mini 的微调版本，专门用于 Codex CLI。对于直接通过 API 使用，我们推荐从 gpt-4.1 开始。',
     displayName: 'Codex mini',
     id: 'codex-mini-latest',
     maxOutput: 100_000,
@@ -713,7 +715,8 @@ export const openaiChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 8192,
-    description: 'computer-use-preview 模型是专为“计算机使用工具”设计的专用模型，经过训练以理解并执行计算机相关任务。',
+    description:
+      'computer-use-preview 模型是专为“计算机使用工具”设计的专用模型，经过训练以理解并执行计算机相关任务。',
     displayName: 'Computer Use Preview',
     id: 'computer-use-preview',
     maxOutput: 1024,
@@ -804,7 +807,8 @@ export const openaiSTTModels: AISTTModelCard[] = [
   },
   {
     contextWindowTokens: 16_000,
-    description: 'GPT-4o Transcribe 是一种使用 GPT-4o 转录音频的语音转文本模型。与原始 Whisper 模型相比，它提高了单词错误率，并提高了语言识别和准确性。使用它来获得更准确的转录。',
+    description:
+      'GPT-4o Transcribe 是一种使用 GPT-4o 转录音频的语音转文本模型。与原始 Whisper 模型相比，它提高了单词错误率，并提高了语言识别和准确性。使用它来获得更准确的转录。',
     displayName: 'GPT-4o Transcribe',
     id: 'gpt-4o-transcribe',
     maxOutput: 2000,
@@ -816,7 +820,8 @@ export const openaiSTTModels: AISTTModelCard[] = [
   },
   {
     contextWindowTokens: 16_000,
-    description: 'GPT-4o Mini Transcribe 是一种使用 GPT-4o 转录音频的语音转文本模型。与原始 Whisper 模型相比，它提高了单词错误率，并提高了语言识别和准确性。使用它来获得更准确的转录。',
+    description:
+      'GPT-4o Mini Transcribe 是一种使用 GPT-4o 转录音频的语音转文本模型。与原始 Whisper 模型相比，它提高了单词错误率，并提高了语言识别和准确性。使用它来获得更准确的转录。',
     displayName: 'GPT-4o Mini Transcribe',
     id: 'gpt-4o-mini-transcribe',
     maxOutput: 2000,
@@ -829,7 +834,7 @@ export const openaiSTTModels: AISTTModelCard[] = [
 ];
 
 // 图像生成模型
-export const openaiImageModels: AIText2ImageModelCard[] = [
+export const openaiImageModels: AIImageModelCard[] = [
   {
     description:
       '最新的 DALL·E 模型，于2023年11月发布。支持更真实、准确的图像生成，具有更强的细节表现力',
@@ -850,6 +855,15 @@ export const openaiImageModels: AIText2ImageModelCard[] = [
       input: 0.02, // $0.020 per image (1024×1024)
     },
     resolutions: ['256x256', '512x512', '1024x1024'],
+    type: 'image',
+  },
+  // https://platform.openai.com/docs/models/gpt-image-1
+  {
+    description: 'ChatGPT 原生多模态图片生成模型',
+    displayName: 'GPT Image 1',
+    enabled: true,
+    id: 'gpt-image-1',
+    parameters: gptImage1ParamsSchema,
     type: 'image',
   },
 ];
