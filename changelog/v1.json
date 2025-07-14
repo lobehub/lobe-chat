@@ -1,6 +1,20 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-14",
+    "version": "1.98.2"
+  },
+  {
+    "children": {
+      "improvements": ["Fix discover translation."]
+    },
+    "date": "2025-07-14",
+    "version": "1.98.1"
+  },
+  {
+    "children": {
       "features": ["Add network proxy for desktop."]
     },
     "date": "2025-07-13",
