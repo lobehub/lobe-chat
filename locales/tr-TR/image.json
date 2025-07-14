@@ -1,7 +1,9 @@
 {
   "config": {
     "aspectRatio": {
-      "label": "Oran"
+      "label": "Oran",
+      "lock": "En boy oranını kilitle",
+      "unlock": "En boy oranının kilidini aç"
     },
     "header": {
       "desc": "Basit açıklama, hemen yarat",

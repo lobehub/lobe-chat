@@ -77,6 +77,13 @@
       "secondary": "Kliknij, aby przesłać"
     }
   },
+  "KeyValueEditor": {
+    "addButton": "Dodaj nowy wiersz",
+    "deleteTooltip": "Usuń",
+    "duplicateKeyError": "Nazwa klucza musi być unikalna",
+    "keyPlaceholder": "Klucz",
+    "valuePlaceholder": "Wartość"
+  },
   "MaxTokenSlider": {
     "unlimited": "Bez ograniczeń"
   },

@@ -151,6 +151,7 @@ export default {
   stt: {
     responseError: '服务请求失败，请检查配置或重试',
   },
+  testConnectionFailed: '测试连接失败：{{error}}',
   tts: {
     responseError: '服务请求失败，请检查配置或重试',
   },

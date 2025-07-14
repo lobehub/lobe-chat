@@ -57,11 +57,27 @@
       }
     },
     "mcp": {
+      "advanced": {
+        "title": "Gelişmiş Ayarlar"
+      },
       "args": {
         "desc": "Komutları yürütmek için geçilecek parametreler listesi, genellikle burada MCP sunucu adını veya başlatma betiği yolunu girin.",
         "label": "Komut Parametreleri",
         "placeholder": "Örneğin: --port 8080 --debug",
         "required": "Lütfen başlatma parametrelerini girin"
+      },
+      "auth": {
+        "bear": "API Anahtarı",
+        "desc": "MCP sunucusunun kimlik doğrulama yöntemini seçin",
+        "label": "Kimlik Doğrulama Türü",
+        "none": "Kimlik doğrulama gerekmiyor",
+        "placeholder": "Lütfen kimlik doğrulama türünü seçin",
+        "token": {
+          "desc": "API Anahtarınızı veya Bearer Token'ınızı girin",
+          "label": "API Anahtarı",
+          "placeholder": "sk-xxxxx",
+          "required": "Lütfen kimlik doğrulama jetonunu girin"
+        }
       },
       "avatar": {
         "label": "Eklenti İkonu"
@@ -89,6 +105,11 @@
         "keyRequired": "Alan anahtarı boş olamaz",
         "label": "MCP Sunucu Ortam Değişkeni",
         "stringifyError": "Parametreleri serileştirmek mümkün değil, lütfen parametre formatını kontrol edin"
+      },
+      "headers": {
+        "add": "Yeni satır ekle",
+        "desc": "İstek başlıklarını girin",
+        "label": "HTTP Başlıkları"
       },
       "identifier": {
         "desc": "MCP eklentiniz için bir ad belirleyin, İngilizce karakterler kullanmalısınız",
@@ -269,6 +290,7 @@
       "showDetails": "Detayları göster"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "Yetkilendirme doğrulama hatası",
       "CONNECTION_FAILED": "Bağlantı başarısız",
       "INITIALIZATION_TIMEOUT": "Başlatma zaman aşımı",
       "PROCESS_SPAWN_ERROR": "İşlem başlatılamadı",

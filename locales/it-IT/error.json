@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "Errore nella richiesta del servizio. Verifica la configurazione o riprova"
   },
+  "testConnectionFailed": "Connessione di prova fallita: {{error}}",
   "tts": {
     "responseError": "Errore nella richiesta del servizio. Verifica la configurazione o riprova"
   },

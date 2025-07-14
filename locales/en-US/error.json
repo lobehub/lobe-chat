@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "Service request failed, please check the configuration or try again"
   },
+  "testConnectionFailed": "Test connection failed: {{error}}",
   "tts": {
     "responseError": "Service request failed, please check the configuration or try again"
   },

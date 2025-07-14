@@ -1,7 +1,9 @@
 {
   "config": {
     "aspectRatio": {
-      "label": "Tỷ lệ"
+      "label": "Tỷ lệ",
+      "lock": "Khóa tỷ lệ khung hình",
+      "unlock": "Mở khóa tỷ lệ khung hình"
     },
     "header": {
       "desc": "Mô tả ngắn gọn, sáng tạo ngay lập tức",

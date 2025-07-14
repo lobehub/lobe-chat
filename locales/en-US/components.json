@@ -77,6 +77,13 @@
       "secondary": "Click to Upload"
     }
   },
+  "KeyValueEditor": {
+    "addButton": "Add a row",
+    "deleteTooltip": "Delete",
+    "duplicateKeyError": "Key must be unique",
+    "keyPlaceholder": "Key",
+    "valuePlaceholder": "Value"
+  },
   "MaxTokenSlider": {
     "unlimited": "Unlimited"
   },

@@ -77,6 +77,13 @@
       "secondary": "클릭하여 업로드"
     }
   },
+  "KeyValueEditor": {
+    "addButton": "새 행 추가",
+    "deleteTooltip": "삭제",
+    "duplicateKeyError": "키 이름은 고유해야 합니다",
+    "keyPlaceholder": "키",
+    "valuePlaceholder": "값"
+  },
   "MaxTokenSlider": {
     "unlimited": "무제한"
   },

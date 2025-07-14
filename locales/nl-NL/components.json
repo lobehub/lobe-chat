@@ -77,6 +77,13 @@
       "secondary": "Klik om te uploaden"
     }
   },
+  "KeyValueEditor": {
+    "addButton": "Voeg een regel toe",
+    "deleteTooltip": "Verwijderen",
+    "duplicateKeyError": "Sleutelnaam moet uniek zijn",
+    "keyPlaceholder": "Sleutel",
+    "valuePlaceholder": "Waarde"
+  },
   "MaxTokenSlider": {
     "unlimited": "Onbeperkt"
   },

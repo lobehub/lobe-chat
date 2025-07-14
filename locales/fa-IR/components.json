@@ -77,6 +77,13 @@
       "secondary": "برای بارگذاری کلیک کنید"
     }
   },
+  "KeyValueEditor": {
+    "addButton": "افزودن یک ردیف",
+    "deleteTooltip": "حذف",
+    "duplicateKeyError": "نام کلید باید یکتا باشد",
+    "keyPlaceholder": "کلید",
+    "valuePlaceholder": "مقدار"
+  },
   "MaxTokenSlider": {
     "unlimited": "نامحدود"
   },
