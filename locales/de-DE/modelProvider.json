@@ -66,6 +66,7 @@
       "customRegion": "Benutzerdefinierter Regionsservice",
       "customSessionToken": "Benutzerdefiniertes Sitzungstoken",
       "description": "Geben Sie Ihren AWS AccessKeyId / SecretAccessKey ein, um das Gespräch zu beginnen. Die App speichert Ihre Authentifizierungsinformationen nicht.",
+      "imageGenerationDescription": "Geben Sie Ihre AWS AccessKeyId / SecretAccessKey ein, um mit der Generierung zu beginnen. Die Anwendung speichert Ihre Authentifizierungsdaten nicht.",
       "title": "Verwenden Sie benutzerdefinierte Bedrock-Authentifizierungsinformationen"
     }
   },

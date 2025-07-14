@@ -130,6 +130,7 @@
     "addProxyUrl": "Adicionar URL de proxy OpenAI (opcional)",
     "apiKey": {
       "description": "Insira sua chave de API {{name}} para iniciar a sessão",
+      "imageGenerationDescription": "Digite sua chave API {{name}} para começar a gerar",
       "title": "Usar chave de API personalizada {{name}}"
     },
     "closeMessage": "Fechar mensagem",

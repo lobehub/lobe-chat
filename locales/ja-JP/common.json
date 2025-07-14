@@ -324,6 +324,7 @@
     }
   },
   "tab": {
+    "aiImage": "AI 画像生成",
     "chat": "チャット",
     "discover": "発見",
     "files": "ファイル",

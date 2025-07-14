@@ -68,6 +68,15 @@
   "GoBack": {
     "back": "عودة"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "انقر لتغيير الصورة"
+    },
+    "placeholder": {
+      "primary": "إضافة صورة",
+      "secondary": "انقر للتحميل"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "غير محدود"
   },
@@ -90,6 +99,25 @@
     "goToSettings": "اذهب إلى الإعدادات",
     "provider": "مزود",
     "title": "نموذج"
+  },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "انقر لتحميل المزيد"
+    },
+    "modal": {
+      "complete": "اكتمل",
+      "newFileIndicator": "جديد",
+      "selectImageToPreview": "يرجى اختيار صورة للمعاينة",
+      "title": "إدارة الصور ({{count}})",
+      "upload": "تحميل الصور"
+    },
+    "placeholder": {
+      "primary": "انقر لتحميل الصور",
+      "secondary": "يدعم اختيار عدة صور"
+    },
+    "progress": {
+      "uploadingWithCount": "تم تحميل {{completed}} من أصل {{total}}"
+    }
   },
   "OllamaSetupGuide": {
     "action": {

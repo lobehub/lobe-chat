@@ -32,6 +32,10 @@
     "search": "搜尋",
     "title": "發現"
   },
+  "image": {
+    "description": "{{appName}} 帶給你最好的 GPT Image、Flux、Midjourney、Stable Diffusion 使用體驗",
+    "title": "AI 繪畫"
+  },
   "plugins": {
     "description": "搜尋、圖表生成、學術、圖像生成、視頻生成、語音生成、自動化工作流，定制 ChatGPT / Claude 專屬的 ToolCall 插件能力",
     "title": "插件市場"

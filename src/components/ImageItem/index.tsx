@@ -1,4 +1,4 @@
-import { ActionIcon, Image } from '@lobehub/ui';
+import { ActionIcon, Image, ImageProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Trash } from 'lucide-react';
 import { CSSProperties, memo } from 'react';
@@ -33,7 +33,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface FileItemProps {
+interface ImageItemProps {
   alt?: string;
   alwaysShowClose?: boolean;
   className?: string;
@@ -41,12 +41,13 @@ interface FileItemProps {
   loading?: boolean;
   onClick?: () => void;
   onRemove?: () => void;
+  preview?: ImageProps['preview'];
   style?: CSSProperties;
   url?: string;
 }
 
-const FileItem = memo<FileItemProps>(
-  ({ editable, alt, onRemove, url, loading, alwaysShowClose }) => {
+const ImageItem = memo<ImageItemProps>(
+  ({ className, style, editable, alt, onRemove, url, loading, alwaysShowClose, preview }) => {
     const IMAGE_SIZE = editable ? MIN_IMAGE_SIZE : '100%';
     const { styles, cx } = useStyles();
     const { isSafari } = usePlatform();
@@ -69,15 +70,17 @@ const FileItem = memo<FileItemProps>(
         }
         alt={alt || ''}
         alwaysShowActions={alwaysShowClose}
+        className={className}
         height={isSafari ? 'auto' : '100%'}
         isLoading={loading}
+        preview={preview}
         size={IMAGE_SIZE as any}
         src={url}
-        style={{ height: isSafari ? 'auto' : '100%' }}
+        style={{ height: isSafari ? 'auto' : '100%', width: '100%', ...style }}
         wrapperClassName={cx(styles.image, editable && styles.editableImage)}
       />
     );
   },
 );
 
-export default FileItem;
+export default ImageItem;
