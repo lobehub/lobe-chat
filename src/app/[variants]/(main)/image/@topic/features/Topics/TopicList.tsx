@@ -28,7 +28,16 @@ const TopicsList = memo(() => {
   }
 
   return (
-    <Flexbox align="center" gap={12} ref={ref} width={'100%'}>
+    <Flexbox
+      align="center"
+      gap={12}
+      ref={ref}
+      style={{
+        maxHeight: '100%',
+        overflowY: 'auto',
+      }}
+      width={'100%'}
+    >
       <NewTopicButton
         count={generationTopics?.length}
         onClick={openNewGenerationTopic}
