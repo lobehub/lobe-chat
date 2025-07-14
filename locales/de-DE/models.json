@@ -203,23 +203,20 @@
   "Pro/Qwen/Qwen2.5-VL-7B-Instruct": {
     "description": "Qwen2.5-VL ist ein neues Mitglied der Qwen-Serie und verfügt über leistungsstarke visuelle Wahrnehmungsfähigkeiten. Es kann Text, Diagramme und Layouts in Bildern analysieren, längere Videos verstehen und Ereignisse erfassen. Zudem kann es Schlussfolgerungen ziehen, Werkzeuge bedienen, mehrere Formate für Objektlokalisation unterstützen und strukturierte Ausgaben generieren. Die Videoverarbeitung wurde durch dynamische Auflösungs- und Frameratetraining optimiert, und die Effizienz des visuellen Encoders wurde verbessert."
   },
+  "Pro/THUDM/GLM-4.1V-9B-Thinking": {
+    "description": "GLM-4.1V-9B-Thinking ist ein von Zhipu AI und dem KEG-Labor der Tsinghua-Universität gemeinsam veröffentlichtes Open-Source-Visuell-Sprachmodell (VLM), das speziell für die Bewältigung komplexer multimodaler kognitiver Aufgaben entwickelt wurde. Das Modell basiert auf dem GLM-4-9B-0414-Grundmodell und verbessert durch die Einführung des „Chain-of-Thought“-Schlussmechanismus und den Einsatz von Verstärkungslernstrategien seine multimodale Schlussfolgerungsfähigkeit und Stabilität erheblich."
+  },
   "Pro/THUDM/glm-4-9b-chat": {
     "description": "GLM-4-9B-Chat ist die Open-Source-Version des GLM-4-Modells, das von Zhizhu AI eingeführt wurde. Dieses Modell zeigt hervorragende Leistungen in den Bereichen Semantik, Mathematik, Inferenz, Code und Wissen. Neben der Unterstützung für mehrstufige Dialoge bietet GLM-4-9B-Chat auch fortgeschrittene Funktionen wie Web-Browsing, Code-Ausführung, benutzerdefinierte Tool-Aufrufe (Function Call) und langes Textverständnis. Das Modell unterstützt 26 Sprachen, darunter Chinesisch, Englisch, Japanisch, Koreanisch und Deutsch. In mehreren Benchmark-Tests zeigt GLM-4-9B-Chat hervorragende Leistungen, wie AlignBench-v2, MT-Bench, MMLU und C-Eval. Das Modell unterstützt eine maximale Kontextlänge von 128K und ist für akademische Forschung und kommerzielle Anwendungen geeignet."
   },
   "Pro/deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 ist ein durch verstärkendes Lernen (RL) gesteuertes Inferenzmodell, das Probleme mit Wiederholungen und Lesbarkeit im Modell löst. Vor dem RL führte DeepSeek-R1 Kaltstartdaten ein, um die Inferenzleistung weiter zu optimieren. Es zeigt in mathematischen, programmierbezogenen und Inferenzaufgaben eine vergleichbare Leistung zu OpenAI-o1 und verbessert die Gesamtleistung durch sorgfältig gestaltete Trainingsmethoden."
   },
-  "Pro/deepseek-ai/DeepSeek-R1-0120": {
-    "description": "DeepSeek-R1 ist ein durch verstärkendes Lernen (RL) gesteuertes Inferenzmodell, das Probleme der Wiederholungen und Lesbarkeit im Modell löst. Vor RL wurde ein Cold-Start-Datensatz eingeführt, um die Inferenzleistung weiter zu optimieren. Es zeigt vergleichbare Leistungen zu OpenAI-o1 in Mathematik, Programmierung und Inferenzaufgaben und verbessert die Gesamtleistung durch sorgfältig gestaltete Trainingsmethoden."
-  },
   "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": {
     "description": "DeepSeek-R1-Distill-Qwen-7B ist ein Modell, das durch Wissensdistillierung auf Basis von Qwen2.5-Math-7B erstellt wurde. Dieses Modell wurde mit 800.000 sorgfältig ausgewählten Beispielen, die von DeepSeek-R1 generiert wurden, feinjustiert und zeigt ausgezeichnete Inferenzfähigkeiten. Es erzielte in mehreren Benchmarks hervorragende Ergebnisse, darunter eine Genauigkeit von 92,8 % im MATH-500, einen Durchgangsrate von 55,5 % im AIME 2024 und eine Bewertung von 1189 auf CodeForces, was seine starken mathematischen und programmierischen Fähigkeiten als Modell mit 7B Parametern unterstreicht."
   },
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 ist ein hybrides Experten (MoE) Sprachmodell mit 6710 Milliarden Parametern, das eine Multi-Head-Latente-Attention (MLA) und DeepSeekMoE-Architektur verwendet, kombiniert mit einer Lastenausgleichsstrategie ohne Hilfskosten, um die Inferenz- und Trainingseffizienz zu optimieren. Durch das Pre-Training auf 14,8 Billionen hochwertigen Tokens und anschließende überwachte Feinabstimmung und verstärktes Lernen übertrifft DeepSeek-V3 in der Leistung andere Open-Source-Modelle und nähert sich führenden geschlossenen Modellen."
-  },
-  "Pro/deepseek-ai/DeepSeek-V3-1226": {
-    "description": "DeepSeek-V3 ist ein hybrides Expertenmodell (MoE) mit 6710 Milliarden Parametern, das eine Multi-Head-Latente-Attention (MLA) und die DeepSeekMoE-Architektur verwendet, kombiniert mit einer Lastenausgleichsstrategie ohne Hilfskosten, um die Effizienz von Inferenz und Training zu optimieren. Durch das Pre-Training auf 14,8 Billionen hochwertigen Tokens und anschließendes überwachten Feintuning und verstärkendes Lernen übertrifft DeepSeek-V3 in der Leistung andere Open-Source-Modelle und nähert sich führenden Closed-Source-Modellen."
   },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview ist ein innovatives Modell für die Verarbeitung natürlicher Sprache, das komplexe Aufgaben der Dialoggenerierung und des Kontextverständnisses effizient bewältigen kann."
@@ -383,6 +380,9 @@
   "THUDM/GLM-4-9B-0414": {
     "description": "GLM-4-9B-0414 ist ein kleines Modell der GLM-Serie mit 9 Milliarden Parametern. Dieses Modell übernimmt die technischen Merkmale der GLM-4-32B-Serie, bietet jedoch eine leichtere Bereitstellungsoption. Trotz seiner kleineren Größe zeigt GLM-4-9B-0414 hervorragende Fähigkeiten in Aufgaben wie Codegenerierung, Webdesign, SVG-Grafikgenerierung und suchbasiertem Schreiben."
   },
+  "THUDM/GLM-4.1V-9B-Thinking": {
+    "description": "GLM-4.1V-9B-Thinking ist ein von Zhipu AI und dem KEG-Labor der Tsinghua-Universität gemeinsam veröffentlichtes Open-Source-Visuell-Sprachmodell (VLM), das speziell für die Bewältigung komplexer multimodaler kognitiver Aufgaben entwickelt wurde. Das Modell basiert auf dem GLM-4-9B-0414-Grundmodell und verbessert durch die Einführung des „Chain-of-Thought“-Schlussmechanismus und den Einsatz von Verstärkungslernstrategien seine multimodale Schlussfolgerungsfähigkeit und Stabilität erheblich."
+  },
   "THUDM/GLM-Z1-32B-0414": {
     "description": "GLM-Z1-32B-0414 ist ein Schlussfolgerungsmodell mit tiefen Denkfähigkeiten. Dieses Modell wurde auf der Grundlage von GLM-4-32B-0414 durch Kaltstart und verstärktes Lernen entwickelt und wurde weiter in Mathematik, Programmierung und logischen Aufgaben trainiert. Im Vergleich zum Basismodell hat GLM-Z1-32B-0414 die mathematischen Fähigkeiten und die Fähigkeit zur Lösung komplexer Aufgaben erheblich verbessert."
   },
@@ -539,6 +539,9 @@
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4 kann nahezu sofortige Antworten oder verlängerte schrittweise Überlegungen erzeugen, die für den Nutzer klar nachvollziehbar sind. API-Nutzer können zudem die Denkzeit des Modells präzise steuern."
   },
+  "ascend-tribe/pangu-pro-moe": {
+    "description": "Pangu-Pro-MoE 72B-A16B ist ein spärlich besetztes großes Sprachmodell mit 72 Milliarden Parametern und 16 Milliarden aktivierten Parametern. Es basiert auf der gruppierten Mixture-of-Experts-Architektur (MoGE), bei der Experten in Gruppen eingeteilt werden und Tokens innerhalb jeder Gruppe eine gleiche Anzahl von Experten aktivieren, um eine ausgewogene Expertenauslastung zu gewährleisten. Dies verbessert die Effizienz der Modellausführung auf der Ascend-Plattform erheblich."
+  },
   "aya": {
     "description": "Aya 23 ist ein mehrsprachiges Modell von Cohere, das 23 Sprachen unterstützt und die Anwendung in einer Vielzahl von Sprachen erleichtert."
   },
@@ -547,6 +550,9 @@
   },
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B ist ein Open-Source-Sprachmodell mit 13 Milliarden Parametern, das von Baichuan Intelligence entwickelt wurde und in autorisierten chinesischen und englischen Benchmarks die besten Ergebnisse in seiner Größenordnung erzielt hat."
+  },
+  "baidu/ERNIE-4.5-300B-A47B": {
+    "description": "ERNIE-4.5-300B-A47B ist ein von Baidu entwickeltes großes Sprachmodell, das auf einer Mixture-of-Experts (MoE)-Architektur basiert. Das Modell verfügt über insgesamt 300 Milliarden Parameter, aktiviert jedoch bei der Inferenz nur 47 Milliarden Parameter pro Token, was eine starke Leistung bei gleichzeitig hoher Rechen-effizienz gewährleistet. Als eines der Kernmodelle der ERNIE 4.5-Serie zeigt es herausragende Fähigkeiten in Textverständnis, -generierung, Schlussfolgerung und Programmierung. Das Modell verwendet eine innovative multimodale heterogene MoE-Vortrainingsmethode, die durch gemeinsames Training von Text- und visuellen Modalitäten die Gesamtleistung verbessert, insbesondere bei der Befolgung von Anweisungen und dem Erinnern von Weltwissen."
   },
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanse ist ein leistungsstarkes 32B mehrsprachiges Modell, das darauf abzielt, die Leistung von einsprachigen Modellen durch innovative Ansätze wie Anweisungsoptimierung, Datenarbitrage, Präferenztraining und Modellfusion herauszufordern. Es unterstützt 23 Sprachen."
@@ -1097,9 +1103,6 @@
   "gemini-2.5-pro": {
     "description": "Gemini 2.5 Pro ist Googles fortschrittlichstes Denkmodell, das komplexe Probleme in den Bereichen Code, Mathematik und MINT-Fächer lösen kann und große Datensätze, Codebasen und Dokumente mit langem Kontext analysiert."
   },
-  "gemini-2.5-pro-exp-03-25": {
-    "description": "Gemini 2.5 Pro Experimental ist Googles fortschrittlichstes Denkmodell, das in der Lage ist, komplexe Probleme in den Bereichen Code, Mathematik und STEM zu analysieren. Es kann auch lange Kontexte nutzen, um große Datensätze, Codebasen und Dokumente zu analysieren."
-  },
   "gemini-2.5-pro-preview-03-25": {
     "description": "Gemini 2.5 Pro Preview ist Googles fortschrittlichstes Denkmodell, das in der Lage ist, komplexe Probleme in den Bereichen Code, Mathematik und STEM zu analysieren sowie große Datensätze, Codebasen und Dokumente mithilfe von langen Kontextanalysen zu verarbeiten."
   },
@@ -1166,6 +1169,12 @@
   "glm-4-plus": {
     "description": "GLM-4-Plus ist das hochintelligente Flaggschiffmodell mit starken Fähigkeiten zur Verarbeitung langer Texte und komplexer Aufgaben, mit umfassenden Leistungsverbesserungen."
   },
+  "glm-4.1v-thinking-flash": {
+    "description": "Die GLM-4.1V-Thinking-Serie ist das leistungsstärkste visuelle Modell unter den bekannten 10-Milliarden-Parameter-VLMs und integriert SOTA-Leistungen auf diesem Niveau in verschiedenen visuellen Sprachaufgaben, darunter Videoverstehen, Bildfragen, Fachaufgaben, OCR-Texterkennung, Dokumenten- und Diagramminterpretation, GUI-Agenten, Frontend-Web-Coding und Grounding. In vielen Aufgaben übertrifft es sogar das Qwen2.5-VL-72B mit achtmal so vielen Parametern. Durch fortschrittliche Verstärkungslernverfahren beherrscht das Modell die Chain-of-Thought-Schlussfolgerung, was die Genauigkeit und Detailtiefe der Antworten deutlich verbessert und in Bezug auf Endergebnis und Erklärbarkeit traditionelle Nicht-Thinking-Modelle übertrifft."
+  },
+  "glm-4.1v-thinking-flashx": {
+    "description": "Die GLM-4.1V-Thinking-Serie ist das leistungsstärkste visuelle Modell unter den bekannten 10-Milliarden-Parameter-VLMs und integriert SOTA-Leistungen auf diesem Niveau in verschiedenen visuellen Sprachaufgaben, darunter Videoverstehen, Bildfragen, Fachaufgaben, OCR-Texterkennung, Dokumenten- und Diagramminterpretation, GUI-Agenten, Frontend-Web-Coding und Grounding. In vielen Aufgaben übertrifft es sogar das Qwen2.5-VL-72B mit achtmal so vielen Parametern. Durch fortschrittliche Verstärkungslernverfahren beherrscht das Modell die Chain-of-Thought-Schlussfolgerung, was die Genauigkeit und Detailtiefe der Antworten deutlich verbessert und in Bezug auf Endergebnis und Erklärbarkeit traditionelle Nicht-Thinking-Modelle übertrifft."
+  },
   "glm-4v": {
     "description": "GLM-4V bietet starke Fähigkeiten zur Bildverständnis und -schlussfolgerung und unterstützt eine Vielzahl visueller Aufgaben."
   },
@@ -1186,6 +1195,9 @@
   },
   "glm-z1-flash": {
     "description": "Die GLM-Z1-Serie verfügt über starke Fähigkeiten zur komplexen Schlussfolgerung und zeigt in den Bereichen logische Schlussfolgerung, Mathematik und Programmierung hervorragende Leistungen. Die maximale Kontextlänge beträgt 32K."
+  },
+  "glm-z1-flashx": {
+    "description": "Hohe Geschwindigkeit zu niedrigem Preis: Flash-verbesserte Version mit ultraschneller Inferenzgeschwindigkeit und schnellerer gleichzeitiger Verarbeitung."
   },
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview verfügt über starke Fähigkeiten zur komplexen Schlussfolgerung und zeigt hervorragende Leistungen in den Bereichen logisches Denken, Mathematik und Programmierung."
@@ -1237,6 +1249,9 @@
   },
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B) bietet grundlegende Anweisungsverarbeitungsfähigkeiten und eignet sich für leichte Anwendungen."
+  },
+  "google/gemma-3-1b-it": {
+    "description": "Gemma 3 1B ist ein Open-Source-Sprachmodell von Google, das neue Maßstäbe in Effizienz und Leistung setzt."
   },
   "google/gemma-3-27b-it": {
     "description": "Gemma 3 27B ist ein Open-Source-Sprachmodell von Google, das neue Maßstäbe in Bezug auf Effizienz und Leistung setzt."
@@ -1373,6 +1388,9 @@
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B ist ein Sprachmodell, das Kreativität und Intelligenz kombiniert und mehrere führende Modelle integriert."
   },
+  "hunyuan-a13b": {
+    "description": "Hunyuan ist das erste hybride Schlussfolgerungsmodell, eine Weiterentwicklung von hunyuan-standard-256K mit insgesamt 80 Milliarden Parametern und 13 Milliarden aktivierten Parametern. Standardmäßig im langsamen Denkmodus, unterstützt es den Wechsel zwischen schnellem und langsamem Denkmodus über Parameter oder Anweisungen, wobei der Wechsel durch Voranstellen von query mit / no_think erfolgt. Die Gesamtleistung wurde gegenüber der Vorgängergeneration deutlich verbessert, insbesondere in Mathematik, Naturwissenschaften, Langtextverständnis und Agentenfähigkeiten."
+  },
   "hunyuan-code": {
     "description": "Das neueste Code-Generierungsmodell von Hunyuan, das auf einem Basismodell mit 200B hochwertigen Code-Daten trainiert wurde, hat ein halbes Jahr lang mit hochwertigen SFT-Daten trainiert, das Kontextfenster auf 8K erhöht und belegt in den automatischen Bewertungsmetriken für die fünf großen Programmiersprachen Spitzenplätze; in den zehn Aspekten der umfassenden Codeaufgabenbewertung für die fünf großen Sprachen liegt die Leistung in der ersten Reihe."
   },
@@ -1424,6 +1442,9 @@
   "hunyuan-t1-vision": {
     "description": "Hunyuan ist ein multimodales Verständnis- und Tiefdenkmodell, das native multimodale lange Denkprozesse unterstützt. Es ist spezialisiert auf verschiedene Bildinferenzszenarien und zeigt im Vergleich zu Schnelldenkmodellen umfassende Verbesserungen bei naturwissenschaftlichen Problemen."
   },
+  "hunyuan-t1-vision-20250619": {
+    "description": "Die neueste Version des hunyuan t1-vision multimodalen tiefen Denkmodells unterstützt native multimodale Chain-of-Thought-Mechanismen und bietet im Vergleich zur vorherigen Standardversion umfassende Verbesserungen."
+  },
   "hunyuan-turbo": {
     "description": "Die Vorschauversion des neuen großen Sprachmodells von Hunyuan verwendet eine neuartige hybride Expertenmodellstruktur (MoE) und bietet im Vergleich zu Hunyuan-Pro eine schnellere Inferenz und bessere Leistung."
   },
@@ -1453,6 +1474,12 @@
   },
   "hunyuan-turbos-role-plus": {
     "description": "Die neueste Version des Hunyuan-Rollenspielsmodells, feinabgestimmt und trainiert von Hunyuan, basiert auf dem Hunyuan-Modell und wurde mit Datensätzen für Rollenspielszenarien weiter trainiert, um in Rollenspielszenarien bessere Grundleistungen zu erzielen."
+  },
+  "hunyuan-turbos-vision": {
+    "description": "Dieses Modell eignet sich für Szenarien mit Bild- und Textverständnis und basiert auf dem neuesten hunyuan turbos. Es ist ein neues Flaggschiff-Visuell-Sprachmodell, das sich auf Aufgaben des Bild-Text-Verstehens konzentriert, einschließlich bildbasierter Entitätenerkennung, Wissensfragen, Textkreation und fotografiebasierter Problemlösung, mit umfassenden Verbesserungen gegenüber der Vorgängerversion."
+  },
+  "hunyuan-turbos-vision-20250619": {
+    "description": "Die neueste Version des hunyuan turbos-vision Flaggschiff-Visuell-Sprachmodells bietet umfassende Verbesserungen bei Aufgaben des Bild-Text-Verstehens, einschließlich bildbasierter Entitätenerkennung, Wissensfragen, Textkreation und fotografiebasierter Problemlösung, im Vergleich zur vorherigen Standardversion."
   },
   "hunyuan-vision": {
     "description": "Das neueste multimodale Modell von Hunyuan unterstützt die Eingabe von Bildern und Text zur Generierung von Textinhalten."
