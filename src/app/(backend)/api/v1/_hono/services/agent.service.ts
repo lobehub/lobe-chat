@@ -39,6 +39,17 @@ export class AgentService extends BaseService {
     this.log('info', '获取用户的 Agent 列表', { userId: this.userId });
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('用户未认证');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('AGENT_READ', this.userId);
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权访问 Agent 列表');
+      }
+
       // 按用户ID过滤，确保数据隔离
       const agentsList = (await this.db.query.agents.findMany({
         orderBy: desc(agents.createdAt),
@@ -75,6 +86,17 @@ export class AgentService extends BaseService {
     this.log('info', '创建智能体', { title: request.title });
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('用户未认证');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('AGENT_CREATE', this.userId);
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权创建 Agent');
+      }
+
       return await this.db.transaction(async (tx) => {
         // 准备创建数据
         const newAgentData: NewAgent = {
@@ -114,6 +136,19 @@ export class AgentService extends BaseService {
     this.log('info', '更新智能体', { id: request.id, title: request.title });
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('用户未认证');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('AGENT_UPDATE', {
+        targetAgentId: request.id,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权更新此 Agent');
+      }
+
       return await this.db.transaction(async (tx) => {
         // 检查 Agent 是否存在且属于当前用户
         const existingAgent = await tx.query.agents.findFirst({
@@ -160,6 +195,19 @@ export class AgentService extends BaseService {
     this.log('info', '删除智能体', { agentId: request.agentId, migrateTo: request.migrateTo });
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('用户未认证');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('AGENT_DELETE', {
+        targetAgentId: request.agentId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权删除此 Agent');
+      }
+
       // 检查要删除的 Agent 是否存在
       const targetAgent = await this.db.query.agents.findFirst({
         where: eq(agents.id, request.agentId),
@@ -206,6 +254,19 @@ export class AgentService extends BaseService {
     this.log('info', '根据 ID 获取 Agent 详情', { agentId });
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('用户未认证');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('AGENT_READ', {
+        targetAgentId: agentId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权访问此 Agent');
+      }
+
       // 复用 AgentModel 的方法获取完整的 Agent 配置
       const agentModel = new AgentModel(this.db, this.userId!);
       const agent = await agentModel.getAgentConfigById(agentId);
@@ -270,6 +331,19 @@ export class AgentService extends BaseService {
     this.log('info', '为 Agent 创建 Session', { agentId: request.agentId });
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('用户未认证');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('AGENT_UPDATE', {
+        targetAgentId: request.agentId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权为此 Agent 创建 Session');
+      }
+
       return await this.db.transaction(async (tx) => {
         // 验证 Agent 存在且属于当前用户
         const agent = await tx.query.agents.findFirst({
@@ -327,6 +401,19 @@ export class AgentService extends BaseService {
     this.log('info', '获取 Agent 关联的 Session', { agentId });
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('用户未认证');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('AGENT_READ', {
+        targetAgentId: agentId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权访问此 Agent 的 Session');
+      }
+
       // 验证 Agent 存在且属于当前用户
       const agent = await this.db.query.agents.findFirst({
         where: and(eq(agents.id, agentId), eq(agents.userId, this.userId!)),
@@ -378,6 +465,19 @@ export class AgentService extends BaseService {
     this.log('info', '关联 Agent 和 Session', { agentId, sessionId: request.sessionId });
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('用户未认证');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('AGENT_UPDATE', {
+        targetAgentId: agentId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权关联此 Agent');
+      }
+
       await this.db.transaction(async (tx) => {
         // 验证 Agent 和 Session 都存在且属于当前用户
         const [agent, session] = await Promise.all([
@@ -431,6 +531,19 @@ export class AgentService extends BaseService {
     this.log('info', '取消 Agent 和 Session 关联', { agentId, sessionId });
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('用户未认证');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('AGENT_UPDATE', {
+        targetAgentId: agentId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权取消此 Agent 的关联');
+      }
+
       await this.db.transaction(async (tx) => {
         // 验证关联关系存在且属于当前用户
         const relation = await tx.query.agentsToSessions.findFirst({
@@ -475,6 +588,19 @@ export class AgentService extends BaseService {
     });
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('用户未认证');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('AGENT_UPDATE', {
+        targetAgentId: agentId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权批量关联此 Agent');
+      }
+
       await this.db.transaction(async (tx) => {
         // 验证 Agent 存在且属于当前用户
         const agent = await tx.query.agents.findFirst({
@@ -551,6 +677,15 @@ export class AgentService extends BaseService {
     try {
       if (!this.userId) {
         throw this.createAuthError('用户未认证');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveBatchQueryPermission('AGENT_DELETE', {
+        targetAgentId: request.agentIds,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权批量删除 Agent');
       }
 
       const result: BatchOperationResult = {
@@ -635,6 +770,19 @@ export class AgentService extends BaseService {
     this.log('info', '批量更新 Agent', { agentCount: request.agentIds.length });
 
     try {
+      if (!this.userId) {
+        throw this.createAuthError('用户未认证');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveBatchQueryPermission('AGENT_UPDATE', {
+        targetAgentId: request.agentIds,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权批量更新 Agent');
+      }
+
       const result: BatchOperationResult = {
         errors: [],
         failed: 0,
