@@ -167,6 +167,14 @@ export class SessionService extends BaseService {
     this.log('info', '获取分组的会话列表');
 
     try {
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('SESSION_READ');
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权访问会话列表');
+      }
+
+      // 传递权限条件到 queryWithGroups 方法
       const result = await this.sessionModel.queryWithGroups();
 
       this.log('info', '成功获取分组会话列表', {
@@ -293,9 +301,22 @@ export class SessionService extends BaseService {
     this.log('info', '根据 ID 获取会话详情', { sessionId });
 
     try {
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('SESSION_READ', {
+        targetSessionId: sessionId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权访问此会话');
+      }
+
       // 查询会话信息，包含关联的 agent 和 user 信息
       const sessionWithAgent = await this.db.query.sessions.findFirst({
-        where: eq(sessions.id, sessionId),
+        where: and(
+          eq(sessions.id, sessionId),
+          // 添加权限相关的查询条件
+          permissionResult.condition?.userId ? eq(sessions.userId, permissionResult.condition.userId) : undefined,
+        ),
         with: {
           agentsToSessions: {
             with: {
@@ -349,11 +370,25 @@ export class SessionService extends BaseService {
     this.log('info', '获取会话配置', { sessionId });
 
     try {
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('SESSION_READ', {
+        targetSessionId: sessionId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权访问此会话配置');
+      }
+
       const session = await this.sessionModel.findByIdOrSlug(sessionId);
 
       if (!session) {
         this.log('warn', '会话不存在', { sessionId });
         return null;
+      }
+
+      // 验证用户权限
+      if (permissionResult.condition?.userId && session.userId !== permissionResult.condition.userId) {
+        throw this.createAuthorizationError('无权访问此会话配置');
       }
 
       return session.agent as LobeAgentConfig;
@@ -529,6 +564,18 @@ export class SessionService extends BaseService {
     this.log('info', '克隆会话', { id: request.id, newTitle: request.newTitle });
 
     try {
+      // 权限校验
+      const permissionRead = await this.resolveQueryPermission('SESSION_READ', {
+        targetSessionId: request.id,
+      });
+      const permissionCreate = await this.resolveQueryPermission('SESSION_CREATE', {
+        targetSessionId: request.id,
+      });
+
+      if (!permissionRead.isPermitted || !permissionCreate.isPermitted) {
+        throw this.createAuthorizationError(permissionRead.message || '无权克隆此会话');
+      }
+
       const result = await this.sessionModel.duplicate(request.id, request.newTitle);
 
       if (!result) {
