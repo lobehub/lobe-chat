@@ -201,11 +201,6 @@ const isSendButtonDisabledByMessage = (s: ChatStoreState) =>
   // 4. when the message is in RAG flow
   isInRAGFlow(s);
 
-const inboxActiveTopicMessages = (state: ChatStoreState) => {
-  const activeTopicId = state.activeTopicId;
-  return state.messagesMap[messageMapKey(INBOX_SESSION_ID, activeTopicId)] || [];
-};
-
 export const chatSelectors = {
   activeBaseChats,
   activeBaseChatsWithoutTool,
@@ -218,7 +213,6 @@ export const chatSelectors = {
   getMessageById,
   getMessageByToolCallId,
   getTraceIdByMessageId,
-  inboxActiveTopicMessages,
   isAIGenerating,
   isCreatingMessage,
   isCurrentChatLoaded,
