@@ -91,14 +91,14 @@ export class AiInfraRepos {
   /**
    * used in the chat page. to show the enabled models
    */
-  getEnabledModels = async () => {
-    const providers = await this.getAiProviderList();
-    const enabledProviders = providers.filter((item) => item.enabled);
+  getEnabledModels = async (filterEnabled: boolean = true) => {
+    const [providers, allModels] = await Promise.all([
+      this.getAiProviderList(),
+      this.aiModelModel.getAllModels(),
+    ]);
+    const enabledProviders = providers.filter((item) => (filterEnabled ? item.enabled : true));
 
-    const allModels = await this.aiModelModel.getAllModels();
-    const userEnabledModels = allModels.filter((item) => item.enabled);
-
-    const modelList = await pMap(
+    const builtinModelList = await pMap(
       enabledProviders,
       async (provider) => {
         const aiModels = await this.fetchBuiltinModels(provider.id);
@@ -114,6 +114,7 @@ export class AiInfraRepos {
               };
 
             return {
+              ...item,
               abilities: !isEmpty(user.abilities) ? user.abilities : item.abilities || {},
               config: !isEmpty(user.config) ? user.config : item.config,
               contextWindowTokens:
@@ -129,32 +130,40 @@ export class AiInfraRepos {
               type: item.type,
             };
           })
-          .filter((i) => i.enabled);
+          .filter((item) => (filterEnabled ? item.enabled : true));
       },
       { concurrency: 10 },
     );
 
-    return [...modelList.flat(), ...userEnabledModels].sort(
-      (a, b) => (a?.sort || -1) - (b?.sort || -1),
-    ) as EnabledAiModel[];
+    const enabledProviderIds = new Set(enabledProviders.map((item) => item.id));
+
+    return [
+      ...builtinModelList.flat(),
+      ...allModels.filter((item) =>
+        filterEnabled ? enabledProviderIds.has(item.providerId) && item.enabled : true,
+      ),
+    ].sort((a, b) => (a?.sort || -1) - (b?.sort || -1)) as EnabledAiModel[];
   };
 
   getAiProviderRuntimeState = async (
     decryptor?: DecryptUserKeyVaults,
   ): Promise<AiProviderRuntimeState> => {
-    const result = await this.aiProviderModel.getAiProviderRuntimeConfig(decryptor);
+    const [result, enabledAiProviders, allModels] = await Promise.all([
+      this.aiProviderModel.getAiProviderRuntimeConfig(decryptor),
+      this.getUserEnabledProviderList(),
+      this.getEnabledModels(false),
+    ]);
 
     const runtimeConfig = result;
-
     Object.entries(result).forEach(([key, value]) => {
       runtimeConfig[key] = merge(this.providerConfigs[key] || {}, value);
     });
+    const enabledAiModels = allModels.filter((model) => model.enabled);
+    const enabledImageAiProviders = enabledAiProviders.filter((provider) => {
+      return allModels.some((model) => model.providerId === provider.id && model.type === 'image');
+    });
 
-    const enabledAiProviders = await this.getUserEnabledProviderList();
-
-    const enabledAiModels = await this.getEnabledModels();
-
-    return { enabledAiModels, enabledAiProviders, runtimeConfig };
+    return { enabledAiModels, enabledAiProviders, enabledImageAiProviders, runtimeConfig };
   };
 
   getAiProviderModelList = async (providerId: string) => {

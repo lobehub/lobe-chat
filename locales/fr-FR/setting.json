@@ -484,6 +484,11 @@
       "placeholder": "Veuillez entrer le mot-clé personnalisé",
       "title": "Mot-clé personnalisé"
     },
+    "generationTopic": {
+      "label": "Modèle de nomination de sujets pour peinture IA",
+      "modelDesc": "Modèle spécifiquement utilisé pour la nomination automatique des sujets de peinture IA",
+      "title": "Nomination automatique des sujets de peinture IA"
+    },
     "helpInfo": "Lors de la création d'un nouvel assistant, les paramètres par défaut de l'assistant seront utilisés comme valeurs par défaut.",
     "historyCompress": {
       "label": "Modèle d'historique de conversation",

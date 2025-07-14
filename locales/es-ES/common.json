@@ -183,6 +183,7 @@
   },
   "fullscreen": "Pantalla completa",
   "historyRange": "Rango de historial",
+  "import": "Importar",
   "importData": "Importar datos",
   "importModal": {
     "error": {
@@ -324,6 +325,7 @@
     }
   },
   "tab": {
+    "aiImage": "Dibujo AI",
     "chat": "Chat",
     "discover": "Descubrir",
     "files": "Archivos",

@@ -1,0 +1,100 @@
+{
+  "config": {
+    "aspectRatio": {
+      "label": "Ratio",
+      "lock": "Verrouiller le rapport hauteur/largeur",
+      "unlock": "Déverrouiller le rapport hauteur/largeur"
+    },
+    "header": {
+      "desc": "Description simple, création immédiate",
+      "title": "Peinture"
+    },
+    "height": {
+      "label": "Hauteur"
+    },
+    "imageNum": {
+      "label": "Nombre d'images"
+    },
+    "imageUrl": {
+      "label": "Image de référence"
+    },
+    "imageUrls": {
+      "label": "Images de référence"
+    },
+    "model": {
+      "label": "Modèle"
+    },
+    "prompt": {
+      "placeholder": "Décrivez ce que vous souhaitez générer"
+    },
+    "seed": {
+      "label": "Graine",
+      "random": "Graine aléatoire"
+    },
+    "size": {
+      "label": "Taille"
+    },
+    "steps": {
+      "label": "Étapes"
+    },
+    "title": "Peinture IA",
+    "width": {
+      "label": "Largeur"
+    }
+  },
+  "generation": {
+    "actions": {
+      "applySeed": "Appliquer la graine",
+      "copyError": "Copier l'erreur",
+      "copyPrompt": "Copier l'invite",
+      "copySeed": "Copier la graine",
+      "delete": "Supprimer",
+      "deleteBatch": "Supprimer le lot",
+      "download": "Télécharger",
+      "downloadFailed": "Échec du téléchargement de l'image",
+      "errorCopied": "Message d'erreur copié dans le presse-papiers",
+      "errorCopyFailed": "Échec de la copie du message d'erreur",
+      "generate": "Générer",
+      "promptCopied": "Invite copiée dans le presse-papiers",
+      "promptCopyFailed": "Échec de la copie de l'invite",
+      "reuseSettings": "Réutiliser les paramètres",
+      "seedApplied": "Graine appliquée à la configuration",
+      "seedApplyFailed": "Échec de l'application de la graine",
+      "seedCopied": "Graine copiée dans le presse-papiers",
+      "seedCopyFailed": "Échec de la copie de la graine"
+    },
+    "metadata": {
+      "count": "{{count}} image(s)"
+    },
+    "status": {
+      "failed": "Échec de la génération",
+      "generating": "Génération en cours..."
+    }
+  },
+  "notSupportGuide": {
+    "desc": "L'instance déployée actuelle utilise un mode base de données client, la fonction de génération d'images IA n'est pas disponible. Veuillez passer au <1>mode de déploiement base de données serveur</1> ou utiliser directement <3>LobeChat Cloud</3>",
+    "features": {
+      "fileIntegration": {
+        "desc": "Intégration approfondie avec le système de gestion de fichiers, les images générées sont automatiquement sauvegardées dans le système de fichiers pour une gestion et organisation unifiées",
+        "title": "Interopérabilité avec le système de fichiers"
+      },
+      "llmAssisted": {
+        "desc": "Combinaison avec les capacités des grands modèles de langage pour optimiser et étendre intelligemment les invites, améliorant la qualité de génération d'images (Bientôt disponible)",
+        "title": "Assistance LLM pour la génération d'images"
+      },
+      "multiProviders": {
+        "desc": "Prise en charge de plusieurs fournisseurs de services de peinture IA, y compris OpenAI gpt-image-1, Google Imagen, FAL.ai, offrant un large choix de modèles",
+        "title": "Support multi-fournisseurs"
+      }
+    },
+    "title": "Le mode de déploiement actuel ne prend pas en charge la peinture IA"
+  },
+  "topic": {
+    "createNew": "Créer un nouveau sujet",
+    "deleteConfirm": "Supprimer le sujet généré",
+    "deleteConfirmDesc": "Vous êtes sur le point de supprimer ce sujet généré. Cette action est irréversible, veuillez procéder avec prudence.",
+    "empty": "Aucun sujet généré",
+    "title": "Thème de peinture",
+    "untitled": "Sujet par défaut"
+  }
+}

@@ -484,6 +484,11 @@
       "placeholder": "Voer aangepaste prompt in",
       "title": "Aangepaste prompt"
     },
+    "generationTopic": {
+      "label": "AI-schilderij onderwerp naamgevingsmodel",
+      "modelDesc": "Model aangewezen voor het automatisch benoemen van onderwerpen in AI-schilderijen",
+      "title": "Automatisch onderwerp naamgeven voor AI-schilderijen"
+    },
     "helpInfo": "Wanneer je een nieuwe assistent maakt, worden de standaard assistentinstellingen als standaardwaarden gebruikt.",
     "historyCompress": {
       "label": "Gespreksgeschiedenismodel",

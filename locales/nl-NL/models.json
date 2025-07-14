@@ -1019,6 +1019,15 @@
   "ernie-x1-turbo-32k": {
     "description": "In vergelijking met ERNIE-X1-32K biedt dit model betere prestaties en effectiviteit."
   },
+  "flux-kontext/dev": {
+    "description": "Frontier beeldbewerkingsmodel."
+  },
+  "flux-pro/kontext": {
+    "description": "FLUX.1 Kontext [pro] kan tekst en referentieafbeeldingen als invoer verwerken, waardoor doelgerichte lokale bewerkingen en complexe algehele scèneveranderingen naadloos mogelijk zijn."
+  },
+  "flux/schnell": {
+    "description": "FLUX.1 [schnell] is een streaming transformer-model met 12 miljard parameters, dat binnen 1 tot 4 stappen hoogwaardige afbeeldingen uit tekst kan genereren, geschikt voor persoonlijk en commercieel gebruik."
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) biedt stabiele en afstelbare prestaties, ideaal voor oplossingen voor complexe taken."
   },
@@ -1364,6 +1373,9 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe is een spraak-naar-tekstmodel dat GPT-4o gebruikt voor audiotranscriptie. Vergeleken met het originele Whisper-model verbetert het de woordfoutpercentage en verhoogt het de taalherkenning en nauwkeurigheid. Gebruik het voor nauwkeurigere transcripties."
   },
+  "gpt-image-1": {
+    "description": "ChatGPT native multimodaal afbeeldingsgeneratiemodel"
+  },
   "grok-2-1212": {
     "description": "Dit model heeft verbeteringen aangebracht in nauwkeurigheid, instructievolging en meertalige capaciteiten."
   },
@@ -1483,6 +1495,9 @@
   },
   "hunyuan-vision": {
     "description": "Het nieuwste multimodale model van Hunyuan, ondersteunt het genereren van tekstinhoud op basis van afbeelding + tekstinvoer."
+  },
+  "imagen4/preview": {
+    "description": "Google's hoogste kwaliteit afbeeldingsgeneratiemodel"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 biedt intelligente gespreksoplossingen voor meerdere scenario's."

@@ -66,6 +66,7 @@
       "customRegion": "منطقه خدمات سفارشی",
       "customSessionToken": "توکن نشست سفارشی",
       "description": "برای شروع جلسه، AWS AccessKeyId / SecretAccessKey خود را وارد کنید. برنامه تنظیمات احراز هویت شما را ذخیره نخواهد کرد",
+      "imageGenerationDescription": "برای شروع تولید، AWS AccessKeyId / SecretAccessKey خود را وارد کنید. برنامه پیکربندی احراز هویت شما را ذخیره نمی‌کند.",
       "title": "استفاده از اطلاعات احراز هویت سفارشی Bedrock"
     }
   },

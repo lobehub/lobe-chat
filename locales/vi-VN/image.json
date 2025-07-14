@@ -1,0 +1,100 @@
+{
+  "config": {
+    "aspectRatio": {
+      "label": "Tỷ lệ",
+      "lock": "Khóa tỷ lệ khung hình",
+      "unlock": "Mở khóa tỷ lệ khung hình"
+    },
+    "header": {
+      "desc": "Mô tả ngắn gọn, sáng tạo ngay lập tức",
+      "title": "Vẽ tranh"
+    },
+    "height": {
+      "label": "Chiều cao"
+    },
+    "imageNum": {
+      "label": "Số lượng ảnh"
+    },
+    "imageUrl": {
+      "label": "Hình tham khảo"
+    },
+    "imageUrls": {
+      "label": "Ảnh tham khảo"
+    },
+    "model": {
+      "label": "Mô hình"
+    },
+    "prompt": {
+      "placeholder": "Mô tả nội dung bạn muốn tạo"
+    },
+    "seed": {
+      "label": "Hạt giống",
+      "random": "Hạt giống ngẫu nhiên"
+    },
+    "size": {
+      "label": "Kích thước"
+    },
+    "steps": {
+      "label": "Số bước"
+    },
+    "title": "Vẽ AI",
+    "width": {
+      "label": "Chiều rộng"
+    }
+  },
+  "generation": {
+    "actions": {
+      "applySeed": "Áp dụng hạt giống",
+      "copyError": "Sao chép lỗi",
+      "copyPrompt": "Sao chép lời nhắc",
+      "copySeed": "Sao chép hạt giống",
+      "delete": "Xóa",
+      "deleteBatch": "Xóa lô",
+      "download": "Tải xuống",
+      "downloadFailed": "Tải ảnh thất bại",
+      "errorCopied": "Thông tin lỗi đã được sao chép vào bộ nhớ tạm",
+      "errorCopyFailed": "Sao chép thông tin lỗi thất bại",
+      "generate": "Tạo",
+      "promptCopied": "Từ khóa đã được sao chép vào bộ nhớ tạm",
+      "promptCopyFailed": "Sao chép từ khóa thất bại",
+      "reuseSettings": "Tái sử dụng cài đặt",
+      "seedApplied": "Hạt giống đã được áp dụng vào cấu hình",
+      "seedApplyFailed": "Áp dụng hạt giống thất bại",
+      "seedCopied": "Hạt giống đã được sao chép vào bộ nhớ tạm",
+      "seedCopyFailed": "Sao chép hạt giống thất bại"
+    },
+    "metadata": {
+      "count": "{{count}} ảnh"
+    },
+    "status": {
+      "failed": "Tạo thất bại",
+      "generating": "Đang tạo..."
+    }
+  },
+  "notSupportGuide": {
+    "desc": "Phiên bản triển khai hiện tại là chế độ cơ sở dữ liệu phía khách, không hỗ trợ chức năng tạo hình ảnh AI. Vui lòng chuyển sang <1>chế độ triển khai cơ sở dữ liệu phía máy chủ</1> hoặc sử dụng trực tiếp <3>LobeChat Cloud</3>",
+    "features": {
+      "fileIntegration": {
+        "desc": "Tích hợp sâu với hệ thống quản lý tệp, ảnh tạo ra tự động lưu vào hệ thống tệp, hỗ trợ quản lý và tổ chức thống nhất",
+        "title": "Tương tác hệ thống tệp"
+      },
+      "llmAssisted": {
+        "desc": "Kết hợp khả năng mô hình ngôn ngữ lớn, tối ưu và mở rộng từ khóa thông minh, nâng cao chất lượng tạo ảnh (Sắp ra mắt)",
+        "title": "Hỗ trợ tạo ảnh bởi LLM"
+      },
+      "multiProviders": {
+        "desc": "Hỗ trợ nhiều nhà cung cấp dịch vụ vẽ AI, bao gồm OpenAI gpt-image-1, Google Imagen, FAL.ai, v.v., cung cấp đa dạng lựa chọn mô hình",
+        "title": "Hỗ trợ nhiều nhà cung cấp"
+      }
+    },
+    "title": "Chế độ triển khai hiện tại không hỗ trợ vẽ AI"
+  },
+  "topic": {
+    "createNew": "Tạo chủ đề mới",
+    "deleteConfirm": "Xác nhận xóa chủ đề tạo",
+    "deleteConfirmDesc": "Bạn sắp xóa chủ đề tạo này, hành động này không thể hoàn tác, vui lòng cân nhắc kỹ.",
+    "empty": "Chưa có chủ đề tạo",
+    "title": "Chủ đề vẽ tranh",
+    "untitled": "Chủ đề mặc định"
+  }
+}
