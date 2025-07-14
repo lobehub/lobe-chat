@@ -1,4 +1,4 @@
-import { and, count, desc, ilike } from 'drizzle-orm';
+import { and, count, desc, ilike, eq } from 'drizzle-orm';
 import { sha256 } from 'js-sha256';
 
 import { DocumentModel } from '@/database/models/document';
@@ -101,6 +101,14 @@ export class FileUploadService extends BaseService {
       if (!this.userId) {
         throw this.createAuthError('User authentication required');
       }
+
+      // 权限校验
+      const permissionCreate = await this.resolveQueryPermission('FILE_UPDATE', this.userId);
+
+      if (!permissionCreate.isPermitted) {
+        throw this.createAuthorizationError(permissionCreate.message || '无权上传文件');
+      }
+
 
       this.log('info', 'Starting file upload', {
         filename: file.name,
@@ -257,8 +265,11 @@ export class FileUploadService extends BaseService {
    */
   async getFileList(query: FileListQuery): Promise<FileListResponse> {
     try {
-      if (!this.userId) {
-        throw this.createAuthError('User authentication required');
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('FILE_READ');
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权访问文件列表');
       }
 
       this.log('info', 'Getting file list', {
@@ -285,6 +296,11 @@ export class FileUploadService extends BaseService {
       // 添加文件类型过滤
       if (query.fileType) {
         whereConditions.push(ilike(files.fileType, `${query.fileType}%`));
+      }
+
+      // 添加权限相关的查询条件
+      if (permissionResult?.condition?.userId) {
+        whereConditions.push(eq(files.userId, permissionResult.condition.userId));
       }
 
       const whereClause = and(...whereConditions);
@@ -345,8 +361,21 @@ export class FileUploadService extends BaseService {
    */
   async getFileDetail(fileId: string): Promise<FileDetailResponse> {
     try {
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('FILE_READ', {
+        targetFileId: fileId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权访问此文件');
+      }
+
       const file = await this.db.query.files.findFirst({
-        where: (files, { eq }) => eq(files.id, fileId),
+        where: and(
+          eq(files.id, fileId),
+          // 添加权限相关的查询条件
+          permissionResult.condition?.userId ? eq(files.userId, permissionResult.condition.userId) : undefined,
+        ),
       });
 
       if (!file) {
@@ -546,8 +575,13 @@ export class FileUploadService extends BaseService {
     options: Partial<FileParseRequest> = {},
   ): Promise<FileParseResponse> {
     try {
-      if (!this.userId) {
-        throw this.createAuthError('User authentication required');
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('FILE_READ', {
+        targetFileId: fileId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权解析此文件');
       }
 
       // 1. 获取文件信息
@@ -656,8 +690,13 @@ export class FileUploadService extends BaseService {
    */
   async deleteFile(fileId: string): Promise<FileDeleteResponse> {
     try {
-      if (!this.userId) {
-        throw this.createAuthError('User authentication required');
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('FILE_DELETE', {
+        targetFileId: fileId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权删除此文件');
       }
 
       const file = await this.fileModel.findById(fileId);
@@ -926,9 +965,6 @@ export class FileUploadService extends BaseService {
    */
   async batchGetFiles(request: BatchGetFilesRequest): Promise<BatchGetFilesResponse> {
     try {
-      if (!this.userId) {
-        throw this.createAuthError('User authentication required');
-      }
 
       this.log('info', 'Starting batch file retrieval', {
         count: request.fileIds.length,
