@@ -147,11 +147,6 @@
         "required": "Пожалуйста, введите URL службы MCP"
       }
     },
-    "mcpInstall": {
-      "errorTypes": {
-        "AUTHORIZATION_ERROR": "Ошибка авторизации"
-      }
-    },
     "meta": {
       "author": {
         "desc": "Автор плагина",
@@ -295,6 +290,7 @@
       "showDetails": "Показать детали"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "Ошибка авторизации",
       "CONNECTION_FAILED": "Ошибка подключения",
       "INITIALIZATION_TIMEOUT": "Превышено время инициализации",
       "PROCESS_SPAWN_ERROR": "Ошибка запуска процесса",

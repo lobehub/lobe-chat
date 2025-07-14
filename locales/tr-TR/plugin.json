@@ -147,11 +147,6 @@
         "required": "Lütfen MCP hizmet URL'sini girin"
       }
     },
-    "mcpInstall": {
-      "errorTypes": {
-        "AUTHORIZATION_ERROR": "Yetkilendirme doğrulama hatası"
-      }
-    },
     "meta": {
       "author": {
         "desc": "Eklentinin yazarı",
@@ -295,6 +290,7 @@
       "showDetails": "Detayları göster"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "Yetkilendirme doğrulama hatası",
       "CONNECTION_FAILED": "Bağlantı başarısız",
       "INITIALIZATION_TIMEOUT": "Başlatma zaman aşımı",
       "PROCESS_SPAWN_ERROR": "İşlem başlatılamadı",

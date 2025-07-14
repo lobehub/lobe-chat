@@ -147,11 +147,6 @@
         "required": "請輸入 MCP 服務 URL"
       }
     },
-    "mcpInstall": {
-      "errorTypes": {
-        "AUTHORIZATION_ERROR": "授權驗證錯誤"
-      }
-    },
     "meta": {
       "author": {
         "desc": "外掛的作者",
@@ -295,6 +290,7 @@
       "showDetails": "查看詳情"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "授權驗證錯誤",
       "CONNECTION_FAILED": "連接失敗",
       "INITIALIZATION_TIMEOUT": "初始化逾時",
       "PROCESS_SPAWN_ERROR": "進程啟動失敗",

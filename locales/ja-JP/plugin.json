@@ -147,11 +147,6 @@
         "required": "MCP サービスの URL を入力してください"
       }
     },
-    "mcpInstall": {
-      "errorTypes": {
-        "AUTHORIZATION_ERROR": "認証エラー"
-      }
-    },
     "meta": {
       "author": {
         "desc": "プラグインの作者",
@@ -295,6 +290,7 @@
       "showDetails": "詳細を表示"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "認証エラー",
       "CONNECTION_FAILED": "接続失敗",
       "INITIALIZATION_TIMEOUT": "初期化タイムアウト",
       "PROCESS_SPAWN_ERROR": "プロセス起動失敗",

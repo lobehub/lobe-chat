@@ -147,11 +147,6 @@
         "required": "لطفاً URL سرویس MCP را وارد کنید"
       }
     },
-    "mcpInstall": {
-      "errorTypes": {
-        "AUTHORIZATION_ERROR": "خطای احراز هویت"
-      }
-    },
     "meta": {
       "author": {
         "desc": "نویسنده افزونه",
@@ -295,6 +290,7 @@
       "showDetails": "نمایش جزئیات"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "خطای تأیید مجوز",
       "CONNECTION_FAILED": "اتصال ناموفق بود",
       "INITIALIZATION_TIMEOUT": "زمان راه‌اندازی به پایان رسید",
       "PROCESS_SPAWN_ERROR": "خطا در راه‌اندازی فرآیند",

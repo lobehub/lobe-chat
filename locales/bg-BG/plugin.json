@@ -147,11 +147,6 @@
         "required": "Моля, въведете URL на MCP услугата"
       }
     },
-    "mcpInstall": {
-      "errorTypes": {
-        "AUTHORIZATION_ERROR": "Грешка при удостоверяване"
-      }
-    },
     "meta": {
       "author": {
         "desc": "Авторът на плъгина",
@@ -295,6 +290,7 @@
       "showDetails": "Покажи детайли"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "Грешка при удостоверяване на разрешения",
       "CONNECTION_FAILED": "Връзката не бе осъществена",
       "INITIALIZATION_TIMEOUT": "Времето за инициализация изтече",
       "PROCESS_SPAWN_ERROR": "Неуспешно стартиране на процеса",

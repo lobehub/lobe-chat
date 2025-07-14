@@ -22,7 +22,7 @@ const QuickImportSection = ({
   isEditMode,
   onClearConnectionError,
 }: QuickImportSectionProps) => {
-  const { t } = useTranslation('plugin');
+  const { t } = useTranslation(['plugin', 'common']);
   const pluginIds = useToolStore(pluginSelectors.storeAndInstallPluginsIdList);
   const [isImportModalVisible, setIsImportModalVisible] = useState(false);
   const [jsonInput, setJsonInput] = useState('');
@@ -145,10 +145,10 @@ const QuickImportSection = ({
           }}
           size={'small'}
         >
-          取消
+          {t('common:cancel')}
         </Button>
         <Button onClick={handleImportConfirm} size={'small'} type={'primary'}>
-          导入
+          {t('common:import')}
         </Button>
       </Flexbox>
     </Flexbox>

@@ -147,11 +147,6 @@
         "required": "يرجى إدخال عنوان URL لخدمة MCP"
       }
     },
-    "mcpInstall": {
-      "errorTypes": {
-        "AUTHORIZATION_ERROR": "خطأ في التحقق من التفويض"
-      }
-    },
     "meta": {
       "author": {
         "desc": "مؤلف البرنامج المساعد",
@@ -295,6 +290,7 @@
       "showDetails": "عرض التفاصيل"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "خطأ في التحقق من التفويض",
       "CONNECTION_FAILED": "فشل الاتصال",
       "INITIALIZATION_TIMEOUT": "انتهت مهلة التهيئة",
       "PROCESS_SPAWN_ERROR": "فشل بدء العملية",

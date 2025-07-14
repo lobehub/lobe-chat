@@ -147,11 +147,6 @@
         "required": "Please enter the MCP service URL"
       }
     },
-    "mcpInstall": {
-      "errorTypes": {
-        "AUTHORIZATION_ERROR": "Authorization Verification Error"
-      }
-    },
     "meta": {
       "author": {
         "desc": "The author of the plugin",
@@ -295,6 +290,7 @@
       "showDetails": "Show details"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "Authorization Verification Error",
       "CONNECTION_FAILED": "Connection failed",
       "INITIALIZATION_TIMEOUT": "Initialization timeout",
       "PROCESS_SPAWN_ERROR": "Process spawn error",

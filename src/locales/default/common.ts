@@ -186,6 +186,7 @@ export default {
   },
   fullscreen: '全屏模式',
   historyRange: '历史范围',
+  import: '导入',
   importData: '导入数据',
   importModal: {
     error: {

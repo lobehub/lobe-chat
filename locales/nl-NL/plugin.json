@@ -147,11 +147,6 @@
         "required": "Voer de MCP service URL in"
       }
     },
-    "mcpInstall": {
-      "errorTypes": {
-        "AUTHORIZATION_ERROR": "Autorisatiefout"
-      }
-    },
     "meta": {
       "author": {
         "desc": "De auteur van de plug-in",
@@ -295,6 +290,7 @@
       "showDetails": "Details weergeven"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "Autorisatiefout",
       "CONNECTION_FAILED": "Verbinding mislukt",
       "INITIALIZATION_TIMEOUT": "Initialisatie time-out",
       "PROCESS_SPAWN_ERROR": "Proces starten mislukt",

@@ -147,11 +147,6 @@
         "required": "Proszę wprowadzić adres URL usługi MCP"
       }
     },
-    "mcpInstall": {
-      "errorTypes": {
-        "AUTHORIZATION_ERROR": "Błąd autoryzacji"
-      }
-    },
     "meta": {
       "author": {
         "desc": "Autor wtyczki",
@@ -295,6 +290,7 @@
       "showDetails": "Pokaż szczegóły"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "Błąd autoryzacji",
       "CONNECTION_FAILED": "Nieudane połączenie",
       "INITIALIZATION_TIMEOUT": "Przekroczono czas inicjalizacji",
       "PROCESS_SPAWN_ERROR": "Błąd uruchomienia procesu",

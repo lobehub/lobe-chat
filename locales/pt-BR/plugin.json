@@ -147,11 +147,6 @@
         "required": "Por favor, insira o URL do serviço MCP"
       }
     },
-    "mcpInstall": {
-      "errorTypes": {
-        "AUTHORIZATION_ERROR": "Erro de autorização"
-      }
-    },
     "meta": {
       "author": {
         "desc": "Autor do plugin",
@@ -295,6 +290,7 @@
       "showDetails": "Mostrar detalhes"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "Erro de autorização",
       "CONNECTION_FAILED": "Falha na conexão",
       "INITIALIZATION_TIMEOUT": "Tempo de inicialização esgotado",
       "PROCESS_SPAWN_ERROR": "Falha ao iniciar processo",

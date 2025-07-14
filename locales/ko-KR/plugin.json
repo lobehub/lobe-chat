@@ -147,11 +147,6 @@
         "required": "MCP 서비스 URL을 입력하세요"
       }
     },
-    "mcpInstall": {
-      "errorTypes": {
-        "AUTHORIZATION_ERROR": "권한 인증 오류"
-      }
-    },
     "meta": {
       "author": {
         "desc": "플러그인 작성자",
@@ -295,6 +290,7 @@
       "showDetails": "세부 정보 보기"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "권한 인증 오류",
       "CONNECTION_FAILED": "연결 실패",
       "INITIALIZATION_TIMEOUT": "초기화 시간 초과",
       "PROCESS_SPAWN_ERROR": "프로세스 시작 실패",

@@ -147,11 +147,6 @@
         "required": "Por favor, introduce la URL del servicio MCP"
       }
     },
-    "mcpInstall": {
-      "errorTypes": {
-        "AUTHORIZATION_ERROR": "Error de autorización"
-      }
-    },
     "meta": {
       "author": {
         "desc": "Autor del complemento",
@@ -295,6 +290,7 @@
       "showDetails": "Mostrar detalles"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "Error de autorización",
       "CONNECTION_FAILED": "Conexión fallida",
       "INITIALIZATION_TIMEOUT": "Tiempo de inicialización agotado",
       "PROCESS_SPAWN_ERROR": "Error al iniciar el proceso",

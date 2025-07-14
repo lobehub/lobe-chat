@@ -183,6 +183,7 @@
   },
   "fullscreen": "Mode plein écran",
   "historyRange": "Plage d'historique",
+  "import": "Importer",
   "importData": "Importer des données",
   "importModal": {
     "error": {
