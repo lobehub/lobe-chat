@@ -18,8 +18,8 @@ const qwenChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 4,
-      output: 40, // Thinking mode pricing
+      input: 2,
+      output: 20, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -36,7 +36,6 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
     displayName: 'Qwen3 32B',
-    enabled: true,
     id: 'qwen3-32b',
     maxOutput: 8192,
     organization: 'Qwen',
@@ -66,8 +65,8 @@ const qwenChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 1.5,
-      output: 15, // Thinking mode pricing
+      input: 0.75,
+      output: 7.5, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -203,7 +202,6 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       '基于 Qwen2.5 模型训练的 QwQ 推理模型，通过强化学习大幅度提升了模型推理能力。模型数学代码等核心指标（AIME 24/25、LiveCodeBench）以及部分通用指标（IFEval、LiveBench等）达到DeepSeek-R1 满血版水平。',
     displayName: 'QwQ Plus',
-    enabled: true,
     id: 'qwq-plus',
     maxOutput: 8192,
     organization: 'Qwen',
@@ -237,7 +235,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 0.3,
-      output: 6, // Thinking mode pricing
+      output: 3, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -265,7 +263,7 @@ const qwenChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       input: 0.8,
-      output: 16, // Thinking mode pricing
+      output: 8, // Thinking mode pricing
     },
     releasedAt: '2025-04-28',
     settings: {
@@ -311,7 +309,6 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       '通义千问超大规模语言模型，支持长文本上下文，以及基于长文档、多文档等多个场景的对话功能。',
     displayName: 'Qwen Long',
-    enabled: true,
     id: 'qwen-long',
     maxOutput: 8192,
     organization: 'Qwen',
@@ -327,7 +324,7 @@ const qwenChatModels: AIChatModelCard[] = [
       vision: true,
     },
     config: {
-      deploymentName: 'qwen-omni-turbo-latest',
+      deploymentName: 'qwen-omni-turbo-latest', // expired on 2025-08-13
     },
     contextWindowTokens: 32_768,
     description:
@@ -357,7 +354,7 @@ const qwenChatModels: AIChatModelCard[] = [
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
-      input: 0.6,
+      input: 2, // use image input price
       output: 6,
     },
     type: 'chat',
@@ -818,12 +815,12 @@ const qwenChatModels: AIChatModelCard[] = [
     abilities: {
       reasoning: true,
     },
-    contextWindowTokens: 65_536,
+    contextWindowTokens: 131_072,
     description:
       '685B 满血版模型，2025年5月28日发布。DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能较高，能力较强。',
     displayName: 'DeepSeek R1 0528',
     id: 'deepseek-r1-0528',
-    maxOutput: 8192,
+    maxOutput: 16_384,
     organization: 'DeepSeek',
     pricing: {
       currency: 'CNY',
@@ -831,25 +828,6 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 16,
     },
     releasedAt: '2025-05-28',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 65_536,
-    description:
-      '671B 满血版模型，2025年1月20日发布。DeepSeek-R1 在后训练阶段大规模使用了强化学习技术，在仅有极少标注数据的情况下，极大提升了模型推理能力。在数学、代码、自然语言推理等任务上，性能较高，能力较强。',
-    displayName: 'DeepSeek R1',
-    id: 'deepseek-r1',
-    maxOutput: 8192,
-    organization: 'DeepSeek',
-    pricing: {
-      currency: 'CNY',
-      input: 4,
-      output: 16,
-    },
-    releasedAt: '2025-01-27',
     type: 'chat',
   },
   {

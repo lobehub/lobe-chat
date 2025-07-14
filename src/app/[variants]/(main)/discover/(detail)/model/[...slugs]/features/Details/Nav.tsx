@@ -26,11 +26,13 @@ const useStyles = createStyles(({ css, token }) => {
   };
 });
 
-const Nav = memo<{
+interface NavProps {
   activeTab?: ModelNavKey;
   mobile?: boolean;
   setActiveTab?: (tab: ModelNavKey) => void;
-}>(({ mobile, setActiveTab, activeTab = ModelNavKey.Overview }) => {
+}
+
+const Nav = memo<NavProps>(({ mobile, setActiveTab, activeTab = ModelNavKey.Overview }) => {
   const { t } = useTranslation('discover');
   const { styles } = useStyles();
 

@@ -520,6 +520,7 @@
     "hotkey": "Hotkeys",
     "llm": "Language Model",
     "provider": "AI Service Provider",
+    "proxy": "Network Proxy",
     "storage": "Data Storage",
     "sync": "Cloud Sync",
     "system-agent": "System Assistant",

@@ -1,6 +1,6 @@
 {
   "name": "lobehub-desktop-dev",
-  "version": "0.0.10",
+  "version": "0.0.0",
   "description": "LobeHub Desktop Application",
   "homepage": "https://lobehub.com",
   "repository": {
@@ -24,6 +24,7 @@
     "lint": "eslint --cache ",
     "pg-server": "bun run scripts/pglite-server.ts",
     "start": "electron-vite preview",
+    "test": "vite --run",
     "typecheck": "tsgo --noEmit -p tsconfig.json"
   },
   "dependencies": {
@@ -45,10 +46,10 @@
     "@types/resolve": "^1.20.6",
     "@types/semver": "^7.7.0",
     "@types/set-cookie-parser": "^2.4.10",
-    "@typescript/native-preview": "latest",
+    "@typescript/native-preview": "7.0.0-dev.20250711.1",
     "consola": "^3.1.0",
     "cookie": "^1.0.2",
-    "electron": "^37.2.0",
+    "electron": "~37.1.0",
     "electron-builder": "^26.0.12",
     "electron-is": "^3.0.0",
     "electron-log": "^5.3.3",
@@ -58,17 +59,19 @@
     "fix-path": "^4.0.0",
     "just-diff": "^6.0.2",
     "lodash": "^4.17.21",
-    "pglite-server": "^0.1.4",
+    "lodash-es": "^4.17.21",
     "resolve": "^1.22.8",
     "semver": "^7.5.4",
     "set-cookie-parser": "^2.7.1",
     "tsx": "^4.19.3",
     "typescript": "^5.7.3",
+    "undici": "^7.9.0",
     "vite": "^6.2.5"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "electron"
+      "electron",
+      "electron-builder"
     ]
   }
 }

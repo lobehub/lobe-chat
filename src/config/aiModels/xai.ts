@@ -7,13 +7,14 @@ const xaiChatModels: AIChatModelCard[] = [
       functionCall: true,
       reasoning: true,
       search: true,
+      vision: true,
     },
     contextWindowTokens: 256_000,
     description:
       '我们最新最强大的旗舰模型，在自然语言处理、数学计算和推理方面表现卓越 —— 是一款完美的全能型选手。',
     displayName: 'Grok 4 0709',
     enabled: true,
-    id: 'grok-4-0709',
+    id: 'grok-4',
     pricing: {
       cachedInput: 0.75,
       input: 3,
@@ -144,7 +145,6 @@ const xaiChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_768,
     description: '该模型在准确性、指令遵循和多语言能力方面有所改进。',
     displayName: 'Grok 2 Vision 1212',
-    enabled: true,
     id: 'grok-2-vision-1212',
     pricing: {
       input: 2,

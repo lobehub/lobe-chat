@@ -141,6 +141,7 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
   return (
     <ActionDropdown
       menu={{
+        // @ts-expect-error 等待 antd 修复
         activeKey: menuKey(provider, model),
         className: styles.menu,
         items,

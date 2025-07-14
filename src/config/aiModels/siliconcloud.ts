@@ -8,6 +8,37 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 131_072,
     description:
+      'Pangu-Pro-MoE 72B-A16B 是一款 720 亿参数、激活 160 亿参的稀疏大语言模型，它基于分组混合专家（MoGE）架构，它在专家选择阶段对专家进行分组，并约束 token 在每个组内激活等量专家，从而实现专家负载均衡，显著提升模型在昇腾平台的部署效率。',
+    displayName: 'Pangu Pro MoE 72B A16B',
+    id: 'ascend-tribe/pangu-pro-moe',
+    pricing: {
+      currency: 'CNY',
+      input: 1,
+      output: 4,
+    },
+    releasedAt: '2025-06-17',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 131_072,
+    description:
+      'ERNIE-4.5-300B-A47B 是由百度公司开发的一款基于混合专家（MoE）架构的大语言模型。该模型总参数量为 3000 亿，但在推理时每个 token 仅激活 470 亿参数，从而在保证强大性能的同时兼顾了计算效率。作为 ERNIE 4.5 系列的核心模型之一，在文本理解、生成、推理和编程等任务上展现出卓越的能力。该模型采用了一种创新的多模态异构 MoE 预训练方法，通过文本与视觉模态的联合训练，有效提升了模型的综合能力，尤其在指令遵循和世界知识记忆方面效果突出。',
+    displayName: 'ERNIE 4.5 300B A47B',
+    id: 'baidu/ERNIE-4.5-300B-A47B',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 8,
+    },
+    releasedAt: '2025-06-30',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
       'Kimi-Dev-72B 是一款开源代码大模型，经过大规模强化学习优化，能输出稳健、可直接投产的补丁。该模型在 SWE-bench Verified 上取得 60.4 % 的新高分，刷新了开源模型在缺陷修复、代码评审等自动化软件工程任务上的纪录。',
     displayName: 'Kimi Dev 72B',
     id: 'moonshotai/Kimi-Dev-72B',
@@ -166,7 +197,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description:
       'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
-    displayName: 'Qwen3 8B',
+    displayName: 'Qwen3 8B (Free)',
     enabled: true,
     id: 'Qwen/Qwen3-8B',
     organization: 'Qwen',
@@ -184,6 +215,43 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
       reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      'GLM-4.1V-9B-Thinking 是由智谱 AI 和清华大学 KEG 实验室联合发布的一款开源视觉语言模型（VLM），专为处理复杂的多模态认知任务而设计。该模型基于 GLM-4-9B-0414 基础模型，通过引入“思维链”（Chain-of-Thought）推理机制和采用强化学习策略，显著提升了其跨模态的推理能力和稳定性。',
+    displayName: 'GLM-4.1V 9B Thinking (Free)',
+    enabled: true,
+    id: 'THUDM/GLM-4.1V-9B-Thinking',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    releasedAt: '2025-07-02',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      'GLM-4.1V-9B-Thinking 是由智谱 AI 和清华大学 KEG 实验室联合发布的一款开源视觉语言模型（VLM），专为处理复杂的多模态认知任务而设计。该模型基于 GLM-4-9B-0414 基础模型，通过引入“思维链”（Chain-of-Thought）推理机制和采用强化学习策略，显著提升了其跨模态的推理能力和稳定性。',
+    displayName: 'GLM-4.1V 9B Thinking (Pro)',
+    id: 'Pro/THUDM/GLM-4.1V-9B-Thinking',
+    pricing: {
+      currency: 'CNY',
+      input: 0.25,
+      output: 1,
+    },
+    releasedAt: '2025-07-02',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
     },
     contextWindowTokens: 131_072,
     description:
@@ -195,6 +263,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       input: 1,
       output: 4,
     },
+    releasedAt: '2025-04-14',
     type: 'chat',
   },
   {
@@ -212,6 +281,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       input: 1,
       output: 4,
     },
+    releasedAt: '2025-04-14',
     type: 'chat',
   },
   {
@@ -222,13 +292,14 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description:
       'GLM-Z1-9B-0414 是 GLM 系列的小型模型，仅有 90 亿参数，但保持了开源传统的同时展现出惊人的能力。尽管规模较小，该模型在数学推理和通用任务上仍表现出色，其总体性能在同等规模的开源模型中已处于领先水平。',
-    displayName: 'GLM-Z1 9B 0414',
+    displayName: 'GLM-Z1 9B 0414 (Free)',
     id: 'THUDM/GLM-Z1-9B-0414',
     pricing: {
       currency: 'CNY',
       input: 0,
       output: 0,
     },
+    releasedAt: '2025-04-14',
     type: 'chat',
   },
   {
@@ -245,6 +316,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       input: 1.89,
       output: 1.89,
     },
+    releasedAt: '2025-04-14',
     type: 'chat',
   },
   {
@@ -254,14 +326,48 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_768,
     description:
       'GLM-4-9B-0414 是 GLM 系列的小型模型，拥有 90 亿参数。该模型继承了 GLM-4-32B 系列的技术特点，但提供了更轻量级的部署选择。尽管规模较小，GLM-4-9B-0414 仍在代码生成、网页设计、SVG 图形生成和基于搜索的写作等任务上展现出色能力。',
-    displayName: 'GLM-4 9B 0414',
-    enabled: true,
+    displayName: 'GLM-4 9B 0414 (Free)',
     id: 'THUDM/GLM-4-9B-0414',
     pricing: {
       currency: 'CNY',
       input: 0,
       output: 0,
     },
+    releasedAt: '2025-04-14',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'GLM-4-9B-Chat 是智谱 AI 推出的 GLM-4 系列预训练模型中的开源版本。该模型在语义、数学、推理、代码和知识等多个方面表现出色。除了支持多轮对话外，GLM-4-9B-Chat 还具备网页浏览、代码执行、自定义工具调用（Function Call）和长文本推理等高级功能。模型支持 26 种语言，包括中文、英文、日语、韩语和德语等。在多项基准测试中，GLM-4-9B-Chat 展现了优秀的性能，如 AlignBench-v2、MT-Bench、MMLU 和 C-Eval 等。该模型支持最大 128K 的上下文长度，适用于学术研究和商业应用',
+    displayName: 'GLM-4 9B Chat (Free)',
+    id: 'THUDM/glm-4-9b-chat',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    releasedAt: '2024-06-04',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'GLM-4-9B-Chat 是智谱 AI 推出的 GLM-4 系列预训练模型中的开源版本。该模型在语义、数学、推理、代码和知识等多个方面表现出色。除了支持多轮对话外，GLM-4-9B-Chat 还具备网页浏览、代码执行、自定义工具调用（Function Call）和长文本推理等高级功能。模型支持 26 种语言，包括中文、英文、日语、韩语和德语等。在多项基准测试中，GLM-4-9B-Chat 展现了优秀的性能，如 AlignBench-v2、MT-Bench、MMLU 和 C-Eval 等。该模型支持最大 128K 的上下文长度，适用于学术研究和商业应用',
+    displayName: 'GLM-4 9B Chat (Pro)',
+    id: 'Pro/THUDM/glm-4-9b-chat',
+    pricing: {
+      currency: 'CNY',
+      input: 0.6,
+      output: 0.6,
+    },
+    releasedAt: '2024-06-04',
     type: 'chat',
   },
   {
@@ -271,7 +377,7 @@ const siliconcloudChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     description:
       'DeepSeek-R1-0528-Qwen3-8B 是通过从 DeepSeek-R1-0528 模型蒸馏思维链到 Qwen3 8B Base 获得的模型。该模型在开源模型中达到了最先进（SOTA）的性能，在 AIME 2024 测试中超越了 Qwen3 8B 10%，并达到了 Qwen3-235B-thinking 的性能水平。该模型在数学推理、编程和通用逻辑等多个基准测试中表现出色，其架构与 Qwen3-8B 相同，但共享 DeepSeek-R1-0528 的分词器配置。',
-    displayName: 'DeepSeek R1 0528 Qwen3 8B',
+    displayName: 'DeepSeek R1 0528 Qwen3 8B (Free)',
     enabled: true,
     id: 'deepseek-ai/DeepSeek-R1-0528-Qwen3-8B',
     pricing: {
@@ -334,45 +440,12 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      reasoning: true,
-    },
-    contextWindowTokens: 98_304,
-    description:
-      'DeepSeek-R1 是一款强化学习（RL）驱动的推理模型，解决了模型中的重复性和可读性问题。在 RL 之前，DeepSeek-R1 引入了冷启动数据，进一步优化了推理性能。它在数学、代码和推理任务中与 OpenAI-o1 表现相当，并且通过精心设计的训练方法，提升了整体效果。',
-    displayName: 'DeepSeek R1 0120 (Pro)',
-    id: 'Pro/deepseek-ai/DeepSeek-R1-0120',
-    pricing: {
-      currency: 'CNY',
-      input: 4,
-      output: 16,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
     },
     contextWindowTokens: 65_536,
     description:
       'DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。',
     displayName: 'DeepSeek V3 (Pro)',
     id: 'Pro/deepseek-ai/DeepSeek-V3',
-    pricing: {
-      currency: 'CNY',
-      input: 2,
-      output: 8,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 65_536,
-    description:
-      'DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。',
-    displayName: 'DeepSeek V3 1226 (Pro)',
-    id: 'Pro/deepseek-ai/DeepSeek-V3-1226',
     pricing: {
       currency: 'CNY',
       input: 2,
@@ -511,22 +584,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 1,
       output: 4,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      reasoning: true,
-    },
-    contextWindowTokens: 32_768,
-    description:
-      'QwQ-32B-Preview 是 Qwen 最新的实验性研究模型，专注于提升AI推理能力。通过探索语言混合、递归推理等复杂机制，主要优势包括强大的推理分析能力、数学和编程能力。与此同时，也存在语言切换问题、推理循环、安全性考虑、其他能力方面的差异。',
-    displayName: 'QwQ 32B Preview',
-    id: 'Qwen/QwQ-32B-Preview',
-    pricing: {
-      currency: 'CNY',
-      input: 1.26,
-      output: 1.26,
     },
     type: 'chat',
   },
@@ -768,38 +825,6 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 0,
       output: 0,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 131_072,
-    description:
-      'GLM-4-9B-Chat 是智谱 AI 推出的 GLM-4 系列预训练模型中的开源版本。该模型在语义、数学、推理、代码和知识等多个方面表现出色。除了支持多轮对话外，GLM-4-9B-Chat 还具备网页浏览、代码执行、自定义工具调用（Function Call）和长文本推理等高级功能。模型支持 26 种语言，包括中文、英文、日语、韩语和德语等。在多项基准测试中，GLM-4-9B-Chat 展现了优秀的性能，如 AlignBench-v2、MT-Bench、MMLU 和 C-Eval 等。该模型支持最大 128K 的上下文长度，适用于学术研究和商业应用',
-    displayName: 'GLM-4 9B Chat (Free)',
-    id: 'THUDM/glm-4-9b-chat',
-    pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    contextWindowTokens: 131_072,
-    description:
-      'GLM-4-9B-Chat 是智谱 AI 推出的 GLM-4 系列预训练模型中的开源版本。该模型在语义、数学、推理、代码和知识等多个方面表现出色。除了支持多轮对话外，GLM-4-9B-Chat 还具备网页浏览、代码执行、自定义工具调用（Function Call）和长文本推理等高级功能。模型支持 26 种语言，包括中文、英文、日语、韩语和德语等。在多项基准测试中，GLM-4-9B-Chat 展现了优秀的性能，如 AlignBench-v2、MT-Bench、MMLU 和 C-Eval 等。该模型支持最大 128K 的上下文长度，适用于学术研究和商业应用',
-    displayName: 'GLM-4 9B Chat (Pro)',
-    id: 'Pro/THUDM/glm-4-9b-chat',
-    pricing: {
-      currency: 'CNY',
-      input: 0.6,
-      output: 0.6,
     },
     type: 'chat',
   },

@@ -14,11 +14,13 @@ import { useDetailContext } from '../DetailProvider';
 import { useStyles } from './style';
 import { ModeType } from './types';
 
-const Prompts = memo<{
+interface PromptsProps {
   activeKey?: string[];
   mode?: ModeType;
   setActiveKey?: (key: string[]) => void;
-}>(({ mode, activeKey = [], setActiveKey }) => {
+}
+
+const Prompts = memo<PromptsProps>(({ mode, activeKey = [], setActiveKey }) => {
   const { t } = useTranslation('discover');
   const { prompts } = useDetailContext();
   const { styles, theme } = useStyles();
