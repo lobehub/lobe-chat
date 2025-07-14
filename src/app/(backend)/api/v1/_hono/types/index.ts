@@ -45,11 +45,14 @@ export interface TTarget {
   targetRoleId?: string;
   targetSessionId?: string;
   targetTopicId?: string;
-  targetUserId?: string;
 }
 
 export interface TBatchTarget {
   targetAgentId?: string[];
+  targetFileId?: string[];
+  targetMessageId?: string[];
+  targetModelId?: string[];
+  targetRoleId?: string[];
   targetSessionId?: string[];
   targetTopicId?: string[];
 }
