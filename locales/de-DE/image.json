@@ -1,7 +1,9 @@
 {
   "config": {
     "aspectRatio": {
-      "label": "Seitenverhältnis"
+      "label": "Seitenverhältnis",
+      "lock": "Seitenverhältnis sperren",
+      "unlock": "Seitenverhältnis entsperren"
     },
     "header": {
       "desc": "Einfache Beschreibung, sofortige Kreation",

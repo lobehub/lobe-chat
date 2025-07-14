@@ -1,7 +1,9 @@
 {
   "config": {
     "aspectRatio": {
-      "label": "Proporção"
+      "label": "Proporção",
+      "lock": "Bloquear proporção",
+      "unlock": "Desbloquear proporção"
     },
     "header": {
       "desc": "Descrição simples, crie imediatamente",

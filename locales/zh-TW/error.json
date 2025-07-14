@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "服務請求失敗，請檢查配置或重試"
   },
+  "testConnectionFailed": "測試連線失敗：{{error}}",
   "tts": {
     "responseError": "服務請求失敗，請檢查配置或重試"
   },

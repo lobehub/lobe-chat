@@ -77,6 +77,13 @@
       "secondary": "Zum Hochladen klicken"
     }
   },
+  "KeyValueEditor": {
+    "addButton": "Neue Zeile hinzufügen",
+    "deleteTooltip": "Löschen",
+    "duplicateKeyError": "Der Schlüsselname muss eindeutig sein",
+    "keyPlaceholder": "Schlüssel",
+    "valuePlaceholder": "Wert"
+  },
   "MaxTokenSlider": {
     "unlimited": "Unbegrenzt"
   },

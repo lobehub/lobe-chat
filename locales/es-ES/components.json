@@ -77,6 +77,13 @@
       "secondary": "Haz clic para subir"
     }
   },
+  "KeyValueEditor": {
+    "addButton": "Agregar una fila",
+    "deleteTooltip": "Eliminar",
+    "duplicateKeyError": "El nombre de la clave debe ser único",
+    "keyPlaceholder": "Clave",
+    "valuePlaceholder": "Valor"
+  },
   "MaxTokenSlider": {
     "unlimited": "Sin límite"
   },

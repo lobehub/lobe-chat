@@ -1019,6 +1019,15 @@
   "ernie-x1-turbo-32k": {
     "description": "ERNIE-X1-32K에 비해 모델의 효과와 성능이 더 우수합니다."
   },
+  "flux-kontext/dev": {
+    "description": "프론티어 이미지 편집 모델."
+  },
+  "flux-pro/kontext": {
+    "description": "FLUX.1 Kontext [pro]는 텍스트와 참조 이미지를 입력으로 처리하여 목표 지향적인 부분 편집과 복잡한 전체 장면 변환을 원활하게 수행할 수 있습니다."
+  },
+  "flux/schnell": {
+    "description": "FLUX.1 [schnell]은 120억 개의 매개변수를 가진 스트림 변환기 모델로, 1~4단계 내에 텍스트로부터 고품질 이미지를 생성하며 개인 및 상업적 용도에 적합합니다."
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning)은 안정적이고 조정 가능한 성능을 제공하며, 복잡한 작업 솔루션의 이상적인 선택입니다."
   },
@@ -1364,6 +1373,9 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe는 GPT-4o를 사용하여 오디오를 텍스트로 전사하는 음성 인식 모델입니다. 원래 Whisper 모델에 비해 단어 오류율이 개선되었고, 언어 인식 및 정확도가 향상되었습니다. 보다 정확한 전사를 위해 사용하세요."
   },
+  "gpt-image-1": {
+    "description": "ChatGPT 네이티브 멀티모달 이미지 생성 모델"
+  },
   "grok-2-1212": {
     "description": "이 모델은 정확성, 지시 준수 및 다국어 능력에서 개선되었습니다."
   },
@@ -1483,6 +1495,9 @@
   },
   "hunyuan-vision": {
     "description": "혼원 최신 다중 모달 모델로, 이미지와 텍스트 입력을 지원하여 텍스트 콘텐츠를 생성합니다."
+  },
+  "imagen4/preview": {
+    "description": "Google의 최고 품질 이미지 생성 모델"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5는 다양한 시나리오에서 스마트 대화 솔루션을 제공합니다."

@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "Serviceanfrage fehlgeschlagen. Bitte überprüfen Sie die Konfiguration oder versuchen Sie es erneut"
   },
+  "testConnectionFailed": "Verbindungstest fehlgeschlagen: {{error}}",
   "tts": {
     "responseError": "Serviceanfrage fehlgeschlagen. Bitte überprüfen Sie die Konfiguration oder versuchen Sie es erneut"
   },

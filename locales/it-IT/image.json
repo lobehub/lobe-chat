@@ -1,7 +1,9 @@
 {
   "config": {
     "aspectRatio": {
-      "label": "Rapporto"
+      "label": "Rapporto",
+      "lock": "Blocca rapporto d'aspetto",
+      "unlock": "Sblocca rapporto d'aspetto"
     },
     "header": {
       "desc": "Descrizione semplice, crea subito",

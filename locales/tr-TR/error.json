@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "Hizmet isteği başarısız oldu, lütfen yapılandırmayı kontrol edin veya tekrar deneyin"
   },
+  "testConnectionFailed": "Bağlantı testi başarısız: {{error}}",
   "tts": {
     "responseError": "Hizmet isteği başarısız oldu, lütfen yapılandırmayı kontrol edin veya tekrar deneyin"
   },

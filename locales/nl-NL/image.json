@@ -1,7 +1,9 @@
 {
   "config": {
     "aspectRatio": {
-      "label": "Verhouding"
+      "label": "Verhouding",
+      "lock": "Vergrendel beeldverhouding",
+      "unlock": "Ontgrendel beeldverhouding"
     },
     "header": {
       "desc": "Eenvoudige beschrijving, direct creëren",
