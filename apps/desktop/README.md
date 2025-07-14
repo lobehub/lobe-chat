@@ -24,6 +24,13 @@ LobeHub Desktop 是 [LobeChat](https://github.com/lobehub/lobe-chat) 的跨平�
 pnpm install-isolated
 ```
 
+### 配置环境变量
+
+复制 `.env.desktop` 到 `.env`。
+
+> [!WARNING]
+> 注意提前备份好 `.env` 文件，避免丢失配置。
+
 ### 开发模式运行
 
 ```bash

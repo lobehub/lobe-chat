@@ -10,6 +10,7 @@ import BedrockProvider from './bedrock';
 import CloudflareProvider from './cloudflare';
 import CohereProvider from './cohere';
 import DeepSeekProvider from './deepseek';
+import FalProvider from './fal';
 import FireworksAIProvider from './fireworksai';
 import GiteeAIProvider from './giteeai';
 import GithubProvider from './github';
@@ -123,6 +124,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   DeepSeekProvider,
   HuggingFaceProvider,
   OpenRouterProvider,
+  FalProvider,
   CloudflareProvider,
   GithubProvider,
   NovitaProvider,
@@ -185,6 +187,7 @@ export { default as BedrockProviderCard } from './bedrock';
 export { default as CloudflareProviderCard } from './cloudflare';
 export { default as CohereProviderCard } from './cohere';
 export { default as DeepSeekProviderCard } from './deepseek';
+export { default as FalProviderCard } from './fal';
 export { default as FireworksAIProviderCard } from './fireworksai';
 export { default as GiteeAIProviderCard } from './giteeai';
 export { default as GithubProviderCard } from './github';

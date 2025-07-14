@@ -1,6 +1,6 @@
 // copy from https://github.com/kirill-konshin/next-electron-rsc
 import { serialize as serializeCookie } from 'cookie';
-import type { Protocol, Session } from 'electron';
+import { type Protocol, type Session, protocol } from 'electron';
 import type { NextConfig } from 'next';
 import type NextNodeServer from 'next/dist/server/next-server';
 import assert from 'node:assert';
@@ -11,6 +11,7 @@ import { parse } from 'node:url';
 import resolve from 'resolve';
 import { parse as parseCookie, splitCookiesString } from 'set-cookie-parser';
 
+import { LOCAL_STORAGE_URL_PREFIX } from '@/const/dir';
 import { isDev } from '@/const/env';
 import { createLogger } from '@/utils/logger';
 
@@ -178,7 +179,9 @@ export function createHandler({
       }
     };
   }
+
   let registerProtocolHandle = false;
+  let interceptorCount = 0; // 追踪活跃的拦截器数量
 
   protocol.registerSchemesAsPrivileged([
     {
@@ -224,6 +227,14 @@ export function createHandler({
     socket: Socket,
   ): Promise<Response> => {
     try {
+      // 检查是否是本地文件服务请求，如果是则跳过处理
+      const url = new URL(request.url);
+      if (url.pathname.startsWith(LOCAL_STORAGE_URL_PREFIX + '/')) {
+        if (debug) logger.debug(`Skipping local file service request: ${request.url}`);
+        // 直接使用 fetch 转发请求到本地文件服务
+        return fetch(request);
+      }
+
       // 先尝试使用自定义处理器处理请求
       for (const customHandler of customHandlers) {
         try {
@@ -354,19 +365,32 @@ export function createHandler({
     );
 
     const socket = new Socket();
+    interceptorCount++; // 增加拦截器计数
 
     const closeSocket = () => socket.end();
 
     process.on('SIGTERM', () => closeSocket);
     process.on('SIGINT', () => closeSocket);
 
-    if (!isDev && !registerProtocolHandle) {
+    if (!registerProtocolHandle) {
       logger.debug(
         `Registering HTTP protocol handler in ${isDev ? 'development' : 'production'} mode`,
       );
       protocol.handle('http', async (request) => {
         if (!isDev) {
-          assert(request.url.startsWith(localhostUrl), 'External HTTP not supported, use HTTPS');
+          // 检查是否是本地文件服务请求，如果是则允许通过
+          const isLocalhost = request.url.startsWith(localhostUrl);
+
+          const url = new URL(request.url);
+          const isLocalIP =
+            request.url.startsWith('http://127.0.0.1:') ||
+            request.url.startsWith('http://localhost:');
+          const isLocalFileService = url.pathname.startsWith(LOCAL_STORAGE_URL_PREFIX + '/');
+
+          const valid = isLocalhost || (isLocalIP && isLocalFileService);
+          if (!valid) {
+            throw new Error('External HTTP not supported, use HTTPS');
+          }
         }
 
         return handleRequest(request, session, socket);
@@ -374,12 +398,19 @@ export function createHandler({
       registerProtocolHandle = true;
     }
 
+    logger.debug(`Active interceptors count: ${interceptorCount}`);
+
     return function stopIntercept() {
-      if (registerProtocolHandle) {
-        logger.debug('Unregistering HTTP protocol handler');
+      interceptorCount--; // 减少拦截器计数
+      logger.debug(`Stopping interceptor, remaining count: ${interceptorCount}`);
+
+      // 只有当没有活跃的拦截器时才取消注册协议处理器
+      if (registerProtocolHandle && interceptorCount === 0) {
+        logger.debug('Unregistering HTTP protocol handler (no active interceptors)');
         protocol.unhandle('http');
         registerProtocolHandle = false;
       }
+
       process.off('SIGTERM', () => closeSocket);
       process.off('SIGINT', () => closeSocket);
       closeSocket();

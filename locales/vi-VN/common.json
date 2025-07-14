@@ -324,6 +324,7 @@
     }
   },
   "tab": {
+    "aiImage": "Vẽ tranh AI",
     "chat": "Trò chuyện",
     "discover": "Khám phá",
     "files": "Tệp",
