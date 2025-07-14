@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { fluxSchnellParamsSchema } from '@/config/paramsSchemas/fal/flux-schnell';
+import { gptImage1ParamsSchema } from '@/config/paramsSchemas/openai/gpt-image-1';
 import { ModelParamsSchema, RuntimeImageGenParams } from '@/libs/standard-parameters/meta-schema';
 import { ImageStore } from '@/store/image';
 import { initialState } from '@/store/image/initialState';
@@ -14,15 +14,15 @@ vi.mock('@/store/aiInfra', () => ({
   aiProviderSelectors: {
     enabledImageModelList: vi.fn(() => [
       {
-        id: 'fal',
-        name: 'Fal',
+        id: 'openai',
+        name: 'OpenAI',
         children: [
           {
-            id: 'flux/schnell',
-            displayName: 'FLUX.1 Schnell',
+            id: 'gpt-image-1',
+            displayName: 'GPT Image 1',
             type: 'image',
-            parameters: fluxSchnellParamsSchema,
-            releasedAt: '2024-08-01',
+            parameters: gptImage1ParamsSchema,
+            releasedAt: '2024-12-01',
           } as AIImageModelCard,
         ],
       },
@@ -34,47 +34,44 @@ vi.mock('@/store/aiInfra', () => ({
 const initialStore = initialState as ImageStore;
 
 const testModelSchema: ModelParamsSchema = {
+  imageUrls: { default: [] },
   prompt: { default: '' },
-  width: { default: 1024, min: 512, max: 2048, step: 64 },
-  height: { default: 1024, min: 512, max: 2048, step: 64 },
-  steps: { default: 20, min: 1, max: 50 },
-  seed: { default: null, min: 0 },
-  cfg: { default: 7.5, min: 1, max: 20, step: 0.5 },
+  size: {
+    default: 'auto',
+    enum: ['auto', '1024x1024', '1536x1024', '1024x1536'],
+  },
 };
 
 const testParameters: RuntimeImageGenParams = {
+  imageUrls: [],
   prompt: 'test prompt',
-  width: 1024,
-  height: 768,
-  steps: 25,
-  seed: 12345,
-  cfg: 8.0,
+  size: 'auto',
 };
 
 describe('imageGenerationConfigSelectors', () => {
   describe('model', () => {
     it('should return the current model', () => {
-      const state = merge(initialStore, { model: 'flux/schnell' });
+      const state = merge(initialStore, { model: 'gpt-image-1' });
       const result = imageGenerationConfigSelectors.model(state);
-      expect(result).toBe('flux/schnell');
+      expect(result).toBe('gpt-image-1');
     });
 
     it('should return the default model from initial state', () => {
       const result = imageGenerationConfigSelectors.model(initialStore);
-      expect(result).toBe('flux/schnell'); // Default model from initialState
+      expect(result).toBe('gpt-image-1'); // Default model from initialState
     });
   });
 
   describe('provider', () => {
     it('should return the current provider', () => {
-      const state = merge(initialStore, { provider: 'fal' });
+      const state = merge(initialStore, { provider: 'openai' });
       const result = imageGenerationConfigSelectors.provider(state);
-      expect(result).toBe('fal');
+      expect(result).toBe('openai');
     });
 
     it('should return the default provider from initial state', () => {
       const result = imageGenerationConfigSelectors.provider(initialStore);
-      expect(result).toBe('fal'); // Default provider from initialState
+      expect(result).toBe('openai'); // Default provider from initialState
     });
   });
 
@@ -137,26 +134,25 @@ describe('imageGenerationConfigSelectors', () => {
     it('should handle parametersSchema deep merge', () => {
       const customSchema: ModelParamsSchema = {
         prompt: { default: 'custom prompt' },
-        width: { default: 512, min: 256, max: 1024 },
+        size: { default: '1024x1024', enum: ['1024x1024', '512x512'] },
       };
       const state = merge(initialStore, { parametersSchema: customSchema });
       const result = imageGenerationConfigSelectors.parametersSchema(state);
 
       // merge function does deep merge, so we should expect merged result
       expect(result.prompt.default).toBe('custom prompt');
-      expect(result.width?.default).toBe(512);
-      expect(result.width?.min).toBe(256);
-      expect(result.width?.max).toBe(1024);
+      expect(result.size?.default).toBe('1024x1024');
+      expect(result.size?.enum).toEqual(['1024x1024', '512x512']);
       // Original keys should still exist
-      expect(result.height).toBeDefined();
-      expect(result.steps).toBeDefined();
+      expect(result.imageUrls).toBeDefined();
+      expect(result.prompt).toBeDefined();
     });
   });
 
   describe('isSupportParam', () => {
     it('should return true when parameter exists in parametersSchema', () => {
       const state = merge(initialStore, { parametersSchema: testModelSchema });
-      const result = imageGenerationConfigSelectors.isSupportedParam('width')(state);
+      const result = imageGenerationConfigSelectors.isSupportedParam('size')(state);
       expect(result).toBe(true);
     });
 
@@ -184,20 +180,20 @@ describe('imageGenerationConfigSelectors', () => {
       const state = merge(initialStore, { parametersSchema: testModelSchema });
 
       expect(imageGenerationConfigSelectors.isSupportedParam('prompt')(state)).toBe(true);
-      expect(imageGenerationConfigSelectors.isSupportedParam('width')(state)).toBe(true);
-      expect(imageGenerationConfigSelectors.isSupportedParam('height')(state)).toBe(true);
-      expect(imageGenerationConfigSelectors.isSupportedParam('steps')(state)).toBe(true);
-      expect(imageGenerationConfigSelectors.isSupportedParam('seed')(state)).toBe(true);
-      expect(imageGenerationConfigSelectors.isSupportedParam('cfg')(state)).toBe(true);
+      expect(imageGenerationConfigSelectors.isSupportedParam('size')(state)).toBe(true);
+      expect(imageGenerationConfigSelectors.isSupportedParam('imageUrls')(state)).toBe(true);
+      expect(
+        imageGenerationConfigSelectors.isSupportedParam('nonExistentParam' as any)(state),
+      ).toBe(false);
     });
 
-    it('should work correctly with flux/schnell parameters', () => {
-      const state = merge(initialStore, { parametersSchema: fluxSchnellParamsSchema });
+    it('should work correctly with gpt-image-1 parameters', () => {
+      const state = merge(initialStore, { parametersSchema: gptImage1ParamsSchema });
 
-      // Test some known flux/schnell parameters
+      // Test some known gpt-image-1 parameters
       expect(imageGenerationConfigSelectors.isSupportedParam('prompt')(state)).toBe(true);
-      expect(imageGenerationConfigSelectors.isSupportedParam('width')(state)).toBe(true);
-      expect(imageGenerationConfigSelectors.isSupportedParam('height')(state)).toBe(true);
+      expect(imageGenerationConfigSelectors.isSupportedParam('size')(state)).toBe(true);
+      expect(imageGenerationConfigSelectors.isSupportedParam('imageUrls')(state)).toBe(true);
 
       // Test parameter that doesn't exist
       expect(imageGenerationConfigSelectors.isSupportedParam('nonexistent' as any)(state)).toBe(
