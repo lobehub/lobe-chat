@@ -38,6 +38,9 @@ describe('LobeOpenAI', () => {
     );
     vi.spyOn(instance['client'].models, 'list').mockResolvedValue({ data: [] } as any);
 
+    // Mock responses.create for responses API tests
+    vi.spyOn(instance['client'].responses, 'create').mockResolvedValue(new ReadableStream() as any);
+
     // Mock convertImageUrlToFile to return a mock File object
     convertImageUrlToFileSpy.mockResolvedValue({
       name: 'image.png',
@@ -582,6 +585,55 @@ describe('LobeOpenAI', () => {
 
       expect(file).toBeDefined();
       expect((file as any).type).toBe('image/png');
+    });
+  });
+
+  describe('responses.handlePayload', () => {
+    it('should add web_search_preview tool when enabledSearch is true', async () => {
+      const payload = {
+        messages: [{ content: 'Hello', role: 'user' as const }],
+        model: 'gpt-4o', // 使用常规模型，通过 enabledSearch 触发 responses API
+        temperature: 0.7,
+        enabledSearch: true,
+        tools: [{ type: 'function' as const, function: { name: 'test', description: 'test' } }],
+      };
+
+      await instance.chat(payload);
+
+      const createCall = (instance['client'].responses.create as Mock).mock.calls[0][0];
+      expect(createCall.tools).toEqual([
+        { type: 'function', name: 'test', description: 'test' },
+        { type: 'web_search_preview' },
+      ]);
+    });
+
+    it('should handle computer-use models with truncation and reasoning', async () => {
+      const payload = {
+        messages: [{ content: 'Hello', role: 'user' as const }],
+        model: 'computer-use-preview',
+        temperature: 0.7,
+        reasoning: { effort: 'medium' },
+      };
+
+      await instance.chat(payload);
+
+      const createCall = (instance['client'].responses.create as Mock).mock.calls[0][0];
+      expect(createCall.truncation).toBe('auto');
+      expect(createCall.reasoning).toEqual({ effort: 'medium', summary: 'auto' });
+    });
+
+    it('should handle prunePrefixes models without computer-use truncation', async () => {
+      const payload = {
+        messages: [{ content: 'Hello', role: 'user' as const }],
+        model: 'o1-pro', // prunePrefixes 模型但非 computer-use
+        temperature: 0.7,
+      };
+
+      await instance.chat(payload);
+
+      const createCall = (instance['client'].responses.create as Mock).mock.calls[0][0];
+      expect(createCall.reasoning).toEqual({ summary: 'auto' });
+      expect(createCall.truncation).toBeUndefined();
     });
   });
 });
