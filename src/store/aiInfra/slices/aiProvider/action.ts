@@ -183,6 +183,11 @@ export const createAiProviderSlice: StateCreator<
         return {
           enabledAiModels: allModels.filter((m) => m.enabled),
           enabledAiProviders: enabledAiProviders,
+          enabledChatAiProviders: enabledAiProviders.filter((provider) => {
+            return allModels.some(
+              (model) => model.providerId === provider.id && model.type === 'chat',
+            );
+          }),
           enabledImageAiProviders: enabledAiProviders
             .filter((provider) => {
               return allModels.some(
@@ -215,7 +220,7 @@ export const createAiProviderSlice: StateCreator<
           };
 
           // 3. 组装最终数据结构
-          const enabledChatModelList = data.enabledAiProviders.map((provider) => ({
+          const enabledChatModelList = data.enabledChatAiProviders.map((provider) => ({
             ...provider,
             children: getModelListByType(provider.id, 'chat'),
             name: provider.name || provider.id,
