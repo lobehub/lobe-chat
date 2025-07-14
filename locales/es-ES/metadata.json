@@ -32,6 +32,10 @@
     "search": "Buscar",
     "title": "Descubrir"
   },
+  "image": {
+    "description": "{{appName}} te ofrece la mejor experiencia de uso con GPT Image, Flux, Midjourney y Stable Diffusion",
+    "title": "Pintura AI"
+  },
   "plugins": {
     "description": "Búsqueda, generación de gráficos, académico, generación de imágenes, generación de videos, generación de voz, flujos de trabajo automatizados, personaliza las capacidades de los plugins ToolCall exclusivos de ChatGPT / Claude",
     "title": "Mercado de Plugins"

@@ -1019,6 +1019,15 @@
   "ernie-x1-turbo-32k": {
     "description": "ERNIE-X1-32K ile karşılaştırıldığında, modelin etkisi ve performansı daha iyidir."
   },
+  "flux-kontext/dev": {
+    "description": "Frontier görüntü düzenleme modeli."
+  },
+  "flux-pro/kontext": {
+    "description": "FLUX.1 Kontext [pro], metin ve referans görüntüleri girdi olarak işleyebilir, hedefe yönelik yerel düzenlemeler ve karmaşık genel sahne dönüşümlerini sorunsuz bir şekilde gerçekleştirebilir."
+  },
+  "flux/schnell": {
+    "description": "FLUX.1 [schnell], 12 milyar parametreye sahip bir akış dönüştürücü modelidir ve metinden 1 ila 4 adımda yüksek kaliteli görüntüler üretebilir; kişisel ve ticari kullanım için uygundur."
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning), kararlı ve ayarlanabilir bir performans sunar, karmaşık görev çözümleri için ideal bir seçimdir."
   },
@@ -1364,6 +1373,9 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe, GPT-4o kullanarak sesleri metne dönüştüren bir konuşma tanıma modelidir. Orijinal Whisper modeline kıyasla kelime hata oranını düşürür ve dil tanıma ile doğruluğu artırır. Daha doğru transkripsiyonlar için kullanın."
   },
+  "gpt-image-1": {
+    "description": "ChatGPT'nin yerel çok modlu görüntü oluşturma modeli"
+  },
   "grok-2-1212": {
     "description": "Bu model, doğruluk, talimat takibi ve çok dilli yetenekler açısından geliştirilmiştir."
   },
@@ -1483,6 +1495,9 @@
   },
   "hunyuan-vision": {
     "description": "Hunyuan'ın en son çok modlu modeli, resim + metin girişi ile metin içeriği oluşturmayı destekler."
+  },
+  "imagen4/preview": {
+    "description": "Google'ın en yüksek kaliteli görüntü oluşturma modeli"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5, çoklu senaryolarda akıllı diyalog çözümleri sunar."

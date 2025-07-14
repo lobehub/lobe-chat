@@ -186,6 +186,7 @@ export default {
   },
   fullscreen: '全屏模式',
   historyRange: '历史范围',
+  import: '导入',
   importData: '导入数据',
   importModal: {
     error: {
@@ -319,6 +320,7 @@ export default {
     unconnected: { tip: '信令服务器连接失败，将无法建立点对点通信频道，请检查网络后重试' },
   },
   tab: {
+    aiImage: 'AI 绘画',
     chat: '会话',
     discover: '发现',
     files: '文件',

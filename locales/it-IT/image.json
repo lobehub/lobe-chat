@@ -1,0 +1,100 @@
+{
+  "config": {
+    "aspectRatio": {
+      "label": "Rapporto",
+      "lock": "Blocca rapporto d'aspetto",
+      "unlock": "Sblocca rapporto d'aspetto"
+    },
+    "header": {
+      "desc": "Descrizione semplice, crea subito",
+      "title": "Pittura"
+    },
+    "height": {
+      "label": "Altezza"
+    },
+    "imageNum": {
+      "label": "Numero di immagini"
+    },
+    "imageUrl": {
+      "label": "Immagine di riferimento"
+    },
+    "imageUrls": {
+      "label": "Immagini di riferimento"
+    },
+    "model": {
+      "label": "Modello"
+    },
+    "prompt": {
+      "placeholder": "Descrivi ciò che desideri generare"
+    },
+    "seed": {
+      "label": "Seed",
+      "random": "Seme casuale"
+    },
+    "size": {
+      "label": "Dimensione"
+    },
+    "steps": {
+      "label": "Passaggi"
+    },
+    "title": "Disegno AI",
+    "width": {
+      "label": "Larghezza"
+    }
+  },
+  "generation": {
+    "actions": {
+      "applySeed": "Applica seme",
+      "copyError": "Copia errore",
+      "copyPrompt": "Copia suggerimento",
+      "copySeed": "Copia seed",
+      "delete": "Elimina",
+      "deleteBatch": "Elimina batch",
+      "download": "Scarica",
+      "downloadFailed": "Download immagine fallito",
+      "errorCopied": "Messaggio di errore copiato negli appunti",
+      "errorCopyFailed": "Copia messaggio di errore fallita",
+      "generate": "Genera",
+      "promptCopied": "Prompt copiato negli appunti",
+      "promptCopyFailed": "Copia prompt fallita",
+      "reuseSettings": "Riutilizza impostazioni",
+      "seedApplied": "Seme applicato alla configurazione",
+      "seedApplyFailed": "Applicazione del seme fallita",
+      "seedCopied": "Seed copiato negli appunti",
+      "seedCopyFailed": "Copia seed fallita"
+    },
+    "metadata": {
+      "count": "{{count}} immagini"
+    },
+    "status": {
+      "failed": "Generazione fallita",
+      "generating": "Generazione in corso..."
+    }
+  },
+  "notSupportGuide": {
+    "desc": "L'istanza attuale è in modalità database client e non supporta la generazione di immagini AI. Passa alla <1>modalità di distribuzione database server</1> o usa direttamente <3>LobeChat Cloud</3>",
+    "features": {
+      "fileIntegration": {
+        "desc": "Integrazione profonda con il sistema di gestione file, le immagini generate vengono salvate automaticamente nel file system per una gestione e organizzazione unificata",
+        "title": "Integrazione con file system"
+      },
+      "llmAssisted": {
+        "desc": "Combina le capacità dei grandi modelli linguistici per ottimizzare e ampliare intelligentemente i prompt, migliorando la qualità della generazione delle immagini (Prossimamente)",
+        "title": "Generazione assistita da LLM"
+      },
+      "multiProviders": {
+        "desc": "Supporta diversi fornitori di servizi di disegno AI, inclusi OpenAI gpt-image-1, Google Imagen, FAL.ai, offrendo una vasta scelta di modelli",
+        "title": "Supporto multi-fornitori"
+      }
+    },
+    "title": "La modalità di distribuzione attuale non supporta il disegno AI"
+  },
+  "topic": {
+    "createNew": "Crea nuovo argomento",
+    "deleteConfirm": "Elimina argomento generato",
+    "deleteConfirmDesc": "Stai per eliminare questo argomento generato. L'eliminazione è irreversibile, procedi con cautela.",
+    "empty": "Nessun argomento generato",
+    "title": "Tema della pittura",
+    "untitled": "Argomento predefinito"
+  }
+}

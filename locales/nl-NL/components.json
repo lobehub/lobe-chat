@@ -68,6 +68,22 @@
   "GoBack": {
     "back": "Terug"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "Klik om afbeelding te wijzigen"
+    },
+    "placeholder": {
+      "primary": "Afbeelding toevoegen",
+      "secondary": "Klik om te uploaden"
+    }
+  },
+  "KeyValueEditor": {
+    "addButton": "Voeg een regel toe",
+    "deleteTooltip": "Verwijderen",
+    "duplicateKeyError": "Sleutelnaam moet uniek zijn",
+    "keyPlaceholder": "Sleutel",
+    "valuePlaceholder": "Waarde"
+  },
   "MaxTokenSlider": {
     "unlimited": "Onbeperkt"
   },
@@ -90,6 +106,25 @@
     "goToSettings": "Ga naar instellingen",
     "provider": "Provider",
     "title": "Model"
+  },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "Klik om meer te uploaden"
+    },
+    "modal": {
+      "complete": "Voltooien",
+      "newFileIndicator": "Nieuw",
+      "selectImageToPreview": "Selecteer een afbeelding om te bekijken",
+      "title": "Beheer afbeeldingen ({{count}})",
+      "upload": "Afbeeldingen uploaden"
+    },
+    "placeholder": {
+      "primary": "Klik om afbeeldingen te uploaden",
+      "secondary": "Meerdere afbeeldingen selecteren ondersteund"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} geüpload"
+    }
   },
   "OllamaSetupGuide": {
     "action": {

@@ -1019,6 +1019,15 @@
   "ernie-x1-turbo-32k": {
     "description": "Rispetto a ERNIE-X1-32K, il modello offre prestazioni e risultati migliori."
   },
+  "flux-kontext/dev": {
+    "description": "Modello di editing immagini Frontier."
+  },
+  "flux-pro/kontext": {
+    "description": "FLUX.1 Kontext [pro] è in grado di elaborare testo e immagini di riferimento come input, realizzando senza soluzione di continuità modifiche locali mirate e complesse trasformazioni dell'intera scena."
+  },
+  "flux/schnell": {
+    "description": "FLUX.1 [schnell] è un modello trasformatore a flusso con 12 miliardi di parametri, capace di generare immagini di alta qualità da testo in 1-4 passaggi, adatto per uso personale e commerciale."
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) offre prestazioni stabili e ottimizzabili, è la scelta ideale per soluzioni a compiti complessi."
   },
@@ -1364,6 +1373,9 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe è un modello di trascrizione vocale che utilizza GPT-4o per convertire audio in testo. Rispetto al modello Whisper originale, migliora il tasso di errore delle parole e la precisione nel riconoscimento linguistico. Usalo per ottenere trascrizioni più accurate."
   },
+  "gpt-image-1": {
+    "description": "Modello nativo multimodale di generazione immagini di ChatGPT"
+  },
   "grok-2-1212": {
     "description": "Questo modello ha migliorato l'accuratezza, il rispetto delle istruzioni e le capacità multilingue."
   },
@@ -1483,6 +1495,9 @@
   },
   "hunyuan-vision": {
     "description": "Ultimo modello multimodale di Hunyuan, supporta l'input di immagini e testo per generare contenuti testuali."
+  },
+  "imagen4/preview": {
+    "description": "Il modello di generazione immagini di massima qualità di Google"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 offre soluzioni di dialogo intelligente in vari scenari."

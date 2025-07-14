@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "Yêu cầu dịch vụ thất bại, vui lòng kiểm tra cấu hình hoặc thử lại"
   },
+  "testConnectionFailed": "Kiểm tra kết nối thất bại: {{error}}",
   "tts": {
     "responseError": "Yêu cầu dịch vụ thất bại, vui lòng kiểm tra cấu hình hoặc thử lại"
   },
@@ -130,6 +131,7 @@
     "addProxyUrl": "Thêm URL proxy OpenAI (tùy chọn)",
     "apiKey": {
       "description": "Nhập {{name}} API Key của bạn để bắt đầu phiên làm việc",
+      "imageGenerationDescription": "Nhập khóa API {{name}} của bạn để bắt đầu tạo hình ảnh",
       "title": "Sử dụng {{name}} API Key tùy chỉnh"
     },
     "closeMessage": "Đóng thông báo",

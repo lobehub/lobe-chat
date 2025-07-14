@@ -32,6 +32,10 @@
     "search": "Suche",
     "title": "Entdecken"
   },
+  "image": {
+    "description": "{{appName}} bietet Ihnen das beste Nutzungserlebnis für GPT Image, Flux, Midjourney und Stable Diffusion",
+    "title": "KI-Grafik"
+  },
   "plugins": {
     "description": "Suche, Diagrammerstellung, akademisch, Bilderzeugung, Videoerzeugung, Spracherzeugung, automatisierte Workflows, passe die ToolCall-Plugin-Funktionen von ChatGPT / Claude an",
     "title": "Plugin-Markt"

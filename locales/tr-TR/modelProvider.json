@@ -66,6 +66,7 @@
       "customRegion": "Özel Bölge",
       "customSessionToken": "Özel Oturum Tokeni",
       "description": "AWS AccessKeyId / SecretAccessKey bilgilerinizi girerek oturumu başlatabilirsiniz. Uygulama kimlik doğrulama bilgilerinizi kaydetmez.",
+      "imageGenerationDescription": "AWS AccessKeyId / SecretAccessKey bilgilerinizi girerek üretime başlayabilirsiniz. Uygulama kimlik doğrulama yapılandırmanızı kaydetmez",
       "title": "Özel Bedrock Kimlik Bilgilerini Kullan"
     }
   },
