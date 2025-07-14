@@ -2,10 +2,6 @@ const config = require('@lobehub/lint').eslint;
 
 config.extends.push('plugin:@next/next/recommended');
 
-config.rules['@typescript-eslint/no-empty-interface'] = 0;
-config.rules['sort-keys-fix/sort-keys-fix'] = 0;
-config.rules['typescript-sort-keys/interface'] = 0;
-
 config.rules['unicorn/no-negated-condition'] = 0;
 config.rules['unicorn/prefer-type-error'] = 0;
 config.rules['unicorn/prefer-logical-operator-over-ternary'] = 0;
@@ -25,7 +21,6 @@ config.rules['unicorn/prefer-query-selector'] = 0;
 config.rules['unicorn/no-array-callback-reference'] = 0;
 // FIXME: Linting error in src/app/[variants]/(main)/chat/features/Migration/DBReader.ts, the fundamental solution should be upgrading typescript-eslint
 config.rules['@typescript-eslint/no-useless-constructor'] = 0;
-config.rules['typescript-sort-keys/string-enum'] = 0;
 
 config.overrides = [
   {
@@ -39,6 +34,16 @@ config.overrides = [
     },
     settings: {
       'mdx/code-blocks': false,
+    },
+  },
+
+  {
+    files: ['src/store/image/**/*', 'src/types/generation/**/*'],
+    rules: {
+      '@typescript-eslint/no-empty-interface': 0,
+      'sort-keys-fix/sort-keys-fix': 0,
+      'typescript-sort-keys/interface': 0,
+      'typescript-sort-keys/string-enum': 0,
     },
   },
 ];
