@@ -1,5 +1,6 @@
 'use client';
 
+import { LoadingOutlined } from '@ant-design/icons';
 import { Block } from '@lobehub/ui';
 import { Spin } from 'antd';
 import { memo } from 'react';
@@ -32,7 +33,7 @@ export const LoadingState = memo<LoadingStateProps>(({ generation, aspectRatio, 
       variant={'filled'}
     >
       <Center gap={8}>
-        <Spin percent={'auto'} />
+        <Spin indicator={<LoadingOutlined spin />} />
         <ElapsedTime generationId={generation.id} isActive={isGenerating} />
       </Center>
       <ActionButtons onDelete={onDelete} />
