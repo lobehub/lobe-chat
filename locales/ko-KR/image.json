@@ -1,7 +1,9 @@
 {
   "config": {
     "aspectRatio": {
-      "label": "비율"
+      "label": "비율",
+      "lock": "가로 세로 비율 고정",
+      "unlock": "가로 세로 비율 해제"
     },
     "header": {
       "desc": "간단한 설명, 즉시 창작",

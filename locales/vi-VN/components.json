@@ -77,6 +77,13 @@
       "secondary": "Nhấn để tải lên"
     }
   },
+  "KeyValueEditor": {
+    "addButton": "Thêm một dòng",
+    "deleteTooltip": "Xóa",
+    "duplicateKeyError": "Tên khóa phải duy nhất",
+    "keyPlaceholder": "Khóa",
+    "valuePlaceholder": "Giá trị"
+  },
   "MaxTokenSlider": {
     "unlimited": "Không giới hạn"
   },

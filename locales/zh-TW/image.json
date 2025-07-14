@@ -1,7 +1,9 @@
 {
   "config": {
     "aspectRatio": {
-      "label": "比例"
+      "label": "比例",
+      "lock": "鎖定寬高比",
+      "unlock": "解鎖寬高比"
     },
     "header": {
       "desc": "簡單描述，即刻創作",

@@ -77,6 +77,13 @@
       "secondary": "Кликнете, за да качите"
     }
   },
+  "KeyValueEditor": {
+    "addButton": "Добавяне на ред",
+    "deleteTooltip": "Изтриване",
+    "duplicateKeyError": "Името на ключа трябва да е уникално",
+    "keyPlaceholder": "Ключ",
+    "valuePlaceholder": "Стойност"
+  },
   "MaxTokenSlider": {
     "unlimited": "Неограничено"
   },

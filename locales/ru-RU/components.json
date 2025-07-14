@@ -77,6 +77,13 @@
       "secondary": "Нажмите, чтобы загрузить"
     }
   },
+  "KeyValueEditor": {
+    "addButton": "Добавить строку",
+    "deleteTooltip": "Удалить",
+    "duplicateKeyError": "Имя ключа должно быть уникальным",
+    "keyPlaceholder": "Ключ",
+    "valuePlaceholder": "Значение"
+  },
   "MaxTokenSlider": {
     "unlimited": "Без ограничений"
   },

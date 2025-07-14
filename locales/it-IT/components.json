@@ -77,6 +77,13 @@
       "secondary": "Clicca per caricare"
     }
   },
+  "KeyValueEditor": {
+    "addButton": "Aggiungi una riga",
+    "deleteTooltip": "Elimina",
+    "duplicateKeyError": "Il nome della chiave deve essere univoco",
+    "keyPlaceholder": "Chiave",
+    "valuePlaceholder": "Valore"
+  },
   "MaxTokenSlider": {
     "unlimited": "Illimitato"
   },

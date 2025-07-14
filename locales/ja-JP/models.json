@@ -1019,6 +1019,15 @@
   "ernie-x1-turbo-32k": {
     "description": "ERNIE-X1-32Kと比較して、モデルの効果と性能が向上しています。"
   },
+  "flux-kontext/dev": {
+    "description": "フロンティアイメージ編集モデル。"
+  },
+  "flux-pro/kontext": {
+    "description": "FLUX.1 Kontext [pro] はテキストと参照画像を入力として処理し、目的に応じた局所編集や複雑な全体シーンの変換をシームレスに実現します。"
+  },
+  "flux/schnell": {
+    "description": "FLUX.1 [schnell] は120億パラメータを持つストリーミングトランスフォーマーモデルで、1〜4ステップでテキストから高品質な画像を生成し、個人および商用利用に適しています。"
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001（チューニング）は、安定した調整可能な性能を提供し、複雑なタスクのソリューションに理想的な選択肢です。"
   },
@@ -1364,6 +1373,9 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o TranscribeはGPT-4oを使用した音声からテキストへの転写モデルです。元のWhisperモデルと比較して単語誤り率が改善され、言語認識と精度が向上しています。より正確な転写を得るためにご利用ください。"
   },
+  "gpt-image-1": {
+    "description": "ChatGPT ネイティブのマルチモーダル画像生成モデル"
+  },
   "grok-2-1212": {
     "description": "このモデルは、精度、指示の遵守、そして多言語能力において改善されています。"
   },
@@ -1483,6 +1495,9 @@
   },
   "hunyuan-vision": {
     "description": "混元の最新のマルチモーダルモデルで、画像とテキストの入力をサポートし、テキストコンテンツを生成します。"
+  },
+  "imagen4/preview": {
+    "description": "Google の最高品質の画像生成モデル"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5は多様なシーンでのインテリジェントな対話ソリューションを提供します。"

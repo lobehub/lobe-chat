@@ -77,6 +77,13 @@
       "secondary": "Clique para enviar"
     }
   },
+  "KeyValueEditor": {
+    "addButton": "Adicionar uma linha",
+    "deleteTooltip": "Excluir",
+    "duplicateKeyError": "O nome da chave deve ser único",
+    "keyPlaceholder": "Chave",
+    "valuePlaceholder": "Valor"
+  },
   "MaxTokenSlider": {
     "unlimited": "Ilimitado"
   },
