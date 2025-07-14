@@ -39,8 +39,13 @@ export type ServiceResult<T = any> = Promise<T>;
 
 export interface TTarget {
   targetAgentId?: string;
+  targetFileId?: string;
+  targetMessageId?: string;
+  targetModelId?: string;
+  targetRoleId?: string;
   targetSessionId?: string;
   targetTopicId?: string;
+  targetUserId?: string;
 }
 
 export interface TBatchTarget {
