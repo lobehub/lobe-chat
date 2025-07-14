@@ -484,6 +484,11 @@
       "placeholder": "Digite a palavra-chave personalizada",
       "title": "Palavra-chave personalizada"
     },
+    "generationTopic": {
+      "label": "Modelo de Nomeação de Tópicos para Pintura AI",
+      "modelDesc": "Modelo designado para nomeação automática de tópicos em pintura AI",
+      "title": "Nomeação Automática de Tópicos para Pintura AI"
+    },
     "helpInfo": "Ao criar um novo assistente, as configurações padrão do assistente serão usadas como valores predefinidos.",
     "historyCompress": {
       "label": "Modelo de Histórico de Conversa",

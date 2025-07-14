@@ -189,6 +189,13 @@
       "when": 1752212281564,
       "tag": "0026_add_autovacuum_tuning",
       "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1752413805765,
+      "tag": "0027_ai_image",
+      "breakpoints": true
     }
   ],
   "version": "6"

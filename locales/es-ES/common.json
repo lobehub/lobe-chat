@@ -324,6 +324,7 @@
     }
   },
   "tab": {
+    "aiImage": "Dibujo AI",
     "chat": "Chat",
     "discover": "Descubrir",
     "files": "Archivos",

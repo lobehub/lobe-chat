@@ -63,11 +63,13 @@ describe('parseDefaultThemeFromCountry', () => {
       timezones: ['America/New_York'],
     });
 
-    const mockDate = new Date('2025-04-01T12:00:00');
+    // 设置UTC时间16:00，这样在纽约时区（EDT，UTC-4）就是12:00
+    const mockDate = new Date('2025-04-01T16:00:00.000Z');
     vi.setSystemTime(mockDate);
 
     const request = mockRequest();
-    expect(parseDefaultThemeFromCountry(request)).toBe('light');
+    const result = parseDefaultThemeFromCountry(request);
+    expect(result).toBe('light');
   });
 
   it('should return dark theme during night hours', () => {
@@ -78,7 +80,8 @@ describe('parseDefaultThemeFromCountry', () => {
       timezones: ['America/New_York'],
     });
 
-    const mockDate = new Date('2025-04-01T22:00:00');
+    // 设置UTC时间02:00，这样在纽约时区（EDT，UTC-4）就是22:00
+    const mockDate = new Date('2025-04-01T02:00:00.000Z');
     vi.setSystemTime(mockDate);
 
     const request = mockRequest();

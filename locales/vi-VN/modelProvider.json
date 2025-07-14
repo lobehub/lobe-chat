@@ -66,6 +66,7 @@
       "customRegion": "Vùng Dịch vụ Tùy chỉnh",
       "customSessionToken": "Mã thông báo phiên tùy chỉnh",
       "description": "Nhập AWS AccessKeyId / SecretAccessKey của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ cấu hình xác thực của bạn",
+      "imageGenerationDescription": "Nhập AWS AccessKeyId / SecretAccessKey của bạn để bắt đầu tạo. Ứng dụng sẽ không lưu trữ cấu hình xác thực của bạn",
       "title": "Sử dụng Thông tin Xác thực Bedrock tùy chỉnh"
     }
   },

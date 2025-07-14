@@ -68,6 +68,15 @@
   "GoBack": {
     "back": "Назад"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "Нажмите, чтобы изменить изображение"
+    },
+    "placeholder": {
+      "primary": "Добавить изображение",
+      "secondary": "Нажмите, чтобы загрузить"
+    }
+  },
   "MaxTokenSlider": {
     "unlimited": "Без ограничений"
   },
@@ -90,6 +99,25 @@
     "goToSettings": "Перейти в настройки",
     "provider": "Поставщик",
     "title": "Модель"
+  },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "Нажмите, чтобы загрузить ещё"
+    },
+    "modal": {
+      "complete": "Готово",
+      "newFileIndicator": "Новое",
+      "selectImageToPreview": "Выберите изображение для просмотра",
+      "title": "Управление изображениями ({{count}})",
+      "upload": "Загрузить изображение"
+    },
+    "placeholder": {
+      "primary": "Нажмите, чтобы загрузить изображение",
+      "secondary": "Поддерживается выбор нескольких изображений"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} загружено"
+    }
   },
   "OllamaSetupGuide": {
     "action": {

@@ -66,6 +66,7 @@
       "customRegion": "カスタムサービスリージョン",
       "customSessionToken": "カスタムセッショントークン",
       "description": "AWS AccessKeyId / SecretAccessKey を入力するとセッションを開始できます。アプリは認証情報を記録しません",
+      "imageGenerationDescription": "AWSのAccessKeyId / SecretAccessKeyを入力すると、生成を開始できます。アプリは認証情報を記録しません。",
       "title": "使用カスタム Bedrock 認証情報"
     }
   },
