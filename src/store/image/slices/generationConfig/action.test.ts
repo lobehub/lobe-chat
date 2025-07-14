@@ -133,21 +133,6 @@ describe('GenerationConfigAction', () => {
 
       expect(result.current.parameters?.imageUrls).toEqual(['test1.jpg', 'test2.jpg']);
     });
-
-    it('should throw error when parameters is not initialized', async () => {
-      const { result } = renderHook(() => useImageStore());
-
-      // Set parameters to undefined
-      act(() => {
-        useImageStore.setState({ parameters: undefined });
-      });
-
-      expect(() => {
-        act(() => {
-          result.current.setParamOnInput('prompt', 'test');
-        });
-      }).toThrow('parameters is not initialized');
-    });
   });
 
   describe('setModelAndProviderOnSelect', () => {

@@ -64,7 +64,8 @@ const categorizeError = (
   error: any,
   isAborted: boolean,
 ): { errorType: AsyncTaskErrorType; errorMessage: string } => {
-  if (error.errorType === AgentRuntimeErrorType.InvalidProviderAPIKey) {
+  // FIXME: 401 的问题应该放到 agentRuntime 中处理会更好
+  if (error.errorType === AgentRuntimeErrorType.InvalidProviderAPIKey || error?.status === 401) {
     return {
       errorType: AsyncTaskErrorType.InvalidProviderAPIKey,
       errorMessage: 'Invalid provider API key, please check your API key',
