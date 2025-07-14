@@ -48,8 +48,8 @@ export class LobeFalAI implements LobeRuntimeAI {
 
     if ('width' in userInput && 'height' in userInput) {
       userInput.image_size = {
-        width: userInput.width,
         height: userInput.height,
+        width: userInput.width,
       };
       delete userInput.width;
       delete userInput.height;

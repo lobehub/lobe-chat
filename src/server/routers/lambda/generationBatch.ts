@@ -10,19 +10,13 @@ const generationBatchProcedure = authedProcedure.use(serverDatabase).use(async (
 
   return opts.next({
     ctx: {
-      generationBatchModel: new GenerationBatchModel(ctx.serverDB, ctx.userId),
       fileService: new FileService(ctx.serverDB, ctx.userId),
+      generationBatchModel: new GenerationBatchModel(ctx.serverDB, ctx.userId),
     },
   });
 });
 
 export const generationBatchRouter = router({
-  getGenerationBatches: generationBatchProcedure
-    .input(z.object({ topicId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      return ctx.generationBatchModel.queryGenerationBatchesByTopicIdWithGenerations(input.topicId);
-    }),
-
   deleteGenerationBatch: generationBatchProcedure
     .input(z.object({ batchId: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -50,6 +44,12 @@ export const generationBatchRouter = router({
       }
 
       return deletedBatch;
+    }),
+
+  getGenerationBatches: generationBatchProcedure
+    .input(z.object({ topicId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return ctx.generationBatchModel.queryGenerationBatchesByTopicIdWithGenerations(input.topicId);
     }),
 });
 

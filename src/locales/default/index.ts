@@ -28,7 +28,6 @@ import topic from './topic';
 import welcome from './welcome';
 
 const resources = {
-  image,
   auth,
   changelog,
   chat,
@@ -41,6 +40,7 @@ const resources = {
   error,
   file,
   hotkey,
+  image,
   knowledgeBase,
   metadata,
   migration,

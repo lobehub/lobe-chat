@@ -12,9 +12,9 @@ const generationTopicProcedure = authedProcedure.use(serverDatabase).use(async (
 
   return opts.next({
     ctx: {
-      generationTopicModel: new GenerationTopicModel(ctx.serverDB, ctx.userId),
       fileService: new FileService(ctx.serverDB, ctx.userId),
       generationService: new GenerationService(ctx.serverDB, ctx.userId),
+      generationTopicModel: new GenerationTopicModel(ctx.serverDB, ctx.userId),
     },
   });
 });
@@ -23,14 +23,14 @@ const generationTopicProcedure = authedProcedure.use(serverDatabase).use(async (
 const updateTopicSchema = z.object({
   id: z.string(),
   value: z.object({
-    title: z.string().nullable().optional(),
     coverUrl: z.string().nullable().optional(),
+    title: z.string().nullable().optional(),
   }),
 });
 
 const updateTopicCoverSchema = z.object({
-  id: z.string(),
   coverUrl: z.string(),
+  id: z.string(),
 });
 
 export const generationTopicRouter = router({
@@ -38,23 +38,6 @@ export const generationTopicRouter = router({
     const data = await ctx.generationTopicModel.create('');
     return data.id;
   }),
-  getAllGenerationTopics: generationTopicProcedure.query(async ({ ctx }) => {
-    return ctx.generationTopicModel.queryAll();
-  }),
-  updateTopic: generationTopicProcedure
-    .input(updateTopicSchema)
-    .mutation(async ({ ctx, input }) => {
-      return ctx.generationTopicModel.update(input.id, input.value as Partial<GenerationTopicItem>);
-    }),
-  updateTopicCover: generationTopicProcedure
-    .input(updateTopicCoverSchema)
-    .mutation(async ({ ctx, input }) => {
-      // Process the cover image and get key
-      const newCoverKey = await ctx.generationService.createCoverFromUrl(input.coverUrl);
-
-      // Update the topic with the new cover key
-      return ctx.generationTopicModel.update(input.id, { coverUrl: newCoverKey });
-    }),
   deleteTopic: generationTopicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -82,6 +65,23 @@ export const generationTopicRouter = router({
       }
 
       return deletedTopic;
+    }),
+  getAllGenerationTopics: generationTopicProcedure.query(async ({ ctx }) => {
+    return ctx.generationTopicModel.queryAll();
+  }),
+  updateTopic: generationTopicProcedure
+    .input(updateTopicSchema)
+    .mutation(async ({ ctx, input }) => {
+      return ctx.generationTopicModel.update(input.id, input.value as Partial<GenerationTopicItem>);
+    }),
+  updateTopicCover: generationTopicProcedure
+    .input(updateTopicCoverSchema)
+    .mutation(async ({ ctx, input }) => {
+      // Process the cover image and get key
+      const newCoverKey = await ctx.generationService.createCoverFromUrl(input.coverUrl);
+
+      // Update the topic with the new cover key
+      return ctx.generationTopicModel.update(input.id, { coverUrl: newCoverKey });
     }),
 });
 

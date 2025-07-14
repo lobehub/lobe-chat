@@ -47,20 +47,20 @@ const imageProcedure = authedProcedure
 
 const createImageInputSchema = z.object({
   generationTopicId: z.string(),
-  provider: z.string(),
-  model: z.string(),
   imageNum: z.number(),
+  model: z.string(),
   params: z
     .object({
-      prompt: z.string(),
-      imageUrls: z.array(z.string()).optional(),
-      width: z.number().optional(),
+      cfg: z.number().optional(),
       height: z.number().optional(),
+      imageUrls: z.array(z.string()).optional(),
+      prompt: z.string(),
       seed: z.number().nullable().optional(),
       steps: z.number().optional(),
-      cfg: z.number().optional(),
+      width: z.number().optional(),
     })
     .passthrough(),
+  provider: z.string(),
 });
 export type CreateImageServicePayload = z.infer<typeof createImageInputSchema>;
 
@@ -101,14 +101,14 @@ export const imageRouter = router({
 
       // 1. 创建 generationBatch
       const newBatch: NewGenerationBatch = {
-        userId,
+        config: configForDatabase,
         generationTopicId,
-        provider,
+        height: params.height,
         model,
         prompt: params.prompt,
-        width: params.width,
-        height: params.height,
-        config: configForDatabase, // 使用转换后的配置存储到数据库
+        provider,
+        userId,
+        width: params.width, // 使用转换后的配置存储到数据库
       };
       log('Creating generation batch: %O', newBatch);
       const [batch] = await tx.insert(generationBatches).values(newBatch).returning();
@@ -121,9 +121,9 @@ export const imageRouter = router({
           : Array.from({ length: imageNum }, () => null);
       const newGenerations: NewGeneration[] = Array.from({ length: imageNum }, (_, index) => {
         return {
-          userId,
           generationBatchId: batch.id,
           seed: seeds[index],
+          userId,
         };
       });
 
@@ -142,9 +142,9 @@ export const imageRouter = router({
           const [createdAsyncTask] = await tx
             .insert(asyncTasks)
             .values({
-              userId,
               status: AsyncTaskStatus.Pending,
               type: AsyncTaskType.ImageGeneration,
+              userId,
             })
             .returning();
 
@@ -157,7 +157,7 @@ export const imageRouter = router({
             .set({ asyncTaskId })
             .where(and(eq(generations.id, generation.id), eq(generations.userId, userId)));
 
-          return { generation, asyncTaskId };
+          return { asyncTaskId, generation };
         }),
       );
       log('All async tasks created in transaction');
@@ -183,8 +183,8 @@ export const imageRouter = router({
 
       // 使用统一的 caller 工厂创建 caller
       const asyncCaller = await createAsyncCaller({
-        userId: ctx.userId,
         jwtPayload: ctx.jwtPayload,
+        userId: ctx.userId,
       });
 
       log('Unified async caller created successfully for userId: %s', ctx.userId);
@@ -197,11 +197,11 @@ export const imageRouter = router({
         // 不使用 await，让任务在后台异步执行
         // 这里不应该 await 也不应该 .then.catch，让 runtime 早点释放计算资源
         asyncCaller.image.createImage({
-          taskId: asyncTaskId,
           generationId: generation.id,
-          provider,
           model,
-          params, // 使用原始参数
+          params,
+          provider,
+          taskId: asyncTaskId, // 使用原始参数
         });
       });
 
@@ -236,11 +236,11 @@ export const imageRouter = router({
     });
 
     return {
-      success: true,
       data: {
         batch: createdBatch,
         generations: createdGenerations,
       },
+      success: true,
     };
   }),
 });

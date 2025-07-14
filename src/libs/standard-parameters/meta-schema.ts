@@ -5,91 +5,95 @@ export const MAX_SEED = 2 ** 31 - 1;
 
 // 定义顶层的元规范 - 平铺结构
 export const ModelParamsMetaSchema = z.object({
+  aspectRatio: z
+    .object({
+      default: z.string(),
+      description: z.string().optional(),
+      enum: z.array(z.string()),
+      type: z.literal('string').optional(),
+    })
+    .optional(),
+
+  cfg: z
+    .object({
+      default: z.number(),
+      description: z.string().optional(),
+      max: z.number(),
+      min: z.number(),
+      step: z.number(),
+      type: z.literal('number').optional(),
+    })
+    .optional(),
+
+  height: z
+    .object({
+      default: z.number(),
+      description: z.string().optional(),
+      max: z.number(),
+      min: z.number(),
+      step: z.number().optional().default(1),
+      type: z.literal('number').optional(),
+    })
+    .optional(),
+
+  imageUrl: z
+    .object({
+      default: z.string().nullable().optional(),
+      description: z.string().optional(),
+      type: z.tuple([z.literal('string'), z.literal('null')]).optional(),
+    })
+    .optional(),
+
+  imageUrls: z
+    .object({
+      default: z.array(z.string()),
+      description: z.string().optional(),
+      type: z.literal('array').optional(),
+    })
+    .optional(),
   /**
    * Prompt 是唯一一个每个模型都有的参数
    */
   prompt: z.object({
-    type: z.literal('string').optional(),
-    description: z.string().optional(),
     default: z.string().optional().default(''),
+    description: z.string().optional(),
+    type: z.literal('string').optional(),
   }),
-  imageUrls: z
+  seed: z
     .object({
-      type: z.literal('array').optional(),
-      default: z.array(z.string()),
+      default: z.number().nullable().default(null),
       description: z.string().optional(),
-    })
-    .optional(),
-  imageUrl: z
-    .object({
-      type: z.tuple([z.literal('string'), z.literal('null')]).optional(),
-      default: z.string().nullable().optional(),
-      description: z.string().optional(),
-    })
-    .optional(),
-  width: z
-    .object({
-      type: z.literal('number').optional(),
-      default: z.number(),
-      min: z.number(),
-      max: z.number(),
-      step: z.number().optional().default(1),
-      description: z.string().optional(),
-    })
-    .optional(),
-  height: z
-    .object({
-      type: z.literal('number').optional(),
-      default: z.number(),
-      min: z.number(),
-      max: z.number(),
-      step: z.number().optional().default(1),
-      description: z.string().optional(),
+      max: z.number().optional().default(MAX_SEED),
+      min: z.number().optional().default(0),
+      type: z.tuple([z.literal('number'), z.literal('null')]).optional(),
     })
     .optional(),
   size: z
     .object({
-      type: z.literal('string').optional(),
       default: z.string(),
-      enum: z.array(z.string()),
       description: z.string().optional(),
-    })
-    .optional(),
-  aspectRatio: z
-    .object({
+      enum: z.array(z.string()),
       type: z.literal('string').optional(),
-      default: z.string(),
-      enum: z.array(z.string()),
-      description: z.string().optional(),
-    })
-    .optional(),
-  seed: z
-    .object({
-      type: z.tuple([z.literal('number'), z.literal('null')]).optional(),
-      default: z.number().nullable().default(null),
-      min: z.number().optional().default(0),
-      max: z.number().optional().default(MAX_SEED),
-      description: z.string().optional(),
     })
     .optional(),
   steps: z
     .object({
-      type: z.literal('number').optional(),
       default: z.number(),
-      min: z.number(),
-      max: z.number(),
-      step: z.number().optional().default(1),
       description: z.string().optional(),
+      max: z.number(),
+      min: z.number(),
+      step: z.number().optional().default(1),
+      type: z.literal('number').optional(),
     })
     .optional(),
-  cfg: z
+  width: z
     .object({
-      type: z.literal('number').optional(),
       default: z.number(),
-      min: z.number(),
-      max: z.number(),
-      step: z.number(),
       description: z.string().optional(),
+      max: z.number(),
+      min: z.number(),
+      step: z.number().optional().default(1),
+      type: z.literal('number').optional(),
     })
     .optional(),
 });

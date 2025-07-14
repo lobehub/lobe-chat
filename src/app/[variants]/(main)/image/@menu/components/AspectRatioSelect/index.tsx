@@ -7,10 +7,10 @@ import { Center } from 'react-layout-kit';
 import useMergeState from 'use-merge-value';
 
 export interface AspectRatioSelectProps extends Omit<GridProps, 'children' | 'onChange'> {
-  value?: string;
   defaultValue?: string;
   onChange?: (value: string) => void;
   options?: { label?: string; value: string }[];
+  value?: string;
 }
 
 const AspectRatioSelect = memo<AspectRatioSelectProps>(
@@ -18,8 +18,8 @@ const AspectRatioSelect = memo<AspectRatioSelectProps>(
     const theme = useTheme();
     const [active, setActive] = useMergeState('', {
       defaultValue,
-      value,
       onChange,
+      value,
     });
     return (
       <Block padding={4} variant={'filled'} {...rest}>
@@ -50,11 +50,11 @@ const AspectRatioSelect = memo<AspectRatioSelectProps>(
                 <Center height={16} style={{ marginTop: 4 }} width={16}>
                   <div
                     style={{
-                      border: `2px solid ${isActive ? theme.colorText : theme.colorTextDescription}`,
                       aspectRatio: `${width} / ${height}`,
-                      width: isWidthGreater ? 16 : undefined,
-                      height: isWidthGreater ? undefined : 16,
+                      border: `2px solid ${isActive ? theme.colorText : theme.colorTextDescription}`,
                       borderRadius: 3,
+                      height: isWidthGreater ? undefined : 16,
+                      width: isWidthGreater ? 16 : undefined,
                     }}
                   />
                 </Center>

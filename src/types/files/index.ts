@@ -17,10 +17,10 @@ export interface FileItem {
   id: string;
   name: string;
   size: number;
+  source?: FileSource | null;
   type: string;
   updatedAt: Date;
   url: string;
-  source?: FileSource | null;
 }
 
 export * from './list';

@@ -7,18 +7,18 @@ import { Center } from 'react-layout-kit';
 import useMergeState from 'use-merge-value';
 
 export interface SizeSelectProps extends Omit<GridProps, 'children' | 'onChange'> {
-  value?: 'auto' | string;
   defaultValue?: 'auto' | string;
   onChange?: (value: string) => void;
   options?: { label?: string; value: 'auto' | string }[];
+  value?: 'auto' | string;
 }
 
 const SizeSelect = memo<SizeSelectProps>(({ options, onChange, value, defaultValue, ...rest }) => {
   const theme = useTheme();
   const [active, setActive] = useMergeState('auto', {
     defaultValue,
-    value,
     onChange,
+    value,
   });
   return (
     <Block padding={4} variant={'filled'} {...rest}>
@@ -32,9 +32,9 @@ const SizeSelect = memo<SizeSelectProps>(({ options, onChange, value, defaultVal
               <div
                 style={{
                   border: `2px dashed ${isActive ? theme.colorText : theme.colorTextDescription}`,
-                  width: 16,
-                  height: 16,
                   borderRadius: 3,
+                  height: 16,
+                  width: 16,
                 }}
               />
             );
@@ -44,11 +44,11 @@ const SizeSelect = memo<SizeSelectProps>(({ options, onChange, value, defaultVal
             content = (
               <div
                 style={{
-                  border: `2px solid ${isActive ? theme.colorText : theme.colorTextDescription}`,
                   aspectRatio: `${width} / ${height}`,
-                  width: isWidthGreater ? 16 : undefined,
-                  height: isWidthGreater ? undefined : 16,
+                  border: `2px solid ${isActive ? theme.colorText : theme.colorTextDescription}`,
                   borderRadius: 3,
+                  height: isWidthGreater ? undefined : 16,
+                  width: isWidthGreater ? 16 : undefined,
                 }}
               />
             );

@@ -807,7 +807,8 @@ export const openaiSTTModels: AISTTModelCard[] = [
   },
   {
     contextWindowTokens: 16_000,
-    description: 'GPT-4o Transcribe 是一种使用 GPT-4o 转录音频的语音转文本模型。与原始 Whisper 模型相比，它提高了单词错误率，并提高了语言识别和准确性。使用它来获得更准确的转录。',
+    description:
+      'GPT-4o Transcribe 是一种使用 GPT-4o 转录音频的语音转文本模型。与原始 Whisper 模型相比，它提高了单词错误率，并提高了语言识别和准确性。使用它来获得更准确的转录。',
     displayName: 'GPT-4o Transcribe',
     id: 'gpt-4o-transcribe',
     maxOutput: 2000,
@@ -819,7 +820,8 @@ export const openaiSTTModels: AISTTModelCard[] = [
   },
   {
     contextWindowTokens: 16_000,
-    description: 'GPT-4o Mini Transcribe 是一种使用 GPT-4o 转录音频的语音转文本模型。与原始 Whisper 模型相比，它提高了单词错误率，并提高了语言识别和准确性。使用它来获得更准确的转录。',
+    description:
+      'GPT-4o Mini Transcribe 是一种使用 GPT-4o 转录音频的语音转文本模型。与原始 Whisper 模型相比，它提高了单词错误率，并提高了语言识别和准确性。使用它来获得更准确的转录。',
     displayName: 'GPT-4o Mini Transcribe',
     id: 'gpt-4o-mini-transcribe',
     maxOutput: 2000,
@@ -857,9 +859,9 @@ export const openaiImageModels: AIImageModelCard[] = [
   },
   // https://platform.openai.com/docs/models/gpt-image-1
   {
-    enabled: true,
     description: 'ChatGPT 原生多模态图片生成模型',
     displayName: 'GPT Image 1',
+    enabled: true,
     id: 'gpt-image-1',
     parameters: gptImage1ParamsSchema,
     type: 'image',

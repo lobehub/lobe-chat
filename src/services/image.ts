@@ -13,9 +13,9 @@ export class AiImageService {
     try {
       const result = await lambdaClient.image.createImage.mutate(payload);
       log('Image creation service call completed successfully: %O', {
-        success: result.success,
         batchId: result.data?.batch?.id,
         generationCount: result.data?.generations?.length,
+        success: result.success,
       });
 
       return result;

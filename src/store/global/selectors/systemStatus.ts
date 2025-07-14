@@ -64,10 +64,10 @@ const getAgentSystemRoleExpanded =
 
 export const systemStatusSelectors = {
   filePanelWidth,
-  imagePanelWidth,
-  imageTopicPanelWidth,
   getAgentSystemRoleExpanded,
   hidePWAInstaller,
+  imagePanelWidth,
+  imageTopicPanelWidth,
   inZenMode,
   inputHeight,
   isDBInited,

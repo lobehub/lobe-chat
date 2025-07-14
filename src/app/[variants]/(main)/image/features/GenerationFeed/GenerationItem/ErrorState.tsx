@@ -31,8 +31,8 @@ export const ErrorState = memo<ErrorStateProps>(
         padding={16}
         style={{
           aspectRatio,
-          maxWidth: generation.asset?.width ? generation.asset.width / 2 : 'unset',
           cursor: 'pointer',
+          maxWidth: generation.asset?.width ? generation.asset.width / 2 : 'unset',
         }}
         variant={'filled'}
       >

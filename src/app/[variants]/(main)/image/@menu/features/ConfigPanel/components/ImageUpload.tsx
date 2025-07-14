@@ -12,113 +12,28 @@ import { FileUploadStatus } from '@/types/files/upload';
 // ======== Business Types ======== //
 
 export interface ImageUploadProps {
-  value?: string | null; // Image URL
-  onChange?: (url?: string) => void; // Callback when URL changes
-  className?: string;
+  // Callback when URL changes
+  className?: string; // Image URL
+  onChange?: (url?: string) => void;
   style?: React.CSSProperties;
+  value?: string | null;
 }
 
 /**
  * Internal type for managing upload state
  */
 interface UploadState {
-  progress: number; // Upload progress (0-100)
-  previewUrl: string; // Local blob URL for preview
+  error?: string; // Upload progress (0-100)
+  previewUrl: string;
+  progress: number;
+  // Local blob URL for preview
   status: FileUploadStatus;
-  error?: string;
 }
 
 // ======== Styles ======== //
 
 const useStyles = createStyles(({ css, token }) => {
   return {
-    container: css`
-      width: 100%;
-    `,
-    placeholder: css`
-      cursor: pointer;
-
-      width: 100%;
-      height: 160px;
-      border: 2px dashed ${token.colorBorder};
-      border-radius: ${token.borderRadiusLG}px;
-
-      background: ${token.colorFillAlter};
-
-      transition: all ${token.motionDurationMid} ease;
-
-      &:hover {
-        border-color: ${token.colorPrimary};
-        background: ${token.colorFillSecondary};
-      }
-    `,
-    placeholderIcon: css`
-      color: ${token.colorTextTertiary};
-    `,
-    placeholderText: css`
-      font-size: 12px;
-      line-height: 1.4;
-      color: ${token.colorTextSecondary};
-      text-align: center;
-    `,
-    uploadingDisplay: css`
-      position: relative;
-
-      overflow: hidden;
-
-      width: 100%;
-      height: 160px;
-      border: 2px solid ${token.colorPrimary};
-      border-radius: ${token.borderRadiusLG}px;
-
-      background: ${token.colorFillSecondary};
-    `,
-    uploadingOverlay: css`
-      position: absolute;
-      z-index: 5;
-      inset: 0;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      background: ${token.colorBgMask};
-    `,
-    successDisplay: css`
-      cursor: pointer;
-
-      position: relative;
-
-      overflow: hidden;
-
-      width: 100%;
-      height: 160px;
-      border-radius: ${token.borderRadiusLG}px;
-
-      background: ${token.colorBgContainer};
-
-      &:hover .change-overlay {
-        opacity: 1;
-      }
-
-      &:hover .delete-icon {
-        opacity: 1;
-      }
-    `,
-    changeOverlay: css`
-      position: absolute;
-      z-index: 5;
-      inset: 0;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      opacity: 0;
-      background: ${token.colorBgMask};
-
-      transition: opacity ${token.motionDurationMid} ease;
-    `,
     changeButton: css`
       cursor: pointer;
 
@@ -139,6 +54,23 @@ const useStyles = createStyles(({ css, token }) => {
         color: ${token.colorPrimary};
         background: ${token.colorBgElevated};
       }
+    `,
+    changeOverlay: css`
+      position: absolute;
+      z-index: 5;
+      inset: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      opacity: 0;
+      background: ${token.colorBgMask};
+
+      transition: opacity ${token.motionDurationMid} ease;
+    `,
+    container: css`
+      width: 100%;
     `,
     deleteIcon: css`
       cursor: pointer;
@@ -173,6 +105,76 @@ const useStyles = createStyles(({ css, token }) => {
       height: 100%;
       object-fit: cover;
     `,
+    placeholder: css`
+      cursor: pointer;
+
+      width: 100%;
+      height: 160px;
+      border: 2px dashed ${token.colorBorder};
+      border-radius: ${token.borderRadiusLG}px;
+
+      background: ${token.colorFillAlter};
+
+      transition: all ${token.motionDurationMid} ease;
+
+      &:hover {
+        border-color: ${token.colorPrimary};
+        background: ${token.colorFillSecondary};
+      }
+    `,
+    placeholderIcon: css`
+      color: ${token.colorTextTertiary};
+    `,
+    placeholderText: css`
+      font-size: 12px;
+      line-height: 1.4;
+      color: ${token.colorTextSecondary};
+      text-align: center;
+    `,
+    successDisplay: css`
+      cursor: pointer;
+
+      position: relative;
+
+      overflow: hidden;
+
+      width: 100%;
+      height: 160px;
+      border-radius: ${token.borderRadiusLG}px;
+
+      background: ${token.colorBgContainer};
+
+      &:hover .change-overlay {
+        opacity: 1;
+      }
+
+      &:hover .delete-icon {
+        opacity: 1;
+      }
+    `,
+    uploadingDisplay: css`
+      position: relative;
+
+      overflow: hidden;
+
+      width: 100%;
+      height: 160px;
+      border: 2px solid ${token.colorPrimary};
+      border-radius: ${token.borderRadiusLG}px;
+
+      background: ${token.colorFillSecondary};
+    `,
+    uploadingOverlay: css`
+      position: absolute;
+      z-index: 5;
+      inset: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: ${token.colorBgMask};
+    `,
   };
 });
 
@@ -189,10 +191,10 @@ const isLocalBlobUrl = (url: string): boolean => url.startsWith('blob:');
  * 圆形进度条组件 (复用自 MultiImagesUpload)
  */
 interface CircularProgressProps {
-  value: number; // 0-100
+  showText?: boolean; // 0-100
   size?: number;
   strokeWidth?: number;
-  showText?: boolean;
+  value: number;
 }
 
 const CircularProgress: FC<CircularProgressProps> = memo(
@@ -210,12 +212,12 @@ const CircularProgress: FC<CircularProgressProps> = memo(
     return (
       <div
         style={{
-          position: 'relative',
-          display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
-          width: size,
+          display: 'flex',
           height: size,
+          justifyContent: 'center',
+          position: 'relative',
+          width: size,
         }}
       >
         {/* Background circle */}
@@ -260,9 +262,9 @@ const CircularProgress: FC<CircularProgressProps> = memo(
         {showText && (
           <span
             style={{
+              color: theme.colorPrimary,
               fontSize: '12px',
               fontWeight: 600,
-              color: theme.colorPrimary,
               position: 'relative',
               zIndex: 1,
             }}
@@ -330,8 +332,8 @@ UploadingDisplay.displayName = 'UploadingDisplay';
  */
 interface SuccessDisplayProps {
   imageUrl: string;
-  onDelete?: () => void;
   onChangeImage?: () => void;
+  onDelete?: () => void;
 }
 
 const SuccessDisplay: FC<SuccessDisplayProps> = memo(({ imageUrl, onDelete, onChangeImage }) => {
@@ -398,8 +400,8 @@ const ImageUpload: FC<ImageUploadProps> = memo(({ value, onChange, style, classN
 
     // Set initial upload state
     setUploadState({
-      progress: 0,
       previewUrl,
+      progress: 0,
       status: 'pending',
     });
 
@@ -407,7 +409,6 @@ const ImageUpload: FC<ImageUploadProps> = memo(({ value, onChange, style, classN
       // Start upload
       const result = await uploadWithProgress({
         file,
-        skipCheckFileType: true,
         onStatusUpdate: (updateData) => {
           if (updateData.type === 'updateFile') {
             setUploadState((prev) => {
@@ -418,9 +419,9 @@ const ImageUpload: FC<ImageUploadProps> = memo(({ value, onChange, style, classN
 
               return {
                 ...prev,
-                status: fileStatus,
-                progress: updateData.value.uploadState?.progress || 0,
                 error: fileStatus === 'error' ? 'Upload failed' : undefined,
+                progress: updateData.value.uploadState?.progress || 0,
+                status: fileStatus,
               };
             });
           } else if (updateData.type === 'removeFile') {
@@ -428,6 +429,7 @@ const ImageUpload: FC<ImageUploadProps> = memo(({ value, onChange, style, classN
             setUploadState(null);
           }
         },
+        skipCheckFileType: true,
       });
 
       if (result?.url) {
@@ -440,8 +442,8 @@ const ImageUpload: FC<ImageUploadProps> = memo(({ value, onChange, style, classN
         prev
           ? {
               ...prev,
-              status: 'error',
               error: 'Upload failed',
+              status: 'error',
             }
           : null,
       );

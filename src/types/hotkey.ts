@@ -81,10 +81,11 @@ export const HotkeyGroupEnum = {
 export const HotkeyScopeEnum = {
   Chat: 'chat',
   Files: 'files',
-  Image: 'image',
   // 默认全局注册的快捷键 scope
   // https://react-hotkeys-hook.vercel.app/docs/documentation/hotkeys-provider
   Global: 'global',
+
+  Image: 'image',
 } as const;
 
 export type HotkeyId = (typeof HotkeyEnum)[keyof typeof HotkeyEnum];

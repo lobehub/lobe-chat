@@ -11,7 +11,6 @@ export function useDownloadImage() {
   const { t } = useTranslation('image');
 
   return {
-    isDownloading,
     downloadImage: useMemoizedFn(async (url: string, fileName: string) => {
       setIsDownloading(true);
       try {
@@ -27,5 +26,6 @@ export function useDownloadImage() {
         setIsDownloading(false);
       }
     }),
+    isDownloading,
   };
 }

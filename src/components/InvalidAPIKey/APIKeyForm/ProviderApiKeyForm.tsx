@@ -15,9 +15,9 @@ import { useApiKey } from './useApiKey';
 interface ProviderApiKeyFormProps {
   apiKeyPlaceholder?: string;
   avatar?: ReactNode;
+  description: string;
   provider: GlobalLLMProviderKey;
   showEndpoint?: boolean;
-  description: string;
 }
 
 const ProviderApiKeyForm = memo<ProviderApiKeyFormProps>(

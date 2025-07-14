@@ -67,11 +67,11 @@ export class AiModelModel {
         displayName: aiModels.displayName,
         enabled: aiModels.enabled,
         id: aiModels.id,
+        parameters: aiModels.parameters,
         pricing: aiModels.pricing,
         releasedAt: aiModels.releasedAt,
         source: aiModels.source,
         type: aiModels.type,
-        parameters: aiModels.parameters,
       })
       .from(aiModels)
       .where(and(eq(aiModels.providerId, providerId), eq(aiModels.userId, this.userId)))
@@ -94,11 +94,11 @@ export class AiModelModel {
         displayName: aiModels.displayName,
         enabled: aiModels.enabled,
         id: aiModels.id,
+        parameters: aiModels.parameters,
         providerId: aiModels.providerId,
         sort: aiModels.sort,
         source: aiModels.source,
         type: aiModels.type,
-        parameters: aiModels.parameters,
       })
       .from(aiModels)
       .where(and(eq(aiModels.userId, this.userId)));

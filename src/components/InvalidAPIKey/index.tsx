@@ -5,12 +5,12 @@ import { ErrorActionContainer } from '@/features/Conversation/Error/style';
 import APIKeyForm from './APIKeyForm';
 
 interface InvalidAPIKeyProps {
-  id: string;
-  provider?: string;
-  description: string;
   bedrockDescription: string;
-  onRecreate: () => void;
+  description: string;
+  id: string;
   onClose: () => void;
+  onRecreate: () => void;
+  provider?: string;
 }
 const InvalidAPIKey = memo<InvalidAPIKeyProps>(
   ({ id, provider, description, bedrockDescription, onRecreate, onClose }) => (

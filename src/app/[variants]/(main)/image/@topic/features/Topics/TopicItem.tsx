@@ -16,14 +16,14 @@ import { ImageGenerationTopic } from '@/types/generation';
 
 const formatTime = (date: Date, locale: string) => {
   return new Intl.DateTimeFormat(locale, {
-    month: 'long',
     day: 'numeric',
+    month: 'long',
   }).format(new Date(date));
 };
 
 interface TopicItemProps {
-  topic: ImageGenerationTopic;
   showMoreInfo?: boolean;
+  topic: ImageGenerationTopic;
 }
 
 const TopicItem = memo<TopicItemProps>(({ topic, showMoreInfo }) => {
@@ -48,11 +48,10 @@ const TopicItem = memo<TopicItemProps>(({ topic, showMoreInfo }) => {
     e.stopPropagation();
 
     modal.confirm({
-      title: t('topic.deleteConfirm'),
-      content: t('topic.deleteConfirmDesc'),
-      okText: t('delete', { ns: 'common' }),
       cancelText: t('cancel', { ns: 'common' }),
+      content: t('topic.deleteConfirmDesc'),
       okButtonProps: { danger: true },
+      okText: t('delete', { ns: 'common' }),
       onOk: async () => {
         try {
           await removeGenerationTopic(topic.id);
@@ -60,6 +59,7 @@ const TopicItem = memo<TopicItemProps>(({ topic, showMoreInfo }) => {
           console.error('Delete topic failed:', error);
         }
       },
+      title: t('topic.deleteConfirm'),
     });
   };
 

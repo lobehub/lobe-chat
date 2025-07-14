@@ -17,7 +17,7 @@ export class ServerService {
   }
 
   async updateTopicCover(id: string, coverUrl: string): Promise<GenerationTopicItem | undefined> {
-    return lambdaClient.generationTopic.updateTopicCover.mutate({ id, coverUrl });
+    return lambdaClient.generationTopic.updateTopicCover.mutate({ coverUrl, id });
   }
 
   async deleteTopic(id: string): Promise<GenerationTopicItem | undefined> {

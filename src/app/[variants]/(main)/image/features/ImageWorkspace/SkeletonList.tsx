@@ -13,20 +13,20 @@ const SkeletonList = memo(() => {
       <Block variant={'borderless'}>
         <Flexbox gap={12}>
           {/* Prompt text skeleton */}
-          <Skeleton.Button active style={{ width: '95%', height: 20 }} />
+          <Skeleton.Button active style={{ height: 20, width: '95%' }} />
 
           {/* Metadata skeleton */}
           <Flexbox gap={12} horizontal style={{ width: '100%' }}>
-            <Skeleton.Button active style={{ width: 120, height: 16 }} />
-            <Skeleton.Button active style={{ width: 80, height: 16 }} />
-            <Skeleton.Button active style={{ width: 60, height: 16 }} />
-            <Skeleton.Button active style={{ width: 70, height: 16 }} />
+            <Skeleton.Button active style={{ height: 16, width: 120 }} />
+            <Skeleton.Button active style={{ height: 16, width: 80 }} />
+            <Skeleton.Button active style={{ height: 16, width: 60 }} />
+            <Skeleton.Button active style={{ height: 16, width: 70 }} />
           </Flexbox>
 
           {/* Image grid skeleton - 2x2 layout */}
           <Grid maxItemWidth={200} rows={4} width={'100%'}>
             {Array.from({ length: 4 }).map((_, imageIndex) => (
-              <Skeleton.Button active key={imageIndex} style={{ width: '100%', height: 200 }} />
+              <Skeleton.Button active key={imageIndex} style={{ height: 200, width: '100%' }} />
             ))}
           </Grid>
         </Flexbox>
@@ -34,8 +34,8 @@ const SkeletonList = memo(() => {
       <div style={{ flex: 1 }} />
       <Center
         style={{
-          position: 'sticky',
           bottom: 24,
+          position: 'sticky',
           width: '100%',
         }}
       >

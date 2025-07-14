@@ -16,17 +16,20 @@ import { useTranslation } from 'react-i18next';
  * 有url的是现有图片，有file的是待上传文件
  */
 export interface ImageItem {
+  // 现有图片的URL
+  file?: File;
   id: string;
-  url?: string; // 现有图片的URL
-  file?: File; // 新选择的文件
-  previewUrl?: string; // 本地文件的预览URL，仅在file存在时使用
+  // 新选择的文件
+  previewUrl?: string;
+  url?: string; // 本地文件的预览URL，仅在file存在时使用
 }
 
 interface ImageManageModalProps {
-  open: boolean;
-  images: string[]; // 现有图片URL数组
+  images: string[];
+  // 现有图片URL数组
   onClose: () => void;
-  onComplete: (imageItems: ImageItem[]) => void; // 统一的完成回调
+  onComplete: (imageItems: ImageItem[]) => void;
+  open: boolean; // 统一的完成回调
 }
 
 // ======== Utils ======== //
@@ -46,16 +49,76 @@ const generateId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 11
 // ======== Styles ======== //
 
 const useStyles = createStyles(({ css, token }) => ({
+  content: css`
+    display: flex;
+    height: 480px;
+    background: ${token.colorBgContainer};
+  `,
+  fileName: css`
+    margin-block-start: 16px;
+    padding-block: 8px;
+    padding-inline: 12px;
+    border-radius: ${token.borderRadius}px;
+
+    font-family: ${token.fontFamilyCode};
+    font-size: 12px;
+    color: ${token.colorTextSecondary};
+
+    background: ${token.colorFillSecondary};
+  `,
+  footer: css`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding-block: 16px;
+    padding-inline: 24px;
+    border-block-start: 1px solid ${token.colorBorderSecondary};
+
+    background: ${token.colorBgContainer};
+  `,
   modal: css`
     .ant-modal-content {
       overflow: hidden;
       padding: 0;
     }
   `,
-  content: css`
+  newFileIndicator: css`
+    position: absolute;
+    z-index: 5;
+    inset-block-start: 4px;
+    inset-inline-start: 4px;
+
+    padding-block: 2px;
+    padding-inline: 6px;
+    border-radius: ${token.borderRadiusSM}px;
+
+    font-size: 10px;
+    font-weight: 500;
+    color: ${token.colorWhite};
+
+    background: ${token.colorSuccess};
+  `,
+  previewArea: css`
+    position: relative;
+
     display: flex;
-    height: 480px;
-    background: ${token.colorBgContainer};
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+  `,
+  previewEmpty: css`
+    font-size: 16px;
+    color: ${token.colorTextSecondary};
+  `,
+  previewImage: css`
+    max-width: 100%;
+    max-height: 320px;
+    border-radius: ${token.borderRadiusLG}px;
+    box-shadow: ${token.boxShadowSecondary};
   `,
   sidebar: css`
     overflow-y: auto;
@@ -65,11 +128,6 @@ const useStyles = createStyles(({ css, token }) => ({
     border-inline-end: 1px solid ${token.colorBorderSecondary};
 
     background: ${token.colorBgLayout};
-  `,
-  thumbnailList: css`
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
   `,
   thumbnail: css`
     cursor: pointer;
@@ -132,65 +190,10 @@ const useStyles = createStyles(({ css, token }) => ({
       background: ${token.colorErrorBg};
     }
   `,
-  newFileIndicator: css`
-    position: absolute;
-    z-index: 5;
-    inset-block-start: 4px;
-    inset-inline-start: 4px;
-
-    padding-block: 2px;
-    padding-inline: 6px;
-    border-radius: ${token.borderRadiusSM}px;
-
-    font-size: 10px;
-    font-weight: 500;
-    color: ${token.colorWhite};
-
-    background: ${token.colorSuccess};
-  `,
-  previewArea: css`
-    position: relative;
-
+  thumbnailList: css`
     display: flex;
-    flex: 1;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    padding: 24px;
-  `,
-  previewImage: css`
-    max-width: 100%;
-    max-height: 320px;
-    border-radius: ${token.borderRadiusLG}px;
-    box-shadow: ${token.boxShadowSecondary};
-  `,
-  previewEmpty: css`
-    font-size: 16px;
-    color: ${token.colorTextSecondary};
-  `,
-  fileName: css`
-    margin-block-start: 16px;
-    padding-block: 8px;
-    padding-inline: 12px;
-    border-radius: ${token.borderRadius}px;
-
-    font-family: ${token.fontFamilyCode};
-    font-size: 12px;
-    color: ${token.colorTextSecondary};
-
-    background: ${token.colorFillSecondary};
-  `,
-  footer: css`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    padding-block: 16px;
-    padding-inline: 24px;
-    border-block-start: 1px solid ${token.colorBorderSecondary};
-
-    background: ${token.colorBgContainer};
+    gap: 8px;
   `,
 }));
 
@@ -277,8 +280,8 @@ const ImageManageModal: FC<ImageManageModalProps> = memo(
 
       // 创建新的ImageItem，为每个文件生成一次性的预览URL
       const newItems: ImageItem[] = Array.from(files).map((file) => ({
-        id: generateId(),
         file,
+        id: generateId(),
         previewUrl: URL.createObjectURL(file), // 只创建一次
       }));
 
@@ -322,7 +325,7 @@ const ImageManageModal: FC<ImageManageModalProps> = memo(
           <img
             alt={`Image ${index + 1}`}
             src={displayUrl}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            style={{ height: '100%', objectFit: 'cover', width: '100%' }}
           />
 
           {/* 新文件标识 */}

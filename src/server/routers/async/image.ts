@@ -23,29 +23,29 @@ const imageProcedure = asyncAuthedProcedure.use(async (opts) => {
   return opts.next({
     ctx: {
       asyncTaskModel: new AsyncTaskModel(ctx.serverDB, ctx.userId),
-      generationModel: new GenerationModel(ctx.serverDB, ctx.userId),
       fileModel: new FileModel(ctx.serverDB, ctx.userId),
+      generationModel: new GenerationModel(ctx.serverDB, ctx.userId),
       generationService: new GenerationService(ctx.serverDB, ctx.userId),
     },
   });
 });
 
 const createImageInputSchema = z.object({
-  taskId: z.string(),
   generationId: z.string(),
-  provider: z.string(),
   model: z.string(),
   params: z
     .object({
-      prompt: z.string(),
-      imageUrls: z.array(z.string()).optional(),
-      width: z.number().optional(),
+      cfg: z.number().optional(),
       height: z.number().optional(),
+      imageUrls: z.array(z.string()).optional(),
+      prompt: z.string(),
       seed: z.number().nullable().optional(),
       steps: z.number().optional(),
-      cfg: z.number().optional(),
+      width: z.number().optional(),
     })
     .passthrough(),
+  provider: z.string(),
+  taskId: z.string(),
 });
 
 /**
@@ -63,46 +63,46 @@ const checkAbortSignal = (signal: AbortSignal) => {
 const categorizeError = (
   error: any,
   isAborted: boolean,
-): { errorType: AsyncTaskErrorType; errorMessage: string } => {
+): { errorMessage: string; errorType: AsyncTaskErrorType } => {
   // FIXME: 401 的问题应该放到 agentRuntime 中处理会更好
   if (error.errorType === AgentRuntimeErrorType.InvalidProviderAPIKey || error?.status === 401) {
     return {
-      errorType: AsyncTaskErrorType.InvalidProviderAPIKey,
       errorMessage: 'Invalid provider API key, please check your API key',
+      errorType: AsyncTaskErrorType.InvalidProviderAPIKey,
     };
   }
 
   if (error instanceof AsyncTaskError) {
     return {
-      errorType: error.name as AsyncTaskErrorType,
       errorMessage: typeof error.body === 'string' ? error.body : error.body.detail,
+      errorType: error.name as AsyncTaskErrorType,
     };
   }
 
   if (isAborted || error.message?.includes('aborted')) {
     return {
-      errorType: AsyncTaskErrorType.Timeout,
       errorMessage: 'Image generation task timed out, please try again',
+      errorType: AsyncTaskErrorType.Timeout,
     };
   }
 
   if (error.message?.includes('timeout') || error.name === 'TimeoutError') {
     return {
-      errorType: AsyncTaskErrorType.Timeout,
       errorMessage: 'Image generation task timed out, please try again',
+      errorType: AsyncTaskErrorType.Timeout,
     };
   }
 
   if (error.message?.includes('network') || error.name === 'NetworkError') {
     return {
-      errorType: AsyncTaskErrorType.ServerError,
       errorMessage: error.message || 'Network error occurred during image generation',
+      errorType: AsyncTaskErrorType.ServerError,
     };
   }
 
   return {
-    errorType: AsyncTaskErrorType.ServerError,
     errorMessage: error.message || 'Unknown error occurred during image generation',
+    errorType: AsyncTaskErrorType.ServerError,
   };
 };
 
@@ -111,12 +111,12 @@ export const imageRouter = router({
     const { taskId, generationId, provider, model, params } = input;
 
     log('Starting async image generation: %O', {
-      taskId,
       generationId,
-      provider,
+      imageParams: { height: params.height, steps: params.steps, width: params.width },
       model,
       prompt: params.prompt,
-      imageParams: { width: params.width, height: params.height, steps: params.steps },
+      provider,
+      taskId,
     });
 
     log('Updating task status to Processing: %s', taskId);
@@ -149,11 +149,11 @@ export const imageRouter = router({
         checkAbortSignal(signal);
 
         log('Image generation successful: %O', {
+          height: response.height,
           imageUrl: response.imageUrl.startsWith('data:')
             ? response.imageUrl.slice(0, IMAGE_URL_PREVIEW_LENGTH) + '...'
             : response.imageUrl,
           width: response.width,
-          height: response.height,
         });
 
         log('Transforming image for generation');
@@ -175,24 +175,25 @@ export const imageRouter = router({
         await ctx.generationModel.createAssetAndFile(
           generationId,
           {
-            type: 'image',
+            height: height ?? image.height,
             originalUrl: imageUrl,
+            thumbnailUrl: thumbnailImageUrl,
+            type: 'image',
             url: uploadedImageUrl,
             width: width ?? image.width,
-            height: height ?? image.height,
-            thumbnailUrl: thumbnailImageUrl,
           },
           {
-            fileType: image.mime,
             fileHash: image.hash,
-            name: `${params.prompt.slice(0, FILENAME_MAX_LENGTH)}.${image.extension}`, // Use first 50 characters of prompt as filename
+            fileType: image.mime,
+            metadata: {
+              generationId,
+              height: image.height,
+              width: image.width,
+            },
+            name: `${params.prompt.slice(0, FILENAME_MAX_LENGTH)}.${image.extension}`,
+            // Use first 50 characters of prompt as filename
             size: image.size,
             url: uploadedImageUrl,
-            metadata: {
-              width: image.width,
-              height: image.height,
-              generationId,
-            },
           },
         );
 
@@ -228,9 +229,9 @@ export const imageRouter = router({
       }
 
       log('Async image generation failed: %O', {
-        taskId,
-        generationId,
         error: error.message || error,
+        generationId,
+        taskId,
       });
 
       // Improved error categorization logic

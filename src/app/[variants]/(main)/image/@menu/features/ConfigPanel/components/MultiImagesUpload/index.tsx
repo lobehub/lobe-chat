@@ -19,19 +19,25 @@ import ImageManageModal, { type ImageItem } from './ImageManageModal';
  * Internal type for managing upload state and display
  */
 interface DisplayItem {
-  id: string; // Unique identifier for the item
-  url: string; // URL for display, can be a blob: URL for local previews or a remote URL
-  file?: File; // The raw File object, present only for new, not-yet-uploaded images
-  status?: FileUploadStatus; // Upload status - using the correct type from file upload system
-  error?: string; // Error message if upload failed
-  progress?: number; // Upload progress (0-100)
+  // Upload status - using the correct type from file upload system
+  error?: string;
+  // URL for display, can be a blob: URL for local previews or a remote URL
+  file?: File;
+  id: string;
+  // Error message if upload failed
+  progress?: number;
+  // The raw File object, present only for new, not-yet-uploaded images
+  status?: FileUploadStatus;
+  // Unique identifier for the item
+  url: string; // Upload progress (0-100)
 }
 
 export interface MultiImagesUploadProps {
-  value?: string[]; // Array of image URLs
-  onChange?: (urls: string[]) => void; // Callback when URLs change
-  className?: string;
+  // Callback when URLs change
+  className?: string; // Array of image URLs
+  onChange?: (urls: string[]) => void;
   style?: React.CSSProperties;
+  value?: string[];
 }
 
 // ======== Styles ======== //
@@ -43,123 +49,6 @@ const useStyles = createStyles(({ css, token }) => {
   const thumbnailSize = availableWidth / 4;
 
   return {
-    placeholder: css`
-      cursor: pointer;
-
-      width: 100%;
-      height: 120px;
-      border: 2px dashed ${token.colorBorder};
-      border-radius: ${token.borderRadiusLG}px;
-
-      background: ${token.colorFillAlter};
-
-      transition: all 0.2s ease;
-
-      &:hover {
-        border-color: ${token.colorPrimary};
-        background: ${token.colorFillSecondary};
-      }
-    `,
-    progress: css`
-      cursor: pointer;
-
-      position: relative;
-
-      overflow: hidden;
-
-      width: 100%;
-      height: 120px;
-      border: 2px solid ${token.colorPrimary};
-      border-radius: ${token.borderRadiusLG}px;
-
-      background: ${token.colorFillSecondary};
-
-      transition: all 0.2s ease;
-    `,
-    // Image thumbnails styles
-    imageThumbnails: css`
-      cursor: pointer;
-
-      display: flex;
-      gap: 8px;
-
-      width: 100%;
-      height: ${thumbnailSize}px;
-      padding: 0;
-    `,
-    // Single image display styles
-    singleImageDisplay: css`
-      cursor: pointer;
-
-      position: relative;
-
-      overflow: hidden;
-
-      width: 100%;
-      height: 160px;
-      border-radius: ${token.borderRadiusLG}px;
-
-      background: ${token.colorBgContainer};
-
-      &:hover .upload-more-overlay {
-        opacity: 1;
-      }
-
-      &:hover .delete-icon {
-        opacity: 1;
-      }
-    `,
-    uploadMoreOverlay: css`
-      position: absolute;
-      z-index: 5;
-      inset-block: 0 0;
-      inset-inline: 0 0;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      opacity: 0;
-      background: ${token.colorBgMask};
-
-      transition: opacity 0.2s ease;
-    `,
-    uploadMoreButton: css`
-      cursor: pointer;
-
-      padding-block: 8px;
-      padding-inline: 16px;
-      border: 1px solid ${token.colorBorder};
-      border-radius: ${token.borderRadius}px;
-
-      font-size: 12px;
-      font-weight: 500;
-      color: ${token.colorText};
-
-      background: ${token.colorBgContainer};
-      box-shadow: ${token.boxShadowSecondary};
-
-      &:hover {
-        border-color: ${token.colorPrimary};
-        color: ${token.colorPrimary};
-        background: ${token.colorBgElevated};
-      }
-    `,
-    imageItem: css`
-      position: relative;
-
-      overflow: hidden;
-
-      width: ${thumbnailSize}px;
-      height: ${thumbnailSize}px;
-      border-radius: ${token.borderRadius}px;
-
-      background: ${token.colorBgContainer};
-
-      &:hover .delete-icon {
-        opacity: 1;
-      }
-    `,
     deleteIcon: css`
       cursor: pointer;
 
@@ -188,6 +77,35 @@ const useStyles = createStyles(({ css, token }) => {
         background: ${token.colorErrorBg};
       }
     `,
+
+    imageItem: css`
+      position: relative;
+
+      overflow: hidden;
+
+      width: ${thumbnailSize}px;
+      height: ${thumbnailSize}px;
+      border-radius: ${token.borderRadius}px;
+
+      background: ${token.colorBgContainer};
+
+      &:hover .delete-icon {
+        opacity: 1;
+      }
+    `,
+
+    // Image thumbnails styles
+    imageThumbnails: css`
+      cursor: pointer;
+
+      display: flex;
+      gap: 8px;
+
+      width: 100%;
+      height: ${thumbnailSize}px;
+      padding: 0;
+    `,
+
     moreOverlay: css`
       position: absolute;
       inset-block: 0 0;
@@ -203,12 +121,60 @@ const useStyles = createStyles(({ css, token }) => {
 
       background: ${token.colorBgMask};
     `,
+
+    placeholder: css`
+      cursor: pointer;
+
+      width: 100%;
+      height: 120px;
+      border: 2px dashed ${token.colorBorder};
+      border-radius: ${token.borderRadiusLG}px;
+
+      background: ${token.colorFillAlter};
+
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: ${token.colorPrimary};
+        background: ${token.colorFillSecondary};
+      }
+    `,
+
+    placeholderIcon: css`
+      color: ${token.colorTextTertiary};
+    `,
+
     placeholderText: css`
       font-size: 12px; /* Made smaller than default token.fontSize (14px) */
       line-height: 1.4;
       color: ${token.colorTextSecondary};
       text-align: center;
     `,
+
+    progress: css`
+      cursor: pointer;
+
+      position: relative;
+
+      overflow: hidden;
+
+      width: 100%;
+      height: 120px;
+      border: 2px solid ${token.colorPrimary};
+      border-radius: ${token.borderRadiusLG}px;
+
+      background: ${token.colorFillSecondary};
+
+      transition: all 0.2s ease;
+    `,
+
+    progressPrimary: css`
+      margin-block-end: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      color: ${token.colorPrimary};
+    `,
+
     progressText: css`
       font-size: 12px;
       font-weight: 500;
@@ -216,14 +182,63 @@ const useStyles = createStyles(({ css, token }) => {
       color: ${token.colorText};
       text-align: center;
     `,
-    progressPrimary: css`
-      margin-block-end: 4px;
-      font-size: 14px;
-      font-weight: 600;
-      color: ${token.colorPrimary};
+    // Single image display styles
+    singleImageDisplay: css`
+      cursor: pointer;
+
+      position: relative;
+
+      overflow: hidden;
+
+      width: 100%;
+      height: 160px;
+      border-radius: ${token.borderRadiusLG}px;
+
+      background: ${token.colorBgContainer};
+
+      &:hover .upload-more-overlay {
+        opacity: 1;
+      }
+
+      &:hover .delete-icon {
+        opacity: 1;
+      }
     `,
-    placeholderIcon: css`
-      color: ${token.colorTextTertiary};
+    uploadMoreButton: css`
+      cursor: pointer;
+
+      padding-block: 8px;
+      padding-inline: 16px;
+      border: 1px solid ${token.colorBorder};
+      border-radius: ${token.borderRadius}px;
+
+      font-size: 12px;
+      font-weight: 500;
+      color: ${token.colorText};
+
+      background: ${token.colorBgContainer};
+      box-shadow: ${token.boxShadowSecondary};
+
+      &:hover {
+        border-color: ${token.colorPrimary};
+        color: ${token.colorPrimary};
+        background: ${token.colorBgElevated};
+      }
+    `,
+    uploadMoreOverlay: css`
+      position: absolute;
+      z-index: 5;
+      inset-block: 0 0;
+      inset-inline: 0 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      opacity: 0;
+      background: ${token.colorBgMask};
+
+      transition: opacity 0.2s ease;
     `,
   };
 });
@@ -264,11 +279,12 @@ ImageUploadPlaceholder.displayName = 'ImageUploadPlaceholder';
 // ======== 圆形进度组件 ======== //
 
 interface CircularProgressProps {
-  value: number; // 0-100
-  size?: number;
-  strokeWidth?: number;
   className?: string;
   showText?: boolean;
+  // 0-100
+  size?: number;
+  strokeWidth?: number;
+  value: number;
 }
 
 const CircularProgress: FC<CircularProgressProps> = memo(
@@ -287,12 +303,12 @@ const CircularProgress: FC<CircularProgressProps> = memo(
       <div
         className={className}
         style={{
-          position: 'relative',
-          display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
-          width: size,
+          display: 'flex',
           height: size,
+          justifyContent: 'center',
+          position: 'relative',
+          width: size,
         }}
       >
         {/* Background circle */}
@@ -337,9 +353,9 @@ const CircularProgress: FC<CircularProgressProps> = memo(
         {showText && (
           <span
             style={{
+              color: theme.colorPrimary,
               fontSize: '12px',
               fontWeight: 600,
-              color: theme.colorPrimary,
               position: 'relative',
               zIndex: 1,
             }}
@@ -356,9 +372,9 @@ CircularProgress.displayName = 'CircularProgress';
 
 interface ImageUploadProgressProps {
   completedCount: number;
-  totalCount: number;
   currentProgress: number;
   showCount?: boolean;
+  totalCount: number;
 }
 
 const ImageUploadProgress: FC<ImageUploadProgressProps> = memo(
@@ -416,7 +432,7 @@ const ImageThumbnails: FC<ImageThumbnailsProps> = memo(({ images, onClick, onDel
         <img
           alt={`Uploaded image ${index + 1}`}
           src={imageUrl}
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          style={{ height: '100%', objectFit: 'cover', width: '100%' }}
         />
         {!showOverlay && (
           <div
@@ -465,7 +481,7 @@ const SingleImageDisplay: FC<SingleImageDisplayProps> = memo(({ imageUrl, onClic
       <img
         alt="Uploaded image"
         src={imageUrl}
-        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        style={{ height: '100%', objectFit: 'cover', width: '100%' }}
       />
 
       {/* Delete button */}
@@ -534,11 +550,11 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
 
       // Create initial display items with blob URLs for immediate preview
       const newDisplayItems: DisplayItem[] = files.map((file) => ({
-        id: `${Date.now()}-${file.name}`,
-        url: URL.createObjectURL(file),
         file,
-        status: 'pending' as FileUploadStatus,
+        id: `${Date.now()}-${file.name}`,
         progress: 0,
+        status: 'pending' as FileUploadStatus,
+        url: URL.createObjectURL(file),
       }));
 
       setDisplayItems((prev) => [...prev, ...newDisplayItems]);
@@ -547,7 +563,7 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
       const uploadPromises = newDisplayItems.map((item) =>
         uploadWithProgress({
           file: item.file!,
-          skipCheckFileType: true, // Skip file type check for images
+          // Skip file type check for images
           onStatusUpdate: (updateData) => {
             if (updateData.type === 'updateFile') {
               setDisplayItems((prev) =>
@@ -555,9 +571,9 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
                   displayItem.id === item.id
                     ? {
                         ...displayItem,
-                        status: updateData.value.status,
-                        progress: updateData.value.uploadState?.progress || 0,
                         error: updateData.value.status === 'error' ? 'Upload failed' : undefined,
+                        progress: updateData.value.uploadState?.progress || 0,
+                        status: updateData.value.status,
                       }
                     : displayItem,
                 ),
@@ -566,6 +582,7 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
               setDisplayItems((prev) => prev.filter((displayItem) => displayItem.id !== item.id));
             }
           },
+          skipCheckFileType: true,
         }),
       );
 
@@ -585,10 +602,10 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
               item.id === displayItem.id
                 ? {
                     ...item,
-                    url: result.value!.url,
-                    status: 'success',
+                    file: undefined,
                     progress: 100,
-                    file: undefined, // Clear file reference after successful upload
+                    status: 'success',
+                    url: result.value!.url, // Clear file reference after successful upload
                   }
                 : item,
             ),
@@ -600,9 +617,9 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
               item.id === displayItem.id
                 ? {
                     ...item,
-                    status: 'error',
-                    progress: 0,
                     error: 'Upload failed',
+                    progress: 0,
+                    status: 'error',
                   }
                 : item,
             ),

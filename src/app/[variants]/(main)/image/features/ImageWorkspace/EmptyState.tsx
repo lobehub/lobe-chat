@@ -9,13 +9,13 @@ const EmptyState = memo(() => {
     <>
       <AuroraBackground
         style={{
+          height: 400,
+          inset: 0,
+          overflow: 'hidden',
+          pointerEvents: 'none',
           position: 'absolute',
           width: '100%',
-          height: 400,
-          overflow: 'hidden',
-          inset: 0,
           zIndex: 0,
-          pointerEvents: 'none',
         }}
       />
       <Flexbox

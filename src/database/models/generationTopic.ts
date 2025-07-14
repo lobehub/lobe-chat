@@ -41,8 +41,8 @@ export class GenerationTopicModel {
     const [newGenerationTopic] = await this.db
       .insert(generationTopics)
       .values({
-        userId: this.userId,
         title,
+        userId: this.userId,
       })
       .returning();
 

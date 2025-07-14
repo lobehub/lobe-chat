@@ -64,6 +64,7 @@ export const providerRuntimeMap = {
   cloudflare: LobeCloudflareAI,
   cohere: LobeCohereAI,
   deepseek: LobeDeepSeekAI,
+  fal: LobeFalAI,
   fireworksai: LobeFireworksAI,
   giteeai: LobeGiteeAI,
   github: LobeGithubAI,
@@ -107,5 +108,4 @@ export const providerRuntimeMap = {
   xinference: LobeXinferenceAI,
   zeroone: LobeZeroOneAI,
   zhipu: LobeZhipuAI,
-  fal: LobeFalAI,
 };

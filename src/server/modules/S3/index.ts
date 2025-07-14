@@ -148,11 +148,11 @@ export class S3 {
   public async uploadMedia(key: string, buffer: Buffer) {
     const command = new PutObjectCommand({
       ACL: this.setAcl ? 'public-read' : undefined,
-      Bucket: this.bucket,
-      Key: key,
       Body: buffer,
+      Bucket: this.bucket,
       CacheControl: `public, max-age=${YEAR}`,
       ContentType: inferContentTypeFromImageUrl(key)!,
+      Key: key,
     });
 
     await this.client.send(command);

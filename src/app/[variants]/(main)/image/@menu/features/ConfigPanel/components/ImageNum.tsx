@@ -10,10 +10,8 @@ import { useImageStore } from '@/store/image';
 import { imageGenerationConfigSelectors } from '@/store/image/selectors';
 
 const useStyles = createStyles(({ css, token }) => ({
-  container: css`
-    display: flex;
-    gap: 8px;
-    align-items: center;
+  actionButton: css`
+    flex-shrink: 0;
   `,
 
   button: css`
@@ -54,16 +52,32 @@ const useStyles = createStyles(({ css, token }) => ({
     }
   `,
 
-  selectedButton: css`
-    border-color: ${token.colorPrimary};
-    color: ${token.colorPrimary};
-    background: ${token.colorPrimaryBg};
+  cancelButton: css`
+    border-color: ${token.colorBorder};
+    color: ${token.colorTextTertiary};
 
     &:hover {
-      border-color: ${token.colorPrimary};
-      color: ${token.colorPrimary};
-      background: ${token.colorPrimaryBgHover};
+      border-color: ${token.colorBorderSecondary};
+      color: ${token.colorText};
+      background: ${token.colorBgTextHover};
     }
+  `,
+
+  confirmButton: css`
+    border-color: ${token.colorSuccess};
+    color: ${token.colorSuccess};
+
+    &:hover {
+      border-color: ${token.colorSuccessHover};
+      color: ${token.colorSuccessHover};
+      background: ${token.colorSuccessBg};
+    }
+  `,
+
+  container: css`
+    display: flex;
+    gap: 8px;
+    align-items: center;
   `,
 
   editContainer: css`
@@ -83,38 +97,24 @@ const useStyles = createStyles(({ css, token }) => ({
     }
   `,
 
-  actionButton: css`
-    flex-shrink: 0;
-  `,
-
-  confirmButton: css`
-    border-color: ${token.colorSuccess};
-    color: ${token.colorSuccess};
+  selectedButton: css`
+    border-color: ${token.colorPrimary};
+    color: ${token.colorPrimary};
+    background: ${token.colorPrimaryBg};
 
     &:hover {
-      border-color: ${token.colorSuccessHover};
-      color: ${token.colorSuccessHover};
-      background: ${token.colorSuccessBg};
-    }
-  `,
-
-  cancelButton: css`
-    border-color: ${token.colorBorder};
-    color: ${token.colorTextTertiary};
-
-    &:hover {
-      border-color: ${token.colorBorderSecondary};
-      color: ${token.colorText};
-      background: ${token.colorBgTextHover};
+      border-color: ${token.colorPrimary};
+      color: ${token.colorPrimary};
+      background: ${token.colorPrimaryBgHover};
     }
   `,
 }));
 
 interface ImageNumSelectorProps {
-  presetCounts?: number[];
-  min?: number;
-  max?: number;
   disabled?: boolean;
+  max?: number;
+  min?: number;
+  presetCounts?: number[];
 }
 
 const ImageNum = memo<ImageNumSelectorProps>(

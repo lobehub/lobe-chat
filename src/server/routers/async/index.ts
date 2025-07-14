@@ -7,8 +7,8 @@ import { ragEvalRouter } from './ragEval';
 export const asyncRouter = router({
   file: fileRouter,
   healthcheck: publicProcedure.query(() => "i'm live!"),
-  ragEval: ragEvalRouter,
   image: imageRouter,
+  ragEval: ragEvalRouter,
 });
 
 export type AsyncRouter = typeof asyncRouter;

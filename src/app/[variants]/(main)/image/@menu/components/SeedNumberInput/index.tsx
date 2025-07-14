@@ -6,7 +6,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-export interface SeedNumberInputProps extends InputNumberProps {}
+export type SeedNumberInputProps = InputNumberProps;
 
 const SeedNumberInput = memo<SeedNumberInputProps>(
   ({ value, step = 1, onChange, style, className, ...rest }) => {
@@ -26,7 +26,7 @@ const SeedNumberInput = memo<SeedNumberInputProps>(
             disabled={!value}
             icon={Dices}
             onClick={() => onChange?.(null)}
-            style={{ width: 62, flex: 'none' }}
+            style={{ flex: 'none', width: 62 }}
             type={'primary'}
             variant={'outlined'}
           />

@@ -302,12 +302,12 @@ export interface AiProviderModelListItem {
   displayName?: string;
   enabled: boolean;
   id: string;
+  parameters?: Record<string, any>;
   pricing?: ChatModelPricing;
   releasedAt?: string;
   settings?: AiModelSettings;
   source?: AiModelSourceType;
   type: AiModelType;
-  parameters?: Record<string, any>;
 }
 
 // Update
@@ -354,9 +354,9 @@ export interface EnabledAiModel {
   displayName?: string;
   enabled?: boolean;
   id: string;
+  parameters?: Record<string, any>;
   providerId: string;
   settings?: AiModelSettings;
   sort?: number;
   type: AiModelType;
-  parameters?: Record<string, any>;
 }

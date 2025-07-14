@@ -19,8 +19,8 @@ import SizeSelect from './components/SizeSelect';
 import StepsSliderInput from './components/StepsSliderInput';
 
 interface ConfigItemLayoutProps {
-  label?: string;
   children: ReactNode;
+  label?: string;
 }
 
 const ConfigItemLayout = memo<ConfigItemLayoutProps>(({ label, children }) => {

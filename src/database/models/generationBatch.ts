@@ -30,8 +30,8 @@ export class GenerationBatchModel {
 
   async create(value: NewGenerationBatch): Promise<GenerationBatchItem> {
     log('Creating generation batch: %O', {
-      userId: this.userId,
       topicId: value.generationTopicId,
+      userId: this.userId,
     });
 
     const [result] = await this.db
@@ -58,11 +58,11 @@ export class GenerationBatchModel {
     log('Finding generation batches by topic ID: %s for user: %s', topicId, this.userId);
 
     const results = await this.db.query.generationBatches.findMany({
+      orderBy: (table, { desc }) => [desc(table.createdAt)],
       where: and(
         eq(generationBatches.generationTopicId, topicId),
         eq(generationBatches.userId, this.userId),
       ),
-      orderBy: (table, { desc }) => [desc(table.createdAt)],
     });
 
     log('Found %d generation batches for topic %s', results.length, topicId);
@@ -80,11 +80,11 @@ export class GenerationBatchModel {
     );
 
     const results = await this.db.query.generationBatches.findMany({
+      orderBy: (table, { asc }) => [asc(table.createdAt)],
       where: and(
         eq(generationBatches.generationTopicId, topicId),
         eq(generationBatches.userId, this.userId),
       ),
-      orderBy: (table, { asc }) => [asc(table.createdAt)],
       with: {
         generations: {
           orderBy: (table, { asc }) => [asc(table.createdAt), asc(table.id)],
@@ -131,15 +131,15 @@ export class GenerationBatchModel {
         ]);
 
         return {
-          id: batch.id,
-          provider: batch.provider,
-          model: batch.model,
-          prompt: batch.prompt,
-          width: batch.width,
-          height: batch.height,
           config,
           createdAt: batch.createdAt,
           generations,
+          height: batch.height,
+          id: batch.id,
+          model: batch.model,
+          prompt: batch.prompt,
+          provider: batch.provider,
+          width: batch.width,
         };
       }),
     );

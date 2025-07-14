@@ -7,33 +7,33 @@ export interface GenerationItemProps {
 }
 
 export interface ActionButtonsProps {
+  onCopySeed?: () => void;
   onDelete: () => void;
   onDownload?: () => void;
-  onCopySeed?: () => void;
-  showDownload?: boolean;
-  showCopySeed?: boolean;
   seedTooltip?: string;
+  showCopySeed?: boolean;
+  showDownload?: boolean;
 }
 
 export interface SuccessStateProps {
-  generation: Generation;
-  prompt: string;
   aspectRatio: string;
+  generation: Generation;
+  onCopySeed?: () => void;
   onDelete: () => void;
   onDownload: () => void;
-  onCopySeed?: () => void;
+  prompt: string;
   seedTooltip?: string;
 }
 
 export interface ErrorStateProps {
-  generation: Generation;
   aspectRatio: string;
-  onDelete: () => void;
+  generation: Generation;
   onCopyError: () => void;
+  onDelete: () => void;
 }
 
 export interface LoadingStateProps {
-  generation: Generation;
   aspectRatio: string;
+  generation: Generation;
   onDelete: () => void;
 }

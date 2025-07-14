@@ -12,12 +12,12 @@ import { LoadingContext } from './LoadingContext';
 import ProviderApiKeyForm from './ProviderApiKeyForm';
 
 interface APIKeyFormProps {
-  id: string;
-  provider?: string;
-  description: string;
   bedrockDescription: string;
-  onRecreate: () => void;
+  description: string;
+  id: string;
   onClose: () => void;
+  onRecreate: () => void;
+  provider?: string;
 }
 
 const APIKeyForm = memo<APIKeyFormProps>(

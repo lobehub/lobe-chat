@@ -40,10 +40,10 @@ const falImageModels: AIImageModelCard[] = [
     displayName: 'Imagen 4',
     enabled: true,
     id: 'imagen4/preview',
+    organization: 'Deepmind',
     parameters: imagen4ParamsSchema,
     releasedAt: '2025-05-21',
     type: 'image',
-    organization: 'Deepmind',
   },
 ];
 

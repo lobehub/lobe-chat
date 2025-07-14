@@ -41,9 +41,9 @@ interface ImageItemProps {
   loading?: boolean;
   onClick?: () => void;
   onRemove?: () => void;
+  preview?: ImageProps['preview'];
   style?: CSSProperties;
   url?: string;
-  preview?: ImageProps['preview'];
 }
 
 const ImageItem = memo<ImageItemProps>(

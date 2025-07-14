@@ -34,8 +34,8 @@ export class GenerationModel {
 
   async create(value: Omit<NewGeneration, 'userId'>): Promise<GenerationItem> {
     log('Creating generation: %O', {
-      userId: this.userId,
       generationBatchId: value.generationBatchId,
+      userId: this.userId,
     });
 
     const [result] = await this.db
@@ -74,8 +74,8 @@ export class GenerationModel {
 
   async update(id: string, value: Partial<NewGeneration>, trx?: Transaction) {
     log('Updating generation: %s with values: %O', id, {
-      hasAsset: !!value.asset,
       asyncTaskId: value.asyncTaskId,
+      hasAsset: !!value.asset,
     });
 
     const executeUpdate = async (tx: Transaction) => {
@@ -179,17 +179,17 @@ export class GenerationModel {
 
     // Build the Generation object following the same structure as in generationBatch.ts
     const result: Generation = {
-      id: generation.id,
       asset,
-      seed: generation.seed,
-      createdAt: generation.createdAt,
       asyncTaskId: generation.asyncTaskId || null,
+      createdAt: generation.createdAt,
+      id: generation.id,
+      seed: generation.seed,
       task: {
-        id: generation.asyncTaskId || '',
-        status: (generation.asyncTask?.status as AsyncTaskStatus) || 'pending',
         error: generation.asyncTask?.error
           ? (generation.asyncTask.error as AsyncTaskError)
           : undefined,
+        id: generation.asyncTaskId || '',
+        status: (generation.asyncTask?.status as AsyncTaskStatus) || 'pending',
       },
     };
     return result;

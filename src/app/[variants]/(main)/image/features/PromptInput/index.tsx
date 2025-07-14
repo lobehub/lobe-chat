@@ -14,19 +14,11 @@ import { useGenerationConfigParam } from '@/store/image/slices/generationConfig/
 import PromptTitle from './Title';
 
 interface PromptInputProps {
-  showTitle?: boolean;
   disableAnimation?: boolean;
+  showTitle?: boolean;
 }
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
-  wrapper: css`
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    align-items: center;
-
-    width: 100%;
-  `,
   container: css`
     border: 1px solid ${token.colorBorderSecondary};
     border-radius: ${token.borderRadiusLG * 1.5}px;
@@ -37,6 +29,14 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
         ? `0 0 48px 32px ${token.colorBgContainerSecondary}`
         : `0 0 0  ${token.colorBgContainerSecondary}`},
       0 32px 0 ${token.colorBgContainerSecondary};
+  `,
+  wrapper: css`
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+
+    width: 100%;
   `,
 }));
 
@@ -85,8 +85,8 @@ const PromptInput = ({ showTitle = false }: PromptInputProps) => {
           onKeyDown={handleKeyDown}
           placeholder={t('config.prompt.placeholder')}
           style={{
-            padding: 0,
             borderRadius: 0,
+            padding: 0,
           }}
           value={value}
           variant={'borderless'}
@@ -99,9 +99,9 @@ const PromptInput = ({ showTitle = false }: PromptInputProps) => {
           size={'large'}
           style={{
             fontWeight: 500,
-            width: 64,
             height: 64,
             minWidth: 64,
+            width: 64,
           }}
           title={isCreating ? t('generation.status.generating') : t('generation.actions.generate')}
           type={'primary'}

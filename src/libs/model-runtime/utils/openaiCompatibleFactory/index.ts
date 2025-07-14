@@ -81,8 +81,8 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
     ) => ReadableStream<OpenAI.ChatCompletionChunk>;
     noUserId?: boolean;
   };
-  createImage?: (payload: CreateImagePayload & { client: OpenAI }) => Promise<CreateImageResponse>;
   constructorOptions?: ConstructorOptions<T>;
+  createImage?: (payload: CreateImagePayload & { client: OpenAI }) => Promise<CreateImageResponse>;
   customClient?: CustomClientOptions<T>;
   debug?: {
     chatCompletion: () => boolean;

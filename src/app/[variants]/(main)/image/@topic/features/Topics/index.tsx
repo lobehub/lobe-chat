@@ -6,8 +6,8 @@ import React from 'react';
 import SkeletonList from './SkeletonList';
 
 const TopicsList = dynamic(() => import('./TopicList'), {
-  ssr: false,
   loading: () => <SkeletonList />,
+  ssr: false,
 });
 
 const Topics = () => {

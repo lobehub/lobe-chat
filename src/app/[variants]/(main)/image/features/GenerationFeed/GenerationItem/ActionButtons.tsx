@@ -32,22 +32,22 @@ export const ActionButtons = memo<ActionButtonsProps>(
           [
             Boolean(showDownload && onDownload) && {
               icon: Download,
-              onClick: onDownload,
-              label: t('generation.actions.download'),
               key: 'download',
+              label: t('generation.actions.download'),
+              onClick: onDownload,
             },
             Boolean(showCopySeed && onCopySeed) && {
               icon: Dices,
-              onClick: onCopySeed,
-              label: seedTooltip,
               key: 'copySeed',
+              label: seedTooltip,
+              onClick: onCopySeed,
             },
             {
-              icon: Trash2,
-              onClick: onDelete,
-              label: t('generation.actions.delete'),
-              key: 'delete',
               danger: true,
+              icon: Trash2,
+              key: 'delete',
+              label: t('generation.actions.delete'),
+              onClick: onDelete,
             },
           ].filter(Boolean) as ActionIconGroupProps['items']
         }

@@ -38,14 +38,14 @@ export interface FileServiceImpl {
   getFullFileUrl(url?: string | null, expiresIn?: number): Promise<string>;
 
   /**
-   * 上传内容
-   */
-  uploadContent(path: string, content: string): Promise<any>;
-
-  /**
    * 从完整URL中提取key
    */
   getKeyFromFullUrl(url: string): string;
+
+  /**
+   * 上传内容
+   */
+  uploadContent(path: string, content: string): Promise<any>;
 
   /**
    * 上传媒体文件

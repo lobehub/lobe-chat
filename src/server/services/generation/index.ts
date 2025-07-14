@@ -12,12 +12,12 @@ const log = debug('lobe-image:generation-service');
 
 interface ImageForGeneration {
   buffer: Buffer;
-  width: number;
-  height: number;
   extension: string;
+  hash: string;
+  height: number;
   mime: string;
   size: number;
-  hash: string;
+  width: number;
 }
 
 /**
@@ -70,7 +70,7 @@ export class GenerationService {
 
     const sharpInstance = sharp(originalImageBuffer);
     const { format, width, height } = await sharpInstance.metadata();
-    log('Image metadata:', { format, width, height });
+    log('Image metadata:', { format, height, width });
 
     if (!width || !height) {
       throw new Error(`Invalid image format: ${format}, url: ${url}`);
@@ -88,7 +88,7 @@ export class GenerationService {
         : Math.round((height * 512) / width)
       : height;
 
-    log('Thumbnail dimensions calculated:', { thumbnailWidth, thumbnailHeight, shouldResize });
+    log('Thumbnail dimensions calculated:', { shouldResize, thumbnailHeight, thumbnailWidth });
 
     const thumbnailBuffer = shouldResize
       ? await sharpInstance.resize(thumbnailWidth, thumbnailHeight).webp().toBuffer()
@@ -119,21 +119,21 @@ export class GenerationService {
     return {
       image: {
         buffer: originalImageBuffer,
-        width,
-        height,
         extension,
+        hash: originalHash,
+        height,
         mime: originalMimeType,
         size: originalImageBuffer.length,
-        hash: originalHash,
+        width,
       },
       thumbnailImage: {
         buffer: thumbnailBuffer,
-        width: thumbnailWidth,
-        height: thumbnailHeight,
         extension: 'webp',
+        hash: thumbnailHash,
+        height: thumbnailHeight,
         mime: 'image/webp',
         size: thumbnailBuffer.length,
-        hash: thumbnailHash,
+        width: thumbnailWidth,
       },
     };
   }
@@ -153,8 +153,8 @@ export class GenerationService {
     // Check if image and thumbnail buffers are identical
     const isIdenticalBuffer = image.buffer.equals(thumbnail.buffer);
     log('Buffer comparison:', {
-      isIdenticalBuffer,
       imageSize: image.buffer.length,
+      isIdenticalBuffer,
       thumbnailSize: thumbnail.buffer.length,
     });
 

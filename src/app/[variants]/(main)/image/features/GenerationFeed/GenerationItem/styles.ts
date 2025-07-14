@@ -1,15 +1,6 @@
 import { createStyles } from 'antd-style';
 
 export const useStyles = createStyles(({ cx, css, token }) => ({
-  imageContainer: css`
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-
-    &:hover .generation-actions {
-      opacity: 1;
-    }
-  `,
   // 图片操作按钮的公共样式
   generationActionButton: cx(
     'generation-actions',
@@ -24,7 +15,8 @@ export const useStyles = createStyles(({ cx, css, token }) => ({
       transition: opacity 0.1s ${token.motionEaseInOut};
     `,
   ),
-  placeholderContainer: css`
+
+  imageContainer: css`
     position: relative;
     overflow: hidden;
     width: 100%;
@@ -42,6 +34,15 @@ export const useStyles = createStyles(({ cx, css, token }) => ({
 
     font-size: 12px;
     color: ${token.colorTextTertiary};
+  `,
+  placeholderContainer: css`
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+
+    &:hover .generation-actions {
+      opacity: 1;
+    }
   `,
 
   spinIcon: css`

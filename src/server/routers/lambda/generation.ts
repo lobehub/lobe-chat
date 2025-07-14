@@ -15,51 +15,19 @@ const generationProcedure = authedProcedure.use(serverDatabase).use(async (opts)
   return opts.next({
     ctx: {
       asyncTaskModel: new AsyncTaskModel(ctx.serverDB, ctx.userId),
-      generationModel: new GenerationModel(ctx.serverDB, ctx.userId),
       fileService: new FileService(ctx.serverDB, ctx.userId),
+      generationModel: new GenerationModel(ctx.serverDB, ctx.userId),
     },
   });
 });
 
 export type GetGenerationStatusResult = {
-  status: AsyncTaskStatus;
-  generation: Generation | null;
   error: AsyncTaskError | null;
+  generation: Generation | null;
+  status: AsyncTaskStatus;
 };
 
 export const generationRouter = router({
-  getGenerationStatus: generationProcedure
-    .input(z.object({ generationId: z.string(), asyncTaskId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      // Check for timeout tasks before querying
-      await ctx.asyncTaskModel.checkTimeoutTasks([input.asyncTaskId]);
-
-      const asyncTask = await ctx.asyncTaskModel.findById(input.asyncTaskId);
-      if (!asyncTask) {
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'Async task not found' });
-      }
-
-      const { status, error } = asyncTask;
-      const result: GetGenerationStatusResult = {
-        status: status as AsyncTaskStatus,
-        generation: null,
-        error: null,
-      };
-
-      if (asyncTask.status === AsyncTaskStatus.Success) {
-        const generation = await ctx.generationModel.findByIdAndTransform(input.generationId);
-        if (!generation) {
-          throw new TRPCError({ code: 'NOT_FOUND', message: 'Generation not found' });
-        }
-
-        result.generation = generation;
-      } else if (asyncTask.status === AsyncTaskStatus.Error) {
-        result.error = error as AsyncTaskError;
-      }
-
-      return result;
-    }),
-
   deleteGeneration: generationProcedure
     .input(z.object({ generationId: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -80,6 +48,38 @@ export const generationRouter = router({
       }
 
       return deletedGeneration;
+    }),
+
+  getGenerationStatus: generationProcedure
+    .input(z.object({ asyncTaskId: z.string(), generationId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      // Check for timeout tasks before querying
+      await ctx.asyncTaskModel.checkTimeoutTasks([input.asyncTaskId]);
+
+      const asyncTask = await ctx.asyncTaskModel.findById(input.asyncTaskId);
+      if (!asyncTask) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Async task not found' });
+      }
+
+      const { status, error } = asyncTask;
+      const result: GetGenerationStatusResult = {
+        error: null,
+        generation: null,
+        status: status as AsyncTaskStatus,
+      };
+
+      if (asyncTask.status === AsyncTaskStatus.Success) {
+        const generation = await ctx.generationModel.findByIdAndTransform(input.generationId);
+        if (!generation) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Generation not found' });
+        }
+
+        result.generation = generation;
+      } else if (asyncTask.status === AsyncTaskStatus.Error) {
+        result.error = error as AsyncTaskError;
+      }
+
+      return result;
     }),
 });
 

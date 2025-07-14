@@ -11,13 +11,13 @@ import { useDimensionControl } from '@/store/image/slices/generationConfig/hooks
 import AspectRatioSelect from '../../../components/AspectRatioSelect';
 
 const styles = {
+  aspectRatioSelect: {
+    width: '100%',
+  },
   label: {
     fontSize: 12,
     fontWeight: 500,
     textTransform: 'uppercase' as const,
-  },
-  aspectRatioSelect: {
-    width: '100%',
   },
 } as const;
 

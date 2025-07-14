@@ -6,10 +6,12 @@ export const downloadFile = async (
   try {
     // Use better CORS handling similar to download-image.ts
     const response = await fetch(url, {
-      mode: 'cors',
-      credentials: 'omit',
       // Avoid image disk cache which can cause incorrect CORS headers
       cache: 'no-store',
+
+      credentials: 'omit',
+
+      mode: 'cors',
     });
 
     if (!response.ok) {

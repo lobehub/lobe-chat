@@ -35,8 +35,8 @@ export const asyncAuth = asyncTrpc.middleware(async (opts) => {
 
     return opts.next({
       ctx: {
-        userId: ctx.userId,
         jwtPayload: ctx.jwtPayload,
+        userId: ctx.userId,
       },
     });
   } catch (error) {

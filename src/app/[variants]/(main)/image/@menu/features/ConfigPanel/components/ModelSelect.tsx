@@ -57,19 +57,19 @@ const ModelSelect = memo(() => {
       if (modelOptions.length === 0) {
         return [
           {
+            disabled: true,
             label: (
               <Flexbox gap={8} horizontal style={{ color: theme.colorTextTertiary }}>
                 {t('ModelSwitchPanel.emptyModel')}
                 <Icon icon={LucideArrowRight} />
               </Flexbox>
             ),
-            value: `${provider.id}/empty`,
             onClick: () => {
               router.push(
                 isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${provider.id}`,
               );
             },
-            disabled: true,
+            value: `${provider.id}/empty`,
           },
         ];
       }
@@ -81,17 +81,17 @@ const ModelSelect = memo(() => {
     if (enabledImageModelList.length === 0) {
       return [
         {
+          disabled: true,
           label: (
             <Flexbox gap={8} horizontal style={{ color: theme.colorTextTertiary }}>
               {t('ModelSwitchPanel.emptyProvider')}
               <Icon icon={LucideArrowRight} />
             </Flexbox>
           ),
-          value: 'no-provider',
           onClick: () => {
             router.push(isDeprecatedEdition ? '/settings/llm' : '/settings/provider');
           },
-          disabled: true,
+          value: 'no-provider',
         },
       ];
     }

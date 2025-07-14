@@ -22,11 +22,18 @@ import { GenerationBatch } from '@/types/generation';
 import { GenerationItem } from './GenerationItem';
 
 const useStyles = createStyles(({ cx, css, token }) => ({
-  prompt: css`
-    pre {
-      overflow: hidden !important;
-      padding-block: 4px;
-      font-size: 13px;
+  batchActions: cx(
+    'batch-actions',
+    css`
+      opacity: 0;
+      transition: opacity 0.1s ${token.motionEaseInOut};
+    `,
+  ),
+  batchDeleteButton: css`
+    &:hover {
+      border-color: ${token.colorError} !important;
+      color: ${token.colorError} !important;
+      background: ${token.colorErrorBg} !important;
     }
   `,
   container: css`
@@ -36,19 +43,12 @@ const useStyles = createStyles(({ cx, css, token }) => ({
       }
     }
   `,
-  batchActions: cx(
-    'batch-actions',
-    css`
-      opacity: 0;
-      transition: opacity 0.1s ${token.motionEaseInOut};
-    `,
-  ),
 
-  batchDeleteButton: css`
-    &:hover {
-      border-color: ${token.colorError} !important;
-      color: ${token.colorError} !important;
-      background: ${token.colorErrorBg} !important;
+  prompt: css`
+    pre {
+      overflow: hidden !important;
+      padding-block: 4px;
+      font-size: 13px;
     }
   `,
 }));
@@ -169,22 +169,22 @@ export const GenerationBatchItem = memo<GenerationBatchItemProps>(({ batch }) =>
           items={[
             {
               icon: RotateCcwSquareIcon,
-              onClick: handleReuseSettings,
-              label: t('generation.actions.reuseSettings'),
               key: 'reuseSettings',
+              label: t('generation.actions.reuseSettings'),
+              onClick: handleReuseSettings,
             },
             {
               icon: CopyIcon,
-              onClick: handleCopyPrompt,
-              label: t('generation.actions.copyPrompt'),
               key: 'copyPrompt',
+              label: t('generation.actions.copyPrompt'),
+              onClick: handleCopyPrompt,
             },
             {
-              icon: Trash2,
-              onClick: handleDeleteBatch,
-              label: t('generation.actions.deleteBatch'),
-              key: 'deleteBatch',
               danger: true,
+              icon: Trash2,
+              key: 'deleteBatch',
+              label: t('generation.actions.deleteBatch'),
+              onClick: handleDeleteBatch,
             },
           ]}
         />
