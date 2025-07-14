@@ -2,6 +2,66 @@
 
 # Changelog
 
+## [Version&nbsp;1.97.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.96.3...v1.97.0)
+<sup>Released on **2025-07-14**</sup>
+
+
+#### ✨ Features
+
+- **misc**: Add network proxy for desktop.
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add vision support to Grok 4, Revert "💄 style: Open new topic by tap Just Chat again".
+
+
+#### 💄 Styles
+
+- **misc**: Add Kimi K2 model, fix discover translation, Support Hunyuan A13B thinking model, Support new Doubao thinking models, update i18n, update i18n, update i18n.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's improved
+
+* **misc**: Add network proxy for desktop, closes [#7848](https://github.com/jaworldwideorg/OneJA-Bot/issues/7848) ([46d2509](https://github.com/jaworldwideorg/OneJA-Bot/commit/46d2509))
+
+
+
+#### What's fixed
+
+* **misc**: Add vision support to Grok 4, closes [#8386](https://github.com/jaworldwideorg/OneJA-Bot/issues/8386) ([8512f5a](https://github.com/jaworldwideorg/OneJA-Bot/commit/8512f5a))
+* **misc**: Revert "💄 style: Open new topic by tap Just Chat again", closes [#8402](https://github.com/jaworldwideorg/OneJA-Bot/issues/8402) ([55462b9](https://github.com/jaworldwideorg/OneJA-Bot/commit/55462b9))
+
+
+
+#### Styles
+
+* **misc**: Add Kimi K2 model, closes [#8401](https://github.com/jaworldwideorg/OneJA-Bot/issues/8401) ([4cb1a18](https://github.com/jaworldwideorg/OneJA-Bot/commit/4cb1a18))
+* **misc**: Fix discover translation, closes [#8423](https://github.com/jaworldwideorg/OneJA-Bot/issues/8423) ([15ae35c](https://github.com/jaworldwideorg/OneJA-Bot/commit/15ae35c))
+* **misc**: Support Hunyuan A13B thinking model, closes [#8278](https://github.com/jaworldwideorg/OneJA-Bot/issues/8278) ([09ca978](https://github.com/jaworldwideorg/OneJA-Bot/commit/09ca978))
+* **misc**: Support new Doubao thinking models, closes [#8174](https://github.com/jaworldwideorg/OneJA-Bot/issues/8174) ([637d75c](https://github.com/jaworldwideorg/OneJA-Bot/commit/637d75c))
+* **misc**: Update i18n, closes [#8422](https://github.com/jaworldwideorg/OneJA-Bot/issues/8422) ([5b89ec8](https://github.com/jaworldwideorg/OneJA-Bot/commit/5b89ec8))
+* **misc**: Update i18n, closes [#8410](https://github.com/jaworldwideorg/OneJA-Bot/issues/8410) ([2515875](https://github.com/jaworldwideorg/OneJA-Bot/commit/2515875))
+* **misc**: Update i18n, closes [#8400](https://github.com/jaworldwideorg/OneJA-Bot/issues/8400) ([790eeb8](https://github.com/jaworldwideorg/OneJA-Bot/commit/790eeb8))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.96.3](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.96.2...v1.96.3)
 <sup>Released on **2025-07-11**</sup>
 
