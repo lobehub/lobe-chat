@@ -6,28 +6,21 @@ import { passwordProcedure } from '@/libs/trpc/edge';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { mcpService } from '@/server/services/mcp';
 
+const StreamableHTTPAuthSchema = z
+  .object({
+    // Bearer Token
+    accessToken: z.string().optional(),
+    token: z.string().optional(),
+    type: z.enum(['none', 'bearer', 'oauth2']), // OAuth2 Access Token
+  })
+  .optional();
+
 // Define Zod schemas for MCP Client parameters
 const httpParamsSchema = z.object({
-  // 新增认证配置支持
-auth: z
-    .object({
-      // Bearer Token
-accessToken: z.string().optional(),
-      
-token: z.string().optional(), 
-      type: z.enum(['none', 'bearer', 'oauth2']), // OAuth2 Access Token
-    })
-    .optional(),
-  
-// 新增 headers 配置支持
-headers: z.record(z.string()).optional(),
-  
-
-name: z.string().min(1),
-  
-  
-type: z.literal('http'),
-  
+  auth: StreamableHTTPAuthSchema,
+  headers: z.record(z.string()).optional(),
+  name: z.string().min(1),
+  type: z.literal('http'),
   url: z.string().url(),
 });
 
@@ -56,13 +49,7 @@ export const mcpRouter = router({
   getStreamableMcpServerManifest: mcpProcedure
     .input(
       z.object({
-        auth: z
-          .object({
-            accessToken: z.string().optional(),
-            token: z.string().optional(),
-            type: z.enum(['none', 'bearer', 'oauth2']),
-          })
-          .optional(),
+        auth: StreamableHTTPAuthSchema,
         headers: z.record(z.string()).optional(),
         identifier: z.string(),
         metadata: z
