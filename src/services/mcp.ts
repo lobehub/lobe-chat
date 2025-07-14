@@ -128,15 +128,20 @@ class MCPService {
   }
 
   async getStreamableMcpServerManifest(
-    identifier: string,
-    url: string,
-    metadata?: CustomPluginMetadata,
+    params: {
+      auth?: {
+        accessToken?: string;
+        token?: string;
+        type: 'none' | 'bearer' | 'oauth2';
+      };
+      headers?: Record<string, string>;
+      identifier: string;
+      metadata?: CustomPluginMetadata;
+      url: string;
+    },
     signal?: AbortSignal,
   ) {
-    return toolsClient.mcp.getStreamableMcpServerManifest.query(
-      { identifier, metadata, url },
-      { signal },
-    );
+    return toolsClient.mcp.getStreamableMcpServerManifest.query(params, { signal });
   }
 
   async getStdioMcpServerManifest(

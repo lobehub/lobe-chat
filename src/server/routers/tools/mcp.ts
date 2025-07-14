@@ -8,8 +8,26 @@ import { mcpService } from '@/server/services/mcp';
 
 // Define Zod schemas for MCP Client parameters
 const httpParamsSchema = z.object({
-  name: z.string().min(1),
-  type: z.literal('http'),
+  // 新增认证配置支持
+auth: z
+    .object({
+      // Bearer Token
+accessToken: z.string().optional(),
+      
+token: z.string().optional(), 
+      type: z.enum(['none', 'bearer', 'oauth2']), // OAuth2 Access Token
+    })
+    .optional(),
+  
+// 新增 headers 配置支持
+headers: z.record(z.string()).optional(),
+  
+
+name: z.string().min(1),
+  
+  
+type: z.literal('http'),
+  
   url: z.string().url(),
 });
 
@@ -38,6 +56,14 @@ export const mcpRouter = router({
   getStreamableMcpServerManifest: mcpProcedure
     .input(
       z.object({
+        auth: z
+          .object({
+            accessToken: z.string().optional(),
+            token: z.string().optional(),
+            type: z.enum(['none', 'bearer', 'oauth2']),
+          })
+          .optional(),
+        headers: z.record(z.string()).optional(),
         identifier: z.string(),
         metadata: z
           .object({
@@ -53,6 +79,8 @@ export const mcpRouter = router({
         input.identifier,
         input.url,
         input.metadata,
+        input.auth,
+        input.headers,
       );
     }),
   /* eslint-disable sort-keys-fix/sort-keys-fix */
