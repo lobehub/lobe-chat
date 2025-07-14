@@ -1019,6 +1019,15 @@
   "ernie-x1-turbo-32k": {
     "description": "So với ERNIE-X1-32K, mô hình này có hiệu suất và hiệu quả tốt hơn."
   },
+  "flux-kontext/dev": {
+    "description": "Mô hình chỉnh sửa hình ảnh Frontier."
+  },
+  "flux-pro/kontext": {
+    "description": "FLUX.1 Kontext [pro] có khả năng xử lý văn bản và hình ảnh tham khảo làm đầu vào, thực hiện chỉnh sửa cục bộ có mục tiêu và biến đổi cảnh tổng thể phức tạp một cách liền mạch."
+  },
+  "flux/schnell": {
+    "description": "FLUX.1 [schnell] là mô hình bộ chuyển đổi dòng với 12 tỷ tham số, có thể tạo ra hình ảnh chất lượng cao từ văn bản trong 1 đến 4 bước, phù hợp cho mục đích cá nhân và thương mại."
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) cung cấp hiệu suất ổn định và có thể điều chỉnh, là lựa chọn lý tưởng cho các giải pháp nhiệm vụ phức tạp."
   },
@@ -1364,6 +1373,9 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe là mô hình chuyển đổi giọng nói thành văn bản sử dụng GPT-4o để phiên âm âm thanh. So với mô hình Whisper gốc, nó cải thiện tỷ lệ lỗi từ và nâng cao khả năng nhận diện ngôn ngữ cũng như độ chính xác. Sử dụng nó để có bản phiên âm chính xác hơn."
   },
+  "gpt-image-1": {
+    "description": "Mô hình tạo hình ảnh đa phương thức nguyên bản của ChatGPT"
+  },
   "grok-2-1212": {
     "description": "Mô hình này đã được cải thiện về độ chính xác, khả năng tuân thủ hướng dẫn và khả năng đa ngôn ngữ."
   },
@@ -1483,6 +1495,9 @@
   },
   "hunyuan-vision": {
     "description": "Mô hình đa phương thức mới nhất của Hunyuan, hỗ trợ đầu vào hình ảnh + văn bản để tạo ra nội dung văn bản."
+  },
+  "imagen4/preview": {
+    "description": "Mô hình tạo hình ảnh chất lượng cao nhất của Google"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 cung cấp giải pháp đối thoại thông minh cho nhiều tình huống."

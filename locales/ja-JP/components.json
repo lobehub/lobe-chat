@@ -77,6 +77,13 @@
       "secondary": "クリックしてアップロード"
     }
   },
+  "KeyValueEditor": {
+    "addButton": "新しい行を追加",
+    "deleteTooltip": "削除",
+    "duplicateKeyError": "キー名は一意でなければなりません",
+    "keyPlaceholder": "キー",
+    "valuePlaceholder": "値"
+  },
   "MaxTokenSlider": {
     "unlimited": "無制限"
   },

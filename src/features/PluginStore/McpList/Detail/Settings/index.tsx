@@ -6,9 +6,9 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import KeyValueEditor from '@/components/KeyValueEditor';
 import MCPStdioCommandInput from '@/components/MCPStdioCommandInput';
 import ArgsInput from '@/features/PluginDevModal/MCPManifestForm/ArgsInput';
-import EnvEditor from '@/features/PluginDevModal/MCPManifestForm/EnvEditor';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
@@ -342,7 +342,10 @@ const Settings = memo<{ identifier: string }>(({ identifier }) => {
               onFinish={handleEnvSubmit}
             >
               <AForm.Item name="env" style={{ marginBottom: 0 }}>
-                <EnvEditor />
+                <KeyValueEditor
+                  addButtonText={t('dev.mcp.env.add')}
+                  keyPlaceholder="VARIABLE_NAME"
+                />
               </AForm.Item>
               <div className={styles.footer}>
                 <Space>

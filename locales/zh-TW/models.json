@@ -1019,6 +1019,15 @@
   "ernie-x1-turbo-32k": {
     "description": "與ERNIE-X1-32K相比，模型效果和性能更佳。"
   },
+  "flux-kontext/dev": {
+    "description": "Frontier 影像編輯模型。"
+  },
+  "flux-pro/kontext": {
+    "description": "FLUX.1 Kontext [pro] 能夠處理文字和參考圖像作為輸入，無縫實現目標性的局部編輯和複雜的整體場景變換。"
+  },
+  "flux/schnell": {
+    "description": "FLUX.1 [schnell] 是一個擁有120億參數的流式轉換器模型，能夠在1到4步內從文字生成高品質圖像，適合個人和商業用途。"
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) 提供穩定並可調優的性能，是複雜任務解決方案的理想選擇。"
   },
@@ -1364,6 +1373,9 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe 是一種使用 GPT-4o 轉錄音訊的語音轉文字模型。與原始 Whisper 模型相比，它降低了字詞錯誤率，並提升了語言識別和準確性。使用它來獲得更準確的轉錄。"
   },
+  "gpt-image-1": {
+    "description": "ChatGPT 原生多模態圖片生成模型"
+  },
   "grok-2-1212": {
     "description": "該模型在準確性、指令遵循和多語言能力方面有所改進。"
   },
@@ -1483,6 +1495,9 @@
   },
   "hunyuan-vision": {
     "description": "混元最新多模態模型，支持圖片 + 文本輸入生成文本內容。"
+  },
+  "imagen4/preview": {
+    "description": "Google 最高品質的圖像生成模型"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 提供多場景下的智能對話解決方案。"

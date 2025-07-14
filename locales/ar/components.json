@@ -77,6 +77,13 @@
       "secondary": "انقر للتحميل"
     }
   },
+  "KeyValueEditor": {
+    "addButton": "إضافة صف جديد",
+    "deleteTooltip": "حذف",
+    "duplicateKeyError": "يجب أن يكون اسم المفتاح فريدًا",
+    "keyPlaceholder": "المفتاح",
+    "valuePlaceholder": "القيمة"
+  },
   "MaxTokenSlider": {
     "unlimited": "غير محدود"
   },

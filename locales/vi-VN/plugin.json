@@ -57,11 +57,27 @@
       }
     },
     "mcp": {
+      "advanced": {
+        "title": "Cài đặt nâng cao"
+      },
       "args": {
         "desc": "Danh sách các tham số được truyền cho lệnh thực thi, thường nhập tên máy chủ MCP hoặc đường dẫn đến tập lệnh khởi động",
         "label": "Tham số lệnh",
         "placeholder": "Ví dụ: mcp-hello-world",
         "required": "Vui lòng nhập tham số khởi động"
+      },
+      "auth": {
+        "bear": "API Key",
+        "desc": "Chọn phương thức xác thực cho máy chủ MCP",
+        "label": "Loại xác thực",
+        "none": "Không cần xác thực",
+        "placeholder": "Vui lòng chọn loại xác thực",
+        "token": {
+          "desc": "Nhập API Key hoặc Bearer Token của bạn",
+          "label": "API Key",
+          "placeholder": "sk-xxxxx",
+          "required": "Vui lòng nhập mã xác thực"
+        }
       },
       "avatar": {
         "label": "Biểu tượng tiện ích"
@@ -89,6 +105,11 @@
         "keyRequired": "Khóa trường không được để trống",
         "label": "Biến môi trường máy chủ MCP",
         "stringifyError": "Không thể tuần tự hóa tham số, vui lòng kiểm tra định dạng tham số"
+      },
+      "headers": {
+        "add": "Thêm dòng mới",
+        "desc": "Nhập tiêu đề yêu cầu",
+        "label": "HTTP Headers"
       },
       "identifier": {
         "desc": "Chỉ định một tên cho plugin MCP của bạn, cần sử dụng ký tự tiếng Anh",
@@ -269,6 +290,7 @@
       "showDetails": "Xem chi tiết"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "Lỗi xác thực ủy quyền",
       "CONNECTION_FAILED": "Kết nối thất bại",
       "INITIALIZATION_TIMEOUT": "Khởi tạo quá thời gian",
       "PROCESS_SPAWN_ERROR": "Khởi tạo tiến trình thất bại",

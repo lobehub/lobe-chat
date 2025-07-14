@@ -77,6 +77,13 @@
       "secondary": "Yüklemek için tıklayın"
     }
   },
+  "KeyValueEditor": {
+    "addButton": "Yeni bir satır ekle",
+    "deleteTooltip": "Sil",
+    "duplicateKeyError": "Anahtar adı benzersiz olmalıdır",
+    "keyPlaceholder": "Anahtar",
+    "valuePlaceholder": "Değer"
+  },
   "MaxTokenSlider": {
     "unlimited": "Sınırsız"
   },

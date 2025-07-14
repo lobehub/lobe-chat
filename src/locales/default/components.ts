@@ -79,6 +79,13 @@ export default {
       secondary: '点击上传',
     },
   },
+  KeyValueEditor: {
+    addButton: '新增一行',
+    deleteTooltip: '删除',
+    duplicateKeyError: '键名必须唯一',
+    keyPlaceholder: '键',
+    valuePlaceholder: '值',
+  },
   MaxTokenSlider: {
     unlimited: '无限制',
   },

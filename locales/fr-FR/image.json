@@ -1,7 +1,9 @@
 {
   "config": {
     "aspectRatio": {
-      "label": "Ratio"
+      "label": "Ratio",
+      "lock": "Verrouiller le rapport hauteur/largeur",
+      "unlock": "Déverrouiller le rapport hauteur/largeur"
     },
     "header": {
       "desc": "Description simple, création immédiate",

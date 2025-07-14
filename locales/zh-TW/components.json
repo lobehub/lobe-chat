@@ -77,6 +77,13 @@
       "secondary": "點擊上傳"
     }
   },
+  "KeyValueEditor": {
+    "addButton": "新增一行",
+    "deleteTooltip": "刪除",
+    "duplicateKeyError": "鍵名必須唯一",
+    "keyPlaceholder": "鍵",
+    "valuePlaceholder": "值"
+  },
   "MaxTokenSlider": {
     "unlimited": "無限制"
   },

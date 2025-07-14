@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["support AI Image."]
+    },
+    "date": "2025-07-14",
+    "version": "1.99.0"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-07-14",

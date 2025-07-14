@@ -57,11 +57,27 @@
       }
     },
     "mcp": {
+      "advanced": {
+        "title": "고급 설정"
+      },
       "args": {
         "desc": "실행 명령에 전달할 매개변수 목록으로, 일반적으로 여기에서 MCP 서버 이름 또는 시작 스크립트 경로를 입력합니다.",
         "label": "명령 매개변수",
         "placeholder": "예: mcp-hello-world",
         "required": "시작 매개변수를 입력하세요"
+      },
+      "auth": {
+        "bear": "API 키",
+        "desc": "MCP 서버의 인증 방식을 선택하세요",
+        "label": "인증 유형",
+        "none": "인증 불필요",
+        "placeholder": "인증 유형을 선택하세요",
+        "token": {
+          "desc": "API 키 또는 Bearer 토큰을 입력하세요",
+          "label": "API 키",
+          "placeholder": "sk-xxxxx",
+          "required": "인증 토큰을 입력하세요"
+        }
       },
       "avatar": {
         "label": "플러그인 아이콘"
@@ -89,6 +105,11 @@
         "keyRequired": "필드 키는 비워둘 수 없습니다.",
         "label": "MCP 서버 환경 변수",
         "stringifyError": "매개변수를 직렬화할 수 없습니다. 매개변수 형식을 확인하세요."
+      },
+      "headers": {
+        "add": "행 추가",
+        "desc": "요청 헤더를 입력하세요",
+        "label": "HTTP 헤더"
       },
       "identifier": {
         "desc": "당신의 MCP 플러그인에 이름을 지정하세요, 영어 문자 사용 필요",
@@ -269,6 +290,7 @@
       "showDetails": "세부 정보 보기"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "권한 인증 오류",
       "CONNECTION_FAILED": "연결 실패",
       "INITIALIZATION_TIMEOUT": "초기화 시간 초과",
       "PROCESS_SPAWN_ERROR": "프로세스 시작 실패",
