@@ -13,12 +13,12 @@ export const LobeMoonshotAI = createOpenAICompatibleRuntime({
     handlePayload: (payload: ChatStreamPayload) => {
       const { enabledSearch, messages, temperature, tools, ...rest } = payload;
 
-      // 过滤掉空的 assistant 消息 (#8418)
-      const filteredMessages = messages.filter(message => {
+      // 为 assistant 空消息添加一个空格 (#8418)
+      const filteredMessages = messages.map(message => {
         if (message.role === 'assistant' && (!message.content || message.content === '')) {
-          return false;
+          return { ...message, content: ' ' };
         }
-        return true;
+        return message;
       });
 
       const moonshotTools = enabledSearch
