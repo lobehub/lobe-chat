@@ -1,4 +1,7 @@
 import { ClientMetadata } from 'oidc-provider';
+import urlJoin from 'url-join';
+
+import { appEnv } from '@/envs/app';
 
 /**
  * 默认 OIDC 客户端配置
@@ -13,7 +16,7 @@ export const defaultClients: ClientMetadata[] = [
 
     logo_uri: 'https://hub-apac-1.lobeobjects.space/lobehub-desktop-icon.png',
 
-    // 桌面端注册的自定义协议回调（使用反向域名格式）
+    // 桌面端登出回调 - 保持原有自定义协议格式
     post_logout_redirect_uris: [
       'com.lobehub.lobehub-desktop-dev://auth/logout/callback',
       'com.lobehub.lobehub-desktop-nightly://auth/logout/callback',
@@ -21,11 +24,13 @@ export const defaultClients: ClientMetadata[] = [
       'com.lobehub.lobehub-desktop://auth/logout/callback',
     ],
 
+    // 桌面端授权回调 - 改为 Web 页面路径
     redirect_uris: [
-      'com.lobehub.lobehub-desktop-dev://auth/callback',
-      'com.lobehub.lobehub-desktop-nightly://auth/callback',
-      'com.lobehub.lobehub-desktop-beta://auth/callback',
-      'com.lobehub.lobehub-desktop://auth/callback',
+      // 动态构建 Web 页面回调 URL
+      urlJoin(appEnv.APP_URL!, '/oauth/callback/desktop'),
+      // 为本地开发环境添加 localhost 支持
+      'http://localhost:3210/oauth/callback/desktop',
+      'https://localhost:3210/oauth/callback/desktop',
     ],
 
     // 支持授权码获取令牌和刷新令牌
@@ -40,16 +45,14 @@ export const defaultClients: ClientMetadata[] = [
  * OIDC Scopes 定义
  */
 export const defaultScopes = [
-  'openid', // OIDC 必须
-  'profile', // 请求用户信息（姓名、头像等）
-  'email', // 请求用户邮箱
-  'offline_access', // 请求 Refresh Token
-  'sync:read', // 自定义 Scope：读取同步数据权限
-  'sync:write', // 自定义 Scope：写入同步数据权限
+  'openid',
+  'profile',
+  'email',
+  'offline_access', // 允许获取 refresh_token
 ];
 
 /**
- * OIDC Claims 定义 (与 Scopes 关联)
+ * OIDC Claims 定义
  */
 export const defaultClaims = {
   email: ['email', 'email_verified'],

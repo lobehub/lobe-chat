@@ -1,22 +1,21 @@
 import { DataSyncConfig } from '@lobechat/electron-client-ipc';
-import { BrowserWindow, app, shell } from 'electron';
+import { BrowserWindow, shell } from 'electron';
 import crypto from 'node:crypto';
 import querystring from 'node:querystring';
 import { URL } from 'node:url';
 
-import { name } from '@/../../package.json';
 import { createLogger } from '@/utils/logger';
 
 import RemoteServerConfigCtr from './RemoteServerConfigCtr';
+import RemoteServerSyncCtr from './RemoteServerSyncCtr';
 import { ControllerModule, ipcClientEvent } from './index';
 
 // Create logger
 const logger = createLogger('controllers:AuthCtr');
 
-const protocolPrefix = `com.lobehub.${name}`;
 /**
  * Authentication Controller
- * Used to implement the OAuth authorization flow
+ * 使用中间页 + 轮询的方式实现 OAuth 授权流程
  */
 export default class AuthCtr extends ControllerModule {
   /**
@@ -32,9 +31,12 @@ export default class AuthCtr extends ControllerModule {
   private codeVerifier: string | null = null;
   private authRequestState: string | null = null;
 
-  beforeAppReady = () => {
-    this.registerProtocolHandler();
-  };
+  /**
+   * 轮询相关参数
+   */
+  // eslint-disable-next-line no-undef
+  private pollingInterval: NodeJS.Timeout | null = null;
+  private handoffId: string | null = null;
 
   /**
    * Request OAuth authorization
@@ -57,8 +59,16 @@ export default class AuthCtr extends ControllerModule {
       this.authRequestState = crypto.randomBytes(16).toString('hex');
       logger.debug(`Generated state parameter: ${this.authRequestState}`);
 
-      // Construct authorization URL
+      // Generate unique handoff ID for this authorization request
+      this.handoffId = crypto.randomUUID();
+      logger.debug(`Generated handoff ID: ${this.handoffId}`);
+
+      // Construct authorization URL with new redirect_uri
       const authUrl = new URL('/oidc/auth', remoteUrl);
+      const callbackUrl = new URL('/oauth/callback/desktop', remoteUrl);
+
+      // Add handoff ID to callback URL
+      callbackUrl.searchParams.set('id', this.handoffId);
 
       // Add query parameters
       authUrl.search = querystring.stringify({
@@ -66,7 +76,7 @@ export default class AuthCtr extends ControllerModule {
         code_challenge: codeChallenge,
         code_challenge_method: 'S256',
         prompt: 'consent',
-        redirect_uri: `${protocolPrefix}://auth/callback`,
+        redirect_uri: callbackUrl.toString(),
         response_type: 'code',
         scope: 'profile email offline_access',
         state: this.authRequestState,
@@ -78,6 +88,9 @@ export default class AuthCtr extends ControllerModule {
       await shell.openExternal(authUrl.toString());
       logger.debug('Opening authorization URL in default browser');
 
+      // Start polling for credentials
+      this.startPolling();
+
       return { success: true };
     } catch (error) {
       logger.error('Authorization request failed:', error);
@@ -86,78 +99,132 @@ export default class AuthCtr extends ControllerModule {
   }
 
   /**
-   * Handle authorization callback
-   * This method is called when the browser redirects to our custom protocol
+   * 启动轮询机制获取凭证
    */
-  async handleAuthCallback(callbackUrl: string) {
-    logger.info(`Handling authorization callback: ${callbackUrl}`);
+  private startPolling() {
+    if (!this.handoffId) {
+      logger.error('No handoff ID available for polling');
+      return;
+    }
+
+    logger.info('Starting credential polling');
+    const pollInterval = 2000; // 2 seconds
+    const maxPollTime = 5 * 60 * 1000; // 5 minutes
+    const startTime = Date.now();
+
+    this.pollingInterval = setInterval(async () => {
+      try {
+        // Check if polling has timed out
+        if (Date.now() - startTime > maxPollTime) {
+          logger.warn('Credential polling timed out');
+          this.stopPolling();
+          this.broadcastAuthorizationFailed('Authorization timed out');
+          return;
+        }
+
+        // Poll for credentials
+        const result = await this.pollForCredentials();
+
+        if (result) {
+          logger.info('Successfully received credentials from polling');
+          this.stopPolling();
+
+          // Validate state parameter
+          if (result.state !== this.authRequestState) {
+            logger.error(
+              `Invalid state parameter: expected ${this.authRequestState}, received ${result.state}`,
+            );
+            this.broadcastAuthorizationFailed('Invalid state parameter');
+            return;
+          }
+
+          // Exchange code for tokens
+          const exchangeResult = await this.exchangeCodeForToken(result.code, this.codeVerifier!);
+
+          if (exchangeResult.success) {
+            logger.info('Authorization successful');
+            this.broadcastAuthorizationSuccessful();
+          } else {
+            logger.warn(`Authorization failed: ${exchangeResult.error || 'Unknown error'}`);
+            this.broadcastAuthorizationFailed(exchangeResult.error || 'Unknown error');
+          }
+        }
+      } catch (error) {
+        logger.error('Error during credential polling:', error);
+        this.stopPolling();
+        this.broadcastAuthorizationFailed('Polling error: ' + error.message);
+      }
+    }, pollInterval);
+  }
+
+  /**
+   * 停止轮询
+   */
+  private stopPolling() {
+    if (this.pollingInterval) {
+      clearInterval(this.pollingInterval);
+      this.pollingInterval = null;
+    }
+
+    // Clear authorization request state
+    this.authRequestState = null;
+    this.codeVerifier = null;
+    this.handoffId = null;
+  }
+
+  /**
+   * 轮询获取凭证
+   * 使用新的 REST API 接口查询远程服务器
+   */
+  private async pollForCredentials(): Promise<{ code: string; state: string } | null> {
+    if (!this.handoffId) {
+      return null;
+    }
+
     try {
-      const url = new URL(callbackUrl);
-      const params = new URLSearchParams(url.search);
-
-      // Get authorization code
-      const code = params.get('code');
-      const state = params.get('state');
-      logger.debug(`Got parameters from callback URL: code=${code}, state=${state}`);
-
-      // Validate state parameter to prevent CSRF attacks
-      if (state !== this.authRequestState) {
-        logger.error(
-          `Invalid state parameter: expected ${this.authRequestState}, received ${state}`,
-        );
-        throw new Error('Invalid state parameter');
-      }
-      logger.debug('State parameter validation passed');
-
-      if (!code) {
-        logger.error('No authorization code received');
-        throw new Error('No authorization code received');
+      // Use the existing proxy mechanism for the new REST API
+      const remoteServerSyncCtr = this.app.getController(RemoteServerSyncCtr);
+      if (!remoteServerSyncCtr) {
+        throw new Error('RemoteServerSyncCtr not found');
       }
 
-      // Get configuration information
-      const config = await this.remoteServerConfigCtr.getRemoteServerConfig();
-      logger.debug(`Getting remote server configuration: url=${config.remoteServerUrl}`);
+      // Construct the REST API request
+      const restRequest = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'GET' as const,
+        urlPath: `/oidc/handoff?id=${encodeURIComponent(this.handoffId)}&client=desktop`,
+      };
 
-      if (config.storageMode === 'selfHost' && !config.remoteServerUrl) {
-        logger.error('Server URL not configured');
-        throw new Error('No server URL configured');
+      const response = await remoteServerSyncCtr.proxyTRPCRequest(restRequest);
+
+      // Check if the response indicates credentials are not ready
+      if (response.status === 401 || response.status === 404) {
+        return null;
       }
 
-      // Get the previously saved code_verifier
-      const codeVerifier = this.codeVerifier;
-      if (!codeVerifier) {
-        logger.error('Code verifier not found');
-        throw new Error('No code verifier found');
-      }
-      logger.debug('Found code verifier');
-
-      // Exchange authorization code for token
-      logger.debug('Starting to exchange authorization code for token');
-      const result = await this.exchangeCodeForToken(code, codeVerifier);
-
-      if (result.success) {
-        logger.info('Authorization successful');
-        // Notify render process of successful authorization
-        this.broadcastAuthorizationSuccessful();
-      } else {
-        logger.warn(`Authorization failed: ${result.error || 'Unknown error'}`);
-        // Notify render process of failed authorization
-        this.broadcastAuthorizationFailed(result.error || 'Unknown error');
+      if (response.status !== 200) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      return result;
+      // Parse the response body
+      const bodyText =
+        typeof response.body === 'string' ? response.body : Buffer.from(response.body).toString();
+
+      const data = JSON.parse(bodyText);
+
+      if (data.success && data.data?.payload) {
+        return {
+          code: data.data.payload.code,
+          state: data.data.payload.state,
+        };
+      }
+
+      return null;
     } catch (error) {
-      logger.error('Handling authorization callback failed:', error);
-
-      // Notify render process of failed authorization
-      this.broadcastAuthorizationFailed(error.message);
-
-      return { error: error.message, success: false };
-    } finally {
-      // Clear authorization request state
-      logger.debug('Clearing authorization request state');
-      this.authRequestState = null;
-      this.codeVerifier = null;
+      logger.debug('Polling attempt failed (this is normal):', error.message);
+      return null;
     }
   }
 
@@ -199,43 +266,6 @@ export default class AuthCtr extends ControllerModule {
   }
 
   /**
-   * Register custom protocol handler
-   */
-  private registerProtocolHandler() {
-    logger.info(`Registering custom protocol handler ${protocolPrefix}://`);
-    app.setAsDefaultProtocolClient(protocolPrefix);
-
-    // Register custom protocol handler
-    if (process.platform === 'darwin') {
-      // Handle open-url event on macOS
-      logger.debug('Registering open-url event handler for macOS');
-      app.on('open-url', (event, url) => {
-        event.preventDefault();
-        logger.info(`Received open-url event: ${url}`);
-        this.handleAuthCallback(url);
-      });
-    } else {
-      // Handle protocol callback via second-instance event on Windows and Linux
-      logger.debug('Registering second-instance event handler for Windows/Linux');
-      app.on('second-instance', async (event, commandLine) => {
-        // Find the URL from command line arguments
-        const url = commandLine.find((arg) => arg.startsWith(`${protocolPrefix}://`));
-        if (url) {
-          logger.info(`Found URL from second-instance command line arguments: ${url}`);
-          const { success } = await this.handleAuthCallback(url);
-          if (success) {
-            this.app.browserManager.getMainWindow().show();
-          }
-        } else {
-          logger.warn('Protocol URL not found in second-instance command line arguments');
-        }
-      });
-    }
-
-    logger.info(`Registered ${protocolPrefix}:// custom protocol handler`);
-  }
-
-  /**
    * Exchange authorization code for token
    */
   private async exchangeCodeForToken(code: string, codeVerifier: string) {
@@ -251,7 +281,7 @@ export default class AuthCtr extends ControllerModule {
         code,
         code_verifier: codeVerifier,
         grant_type: 'authorization_code',
-        redirect_uri: `${protocolPrefix}://auth/callback`,
+        redirect_uri: new URL('/oauth/callback/desktop', remoteUrl).toString(),
       });
 
       logger.debug('Sending token exchange request');
@@ -275,7 +305,6 @@ export default class AuthCtr extends ControllerModule {
       // Parse response
       const data = await response.json();
       logger.debug('Successfully received token exchange response');
-      // console.log(data); // Keep original log for debugging, or remove/change to logger.debug as needed
 
       // Ensure response contains necessary fields
       if (!data.access_token || !data.refresh_token) {
