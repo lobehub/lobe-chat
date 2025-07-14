@@ -77,6 +77,13 @@
       "secondary": "Cliquez pour télécharger"
     }
   },
+  "KeyValueEditor": {
+    "addButton": "Ajouter une ligne",
+    "deleteTooltip": "Supprimer",
+    "duplicateKeyError": "Le nom de la clé doit être unique",
+    "keyPlaceholder": "Clé",
+    "valuePlaceholder": "Valeur"
+  },
   "MaxTokenSlider": {
     "unlimited": "Illimité"
   },

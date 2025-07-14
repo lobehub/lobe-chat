@@ -1019,6 +1019,15 @@
   "ernie-x1-turbo-32k": {
     "description": "与ERNIE-X1-32K相比，模型效果和性能更好。"
   },
+  "flux-kontext/dev": {
+    "description": "Frontier image editing model."
+  },
+  "flux-pro/kontext": {
+    "description": "FLUX.1 Kontext [pro] 能够处理文本和参考图像作为输入，无缝实现目标性的局部编辑和复杂的整体场景变换。"
+  },
+  "flux/schnell": {
+    "description": "FLUX.1 [schnell] 是一个拥有120亿参数的流式转换器模型，能够在1到4步内从文本生成高质量图像，适合个人和商业用途。"
+  },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) 提供稳定并可调优的性能，是复杂任务解决方案的理想选择。"
   },
@@ -1364,6 +1373,9 @@
   "gpt-4o-transcribe": {
     "description": "GPT-4o Transcribe 是一种使用 GPT-4o 转录音频的语音转文本模型。与原始 Whisper 模型相比，它提高了单词错误率，并提高了语言识别和准确性。使用它来获得更准确的转录。"
   },
+  "gpt-image-1": {
+    "description": "ChatGPT 原生多模态图片生成模型"
+  },
   "grok-2-1212": {
     "description": "该模型在准确性、指令遵循和多语言能力方面有所改进。"
   },
@@ -1483,6 +1495,9 @@
   },
   "hunyuan-vision": {
     "description": "混元最新多模态模型，支持图片+文本输入生成文本内容。"
+  },
+  "imagen4/preview": {
+    "description": "Google 最高质量的图像生成模型"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5-7B-Chat 是一个开源的对话模型，基于 InternLM2 架构开发。该 7B 参数规模的模型专注于对话生成任务，支持中英双语交互。模型采用了最新的训练技术，旨在提供流畅、智能的对话体验。InternLM2.5-7B-Chat 适用于各种对话应用场景，包括但不限于智能客服、个人助手等领域"

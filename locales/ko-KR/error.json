@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "서비스 요청이 실패했습니다. 구성을 확인하거나 다시 시도해주세요."
   },
+  "testConnectionFailed": "연결 테스트 실패: {{error}}",
   "tts": {
     "responseError": "서비스 요청이 실패했습니다. 구성을 확인하거나 다시 시도해주세요."
   },

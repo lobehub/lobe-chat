@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "Serviceverzoek mislukt. Controleer de configuratie of probeer opnieuw"
   },
+  "testConnectionFailed": "Verbindingstest mislukt: {{error}}",
   "tts": {
     "responseError": "Serviceverzoek mislukt. Controleer de configuratie of probeer opnieuw"
   },

@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "Błąd żądania usługi. Proszę sprawdź konfigurację i spróbuj ponownie"
   },
+  "testConnectionFailed": "Test połączenia nie powiódł się: {{error}}",
   "tts": {
     "responseError": "Błąd żądania usługi. Proszę sprawdź konfigurację i spróbuj ponownie"
   },
