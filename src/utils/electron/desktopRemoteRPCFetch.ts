@@ -62,11 +62,11 @@ export const desktopRemoteRPCFetch = async (input: string, init?: RequestInit) =
 };
 
 // eslint-disable-next-line no-undef
-export const fetchWithDesktopRemoteRPC = async (input: string, init?: RequestInit) => {
+export const fetchWithDesktopRemoteRPC = (async (input: RequestInfo | URL, init?: RequestInit) => {
   if (isDesktop) {
     const res = await desktopRemoteRPCFetch(input as string, init);
     if (res) return res;
   }
 
   return fetch(input, init);
-};
+}) as typeof fetch;
