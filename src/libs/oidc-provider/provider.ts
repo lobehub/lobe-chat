@@ -1,5 +1,5 @@
 import debug from 'debug';
-import Provider, { Configuration, KoaContextWithOIDC } from 'oidc-provider';
+import Provider, { Configuration, KoaContextWithOIDC, errors } from 'oidc-provider';
 import urlJoin from 'url-join';
 
 import { serverDBEnv } from '@/config/db';
@@ -13,6 +13,8 @@ import { defaultClaims, defaultClients, defaultScopes } from './config';
 import { createInteractionPolicy } from './interaction-policy';
 
 const logProvider = debug('lobe-oidc:provider'); // <--- 添加 provider 日志实例
+
+export const API_AUDIENCE = 'urn:lobehub:chat'; // <-- 把这里换成你自己的 API 标识符
 
 /**
  * 从环境变量中获取 JWKS
@@ -123,7 +125,24 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
       devInteractions: { enabled: false },
       deviceFlow: { enabled: false },
       introspection: { enabled: true },
-      resourceIndicators: { enabled: false },
+      resourceIndicators: {
+        defaultResource: () => API_AUDIENCE,
+        enabled: true,
+        getResourceServerInfo: (ctx, resourceIndicator) => {
+          logProvider('getResourceServerInfo called with indicator: %s', resourceIndicator); // <-- 添加这行日志
+          if (resourceIndicator === API_AUDIENCE) {
+            logProvider('Indicator matches API_AUDIENCE, returning JWT config.'); // <-- 添加这行日志
+            return {
+              accessTokenFormat: 'jwt',
+              audience: API_AUDIENCE,
+              scope: ctx.oidc.client?.scope || 'read',
+            };
+          }
+
+          logProvider('Indicator does not match API_AUDIENCE, throwing InvalidTarget.'); // <-- 添加这行日志
+          throw new errors.InvalidTarget();
+        },
+      },
       revocation: { enabled: true },
       rpInitiatedLogout: { enabled: true },
       userinfo: { enabled: true },
@@ -256,7 +275,7 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
 
     // 8. 令牌有效期
     ttl: {
-      AccessToken: 7 * 24 * 60 * 60, // 1 week temporarily,need to revert 1 hour with better implement
+      AccessToken: 3600, // 1 hour
       AuthorizationCode: 600, // 10 minutes
       DeviceCode: 600, // 10 minutes (if enabled)
 
