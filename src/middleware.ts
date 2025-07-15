@@ -153,6 +153,8 @@ const isPublicRoute = createRouteMatcher([
   // clerk
   '/login',
   '/signup',
+  // oauth
+  '/oidc/handoff',
 ]);
 
 const isProtectedRoute = createRouteMatcher([
