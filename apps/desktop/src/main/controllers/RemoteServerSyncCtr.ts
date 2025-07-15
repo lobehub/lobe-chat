@@ -123,22 +123,33 @@ export default class RemoteServerSyncCtr extends ControllerModule {
     const clientReq = requester.request(requestOptions, (clientRes: IncomingMessage) => {
       logger.debug(`${logPrefix} Received response with status ${clientRes.statusCode}`);
 
-      // 1. 立刻发送响应头和状态码
-      sender.send(`stream:response:${requestId}`, {
+      // 添加调试信息
+      logger.debug(`${logPrefix} Response details:`, {
         headers: clientRes.headers,
-        status: clientRes.statusCode,
-        statusText: clientRes.statusMessage,
+        statusCode: clientRes.statusCode,
+        statusMessage: clientRes.statusMessage,
       });
+
+      // 1. 立刻发送响应头和状态码
+      const responseData = {
+        headers: clientRes.headers || {},
+        status: clientRes.statusCode || 500,
+        statusText: clientRes.statusMessage || 'Unknown Status',
+      };
+
+      logger.debug(`${logPrefix} Sending response data:`, responseData);
+      sender.send(`stream:response:${requestId}`, responseData);
 
       // 2. 监听数据块并转发
       clientRes.on('data', (chunk: Buffer) => {
         if (sender.isDestroyed()) return;
+        logger.debug(`${logPrefix} Received data chunk, size: ${chunk.length}. Forwarding...`);
         sender.send(`stream:data:${requestId}`, chunk);
       });
 
       // 3. 监听结束信号并转发
       clientRes.on('end', () => {
-        logger.debug(`${logPrefix} Stream ended.`);
+        logger.debug(`${logPrefix} Stream ended. Forwarding end signal...`);
         if (sender.isDestroyed()) return;
         sender.send(`stream:end:${requestId}`);
       });
