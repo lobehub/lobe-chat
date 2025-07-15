@@ -297,7 +297,6 @@ export default class AuthCtr extends ControllerModule {
   /**
    * Refresh access token
    */
-  @ipcClientEvent('refreshAccessToken')
   async refreshAccessToken() {
     logger.info('Starting to refresh access token');
     try {
@@ -550,11 +549,24 @@ export default class AuthCtr extends ControllerModule {
       // 检查 token 是否已经过期
       const currentTime = Date.now();
       if (currentTime >= expiresAt) {
-        logger.info('Token has expired, clearing tokens and requiring re-authorization');
-        await this.remoteServerConfigCtr.clearTokens();
-        await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
-        this.broadcastAuthorizationRequired();
-        return;
+        logger.info('Token has expired, attempting to refresh it');
+
+        // 尝试刷新 token
+        const refreshResult = await this.remoteServerConfigCtr.refreshAccessToken();
+        if (refreshResult.success) {
+          logger.info('Token refresh successful during initialization');
+          this.broadcastTokenRefreshed();
+          // 重新启动自动刷新定时器
+          this.startAutoRefresh();
+          return;
+        } else {
+          logger.error(`Token refresh failed during initialization: ${refreshResult.error}`);
+          // 只有在刷新失败时才清除 token 并要求重新授权
+          await this.remoteServerConfigCtr.clearTokens();
+          await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
+          this.broadcastAuthorizationRequired();
+          return;
+        }
       }
 
       // 启动自动刷新定时器
