@@ -2,7 +2,7 @@ import debug from 'debug';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
-import { AuthHandoffModel } from '@/database/models/authHandoff';
+import { OAuthHandoffModel } from '@/database/models/oauthHandoff';
 import { serverDB } from '@/database/server';
 
 const log = debug('lobe-oidc:handoff');
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
 
     log('Creating handoff record - id=%s, client=%s', id, client);
 
-    const authHandoffModel = new AuthHandoffModel(serverDB);
+    const authHandoffModel = new OAuthHandoffModel(serverDB);
     const result = await authHandoffModel.create({
       client,
       id,
@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
 
     log('Fetching handoff record - id=%s, client=%s', id, client);
 
-    const authHandoffModel = new AuthHandoffModel(serverDB);
+    const authHandoffModel = new OAuthHandoffModel(serverDB);
     const result = await authHandoffModel.fetchAndConsume(id, client);
 
     if (!result) {
@@ -99,7 +99,7 @@ export async function DELETE() {
   log('Received DELETE request for /oidc/handoff cleanup');
 
   try {
-    const authHandoffModel = new AuthHandoffModel(serverDB);
+    const authHandoffModel = new OAuthHandoffModel(serverDB);
     const cleanedCount = await authHandoffModel.cleanupExpired();
 
     log('Cleaned up %d expired handoff records', cleanedCount);

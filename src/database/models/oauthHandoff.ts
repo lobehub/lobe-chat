@@ -2,9 +2,9 @@ import { and, eq, lt, sql } from 'drizzle-orm';
 
 import { LobeChatDatabase } from '@/database/type';
 
-import { AuthHandoffItem, NewAuthHandoff, authHandoffs } from '../schemas';
+import { NewOAuthHandoff, OAuthHandoffItem, oauthHandoffs } from '../schemas';
 
-export class AuthHandoffModel {
+export class OAuthHandoffModel {
   private db: LobeChatDatabase;
 
   constructor(db: LobeChatDatabase) {
@@ -16,8 +16,8 @@ export class AuthHandoffModel {
    * @param params 凭证数据
    * @returns 创建的记录
    */
-  create = async (params: NewAuthHandoff): Promise<AuthHandoffItem> => {
-    const [result] = await this.db.insert(authHandoffs).values(params).returning();
+  create = async (params: NewOAuthHandoff): Promise<OAuthHandoffItem> => {
+    const [result] = await this.db.insert(oauthHandoffs).values(params).returning();
 
     return result;
   };
@@ -29,16 +29,16 @@ export class AuthHandoffModel {
    * @param client 客户端类型
    * @returns 凭证数据，如果不存在或已过期则返回null
    */
-  fetchAndConsume = async (id: string, client: string): Promise<AuthHandoffItem | null> => {
+  fetchAndConsume = async (id: string, client: string): Promise<OAuthHandoffItem | null> => {
     // 先查找记录，同时检查是否过期 (5分钟TTL)
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
 
-    const handoff = await this.db.query.authHandoffs.findFirst({
+    const handoff = await this.db.query.oauthHandoffs.findFirst({
       where: and(
-        eq(authHandoffs.id, id),
-        eq(authHandoffs.client, client),
+        eq(oauthHandoffs.id, id),
+        eq(oauthHandoffs.client, client),
         // 检查记录是否在5分钟内创建
-        sql`${authHandoffs.createdAt} > ${fiveMinutesAgo}`,
+        sql`${oauthHandoffs.createdAt} > ${fiveMinutesAgo}`,
       ),
     });
 
@@ -47,7 +47,7 @@ export class AuthHandoffModel {
     }
 
     // 立即删除记录以确保一次性使用
-    await this.db.delete(authHandoffs).where(eq(authHandoffs.id, id));
+    await this.db.delete(oauthHandoffs).where(eq(oauthHandoffs.id, id));
 
     return handoff;
   };
@@ -61,8 +61,8 @@ export class AuthHandoffModel {
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
 
     const result = await this.db
-      .delete(authHandoffs)
-      .where(lt(authHandoffs.createdAt, fiveMinutesAgo));
+      .delete(oauthHandoffs)
+      .where(lt(oauthHandoffs.createdAt, fiveMinutesAgo));
 
     return result.rowCount || 0;
   };
@@ -77,11 +77,11 @@ export class AuthHandoffModel {
   exists = async (id: string, client: string): Promise<boolean> => {
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
 
-    const handoff = await this.db.query.authHandoffs.findFirst({
+    const handoff = await this.db.query.oauthHandoffs.findFirst({
       where: and(
-        eq(authHandoffs.id, id),
-        eq(authHandoffs.client, client),
-        sql`${authHandoffs.createdAt} > ${fiveMinutesAgo}`,
+        eq(oauthHandoffs.id, id),
+        eq(oauthHandoffs.client, client),
+        sql`${oauthHandoffs.createdAt} > ${fiveMinutesAgo}`,
       ),
     });
 

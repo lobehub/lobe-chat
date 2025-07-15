@@ -8,7 +8,7 @@ import { appEnv } from '@/envs/app';
  */
 export const defaultClients: ClientMetadata[] = [
   {
-    application_type: 'native',
+    application_type: 'web',
     client_id: 'lobehub-desktop',
     client_name: 'LobeHub Desktop',
     // 仅支持授权码流程
@@ -16,21 +16,17 @@ export const defaultClients: ClientMetadata[] = [
 
     logo_uri: 'https://hub-apac-1.lobeobjects.space/lobehub-desktop-icon.png',
 
-    // 桌面端登出回调 - 保持原有自定义协议格式
     post_logout_redirect_uris: [
-      'com.lobehub.lobehub-desktop-dev://auth/logout/callback',
-      'com.lobehub.lobehub-desktop-nightly://auth/logout/callback',
-      'com.lobehub.lobehub-desktop-beta://auth/logout/callback',
-      'com.lobehub.lobehub-desktop://auth/logout/callback',
+      // 动态构建 Web 页面回调 URL
+      urlJoin(appEnv.APP_URL!, '/oauth/logout'),
+      'http://localhost:3210/oauth/logout',
     ],
 
     // 桌面端授权回调 - 改为 Web 页面路径
     redirect_uris: [
       // 动态构建 Web 页面回调 URL
-      urlJoin(appEnv.APP_URL!, '/oauth/callback/desktop'),
-      // 为本地开发环境添加 localhost 支持
-      'http://localhost:3210/oauth/callback/desktop',
-      'https://localhost:3210/oauth/callback/desktop',
+      urlJoin(appEnv.APP_URL!, '/oidc/callback/desktop'),
+      'http://localhost:3210/oidc/callback/desktop',
     ],
 
     // 支持授权码获取令牌和刷新令牌

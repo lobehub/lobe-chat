@@ -3,7 +3,7 @@
 import { Icon, Text } from '@lobehub/ui';
 import { Alert } from 'antd';
 import { createStyles } from 'antd-style';
-import { CheckCircle, Loader2, XCircle } from 'lucide-react';
+import { CheckCircle, XCircle } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -33,7 +33,6 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   statusCard: css`
     padding: 16px;
-    border: 1px solid ${token.colorBorder};
     border-radius: ${token.borderRadiusLG}px;
   `,
   successCard: css`
@@ -51,7 +50,7 @@ interface CallbackState {
   status: 'processing' | 'success' | 'error';
 }
 
-const DesktopCallbackClient = () => {
+const Client = () => {
   const { t } = useTranslation(['common', 'error']);
   const { styles } = useStyles();
   const searchParams = useSearchParams();
@@ -59,92 +58,34 @@ const DesktopCallbackClient = () => {
 
   useEffect(() => {
     const processCallback = async () => {
-      try {
-        // 从 URL 获取参数
-        const code = searchParams.get('code');
-        const state = searchParams.get('state');
-        const id = searchParams.get('id');
+      const state = searchParams.get('state');
 
-        // 验证必要参数
-        if (!code || !state || !id) {
-          setState({
-            message: t('oauth.callback.missingParams', {
-              defaultValue: '缺少必要的授权参数',
-              ns: 'error',
-            }),
-            status: 'error',
-          });
-          return;
-        }
+      // 从 URL 获取参数
 
-        // 调用 API 存储凭证
-        const response = await fetch('/oidc/handoff', {
-          body: JSON.stringify({
-            client: 'desktop',
-            id,
-            payload: {
-              code,
-              state,
+      setState(
+        state === 'success'
+          ? {
+              message: t('oauth.callback.success', {
+                defaultValue: '授权成功！请返回桌面应用。',
+                ns: 'common',
+              }),
+              status: 'success',
+            }
+          : {
+              message: t('oauth.callback.failed', {
+                defaultValue: '授权处理失败，请重试。',
+                ns: 'error',
+              }),
+              status: 'error',
             },
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          method: 'POST',
-        });
-
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`HTTP ${response.status}: ${response.statusText} - ${errorText}`);
-        }
-
-        setState({
-          message: t('oauth.callback.success', {
-            defaultValue: '授权成功！请返回桌面应用。',
-            ns: 'common',
-          }),
-          status: 'success',
-        });
-      } catch (error) {
-        console.error('Desktop callback error:', error);
-        setState({
-          error,
-          message: t('oauth.callback.failed', {
-            defaultValue: '授权处理失败，请重试。',
-            ns: 'error',
-          }),
-          status: 'error',
-        });
-      }
+      );
     };
 
     processCallback();
-  }, [searchParams, t]);
+  }, [searchParams]);
 
   const renderContent = () => {
     switch (state.status) {
-      case 'processing': {
-        return (
-          <Center>
-            <Flexbox align="center" className={styles.container}>
-              <Icon className={styles.loadingSpinner} icon={Loader2} size={48} spin />
-              <Text weight="bold">
-                {t('oauth.callback.processing', {
-                  defaultValue: '处理授权中...',
-                  ns: 'common',
-                })}
-              </Text>
-              <Text type="secondary">
-                {t('oauth.callback.processingDesc', {
-                  defaultValue: '正在安全地传递您的授权信息',
-                  ns: 'common',
-                })}
-              </Text>
-            </Flexbox>
-          </Center>
-        );
-      }
-
       case 'success': {
         return (
           <Center>
@@ -218,15 +159,10 @@ const DesktopCallbackClient = () => {
       {renderContent()}
 
       <div className={styles.brandingSection}>
-        <Center>
-          <Flexbox align="center" className={styles.brandingContent} gap={8} horizontal>
-            <span>🤯</span>
-            <Text type="secondary">LobeChat Desktop</Text>
-          </Flexbox>
-        </Center>
+        <Center>{/*<OrgBrand type={'combine'} />*/}</Center>
       </div>
     </Flexbox>
   );
 };
 
-export default DesktopCallbackClient;
+export default Client;

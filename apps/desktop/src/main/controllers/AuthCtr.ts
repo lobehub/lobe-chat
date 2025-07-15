@@ -7,7 +7,6 @@ import { URL } from 'node:url';
 import { createLogger } from '@/utils/logger';
 
 import RemoteServerConfigCtr from './RemoteServerConfigCtr';
-import RemoteServerSyncCtr from './RemoteServerSyncCtr';
 import { ControllerModule, ipcClientEvent } from './index';
 
 // Create logger
@@ -39,6 +38,21 @@ export default class AuthCtr extends ControllerModule {
   private handoffId: string | null = null;
 
   /**
+   * 构造 redirect_uri，确保授权和令牌交换时使用相同的 URI
+   * @param remoteUrl 远程服务器 URL
+   * @param includeHandoffId 是否包含 handoff ID（仅在授权时需要）
+   */
+  private constructRedirectUri(remoteUrl: string, includeHandoffId: boolean = false): string {
+    const callbackUrl = new URL('/oidc/callback', remoteUrl);
+
+    if (includeHandoffId && this.handoffId) {
+      callbackUrl.searchParams.set('id', this.handoffId);
+    }
+
+    return callbackUrl.toString();
+  }
+
+  /**
    * Request OAuth authorization
    */
   @ipcClientEvent('requestAuthorization')
@@ -65,10 +79,7 @@ export default class AuthCtr extends ControllerModule {
 
       // Construct authorization URL with new redirect_uri
       const authUrl = new URL('/oidc/auth', remoteUrl);
-      const callbackUrl = new URL('/oauth/callback/desktop', remoteUrl);
-
-      // Add handoff ID to callback URL
-      callbackUrl.searchParams.set('id', this.handoffId);
+      const redirectUri = this.constructRedirectUri(remoteUrl, true);
 
       // Add query parameters
       authUrl.search = querystring.stringify({
@@ -76,7 +87,7 @@ export default class AuthCtr extends ControllerModule {
         code_challenge: codeChallenge,
         code_challenge_method: 'S256',
         prompt: 'consent',
-        redirect_uri: callbackUrl.toString(),
+        redirect_uri: redirectUri,
         response_type: 'code',
         scope: 'profile email offline_access',
         state: this.authRequestState,
@@ -174,7 +185,7 @@ export default class AuthCtr extends ControllerModule {
 
   /**
    * 轮询获取凭证
-   * 使用新的 REST API 接口查询远程服务器
+   * 直接发送 HTTP 请求到远程服务器
    */
   private async pollForCredentials(): Promise<{ code: string; state: string } | null> {
     if (!this.handoffId) {
@@ -182,39 +193,39 @@ export default class AuthCtr extends ControllerModule {
     }
 
     try {
-      // Use the existing proxy mechanism for the new REST API
-      const remoteServerSyncCtr = this.app.getController(RemoteServerSyncCtr);
-      if (!remoteServerSyncCtr) {
-        throw new Error('RemoteServerSyncCtr not found');
-      }
+      // 获取远程服务器 URL
+      const remoteUrl = await this.remoteServerConfigCtr.getRemoteServerUrl();
 
-      // Construct the REST API request
-      const restRequest = {
+      // 构造请求 URL
+      const url = new URL('/oidc/handoff', remoteUrl);
+      url.searchParams.set('id', this.handoffId);
+      url.searchParams.set('client', 'desktop');
+
+      logger.debug(`Polling for credentials: ${url.toString()}`);
+
+      // 直接发送 HTTP 请求
+      const response = await fetch(url.toString(), {
         headers: {
           'Content-Type': 'application/json',
         },
-        method: 'GET' as const,
-        urlPath: `/oidc/handoff?id=${encodeURIComponent(this.handoffId)}&client=desktop`,
-      };
+        method: 'GET',
+      });
 
-      const response = await remoteServerSyncCtr.proxyTRPCRequest(restRequest);
-
-      // Check if the response indicates credentials are not ready
-      if (response.status === 401 || response.status === 404) {
+      // 检查响应状态
+      if (response.status === 404) {
+        // 凭证还未准备好，这是正常情况
         return null;
       }
 
-      if (response.status !== 200) {
+      if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      // Parse the response body
-      const bodyText =
-        typeof response.body === 'string' ? response.body : Buffer.from(response.body).toString();
-
-      const data = JSON.parse(bodyText);
+      // 解析响应数据
+      const data = await response.json();
 
       if (data.success && data.data?.payload) {
+        logger.debug('Successfully retrieved credentials from handoff');
         return {
           code: data.data.payload.code,
           state: data.data.payload.state,
@@ -281,7 +292,7 @@ export default class AuthCtr extends ControllerModule {
         code,
         code_verifier: codeVerifier,
         grant_type: 'authorization_code',
-        redirect_uri: new URL('/oauth/callback/desktop', remoteUrl).toString(),
+        redirect_uri: this.constructRedirectUri(remoteUrl, false),
       });
 
       logger.debug('Sending token exchange request');

@@ -1,7 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import { boolean, jsonb, pgTable, primaryKey, text, varchar } from 'drizzle-orm/pg-core';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { z } from 'zod';
 
 import { timestamps, timestamptz } from './_helpers';
 import { users } from './user';
@@ -170,7 +169,7 @@ export const oidcConsents = pgTable(
  * 4. 客户端轮询此表获取凭证
  * 5. 成功获取后立即删除记录
  */
-export const authHandoffs = pgTable('auth_handoffs', {
+export const oauthHandoffs = pgTable('oauth_handoffs', {
   /**
    * 由客户端生成的一次性唯一标识符
    * 用于客户端轮询时认领自己的凭证
@@ -198,15 +197,8 @@ export const authHandoffs = pgTable('auth_handoffs', {
 });
 
 // Zod schemas for validation
-export const insertAuthHandoffSchema = createInsertSchema(authHandoffs);
-export const selectAuthHandoffSchema = createSelectSchema(authHandoffs);
+export const insertAuthHandoffSchema = createInsertSchema(oauthHandoffs);
+export const selectAuthHandoffSchema = createSelectSchema(oauthHandoffs);
 
-// 桌面端认证凭证的专用 payload 类型
-export const desktopAuthPayloadSchema = z.object({
-  code: z.string(),
-  state: z.string(),
-});
-
-export type AuthHandoffItem = typeof authHandoffs.$inferSelect;
-export type NewAuthHandoff = typeof authHandoffs.$inferInsert;
-export type DesktopAuthPayload = z.infer<typeof desktopAuthPayloadSchema>;
+export type OAuthHandoffItem = typeof oauthHandoffs.$inferSelect;
+export type NewOAuthHandoff = typeof oauthHandoffs.$inferInsert;

@@ -1,0 +1,51 @@
+import debug from 'debug';
+import { NextRequest, NextResponse } from 'next/server';
+
+import { OAuthHandoffModel } from '@/database/models/oauthHandoff';
+import { serverDB } from '@/database/server';
+
+const log = debug('lobe-oidc:callback:desktop');
+
+export const POST = async (req: NextRequest) => {
+  try {
+    const formData = await req.formData();
+    const code = formData.get('code');
+    const state = formData.get('state'); // This `state` is the handoff ID
+
+    if (!code || !state || typeof code !== 'string' || typeof state !== 'string') {
+      log('Missing code or state in form data');
+      const errorUrl = req.nextUrl.clone();
+      errorUrl.pathname = '/oauth/callback-result';
+      errorUrl.searchParams.set('error', 'invalid_request');
+      return NextResponse.redirect(errorUrl);
+    }
+
+    log('Received OIDC callback. state(handoffId): %s', state);
+
+    // The 'client' is 'desktop' because this redirect_uri is for the desktop client.
+    const client = 'desktop';
+    const payload = { code };
+    const id = state;
+
+    const authHandoffModel = new OAuthHandoffModel(serverDB);
+    await authHandoffModel.create({ client, id, payload });
+
+    log('Handoff record created successfully for id: %s', id);
+
+    // Redirect to a generic success page. The desktop app will poll for the result.
+    const successUrl = req.nextUrl.clone();
+    successUrl.pathname = '/oauth/callback-result';
+    successUrl.searchParams.set('status', 'success');
+
+    return NextResponse.redirect(successUrl);
+  } catch (error) {
+    log('Error in OIDC callback: %O', error);
+    const errorUrl = req.nextUrl.clone();
+    errorUrl.pathname = '/oauth/callback-result';
+    errorUrl.searchParams.set('error', 'internal_error');
+    if (error instanceof Error) {
+      errorUrl.searchParams.set('errorMessage', error.message);
+    }
+    return NextResponse.redirect(errorUrl);
+  }
+};
