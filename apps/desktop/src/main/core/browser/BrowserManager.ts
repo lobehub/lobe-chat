@@ -3,15 +3,15 @@ import { WebContents } from 'electron';
 
 import { createLogger } from '@/utils/logger';
 
-import { AppBrowsersIdentifiers, appBrowsers } from '../appBrowsers';
-import type { App } from './App';
+import { AppBrowsersIdentifiers, appBrowsers } from '../../appBrowsers';
+import type { App } from '../App';
 import type { BrowserWindowOpts } from './Browser';
 import Browser from './Browser';
 
 // Create logger
 const logger = createLogger('core:BrowserManager');
 
-export default class BrowserManager {
+export class BrowserManager {
   app: App;
 
   browsers: Map<AppBrowsersIdentifiers, Browser> = new Map();

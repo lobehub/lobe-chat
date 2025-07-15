@@ -5,7 +5,7 @@ import { LOCAL_STORAGE_URL_PREFIX } from '@/const/dir';
 import FileService from '@/services/fileSrv';
 import { createLogger } from '@/utils/logger';
 
-import type { App } from './App';
+import type { App } from '../App';
 
 const logger = createLogger('core:StaticFileServerManager');
 
@@ -54,9 +54,12 @@ export class StaticFileServerManager {
     try {
       // 使用 get-port-please 获取可用端口
       this.serverPort = await getPort({
-        port: 33250, // 首选端口
-        ports: [33251, 33252, 33253, 33254, 33255], // 备用端口
+        // 备用端口
         host: '127.0.0.1',
+
+        port: 33_250,
+        // 首选端口
+        ports: [33_251, 33_252, 33_253, 33_254, 33_255],
       });
 
       logger.debug(`Found available port: ${this.serverPort}`);
@@ -64,7 +67,7 @@ export class StaticFileServerManager {
       return new Promise((resolve, reject) => {
         const server = createServer(async (req, res) => {
           // 设置请求超时
-          req.setTimeout(30000, () => {
+          req.setTimeout(30_000, () => {
             logger.warn('Request timeout, closing connection');
             if (!res.destroyed && !res.headersSent) {
               res.writeHead(408, { 'Content-Type': 'text/plain' });
@@ -155,10 +158,13 @@ export class StaticFileServerManager {
 
       // 设置响应头
       res.writeHead(200, {
-        'Content-Type': fileResult.mimeType,
-        'Cache-Control': 'public, max-age=31536000', // 缓存一年
-        'Access-Control-Allow-Origin': 'http://localhost:*', // 允许 localhost 的任意端口
+        // 缓存一年
+        'Access-Control-Allow-Origin': 'http://localhost:*',
+
+        'Cache-Control': 'public, max-age=31536000',
+        // 允许 localhost 的任意端口
         'Content-Length': Buffer.byteLength(fileResult.content),
+        'Content-Type': fileResult.mimeType,
       });
 
       // 发送文件内容
