@@ -1,7 +1,8 @@
-import { DispatchInvoke } from './types';
+import { DispatchInvoke, type ProxyTRPCRequestParams } from './types';
 
 interface IElectronAPI {
   invoke: DispatchInvoke;
+  invokeStream: (params: ProxyTRPCRequestParams) => Promise<Response>;
 }
 
 declare global {

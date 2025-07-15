@@ -39,7 +39,7 @@ import { ChatMessage, MessageToolCall } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
 import { parsePlaceholderVariablesMessages } from '@/utils/client/parserPlaceholder';
-import { fetchWithDesktopRemoteRPC } from '@/utils/electron/desktopRemoteRPCFetch';
+import { fetchWithInvokeStream } from '@/utils/electron/desktopRemoteRPCFetch';
 import { createErrorResponse } from '@/utils/errorResponse';
 import {
   FetchSSEOptions,
@@ -353,7 +353,7 @@ class ChatService {
 
     // Add desktop remote RPC fetch support
     if (isDesktop) {
-      fetcher = fetchWithDesktopRemoteRPC;
+      fetcher = fetchWithInvokeStream;
     } else if (enableFetchOnClient) {
       /**
        * Notes:
