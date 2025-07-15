@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "فشل طلب الخدمة، يرجى التحقق من الإعدادات أو إعادة المحاولة"
   },
+  "testConnectionFailed": "فشل اختبار الاتصال: {{error}}",
   "tts": {
     "responseError": "فشل طلب الخدمة، يرجى التحقق من الإعدادات أو إعادة المحاولة"
   },
@@ -130,6 +131,7 @@
     "addProxyUrl": "إضافة عنوان وكيل OpenAI (اختياري)",
     "apiKey": {
       "description": "يمكنك بدء الجلسة عن طريق إدخال مفتاح API {{name}} الخاص بك",
+      "imageGenerationDescription": "أدخل مفتاح API الخاص بـ {{name}} للبدء في التوليد",
       "title": "استخدام مفتاح API {{name}} المخصص"
     },
     "closeMessage": "إغلاق الرسالة",

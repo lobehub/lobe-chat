@@ -14,17 +14,19 @@ import {
   TextToSpeechOptions,
   TextToSpeechPayload,
 } from './types';
+import { CreateImagePayload, CreateImageResponse } from './types/image';
 
 /* eslint-disable sort-keys-fix/sort-keys-fix , typescript-sort-keys/interface */
 export interface LobeRuntimeAI {
   baseURL?: string;
-  chat(payload: ChatStreamPayload, options?: ChatMethodOptions): Promise<Response>;
+  chat?(payload: ChatStreamPayload, options?: ChatMethodOptions): Promise<Response>;
 
   embeddings?(payload: EmbeddingsPayload, options?: EmbeddingsOptions): Promise<Embeddings[]>;
 
   models?(): Promise<any>;
 
   textToImage?: (payload: TextToImagePayload) => Promise<string[]>;
+  createImage?: (payload: CreateImagePayload) => Promise<CreateImageResponse>;
 
   textToSpeech?: (
     payload: TextToSpeechPayload,

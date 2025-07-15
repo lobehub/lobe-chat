@@ -57,11 +57,27 @@
       }
     },
     "mcp": {
+      "advanced": {
+        "title": "Configurações Avançadas"
+      },
       "args": {
         "desc": "Lista de parâmetros a serem passados para o comando de execução, geralmente aqui se insere o nome do servidor MCP ou o caminho do script de inicialização",
         "label": "Parâmetros do comando",
         "placeholder": "Por exemplo: --port 8080 --debug",
         "required": "Por favor, insira os parâmetros de inicialização"
+      },
+      "auth": {
+        "bear": "Chave API",
+        "desc": "Selecione o método de autenticação do servidor MCP",
+        "label": "Tipo de autenticação",
+        "none": "Sem autenticação",
+        "placeholder": "Por favor, selecione o tipo de autenticação",
+        "token": {
+          "desc": "Insira sua Chave API ou Token Bearer",
+          "label": "Chave API",
+          "placeholder": "sk-xxxxx",
+          "required": "Por favor, insira o token de autenticação"
+        }
       },
       "avatar": {
         "label": "Ícone do plugin"
@@ -89,6 +105,11 @@
         "keyRequired": "A chave do campo não pode estar vazia",
         "label": "Variáveis de ambiente do servidor MCP",
         "stringifyError": "Não foi possível serializar os parâmetros, verifique o formato dos parâmetros"
+      },
+      "headers": {
+        "add": "Adicionar uma linha",
+        "desc": "Insira os cabeçalhos da requisição",
+        "label": "Cabeçalhos HTTP"
       },
       "identifier": {
         "desc": "Dê um nome ao seu plugin MCP, deve usar caracteres em inglês",
@@ -269,6 +290,7 @@
       "showDetails": "Mostrar detalhes"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "Erro de autorização",
       "CONNECTION_FAILED": "Falha na conexão",
       "INITIALIZATION_TIMEOUT": "Tempo de inicialização esgotado",
       "PROCESS_SPAWN_ERROR": "Falha ao iniciar processo",

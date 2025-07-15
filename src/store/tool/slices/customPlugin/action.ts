@@ -51,7 +51,16 @@ export const createCustomPluginSlice: StateCreator<
         const url = plugin.customParams?.mcp?.url;
         if (!url) return;
 
-        manifest = await mcpService.getStreamableMcpServerManifest(plugin.identifier, url);
+        manifest = await mcpService.getStreamableMcpServerManifest({
+          auth: plugin.customParams.mcp.auth,
+          headers: plugin.customParams.mcp.headers,
+          identifier: plugin.identifier,
+          metadata: {
+            avatar: plugin.customParams.avatar,
+            description: plugin.customParams.description,
+          },
+          url,
+        });
       } else {
         manifest = await toolService.getToolManifest(
           plugin.customParams?.manifestUrl,
