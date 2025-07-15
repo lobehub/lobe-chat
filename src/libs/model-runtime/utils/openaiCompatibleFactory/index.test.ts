@@ -1005,6 +1005,7 @@ describe('LobeOpenAICompatibleFactory', () => {
             input: 2.5,
             output: 10,
           },
+          type: 'chat',
           vision: true,
         },
         {
@@ -1020,6 +1021,7 @@ describe('LobeOpenAICompatibleFactory', () => {
             output: 1.25,
           },
           releasedAt: '2024-03-07',
+          type: 'chat',
           vision: true,
         },
         {
@@ -1036,11 +1038,13 @@ describe('LobeOpenAICompatibleFactory', () => {
             output: 0.6,
           },
           releasedAt: '2023-10-26',
+          type: 'chat',
           vision: true,
         },
         {
           id: 'gemini',
           releasedAt: '2025-01-10',
+          type: 'chat',
         },
       ]);
     });

@@ -4,7 +4,7 @@ import createDebug from 'debug';
 import OpenAI, { ClientOptions, toFile } from 'openai';
 import { Stream } from 'openai/streaming';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
 import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/meta-schema';
 import type { ModelCard } from '@/types/llm';
 
@@ -476,7 +476,8 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       return resultModels.map((model) => {
         return {
           ...model,
-          type: LOBE_DEFAULT_MODEL_LIST.find((m) => m.id === model.id)?.type || 'chat',
+          type:
+            model.type || LOBE_DEFAULT_MODEL_LIST.find((m) => m.id === model.id)?.type || 'chat',
         };
       }) as ModelCard[];
     }
