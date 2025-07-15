@@ -17,7 +17,11 @@ export class OAuthHandoffModel {
    * @returns 创建的记录
    */
   create = async (params: NewOAuthHandoff): Promise<OAuthHandoffItem> => {
-    const [result] = await this.db.insert(oauthHandoffs).values(params).returning();
+    const [result] = await this.db
+      .insert(oauthHandoffs)
+      .values(params)
+      .onConflictDoNothing()
+      .returning();
 
     return result;
   };

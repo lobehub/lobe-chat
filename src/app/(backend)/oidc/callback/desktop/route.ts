@@ -15,8 +15,8 @@ export const POST = async (req: NextRequest) => {
     if (!code || !state || typeof code !== 'string' || typeof state !== 'string') {
       log('Missing code or state in form data');
       const errorUrl = req.nextUrl.clone();
-      errorUrl.pathname = '/oauth/callback-result';
-      errorUrl.searchParams.set('error', 'invalid_request');
+      errorUrl.pathname = '/oauth/callback/error';
+      errorUrl.searchParams.set('reason', 'invalid_request');
       return NextResponse.redirect(errorUrl);
     }
 
@@ -34,18 +34,19 @@ export const POST = async (req: NextRequest) => {
 
     // Redirect to a generic success page. The desktop app will poll for the result.
     const successUrl = req.nextUrl.clone();
-    successUrl.pathname = '/oauth/callback-result';
-    successUrl.searchParams.set('status', 'success');
+    successUrl.pathname = '/oauth/callback/success';
 
     return NextResponse.redirect(successUrl);
   } catch (error) {
     log('Error in OIDC callback: %O', error);
     const errorUrl = req.nextUrl.clone();
-    errorUrl.pathname = '/oauth/callback-result';
-    errorUrl.searchParams.set('error', 'internal_error');
+    errorUrl.pathname = '/oauth/callback/error';
+    errorUrl.searchParams.set('reason', 'internal_error');
+
     if (error instanceof Error) {
       errorUrl.searchParams.set('errorMessage', error.message);
     }
+
     return NextResponse.redirect(errorUrl);
   }
 };
