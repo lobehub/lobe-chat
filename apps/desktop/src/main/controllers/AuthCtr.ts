@@ -85,6 +85,8 @@ export default class AuthCtr extends ControllerModule {
         code_challenge_method: 'S256',
         prompt: 'consent',
         redirect_uri: redirectUri,
+        //
+        resource: 'urn:lobehub:chat',
         response_type: 'code',
         scope: 'profile email offline_access',
         state: this.authRequestState,
