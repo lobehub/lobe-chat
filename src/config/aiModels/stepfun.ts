@@ -32,25 +32,6 @@ const stepfunChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 8000,
-    description: '高速模型，适合实时对话。',
-    displayName: 'Step 1 Flash',
-    id: 'step-1-flash', // 将在2025年4月30日下线
-    pricing: {
-      currency: 'CNY',
-      input: 1,
-      output: 4,
-    },
-    settings: {
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      search: true,
-    },
-    contextWindowTokens: 8000,
     description: '小型模型，适合轻量级任务。',
     displayName: 'Step 1 8K',
     id: 'step-1-8k',
@@ -77,25 +58,6 @@ const stepfunChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 15,
       output: 70,
-    },
-    settings: {
-      searchImpl: 'params',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      search: true,
-    },
-    contextWindowTokens: 128_000,
-    description: '平衡性能与成本，适合一般场景。',
-    displayName: 'Step 1 128K',
-    id: 'step-1-128k', // 将在2025年4月30日下线
-    pricing: {
-      currency: 'CNY',
-      input: 40,
-      output: 200,
     },
     settings: {
       searchImpl: 'params',
@@ -238,21 +200,6 @@ const stepfunChatModels: AIChatModelCard[] = [
       output: 70,
     },
     releasedAt: '2025-01-22',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      vision: true,
-    },
-    contextWindowTokens: 32_000,
-    description: '该模型拥有强大的视频理解能力。',
-    displayName: 'Step 1.5V Mini',
-    id: 'step-1.5v-mini',
-    pricing: {
-      currency: 'CNY',
-      input: 8,
-      output: 35,
-    },
     type: 'chat',
   },
   {
