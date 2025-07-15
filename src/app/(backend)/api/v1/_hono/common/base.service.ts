@@ -450,4 +450,73 @@ export abstract class BaseService implements IBaseService {
       message: `no permission for batch operation, current user has no ${resourceType} ${actionType} all/workspace permission`,
     };
   }
+
+  /**
+   * 检查用户是否拥有聊天相关的所有必要权限
+   * 包括：
+   * - 消息读写权限 (MESSAGE_READ, MESSAGE_WRITE)
+   * - 话题读写权限 (TOPIC_READ, TOPIC_WRITE)
+   * - 会话读写权限 (SESSION_READ, SESSION_WRITE)
+   * - AI 模型读权限 (AI_MODEL_READ)
+   * - 助手读权限 (AGENT_READ)
+   * - 文件读权限 (FILE_READ)
+   *
+   * @returns 返回权限检查结果和缺失的权限列表
+   */
+  protected async resolveChatPermissions(): Promise<{
+    isPermitted: boolean;
+    message?: string;
+    missingPermissions: string[];
+  }> {
+    const requiredPermissions = [
+      'MESSAGE_READ',
+      'MESSAGE_CREATE',
+      'TOPIC_READ',
+      'TOPIC_CREATE',
+      'SESSION_READ',
+      'SESSION_CREATE',
+      'AI_MODEL_READ',
+      'AGENT_READ',
+      'FILE_READ',
+    ] as const;
+
+    const permissionResults = await Promise.all(
+      requiredPermissions.map(async (permission) => {
+        const result = await this.resolveQueryPermission(permission);
+        return {
+          isPermitted: result.isPermitted,
+          permission,
+        };
+      }),
+    );
+
+    const missingPermissions = permissionResults
+      .filter((result) => !result.isPermitted)
+      .map((result) => {
+        const resourceType = getResourceType(result.permission);
+        const actionType = getActionType(result.permission);
+        return `${resourceType} ${actionType}`;
+      });
+
+    const isPermitted = missingPermissions.length === 0;
+
+    this.log('info', '聊天权限检查', {
+      isPermitted,
+      missingPermissions,
+      userId: this.userId,
+    });
+
+    if (!isPermitted) {
+      return {
+        isPermitted: false,
+        message: `缺少必要权限：${missingPermissions.join(', ')}`,
+        missingPermissions,
+      };
+    }
+
+    return {
+      isPermitted: true,
+      missingPermissions: [],
+    };
+  }
 }
