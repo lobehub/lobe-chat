@@ -85,7 +85,7 @@ export default class AuthCtr extends ControllerModule {
         code_challenge_method: 'S256',
         prompt: 'consent',
         redirect_uri: redirectUri,
-        //
+        // https://github.com/lobehub/lobe-chat/pull/8450
         resource: 'urn:lobehub:chat',
         response_type: 'code',
         scope: 'profile email offline_access',
