@@ -1,5 +1,12 @@
 [
   {
+    "children": {
+      "fixes": ["Some ai image generation feedback issues."]
+    },
+    "date": "2025-07-15",
+    "version": "1.99.2"
+  },
+  {
     "children": {},
     "date": "2025-07-15",
     "version": "1.99.1"
