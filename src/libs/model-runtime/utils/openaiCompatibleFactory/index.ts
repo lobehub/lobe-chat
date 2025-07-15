@@ -4,6 +4,7 @@ import createDebug from 'debug';
 import OpenAI, { ClientOptions, toFile } from 'openai';
 import { Stream } from 'openai/streaming';
 
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/meta-schema';
 import type { ModelCard } from '@/types/llm';
 
@@ -161,9 +162,7 @@ export function transformResponseToStream(data: OpenAI.ChatCompletion) {
   });
 }
 
-const convertImageUrlToFile = async (imageUrl: string, log: createDebug.Debugger) => {
-  log('Converting image URL to File: %s', imageUrl.startsWith('data:') ? 'base64 data' : imageUrl);
-
+const convertImageUrlToFile = async (imageUrl: string) => {
   let buffer: Buffer;
   let mimeType: string;
 
@@ -181,8 +180,6 @@ const convertImageUrlToFile = async (imageUrl: string, log: createDebug.Debugger
     buffer = Buffer.from(await response.arrayBuffer());
     mimeType = response.headers.get('content-type') || 'image/png';
   }
-
-  log('Successfully converted image to buffer, size: %s, mimeType: %s', buffer.length, mimeType);
 
   return toFile(buffer, `image.${mimeType.split('/')[1]}`, { type: mimeType });
 };
@@ -338,7 +335,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
     async createImage(payload: CreateImagePayload) {
       const { model, params } = payload;
-      const log = createDebug(`lobe-image:${this.id}`);
+      const log = createDebug(`lobe-image:model-runtime`);
 
       log('Creating image with model: %s and params: %O', model, params);
 
@@ -362,7 +359,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         try {
           // 转换所有图片 URL 为 File 对象
           const imageFiles = await Promise.all(
-            userInput.image.map((url: string) => convertImageUrlToFile(url, log)),
+            userInput.image.map((url: string) => convertImageUrlToFile(url)),
           );
 
           log('Successfully converted %d images to File objects', imageFiles.length);
@@ -384,7 +381,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       const options = {
         model,
         ...defaultInput,
-        ...(userInput as any),
+        ...userInput,
       };
 
       log('options: %O', options);
@@ -425,8 +422,6 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     }
 
     async models() {
-      const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
-
       let resultModels: ModelCard[] = [];
       if (typeof models === 'function') {
         resultModels = await models({ client: this.client });
