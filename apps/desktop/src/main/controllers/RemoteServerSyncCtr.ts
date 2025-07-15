@@ -86,9 +86,9 @@ export default class RemoteServerSyncCtr extends ControllerModule {
     // 1. Determine target URL and prepare request options
     const targetUrl = new URL(urlPath, remoteServerUrl); // Combine base URL and path
 
-    // Prepare headers, cloning and adding Authorization
+    // Prepare headers, cloning and adding Oidc-Auth
     const requestHeaders: OutgoingHttpHeaders = { ...originalHeaders }; // Use OutgoingHttpHeaders
-    requestHeaders['Authorization'] = `Bearer ${accessToken}`;
+    requestHeaders['Oidc-Auth'] = accessToken;
 
     // Let node handle Host, Content-Length etc. Remove potentially problematic headers
     delete requestHeaders['host'];
