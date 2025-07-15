@@ -38,6 +38,12 @@ export default class AuthCtr extends ControllerModule {
   private cachedRemoteUrl: string | null = null;
 
   /**
+   * 自动刷新定时器
+   */
+  // eslint-disable-next-line no-undef
+  private autoRefreshTimer: NodeJS.Timeout | null = null;
+
+  /**
    * 构造 redirect_uri，确保授权和令牌交换时使用相同的 URI
    * @param remoteUrl 远程服务器 URL
    * @param includeHandoffId 是否包含 handoff ID（仅在授权时需要）
@@ -178,6 +184,55 @@ export default class AuthCtr extends ControllerModule {
   }
 
   /**
+   * 启动自动刷新定时器
+   */
+  private startAutoRefresh() {
+    // 先停止现有的定时器
+    this.stopAutoRefresh();
+
+    const checkInterval = 2 * 60 * 1000; // 每 2 分钟检查一次
+    logger.debug('Starting auto-refresh timer');
+
+    this.autoRefreshTimer = setInterval(async () => {
+      try {
+        // 检查 token 是否即将过期 (提前 5 分钟刷新)
+        if (this.remoteServerConfigCtr.isTokenExpiringSoon()) {
+          const expiresAt = this.remoteServerConfigCtr.getTokenExpiresAt();
+          logger.info(
+            `Token is expiring soon, triggering auto-refresh. Expires at: ${expiresAt ? new Date(expiresAt).toISOString() : 'unknown'}`,
+          );
+
+          const result = await this.remoteServerConfigCtr.refreshAccessToken();
+          if (result.success) {
+            logger.info('Auto-refresh successful');
+            this.broadcastTokenRefreshed();
+          } else {
+            logger.error(`Auto-refresh failed: ${result.error}`);
+            // 如果自动刷新失败，停止定时器并清除 token
+            this.stopAutoRefresh();
+            await this.remoteServerConfigCtr.clearTokens();
+            await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
+            this.broadcastAuthorizationRequired();
+          }
+        }
+      } catch (error) {
+        logger.error('Error during auto-refresh check:', error);
+      }
+    }, checkInterval);
+  }
+
+  /**
+   * 停止自动刷新定时器
+   */
+  private stopAutoRefresh() {
+    if (this.autoRefreshTimer) {
+      clearInterval(this.autoRefreshTimer);
+      this.autoRefreshTimer = null;
+      logger.debug('Stopped auto-refresh timer');
+    }
+  }
+
+  /**
    * 轮询获取凭证
    * 直接发送 HTTP 请求到远程服务器
    */
@@ -253,6 +308,8 @@ export default class AuthCtr extends ControllerModule {
         logger.info('Token refresh successful via AuthCtr call.');
         // Notify render process that token has been refreshed
         this.broadcastTokenRefreshed();
+        // Restart auto-refresh timer with new expiration time
+        this.startAutoRefresh();
         return { success: true };
       } else {
         // Throw an error to be caught by the catch block below
@@ -266,6 +323,7 @@ export default class AuthCtr extends ControllerModule {
 
       // Refresh failed, clear tokens and disable remote server
       logger.warn('Refresh failed, clearing tokens and disabling remote server');
+      this.stopAutoRefresh();
       await this.remoteServerConfigCtr.clearTokens();
       await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
 
@@ -329,12 +387,19 @@ export default class AuthCtr extends ControllerModule {
 
       // Save tokens
       logger.debug('Starting to save exchanged tokens');
-      await this.remoteServerConfigCtr.saveTokens(data.access_token, data.refresh_token);
+      await this.remoteServerConfigCtr.saveTokens(
+        data.access_token,
+        data.refresh_token,
+        data.expires_in,
+      );
       logger.info('Successfully saved exchanged tokens');
 
       // Set server to active state
       logger.debug(`Setting remote server to active state: ${remoteUrl}`);
       await this.remoteServerConfigCtr.setRemoteServerConfig({ active: true });
+
+      // Start auto-refresh timer
+      this.startAutoRefresh();
 
       return { success: true };
     } catch (error) {
@@ -433,5 +498,72 @@ export default class AuthCtr extends ControllerModule {
       .replace(/=+$/, '');
     logger.debug('Generated code challenge (partial): ' + challenge.slice(0, 10) + '...'); // Avoid logging full sensitive info
     return challenge;
+  }
+
+  /**
+   * 应用启动后初始化
+   */
+  afterAppReady() {
+    logger.debug('AuthCtr initialized, checking for existing tokens');
+    this.initializeAutoRefresh();
+  }
+
+  /**
+   * 清理所有定时器
+   */
+  cleanup() {
+    logger.debug('Cleaning up AuthCtr timers');
+    this.stopPolling();
+    this.stopAutoRefresh();
+  }
+
+  /**
+   * 初始化自动刷新功能
+   * 在应用启动时检查是否有有效的 token，如果有就启动自动刷新定时器
+   */
+  private async initializeAutoRefresh() {
+    try {
+      const config = await this.remoteServerConfigCtr.getRemoteServerConfig();
+
+      // 检查是否配置了远程服务器且处于活动状态
+      if (!config.active || !config.remoteServerUrl) {
+        logger.debug(
+          'Remote server not active or configured, skipping auto-refresh initialization',
+        );
+        return;
+      }
+
+      // 检查是否有有效的访问令牌
+      const accessToken = await this.remoteServerConfigCtr.getAccessToken();
+      if (!accessToken) {
+        logger.debug('No access token found, skipping auto-refresh initialization');
+        return;
+      }
+
+      // 检查是否有过期时间信息
+      const expiresAt = this.remoteServerConfigCtr.getTokenExpiresAt();
+      if (!expiresAt) {
+        logger.debug('No token expiration time found, skipping auto-refresh initialization');
+        return;
+      }
+
+      // 检查 token 是否已经过期
+      const currentTime = Date.now();
+      if (currentTime >= expiresAt) {
+        logger.info('Token has expired, clearing tokens and requiring re-authorization');
+        await this.remoteServerConfigCtr.clearTokens();
+        await this.remoteServerConfigCtr.setRemoteServerConfig({ active: false });
+        this.broadcastAuthorizationRequired();
+        return;
+      }
+
+      // 启动自动刷新定时器
+      logger.info(
+        `Token is valid, starting auto-refresh timer. Token expires at: ${new Date(expiresAt).toISOString()}`,
+      );
+      this.startAutoRefresh();
+    } catch (error) {
+      logger.error('Error during auto-refresh initialization:', error);
+    }
   }
 }
