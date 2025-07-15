@@ -11,6 +11,7 @@ import { default as bedrock } from './bedrock';
 import { default as cloudflare } from './cloudflare';
 import { default as cohere } from './cohere';
 import { default as deepseek } from './deepseek';
+import { default as fal } from './fal';
 import { default as fireworksai } from './fireworksai';
 import { default as giteeai } from './giteeai';
 import { default as github } from './github';
@@ -87,6 +88,7 @@ export const LOBE_DEFAULT_MODEL_LIST = buildDefaultModelList({
   cloudflare,
   cohere,
   deepseek,
+  fal,
   fireworksai,
   giteeai,
   github,
@@ -144,6 +146,7 @@ export { default as bedrock } from './bedrock';
 export { default as cloudflare } from './cloudflare';
 export { default as cohere } from './cohere';
 export { default as deepseek } from './deepseek';
+export { default as fal } from './fal';
 export { default as fireworksai } from './fireworksai';
 export { default as giteeai } from './giteeai';
 export { default as github } from './github';

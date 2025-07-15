@@ -183,6 +183,7 @@
   },
   "fullscreen": "حالت تمام صفحه",
   "historyRange": "محدوده تاریخی",
+  "import": "وارد کردن",
   "importData": "وارد کردن داده‌ها",
   "importModal": {
     "error": {
@@ -324,6 +325,7 @@
     }
   },
   "tab": {
+    "aiImage": "نقاشی هوش مصنوعی",
     "chat": "گفتگو",
     "discover": "کشف",
     "files": "فایل‌ها",

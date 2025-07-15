@@ -129,6 +129,7 @@
     "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość"
   },
   "plugin": {
+    "addMCPPlugin": "Dodaj wtyczkę MCP",
     "addTooltip": "Dodaj niestandardowy dodatek",
     "clearDeprecated": "Usuń przestarzałe dodatki",
     "empty": "Brak zainstalowanych dodatków, zapraszamy do odwiedzenia <1>sklepu z dodatkami</1>",
@@ -483,6 +484,11 @@
       "placeholder": "Wprowadź niestandardowe słowo podpowiedzi",
       "title": "Niestandardowe słowo podpowiedzi"
     },
+    "generationTopic": {
+      "label": "Model nazewnictwa tematów do AI w malarstwie",
+      "modelDesc": "Model przeznaczony do automatycznego nadawania nazw tematom w AI malarskim",
+      "title": "Automatyczne nadawanie nazw tematom w AI malarskim"
+    },
     "helpInfo": "Podczas tworzenia nowego asystenta, domyślne ustawienia asystenta będą używane jako wartości wstępne.",
     "historyCompress": {
       "label": "Model historii rozmów",
@@ -519,6 +525,7 @@
     "hotkey": "Skróty klawiszowe",
     "llm": "Model językowy",
     "provider": "Dostawca usług AI",
+    "proxy": "Proxy sieciowy",
     "storage": "Przechowywanie danych",
     "sync": "Synchronizacja w chmurze",
     "system-agent": "System Agent",

@@ -37,7 +37,9 @@ describe('aiProviderRouter', () => {
   const mockRuntimeState: AiProviderRuntimeState = {
     enabledAiModels: [],
     enabledAiProviders: [],
+    enabledChatAiProviders: [],
     runtimeConfig: {},
+    enabledImageAiProviders: [],
   };
 
   beforeEach(() => {
