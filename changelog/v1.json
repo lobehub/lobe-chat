@@ -6,10 +6,21 @@
   },
   {
     "children": {
-      "features": ["support AI Image."]
+      "features": [
+        "support AI Image."
+      ]
     },
     "date": "2025-07-14",
     "version": "1.99.0"
+  },
+  {
+    "children": {
+      "features": [
+        "support AI Image."
+      ]
+    },
+    "date": "2025-07-15",
+    "version": "1.98.0"
   },
   {
     "children": {
