@@ -64,6 +64,13 @@ export class MessageService extends BaseService {
     this.log('info', '根据用户ID统计消息数量', { targetUserId });
 
     try {
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('MESSAGE_READ', targetUserId);
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权访问此用户的消息');
+      }
+
       const result = await this.db
         .select({ count: count() })
         .from(messages)
@@ -88,9 +95,22 @@ export class MessageService extends BaseService {
     this.log('info', '根据话题ID获取消息列表', { topicId, userId: this.userId });
 
     try {
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('MESSAGE_READ', {
+        targetTopicId: topicId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权访问此话题的消息');
+      }
+
       const messageList = await this.db.query.messages.findMany({
         orderBy: desc(messages.createdAt),
-        where: eq(messages.topicId, topicId),
+        where: and(
+          eq(messages.topicId, topicId),
+          // 添加权限相关的查询条件
+          permissionResult.condition?.userId ? eq(messages.userId, permissionResult.condition.userId) : undefined,
+        ),
         with: {
           messagesFiles: {
             with: {
@@ -125,8 +145,21 @@ export class MessageService extends BaseService {
     this.log('info', '根据消息ID获取消息详情', { messageId, userId: this.userId });
 
     try {
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('MESSAGE_READ', {
+        targetMessageId: messageId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权访问此消息');
+      }
+
       const message = await this.db.query.messages.findFirst({
-        where: and(eq(messages.id, messageId), eq(messages.userId, this.userId!)),
+        where: and(
+          eq(messages.id, messageId),
+          // 添加权限相关的查询条件
+          permissionResult.condition?.userId ? eq(messages.userId, permissionResult.condition.userId) : undefined,
+        ),
         with: {
           messagesFiles: {
             with: {
@@ -167,6 +200,20 @@ export class MessageService extends BaseService {
     });
 
     try {
+      // 权限校验
+      const permissionSession = await this.resolveQueryPermission('MESSAGE_CREATE', {
+        targetSessionId: messageData.sessionId!,
+      });
+      const permissionTopic = await this.resolveQueryPermission('MESSAGE_CREATE', {
+        targetTopicId: messageData.topicId!,
+      });
+
+      if (!permissionSession.isPermitted || !permissionTopic.isPermitted) {
+        throw this.createAuthorizationError(
+          permissionSession.message || permissionTopic.message || '无权创建消息',
+        );
+      }
+
       const [newMessage] = await this.db
         .insert(messages)
         .values({
@@ -203,7 +250,11 @@ export class MessageService extends BaseService {
 
       // 重新查询包含 session 和 user 信息的完整消息
       const completeMessage = await this.db.query.messages.findFirst({
-        where: and(eq(messages.id, newMessage.id), eq(messages.userId, this.userId!)),
+        where: and(
+          eq(messages.id, newMessage.id),
+          // 添加权限相关的查询条件
+          permissionSession.condition?.userId && permissionSession.condition?.userId === permissionTopic.condition?.userId ? eq(messages.userId, permissionSession.condition.userId) : undefined,
+        ),
         with: {
           messagesFiles: {
             with: {
@@ -412,13 +463,27 @@ export class MessageService extends BaseService {
     });
 
     try {
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('MESSAGE_READ', {
+        targetSessionId: searchRequest.sessionId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权搜索消息');
+      }
+
       const { keyword, limit = 20, offset = 0, sessionId } = searchRequest;
 
       // 步骤1: 查询内容匹配关键词的消息ID
       const contentMatchedMessages = await this.db
         .select({ id: messages.id })
         .from(messages)
-        .where(and(eq(messages.sessionId, sessionId), ilike(messages.content, `%${keyword}%`)));
+        .where(and(
+          eq(messages.sessionId, sessionId),
+          ilike(messages.content, `%${keyword}%`),
+          // 添加权限相关的查询条件
+          permissionResult.condition?.userId ? eq(messages.userId, permissionResult.condition.userId) : undefined,
+        ));
 
       // 步骤2: 查询标题匹配关键词的话题，并获取这些话题下的消息ID
       const titleMatchedTopics = await this.db
@@ -455,7 +520,12 @@ export class MessageService extends BaseService {
         limit: limit,
         offset: offset,
         orderBy: desc(messages.createdAt),
-        where: and(eq(messages.userId, this.userId!), inArray(messages.id, allMessageIds)),
+        where: and(
+          eq(messages.userId, this.userId!),
+          inArray(messages.id, allMessageIds),
+          // 添加权限相关的查询条件
+          permissionResult.condition?.userId ? eq(messages.userId, permissionResult.condition.userId) : undefined,
+        ),
         with: {
           messagesFiles: {
             with: {
