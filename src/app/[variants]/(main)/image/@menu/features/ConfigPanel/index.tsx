@@ -26,7 +26,7 @@ interface ConfigItemLayoutProps {
 const ConfigItemLayout = memo<ConfigItemLayoutProps>(({ label, children }) => {
   return (
     <Flexbox gap={8}>
-      {label && <Text weight={500}>{label.toUpperCase()}</Text>}
+      {label && <Text weight={500}>{label}</Text>}
       {children}
     </Flexbox>
   );
