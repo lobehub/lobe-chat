@@ -228,6 +228,16 @@ export class ChatService extends BaseService {
     params: ChatServiceParams,
     options?: Partial<ChatStreamPayload>,
   ): ServiceResult<ChatServiceResponse> {
+    if (!this.userId) {
+      throw this.createAuthError('未授权操作');
+    }
+
+    // 权限检查
+    const permissionResult = await this.resolveChatPermissions();
+    if (!permissionResult.isPermitted) {
+      throw this.createAuthorizationError(permissionResult.message || '无权限操作');
+    }
+
     const provider = params.provider || this.config.defaultProvider!;
     const model = params.model || this.config.defaultModel!;
 
@@ -338,6 +348,12 @@ export class ChatService extends BaseService {
       throw this.createAuthError('未授权操作');
     }
 
+    // 权限检查
+    const permissionResult = await this.resolveChatPermissions();
+    if (!permissionResult.isPermitted) {
+      throw this.createAuthorizationError(permissionResult.message || '无权限操作');
+    }
+
     // 获取最终使用的模型配置
     const modelConfig = await this.resolveModelConfig({
       model: params.model,
@@ -413,6 +429,16 @@ export class ChatService extends BaseService {
    * @returns 生成的回复内容
    */
   async generateReply(params: MessageGenerationParams): ServiceResult<string> {
+    if (!this.userId) {
+      throw this.createAuthError('未授权操作');
+    }
+
+    // 权限检查
+    const permissionResult = await this.resolveChatPermissions();
+    if (!permissionResult.isPermitted) {
+      throw this.createAuthorizationError(permissionResult.message || '无权限操作');
+    }
+
     this.log('info', '开始生成消息回复', {
       agentId: params.agentId,
       hasUserChatConfig: !!params.chatConfig,
