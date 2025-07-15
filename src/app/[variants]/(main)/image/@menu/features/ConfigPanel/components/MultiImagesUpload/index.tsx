@@ -3,6 +3,7 @@
 // Removed Image import - using img tags instead
 import { createStyles, useTheme } from 'antd-style';
 import { Image as ImageIcon, X } from 'lucide-react';
+import Image from 'next/image';
 import React, { type FC, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
@@ -429,10 +430,12 @@ const ImageThumbnails: FC<ImageThumbnailsProps> = memo(({ images, onClick, onDel
 
     return (
       <div className={styles.imageItem} key={imageUrl}>
-        <img
+        <Image
           alt={`Uploaded image ${index + 1}`}
+          fill
           src={imageUrl}
-          style={{ height: '100%', objectFit: 'cover', width: '100%' }}
+          style={{ objectFit: 'cover' }}
+          unoptimized
         />
         {!showOverlay && (
           <div
@@ -478,10 +481,12 @@ const SingleImageDisplay: FC<SingleImageDisplayProps> = memo(({ imageUrl, onClic
 
   return (
     <div className={styles.singleImageDisplay}>
-      <img
+      <Image
         alt="Uploaded image"
+        fill
         src={imageUrl}
-        style={{ height: '100%', objectFit: 'cover', width: '100%' }}
+        style={{ objectFit: 'contain' }}
+        unoptimized
       />
 
       {/* Delete button */}
