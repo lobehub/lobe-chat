@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-07-15",
+    "version": "1.99.1"
+  },
+  {
     "children": {
       "features": ["support AI Image."]
     },
