@@ -35,19 +35,15 @@ export default class AuthCtr extends ControllerModule {
    */
   // eslint-disable-next-line no-undef
   private pollingInterval: NodeJS.Timeout | null = null;
-  private handoffId: string | null = null;
+  private cachedRemoteUrl: string | null = null;
 
   /**
    * 构造 redirect_uri，确保授权和令牌交换时使用相同的 URI
    * @param remoteUrl 远程服务器 URL
    * @param includeHandoffId 是否包含 handoff ID（仅在授权时需要）
    */
-  private constructRedirectUri(remoteUrl: string, includeHandoffId: boolean = false): string {
-    const callbackUrl = new URL('/oidc/callback', remoteUrl);
-
-    if (includeHandoffId && this.handoffId) {
-      callbackUrl.searchParams.set('id', this.handoffId);
-    }
+  private constructRedirectUri(remoteUrl: string): string {
+    const callbackUrl = new URL('/oidc/callback/desktop', remoteUrl);
 
     return callbackUrl.toString();
   }
@@ -58,6 +54,9 @@ export default class AuthCtr extends ControllerModule {
   @ipcClientEvent('requestAuthorization')
   async requestAuthorization(config: DataSyncConfig) {
     const remoteUrl = await this.remoteServerConfigCtr.getRemoteServerUrl(config);
+
+    // 缓存远程服务器 URL 用于后续轮询
+    this.cachedRemoteUrl = remoteUrl;
 
     logger.info(
       `Requesting OAuth authorization, storageMode:${config.storageMode} server URL: ${remoteUrl}`,
@@ -73,13 +72,11 @@ export default class AuthCtr extends ControllerModule {
       this.authRequestState = crypto.randomBytes(16).toString('hex');
       logger.debug(`Generated state parameter: ${this.authRequestState}`);
 
-      // Generate unique handoff ID for this authorization request
-      this.handoffId = crypto.randomUUID();
-      logger.debug(`Generated handoff ID: ${this.handoffId}`);
-
       // Construct authorization URL with new redirect_uri
       const authUrl = new URL('/oidc/auth', remoteUrl);
-      const redirectUri = this.constructRedirectUri(remoteUrl, true);
+      const redirectUri = this.constructRedirectUri(remoteUrl);
+
+      logger.info('redirectUri', redirectUri);
 
       // Add query parameters
       authUrl.search = querystring.stringify({
@@ -113,13 +110,13 @@ export default class AuthCtr extends ControllerModule {
    * 启动轮询机制获取凭证
    */
   private startPolling() {
-    if (!this.handoffId) {
+    if (!this.authRequestState) {
       logger.error('No handoff ID available for polling');
       return;
     }
 
     logger.info('Starting credential polling');
-    const pollInterval = 2000; // 2 seconds
+    const pollInterval = 3000; // 3 seconds
     const maxPollTime = 5 * 60 * 1000; // 5 minutes
     const startTime = Date.now();
 
@@ -176,11 +173,6 @@ export default class AuthCtr extends ControllerModule {
       clearInterval(this.pollingInterval);
       this.pollingInterval = null;
     }
-
-    // Clear authorization request state
-    this.authRequestState = null;
-    this.codeVerifier = null;
-    this.handoffId = null;
   }
 
   /**
@@ -188,17 +180,17 @@ export default class AuthCtr extends ControllerModule {
    * 直接发送 HTTP 请求到远程服务器
    */
   private async pollForCredentials(): Promise<{ code: string; state: string } | null> {
-    if (!this.handoffId) {
+    if (!this.authRequestState || !this.cachedRemoteUrl) {
       return null;
     }
 
     try {
-      // 获取远程服务器 URL
-      const remoteUrl = await this.remoteServerConfigCtr.getRemoteServerUrl();
+      // 使用缓存的远程服务器 URL
+      const remoteUrl = this.cachedRemoteUrl;
 
       // 构造请求 URL
       const url = new URL('/oidc/handoff', remoteUrl);
-      url.searchParams.set('id', this.handoffId);
+      url.searchParams.set('id', this.authRequestState);
       url.searchParams.set('client', 'desktop');
 
       logger.debug(`Polling for credentials: ${url.toString()}`);
@@ -222,7 +214,13 @@ export default class AuthCtr extends ControllerModule {
       }
 
       // 解析响应数据
-      const data = await response.json();
+      const data = (await response.json()) as {
+        data: {
+          id: string;
+          payload: { code: string; state: string };
+        };
+        success: boolean;
+      };
 
       if (data.success && data.data?.payload) {
         logger.debug('Successfully retrieved credentials from handoff');
@@ -280,7 +278,11 @@ export default class AuthCtr extends ControllerModule {
    * Exchange authorization code for token
    */
   private async exchangeCodeForToken(code: string, codeVerifier: string) {
-    const remoteUrl = await this.remoteServerConfigCtr.getRemoteServerUrl();
+    if (!this.cachedRemoteUrl) {
+      throw new Error('No cached remote URL available for token exchange');
+    }
+
+    const remoteUrl = this.cachedRemoteUrl;
     logger.info('Starting to exchange authorization code for token');
     try {
       const tokenUrl = new URL('/oidc/token', remoteUrl);
@@ -292,7 +294,7 @@ export default class AuthCtr extends ControllerModule {
         code,
         code_verifier: codeVerifier,
         grant_type: 'authorization_code',
-        redirect_uri: this.constructRedirectUri(remoteUrl, false),
+        redirect_uri: this.constructRedirectUri(remoteUrl),
       });
 
       logger.debug('Sending token exchange request');
