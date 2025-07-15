@@ -57,11 +57,27 @@
       }
     },
     "mcp": {
+      "advanced": {
+        "title": "高度な設定"
+      },
       "args": {
         "desc": "実行コマンドに渡すパラメータのリスト。通常、ここにMCPサーバー名または起動スクリプトのパスを入力します。",
         "label": "コマンドパラメータ",
         "placeholder": "例：--port 8080 --debug",
         "required": "起動パラメータを入力してください"
+      },
+      "auth": {
+        "bear": "APIキー",
+        "desc": "MCPサーバーの認証方法を選択してください",
+        "label": "認証タイプ",
+        "none": "認証不要",
+        "placeholder": "認証タイプを選択してください",
+        "token": {
+          "desc": "APIキーまたはBearerトークンを入力してください",
+          "label": "APIキー",
+          "placeholder": "sk-xxxxx",
+          "required": "認証トークンを入力してください"
+        }
       },
       "avatar": {
         "label": "プラグインアイコン"
@@ -89,6 +105,11 @@
         "keyRequired": "フィールドキーは空にできません",
         "label": "MCPサーバー環境変数",
         "stringifyError": "パラメータをシリアライズできません。パラメータの形式を確認してください"
+      },
+      "headers": {
+        "add": "行を追加",
+        "desc": "リクエストヘッダーを入力してください",
+        "label": "HTTPヘッダー"
       },
       "identifier": {
         "desc": "あなたの MCP プラグインに名前を指定してください。英字を使用する必要があります",
@@ -269,6 +290,7 @@
       "showDetails": "詳細を表示"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "認証エラー",
       "CONNECTION_FAILED": "接続失敗",
       "INITIALIZATION_TIMEOUT": "初期化タイムアウト",
       "PROCESS_SPAWN_ERROR": "プロセス起動失敗",

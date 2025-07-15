@@ -19,8 +19,9 @@ export const createLogger = (namespace: string) => {
     error: (message, ...args) => {
       if (process.env.NODE_ENV === 'production') {
         electronLog.error(message, ...args);
+      } else {
+        console.error(message, ...args);
       }
-      debugLogger(`ERROR: ${message}`, ...args);
     },
     info: (message, ...args) => {
       if (process.env.NODE_ENV === 'production') {

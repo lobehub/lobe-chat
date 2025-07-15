@@ -484,6 +484,11 @@
       "placeholder": "Inserisci il suggerimento personalizzato",
       "title": "Suggerimento personalizzato"
     },
+    "generationTopic": {
+      "label": "Modello di denominazione argomenti per disegno AI",
+      "modelDesc": "Modello specificato per la denominazione automatica degli argomenti nel disegno AI",
+      "title": "Denominazione automatica argomenti per disegno AI"
+    },
     "helpInfo": "Quando crei un nuovo assistente, verranno utilizzate le impostazioni predefinite dell'assistente come valori predefiniti.",
     "historyCompress": {
       "label": "Modello di storia delle conversazioni",
@@ -520,6 +525,7 @@
     "hotkey": "Scorciatoie",
     "llm": "Modello linguistico",
     "provider": "Fornitore di servizi AI",
+    "proxy": "Proxy di rete",
     "storage": "Storage dati",
     "sync": "云端同步",
     "system-agent": "Assistente di sistema",

@@ -57,11 +57,27 @@
       }
     },
     "mcp": {
+      "advanced": {
+        "title": "Advanced Settings"
+      },
       "args": {
         "desc": "A list of parameters to be passed to the execution command, typically the MCP server name or the path to the startup script.",
         "label": "Command Parameters",
         "placeholder": "For example: mcp-hello-world",
         "required": "Please enter the startup parameters"
+      },
+      "auth": {
+        "bear": "API Key",
+        "desc": "Select the authentication method for the MCP server",
+        "label": "Authentication Type",
+        "none": "No Authentication Required",
+        "placeholder": "Please select an authentication type",
+        "token": {
+          "desc": "Enter your API Key or Bearer Token",
+          "label": "API Key",
+          "placeholder": "sk-xxxxx",
+          "required": "Please enter the authentication token"
+        }
       },
       "avatar": {
         "label": "Plugin Icon"
@@ -89,6 +105,11 @@
         "keyRequired": "Field key cannot be empty",
         "label": "MCP Server Environment Variables",
         "stringifyError": "Unable to serialize parameters, please check the parameter format"
+      },
+      "headers": {
+        "add": "Add a Row",
+        "desc": "Enter request headers",
+        "label": "HTTP Headers"
       },
       "identifier": {
         "desc": "Specify a name for your MCP plugin, using English characters",
@@ -269,6 +290,7 @@
       "showDetails": "Show details"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "Authorization Verification Error",
       "CONNECTION_FAILED": "Connection failed",
       "INITIALIZATION_TIMEOUT": "Initialization timeout",
       "PROCESS_SPAWN_ERROR": "Process spawn error",

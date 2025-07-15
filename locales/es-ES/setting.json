@@ -484,6 +484,11 @@
       "placeholder": "Introduce la palabra clave personalizada",
       "title": "Palabra clave personalizada"
     },
+    "generationTopic": {
+      "label": "Modelo de denominación de temas para pintura AI",
+      "modelDesc": "Modelo designado para la denominación automática de temas en pintura AI",
+      "title": "Denominación automática de temas para pintura AI"
+    },
     "helpInfo": "Al crear un nuevo asistente, se utilizarán los ajustes predeterminados del asistente como valores predeterminados.",
     "historyCompress": {
       "label": "Modelo de historial de conversación",
@@ -520,6 +525,7 @@
     "hotkey": "Atajos de teclado",
     "llm": "Modelo de lenguaje",
     "provider": "Proveedor de servicios de IA",
+    "proxy": "Proxy de red",
     "storage": "Almacenamiento de datos",
     "sync": "Sincronización en la nube",
     "system-agent": "Asistente del sistema",

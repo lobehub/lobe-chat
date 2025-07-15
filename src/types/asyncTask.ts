@@ -1,6 +1,7 @@
 export enum AsyncTaskType {
   Chunking = 'chunk',
   Embedding = 'embedding',
+  ImageGeneration = 'image_generation',
 }
 
 export enum AsyncTaskStatus {
@@ -12,6 +13,7 @@ export enum AsyncTaskStatus {
 
 export enum AsyncTaskErrorType {
   EmbeddingError = 'EmbeddingError',
+  InvalidProviderAPIKey = 'InvalidProviderAPIKey',
   /**
    * the chunk parse result it empty
    */

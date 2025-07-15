@@ -66,6 +66,7 @@
       "customRegion": "Custom Service Region",
       "customSessionToken": "Custom Session Token",
       "description": "Enter your AWS AccessKeyId / SecretAccessKey to start the session. The app will not store your authentication configuration",
+      "imageGenerationDescription": "Enter your AWS AccessKeyId / SecretAccessKey to start generating. The application will not store your authentication credentials.",
       "title": "Use Custom Bedrock Authentication Information"
     }
   },

@@ -183,6 +183,7 @@
   },
   "fullscreen": "全屏模式",
   "historyRange": "历史范围",
+  "import": "导入",
   "importData": "导入数据",
   "importModal": {
     "error": {
@@ -324,6 +325,7 @@
     }
   },
   "tab": {
+    "aiImage": "AI 绘画",
     "chat": "会话",
     "discover": "发现",
     "files": "文件",

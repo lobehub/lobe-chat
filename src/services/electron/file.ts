@@ -10,11 +10,13 @@ class DesktopFileAPI {
    * 上传文件到桌面应用
    * @param file 文件对象
    * @param hash 文件哈希
+   * @param path 文件存储路径
    * @returns 上传结果
    */
   async uploadFile(
     file: File,
     hash: string,
+    path: string,
   ): Promise<{ metadata: FileMetadata; success: boolean }> {
     const arrayBuffer = await file.arrayBuffer();
 
@@ -22,7 +24,7 @@ class DesktopFileAPI {
       content: arrayBuffer,
       filename: file.name,
       hash,
-      path: file.name,
+      path,
       type: file.type,
     });
   }

@@ -1,4 +1,4 @@
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 
 import { lambdaClient } from '@/libs/trpc/client';
 import { LobeAgentConfig } from '@/types/agent';
@@ -21,7 +21,7 @@ class GlobalService {
     return lambdaClient.config.getGlobalConfig.query();
   };
 
-  getDefaultAgentConfig = async (): Promise<DeepPartial<LobeAgentConfig>> => {
+  getDefaultAgentConfig = async (): Promise<PartialDeep<LobeAgentConfig>> => {
     return lambdaClient.config.getDefaultAgentConfig.query();
   };
 }

@@ -484,6 +484,11 @@
       "placeholder": "사용자 정의 프롬프트 입력",
       "title": "사용자 정의 프롬프트"
     },
+    "generationTopic": {
+      "label": "AI 그림 주제 명명 모델",
+      "modelDesc": "AI 그림 자동 주제 명명에 사용되는 모델 지정",
+      "title": "AI 그림 자동 주제 명명"
+    },
     "helpInfo": "새 도우미를 생성할 때 기본 도우미 설정이 기본값으로 사용됩니다.",
     "historyCompress": {
       "label": "대화 기록 모델",
@@ -520,6 +525,7 @@
     "hotkey": "단축키",
     "llm": "언어 모델",
     "provider": "AI 서비스 제공자",
+    "proxy": "네트워크 프록시",
     "storage": "데이터 저장소",
     "sync": "클라우드 동기화",
     "system-agent": "시스템 도우미",
