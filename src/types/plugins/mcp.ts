@@ -1,5 +1,6 @@
 import { PluginQueryParams, SystemDependency } from '@lobehub/market-sdk';
 
+import { MCPErrorType } from '@/libs/mcp';
 import { MCPInstallStep } from '@/store/tool/slices/mcpStore';
 
 export interface CheckMcpInstallParams {
@@ -147,12 +148,7 @@ export interface MCPErrorInfo {
   /**
    * 错误类型
    */
-  type:
-    | 'CONNECTION_FAILED'
-    | 'PROCESS_SPAWN_ERROR'
-    | 'INITIALIZATION_TIMEOUT'
-    | 'VALIDATION_ERROR'
-    | 'UNKNOWN_ERROR';
+  type: MCPErrorType;
 }
 
 export interface MCPInstallProgress {

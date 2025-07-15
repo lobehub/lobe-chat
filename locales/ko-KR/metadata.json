@@ -32,6 +32,10 @@
     "search": "검색",
     "title": "발견"
   },
+  "image": {
+    "description": "{{appName}}가 최고의 GPT 이미지, Flux, Midjourney, Stable Diffusion 사용 경험을 제공합니다",
+    "title": "AI 그림"
+  },
   "plugins": {
     "description": "검색, 차트 생성, 학술, 이미지 생성, 비디오 생성, 음성 생성, 자동화 워크플로우, ChatGPT / Claude 전용 ToolCall 플러그인 기능을 맞춤 설정하세요",
     "title": "플러그인 마켓"

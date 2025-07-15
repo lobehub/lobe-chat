@@ -9,6 +9,7 @@ import { buildDir, nextStandaloneDir } from '@/const/dir';
 import { isDev } from '@/const/env';
 import { IControlModule } from '@/controllers';
 import { IServiceModule } from '@/services';
+import FileService from '@/services/fileSrv';
 import { IpcClientEventSender } from '@/types/ipcClientEvent';
 import { createLogger } from '@/utils/logger';
 import { CustomRequestHandler, createHandler } from '@/utils/next-electron-rsc';
@@ -18,6 +19,7 @@ import { I18nManager } from './I18nManager';
 import { IoCContainer } from './IoCContainer';
 import MenuManager from './MenuManager';
 import { ShortcutManager } from './ShortcutManager';
+import { StaticFileServerManager } from './StaticFileServerManager';
 import { StoreManager } from './StoreManager';
 import TrayManager from './TrayManager';
 import { UpdaterManager } from './UpdaterManager';
@@ -41,6 +43,7 @@ export class App {
   updaterManager: UpdaterManager;
   shortcutManager: ShortcutManager;
   trayManager: TrayManager;
+  staticFileServerManager: StaticFileServerManager;
   chromeFlags: string[] = ['OverlayScrollbar', 'FluentOverlayScrollbar', 'FluentScrollbar'];
 
   /**
@@ -97,6 +100,7 @@ export class App {
     this.updaterManager = new UpdaterManager(this);
     this.shortcutManager = new ShortcutManager(this);
     this.trayManager = new TrayManager(this);
+    this.staticFileServerManager = new StaticFileServerManager(this);
 
     // register the schema to interceptor url
     // it should register before app ready
@@ -129,6 +133,9 @@ export class App {
     // Initialize i18n. Note: app.getLocale() must be called after app.whenReady() to get the correct value
     await this.i18n.init();
     this.menuManager.initialize();
+
+    // Initialize static file manager
+    await this.staticFileServerManager.initialize();
 
     // Initialize global shortcuts: globalShortcut must be called after app.whenReady()
     this.shortcutManager.initialize();
@@ -399,6 +406,7 @@ export class App {
     }
 
     // 执行清理操作
+    this.staticFileServerManager.destroy();
     this.unregisterAllRequestHandlers();
   };
 }

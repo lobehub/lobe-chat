@@ -27,3 +27,6 @@ export const LOCAL_DATABASE_DIR = 'lobehub-local-db';
 export const FILE_STORAGE_DIR = 'file-storage';
 // Plugin 安装目录
 export const INSTALL_PLUGINS_DIR = 'plugins';
+
+// Desktop file service
+export const LOCAL_STORAGE_URL_PREFIX = '/lobe-desktop-file';
