@@ -1,0 +1,68 @@
+---
+title: 在 LobeChat 中使用 Fal API Key
+description: >-
+  学习如何在 LobeChat 中配置和使用 Fal API Key，使用 FLUX、Kling 等尖端模型进行 AI 图像和视频生成。
+
+tags:
+  - Fal
+  - 图像生成
+  - 视频生成
+  - API Key
+  - Web UI
+---
+
+# 在 LobeChat 中使用 Fal
+
+<Image alt={'在 LobeChat 中使用 Fal'} cover src={'https://github.com/user-attachments/assets/febb2ffb-8fe8-4f88-b8c9-8fa0985a2352'} />
+
+[Fal.ai](https://fal.ai/) 是一个专门从事 AI 媒体生成的快速推理平台，提供包括 FLUX、Kling、HiDream 等在内的最先进图像和视频生成模型。本文将指导你如何在 LobeChat 中使用 Fal：
+
+<Steps>
+  ### 步骤一：获取 Fal API Key
+
+  - 注册 [Fal.ai](https://fal.ai/) 账户；
+  - 前往 [API Keys 控制台](https://fal.ai/dashboard/keys)，点击 **Add key** 创建新的 API 密钥；
+  - 复制生成的 API Key 并妥善保存，它只会显示一次。
+
+  <Image
+    alt={'打开创建窗口'}
+    inStep
+    src={
+'https://github.com/user-attachments/assets/a2203b3a-1657-485a-a060-b018e7b2faaa'
+}
+  />
+
+  <Image
+    alt={'创建 API Key'}
+    inStep
+    src={
+'https://github.com/user-attachments/assets/a216e326-6a51-4f3a-b8c1-23bb995ddac2'
+}
+  />
+
+  <Image
+    alt={'获取 API Key'}
+    inStep
+    src={
+'https://github.com/user-attachments/assets/faee998d-4349-4c17-a5c4-07a7ff65f18e'
+}
+  />
+
+  ### 步骤二：在 LobeChat 中配置 Fal
+
+  - 访问 LobeChat 的 `设置` 页面；
+  - 在 `AI服务商` 下找到 `Fal` 的设置项；
+
+  <Image alt={'填入 API 密钥'} inStep src={'https://github.com/user-attachments/assets/7566f679-f935-4a5b-9c98-a8d99d9c7994'} />
+
+  - 粘贴获取到的 API Key；
+  - 选择一个 Fal 模型（如 `fal-ai/flux-pro`、`fal-ai/kling-video`、`fal-ai/hidream-i1-fast`）用于图像或视频生成。
+
+  <Image alt={'选择 Fal 模型进行媒体生成'} inStep src={'https://github.com/user-attachments/assets/817167ff-4723-4f84-8528-c779c5c3a118'} />
+
+  <Callout type={'warning'}>
+    在使用过程中，你可能需要向 Fal 支付相应费用，请在大量调用前查阅 Fal 的官方计费政策。
+  </Callout>
+</Steps>
+
+至此，你已经可以在 LobeChat 中使用 Fal 提供的先进图像和视频生成模型来创作精美的视觉内容了。
