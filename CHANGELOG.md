@@ -2,6 +2,39 @@
 
 # Changelog
 
+## [Version&nbsp;1.98.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.97.0...v1.98.0)
+<sup>Released on **2025-07-15**</sup>
+
+
+#### ✨ Features
+
+- **plugin**: Support Streamable HTTP MCP Server Auth.
+- **misc**:  support AI Image.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's improved
+
+* **plugin**: Support Streamable HTTP MCP Server Auth, closes [#8425](https://github.com/jaworldwideorg/OneJA-Bot/issues/8425) ([853a09a](https://github.com/jaworldwideorg/OneJA-Bot/commit/853a09a))
+* **misc**:  support AI Image, closes [#8312](https://github.com/jaworldwideorg/OneJA-Bot/issues/8312) ([095de57](https://github.com/jaworldwideorg/OneJA-Bot/commit/095de57))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version&nbsp;1.97.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.96.3...v1.97.0)
 <sup>Released on **2025-07-14**</sup>
 
