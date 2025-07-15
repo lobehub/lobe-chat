@@ -1,0 +1,100 @@
+{
+  "config": {
+    "aspectRatio": {
+      "label": "比率",
+      "lock": "アスペクト比を固定する",
+      "unlock": "アスペクト比の固定を解除する"
+    },
+    "header": {
+      "desc": "簡単な説明、すぐに創作",
+      "title": "絵画"
+    },
+    "height": {
+      "label": "高さ"
+    },
+    "imageNum": {
+      "label": "画像数"
+    },
+    "imageUrl": {
+      "label": "参考画像"
+    },
+    "imageUrls": {
+      "label": "参考画像"
+    },
+    "model": {
+      "label": "モデル"
+    },
+    "prompt": {
+      "placeholder": "生成したい内容を記述してください"
+    },
+    "seed": {
+      "label": "シード",
+      "random": "ランダムシード"
+    },
+    "size": {
+      "label": "サイズ"
+    },
+    "steps": {
+      "label": "ステップ数"
+    },
+    "title": "AI 絵画",
+    "width": {
+      "label": "幅"
+    }
+  },
+  "generation": {
+    "actions": {
+      "applySeed": "シードを適用する",
+      "copyError": "エラー情報をコピー",
+      "copyPrompt": "プロンプトをコピー",
+      "copySeed": "シードをコピー",
+      "delete": "削除",
+      "deleteBatch": "バッチを削除",
+      "download": "ダウンロード",
+      "downloadFailed": "画像のダウンロードに失敗しました",
+      "errorCopied": "エラー情報がクリップボードにコピーされました",
+      "errorCopyFailed": "エラー情報のコピーに失敗しました",
+      "generate": "生成",
+      "promptCopied": "プロンプトがクリップボードにコピーされました",
+      "promptCopyFailed": "プロンプトのコピーに失敗しました",
+      "reuseSettings": "設定を再利用",
+      "seedApplied": "シードが設定に適用されました",
+      "seedApplyFailed": "シードの適用に失敗しました",
+      "seedCopied": "シードがクリップボードにコピーされました",
+      "seedCopyFailed": "シードのコピーに失敗しました"
+    },
+    "metadata": {
+      "count": "{{count}} 枚の画像"
+    },
+    "status": {
+      "failed": "生成失敗",
+      "generating": "生成中..."
+    }
+  },
+  "notSupportGuide": {
+    "desc": "現在のデプロイはクライアントデータベースモードのため、AI画像生成機能は使用できません。<1>サーバーデータベースデプロイモード</1>に切り替えるか、直接 <3>LobeChat Cloud</3> をご利用ください。",
+    "features": {
+      "fileIntegration": {
+        "desc": "ファイル管理システムと深く統合され、生成された画像は自動的にファイルシステムに保存され、統一的な管理と整理が可能です",
+        "title": "ファイルシステム連携"
+      },
+      "llmAssisted": {
+        "desc": "大規模言語モデルの能力を活用し、プロンプトの最適化と拡張を行い、画像生成の品質を向上させます（近日公開予定）",
+        "title": "LLM支援生成"
+      },
+      "multiProviders": {
+        "desc": "OpenAI gpt-image-1、Google Imagen、FAL.ai など複数のAI絵画サービスプロバイダーをサポートし、多彩なモデル選択を提供します",
+        "title": "複数プロバイダー対応"
+      }
+    },
+    "title": "現在のデプロイモードはAI絵画をサポートしていません"
+  },
+  "topic": {
+    "createNew": "新しいテーマを作成",
+    "deleteConfirm": "生成テーマを削除",
+    "deleteConfirmDesc": "この生成テーマを削除すると復元できません。慎重に操作してください。",
+    "empty": "生成されたテーマはありません",
+    "title": "絵画のテーマ",
+    "untitled": "デフォルトテーマ"
+  }
+}

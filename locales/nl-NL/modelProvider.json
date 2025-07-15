@@ -66,6 +66,7 @@
       "customRegion": "Aangepaste regio",
       "customSessionToken": "Aangepaste sessietoken",
       "description": "Voer uw AWS AccessKeyId / SecretAccessKey in om een sessie te starten. De app zal uw verificatiegegevens niet opslaan",
+      "imageGenerationDescription": "Voer je AWS AccessKeyId / SecretAccessKey in om te beginnen met genereren. De applicatie slaat je authenticatiegegevens niet op",
       "title": "Gebruik aangepaste Bedrock-verificatiegegevens"
     }
   },

@@ -484,6 +484,11 @@
       "placeholder": "Lütfen özel ipucu kelimelerini girin",
       "title": "Özel İpucu"
     },
+    "generationTopic": {
+      "label": "Yapay Zeka Resim Konusu İsimlendirme Modeli",
+      "modelDesc": "Yapay zeka resimlerinin otomatik konu isimlendirmesi için belirlenen model",
+      "title": "Yapay Zeka Resim Otomatik Konu İsimlendirme"
+    },
     "helpInfo": "Yeni bir asistan oluşturduğunuzda, varsayılan asistan ayarları ön ayar olarak kullanılacaktır.",
     "historyCompress": {
       "label": "Oturum Geçmişi Modeli",

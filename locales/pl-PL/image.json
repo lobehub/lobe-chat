@@ -1,0 +1,100 @@
+{
+  "config": {
+    "aspectRatio": {
+      "label": "Proporcje",
+      "lock": "Zablokuj proporcje",
+      "unlock": "Odblokuj proporcje"
+    },
+    "header": {
+      "desc": "Prosty opis, twórz natychmiast",
+      "title": "Malarstwo"
+    },
+    "height": {
+      "label": "Wysokość"
+    },
+    "imageNum": {
+      "label": "Liczba obrazów"
+    },
+    "imageUrl": {
+      "label": "Obraz referencyjny"
+    },
+    "imageUrls": {
+      "label": "Obrazy referencyjne"
+    },
+    "model": {
+      "label": "Model"
+    },
+    "prompt": {
+      "placeholder": "Opisz, co chcesz wygenerować"
+    },
+    "seed": {
+      "label": "Ziarno",
+      "random": "Losowy seed"
+    },
+    "size": {
+      "label": "Rozmiar"
+    },
+    "steps": {
+      "label": "Liczba kroków"
+    },
+    "title": "AI Rysowanie",
+    "width": {
+      "label": "Szerokość"
+    }
+  },
+  "generation": {
+    "actions": {
+      "applySeed": "Zastosuj nasiono",
+      "copyError": "Kopiuj błąd",
+      "copyPrompt": "Kopiuj podpowiedź",
+      "copySeed": "Kopiuj ziarno",
+      "delete": "Usuń",
+      "deleteBatch": "Usuń partię",
+      "download": "Pobierz",
+      "downloadFailed": "Pobieranie obrazu nie powiodło się",
+      "errorCopied": "Informacja o błędzie skopiowana do schowka",
+      "errorCopyFailed": "Kopiowanie informacji o błędzie nie powiodło się",
+      "generate": "Generuj",
+      "promptCopied": "Tekst podpowiedzi skopiowany do schowka",
+      "promptCopyFailed": "Kopiowanie tekstu podpowiedzi nie powiodło się",
+      "reuseSettings": "Użyj ponownie ustawień",
+      "seedApplied": "Nasiono zostało zastosowane w konfiguracji",
+      "seedApplyFailed": "Nie udało się zastosować nasiona",
+      "seedCopied": "Ziarno skopiowane do schowka",
+      "seedCopyFailed": "Kopiowanie ziarna nie powiodło się"
+    },
+    "metadata": {
+      "count": "{{count}} obrazów"
+    },
+    "status": {
+      "failed": "Generowanie nie powiodło się",
+      "generating": "Generowanie..."
+    }
+  },
+  "notSupportGuide": {
+    "desc": "Aktualna instancja wdrożeniowa działa w trybie bazy danych klienta i nie obsługuje funkcji generowania obrazów AI. Proszę przełączyć się na <1>tryb wdrożenia bazy danych serwera</1> lub bezpośrednio skorzystać z <3>LobeChat Cloud</3>",
+    "features": {
+      "fileIntegration": {
+        "desc": "Głęboka integracja z systemem zarządzania plikami, generowane obrazy są automatycznie zapisywane w systemie plików, umożliwiając ich centralne zarządzanie i organizację",
+        "title": "Integracja z systemem plików"
+      },
+      "llmAssisted": {
+        "desc": "Wykorzystanie możliwości dużych modeli językowych do inteligentnej optymalizacji i rozszerzania tekstów podpowiedzi, poprawiając jakość generowanych obrazów (wkrótce)",
+        "title": "Wsparcie LLM przy generowaniu obrazów"
+      },
+      "multiProviders": {
+        "desc": "Obsługuje wielu dostawców usług AI do rysowania, w tym OpenAI gpt-image-1, Google Imagen, FAL.ai i innych, oferując szeroki wybór modeli",
+        "title": "Wsparcie wielu dostawców"
+      }
+    },
+    "title": "Aktualny tryb wdrożenia nie obsługuje AI Rysowania"
+  },
+  "topic": {
+    "createNew": "Utwórz nowy temat",
+    "deleteConfirm": "Usuń temat generowania",
+    "deleteConfirmDesc": "Temat generowania zostanie usunięty i nie będzie można go przywrócić. Proszę zachować ostrożność.",
+    "empty": "Brak wygenerowanych tematów",
+    "title": "Temat malarski",
+    "untitled": "Domyślny temat"
+  }
+}
