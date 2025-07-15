@@ -26,10 +26,8 @@
   "defaultSession": "Asistente predeterminado",
   "duplicateSession": {
     "loading": "Cargando duplicado...",
-    "success": "Duplicado exitoso",
-    "title": "{{title}} Copia"
+    "success": "Duplicado exitoso"
   },
-  "duplicateTitle": "{{title}} Copia",
   "emptyAgent": "No hay asistente disponible",
   "extendParams": {
     "disableContextCaching": {

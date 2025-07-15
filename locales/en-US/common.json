@@ -150,6 +150,7 @@
   "document": "User Manual",
   "download": "Download",
   "duplicate": "Create Duplicate",
+  "duplicateSymbol": "Copy",
   "edit": "Edit",
   "export": "Export Configuration",
   "exportType": {

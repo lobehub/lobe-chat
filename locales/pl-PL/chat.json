@@ -26,10 +26,8 @@
   "defaultSession": "Domyślna sesja",
   "duplicateSession": {
     "loading": "Kopiowanie...",
-    "success": "Kopiowanie zakończone powodzeniem",
-    "title": "{{title}} - kopia"
+    "success": "Kopiowanie zakończone powodzeniem"
   },
-  "duplicateTitle": "{{title}} kopia",
   "emptyAgent": "Brak asystenta",
   "extendParams": {
     "disableContextCaching": {
