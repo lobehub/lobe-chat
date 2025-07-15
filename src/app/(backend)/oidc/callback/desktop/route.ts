@@ -6,11 +6,11 @@ import { serverDB } from '@/database/server';
 
 const log = debug('lobe-oidc:callback:desktop');
 
-export const POST = async (req: NextRequest) => {
+export const GET = async (req: NextRequest) => {
   try {
-    const formData = await req.formData();
-    const code = formData.get('code');
-    const state = formData.get('state'); // This `state` is the handoff ID
+    const searchParams = req.nextUrl.searchParams;
+    const code = searchParams.get('code');
+    const state = searchParams.get('state'); // This `state` is the handoff ID
 
     if (!code || !state || typeof code !== 'string' || typeof state !== 'string') {
       log('Missing code or state in form data');
@@ -24,7 +24,7 @@ export const POST = async (req: NextRequest) => {
 
     // The 'client' is 'desktop' because this redirect_uri is for the desktop client.
     const client = 'desktop';
-    const payload = { code };
+    const payload = { code, state };
     const id = state;
 
     const authHandoffModel = new OAuthHandoffModel(serverDB);
