@@ -46,13 +46,14 @@ export const LobeTogetherAI = createOpenAICompatibleRuntime({
           maxOutput: model.context_length,
           reasoning:
             reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-            knownModel?.abilities?.functionCall ||
+            knownModel?.abilities?.reasoning ||
             false,
+          search: knownModel?.abilities?.search || false,
           tokens: model.context_length,
           vision:
             model.description?.toLowerCase().includes('vision') ||
             visionKeywords.some((keyword) => model.id?.toLowerCase().includes(keyword)) ||
-            knownModel?.abilities?.functionCall ||
+            knownModel?.abilities?.vision ||
             false,
         };
       })
