@@ -24,6 +24,20 @@ const groqChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    displayName: 'Kimi K2 Instruct',
+    enabled: true,
+    id: 'moonshotai/kimi-k2-instruct',
+    maxOutput: 131_072,
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 131_072,
     displayName: 'Llama 4 Scout (17Bx16E)',
     enabled: true,
@@ -36,6 +50,9 @@ const groqChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+    },
     contextWindowTokens: 131_072,
     displayName: 'Llama 4 Maverick (17Bx128E)',
     enabled: true,
