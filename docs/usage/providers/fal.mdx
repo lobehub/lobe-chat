@@ -1,0 +1,69 @@
+---
+title: Using Fal API Key in LobeChat
+description: >-
+  Learn how to integrate Fal API Key in LobeChat for AI image and video generation using cutting-edge models like FLUX, Kling, and more.
+
+tags:
+  - Fal AI
+  - Image Generation
+  - Video Generation
+  - API Key
+  - Web UI
+---
+
+# Using Fal in LobeChat
+
+<Image alt={'Using Fal in LobeChat'} cover src={'https://github.com/user-attachments/assets/febb2ffb-8fe8-4f88-b8c9-8fa0985a2352'} />
+
+[Fal.ai](https://fal.ai/) is a lightning-fast inference platform specialized in AI media generation, hosting state-of-the-art models for image and video creation including FLUX, Kling, HiDream, and other cutting-edge generative models. This document will guide you on how to use Fal in LobeChat:
+
+<Steps>
+  ### Step 1: Obtain Fal API Key
+
+  - Register for a [Fal.ai account](https://fal.ai/).
+  - Navigate to [API Keys dashboard](https://fal.ai/dashboard/keys) and click **Add key** to create a new API key.
+  - Copy the generated API key and keep it secure; it will only be shown once.
+
+  <Image
+    alt={'Open the creation window'}
+    inStep
+    src={
+'https://github.com/user-attachments/assets/a2203b3a-1657-485a-a060-b018e7b2faaa'
+}
+  />
+
+  <Image
+    alt={'Create API Key'}
+    inStep
+    src={
+'https://github.com/user-attachments/assets/a216e326-6a51-4f3a-b8c1-23bb995ddac2'
+}
+  />
+
+  <Image
+    alt={'Retrieve API Key'}
+    inStep
+    src={
+'https://github.com/user-attachments/assets/faee998d-4349-4c17-a5c4-07a7ff65f18e'
+}
+  />
+
+  ### Step 2: Configure Fal in LobeChat
+
+  - Visit the `Settings` page in LobeChat.
+  - Under **AI Service Provider**, locate the **Fal** configuration section.
+
+  <Image alt={'Enter API Key'} inStep src={'https://github.com/user-attachments/assets/7566f679-f935-4a5b-9c98-a8d99d9c7994'} />
+
+  - Paste the API key you obtained.
+  - Choose a Fal model (e.g. `fal-ai/flux-pro`, `fal-ai/kling-video`, `fal-ai/hidream-i1-fast`) for image or video generation.
+
+  <Image alt={'Select Fal model for media generation'} inStep src={'https://github.com/user-attachments/assets/817167ff-4723-4f84-8528-c779c5c3a118'} />
+
+  <Callout type={'warning'}>
+    During usage, you may incur charges according to Fal's pricing policy. Please review Fal's
+    official pricing before heavy usage.
+  </Callout>
+</Steps>
+
+You can now use Fal's advanced image and video generation models directly within LobeChat to create stunning visual content.
