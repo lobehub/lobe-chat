@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next';
 
 import MaxTokenSlider from '@/components/MaxTokenSlider';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { ChatModelCard } from '@/types/llm';
+import { ModelCard } from '@/types/llm';
 
 interface ModelConfigFormProps {
-  initialValues?: ChatModelCard;
+  initialValues?: ModelCard;
   onFormInstanceReady: (instance: FormInstance) => void;
   showAzureDeployName?: boolean;
 }

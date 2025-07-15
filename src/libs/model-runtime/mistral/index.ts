@@ -1,4 +1,4 @@
-import type { ChatModelCard } from '@/types/llm';
+import type { ModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
@@ -56,7 +56,7 @@ export const LobeMistralAI = createOpenAICompatibleRuntime({
           vision: model.capabilities.vision,
         };
       })
-      .filter(Boolean) as ChatModelCard[];
+      .filter(Boolean) as ModelCard[];
   },
   provider: ModelProvider.Mistral,
 });

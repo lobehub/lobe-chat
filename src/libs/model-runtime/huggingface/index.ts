@@ -1,7 +1,7 @@
 import { HfInference } from '@huggingface/inference';
 import urlJoin from 'url-join';
 
-import type { ChatModelCard } from '@/types/llm';
+import type { ModelCard } from '@/types/llm';
 
 import { AgentRuntimeErrorType } from '../error';
 import { ModelProvider } from '../types';
@@ -98,7 +98,7 @@ export const LobeHuggingFaceAI = createOpenAICompatibleRuntime({
             false,
         };
       })
-      .filter(Boolean) as ChatModelCard[];
+      .filter(Boolean) as ModelCard[];
   },
   provider: ModelProvider.HuggingFace,
 });

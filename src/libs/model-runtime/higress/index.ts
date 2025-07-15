@@ -1,6 +1,6 @@
 import { uniqueId } from 'lodash-es';
 
-import type { ChatModelCard } from '@/types/llm';
+import type { ModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
@@ -60,7 +60,7 @@ export const LobeHigressAI = createOpenAICompatibleRuntime({
             false,
         };
       })
-      .filter(Boolean) as ChatModelCard[];
+      .filter(Boolean) as ModelCard[];
   },
   provider: ModelProvider.Higress,
 });

@@ -1,6 +1,6 @@
 import { ModelProviderKey } from '@/libs/model-runtime';
 import { AiFullModelCard } from '@/types/aiModel';
-import { ChatModelCard } from '@/types/llm';
+import { ModelCard } from '@/types/llm';
 
 export interface ProviderConfig {
   /**
@@ -10,7 +10,7 @@ export interface ProviderConfig {
   /**
    * user defined model cards
    */
-  customModelCards?: ChatModelCard[];
+  customModelCards?: ModelCard[];
   enabled: boolean;
   /**
    * enabled models id
@@ -27,7 +27,7 @@ export interface ProviderConfig {
   /**
    * fetched models from provider side
    */
-  remoteModelCards?: ChatModelCard[];
+  remoteModelCards?: ModelCard[];
   serverModelLists?: AiFullModelCard[];
 }
 

@@ -1,4 +1,4 @@
-import type { ChatModelCard } from '@/types/llm';
+import type { ModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
@@ -50,7 +50,7 @@ export const LobeGiteeAI = createOpenAICompatibleRuntime({
             false,
         };
       })
-      .filter(Boolean) as ChatModelCard[];
+      .filter(Boolean) as ModelCard[];
   },
   provider: ModelProvider.GiteeAI,
 });

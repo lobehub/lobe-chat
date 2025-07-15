@@ -1,7 +1,7 @@
 import type { PartialDeep } from 'type-fest';
 
 import { IFeatureFlags } from '@/config/featureFlags';
-import { ChatModelCard } from '@/types/llm';
+import { ModelCard } from '@/types/llm';
 import {
   GlobalLLMProviderKey,
   UserDefaultAgent,
@@ -15,7 +15,7 @@ export interface ServerModelProviderConfig {
   /**
    * the model cards defined in server
    */
-  serverModelCards?: ChatModelCard[];
+  serverModelCards?: ModelCard[];
 }
 
 export type ServerLanguageModel = Partial<Record<GlobalLLMProviderKey, ServerModelProviderConfig>>;

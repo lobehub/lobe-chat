@@ -1,9 +1,9 @@
 import { produce } from 'immer';
 
-import { ChatModelCard } from '@/types/llm';
+import { ModelCard } from '@/types/llm';
 
 export interface AddCustomModelCard {
-  modelCard: ChatModelCard;
+  modelCard: ModelCard;
   type: 'add';
 }
 
@@ -15,7 +15,7 @@ export interface DeleteCustomModelCard {
 export interface UpdateCustomModelCard {
   id: string;
   type: 'update';
-  value: Partial<ChatModelCard>;
+  value: Partial<ModelCard>;
 }
 
 export type CustomModelCardDispatch =
@@ -24,9 +24,9 @@ export type CustomModelCardDispatch =
   | UpdateCustomModelCard;
 
 export const customModelCardsReducer = (
-  state: ChatModelCard[] | undefined,
+  state: ModelCard[] | undefined,
   payload: CustomModelCardDispatch,
-): ChatModelCard[] => {
+): ModelCard[] => {
   switch (payload.type) {
     case 'add': {
       return produce(state || [], (draftState) => {

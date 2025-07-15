@@ -1,13 +1,13 @@
 import { produce } from 'immer';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
-import { ChatModelCard } from '@/types/llm';
+import { ModelCard } from '@/types/llm';
 
 /**
  * Parse model string to add or remove models.
  */
 export const parseModelString = (modelString: string = '', withDeploymentName = false) => {
-  let models: ChatModelCard[] = [];
+  let models: ModelCard[] = [];
   let removeAll = false;
   const removedModels: string[] = [];
   const modelNames = modelString.split(/[,，]/).filter(Boolean);
@@ -45,7 +45,7 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
       models.splice(existingIndex, 1);
     }
 
-    const model: ChatModelCard = {
+    const model: ModelCard = {
       displayName: displayName || undefined,
       id,
     };
@@ -101,10 +101,10 @@ export const transformToChatModelCards = ({
   defaultChatModels,
   withDeploymentName = false,
 }: {
-  defaultChatModels: ChatModelCard[];
+  defaultChatModels: ModelCard[];
   modelString?: string;
   withDeploymentName?: boolean;
-}): ChatModelCard[] | undefined => {
+}): ModelCard[] | undefined => {
   if (!modelString) return undefined;
 
   const modelConfig = parseModelString(modelString, withDeploymentName);

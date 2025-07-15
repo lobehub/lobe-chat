@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { ChatModelCard } from '@/types/llm';
+import { ModelCard } from '@/types/llm';
 
 import {
   AddCustomModelCard,
@@ -10,7 +10,7 @@ import {
 } from './customModelCard';
 
 describe('customModelCardsReducer', () => {
-  const initialState: ChatModelCard[] = [
+  const initialState: ModelCard[] = [
     {
       id: 'model1',
       displayName: 'Model 1',
@@ -39,7 +39,7 @@ describe('customModelCardsReducer', () => {
   ];
 
   it('should add a new custom model card', () => {
-    const newModelCard: ChatModelCard = {
+    const newModelCard: ModelCard = {
       id: 'model3',
       displayName: 'Model 3',
       description: 'A versatile assistant',
@@ -65,7 +65,7 @@ describe('customModelCardsReducer', () => {
   });
 
   it('should not add a duplicate custom model card', () => {
-    const duplicateModelCard: ChatModelCard = {
+    const duplicateModelCard: ModelCard = {
       id: 'model1',
       displayName: 'Duplicate Model 1',
       description: 'A duplicate model',
@@ -137,7 +137,7 @@ describe('customModelCardsReducer', () => {
   });
 
   it('should return the original state if the model card ID is missing during add', () => {
-    const newModelCard: ChatModelCard = {
+    const newModelCard: ModelCard = {
       id: '',
       displayName: 'Model 4',
       description: 'A new model',
@@ -162,7 +162,7 @@ describe('customModelCardsReducer', () => {
   });
 
   it('should handle optional properties correctly', () => {
-    const newModelCard: ChatModelCard = {
+    const newModelCard: ModelCard = {
       id: 'model4',
     };
 
@@ -177,7 +177,7 @@ describe('customModelCardsReducer', () => {
   });
 
   it('should handle an undefined initial state', () => {
-    const newModelCard: ChatModelCard = {
+    const newModelCard: ModelCard = {
       id: 'model4',
       displayName: 'Model 4',
       description: 'A new model',

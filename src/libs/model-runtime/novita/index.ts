@@ -1,4 +1,4 @@
-import type { ChatModelCard } from '@/types/llm';
+import type { ModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
 import { processMultiProviderModelList } from '../utils/modelParse';
@@ -48,7 +48,7 @@ export const LobeNovitaAI = createOpenAICompatibleRuntime({
           vision: baseModel.vision || model.description.toLowerCase().includes('vision') || false,
         };
       })
-      .filter(Boolean) as ChatModelCard[];
+      .filter(Boolean) as ModelCard[];
   },
   provider: ModelProvider.Novita,
 });

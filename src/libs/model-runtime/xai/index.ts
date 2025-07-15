@@ -1,4 +1,4 @@
-import type { ChatModelCard } from '@/types/llm';
+import type { ModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
@@ -7,10 +7,7 @@ export interface XAIModelCard {
   id: string;
 }
 
-export const GrokReasoningModels = new Set([
-  'grok-3-mini',
-  'grok-4',
-]);
+export const GrokReasoningModels = new Set(['grok-3-mini', 'grok-4']);
 
 export const isGrokReasoningModel = (model: string) =>
   Array.from(GrokReasoningModels).some((id) => model.includes(id));
@@ -82,7 +79,7 @@ export const LobeXAI = createOpenAICompatibleRuntime({
             false,
         };
       })
-      .filter(Boolean) as ChatModelCard[];
+      .filter(Boolean) as ModelCard[];
   },
   provider: ModelProvider.XAI,
 });

@@ -17,7 +17,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { ModelAbilities } from '@/types/aiModel';
 import { AiProviderSourceType } from '@/types/aiProvider';
-import { ChatModelCard } from '@/types/llm';
+import { ModelCard } from '@/types/llm';
 import { formatTokenNumber } from '@/utils/format';
 
 export const TAG_CLASSNAME = 'lobe-model-info-tags';
@@ -161,7 +161,7 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
   },
 );
 
-interface ModelItemRenderProps extends ChatModelCard {
+interface ModelItemRenderProps extends ModelCard {
   showInfoTag?: boolean;
 }
 

@@ -3,7 +3,7 @@ import { createHeaderWithAuth } from '@/services/_auth';
 import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { useUserStore } from '@/store/user';
 import { modelConfigSelectors } from '@/store/user/selectors';
-import { ChatModelCard } from '@/types/llm';
+import { ModelCard } from '@/types/llm';
 import { getMessageError } from '@/utils/fetch';
 
 import { API_ENDPOINTS } from './_url';
@@ -36,7 +36,7 @@ export class ModelsService {
   private _abortController: AbortController | null = null;
 
   // 获取模型列表
-  getModels = async (provider: string): Promise<ChatModelCard[] | undefined> => {
+  getModels = async (provider: string): Promise<ModelCard[] | undefined> => {
     const headers = await createHeaderWithAuth({
       headers: { 'Content-Type': 'application/json' },
       provider,

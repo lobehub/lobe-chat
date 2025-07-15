@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
 
-import { ChatModelPricing } from '@/types/aiModel';
+import { AiModelType, ChatModelPricing } from '@/types/aiModel';
 import { AiProviderSettings } from '@/types/aiProvider';
 
 export type ModelPriceCurrency = 'CNY' | 'USD';
 
-export interface ChatModelCard {
+export interface ModelCard {
   /**
    * the context window (or input + output tokens limit)
    */
@@ -54,6 +54,11 @@ export interface ChatModelCard {
   releasedAt?: string;
 
   /**
+   * the type of model
+   */
+  type?: AiModelType;
+
+  /**
    *  whether model supports vision
    */
   vision?: boolean;
@@ -72,7 +77,7 @@ export interface ModelProviderCard {
   /**
    * @deprecated
    */
-  chatModels: ChatModelCard[];
+  chatModels: ModelCard[];
   /**
    * the default model that used for connection check
    */

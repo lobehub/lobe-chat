@@ -2,7 +2,7 @@ import { uniqBy } from 'lodash-es';
 
 import { filterEnabledModels } from '@/config/modelProviders';
 import { EnabledProviderWithModels } from '@/types/aiProvider';
-import { ChatModelCard, ModelProviderCard } from '@/types/llm';
+import { ModelCard, ModelProviderCard } from '@/types/llm';
 import { ServerModelProviderConfig } from '@/types/serverConfig';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 
@@ -14,7 +14,7 @@ import { currentSettings, getProviderConfigById } from '../../settings/selectors
  */
 const serverProviderModelCards =
   (provider: GlobalLLMProviderKey) =>
-  (s: UserStore): ChatModelCard[] | undefined => {
+  (s: UserStore): ModelCard[] | undefined => {
     const config = s.serverLanguageModel?.[provider] as ServerModelProviderConfig | undefined;
 
     if (!config) return;
@@ -24,9 +24,9 @@ const serverProviderModelCards =
 
 const remoteProviderModelCards =
   (provider: GlobalLLMProviderKey) =>
-  (s: UserStore): ChatModelCard[] | undefined => {
+  (s: UserStore): ModelCard[] | undefined => {
     const cards = currentSettings(s).languageModel?.[provider]?.remoteModelCards as
-      | ChatModelCard[]
+      | ModelCard[]
       | undefined;
 
     if (!cards) return;
@@ -70,7 +70,7 @@ const getDefaultModelCardById = (id: string) => (s: UserStore) => {
 
 const getModelCardsById =
   (provider: string) =>
-  (s: UserStore): ChatModelCard[] => {
+  (s: UserStore): ModelCard[] => {
     const builtinCards = getDefaultModeProviderById(provider)(s)?.chatModels || [];
 
     const userCards = (getProviderConfigById(provider)(s)?.customModelCards || []).map((model) => ({

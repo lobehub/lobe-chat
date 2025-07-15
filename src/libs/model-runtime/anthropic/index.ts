@@ -1,6 +1,6 @@
 import Anthropic, { ClientOptions } from '@anthropic-ai/sdk';
 
-import type { ChatModelCard } from '@/types/llm';
+import type { ModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
@@ -234,7 +234,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
             false,
         };
       })
-      .filter(Boolean) as ChatModelCard[];
+      .filter(Boolean) as ModelCard[];
   }
 
   private handleError(error: any): ChatCompletionErrorPayload {

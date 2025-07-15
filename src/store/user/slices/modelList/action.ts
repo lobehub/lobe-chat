@@ -5,7 +5,7 @@ import type { StateCreator } from 'zustand/vanilla';
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { ModelProvider } from '@/libs/model-runtime';
 import { UserStore } from '@/store/user';
-import type { ChatModelCard, ModelProviderCard } from '@/types/llm';
+import type { ModelCard, ModelProviderCard } from '@/types/llm';
 import type {
   GlobalLLMProviderKey,
   UserKeyVaults,
@@ -197,7 +197,7 @@ export const createModelListSlice: StateCreator<
   },
 
   useFetchProviderModelList: (provider, enabledAutoFetch) =>
-    useSWR<ChatModelCard[] | undefined>(
+    useSWR<ModelCard[] | undefined>(
       [provider, enabledAutoFetch],
       async ([p]) => {
         const { modelsService } = await import('@/services/models');
