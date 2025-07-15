@@ -11,6 +11,14 @@
     "desc": "Mesaja çift tıklayıp Alt tuşuna basarak düzenleme moduna geçin",
     "title": "Mesajı düzenle"
   },
+  "navigateToChat": {
+    "desc": "Sohbet sekmesine geç",
+    "title": "Sohbet Sekmesi"
+  },
+  "navigateToInbox": {
+    "desc": "Sohbet sekmesine geç ve Rasgele Sohbet'e gir",
+    "title": "Rasgele Sohbet"
+  },
   "openChatSettings": {
     "desc": "Mevcut oturumun ayarlarını görüntüle ve değiştir",
     "title": "Sohbet ayarlarını aç"
@@ -42,14 +50,6 @@
   "switchAgent": {
     "desc": "Yan panelde sabitlenmiş asistanı değiştirmek için Ctrl tuşuna basılı tutarak 0~9 sayısına basın",
     "title": "Asistanı hızlıca değiştir"
-  },
-  "switchToChat": {
-    "desc": "Sohbet sekmesine geç",
-    "title": "Sohbet sekmesine geç"
-  },
-  "switchToDefaultAgent": {
-    "desc": "Varsayılan asistana geç",
-    "title": "Varsayılan asistana geç"
   },
   "toggleLeftPanel": {
     "desc": "Sol yan paneli göster veya gizle",

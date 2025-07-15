@@ -11,6 +11,14 @@
     "desc": "Wejdź w tryb edycji, przytrzymując klawisz Alt i podwójnie klikając wiadomość",
     "title": "Edytuj wiadomość"
   },
+  "navigateToChat": {
+    "desc": "Przełącz na kartę rozmowy",
+    "title": "Karta rozmowy"
+  },
+  "navigateToInbox": {
+    "desc": "Przełącz na kartę rozmowy i wejdź do swobodnej rozmowy",
+    "title": "Swobodna rozmowa"
+  },
   "openChatSettings": {
     "desc": "Zobacz i zmodyfikuj ustawienia bieżącej rozmowy",
     "title": "Otwórz ustawienia czatu"
@@ -42,14 +50,6 @@
   "switchAgent": {
     "desc": "Przełączaj przypiętego asystenta w pasku bocznym, przytrzymując Ctrl i naciskając numery 0-9",
     "title": "Szybkie przełączanie asystenta"
-  },
-  "switchToChat": {
-    "desc": "Przełącz na kartę rozmowy",
-    "title": "Przełącz na kartę rozmowy"
-  },
-  "switchToDefaultAgent": {
-    "desc": "Przełącz na domyślnego asystenta",
-    "title": "Przełącz na domyślnego asystenta"
   },
   "toggleLeftPanel": {
     "desc": "Pokaż lub ukryj lewy panel asystenta",

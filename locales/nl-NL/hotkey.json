@@ -11,6 +11,14 @@
     "desc": "Ga naar de bewerkingsmodus door Alt ingedrukt te houden en op het bericht te dubbelklikken",
     "title": "Bewerk bericht"
   },
+  "navigateToChat": {
+    "desc": "Schakel over naar het gesprekstabblad",
+    "title": "Gesprekstabblad"
+  },
+  "navigateToInbox": {
+    "desc": "Schakel over naar het gesprekstabblad en ga naar 'Gewoon kletsen'",
+    "title": "Gewoon kletsen"
+  },
   "openChatSettings": {
     "desc": "Bekijk en wijzig de instellingen van de huidige sessie",
     "title": "Open gespreksinstellingen"
@@ -42,14 +50,6 @@
   "switchAgent": {
     "desc": "Schakel tussen de in de zijbalk vastgezette assistenten door Ctrl ingedrukt te houden en een cijfer van 0~9 te drukken",
     "title": "Snel wisselen van assistent"
-  },
-  "switchToChat": {
-    "desc": "Overschakelen naar het gesprekstabblad",
-    "title": "Overschakelen naar het gesprekstabblad"
-  },
-  "switchToDefaultAgent": {
-    "desc": "Overschakelen naar de standaardassistent",
-    "title": "Overschakelen naar de standaardassistent"
   },
   "toggleLeftPanel": {
     "desc": "Toon of verberg het linker assistentpaneel",

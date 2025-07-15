@@ -11,6 +11,14 @@
     "desc": "Entra in modalità di modifica tenendo premuto Alt e facendo doppio clic sul messaggio",
     "title": "Modifica messaggio"
   },
+  "navigateToChat": {
+    "desc": "Passa alla scheda conversazioni",
+    "title": "Scheda conversazioni"
+  },
+  "navigateToInbox": {
+    "desc": "Passa alla scheda conversazioni e accedi a Chiacchiere casuali",
+    "title": "Chiacchiere casuali"
+  },
   "openChatSettings": {
     "desc": "Visualizza e modifica le impostazioni della conversazione attuale",
     "title": "Apri impostazioni chat"
@@ -42,14 +50,6 @@
   "switchAgent": {
     "desc": "Cambia l'assistente fissato nella barra laterale tenendo premuto Ctrl e premendo un numero da 0 a 9",
     "title": "Cambia assistente rapidamente"
-  },
-  "switchToChat": {
-    "desc": "Passa alla scheda conversazione",
-    "title": "Passa alla scheda conversazione"
-  },
-  "switchToDefaultAgent": {
-    "desc": "Passa all'assistente predefinito",
-    "title": "Passa all'assistente predefinito"
   },
   "toggleLeftPanel": {
     "desc": "Mostra o nascondi il pannello assistente a sinistra",

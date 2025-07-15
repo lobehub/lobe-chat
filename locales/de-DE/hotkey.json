@@ -11,6 +11,14 @@
     "desc": "Treten Sie in den Bearbeitungsmodus, indem Sie die Alt-Taste gedrückt halten und auf die Nachricht doppelklicken",
     "title": "Nachricht bearbeiten"
   },
+  "navigateToChat": {
+    "desc": "Zum Chat-Tab wechseln",
+    "title": "Chat-Tab"
+  },
+  "navigateToInbox": {
+    "desc": "Zum Chat-Tab wechseln und in 'Einfach plaudern' eintreten",
+    "title": "Einfach plaudern"
+  },
   "openChatSettings": {
     "desc": "Aktuelle Sitzungseinstellungen anzeigen und ändern",
     "title": "Chat-Einstellungen öffnen"
@@ -42,14 +50,6 @@
   "switchAgent": {
     "desc": "Wechseln Sie zwischen den im Seitenbereich fixierten Assistenten, indem Sie die Strg-Taste gedrückt halten und eine Zahl von 0 bis 9 drücken",
     "title": "Schnell zwischen Assistenten wechseln"
-  },
-  "switchToChat": {
-    "desc": "Zum Chat-Tab wechseln",
-    "title": "Zum Chat-Tab wechseln"
-  },
-  "switchToDefaultAgent": {
-    "desc": "Zum Standardassistenten wechseln",
-    "title": "Zum Standardassistenten wechseln"
   },
   "toggleLeftPanel": {
     "desc": "Linkes Hilfepanel ein- oder ausblenden",

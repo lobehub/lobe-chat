@@ -11,6 +11,14 @@
     "desc": "Enter edit mode by holding Alt and double-clicking the message",
     "title": "Edit Message"
   },
+  "navigateToChat": {
+    "desc": "Switch to the chat tab",
+    "title": "Chat Tab"
+  },
+  "navigateToInbox": {
+    "desc": "Switch to the chat tab and enter Casual Chat",
+    "title": "Casual Chat"
+  },
   "openChatSettings": {
     "desc": "View and modify the settings for the current conversation",
     "title": "Open Chat Settings"
@@ -42,14 +50,6 @@
   "switchAgent": {
     "desc": "Switch between pinned assistants in the sidebar by holding Ctrl and pressing numbers 0-9",
     "title": "Quick Switch Assistant"
-  },
-  "switchToChat": {
-    "desc": "Switch to the conversation tab",
-    "title": "Switch to Conversation Tab"
-  },
-  "switchToDefaultAgent": {
-    "desc": "Switch to the default assistant",
-    "title": "Switch to Default Assistant"
   },
   "toggleLeftPanel": {
     "desc": "Show or hide the left assistant panel",

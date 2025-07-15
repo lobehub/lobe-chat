@@ -11,6 +11,14 @@
     "desc": "Entrez en mode édition en maintenant la touche Alt enfoncée et en double-cliquant sur le message",
     "title": "Éditer le message"
   },
+  "navigateToChat": {
+    "desc": "Basculer vers l'onglet de conversation",
+    "title": "Onglet de conversation"
+  },
+  "navigateToInbox": {
+    "desc": "Basculer vers l'onglet de conversation et accéder à la discussion libre",
+    "title": "Discussion libre"
+  },
   "openChatSettings": {
     "desc": "Voir et modifier les paramètres de la conversation actuelle",
     "title": "Ouvrir les paramètres de la conversation"
@@ -42,14 +50,6 @@
   "switchAgent": {
     "desc": "Changer d'assistant fixé dans la barre latérale en maintenant Ctrl et en appuyant sur un chiffre de 0 à 9",
     "title": "Changer rapidement d'assistant"
-  },
-  "switchToChat": {
-    "desc": "Passer à l'onglet de conversation",
-    "title": "Passer à l'onglet de conversation"
-  },
-  "switchToDefaultAgent": {
-    "desc": "Passer à l'assistant par défaut",
-    "title": "Passer à l'assistant par défaut"
   },
   "toggleLeftPanel": {
     "desc": "Afficher ou masquer le panneau d'assistance à gauche",

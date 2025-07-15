@@ -11,6 +11,14 @@
     "desc": "通過按住 Alt 並雙擊消息進入編輯模式",
     "title": "編輯消息"
   },
+  "navigateToChat": {
+    "desc": "切換至會話標籤",
+    "title": "會話標籤"
+  },
+  "navigateToInbox": {
+    "desc": "切換至會話標籤並進入隨便聊聊",
+    "title": "隨便聊聊"
+  },
   "openChatSettings": {
     "desc": "查看和修改當前會話的設定",
     "title": "打開會話設定"
@@ -42,14 +50,6 @@
   "switchAgent": {
     "desc": "通過按住 Ctrl 加數字 0~9 切換固定在側邊欄的助手",
     "title": "快捷切換助手"
-  },
-  "switchToChat": {
-    "desc": "切換到會話標籤頁",
-    "title": "切換到會話標籤"
-  },
-  "switchToDefaultAgent": {
-    "desc": "切換到預設助理",
-    "title": "切換到預設助理"
   },
   "toggleLeftPanel": {
     "desc": "顯示或隱藏左側助手面板",
