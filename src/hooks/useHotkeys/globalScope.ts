@@ -50,21 +50,21 @@ export const useSwitchAgentHotkey = () => {
 };
 
 // 仅切换到会话标签
-export const useSwitchToChatHotkey = () => {
+export const useNavigateToChatHotkey = () => {
   const currentSessionId = useSessionStore((s) => s.activeId);
   const switchSession = useSwitchSession();
   const [, { unpinAgent }] = usePinnedAgentState();
 
-  return useHotkeyById(HotkeyEnum.SwitchToChat, () => {
+  return useHotkeyById(HotkeyEnum.NavigateToChat, () => {
     switchSession(currentSessionId);
     unpinAgent();
   });
 };
 
-export const useSwitchToDefaultAgentHotkey = () => {
+export const useNavigateToJustChatHotkey = () => {
   const switchSession = useSwitchSession();
   const [, { unpinAgent }] = usePinnedAgentState();
-  return useHotkeyById(HotkeyEnum.SwitchToDefaultAgent, () => {
+  return useHotkeyById(HotkeyEnum.NavigateToInbox, () => {
     switchSession(INBOX_SESSION_ID);
     unpinAgent();
   });
@@ -86,7 +86,7 @@ export const useOpenHotkeyHelperHotkey = () => {
 export const useRegisterGlobalHotkeys = () => {
   // 全局自动注册不需要 enableScope
   useSwitchAgentHotkey();
-  useSwitchToChatHotkey();
-  useSwitchToDefaultAgentHotkey();
+  useNavigateToChatHotkey();
+  useNavigateToJustChatHotkey();
   useOpenHotkeyHelperHotkey();
 };

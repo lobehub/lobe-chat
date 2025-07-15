@@ -13,6 +13,14 @@ const hotkey: HotkeyI18nTranslations = {
     desc: '通过按住 Alt 并双击消息进入编辑模式',
     title: '编辑消息',
   },
+  navigateToChat: {
+    desc: '切换至会话标签',
+    title: '会话标签',
+  },
+  navigateToInbox: {
+    desc: '切换至会话标签并进入随便聊聊',
+    title: '随便聊聊',
+  },
   openChatSettings: {
     desc: '查看和修改当前会话的设置',
     title: '打开会话设置',
@@ -44,14 +52,6 @@ const hotkey: HotkeyI18nTranslations = {
   switchAgent: {
     desc: '通过按住 Ctrl 加数字 0~9 切换固定在侧边栏的助手',
     title: '快捷切换助手',
-  },
-  switchToChat: {
-    desc: '切换到会话标签页',
-    title: '切换到会话标签',
-  },
-  switchToDefaultAgent: {
-    desc: '切换到默认助手',
-    title: '切换到默认助手',
   },
   toggleLeftPanel: {
     desc: '显示或隐藏左侧助手面板',

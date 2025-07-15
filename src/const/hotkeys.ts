@@ -33,13 +33,13 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
   },
   {
     group: HotkeyGroupEnum.Essential,
-    id: HotkeyEnum.SwitchToChat,
+    id: HotkeyEnum.NavigateToChat,
     keys: combineKeys([KeyEnum.Ctrl, KeyEnum.Zero]),
     scopes: [HotkeyScopeEnum.Global],
   },
   {
     group: HotkeyGroupEnum.Essential,
-    id: HotkeyEnum.SwitchToDefaultAgent,
+    id: HotkeyEnum.NavigateToInbox,
     keys: combineKeys([KeyEnum.Ctrl, KeyEnum.Shift, KeyEnum.Zero]),
     scopes: [HotkeyScopeEnum.Global],
   },
