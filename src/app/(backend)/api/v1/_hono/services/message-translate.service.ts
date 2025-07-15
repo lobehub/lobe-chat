@@ -27,6 +27,12 @@ export class MessageTranslateService extends BaseService {
       throw this.createAuthError('未授权操作');
     }
 
+    // 权限检查
+    const permissionResult = await this.resolveChatPermissions();
+    if (!permissionResult.isPermitted) {
+      throw this.createAuthorizationError(permissionResult.message || '无权限操作');
+    }
+
     this.log('info', '根据消息ID获取翻译信息', { messageId, userId: this.userId });
 
     try {
@@ -79,6 +85,12 @@ export class MessageTranslateService extends BaseService {
   ): ServiceResult<Partial<MessageTranslateItem>> {
     if (!this.userId) {
       throw this.createAuthError('未授权操作');
+    }
+
+    // 权限检查
+    const permissionResult = await this.resolveChatPermissions();
+    if (!permissionResult.isPermitted) {
+      throw this.createAuthorizationError(permissionResult.message || '无权限操作');
     }
 
     this.log('info', '开始翻译消息', {
