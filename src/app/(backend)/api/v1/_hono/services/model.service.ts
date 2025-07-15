@@ -42,8 +42,15 @@ export class ModelService extends BaseService {
     });
 
     try {
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('AI_MODEL_READ');
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权访问模型列表');
+      }
+
       // 1. 获取已启用的提供商列表
-      const enabledProviders = await this.getEnabledProviders();
+      const enabledProviders = await this.getEnabledProviders(permissionResult.condition?.userId);
 
       // 2. 按 provider 分组处理数据
       const providerMap = new Map<string, ProviderWithModels>();
@@ -57,7 +64,7 @@ export class ModelService extends BaseService {
         const builtinModels = await this.fetchBuiltinModels(providerId);
 
         // 3.2 获取数据库中该提供商的用户自定义模型配置
-        const userModels = await this.getUserModels(providerId);
+        const userModels = await this.getUserModels(providerId, permissionResult.condition?.userId);
 
         // 3.3 合并内置配置和用户配置（用户配置优先）
         const mergedModels = mergeArrayById(builtinModels, userModels);
@@ -173,8 +180,21 @@ export class ModelService extends BaseService {
     });
 
     try {
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('AI_MODEL_READ', {
+        targetModelId: request.model,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权访问此模型配置');
+      }
+
       // 首先从数据库查询
-      const dbModel = await this.getModelFromDatabase(request.provider, request.model);
+      const dbModel = await this.getModelFromDatabase(
+        request.provider,
+        request.model,
+        permissionResult.condition?.userId,
+      );
 
       if (dbModel) {
         this.log('info', '从数据库获取模型配置成功', {
@@ -220,8 +240,29 @@ export class ModelService extends BaseService {
     });
 
     try {
+      // 权限校验 - 需要同时有 MODEL_READ 和 SESSION_READ 权限
+      const [modelPermission, sessionPermission] = await Promise.all([
+        this.resolveQueryPermission('AI_MODEL_READ'),
+        this.resolveQueryPermission('SESSION_READ', {
+          targetSessionId: request.sessionId,
+        }),
+      ]);
+
+      if (!modelPermission.isPermitted) {
+        throw this.createAuthorizationError(modelPermission.message || '无权访问模型配置');
+      }
+
+      if (!sessionPermission.isPermitted) {
+        throw this.createAuthorizationError(sessionPermission.message || '无权访问此会话');
+      }
+
       const agentToSession = await this.db.query.agentsToSessions.findFirst({
-        where: eq(agentsToSessions.sessionId, request.sessionId),
+        where: and(
+          eq(agentsToSessions.sessionId, request.sessionId),
+          sessionPermission.condition?.userId
+            ? eq(agentsToSessions.userId, sessionPermission.condition.userId)
+            : undefined,
+        ),
       });
 
       if (!agentToSession) {
@@ -231,7 +272,12 @@ export class ModelService extends BaseService {
       const { agentId } = agentToSession;
 
       const agent = await this.db.query.agents.findFirst({
-        where: eq(agents.id, agentId),
+        where: and(
+          eq(agents.id, agentId),
+          sessionPermission.condition?.userId
+            ? eq(agents.userId, sessionPermission.condition.userId)
+            : undefined,
+        ),
       });
 
       if (!agent) {
@@ -258,7 +304,11 @@ export class ModelService extends BaseService {
         throw this.createNotFoundError(`无法确定模型提供商: model=${model}`);
       }
 
-      let databaseModel = await this.getModelFromDatabase(actualProvider, model);
+      let databaseModel = await this.getModelFromDatabase(
+        actualProvider,
+        model,
+        modelPermission.condition?.userId,
+      );
 
       let modelConfig: ModelConfigResponse | null = null;
 
@@ -287,13 +337,14 @@ export class ModelService extends BaseService {
   private async getModelFromDatabase(
     providerId: string,
     modelId: string,
+    userId?: string,
   ): Promise<DatabaseModelItem | null> {
     try {
       const result = await this.db.query.aiModels.findFirst({
         where: and(
-          eq(aiModels.userId, this.userId!),
           eq(aiModels.providerId, providerId),
           eq(aiModels.id, modelId),
+          userId ? eq(aiModels.userId, userId) : undefined,
         ),
       });
 
@@ -352,7 +403,7 @@ export class ModelService extends BaseService {
   /**
    * 获取已启用的提供商列表
    */
-  private async getEnabledProviders(): Promise<AiProviderListItem[]> {
+  private async getEnabledProviders(userId?: string): Promise<AiProviderListItem[]> {
     // 获取数据库中用户配置的提供商
     const userProviders = await this.db
       .select({
@@ -365,7 +416,7 @@ export class ModelService extends BaseService {
         source: aiProviders.source,
       })
       .from(aiProviders)
-      .where(eq(aiProviders.userId, this.userId!))
+      .where(userId ? eq(aiProviders.userId, userId) : undefined)
       .orderBy(aiProviders.sort, aiProviders.id);
 
     // 创建基于 DEFAULT_MODEL_PROVIDER_LIST 的排序映射
@@ -424,7 +475,7 @@ export class ModelService extends BaseService {
   /**
    * 获取指定提供商的用户自定义模型配置
    */
-  private async getUserModels(providerId: string): Promise<AiProviderModelListItem[]> {
+  private async getUserModels(providerId: string, userId?: string): Promise<AiProviderModelListItem[]> {
     const result = await this.db
       .select({
         abilities: aiModels.abilities,
@@ -440,7 +491,10 @@ export class ModelService extends BaseService {
         type: aiModels.type,
       })
       .from(aiModels)
-      .where(and(eq(aiModels.providerId, providerId), eq(aiModels.userId, this.userId!)))
+      .where(and(
+        eq(aiModels.providerId, providerId),
+        userId ? eq(aiModels.userId, userId) : undefined,
+      ))
       .orderBy(aiModels.sort, aiModels.id);
 
     return result as AiProviderModelListItem[];
