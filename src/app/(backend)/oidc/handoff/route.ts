@@ -44,25 +44,3 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
-
-/**
- * DELETE /oidc/handoff/cleanup
- * 清理过期的凭证记录
- * 可以通过定时任务调用
- */
-export async function DELETE() {
-  log('Received DELETE request for /oidc/handoff cleanup');
-
-  try {
-    const authHandoffModel = new OAuthHandoffModel(serverDB);
-    const cleanedCount = await authHandoffModel.cleanupExpired();
-
-    log('Cleaned up %d expired handoff records', cleanedCount);
-
-    return NextResponse.json({ cleanedCount, success: true });
-  } catch (error) {
-    log('Error cleaning up handoff records: %O', error);
-
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
-}

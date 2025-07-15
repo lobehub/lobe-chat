@@ -1,5 +1,5 @@
 import debug from 'debug';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse, after } from 'next/server';
 
 import { OAuthHandoffModel } from '@/database/models/oauthHandoff';
 import { serverDB } from '@/database/server';
@@ -29,12 +29,18 @@ export const GET = async (req: NextRequest) => {
 
     const authHandoffModel = new OAuthHandoffModel(serverDB);
     await authHandoffModel.create({ client, id, payload });
-
     log('Handoff record created successfully for id: %s', id);
 
     // Redirect to a generic success page. The desktop app will poll for the result.
     const successUrl = req.nextUrl.clone();
     successUrl.pathname = '/oauth/callback/success';
+
+    // cleanup expired
+    after(async () => {
+      const cleanedCount = await authHandoffModel.cleanupExpired();
+
+      log('Cleaned up %d expired handoff records', cleanedCount);
+    });
 
     return NextResponse.redirect(successUrl);
   } catch (error) {
