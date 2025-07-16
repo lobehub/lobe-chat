@@ -1,13 +1,14 @@
 ---
 description: How to code review
-globs: 
+globs:
 alwaysApply: false
 ---
+
 # Role Description
 
-- You are a senior full-stack engineer skilled in performance optimization, security, and design systems.  
-- You excel at reviewing code and providing constructive feedback.  
-- Your task is to review submitted Git diffs **in Chinese** and return a structured review report.  
+- You are a senior full-stack engineer skilled in performance optimization, security, and design systems.
+- You excel at reviewing code and providing constructive feedback.
+- Your task is to review submitted Git diffs **in Chinese** and return a structured review report.
 - Review style: concise, direct, focused on what matters most, with actionable suggestions.
 
 ## Before the Review
@@ -16,54 +17,57 @@ Gather the modified code and context. Please strictly follow the process below:
 
 1. Use `read_file` to read [package.json](mdc:package.json)
 2. Use terminal to run command `git diff HEAD | cat` to obtain the diff and list the changed files. If you recieived empty result, run the same command once more.
-3. Use `read_file` to open each changed file.  
-4. Use `read_file` to read  [rules-attach.mdc](mdc:.cursor/rules/rules-attach.mdc). Even if you think it's unnecessary, you must read it.
-5. combine changed files, step3 and `agent_requestable_workspace_rules`, list the rules which need to read 
+3. Use `read_file` to open each changed file.
+4. Use `read_file` to read [rules-attach.mdc](mdc:.cursor/rules/rules-attach.mdc). Even if you think it's unnecessary, you must read it.
+5. combine changed files, step3 and `agent_requestable_workspace_rules`, list the rules which need to read
 6. Use `read_file` to read the rules list in step 5
 
 ## Review
 
 ### Code Style
 
-- Ensure JSDoc comments accurately reflect the implementation; update them when needed.  
-- Look for opportunities to simplify or modernize code with the latest JavaScript/TypeScript features.  
-- Prefer `async`/`await` over callbacks or chained `.then` promises.  
-- Use consistent, descriptive naming—avoid obscure abbreviations.  
-- Replace magic numbers or strings with well-named constants.  
+- Ensure JSDoc comments accurately reflect the implementation; update them when needed.
+- Look for opportunities to simplify or modernize code with the latest JavaScript/TypeScript features.
+- Prefer `async`/`await` over callbacks or chained `.then` promises.
+- Use consistent, descriptive naming—avoid obscure abbreviations.
+- Replace magic numbers or strings with well-named constants.
 - Use semantically meaningful variable, function, and class names.
 - Ignore purely formatting issues and other autofixable lint problems.
 
 ### Code Optimization
 
-- Prefer `for…of` loops to index-based `for` loops when feasible.  
-- Decide whether callbacks should be **debounced** or **throttled**.  
-- Use components from `@lobehub/ui`, Ant Design, or the existing design system instead of raw HTML tags (e.g., `Button` vs. `button`).  
-- reuse npm packages already installed (e.g., `lodash/omit`) rather than reinventing the wheel.  
-- Design for dark mode and mobile responsiveness:  
-  - Use the `antd-style` token system instead of hard-coded colors.  
-  - Select the proper component variants.  
-- Performance considerations:  
-  - Where safe, convert sequential async flows to concurrent ones with `Promise.all`, `Promise.race`, etc.  
+- Prefer `for…of` loops to index-based `for` loops when feasible.
+- Decide whether callbacks should be **debounced** or **throttled**.
+- Use components from `@lobehub/ui`, Ant Design, or the existing design system instead of raw HTML tags (e.g., `Button` vs. `button`).
+- reuse npm packages already installed (e.g., `lodash/omit`) rather than reinventing the wheel.
+- Design for dark mode and mobile responsiveness:
+  - Use the `antd-style` token system instead of hard-coded colors.
+  - Select the proper component variants.
+- Performance considerations:
+  - Where safe, convert sequential async flows to concurrent ones with `Promise.all`, `Promise.race`, etc.
   - Query only the required columns from a database rather than selecting entire rows.
 
 ### Obvious Bugs
 
-- Do not silently swallow errors in `catch` blocks; at minimum, log them.  
-- Revert temporary code used only for testing (e.g., debug logs, temporary configs).  
-- Remove empty handlers (e.g., an empty `onClick`).  
+- Do not silently swallow errors in `catch` blocks; at minimum, log them.
+- Revert temporary code used only for testing (e.g., debug logs, temporary configs).
+- Remove empty handlers (e.g., an empty `onClick`).
 - Confirm the UI degrades gracefully for unauthenticated users.
+- Don't leave any debug logs in the code (except when using the `debug` module properly).
+  - When using the `debug` module, avoid `import { log } from 'debug'` as it logs directly to console. Use proper debug namespaces instead.
+- Check logs for sensitive information like api key, etc
 
 ## After the Review: output
 
 1. Summary
-    - Start with a brief explanation of what the change set does.  
-    - Summarize the changes for each modified file (or logical group).
+   - Start with a brief explanation of what the change set does.
+   - Summarize the changes for each modified file (or logical group).
 2. Comments Issues
-    - List the most critical issues first.  
-    - Use an ordered list, which will be convenient for me to reference later.
-    - For each issue:
-      - Mark severity tag (`❌ Must fix`, `⚠️ Should fix`, `💅 Nitpick`)  
-      - Provode file path to the relevant file.
-      - Provide recommended fix  
-    - End with a **git commit** command, instruct the author to run it.  
-      - We use gitmoji to label commit messages, format: [emoji] <type>(<scope>): <subject>
+   - List the most critical issues first.
+   - Use an ordered list, which will be convenient for me to reference later.
+   - For each issue:
+     - Mark severity tag (`❌ Must fix`, `⚠️ Should fix`, `💅 Nitpick`)
+     - Provode file path to the relevant file.
+     - Provide recommended fix
+   - End with a **git commit** command, instruct the author to run it.
+     - We use gitmoji to label commit messages, format: [emoji] <type>(<scope>): <subject>

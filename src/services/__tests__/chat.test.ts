@@ -36,6 +36,7 @@ import { modelConfigSelectors } from '@/store/user/selectors';
 import { UserSettingsState, initialSettingsState } from '@/store/user/slices/settings/initialState';
 import { DalleManifest } from '@/tools/dalle';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
+import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage } from '@/types/message';
 import { ChatStreamPayload, type OpenAIChatMessage } from '@/types/openai/chat';
 import { LobeTool } from '@/types/tool';
@@ -58,15 +59,44 @@ vi.mock('@/utils/fetch', async (importOriginal) => {
   return { ...(module as any), getMessageError: vi.fn() };
 });
 
-beforeEach(() => {
+// Mock image processing utilities
+vi.mock('@/utils/url', () => ({
+  isLocalUrl: vi.fn(),
+}));
+
+vi.mock('@/utils/imageToBase64', () => ({
+  imageUrlToBase64: vi.fn(),
+}));
+
+vi.mock('@/libs/model-runtime/utils/uriParser', () => ({
+  parseDataUri: vi.fn(),
+}));
+
+beforeEach(async () => {
   // 清除所有模块的缓存
   vi.resetModules();
+
   // 默认设置 isServerMode 为 false
   vi.mock('@/const/version', () => ({
     isServerMode: false,
     isDeprecatedEdition: true,
     isDesktop: false,
   }));
+
+  // Reset all mocks
+  vi.clearAllMocks();
+
+  // Set default mock return values for image processing utilities
+  const { isLocalUrl } = await import('@/utils/url');
+  const { imageUrlToBase64 } = await import('@/utils/imageToBase64');
+  const { parseDataUri } = await import('@/libs/model-runtime/utils/uriParser');
+
+  vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
+  vi.mocked(isLocalUrl).mockReturnValue(false);
+  vi.mocked(imageUrlToBase64).mockResolvedValue({
+    base64: 'mock-base64',
+    mimeType: 'image/jpeg',
+  });
 });
 
 // mock auth
@@ -206,6 +236,251 @@ describe('ChatService', () => {
           },
           undefined,
         );
+      });
+    });
+
+    describe('local image URL conversion', () => {
+      it('should convert local image URLs to base64 and call processImageList', async () => {
+        const { isLocalUrl } = await import('@/utils/url');
+        const { imageUrlToBase64 } = await import('@/utils/imageToBase64');
+        const { parseDataUri } = await import('@/libs/model-runtime/utils/uriParser');
+
+        // Mock for local URL
+        vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
+        vi.mocked(isLocalUrl).mockReturnValue(true); // This is a local URL
+        vi.mocked(imageUrlToBase64).mockResolvedValue({
+          base64: 'converted-base64-content',
+          mimeType: 'image/png',
+        });
+
+        const messages = [
+          {
+            content: 'Hello',
+            role: 'user',
+            imageList: [
+              {
+                id: 'file1',
+                url: 'http://127.0.0.1:3000/uploads/image.png', // Real local URL
+                alt: 'local-image.png',
+              },
+            ],
+            createdAt: Date.now(),
+            id: 'test-id',
+            meta: {},
+            updatedAt: Date.now(),
+          },
+        ] as ChatMessage[];
+
+        // Spy on processImageList method
+        const processImageListSpy = vi.spyOn(chatService as any, 'processImageList');
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+
+        await chatService.createAssistantMessage({
+          messages,
+          plugins: [],
+          model: 'gpt-4-vision-preview',
+        });
+
+        // Verify processImageList was called with correct arguments
+        expect(processImageListSpy).toHaveBeenCalledWith([
+          {
+            id: 'file1',
+            url: 'http://127.0.0.1:3000/uploads/image.png',
+            alt: 'local-image.png',
+          },
+        ]);
+
+        // Verify the utility functions were called
+        expect(parseDataUri).toHaveBeenCalledWith('http://127.0.0.1:3000/uploads/image.png');
+        expect(isLocalUrl).toHaveBeenCalledWith('http://127.0.0.1:3000/uploads/image.png');
+        expect(imageUrlToBase64).toHaveBeenCalledWith('http://127.0.0.1:3000/uploads/image.png');
+
+        // Verify the final result contains base64 converted URL
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          {
+            messages: [
+              {
+                content: [
+                  {
+                    text: 'Hello',
+                    type: 'text',
+                  },
+                  {
+                    image_url: {
+                      detail: 'auto',
+                      url: 'data:image/png;base64,converted-base64-content',
+                    },
+                    type: 'image_url',
+                  },
+                ],
+                role: 'user',
+              },
+            ],
+            model: 'gpt-4-vision-preview',
+          },
+          undefined,
+        );
+      });
+
+      it('should not convert remote URLs to base64 and call processImageList', async () => {
+        const { isLocalUrl } = await import('@/utils/url');
+        const { imageUrlToBase64 } = await import('@/utils/imageToBase64');
+        const { parseDataUri } = await import('@/libs/model-runtime/utils/uriParser');
+
+        // Mock for remote URL
+        vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
+        vi.mocked(isLocalUrl).mockReturnValue(false); // This is NOT a local URL
+        vi.mocked(imageUrlToBase64).mockClear(); // Clear to ensure it's not called
+
+        const messages = [
+          {
+            content: 'Hello',
+            role: 'user',
+            imageList: [
+              {
+                id: 'file1',
+                url: 'https://example.com/remote-image.jpg', // Remote URL
+                alt: 'remote-image.jpg',
+              },
+            ],
+            createdAt: Date.now(),
+            id: 'test-id-2',
+            meta: {},
+            updatedAt: Date.now(),
+          },
+        ] as ChatMessage[];
+
+        // Spy on processImageList method
+        const processImageListSpy = vi.spyOn(chatService as any, 'processImageList');
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+
+        await chatService.createAssistantMessage({
+          messages,
+          plugins: [],
+          model: 'gpt-4-vision-preview',
+        });
+
+        // Verify processImageList was called
+        expect(processImageListSpy).toHaveBeenCalledWith([
+          {
+            id: 'file1',
+            url: 'https://example.com/remote-image.jpg',
+            alt: 'remote-image.jpg',
+          },
+        ]);
+
+        // Verify the utility functions were called
+        expect(parseDataUri).toHaveBeenCalledWith('https://example.com/remote-image.jpg');
+        expect(isLocalUrl).toHaveBeenCalledWith('https://example.com/remote-image.jpg');
+        expect(imageUrlToBase64).not.toHaveBeenCalled(); // Should NOT be called for remote URLs
+
+        // Verify the final result preserves original URL
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          {
+            messages: [
+              {
+                content: [
+                  {
+                    text: 'Hello',
+                    type: 'text',
+                  },
+                  {
+                    image_url: { detail: 'auto', url: 'https://example.com/remote-image.jpg' },
+                    type: 'image_url',
+                  },
+                ],
+                role: 'user',
+              },
+            ],
+            model: 'gpt-4-vision-preview',
+          },
+          undefined,
+        );
+      });
+
+      it('should handle mixed local and remote URLs correctly', async () => {
+        const { isLocalUrl } = await import('@/utils/url');
+        const { imageUrlToBase64 } = await import('@/utils/imageToBase64');
+        const { parseDataUri } = await import('@/libs/model-runtime/utils/uriParser');
+
+        // Mock parseDataUri to always return url type
+        vi.mocked(parseDataUri).mockReturnValue({ type: 'url', base64: null, mimeType: null });
+
+        // Mock isLocalUrl to return true only for 127.0.0.1 URLs
+        vi.mocked(isLocalUrl).mockImplementation((url: string) => {
+          return new URL(url).hostname === '127.0.0.1';
+        });
+
+        // Mock imageUrlToBase64 for conversion
+        vi.mocked(imageUrlToBase64).mockResolvedValue({
+          base64: 'local-file-base64',
+          mimeType: 'image/jpeg',
+        });
+
+        const messages = [
+          {
+            content: 'Multiple images',
+            role: 'user',
+            imageList: [
+              {
+                id: 'local1',
+                url: 'http://127.0.0.1:3000/local1.jpg', // Local URL
+                alt: 'local1.jpg',
+              },
+              {
+                id: 'remote1',
+                url: 'https://example.com/remote1.png', // Remote URL
+                alt: 'remote1.png',
+              },
+              {
+                id: 'local2',
+                url: 'http://127.0.0.1:8080/local2.gif', // Another local URL
+                alt: 'local2.gif',
+              },
+            ],
+            createdAt: Date.now(),
+            id: 'test-id-3',
+            meta: {},
+            updatedAt: Date.now(),
+          },
+        ] as ChatMessage[];
+
+        const processImageListSpy = vi.spyOn(chatService as any, 'processImageList');
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+
+        await chatService.createAssistantMessage({
+          messages,
+          plugins: [],
+          model: 'gpt-4-vision-preview',
+        });
+
+        // Verify processImageList was called
+        expect(processImageListSpy).toHaveBeenCalledWith([
+          { id: 'local1', url: 'http://127.0.0.1:3000/local1.jpg', alt: 'local1.jpg' },
+          { id: 'remote1', url: 'https://example.com/remote1.png', alt: 'remote1.png' },
+          { id: 'local2', url: 'http://127.0.0.1:8080/local2.gif', alt: 'local2.gif' },
+        ]);
+
+        // Verify isLocalUrl was called for each image
+        expect(isLocalUrl).toHaveBeenCalledWith('http://127.0.0.1:3000/local1.jpg');
+        expect(isLocalUrl).toHaveBeenCalledWith('https://example.com/remote1.png');
+        expect(isLocalUrl).toHaveBeenCalledWith('http://127.0.0.1:8080/local2.gif');
+
+        // Verify imageUrlToBase64 was called only for local URLs
+        expect(imageUrlToBase64).toHaveBeenCalledWith('http://127.0.0.1:3000/local1.jpg');
+        expect(imageUrlToBase64).toHaveBeenCalledWith('http://127.0.0.1:8080/local2.gif');
+        expect(imageUrlToBase64).toHaveBeenCalledTimes(2); // Only for local URLs
+
+        // Verify the final result has correct URLs
+        const callArgs = getChatCompletionSpy.mock.calls[0][0];
+        const imageContent = (callArgs.messages?.[0].content as any[])?.filter(
+          (c) => c.type === 'image_url',
+        );
+
+        expect(imageContent).toHaveLength(3);
+        expect(imageContent[0].image_url.url).toBe('data:image/jpeg;base64,local-file-base64'); // Local converted
+        expect(imageContent[1].image_url.url).toBe('https://example.com/remote1.png'); // Remote preserved
+        expect(imageContent[2].image_url.url).toBe('data:image/jpeg;base64,local-file-base64'); // Local converted
       });
     });
 
@@ -654,45 +929,71 @@ describe('ChatService', () => {
       });
     });
 
-    it('should throw InvalidAccessCode error when enableFetchOnClient is true and auth is enabled but user is not signed in', async () => {
-      // Mock userStore
-      const mockUserStore = {
-        enableAuth: () => true,
+    it('should return InvalidAccessCode error when enableFetchOnClient is true and auth is enabled but user is not signed in', async () => {
+      // Mock enableAuth to be true and userStore to be not signed in
+      vi.doMock('@/const/auth', () => ({ enableAuth: true }));
+
+      // Mock userStore BEFORE importing chatService
+      const mockUserState = {
         isSignedIn: false,
+        settings: {
+          keyVaults: {
+            openai: {
+              apiKey: 'test-api-key',
+              baseURL: 'https://api.openai.com/v1',
+            },
+          },
+        },
       };
 
-      // Mock modelConfigSelectors
-      const mockModelConfigSelectors = {
-        isProviderFetchOnClient: () => () => true,
-      };
+      vi.doMock('@/store/user', () => ({
+        useUserStore: {
+          getState: () => mockUserState,
+        },
+        getUserStoreState: () => mockUserState,
+      }));
 
-      vi.spyOn(useUserStore, 'getState').mockImplementationOnce(() => mockUserStore as any);
-      vi.spyOn(modelConfigSelectors, 'isProviderFetchOnClient').mockImplementationOnce(
-        mockModelConfigSelectors.isProviderFetchOnClient,
-      );
+      // Mock modelConfigSelectors BEFORE importing chatService
+      vi.doMock('@/store/user/selectors', async (importOriginal) => {
+        const actual = (await importOriginal()) as any;
+        return {
+          ...actual,
+          modelConfigSelectors: {
+            ...actual.modelConfigSelectors,
+            isProviderFetchOnClient: () => () => true,
+          },
+        };
+      });
+
+      vi.resetModules();
+
+      // Re-import after all mocks
+      const { chatService: mockedChatService } = await import('../chat');
+      const { useUserStore: mockedUserStore } = await import('@/store/user');
 
       const params: Partial<ChatStreamPayload> = {
         model: 'test-model',
         messages: [],
-      };
-      const options = {};
-      const expectedPayload = {
-        model: DEFAULT_AGENT_CONFIG.model,
-        stream: true,
-        ...DEFAULT_AGENT_CONFIG.params,
-        ...params,
+        provider: 'openai',
       };
 
-      const result = await chatService.getChatCompletion(params, options);
+      try {
+        // Call getChatCompletion and expect it to return a 401 response
+        const response = await mockedChatService.getChatCompletion(params, {});
 
-      expect(global.fetch).toHaveBeenCalledWith(expect.any(String), {
-        body: JSON.stringify(expectedPayload),
-        headers: expect.objectContaining({
-          'Content-Type': 'application/json',
-        }),
-        method: 'POST',
-      });
-      expect(result.status).toBe(401);
+        // Verify response status and error type
+        expect(response).toBeInstanceOf(Response);
+        expect(response.status).toBe(401);
+
+        const responseBody = await response.json();
+        expect(responseBody.errorType).toBe(ChatErrorType.InvalidAccessCode);
+      } finally {
+        // Cleanup
+        vi.doUnmock('@/const/auth');
+        vi.doUnmock('@/store/user');
+        vi.doUnmock('@/store/user/selectors');
+        vi.resetModules();
+      }
     });
 
     // Add more test cases to cover different scenarios and edge cases
@@ -941,7 +1242,7 @@ describe('ChatService', () => {
           { content: 'Hey', role: 'assistant' }, // Regular user message
         ] as ChatMessage[];
 
-        const output = chatService['processMessages']({
+        const output = await chatService['processMessages']({
           messages,
           model: 'gpt-4o',
           provider: 'openai',
@@ -1062,7 +1363,7 @@ describe('ChatService', () => {
       });
     });
 
-    it('should handle empty tool calls messages correctly', () => {
+    it('should handle empty tool calls messages correctly', async () => {
       const messages = [
         {
           content: '## Tools\n\nYou can use these tools',
@@ -1075,7 +1376,7 @@ describe('ChatService', () => {
         },
       ] as ChatMessage[];
 
-      const result = chatService['processMessages']({
+      const result = await chatService['processMessages']({
         messages,
         model: 'gpt-4',
         provider: 'openai',
@@ -1093,7 +1394,7 @@ describe('ChatService', () => {
       ]);
     });
 
-    it('should handle assistant messages with reasoning correctly', () => {
+    it('should handle assistant messages with reasoning correctly', async () => {
       const messages = [
         {
           role: 'assistant',
@@ -1105,7 +1406,7 @@ describe('ChatService', () => {
         },
       ] as ChatMessage[];
 
-      const result = chatService['processMessages']({
+      const result = await chatService['processMessages']({
         messages,
         model: 'gpt-4',
         provider: 'openai',

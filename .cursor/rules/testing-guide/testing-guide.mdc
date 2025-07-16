@@ -381,7 +381,7 @@ git show HEAD -- src/components/Button/index.tsx | cat
 
 ## 特殊场景的测试
 
-针对一些特殊场景的测试，需要阅读相关文件：
+针对一些特殊场景的测试，需要阅读相关 rules：
 
 - [Electron IPC 接口测试策略](mdc:./electron-ipc-test.mdc)
 - [数据库 Model 测试指南](mdc:./db-model-test.mdc)
@@ -390,12 +390,15 @@ git show HEAD -- src/components/Button/index.tsx | cat
 
 修复测试时，记住以下关键点：
 
-- **使用正确的命令**: `npx vitest run --config [config-file]`
-- **理解测试意图**: 先读懂测试再修复
-- **查看最近修改**: 检查相关文件的 git 修改记录，判断问题根源
-- **选择正确环境**: 客户端测试用 `vitest.config.ts`，服务端用 `vitest.config.server.ts`
-- **专注单一问题**: 只修复当前的测试失败
-- **验证修复结果**: 确保修复后测试通过且无副作用
-- **提供修复总结**: 说明错误原因和修复方法
-- **Model 测试安全第一**: 必须包含用户权限检查和对应的安全测试
-- **Model 双环境验证**: 必须在 PGLite 和 PostgreSQL 两个环境下都验证通过
+- 使用正确的命令: `npx vitest run --config [config-file]`
+- 理解测试意图: 先读懂测试再修复
+- 查看最近修改: 检查相关文件的 git 修改记录，判断问题根源
+- 选择正确环境: 客户端测试用 `vitest.config.ts`，服务端用 `vitest.config.server.ts`
+- 专注单一问题: 只修复当前的测试失败
+- 验证修复结果: 确保修复后测试通过且无副作用
+- 提供修复总结: 说明错误原因和修复方法
+- Model 测试安全第一: 必须包含用户权限检查和对应的安全测试
+- Model 双环境验证: 必须在 PGLite 和 PostgreSQL 两个环境下都验证通过
+- 大文件测试优化策略:
+  - 集中式修改: 新增测试代码时，尽量在同一区域内添加，避免大文件多处分散修改（模块导入除外，还是应该放开头）
+  - 深度理解: 即使文件较大，也要仔细阅读较多现有代码以理解上下文和保持代码风格一致性，例如务必阅读开头 200 行代码，理解导入了哪些模块，以及之前是怎么配置 mock 的

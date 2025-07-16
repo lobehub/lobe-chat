@@ -123,3 +123,10 @@ export function inferContentTypeFromImageUrl(url: string) {
 
   return mimeType!; // Non-null assertion is safe due to whitelist validation
 }
+
+/**
+ * check: apps/desktop/src/main/core/StaticFileServerManager.ts
+ */
+export function isLocalUrl(url: string) {
+  return new URL(url).hostname === '127.0.0.1';
+}
