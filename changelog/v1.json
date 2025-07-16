@@ -1,14 +1,18 @@
 [
   {
     "children": {
-      "fixes": ["Chat model list should not show image model."]
+      "fixes": [
+        "Chat model list should not show image model."
+      ]
     },
     "date": "2025-07-16",
     "version": "1.99.3"
   },
   {
     "children": {
-      "fixes": ["Some ai image generation feedback issues."]
+      "fixes": [
+        "Some ai image generation feedback issues."
+      ]
     },
     "date": "2025-07-15",
     "version": "1.99.2"
@@ -26,6 +30,15 @@
     },
     "date": "2025-07-14",
     "version": "1.99.0"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Chat model list should not show image model, some ai image generation feedback issues."
+      ]
+    },
+    "date": "2025-07-16",
+    "version": "1.98.1"
   },
   {
     "children": {
