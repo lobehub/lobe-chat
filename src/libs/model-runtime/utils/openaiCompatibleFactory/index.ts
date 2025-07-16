@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import createDebug from 'debug';
-import OpenAI, { ClientOptions, toFile } from 'openai';
+import OpenAI, { ClientOptions } from 'openai';
 import { Stream } from 'openai/streaming';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
@@ -29,7 +29,11 @@ import { AgentRuntimeError } from '../createError';
 import { debugResponse, debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
 import { handleOpenAIError } from '../handleOpenAIError';
-import { convertOpenAIMessages, convertOpenAIResponseInputs } from '../openaiHelpers';
+import {
+  convertImageUrlToFile,
+  convertOpenAIMessages,
+  convertOpenAIResponseInputs,
+} from '../openaiHelpers';
 import { StreamingResponse } from '../response';
 import { OpenAIResponsesStream, OpenAIStream, OpenAIStreamOptions } from '../streams';
 
@@ -161,28 +165,6 @@ export function transformResponseToStream(data: OpenAI.ChatCompletion) {
     },
   });
 }
-
-const convertImageUrlToFile = async (imageUrl: string) => {
-  let buffer: Buffer;
-  let mimeType: string;
-
-  if (imageUrl.startsWith('data:')) {
-    // a base64 image
-    const [mimeTypePart, base64Data] = imageUrl.split(',');
-    mimeType = mimeTypePart.split(':')[1].split(';')[0];
-    buffer = Buffer.from(base64Data, 'base64');
-  } else {
-    // a http url
-    const response = await fetch(imageUrl);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch image from ${imageUrl}: ${response.statusText}`);
-    }
-    buffer = Buffer.from(await response.arrayBuffer());
-    mimeType = response.headers.get('content-type') || 'image/png';
-  }
-
-  return toFile(buffer, `image.${mimeType.split('/')[1]}`, { type: mimeType });
-};
 
 export const createOpenAICompatibleRuntime = <T extends Record<string, any> = any>({
   provider,

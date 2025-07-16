@@ -14,6 +14,7 @@ import officalOpenAIModels from '@/libs/model-runtime/openai/fixtures/openai-mod
 import { sleep } from '@/utils/sleep';
 
 import * as debugStreamModule from '../debugStream';
+import * as openaiHelpers from '../openaiHelpers';
 import { createOpenAICompatibleRuntime } from './index';
 
 const provider = 'groq';
@@ -974,6 +975,293 @@ describe('LobeOpenAICompatibleFactory', () => {
 
         // 恢复原始环境变量值
         process.env.DEBUG_MOCKPROVIDER_CHAT_COMPLETION = originalDebugValue;
+      });
+    });
+  });
+
+  describe('createImage', () => {
+    beforeEach(() => {
+      // Mock convertImageUrlToFile since it's already tested in openaiHelpers.test.ts
+      vi.spyOn(openaiHelpers, 'convertImageUrlToFile').mockResolvedValue(
+        new File(['mock-file-content'], 'test-image.jpg', { type: 'image/jpeg' }),
+      );
+    });
+
+    describe('basic image generation', () => {
+      it('should generate image successfully without imageUrls', async () => {
+        const mockResponse = {
+          data: [
+            {
+              b64_json:
+                'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+            },
+          ],
+        };
+
+        vi.spyOn(instance['client'].images, 'generate').mockResolvedValue(mockResponse as any);
+
+        const payload = {
+          model: 'dall-e-3',
+          params: {
+            prompt: 'A beautiful sunset',
+            size: '1024x1024',
+            quality: 'standard',
+          },
+        };
+
+        const result = await (instance as any).createImage(payload);
+
+        expect(instance['client'].images.generate).toHaveBeenCalledWith({
+          model: 'dall-e-3',
+          n: 1,
+          prompt: 'A beautiful sunset',
+          size: '1024x1024',
+          quality: 'standard',
+        });
+
+        expect(result).toEqual({
+          imageUrl:
+            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+        });
+      });
+
+      it('should handle size auto parameter correctly', async () => {
+        const mockResponse = {
+          data: [{ b64_json: 'mock-base64-data' }],
+        };
+
+        vi.spyOn(instance['client'].images, 'generate').mockResolvedValue(mockResponse as any);
+
+        const payload = {
+          model: 'dall-e-3',
+          params: {
+            prompt: 'A beautiful sunset',
+            size: 'auto',
+          },
+        };
+
+        await (instance as any).createImage(payload);
+
+        // size: 'auto' should be removed from the options
+        expect(instance['client'].images.generate).toHaveBeenCalledWith({
+          model: 'dall-e-3',
+          n: 1,
+          prompt: 'A beautiful sunset',
+        });
+      });
+    });
+
+    describe('image editing', () => {
+      it('should edit image with single imageUrl', async () => {
+        const mockResponse = {
+          data: [{ b64_json: 'edited-image-base64' }],
+        };
+
+        vi.spyOn(instance['client'].images, 'edit').mockResolvedValue(mockResponse as any);
+
+        const payload = {
+          model: 'dall-e-2',
+          params: {
+            prompt: 'Add a rainbow to this image',
+            imageUrls: ['https://example.com/image1.jpg'],
+            mask: 'https://example.com/mask.jpg',
+          },
+        };
+
+        const result = await (instance as any).createImage(payload);
+
+        expect(openaiHelpers.convertImageUrlToFile).toHaveBeenCalledWith(
+          'https://example.com/image1.jpg',
+        );
+        expect(instance['client'].images.edit).toHaveBeenCalledWith({
+          model: 'dall-e-2',
+          n: 1,
+          prompt: 'Add a rainbow to this image',
+          image: expect.any(File),
+          mask: 'https://example.com/mask.jpg',
+        });
+
+        expect(result).toEqual({
+          imageUrl: 'data:image/png;base64,edited-image-base64',
+        });
+      });
+
+      it('should edit image with multiple imageUrls', async () => {
+        const mockResponse = {
+          data: [{ b64_json: 'edited-multiple-images-base64' }],
+        };
+
+        const mockFile1 = new File(['content1'], 'image1.jpg', { type: 'image/jpeg' });
+        const mockFile2 = new File(['content2'], 'image2.jpg', { type: 'image/jpeg' });
+
+        vi.mocked(openaiHelpers.convertImageUrlToFile)
+          .mockResolvedValueOnce(mockFile1)
+          .mockResolvedValueOnce(mockFile2);
+
+        vi.spyOn(instance['client'].images, 'edit').mockResolvedValue(mockResponse as any);
+
+        const payload = {
+          model: 'dall-e-2',
+          params: {
+            prompt: 'Merge these images',
+            imageUrls: ['https://example.com/image1.jpg', 'https://example.com/image2.jpg'],
+          },
+        };
+
+        const result = await (instance as any).createImage(payload);
+
+        expect(openaiHelpers.convertImageUrlToFile).toHaveBeenCalledTimes(2);
+        expect(openaiHelpers.convertImageUrlToFile).toHaveBeenCalledWith(
+          'https://example.com/image1.jpg',
+        );
+        expect(openaiHelpers.convertImageUrlToFile).toHaveBeenCalledWith(
+          'https://example.com/image2.jpg',
+        );
+
+        expect(instance['client'].images.edit).toHaveBeenCalledWith({
+          model: 'dall-e-2',
+          n: 1,
+          prompt: 'Merge these images',
+          image: [mockFile1, mockFile2],
+        });
+
+        expect(result).toEqual({
+          imageUrl: 'data:image/png;base64,edited-multiple-images-base64',
+        });
+      });
+
+      it('should handle convertImageUrlToFile error', async () => {
+        vi.mocked(openaiHelpers.convertImageUrlToFile).mockRejectedValue(
+          new Error('Failed to download image'),
+        );
+
+        const payload = {
+          model: 'dall-e-2',
+          params: {
+            prompt: 'Edit this image',
+            imageUrls: ['https://invalid-url.com/image.jpg'],
+          },
+        };
+
+        await expect((instance as any).createImage(payload)).rejects.toThrow(
+          'Failed to convert image URLs to File objects: Error: Failed to download image',
+        );
+      });
+    });
+
+    describe('error handling', () => {
+      it('should throw error when API response is invalid - no data', async () => {
+        vi.spyOn(instance['client'].images, 'generate').mockResolvedValue({} as any);
+
+        const payload = {
+          model: 'dall-e-3',
+          params: { prompt: 'Test prompt' },
+        };
+
+        await expect((instance as any).createImage(payload)).rejects.toThrow(
+          'Invalid image response: missing or empty data array',
+        );
+      });
+
+      it('should throw error when API response is invalid - empty data array', async () => {
+        vi.spyOn(instance['client'].images, 'generate').mockResolvedValue({
+          data: [],
+        } as any);
+
+        const payload = {
+          model: 'dall-e-3',
+          params: { prompt: 'Test prompt' },
+        };
+
+        await expect((instance as any).createImage(payload)).rejects.toThrow(
+          'Invalid image response: missing or empty data array',
+        );
+      });
+
+      it('should throw error when first data item is null', async () => {
+        vi.spyOn(instance['client'].images, 'generate').mockResolvedValue({
+          data: [null],
+        } as any);
+
+        const payload = {
+          model: 'dall-e-3',
+          params: { prompt: 'Test prompt' },
+        };
+
+        await expect((instance as any).createImage(payload)).rejects.toThrow(
+          'Invalid image response: first data item is null or undefined',
+        );
+      });
+
+      it('should throw error when b64_json is missing', async () => {
+        vi.spyOn(instance['client'].images, 'generate').mockResolvedValue({
+          data: [{ url: 'https://example.com/image.jpg' }],
+        } as any);
+
+        const payload = {
+          model: 'dall-e-3',
+          params: { prompt: 'Test prompt' },
+        };
+
+        await expect((instance as any).createImage(payload)).rejects.toThrow(
+          'Invalid image response: missing b64_json field',
+        );
+      });
+    });
+
+    describe('parameter mapping', () => {
+      it('should map imageUrls parameter to image', async () => {
+        const mockResponse = {
+          data: [{ b64_json: 'test-base64' }],
+        };
+
+        vi.spyOn(instance['client'].images, 'edit').mockResolvedValue(mockResponse as any);
+
+        const payload = {
+          model: 'dall-e-2',
+          params: {
+            prompt: 'Test prompt',
+            imageUrls: ['https://example.com/image.jpg'],
+            customParam: 'should remain unchanged',
+          },
+        };
+
+        await (instance as any).createImage(payload);
+
+        expect(instance['client'].images.edit).toHaveBeenCalledWith({
+          model: 'dall-e-2',
+          n: 1,
+          prompt: 'Test prompt',
+          image: expect.any(File),
+          customParam: 'should remain unchanged',
+        });
+      });
+
+      it('should handle parameters without imageUrls', async () => {
+        const mockResponse = {
+          data: [{ b64_json: 'test-base64' }],
+        };
+
+        vi.spyOn(instance['client'].images, 'generate').mockResolvedValue(mockResponse as any);
+
+        const payload = {
+          model: 'dall-e-3',
+          params: {
+            prompt: 'Test prompt',
+            quality: 'hd',
+            style: 'vivid',
+          },
+        };
+
+        await (instance as any).createImage(payload);
+
+        expect(instance['client'].images.generate).toHaveBeenCalledWith({
+          model: 'dall-e-3',
+          n: 1,
+          prompt: 'Test prompt',
+          quality: 'hd',
+          style: 'vivid',
+        });
       });
     });
   });
