@@ -1017,6 +1017,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           prompt: 'A beautiful sunset',
           size: '1024x1024',
           quality: 'standard',
+          response_format: 'b64_json',
         });
 
         expect(result).toEqual({
@@ -1047,6 +1048,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           model: 'dall-e-3',
           n: 1,
           prompt: 'A beautiful sunset',
+          response_format: 'b64_json',
         });
       });
     });
@@ -1079,6 +1081,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           prompt: 'Add a rainbow to this image',
           image: expect.any(File),
           mask: 'https://example.com/mask.jpg',
+          response_format: 'b64_json',
         });
 
         expect(result).toEqual({
@@ -1123,6 +1126,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           n: 1,
           prompt: 'Merge these images',
           image: [mockFile1, mockFile2],
+          response_format: 'b64_json',
         });
 
         expect(result).toEqual({
@@ -1234,6 +1238,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           prompt: 'Test prompt',
           image: expect.any(File),
           customParam: 'should remain unchanged',
+          response_format: 'b64_json',
         });
       });
 
@@ -1261,6 +1266,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           prompt: 'Test prompt',
           quality: 'hd',
           style: 'vivid',
+          response_format: 'b64_json',
         });
       });
     });
