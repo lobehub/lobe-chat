@@ -835,11 +835,27 @@ export const openaiSTTModels: AISTTModelCard[] = [
 
 // 图像生成模型
 export const openaiImageModels: AIImageModelCard[] = [
+  // https://platform.openai.com/docs/models/gpt-image-1
+  {
+    description: 'ChatGPT 原生多模态图片生成模型',
+    displayName: 'GPT Image 1',
+    enabled: true,
+    id: 'gpt-image-1',
+    parameters: gptImage1ParamsSchema,
+    type: 'image',
+  },
   {
     description:
       '最新的 DALL·E 模型，于2023年11月发布。支持更真实、准确的图像生成，具有更强的细节表现力',
     displayName: 'DALL·E 3',
     id: 'dall-e-3',
+    parameters: {
+      prompt: { default: '' },
+      size: {
+        default: '1024x1024',
+        enum: ['1024x1024', '1792x1024', '1024x1792'],
+      },
+    },
     pricing: {
       hd: 0.08,
       standard: 0.04,
@@ -851,19 +867,18 @@ export const openaiImageModels: AIImageModelCard[] = [
     description: '第二代 DALL·E 模型，支持更真实、准确的图像生成，分辨率是第一代的4倍',
     displayName: 'DALL·E 2',
     id: 'dall-e-2',
+    parameters: {
+      imageUrl: { default: null },
+      prompt: { default: '' },
+      size: {
+        default: '1024x1024',
+        enum: ['256x256', '512x512', '1024x1024'],
+      },
+    },
     pricing: {
       input: 0.02, // $0.020 per image (1024×1024)
     },
     resolutions: ['256x256', '512x512', '1024x1024'],
-    type: 'image',
-  },
-  // https://platform.openai.com/docs/models/gpt-image-1
-  {
-    description: 'ChatGPT 原生多模态图片生成模型',
-    displayName: 'GPT Image 1',
-    enabled: true,
-    id: 'gpt-image-1',
-    parameters: gptImage1ParamsSchema,
     type: 'image',
   },
 ];

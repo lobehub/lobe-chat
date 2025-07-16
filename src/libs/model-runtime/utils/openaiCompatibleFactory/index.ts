@@ -323,10 +323,14 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
       const defaultInput = {
         n: 1,
+        ...(model.includes('dall-e') ? { response_format: 'b64_json' } : {}),
       };
 
       // 映射参数名称，将 imageUrls 映射为 image
-      const paramsMap = new Map<RuntimeImageGenParamsValue, string>([['imageUrls', 'image']]);
+      const paramsMap = new Map<RuntimeImageGenParamsValue, string>([
+        ['imageUrls', 'image'],
+        ['imageUrl', 'image'],
+      ]);
       const userInput: Record<string, any> = Object.fromEntries(
         Object.entries(params).map(([key, value]) => [
           paramsMap.get(key as RuntimeImageGenParamsValue) ?? key,
