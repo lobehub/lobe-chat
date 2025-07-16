@@ -133,11 +133,6 @@ export class AiModelModel {
   };
 
   batchUpdateAiModels = async (providerId: string, models: AiProviderModelListItem[]) => {
-    console.log(
-      'update gpt-image-1',
-      models.filter((model) => model.id === 'gpt-image-1'),
-    );
-
     const records = models.map(({ id, ...model }) => ({
       ...model,
       id,
