@@ -203,6 +203,8 @@ export const createAiProviderSlice: StateCreator<
         onSuccess: async (data) => {
           if (!data) return;
 
+          const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
           const getModelListByType = (providerId: string, type: string) => {
             const models = data.enabledAiModels
               .filter((model) => model.providerId === providerId && model.type === type)
@@ -212,7 +214,9 @@ export const createAiProviderSlice: StateCreator<
                 displayName: model.displayName ?? '',
                 id: model.id,
                 ...(model.type === 'image' && {
-                  parameters: (model as AIImageModelCard).parameters,
+                  parameters:
+                    (model as AIImageModelCard).parameters ||
+                    LOBE_DEFAULT_MODEL_LIST.find((m) => m.id === model.id)?.parameters,
                 }),
               }));
 
@@ -231,7 +235,6 @@ export const createAiProviderSlice: StateCreator<
             children: getModelListByType(provider.id, 'image'),
             name: provider.name || provider.id,
           }));
-          const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
           set(
             {
