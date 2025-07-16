@@ -10,6 +10,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "whisper-1",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "stt",
     "vision": false,
   },
   {
@@ -20,6 +21,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "davinci-002",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -30,6 +32,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-3.5-turbo",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -40,6 +43,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "dall-e-2",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "image",
     "vision": false,
   },
   {
@@ -50,6 +54,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-3.5-turbo-16k",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -60,6 +65,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "tts-1-hd-1106",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -70,6 +76,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "tts-1-hd",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "tts",
     "vision": false,
   },
   {
@@ -80,6 +87,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-3.5-turbo-16k-0613",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -90,6 +98,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "text-embedding-3-large",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "embedding",
     "vision": false,
   },
   {
@@ -100,6 +109,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-4-1106-vision-preview",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -110,6 +120,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-3.5-turbo-instruct-0914",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -120,6 +131,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-4-0125-preview",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -130,6 +142,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-4-turbo-preview",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -140,6 +153,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-3.5-turbo-instruct",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -150,6 +164,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-3.5-turbo-0301",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -160,6 +175,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-3.5-turbo-0613",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -170,6 +186,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "tts-1",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "tts",
     "vision": false,
   },
   {
@@ -180,6 +197,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "dall-e-3",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "image",
     "vision": false,
   },
   {
@@ -190,6 +208,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-3.5-turbo-1106",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -200,6 +219,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-4-1106-preview",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -210,6 +230,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "babbage-002",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -220,6 +241,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "tts-1-1106",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -230,6 +252,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-4-vision-preview",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": true,
   },
   {
@@ -240,6 +263,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "text-embedding-3-small",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "embedding",
     "vision": false,
   },
   {
@@ -250,6 +274,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-4",
     "maxOutput": 4096,
     "reasoning": false,
+    "type": "chat",
     "vision": true,
   },
   {
@@ -260,6 +285,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "text-embedding-ada-002",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -270,6 +296,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-3.5-turbo-0125",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -280,6 +307,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-4-0613",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
 ]
