@@ -4,11 +4,14 @@ import {
   ProxyTRPCStreamRequestParams,
 } from '@lobechat/electron-client-ipc';
 import { IpcMainEvent, WebContents, ipcMain } from 'electron';
+import { HttpProxyAgent } from 'http-proxy-agent';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 import { Buffer } from 'node:buffer';
 import http, { IncomingMessage, OutgoingHttpHeaders } from 'node:http';
 import https from 'node:https';
 import { URL } from 'node:url';
 
+import { defaultProxySettings } from '@/const/store';
 import { createLogger } from '@/utils/logger';
 
 import RemoteServerConfigCtr from './RemoteServerConfigCtr';
@@ -313,14 +316,25 @@ export default class RemoteServerSyncCtr extends ControllerModule {
     delete requestHeaders['connection']; // Often causes issues
     // delete requestHeaders['content-length']; // Let node handle it based on body
 
+    // 读取代理配置
+    const proxyConfig = this.app.storeManager.get('networkProxy', defaultProxySettings);
+
+    let agent;
+    if (proxyConfig?.enableProxy && proxyConfig.proxyServer) {
+      const proxyUrl = `${proxyConfig.proxyType}://${proxyConfig.proxyServer}${proxyConfig.proxyPort ? `:${proxyConfig.proxyPort}` : ''}`;
+      agent =
+        url.protocol === 'https:' ? new HttpsProxyAgent(proxyUrl) : new HttpProxyAgent(proxyUrl);
+    }
+
     const requestOptions: https.RequestOptions | http.RequestOptions = {
+      agent,
       // Use union type
       headers: requestHeaders,
       hostname: url.hostname,
       method: method,
       path: url.pathname + url.search,
       port: url.port || (url.protocol === 'https:' ? 443 : 80),
-      protocol: url.protocol,
+      protocol: url.protocol, // 注入代理
       // agent: false, // Consider for keep-alive issues if they arise
     };
 
