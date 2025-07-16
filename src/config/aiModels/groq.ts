@@ -27,7 +27,7 @@ const groqChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 131_072,
+    contextWindowTokens: 16_384,
     displayName: 'Kimi K2 Instruct',
     enabled: true,
     id: 'moonshotai/kimi-k2-instruct',
