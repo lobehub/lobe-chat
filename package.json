@@ -326,7 +326,7 @@
     "crypto-js": "^4.2.0",
     "dbdocs": "^0.14.4",
     "dotenv": "^16.5.0",
-    "dpdm-fast": "^1.0.7",
+    "dpdm-fast": "1.0.7",
     "drizzle-dbml-generator": "^0.10.0",
     "drizzle-kit": "^0.31.0",
     "eslint": "^8.57.1",
