@@ -148,6 +148,7 @@ const defaultMiddleware = (request: NextRequest) => {
 const isPublicRoute = createRouteMatcher([
   '/api/auth(.*)',
   '/api/webhooks(.*)',
+  '/api/webapi(.*)',
   '/trpc(.*)',
   // next auth
   '/next-auth/(.*)',
@@ -168,7 +169,7 @@ const isProtectedRoute = createRouteMatcher([
 ]);
 
 // Initialize an Edge compatible NextAuth middleware
-const nextAuthMiddleware = NextAuthEdge.auth((req) => {
+const nextAuthMiddleware = NextAuthEdge.auth(async (req) => {
   logNextAuth('NextAuth middleware processing request: %s %s', req.method, req.url);
 
   const response = defaultMiddleware(req);
