@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 
-import { ModelCard } from '@/types/llm';
+import { ChatModelCard } from '@/types/llm';
 
 import {
   ChatMethodOptions,
@@ -44,7 +44,7 @@ export abstract class LobeOpenAICompatibleRuntime {
 
   abstract chat(payload: ChatStreamPayload, options?: ChatMethodOptions): Promise<Response>;
 
-  abstract models(): Promise<ModelCard[]>;
+  abstract models(): Promise<ChatModelCard[]>;
 
   abstract embeddings(
     payload: EmbeddingsPayload,

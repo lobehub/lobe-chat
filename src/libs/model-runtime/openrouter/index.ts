@@ -1,5 +1,5 @@
 import OpenRouterModels from '@/config/aiModels/openrouter';
-import type { ModelCard } from '@/types/llm';
+import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
 import { processMultiProviderModelList } from '../utils/modelParse';
@@ -108,7 +108,7 @@ export const LobeOpenRouterAI = createOpenAICompatibleRuntime({
           vision: baseModel.vision || model.architecture.modality.includes('image') || false,
         };
       })
-      .filter(Boolean) as ModelCard[];
+      .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.OpenRouter,
 });

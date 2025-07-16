@@ -6,11 +6,11 @@ import { useTranslation } from 'react-i18next';
 import MaxTokenSlider from '@/components/MaxTokenSlider';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { AiModelType } from '@/types/aiModel';
-import { ModelCard } from '@/types/llm';
+import { ChatModelCard } from '@/types/llm';
 
 interface ModelConfigFormProps {
   idEditable?: boolean;
-  initialValues?: ModelCard;
+  initialValues?: ChatModelCard;
   onFormInstanceReady: (instance: FormInstance) => void;
   showDeployName?: boolean;
   type?: AiModelType;

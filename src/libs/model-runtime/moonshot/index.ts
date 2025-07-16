@@ -1,4 +1,4 @@
-import type { ModelCard } from '@/types/llm';
+import type { ChatModelCard } from '@/types/llm';
 
 import { ChatStreamPayload, ModelProvider } from '../types';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
@@ -72,7 +72,7 @@ export const LobeMoonshotAI = createOpenAICompatibleRuntime({
             false,
         };
       })
-      .filter(Boolean) as ModelCard[];
+      .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.Moonshot,
 });

@@ -2,7 +2,7 @@ import { Ollama, Tool } from 'ollama/browser';
 import { ClientOptions } from 'openai';
 
 import { ModelRequestOptions, OpenAIChatMessage } from '@/libs/model-runtime';
-import { ModelCard } from '@/types/llm';
+import { ChatModelCard } from '@/types/llm';
 import { createErrorResponse } from '@/utils/errorResponse';
 
 import { LobeRuntimeAI } from '../BaseAI';
@@ -140,7 +140,7 @@ export class LobeOllamaAI implements LobeRuntimeAI {
           vision: knownModel?.abilities?.functionCall || false,
         };
       })
-      .filter(Boolean) as ModelCard[];
+      .filter(Boolean) as ChatModelCard[];
   }
 
   private invokeEmbeddingModel = async (payload: EmbeddingsPayload): Promise<Embeddings> => {

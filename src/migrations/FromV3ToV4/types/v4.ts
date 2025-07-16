@@ -1,10 +1,10 @@
-import { ModelCard } from '@/types/llm';
+import { ChatModelCard } from '@/types/llm';
 
 import { V3LLMConfig, V3Settings } from './v3';
 
 export interface V4ProviderConfig {
   apiKey?: string;
-  customModelCards?: ModelCard[];
+  customModelCards?: ChatModelCard[];
   enabled?: boolean;
   /**
    * enabled models id

@@ -1,4 +1,4 @@
-import type { ModelCard } from '@/types/llm';
+import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
@@ -62,7 +62,7 @@ export const LobeCohereAI = createOpenAICompatibleRuntime({
           vision: model.supports_vision || knownModel?.abilities?.vision || false,
         };
       })
-      .filter(Boolean) as ModelCard[];
+      .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.Cohere,
 });

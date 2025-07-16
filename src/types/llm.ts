@@ -5,7 +5,7 @@ import { AiProviderSettings } from '@/types/aiProvider';
 
 export type ModelPriceCurrency = 'CNY' | 'USD';
 
-export interface ModelCard {
+export interface ChatModelCard {
   /**
    * the context window (or input + output tokens limit)
    */
@@ -53,9 +53,6 @@ export interface ModelCard {
    */
   releasedAt?: string;
 
-  /**
-   * the type of model
-   */
   type?: AiModelType;
 
   /**
@@ -77,7 +74,7 @@ export interface ModelProviderCard {
   /**
    * @deprecated
    */
-  chatModels: ModelCard[];
+  chatModels: ChatModelCard[];
   /**
    * the default model that used for connection check
    */

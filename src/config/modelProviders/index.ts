@@ -1,4 +1,4 @@
-import { ModelCard, ModelProviderCard } from '@/types/llm';
+import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 
 import Ai21Provider from './ai21';
 import Ai360Provider from './ai360';
@@ -59,7 +59,7 @@ import ZhiPuProvider from './zhipu';
 /**
  * @deprecated
  */
-export const LOBE_DEFAULT_MODEL_LIST: ModelCard[] = [
+export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   OpenAIProvider.chatModels,
   QwenProvider.chatModels,
   ZhiPuProvider.chatModels,

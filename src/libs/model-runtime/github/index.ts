@@ -1,4 +1,4 @@
-import type { ModelCard } from '@/types/llm';
+import type { ChatModelCard } from '@/types/llm';
 
 import { AgentRuntimeErrorType } from '../error';
 import { ModelProvider } from '../types';
@@ -80,7 +80,7 @@ export const LobeGithubAI = createOpenAICompatibleRuntime({
             false,
         };
       })
-      .filter(Boolean) as ModelCard[];
+      .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.Github,
 });

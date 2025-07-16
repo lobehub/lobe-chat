@@ -6,7 +6,7 @@ import { Stream } from 'openai/streaming';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/meta-schema';
-import type { ModelCard } from '@/types/llm';
+import type { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
@@ -95,9 +95,9 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
     invalidAPIKey: ILobeAgentRuntimeErrorType;
   };
   models?:
-    | ((params: { client: OpenAI }) => Promise<ModelCard[]>)
+    | ((params: { client: OpenAI }) => Promise<ChatModelCard[]>)
     | {
-        transformModel?: (model: OpenAI.Model) => ModelCard;
+        transformModel?: (model: OpenAI.Model) => ChatModelCard;
       };
   provider: string;
   responses?: {
@@ -422,7 +422,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     }
 
     async models() {
-      let resultModels: ModelCard[] = [];
+      let resultModels: ChatModelCard[] = [];
       if (typeof models === 'function') {
         resultModels = await models({ client: this.client });
       } else {
@@ -470,7 +470,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
             };
           })
 
-          .filter(Boolean) as ModelCard[];
+          .filter(Boolean) as ChatModelCard[];
       }
 
       return resultModels.map((model) => {
@@ -478,7 +478,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
           ...model,
           type: model.type || LOBE_DEFAULT_MODEL_LIST.find((m) => m.id === model.id)?.type,
         };
-      }) as ModelCard[];
+      }) as ChatModelCard[];
     }
 
     async embeddings(

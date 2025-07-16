@@ -1,4 +1,4 @@
-import { ModelCard } from '@/types/llm';
+import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
@@ -111,7 +111,7 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
     }
   }
 
-  async models(): Promise<ModelCard[]> {
+  async models(): Promise<ChatModelCard[]> {
     const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
     const url = `${DEFAULT_BASE_URL_PREFIX}/client/v4/accounts/${this.accountID}/ai/models/search`;
@@ -158,6 +158,6 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
             false,
         };
       })
-      .filter(Boolean) as ModelCard[];
+      .filter(Boolean) as ChatModelCard[];
   }
 }

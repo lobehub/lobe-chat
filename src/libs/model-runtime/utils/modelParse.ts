@@ -1,4 +1,4 @@
-import type { ModelCard } from '@/types/llm';
+import type { ChatModelCard } from '@/types/llm';
 
 export interface ModelProcessorConfig {
   excludeKeywords?: readonly string[]; // 对符合的模型不添加标签
@@ -109,7 +109,7 @@ const processModelCard = (
   model: { [key: string]: any; id: string },
   config: ModelProcessorConfig,
   knownModel?: any,
-): ModelCard => {
+): ChatModelCard => {
   const {
     functionCallKeywords = [],
     visionKeywords = [],
@@ -154,7 +154,7 @@ const processModelCard = (
 export const processModelList = async (
   modelList: Array<{ id: string }>,
   config: ModelProcessorConfig,
-): Promise<ModelCard[]> => {
+): Promise<ChatModelCard[]> => {
   const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
   return modelList
@@ -175,7 +175,7 @@ export const processModelList = async (
  */
 export const processMultiProviderModelList = async (
   modelList: Array<{ id: string }>,
-): Promise<ModelCard[]> => {
+): Promise<ChatModelCard[]> => {
   const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
   return modelList

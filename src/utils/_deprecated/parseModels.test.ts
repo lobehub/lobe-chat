@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { LOBE_DEFAULT_MODEL_LIST, OpenAIProviderCard } from '@/config/modelProviders';
-import { ModelCard } from '@/types/llm';
+import { ChatModelCard } from '@/types/llm';
 
 import { parseModelString, transformToChatModelCards } from './parseModels';
 
@@ -212,7 +212,7 @@ describe('parseModelString', () => {
 });
 
 describe('transformToChatModelCards', () => {
-  const defaultChatModels: ModelCard[] = [
+  const defaultChatModels: ChatModelCard[] = [
     { id: 'model1', displayName: 'Model 1', enabled: true },
     { id: 'model2', displayName: 'Model 2', enabled: false },
   ];

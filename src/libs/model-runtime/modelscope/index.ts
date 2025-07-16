@@ -1,4 +1,4 @@
-import type { ModelCard } from '@/types/llm';
+import type { ChatModelCard } from '@/types/llm';
 
 import { ModelProvider } from '../types';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
@@ -55,7 +55,7 @@ export const LobeModelScopeAI = createOpenAICompatibleRuntime({
               false,
           };
         })
-        .filter(Boolean) as ModelCard[];
+        .filter(Boolean) as ChatModelCard[];
     } catch (error) {
       console.warn(
         'Failed to fetch ModelScope models. Please ensure your ModelScope API key is valid and your Alibaba Cloud account is properly bound:',

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import type { ModelCard } from '@/types/llm';
+import type { ChatModelCard } from '@/types/llm';
 
 import {
   MODEL_LIST_CONFIGS,
@@ -11,7 +11,7 @@ import {
 } from './modelParse';
 
 // Mock the imported LOBE_DEFAULT_MODEL_LIST
-const mockDefaultModelList: (Partial<ModelCard> & { id: string })[] = [
+const mockDefaultModelList: (Partial<ChatModelCard> & { id: string })[] = [
   {
     contextWindowTokens: 8192,
     displayName: 'GPT-4',
