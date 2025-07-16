@@ -1051,6 +1051,36 @@ describe('LobeOpenAICompatibleFactory', () => {
           response_format: 'b64_json',
         });
       });
+
+      it('should not add response_format parameter for gpt-image-1 model', async () => {
+        const mockResponse = {
+          data: [{ b64_json: 'gpt-image-1-base64-data' }],
+        };
+
+        vi.spyOn(instance['client'].images, 'generate').mockResolvedValue(mockResponse as any);
+
+        const payload = {
+          model: 'gpt-image-1',
+          params: {
+            prompt: 'A modern digital artwork',
+            size: '1024x1024',
+          },
+        };
+
+        const result = await (instance as any).createImage(payload);
+
+        // gpt-image-1 model should not include response_format parameter
+        expect(instance['client'].images.generate).toHaveBeenCalledWith({
+          model: 'gpt-image-1',
+          n: 1,
+          prompt: 'A modern digital artwork',
+          size: '1024x1024',
+        });
+
+        expect(result).toEqual({
+          imageUrl: 'data:image/png;base64,gpt-image-1-base64-data',
+        });
+      });
     });
 
     describe('image editing', () => {
