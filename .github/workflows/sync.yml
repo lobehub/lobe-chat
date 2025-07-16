@@ -54,6 +54,12 @@ jobs:
           # Create a backup of files to be preserved
           mkdir -p .file_backup
 
+          # Always backup package.json for special handling
+          if [ -f "package.json" ]; then
+            echo "Backing up package.json for special merge handling"
+            cp "package.json" ".file_backup/package.json" || true
+          fi
+
           # Process each pattern (comma-separated)
           for pattern in $(echo $IGNORE_FILES | tr ',' ' '); do
             # Use find to handle wildcards
@@ -103,6 +109,39 @@ jobs:
             git config --local user.name "GitHub Action"
             git commit -m "Restore ignored files after sync: ${{ steps.extract_ignore.outputs.ignore_files }}"
             git push
+          fi
+
+      - name: Setup Node.js
+        if: steps.sync.outputs.has_new_commits == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Merge package.json
+        if: steps.sync.outputs.has_new_commits == 'true'
+        run: |
+          if [ -f ".file_backup/package.json" ] && [ -f "package.json" ]; then
+            echo "Merging package.json files..."
+            # Create a temporary file for the merged package.json
+            node scripts/mergePackageJson.js ".file_backup/package.json" "package.json" "package.json.merged"
+
+            if [ -f "package.json.merged" ]; then
+              # Replace the current package.json with the merged version
+              mv package.json.merged package.json
+              git add package.json
+
+              # Commit the merged package.json
+              git config --local user.email "action@github.com"
+              git config --local user.name "GitHub Action"
+              git commit -m "Merge package.json with custom dependencies preserved"
+              git push
+
+              echo "Successfully merged package.json"
+            else
+              echo "Failed to merge package.json files"
+            fi
+          else
+            echo "Either original or synced package.json is missing, skipping merge"
           fi
 
       - name: Sync check
