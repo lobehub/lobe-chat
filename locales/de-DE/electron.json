@@ -101,7 +101,10 @@
   "waitingOAuth": {
     "cancel": "Abbrechen",
     "description": "Der Browser hat die Autorisierungsseite geöffnet, bitte schließen Sie die Autorisierung im Browser ab",
+    "error": "Autorisierung fehlgeschlagen: {{error}}",
+    "errorTitle": "Verbindungsfehler bei der Autorisierung",
     "helpText": "Wenn der Browser nicht automatisch geöffnet wurde, klicken Sie bitte auf Abbrechen und versuchen Sie es erneut",
+    "retry": "Erneut versuchen",
     "title": "Warten auf Autorisierungsverbindung"
   }
 }

@@ -315,8 +315,19 @@ export default class AuthCtr extends ControllerModule {
         throw new Error(errorMessage);
       }
 
+      let data;
+
       // Parse response
-      const data = await response.json();
+      try {
+        data = await response.clone().json();
+      } catch {
+        const status = response.status;
+
+        throw new Error(
+          `Parse JSON failed, please check your server, response status: ${status}, detail:\n\n ${await response.text()} `,
+        );
+      }
+
       logger.debug('Successfully received token exchange response');
 
       // Ensure response contains necessary fields
