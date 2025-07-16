@@ -306,7 +306,7 @@ describe('NetworkProxyCtr', () => {
     });
   });
 
-  describe('afterAppReady', () => {
+  describe('beforeAppReady', () => {
     it('should apply stored proxy settings on app ready', async () => {
       const storedConfig: NetworkProxySettings = {
         enableProxy: true,
@@ -319,7 +319,7 @@ describe('NetworkProxyCtr', () => {
 
       mockStoreManager.get.mockReturnValue(storedConfig);
 
-      await networkProxyCtr.afterAppReady();
+      await networkProxyCtr.beforeAppReady();
 
       expect(mockStoreManager.get).toHaveBeenCalledWith('networkProxy', expect.any(Object));
     });
@@ -336,7 +336,7 @@ describe('NetworkProxyCtr', () => {
 
       mockStoreManager.get.mockReturnValue(invalidConfig);
 
-      await networkProxyCtr.afterAppReady();
+      await networkProxyCtr.beforeAppReady();
 
       expect(mockStoreManager.get).toHaveBeenCalledWith('networkProxy', expect.any(Object));
     });
@@ -347,7 +347,7 @@ describe('NetworkProxyCtr', () => {
       });
 
       // 不应该抛出错误
-      await expect(networkProxyCtr.afterAppReady()).resolves.not.toThrow();
+      await expect(networkProxyCtr.beforeAppReady()).resolves.not.toThrow();
     });
   });
 

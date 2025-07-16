@@ -1,6 +1,6 @@
-import { getRequestBody, headersToRecord } from '@/utils/fetch';
-
 import { ProxyTRPCRequestParams } from './types';
+import { headersToRecord } from './utils/headers';
+import { getRequestBody } from './utils/request';
 
 // eslint-disable-next-line no-undef
 export const streamInvoke = async (input: RequestInfo | URL, init?: RequestInit) => {
