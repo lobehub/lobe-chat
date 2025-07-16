@@ -383,8 +383,8 @@ git show HEAD -- src/components/Button/index.tsx | cat
 
 针对一些特殊场景的测试，需要阅读相关文件：
 
-- [Electron IPC 接口测试策略](mdc:.cursor/rules/testing-guide/electron-ipc-test.mdc)
-- [数据库 Model 测试指南](mdc:.cursor/rules/testing-guide/db-model-test.mdc)
+- [Electron IPC 接口测试策略](mdc:./electron-ipc-test.mdc)
+- [数据库 Model 测试指南](mdc:./db-model-test.mdc)
 
 ## 🎯 总结
 
