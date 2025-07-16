@@ -993,58 +993,82 @@ describe('LobeOpenAICompatibleFactory', () => {
 
       expect(list).toEqual([
         {
+          abilities: {
+            functionCall: true,
+            vision: true,
+          },
+          config: {
+            deploymentName: 'gpt-4o',
+          },
           contextWindowTokens: 128000,
-          releasedAt: '2023-10-25',
           description:
             'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
           displayName: 'GPT-4o',
           enabled: true,
-          functionCall: true,
           id: 'gpt-4o',
+          maxOutput: 4096,
           pricing: {
+            cachedInput: 1.25,
             input: 2.5,
             output: 10,
           },
+          providerId: 'azure',
+          releasedAt: '2024-05-13',
+          source: 'builtin',
           type: 'chat',
-          vision: true,
         },
         {
+          abilities: {
+            functionCall: true,
+            vision: true,
+          },
           contextWindowTokens: 200000,
           description:
             'Claude 3 Haiku 是 Anthropic 的最快且最紧凑的模型，旨在实现近乎即时的响应。它具有快速且准确的定向性能。',
           displayName: 'Claude 3 Haiku',
-          functionCall: true,
+          enabled: false,
           id: 'claude-3-haiku-20240307',
           maxOutput: 4096,
           pricing: {
             input: 0.25,
             output: 1.25,
           },
+          providerId: 'anthropic',
           releasedAt: '2024-03-07',
+          settings: {
+            extendParams: ['disableContextCaching'],
+          },
+          source: 'builtin',
           type: 'chat',
-          vision: true,
         },
         {
+          abilities: {
+            functionCall: true,
+            vision: true,
+          },
+          config: {
+            deploymentName: 'gpt-4o-mini',
+          },
           contextWindowTokens: 128000,
-          description:
-            'GPT-4o mini是OpenAI在GPT-4 Omni之后推出的最新模型，支持图文输入并输出文本。作为他们最先进的小型模型，它比其他近期的前沿模型便宜很多，并且比GPT-3.5 Turbo便宜超过60%。它保持了最先进的智能，同时具有显著的性价比。GPT-4o mini在MMLU测试中获得了 82% 的得分，目前在聊天偏好上排名高于 GPT-4。',
-          displayName: 'GPT-4o mini',
-          enabled: true,
-          functionCall: true,
+          description: 'GPT-4o Mini，小型高效模型，具备与GPT-4o相似的卓越性能。',
+          displayName: 'GPT 4o Mini',
+          enabled: false,
           id: 'gpt-4o-mini',
-          maxOutput: 16385,
+          maxOutput: 4096,
           pricing: {
+            cachedInput: 0.075,
             input: 0.15,
             output: 0.6,
           },
+          providerId: 'azure',
           releasedAt: '2023-10-26',
+          source: 'builtin',
           type: 'chat',
-          vision: true,
         },
         {
           id: 'gemini',
           releasedAt: '2025-01-10',
-          type: 'chat',
+          type: undefined,
         },
       ]);
     });
