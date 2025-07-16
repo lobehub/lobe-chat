@@ -21,6 +21,7 @@ _These are free, rate-limited endpoints for [Reflection 70B](/models/mattshumer/
     },
     "reasoning": true,
     "releasedAt": "2024-09-06",
+    "type": "chat",
     "vision": false,
   },
 ]
@@ -47,6 +48,7 @@ _These are free, rate-limited endpoints for [Reflection 70B](/models/mattshumer/
     },
     "reasoning": false,
     "releasedAt": "2024-09-06",
+    "type": "chat",
     "vision": false,
   },
 ]
@@ -73,6 +75,7 @@ _These are free, rate-limited endpoints for [Reflection 70B](/models/mattshumer/
     },
     "reasoning": false,
     "releasedAt": "2024-09-06",
+    "type": "chat",
     "vision": false,
   },
 ]
