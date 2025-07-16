@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
 
 import {
+  convertImageUrlToFile,
   convertMessageContent,
   convertOpenAIMessages,
   convertOpenAIResponseInputs,
@@ -286,5 +287,155 @@ describe('convertOpenAIResponseInputs', () => {
         type: 'function_call_output',
       },
     ]);
+  });
+});
+
+describe('convertImageUrlToFile', () => {
+  beforeEach(() => {
+    vi.resetAllMocks();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  describe('Data URL handling', () => {
+    it('should convert PNG data URL to File object correctly', async () => {
+      const base64Data =
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
+      const dataUrl = `data:image/png;base64,${base64Data}`;
+
+      const result = await convertImageUrlToFile(dataUrl);
+
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('name', 'image.png');
+      expect(result).toHaveProperty('type', 'image/png');
+      expect(result).toHaveProperty('size');
+      expect(result.size).toBeGreaterThan(0);
+    });
+
+    it('should convert JPEG data URL to File object correctly', async () => {
+      const base64Data =
+        '/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA9BQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==';
+      const dataUrl = `data:image/jpeg;base64,${base64Data}`;
+
+      const result = await convertImageUrlToFile(dataUrl);
+
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('name', 'image.jpeg');
+      expect(result).toHaveProperty('type', 'image/jpeg');
+      expect(result).toHaveProperty('size');
+      expect(result.size).toBeGreaterThan(0);
+    });
+
+    it('should convert WebP data URL to File object correctly', async () => {
+      const base64Data = 'UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAAAAJaQAA6g=';
+      const dataUrl = `data:image/webp;base64,${base64Data}`;
+
+      const result = await convertImageUrlToFile(dataUrl);
+
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('name', 'image.webp');
+      expect(result).toHaveProperty('type', 'image/webp');
+      expect(result).toHaveProperty('size');
+      expect(result.size).toBeGreaterThan(0);
+    });
+  });
+
+  describe('HTTP URL handling', () => {
+    const mockFetch = vi.fn();
+
+    beforeEach(() => {
+      // Mock global fetch using vi.stubGlobal for better isolation
+      vi.stubGlobal('fetch', mockFetch);
+    });
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+      vi.clearAllMocks();
+    });
+
+    it('should convert HTTP URL to File object correctly', async () => {
+      const mockArrayBuffer = new ArrayBuffer(8);
+      const mockHeaders = new Headers();
+      mockHeaders.set('content-type', 'image/jpeg');
+
+      mockFetch.mockResolvedValue({
+        ok: true,
+        arrayBuffer: () => Promise.resolve(mockArrayBuffer),
+        headers: mockHeaders,
+      } satisfies Partial<Response>);
+
+      const result = await convertImageUrlToFile('https://example.com/image.jpg');
+
+      expect(mockFetch).toHaveBeenCalledWith('https://example.com/image.jpg');
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('name', 'image.jpeg');
+      expect(result).toHaveProperty('type', 'image/jpeg');
+      expect(result).toHaveProperty('size');
+      expect(result.size).toEqual(8);
+    });
+
+    it('should handle different content types from HTTP response headers', async () => {
+      const testCases = [
+        { contentType: 'image/jpeg', expectedExtension: 'jpeg' },
+        { contentType: 'image/png', expectedExtension: 'png' },
+        { contentType: 'image/webp', expectedExtension: 'webp' },
+        { contentType: null, expectedExtension: 'png' }, // default fallback
+      ];
+
+      for (const testCase of testCases) {
+        const mockArrayBuffer = new ArrayBuffer(8);
+        const mockHeaders = new Headers();
+        if (testCase.contentType) {
+          mockHeaders.set('content-type', testCase.contentType);
+        }
+
+        mockFetch.mockResolvedValue({
+          ok: true,
+          arrayBuffer: () => Promise.resolve(mockArrayBuffer),
+          headers: mockHeaders,
+        } satisfies Partial<Response>);
+
+        const result = await convertImageUrlToFile('https://example.com/image.jpg');
+
+        expect(result).toHaveProperty('name', `image.${testCase.expectedExtension}`);
+        expect(result).toHaveProperty('type', testCase.contentType || 'image/png');
+
+        vi.clearAllMocks();
+      }
+    });
+
+    it('should throw error when HTTP request fails', async () => {
+      mockFetch.mockResolvedValue({
+        ok: false,
+        statusText: 'Not Found',
+      } satisfies Partial<Response>);
+
+      await expect(convertImageUrlToFile('https://example.com/nonexistent.jpg')).rejects.toThrow(
+        'Failed to fetch image from https://example.com/nonexistent.jpg: Not Found',
+      );
+
+      expect(mockFetch).toHaveBeenCalledWith('https://example.com/nonexistent.jpg');
+    });
+
+    it('should throw error when network request fails', async () => {
+      mockFetch.mockRejectedValue(new Error('Network error'));
+
+      await expect(convertImageUrlToFile('https://example.com/image.jpg')).rejects.toThrow(
+        'Network error',
+      );
+
+      expect(mockFetch).toHaveBeenCalledWith('https://example.com/image.jpg');
+    });
+  });
+
+  describe('Edge cases', () => {
+    it('should handle malformed data URL gracefully', async () => {
+      const malformedDataUrl = 'data:invalid-format';
+
+      // 这个测试可能会抛出错误，我们需要适当处理
+      await expect(convertImageUrlToFile(malformedDataUrl)).rejects.toThrow();
+    });
   });
 });
