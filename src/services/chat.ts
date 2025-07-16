@@ -64,6 +64,14 @@ const isCanUseFC = (model: string, provider: string) => {
   return aiModelSelectors.isModelSupportToolUse(model, provider)(getAiInfraStoreState());
 };
 
+const isCanUseVision = (model: string, provider: string) => {
+  // TODO: remove isDeprecatedEdition condition in V2.0
+  if (isDeprecatedEdition) {
+    return modelProviderSelectors.isModelEnabledVision(model)(getUserStoreState());
+  }
+  return aiModelSelectors.isModelSupportVision(model, provider)(getAiInfraStoreState());
+};
+
 /**
  * TODO: we need to update this function to auto find deploymentName with provider setting config
  */
@@ -533,7 +541,7 @@ class ChatService {
         return m.content;
 
       const imageList = m.imageList || [];
-      const imageContentParts = await this.processImageList(imageList);
+      const imageContentParts = await this.processImageList({ imageList, model, provider });
 
       const filesContext = isServerMode
         ? filesPrompts({ addUrl: !isDesktop, fileList: m.fileList, imageList })
@@ -561,7 +569,11 @@ class ChatService {
       // only if message doesn't have images and files, then return the plain content
 
       if (m.imageList && m.imageList.length > 0) {
-        const imageContentParts = await this.processImageList(m.imageList);
+        const imageContentParts = await this.processImageList({
+          imageList: m.imageList,
+          model,
+          provider,
+        });
         return [
           !!m.content ? { text: m.content, type: 'text' } : undefined,
           ...imageContentParts,
@@ -663,7 +675,19 @@ class ChatService {
   /**
    * Process imageList: convert local URLs to base64 and format as UserMessageContentPart
    */
-  private processImageList = async (imageList: ChatImageItem[]) => {
+  private processImageList = async ({
+    model,
+    provider,
+    imageList,
+  }: {
+    imageList: ChatImageItem[];
+    model: string;
+    provider: string;
+  }) => {
+    if (!isCanUseVision(model, provider)) {
+      return [];
+    }
+
     return Promise.all(
       imageList.map(async (image) => {
         const { type } = parseDataUri(image.url);
