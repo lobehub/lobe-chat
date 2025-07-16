@@ -282,13 +282,17 @@ describe('ChatService', () => {
         });
 
         // Verify processImageList was called with correct arguments
-        expect(processImageListSpy).toHaveBeenCalledWith([
-          {
-            id: 'file1',
-            url: 'http://127.0.0.1:3000/uploads/image.png',
-            alt: 'local-image.png',
-          },
-        ]);
+        expect(processImageListSpy).toHaveBeenCalledWith({
+          imageList: [
+            {
+              id: 'file1',
+              url: 'http://127.0.0.1:3000/uploads/image.png',
+              alt: 'local-image.png',
+            },
+          ],
+          model: 'gpt-4-vision-preview',
+          provider: undefined,
+        });
 
         // Verify the utility functions were called
         expect(parseDataUri).toHaveBeenCalledWith('http://127.0.0.1:3000/uploads/image.png');
@@ -361,13 +365,17 @@ describe('ChatService', () => {
         });
 
         // Verify processImageList was called
-        expect(processImageListSpy).toHaveBeenCalledWith([
-          {
-            id: 'file1',
-            url: 'https://example.com/remote-image.jpg',
-            alt: 'remote-image.jpg',
-          },
-        ]);
+        expect(processImageListSpy).toHaveBeenCalledWith({
+          imageList: [
+            {
+              id: 'file1',
+              url: 'https://example.com/remote-image.jpg',
+              alt: 'remote-image.jpg',
+            },
+          ],
+          model: 'gpt-4-vision-preview',
+          provider: undefined,
+        });
 
         // Verify the utility functions were called
         expect(parseDataUri).toHaveBeenCalledWith('https://example.com/remote-image.jpg');
@@ -455,11 +463,15 @@ describe('ChatService', () => {
         });
 
         // Verify processImageList was called
-        expect(processImageListSpy).toHaveBeenCalledWith([
-          { id: 'local1', url: 'http://127.0.0.1:3000/local1.jpg', alt: 'local1.jpg' },
-          { id: 'remote1', url: 'https://example.com/remote1.png', alt: 'remote1.png' },
-          { id: 'local2', url: 'http://127.0.0.1:8080/local2.gif', alt: 'local2.gif' },
-        ]);
+        expect(processImageListSpy).toHaveBeenCalledWith({
+          imageList: [
+            { id: 'local1', url: 'http://127.0.0.1:3000/local1.jpg', alt: 'local1.jpg' },
+            { id: 'remote1', url: 'https://example.com/remote1.png', alt: 'remote1.png' },
+            { id: 'local2', url: 'http://127.0.0.1:8080/local2.gif', alt: 'local2.gif' },
+          ],
+          model: 'gpt-4-vision-preview',
+          provider: undefined,
+        });
 
         // Verify isLocalUrl was called for each image
         expect(isLocalUrl).toHaveBeenCalledWith('http://127.0.0.1:3000/local1.jpg');
@@ -1210,6 +1222,18 @@ describe('ChatService', () => {
 
         // 需要在修改模拟后重新导入相关模块
         const { chatService } = await import('../chat');
+
+        // Mock processImageList to return expected image content
+        const processImageListSpy = vi.spyOn(chatService as any, 'processImageList');
+        processImageListSpy.mockImplementation(async () => {
+          // Mock the expected return value for an image
+          return [
+            {
+              image_url: { detail: 'auto', url: 'http://example.com/xxx0asd-dsd.png' },
+              type: 'image_url',
+            },
+          ];
+        });
 
         const messages = [
           {
