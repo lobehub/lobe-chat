@@ -1,0 +1,401 @@
+---
+globs: *.test.ts,*.test.tsx
+alwaysApply: false
+---
+
+# 测试指南 - LobeChat Testing Guide
+
+## 🧪 测试环境概览
+
+LobeChat 项目使用 Vitest 测试库，配置了两种不同的测试环境：
+
+### 客户端测试环境 (DOM Environment)
+
+- **配置文件**: [vitest.config.ts](mdc:vitest.config.ts)
+- **环境**: Happy DOM (浏览器环境模拟)
+- **数据库**: PGLite (浏览器环境的 PostgreSQL)
+- **用途**: 测试前端组件、客户端逻辑、React 组件等
+- **设置文件**: [tests/setup.ts](mdc:tests/setup.ts)
+
+### 服务端测试环境 (Node Environment)
+
+- **配置文件**: [vitest.config.server.ts](mdc:vitest.config.server.ts)
+- **环境**: Node.js
+- **数据库**: 真实的 PostgreSQL 数据库
+- **并发限制**: 单线程运行 (`singleFork: true`)
+- **用途**: 测试数据库模型、服务端逻辑、API 端点等
+- **设置文件**: [tests/setup-db.ts](mdc:tests/setup-db.ts)
+
+## 🚀 测试运行命令
+
+### package.json 脚本说明
+
+查看 [package.json](mdc:package.json) 中的测试相关脚本：
+
+```json
+{
+  "test": "npm run test-app && npm run test-server",
+  "test-app": "vitest run --config vitest.config.ts",
+  "test-app:coverage": "vitest run --config vitest.config.ts --coverage",
+  "test-server": "vitest run --config vitest.config.server.ts",
+  "test-server:coverage": "vitest run --config vitest.config.server.ts --coverage"
+}
+```
+
+### 推荐的测试运行方式
+
+#### ⚠️ 重要提醒
+
+**🚨 性能警告**:
+
+- **永远不要直接运行整个项目的所有测试用例** - 项目包含 3000+ 测试用例，完整运行需要约 10 分钟
+- **务必使用文件过滤或测试名称过滤** - 始终指定具体的测试文件或测试名称模式
+- **避免无意中触发全量测试** - 某些看似针对单个文件的命令实际上会运行所有测试
+
+#### ✅ 正确的命令格式
+
+```bash
+# 运行所有客户端测试
+npx vitest run --config vitest.config.ts
+
+# 运行所有服务端测试
+npx vitest run --config vitest.config.server.ts
+
+# 运行特定测试文件 (支持模糊匹配)
+npx vitest run --config vitest.config.ts basic
+npx vitest run --config vitest.config.ts user.test.ts
+
+# 运行特定文件的特定行号
+npx vitest run --config vitest.config.ts src/utils/helper.test.ts:25
+npx vitest run --config vitest.config.ts basic/foo.test.ts:10,basic/foo.test.ts:25
+
+# 过滤特定测试用例名称
+npx vitest -t "test case name" --config vitest.config.ts
+
+# 组合使用文件和测试名称过滤
+npx vitest run --config vitest.config.ts filename.test.ts -t "specific test"
+```
+
+#### ❌ 避免的命令格式
+
+```bash
+# ❌ 这些命令会运行所有 3000+ 测试用例，耗时约 10 分钟！
+npm test
+npm run test
+pnpm test
+pnpm run test
+
+# ❌ 这些命令看似针对单个文件，但实际会运行所有测试用例！, 需要直接运行 vitest 命令不要使用 test npm script
+npm test src/libs/model-runtime/utils/openaiCompatibleFactory/index.test.ts
+pnpm test src/components/Button/index.test.tsx
+
+# ❌ 不要使用 pnpm test xxx (这不是有效的 vitest 命令)
+pnpm test some-file
+
+# ❌ 不要使用裸 vitest (会进入 watch 模式)
+vitest test-file.test.ts
+
+# ❌ 不要混淆测试环境
+npx vitest run --config vitest.config.server.ts client-component.test.ts
+```
+
+### 关键运行参数说明
+
+- **`vitest run`**: 运行一次测试然后退出 (避免 watch 模式)
+- **`vitest`**: 默认进入 watch 模式，持续监听文件变化
+- **`--config`**: 指定配置文件，选择正确的测试环境
+- **`-t`**: 过滤测试用例名称，支持正则表达式
+- **`--coverage`**: 生成测试覆盖率报告
+
+## 🔧 测试修复原则
+
+### 核心原则 ⚠️
+
+1. **充分阅读测试代码**: 在修复测试之前，必须完整理解测试的意图和实现
+2. **测试优先修复**: 如果是测试本身写错了，修改测试而不是实现代码
+3. **专注单一问题**: 只修复指定的测试，不要添加额外测试或功能
+4. **不自作主张**: 不要因为发现其他问题就直接修改，先提出再讨论
+
+### 测试修复流程
+
+```mermaid
+flowchart TD
+    subgraph "阶段一：分析与复现"
+        A[开始：收到测试失败报告] --> B[定位并运行失败的测试];
+        B --> C{是否能在本地复现?};
+        C -->|否| D[检查测试环境/配置/依赖];
+        C -->|是| E[分析：阅读测试代码、错误日志、Git 历史];
+    end
+
+    subgraph "阶段二：诊断与调试"
+        E --> F[建立假设：问题出在测试、代码还是环境?];
+        F --> G["调试：使用 console.log 或 debugger 深入检查"];
+        G --> H{假设是否被证实?};
+        H -->|否, 重新假设| F;
+    end
+
+    subgraph "阶段三：修复与验证"
+        H -->|是| I{确定根本原因};
+        I -->|测试逻辑错误| J[修复测试代码];
+        I -->|实现代码 Bug| K[修复实现代码];
+        I -->|环境/配置问题| L[修复配置或依赖];
+        J --> M[验证修复：重新运行失败的测试];
+        K --> M;
+        L --> M;
+        M --> N{测试是否通过?};
+        N -->|否, 修复无效| F;
+        N -->|是| O[扩大验证：运行当前文件内所有测试];
+        O --> P{是否全部通过?};
+        P -->|否, 引入新问题| F;
+    end
+
+    subgraph "阶段四：总结"
+        P -->|是| Q[完成：撰写修复总结];
+    end
+
+    D --> F;
+```
+
+### 修复完成后的总结
+
+测试修复完成后，应该提供简要说明，包括：
+
+1. **错误原因分析**: 说明测试失败的根本原因
+   - 测试逻辑错误
+   - 实现代码bug
+   - 环境配置问题
+   - 依赖变更导致的问题
+
+2. **修复方法说明**: 简述采用的修复方式
+   - 修改了哪些文件
+   - 采用了什么解决方案
+   - 为什么选择这种修复方式
+
+**示例格式**:
+
+```markdown
+## 测试修复总结
+
+**错误原因**: 测试中的 mock 数据格式与实际 API 返回格式不匹配，导致断言失败。
+
+**修复方法**: 更新了测试文件中的 mock 数据结构，使其与最新的 API 响应格式保持一致。具体修改了 `user.test.ts` 中的 `mockUserData` 对象结构。
+```
+
+## 📂 测试文件组织
+
+### 文件命名约定
+
+- **客户端测试**: `*.test.ts`, `*.test.tsx` (任意位置)
+- **服务端测试**: `src/database/models/**/*.test.ts`, `src/database/server/**/*.test.ts` (限定路径)
+
+### 测试文件组织风格
+
+项目采用 **测试文件与源文件同目录** 的组织风格：
+
+- 测试文件放在对应源文件的同一目录下
+- 命名格式：`原文件名.test.ts` 或 `原文件名.test.tsx`
+
+例如：
+
+```
+src/components/Button/
+├── index.tsx           # 源文件
+└── index.test.tsx      # 测试文件
+```
+
+## 🛠️ 测试调试技巧
+
+### 运行失败测试的步骤
+
+1. **确定测试类型**: 查看文件路径确定使用哪个配置
+2. **运行单个测试**: 使用 `-t` 参数隔离问题
+3. **检查错误日志**: 仔细阅读错误信息和堆栈跟踪
+4. **查看最近修改记录**: 检查相关文件的最近变更情况
+5. **添加调试日志**: 在测试中添加 `console.log` 了解执行流程
+
+### TypeScript 类型处理 📝
+
+在测试中，为了提高编写效率和可读性，可以适当放宽 TypeScript 类型检测：
+
+#### ✅ 推荐的类型放宽策略
+
+```typescript
+// ✅ 使用非空断言访问测试中确定存在的属性
+const result = await someFunction();
+expect(result!.data).toBeDefined();
+expect(result!.status).toBe('success');
+
+// ✅ 使用 any 类型简化复杂的 Mock 设置
+const mockStream = new ReadableStream() as any;
+mockStream.toReadableStream = () => mockStream;
+```
+
+#### 🎯 适用场景
+
+- **Mock 对象**: 对于测试用的 Mock 数据，使用 `as any` 避免复杂的类型定义
+- **第三方库**: 处理复杂的第三方库类型时，适当使用 `any` 提高效率
+- **测试断言**: 在确定对象存在的测试场景中，使用 `!` 非空断言
+- **临时调试**: 快速编写测试时，先用 `any` 保证功能，后续可选择性地优化类型
+
+#### ⚠️ 注意事项
+
+- **适度使用**: 不要过度依赖 `any`，核心业务逻辑的类型仍应保持严格
+- **文档说明**: 对于使用 `any` 的复杂场景，添加注释说明原因
+- **测试覆盖**: 确保即使使用了 `any`，测试仍能有效验证功能正确性
+
+### 检查最近修改记录 🔍
+
+为了更好地判断测试失败的根本原因，需要**系统性地检查相关文件的修改历史**。这是问题定位的关键步骤。
+
+#### 第一步：确定需要检查的文件范围
+
+1. **测试文件本身**: `path/to/component.test.ts`
+2. **对应的实现文件**: `path/to/component.ts` 或 `path/to/component/index.ts`
+3. **相关依赖文件**: 测试或实现中导入的其他模块
+
+#### 第二步：检查当前工作目录状态
+
+```bash
+# 查看所有未提交的修改状态
+git status
+
+# 重点关注测试文件和实现文件是否有未提交的修改
+git status | grep -E "(test|spec)"
+```
+
+#### 第三步：检查未提交的修改内容
+
+```bash
+# 查看测试文件的未提交修改 (工作区 vs 暂存区)
+git diff path/to/component.test.ts | cat
+
+# 查看对应实现文件的未提交修改
+git diff path/to/component.ts | cat
+
+# 查看已暂存但未提交的修改
+git diff --cached path/to/component.test.ts | cat
+git diff --cached path/to/component.ts | cat
+```
+
+#### 第四步：检查提交历史和时间相关性
+
+**首先查看提交时间，判断修改的时效性**：
+
+```bash
+# 查看测试文件的最近提交历史，包含提交时间
+git log --pretty=format:"%h %ad %s" --date=relative -5 path/to/component.test.ts | cat
+
+# 查看实现文件的最近提交历史，包含提交时间
+git log --pretty=format:"%h %ad %s" --date=relative -5 path/to/component.ts | cat
+
+# 查看详细的提交时间（ISO格式，便于精确判断）
+git log --pretty=format:"%h %ad %an %s" --date=iso -3 path/to/component.ts | cat
+git log --pretty=format:"%h %ad %an %s" --date=iso -3 path/to/component.test.ts | cat
+```
+
+**判断提交的参考价值**：
+
+1. **最近提交（24小时内）**: 🔴 **高度相关** - 很可能是导致测试失败的直接原因
+2. **近期提交（1-7天内）**: 🟡 **中等相关** - 可能相关，需要仔细分析修改内容
+3. **较早提交（超过1周）**: ⚪ **低相关性** - 除非是重大重构，否则不太可能是直接原因
+
+#### 第五步：基于时间相关性查看具体修改内容
+
+**根据提交时间的远近，优先查看最近的修改**：
+
+```bash
+# 如果有24小时内的提交，重点查看这些修改
+git show HEAD -- path/to/component.test.ts | cat
+git show HEAD -- path/to/component.ts | cat
+
+# 查看次新的提交（如果最新提交时间较远）
+git show HEAD~1 -- path/to/component.ts | cat
+git show path/to/component.ts < recent-commit-hash > -- | cat
+
+# 对比最近两次提交的差异
+git diff HEAD~1 HEAD -- path/to/component.ts | cat
+```
+
+#### 第六步：分析修改与测试失败的关系
+
+基于修改记录和时间相关性判断：
+
+1. **最近修改了实现代码**:
+
+   ```bash
+   # 重点检查实现逻辑的变化
+   git diff HEAD~1 path/to/component.ts | cat
+   ```
+
+   - 很可能是实现代码的变更导致测试失败
+   - 检查实现逻辑是否正确
+   - 确认测试是否需要相应更新
+
+2. **最近修改了测试代码**:
+
+   ```bash
+   # 重点检查测试逻辑的变化
+   git diff HEAD~1 path/to/component.test.ts | cat
+   ```
+
+   - 可能是测试本身写错了
+   - 检查测试逻辑和断言是否正确
+   - 确认测试是否符合实现的预期行为
+
+3. **两者都有最近修改**:
+
+   ```bash
+   # 对比两个文件的修改时间
+   git log --pretty=format:"%ad %f" --date=iso -1 path/to/component.ts | cat
+   git log --pretty=format:"%ad %f" --date=iso -1 path/to/component.test.ts | cat
+   ```
+
+   - 需要综合分析两者的修改
+   - 确定哪个修改更可能导致问题
+   - 优先检查时间更近的修改
+
+4. **都没有最近修改**:
+   - 可能是依赖变更或环境问题
+   - 检查 `package.json`、配置文件等的修改
+   - 查看是否有全局性的代码重构
+
+#### 修改记录检查示例
+
+```bash
+# 完整的检查流程示例
+echo "=== 检查文件修改状态 ==="
+git status | grep component
+
+echo "=== 检查未提交修改 ==="
+git diff src/components/Button/index.test.tsx | cat
+git diff src/components/Button/index.tsx | cat
+
+echo "=== 检查提交历史和时间 ==="
+git log --pretty=format:"%h %ad %s" --date=relative -3 src/components/Button/index.test.tsx | cat
+git log --pretty=format:"%h %ad %s" --date=relative -3 src/components/Button/index.tsx | cat
+
+echo "=== 根据时间优先级查看修改内容 ==="
+# 如果有24小时内的提交，重点查看
+git show HEAD -- src/components/Button/index.tsx | cat
+```
+
+## 特殊场景的测试
+
+针对一些特殊场景的测试，需要阅读相关文件：
+
+- [Electron IPC 接口测试策略](mdc:./electron-ipc-test.mdc)
+- [数据库 Model 测试指南](mdc:./db-model-test.mdc)
+
+## 🎯 总结
+
+修复测试时，记住以下关键点：
+
+- **使用正确的命令**: `npx vitest run --config [config-file]`
+- **理解测试意图**: 先读懂测试再修复
+- **查看最近修改**: 检查相关文件的 git 修改记录，判断问题根源
+- **选择正确环境**: 客户端测试用 `vitest.config.ts`，服务端用 `vitest.config.server.ts`
+- **专注单一问题**: 只修复当前的测试失败
+- **验证修复结果**: 确保修复后测试通过且无副作用
+- **提供修复总结**: 说明错误原因和修复方法
+- **Model 测试安全第一**: 必须包含用户权限检查和对应的安全测试
+- **Model 双环境验证**: 必须在 PGLite 和 PostgreSQL 两个环境下都验证通过

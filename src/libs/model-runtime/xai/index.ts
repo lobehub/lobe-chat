@@ -7,10 +7,7 @@ export interface XAIModelCard {
   id: string;
 }
 
-export const GrokReasoningModels = new Set([
-  'grok-3-mini',
-  'grok-4',
-]);
+export const GrokReasoningModels = new Set(['grok-3-mini', 'grok-4']);
 
 export const isGrokReasoningModel = (model: string) =>
   Array.from(GrokReasoningModels).some((id) => model.includes(id));
