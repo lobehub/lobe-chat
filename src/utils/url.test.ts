@@ -1,7 +1,7 @@
 import { vi } from 'vitest';
 
 import { pathString } from './url';
-import { inferContentTypeFromImageUrl, inferFileExtensionFromImageUrl } from './url';
+import { inferContentTypeFromImageUrl, inferFileExtensionFromImageUrl, isLocalUrl } from './url';
 
 describe('pathString', () => {
   it('should handle basic path', () => {
@@ -396,5 +396,46 @@ describe('inferFileExtensionFromImageUrl', () => {
   it('should handle relative paths with hash fragments', () => {
     const result = inferFileExtensionFromImageUrl('assets/images/banner.gif#preview');
     expect(result).toBe('gif');
+  });
+});
+
+describe('isLocalUrl', () => {
+  it('should return true for URLs with 127.0.0.1 as hostname', () => {
+    expect(isLocalUrl('http://127.0.0.1')).toBe(true);
+    expect(isLocalUrl('https://127.0.0.1')).toBe(true);
+    expect(isLocalUrl('http://127.0.0.1:8080')).toBe(true);
+    expect(isLocalUrl('http://127.0.0.1/path/to/resource')).toBe(true);
+    expect(isLocalUrl('https://127.0.0.1/path?query=1#hash')).toBe(true);
+  });
+
+  it('should return false for URLs with "localhost" as hostname', () => {
+    expect(isLocalUrl('http://localhost')).toBe(false);
+    expect(isLocalUrl('http://localhost:3000')).toBe(false);
+  });
+
+  it('should return false for other IP addresses', () => {
+    expect(isLocalUrl('http://192.168.1.1')).toBe(false);
+    expect(isLocalUrl('http://0.0.0.0')).toBe(false);
+    expect(isLocalUrl('http://127.0.0.2')).toBe(false);
+  });
+
+  it('should return false for domain names', () => {
+    expect(isLocalUrl('https://example.com')).toBe(false);
+    expect(isLocalUrl('http://www.google.com')).toBe(false);
+  });
+
+  it('should return false for malformed URLs', () => {
+    expect(isLocalUrl('invalid-url')).toBe(false);
+    expect(isLocalUrl('http://')).toBe(false);
+    expect(isLocalUrl('a string but not a url')).toBe(false);
+  });
+
+  it('should return false for empty or nullish strings', () => {
+    expect(isLocalUrl('')).toBe(false);
+  });
+
+  it('should return false for relative URLs', () => {
+    expect(isLocalUrl('/path/to/file')).toBe(false);
+    expect(isLocalUrl('./relative/path')).toBe(false);
   });
 });
