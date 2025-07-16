@@ -2,6 +2,123 @@
 
 # Changelog
 
+### [Version 1.99.5](https://github.com/lobehub/lobe-chat/compare/v1.99.4...v1.99.5)
+
+<sup>Released on **2025-07-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix page error when url is not defined in web search plugin.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix page error when url is not defined in web search plugin, closes [#8441](https://github.com/lobehub/lobe-chat/issues/8441) ([a55b65b](https://github.com/lobehub/lobe-chat/commit/a55b65b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.99.4](https://github.com/lobehub/lobe-chat/compare/v1.99.3...v1.99.4)
+
+<sup>Released on **2025-07-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix apikey issue on server log.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix apikey issue on server log, closes [#8457](https://github.com/lobehub/lobe-chat/issues/8457) ([43be2d1](https://github.com/lobehub/lobe-chat/commit/43be2d1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.99.3](https://github.com/lobehub/lobe-chat/compare/v1.99.2...v1.99.3)
+
+<sup>Released on **2025-07-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Chat model list should not show image model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Chat model list should not show image model, closes [#8448](https://github.com/lobehub/lobe-chat/issues/8448) ([2bb1506](https://github.com/lobehub/lobe-chat/commit/2bb1506))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.99.2](https://github.com/lobehub/lobe-chat/compare/v1.99.1...v1.99.2)
+
+<sup>Released on **2025-07-15**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Some ai image generation feedback issues.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Some ai image generation feedback issues, closes [#8440](https://github.com/lobehub/lobe-chat/issues/8440) ([bc41329](https://github.com/lobehub/lobe-chat/commit/bc41329))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.99.1](https://github.com/lobehub/lobe-chat/compare/v1.99.0...v1.99.1)
+
+<sup>Released on **2025-07-15**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.99.0](https://github.com/lobehub/lobe-chat/compare/v1.98.2...v1.99.0)
 
 <sup>Released on **2025-07-14**</sup>

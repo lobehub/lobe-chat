@@ -112,7 +112,6 @@ class ModelRuntime {
         LobeCloudflareParams & { apiKey?: string; apiVersion?: string; baseURL?: string }
     >,
   ) {
-    log('Initializing runtime with provider: %s and params: %O', provider, params);
     // @ts-expect-error ignore
     if (providerRuntimeMap[provider]) {
       log('Provider runtime map found for provider: %s', provider);
