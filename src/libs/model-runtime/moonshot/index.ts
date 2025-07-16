@@ -42,69 +42,49 @@ export const LobeMoonshotAI = createOpenAICompatibleRuntime({
     },
     // 添加流式响应处理
     handleStream: (stream) => {
+      // 如果是标准的 ReadableStream，直接返回
+      if (stream instanceof ReadableStream) {
+        return stream;
+      }
+      
+      // 处理 Stream<ChatCompletionChunk> 类型
       return new ReadableStream({
-        start(controller) {
-          const reader = stream.getReader();
-          
-          const processChunk = async () => {
-            try {
-              const { done, value } = await reader.read();
-              
-              if (done) {
-                controller.close();
-                return;
-              }
-              
+        async start(controller) {
+          try {
+            for await (const chunk of stream as any) {
               // 处理 Moonshot 特殊的流式响应格式
-              const text = new TextDecoder().decode(value);
-              const lines = text.split('\n').filter(line => line.trim());
-              
-              for (const line of lines) {
-                if (line.startsWith('data: ')) {
-                  const data = line.slice(6);
-                  if (data === '[DONE]') continue;
+              if (chunk.choices?.[0]?.delta?.tool_calls) {
+                const toolCall = chunk.choices[0].delta.tool_calls[0];
+                
+                // 处理 builtin_function 类型的工具调用
+                if (toolCall.type === 'builtin_function' && toolCall.function?.name === '$web_search') {
+                  // 自动执行内置搜索并返回结果
+                  const searchResult = {
+                    role: 'assistant',
+                    content: '',
+                    tool_calls: [{
+                      id: toolCall.id,
+                      type: 'function',
+                      function: {
+                        name: '$web_search',
+                        arguments: toolCall.function.arguments || '{}',
+                      },
+                    }],
+                  };
                   
-                  try {
-                    const parsed = JSON.parse(data);
-                    // 处理 $web_search 的特殊响应格式
-                    if (parsed.choices?.[0]?.delta?.tool_calls) {
-                      const toolCall = parsed.choices[0].delta.tool_calls[0];
-                      
-                      // 处理 builtin_function 类型的工具调用
-                      if (toolCall.type === 'builtin_function' && toolCall.function?.name === '$web_search') {
-                        // 自动执行内置搜索并返回结果
-                        const searchResult = {
-                          role: 'assistant',
-                          content: '',
-                          tool_calls: [{
-                            id: toolCall.id,
-                            type: 'function',
-                            function: {
-                              name: '$web_search',
-                              arguments: toolCall.function.arguments || '{}',
-                            },
-                          }],
-                        };
-                        
-                        controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({
-                          choices: [{ delta: searchResult }]
-                        })}\n\n`));
-                      }
-                    }
-                  } catch (e) {
-                    // 忽略解析错误
-                  }
+                  controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify({
+                    choices: [{ delta: searchResult }]
+                  })}\n\n`));
                 }
               }
               
-              controller.enqueue(value);
-              await processChunk();
-            } catch (error) {
-              controller.error(error);
+              // 编码并发送原始块数据
+              controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify(chunk)}\n\n`));
             }
-          };
-          
-          processChunk();
+            controller.close();
+          } catch (error) {
+            controller.error(error);
+          }
         },
       });
     },
