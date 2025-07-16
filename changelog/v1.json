@@ -1,6 +1,27 @@
 [
   {
     "children": {
+      "fixes": ["Desktop local db can't upload image."]
+    },
+    "date": "2025-07-16",
+    "version": "1.99.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix page error when url is not defined in web search plugin."]
+    },
+    "date": "2025-07-16",
+    "version": "1.99.5"
+  },
+  {
+    "children": {
+      "fixes": ["Fix apikey issue on server log."]
+    },
+    "date": "2025-07-16",
+    "version": "1.99.4"
+  },
+  {
+    "children": {
       "fixes": ["Chat model list should not show image model."]
     },
     "date": "2025-07-16",

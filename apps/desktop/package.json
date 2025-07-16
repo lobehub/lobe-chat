@@ -20,7 +20,7 @@
     "electron:run-unpack": "electron .",
     "format": "prettier --write ",
     "i18n": "bun run scripts/i18nWorkflow/index.ts && lobe-i18n",
-    "postinstall": "electron-builder install-app-deps && pnpm rebuild sharp",
+    "postinstall": "electron-builder install-app-deps",
     "install-isolated": "pnpm install",
     "lint": "eslint --cache ",
     "pg-server": "bun run scripts/pglite-server.ts",
