@@ -40,6 +40,7 @@ const RootLayout = async ({ children, params, modal }: RootLayoutProps) => {
             locale={locale}
             neutralColor={neutralColor}
             primaryColor={primaryColor}
+            variants={variants}
           >
             <AuthProvider>
               {children}
