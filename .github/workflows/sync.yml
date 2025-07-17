@@ -25,6 +25,11 @@ jobs:
           actions: 'close-issues'
           labels: '🚨 Sync Fail'
 
+      - name: Configure Git merge strategies
+        run: |
+          git config --global merge.ours.driver true
+          git config --global merge.union.driver "git merge-file --union %O %A %B"
+
       - name: Sync upstream changes
         id: sync
         uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
