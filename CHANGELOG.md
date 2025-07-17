@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.100.0](https://github.com/lobehub/lobe-chat/compare/v1.99.6...v1.100.0)
+
+<sup>Released on **2025-07-17**</sup>
+
+#### ✨ Features
+
+- **misc**: Refactor desktop oauth and use JWTs token to support remote chat.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Refactor desktop oauth and use JWTs token to support remote chat, closes [#8446](https://github.com/lobehub/lobe-chat/issues/8446) ([054ca5f](https://github.com/lobehub/lobe-chat/commit/054ca5f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.99.6](https://github.com/lobehub/lobe-chat/compare/v1.99.5...v1.99.6)
 
 <sup>Released on **2025-07-16**</sup>
