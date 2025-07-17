@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/lobehub-lobe-chat-badge.png)](https://mseep.ai/app/lobehub-lobe-chat)
+
 <div align="center"><a name="readme-top"></a>
 
 [![][image-banner]][vercel-link]
