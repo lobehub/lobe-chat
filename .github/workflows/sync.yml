@@ -9,12 +9,6 @@ on:
   schedule:
     - cron: '0 */6 * * *' # every 6 hours
   workflow_dispatch:
-    inputs:
-      ignore_files:
-        description: 'Files to ignore during sync (comma-separated)'
-        required: false
-        default: 'changelog/*,CHANGELOG.md'
-        type: string
 
 jobs:
   sync_latest_from_upstream:
@@ -23,56 +17,13 @@ jobs:
     if: ${{ github.event.repository.fork }}
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
 
       - name: Clean issue notice
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'close-issues'
-          labels: '🚨 Sync Failed'
-
-      - name: Extract ignore files
-        id: extract_ignore
-        run: |
-          # Default files to ignore
-          DEFAULT_IGNORE="Changelog.md"
-
-          # Get input files to ignore or use default
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            IGNORE_FILES="${{ github.event.inputs.ignore_files }}"
-          else
-            IGNORE_FILES="$DEFAULT_IGNORE"
-          fi
-
-          # Convert to array and prepare for output
-          echo "IGNORE_FILES=$IGNORE_FILES" >> $GITHUB_ENV
-          echo "ignore_files=$IGNORE_FILES" >> $GITHUB_OUTPUT
-
-          # Create a backup of files to be preserved
-          mkdir -p .file_backup
-
-          # Always backup package.json for special handling
-          if [ -f "package.json" ]; then
-            echo "Backing up package.json for special merge handling"
-            cp "package.json" ".file_backup/package.json" || true
-          fi
-
-          # Process each pattern (comma-separated)
-          for pattern in $(echo $IGNORE_FILES | tr ',' ' '); do
-            # Use find to handle wildcards
-            for file in $(find . -type f -path "./$pattern" 2>/dev/null || echo "$pattern"); do
-              # Skip if the file doesn't exist or if it's the find command returning the pattern
-              if [ -f "$file" ]; then
-                echo "Backing up $file"
-                # Create directory structure in backup
-                mkdir -p ".file_backup/$(dirname "$file")"
-                cp "$file" ".file_backup/$file" || true
-              fi
-            done
-          done
+          labels: '🚨 Sync Fail'
 
       - name: Sync upstream changes
         id: sync
@@ -81,91 +32,23 @@ jobs:
           upstream_sync_repo: lobehub/lobe-chat
           upstream_sync_branch: main
           target_sync_branch: main
-          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }} # automatically generated, no need to set
           test_mode: false
-
-      - name: Restore ignored files
-        if: steps.sync.outputs.has_new_commits == 'true'
-        run: |
-          # Process each pattern (comma-separated)
-          for pattern in $(echo $IGNORE_FILES | tr ',' ' '); do
-            # Find all matching files in the backup
-            for file in $(find .file_backup -type f -path ".file_backup/$pattern" 2>/dev/null || find .file_backup -type f -name "$(basename "$pattern")" 2>/dev/null); do
-              # Get the original file path
-              original_file="${file#.file_backup/}"
-              if [ -f "$file" ]; then
-                echo "Restoring $original_file"
-                # Ensure directory exists
-                mkdir -p "$(dirname "$original_file")"
-                cp "$file" "$original_file"
-                git add "$original_file"
-              fi
-            done
-          done
-
-          # Commit the restored files if there are changes
-          if [ -n "$(git status --porcelain)" ]; then
-            git config --local user.email "action@github.com"
-            git config --local user.name "GitHub Action"
-            git commit -m "Restore ignored files after sync: ${{ steps.extract_ignore.outputs.ignore_files }}"
-            git push
-          fi
-
-      - name: Setup Node.js
-        if: steps.sync.outputs.has_new_commits == 'true'
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Merge package.json
-        if: steps.sync.outputs.has_new_commits == 'true'
-        run: |
-          if [ -f ".file_backup/package.json" ] && [ -f "package.json" ]; then
-            echo "Merging package.json files..."
-            # Create a temporary file for the merged package.json
-            node scripts/mergePackageJson.js ".file_backup/package.json" "package.json" "package.json.merged"
-
-            if [ -f "package.json.merged" ]; then
-              # Replace the current package.json with the merged version
-              mv package.json.merged package.json
-              git add package.json
-
-              # Commit the merged package.json
-              git config --local user.email "action@github.com"
-              git config --local user.name "GitHub Action"
-              git commit -m "Merge package.json with custom dependencies preserved"
-              git push
-
-              echo "Successfully merged package.json"
-            else
-              echo "Failed to merge package.json files"
-            fi
-          else
-            echo "Either original or synced package.json is missing, skipping merge"
-          fi
 
       - name: Sync check
         if: failure()
         uses: actions-cool/issues-helper@v3
         with:
           actions: 'create-issue'
-          title: '🚨 Sync Failed'
-          labels: '🚨 Sync Failed'
+          title: '🚨 同步失败 | Sync Fail'
+          labels: '🚨 Sync Fail'
           body: |
-            Due to a change in the workflow file of the upstream repository, GitHub has automatically suspended the scheduled automatic update. You need to manually sync your fork.
+            Due to a change in the workflow file of the [LobeChat][lobechat] upstream repository, GitHub has automatically suspended the scheduled automatic update. You need to manually sync your fork. Please refer to the detailed [Tutorial][tutorial-en-US] for instructions.
 
-            To manually sync your fork:
-            1. Go to your fork's GitHub page
-            2. Click on "Sync fork" button
-            3. Click on "Update branch"
+            由于 [LobeChat][lobechat] 上游仓库的 workflow 文件变更，导致 GitHub 自动暂停了本次自动更新，你需要手动 Sync Fork 一次，请查看 [详细教程][tutorial-zh-CN]
 
-            If you encounter any issues, please contact the repository maintainers.
+            ![](https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/273954625-df80c890-0822-4ac2-95e6-c990785cbed5.png)
 
-      - name: Trigger Release Workflow
-        if: success() && steps.sync.outputs.has_new_commits == 'true'
-        run: |
-          curl -X POST \
-            -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/${{ github.repository }}/actions/workflows/release.yml/dispatches \
-            -d '{"ref":"main"}'
+            [lobechat]: https://github.com/lobehub/lobe-chat
+            [tutorial-zh-CN]: https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN
+            [tutorial-en-US]: https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync
