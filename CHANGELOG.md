@@ -2,6 +2,37 @@
 
 # Changelog
 
+### [Version&nbsp;1.99.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.99.0...v1.99.1)
+<sup>Released on **2025-07-17**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Use server env config image models.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **misc**: Use server env config image models, closes [#8478](https://github.com/jaworldwideorg/OneJA-Bot/issues/8478) ([768ee2b](https://github.com/jaworldwideorg/OneJA-Bot/commit/768ee2b))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version&nbsp;1.99.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.98.1...v1.99.0)
 <sup>Released on **2025-07-17**</sup>
 
