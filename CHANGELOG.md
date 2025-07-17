@@ -2,6 +2,50 @@
 
 # Changelog
 
+## [Version&nbsp;1.99.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.98.1...v1.99.0)
+<sup>Released on **2025-07-17**</sup>
+
+
+#### ✨ Features
+
+- **misc**: Refactor desktop oauth and use JWTs token to support remote chat.
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Desktop local db can't upload image, fix apikey issue on server log, fix page error when url is not defined in web search plugin.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's improved
+
+* **misc**: Refactor desktop oauth and use JWTs token to support remote chat, closes [#8446](https://github.com/jaworldwideorg/OneJA-Bot/issues/8446) ([054ca5f](https://github.com/jaworldwideorg/OneJA-Bot/commit/054ca5f))
+
+
+
+#### What's fixed
+
+* **misc**: Desktop local db can't upload image, closes [#8459](https://github.com/jaworldwideorg/OneJA-Bot/issues/8459) ([25bfc80](https://github.com/jaworldwideorg/OneJA-Bot/commit/25bfc80))
+* **misc**: Fix apikey issue on server log, closes [#8457](https://github.com/jaworldwideorg/OneJA-Bot/issues/8457) ([43be2d1](https://github.com/jaworldwideorg/OneJA-Bot/commit/43be2d1))
+* **misc**: Fix page error when url is not defined in web search plugin, closes [#8441](https://github.com/jaworldwideorg/OneJA-Bot/issues/8441) ([a55b65b](https://github.com/jaworldwideorg/OneJA-Bot/commit/a55b65b))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.98.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.98.0...v1.98.1)
 <sup>Released on **2025-07-16**</sup>
 
