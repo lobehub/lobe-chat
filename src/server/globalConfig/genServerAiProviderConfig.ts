@@ -19,15 +19,15 @@ export const genServerAiProvidersConfig = (specificConfig: Record<any, ProviderS
   return Object.values(ModelProvider).reduce(
     (config, provider) => {
       const providerUpperCase = provider.toUpperCase();
-      const builtinModels = AiModels[provider] as AiFullModelCard[];
+      const aiModels = AiModels[provider] as AiFullModelCard[];
 
-      if (!builtinModels)
+      if (!aiModels)
         throw new Error(
           `Provider [${provider}] not found in aiModels, please make sure you have exported the provider in the \`aiModels/index.ts\``,
         );
 
       const providerConfig = specificConfig[provider as keyof typeof specificConfig] || {};
-      const providerModelList =
+      const modelString =
         process.env[providerConfig.modelListKey ?? `${providerUpperCase}_MODEL_LIST`];
 
       config[provider] = {
@@ -37,12 +37,13 @@ export const genServerAiProvidersConfig = (specificConfig: Record<any, ProviderS
             : llmConfig[providerConfig.enabledKey || `ENABLED_${providerUpperCase}`],
 
         enabledModels: extractEnabledModels(
-          providerModelList,
+          provider,
+          modelString,
           providerConfig.withDeploymentName || false,
         ),
         serverModelLists: transformToAiModelList({
-          defaultModels: builtinModels || [],
-          modelString: providerModelList,
+          defaultModels: aiModels || [],
+          modelString,
           providerId: provider,
           withDeploymentName: providerConfig.withDeploymentName || false,
         }),

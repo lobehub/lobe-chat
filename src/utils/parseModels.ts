@@ -1,13 +1,18 @@
 import { produce } from 'immer';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
-import { AiFullModelCard } from '@/types/aiModel';
+import { AiFullModelCard, AiModelType } from '@/types/aiModel';
+import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
 import { merge } from '@/utils/merge';
 
 /**
  * Parse model string to add or remove models.
  */
-export const parseModelString = (modelString: string = '', withDeploymentName = false) => {
+export const parseModelString = (
+  providerId: string,
+  modelString: string = '',
+  withDeploymentName = false,
+) => {
   let models: AiFullModelCard[] = [];
   let removeAll = false;
   const removedModels: string[] = [];
@@ -46,11 +51,18 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
       models.splice(existingIndex, 1);
     }
 
+    // Use new type lookup function, prioritizing same provider first, then fallback to other providers
+    const modelType: AiModelType = getModelPropertyWithFallback<AiModelType>(
+      id,
+      'type',
+      providerId,
+    );
+
     const model: AiFullModelCard = {
       abilities: {},
       displayName: displayName || undefined,
       id,
-      type: LOBE_DEFAULT_MODEL_LIST.find((m) => m.id === id)?.type || 'chat',
+      type: modelType,
     };
 
     if (deploymentName) {
@@ -120,7 +132,7 @@ export const transformToAiModelList = ({
 }): AiFullModelCard[] | undefined => {
   if (!modelString) return undefined;
 
-  const modelConfig = parseModelString(modelString, withDeploymentName);
+  const modelConfig = parseModelString(providerId, modelString, withDeploymentName);
   let chatModels = modelConfig.removeAll ? [] : defaultModels;
 
   // 处理移除逻辑
@@ -181,8 +193,12 @@ export const transformToAiModelList = ({
   });
 };
 
-export const extractEnabledModels = (modelString: string = '', withDeploymentName = false) => {
-  const modelConfig = parseModelString(modelString, withDeploymentName);
+export const extractEnabledModels = (
+  providerId: string,
+  modelString: string = '',
+  withDeploymentName = false,
+) => {
+  const modelConfig = parseModelString(providerId, modelString, withDeploymentName);
   const list = modelConfig.add.map((m) => m.id);
 
   if (list.length === 0) return;
