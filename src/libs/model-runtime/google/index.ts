@@ -487,12 +487,18 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         if (parsed && typeof parsed === 'object' && parsed.error) {
           const errorInfo = parsed.error;
           
-          // 如果error.message还是一个JSON字符串，继续递归解析
+          // 清理错误消息
           if (typeof errorInfo.message === 'string') {
+            errorInfo.message = errorInfo.message
+              .replace(/^\*\s*/, '') // 移除开头的星号和空格
+              .replace(/\\n/g, '\n') // 转换转义的换行符
+              .replace(/\n+/g, ' ') // 将多个换行符替换为单个空格
+              .trim(); // 去除首尾空格
+            
+            // 如果error.message还是一个JSON字符串，继续递归解析
             try {
               const nestedResult = parseJsonRecursively(errorInfo.message, maxDepth - 1);
               if (nestedResult && nestedResult.error) {
-                // 使用更深层的错误信息
                 return nestedResult;
               }
             } catch {
