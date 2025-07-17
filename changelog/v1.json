@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Use server env config image models."]
+    },
+    "date": "2025-07-17",
+    "version": "1.100.1"
+  },
+  {
+    "children": {
       "features": ["Refactor desktop oauth and use JWTs token to support remote chat."]
     },
     "date": "2025-07-17",
