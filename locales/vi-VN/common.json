@@ -183,6 +183,7 @@
   },
   "fullscreen": "Chế độ toàn màn hình",
   "historyRange": "Phạm vi lịch sử",
+  "import": "Nhập khẩu",
   "importData": "Nhập dữ liệu",
   "importModal": {
     "error": {
@@ -324,6 +325,7 @@
     }
   },
   "tab": {
+    "aiImage": "Vẽ tranh AI",
     "chat": "Trò chuyện",
     "discover": "Khám phá",
     "files": "Tệp",

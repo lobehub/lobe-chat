@@ -68,6 +68,22 @@
   "GoBack": {
     "back": "返回"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "點擊更換圖片"
+    },
+    "placeholder": {
+      "primary": "新增圖片",
+      "secondary": "點擊上傳"
+    }
+  },
+  "KeyValueEditor": {
+    "addButton": "新增一行",
+    "deleteTooltip": "刪除",
+    "duplicateKeyError": "鍵名必須唯一",
+    "keyPlaceholder": "鍵",
+    "valuePlaceholder": "值"
+  },
   "MaxTokenSlider": {
     "unlimited": "無限制"
   },
@@ -90,6 +106,25 @@
     "goToSettings": "前往設定",
     "provider": "提供商",
     "title": "模型"
+  },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "點擊上傳更多"
+    },
+    "modal": {
+      "complete": "完成",
+      "newFileIndicator": "新增",
+      "selectImageToPreview": "請選擇要預覽的圖片",
+      "title": "管理圖片 ({{count}})",
+      "upload": "上傳圖片"
+    },
+    "placeholder": {
+      "primary": "點擊上傳圖片",
+      "secondary": "支援多張圖片選擇"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} 已上傳"
+    }
   },
   "OllamaSetupGuide": {
     "action": {

@@ -484,6 +484,11 @@
       "placeholder": "请输入自定义提示词",
       "title": "自定义提示词"
     },
+    "generationTopic": {
+      "label": "AI 绘画话题命名模型",
+      "modelDesc": "指定用于 AI 绘画自动命名话题的模型",
+      "title": "AI 绘画自动命名话题"
+    },
     "helpInfo": "当创建新助手时，将以默认助手设置作为预设值。",
     "historyCompress": {
       "label": "会话历史模型",

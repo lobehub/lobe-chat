@@ -68,6 +68,22 @@
   "GoBack": {
     "back": "Indietro"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "Clicca per cambiare immagine"
+    },
+    "placeholder": {
+      "primary": "Aggiungi immagine",
+      "secondary": "Clicca per caricare"
+    }
+  },
+  "KeyValueEditor": {
+    "addButton": "Aggiungi una riga",
+    "deleteTooltip": "Elimina",
+    "duplicateKeyError": "Il nome della chiave deve essere univoco",
+    "keyPlaceholder": "Chiave",
+    "valuePlaceholder": "Valore"
+  },
   "MaxTokenSlider": {
     "unlimited": "Illimitato"
   },
@@ -90,6 +106,25 @@
     "goToSettings": "Vai alle impostazioni",
     "provider": "Provider",
     "title": "Modello"
+  },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "Clicca per caricare altre"
+    },
+    "modal": {
+      "complete": "Completa",
+      "newFileIndicator": "Nuovo",
+      "selectImageToPreview": "Seleziona un'immagine da visualizzare in anteprima",
+      "title": "Gestisci immagini ({{count}})",
+      "upload": "Carica immagine"
+    },
+    "placeholder": {
+      "primary": "Clicca per caricare immagini",
+      "secondary": "Supporta la selezione di più immagini"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} caricati"
+    }
   },
   "OllamaSetupGuide": {
     "action": {

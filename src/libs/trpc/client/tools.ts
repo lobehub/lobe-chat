@@ -3,8 +3,7 @@ import superjson from 'superjson';
 
 import { isDesktop } from '@/const/version';
 import type { ToolsRouter } from '@/server/routers/tools';
-
-import { fetchWithDesktopRemoteRPC } from './helpers/desktopRemoteRPCFetch';
+import { fetchWithDesktopRemoteRPC } from '@/utils/electron/desktopRemoteRPCFetch';
 
 export const toolsClient = createTRPCClient<ToolsRouter>({
   links: [

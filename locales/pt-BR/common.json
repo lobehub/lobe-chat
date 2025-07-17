@@ -183,6 +183,7 @@
   },
   "fullscreen": "Modo de Tela Cheia",
   "historyRange": "Intervalo de histórico",
+  "import": "Importar",
   "importData": "Importar dados",
   "importModal": {
     "error": {
@@ -324,6 +325,7 @@
     }
   },
   "tab": {
+    "aiImage": "Pintura AI",
     "chat": "Chat",
     "discover": "Descobrir",
     "files": "Arquivos",

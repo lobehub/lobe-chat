@@ -101,7 +101,10 @@
   "waitingOAuth": {
     "cancel": "Annuler",
     "description": "La page d'autorisation a été ouverte dans le navigateur, veuillez compléter l'autorisation dans le navigateur",
+    "error": "Échec de l'autorisation : {{error}}",
+    "errorTitle": "Échec de la connexion d'autorisation",
     "helpText": "Si le navigateur ne s'est pas ouvert automatiquement, veuillez cliquer sur annuler puis réessayer",
+    "retry": "Réessayer",
     "title": "En attente de connexion d'autorisation"
   }
 }

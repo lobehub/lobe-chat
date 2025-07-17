@@ -28,10 +28,14 @@
     },
     "title": "授权 {{clientName}}"
   },
-  "failed": {
+  "error": {
     "backToHome": "返回首页",
-    "subTitle": "您已拒绝授权应用访问您的 LobeChat 账户",
-    "title": "授权被拒绝"
+    "desc": "OAuth 授权失败，失败原因：{{reason}}",
+    "reason": {
+      "internal_error": "服务端错误",
+      "invalid_request": "无效的请求参数"
+    },
+    "title": "授权失败"
   },
   "handoff": {
     "desc": {
@@ -50,7 +54,7 @@
     "userWelcome": "欢迎回来，"
   },
   "success": {
-    "subTitle": "您已成功授权应用访问您的 LobeChat 账户，可以关闭该页面了",
+    "subTitle": "您已成功授权应用访问您的账户，可以关闭该页面了",
     "title": "授权成功"
   }
 }

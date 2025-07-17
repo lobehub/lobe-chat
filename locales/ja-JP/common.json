@@ -183,6 +183,7 @@
   },
   "fullscreen": "フルスクリーンモード",
   "historyRange": "履歴範囲",
+  "import": "インポート",
   "importData": "データをインポートする",
   "importModal": {
     "error": {
@@ -324,6 +325,7 @@
     }
   },
   "tab": {
+    "aiImage": "AI 画像生成",
     "chat": "チャット",
     "discover": "発見",
     "files": "ファイル",

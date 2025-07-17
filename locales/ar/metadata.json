@@ -32,6 +32,10 @@
     "search": "بحث",
     "title": "اكتشاف"
   },
+  "image": {
+    "description": "{{appName}} يقدم لك أفضل تجربة استخدام لـ GPT Image و Flux و Midjourney و Stable Diffusion",
+    "title": "الرسم بالذكاء الاصطناعي"
+  },
   "plugins": {
     "description": "البحث، توليد الرسوم البيانية، الأكاديميات، توليد الصور، توليد الفيديو، توليد الصوت، سير العمل الآلي، خصص قدرات ToolCall الخاصة بـ ChatGPT / Claude",
     "title": "سوق الإضافات"

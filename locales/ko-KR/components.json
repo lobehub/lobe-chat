@@ -68,6 +68,22 @@
   "GoBack": {
     "back": "뒤로 가기"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "클릭하여 이미지 변경"
+    },
+    "placeholder": {
+      "primary": "이미지 추가",
+      "secondary": "클릭하여 업로드"
+    }
+  },
+  "KeyValueEditor": {
+    "addButton": "새 행 추가",
+    "deleteTooltip": "삭제",
+    "duplicateKeyError": "키 이름은 고유해야 합니다",
+    "keyPlaceholder": "키",
+    "valuePlaceholder": "값"
+  },
   "MaxTokenSlider": {
     "unlimited": "무제한"
   },
@@ -90,6 +106,25 @@
     "goToSettings": "설정으로 가기",
     "provider": "제공자",
     "title": "모델"
+  },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "더 업로드하려면 클릭"
+    },
+    "modal": {
+      "complete": "완료",
+      "newFileIndicator": "새로 추가됨",
+      "selectImageToPreview": "미리 볼 이미지를 선택하세요",
+      "title": "이미지 관리 ({{count}})",
+      "upload": "이미지 업로드"
+    },
+    "placeholder": {
+      "primary": "클릭하여 이미지 업로드",
+      "secondary": "여러 이미지 선택 가능"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} 업로드 완료"
+    }
   },
   "OllamaSetupGuide": {
     "action": {

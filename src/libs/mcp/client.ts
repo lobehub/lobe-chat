@@ -164,7 +164,42 @@ export class MCPClient {
     switch (params.type) {
       case 'http': {
         log('Using HTTP transport with url: %s', params.url);
-        this.transport = new StreamableHTTPClientTransport(new URL(params.url));
+
+        // 构建头部信息，包括用户自定义的 headers 和认证信息
+        const headers: Record<string, string> = { ...params.headers };
+
+        // 处理认证配置
+        if (params.auth) {
+          switch (params.auth.type) {
+            case 'bearer': {
+              if (params.auth.token) {
+                headers['Authorization'] = `Bearer ${params.auth.token}`;
+                log('Added Bearer token authentication');
+              }
+              break;
+            }
+            case 'oauth2': {
+              if (params.auth.accessToken) {
+                headers['Authorization'] = `Bearer ${params.auth.accessToken}`;
+                log('Added OAuth2 access token authentication');
+              }
+              break;
+            }
+
+            default: {
+              // 不需要认证
+              break;
+            }
+          }
+        }
+
+        // 创建 StreamableHTTPClientTransport 并传递 headers
+        this.transport = new StreamableHTTPClientTransport(new URL(params.url), {
+          requestInit: { headers },
+        });
+
+        log('HTTP transport created with headers: %O', Object.keys(headers));
+
         break;
       }
 
@@ -205,6 +240,14 @@ export class MCPClient {
     } catch (e) {
       log('MCP connection failed:', e);
 
+      if (this.params.type === 'http') {
+        const error = e as Error;
+        if (error.message.includes('401'))
+          throw createMCPError('AUTHORIZATION_ERROR', error.message);
+
+        throw e;
+      }
+
       // 对于 stdio 连接失败，尝试预检查命令以获取详细错误信息
       if (this.params.type === 'stdio') {
         log('Attempting to pre-check stdio command for detailed error information...');
@@ -228,34 +271,24 @@ export class MCPClient {
           'Failed to connect to MCP server, please check your configuration',
           {
             originalError: (e as Error).message,
-            params:
-              this.params.type === 'stdio'
-                ? {
-                    args: this.params.args,
-                    command: this.params.command,
-                    type: this.params.type,
-                  }
-                : {
-                    type: this.params.type,
-                  },
+            params: {
+              args: this.params.args,
+              command: this.params.command,
+              type: this.params.type,
+            },
             step: 'mcp_connect',
           },
         );
       }
 
       // Wrap other unknown errors
-      throw createMCPError('UNKNOWN_ERROR', 'Unknown error occurred', {
+      throw createMCPError('UNKNOWN_ERROR', (e as Error).message, {
         originalError: (e as Error).message,
-        params:
-          this.params.type === 'stdio'
-            ? {
-                args: this.params.args,
-                command: this.params.command,
-                type: this.params.type,
-              }
-            : {
-                type: this.params.type,
-              },
+        params: {
+          args: this.params.args,
+          command: this.params.command,
+          type: this.params.type,
+        },
         step: 'mcp_connect',
       });
     }

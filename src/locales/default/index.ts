@@ -10,6 +10,7 @@ import electron from './electron';
 import error from './error';
 import file from './file';
 import hotkey from './hotkey';
+import image from './image';
 import knowledgeBase from './knowledgeBase';
 import metadata from './metadata';
 import migration from './migration';
@@ -39,6 +40,7 @@ const resources = {
   error,
   file,
   hotkey,
+  image,
   knowledgeBase,
   metadata,
   migration,

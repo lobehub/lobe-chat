@@ -128,9 +128,12 @@ export default class BrowserManager {
    */
   initializeBrowsers() {
     logger.info('Initializing all browsers');
-    Object.values(appBrowsers).forEach((browser) => {
+    Object.values(appBrowsers).forEach((browser: BrowserWindowOpts) => {
       logger.debug(`Initializing browser: ${browser.identifier}`);
-      this.retrieveOrInitialize(browser);
+
+      if (browser.keepAlive) {
+        this.retrieveOrInitialize(browser);
+      }
     });
   }
 

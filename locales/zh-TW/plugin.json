@@ -57,11 +57,27 @@
       }
     },
     "mcp": {
+      "advanced": {
+        "title": "進階設定"
+      },
       "args": {
         "desc": "傳遞給執行命令的參數列表，一般在這裡輸入 MCP 伺服器名稱，或啟動腳本路徑",
         "label": "命令參數",
         "placeholder": "例如：--port 8080 --debug",
         "required": "請輸入啟動參數"
+      },
+      "auth": {
+        "bear": "API 金鑰",
+        "desc": "選擇 MCP 伺服器的認證方式",
+        "label": "認證類型",
+        "none": "無需認證",
+        "placeholder": "請選擇認證類型",
+        "token": {
+          "desc": "輸入你的 API 金鑰或 Bearer Token",
+          "label": "API 金鑰",
+          "placeholder": "sk-xxxxx",
+          "required": "請輸入認證令牌"
+        }
       },
       "avatar": {
         "label": "插件圖示"
@@ -89,6 +105,11 @@
         "keyRequired": "欄位鍵不能為空",
         "label": "MCP Server 環境變數",
         "stringifyError": "無法序列化參數，請檢查參數格式"
+      },
+      "headers": {
+        "add": "新增一行",
+        "desc": "輸入請求標頭",
+        "label": "HTTP 標頭"
       },
       "identifier": {
         "desc": "為你的 MCP 插件指定一個名稱，需要使用英文字符",
@@ -269,6 +290,7 @@
       "showDetails": "查看詳情"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "授權驗證錯誤",
       "CONNECTION_FAILED": "連接失敗",
       "INITIALIZATION_TIMEOUT": "初始化逾時",
       "PROCESS_SPAWN_ERROR": "進程啟動失敗",

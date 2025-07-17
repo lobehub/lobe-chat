@@ -27,6 +27,14 @@ export interface CustomPluginParams {
     command?: string;
     type: 'http' | 'stdio';
     url?: string;
+    // 新增认证配置支持
+    auth?: {
+      type: 'none' | 'bearer' | 'oauth2';
+      token?: string; // Bearer Token
+      accessToken?: string; // OAuth2 Access Token
+    };
+    // 新增 headers 配置支持
+    headers?: Record<string, string>;
   };
   avatar?: string;
   description?: string;

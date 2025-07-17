@@ -57,11 +57,27 @@
       }
     },
     "mcp": {
+      "advanced": {
+        "title": "Erweiterte Einstellungen"
+      },
       "args": {
         "desc": "Liste der Parameter, die an den auszuführenden Befehl übergeben werden, normalerweise hier den MCP-Servernamen oder den Pfad zum Startskript eingeben",
         "label": "Befehlsparameter",
         "placeholder": "Zum Beispiel: mcp-hello-world",
         "required": "Bitte geben Sie die Startparameter ein"
+      },
+      "auth": {
+        "bear": "API-Schlüssel",
+        "desc": "Wählen Sie die Authentifizierungsmethode für den MCP-Server",
+        "label": "Authentifizierungstyp",
+        "none": "Keine Authentifizierung erforderlich",
+        "placeholder": "Bitte Authentifizierungstyp auswählen",
+        "token": {
+          "desc": "Geben Sie Ihren API-Schlüssel oder Bearer-Token ein",
+          "label": "API-Schlüssel",
+          "placeholder": "sk-xxxxx",
+          "required": "Bitte Authentifizierungs-Token eingeben"
+        }
       },
       "avatar": {
         "label": "Plugin-Icon"
@@ -89,6 +105,11 @@
         "keyRequired": "Feldschlüssel darf nicht leer sein",
         "label": "MCP-Server-Umgebungsvariablen",
         "stringifyError": "Parameter können nicht serialisiert werden, bitte überprüfen Sie das Parameterformat"
+      },
+      "headers": {
+        "add": "Neue Zeile hinzufügen",
+        "desc": "HTTP-Anforderungsheader eingeben",
+        "label": "HTTP-Header"
       },
       "identifier": {
         "desc": "Geben Sie Ihrem MCP-Plugin einen Namen, der englische Zeichen verwenden muss",
@@ -269,6 +290,7 @@
       "showDetails": "Details anzeigen"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "Autorisierungsfehler",
       "CONNECTION_FAILED": "Verbindung fehlgeschlagen",
       "INITIALIZATION_TIMEOUT": "Initialisierung zeitüberschritten",
       "PROCESS_SPAWN_ERROR": "Prozessstart fehlgeschlagen",

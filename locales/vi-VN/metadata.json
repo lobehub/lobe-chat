@@ -32,6 +32,10 @@
     "search": "Tìm kiếm",
     "title": "Khám Phá"
   },
+  "image": {
+    "description": "{{appName}} mang đến cho bạn trải nghiệm sử dụng GPT Image, Flux, Midjourney, Stable Diffusion tốt nhất",
+    "title": "Vẽ AI"
+  },
   "plugins": {
     "description": "Tìm kiếm, tạo biểu đồ, học thuật, tạo hình ảnh, tạo video, tạo giọng nói, quy trình tự động hóa, tùy chỉnh khả năng plugin ToolCall dành riêng cho ChatGPT / Claude",
     "title": "Thị trường plugin"

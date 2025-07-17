@@ -4,6 +4,7 @@ export interface ElectronMainStore {
   dataSyncConfig: DataSyncConfig;
   encryptedTokens: {
     accessToken?: string;
+    expiresAt?: number;
     refreshToken?: string;
   };
   locale: string;

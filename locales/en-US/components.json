@@ -68,6 +68,22 @@
   "GoBack": {
     "back": "Back"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "Click to Change Image"
+    },
+    "placeholder": {
+      "primary": "Add Image",
+      "secondary": "Click to Upload"
+    }
+  },
+  "KeyValueEditor": {
+    "addButton": "Add a row",
+    "deleteTooltip": "Delete",
+    "duplicateKeyError": "Key must be unique",
+    "keyPlaceholder": "Key",
+    "valuePlaceholder": "Value"
+  },
   "MaxTokenSlider": {
     "unlimited": "Unlimited"
   },
@@ -90,6 +106,25 @@
     "goToSettings": "Go to settings",
     "provider": "Provider",
     "title": "Model"
+  },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "Click to upload more"
+    },
+    "modal": {
+      "complete": "Done",
+      "newFileIndicator": "New",
+      "selectImageToPreview": "Please select an image to preview",
+      "title": "Manage Images ({{count}})",
+      "upload": "Upload Images"
+    },
+    "placeholder": {
+      "primary": "Click to upload images",
+      "secondary": "Supports multiple image selection"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} uploaded"
+    }
   },
   "OllamaSetupGuide": {
     "action": {

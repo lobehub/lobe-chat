@@ -2,6 +2,250 @@
 
 # Changelog
 
+## [Version 1.100.0](https://github.com/lobehub/lobe-chat/compare/v1.99.6...v1.100.0)
+
+<sup>Released on **2025-07-17**</sup>
+
+#### ✨ Features
+
+- **misc**: Refactor desktop oauth and use JWTs token to support remote chat.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Refactor desktop oauth and use JWTs token to support remote chat, closes [#8446](https://github.com/lobehub/lobe-chat/issues/8446) ([054ca5f](https://github.com/lobehub/lobe-chat/commit/054ca5f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.99.6](https://github.com/lobehub/lobe-chat/compare/v1.99.5...v1.99.6)
+
+<sup>Released on **2025-07-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Desktop local db can't upload image.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Desktop local db can't upload image, closes [#8459](https://github.com/lobehub/lobe-chat/issues/8459) ([25bfc80](https://github.com/lobehub/lobe-chat/commit/25bfc80))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.99.5](https://github.com/lobehub/lobe-chat/compare/v1.99.4...v1.99.5)
+
+<sup>Released on **2025-07-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix page error when url is not defined in web search plugin.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix page error when url is not defined in web search plugin, closes [#8441](https://github.com/lobehub/lobe-chat/issues/8441) ([a55b65b](https://github.com/lobehub/lobe-chat/commit/a55b65b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.99.4](https://github.com/lobehub/lobe-chat/compare/v1.99.3...v1.99.4)
+
+<sup>Released on **2025-07-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix apikey issue on server log.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix apikey issue on server log, closes [#8457](https://github.com/lobehub/lobe-chat/issues/8457) ([43be2d1](https://github.com/lobehub/lobe-chat/commit/43be2d1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.99.3](https://github.com/lobehub/lobe-chat/compare/v1.99.2...v1.99.3)
+
+<sup>Released on **2025-07-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Chat model list should not show image model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Chat model list should not show image model, closes [#8448](https://github.com/lobehub/lobe-chat/issues/8448) ([2bb1506](https://github.com/lobehub/lobe-chat/commit/2bb1506))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.99.2](https://github.com/lobehub/lobe-chat/compare/v1.99.1...v1.99.2)
+
+<sup>Released on **2025-07-15**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Some ai image generation feedback issues.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Some ai image generation feedback issues, closes [#8440](https://github.com/lobehub/lobe-chat/issues/8440) ([bc41329](https://github.com/lobehub/lobe-chat/commit/bc41329))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.99.1](https://github.com/lobehub/lobe-chat/compare/v1.99.0...v1.99.1)
+
+<sup>Released on **2025-07-15**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.99.0](https://github.com/lobehub/lobe-chat/compare/v1.98.2...v1.99.0)
+
+<sup>Released on **2025-07-14**</sup>
+
+#### ✨ Features
+
+- **plugin**: Support Streamable HTTP MCP Server Auth.
+- **misc**: support AI Image.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **plugin**: Support Streamable HTTP MCP Server Auth, closes [#8425](https://github.com/lobehub/lobe-chat/issues/8425) ([853a09a](https://github.com/lobehub/lobe-chat/commit/853a09a))
+- **misc**: support AI Image, closes [#8312](https://github.com/lobehub/lobe-chat/issues/8312) ([095de57](https://github.com/lobehub/lobe-chat/commit/095de57))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.98.2](https://github.com/lobehub/lobe-chat/compare/v1.98.1...v1.98.2)
+
+<sup>Released on **2025-07-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#8422](https://github.com/lobehub/lobe-chat/issues/8422) ([5b89ec8](https://github.com/lobehub/lobe-chat/commit/5b89ec8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.98.1](https://github.com/lobehub/lobe-chat/compare/v1.98.0...v1.98.1)
+
+<sup>Released on **2025-07-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix discover translation.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix discover translation, closes [#8423](https://github.com/lobehub/lobe-chat/issues/8423) ([15ae35c](https://github.com/lobehub/lobe-chat/commit/15ae35c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.98.0](https://github.com/lobehub/lobe-chat/compare/v1.97.17...v1.98.0)
 
 <sup>Released on **2025-07-13**</sup>

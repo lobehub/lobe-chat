@@ -101,7 +101,10 @@
   "waitingOAuth": {
     "cancel": "Cancel",
     "description": "The browser has opened the authorization page, please complete the authorization in the browser",
+    "error": "Authorization failed: {{error}}",
+    "errorTitle": "Authorization Connection Failed",
     "helpText": "If the browser did not open automatically, please click cancel and try again",
+    "retry": "Retry",
     "title": "Waiting for Authorization Connection"
   }
 }

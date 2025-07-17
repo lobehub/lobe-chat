@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "서비스 요청이 실패했습니다. 구성을 확인하거나 다시 시도해주세요."
   },
+  "testConnectionFailed": "연결 테스트 실패: {{error}}",
   "tts": {
     "responseError": "서비스 요청이 실패했습니다. 구성을 확인하거나 다시 시도해주세요."
   },
@@ -130,6 +131,7 @@
     "addProxyUrl": "OpenAI 프록시 주소 추가(선택 사항)",
     "apiKey": {
       "description": "{{name}} API 키를 입력하면 세션을 시작할 수 있습니다.",
+      "imageGenerationDescription": "{{name}} API 키를 입력하면 생성이 시작됩니다",
       "title": "사용자 정의 {{name}} API 키 사용"
     },
     "closeMessage": "알림 닫기",

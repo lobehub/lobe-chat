@@ -68,6 +68,22 @@
   "GoBack": {
     "back": "بازگشت"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "برای تغییر تصویر کلیک کنید"
+    },
+    "placeholder": {
+      "primary": "افزودن تصویر",
+      "secondary": "برای بارگذاری کلیک کنید"
+    }
+  },
+  "KeyValueEditor": {
+    "addButton": "افزودن یک ردیف",
+    "deleteTooltip": "حذف",
+    "duplicateKeyError": "نام کلید باید یکتا باشد",
+    "keyPlaceholder": "کلید",
+    "valuePlaceholder": "مقدار"
+  },
   "MaxTokenSlider": {
     "unlimited": "نامحدود"
   },
@@ -90,6 +106,25 @@
     "goToSettings": "به تنظیمات بروید",
     "provider": "ارائه‌دهنده",
     "title": "مدل"
+  },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "برای آپلود بیشتر کلیک کنید"
+    },
+    "modal": {
+      "complete": "تکمیل",
+      "newFileIndicator": "جدید",
+      "selectImageToPreview": "لطفاً تصویری برای پیش‌نمایش انتخاب کنید",
+      "title": "مدیریت تصاویر ({{count}})",
+      "upload": "آپلود تصویر"
+    },
+    "placeholder": {
+      "primary": "برای آپلود تصویر کلیک کنید",
+      "secondary": "انتخاب چندین تصویر پشتیبانی می‌شود"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} بارگذاری شده"
+    }
   },
   "OllamaSetupGuide": {
     "action": {

@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "Serviceverzoek mislukt. Controleer de configuratie of probeer opnieuw"
   },
+  "testConnectionFailed": "Verbindingstest mislukt: {{error}}",
   "tts": {
     "responseError": "Serviceverzoek mislukt. Controleer de configuratie of probeer opnieuw"
   },
@@ -130,6 +131,7 @@
     "addProxyUrl": "Voeg een optionele OpenAI-proxy-URL toe",
     "apiKey": {
       "description": "Voer uw {{name}} API-sleutel in om de sessie te starten.",
+      "imageGenerationDescription": "Voer je {{name}} API-sleutel in om te beginnen met genereren",
       "title": "Gebruik aangepaste {{name}} API-sleutel"
     },
     "closeMessage": "Sluit bericht",

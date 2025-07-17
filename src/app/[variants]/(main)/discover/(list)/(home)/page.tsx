@@ -10,9 +10,9 @@ export const generateMetadata = async (props: DynamicLayoutProps) => {
   const { locale, t } = await parsePageMetaProps(props);
   return metadataModule.generate({
     alternate: true,
-    description: t('discover.home.description'),
+    description: t('discover.description'),
     locale,
-    title: t('discover.home.title'),
+    title: t('discover.title'),
     url: '/discover',
   });
 };
@@ -21,9 +21,9 @@ const Page = async (props: DynamicLayoutProps) => {
   const { locale, t, isMobile } = await parsePageMetaProps(props);
 
   const ld = ldModule.generate({
-    description: t('discover.home.description'),
+    description: t('discover.description'),
     locale,
-    title: t('discover.home.title'),
+    title: t('discover.title'),
     url: '/discover',
     webpage: {
       enable: true,

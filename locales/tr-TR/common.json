@@ -183,6 +183,7 @@
   },
   "fullscreen": "Tam Ekran Modu",
   "historyRange": "Geçmiş Aralığı",
+  "import": "İçe aktar",
   "importData": "Veri İçe Aktar",
   "importModal": {
     "error": {
@@ -324,6 +325,7 @@
     }
   },
   "tab": {
+    "aiImage": "Yapay Zeka Resim",
     "chat": "Chat",
     "discover": "Keşfet",
     "files": "Dosyalar",

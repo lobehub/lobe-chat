@@ -57,11 +57,27 @@
       }
     },
     "mcp": {
+      "advanced": {
+        "title": "高级设置"
+      },
       "args": {
         "desc": "传递给执行命令的参数列表，一般在这里输入 MCP 服务器名称，或启动脚本路径",
         "label": "命令参数",
         "placeholder": "例如：mcp-hello-world",
         "required": "请输入启动参数"
+      },
+      "auth": {
+        "bear": "API Key",
+        "desc": "选择 MCP 服务器的认证方式",
+        "label": "认证类型",
+        "none": "无需认证",
+        "placeholder": "请选择认证类型",
+        "token": {
+          "desc": "输入你的 API Key 或 Bearer Token",
+          "label": "API Key",
+          "placeholder": "sk-xxxxx",
+          "required": "请输入认证令牌"
+        }
       },
       "avatar": {
         "label": "插件图标"
@@ -89,6 +105,11 @@
         "keyRequired": "字段键不能为空",
         "label": "MCP Server 环境变量",
         "stringifyError": "无法序列化参数，请检查参数格式"
+      },
+      "headers": {
+        "add": "新增一行",
+        "desc": "输入请求头",
+        "label": "HTTP Headers"
       },
       "identifier": {
         "desc": "为你的 MCP 插件指定一个名称，需要使用英文字符",
@@ -269,6 +290,7 @@
       "showDetails": "查看详情"
     },
     "errorTypes": {
+      "AUTHORIZATION_ERROR": "授权验证错误",
       "CONNECTION_FAILED": "连接失败",
       "INITIALIZATION_TIMEOUT": "初始化超时",
       "PROCESS_SPAWN_ERROR": "进程启动失败",

@@ -216,7 +216,7 @@ class MCPService {
       log(`New client initialized and cached for key: ${key.slice(0, 20)}`);
       return client;
     } catch (error) {
-      console.error(`Failed to initialize MCP client for key ${key}:`, error);
+      console.error(`Failed to initialize MCP client:`, error);
 
       // 保留完整的错误信息，特别是详细的 stderr 输出
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -266,8 +266,26 @@ class MCPService {
     identifier: string,
     url: string,
     metadata?: CustomPluginMetadata,
+    auth?: {
+      accessToken?: string;
+      token?: string;
+      type: 'none' | 'bearer' | 'oauth2';
+    },
+    headers?: Record<string, string>,
   ): Promise<LobeChatPluginManifest> {
-    const tools = await this.listTools({ name: identifier, type: 'http', url }); // Get client using params
+    const mcpParams = { name: identifier, type: 'http' as const, url };
+
+    // 如果有认证信息，添加到参数中
+    if (auth) {
+      (mcpParams as any).auth = auth;
+    }
+
+    // 如果有 headers 信息，添加到参数中
+    if (headers) {
+      (mcpParams as any).headers = headers;
+    }
+
+    const tools = await this.listTools(mcpParams);
 
     return {
       api: tools,

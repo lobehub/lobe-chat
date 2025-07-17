@@ -151,6 +151,7 @@ export default {
   stt: {
     responseError: '服务请求失败，请检查配置或重试',
   },
+  testConnectionFailed: '测试连接失败：{{error}}',
   tts: {
     responseError: '服务请求失败，请检查配置或重试',
   },
@@ -158,6 +159,7 @@ export default {
     addProxyUrl: '添加 OpenAI 代理地址（可选）',
     apiKey: {
       description: '输入你的 {{name}} API Key 即可开始会话',
+      imageGenerationDescription: '输入你的 {{name}} API Key 即可开始生成',
       title: '使用自定义 {{name}} API Key',
     },
     closeMessage: '关闭提示',

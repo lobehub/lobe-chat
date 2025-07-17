@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "Service request failed, please check the configuration or try again"
   },
+  "testConnectionFailed": "Test connection failed: {{error}}",
   "tts": {
     "responseError": "Service request failed, please check the configuration or try again"
   },
@@ -130,6 +131,7 @@
     "addProxyUrl": "Add OpenAI proxy URL (optional)",
     "apiKey": {
       "description": "Enter your {{name}} API Key to start the session",
+      "imageGenerationDescription": "Enter your {{name}} API Key to start generating",
       "title": "Use custom {{name}} API Key"
     },
     "closeMessage": "Close message",

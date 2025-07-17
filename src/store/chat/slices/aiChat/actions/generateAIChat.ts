@@ -24,7 +24,7 @@ import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { ChatMessage, CreateMessageParams, SendMessageParams } from '@/types/message';
 import { ChatImageItem } from '@/types/message/image';
 import { MessageSemanticSearchChunk } from '@/types/rag';
-import { setNamespace } from '@/utils/storeDebug';
+import { Action, setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors, topicSelectors } from '../../../selectors';
 
@@ -104,7 +104,7 @@ export interface AIGenerateAction {
   internal_toggleChatLoading: (
     loading: boolean,
     id?: string,
-    action?: string,
+    action?: Action,
   ) => AbortController | undefined;
   /**
    * Controls the streaming state of tool calling processes, updating the UI accordingly
@@ -383,7 +383,7 @@ export const generateAIChat: StateCreator<
       const abortController = get().internal_toggleChatLoading(
         true,
         assistantId,
-        n('generateMessage(start)', { messageId: assistantId, messages }) as string,
+        n('generateMessage(start)', { messageId: assistantId, messages }),
       );
 
       get().internal_toggleSearchWorkflow(true, assistantId);
@@ -434,7 +434,7 @@ export const generateAIChat: StateCreator<
       get().internal_toggleChatLoading(
         false,
         assistantId,
-        n('generateMessage(start)', { messageId: assistantId, messages }) as string,
+        n('generateMessage(start)', { messageId: assistantId, messages }),
       );
       get().internal_toggleSearchWorkflow(false, assistantId);
 
@@ -502,7 +502,7 @@ export const generateAIChat: StateCreator<
     const abortController = internal_toggleChatLoading(
       true,
       messageId,
-      n('generateMessage(start)', { messageId, messages }) as string,
+      n('generateMessage(start)', { messageId, messages }),
     );
 
     const agentConfig = agentSelectors.currentAgentConfig(getAgentStoreState());

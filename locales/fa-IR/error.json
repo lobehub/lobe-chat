@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "درخواست سرویس ناموفق بود، لطفاً تنظیمات را بررسی کرده و دوباره تلاش کنید."
   },
+  "testConnectionFailed": "اتصال آزمایشی ناموفق بود: {{error}}",
   "tts": {
     "responseError": "درخواست سرویس ناموفق بود، لطفاً تنظیمات را بررسی کرده و دوباره تلاش کنید."
   },
@@ -130,6 +131,7 @@
     "addProxyUrl": "افزودن آدرس پروکسی OpenAI (اختیاری)",
     "apiKey": {
       "description": "API Key {{name}} خود را وارد کنید تا مکالمه را شروع کنید",
+      "imageGenerationDescription": "برای شروع تولید، کلید API {{name}} خود را وارد کنید",
       "title": "استفاده از API Key سفارشی {{name}}"
     },
     "closeMessage": "بستن پیام",

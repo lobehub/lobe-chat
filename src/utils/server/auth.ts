@@ -49,3 +49,25 @@ export const extractBearerToken = (authHeader?: string | null): string | null =>
   // Return the token only if it's not an empty string after trimming
   return token || null;
 };
+
+/**
+ * 从 Oidc-Auth header 中提取 JWT token
+ * @param authHeader - Oidc-Auth header 值 (例如 "Oidc-Auth xxx")
+ * @returns JWT token 或 null（如果授权头无效或不存在）
+ */
+export const extractOidcAuthToken = (authHeader?: string | null): string | null => {
+  if (!authHeader) return null;
+
+  const trimmedHeader = authHeader.trim(); // Trim leading/trailing spaces
+
+  // Check if it starts with 'Oidc-Auth ' (case-insensitive check)
+  if (!trimmedHeader.toLowerCase().startsWith('oidc-auth ')) {
+    return null;
+  }
+
+  // Extract the token part after "Oidc-Auth " and trim potential spaces around the token itself
+  const token = trimmedHeader.slice(10).trim(); // 'Oidc-Auth ' length is 10
+
+  // Return the token only if it's not an empty string after trimming
+  return token || null;
+};

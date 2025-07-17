@@ -1,8 +1,9 @@
 ---
-description: 
-globs: 
+description:
+globs:
 alwaysApply: true
 ---
+
 # LobeChat Cursor Rules System Guide
 
 This document explains how the LobeChat project's Cursor rules system works and serves as an index for manually accessible rules.
@@ -14,22 +15,26 @@ This document explains how the LobeChat project's Cursor rules system works and 
 ## 📚 Four Ways to Access Rules
 
 ### 1. **Always Applied Rules** - `always_applied_workspace_rules`
+
 - **What**: Core project guidelines that are always active
 - **Content**: Project tech stack, basic coding standards, output formatting rules
 - **Access**: No tools needed - automatically provided in every conversation
 
 ### 2. **Dynamic Context Rules** - `cursor_rules_context`
+
 - **What**: Rules automatically matched based on files referenced in the conversation
 - **Trigger**: Only when user **explicitly @ mentions files** or **opens files in Cursor**
 - **Content**: May include brief descriptions or full rule content, depending on relevance
 - **Access**: No tools needed - automatically updated when files are referenced
 
 ### 3. **Agent Requestable Rules** - `agent_requestable_workspace_rules`
+
 - **What**: Detailed operational guides that can be requested on-demand
 - **Access**: Use `fetch_rules` tool with rule names
 - **Examples**: `debug`, `i18n/i18n`, `code-review`
 
 ### 4. **Manual Rules Index** - This file + `read_file`
+
 - **What**: Additional rules not covered by the above mechanisms
 - **Why needed**: Cursor's rule system only supports "agent request" or "auto attach" modes
 - **Access**: Use `read_file` tool to read specific `.mdc` files
@@ -47,10 +52,13 @@ Use `read_file` to access rules from the index below when:
 The following rules are available via `read_file` from the `.cursor/rules/` directory:
 
 - `backend-architecture.mdc` – Backend layer architecture and design guidelines
-- `zustand-action-patterns.mdc` – Recommended patterns for organizing Zustand actions
-- `zustand-slice-organization.mdc` – Best practices for structuring Zustand slices
+- `define-database-model.mdc` – Database model definition guidelines
 - `drizzle-schema-style-guide.mdc` – Style guide for defining Drizzle ORM schemas
 - `react-component.mdc` – React component style guide and conventions
+- `testing-guide.mdc` – Comprehensive testing guide for Vitest environment
+- `typescript.mdc` – TypeScript code style guide
+- `zustand-action-patterns.mdc` – Recommended patterns for organizing Zustand actions
+- `zustand-slice-organization.mdc` – Best practices for structuring Zustand slices
 
 ## ❌ Common Misunderstandings to Avoid
 
@@ -62,7 +70,7 @@ The following rules are available via `read_file` from the `.cursor/rules/` dire
 
 ```
 1. Start with always_applied_workspace_rules (automatic)
-2. Check cursor_rules_context for auto-matched rules (automatic) 
+2. Check cursor_rules_context for auto-matched rules (automatic)
 3. If you need specific guides: fetch_rules (manual)
 4. If you identify gaps: consult this index → read_file (manual)
 ```
@@ -70,7 +78,8 @@ The following rules are available via `read_file` from the `.cursor/rules/` dire
 ## Example Decision Flow
 
 **Scenario**: Working on a new Zustand store slice
+
 1. Follow always_applied_workspace_rules ✅
-2. If store files were @ mentioned → use cursor_rules_context rules ✅  
+2. If store files were @ mentioned → use cursor_rules_context rules ✅
 3. Need detailed Zustand guidance → `read_file('.cursor/rules/zustand-slice-organization.mdc')` ✅
 4. All rules apply simultaneously - no conflicts ✅

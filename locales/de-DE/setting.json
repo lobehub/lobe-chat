@@ -484,6 +484,11 @@
       "placeholder": "Bitte benutzerdefinierte Eingabe eingeben",
       "title": "Benutzerdefinierte Eingabe"
     },
+    "generationTopic": {
+      "label": "Modell zur Benennung von KI-Malthemen",
+      "modelDesc": "Modell zur automatischen Benennung von Themen für KI-Malerei",
+      "title": "Automatische Benennung von KI-Malthemen"
+    },
     "helpInfo": "Beim Erstellen eines neuen Assistenten werden die Standardassistenteneinstellungen als Voreinstellungen verwendet.",
     "historyCompress": {
       "label": "Gesprächshistorienmodell",

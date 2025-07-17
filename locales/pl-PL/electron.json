@@ -101,7 +101,10 @@
   "waitingOAuth": {
     "cancel": "Anuluj",
     "description": "Przeglądarka otworzyła stronę autoryzacji, proszę zakończyć autoryzację w przeglądarce",
+    "error": "Autoryzacja nie powiodła się: {{error}}",
+    "errorTitle": "Nie udało się połączyć z autoryzacją",
     "helpText": "Jeśli przeglądarka nie otworzyła się automatycznie, kliknij anuluj i spróbuj ponownie",
+    "retry": "Spróbuj ponownie",
     "title": "Oczekiwanie na połączenie autoryzacyjne"
   }
 }

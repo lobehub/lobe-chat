@@ -1,21 +1,20 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
-import { Alert, FormItem, Input, TextArea } from '@lobehub/ui';
-import { Button, Divider, Form, FormInstance } from 'antd';
+import { Alert, FormItem, Input, InputPassword } from '@lobehub/ui';
+import { Button, Divider, Form, FormInstance, Radio } from 'antd';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import KeyValueEditor from '@/components/KeyValueEditor';
 import MCPStdioCommandInput from '@/components/MCPStdioCommandInput';
-import { isDesktop } from '@/const/version';
 import { mcpService } from '@/services/mcp';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
-import { electronStylish } from '@/styles/electron';
 
 import ArgsInput from './ArgsInput';
-import EnvEditor from './EnvEditor';
+import CollapsibleSection from './CollapsibleSection';
 import MCPTypeSelect from './MCPTypeSelect';
-import { parseMcpInput } from './utils';
+import QuickImportSection from './QuickImportSection';
 
 interface MCPManifestFormProps {
   form: FormInstance;
@@ -28,81 +27,20 @@ const STDIO_ARGS = ['customParams', 'mcp', 'args'];
 const STDIO_ENV = ['customParams', 'mcp', 'env'];
 const MCP_TYPE = ['customParams', 'mcp', 'type'];
 const DESC_TYPE = ['customParams', 'description'];
+// 新增认证相关常量
+const AUTH_TYPE = ['customParams', 'mcp', 'auth', 'type'];
+const AUTH_TOKEN = ['customParams', 'mcp', 'auth', 'token'];
+// 新增 headers 相关常量
+const HEADERS = ['customParams', 'mcp', 'headers'];
 
 const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
   const { t } = useTranslation('plugin');
   const mcpType = Form.useWatch(MCP_TYPE, form);
+  const authType = Form.useWatch(AUTH_TYPE, form);
 
   const pluginIds = useToolStore(pluginSelectors.storeAndInstallPluginsIdList);
   const [isTesting, setIsTesting] = useState(false);
   const [connectionError, setConnectionError] = useState<string | null>(null);
-  const [isImportModalVisible, setIsImportModalVisible] = useState(false);
-  const [jsonInput, setJsonInput] = useState('');
-  const [importError, setImportError] = useState<string | null>(null);
-
-  const handleImportConfirm = () => {
-    setImportError(null); // Clear previous import error
-    setConnectionError(null); // Clear connection error
-
-    const value = jsonInput.trim(); // Use the text area input
-    if (!value) {
-      setImportError(t('dev.mcp.quickImportError.empty'));
-      return;
-    }
-
-    // Use the existing parseMcpInput function
-    const parseResult = parseMcpInput(value);
-
-    // Handle parsing errors from parseMcpInput
-    if (parseResult.status === 'error') {
-      // Assuming parseMcpInput returns an error message or code in parseResult
-      // We might need a more specific error message based on parseResult.error
-      setImportError(parseResult.errorCode);
-      return;
-    }
-
-    if (parseResult.status === 'noop') {
-      setImportError(t('dev.mcp.quickImportError.invalidJson'));
-      return;
-    }
-
-    // Extract identifier and mcpConfig from the successful parse result
-    const { identifier, mcpConfig } = parseResult;
-
-    // Check for desktop requirement for stdio
-    if (!isDesktop && mcpConfig.type === 'stdio') {
-      setImportError(t('dev.mcp.stdioNotSupported'));
-      return;
-    }
-
-    // Check for duplicate identifier (only in create mode)
-    if (!isEditMode && pluginIds.includes(identifier)) {
-      // Update form fields even if duplicate, so user sees the pasted values
-      form.setFieldsValue({
-        customParams: { mcp: mcpConfig },
-        identifier: identifier,
-      });
-      // Trigger validation to show Form.Item error
-      form.validateFields(['identifier']);
-      setIsImportModalVisible(false); // Close modal even on duplicate error
-      setJsonInput(''); // Clear modal input
-      return;
-    }
-
-    // All checks passed, fill the form
-    form.setFieldsValue({
-      customParams: { mcp: mcpConfig },
-      identifier: identifier,
-    });
-
-    // Clear potential old validation error on identifier field
-    form.setFields([{ errors: [], name: 'identifier' }]);
-
-    // Clear modal state and close (or rather, hide the import UI)
-    setIsImportModalVisible(false);
-    // setJsonInput(''); // Keep input for potential edits?
-    setImportError(null);
-  };
 
   const handleTestConnection = async () => {
     setIsTesting(true);
@@ -111,9 +49,20 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
     // Manually trigger validation for fields needed for the test
     let isValid = false;
     try {
-      await form.validateFields([
+      const fieldsToValidate = [
         ...(mcpType === 'http' ? [HTTP_URL_KEY] : [STDIO_COMMAND, STDIO_ARGS]),
-      ]);
+      ];
+
+      // 如果是 HTTP 类型，还需要验证认证字段
+      if (mcpType === 'http') {
+        fieldsToValidate.push(AUTH_TYPE);
+        const currentAuthType = form.getFieldValue(AUTH_TYPE);
+        if (currentAuthType === 'bearer') {
+          fieldsToValidate.push(AUTH_TOKEN);
+        }
+      }
+
+      await form.validateFields(fieldsToValidate);
       isValid = true;
     } catch {
       // no-thing
@@ -135,9 +84,12 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
 
       if (mcp.type === 'http') {
         if (!mcp.url) throw new Error(t('dev.mcp.url.required'));
-        data = await mcpService.getStreamableMcpServerManifest(id, mcp.url, {
-          avatar,
-          description,
+        data = await mcpService.getStreamableMcpServerManifest({
+          auth: mcp.auth,
+          headers: mcp.headers,
+          identifier: id,
+          metadata: { avatar, description },
+          url: mcp.url,
         });
       } else if (mcp.type === 'stdio') {
         if (!mcp.command) throw new Error(t('dev.mcp.command.required'));
@@ -173,67 +125,15 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
 
   return (
     <>
-      {isImportModalVisible ? (
-        <Flexbox gap={8}>
-          {importError && (
-            <Alert message={importError} showIcon style={{ marginBottom: 8 }} type="error" />
-          )}
-          <TextArea
-            autoSize={{ maxRows: 15, minRows: 10 }}
-            onChange={(e) => {
-              setJsonInput(e.target.value);
-              if (importError) setImportError(null);
-            }}
-            placeholder={`{
-  "mcpServers": {
-    "github": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-github"
-      ],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "<your-api-key>"
-      }
-    }
-  }
-}`}
-            value={jsonInput}
-          />
-          <Flexbox horizontal justify={'space-between'}>
-            <Button
-              className={electronStylish.nodrag}
-              onClick={() => {
-                setIsImportModalVisible(false);
-              }}
-              size={'small'}
-            >
-              取消
-            </Button>
-            <Button onClick={handleImportConfirm} size={'small'} type={'primary'}>
-              导入
-            </Button>
-          </Flexbox>
-        </Flexbox>
-      ) : (
-        <div>
-          <Button
-            block // Make button full width
-            onClick={() => {
-              setImportError(null); // Clear previous errors when opening
-              setIsImportModalVisible(true);
-            }}
-            style={{ marginBottom: 16 }} // Add some spacing
-            type="dashed"
-          >
-            {t('dev.mcp.quickImport')}
-          </Button>
-        </div>
-      )}
-
+      <QuickImportSection
+        form={form}
+        isEditMode={isEditMode}
+        onClearConnectionError={() => setConnectionError(null)}
+      />
       <Form form={form} layout={'vertical'}>
         <Flexbox>
           <Form.Item
+            initialValue={'http'}
             label={t('dev.mcp.type.title')}
             name={['customParams', 'mcp', 'type']}
             rules={[{ required: true }]}
@@ -268,26 +168,67 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
             <Input placeholder={t('dev.mcp.identifier.placeholder')} />
           </FormItem>
           {mcpType === 'http' && (
-            <FormItem
-              desc={t('dev.mcp.url.desc')}
-              label={t('dev.mcp.url.label')}
-              name={HTTP_URL_KEY}
-              rules={[
-                { message: t('dev.mcp.url.required'), required: true },
-                {
-                  message: t('dev.mcp.url.invalid'),
-                  validator: async (_, value) => {
-                    if (!value) return true;
+            <>
+              <FormItem
+                desc={t('dev.mcp.url.desc')}
+                label={t('dev.mcp.url.label')}
+                name={HTTP_URL_KEY}
+                rules={[
+                  { message: t('dev.mcp.url.required'), required: true },
+                  {
+                    message: t('dev.mcp.url.invalid'),
+                    validator: async (_, value) => {
+                      if (!value) return true;
 
-                    // 如果不是 URL 就会自动抛出错误
-                    new URL(value);
+                      // 如果不是 URL 就会自动抛出错误
+                      new URL(value);
+                    },
                   },
-                },
-              ]}
-              tag={'url'}
-            >
-              <Input placeholder="https://mcp.higress.ai/mcp-github/xxxxx" />
-            </FormItem>
+                ]}
+                tag={'url'}
+              >
+                <Input placeholder="https://mcp.higress.ai/mcp-github/xxxxx" />
+              </FormItem>
+              <FormItem
+                desc={t('dev.mcp.auth.desc')}
+                initialValue={'none'}
+                label={t('dev.mcp.auth.label')}
+                name={AUTH_TYPE}
+              >
+                <Radio.Group
+                  options={[
+                    {
+                      label: t('dev.mcp.auth.none'),
+                      value: 'none',
+                    },
+                    {
+                      label: t('dev.mcp.auth.bear'),
+                      value: 'bearer',
+                    },
+                  ]}
+                  style={{ width: '100%' }}
+                />
+              </FormItem>
+              {authType === 'bearer' && (
+                <FormItem
+                  desc={t('dev.mcp.auth.token.desc')}
+                  label={t('dev.mcp.auth.token.label')}
+                  name={AUTH_TOKEN}
+                  rules={[{ message: t('dev.mcp.auth.token.required'), required: true }]}
+                >
+                  <InputPassword placeholder={t('dev.mcp.auth.token.placeholder')} />
+                </FormItem>
+              )}
+              <CollapsibleSection title={t('dev.mcp.advanced.title')}>
+                <FormItem
+                  desc={t('dev.mcp.headers.desc')}
+                  label={t('dev.mcp.headers.label')}
+                  name={HEADERS}
+                >
+                  <KeyValueEditor addButtonText={t('dev.mcp.headers.add')} />
+                </FormItem>
+              </CollapsibleSection>
+            </>
           )}
           {mcpType === 'stdio' && (
             <>
@@ -315,7 +256,10 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
                 name={STDIO_ENV}
                 tag={'env'}
               >
-                <EnvEditor />
+                <KeyValueEditor
+                  addButtonText={t('dev.mcp.env.add')}
+                  keyPlaceholder="VARIABLE_NAME"
+                />
               </FormItem>
             </>
           )}

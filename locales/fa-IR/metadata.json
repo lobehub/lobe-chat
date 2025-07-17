@@ -32,6 +32,10 @@
     "search": "جستجو",
     "title": "کشف"
   },
+  "image": {
+    "description": "{{appName}} بهترین تجربه استفاده از GPT Image، Flux، Midjourney و Stable Diffusion را برای شما به ارمغان می‌آورد",
+    "title": "نقاشی هوش مصنوعی"
+  },
   "plugins": {
     "description": "جستجو، تولید نمودار، علمی، تولید تصویر، تولید ویدئو، تولید صدا، جریان کاری خودکار، سفارشی‌سازی قابلیت‌های ToolCall اختصاصی ChatGPT / Claude",
     "title": "بازار افزونه‌ها"

@@ -12,7 +12,8 @@ export const LobeHunyuanAI = createOpenAICompatibleRuntime({
   chatCompletion: {
     handlePayload: (payload) => {
       // eslint-disable-next-line unused-imports/no-unused-vars, @typescript-eslint/no-unused-vars
-      const { enabledSearch, frequency_penalty, model, presence_penalty, thinking, ...rest } = payload;
+      const { enabledSearch, frequency_penalty, model, presence_penalty, thinking, ...rest } =
+        payload;
 
       return {
         ...rest,
@@ -30,11 +31,8 @@ export const LobeHunyuanAI = createOpenAICompatibleRuntime({
           search_info: true,
         }),
         ...(model === 'hunyuan-a13b' && {
-          enable_thinking: thinking?.type === 'enabled' 
-            ? true 
-            : thinking?.type === 'disabled' 
-              ? false 
-              : undefined
+          enable_thinking:
+            thinking?.type === 'enabled' ? true : thinking?.type === 'disabled' ? false : undefined,
         }),
       } as any;
     },

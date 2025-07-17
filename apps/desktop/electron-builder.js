@@ -25,6 +25,11 @@ const config = {
     artifactName: '${productName}-${version}.${ext}',
   },
   asar: true,
+  asarUnpack: [
+    // https://github.com/electron-userland/electron-builder/issues/9001#issuecomment-2778802044
+    '**/node_modules/sharp/**/*',
+    '**/node_modules/@img/**/*',
+  ],
   detectUpdateChannel: true,
   directories: {
     buildResources: 'build',

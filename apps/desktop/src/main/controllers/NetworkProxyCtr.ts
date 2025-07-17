@@ -135,7 +135,7 @@ export default class NetworkProxyCtr extends ControllerModule {
   /**
    * 应用初始代理设置
    */
-  async afterAppReady(): Promise<void> {
+  async beforeAppReady(): Promise<void> {
     try {
       // 获取存储的代理设置
       const networkProxy = this.app.storeManager.get(
