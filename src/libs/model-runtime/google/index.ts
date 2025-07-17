@@ -451,7 +451,10 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       .filter((message) => message.role !== 'function')
       .map(async (msg) => await this.convertOAIMessagesToGoogleMessage(msg, toolCallNameMap));
 
-    return Promise.all(pools);
+    const contents = await Promise.all(pools);
+    
+    // 筛除空消息: contents.parts must not be empty.
+    return contents.filter((content: Content) => content.parts && content.parts.length > 0);
   };
 
   private parseErrorMessage(message: string): {
