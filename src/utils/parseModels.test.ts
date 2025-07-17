@@ -305,6 +305,60 @@ describe('parseModelString', () => {
     });
   });
 
+  describe('FAL image models', () => {
+    it('should correctly parse FAL image model ids with slash and custom display names', () => {
+      const result = parseModelString(
+        '-all,+flux-kontext/dev=KontextDev,+flux-pro/kontext=KontextPro,+flux/schnell=Schnell,+imagen4/preview=Imagen4',
+      );
+      expect(result.add).toEqual([
+        {
+          id: 'flux-kontext/dev',
+          displayName: 'KontextDev',
+          abilities: {},
+          type: 'chat',
+        },
+        {
+          id: 'flux-pro/kontext',
+          displayName: 'KontextPro',
+          abilities: {},
+          type: 'chat',
+        },
+        {
+          id: 'flux/schnell',
+          displayName: 'Schnell',
+          abilities: {},
+          type: 'chat',
+        },
+        {
+          id: 'imagen4/preview',
+          displayName: 'Imagen4',
+          abilities: {},
+          type: 'chat',
+        },
+      ]);
+      expect(result.removeAll).toBe(true);
+      expect(result.removed).toEqual(['all']);
+    });
+
+    it('should correctly parse FAL image model ids with slash (no displayName)', () => {
+      const result = parseModelString('-all,+flux-kontext/dev,+flux-pro/kontext');
+      expect(result.add).toEqual([
+        {
+          id: 'flux-kontext/dev',
+          abilities: {},
+          type: 'chat',
+        },
+        {
+          id: 'flux-pro/kontext',
+          abilities: {},
+          type: 'chat',
+        },
+      ]);
+      expect(result.removeAll).toBe(true);
+      expect(result.removed).toEqual(['all']);
+    });
+  });
+
   describe('deployment name', () => {
     it('should have no deployment name', () => {
       const result = parseModelString('model1=Model 1', true);
