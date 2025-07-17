@@ -15,8 +15,8 @@ export const desktopRemoteRPCFetch = async (input: string, init?: RequestInit) =
 
   if (isSyncActive) {
     log('Using IPC proxy for tRPC request');
+    const url = input as string;
     try {
-      const url = input as string;
       const parsedUrl = new URL(url, window.location.origin);
       const urlPath = parsedUrl.pathname + parsedUrl.search;
       const method = init?.method?.toUpperCase() || 'GET';
@@ -32,7 +32,7 @@ export const desktopRemoteRPCFetch = async (input: string, init?: RequestInit) =
 
       const ipcResult = await dispatch('proxyTRPCRequest', params);
 
-      log('Received IPC proxy response:', { status: ipcResult.status });
+      log(`Received ${url} IPC proxy response:`, { status: ipcResult.status });
       const response = new Response(ipcResult.body, {
         headers: ipcResult.headers,
         status: ipcResult.status,
@@ -41,7 +41,7 @@ export const desktopRemoteRPCFetch = async (input: string, init?: RequestInit) =
 
       if (!response.ok) {
         console.warn(
-          '[lambda] IPC proxy response indicates an error:',
+          `[lambda] ${url} IPC proxy response indicates an error:`,
           response.status,
           response.statusText,
         );
@@ -49,7 +49,7 @@ export const desktopRemoteRPCFetch = async (input: string, init?: RequestInit) =
 
       return response;
     } catch (error) {
-      console.error('[lambda] Error during IPC proxy call:', error);
+      console.error(`[lambda] Error during ${url} IPC proxy call:`, error);
       return new Response(
         `IPC Proxy Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
         {

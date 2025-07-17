@@ -334,8 +334,7 @@ export default class RemoteServerSyncCtr extends ControllerModule {
       method: method,
       path: url.pathname + url.search,
       port: url.port || (url.protocol === 'https:' ? 443 : 80),
-      protocol: url.protocol, // 注入代理
-      // agent: false, // Consider for keep-alive issues if they arise
+      protocol: url.protocol,
     };
 
     const requester = url.protocol === 'https:' ? https : http;

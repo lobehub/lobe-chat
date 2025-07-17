@@ -240,7 +240,7 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
 
     // 8. 令牌有效期
     ttl: {
-      AccessToken: 3600, // 1 hour
+      AccessToken: 25 * 3600, // 25 hour
       AuthorizationCode: 600, // 10 minutes
       DeviceCode: 600, // 10 minutes (if enabled)
 
