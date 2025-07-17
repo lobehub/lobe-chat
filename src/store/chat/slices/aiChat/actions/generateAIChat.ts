@@ -509,7 +509,7 @@ export const generateAIChat: StateCreator<
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
 
     const compiler = template(chatConfig.inputTemplate, {
-      interpolate: /{{\s*(text)\s*}}/g
+      interpolate: /{{\s*(text)\s*}}/g,
     });
 
     // ================================== //
@@ -528,20 +528,20 @@ export const generateAIChat: StateCreator<
 
     // 2. replace inputMessage template
     preprocessMsgs = !chatConfig.inputTemplate
-    ? preprocessMsgs
-    : preprocessMsgs.map((m) => {
-        if (m.role === 'user') {
-          try {
-            return { ...m, content: compiler({ text: m.content }) };
-          } catch (error) {
-            console.error(error);
+      ? preprocessMsgs
+      : preprocessMsgs.map((m) => {
+          if (m.role === 'user') {
+            try {
+              return { ...m, content: compiler({ text: m.content }) };
+            } catch (error) {
+              console.error(error);
 
-            return m;
+              return m;
+            }
           }
-        }
 
-        return m;
-      });
+          return m;
+        });
 
     // 3. add systemRole
     if (agentConfig.systemRole) {
