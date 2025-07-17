@@ -41,7 +41,6 @@ export const getJWKS = (): object => {
   }
 };
 
-// 我强烈建议你将这个函数改名为 getVerificationKey
 const getVerificationKey = async () => {
   try {
     const jwksString = oidcEnv.OIDC_JWKS_KEY;
@@ -61,7 +60,6 @@ const getVerificationKey = async () => {
       throw new Error('JWKS 中没有找到 RS256 算法的 RSA 密钥');
     }
 
-    // --- 核心修复 ---
     // 创建一个只包含公钥组件的“纯净”JWK对象。
     // RSA公钥的关键字段是 kty, n, e。其他如 kid, alg, use 也是公共的。
     const publicKeyJwk = {
