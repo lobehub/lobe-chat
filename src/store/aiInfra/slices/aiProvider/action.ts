@@ -19,6 +19,7 @@ import {
   UpdateAiProviderConfigParams,
   UpdateAiProviderParams,
 } from '@/types/aiProvider';
+import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
 
 enum AiProviderSwrKey {
   fetchAiProviderItem = 'FETCH_AI_PROVIDER_ITEM',
@@ -216,7 +217,7 @@ export const createAiProviderSlice: StateCreator<
                 ...(model.type === 'image' && {
                   parameters:
                     (model as AIImageModelCard).parameters ||
-                    LOBE_DEFAULT_MODEL_LIST.find((m) => m.id === model.id)?.parameters,
+                    getModelPropertyWithFallback(model.id, 'parameters'),
                 }),
               }));
 
