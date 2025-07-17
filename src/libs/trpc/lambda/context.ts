@@ -3,7 +3,13 @@ import debug from 'debug';
 import { User } from 'next-auth';
 import { NextRequest } from 'next/server';
 
-import { JWTPayload, LOBE_CHAT_AUTH_HEADER, enableClerk, enableNextAuth } from '@/const/auth';
+import {
+  JWTPayload,
+  LOBE_CHAT_AUTH_HEADER,
+  LOBE_CHAT_OIDC_AUTH_HEADER,
+  enableClerk,
+  enableNextAuth,
+} from '@/const/auth';
 import { oidcEnv } from '@/envs/oidc';
 import { ClerkAuth, IClerkAuth } from '@/libs/clerk-auth';
 import { validateOIDCJWT } from '@/libs/oidc-provider/jwt';
@@ -102,7 +108,7 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
   if (oidcEnv.ENABLE_OIDC) {
     log('OIDC enabled, attempting OIDC authentication');
     const standardAuthorization = request.headers.get('Authorization');
-    const oidcAuthToken = request.headers.get('Oidc-Auth');
+    const oidcAuthToken = request.headers.get(LOBE_CHAT_OIDC_AUTH_HEADER);
     log('Standard Authorization header: %s', standardAuthorization ? 'exists' : 'not found');
     log('Oidc-Auth header: %s', oidcAuthToken ? 'exists' : 'not found');
 
