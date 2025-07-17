@@ -4,7 +4,7 @@ import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import { openaiChatModels } from '@/config/aiModels/openai';
 import { AiFullModelCard } from '@/types/aiModel';
 
-import { parseModelString, transformToAiChatModelList } from './parseModels';
+import { parseModelString, transformToAiModelList } from './parseModels';
 
 describe('parseModelString', () => {
   it('custom deletion, addition, and renaming of models', () => {
@@ -315,25 +315,25 @@ describe('parseModelString', () => {
           id: 'flux-kontext/dev',
           displayName: 'KontextDev',
           abilities: {},
-          type: 'chat',
+          type: 'image',
         },
         {
           id: 'flux-pro/kontext',
           displayName: 'KontextPro',
           abilities: {},
-          type: 'chat',
+          type: 'image',
         },
         {
           id: 'flux/schnell',
           displayName: 'Schnell',
           abilities: {},
-          type: 'chat',
+          type: 'image',
         },
         {
           id: 'imagen4/preview',
           displayName: 'Imagen4',
           abilities: {},
-          type: 'chat',
+          type: 'image',
         },
       ]);
       expect(result.removeAll).toBe(true);
@@ -346,12 +346,12 @@ describe('parseModelString', () => {
         {
           id: 'flux-kontext/dev',
           abilities: {},
-          type: 'chat',
+          type: 'image',
         },
         {
           id: 'flux-pro/kontext',
           abilities: {},
-          type: 'chat',
+          type: 'image',
         },
       ]);
       expect(result.removeAll).toBe(true);
@@ -422,27 +422,27 @@ describe('transformToChatModelCards', () => {
   ];
 
   it('should return undefined when modelString is empty', () => {
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString: '',
-      defaultChatModels,
+      defaultModels: defaultChatModels,
       providerId: 'openai',
     });
     expect(result).toBeUndefined();
   });
 
   it('should remove all models when removeAll is true', () => {
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString: '-all',
-      defaultChatModels,
+      defaultModels: defaultChatModels,
       providerId: 'openai',
     });
     expect(result).toEqual([]);
   });
 
   it('should remove specified models', () => {
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString: '-model1',
-      defaultChatModels,
+      defaultModels: defaultChatModels,
       providerId: 'openai',
     });
     expect(result).toEqual([
@@ -452,9 +452,9 @@ describe('transformToChatModelCards', () => {
 
   it('should add a new known model', () => {
     const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => m.providerId === 'ai21')!;
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString: `${knownModel.id}`,
-      defaultChatModels,
+      defaultModels: defaultChatModels,
       providerId: 'ai21',
     });
 
@@ -467,9 +467,9 @@ describe('transformToChatModelCards', () => {
 
   it('should update an existing known model', () => {
     const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => m.providerId === 'openai')!;
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString: `+${knownModel.id}=Updated Model`,
-      defaultChatModels: [knownModel],
+      defaultModels: [knownModel],
       providerId: 'openai',
     });
 
@@ -481,9 +481,9 @@ describe('transformToChatModelCards', () => {
   });
 
   it('should add a new custom model', () => {
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString: '+custom_model=Custom Model',
-      defaultChatModels,
+      defaultModels: defaultChatModels,
       providerId: 'openai',
     });
     expect(result).toContainEqual({
@@ -496,10 +496,10 @@ describe('transformToChatModelCards', () => {
   });
 
   it('should have file with builtin models like gpt-4-0125-preview', () => {
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString:
         '-all,+gpt-4-0125-preview=ChatGPT-4<128000:fc:file>,+gpt-4-turbo-2024-04-09=ChatGPT-4 Vision<128000:fc:vision:file>',
-      defaultChatModels: openaiChatModels,
+      defaultModels: openaiChatModels,
       providerId: 'openai',
     });
 
@@ -511,9 +511,9 @@ describe('transformToChatModelCards', () => {
       (m) => m.id === 'deepseek-r1' && m.providerId === 'volcengine',
     );
     const defaultChatModels: AiFullModelCard[] = [];
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString: '+deepseek-r1',
-      defaultChatModels,
+      defaultModels: defaultChatModels,
       providerId: 'volcengine',
       withDeploymentName: true,
     });
@@ -528,9 +528,9 @@ describe('transformToChatModelCards', () => {
     const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
       (m) => m.id === 'deepseek-r1' && m.providerId === 'volcengine',
     );
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString: `+deepseek-r1->my-custom-deploy`,
-      defaultChatModels,
+      defaultModels: defaultChatModels,
       providerId: 'volcengine',
       withDeploymentName: true,
     });
@@ -543,9 +543,9 @@ describe('transformToChatModelCards', () => {
 
   it('should set both id and deploymentName to the full string when no -> is used and withDeploymentName is true', () => {
     const defaultChatModels: AiFullModelCard[] = [];
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString: `+my_model`,
-      defaultChatModels,
+      defaultModels: defaultChatModels,
       providerId: 'volcengine',
       withDeploymentName: true,
     });
@@ -656,9 +656,9 @@ describe('transformToChatModelCards', () => {
     const modelString =
       '-all,gpt-4o->id1=GPT-4o,gpt-4o-mini->id2=GPT 4o Mini,o1-mini->id3=OpenAI o1-mini';
 
-    const data = transformToAiChatModelList({
+    const data = transformToAiModelList({
       modelString,
-      defaultChatModels,
+      defaultModels: defaultChatModels,
       providerId: 'azure',
       withDeploymentName: true,
     });

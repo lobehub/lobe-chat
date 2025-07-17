@@ -3,7 +3,7 @@ import { getLLMConfig } from '@/config/llm';
 import { ModelProvider } from '@/libs/model-runtime';
 import { AiFullModelCard } from '@/types/aiModel';
 import { ProviderConfig } from '@/types/user/settings';
-import { extractEnabledModels, transformToAiChatModelList } from '@/utils/parseModels';
+import { extractEnabledModels, transformToAiModelList } from '@/utils/parseModels';
 
 interface ProviderSpecificConfig {
   enabled?: boolean;
@@ -19,9 +19,9 @@ export const genServerAiProvidersConfig = (specificConfig: Record<any, ProviderS
   return Object.values(ModelProvider).reduce(
     (config, provider) => {
       const providerUpperCase = provider.toUpperCase();
-      const providerCard = AiModels[provider] as AiFullModelCard[];
+      const builtinModels = AiModels[provider] as AiFullModelCard[];
 
-      if (!providerCard)
+      if (!builtinModels)
         throw new Error(
           `Provider [${provider}] not found in aiModels, please make sure you have exported the provider in the \`aiModels/index.ts\``,
         );
@@ -29,8 +29,6 @@ export const genServerAiProvidersConfig = (specificConfig: Record<any, ProviderS
       const providerConfig = specificConfig[provider as keyof typeof specificConfig] || {};
       const providerModelList =
         process.env[providerConfig.modelListKey ?? `${providerUpperCase}_MODEL_LIST`];
-
-      const defaultChatModels = providerCard.filter((c) => c.type === 'chat');
 
       config[provider] = {
         enabled:
@@ -42,8 +40,8 @@ export const genServerAiProvidersConfig = (specificConfig: Record<any, ProviderS
           providerModelList,
           providerConfig.withDeploymentName || false,
         ),
-        serverModelLists: transformToAiChatModelList({
-          defaultChatModels: defaultChatModels || [],
+        serverModelLists: transformToAiModelList({
+          defaultModels: builtinModels || [],
           modelString: providerModelList,
           providerId: provider,
           withDeploymentName: providerConfig.withDeploymentName || false,

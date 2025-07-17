@@ -50,8 +50,7 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
       abilities: {},
       displayName: displayName || undefined,
       id,
-      // TODO: 临时写死为 chat ，后续基于元数据迭代成对应的类型
-      type: 'chat',
+      type: LOBE_DEFAULT_MODEL_LIST.find((m) => m.id === id)?.type || 'chat',
     };
 
     if (deploymentName) {
@@ -108,13 +107,13 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
 /**
  * Extract a special method to process chatModels
  */
-export const transformToAiChatModelList = ({
+export const transformToAiModelList = ({
   modelString = '',
-  defaultChatModels,
+  defaultModels,
   providerId,
   withDeploymentName = false,
 }: {
-  defaultChatModels: AiFullModelCard[];
+  defaultModels: AiFullModelCard[];
   modelString?: string;
   providerId: string;
   withDeploymentName?: boolean;
@@ -122,7 +121,7 @@ export const transformToAiChatModelList = ({
   if (!modelString) return undefined;
 
   const modelConfig = parseModelString(modelString, withDeploymentName);
-  let chatModels = modelConfig.removeAll ? [] : defaultChatModels;
+  let chatModels = modelConfig.removeAll ? [] : defaultModels;
 
   // 处理移除逻辑
   if (!modelConfig.removeAll) {
