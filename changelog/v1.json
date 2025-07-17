@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Refactor desktop oauth and use JWTs token to support remote chat."]
+    },
+    "date": "2025-07-17",
+    "version": "1.100.0"
+  },
+  {
+    "children": {
       "fixes": ["Desktop local db can't upload image."]
     },
     "date": "2025-07-16",
