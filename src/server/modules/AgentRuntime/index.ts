@@ -53,11 +53,19 @@ const getParamsFromPayload = (provider: string, payload: JWTPayload) => {
     }
 
     case ModelProvider.Bedrock: {
-      const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SESSION_TOKEN } = llmConfig;
+      const {
+        AWS_SECRET_ACCESS_KEY,
+        AWS_ACCESS_KEY_ID,
+        AWS_REGION,
+        AWS_SESSION_TOKEN,
+        AWS_ENDPOINT_URL_BEDROCK_RUNTIME,
+      } = llmConfig;
       let accessKeyId: string | undefined = AWS_ACCESS_KEY_ID;
       let accessKeySecret: string | undefined = AWS_SECRET_ACCESS_KEY;
       let region = AWS_REGION;
       let sessionToken: string | undefined = AWS_SESSION_TOKEN;
+      let endpoint: string | undefined = AWS_ENDPOINT_URL_BEDROCK_RUNTIME;
+
       // if the payload has the api key, use user
       if (payload.apiKey) {
         accessKeyId = payload?.awsAccessKeyId;
@@ -65,7 +73,7 @@ const getParamsFromPayload = (provider: string, payload: JWTPayload) => {
         sessionToken = payload?.awsSessionToken;
         region = payload?.awsRegion;
       }
-      return { accessKeyId, accessKeySecret, region, sessionToken };
+      return { accessKeyId, accessKeySecret, endpoint, region, sessionToken };
     }
 
     case ModelProvider.Cloudflare: {

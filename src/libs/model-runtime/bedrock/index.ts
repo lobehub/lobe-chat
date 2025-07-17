@@ -59,6 +59,7 @@ export function experimental_buildLlama2Prompt(messages: { content: string; role
 export interface LobeBedrockAIParams {
   accessKeyId?: string;
   accessKeySecret?: string;
+  endpoint?: string;
   region?: string;
   sessionToken?: string;
 }
@@ -68,18 +69,31 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
   region: string;
 
-  constructor({ region, accessKeyId, accessKeySecret, sessionToken }: LobeBedrockAIParams = {}) {
+  constructor({
+    region,
+    accessKeyId,
+    accessKeySecret,
+    sessionToken,
+    endpoint,
+  }: LobeBedrockAIParams = {}) {
     if (!(accessKeyId && accessKeySecret))
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
     this.region = region ?? 'us-east-1';
-    this.client = new BedrockRuntimeClient({
+
+    const clientOptions: any = {
       credentials: {
         accessKeyId: accessKeyId,
         secretAccessKey: accessKeySecret,
         sessionToken: sessionToken,
       },
       region: this.region,
-    });
+    };
+
+    if (endpoint) {
+      clientOptions.endpoint = endpoint;
+    }
+
+    this.client = new BedrockRuntimeClient(clientOptions);
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {
