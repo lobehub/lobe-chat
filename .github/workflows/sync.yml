@@ -57,3 +57,12 @@ jobs:
             [lobechat]: https://github.com/lobehub/lobe-chat
             [tutorial-zh-CN]: https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync.zh-CN
             [tutorial-en-US]: https://github.com/lobehub/lobe-chat/wiki/Upstream-Sync
+
+      - name: Trigger Release Workflow
+        if: success() && steps.sync.outputs.has_new_commits == 'true'
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GH_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/repos/${{ github.repository }}/actions/workflows/release.yml/dispatches \
+            -d '{"ref":"main"}'
