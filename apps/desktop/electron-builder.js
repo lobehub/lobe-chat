@@ -24,7 +24,7 @@ const config = {
   appImage: {
     artifactName: '${productName}-${version}.${ext}',
   },
-  asar: true,
+  asar: false,
   asarUnpack: [
     // https://github.com/electron-userland/electron-builder/issues/9001#issuecomment-2778802044
     '**/node_modules/sharp/**/*',
