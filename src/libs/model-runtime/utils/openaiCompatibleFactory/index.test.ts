@@ -1392,7 +1392,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         {
           id: 'gemini',
           releasedAt: '2025-01-10',
-          type: undefined,
+          type: 'chat',
         },
       ]);
     });
