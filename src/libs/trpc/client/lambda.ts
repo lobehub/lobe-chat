@@ -15,7 +15,7 @@ const links = [
   httpBatchLink({
     fetch: async (input, init) => {
       if (isDesktop) {
-        const { desktopRemoteRPCFetch } = await import('./helpers/desktopRemoteRPCFetch');
+        const { desktopRemoteRPCFetch } = await import('@/utils/electron/desktopRemoteRPCFetch');
 
         const res = await desktopRemoteRPCFetch(input as string, init);
 
