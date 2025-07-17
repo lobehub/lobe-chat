@@ -1,4 +1,4 @@
-import { ProxyTRPCRequestParams, dispatch } from '@lobechat/electron-client-ipc';
+import { ProxyTRPCRequestParams, dispatch, streamInvoke } from '@lobechat/electron-client-ipc';
 import debug from 'debug';
 
 import { isDesktop } from '@/const/version';
@@ -6,7 +6,7 @@ import { getElectronStoreState } from '@/store/electron';
 import { electronSyncSelectors } from '@/store/electron/selectors';
 import { getRequestBody, headersToRecord } from '@/utils/fetch';
 
-const log = debug('lobe-lambda:desktopRemoteRPCFetch');
+const log = debug('utils:desktopRemoteRPCFetch');
 
 // eslint-disable-next-line no-undef
 export const desktopRemoteRPCFetch = async (input: string, init?: RequestInit) => {
@@ -62,10 +62,25 @@ export const desktopRemoteRPCFetch = async (input: string, init?: RequestInit) =
 };
 
 // eslint-disable-next-line no-undef
-export const fetchWithDesktopRemoteRPC = async (input: string, init?: RequestInit) => {
+export const fetchWithDesktopRemoteRPC = (async (input: RequestInfo | URL, init?: RequestInit) => {
   if (isDesktop) {
     const res = await desktopRemoteRPCFetch(input as string, init);
     if (res) return res;
+  }
+
+  return fetch(input, init);
+}) as typeof fetch;
+
+// eslint-disable-next-line no-undef
+export const fetchWithInvokeStream = async (input: RequestInfo | URL, init?: RequestInit) => {
+  if (isDesktop) {
+    const isSyncActive = electronSyncSelectors.isSyncActive(getElectronStoreState());
+    log('isSyncActive:', isSyncActive);
+    if (isSyncActive) {
+      log('Using IPC stream proxy for request to:', input);
+
+      return streamInvoke(input, init);
+    }
   }
 
   return fetch(input, init);
