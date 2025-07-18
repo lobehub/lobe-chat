@@ -17,7 +17,6 @@ const styles = {
   label: {
     fontSize: 12,
     fontWeight: 500,
-    textTransform: 'uppercase' as const,
   },
 } as const;
 
