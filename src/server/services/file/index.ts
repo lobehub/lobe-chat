@@ -8,6 +8,7 @@ import { TempFileManager } from '@/server/utils/tempFileManager';
 import { nanoid } from '@/utils/uuid';
 
 import { FileServiceImpl, createFileServiceModule } from './impls';
+import { TRPCErrorMessage } from '@/types/files';
 
 /**
  * 文件服务类
@@ -85,7 +86,7 @@ export class FileService {
   ): Promise<{ cleanup: () => void; file: FileItem; filePath: string }> {
     const file = await this.fileModel.findById(fileId);
     if (!file) {
-      throw new TRPCError({ code: 'BAD_REQUEST', message: 'File not found' });
+      throw new TRPCError({ code: 'BAD_REQUEST', message: TRPCErrorMessage.FileNotFound });
     }
 
     let content: Uint8Array | undefined;
@@ -96,11 +97,11 @@ export class FileService {
       // if file not found, delete it from db
       if ((e as any).Code === 'NoSuchKey') {
         await this.fileModel.delete(fileId, serverDBEnv.REMOVE_GLOBAL_FILE);
-        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Origin File Not Found' });
+        throw new TRPCError({ code: 'BAD_REQUEST', message: TRPCErrorMessage.OrginFileNotFound });
       }
     }
 
-    if (!content) throw new TRPCError({ code: 'BAD_REQUEST', message: 'File content is empty' });
+    if (!content) throw new TRPCError({ code: 'BAD_REQUEST', message: TRPCErrorMessage.OrginFileNotFound });
 
     const dir = nanoid();
     const tempManager = new TempFileManager(dir);
