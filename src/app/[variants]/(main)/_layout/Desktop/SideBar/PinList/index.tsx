@@ -1,9 +1,11 @@
-import { Avatar, Tooltip } from '@lobehub/ui';
+import { ActionIcon, Avatar, Tooltip } from '@lobehub/ui';
+import { useBoolean } from 'ahooks';
 import { Divider } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
+import { Settings2 } from 'lucide-react';
 import { parseAsBoolean, useQueryState } from 'nuqs';
-import { Flexbox } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 
 import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useSessionStore } from '@/store/session';
@@ -13,10 +15,12 @@ import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 import { HotkeyEnum, KeyEnum } from '@/types/hotkey';
 
+import ListModal from './ListModal';
+
 const HANDLER_WIDTH = 4;
 
-const useStyles = createStyles(({ css, token }) => ({
-  ink: css`
+const useStyles = createStyles(({ css, token }) => {
+  const ink = css`
     &::before {
       content: '';
 
@@ -46,8 +50,9 @@ const useStyles = createStyles(({ css, token }) => ({
         opacity: 1;
       }
     }
-  `,
-  inkActive: css`
+  `;
+
+  const inkActive = css`
     &::before {
       width: ${HANDLER_WIDTH}px;
       height: 40px;
@@ -61,8 +66,22 @@ const useStyles = createStyles(({ css, token }) => ({
         opacity: 1;
       }
     }
-  `,
-}));
+  `;
+
+  const list = css`
+    padding: 0;
+    & > li:last-child {
+      opacity: 0;
+      transition: opacity 200ms ${token.motionEaseInOut};
+    }
+
+    &:hover > li:last-child {
+      opacity: 1;
+    }
+  `;
+
+  return { ink, inkActive, list };
+});
 
 const PinList = () => {
   const { styles, cx } = useStyles();
@@ -72,6 +91,7 @@ const PinList = () => {
   const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.SwitchAgent));
   const hasList = list.length > 0;
   const [isPinned, setPinned] = useQueryState('pinned', parseAsBoolean);
+  const [isEditModalOpen, { setFalse: closeEditModal, setTrue: openEditModal }] = useBoolean(false);
 
   const switchAgent = (id: string) => {
     switchSession(id);
@@ -82,9 +102,9 @@ const PinList = () => {
     hasList && (
       <>
         <Divider style={{ marginBottom: 8, marginTop: 4 }} />
-        <Flexbox flex={1} gap={12} height={'100%'}>
+        <Flexbox as="ul" className={styles.list} flex={1} gap={12} height={'100%'}>
           {list.slice(0, 9).map((item, index) => (
-            <Flexbox key={item.id} style={{ position: 'relative' }}>
+            <Flexbox as="li" key={item.id} style={{ position: 'relative' }}>
               <Tooltip
                 hotkey={hotkey.replaceAll(KeyEnum.Number, String(index + 1))}
                 placement={'right'}
@@ -108,7 +128,16 @@ const PinList = () => {
               </Tooltip>
             </Flexbox>
           ))}
+          <Center as="li">
+            <ActionIcon
+              icon={Settings2}
+              onClick={openEditModal}
+              title="Edit Pinned Sessions"
+              tooltipProps={{ placement: 'right' }}
+            />
+          </Center>
         </Flexbox>
+        <ListModal onCancel={closeEditModal} open={isEditModalOpen} />
       </>
     )
   );
