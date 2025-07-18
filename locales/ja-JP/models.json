@@ -656,6 +656,9 @@
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22Bは指示遵守、対話、プログラミングのために設計されたモデルです。"
   },
+  "cogview-4": {
+    "description": "CogView-4 は智譜が初めて開発した漢字生成対応のオープンソーステキストから画像生成モデルであり、意味理解、画像生成の品質、中英文字生成能力の全方位的な向上を実現しています。任意の長さの中英バイリンガル入力に対応し、指定された範囲内で任意の解像度の画像を生成することが可能です。"
+  },
   "cohere-command-r": {
     "description": "Command Rは、RAGとツール使用をターゲットにしたスケーラブルな生成モデルで、企業向けの生産規模のAIを実現します。"
   },
