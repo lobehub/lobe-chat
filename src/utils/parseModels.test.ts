@@ -4,11 +4,12 @@ import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import { openaiChatModels } from '@/config/aiModels/openai';
 import { AiFullModelCard } from '@/types/aiModel';
 
-import { parseModelString, transformToAiChatModelList } from './parseModels';
+import { extractEnabledModels, parseModelString, transformToAiModelList } from './parseModels';
 
 describe('parseModelString', () => {
   it('custom deletion, addition, and renaming of models', () => {
     const result = parseModelString(
+      'test-provider',
       '-all,+llama,+claude-2，-gpt-3.5-turbo,gpt-4-1106-preview=gpt-4-turbo,gpt-4-1106-preview=gpt-4-32k',
     );
 
@@ -16,24 +17,30 @@ describe('parseModelString', () => {
   });
 
   it('duplicate naming model', () => {
-    const result = parseModelString('gpt-4-1106-preview=gpt-4-turbo，gpt-4-1106-preview=gpt-4-32k');
+    const result = parseModelString(
+      'test-provider',
+      'gpt-4-1106-preview=gpt-4-turbo，gpt-4-1106-preview=gpt-4-32k',
+    );
     expect(result).toMatchSnapshot();
   });
 
   it('only add the model', () => {
-    const result = parseModelString('model1,model2,model3，model4');
+    const result = parseModelString('test-provider', 'model1,model2,model3，model4');
 
     expect(result).toMatchSnapshot();
   });
 
   it('empty string model', () => {
-    const result = parseModelString('gpt-4-1106-preview=gpt-4-turbo,,  ,\n  ，+claude-2');
+    const result = parseModelString(
+      'test-provider',
+      'gpt-4-1106-preview=gpt-4-turbo,,  ,\n  ，+claude-2',
+    );
     expect(result).toMatchSnapshot();
   });
 
   describe('extension capabilities', () => {
     it('with token', () => {
-      const result = parseModelString('chatglm-6b=ChatGLM 6B<4096>');
+      const result = parseModelString('test-provider', 'chatglm-6b=ChatGLM 6B<4096>');
 
       expect(result.add[0]).toEqual({
         displayName: 'ChatGLM 6B',
@@ -45,7 +52,7 @@ describe('parseModelString', () => {
     });
 
     it('token and function calling', () => {
-      const result = parseModelString('spark-v3.5=讯飞星火 v3.5<8192:fc>');
+      const result = parseModelString('test-provider', 'spark-v3.5=讯飞星火 v3.5<8192:fc>');
 
       expect(result.add[0]).toEqual({
         displayName: '讯飞星火 v3.5',
@@ -59,7 +66,7 @@ describe('parseModelString', () => {
     });
 
     it('token and reasoning', () => {
-      const result = parseModelString('deepseek-r1=Deepseek R1<65536:reasoning>');
+      const result = parseModelString('test-provider', 'deepseek-r1=Deepseek R1<65536:reasoning>');
 
       expect(result.add[0]).toEqual({
         displayName: 'Deepseek R1',
@@ -73,7 +80,7 @@ describe('parseModelString', () => {
     });
 
     it('token and search', () => {
-      const result = parseModelString('qwen-max-latest=Qwen Max<32768:search>');
+      const result = parseModelString('test-provider', 'qwen-max-latest=Qwen Max<32768:search>');
 
       expect(result.add[0]).toEqual({
         displayName: 'Qwen Max',
@@ -88,6 +95,7 @@ describe('parseModelString', () => {
 
     it('token and image output', () => {
       const result = parseModelString(
+        'test-provider',
         'gemini-2.0-flash-exp-image-generation=Gemini 2.0 Flash (Image Generation) Experimental<32768:imageOutput>',
       );
 
@@ -104,6 +112,7 @@ describe('parseModelString', () => {
 
     it('multi models', () => {
       const result = parseModelString(
+        'test-provider',
         'gemini-1.5-flash-latest=Gemini 1.5 Flash<16000:vision>,gpt-4-all=ChatGPT Plus<128000:fc:vision:file>',
       );
 
@@ -133,6 +142,7 @@ describe('parseModelString', () => {
 
     it('should have file with builtin models like gpt-4-0125-preview', () => {
       const result = parseModelString(
+        'openai',
         '-all,+gpt-4-0125-preview=ChatGPT-4<128000:fc:file>,+gpt-4-turbo-2024-04-09=ChatGPT-4 Vision<128000:fc:vision:file>',
       );
       expect(result.add).toEqual([
@@ -161,7 +171,7 @@ describe('parseModelString', () => {
     });
 
     it('should handle empty extension capability value', () => {
-      const result = parseModelString('model1<1024:>');
+      const result = parseModelString('test-provider', 'model1<1024:>');
       expect(result.add[0]).toEqual({
         abilities: {},
         type: 'chat',
@@ -171,7 +181,7 @@ describe('parseModelString', () => {
     });
 
     it('should handle empty extension capability name', () => {
-      const result = parseModelString('model1<1024::file>');
+      const result = parseModelString('test-provider', 'model1<1024::file>');
       expect(result.add[0]).toEqual({
         id: 'model1',
         contextWindowTokens: 1024,
@@ -183,7 +193,7 @@ describe('parseModelString', () => {
     });
 
     it('should handle duplicate extension capabilities', () => {
-      const result = parseModelString('model1<1024:vision:vision>');
+      const result = parseModelString('test-provider', 'model1<1024:vision:vision>');
       expect(result.add[0]).toEqual({
         id: 'model1',
         contextWindowTokens: 1024,
@@ -195,7 +205,7 @@ describe('parseModelString', () => {
     });
 
     it('should handle case-sensitive extension capability names', () => {
-      const result = parseModelString('model1<1024:VISION:FC:file>');
+      const result = parseModelString('test-provider', 'model1<1024:VISION:FC:file>');
       expect(result.add[0]).toEqual({
         id: 'model1',
         contextWindowTokens: 1024,
@@ -207,7 +217,7 @@ describe('parseModelString', () => {
     });
 
     it('should handle case-sensitive extension capability values', () => {
-      const result = parseModelString('model1<1024:vision:Fc:File>');
+      const result = parseModelString('test-provider', 'model1<1024:vision:Fc:File>');
       expect(result.add[0]).toEqual({
         id: 'model1',
         contextWindowTokens: 1024,
@@ -219,12 +229,12 @@ describe('parseModelString', () => {
     });
 
     it('should handle empty angle brackets', () => {
-      const result = parseModelString('model1<>');
+      const result = parseModelString('test-provider', 'model1<>');
       expect(result.add[0]).toEqual({ id: 'model1', abilities: {}, type: 'chat' });
     });
 
     it('should handle not close angle brackets', () => {
-      const result = parseModelString('model1<,model2');
+      const result = parseModelString('test-provider', 'model1<,model2');
       expect(result.add).toEqual([
         { id: 'model1', abilities: {}, type: 'chat' },
         { id: 'model2', abilities: {}, type: 'chat' },
@@ -232,7 +242,7 @@ describe('parseModelString', () => {
     });
 
     it('should handle multi close angle brackets', () => {
-      const result = parseModelString('model1<>>,model2');
+      const result = parseModelString('test-provider', 'model1<>>,model2');
       expect(result.add).toEqual([
         { id: 'model1', abilities: {}, type: 'chat' },
         { id: 'model2', abilities: {}, type: 'chat' },
@@ -240,22 +250,22 @@ describe('parseModelString', () => {
     });
 
     it('should handle only colon inside angle brackets', () => {
-      const result = parseModelString('model1<:>');
+      const result = parseModelString('test-provider', 'model1<:>');
       expect(result.add[0]).toEqual({ id: 'model1', abilities: {}, type: 'chat' });
     });
 
     it('should handle only non-digit characters inside angle brackets', () => {
-      const result = parseModelString('model1<abc>');
+      const result = parseModelString('test-provider', 'model1<abc>');
       expect(result.add[0]).toEqual({ id: 'model1', abilities: {}, type: 'chat' });
     });
 
     it('should handle non-digit characters followed by digits inside angle brackets', () => {
-      const result = parseModelString('model1<abc123>');
+      const result = parseModelString('test-provider', 'model1<abc123>');
       expect(result.add[0]).toEqual({ id: 'model1', abilities: {}, type: 'chat' });
     });
 
     it('should handle digits followed by non-colon characters inside angle brackets', () => {
-      const result = parseModelString('model1<1024abc>');
+      const result = parseModelString('test-provider', 'model1<1024abc>');
       expect(result.add[0]).toEqual({
         id: 'model1',
         contextWindowTokens: 1024,
@@ -265,7 +275,7 @@ describe('parseModelString', () => {
     });
 
     it('should handle digits followed by multiple colons inside angle brackets', () => {
-      const result = parseModelString('model1<1024::>');
+      const result = parseModelString('test-provider', 'model1<1024::>');
       expect(result.add[0]).toEqual({
         id: 'model1',
         contextWindowTokens: 1024,
@@ -275,7 +285,7 @@ describe('parseModelString', () => {
     });
 
     it('should handle digits followed by a colon and non-letter characters inside angle brackets', () => {
-      const result = parseModelString('model1<1024:123>');
+      const result = parseModelString('test-provider', 'model1<1024:123>');
       expect(result.add[0]).toEqual({
         id: 'model1',
         contextWindowTokens: 1024,
@@ -285,7 +295,7 @@ describe('parseModelString', () => {
     });
 
     it('should handle digits followed by a colon and spaces inside angle brackets', () => {
-      const result = parseModelString('model1<1024: vision>');
+      const result = parseModelString('test-provider', 'model1<1024: vision>');
       expect(result.add[0]).toEqual({
         id: 'model1',
         contextWindowTokens: 1024,
@@ -295,7 +305,7 @@ describe('parseModelString', () => {
     });
 
     it('should handle digits followed by multiple colons and spaces inside angle brackets', () => {
-      const result = parseModelString('model1<1024: : vision>');
+      const result = parseModelString('test-provider', 'model1<1024: : vision>');
       expect(result.add[0]).toEqual({
         id: 'model1',
         contextWindowTokens: 1024,
@@ -305,9 +315,64 @@ describe('parseModelString', () => {
     });
   });
 
+  describe('FAL image models', () => {
+    it('should correctly parse FAL image model ids with slash and custom display names', () => {
+      const result = parseModelString(
+        'fal',
+        '-all,+flux-kontext/dev=KontextDev,+flux-pro/kontext=KontextPro,+flux/schnell=Schnell,+imagen4/preview=Imagen4',
+      );
+      expect(result.add).toEqual([
+        {
+          id: 'flux-kontext/dev',
+          displayName: 'KontextDev',
+          abilities: {},
+          type: 'image',
+        },
+        {
+          id: 'flux-pro/kontext',
+          displayName: 'KontextPro',
+          abilities: {},
+          type: 'image',
+        },
+        {
+          id: 'flux/schnell',
+          displayName: 'Schnell',
+          abilities: {},
+          type: 'image',
+        },
+        {
+          id: 'imagen4/preview',
+          displayName: 'Imagen4',
+          abilities: {},
+          type: 'image',
+        },
+      ]);
+      expect(result.removeAll).toBe(true);
+      expect(result.removed).toEqual(['all']);
+    });
+
+    it('should correctly parse FAL image model ids with slash (no displayName)', () => {
+      const result = parseModelString('fal', '-all,+flux-kontext/dev,+flux-pro/kontext');
+      expect(result.add).toEqual([
+        {
+          id: 'flux-kontext/dev',
+          abilities: {},
+          type: 'image',
+        },
+        {
+          id: 'flux-pro/kontext',
+          abilities: {},
+          type: 'image',
+        },
+      ]);
+      expect(result.removeAll).toBe(true);
+      expect(result.removed).toEqual(['all']);
+    });
+  });
+
   describe('deployment name', () => {
     it('should have no deployment name', () => {
-      const result = parseModelString('model1=Model 1', true);
+      const result = parseModelString('test-provider', 'model1=Model 1', true);
       expect(result.add[0]).toEqual({
         id: 'model1',
         displayName: 'Model 1',
@@ -317,7 +382,7 @@ describe('parseModelString', () => {
     });
 
     it('should have diff deployment name as id', () => {
-      const result = parseModelString('gpt-35-turbo->my-deploy=GPT 3.5 Turbo', true);
+      const result = parseModelString('azure', 'gpt-35-turbo->my-deploy=GPT 3.5 Turbo', true);
       expect(result.add[0]).toEqual({
         id: 'gpt-35-turbo',
         displayName: 'GPT 3.5 Turbo',
@@ -331,6 +396,7 @@ describe('parseModelString', () => {
 
     it('should handle with multi deployName', () => {
       const result = parseModelString(
+        'azure',
         'gpt-4o->id1=GPT-4o,gpt-4o-mini->id2=gpt-4o-mini,o1-mini->id3=O1 mini',
         true,
       );
@@ -361,6 +427,42 @@ describe('parseModelString', () => {
   });
 });
 
+describe('extractEnabledModels', () => {
+  it('should return undefined when no models are added', () => {
+    const result = extractEnabledModels('test-provider', '-all');
+    expect(result).toBeUndefined();
+  });
+
+  it('should return undefined when modelString is empty', () => {
+    const result = extractEnabledModels('test-provider', '');
+    expect(result).toBeUndefined();
+  });
+
+  it('should return array of model IDs when models are added', () => {
+    const result = extractEnabledModels('test-provider', '+model1,+model2,+model3');
+    expect(result).toEqual(['model1', 'model2', 'model3']);
+  });
+
+  it('should handle mixed add/remove operations and return only added models', () => {
+    const result = extractEnabledModels('test-provider', '+model1,-model2,+model3');
+    expect(result).toEqual(['model1', 'model3']);
+  });
+
+  it('should handle deployment names when withDeploymentName is true', () => {
+    const result = extractEnabledModels(
+      'azure',
+      '+gpt-4->deployment1,+gpt-35-turbo->deployment2',
+      true,
+    );
+    expect(result).toEqual(['gpt-4', 'gpt-35-turbo']);
+  });
+
+  it('should handle complex model strings with custom names', () => {
+    const result = extractEnabledModels('openai', '+gpt-4=Custom GPT-4,+claude-2=Custom Claude');
+    expect(result).toEqual(['gpt-4', 'claude-2']);
+  });
+});
+
 describe('transformToChatModelCards', () => {
   const defaultChatModels: AiFullModelCard[] = [
     { id: 'model1', displayName: 'Model 1', enabled: true, type: 'chat' },
@@ -368,27 +470,27 @@ describe('transformToChatModelCards', () => {
   ];
 
   it('should return undefined when modelString is empty', () => {
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString: '',
-      defaultChatModels,
+      defaultModels: defaultChatModels,
       providerId: 'openai',
     });
     expect(result).toBeUndefined();
   });
 
   it('should remove all models when removeAll is true', () => {
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString: '-all',
-      defaultChatModels,
+      defaultModels: defaultChatModels,
       providerId: 'openai',
     });
     expect(result).toEqual([]);
   });
 
   it('should remove specified models', () => {
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString: '-model1',
-      defaultChatModels,
+      defaultModels: defaultChatModels,
       providerId: 'openai',
     });
     expect(result).toEqual([
@@ -398,9 +500,9 @@ describe('transformToChatModelCards', () => {
 
   it('should add a new known model', () => {
     const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => m.providerId === 'ai21')!;
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString: `${knownModel.id}`,
-      defaultChatModels,
+      defaultModels: defaultChatModels,
       providerId: 'ai21',
     });
 
@@ -413,9 +515,9 @@ describe('transformToChatModelCards', () => {
 
   it('should update an existing known model', () => {
     const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => m.providerId === 'openai')!;
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString: `+${knownModel.id}=Updated Model`,
-      defaultChatModels: [knownModel],
+      defaultModels: [knownModel],
       providerId: 'openai',
     });
 
@@ -427,9 +529,9 @@ describe('transformToChatModelCards', () => {
   });
 
   it('should add a new custom model', () => {
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString: '+custom_model=Custom Model',
-      defaultChatModels,
+      defaultModels: defaultChatModels,
       providerId: 'openai',
     });
     expect(result).toContainEqual({
@@ -442,10 +544,10 @@ describe('transformToChatModelCards', () => {
   });
 
   it('should have file with builtin models like gpt-4-0125-preview', () => {
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString:
         '-all,+gpt-4-0125-preview=ChatGPT-4<128000:fc:file>,+gpt-4-turbo-2024-04-09=ChatGPT-4 Vision<128000:fc:vision:file>',
-      defaultChatModels: openaiChatModels,
+      defaultModels: openaiChatModels,
       providerId: 'openai',
     });
 
@@ -457,9 +559,9 @@ describe('transformToChatModelCards', () => {
       (m) => m.id === 'deepseek-r1' && m.providerId === 'volcengine',
     );
     const defaultChatModels: AiFullModelCard[] = [];
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString: '+deepseek-r1',
-      defaultChatModels,
+      defaultModels: defaultChatModels,
       providerId: 'volcengine',
       withDeploymentName: true,
     });
@@ -474,9 +576,9 @@ describe('transformToChatModelCards', () => {
     const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
       (m) => m.id === 'deepseek-r1' && m.providerId === 'volcengine',
     );
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString: `+deepseek-r1->my-custom-deploy`,
-      defaultChatModels,
+      defaultModels: defaultChatModels,
       providerId: 'volcengine',
       withDeploymentName: true,
     });
@@ -489,9 +591,9 @@ describe('transformToChatModelCards', () => {
 
   it('should set both id and deploymentName to the full string when no -> is used and withDeploymentName is true', () => {
     const defaultChatModels: AiFullModelCard[] = [];
-    const result = transformToAiChatModelList({
+    const result = transformToAiModelList({
       modelString: `+my_model`,
-      defaultChatModels,
+      defaultModels: defaultChatModels,
       providerId: 'volcengine',
       withDeploymentName: true,
     });
@@ -602,9 +704,9 @@ describe('transformToChatModelCards', () => {
     const modelString =
       '-all,gpt-4o->id1=GPT-4o,gpt-4o-mini->id2=GPT 4o Mini,o1-mini->id3=OpenAI o1-mini';
 
-    const data = transformToAiChatModelList({
+    const data = transformToAiModelList({
       modelString,
-      defaultChatModels,
+      defaultModels: defaultChatModels,
       providerId: 'azure',
       withDeploymentName: true,
     });

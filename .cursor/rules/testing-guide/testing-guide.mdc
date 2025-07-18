@@ -214,6 +214,176 @@ describe('<UserProfile />', () => {
 **修复方法**: 更新了测试文件中的 mock 数据结构，使其与最新的 API 响应格式保持一致。具体修改了 `user.test.ts` 中的 `mockUserData` 对象结构。
 ```
 
+## 🎯 测试编写最佳实践
+
+### Mock 数据策略：追求"低成本的真实性" 📋
+
+**核心原则**: 测试数据应默认追求真实性，只有在引入"高昂的测试成本"时才进行简化。
+
+#### 什么是"高昂的测试成本"？
+
+"高成本"指的是测试中引入了外部依赖，使测试变慢、不稳定或复杂：
+
+- **文件 I/O 操作**：读写硬盘文件
+- **网络请求**：HTTP 调用、数据库连接
+- **系统调用**：获取系统时间、环境变量等
+
+#### ✅ 推荐做法：Mock 依赖，保留真实数据
+
+```typescript
+// ✅ 好的做法：Mock I/O 操作，但使用真实的文件内容格式
+describe('parseContentType', () => {
+  beforeEach(() => {
+    // Mock 文件读取操作（避免真实 I/O）
+    vi.spyOn(fs, 'readFileSync').mockImplementation((path) => {
+      // 但返回真实的文件内容格式
+      if (path.includes('.pdf')) return '%PDF-1.4\n%âãÏÓ'; // 真实 PDF 文件头
+      if (path.includes('.png')) return '\x89PNG\r\n\x1a\n'; // 真实 PNG 文件头
+      return '';
+    });
+  });
+
+  it('should detect PDF content type correctly', () => {
+    const result = parseContentType('/path/to/file.pdf');
+    expect(result).toBe('application/pdf');
+  });
+});
+
+// ❌ 过度简化：使用不真实的数据
+describe('parseContentType', () => {
+  it('should detect PDF content type correctly', () => {
+    // 这种简化数据没有测试价值
+    const result = parseContentType('fake-pdf-content');
+    expect(result).toBe('application/pdf');
+  });
+});
+```
+
+#### 🎯 真实标识符的价值
+
+```typescript
+// ✅ 使用真实的提供商标识符
+it('should parse OpenAI model list correctly', () => {
+  const result = parseModelString('openai', '+gpt-4,+gpt-3.5-turbo');
+  expect(result.add).toHaveLength(2);
+  expect(result.add[0].id).toBe('gpt-4');
+});
+
+// ❌ 使用占位符标识符（价值较低）
+it('should parse model list correctly', () => {
+  const result = parseModelString('test-provider', '+model1,+model2');
+  expect(result.add).toHaveLength(2);
+  // 这种测试对理解真实场景帮助不大
+});
+```
+
+### 错误处理测试：测试"行为"而非"文本" ⚠️
+
+**核心原则**: 测试应该验证程序在错误发生时的行为是可预测的，而不是验证易变的错误信息文本。
+
+#### ✅ 推荐的错误测试方式
+
+```typescript
+// ✅ 测试是否抛出错误
+it('should throw error when invalid input provided', () => {
+  expect(() => processInput(null)).toThrow();
+});
+
+// ✅ 测试错误类型（最推荐）
+it('should throw ValidationError for invalid data', () => {
+  expect(() => validateUser({})).toThrow(ValidationError);
+});
+
+// ✅ 测试错误属性而非消息文本
+it('should throw error with correct error code', () => {
+  expect(() => processPayment({})).toThrow(
+    expect.objectContaining({
+      code: 'INVALID_PAYMENT_DATA',
+      statusCode: 400,
+    }),
+  );
+});
+```
+
+#### ❌ 应避免的做法
+
+```typescript
+// ❌ 过度依赖具体错误信息文本
+it('should throw specific error message', () => {
+  expect(() => processUser({})).toThrow('用户数据不能为空，请检查输入参数');
+  // 这种测试很脆弱，错误文案稍有修改就会失败
+});
+```
+
+#### 🎯 例外情况：何时可以测试错误信息
+
+```typescript
+// ✅ 测试标准 API 错误（这是契约的一部分）
+it('should return proper HTTP error for API', () => {
+  expect(response.statusCode).toBe(400);
+  expect(response.error).toBe('Bad Request');
+});
+
+// ✅ 测试错误信息的关键部分（使用正则）
+it('should include field name in validation error', () => {
+  expect(() => validateField('email', '')).toThrow(/email/i);
+});
+```
+
+### 疑难解答：警惕模块污染 🚨
+
+**识别信号**: 当你的测试出现以下"灵异"现象时，优先怀疑模块污染：
+
+- 单独运行某个测试通过，但和其他测试一起运行就失败
+- 测试的执行顺序影响结果
+- Mock 设置看起来正确，但实际使用的是旧的 Mock 版本
+
+#### 典型场景：动态 Mock 同一模块
+
+```typescript
+// ❌ 容易出现模块污染的写法
+describe('ConfigService', () => {
+  it('should work in development mode', async () => {
+    vi.doMock('./config', () => ({ isDev: true }));
+    const { getSettings } = await import('./configService'); // 第一次加载
+    expect(getSettings().debugMode).toBe(true);
+  });
+
+  it('should work in production mode', async () => {
+    vi.doMock('./config', () => ({ isDev: false }));
+    const { getSettings } = await import('./configService'); // 可能使用缓存的旧版本！
+    expect(getSettings().debugMode).toBe(false); // ❌ 可能失败
+  });
+});
+
+// ✅ 使用 resetModules 解决模块污染
+describe('ConfigService', () => {
+  beforeEach(() => {
+    vi.resetModules(); // 清除模块缓存，确保每个测试都是干净的环境
+  });
+
+  it('should work in development mode', async () => {
+    vi.doMock('./config', () => ({ isDev: true }));
+    const { getSettings } = await import('./configService');
+    expect(getSettings().debugMode).toBe(true);
+  });
+
+  it('should work in production mode', async () => {
+    vi.doMock('./config', () => ({ isDev: false }));
+    const { getSettings } = await import('./configService');
+    expect(getSettings().debugMode).toBe(false); // ✅ 测试通过
+  });
+});
+```
+
+#### 🔧 排查和解决步骤
+
+1. **识别问题**: 测试失败时，首先问自己："是否有多个测试在 Mock 同一个模块？"
+2. **添加隔离**: 在 `beforeEach` 中添加 `vi.resetModules()`
+3. **验证修复**: 重新运行测试，确认问题解决
+
+**记住**: `vi.resetModules()` 是解决测试"灵异"失败的终极武器，当常规调试方法都无效时，它往往能一针见血地解决问题。
+
 ## 📂 测试文件组织
 
 ### 文件命名约定
@@ -320,4 +490,7 @@ git show HEAD -- path/to/component.ts | cat # 查看最新提交的修改
 - **修复原则**: 失败1-2次后寻求帮助，测试命名关注行为而非实现细节
 - **调试流程**: 复现 → 分析 → 假设 → 修复 → 验证 → 总结
 - **文件组织**: 优先在现有 `describe` 块中添加测试，避免创建冗余顶级块
+- **数据策略**: 默认追求真实性，只有高成本（I/O、网络等）时才简化
+- **错误测试**: 测试错误类型和行为，避免依赖具体的错误信息文本
+- **模块污染**: 测试"灵异"失败时，优先怀疑模块污染，使用 `vi.resetModules()` 解决
 - **安全要求**: Model 测试必须包含权限检查，并在双环境下验证通过

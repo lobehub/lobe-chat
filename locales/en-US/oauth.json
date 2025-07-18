@@ -28,10 +28,14 @@
     },
     "title": "Authorize {{clientName}}"
   },
-  "failed": {
+  "error": {
     "backToHome": "Back to Home",
-    "subTitle": "You have denied the application access to your LobeChat account",
-    "title": "Authorization Denied"
+    "desc": "OAuth authorization failed, reason: {{reason}}",
+    "reason": {
+      "internal_error": "Internal Server Error",
+      "invalid_request": "Invalid Request Parameters"
+    },
+    "title": "Authorization Failed"
   },
   "handoff": {
     "desc": {
@@ -50,7 +54,7 @@
     "userWelcome": "Welcome back, "
   },
   "success": {
-    "subTitle": "You have successfully authorized the application to access your LobeChat account. You can close this page now.",
+    "subTitle": "You have successfully authorized the application to access your account. You may now close this page.",
     "title": "Authorization Successful"
   }
 }

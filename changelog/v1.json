@@ -1,6 +1,27 @@
 [
   {
     "children": {
+      "fixes": ["Fix webapi proxy with clerk."]
+    },
+    "date": "2025-07-18",
+    "version": "1.100.2"
+  },
+  {
+    "children": {
+      "fixes": ["Use server env config image models."]
+    },
+    "date": "2025-07-17",
+    "version": "1.100.1"
+  },
+  {
+    "children": {
+      "features": ["Refactor desktop oauth and use JWTs token to support remote chat."]
+    },
+    "date": "2025-07-17",
+    "version": "1.100.0"
+  },
+  {
+    "children": {
       "fixes": ["Desktop local db can't upload image."]
     },
     "date": "2025-07-16",

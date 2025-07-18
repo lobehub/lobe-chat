@@ -7,6 +7,7 @@ import { Stream } from 'openai/streaming';
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/meta-schema';
 import type { ChatModelCard } from '@/types/llm';
+import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
 
 import { LobeRuntimeAI } from '../../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
@@ -462,7 +463,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       return resultModels.map((model) => {
         return {
           ...model,
-          type: model.type || LOBE_DEFAULT_MODEL_LIST.find((m) => m.id === model.id)?.type,
+          type: model.type || getModelPropertyWithFallback(model.id, 'type'),
         };
       }) as ChatModelCard[];
     }
