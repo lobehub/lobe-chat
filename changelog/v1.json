@@ -1,6 +1,18 @@
 [
   {
     "children": {
+      "features": [
+        "Add zhipu cogview4."
+      ],
+      "fixes": [
+        "Some ai image bugs."
+      ]
+    },
+    "date": "2025-07-18",
+    "version": "1.100.0"
+  },
+  {
+    "children": {
       "fixes": [
         "Chat model list should not show image model."
       ]
