@@ -11,6 +11,14 @@
     "desc": "Wejdź w tryb edycji, przytrzymując klawisz Alt i podwójnie klikając wiadomość",
     "title": "Edytuj wiadomość"
   },
+  "navigateToChat": {
+    "desc": "Przełącz na kartę rozmowy",
+    "title": "Karta rozmowy"
+  },
+  "navigateToInbox": {
+    "desc": "Przełącz na kartę rozmowy i wejdź do swobodnej rozmowy",
+    "title": "Swobodna rozmowa"
+  },
   "openChatSettings": {
     "desc": "Zobacz i zmodyfikuj ustawienia bieżącej rozmowy",
     "title": "Otwórz ustawienia czatu"

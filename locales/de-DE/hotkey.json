@@ -11,6 +11,14 @@
     "desc": "Treten Sie in den Bearbeitungsmodus, indem Sie die Alt-Taste gedrückt halten und auf die Nachricht doppelklicken",
     "title": "Nachricht bearbeiten"
   },
+  "navigateToChat": {
+    "desc": "Zum Chat-Tab wechseln",
+    "title": "Chat-Tab"
+  },
+  "navigateToInbox": {
+    "desc": "Zum Chat-Tab wechseln und in 'Einfach plaudern' eintreten",
+    "title": "Einfach plaudern"
+  },
   "openChatSettings": {
     "desc": "Aktuelle Sitzungseinstellungen anzeigen und ändern",
     "title": "Chat-Einstellungen öffnen"

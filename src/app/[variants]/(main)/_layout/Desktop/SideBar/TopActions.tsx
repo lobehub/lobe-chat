@@ -1,4 +1,4 @@
-import { ActionIcon, ActionIconProps } from '@lobehub/ui';
+import { ActionIcon, ActionIconProps, Hotkey } from '@lobehub/ui';
 import { Compass, FolderClosed, MessageSquare, Palette } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
@@ -9,6 +9,9 @@ import { useGlobalStore } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
+import { HotkeyEnum } from '@/types/hotkey';
 
 const ICON_SIZE: ActionIconProps['size'] = {
   blockSize: 40,
@@ -25,6 +28,7 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
   const { t } = useTranslation('common');
   const switchBackToChat = useGlobalStore((s) => s.switchBackToChat);
   const { showMarket, enableKnowledgeBase } = useServerConfigStore(featureFlagsSelectors);
+  const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.NavigateToChat));
 
   const isChatActive = tab === SidebarTabKey.Chat && !isPinned;
   const isFilesActive = tab === SidebarTabKey.Files;
@@ -51,7 +55,12 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
           active={isChatActive}
           icon={MessageSquare}
           size={ICON_SIZE}
-          title={t('tab.chat')}
+          title={
+            <Flexbox align={'center'} gap={8} horizontal justify={'space-between'}>
+              <span>{t('tab.chat')}</span>
+              <Hotkey inverseTheme keys={hotkey} />
+            </Flexbox>
+          }
           tooltipProps={{ placement: 'right' }}
         />
       </Link>
