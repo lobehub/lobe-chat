@@ -15,6 +15,7 @@ import { useChatStore } from '@/store/chat';
 import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
+import { WebBrowsingManifest } from '@/tools/web-browsing';
 
 import ActionPopover from '../components/ActionPopover';
 import TokenProgress from './TokenProgress';
@@ -52,10 +53,29 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
   // Tool usage token
   const canUseTool = useModelSupportToolUse(model, provider);
   const plugins = useAgentStore(agentSelectors.currentAgentPlugins);
+
+  // Check if web-browsing tool was actually called in the conversation history
+  const messages = useChatStore(chatSelectors.activeBaseChats);
+  const hasWebBrowsingToolCall = useMemo(() => {
+    return messages.some((message) => {
+      if (!message.tools || message.tools.length === 0) return false;
+      return message.tools.some((tool) => tool.identifier === WebBrowsingManifest.identifier);
+    });
+  }, [messages]);
+
+  // Include web-browsing tool only if it was actually called in the conversation
+  const pluginsForTokenCalc = useMemo(() => {
+    const pluginIds = [...plugins];
+    if (hasWebBrowsingToolCall) {
+      pluginIds.push(WebBrowsingManifest.identifier);
+    }
+    return pluginIds;
+  }, [plugins, hasWebBrowsingToolCall]);
+
   const toolsString = useToolStore((s) => {
-    const pluginSystemRoles = toolSelectors.enabledSystemRoles(plugins)(s);
+    const pluginSystemRoles = toolSelectors.enabledSystemRoles(pluginsForTokenCalc)(s);
     const schemaNumber = toolSelectors
-      .enabledSchema(plugins)(s)
+      .enabledSchema(pluginsForTokenCalc)(s)
       .map((i) => JSON.stringify(i))
       .join('');
 
