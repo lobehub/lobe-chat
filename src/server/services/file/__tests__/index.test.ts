@@ -5,6 +5,7 @@ import { FileModel } from '@/database/models/file';
 import { TempFileManager } from '@/server/utils/tempFileManager';
 
 import { FileService } from '../index';
+import { TRPCErrorMessage } from '@/types/files';
 
 vi.mock('@/config/db', () => ({
   serverDBEnv: {
@@ -77,7 +78,7 @@ describe('FileService', () => {
       mockFileModel.findById.mockResolvedValue(undefined);
 
       await expect(service.downloadFileToLocal('test-file-id')).rejects.toThrow(
-        new TRPCError({ code: 'BAD_REQUEST', message: 'File not found' }),
+        new TRPCError({ code: 'BAD_REQUEST', message: TRPCErrorMessage.FileNotFound }),
       );
     });
 
@@ -86,7 +87,7 @@ describe('FileService', () => {
       vi.mocked(service['impl'].getFileByteArray).mockResolvedValue(undefined as any);
 
       await expect(service.downloadFileToLocal('test-file-id')).rejects.toThrow(
-        new TRPCError({ code: 'BAD_REQUEST', message: 'File content is empty' }),
+        new TRPCError({ code: 'BAD_REQUEST', message: TRPCErrorMessage.FileContentEmpty }),
       );
     });
 
@@ -95,7 +96,7 @@ describe('FileService', () => {
       vi.mocked(service['impl'].getFileByteArray).mockRejectedValue({ Code: 'NoSuchKey' });
 
       await expect(service.downloadFileToLocal('test-file-id')).rejects.toThrow(
-        new TRPCError({ code: 'BAD_REQUEST', message: 'File not found' }),
+        new TRPCError({ code: 'BAD_REQUEST', message: TRPCErrorMessage.FileNotFound }),
       );
 
       expect(mockFileModel.delete).toHaveBeenCalledWith('test-file-id', false);
