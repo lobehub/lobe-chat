@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix webapi proxy with clerk."]
+    },
+    "date": "2025-07-18",
+    "version": "1.100.2"
+  },
+  {
+    "children": {
       "fixes": ["Use server env config image models."]
     },
     "date": "2025-07-17",
