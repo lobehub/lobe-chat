@@ -656,6 +656,9 @@
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B là mô hình được thiết kế cho việc tuân thủ hướng dẫn, đối thoại và lập trình."
   },
+  "cogview-4": {
+    "description": "CogView-4 là mô hình tạo hình ảnh văn bản mã nguồn mở đầu tiên của Zhipu hỗ trợ tạo ký tự Trung Hoa, với sự cải tiến toàn diện về hiểu ngữ nghĩa, chất lượng tạo hình ảnh, khả năng tạo ký tự tiếng Trung và tiếng Anh, hỗ trợ đầu vào song ngữ Trung-Anh với độ dài tùy ý, có thể tạo hình ảnh với độ phân giải bất kỳ trong phạm vi cho phép."
+  },
   "cohere-command-r": {
     "description": "Command R là một mô hình sinh tạo có thể mở rộng, nhắm đến RAG và Sử dụng Công cụ để cho phép AI quy mô sản xuất cho doanh nghiệp."
   },

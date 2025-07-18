@@ -1227,9 +1227,26 @@ describe('LobeOpenAICompatibleFactory', () => {
         );
       });
 
-      it('should throw error when b64_json is missing', async () => {
+      it('should handle url format response successfully', async () => {
         vi.spyOn(instance['client'].images, 'generate').mockResolvedValue({
-          data: [{ url: 'https://example.com/image.jpg' }],
+          data: [{ url: 'https://example.com/generated-image.jpg' }],
+        } as any);
+
+        const payload = {
+          model: 'dall-e-3',
+          params: { prompt: 'Test prompt' },
+        };
+
+        const result = await (instance as any).createImage(payload);
+
+        expect(result).toEqual({
+          imageUrl: 'https://example.com/generated-image.jpg',
+        });
+      });
+
+      it('should throw error when both b64_json and url are missing', async () => {
+        vi.spyOn(instance['client'].images, 'generate').mockResolvedValue({
+          data: [{ some_other_field: 'value' }],
         } as any);
 
         const payload = {
@@ -1238,7 +1255,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         };
 
         await expect((instance as any).createImage(payload)).rejects.toThrow(
-          'Invalid image response: missing b64_json field',
+          'Invalid image response: missing both b64_json and url fields',
         );
       });
     });

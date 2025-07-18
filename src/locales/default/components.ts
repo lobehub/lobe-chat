@@ -73,10 +73,11 @@ export default {
   ImageUpload: {
     actions: {
       changeImage: '点击更换图片',
+      dropMultipleFiles: '不支持多上传多个文件，只会使用第一个文件',
     },
     placeholder: {
       primary: '添加图片',
-      secondary: '点击上传',
+      secondary: '点击或拖拽上传',
     },
   },
   KeyValueEditor: {
@@ -111,7 +112,7 @@ export default {
   },
   MultiImagesUpload: {
     actions: {
-      uploadMore: '点击上传更多',
+      uploadMore: '点击或拖拽上传更多',
     },
     modal: {
       complete: '完成',
@@ -121,7 +122,7 @@ export default {
       upload: '上传图片',
     },
     placeholder: {
-      primary: '点击上传图片',
+      primary: '点击或拖拽上传图片',
       secondary: '支持多张图片选择',
     },
     progress: {
