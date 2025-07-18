@@ -2,6 +2,48 @@
 
 # Changelog
 
+## [Version&nbsp;1.100.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.99.2...v1.100.0)
+<sup>Released on **2025-07-18**</sup>
+
+
+#### ✨ Features
+
+- **misc**: Add zhipu cogview4.
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Some ai image bugs.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's improved
+
+* **misc**: Add zhipu cogview4, closes [#8486](https://github.com/jaworldwideorg/OneJA-Bot/issues/8486) ([0b1557d](https://github.com/jaworldwideorg/OneJA-Bot/commit/0b1557d))
+
+
+
+#### What's fixed
+
+* **misc**: Some ai image bugs, closes [#8490](https://github.com/jaworldwideorg/OneJA-Bot/issues/8490) ([5d852be](https://github.com/jaworldwideorg/OneJA-Bot/commit/5d852be))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.99.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.99.1...v1.99.2)
 <sup>Released on **2025-07-18**</sup>
 
