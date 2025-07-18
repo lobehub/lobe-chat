@@ -390,21 +390,30 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         throw new Error('Invalid image response: first data item is null or undefined');
       }
 
-      if (!imageData.b64_json) {
-        log('Invalid image response: missing b64_json field');
-        throw new Error('Invalid image response: missing b64_json field');
+      let imageUrl: string;
+
+      // 处理 base64 格式的响应
+      if (imageData.b64_json) {
+        // 确定图片的 MIME 类型，默认为 PNG
+        const mimeType = 'image/png'; // OpenAI 图片生成默认返回 PNG 格式
+
+        // 将 base64 字符串转换为完整的 data URL
+        imageUrl = `data:${mimeType};base64,${imageData.b64_json}`;
+        log('Successfully converted base64 to data URL, length: %d', imageUrl.length);
+      }
+      // 处理 URL 格式的响应
+      else if (imageData.url) {
+        imageUrl = imageData.url;
+        log('Using direct image URL: %s', imageUrl);
+      }
+      // 如果两种格式都不存在，抛出错误
+      else {
+        log('Invalid image response: missing both b64_json and url fields');
+        throw new Error('Invalid image response: missing both b64_json and url fields');
       }
 
-      // 确定图片的 MIME 类型，默认为 PNG
-      const mimeType = 'image/png'; // OpenAI 图片生成默认返回 PNG 格式
-
-      // 将 base64 字符串转换为完整的 data URL
-      const dataUrl = `data:${mimeType};base64,${imageData.b64_json}`;
-
-      log('Successfully converted base64 to data URL, length: %d', dataUrl.length);
-
       return {
-        imageUrl: dataUrl,
+        imageUrl,
       };
     }
 
