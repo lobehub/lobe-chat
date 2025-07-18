@@ -49,12 +49,12 @@ export interface ModelSpeed {
   tps?: number;
   // time to fist token
   ttft?: number;
+  inputStartAt?: number;
+  outputStartAt?: number;
+  outputFinishAt?: number;
 }
 
-export interface MessageMetadata extends ModelTokensUsage {
-  tps?: number;
-  ttft?: number;
-}
+export type MessageMetadata = ModelSpeed & ModelTokensUsage;
 
 export type MessageRoleType = 'user' | 'system' | 'assistant' | 'tool';
 
