@@ -12,6 +12,8 @@ import { useFileStore } from '@/store/file';
 import { FileUploadStatus } from '@/types/files/upload';
 
 import { CONFIG_PANEL_WIDTH } from '../../constants';
+import { useDragAndDrop } from '../../hooks/useDragAndDrop';
+import { useConfigPanelStyles } from '../../style';
 import ImageManageModal, { type ImageItem } from './ImageManageModal';
 
 // ======== Business Types ======== //
@@ -279,14 +281,6 @@ const useStyles = createStyles(({ css, token }) => {
  */
 const isLocalBlobUrl = (url: string): boolean => url.startsWith('blob:');
 
-/**
- * Handle drag over event - prevent default behavior
- */
-const handleDragOver = (e: React.DragEvent) => {
-  e.preventDefault();
-  e.stopPropagation();
-};
-
 // ======== Sub-Components ======== //
 
 interface ImageUploadPlaceholderProps {
@@ -456,6 +450,7 @@ interface ImageThumbnailsProps {
 const ImageThumbnails: FC<ImageThumbnailsProps> = memo(
   ({ images, isDragOver, onClick, onDelete }) => {
     const { styles } = useStyles();
+    const { styles: configStyles } = useConfigPanelStyles();
 
     // Display max 4 images, with overflow indication
     const displayImages = images.slice(0, 4);
@@ -494,7 +489,7 @@ const ImageThumbnails: FC<ImageThumbnailsProps> = memo(
 
     return (
       <div
-        className={`${styles.imageThumbnails} ${isDragOver ? 'drag-over' : ''}`}
+        className={`${styles.imageThumbnails} ${configStyles.dragTransition} ${isDragOver ? configStyles.dragOver : ''}`}
         onClick={onClick}
       >
         {displayImages.map(renderImageItem)}
@@ -515,6 +510,7 @@ interface SingleImageDisplayProps {
 const SingleImageDisplay: FC<SingleImageDisplayProps> = memo(
   ({ imageUrl, isDragOver, onClick, onDelete }) => {
     const { styles } = useStyles();
+    const { styles: configStyles } = useConfigPanelStyles();
     const { t } = useTranslation('components');
 
     const handleDelete = (event: React.MouseEvent) => {
@@ -528,7 +524,9 @@ const SingleImageDisplay: FC<SingleImageDisplayProps> = memo(
     };
 
     return (
-      <div className={`${styles.singleImageDisplay} ${isDragOver ? 'drag-over' : ''}`}>
+      <div
+        className={`${styles.singleImageDisplay} ${configStyles.dragTransition} ${isDragOver ? configStyles.dragOver : ''}`}
+      >
         <Image
           alt="Uploaded image"
           fill
@@ -566,8 +564,7 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
     const uploadWithProgress = useFileStore((s) => s.uploadWithProgress);
     const [displayItems, setDisplayItems] = useState<DisplayItem[]>([]);
     const [modalOpen, setModalOpen] = useState(false);
-    const [isDragOver, setIsDragOver] = useState(false);
-    const dragCounter = useRef(0);
+    const { styles: configStyles } = useConfigPanelStyles();
 
     // Cleanup blob URLs to prevent memory leaks
     useEffect(() => {
@@ -709,46 +706,15 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
 
     // ======== Drag and Drop Handlers ======== //
 
-    const handleDragEnter = (e: React.DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      // Check if dragging files
-      if (e.dataTransfer.types.includes('Files')) {
-        dragCounter.current++;
-        setIsDragOver(true);
-      }
-    };
-
-    const handleDragLeave = (e: React.DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      dragCounter.current--;
-      if (dragCounter.current === 0) {
-        setIsDragOver(false);
-      }
-    };
-
-    const handleDrop = async (e: React.DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      dragCounter.current = 0;
-      setIsDragOver(false);
-
-      const files = Array.from(e.dataTransfer.files);
-
-      // Filter to only image files
-      const imageFiles = files.filter((file) => file.type.startsWith('image/'));
-
-      if (imageFiles.length === 0) {
-        return; // No image files found
-      }
-
+    const handleDrop = async (files: File[]) => {
       // Add all image files to existing images
-      await handleFilesSelected(imageFiles);
+      await handleFilesSelected(files);
     };
+
+    const { isDragOver, dragHandlers } = useDragAndDrop({
+      accept: 'image/*',
+      onDrop: handleDrop,
+    });
 
     // 处理 Modal 完成回调
     const handleModalComplete = async (imageItems: ImageItem[]) => {
@@ -779,14 +745,7 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
     const isSingleImage = value && value.length === 1;
 
     return (
-      <div
-        className={className}
-        onDragEnter={handleDragEnter}
-        onDragLeave={handleDragLeave}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-        style={style}
-      >
+      <div className={className} {...dragHandlers} style={style}>
         {/* Hidden file input */}
         <input
           accept="image/*"
@@ -803,7 +762,9 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
 
         {/* Conditional rendering based on state */}
         {isUploading ? (
-          <div className={isDragOver ? 'drag-over' : ''}>
+          <div
+            className={`${configStyles.dragTransition} ${isDragOver ? configStyles.dragOver : ''}`}
+          >
             <ImageUploadProgress
               completedCount={completedFiles}
               currentProgress={overallProgress}

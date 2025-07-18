@@ -1,5 +1,6 @@
 'use client';
 
+import { App } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
 import { Image as ImageIcon, X } from 'lucide-react';
 import Image from 'next/image';
@@ -9,6 +10,9 @@ import { Center } from 'react-layout-kit';
 
 import { useFileStore } from '@/store/file';
 import { FileUploadStatus } from '@/types/files/upload';
+
+import { useDragAndDrop } from '../hooks/useDragAndDrop';
+import { useConfigPanelStyles } from '../style';
 
 // ======== Business Types ======== //
 
@@ -196,14 +200,6 @@ const useStyles = createStyles(({ css, token }) => {
  */
 const isLocalBlobUrl = (url: string): boolean => url.startsWith('blob:');
 
-/**
- * Handle drag over event - prevent default behavior
- */
-const handleDragOver = (e: React.DragEvent) => {
-  e.preventDefault();
-  e.stopPropagation();
-};
-
 // ======== Sub-Components ======== //
 
 /**
@@ -308,11 +304,12 @@ interface PlaceholderProps {
 
 const Placeholder: FC<PlaceholderProps> = memo(({ isDragOver, onClick }) => {
   const { styles } = useStyles();
+  const { styles: configStyles } = useConfigPanelStyles();
   const { t } = useTranslation('components');
 
   return (
     <Center
-      className={`${styles.placeholder} ${isDragOver ? 'drag-over' : ''}`}
+      className={`${styles.placeholder} ${configStyles.dragTransition} ${isDragOver ? configStyles.dragOver : ''}`}
       gap={16}
       horizontal={false}
       onClick={onClick}
@@ -371,6 +368,7 @@ interface SuccessDisplayProps {
 const SuccessDisplay: FC<SuccessDisplayProps> = memo(
   ({ imageUrl, isDragOver, onDelete, onChangeImage }) => {
     const { styles } = useStyles();
+    const { styles: configStyles } = useConfigPanelStyles();
     const { t } = useTranslation('components');
 
     const handleDelete = (event: React.MouseEvent) => {
@@ -385,7 +383,7 @@ const SuccessDisplay: FC<SuccessDisplayProps> = memo(
 
     return (
       <div
-        className={`${styles.successDisplay} ${isDragOver ? 'drag-over' : ''}`}
+        className={`${styles.successDisplay} ${configStyles.dragTransition} ${isDragOver ? configStyles.dragOver : ''}`}
         onClick={onChangeImage}
       >
         <Image
@@ -420,8 +418,8 @@ const ImageUpload: FC<ImageUploadProps> = memo(({ value, onChange, style, classN
   const inputRef = useRef<HTMLInputElement>(null);
   const uploadWithProgress = useFileStore((s) => s.uploadWithProgress);
   const [uploadState, setUploadState] = useState<UploadState | null>(null);
-  const [isDragOver, setIsDragOver] = useState(false);
-  const dragCounter = useRef(0);
+  const { t } = useTranslation('components');
+  const { message } = App.useApp();
 
   // Cleanup blob URLs to prevent memory leaks
   useEffect(() => {
@@ -509,45 +507,14 @@ const ImageUpload: FC<ImageUploadProps> = memo(({ value, onChange, style, classN
     onChange?.(undefined);
   };
 
-  const handleDragEnter = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    // Check if dragging files
-    if (e.dataTransfer.types.includes('Files')) {
-      dragCounter.current++;
-      setIsDragOver(true);
-    }
-  };
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    dragCounter.current--;
-    if (dragCounter.current === 0) {
-      setIsDragOver(false);
-    }
-  };
-
-  const handleDrop = async (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    dragCounter.current = 0;
-    setIsDragOver(false);
-
-    const files = Array.from(e.dataTransfer.files);
-
-    // Filter to only image files
-    const imageFiles = files.filter((file) => file.type.startsWith('image/'));
-
-    if (imageFiles.length === 0) {
-      return; // No image files found
+  const handleDrop = async (files: File[]) => {
+    // Show warning if multiple files detected
+    if (files.length > 1) {
+      message.warning(t('ImageUpload.actions.dropMultipleFiles'));
     }
 
     // Take the first image file
-    const file = imageFiles[0];
+    const file = files[0];
 
     // Create preview URL
     const previewUrl = URL.createObjectURL(file);
@@ -613,19 +580,17 @@ const ImageUpload: FC<ImageUploadProps> = memo(({ value, onChange, style, classN
     }
   };
 
+  const { isDragOver, dragHandlers } = useDragAndDrop({
+    accept: 'image/*',
+    onDrop: handleDrop,
+  });
+
   // Determine which view to render
   const hasImage = Boolean(value);
   const isUploading = Boolean(uploadState);
 
   return (
-    <div
-      className={className}
-      onDragEnter={handleDragEnter}
-      onDragLeave={handleDragLeave}
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
-      style={style}
-    >
+    <div className={className} {...dragHandlers} style={style}>
       {/* Hidden file input */}
       <input
         accept="image/*"

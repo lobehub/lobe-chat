@@ -73,6 +73,7 @@ export default {
   ImageUpload: {
     actions: {
       changeImage: '点击更换图片',
+      dropMultipleFiles: '不支持多上传多个文件，只会使用第一个文件',
     },
     placeholder: {
       primary: '添加图片',
