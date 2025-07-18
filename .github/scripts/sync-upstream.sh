@@ -2,6 +2,12 @@
 set -e
 
 # Script to sync with upstream repository while honoring .gitattributes
+#
+# Features:
+# - Only fetches the specific branch from upstream (no tags or other branches)
+# - Handles "refusing to merge unrelated histories" error with --allow-unrelated-histories flag
+# - Honors .gitattributes merge strategies
+#
 # Parameters:
 # $1 - Upstream repository (e.g., "lobehub/lobe-chat")
 # $2 - Upstream branch (e.g., "main")
@@ -31,9 +37,9 @@ git config --global user.email "actions@github.com"
 git remote add upstream "https://github.com/$UPSTREAM_REPO.git" || true
 echo "Added upstream remote"
 
-# Fetch from upstream
-git fetch upstream
-echo "Fetched from upstream"
+# Fetch only the specific branch from upstream (no tags or other branches)
+git fetch upstream "$UPSTREAM_BRANCH":"upstream/$UPSTREAM_BRANCH" --no-tags
+echo "Fetched only $UPSTREAM_BRANCH branch from upstream (no tags or other branches)"
 
 # Get the current commit hash before merging
 BEFORE_COMMIT=$(git rev-parse HEAD)
@@ -45,7 +51,11 @@ echo "Checked out target branch: $TARGET_BRANCH"
 # Merge upstream changes
 # This will honor .gitattributes because we're using native git commands
 echo "Merging upstream changes from $UPSTREAM_REPO/$UPSTREAM_BRANCH"
-git merge "upstream/$UPSTREAM_BRANCH" --no-edit
+git merge "upstream/$UPSTREAM_BRANCH" --no-edit --allow-unrelated-histories || {
+  echo "Error: Failed to merge upstream changes"
+  echo "If you're seeing 'refusing to merge unrelated histories', this is now handled with --allow-unrelated-histories flag"
+  exit 1
+}
 
 # Get the commit hash after merging
 AFTER_COMMIT=$(git rev-parse HEAD)
