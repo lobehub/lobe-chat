@@ -12,6 +12,8 @@ import { useFileStore } from '@/store/file';
 import { FileUploadStatus } from '@/types/files/upload';
 
 import { CONFIG_PANEL_WIDTH } from '../../constants';
+import { useDragAndDrop } from '../../hooks/useDragAndDrop';
+import { useConfigPanelStyles } from '../../style';
 import ImageManageModal, { type ImageItem } from './ImageManageModal';
 
 // ======== Business Types ======== //
@@ -105,6 +107,14 @@ const useStyles = createStyles(({ css, token }) => {
       width: 100%;
       height: ${thumbnailSize}px;
       padding: 0;
+      border-radius: ${token.borderRadiusLG}px;
+
+      transition: all 0.2s ease;
+
+      &.drag-over {
+        transform: scale(1.02);
+        background: ${token.colorPrimaryBg};
+      }
     `,
 
     moreOverlay: css`
@@ -139,6 +149,12 @@ const useStyles = createStyles(({ css, token }) => {
         border-color: ${token.colorPrimary};
         background: ${token.colorFillSecondary};
       }
+
+      &.drag-over {
+        transform: scale(1.02);
+        border-color: ${token.colorPrimary};
+        background: ${token.colorPrimaryBg};
+      }
     `,
 
     placeholderIcon: css`
@@ -167,6 +183,11 @@ const useStyles = createStyles(({ css, token }) => {
       background: ${token.colorFillSecondary};
 
       transition: all 0.2s ease;
+
+      &.drag-over {
+        transform: scale(1.02);
+        background: ${token.colorPrimaryBg};
+      }
     `,
 
     progressPrimary: css`
@@ -197,12 +218,19 @@ const useStyles = createStyles(({ css, token }) => {
 
       background: ${token.colorBgContainer};
 
+      transition: all 0.2s ease;
+
       &:hover .upload-more-overlay {
         opacity: 1;
       }
 
       &:hover .delete-icon {
         opacity: 1;
+      }
+
+      &.drag-over {
+        transform: scale(1.02);
+        background: ${token.colorPrimaryBg};
       }
     `,
     uploadMoreButton: css`
@@ -256,15 +284,21 @@ const isLocalBlobUrl = (url: string): boolean => url.startsWith('blob:');
 // ======== Sub-Components ======== //
 
 interface ImageUploadPlaceholderProps {
+  isDragOver?: boolean;
   onClick?: () => void;
 }
 
-const ImageUploadPlaceholder: FC<ImageUploadPlaceholderProps> = memo(({ onClick }) => {
+const ImageUploadPlaceholder: FC<ImageUploadPlaceholderProps> = memo(({ isDragOver, onClick }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('components');
 
   return (
-    <Center className={styles.placeholder} gap={16} horizontal={false} onClick={onClick}>
+    <Center
+      className={`${styles.placeholder} ${isDragOver ? 'drag-over' : ''}`}
+      gap={16}
+      horizontal={false}
+      onClick={onClick}
+    >
       <ImageIcon className={styles.placeholderIcon} size={48} strokeWidth={1.5} />
       <div className={styles.placeholderText}>
         {t('MultiImagesUpload.placeholder.primary')}
@@ -408,104 +442,117 @@ ImageUploadProgress.displayName = 'ImageUploadProgress';
 
 interface ImageThumbnailsProps {
   images: string[];
+  isDragOver?: boolean;
   onClick?: () => void;
   onDelete?: (index: number) => void;
 }
 
-const ImageThumbnails: FC<ImageThumbnailsProps> = memo(({ images, onClick, onDelete }) => {
-  const { styles } = useStyles();
+const ImageThumbnails: FC<ImageThumbnailsProps> = memo(
+  ({ images, isDragOver, onClick, onDelete }) => {
+    const { styles } = useStyles();
+    const { styles: configStyles } = useConfigPanelStyles();
 
-  // Display max 4 images, with overflow indication
-  const displayImages = images.slice(0, 4);
-  const remainingCount = Math.max(0, images.length - 3); // Show +x for images beyond first 3
+    // Display max 4 images, with overflow indication
+    const displayImages = images.slice(0, 4);
+    const remainingCount = Math.max(0, images.length - 3); // Show +x for images beyond first 3
 
-  const handleDelete = (index: number, event: React.MouseEvent) => {
-    event.stopPropagation(); // Prevent triggering container click
-    onDelete?.(index);
-  };
+    const handleDelete = (index: number, event: React.MouseEvent) => {
+      event.stopPropagation(); // Prevent triggering container click
+      onDelete?.(index);
+    };
 
-  const renderImageItem = (imageUrl: string, index: number) => {
-    const isLastItem = index === 3;
-    const showOverlay = isLastItem && remainingCount > 1;
+    const renderImageItem = (imageUrl: string, index: number) => {
+      const isLastItem = index === 3;
+      const showOverlay = isLastItem && remainingCount > 1;
+
+      return (
+        <div className={styles.imageItem} key={imageUrl}>
+          <Image
+            alt={`Uploaded image ${index + 1}`}
+            fill
+            src={imageUrl}
+            style={{ objectFit: 'cover' }}
+            unoptimized
+          />
+          {!showOverlay && (
+            <div
+              className={`${styles.deleteIcon} delete-icon`}
+              onClick={(e) => handleDelete(index, e)}
+            >
+              <X size={12} />
+            </div>
+          )}
+          {showOverlay && <div className={styles.moreOverlay}>+{remainingCount}</div>}
+        </div>
+      );
+    };
 
     return (
-      <div className={styles.imageItem} key={imageUrl}>
-        <Image
-          alt={`Uploaded image ${index + 1}`}
-          fill
-          src={imageUrl}
-          style={{ objectFit: 'cover' }}
-          unoptimized
-        />
-        {!showOverlay && (
-          <div
-            className={`${styles.deleteIcon} delete-icon`}
-            onClick={(e) => handleDelete(index, e)}
-          >
-            <X size={12} />
-          </div>
-        )}
-        {showOverlay && <div className={styles.moreOverlay}>+{remainingCount}</div>}
+      <div
+        className={`${styles.imageThumbnails} ${configStyles.dragTransition} ${isDragOver ? configStyles.dragOver : ''}`}
+        onClick={onClick}
+      >
+        {displayImages.map(renderImageItem)}
       </div>
     );
-  };
-
-  return (
-    <div className={styles.imageThumbnails} onClick={onClick}>
-      {displayImages.map(renderImageItem)}
-    </div>
-  );
-});
+  },
+);
 
 ImageThumbnails.displayName = 'ImageThumbnails';
 
 interface SingleImageDisplayProps {
   imageUrl: string;
+  isDragOver?: boolean;
   onClick?: () => void;
   onDelete?: () => void;
 }
 
-const SingleImageDisplay: FC<SingleImageDisplayProps> = memo(({ imageUrl, onClick, onDelete }) => {
-  const { styles } = useStyles();
-  const { t } = useTranslation('components');
+const SingleImageDisplay: FC<SingleImageDisplayProps> = memo(
+  ({ imageUrl, isDragOver, onClick, onDelete }) => {
+    const { styles } = useStyles();
+    const { styles: configStyles } = useConfigPanelStyles();
+    const { t } = useTranslation('components');
 
-  const handleDelete = (event: React.MouseEvent) => {
-    event.stopPropagation(); // Prevent triggering container click
-    onDelete?.();
-  };
+    const handleDelete = (event: React.MouseEvent) => {
+      event.stopPropagation(); // Prevent triggering container click
+      onDelete?.();
+    };
 
-  const handleOverlayClick = (event: React.MouseEvent) => {
-    event.stopPropagation(); // Prevent triggering container click
-    onClick?.();
-  };
+    const handleOverlayClick = (event: React.MouseEvent) => {
+      event.stopPropagation(); // Prevent triggering container click
+      onClick?.();
+    };
 
-  return (
-    <div className={styles.singleImageDisplay}>
-      <Image
-        alt="Uploaded image"
-        fill
-        src={imageUrl}
-        style={{ objectFit: 'contain' }}
-        unoptimized
-      />
-
-      {/* Delete button */}
-      <div className={`${styles.deleteIcon} delete-icon`} onClick={handleDelete}>
-        <X size={12} />
-      </div>
-
-      {/* Upload more overlay */}
+    return (
       <div
-        className={`${styles.uploadMoreOverlay} upload-more-overlay`}
-        onClick={handleOverlayClick}
+        className={`${styles.singleImageDisplay} ${configStyles.dragTransition} ${isDragOver ? configStyles.dragOver : ''}`}
       >
-        <button className={styles.uploadMoreButton} type="button">
-          {t('MultiImagesUpload.actions.uploadMore')}
-        </button>
+        <Image
+          alt="Uploaded image"
+          fill
+          src={imageUrl}
+          style={{ objectFit: 'contain' }}
+          unoptimized
+        />
+
+        {/* Delete button */}
+        <div className={`${styles.deleteIcon} delete-icon`} onClick={handleDelete}>
+          <X size={12} />
+        </div>
+
+        {/* Upload more overlay */}
+        <div
+          className={`${styles.uploadMoreOverlay} upload-more-overlay`}
+          onClick={handleOverlayClick}
+        >
+          <button className={styles.uploadMoreButton} type="button">
+            {t('MultiImagesUpload.actions.uploadMore')}
+          </button>
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 SingleImageDisplay.displayName = 'SingleImageDisplay';
 
@@ -517,6 +564,7 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
     const uploadWithProgress = useFileStore((s) => s.uploadWithProgress);
     const [displayItems, setDisplayItems] = useState<DisplayItem[]>([]);
     const [modalOpen, setModalOpen] = useState(false);
+    const { styles: configStyles } = useConfigPanelStyles();
 
     // Cleanup blob URLs to prevent memory leaks
     useEffect(() => {
@@ -656,6 +704,18 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
       await handleFilesSelected(Array.from(files));
     };
 
+    // ======== Drag and Drop Handlers ======== //
+
+    const handleDrop = async (files: File[]) => {
+      // Add all image files to existing images
+      await handleFilesSelected(files);
+    };
+
+    const { isDragOver, dragHandlers } = useDragAndDrop({
+      accept: 'image/*',
+      onDrop: handleDrop,
+    });
+
     // 处理 Modal 完成回调
     const handleModalComplete = async (imageItems: ImageItem[]) => {
       // 分离现有URL和新文件
@@ -685,7 +745,7 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
     const isSingleImage = value && value.length === 1;
 
     return (
-      <div className={className} style={style}>
+      <div className={className} {...dragHandlers} style={style}>
         {/* Hidden file input */}
         <input
           accept="image/*"
@@ -702,22 +762,32 @@ const MultiImagesUpload: FC<MultiImagesUploadProps> = memo(
 
         {/* Conditional rendering based on state */}
         {isUploading ? (
-          <ImageUploadProgress
-            completedCount={completedFiles}
-            currentProgress={overallProgress}
-            showCount={totalFiles > 1}
-            totalCount={totalFiles}
-          />
+          <div
+            className={`${configStyles.dragTransition} ${isDragOver ? configStyles.dragOver : ''}`}
+          >
+            <ImageUploadProgress
+              completedCount={completedFiles}
+              currentProgress={overallProgress}
+              showCount={totalFiles > 1}
+              totalCount={totalFiles}
+            />
+          </div>
         ) : isSingleImage ? (
           <SingleImageDisplay
             imageUrl={value[0]}
+            isDragOver={isDragOver}
             onClick={handleOpenModal}
             onDelete={() => handleDelete(0)}
           />
         ) : hasImages ? (
-          <ImageThumbnails images={value || []} onClick={handleOpenModal} onDelete={handleDelete} />
+          <ImageThumbnails
+            images={value || []}
+            isDragOver={isDragOver}
+            onClick={handleOpenModal}
+            onDelete={handleDelete}
+          />
         ) : (
-          <ImageUploadPlaceholder onClick={handlePlaceholderClick} />
+          <ImageUploadPlaceholder isDragOver={isDragOver} onClick={handlePlaceholderClick} />
         )}
 
         {/* Image Management Modal */}
