@@ -74,7 +74,7 @@
     },
     "placeholder": {
       "primary": "Ajouter une image",
-      "secondary": "Cliquez pour télécharger"
+      "secondary": "Cliquez ou faites glisser pour télécharger"
     }
   },
   "KeyValueEditor": {
@@ -109,7 +109,7 @@
   },
   "MultiImagesUpload": {
     "actions": {
-      "uploadMore": "Cliquez pour télécharger plus"
+      "uploadMore": "Cliquez ou glissez pour télécharger plus"
     },
     "modal": {
       "complete": "Terminé",
@@ -119,7 +119,7 @@
       "upload": "Télécharger des images"
     },
     "placeholder": {
-      "primary": "Cliquez pour télécharger des images",
+      "primary": "Cliquez ou glissez pour télécharger une image",
       "secondary": "Prise en charge de la sélection de plusieurs images"
     },
     "progress": {

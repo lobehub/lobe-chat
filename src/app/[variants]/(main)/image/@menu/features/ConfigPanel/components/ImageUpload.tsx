@@ -2,6 +2,7 @@
 
 import { createStyles, useTheme } from 'antd-style';
 import { Image as ImageIcon, X } from 'lucide-react';
+import Image from 'next/image';
 import React, { type FC, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
@@ -100,11 +101,6 @@ const useStyles = createStyles(({ css, token }) => {
         background: ${token.colorErrorBg};
       }
     `,
-    imageStyle: css`
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    `,
     placeholder: css`
       cursor: pointer;
 
@@ -120,6 +116,12 @@ const useStyles = createStyles(({ css, token }) => {
       &:hover {
         border-color: ${token.colorPrimary};
         background: ${token.colorFillSecondary};
+      }
+
+      &.drag-over {
+        transform: scale(1.02);
+        border-color: ${token.colorPrimary};
+        background: ${token.colorPrimaryBg};
       }
     `,
     placeholderIcon: css`
@@ -140,9 +142,12 @@ const useStyles = createStyles(({ css, token }) => {
 
       width: 100%;
       height: 160px;
+      border: 2px solid transparent;
       border-radius: ${token.borderRadiusLG}px;
 
       background: ${token.colorBgContainer};
+
+      transition: all ${token.motionDurationMid} ease;
 
       &:hover .change-overlay {
         opacity: 1;
@@ -150,6 +155,12 @@ const useStyles = createStyles(({ css, token }) => {
 
       &:hover .delete-icon {
         opacity: 1;
+      }
+
+      &.drag-over {
+        transform: scale(1.02);
+        border-color: ${token.colorPrimary};
+        background: ${token.colorPrimaryBg};
       }
     `,
     uploadingDisplay: css`
@@ -184,6 +195,14 @@ const useStyles = createStyles(({ css, token }) => {
  * Check if a URL is a local blob URL
  */
 const isLocalBlobUrl = (url: string): boolean => url.startsWith('blob:');
+
+/**
+ * Handle drag over event - prevent default behavior
+ */
+const handleDragOver = (e: React.DragEvent) => {
+  e.preventDefault();
+  e.stopPropagation();
+};
 
 // ======== Sub-Components ======== //
 
@@ -283,20 +302,26 @@ CircularProgress.displayName = 'CircularProgress';
  * 占位视图组件
  */
 interface PlaceholderProps {
+  isDragOver?: boolean;
   onClick?: () => void;
 }
 
-const Placeholder: FC<PlaceholderProps> = memo(({ onClick }) => {
+const Placeholder: FC<PlaceholderProps> = memo(({ isDragOver, onClick }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('components');
 
   return (
-    <Center className={styles.placeholder} gap={16} horizontal={false} onClick={onClick}>
+    <Center
+      className={`${styles.placeholder} ${isDragOver ? 'drag-over' : ''}`}
+      gap={16}
+      horizontal={false}
+      onClick={onClick}
+    >
       <ImageIcon className={styles.placeholderIcon} size={48} strokeWidth={1.5} />
       <div className={styles.placeholderText}>
-        {t('ImageUpload.placeholder.primary', 'Add Image')}
+        {t('ImageUpload.placeholder.primary')}
         <br />
-        {t('ImageUpload.placeholder.secondary', 'Click to upload')}
+        {t('ImageUpload.placeholder.secondary')}
       </div>
     </Center>
   );
@@ -317,7 +342,13 @@ const UploadingDisplay: FC<UploadingDisplayProps> = memo(({ previewUrl, progress
 
   return (
     <div className={styles.uploadingDisplay}>
-      <img alt="Uploading preview" className={styles.imageStyle} src={previewUrl} />
+      <Image
+        alt="Uploading preview"
+        fill
+        src={previewUrl}
+        style={{ objectFit: 'cover' }}
+        unoptimized
+      />
       <div className={styles.uploadingOverlay}>
         <CircularProgress value={progress} />
       </div>
@@ -332,42 +363,54 @@ UploadingDisplay.displayName = 'UploadingDisplay';
  */
 interface SuccessDisplayProps {
   imageUrl: string;
+  isDragOver?: boolean;
   onChangeImage?: () => void;
   onDelete?: () => void;
 }
 
-const SuccessDisplay: FC<SuccessDisplayProps> = memo(({ imageUrl, onDelete, onChangeImage }) => {
-  const { styles } = useStyles();
-  const { t } = useTranslation('components');
+const SuccessDisplay: FC<SuccessDisplayProps> = memo(
+  ({ imageUrl, isDragOver, onDelete, onChangeImage }) => {
+    const { styles } = useStyles();
+    const { t } = useTranslation('components');
 
-  const handleDelete = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    onDelete?.();
-  };
+    const handleDelete = (event: React.MouseEvent) => {
+      event.stopPropagation();
+      onDelete?.();
+    };
 
-  const handleChangeImage = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    onChangeImage?.();
-  };
+    const handleChangeImage = (event: React.MouseEvent) => {
+      event.stopPropagation();
+      onChangeImage?.();
+    };
 
-  return (
-    <div className={styles.successDisplay} onClick={onChangeImage}>
-      <img alt="Uploaded image" className={styles.imageStyle} src={imageUrl} />
+    return (
+      <div
+        className={`${styles.successDisplay} ${isDragOver ? 'drag-over' : ''}`}
+        onClick={onChangeImage}
+      >
+        <Image
+          alt="Uploaded image"
+          fill
+          src={imageUrl}
+          style={{ objectFit: 'cover' }}
+          unoptimized
+        />
 
-      {/* Delete button */}
-      <div className={`${styles.deleteIcon} delete-icon`} onClick={handleDelete}>
-        <X size={14} />
+        {/* Delete button */}
+        <div className={`${styles.deleteIcon} delete-icon`} onClick={handleDelete}>
+          <X size={14} />
+        </div>
+
+        {/* Change image overlay */}
+        <div className={`${styles.changeOverlay} change-overlay`} onClick={handleChangeImage}>
+          <button className={styles.changeButton} type="button">
+            {t('ImageUpload.actions.changeImage')}
+          </button>
+        </div>
       </div>
-
-      {/* Change image overlay */}
-      <div className={`${styles.changeOverlay} change-overlay`} onClick={handleChangeImage}>
-        <button className={styles.changeButton} type="button">
-          {t('ImageUpload.actions.changeImage', 'Click to change image')}
-        </button>
-      </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 SuccessDisplay.displayName = 'SuccessDisplay';
 
@@ -377,6 +420,8 @@ const ImageUpload: FC<ImageUploadProps> = memo(({ value, onChange, style, classN
   const inputRef = useRef<HTMLInputElement>(null);
   const uploadWithProgress = useFileStore((s) => s.uploadWithProgress);
   const [uploadState, setUploadState] = useState<UploadState | null>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const dragCounter = useRef(0);
 
   // Cleanup blob URLs to prevent memory leaks
   useEffect(() => {
@@ -464,12 +509,123 @@ const ImageUpload: FC<ImageUploadProps> = memo(({ value, onChange, style, classN
     onChange?.(undefined);
   };
 
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Check if dragging files
+    if (e.dataTransfer.types.includes('Files')) {
+      dragCounter.current++;
+      setIsDragOver(true);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    dragCounter.current--;
+    if (dragCounter.current === 0) {
+      setIsDragOver(false);
+    }
+  };
+
+  const handleDrop = async (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    dragCounter.current = 0;
+    setIsDragOver(false);
+
+    const files = Array.from(e.dataTransfer.files);
+
+    // Filter to only image files
+    const imageFiles = files.filter((file) => file.type.startsWith('image/'));
+
+    if (imageFiles.length === 0) {
+      return; // No image files found
+    }
+
+    // Take the first image file
+    const file = imageFiles[0];
+
+    // Create preview URL
+    const previewUrl = URL.createObjectURL(file);
+
+    // Set initial upload state
+    setUploadState({
+      previewUrl,
+      progress: 0,
+      status: 'pending',
+    });
+
+    try {
+      // Start upload using the same logic as handleFileChange
+      const result = await uploadWithProgress({
+        file,
+        onStatusUpdate: (updateData) => {
+          if (updateData.type === 'updateFile') {
+            setUploadState((prev) => {
+              if (!prev) return null;
+
+              const fileStatus = updateData.value.status;
+              if (!fileStatus) return prev;
+
+              return {
+                ...prev,
+                error: fileStatus === 'error' ? 'Upload failed' : undefined,
+                progress: updateData.value.uploadState?.progress || 0,
+                status: fileStatus,
+              };
+            });
+          } else if (updateData.type === 'removeFile') {
+            setUploadState(null);
+          }
+        },
+        skipCheckFileType: true,
+      });
+
+      if (result?.url) {
+        // Upload successful
+        onChange?.(result.url);
+      }
+    } catch {
+      // Upload failed
+      setUploadState((prev) =>
+        prev
+          ? {
+              ...prev,
+              error: 'Upload failed',
+              status: 'error',
+            }
+          : null,
+      );
+    } finally {
+      // Cleanup
+      if (isLocalBlobUrl(previewUrl)) {
+        URL.revokeObjectURL(previewUrl);
+      }
+
+      // Clear upload state after a delay to show completion
+      setTimeout(() => {
+        setUploadState(null);
+      }, 1000);
+    }
+  };
+
   // Determine which view to render
   const hasImage = Boolean(value);
   const isUploading = Boolean(uploadState);
 
   return (
-    <div className={className} style={style}>
+    <div
+      className={className}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+      style={style}
+    >
       {/* Hidden file input */}
       <input
         accept="image/*"
@@ -489,11 +645,12 @@ const ImageUpload: FC<ImageUploadProps> = memo(({ value, onChange, style, classN
       ) : hasImage ? (
         <SuccessDisplay
           imageUrl={value!}
+          isDragOver={isDragOver}
           onChangeImage={handleFileSelect}
           onDelete={handleDelete}
         />
       ) : (
-        <Placeholder onClick={handleFileSelect} />
+        <Placeholder isDragOver={isDragOver} onClick={handleFileSelect} />
       )}
     </div>
   );

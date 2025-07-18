@@ -74,7 +74,7 @@
     },
     "placeholder": {
       "primary": "Afbeelding toevoegen",
-      "secondary": "Klik om te uploaden"
+      "secondary": "Klik of sleep om te uploaden"
     }
   },
   "KeyValueEditor": {
@@ -109,7 +109,7 @@
   },
   "MultiImagesUpload": {
     "actions": {
-      "uploadMore": "Klik om meer te uploaden"
+      "uploadMore": "Klik of sleep om meer te uploaden"
     },
     "modal": {
       "complete": "Voltooien",
@@ -119,7 +119,7 @@
       "upload": "Afbeeldingen uploaden"
     },
     "placeholder": {
-      "primary": "Klik om afbeeldingen te uploaden",
+      "primary": "Klik of sleep om een afbeelding te uploaden",
       "secondary": "Meerdere afbeeldingen selecteren ondersteund"
     },
     "progress": {

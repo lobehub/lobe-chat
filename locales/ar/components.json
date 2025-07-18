@@ -74,7 +74,7 @@
     },
     "placeholder": {
       "primary": "إضافة صورة",
-      "secondary": "انقر للتحميل"
+      "secondary": "انقر أو اسحب للإرفاق"
     }
   },
   "KeyValueEditor": {
@@ -109,7 +109,7 @@
   },
   "MultiImagesUpload": {
     "actions": {
-      "uploadMore": "انقر لتحميل المزيد"
+      "uploadMore": "انقر أو اسحب لإضافة المزيد"
     },
     "modal": {
       "complete": "اكتمل",
@@ -119,7 +119,7 @@
       "upload": "تحميل الصور"
     },
     "placeholder": {
-      "primary": "انقر لتحميل الصور",
+      "primary": "انقر أو اسحب لتحميل الصور",
       "secondary": "يدعم اختيار عدة صور"
     },
     "progress": {

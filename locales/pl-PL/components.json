@@ -74,7 +74,7 @@
     },
     "placeholder": {
       "primary": "Dodaj obraz",
-      "secondary": "Kliknij, aby przesłać"
+      "secondary": "Kliknij lub przeciągnij, aby przesłać"
     }
   },
   "KeyValueEditor": {
@@ -109,7 +109,7 @@
   },
   "MultiImagesUpload": {
     "actions": {
-      "uploadMore": "Kliknij, aby przesłać więcej"
+      "uploadMore": "Kliknij lub przeciągnij, aby przesłać więcej"
     },
     "modal": {
       "complete": "Zakończ",
@@ -119,7 +119,7 @@
       "upload": "Prześlij obraz"
     },
     "placeholder": {
-      "primary": "Kliknij, aby przesłać obraz",
+      "primary": "Kliknij lub przeciągnij, aby przesłać obraz",
       "secondary": "Obsługuje wybór wielu obrazów"
     },
     "progress": {
