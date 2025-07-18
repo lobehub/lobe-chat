@@ -15,7 +15,6 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
     group: HotkeyGroupEnum.Essential,
     id: HotkeyEnum.ShowApp,
     keys: combineKeys([KeyEnum.Mod, 'e']),
-    nonEditable: true,
     scopes: [HotkeyScopeEnum.Global],
   },
   {
@@ -60,7 +59,6 @@ export const HOTKEYS_REGISTRATION: HotkeyRegistration = [
     id: HotkeyEnum.OpenSettings,
     isDesktop: true,
     keys: combineKeys([KeyEnum.Mod, KeyEnum.Comma]),
-    nonEditable: true,
     scopes: [HotkeyScopeEnum.Global],
   },
   // Chat
