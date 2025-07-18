@@ -656,6 +656,9 @@
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B, talimat takibi, diyalog ve programlama için tasarlanmış bir modeldir."
   },
+  "cogview-4": {
+    "description": "CogView-4, Zhipu'nun Çince karakter üretimini destekleyen ilk açık kaynaklı metinden görsele modelidir. Anlam anlayışı, görüntü üretim kalitesi ve Çince-İngilizce metin üretme yeteneklerinde kapsamlı iyileştirmeler sunar. Her uzunlukta Çince ve İngilizce çift dilli girişi destekler ve verilen aralıkta herhangi bir çözünürlükte görüntü oluşturabilir."
+  },
   "cohere-command-r": {
     "description": "Command R, üretim ölçeğinde AI sağlamak için RAG ve Araç Kullanımına yönelik ölçeklenebilir bir üretken modeldir."
   },

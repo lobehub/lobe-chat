@@ -656,6 +656,9 @@
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B는 지시 준수, 대화 및 프로그래밍을 위해 설계된 모델입니다."
   },
+  "cogview-4": {
+    "description": "CogView-4는 지푸가 처음으로 한자 생성을 지원하는 오픈 소스 텍스트-이미지 생성 모델로, 의미 이해, 이미지 생성 품질, 중영 문자 생성 능력 등 여러 측면에서 전면적으로 향상되었으며, 임의 길이의 중영 이중 언어 입력을 지원하고 주어진 범위 내에서 임의 해상도의 이미지를 생성할 수 있습니다."
+  },
   "cohere-command-r": {
     "description": "Command R은 RAG 및 도구 사용을 목표로 하는 확장 가능한 생성 모델로, 기업을 위한 생산 규모 AI를 가능하게 합니다."
   },
