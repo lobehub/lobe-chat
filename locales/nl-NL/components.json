@@ -70,7 +70,8 @@
   },
   "ImageUpload": {
     "actions": {
-      "changeImage": "Klik om afbeelding te wijzigen"
+      "changeImage": "Klik om afbeelding te wijzigen",
+      "dropMultipleFiles": "Meerdere bestanden uploaden wordt niet ondersteund, alleen het eerste bestand wordt gebruikt"
     },
     "placeholder": {
       "primary": "Afbeelding toevoegen",

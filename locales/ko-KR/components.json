@@ -70,7 +70,8 @@
   },
   "ImageUpload": {
     "actions": {
-      "changeImage": "이미지 변경 클릭"
+      "changeImage": "이미지 변경 클릭",
+      "dropMultipleFiles": "여러 파일 업로드는 지원하지 않으며, 첫 번째 파일만 사용됩니다"
     },
     "placeholder": {
       "primary": "이미지 추가",
@@ -119,6 +120,7 @@
       "upload": "이미지 업로드"
     },
     "placeholder": {
+      "primary": "클릭하거나 드래그하여 이미지를 업로드하세요",
       "secondary": "여러 이미지 선택 가능"
     },
     "progress": {
@@ -157,8 +159,5 @@
     "thinking": "심층적으로 생각 중...",
     "thought": "심층적으로 생각했습니다 (소요 시간 {{duration}} 초)",
     "thoughtWithDuration": "심층적으로 생각했습니다"
-  },
-  "placeholder": {
-    "primary": "클릭하거나 드래그하여 이미지 업로드"
   }
 }

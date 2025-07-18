@@ -70,7 +70,8 @@
   },
   "ImageUpload": {
     "actions": {
-      "changeImage": "Resmi değiştirmek için tıklayın"
+      "changeImage": "Resmi değiştirmek için tıklayın",
+      "dropMultipleFiles": "Birden fazla dosya yükleme desteklenmiyor, sadece ilk dosya kullanılacak"
     },
     "placeholder": {
       "primary": "Resim ekle",

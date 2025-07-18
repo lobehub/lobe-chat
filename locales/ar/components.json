@@ -70,7 +70,8 @@
   },
   "ImageUpload": {
     "actions": {
-      "changeImage": "انقر لتغيير الصورة"
+      "changeImage": "انقر لتغيير الصورة",
+      "dropMultipleFiles": "لا يدعم تحميل ملفات متعددة في آن واحد، سيتم استخدام الملف الأول فقط"
     },
     "placeholder": {
       "primary": "إضافة صورة",

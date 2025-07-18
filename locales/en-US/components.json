@@ -70,7 +70,8 @@
   },
   "ImageUpload": {
     "actions": {
-      "changeImage": "Click to change image"
+      "changeImage": "Click to change image",
+      "dropMultipleFiles": "Uploading multiple files at once is not supported; only the first file will be used"
     },
     "placeholder": {
       "primary": "Add Image",

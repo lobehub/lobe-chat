@@ -70,7 +70,8 @@
   },
   "ImageUpload": {
     "actions": {
-      "changeImage": "點擊更換圖片"
+      "changeImage": "點擊更換圖片",
+      "dropMultipleFiles": "不支援多重上傳多個檔案，僅會使用第一個檔案"
     },
     "placeholder": {
       "primary": "新增圖片",

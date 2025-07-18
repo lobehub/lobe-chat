@@ -70,7 +70,8 @@
   },
   "ImageUpload": {
     "actions": {
-      "changeImage": "Nhấn để thay đổi hình ảnh"
+      "changeImage": "Nhấn để thay đổi hình ảnh",
+      "dropMultipleFiles": "Không hỗ trợ tải lên nhiều tệp cùng lúc, chỉ sử dụng tệp đầu tiên"
     },
     "placeholder": {
       "primary": "Thêm hình ảnh",
