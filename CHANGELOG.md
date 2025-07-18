@@ -2,6 +2,37 @@
 
 # Changelog
 
+### [Version&nbsp;1.99.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.99.1...v1.99.2)
+<sup>Released on **2025-07-18**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix webapi proxy with clerk.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **misc**: Fix webapi proxy with clerk, closes [#8479](https://github.com/jaworldwideorg/OneJA-Bot/issues/8479) ([7dd65f0](https://github.com/jaworldwideorg/OneJA-Bot/commit/7dd65f0))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.99.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.99.0...v1.99.1)
 <sup>Released on **2025-07-17**</sup>
 
