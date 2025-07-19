@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Try fix authorization code exchange & pin next-auto to beta.29."]
+    },
+    "date": "2025-07-19",
+    "version": "1.101.1"
+  },
+  {
+    "children": {
       "features": ["Add zhipu cogview4."],
       "fixes": ["Some ai image bugs."]
     },
