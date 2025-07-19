@@ -20,6 +20,9 @@
   "bedrock": {
     "description": "Bedrock, Amazon AWS tarafından sunulan bir hizmettir ve işletmelere gelişmiş yapay zeka dil modelleri ve görsel modeller sağlamaya odaklanmaktadır. Model ailesi, Anthropic'in Claude serisi, Meta'nın Llama 3.1 serisi gibi seçenekleri içermekte olup, metin üretimi, diyalog, görüntü işleme gibi çeşitli görevleri desteklemektedir. Farklı ölçek ve ihtiyaçlara uygun kurumsal uygulamalar için geniş bir yelpaze sunmaktadır."
   },
+  "burncloud": {
+    "description": "BurnCloud, Claude serisi, GPT serisi, Gemini ve DeepSeek dahil olmak üzere sektörün önde gelen büyük modellerine API erişimi sağlayan yüksek performanslı bir yapay zeka hizmet platformudur. İleri düzey yapay zeka yeteneklerinin sorunsuz entegrasyonu için istikrarlı güvenilirlik ve hızlı yanıt süreleri ile öne çıkmaktadır."
+  },
   "cloudflare": {
     "description": "Cloudflare'ın küresel ağı üzerinde sunucusuz GPU destekli makine öğrenimi modelleri çalıştırın."
   },
