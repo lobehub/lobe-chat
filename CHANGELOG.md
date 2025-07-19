@@ -2,6 +2,37 @@
 
 # Changelog
 
+### [Version&nbsp;1.100.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.100.0...v1.100.1)
+<sup>Released on **2025-07-19**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Try fix authorization code exchange & pin next-auto to `beta.29`.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **misc**: Try fix authorization code exchange & pin next-auto to `beta.29`, closes [#8496](https://github.com/jaworldwideorg/OneJA-Bot/issues/8496) ([27c4881](https://github.com/jaworldwideorg/OneJA-Bot/commit/27c4881))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version&nbsp;1.100.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.99.2...v1.100.0)
 <sup>Released on **2025-07-18**</sup>
 
