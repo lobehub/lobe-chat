@@ -6,6 +6,26 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      '总参数 1T，激活参数 32B。 非思维模型中，在前沿知识、数学和编码方面达到了顶尖水平，更擅长通用 Agent 任务。 针对代理任务进行了精心优化，不仅能回答问题，还能采取行动。 最适用于即兴、通用聊天和代理体验，是一款无需长时间思考的反射级模型。',
+    displayName: 'Kimi K2 Instruct',
+    enabled: true,
+    id: 'Moonshot-Kimi-K2-Instruct',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 4,
+      output: 16,
+    },
+    releasedAt: '2025-07-17',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
@@ -223,21 +243,21 @@ const qwenChatModels: AIChatModelCard[] = [
       search: true,
     },
     config: {
-      deploymentName: 'qwen-turbo-2025-04-28', // expired on 2025-10-26
+      deploymentName: 'qwen-turbo-2025-07-15',
     },
-    contextWindowTokens: 1_000_000,
+    contextWindowTokens: 1_000_000, // Non-thinking mode
     description: '通义千问超大规模语言模型，支持中文、英文等不同语言输入。',
     displayName: 'Qwen Turbo',
     enabled: true,
     id: 'qwen-turbo',
-    maxOutput: 8192,
+    maxOutput: 16_384,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 0.3,
       output: 3, // Thinking mode pricing
     },
-    releasedAt: '2025-04-28',
+    releasedAt: '2025-07-15',
     settings: {
       extendParams: ['enableReasoning', 'reasoningBudgetToken'],
       searchImpl: 'params',
@@ -251,21 +271,21 @@ const qwenChatModels: AIChatModelCard[] = [
       search: true,
     },
     config: {
-      deploymentName: 'qwen-plus-2025-04-28', // expired on 2025-10-26
+      deploymentName: 'qwen-plus-2025-07-14',
     },
     contextWindowTokens: 131_072,
     description: '通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入。',
     displayName: 'Qwen Plus',
     enabled: true,
     id: 'qwen-plus',
-    maxOutput: 8192,
+    maxOutput: 16_384,
     organization: 'Qwen',
     pricing: {
       currency: 'CNY',
       input: 0.8,
       output: 8, // Thinking mode pricing
     },
-    releasedAt: '2025-04-28',
+    releasedAt: '2025-07-14',
     settings: {
       extendParams: ['enableReasoning', 'reasoningBudgetToken'],
       searchImpl: 'params',
