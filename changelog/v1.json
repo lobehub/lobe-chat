@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "features": ["Add zhipu cogview4."],
+      "fixes": ["Some ai image bugs."]
+    },
+    "date": "2025-07-19",
+    "version": "1.101.0"
+  },
+  {
+    "children": {
       "fixes": ["Fix webapi proxy with clerk."]
     },
     "date": "2025-07-18",
