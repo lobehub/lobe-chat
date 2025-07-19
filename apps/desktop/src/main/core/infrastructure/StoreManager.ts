@@ -5,7 +5,7 @@ import { ElectronMainStore, StoreKey } from '@/types/store';
 import { makeSureDirExist } from '@/utils/file-system';
 import { createLogger } from '@/utils/logger';
 
-import { App } from './App';
+import { App } from '../App';
 
 // Create logger
 const logger = createLogger('core:StoreManager');

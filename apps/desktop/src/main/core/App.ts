@@ -9,20 +9,19 @@ import { buildDir, nextStandaloneDir } from '@/const/dir';
 import { isDev } from '@/const/env';
 import { IControlModule } from '@/controllers';
 import { IServiceModule } from '@/services';
-import FileService from '@/services/fileSrv';
 import { IpcClientEventSender } from '@/types/ipcClientEvent';
 import { createLogger } from '@/utils/logger';
 import { CustomRequestHandler, createHandler } from '@/utils/next-electron-rsc';
 
-import BrowserManager from './BrowserManager';
-import { I18nManager } from './I18nManager';
 import { IoCContainer } from './IoCContainer';
-import MenuManager from './MenuManager';
-import { ShortcutManager } from './ShortcutManager';
-import { StaticFileServerManager } from './StaticFileServerManager';
-import { StoreManager } from './StoreManager';
-import TrayManager from './TrayManager';
-import { UpdaterManager } from './UpdaterManager';
+import { BrowserManager } from './browser';
+import {
+  I18nManager,
+  StaticFileServerManager,
+  StoreManager,
+  UpdaterManager,
+} from './infrastructure';
+import { MenuManager, ShortcutManager, TrayManager } from './ui';
 
 const logger = createLogger('core:App');
 

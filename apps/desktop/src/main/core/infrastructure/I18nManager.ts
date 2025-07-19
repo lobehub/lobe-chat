@@ -111,6 +111,13 @@ export class I18nManager {
   }
 
   /**
+   * Get i18n instance for advanced usage (e.g., event listeners)
+   */
+  getI18nInstance() {
+    return this.i18n;
+  }
+
+  /**
    * Change application language
    * @param lng Target language
    */

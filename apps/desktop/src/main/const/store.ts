@@ -25,10 +25,14 @@ export const defaultProxySettings: NetworkProxySettings = {
  * 存储默认值
  */
 export const STORE_DEFAULTS: ElectronMainStore = {
+  autoSyncSpellCheckLanguage: true,
   dataSyncConfig: { storageMode: 'local' },
+  enableSpellCheck: false,
   encryptedTokens: {},
   locale: 'auto',
   networkProxy: defaultProxySettings,
   shortcuts: DEFAULT_SHORTCUTS_CONFIG,
+  spellCheckLanguages: ['en-US'],
   storagePath: appStorageDir,
+  zoomFactor: 1,
 };

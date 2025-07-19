@@ -1,17 +1,18 @@
 import { MainBroadcastEventKey, MainBroadcastParams } from '@lobechat/electron-client-ipc';
 import { WebContents } from 'electron';
 
+import { DEFAULT_WINDOW_CONFIG } from '@/const/theme';
 import { createLogger } from '@/utils/logger';
 
-import { AppBrowsersIdentifiers, appBrowsers } from '../appBrowsers';
-import type { App } from './App';
+import { AppBrowsersIdentifiers, appBrowsers } from '../../appBrowsers';
+import type { App } from '../App';
 import type { BrowserWindowOpts } from './Browser';
-import Browser from './Browser';
+import { Browser } from './Browser';
 
 // Create logger
 const logger = createLogger('core:BrowserManager');
 
-export default class BrowserManager {
+export class BrowserManager {
   app: App;
 
   browsers: Map<AppBrowsersIdentifiers, Browser> = new Map();
@@ -23,8 +24,8 @@ export default class BrowserManager {
     this.app = app;
   }
 
-  getMainWindow() {
-    return this.retrieveByIdentifier('chat');
+  getMainWindow(): Browser | null {
+    return this.browsers.get('chat') || null;
   }
 
   showMainWindow() {
@@ -55,8 +56,14 @@ export default class BrowserManager {
     event: T,
     data: MainBroadcastParams<T>,
   ) => {
+    const browser = this.browsers.get(identifier);
+    if (!browser) {
+      logger.warn(`Cannot broadcast to non-existent window: ${identifier}`);
+      return;
+    }
+
     logger.debug(`Broadcasting event ${event} to window: ${identifier}`);
-    this.browsers.get(identifier).broadcast(event, data);
+    browser.broadcast(event, data);
   };
 
   /**
@@ -72,7 +79,10 @@ export default class BrowserManager {
       // make provider page more large
       if (tab.startsWith('provider/')) {
         logger.debug('Resizing window for provider settings');
-        browser.setWindowSize({ height: 1000, width: 1400 });
+        browser.setWindowSize({
+          height: DEFAULT_WINDOW_CONFIG.PROVIDER_WINDOW.HEIGHT,
+          width: DEFAULT_WINDOW_CONFIG.PROVIDER_WINDOW.WIDTH,
+        });
         browser.moveToCenter();
       }
 
@@ -156,42 +166,80 @@ export default class BrowserManager {
     const identifier = options.identifier as AppBrowsersIdentifiers;
     this.browsers.set(identifier, browser);
 
-    // 记录 WebContents 和 identifier 的映射
-    this.webContentsMap.set(browser.browserWindow.webContents, identifier);
-
-    // 当窗口关闭时清理映射
-    browser.browserWindow.on('close', () => {
-      if (browser.webContents) this.webContentsMap.delete(browser.webContents);
-    });
-
-    browser.browserWindow.on('show', () => {
-      if (browser.webContents)
-        this.webContentsMap.set(browser.webContents, browser.identifier as AppBrowsersIdentifiers);
-    });
+    // Set up WebContents mapping
+    this.setupWebContentsMapping(browser, identifier);
 
     return browser;
   }
 
   closeWindow(identifier: string) {
     const browser = this.browsers.get(identifier as AppBrowsersIdentifiers);
-    browser?.close();
+    if (!browser) {
+      logger.warn(`Cannot close non-existent window: ${identifier}`);
+      return;
+    }
+    browser.close();
   }
 
   minimizeWindow(identifier: string) {
     const browser = this.browsers.get(identifier as AppBrowsersIdentifiers);
-    browser?.browserWindow.minimize();
+    if (!browser) {
+      logger.warn(`Cannot minimize non-existent window: ${identifier}`);
+      return;
+    }
+    browser.browserWindow.minimize();
   }
 
   maximizeWindow(identifier: string) {
     const browser = this.browsers.get(identifier as AppBrowsersIdentifiers);
-    if (browser.browserWindow.isMaximized()) {
-      browser?.browserWindow.unmaximize();
-    } else {
-      browser?.browserWindow.maximize();
+    if (!browser) {
+      logger.warn(`Cannot maximize non-existent window: ${identifier}`);
+      return;
     }
+
+    const window = browser.browserWindow;
+    if (window.isMaximized()) {
+      window.unmaximize();
+    } else {
+      window.maximize();
+    }
+  }
+
+  /**
+   * Check if a window exists and is not destroyed
+   */
+  isWindowValid(identifier: AppBrowsersIdentifiers): boolean {
+    const browser = this.browsers.get(identifier);
+    return browser ? !browser.browserWindow.isDestroyed() : false;
+  }
+
+  /**
+   * Get all active window identifiers
+   */
+  getActiveWindowIdentifiers(): AppBrowsersIdentifiers[] {
+    return Array.from(this.browsers.keys()).filter((id) => this.isWindowValid(id));
   }
 
   getIdentifierByWebContents(webContents: WebContents): AppBrowsersIdentifiers | null {
     return this.webContentsMap.get(webContents) || null;
+  }
+
+  private setupWebContentsMapping(browser: Browser, identifier: AppBrowsersIdentifiers): void {
+    // Record WebContents and identifier mapping
+    this.webContentsMap.set(browser.browserWindow.webContents, identifier);
+
+    // Clean up mapping when window closes
+    browser.browserWindow.on('close', () => {
+      if (browser.webContents) {
+        this.webContentsMap.delete(browser.webContents);
+      }
+    });
+
+    // Update mapping when window shows (in case WebContents changes)
+    browser.browserWindow.on('show', () => {
+      if (browser.webContents) {
+        this.webContentsMap.set(browser.webContents, identifier);
+      }
+    });
   }
 }

@@ -12,157 +12,157 @@ import { join } from 'node:path';
 import { resourcesDir } from '@/const/dir';
 import { createLogger } from '@/utils/logger';
 
-import type { App } from './App';
+import type { App } from '../App';
 
-// 创建日志记录器
+// Create logger
 const logger = createLogger('core:Tray');
 
 export interface TrayOptions {
   /**
-   * 托盘图标路径（相对于资源目录）
+   * Tray icon path (relative to resource directory)
    */
   iconPath: string;
 
   /**
-   * 托盘标识符
+   * Tray identifier
    */
   identifier: string;
 
   /**
-   * 托盘提示文本
+   * Tray tooltip text
    */
   tooltip?: string;
 }
 
-export default class Tray {
+export class Tray {
   private app: App;
 
   /**
-   * 内部 Electron 托盘
+   * Internal Electron tray
    */
   private _tray?: ElectronTray;
 
   /**
-   * 标识符
+   * Identifier
    */
   identifier: string;
 
   /**
-   * 创建时的选项
+   * Options when created
    */
   options: TrayOptions;
 
   /**
-   * 获取托盘实例
+   * Get tray instance
    */
   get tray() {
     return this.retrieveOrInitialize();
   }
 
   /**
-   * 构造托盘对象
-   * @param options 托盘选项
-   * @param application 应用实例
+   * Construct tray object
+   * @param options Tray options
+   * @param application App instance
    */
   constructor(options: TrayOptions, application: App) {
-    logger.debug(`创建托盘实例: ${options.identifier}`);
-    logger.debug(`托盘选项: ${JSON.stringify(options)}`);
+    logger.debug(`Creating tray instance: ${options.identifier}`);
+    logger.debug(`Tray options: ${JSON.stringify(options)}`);
     this.app = application;
     this.identifier = options.identifier;
     this.options = options;
 
-    // 初始化
+    // Initialize
     this.retrieveOrInitialize();
   }
 
   /**
-   * 初始化托盘
+   * Initialize tray
    */
   retrieveOrInitialize() {
-    // 如果托盘已存在且未被销毁，则返回
+    // If tray already exists and is not destroyed, return it
     if (this._tray) {
-      logger.debug(`[${this.identifier}] 返回现有托盘实例`);
+      logger.debug(`[${this.identifier}] Returning existing tray instance`);
       return this._tray;
     }
 
     const { iconPath, tooltip } = this.options;
 
-    // 加载托盘图标
-    logger.info(`创建新的托盘实例: ${this.identifier}`);
+    // Load tray icon
+    logger.info(`Creating new tray instance: ${this.identifier}`);
     const iconFile = join(resourcesDir, iconPath);
-    logger.debug(`[${this.identifier}] 加载图标: ${iconFile}`);
+    logger.debug(`[${this.identifier}] Loading icon: ${iconFile}`);
 
     try {
       const icon = nativeImage.createFromPath(iconFile);
       this._tray = new ElectronTray(icon);
 
-      // 设置工具提示
+      // Set tooltip
       if (tooltip) {
-        logger.debug(`[${this.identifier}] 设置提示文本: ${tooltip}`);
+        logger.debug(`[${this.identifier}] Setting tooltip: ${tooltip}`);
         this._tray.setToolTip(tooltip);
       }
 
-      // 设置默认上下文菜单
+      // Set default context menu
       this.setContextMenu();
 
-      // 设置点击事件
+      // Set click event
       this._tray.on('click', () => {
-        logger.debug(`[${this.identifier}] 托盘被点击`);
+        logger.debug(`[${this.identifier}] Tray clicked`);
         this.onClick();
       });
 
-      logger.debug(`[${this.identifier}] 托盘实例创建完成`);
+      logger.debug(`[${this.identifier}] Tray instance created successfully`);
       return this._tray;
     } catch (error) {
-      logger.error(`[${this.identifier}] 创建托盘失败:`, error);
+      logger.error(`[${this.identifier}] Failed to create tray:`, error);
       throw error;
     }
   }
 
   /**
-   * 设置托盘上下文菜单
-   * @param template 菜单模板，如果未提供则使用默认模板
+   * Set tray context menu
+   * @param template Menu template, if not provided default template will be used
    */
   setContextMenu(template?: MenuItemConstructorOptions[]) {
-    logger.debug(`[${this.identifier}] 设置托盘上下文菜单`);
+    logger.debug(`[${this.identifier}] Setting tray context menu`);
 
-    // 如果未提供模板，使用默认菜单
+    // If no template provided, use default menu
     const defaultTemplate: MenuItemConstructorOptions[] = template || [
       {
         click: () => {
-          logger.debug(`[${this.identifier}] 菜单项 "显示主窗口" 被点击`);
+          logger.debug(`[${this.identifier}] Menu item "Show Main Window" clicked`);
           this.app.browserManager.showMainWindow();
         },
-        label: '显示主窗口',
+        label: 'Show Main Window',
       },
       { type: 'separator' },
       {
         click: () => {
-          logger.debug(`[${this.identifier}] 菜单项 "退出" 被点击`);
+          logger.debug(`[${this.identifier}] Menu item "Quit" clicked`);
           app.quit();
         },
-        label: '退出',
+        label: 'Quit',
       },
     ];
 
     const contextMenu = Menu.buildFromTemplate(defaultTemplate);
     this._tray?.setContextMenu(contextMenu);
-    logger.debug(`[${this.identifier}] 托盘上下文菜单已设置`);
+    logger.debug(`[${this.identifier}] Tray context menu has been set`);
   }
 
   /**
-   * 处理托盘点击事件
+   * Handle tray click event
    */
   onClick() {
-    logger.debug(`[${this.identifier}] 处理托盘点击事件`);
+    logger.debug(`[${this.identifier}] Handling tray click event`);
     const mainWindow = this.app.browserManager.getMainWindow();
 
     if (mainWindow) {
       if (mainWindow.browserWindow.isVisible() && mainWindow.browserWindow.isFocused()) {
-        logger.debug(`[${this.identifier}] 主窗口已可见且聚焦，现在隐藏它`);
+        logger.debug(`[${this.identifier}] Main window is visible and focused, hiding it now`);
         mainWindow.hide();
       } else {
-        logger.debug(`[${this.identifier}] 显示并聚焦主窗口`);
+        logger.debug(`[${this.identifier}] Showing and focusing main window`);
         mainWindow.show();
         mainWindow.browserWindow.focus();
       }
@@ -170,59 +170,61 @@ export default class Tray {
   }
 
   /**
-   * 更新托盘图标
-   * @param iconPath 新图标路径（相对于资源目录）
+   * Update tray icon
+   * @param iconPath New icon path (relative to resource directory)
    */
   updateIcon(iconPath: string) {
-    logger.debug(`[${this.identifier}] 更新图标: ${iconPath}`);
+    logger.debug(`[${this.identifier}] Updating icon: ${iconPath}`);
     try {
       const iconFile = join(resourcesDir, iconPath);
       const icon = nativeImage.createFromPath(iconFile);
       this._tray?.setImage(icon);
       this.options.iconPath = iconPath;
-      logger.debug(`[${this.identifier}] 图标已更新`);
+      logger.debug(`[${this.identifier}] Icon updated successfully`);
     } catch (error) {
-      logger.error(`[${this.identifier}] 更新图标失败:`, error);
+      logger.error(`[${this.identifier}] Failed to update icon:`, error);
     }
   }
 
   /**
-   * 更新提示文本
-   * @param tooltip 新提示文本
+   * Update tooltip text
+   * @param tooltip New tooltip text
    */
   updateTooltip(tooltip: string) {
-    logger.debug(`[${this.identifier}] 更新提示文本: ${tooltip}`);
+    logger.debug(`[${this.identifier}] Updating tooltip: ${tooltip}`);
     this._tray?.setToolTip(tooltip);
     this.options.tooltip = tooltip;
   }
 
   /**
-   * 显示气泡通知（仅在 Windows 上支持）
-   * @param options 气泡选项
+   * Display balloon notification (only supported on Windows)
+   * @param options Balloon options
    */
   displayBalloon(options: DisplayBalloonOptions) {
     if (process.platform === 'win32' && this._tray) {
-      logger.debug(`[${this.identifier}] 显示气泡通知: ${JSON.stringify(options)}`);
+      logger.debug(
+        `[${this.identifier}] Displaying balloon notification: ${JSON.stringify(options)}`,
+      );
       this._tray.displayBalloon(options);
     } else {
-      logger.debug(`[${this.identifier}] 气泡通知仅在 Windows 上支持`);
+      logger.debug(`[${this.identifier}] Balloon notification is only supported on Windows`);
     }
   }
 
   /**
-   * 广播事件
+   * Broadcast event
    */
   broadcast = <T extends MainBroadcastEventKey>(channel: T, data?: MainBroadcastParams<T>) => {
-    logger.debug(`向托盘 ${this.identifier} 广播, 频道: ${channel}`);
-    // 可以通过 App 实例的 browserManager 将消息转发到主窗口
+    logger.debug(`Broadcasting to tray ${this.identifier}, channel: ${channel}`);
+    // Can forward message to main window through App instance's browserManager
     this.app.browserManager.getMainWindow()?.broadcast(channel, data);
   };
 
   /**
-   * 销毁托盘实例
+   * Destroy tray instance
    */
   destroy() {
-    logger.debug(`销毁托盘实例: ${this.identifier}`);
+    logger.debug(`Destroying tray instance: ${this.identifier}`);
     if (this._tray) {
       this._tray.destroy();
       this._tray = undefined;

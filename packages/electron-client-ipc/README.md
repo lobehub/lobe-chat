@@ -1,48 +1,73 @@
 # @lobechat/electron-client-ipc
 
-这个包是 LobeChat 在 Electron 环境中用于处理 IPC（进程间通信）的客户端工具包。
+This package is a client-side toolkit for handling IPC (Inter-Process Communication) in LobeChat's Electron environment.
 
-## 介绍
+## Introduction
 
-在 Electron 应用中，IPC（进程间通信）是连接主进程（Main Process）、渲染进程（Renderer Process）以及 NextJS 进程的桥梁。为了更好地组织和管理这些通信，我们将 IPC 相关的代码分成了两个包：
+In Electron applications, IPC (Inter-Process Communication) serves as a bridge connecting the Main Process, Renderer Process, and NextJS Process. To better organize and manage these communications, we have split the IPC-related code into two packages:
 
-- `@lobechat/electron-client-ipc`：**客户端 IPC 包**
-- `@lobechat/electron-server-ipc`：**服务端 IPC 包**
+- `@lobechat/electron-client-ipc`: **Client-side IPC package**
+- `@lobechat/electron-server-ipc`: **Server-side IPC package**
 
-## 主要区别
+## Key Differences
 
-### electron-client-ipc（本包）
+### electron-client-ipc (This Package)
 
-- 运行环境：在渲染进程（Renderer Process）中运行
-- 主要职责：
-  - 提供渲染进程调用主进程方法的接口定义
-  - 封装 `ipcRenderer.invoke` 相关方法
-  - 处理与主进程的通信请求
+- Runtime Environment: Runs in the Renderer Process
+- Main Responsibilities:
+  - Provides interface definitions for renderer process to call main process methods
+  - Encapsulates `ipcRenderer.invoke` related methods
+  - Handles communication requests with the main process
 
 ### electron-server-ipc
 
-- 运行环境：在 Electron 主进程和 Next.js 服务端进程中运行
-- 主要职责：
-  - 提供基于 Socket 的 IPC 通信机制
-  - 实现服务端（ElectronIPCServer）和客户端（ElectronIpcClient）通信组件
-  - 处理跨进程的请求和响应
-  - 提供自动重连和错误处理机制
-  - 确保类型安全的 API 调用
+- Runtime Environment: Runs in both Electron main process and Next.js server process
+- Main Responsibilities:
+  - Provides Socket-based IPC communication mechanism
+  - Implements server-side (ElectronIPCServer) and client-side (ElectronIpcClient) communication components
+  - Handles cross-process requests and responses
+  - Provides automatic reconnection and error handling mechanisms
+  - Ensures type-safe API calls
 
-## 使用场景
+## Use Cases
 
-当渲染进程需要：
+When the renderer process needs to:
 
-- 访问系统 API
-- 进行文件操作
-- 调用主进程特定功能
+- Access system APIs
+- Perform file operations
+- Call main process specific functions
 
-时，都需要通过 `electron-client-ipc` 包提供的方法来发起请求。
+All such operations need to be initiated through the methods provided by the `electron-client-ipc` package.
 
-## 技术说明
+## Technical Notes
 
-这种分包设计遵循了关注点分离原则，使得：
+This separated package design follows the principle of separation of concerns, ensuring that:
 
-- IPC 通信接口清晰可维护
-- 客户端和服务端代码解耦
-- TypeScript 类型定义共享，确保类型安全
+- IPC communication interfaces are clear and maintainable
+- Client-side and server-side code are decoupled
+- TypeScript type definitions are shared, ensuring type safety
+
+## 🤝 Contribution
+
+IPC communication needs vary across different use cases and platforms. We welcome community contributions to improve and extend the IPC functionality. You can participate in improvements through:
+
+### How to Contribute
+
+1. **Bug Reports**: Report issues with IPC communication or type definitions
+2. **Feature Requests**: Suggest new IPC methods or improvements to existing interfaces
+3. **Code Contributions**: Submit pull requests for bug fixes or new features
+
+### Contribution Process
+
+1. Fork the [LobeChat repository](https://github.com/lobehub/lobe-chat)
+2. Make your changes to the IPC client package
+3. Submit a Pull Request describing:
+
+- The problem being solved
+- Implementation details
+- Test cases or usage examples
+- Impact on existing functionality
+
+## 📌 Note
+
+This is an internal module of LobeHub (`"private": true`), designed specifically for LobeChat and not published as a standalone package.
