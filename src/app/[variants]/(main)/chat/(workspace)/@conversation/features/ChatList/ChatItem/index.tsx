@@ -21,6 +21,9 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => {
         border-end-end-radius: 8px;
       }
     `,
+    lastItem: css`
+      min-height: calc(100vh - 335px);
+    `,
     line: css`
       &::after {
         content: '';
@@ -66,10 +69,14 @@ const MainChatItem = memo<ThreadChatItemProps>(({ id, index }) => {
 
   const actionBar = useMemo(() => <ActionsBar id={id} index={index} />, [id]);
 
+  const isLastItem = index === historyLength - 1;
+  const threadClassName = showThread ? cx(styles.line, styles[placement]) : '';
+  const lastItemClassName = isLastItem && userRole !== 'user' ? cx(styles.lastItem) : '';
+
   return (
     <ChatItem
       actionBar={actionBar}
-      className={showThread ? cx(styles.line, styles[placement]) : ''}
+      className={cx(threadClassName, lastItemClassName)}
       enableHistoryDivider={enableHistoryDivider}
       endRender={
         showThread && (
