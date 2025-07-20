@@ -7,6 +7,7 @@ import { MessageTranslateController } from '../controllers';
 import { requireAuth } from '../middleware';
 import { requireAnyPermission } from '../middleware/permission-check';
 import {
+  MessageTranslateInfoUpdateSchema,
   MessageTranslateQueryRequestSchema,
   MessageTranslateTriggerRequestSchema,
 } from '../types/message-translate.type';
@@ -41,6 +42,21 @@ MessageTranslatesRoutes.post(
   (c) => {
     const controller = new MessageTranslateController();
     return controller.handleTranslateMessage(c);
+  },
+);
+
+// PUT /api/v1/message-translates/:messageId - 更新消息翻译信息
+MessageTranslatesRoutes.put(
+  '/:messageId',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('MESSAGE_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),
+    'You do not have permission to update translation configuration',
+  ),
+  zValidator('json', MessageTranslateInfoUpdateSchema),
+  (c) => {
+    const controller = new MessageTranslateController();
+    return controller.handleUpdateTranslateInfo(c);
   },
 );
 

@@ -7,6 +7,7 @@ import { BaseService } from '../common/base.service';
 import { removeSystemContext } from '../helpers/translate';
 import { ServiceResult } from '../types';
 import {
+  MessageTranslateInfoUpdate,
   MessageTranslateResponse,
   MessageTranslateTriggerRequest,
 } from '../types/message-translate.type';
@@ -171,6 +172,69 @@ export class MessageTranslateService extends BaseService {
         messageId: translateData.messageId,
       });
       throw this.createCommonError('翻译消息失败');
+    }
+  }
+
+  /**
+   * 更新消息翻译信息
+   * @param data 翻译信息更新数据
+   * @returns 更新后的翻译结果
+   */
+  async updateTranslateInfo(
+    data: MessageTranslateInfoUpdate,
+  ): ServiceResult<Partial<MessageTranslateItem>> {
+    if (!this.userId) {
+      throw this.createAuthError('未授权操作');
+    }
+
+    // 权限检查
+    const permissionResult = await this.resolveChatPermissions();
+    if (!permissionResult.isPermitted) {
+      throw this.createAuthorizationError(permissionResult.message || '无权限操作');
+    }
+
+    try {
+      // 检查消息是否存在
+      const messageInfo = await this.getMessageWithSessionId(data.messageId);
+      if (!messageInfo) {
+        throw this.createCommonError('未找到要更新翻译信息的消息');
+      }
+
+      // 更新翻译信息和内容
+      await this.db
+        .insert(messageTranslates)
+        .values({
+          content: data.translatedContent,
+          from: data.from,
+          id: data.messageId,
+          to: data.to,
+          userId: this.userId,
+        })
+        .onConflictDoUpdate({
+          set: {
+            content: data.translatedContent,
+            from: data.from,
+            to: data.to,
+          },
+          target: messageTranslates.id,
+        });
+
+      this.log('info', '更新翻译信息完成', { messageId: data.messageId });
+
+      return {
+        content: data.translatedContent,
+        from: data.from,
+        id: data.messageId,
+        to: data.to,
+        userId: this.userId,
+      };
+    } catch (error) {
+
+      this.log('error', '更新翻译信息失败', {
+        error,
+        messageId: data.messageId,
+      });
+      throw this.createCommonError('更新翻译信息失败');
     }
   }
 
