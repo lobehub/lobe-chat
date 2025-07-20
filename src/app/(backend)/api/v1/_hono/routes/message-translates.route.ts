@@ -53,6 +53,7 @@ MessageTranslatesRoutes.put(
     getScopePermissions('MESSAGE_UPDATE', ['ALL', 'WORKSPACE', 'OWNER']),
     'You do not have permission to update translation configuration',
   ),
+  zValidator('param', MessageTranslateQueryRequestSchema),
   zValidator('json', MessageTranslateInfoUpdateSchema),
   (c) => {
     const controller = new MessageTranslateController();

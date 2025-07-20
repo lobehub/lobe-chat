@@ -13,7 +13,6 @@ export const MessageTranslateTriggerRequestSchema = z.object({
 
 export const MessageTranslateInfoUpdateSchema = z.object({
   from: z.string(),
-  messageId: z.string().min(1, '消息ID不能为空'),
   to: z.string().min(1, '目标语言不能为空'),
   translatedContent: z.string().min(1, '翻译内容不能为空'),
 });
