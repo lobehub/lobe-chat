@@ -119,34 +119,13 @@ export class MessageTranslateService extends BaseService {
         toLanguage: translateData.to,
       });
 
-      // 使用 upsert 操作：如果存在则更新，不存在则插入
-      await this.db
-        .insert(messageTranslates)
-        .values({
-          content: translatedContent,
-          from: translateData.from,
-          id: translateData.messageId,
-          to: translateData.to,
-          userId: this.userId,
-        })
-        .onConflictDoUpdate({
-          set: {
-            content: translatedContent,
-            from: translateData.from,
-            to: translateData.to,
-          },
-          target: messageTranslates.id,
-        });
-
-      this.log('info', '翻译消息完成', { messageId: translateData.messageId });
-
-      return {
-        content: translatedContent,
+      // 使用 updateTranslateInfo 来更新翻译内容
+      return this.updateTranslateInfo({
         from: translateData.from,
-        id: translateData.messageId,
-        to: translateData.to || null,
-        userId: this.userId,
-      };
+        messageId: translateData.messageId,
+        to: translateData.to,
+        translatedContent,
+      });
     } catch (error) {
       // 改进错误日志记录，提供更详细的错误信息
       let errorDetails: any;
