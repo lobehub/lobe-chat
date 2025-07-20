@@ -11,6 +11,13 @@ export const MessageTranslateTriggerRequestSchema = z.object({
   to: z.string().min(1, '目标语言不能为空'),
 });
 
+export const MessageTranslateInfoUpdateSchema = z.object({
+  from: z.string(),
+  messageId: z.string().min(1, '消息ID不能为空'),
+  to: z.string().min(1, '目标语言不能为空'),
+  translatedContent: z.string().min(1, '翻译内容不能为空'),
+});
+
 // TypeScript types
 export interface MessageTranslateQueryRequest {
   messageId: string;
@@ -20,6 +27,13 @@ export interface MessageTranslateTriggerRequest {
   from: string;
   messageId: string;
   to: string;
+}
+
+export interface MessageTranslateInfoUpdate {
+  from: string;
+  messageId: string;
+  to: string;
+  translatedContent: string;
 }
 
 // Response type (represents the message_translates table structure)

@@ -2,7 +2,7 @@ import { Context } from 'hono';
 
 import { BaseController } from '../common/base.controller';
 import { MessageTranslateService } from '../services/message-translate.service';
-import { MessageTranslateTriggerRequest } from '../types/message-translate.type';
+import { MessageTranslateInfoUpdate, MessageTranslateTriggerRequest } from '../types/message-translate.type';
 
 export class MessageTranslateController extends BaseController {
   /**
@@ -40,6 +40,27 @@ export class MessageTranslateController extends BaseController {
       const result = await translateService.translateMessage(translateData);
 
       return this.success(c, result, '翻译消息成功');
+    } catch (error) {
+      return this.handleError(c, error);
+    }
+  }
+
+  /**
+   * 更新消息翻译信息
+   * PUT /api/v1/message-translates/:messageId
+   * Body: { from: string, to: string, translatedContent: string }
+   */
+  async handleUpdateTranslateInfo(c: Context) {
+    try {
+      const userId = this.getUserId(c)!;
+      const { messageId } = this.getParams<{ messageId: string }>(c);
+      const configData = (await this.getBody<MessageTranslateInfoUpdate>(c))!;
+
+      const db = await this.getDatabase();
+      const translateService = new MessageTranslateService(db, userId);
+      const result = await translateService.updateTranslateInfo({ ...configData, messageId });
+
+      return this.success(c, result, '更新翻译信息成功');
     } catch (error) {
       return this.handleError(c, error);
     }
