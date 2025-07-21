@@ -1,9 +1,8 @@
 ---
 title: LobeChat Model Service Providers - Environment Variables and Configuration
 description: >-
-  Learn about the environment variables and configuration settings for various
-  model service providers like OpenAI, Google AI, AWS Bedrock, Ollama,
-  Perplexity AI, Anthropic AI, Mistral AI, Groq AI, OpenRouter AI, and 01.AI.
+  Learn about the environment variables and configuration settings for various model service providers like OpenAI, Google AI, AWS Bedrock, Ollama, Perplexity AI, Anthropic AI, Mistral AI, Groq AI, OpenRouter AI, and 01.AI.
+
 tags:
   - Model Service Providers
   - Environment Variables
@@ -58,8 +57,8 @@ Related discussions:
 ### `OPENAI_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
-- Default: `-`
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
+- 
 - Example: `+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo`
 
 The above example adds `qwen-7b-chat` and `glm-6b` to the model list, removes `gpt-3.5-turbo` from the list, and displays the name of `gpt-4-0125-preview` as `gpt-4-turbo`. If you want to disable all models first and then enable specific models, you can use `-all,+gpt-3.5-turbo`, which means only `gpt-3.5-turbo` will be enabled.
@@ -94,8 +93,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `AZURE_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `id->deploymentName=displayName` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
-- Default: `-`
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `id->deploymentName=displayName` to customize the display name of a model, separated by commas. Definition syntax rules see
 - Example: `gpt-35-turbo->my-deploy=GPT 3.5 Turbo` 或 `gpt-4-turbo->my-gpt4=GPT 4 Turbo<128000:vision:fc>`
 
 ## Google AI
@@ -117,8 +115,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `GOOGLE_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
-- Default: `-`
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
 - Example: `-all,+gemini-1.5-flash-latest,+gemini-1.5-pro-latest`
 
 ## Anthropic AI
@@ -186,7 +183,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `DEEPSEEK_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=displayName` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Descriptio: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=displayName` to customize the display name of a model, separated by commas. Definition syntax rules see
 - Default: `-`
 - Example: `-all,+deepseek-reasoner`
 
@@ -204,7 +201,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `WENXIN_API_KEY`
 
 - Type: Required
-- Description: This is the API key you applied for in the Baidu Wenxin service
+- Description: This is the API key you applied forin the Baidu Wenxin service
 - Default: -
 - Example: `xxxxxx...xxxxxx`
 
@@ -220,7 +217,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `OPENROUTER_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to specify a custom OpenRouter model list. Model definition syntax rules see [model-list][model-list]
+- Description: Used to specify a custom OpenRouter model list. Moel definition syntax rules see
 - Default: `-`
 - Example: `-all,+01-ai/yi-34b-chat,+huggingfaceh4/zephyr-7b-beta`
 
@@ -236,9 +233,9 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `PPIO_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
 - Default: `-`
-- Example: `-all,+deepseek/deepseek-v3/community,+deepseek/deepseek-r1-distill-llama-70b`
+- Example: `-all,+deepseek/deepseek-v3/community,+deepseek/eepseek-r1-distill-llama-70b`
 
 ## Github
 
@@ -252,7 +249,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `GITHUB_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
 - Default: `-`
 - Example: `-all,+gpt-4o,+gpt-4o-mini`
 
@@ -265,10 +262,10 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Default: -
 - Example: `xxxxxx...xxxxxx`
 
-### `TOGETHERAI_MODEL_LIST`
+### `TOGETHERAI_MODEL_LIS`
 
 - Type: Optional
-- Description: Used to specify a custom TogetherAI model list. Model definition syntax rules see [model-list][model-list]
+- Description: Used to specify a custom TogetherAI model list. Model definition syntax rules see
 - Default: `-`
 - Example: `-all,+meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo,+meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo`
 
@@ -284,9 +281,9 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `FIREWORKSAI_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
 - Default: `-`
-- Example: `-all,+accounts/fireworks/models/firefunction-v2,+accounts/fireworks/models/firefunction-v1`
+- Example: `-all,+accouts/fireworks/models/firefunction-v2,+accounts/fireworks/models/firefunction-v1`
 
 ## Ollama
 
@@ -307,7 +304,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `OLLAMA_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to specify a custom Ollama language model. Model definition syntax rules see [model-list][model-list]
+- Description: Used to specify a custom Ollama language model. Model definition syntax rules see
 - Default: -
 - Example: `llama2:7B`
 
@@ -323,8 +320,8 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `MOONSHOT_PROXY_URL`
 
 - Type: Optional
-- Description: If you manually configure the Moonshot API proxy, you can use this configuration item to override the default Moonshot API request base URL
-- Default: `https://api.moonshot.cn/v1`
+- Description: If you manually configurethe Moonshot API proxy, you can use this configuration item to override the default Moonshot API request base URL
+- Default: `https://api.moonshot.ai/v1`
 - Example: `https://my-moonshot-proxy.com/v1`
 
 ## Perplexity AI
@@ -339,7 +336,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `PERPLEXITY_PROXY_URL`
 
 - Type: Optional
-- Description: If you manually configure the Perplexity API proxy, you can use this configuration item to override the default Perplexity API request base URL
+- Description: If you manually configure the Perplexity API proxy, you can use this configuration item to overide the default Perplexity API request base URL
 - Default: `https://api.Perplexity.ai`
 - Example: `https://my-Perplexity-proxy.com`
 
@@ -348,7 +345,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Type: Optional
 - Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
 - Default: `-`
-- Example: `-all,+llama-3.1-sonar-small-128k-online,+llama-3.1-sonar-small-128k-chat`
+- Example: `-all,+llama-3.1-sonar-small-128k-online,+llama-3.1-sonar-smll-128k-chat`
 
 ## Minimax AI
 
@@ -375,7 +372,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Type: Required
 - Description: This is the API key you applied from Groq AI
 - Default: -
-- Example: `gsk_xxxxxx...xxxxxx`
+- 
 
 ### `GROQ_PROXY_URL`
 
@@ -387,7 +384,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `GROQ_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
 - Default: `-`
 - Example: `-all,+gemma2-9b-it,+llama-3.1-8b-instant`
 
@@ -395,7 +392,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 
 ### `ZHIPU_API_KEY`
 
-- Type: Required
+- Type: Requird
 - Description: This is the API key you applied for in the ZHIPU AI service
 - Default: -
 - Example: `4582d332441a313f5c2ed9824d1798ca.rC8EcTAhgbOuAuVT`
@@ -403,7 +400,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `ZHIPU_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
 - Default: `-`
 - Example: `-all,+glm-4-alltools,+glm-4-plus`
 
@@ -419,9 +416,32 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `ZEROONE_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
 - Default: `-`
 - Example: `-all,+yi-large,+yi-large-rag`
+
+## Qiniu
+
+### `QINIU_API_KEY`
+
+- Type: Required
+- Description: This is the API key you can obtain from Qiniu AI service
+- Default: -
+- Example：`sk-xxxxx...xxxxx`
+
+### `QINIU_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separatedby commas. Definition syntax rules see
+- Default: `-`
+- Example: `-all,+deepseek-r1,+deepseek-v3`
+
+### `QINIU_PROXY_URL`
+
+- Type: Optional
+- Description: If you manually configure the Qiniu API proxy, you can use this configuration item to override the default Qiniu API request base URL
+- Default: `https://api.qnaigc.com/v1`
+- Example: `https://my-qnaigc.com/v1`
 
 ## Qwen
 
@@ -435,11 +455,11 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `QWEN_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name->deploymentName=display_name` to customize the display name of a model, separated by commas. The deploymentName `->deploymentName` can be omitted, and it defaults to the latest model version. Definition syntax rules see
 - Default: `-`
-- Example: `-all,+qwen-turbo-latest,+qwen-plus-latest`
+- Example: `-all,+qwen-turbo,+qwen-plus,+qwen-max->qwen-max-2025-01-25`
 
-### `QWEN_PROXY_URL`
+### 
 
 - Type: Optional
 - Description: If you manually configure the Qwen API proxy, you can use this configuration item to override the default Qwen API request base URL
@@ -467,7 +487,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `NOVITA_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
 - Default: `-`
 - Example: `-all,+meta-llama/llama-3.1-8b-instruct,+meta-llama/llama-3.1-70b-instruct`
 
@@ -517,7 +537,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `SILICONCLOUD_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
 - Default: `-`
 - Example: `-all,+deepseek-ai/DeepSeek-V2.5,+Qwen/Qwen2.5-7B-Instruct`
 
@@ -560,7 +580,7 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `HUNYUAN_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
 - Default: `-`
 - Example: `-all,+hunyuan-lite,+hunyuan-standard`
 
@@ -576,9 +596,9 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `VOLCENGINE_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name->deploymentName=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name->deploymentName=display_name` to customize the display name of a model, separated by commas. The deploymentName `->deploymentName` can be omitted, and it defaults to the latest model version. Definition syntax rules see
 - Default: `-`
-- Example: `-all,+deepseek-r1->deepseek-r1-250120,+deepseek-v3->deepseek-v3-250324,+doubao-1.5-pro-256k->doubao-1-5-pro-256k-250115,+doubao-1.5-pro-32k->doubao-1-5-pro-32k-250115,+doubao-1.5-lite-32k->doubao-1-5-lite-32k-250115`
+- Example: `-all,+deepseek-r1,+deepseek-v3->deepseek-v3-250324,+doubao-1.5-pro-256k,+doubao-1.5-pro-32k->doubao-1-5-pro-32k-250115,+doubao-1.5-lite-32k`
 
 ### `VOLCENGINE_PROXY_URL`
 
@@ -599,8 +619,31 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `INFINIAI_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name->deploymentName=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see
 - Default: `-`
 - Example: `-all,+qwq-32b,+deepseek-r1`
 
-[model-list]: /docs/self-hosting/advanced/model-list
+## FAL
+
+### `ENABLED_FAL`
+
+- Type: Optional
+- Description: Enables FAL as a model provider by default. Set to `0` to disable the FAL service.
+- Default: `1`
+- Example: `0`
+
+### `FAL_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the FAL service.
+- Default: -
+- Example: `fal-xxxxxx...xxxxxx`
+
+### `FAL_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the FAL model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model. Separate multiple entries with commas. The definition syntax follows the same rules as other providers' model lists.
+- Default: `-`
+- Example: `-all,+fal-model-1,+fal-model-2=fal-special`
+
+The above example disables all models first, then enables `fal-model-1` and `fal-model-2` (displayed as `fal-special`).
