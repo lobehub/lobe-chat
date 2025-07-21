@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Modal list header sticky style."]
+    },
+    "date": "2025-07-21",
+    "version": "1.102.1"
+  },
+  {
+    "children": {
       "features": ["Add image generation capabilities using Google AI Imagen API."]
     },
     "date": "2025-07-21",
