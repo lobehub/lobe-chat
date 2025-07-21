@@ -71,44 +71,23 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 è un modello MoE sviluppato internamente dalla DeepSeek Company. I risultati di DeepSeek-V3 in molte valutazioni superano quelli di altri modelli open source come Qwen2.5-72B e Llama-3.1-405B, e si confronta alla pari con i modelli closed source di punta a livello mondiale come GPT-4o e Claude-3.5-Sonnet."
   },
-  "Doubao-1.5-thinking-pro-m": {
-    "description": "Doubao-1.5 è un nuovo modello di pensiero profondo (versione m con capacità di ragionamento multimodale native), che si distingue in matematica, programmazione, ragionamento scientifico e compiti generali come la scrittura creativa, raggiungendo o avvicinandosi ai livelli di punta del settore in vari benchmark autorevoli come AIME 2024, Codeforces, GPQA. Supporta una finestra di contesto di 128k e un output di 16k."
-  },
-  "Doubao-1.5-thinking-vision-pro": {
-    "description": "Nuovo modello di pensiero visivo profondo, con una maggiore capacità di comprensione e ragionamento multimodale generale, ottenendo prestazioni SOTA in 37 dei 59 benchmark pubblici."
-  },
-  "Doubao-1.5-vision-pro": {
-    "description": "Doubao-1.5-vision-pro è un grande modello multimodale aggiornato, che supporta il riconoscimento di immagini a qualsiasi risoluzione e proporzioni estremamente lunghe, migliorando le capacità di ragionamento visivo, riconoscimento di documenti, comprensione delle informazioni dettagliate e rispetto delle istruzioni."
-  },
-  "Doubao-1.5-vision-pro-32k": {
-    "description": "Doubao-1.5-vision-pro è un modello multimodale aggiornato, che supporta il riconoscimento di immagini con qualsiasi risoluzione e rapporti di aspetto estremi, migliorando le capacità di ragionamento visivo, riconoscimento di documenti, comprensione delle informazioni dettagliate e capacità di seguire istruzioni."
-  },
   "Doubao-lite-128k": {
-    "description": "Doubao-lite offre un'estrema velocità di risposta, un miglior rapporto qualità-prezzo e opzioni più flessibili per diversi scenari dei clienti. Supporta inferenze e fine-tuning con una finestra di contesto di 128k."
+    "description": "Doubao-lite offre una velocità di risposta eccezionale e un miglior rapporto qualità-prezzo, fornendo ai clienti scelte più flessibili per diversi scenari. Supporta inferenza e fine-tuning con una finestra contestuale di 128k."
   },
   "Doubao-lite-32k": {
-    "description": "Doubao-lite offre un'estrema velocità di risposta, un miglior rapporto qualità-prezzo e opzioni più flessibili per diversi scenari dei clienti. Supporta inferenze e fine-tuning con una finestra di contesto di 32k."
+    "description": "Doubao-lite offre una velocità di risposta eccezionale e un miglior rapporto qualità-prezzo, fornendo ai clienti scelte più flessibili per diversi scenari. Supporta inferenza e fine-tuning con una finestra contestuale di 32k."
   },
   "Doubao-lite-4k": {
-    "description": "Doubao-lite offre un'estrema velocità di risposta, un miglior rapporto qualità-prezzo e opzioni più flessibili per diversi scenari dei clienti. Supporta inferenze e fine-tuning con una finestra di contesto di 4k."
+    "description": "Doubao-lite offre una velocità di risposta eccezionale e un miglior rapporto qualità-prezzo, fornendo ai clienti scelte più flessibili per diversi scenari. Supporta inferenza e fine-tuning con una finestra contestuale di 4k."
   },
   "Doubao-pro-128k": {
-    "description": "Il modello principale presenta le migliori prestazioni, adatto per compiti complessi, con risultati eccellenti in scenari di domanda di riferimento, sintesi, creazione, classificazione del testo, e role-playing. Supporta inferenze e fine-tuning con una finestra di contesto di 128k."
-  },
-  "Doubao-pro-256k": {
-    "description": "Il modello principale con le migliori prestazioni, adatto a gestire compiti complessi, con ottimi risultati in scenari di domande e risposte, riassunti, creazione, classificazione del testo e interpretazione di ruoli. Supporta il ragionamento e il fine-tuning con una finestra di contesto di 256k."
+    "description": "Il modello principale con le migliori prestazioni, adatto per gestire compiti complessi, con ottimi risultati in domande di riferimento, sintesi, creazione, classificazione del testo, role-playing e altri scenari. Supporta inferenza e fine-tuning con una finestra contestuale di 128k."
   },
   "Doubao-pro-32k": {
-    "description": "Il modello principale presenta le migliori prestazioni, adatto per compiti complessi, con risultati eccellenti in scenari di domanda di riferimento, sintesi, creazione, classificazione del testo, e role-playing. Supporta inferenze e fine-tuning con una finestra di contesto di 32k."
+    "description": "Il modello principale con le migliori prestazioni, adatto per gestire compiti complessi, con ottimi risultati in domande di riferimento, sintesi, creazione, classificazione del testo, role-playing e altri scenari. Supporta inferenza e fine-tuning con una finestra contestuale di 32k."
   },
   "Doubao-pro-4k": {
-    "description": "Il modello principale presenta le migliori prestazioni, adatto per compiti complessi, con risultati eccellenti in scenari di domanda di riferimento, sintesi, creazione, classificazione del testo, e role-playing. Supporta inferenze e fine-tuning con una finestra di contesto di 4k."
-  },
-  "Doubao-vision-lite-32k": {
-    "description": "Il modello Doubao-vision è un modello multimodale lanciato da Doubao, dotato di potenti capacità di comprensione e ragionamento delle immagini, nonché di una precisa comprensione delle istruzioni. Il modello ha dimostrato prestazioni eccezionali nell'estrazione di informazioni testuali da immagini e in compiti di ragionamento basati su immagini, applicabile a compiti di domanda e risposta visiva più complessi e ampi."
-  },
-  "Doubao-vision-pro-32k": {
-    "description": "Il modello Doubao-vision è un modello multimodale lanciato da Doubao, dotato di potenti capacità di comprensione e ragionamento delle immagini, nonché di una precisa comprensione delle istruzioni. Il modello ha dimostrato prestazioni eccezionali nell'estrazione di informazioni testuali da immagini e in compiti di ragionamento basati su immagini, applicabile a compiti di domanda e risposta visiva più complessi e ampi."
+    "description": "Il modello principale con le migliori prestazioni, adatto per gestire compiti complessi, con ottimi risultati in domande di riferimento, sintesi, creazione, classificazione del testo, role-playing e altri scenari. Supporta inferenza e fine-tuning con una finestra contestuale di 4k."
   },
   "ERNIE-3.5-128K": {
     "description": "Modello di linguaggio di grande scala di punta sviluppato da Baidu, che copre un'enorme quantità di dati in cinese e inglese, con potenti capacità generali, in grado di soddisfare la maggior parte delle esigenze di domande e risposte, generazione creativa e scenari di applicazione dei plugin; supporta l'integrazione automatica con il plugin di ricerca di Baidu, garantendo l'aggiornamento delle informazioni nelle risposte."
@@ -224,23 +203,20 @@
   "Pro/Qwen/Qwen2.5-VL-7B-Instruct": {
     "description": "Qwen2.5-VL è il nuovo membro della serie Qwen, dotato di potenti capacità di comprensione visiva. È in grado di analizzare il testo, i grafici e il layout all'interno delle immagini, nonché di comprendere video lunghi e catturare eventi. Può effettuare ragionamenti, manipolare strumenti, supportare la localizzazione di oggetti in diversi formati e generare output strutturati. Inoltre, è stato ottimizzato per la formazione dinamica di risoluzione e frame rate nella comprensione video, migliorando l'efficienza dell'encoder visivo."
   },
+  "Pro/THUDM/GLM-4.1V-9B-Thinking": {
+    "description": "GLM-4.1V-9B-Thinking è un modello di linguaggio visivo open source (VLM) rilasciato congiuntamente da Zhipu AI e dal laboratorio KEG dell'Università di Tsinghua, progettato specificamente per gestire compiti cognitivi multimodali complessi. Basato sul modello di base GLM-4-9B-0414, il modello introduce il meccanismo di ragionamento \"Catena di Pensiero\" (Chain-of-Thought) e utilizza strategie di apprendimento rinforzato, migliorando significativamente la capacità di ragionamento cross-modale e la stabilità."
+  },
   "Pro/THUDM/glm-4-9b-chat": {
     "description": "GLM-4-9B-Chat è la versione open source del modello pre-addestrato GLM-4 della serie sviluppata da Zhipu AI. Questo modello ha dimostrato prestazioni eccellenti in vari aspetti, tra cui semantica, matematica, ragionamento, codice e conoscenza. Oltre a supportare conversazioni multi-turno, GLM-4-9B-Chat offre anche funzionalità avanzate come navigazione web, esecuzione di codice, chiamate a strumenti personalizzati (Function Call) e ragionamento su testi lunghi. Il modello supporta 26 lingue, tra cui cinese, inglese, giapponese, coreano e tedesco. Ha mostrato prestazioni eccellenti in vari benchmark, come AlignBench-v2, MT-Bench, MMLU e C-Eval. Questo modello supporta una lunghezza di contesto massima di 128K, rendendolo adatto per ricerche accademiche e applicazioni commerciali."
   },
   "Pro/deepseek-ai/DeepSeek-R1": {
     "description": "DeepSeek-R1 è un modello di inferenza guidato dall'apprendimento per rinforzo (RL) che affronta i problemi di ripetitività e leggibilità nel modello. Prima dell'RL, DeepSeek-R1 ha introdotto dati di cold start, ottimizzando ulteriormente le prestazioni di inferenza. Si comporta in modo comparabile a OpenAI-o1 in compiti matematici, di codifica e di inferenza, e migliora l'efficacia complessiva grazie a metodi di addestramento ben progettati."
   },
-  "Pro/deepseek-ai/DeepSeek-R1-0120": {
-    "description": "DeepSeek-R1 è un modello di ragionamento guidato da apprendimento rinforzato (RL) che risolve problemi di ripetitività e leggibilità. Prima del RL, ha introdotto dati di cold start per ottimizzare ulteriormente le prestazioni di ragionamento. Le sue prestazioni in matematica, codice e ragionamento sono comparabili a OpenAI-o1, con miglioramenti complessivi grazie a metodi di addestramento accuratamente progettati."
-  },
   "Pro/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B": {
     "description": "DeepSeek-R1-Distill-Qwen-7B è un modello ottenuto attraverso il distillamento del knowledge da Qwen2.5-Math-7B. Questo modello è stato fine-tunato utilizzando 800.000 campioni selezionati generati da DeepSeek-R1, dimostrando un'ottima capacità di inferenza. Ha ottenuto risultati eccellenti in diversi benchmark, raggiungendo una precisione del 92,8% su MATH-500, un tasso di passaggio del 55,5% su AIME 2024 e una valutazione di 1189 su CodeForces, dimostrando una forte capacità matematica e di programmazione per un modello di 7B."
   },
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 è un modello di linguaggio con 6710 miliardi di parametri, basato su un'architettura di esperti misti (MoE) che utilizza attenzione multilivello (MLA) e la strategia di bilanciamento del carico senza perdite ausiliarie, ottimizzando l'efficienza di inferenza e addestramento. Pre-addestrato su 14,8 trilioni di token di alta qualità e successivamente affinato tramite supervisione e apprendimento per rinforzo, DeepSeek-V3 supera altri modelli open source, avvicinandosi ai modelli chiusi di punta."
-  },
-  "Pro/deepseek-ai/DeepSeek-V3-1226": {
-    "description": "DeepSeek-V3 è un modello linguistico ibrido esperto (MoE) con 6710 miliardi di parametri, che utilizza l'attenzione multilivello (MLA) e l'architettura DeepSeekMoE, combinando strategie di bilanciamento del carico senza perdite ausiliarie per ottimizzare l'efficienza di inferenza e addestramento. Pre-addestrato su 14,8 trilioni di token di alta qualità e successivamente affinato supervisionato e tramite apprendimento rinforzato, DeepSeek-V3 supera le prestazioni di altri modelli open source, avvicinandosi ai modelli closed source leader."
   },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview è un modello di elaborazione del linguaggio naturale innovativo, in grado di gestire in modo efficiente compiti complessi di generazione di dialoghi e comprensione del contesto."
@@ -404,6 +380,9 @@
   "THUDM/GLM-4-9B-0414": {
     "description": "GLM-4-9B-0414 è un modello di piccole dimensioni della serie GLM, con 9 miliardi di parametri. Questo modello eredita le caratteristiche tecniche della serie GLM-4-32B, ma offre opzioni di distribuzione più leggere. Nonostante le dimensioni ridotte, GLM-4-9B-0414 mostra ancora capacità eccezionali in generazione di codice, progettazione di pagine web, generazione di grafica SVG e scrittura basata su ricerca."
   },
+  "THUDM/GLM-4.1V-9B-Thinking": {
+    "description": "GLM-4.1V-9B-Thinking è un modello di linguaggio visivo open source (VLM) rilasciato congiuntamente da Zhipu AI e dal laboratorio KEG dell'Università di Tsinghua, progettato specificamente per gestire compiti cognitivi multimodali complessi. Basato sul modello di base GLM-4-9B-0414, il modello introduce il meccanismo di ragionamento \"Catena di Pensiero\" (Chain-of-Thought) e utilizza strategie di apprendimento rinforzato, migliorando significativamente la capacità di ragionamento cross-modale e la stabilità."
+  },
   "THUDM/GLM-Z1-32B-0414": {
     "description": "GLM-Z1-32B-0414 è un modello di inferenza con capacità di pensiero profondo. Questo modello è stato sviluppato sulla base di GLM-4-32B-0414 attraverso un avvio a freddo e un apprendimento rinforzato esteso, ed è stato ulteriormente addestrato in compiti di matematica, codice e logica. Rispetto al modello di base, GLM-Z1-32B-0414 ha migliorato significativamente le capacità matematiche e la capacità di risolvere compiti complessi."
   },
@@ -560,6 +539,9 @@
   "anthropic/claude-sonnet-4": {
     "description": "Claude Sonnet 4 può generare risposte quasi istantanee o un ragionamento esteso e graduale, che gli utenti possono osservare chiaramente. Gli utenti API possono anche controllare con precisione il tempo di riflessione del modello."
   },
+  "ascend-tribe/pangu-pro-moe": {
+    "description": "Pangu-Pro-MoE 72B-A16B è un modello linguistico di grandi dimensioni a parametri sparsi con 72 miliardi di parametri totali e 16 miliardi di parametri attivati, basato sull'architettura Mixture of Group Experts (MoGE). Durante la fase di selezione degli esperti, gli esperti sono raggruppati e il token attiva un numero uguale di esperti all'interno di ogni gruppo, garantendo un bilanciamento del carico degli esperti e migliorando significativamente l'efficienza di distribuzione del modello sulla piattaforma Ascend."
+  },
   "aya": {
     "description": "Aya 23 è un modello multilingue lanciato da Cohere, supporta 23 lingue, facilitando applicazioni linguistiche diversificate."
   },
@@ -568,6 +550,9 @@
   },
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B è un modello di linguaggio open source sviluppato da Baichuan Intelligence, con 13 miliardi di parametri, che ha ottenuto i migliori risultati nella sua categoria in benchmark autorevoli sia in cinese che in inglese."
+  },
+  "baidu/ERNIE-4.5-300B-A47B": {
+    "description": "ERNIE-4.5-300B-A47B è un modello linguistico di grandi dimensioni sviluppato da Baidu basato sull'architettura Mixture of Experts (MoE). Il modello ha un totale di 300 miliardi di parametri, ma durante l'inferenza attiva solo 47 miliardi di parametri per token, garantendo così un equilibrio tra prestazioni elevate ed efficienza computazionale. Come uno dei modelli principali della serie ERNIE 4.5, eccelle in compiti di comprensione del testo, generazione, ragionamento e programmazione. Il modello utilizza un innovativo metodo di pre-addestramento multimodale eterogeneo MoE, addestrando congiuntamente testo e modalità visive, migliorando efficacemente le capacità complessive, con risultati particolarmente evidenti nell'aderenza alle istruzioni e nella memoria della conoscenza mondiale."
   },
   "c4ai-aya-expanse-32b": {
     "description": "Aya Expanse è un modello multilingue ad alte prestazioni da 32B, progettato per sfidare le prestazioni dei modelli monolingue attraverso innovazioni in ottimizzazione delle istruzioni, arbitraggio dei dati, addestramento delle preferenze e fusione dei modelli. Supporta 23 lingue."
@@ -670,6 +655,9 @@
   },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B è un modello progettato per seguire istruzioni, dialogo e programmazione."
+  },
+  "cogview-4": {
+    "description": "CogView-4 è il primo modello open source di Zhipu che supporta la generazione di caratteri cinesi, con miglioramenti completi nella comprensione semantica, nella qualità della generazione delle immagini e nella capacità di generare testi in cinese e inglese. Supporta input bilingue cinese-inglese di qualsiasi lunghezza e può generare immagini a risoluzione arbitraria entro un intervallo specificato."
   },
   "cohere-command-r": {
     "description": "Command R è un modello generativo scalabile mirato a RAG e all'uso di strumenti per abilitare l'IA su scala aziendale."
@@ -914,8 +902,38 @@
   "doubao-1.5-thinking-pro": {
     "description": "Il modello di pensiero profondo Doubao-1.5, completamente nuovo, si distingue in ambiti professionali come matematica, programmazione e ragionamento scientifico, oltre che in compiti generali come la scrittura creativa, raggiungendo o avvicinandosi ai livelli di eccellenza del settore in numerosi benchmark autorevoli come AIME 2024, Codeforces e GPQA. Supporta una finestra di contesto di 128k e un output di 16k."
   },
+  "doubao-1.5-thinking-pro-m": {
+    "description": "Doubao-1.5 è un nuovo modello di pensiero profondo (versione m con capacità native di inferenza multimodale profonda), eccellente in matematica, programmazione, ragionamento scientifico e compiti generali come scrittura creativa. Raggiunge o si avvicina al livello top nel settore in benchmark autorevoli come AIME 2024, Codeforces, GPQA. Supporta una finestra contestuale di 128k e output di 16k."
+  },
+  "doubao-1.5-thinking-vision-pro": {
+    "description": "Nuovo modello di pensiero profondo visivo con capacità multimodali generali potenziate, che ha raggiunto prestazioni SOTA in 37 su 59 benchmark pubblici."
+  },
+  "doubao-1.5-ui-tars": {
+    "description": "Doubao-1.5-UI-TARS è un modello Agent nativo progettato per l'interazione con interfacce grafiche (GUI). Interagisce senza soluzione di continuità con la GUI attraverso capacità umanoidi di percezione, ragionamento e azione."
+  },
   "doubao-1.5-vision-lite": {
     "description": "Doubao-1.5-vision-lite è un grande modello multimodale aggiornato, che supporta il riconoscimento di immagini a qualsiasi risoluzione e proporzioni estremamente lunghe, migliorando le capacità di ragionamento visivo, riconoscimento di documenti, comprensione delle informazioni dettagliate e rispetto delle istruzioni. Supporta una finestra di contesto di 128k e una lunghezza di uscita massima di 16k token."
+  },
+  "doubao-1.5-vision-pro": {
+    "description": "Doubao-1.5-vision-pro è un modello multimodale avanzato che supporta il riconoscimento di immagini a qualsiasi risoluzione e rapporti d'aspetto estremi, migliorando il ragionamento visivo, il riconoscimento documentale, la comprensione dei dettagli e l'aderenza alle istruzioni."
+  },
+  "doubao-1.5-vision-pro-32k": {
+    "description": "Doubao-1.5-vision-pro è un modello multimodale avanzato che supporta il riconoscimento di immagini a qualsiasi risoluzione e rapporti d'aspetto estremi, migliorando il ragionamento visivo, il riconoscimento documentale, la comprensione dei dettagli e l'aderenza alle istruzioni."
+  },
+  "doubao-lite-128k": {
+    "description": "Offre una velocità di risposta eccezionale e un miglior rapporto qualità-prezzo, fornendo ai clienti scelte più flessibili per diversi scenari. Supporta inferenza e fine-tuning con una finestra contestuale di 128k."
+  },
+  "doubao-lite-32k": {
+    "description": "Offre una velocità di risposta eccezionale e un miglior rapporto qualità-prezzo, fornendo ai clienti scelte più flessibili per diversi scenari. Supporta inferenza e fine-tuning con una finestra contestuale di 32k."
+  },
+  "doubao-lite-4k": {
+    "description": "Offre una velocità di risposta eccezionale e un miglior rapporto qualità-prezzo, fornendo ai clienti scelte più flessibili per diversi scenari. Supporta inferenza e fine-tuning con una finestra contestuale di 4k."
+  },
+  "doubao-pro-256k": {
+    "description": "Il modello principale con le migliori prestazioni, adatto per gestire compiti complessi, con ottimi risultati in domande di riferimento, sintesi, creazione, classificazione del testo, role-playing e altri scenari. Supporta inferenza e fine-tuning con una finestra contestuale di 256k."
+  },
+  "doubao-pro-32k": {
+    "description": "Il modello principale con le migliori prestazioni, adatto per gestire compiti complessi, con ottimi risultati in domande di riferimento, sintesi, creazione, classificazione del testo, role-playing e altri scenari. Supporta inferenza e fine-tuning con una finestra contestuale di 32k."
   },
   "doubao-seed-1.6": {
     "description": "Doubao-Seed-1.6 è un nuovo modello multimodale di pensiero profondo che supporta tre modalità di pensiero: auto, thinking e non-thinking. In modalità non-thinking, le prestazioni del modello migliorano significativamente rispetto a Doubao-1.5-pro/250115. Supporta una finestra contestuale di 256k e una lunghezza massima di output di 16k token."
@@ -925,6 +943,12 @@
   },
   "doubao-seed-1.6-thinking": {
     "description": "Il modello Doubao-Seed-1.6-thinking ha capacità di pensiero notevolmente potenziate; rispetto a Doubao-1.5-thinking-pro, migliora ulteriormente le capacità di base come coding, matematica e ragionamento logico, supportando anche la comprensione visiva. Supporta una finestra contestuale di 256k e una lunghezza massima di output di 16k token."
+  },
+  "doubao-vision-lite-32k": {
+    "description": "Il modello Doubao-vision è un modello multimodale lanciato da Doubao, con potenti capacità di comprensione e ragionamento delle immagini e una precisa comprensione delle istruzioni. Il modello mostra prestazioni eccellenti nell'estrazione di informazioni da testo e immagini e in compiti di ragionamento basati su immagini, applicabile a compiti di domande visive più complessi e ampi."
+  },
+  "doubao-vision-pro-32k": {
+    "description": "Il modello Doubao-vision è un modello multimodale lanciato da Doubao, con potenti capacità di comprensione e ragionamento delle immagini e una precisa comprensione delle istruzioni. Il modello mostra prestazioni eccellenti nell'estrazione di informazioni da testo e immagini e in compiti di ragionamento basati su immagini, applicabile a compiti di domande visive più complessi e ampi."
   },
   "emohaa": {
     "description": "Emohaa è un modello psicologico, con capacità di consulenza professionale, aiuta gli utenti a comprendere i problemi emotivi."
@@ -997,6 +1021,15 @@
   },
   "ernie-x1-turbo-32k": {
     "description": "Rispetto a ERNIE-X1-32K, il modello offre prestazioni e risultati migliori."
+  },
+  "flux-kontext/dev": {
+    "description": "Modello di editing immagini Frontier."
+  },
+  "flux-pro/kontext": {
+    "description": "FLUX.1 Kontext [pro] è in grado di elaborare testo e immagini di riferimento come input, realizzando senza soluzione di continuità modifiche locali mirate e complesse trasformazioni dell'intera scena."
+  },
+  "flux/schnell": {
+    "description": "FLUX.1 [schnell] è un modello trasformatore a flusso con 12 miliardi di parametri, capace di generare immagini di alta qualità da testo in 1-4 passaggi, adatto per uso personale e commerciale."
   },
   "gemini-1.0-pro-001": {
     "description": "Gemini 1.0 Pro 001 (Tuning) offre prestazioni stabili e ottimizzabili, è la scelta ideale per soluzioni a compiti complessi."
@@ -1082,9 +1115,6 @@
   "gemini-2.5-pro": {
     "description": "Gemini 2.5 Pro è il modello di pensiero più avanzato di Google, capace di ragionare su codice, matematica e problemi complessi nei campi STEM, oltre a utilizzare contesti lunghi per analizzare grandi dataset, codebase e documenti."
   },
-  "gemini-2.5-pro-exp-03-25": {
-    "description": "Gemini 2.5 Pro Experimental è il modello di pensiero più avanzato di Google, in grado di ragionare su problemi complessi in codice, matematica e nei campi STEM, e di analizzare grandi set di dati, codebase e documenti utilizzando contesti lunghi."
-  },
   "gemini-2.5-pro-preview-03-25": {
     "description": "Gemini 2.5 Pro Preview è il modello di pensiero più avanzato di Google, in grado di ragionare su problemi complessi in codice, matematica e nei campi STEM, oltre a utilizzare analisi di lungo contesto per grandi set di dati, codici sorgente e documenti."
   },
@@ -1151,6 +1181,12 @@
   "glm-4-plus": {
     "description": "GLM-4-Plus, come flagship ad alta intelligenza, ha potenti capacità di elaborazione di testi lunghi e compiti complessi, con prestazioni complessive migliorate."
   },
+  "glm-4.1v-thinking-flash": {
+    "description": "La serie GLM-4.1V-Thinking è attualmente il modello visivo più performante tra i modelli VLM di livello 10 miliardi di parametri noti, integrando le migliori prestazioni SOTA nelle attività di linguaggio visivo di pari livello, tra cui comprensione video, domande sulle immagini, risoluzione di problemi disciplinari, riconoscimento OCR, interpretazione di documenti e grafici, agent GUI, coding front-end web, grounding e altro. Le capacità in molteplici compiti superano persino il modello Qwen2.5-VL-72B con 8 volte più parametri. Grazie a tecniche avanzate di apprendimento rinforzato, il modello padroneggia il ragionamento tramite catena di pensiero per migliorare accuratezza e ricchezza delle risposte, superando significativamente i modelli tradizionali non-thinking in termini di risultati finali e interpretabilità."
+  },
+  "glm-4.1v-thinking-flashx": {
+    "description": "La serie GLM-4.1V-Thinking è attualmente il modello visivo più performante tra i modelli VLM di livello 10 miliardi di parametri noti, integrando le migliori prestazioni SOTA nelle attività di linguaggio visivo di pari livello, tra cui comprensione video, domande sulle immagini, risoluzione di problemi disciplinari, riconoscimento OCR, interpretazione di documenti e grafici, agent GUI, coding front-end web, grounding e altro. Le capacità in molteplici compiti superano persino il modello Qwen2.5-VL-72B con 8 volte più parametri. Grazie a tecniche avanzate di apprendimento rinforzato, il modello padroneggia il ragionamento tramite catena di pensiero per migliorare accuratezza e ricchezza delle risposte, superando significativamente i modelli tradizionali non-thinking in termini di risultati finali e interpretabilità."
+  },
   "glm-4v": {
     "description": "GLM-4V offre potenti capacità di comprensione e ragionamento visivo, supportando vari compiti visivi."
   },
@@ -1171,6 +1207,9 @@
   },
   "glm-z1-flash": {
     "description": "La serie GLM-Z1 possiede potenti capacità di ragionamento complesso, eccellendo in logica, matematica e programmazione. La lunghezza massima del contesto è di 32K."
+  },
+  "glm-z1-flashx": {
+    "description": "Alta velocità e basso costo: versione potenziata Flash, con velocità di inferenza ultra-rapida e migliore garanzia di concorrenza."
   },
   "glm-zero-preview": {
     "description": "GLM-Zero-Preview possiede potenti capacità di ragionamento complesso, eccellendo nei campi del ragionamento logico, della matematica e della programmazione."
@@ -1222,6 +1261,9 @@
   },
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B) offre capacità di elaborazione di istruzioni di base, adatta per applicazioni leggere."
+  },
+  "google/gemma-3-1b-it": {
+    "description": "Gemma 3 1B è un modello linguistico open source di Google che ha stabilito nuovi standard in termini di efficienza e prestazioni."
   },
   "google/gemma-3-27b-it": {
     "description": "Gemma 3 27B è un modello linguistico open source di Google, che ha stabilito nuovi standard in termini di efficienza e prestazioni."
@@ -1313,6 +1355,9 @@
   "gpt-4o-mini-search-preview": {
     "description": "La versione preview di GPT-4o mini per la ricerca è un modello appositamente addestrato per comprendere ed eseguire query di ricerca web, utilizzando l’API Chat Completions. Oltre ai costi per token, le query di ricerca web comportano un costo per ogni chiamata allo strumento."
   },
+  "gpt-4o-mini-transcribe": {
+    "description": "GPT-4o Mini Transcribe è un modello di trascrizione vocale che utilizza GPT-4o per convertire audio in testo. Rispetto al modello Whisper originale, migliora il tasso di errore delle parole e la precisione nel riconoscimento linguistico. Usalo per ottenere trascrizioni più accurate."
+  },
   "gpt-4o-mini-tts": {
     "description": "GPT-4o mini TTS è un modello di sintesi vocale basato su GPT-4o mini, che offre una generazione di voce di alta qualità a un costo più basso."
   },
@@ -1322,11 +1367,17 @@
   "gpt-4o-realtime-preview-2024-10-01": {
     "description": "Versione in tempo reale di GPT-4o, supporta input e output audio e testuali in tempo reale."
   },
-  "gpt-4o-realtime-preview-2024-12-17": {
+  "gpt-4o-realtime-preview-2025-06-03": {
     "description": "Versione in tempo reale di GPT-4o, supporta input e output audio e testuali in tempo reale."
   },
   "gpt-4o-search-preview": {
     "description": "La versione preview di GPT-4o per la ricerca è un modello appositamente addestrato per comprendere ed eseguire query di ricerca web, utilizzando l’API Chat Completions. Oltre ai costi per token, le query di ricerca web comportano un costo per ogni chiamata allo strumento."
+  },
+  "gpt-4o-transcribe": {
+    "description": "GPT-4o Transcribe è un modello di trascrizione vocale che utilizza GPT-4o per convertire audio in testo. Rispetto al modello Whisper originale, migliora il tasso di errore delle parole e la precisione nel riconoscimento linguistico. Usalo per ottenere trascrizioni più accurate."
+  },
+  "gpt-image-1": {
+    "description": "Modello nativo multimodale di generazione immagini di ChatGPT"
   },
   "grok-2-1212": {
     "description": "Questo modello ha migliorato l'accuratezza, il rispetto delle istruzioni e le capacità multilingue."
@@ -1346,8 +1397,14 @@
   "grok-3-mini-fast": {
     "description": "Modello leggero che riflette prima di rispondere. Veloce e intelligente, adatto a compiti logici che non richiedono conoscenze di dominio profonde, con tracciamento del processo di pensiero originale."
   },
+  "grok-4": {
+    "description": "Il nostro modello di punta più recente e potente, eccellente nell'elaborazione del linguaggio naturale, nel calcolo matematico e nel ragionamento — un vero campione versatile e completo."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B è un modello linguistico che combina creatività e intelligenza, unendo diversi modelli di punta."
+  },
+  "hunyuan-a13b": {
+    "description": "Hunyuan è il primo modello di ragionamento ibrido, versione aggiornata di hunyuan-standard-256K, con 80 miliardi di parametri totali e 13 miliardi attivati. Di default opera in modalità pensiero lento, ma supporta il passaggio tra modalità pensiero lento e veloce tramite parametri o istruzioni, con il cambio che avviene aggiungendo / no_think prima della query. Le capacità complessive sono migliorate rispetto alla generazione precedente, con miglioramenti significativi in matematica, scienze, comprensione di testi lunghi e capacità agent."
   },
   "hunyuan-code": {
     "description": "Ultimo modello di generazione di codice di Hunyuan, addestrato su un modello di base con 200B di dati di codice di alta qualità, con sei mesi di addestramento su dati SFT di alta qualità, la lunghezza della finestra di contesto è aumentata a 8K, e si posiziona tra i primi in cinque indicatori di valutazione automatica della generazione di codice; nelle valutazioni di alta qualità su dieci aspetti di codice in cinque lingue, le prestazioni sono nella prima fascia."
@@ -1400,6 +1457,9 @@
   "hunyuan-t1-vision": {
     "description": "Modello di comprensione multimodale profonda Hunyuan, supporta catene di pensiero native multimodali, eccelle in vari scenari di ragionamento visivo e migliora significativamente rispetto ai modelli di pensiero rapido nei problemi scientifici."
   },
+  "hunyuan-t1-vision-20250619": {
+    "description": "L'ultima versione del modello di pensiero profondo multimodale t1-vision di Hunyuan, supporta catene di pensiero native multimodali e presenta miglioramenti completi rispetto alla versione predefinita della generazione precedente."
+  },
   "hunyuan-turbo": {
     "description": "Anteprima della nuova generazione di modelli di linguaggio di Hunyuan, utilizza una nuova struttura di modello ibrido di esperti (MoE), con una maggiore efficienza di inferenza e prestazioni superiori rispetto a hunyuan-pro."
   },
@@ -1430,8 +1490,17 @@
   "hunyuan-turbos-role-plus": {
     "description": "Ultima versione del modello di role-playing di Hunyuan, finemente addestrato ufficialmente, basato sul modello Hunyuan e ulteriormente addestrato con dataset specifici per scenari di role-playing, offrendo migliori prestazioni di base in tali contesti."
   },
+  "hunyuan-turbos-vision": {
+    "description": "Questo modello è adatto per scenari di comprensione testo-immagine ed è basato sulla più recente versione turbos di Hunyuan, una nuova generazione di modello linguistico visivo di punta focalizzato su compiti di comprensione testo-immagine, inclusi riconoscimento di entità basato su immagini, domande di conoscenza, creazione di testi e risoluzione di problemi tramite foto, con miglioramenti completi rispetto alla generazione precedente."
+  },
+  "hunyuan-turbos-vision-20250619": {
+    "description": "L'ultima versione del modello linguistico visivo di punta turbos-vision di Hunyuan, con miglioramenti completi rispetto alla versione predefinita della generazione precedente in compiti di comprensione testo-immagine, inclusi riconoscimento di entità basato su immagini, domande di conoscenza, creazione di testi e risoluzione di problemi tramite foto."
+  },
   "hunyuan-vision": {
     "description": "Ultimo modello multimodale di Hunyuan, supporta l'input di immagini e testo per generare contenuti testuali."
+  },
+  "imagen4/preview": {
+    "description": "Il modello di generazione immagini di massima qualità di Google"
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 offre soluzioni di dialogo intelligente in vari scenari."
@@ -1456,6 +1525,9 @@
   },
   "jina-deepsearch-v1": {
     "description": "La ricerca approfondita combina la ricerca online, la lettura e il ragionamento, consentendo indagini complete. Puoi considerarlo come un agente che accetta il tuo compito di ricerca - eseguirà una ricerca approfondita e iterativa prima di fornire una risposta. Questo processo implica una continua ricerca, ragionamento e risoluzione dei problemi da diverse angolazioni. Questo è fondamentalmente diverso dai modelli di grandi dimensioni standard che generano risposte direttamente dai dati pre-addestrati e dai tradizionali sistemi RAG che si basano su ricerche superficiali una tantum."
+  },
+  "kimi-k2-0711-preview": {
+    "description": "kimi-k2 è un modello base con architettura MoE dotato di potenti capacità di codice e Agent, con un totale di 1T parametri e 32B parametri attivi. Nei test di benchmark per ragionamento generale, programmazione, matematica e Agent, il modello K2 supera altri modelli open source principali."
   },
   "kimi-latest": {
     "description": "Il prodotto Kimi Smart Assistant utilizza il più recente modello Kimi, che potrebbe includere funzionalità non ancora stabili. Supporta la comprensione delle immagini e selezionerà automaticamente il modello di fatturazione 8k/32k/128k in base alla lunghezza del contesto della richiesta."
@@ -1869,7 +1941,7 @@
     "description": "o1 è il nuovo modello di inferenza di OpenAI, adatto a compiti complessi che richiedono una vasta conoscenza generale. Questo modello ha un contesto di 128K e una data di cutoff della conoscenza di ottobre 2023."
   },
   "o1-pro": {
-    "description": "La serie di modelli o1 è stata addestrata con apprendimento rinforzato, in grado di riflettere prima di rispondere ed eseguire compiti di ragionamento complessi. Il modello o1-pro utilizza più risorse computazionali per un pensiero più approfondito, offrendo risposte di qualità superiore in modo costante."
+    "description": "La serie di modelli o1 è stata addestrata con apprendimento rinforzato, in grado di riflettere prima di rispondere ed eseguire compiti di ragionamento complessi. Il modello o1-pro utilizza più risorse computazionali per un pensiero più approfondito, offrendo risposte di qualità superiore in modo continuo."
   },
   "o3": {
     "description": "o3 è un modello versatile e potente, che si distingue in vari campi. Stabilisce nuovi standard per compiti di matematica, scienza, programmazione e ragionamento visivo. È anche abile nella scrittura tecnica e nel seguire istruzioni. Gli utenti possono utilizzarlo per analizzare testi, codici e immagini, risolvendo problemi complessi in più passaggi."
@@ -2349,7 +2421,7 @@
     "description": "Il modello v0-1.5-md è adatto per compiti quotidiani e generazione di interfacce utente (UI)"
   },
   "whisper-1": {
-    "description": "Modello di riconoscimento vocale universale, supporta il riconoscimento vocale multilingue, la traduzione vocale e il riconoscimento linguistico."
+    "description": "Modello universale di riconoscimento vocale, supporta riconoscimento vocale multilingue, traduzione vocale e identificazione della lingua."
   },
   "wizardlm2": {
     "description": "WizardLM 2 è un modello di linguaggio fornito da Microsoft AI, particolarmente efficace in dialoghi complessi, multilingue, ragionamento e assistenti intelligenti."

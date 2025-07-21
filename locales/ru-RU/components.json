@@ -68,6 +68,23 @@
   "GoBack": {
     "back": "Назад"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "Нажмите, чтобы изменить изображение",
+      "dropMultipleFiles": "Не поддерживается загрузка нескольких файлов одновременно, будет использован только первый файл"
+    },
+    "placeholder": {
+      "primary": "Добавить изображение",
+      "secondary": "Нажмите или перетащите для загрузки"
+    }
+  },
+  "KeyValueEditor": {
+    "addButton": "Добавить строку",
+    "deleteTooltip": "Удалить",
+    "duplicateKeyError": "Имя ключа должно быть уникальным",
+    "keyPlaceholder": "Ключ",
+    "valuePlaceholder": "Значение"
+  },
   "MaxTokenSlider": {
     "unlimited": "Без ограничений"
   },
@@ -90,6 +107,25 @@
     "goToSettings": "Перейти в настройки",
     "provider": "Поставщик",
     "title": "Модель"
+  },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "Нажмите или перетащите для загрузки дополнительных файлов"
+    },
+    "modal": {
+      "complete": "Готово",
+      "newFileIndicator": "Новое",
+      "selectImageToPreview": "Выберите изображение для просмотра",
+      "title": "Управление изображениями ({{count}})",
+      "upload": "Загрузить изображение"
+    },
+    "placeholder": {
+      "primary": "Нажмите или перетащите изображение для загрузки",
+      "secondary": "Поддерживается выбор нескольких изображений"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} загружено"
+    }
   },
   "OllamaSetupGuide": {
     "action": {

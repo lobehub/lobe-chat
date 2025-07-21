@@ -13,6 +13,10 @@
       "title": "Assistants IA"
     },
     "description": "Création de contenu, rédaction, questions-réponses, génération d'images, génération de vidéos, génération de voix, agents intelligents, flux de travail automatisés, applications AI personnalisées, personnalisez votre espace de travail AI.",
+    "mcp": {
+      "description": "Recherchez, comparez et connectez des milliers de serveurs MCP, aidant les systèmes d'IA à accéder facilement aux systèmes de fichiers, bases de données, API et autres ressources clés, étendant ainsi pleinement vos capacités d'IA",
+      "title": "Marché des serveurs MCP"
+    },
     "models": {
       "description": "Explorez les modèles AI populaires OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek.",
       "title": "Modèles IA"
@@ -27,6 +31,10 @@
     },
     "search": "Recherche",
     "title": "Découvrir"
+  },
+  "image": {
+    "description": "{{appName}} vous offre la meilleure expérience d'utilisation de GPT Image, Flux, Midjourney, Stable Diffusion",
+    "title": "Peinture IA"
   },
   "plugins": {
     "description": "Recherche, génération de graphiques, académique, génération d'images, génération de vidéos, génération de voix, flux de travail automatisés, personnalisez les capacités de plugins ToolCall pour ChatGPT / Claude",

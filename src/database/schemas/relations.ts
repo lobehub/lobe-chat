@@ -8,6 +8,7 @@ import { agents, agentsFiles, agentsKnowledgeBases } from './agent';
 import { asyncTasks } from './asyncTask';
 import { documentChunks, documents } from './document';
 import { files, knowledgeBases } from './file';
+import { generationBatches, generationTopics, generations } from './generation';
 import { messages, messagesFiles } from './message';
 import { chunks, unstructuredChunks } from './rag';
 import { sessionGroups, sessions } from './session';
@@ -122,6 +123,17 @@ export const agentsToSessionsRelations = relations(agentsToSessions, ({ one }) =
   }),
 }));
 
+export const filesToSessionsRelations = relations(filesToSessions, ({ one }) => ({
+  file: one(files, {
+    fields: [filesToSessions.fileId],
+    references: [files.id],
+  }),
+  session: one(sessions, {
+    fields: [filesToSessions.sessionId],
+    references: [sessions.id],
+  }),
+}));
+
 export const agentsKnowledgeBasesRelations = relations(agentsKnowledgeBases, ({ one }) => ({
   knowledgeBase: one(knowledgeBases, {
     fields: [agentsKnowledgeBases.knowledgeBaseId],
@@ -130,6 +142,39 @@ export const agentsKnowledgeBasesRelations = relations(agentsKnowledgeBases, ({ 
   agent: one(agents, {
     fields: [agentsKnowledgeBases.agentId],
     references: [agents.id],
+  }),
+}));
+
+export const agentsFilesRelations = relations(agentsFiles, ({ one }) => ({
+  file: one(files, {
+    fields: [agentsFiles.fileId],
+    references: [files.id],
+  }),
+  agent: one(agents, {
+    fields: [agentsFiles.agentId],
+    references: [agents.id],
+  }),
+}));
+
+export const messagesFilesRelations = relations(messagesFiles, ({ one }) => ({
+  file: one(files, {
+    fields: [messagesFiles.fileId],
+    references: [files.id],
+  }),
+  message: one(messages, {
+    fields: [messagesFiles.messageId],
+    references: [messages.id],
+  }),
+}));
+
+export const fileChunksRelations = relations(fileChunks, ({ one }) => ({
+  file: one(files, {
+    fields: [fileChunks.fileId],
+    references: [files.id],
+  }),
+  chunk: one(chunks, {
+    fields: [fileChunks.chunkId],
+    references: [chunks.id],
   }),
 }));
 
@@ -154,7 +199,10 @@ export const filesRelations = relations(files, ({ many, one }) => ({
   sessions: many(filesToSessions),
   agents: many(agentsFiles),
   documents: many(documents, { relationName: 'fileDocuments' }),
-
+  generation: one(generations, {
+    fields: [files.id],
+    references: [generations.fileId],
+  }),
   chunkingTask: one(asyncTasks, {
     fields: [files.chunkTaskId],
     references: [asyncTasks.id],
@@ -191,5 +239,45 @@ export const documentChunksRelations = relations(documentChunks, ({ one }) => ({
   document: one(documents, {
     fields: [documentChunks.documentId],
     references: [documents.id],
+  }),
+}));
+
+// Generation 相关关系定义
+export const generationTopicsRelations = relations(generationTopics, ({ one, many }) => ({
+  user: one(users, {
+    fields: [generationTopics.userId],
+    references: [users.id],
+  }),
+  batches: many(generationBatches),
+}));
+
+export const generationBatchesRelations = relations(generationBatches, ({ one, many }) => ({
+  user: one(users, {
+    fields: [generationBatches.userId],
+    references: [users.id],
+  }),
+  topic: one(generationTopics, {
+    fields: [generationBatches.generationTopicId],
+    references: [generationTopics.id],
+  }),
+  generations: many(generations),
+}));
+
+export const generationsRelations = relations(generations, ({ one }) => ({
+  user: one(users, {
+    fields: [generations.userId],
+    references: [users.id],
+  }),
+  batch: one(generationBatches, {
+    fields: [generations.generationBatchId],
+    references: [generationBatches.id],
+  }),
+  asyncTask: one(asyncTasks, {
+    fields: [generations.asyncTaskId],
+    references: [asyncTasks.id],
+  }),
+  file: one(files, {
+    fields: [generations.fileId],
+    references: [files.id],
   }),
 }));

@@ -129,6 +129,7 @@
     "waitingForMore": "Weitere Modelle werden <1>geplant</1>, bitte freuen Sie sich auf weitere Updates"
   },
   "plugin": {
+    "addMCPPlugin": "MCP-Plugin hinzufügen",
     "addTooltip": "Benutzerdefiniertes Plugin",
     "clearDeprecated": "Entfernen Sie ungültige Plugins",
     "empty": "Keine installierten Plugins vorhanden. Besuchen Sie den <1>Plugin-Store</1>, um mehr zu entdecken.",
@@ -483,6 +484,11 @@
       "placeholder": "Bitte benutzerdefinierte Eingabe eingeben",
       "title": "Benutzerdefinierte Eingabe"
     },
+    "generationTopic": {
+      "label": "Modell zur Benennung von KI-Malthemen",
+      "modelDesc": "Modell zur automatischen Benennung von Themen für KI-Malerei",
+      "title": "Automatische Benennung von KI-Malthemen"
+    },
     "helpInfo": "Beim Erstellen eines neuen Assistenten werden die Standardassistenteneinstellungen als Voreinstellungen verwendet.",
     "historyCompress": {
       "label": "Gesprächshistorienmodell",
@@ -519,6 +525,7 @@
     "hotkey": "Tastenkombinationen",
     "llm": "Sprachmodell",
     "provider": "KI-Dienstanbieter",
+    "proxy": "Netzwerkproxy",
     "storage": "Datenspeicher",
     "sync": "Cloud-Synchronisierung",
     "system-agent": "Systemassistent",

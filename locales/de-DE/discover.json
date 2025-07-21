@@ -10,13 +10,57 @@
     },
     "description": "Assistentenbeschreibung",
     "detail": "Details",
+    "details": {
+      "capabilities": {
+        "knowledge": {
+          "desc": "Der Assistent verfügt über die folgenden Wissensdatenbanken, die Ihnen helfen, mehr Fragen zu beantworten.",
+          "title": "Wissensdatenbank"
+        },
+        "plugin": {
+          "desc": "Der Assistent verfügt über die folgenden Plugins, die Ihnen helfen, mehr Aufgaben zu erledigen.",
+          "title": "Eingebaute Plugins"
+        },
+        "title": "Assistentenfähigkeiten"
+      },
+      "overview": {
+        "example": "Assistenten-Demo",
+        "title": "Übersicht"
+      },
+      "related": {
+        "listTitle": "Verwandte Assistenten",
+        "more": "Mehr anzeigen",
+        "title": "Empfehlungen"
+      },
+      "sidebar": {
+        "toc": "Inhaltsverzeichnis"
+      },
+      "summary": {
+        "title": "Was können Sie mit diesem Assistenten tun?"
+      },
+      "systemRole": {
+        "openingMessage": "Eröffnungsnachricht",
+        "openingQuestions": "Eröffnungsfragen",
+        "title": "Assistenteneinstellungen"
+      }
+    },
     "list": "Assistentenliste",
     "more": "Mehr",
     "plugins": "Integrations-Plugins",
     "recentSubmits": "Neueste Aktualisierungen",
+    "sorts": {
+      "createdAt": "Zuletzt veröffentlicht",
+      "identifier": "Assistenten-ID",
+      "knowledgeCount": "Anzahl der Wissensdatenbanken",
+      "pluginCount": "Anzahl der Plugins",
+      "title": "Assistentenname",
+      "tokenUsage": "Token-Verbrauch"
+    },
     "suggestions": "Ähnliche Empfehlungen",
     "systemRole": "Assistenteneinstellungen",
-    "try": "Ausprobieren"
+    "tokenUsage": "Token-Verbrauch der Assistenten-Prompt",
+    "try": "Ausprobieren",
+    "withKnowledge": "Dieser Assistent enthält Wissensdatenbanken",
+    "withPlugin": "Dieser Assistent enthält Plugins"
   },
   "back": "Zurück zur Entdeckung",
   "category": {
@@ -41,6 +85,7 @@
       "all": "Alle",
       "gaming-entertainment": "Gaming & Unterhaltung",
       "life-style": "Lebensstil",
+      "lifestyle": "Lebensstil",
       "media-generate": "Medienerstellung",
       "science-education": "Wissenschaft & Bildung",
       "social": "Soziale Medien",
@@ -102,10 +147,368 @@
     "featuredTools": "Empfohlene Plugins",
     "more": "Mehr entdecken"
   },
+  "isClaimed": "Beansprucht",
+  "isFeatured": "Empfohlen",
+  "isOfficial": "Offiziell zertifiziert",
   "like": "Mögen",
+  "mcp": {
+    "categories": {
+      "all": {
+        "description": "Alle MCP-Server",
+        "name": "Alle"
+      },
+      "business": {
+        "description": "Geschäfts- und Unternehmensdienste",
+        "name": "Geschäftsdienste"
+      },
+      "developer": {
+        "description": "Entwicklerbezogene Werkzeuge und Dienste",
+        "name": "Entwicklerwerkzeuge"
+      },
+      "gaming-entertainment": {
+        "description": "Spiele, Unterhaltung und Freizeitaktivitäten",
+        "name": "Spiel & Unterhaltung"
+      },
+      "health-wellness": {
+        "description": "Gesundheit, Fitness und Körper-Geist-Pflege",
+        "name": "Gesundheit & Wellness"
+      },
+      "lifestyle": {
+        "description": "Persönlicher Lebensstil, Gewohnheiten und tägliche Aktivitäten",
+        "name": "Lebensstil"
+      },
+      "media-generate": {
+        "description": "Medienerstellung, -bearbeitung und -verarbeitung",
+        "name": "Medienerzeugung"
+      },
+      "news": {
+        "description": "Nachrichtenaggregation, Berichterstattung und Informationsdienste",
+        "name": "Nachrichten & Information"
+      },
+      "productivity": {
+        "description": "Aufgabenmanagement, Notizen und Effizienzwerkzeuge",
+        "name": "Produktivitätstools"
+      },
+      "science-education": {
+        "description": "Wissenschaftliche Forschung, Lernen und Bildungstools",
+        "name": "Wissenschaft & Bildung"
+      },
+      "social": {
+        "description": "Soziale Netzwerke und Kommunikation",
+        "name": "Soziale Medien"
+      },
+      "stocks-finance": {
+        "description": "Finanzmärkte, Handel und Investitionen",
+        "name": "Aktien & Finanzen"
+      },
+      "tools": {
+        "description": "Allgemeine praktische Werkzeuge und Dienste",
+        "name": "Nützliche Werkzeuge"
+      },
+      "travel-transport": {
+        "description": "Reiseplanung und Verkehrsmittel",
+        "name": "Reise & Verkehr"
+      },
+      "weather": {
+        "description": "Wettervorhersage und meteorologische Dienste",
+        "name": "Wetter"
+      },
+      "web-search": {
+        "description": "Websuche und Informationsrecherche",
+        "name": "Informationsrecherche"
+      }
+    },
+    "details": {
+      "connectionType": {
+        "hybrid": {
+          "desc": "Dieser Dienst kann je nach Konfiguration oder Nutzungsszenario lokal oder in der Cloud ausgeführt werden und verfügt über eine doppelte Betriebsfähigkeit.",
+          "title": "Hybrider Dienst"
+        },
+        "local": {
+          "desc": "Dieser Server kann nur auf dem lokalen Gerät des Clients ausgeführt werden und erfordert die Installation sowie lokale Ressourcen.",
+          "title": "Lokaler Dienst"
+        },
+        "remote": {
+          "desc": "Dieser Server wird remote gehostet, da er hauptsächlich auf Remote-Dienste angewiesen ist und nicht auf die lokale Umgebung.",
+          "title": "Cloud-Dienst"
+        }
+      },
+      "deployment": {
+        "args": "Parameter",
+        "checkCommand": "Prüfbefehl",
+        "command": "Befehl",
+        "commandLine": "Systemabhängigkeiten",
+        "connection": "Verbindungsart",
+        "connectionType": "Verbindungstyp",
+        "description": "Installations- und Bereitstellungsart des Plugins",
+        "descriptionPlaceholder": "Optionale Beschreibung",
+        "empty": "Keine Bereitstellungsoptionen verfügbar",
+        "env": "Umgebungsvariablen",
+        "guide": "Installationsanleitung",
+        "installation": "Installation über {{method}}",
+        "installationMethod": "Installationsmethode",
+        "other": "Weitere Einstellungen",
+        "packageName": "Paketname",
+        "platform": {
+          "steps": {
+            "claude": "- Öffnen Sie die **Claude Desktop**-Anwendung\n- Gehen Sie zu **Einstellungen** und wählen Sie **Entwickler**\n- Klicken Sie auf **Konfiguration bearbeiten**\n- Öffnen Sie die Datei **claude_desktop_config.json**\n- Kopieren und fügen Sie die Serverkonfiguration in die bestehende Datei ein und speichern Sie",
+            "cline": "- Öffnen Sie VS Code mit installiertem Cline-Plugin\n- Klicken Sie auf das Cline-Symbol in der Seitenleiste\n- Wählen Sie im Dropdown-Menü **MCP Servers**\n- Geben Sie im Tab **Remote Servers** den Servernamen und Ihre MCP-Server-URL ein\n- Klicken Sie auf **Server hinzufügen**, um die Verbindung herzustellen",
+            "cursor": "- Navigieren Sie zu **Einstellungen** und wählen Sie Cursor-Einstellungen\n- Wählen Sie links **MCP**\n- Klicken Sie oben rechts auf **Neuen globalen MCP-Server hinzufügen**\n- Kopieren und fügen Sie die Serverkonfiguration in die bestehende Datei ein und speichern Sie",
+            "lobeChat": "- Öffnen Sie die **LobeChat Desktop**-Anwendung\n- Gehen Sie zu **Einstellungen** - **Standardassistent**\n- Wählen Sie dann **Plugin-Einstellungen** - **Benutzerdefinierte Plugins**\n- Klicken Sie auf **Schnellimport JSON-Konfiguration**\n- Kopieren und fügen Sie die Serverkonfiguration in das Textfeld ein und installieren Sie",
+            "openai": "- Öffnen Sie Ihre **OpenAI-Anwendung** oder Entwicklungsumgebung\n- Konfigurieren Sie MCP-Tools in der **Responses API**\n- Fügen Sie im API-Request-Array **tools** den MCP-Block hinzu\n- Setzen Sie **server_url** auf Ihren MCP-Server-Endpunkt\n- Fügen Sie die für die Authentifizierung erforderlichen Header (API-Schlüssel, Token usw.) hinzu\n- Verwenden Sie den Parameter `allowed_tools`, um die freigegebenen Tools zu beschränken\n- Setzen Sie `require_approval`, um die Ausführung von Tools zu genehmigen",
+            "vscode": "- Öffnen Sie VS Code\n- Öffnen Sie die Befehlspalette (`Ctrl+Shift+P` / `Cmd+Shift+P`)\n- Geben Sie **MCP: Add Server** ein und wählen Sie es aus\n- Wählen Sie aus, ob der Server zur Arbeitsbereichs- oder Benutzereinstellung hinzugefügt werden soll\n- Kopieren und fügen Sie die Serverkonfiguration ein"
+          },
+          "title": "Installation in {{platform}}"
+        },
+        "recommended": "Empfohlen",
+        "systemDependencies": "Systemabhängigkeiten",
+        "table": {
+          "description": "Beschreibung",
+          "name": "Name",
+          "required": "Erforderlich",
+          "type": "Typ"
+        },
+        "title": "Installationsmethode"
+      },
+      "githubBadge": {
+        "desc": "LobeHub scannt regelmäßig Code-Repositories und Dokumentationen, um:\n\n- Sicherzustellen, dass MCP-Server ordnungsgemäß laufen.\n- Servermerkmale wie Tools, Ressourcen, Prompts und erforderliche Parameter zu extrahieren.\n- Unser Badge hilft Nutzern, die Sicherheit, Funktionalität und Installationsanleitung des MCP-Servers schnell zu bewerten.\n\nBitte kopieren Sie den folgenden Code in Ihre `README.md`-Datei:"
+      },
+      "nav": {
+        "needHelp": "Brauchen Sie Hilfe?",
+        "reportIssue": "Problem melden",
+        "viewSourceCode": "Quellcode ansehen"
+      },
+      "overview": {
+        "title": "Übersicht"
+      },
+      "related": {
+        "listTitle": "Verwandte MCP-Server",
+        "more": "Mehr anzeigen",
+        "title": "Empfehlungen"
+      },
+      "schema": {
+        "mode": {
+          "docs": "Dokumentation"
+        },
+        "prompts": {
+          "arguments": "Parameterkonfiguration",
+          "desc": "Interaktive Vorlagen, die vom Nutzer ausgewählt und ausgelöst werden",
+          "empty": "Keine Prompts verfügbar",
+          "instructions": "Anweisungen",
+          "table": {
+            "description": "Beschreibung",
+            "name": "Name",
+            "required": "Erforderlich"
+          },
+          "title": "Prompt-Liste"
+        },
+        "resources": {
+          "desc": "Kontextdaten, die vom Client angehängt und verwaltet werden",
+          "empty": "Keine Ressourcen verfügbar",
+          "table": {
+            "description": "Beschreibung",
+            "mineType": "MIME-Typ",
+            "name": "Name",
+            "uri": "URI"
+          },
+          "title": "Ressourcenliste"
+        },
+        "title": "Plugin-Funktionalität",
+        "tools": {
+          "desc": "Funktionale Schnittstellen, die dem großen Sprachmodell (LLM) zur Ausführung von Operationen bereitgestellt werden",
+          "empty": "Keine Werkzeuge verfügbar",
+          "inputSchema": "Eingabebeschreibung",
+          "instructions": "Anweisungen",
+          "table": {
+            "description": "Beschreibung",
+            "name": "Name",
+            "required": "Erforderlich",
+            "type": "Typ"
+          },
+          "title": "Werkzeugliste"
+        }
+      },
+      "score": {
+        "claimed": {
+          "desc": "Dieser MCP-Server wurde vom Eigentümer beansprucht, um Eigentum und Verwaltung sicherzustellen.",
+          "title": "Vom Eigentümer beansprucht"
+        },
+        "deployMoreThanManual": {
+          "desc": "Dieser MCP-Server bietet benutzerfreundlichere Installationsmethoden als nur manuelle, die eine einfache Bereitstellung und Nutzung ermöglichen.",
+          "title": "Bietet benutzerfreundliche Installationsmethoden"
+        },
+        "deployment": {
+          "desc": "Dieser MCP-Server bietet mindestens eine Installationsmethode, die eine Bereitstellung und Nutzung ermöglicht.",
+          "descWithCount": "Dieser MCP-Server bietet {{number}} Installationsmethoden, die eine Bereitstellung und Nutzung ermöglichen.",
+          "title": "Bietet mindestens eine Installationsmethode"
+        },
+        "license": {
+          "desc": "Dieses Repository enthält eine LICENSE-Datei.",
+          "descWithlicense": "Die Lizenz dieses Repositories ist {{license}}.",
+          "title": "Mit LICENSE"
+        },
+        "listTitle": "Bewertungsdetails",
+        "notClaimed": {
+          "desc": "Wenn Sie Eigentümer dieses MCP-Servers sind, können Sie ihn wie folgt beanspruchen.",
+          "title": "Nicht vom Eigentümer beansprucht"
+        },
+        "prompts": {
+          "desc": "Dieser MCP-Server bietet Prompts, die eine Interaktion mit dem Dienst ermöglichen.",
+          "descWithCount": "Dieser MCP-Server bietet {{number}} Prompts, die eine Interaktion mit dem Dienst ermöglichen.",
+          "title": "Enthält Prompts"
+        },
+        "readme": {
+          "desc": "Dieses Repository enthält eine README.md-Datei.",
+          "title": "Mit README"
+        },
+        "resources": {
+          "desc": "Dieser MCP-Server bietet Ressourcen, die das Anhängen und Verwalten von Kontextdaten ermöglichen.",
+          "descWithCount": "Dieser MCP-Server bietet {{number}} Ressourcen, die das Anhängen und Verwalten von Kontextdaten ermöglichen.",
+          "title": "Enthält Ressourcen"
+        },
+        "title": "Bewertung",
+        "tools": {
+          "desc": "Der Dienst muss mindestens ein Werkzeug bereitstellen, das die Ausführung bestimmter Operationen ermöglicht.",
+          "descWithCount": "Dieser MCP-Server bietet {{number}} Werkzeuge, die die Ausführung bestimmter Operationen ermöglichen.",
+          "title": "Enthält mindestens ein Werkzeug"
+        },
+        "validated": {
+          "desc": "Dieser MCP-Server wurde durch eine Installationsvalidierung geprüft, um Qualität und Zuverlässigkeit sicherzustellen.",
+          "title": "Validiert"
+        }
+      },
+      "scoreLevel": {
+        "a": {
+          "desc": "Dieser MCP-Server wurde streng validiert und bietet umfassende Funktionen sowie eine hochwertige Benutzererfahrung.",
+          "fullTitle": "Ausgezeichnetes Plugin",
+          "title": "Hervorragend"
+        },
+        "b": {
+          "desc": "Dieser MCP-Server bietet gute Funktionen und Benutzererfahrung, könnte aber in einigen Bereichen verbessert werden.",
+          "fullTitle": "Gut funktionierend",
+          "title": "Gut"
+        },
+        "f": {
+          "desc": "Dieser MCP-Server ist unvollständig oder von geringer Qualität, Nutzer sollten vorsichtig sein.",
+          "fullTitle": "Mangelhafte Qualität",
+          "title": "Mangelhaft"
+        }
+      },
+      "settings": {
+        "capabilities": {
+          "prompts": "Eingabeaufforderungen",
+          "resources": "Ressourcen",
+          "title": "Plugin-Fähigkeiten",
+          "tools": "Werkzeuge"
+        },
+        "configuration": {
+          "title": "Plugin-Konfiguration"
+        },
+        "connection": {
+          "args": "Startparameter",
+          "command": "Startbefehl",
+          "title": "Verbindungsinformationen",
+          "type": "Verbindungstyp",
+          "url": "Dienstadresse"
+        },
+        "saveSettings": "Einstellungen speichern",
+        "title": "Plugin-Einstellungen"
+      },
+      "sidebar": {
+        "install": "MCP-Server installieren",
+        "meta": {
+          "homepage": "Offizielle Webseite",
+          "installCount": "Installationen",
+          "language": "Quellcode-Sprache",
+          "license": "Lizenz",
+          "published": "Veröffentlichungsdatum",
+          "repo": "Quellcode-Repository",
+          "stars": "Sterne",
+          "title": "Details",
+          "updated": "Zuletzt aktualisiert"
+        },
+        "moreServerConfig": "Details anzeigen",
+        "recommendServers": "Empfohlene MCPs",
+        "serverConfig": "Installationskonfiguration",
+        "toc": "Inhaltsverzeichnis"
+      },
+      "summary": {
+        "title": "Was können Sie mit diesem MCP-Server tun?"
+      },
+      "totalScore": {
+        "description": "Gesamtpunktzahl basierend auf verschiedenen Bewertungsindikatoren",
+        "legend": {
+          "aGrade": "Note A ({{minPercent}}-100%)",
+          "bGrade": "Note B ({{minPercent}}-{{maxPercent}}%)",
+          "fGrade": "Note F (0-{{maxPercent}}%)"
+        },
+        "pointsFormat": "{{score}}/{{total}} Punkte",
+        "popover": {
+          "completedOptional": "✅ Optionale Punkte abgeschlossen ({{count}})",
+          "completedRequired": "✅ Pflichtpunkte abgeschlossen ({{count}})",
+          "incompleteOptional": "⏸️ Optionale Punkte nicht abgeschlossen ({{count}})",
+          "incompleteRequired": "❌ Pflichtpunkte nicht abgeschlossen ({{count}})",
+          "title": "Bewertungsdetails"
+        },
+        "ratingFormat": "Bewertung: {{level}}",
+        "scoreInfo": {
+          "items": "Elemente",
+          "points": "Punkte",
+          "requiredItems": "Pflichtpunkte"
+        },
+        "title": "Gesamtpunktzahl"
+      },
+      "versions": {
+        "table": {
+          "isLatest": "Neueste Version",
+          "isValidated": "Validiert",
+          "publishAt": "Veröffentlichungsdatum",
+          "version": "Version"
+        },
+        "title": "Versionsverlauf"
+      }
+    },
+    "hero": {
+      "desc": "Offene, bereitstellbare MCP-Server-Plattform, die KI-Systemen den einfachen Zugriff auf Dateisysteme, Datenbanken, APIs und andere wichtige Ressourcen ermöglicht und Ihre KI-Fähigkeiten umfassend erweitert.",
+      "subTitle": "Open Source & sofort einsatzbereit",
+      "title": "Open Source MCP-Marktplatz für KI"
+    },
+    "sorts": {
+      "createdAt": "Zuletzt hinzugefügt",
+      "installCount": "Installationen",
+      "isFeatured": "Empfohlenes Plugin",
+      "isValidated": "Validiertes Plugin",
+      "promptsCount": "Anzahl der Prompts",
+      "ratingCount": "Anzahl der Bewertungen",
+      "resourcesCount": "Anzahl der Ressourcen",
+      "toolsCount": "Anzahl der Werkzeuge",
+      "updatedAt": "Zuletzt aktualisiert"
+    },
+    "title": "MCP-Marktplatz",
+    "unvalidated": {
+      "desc": "Dieser MCP-Server wurde noch nicht validiert",
+      "title": "Nicht validiert"
+    },
+    "validated": {
+      "desc": "Dieser MCP-Server wurde validiert, um Qualität und Zuverlässigkeit sicherzustellen.",
+      "descWithDate": "Dieser MCP-Server wurde am {{date}} validiert, um Qualität und Zuverlässigkeit sicherzustellen.",
+      "title": "Validiert"
+    }
+  },
   "models": {
+    "abilities": "Modellfähigkeiten",
     "chat": "Gespräch starten",
     "contentLength": "Maximale Kontextlänge",
+    "details": {
+      "overview": {
+        "title": "Übersicht"
+      },
+      "related": {
+        "listTitle": "Verwandte Modelle",
+        "more": "Mehr anzeigen",
+        "title": "Empfehlungen"
+      }
+    },
     "free": "Kostenlos",
     "guide": "Konfigurationsanleitung",
     "list": "Modellliste",
@@ -156,11 +559,30 @@
       "throughput": "Durchsatz",
       "throughputTooltip": "Durchschnittliche Anzahl von Tokens, die pro Sekunde bei Stream-Anfragen übertragen werden"
     },
+    "sorts": {
+      "contextWindowTokens": "Kontextfenstergröße",
+      "identifier": "Modell-ID",
+      "inputPrice": "Eingabepreis",
+      "outputPrice": "Ausgabepreis",
+      "providerCount": "Anzahl der Anbieter",
+      "releasedAt": "Zuletzt veröffentlicht"
+    },
     "suggestions": "Verwandte Modelle",
     "supportedProviders": "Anbieter, die dieses Modell unterstützen"
   },
   "plugins": {
     "community": "Community-Plugins",
+    "details": {
+      "settings": {
+        "title": "Plugin-Einstellungen"
+      },
+      "summary": {
+        "title": "Was können Sie mit diesem Plugin tun?"
+      },
+      "tools": {
+        "title": "Plugin-Werkzeuge"
+      }
+    },
     "install": "Plugin installieren",
     "installed": "Installiert",
     "list": "Plugin-Liste",
@@ -173,36 +595,54 @@
     "more": "Mehr",
     "official": "Offizielle Plugins",
     "recentSubmits": "Neueste Aktualisierungen",
+    "sorts": {
+      "createdAt": "Zuletzt veröffentlicht",
+      "identifier": "Plugin-ID",
+      "title": "Plugin-Name"
+    },
     "suggestions": "Ähnliche Empfehlungen"
   },
   "providers": {
     "config": "Anbieter konfigurieren",
+    "details": {
+      "guide": {
+        "title": "Integrationsanleitung"
+      },
+      "overview": {
+        "title": "Übersicht"
+      },
+      "related": {
+        "listTitle": "Verwandte Anbieter",
+        "more": "Mehr anzeigen",
+        "title": "Empfehlungen"
+      }
+    },
     "list": "Liste der Modellanbieter",
     "modelCount": "{{count}} Modelle",
+    "modelName": "Modellname",
     "modelSite": "Modell-Dokumentation",
     "more": "Mehr",
     "officialSite": "Offizielle Webseite",
     "showAllModels": "Alle Modelle anzeigen",
+    "sorts": {
+      "default": "Standard-Sortierung",
+      "identifier": "Anbieter-ID",
+      "modelCount": "Anzahl der Modelle"
+    },
     "suggestions": "Verwandte Anbieter",
     "supportedModels": "Unterstützte Modelle"
   },
+  "publishedTime": "Veröffentlicht am",
   "search": {
     "placeholder": "Suche nach Namen, Beschreibung oder Schlüsselwörtern...",
     "result": "{{count}} Ergebnisse zu <highlight>{{keyword}}</highlight>",
     "searching": "Suche läuft..."
   },
-  "sort": {
-    "mostLiked": "Am meisten gemocht",
-    "mostUsed": "Am häufigsten verwendet",
-    "newest": "Neueste zuerst",
-    "oldest": "Älteste zuerst",
-    "recommended": "Empfohlen"
-  },
   "tab": {
-    "assistants": "Assistenten",
+    "assistant": "Assistent",
     "home": "Startseite",
-    "models": "Modelle",
-    "plugins": "Plugins",
-    "providers": "Modellanbieter"
+    "model": "Modell",
+    "plugin": "Plugin",
+    "provider": "Modellanbieter"
   }
 }

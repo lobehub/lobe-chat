@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import MainInterfaceTracker from '@/components/Analytics/MainInterfaceTracker';
 import BrandTextLoading from '@/components/Loading/BrandTextLoading';
 
 import { LayoutProps } from '../type';
@@ -31,6 +32,7 @@ const Layout = ({ children, topic, conversation, portal }: LayoutProps) => {
         </Portal>
         <TopicPanel>{topic}</TopicPanel>
       </Flexbox>
+      <MainInterfaceTracker />
     </>
   );
 };

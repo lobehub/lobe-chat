@@ -10,12 +10,15 @@ import { Flexbox } from 'react-layout-kit';
 
 import Menu from '@/components/Menu';
 import type { MenuProps } from '@/components/Menu';
+import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
-const FileMenu = memo<{ id: string }>(({ id }) => {
+const FileMenu = memo(() => {
   const { t } = useTranslation('knowledgeBase');
   const pathname = usePathname();
   const { enableRAGEval } = useServerConfigStore(featureFlagsSelectors);
+  const id = useKnowledgeBaseStore((s) => s.activeKnowledgeBaseId);
+
   const [activeKey, setActiveKey] = useState(
     pathname.startsWith(`/repos/${id}/evals`) ? 'eval' : 'files',
   );
