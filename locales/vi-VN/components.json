@@ -70,11 +70,12 @@
   },
   "ImageUpload": {
     "actions": {
-      "changeImage": "Nhấn để thay đổi hình ảnh"
+      "changeImage": "Nhấn để thay đổi hình ảnh",
+      "dropMultipleFiles": "Không hỗ trợ tải lên nhiều tệp cùng lúc, chỉ sử dụng tệp đầu tiên"
     },
     "placeholder": {
       "primary": "Thêm hình ảnh",
-      "secondary": "Nhấn để tải lên"
+      "secondary": "Nhấn hoặc kéo thả để tải lên"
     }
   },
   "KeyValueEditor": {
@@ -109,7 +110,7 @@
   },
   "MultiImagesUpload": {
     "actions": {
-      "uploadMore": "Nhấn để tải thêm"
+      "uploadMore": "Nhấn hoặc kéo thả để tải lên thêm"
     },
     "modal": {
       "complete": "Hoàn thành",
@@ -119,7 +120,7 @@
       "upload": "Tải lên hình ảnh"
     },
     "placeholder": {
-      "primary": "Nhấn để tải lên hình ảnh",
+      "primary": "Nhấn hoặc kéo thả để tải lên hình ảnh",
       "secondary": "Hỗ trợ chọn nhiều hình ảnh"
     },
     "progress": {

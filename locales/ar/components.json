@@ -70,11 +70,12 @@
   },
   "ImageUpload": {
     "actions": {
-      "changeImage": "انقر لتغيير الصورة"
+      "changeImage": "انقر لتغيير الصورة",
+      "dropMultipleFiles": "لا يدعم تحميل ملفات متعددة في آن واحد، سيتم استخدام الملف الأول فقط"
     },
     "placeholder": {
       "primary": "إضافة صورة",
-      "secondary": "انقر للتحميل"
+      "secondary": "انقر أو اسحب للإرفاق"
     }
   },
   "KeyValueEditor": {
@@ -109,7 +110,7 @@
   },
   "MultiImagesUpload": {
     "actions": {
-      "uploadMore": "انقر لتحميل المزيد"
+      "uploadMore": "انقر أو اسحب لإضافة المزيد"
     },
     "modal": {
       "complete": "اكتمل",
@@ -119,7 +120,7 @@
       "upload": "تحميل الصور"
     },
     "placeholder": {
-      "primary": "انقر لتحميل الصور",
+      "primary": "انقر أو اسحب لتحميل الصور",
       "secondary": "يدعم اختيار عدة صور"
     },
     "progress": {

@@ -196,6 +196,13 @@
       "when": 1752413805765,
       "tag": "0027_ai_image",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1752567402506,
+      "tag": "0028_oauth_handoffs",
+      "breakpoints": true
     }
   ],
   "version": "6"

@@ -28,10 +28,14 @@
     },
     "title": "İzin Ver {{clientName}}"
   },
-  "failed": {
+  "error": {
     "backToHome": "Ana sayfaya dön",
-    "subTitle": "Uygulamaya LobeChat hesabınıza erişim izni vermeyi reddettiniz",
-    "title": "Yetkilendirme reddedildi"
+    "desc": "OAuth yetkilendirmesi başarısız oldu, hata nedeni: {{reason}}",
+    "reason": {
+      "internal_error": "Sunucu hatası",
+      "invalid_request": "Geçersiz istek parametresi"
+    },
+    "title": "Yetkilendirme başarısız"
   },
   "handoff": {
     "desc": {
@@ -50,7 +54,7 @@
     "userWelcome": "Hoş geldiniz, "
   },
   "success": {
-    "subTitle": "Uygulamaya LobeChat hesabınıza erişim izni verdiniz, bu sayfayı kapatabilirsiniz",
+    "subTitle": "Uygulamanın hesabınıza erişim izni başarıyla verildi, bu sayfayı kapatabilirsiniz",
     "title": "Yetkilendirme başarılı"
   }
 }

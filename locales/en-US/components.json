@@ -70,11 +70,12 @@
   },
   "ImageUpload": {
     "actions": {
-      "changeImage": "Click to Change Image"
+      "changeImage": "Click to change image",
+      "dropMultipleFiles": "Uploading multiple files at once is not supported; only the first file will be used"
     },
     "placeholder": {
       "primary": "Add Image",
-      "secondary": "Click to Upload"
+      "secondary": "Click or drag to upload"
     }
   },
   "KeyValueEditor": {
@@ -109,7 +110,7 @@
   },
   "MultiImagesUpload": {
     "actions": {
-      "uploadMore": "Click to upload more"
+      "uploadMore": "Click or drag to upload more"
     },
     "modal": {
       "complete": "Done",
@@ -119,7 +120,7 @@
       "upload": "Upload Images"
     },
     "placeholder": {
-      "primary": "Click to upload images",
+      "primary": "Click or drag to upload images",
       "secondary": "Supports multiple image selection"
     },
     "progress": {

@@ -656,6 +656,9 @@
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B is a model designed for instruction following, dialogue, and programming."
   },
+  "cogview-4": {
+    "description": "CogView-4 is Zhipu's first open-source text-to-image model supporting Chinese character generation. It offers comprehensive improvements in semantic understanding, image generation quality, and bilingual Chinese-English text generation capabilities. It supports bilingual input of any length and can generate images at any resolution within a specified range."
+  },
   "cohere-command-r": {
     "description": "Command R is a scalable generative model targeting RAG and Tool Use to enable production-scale AI for enterprises."
   },
