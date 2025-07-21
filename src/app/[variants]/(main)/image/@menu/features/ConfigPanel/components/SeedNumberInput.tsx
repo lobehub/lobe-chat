@@ -7,18 +7,9 @@ import InputNumber from '../../../components/SeedNumberInput';
 
 const SeedNumberInput = memo(() => {
   const { t } = useTranslation('image');
-  const { value, setValue, min, max, step = 1 } = useGenerationConfigParam('seed');
+  const { value, setValue } = useGenerationConfigParam('seed');
 
-  return (
-    <InputNumber
-      max={max}
-      min={min}
-      onChange={setValue as any}
-      placeholder={t('config.seed.random')}
-      step={step}
-      value={value}
-    />
-  );
+  return <InputNumber onChange={setValue} placeholder={t('config.seed.random')} value={value} />;
 });
 
 export default SeedNumberInput;

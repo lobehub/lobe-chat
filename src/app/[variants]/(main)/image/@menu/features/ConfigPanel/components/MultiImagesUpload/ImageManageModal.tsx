@@ -3,6 +3,7 @@
 import { Button, Modal } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { Upload, X } from 'lucide-react';
+import Image from 'next/image';
 import React, { type FC, memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -153,13 +154,6 @@ const useStyles = createStyles(({ css, token }) => ({
 
     &.selected {
       border-color: ${token.colorPrimary};
-    }
-
-    img {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
     }
   `,
   thumbnailDelete: css`
@@ -322,10 +316,12 @@ const ImageManageModal: FC<ImageManageModalProps> = memo(
           key={item.id}
           onClick={() => setSelectedIndex(index)}
         >
-          <img
+          <Image
             alt={`Image ${index + 1}`}
+            fill
             src={displayUrl}
-            style={{ height: '100%', objectFit: 'cover', width: '100%' }}
+            style={{ objectFit: 'cover' }}
+            unoptimized
           />
 
           {/* 新文件标识 */}
@@ -380,10 +376,14 @@ const ImageManageModal: FC<ImageManageModalProps> = memo(
           <div className={styles.previewArea}>
             {selectedItem ? (
               <>
-                <img
+                <Image
                   alt="Preview"
                   className={styles.previewImage}
+                  height={320}
                   src={getDisplayUrl(selectedItem)}
+                  style={{ objectFit: 'contain' }}
+                  unoptimized
+                  width={400}
                 />
                 <div className={styles.fileName}>{getDisplayFileName(selectedItem)}</div>
               </>

@@ -156,6 +156,7 @@ export { default as infiniai } from './infiniai';
 export { default as internlm } from './internlm';
 export { default as jina } from './jina';
 export { default as lmstudio } from './lmstudio';
+export { default as lobehub } from './lobehub';
 export { default as minimax } from './minimax';
 export { default as mistral } from './mistral';
 export { default as modelscope } from './modelscope';

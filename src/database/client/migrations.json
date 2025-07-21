@@ -541,5 +541,13 @@
     "bps": true,
     "folderMillis": 1752413805765,
     "hash": "abed92b1356df6d7eb35c03f47fbbdcdaf25aefda750dc3e4963c1c2a0d38b54"
+  },
+  {
+    "sql": [
+      "CREATE TABLE \"oauth_handoffs\" (\n\t\"id\" text PRIMARY KEY NOT NULL,\n\t\"client\" varchar(50) NOT NULL,\n\t\"payload\" jsonb NOT NULL,\n\t\"accessed_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"created_at\" timestamp with time zone DEFAULT now() NOT NULL,\n\t\"updated_at\" timestamp with time zone DEFAULT now() NOT NULL\n);\n"
+    ],
+    "bps": true,
+    "folderMillis": 1752567402506,
+    "hash": "8ba3ae52ed72e8aad1623dbcf47ca26a8406ebffc6d5284abff94ea994b59c04"
   }
 ]

@@ -28,10 +28,14 @@
     },
     "title": "{{clientName}} の承認"
   },
-  "failed": {
+  "error": {
     "backToHome": "ホームに戻る",
-    "subTitle": "あなたはアプリがあなたの LobeChat アカウントにアクセスすることを拒否しました",
-    "title": "承認が拒否されました"
+    "desc": "OAuth認証に失敗しました。失敗理由：{{reason}}",
+    "reason": {
+      "internal_error": "サーバーエラー",
+      "invalid_request": "無効なリクエストパラメータ"
+    },
+    "title": "認証失敗"
   },
   "handoff": {
     "desc": {
@@ -50,7 +54,7 @@
     "userWelcome": "お帰りなさい、"
   },
   "success": {
-    "subTitle": "あなたはアプリがあなたの LobeChat アカウントにアクセスすることを成功裏に承認しました。このページを閉じても構いません",
+    "subTitle": "アプリがアカウントへのアクセスを正常に許可されました。このページを閉じてください。",
     "title": "承認成功"
   }
 }
