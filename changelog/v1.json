@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Fix lobehub provider /chat in desktop."]
+    },
+    "date": "2025-07-21",
+    "version": "1.101.2"
+  },
+  {
+    "children": {
       "fixes": ["Try fix authorization code exchange & pin next-auto to beta.29."]
     },
     "date": "2025-07-19",
