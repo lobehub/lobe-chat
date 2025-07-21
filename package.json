@@ -354,7 +354,7 @@
     "semantic-release": "^21.1.2",
     "serwist": "^9.0.14",
     "stylelint": "^15.11.0",
-    "tsx": "~4.19.4",
+    "tsx": "~4.20.0",
     "type-fest": "^4.41.0",
     "typescript": "^5.8.3",
     "unified": "^11.0.5",
