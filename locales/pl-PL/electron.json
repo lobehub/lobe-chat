@@ -1,4 +1,7 @@
 {
+  "notification": {
+    "finishChatGeneration": "Wiadomość AI została wygenerowana"
+  },
   "proxy": {
     "auth": "Wymagana autoryzacja",
     "authDesc": "Jeśli serwer proxy wymaga nazwy użytkownika i hasła",

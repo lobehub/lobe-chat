@@ -2,6 +2,89 @@
 
 # Changelog
 
+### [Version 1.102.4](https://github.com/lobehub/lobe-chat/compare/v1.102.3...v1.102.4)
+
+<sup>Released on **2025-07-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Add badge and improve document.
+
+#### 💄 Styles
+
+- **misc**: Update tray icon.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Add badge and improve document, closes [#8528](https://github.com/lobehub/lobe-chat/issues/8528) ([9fb4b0d](https://github.com/lobehub/lobe-chat/commit/9fb4b0d))
+
+#### Styles
+
+- **misc**: Update tray icon, closes [#8530](https://github.com/lobehub/lobe-chat/issues/8530) ([2696de4](https://github.com/lobehub/lobe-chat/commit/2696de4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.102.3](https://github.com/lobehub/lobe-chat/compare/v1.102.2...v1.102.3)
+
+<sup>Released on **2025-07-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Remove debug logging from ModelRuntime and async caller.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Remove debug logging from ModelRuntime and async caller, closes [#8525](https://github.com/lobehub/lobe-chat/issues/8525) ([dd1a635](https://github.com/lobehub/lobe-chat/commit/dd1a635))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.102.2](https://github.com/lobehub/lobe-chat/compare/v1.102.1...v1.102.2)
+
+<sup>Released on **2025-07-22**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add notification for desktop.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add notification for desktop, closes [#8523](https://github.com/lobehub/lobe-chat/issues/8523) ([4917d17](https://github.com/lobehub/lobe-chat/commit/4917d17))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.102.1](https://github.com/lobehub/lobe-chat/compare/v1.102.0...v1.102.1)
 
 <sup>Released on **2025-07-21**</sup>
