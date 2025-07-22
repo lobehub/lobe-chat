@@ -58,8 +58,8 @@ export default class TrayManager {
     return this.retrieveOrInitialize({
       iconPath: isMac
         ? nativeTheme.shouldUseDarkColors
-          ? 'tray-light.png'
-          : 'tray-dark.png'
+          ? 'tray-dark.png'
+          : 'tray-light.png'
         : 'tray.png',
       identifier: 'main', // 使用应用图标，需要确保资源目录中有此文件
       tooltip: name, // 可以使用 app.getName() 或本地化字符串
