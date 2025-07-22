@@ -1499,6 +1499,12 @@
   "hunyuan-vision": {
     "description": "Mô hình đa phương thức mới nhất của Hunyuan, hỗ trợ đầu vào hình ảnh + văn bản để tạo ra nội dung văn bản."
   },
+  "imagen-4.0-generate-preview-06-06": {
+    "description": "Dòng mô hình chuyển đổi văn bản thành hình ảnh thế hệ thứ 4 của Imagen"
+  },
+  "imagen-4.0-ultra-generate-preview-06-06": {
+    "description": "Phiên bản Ultra của dòng mô hình chuyển đổi văn bản thành hình ảnh thế hệ thứ 4 của Imagen"
+  },
   "imagen4/preview": {
     "description": "Mô hình tạo hình ảnh chất lượng cao nhất của Google"
   },
@@ -1918,6 +1924,9 @@
   },
   "moonshotai/Kimi-Dev-72B": {
     "description": "Kimi-Dev-72B là một mô hình mã nguồn mở lớn, được tối ưu hóa qua học tăng cường quy mô lớn, có khả năng tạo ra các bản vá ổn định và có thể triển khai trực tiếp. Mô hình này đã đạt điểm cao kỷ lục 60,4% trên SWE-bench Verified, phá vỡ các kỷ lục của mô hình mã nguồn mở trong các nhiệm vụ kỹ thuật phần mềm tự động như sửa lỗi và đánh giá mã."
+  },
+  "moonshotai/kimi-k2-instruct": {
+    "description": "kimi-k2 là mô hình cơ sở kiến trúc MoE với khả năng mã hóa và Agent cực mạnh, tổng số tham số 1T, tham số kích hoạt 32B. Trong các bài kiểm tra hiệu năng chuẩn về suy luận kiến thức chung, lập trình, toán học, Agent và các loại chính khác, mô hình K2 vượt trội hơn các mô hình mã nguồn mở phổ biến khác."
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B là phiên bản nâng cấp của Nous Hermes 2, bao gồm bộ dữ liệu phát triển nội bộ mới nhất."

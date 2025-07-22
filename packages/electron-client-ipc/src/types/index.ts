@@ -1,6 +1,7 @@
 export * from './dataSync';
 export * from './dispatch';
 export * from './localFile';
+export * from './notification';
 export * from './proxy';
 export * from './proxyTRPCRequest';
 export * from './route';

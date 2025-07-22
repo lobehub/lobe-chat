@@ -31,6 +31,9 @@ const ShareButton = memo<ShareButtonProps>(({ mobile, setOpen, open }) => {
         onClick={() => setIsModalOpen(true)}
         size={mobile ? MOBILE_HEADER_ICON_SIZE : DESKTOP_HEADER_ICON_SIZE}
         title={t('share')}
+        tooltipProps={{
+          placement: 'bottom',
+        }}
       />
       <ShareModal onCancel={() => setIsModalOpen(false)} open={isModalOpen} />
     </>

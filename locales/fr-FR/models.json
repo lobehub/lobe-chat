@@ -1499,6 +1499,12 @@
   "hunyuan-vision": {
     "description": "Dernier modèle multimodal Hunyuan, prenant en charge l'entrée d'images et de textes pour générer du contenu textuel."
   },
+  "imagen-4.0-generate-preview-06-06": {
+    "description": "Série de modèles de génération d'images à partir de texte Imagen 4e génération"
+  },
+  "imagen-4.0-ultra-generate-preview-06-06": {
+    "description": "Série de modèles de génération d'images à partir de texte Imagen 4e génération version Ultra"
+  },
   "imagen4/preview": {
     "description": "Modèle de génération d'images de la plus haute qualité de Google."
   },
@@ -1918,6 +1924,9 @@
   },
   "moonshotai/Kimi-Dev-72B": {
     "description": "Kimi-Dev-72B est un grand modèle de code open source, optimisé par un apprentissage par renforcement à grande échelle, capable de générer des correctifs robustes et directement exploitables en production. Ce modèle a atteint un nouveau score record de 60,4 % sur SWE-bench Verified, établissant un nouveau standard pour les modèles open source dans les tâches d'ingénierie logicielle automatisée telles que la correction de bugs et la revue de code."
+  },
+  "moonshotai/kimi-k2-instruct": {
+    "description": "kimi-k2 est un modèle de base à architecture MoE doté de capacités exceptionnelles en code et Agent, avec un total de 1T paramètres et 32B paramètres activés. Dans les tests de performance de référence couvrant les principales catégories telles que le raisonnement général, la programmation, les mathématiques et les Agents, le modèle K2 surpasse les autres modèles open source majeurs."
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B est une version améliorée de Nous Hermes 2, intégrant les derniers ensembles de données développés en interne."
