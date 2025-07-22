@@ -1,4 +1,7 @@
 {
+  "notification": {
+    "finishChatGeneration": "Yapay Zeka mesajı oluşturuldu"
+  },
   "proxy": {
     "auth": "Kimlik doğrulama gerekli",
     "authDesc": "Eğer proxy sunucusu kullanıcı adı ve şifre gerektiriyorsa",

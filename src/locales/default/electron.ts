@@ -1,6 +1,6 @@
 const electron = {
   notification: {
-    finishChatGeneration: '回复已生成完毕',
+    finishChatGeneration: 'AI 消息已生成完毕',
   },
   proxy: {
     auth: '需要认证',

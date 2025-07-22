@@ -1,4 +1,7 @@
 {
+  "notification": {
+    "finishChatGeneration": "AI-bericht is voltooid"
+  },
   "proxy": {
     "auth": "Authenticatie vereist",
     "authDesc": "Als de proxyserver een gebruikersnaam en wachtwoord vereist",
