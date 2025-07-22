@@ -1,6 +1,6 @@
 'use client';
 
-import { ActionIcon, Tooltip } from '@lobehub/ui';
+import { ActionIcon } from '@lobehub/ui';
 import { AlignJustify } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
@@ -25,13 +25,16 @@ const SettingButton = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   return (
     <>
-      <Tooltip hotkey={hotkey} title={t('openChatSettings.title', { ns: 'hotkey' })}>
-        <ActionIcon
-          icon={AlignJustify}
-          onClick={() => openChatSettings()}
-          size={mobile ? MOBILE_HEADER_ICON_SIZE : DESKTOP_HEADER_ICON_SIZE}
-        />
-      </Tooltip>
+      <ActionIcon
+        icon={AlignJustify}
+        onClick={() => openChatSettings()}
+        size={mobile ? MOBILE_HEADER_ICON_SIZE : DESKTOP_HEADER_ICON_SIZE}
+        title={t('openChatSettings.title', { ns: 'hotkey' })}
+        tooltipProps={{
+          hotkey,
+          placement: 'bottom',
+        }}
+      />
       <AgentSettings key={id} />
     </>
   );
