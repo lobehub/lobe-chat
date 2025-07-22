@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update tray icon."]
+    },
+    "date": "2025-07-22",
+    "version": "1.102.4"
+  },
+  {
+    "children": {
       "fixes": ["Remove debug logging from ModelRuntime and async caller."]
     },
     "date": "2025-07-22",
