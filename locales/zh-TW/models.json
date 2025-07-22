@@ -1499,6 +1499,12 @@
   "hunyuan-vision": {
     "description": "混元最新多模態模型，支持圖片 + 文本輸入生成文本內容。"
   },
+  "imagen-4.0-generate-preview-06-06": {
+    "description": "Imagen 第四代文字轉圖像模型系列"
+  },
+  "imagen-4.0-ultra-generate-preview-06-06": {
+    "description": "Imagen 第四代文字轉圖像模型系列 超級版"
+  },
   "imagen4/preview": {
     "description": "Google 最高品質的圖像生成模型"
   },
@@ -1918,6 +1924,9 @@
   },
   "moonshotai/Kimi-Dev-72B": {
     "description": "Kimi-Dev-72B 是一款開源程式碼大型模型，經過大規模強化學習優化，能輸出穩健、可直接投產的補丁。該模型在 SWE-bench Verified 上取得 60.4 % 的新高分，刷新了開源模型在缺陷修復、程式碼審查等自動化軟體工程任務上的紀錄。"
+  },
+  "moonshotai/kimi-k2-instruct": {
+    "description": "kimi-k2 是一款具備超強程式碼與代理能力的 MoE 架構基礎模型，總參數量達 1T，啟用參數 32B。在通用知識推理、程式設計、數學、代理等主要類別的基準效能測試中，K2 模型的表現超越其他主流開源模型。"
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B 是 Nous Hermes 2 的升級版本，包含最新的內部開發的數據集。"

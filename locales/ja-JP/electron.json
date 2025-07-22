@@ -1,4 +1,7 @@
 {
+  "notification": {
+    "finishChatGeneration": "AI メッセージの生成が完了しました"
+  },
   "proxy": {
     "auth": "認証が必要",
     "authDesc": "プロキシサーバーがユーザー名とパスワードを必要とする場合",
