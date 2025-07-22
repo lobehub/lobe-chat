@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Add Qwen image generation capabilities."]
+    },
+    "date": "2025-07-22",
+    "version": "1.103.0"
+  },
+  {
+    "children": {
       "improvements": ["Update tray icon."]
     },
     "date": "2025-07-22",
