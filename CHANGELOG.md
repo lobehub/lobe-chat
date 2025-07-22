@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.102.4](https://github.com/lobehub/lobe-chat/compare/v1.102.3...v1.102.4)
+
+<sup>Released on **2025-07-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Add badge and improve document.
+
+#### 💄 Styles
+
+- **misc**: Update tray icon.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Add badge and improve document, closes [#8528](https://github.com/lobehub/lobe-chat/issues/8528) ([9fb4b0d](https://github.com/lobehub/lobe-chat/commit/9fb4b0d))
+
+#### Styles
+
+- **misc**: Update tray icon, closes [#8530](https://github.com/lobehub/lobe-chat/issues/8530) ([2696de4](https://github.com/lobehub/lobe-chat/commit/2696de4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.102.3](https://github.com/lobehub/lobe-chat/compare/v1.102.2...v1.102.3)
 
 <sup>Released on **2025-07-22**</sup>
