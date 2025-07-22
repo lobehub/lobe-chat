@@ -12,7 +12,16 @@ const SuccessPage = memo(() => {
 
   return (
     <Center height="100vh">
-      <Card style={{ maxWidth: 500, width: '100%' }}>
+      <Card
+        style={{
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'center',
+          minHeight: 280,
+          minWidth: 500,
+          width: '100%',
+        }}
+      >
         <Result
           icon={<Icon icon={CheckCircle} />}
           status="success"

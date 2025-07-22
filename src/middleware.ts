@@ -18,9 +18,9 @@ import { OAUTH_AUTHORIZED } from './const/auth';
 import { oidcEnv } from './envs/oidc';
 
 // Create debug logger instances
-const logDefault = debug('lobe-middleware:default');
-const logNextAuth = debug('lobe-middleware:next-auth');
-const logClerk = debug('lobe-middleware:clerk');
+const logDefault = debug('middleware:default');
+const logNextAuth = debug('middleware:next-auth');
+const logClerk = debug('middleware:clerk');
 
 // OIDC session pre-sync constant
 const OIDC_SESSION_HEADER = 'x-oidc-session-sync';
@@ -146,13 +146,19 @@ const defaultMiddleware = (request: NextRequest) => {
 };
 
 const isPublicRoute = createRouteMatcher([
+  // backend api
   '/api/auth(.*)',
+  '/api/webhooks(.*)',
+  '/webapi(.*)',
   '/trpc(.*)',
   // next auth
   '/next-auth/(.*)',
   // clerk
   '/login',
   '/signup',
+  // oauth
+  '/oidc/handoff',
+  '/oidc/token',
 ]);
 
 const isProtectedRoute = createRouteMatcher([
@@ -164,7 +170,7 @@ const isProtectedRoute = createRouteMatcher([
 ]);
 
 // Initialize an Edge compatible NextAuth middleware
-const nextAuthMiddleware = NextAuthEdge.auth((req) => {
+const nextAuthMiddleware = NextAuthEdge.auth(async (req) => {
   logNextAuth('NextAuth middleware processing request: %s %s', req.method, req.url);
 
   const response = defaultMiddleware(req);

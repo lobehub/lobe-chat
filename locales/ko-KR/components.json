@@ -70,11 +70,12 @@
   },
   "ImageUpload": {
     "actions": {
-      "changeImage": "클릭하여 이미지 변경"
+      "changeImage": "이미지 변경 클릭",
+      "dropMultipleFiles": "여러 파일 업로드는 지원하지 않으며, 첫 번째 파일만 사용됩니다"
     },
     "placeholder": {
       "primary": "이미지 추가",
-      "secondary": "클릭하여 업로드"
+      "secondary": "클릭하거나 드래그하여 업로드"
     }
   },
   "KeyValueEditor": {
@@ -109,7 +110,7 @@
   },
   "MultiImagesUpload": {
     "actions": {
-      "uploadMore": "더 업로드하려면 클릭"
+      "uploadMore": "클릭하거나 드래그하여 더 업로드"
     },
     "modal": {
       "complete": "완료",
@@ -119,7 +120,7 @@
       "upload": "이미지 업로드"
     },
     "placeholder": {
-      "primary": "클릭하여 이미지 업로드",
+      "primary": "클릭하거나 드래그하여 이미지를 업로드하세요",
       "secondary": "여러 이미지 선택 가능"
     },
     "progress": {

@@ -1,33 +1,48 @@
 'use client';
 
-import { Button, InputNumber, InputNumberProps, Tooltip } from '@lobehub/ui';
+import { Button, InputNumber, Tooltip } from '@lobehub/ui';
 import { Dices } from 'lucide-react';
-import { memo } from 'react';
+import { CSSProperties, memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-export type SeedNumberInputProps = InputNumberProps;
+import { MAX_SEED } from '@/libs/standard-parameters/meta-schema';
+import { generateUniqueSeeds } from '@/utils/number';
+
+export interface SeedNumberInputProps {
+  className?: string;
+  onChange: (value: number | null | undefined) => void;
+  placeholder?: string;
+  style?: CSSProperties;
+  value?: number | null;
+}
 
 const SeedNumberInput = memo<SeedNumberInputProps>(
-  ({ value, step = 1, onChange, style, className, ...rest }) => {
+  ({ value, onChange, style, className, ...rest }) => {
     const { t } = useTranslation('image');
+
+    const handleClick = useCallback(() => {
+      const randomSeed = generateUniqueSeeds(1)[0];
+      onChange?.(randomSeed);
+    }, [onChange]);
 
     return (
       <Flexbox className={className} gap={4} horizontal style={style}>
         <InputNumber
+          max={MAX_SEED}
+          min={0}
+          onChange={onChange as any}
           placeholder={t('config.seed.random')}
-          step={step}
+          step={1}
           style={{ width: '100%' }}
           value={value}
           {...rest}
         />
         <Tooltip title={t('config.seed.random')}>
           <Button
-            disabled={!value}
             icon={Dices}
-            onClick={() => onChange?.(null)}
-            style={{ flex: 'none', width: 62 }}
-            type={'primary'}
+            onClick={handleClick}
+            style={{ flex: 'none', width: 48 }}
             variant={'outlined'}
           />
         </Tooltip>

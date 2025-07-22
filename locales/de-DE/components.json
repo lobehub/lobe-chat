@@ -70,11 +70,12 @@
   },
   "ImageUpload": {
     "actions": {
-      "changeImage": "Bild ändern"
+      "changeImage": "Klicken, um das Bild zu ändern",
+      "dropMultipleFiles": "Das Hochladen mehrerer Dateien wird nicht unterstützt, es wird nur die erste Datei verwendet"
     },
     "placeholder": {
       "primary": "Bild hinzufügen",
-      "secondary": "Zum Hochladen klicken"
+      "secondary": "Klicken oder ziehen, um hochzuladen"
     }
   },
   "KeyValueEditor": {
@@ -109,7 +110,7 @@
   },
   "MultiImagesUpload": {
     "actions": {
-      "uploadMore": "Klicken Sie, um weitere hochzuladen"
+      "uploadMore": "Klicken oder ziehen, um mehr hochzuladen"
     },
     "modal": {
       "complete": "Fertig",
@@ -119,7 +120,7 @@
       "upload": "Bild hochladen"
     },
     "placeholder": {
-      "primary": "Klicken Sie, um Bilder hochzuladen",
+      "primary": "Klicken oder ziehen, um Bilder hochzuladen",
       "secondary": "Mehrere Bilder können ausgewählt werden"
     },
     "progress": {

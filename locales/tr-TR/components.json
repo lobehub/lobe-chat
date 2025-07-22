@@ -70,11 +70,12 @@
   },
   "ImageUpload": {
     "actions": {
-      "changeImage": "Resmi değiştirmek için tıklayın"
+      "changeImage": "Resmi değiştirmek için tıklayın",
+      "dropMultipleFiles": "Birden fazla dosya yükleme desteklenmiyor, sadece ilk dosya kullanılacak"
     },
     "placeholder": {
       "primary": "Resim ekle",
-      "secondary": "Yüklemek için tıklayın"
+      "secondary": "Tıklayın veya sürükleyip bırakın yüklemek için"
     }
   },
   "KeyValueEditor": {
@@ -109,7 +110,7 @@
   },
   "MultiImagesUpload": {
     "actions": {
-      "uploadMore": "Daha fazla yüklemek için tıklayın"
+      "uploadMore": "Daha fazla yüklemek için tıklayın veya sürükleyin"
     },
     "modal": {
       "complete": "Tamamla",
@@ -119,7 +120,7 @@
       "upload": "Resim Yükle"
     },
     "placeholder": {
-      "primary": "Resim yüklemek için tıklayın",
+      "primary": "Resim yüklemek için tıklayın veya sürükleyin",
       "secondary": "Birden fazla resim seçimi desteklenir"
     },
     "progress": {
