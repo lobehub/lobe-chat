@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add notification for desktop."]
+    },
+    "date": "2025-07-22",
+    "version": "1.102.2"
+  },
+  {
+    "children": {
       "improvements": ["Modal list header sticky style."]
     },
     "date": "2025-07-21",
