@@ -1,4 +1,7 @@
 {
+  "notification": {
+    "finishChatGeneration": "Yapay Zeka mesajı oluşturuldu"
+  },
   "proxy": {
     "auth": "Kimlik doğrulama gerekli",
     "authDesc": "Eğer proxy sunucusu kullanıcı adı ve şifre gerektiriyorsa",
@@ -101,7 +104,10 @@
   "waitingOAuth": {
     "cancel": "İptal",
     "description": "Tarayıcıda yetkilendirme sayfası açıldı, lütfen tarayıcıda yetkilendirmeyi tamamlayın",
+    "error": "Yetkilendirme başarısız: {{error}}",
+    "errorTitle": "Yetkilendirme bağlantısı başarısız",
     "helpText": "Tarayıcı otomatik olarak açılmadıysa, lütfen iptal'e tıklayıp yeniden deneyin",
+    "retry": "Tekrar dene",
     "title": "Yetkilendirme bağlantısını bekliyor"
   }
 }

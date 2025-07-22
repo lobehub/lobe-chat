@@ -1,4 +1,7 @@
 {
+  "notification": {
+    "finishChatGeneration": "AI-bericht is voltooid"
+  },
   "proxy": {
     "auth": "Authenticatie vereist",
     "authDesc": "Als de proxyserver een gebruikersnaam en wachtwoord vereist",
@@ -101,7 +104,10 @@
   "waitingOAuth": {
     "cancel": "Annuleren",
     "description": "De browser heeft de autorisatiepagina geopend, voltooi de autorisatie in de browser",
+    "error": "Autorisatie mislukt: {{error}}",
+    "errorTitle": "Verbinding met autorisatie mislukt",
     "helpText": "Als de browser niet automatisch opent, klik dan op annuleren en probeer het opnieuw",
+    "retry": "Opnieuw proberen",
     "title": "Wachten op autorisatieverbinding"
   }
 }

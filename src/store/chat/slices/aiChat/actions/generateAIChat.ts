@@ -1,12 +1,13 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
+import { t } from 'i18next';
 import { produce } from 'immer';
 import { template } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { TraceEventType, TraceNameMap } from '@/const/trace';
-import { isServerMode } from '@/const/version';
+import { isDesktop, isServerMode } from '@/const/version';
 import { knowledgeBaseQAPrompts } from '@/prompts/knowledgeBaseQA';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
@@ -84,6 +85,7 @@ export interface AIGenerateAction {
     provider: string;
   }) => Promise<{
     isFunctionCall: boolean;
+    content: string;
     traceId?: string;
   }>;
   /**
@@ -455,7 +457,7 @@ export const generateAIChat: StateCreator<
     }
 
     // 4. fetch the AI response
-    const { isFunctionCall } = await internal_fetchAIChatMessage({
+    const { isFunctionCall, content } = await internal_fetchAIChatMessage({
       messages,
       messageId: assistantId,
       params,
@@ -470,6 +472,24 @@ export const generateAIChat: StateCreator<
         threadId: params?.threadId,
         inPortalThread: params?.inPortalThread,
       });
+    } else {
+      // 显示桌面通知（仅在桌面端且窗口隐藏时）
+      if (isDesktop) {
+        try {
+          // 动态导入桌面通知服务，避免在非桌面端环境中导入
+          const { desktopNotificationService } = await import(
+            '@/services/electron/desktopNotification'
+          );
+
+          await desktopNotificationService.showNotification({
+            body: content,
+            title: t('notification.finishChatGeneration', { ns: 'electron' }),
+          });
+        } catch (error) {
+          // 静默处理错误，不影响正常流程
+          console.error('Desktop notification error:', error);
+        }
+      }
     }
 
     // 6. summary history if context messages is larger than historyCount
@@ -509,7 +529,7 @@ export const generateAIChat: StateCreator<
     const chatConfig = agentChatConfigSelectors.currentChatConfig(getAgentStoreState());
 
     const compiler = template(chatConfig.inputTemplate, {
-      interpolate: /{{\s*(text)\s*}}/g
+      interpolate: /{{\s*(text)\s*}}/g,
     });
 
     // ================================== //
@@ -528,20 +548,20 @@ export const generateAIChat: StateCreator<
 
     // 2. replace inputMessage template
     preprocessMsgs = !chatConfig.inputTemplate
-    ? preprocessMsgs
-    : preprocessMsgs.map((m) => {
-        if (m.role === 'user') {
-          try {
-            return { ...m, content: compiler({ text: m.content }) };
-          } catch (error) {
-            console.error(error);
+      ? preprocessMsgs
+      : preprocessMsgs.map((m) => {
+          if (m.role === 'user') {
+            try {
+              return { ...m, content: compiler({ text: m.content }) };
+            } catch (error) {
+              console.error(error);
 
-            return m;
+              return m;
+            }
           }
-        }
 
-        return m;
-      });
+          return m;
+        });
 
     // 3. add systemRole
     if (agentConfig.systemRole) {
@@ -753,7 +773,7 @@ export const generateAIChat: StateCreator<
 
     internal_toggleChatLoading(false, messageId, n('generateMessage(end)') as string);
 
-    return { isFunctionCall, traceId: msgTraceId };
+    return { isFunctionCall, traceId: msgTraceId, content: output };
   },
 
   internal_resendMessage: async (

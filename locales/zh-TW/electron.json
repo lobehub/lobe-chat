@@ -1,4 +1,7 @@
 {
+  "notification": {
+    "finishChatGeneration": "AI 訊息已生成完畢"
+  },
   "proxy": {
     "auth": "需要認證",
     "authDesc": "如果代理伺服器需要使用者名稱和密碼",
@@ -101,7 +104,10 @@
   "waitingOAuth": {
     "cancel": "取消",
     "description": "瀏覽器已打開授權頁面，請在瀏覽器中完成授權",
+    "error": "授權失敗: {{error}}",
+    "errorTitle": "授權連接失敗",
     "helpText": "如果瀏覽器沒有自動打開，請點擊取消後重新嘗試",
+    "retry": "重試",
     "title": "等待授權連接"
   }
 }

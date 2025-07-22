@@ -1,4 +1,7 @@
 {
+  "notification": {
+    "finishChatGeneration": "Tin nhắn AI đã được tạo xong"
+  },
   "proxy": {
     "auth": "Cần xác thực",
     "authDesc": "Nếu máy chủ proxy yêu cầu tên đăng nhập và mật khẩu",
@@ -101,7 +104,10 @@
   "waitingOAuth": {
     "cancel": "Hủy",
     "description": "Trình duyệt đã mở trang ủy quyền, vui lòng hoàn tất ủy quyền trong trình duyệt",
+    "error": "Ủy quyền thất bại: {{error}}",
+    "errorTitle": "Kết nối ủy quyền thất bại",
     "helpText": "Nếu trình duyệt không tự động mở, vui lòng nhấp vào hủy và thử lại",
+    "retry": "Thử lại",
     "title": "Đang chờ kết nối ủy quyền"
   }
 }

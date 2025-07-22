@@ -1,4 +1,7 @@
 {
+  "notification": {
+    "finishChatGeneration": "Messaggio AI generato con successo"
+  },
   "proxy": {
     "auth": "Autenticazione necessaria",
     "authDesc": "Se il server proxy richiede nome utente e password",
@@ -101,7 +104,10 @@
   "waitingOAuth": {
     "cancel": "Annulla",
     "description": "Il browser ha aperto la pagina di autorizzazione, completare l'autorizzazione nel browser",
+    "error": "Autorizzazione fallita: {{error}}",
+    "errorTitle": "Connessione di autorizzazione fallita",
     "helpText": "Se il browser non si è aperto automaticamente, fai clic su annulla e riprova",
+    "retry": "Riprova",
     "title": "In attesa di autorizzazione"
   }
 }

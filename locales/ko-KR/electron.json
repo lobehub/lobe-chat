@@ -1,4 +1,7 @@
 {
+  "notification": {
+    "finishChatGeneration": "AI 메시지 생성이 완료되었습니다"
+  },
   "proxy": {
     "auth": "인증 필요",
     "authDesc": "프록시 서버가 사용자 이름과 비밀번호를 요구하는 경우",
@@ -101,7 +104,10 @@
   "waitingOAuth": {
     "cancel": "취소",
     "description": "브라우저에서 인증 페이지가 열렸습니다. 브라우저에서 인증을 완료하세요.",
+    "error": "권한 부여 실패: {{error}}",
+    "errorTitle": "권한 연결 실패",
     "helpText": "브라우저가 자동으로 열리지 않으면, 취소를 클릭한 후 다시 시도하세요.",
+    "retry": "다시 시도",
     "title": "인증 연결 대기 중"
   }
 }

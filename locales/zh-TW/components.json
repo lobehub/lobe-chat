@@ -70,11 +70,12 @@
   },
   "ImageUpload": {
     "actions": {
-      "changeImage": "點擊更換圖片"
+      "changeImage": "點擊更換圖片",
+      "dropMultipleFiles": "不支援多重上傳多個檔案，僅會使用第一個檔案"
     },
     "placeholder": {
       "primary": "新增圖片",
-      "secondary": "點擊上傳"
+      "secondary": "點擊或拖曳上傳"
     }
   },
   "KeyValueEditor": {
@@ -109,7 +110,7 @@
   },
   "MultiImagesUpload": {
     "actions": {
-      "uploadMore": "點擊上傳更多"
+      "uploadMore": "點擊或拖曳上傳更多"
     },
     "modal": {
       "complete": "完成",
@@ -119,7 +120,7 @@
       "upload": "上傳圖片"
     },
     "placeholder": {
-      "primary": "點擊上傳圖片",
+      "primary": "點擊或拖曳上傳圖片",
       "secondary": "支援多張圖片選擇"
     },
     "progress": {

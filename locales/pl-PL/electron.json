@@ -1,4 +1,7 @@
 {
+  "notification": {
+    "finishChatGeneration": "Wiadomość AI została wygenerowana"
+  },
   "proxy": {
     "auth": "Wymagana autoryzacja",
     "authDesc": "Jeśli serwer proxy wymaga nazwy użytkownika i hasła",
@@ -101,7 +104,10 @@
   "waitingOAuth": {
     "cancel": "Anuluj",
     "description": "Przeglądarka otworzyła stronę autoryzacji, proszę zakończyć autoryzację w przeglądarce",
+    "error": "Autoryzacja nie powiodła się: {{error}}",
+    "errorTitle": "Nie udało się połączyć z autoryzacją",
     "helpText": "Jeśli przeglądarka nie otworzyła się automatycznie, kliknij anuluj i spróbuj ponownie",
+    "retry": "Spróbuj ponownie",
     "title": "Oczekiwanie na połączenie autoryzacyjne"
   }
 }

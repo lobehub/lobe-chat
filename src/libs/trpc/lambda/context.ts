@@ -3,10 +3,16 @@ import debug from 'debug';
 import { User } from 'next-auth';
 import { NextRequest } from 'next/server';
 
-import { JWTPayload, LOBE_CHAT_AUTH_HEADER, enableClerk, enableNextAuth } from '@/const/auth';
+import {
+  JWTPayload,
+  LOBE_CHAT_AUTH_HEADER,
+  LOBE_CHAT_OIDC_AUTH_HEADER,
+  enableClerk,
+  enableNextAuth,
+} from '@/const/auth';
 import { oidcEnv } from '@/envs/oidc';
 import { ClerkAuth, IClerkAuth } from '@/libs/clerk-auth';
-import { extractBearerToken } from '@/utils/server/auth';
+import { validateOIDCJWT } from '@/libs/oidc-provider/jwt';
 
 // Create context logger namespace
 const log = debug('lobe-trpc:lambda:context');
@@ -98,26 +104,19 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
   let auth;
   let oidcAuth = null;
 
-  // Prioritize checking the standard Authorization header for OIDC Bearer Token validation
+  // Prioritize checking for OIDC authentication (both standard Authorization and custom Oidc-Auth headers)
   if (oidcEnv.ENABLE_OIDC) {
     log('OIDC enabled, attempting OIDC authentication');
     const standardAuthorization = request.headers.get('Authorization');
+    const oidcAuthToken = request.headers.get(LOBE_CHAT_OIDC_AUTH_HEADER);
     log('Standard Authorization header: %s', standardAuthorization ? 'exists' : 'not found');
+    log('Oidc-Auth header: %s', oidcAuthToken ? 'exists' : 'not found');
 
     try {
-      // Use extractBearerToken from utils
-      const bearerToken = extractBearerToken(standardAuthorization);
+      if (oidcAuthToken) {
+        // Use direct JWT validation instead of database lookup
+        const tokenInfo = await validateOIDCJWT(oidcAuthToken);
 
-      log('Extracted Bearer Token: %s', bearerToken ? 'valid' : 'invalid');
-      if (bearerToken) {
-        const { OIDCService } = await import('@/server/services/oidc');
-
-        // Initialize OIDC service
-        log('Initializing OIDC service');
-        const oidcService = await OIDCService.initialize();
-        // Validate token using OIDCService
-        log('Validating OIDC token');
-        const tokenInfo = await oidcService.validateToken(bearerToken);
         oidcAuth = {
           payload: tokenInfo.tokenData,
           ...tokenInfo.tokenData, // Spread payload into oidcAuth
@@ -136,7 +135,7 @@ export const createLambdaContext = async (request: NextRequest): Promise<LambdaC
       }
     } catch (error) {
       // If OIDC authentication fails, log error and continue with other authentication methods
-      if (standardAuthorization?.startsWith('Bearer ')) {
+      if (oidcAuthToken) {
         log('OIDC authentication failed, error: %O', error);
         console.error('OIDC authentication failed, trying other methods:', error);
       }

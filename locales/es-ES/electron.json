@@ -1,4 +1,7 @@
 {
+  "notification": {
+    "finishChatGeneration": "El mensaje de IA se ha generado por completo"
+  },
   "proxy": {
     "auth": "Se requiere autenticación",
     "authDesc": "Si el servidor proxy requiere nombre de usuario y contraseña",
@@ -101,7 +104,10 @@
   "waitingOAuth": {
     "cancel": "Cancelar",
     "description": "Se ha abierto la página de autorización en el navegador, por favor completa la autorización en el navegador",
+    "error": "Error de autorización: {{error}}",
+    "errorTitle": "Fallo en la conexión de autorización",
     "helpText": "Si el navegador no se abre automáticamente, haz clic en cancelar y vuelve a intentarlo",
+    "retry": "Reintentar",
     "title": "Esperando conexión de autorización"
   }
 }
