@@ -1,5 +1,4 @@
 import { createTRPCClient, httpLink } from '@trpc/client';
-import debug from 'debug';
 import superjson from 'superjson';
 import urlJoin from 'url-join';
 
@@ -14,11 +13,7 @@ import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { asyncRouter } from './index';
 import type { AsyncRouter } from './index';
 
-const log = debug('lobe-image:async-caller');
-
 export const createAsyncServerClient = async (userId: string, payload: JWTPayload) => {
-  log('Creating async server client for userId: %s', userId);
-
   const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
   const headers: Record<string, string> = {
     Authorization: `Bearer ${serverDBEnv.KEY_VAULTS_SECRET}`,
@@ -39,7 +34,6 @@ export const createAsyncServerClient = async (userId: string, payload: JWTPayloa
     ],
   });
 
-  log('Async server client created successfully for userId: %s', userId);
   return client;
 };
 
