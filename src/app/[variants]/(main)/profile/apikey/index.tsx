@@ -16,7 +16,9 @@ import { ApiKeyDisplay, ApiKeyModal, EditableCell } from './features';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
-    padding: ${token.padding}px;
+    .ant-pro-card-body {
+      padding-inline: 0;
+    }
   `,
   header: css`
     display: flex;
