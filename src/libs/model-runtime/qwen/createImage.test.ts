@@ -270,9 +270,82 @@ describe('createQwenImage', () => {
       // Should have made 1 create call + 4 status calls (3 RUNNING + 1 SUCCEEDED)
       expect(fetch).toHaveBeenCalledTimes(5);
     });
+
+    it('should handle seed value of 0 correctly', async () => {
+      const mockTaskId = 'task-with-zero-seed';
+      const mockImageUrl = 'https://dashscope.oss-cn-beijing.aliyuncs.com/aigc/seed-zero.jpg';
+
+      global.fetch = vi
+        .fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            output: { task_id: mockTaskId },
+            request_id: 'req-seed-0',
+          }),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            output: {
+              task_id: mockTaskId,
+              task_status: 'SUCCEEDED',
+              results: [{ url: mockImageUrl }],
+            },
+            request_id: 'req-seed-0-status',
+          }),
+        });
+
+      const payload: CreateImagePayload = {
+        model: 'wanx2.1-t2i-turbo',
+        params: {
+          prompt: 'Image with seed 0',
+          seed: 0,
+        },
+      };
+
+      await createQwenImage(payload, mockOptions);
+
+      // Verify that seed: 0 is included in the request
+      expect(fetch).toHaveBeenCalledWith(
+        'https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis',
+        expect.objectContaining({
+          body: JSON.stringify({
+            input: {
+              prompt: 'Image with seed 0',
+            },
+            model: 'wanx2.1-t2i-turbo',
+            parameters: {
+              n: 1,
+              seed: 0,
+              size: '1024*1024',
+            },
+          }),
+        }),
+      );
+    });
   });
 
   describe('Error scenarios', () => {
+    it('should handle unsupported model', async () => {
+      const payload: CreateImagePayload = {
+        model: 'unsupported-model',
+        params: {
+          prompt: 'Test prompt',
+        },
+      };
+
+      await expect(createQwenImage(payload, mockOptions)).rejects.toEqual(
+        expect.objectContaining({
+          errorType: 'ProviderBizError',
+          provider: 'qwen',
+        }),
+      );
+
+      // Should not make any fetch calls
+      expect(fetch).not.toHaveBeenCalled();
+    });
+
     it('should handle task creation failure', async () => {
       global.fetch = vi.fn().mockResolvedValueOnce({
         ok: false,
@@ -284,6 +357,31 @@ describe('createQwenImage', () => {
 
       const payload: CreateImagePayload = {
         model: 'invalid-model',
+        params: {
+          prompt: 'Test prompt',
+        },
+      };
+
+      await expect(createQwenImage(payload, mockOptions)).rejects.toEqual(
+        expect.objectContaining({
+          errorType: 'ProviderBizError',
+          provider: 'qwen',
+        }),
+      );
+    });
+
+    it('should handle non-JSON error responses', async () => {
+      global.fetch = vi.fn().mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        statusText: 'Internal Server Error',
+        json: async () => {
+          throw new Error('Failed to parse JSON');
+        },
+      });
+
+      const payload: CreateImagePayload = {
+        model: 'wanx2.1-t2i-turbo',
         params: {
           prompt: 'Test prompt',
         },
@@ -408,6 +506,108 @@ describe('createQwenImage', () => {
           provider: 'qwen',
         }),
       );
+    });
+
+    it('should handle transient status query failures and retry', async () => {
+      const mockTaskId = 'task-transient-failure';
+      const mockImageUrl = 'https://dashscope.oss-cn-beijing.aliyuncs.com/aigc/retry-success.jpg';
+
+      let statusQueryCount = 0;
+      const statusQueryMock = vi.fn().mockImplementation(() => {
+        statusQueryCount++;
+        if (statusQueryCount === 1 || statusQueryCount === 2) {
+          // First two calls fail
+          return Promise.reject(new Error('Network timeout'));
+        } else {
+          // Third call succeeds
+          return Promise.resolve({
+            ok: true,
+            json: async () => ({
+              output: {
+                task_id: mockTaskId,
+                task_status: 'SUCCEEDED',
+                results: [{ url: mockImageUrl }],
+              },
+              request_id: 'req-retry-success',
+            }),
+          });
+        }
+      });
+
+      global.fetch = vi
+        .fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            output: { task_id: mockTaskId },
+            request_id: 'req-transient',
+          }),
+        })
+        .mockImplementation(statusQueryMock);
+
+      const payload: CreateImagePayload = {
+        model: 'wanx2.1-t2i-turbo',
+        params: {
+          prompt: 'Test transient failure',
+        },
+      };
+
+      // Mock setTimeout to make test run faster
+      vi.spyOn(global, 'setTimeout').mockImplementation((callback: any) => {
+        setImmediate(callback);
+        return 1 as any;
+      });
+
+      const result = await createQwenImage(payload, mockOptions);
+
+      expect(result).toEqual({
+        imageUrl: mockImageUrl,
+      });
+
+      // Verify the mock was called the expected number of times
+      expect(statusQueryMock).toHaveBeenCalledTimes(3); // 2 failures + 1 success
+
+      // Should have made 1 create call + 3 status calls (2 failed + 1 succeeded)
+      expect(fetch).toHaveBeenCalledTimes(4);
+    });
+
+    it('should fail after consecutive query failures', async () => {
+      const mockTaskId = 'task-consecutive-failures';
+
+      global.fetch = vi
+        .fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            output: { task_id: mockTaskId },
+            request_id: 'req-will-fail',
+          }),
+        })
+        // All subsequent calls fail
+        .mockRejectedValue(new Error('Persistent network error'));
+
+      const payload: CreateImagePayload = {
+        model: 'wanx2.1-t2i-turbo',
+        params: {
+          prompt: 'Test persistent failure',
+        },
+      };
+
+      // Mock setTimeout to make test run faster
+      vi.spyOn(global, 'setTimeout').mockImplementation((callback: any) => {
+        setImmediate(callback);
+        return 1 as any;
+      });
+
+      await expect(createQwenImage(payload, mockOptions)).rejects.toEqual(
+        expect.objectContaining({
+          errorType: 'ProviderBizError',
+          provider: 'qwen',
+        }),
+      );
+
+      // Should have made 1 create call + 3 failed status calls (maxConsecutiveFailures)
+      expect(fetch).toHaveBeenCalledTimes(4);
     });
   });
 });
