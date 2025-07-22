@@ -1499,6 +1499,12 @@
   "hunyuan-vision": {
     "description": "혼원 최신 다중 모달 모델로, 이미지와 텍스트 입력을 지원하여 텍스트 콘텐츠를 생성합니다."
   },
+  "imagen-4.0-generate-preview-06-06": {
+    "description": "Imagen 4세대 텍스트-이미지 모델 시리즈"
+  },
+  "imagen-4.0-ultra-generate-preview-06-06": {
+    "description": "Imagen 4세대 텍스트-이미지 모델 시리즈 울트라 버전"
+  },
   "imagen4/preview": {
     "description": "Google의 최고 품질 이미지 생성 모델"
   },
@@ -1918,6 +1924,9 @@
   },
   "moonshotai/Kimi-Dev-72B": {
     "description": "Kimi-Dev-72B는 대규모 강화 학습 최적화를 거친 오픈소스 코드 대형 모델로, 안정적이고 바로 생산에 투입 가능한 패치를 출력할 수 있습니다. 이 모델은 SWE-bench Verified에서 60.4%의 신기록을 세우며, 결함 수정, 코드 리뷰 등 자동화 소프트웨어 엔지니어링 작업에서 오픈소스 모델의 기록을 경신했습니다."
+  },
+  "moonshotai/kimi-k2-instruct": {
+    "description": "kimi-k2는 강력한 코드 및 에이전트 기능을 갖춘 MoE 아키텍처 기반 모델로, 총 파라미터 1조, 활성화 파라미터 320억입니다. 일반 지식 추론, 프로그래밍, 수학, 에이전트 등 주요 분야의 벤치마크 성능 테스트에서 K2 모델은 다른 주요 오픈소스 모델을 능가하는 성능을 보입니다."
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B는 Nous Hermes 2의 업그레이드 버전으로, 최신 내부 개발 데이터 세트를 포함하고 있습니다."
