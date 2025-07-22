@@ -1,6 +1,8 @@
 import { BrowserWindow, nativeTheme } from 'electron';
+import { join } from 'node:path';
 
-import { isWindows } from '@/const/env';
+import { buildDir } from '@/const/dir';
+import { isDev, isWindows } from '@/const/env';
 import {
   BACKGROUND_DARK,
   BACKGROUND_LIGHT,
@@ -43,6 +45,7 @@ export class ThemeManager {
   static getWindowsThemeConfig(isDarkMode: boolean) {
     return {
       backgroundColor: isDarkMode ? BACKGROUND_DARK : BACKGROUND_LIGHT,
+      icon: isDev ? join(buildDir, 'icon-dev.ico') : undefined,
       titleBarOverlay: {
         color: isDarkMode ? BACKGROUND_DARK : BACKGROUND_LIGHT,
         height: TITLE_BAR_HEIGHT,
