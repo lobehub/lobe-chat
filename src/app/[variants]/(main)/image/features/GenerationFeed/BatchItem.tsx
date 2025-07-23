@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import InvalidAPIKey from '@/components/InvalidAPIKey';
-import { RuntimeImageGenParams } from '@/libs/standard-parameters/meta-schema';
+import { RuntimeImageGenParams } from '@/libs/standard-parameters/index';
 import { useImageStore } from '@/store/image';
 import { AsyncTaskErrorType } from '@/types/asyncTask';
 import { GenerationBatch } from '@/types/generation';

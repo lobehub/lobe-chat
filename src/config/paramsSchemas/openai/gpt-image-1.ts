@@ -1,4 +1,4 @@
-import { type ModelParamsSchema } from '@/libs/standard-parameters/meta-schema';
+import { type ModelParamsSchema } from '@/libs/standard-parameters/index';
 
 export const gptImage1ParamsSchema: ModelParamsSchema = {
   imageUrls: { default: [] },

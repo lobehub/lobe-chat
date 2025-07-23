@@ -1,4 +1,4 @@
-import { type ModelParamsSchema } from '@/libs/standard-parameters/meta-schema';
+import { type ModelParamsSchema } from '@/libs/standard-parameters/index';
 
 export const fluxSchnellParamsSchema: ModelParamsSchema = {
   height: { default: 1024, max: 1536, min: 512, step: 1 },
