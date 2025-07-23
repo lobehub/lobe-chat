@@ -656,6 +656,9 @@
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B è un modello progettato per seguire istruzioni, dialogo e programmazione."
   },
+  "cogview-4": {
+    "description": "CogView-4 è il primo modello open source di Zhipu che supporta la generazione di caratteri cinesi, con miglioramenti completi nella comprensione semantica, nella qualità della generazione delle immagini e nella capacità di generare testi in cinese e inglese. Supporta input bilingue cinese-inglese di qualsiasi lunghezza e può generare immagini a risoluzione arbitraria entro un intervallo specificato."
+  },
   "cohere-command-r": {
     "description": "Command R è un modello generativo scalabile mirato a RAG e all'uso di strumenti per abilitare l'IA su scala aziendale."
   },
@@ -1496,6 +1499,12 @@
   "hunyuan-vision": {
     "description": "Ultimo modello multimodale di Hunyuan, supporta l'input di immagini e testo per generare contenuti testuali."
   },
+  "imagen-4.0-generate-preview-06-06": {
+    "description": "Serie di modelli di generazione di immagini da testo di quarta generazione Imagen"
+  },
+  "imagen-4.0-ultra-generate-preview-06-06": {
+    "description": "Serie di modelli di generazione di immagini da testo di quarta generazione Imagen versione Ultra"
+  },
   "imagen4/preview": {
     "description": "Il modello di generazione immagini di massima qualità di Google"
   },
@@ -1915,6 +1924,9 @@
   },
   "moonshotai/Kimi-Dev-72B": {
     "description": "Kimi-Dev-72B è un modello open source di grandi dimensioni per il codice, ottimizzato tramite apprendimento rinforzato su larga scala, capace di generare patch robuste e pronte per la produzione. Questo modello ha raggiunto un nuovo record del 60,4% su SWE-bench Verified, superando tutti i modelli open source nelle attività di ingegneria del software automatizzata come la correzione di difetti e la revisione del codice."
+  },
+  "moonshotai/kimi-k2-instruct": {
+    "description": "kimi-k2 è un modello di base con architettura MoE dotato di potenti capacità di codice e agenti, con un totale di 1T parametri e 32B parametri attivi. Nei test di benchmark per categorie principali come ragionamento generale, programmazione, matematica e agenti, il modello K2 supera le altre principali soluzioni open source."
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B è una versione aggiornata di Nous Hermes 2, contenente i più recenti dataset sviluppati internamente."
@@ -2416,6 +2428,9 @@
   },
   "v0-1.5-md": {
     "description": "Il modello v0-1.5-md è adatto per compiti quotidiani e generazione di interfacce utente (UI)"
+  },
+  "wanx2.1-t2i-turbo": {
+    "description": "Modello di generazione di immagini basato su testo di Tongyi di Alibaba Cloud"
   },
   "whisper-1": {
     "description": "Modello universale di riconoscimento vocale, supporta riconoscimento vocale multilingue, traduzione vocale e identificazione della lingua."

@@ -1,4 +1,7 @@
 {
+  "notification": {
+    "finishChatGeneration": "Tin nhắn AI đã được tạo xong"
+  },
   "proxy": {
     "auth": "Cần xác thực",
     "authDesc": "Nếu máy chủ proxy yêu cầu tên đăng nhập và mật khẩu",

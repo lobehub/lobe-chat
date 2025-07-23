@@ -656,6 +656,9 @@
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B is a model designed for instruction following, dialogue, and programming."
   },
+  "cogview-4": {
+    "description": "CogView-4 is Zhipu's first open-source text-to-image model supporting Chinese character generation. It offers comprehensive improvements in semantic understanding, image generation quality, and bilingual Chinese-English text generation capabilities. It supports bilingual input of any length and can generate images at any resolution within a specified range."
+  },
   "cohere-command-r": {
     "description": "Command R is a scalable generative model targeting RAG and Tool Use to enable production-scale AI for enterprises."
   },
@@ -1496,6 +1499,12 @@
   "hunyuan-vision": {
     "description": "The latest multimodal model from Hunyuan, supporting image + text input to generate textual content."
   },
+  "imagen-4.0-generate-preview-06-06": {
+    "description": "Imagen 4th generation text-to-image model series"
+  },
+  "imagen-4.0-ultra-generate-preview-06-06": {
+    "description": "Imagen 4th generation text-to-image model series Ultra version"
+  },
   "imagen4/preview": {
     "description": "Google's highest quality image generation model."
   },
@@ -1915,6 +1924,9 @@
   },
   "moonshotai/Kimi-Dev-72B": {
     "description": "Kimi-Dev-72B is an open-source large code model optimized through extensive reinforcement learning, capable of producing robust, production-ready patches. This model achieved a new high score of 60.4% on SWE-bench Verified, setting a record for open-source models in automated software engineering tasks such as defect repair and code review."
+  },
+  "moonshotai/kimi-k2-instruct": {
+    "description": "kimi-k2 is a MoE architecture base model with powerful coding and Agent capabilities, featuring a total of 1 trillion parameters and 32 billion active parameters. In benchmark tests across key categories such as general knowledge reasoning, programming, mathematics, and Agent tasks, the K2 model outperforms other mainstream open-source models."
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B is an upgraded version of Nous Hermes 2, featuring the latest internally developed datasets."
@@ -2416,6 +2428,9 @@
   },
   "v0-1.5-md": {
     "description": "The v0-1.5-md model is suitable for everyday tasks and user interface (UI) generation."
+  },
+  "wanx2.1-t2i-turbo": {
+    "description": "Text-to-image model under Alibaba Cloud Tongyi"
   },
   "whisper-1": {
     "description": "A general-purpose speech recognition model supporting multilingual speech recognition, speech translation, and language identification."

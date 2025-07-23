@@ -38,9 +38,9 @@ LobeChat provides a complete authentication service capability when deployed. Th
 #### `NEXT_AUTH_SSO_PROVIDERS`
 
 - Type: Optional
-- Description: Select the single sign-on provider for LobeChat. For multiple SSO Providers separating them with commas, for example, `auth0,microsoft-entra-id,authentik`.
+- Description: Select the single sign-on provider for LoboChat. For multiple SSO Providers separating them with commas, for example, `auth0,microsoft-entra-id,authentik`.
 - Default: `auth0`
-- Example: `auth0,microsoft-entra-id,authentik,okta`
+- Example: `auth0,microsoft-entra-id,authentik`
 
 #### `NEXTAUTH_URL`
 
@@ -248,29 +248,6 @@ LobeChat provides a complete authentication service capability when deployed. Th
 - Description: Issuer of the ZITADEL application. This is usually the URL of the ZITADEL instance, and can be found in `URLs` tab of your application in the console.
 - Default: `-`
 - Example: `https://your-instance-abc123.zitadel.cloud`
-
-### OKTA
-
-#### `AUTH_OKTA_ID`
-
-- Type: Required
-- Description: Client ID of the OKTA application. This can be found under your application in the OKTA console.
-- Default: `-`
-- Example: `evCnOJP1UX8FMnXR9Xkj5t0NyFn5p70P`
-
-#### `AUTH_OKTA_SECRET`
-
-- Type: Required
-- Description: Client Secret of the OKTA application.
-- Default: `-`
-- Example: `wnX7UbZg85ZUzF6ioxPLnJVEQa1Elbs7aqBUSF16xleBS5AdkVfASS49-fQIC8Rm`
-
-#### `AUTH_OKTA_ISSUER`
-
-- Type: Required
-- Description: Issuer/domain of the OKTA application.
-- Default: `-`
-- Example: `https://dev1234.okta.com`
 
 ### Generic OIDC
 

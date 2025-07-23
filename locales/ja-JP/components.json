@@ -70,11 +70,12 @@
   },
   "ImageUpload": {
     "actions": {
-      "changeImage": "クリックして画像を変更"
+      "changeImage": "画像を変更するにはクリックしてください",
+      "dropMultipleFiles": "複数ファイルの同時アップロードはサポートされていません。最初のファイルのみが使用されます。"
     },
     "placeholder": {
       "primary": "画像を追加",
-      "secondary": "クリックしてアップロード"
+      "secondary": "クリックまたはドラッグしてアップロード"
     }
   },
   "KeyValueEditor": {
@@ -109,7 +110,7 @@
   },
   "MultiImagesUpload": {
     "actions": {
-      "uploadMore": "さらにアップロード"
+      "uploadMore": "クリックまたはドラッグしてさらにアップロード"
     },
     "modal": {
       "complete": "完了",
@@ -119,7 +120,7 @@
       "upload": "画像をアップロード"
     },
     "placeholder": {
-      "primary": "クリックして画像をアップロード",
+      "primary": "クリックまたはドラッグして画像をアップロード",
       "secondary": "複数の画像を選択可能"
     },
     "progress": {

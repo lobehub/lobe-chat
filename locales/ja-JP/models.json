@@ -656,6 +656,9 @@
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22Bは指示遵守、対話、プログラミングのために設計されたモデルです。"
   },
+  "cogview-4": {
+    "description": "CogView-4 は智譜が初めて開発した漢字生成対応のオープンソーステキストから画像生成モデルであり、意味理解、画像生成の品質、中英文字生成能力の全方位的な向上を実現しています。任意の長さの中英バイリンガル入力に対応し、指定された範囲内で任意の解像度の画像を生成することが可能です。"
+  },
   "cohere-command-r": {
     "description": "Command Rは、RAGとツール使用をターゲットにしたスケーラブルな生成モデルで、企業向けの生産規模のAIを実現します。"
   },
@@ -1496,6 +1499,12 @@
   "hunyuan-vision": {
     "description": "混元の最新のマルチモーダルモデルで、画像とテキストの入力をサポートし、テキストコンテンツを生成します。"
   },
+  "imagen-4.0-generate-preview-06-06": {
+    "description": "Imagen 第4世代テキストから画像へのモデルシリーズ"
+  },
+  "imagen-4.0-ultra-generate-preview-06-06": {
+    "description": "Imagen 第4世代テキストから画像へのモデルシリーズ ウルトラバージョン"
+  },
   "imagen4/preview": {
     "description": "Google の最高品質の画像生成モデル"
   },
@@ -1915,6 +1924,9 @@
   },
   "moonshotai/Kimi-Dev-72B": {
     "description": "Kimi-Dev-72B はオープンソースの大規模コードモデルであり、大規模な強化学習によって最適化されており、堅牢で直接本番投入可能なパッチを出力できます。このモデルは SWE-bench Verified で 60.4% の新記録を達成し、欠陥修正やコードレビューなどの自動化ソフトウェア工学タスクにおけるオープンソースモデルの記録を更新しました。"
+  },
+  "moonshotai/kimi-k2-instruct": {
+    "description": "kimi-k2 は、強力なコードおよびエージェント機能を備えたMoEアーキテクチャの基盤モデルで、総パラメータ数は1兆、活性化パラメータは320億です。一般的な知識推論、プログラミング、数学、エージェントなどの主要なベンチマーク性能テストにおいて、K2モデルは他の主流のオープンソースモデルを上回る性能を示しています。"
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8BはNous Hermes 2のアップグレード版で、最新の内部開発データセットを含んでいます。"
@@ -2416,6 +2428,9 @@
   },
   "v0-1.5-md": {
     "description": "v0-1.5-md モデルは、日常的なタスクやユーザーインターフェース（UI）生成に適しています"
+  },
+  "wanx2.1-t2i-turbo": {
+    "description": "アリババクラウドのTongyiが提供するテキストから画像生成モデル"
   },
   "whisper-1": {
     "description": "汎用音声認識モデルで、多言語の音声認識、音声翻訳、言語識別をサポートします。"

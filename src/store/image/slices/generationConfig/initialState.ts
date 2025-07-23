@@ -1,11 +1,11 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-import { gptImage1ParamsSchema } from '@/config/paramsSchemas/openai/gpt-image-1';
+import { gptImage1ParamsSchema } from '@/config/aiModels/openai';
 import { ModelProvider } from '@/libs/model-runtime/types/type';
 import {
   ModelParamsSchema,
   RuntimeImageGenParams,
   extractDefaultValues,
-} from '@/libs/standard-parameters/meta-schema';
+} from '@/libs/standard-parameters/index';
 
 export const DEFAULT_AI_IMAGE_PROVIDER = ModelProvider.OpenAI;
 export const DEFAULT_AI_IMAGE_MODEL = 'gpt-image-1';

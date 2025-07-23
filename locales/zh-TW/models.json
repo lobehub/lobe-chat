@@ -656,6 +656,9 @@
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B 是一款為指令遵循、對話和編程設計的模型。"
   },
+  "cogview-4": {
+    "description": "CogView-4 是智譜首個支援生成漢字的開源文生圖模型，在語義理解、圖像生成質量、中英文字生成能力等方面全面提升，支援任意長度的中英雙語輸入，能夠生成在給定範圍內的任意解析度圖像。"
+  },
   "cohere-command-r": {
     "description": "Command R是一個可擴展的生成模型，針對RAG和工具使用，旨在為企業提供生產級AI。"
   },
@@ -1496,6 +1499,12 @@
   "hunyuan-vision": {
     "description": "混元最新多模態模型，支持圖片 + 文本輸入生成文本內容。"
   },
+  "imagen-4.0-generate-preview-06-06": {
+    "description": "Imagen 第四代文字轉圖像模型系列"
+  },
+  "imagen-4.0-ultra-generate-preview-06-06": {
+    "description": "Imagen 第四代文字轉圖像模型系列 超級版"
+  },
   "imagen4/preview": {
     "description": "Google 最高品質的圖像生成模型"
   },
@@ -1915,6 +1924,9 @@
   },
   "moonshotai/Kimi-Dev-72B": {
     "description": "Kimi-Dev-72B 是一款開源程式碼大型模型，經過大規模強化學習優化，能輸出穩健、可直接投產的補丁。該模型在 SWE-bench Verified 上取得 60.4 % 的新高分，刷新了開源模型在缺陷修復、程式碼審查等自動化軟體工程任務上的紀錄。"
+  },
+  "moonshotai/kimi-k2-instruct": {
+    "description": "kimi-k2 是一款具備超強程式碼與代理能力的 MoE 架構基礎模型，總參數量達 1T，啟用參數 32B。在通用知識推理、程式設計、數學、代理等主要類別的基準效能測試中，K2 模型的表現超越其他主流開源模型。"
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B 是 Nous Hermes 2 的升級版本，包含最新的內部開發的數據集。"
@@ -2416,6 +2428,9 @@
   },
   "v0-1.5-md": {
     "description": "v0-1.5-md 模型適用於日常任務和使用者介面（UI）生成"
+  },
+  "wanx2.1-t2i-turbo": {
+    "description": "阿里雲通義旗下的文生圖模型"
   },
   "whisper-1": {
     "description": "通用語音識別模型，支持多語言語音識別、語音翻譯和語言識別。"
