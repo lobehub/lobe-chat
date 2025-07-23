@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { gptImage1ParamsSchema } from '@/config/paramsSchemas/openai/gpt-image-1';
+import { gptImage1ParamsSchema } from '@/config/aiModels/openai';
 import { ModelParamsSchema, RuntimeImageGenParams } from '@/libs/standard-parameters/index';
 import { ImageStore } from '@/store/image';
 import { initialState } from '@/store/image/initialState';

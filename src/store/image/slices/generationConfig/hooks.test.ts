@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { fluxSchnellParamsSchema } from '@/config/paramsSchemas/fal/flux-schnell';
+import { fluxSchnellParamsSchema } from '@/config/aiModels/fal';
 import { ModelParamsSchema, RuntimeImageGenParams } from '@/libs/standard-parameters/index';
 import { useImageStore } from '@/store/image';
 import { AIImageModelCard } from '@/types/aiModel';

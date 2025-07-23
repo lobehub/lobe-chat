@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
-import { gptImage1ParamsSchema } from '@/config/paramsSchemas/openai/gpt-image-1';
+import { gptImage1ParamsSchema } from '@/config/aiModels/openai';
 import { ModelProvider } from '@/libs/model-runtime/types/type';
 import {
   ModelParamsSchema,
