@@ -259,7 +259,20 @@ describe('LobeGoogleAI', () => {
             temperature: 0,
           });
         } catch (e) {
-          expect(e).toEqual({ errorType: invalidErrorType, error: { message }, provider });
+          expect(e).toEqual({
+            errorType: bizErrorType,
+            error: [
+              {
+                '@type': 'type.googleapis.com/google.rpc.ErrorInfo',
+                'domain': 'googleapis.com',
+                'metadata': {
+                  service: 'generativelanguage.googleapis.com',
+                },
+                'reason': 'API_KEY_INVALID',
+              },
+            ],
+            provider,
+          });
         }
       });
 
