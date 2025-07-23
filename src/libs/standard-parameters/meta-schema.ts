@@ -51,6 +51,7 @@ export const ModelParamsMetaSchema = z.object({
       type: z.literal('array').optional(),
     })
     .optional(),
+
   /**
    * Prompt 是唯一一个每个模型都有的参数
    */
@@ -59,6 +60,7 @@ export const ModelParamsMetaSchema = z.object({
     description: z.string().optional(),
     type: z.literal('string').optional(),
   }),
+
   seed: z
     .object({
       default: z.number().nullable().default(null),
@@ -68,6 +70,7 @@ export const ModelParamsMetaSchema = z.object({
       type: z.tuple([z.literal('number'), z.literal('null')]).optional(),
     })
     .optional(),
+
   size: z
     .object({
       default: z.string(),
@@ -76,6 +79,7 @@ export const ModelParamsMetaSchema = z.object({
       type: z.literal('string').optional(),
     })
     .optional(),
+
   steps: z
     .object({
       default: z.number(),
@@ -86,6 +90,7 @@ export const ModelParamsMetaSchema = z.object({
       type: z.literal('number').optional(),
     })
     .optional(),
+
   width: z
     .object({
       default: z.number(),
