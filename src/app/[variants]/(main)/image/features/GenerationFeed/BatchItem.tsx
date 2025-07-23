@@ -14,12 +14,13 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import InvalidAPIKey from '@/components/InvalidAPIKey';
-import { RuntimeImageGenParams } from '@/libs/standard-parameters/meta-schema';
+import { RuntimeImageGenParams } from '@/libs/standard-parameters/index';
 import { useImageStore } from '@/store/image';
 import { AsyncTaskErrorType } from '@/types/asyncTask';
 import { GenerationBatch } from '@/types/generation';
 
 import { GenerationItem } from './GenerationItem';
+import { ReferenceImages } from './ReferenceImages';
 
 const useStyles = createStyles(({ cx, css, token }) => ({
   batchActions: cx(
@@ -132,8 +133,15 @@ export const GenerationBatchItem = memo<GenerationBatchItemProps>(({ batch }) =>
     );
   }
 
-  return (
-    <Block className={styles.container} gap={8} variant="borderless">
+  // Calculate total number of reference images
+  const referenceImageCount =
+    (batch.config?.imageUrl ? 1 : 0) + (batch.config?.imageUrls?.length || 0);
+
+  const isSingleImageLayout = referenceImageCount === 1;
+
+  // Content for prompt and metadata
+  const promptAndMetadata = (
+    <>
       <Markdown variant={'chat'}>{batch.prompt}</Markdown>
       <Flexbox gap={4} horizontal justify="space-between" style={{ marginBottom: 10 }}>
         <Flexbox gap={4} horizontal>
@@ -146,6 +154,34 @@ export const GenerationBatchItem = memo<GenerationBatchItemProps>(({ batch }) =>
           <Tag>{t('generation.metadata.count', { count: batch.generations.length })}</Tag>
         </Flexbox>
       </Flexbox>
+    </>
+  );
+
+  return (
+    <Block className={styles.container} gap={8} variant="borderless">
+      {isSingleImageLayout ? (
+        // Single image layout: horizontal arrangement with vertical centering
+        <Flexbox align="center" gap={16} horizontal>
+          <ReferenceImages
+            imageUrl={batch.config?.imageUrl}
+            imageUrls={batch.config?.imageUrls}
+            layout="single"
+          />
+          <Flexbox flex={1} gap={8}>
+            {promptAndMetadata}
+          </Flexbox>
+        </Flexbox>
+      ) : (
+        // Multiple images or no images: vertical arrangement
+        <>
+          <ReferenceImages
+            imageUrl={batch.config?.imageUrl}
+            imageUrls={batch.config?.imageUrls}
+            layout="multiple"
+          />
+          {promptAndMetadata}
+        </>
+      )}
       <Grid maxItemWidth={200} ref={imageGridRef} rows={batch.generations.length || 4}>
         {batch.generations.map((generation) => (
           <GenerationItem

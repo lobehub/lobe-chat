@@ -5,7 +5,7 @@ import OpenAI, { ClientOptions } from 'openai';
 import { Stream } from 'openai/streaming';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
-import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/meta-schema';
+import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/index';
 import type { ChatModelCard } from '@/types/llm';
 import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
 

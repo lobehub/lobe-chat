@@ -6,7 +6,7 @@ import {
   RuntimeImageGenParamsKeys,
   RuntimeImageGenParamsValue,
   extractDefaultValues,
-} from '@/libs/standard-parameters/meta-schema';
+} from '@/libs/standard-parameters/index';
 import { aiProviderSelectors, getAiInfraStoreState } from '@/store/aiInfra';
 import { AIImageModelCard } from '@/types/aiModel';
 
