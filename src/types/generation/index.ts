@@ -39,7 +39,6 @@ export type GenerationAsset = ImageGenerationAsset;
 
 export interface GenerationConfig {
   prompt: string;
-  imageUrl?: string | null;
   imageUrls?: string[];
   width?: number;
   height?: number;

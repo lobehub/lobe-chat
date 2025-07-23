@@ -796,7 +796,6 @@ describe('chatMessage actions', () => {
             messageId: assistantMessageId,
           }),
         ).toEqual({
-          content: '',
           isFunctionCall: false,
         });
       });

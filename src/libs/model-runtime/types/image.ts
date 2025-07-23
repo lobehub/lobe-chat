@@ -1,4 +1,4 @@
-import { RuntimeImageGenParams } from '@/libs/standard-parameters/index';
+import { RuntimeImageGenParams } from '@/libs/standard-parameters/meta-schema';
 
 export type CreateImagePayload = {
   model: string;

@@ -5,7 +5,7 @@ import OpenAI, { ClientOptions } from 'openai';
 import { Stream } from 'openai/streaming';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
-import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/index';
+import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/meta-schema';
 import type { ChatModelCard } from '@/types/llm';
 import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
 
@@ -52,10 +52,6 @@ export const CHAT_MODELS_BLOCK_LIST = [
 ];
 
 type ConstructorOptions<T extends Record<string, any> = any> = ClientOptions & T;
-export type CreateImageOptions = Omit<ClientOptions, 'apiKey'> & {
-  apiKey: string;
-  provider: string;
-};
 
 export interface CustomClientOptions<T extends Record<string, any> = any> {
   createChatCompletionStream?: (
@@ -93,10 +89,7 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
     noUserId?: boolean;
   };
   constructorOptions?: ConstructorOptions<T>;
-  createImage?: (
-    payload: CreateImagePayload,
-    options: CreateImageOptions,
-  ) => Promise<CreateImageResponse>;
+  createImage?: (payload: CreateImagePayload & { client: OpenAI }) => Promise<CreateImageResponse>;
   customClient?: CustomClientOptions<T>;
   debug?: {
     chatCompletion: () => boolean;
@@ -185,7 +178,6 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
   models,
   customClient,
   responses,
-  createImage: customCreateImage,
 }: OpenAICompatibleFactoryOptions<T>) => {
   const ErrorType = {
     bizError: errorType?.bizError || AgentRuntimeErrorType.ProviderBizError,
@@ -325,16 +317,6 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     }
 
     async createImage(payload: CreateImagePayload) {
-      // If custom createImage implementation is provided, use it
-      if (customCreateImage) {
-        return customCreateImage(payload, {
-          ...this._options,
-          apiKey: this._options.apiKey!,
-          provider,
-        });
-      }
-
-      // Otherwise use default OpenAI compatible implementation
       const { model, params } = payload;
       const log = createDebug(`lobe-image:model-runtime`);
 

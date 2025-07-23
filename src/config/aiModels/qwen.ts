@@ -1,4 +1,4 @@
-import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
+import { AIChatModelCard } from '@/types/aiModel';
 
 // https://help.aliyun.com/zh/model-studio/models?spm=a2c4g.11186623
 
@@ -956,26 +956,6 @@ const qwenChatModels: AIChatModelCard[] = [
   },
 ];
 
-const qwenImageModels: AIImageModelCard[] = [
-  {
-    description: '阿里云通义旗下的文生图模型',
-    displayName: 'Wanxiang T2I Turbo',
-    enabled: true,
-    id: 'wanx2.1-t2i-turbo',
-    organization: 'Qwen',
-    parameters: {
-      height: { default: 1024, max: 1440, min: 512, step: 1 },
-      prompt: {
-        default: '',
-      },
-      seed: { default: null },
-      width: { default: 1024, max: 1440, min: 512, step: 1 },
-    },
-    releasedAt: '2025-01-08',
-    type: 'image',
-  },
-];
-
-export const allModels = [...qwenChatModels, ...qwenImageModels];
+export const allModels = [...qwenChatModels];
 
 export default allModels;

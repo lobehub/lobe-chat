@@ -62,9 +62,6 @@ const Header = memo(() => {
               size={DESKTOP_HEADER_ICON_SIZE}
               style={{ flex: 'none' }}
               title={t('newAgent')}
-              tooltipProps={{
-                placement: 'bottom',
-              }}
             />
           )}
         </Flexbox>

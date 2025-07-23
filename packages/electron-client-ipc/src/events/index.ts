@@ -1,6 +1,5 @@
 import { LocalFilesDispatchEvents } from './localFile';
 import { MenuDispatchEvents } from './menu';
-import { NotificationDispatchEvents } from './notification';
 import { RemoteServerBroadcastEvents, RemoteServerDispatchEvents } from './remoteServer';
 import { DesktopSettingsDispatchEvents } from './settings';
 import { ShortcutDispatchEvents } from './shortcut';
@@ -24,8 +23,7 @@ export interface ClientDispatchEvents
     RemoteServerDispatchEvents,
     UploadFilesDispatchEvents,
     TrayDispatchEvents,
-    DesktopSettingsDispatchEvents,
-    NotificationDispatchEvents {}
+    DesktopSettingsDispatchEvents {}
 
 export type ClientDispatchEventKey = keyof ClientDispatchEvents;
 

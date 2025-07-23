@@ -1,13 +1,9 @@
-import { ModelParamsSchema } from '@/libs/standard-parameters';
 import { AIImageModelCard } from '@/types/aiModel';
 
-export const fluxSchnellParamsSchema: ModelParamsSchema = {
-  height: { default: 1024, max: 1536, min: 512, step: 1 },
-  prompt: { default: '' },
-  seed: { default: null },
-  steps: { default: 4, max: 12, min: 1 },
-  width: { default: 1024, max: 1536, min: 512, step: 1 },
-};
+import { fluxKontextDevParamsSchema } from '../paramsSchemas/fal/flux-kontext-dev';
+import { fluxProKontextParamsSchema } from '../paramsSchemas/fal/flux-pro-kontext';
+import { fluxSchnellParamsSchema } from '../paramsSchemas/fal/flux-schnell';
+import { imagen4ParamsSchema } from '../paramsSchemas/fal/imagen4';
 
 const falImageModels: AIImageModelCard[] = [
   {
@@ -15,12 +11,7 @@ const falImageModels: AIImageModelCard[] = [
     displayName: 'FLUX.1 Kontext Dev',
     enabled: true,
     id: 'flux-kontext/dev',
-    parameters: {
-      imageUrl: { default: null },
-      prompt: { default: '' },
-      seed: { default: null },
-      steps: { default: 28, max: 50, min: 10 },
-    },
+    parameters: fluxKontextDevParamsSchema,
     releasedAt: '2025-06-28',
     type: 'image',
   },
@@ -30,15 +21,7 @@ const falImageModels: AIImageModelCard[] = [
     displayName: 'FLUX.1 Kontext [pro]',
     enabled: true,
     id: 'flux-pro/kontext',
-    parameters: {
-      aspectRatio: {
-        default: '1:1',
-        enum: ['21:9', '16:9', '4:3', '3:2', '1:1', '2:3', '3:4', '9:16', '9:21'],
-      },
-      imageUrl: { default: null },
-      prompt: { default: '' },
-      seed: { default: null },
-    },
+    parameters: fluxProKontextParamsSchema,
     releasedAt: '2025-05-01',
     type: 'image',
   },
@@ -58,14 +41,7 @@ const falImageModels: AIImageModelCard[] = [
     enabled: true,
     id: 'imagen4/preview',
     organization: 'Deepmind',
-    parameters: {
-      aspectRatio: {
-        default: '1:1',
-        enum: ['1:1', '16:9', '9:16', '3:4', '4:3'],
-      },
-      prompt: { default: '' },
-      seed: { default: null },
-    },
+    parameters: imagen4ParamsSchema,
     releasedAt: '2025-05-21',
     type: 'image',
   },

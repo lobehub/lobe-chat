@@ -72,7 +72,7 @@ beforeEach(async () => {
 
 describe('AgentRuntime', () => {
   describe('should initialize with various providers', () => {
-    const providers = Object.values(ModelProvider).filter((i) => i !== 'lobehub');
+    const providers = Object.values(ModelProvider);
 
     const specialProviderIds = [ModelProvider.VertexAI, ...specialProviders.map((p) => p.id)];
 

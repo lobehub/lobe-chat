@@ -2,7 +2,6 @@ import { ModelProvider } from '../types';
 import { processMultiProviderModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 import { QwenAIStream } from '../utils/streams';
-import { createQwenImage } from './createImage';
 
 export interface QwenModelCard {
   id: string;
@@ -74,7 +73,6 @@ export const LobeQwenAI = createOpenAICompatibleRuntime({
     },
     handleStream: QwenAIStream,
   },
-  createImage: createQwenImage,
   debug: {
     chatCompletion: () => process.env.DEBUG_QWEN_CHAT_COMPLETION === '1',
   },

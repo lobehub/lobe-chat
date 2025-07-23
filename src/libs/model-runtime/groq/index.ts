@@ -21,7 +21,8 @@ export const LobeGroq = createOpenAICompatibleRuntime({
       const { temperature, ...restPayload } = payload;
       return {
         ...restPayload,
-        stream: payload.stream ?? true,
+        // disable stream for tools due to groq dont support
+        stream: !payload.tools,
 
         temperature: temperature <= 0 ? undefined : temperature,
       } as any;

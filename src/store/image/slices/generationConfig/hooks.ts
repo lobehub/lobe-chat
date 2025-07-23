@@ -1,7 +1,10 @@
 import { useCallback, useMemo } from 'react';
 
 import { DEFAULT_ASPECT_RATIO, PRESET_ASPECT_RATIOS } from '@/const/image';
-import { RuntimeImageGenParams, RuntimeImageGenParamsKeys } from '@/libs/standard-parameters/index';
+import {
+  RuntimeImageGenParams,
+  RuntimeImageGenParamsKeys,
+} from '@/libs/standard-parameters/meta-schema';
 
 import { useImageStore } from '../../store';
 import { imageGenerationConfigSelectors } from './selectors';

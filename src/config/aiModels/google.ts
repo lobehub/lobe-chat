@@ -1,5 +1,4 @@
-import { ModelParamsSchema } from '@/libs/standard-parameters';
-import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
+import { AIChatModelCard } from '@/types/aiModel';
 
 const googleChatModels: AIChatModelCard[] = [
   {
@@ -497,38 +496,6 @@ const googleChatModels: AIChatModelCard[] = [
   },
 ];
 
-// Common parameters for Imagen models
-const imagenBaseParameters: ModelParamsSchema = {
-  aspectRatio: {
-    default: '1:1',
-    enum: ['1:1', '16:9', '9:16', '3:4', '4:3'],
-  },
-  prompt: { default: '' },
-};
-
-const googleImageModels: AIImageModelCard[] = [
-  {
-    description: 'Imagen 4th generation text-to-image model series',
-    displayName: 'Imagen4 Preview 06-06',
-    enabled: true,
-    id: 'imagen-4.0-generate-preview-06-06',
-    organization: 'Deepmind',
-    parameters: imagenBaseParameters,
-    releasedAt: '2024-06-06',
-    type: 'image',
-  },
-  {
-    description: 'Imagen 4th generation text-to-image model series Ultra version',
-    displayName: 'Imagen4 Ultra Preview 06-06',
-    enabled: true,
-    id: 'imagen-4.0-ultra-generate-preview-06-06',
-    organization: 'Deepmind',
-    parameters: imagenBaseParameters,
-    releasedAt: '2024-06-06',
-    type: 'image',
-  },
-];
-
-export const allModels = [...googleChatModels, ...googleImageModels];
+export const allModels = [...googleChatModels];
 
 export default allModels;
