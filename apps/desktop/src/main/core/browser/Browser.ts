@@ -8,11 +8,19 @@ import {
 } from 'electron';
 import { join } from 'node:path';
 
-import { preloadDir, resourcesDir } from '@/const/dir';
+import { buildDir, preloadDir, resourcesDir } from '@/const/dir';
+import { isDev, isWindows } from '@/const/env';
+import {
+  BACKGROUND_DARK,
+  BACKGROUND_LIGHT,
+  SYMBOL_COLOR_DARK,
+  SYMBOL_COLOR_LIGHT,
+  THEME_CHANGE_DELAY,
+  TITLE_BAR_HEIGHT,
+} from '@/const/theme';
 import { createLogger } from '@/utils/logger';
 
 import type { App } from '../App';
-import { ThemeManager } from './ThemeManager';
 
 // Create logger
 const logger = createLogger('core:Browser');
@@ -32,7 +40,7 @@ export interface BrowserWindowOpts extends BrowserWindowConstructorOptions {
 export default class Browser {
   private app: App;
   private _browserWindow?: BrowserWindow;
-  private themeManager?: ThemeManager;
+  private themeListenerSetup = false;
   private stopInterceptHandler;
   identifier: string;
   options: BrowserWindowOpts;
@@ -61,6 +69,90 @@ export default class Browser {
 
     // Initialization
     this.retrieveOrInitialize();
+  }
+
+  /**
+   * Get platform-specific theme configuration for window creation
+   */
+  private getPlatformThemeConfig(isDarkMode?: boolean): Record<string, any> {
+    const darkMode = isDarkMode ?? nativeTheme.shouldUseDarkColors;
+
+    if (isWindows) {
+      return this.getWindowsThemeConfig(darkMode);
+    }
+
+    return {};
+  }
+
+  /**
+   * Get Windows-specific theme configuration
+   */
+  private getWindowsThemeConfig(isDarkMode: boolean) {
+    return {
+      backgroundColor: isDarkMode ? BACKGROUND_DARK : BACKGROUND_LIGHT,
+      icon: isDev ? join(buildDir, 'icon-dev.ico') : undefined,
+      titleBarOverlay: {
+        color: isDarkMode ? BACKGROUND_DARK : BACKGROUND_LIGHT,
+        height: TITLE_BAR_HEIGHT,
+        symbolColor: isDarkMode ? SYMBOL_COLOR_DARK : SYMBOL_COLOR_LIGHT,
+      },
+      titleBarStyle: 'hidden' as const,
+    };
+  }
+
+  private setupThemeListener(): void {
+    if (this.themeListenerSetup) return;
+
+    nativeTheme.on('updated', this.handleThemeChange);
+    this.themeListenerSetup = true;
+  }
+
+  private handleThemeChange = (): void => {
+    logger.debug(`[${this.identifier}] System theme changed, reapplying visual effects.`);
+    setTimeout(() => {
+      this.applyVisualEffects();
+    }, THEME_CHANGE_DELAY);
+  };
+
+  private applyVisualEffects(): void {
+    if (!this._browserWindow || this._browserWindow.isDestroyed()) return;
+
+    logger.debug(`[${this.identifier}] Applying visual effects for platform`);
+    const isDarkMode = this.isDarkMode;
+
+    try {
+      if (isWindows) {
+        this.applyWindowsVisualEffects(isDarkMode);
+      }
+
+      logger.debug(
+        `[${this.identifier}] Visual effects applied successfully (dark mode: ${isDarkMode})`,
+      );
+    } catch (error) {
+      logger.error(`[${this.identifier}] Failed to apply visual effects:`, error);
+    }
+  }
+
+  private applyWindowsVisualEffects(isDarkMode: boolean): void {
+    const config = this.getWindowsThemeConfig(isDarkMode);
+
+    this._browserWindow.setBackgroundColor(config.backgroundColor);
+    this._browserWindow.setTitleBarOverlay(config.titleBarOverlay);
+  }
+
+  private cleanupThemeListener(): void {
+    if (this.themeListenerSetup) {
+      // Note: nativeTheme listeners are global, consider using a centralized theme manager
+      // for multiple windows to avoid duplicate listeners
+      this.themeListenerSetup = false;
+    }
+  }
+
+  private get isDarkMode() {
+    const themeMode = this.app.storeManager.get('themeMode');
+    if (themeMode === 'auto') return nativeTheme.shouldUseDarkColors;
+
+    return themeMode === 'dark';
   }
 
   loadUrl = async (path: string) => {
@@ -180,8 +272,7 @@ export default class Browser {
   destroy() {
     logger.debug(`Destroying window instance: ${this.identifier}`);
     this.stopInterceptHandler?.();
-    this.themeManager?.cleanup();
-    this.themeManager = undefined;
+    this.cleanupThemeListener();
     this._browserWindow = undefined;
   }
 
@@ -230,18 +321,18 @@ export default class Browser {
         webviewTag: true,
       },
       width: savedState?.width || width,
-      ...ThemeManager.getPlatformThemeConfig(isDarkMode),
+      ...this.getPlatformThemeConfig(isDarkMode),
     });
 
     this._browserWindow = browserWindow;
     logger.debug(`[${this.identifier}] BrowserWindow instance created.`);
 
-    // Initialize theme manager for this window to handle theme changes
-    this.themeManager = new ThemeManager(browserWindow, this.identifier);
-    logger.debug(`[${this.identifier}] ThemeManager initialized and theme listener setup.`);
+    // Initialize theme listener for this window to handle theme changes
+    this.setupThemeListener();
+    logger.debug(`[${this.identifier}] Theme listener setup and applying initial visual effects.`);
 
     // Apply initial visual effects
-    this.themeManager.applyVisualEffects();
+    this.applyVisualEffects();
 
     logger.debug(`[${this.identifier}] Setting up nextInterceptor.`);
     this.stopInterceptHandler = this.app.nextInterceptor({
@@ -297,7 +388,7 @@ export default class Browser {
         }
         // Need to clean up intercept handler and theme manager
         this.stopInterceptHandler?.();
-        this.themeManager?.cleanup();
+        this.cleanupThemeListener();
         return;
       }
 
@@ -333,7 +424,7 @@ export default class Browser {
         }
         // Need to clean up intercept handler and theme manager
         this.stopInterceptHandler?.();
-        this.themeManager?.cleanup();
+        this.cleanupThemeListener();
       }
     });
 
@@ -379,6 +470,6 @@ export default class Browser {
    */
   reapplyVisualEffects(): void {
     logger.debug(`[${this.identifier}] Manually reapplying visual effects via Browser.`);
-    this.themeManager?.reapplyVisualEffects();
+    this.applyVisualEffects();
   }
 }
