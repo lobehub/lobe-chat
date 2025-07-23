@@ -1,20 +1,20 @@
-# 添加新的 AI 图像模型
+# Adding New AI Image Models
 
-## 兼容 openai 请求格式的模型
+## OpenAI Compatible Models
 
-指的是可以使用 openai SDK 进行请求，并且请求参数和和返回值和 dall-e 以及 gpt-image-x 系列一致。
+These models can be requested using the OpenAI SDK, with request parameters and return values consistent with DALL-E and GPT-Image-X series.
 
-以智谱的 CogView-4 为例，它是一个兼容 openai 请求格式的模型，可以按照以下步骤添加：
+Taking Zhipu's CogView-4 as an example, which is an OpenAI-compatible model, you can add it by following these steps:
 
-1. 在对应的 ai models 文件 `src/config/aiModels/zhipu.ts` 中，添加模型配置，例如：
+1. Add the model configuration in the corresponding AI models file `src/config/aiModels/zhipu.ts`:
 
 ```ts
 const zhipuImageModels: AIImageModelCard[] = [
-  // 添加模型配置
+  // Add model configuration
   // https://bigmodel.cn/dev/howuse/image-generation-model/cogview-4
   {
     description:
-      'CogView-4 是智谱首个支持生成汉字的开源文生图模型，在语义理解、图像生成质量、中英文字生成能力等方面全面提升，支持任意长度的中英双语输入，能够生成在给定范围内的任意分辨率图像。',
+      'CogView-4 is the first open-source text-to-image model from Zhipu that supports Chinese character generation, with comprehensive improvements in semantic understanding, image generation quality, and Chinese-English text generation capabilities.',
     displayName: 'CogView-4',
     enabled: true,
     id: 'cogview-4',
@@ -33,4 +33,96 @@ const zhipuImageModels: AIImageModelCard[] = [
 ];
 ```
 
-2. 执行下 `npx i18n` 命令，更新模型描述的翻译文件
+2. Run `npx i18n` command to update the translation files for model descriptions
+
+## Non-OpenAI Compatible Models
+
+For image generation models that are not compatible with OpenAI format, you need to implement a custom `createImage` method. There are two main implementation approaches:
+
+### Method 1: Using OpenAI Compatible Factory (Recommended)
+
+If your Provider uses `openaiCompatibleFactory`, you can pass in a custom `createImage` function (reference [PR #8534](https://github.com/lobehub/lobe-chat/pull/8534)):
+
+1. **Create a standalone image generation function**:
+
+```ts
+// src/libs/model-runtime/provider-name/createImage.ts
+export const createProviderImage = async (
+  payload: ImageGenerationPayload,
+  options: any,
+): Promise<ImageGenerationResponse> => {
+  const { model, prompt, ...params } = payload;
+
+  // Call Provider's native API
+  const result = await callProviderAPI({
+    model,
+    prompt,
+    // Convert parameter format
+    custom_param: params.width,
+    // ...
+  });
+
+  // Return unified format
+  return {
+    created: Date.now(),
+    data: [{ url: result.imageUrl }],
+  };
+};
+```
+
+2. **Pass it during Provider initialization**:
+
+```ts
+// src/libs/model-runtime/provider-name/index.ts
+export const LobeProviderAI = openaiCompatibleFactory({
+  constructorOptions: {
+    // ... other configurations
+  },
+  createImage: createProviderImage, // Pass custom implementation
+  provider: ModelProvider.ProviderName,
+});
+```
+
+### Method 2: Direct Implementation in Provider Class
+
+If your Provider has an independent class implementation, you can directly add the `createImage` method in the class (reference [PR #8503](https://github.com/lobehub/lobe-chat/pull/8503)):
+
+```ts
+// src/libs/model-runtime/provider-name/index.ts
+export class LobeProviderAI {
+  async createImage(
+    payload: ImageGenerationPayload,
+    options?: ChatStreamCallbacks,
+  ): Promise<ImageGenerationResponse> {
+    const { model, prompt, ...params } = payload;
+
+    // Call native API and handle response
+    const result = await this.client.generateImage({
+      model,
+      prompt,
+      // Parameter conversion
+    });
+
+    return {
+      created: Date.now(),
+      data: [{ url: result.url }],
+    };
+  }
+}
+```
+
+## Important Notes
+
+1. **Supported Parameters**: Image generation currently only supports standard parameters defined in `src/libs/standard-parameters/index.ts`:
+   - `prompt` (required): Text prompt for image generation
+   - `aspectRatio`: Aspect ratio (e.g., "16:9", "1:1")
+   - `width` / `height`: Image dimensions
+   - `size`: Preset dimensions (e.g., "1024x1024")
+   - `seed`: Random seed
+   - `steps`: Generation steps
+   - `cfg`: Guidance scale
+   - For other parameters, please check the source file
+
+2. **Testing Requirements**: Add comprehensive unit tests for custom implementations, ensuring coverage of success scenarios and various error cases
+
+3. **Error Handling**: Use `AgentRuntimeError` consistently for error wrapping to maintain error message consistency
