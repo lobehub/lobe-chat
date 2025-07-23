@@ -2429,6 +2429,9 @@
   "v0-1.5-md": {
     "description": "El modelo v0-1.5-md es adecuado para tareas cotidianas y generación de interfaces de usuario (UI)"
   },
+  "wanx2.1-t2i-turbo": {
+    "description": "Modelo de generación de imágenes de texto a imagen de Tongyi de Alibaba Cloud"
+  },
   "whisper-1": {
     "description": "Modelo universal de reconocimiento de voz que soporta reconocimiento de voz multilingüe, traducción de voz y detección de idioma."
   },

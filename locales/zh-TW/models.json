@@ -2429,6 +2429,9 @@
   "v0-1.5-md": {
     "description": "v0-1.5-md 模型適用於日常任務和使用者介面（UI）生成"
   },
+  "wanx2.1-t2i-turbo": {
+    "description": "阿里雲通義旗下的文生圖模型"
+  },
   "whisper-1": {
     "description": "通用語音識別模型，支持多語言語音識別、語音翻譯和語言識別。"
   },
