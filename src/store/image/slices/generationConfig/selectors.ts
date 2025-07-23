@@ -1,4 +1,4 @@
-import { RuntimeImageGenParamsKeys } from '@/libs/standard-parameters/meta-schema';
+import { RuntimeImageGenParamsKeys } from '@/libs/standard-parameters/index';
 
 import { GenerationConfigState } from './initialState';
 
