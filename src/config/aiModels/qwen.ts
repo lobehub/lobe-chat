@@ -26,6 +26,25 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      '基于Qwen3的非思考模式开源模型，创作能力与模型安全性均有提升。',
+    displayName: 'Qwen3 235B A22B Instruct 2507',
+    id: 'qwen3-235b-a22b-instruct-2507',
+    maxOutput: 32_768,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 8,
+    },
+    releasedAt: '2025-07-22',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
@@ -479,6 +498,24 @@ const qwenChatModels: AIChatModelCard[] = [
   },
   {
     config: {
+      deploymentName: 'qwen3-coder-plus',
+    },
+    contextWindowTokens: 1_048_576,
+    description: '通义千问代码模型。最新的 Qwen3-Coder-Plus 系列模型是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程，代码能力卓越的同时兼具通用能力。',
+    displayName: 'Qwen3 Coder Plus',
+    id: 'qwen3-coder-plus',
+    maxOutput: 65_536,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 6, // tokens 32K ~ 128K
+      output: 24,
+    },
+    releasedAt: '2025-07-23',
+    type: 'chat',
+  },
+  {
+    config: {
       deploymentName: 'qwen-coder-turbo-latest',
     },
     contextWindowTokens: 131_072,
@@ -729,6 +766,21 @@ const qwenChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 4,
       output: 12,
+    },
+    releasedAt: '2025-07-23',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 262_144,
+    description: '通义千问代码模型开源版。最新的 qwen3-coder-480b-a35b-instruct 是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程、代码能力卓越的同时兼具通用能力。',
+    displayName: 'Qwen3 Coder 480B A35B',
+    id: 'qwen3-coder-480b-a35b-instruct',
+    maxOutput: 65_536,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 9, // tokens 32K ~ 128K
+      output: 36,
     },
     type: 'chat',
   },
