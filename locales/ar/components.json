@@ -68,6 +68,23 @@
   "GoBack": {
     "back": "عودة"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "انقر لتغيير الصورة",
+      "dropMultipleFiles": "لا يدعم تحميل ملفات متعددة في آن واحد، سيتم استخدام الملف الأول فقط"
+    },
+    "placeholder": {
+      "primary": "إضافة صورة",
+      "secondary": "انقر أو اسحب للإرفاق"
+    }
+  },
+  "KeyValueEditor": {
+    "addButton": "إضافة صف جديد",
+    "deleteTooltip": "حذف",
+    "duplicateKeyError": "يجب أن يكون اسم المفتاح فريدًا",
+    "keyPlaceholder": "المفتاح",
+    "valuePlaceholder": "القيمة"
+  },
   "MaxTokenSlider": {
     "unlimited": "غير محدود"
   },
@@ -90,6 +107,25 @@
     "goToSettings": "اذهب إلى الإعدادات",
     "provider": "مزود",
     "title": "نموذج"
+  },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "انقر أو اسحب لإضافة المزيد"
+    },
+    "modal": {
+      "complete": "اكتمل",
+      "newFileIndicator": "جديد",
+      "selectImageToPreview": "يرجى اختيار صورة للمعاينة",
+      "title": "إدارة الصور ({{count}})",
+      "upload": "تحميل الصور"
+    },
+    "placeholder": {
+      "primary": "انقر أو اسحب لتحميل الصور",
+      "secondary": "يدعم اختيار عدة صور"
+    },
+    "progress": {
+      "uploadingWithCount": "تم تحميل {{completed}} من أصل {{total}}"
+    }
   },
   "OllamaSetupGuide": {
     "action": {

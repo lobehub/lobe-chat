@@ -1,4 +1,46 @@
 {
+  "notification": {
+    "finishChatGeneration": "Tin nhắn AI đã được tạo xong"
+  },
+  "proxy": {
+    "auth": "Cần xác thực",
+    "authDesc": "Nếu máy chủ proxy yêu cầu tên đăng nhập và mật khẩu",
+    "authSettings": "Cài đặt xác thực",
+    "basicSettings": "Cài đặt proxy",
+    "basicSettingsDesc": "Cấu hình các tham số kết nối của máy chủ proxy",
+    "bypass": "Địa chỉ không sử dụng proxy",
+    "connectionTest": "Kiểm tra kết nối",
+    "enable": "Bật proxy",
+    "enableDesc": "Khi bật, truy cập mạng sẽ thông qua máy chủ proxy",
+    "password": "Mật khẩu",
+    "password_placeholder": "Vui lòng nhập mật khẩu",
+    "port": "Cổng",
+    "resetButton": "Đặt lại",
+    "saveButton": "Lưu",
+    "saveFailed": "Lưu thất bại: {{error}}",
+    "saveSuccess": "Lưu cài đặt proxy thành công",
+    "server": "Địa chỉ máy chủ",
+    "testButton": "Kiểm tra kết nối",
+    "testDescription": "Sử dụng cấu hình proxy hiện tại để kiểm tra kết nối, xác nhận cấu hình hoạt động bình thường",
+    "testFailed": "Kết nối thất bại",
+    "testSuccessWithTime": "Kiểm tra kết nối thành công, thời gian: {{time}} ms",
+    "testUrl": "Địa chỉ kiểm tra",
+    "testUrlPlaceholder": "Vui lòng nhập URL cần kiểm tra",
+    "testing": "Đang kiểm tra kết nối...",
+    "type": "Loại proxy",
+    "unsavedChanges": "Bạn có các thay đổi chưa được lưu",
+    "username": "Tên người dùng",
+    "username_placeholder": "Vui lòng nhập tên người dùng",
+    "validation": {
+      "passwordRequired": "Mật khẩu là bắt buộc khi bật xác thực",
+      "portInvalid": "Cổng phải là số từ 1 đến 65535",
+      "portRequired": "Cổng là bắt buộc khi bật proxy",
+      "serverInvalid": "Vui lòng nhập địa chỉ máy chủ hợp lệ (IP hoặc tên miền)",
+      "serverRequired": "Địa chỉ máy chủ là bắt buộc khi bật proxy",
+      "typeRequired": "Loại proxy là bắt buộc khi bật proxy",
+      "usernameRequired": "Tên đăng nhập là bắt buộc khi bật xác thực"
+    }
+  },
   "remoteServer": {
     "authError": "Xác thực thất bại: {{error}}",
     "authPending": "Vui lòng hoàn tất xác thực trong trình duyệt",
@@ -62,7 +104,10 @@
   "waitingOAuth": {
     "cancel": "Hủy",
     "description": "Trình duyệt đã mở trang ủy quyền, vui lòng hoàn tất ủy quyền trong trình duyệt",
+    "error": "Ủy quyền thất bại: {{error}}",
+    "errorTitle": "Kết nối ủy quyền thất bại",
     "helpText": "Nếu trình duyệt không tự động mở, vui lòng nhấp vào hủy và thử lại",
+    "retry": "Thử lại",
     "title": "Đang chờ kết nối ủy quyền"
   }
 }

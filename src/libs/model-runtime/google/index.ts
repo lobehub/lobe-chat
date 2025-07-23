@@ -21,6 +21,7 @@ import {
   OpenAIChatMessage,
   UserMessageContentPart,
 } from '../types';
+import { CreateImagePayload, CreateImageResponse } from '../types/image';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
@@ -240,6 +241,52 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const { errorType, error } = this.parseErrorMessage(err.message);
 
       throw AgentRuntimeError.chat({ error, errorType, provider: this.provider });
+    }
+  }
+
+  /**
+   * Generate images using Google AI Imagen API
+   * @see https://ai.google.dev/gemini-api/docs/image-generation#imagen
+   */
+  async createImage(payload: CreateImagePayload): Promise<CreateImageResponse> {
+    try {
+      const { model, params } = payload;
+
+      const response = await this.client.models.generateImages({
+        config: {
+          aspectRatio: params.aspectRatio,
+          numberOfImages: 1,
+        },
+        model,
+        prompt: params.prompt,
+      });
+
+      if (!response.generatedImages || response.generatedImages.length === 0) {
+        throw new Error('No images generated');
+      }
+
+      const generatedImage = response.generatedImages[0];
+      if (!generatedImage.image || !generatedImage.image.imageBytes) {
+        throw new Error('Invalid image data');
+      }
+
+      const { imageBytes } = generatedImage.image;
+      // 1. official doc use png as example
+      // 2. no responseType param support like openai now.
+      // I think we can just hard code png now
+      const imageUrl = `data:image/png;base64,${imageBytes}`;
+
+      return { imageUrl };
+    } catch (error) {
+      const err = error as Error;
+      console.error('Google AI image generation error:', err);
+
+      const { errorType, error: parsedError } = this.parseErrorMessage(err.message);
+      throw AgentRuntimeError.createImage({
+        error: parsedError,
+        errorType,
+        provider: this.provider,
+      });
     }
   }
 

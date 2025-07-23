@@ -108,6 +108,22 @@ const chatStreamable = async function* <T>(stream: AsyncIterable<T>) {
 };
 
 const ERROR_CHUNK_PREFIX = '%FIRST_CHUNK_ERROR%: ';
+
+export function readableFromAsyncIterable<T>(iterable: AsyncIterable<T>) {
+  let it = iterable[Symbol.asyncIterator]();
+  return new ReadableStream<T>({
+    async cancel(reason) {
+      await it.return?.(reason);
+    },
+
+    async pull(controller) {
+      const { done, value } = await it.next();
+      if (done) controller.close();
+      else controller.enqueue(value);
+    },
+  });
+}
+
 // make the response to the streamable format
 export const convertIterableToStream = <T>(stream: AsyncIterable<T>) => {
   const iterable = chatStreamable(stream);

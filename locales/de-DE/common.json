@@ -183,6 +183,7 @@
   },
   "fullscreen": "Vollbildmodus",
   "historyRange": "Verlaufsbereich",
+  "import": "Importieren",
   "importData": "Daten importieren",
   "importModal": {
     "error": {
@@ -324,6 +325,7 @@
     }
   },
   "tab": {
+    "aiImage": "KI-Gemälde",
     "chat": "Chat",
     "discover": "Entdecken",
     "files": "Dateien",

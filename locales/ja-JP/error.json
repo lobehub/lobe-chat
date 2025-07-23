@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "サービスリクエストが失敗しました。設定を確認するか、もう一度お試しください"
   },
+  "testConnectionFailed": "接続テストに失敗しました：{{error}}",
   "tts": {
     "responseError": "サービスリクエストが失敗しました。設定を確認するか、もう一度お試しください"
   },
@@ -130,6 +131,7 @@
     "addProxyUrl": "OpenAI 代理アドレスを追加する（オプション）",
     "apiKey": {
       "description": "{{name}} APIキーを入力してセッションを開始します。",
+      "imageGenerationDescription": "{{name}} の API キーを入力すると、生成を開始できます",
       "title": "カスタム{{name}} APIキーを使用"
     },
     "closeMessage": "ヒントを閉じる",

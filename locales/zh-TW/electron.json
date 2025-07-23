@@ -1,4 +1,46 @@
 {
+  "notification": {
+    "finishChatGeneration": "AI 訊息已生成完畢"
+  },
+  "proxy": {
+    "auth": "需要認證",
+    "authDesc": "如果代理伺服器需要使用者名稱和密碼",
+    "authSettings": "認證設定",
+    "basicSettings": "代理設定",
+    "basicSettingsDesc": "配置代理伺服器的連線參數",
+    "bypass": "不使用代理的地址",
+    "connectionTest": "連線測試",
+    "enable": "啟用代理",
+    "enableDesc": "開啟後將透過代理伺服器存取網路",
+    "password": "密碼",
+    "password_placeholder": "請輸入密碼",
+    "port": "埠號",
+    "resetButton": "重設",
+    "saveButton": "儲存",
+    "saveFailed": "儲存失敗：{{error}}",
+    "saveSuccess": "代理設定儲存成功",
+    "server": "伺服器地址",
+    "testButton": "測試連接",
+    "testDescription": "使用目前代理設定測試連線，驗證設定是否正常運作",
+    "testFailed": "連線失敗",
+    "testSuccessWithTime": "測試連線成功，耗時 {{time}} 毫秒",
+    "testUrl": "測試地址",
+    "testUrlPlaceholder": "請輸入要測試的 URL",
+    "testing": "正在測試連接...",
+    "type": "代理類型",
+    "unsavedChanges": "您有未儲存的變更",
+    "username": "使用者名稱",
+    "username_placeholder": "請輸入使用者名稱",
+    "validation": {
+      "passwordRequired": "啟用認證時密碼為必填項",
+      "portInvalid": "連接埠必須是 1 到 65535 之間的數字",
+      "portRequired": "啟用代理時連接埠為必填項",
+      "serverInvalid": "請輸入有效的伺服器位址（IP 或網域名稱）",
+      "serverRequired": "啟用代理時伺服器位址為必填項",
+      "typeRequired": "啟用代理時代理類型為必填項",
+      "usernameRequired": "啟用認證時使用者名稱為必填項"
+    }
+  },
   "remoteServer": {
     "authError": "授權失敗: {{error}}",
     "authPending": "請在瀏覽器中完成授權",
@@ -62,7 +104,10 @@
   "waitingOAuth": {
     "cancel": "取消",
     "description": "瀏覽器已打開授權頁面，請在瀏覽器中完成授權",
+    "error": "授權失敗: {{error}}",
+    "errorTitle": "授權連接失敗",
     "helpText": "如果瀏覽器沒有自動打開，請點擊取消後重新嘗試",
+    "retry": "重試",
     "title": "等待授權連接"
   }
 }

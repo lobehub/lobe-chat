@@ -68,6 +68,23 @@
   "GoBack": {
     "back": "Назад"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "Кликнете, за да смените изображението",
+      "dropMultipleFiles": "Не се поддържа качване на няколко файла едновременно, ще бъде използван само първият файл"
+    },
+    "placeholder": {
+      "primary": "Добавяне на изображение",
+      "secondary": "Кликнете или плъзнете, за да качите"
+    }
+  },
+  "KeyValueEditor": {
+    "addButton": "Добавяне на ред",
+    "deleteTooltip": "Изтриване",
+    "duplicateKeyError": "Името на ключа трябва да е уникално",
+    "keyPlaceholder": "Ключ",
+    "valuePlaceholder": "Стойност"
+  },
   "MaxTokenSlider": {
     "unlimited": "Неограничено"
   },
@@ -90,6 +107,25 @@
     "goToSettings": "Отидете в настройките",
     "provider": "Доставчик",
     "title": "Модел"
+  },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "Кликнете или плъзнете, за да качите още"
+    },
+    "modal": {
+      "complete": "Готово",
+      "newFileIndicator": "Нов",
+      "selectImageToPreview": "Моля, изберете изображение за преглед",
+      "title": "Управление на изображенията ({{count}})",
+      "upload": "Качване на изображение"
+    },
+    "placeholder": {
+      "primary": "Кликнете или плъзнете, за да качите изображение",
+      "secondary": "Поддържа избор на няколко изображения"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} качени"
+    }
   },
   "OllamaSetupGuide": {
     "action": {

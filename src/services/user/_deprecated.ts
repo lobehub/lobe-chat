@@ -1,4 +1,4 @@
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 
 import { MessageModel } from '@/database/_deprecated/models/message';
 import { SessionModel } from '@/database/_deprecated/models/session';
@@ -47,7 +47,7 @@ export class ClientService implements IUserService {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  updateUserSettings = async (patch: DeepPartial<UserSettings>, _?: any) => {
+  updateUserSettings = async (patch: PartialDeep<UserSettings>, _?: any) => {
     return UserModel.updateSettings(patch);
   };
 

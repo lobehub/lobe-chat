@@ -84,7 +84,7 @@ export const createAiModelSlice: StateCreator<
           },
           enabled: model.enabled || false,
           source: 'remote',
-          type: 'chat',
+          type: model.type || 'chat',
         })),
       );
 

@@ -7,8 +7,9 @@ import {
   Input,
   Modal,
   Tag,
+  Text,
 } from '@lobehub/ui';
-import { Skeleton, Typography } from 'antd';
+import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { startCase } from 'lodash-es';
 import { LinkIcon, Share2Icon } from 'lucide-react';
@@ -103,9 +104,9 @@ const ShareButton = memo<ShareButtonProps>(({ meta, ...rest }) => {
           </Center>
           <Center padding={12} width={'100%'}>
             <h3 style={{ fontWeight: 'bold', textAlign: 'center' }}>{meta.title}</h3>
-            <Typography.Paragraph style={{ color: theme.colorTextSecondary, textAlign: 'center' }}>
+            <Text as={'p'} style={{ color: theme.colorTextSecondary, textAlign: 'center' }}>
               {meta.desc}
-            </Typography.Paragraph>
+            </Text>
             {meta.hashtags && (
               <Flexbox align={'center'} gap={4} horizontal justify={'center'} wrap={'wrap'}>
                 {meta.hashtags.map((tag, index) => (

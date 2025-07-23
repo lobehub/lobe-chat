@@ -1,12 +1,12 @@
 import debug from 'debug';
-import Provider, { Configuration, KoaContextWithOIDC } from 'oidc-provider';
+import Provider, { Configuration, KoaContextWithOIDC, errors } from 'oidc-provider';
 import urlJoin from 'url-join';
 
 import { serverDBEnv } from '@/config/db';
 import { UserModel } from '@/database/models/user';
 import { LobeChatDatabase } from '@/database/type';
 import { appEnv } from '@/envs/app';
-import { oidcEnv } from '@/envs/oidc';
+import { getJWKS } from '@/libs/oidc-provider/jwt';
 
 import { DrizzleAdapter } from './adapter';
 import { defaultClaims, defaultClients, defaultScopes } from './config';
@@ -14,40 +14,7 @@ import { createInteractionPolicy } from './interaction-policy';
 
 const logProvider = debug('lobe-oidc:provider'); // <--- 添加 provider 日志实例
 
-/**
- * 从环境变量中获取 JWKS
- * 该 JWKS 是一个包含 RS256 私钥的 JSON 对象
- */
-const getJWKS = (): object => {
-  try {
-    const jwksString = oidcEnv.OIDC_JWKS_KEY;
-
-    if (!jwksString) {
-      throw new Error(
-        'OIDC_JWKS_KEY 环境变量是必需的。请使用 scripts/generate-oidc-jwk.mjs 生成 JWKS。',
-      );
-    }
-
-    // 尝试解析 JWKS JSON 字符串
-    const jwks = JSON.parse(jwksString);
-
-    // 检查 JWKS 格式是否正确
-    if (!jwks.keys || !Array.isArray(jwks.keys) || jwks.keys.length === 0) {
-      throw new Error('JWKS 格式无效: 缺少或为空的 keys 数组');
-    }
-
-    // 检查是否有 RS256 算法的密钥
-    const hasRS256Key = jwks.keys.some((key: any) => key.alg === 'RS256' && key.kty === 'RSA');
-    if (!hasRS256Key) {
-      throw new Error('JWKS 中没有找到 RS256 算法的 RSA 密钥');
-    }
-
-    return jwks;
-  } catch (error) {
-    console.error('解析 JWKS 失败:', error);
-    throw new Error(`OIDC_JWKS_KEY 解析错误: ${(error as Error).message}`);
-  }
-};
+export const API_AUDIENCE = 'urn:lobehub:chat'; // <-- 把这里换成你自己的 API 标识符
 
 /**
  * 获取 Cookie 密钥，使用 KEY_VAULTS_SECRET
@@ -123,7 +90,24 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
       devInteractions: { enabled: false },
       deviceFlow: { enabled: false },
       introspection: { enabled: true },
-      resourceIndicators: { enabled: false },
+      resourceIndicators: {
+        defaultResource: () => API_AUDIENCE,
+        enabled: true,
+        getResourceServerInfo: (ctx, resourceIndicator) => {
+          logProvider('getResourceServerInfo called with indicator: %s', resourceIndicator); // <-- 添加这行日志
+          if (resourceIndicator === API_AUDIENCE) {
+            logProvider('Indicator matches API_AUDIENCE, returning JWT config.'); // <-- 添加这行日志
+            return {
+              accessTokenFormat: 'jwt',
+              audience: API_AUDIENCE,
+              scope: ctx.oidc.client?.scope || 'read',
+            };
+          }
+
+          logProvider('Indicator does not match API_AUDIENCE, throwing InvalidTarget.'); // <-- 添加这行日志
+          throw new errors.InvalidTarget();
+        },
+      },
       revocation: { enabled: true },
       rpInitiatedLogout: { enabled: true },
       userinfo: { enabled: true },
@@ -256,7 +240,7 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
 
     // 8. 令牌有效期
     ttl: {
-      AccessToken: 7 * 24 * 60 * 60, // 1 week temporarily,need to revert 1 hour with better implement
+      AccessToken: 25 * 3600, // 25 hour
       AuthorizationCode: 600, // 10 minutes
       DeviceCode: 600, // 10 minutes (if enabled)
 

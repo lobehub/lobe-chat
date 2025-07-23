@@ -6,8 +6,19 @@ import { passwordProcedure } from '@/libs/trpc/edge';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { mcpService } from '@/server/services/mcp';
 
+const StreamableHTTPAuthSchema = z
+  .object({
+    // Bearer Token
+    accessToken: z.string().optional(),
+    token: z.string().optional(),
+    type: z.enum(['none', 'bearer', 'oauth2']), // OAuth2 Access Token
+  })
+  .optional();
+
 // Define Zod schemas for MCP Client parameters
 const httpParamsSchema = z.object({
+  auth: StreamableHTTPAuthSchema,
+  headers: z.record(z.string()).optional(),
   name: z.string().min(1),
   type: z.literal('http'),
   url: z.string().url(),
@@ -38,6 +49,8 @@ export const mcpRouter = router({
   getStreamableMcpServerManifest: mcpProcedure
     .input(
       z.object({
+        auth: StreamableHTTPAuthSchema,
+        headers: z.record(z.string()).optional(),
         identifier: z.string(),
         metadata: z
           .object({
@@ -53,6 +66,8 @@ export const mcpRouter = router({
         input.identifier,
         input.url,
         input.metadata,
+        input.auth,
+        input.headers,
       );
     }),
   /* eslint-disable sort-keys-fix/sort-keys-fix */
@@ -66,6 +81,28 @@ export const mcpRouter = router({
 
       // Pass the validated MCPClientParams to the service
       return await mcpService.listTools(input);
+    }),
+
+  // listResources now accepts MCPClientParams directly
+  listResources: mcpProcedure
+    .input(mcpClientParamsSchema) // Use the unified schema
+    .query(async ({ input }) => {
+      // Stdio check can be done here or rely on the service/client layer
+      checkStdioEnvironment(input);
+
+      // Pass the validated MCPClientParams to the service
+      return await mcpService.listResources(input);
+    }),
+
+  // listPrompts now accepts MCPClientParams directly
+  listPrompts: mcpProcedure
+    .input(mcpClientParamsSchema) // Use the unified schema
+    .query(async ({ input }) => {
+      // Stdio check can be done here or rely on the service/client layer
+      checkStdioEnvironment(input);
+
+      // Pass the validated MCPClientParams to the service
+      return await mcpService.listPrompts(input);
     }),
 
   // callTool now accepts MCPClientParams, toolName, and args

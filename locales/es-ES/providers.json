@@ -29,6 +29,9 @@
   "deepseek": {
     "description": "DeepSeek es una empresa centrada en la investigación y aplicación de tecnologías de inteligencia artificial, cuyo modelo más reciente, DeepSeek-V2.5, combina capacidades de diálogo general y procesamiento de código, logrando mejoras significativas en alineación con preferencias humanas, tareas de escritura y seguimiento de instrucciones."
   },
+  "fal": {
+    "description": "Plataforma de medios generativos orientada a desarrolladores"
+  },
   "fireworksai": {
     "description": "Fireworks AI es un proveedor líder de servicios de modelos de lenguaje avanzados, enfocado en la llamada de funciones y el procesamiento multimodal. Su modelo más reciente, Firefunction V2, basado en Llama-3, está optimizado para llamadas de funciones, diálogos y seguimiento de instrucciones. El modelo de lenguaje visual FireLLaVA-13B admite entradas mixtas de imágenes y texto. Otros modelos notables incluyen la serie Llama y la serie Mixtral, que ofrecen un soporte eficiente para el seguimiento y generación de instrucciones multilingües."
   },

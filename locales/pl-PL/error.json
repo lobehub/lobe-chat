@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "Błąd żądania usługi. Proszę sprawdź konfigurację i spróbuj ponownie"
   },
+  "testConnectionFailed": "Test połączenia nie powiódł się: {{error}}",
   "tts": {
     "responseError": "Błąd żądania usługi. Proszę sprawdź konfigurację i spróbuj ponownie"
   },
@@ -130,6 +131,7 @@
     "addProxyUrl": "Dodaj adres proxy OpenAI (opcjonalnie)",
     "apiKey": {
       "description": "Wprowadź swój Klucz API {{name}}, aby rozpocząć sesję.",
+      "imageGenerationDescription": "Wprowadź swój klucz API {{name}}, aby rozpocząć generowanie",
       "title": "Użyj niestandardowego Klucza API {{name}}"
     },
     "closeMessage": "Zamknij komunikat",

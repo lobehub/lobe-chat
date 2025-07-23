@@ -28,10 +28,14 @@
     },
     "title": "Autorizzazione per {{clientName}}"
   },
-  "failed": {
-    "backToHome": "Torna alla home",
-    "subTitle": "Hai rifiutato di autorizzare l'app ad accedere al tuo account LobeChat",
-    "title": "Autorizzazione rifiutata"
+  "error": {
+    "backToHome": "Torna alla pagina principale",
+    "desc": "Autorizzazione OAuth fallita, motivo dell'errore: {{reason}}",
+    "reason": {
+      "internal_error": "Errore del server",
+      "invalid_request": "Parametri della richiesta non validi"
+    },
+    "title": "Autorizzazione fallita"
   },
   "handoff": {
     "desc": {
@@ -50,7 +54,7 @@
     "userWelcome": "Bentornato, "
   },
   "success": {
-    "subTitle": "Hai autorizzato con successo l'app ad accedere al tuo account LobeChat, puoi chiudere questa pagina",
+    "subTitle": "Hai autorizzato con successo l'app ad accedere al tuo account, puoi chiudere questa pagina.",
     "title": "Autorizzazione riuscita"
   }
 }

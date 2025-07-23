@@ -1,4 +1,4 @@
-import { createTRPCClient, httpBatchLink } from '@trpc/client';
+import { createTRPCClient, httpLink } from '@trpc/client';
 import superjson from 'superjson';
 import urlJoin from 'url-join';
 
@@ -24,15 +24,17 @@ export const createAsyncServerClient = async (userId: string, payload: JWTPayloa
     headers['x-vercel-protection-bypass'] = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
   }
 
-  return createTRPCClient<AsyncRouter>({
+  const client = createTRPCClient<AsyncRouter>({
     links: [
-      httpBatchLink({
+      httpLink({
         headers,
         transformer: superjson,
         url: urlJoin(appEnv.APP_URL!, '/trpc/async'),
       }),
     ],
   });
+
+  return client;
 };
 
 /**
