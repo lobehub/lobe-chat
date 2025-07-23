@@ -2429,6 +2429,9 @@
   "v0-1.5-md": {
     "description": "Mô hình v0-1.5-md phù hợp cho các nhiệm vụ hàng ngày và tạo giao diện người dùng (UI)"
   },
+  "wanx2.1-t2i-turbo": {
+    "description": "Mô hình tạo hình ảnh từ văn bản thuộc Alibaba Cloud Tongyi"
+  },
   "whisper-1": {
     "description": "Mô hình nhận dạng giọng nói đa năng, hỗ trợ nhận dạng giọng nói đa ngôn ngữ, dịch giọng nói và nhận diện ngôn ngữ."
   },
