@@ -656,6 +656,9 @@
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B 是一款为指令遵循、对话和编程设计的模型。"
   },
+  "cogview-4": {
+    "description": "CogView-4 是智谱首个支持生成汉字的开源文生图模型，在语义理解、图像生成质量、中英文字生成能力等方面全面提升，支持任意长度的中英双语输入，能够生成在给定范围内的任意分辨率图像。"
+  },
   "cohere-command-r": {
     "description": "Command R是一个可扩展的生成模型，旨在针对RAG和工具使用，使企业能够实现生产级AI。"
   },

@@ -2,6 +2,264 @@
 
 # Changelog
 
+### [Version 1.101.2](https://github.com/lobehub/lobe-chat/compare/v1.101.1...v1.101.2)
+
+<sup>Released on **2025-07-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix lobehub provider `/chat` in desktop.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix lobehub provider `/chat` in desktop, closes [#8508](https://github.com/lobehub/lobe-chat/issues/8508) ([c801f9c](https://github.com/lobehub/lobe-chat/commit/c801f9c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.101.1](https://github.com/lobehub/lobe-chat/compare/v1.101.0...v1.101.1)
+
+<sup>Released on **2025-07-19**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Try fix authorization code exchange & pin next-auto to `beta.29`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Try fix authorization code exchange & pin next-auto to `beta.29`, closes [#8496](https://github.com/lobehub/lobe-chat/issues/8496) ([27c4881](https://github.com/lobehub/lobe-chat/commit/27c4881))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.101.0](https://github.com/lobehub/lobe-chat/compare/v1.100.2...v1.101.0)
+
+<sup>Released on **2025-07-19**</sup>
+
+#### ✨ Features
+
+- **misc**: Add zhipu cogview4.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Some ai image bugs.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add zhipu cogview4, closes [#8486](https://github.com/lobehub/lobe-chat/issues/8486) ([0b1557d](https://github.com/lobehub/lobe-chat/commit/0b1557d))
+
+#### What's fixed
+
+- **misc**: Some ai image bugs, closes [#8490](https://github.com/lobehub/lobe-chat/issues/8490) ([5d852be](https://github.com/lobehub/lobe-chat/commit/5d852be))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.100.2](https://github.com/lobehub/lobe-chat/compare/v1.100.1...v1.100.2)
+
+<sup>Released on **2025-07-18**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix webapi proxy with clerk.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix webapi proxy with clerk, closes [#8479](https://github.com/lobehub/lobe-chat/issues/8479) ([7dd65f0](https://github.com/lobehub/lobe-chat/commit/7dd65f0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.100.1](https://github.com/lobehub/lobe-chat/compare/v1.100.0...v1.100.1)
+
+<sup>Released on **2025-07-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Use server env config image models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Use server env config image models, closes [#8478](https://github.com/lobehub/lobe-chat/issues/8478) ([768ee2b](https://github.com/lobehub/lobe-chat/commit/768ee2b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.100.0](https://github.com/lobehub/lobe-chat/compare/v1.99.6...v1.100.0)
+
+<sup>Released on **2025-07-17**</sup>
+
+#### ✨ Features
+
+- **misc**: Refactor desktop oauth and use JWTs token to support remote chat.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Refactor desktop oauth and use JWTs token to support remote chat, closes [#8446](https://github.com/lobehub/lobe-chat/issues/8446) ([054ca5f](https://github.com/lobehub/lobe-chat/commit/054ca5f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.99.6](https://github.com/lobehub/lobe-chat/compare/v1.99.5...v1.99.6)
+
+<sup>Released on **2025-07-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Desktop local db can't upload image.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Desktop local db can't upload image, closes [#8459](https://github.com/lobehub/lobe-chat/issues/8459) ([25bfc80](https://github.com/lobehub/lobe-chat/commit/25bfc80))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.99.5](https://github.com/lobehub/lobe-chat/compare/v1.99.4...v1.99.5)
+
+<sup>Released on **2025-07-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix page error when url is not defined in web search plugin.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix page error when url is not defined in web search plugin, closes [#8441](https://github.com/lobehub/lobe-chat/issues/8441) ([a55b65b](https://github.com/lobehub/lobe-chat/commit/a55b65b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.99.4](https://github.com/lobehub/lobe-chat/compare/v1.99.3...v1.99.4)
+
+<sup>Released on **2025-07-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix apikey issue on server log.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix apikey issue on server log, closes [#8457](https://github.com/lobehub/lobe-chat/issues/8457) ([43be2d1](https://github.com/lobehub/lobe-chat/commit/43be2d1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.99.3](https://github.com/lobehub/lobe-chat/compare/v1.99.2...v1.99.3)
+
+<sup>Released on **2025-07-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Chat model list should not show image model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Chat model list should not show image model, closes [#8448](https://github.com/lobehub/lobe-chat/issues/8448) ([2bb1506](https://github.com/lobehub/lobe-chat/commit/2bb1506))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.99.2](https://github.com/lobehub/lobe-chat/compare/v1.99.1...v1.99.2)
 
 <sup>Released on **2025-07-15**</sup>

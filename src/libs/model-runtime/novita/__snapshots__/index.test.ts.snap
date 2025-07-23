@@ -11,6 +11,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     "id": "meta-llama/llama-3-8b-instruct",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -22,6 +23,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     "id": "meta-llama/llama-3-70b-instruct",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -33,6 +35,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     "id": "meta-llama/llama-3.1-8b-instruct",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -44,6 +47,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     "id": "meta-llama/llama-3.1-70b-instruct",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -55,6 +59,7 @@ exports[`NovitaAI > models > should get models 1`] = `
     "id": "meta-llama/llama-3.1-405b-instruct",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -67,6 +72,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "id": "google/gemma-2-9b-it",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -78,6 +84,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "id": "jondurbin/airoboros-l2-70b",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -89,6 +96,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "id": "nousresearch/hermes-2-pro-llama-3-8b",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -100,6 +108,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "id": "mistralai/mistral-7b-instruct",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -111,6 +120,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "id": "cognitivecomputations/dolphin-mixtral-8x22b",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -122,6 +132,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "id": "sao10k/l3-70b-euryale-v2.1",
     "maxOutput": undefined,
     "reasoning": true,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -133,6 +144,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "id": "sophosympatheia/midnight-rose-70b",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -144,6 +156,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "id": "gryphe/mythomax-l2-13b",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -155,6 +168,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "id": "nousresearch/nous-hermes-llama2-13b",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -166,6 +180,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "id": "Nous-Hermes-2-Mixtral-8x7B-DPO",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -177,6 +192,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "id": "lzlv_70b",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -188,6 +204,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "id": "teknium/openhermes-2.5-mistral-7b",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -199,6 +216,7 @@ Designed for a wide variety of tasks, it empowers developers and researchers to 
     "id": "microsoft/wizardlm-2-8x22b",
     "maxOutput": undefined,
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
 ]

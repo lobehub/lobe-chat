@@ -101,7 +101,10 @@ const electron = {
   waitingOAuth: {
     cancel: '取消',
     description: '浏览器已打开授权页面，请在浏览器中完成授权',
+    error: '授权失败: {{error}}',
+    errorTitle: '授权连接失败',
     helpText: '如果浏览器没有自动打开，请点击取消后重新尝试',
+    retry: '重试',
     title: '等待授权连接',
   },
 };

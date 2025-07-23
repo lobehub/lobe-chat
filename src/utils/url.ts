@@ -123,3 +123,31 @@ export function inferContentTypeFromImageUrl(url: string) {
 
   return mimeType!; // Non-null assertion is safe due to whitelist validation
 }
+
+/**
+ * Check if a URL points to localhost (127.0.0.1)
+ *
+ * This function safely determines if the provided URL's hostname is '127.0.0.1'.
+ * It handles malformed URLs gracefully by returning false instead of throwing errors.
+ *
+ * @param url - The URL string to check
+ * @returns true if the URL's hostname is '127.0.0.1', false otherwise (including for malformed URLs)
+ *
+ * @example
+ * ```typescript
+ * isLocalUrl('http://127.0.0.1:8080/path') // true
+ * isLocalUrl('https://example.com') // false
+ * isLocalUrl('invalid-url') // false (instead of throwing)
+ * isLocalUrl('') // false (instead of throwing)
+ * ```
+ *
+ * check: apps/desktop/src/main/core/StaticFileServerManager.ts
+ */
+export function isLocalUrl(url: string) {
+  try {
+    return new URL(url).hostname === '127.0.0.1';
+  } catch {
+    // Return false for malformed URLs instead of throwing
+    return false;
+  }
+}

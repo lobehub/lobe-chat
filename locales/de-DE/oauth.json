@@ -28,10 +28,14 @@
     },
     "title": "Autorisierung von {{clientName}}"
   },
-  "failed": {
-    "backToHome": "Zurück zur Startseite",
-    "subTitle": "Sie haben die Autorisierung für die Anwendung zum Zugriff auf Ihr LobeChat-Konto abgelehnt",
-    "title": "Autorisierung abgelehnt"
+  "error": {
+    "backToHome": "Zur Startseite zurückkehren",
+    "desc": "OAuth-Autorisierung fehlgeschlagen, Grund: {{reason}}",
+    "reason": {
+      "internal_error": "Serverfehler",
+      "invalid_request": "Ungültige Anfrageparameter"
+    },
+    "title": "Autorisierung fehlgeschlagen"
   },
   "handoff": {
     "desc": {
@@ -50,7 +54,7 @@
     "userWelcome": "Willkommen zurück, "
   },
   "success": {
-    "subTitle": "Sie haben der Anwendung erfolgreich Zugriff auf Ihr LobeChat-Konto gewährt. Sie können diese Seite jetzt schließen.",
+    "subTitle": "Sie haben der Anwendung erfolgreich Zugriff auf Ihr Konto gewährt. Sie können diese Seite jetzt schließen.",
     "title": "Autorisierung erfolgreich"
   }
 }
