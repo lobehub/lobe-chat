@@ -1,4 +1,7 @@
 {
+  "notification": {
+    "finishChatGeneration": "KI-Nachricht wurde vollständig generiert"
+  },
   "proxy": {
     "auth": "Authentifizierung erforderlich",
     "authDesc": "Wenn der Proxy-Server Benutzername und Passwort benötigt",

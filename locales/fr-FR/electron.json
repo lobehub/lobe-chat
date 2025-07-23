@@ -1,4 +1,7 @@
 {
+  "notification": {
+    "finishChatGeneration": "Le message IA a été généré"
+  },
   "proxy": {
     "auth": "Authentification requise",
     "authDesc": "Si le serveur proxy nécessite un nom d'utilisateur et un mot de passe",

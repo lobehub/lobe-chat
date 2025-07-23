@@ -34,25 +34,7 @@ afterEach(() => {
 
 describe('LobeGroqAI Temperature Tests', () => {
   describe('handlePayload option', () => {
-    it('should set stream to false when payload contains tools', async () => {
-      const mockCreateMethod = vi
-        .spyOn(instance['client'].chat.completions, 'create')
-        .mockResolvedValue({
-          id: 'chatcmpl-8xDx5AETP8mESQN7UB30GxTN2H1SO',
-          object: 'chat.completion',
-          created: 1709125675,
-          model: 'mistralai/mistral-7b-instruct:free',
-          system_fingerprint: 'fp_86156a94a0',
-          choices: [
-            {
-              index: 0,
-              message: { role: 'assistant', content: 'hello', refusal: null },
-              logprobs: null,
-              finish_reason: 'stop',
-            },
-          ],
-        });
-
+    it('should not set stream to false when payload contains tools', async () => {
       await instance.chat({
         messages: [{ content: 'Hello', role: 'user' }],
         model: 'mistralai/mistral-7b-instruct:free',
@@ -65,8 +47,8 @@ describe('LobeGroqAI Temperature Tests', () => {
         ],
       });
 
-      expect(mockCreateMethod).toHaveBeenCalledWith(
-        expect.objectContaining({ stream: false }),
+      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+        expect.objectContaining({ stream: true }),
         expect.anything(),
       );
     });

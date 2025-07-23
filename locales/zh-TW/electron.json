@@ -1,4 +1,7 @@
 {
+  "notification": {
+    "finishChatGeneration": "AI 訊息已生成完畢"
+  },
   "proxy": {
     "auth": "需要認證",
     "authDesc": "如果代理伺服器需要使用者名稱和密碼",
