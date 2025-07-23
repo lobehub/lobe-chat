@@ -2429,6 +2429,9 @@
   "v0-1.5-md": {
     "description": "Le modèle v0-1.5-md convient aux tâches quotidiennes et à la génération d'interfaces utilisateur (UI)"
   },
+  "wanx2.1-t2i-turbo": {
+    "description": "Modèle de génération d'images par texte de Tongyi d'Aliyun"
+  },
   "whisper-1": {
     "description": "Modèle universel de reconnaissance vocale, prenant en charge la reconnaissance vocale multilingue, la traduction vocale et la reconnaissance de langue."
   },

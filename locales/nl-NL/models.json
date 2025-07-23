@@ -2429,6 +2429,9 @@
   "v0-1.5-md": {
     "description": "Het v0-1.5-md model is geschikt voor dagelijkse taken en het genereren van gebruikersinterfaces (UI)"
   },
+  "wanx2.1-t2i-turbo": {
+    "description": "Tekst-naar-beeldmodel van Alibaba Cloud Tongyi"
+  },
   "whisper-1": {
     "description": "Algemeen spraakherkenningsmodel, ondersteunt meertalige spraakherkenning, spraakvertaling en taalherkenning."
   },
