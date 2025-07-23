@@ -102,10 +102,8 @@ describe('AiProviderModel', () => {
 
       const userGroups = await aiProviderModel.query();
       expect(userGroups).toHaveLength(2);
-
-      expect(userGroups.map((group) => group.id)).toEqual(
-        expect.arrayContaining(['aihubmix', 'aihubmix-2']),
-      );
+      expect(userGroups[0].id).toBe('aihubmix-2');
+      expect(userGroups[1].id).toBe('aihubmix');
     });
   });
 

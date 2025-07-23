@@ -39,7 +39,7 @@ export default defineConfig({
     globals: true,
     server: {
       deps: {
-        inline: ['vi-canvas-mock'],
+        inline: ['vitest-canvas-mock'],
       },
     },
     setupFiles: join(__dirname, './tests/setup.ts'),

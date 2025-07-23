@@ -99,10 +99,8 @@ describe('KnowledgeBaseModel', () => {
 
       const userGroups = await knowledgeBaseModel.query();
       expect(userGroups).toHaveLength(2);
-
-      expect(userGroups.map((group) => group.name)).toEqual(
-        expect.arrayContaining(['Test Group 1', 'Test Group 2']),
-      );
+      expect(userGroups[0].name).toBe('Test Group 2');
+      expect(userGroups[1].name).toBe('Test Group 1');
     });
   });
 
