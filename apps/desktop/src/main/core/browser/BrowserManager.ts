@@ -194,4 +194,14 @@ export class BrowserManager {
   getIdentifierByWebContents(webContents: WebContents): AppBrowsersIdentifiers | null {
     return this.webContentsMap.get(webContents) || null;
   }
+
+  /**
+   * Handle application theme mode changes and reapply visual effects to all windows
+   */
+  handleAppThemeChange(): void {
+    logger.debug('Handling app theme change for all browser windows');
+    this.browsers.forEach((browser) => {
+      browser.handleAppThemeChange();
+    });
+  }
 }

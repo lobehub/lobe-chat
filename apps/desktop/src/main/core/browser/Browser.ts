@@ -114,6 +114,16 @@ export default class Browser {
     }, THEME_CHANGE_DELAY);
   };
 
+  /**
+   * Handle application theme mode change (called from BrowserManager)
+   */
+  handleAppThemeChange = (): void => {
+    logger.debug(`[${this.identifier}] App theme mode changed, reapplying visual effects.`);
+    setTimeout(() => {
+      this.applyVisualEffects();
+    }, THEME_CHANGE_DELAY);
+  };
+
   private applyVisualEffects(): void {
     if (!this._browserWindow || this._browserWindow.isDestroyed()) return;
 
