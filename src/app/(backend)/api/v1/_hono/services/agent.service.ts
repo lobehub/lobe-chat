@@ -283,6 +283,56 @@ export class AgentService extends BaseService {
   }
 
   /**
+   * 根据 Session ID 获取关联的 Agent 详情
+   * @param sessionId Session ID
+   * @returns Agent 详情
+   */
+  async getAgentBySessionId(sessionId: string): ServiceResult<AgentDetailResponse | null> {
+    this.log('info', '根据 Session ID 获取 Agent 详情', { sessionId });
+
+    try {
+      if (!this.userId) {
+        throw this.createAuthError('用户未认证');
+      }
+
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('AGENT_READ', {
+        targetSessionId: sessionId,
+      });
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权访问此会话');
+      }
+
+      // 查找 session 是否存在且属于当前用户
+      const session = await this.db.query.sessions.findFirst({
+        where: and(
+          eq(sessions.id, sessionId),
+          permissionResult.condition?.userId ? eq(sessions.userId, permissionResult.condition.userId) : undefined,
+        ),
+      });
+
+      if (!session) {
+        this.log('warn', 'Session 不存在', { sessionId });
+        return null;
+      }
+
+      // 查找关联的 Agent
+      const agentModel = new AgentModel(this.db, this.userId!);
+      const agent = await agentModel.findBySessionId(sessionId);
+
+      if (!agent || !agent.id) {
+        this.log('warn', 'Session 没有关联的 Agent', { sessionId });
+        return null;
+      }
+
+      return agent as AgentDetailResponse;
+    } catch (error) {
+      this.handleServiceError(error, '根据 Session ID 获取 Agent 详情');
+    }
+  }
+
+  /**
    * 迁移 Agent 的会话到另一个 Agent
    * @param fromAgentId 源 Agent ID
    * @param toAgentId 目标 Agent ID
