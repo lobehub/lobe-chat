@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-23",
+    "version": "1.103.1"
+  },
+  {
+    "children": {
       "features": ["Add Qwen image generation capabilities."]
     },
     "date": "2025-07-22",
