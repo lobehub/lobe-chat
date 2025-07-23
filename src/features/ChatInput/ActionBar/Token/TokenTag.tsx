@@ -15,7 +15,6 @@ import { useChatStore } from '@/store/chat';
 import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
-import { WebBrowsingManifest } from '@/tools/web-browsing';
 
 import ActionPopover from '../components/ActionPopover';
 import TokenProgress from './TokenProgress';
@@ -37,9 +36,12 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
       agentSelectors.currentAgentSystemRole(s),
       agentSelectors.currentAgentModel(s) as string,
       agentSelectors.currentAgentModelProvider(s) as string,
-      // add these two params to enable the component to re-render
+      // add these params to enable the component to re-render
       agentChatConfigSelectors.historyCount(s),
       agentChatConfigSelectors.enableHistoryCount(s),
+      // add search config to enable re-render when search settings change
+      agentChatConfigSelectors.isAgentEnableSearch(s),
+      agentChatConfigSelectors.useModelBuiltinSearch(s),
     ];
   });
 
@@ -54,28 +56,10 @@ const Token = memo<TokenTagProps>(({ total: messageString }) => {
   const canUseTool = useModelSupportToolUse(model, provider);
   const plugins = useAgentStore(agentSelectors.currentAgentPlugins);
 
-  // Check if web-browsing tool was actually called in the conversation history
-  const messages = useChatStore(chatSelectors.activeBaseChats);
-  const hasWebBrowsingToolCall = useMemo(() => {
-    return messages.some((message) => {
-      if (!message.tools || message.tools.length === 0) return false;
-      return message.tools.some((tool) => tool.identifier === WebBrowsingManifest.identifier);
-    });
-  }, [messages]);
-
-  // Include web-browsing tool only if it was actually called in the conversation
-  const pluginsForTokenCalc = useMemo(() => {
-    const pluginIds = [...plugins];
-    if (hasWebBrowsingToolCall) {
-      pluginIds.push(WebBrowsingManifest.identifier);
-    }
-    return pluginIds;
-  }, [plugins, hasWebBrowsingToolCall]);
-
   const toolsString = useToolStore((s) => {
-    const pluginSystemRoles = toolSelectors.enabledSystemRoles(pluginsForTokenCalc)(s);
+    const pluginSystemRoles = toolSelectors.enabledSystemRoles(plugins)(s);
     const schemaNumber = toolSelectors
-      .enabledSchema(pluginsForTokenCalc)(s)
+      .enabledSchema(plugins)(s)
       .map((i) => JSON.stringify(i))
       .join('');
 
