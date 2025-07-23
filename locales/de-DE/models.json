@@ -2429,6 +2429,9 @@
   "v0-1.5-md": {
     "description": "Das Modell v0-1.5-md ist für alltägliche Aufgaben und die Generierung von Benutzeroberflächen (UI) geeignet"
   },
+  "wanx2.1-t2i-turbo": {
+    "description": "Text-zu-Bild-Modell von Aliyun Tongyi"
+  },
   "whisper-1": {
     "description": "Universelles Spracherkennungsmodell, unterstützt mehrsprachige Spracherkennung, Sprachübersetzung und Spracherkennung."
   },

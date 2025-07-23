@@ -2429,6 +2429,9 @@
   "v0-1.5-md": {
     "description": "v0-1.5-md modeli, günlük görevler ve kullanıcı arayüzü (UI) oluşturma için uygundur"
   },
+  "wanx2.1-t2i-turbo": {
+    "description": "Alibaba Cloud Tongyi tarafından geliştirilen metinden görsele model"
+  },
   "whisper-1": {
     "description": "Genel amaçlı konuşma tanıma modeli olup, çok dilli konuşma tanıma, konuşma çevirisi ve dil tanıma destekler."
   },

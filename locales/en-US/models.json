@@ -2429,6 +2429,9 @@
   "v0-1.5-md": {
     "description": "The v0-1.5-md model is suitable for everyday tasks and user interface (UI) generation."
   },
+  "wanx2.1-t2i-turbo": {
+    "description": "Text-to-image model under Alibaba Cloud Tongyi"
+  },
   "whisper-1": {
     "description": "A general-purpose speech recognition model supporting multilingual speech recognition, speech translation, and language identification."
   },
