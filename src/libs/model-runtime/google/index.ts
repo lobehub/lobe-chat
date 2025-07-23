@@ -471,7 +471,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
     // 统一的错误类型判断函数
     const getErrorType = (code: number | null, message: string): ILobeAgentRuntimeErrorType => {
-      if (code === 401 || message.includes('API_KEY_INVALID')) {
+      if (code === 400 && message.includes('API key not valid')) {
         return AgentRuntimeErrorType.InvalidProviderAPIKey;
       } else if (code === 429) {
         return AgentRuntimeErrorType.QuotaLimitReached;
@@ -593,9 +593,6 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         const json: GoogleChatErrors = JSON.parse(jsonString);
         const bizError = json[0];
 
-        if (bizError?.reason === 'API_KEY_INVALID') {
-          return { ...defaultError, errorType: AgentRuntimeErrorType.InvalidProviderAPIKey };
-        }
         return { error: json, errorType: AgentRuntimeErrorType.ProviderBizError };
       } catch {
         // 忽略解析错误
