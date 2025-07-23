@@ -2,7 +2,7 @@
 
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { MouseEventHandler, ReactNode, memo, use, useCallback, useMemo } from 'react';
+import { MouseEventHandler, ReactNode, memo, use, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -16,9 +16,6 @@ import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 import { ChatMessage } from '@/types/message';
 
-import { useChatItemContextMenu } from '../../hooks/useChatItemContextMenu';
-import ContextMenu from './ContextMenu';
-
 import ErrorMessageExtra, { useErrorContent } from '../../Error';
 import { renderMessagesExtra } from '../../Extras';
 import {
@@ -27,9 +24,12 @@ import {
   renderMessages,
   useAvatarsClick,
 } from '../../Messages';
+import { useChatItemContextMenu } from '../../hooks/useChatItemContextMenu';
 import History from '../History';
 import { markdownElements } from '../MarkdownElements';
+import ContextMenu from './ContextMenu';
 import { InPortalThreadContext } from './InPortalThreadContext';
+import ShareMessageModal from './ShareMessageModal';
 import { normalizeThinkTags, processWithArtifact } from './utils';
 
 const rehypePlugins = markdownElements.map((element) => element.rehypePlugin).filter(Boolean);
@@ -72,6 +72,7 @@ const Item = memo<ChatListItemProps>(
   }) => {
     const { t } = useTranslation('common');
     const { styles, cx } = useStyles();
+    const [showShareModal, setShareModal] = useState(false);
 
     const type = useAgentStore(agentChatConfigSelectors.displayMode);
     const item = useChatStore(chatSelectors.getMessageById(id), isEqual);
@@ -117,71 +118,87 @@ const Item = memo<ChatListItemProps>(
     const virtuosoRef = use(VirtuosoContext);
 
     // Context menu functionality
-    const handleContextMenuAction = useCallback(async (action: any) => {
-      switch (action.key) {
-        case 'quote': {
-          if (action.selectedText) {
-            const currentInput = useChatStore.getState().inputMessage;
-            const quotedText = `> ${action.selectedText.replaceAll('\n', '\n> ')}\n\n`;
-            updateInputMessage(currentInput + quotedText);
+    const handleContextMenuAction = useCallback(
+      async (action: any) => {
+        switch (action.key) {
+          case 'quote': {
+            const contentToQuote = action.selectedText || (item ? item.content : '');
+            if (contentToQuote) {
+              const currentInput = useChatStore.getState().inputMessage;
+              const quotedText = `<quote_message>\n${contentToQuote}\n</quote_message>\n\n`;
+              updateInputMessage(quotedText + currentInput);
+            }
+            break;
           }
-          break;
-        }
-        case 'copy': {
-          if (item) {
-            await copyMessage(id, item.content);
+          case 'copy': {
+            if (action.selectedText) {
+              await copyMessage(id, action.selectedText);
+            } else if (item) {
+              await copyMessage(id, item.content);
+            }
+            break;
           }
-          break;
+          case 'edit': {
+            toggleMessageEditing(id, true);
+            virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
+            break;
+          }
+          case 'regenerate': {
+            regenerateMessage(id);
+            // if this message is an error message, we need to delete it
+            if (item?.error) deleteMessage(id);
+            break;
+          }
+          case 'branching': {
+            openThreadCreator(id);
+            break;
+          }
+          case 'delAndRegenerate': {
+            delAndRegenerateMessage(id);
+            break;
+          }
+          case 'share': {
+            setShareModal(true);
+            break;
+          }
+          case 'tts': {
+            ttsMessage(id);
+            break;
+          }
+          case 'del': {
+            deleteMessage(id);
+            break;
+          }
         }
-        case 'edit': {
-          toggleMessageEditing(id, true);
-          virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
-          break;
-        }
-        case 'regenerate': {
-          regenerateMessage(id);
-          // if this message is an error message, we need to delete it
-          if (item?.error) deleteMessage(id);
-          break;
-        }
-        case 'branching': {
-          openThreadCreator(id);
-          break;
-        }
-        case 'delAndRegenerate': {
-          delAndRegenerateMessage(id);
-          break;
-        }
-        case 'export': {
-          // Export functionality - can be implemented later
-          console.log('Export action clicked');
-          break;
-        }
-        case 'share': {
-          // Share functionality - can be implemented later
-          console.log('Share action clicked');
-          break;
-        }
-        case 'tts': {
-          ttsMessage(id);
-          break;
-        }
-        case 'del': {
-          deleteMessage(id);
-          break;
-        }
-      }
 
-      // Handle translation actions
-      if (action.keyPath?.at(-1) === 'translate') {
-        const lang = action.keyPath[0];
-        translateMessage(id, lang);
-      }
-    }, [id, item, updateInputMessage, copyMessage, toggleMessageEditing, regenerateMessage, deleteMessage, openThreadCreator, delAndRegenerateMessage, ttsMessage, translateMessage, virtuosoRef, index]);
+        // Handle translation actions
+        if (action.keyPath?.at(-1) === 'translate') {
+          const lang = action.keyPath[0];
+          translateMessage(id, lang);
+        }
+      },
+      [
+        id,
+        item,
+        updateInputMessage,
+        copyMessage,
+        toggleMessageEditing,
+        regenerateMessage,
+        deleteMessage,
+        openThreadCreator,
+        delAndRegenerateMessage,
+        ttsMessage,
+        translateMessage,
+        virtuosoRef,
+        index,
+      ],
+    );
 
-    const { contextMenuState, containerRef, handleContextMenu, handleMenuClick } = useChatItemContextMenu({
-      onActionClick: handleContextMenuAction,
-    });
+    const { contextMenuState, containerRef, handleContextMenu, handleMenuClick } =
+      useChatItemContextMenu({
+        editing,
+        onActionClick: handleContextMenuAction,
+      });
 
     const renderMessage = useCallback(
       (editableContent: ReactNode) => {
@@ -314,7 +331,7 @@ const Item = memo<ChatListItemProps>(
       item && (
         <InPortalThreadContext.Provider value={inPortalThread}>
           {enableHistoryDivider && <History />}
-          <Flexbox 
+          <Flexbox
             className={cx(styles.message, className, isMessageLoading && styles.loading)}
             onContextMenu={handleContextMenu}
             ref={containerRef}
@@ -346,9 +363,19 @@ const Item = memo<ChatListItemProps>(
           <ContextMenu
             onMenuClick={handleMenuClick}
             position={contextMenuState.position}
+            role={item?.role}
             selectedText={contextMenuState.selectedText}
             visible={contextMenuState.visible}
           />
+          {item && showShareModal && (
+            <ShareMessageModal
+              message={item}
+              onCancel={() => {
+                setShareModal(false);
+              }}
+              open={showShareModal}
+            />
+          )}
         </InPortalThreadContext.Provider>
       )
     );
