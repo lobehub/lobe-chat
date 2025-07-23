@@ -83,6 +83,7 @@ export default class SystemController extends ControllerModule {
 
   @ipcClientEvent('updateThemeMode')
   async updateThemeModeHandler(themeMode: ThemeMode) {
+    this.app.storeManager.set('themeMode', themeMode);
     this.app.browserManager.broadcastToAllWindows('themeChanged', { themeMode });
   }
 

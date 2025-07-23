@@ -13,16 +13,20 @@ import {
 } from '@/const/theme';
 import { createLogger } from '@/utils/logger';
 
+import type { App } from '../App';
+
 const logger = createLogger('core:ThemeManager');
 
 export class ThemeManager {
+  private app: App;
   private window: BrowserWindow;
   private identifier: string;
   private themeListenerSetup = false;
 
-  constructor(window: BrowserWindow, identifier: string) {
-    this.window = window;
-    this.identifier = identifier;
+  constructor(params: { app: App; identifier: string; window: BrowserWindow }) {
+    this.app = params.app;
+    this.window = params.window;
+    this.identifier = params.identifier;
     this.setupThemeListener();
   }
 
@@ -84,7 +88,7 @@ export class ThemeManager {
     if (!this.window || this.window.isDestroyed()) return;
 
     logger.debug(`[${this.identifier}] Applying visual effects for platform`);
-    const isDarkMode = nativeTheme.shouldUseDarkColors;
+    const isDarkMode = this.isDarkMode;
 
     try {
       if (isWindows) {
@@ -120,5 +124,12 @@ export class ThemeManager {
       // for multiple windows to avoid duplicate listeners
       this.themeListenerSetup = false;
     }
+  }
+
+  private get isDarkMode() {
+    const themeMode = this.app.storeManager.get('themeMode');
+    if (themeMode === 'auto') return nativeTheme.shouldUseDarkColors;
+
+    return themeMode === 'dark';
   }
 }
