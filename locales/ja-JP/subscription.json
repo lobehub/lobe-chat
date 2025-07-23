@@ -1,0 +1,24 @@
+{
+  "plans": {
+    "plan": {
+      "enterprise": {
+        "title": "エンタープライズ版"
+      },
+      "free": {
+        "title": "無料版"
+      },
+      "hobby": {
+        "title": "セルフサービス版"
+      },
+      "premium": {
+        "title": "アドバンス版"
+      },
+      "starter": {
+        "title": "基本版"
+      },
+      "ultimate": {
+        "title": "プロ版"
+      }
+    }
+  }
+}

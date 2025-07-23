@@ -1,4 +1,7 @@
 const electron = {
+  notification: {
+    finishChatGeneration: 'AI 消息已生成完毕',
+  },
   proxy: {
     auth: '需要认证',
     authDesc: '如果代理服务器需要用户名和密码',

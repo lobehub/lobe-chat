@@ -5,7 +5,7 @@ import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '@/database/models/asyncTask'
 import { FileModel } from '@/database/models/file';
 import { GenerationModel } from '@/database/models/generation';
 import { AgentRuntimeErrorType } from '@/libs/model-runtime/error';
-import { RuntimeImageGenParams } from '@/libs/standard-parameters/meta-schema';
+import { RuntimeImageGenParams } from '@/libs/standard-parameters/index';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
 import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { GenerationService } from '@/server/services/generation';
