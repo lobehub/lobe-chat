@@ -144,6 +144,77 @@
 
 </div>
 
+## [Version&nbsp;1.101.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.100.1...v1.101.0)
+<sup>Released on **2025-07-23**</sup>
+
+
+#### ♻ Code Refactoring
+
+- **misc**: Add badge and improve document.
+
+
+#### ✨ Features
+
+- **misc**: Add image generation capabilities using Google AI Imagen API, add Qwen image generation capabilities.
+
+
+#### 🐛 Bug Fixes
+
+- **groq**: Enable streaming for tool calls and add Kimi K2 model.
+- **misc**: Remove debug logging from ModelRuntime and async caller.
+
+
+#### 💄 Styles
+
+- **misc**: Add notification for desktop, fix lobehub provider `/chat` in desktop, modal list header sticky style, update i18n, Update tray icon.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Code refactoring
+
+* **misc**: Add badge and improve document, closes [#8528](https://github.com/jaworldwideorg/OneJA-Bot/issues/8528) ([9fb4b0d](https://github.com/jaworldwideorg/OneJA-Bot/commit/9fb4b0d))
+
+
+
+#### What's improved
+
+* **misc**: Add image generation capabilities using Google AI Imagen API, closes [#8503](https://github.com/jaworldwideorg/OneJA-Bot/issues/8503) ([cef8208](https://github.com/jaworldwideorg/OneJA-Bot/commit/cef8208))
+* **misc**: Add Qwen image generation capabilities, closes [#8534](https://github.com/jaworldwideorg/OneJA-Bot/issues/8534) ([7e8e5ef](https://github.com/jaworldwideorg/OneJA-Bot/commit/7e8e5ef))
+
+
+
+#### What's fixed
+
+* **groq**: Enable streaming for tool calls and add Kimi K2 model, closes [#8510](https://github.com/jaworldwideorg/OneJA-Bot/issues/8510) ([60739bc](https://github.com/jaworldwideorg/OneJA-Bot/commit/60739bc))
+* **misc**: Remove debug logging from ModelRuntime and async caller, closes [#8525](https://github.com/jaworldwideorg/OneJA-Bot/issues/8525) ([dd1a635](https://github.com/jaworldwideorg/OneJA-Bot/commit/dd1a635))
+
+
+
+#### Styles
+
+* **misc**: Add notification for desktop, closes [#8523](https://github.com/jaworldwideorg/OneJA-Bot/issues/8523) ([4917d17](https://github.com/jaworldwideorg/OneJA-Bot/commit/4917d17))
+* **misc**: Fix lobehub provider `/chat` in desktop, closes [#8508](https://github.com/jaworldwideorg/OneJA-Bot/issues/8508) ([c801f9c](https://github.com/jaworldwideorg/OneJA-Bot/commit/c801f9c))
+* **misc**: Modal list header sticky style, closes [#8514](https://github.com/jaworldwideorg/OneJA-Bot/issues/8514) ([75273d5](https://github.com/jaworldwideorg/OneJA-Bot/commit/75273d5))
+* **misc**: Update i18n, closes [#8537](https://github.com/jaworldwideorg/OneJA-Bot/issues/8537) ([b16f19b](https://github.com/jaworldwideorg/OneJA-Bot/commit/b16f19b))
+* **misc**: Update tray icon, closes [#8530](https://github.com/jaworldwideorg/OneJA-Bot/issues/8530) ([2696de4](https://github.com/jaworldwideorg/OneJA-Bot/commit/2696de4))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.100.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.100.0...v1.100.1)
 <sup>Released on **2025-07-19**</sup>
 
