@@ -10,6 +10,7 @@ import { requireAnyPermission } from '../middleware/permission-check';
 import {
   AgentIdParamSchema,
   CreateAgentRequestSchema,
+  SessionIdParamSchema,
   UpdateAgentRequestSchema,
 } from '../types/agent.type';
 
@@ -99,6 +100,25 @@ AgentRoutes.get(
   async (c) => {
     const controller = new AgentController();
     return await controller.getAgentById(c);
+  },
+);
+
+/**
+ * 根据 Session ID 获取关联的 Agent 详情
+ * GET /api/v1/agents/session/:sessionId
+ * 需要会话读取权限
+ */
+AgentRoutes.get(
+  '/session/:sessionId',
+  requireAuth,
+  requireAnyPermission(
+    getScopePermissions('AGENT_READ', ['ALL', 'WORKSPACE', 'OWNER']),
+    '您没有权限查看此会话的 Agent 详情',
+  ),
+  zValidator('param', SessionIdParamSchema),
+  async (c) => {
+    const controller = new AgentController();
+    return await controller.getAgentBySessionId(c);
   },
 );
 
