@@ -2,6 +2,50 @@
 
 # Changelog
 
+### [Version&nbsp;1.103.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.103.1...v1.103.2)
+<sup>Released on **2025-07-24**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix chat stream in desktop and update shortcut.
+
+
+#### 💄 Styles
+
+- **misc**: Add cached token count to usage of GoogleAI and VertexAI, fix desktop titlebar style in window, fix sub topic width in md responsive.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **misc**: Fix chat stream in desktop and update shortcut, closes [#8520](https://github.com/jaworldwideorg/OneJA-Bot/issues/8520) ([0192140](https://github.com/jaworldwideorg/OneJA-Bot/commit/0192140))
+
+
+
+#### Styles
+
+* **misc**: Add cached token count to usage of GoogleAI and VertexAI, closes [#8545](https://github.com/jaworldwideorg/OneJA-Bot/issues/8545) ([66dbb24](https://github.com/jaworldwideorg/OneJA-Bot/commit/66dbb24))
+* **misc**: Fix desktop titlebar style in window, closes [#8439](https://github.com/jaworldwideorg/OneJA-Bot/issues/8439) ([fd7662c](https://github.com/jaworldwideorg/OneJA-Bot/commit/fd7662c))
+* **misc**: Fix sub topic width in md responsive, closes [#8443](https://github.com/jaworldwideorg/OneJA-Bot/issues/8443) ([9bae13b](https://github.com/jaworldwideorg/OneJA-Bot/commit/9bae13b))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version&nbsp;1.101.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.100.1...v1.101.0)
 <sup>Released on **2025-07-23**</sup>
 
