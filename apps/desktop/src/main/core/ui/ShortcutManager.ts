@@ -3,7 +3,7 @@ import { globalShortcut } from 'electron';
 import { DEFAULT_SHORTCUTS_CONFIG } from '@/shortcuts';
 import { createLogger } from '@/utils/logger';
 
-import type { App } from './App';
+import type { App } from '../App';
 
 // Create logger
 const logger = createLogger('core:ShortcutManager');

@@ -77,10 +77,8 @@ export default class NotificationCtr extends ControllerModule {
       const notification = new Notification({
         body: params.body,
         // 添加更多配置以确保通知能正常显示
-hasReply: false,
-        
-silent: params.silent || false,
-        
+        hasReply: false,
+        silent: params.silent || false,
         timeoutType: 'default',
         title: params.title,
         urgency: 'normal',
