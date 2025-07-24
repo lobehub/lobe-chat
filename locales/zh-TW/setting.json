@@ -45,14 +45,25 @@
   },
   "hotkey": {
     "conflicts": "與現有快捷鍵衝突",
+    "errors": {
+      "CONFLICT": "快速鍵衝突：該快速鍵已被其他功能佔用",
+      "INVALID_FORMAT": "快速鍵格式無效：請使用正確的格式（如 CommandOrControl+E）",
+      "INVALID_ID": "無效的快速鍵ID",
+      "NO_MODIFIER": "快速鍵必須包含修飾鍵（Ctrl、Alt、Shift等）",
+      "SYSTEM_OCCUPIED": "快速鍵已被系統或其他應用程式佔用",
+      "UNKNOWN": "更新失敗：未知錯誤"
+    },
     "group": {
       "conversation": "對話",
+      "desktop": "桌面端",
       "essential": "基本"
     },
     "invalidCombination": "快捷鍵需要至少包含一個修飾鍵 (Ctrl, Alt, Shift) 和一個常規鍵",
     "record": "按下按鍵以錄製快捷鍵",
     "reset": "重置為預設快捷鍵",
-    "title": "快速鍵"
+    "title": "快速鍵",
+    "updateError": "快速鍵更新失敗：網路或系統錯誤",
+    "updateSuccess": "快速鍵更新成功"
   },
   "llm": {
     "aesGcm": "您的金鑰與代理地址等將使用 <1>AES-GCM</1> 加密演算法進行加密",
