@@ -15,7 +15,7 @@ export default class TrayMenuCtr extends ControllerModule {
   /**
    * 使用快捷键切换窗口可见性
    */
-  @shortcut('toggleMainWindow')
+  @shortcut('showMainWindow')
   async toggleMainWindow() {
     logger.debug('通过快捷键切换主窗口可见性');
     const mainWindow = this.app.browserManager.getMainWindow();
@@ -47,7 +47,7 @@ export default class TrayMenuCtr extends ControllerModule {
 
     return {
       error: '托盘通知仅在 Windows 平台支持',
-      success: false
+      success: false,
     };
   }
 
@@ -71,7 +71,7 @@ export default class TrayMenuCtr extends ControllerModule {
           logger.error('更新托盘图标失败:', error);
           return {
             error: String(error),
-            success: false
+            success: false,
           };
         }
       }
@@ -79,7 +79,7 @@ export default class TrayMenuCtr extends ControllerModule {
 
     return {
       error: '托盘功能仅在 Windows 平台支持',
-      success: false
+      success: false,
     };
   }
 
@@ -103,7 +103,7 @@ export default class TrayMenuCtr extends ControllerModule {
 
     return {
       error: '托盘功能仅在 Windows 平台支持',
-      success: false
+      success: false,
     };
   }
 }
