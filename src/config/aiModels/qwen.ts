@@ -272,6 +272,7 @@ const qwenChatModels: AIChatModelCard[] = [
     maxOutput: 16_384,
     organization: 'Qwen',
     pricing: {
+      cachedInput: 0.12,
       currency: 'CNY',
       input: 0.3,
       output: 3, // Thinking mode pricing
@@ -300,6 +301,7 @@ const qwenChatModels: AIChatModelCard[] = [
     maxOutput: 16_384,
     organization: 'Qwen',
     pricing: {
+      cachedInput: 0.32,
       currency: 'CNY',
       input: 0.8,
       output: 8, // Thinking mode pricing
@@ -328,6 +330,7 @@ const qwenChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
+      cachedInput: 0.96,
       currency: 'CNY',
       input: 2.4,
       output: 9.6,
@@ -413,6 +416,7 @@ const qwenChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
+      cachedInput: 0.6,
       currency: 'CNY',
       input: 1.5,
       output: 4.5,
@@ -435,6 +439,7 @@ const qwenChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
+      cachedInput: 1.2,
       currency: 'CNY',
       input: 3,
       output: 9,
@@ -507,8 +512,9 @@ const qwenChatModels: AIChatModelCard[] = [
     maxOutput: 65_536,
     organization: 'Qwen',
     pricing: {
-      currency: 'CNY',
-      input: 6, // tokens 32K ~ 128K
+      cachedInput: 2.4, // tokens 32K ~ 128K
+      currency: 'CNY',  
+      input: 6,
       output: 24,
     },
     releasedAt: '2025-07-23',
