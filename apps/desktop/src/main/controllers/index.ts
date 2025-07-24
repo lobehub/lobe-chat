@@ -2,7 +2,7 @@ import type { ClientDispatchEvents } from '@lobechat/electron-client-ipc';
 import type { ServerDispatchEvents } from '@lobechat/electron-server-ipc';
 
 import type { App } from '@/core/App';
-import { IoCContainer } from '@/core/IoCContainer';
+import { IoCContainer } from '@/core/infrastructure/IoCContainer';
 import { ShortcutActionType } from '@/shortcuts';
 
 const ipcDecorator =

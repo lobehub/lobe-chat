@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "electron-updater": "^6.6.2",
+    "electron-window-state": "^5.0.3",
     "get-port-please": "^3.1.2",
     "pdfjs-dist": "4.10.38"
   },
