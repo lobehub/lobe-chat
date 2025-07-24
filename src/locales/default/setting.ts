@@ -45,14 +45,25 @@ export default {
   },
   hotkey: {
     conflicts: '与现有快捷键冲突',
+    errors: {
+      CONFLICT: '快捷键冲突：该快捷键已被其他功能占用',
+      INVALID_FORMAT: '快捷键格式无效：请使用正确的格式（如 CommandOrControl+E）',
+      INVALID_ID: '无效的快捷键ID',
+      NO_MODIFIER: '快捷键必须包含修饰键（Ctrl、Alt、Shift等）',
+      SYSTEM_OCCUPIED: '快捷键已被系统或其他应用程序占用',
+      UNKNOWN: '更新失败：未知错误',
+    },
     group: {
       conversation: '会话',
+      desktop: '桌面端',
       essential: '基础',
     },
     invalidCombination: '快捷键需要至少包含一个修饰键 (Ctrl, Alt, Shift) 和一个常规键',
     record: '按下按键以录制快捷键',
     reset: '重置为默认快捷键',
     title: '快捷键',
+    updateError: '快捷键更新失败：网络或系统错误',
+    updateSuccess: '快捷键更新成功',
   },
   llm: {
     aesGcm: '您的秘钥与代理地址等将使用 <1>AES-GCM</1> 加密算法进行加密',

@@ -7,6 +7,16 @@
     "desc": "Limpar as mensagens da conversa atual e os arquivos enviados",
     "title": "Limpar mensagens da conversa"
   },
+  "desktop": {
+    "openSettings": {
+      "desc": "Abrir a página de configurações do aplicativo",
+      "title": "Configurações do Aplicativo"
+    },
+    "showApp": {
+      "desc": "Atalho global para mostrar ou ocultar a janela principal",
+      "title": "Mostrar/Ocultar Janela Principal"
+    }
+  },
   "editMessage": {
     "desc": "Entre no modo de edição pressionando Alt e clicando duas vezes na mensagem",
     "title": "Editar mensagem"
@@ -18,10 +28,6 @@
   "openHotkeyHelper": {
     "desc": "Ver as instruções de uso de todos os atalhos",
     "title": "Abrir ajuda de atalhos"
-  },
-  "openSettings": {
-    "desc": "Abra a página de configurações do aplicativo",
-    "title": "Configurações do Aplicativo"
   },
   "regenerateMessage": {
     "desc": "Regenerar a última mensagem",
