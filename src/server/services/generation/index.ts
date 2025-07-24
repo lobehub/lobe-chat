@@ -6,6 +6,7 @@ import sharp from 'sharp';
 
 import { LobeChatDatabase } from '@/database/type';
 import { FileService } from '@/server/services/file';
+import { calculateThumbnailDimensions } from '@/utils/number';
 import { getYYYYmmddHHMMss } from '@/utils/time';
 
 const log = debug('lobe-image:generation-service');
@@ -77,16 +78,7 @@ export class GenerationService {
     }
 
     const shouldResize = format !== 'webp' || width > 512 || height > 512;
-    const thumbnailWidth = shouldResize
-      ? width > height
-        ? 512
-        : Math.round((width * 512) / height)
-      : width;
-    const thumbnailHeight = shouldResize
-      ? height > width
-        ? 512
-        : Math.round((height * 512) / width)
-      : height;
+    const { thumbnailWidth, thumbnailHeight } = calculateThumbnailDimensions(width, height);
 
     log('Thumbnail dimensions calculated:', { shouldResize, thumbnailHeight, thumbnailWidth });
 

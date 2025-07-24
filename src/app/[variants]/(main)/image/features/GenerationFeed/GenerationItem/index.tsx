@@ -37,13 +37,7 @@ export const GenerationItem = memo<GenerationItemProps>(
     const shouldPoll = !isFinalized;
     useCheckGenerationStatus(generation.id, generation.task.id, activeTopicId!, shouldPoll);
 
-    const aspectRatio = getAspectRatio(
-      generation.asset ?? {
-        height: generationBatch.config?.height,
-        type: 'image',
-        width: generationBatch.config?.width,
-      },
-    );
+    const aspectRatio = getAspectRatio(generation, generationBatch);
 
     // 事件处理函数
     const handleDeleteGeneration = async () => {
@@ -120,6 +114,7 @@ export const GenerationItem = memo<GenerationItemProps>(
         <SuccessState
           aspectRatio={aspectRatio}
           generation={generation}
+          generationBatch={generationBatch}
           onCopySeed={handleCopySeed}
           onDelete={handleDeleteGeneration}
           onDownload={handleDownloadImage}

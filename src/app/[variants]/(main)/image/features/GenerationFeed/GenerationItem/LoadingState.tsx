@@ -12,6 +12,7 @@ import { ActionButtons } from './ActionButtons';
 import { ElapsedTime } from './ElapsedTime';
 import { useStyles } from './styles';
 import { LoadingStateProps } from './types';
+import { getThumbnailMaxWidth } from './utils';
 
 // 加载状态组件
 export const LoadingState = memo<LoadingStateProps>(({ generation, aspectRatio, onDelete }) => {
@@ -28,7 +29,7 @@ export const LoadingState = memo<LoadingStateProps>(({ generation, aspectRatio, 
       justify={'center'}
       style={{
         aspectRatio,
-        maxWidth: generation.asset?.width ? generation.asset.width / 2 : 'unset',
+        maxWidth: getThumbnailMaxWidth(generation),
       }}
       variant={'filled'}
     >

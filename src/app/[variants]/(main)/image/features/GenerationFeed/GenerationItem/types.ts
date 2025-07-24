@@ -18,6 +18,7 @@ export interface ActionButtonsProps {
 export interface SuccessStateProps {
   aspectRatio: string;
   generation: Generation;
+  generationBatch: GenerationBatch;
   onCopySeed?: () => void;
   onDelete: () => void;
   onDownload: () => void;

@@ -23,3 +23,43 @@ export function generateUniqueSeeds(seedCount: number): number[] {
 
   return Array.from(seeds);
 }
+
+/**
+ * Calculate thumbnail dimensions
+ * Generate thumbnail with max edge of 512px
+ */
+export function calculateThumbnailDimensions(
+  originalWidth: number,
+  originalHeight: number,
+  maxSize = 512,
+): {
+  shouldResize: boolean;
+  thumbnailHeight: number;
+  thumbnailWidth: number;
+} {
+  const shouldResize = originalWidth > maxSize || originalHeight > maxSize;
+
+  if (!shouldResize) {
+    return {
+      shouldResize: false,
+      thumbnailHeight: originalHeight,
+      thumbnailWidth: originalWidth,
+    };
+  }
+
+  const thumbnailWidth =
+    originalWidth > originalHeight
+      ? maxSize
+      : Math.round((originalWidth * maxSize) / originalHeight);
+
+  const thumbnailHeight =
+    originalHeight > originalWidth
+      ? maxSize
+      : Math.round((originalHeight * maxSize) / originalWidth);
+
+  return {
+    shouldResize: true,
+    thumbnailHeight,
+    thumbnailWidth,
+  };
+}
