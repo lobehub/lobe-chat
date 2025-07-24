@@ -39,14 +39,21 @@ export class DatabaseManager {
   private isLocalDBSchemaSynced = false;
 
   // CDN 配置
+ // private static WASM_CDN_URL =
+   // 'https://registry.npmmirror.com/@electric-sql/pglite/0.2.17/files/dist/postgres.wasm';
+//
+  //private static FSBUNDLER_CDN_URL =
+   // 'https://registry.npmmirror.com/@electric-sql/pglite/0.2.17/files/dist/postgres.data';
+
+  //private static VECTOR_CDN_URL =
+   // 'https://registry.npmmirror.com/@electric-sql/pglite/0.2.17/files/dist/vector.tar.gz';
+
   private static WASM_CDN_URL =
-    'https://registry.npmmirror.com/@electric-sql/pglite/0.2.17/files/dist/postgres.wasm';
-
+  'https://cdn.jsdelivr.net/npm/@electric-sql/pglite@0.2.17/dist/postgres.wasm';
   private static FSBUNDLER_CDN_URL =
-    'https://registry.npmmirror.com/@electric-sql/pglite/0.2.17/files/dist/postgres.data';
-
+  'https://cdn.jsdelivr.net/npm/@electric-sql/pglite@0.2.17/dist/postgres.data';
   private static VECTOR_CDN_URL =
-    'https://registry.npmmirror.com/@electric-sql/pglite/0.2.17/files/dist/vector.tar.gz';
+  'https://cdn.jsdelivr.net/npm/@electric-sql/pglite@0.2.17/dist/vector.tar.gz';
 
   private constructor() {}
 
