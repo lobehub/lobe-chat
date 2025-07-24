@@ -40,11 +40,6 @@ declare global {
       ZITADEL_CLIENT_ID?: string;
       ZITADEL_CLIENT_SECRET?: string;
       ZITADEL_ISSUER?: string;
-
-      //Okta
-      OKTA_CLIENT_ID?: string;
-      OKTA_CLIENT_SECRET?: string;
-      OKTA_ISSUER?: string;
     }
   }
 }
@@ -143,15 +138,6 @@ export const getAuthConfig = () => {
   if (process.env.ZITADEL_ISSUER) {
     console.warn(removeTipsTemplate('ZITADEL_ISSUER', 'AUTH_ZITADEL_ISSUER'));
   }
-  if (process.env.OKTA_CLIENT_ID) {
-    console.warn(removeTipsTemplate('OKTA_CLIENT_ID', 'AUTH_OKTA_ID'));
-  }
-  if (process.env.OKTA_CLIENT_SECRET) {
-    console.warn(removeTipsTemplate('OKTA_CLIENT_SECRET', 'AUTH_OKTA_SECRET'));
-  }
-  if (process.env.OKTA_ISSUER) {
-    console.warn(removeTipsTemplate('OKTA_ISSUER', 'AUTH_OKTA_ISSUER'));
-  }
   // End
 
   return createEnv({
@@ -212,11 +198,6 @@ export const getAuthConfig = () => {
       ZITADEL_CLIENT_ID: z.string().optional(),
       ZITADEL_CLIENT_SECRET: z.string().optional(),
       ZITADEL_ISSUER: z.string().optional(),
-
-      // Okta
-      OKTA_CLIENT_ID: z.string().optional(),
-      OKTA_CLIENT_SECRET: z.string().optional(),
-      OKTA_ISSUER: z.string().optional(),
 
       // LOGTO
       LOGTO_CLIENT_ID: z.string().optional(),
@@ -279,11 +260,6 @@ export const getAuthConfig = () => {
       ZITADEL_CLIENT_ID: process.env.ZITADEL_CLIENT_ID,
       ZITADEL_CLIENT_SECRET: process.env.ZITADEL_CLIENT_SECRET,
       ZITADEL_ISSUER: process.env.ZITADEL_ISSUER,
-
-      // Okta
-      OKTA_CLIENT_ID: process.env.OKTA_CLIENT_ID,
-      OKTA_CLIENT_SECRET: process.env.OKTA_CLIENT_SECRET,
-      OKTA_ISSUER: process.env.OKTA_ISSUER,
 
       // LOGTO
       LOGTO_CLIENT_ID: process.env.LOGTO_CLIENT_ID,
