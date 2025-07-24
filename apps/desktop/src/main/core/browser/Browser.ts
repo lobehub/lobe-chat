@@ -153,6 +153,7 @@ export default class Browser {
   private cleanupThemeListener(): void {
     if (this.themeListenerSetup) {
       // Note: nativeTheme listeners are global, consider using a centralized theme manager
+      nativeTheme.off('updated', this.handleThemeChange);
       // for multiple windows to avoid duplicate listeners
       this.themeListenerSetup = false;
     }
