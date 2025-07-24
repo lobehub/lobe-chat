@@ -7,6 +7,16 @@
     "desc": "Geçerli oturumun mesajlarını ve yüklenen dosyaları temizle",
     "title": "Oturum mesajlarını temizle"
   },
+  "desktop": {
+    "openSettings": {
+      "desc": "Uygulama ayarları sayfasını aç",
+      "title": "Uygulama Ayarları"
+    },
+    "showApp": {
+      "desc": "Küresel kısayol tuşu ile ana pencereyi göster veya gizle",
+      "title": "Ana Pencereyi Göster/Gizle"
+    }
+  },
   "editMessage": {
     "desc": "Mesaja çift tıklayıp Alt tuşuna basarak düzenleme moduna geçin",
     "title": "Mesajı düzenle"
@@ -18,10 +28,6 @@
   "openHotkeyHelper": {
     "desc": "Tüm kısayol tuşlarının kullanım talimatlarını görüntüle",
     "title": "Kısayol Yardımını Aç"
-  },
-  "openSettings": {
-    "desc": "Uygulama ayarları sayfasını aç",
-    "title": "Uygulama Ayarları"
   },
   "regenerateMessage": {
     "desc": "Son mesajı yeniden oluştur",

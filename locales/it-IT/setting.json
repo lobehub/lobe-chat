@@ -45,14 +45,25 @@
   },
   "hotkey": {
     "conflicts": "In conflitto con i tasti di scelta rapida esistenti",
+    "errors": {
+      "CONFLICT": "Conflitto di tasti rapidi: questo tasto è già assegnato ad un'altra funzione",
+      "INVALID_FORMAT": "Formato del tasto rapido non valido: utilizzare un formato corretto (es. CommandOrControl+E)",
+      "INVALID_ID": "ID del tasto rapido non valido",
+      "NO_MODIFIER": "Il tasto rapido deve includere un modificatore (Ctrl, Alt, Shift, ecc.)",
+      "SYSTEM_OCCUPIED": "Il tasto rapido è già occupato dal sistema o da un'altra applicazione",
+      "UNKNOWN": "Aggiornamento fallito: errore sconosciuto"
+    },
     "group": {
       "conversation": "Conversazione",
+      "desktop": "Desktop",
       "essential": "Essenziale"
     },
     "invalidCombination": "La combinazione di tasti deve contenere almeno un tasto modificatore (Ctrl, Alt, Shift) e un tasto normale",
     "record": "Premi un tasto per registrare la scorciatoia",
     "reset": "Ripristina le scorciatoie predefinite",
-    "title": "Scorciatoie"
+    "title": "Scorciatoie",
+    "updateError": "Aggiornamento del tasto rapido fallito: errore di rete o di sistema",
+    "updateSuccess": "Aggiornamento del tasto rapido riuscito"
   },
   "llm": {
     "aesGcm": "La tua chiave e l'indirizzo dell'agente saranno crittografati utilizzando l'algoritmo di crittografia <1>AES-GCM</1>",

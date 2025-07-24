@@ -6,16 +6,12 @@ import {
 
 import { createLogger } from '@/utils/logger';
 
-import { ControllerModule, ipcClientEvent, shortcut } from './index';
+import { ControllerModule, ipcClientEvent } from './index';
 
 // 创建日志记录器
 const logger = createLogger('controllers:TrayMenuCtr');
 
 export default class TrayMenuCtr extends ControllerModule {
-  /**
-   * 使用快捷键切换窗口可见性
-   */
-  @shortcut('showMainWindow')
   async toggleMainWindow() {
     logger.debug('通过快捷键切换主窗口可见性');
     const mainWindow = this.app.browserManager.getMainWindow();
