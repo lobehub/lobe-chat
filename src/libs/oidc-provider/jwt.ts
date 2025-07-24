@@ -41,10 +41,7 @@ export const getJWKS = (): object => {
   }
 };
 
-/**
- * 从环境变量中获取 JWKS 并提取第一个 RSA 密钥
- */
-const getJWKSPublicKey = async () => {
+const getVerificationKey = async () => {
   try {
     const jwksString = oidcEnv.OIDC_JWKS_KEY;
 
@@ -58,20 +55,32 @@ const getJWKSPublicKey = async () => {
       throw new Error('JWKS 格式无效: 缺少或为空的 keys 数组');
     }
 
-    // 查找 RS256 算法的 RSA 密钥
-    const rsaKey = jwks.keys.find((key: any) => key.alg === 'RS256' && key.kty === 'RSA');
-
-    if (!rsaKey) {
+    const privateRsaKey = jwks.keys.find((key: any) => key.alg === 'RS256' && key.kty === 'RSA');
+    if (!privateRsaKey) {
       throw new Error('JWKS 中没有找到 RS256 算法的 RSA 密钥');
     }
 
-    // 导入 JWK 为公钥
-    const publicKey = await importJWK(rsaKey, 'RS256');
+    // 创建一个只包含公钥组件的“纯净”JWK对象。
+    // RSA公钥的关键字段是 kty, n, e。其他如 kid, alg, use 也是公共的。
+    const publicKeyJwk = {
+      alg: privateRsaKey.alg,
+      e: privateRsaKey.e,
+      kid: privateRsaKey.kid,
+      kty: privateRsaKey.kty,
+      n: privateRsaKey.n,
+      use: privateRsaKey.use,
+    };
 
-    return publicKey;
+    // 移除任何可能存在的 undefined 字段，保持对象干净
+    Object.keys(publicKeyJwk).forEach(
+      (key) => (publicKeyJwk as any)[key] === undefined && delete (publicKeyJwk as any)[key],
+    );
+
+    // 现在，无论在哪个环境下，`importJWK` 都会将这个对象正确地识别为一个公钥。
+    return await importJWK(publicKeyJwk, 'RS256');
   } catch (error) {
     log('获取 JWKS 公钥失败: %O', error);
-    throw new Error(`JWKS 公钥获取失败: ${(error as Error).message}`);
+    throw new Error(`JWKS 公key获取失败: ${(error as Error).message}`);
   }
 };
 
@@ -85,7 +94,7 @@ export const validateOIDCJWT = async (token: string) => {
     log('开始验证 OIDC JWT token');
 
     // 获取公钥
-    const publicKey = await getJWKSPublicKey();
+    const publicKey = await getVerificationKey();
 
     // 验证 JWT
     const { payload } = await jwtVerify(token, publicKey, {

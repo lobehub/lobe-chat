@@ -1,9 +1,16 @@
 import { AuthObject } from '@clerk/backend';
 import { NextRequest } from 'next/server';
 
-import { JWTPayload, LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED, enableClerk } from '@/const/auth';
+import {
+  JWTPayload,
+  LOBE_CHAT_AUTH_HEADER,
+  LOBE_CHAT_OIDC_AUTH_HEADER,
+  OAUTH_AUTHORIZED,
+  enableClerk,
+} from '@/const/auth';
 import { ClerkAuth } from '@/libs/clerk-auth';
 import { AgentRuntime, AgentRuntimeError, ChatCompletionErrorPayload } from '@/libs/model-runtime';
+import { validateOIDCJWT } from '@/libs/oidc-provider/jwt';
 import { ChatErrorType } from '@/types/fetch';
 import { createErrorResponse } from '@/utils/errorResponse';
 import { getJWTPayload } from '@/utils/server/jwt';
@@ -50,12 +57,26 @@ export const checkAuth =
 
       jwtPayload = await getJWTPayload(authorization);
 
-      checkAuthMethod({
-        accessCode: jwtPayload.accessCode,
-        apiKey: jwtPayload.apiKey,
-        clerkAuth,
-        nextAuthAuthorized: oauthAuthorized,
-      });
+      const oidcAuthorization = req.headers.get(LOBE_CHAT_OIDC_AUTH_HEADER);
+      let isUseOidcAuth = false;
+      if (!!oidcAuthorization) {
+        const oidc = await validateOIDCJWT(oidcAuthorization);
+
+        isUseOidcAuth = true;
+
+        jwtPayload = {
+          ...jwtPayload,
+          userId: oidc.userId,
+        };
+      }
+
+      if (!isUseOidcAuth)
+        checkAuthMethod({
+          accessCode: jwtPayload.accessCode,
+          apiKey: jwtPayload.apiKey,
+          clerkAuth,
+          nextAuthAuthorized: oauthAuthorized,
+        });
     } catch (e) {
       const params = await options.params;
 

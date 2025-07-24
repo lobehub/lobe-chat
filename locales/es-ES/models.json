@@ -656,6 +656,9 @@
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B es un modelo diseñado para seguir instrucciones, diálogos y programación."
   },
+  "cogview-4": {
+    "description": "CogView-4 es el primer modelo de generación de imágenes a partir de texto de código abierto de Zhipu que admite la generación de caracteres chinos. Ofrece mejoras integrales en la comprensión semántica, la calidad de generación de imágenes y la capacidad de generar texto en chino e inglés. Soporta entradas bilingües en chino e inglés de cualquier longitud y puede generar imágenes en cualquier resolución dentro del rango especificado."
+  },
   "cohere-command-r": {
     "description": "Command R es un modelo generativo escalable dirigido a RAG y uso de herramientas para habilitar IA a escala de producción para empresas."
   },
@@ -1496,6 +1499,12 @@
   "hunyuan-vision": {
     "description": "El último modelo multimodal de Hunyuan, que admite la entrada de imágenes y texto para generar contenido textual."
   },
+  "imagen-4.0-generate-preview-06-06": {
+    "description": "Serie de modelos de texto a imagen de cuarta generación de Imagen"
+  },
+  "imagen-4.0-ultra-generate-preview-06-06": {
+    "description": "Serie de modelos de texto a imagen de cuarta generación de Imagen, versión Ultra"
+  },
   "imagen4/preview": {
     "description": "El modelo de generación de imágenes de mayor calidad de Google."
   },
@@ -1915,6 +1924,9 @@
   },
   "moonshotai/Kimi-Dev-72B": {
     "description": "Kimi-Dev-72B es un modelo de código abierto de gran escala, optimizado mediante aprendizaje reforzado a gran escala, capaz de generar parches robustos y listos para producción. Este modelo alcanzó un nuevo récord del 60.4 % en SWE-bench Verified, estableciendo un nuevo estándar para modelos de código abierto en tareas automatizadas de ingeniería de software como la corrección de errores y la revisión de código."
+  },
+  "moonshotai/kimi-k2-instruct": {
+    "description": "kimi-k2 es un modelo base con arquitectura MoE que cuenta con capacidades avanzadas de código y agentes, con un total de 1T parámetros y 32B parámetros activados. En pruebas de referencia en categorías principales como razonamiento de conocimiento general, programación, matemáticas y agentes, el modelo K2 supera el rendimiento de otros modelos de código abierto populares."
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B es una versión mejorada de Nous Hermes 2, que incluye los conjuntos de datos más recientes desarrollados internamente."
@@ -2416,6 +2428,9 @@
   },
   "v0-1.5-md": {
     "description": "El modelo v0-1.5-md es adecuado para tareas cotidianas y generación de interfaces de usuario (UI)"
+  },
+  "wanx2.1-t2i-turbo": {
+    "description": "Modelo de generación de imágenes de texto a imagen de Tongyi de Alibaba Cloud"
   },
   "whisper-1": {
     "description": "Modelo universal de reconocimiento de voz que soporta reconocimiento de voz multilingüe, traducción de voz y detección de idioma."

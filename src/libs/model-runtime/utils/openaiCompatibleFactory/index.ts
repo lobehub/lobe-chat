@@ -5,8 +5,9 @@ import OpenAI, { ClientOptions } from 'openai';
 import { Stream } from 'openai/streaming';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
-import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/meta-schema';
+import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/index';
 import type { ChatModelCard } from '@/types/llm';
+import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
 
 import { LobeRuntimeAI } from '../../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
@@ -51,6 +52,10 @@ export const CHAT_MODELS_BLOCK_LIST = [
 ];
 
 type ConstructorOptions<T extends Record<string, any> = any> = ClientOptions & T;
+export type CreateImageOptions = Omit<ClientOptions, 'apiKey'> & {
+  apiKey: string;
+  provider: string;
+};
 
 export interface CustomClientOptions<T extends Record<string, any> = any> {
   createChatCompletionStream?: (
@@ -88,7 +93,10 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
     noUserId?: boolean;
   };
   constructorOptions?: ConstructorOptions<T>;
-  createImage?: (payload: CreateImagePayload & { client: OpenAI }) => Promise<CreateImageResponse>;
+  createImage?: (
+    payload: CreateImagePayload,
+    options: CreateImageOptions,
+  ) => Promise<CreateImageResponse>;
   customClient?: CustomClientOptions<T>;
   debug?: {
     chatCompletion: () => boolean;
@@ -177,6 +185,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
   models,
   customClient,
   responses,
+  createImage: customCreateImage,
 }: OpenAICompatibleFactoryOptions<T>) => {
   const ErrorType = {
     bizError: errorType?.bizError || AgentRuntimeErrorType.ProviderBizError,
@@ -316,6 +325,16 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     }
 
     async createImage(payload: CreateImagePayload) {
+      // If custom createImage implementation is provided, use it
+      if (customCreateImage) {
+        return customCreateImage(payload, {
+          ...this._options,
+          apiKey: this._options.apiKey!,
+          provider,
+        });
+      }
+
+      // Otherwise use default OpenAI compatible implementation
       const { model, params } = payload;
       const log = createDebug(`lobe-image:model-runtime`);
 
@@ -389,21 +408,30 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         throw new Error('Invalid image response: first data item is null or undefined');
       }
 
-      if (!imageData.b64_json) {
-        log('Invalid image response: missing b64_json field');
-        throw new Error('Invalid image response: missing b64_json field');
+      let imageUrl: string;
+
+      // 处理 base64 格式的响应
+      if (imageData.b64_json) {
+        // 确定图片的 MIME 类型，默认为 PNG
+        const mimeType = 'image/png'; // OpenAI 图片生成默认返回 PNG 格式
+
+        // 将 base64 字符串转换为完整的 data URL
+        imageUrl = `data:${mimeType};base64,${imageData.b64_json}`;
+        log('Successfully converted base64 to data URL, length: %d', imageUrl.length);
+      }
+      // 处理 URL 格式的响应
+      else if (imageData.url) {
+        imageUrl = imageData.url;
+        log('Using direct image URL: %s', imageUrl);
+      }
+      // 如果两种格式都不存在，抛出错误
+      else {
+        log('Invalid image response: missing both b64_json and url fields');
+        throw new Error('Invalid image response: missing both b64_json and url fields');
       }
 
-      // 确定图片的 MIME 类型，默认为 PNG
-      const mimeType = 'image/png'; // OpenAI 图片生成默认返回 PNG 格式
-
-      // 将 base64 字符串转换为完整的 data URL
-      const dataUrl = `data:${mimeType};base64,${imageData.b64_json}`;
-
-      log('Successfully converted base64 to data URL, length: %d', dataUrl.length);
-
       return {
-        imageUrl: dataUrl,
+        imageUrl,
       };
     }
 
@@ -462,7 +490,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       return resultModels.map((model) => {
         return {
           ...model,
-          type: model.type || LOBE_DEFAULT_MODEL_LIST.find((m) => m.id === model.id)?.type,
+          type: model.type || getModelPropertyWithFallback(model.id, 'type'),
         };
       }) as ChatModelCard[];
     }

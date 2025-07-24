@@ -6,7 +6,7 @@ import {
   type RuntimeImageGenParams,
   extractDefaultValues,
   validateModelParamsSchema,
-} from './meta-schema';
+} from './index';
 
 describe('meta-schema', () => {
   describe('ModelParamsMetaSchema', () => {

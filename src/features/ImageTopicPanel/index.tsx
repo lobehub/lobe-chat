@@ -67,7 +67,6 @@ const ImageTopicPanel = memo<PropsWithChildren>(({ children }) => {
           flex: 'none',
           height: '100%',
           minWidth: 80,
-          padding: 16,
         }}
       >
         {children}

@@ -656,6 +656,9 @@
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B ist ein Modell, das für die Befolgung von Anweisungen, Dialoge und Programmierung entwickelt wurde."
   },
+  "cogview-4": {
+    "description": "CogView-4 ist das erste von Zhipu entwickelte Open-Source-Text-zu-Bild-Modell, das die Generierung chinesischer Schriftzeichen unterstützt. Es bietet umfassende Verbesserungen in den Bereichen semantisches Verständnis, Bildgenerierungsqualität und die Fähigkeit, chinesische und englische Schriftzeichen zu erzeugen. Es unterstützt mehrsprachige Eingaben beliebiger Länge in Chinesisch und Englisch und kann Bilder in beliebiger Auflösung innerhalb eines vorgegebenen Bereichs erzeugen."
+  },
   "cohere-command-r": {
     "description": "Command R ist ein skalierbares generatives Modell, das auf RAG und Tool-Nutzung abzielt, um KI in Produktionsgröße für Unternehmen zu ermöglichen."
   },
@@ -1496,6 +1499,12 @@
   "hunyuan-vision": {
     "description": "Das neueste multimodale Modell von Hunyuan unterstützt die Eingabe von Bildern und Text zur Generierung von Textinhalten."
   },
+  "imagen-4.0-generate-preview-06-06": {
+    "description": "Imagen 4. Generation Text-zu-Bild Modellserie"
+  },
+  "imagen-4.0-ultra-generate-preview-06-06": {
+    "description": "Imagen 4. Generation Text-zu-Bild Modellserie Ultra-Version"
+  },
   "imagen4/preview": {
     "description": "Googles hochwertigstes Bildgenerierungsmodell"
   },
@@ -1915,6 +1924,9 @@
   },
   "moonshotai/Kimi-Dev-72B": {
     "description": "Kimi-Dev-72B ist ein Open-Source-Großmodell für Quellcode, das durch umfangreiche Verstärkungslernoptimierung robuste und direkt produktionsreife Patches erzeugen kann. Dieses Modell erreichte auf SWE-bench Verified eine neue Höchstpunktzahl von 60,4 % und stellte damit einen Rekord für Open-Source-Modelle bei automatisierten Software-Engineering-Aufgaben wie Fehlerbehebung und Code-Review auf."
+  },
+  "moonshotai/kimi-k2-instruct": {
+    "description": "kimi-k2 ist ein MoE-Architektur-Basismodell mit außergewöhnlichen Fähigkeiten in Code und Agenten, mit insgesamt 1 Billion Parametern und 32 Milliarden aktiven Parametern. In Benchmark-Tests zu allgemeinem Wissen, Programmierung, Mathematik und Agenten übertrifft das K2-Modell andere führende Open-Source-Modelle."
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B ist die aktualisierte Version von Nous Hermes 2 und enthält die neuesten intern entwickelten Datensätze."
@@ -2416,6 +2428,9 @@
   },
   "v0-1.5-md": {
     "description": "Das Modell v0-1.5-md ist für alltägliche Aufgaben und die Generierung von Benutzeroberflächen (UI) geeignet"
+  },
+  "wanx2.1-t2i-turbo": {
+    "description": "Text-zu-Bild-Modell von Aliyun Tongyi"
   },
   "whisper-1": {
     "description": "Universelles Spracherkennungsmodell, unterstützt mehrsprachige Spracherkennung, Sprachübersetzung und Spracherkennung."

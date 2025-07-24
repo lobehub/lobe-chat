@@ -70,11 +70,12 @@
   },
   "ImageUpload": {
     "actions": {
-      "changeImage": "Clicca per cambiare immagine"
+      "changeImage": "Clicca per cambiare immagine",
+      "dropMultipleFiles": "Non è supportato il caricamento multiplo di file, verrà utilizzato solo il primo file"
     },
     "placeholder": {
       "primary": "Aggiungi immagine",
-      "secondary": "Clicca per caricare"
+      "secondary": "Clicca o trascina per caricare"
     }
   },
   "KeyValueEditor": {
@@ -109,7 +110,7 @@
   },
   "MultiImagesUpload": {
     "actions": {
-      "uploadMore": "Clicca per caricare altre"
+      "uploadMore": "Clicca o trascina per caricare di più"
     },
     "modal": {
       "complete": "Completa",
@@ -119,7 +120,7 @@
       "upload": "Carica immagine"
     },
     "placeholder": {
-      "primary": "Clicca per caricare immagini",
+      "primary": "Clicca o trascina per caricare immagini",
       "secondary": "Supporta la selezione di più immagini"
     },
     "progress": {
