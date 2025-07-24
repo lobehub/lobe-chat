@@ -1,4 +1,4 @@
-import type { BrowserWindowOpts } from './core/Browser';
+import type { BrowserWindowOpts } from './core/browser/Browser';
 
 export const BrowsersIdentifiers = {
   chat: 'chat',
@@ -36,7 +36,7 @@ export const appBrowsers = {
     autoHideMenuBar: true,
     height: 800,
     identifier: 'settings',
-    // keepAlive: true,
+    keepAlive: true,
     minWidth: 600,
     parentIdentifier: 'chat',
     path: '/settings',
