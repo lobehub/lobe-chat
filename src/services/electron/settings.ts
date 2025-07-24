@@ -1,4 +1,8 @@
-import { NetworkProxySettings, dispatch } from '@lobechat/electron-client-ipc';
+import {
+  NetworkProxySettings,
+  ShortcutUpdateResult,
+  dispatch,
+} from '@lobechat/electron-client-ipc';
 
 class DesktopSettingsService {
   /**
@@ -13,6 +17,20 @@ class DesktopSettingsService {
    */
   setSettings = async (data: Partial<NetworkProxySettings>) => {
     return dispatch('setProxySettings', data);
+  };
+
+  /**
+   * 获取桌面热键配置
+   */
+  getDesktopHotkeys = async () => {
+    return dispatch('getShortcutsConfig');
+  };
+
+  /**
+   * 更新桌面热键配置
+   */
+  updateDesktopHotkey = async (id: string, accelerator: string): Promise<ShortcutUpdateResult> => {
+    return dispatch('updateShortcutConfig', { accelerator, id });
   };
 
   /**
