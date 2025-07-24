@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 import { describe, expect, it } from 'vitest';
 
-import { convertUsage } from './usageConverter';
+import { convertUsage, convertResponseUsage } from './usageConverter';
 
 describe('convertUsage', () => {
   it('should convert basic OpenAI usage data correctly', () => {
@@ -245,5 +245,49 @@ describe('convertUsage', () => {
     // These should not be present in the result
     expect(result).not.toHaveProperty('outputReasoningTokens');
     expect(result).not.toHaveProperty('outputAudioTokens');
+  });
+
+  it('should handle XAI provider correctly where completion_tokens does not include reasoning_tokens', () => {
+    // Arrange
+    const xaiUsage: OpenAI.Completions.CompletionUsage = {
+      prompt_tokens: 6103,
+      completion_tokens: 66, // 这个不包含 reasoning_tokens
+      total_tokens: 6550,
+      prompt_tokens_details: {
+        audio_tokens: 0,
+        cached_tokens: 0,
+      },
+      completion_tokens_details: {
+        accepted_prediction_tokens: 0,
+        audio_tokens: 0,
+        reasoning_tokens: 381, // 这是额外的 reasoning tokens
+        rejected_prediction_tokens: 0,
+      },
+    };
+
+    // Act
+    const xaiResult = convertUsage(xaiUsage, 'xai');
+
+    // Assert
+    expect(xaiResult).toMatchObject({
+      totalInputTokens: 6103,
+      totalOutputTokens: 66,
+      outputTextTokens: 66, // 不减去 reasoning_tokens
+      outputReasoningTokens: 381,
+      totalTokens: 6550,
+    });
+
+    // 测试其他 provider（默认行为）
+    const defaultResult = convertUsage(xaiUsage);
+
+    // 默认行为: outputTextTokens 应该是 completion_tokens - reasoning_tokens - audio_tokens = 66 - 381 - 0 = -315
+    expect(defaultResult.outputTextTokens).toBe(-315);
+    expect(defaultResult).toMatchObject({
+      totalInputTokens: 6103,
+      totalOutputTokens: 66,
+      outputTextTokens: -315, // 负数确实会出现在结果中
+      outputReasoningTokens: 381,
+      totalTokens: 6550,
+    });
   });
 });
