@@ -976,12 +976,20 @@ describe('LobeGoogleAI', () => {
         };
 
         // Act & Assert - Test error type rather than specific text
-        await expect(instance.createImage(payload)).rejects.toEqual(
-          expect.objectContaining({
-            errorType: invalidErrorType,
-            provider,
-          }),
-        );
+        await expect(instance.createImage(payload)).rejects.toEqual({
+          errorType: bizErrorType,
+          error: [
+            {
+              '@type': 'type.googleapis.com/google.rpc.ErrorInfo',
+              'domain': 'googleapis.com',
+              'metadata': {
+                service: 'generativelanguage.googleapis.com',
+              },
+              'reason': 'API_KEY_INVALID',
+            },
+          ],
+          provider,
+        });
       });
 
       it('should throw ProviderBizError for network and API errors', async () => {
