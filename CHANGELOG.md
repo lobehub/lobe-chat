@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.104.0](https://github.com/lobehub/lobe-chat/compare/v1.103.2...v1.104.0)
+
+<sup>Released on **2025-07-24**</sup>
+
+#### ✨ Features
+
+- **misc**: Support custom hotkey on desktop.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support custom hotkey on desktop, closes [#8559](https://github.com/lobehub/lobe-chat/issues/8559) ([b50f121](https://github.com/lobehub/lobe-chat/commit/b50f121))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.103.2](https://github.com/lobehub/lobe-chat/compare/v1.103.1...v1.103.2)
 
 <sup>Released on **2025-07-24**</sup>
