@@ -7,6 +7,13 @@ export enum FilesTabs {
   Websites = 'websites',
 }
 
+export enum TRPCErrorMessage {
+  // files not find in origin 
+  OrginFileNotFound = 'Origin File Not Found',
+  FileContentEmpty ='File content is empty',
+  FileNotFound = 'File not found'
+}
+
 export enum FileSource {
   ImageGeneration = 'image_generation',
 }

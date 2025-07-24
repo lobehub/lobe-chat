@@ -1,9 +1,13 @@
+import { sha256 } from 'js-sha256';
+
 import { lambdaClient } from '@/libs/trpc/client';
 import { SemanticSearchSchemaType } from '@/types/rag';
 
 class RAGService {
-  parseFileContent = async (id: string, skipExist?: boolean) => {
-    return lambdaClient.document.parseFileContent.mutate({ id, skipExist });
+  parseFileContent = async (fileId: string, file: File, skipExist?: boolean) => {
+    const fileArrayBuffer = await file.arrayBuffer();
+    const hash = sha256(fileArrayBuffer);
+    return lambdaClient.document.parseFileContent.mutate({ hash: hash, id: fileId, skipExist });
   };
 
   createParseFileTask = async (id: string, skipExist?: boolean) => {
