@@ -9,9 +9,12 @@ import {
 } from '@/const/settings';
 import { DEFAULT_OPENING_QUESTIONS } from '@/features/AgentSetting/store/selectors';
 import { AgentStoreState } from '@/store/agent/initialState';
+import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
 import { KnowledgeItem, KnowledgeType } from '@/types/knowledgeBase';
 import { merge } from '@/utils/merge';
+
+import { agentChatConfigSelectors } from './chatConfig';
 
 const isInboxSession = (s: AgentStoreState) => s.activeId === INBOX_SESSION_ID;
 
@@ -47,8 +50,18 @@ const currentAgentModelProvider = (s: AgentStoreState) => {
 
 const currentAgentPlugins = (s: AgentStoreState) => {
   const config = currentAgentConfig(s);
+  const plugins = config?.plugins || [];
 
-  return config?.plugins || [];
+  // 检查是否启用智能联网，如果启用则自动添加到插件列表
+  const enabledSearch = agentChatConfigSelectors.isAgentEnableSearch(s);
+  const useModelBuiltinSearch = agentChatConfigSelectors.useModelBuiltinSearch(s);
+  const useApplicationBuiltinSearchTool = enabledSearch && !useModelBuiltinSearch;
+
+  if (useApplicationBuiltinSearchTool && !plugins.includes(WebBrowsingManifest.identifier)) {
+    return [...plugins, WebBrowsingManifest.identifier];
+  }
+
+  return plugins;
 };
 
 const currentAgentKnowledgeBases = (s: AgentStoreState) => {
