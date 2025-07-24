@@ -5,7 +5,7 @@ export const ShortcutActionEnum = {
   /**
    * 显示/隐藏主窗口
    */
-  toggleMainWindow: 'toggleMainWindow',
+  showMainWindow: 'showMainWindow',
 } as const;
 
 export type ShortcutActionType = (typeof ShortcutActionEnum)[keyof typeof ShortcutActionEnum];
@@ -14,5 +14,5 @@ export type ShortcutActionType = (typeof ShortcutActionEnum)[keyof typeof Shortc
  * 默认快捷键配置
  */
 export const DEFAULT_SHORTCUTS_CONFIG: Record<ShortcutActionType, string> = {
-  [ShortcutActionEnum.toggleMainWindow]: 'CommandOrControl+E',
+  [ShortcutActionEnum.showMainWindow]: 'Control+E',
 };

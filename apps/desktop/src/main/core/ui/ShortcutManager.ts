@@ -3,7 +3,7 @@ import { globalShortcut } from 'electron';
 import { DEFAULT_SHORTCUTS_CONFIG } from '@/shortcuts';
 import { createLogger } from '@/utils/logger';
 
-import type { App } from './App';
+import type { App } from '../App';
 
 // Create logger
 const logger = createLogger('core:ShortcutManager');
@@ -163,6 +163,12 @@ export class ShortcutManager {
     // Register each enabled shortcut
     Object.entries(this.shortcutsConfig).forEach(([id, accelerator]) => {
       logger.debug(`Registering shortcut '${id}' with ${accelerator}`);
+
+      // 只注册在 DEFAULT_SHORTCUTS_CONFIG 中存在的快捷键
+      if (!DEFAULT_SHORTCUTS_CONFIG[id]) {
+        logger.debug(`Skipping shortcut '${id}' - not found in DEFAULT_SHORTCUTS_CONFIG`);
+        return;
+      }
 
       const method = this.shortcuts.get(id);
       if (accelerator && method) {

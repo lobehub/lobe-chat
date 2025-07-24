@@ -1,12 +1,13 @@
+import { dev, linux, macOS, windows } from 'electron-is';
 import os from 'node:os';
 
-export const isDev = process.env.NODE_ENV === 'development';
+export const isDev = dev();
 
 export const OFFICIAL_CLOUD_SERVER = process.env.OFFICIAL_CLOUD_SERVER || 'https://lobechat.com';
 
-export const isMac = process.platform === 'darwin';
-export const isWindows = process.platform === 'win32';
-export const isLinux = process.platform === 'linux';
+export const isMac = macOS();
+export const isWindows = windows();
+export const isLinux = linux();
 
 function getIsWindows11() {
   if (!isWindows) return false;
