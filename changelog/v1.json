@@ -1,6 +1,16 @@
 [
   {
     "children": {
+      "fixes": ["Fix chat stream in desktop and update shortcut."],
+      "improvements": [
+        "Add cached token count to usage of GoogleAI and VertexAI, fix desktop titlebar style in window, fix sub topic width in md responsive."
+      ]
+    },
+    "date": "2025-07-24",
+    "version": "1.103.2"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-07-23",
