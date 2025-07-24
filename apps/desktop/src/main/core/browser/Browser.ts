@@ -322,13 +322,9 @@ export default class Browser {
       vibrancy: 'sidebar',
       visualEffectState: 'active',
       webPreferences: {
-        allowRunningInsecureContent: true,
         backgroundThrottling: false,
         contextIsolation: true,
         preload: join(preloadDir, 'index.js'),
-        sandbox: false,
-        webSecurity: false,
-        webviewTag: true,
       },
       width: savedState?.width || width,
       ...this.getPlatformThemeConfig(isDarkMode),
