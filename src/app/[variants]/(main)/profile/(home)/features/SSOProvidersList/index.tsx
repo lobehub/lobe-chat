@@ -34,7 +34,7 @@ export const SSOProvidersList = memo(() => {
     if (data?.length === 1 || !data) {
       // At least one SSO provider should be linked
       notification.error({
-        message: t('profile.sso.unlink.forbidden'),
+        title: t('profile.sso.unlink.forbidden'),
       });
       return;
     }
