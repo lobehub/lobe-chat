@@ -74,7 +74,6 @@ export const settingsSlice: StateCreator<
       async () => desktopSettingsService.getDesktopHotkeys(),
       {
         onSuccess: (data) => {
-          console.log('data', data);
           if (!isEqual(data, get().desktopHotkeys)) {
             set({ desktopHotkeys: data, isDesktopHotkeysInit: true });
           }
