@@ -186,6 +186,52 @@ describe('GoogleGenerativeAIStream', () => {
     ]);
   });
 
+  it('should handle token count with cached token count', async () => {
+    vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
+
+    const data = {
+      candidates: [{ content: { role: 'model' }, finishReason: 'STOP', index: 0 }],
+      usageMetadata: {
+        promptTokenCount: 15725,
+        candidatesTokenCount: 1053,
+        totalTokenCount: 16778,
+        cachedContentTokenCount: 14286,
+        promptTokensDetails: [{ modality: 'TEXT', tokenCount: 15725 }],
+        cacheTokensDetails: [{ modality: 'TEXT', tokenCount: 14286 }],
+      },
+      modelVersion: 'gemini-2.0-flash-exp',
+    };
+
+    const mockGoogleStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue(data);
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = GoogleGenerativeAIStream(mockGoogleStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual([
+      // stop
+      'id: chat_1\n',
+      'event: stop\n',
+      `data: "STOP"\n\n`,
+      // usage
+      'id: chat_1\n',
+      'event: usage\n',
+      `data: {"inputCachedTokens":14286,"inputTextTokens":15725,"outputTextTokens":1053,"totalInputTokens":15725,"totalOutputTokens":1053,"totalTokens":16778}\n\n`,
+    ]);
+  });
+
   it('should handle stop with content', async () => {
     vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
 
