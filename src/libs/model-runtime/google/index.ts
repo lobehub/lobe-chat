@@ -638,6 +638,11 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       try {
         const jsonString = message.slice(startIndex);
         const json: GoogleChatErrors = JSON.parse(jsonString);
+        const bizError = json[0];
+
+        if (bizError?.reason === 'API_KEY_INVALID') {
+          return { ...defaultError, errorType: AgentRuntimeErrorType.InvalidProviderAPIKey };
+        }
 
         return { error: json, errorType: AgentRuntimeErrorType.ProviderBizError };
       } catch {
