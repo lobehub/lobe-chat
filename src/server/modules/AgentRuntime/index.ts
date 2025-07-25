@@ -5,6 +5,7 @@ import { AgentRuntime, ModelProvider } from '@/libs/model-runtime';
 import apiKeyManager from './apiKeyManager';
 
 export * from './trace';
+export * from './usage';
 
 /**
  * Retrieves the options object from environment and apikeymanager
