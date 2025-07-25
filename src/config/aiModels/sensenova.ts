@@ -9,10 +9,51 @@ const sensenovaChatModels: AIChatModelCard[] = [
       reasoning: true,
       vision: true,
     },
+    contextWindowTokens: 131_072,
+    description: '通过对多模态、语言及推理数据的全面更新与训练策略的优化，新模型在多模态推理和泛化指令跟随能力上实现了显著提升，支持高达128k的上下文窗口，并在OCR与文旅IP识别等专项任务中表现卓越。',
+    displayName: 'SenseNova V6.5 Pro',
+    enabled: true,
+    id: 'SenseNova-V6.5-Pro',
+    pricing: {
+      currency: 'CNY',
+      input: 3,
+      output: 9,
+    },
+    releasedAt: '2025-07-23',
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 131_072,
+    description: '通过对多模态、语言及推理数据的全面更新与训练策略的优化，新模型在多模态推理和泛化指令跟随能力上实现了显著提升，支持高达128k的上下文窗口，并在OCR与文旅IP识别等专项任务中表现卓越。',
+    displayName: 'SenseNova V6.5 Turbo',
+    enabled: true,
+    id: 'SenseNova-V6.5-Turbo',
+    pricing: {
+      currency: 'CNY',
+      input: 1.5,
+      output: 4.5,
+    },
+    releasedAt: '2025-07-23',
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+      vision: true,
+    },
     contextWindowTokens: 32_768,
     description: '兼顾视觉、语言深度推理，实现慢思考和深度推理，呈现完整的思维链过程。',
     displayName: 'SenseNova V6 Reasoner',
-    enabled: true,
     id: 'SenseNova-V6-Reasoner',
     pricing: {
       currency: 'CNY',
@@ -30,7 +71,6 @@ const sensenovaChatModels: AIChatModelCard[] = [
     description:
       '实现图片、文本、视频能力的原生统一，突破传统多模态分立局限，在多模基础能力、语言基础能力等核心维度全面领先，文理兼修，在多项测评中多次位列国内外第一梯队水平。',
     displayName: 'SenseNova V6 Turbo',
-    enabled: true,
     id: 'SenseNova-V6-Turbo',
     pricing: {
       currency: 'CNY',
@@ -48,7 +88,6 @@ const sensenovaChatModels: AIChatModelCard[] = [
     description:
       '实现图片、文本、视频能力的原生统一，突破传统多模态分立局限，在OpenCompass和SuperCLUE评测中斩获双冠军。',
     displayName: 'SenseNova V6 Pro',
-    enabled: true,
     id: 'SenseNova-V6-Pro',
     pricing: {
       currency: 'CNY',
