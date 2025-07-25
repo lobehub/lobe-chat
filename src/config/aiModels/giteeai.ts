@@ -230,6 +230,7 @@ const giteeaiImageModels: AIImageModelCard[] = [
     enabled: true,
     id: 'FLUX.1-dev',
     parameters: {
+      imageUrl: { default: null },
       prompt: {
         default: '',
       },
@@ -247,6 +248,24 @@ const giteeaiImageModels: AIImageModelCard[] = [
     enabled: true,
     id: 'flux-1-schnell',
     parameters: {
+      prompt: {
+        default: '',
+      },
+      size: {
+        default: '1024x1024',
+        enum: ['1024x1024', '1536x1536', '2048x2048'],
+      },
+    },
+    type: 'image',
+  },
+  {
+    description:
+      'FLUX.1-Kontext-dev 是由 Black Forest Labs 开发的一款基于 Rectified Flow Transformer 架构 的多模态图像生成与编辑模型，拥有 12B（120 亿）参数规模，专注于在给定上下文条件下生成、重构、增强或编辑图像。该模型结合了扩散模型的可控生成优势与 Transformer 的上下文建模能力，支持高质量图像输出，广泛适用于图像修复、图像补全、视觉场景重构等任务。',
+    displayName: 'FLUX.1-Kontext-dev',
+    enabled: true,
+    id: 'FLUX.1-Kontext-dev',
+    parameters: {
+      imageUrl: { default: null },
       prompt: {
         default: '',
       },
@@ -315,6 +334,7 @@ const giteeaiImageModels: AIImageModelCard[] = [
     enabled: true,
     id: 'Kolors',
     parameters: {
+      imageUrl: { default: null },
       prompt: {
         default: '',
       },
@@ -349,6 +369,114 @@ const giteeaiImageModels: AIImageModelCard[] = [
     enabled: true,
     id: 'HiDream-I1-Full',
     parameters: {
+      prompt: {
+        default: '',
+      },
+      size: {
+        default: '1024x1024',
+        enum: ['1024x1024'],
+      },
+    },
+    type: 'image',
+  },
+  {
+    description:
+      'HiDream-E1-Full 是由智象未来（HiDream.ai）推出的一款 开源多模态图像编辑大模型，基于先进的 Diffusion Transformer 架构，并结合强大的语言理解能力（内嵌 LLaMA 3.1-8B-Instruct），支持通过自然语言指令进行图像生成、风格迁移、局部编辑和内容重绘，具备出色的图文理解与执行能力。',
+    displayName: 'HiDream-E1-Full',
+    enabled: true,
+    id: 'HiDream-I1-Full',
+    parameters: {
+      imageUrl: { default: null },
+      prompt: {
+        default: '',
+      },
+      size: {
+        default: '1024x1024',
+        enum: ['1024x1024'],
+      },
+    },
+    type: 'image',
+  },
+  {
+    description:
+      'HelloMeme 是一个可以根据你提供的图片或动作，自动生成表情包、动图或短视频的 AI 工具。它不需要你有任何绘画或编程基础，只需要准备好参考图片，它就能帮你做出好看、有趣、风格一致的内容。',
+    displayName: 'HelloMeme',
+    enabled: true,
+    id: 'HelloMeme',
+    parameters: {
+      imageUrl: { default: null },
+      prompt: {
+        default: '',
+      },
+      size: {
+        default: '1024x1024',
+        enum: ['1024x1024'],
+      },
+    },
+    type: 'image',
+  },
+  {
+    description:
+      'OmniConsistency 通过引入大规模 Diffusion Transformers（DiTs）和配对风格化数据，提升图像到图像（Image-to-Image）任务中的风格一致性和泛化能力，避免风格退化。',
+    displayName: 'OmniConsistency',
+    enabled: true,
+    id: 'OmniConsistency',
+    parameters: {
+      imageUrl: { default: null },
+      prompt: {
+        default: '',
+      },
+      size: {
+        default: '1024x1024',
+        enum: ['1024x1024'],
+      },
+    },
+    type: 'image',
+  },
+  {
+    description:
+      'InstantCharacter 是由腾讯 AI 团队在 2025 年发布的一款 无需微调（tuning-free） 的个性化角色生成模型，旨在实现高保真、跨场景的一致角色生成。该模型支持仅基于 一张参考图像 对角色进行建模，并能够将该角色灵活迁移到各种风格、动作和背景中。',
+    displayName: 'InstantCharacter',
+    enabled: true,
+    id: 'InstantCharacter',
+    parameters: {
+      imageUrl: { default: null },
+      prompt: {
+        default: '',
+      },
+      size: {
+        default: '1024x1024',
+        enum: ['1024x1024'],
+      },
+    },
+    type: 'image',
+  },
+  {
+    description:
+      'DreamO 是由字节跳动与北京大学联合研发的开源图像定制生成模型，旨在通过统一架构支持多任务图像生成。它采用高效的组合建模方法，可根据用户指定的身份、主体、风格、背景等多个条件生成高度一致且定制化的图像。',
+    displayName: 'DreamO',
+    enabled: true,
+    id: 'DreamO',
+    parameters: {
+      imageUrl: { default: null },
+      prompt: {
+        default: '',
+      },
+      size: {
+        default: '1024x1024',
+        enum: ['1024x1024'],
+      },
+    },
+    type: 'image',
+  },
+  {
+    description:
+      'AnimeSharp（又名 “4x‑AnimeSharp”） 是 Kim2091 基于 ESRGAN 架构开发的开源超分辨率模型，专注于动漫风格图像的放大与锐化。它于 2022 年 2 月重命名自 “4x-TextSharpV1”，原本也适用于文字图像但性能针对动漫内容进行了大幅优化',
+    displayName: 'AnimeSharp',
+    enabled: true,
+    id: 'AnimeSharp',
+    parameters: {
+      imageUrl: { default: null },
       prompt: {
         default: '',
       },

@@ -585,6 +585,25 @@ const wenxinImageModels: AIImageModelCard[] = [
   },
   {
     description:
+      '百度自研的ERNIE iRAG Edit图像编辑模型支持基于图片进行erase（消除对象）、repaint（重绘对象）、variation（生成变体）等操作。',
+    displayName: 'ERINE iRAG Edit',
+    enabled: true,
+    id: 'ernie-irag-edit',
+    parameters: {
+      imageUrl: { default: null },
+      prompt: {
+        default: '',
+      },
+      size: {
+        default: '1024x1024',
+        enum: ['768x768', '1024x1024', '1536x1536', '2048x2048', '1024x768', '2048x1536', '768x1024', '1536x2048', '1024x576', '2048x1152', '576x1024', '1152x2048'],
+      },
+    },
+    releasedAt: '2025-04-17',
+    type: 'image',
+  },
+  {
+    description:
       '具有120亿参数的修正流变换器，能够根据文本描述生成图像。',
     displayName: 'FLUX.1-schnell',
     enabled: true,
