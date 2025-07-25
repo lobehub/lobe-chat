@@ -512,6 +512,7 @@ const doubaoChatModels: AIChatModelCard[] = [
 const volcengineImageModels: AIImageModelCard[] = [
   {
     /*
+    // TODO: AIImageModelCard 不支持 config.deploymentName
     config: {
       deploymentName: 'doubao-seedream-3-0-t2i-250415',
     },
@@ -534,12 +535,12 @@ const volcengineImageModels: AIImageModelCard[] = [
     releasedAt: '2025-04-15',
     type: 'image',
   },
+  /*
+  // Note: Doubao 图片编辑模型与文生图模型公用一个 Endpoint，当前如果存在 imageUrl 会切换至 edit endpoint 下
   {
-    /*
     config: {
       deploymentName: 'doubao-seededit-3-0-i2i-250628',
     },
-    */
     description:
       'Doubao图片生成模型由字节跳动 Seed 团队研发，支持文字与图片输入，提供高可控、高质量的图片生成体验。支持通过文本指令编辑图像，生成图像的边长在512～1536之间。',
     displayName: 'Doubao-SeedEdit-3.0-i2i',
@@ -559,6 +560,7 @@ const volcengineImageModels: AIImageModelCard[] = [
     releasedAt: '2025-06-28',
     type: 'image',
   },
+  */
 ];
 
 export const allModels = [...doubaoChatModels, ...volcengineImageModels];
