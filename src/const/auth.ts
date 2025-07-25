@@ -36,6 +36,7 @@ export interface JWTPayload {
   awsRegion?: string;
   awsSecretAccessKey?: string;
   awsSessionToken?: string;
+  awsBearerToken?: string;
 
   cloudflareBaseURLOrAccountID?: string;
 

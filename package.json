@@ -124,6 +124,7 @@
     "@anthropic-ai/sdk": "^0.56.0",
     "@auth/core": "^0.38.0",
     "@aws-sdk/client-bedrock-runtime": "^3.848.0",
+    "@aws-sdk/token-providers": "^3.848.0",
     "@aws-sdk/client-s3": "^3.850.0",
     "@aws-sdk/s3-request-presigner": "^3.850.0",
     "@azure-rest/ai-inference": "1.0.0-beta.5",

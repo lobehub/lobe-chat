@@ -3,6 +3,7 @@ import {
   InvokeModelCommand,
   InvokeModelWithResponseStreamCommand,
 } from '@aws-sdk/client-bedrock-runtime';
+import { fromStatic } from '@aws-sdk/token-providers';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
@@ -61,6 +62,7 @@ export interface LobeBedrockAIParams {
   accessKeySecret?: string;
   region?: string;
   sessionToken?: string;
+  token?: string;
 }
 
 export class LobeBedrockAI implements LobeRuntimeAI {
@@ -68,18 +70,25 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
   region: string;
 
-  constructor({ region, accessKeyId, accessKeySecret, sessionToken }: LobeBedrockAIParams = {}) {
-    if (!(accessKeyId && accessKeySecret))
-      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
+  constructor({ region, accessKeyId, accessKeySecret, sessionToken, token }: LobeBedrockAIParams = {}) {
     this.region = region ?? 'us-east-1';
-    this.client = new BedrockRuntimeClient({
-      credentials: {
-        accessKeyId: accessKeyId,
-        secretAccessKey: accessKeySecret,
-        sessionToken: sessionToken,
-      },
-      region: this.region,
-    });
+    if (token) {
+      this.client = new BedrockRuntimeClient({
+        region: this.region,
+        token: fromStatic({ token: { token } }),
+      });
+    } else {
+      if (!(accessKeyId && accessKeySecret))
+        throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
+      this.client = new BedrockRuntimeClient({
+        credentials: {
+          accessKeyId: accessKeyId,
+          secretAccessKey: accessKeySecret,
+          sessionToken: sessionToken,
+        },
+        region: this.region,
+      });
+    }
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {
