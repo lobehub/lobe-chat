@@ -41,10 +41,6 @@ test-output
 # husky
 .husky/prepare-commit-msg
 
-# misc
-# add other ignore file below
-CLAUDE.md
-
 # local env files
 .env*.local
 
@@ -74,5 +70,8 @@ vertex-ai-key.json
 ./packages/lobe-ui
 
 
-# for local prd docs
-docs/prd
+# local use ai coding files
+docs/.prd
+.claude
+.mcp.json
+CLAUDE.md
