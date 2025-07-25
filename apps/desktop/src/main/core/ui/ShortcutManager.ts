@@ -224,7 +224,34 @@ export class ShortcutManager {
         this.shortcutsConfig = DEFAULT_SHORTCUTS_CONFIG;
         this.saveShortcutsConfig();
       } else {
-        this.shortcutsConfig = config;
+        // Filter out invalid shortcuts that are not in DEFAULT_SHORTCUTS_CONFIG
+        const filteredConfig: Record<string, string> = {};
+        let hasInvalidKeys = false;
+
+        Object.entries(config).forEach(([id, accelerator]) => {
+          if (DEFAULT_SHORTCUTS_CONFIG[id]) {
+            filteredConfig[id] = accelerator;
+          } else {
+            hasInvalidKeys = true;
+            logger.debug(`Filtering out invalid shortcut ID: ${id}`);
+          }
+        });
+
+        // Ensure all default shortcuts are present
+        Object.entries(DEFAULT_SHORTCUTS_CONFIG).forEach(([id, defaultAccelerator]) => {
+          if (!(id in filteredConfig)) {
+            filteredConfig[id] = defaultAccelerator;
+            logger.debug(`Adding missing default shortcut: ${id} = ${defaultAccelerator}`);
+          }
+        });
+
+        this.shortcutsConfig = filteredConfig;
+
+        // Save the filtered configuration back to storage if we removed invalid keys
+        if (hasInvalidKeys) {
+          logger.debug('Saving filtered shortcuts config to remove invalid keys');
+          this.saveShortcutsConfig();
+        }
       }
 
       logger.debug('Loaded shortcuts config:', this.shortcutsConfig);
