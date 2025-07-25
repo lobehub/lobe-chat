@@ -1,5 +1,7 @@
 import prand from 'pure-rand';
 
+import { IMAGE_GENERATION_CONFIG } from '@/const/imageGeneration';
+
 export const MAX_SEED = 2 ** 31 - 1;
 export function generateUniqueSeeds(seedCount: number): number[] {
   // Use current timestamp as the initial seed
@@ -26,12 +28,12 @@ export function generateUniqueSeeds(seedCount: number): number[] {
 
 /**
  * Calculate thumbnail dimensions
- * Generate thumbnail with max edge of 512px
+ * Generate thumbnail with configurable max edge size
  */
 export function calculateThumbnailDimensions(
   originalWidth: number,
   originalHeight: number,
-  maxSize = 512,
+  maxSize: number = IMAGE_GENERATION_CONFIG.THUMBNAIL_MAX_SIZE,
 ): {
   shouldResize: boolean;
   thumbnailHeight: number;

@@ -4,7 +4,9 @@ import mime from 'mime';
 import { nanoid } from 'nanoid';
 import sharp from 'sharp';
 
+import { IMAGE_GENERATION_CONFIG } from '@/const/imageGeneration';
 import { LobeChatDatabase } from '@/database/type';
+import { parseDataUri } from '@/libs/model-runtime/utils/uriParser';
 import { FileService } from '@/server/services/file';
 import { calculateThumbnailDimensions } from '@/utils/number';
 import { getYYYYmmddHHMMss } from '@/utils/time';
@@ -22,11 +24,20 @@ export async function fetchImageFromUrl(url: string): Promise<{
   mimeType: string;
 }> {
   if (url.startsWith('data:')) {
-    // Extract the MIME type and base64 data part
-    const [mimeTypePart, base64Data] = url.split(',');
-    const mimeType = mimeTypePart.split(':')[1].split(';')[0];
-    const buffer = Buffer.from(base64Data, 'base64');
-    return { buffer, mimeType };
+    const { base64, mimeType, type } = parseDataUri(url);
+
+    if (type !== 'base64' || !base64 || !mimeType) {
+      throw new Error(`Invalid data URI format: ${url}`);
+    }
+
+    try {
+      const buffer = Buffer.from(base64, 'base64');
+      return { buffer, mimeType };
+    } catch (error) {
+      throw new Error(
+        `Failed to decode base64 data: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
   } else {
     const response = await fetch(url);
     if (!response.ok) {
@@ -197,7 +208,7 @@ export class GenerationService {
   }
 
   /**
-   * Create a 256x256 cover image from a given URL and upload
+   * Create a cover image from a given URL and upload
    * @param coverUrl - The source image URL (can be base64 or HTTP URL)
    * @returns The key of the uploaded cover image
    */
@@ -215,8 +226,12 @@ export class GenerationService {
       throw new Error('Invalid image format for cover creation');
     }
 
-    // Calculate cover dimensions maintaining aspect ratio with max size 256px
-    const { thumbnailWidth, thumbnailHeight } = calculateThumbnailDimensions(width, height, 256);
+    // Calculate cover dimensions maintaining aspect ratio with configurable max size
+    const { thumbnailWidth, thumbnailHeight } = calculateThumbnailDimensions(
+      width,
+      height,
+      IMAGE_GENERATION_CONFIG.COVER_MAX_SIZE,
+    );
 
     log('Processing cover image with dimensions:', {
       cover: { height: thumbnailHeight, width: thumbnailWidth },

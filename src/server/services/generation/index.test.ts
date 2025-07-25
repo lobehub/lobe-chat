@@ -103,10 +103,10 @@ describe('GenerationService', () => {
           'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChAGAWqGfKwAAAABJRU5ErkJggg==';
         const dataUri = `data:image/png;charset=utf-8;base64,${base64Data}`;
 
-        const result = await fetchImageFromUrl(dataUri);
-
-        expect(result.mimeType).toBe('image/png');
-        expect(result.buffer).toBeInstanceOf(Buffer);
+        // This should fail because parseDataUri only supports the strict format: data:mime/type;base64,data
+        await expect(fetchImageFromUrl(dataUri)).rejects.toThrow(
+          'Invalid data URI format: data:image/png;charset=utf-8;base64,',
+        );
       });
     });
 
@@ -190,6 +190,22 @@ describe('GenerationService', () => {
 
         expect(result.mimeType).toBe('image/png');
         expect(result.buffer).toBeInstanceOf(Buffer);
+      });
+
+      it('should throw error for invalid data URI format', async () => {
+        const invalidDataUri = 'data:image/png:invalid-format';
+
+        await expect(fetchImageFromUrl(invalidDataUri)).rejects.toThrow(
+          'Invalid data URI format: data:image/png:invalid-format',
+        );
+      });
+
+      it('should throw error for malformed data URI without base64', async () => {
+        const malformedDataUri = 'data:image/png;charset=utf-8,not-base64-data';
+
+        await expect(fetchImageFromUrl(malformedDataUri)).rejects.toThrow(
+          'Invalid data URI format: data:image/png;charset=utf-8,not-base64-data',
+        );
       });
 
       it('should handle different URL schemes', async () => {

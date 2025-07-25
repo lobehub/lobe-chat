@@ -101,6 +101,9 @@ export const getAspectRatio = (
 /**
  * Calculate display max width for generation items
  * Ensures height doesn't exceed half screen height based on original aspect ratio
+ *
+ * @note This function is only used in client-side rendering environments.
+ * It directly accesses window.innerHeight and is not designed for SSR compatibility.
  */
 export const getThumbnailMaxWidth = (
   generation: Generation,
@@ -117,6 +120,7 @@ export const getThumbnailMaxWidth = (
   const aspectRatio = originalWidth / originalHeight;
 
   // Apply screen height constraint (half of screen height)
+  // Note: window.innerHeight is safe to use here as this function is client-side only
   const maxScreenHeight = window.innerHeight / 2;
   const maxWidthFromHeight = Math.round(maxScreenHeight * aspectRatio);
 
