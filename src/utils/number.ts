@@ -1,5 +1,7 @@
 import prand from 'pure-rand';
 
+import { IMAGE_GENERATION_CONFIG } from '@/const/imageGeneration';
+
 export const MAX_SEED = 2 ** 31 - 1;
 export function generateUniqueSeeds(seedCount: number): number[] {
   // Use current timestamp as the initial seed
@@ -22,4 +24,44 @@ export function generateUniqueSeeds(seedCount: number): number[] {
   }
 
   return Array.from(seeds);
+}
+
+/**
+ * Calculate thumbnail dimensions
+ * Generate thumbnail with configurable max edge size
+ */
+export function calculateThumbnailDimensions(
+  originalWidth: number,
+  originalHeight: number,
+  maxSize: number = IMAGE_GENERATION_CONFIG.THUMBNAIL_MAX_SIZE,
+): {
+  shouldResize: boolean;
+  thumbnailHeight: number;
+  thumbnailWidth: number;
+} {
+  const shouldResize = originalWidth > maxSize || originalHeight > maxSize;
+
+  if (!shouldResize) {
+    return {
+      shouldResize: false,
+      thumbnailHeight: originalHeight,
+      thumbnailWidth: originalWidth,
+    };
+  }
+
+  const thumbnailWidth =
+    originalWidth > originalHeight
+      ? maxSize
+      : Math.round((originalWidth * maxSize) / originalHeight);
+
+  const thumbnailHeight =
+    originalHeight > originalWidth
+      ? maxSize
+      : Math.round((originalHeight * maxSize) / originalWidth);
+
+  return {
+    shouldResize: true,
+    thumbnailHeight,
+    thumbnailWidth,
+  };
 }
