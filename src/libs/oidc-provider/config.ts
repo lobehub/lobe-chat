@@ -41,7 +41,7 @@ export const defaultClients: ClientMetadata[] = [
     client_name: 'LobeHub Mobile',
     // 支持授权码流程和刷新令牌
     grant_types: ['authorization_code', 'refresh_token'],
-    logo_uri: 'https://hub-apac-1.lobeobjects.space/docs/c7972e693c3b7a52fe571b4385855dc6.png',
+    logo_uri: 'https://hub-apac-1.lobeobjects.space/docs/73f69adfa1b802a0e250f6ff9d62f70b.png',
     // 移动端不需要 post_logout_redirect_uris，因为注销通常在应用内处理
     post_logout_redirect_uris: [],
     // 移动端使用自定义 URL Scheme
