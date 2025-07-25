@@ -1035,8 +1035,8 @@ const qwenImageModels: AIImageModelCard[] = [
       },
       seed: { default: null },
       size: {
-        default: '1024x1024',
-        enum: ['512x1024', '768x512', '768x1024', '1024x576', '576x1024', '1024x1024'],
+        default: '1024*1024',
+        enum: ['512*1024', '768*512', '768*1024', '1024*576', '576*1024', '1024*1024'],
       },
       steps: { default: 4, max: 12, min: 1 },
     },
@@ -1055,8 +1055,8 @@ const qwenImageModels: AIImageModelCard[] = [
       },
       seed: { default: null },
       size: {
-        default: '1024x1024',
-        enum: ['512x1024', '768x512', '768x1024', '1024x576', '576x1024', '1024x1024'],
+        default: '1024*1024',
+        enum: ['512*1024', '768*512', '768*1024', '1024*576', '576*1024', '1024*1024'],
       },
       steps: { default: 50, max: 50, min: 1 },
     },
@@ -1075,8 +1075,8 @@ const qwenImageModels: AIImageModelCard[] = [
       },
       seed: { default: null },
       size: {
-        default: '1024x1024',
-        enum: ['512x1024', '768x512', '768x1024', '1024x576', '576x1024', '1024x1024'],
+        default: '1024*1024',
+        enum: ['512*1024', '768*512', '768*1024', '1024*576', '576*1024', '1024*1024'],
       },
       steps: { default: 30, max: 30, min: 1 },
     },
