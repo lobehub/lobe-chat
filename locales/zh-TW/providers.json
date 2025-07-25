@@ -20,6 +20,9 @@
   "bedrock": {
     "description": "Bedrock 是亞馬遜 AWS 提供的一項服務，專注於為企業提供先進的 AI 語言模型和視覺模型。其模型家族包括 Anthropic 的 Claude 系列、Meta 的 Llama 3.1 系列等，涵蓋從輕量級到高性能的多種選擇，支持文本生成、對話、圖像處理等多種任務，適用於不同規模和需求的企業應用。"
   },
+  "burncloud": {
+    "description": "BurnCloud是一個高性能AI服務平台，提供Claude系列、GPT系列、Gemini、DeepSeek等多種行業領先大模型的API服務，具有穩定可靠、響應迅速的特點。"
+  },
   "cloudflare": {
     "description": "在 Cloudflare 的全球網絡上運行由無伺服器 GPU 驅動的機器學習模型。"
   },
