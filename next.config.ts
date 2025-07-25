@@ -280,6 +280,11 @@ const nextConfig: NextConfig = {
     // refs: https://github.com/lobehub/lobe-chat/discussions/6769
     config.resolve.fallback = {
       ...config.resolve.fallback,
+      crypto: 'crypto-browserify',
+      fs: false,
+      os: false,
+      path: 'path-browserify',
+      stream: 'stream-browserify',
       zipfile: false,
     };
     return config;

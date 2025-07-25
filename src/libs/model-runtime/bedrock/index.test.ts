@@ -46,6 +46,23 @@ describe('LobeBedrockAI', () => {
       });
       expect(instance).toBeInstanceOf(LobeBedrockAI);
     });
+
+    it('should correctly initialize with bearer token', async () => {
+      const instance = new LobeBedrockAI({
+        region: 'us-west-2',
+        token: 'test-bearer-token',
+      });
+      expect(instance).toBeInstanceOf(LobeBedrockAI);
+      expect(instance.region).toBe('us-west-2');
+    });
+
+    it('should throw error when no credentials provided', async () => {
+      expect(() => {
+        new LobeBedrockAI({
+          region: 'us-west-2',
+        });
+      }).toThrow();
+    });
   });
 
   describe('chat', () => {

@@ -3,7 +3,6 @@ import {
   InvokeModelCommand,
   InvokeModelWithResponseStreamCommand,
 } from '@aws-sdk/client-bedrock-runtime';
-import { fromStatic } from '@aws-sdk/token-providers';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
@@ -23,6 +22,7 @@ import {
   AWSBedrockClaudeStream,
   AWSBedrockLlamaStream,
   createBedrockStream,
+  OpenAIStream,
 } from '../utils/streams';
 
 /**
@@ -67,16 +67,18 @@ export interface LobeBedrockAIParams {
 
 export class LobeBedrockAI implements LobeRuntimeAI {
   private client: BedrockRuntimeClient;
+  private bearerToken?: string;
 
   region: string;
 
   constructor({ region, accessKeyId, accessKeySecret, sessionToken, token }: LobeBedrockAIParams = {}) {
     this.region = region ?? 'us-east-1';
+    this.bearerToken = token;
+    
     if (token) {
-      this.client = new BedrockRuntimeClient({
-        region: this.region,
-        token: fromStatic({ token: { token } }),
-      });
+      // For bearer token, we'll handle requests manually
+      // Initialize a dummy client to satisfy the interface
+      this.client = new BedrockRuntimeClient({ region: this.region });
     } else {
       if (!(accessKeyId && accessKeySecret))
         throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
@@ -92,8 +94,13 @@ export class LobeBedrockAI implements LobeRuntimeAI {
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {
+    if (this.bearerToken) {
+      // Use bearer token authentication with direct HTTP requests
+      return this.invokeBearerTokenModel(payload, options);
+    }
+    
+    // Use AWS SDK authentication
     if (payload.model.startsWith('meta')) return this.invokeLlamaModel(payload, options);
-
     return this.invokeClaudeModel(payload, options);
   }
   /**
@@ -107,16 +114,230 @@ export class LobeBedrockAI implements LobeRuntimeAI {
   async embeddings(payload: EmbeddingsPayload, options?: EmbeddingsOptions): Promise<Embeddings[]> {
     const input = Array.isArray(payload.input) ? payload.input : [payload.input];
     const promises = input.map((inputText: string) =>
-      this.invokeEmbeddingModel(
-        {
-          dimensions: payload.dimensions,
-          input: inputText,
-          model: payload.model,
-        },
-        options,
-      ),
+      this.bearerToken
+        ? this.invokeEmbeddingModelWithBearerToken(
+            {
+              dimensions: payload.dimensions,
+              input: inputText,
+              model: payload.model,
+            },
+            options,
+          )
+        : this.invokeEmbeddingModel(
+            {
+              dimensions: payload.dimensions,
+              input: inputText,
+              model: payload.model,
+            },
+            options,
+          ),
     );
     return Promise.all(promises);
+  }
+
+  private async invokeBearerTokenModel(
+    payload: ChatStreamPayload,
+    options?: ChatMethodOptions,
+  ): Promise<Response> {
+    const { max_tokens, messages, model, temperature, top_p, tools: _tools } = payload;
+    const system_message = messages.find((m) => m.role === 'system');
+    const user_messages = messages.filter((m) => m.role !== 'system');
+
+    // Use the Converse API format for bearer token requests
+    const converseMessages = user_messages
+      .filter(msg => msg.content && (msg.content as string).trim())
+      .map(msg => ({
+        content: [{ text: (msg.content as string).trim() }],
+        role: msg.role === 'assistant' ? 'assistant' : 'user',
+      }));
+
+    const requestBody: any = {
+      inferenceConfig: {
+        maxTokens: max_tokens || 4096,
+      },
+      messages: converseMessages,
+    };
+
+    // Add system message if present
+    if (system_message?.content) {
+      requestBody.system = [{ text: system_message.content as string }];
+    }
+
+    // Add temperature and top_p if specified
+    if (temperature !== undefined) {
+      requestBody.inferenceConfig.temperature = temperature / 2;
+    }
+    if (top_p !== undefined) {
+      requestBody.inferenceConfig.topP = top_p;
+    }
+
+    // Add tools if present
+    if (_tools && _tools.length > 0) {
+      requestBody.toolConfig = {
+        tools: buildAnthropicTools(_tools),
+      };
+    }
+
+    const url = `https://bedrock-runtime.${this.region}.amazonaws.com/model/${model}/converse-stream`;
+
+    try {
+      const response = await fetch(url, {
+        body: JSON.stringify(requestBody),
+        headers: {
+          'Authorization': `Bearer ${this.bearerToken}`,
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        signal: options?.signal,
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+
+      // Create OpenAI-compatible stream
+      const openaiStream = new ReadableStream({
+        start(controller) {
+          if (!response.body) {
+            controller.close();
+            return;
+          }
+          
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+          let buffer = '';
+          
+          function pump(): Promise<void> {
+            return reader.read().then(({ done, value }) => {
+              if (done) {
+                controller.close();
+                return;
+              }
+              
+              const chunk = decoder.decode(value, { stream: true });
+              buffer += chunk;
+              
+              // Look for JSON objects in the stream
+              let jsonStart = buffer.indexOf('{');
+              while (jsonStart !== -1) {
+                let braceCount = 0;
+                let jsonEnd = jsonStart;
+                
+                // Find the end of the JSON object
+                for (let i = jsonStart; i < buffer.length; i++) {
+                  if (buffer[i] === '{') braceCount++;
+                  if (buffer[i] === '}') braceCount--;
+                  if (braceCount === 0) {
+                    jsonEnd = i + 1;
+                    break;
+                  }
+                }
+                
+                if (braceCount === 0) {
+                  const jsonStr = buffer.substring(jsonStart, jsonEnd);
+                  
+                  try {
+                    const data = JSON.parse(jsonStr);
+                    
+                    // Only extract actual response text, not reasoning
+                    const text = data.delta?.text;
+                    
+                    if (text && text.trim()) {
+                      // Create OpenAI-compatible chunk
+                      const openaiChunk = {
+                        choices: [{
+                          delta: { content: text },
+                          finish_reason: null,
+                          index: 0
+                        }],
+                        created: Math.floor(Date.now() / 1000),
+                        id: 'chatcmpl-bedrock',
+                        model: model,
+                        object: 'chat.completion.chunk'
+                      };
+                      controller.enqueue(openaiChunk);
+                    }
+                  } catch (e) {
+                    // Skip invalid JSON
+                  }
+                  
+                  buffer = buffer.substring(jsonEnd);
+                  jsonStart = buffer.indexOf('{');
+                } else {
+                  break; // Incomplete JSON, wait for more data
+                }
+              }
+              
+              return pump();
+            });
+          }
+          
+          return pump();
+        },
+      });
+
+      return StreamingResponse(OpenAIStream(openaiStream, { callbacks: options?.callback }), {
+        headers: options?.headers,
+      });
+    } catch (e) {
+      const err = e as Error;
+      throw AgentRuntimeError.chat({
+        error: {
+          body: undefined,
+          message: err.message,
+          type: err.name,
+        },
+        errorType: AgentRuntimeErrorType.ProviderBizError,
+        provider: ModelProvider.Bedrock,
+        region: this.region,
+      });
+    }
+  }
+
+  private async invokeEmbeddingModelWithBearerToken(
+    payload: EmbeddingsPayload,
+    options?: EmbeddingsOptions,
+  ): Promise<Embeddings> {
+    const requestBody = {
+      dimensions: payload.dimensions,
+      inputText: payload.input,
+      normalize: true,
+    };
+
+    const url = `https://bedrock-runtime.${this.region}.amazonaws.com/model/${payload.model}/invoke`;
+
+    try {
+      const response = await fetch(url, {
+        body: JSON.stringify(requestBody),
+        headers: {
+          'Authorization': `Bearer ${this.bearerToken}`,
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        signal: options?.signal,
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+
+      const responseBody = await response.json();
+      return responseBody.embedding;
+    } catch (e) {
+      const err = e as Error;
+      throw AgentRuntimeError.chat({
+        error: {
+          body: undefined,
+          message: err.message,
+          type: err.name,
+        },
+        errorType: AgentRuntimeErrorType.ProviderBizError,
+        provider: ModelProvider.Bedrock,
+        region: this.region,
+      });
+    }
   }
 
   private invokeEmbeddingModel = async (

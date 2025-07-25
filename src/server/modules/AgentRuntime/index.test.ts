@@ -44,6 +44,7 @@ vi.mock('@/config/llm', () => ({
     AWS_ACCESS_KEY_ID: 'test-aws-id',
     AWS_REGION: 'test-aws-region',
     AWS_SESSION_TOKEN: 'test-aws-session-token',
+    AWS_BEARER_TOKEN_BEDROCK: 'test-bearer-token',
     OLLAMA_PROXY_URL: 'https://test-ollama-url.local',
     PERPLEXITY_API_KEY: 'test-perplexity-key',
     DEEPSEEK_API_KEY: 'test-deepseek-key',
@@ -119,6 +120,16 @@ describe('initAgentRuntimeWithUserPayload method', () => {
         apiKey: 'user-bedrock-key',
         awsAccessKeyId: 'user-aws-id',
         awsSecretAccessKey: 'user-aws-secret',
+        awsRegion: 'user-aws-region',
+      };
+      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Bedrock, jwtPayload);
+      expect(runtime).toBeInstanceOf(AgentRuntime);
+      expect(runtime['_runtime']).toBeInstanceOf(LobeBedrockAI);
+    });
+
+    it('Bedrock AI provider: with bearer token', async () => {
+      const jwtPayload: JWTPayload = {
+        awsBearerToken: 'user-bearer-token',
         awsRegion: 'user-aws-region',
       };
       const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Bedrock, jwtPayload);

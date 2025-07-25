@@ -37,7 +37,24 @@ This document will guide you on how to use Amazon Bedrock in LobeChat:
 
   <Callout type={'info'}>Some models may require additional information from you</Callout>
 
-  ### Step 2: Obtain API Access Keys
+  ### Step 2: Choose Authentication Method
+
+  Amazon Bedrock supports two authentication methods:
+
+  #### Option A: API Key Authentication (Recommended)
+
+  AWS Bedrock now supports API key authentication, which is simpler to set up and use.
+
+  - In the AWS Console, navigate to Amazon Bedrock service
+  - Go to `API keys` in the left menu
+  - Click `Create API key`
+  - Copy and securely store the generated API key (bearer token)
+
+  <Callout type={'info'}>
+    API key authentication is simpler and more secure for most use cases. You can set the `AWS_BEARER_TOKEN_BEDROCK` environment variable to use this method.
+  </Callout>
+
+  #### Option B: IAM User Access Keys (Traditional Method)
 
   - Continue searching for IAM in the AWS console and enter the IAM service
 
@@ -70,6 +87,16 @@ This document will guide you on how to use Amazon Bedrock in LobeChat:
 
   ### Step 3: Configure Amazon Bedrock in LobeChat
 
+  #### For API Key Authentication:
+
+  - Access the `Settings` interface in LobeChat
+  - Find the setting for `Amazon Bedrock` under `AI Service Provider` and open it
+  - Enter your API key (bearer token) in the Bearer Token field
+  - Select your AWS region
+  - Choose an Amazon Bedrock model for your assistant to start the conversation
+
+  #### For IAM User Access Keys:
+
   - Access the `Settings` interface in LobeChat
   - Find the setting for `Amazon Bedrock` under `AI Service Provider` and open it
 
@@ -79,6 +106,28 @@ This document will guide you on how to use Amazon Bedrock in LobeChat:
   - Choose an Amazon Bedrock model for your assistant to start the conversation
 
   <Image alt={'Select and use Amazon Bedrock model'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/164b34b5-671e-418d-b34a-3b70f1156d06'} />
+
+  #### Environment Variables (Server Deployment):
+
+  For server deployments, you can set the following environment variables:
+
+  **API Key Authentication:**
+  ```bash
+  AWS_BEARER_TOKEN_BEDROCK=your_api_key_here
+  AWS_REGION=us-east-1  # Optional, defaults to us-east-1
+  ```
+
+  **IAM User Authentication:**
+  ```bash
+  AWS_ACCESS_KEY_ID=your_access_key_here
+  AWS_SECRET_ACCESS_KEY=your_secret_key_here
+  AWS_REGION=us-east-1  # Optional, defaults to us-east-1
+  AWS_SESSION_TOKEN=your_session_token_here  # Optional, for temporary credentials
+  ```
+
+  <Callout type={'info'}>
+    When `AWS_BEARER_TOKEN_BEDROCK` is set, it takes precedence over IAM user credentials, and you don't need to set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+  </Callout>
 
   <Callout type={'warning'}>
     You may incur charges while using the API service, please refer to Amazon Bedrock's pricing

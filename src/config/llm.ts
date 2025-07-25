@@ -233,7 +233,7 @@ export const getLLMConfig = () => {
       ENABLED_ZEROONE: !!process.env.ZEROONE_API_KEY,
       ZEROONE_API_KEY: process.env.ZEROONE_API_KEY,
 
-      ENABLED_AWS_BEDROCK: process.env.ENABLED_AWS_BEDROCK === '1',
+      ENABLED_AWS_BEDROCK: process.env.ENABLED_AWS_BEDROCK === '1' || !!process.env.AWS_BEARER_TOKEN_BEDROCK,
       AWS_REGION: process.env.AWS_REGION,
       AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
       AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
