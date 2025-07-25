@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "fixes": [
+        "Update convertUsage to handle XAI provider and adjust OpenAIStream to pass provider."
+      ]
+    },
+    "date": "2025-07-25",
+    "version": "1.104.1"
+  },
+  {
+    "children": {
       "features": ["Support custom hotkey on desktop."]
     },
     "date": "2025-07-24",
