@@ -511,14 +511,16 @@ const doubaoChatModels: AIChatModelCard[] = [
 
 const volcengineImageModels: AIImageModelCard[] = [
   {
+    /*
     config: {
       deploymentName: 'doubao-seedream-3-0-t2i-250415',
     },
+    */
     description:
       'Doubao图片生成模型由字节跳动 Seed 团队研发，支持文字与图片输入，提供高可控、高质量的图片生成体验',
     displayName: 'Doubao Seedream 3.0 t2i',
     enabled: true,
-    id: 'Doubao-Seedream-3.0-t2i',
+    id: 'doubao-seedream-3-0-t2i-250415',
     parameters: {
       prompt: {
         default: '',
