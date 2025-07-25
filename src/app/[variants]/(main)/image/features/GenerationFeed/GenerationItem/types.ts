@@ -29,6 +29,7 @@ export interface SuccessStateProps {
 export interface ErrorStateProps {
   aspectRatio: string;
   generation: Generation;
+  generationBatch: GenerationBatch;
   onCopyError: () => void;
   onDelete: () => void;
 }
@@ -36,5 +37,6 @@ export interface ErrorStateProps {
 export interface LoadingStateProps {
   aspectRatio: string;
   generation: Generation;
+  generationBatch: GenerationBatch;
   onDelete: () => void;
 }

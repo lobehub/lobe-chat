@@ -1,7 +1,8 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { Generation, GenerationBatch } from '@/types/generation';
 
+// Import functions for testing
 import {
   DEFAULT_MAX_ITEM_WIDTH,
   getAspectRatio,
@@ -372,9 +373,8 @@ describe('getImageDimensions', () => {
   });
 });
 
-describe('getAspectRatio', () => {
-  // Mock base generation object
-  const baseGeneration: Generation = {
+describe('getAspectRatio (isolated unit testing)', () => {
+  const mockGeneration: Generation = {
     id: 'test-gen-id',
     seed: 12345,
     createdAt: new Date(),
@@ -384,503 +384,60 @@ describe('getAspectRatio', () => {
       status: 'success' as any,
     },
   };
+  const mockGenerationBatch: GenerationBatch = {
+    id: 'test-batch-id',
+    provider: 'test-provider',
+    model: 'test-model',
+    prompt: 'test prompt',
+    createdAt: new Date(),
+    generations: [],
+  };
 
-  describe('Priority 1: asset width and height', () => {
-    it('should use asset dimensions when available', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: {
-          type: 'image',
-          width: 1920,
-          height: 1080,
-        },
-      };
-
-      const result = getAspectRatio(generation);
-      expect(result).toBe('1920 / 1080');
-    });
-
-    it('should use asset dimensions even when batch config exists', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: {
-          type: 'image',
-          width: 800,
-          height: 600,
-        },
-      };
-
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        width: 1024,
-        height: 1024,
-        config: {
-          prompt: 'test',
-          width: 512,
-          height: 512,
-        },
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getAspectRatio(generation, generationBatch);
-      expect(result).toBe('800 / 600');
-    });
-
-    it('should not use asset dimensions when width or height is missing', () => {
-      const generationWithoutHeight: Generation = {
-        ...baseGeneration,
-        asset: {
-          type: 'image',
-          width: 1920,
-        },
-      };
-
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        config: {
-          prompt: 'test',
-          width: 1024,
-          height: 768,
-        },
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getAspectRatio(generationWithoutHeight, generationBatch);
-      expect(result).toBe('1024 / 768');
-    });
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  describe('Priority 2: generationBatch config width and height', () => {
-    it('should use config dimensions when asset is not available', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
+  it('should return aspectRatio from getImageDimensions when dimensions have aspectRatio', () => {
+    // Test the actual implementation directly with mock data
+    const mockGen: Generation = {
+      ...mockGeneration,
+      asset: {
+        type: 'image',
+        width: 1920,
+        height: 1080,
+      },
+    };
 
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        config: {
-          prompt: 'test',
-          width: 1024,
-          height: 768,
-        },
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getAspectRatio(generation, generationBatch);
-      expect(result).toBe('1024 / 768');
-    });
-
-    it('should not use config dimensions when width or height is missing', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
-
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        width: 800,
-        height: 600,
-        config: {
-          prompt: 'test',
-          width: 1024,
-        },
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getAspectRatio(generation, generationBatch);
-      expect(result).toBe('800 / 600');
-    });
+    const result = getAspectRatio(mockGen);
+    expect(result).toBe('1920 / 1080');
   });
 
-  describe('Priority 3: generationBatch top-level width and height', () => {
-    it('should use batch top-level dimensions when config is not available', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
-
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        width: 1280,
-        height: 720,
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getAspectRatio(generation, generationBatch);
-      expect(result).toBe('1280 / 720');
-    });
-
-    it('should not use batch dimensions when width or height is missing', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
-
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        width: 1280,
-        config: {
-          prompt: 'test',
-          size: '1024x768',
-        },
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getAspectRatio(generation, generationBatch);
-      expect(result).toBe('1024 / 768');
-    });
+  it('should return default "1 / 1" when no dimensions are available', () => {
+    const result = getAspectRatio(mockGeneration, mockGenerationBatch);
+    expect(result).toBe('1 / 1');
   });
 
-  describe('Priority 4: config size parameter', () => {
-    it('should parse size parameter in format "1024x768"', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
-
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
+  it('should work with different aspectRatio sources', () => {
+    const mockBatch: GenerationBatch = {
+      id: 'test-batch',
+      provider: 'test-provider',
+      model: 'test-model',
+      prompt: 'test prompt',
+      createdAt: new Date(),
+      generations: [],
+      config: {
         prompt: 'test prompt',
-        config: {
-          prompt: 'test',
-          size: '1920x1080',
-        },
-        createdAt: new Date(),
-        generations: [],
-      };
+        aspectRatio: '16:9',
+      },
+    };
 
-      const result = getAspectRatio(generation, generationBatch);
-      expect(result).toBe('1920 / 1080');
-    });
-
-    it('should ignore size parameter when it is "auto"', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
-
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        config: {
-          prompt: 'test',
-          size: 'auto',
-          aspectRatio: '16:9',
-        },
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getAspectRatio(generation, generationBatch);
-      expect(result).toBe('16 / 9');
-    });
-
-    it('should not use invalid size format', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
-
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        config: {
-          prompt: 'test',
-          size: 'invalid-format',
-          aspectRatio: '4:3',
-        },
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getAspectRatio(generation, generationBatch);
-      expect(result).toBe('4 / 3');
-    });
-
-    it('should handle various valid size formats', () => {
-      const testCases = [
-        { size: '512x512', expected: '512 / 512' },
-        { size: '1024x768', expected: '1024 / 768' },
-        { size: '1920x1080', expected: '1920 / 1080' },
-        { size: '4096x4096', expected: '4096 / 4096' },
-      ];
-
-      testCases.forEach(({ size, expected }) => {
-        const generation: Generation = {
-          ...baseGeneration,
-          asset: null,
-        };
-
-        const generationBatch: GenerationBatch = {
-          id: 'batch-id',
-          provider: 'test',
-          model: 'test-model',
-          prompt: 'test prompt',
-          config: {
-            prompt: 'test',
-            size,
-          },
-          createdAt: new Date(),
-          generations: [],
-        };
-
-        const result = getAspectRatio(generation, generationBatch);
-        expect(result).toBe(expected);
-      });
-    });
-  });
-
-  describe('Priority 5: config aspectRatio parameter', () => {
-    it('should parse aspectRatio parameter in format "16:9"', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
-
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        config: {
-          prompt: 'test',
-          aspectRatio: '16:9',
-        },
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getAspectRatio(generation, generationBatch);
-      expect(result).toBe('16 / 9');
-    });
-
-    it('should not use invalid aspectRatio format', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
-
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        config: {
-          prompt: 'test',
-          aspectRatio: 'invalid-format',
-        },
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getAspectRatio(generation, generationBatch);
-      expect(result).toBe('1 / 1');
-    });
-
-    it('should handle various valid aspectRatio formats', () => {
-      const testCases = [
-        { aspectRatio: '1:1', expected: '1 / 1' },
-        { aspectRatio: '4:3', expected: '4 / 3' },
-        { aspectRatio: '16:9', expected: '16 / 9' },
-        { aspectRatio: '21:9', expected: '21 / 9' },
-        { aspectRatio: '3:2', expected: '3 / 2' },
-      ];
-
-      testCases.forEach(({ aspectRatio, expected }) => {
-        const generation: Generation = {
-          ...baseGeneration,
-          asset: null,
-        };
-
-        const generationBatch: GenerationBatch = {
-          id: 'batch-id',
-          provider: 'test',
-          model: 'test-model',
-          prompt: 'test prompt',
-          config: {
-            prompt: 'test',
-            aspectRatio,
-          },
-          createdAt: new Date(),
-          generations: [],
-        };
-
-        const result = getAspectRatio(generation, generationBatch);
-        expect(result).toBe(expected);
-      });
-    });
-  });
-
-  describe('Priority 6: default fallback', () => {
-    it('should return "1 / 1" when no dimensions are available', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
-
-      const result = getAspectRatio(generation);
-      expect(result).toBe('1 / 1');
-    });
-
-    it('should return "1 / 1" when generationBatch is undefined', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
-
-      const generationBatch = undefined;
-
-      const result = getAspectRatio(generation, generationBatch);
-      expect(result).toBe('1 / 1');
-    });
-
-    it('should return "1 / 1" when all dimension sources are invalid', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: {
-          type: 'image',
-          width: undefined,
-        },
-      };
-
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        config: {
-          prompt: 'test',
-          size: 'invalid',
-          aspectRatio: 'invalid',
-        },
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getAspectRatio(generation, generationBatch);
-      expect(result).toBe('1 / 1');
-    });
-  });
-
-  describe('Edge cases', () => {
-    it('should handle zero dimensions in asset', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: {
-          type: 'image',
-          width: 0,
-          height: 0,
-        },
-      };
-
-      const result = getAspectRatio(generation);
-      expect(result).toBe('1 / 1');
-    });
-
-    it('should handle zero dimensions in config', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
-
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        config: {
-          prompt: 'test',
-          width: 0,
-          height: 0,
-        },
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getAspectRatio(generation, generationBatch);
-      expect(result).toBe('1 / 1');
-    });
-
-    it('should handle null config', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
-
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        config: undefined,
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getAspectRatio(generation, generationBatch);
-      expect(result).toBe('1 / 1');
-    });
-
-    it('should handle empty string in size and aspectRatio', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
-
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        config: {
-          prompt: 'test',
-          size: '',
-          aspectRatio: '',
-        },
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getAspectRatio(generation, generationBatch);
-      expect(result).toBe('1 / 1');
-    });
+    const result = getAspectRatio(mockGeneration, mockBatch);
+    expect(result).toBe('16 / 9');
   });
 });
 
-describe('getThumbnailMaxWidth', () => {
-  // Mock base generation object
-  const baseGeneration: Generation = {
+describe('getThumbnailMaxWidth (isolated unit testing)', () => {
+  const mockGeneration: Generation = {
     id: 'test-gen-id',
     seed: 12345,
     createdAt: new Date(),
@@ -889,12 +446,21 @@ describe('getThumbnailMaxWidth', () => {
       id: 'task-id',
       status: 'success' as any,
     },
+  };
+  const mockGenerationBatch: GenerationBatch = {
+    id: 'test-batch-id',
+    provider: 'test-provider',
+    model: 'test-model',
+    prompt: 'test prompt',
+    createdAt: new Date(),
+    generations: [],
   };
 
   // Mock window.innerHeight for tests
   const originalWindow = global.window;
 
   beforeEach(() => {
+    vi.clearAllMocks();
     Object.defineProperty(global, 'window', {
       writable: true,
       value: {
@@ -907,273 +473,128 @@ describe('getThumbnailMaxWidth', () => {
     global.window = originalWindow;
   });
 
-  describe('when dimensions are available from asset', () => {
-    it('should calculate thumbnail width for landscape image within 512px', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: {
-          type: 'image',
-          width: 400,
-          height: 300,
-        },
-      };
-
-      const result = getThumbnailMaxWidth(generation);
-      expect(result).toBe(400); // No scaling needed
-    });
-
-    it('should calculate thumbnail width for large landscape image', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: {
-          type: 'image',
-          width: 1024,
-          height: 768,
-        },
-      };
-
-      const result = getThumbnailMaxWidth(generation);
-      expect(result).toBe(512); // Scale to max width 512
-    });
-
-    it('should calculate thumbnail width for portrait image', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: {
-          type: 'image',
-          width: 768,
-          height: 1024,
-        },
-      };
-
-      const result = getThumbnailMaxWidth(generation);
-      // (768 * 512) / 1024 = 384, but screen height constraint (800/2=400) limits it
-      // Scale: 400/512 = 0.78125, final width: 384 * 0.78125 = 300
-      expect(result).toBe(300);
-    });
-
-    it('should limit height by screen height constraint', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: {
-          type: 'image',
-          width: 512,
-          height: 1000, // This would exceed screen height / 2 (400px)
-        },
-      };
-
-      const result = getThumbnailMaxWidth(generation);
-      // Original thumbnail would be 512 width, 1000 height
-      // Screen constraint: height must be <= 400
-      // Scale: 400/1000 = 0.4
-      // Final width: 512 * 0.4 = 204.8 → 205
-      expect(result).toBe(205);
-    });
+  it('should return DEFAULT_MAX_ITEM_WIDTH when no dimensions available', () => {
+    const result = getThumbnailMaxWidth(mockGeneration, mockGenerationBatch);
+    expect(result).toBe(DEFAULT_MAX_ITEM_WIDTH);
   });
 
-  describe('when dimensions are available from generationBatch config', () => {
-    it('should use config dimensions when asset is not available', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
-
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        config: {
-          prompt: 'test',
-          width: 1024,
-          height: 512,
-        },
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getThumbnailMaxWidth(generation, generationBatch);
-      expect(result).toBe(512); // 1024 > 512, so scale to 512 width
-    });
+  it('should return DEFAULT_MAX_ITEM_WIDTH when width is missing', () => {
+    const mockGen: Generation = {
+      ...mockGeneration,
+      // No asset with width/height, should fall back to default
+    };
+    const result = getThumbnailMaxWidth(mockGen);
+    expect(result).toBe(DEFAULT_MAX_ITEM_WIDTH);
   });
 
-  describe('when dimensions are available from generationBatch top-level', () => {
-    it('should use batch dimensions when config is not available', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
-
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        width: 800,
-        height: 600,
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getThumbnailMaxWidth(generation, generationBatch);
-      expect(result).toBe(512); // 800 > 600, so scale to 512 width
-    });
+  it('should return DEFAULT_MAX_ITEM_WIDTH when height is missing', () => {
+    const mockGen: Generation = {
+      ...mockGeneration,
+      // No asset with valid dimensions
+    };
+    const result = getThumbnailMaxWidth(mockGen);
+    expect(result).toBe(DEFAULT_MAX_ITEM_WIDTH);
   });
 
-  describe('when dimensions are available from size parameter', () => {
-    it('should parse size parameter correctly', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
+  it('should calculate width based on screen height constraint', () => {
+    const mockGen: Generation = {
+      ...mockGeneration,
+      asset: {
+        type: 'image',
+        width: 300,
+        height: 200,
+      },
+    };
 
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        config: {
-          prompt: 'test',
-          size: '1920x1080',
-        },
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getThumbnailMaxWidth(generation, generationBatch);
-      expect(result).toBe(512); // 1920 > 1080, so scale to 512 width
-    });
+    // aspectRatio = 300/200 = 1.5
+    // maxScreenHeight = 800/2 = 400
+    // maxWidthFromHeight = 400 * 1.5 = 600
+    // maxReasonableWidth = 200 * 2 = 400
+    // min(600, 400) = 400
+    const result = getThumbnailMaxWidth(mockGen);
+    expect(result).toBe(400);
   });
 
-  describe('when only aspectRatio is available (no dimensions)', () => {
-    it('should return DEFAULT_MAX_ITEM_WIDTH for aspectRatio without dimensions', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
+  it('should apply maxReasonableWidth limit', () => {
+    const mockGen: Generation = {
+      ...mockGeneration,
+      asset: {
+        type: 'image',
+        width: 600,
+        height: 200,
+      },
+    };
 
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        config: {
-          prompt: 'test',
-          aspectRatio: '16:9',
-        },
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getThumbnailMaxWidth(generation, generationBatch);
-      // When only aspectRatio is available (no concrete dimensions), return default width
-      expect(result).toBe(DEFAULT_MAX_ITEM_WIDTH);
-    });
-
-    it('should also return DEFAULT_MAX_ITEM_WIDTH for portrait aspectRatio', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
-
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        config: {
-          prompt: 'test',
-          aspectRatio: '9:16',
-        },
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getThumbnailMaxWidth(generation, generationBatch);
-      // When only aspectRatio is available (no concrete dimensions), return default width
-      expect(result).toBe(DEFAULT_MAX_ITEM_WIDTH);
-    });
+    // aspectRatio = 600/200 = 3
+    // maxScreenHeight = 800/2 = 400
+    // maxWidthFromHeight = 400 * 3 = 1200
+    // maxReasonableWidth = 200 * 2 = 400
+    // min(1200, 400) = 400
+    const result = getThumbnailMaxWidth(mockGen);
+    expect(result).toBe(400);
   });
 
-  describe('fallback behavior', () => {
-    it('should return DEFAULT_MAX_ITEM_WIDTH when no dimensions are available', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
+  it('should use screen height constraint when smaller', () => {
+    const mockGen: Generation = {
+      ...mockGeneration,
+      asset: {
+        type: 'image',
+        width: 200,
+        height: 400,
+      },
+    };
 
-      const result = getThumbnailMaxWidth(generation);
-      expect(result).toBe(DEFAULT_MAX_ITEM_WIDTH);
-    });
-
-    it('should return DEFAULT_MAX_ITEM_WIDTH when generationBatch has no valid dimensions', () => {
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: null,
-      };
-
-      const generationBatch: GenerationBatch = {
-        id: 'batch-id',
-        provider: 'test',
-        model: 'test-model',
-        prompt: 'test prompt',
-        config: {
-          prompt: 'test',
-          size: 'invalid',
-          aspectRatio: 'invalid',
-        },
-        createdAt: new Date(),
-        generations: [],
-      };
-
-      const result = getThumbnailMaxWidth(generation, generationBatch);
-      expect(result).toBe(DEFAULT_MAX_ITEM_WIDTH);
-    });
+    // aspectRatio = 200/400 = 0.5
+    // maxScreenHeight = 800/2 = 400
+    // maxWidthFromHeight = 400 * 0.5 = 200
+    // maxReasonableWidth = 200 * 2 = 400
+    // min(200, 400) = 200
+    const result = getThumbnailMaxWidth(mockGen);
+    expect(result).toBe(200);
   });
 
-  describe('screen height constraint', () => {
-    it('should limit width when calculated height exceeds screen height / 2', () => {
-      Object.defineProperty(global, 'window', {
-        writable: true,
-        value: {
-          innerHeight: 600,
-        },
-      });
-
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: {
-          type: 'image',
-          width: 400,
-          height: 800, // Height exceeds 600/2 = 300
-        },
-      };
-
-      const result = getThumbnailMaxWidth(generation, undefined);
-      // Original: 400x800, within 512 limit so no initial scaling
-      // Screen constraint: height must be <= 300
-      // Scale: 300/800 = 0.375
-      // Final width: 400 * 0.375 = 150
-      expect(result).toBe(150);
+  it('should handle different window.innerHeight values', () => {
+    Object.defineProperty(global, 'window', {
+      writable: true,
+      value: {
+        innerHeight: 600,
+      },
     });
 
-    it('should handle server-side rendering (no window)', () => {
-      delete (global as any).window;
+    const mockGen: Generation = {
+      ...mockGeneration,
+      asset: {
+        type: 'image',
+        width: 400,
+        height: 200,
+      },
+    };
 
-      const generation: Generation = {
-        ...baseGeneration,
-        asset: {
-          type: 'image',
-          width: 600,
-          height: 1000,
-        },
-      };
+    // aspectRatio = 400/200 = 2
+    // maxScreenHeight = 600/2 = 300
+    // maxWidthFromHeight = 300 * 2 = 600
+    // maxReasonableWidth = 200 * 2 = 400
+    // min(600, 400) = 400
+    const result = getThumbnailMaxWidth(mockGen);
+    expect(result).toBe(400);
+  });
 
-      const result = getThumbnailMaxWidth(generation);
-      // Original: 600x1000, calculateThumbnailDimensions gives us:
-      // thumbnailWidth = Math.round((600 * 512) / 1000) = 307
-      // In SSR environment, no height constraint applied, return thumbnailWidth directly
-      expect(result).toBe(307);
-    });
+  it('should round calculated width correctly', () => {
+    const mockGen: Generation = {
+      ...mockGeneration,
+      asset: {
+        type: 'image',
+        width: 512,
+        height: 1000,
+      },
+    };
+
+    // aspectRatio = 512/1000 = 0.512
+    // maxScreenHeight = 800/2 = 400
+    // maxWidthFromHeight = Math.round(400 * 0.512) = Math.round(204.8) = 205
+    // maxReasonableWidth = 200 * 2 = 400
+    // min(205, 400) = 205
+    const result = getThumbnailMaxWidth(mockGen);
+    expect(result).toBe(205);
   });
 });

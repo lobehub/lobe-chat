@@ -129,6 +129,7 @@ export const GenerationItem = memo<GenerationItemProps>(
         <ErrorState
           aspectRatio={aspectRatio}
           generation={generation}
+          generationBatch={generationBatch}
           onCopyError={handleCopyError}
           onDelete={handleDeleteGeneration}
         />
@@ -140,6 +141,7 @@ export const GenerationItem = memo<GenerationItemProps>(
       <LoadingState
         aspectRatio={aspectRatio}
         generation={generation}
+        generationBatch={generationBatch}
         onDelete={handleDeleteGeneration}
       />
     );

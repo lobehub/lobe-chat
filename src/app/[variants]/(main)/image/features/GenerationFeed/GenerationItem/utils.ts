@@ -1,5 +1,4 @@
 import { Generation, GenerationBatch } from '@/types/generation';
-import { calculateThumbnailDimensions } from '@/utils/number';
 
 // Default maximum width for image items
 export const DEFAULT_MAX_ITEM_WIDTH = 200;
@@ -11,7 +10,7 @@ export const DEFAULT_MAX_ITEM_WIDTH = 200;
 export const getImageDimensions = (
   generation: Generation,
   generationBatch?: GenerationBatch,
-): { aspectRatio: string | null, height: number | null; width: number | null; } => {
+): { aspectRatio: string | null; height: number | null; width: number | null } => {
   // 1. Priority: actual dimensions from asset
   if (
     generation.asset?.width &&
@@ -100,8 +99,8 @@ export const getAspectRatio = (
 };
 
 /**
- * Calculate thumbnail max width
- * Generate thumbnail with max edge of 512px, ensuring height doesn't exceed half screen height
+ * Calculate display max width for generation items
+ * Ensures height doesn't exceed half screen height based on original aspect ratio
  */
 export const getThumbnailMaxWidth = (
   generation: Generation,
@@ -115,22 +114,13 @@ export const getThumbnailMaxWidth = (
   }
 
   const { width: originalWidth, height: originalHeight } = dimensions;
+  const aspectRatio = originalWidth / originalHeight;
 
-  // Calculate base thumbnail dimensions using the utility function
-  const { thumbnailWidth, thumbnailHeight } = calculateThumbnailDimensions(
-    originalWidth,
-    originalHeight,
-  );
+  // Apply screen height constraint (half of screen height)
+  const maxScreenHeight = window.innerHeight / 2;
+  const maxWidthFromHeight = Math.round(maxScreenHeight * aspectRatio);
 
-  // In browser environment, apply screen height constraint (half of screen height)
-  if (typeof window !== 'undefined') {
-    const maxScreenHeight = window.innerHeight / 2;
-    if (thumbnailHeight > maxScreenHeight) {
-      const heightScale = maxScreenHeight / thumbnailHeight;
-      return Math.round(thumbnailWidth * heightScale);
-    }
-  }
-
-  // In SSR environment, return thumbnail width without height constraint
-  return thumbnailWidth;
+  // Use the smaller of: calculated width from height constraint or a reasonable maximum
+  const maxReasonableWidth = DEFAULT_MAX_ITEM_WIDTH * 2;
+  return Math.min(maxWidthFromHeight, maxReasonableWidth);
 };
