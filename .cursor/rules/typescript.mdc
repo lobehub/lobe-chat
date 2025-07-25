@@ -17,3 +17,5 @@ TypeScript Code Style Guide:
 - Don't remove meaningful code comments, be sure to keep original comments when providing applied code
 - Update the code comments when needed after you modify the related code
 - Please respect my prettier preferences when you provide code
+- Prefer object destructuring when accessing and using properties
+- Prefer async version api than sync version, eg: use readFile from 'fs/promises' instead of 'fs'

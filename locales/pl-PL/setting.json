@@ -45,14 +45,25 @@
   },
   "hotkey": {
     "conflicts": "Kolizja z istniejącymi skrótami klawiszowymi",
+    "errors": {
+      "CONFLICT": "Konflikt skrótu klawiszowego: ten skrót jest już używany przez inną funkcję",
+      "INVALID_FORMAT": "Nieprawidłowy format skrótu klawiszowego: użyj poprawnego formatu (np. CommandOrControl+E)",
+      "INVALID_ID": "Nieprawidłowy identyfikator skrótu klawiszowego",
+      "NO_MODIFIER": "Skrót klawiszowy musi zawierać klawisz modyfikujący (Ctrl, Alt, Shift itp.)",
+      "SYSTEM_OCCUPIED": "Skrót klawiszowy jest zajęty przez system lub inną aplikację",
+      "UNKNOWN": "Aktualizacja nie powiodła się: nieznany błąd"
+    },
     "group": {
       "conversation": "Rozmowa",
+      "desktop": "Pulpit",
       "essential": "Podstawowy"
     },
     "invalidCombination": "Skrót klawiszowy musi zawierać przynajmniej jeden klawisz modyfikujący (Ctrl, Alt, Shift) oraz jeden klawisz zwykły",
     "record": "Naciśnij klawisz, aby nagrać skrót klawiszowy",
     "reset": "Przywróć domyślne skróty klawiszowe",
-    "title": "Skróty klawiszowe"
+    "title": "Skróty klawiszowe",
+    "updateError": "Aktualizacja skrótu klawiszowego nie powiodła się: błąd sieci lub systemu",
+    "updateSuccess": "Skrót klawiszowy został pomyślnie zaktualizowany"
   },
   "llm": {
     "aesGcm": "Twój klucz, adres proxy i inne będą szyfrowane za pomocą algorytmu szyfrowania <1>AES-GCM</1>",

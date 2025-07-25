@@ -45,14 +45,25 @@
   },
   "hotkey": {
     "conflicts": "Conflito com teclas de atalho existentes",
+    "errors": {
+      "CONFLICT": "Conflito de atalho: este atalho já está em uso por outra função",
+      "INVALID_FORMAT": "Formato de atalho inválido: por favor, use o formato correto (ex: CommandOrControl+E)",
+      "INVALID_ID": "ID de atalho inválido",
+      "NO_MODIFIER": "O atalho deve incluir uma tecla modificadora (Ctrl, Alt, Shift, etc.)",
+      "SYSTEM_OCCUPIED": "Atalho já está ocupado pelo sistema ou por outro aplicativo",
+      "UNKNOWN": "Falha na atualização: erro desconhecido"
+    },
     "group": {
       "conversation": "Conversa",
+      "desktop": "Área de trabalho",
       "essential": "Essencial"
     },
     "invalidCombination": "A combinação de teclas de atalho deve incluir pelo menos uma tecla modificadora (Ctrl, Alt, Shift) e uma tecla comum",
     "record": "Pressione a tecla para gravar o atalho",
     "reset": "Redefinir para os atalhos padrão",
-    "title": "Atalhos"
+    "title": "Atalhos",
+    "updateError": "Falha na atualização do atalho: erro de rede ou sistema",
+    "updateSuccess": "Atalho atualizado com sucesso"
   },
   "llm": {
     "aesGcm": "Suas chaves, endereço do agente, etc., serão criptografados usando o algoritmo de criptografia <1>AES-GCM</1>",
