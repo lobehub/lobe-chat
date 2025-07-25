@@ -517,7 +517,7 @@ const volcengineImageModels: AIImageModelCard[] = [
     },
     */
     description:
-      'Doubao图片生成模型由字节跳动 Seed 团队研发，支持文字与图片输入，提供高可控、高质量的图片生成体验',
+      'Doubao图片生成模型由字节跳动 Seed 团队研发，支持文字与图片输入，提供高可控、高质量的图片生成体验。基于文本提示词生成图片。',
     displayName: 'Doubao Seedream 3.0 t2i',
     enabled: true,
     id: 'doubao-seedream-3-0-t2i-250415',
@@ -532,6 +532,31 @@ const volcengineImageModels: AIImageModelCard[] = [
       },
     },
     releasedAt: '2025-04-15',
+    type: 'image',
+  },
+  {
+    /*
+    config: {
+      deploymentName: 'doubao-seededit-3-0-i2i-250628',
+    },
+    */
+    description:
+      'Doubao图片生成模型由字节跳动 Seed 团队研发，支持文字与图片输入，提供高可控、高质量的图片生成体验。支持通过文本指令编辑图像，生成图像的边长在512～1536之间。',
+    displayName: 'Doubao-SeedEdit-3.0-i2i',
+    enabled: true,
+    id: 'doubao-seededit-3-0-i2i-250628',
+    parameters: {
+      imageUrl: { default: null },
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      size: {
+        default: '1024x1024',
+        enum: ['1024x1024', '864x1152', '1152x864', '1280x720', '720x1280', '832x1248', '1248x832', '1512x648'],
+      },
+    },
+    releasedAt: '2025-06-28',
     type: 'image',
   },
 ];
