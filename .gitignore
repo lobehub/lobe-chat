@@ -72,5 +72,6 @@ vertex-ai-key.json
 
 # local use ai coding files
 docs/.prd
+.claude
 .mcp.json
 CLAUDE.md
