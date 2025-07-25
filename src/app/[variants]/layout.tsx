@@ -2,7 +2,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ThemeAppearance } from 'antd-style';
 import { ResolvingViewport } from 'next';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
@@ -32,6 +32,11 @@ const RootLayout = async ({ children, params, modal }: RootLayoutProps) => {
 
   return (
     <html dir={direction} lang={locale} suppressHydrationWarning>
+      {process.env.DEBUG_REACT_SCAN === '1' && (
+        <head>
+          <script crossOrigin="anonymous" src="https://unpkg.com/react-scan/dist/auto.global.js" />
+        </head>
+      )}
       <body>
         <NuqsAdapter>
           <GlobalProvider
