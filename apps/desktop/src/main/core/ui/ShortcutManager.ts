@@ -33,6 +33,28 @@ export class ShortcutManager {
     });
   }
 
+  /**
+   * Convert react-hotkey format to Electron accelerator format
+   * @param accelerator The accelerator string from frontend
+   * @returns Converted accelerator string for Electron
+   */
+  private convertAcceleratorFormat(accelerator: string): string {
+    return accelerator
+      .split('+')
+      .map((key) => {
+        const trimmedKey = key.trim().toLowerCase();
+
+        // Convert react-hotkey 'mod' to Electron 'CommandOrControl'
+        if (trimmedKey === 'mod') {
+          return 'CommandOrControl';
+        }
+
+        // Keep other keys as is, but preserve proper casing
+        return key.trim().length === 1 ? key.trim().toUpperCase() : key.trim();
+      })
+      .join('+');
+  }
+
   initialize() {
     logger.info('Initializing global shortcuts');
     // Load shortcuts configuration from storage
@@ -67,7 +89,11 @@ export class ShortcutManager {
         return { errorType: 'INVALID_FORMAT', success: false };
       }
 
-      const cleanAccelerator = accelerator.trim().toLowerCase();
+      // 转换前端格式到 Electron 格式
+      const convertedAccelerator = this.convertAcceleratorFormat(accelerator.trim());
+      const cleanAccelerator = convertedAccelerator.toLowerCase();
+
+      logger.debug(`Converted accelerator from ${accelerator} to ${convertedAccelerator}`);
 
       // 3. 检查是否包含 + 号（修饰键格式）
       if (!cleanAccelerator.includes('+')) {
@@ -100,17 +126,19 @@ export class ShortcutManager {
       }
 
       // 6. 尝试注册测试（检查是否被系统占用）
-      const testSuccess = globalShortcut.register(cleanAccelerator, () => {});
+      const testSuccess = globalShortcut.register(convertedAccelerator, () => {});
       if (!testSuccess) {
-        logger.error(`Shortcut ${cleanAccelerator} is already registered by system or other app`);
+        logger.error(
+          `Shortcut ${convertedAccelerator} is already registered by system or other app`,
+        );
         return { errorType: 'SYSTEM_OCCUPIED', success: false };
       } else {
         // 测试成功，立即取消注册
-        globalShortcut.unregister(cleanAccelerator);
+        globalShortcut.unregister(convertedAccelerator);
       }
 
       // 7. 更新配置
-      this.shortcutsConfig[id] = cleanAccelerator;
+      this.shortcutsConfig[id] = convertedAccelerator;
 
       this.saveShortcutsConfig();
       this.registerConfiguredShortcuts();
