@@ -63,10 +63,11 @@ async function createImageTask(payload: CreateImagePayload, apiKey: string): Pro
       parameters: {
         n: 1,
         ...(params.seed !== undefined ? { seed: params.seed } : {}),
-        ...(params.size !== undefined ? { size: params.size } : {}),
         ...(params.width && params.height
           ? { size: `${params.width}*${params.height}` }
-          : { size: '1024*1024' }),
+          : params.size 
+            ? { size: params.size.replace(/x/g, '*') }
+            : { size: '1024*1024' }),
       },
     }),
     headers: {
