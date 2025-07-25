@@ -6,6 +6,11 @@ export interface ElectronAppState {
   platform?: 'darwin' | 'win32' | 'linux';
   systemAppearance?: string;
   userPath?: UserPathData;
+  version?: {
+    channel?: 'nightly' | 'beta' | 'stable';
+    protocolScheme?: string; // e.g., 'lobehub', 'lobehub-nightly', 'lobehub-beta'
+    version?: string;
+  };
 }
 
 /**

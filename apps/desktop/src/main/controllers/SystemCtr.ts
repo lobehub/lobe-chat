@@ -5,8 +5,10 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import process from 'node:process';
 
+import { version } from '@/../../package.json';
 import { DB_SCHEMA_HASH_FILENAME, LOCAL_DATABASE_DIR, userDataDir } from '@/const/dir';
 import { createLogger } from '@/utils/logger';
+import { getVersionInfo } from '@/utils/protocol';
 
 import { ControllerModule, ipcClientEvent, ipcServerEvent } from './index';
 
@@ -30,6 +32,7 @@ export default class SystemController extends ControllerModule {
   async getAppState(): Promise<ElectronAppState> {
     const platform = process.platform;
     const arch = process.arch;
+    const versionInfo = { ...getVersionInfo(), version };
 
     return {
       // System Info
@@ -50,6 +53,7 @@ export default class SystemController extends ControllerModule {
         userData: app.getPath('userData'),
         videos: app.getPath('videos'),
       },
+      version: versionInfo,
     };
   }
 
