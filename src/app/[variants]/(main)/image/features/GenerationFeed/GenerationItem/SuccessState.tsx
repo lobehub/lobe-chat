@@ -41,7 +41,8 @@ export const SuccessState = memo<SuccessStateProps>(
             src: generation.asset!.url,
           }}
           style={{ height: '100%', width: '100%' }}
-          url={generation.asset!.thumbnailUrl}
+          // Thumbnail quality is too bad
+          url={generation.asset!.url}
         />
         <ActionButtons
           onCopySeed={onCopySeed}
