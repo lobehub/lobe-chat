@@ -36,8 +36,7 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
       height={'100%'}
       horizontal={md}
       ref={ref}
-      style={{ background: theme.colorBgContainer, position: 'relative' }}
-      width={'100%'}
+      style={{ background: theme.colorBgContainer, flex: '1', position: 'relative', width: '0' }}
     >
       {md ? (
         <SideBar>{category}</SideBar>
