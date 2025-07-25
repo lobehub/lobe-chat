@@ -13,7 +13,7 @@ const sensenovaChatModels: AIChatModelCard[] = [
     description: '通过对多模态、语言及推理数据的全面更新与训练策略的优化，新模型在多模态推理和泛化指令跟随能力上实现了显著提升，支持高达128k的上下文窗口，并在OCR与文旅IP识别等专项任务中表现卓越。',
     displayName: 'SenseNova V6.5 Pro',
     enabled: true,
-    id: 'SenseNova-V6.5-Pro',
+    id: 'SenseNova-V6-5-Pro',
     pricing: {
       currency: 'CNY',
       input: 3,
@@ -34,13 +34,53 @@ const sensenovaChatModels: AIChatModelCard[] = [
     description: '通过对多模态、语言及推理数据的全面更新与训练策略的优化，新模型在多模态推理和泛化指令跟随能力上实现了显著提升，支持高达128k的上下文窗口，并在OCR与文旅IP识别等专项任务中表现卓越。',
     displayName: 'SenseNova V6.5 Turbo',
     enabled: true,
-    id: 'SenseNova-V6.5-Turbo',
+    id: 'SenseNova-V6-5-Turbo',
     pricing: {
       currency: 'CNY',
       input: 1.5,
       output: 4.5,
     },
     releasedAt: '2025-07-23',
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description: 'Qwen3-235B-A22B，MoE（混合专家模型）模型,引入了“混合推理模式”，支持用户在“思考模式”和“非思考模式”之间无缝切换，支持119种语言和方言理解与推理，并具备强大的工具调用能力，在综合能力、代码与数学、多语言能力、知识与推理等多项基准测试中，都能与DeepSeek R1、OpenAI o1、o3-mini、Grok 3和谷歌Gemini 2.5 Pro等目前市场上的主流大模型竞争。',
+    displayName: 'Qwen3 235B A22B',
+    id: 'Qwen3-235B',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    releasedAt: '2025-05-27',
+    settings: {
+      extendParams: ['enableReasoning'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description: 'Qwen3-32B，稠密模型（Dense Model）,引入了“混合推理模式”，支持用户在“思考模式”和“非思考模式”之间无缝切换，由于模型架构改进、训练数据增加以及更有效的训练方法，整体性能与Qwen2.5-72B表现相当。',
+    displayName: 'Qwen3 32B',
+    id: 'Qwen3-32B',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    releasedAt: '2025-05-27',
     settings: {
       extendParams: ['enableReasoning'],
     },

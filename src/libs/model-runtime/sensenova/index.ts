@@ -34,7 +34,7 @@ export const LobeSenseNovaAI = createOpenAICompatibleRuntime({
             ? temperature
             : undefined,
         thinking: thinking 
-          ? (model && model.includes('-V6.5-') && thinking.type === 'enabled' ? { enabled: true } : { enabled: false })
+          ? (model && model.includes('-V6-5-') && thinking.type === 'enabled' ? { enabled: true } : { enabled: false })
           : undefined,
         top_p: top_p !== undefined && top_p > 0 && top_p < 1 ? top_p : undefined,
       } as any;
