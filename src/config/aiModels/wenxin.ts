@@ -568,7 +568,7 @@ const wenxinImageModels: AIImageModelCard[] = [
   {
     description:
       '百度自研的iRAG（image based RAG），检索增强的文生图技术，将百度搜索的亿级图片资源跟强大的基础模型能力相结合，就可以生成各种超真实的图片，整体效果远远超过文生图原生系统，去掉了AI味儿，而且成本很低。iRAG具备无幻觉、超真实、立等可取等特点。',
-    displayName: 'ERINE iRAG',
+    displayName: 'ERNIE iRAG',
     enabled: true,
     id: 'irag-1.0',
     parameters: {
@@ -586,7 +586,7 @@ const wenxinImageModels: AIImageModelCard[] = [
   {
     description:
       '百度自研的ERNIE iRAG Edit图像编辑模型支持基于图片进行erase（消除对象）、repaint（重绘对象）、variation（生成变体）等操作。',
-    displayName: 'ERINE iRAG Edit',
+    displayName: 'ERNIE iRAG Edit',
     enabled: true,
     id: 'ernie-irag-edit',
     parameters: {
