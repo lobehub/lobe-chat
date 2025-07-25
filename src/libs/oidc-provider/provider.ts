@@ -76,6 +76,9 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
     // 1. 客户端配置
     clients: defaultClients,
 
+    // 新增：确保 ID Token 包含所有 scope 对应的 claims，而不仅仅是 openid scope
+    conformIdTokenClaims: false,
+
     // 7. Cookie 配置
     cookies: {
       keys: cookieKeys,
