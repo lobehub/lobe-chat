@@ -4,11 +4,53 @@ import mime from 'mime';
 import { nanoid } from 'nanoid';
 import sharp from 'sharp';
 
+import { IMAGE_GENERATION_CONFIG } from '@/const/imageGeneration';
 import { LobeChatDatabase } from '@/database/type';
+import { parseDataUri } from '@/libs/model-runtime/utils/uriParser';
 import { FileService } from '@/server/services/file';
+import { calculateThumbnailDimensions } from '@/utils/number';
 import { getYYYYmmddHHMMss } from '@/utils/time';
+import { inferFileExtensionFromImageUrl } from '@/utils/url';
 
 const log = debug('lobe-image:generation-service');
+
+/**
+ * Fetch image buffer and MIME type from URL or base64 data
+ * @param url - Image URL or base64 data URI
+ * @returns Object containing buffer and MIME type
+ */
+export async function fetchImageFromUrl(url: string): Promise<{
+  buffer: Buffer;
+  mimeType: string;
+}> {
+  if (url.startsWith('data:')) {
+    const { base64, mimeType, type } = parseDataUri(url);
+
+    if (type !== 'base64' || !base64 || !mimeType) {
+      throw new Error(`Invalid data URI format: ${url}`);
+    }
+
+    try {
+      const buffer = Buffer.from(base64, 'base64');
+      return { buffer, mimeType };
+    } catch (error) {
+      throw new Error(
+        `Failed to decode base64 data: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  } else {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch image from ${url}: ${response.status} ${response.statusText}`,
+      );
+    }
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const mimeType = response.headers.get('content-type') || 'application/octet-stream';
+    return { buffer, mimeType };
+  }
+}
 
 interface ImageForGeneration {
   buffer: Buffer;
@@ -40,33 +82,12 @@ export class GenerationService {
   }> {
     log('Starting image transformation for:', url.startsWith('data:') ? 'base64 data' : url);
 
-    // If the url is in base64 format, extract the Buffer directly; otherwise, use fetch to get the Buffer
-    let originalImageBuffer: Buffer;
-    let originalMimeType: string;
-
-    if (url.startsWith('data:')) {
-      log('Processing base64 image data');
-      // Extract the MIME type and base64 data part
-      const [mimeTypePart, base64Data] = url.split(',');
-      originalMimeType = mimeTypePart.split(':')[1].split(';')[0];
-      originalImageBuffer = Buffer.from(base64Data, 'base64');
-    } else {
-      log('Fetching image from URL:', url);
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch image from ${url}: ${response.status} ${response.statusText}`,
-        );
-      }
-      const arrayBuffer = await response.arrayBuffer();
-      originalImageBuffer = Buffer.from(arrayBuffer);
-      originalMimeType = response.headers.get('content-type') || 'application/octet-stream';
-      log('Successfully fetched image, buffer size:', originalImageBuffer.length);
-    }
+    // Fetch image buffer and MIME type using utility function
+    const { buffer: originalImageBuffer, mimeType: originalMimeType } =
+      await fetchImageFromUrl(url);
 
     // Calculate hash for original image
     const originalHash = sha256(originalImageBuffer);
-    log('Original image hash calculated:', originalHash);
 
     const sharpInstance = sharp(originalImageBuffer);
     const { format, width, height } = await sharpInstance.metadata();
@@ -76,19 +97,20 @@ export class GenerationService {
       throw new Error(`Invalid image format: ${format}, url: ${url}`);
     }
 
-    const shouldResize = format !== 'webp' || width > 512 || height > 512;
-    const thumbnailWidth = shouldResize
-      ? width > height
-        ? 512
-        : Math.round((width * 512) / height)
-      : width;
-    const thumbnailHeight = shouldResize
-      ? height > width
-        ? 512
-        : Math.round((height * 512) / width)
-      : height;
+    const {
+      shouldResize: shouldResizeBySize,
+      thumbnailWidth,
+      thumbnailHeight,
+    } = calculateThumbnailDimensions(width, height);
+    const shouldResize = shouldResizeBySize || format !== 'webp';
 
-    log('Thumbnail dimensions calculated:', { shouldResize, thumbnailHeight, thumbnailWidth });
+    log('Thumbnail processing decision:', {
+      format,
+      shouldResize,
+      shouldResizeBySize,
+      thumbnailHeight,
+      thumbnailWidth,
+    });
 
     const thumbnailBuffer = shouldResize
       ? await sharpInstance.resize(thumbnailWidth, thumbnailHeight).webp().toBuffer()
@@ -96,11 +118,10 @@ export class GenerationService {
 
     // Calculate hash for thumbnail
     const thumbnailHash = sha256(thumbnailBuffer);
-    log('Thumbnail image hash calculated:', thumbnailHash);
 
     log('Image transformation completed successfully');
 
-    // Determine extension without fallback
+    // Determine extension using url utility
     let extension: string;
     if (url.startsWith('data:')) {
       const mimeExtension = mime.getExtension(originalMimeType);
@@ -109,11 +130,10 @@ export class GenerationService {
       }
       extension = mimeExtension;
     } else {
-      const urlExtension = url.split('.').pop();
-      if (!urlExtension) {
+      extension = inferFileExtensionFromImageUrl(url);
+      if (!extension) {
         throw new Error(`Unable to determine file extension from URL: ${url}`);
       }
-      extension = urlExtension;
     }
 
     return {
@@ -144,9 +164,8 @@ export class GenerationService {
     const generationImagesFolder = 'generations/images';
     const uuid = nanoid();
     const dateTime = getYYYYmmddHHMMss(new Date());
-    const pathPrefix = `${generationImagesFolder}/${uuid}_${image.width}x${image.height}_${dateTime}`;
-    const imageKey = `${pathPrefix}_raw.${image.extension}`;
-    const thumbnailKey = `${pathPrefix}_thumb.${thumbnail.extension}`;
+    const imageKey = `${generationImagesFolder}/${uuid}_${image.width}x${image.height}_${dateTime}_raw.${image.extension}`;
+    const thumbnailKey = `${generationImagesFolder}/${uuid}_${thumbnail.width}x${thumbnail.height}_${dateTime}_thumb.${thumbnail.extension}`;
 
     log('Generated paths:', { imagePath: imageKey, thumbnailPath: thumbnailKey });
 
@@ -189,37 +208,39 @@ export class GenerationService {
   }
 
   /**
-   * Create a 256x256 cover image from a given URL and upload
+   * Create a cover image from a given URL and upload
    * @param coverUrl - The source image URL (can be base64 or HTTP URL)
    * @returns The key of the uploaded cover image
    */
   async createCoverFromUrl(coverUrl: string): Promise<string> {
     log('Creating cover image from URL:', coverUrl.startsWith('data:') ? 'base64 data' : coverUrl);
 
-    // Download the original image
-    let originalImageBuffer: Buffer;
-    if (coverUrl.startsWith('data:')) {
-      log('Processing base64 cover image data');
-      // Extract base64 data part
-      const [, base64Data] = coverUrl.split(',');
-      originalImageBuffer = Buffer.from(base64Data, 'base64');
-    } else {
-      log('Fetching cover image from URL:', coverUrl);
-      const response = await fetch(coverUrl);
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch cover image from ${coverUrl}: ${response.status} ${response.statusText}`,
-        );
-      }
-      const arrayBuffer = await response.arrayBuffer();
-      originalImageBuffer = Buffer.from(arrayBuffer);
-      log('Successfully fetched cover image, buffer size:', originalImageBuffer.length);
+    // Fetch image buffer using utility function
+    const { buffer: originalImageBuffer } = await fetchImageFromUrl(coverUrl);
+
+    // Get image metadata to calculate proper cover dimensions
+    const sharpInstance = sharp(originalImageBuffer);
+    const { width, height } = await sharpInstance.metadata();
+
+    if (!width || !height) {
+      throw new Error('Invalid image format for cover creation');
     }
 
-    // Process image to 256x256 cover with webp format
-    log('Processing cover image to 256x256 webp format');
-    const coverBuffer = await sharp(originalImageBuffer)
-      .resize(256, 256, { fit: 'cover', position: 'center' })
+    // Calculate cover dimensions maintaining aspect ratio with configurable max size
+    const { thumbnailWidth, thumbnailHeight } = calculateThumbnailDimensions(
+      width,
+      height,
+      IMAGE_GENERATION_CONFIG.COVER_MAX_SIZE,
+    );
+
+    log('Processing cover image with dimensions:', {
+      cover: { height: thumbnailHeight, width: thumbnailWidth },
+      original: { height, width },
+    });
+
+    const coverBuffer = await sharpInstance
+      .resize(thumbnailWidth, thumbnailHeight)
+      .webp()
       .toBuffer();
 
     log('Cover image processed, final size:', coverBuffer.length);
@@ -228,7 +249,7 @@ export class GenerationService {
     const coverFolder = 'generations/covers';
     const uuid = nanoid();
     const dateTime = getYYYYmmddHHMMss(new Date());
-    const coverKey = `${coverFolder}/${uuid}_cover_${dateTime}.webp`;
+    const coverKey = `${coverFolder}/${uuid}_${thumbnailWidth}x${thumbnailHeight}_${dateTime}_cover.webp`;
 
     log('Uploading cover image:', coverKey);
     const result = await this.fileService.uploadMedia(coverKey, coverBuffer);
