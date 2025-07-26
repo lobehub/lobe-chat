@@ -32,11 +32,11 @@ const RootLayout = async ({ children, params, modal }: RootLayoutProps) => {
 
   return (
     <html dir={direction} lang={locale} suppressHydrationWarning>
-      {process.env.DEBUG_REACT_SCAN === '1' && (
-        <head>
+      <head>
+        {process.env.DEBUG_REACT_SCAN === '1' && (
           <script crossOrigin="anonymous" src="https://unpkg.com/react-scan/dist/auto.global.js" />
-        </head>
-      )}
+        )}
+      </head>
       <body>
         <NuqsAdapter>
           <GlobalProvider
