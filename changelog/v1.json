@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add Gemini 2.5 Flash-Lite GA model."]
+    },
+    "date": "2025-07-26",
+    "version": "1.104.3"
+  },
+  {
+    "children": {
       "fixes": ["Fix update hotkey invalid when input mod in desktop."]
     },
     "date": "2025-07-26",
