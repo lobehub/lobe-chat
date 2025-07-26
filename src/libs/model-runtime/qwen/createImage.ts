@@ -66,7 +66,7 @@ async function createImageTask(payload: CreateImagePayload, apiKey: string): Pro
         ...(params.width && params.height
           ? { size: `${params.width}*${params.height}` }
           : params.size 
-            ? { size: params.size.replace(/x/g, '*') }
+            ? { size: params.size.replaceAll(/x/g, '*') }
             : { size: '1024*1024' }),
       },
     }),
