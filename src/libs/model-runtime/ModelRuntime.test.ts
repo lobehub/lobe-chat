@@ -6,10 +6,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as langfuseCfg from '@/config/langfuse';
 import { JWTPayload } from '@/const/auth';
 import { TraceNameMap } from '@/const/trace';
-import { AgentRuntime, ChatStreamPayload, LobeOpenAI, ModelProvider } from '@/libs/model-runtime';
+import { ChatStreamPayload, LobeOpenAI, ModelProvider, ModelRuntime } from '@/libs/model-runtime';
 import { providerRuntimeMap } from '@/libs/model-runtime/runtimeMap';
 import { CreateImagePayload } from '@/libs/model-runtime/types/image';
-import { createTraceOptions } from '@/server/modules/AgentRuntime';
+import { createTraceOptions } from '@/server/modules/ModelRuntime';
 
 import { AgentChatOptions } from './ModelRuntime';
 
@@ -52,7 +52,7 @@ const testRuntime = (providerId: string, payload?: any) => {
   describe(`${providerId} provider runtime`, () => {
     it('should initialize correctly', async () => {
       const jwtPayload: JWTPayload = { apiKey: 'user-key', ...payload };
-      const runtime = await AgentRuntime.initializeWithProvider(providerId, jwtPayload);
+      const runtime = await ModelRuntime.initializeWithProvider(providerId, jwtPayload);
 
       // @ts-ignore
       expect(runtime['_runtime']).toBeInstanceOf(providerRuntimeMap[providerId]);
@@ -64,13 +64,13 @@ const testRuntime = (providerId: string, payload?: any) => {
   });
 };
 
-let mockModelRuntime: AgentRuntime;
+let mockModelRuntime: ModelRuntime;
 beforeEach(async () => {
   const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', baseURL: 'user-endpoint' };
-  mockModelRuntime = await AgentRuntime.initializeWithProvider(ModelProvider.OpenAI, jwtPayload);
+  mockModelRuntime = await ModelRuntime.initializeWithProvider(ModelProvider.OpenAI, jwtPayload);
 });
 
-describe('AgentRuntime', () => {
+describe('ModelRuntime', () => {
   describe('should initialize with various providers', () => {
     const providers = Object.values(ModelProvider).filter((i) => i !== 'lobehub');
 
@@ -87,7 +87,7 @@ describe('AgentRuntime', () => {
     specialProviders.forEach(({ id, payload }) => testRuntime(id, payload));
   });
 
-  describe('AgentRuntime chat method', () => {
+  describe('ModelRuntime chat method', () => {
     it('should run correctly', async () => {
       const payload: ChatStreamPayload = {
         messages: [{ role: 'user', content: 'Hello, world!' }],
@@ -243,7 +243,7 @@ describe('AgentRuntime', () => {
     });
   });
 
-  describe('AgentRuntime createImage method', () => {
+  describe('ModelRuntime createImage method', () => {
     it('should run correctly', async () => {
       const payload: CreateImagePayload = {
         model: 'dall-e-3',
@@ -292,7 +292,7 @@ describe('AgentRuntime', () => {
     });
   });
 
-  describe('AgentRuntime models method', () => {
+  describe('ModelRuntime models method', () => {
     it('should run correctly', async () => {
       const mockModels = [
         { id: 'gpt-4', name: 'GPT-4' },

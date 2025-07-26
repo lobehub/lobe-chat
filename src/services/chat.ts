@@ -10,10 +10,10 @@ import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
 import { isDeprecatedEdition, isDesktop, isServerMode } from '@/const/version';
 import {
-  AgentRuntime,
   AgentRuntimeError,
   ChatCompletionErrorPayload,
   ModelProvider,
+  ModelRuntime,
 } from '@/libs/model-runtime';
 import { parseDataUri } from '@/libs/model-runtime/utils/uriParser';
 import { filesPrompts } from '@/prompts/files';
@@ -168,7 +168,7 @@ export function initializeWithClientStore(provider: string, payload?: any) {
    * Configuration override order:
    * payload -> providerAuthPayload -> commonOptions
    */
-  return AgentRuntime.initializeWithProvider(provider, {
+  return ModelRuntime.initializeWithProvider(provider, {
     ...commonOptions,
     ...providerAuthPayload,
     ...payload,
