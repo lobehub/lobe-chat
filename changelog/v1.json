@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix update hotkey invalid when input mod in desktop."]
+    },
+    "date": "2025-07-26",
+    "version": "1.104.2"
+  },
+  {
+    "children": {
       "fixes": [
         "Update convertUsage to handle XAI provider and adjust OpenAIStream to pass provider."
       ]
