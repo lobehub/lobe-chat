@@ -373,8 +373,7 @@
       "@vercel/speed-insights"
     ],
     "overrides": {
-      "mdast-util-gfm-autolink-literal": "2.0.0",
-      "react-layout-kit": "2.0.0-beta.1"
+      "mdast-util-gfm-autolink-literal": "2.0.0"
     }
   }
 }
