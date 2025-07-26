@@ -142,7 +142,7 @@ const AiHubMix: ModelProviderCard = {
     sdkType: 'openai',
     showModelFetcher: true,
   },
-  url: 'https://aihubmix.com',
+  url: 'https://aihubmix.com?utm_source=lobehub',
 };
 
 export default AiHubMix;
