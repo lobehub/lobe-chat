@@ -1,4 +1,4 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
 
 // modelInfo https://www.volcengine.com/docs/82379/1330310
 // pricing https://console.volcengine.com/ark/region:ark+cn-beijing/openManagement
@@ -509,6 +509,60 @@ const doubaoChatModels: AIChatModelCard[] = [
   },
 ];
 
-export const allModels = [...doubaoChatModels];
+const volcengineImageModels: AIImageModelCard[] = [
+  {
+    /*
+    // TODO: AIImageModelCard 不支持 config.deploymentName
+    config: {
+      deploymentName: 'doubao-seedream-3-0-t2i-250415',
+    },
+    */
+    description:
+      'Doubao图片生成模型由字节跳动 Seed 团队研发，支持文字与图片输入，提供高可控、高质量的图片生成体验。基于文本提示词生成图片。',
+    displayName: 'Doubao Seedream 3.0 t2i',
+    enabled: true,
+    id: 'doubao-seedream-3-0-t2i-250415',
+    parameters: {
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      size: {
+        default: '1024x1024',
+        enum: ['1024x1024', '864x1152', '1152x864', '1280x720', '720x1280', '832x1248', '1248x832', '1512x648'],
+      },
+    },
+    releasedAt: '2025-04-15',
+    type: 'image',
+  },
+  /*
+  // Note: Doubao 图生图模型与文生图模型公用一个 Endpoint，当前如果存在 imageUrl 会切换至 edit endpoint 下
+  {
+    config: {
+      deploymentName: 'doubao-seededit-3-0-i2i-250628',
+    },
+    description:
+      'Doubao图片生成模型由字节跳动 Seed 团队研发，支持文字与图片输入，提供高可控、高质量的图片生成体验。支持通过文本指令编辑图像，生成图像的边长在512～1536之间。',
+    displayName: 'Doubao SeedEdit 3.0 i2i',
+    enabled: true,
+    id: 'doubao-seededit-3-0-i2i-250628',
+    parameters: {
+      imageUrl: { default: null },
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      size: {
+        default: '1024x1024',
+        enum: ['1024x1024', '864x1152', '1152x864', '1280x720', '720x1280', '832x1248', '1248x832', '1512x648'],
+      },
+    },
+    releasedAt: '2025-06-28',
+    type: 'image',
+  },
+  */
+];
+
+export const allModels = [...doubaoChatModels, ...volcengineImageModels];
 
 export default allModels;
