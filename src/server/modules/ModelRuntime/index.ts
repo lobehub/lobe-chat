@@ -1,6 +1,6 @@
 import { getLLMConfig } from '@/config/llm';
 import { ClientSecretPayload } from '@/const/auth';
-import { AgentRuntime, ModelProvider } from '@/libs/model-runtime';
+import { ModelProvider, ModelRuntime } from '@/libs/model-runtime';
 
 import apiKeyManager from './apiKeyManager';
 
@@ -113,12 +113,12 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
  * @param params
  * @returns A promise that resolves when the agent runtime is initialized.
  */
-export const initAgentRuntimeWithUserPayload = (
+export const initModelRuntimeWithUserPayload = (
   provider: string,
   payload: ClientSecretPayload,
   params: any = {},
 ) => {
-  return AgentRuntime.initializeWithProvider(provider, {
+  return ModelRuntime.initializeWithProvider(provider, {
     ...getParamsFromPayload(provider, payload),
     ...params,
   });
