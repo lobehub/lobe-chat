@@ -9,7 +9,7 @@ import { Trash } from 'lucide-react';
 import { FC, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { apiKeyService } from '@/services/apiKey';
+import { lambdaClient } from '@/libs/trpc/client';
 import { ApiKeyItem, CreateApiKeyParams, UpdateApiKeyParams } from '@/types/apiKey';
 
 import { ApiKeyDisplay, ApiKeyModal, EditableCell } from './features';
@@ -35,7 +35,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const Page: FC = () => {
+const Client: FC = () => {
   const { styles } = useStyles();
   const { t } = useTranslation('auth');
   const [modalOpen, setModalOpen] = useState(false);
@@ -43,7 +43,7 @@ const Page: FC = () => {
   const actionRef = useRef<ActionType>(null);
 
   const createMutation = useMutation({
-    mutationFn: (params: CreateApiKeyParams) => apiKeyService.create(params),
+    mutationFn: (params: CreateApiKeyParams) => lambdaClient.apiKey.createApiKey.mutate(params),
     onSuccess: () => {
       actionRef.current?.reload();
       setModalOpen(false);
@@ -52,14 +52,14 @@ const Page: FC = () => {
 
   const updateMutation = useMutation({
     mutationFn: ({ id, params }: { id: number; params: UpdateApiKeyParams }) =>
-      apiKeyService.update(id, params),
+      lambdaClient.apiKey.updateApiKey.mutate({ id, value: params }),
     onSuccess: () => {
       actionRef.current?.reload();
     },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => apiKeyService.delete(id),
+    mutationFn: (id: number) => lambdaClient.apiKey.deleteApiKey.mutate({ id }),
     onSuccess: () => {
       actionRef.current?.reload();
     },
@@ -179,7 +179,7 @@ const Page: FC = () => {
         options={false}
         pagination={false}
         request={async () => {
-          const apiKeys = await apiKeyService.list();
+          const apiKeys = await lambdaClient.apiKey.getApiKeys.query();
 
           return {
             data: apiKeys,
@@ -206,6 +206,4 @@ const Page: FC = () => {
   );
 };
 
-Page.displayName = 'ApiKeySetting';
-
-export default Page;
+export default Client;
