@@ -1,8 +1,11 @@
+import urlJoin from 'url-join';
+
 import AiHubMixModels from '@/config/aiModels/aihubmix';
+import { allModels } from '@/config/aiModels/lobehub';
 import type { ChatModelCard } from '@/types/llm';
 
+import { createRouterRuntime } from '../RouterRuntime';
 import { ModelProvider } from '../types';
-import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
 
 export interface AiHubMixModelCard {
   created: number;
@@ -11,11 +14,13 @@ export interface AiHubMixModelCard {
   owned_by: string;
 }
 
-export const LobeAiHubMixAI = createOpenAICompatibleRuntime({
-  baseURL: 'https://aihubmix.com/v1',
+const baseURL = 'https://aihubmix.com';
+
+export const LobeAiHubMixAI = createRouterRuntime({
   debug: {
     chatCompletion: () => process.env.DEBUG_AIHUBMIX_CHAT_COMPLETION === '1',
   },
+  id: ModelProvider.AiHubMix,
   models: async ({ client }) => {
     const functionCallKeywords = [
       'gpt-4',
@@ -87,5 +92,22 @@ export const LobeAiHubMixAI = createOpenAICompatibleRuntime({
       return [];
     }
   },
-  provider: ModelProvider.AiHubMix,
+  routers: [
+    {
+      apiType: 'openai',
+      options: { baseURL: urlJoin(baseURL, '/v1') },
+    },
+    {
+      apiType: 'anthropic',
+      models: allModels
+        .map((m) => m.id)
+        .filter((id) => id.startsWith('claude') || id.startsWith('kimi-k2')),
+      options: { baseURL },
+    },
+    {
+      apiType: 'google',
+      models: allModels.map((m) => m.id).filter((id) => id.startsWith('gemini')),
+      options: { baseURL: urlJoin(baseURL, '/gemini') },
+    },
+  ],
 });
