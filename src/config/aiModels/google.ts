@@ -139,6 +139,31 @@ const googleChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 1_048_576 + 65_536,
+    description: 'Gemini 2.5 Flash-Lite 是 Google 最小、性价比最高的模型，专为大规模使用而设计。',
+    displayName: 'Gemini 2.5 Flash-Lite',
+    id: 'gemini-2.5-flash-lite',
+    maxOutput: 65_536,
+    pricing: {
+      cachedInput: 0.025,
+      input: 0.1,
+      output: 0.4,
+    },
+    releasedAt: '2025-07-22',
+    settings: {
+      extendParams: ['thinkingBudget'],
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_048_576 + 65_536,
     description:
       'Gemini 2.5 Flash-Lite Preview 是 Google 最小、性价比最高的模型，专为大规模使用而设计。',
     displayName: 'Gemini 2.5 Flash-Lite Preview 06-17',
