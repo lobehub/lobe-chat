@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { MAX_SEED, generateUniqueSeeds } from './number';
+import { MAX_SEED, calculateThumbnailDimensions, generateUniqueSeeds } from './number';
 
 describe('number utilities', () => {
   describe('MAX_SEED constant', () => {
@@ -100,6 +100,106 @@ describe('number utilities', () => {
 
       dateSpy.mockRestore();
       vi.useRealTimers();
+    });
+  });
+
+  describe('calculateThumbnailDimensions', () => {
+    it('should not resize when both dimensions are within max size', () => {
+      const result = calculateThumbnailDimensions(400, 300);
+
+      expect(result).toEqual({
+        shouldResize: false,
+        thumbnailWidth: 400,
+        thumbnailHeight: 300,
+      });
+    });
+
+    it('should not resize when dimensions equal max size', () => {
+      const result = calculateThumbnailDimensions(512, 512);
+
+      expect(result).toEqual({
+        shouldResize: false,
+        thumbnailWidth: 512,
+        thumbnailHeight: 512,
+      });
+    });
+
+    it('should resize when width exceeds max size (landscape)', () => {
+      const result = calculateThumbnailDimensions(1024, 768);
+
+      expect(result).toEqual({
+        shouldResize: true,
+        thumbnailWidth: 512,
+        thumbnailHeight: 384, // Math.round((768 * 512) / 1024)
+      });
+    });
+
+    it('should resize when height exceeds max size (portrait)', () => {
+      const result = calculateThumbnailDimensions(768, 1024);
+
+      expect(result).toEqual({
+        shouldResize: true,
+        thumbnailWidth: 384, // Math.round((768 * 512) / 1024)
+        thumbnailHeight: 512,
+      });
+    });
+
+    it('should resize square images correctly', () => {
+      const result = calculateThumbnailDimensions(1024, 1024);
+
+      expect(result).toEqual({
+        shouldResize: true,
+        thumbnailWidth: 512,
+        thumbnailHeight: 512,
+      });
+    });
+
+    it('should handle very large images', () => {
+      const result = calculateThumbnailDimensions(2048, 1536);
+
+      expect(result).toEqual({
+        shouldResize: true,
+        thumbnailWidth: 512,
+        thumbnailHeight: 384, // Math.round((1536 * 512) / 2048)
+      });
+    });
+
+    it('should handle very tall images', () => {
+      const result = calculateThumbnailDimensions(800, 2400);
+
+      expect(result).toEqual({
+        shouldResize: true,
+        thumbnailWidth: 171, // Math.round((800 * 512) / 2400)
+        thumbnailHeight: 512,
+      });
+    });
+
+    it('should work with custom max size', () => {
+      const result = calculateThumbnailDimensions(1000, 800, 256);
+
+      expect(result).toEqual({
+        shouldResize: true,
+        thumbnailWidth: 256,
+        thumbnailHeight: 205, // Math.round((800 * 256) / 1000)
+      });
+    });
+
+    it('should handle edge case with very small dimensions', () => {
+      const result = calculateThumbnailDimensions(50, 100);
+
+      expect(result).toEqual({
+        shouldResize: false,
+        thumbnailWidth: 50,
+        thumbnailHeight: 100,
+      });
+    });
+
+    it('should maintain aspect ratio correctly', () => {
+      const result = calculateThumbnailDimensions(1600, 900);
+      const originalRatio = 1600 / 900;
+      const thumbnailRatio = result.thumbnailWidth / result.thumbnailHeight;
+
+      expect(Math.abs(originalRatio - thumbnailRatio)).toBeLessThan(0.01);
     });
   });
 });

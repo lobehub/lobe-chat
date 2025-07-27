@@ -6,13 +6,21 @@ import {
   nativeTheme,
   screen,
 } from 'electron';
-import os from 'node:os';
 import { join } from 'node:path';
 
+import { buildDir, preloadDir, resourcesDir } from '@/const/dir';
+import { isDev, isWindows } from '@/const/env';
+import {
+  BACKGROUND_DARK,
+  BACKGROUND_LIGHT,
+  SYMBOL_COLOR_DARK,
+  SYMBOL_COLOR_LIGHT,
+  THEME_CHANGE_DELAY,
+  TITLE_BAR_HEIGHT,
+} from '@/const/theme';
 import { createLogger } from '@/utils/logger';
 
-import { preloadDir, resourcesDir } from '../const/dir';
-import type { App } from './App';
+import type { App } from '../App';
 
 // Create logger
 const logger = createLogger('core:Browser');
@@ -20,9 +28,6 @@ const logger = createLogger('core:Browser');
 export interface BrowserWindowOpts extends BrowserWindowConstructorOptions {
   devTools?: boolean;
   height?: number;
-  /**
-   * URL
-   */
   identifier: string;
   keepAlive?: boolean;
   parentIdentifier?: string;
@@ -34,38 +39,18 @@ export interface BrowserWindowOpts extends BrowserWindowConstructorOptions {
 
 export default class Browser {
   private app: App;
-
-  /**
-   * Internal electron window
-   */
   private _browserWindow?: BrowserWindow;
-
+  private themeListenerSetup = false;
   private stopInterceptHandler;
-  /**
-   * Identifier
-   */
   identifier: string;
-
-  /**
-   * Options at creation
-   */
   options: BrowserWindowOpts;
-
-  /**
-   * Key for storing window state in storeManager
-   */
   private readonly windowStateKey: string;
 
-  /**
-   * Method to expose window externally
-   */
   get browserWindow() {
     return this.retrieveOrInitialize();
   }
-
   get webContents() {
     if (this._browserWindow.isDestroyed()) return null;
-
     return this._browserWindow.webContents;
   }
 
@@ -84,6 +69,101 @@ export default class Browser {
 
     // Initialization
     this.retrieveOrInitialize();
+  }
+
+  /**
+   * Get platform-specific theme configuration for window creation
+   */
+  private getPlatformThemeConfig(isDarkMode?: boolean): Record<string, any> {
+    const darkMode = isDarkMode ?? nativeTheme.shouldUseDarkColors;
+
+    if (isWindows) {
+      return this.getWindowsThemeConfig(darkMode);
+    }
+
+    return {};
+  }
+
+  /**
+   * Get Windows-specific theme configuration
+   */
+  private getWindowsThemeConfig(isDarkMode: boolean) {
+    return {
+      backgroundColor: isDarkMode ? BACKGROUND_DARK : BACKGROUND_LIGHT,
+      icon: isDev ? join(buildDir, 'icon-dev.ico') : undefined,
+      titleBarOverlay: {
+        color: isDarkMode ? BACKGROUND_DARK : BACKGROUND_LIGHT,
+        height: TITLE_BAR_HEIGHT,
+        symbolColor: isDarkMode ? SYMBOL_COLOR_DARK : SYMBOL_COLOR_LIGHT,
+      },
+      titleBarStyle: 'hidden' as const,
+    };
+  }
+
+  private setupThemeListener(): void {
+    if (this.themeListenerSetup) return;
+
+    nativeTheme.on('updated', this.handleThemeChange);
+    this.themeListenerSetup = true;
+  }
+
+  private handleThemeChange = (): void => {
+    logger.debug(`[${this.identifier}] System theme changed, reapplying visual effects.`);
+    setTimeout(() => {
+      this.applyVisualEffects();
+    }, THEME_CHANGE_DELAY);
+  };
+
+  /**
+   * Handle application theme mode change (called from BrowserManager)
+   */
+  handleAppThemeChange = (): void => {
+    logger.debug(`[${this.identifier}] App theme mode changed, reapplying visual effects.`);
+    setTimeout(() => {
+      this.applyVisualEffects();
+    }, THEME_CHANGE_DELAY);
+  };
+
+  private applyVisualEffects(): void {
+    if (!this._browserWindow || this._browserWindow.isDestroyed()) return;
+
+    logger.debug(`[${this.identifier}] Applying visual effects for platform`);
+    const isDarkMode = this.isDarkMode;
+
+    try {
+      if (isWindows) {
+        this.applyWindowsVisualEffects(isDarkMode);
+      }
+
+      logger.debug(
+        `[${this.identifier}] Visual effects applied successfully (dark mode: ${isDarkMode})`,
+      );
+    } catch (error) {
+      logger.error(`[${this.identifier}] Failed to apply visual effects:`, error);
+    }
+  }
+
+  private applyWindowsVisualEffects(isDarkMode: boolean): void {
+    const config = this.getWindowsThemeConfig(isDarkMode);
+
+    this._browserWindow.setBackgroundColor(config.backgroundColor);
+    this._browserWindow.setTitleBarOverlay(config.titleBarOverlay);
+  }
+
+  private cleanupThemeListener(): void {
+    if (this.themeListenerSetup) {
+      // Note: nativeTheme listeners are global, consider using a centralized theme manager
+      nativeTheme.off('updated', this.handleThemeChange);
+      // for multiple windows to avoid duplicate listeners
+      this.themeListenerSetup = false;
+    }
+  }
+
+  private get isDarkMode() {
+    const themeMode = this.app.storeManager.get('themeMode');
+    if (themeMode === 'auto') return nativeTheme.shouldUseDarkColors;
+
+    return themeMode === 'dark';
   }
 
   loadUrl = async (path: string) => {
@@ -203,6 +283,7 @@ export default class Browser {
   destroy() {
     logger.debug(`Destroying window instance: ${this.identifier}`);
     this.stopInterceptHandler?.();
+    this.cleanupThemeListener();
     this._browserWindow = undefined;
   }
 
@@ -228,45 +309,37 @@ export default class Browser {
       `[${this.identifier}] Saved window state (only size used): ${JSON.stringify(savedState)}`,
     );
 
-    const { isWindows11, isWindows } = this.getWindowsVersion();
     const isDarkMode = nativeTheme.shouldUseDarkColors;
 
     const browserWindow = new BrowserWindow({
       ...res,
-      ...(isWindows
-        ? {
-            titleBarStyle: 'hidden',
-          }
-        : {}),
-      ...(isWindows11
-        ? {
-            backgroundMaterial: isDarkMode ? 'mica' : 'acrylic',
-            vibrancy: 'under-window',
-            visualEffectState: 'active',
-          }
-        : {}),
       autoHideMenuBar: true,
       backgroundColor: '#00000000',
+      darkTheme: isDarkMode,
       frame: false,
-
       height: savedState?.height || height,
-      // Always create hidden first
       show: false,
       title,
-
+      vibrancy: 'sidebar',
+      visualEffectState: 'active',
       webPreferences: {
-        // Context isolation environment
-        // https://www.electronjs.org/docs/tutorial/context-isolation
+        backgroundThrottling: false,
         contextIsolation: true,
         preload: join(preloadDir, 'index.js'),
       },
       width: savedState?.width || width,
+      ...this.getPlatformThemeConfig(isDarkMode),
     });
 
     this._browserWindow = browserWindow;
     logger.debug(`[${this.identifier}] BrowserWindow instance created.`);
 
-    if (isWindows11) this.applyVisualEffects();
+    // Initialize theme listener for this window to handle theme changes
+    this.setupThemeListener();
+    logger.debug(`[${this.identifier}] Theme listener setup and applying initial visual effects.`);
+
+    // Apply initial visual effects
+    this.applyVisualEffects();
 
     logger.debug(`[${this.identifier}] Setting up nextInterceptor.`);
     this.stopInterceptHandler = this.app.nextInterceptor({
@@ -320,8 +393,9 @@ export default class Browser {
         } catch (error) {
           logger.error(`[${this.identifier}] Failed to save window state on quit:`, error);
         }
-        // Need to clean up intercept handler
+        // Need to clean up intercept handler and theme manager
         this.stopInterceptHandler?.();
+        this.cleanupThemeListener();
         return;
       }
 
@@ -355,8 +429,9 @@ export default class Browser {
         } catch (error) {
           logger.error(`[${this.identifier}] Failed to save window state on close:`, error);
         }
-        // Need to clean up intercept handler
+        // Need to clean up intercept handler and theme manager
         this.stopInterceptHandler?.();
+        this.cleanupThemeListener();
       }
     });
 
@@ -387,16 +462,6 @@ export default class Browser {
     this._browserWindow.webContents.send(channel, data);
   };
 
-  applyVisualEffects() {
-    // Windows 11 can use this new API
-    if (this._browserWindow) {
-      logger.debug(`[${this.identifier}] Setting window background material for Windows 11`);
-      const isDarkMode = nativeTheme.shouldUseDarkColors;
-      this._browserWindow?.setBackgroundMaterial(isDarkMode ? 'mica' : 'acrylic');
-      this._browserWindow?.setVibrancy('under-window');
-    }
-  }
-
   toggleVisible() {
     logger.debug(`Toggling visibility for window: ${this.identifier}`);
     if (this._browserWindow.isVisible() && this._browserWindow.isFocused()) {
@@ -407,35 +472,11 @@ export default class Browser {
     }
   }
 
-  getWindowsVersion() {
-    if (process.platform !== 'win32') {
-      return {
-        isWindows: false,
-        isWindows10: false,
-        isWindows11: false,
-        version: null,
-      };
-    }
-
-    // 获取操作系统版本（如 "10.0.22621"）
-    const release = os.release();
-    const parts = release.split('.');
-
-    // 主版本和次版本
-    const majorVersion = parseInt(parts[0], 10);
-    const minorVersion = parseInt(parts[1], 10);
-
-    // 构建号是第三部分
-    const buildNumber = parseInt(parts[2], 10);
-
-    // Windows 11 的构建号从 22000 开始
-    const isWindows11 = majorVersion === 10 && minorVersion === 0 && buildNumber >= 22_000;
-
-    return {
-      buildNumber,
-      isWindows: true,
-      isWindows11,
-      version: release,
-    };
+  /**
+   * Manually reapply visual effects (useful for fixing lost effects after window state changes)
+   */
+  reapplyVisualEffects(): void {
+    logger.debug(`[${this.identifier}] Manually reapplying visual effects via Browser.`);
+    this.applyVisualEffects();
   }
 }

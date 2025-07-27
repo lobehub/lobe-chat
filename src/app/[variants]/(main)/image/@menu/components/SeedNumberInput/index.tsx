@@ -6,7 +6,7 @@ import { CSSProperties, memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { MAX_SEED } from '@/libs/standard-parameters/meta-schema';
+import { MAX_SEED } from '@/libs/standard-parameters/index';
 import { generateUniqueSeeds } from '@/utils/number';
 
 export interface SeedNumberInputProps {

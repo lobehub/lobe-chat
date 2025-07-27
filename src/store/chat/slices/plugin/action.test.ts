@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 import { Mock, afterEach, describe, expect, it, vi } from 'vitest';
 
 import { LOADING_FLAT } from '@/const/message';
+import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
@@ -66,7 +67,7 @@ describe('ChatPluginAction', () => {
           {
             ...toolMessage,
             meta: {
-              avatar: '🤯',
+              avatar: DEFAULT_INBOX_AVATAR,
               backgroundColor: 'rgba(0,0,0,0)',
               description: undefined,
               title: undefined,

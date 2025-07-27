@@ -1112,6 +1112,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           image: expect.any(File),
           mask: 'https://example.com/mask.jpg',
           response_format: 'b64_json',
+          input_fidelity: 'high',
         });
 
         expect(result).toEqual({
@@ -1157,6 +1158,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           prompt: 'Merge these images',
           image: [mockFile1, mockFile2],
           response_format: 'b64_json',
+          input_fidelity: 'high',
         });
 
         expect(result).toEqual({
@@ -1286,6 +1288,7 @@ describe('LobeOpenAICompatibleFactory', () => {
           image: expect.any(File),
           customParam: 'should remain unchanged',
           response_format: 'b64_json',
+          input_fidelity: 'high',
         });
       });
 

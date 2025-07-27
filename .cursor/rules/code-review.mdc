@@ -26,6 +26,8 @@ Gather the modified code and context. Please strictly follow the process below:
 
 ### Code Style
 
+read [typescript.mdc](mdc:.cursor/rules/typescript.mdc) to learn the project's code style.
+
 - Ensure JSDoc comments accurately reflect the implementation; update them when needed.
 - Look for opportunities to simplify or modernize code with the latest JavaScript/TypeScript features.
 - Prefer `async`/`await` over callbacks or chained `.then` promises.

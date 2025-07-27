@@ -17,6 +17,7 @@ const googleChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-pro',
     maxOutput: 65_536,
     pricing: {
+      cachedInput: 0.31, // prompts <= 200k tokens
       input: 1.25, // prompts <= 200k tokens
       output: 10, // prompts <= 200k tokens
     },

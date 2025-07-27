@@ -45,14 +45,25 @@
   },
   "hotkey": {
     "conflicts": "Conflict met bestaande sneltoetsen",
+    "errors": {
+      "CONFLICT": "Sneltoetsconflict: deze sneltoets wordt al door een andere functie gebruikt",
+      "INVALID_FORMAT": "Ongeldig sneltoetsformaat: gebruik het juiste formaat (bijv. CommandOrControl+E)",
+      "INVALID_ID": "Ongeldige sneltoets-ID",
+      "NO_MODIFIER": "Sneltoets moet een modificatortoets bevatten (Ctrl, Alt, Shift, enz.)",
+      "SYSTEM_OCCUPIED": "Sneltoets wordt al door het systeem of een andere applicatie gebruikt",
+      "UNKNOWN": "Bijwerken mislukt: onbekende fout"
+    },
     "group": {
       "conversation": "Gesprek",
+      "desktop": "Desktop",
       "essential": "Essentieel"
     },
     "invalidCombination": "Sneltoets moet ten minste één modifier-toets (Ctrl, Alt, Shift) en één reguliere toets bevatten",
     "record": "Druk op een toets om de sneltoets op te nemen",
     "reset": "Reset naar standaard sneltoetsen",
-    "title": "Sneltoetsen"
+    "title": "Sneltoetsen",
+    "updateError": "Sneltoets bijwerken mislukt: netwerk- of systeemfout",
+    "updateSuccess": "Sneltoets succesvol bijgewerkt"
   },
   "llm": {
     "aesGcm": "Uw sleutel en proxy-adres zullen worden versleuteld met het <1>AES-GCM</1> encryptie-algoritme",

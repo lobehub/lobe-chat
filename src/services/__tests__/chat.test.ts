@@ -4,6 +4,7 @@ import { merge } from 'lodash-es';
 import OpenAI from 'openai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { DEFAULT_USER_AVATAR } from '@/const/meta';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import {
   LobeAnthropicAI,
@@ -31,8 +32,6 @@ import { aiModelSelectors } from '@/store/aiInfra';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { UserStore } from '@/store/user';
-import { useUserStore } from '@/store/user';
-import { modelConfigSelectors } from '@/store/user/selectors';
 import { UserSettingsState, initialSettingsState } from '@/store/user/slices/settings/initialState';
 import { DalleManifest } from '@/tools/dalle';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
@@ -671,7 +670,7 @@ describe('ChatService', () => {
             updatedAt: 1702723964330,
             extra: {},
             meta: {
-              avatar: '😀',
+              avatar: DEFAULT_USER_AVATAR,
             },
           },
         ] as ChatMessage[];
@@ -913,7 +912,7 @@ describe('ChatService', () => {
             updatedAt: 1702723964330,
             extra: {},
             meta: {
-              avatar: '😀',
+              avatar: DEFAULT_USER_AVATAR,
             },
           },
         ] as ChatMessage[];

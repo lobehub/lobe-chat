@@ -3,12 +3,12 @@ import { Menu } from 'electron';
 import { IMenuPlatform, MenuOptions, createMenuImpl } from '@/menus';
 import { createLogger } from '@/utils/logger';
 
-import type { App } from './App';
+import type { App } from '../App';
 
 // Create logger
 const logger = createLogger('core:MenuManager');
 
-export default class MenuManager {
+export class MenuManager {
   app: App;
   private platformImpl: IMenuPlatform;
 
