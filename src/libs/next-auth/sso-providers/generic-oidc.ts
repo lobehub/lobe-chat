@@ -13,28 +13,23 @@ export type GenericOIDCProfile = {
   username?: string;
 };
 
-const provider = {
+export const genericOidc = {
+  ...CommonProviderConfig,
+  authorization: { params: { scope: 'email openid profile' } },
+  checks: ['state', 'pkce'],
+  clientId: authEnv.GENERIC_OIDC_CLIENT_ID ?? process.env.AUTH_GENERIC_OIDC_ID,
+  clientSecret: authEnv.GENERIC_OIDC_CLIENT_SECRET ?? process.env.AUTH_GENERIC_OIDC_SECRET,
   id: 'generic-oidc',
-  provider: {
-    ...CommonProviderConfig,
-    authorization: { params: { scope: 'email openid profile' } },
-    checks: ['state', 'pkce'],
-    clientId: authEnv.GENERIC_OIDC_CLIENT_ID ?? process.env.AUTH_GENERIC_OIDC_ID,
-    clientSecret: authEnv.GENERIC_OIDC_CLIENT_SECRET ?? process.env.AUTH_GENERIC_OIDC_SECRET,
-    id: 'generic-oidc',
-    issuer: authEnv.GENERIC_OIDC_ISSUER ?? process.env.AUTH_GENERIC_OIDC_ISSUER,
-    name: 'Generic OIDC',
-    profile(profile) {
-      return {
-        email: profile.email,
-        id: profile.sub,
-        image: profile.picture,
-        name: profile.name ?? profile.username ?? profile.email,
-        providerAccountId: profile.sub,
-      };
-    },
-    type: 'oidc',
-  } satisfies OIDCConfig<GenericOIDCProfile>,
-};
-
-export default provider;
+  issuer: authEnv.GENERIC_OIDC_ISSUER ?? process.env.AUTH_GENERIC_OIDC_ISSUER,
+  name: 'Generic OIDC',
+  profile(profile) {
+    return {
+      email: profile.email,
+      id: profile.sub,
+      image: profile.picture,
+      name: profile.name ?? profile.username ?? profile.email,
+      providerAccountId: profile.sub,
+    };
+  },
+  type: 'oidc',
+} satisfies OIDCConfig<GenericOIDCProfile>;

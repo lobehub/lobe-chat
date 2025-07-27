@@ -1,41 +1,46 @@
-import Auth0 from './auth0';
-import Authelia from './authelia';
-import Authentik from './authentik';
-import AzureAD from './azure-ad';
-import Bypass from './bypass';
-import Casdoor from './casdoor';
-import CloudflareZeroTrust from './cloudflare-zero-trust';
-import Cognito from './cognito';
-import GenericOIDC from './generic-oidc';
-import Github from './github';
-import Google from './google';
-import Keycloak from './keycloak';
-import Logto from './logto';
-import MicrosoftEntraID from './microsoft-entra-id';
-import WeChat from './wechat';
-import Zitadel from './zitadel';
+import type { Provider } from '@auth/core/providers';
 
-const ssoProviders = [
-  Auth0,
-  Authentik,
-  AzureAD,
-  GenericOIDC,
-  Github,
-  Zitadel,
-  Authelia,
-  Logto,
-  CloudflareZeroTrust,
-  Casdoor,
-  MicrosoftEntraID,
-  WeChat,
-  Keycloak,
-  Google,
-  Cognito,
-  Bypass,
-];
+import { auth0 } from './auth0';
+import { authelia } from './authelia';
+import { authentik } from './authentik';
+import { azureAd } from './azure-ad';
+import { bypass } from './bypass';
+import { casdoor } from './casdoor';
+import { cloudflareZeroTrust } from './cloudflare-zero-trust';
+import { cognito } from './cognito';
+import { genericOidc } from './generic-oidc';
+import { github } from './github';
+import { google } from './google';
+import { keycloak } from './keycloak';
+import { logto } from './logto';
+import { microsoftEntraId } from './microsoft-entra-id';
+import { wechat } from './wechat';
+import { zitadel } from './zitadel';
 
-if (process.env.NODE_ENV === 'development') {
-  ssoProviders.push(Bypass);
+function createSSOProviders() {
+  const providers: Record<string, Provider> = {
+    auth0,
+    authelia,
+    authentik,
+    azureAd,
+    casdoor,
+    'cloudflare-zero-trust': cloudflareZeroTrust,
+    cognito,
+    'generic-oidc': genericOidc,
+    github,
+    google,
+    keycloak,
+    logto,
+    'microsoft-entra-id': microsoftEntraId,
+    wechat,
+    zitadel,
+  };
+
+  if (process.env.NODE_ENV === 'development') {
+    providers.bypass = bypass;
+  }
+
+  return providers;
 }
 
-export { ssoProviders };
+export const ssoProviders = createSSOProviders();

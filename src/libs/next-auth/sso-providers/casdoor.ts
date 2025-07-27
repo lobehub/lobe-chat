@@ -35,16 +35,11 @@ function LobeCasdoorProvider(config: OIDCUserConfig<CasdoorProfile>): OIDCConfig
   };
 }
 
-const provider = {
-  id: 'casdoor',
-  provider: LobeCasdoorProvider({
-    authorization: {
-      params: { scope: 'openid profile email' },
-    },
-    clientId: process.env.AUTH_CASDOOR_ID,
-    clientSecret: process.env.AUTH_CASDOOR_SECRET,
-    issuer: process.env.AUTH_CASDOOR_ISSUER,
-  }),
-};
-
-export default provider;
+export const casdoor = LobeCasdoorProvider({
+  authorization: {
+    params: { scope: 'openid profile email' },
+  },
+  clientId: process.env.AUTH_CASDOOR_ID,
+  clientSecret: process.env.AUTH_CASDOOR_SECRET,
+  issuer: process.env.AUTH_CASDOOR_ISSUER,
+});
