@@ -958,9 +958,42 @@ const qwenChatModels: AIChatModelCard[] = [
 
 const qwenImageModels: AIImageModelCard[] = [
   {
+    description: '万相2.2极速版，当前最新模型。在创意性、稳定性、写实质感上全面升级，生成速度快，性价比高。',
+    displayName: 'Wanxiang2.2 T2I Flash',
+    enabled: true,
+    id: 'wan2.2-t2i-flash',
+    organization: 'Qwen',
+    parameters: {
+      height: { default: 1024, max: 1440, min: 512, step: 1 },
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      width: { default: 1024, max: 1440, min: 512, step: 1 },
+    },
+    releasedAt: '2025-07-28',
+    type: 'image',
+  },
+  {
+    description: '万相2.2专业版，当前最新模型。在创意性、稳定性、写实质感上全面升级，生成细节丰富。',
+    displayName: 'Wanxiang2.2 T2I Plus',
+    enabled: true,
+    id: 'wan2.2-t2i-plus',
+    organization: 'Qwen',
+    parameters: {
+      height: { default: 1024, max: 1440, min: 512, step: 1 },
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      width: { default: 1024, max: 1440, min: 512, step: 1 },
+    },
+    releasedAt: '2025-07-28',
+    type: 'image',
+  },
+  {
     description: '全面升级版本。生成速度快、效果全面、综合性价比高。对应通义万相官网2.1极速模型。',
     displayName: 'Wanxiang2.1 T2I Turbo',
-    enabled: true,
     id: 'wanx2.1-t2i-turbo',
     organization: 'Qwen',
     parameters: {
@@ -977,7 +1010,6 @@ const qwenImageModels: AIImageModelCard[] = [
   {
     description: '全面升级版本。生成图像细节更丰富，速度稍慢。对应通义万相官网2.1专业模型。',
     displayName: 'Wanxiang2.1 T2I Plus',
-    enabled: true,
     id: 'wanx2.1-t2i-plus',
     organization: 'Qwen',
     parameters: {
@@ -1086,7 +1118,6 @@ const qwenImageModels: AIImageModelCard[] = [
   {
     description: 'stable-diffusion-3.5-large 是一个具有8亿参数的多模态扩散变压器（MMDiT）文本到图像生成模型，具备卓越的图像质量和提示词匹配度，支持生成 100 万像素的高分辨率图像，且能够在普通消费级硬件上高效运行。',
     displayName: 'StableDiffusion 3.5 Large',
-    enabled: true,
     id: 'stable-diffusion-3.5-large',
     organization: 'Qwen',
     parameters: {
@@ -1103,7 +1134,6 @@ const qwenImageModels: AIImageModelCard[] = [
   {
     description: 'stable-diffusion-3.5-large-turbo 是在 stable-diffusion-3.5-large 的基础上采用对抗性扩散蒸馏（ADD）技术的模型，具备更快的速度。',
     displayName: 'StableDiffusion 3.5 Large Turbo',
-    enabled: true,
     id: 'stable-diffusion-3.5-large-turbo',
     organization: 'Qwen',
     parameters: {

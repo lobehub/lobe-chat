@@ -19,6 +19,7 @@ interface QwenImageTaskResponse {
 }
 
 const QwenText2ImageModels = [
+  'wan2.2-t2i',
   'wanx2.1-t2i',
   'wanx2.0-t2i',
   'wanx-v1',
