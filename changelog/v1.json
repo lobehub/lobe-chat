@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Fix setting window layout size, update i18n."]
+    },
+    "date": "2025-07-28",
+    "version": "1.104.4"
+  },
+  {
+    "children": {
       "improvements": ["Add Gemini 2.5 Flash-Lite GA model."]
     },
     "date": "2025-07-26",
