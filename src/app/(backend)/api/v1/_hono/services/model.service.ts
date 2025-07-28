@@ -327,7 +327,7 @@ export class ModelService extends BaseService {
       return modelConfig;
     } catch (error) {
       this.log('error', '根据会话ID获取模型配置失败', { error, request });
-      throw this.createCommonError('根据会话ID获取模型配置失败');
+      throw this.handleServiceError(error, '根据会话ID获取模型配置失败');
     }
   }
 
