@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.104.5](https://github.com/lobehub/lobe-chat/compare/v1.104.4...v1.104.5)
+
+<sup>Released on **2025-07-28**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix setting window layout when in desktop was disappear.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix setting window layout when in desktop was disappear, closes [#8585](https://github.com/lobehub/lobe-chat/issues/8585) ([74ab822](https://github.com/lobehub/lobe-chat/commit/74ab822))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.104.4](https://github.com/lobehub/lobe-chat/compare/v1.104.3...v1.104.4)
 
 <sup>Released on **2025-07-28**</sup>
