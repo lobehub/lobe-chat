@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Fix setting window layout when in desktop was disappear."]
+    },
+    "date": "2025-07-28",
+    "version": "1.104.5"
+  },
+  {
+    "children": {
       "improvements": ["Fix setting window layout size, update i18n."]
     },
     "date": "2025-07-28",
