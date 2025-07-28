@@ -1100,6 +1100,9 @@
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash 是 Google 性价比最高的模型，提供全面的功能。"
   },
+  "gemini-2.5-flash-lite": {
+    "description": "Gemini 2.5 Flash-Lite 是 Google 最小、性价比最高的模型，专为大规模使用而设计。"
+  },
   "gemini-2.5-flash-lite-preview-06-17": {
     "description": "Gemini 2.5 Flash-Lite Preview 是 Google 最小、性价比最高的模型，专为大规模使用而设计。"
   },
@@ -2428,6 +2431,9 @@
   },
   "v0-1.5-md": {
     "description": "v0-1.5-md 模型适用于日常任务和用户界面（UI）生成"
+  },
+  "wanx2.1-t2i-turbo": {
+    "description": "阿里云通义旗下的文生图模型"
   },
   "whisper-1": {
     "description": "通用语音识别模型，支持多语言语音识别、语音翻译和语言识别。"

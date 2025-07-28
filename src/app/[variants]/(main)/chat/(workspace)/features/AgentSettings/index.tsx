@@ -10,8 +10,10 @@ import HeaderContent from '@/app/[variants]/(main)/chat/settings/features/Header
 import BrandWatermark from '@/components/BrandWatermark';
 import PanelTitle from '@/components/PanelTitle';
 import { INBOX_SESSION_ID } from '@/const/session';
+import { isDesktop } from '@/const/version';
 import { AgentCategory, AgentSettings as Settings } from '@/features/AgentSetting';
 import { AgentSettingsProvider } from '@/features/AgentSetting/AgentSettingsProvider';
+import { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';
 import Footer from '@/features/Setting/Footer';
 import { useInitAgentConfig } from '@/hooks/useInitAgentConfig';
 import { useAgentStore } from '@/store/agent';
@@ -49,7 +51,7 @@ const AgentSettings = memo(() => {
     >
       <Drawer
         containerMaxWidth={1280}
-        height={'100vh'}
+        height={isDesktop ? `calc(100vh - ${TITLE_BAR_HEIGHT}px)` : '100vh'}
         noHeader
         onClose={() => useAgentStore.setState({ showAgentSetting: false })}
         open={showAgentSetting}
@@ -74,7 +76,7 @@ const AgentSettings = memo(() => {
           sidebarContent: {
             gap: 48,
             justifyContent: 'space-between',
-            minHeight: '100%',
+            minHeight: isDesktop ? `calc(100% - ${TITLE_BAR_HEIGHT}px)` : '100%',
             paddingBlock: 24,
             paddingInline: 48,
           },

@@ -1100,6 +1100,9 @@
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash là mô hình có hiệu suất chi phí tốt nhất của Google, cung cấp đầy đủ các chức năng."
   },
+  "gemini-2.5-flash-lite": {
+    "description": "Gemini 2.5 Flash-Lite là mô hình nhỏ nhất và có hiệu suất chi phí tốt nhất của Google, được thiết kế dành cho việc sử dụng quy mô lớn."
+  },
   "gemini-2.5-flash-lite-preview-06-17": {
     "description": "Gemini 2.5 Flash-Lite Preview là mô hình nhỏ nhất và có hiệu suất chi phí tốt nhất của Google, được thiết kế dành cho sử dụng quy mô lớn."
   },
@@ -2428,6 +2431,9 @@
   },
   "v0-1.5-md": {
     "description": "Mô hình v0-1.5-md phù hợp cho các nhiệm vụ hàng ngày và tạo giao diện người dùng (UI)"
+  },
+  "wanx2.1-t2i-turbo": {
+    "description": "Mô hình tạo hình ảnh từ văn bản thuộc Alibaba Cloud Tongyi"
   },
   "whisper-1": {
     "description": "Mô hình nhận dạng giọng nói đa năng, hỗ trợ nhận dạng giọng nói đa ngôn ngữ, dịch giọng nói và nhận diện ngôn ngữ."

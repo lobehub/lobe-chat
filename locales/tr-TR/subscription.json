@@ -1,0 +1,24 @@
+{
+  "plans": {
+    "plan": {
+      "enterprise": {
+        "title": "Kurumsal"
+      },
+      "free": {
+        "title": "Ücretsiz"
+      },
+      "hobby": {
+        "title": "Kendi Kendine Hizmet Versiyonu"
+      },
+      "premium": {
+        "title": "Gelişmiş"
+      },
+      "starter": {
+        "title": "Temel"
+      },
+      "ultimate": {
+        "title": "Profesyonel"
+      }
+    }
+  }
+}

@@ -1100,6 +1100,9 @@
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash هو نموذج Google الأكثر فعالية من حيث التكلفة، ويوفر وظائف شاملة."
   },
+  "gemini-2.5-flash-lite": {
+    "description": "Gemini 2.5 Flash-Lite هو أصغر وأفضل نموذج من حيث التكلفة من Google، مصمم للاستخدام على نطاق واسع."
+  },
   "gemini-2.5-flash-lite-preview-06-17": {
     "description": "Gemini 2.5 Flash-Lite Preview هو أصغر وأكفأ نموذج من Google، مصمم للاستخدام واسع النطاق."
   },
@@ -2428,6 +2431,9 @@
   },
   "v0-1.5-md": {
     "description": "نموذج v0-1.5-md مناسب للمهام اليومية وتوليد واجهات المستخدم (UI)"
+  },
+  "wanx2.1-t2i-turbo": {
+    "description": "نموذج توليد الصور التابع لشركة علي بابا كلاود Tongyi"
   },
   "whisper-1": {
     "description": "نموذج التعرف على الصوت العام، يدعم التعرف على الصوت بعدة لغات، الترجمة الصوتية، والتعرف على اللغة."

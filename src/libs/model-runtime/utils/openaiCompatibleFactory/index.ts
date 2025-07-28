@@ -5,7 +5,7 @@ import OpenAI, { ClientOptions } from 'openai';
 import { Stream } from 'openai/streaming';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
-import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/meta-schema';
+import { RuntimeImageGenParamsValue } from '@/libs/standard-parameters/index';
 import type { ChatModelCard } from '@/types/llm';
 import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
 
@@ -52,6 +52,10 @@ export const CHAT_MODELS_BLOCK_LIST = [
 ];
 
 type ConstructorOptions<T extends Record<string, any> = any> = ClientOptions & T;
+export type CreateImageOptions = Omit<ClientOptions, 'apiKey'> & {
+  apiKey: string;
+  provider: string;
+};
 
 export interface CustomClientOptions<T extends Record<string, any> = any> {
   createChatCompletionStream?: (
@@ -89,7 +93,10 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
     noUserId?: boolean;
   };
   constructorOptions?: ConstructorOptions<T>;
-  createImage?: (payload: CreateImagePayload & { client: OpenAI }) => Promise<CreateImageResponse>;
+  createImage?: (
+    payload: CreateImagePayload,
+    options: CreateImageOptions,
+  ) => Promise<CreateImageResponse>;
   customClient?: CustomClientOptions<T>;
   debug?: {
     chatCompletion: () => boolean;
@@ -178,6 +185,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
   models,
   customClient,
   responses,
+  createImage: customCreateImage,
 }: OpenAICompatibleFactoryOptions<T>) => {
   const ErrorType = {
     bizError: errorType?.bizError || AgentRuntimeErrorType.ProviderBizError,
@@ -317,15 +325,20 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
     }
 
     async createImage(payload: CreateImagePayload) {
+      // If custom createImage implementation is provided, use it
+      if (customCreateImage) {
+        return customCreateImage(payload, {
+          ...this._options,
+          apiKey: this._options.apiKey!,
+          provider,
+        });
+      }
+
+      // Otherwise use default OpenAI compatible implementation
       const { model, params } = payload;
       const log = createDebug(`lobe-image:model-runtime`);
 
       log('Creating image with model: %s and params: %O', model, params);
-
-      const defaultInput = {
-        n: 1,
-        ...(model.includes('dall-e') ? { response_format: 'b64_json' } : {}),
-      };
 
       // 映射参数名称，将 imageUrls 映射为 image
       const paramsMap = new Map<RuntimeImageGenParamsValue, string>([
@@ -339,6 +352,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         ]),
       );
 
+      // https://platform.openai.com/docs/api-reference/images/createEdit
       const isImageEdit = Array.isArray(userInput.image) && userInput.image.length > 0;
       // 如果有 imageUrls 参数，将其转换为 File 对象
       if (isImageEdit) {
@@ -364,6 +378,12 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       if (userInput.size === 'auto') {
         delete userInput.size;
       }
+
+      const defaultInput = {
+        n: 1,
+        ...(model.includes('dall-e') ? { response_format: 'b64_json' } : {}),
+        ...(isImageEdit ? { input_fidelity: 'high' } : {}),
+      };
 
       const options = {
         model,

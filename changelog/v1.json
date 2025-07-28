@@ -1,6 +1,74 @@
 [
   {
     "children": {
+      "improvements": ["Fix setting window layout size, update i18n."]
+    },
+    "date": "2025-07-28",
+    "version": "1.104.4"
+  },
+  {
+    "children": {
+      "improvements": ["Add Gemini 2.5 Flash-Lite GA model."]
+    },
+    "date": "2025-07-26",
+    "version": "1.104.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix update hotkey invalid when input mod in desktop."]
+    },
+    "date": "2025-07-26",
+    "version": "1.104.2"
+  },
+  {
+    "children": {
+      "fixes": [
+        "Update convertUsage to handle XAI provider and adjust OpenAIStream to pass provider."
+      ]
+    },
+    "date": "2025-07-25",
+    "version": "1.104.1"
+  },
+  {
+    "children": {
+      "features": ["Support custom hotkey on desktop."]
+    },
+    "date": "2025-07-24",
+    "version": "1.104.0"
+  },
+  {
+    "children": {
+      "fixes": ["Fix chat stream in desktop and update shortcut."],
+      "improvements": [
+        "Add cached token count to usage of GoogleAI and VertexAI, fix desktop titlebar style in window, fix sub topic width in md responsive."
+      ]
+    },
+    "date": "2025-07-24",
+    "version": "1.103.2"
+  },
+  {
+    "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-23",
+    "version": "1.103.1"
+  },
+  {
+    "children": {
+      "features": ["Add Qwen image generation capabilities."]
+    },
+    "date": "2025-07-22",
+    "version": "1.103.0"
+  },
+  {
+    "children": {
+      "improvements": ["Update tray icon."]
+    },
+    "date": "2025-07-22",
+    "version": "1.102.4"
+  },
+  {
+    "children": {
       "fixes": ["Remove debug logging from ModelRuntime and async caller."]
     },
     "date": "2025-07-22",

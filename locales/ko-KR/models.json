@@ -1100,6 +1100,9 @@
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash는 구글에서 가장 가성비가 뛰어난 모델로, 포괄적인 기능을 제공합니다."
   },
+  "gemini-2.5-flash-lite": {
+    "description": "Gemini 2.5 Flash-Lite는 Google의 가장 작고 가성비가 뛰어난 모델로, 대규모 사용을 위해 설계되었습니다."
+  },
   "gemini-2.5-flash-lite-preview-06-17": {
     "description": "Gemini 2.5 Flash-Lite Preview는 구글의 가장 작고 가성비가 뛰어난 모델로, 대규모 사용을 위해 설계되었습니다."
   },
@@ -2428,6 +2431,9 @@
   },
   "v0-1.5-md": {
     "description": "v0-1.5-md 모델은 일상 작업 및 사용자 인터페이스(UI) 생성에 적합합니다"
+  },
+  "wanx2.1-t2i-turbo": {
+    "description": "알리클라우드 통의(通义) 산하의 텍스트-이미지 생성 모델"
   },
   "whisper-1": {
     "description": "범용 음성 인식 모델로, 다국어 음성 인식, 음성 번역 및 언어 인식을 지원합니다."

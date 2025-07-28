@@ -1100,6 +1100,9 @@
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash é o modelo com melhor custo-benefício do Google, oferecendo funcionalidades abrangentes."
   },
+  "gemini-2.5-flash-lite": {
+    "description": "Gemini 2.5 Flash-Lite é o modelo mais compacto e com melhor custo-benefício do Google, projetado para uso em larga escala."
+  },
   "gemini-2.5-flash-lite-preview-06-17": {
     "description": "Gemini 2.5 Flash-Lite Preview é o modelo mais compacto e com melhor custo-benefício do Google, projetado para uso em larga escala."
   },
@@ -2428,6 +2431,9 @@
   },
   "v0-1.5-md": {
     "description": "O modelo v0-1.5-md é adequado para tarefas diárias e geração de interfaces de usuário (UI)"
+  },
+  "wanx2.1-t2i-turbo": {
+    "description": "Modelo de geração de imagens da Alibaba Cloud Tongyi"
   },
   "whisper-1": {
     "description": "Modelo universal de reconhecimento de voz, suportando reconhecimento de voz multilíngue, tradução de voz e identificação de idioma."

@@ -1100,6 +1100,9 @@
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash è il modello Google con il miglior rapporto qualità-prezzo, offrendo funzionalità complete."
   },
+  "gemini-2.5-flash-lite": {
+    "description": "Gemini 2.5 Flash-Lite è il modello più piccolo e conveniente di Google, progettato per un utilizzo su larga scala."
+  },
   "gemini-2.5-flash-lite-preview-06-17": {
     "description": "Gemini 2.5 Flash-Lite Preview è il modello Google più piccolo e con il miglior rapporto qualità-prezzo, progettato per un utilizzo su larga scala."
   },
@@ -2428,6 +2431,9 @@
   },
   "v0-1.5-md": {
     "description": "Il modello v0-1.5-md è adatto per compiti quotidiani e generazione di interfacce utente (UI)"
+  },
+  "wanx2.1-t2i-turbo": {
+    "description": "Modello di generazione di immagini basato su testo di Tongyi di Alibaba Cloud"
   },
   "whisper-1": {
     "description": "Modello universale di riconoscimento vocale, supporta riconoscimento vocale multilingue, traduzione vocale e identificazione della lingua."
