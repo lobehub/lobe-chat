@@ -71,7 +71,7 @@ export const createAiModelSlice: StateCreator<
   fetchRemoteModelList: async (providerId) => {
     const { modelsService } = await import('@/services/models');
 
-    const data = await modelsService.getChatModels(providerId);
+    const data = await modelsService.getModels(providerId);
     if (data) {
       await get().batchUpdateAiModels(
         data.map((model) => ({
@@ -84,7 +84,7 @@ export const createAiModelSlice: StateCreator<
           },
           enabled: model.enabled || false,
           source: 'remote',
-          type: 'chat',
+          type: model.type || 'chat',
         })),
       );
 

@@ -68,6 +68,23 @@
   "GoBack": {
     "back": "Zurück"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "Klicken, um das Bild zu ändern",
+      "dropMultipleFiles": "Das Hochladen mehrerer Dateien wird nicht unterstützt, es wird nur die erste Datei verwendet"
+    },
+    "placeholder": {
+      "primary": "Bild hinzufügen",
+      "secondary": "Klicken oder ziehen, um hochzuladen"
+    }
+  },
+  "KeyValueEditor": {
+    "addButton": "Neue Zeile hinzufügen",
+    "deleteTooltip": "Löschen",
+    "duplicateKeyError": "Der Schlüsselname muss eindeutig sein",
+    "keyPlaceholder": "Schlüssel",
+    "valuePlaceholder": "Wert"
+  },
   "MaxTokenSlider": {
     "unlimited": "Unbegrenzt"
   },
@@ -88,9 +105,33 @@
     "emptyModel": "Kein aktiviertes Modell. Bitte gehen Sie zu den Einstellungen, um es zu aktivieren.",
     "emptyProvider": "Es sind keine aktiven Anbieter vorhanden, bitte gehen Sie zu den Einstellungen, um sie zu aktivieren",
     "goToSettings": "Zu den Einstellungen gehen",
-    "provider": "Anbieter"
+    "provider": "Anbieter",
+    "title": "Modell"
+  },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "Klicken oder ziehen, um mehr hochzuladen"
+    },
+    "modal": {
+      "complete": "Fertig",
+      "newFileIndicator": "Neu",
+      "selectImageToPreview": "Bitte wählen Sie ein Bild zur Vorschau aus",
+      "title": "Bilder verwalten ({{count}})",
+      "upload": "Bild hochladen"
+    },
+    "placeholder": {
+      "primary": "Klicken oder ziehen, um Bilder hochzuladen",
+      "secondary": "Mehrere Bilder können ausgewählt werden"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} hochgeladen"
+    }
   },
   "OllamaSetupGuide": {
+    "action": {
+      "close": "Hinweis schließen",
+      "start": "Installiert und ausgeführt, beginnen Sie das Gespräch"
+    },
     "cors": {
       "description": "Aufgrund von Sicherheitsbeschränkungen im Browser müssen Sie CORS für Ollama konfigurieren, um es ordnungsgemäß nutzen zu können.",
       "linux": {

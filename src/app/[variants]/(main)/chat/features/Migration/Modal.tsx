@@ -1,5 +1,5 @@
-import { Icon } from '@lobehub/ui';
-import { Button, Result } from 'antd';
+import { Button, Icon } from '@lobehub/ui';
+import { Result } from 'antd';
 import { CheckCircle, CpuIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

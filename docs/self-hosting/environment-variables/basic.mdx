@@ -1,9 +1,8 @@
 ---
 title: Customize LobeChat Deployment with Environment Variables
 description: >-
-  Learn about the common environment variables used to customize LobeChat
-  deployment, including access code, OAuth SSO, base path, and default agent
-  configuration.
+  Learn about the common environment variables used to customize LobeChat deployment, including access code, OAuth SSO, base path, and default agent configuration.
+
 tags:
   - LobeChat
   - environment variables
@@ -71,6 +70,37 @@ Further reading:
 
 - [\[RFC\] 022 - Default Assistant Parameters Configuration via Environment Variables](https://github.com/lobehub/lobe-chat/discussions/913)
 
+### `SYSTEM_AGENT`
+
+- Type: Optional
+- Description: Used to configure models and providers for LobeChat system agents (such as topic generation, translation, etc.).
+- Default value: `-`
+- Example: `default=ollama/deepseek-v3` or `topic=openai/gpt-4,translation=anthropic/claude-1`
+
+The `SYSTEM_AGENT` environment variable supports two configuration methods:
+
+1. Use `default=provider/model` to set the same default configuration for all system agents
+2. Configure specific system agents individually using the format `agent-name=provider/model`
+
+Configuration details:
+
+| Config Type         | Format                                          | Explanation                                                            |
+| ------------------- | ----------------------------------------------- | ---------------------------------------------------------------------- |
+| Default setting     | `default=ollama/deepseek-v3`                    | Set deepseek-v3 from ollama as the default model for all system agents |
+| Specific setting    | `topic=openai/gpt-4`                            | Set a specific provider and model for topic generation                 |
+| Mixed configuration | `default=ollama/deepseek-v3,topic=openai/gpt-4` | First set default values for all agents, then override specific agents |
+
+Available system agents and their functions:
+
+| System Agent        | Key Name          | Function Description                                                                                |
+| ------------------- | ----------------- | --------------------------------------------------------------------------------------------------- |
+| Topic Generation    | `topic`           | Automatically generates topic names and summaries based on chat content                             |
+| Translation         | `translation`     | Handles text translation between multiple languages                                                 |
+| Metadata Generation | `agentMeta`       | Generates descriptive information and metadata for assistants                                       |
+| History Compression | `historyCompress` | Compresses and organizes history for long conversations, optimizing context management              |
+| Query Rewrite       | `queryRewrite`    | Rewrites follow-up questions as standalone questions with context, improving conversation coherence |
+| Thread Management   | `thread`          | Handles the creation and management of conversation threads                                         |
+
 ### `FEATURE_FLAGS`
 
 - Type: Optional
@@ -90,8 +120,16 @@ For specific content, please refer to the [Feature Flags](/docs/self-hosting/adv
 <Callout type="info">
   If you're using Docker Desktop on Windows or macOS, it relies on a virtual machine. In this setup,
   `localhost` / `127.0.0.1` refers to the localhost of the container itself. In such cases, please
-  try using `host.docker.internal` instead of `localhost`.
+  try using `host.docker.internal` instead of `localhost`. Use `http://user:password@127.0.0.1:7890`
+  to connect to an authenticated proxy server.
 </Callout>
+
+### `ENABLE_PROXY_DNS`
+
+- Type: Optional
+- Description: Used to control whether to send DNS queries to the proxy server. When configured as `0`, all DNS queries are resolved locally. If you encounter API access failures or timeouts in your network environment, try setting this option to `1`.
+- Default: `0`
+- Example: `1` or `0`
 
 ### `SSRF_ALLOW_PRIVATE_IP_ADDRESS`
 
@@ -106,6 +144,13 @@ For specific content, please refer to the [Feature Flags](/docs/self-hosting/adv
 - Description: Allow private IP address list, multiple IP addresses are separated by commas. Only when `SSRF_ALLOW_PRIVATE_IP_ADDRESS` is `0`, it takes effect.
 - Default: -
 - Example: `198.18.1.62,224.0.0.3`
+
+### `ENABLE_AUTH_PROTECTION`
+
+- Type: Optional
+- Description: Controls whether to enable route protection. When set to `1`, all routes except public routes (like `/api/auth`, `/next-auth/*`, `/login`, `/signup`) will require authentication. When set to `0` or not set, only specific protected routes (like `/settings`, `/files`) will require authentication.
+- Default: `0`
+- Example: `1` or `0`
 
 ## Plugin Service
 

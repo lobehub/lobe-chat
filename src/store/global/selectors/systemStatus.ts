@@ -14,15 +14,20 @@ const mobileShowPortal = (s: GlobalState) => s.status.mobileShowPortal;
 const showChatSideBar = (s: GlobalState) => !s.status.zenMode && s.status.showChatSideBar;
 const showSessionPanel = (s: GlobalState) => !s.status.zenMode && s.status.showSessionPanel;
 const showFilePanel = (s: GlobalState) => s.status.showFilePanel;
+const showImagePanel = (s: GlobalState) => s.status.showImagePanel;
+const showImageTopicPanel = (s: GlobalState) => s.status.showImageTopicPanel;
 const hidePWAInstaller = (s: GlobalState) => s.status.hidePWAInstaller;
 const isShowCredit = (s: GlobalState) => s.status.isShowCredit;
 const themeMode = (s: GlobalState) => s.status.themeMode || 'auto';
+const language = (s: GlobalState) => s.status.language || 'auto';
 
 const showChatHeader = (s: GlobalState) => !s.status.zenMode;
 const inZenMode = (s: GlobalState) => s.status.zenMode;
 const sessionWidth = (s: GlobalState) => s.status.sessionsWidth;
 const portalWidth = (s: GlobalState) => s.status.portalWidth || 400;
 const filePanelWidth = (s: GlobalState) => s.status.filePanelWidth;
+const imagePanelWidth = (s: GlobalState) => s.status.imagePanelWidth;
+const imageTopicPanelWidth = (s: GlobalState) => s.status.imageTopicPanelWidth;
 const inputHeight = (s: GlobalState) => s.status.inputHeight;
 const threadInputHeight = (s: GlobalState) => s.status.threadInputHeight;
 
@@ -50,9 +55,19 @@ const isPgliteInited = (s: GlobalState): boolean =>
 // 这个变量控制 clientdb 是否完成初始化，正常来说，只有 pgliteDB 模式下，才会存在变化，其他时候都是 true
 const isDBInited = (s: GlobalState): boolean => (isUsePgliteDB ? isPgliteInited(s) : true);
 
+const getAgentSystemRoleExpanded =
+  (agentId: string) =>
+  (s: GlobalState): boolean => {
+    const map = s.status.systemRoleExpandedMap || {};
+    return map[agentId] !== false; // 角色设定默认为展开状态
+  };
+
 export const systemStatusSelectors = {
   filePanelWidth,
+  getAgentSystemRoleExpanded,
   hidePWAInstaller,
+  imagePanelWidth,
+  imageTopicPanelWidth,
   inZenMode,
   inputHeight,
   isDBInited,
@@ -60,6 +75,7 @@ export const systemStatusSelectors = {
   isPgliteNotEnabled,
   isPgliteNotInited,
   isShowCredit,
+  language,
   mobileShowPortal,
   mobileShowTopic,
   portalWidth,
@@ -68,6 +84,8 @@ export const systemStatusSelectors = {
   showChatHeader,
   showChatSideBar,
   showFilePanel,
+  showImagePanel,
+  showImageTopicPanel,
   showSessionPanel,
   showSystemRole,
   systemStatus,

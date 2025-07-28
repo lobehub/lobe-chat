@@ -1,14 +1,26 @@
 {
+  "confirm": "確認",
   "debug": {
     "arguments": "引数",
     "function_call": "関数呼び出し",
     "off": "デバッグをオフにする",
     "on": "プラグイン呼び出し情報を表示する",
     "payload": "ペイロード",
+    "pluginState": "プラグインの状態",
     "response": "レスポンス",
+    "title": "プラグインの詳細",
     "tool_call": "ツール呼び出し"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "詳細は編集ページでご確認ください",
+      "editBtn": "今すぐ編集",
+      "title": "これはカスタムプラグインです"
+    },
+    "emptyState": {
+      "description": "このプラグインをインストールしてから、プラグインの機能と設定オプションを確認してください",
+      "title": "インストール後にプラグインの詳細を表示"
+    },
     "info": {
       "description": "API 説明",
       "name": "API 名"
@@ -34,14 +46,105 @@
         "label": "識別子"
       },
       "mode": {
-        "local": "ビジュアル設定",
-        "local-tooltip": "ビジュアル設定は一時的にサポートされていません",
+        "mcp": "MCP プラグイン",
+        "mcpExp": "実験的",
         "url": "オンラインリンク"
       },
       "name": {
         "desc": "プラグインのタイトル",
         "label": "タイトル",
         "placeholder": "検索エンジン"
+      }
+    },
+    "mcp": {
+      "advanced": {
+        "title": "高度な設定"
+      },
+      "args": {
+        "desc": "実行コマンドに渡すパラメータのリスト。通常、ここにMCPサーバー名または起動スクリプトのパスを入力します。",
+        "label": "コマンドパラメータ",
+        "placeholder": "例：--port 8080 --debug",
+        "required": "起動パラメータを入力してください"
+      },
+      "auth": {
+        "bear": "APIキー",
+        "desc": "MCPサーバーの認証方法を選択してください",
+        "label": "認証タイプ",
+        "none": "認証不要",
+        "placeholder": "認証タイプを選択してください",
+        "token": {
+          "desc": "APIキーまたはBearerトークンを入力してください",
+          "label": "APIキー",
+          "placeholder": "sk-xxxxx",
+          "required": "認証トークンを入力してください"
+        }
+      },
+      "avatar": {
+        "label": "プラグインアイコン"
+      },
+      "command": {
+        "desc": "MCP STDIO プラグインを起動するための実行可能ファイルまたはスクリプト",
+        "label": "コマンド",
+        "placeholder": "例：python main.py または /path/to/executable",
+        "required": "起動コマンドを入力してください"
+      },
+      "desc": {
+        "desc": "プラグインの説明を追加",
+        "label": "プラグインの説明",
+        "placeholder": "このプラグインの使用方法やシーンなどの情報を補足してください"
+      },
+      "endpoint": {
+        "desc": "あなたの MCP Streamable HTTP サーバーのアドレスを入力してください",
+        "label": "MCP エンドポイント URL"
+      },
+      "env": {
+        "add": "行を追加",
+        "desc": "MCPサーバーに必要な環境変数を入力してください",
+        "duplicateKeyError": "フィールドキーは一意でなければなりません",
+        "formValidationFailed": "フォームの検証に失敗しました。パラメータの形式を確認してください",
+        "keyRequired": "フィールドキーは空にできません",
+        "label": "MCPサーバー環境変数",
+        "stringifyError": "パラメータをシリアライズできません。パラメータの形式を確認してください"
+      },
+      "headers": {
+        "add": "行を追加",
+        "desc": "リクエストヘッダーを入力してください",
+        "label": "HTTPヘッダー"
+      },
+      "identifier": {
+        "desc": "あなたの MCP プラグインに名前を指定してください。英字を使用する必要があります",
+        "invalid": "英字、数字、- および _ のみを入力できます",
+        "label": "MCP プラグイン名",
+        "placeholder": "例：my-mcp-plugin",
+        "required": "MCP サービス識別子を入力してください"
+      },
+      "previewManifest": "プラグインの説明ファイルをプレビュー",
+      "quickImport": "JSON 設定を迅速にインポート",
+      "quickImportError": {
+        "empty": "入力内容は空にできません",
+        "invalidJson": "無効な JSON 形式です",
+        "invalidStructure": "JSON 形式が無効です"
+      },
+      "stdioNotSupported": "現在の環境では stdio タイプの MCP プラグインはサポートされていません",
+      "testConnection": "接続をテスト",
+      "testConnectionTip": "接続テストが成功した後、MCP プラグインは正常に使用できます",
+      "type": {
+        "desc": "MCP プラグインの通信方式を選択してください。ウェブ版は Streamable HTTP のみをサポートしています",
+        "httpFeature1": "ウェブ版とデスクトップ版の互換性",
+        "httpFeature2": "追加のインストールや設定なしでリモートMCPサーバーに接続",
+        "httpShortDesc": "ストリーミングHTTPに基づく通信プロトコル",
+        "label": "MCP プラグインタイプ",
+        "stdioFeature1": "通信遅延が少なく、ローカル実行に適している",
+        "stdioFeature2": "ローカルにMCPサーバーをインストールして実行する必要がある",
+        "stdioNotAvailable": "STDIOモードはデスクトップ版でのみ利用可能",
+        "stdioShortDesc": "標準入力出力に基づく通信プロトコル",
+        "title": "MCPプラグインタイプ"
+      },
+      "url": {
+        "desc": "あなたのMCPサーバーのストリーミングHTTPアドレスを入力してください。SSEモードはサポートされていません。",
+        "invalid": "有効な URL アドレスを入力してください",
+        "label": "HTTP エンドポイント URL",
+        "required": "MCP サービスの URL を入力してください"
       }
     },
     "meta": {
@@ -69,12 +172,14 @@
         "label": "識別子",
         "pattenErrorMessage": "英数字、-、_ のみ入力できます"
       },
+      "lobe": "{{appName}} プラグイン",
       "manifest": {
         "desc": "{{appName}}はこのリンクを通じてプラグインをインストールします",
         "label": "プラグイン記述ファイル (Manifest) URL",
         "preview": "マニフェストのプレビュー",
         "refresh": "更新"
       },
+      "openai": "OpenAI プラグイン",
       "title": {
         "desc": "プラグインのタイトル",
         "label": "タイトル",
@@ -88,8 +193,18 @@
       "schema": "スキーマ"
     },
     "preview": {
+      "api": {
+        "noParams": "このツールにはパラメータがありません",
+        "noResults": "検索条件に一致する API が見つかりませんでした",
+        "params": "パラメータ:",
+        "searchPlaceholder": "ツールを検索..."
+      },
       "card": "プラグインのプレビュー表示",
       "desc": "プラグインの説明のプレビュー",
+      "empty": {
+        "desc": "設定が完了すると、ここでプラグインがサポートするツールの機能をプレビューできます",
+        "title": "プラグインを設定した後にプレビューを開始"
+      },
       "title": "プラグイン名のプレビュー"
     },
     "save": "プラグインを保存",
@@ -116,6 +231,7 @@
     "noManifest": "マニフェストが存在しません",
     "openAPIInvalid": "OpenAPIの解析に失敗しました。エラー: \n\n {{error}}",
     "reinstallError": "プラグイン{{name}}の再インストールに失敗しました",
+    "testConnectionFailed": "マニフェストの取得に失敗しました: {{error}}",
     "urlError": "このリンクはJSON形式のコンテンツを返していません。有効なリンクであることを確認してください"
   },
   "inspector": {
@@ -133,8 +249,69 @@
     "content": "プラグインを呼び出しています...",
     "plugin": "プラグインの実行中..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "ファイルリストを表示",
+      "moveLocalFiles": "ファイルを移動",
+      "readLocalFile": "ファイル内容を読み取る",
+      "renameLocalFile": "名前を変更",
+      "searchLocalFiles": "ファイルを検索",
+      "writeLocalFile": "ファイルに書き込む"
+    },
+    "title": "ローカルファイル"
+  },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "インストール環境を確認しています...",
+    "COMPLETED": "インストール完了",
+    "CONFIGURATION_REQUIRED": "関連設定を完了してからインストールを続行してください",
+    "ERROR": "インストールエラー",
+    "FETCHING_MANIFEST": "プラグインマニフェストを取得しています...",
+    "GETTING_SERVER_MANIFEST": "MCPサーバーを初期化しています...",
+    "INSTALLING_PLUGIN": "プラグインをインストールしています...",
+    "configurationDescription": "このMCPプラグインは正常に動作するために設定パラメータが必要です。必要な設定情報を入力してください。",
+    "configurationRequired": "プラグインパラメータの設定が必要です",
+    "continueInstall": "インストールを続行",
+    "dependenciesDescription": "このプラグインは正常に動作するために以下のシステム依存関係のインストールが必要です。指示に従って不足している依存関係をインストールし、再確認をクリックしてインストールを続行してください。",
+    "dependenciesRequired": "プラグインのシステム依存関係をインストールしてください",
+    "dependencyStatus": {
+      "installed": "インストール済み",
+      "notInstalled": "未インストール",
+      "requiredVersion": "必要なバージョン: {{version}}"
+    },
+    "errorDetails": {
+      "args": "引数",
+      "command": "コマンド",
+      "connectionParams": "接続パラメータ",
+      "env": "環境変数",
+      "errorOutput": "エラーログ",
+      "exitCode": "終了コード",
+      "hideDetails": "詳細を隠す",
+      "originalError": "元のエラー",
+      "showDetails": "詳細を表示"
+    },
+    "errorTypes": {
+      "AUTHORIZATION_ERROR": "認証エラー",
+      "CONNECTION_FAILED": "接続失敗",
+      "INITIALIZATION_TIMEOUT": "初期化タイムアウト",
+      "PROCESS_SPAWN_ERROR": "プロセス起動失敗",
+      "UNKNOWN_ERROR": "不明なエラー",
+      "VALIDATION_ERROR": "パラメータ検証失敗"
+    },
+    "installError": "MCPプラグインのインストールに失敗しました。原因：{{detail}}",
+    "installMethods": {
+      "manual": "手動インストール:",
+      "recommended": "推奨インストール方法:"
+    },
+    "recheckDependencies": "再確認",
+    "skipDependencies": "チェックをスキップ"
+  },
   "pluginList": "プラグインリスト",
   "search": {
+    "apiName": {
+      "crawlMultiPages": "複数のページの内容を読み取る",
+      "crawlSinglePage": "ページ内容を読み取る",
+      "search": "ページを検索"
+    },
     "config": {
       "addKey": "キーを追加",
       "close": "削除",
@@ -164,16 +341,48 @@
   },
   "setting": "プラグインの設定",
   "settings": {
+    "capabilities": {
+      "prompts": "プロンプト",
+      "resources": "リソース",
+      "title": "プラグイン機能",
+      "tools": "ツール"
+    },
+    "configuration": {
+      "title": "プラグイン設定"
+    },
+    "connection": {
+      "args": "起動引数",
+      "command": "起動コマンド",
+      "title": "接続情報",
+      "type": "接続タイプ",
+      "url": "サービスアドレス"
+    },
+    "edit": "編集",
+    "envConfigDescription": "これらの設定は MCP サーバー起動時に環境変数としてプロセスに渡されます",
+    "httpTypeNotice": "HTTP タイプの MCP プラグインには現在設定が必要な環境変数はありません",
     "indexUrl": {
       "title": "マーケットインデックス",
       "tooltip": "オンライン編集は現在サポートされていません。デプロイ時の環境変数を使用して設定してください"
     },
+    "messages": {
+      "connectionUpdateFailed": "接続情報の更新に失敗しました",
+      "connectionUpdateSuccess": "接続情報が正常に更新されました",
+      "envUpdateFailed": "環境変数の保存に失敗しました",
+      "envUpdateSuccess": "環境変数が正常に保存されました"
+    },
     "modalDesc": "プラグインマーケットのアドレスを設定すると、カスタムのプラグインマーケットを使用できます",
+    "rules": {
+      "argsRequired": "起動パラメータを入力してください",
+      "commandRequired": "起動コマンドを入力してください",
+      "urlRequired": "サービスアドレスを入力してください"
+    },
+    "saveSettings": "設定を保存",
     "title": "プラグインマーケットの設定"
   },
   "showInPortal": "詳細はワークスペースで表示してください",
   "store": {
     "actions": {
+      "cancel": "インストールをキャンセル",
       "confirmUninstall": "このプラグインをアンインストールします。アンインストール後、プラグインの設定がクリアされます。操作を確認してください。",
       "detail": "詳細",
       "install": "インストール",
@@ -184,15 +393,18 @@
     "communityPlugin": "コミュニティプラグイン",
     "customPlugin": "カスタムプラグイン",
     "empty": "インストールされたプラグインはありません",
+    "emptySelectHint": "プラグインを選択して詳細情報をプレビューしてください",
     "installAllPlugins": "すべてのプラグインをインストール",
     "networkError": "プラグインストアの取得に失敗しました。ネットワーク接続を確認してから再試行してください",
     "placeholder": "プラグイン名、説明、またはキーワードで検索...",
     "releasedAt": "{{createdAt}} にリリース",
     "tabs": {
-      "all": "すべて",
-      "installed": "インストール済み"
+      "installed": "インストール済み",
+      "mcp": "MCPプラグイン",
+      "old": "LobeChatプラグイン"
     },
     "title": "プラグインストア"
   },
+  "unknownError": "未知のエラー",
   "unknownPlugin": "未知のプラグイン"
 }

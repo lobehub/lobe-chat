@@ -16,6 +16,16 @@
     "detail": "Dettagli errore",
     "title": "Richiesta fallita"
   },
+  "import": {
+    "importConfigFile": {
+      "description": "Motivo dell'errore: {{reason}}",
+      "title": "Importazione fallita"
+    },
+    "incompatible": {
+      "description": "Questo file è stato esportato da una versione più recente, si prega di provare ad aggiornare all'ultima versione e riprovare l'importazione",
+      "title": "L'app attuale non supporta l'importazione di questo file"
+    }
+  },
   "loginRequired": {
     "desc": "Verrai reindirizzato automaticamente alla pagina di accesso",
     "title": "Accedi per utilizzare questa funzione"
@@ -56,6 +66,7 @@
     "429": "Spiacenti, ci sono troppe richieste in arrivo. Il server è un po' stanco. Riprova più tardi",
     "431": "Spiacenti, le intestazioni della tua richiesta sono troppo grandi per il server da gestire",
     "451": "Spiacenti, per motivi legali, il server rifiuta di fornire questa risorsa",
+    "499": "Ci scusiamo, la tua richiesta è stata interrotta in modo imprevisto durante l'elaborazione sul server, probabilmente a causa di un annullamento dell'operazione da parte tua o di una connessione di rete instabile. Controlla le condizioni di rete e riprova.",
     "500": "Spiacenti, il server sembra avere qualche difficoltà al momento e non può completare la tua richiesta. Riprova più tardi",
     "501": "Ci dispiace, il server non sa ancora come gestire questa richiesta, per favore verifica che la tua operazione sia corretta",
     "502": "Spiacenti, il server sembra smarrito e non può fornire servizio al momento. Riprova più tardi",
@@ -66,9 +77,12 @@
     "507": "Ci dispiace, lo spazio di archiviazione del server è insufficiente per elaborare la tua richiesta, per favore riprova più tardi",
     "509": "Ci dispiace, la larghezza di banda del server è esaurita, per favore riprova più tardi",
     "510": "Ci dispiace, il server non supporta le funzionalità di estensione richieste, contatta l'amministratore",
-    "524": "Ci dispiace, il server ha superato il timeout in attesa di una risposta, potrebbe essere a causa di una risposta troppo lenta, per favore riprova più tardi",
+    "520": "Ci scusiamo, il server ha riscontrato un problema imprevisto che ha impedito il completamento della tua richiesta. Riprova più tardi, stiamo lavorando per risolvere questo problema.",
+    "522": "Ci scusiamo, la connessione al server è scaduta e non ha risposto in tempo alla tua richiesta. Potrebbe essere dovuto a una rete instabile o a un server temporaneamente non accessibile. Riprova più tardi, stiamo lavorando per ripristinare il servizio.",
+    "524": "Ci scusiamo, il server ha superato il tempo di attesa in attesa di una risposta, probabilmente a causa di una risposta troppo lenta. Riprova più tardi.",
     "AgentRuntimeError": "Errore di esecuzione del modello linguistico Lobe, controlla le informazioni seguenti o riprova",
     "ConnectionCheckFailed": "La risposta è vuota, controlla se l'indirizzo del proxy API termina con `/v1`",
+    "CreateMessageError": "Ci dispiace, il messaggio non è stato inviato correttamente. Si prega di copiare il contenuto e inviarlo nuovamente. Dopo aver aggiornato la pagina, questo messaggio non verrà conservato.",
     "ExceededContextWindow": "Il contenuto della richiesta attuale supera la lunghezza che il modello può gestire. Si prega di ridurre la quantità di contenuto e riprovare.",
     "FreePlanLimit": "Attualmente sei un utente gratuito e non puoi utilizzare questa funzione. Per favore, passa a un piano a pagamento per continuare.",
     "InsufficientQuota": "Ci dispiace, la quota per questa chiave ha raggiunto il limite. Si prega di controllare il saldo dell'account o di aumentare la quota della chiave e riprovare.",
@@ -109,6 +123,7 @@
   "stt": {
     "responseError": "Errore nella richiesta del servizio. Verifica la configurazione o riprova"
   },
+  "testConnectionFailed": "Connessione di prova fallita: {{error}}",
   "tts": {
     "responseError": "Errore nella richiesta del servizio. Verifica la configurazione o riprova"
   },
@@ -116,6 +131,7 @@
     "addProxyUrl": "Aggiungi URL del proxy OpenAI (opzionale)",
     "apiKey": {
       "description": "Inserisci la tua Chiave API {{name}} per iniziare la sessione",
+      "imageGenerationDescription": "Inserisci la tua chiave API {{name}} per iniziare a generare",
       "title": "Usa la tua Chiave API personalizzata {{name}}"
     },
     "closeMessage": "Chiudi messaggio",

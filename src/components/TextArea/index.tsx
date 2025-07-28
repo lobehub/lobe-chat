@@ -1,5 +1,5 @@
-import { Input } from 'antd';
-import { TextAreaProps as Props, TextAreaRef } from 'antd/es/input/TextArea';
+import { TextArea as LobeTextArea, TextAreaProps as Props } from '@lobehub/ui';
+import { TextAreaRef } from 'antd/es/input/TextArea';
 import { memo, useRef, useState } from 'react';
 
 interface TextAreaProps extends Omit<Props, 'onChange'> {
@@ -13,7 +13,7 @@ const TextArea = memo<TextAreaProps>(({ onChange, value: defaultValue, ...props 
   const [value, setValue] = useState(defaultValue as string);
 
   return (
-    <Input.TextArea
+    <LobeTextArea
       onBlur={() => {
         onChange?.(value);
       }}

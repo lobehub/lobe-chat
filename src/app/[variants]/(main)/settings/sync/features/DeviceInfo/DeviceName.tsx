@@ -1,7 +1,6 @@
 'use client';
 
-import { EditableText } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { EditableText, Text } from '@lobehub/ui';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -39,22 +38,22 @@ const DeviceName = memo(() => {
           }}
           style={{ cursor: 'pointer' }}
         >
-          <Typography.Text type={'secondary'}>{t('sync.device.deviceName.hint')}</Typography.Text>
+          <Text type={'secondary'}>{t('sync.device.deviceName.hint')}</Text>
         </Flexbox>
       )}
       <EditableText
         editing={editing}
-        onBlur={(e) => {
-          updateDeviceName(e.target.value);
+        inputProps={{
+          placeholder: t('sync.device.deviceName.placeholder'),
         }}
+        onBlur={(e) => updateDeviceName(e.target.value)}
         onChange={(e) => {
           updateDeviceName(e);
         }}
         onEditingChange={setEditing}
-        placeholder={t('sync.device.deviceName.placeholder')}
         size={'large'}
-        type={'block'}
         value={deviceName}
+        variant={'filled'}
       />
     </Flexbox>
   );

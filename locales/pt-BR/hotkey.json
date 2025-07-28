@@ -1,0 +1,64 @@
+{
+  "addUserMessage": {
+    "desc": "Adiciona o conteúdo atual como uma mensagem do usuário, mas não aciona a geração",
+    "title": "Adicionar uma mensagem do usuário"
+  },
+  "clearCurrentMessages": {
+    "desc": "Limpar as mensagens da conversa atual e os arquivos enviados",
+    "title": "Limpar mensagens da conversa"
+  },
+  "desktop": {
+    "openSettings": {
+      "desc": "Abrir a página de configurações do aplicativo",
+      "title": "Configurações do Aplicativo"
+    },
+    "showApp": {
+      "desc": "Atalho global para mostrar ou ocultar a janela principal",
+      "title": "Mostrar/Ocultar Janela Principal"
+    }
+  },
+  "editMessage": {
+    "desc": "Entre no modo de edição pressionando Alt e clicando duas vezes na mensagem",
+    "title": "Editar mensagem"
+  },
+  "openChatSettings": {
+    "desc": "Ver e modificar as configurações da conversa atual",
+    "title": "Abrir configurações de conversa"
+  },
+  "openHotkeyHelper": {
+    "desc": "Ver as instruções de uso de todos os atalhos",
+    "title": "Abrir ajuda de atalhos"
+  },
+  "regenerateMessage": {
+    "desc": "Regenerar a última mensagem",
+    "title": "Regenerar mensagem"
+  },
+  "saveTopic": {
+    "desc": "Salvar o tópico atual e abrir um novo tópico",
+    "title": "Iniciar novo tópico"
+  },
+  "search": {
+    "desc": "Abrir a caixa de pesquisa principal da página atual",
+    "title": "Pesquisar"
+  },
+  "showApp": {
+    "desc": "Abrir rapidamente a janela principal do aplicativo",
+    "title": "Mostrar janela principal"
+  },
+  "switchAgent": {
+    "desc": "Troque o assistente fixo na barra lateral pressionando Ctrl e um número de 0 a 9",
+    "title": "Troca rápida de assistente"
+  },
+  "toggleLeftPanel": {
+    "desc": "Mostrar ou ocultar o painel de assistente à esquerda",
+    "title": "Mostrar/Ocultar painel do assistente"
+  },
+  "toggleRightPanel": {
+    "desc": "Mostrar ou ocultar o painel de tópicos à direita",
+    "title": "Mostrar/Ocultar painel de tópicos"
+  },
+  "toggleZenMode": {
+    "desc": "No modo de foco, exibe apenas a conversa atual, ocultando outras interfaces",
+    "title": "Alternar modo de foco"
+  }
+}

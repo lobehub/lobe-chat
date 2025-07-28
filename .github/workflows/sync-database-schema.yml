@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'docs/developer/database-schema.dbml'
+      - 'docs/development/database-schema.dbml'
 
 jobs:
   build:

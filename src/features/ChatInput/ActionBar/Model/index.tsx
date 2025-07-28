@@ -1,6 +1,4 @@
 import { ModelIcon } from '@lobehub/icons';
-import { ActionIcon } from '@lobehub/ui';
-import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
 import { Settings2Icon } from 'lucide-react';
 import { memo } from 'react';
@@ -8,17 +6,17 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import ModelSwitchPanel from '@/features/ModelSwitchPanel';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors, useAiInfraStore } from '@/store/aiInfra';
 
+import Action from '../components/Action';
 import ControlsForm from './ControlsForm';
 
-const useStyles = createStyles(({ css, token, isDarkMode, cx }) => ({
+const useStyles = createStyles(({ css, token, cx }) => ({
   container: css`
     border-radius: 20px;
-    background: ${isDarkMode ? token.colorFillSecondary : token.colorFillTertiary};
+    background: ${token.colorFillTertiary};
   `,
   icon: cx(
     'model-switch',
@@ -67,20 +65,6 @@ const ModelSwitch = memo(() => {
     aiModelSelectors.isModelHasExtendParams(model, provider),
   );
 
-  const isMobile = useIsMobile();
-
-  // if (isLoading && isLoginWithAuth)
-  //   return (
-  //     <ActionIcon
-  //       icon={Brain}
-  //       placement={'bottom'}
-  //       style={{
-  //         cursor: 'not-allowed',
-  //       }}
-  //       title={t('ModelSwitch.title')}
-  //     />
-  //   );
-
   return (
     <Flexbox align={'center'} className={isModelHasExtendParams ? styles.container : ''} horizontal>
       <ModelSwitchPanel>
@@ -96,27 +80,17 @@ const ModelSwitch = memo(() => {
       </ModelSwitchPanel>
 
       {isModelHasExtendParams && (
-        <Flexbox style={{ marginInlineStart: -4 }}>
-          <Popover
-            arrow={false}
-            content={<ControlsForm />}
-            placement={'topLeft'}
-            styles={{
-              body: {
-                minWidth: isMobile ? undefined : 350,
-                paddingBlock: 4,
-                width: isMobile ? '100vw' : undefined,
-              },
-            }}
-          >
-            <ActionIcon
-              icon={Settings2Icon}
-              placement={'bottom'}
-              style={{ borderRadius: 20 }}
-              title={t('extendParams.title')}
-            />
-          </Popover>
-        </Flexbox>
+        <Action
+          icon={Settings2Icon}
+          popover={{
+            content: <ControlsForm />,
+            minWidth: 350,
+            placement: 'topLeft',
+          }}
+          showTooltip={false}
+          style={{ borderRadius: 20, marginInlineStart: -4 }}
+          title={t('extendParams.title')}
+        />
       )}
     </Flexbox>
   );

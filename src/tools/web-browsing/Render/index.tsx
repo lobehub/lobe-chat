@@ -4,20 +4,21 @@ import { WebBrowsingApiName } from '@/tools/web-browsing';
 import PageContent from '@/tools/web-browsing/Render/PageContent';
 import { BuiltinRenderProps } from '@/types/tool';
 import { CrawlMultiPagesQuery, CrawlPluginState, CrawlSinglePageQuery } from '@/types/tool/crawler';
-import { SearchContent, SearchQuery, SearchResponse } from '@/types/tool/search';
+import { SearchContent, SearchQuery, UniformSearchResponse } from '@/types/tool/search';
 
 import Search from './Search';
 
 const WebBrowsing = memo<BuiltinRenderProps<SearchContent[]>>(
   ({ messageId, args, pluginState, pluginError, apiName }) => {
     switch (apiName) {
-      case WebBrowsingApiName.searchWithSearXNG: {
+      case WebBrowsingApiName.search:
+      case 'searchWithSearXNG': {
         return (
           <Search
             messageId={messageId}
             pluginError={pluginError}
             searchQuery={args as SearchQuery}
-            searchResponse={pluginState as SearchResponse}
+            searchResponse={pluginState as UniformSearchResponse}
           />
         );
       }

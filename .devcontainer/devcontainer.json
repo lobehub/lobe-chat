@@ -1,6 +1,6 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node",
   "features": {
-    "ghcr.io/devcontainers/features/node:1": {}
+    "ghcr.io/devcontainer-community/devcontainer-features/bun.sh:1": {}
   }
 }

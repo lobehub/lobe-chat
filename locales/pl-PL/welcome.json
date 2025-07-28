@@ -4,7 +4,7 @@
       "replaceBtn": "Zmień",
       "title": "Nowe zalecenia asystenta:"
     },
-    "defaultMessage": "Jestem Twoim osobistym inteligentnym asystentem {{appName}}. W czym mogę Ci teraz pomóc?\nJeśli potrzebujesz bardziej profesjonalnego lub dostosowanego asystenta, kliknij `+`, aby utworzyć niestandardowego asystenta.",
+    "defaultMessage": "Jestem Twoim osobistym inteligentnym asystentem {{appName}}. W czym mogę Ci teraz pomóc?<br />Jeśli potrzebujesz bardziej profesjonalnego lub dostosowanego asystenta, kliknij <plus />, aby utworzyć niestandardowego asystenta.",
     "defaultMessageWithoutCreate": "Jestem Twoim osobistym inteligentnym asystentem {{appName}}. W czym mogę Ci teraz pomóc?",
     "qa": {
       "q01": "Czym jest LobeHub?",

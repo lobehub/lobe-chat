@@ -11,6 +11,7 @@
 venv
 temp
 tmp
+.windsurfrules
 
 # dependencies
 node_modules
@@ -40,9 +41,6 @@ test-output
 # husky
 .husky/prepare-commit-msg
 
-# misc
-# add other ignore file below
-
 # local env files
 .env*.local
 
@@ -69,3 +67,11 @@ public/swe-worker*
 *.pdf
 vertex-ai-key.json
 .pnpm-store
+./packages/lobe-ui
+
+
+# local use ai coding files
+docs/.prd
+.claude
+.mcp.json
+CLAUDE.md

@@ -38,11 +38,10 @@ describe('fetchSSE', () => {
     await fetchSSE('/', {
       onMessageHandle: mockOnMessageHandle,
       onFinish: mockOnFinish,
-      smoothing: false,
+      responseAnimation: 'fadeIn',
     });
 
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hello', type: 'text' });
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: ' World', type: 'text' });
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hello World', type: 'text' });
     expect(mockOnFinish).toHaveBeenCalledWith('Hello World', {
       observationId: null,
       toolCalls: undefined,
@@ -76,7 +75,7 @@ describe('fetchSSE', () => {
     await fetchSSE('/', {
       onMessageHandle: mockOnMessageHandle,
       onFinish: mockOnFinish,
-      smoothing: false,
+      responseAnimation: 'fadeIn',
     });
 
     expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, {
@@ -139,7 +138,7 @@ describe('fetchSSE', () => {
     await fetchSSE('/', {
       onMessageHandle: mockOnMessageHandle,
       onFinish: mockOnFinish,
-      smoothing: true,
+      responseAnimation: 'smooth',
     });
 
     const expectedMessages = [
@@ -169,6 +168,39 @@ describe('fetchSSE', () => {
     });
   });
 
+  it('should not handle text events', async () => {
+    const mockOnMessageHandle = vi.fn();
+    const mockOnFinish = vi.fn();
+
+    (fetchEventSource as any).mockImplementationOnce(
+      async (url: string, options: FetchEventSourceInit) => {
+        options.onopen!({ clone: () => ({ ok: true, headers: new Headers() }) } as any);
+        options.onmessage!({ event: 'text', data: JSON.stringify('He') } as any);
+        await sleep(100);
+        options.onmessage!({ event: 'text', data: JSON.stringify('llo') } as any);
+        await sleep(60);
+        options.onmessage!({ event: 'text', data: JSON.stringify(' World') } as any);
+      },
+    );
+
+    await fetchSSE('/', {
+      onMessageHandle: mockOnMessageHandle,
+      onFinish: mockOnFinish,
+      responseAnimation: 'none',
+    });
+
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'He', type: 'text' });
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'llo', type: 'text' });
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(3, { text: ' World', type: 'text' });
+
+    expect(mockOnFinish).toHaveBeenCalledWith('Hello World', {
+      observationId: null,
+      toolCalls: undefined,
+      traceId: null,
+      type: 'done',
+    });
+  });
+
   describe('reasoning', () => {
     it('should handle reasoning event without smoothing', async () => {
       const mockOnMessageHandle = vi.fn();
@@ -178,9 +210,9 @@ describe('fetchSSE', () => {
         async (url: string, options: FetchEventSourceInit) => {
           options.onopen!({ clone: () => ({ ok: true, headers: new Headers() }) } as any);
           options.onmessage!({ event: 'reasoning', data: JSON.stringify('Hello') } as any);
-          await sleep(100);
+          await sleep(400);
           options.onmessage!({ event: 'reasoning', data: JSON.stringify(' World') } as any);
-          await sleep(100);
+          await sleep(400);
           options.onmessage!({ event: 'text', data: JSON.stringify('hi') } as any);
         },
       );
@@ -188,7 +220,7 @@ describe('fetchSSE', () => {
       await fetchSSE('/', {
         onMessageHandle: mockOnMessageHandle,
         onFinish: mockOnFinish,
-        smoothing: false,
+        responseAnimation: 'fadeIn',
       });
 
       expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hello', type: 'reasoning' });
@@ -266,7 +298,7 @@ describe('fetchSSE', () => {
     await fetchSSE('/', {
       onMessageHandle: mockOnMessageHandle,
       onFinish: mockOnFinish,
-      smoothing: true,
+      responseAnimation: 'smooth',
     });
 
     // TODO: need to check whether the `aarg1` is correct
@@ -318,7 +350,7 @@ describe('fetchSSE', () => {
       onMessageHandle: mockOnMessageHandle,
       onFinish: mockOnFinish,
       signal: abortController.signal,
-      smoothing: true,
+      responseAnimation: 'smooth',
     });
 
     const expectedMessages = [
@@ -357,7 +389,7 @@ describe('fetchSSE', () => {
       },
     );
 
-    await fetchSSE('/', { onFinish: mockOnFinish, smoothing: false });
+    await fetchSSE('/', { onFinish: mockOnFinish, responseAnimation: 'fadeIn' });
 
     expect(mockOnFinish).toHaveBeenCalledWith('Hello', {
       observationId: null,
@@ -374,7 +406,7 @@ describe('fetchSSE', () => {
       },
     );
 
-    await fetchSSE('/', { onFinish: mockOnFinish, smoothing: false });
+    await fetchSSE('/', { onFinish: mockOnFinish, responseAnimation: 'fadeIn' });
 
     expect(mockOnFinish).toHaveBeenCalledWith('Hello', {
       observationId: null,
@@ -395,7 +427,7 @@ describe('fetchSSE', () => {
         },
       );
 
-      await fetchSSE('/', { onAbort: mockOnAbort, smoothing: false });
+      await fetchSSE('/', { onAbort: mockOnAbort, responseAnimation: 'fadeIn' });
 
       expect(mockOnAbort).toHaveBeenCalledWith('Hello');
     });
@@ -410,7 +442,7 @@ describe('fetchSSE', () => {
         },
       );
 
-      await fetchSSE('/', { onAbort: mockOnAbort, smoothing: false });
+      await fetchSSE('/', { onAbort: mockOnAbort, responseAnimation: 'fadeIn' });
 
       expect(mockOnAbort).toHaveBeenCalledWith('Hello');
     });

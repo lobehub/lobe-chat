@@ -73,6 +73,47 @@ describe('browserless', () => {
     });
   });
 
+  it('should include rejectRequestPattern in request payload', async () => {
+    process.env.BROWSERLESS_TOKEN = 'test-token';
+    const fetchMock = vi.fn().mockResolvedValue({
+      text: vi.fn().mockResolvedValue('<html><title>Test</title></html>'),
+    });
+    global.fetch = fetchMock;
+
+    await browserless('https://example.com', { filterOptions: {} });
+
+    const requestPayload = JSON.parse(fetchMock.mock.calls[0][1].body);
+    expect(requestPayload.rejectRequestPattern).toEqual([
+      '.*\\.(?!(html|css|js|json|xml|webmanifest|txt|md)(\\?|#|$))[\\w-]+(?:[\\?#].*)?$',
+    ]);
+  });
+
+  it('should allow requests to permitted file types', async () => {
+    const allowedExtensions = ['html', 'css', 'js', 'json', 'xml', 'webmanifest', 'txt', 'md'];
+    const pattern = new RegExp(
+      '.*\\.(?!(html|css|js|json|xml|webmanifest|txt|md)(\\?|#|$))[\\w-]+(?:[\\?#].*)?$',
+    );
+
+    allowedExtensions.forEach((ext) => {
+      expect(`file.${ext}`).not.toMatch(pattern);
+      expect(`file.${ext}?param=value`).not.toMatch(pattern);
+      expect(`file.${ext}#hash`).not.toMatch(pattern);
+    });
+  });
+
+  it('should reject requests to non-permitted file types', async () => {
+    const rejectedExtensions = ['jpg', 'png', 'gif', 'pdf', 'doc', 'mp4', 'wav'];
+    const pattern = new RegExp(
+      '.*\\.(?!(html|css|js|json|xml|webmanifest|txt|md)(\\?|#|$))[\\w-]+(?:[\\?#].*)?$',
+    );
+
+    rejectedExtensions.forEach((ext) => {
+      expect(`file.${ext}`).toMatch(pattern);
+      expect(`file.${ext}?param=value`).toMatch(pattern);
+      expect(`file.${ext}#hash`).toMatch(pattern);
+    });
+  });
+
   it('should use correct URL when BROWSERLESS_URL is provided', async () => {
     const customUrl = 'https://custom.browserless.io';
     const originalEnv = { ...process.env };

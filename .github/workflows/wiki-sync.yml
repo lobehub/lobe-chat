@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'contributing/**'
+      - 'docs/wiki/**'
     branches:
       - main
 
@@ -15,5 +15,5 @@ jobs:
     steps:
       - uses: OrlovM/Wiki-Action@v1
         with:
-          path: 'contributing'
+          path: 'docs/wiki'
           token: ${{ secrets.GH_TOKEN }}

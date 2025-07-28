@@ -1,5 +1,6 @@
 'use client';
 
+import { useTheme } from 'antd-style';
 import { Suspense, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -48,12 +49,21 @@ interface ModelListProps extends ProviderSettingsContextValue {
 const ModelList = memo<ModelListProps>(
   ({ id, showModelFetcher, sdkType, showAddNewModel, showDeployName, modelEditable = true }) => {
     const mobile = useIsMobile();
+    const theme = useTheme();
 
     return (
       <ProviderSettingsContext
         value={{ modelEditable, sdkType, showAddNewModel, showDeployName, showModelFetcher }}
       >
-        <Flexbox gap={16} paddingInline={mobile ? 12 : 0}>
+        <Flexbox
+          gap={16}
+          paddingInline={mobile ? 12 : 0}
+          style={{
+            background: mobile ? theme.colorBgContainer : undefined,
+            paddingBottom: 16,
+            paddingTop: 8,
+          }}
+        >
           <ModelTitle
             provider={id}
             showAddNewModel={showAddNewModel}

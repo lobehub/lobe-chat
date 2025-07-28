@@ -1,0 +1,60 @@
+{
+  "consent": {
+    "buttons": {
+      "accept": "Onayla",
+      "deny": "Reddet"
+    },
+    "description": "Uygulama {{clientName}} hesabınıza erişim izni talep ediyor",
+    "error": {
+      "sessionInvalid": {
+        "message": "Yetki oturumu süresi dolmuş veya geçersiz, lütfen yetkilendirme sürecini yeniden başlatın.",
+        "title": "Yetki oturumu geçersiz"
+      },
+      "title": "Bir hata oluştu",
+      "unsupportedInteraction": {
+        "message": "Desteklenmeyen etkileşim türü: {promptName}",
+        "title": "Desteklenmeyen etkileşim türü"
+      }
+    },
+    "permissionsTitle": "Aşağıdaki izinleri talep et:",
+    "redirectUri": "İzin verildikten sonra şu adrese yönlendirileceksiniz",
+    "scope": {
+      "email": "E-posta adresinize erişim",
+      "offline_access": "Müşterinin verilerinize erişmesine izin ver",
+      "openid": "LobeChat hesabınızla kimlik doğrulama",
+      "profile": "Temel profil bilgilerinize (isim, avatar vb.) erişim",
+      "sync-read": "Senkronize verilerinizi okumak",
+      "sync-write": "Senkronize verilerinizi yazmak ve güncellemek"
+    },
+    "title": "İzin Ver {{clientName}}"
+  },
+  "error": {
+    "backToHome": "Ana sayfaya dön",
+    "desc": "OAuth yetkilendirmesi başarısız oldu, hata nedeni: {{reason}}",
+    "reason": {
+      "internal_error": "Sunucu hatası",
+      "invalid_request": "Geçersiz istek parametresi"
+    },
+    "title": "Yetkilendirme başarısız"
+  },
+  "handoff": {
+    "desc": {
+      "processing": "Uygulama yetkilendirmeyi işliyor, bir sonraki sayfaya geçmek üzere...",
+      "success": "Masaüstü uygulaması açılmaya çalışıldı. Uygulama otomatik olarak açılmazsa, lütfen manuel olarak geçiş yapın. Bu tarayıcı penceresini daha sonra kapatabilirsiniz."
+    },
+    "title": {
+      "processing": "Yetkilendirme işleniyor...",
+      "success": "Yetkilendirme tamamlandı"
+    }
+  },
+  "login": {
+    "button": "Giriş Yap",
+    "description": "Uygulama {{clientName}} hesabınızı kullanmak için giriş talep ediyor",
+    "title": "{{clientName}} Girişi",
+    "userWelcome": "Hoş geldiniz, "
+  },
+  "success": {
+    "subTitle": "Uygulamanın hesabınıza erişim izni başarıyla verildi, bu sayfayı kapatabilirsiniz",
+    "title": "Yetkilendirme başarılı"
+  }
+}

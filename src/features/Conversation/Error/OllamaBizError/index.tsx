@@ -8,7 +8,7 @@ import ErrorJsonViewer from '../ErrorJsonViewer';
 
 const loading = () => <Skeleton active style={{ width: 300 }} />;
 
-const SetupGuide = dynamic(() => import('./SetupGuide'), { loading, ssr: false });
+const SetupGuide = dynamic(() => import('@/features/OllamaSetupGuide'), { loading, ssr: false });
 
 const InvalidModel = dynamic(() => import('./InvalidOllamaModel'), { loading, ssr: false });
 
@@ -38,7 +38,7 @@ const OllamaBizError = memo<ChatMessage>(({ error, id }) => {
 
   // error of not enable model or not set the CORS rules
   if (errorMessage?.includes('Failed to fetch')) {
-    return <SetupGuide />;
+    return <SetupGuide id={id} />;
   }
 
   return <ErrorJsonViewer error={error} id={id} />;

@@ -1,0 +1,64 @@
+{
+  "addUserMessage": {
+    "desc": "Add the current input as a user message without triggering generation",
+    "title": "Add a User Message"
+  },
+  "clearCurrentMessages": {
+    "desc": "Clear the messages and uploaded files from the current conversation",
+    "title": "Clear Conversation Messages"
+  },
+  "desktop": {
+    "openSettings": {
+      "desc": "Open the application settings page",
+      "title": "Application Settings"
+    },
+    "showApp": {
+      "desc": "Toggle the main window visibility with a global shortcut",
+      "title": "Show/Hide Main Window"
+    }
+  },
+  "editMessage": {
+    "desc": "Enter edit mode by holding Alt and double-clicking the message",
+    "title": "Edit Message"
+  },
+  "openChatSettings": {
+    "desc": "View and modify the settings for the current conversation",
+    "title": "Open Chat Settings"
+  },
+  "openHotkeyHelper": {
+    "desc": "View instructions for all keyboard shortcuts",
+    "title": "Open Hotkey Help"
+  },
+  "regenerateMessage": {
+    "desc": "Regenerate the last message",
+    "title": "Regenerate Message"
+  },
+  "saveTopic": {
+    "desc": "Save the current topic and open a new one",
+    "title": "Start a New Topic"
+  },
+  "search": {
+    "desc": "Activate the main search box on the current page",
+    "title": "Search"
+  },
+  "showApp": {
+    "desc": "Quickly open the main application window",
+    "title": "Show Main Window"
+  },
+  "switchAgent": {
+    "desc": "Switch between pinned assistants in the sidebar by holding Ctrl and pressing numbers 0-9",
+    "title": "Quick Switch Assistant"
+  },
+  "toggleLeftPanel": {
+    "desc": "Show or hide the left assistant panel",
+    "title": "Show/Hide Assistant Panel"
+  },
+  "toggleRightPanel": {
+    "desc": "Show or hide the right topics panel",
+    "title": "Show/Hide Topic Panel"
+  },
+  "toggleZenMode": {
+    "desc": "In focus mode, only display the current conversation and hide other UI elements",
+    "title": "Toggle Focus Mode"
+  }
+}

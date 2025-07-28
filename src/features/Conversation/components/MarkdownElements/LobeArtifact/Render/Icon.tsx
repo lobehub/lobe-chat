@@ -42,24 +42,11 @@ const ArtifactIcon = memo<ArtifactProps>(({ type }) => {
   const { theme } = useStyles();
 
   if (!type)
-    return (
-      <Icon
-        icon={Loader2}
-        size={{ fontSize: SIZE }}
-        spin
-        style={{ color: theme.colorTextSecondary }}
-      />
-    );
+    return <Icon icon={Loader2} size={SIZE} spin style={{ color: theme.colorTextSecondary }} />;
 
   switch (type) {
     case 'application/lobe.artifacts.code': {
-      return (
-        <Icon
-          icon={CodeXml}
-          size={{ fontSize: SIZE }}
-          style={{ color: theme.colorTextSecondary }}
-        />
-      );
+      return <Icon icon={CodeXml} size={SIZE} style={{ color: theme.colorTextSecondary }} />;
     }
 
     case 'application/lobe.artifacts.react': {
@@ -67,26 +54,14 @@ const ArtifactIcon = memo<ArtifactProps>(({ type }) => {
     }
 
     case 'image/svg+xml': {
-      return (
-        <Icon
-          icon={ImageIcon}
-          size={{ fontSize: SIZE }}
-          style={{ color: theme.colorTextSecondary }}
-        />
-      );
+      return <Icon icon={ImageIcon} size={SIZE} style={{ color: theme.colorTextSecondary }} />;
     }
     case 'text/html': {
-      return (
-        <Icon
-          icon={GlobeIcon}
-          size={{ fontSize: SIZE }}
-          style={{ color: theme.colorTextSecondary }}
-        />
-      );
+      return <Icon icon={GlobeIcon} size={SIZE} style={{ color: theme.colorTextSecondary }} />;
     }
     default: {
       return (
-        <Icon color={theme.purple} icon={OrigamiIcon} size={{ fontSize: SIZE, strokeWidth: 1.2 }} />
+        <Icon color={theme.purple} icon={OrigamiIcon} size={{ size: SIZE, strokeWidth: 1.2 }} />
       );
     }
   }

@@ -7,6 +7,20 @@
     "images": "Images :",
     "prompt": "Mot de rappel"
   },
+  "localFiles": {
+    "file": "Fichier",
+    "folder": "Dossier",
+    "open": "Ouvrir",
+    "openFile": "Ouvrir le fichier",
+    "openFolder": "Ouvrir le dossier",
+    "read": {
+      "more": "Voir plus"
+    },
+    "readFile": "Lire le fichier",
+    "readFileError": "Échec de la lecture du fichier, veuillez vérifier si le chemin du fichier est correct",
+    "readFiles": "Lire les fichiers",
+    "readFilesError": "Échec de la lecture des fichiers, veuillez vérifier si le chemin du fichier est correct"
+  },
   "search": {
     "createNewSearch": "Créer un nouvel enregistrement de recherche",
     "emptyResult": "Aucun résultat trouvé, veuillez modifier les mots-clés et réessayer",
@@ -19,10 +33,50 @@
       "placeholder": "Mots-clés",
       "tooltip": "Cela va récupérer à nouveau les résultats de recherche et créer un nouveau message de résumé"
     },
-    "searchEngine": "Moteur de recherche :",
+    "searchCategory": {
+      "placeholder": "Catégorie de recherche",
+      "title": "Catégorie de recherche :",
+      "value": {
+        "files": "Fichiers",
+        "general": "Général",
+        "images": "Images",
+        "it": "Technologies de l'information",
+        "map": "Cartes",
+        "music": "Musique",
+        "news": "Actualités",
+        "science": "Science",
+        "social_media": "Médias sociaux",
+        "videos": "Vidéos"
+      }
+    },
+    "searchEngine": {
+      "placeholder": "Moteur de recherche",
+      "title": "Moteur de recherche :"
+    },
     "searchResult": "Nombre de recherches :",
+    "searchTimeRange": {
+      "title": "Plage horaire :",
+      "value": {
+        "anytime": "Temps illimité",
+        "day": "Dans la journée",
+        "month": "Dans le mois",
+        "week": "Dans la semaine",
+        "year": "Dans l'année"
+      }
+    },
     "summary": "Résumé",
     "summaryTooltip": "Résumer le contenu actuel",
     "viewMoreResults": "Voir {{results}} résultats supplémentaires"
+  },
+  "updateArgs": {
+    "duplicateKeyError": "La clé du champ doit être unique",
+    "form": {
+      "add": "Ajouter un élément",
+      "key": "Clé du champ",
+      "value": "Valeur du champ"
+    },
+    "formValidationFailed": "Échec de la validation du formulaire, veuillez vérifier le format des paramètres",
+    "keyRequired": "La clé du champ ne peut pas être vide",
+    "stringifyError": "Impossible de sérialiser les paramètres, veuillez vérifier le format des paramètres"
   }
 }

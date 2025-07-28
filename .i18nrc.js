@@ -24,7 +24,8 @@ module.exports = defineConfig({
     'fa-IR',
   ],
   temperature: 0,
-  modelName: 'gpt-4o-mini',
+  saveImmediately: true,
+  modelName: 'gpt-4.1-mini',
   experimental: {
     jsonMode: true,
   },

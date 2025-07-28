@@ -34,7 +34,6 @@ const DesktopChatInput = memo<DesktopChatInputProps>(
     renderFooter,
   }) => {
     const [expand, setExpand] = useState<boolean>(false);
-
     const onSend = useCallback(() => {
       setExpand(false);
     }, []);
@@ -61,7 +60,7 @@ const DesktopChatInput = memo<DesktopChatInputProps>(
           <Flexbox
             gap={8}
             height={'100%'}
-            padding={'12px 0 16px'}
+            paddingBlock={'4px 16px'}
             style={{ minHeight: CHAT_TEXTAREA_HEIGHT, position: 'relative' }}
           >
             <Head

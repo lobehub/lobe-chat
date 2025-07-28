@@ -1,12 +1,14 @@
 'use client';
 
+import { Hotkey } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import HotKeys from '@/components/HotKeys';
-import { HOTKEYS } from '@/const/hotkeys';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
+import { HotkeyEnum } from '@/types/hotkey';
 
 const useStyles = createStyles(({ css, token }) => ({
   closeButton: css`
@@ -41,7 +43,8 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 
   text: css`
-    font-size: ${token.fontSizeLG}px;
+    font-size: 16px;
+    font-weight: 500;
     color: ${token.colorBgBase};
   `,
 
@@ -49,8 +52,8 @@ const useStyles = createStyles(({ css, token }) => ({
     display: flex;
     align-items: center;
 
-    padding-block: 12px;
-    padding-inline: 16px;
+    padding-block: 8px;
+    padding-inline: 24px;
     border-radius: 9999px;
 
     background: ${token.colorText};
@@ -62,6 +65,7 @@ const Toast = () => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
   const [isVisible, setIsVisible] = useState(true);
+  const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.ToggleZenMode));
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -76,8 +80,8 @@ const Toast = () => {
   return (
     <div className={styles.container}>
       <div className={styles.toast}>
-        <Flexbox className={styles.text} gap={12} horizontal>
-          {t('zenMode')} <HotKeys inverseTheme keys={HOTKEYS.zenMode} />
+        <Flexbox align={'center'} className={styles.text} gap={8} horizontal>
+          {t('zenMode')} <Hotkey inverseTheme keys={hotkey} />
         </Flexbox>
       </div>
     </div>

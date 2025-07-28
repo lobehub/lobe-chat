@@ -30,6 +30,14 @@ const getMeta = (message: ChatMessage) => {
   }
 };
 
+const getBaseChatsByKey =
+  (key: string) =>
+  (s: ChatStoreState): ChatMessage[] => {
+    const messages = s.messagesMap[key] || [];
+
+    return messages.map((i) => ({ ...i, meta: getMeta(i) }));
+  };
+
 const currentChatKey = (s: ChatStoreState) => messageMapKey(s.activeId, s.activeTopicId);
 
 /**
@@ -38,9 +46,7 @@ const currentChatKey = (s: ChatStoreState) => messageMapKey(s.activeId, s.active
 const activeBaseChats = (s: ChatStoreState): ChatMessage[] => {
   if (!s.activeId) return [];
 
-  const messages = s.messagesMap[currentChatKey(s)] || [];
-
-  return messages.map((i) => ({ ...i, meta: getMeta(i) }));
+  return getBaseChatsByKey(currentChatKey(s))(s);
 };
 
 /**
@@ -98,6 +104,9 @@ const mainAIChatsMessageString = (s: ChatStoreState): string => {
   return chats.map((m) => m.content).join('');
 };
 
+const mainAILatestMessageReasoningContent = (s: ChatStoreState) =>
+  mainAIChats(s).at(-1)?.reasoning?.content;
+
 const currentToolMessages = (s: ChatStoreState) => {
   const messages = activeBaseChats(s);
 
@@ -154,6 +163,9 @@ const isMessageLoading = (id: string) => (s: ChatStoreState) => s.messageLoading
 const isMessageGenerating = (id: string) => (s: ChatStoreState) => s.chatLoadingIds.includes(id);
 const isMessageInRAGFlow = (id: string) => (s: ChatStoreState) =>
   s.messageRAGLoadingIds.includes(id);
+const isMessageInChatReasoning = (id: string) => (s: ChatStoreState) =>
+  s.reasoningLoadingIds.includes(id);
+
 const isPluginApiInvoking = (id: string) => (s: ChatStoreState) =>
   s.pluginApiLoadingIds.includes(id);
 
@@ -167,6 +179,7 @@ const isToolCallStreaming = (id: string, index: number) => (s: ChatStoreState) =
 
 const isAIGenerating = (s: ChatStoreState) =>
   s.chatLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
+
 const isInRAGFlow = (s: ChatStoreState) =>
   s.messageRAGLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
 
@@ -196,6 +209,7 @@ export const chatSelectors = {
   currentChatLoadingState,
   currentToolMessages,
   currentUserFiles,
+  getBaseChatsByKey,
   getMessageById,
   getMessageByToolCallId,
   getTraceIdByMessageId,
@@ -205,6 +219,7 @@ export const chatSelectors = {
   isHasMessageLoading,
   isMessageEditing,
   isMessageGenerating,
+  isMessageInChatReasoning,
   isMessageInRAGFlow,
   isMessageLoading,
   isPluginApiInvoking,
@@ -214,6 +229,7 @@ export const chatSelectors = {
   mainAIChats,
   mainAIChatsMessageString,
   mainAIChatsWithHistoryConfig,
+  mainAILatestMessageReasoningContent,
   mainDisplayChatIDs,
   mainDisplayChats,
   showInboxWelcome,

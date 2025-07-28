@@ -1,5 +1,4 @@
-import { Icon } from '@lobehub/ui';
-import { Segmented } from 'antd';
+import { Icon, Segmented } from '@lobehub/ui';
 import { SegmentedLabeledOption } from 'antd/es/segmented';
 import { AsteriskSquare, KeySquare, ScanFace } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -9,8 +8,8 @@ import { Flexbox } from 'react-layout-kit';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { featureFlagsSelectors, serverConfigSelectors } from '@/store/serverConfig/selectors';
 
-import APIKeyForm from './APIKeyForm';
 import AccessCodeForm from './AccessCodeForm';
+import ChatInvalidAPIKey from './ChatInvalidApiKey';
 import OAuthForm from './OAuthForm';
 import { ErrorActionContainer } from './style';
 
@@ -64,12 +63,13 @@ const InvalidAccessCode = memo<InvalidAccessCodeProps>(({ id, provider }) => {
           }
           style={{ width: '100%' }}
           value={mode}
+          variant={'filled'}
         />
       )}
 
       <Flexbox gap={24}>
         {mode === Tab.Password && <AccessCodeForm id={id} />}
-        {showOpenAIApiKey && mode === Tab.Api && <APIKeyForm id={id} provider={provider} />}
+        {showOpenAIApiKey && mode === Tab.Api && <ChatInvalidAPIKey id={id} provider={provider} />}
         {isEnabledOAuth && mode === Tab.Oauth && <OAuthForm id={id} />}
       </Flexbox>
     </ErrorActionContainer>

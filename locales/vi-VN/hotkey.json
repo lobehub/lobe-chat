@@ -1,0 +1,64 @@
+{
+  "addUserMessage": {
+    "desc": "Thêm nội dung hiện tại vào tin nhắn của người dùng mà không kích hoạt việc tạo mới",
+    "title": "Thêm một tin nhắn người dùng"
+  },
+  "clearCurrentMessages": {
+    "desc": "Xóa tất cả tin nhắn và tệp đã tải lên trong cuộc trò chuyện hiện tại",
+    "title": "Xóa tin nhắn cuộc trò chuyện"
+  },
+  "desktop": {
+    "openSettings": {
+      "desc": "Mở trang cài đặt ứng dụng",
+      "title": "Cài đặt ứng dụng"
+    },
+    "showApp": {
+      "desc": "Phím tắt toàn cục để hiển thị hoặc ẩn cửa sổ chính",
+      "title": "Hiển thị/Ẩn cửa sổ chính"
+    }
+  },
+  "editMessage": {
+    "desc": "Vào chế độ chỉnh sửa bằng cách giữ phím Alt và nhấp đúp vào tin nhắn",
+    "title": "Chỉnh sửa tin nhắn"
+  },
+  "openChatSettings": {
+    "desc": "Xem và chỉnh sửa cài đặt của cuộc trò chuyện hiện tại",
+    "title": "Mở cài đặt cuộc trò chuyện"
+  },
+  "openHotkeyHelper": {
+    "desc": "Xem hướng dẫn sử dụng tất cả các phím tắt",
+    "title": "Mở trợ giúp phím tắt"
+  },
+  "regenerateMessage": {
+    "desc": "Tạo lại tin nhắn cuối cùng",
+    "title": "Tạo lại tin nhắn"
+  },
+  "saveTopic": {
+    "desc": "Lưu chủ đề hiện tại và mở chủ đề mới",
+    "title": "Mở chủ đề mới"
+  },
+  "search": {
+    "desc": "Kích hoạt hộp tìm kiếm chính của trang hiện tại",
+    "title": "Tìm kiếm"
+  },
+  "showApp": {
+    "desc": "Mở nhanh cửa sổ chính của ứng dụng",
+    "title": "Hiển thị cửa sổ chính"
+  },
+  "switchAgent": {
+    "desc": "Chuyển đổi giữa các trợ lý cố định ở thanh bên bằng cách giữ phím Ctrl và nhấn số 0~9",
+    "title": "Chuyển đổi nhanh trợ lý"
+  },
+  "toggleLeftPanel": {
+    "desc": "Hiện hoặc ẩn bảng trợ giúp bên trái",
+    "title": "Hiện/Ẩn bảng trợ lý"
+  },
+  "toggleRightPanel": {
+    "desc": "Hiện hoặc ẩn bảng chủ đề bên phải",
+    "title": "Hiện/Ẩn bảng chủ đề"
+  },
+  "toggleZenMode": {
+    "desc": "Trong chế độ tập trung, chỉ hiển thị cuộc trò chuyện hiện tại, ẩn các giao diện người dùng khác",
+    "title": "Chuyển đổi chế độ tập trung"
+  }
+}

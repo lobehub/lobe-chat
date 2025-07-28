@@ -108,10 +108,13 @@ const modelProviderListForModelSelect = (s: UserStore): EnabledProviderWithModel
       source: 'builtin',
     }));
 
-const getModelCardById = (id: string) => (s: UserStore) => {
+const getModelCardById = (id: string, provider?: GlobalLLMProviderKey) => (s: UserStore) => {
   const list = modelProviderList(s);
 
-  return list.flatMap((i) => i.chatModels).find((m) => m.id === id);
+  return list
+    .filter((i) => !provider || i.id === provider)
+    .flatMap((i) => i.chatModels)
+    .find((m) => m.id === id);
 };
 
 const isModelEnabledFunctionCall = (id: string) => (s: UserStore) =>

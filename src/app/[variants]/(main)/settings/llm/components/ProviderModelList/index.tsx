@@ -1,5 +1,4 @@
-import { ActionIcon } from '@lobehub/ui';
-import { Select } from 'antd';
+import { ActionIcon, Select } from '@lobehub/ui';
 import { css, cx } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { RotateCwIcon } from 'lucide-react';
@@ -88,7 +87,7 @@ const ProviderModelListSelect = memo<CustomModelSelectProps>(
                 />
               )}
             </div>
-            <Select<string[]>
+            <Select
               allowClear
               mode="tags"
               notFoundContent={notFoundContent}

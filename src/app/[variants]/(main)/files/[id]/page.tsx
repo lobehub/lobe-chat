@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { Flexbox } from 'react-layout-kit';
 
 import FileViewer from '@/features/FileViewer';
-import { createCallerFactory } from '@/libs/trpc';
+import { createCallerFactory } from '@/libs/trpc/lambda';
 import { lambdaRouter } from '@/server/routers/lambda';
 import { PagePropsWithId } from '@/types/next';
 import { getUserAuth } from '@/utils/server/auth';
@@ -39,3 +39,5 @@ const FilePage = async (props: PagePropsWithId) => {
 };
 
 export default FilePage;
+
+export const dynamic = 'force-static';

@@ -1,0 +1,113 @@
+{
+  "notification": {
+    "finishChatGeneration": "Le message IA a été généré"
+  },
+  "proxy": {
+    "auth": "Authentification requise",
+    "authDesc": "Si le serveur proxy nécessite un nom d'utilisateur et un mot de passe",
+    "authSettings": "Paramètres d'authentification",
+    "basicSettings": "Paramètres du proxy",
+    "basicSettingsDesc": "Configurer les paramètres de connexion du serveur proxy",
+    "bypass": "Adresses sans proxy",
+    "connectionTest": "Test de connexion",
+    "enable": "Activer le proxy",
+    "enableDesc": "Une fois activé, l'accès au réseau se fera via le serveur proxy",
+    "password": "Mot de passe",
+    "password_placeholder": "Veuillez entrer le mot de passe",
+    "port": "Port",
+    "resetButton": "Réinitialiser",
+    "saveButton": "Enregistrer",
+    "saveFailed": "Échec de l'enregistrement : {{error}}",
+    "saveSuccess": "Paramètres du proxy enregistrés avec succès",
+    "server": "Adresse du serveur",
+    "testButton": "Tester la connexion",
+    "testDescription": "Tester la connexion avec la configuration proxy actuelle pour vérifier son bon fonctionnement",
+    "testFailed": "Échec de la connexion",
+    "testSuccessWithTime": "Connexion réussie, temps écoulé {{time}} ms",
+    "testUrl": "Adresse de test",
+    "testUrlPlaceholder": "Veuillez entrer l'URL à tester",
+    "testing": "Test de la connexion en cours...",
+    "type": "Type de proxy",
+    "unsavedChanges": "Vous avez des modifications non enregistrées",
+    "username": "Nom d'utilisateur",
+    "username_placeholder": "Veuillez entrer le nom d'utilisateur",
+    "validation": {
+      "passwordRequired": "Le mot de passe est obligatoire lorsque l'authentification est activée",
+      "portInvalid": "Le port doit être un nombre entre 1 et 65535",
+      "portRequired": "Le port est obligatoire lorsque le proxy est activé",
+      "serverInvalid": "Veuillez saisir une adresse de serveur valide (IP ou nom de domaine)",
+      "serverRequired": "L'adresse du serveur est obligatoire lorsque le proxy est activé",
+      "typeRequired": "Le type de proxy est obligatoire lorsque le proxy est activé",
+      "usernameRequired": "Le nom d'utilisateur est obligatoire lorsque l'authentification est activée"
+    }
+  },
+  "remoteServer": {
+    "authError": "Échec de l'autorisation : {{error}}",
+    "authPending": "Veuillez terminer l'autorisation dans le navigateur",
+    "configDesc": "Connectez-vous au serveur LobeChat distant pour activer la synchronisation des données",
+    "configError": "Erreur de configuration",
+    "configTitle": "Configurer la synchronisation dans le cloud",
+    "connect": "Se connecter et autoriser",
+    "connected": "Connecté",
+    "disconnect": "Déconnexion",
+    "disconnectError": "Échec de la déconnexion",
+    "disconnected": "Déconnecté",
+    "fetchError": "Échec de la récupération de la configuration",
+    "invalidUrl": "Veuillez entrer une URL valide",
+    "serverUrl": "Adresse du serveur",
+    "statusConnected": "Connecté",
+    "statusDisconnected": "Déconnecté",
+    "urlRequired": "Veuillez entrer l'adresse du serveur"
+  },
+  "sync": {
+    "continue": "Continuer",
+    "inCloud": "Utilisation actuelle de la synchronisation dans le cloud",
+    "inLocalStorage": "Utilisation actuelle du stockage local",
+    "isIniting": "Initialisation en cours...",
+    "lobehubCloud": {
+      "description": "Version cloud fournie par l'éditeur",
+      "title": "LobeHub Cloud"
+    },
+    "local": {
+      "description": "Utilise une base de données locale, entièrement hors ligne",
+      "title": "Base de données locale"
+    },
+    "mode": {
+      "cloudSync": "Synchronisation dans le cloud",
+      "localStorage": "Stockage local",
+      "title": "Choisissez votre mode de connexion",
+      "useSelfHosted": "Utiliser une instance auto-hébergée ?"
+    },
+    "selfHosted": {
+      "description": "Version communautaire déployée par vos soins",
+      "title": "Instance auto-hébergée"
+    }
+  },
+  "updater": {
+    "checkingUpdate": "Vérification des mises à jour",
+    "checkingUpdateDesc": "Récupération des informations de version...",
+    "downloadNewVersion": "Télécharger la nouvelle version",
+    "downloadingUpdate": "Téléchargement de la mise à jour",
+    "downloadingUpdateDesc": "La mise à jour est en cours de téléchargement, veuillez patienter...",
+    "installLater": "Mettre à jour au prochain démarrage",
+    "isLatestVersion": "Vous utilisez déjà la dernière version",
+    "isLatestVersionDesc": "Super, la version {{version}} que vous utilisez est à la pointe de la technologie.",
+    "later": "Mettre à jour plus tard",
+    "newVersionAvailable": "Nouvelle version disponible",
+    "newVersionAvailableDesc": "Une nouvelle version {{version}} a été trouvée, souhaitez-vous la télécharger maintenant ?",
+    "restartAndInstall": "Installer la mise à jour et redémarrer",
+    "updateError": "Erreur de mise à jour",
+    "updateReady": "Mise à jour prête",
+    "updateReadyDesc": "La nouvelle version {{version}} a été téléchargée avec succès, redémarrez l'application pour terminer l'installation.",
+    "upgradeNow": "Mettre à jour maintenant"
+  },
+  "waitingOAuth": {
+    "cancel": "Annuler",
+    "description": "La page d'autorisation a été ouverte dans le navigateur, veuillez compléter l'autorisation dans le navigateur",
+    "error": "Échec de l'autorisation : {{error}}",
+    "errorTitle": "Échec de la connexion d'autorisation",
+    "helpText": "Si le navigateur ne s'est pas ouvert automatiquement, veuillez cliquer sur annuler puis réessayer",
+    "retry": "Réessayer",
+    "title": "En attente de connexion d'autorisation"
+  }
+}

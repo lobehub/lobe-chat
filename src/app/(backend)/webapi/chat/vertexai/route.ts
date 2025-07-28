@@ -1,6 +1,6 @@
 import { checkAuth } from '@/app/(backend)/middleware/auth';
-import { AgentRuntime, ModelProvider } from '@/libs/agent-runtime';
-import { LobeVertexAI } from '@/libs/agent-runtime/vertexai';
+import { AgentRuntime, ModelProvider } from '@/libs/model-runtime';
+import { LobeVertexAI } from '@/libs/model-runtime/vertexai';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { POST as UniverseRoute } from '../[provider]/route';

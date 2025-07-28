@@ -1,7 +1,8 @@
 import { ReactNode, Suspense } from 'react';
 
-import { appEnv } from '@/config/app';
+import { LobeAnalyticsProviderWrapper } from '@/components/Analytics/LobeAnalyticsProviderWrapper';
 import { getServerFeatureFlagsValue } from '@/config/featureFlags';
+import { appEnv } from '@/envs/app';
 import DevPanel from '@/features/DevPanel';
 import { getServerGlobalConfig } from '@/server/globalConfig';
 import { ServerConfigStoreProvider } from '@/store/serverConfig/Provider';
@@ -12,7 +13,6 @@ import AppTheme from './AppTheme';
 import ImportSettings from './ImportSettings';
 import Locale from './Locale';
 import QueryProvider from './Query';
-import ReactScan from './ReactScan';
 import StoreInitialization from './StoreInitialization';
 import StyleRegistry from './StyleRegistry';
 
@@ -40,31 +40,32 @@ const GlobalLayout = async ({
   const serverConfig = await getServerGlobalConfig();
   return (
     <StyleRegistry>
-      <Locale antdLocale={antdLocale} defaultLang={userLocale}>
-        <AppTheme
-          customFontFamily={appEnv.CUSTOM_FONT_FAMILY}
-          customFontURL={appEnv.CUSTOM_FONT_URL}
-          defaultAppearance={appearance}
-          defaultNeutralColor={neutralColor as any}
-          defaultPrimaryColor={primaryColor as any}
-          globalCDN={appEnv.CDN_USE_GLOBAL}
-        >
+      <AppTheme
+        customFontFamily={appEnv.CUSTOM_FONT_FAMILY}
+        customFontURL={appEnv.CUSTOM_FONT_URL}
+        defaultAppearance={appearance}
+        defaultNeutralColor={neutralColor as any}
+        defaultPrimaryColor={primaryColor as any}
+        globalCDN={appEnv.CDN_USE_GLOBAL}
+      >
+        <Locale antdLocale={antdLocale} defaultLang={userLocale}>
           <ServerConfigStoreProvider
             featureFlags={serverFeatureFlags}
             isMobile={isMobile}
             serverConfig={serverConfig}
           >
-            <QueryProvider>{children}</QueryProvider>
+            <QueryProvider>
+              <LobeAnalyticsProviderWrapper>{children}</LobeAnalyticsProviderWrapper>
+            </QueryProvider>
             <StoreInitialization />
             <Suspense>
               <ImportSettings />
-              <ReactScan />
               {process.env.NODE_ENV === 'development' && <DevPanel />}
             </Suspense>
           </ServerConfigStoreProvider>
-        </AppTheme>
-        <AntdV5MonkeyPatch />
-      </Locale>
+        </Locale>
+      </AppTheme>
+      <AntdV5MonkeyPatch />
     </StyleRegistry>
   );
 };

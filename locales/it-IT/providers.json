@@ -23,11 +23,14 @@
   "cloudflare": {
     "description": "Esegui modelli di machine learning alimentati da GPU serverless sulla rete globale di Cloudflare."
   },
+  "cohere": {
+    "description": "Cohere ti offre i modelli multilingue più all'avanguardia, funzionalità di ricerca avanzate e uno spazio di lavoro AI su misura per le moderne imprese - il tutto integrato in una piattaforma sicura."
+  },
   "deepseek": {
     "description": "DeepSeek è un'azienda focalizzata sulla ricerca e applicazione della tecnologia AI, il cui ultimo modello DeepSeek-V2.5 combina capacità di dialogo generico e elaborazione del codice, realizzando miglioramenti significativi nell'allineamento delle preferenze umane, nei compiti di scrittura e nel rispetto delle istruzioni."
   },
-  "doubao": {
-    "description": "Il grande modello sviluppato internamente da ByteDance. Validato attraverso oltre 50 scenari aziendali interni, con un utilizzo quotidiano di trilioni di token che affinano continuamente il modello, offre diverse capacità multimodali, creando esperienze aziendali ricche con risultati di alta qualità."
+  "fal": {
+    "description": "Piattaforma di media generativi rivolta agli sviluppatori"
   },
   "fireworksai": {
     "description": "Fireworks AI è un fornitore leader di servizi di modelli linguistici avanzati, focalizzato su chiamate funzionali e elaborazione multimodale. Il suo ultimo modello Firefunction V2, basato su Llama-3, è ottimizzato per chiamate di funzione, dialogo e rispetto delle istruzioni. Il modello di linguaggio visivo FireLLaVA-13B supporta input misti di immagini e testo. Altri modelli notevoli includono la serie Llama e la serie Mixtral, offrendo supporto efficiente per il rispetto e la generazione di istruzioni multilingue."
@@ -53,6 +56,9 @@
   "hunyuan": {
     "description": "Un modello di linguaggio sviluppato da Tencent, dotato di potenti capacità di creazione in cinese, abilità di ragionamento logico in contesti complessi e capacità affidabili di esecuzione dei compiti."
   },
+  "infiniai": {
+    "description": "Fornisce servizi di modelli di grande dimensione ad alta prestazione, facili da usare e sicuri per gli sviluppatori di applicazioni, coprendo l'intero processo dalla sviluppo dei modelli alla distribuzione dei servizi."
+  },
   "internlm": {
     "description": "Un'organizzazione open source dedicata alla ricerca e allo sviluppo di strumenti per modelli di grandi dimensioni. Fornisce a tutti gli sviluppatori di AI una piattaforma open source efficiente e facile da usare, rendendo le tecnologie e gli algoritmi all'avanguardia accessibili a tutti."
   },
@@ -67,6 +73,9 @@
   },
   "mistral": {
     "description": "Mistral offre modelli avanzati generali, professionali e di ricerca, ampiamente utilizzati in ragionamenti complessi, compiti multilingue, generazione di codice e altro, consentendo agli utenti di integrare funzionalità personalizzate tramite interfacce di chiamata funzionale."
+  },
+  "modelscope": {
+    "description": "ModelScope è una piattaforma di modelli come servizio lanciata da Alibaba Cloud, che offre una ricca gamma di modelli AI e servizi di inferenza."
   },
   "moonshot": {
     "description": "Moonshot è una piattaforma open source lanciata da Beijing Dark Side Technology Co., Ltd., che offre vari modelli di elaborazione del linguaggio naturale, con ampie applicazioni, inclusi ma non limitati a creazione di contenuti, ricerca accademica, raccomandazioni intelligenti, diagnosi mediche e altro, supportando l'elaborazione di testi lunghi e compiti di generazione complessi."
@@ -92,11 +101,17 @@
   "ppio": {
     "description": "PPIO Paeou Cloud offre servizi API per modelli open source stabili e ad alto rapporto qualità-prezzo, supportando l'intera gamma di DeepSeek, Llama, Qwen e altri modelli di grandi dimensioni leader del settore."
   },
+  "qiniu": {
+    "description": "Qiniu è un fornitore di servizi cloud leader, offrendo API di IA ad alta velocità e efficienza, incluso il modello Alibaba, con opzioni flessibili per costruire e applicare applicazioni di IA."
+  },
   "qwen": {
     "description": "Qwen è un modello di linguaggio di grande scala sviluppato autonomamente da Alibaba Cloud, con potenti capacità di comprensione e generazione del linguaggio naturale. Può rispondere a varie domande, creare contenuti testuali, esprimere opinioni e scrivere codice, svolgendo un ruolo in vari settori."
   },
   "sambanova": {
     "description": "SambaNova Cloud consente agli sviluppatori di utilizzare facilmente i migliori modelli open source e di godere della velocità di inferenza più rapida."
+  },
+  "search1api": {
+    "description": "Search1API fornisce accesso alla serie di modelli DeepSeek che possono connettersi autonomamente, inclusa la versione standard e quella rapida, supportando la scelta di modelli con diverse dimensioni di parametri."
   },
   "sensenova": {
     "description": "SenseTime offre servizi di modelli di grandi dimensioni full-stack, supportati dalla potente infrastruttura di SenseTime."
@@ -122,6 +137,9 @@
   "upstage": {
     "description": "Upstage si concentra sullo sviluppo di modelli AI per varie esigenze commerciali, inclusi Solar LLM e document AI, con l'obiettivo di realizzare un'intelligenza artificiale generale artificiale (AGI) per il lavoro. Crea semplici agenti di dialogo tramite Chat API e supporta chiamate funzionali, traduzioni, embedding e applicazioni specifiche del settore."
   },
+  "v0": {
+    "description": "v0 è un assistente di programmazione in coppia: basta descrivere le tue idee in linguaggio naturale e lui genererà codice e interfacce utente (UI) per il tuo progetto"
+  },
   "vertexai": {
     "description": "La serie Gemini di Google è il suo modello AI più avanzato e versatile, sviluppato da Google DeepMind, progettato per essere multimodale e supportare la comprensione e l'elaborazione senza soluzione di continuità di testo, codice, immagini, audio e video. Adatta a una varietà di ambienti, dai data center ai dispositivi mobili, migliora notevolmente l'efficienza e l'ampia applicabilità dei modelli AI."
   },
@@ -136,6 +154,9 @@
   },
   "xai": {
     "description": "xAI è un'azienda dedicata alla costruzione di intelligenza artificiale per accelerare le scoperte scientifiche umane. La nostra missione è promuovere la nostra comprensione collettiva dell'universo."
+  },
+  "xinference": {
+    "description": "Xorbits Inference (Xinference) è una piattaforma open source progettata per semplificare l'esecuzione e l'integrazione di vari modelli AI. Con Xinference, è possibile eseguire inferenze utilizzando qualsiasi modello LLM open source, modelli di embedding e modelli multimodali, sia in un ambiente cloud che locale, creando potenti applicazioni AI."
   },
   "zeroone": {
     "description": "01.AI si concentra sulla tecnologia AI dell'era 2.0, promuovendo attivamente l'innovazione e l'applicazione di \"uomo + intelligenza artificiale\", utilizzando modelli potenti e tecnologie AI avanzate per migliorare la produttività umana e realizzare l'abilitazione tecnologica."

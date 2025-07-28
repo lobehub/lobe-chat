@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LobeChatDatabase } from '@/database/type';
 
 import { messages, sessions, topics, users } from '../../schemas';
-import { CreateTopicParams, TopicModel } from '../../server/models/topic';
+import { CreateTopicParams, TopicModel } from '../topic';
 import { getTestDB } from './_util';
 
 const serverDB: LobeChatDatabase = await getTestDB();

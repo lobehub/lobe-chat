@@ -66,6 +66,7 @@
       "customRegion": "カスタムサービスリージョン",
       "customSessionToken": "カスタムセッショントークン",
       "description": "AWS AccessKeyId / SecretAccessKey を入力するとセッションを開始できます。アプリは認証情報を記録しません",
+      "imageGenerationDescription": "AWSのAccessKeyId / SecretAccessKeyを入力すると、生成を開始できます。アプリは認証情報を記録しません。",
       "title": "使用カスタム Bedrock 認証情報"
     }
   },
@@ -164,6 +165,7 @@
     },
     "download": {
       "desc": "Ollamaはこのモデルをダウンロードしています。このページを閉じないでください。再ダウンロードすると中断したところから再開されます。",
+      "failed": "モデルのダウンロードに失敗しました。ネットワークまたはOllamaの設定を確認して再試行してください",
       "remainingTime": "残り時間",
       "speed": "ダウンロード速度",
       "title": "モデル{{model}}をダウンロード中"
@@ -207,6 +209,10 @@
         "title": "クライアントリクエストモードを使用"
       },
       "helpDoc": "設定ガイド",
+      "responsesApi": {
+        "desc": "OpenAIの新世代リクエストフォーマット規格を採用し、チェーン思考などの高度な機能を解放します",
+        "title": "Responses API 規格の使用"
+      },
       "waitingForMore": "さらに多くのモデルが <1>接続予定</1> です。お楽しみに"
     },
     "createNew": {

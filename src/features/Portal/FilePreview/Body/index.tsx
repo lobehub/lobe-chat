@@ -1,5 +1,4 @@
-import { Icon, Markdown } from '@lobehub/ui';
-import { Segmented } from 'antd';
+import { Icon, Markdown, Segmented } from '@lobehub/ui';
 import { BoltIcon, FileIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,19 +10,24 @@ import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
 import { useFileStore } from '@/store/file';
 
+enum FilePreviewTab {
+  Chunk = 'chunk',
+  File = 'file',
+}
+
 const FilePreview = () => {
   const previewFileId = useChatStore(chatPortalSelectors.previewFileId);
   const chunkText = useChatStore(chatPortalSelectors.chunkText);
   const useFetchFileItem = useFileStore((s) => s.useFetchFileItem);
   const { t } = useTranslation('portal');
 
-  const [tab, setTab] = useState('chunk');
+  const [tab, setTab] = useState<FilePreviewTab>(FilePreviewTab.File);
   const { data, isLoading } = useFetchFileItem(previewFileId);
 
   if (isLoading) return <Loading />;
   if (!data) return;
 
-  const showChunk = tab === 'chunk' && !!chunkText;
+  const showChunk = tab === FilePreviewTab.Chunk && !!chunkText;
   return (
     <Flexbox
       height={'100%'}
@@ -34,12 +38,21 @@ const FilePreview = () => {
       {chunkText && (
         <Segmented
           block
-          onChange={setTab}
+          onChange={(v) => setTab(v as FilePreviewTab)}
           options={[
-            { icon: <Icon icon={BoltIcon} />, label: t('FilePreview.tabs.chunk'), value: 'chunk' },
-            { icon: <Icon icon={FileIcon} />, label: t('FilePreview.tabs.file'), value: 'file' },
+            {
+              icon: <Icon icon={BoltIcon} />,
+              label: t('FilePreview.tabs.chunk'),
+              value: FilePreviewTab.Chunk,
+            },
+            {
+              icon: <Icon icon={FileIcon} />,
+              label: t('FilePreview.tabs.file'),
+              value: FilePreviewTab.File,
+            },
           ]}
           value={tab}
+          variant={'filled'}
         />
       )}
 

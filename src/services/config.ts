@@ -1,162 +1,107 @@
-import { importService } from '@/services/import';
-import { messageService } from '@/services/message';
-import { sessionService } from '@/services/session';
-import { topicService } from '@/services/topic';
-import { useSessionStore } from '@/store/session';
-import { sessionSelectors } from '@/store/session/selectors';
-import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/selectors';
-import { ConfigFile } from '@/types/exportConfig';
-import { ImportStage, OnImportCallbacks } from '@/types/importer';
-import { createConfigFile, exportConfigFile } from '@/utils/config';
+import dayjs from 'dayjs';
 
-export interface ImportResult {
-  added: number;
-  errors: number;
-  skips: number;
-}
-export interface ImportResults {
-  messages?: ImportResult;
-  sessionGroups?: ImportResult;
-  sessions?: ImportResult;
-  topics?: ImportResult;
-  type?: string;
-}
+import { BRANDING_NAME } from '@/const/branding';
+import { isDeprecatedEdition, isServerMode } from '@/const/version';
+import { CURRENT_CONFIG_VERSION } from '@/migrations';
+import { ImportPgDataStructure } from '@/types/export';
+import { downloadFile } from '@/utils/client/downloadFile';
+import { exportJSONFile } from '@/utils/client/exportFile';
 
-/**
- * @deprecated
- */
+import { exportService } from './export';
+import { configService as deprecatedExportService } from './export/_deprecated';
+
 class ConfigService {
-  importConfigState = async (config: ConfigFile, callbacks?: OnImportCallbacks): Promise<void> => {
-    if (config.exportType === 'settings') {
-      await importService.importSettings(config.state.settings);
-      callbacks?.onStageChange?.(ImportStage.Success);
+  exportAll = async () => {
+    // TODO: remove this in V2
+    if (isDeprecatedEdition) {
+      const config = await deprecatedExportService.exportAll();
+      const filename = `${BRANDING_NAME}-config-v${CURRENT_CONFIG_VERSION}.json`;
+      exportJSONFile(config, filename);
       return;
     }
 
-    if (config.exportType === 'all') {
-      await importService.importSettings(config.state.settings);
+    const { data, url } = await exportService.exportData();
+    const filename = `${dayjs().format('YYYY-MM-DD-hh-mm')}_${BRANDING_NAME}-data.json`;
+
+    // if url exists, means export data from server and upload the data to S3
+    // just need to download the file
+    if (url) {
+      await downloadFile(url, filename);
+      return;
     }
 
-    await importService.importData(
-      {
-        messages: (config.state as any).messages || [],
-        sessionGroups: (config.state as any).sessionGroups || [],
-        sessions: (config.state as any).sessions || [],
-        topics: (config.state as any).topics || [],
-        version: config.version,
-      },
-      callbacks,
-    );
+    // or export to file with the data
+    const result = await this.createDataStructure(data, isServerMode ? 'postgres' : 'pglite');
+
+    exportJSONFile(result, filename);
   };
 
-  // TODO: Separate export feature into a new service like importService
-
-  /**
-   * export all agents
-   */
   exportAgents = async () => {
-    const agents = await sessionService.getSessionsByType('agent');
-    const sessionGroups = await sessionService.getSessionGroups();
-
-    const config = createConfigFile('agents', { sessionGroups, sessions: agents });
-
-    exportConfigFile(config, 'agents');
+    // TODO: remove this in V2
+    if (isDeprecatedEdition) {
+      const config = await deprecatedExportService.exportAgents();
+      const filename = `${BRANDING_NAME}-agents-v${CURRENT_CONFIG_VERSION}.json`;
+      exportJSONFile(config, filename);
+      return;
+    }
   };
 
-  /**
-   * export all sessions
-   */
+  exportSingleAgent = async (agentId: string) => {
+    // TODO: remove this in V2
+    if (isDeprecatedEdition) {
+      const result = await deprecatedExportService.exportSingleAgent(agentId);
+      if (!result) return;
+
+      const filename = `${BRANDING_NAME}-${result.title}-v${CURRENT_CONFIG_VERSION}.json`;
+      exportJSONFile(result.config, filename);
+      return;
+    }
+  };
+
   exportSessions = async () => {
-    const sessions = await sessionService.getSessionsByType();
-    const sessionGroups = await sessionService.getSessionGroups();
-    const messages = await messageService.getAllMessages();
-    const topics = await topicService.getAllTopics();
-
-    const config = createConfigFile('sessions', { messages, sessionGroups, sessions, topics });
-
-    exportConfigFile(config, 'sessions');
+    // TODO: remove this in V2
+    if (isDeprecatedEdition) {
+      const config = await deprecatedExportService.exportSessions();
+      const filename = `${BRANDING_NAME}-sessions-v${CURRENT_CONFIG_VERSION}.json`;
+      exportJSONFile(config, filename);
+      return;
+    }
   };
 
-  /**
-   * export a session
-   */
-  exportSingleSession = async (id: string) => {
-    const session = this.getSession(id);
-    if (!session) return;
-
-    const messages = await messageService.getAllMessagesInSession(id);
-    const topics = await topicService.getTopics({ sessionId: id });
-
-    const config = createConfigFile('singleSession', { messages, sessions: [session], topics });
-
-    exportConfigFile(config, `${session.meta?.title}-session`);
-  };
-
-  /**
-   * export a topic
-   */
-  exportSingleTopic = async (sessionId: string, topicId: string) => {
-    const session = this.getSession(sessionId);
-    if (!session) return;
-
-    const messages = await messageService.getMessages(sessionId, topicId);
-    const topics = await topicService.getTopics({ sessionId });
-
-    const topic = topics.find((item) => item.id === topicId);
-    if (!topic) return;
-
-    const config = createConfigFile('singleSession', {
-      messages,
-      sessions: [session],
-      topics: [topic],
-    });
-
-    exportConfigFile(config, `${topic.title}-topic`);
-  };
-
-  exportSingleAgent = async (id: string) => {
-    const agent = this.getAgent(id);
-    if (!agent) return;
-
-    const config = createConfigFile('agents', { sessionGroups: [], sessions: [agent] });
-
-    exportConfigFile(config, agent.meta?.title || 'agent');
-  };
-
-  /**
-   * export settings
-   */
   exportSettings = async () => {
-    const settings = this.getSettings();
-
-    const config = createConfigFile('settings', { settings });
-
-    exportConfigFile(config, 'settings');
+    // TODO: remove this in V2
+    if (isDeprecatedEdition) {
+      const config = await deprecatedExportService.exportSessions();
+      const filename = `${BRANDING_NAME}-settings-v${CURRENT_CONFIG_VERSION}.json`;
+      exportJSONFile(config, filename);
+      return;
+    }
   };
 
-  /**
-   * export all data
-   */
-  exportAll = async () => {
-    const sessions = await sessionService.getSessionsByType();
-    const sessionGroups = await sessionService.getSessionGroups();
-    const messages = await messageService.getAllMessages();
-    const topics = await topicService.getAllTopics();
-    const settings = this.getSettings();
+  exportSingleSession = async (sessionId: string) => {
+    // TODO: remove this in V2
+    if (isDeprecatedEdition) {
+      const data = await deprecatedExportService.exportSingleSession(sessionId);
+      if (!data) return;
 
-    const config = createConfigFile('all', { messages, sessionGroups, sessions, settings, topics });
-
-    exportConfigFile(config, 'config');
+      const filename = `${BRANDING_NAME}-${data.title}-v${CURRENT_CONFIG_VERSION}.json`;
+      exportJSONFile(data.config, filename);
+      return;
+    }
   };
 
-  private getSettings = () => settingsSelectors.exportSettings(useUserStore.getState());
+  private createDataStructure = async (
+    data: any,
+    mode: 'pglite' | 'postgres',
+  ): Promise<ImportPgDataStructure> => {
+    const { default: json } = await import('@/database/client/migrations.json');
+    const latestHash = json.at(-1)?.hash;
+    if (!latestHash) {
+      throw new Error('Not find database sql hash');
+    }
 
-  private getSession = (id: string) =>
-    sessionSelectors.getSessionById(id)(useSessionStore.getState());
-
-  private getAgent = (id: string) =>
-    sessionSelectors.getSessionById(id)(useSessionStore.getState());
+    return { data, mode, schemaHash: latestHash };
+  };
 }
 
 export const configService = new ConfigService();

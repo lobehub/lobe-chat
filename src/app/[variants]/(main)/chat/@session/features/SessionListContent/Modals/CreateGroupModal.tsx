@@ -28,7 +28,7 @@ const CreateGroupModal = memo<CreateGroupModalProps>(
       <div onClick={(e) => e.stopPropagation()}>
         <Modal
           allowFullscreen
-          destroyOnClose
+          destroyOnHidden
           okButtonProps={{ loading }}
           onCancel={(e) => {
             setInput('');

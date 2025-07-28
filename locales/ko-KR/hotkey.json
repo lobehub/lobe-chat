@@ -1,0 +1,64 @@
+{
+  "addUserMessage": {
+    "desc": "현재 입력 내용을 사용자 메시지로 추가하되 생성은 트리거하지 않음",
+    "title": "사용자 메시지 추가"
+  },
+  "clearCurrentMessages": {
+    "desc": "현재 대화의 메시지와 업로드된 파일을 지웁니다",
+    "title": "대화 메시지 지우기"
+  },
+  "desktop": {
+    "openSettings": {
+      "desc": "애플리케이션 설정 페이지 열기",
+      "title": "애플리케이션 설정"
+    },
+    "showApp": {
+      "desc": "글로벌 단축키로 메인 창 표시 또는 숨기기",
+      "title": "메인 창 표시/숨기기"
+    }
+  },
+  "editMessage": {
+    "desc": "Alt 키를 누른 채로 메시지를 더블 클릭하여 편집 모드로 들어갑니다",
+    "title": "메시지 편집"
+  },
+  "openChatSettings": {
+    "desc": "현재 대화의 설정을 확인하고 수정합니다.",
+    "title": "채팅 설정 열기"
+  },
+  "openHotkeyHelper": {
+    "desc": "모든 단축키 사용 설명을 확인합니다.",
+    "title": "단축키 도움말 열기"
+  },
+  "regenerateMessage": {
+    "desc": "마지막 메시지를 다시 생성합니다",
+    "title": "메시지 다시 생성"
+  },
+  "saveTopic": {
+    "desc": "현재 주제를 저장하고 새 주제를 엽니다",
+    "title": "새 주제 시작"
+  },
+  "search": {
+    "desc": "현재 페이지의 주요 검색 상자를 호출합니다.",
+    "title": "검색"
+  },
+  "showApp": {
+    "desc": "애플리케이션의 주 창을 빠르게 호출합니다.",
+    "title": "주 창 표시"
+  },
+  "switchAgent": {
+    "desc": "Ctrl 키를 누른 채로 숫자 0~9를 눌러 사이드바에 고정된 도우미를 전환합니다",
+    "title": "도우미 빠른 전환"
+  },
+  "toggleLeftPanel": {
+    "desc": "왼쪽 도우미 패널을 표시하거나 숨깁니다.",
+    "title": "도우미 패널 표시/숨기기"
+  },
+  "toggleRightPanel": {
+    "desc": "오른쪽 주제 패널을 표시하거나 숨깁니다.",
+    "title": "주제 패널 표시/숨기기"
+  },
+  "toggleZenMode": {
+    "desc": "집중 모드에서는 현재 대화만 표시하고 다른 UI를 숨깁니다.",
+    "title": "집중 모드 전환"
+  }
+}

@@ -1,21 +1,10 @@
-import { Button, Form, Input } from 'antd';
-import { css, cx } from 'antd-style';
+import { Button, Form, Input, TextArea } from '@lobehub/ui';
+import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 import { CreateKnowledgeBaseParams } from '@/types/knowledgeBase';
-
-const formItem = css`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-
-  .ant-form-item {
-    margin-block-end: 0;
-  }
-`;
 
 interface CreateFormProps {
   onClose?: () => void;
@@ -25,14 +14,17 @@ const CreateForm = memo<CreateFormProps>(({ onClose }) => {
   const { t } = useTranslation('knowledgeBase');
   const [loading, setLoading] = useState(false);
   const createNewKnowledgeBase = useKnowledgeBaseStore((s) => s.createNewKnowledgeBase);
+  const router = useRouter();
 
   const onFinish = async (values: CreateKnowledgeBaseParams) => {
     setLoading(true);
 
     try {
-      await createNewKnowledgeBase(values);
+      const id = await createNewKnowledgeBase(values);
       setLoading(false);
       onClose?.();
+
+      router.push(`/repos/${id}`);
     } catch (e) {
       console.error(e);
       setLoading(false);
@@ -40,33 +32,35 @@ const CreateForm = memo<CreateFormProps>(({ onClose }) => {
   };
 
   return (
-    <Flexbox gap={8}>
-      <div>{t('createNew.formTitle')}</div>
-      <Form className={cx(formItem)} onFinish={onFinish}>
-        <Form.Item
-          name={'name'}
-          rules={[{ message: t('createNew.name.required'), required: true }]}
-        >
-          <Input autoFocus placeholder={t('createNew.name.placeholder')} variant={'filled'} />
-        </Form.Item>
-        <Form.Item name={'description'}>
-          <Input.TextArea
-            placeholder={t('createNew.description.placeholder')}
-            style={{ minHeight: 120 }}
-            variant={'filled'}
-          />
-        </Form.Item>
-        <Button
-          block
-          htmlType={'submit'}
-          loading={loading}
-          style={{ marginTop: 16 }}
-          type={'primary'}
-        >
+    <Form
+      footer={
+        <Button block htmlType={'submit'} loading={loading} type={'primary'}>
           {t('createNew.confirm')}
         </Button>
-      </Form>
-    </Flexbox>
+      }
+      gap={16}
+      items={[
+        {
+          children: <Input autoFocus placeholder={t('createNew.name.placeholder')} />,
+          label: t('createNew.name.placeholder'),
+          name: 'name',
+          rules: [{ message: t('createNew.name.required'), required: true }],
+        },
+        {
+          children: (
+            <TextArea
+              placeholder={t('createNew.description.placeholder')}
+              style={{ minHeight: 120 }}
+            />
+          ),
+          label: t('createNew.description.placeholder'),
+          name: 'description',
+        },
+      ]}
+      itemsType={'flat'}
+      layout={'vertical'}
+      onFinish={onFinish}
+    />
   );
 });
 

@@ -1,10 +1,9 @@
 import urlJoin from 'url-join';
 
+import { BRANDING_EMAIL } from '@/const/branding';
 import {
   BLOG,
   DOCKER_IMAGE,
-  EMAIL_BUSINESS,
-  EMAIL_SUPPORT,
   GITHUB,
   OFFICIAL_PREVIEW_URL,
   OFFICIAL_SITE,
@@ -70,8 +69,8 @@ In the response, please try to pick and include the relevant links below, and if
 - Usage Documentation: ${USAGE_DOCUMENTS}
 - Self-Hosting Documentation: ${SELF_HOSTING_DOCUMENTS}
 - Development Guide: ${WIKI}
-- Email Support: ${EMAIL_SUPPORT}
-- Business Inquiries: ${EMAIL_BUSINESS}
+- Email Support: ${BRANDING_EMAIL.support}
+- Business Inquiries: ${BRANDING_EMAIL.business}
 
 ## Workflow
 

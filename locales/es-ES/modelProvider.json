@@ -66,6 +66,7 @@
       "customRegion": "Región de servicio personalizada",
       "customSessionToken": "Token de sesión personalizado",
       "description": "Introduce tu AWS AccessKeyId / SecretAccessKey para comenzar la sesión. La aplicación no guardará tu configuración de autenticación.",
+      "imageGenerationDescription": "Introduce tu AWS AccessKeyId / SecretAccessKey para comenzar a generar. La aplicación no registrará tu configuración de autenticación",
       "title": "Usar información de autenticación de Bedrock personalizada"
     }
   },
@@ -164,6 +165,7 @@
     },
     "download": {
       "desc": "Ollama está descargando este modelo, por favor intenta no cerrar esta página. La descarga se reanudará desde donde se interrumpió",
+      "failed": "La descarga del modelo ha fallado, por favor verifica la red o la configuración de Ollama y vuelve a intentarlo",
       "remainingTime": "Tiempo restante",
       "speed": "Velocidad de descarga",
       "title": "Descargando el modelo {{model}} "
@@ -207,6 +209,10 @@
         "title": "Usar modo de solicitud del cliente"
       },
       "helpDoc": "Guía de configuración",
+      "responsesApi": {
+        "desc": "Utiliza el nuevo formato de solicitud de OpenAI para desbloquear características avanzadas como cadenas de pensamiento",
+        "title": "Uso de la especificación Responses API"
+      },
       "waitingForMore": "Más modelos están en <1>planificación de integración</1>, por favor, espera"
     },
     "createNew": {

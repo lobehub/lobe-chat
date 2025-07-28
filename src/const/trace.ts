@@ -7,15 +7,14 @@ export enum TraceNameMap {
   Conversation = 'Conversation',
   EmojiPicker = 'Emoji Picker',
   FetchPluginAPI = 'Fetch Plugin API',
-  InvokePlugin = 'Invoke Plugin',
   LanguageDetect = 'Language Detect',
+  SearchIntentRecognition = 'Search Intent Recognition',
   SummaryAgentDescription = 'Summary Agent Description',
   SummaryAgentTags = 'Summary Agent Tags',
   SummaryAgentTitle = 'Summary Agent Title',
+  SummaryHistoryMessages = 'Summary History Messages',
   SummaryTopicTitle = 'Summary Topic Title',
   Translator = 'Translator',
-  // mean user have relative events
-  UserEvents = 'User Events',
 }
 
 export enum TraceEventType {
@@ -33,7 +32,7 @@ export enum TraceTagMap {
   Chat = 'Chat Competition',
   SystemChain = 'System Chain',
   ToolCalling = 'Tool Calling',
-  ToolsCall = 'Tools Call',
+  ToolsCalling = 'Tools Calling',
 }
 
 export interface TracePayload {

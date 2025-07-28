@@ -1,14 +1,26 @@
 {
+  "confirm": "Bevestigen",
   "debug": {
     "arguments": "Argumenten",
     "function_call": "Functieoproep",
     "off": "Zet debug uit",
     "on": "Bekijk plug-in oproepinformatie",
     "payload": "plug-in payload",
+    "pluginState": "Pluginstatus",
     "response": "Reactie",
+    "title": "Plugin Details",
     "tool_call": "Tool-oproepverzoek"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "Ga naar de bewerkingspagina voor meer details",
+      "editBtn": "Nu bewerken",
+      "title": "Dit is een aangepaste plugin"
+    },
+    "emptyState": {
+      "description": "Installeer deze plug-in eerst om de mogelijkheden en configuratieopties te bekijken",
+      "title": "Bekijk plug-in details na installatie"
+    },
     "info": {
       "description": "API-beschrijving",
       "name": "API-naam"
@@ -34,14 +46,105 @@
         "label": "Identificatie"
       },
       "mode": {
-        "local": "Visuele configuratie",
-        "local-tooltip": "Visuele configuratie wordt op dit moment niet ondersteund",
+        "mcp": "MCP-plugin",
+        "mcpExp": "Experimenteel",
         "url": "Online link"
       },
       "name": {
         "desc": "De titel van de plug-in",
         "label": "Titel",
         "placeholder": "Zoekmachine"
+      }
+    },
+    "mcp": {
+      "advanced": {
+        "title": "Geavanceerde instellingen"
+      },
+      "args": {
+        "desc": "Een lijst met parameters die aan het uitvoeringscommando worden doorgegeven, meestal hier de naam van de MCP-server of het pad naar het opstartscript invoeren.",
+        "label": "Commando-parameters",
+        "placeholder": "Bijvoorbeeld: --port 8080 --debug",
+        "required": "Voer de opstartparameters in"
+      },
+      "auth": {
+        "bear": "API-sleutel",
+        "desc": "Kies de authenticatiemethode voor de MCP-server",
+        "label": "Authenticatietype",
+        "none": "Geen authenticatie vereist",
+        "placeholder": "Selecteer een authenticatietype",
+        "token": {
+          "desc": "Voer je API-sleutel of Bearer-token in",
+          "label": "API-sleutel",
+          "placeholder": "sk-xxxxx",
+          "required": "Voer het authenticatietoken in"
+        }
+      },
+      "avatar": {
+        "label": "Plugin-icoon"
+      },
+      "command": {
+        "desc": "Uitvoerbaar bestand of script om de MCP STDIO-plugin te starten",
+        "label": "Commando",
+        "placeholder": "Bijvoorbeeld: python main.py of /path/to/executable",
+        "required": "Voer het opstartcommando in"
+      },
+      "desc": {
+        "desc": "Voeg een beschrijving van de plugin toe",
+        "label": "Plugin-beschrijving",
+        "placeholder": "Vul informatie in over het gebruik en de scenario's van deze plugin"
+      },
+      "endpoint": {
+        "desc": "Voer het adres van je MCP Streamable HTTP Server in",
+        "label": "MCP Endpoint URL"
+      },
+      "env": {
+        "add": "Een regel toevoegen",
+        "desc": "Voer de omgevingsvariabelen in die nodig zijn voor jouw MCP-server",
+        "duplicateKeyError": "Veldsleutels moeten uniek zijn",
+        "formValidationFailed": "Formuliervalidatie is mislukt, controleer het parameterformaat",
+        "keyRequired": "Veldsleutel mag niet leeg zijn",
+        "label": "Omgevingsvariabelen voor MCP-server",
+        "stringifyError": "Kan parameters niet serialiseren, controleer het parameterformaat"
+      },
+      "headers": {
+        "add": "Voeg een regel toe",
+        "desc": "Voer de verzoekheaders in",
+        "label": "HTTP-headers"
+      },
+      "identifier": {
+        "desc": "Geef je MCP-plugin een naam, gebruik Engelse karakters",
+        "invalid": "Alleen Engelse karakters, cijfers, - en _ zijn toegestaan",
+        "label": "MCP Plugin Naam",
+        "placeholder": "Bijvoorbeeld: my-mcp-plugin",
+        "required": "Voer de MCP service-identificator in"
+      },
+      "previewManifest": "Voorbeeld van het plugin beschrijvingsbestand",
+      "quickImport": "Snelle import van JSON-configuratie",
+      "quickImportError": {
+        "empty": "Invoerveld mag niet leeg zijn",
+        "invalidJson": "Ongeldig JSON-formaat",
+        "invalidStructure": "Ongeldige JSON-structuur"
+      },
+      "stdioNotSupported": "De huidige omgeving ondersteunt geen stdio-type MCP-plug-ins",
+      "testConnection": "Test verbinding",
+      "testConnectionTip": "De MCP plugin kan pas normaal worden gebruikt na een succesvolle verbindingstest",
+      "type": {
+        "desc": "Kies de communicatiemethode voor de MCP-plugin, de webversie ondersteunt alleen Streamable HTTP",
+        "httpFeature1": "Compatibel met web- en desktopversies",
+        "httpFeature2": "Verbind met een externe MCP-server, zonder extra installatie of configuratie",
+        "httpShortDesc": "Communicatieprotocol op basis van streaming HTTP",
+        "label": "MCP Plugin Type",
+        "stdioFeature1": "Lagere communicatietijd, geschikt voor lokale uitvoering",
+        "stdioFeature2": "MCP-server moet lokaal worden geïnstalleerd en uitgevoerd",
+        "stdioNotAvailable": "STDIO-modus is alleen beschikbaar in de desktopversie",
+        "stdioShortDesc": "Communicatieprotocol op basis van standaardinvoer en -uitvoer",
+        "title": "MCP-plugintype"
+      },
+      "url": {
+        "desc": "Voer je MCP Server Streamable HTTP-adres in, SSE-modus wordt niet ondersteund",
+        "invalid": "Voer een geldige URL in",
+        "label": "HTTP Endpoint URL",
+        "required": "Voer de MCP service URL in"
       }
     },
     "meta": {
@@ -69,12 +172,14 @@
         "label": "Identificatie",
         "pattenErrorMessage": "Alleen alfanumerieke tekens, koppelteken - en underscore _ zijn toegestaan"
       },
+      "lobe": "{{appName}} plugin",
       "manifest": {
         "desc": "{{appName}} zal de plugin installeren via deze link",
         "label": "Plug-in Beschrijving (Manifest) URL",
         "preview": "Voorbeeld",
         "refresh": "Vernieuwen"
       },
+      "openai": "OpenAI plugin",
       "title": {
         "desc": "De titel van de plug-in",
         "label": "Titel",
@@ -88,8 +193,18 @@
       "schema": "Schema"
     },
     "preview": {
+      "api": {
+        "noParams": "Deze tool heeft geen parameters",
+        "noResults": "Geen API's gevonden die aan de zoekcriteria voldoen",
+        "params": "Parameters:",
+        "searchPlaceholder": "Zoek tool..."
+      },
       "card": "Voorbeeld van plug-inweergave",
       "desc": "Voorbeeld van plug-inbeschrijving",
+      "empty": {
+        "desc": "Na configuratie kunt u hier de mogelijkheden van de ondersteunde tools van de plug-in bekijken",
+        "title": "Begin met het bekijken na het configureren van de plug-in"
+      },
       "title": "Voorbeeld van plug-innaam"
     },
     "save": "Installeer plug-in",
@@ -116,6 +231,7 @@
     "noManifest": "Geen manifest beschikbaar",
     "openAPIInvalid": "OpenAPI-analyse mislukt. Fout: \n\n {{error}}",
     "reinstallError": "Vernieuwen van de plugin {{name}} is mislukt.",
+    "testConnectionFailed": "Manifest ophalen mislukt: {{error}}",
     "urlError": "De link retourneert geen JSON-indeling. Zorg ervoor dat het een geldige link is."
   },
   "inspector": {
@@ -133,8 +249,69 @@
     "content": "Plugin wordt geladen...",
     "plugin": "Plugin wordt uitgevoerd..."
   },
+  "localSystem": {
+    "apiName": {
+      "listLocalFiles": "Bestandlijst weergeven",
+      "moveLocalFiles": "Bestanden verplaatsen",
+      "readLocalFile": "Bestand inhoud lezen",
+      "renameLocalFile": "Hernoemen",
+      "searchLocalFiles": "Bestanden zoeken",
+      "writeLocalFile": "Bestand schrijven"
+    },
+    "title": "Lokale bestanden"
+  },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "Installatieomgeving controleren...",
+    "COMPLETED": "Installatie voltooid",
+    "CONFIGURATION_REQUIRED": "Voltooi de configuratie voordat u doorgaat met de installatie",
+    "ERROR": "Installatiefout",
+    "FETCHING_MANIFEST": "Plugin manifest ophalen...",
+    "GETTING_SERVER_MANIFEST": "MCP-server initialiseren...",
+    "INSTALLING_PLUGIN": "Plugin wordt geïnstalleerd...",
+    "configurationDescription": "Deze MCP-plugin vereist configuratieparameters om correct te functioneren. Vul de benodigde configuratiegegevens in.",
+    "configurationRequired": "Pluginparameters configureren",
+    "continueInstall": "Installatie voortzetten",
+    "dependenciesDescription": "Deze plugin vereist de installatie van de volgende systeemafhankelijkheden om correct te werken. Installeer de ontbrekende afhankelijkheden volgens de instructies en klik vervolgens op 'Opnieuw controleren' om door te gaan met de installatie.",
+    "dependenciesRequired": "Installeer de systeemafhankelijkheden van de plugin",
+    "dependencyStatus": {
+      "installed": "Geïnstalleerd",
+      "notInstalled": "Niet geïnstalleerd",
+      "requiredVersion": "Vereiste versie: {{version}}"
+    },
+    "errorDetails": {
+      "args": "Parameters",
+      "command": "Opdracht",
+      "connectionParams": "Verbindingsparameters",
+      "env": "Omgevingsvariabelen",
+      "errorOutput": "Foutlogboek",
+      "exitCode": "Exitcode",
+      "hideDetails": "Details verbergen",
+      "originalError": "Oorspronkelijke fout",
+      "showDetails": "Details weergeven"
+    },
+    "errorTypes": {
+      "AUTHORIZATION_ERROR": "Autorisatiefout",
+      "CONNECTION_FAILED": "Verbinding mislukt",
+      "INITIALIZATION_TIMEOUT": "Initialisatie time-out",
+      "PROCESS_SPAWN_ERROR": "Proces starten mislukt",
+      "UNKNOWN_ERROR": "Onbekende fout",
+      "VALIDATION_ERROR": "Parametervalidatie mislukt"
+    },
+    "installError": "MCP-plugin installatie mislukt, reden: {{detail}}",
+    "installMethods": {
+      "manual": "Handmatige installatie:",
+      "recommended": "Aanbevolen installatiemethode:"
+    },
+    "recheckDependencies": "Opnieuw controleren",
+    "skipDependencies": "Controle overslaan"
+  },
   "pluginList": "Lijst met plugins",
   "search": {
+    "apiName": {
+      "crawlMultiPages": "Meerdere pagina-inhoud lezen",
+      "crawlSinglePage": "Pagina-inhoud lezen",
+      "search": "Pagina zoeken"
+    },
     "config": {
       "addKey": "Voeg sleutel toe",
       "close": "Verwijderen",
@@ -164,16 +341,48 @@
   },
   "setting": "Plugin-instellingen",
   "settings": {
+    "capabilities": {
+      "prompts": "Promptwoorden",
+      "resources": "Middelen",
+      "title": "Pluginmogelijkheden",
+      "tools": "Hulpmiddelen"
+    },
+    "configuration": {
+      "title": "Pluginconfiguratie"
+    },
+    "connection": {
+      "args": "Startparameters",
+      "command": "Startopdracht",
+      "title": "Verbindingsinformatie",
+      "type": "Verbindingstype",
+      "url": "Serviceadres"
+    },
+    "edit": "Bewerken",
+    "envConfigDescription": "Deze configuraties worden als omgevingsvariabelen doorgegeven aan het proces bij het opstarten van de MCP-server",
+    "httpTypeNotice": "HTTP-type MCP-plugins hebben momenteel geen omgevingsvariabelen die geconfigureerd moeten worden",
     "indexUrl": {
       "title": "Marktindex",
       "tooltip": "Online bewerken wordt momenteel niet ondersteund. Stel in via omgevingsvariabelen tijdens implementatie."
     },
+    "messages": {
+      "connectionUpdateFailed": "Bijwerken van verbindingsinformatie mislukt",
+      "connectionUpdateSuccess": "Verbindingsinformatie succesvol bijgewerkt",
+      "envUpdateFailed": "Opslaan van omgevingsvariabelen mislukt",
+      "envUpdateSuccess": "Omgevingsvariabelen succesvol opgeslagen"
+    },
     "modalDesc": "Na het instellen van de marktlocatie voor plugins, kunt u een aangepaste pluginmarkt gebruiken.",
+    "rules": {
+      "argsRequired": "Voer opstartparameters in",
+      "commandRequired": "Voer het opstartcommando in",
+      "urlRequired": "Voer het serviceadres in"
+    },
+    "saveSettings": "Instellingen opslaan",
     "title": "Instellingen voor pluginmarkt"
   },
   "showInPortal": "Gelieve de details in het portaal te bekijken",
   "store": {
     "actions": {
+      "cancel": "Installatie annuleren",
       "confirmUninstall": "Deze plugin wordt binnenkort verwijderd. Na verwijdering worden de configuraties gewist. Weet u zeker dat u door wilt gaan?",
       "detail": "Details",
       "install": "Installeren",
@@ -184,15 +393,18 @@
     "communityPlugin": "Community",
     "customPlugin": "Aangepast",
     "empty": "Geen geïnstalleerde plugins beschikbaar",
+    "emptySelectHint": "Selecteer een plugin om details te bekijken",
     "installAllPlugins": "Allemaal installeren",
     "networkError": "Kan de pluginwinkel niet laden. Controleer de netwerkverbinding en probeer het opnieuw.",
     "placeholder": "Zoek plugin op naam, beschrijving of trefwoord...",
     "releasedAt": "Uitgebracht op {{createdAt}}",
     "tabs": {
-      "all": "Alle",
-      "installed": "Geïnstalleerd"
+      "installed": "Geïnstalleerd",
+      "mcp": "MCP-plug-in",
+      "old": "LobeChat-plugin"
     },
     "title": "Pluginwinkel"
   },
+  "unknownError": "Onbekende fout",
   "unknownPlugin": "onbekende plugin"
 }

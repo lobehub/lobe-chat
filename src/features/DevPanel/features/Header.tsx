@@ -36,11 +36,7 @@ const Header = ({ title, actions = [], extra, ...rest }: HeaderProps) => {
       <Flexbox align={'center'} gap={4} horizontal>
         {extra}
         {actions.map((action, index) => (
-          <ActionIcon
-            {...action}
-            key={action.title || index}
-            size={{ blockSize: 28, fontSize: 16 }}
-          />
+          <ActionIcon {...action} key={index} size={{ blockSize: 28, size: 16 }} />
         ))}
       </Flexbox>
     </Flexbox>

@@ -1,5 +1,5 @@
-import { Form, type FormItemProps, Icon, copyToClipboard } from '@lobehub/ui';
-import { App, Button, Switch } from 'antd';
+import { Button, Form, type FormItemProps, copyToClipboard } from '@lobehub/ui';
+import { App, Switch } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { CopyIcon } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -35,6 +35,7 @@ const ShareText = memo(() => {
     {
       children: <Switch />,
       label: t('shareModal.withSystemRole'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'withSystemRole',
       valuePropName: 'checked',
@@ -42,6 +43,7 @@ const ShareText = memo(() => {
     {
       children: <Switch />,
       label: t('shareModal.withRole'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'withRole',
       valuePropName: 'checked',
@@ -49,6 +51,7 @@ const ShareText = memo(() => {
     {
       children: <Switch />,
       label: t('shareModal.includeUser'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'includeUser',
       valuePropName: 'checked',
@@ -56,6 +59,7 @@ const ShareText = memo(() => {
     {
       children: <Switch />,
       label: t('shareModal.includeTool'),
+      layout: 'horizontal',
       minWidth: undefined,
       name: 'includeTool',
       valuePropName: 'checked',
@@ -80,7 +84,7 @@ const ShareText = memo(() => {
     <>
       <Button
         block
-        icon={<Icon icon={CopyIcon} />}
+        icon={CopyIcon}
         onClick={async () => {
           await copyToClipboard(content);
           message.success(t('copySuccess', { defaultValue: 'Copy Success', ns: 'common' }));
@@ -96,7 +100,6 @@ const ShareText = memo(() => {
           exportFile(content, `${title}.md`);
         }}
         size={isMobile ? undefined : 'large'}
-        variant={'filled'}
       >
         {t('shareModal.downloadFile')}
       </Button>
@@ -107,7 +110,7 @@ const ShareText = memo(() => {
     <>
       <Flexbox className={styles.body} gap={16} horizontal={!isMobile}>
         <Preview content={content} />
-        <Flexbox className={styles.sidebar} gap={16}>
+        <Flexbox className={styles.sidebar} gap={12}>
           <Form
             initialValues={DEFAULT_FIELD_VALUE}
             items={settings}

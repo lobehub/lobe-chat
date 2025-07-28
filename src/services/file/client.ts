@@ -1,5 +1,5 @@
 import { clientDB } from '@/database/client/db';
-import { FileModel } from '@/database/server/models/file';
+import { FileModel } from '@/database/models/file';
 import { BaseClientService } from '@/services/baseClientService';
 import { clientS3Storage } from '@/services/file/ClientS3';
 

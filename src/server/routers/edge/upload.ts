@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { passwordProcedure, router } from '@/libs/trpc';
+import { passwordProcedure, router } from '@/libs/trpc/edge';
 import { S3 } from '@/server/modules/S3';
 
 export const uploadRouter = router({

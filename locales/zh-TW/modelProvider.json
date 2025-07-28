@@ -66,6 +66,7 @@
       "customRegion": "自定義服務區域",
       "customSessionToken": "自訂 Session Token",
       "description": "輸入你的 AWS AccessKeyId / SecretAccessKey 即可開始會話。應用程式不會記錄你的驗證配置",
+      "imageGenerationDescription": "輸入你的 AWS AccessKeyId / SecretAccessKey 即可開始生成。應用不會記錄你的鑑權配置",
       "title": "使用自定義 Bedrock 驗證資訊"
     }
   },
@@ -164,6 +165,7 @@
     },
     "download": {
       "desc": "Ollama 正在下載該模型，請儘量不要關閉本頁面。重新下載時將會中斷處繼續",
+      "failed": "模型下載失敗，請檢查網路或 Ollama 設定後重試",
       "remainingTime": "剩餘時間",
       "speed": "下載速度",
       "title": "正在下載模型 {{model}}"
@@ -207,6 +209,10 @@
         "title": "使用客戶端請求模式"
       },
       "helpDoc": "配置教程",
+      "responsesApi": {
+        "desc": "採用 OpenAI 新一代請求格式規範，解鎖思維鏈等進階特性",
+        "title": "使用 Responses API 規範"
+      },
       "waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待"
     },
     "createNew": {

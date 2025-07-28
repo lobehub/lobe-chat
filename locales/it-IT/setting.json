@@ -6,6 +6,7 @@
     "chat": "Preferenze di chat",
     "meta": "Informazioni assistente",
     "modal": "Impostazioni modello",
+    "opening": "Impostazioni di apertura",
     "plugin": "Impostazioni plugin",
     "prompt": "Impostazioni ruolo",
     "tts": "Servizio vocale"
@@ -41,6 +42,28 @@
     "sessionDesc": "Impostazioni del personaggio e preferenze di sessione.",
     "sessionWithName": "Impostazioni della sessione · {{name}}",
     "title": "Impostazioni"
+  },
+  "hotkey": {
+    "conflicts": "In conflitto con i tasti di scelta rapida esistenti",
+    "errors": {
+      "CONFLICT": "Conflitto di tasti rapidi: questo tasto è già assegnato ad un'altra funzione",
+      "INVALID_FORMAT": "Formato del tasto rapido non valido: utilizzare un formato corretto (es. CommandOrControl+E)",
+      "INVALID_ID": "ID del tasto rapido non valido",
+      "NO_MODIFIER": "Il tasto rapido deve includere un modificatore (Ctrl, Alt, Shift, ecc.)",
+      "SYSTEM_OCCUPIED": "Il tasto rapido è già occupato dal sistema o da un'altra applicazione",
+      "UNKNOWN": "Aggiornamento fallito: errore sconosciuto"
+    },
+    "group": {
+      "conversation": "Conversazione",
+      "desktop": "Desktop",
+      "essential": "Essenziale"
+    },
+    "invalidCombination": "La combinazione di tasti deve contenere almeno un tasto modificatore (Ctrl, Alt, Shift) e un tasto normale",
+    "record": "Premi un tasto per registrare la scorciatoia",
+    "reset": "Ripristina le scorciatoie predefinite",
+    "title": "Scorciatoie",
+    "updateError": "Aggiornamento del tasto rapido fallito: errore di rete o di sistema",
+    "updateSuccess": "Aggiornamento del tasto rapido riuscito"
   },
   "llm": {
     "aesGcm": "La tua chiave e l'indirizzo dell'agente saranno crittografati utilizzando l'algoritmo di crittografia <1>AES-GCM</1>",
@@ -117,6 +140,7 @@
     "waitingForMore": "Altri modelli sono in fase di <1> pianificazione per l'integrazione </1>, resta sintonizzato"
   },
   "plugin": {
+    "addMCPPlugin": "Aggiungi plugin MCP",
     "addTooltip": "Aggiungi plugin personalizzato",
     "clearDeprecated": "Rimuovi plugin non validi",
     "empty": "Nessun plugin installato al momento, visita il <1>negozio dei plugin</1> per esplorare",
@@ -138,6 +162,7 @@
       "title": "Colore di sfondo"
     },
     "description": {
+      "desc": "Una breve introduzione al tuo assistente, non come impostazione del personaggio",
       "placeholder": "Inserisci la descrizione dell'assistente",
       "title": "Descrizione dell'assistente"
     },
@@ -149,11 +174,27 @@
       "placeholder": "Inserisci la parola di prompt del ruolo",
       "title": "Impostazione del ruolo"
     },
+    "submit": "Aggiorna informazioni assistente",
     "tag": {
+      "desc": "Le etichette dell'assistente verranno visualizzate nel mercato degli assistenti",
       "placeholder": "Inserisci un'etichetta",
       "title": "Etichetta"
     },
     "title": "Informazioni sull'assistente"
+  },
+  "settingAppearance": {
+    "neutralColor": {
+      "desc": "Personalizzazione dei grigi con diverse inclinazioni di colore",
+      "title": "Colore Neutro"
+    },
+    "preview": {
+      "title": "Tavolozza"
+    },
+    "primaryColor": {
+      "desc": "Colore del tema personalizzato",
+      "title": "Colore del Tema"
+    },
+    "title": "Aspetto dell'Applicazione"
   },
   "settingChat": {
     "autoCreateTopicThreshold": {
@@ -194,14 +235,56 @@
       "placeholder": "Il modello di input {{text}} verrà sostituito con le informazioni in tempo reale",
       "title": "Pre-elaborazione dell'input dell'utente"
     },
+    "submit": "Aggiorna preferenze chat",
     "title": "Impostazioni della chat"
+  },
+  "settingChatAppearance": {
+    "fontSize": {
+      "desc": "Dimensione del carattere per il contenuto della chat",
+      "marks": {
+        "normal": "Normale"
+      },
+      "title": "Dimensione del Carattere"
+    },
+    "highlighterTheme": {
+      "title": "Tema di Evidenziazione del Codice"
+    },
+    "mermaidTheme": {
+      "title": "Tema Sirena"
+    },
+    "title": "Aspetto della Chat",
+    "transitionMode": {
+      "desc": "Animazione di transizione dei messaggi di chat",
+      "options": {
+        "fadeIn": "Dissolvenza in entrata",
+        "none": {
+          "desc": "Dipende dal modo in cui il modello restituisce la risposta, si prega di testare autonomamente.",
+          "value": "Nessuna"
+        },
+        "smooth": "Fluido"
+      },
+      "title": "Animazione di transizione"
+    }
+  },
+  "settingCommon": {
+    "lang": {
+      "autoMode": "Segui il sistema",
+      "title": "Lingua"
+    },
+    "themeMode": {
+      "auto": "Automatico",
+      "dark": "Scuro",
+      "light": "Chiaro",
+      "title": "Tema"
+    },
+    "title": "Impostazioni Generali"
   },
   "settingModel": {
     "enableMaxTokens": {
       "title": "Abilita limite di risposta singola"
     },
     "enableReasoningEffort": {
-      "title": "Attiva la regolazione dell'intensità del ragionamento"
+      "title": "Abilita regolazione dell'intensità del ragionamento"
     },
     "frequencyPenalty": {
       "desc": "Maggiore è il valore, più ricca e varia sarà la scelta delle parole; minore è il valore, più semplici e dirette saranno le parole",
@@ -223,7 +306,7 @@
       "title": "Divergenza espressiva"
     },
     "reasoningEffort": {
-      "desc": "Maggiore è il valore, più forte è la capacità di ragionamento, ma potrebbe aumentare il tempo di risposta e il consumo di Token",
+      "desc": "Valori più alti indicano una maggiore capacità di ragionamento, ma potrebbero aumentare i tempi di risposta e il consumo di token",
       "options": {
         "high": "Alto",
         "low": "Basso",
@@ -231,6 +314,7 @@
       },
       "title": "Intensità del ragionamento"
     },
+    "submit": "Aggiorna impostazioni modello",
     "temperature": {
       "desc": "Maggiore è il valore, più creativi e fantasiosi saranno le risposte; minore è il valore, più rigorose saranno le risposte",
       "title": "Attività Creativa",
@@ -241,6 +325,21 @@
       "desc": "Considera quante possibilità, maggiore è il valore, più risposte potenziali vengono accettate; minore è il valore, più si tende a scegliere la risposta più probabile. Non si consiglia di modificarlo insieme all'attività creativa",
       "title": "Apertura Mentale"
     }
+  },
+  "settingOpening": {
+    "openingMessage": {
+      "desc": "Messaggio di apertura quando si avvia la conversazione, utilizzato per presentare le funzionalità dell'assistente",
+      "placeholder": "Ciao, sono l'assistente personalizzato, puoi iniziare subito a conversare con me oppure andare su Impostazioni assistente per completare le mie informazioni.",
+      "title": "Messaggio di apertura"
+    },
+    "openingQuestions": {
+      "desc": "Domande guida visualizzate all'inizio della conversazione",
+      "empty": "Nessuna domanda disponibile",
+      "placeholder": "Inserisci una domanda",
+      "repeat": "La domanda esiste già",
+      "title": "Domande di apertura"
+    },
+    "title": "Impostazioni di apertura"
   },
   "settingPlugin": {
     "title": "Elenco dei plugin"
@@ -292,6 +391,7 @@
       "desc": "Il servizio di riconoscimento vocale, dove 'browser' è il servizio nativo del browser",
       "title": "Servizio di riconoscimento vocale"
     },
+    "submit": "Aggiorna servizio vocale",
     "title": "Servizio vocale",
     "tts": "Impostazioni di sintesi vocale",
     "ttsService": {
@@ -304,36 +404,32 @@
       "title": "Voce di sintesi vocale"
     }
   },
-  "settingTheme": {
-    "avatar": {
-      "title": "Avatar"
-    },
-    "fontSize": {
-      "desc": "Dimensione del carattere per i messaggi",
-      "marks": {
-        "normal": "Normale"
+  "storage": {
+    "actions": {
+      "export": {
+        "button": "Esporta",
+        "exportType": {
+          "agent": "Esporta impostazioni assistente",
+          "agentWithMessage": "Esporta assistente e messaggi",
+          "all": "Esporta impostazioni globali e tutti i dati degli assistenti",
+          "allAgent": "Esporta tutte le impostazioni degli assistenti",
+          "allAgentWithMessage": "Esporta tutti gli assistenti e messaggi",
+          "globalSetting": "Esporta impostazioni globali"
+        },
+        "title": "Esporta dati"
       },
-      "title": "Dimensione del carattere"
+      "import": {
+        "button": "Importa",
+        "title": "Importa dati"
+      },
+      "title": "Operazioni avanzate"
     },
-    "lang": {
-      "autoMode": "Segui il sistema",
-      "title": "Lingua"
+    "desc": "Utilizzo dello storage nel browser attuale",
+    "embeddings": {
+      "used": "Storage vettoriale"
     },
-    "neutralColor": {
-      "desc": "Personalizzazione delle sfumature di grigio per diverse preferenze di colore",
-      "title": "Colore neutro"
-    },
-    "primaryColor": {
-      "desc": "Colore del tema personalizzato",
-      "title": "Colore principale"
-    },
-    "themeMode": {
-      "auto": "Automatico",
-      "dark": "Scuro",
-      "light": "Chiaro",
-      "title": "Tema"
-    },
-    "title": "Impostazioni del tema"
+    "title": "Storage dati",
+    "used": "Utilizzo dello storage"
   },
   "submitAgentModal": {
     "button": "Invia assistente",
@@ -341,6 +437,12 @@
     "metaMiss": "Si prega di completare le informazioni dell'assistente prima di inviare, è necessario includere nome, descrizione e tag",
     "placeholder": "Inserisci l'identificatore dell'assistente, deve essere univoco, ad esempio sviluppo-web",
     "tooltips": "Condividi sul mercato degli assistenti"
+  },
+  "submitFooter": {
+    "reset": "Ripristina",
+    "submit": "Salva",
+    "unSaved": "Modifiche non salvate",
+    "unSavedWarning": "Ci sono modifiche non salvate attualmente"
   },
   "sync": {
     "device": {
@@ -393,6 +495,12 @@
       "placeholder": "Inserisci il suggerimento personalizzato",
       "title": "Suggerimento personalizzato"
     },
+    "generationTopic": {
+      "label": "Modello di denominazione argomenti per disegno AI",
+      "modelDesc": "Modello specificato per la denominazione automatica degli argomenti nel disegno AI",
+      "title": "Denominazione automatica argomenti per disegno AI"
+    },
+    "helpInfo": "Quando crei un nuovo assistente, verranno utilizzate le impostazioni predefinite dell'assistente come valori predefiniti.",
     "historyCompress": {
       "label": "Modello di storia delle conversazioni",
       "modelDesc": "Specifica il modello utilizzato per comprimere la storia delle conversazioni",
@@ -425,8 +533,11 @@
     "agent": "Assistente predefinito",
     "common": "Impostazioni comuni",
     "experiment": "实验",
+    "hotkey": "Scorciatoie",
     "llm": "Modello linguistico",
     "provider": "Fornitore di servizi AI",
+    "proxy": "Proxy di rete",
+    "storage": "Storage dati",
     "sync": "云端同步",
     "system-agent": "Assistente di sistema",
     "tts": "Servizio vocale"

@@ -1,11 +1,13 @@
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ThemeAppearance } from 'antd-style';
 import { ResolvingViewport } from 'next';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { ReactNode } from 'react';
 import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
 import { DEFAULT_LANG } from '@/const/locale';
+import { isDesktop } from '@/const/version';
 import PWAInstall from '@/features/PWAInstall';
 import AuthProvider from '@/layout/AuthProvider';
 import GlobalProvider from '@/layout/GlobalProvider';
@@ -30,20 +32,27 @@ const RootLayout = async ({ children, params, modal }: RootLayoutProps) => {
 
   return (
     <html dir={direction} lang={locale} suppressHydrationWarning>
+      <head>
+        {process.env.DEBUG_REACT_SCAN === '1' && (
+          <script crossOrigin="anonymous" src="https://unpkg.com/react-scan/dist/auto.global.js" />
+        )}
+      </head>
       <body>
-        <GlobalProvider
-          appearance={theme}
-          isMobile={isMobile}
-          locale={locale}
-          neutralColor={neutralColor}
-          primaryColor={primaryColor}
-        >
-          <AuthProvider>
-            {children}
-            {!isMobile && modal}
-          </AuthProvider>
-          <PWAInstall />
-        </GlobalProvider>
+        <NuqsAdapter>
+          <GlobalProvider
+            appearance={theme}
+            isMobile={isMobile}
+            locale={locale}
+            neutralColor={neutralColor}
+            primaryColor={primaryColor}
+          >
+            <AuthProvider>
+              {children}
+              {!isMobile && modal}
+            </AuthProvider>
+            <PWAInstall />
+          </GlobalProvider>
+        </NuqsAdapter>
         <Analytics />
         {inVercel && <SpeedInsights />}
       </body>
@@ -75,7 +84,7 @@ export const generateViewport = async (props: DynamicLayoutProps): ResolvingView
 
 export const generateStaticParams = () => {
   const themes: ThemeAppearance[] = ['dark', 'light'];
-  const mobileOptions = [true, false];
+  const mobileOptions = isDesktop ? [false] : [true, false];
   // only static for serveral page, other go to dynamtic
   const staticLocales: Locales[] = [DEFAULT_LANG, 'zh-CN'];
 

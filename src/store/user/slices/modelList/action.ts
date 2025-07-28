@@ -3,7 +3,7 @@ import useSWR, { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
-import { ModelProvider } from '@/libs/agent-runtime';
+import { ModelProvider } from '@/libs/model-runtime';
 import { UserStore } from '@/store/user';
 import type { ChatModelCard, ModelProviderCard } from '@/types/llm';
 import type {
@@ -202,7 +202,7 @@ export const createModelListSlice: StateCreator<
       async ([p]) => {
         const { modelsService } = await import('@/services/models');
 
-        return modelsService.getChatModels(p);
+        return modelsService.getModels(p);
       },
       {
         onSuccess: async (data) => {

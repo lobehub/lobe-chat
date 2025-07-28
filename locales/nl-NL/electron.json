@@ -1,0 +1,113 @@
+{
+  "notification": {
+    "finishChatGeneration": "AI-bericht is voltooid"
+  },
+  "proxy": {
+    "auth": "Authenticatie vereist",
+    "authDesc": "Als de proxyserver een gebruikersnaam en wachtwoord vereist",
+    "authSettings": "Authenticatie-instellingen",
+    "basicSettings": "Proxy-instellingen",
+    "basicSettingsDesc": "Configureer de verbindingsparameters van de proxyserver",
+    "bypass": "Adressen zonder proxy",
+    "connectionTest": "Verbindingstest",
+    "enable": "Proxy inschakelen",
+    "enableDesc": "Als ingeschakeld wordt het netwerk via de proxyserver benaderd",
+    "password": "Wachtwoord",
+    "password_placeholder": "Voer wachtwoord in",
+    "port": "Poort",
+    "resetButton": "Resetten",
+    "saveButton": "Opslaan",
+    "saveFailed": "Opslaan mislukt: {{error}}",
+    "saveSuccess": "Proxy-instellingen succesvol opgeslagen",
+    "server": "Serveradres",
+    "testButton": "Test verbinding",
+    "testDescription": "Test de verbinding met de huidige proxyconfiguratie om te verifiëren of de instellingen correct werken",
+    "testFailed": "Verbinding mislukt",
+    "testSuccessWithTime": "Verbindingstest geslaagd, duurde {{time}} ms",
+    "testUrl": "Testadres",
+    "testUrlPlaceholder": "Voer de te testen URL in",
+    "testing": "Verbinding aan het testen...",
+    "type": "Proxy type",
+    "unsavedChanges": "U heeft niet-opgeslagen wijzigingen",
+    "username": "Gebruikersnaam",
+    "username_placeholder": "Voer gebruikersnaam in",
+    "validation": {
+      "passwordRequired": "Wachtwoord is verplicht bij ingeschakelde authenticatie",
+      "portInvalid": "Poort moet een getal tussen 1 en 65535 zijn",
+      "portRequired": "Poort is verplicht bij ingeschakelde proxy",
+      "serverInvalid": "Voer een geldig serveradres in (IP of domeinnaam)",
+      "serverRequired": "Serveradres is verplicht bij ingeschakelde proxy",
+      "typeRequired": "Proxytype is verplicht bij ingeschakelde proxy",
+      "usernameRequired": "Gebruikersnaam is verplicht bij ingeschakelde authenticatie"
+    }
+  },
+  "remoteServer": {
+    "authError": "Autorisatiefout: {{error}}",
+    "authPending": "Voltooi de autorisatie in de browser",
+    "configDesc": "Verbind met de externe LobeChat-server om gegevenssynchronisatie in te schakelen",
+    "configError": "Configuratiefout",
+    "configTitle": "Cloud-synchronisatie configureren",
+    "connect": "Verbinden en autoriseren",
+    "connected": "Verbonden",
+    "disconnect": "Verbinding verbreken",
+    "disconnectError": "Verbinding verbreken mislukt",
+    "disconnected": "Niet verbonden",
+    "fetchError": "Configuratie ophalen mislukt",
+    "invalidUrl": "Voer een geldige URL in",
+    "serverUrl": "Serveradres",
+    "statusConnected": "Verbonden",
+    "statusDisconnected": "Niet verbonden",
+    "urlRequired": "Voer het serveradres in"
+  },
+  "sync": {
+    "continue": "Doorgaan",
+    "inCloud": "Momenteel gebruik makend van cloud synchronisatie",
+    "inLocalStorage": "Momenteel gebruik makend van lokale opslag",
+    "isIniting": "Bezig met initialiseren...",
+    "lobehubCloud": {
+      "description": "De door de officiële instantie aangeboden cloudversie",
+      "title": "LobeHub Cloud"
+    },
+    "local": {
+      "description": "Gebruik makend van een lokale database, volledig offline beschikbaar",
+      "title": "Lokale database"
+    },
+    "mode": {
+      "cloudSync": "Cloud synchronisatie",
+      "localStorage": "Lokale opslag",
+      "title": "Kies je verbindingsmodus",
+      "useSelfHosted": "Gebruik je een zelfgehoste instantie?"
+    },
+    "selfHosted": {
+      "description": "Gemeenschapsversie die zelf is geïmplementeerd",
+      "title": "Zelfgehoste instantie"
+    }
+  },
+  "updater": {
+    "checkingUpdate": "Controleer op updates",
+    "checkingUpdateDesc": "Bezig met het ophalen van versie-informatie...",
+    "downloadNewVersion": "Download nieuwe versie",
+    "downloadingUpdate": "Update aan het downloaden",
+    "downloadingUpdateDesc": "De update wordt gedownload, even geduld...",
+    "installLater": "Bij de volgende opstarten bijwerken",
+    "isLatestVersion": "Je hebt de nieuwste versie",
+    "isLatestVersionDesc": "Geweldig, de versie {{version}} die je gebruikt is de meest recente versie.",
+    "later": "Later bijwerken",
+    "newVersionAvailable": "Nieuwe versie beschikbaar",
+    "newVersionAvailableDesc": "Nieuwe versie {{version}} gevonden, wilt u deze nu downloaden?",
+    "restartAndInstall": "Installeer de update en herstart",
+    "updateError": "Updatefout",
+    "updateReady": "Update gereed",
+    "updateReadyDesc": "Nieuwe versie {{version}} is gedownload, herstart de applicatie om de installatie te voltooien.",
+    "upgradeNow": "Nu bijwerken"
+  },
+  "waitingOAuth": {
+    "cancel": "Annuleren",
+    "description": "De browser heeft de autorisatiepagina geopend, voltooi de autorisatie in de browser",
+    "error": "Autorisatie mislukt: {{error}}",
+    "errorTitle": "Verbinding met autorisatie mislukt",
+    "helpText": "Als de browser niet automatisch opent, klik dan op annuleren en probeer het opnieuw",
+    "retry": "Opnieuw proberen",
+    "title": "Wachten op autorisatieverbinding"
+  }
+}

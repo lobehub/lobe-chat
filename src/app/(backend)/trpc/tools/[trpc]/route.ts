@@ -2,7 +2,7 @@ import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import type { NextRequest } from 'next/server';
 
 import { pino } from '@/libs/logger';
-import { createContext } from '@/server/context';
+import { createLambdaContext } from '@/libs/trpc/lambda/context';
 import { toolsRouter } from '@/server/routers/tools';
 
 const handler = (req: NextRequest) =>
@@ -10,7 +10,7 @@ const handler = (req: NextRequest) =>
     /**
      * @link https://trpc.io/docs/v11/context
      */
-    createContext: () => createContext(req),
+    createContext: () => createLambdaContext(req),
 
     endpoint: '/trpc/tools',
 

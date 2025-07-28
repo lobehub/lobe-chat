@@ -1,5 +1,5 @@
-import { Input } from 'antd';
-import { InputRef, InputProps as Props } from 'antd/es/input/Input';
+import { InputPassword, InputProps as Props } from '@lobehub/ui';
+import { InputRef } from 'antd/es/input/Input';
 import { memo, useEffect, useRef, useState } from 'react';
 
 interface FormPasswordProps extends Omit<Props, 'onChange'> {
@@ -17,7 +17,7 @@ const FormPassword = memo<FormPasswordProps>(({ onChange, value: defaultValue, .
   }, [defaultValue]);
 
   return (
-    <Input.Password
+    <InputPassword
       onBlur={() => {
         onChange?.(value);
       }}

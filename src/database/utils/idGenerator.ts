@@ -4,7 +4,11 @@ import { createNanoId } from '@/utils/uuid';
 
 const prefixes = {
   agents: 'agt',
+  documents: 'docs',
   files: 'file',
+  generationBatches: 'gb',
+  generationTopics: 'gt',
+  generations: 'gen',
   knowledgeBases: 'kb',
   messages: 'msg',
   plugins: 'plg',

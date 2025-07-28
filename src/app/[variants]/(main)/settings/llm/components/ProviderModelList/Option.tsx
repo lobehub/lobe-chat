@@ -1,6 +1,5 @@
 import { ModelIcon } from '@lobehub/icons';
-import { ActionIcon, Tooltip } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { ActionIcon, Text, Tooltip } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { Recycle } from 'lucide-react';
@@ -23,7 +22,10 @@ interface OptionRenderProps {
   removed?: boolean;
 }
 const OptionRender = memo<OptionRenderProps>(({ displayName, id, provider, isAzure, removed }) => {
-  const model = useUserStore((s) => modelProviderSelectors.getModelCardById(id)(s), isEqual);
+  const model = useUserStore(
+    (s) => modelProviderSelectors.getModelCardById(id, provider)(s),
+    isEqual,
+  );
   const { t } = useTranslation('components');
   const theme = useTheme();
   // if there is isCustom, it means it is a user defined custom model
@@ -44,9 +46,9 @@ const OptionRender = memo<OptionRenderProps>(({ displayName, id, provider, isAzu
             {displayName}
             <ModelInfoTags directionReverse placement={'top'} {...model!} />
           </Flexbox>
-          <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
+          <Text style={{ fontSize: 12 }} type={'secondary'}>
             {id}
-          </Typography.Text>
+          </Text>
         </Flexbox>
       </Flexbox>
       {removed && (

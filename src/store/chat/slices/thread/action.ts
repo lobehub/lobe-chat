@@ -158,6 +158,7 @@ export const chatThreadMessage: StateCreator<
 
     get().internal_toggleMessageLoading(false, tempMessageId);
 
+    if (!parentMessageId) return;
     //  update assistant update to make it rerank
     useSessionStore.getState().triggerSessionUpdate(get().activeId);
 
@@ -214,8 +215,6 @@ export const chatThreadMessage: StateCreator<
       enable && !!topicId && !isDeprecatedEdition ? [SWR_USE_FETCH_THREADS, topicId] : null,
       async ([, topicId]: [string, string]) => threadService.getThreads(topicId),
       {
-        suspense: true,
-        fallbackData: [],
         onSuccess: (threads) => {
           const nextMap = { ...get().threadMaps, [topicId!]: threads };
 

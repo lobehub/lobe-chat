@@ -12,6 +12,7 @@ import { topicService } from '@/services/topic';
 import { traceService } from '@/services/trace';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
+import { ChatErrorType } from '@/types/fetch';
 import {
   ChatMessage,
   ChatMessageError,
@@ -24,7 +25,7 @@ import {
 import { ChatImageItem } from '@/types/message/image';
 import { GroundingSearch } from '@/types/search';
 import { TraceEventPayloads } from '@/types/trace';
-import { setNamespace } from '@/utils/storeDebug';
+import { Action, setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
 import type { ChatStoreState } from '../../initialState';
@@ -101,7 +102,7 @@ export interface ChatMessageAction {
   internal_createMessage: (
     params: CreateMessageParams,
     context?: { tempMessageId?: string; skipRefresh?: boolean },
-  ) => Promise<string>;
+  ) => Promise<string | undefined>;
   /**
    * create a temp message for optimistic update
    * otherwise the message will be too slow to show
@@ -129,7 +130,7 @@ export interface ChatMessageAction {
     key: keyof ChatStoreState,
     loading: boolean,
     id?: string,
-    action?: string,
+    action?: Action,
   ) => AbortController | undefined;
 }
 
@@ -327,7 +328,12 @@ export const chatMessage: StateCreator<
   },
 
   internal_createMessage: async (message, context) => {
-    const { internal_createTmpMessage, refreshMessages, internal_toggleMessageLoading } = get();
+    const {
+      internal_createTmpMessage,
+      refreshMessages,
+      internal_toggleMessageLoading,
+      internal_dispatchMessage,
+    } = get();
     let tempId = context?.tempMessageId;
     if (!tempId) {
       // use optimistic update to avoid the slow waiting
@@ -336,14 +342,25 @@ export const chatMessage: StateCreator<
       internal_toggleMessageLoading(true, tempId);
     }
 
-    const id = await messageService.createMessage(message);
-    if (!context?.skipRefresh) {
-      internal_toggleMessageLoading(true, tempId);
-      await refreshMessages();
-    }
+    try {
+      const id = await messageService.createMessage(message);
+      if (!context?.skipRefresh) {
+        internal_toggleMessageLoading(true, tempId);
+        await refreshMessages();
+      }
 
-    internal_toggleMessageLoading(false, tempId);
-    return id;
+      internal_toggleMessageLoading(false, tempId);
+      return id;
+    } catch (e) {
+      internal_toggleMessageLoading(false, tempId);
+      internal_dispatchMessage({
+        id: tempId,
+        type: 'updateMessage',
+        value: {
+          error: { type: ChatErrorType.CreateMessageError, message: (e as Error).message, body: e },
+        },
+      });
+    }
   },
 
   internal_fetchMessages: async () => {

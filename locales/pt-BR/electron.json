@@ -1,0 +1,113 @@
+{
+  "notification": {
+    "finishChatGeneration": "Mensagem de IA gerada com sucesso"
+  },
+  "proxy": {
+    "auth": "Autenticação necessária",
+    "authDesc": "Se o servidor proxy requer nome de usuário e senha",
+    "authSettings": "Configurações de autenticação",
+    "basicSettings": "Configurações do proxy",
+    "basicSettingsDesc": "Configure os parâmetros de conexão do servidor proxy",
+    "bypass": "Endereços que não usam proxy",
+    "connectionTest": "Teste de conexão",
+    "enable": "Ativar proxy",
+    "enableDesc": "Quando ativado, o acesso à rede será feito através do servidor proxy",
+    "password": "Senha",
+    "password_placeholder": "Digite a senha",
+    "port": "Porta",
+    "resetButton": "Redefinir",
+    "saveButton": "Salvar",
+    "saveFailed": "Falha ao salvar: {{error}}",
+    "saveSuccess": "Configurações do proxy salvas com sucesso",
+    "server": "Endereço do servidor",
+    "testButton": "Testar conexão",
+    "testDescription": "Teste a conexão usando a configuração atual do proxy para verificar se está funcionando corretamente",
+    "testFailed": "Falha na conexão",
+    "testSuccessWithTime": "Conexão testada com sucesso, tempo gasto {{time}} ms",
+    "testUrl": "URL de teste",
+    "testUrlPlaceholder": "Digite a URL a ser testada",
+    "testing": "Testando conexão...",
+    "type": "Tipo de proxy",
+    "unsavedChanges": "Você tem alterações não salvas",
+    "username": "Nome de usuário",
+    "username_placeholder": "Digite o nome de usuário",
+    "validation": {
+      "passwordRequired": "Senha é obrigatória quando a autenticação está ativada",
+      "portInvalid": "A porta deve ser um número entre 1 e 65535",
+      "portRequired": "Porta é obrigatória quando o proxy está ativado",
+      "serverInvalid": "Por favor, insira um endereço de servidor válido (IP ou domínio)",
+      "serverRequired": "Endereço do servidor é obrigatório quando o proxy está ativado",
+      "typeRequired": "Tipo de proxy é obrigatório quando o proxy está ativado",
+      "usernameRequired": "Nome de usuário é obrigatório quando a autenticação está ativada"
+    }
+  },
+  "remoteServer": {
+    "authError": "Erro de autorização: {{error}}",
+    "authPending": "Por favor, complete a autorização no navegador",
+    "configDesc": "Conecte-se ao servidor LobeChat remoto para habilitar a sincronização de dados",
+    "configError": "Erro na configuração",
+    "configTitle": "Configurar sincronização na nuvem",
+    "connect": "Conectar e autorizar",
+    "connected": "Conectado",
+    "disconnect": "Desconectar",
+    "disconnectError": "Falha ao desconectar",
+    "disconnected": "Desconectado",
+    "fetchError": "Falha ao obter a configuração",
+    "invalidUrl": "Por favor, insira um URL válido",
+    "serverUrl": "Endereço do servidor",
+    "statusConnected": "Conectado",
+    "statusDisconnected": "Desconectado",
+    "urlRequired": "Por favor, insira o endereço do servidor"
+  },
+  "sync": {
+    "continue": "Continuar",
+    "inCloud": "Atualmente usando sincronização em nuvem",
+    "inLocalStorage": "Atualmente usando armazenamento local",
+    "isIniting": "Inicializando...",
+    "lobehubCloud": {
+      "description": "Versão em nuvem fornecida oficialmente",
+      "title": "LobeHub Cloud"
+    },
+    "local": {
+      "description": "Usando banco de dados local, totalmente disponível offline",
+      "title": "Banco de Dados Local"
+    },
+    "mode": {
+      "cloudSync": "Sincronização em Nuvem",
+      "localStorage": "Armazenamento Local",
+      "title": "Escolha seu modo de conexão",
+      "useSelfHosted": "Usar instância auto-hospedada?"
+    },
+    "selfHosted": {
+      "description": "Versão comunitária autoimplantada",
+      "title": "Instância Auto-Hospedada"
+    }
+  },
+  "updater": {
+    "checkingUpdate": "Verificando atualizações",
+    "checkingUpdateDesc": "Obtendo informações da versão...",
+    "downloadNewVersion": "Baixar nova versão",
+    "downloadingUpdate": "Baixando atualização",
+    "downloadingUpdateDesc": "A atualização está sendo baixada, por favor aguarde...",
+    "installLater": "Atualizar na próxima inicialização",
+    "isLatestVersion": "Você já está na versão mais recente",
+    "isLatestVersionDesc": "Ótimo, a versão {{version}} que você está usando já é a mais atual.",
+    "later": "Atualizar depois",
+    "newVersionAvailable": "Nova versão disponível",
+    "newVersionAvailableDesc": "Uma nova versão {{version}} foi encontrada, deseja baixar agora?",
+    "restartAndInstall": "Instalar atualização e reiniciar",
+    "updateError": "Erro na atualização",
+    "updateReady": "Atualização pronta",
+    "updateReadyDesc": "A nova versão {{version}} foi baixada com sucesso, reinicie o aplicativo para concluir a instalação.",
+    "upgradeNow": "Atualizar agora"
+  },
+  "waitingOAuth": {
+    "cancel": "Cancelar",
+    "description": "A página de autorização foi aberta no navegador, por favor, complete a autorização no navegador",
+    "error": "Falha na autorização: {{error}}",
+    "errorTitle": "Falha na conexão de autorização",
+    "helpText": "Se o navegador não abrir automaticamente, clique em cancelar e tente novamente",
+    "retry": "Tentar novamente",
+    "title": "Aguardando conexão de autorização"
+  }
+}

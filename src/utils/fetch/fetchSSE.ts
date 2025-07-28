@@ -1,15 +1,15 @@
-import { isObject } from 'lodash-es';
-
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/const/trace';
+import { parseToolCalls } from '@/libs/model-runtime';
 import { ChatErrorType } from '@/types/fetch';
-import { SmoothingParams } from '@/types/llm';
+import { ResponseAnimation, ResponseAnimationStyle } from '@/types/llm';
 import {
   ChatMessageError,
   MessageToolCall,
   MessageToolCallChunk,
   MessageToolCallSchema,
   ModelReasoning,
+  ModelSpeed,
   ModelTokensUsage,
 } from '@/types/message';
 import { ChatImageChunk } from '@/types/message/image';
@@ -18,7 +18,6 @@ import { nanoid } from '@/utils/uuid';
 
 import { fetchEventSource } from './fetchEventSource';
 import { getMessageError } from './parseError';
-import { parseToolCalls } from './parseToolCalls';
 
 type SSEFinishType = 'done' | 'error' | 'abort';
 
@@ -29,6 +28,7 @@ export type OnFinishHandler = (
     images?: ChatImageChunk[];
     observationId?: string | null;
     reasoning?: ModelReasoning;
+    speed?: ModelSpeed;
     toolCalls?: MessageToolCall[];
     traceId?: string | null;
     type?: SSEFinishType;
@@ -39,6 +39,11 @@ export type OnFinishHandler = (
 export interface MessageUsageChunk {
   type: 'usage';
   usage: ModelTokensUsage;
+}
+
+export interface MessageSpeedChunk {
+  speed: ModelSpeed;
+  type: 'speed';
 }
 
 export interface MessageTextChunk {
@@ -82,9 +87,10 @@ export interface FetchSSEOptions {
       | MessageReasoningChunk
       | MessageGroundingChunk
       | MessageUsageChunk
-      | MessageBase64ImageChunk,
+      | MessageBase64ImageChunk
+      | MessageSpeedChunk,
   ) => void;
-  smoothing?: SmoothingParams | boolean;
+  responseAnimation?: ResponseAnimation;
 }
 
 const START_ANIMATION_SPEED = 10; // 默认起始速度
@@ -294,6 +300,14 @@ const createSmoothToolCalls = (params: {
   };
 };
 
+export const standardizeAnimationStyle = (
+  animationStyle?: ResponseAnimation,
+): Exclude<ResponseAnimation, ResponseAnimationStyle> => {
+  return typeof animationStyle === 'object'
+    ? animationStyle
+    : { text: animationStyle, toolsCalling: animationStyle };
+};
+
 /**
  * Fetch data using stream method
  */
@@ -305,12 +319,27 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   let finishedType: SSEFinishType = 'done';
   let response!: Response;
 
-  const { smoothing } = options;
+  const {
+    text,
+    toolsCalling,
+    speed: smoothingSpeed,
+  } = standardizeAnimationStyle(options.responseAnimation ?? {});
+  const shouldSkipTextProcessing = text === 'none';
+  const textSmoothing = text === 'smooth';
+  const toolsCallingSmoothing = toolsCalling === 'smooth';
 
-  const textSmoothing = typeof smoothing === 'boolean' ? smoothing : (smoothing?.text ?? true);
-  const toolsCallingSmoothing =
-    typeof smoothing === 'boolean' ? smoothing : (smoothing?.toolsCalling ?? true);
-  const smoothingSpeed = isObject(smoothing) ? smoothing.speed : undefined;
+  // 添加文本buffer和计时器相关变量
+  let textBuffer = '';
+  // eslint-disable-next-line no-undef
+  let bufferTimer: NodeJS.Timeout | null = null;
+  const BUFFER_INTERVAL = 300; // 300ms
+
+  const flushTextBuffer = () => {
+    if (textBuffer) {
+      options.onMessageHandle?.({ text: textBuffer, type: 'text' });
+      textBuffer = '';
+    }
+  };
 
   let output = '';
   const textController = createSmoothMessage({
@@ -332,6 +361,18 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     startSpeed: smoothingSpeed,
   });
 
+  let thinkingBuffer = '';
+  // eslint-disable-next-line no-undef
+  let thinkingBufferTimer: NodeJS.Timeout | null = null;
+
+  // 创建一个函数来处理buffer的刷新
+  const flushThinkingBuffer = () => {
+    if (thinkingBuffer) {
+      options.onMessageHandle?.({ text: thinkingBuffer, type: 'reasoning' });
+      thinkingBuffer = '';
+    }
+  };
+
   const toolCallsController = createSmoothToolCalls({
     onToolCallsUpdate: (toolCalls, isAnimationActives) => {
       options.onMessageHandle?.({ isAnimationActives, tool_calls: toolCalls, type: 'tool_calls' });
@@ -342,6 +383,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   let grounding: GroundingSearch | undefined = undefined;
   let usage: ModelTokensUsage | undefined = undefined;
   let images: ChatImageChunk[] = [];
+  let speed: ModelSpeed | undefined = undefined;
 
   await fetchEventSource(url, {
     body: options.body,
@@ -415,13 +457,26 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
           // skip empty text
           if (!data) break;
 
-          if (textSmoothing) {
+          if (shouldSkipTextProcessing) {
+            output += data;
+            options.onMessageHandle?.({ text: data, type: 'text' });
+          } else if (textSmoothing) {
             textController.pushToQueue(data);
 
             if (!textController.isAnimationActive) textController.startAnimation();
           } else {
             output += data;
-            options.onMessageHandle?.({ text: data, type: 'text' });
+
+            // 使用buffer机制
+            textBuffer += data;
+
+            // 如果还没有设置计时器，创建一个
+            if (!bufferTimer) {
+              bufferTimer = setTimeout(() => {
+                flushTextBuffer();
+                bufferTimer = null;
+              }, BUFFER_INTERVAL);
+            }
           }
 
           break;
@@ -430,6 +485,12 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         case 'usage': {
           usage = data;
           options.onMessageHandle?.({ type: 'usage', usage: data });
+          break;
+        }
+
+        case 'speed': {
+          speed = data;
+          options.onMessageHandle?.({ speed: data, type: 'speed' });
           break;
         }
 
@@ -451,7 +512,17 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
             if (!thinkingController.isAnimationActive) thinkingController.startAnimation();
           } else {
             thinking += data;
-            options.onMessageHandle?.({ text: data, type: 'reasoning' });
+
+            // 使用buffer机制
+            thinkingBuffer += data;
+
+            // 如果还没有设置计时器，创建一个
+            if (!thinkingBufferTimer) {
+              thinkingBufferTimer = setTimeout(() => {
+                flushThinkingBuffer();
+                thinkingBufferTimer = null;
+              }, BUFFER_INTERVAL);
+            }
           }
 
           break;
@@ -494,6 +565,17 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     textController.stopAnimation();
     toolCallsController.stopAnimations();
 
+    // 确保所有缓冲区数据都被处理
+    if (bufferTimer) {
+      clearTimeout(bufferTimer);
+      flushTextBuffer();
+    }
+
+    if (thinkingBufferTimer) {
+      clearTimeout(thinkingBufferTimer);
+      flushThinkingBuffer();
+    }
+
     if (response.ok) {
       // if there is no onMessageHandler, we should call onHandleMessage first
       if (!triggerOnMessageHandler) {
@@ -517,6 +599,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         images: images.length > 0 ? images : undefined,
         observationId,
         reasoning: !!thinking ? { content: thinking, signature: thinkingSignature } : undefined,
+        speed,
         toolCalls,
         traceId,
         type: finishedType,

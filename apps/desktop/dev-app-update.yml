@@ -1,0 +1,6 @@
+provider: github
+owner: lobehub
+repo: lobe-chat
+updaterCacheDirName: electron-app-updater
+allowPrerelease: true
+channel: nightly

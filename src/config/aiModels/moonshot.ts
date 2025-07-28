@@ -1,6 +1,30 @@
 import { AIChatModelCard } from '@/types/aiModel';
 
+// https://platform.moonshot.cn/docs/pricing/chat
 const moonshotChatModels: AIChatModelCard[] = [
+  {
+    abilities: {
+      functionCall: true,
+      search: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'kimi-k2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。',
+    displayName: 'Kimi K2',
+    enabled: true,
+    id: 'kimi-k2-0711-preview',
+    pricing: {
+      cachedInput: 1,
+      currency: 'CNY',
+      input: 4,
+      output: 16,
+    },
+    releasedAt: '2025-07-11',
+    settings: {
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
   {
     abilities: {
       functionCall: true,
@@ -16,8 +40,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     pricing: {
       cachedInput: 1,
       currency: 'CNY',
-      input: 60,
-      output: 60,
+      input: 10, // 128k 上下文时
+      output: 30,
     },
     releasedAt: '2025-02-17',
     settings: {
@@ -27,18 +51,36 @@ const moonshotChatModels: AIChatModelCard[] = [
   },
   {
     abilities: {
+      reasoning: true,
+      vision: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'kimi-thinking-preview 模型是月之暗面提供的具有多模态推理能力和通用推理能力的多模态思考模型，它擅长深度推理，帮助解决更多更难的事情',
+    displayName: 'Kimi Thinking Preview',
+    enabled: true,
+    id: 'kimi-thinking-preview',
+    pricing: {
+      currency: 'CNY',
+      input: 200,
+      output: 200,
+    },
+    releasedAt: '2025-05-06',
+    type: 'chat',
+  },
+  {
+    abilities: {
       functionCall: true,
       search: true,
     },
     contextWindowTokens: 131_072,
-    description:
-      'Moonshot V1 Auto 可以根据当前上下文占用的 Tokens 数量来选择合适的模型',
+    description: 'Moonshot V1 Auto 可以根据当前上下文占用的 Tokens 数量来选择合适的模型',
     displayName: 'Moonshot V1 Auto',
     id: 'moonshot-v1-auto',
     pricing: {
       currency: 'CNY',
-      input: 60,
-      output: 60,
+      input: 10, // 128k 上下文时
+      output: 30,
     },
     settings: {
       searchImpl: 'params',
@@ -57,8 +99,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-8k',
     pricing: {
       currency: 'CNY',
-      input: 12,
-      output: 12,
+      input: 2,
+      output: 10,
     },
     settings: {
       searchImpl: 'params',
@@ -77,8 +119,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-32k',
     pricing: {
       currency: 'CNY',
-      input: 24,
-      output: 24,
+      input: 5,
+      output: 20,
     },
     settings: {
       searchImpl: 'params',
@@ -97,8 +139,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-128k',
     pricing: {
       currency: 'CNY',
-      input: 60,
-      output: 60,
+      input: 10,
+      output: 30,
     },
     settings: {
       searchImpl: 'params',
@@ -118,8 +160,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-8k-vision-preview',
     pricing: {
       currency: 'CNY',
-      input: 12,
-      output: 12,
+      input: 2,
+      output: 10,
     },
     releasedAt: '2025-01-14',
     settings: {
@@ -140,8 +182,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-32k-vision-preview',
     pricing: {
       currency: 'CNY',
-      input: 24,
-      output: 24,
+      input: 5,
+      output: 20,
     },
     releasedAt: '2025-01-14',
     settings: {
@@ -162,8 +204,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     id: 'moonshot-v1-128k-vision-preview',
     pricing: {
       currency: 'CNY',
-      input: 60,
-      output: 60,
+      input: 10,
+      output: 30,
     },
     releasedAt: '2025-01-14',
     settings: {

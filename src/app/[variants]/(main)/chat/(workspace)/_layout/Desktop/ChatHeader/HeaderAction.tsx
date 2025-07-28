@@ -10,13 +10,16 @@ import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
+import { HotkeyEnum } from '@/types/hotkey';
 
 import SettingButton from '../../../features/SettingButton';
 import ShareButton from '../../../features/ShareButton';
 
-const HeaderAction = memo(() => {
+const HeaderAction = memo<{ className?: string }>(({ className }) => {
   const { t } = useTranslation('chat');
-
+  const hotkey = useUserStore(settingsSelectors.getHotkeyById(HotkeyEnum.ToggleRightPanel));
   const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
     systemStatusSelectors.showChatSideBar(s),
     s.toggleChatSideBar,
@@ -25,13 +28,17 @@ const HeaderAction = memo(() => {
   const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);
 
   return (
-    <Flexbox gap={4} horizontal>
+    <Flexbox className={className} gap={4} horizontal>
       <ShareButton />
       <ActionIcon
         icon={showAgentSettings ? PanelRightClose : PanelRightOpen}
         onClick={() => toggleConfig()}
         size={DESKTOP_HEADER_ICON_SIZE}
-        title={t('roleAndArchive')}
+        title={t('toggleRightPanel.title', { ns: 'hotkey' })}
+        tooltipProps={{
+          hotkey,
+          placement: 'bottom',
+        }}
       />
       {isAgentEditable && <SettingButton />}
     </Flexbox>

@@ -7,6 +7,20 @@
     "images": "Imágenes:",
     "prompt": "Palabra de aviso"
   },
+  "localFiles": {
+    "file": "Archivo",
+    "folder": "Carpeta",
+    "open": "Abrir",
+    "openFile": "Abrir archivo",
+    "openFolder": "Abrir carpeta",
+    "read": {
+      "more": "Ver más"
+    },
+    "readFile": "Leer archivo",
+    "readFileError": "Error al leer el archivo, por favor verifica si la ruta del archivo es correcta",
+    "readFiles": "Leer archivos",
+    "readFilesError": "Error al leer los archivos, por favor verifica si la ruta del archivo es correcta"
+  },
   "search": {
     "createNewSearch": "Crear un nuevo registro de búsqueda",
     "emptyResult": "No se encontraron resultados, por favor modifica las palabras clave y vuelve a intentarlo",
@@ -19,10 +33,50 @@
       "placeholder": "Palabras clave",
       "tooltip": "Se volverán a obtener los resultados de búsqueda y se creará un nuevo mensaje de resumen"
     },
-    "searchEngine": "Motor de búsqueda:",
+    "searchCategory": {
+      "placeholder": "Buscar categoría",
+      "title": "Categoría de búsqueda:",
+      "value": {
+        "files": "Archivos",
+        "general": "General",
+        "images": "Imágenes",
+        "it": "Tecnologías de la información",
+        "map": "Mapas",
+        "music": "Música",
+        "news": "Noticias",
+        "science": "Ciencia",
+        "social_media": "Redes sociales",
+        "videos": "Videos"
+      }
+    },
+    "searchEngine": {
+      "placeholder": "Motor de búsqueda",
+      "title": "Motor de búsqueda:"
+    },
     "searchResult": "Número de búsquedas:",
+    "searchTimeRange": {
+      "title": "Rango de tiempo:",
+      "value": {
+        "anytime": "Sin límite de tiempo",
+        "day": "En un día",
+        "month": "En un mes",
+        "week": "En una semana",
+        "year": "En un año"
+      }
+    },
     "summary": "Resumen",
     "summaryTooltip": "Resumir el contenido actual",
     "viewMoreResults": "Ver más {{results}} resultados"
+  },
+  "updateArgs": {
+    "duplicateKeyError": "La clave del campo debe ser única",
+    "form": {
+      "add": "Agregar un elemento",
+      "key": "Clave del campo",
+      "value": "Valor del campo"
+    },
+    "formValidationFailed": "La validación del formulario falló, por favor verifica el formato de los parámetros",
+    "keyRequired": "La clave del campo no puede estar vacía",
+    "stringifyError": "No se puede serializar el parámetro, por favor verifica el formato de los parámetros"
   }
 }

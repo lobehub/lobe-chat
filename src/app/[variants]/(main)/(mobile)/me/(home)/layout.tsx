@@ -1,5 +1,6 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, Suspense } from 'react';
 
+import Loading from '@/components/Loading/BrandTextLoading';
 import MobileContentLayout from '@/components/server/MobileNavLayout';
 import InitClientDB from '@/features/InitClientDB';
 
@@ -8,7 +9,7 @@ import Header from './features/Header';
 const Layout = ({ children }: PropsWithChildren) => {
   return (
     <MobileContentLayout header={<Header />} withNav>
-      {children}
+      <Suspense fallback={<Loading />}>{children}</Suspense>
       <InitClientDB />
     </MobileContentLayout>
   );

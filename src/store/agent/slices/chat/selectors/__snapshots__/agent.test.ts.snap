@@ -9,15 +9,16 @@ exports[`agentSelectors > defaultAgentConfig > should merge DEFAULT_AGENT_CONFIG
     "enableCompressHistory": true,
     "enableHistoryCount": true,
     "enableReasoning": false,
-    "historyCount": 8,
+    "historyCount": 20,
     "reasoningBudgetToken": 1024,
     "searchFCModel": {
-      "model": "gpt-4o-mini",
+      "model": "gpt-4.1-mini",
       "provider": "openai",
     },
     "searchMode": "off",
   },
   "model": "gpt-3.5-turbo",
+  "openingQuestions": [],
   "params": {
     "frequency_penalty": 0,
     "presence_penalty": 0,

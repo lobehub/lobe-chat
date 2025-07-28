@@ -1,5 +1,4 @@
-import { Tooltip } from '@lobehub/ui';
-import { Tag, Typography } from 'antd';
+import { Tag, Text, Tooltip } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -9,7 +8,7 @@ import { EngineAvatarGroup } from '@/tools/web-browsing/components/EngineAvatar'
 import CategoryAvatar from './CategoryAvatar';
 
 interface TitleExtraProps {
-  category: string;
+  category?: string;
   engines: string[];
   highlight?: boolean;
   score: number;
@@ -27,15 +26,15 @@ const TitleExtra = memo<TitleExtraProps>(({ category, score, highlight, engines 
             {score.toFixed(1)}
           </Tag>
         ) : (
-          <Typography.Text
+          <Text
             style={{ textAlign: 'center', width: 32, wordBreak: 'keep-all' }}
             type={'secondary'}
           >
             {score.toFixed(1)}
-          </Typography.Text>
+          </Text>
         )}
       </Tooltip>
-      <CategoryAvatar category={category} />
+      <CategoryAvatar category={category || 'general'} />
     </Flexbox>
   );
 });

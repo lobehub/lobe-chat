@@ -1,0 +1,64 @@
+{
+  "addUserMessage": {
+    "desc": "Dodaj bieżącą treść jako wiadomość użytkownika, ale nie wyzwalaj generowania",
+    "title": "Dodaj wiadomość użytkownika"
+  },
+  "clearCurrentMessages": {
+    "desc": "Wyczyść wiadomości i przesłane pliki w bieżącej rozmowie",
+    "title": "Wyczyść wiadomości rozmowy"
+  },
+  "desktop": {
+    "openSettings": {
+      "desc": "Otwórz stronę ustawień aplikacji",
+      "title": "Ustawienia aplikacji"
+    },
+    "showApp": {
+      "desc": "Globalny skrót klawiszowy do wyświetlania lub ukrywania głównego okna",
+      "title": "Pokaż/Ukryj główne okno"
+    }
+  },
+  "editMessage": {
+    "desc": "Wejdź w tryb edycji, przytrzymując klawisz Alt i podwójnie klikając wiadomość",
+    "title": "Edytuj wiadomość"
+  },
+  "openChatSettings": {
+    "desc": "Zobacz i zmodyfikuj ustawienia bieżącej rozmowy",
+    "title": "Otwórz ustawienia czatu"
+  },
+  "openHotkeyHelper": {
+    "desc": "Zobacz wszystkie instrukcje dotyczące skrótów klawiszowych",
+    "title": "Otwórz pomoc dotyczącą skrótów klawiszowych"
+  },
+  "regenerateMessage": {
+    "desc": "Ponownie wygeneruj ostatnią wiadomość",
+    "title": "Ponownie wygeneruj wiadomość"
+  },
+  "saveTopic": {
+    "desc": "Zapisz bieżący temat i otwórz nowy temat",
+    "title": "Rozpocznij nowy temat"
+  },
+  "search": {
+    "desc": "Wywołaj główne pole wyszukiwania na bieżącej stronie",
+    "title": "Szukaj"
+  },
+  "showApp": {
+    "desc": "Szybkie otwarcie głównego okna aplikacji",
+    "title": "Pokaż główne okno"
+  },
+  "switchAgent": {
+    "desc": "Przełączaj przypiętego asystenta w pasku bocznym, przytrzymując Ctrl i naciskając numery 0-9",
+    "title": "Szybkie przełączanie asystenta"
+  },
+  "toggleLeftPanel": {
+    "desc": "Pokaż lub ukryj lewy panel asystenta",
+    "title": "Pokaż/ukryj panel asystenta"
+  },
+  "toggleRightPanel": {
+    "desc": "Pokaż lub ukryj prawy panel tematów",
+    "title": "Pokaż/ukryj panel tematów"
+  },
+  "toggleZenMode": {
+    "desc": "W trybie skupienia wyświetlaj tylko bieżącą rozmowę, ukrywając inne interfejsy",
+    "title": "Przełącz tryb skupienia"
+  }
+}

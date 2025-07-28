@@ -9,6 +9,8 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { z } from 'zod';
 
 import { fileEnv } from '@/config/file';
+import { YEAR } from '@/utils/units';
+import { inferContentTypeFromImageUrl } from '@/utils/url';
 
 export const fileSchema = z.object({
   Key: z.string(),
@@ -119,6 +121,19 @@ export class S3 {
     });
   }
 
+  // 添加一个新方法用于上传二进制内容
+  public async uploadBuffer(path: string, buffer: Buffer, contentType?: string) {
+    const command = new PutObjectCommand({
+      ACL: this.setAcl ? 'public-read' : undefined,
+      Body: buffer,
+      Bucket: this.bucket,
+      ContentType: contentType,
+      Key: path,
+    });
+
+    return this.client.send(command);
+  }
+
   public async uploadContent(path: string, content: string) {
     const command = new PutObjectCommand({
       ACL: this.setAcl ? 'public-read' : undefined,
@@ -128,5 +143,18 @@ export class S3 {
     });
 
     return this.client.send(command);
+  }
+
+  public async uploadMedia(key: string, buffer: Buffer) {
+    const command = new PutObjectCommand({
+      ACL: this.setAcl ? 'public-read' : undefined,
+      Body: buffer,
+      Bucket: this.bucket,
+      CacheControl: `public, max-age=${YEAR}`,
+      ContentType: inferContentTypeFromImageUrl(key)!,
+      Key: key,
+    });
+
+    await this.client.send(command);
   }
 }

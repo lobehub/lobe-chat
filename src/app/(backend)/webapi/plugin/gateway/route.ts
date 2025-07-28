@@ -1,10 +1,10 @@
 import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { createGatewayOnEdgeRuntime } from '@lobehub/chat-plugins-gateway';
 
-import { getAppConfig } from '@/config/app';
 import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED, enableNextAuth } from '@/const/auth';
 import { LOBE_CHAT_TRACE_ID, TraceNameMap } from '@/const/trace';
-import { AgentRuntimeError } from '@/libs/agent-runtime';
+import { getAppConfig } from '@/envs/app';
+import { AgentRuntimeError } from '@/libs/model-runtime';
 import { TraceClient } from '@/libs/traces';
 import { ChatErrorType, ErrorType } from '@/types/fetch';
 import { createErrorResponse } from '@/utils/errorResponse';
@@ -52,6 +52,7 @@ export const POST = async (req: Request) => {
     return createErrorResponse(result.error as ErrorType);
   }
 
+  // TODO: need to be replace by better telemetry system
   // add trace
   const tracePayload = getTracePayload(req);
   const traceClient = new TraceClient();

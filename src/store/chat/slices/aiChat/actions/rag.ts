@@ -130,9 +130,8 @@ export const chatRag: StateCreator<ChatStore, [['zustand/devtools', never]], [],
     return rewriteQuery;
   },
   internal_shouldUseRAG: () => {
-    const userFiles = chatSelectors.currentUserFiles(get()).map((f) => f.id);
-    //  if there is relative files or enabled knowledge, try with ragQuery
-    return hasEnabledKnowledge() || userFiles.length > 0;
+    //  if there is enabled knowledge, try with ragQuery
+    return hasEnabledKnowledge();
   },
 
   internal_toggleMessageRAGLoading: (loading, id) => {

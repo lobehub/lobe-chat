@@ -1,0 +1,64 @@
+{
+  "addUserMessage": {
+    "desc": "Mevcut girdi içeriğini kullanıcı mesajı olarak ekleyin, ancak oluşturmayı tetiklemeyin",
+    "title": "Bir kullanıcı mesajı ekle"
+  },
+  "clearCurrentMessages": {
+    "desc": "Geçerli oturumun mesajlarını ve yüklenen dosyaları temizle",
+    "title": "Oturum mesajlarını temizle"
+  },
+  "desktop": {
+    "openSettings": {
+      "desc": "Uygulama ayarları sayfasını aç",
+      "title": "Uygulama Ayarları"
+    },
+    "showApp": {
+      "desc": "Küresel kısayol tuşu ile ana pencereyi göster veya gizle",
+      "title": "Ana Pencereyi Göster/Gizle"
+    }
+  },
+  "editMessage": {
+    "desc": "Mesaja çift tıklayıp Alt tuşuna basarak düzenleme moduna geçin",
+    "title": "Mesajı düzenle"
+  },
+  "openChatSettings": {
+    "desc": "Mevcut oturumun ayarlarını görüntüle ve değiştir",
+    "title": "Sohbet ayarlarını aç"
+  },
+  "openHotkeyHelper": {
+    "desc": "Tüm kısayol tuşlarının kullanım talimatlarını görüntüle",
+    "title": "Kısayol Yardımını Aç"
+  },
+  "regenerateMessage": {
+    "desc": "Son mesajı yeniden oluştur",
+    "title": "Mesajı yeniden oluştur"
+  },
+  "saveTopic": {
+    "desc": "Mevcut konuyu kaydedin ve yeni bir konu açın",
+    "title": "Yeni konu aç"
+  },
+  "search": {
+    "desc": "Mevcut sayfanın ana arama kutusunu aç",
+    "title": "Ara"
+  },
+  "showApp": {
+    "desc": "Uygulamanın ana penceresini hızlıca aç",
+    "title": "Ana Pencereyi Göster"
+  },
+  "switchAgent": {
+    "desc": "Yan panelde sabitlenmiş asistanı değiştirmek için Ctrl tuşuna basılı tutarak 0~9 sayısına basın",
+    "title": "Asistanı hızlıca değiştir"
+  },
+  "toggleLeftPanel": {
+    "desc": "Sol yan paneli göster veya gizle",
+    "title": "Asistan panelini göster/gizle"
+  },
+  "toggleRightPanel": {
+    "desc": "Sağ konu panelini göster veya gizle",
+    "title": "Konu panelini göster/gizle"
+  },
+  "toggleZenMode": {
+    "desc": "Odak modu, yalnızca mevcut oturumu gösterir, diğer UI'ları gizler",
+    "title": "Odak modunu değiştir"
+  }
+}

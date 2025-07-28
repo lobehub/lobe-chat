@@ -42,7 +42,7 @@
       "cert": "cert-built-in",
       "headerHtml": "",
       "enablePassword": true,
-      "enableSignUp": true,
+      "enableSignUp": false,
       "enableSigninSession": false,
       "enableAutoSignin": false,
       "enableCodeSignin": false,

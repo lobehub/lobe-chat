@@ -70,6 +70,23 @@ export default {
   GoBack: {
     back: '返回',
   },
+  ImageUpload: {
+    actions: {
+      changeImage: '点击更换图片',
+      dropMultipleFiles: '不支持多上传多个文件，只会使用第一个文件',
+    },
+    placeholder: {
+      primary: '添加图片',
+      secondary: '点击或拖拽上传',
+    },
+  },
+  KeyValueEditor: {
+    addButton: '新增一行',
+    deleteTooltip: '删除',
+    duplicateKeyError: '键名必须唯一',
+    keyPlaceholder: '键',
+    valuePlaceholder: '值',
+  },
   MaxTokenSlider: {
     unlimited: '无限制',
   },
@@ -91,8 +108,32 @@ export default {
     emptyProvider: '没有启用的服务商，请前往设置开启',
     goToSettings: '前往设置',
     provider: '服务商',
+    title: '模型',
+  },
+  MultiImagesUpload: {
+    actions: {
+      uploadMore: '点击或拖拽上传更多',
+    },
+    modal: {
+      complete: '完成',
+      newFileIndicator: '新增',
+      selectImageToPreview: '请选择要预览的图片',
+      title: '管理图片 ({{count}})',
+      upload: '上传图片',
+    },
+    placeholder: {
+      primary: '点击或拖拽上传图片',
+      secondary: '支持多张图片选择',
+    },
+    progress: {
+      uploadingWithCount: '{{completed}}/{{total}} 已上传',
+    },
   },
   OllamaSetupGuide: {
+    action: {
+      close: '关闭提示',
+      start: '已安装并运行，开始对话',
+    },
     cors: {
       description: '因浏览器安全限制，你需要为 Ollama 进行跨域配置后方可正常使用。',
       linux: {

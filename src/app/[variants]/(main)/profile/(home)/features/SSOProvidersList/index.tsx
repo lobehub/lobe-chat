@@ -5,12 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { modal, notification } from '@/components/AntdStaticMethods';
+import AuthIcons from '@/components/NextAuth/AuthIcons';
 import { useOnlyFetchOnceSWR } from '@/libs/swr';
 import { userService } from '@/services/user';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
-
-import AuthIcons from '@/components/NextAuth/AuthIcons';
 
 const { Item } = List;
 
@@ -69,7 +68,7 @@ export const SSOProvidersList = memo(() => {
             <Flexbox gap={4} horizontal>
               <CopyButton content={item.providerAccountId} size={'small'} />
               <ActionIcon
-                disable={!allowUnlink}
+                disabled={!allowUnlink}
                 icon={Unlink}
                 onClick={() => handleUnlinkSSO(item.provider, item.providerAccountId)}
                 size={'small'}
@@ -79,7 +78,7 @@ export const SSOProvidersList = memo(() => {
           avatar={AuthIcons(item.provider)}
           date={item.expires_at}
           description={item.providerAccountId}
-          key={index}
+          key={[item.provider, item.providerAccountId].join('-')}
           onMouseEnter={() => setHoveredIndex(index)}
           onMouseLeave={() => setHoveredIndex(null)}
           showAction={hoveredIndex === index}

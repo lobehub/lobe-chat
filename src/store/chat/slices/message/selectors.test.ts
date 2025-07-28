@@ -10,7 +10,6 @@ import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { createServerConfigStore } from '@/store/serverConfig/store';
 import { LobeAgentConfig } from '@/types/agent';
 import { ChatMessage } from '@/types/message';
-import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
 
 import { chatSelectors } from './selectors';
@@ -48,6 +47,27 @@ const mockMessages = [
   },
 ] as ChatMessage[];
 
+const mockReasoningMessages = [
+  {
+    id: 'msg1',
+    content: 'Hello World',
+    role: 'user',
+  },
+  {
+    id: 'msg2',
+    content: 'Goodbye World',
+    role: 'user',
+  },
+  {
+    id: 'msg3',
+    content: 'Content Message',
+    role: 'assistant',
+    reasoning: {
+      content: 'Reasoning Content',
+    },
+  },
+] as ChatMessage[];
+
 const mockedChats = [
   {
     id: 'msg1',
@@ -70,7 +90,7 @@ const mockedChats = [
     content: 'Function Message',
     role: 'tool',
     meta: {
-      avatar: '🤯',
+      avatar: DEFAULT_INBOX_AVATAR,
       backgroundColor: 'rgba(0,0,0,0)',
       description: 'inbox.desc',
       title: 'inbox.title',
@@ -213,7 +233,7 @@ describe('chatSelectors', () => {
           content: 'Function Message',
           role: 'tool',
           meta: {
-            avatar: '🤯',
+            avatar: DEFAULT_INBOX_AVATAR,
             backgroundColor: 'rgba(0,0,0,0)',
             description: 'inbox.desc',
             title: 'inbox.title',
@@ -264,6 +284,27 @@ describe('chatSelectors', () => {
       // Call the selector and verify the result
       const concatenatedString = chatSelectors.mainAIChatsMessageString(state);
       expect(concatenatedString).toBe(expectedString);
+
+      // Restore the mocks after the test
+      vi.restoreAllMocks();
+    });
+  });
+
+  describe('latestMessageReasoningContent', () => {
+    it('should return the reasoning content of the latest message', () => {
+      // Prepare a state with a few messages
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('active-session')]: mockReasoningMessages,
+        },
+        activeId: 'active-session',
+      });
+
+      const expectedString = mockReasoningMessages.at(-1)?.reasoning?.content;
+
+      // Call the selector and verify the result
+      const reasoningContent = chatSelectors.mainAILatestMessageReasoningContent(state);
+      expect(reasoningContent).toBe(expectedString);
 
       // Restore the mocks after the test
       vi.restoreAllMocks();

@@ -1,0 +1,60 @@
+{
+  "consent": {
+    "buttons": {
+      "accept": "Toestaan",
+      "deny": "Weigeren"
+    },
+    "description": "De applicatie {{clientName}} vraagt om toestemming voor uw account",
+    "error": {
+      "sessionInvalid": {
+        "message": "De autorisatiesessie is verlopen of ongeldig, start het autorisatieproces opnieuw.",
+        "title": "Ongeldige autorisatiesessie"
+      },
+      "title": "Er is een fout opgetreden",
+      "unsupportedInteraction": {
+        "message": "Niet-ondersteund interactietype: {promptName}",
+        "title": "Niet-ondersteund interactietype"
+      }
+    },
+    "permissionsTitle": "Vraag om de volgende toestemmingen:",
+    "redirectUri": "U wordt omgeleid naar na succesvolle autorisatie",
+    "scope": {
+      "email": "Toegang tot uw e-mailadres",
+      "offline_access": "Toestaan dat de client toegang heeft tot uw gegevens",
+      "openid": "Authenticatie met uw LobeChat-account",
+      "profile": "Toegang tot uw basisprofielinformatie (naam, profielfoto, enz.)",
+      "sync-read": "Lees uw gesynchroniseerde gegevens",
+      "sync-write": "Schrijf en werk uw gesynchroniseerde gegevens bij"
+    },
+    "title": "Toestemming voor {{clientName}}"
+  },
+  "error": {
+    "backToHome": "Terug naar startpagina",
+    "desc": "OAuth-autorisatie mislukt, reden: {{reason}}",
+    "reason": {
+      "internal_error": "Serverfout",
+      "invalid_request": "Ongeldige aanvraagparameters"
+    },
+    "title": "Autorisatie mislukt"
+  },
+  "handoff": {
+    "desc": {
+      "processing": "De applicatie verwerkt de autorisatie, u wordt binnenkort doorgestuurd naar de volgende pagina...",
+      "success": "Er is geprobeerd de desktopapplicatie te openen. Als de applicatie niet automatisch opent, schakelt u handmatig over. U kunt dit browservenster later sluiten."
+    },
+    "title": {
+      "processing": "Autorisatie wordt verwerkt...",
+      "success": "Autorisatie is voltooid"
+    }
+  },
+  "login": {
+    "button": "Bevestig inloggen",
+    "description": "De applicatie {{clientName}} vraagt om uw account te gebruiken voor inloggen",
+    "title": "Inloggen bij {{clientName}}",
+    "userWelcome": "Welkom terug, "
+  },
+  "success": {
+    "subTitle": "U hebt de applicatie succesvol gemachtigd om toegang te krijgen tot uw account. U kunt deze pagina nu sluiten.",
+    "title": "Autorisatie succesvol"
+  }
+}

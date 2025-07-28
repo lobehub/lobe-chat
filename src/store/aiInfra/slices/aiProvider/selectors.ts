@@ -10,6 +10,8 @@ const enabledAiProviderList = (s: AIProviderStoreState) =>
 const disabledAiProviderList = (s: AIProviderStoreState) =>
   s.aiProviderList.filter((item) => !item.enabled);
 
+const enabledImageModelList = (s: AIProviderStoreState) => s.enabledImageModelList || [];
+
 const isProviderEnabled = (id: string) => (s: AIProviderStoreState) =>
   enabledAiProviderList(s).some((i) => i.id === id);
 
@@ -99,14 +101,26 @@ const isProviderHasBuiltinSearchConfig = (id: string) => (s: AIProviderStoreStat
   return !!providerCfg?.settings.searchMode && providerCfg?.settings.searchMode !== 'internal';
 };
 
+const isProviderEnableResponseApi = (id: string) => (s: AIProviderStoreState) => {
+  const providerCfg = providerConfigById(id)(s);
+
+  const enableResponseApi = providerCfg?.config?.enableResponseApi;
+
+  if (typeof enableResponseApi === 'boolean') return enableResponseApi;
+
+  return false;
+};
+
 export const aiProviderSelectors = {
   activeProviderConfig,
   disabledAiProviderList,
   enabledAiProviderList,
+  enabledImageModelList,
   isActiveProviderApiKeyNotEmpty,
   isActiveProviderEndpointNotEmpty,
   isAiProviderConfigLoading,
   isProviderConfigUpdating,
+  isProviderEnableResponseApi,
   isProviderEnabled,
   isProviderFetchOnClient,
   isProviderHasBuiltinSearch,

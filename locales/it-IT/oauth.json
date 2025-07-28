@@ -1,0 +1,60 @@
+{
+  "consent": {
+    "buttons": {
+      "accept": "Autorizza",
+      "deny": "Rifiuta"
+    },
+    "description": "L'applicazione {{clientName}} richiede l'autorizzazione per il tuo account",
+    "error": {
+      "sessionInvalid": {
+        "message": "La sessione di autorizzazione è scaduta o non valida, per favore riavvia il processo di autorizzazione.",
+        "title": "Sessione di autorizzazione non valida"
+      },
+      "title": "Si è verificato un errore",
+      "unsupportedInteraction": {
+        "message": "Tipo di interazione non supportato: {promptName}",
+        "title": "Tipo di interazione non supportato"
+      }
+    },
+    "permissionsTitle": "Richiesta delle seguenti autorizzazioni:",
+    "redirectUri": "Verrai reindirizzato a dopo un'autorizzazione riuscita",
+    "scope": {
+      "email": "Accesso al tuo indirizzo email",
+      "offline_access": "Consenti all'accesso del client ai tuoi dati",
+      "openid": "Autenticati con il tuo account LobeChat",
+      "profile": "Accesso alle tue informazioni di base (nome, foto profilo, ecc.)",
+      "sync-read": "Leggi i tuoi dati sincronizzati",
+      "sync-write": "Scrivi e aggiorna i tuoi dati sincronizzati"
+    },
+    "title": "Autorizzazione per {{clientName}}"
+  },
+  "error": {
+    "backToHome": "Torna alla pagina principale",
+    "desc": "Autorizzazione OAuth fallita, motivo dell'errore: {{reason}}",
+    "reason": {
+      "internal_error": "Errore del server",
+      "invalid_request": "Parametri della richiesta non validi"
+    },
+    "title": "Autorizzazione fallita"
+  },
+  "handoff": {
+    "desc": {
+      "processing": "L'applicazione sta elaborando l'autorizzazione, verrà reindirizzato alla prossima pagina...",
+      "success": "È stato tentato di aprire l'app desktop. Se l'app non si apre automaticamente, si prega di passare manualmente. Può chiudere questa finestra del browser in seguito."
+    },
+    "title": {
+      "processing": "Elaborazione dell'autorizzazione...",
+      "success": "Autorizzazione completata"
+    }
+  },
+  "login": {
+    "button": "Conferma accesso",
+    "description": "L'app {{clientName}} richiede di utilizzare il tuo account per accedere",
+    "title": "Accedi a {{clientName}}",
+    "userWelcome": "Bentornato, "
+  },
+  "success": {
+    "subTitle": "Hai autorizzato con successo l'app ad accedere al tuo account, puoi chiudere questa pagina.",
+    "title": "Autorizzazione riuscita"
+  }
+}

@@ -19,7 +19,7 @@ const All = memo(() => {
     <Link className={cx(styles.container, pathname === ALL_PATH && styles.active)} href={ALL_PATH}>
       <Flexbox gap={8} horizontal>
         <Center width={24}>
-          <Icon icon={WalletCards} size={{ fontSize: 18 }} />
+          <Icon icon={WalletCards} size={18} />
         </Center>
         {t('menu.all')}
       </Flexbox>

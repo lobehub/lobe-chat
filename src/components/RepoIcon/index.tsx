@@ -9,14 +9,7 @@ interface RepoIconProps {
 const RepoIcon = memo<RepoIconProps>(({ size = 20 }) => {
   const theme = useTheme();
 
-  return (
-    <Icon
-      color={theme.geekblue}
-      fill={theme.geekblue3}
-      icon={BookTextIcon}
-      size={{ fontSize: size }}
-    />
-  );
+  return <Icon color={theme.geekblue} fill={theme.geekblue3} icon={BookTextIcon} size={size} />;
 });
 
 export default RepoIcon;

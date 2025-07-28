@@ -3,7 +3,7 @@ import {
   AGENT_RUNTIME_ERROR_SET,
   AgentRuntime,
   ChatCompletionErrorPayload,
-} from '@/libs/agent-runtime';
+} from '@/libs/model-runtime';
 import { createTraceOptions, initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
@@ -33,10 +33,7 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload, createR
     let traceOptions = {};
     // If user enable trace
     if (tracePayload?.enabled) {
-      traceOptions = createTraceOptions(data, {
-        provider,
-        trace: tracePayload,
-      });
+      traceOptions = createTraceOptions(data, { provider, trace: tracePayload });
     }
 
     return await agentRuntime.chat(data, {

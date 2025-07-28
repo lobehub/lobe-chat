@@ -66,6 +66,7 @@
       "customRegion": "사용자 정의 서비스 지역",
       "customSessionToken": "사용자 정의 세션 토큰",
       "description": "AWS AccessKeyId / SecretAccessKey를 입력하면 세션이 시작됩니다. 애플리케이션은 인증 구성을 기록하지 않습니다.",
+      "imageGenerationDescription": "AWS AccessKeyId / SecretAccessKey를 입력하면 생성이 시작됩니다. 애플리케이션은 인증 구성을 기록하지 않습니다.",
       "title": "사용자 정의 Bedrock 인증 정보 사용"
     }
   },
@@ -164,6 +165,7 @@
     },
     "download": {
       "desc": "Ollama가 모델을 다운로드하고 있습니다. 이 페이지를 닫지 마세요. 다시 다운로드할 경우 중단된 지점에서 계속됩니다.",
+      "failed": "모델 다운로드에 실패했습니다. 네트워크 또는 Ollama 설정을 확인한 후 다시 시도해 주세요.",
       "remainingTime": "남은 시간",
       "speed": "다운로드 속도",
       "title": "모델 {{model}} 다운로드 중"
@@ -207,6 +209,10 @@
         "title": "클라이언트 요청 모드 사용"
       },
       "helpDoc": "설정 가이드",
+      "responsesApi": {
+        "desc": "OpenAI의 최신 요청 형식 규격을 사용하여 사고 연결 등 고급 기능을 활성화합니다",
+        "title": "Responses API 규격 사용"
+      },
       "waitingForMore": "더 많은 모델이 <1>계획 중</1>입니다. 기대해 주세요"
     },
     "createNew": {

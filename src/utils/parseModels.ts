@@ -1,13 +1,18 @@
 import { produce } from 'immer';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
-import { AiFullModelCard } from '@/types/aiModel';
+import { AiFullModelCard, AiModelType } from '@/types/aiModel';
+import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
 import { merge } from '@/utils/merge';
 
 /**
  * Parse model string to add or remove models.
  */
-export const parseModelString = (modelString: string = '', withDeploymentName = false) => {
+export const parseModelString = (
+  providerId: string,
+  modelString: string = '',
+  withDeploymentName = false,
+) => {
   let models: AiFullModelCard[] = [];
   let removeAll = false;
   const removedModels: string[] = [];
@@ -23,7 +28,7 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
 
     if (withDeploymentName) {
       [id, deploymentName] = id.split('->');
-      if (!deploymentName) deploymentName = id;
+      // if (!deploymentName) deploymentName = id;
     }
 
     if (disable) {
@@ -46,12 +51,18 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
       models.splice(existingIndex, 1);
     }
 
+    // Use new type lookup function, prioritizing same provider first, then fallback to other providers
+    const modelType: AiModelType = getModelPropertyWithFallback<AiModelType>(
+      id,
+      'type',
+      providerId,
+    );
+
     const model: AiFullModelCard = {
       abilities: {},
       displayName: displayName || undefined,
       id,
-      // TODO: 临时写死为 chat ，后续基于元数据迭代成对应的类型
-      type: 'chat',
+      type: modelType,
     };
 
     if (deploymentName) {
@@ -84,6 +95,10 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
             model.abilities!.search = true;
             break;
           }
+          case 'imageOutput': {
+            model.abilities!.imageOutput = true;
+            break;
+          }
           default: {
             console.warn(`Unknown capability: ${capability}`);
           }
@@ -104,21 +119,21 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
 /**
  * Extract a special method to process chatModels
  */
-export const transformToAiChatModelList = ({
+export const transformToAiModelList = ({
   modelString = '',
-  defaultChatModels,
+  defaultModels,
   providerId,
   withDeploymentName = false,
 }: {
-  defaultChatModels: AiFullModelCard[];
+  defaultModels: AiFullModelCard[];
   modelString?: string;
   providerId: string;
   withDeploymentName?: boolean;
 }): AiFullModelCard[] | undefined => {
   if (!modelString) return undefined;
 
-  const modelConfig = parseModelString(modelString, withDeploymentName);
-  let chatModels = modelConfig.removeAll ? [] : defaultChatModels;
+  const modelConfig = parseModelString(providerId, modelString, withDeploymentName);
+  let chatModels = modelConfig.removeAll ? [] : defaultModels;
 
   // 处理移除逻辑
   if (!modelConfig.removeAll) {
@@ -136,6 +151,12 @@ export const transformToAiChatModelList = ({
       if (!knownModel) {
         knownModel = LOBE_DEFAULT_MODEL_LIST.find((model) => model.id === toAddModel.id);
         if (knownModel) knownModel.providerId = providerId;
+      }
+      if (withDeploymentName) {
+        toAddModel.config = toAddModel.config || {};
+        if (!toAddModel.config.deploymentName) {
+          toAddModel.config.deploymentName = knownModel?.config?.deploymentName ?? toAddModel.id;
+        }
       }
 
       // if the model is known, update it based on the known model
@@ -172,8 +193,12 @@ export const transformToAiChatModelList = ({
   });
 };
 
-export const extractEnabledModels = (modelString: string = '', withDeploymentName = false) => {
-  const modelConfig = parseModelString(modelString, withDeploymentName);
+export const extractEnabledModels = (
+  providerId: string,
+  modelString: string = '',
+  withDeploymentName = false,
+) => {
+  const modelConfig = parseModelString(providerId, modelString, withDeploymentName);
   const list = modelConfig.add.map((m) => m.id);
 
   if (list.length === 0) return;

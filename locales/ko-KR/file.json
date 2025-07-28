@@ -71,6 +71,9 @@
     "websites": "웹사이트"
   },
   "title": "파일",
+  "toggleLeftPanel": {
+    "title": "왼쪽 패널 표시/숨기기"
+  },
   "uploadDock": {
     "body": {
       "collapse": "접기",

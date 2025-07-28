@@ -2,8 +2,8 @@ import dayjs from 'dayjs';
 import { sha256 } from 'js-sha256';
 
 import { fileEnv } from '@/config/file';
-import { isServerMode } from '@/const/version';
-import { parseDataUri } from '@/libs/agent-runtime/utils/uriParser';
+import { isDesktop, isServerMode } from '@/const/version';
+import { parseDataUri } from '@/libs/model-runtime/utils/uriParser';
 import { edgeClient } from '@/libs/trpc/client';
 import { API_ENDPOINTS } from '@/services/_url';
 import { clientS3Storage } from '@/services/file/ClientS3';
@@ -13,10 +13,45 @@ import { uuid } from '@/utils/uuid';
 
 export const UPLOAD_NETWORK_ERROR = 'NetWorkError';
 
+/**
+ * Generate file storage path metadata for S3-compatible storage
+ * @param originalFilename - Original filename
+ * @param options - Path generation options
+ * @returns Path metadata including date, dirname, filename, and pathname
+ */
+const generateFilePathMetadata = (
+  originalFilename: string,
+  options: { directory?: string; pathname?: string } = {},
+): {
+  date: string;
+  dirname: string;
+  filename: string;
+  pathname: string;
+} => {
+  // Generate unique filename with UUID prefix and original extension
+  const extension = originalFilename.split('.').at(-1);
+  const filename = `${uuid()}.${extension}`;
+
+  // Generate timestamp-based directory path
+  const date = (Date.now() / 1000 / 60 / 60).toFixed(0);
+  const dirname = `${options.directory || fileEnv.NEXT_PUBLIC_S3_FILE_PATH}/${date}`;
+  const pathname = options.pathname ?? `${dirname}/${filename}`;
+
+  return {
+    date,
+    dirname,
+    filename,
+    pathname,
+  };
+};
+
 interface UploadFileToS3Options {
   directory?: string;
   filename?: string;
+  onNotSupported?: () => void;
   onProgress?: (status: FileUploadStatus, state: FileUploadState) => void;
+  pathname?: string;
+  skipCheckFileType?: boolean;
 }
 
 class UploadService {
@@ -25,20 +60,43 @@ class UploadService {
    */
   uploadFileToS3 = async (
     file: File,
-    options: UploadFileToS3Options = {},
-  ): Promise<FileMetadata> => {
-    const { directory, onProgress } = options;
+    { onProgress, directory, skipCheckFileType, onNotSupported, pathname }: UploadFileToS3Options,
+  ): Promise<{ data: FileMetadata; success: boolean }> => {
+    const { getElectronStoreState } = await import('@/store/electron');
+    const { electronSyncSelectors } = await import('@/store/electron/selectors');
+    // only if not enable sync
+    const state = getElectronStoreState();
+    const isSyncActive = electronSyncSelectors.isSyncActive(state);
 
-    if (isServerMode) {
-      return this.uploadWithProgress(file, { directory, onProgress });
-    } else {
-      const fileArrayBuffer = await file.arrayBuffer();
-
-      // 1. check file hash
-      const hash = sha256(fileArrayBuffer);
-
-      return this.uploadToClientS3(hash, file);
+    // 桌面端上传逻辑（并且没开启 sync 同步）
+    if (isDesktop && !isSyncActive) {
+      const data = await this.uploadToDesktopS3(file, { directory, pathname });
+      return { data, success: true };
     }
+
+    // 服务端上传逻辑
+    if (isServerMode) {
+      // if is server mode, upload to server s3,
+
+      const data = await this.uploadToServerS3(file, { directory, onProgress, pathname });
+      return { data, success: true };
+    }
+
+    // upload to client s3
+    // 客户端上传逻辑
+    if (!skipCheckFileType && !file.type.startsWith('image')) {
+      onNotSupported?.();
+      return { data: undefined as unknown as FileMetadata, success: false };
+    }
+
+    const fileArrayBuffer = await file.arrayBuffer();
+
+    // 1. check file hash
+    const hash = sha256(fileArrayBuffer);
+    // Upload to the indexeddb in the browser
+    const data = await this.uploadToClientS3(hash, file);
+
+    return { data, success: true };
   };
 
   uploadBase64ToS3 = async (
@@ -79,7 +137,7 @@ class UploadService {
     const file = new File([blob], fileName, { type: mimeType });
 
     // 使用统一的上传方法
-    const metadata = await this.uploadFileToS3(file, options);
+    const { data: metadata } = await this.uploadFileToS3(file, options);
     const hash = sha256(await file.arrayBuffer());
 
     return {
@@ -90,19 +148,27 @@ class UploadService {
     };
   };
 
-  uploadWithProgress = async (
+  uploadDataToS3 = async (data: object, options: UploadFileToS3Options = {}) => {
+    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+    const file = new File([blob], options.filename || 'data.json', { type: 'application/json' });
+    return await this.uploadFileToS3(file, options);
+  };
+
+  uploadToServerS3 = async (
     file: File,
     {
       onProgress,
       directory,
+      pathname,
     }: {
       directory?: string;
       onProgress?: (status: FileUploadStatus, state: FileUploadState) => void;
+      pathname?: string;
     },
   ): Promise<FileMetadata> => {
     const xhr = new XMLHttpRequest();
 
-    const { preSignUrl, ...result } = await this.getSignedUploadUrl(file, directory);
+    const { preSignUrl, ...result } = await this.getSignedUploadUrl(file, { directory, pathname });
     let startTime = Date.now();
     xhr.upload.addEventListener('progress', (event) => {
       if (event.lengthComputable) {
@@ -148,7 +214,22 @@ class UploadService {
     return result;
   };
 
-  uploadToClientS3 = async (hash: string, file: File): Promise<FileMetadata> => {
+  private uploadToDesktopS3 = async (
+    file: File,
+    options: { directory?: string; pathname?: string } = {},
+  ) => {
+    const fileArrayBuffer = await file.arrayBuffer();
+    const hash = sha256(fileArrayBuffer);
+
+    // 生成文件路径元数据
+    const { pathname } = generateFilePathMetadata(file.name, options);
+
+    const { desktopFileAPI } = await import('@/services/electron/file');
+    const { metadata } = await desktopFileAPI.uploadFile(file, hash, pathname);
+    return metadata;
+  };
+
+  private uploadToClientS3 = async (hash: string, file: File): Promise<FileMetadata> => {
     await clientS3Storage.putObject(hash, file);
 
     return {
@@ -174,18 +255,14 @@ class UploadService {
 
   private getSignedUploadUrl = async (
     file: File,
-    directory?: string,
+    options: { directory?: string; pathname?: string } = {},
   ): Promise<
     FileMetadata & {
       preSignUrl: string;
     }
   > => {
-    const filename = `${uuid()}.${file.name.split('.').at(-1)}`;
-
-    // 精确到以 h 为单位的 path
-    const date = (Date.now() / 1000 / 60 / 60).toFixed(0);
-    const dirname = `${directory || fileEnv.NEXT_PUBLIC_S3_FILE_PATH}/${date}`;
-    const pathname = `${dirname}/${filename}`;
+    // 生成文件路径元数据
+    const { date, dirname, filename, pathname } = generateFilePathMetadata(file.name, options);
 
     const preSignUrl = await edgeClient.upload.createS3PreSignedUrl.mutate({ pathname });
 

@@ -23,11 +23,14 @@
   "cloudflare": {
     "description": "Chạy các mô hình học máy được hỗ trợ bởi GPU không máy chủ trên mạng lưới toàn cầu của Cloudflare."
   },
+  "cohere": {
+    "description": "Cohere mang đến cho bạn các mô hình đa ngôn ngữ tiên tiến nhất, tính năng tìm kiếm hiện đại và không gian làm việc AI được thiết kế riêng cho các doanh nghiệp hiện đại - tất cả đều được tích hợp trong một nền tảng an toàn."
+  },
   "deepseek": {
     "description": "DeepSeek là một công ty tập trung vào nghiên cứu và ứng dụng công nghệ trí tuệ nhân tạo, mô hình mới nhất của họ, DeepSeek-V2.5, kết hợp khả năng đối thoại chung và xử lý mã, đồng thời đạt được sự cải thiện đáng kể trong việc căn chỉnh sở thích của con người, nhiệm vụ viết và tuân theo chỉ dẫn."
   },
-  "doubao": {
-    "description": "Mô hình lớn tự phát triển do ByteDance phát triển. Được xác thực qua hơn 50 tình huống kinh doanh nội bộ của ByteDance, với việc sử dụng hàng nghìn tỷ token mỗi ngày để liên tục cải tiến, cung cấp nhiều khả năng đa phương thức, tạo ra trải nghiệm kinh doanh phong phú cho doanh nghiệp với hiệu quả mô hình chất lượng cao."
+  "fal": {
+    "description": "Nền tảng truyền thông tạo sinh dành cho nhà phát triển"
   },
   "fireworksai": {
     "description": "Fireworks AI là nhà cung cấp dịch vụ mô hình ngôn ngữ cao cấp hàng đầu, tập trung vào gọi chức năng và xử lý đa phương thức. Mô hình mới nhất của họ, Firefunction V2, dựa trên Llama-3, được tối ưu hóa cho gọi chức năng, đối thoại và tuân theo chỉ dẫn. Mô hình ngôn ngữ hình ảnh FireLLaVA-13B hỗ trợ đầu vào hỗn hợp hình ảnh và văn bản. Các mô hình đáng chú ý khác bao gồm dòng Llama và dòng Mixtral, cung cấp hỗ trợ cho việc tuân theo và tạo ra chỉ dẫn đa ngôn ngữ hiệu quả."
@@ -53,6 +56,9 @@
   "hunyuan": {
     "description": "Mô hình ngôn ngữ lớn được phát triển bởi Tencent, có khả năng sáng tạo tiếng Trung mạnh mẽ, khả năng suy luận logic trong các ngữ cảnh phức tạp, và khả năng thực hiện nhiệm vụ đáng tin cậy."
   },
+  "infiniai": {
+    "description": "Cung cấp dịch vụ mô hình lớn hiệu suất cao, dễ sử dụng và an toàn cho nhà phát triển ứng dụng, bao gồm toàn bộ quy trình từ phát triển mô hình lớn đến triển khai dịch vụ mô hình lớn."
+  },
   "internlm": {
     "description": "Tổ chức mã nguồn mở chuyên nghiên cứu và phát triển công cụ cho mô hình lớn. Cung cấp nền tảng mã nguồn mở hiệu quả, dễ sử dụng cho tất cả các nhà phát triển AI, giúp tiếp cận công nghệ mô hình lớn và thuật toán tiên tiến nhất."
   },
@@ -67,6 +73,9 @@
   },
   "mistral": {
     "description": "Mistral cung cấp các mô hình tiên tiến cho mục đích chung, chuyên nghiệp và nghiên cứu, được ứng dụng rộng rãi trong suy diễn phức tạp, nhiệm vụ đa ngôn ngữ, tạo mã, v.v. Thông qua giao diện gọi chức năng, người dùng có thể tích hợp các chức năng tùy chỉnh để thực hiện các ứng dụng cụ thể."
+  },
+  "modelscope": {
+    "description": "ModelScope là nền tảng mô hình như một dịch vụ do Alibaba Cloud phát triển, cung cấp nhiều mô hình AI và dịch vụ suy luận phong phú."
   },
   "moonshot": {
     "description": "Moonshot là nền tảng mã nguồn mở do Công ty TNHH Công nghệ Mặt Trăng Bắc Kinh phát hành, cung cấp nhiều mô hình xử lý ngôn ngữ tự nhiên, ứng dụng rộng rãi trong nhiều lĩnh vực, bao gồm nhưng không giới hạn ở sáng tác nội dung, nghiên cứu học thuật, gợi ý thông minh, chẩn đoán y tế, v.v., hỗ trợ xử lý văn bản dài và nhiệm vụ tạo phức tạp."
@@ -92,11 +101,17 @@
   "ppio": {
     "description": "PPIO派欧云 cung cấp dịch vụ API mô hình mã nguồn mở ổn định, hiệu quả chi phí cao, hỗ trợ toàn bộ dòng sản phẩm DeepSeek, Llama, Qwen và các mô hình lớn hàng đầu trong ngành."
   },
+  "qiniu": {
+    "description": "Qiniu là nhà cung cấp dịch vụ cloud hàng đầu, cung cấp API cho các mô hình AI lớn, bao gồm DeepSeek, Llama và Qwen, với các tùy chọn linh hoạt để xây dựng và áp dụng các ứng dụng AI."
+  },
   "qwen": {
     "description": "Qwen là mô hình ngôn ngữ quy mô lớn tự phát triển của Alibaba Cloud, có khả năng hiểu và tạo ngôn ngữ tự nhiên mạnh mẽ. Nó có thể trả lời nhiều câu hỏi, sáng tác nội dung văn bản, bày tỏ quan điểm, viết mã, v.v., hoạt động trong nhiều lĩnh vực."
   },
   "sambanova": {
     "description": "SambaNova Cloud cho phép các nhà phát triển dễ dàng sử dụng các mô hình mã nguồn mở tốt nhất và tận hưởng tốc độ suy diễn nhanh nhất."
+  },
+  "search1api": {
+    "description": "Search1API cung cấp quyền truy cập vào các mô hình DeepSeek có thể tự kết nối theo nhu cầu, bao gồm phiên bản tiêu chuẩn và phiên bản nhanh, hỗ trợ lựa chọn mô hình với nhiều quy mô tham số khác nhau."
   },
   "sensenova": {
     "description": "SenseTime luôn đổi mới, dựa vào nền tảng mạnh mẽ của SenseTime để cung cấp dịch vụ mô hình lớn toàn diện, hiệu quả và dễ sử dụng."
@@ -122,6 +137,9 @@
   "upstage": {
     "description": "Upstage tập trung vào việc phát triển các mô hình AI cho nhiều nhu cầu thương mại khác nhau, bao gồm Solar LLM và AI tài liệu, nhằm đạt được trí thông minh nhân tạo tổng quát (AGI) cho công việc. Tạo ra các đại lý đối thoại đơn giản thông qua Chat API, và hỗ trợ gọi chức năng, dịch thuật, nhúng và ứng dụng trong các lĩnh vực cụ thể."
   },
+  "v0": {
+    "description": "v0 là một trợ lý lập trình theo cặp, bạn chỉ cần mô tả ý tưởng bằng ngôn ngữ tự nhiên, nó sẽ tạo mã và giao diện người dùng (UI) cho dự án của bạn"
+  },
   "vertexai": {
     "description": "Dòng sản phẩm Gemini của Google là mô hình AI tiên tiến và đa năng nhất của họ, được phát triển bởi Google DeepMind, được thiết kế đặc biệt cho đa phương thức, hỗ trợ hiểu và xử lý liền mạch văn bản, mã, hình ảnh, âm thanh và video. Phù hợp với nhiều môi trường từ trung tâm dữ liệu đến thiết bị di động, nâng cao đáng kể hiệu quả và tính ứng dụng của mô hình AI."
   },
@@ -136,6 +154,9 @@
   },
   "xai": {
     "description": "xAI là một công ty cam kết xây dựng trí tuệ nhân tạo để tăng tốc khám phá khoa học của nhân loại. Sứ mệnh của chúng tôi là thúc đẩy sự hiểu biết chung của chúng ta về vũ trụ."
+  },
+  "xinference": {
+    "description": "Xorbits Inference (Xinference) là một nền tảng mã nguồn mở, được thiết kế để đơn giản hóa việc chạy và tích hợp các mô hình AI khác nhau. Với Xinference, bạn có thể chạy suy luận trên bất kỳ mô hình LLM mã nguồn mở, mô hình nhúng và mô hình đa phương thức nào trong môi trường đám mây hoặc cục bộ, và tạo ra các ứng dụng AI mạnh mẽ."
   },
   "zeroone": {
     "description": "01.AI tập trung vào công nghệ trí tuệ nhân tạo trong kỷ nguyên AI 2.0, thúc đẩy mạnh mẽ sự đổi mới và ứng dụng của \"người + trí tuệ nhân tạo\", sử dụng các mô hình mạnh mẽ và công nghệ AI tiên tiến để nâng cao năng suất của con người và thực hiện sự trao quyền công nghệ."

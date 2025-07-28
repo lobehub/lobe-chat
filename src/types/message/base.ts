@@ -44,8 +44,16 @@ export interface ModelTokensUsage {
   totalTokens?: number;
 }
 
+export interface ModelSpeed {
+  // tokens per second
+  tps?: number;
+  // time to fist token
+  ttft?: number;
+}
+
 export interface MessageMetadata extends ModelTokensUsage {
   tps?: number;
+  ttft?: number;
 }
 
 export type MessageRoleType = 'user' | 'system' | 'assistant' | 'tool';

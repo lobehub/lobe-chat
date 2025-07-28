@@ -1,7 +1,6 @@
-import { mkdtempSync, rmSync , writeFileSync, existsSync } from 'node:fs';
+import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { v4 as uuidv4 } from 'uuid';
 
 /**
  * 安全存储临时文件工具类
@@ -10,21 +9,19 @@ export class TempFileManager {
   private readonly tempDir: string;
   private filePaths: Set<string> = new Set();
 
-  constructor() {
+  constructor(dirname: string) {
     // 创建唯一临时目录 (跨平台安全)
-    this.tempDir = mkdtempSync(join(tmpdir(), 'epub-'));
+    this.tempDir = mkdtempSync(join(tmpdir(), dirname));
     // 注册退出清理钩子
     this.registerCleanupHook();
   }
 
   /**
    * 将 Uint8Array 写入临时文件
-   * @param data 文件数据
-   * @param ext 文件扩展名 (默认 .epub)
-   * @returns 临时文件绝对路径
+
    */
-  async writeTempFile(data: Uint8Array, ext = '.epub'): Promise<string> {
-    const filePath = join(this.tempDir, `${uuidv4()}${ext}`);
+  async writeTempFile(data: Uint8Array, name: string): Promise<string> {
+    const filePath = join(this.tempDir, name);
 
     try {
       writeFileSync(filePath, data);

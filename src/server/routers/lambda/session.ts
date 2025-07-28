@@ -1,23 +1,23 @@
 import { z } from 'zod';
 
+import { SessionModel } from '@/database/models/session';
+import { SessionGroupModel } from '@/database/models/sessionGroup';
 import { insertAgentSchema, insertSessionSchema } from '@/database/schemas';
-import { serverDB } from '@/database/server';
-import { SessionModel } from '@/database/server/models/session';
-import { SessionGroupModel } from '@/database/server/models/sessionGroup';
-import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
+import { getServerDB } from '@/database/server';
+import { authedProcedure, publicProcedure, router } from '@/libs/trpc/lambda';
+import { serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { AgentChatConfigSchema } from '@/types/agent';
 import { LobeMetaDataSchema } from '@/types/meta';
 import { BatchTaskResult } from '@/types/service';
 import { ChatSessionList } from '@/types/session';
-import { merge } from '@/utils/merge';
 
-const sessionProcedure = authedProcedure.use(async (opts) => {
+const sessionProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
     ctx: {
-      sessionGroupModel: new SessionGroupModel(serverDB, ctx.userId),
-      sessionModel: new SessionModel(serverDB, ctx.userId),
+      sessionGroupModel: new SessionGroupModel(ctx.serverDB, ctx.userId),
+      sessionModel: new SessionModel(ctx.serverDB, ctx.userId),
     },
   });
 });
@@ -75,7 +75,14 @@ export const sessionRouter = router({
     .input(
       z.object({
         config: insertAgentSchema
-          .omit({ chatConfig: true, plugins: true, tags: true, tts: true })
+          .omit({
+            chatConfig: true,
+            openingMessage: true,
+            openingQuestions: true,
+            plugins: true,
+            tags: true,
+            tts: true,
+          })
           .passthrough()
           .partial(),
         session: insertSessionSchema.omit({ createdAt: true, updatedAt: true }).partial(),
@@ -89,13 +96,10 @@ export const sessionRouter = router({
     }),
 
   getGroupedSessions: publicProcedure.query(async ({ ctx }): Promise<ChatSessionList> => {
-    if (!ctx.userId)
-      return {
-        sessionGroups: [],
-        sessions: [],
-      };
+    if (!ctx.userId) return { sessionGroups: [], sessions: [] };
 
-    const sessionModel = new SessionModel(serverDB, ctx.userId);
+    const serverDB = await getServerDB();
+    const sessionModel = new SessionModel(serverDB, ctx.userId!);
 
     return sessionModel.queryWithGroups();
   }),
@@ -151,12 +155,8 @@ export const sessionRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const session = await ctx.sessionModel.findByIdOrSlug(input.id);
-
-      if (!session) return;
-
-      return ctx.sessionModel.updateConfig(session.agent.id, {
-        chatConfig: merge(session.agent.chatConfig, input.value),
+      return ctx.sessionModel.updateConfig(input.id, {
+        chatConfig: input.value,
       });
     }),
   updateSessionConfig: sessionProcedure
@@ -167,17 +167,7 @@ export const sessionRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const session = await ctx.sessionModel.findByIdOrSlug(input.id);
-
-      if (!session || !input.value) return;
-
-      if (!session.agent) {
-        throw new Error(
-          'this session is not assign with agent, please contact with admin to fix this issue.',
-        );
-      }
-
-      return ctx.sessionModel.updateConfig(session.agent.id, input.value);
+      return ctx.sessionModel.updateConfig(input.id, input.value);
     }),
 });
 

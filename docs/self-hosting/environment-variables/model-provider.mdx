@@ -1,9 +1,8 @@
 ---
 title: LobeChat Model Service Providers - Environment Variables and Configuration
 description: >-
-  Learn about the environment variables and configuration settings for various
-  model service providers like OpenAI, Google AI, AWS Bedrock, Ollama,
-  Perplexity AI, Anthropic AI, Mistral AI, Groq AI, OpenRouter AI, and 01.AI.
+  Learn about the environment variables and configuration settings for various model service providers like OpenAI, Google AI, AWS Bedrock, Ollama, Perplexity AI, Anthropic AI, Mistral AI, Groq AI, OpenRouter AI, and 01.AI.
+
 tags:
   - Model Service Providers
   - Environment Variables
@@ -173,8 +172,8 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 
 - Type: Optional
 - Description: If you manually configure the DeepSeek API proxy, you can use this configuration item to override the default DeepSeek API request base URL
-- Default: -
-- Example: `https://xxxx.models.ai.azure.com/v1`
+- Default: `https://api.deepseek.com`
+- Example: `https://my-deepseek-proxy.com`
 
 ### `DEEPSEEK_API_KEY`
 
@@ -320,6 +319,13 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Default: -
 - Example: `Y2xpdGhpMzNhZXNoYjVtdnZjMWc6bXNrLWIxQlk3aDNPaXpBWnc0V1RaMDhSRmRFVlpZUWY=`
 
+### `MOONSHOT_PROXY_URL`
+
+- Type: Optional
+- Description: If you manually configure the Moonshot API proxy, you can use this configuration item to override the default Moonshot API request base URL
+- Default: `https://api.moonshot.cn/v1`
+- Example: `https://my-moonshot-proxy.com/v1`
+
 ## Perplexity AI
 
 ### `PERPLEXITY_API_KEY`
@@ -416,6 +422,29 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Default: `-`
 - Example: `-all,+yi-large,+yi-large-rag`
 
+## Qiniu
+
+### `QINIU_API_KEY`
+
+- Type: Required
+- Description: This is the API key you can obtain from Qiniu AI service
+- Default: -
+- Example：`sk-xxxxx...xxxxx`
+
+### `QINIU_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+deepseek-r1,+deepseek-v3`
+
+### `QINIU_PROXY_URL`
+
+- Type: Optional
+- Description: If you manually configure the Qiniu API proxy, you can use this configuration item to override the default Qiniu API request base URL
+- Default: `https://api.qnaigc.com/v1`
+- Example: `https://my-qnaigc.com/v1`
+
 ## Qwen
 
 ### `QWEN_API_KEY`
@@ -428,9 +457,9 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `QWEN_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name->deploymentName=display_name` to customize the display name of a model, separated by commas. The deploymentName `->deploymentName` can be omitted, and it defaults to the latest model version. Definition syntax rules see [model-list][model-list]
 - Default: `-`
-- Example: `-all,+qwen-turbo-latest,+qwen-plus-latest`
+- Example: `-all,+qwen-turbo,+qwen-plus,+qwen-max->qwen-max-2025-01-25`
 
 ### `QWEN_PROXY_URL`
 
@@ -569,9 +598,56 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 ### `VOLCENGINE_MODEL_LIST`
 
 - Type: Optional
-- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name->deploymentName=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name->deploymentName=display_name` to customize the display name of a model, separated by commas. The deploymentName `->deploymentName` can be omitted, and it defaults to the latest model version. Definition syntax rules see [model-list][model-list]
 - Default: `-`
-- Example: `-all,+deepseek-r1->deepseek-r1-250120,+deepseek-v3->deepseek-v3-241226,+doubao-1.5-pro-256k->doubao-1-5-pro-256k-250115,+doubao-1.5-pro-32k->doubao-1-5-pro-32k-250115,+doubao-1.5-lite-32k->doubao-1-5-lite-32k-250115`
+- Example: `-all,+deepseek-r1,+deepseek-v3->deepseek-v3-250324,+doubao-1.5-pro-256k,+doubao-1.5-pro-32k->doubao-1-5-pro-32k-250115,+doubao-1.5-lite-32k`
 
+### `VOLCENGINE_PROXY_URL`
+
+- Type: Optional
+- Description: If you manually configure the Volcengine API proxy, you can use this configuration item to override the default Volcengine API request base URL
+- Default: `https://ark.cn-beijing.volces.com/api/v3`
+- Example: `https://my-volcengine-proxy.com/v1`
+
+## InfiniAI
+
+### `INFINIAI_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied from Infini-AI, you can check it out [here](https://cloud.infini-ai.com)
+- Default: -
+- Example: `sk-xxxxxx...xxxxxx`
+
+### `INFINIAI_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+qwq-32b,+deepseek-r1`
+
+## FAL
+
+### `ENABLED_FAL`
+
+- Type: Optional
+- Description: Enables FAL as a model provider by default. Set to `0` to disable the FAL service.
+- Default: `1`
+- Example: `0`
+
+### `FAL_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the FAL service.
+- Default: -
+- Example: `fal-xxxxxx...xxxxxx`
+
+### `FAL_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the FAL model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model. Separate multiple entries with commas. The definition syntax follows the same rules as other providers' model lists.
+- Default: `-`
+- Example: `-all,+fal-model-1,+fal-model-2=fal-special`
+
+The above example disables all models first, then enables `fal-model-1` and `fal-model-2` (displayed as `fal-special`).
 
 [model-list]: /docs/self-hosting/advanced/model-list

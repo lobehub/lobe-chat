@@ -8,8 +8,8 @@ import { and, eq } from 'drizzle-orm/expressions';
 import type { NeonDatabase } from 'drizzle-orm/neon-serverless';
 import { Adapter, AdapterAccount } from 'next-auth/adapters';
 
+import { UserModel } from '@/database/models/user';
 import * as schema from '@/database/schemas';
-import { UserModel } from '@/database/server/models/user';
 import { AgentService } from '@/server/services/agent';
 import { merge } from '@/utils/merge';
 

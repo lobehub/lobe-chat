@@ -11,7 +11,7 @@ const PluginSchema = z.object({
   identifier: z.string(),
   arguments: z.string(),
   apiName: z.string(),
-  type: z.enum(['default', 'markdown', 'standalone', 'builtin']).default('default'),
+  type: z.enum(['default', 'markdown', 'standalone', 'builtin', 'mcp']).default('default'),
 });
 
 const ToolCallSchema = PluginSchema.extend({

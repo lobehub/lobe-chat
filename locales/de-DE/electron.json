@@ -1,0 +1,113 @@
+{
+  "notification": {
+    "finishChatGeneration": "KI-Nachricht wurde vollständig generiert"
+  },
+  "proxy": {
+    "auth": "Authentifizierung erforderlich",
+    "authDesc": "Wenn der Proxy-Server Benutzername und Passwort benötigt",
+    "authSettings": "Authentifizierungseinstellungen",
+    "basicSettings": "Proxy-Einstellungen",
+    "basicSettingsDesc": "Konfigurieren Sie die Verbindungsparameter des Proxy-Servers",
+    "bypass": "Adressen ohne Proxy",
+    "connectionTest": "Verbindungstest",
+    "enable": "Proxy aktivieren",
+    "enableDesc": "Wenn aktiviert, wird der Netzwerkzugang über den Proxy-Server geleitet",
+    "password": "Passwort",
+    "password_placeholder": "Bitte Passwort eingeben",
+    "port": "Port",
+    "resetButton": "Zurücksetzen",
+    "saveButton": "Speichern",
+    "saveFailed": "Speichern fehlgeschlagen: {{error}}",
+    "saveSuccess": "Proxy-Einstellungen erfolgreich gespeichert",
+    "server": "Serveradresse",
+    "testButton": "Verbindung testen",
+    "testDescription": "Testen Sie die Verbindung mit der aktuellen Proxy-Konfiguration, um die Funktionalität zu überprüfen",
+    "testFailed": "Verbindung fehlgeschlagen",
+    "testSuccessWithTime": "Verbindung erfolgreich getestet, Dauer {{time}} ms",
+    "testUrl": "Test-URL",
+    "testUrlPlaceholder": "Bitte die zu testende URL eingeben",
+    "testing": "Verbindung wird getestet...",
+    "type": "Proxy-Typ",
+    "unsavedChanges": "Sie haben ungespeicherte Änderungen",
+    "username": "Benutzername",
+    "username_placeholder": "Bitte Benutzernamen eingeben",
+    "validation": {
+      "passwordRequired": "Passwort ist erforderlich, wenn die Authentifizierung aktiviert ist",
+      "portInvalid": "Der Port muss eine Zahl zwischen 1 und 65535 sein",
+      "portRequired": "Port ist erforderlich, wenn der Proxy aktiviert ist",
+      "serverInvalid": "Bitte geben Sie eine gültige Serveradresse (IP oder Domain) ein",
+      "serverRequired": "Serveradresse ist erforderlich, wenn der Proxy aktiviert ist",
+      "typeRequired": "Proxy-Typ ist erforderlich, wenn der Proxy aktiviert ist",
+      "usernameRequired": "Benutzername ist erforderlich, wenn die Authentifizierung aktiviert ist"
+    }
+  },
+  "remoteServer": {
+    "authError": "Autorisierung fehlgeschlagen: {{error}}",
+    "authPending": "Bitte schließen Sie die Autorisierung im Browser ab",
+    "configDesc": "Verbinden Sie sich mit dem Remote LobeChat-Server, um die Datensynchronisierung zu aktivieren",
+    "configError": "Konfigurationsfehler",
+    "configTitle": "Cloud-Synchronisierung konfigurieren",
+    "connect": "Verbinden und autorisieren",
+    "connected": "Verbunden",
+    "disconnect": "Trennen",
+    "disconnectError": "Trennen fehlgeschlagen",
+    "disconnected": "Nicht verbunden",
+    "fetchError": "Fehler beim Abrufen der Konfiguration",
+    "invalidUrl": "Bitte geben Sie eine gültige URL ein",
+    "serverUrl": "Serveradresse",
+    "statusConnected": "Verbunden",
+    "statusDisconnected": "Nicht verbunden",
+    "urlRequired": "Bitte geben Sie die Serveradresse ein"
+  },
+  "sync": {
+    "continue": "Fortfahren",
+    "inCloud": "Aktuell Cloud-Synchronisierung verwenden",
+    "inLocalStorage": "Aktuell lokale Speicherung verwenden",
+    "isIniting": "Wird initialisiert...",
+    "lobehubCloud": {
+      "description": "Offizielle Cloud-Version",
+      "title": "LobeHub Cloud"
+    },
+    "local": {
+      "description": "Verwendet lokale Datenbank, vollständig offline verfügbar",
+      "title": "Lokale Datenbank"
+    },
+    "mode": {
+      "cloudSync": "Cloud-Synchronisierung",
+      "localStorage": "Lokale Speicherung",
+      "title": "Wählen Sie Ihren Verbindungsmodus",
+      "useSelfHosted": "Selbstgehostete Instanz verwenden?"
+    },
+    "selfHosted": {
+      "description": "Community-Version, die selbst bereitgestellt wird",
+      "title": "Selbstgehostete Instanz"
+    }
+  },
+  "updater": {
+    "checkingUpdate": "Überprüfen auf Updates",
+    "checkingUpdateDesc": "Versioninformationen werden abgerufen...",
+    "downloadNewVersion": "Neue Version herunterladen",
+    "downloadingUpdate": "Update wird heruntergeladen",
+    "downloadingUpdateDesc": "Das Update wird heruntergeladen, bitte warten...",
+    "installLater": "Beim nächsten Start aktualisieren",
+    "isLatestVersion": "Sie verwenden bereits die neueste Version",
+    "isLatestVersionDesc": "Fantastisch, die verwendete Version {{version}} ist die aktuellste Version.",
+    "later": "Später aktualisieren",
+    "newVersionAvailable": "Neue Version verfügbar",
+    "newVersionAvailableDesc": "Eine neue Version {{version}} wurde gefunden, möchten Sie jetzt herunterladen?",
+    "restartAndInstall": "Update installieren und neu starten",
+    "updateError": "Update-Fehler",
+    "updateReady": "Update ist bereit",
+    "updateReadyDesc": "Die neue Version {{version}} wurde heruntergeladen, die Installation wird nach dem Neustart der Anwendung abgeschlossen.",
+    "upgradeNow": "Jetzt aktualisieren"
+  },
+  "waitingOAuth": {
+    "cancel": "Abbrechen",
+    "description": "Der Browser hat die Autorisierungsseite geöffnet, bitte schließen Sie die Autorisierung im Browser ab",
+    "error": "Autorisierung fehlgeschlagen: {{error}}",
+    "errorTitle": "Verbindungsfehler bei der Autorisierung",
+    "helpText": "Wenn der Browser nicht automatisch geöffnet wurde, klicken Sie bitte auf Abbrechen und versuchen Sie es erneut",
+    "retry": "Erneut versuchen",
+    "title": "Warten auf Autorisierungsverbindung"
+  }
+}

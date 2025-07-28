@@ -1,0 +1,100 @@
+{
+  "config": {
+    "aspectRatio": {
+      "label": "Verhouding",
+      "lock": "Vergrendel beeldverhouding",
+      "unlock": "Ontgrendel beeldverhouding"
+    },
+    "header": {
+      "desc": "Eenvoudige beschrijving, direct creëren",
+      "title": "Schilderen"
+    },
+    "height": {
+      "label": "Hoogte"
+    },
+    "imageNum": {
+      "label": "Aantal afbeeldingen"
+    },
+    "imageUrl": {
+      "label": "Referentieafbeelding"
+    },
+    "imageUrls": {
+      "label": "Referentieafbeeldingen"
+    },
+    "model": {
+      "label": "Model"
+    },
+    "prompt": {
+      "placeholder": "Beschrijf wat je wilt genereren"
+    },
+    "seed": {
+      "label": "Zaad",
+      "random": "Willekeurige zaad"
+    },
+    "size": {
+      "label": "Afmeting"
+    },
+    "steps": {
+      "label": "Stappen"
+    },
+    "title": "AI Tekenen",
+    "width": {
+      "label": "Breedte"
+    }
+  },
+  "generation": {
+    "actions": {
+      "applySeed": "Zaad toepassen",
+      "copyError": "Foutmelding kopiëren",
+      "copyPrompt": "Prompt kopiëren",
+      "copySeed": "Zaad kopiëren",
+      "delete": "Verwijderen",
+      "deleteBatch": "Batch verwijderen",
+      "download": "Downloaden",
+      "downloadFailed": "Afbeelding downloaden mislukt",
+      "errorCopied": "Foutmelding gekopieerd naar klembord",
+      "errorCopyFailed": "Foutmelding kopiëren mislukt",
+      "generate": "Genereren",
+      "promptCopied": "Prompt gekopieerd naar klembord",
+      "promptCopyFailed": "Prompt kopiëren mislukt",
+      "reuseSettings": "Instellingen hergebruiken",
+      "seedApplied": "Zaad is toegepast op de configuratie",
+      "seedApplyFailed": "Toepassen van zaad mislukt",
+      "seedCopied": "Zaad gekopieerd naar klembord",
+      "seedCopyFailed": "Zaad kopiëren mislukt"
+    },
+    "metadata": {
+      "count": "{{count}} afbeeldingen"
+    },
+    "status": {
+      "failed": "Generatie mislukt",
+      "generating": "Bezig met genereren..."
+    }
+  },
+  "notSupportGuide": {
+    "desc": "De huidige implementatie gebruikt een client-database modus en ondersteunt geen AI-beeldgeneratie. Schakel over naar de <1>server-database modus</1> of gebruik direct <3>LobeChat Cloud</3>",
+    "features": {
+      "fileIntegration": {
+        "desc": "Diepe integratie met het bestandsbeheersysteem, gegenereerde afbeeldingen worden automatisch opgeslagen in het bestandssysteem voor gecentraliseerd beheer en organisatie",
+        "title": "Bestandssysteem integratie"
+      },
+      "llmAssisted": {
+        "desc": "Combineert de kracht van grote taalmodellen om prompts intelligent te optimaliseren en uit te breiden, wat de beeldgeneratiekwaliteit verbetert (Binnenkort beschikbaar)",
+        "title": "LLM-ondersteunde beeldgeneratie"
+      },
+      "multiProviders": {
+        "desc": "Ondersteunt meerdere AI-tekenproviders, waaronder OpenAI gpt-image-1, Google Imagen, FAL.ai, enz., met een breed scala aan modelkeuzes",
+        "title": "Ondersteuning voor meerdere providers"
+      }
+    },
+    "title": "De huidige implementatiemodus ondersteunt geen AI-tekenen"
+  },
+  "topic": {
+    "createNew": "Nieuw onderwerp aanmaken",
+    "deleteConfirm": "Onderwerp verwijderen",
+    "deleteConfirmDesc": "U staat op het punt dit gegenereerde onderwerp te verwijderen. Verwijdering is onomkeerbaar, wees voorzichtig.",
+    "empty": "Geen gegenereerde onderwerpen",
+    "title": "Schilderthema",
+    "untitled": "Standaard onderwerp"
+  }
+}

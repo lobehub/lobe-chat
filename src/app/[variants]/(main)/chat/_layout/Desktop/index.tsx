@@ -1,9 +1,12 @@
+import { Suspense } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import InitClientDB from '@/features/InitClientDB';
 
 import { LayoutProps } from '../type';
+import RegisterHotkeys from './RegisterHotkeys';
 import SessionPanel from './SessionPanel';
+import Workspace from './Workspace';
 
 const Layout = ({ children, session }: LayoutProps) => {
   return (
@@ -15,14 +18,15 @@ const Layout = ({ children, session }: LayoutProps) => {
         width={'100%'}
       >
         <SessionPanel>{session}</SessionPanel>
-        <Flexbox flex={1} style={{ overflow: 'hidden', position: 'relative' }}>
-          {children}
-        </Flexbox>
+        <Workspace>{children}</Workspace>
       </Flexbox>
       <InitClientDB bottom={60} />
       {/* ↓ cloud slot ↓ */}
 
       {/* ↑ cloud slot ↑ */}
+      <Suspense>
+        <RegisterHotkeys />
+      </Suspense>
     </>
   );
 };

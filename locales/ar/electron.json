@@ -1,0 +1,113 @@
+{
+  "notification": {
+    "finishChatGeneration": "تم إنشاء رسالة الذكاء الاصطناعي بنجاح"
+  },
+  "proxy": {
+    "auth": "يتطلب المصادقة",
+    "authDesc": "إذا كان خادم الوكيل يتطلب اسم مستخدم وكلمة مرور",
+    "authSettings": "إعدادات المصادقة",
+    "basicSettings": "إعدادات الوكيل",
+    "basicSettingsDesc": "تكوين معلمات اتصال خادم الوكيل",
+    "bypass": "العناوين التي لا تستخدم الوكيل",
+    "connectionTest": "اختبار الاتصال",
+    "enable": "تفعيل الوكيل",
+    "enableDesc": "عند التفعيل، سيتم الوصول إلى الشبكة عبر خادم الوكيل",
+    "password": "كلمة المرور",
+    "password_placeholder": "الرجاء إدخال كلمة المرور",
+    "port": "المنفذ",
+    "resetButton": "إعادة تعيين",
+    "saveButton": "حفظ",
+    "saveFailed": "فشل الحفظ: {{error}}",
+    "saveSuccess": "تم حفظ إعدادات الوكيل بنجاح",
+    "server": "عنوان الخادم",
+    "testButton": "اختبار الاتصال",
+    "testDescription": "اختبر الاتصال باستخدام إعدادات الوكيل الحالية للتحقق من صحة التكوين",
+    "testFailed": "فشل الاتصال",
+    "testSuccessWithTime": "تم اختبار الاتصال بنجاح، استغرق {{time}} مللي ثانية",
+    "testUrl": "عنوان الاختبار",
+    "testUrlPlaceholder": "الرجاء إدخال عنوان URL للاختبار",
+    "testing": "جارٍ اختبار الاتصال...",
+    "type": "نوع الوكيل",
+    "unsavedChanges": "لديك تغييرات غير محفوظة",
+    "username": "اسم المستخدم",
+    "username_placeholder": "الرجاء إدخال اسم المستخدم",
+    "validation": {
+      "passwordRequired": "كلمة المرور مطلوبة عند تفعيل المصادقة",
+      "portInvalid": "يجب أن يكون المنفذ رقمًا بين 1 و 65535",
+      "portRequired": "المنفذ مطلوب عند تفعيل الوكيل",
+      "serverInvalid": "يرجى إدخال عنوان خادم صالح (IP أو اسم نطاق)",
+      "serverRequired": "عنوان الخادم مطلوب عند تفعيل الوكيل",
+      "typeRequired": "نوع الوكيل مطلوب عند تفعيل الوكيل",
+      "usernameRequired": "اسم المستخدم مطلوب عند تفعيل المصادقة"
+    }
+  },
+  "remoteServer": {
+    "authError": "فشل التفويض: {{error}}",
+    "authPending": "يرجى إكمال التفويض في المتصفح",
+    "configDesc": "الاتصال بخادم LobeChat البعيد، تمكين مزامنة البيانات",
+    "configError": "خطأ في التكوين",
+    "configTitle": "تكوين المزامنة السحابية",
+    "connect": "الاتصال والتفويض",
+    "connected": "متصل",
+    "disconnect": "قطع الاتصال",
+    "disconnectError": "فشل في قطع الاتصال",
+    "disconnected": "غير متصل",
+    "fetchError": "فشل في جلب التكوين",
+    "invalidUrl": "يرجى إدخال عنوان URL صالح",
+    "serverUrl": "عنوان الخادم",
+    "statusConnected": "متصل",
+    "statusDisconnected": "غير متصل",
+    "urlRequired": "يرجى إدخال عنوان الخادم"
+  },
+  "sync": {
+    "continue": "استمر",
+    "inCloud": "تستخدم حاليًا المزامنة السحابية",
+    "inLocalStorage": "تستخدم حاليًا التخزين المحلي",
+    "isIniting": "جارٍ التهيئة...",
+    "lobehubCloud": {
+      "description": "الإصدار السحابي المقدم رسميًا",
+      "title": "LobeHub Cloud"
+    },
+    "local": {
+      "description": "استخدام قاعدة بيانات محلية، متاحة بالكامل دون اتصال",
+      "title": "قاعدة بيانات محلية"
+    },
+    "mode": {
+      "cloudSync": "مزامنة سحابية",
+      "localStorage": "تخزين محلي",
+      "title": "اختر وضع الاتصال الخاص بك",
+      "useSelfHosted": "استخدام نسخة مستضافة ذاتيًا؟"
+    },
+    "selfHosted": {
+      "description": "نسخة المجتمع التي تم نشرها ذاتيًا",
+      "title": "نسخة مستضافة ذاتيًا"
+    }
+  },
+  "updater": {
+    "checkingUpdate": "التحقق من وجود تحديثات",
+    "checkingUpdateDesc": "جارٍ الحصول على معلومات الإصدار...",
+    "downloadNewVersion": "تحميل إصدار جديد",
+    "downloadingUpdate": "جارٍ تنزيل التحديث",
+    "downloadingUpdateDesc": "يتم تنزيل التحديث، يرجى الانتظار...",
+    "installLater": "تحديث عند بدء التشغيل التالي",
+    "isLatestVersion": "الإصدار الحالي هو الأحدث",
+    "isLatestVersionDesc": "رائع، الإصدار {{version}} الذي تستخدمه هو أحدث إصدار متاح.",
+    "later": "تحديث لاحقًا",
+    "newVersionAvailable": "يتوفر إصدار جديد",
+    "newVersionAvailableDesc": "تم العثور على إصدار جديد {{version}}، هل ترغب في التنزيل الآن؟",
+    "restartAndInstall": "تثبيت التحديث وإعادة التشغيل",
+    "updateError": "خطأ في التحديث",
+    "updateReady": "التحديث جاهز",
+    "updateReadyDesc": "تم تنزيل الإصدار الجديد {{version}}، يمكنك إكمال التثبيت بعد إعادة تشغيل التطبيق.",
+    "upgradeNow": "تحديث الآن"
+  },
+  "waitingOAuth": {
+    "cancel": "إلغاء",
+    "description": "تم فتح صفحة التفويض في المتصفح، يرجى إكمال التفويض في المتصفح",
+    "error": "فشل التفويض: {{error}}",
+    "errorTitle": "فشل في الاتصال بالتفويض",
+    "helpText": "إذا لم يفتح المتصفح تلقائيًا، يرجى النقر على إلغاء ثم المحاولة مرة أخرى",
+    "retry": "أعد المحاولة",
+    "title": "انتظار الاتصال بالتفويض"
+  }
+}

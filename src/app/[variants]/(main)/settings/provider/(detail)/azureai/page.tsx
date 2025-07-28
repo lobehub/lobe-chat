@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { FormInput, FormPassword } from '@/components/FormInput';
 import { AzureAIProviderCard } from '@/config/modelProviders';
-import { ModelProvider } from '@/libs/agent-runtime';
+import { ModelProvider } from '@/libs/model-runtime';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 
 import { KeyVaultsConfigKey, LLMProviderApiTokenKey, LLMProviderBaseUrlKey } from '../../const';

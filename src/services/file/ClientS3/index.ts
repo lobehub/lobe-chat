@@ -38,7 +38,8 @@ export class BrowserS3Storage {
 
       return new File([res.data], res!.name, { type: res?.type });
     } catch (e) {
-      throw new Error(`Failed to get object (key=${key}): ${(e as Error).message}`);
+      console.log(`Failed to get object (key=${key}):`, e);
+      return undefined;
     }
   };
 

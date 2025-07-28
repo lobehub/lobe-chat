@@ -4,14 +4,14 @@ import { eq } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
-import { getTestDBInstance } from '@/database/server/core/dbForTest';
+import { getTestDBInstance } from '@/database/core/dbForTest';
 import { LobeChatDatabase } from '@/database/type';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { UserGuide, UserPreference } from '@/types/user';
 
+import { SessionModel } from '../../../models/session';
+import { UserModel, UserNotFoundError } from '../../../models/user';
 import { UserSettingsItem, userSettings, users } from '../../../schemas';
-import { SessionModel } from '../session';
-import { UserModel, UserNotFoundError } from '../user';
 
 let serverDB = await getTestDBInstance();
 

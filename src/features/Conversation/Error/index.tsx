@@ -6,19 +6,24 @@ import { Suspense, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useProviderName } from '@/hooks/useProviderName';
-import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
+import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/model-runtime';
 import { ChatErrorType, ErrorType } from '@/types/fetch';
 import { ChatMessage, ChatMessageError } from '@/types/message';
 
+import ChatInvalidAPIKey from './ChatInvalidApiKey';
 import ClerkLogin from './ClerkLogin';
 import ErrorJsonViewer from './ErrorJsonViewer';
-import InvalidAPIKey from './InvalidAPIKey';
 import InvalidAccessCode from './InvalidAccessCode';
 import { ErrorActionContainer } from './style';
 
 const loading = () => <Skeleton active />;
 
 const OllamaBizError = dynamic(() => import('./OllamaBizError'), { loading, ssr: false });
+
+const OllamaSetupGuide = dynamic(() => import('@/features/OllamaSetupGuide'), {
+  loading,
+  ssr: false,
+});
 
 // Config for the errorMessage display
 const getErrorAlertConfig = (
@@ -49,6 +54,7 @@ const getErrorAlertConfig = (
       };
     }
 
+    case AgentRuntimeErrorType.OllamaServiceUnavailable:
     case AgentRuntimeErrorType.NoOpenAIAPIKey: {
       return {
         extraDefaultExpand: true,
@@ -85,6 +91,10 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
   if (!error?.type) return;
 
   switch (error.type) {
+    case AgentRuntimeErrorType.OllamaServiceUnavailable: {
+      return <OllamaSetupGuide id={data.id} />;
+    }
+
     case AgentRuntimeErrorType.OllamaBizError: {
       return <OllamaBizError {...data} />;
     }
@@ -103,13 +113,13 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
 
     case AgentRuntimeErrorType.NoOpenAIAPIKey: {
       {
-        return <InvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
+        return <ChatInvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
       }
     }
   }
 
   if (error.type.toString().includes('Invalid')) {
-    return <InvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
+    return <ChatInvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
   }
 
   return <ErrorJsonViewer error={data.error} id={data.id} />;

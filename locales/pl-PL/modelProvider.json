@@ -66,6 +66,7 @@
       "customRegion": "Niestandardowy region usługi",
       "customSessionToken": "Niestandardowy token sesji",
       "description": "Wprowadź swój AWS AccessKeyId / SecretAccessKey, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojej konfiguracji uwierzytelniania",
+      "imageGenerationDescription": "Wprowadź swój AWS AccessKeyId / SecretAccessKey, aby rozpocząć generowanie. Aplikacja nie będzie zapisywać Twoich danych uwierzytelniających",
       "title": "Użyj niestandardowych informacji uwierzytelniających Bedrock"
     }
   },
@@ -164,6 +165,7 @@
     },
     "download": {
       "desc": "Ollama pobiera ten model, proszę nie zamykać tej strony. Wznowienie pobierania nastąpi od miejsca przerwania",
+      "failed": "Pobieranie modelu nie powiodło się, sprawdź połączenie sieciowe lub ustawienia Ollama, a następnie spróbuj ponownie",
       "remainingTime": "Pozostały czas",
       "speed": "Prędkość pobierania",
       "title": "Pobieranie modelu {{model}}"
@@ -207,6 +209,10 @@
         "title": "Użyj trybu żądania klienta"
       },
       "helpDoc": "Dokumentacja konfiguracyjna",
+      "responsesApi": {
+        "desc": "Wykorzystuje nową generację formatu zapytań OpenAI, odblokowując zaawansowane funkcje, takie jak łańcuchy myślowe",
+        "title": "Użyj specyfikacji Responses API"
+      },
       "waitingForMore": "Więcej modeli jest w <1>planach integracji</1>, proszę czekać"
     },
     "createNew": {
