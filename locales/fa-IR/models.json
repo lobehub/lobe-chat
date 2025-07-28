@@ -1100,6 +1100,9 @@
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash مدل با بهترین نسبت قیمت به کارایی گوگل است که امکانات جامع را ارائه می‌دهد."
   },
+  "gemini-2.5-flash-lite": {
+    "description": "Gemini 2.5 Flash-Lite کوچک‌ترین و مقرون‌به‌صرفه‌ترین مدل گوگل است که برای استفاده در مقیاس وسیع طراحی شده است."
+  },
   "gemini-2.5-flash-lite-preview-06-17": {
     "description": "Gemini 2.5 Flash-Lite Preview کوچک‌ترین و مقرون‌به‌صرفه‌ترین مدل گوگل است که برای استفاده در مقیاس بزرگ طراحی شده است."
   },

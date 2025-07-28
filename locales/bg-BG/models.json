@@ -1100,6 +1100,9 @@
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash е най-ефективният модел на Google, предлагащ пълна функционалност."
   },
+  "gemini-2.5-flash-lite": {
+    "description": "Gemini 2.5 Flash-Lite е най-малкият и най-ефективен модел на Google, създаден специално за масово използване."
+  },
   "gemini-2.5-flash-lite-preview-06-17": {
     "description": "Gemini 2.5 Flash-Lite Preview е най-малкият и най-ефективен модел на Google, проектиран за мащабна употреба."
   },
