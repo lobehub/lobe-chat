@@ -12,7 +12,7 @@ export const LobeZhipuAI = createOpenAICompatibleRuntime({
   baseURL: 'https://open.bigmodel.cn/api/paas/v4',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { enabledSearch, max_tokens, model, temperature, tools, top_p, ...rest } = payload;
+      const { enabledSearch, max_tokens, model, temperature, thinking, tools, top_p, ...rest } = payload;
 
       const zhipuTools = enabledSearch
         ? [
@@ -39,6 +39,7 @@ export const LobeZhipuAI = createOpenAICompatibleRuntime({
               max_tokens,
         model,
         stream: true,
+        thinking: model.includes('-4.5') ? { type: thinking?.type } : undefined,
         tools: zhipuTools,
         ...(model === 'glm-4-alltools'
           ? {
