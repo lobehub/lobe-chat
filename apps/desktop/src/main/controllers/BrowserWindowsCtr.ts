@@ -7,7 +7,7 @@ import { IpcClientEventSender } from '@/types/ipcClientEvent';
 import { ControllerModule, ipcClientEvent, shortcut } from './index';
 
 export default class BrowserWindowsCtr extends ControllerModule {
-  @shortcut('showMainWindow')
+  @shortcut('showApp')
   async toggleMainWindow() {
     const mainWindow = this.app.browserManager.getMainWindow();
     mainWindow.toggleVisible();

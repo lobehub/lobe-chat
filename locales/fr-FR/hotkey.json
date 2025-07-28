@@ -7,6 +7,16 @@
     "desc": "Effacer les messages de la session actuelle et les fichiers téléchargés",
     "title": "Effacer les messages de la session"
   },
+  "desktop": {
+    "openSettings": {
+      "desc": "Ouvrir la page des paramètres de l'application",
+      "title": "Paramètres de l'application"
+    },
+    "showApp": {
+      "desc": "Afficher ou masquer la fenêtre principale via un raccourci global",
+      "title": "Afficher/Masquer la fenêtre principale"
+    }
+  },
   "editMessage": {
     "desc": "Entrez en mode édition en maintenant la touche Alt enfoncée et en double-cliquant sur le message",
     "title": "Éditer le message"
@@ -18,10 +28,6 @@
   "openHotkeyHelper": {
     "desc": "Voir les instructions d'utilisation de tous les raccourcis",
     "title": "Ouvrir l'aide des raccourcis"
-  },
-  "openSettings": {
-    "desc": "Ouvrir la page des paramètres de l'application",
-    "title": "Paramètres de l'application"
   },
   "regenerateMessage": {
     "desc": "Régénérer le dernier message",

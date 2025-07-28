@@ -1100,6 +1100,9 @@
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash ist Googles kosteneffizientestes Modell und bietet umfassende Funktionen."
   },
+  "gemini-2.5-flash-lite": {
+    "description": "Gemini 2.5 Flash-Lite ist Googles kleinstes und kosteneffizientestes Modell, das speziell für den großflächigen Einsatz entwickelt wurde."
+  },
   "gemini-2.5-flash-lite-preview-06-17": {
     "description": "Gemini 2.5 Flash-Lite Preview ist Googles kleinstes und kosteneffizientestes Modell, speziell für den großflächigen Einsatz konzipiert."
   },

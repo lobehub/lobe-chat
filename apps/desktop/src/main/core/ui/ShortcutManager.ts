@@ -8,6 +8,17 @@ import type { App } from '../App';
 // Create logger
 const logger = createLogger('core:ShortcutManager');
 
+export interface ShortcutUpdateResult {
+  errorType?:
+    | 'INVALID_ID'
+    | 'INVALID_FORMAT'
+    | 'NO_MODIFIER'
+    | 'CONFLICT'
+    | 'SYSTEM_OCCUPIED'
+    | 'UNKNOWN';
+  success: boolean;
+}
+
 export class ShortcutManager {
   private app: App;
   private shortcuts: Map<string, () => void> = new Map();
@@ -20,6 +31,28 @@ export class ShortcutManager {
     app.shortcutMethodMap.forEach((method, key) => {
       this.shortcuts.set(key, method);
     });
+  }
+
+  /**
+   * Convert react-hotkey format to Electron accelerator format
+   * @param accelerator The accelerator string from frontend
+   * @returns Converted accelerator string for Electron
+   */
+  private convertAcceleratorFormat(accelerator: string): string {
+    return accelerator
+      .split('+')
+      .map((key) => {
+        const trimmedKey = key.trim().toLowerCase();
+
+        // Convert react-hotkey 'mod' to Electron 'CommandOrControl'
+        if (trimmedKey === 'mod') {
+          return 'CommandOrControl';
+        }
+
+        // Keep other keys as is, but preserve proper casing
+        return key.trim().length === 1 ? key.trim().toUpperCase() : key.trim();
+      })
+      .join('+');
   }
 
   initialize() {
@@ -40,18 +73,79 @@ export class ShortcutManager {
   /**
    * Update a single shortcut configuration
    */
-  updateShortcutConfig(id: string, accelerator: string): boolean {
+  updateShortcutConfig(id: string, accelerator: string): ShortcutUpdateResult {
     try {
       logger.debug(`Updating shortcut ${id} to ${accelerator}`);
-      // Update configuration
-      this.shortcutsConfig[id] = accelerator;
+
+      // 1. 检查 ID 是否有效
+      if (!DEFAULT_SHORTCUTS_CONFIG[id]) {
+        logger.error(`Invalid shortcut ID: ${id}`);
+        return { errorType: 'INVALID_ID', success: false };
+      }
+
+      // 2. 基本格式校验
+      if (!accelerator || typeof accelerator !== 'string' || accelerator.trim() === '') {
+        logger.error(`Invalid accelerator format: ${accelerator}`);
+        return { errorType: 'INVALID_FORMAT', success: false };
+      }
+
+      // 转换前端格式到 Electron 格式
+      const convertedAccelerator = this.convertAcceleratorFormat(accelerator.trim());
+      const cleanAccelerator = convertedAccelerator.toLowerCase();
+
+      logger.debug(`Converted accelerator from ${accelerator} to ${convertedAccelerator}`);
+
+      // 3. 检查是否包含 + 号（修饰键格式）
+      if (!cleanAccelerator.includes('+')) {
+        logger.error(
+          `Invalid accelerator format: ${cleanAccelerator}. Must contain modifier keys like 'CommandOrControl+E'`,
+        );
+        return { errorType: 'INVALID_FORMAT', success: false };
+      }
+
+      // 4. 检查是否有基本的修饰键
+      const hasModifier = ['CommandOrControl', 'Command', 'Ctrl', 'Alt', 'Shift'].some((modifier) =>
+        cleanAccelerator.includes(modifier.toLowerCase()),
+      );
+
+      if (!hasModifier) {
+        logger.error(`Invalid accelerator format: ${cleanAccelerator}. Must contain modifier keys`);
+        return { errorType: 'NO_MODIFIER', success: false };
+      }
+
+      // 5. 检查冲突
+      for (const [existingId, existingAccelerator] of Object.entries(this.shortcutsConfig)) {
+        if (
+          existingId !== id &&
+          typeof existingAccelerator === 'string' &&
+          existingAccelerator.toLowerCase() === cleanAccelerator
+        ) {
+          logger.error(`Shortcut conflict: ${cleanAccelerator} already used by ${existingId}`);
+          return { errorType: 'CONFLICT', success: false };
+        }
+      }
+
+      // 6. 尝试注册测试（检查是否被系统占用）
+      const testSuccess = globalShortcut.register(convertedAccelerator, () => {});
+      if (!testSuccess) {
+        logger.error(
+          `Shortcut ${convertedAccelerator} is already registered by system or other app`,
+        );
+        return { errorType: 'SYSTEM_OCCUPIED', success: false };
+      } else {
+        // 测试成功，立即取消注册
+        globalShortcut.unregister(convertedAccelerator);
+      }
+
+      // 7. 更新配置
+      this.shortcutsConfig[id] = convertedAccelerator;
 
       this.saveShortcutsConfig();
       this.registerConfiguredShortcuts();
-      return true;
+      return { success: true };
     } catch (error) {
       logger.error(`Error updating shortcut ${id}:`, error);
-      return false;
+      return { errorType: 'UNKNOWN', success: false };
     }
   }
 
@@ -130,7 +224,34 @@ export class ShortcutManager {
         this.shortcutsConfig = DEFAULT_SHORTCUTS_CONFIG;
         this.saveShortcutsConfig();
       } else {
-        this.shortcutsConfig = config;
+        // Filter out invalid shortcuts that are not in DEFAULT_SHORTCUTS_CONFIG
+        const filteredConfig: Record<string, string> = {};
+        let hasInvalidKeys = false;
+
+        Object.entries(config).forEach(([id, accelerator]) => {
+          if (DEFAULT_SHORTCUTS_CONFIG[id]) {
+            filteredConfig[id] = accelerator;
+          } else {
+            hasInvalidKeys = true;
+            logger.debug(`Filtering out invalid shortcut ID: ${id}`);
+          }
+        });
+
+        // Ensure all default shortcuts are present
+        Object.entries(DEFAULT_SHORTCUTS_CONFIG).forEach(([id, defaultAccelerator]) => {
+          if (!(id in filteredConfig)) {
+            filteredConfig[id] = defaultAccelerator;
+            logger.debug(`Adding missing default shortcut: ${id} = ${defaultAccelerator}`);
+          }
+        });
+
+        this.shortcutsConfig = filteredConfig;
+
+        // Save the filtered configuration back to storage if we removed invalid keys
+        if (hasInvalidKeys) {
+          logger.debug('Saving filtered shortcuts config to remove invalid keys');
+          this.saveShortcutsConfig();
+        }
       }
 
       logger.debug('Loaded shortcuts config:', this.shortcutsConfig);
