@@ -2,6 +2,64 @@
 
 # Changelog
 
+## [Version&nbsp;1.104.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.103.3...v1.104.0)
+<sup>Released on **2025-07-28**</sup>
+
+
+#### ✨ Features
+
+- **misc**: Implement API Key management functionality, support custom hotkey on desktop.
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix update hotkey invalid when input mod in desktop, update convertUsage to handle XAI provider and adjust OpenAIStream to pass provider.
+
+
+#### 💄 Styles
+
+- **misc**: Add Gemini 2.5 Flash-Lite GA model, fix setting window layout size, fix setting window layout when in desktop was disappear, update i18n.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's improved
+
+* **misc**: Implement API Key management functionality, closes [#8535](https://github.com/jaworldwideorg/OneJA-Bot/issues/8535) ([fdaa725](https://github.com/jaworldwideorg/OneJA-Bot/commit/fdaa725))
+* **misc**: Support custom hotkey on desktop, closes [#8559](https://github.com/jaworldwideorg/OneJA-Bot/issues/8559) ([b50f121](https://github.com/jaworldwideorg/OneJA-Bot/commit/b50f121))
+
+
+
+#### What's fixed
+
+* **misc**: Fix update hotkey invalid when input mod in desktop, closes [#8572](https://github.com/jaworldwideorg/OneJA-Bot/issues/8572) ([07f3e6a](https://github.com/jaworldwideorg/OneJA-Bot/commit/07f3e6a))
+* **misc**: Update convertUsage to handle XAI provider and adjust OpenAIStream to pass provider, closes [#8557](https://github.com/jaworldwideorg/OneJA-Bot/issues/8557) ([d1e4a54](https://github.com/jaworldwideorg/OneJA-Bot/commit/d1e4a54))
+
+
+
+#### Styles
+
+* **misc**: Add Gemini 2.5 Flash-Lite GA model, closes [#8539](https://github.com/jaworldwideorg/OneJA-Bot/issues/8539) ([404ac21](https://github.com/jaworldwideorg/OneJA-Bot/commit/404ac21))
+* **misc**: Fix setting window layout size, closes [#8483](https://github.com/jaworldwideorg/OneJA-Bot/issues/8483) ([4902341](https://github.com/jaworldwideorg/OneJA-Bot/commit/4902341))
+* **misc**: Fix setting window layout when in desktop was disappear, closes [#8585](https://github.com/jaworldwideorg/OneJA-Bot/issues/8585) ([74ab822](https://github.com/jaworldwideorg/OneJA-Bot/commit/74ab822))
+* **misc**: Update i18n, closes [#8579](https://github.com/jaworldwideorg/OneJA-Bot/issues/8579) ([2eccbc7](https://github.com/jaworldwideorg/OneJA-Bot/commit/2eccbc7))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.103.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.103.1...v1.103.2)
 <sup>Released on **2025-07-24**</sup>
 
