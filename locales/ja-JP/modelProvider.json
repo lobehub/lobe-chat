@@ -189,6 +189,7 @@
       "aesGcm": "あなたのキーとプロキシアドレスなどは <1>AES-GCM</1> 暗号化アルゴリズムを使用して暗号化されます",
       "apiKey": {
         "desc": "あなたの {{name}} API キーを入力してください",
+        "descWithUrl": "あなたの {{name}} APIキーを入力してください。<3>こちらから取得できます</3>",
         "placeholder": "{{name}} API キー",
         "title": "API キー"
       },
