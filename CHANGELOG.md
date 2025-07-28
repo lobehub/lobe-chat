@@ -2,6 +2,132 @@
 
 # Changelog
 
+## [Version 1.105.0](https://github.com/lobehub/lobe-chat/compare/v1.104.5...v1.105.0)
+
+<sup>Released on **2025-07-28**</sup>
+
+#### ✨ Features
+
+- **misc**: Implement API Key management functionality.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Implement API Key management functionality, closes [#8535](https://github.com/lobehub/lobe-chat/issues/8535) ([fdaa725](https://github.com/lobehub/lobe-chat/commit/fdaa725))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.104.5](https://github.com/lobehub/lobe-chat/compare/v1.104.4...v1.104.5)
+
+<sup>Released on **2025-07-28**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix setting window layout when in desktop was disappear.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix setting window layout when in desktop was disappear, closes [#8585](https://github.com/lobehub/lobe-chat/issues/8585) ([74ab822](https://github.com/lobehub/lobe-chat/commit/74ab822))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.104.4](https://github.com/lobehub/lobe-chat/compare/v1.104.3...v1.104.4)
+
+<sup>Released on **2025-07-28**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix setting window layout size, update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix setting window layout size, closes [#8483](https://github.com/lobehub/lobe-chat/issues/8483) ([4902341](https://github.com/lobehub/lobe-chat/commit/4902341))
+- **misc**: Update i18n, closes [#8579](https://github.com/lobehub/lobe-chat/issues/8579) ([2eccbc7](https://github.com/lobehub/lobe-chat/commit/2eccbc7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.104.3](https://github.com/lobehub/lobe-chat/compare/v1.104.2...v1.104.3)
+
+<sup>Released on **2025-07-26**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Gemini 2.5 Flash-Lite GA model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Gemini 2.5 Flash-Lite GA model, closes [#8539](https://github.com/lobehub/lobe-chat/issues/8539) ([404ac21](https://github.com/lobehub/lobe-chat/commit/404ac21))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.104.2](https://github.com/lobehub/lobe-chat/compare/v1.104.1...v1.104.2)
+
+<sup>Released on **2025-07-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix update hotkey invalid when input mod in desktop.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix update hotkey invalid when input mod in desktop, closes [#8572](https://github.com/lobehub/lobe-chat/issues/8572) ([07f3e6a](https://github.com/lobehub/lobe-chat/commit/07f3e6a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.104.1](https://github.com/lobehub/lobe-chat/compare/v1.104.0...v1.104.1)
 
 <sup>Released on **2025-07-25**</sup>
