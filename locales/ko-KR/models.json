@@ -1100,6 +1100,9 @@
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash는 구글에서 가장 가성비가 뛰어난 모델로, 포괄적인 기능을 제공합니다."
   },
+  "gemini-2.5-flash-lite": {
+    "description": "Gemini 2.5 Flash-Lite는 Google의 가장 작고 가성비가 뛰어난 모델로, 대규모 사용을 위해 설계되었습니다."
+  },
   "gemini-2.5-flash-lite-preview-06-17": {
     "description": "Gemini 2.5 Flash-Lite Preview는 구글의 가장 작고 가성비가 뛰어난 모델로, 대규모 사용을 위해 설계되었습니다."
   },
