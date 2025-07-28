@@ -958,10 +958,10 @@ const qwenChatModels: AIChatModelCard[] = [
 
 const qwenImageModels: AIImageModelCard[] = [
   {
-    description: '全面升级版本。生成图像细节更丰富，速度稍慢。对应通义万相官网2.1专业模型。',
-    displayName: 'Wanxiang2.1 T2I Plus',
+    description: '全面升级版本。生成速度快、效果全面、综合性价比高。对应通义万相官网2.1极速模型。',
+    displayName: 'Wanxiang2.1 T2I Turbo',
     enabled: true,
-    id: 'wanx2.1-t2i-plus',
+    id: 'wanx2.1-t2i-turbo',
     organization: 'Qwen',
     parameters: {
       height: { default: 1024, max: 1440, min: 512, step: 1 },
@@ -975,10 +975,10 @@ const qwenImageModels: AIImageModelCard[] = [
     type: 'image',
   },
   {
-    description: '全面升级版本。生成速度快、效果全面、综合性价比高。对应通义万相官网2.1极速模型。',
-    displayName: 'Wanxiang2.1 T2I Turbo',
+    description: '全面升级版本。生成图像细节更丰富，速度稍慢。对应通义万相官网2.1专业模型。',
+    displayName: 'Wanxiang2.1 T2I Plus',
     enabled: true,
-    id: 'wanx2.1-t2i-turbo',
+    id: 'wanx2.1-t2i-plus',
     organization: 'Qwen',
     parameters: {
       height: { default: 1024, max: 1440, min: 512, step: 1 },
