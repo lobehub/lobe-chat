@@ -44,42 +44,6 @@ const aihubmixModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_000_000,
-    description: 'Gemini 2.5 Flash 预览版，快速高效的多模态模型',
-    displayName: 'Gemini 2.5 Flash',
-    enabled: true,
-    id: 'gemini-2.5-flash-preview-05-20',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_000_000,
-    description: 'Gemini 2.5 Flash 无思维链版本',
-    displayName: 'Gemini 2.5 Flash (No Think)',
-    enabled: true,
-    id: 'gemini-2.5-flash-preview-05-20-nothink',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_000_000,
-    description: 'Gemini 2.5 Flash 搜索增强版本',
-    displayName: 'Gemini 2.5 Flash (Search)',
-    enabled: true,
-    id: 'gemini-2.5-flash-preview-05-20-search',
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
       reasoning: true,
       vision: true,
     },
@@ -130,13 +94,27 @@ const aihubmixModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
+      search: true,
       vision: true,
     },
-    contextWindowTokens: 1_000_000,
-    description: 'Gemini 2.5 Flash 预览版 (04-17)',
-    displayName: 'Gemini 2.5 Flash (04-17)',
+    contextWindowTokens: 1_048_576 + 65_536,
+    description:
+      'Gemini 2.5 Pro 是 Google 最先进的思维模型，能够对代码、数学和STEM领域的复杂问题进行推理，以及使用长上下文分析大型数据集、代码库和文档。',
+    displayName: 'Gemini 2.5 Pro',
     enabled: true,
-    id: 'gemini-2.5-flash-preview-04-17',
+    id: 'gemini-2.5-pro',
+    maxOutput: 65_536,
+    pricing: {
+      input: 1.25, // prompts <= 200k tokens
+      output: 10, // prompts <= 200k tokens
+    },
+    releasedAt: '2025-06-17',
+    settings: {
+      extendParams: ['thinkingBudget'],
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
     type: 'chat',
   },
   {
@@ -144,11 +122,17 @@ const aihubmixModels: AIChatModelCard[] = [
       functionCall: true,
       vision: true,
     },
-    contextWindowTokens: 2_000_000,
-    description: 'Gemini 2.5 Pro 预览版，长上下文支持',
-    displayName: 'Gemini 2.5 Pro',
+    contextWindowTokens: 1_000_000,
+    description: 'Gemini 2.5 Flash 预览版，快速高效的多模态模型',
+    displayName: 'Gemini 2.5 Flash',
     enabled: true,
-    id: 'gemini-2.5-pro-preview-05-06',
+    id: 'gemini-2.5-flash',
+    releasedAt: '2025-06-17',
+    settings: {
+      extendParams: ['thinkingBudget'],
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
     type: 'chat',
   },
   {
