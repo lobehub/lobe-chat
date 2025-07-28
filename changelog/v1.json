@@ -1,6 +1,21 @@
 [
   {
     "children": {
+      "features": [
+        "Implement API Key management functionality, support custom hotkey on desktop."
+      ],
+      "fixes": [
+        "Fix update hotkey invalid when input mod in desktop, update convertUsage to handle XAI provider and adjust OpenAIStream to pass provider."
+      ],
+      "improvements": [
+        "Add Gemini 2.5 Flash-Lite GA model, fix setting window layout size, fix setting window layout when in desktop was disappear, update i18n."
+      ]
+    },
+    "date": "2025-07-28",
+    "version": "1.104.0"
+  },
+  {
+    "children": {
       "fixes": [
         "Fix chat stream in desktop and update shortcut."
       ],
