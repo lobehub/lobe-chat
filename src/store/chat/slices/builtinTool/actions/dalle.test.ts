@@ -1,8 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { fileService } from '@/services/file';
-import { ClientService } from '@/services/file/_deprecated';
 import { messageService } from '@/services/message';
 import { imageGenerationService } from '@/services/textToImage';
 import { uploadService } from '@/services/upload';
@@ -43,14 +41,8 @@ describe('chatToolSlice - dalle', () => {
       );
       // @ts-ignore
       vi.spyOn(uploadService, 'uploadToClientS3').mockResolvedValue({} as any);
-      vi.spyOn(ClientService.prototype, 'createFile').mockResolvedValue({
-        id: mockId,
-        url: '',
-      });
+
       vi.spyOn(result.current, 'toggleDallEImageLoading');
-      vi.spyOn(ClientService.prototype, 'checkFileHash').mockImplementation(
-        async () => ({ isExist: false }) as any,
-      );
 
       await act(async () => {
         await result.current.generateImageFromPrompts(prompts, messageId);

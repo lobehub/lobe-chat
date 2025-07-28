@@ -7,7 +7,6 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { FormInput, FormPassword } from '@/components/FormInput';
 import { useChatStore } from '@/store/chat';
 import { useUserStore } from '@/store/user';
-import { keyVaultsConfigSelectors } from '@/store/user/selectors';
 
 import SearchXNGIcon from './SearchXNGIcon';
 import { FormAction } from './style';
@@ -20,11 +19,7 @@ interface ProviderApiKeyFormProps {
 const Form = memo<ProviderApiKeyFormProps>(({ provider, id }) => {
   const { t } = useTranslation('plugin');
 
-  const [apiKey, baseURL, setConfig] = useUserStore((s) => [
-    keyVaultsConfigSelectors.getVaultByProvider(provider as any)(s)?.apiKey,
-    keyVaultsConfigSelectors.getVaultByProvider(provider as any)(s)?.baseURL,
-    s.updateKeyVaultSettings,
-  ]);
+  const [setConfig] = useUserStore((s) => [s.updateKeyVaultConfig]);
 
   const [showKey, setShow] = useState(false);
 
@@ -53,7 +48,7 @@ const Form = memo<ProviderApiKeyFormProps>(({ provider, id }) => {
           }}
           placeholder={'https://searxng.xxx'}
           suffix={<div>{loading && <Icon icon={Loader2Icon} spin />}</div>}
-          value={baseURL}
+          // value={baseURL}
         />
         {showKey ? (
           <FormPassword
@@ -63,7 +58,7 @@ const Form = memo<ProviderApiKeyFormProps>(({ provider, id }) => {
             }}
             placeholder={t('search.searchxng.keyPlaceholder')}
             suffix={<div>{loading && <Icon icon={Loader2Icon} spin />}</div>}
-            value={apiKey}
+            // value={apiKey}
           />
         ) : (
           <Button

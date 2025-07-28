@@ -1,4 +1,4 @@
-import { ChatModelCard, ModelProviderCard } from '@/types/llm';
+import { ModelProviderCard } from '@/types/llm';
 
 import Ai21Provider from './ai21';
 import Ai302Provider from './ai302';
@@ -58,61 +58,6 @@ import XAIProvider from './xai';
 import XinferenceProvider from './xinference';
 import ZeroOneProvider from './zeroone';
 import ZhiPuProvider from './zhipu';
-
-/**
- * @deprecated
- */
-export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
-  OpenAIProvider.chatModels,
-  QwenProvider.chatModels,
-  ZhiPuProvider.chatModels,
-  BedrockProvider.chatModels,
-  DeepSeekProvider.chatModels,
-  GoogleProvider.chatModels,
-  GroqProvider.chatModels,
-  GithubProvider.chatModels,
-  MinimaxProvider.chatModels,
-  MistralProvider.chatModels,
-  ModelScopeProvider.chatModels,
-  MoonshotProvider.chatModels,
-  OllamaProvider.chatModels,
-  VLLMProvider.chatModels,
-  XinferenceProvider.chatModels,
-  OpenRouterProvider.chatModels,
-  TogetherAIProvider.chatModels,
-  FireworksAIProvider.chatModels,
-  PerplexityProvider.chatModels,
-  AnthropicProvider.chatModels,
-  HuggingFaceProvider.chatModels,
-  XAIProvider.chatModels,
-  JinaProvider.chatModels,
-  SambaNovaProvider.chatModels,
-  CohereProvider.chatModels,
-  V0Provider.chatModels,
-  ZeroOneProvider.chatModels,
-  StepfunProvider.chatModels,
-  NovitaProvider.chatModels,
-  NvidiaProvider.chatModels,
-  BaichuanProvider.chatModels,
-  TaichuProvider.chatModels,
-  CloudflareProvider.chatModels,
-  Ai360Provider.chatModels,
-  AiHubMixProvider.chatModels,
-  SiliconCloudProvider.chatModels,
-  GiteeAIProvider.chatModels,
-  UpstageProvider.chatModels,
-  SparkProvider.chatModels,
-  Ai21Provider.chatModels,
-  HunyuanProvider.chatModels,
-  WenxinProvider.chatModels,
-  SenseNovaProvider.chatModels,
-  InternLMProvider.chatModels,
-  HigressProvider.chatModels,
-  PPIOProvider.chatModels,
-  Search1APIProvider.chatModels,
-  InfiniAIProvider.chatModels,
-  QiniuProvider.chatModels,
-].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
   OpenAIProvider,

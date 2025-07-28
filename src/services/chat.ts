@@ -25,8 +25,6 @@ import { getToolStoreState } from '@/store/tool';
 import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
 import { getUserStoreState, useUserStore } from '@/store/user';
 import {
-  modelConfigSelectors,
-  modelProviderSelectors,
   preferenceSelectors,
   userGeneralSettingsSelectors,
   userProfileSelectors,
@@ -54,19 +52,10 @@ import { createHeaderWithAuth, createPayloadWithKeyVaults } from './_auth';
 import { API_ENDPOINTS } from './_url';
 
 const isCanUseFC = (model: string, provider: string) => {
-  // TODO: remove isDeprecatedEdition condition in V2.0
-  if (isDeprecatedEdition) {
-    return modelProviderSelectors.isModelEnabledFunctionCall(model)(getUserStoreState());
-  }
-
   return aiModelSelectors.isModelSupportToolUse(model, provider)(getAiInfraStoreState());
 };
 
 const isCanUseVision = (model: string, provider: string) => {
-  // TODO: remove isDeprecatedEdition condition in V2.0
-  if (isDeprecatedEdition) {
-    return modelProviderSelectors.isModelEnabledVision(model)(getUserStoreState());
-  }
   return aiModelSelectors.isModelSupportVision(model, provider)(getAiInfraStoreState());
 };
 
@@ -76,35 +65,20 @@ const isCanUseVision = (model: string, provider: string) => {
 const findDeploymentName = (model: string, provider: string) => {
   let deploymentId = model;
 
-  // TODO: remove isDeprecatedEdition condition in V2.0
-  if (isDeprecatedEdition) {
-    const chatModelCards = modelProviderSelectors.getModelCardsById(ModelProvider.Azure)(
-      useUserStore.getState(),
-    );
+  // find the model by id
+  const modelItem = getAiInfraStoreState().enabledAiModels?.find(
+    (i) => i.id === model && i.providerId === provider,
+  );
 
-    const deploymentName = chatModelCards.find((i) => i.id === model)?.deploymentName;
-    if (deploymentName) deploymentId = deploymentName;
-  } else {
-    // find the model by id
-    const modelItem = getAiInfraStoreState().enabledAiModels?.find(
-      (i) => i.id === model && i.providerId === provider,
-    );
-
-    if (modelItem && modelItem.config?.deploymentName) {
-      deploymentId = modelItem.config?.deploymentName;
-    }
+  if (modelItem && modelItem.config?.deploymentName) {
+    deploymentId = modelItem.config?.deploymentName;
   }
 
   return deploymentId;
 };
 
 const isEnableFetchOnClient = (provider: string) => {
-  // TODO: remove this condition in V2.0
-  if (isDeprecatedEdition) {
-    return modelConfigSelectors.isProviderFetchOnClient(provider)(useUserStore.getState());
-  } else {
-    return aiProviderSelectors.isProviderFetchOnClient(provider)(getAiInfraStoreState());
-  }
+  return aiProviderSelectors.isProviderFetchOnClient(provider)(getAiInfraStoreState());
 };
 
 interface FetchOptions extends FetchSSEOptions {

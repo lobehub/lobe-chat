@@ -1,25 +1,15 @@
 import dayjs from 'dayjs';
 
 import { BRANDING_NAME } from '@/const/branding';
-import { isDeprecatedEdition, isServerMode } from '@/const/version';
-import { CURRENT_CONFIG_VERSION } from '@/migrations';
+import { isServerMode } from '@/const/version';
 import { ImportPgDataStructure } from '@/types/export';
 import { downloadFile } from '@/utils/client/downloadFile';
 import { exportJSONFile } from '@/utils/client/exportFile';
 
 import { exportService } from './export';
-import { configService as deprecatedExportService } from './export/_deprecated';
 
 class ConfigService {
   exportAll = async () => {
-    // TODO: remove this in V2
-    if (isDeprecatedEdition) {
-      const config = await deprecatedExportService.exportAll();
-      const filename = `${BRANDING_NAME}-config-v${CURRENT_CONFIG_VERSION}.json`;
-      exportJSONFile(config, filename);
-      return;
-    }
-
     const { data, url } = await exportService.exportData();
     const filename = `${dayjs().format('YYYY-MM-DD-hh-mm')}_${BRANDING_NAME}-data.json`;
 
@@ -36,58 +26,14 @@ class ConfigService {
     exportJSONFile(result, filename);
   };
 
-  exportAgents = async () => {
-    // TODO: remove this in V2
-    if (isDeprecatedEdition) {
-      const config = await deprecatedExportService.exportAgents();
-      const filename = `${BRANDING_NAME}-agents-v${CURRENT_CONFIG_VERSION}.json`;
-      exportJSONFile(config, filename);
-      return;
-    }
-  };
-
   exportSingleAgent = async (agentId: string) => {
-    // TODO: remove this in V2
-    if (isDeprecatedEdition) {
-      const result = await deprecatedExportService.exportSingleAgent(agentId);
-      if (!result) return;
-
-      const filename = `${BRANDING_NAME}-${result.title}-v${CURRENT_CONFIG_VERSION}.json`;
-      exportJSONFile(result.config, filename);
-      return;
-    }
+    console.log(agentId);
   };
 
-  exportSessions = async () => {
-    // TODO: remove this in V2
-    if (isDeprecatedEdition) {
-      const config = await deprecatedExportService.exportSessions();
-      const filename = `${BRANDING_NAME}-sessions-v${CURRENT_CONFIG_VERSION}.json`;
-      exportJSONFile(config, filename);
-      return;
-    }
-  };
-
-  exportSettings = async () => {
-    // TODO: remove this in V2
-    if (isDeprecatedEdition) {
-      const config = await deprecatedExportService.exportSessions();
-      const filename = `${BRANDING_NAME}-settings-v${CURRENT_CONFIG_VERSION}.json`;
-      exportJSONFile(config, filename);
-      return;
-    }
-  };
+  exportSettings = async () => {};
 
   exportSingleSession = async (sessionId: string) => {
-    // TODO: remove this in V2
-    if (isDeprecatedEdition) {
-      const data = await deprecatedExportService.exportSingleSession(sessionId);
-      if (!data) return;
-
-      const filename = `${BRANDING_NAME}-${data.title}-v${CURRENT_CONFIG_VERSION}.json`;
-      exportJSONFile(data.config, filename);
-      return;
-    }
+    console.log(sessionId);
   };
 
   private createDataStructure = async (

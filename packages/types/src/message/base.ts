@@ -118,12 +118,14 @@ export interface UpdateMessageParams {
   imageList?: ChatImageItem[];
   metadata?: MessageMetadata;
   model?: string;
+  observationId?: string;
   provider?: string;
   reasoning?: ModelReasoning;
   role?: string;
   search?: GroundingSearch;
   toolCalls?: MessageToolCall[];
   tools?: ChatToolPayload[] | null;
+  traceId?: string;
 }
 
 export interface NewMessageQueryParams {

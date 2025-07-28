@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { LOBE_DEFAULT_MODEL_LIST, OpenAIProviderCard } from '@/config/modelProviders';
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import { OpenAIProviderCard } from '@/config/modelProviders';
 import { ChatModelCard } from '@/types/llm';
 
 import { parseModelString, transformToChatModelCards } from './parseModels';
