@@ -340,11 +340,6 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
 
       log('Creating image with model: %s and params: %O', model, params);
 
-      const defaultInput = {
-        n: 1,
-        ...(model.includes('dall-e') ? { response_format: 'b64_json' } : {}),
-      };
-
       // 映射参数名称，将 imageUrls 映射为 image
       const paramsMap = new Map<RuntimeImageGenParamsValue, string>([
         ['imageUrls', 'image'],
@@ -357,6 +352,7 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
         ]),
       );
 
+      // https://platform.openai.com/docs/api-reference/images/createEdit
       const isImageEdit = Array.isArray(userInput.image) && userInput.image.length > 0;
       // 如果有 imageUrls 参数，将其转换为 File 对象
       if (isImageEdit) {
@@ -382,6 +378,12 @@ export const createOpenAICompatibleRuntime = <T extends Record<string, any> = an
       if (userInput.size === 'auto') {
         delete userInput.size;
       }
+
+      const defaultInput = {
+        n: 1,
+        ...(model.includes('dall-e') ? { response_format: 'b64_json' } : {}),
+        ...(isImageEdit ? { input_fidelity: 'high' } : {}),
+      };
 
       const options = {
         model,

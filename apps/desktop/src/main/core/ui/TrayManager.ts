@@ -5,8 +5,8 @@ import { name } from '@/../../package.json';
 import { isMac } from '@/const/env';
 import { createLogger } from '@/utils/logger';
 
-import type { App } from './App';
-import Tray, { TrayOptions } from './Tray';
+import type { App } from '../App';
+import { Tray, TrayOptions } from './Tray';
 
 // 创建日志记录器
 const logger = createLogger('core:TrayManager');
@@ -16,7 +16,7 @@ const logger = createLogger('core:TrayManager');
  */
 export type TrayIdentifiers = 'main';
 
-export default class TrayManager {
+export class TrayManager {
   app: App;
 
   /**
@@ -61,8 +61,8 @@ export default class TrayManager {
           ? 'tray-dark.png'
           : 'tray-light.png'
         : 'tray.png',
-      identifier: 'main', // 使用应用图标，需要确保资源目录中有此文件
-      tooltip: name, // 可以使用 app.getName() 或本地化字符串
+      identifier: 'main', // Use app icon, ensure this file exists in resources directory
+      tooltip: name, // Can use app.getName() or localized string
     });
   }
 

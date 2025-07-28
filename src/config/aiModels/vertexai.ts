@@ -17,6 +17,7 @@ const vertexaiChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-pro',
     maxOutput: 65_536,
     pricing: {
+      cachedInput: 0.31, // prompts <= 200k tokens
       input: 1.25, // prompts <= 200k tokens
       output: 10, // prompts <= 200k tokens
     },
@@ -80,6 +81,7 @@ const vertexaiChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-flash',
     maxOutput: 65_536,
     pricing: {
+      cachedInput: 0.075,
       input: 0.3,
       output: 2.5,
     },
@@ -107,6 +109,31 @@ const vertexaiChatModels: AIChatModelCard[] = [
       output: 3.5, // Thinking
     },
     releasedAt: '2025-04-17',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 1_000_000 + 64_000,
+    description: 'Gemini 2.5 Flash-Lite 是 Google 最小、性价比最高的模型，专为大规模使用而设计。',
+    displayName: 'Gemini 2.5 Flash-Lite',
+    enabled: true,
+    id: 'gemini-2.5-flash-lite',
+    maxOutput: 64_000,
+    pricing: {
+      cachedInput: 0.025,
+      input: 0.1,
+      output: 0.4,
+    },
+    releasedAt: '2025-07-22',
+    settings: {
+      searchImpl: 'params',
+      searchProvider: 'google',
+    },
     type: 'chat',
   },
   {

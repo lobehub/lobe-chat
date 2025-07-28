@@ -45,14 +45,25 @@
   },
   "hotkey": {
     "conflicts": "기존 단축키와 충돌",
+    "errors": {
+      "CONFLICT": "단축키 충돌: 해당 단축키는 이미 다른 기능에서 사용 중입니다",
+      "INVALID_FORMAT": "단축키 형식이 올바르지 않습니다: 올바른 형식(예: CommandOrControl+E)을 사용하세요",
+      "INVALID_ID": "유효하지 않은 단축키 ID입니다",
+      "NO_MODIFIER": "단축키에는 반드시 수정 키(Ctrl, Alt, Shift 등)가 포함되어야 합니다",
+      "SYSTEM_OCCUPIED": "단축키가 시스템 또는 다른 애플리케이션에서 사용 중입니다",
+      "UNKNOWN": "업데이트 실패: 알 수 없는 오류"
+    },
     "group": {
       "conversation": "대화",
+      "desktop": "데스크톱",
       "essential": "기본"
     },
     "invalidCombination": "단축키는 최소한 하나의 수정 키(Ctrl, Alt, Shift)와 하나의 일반 키를 포함해야 합니다",
     "record": "단축키를 녹음하려면 키를 누르세요",
     "reset": "기본 단축키로 재설정",
-    "title": "단축키"
+    "title": "단축키",
+    "updateError": "단축키 업데이트 실패: 네트워크 또는 시스템 오류",
+    "updateSuccess": "단축키가 성공적으로 업데이트되었습니다"
   },
   "llm": {
     "aesGcm": "귀하의 키 및 프록시 주소는 <1>AES-GCM</1> 암호화 알고리즘을 사용하여 암호화됩니다",

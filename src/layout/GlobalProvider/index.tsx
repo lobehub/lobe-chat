@@ -13,7 +13,6 @@ import AppTheme from './AppTheme';
 import ImportSettings from './ImportSettings';
 import Locale from './Locale';
 import QueryProvider from './Query';
-import ReactScan from './ReactScan';
 import StoreInitialization from './StoreInitialization';
 import StyleRegistry from './StyleRegistry';
 
@@ -61,7 +60,6 @@ const GlobalLayout = async ({
             <StoreInitialization />
             <Suspense>
               <ImportSettings />
-              <ReactScan />
               {process.env.NODE_ENV === 'development' && <DevPanel />}
             </Suspense>
           </ServerConfigStoreProvider>

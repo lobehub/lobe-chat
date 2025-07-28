@@ -6,16 +6,12 @@ import {
 
 import { createLogger } from '@/utils/logger';
 
-import { ControllerModule, ipcClientEvent, shortcut } from './index';
+import { ControllerModule, ipcClientEvent } from './index';
 
 // 创建日志记录器
 const logger = createLogger('controllers:TrayMenuCtr');
 
 export default class TrayMenuCtr extends ControllerModule {
-  /**
-   * 使用快捷键切换窗口可见性
-   */
-  @shortcut('toggleMainWindow')
   async toggleMainWindow() {
     logger.debug('通过快捷键切换主窗口可见性');
     const mainWindow = this.app.browserManager.getMainWindow();
@@ -47,7 +43,7 @@ export default class TrayMenuCtr extends ControllerModule {
 
     return {
       error: '托盘通知仅在 Windows 平台支持',
-      success: false
+      success: false,
     };
   }
 
@@ -71,7 +67,7 @@ export default class TrayMenuCtr extends ControllerModule {
           logger.error('更新托盘图标失败:', error);
           return {
             error: String(error),
-            success: false
+            success: false,
           };
         }
       }
@@ -79,7 +75,7 @@ export default class TrayMenuCtr extends ControllerModule {
 
     return {
       error: '托盘功能仅在 Windows 平台支持',
-      success: false
+      success: false,
     };
   }
 
@@ -103,7 +99,7 @@ export default class TrayMenuCtr extends ControllerModule {
 
     return {
       error: '托盘功能仅在 Windows 平台支持',
-      success: false
+      success: false,
     };
   }
 }
