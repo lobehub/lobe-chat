@@ -8,6 +8,7 @@ import {
   Info,
   KeyboardIcon,
   Mic2,
+  Puzzle,
   Settings2,
   Sparkles,
 } from 'lucide-react';
@@ -112,6 +113,15 @@ export const useCategory = () => {
           label: (
             <Link href={'/settings/system-agent'} onClick={(e) => e.preventDefault()}>
               {t('tab.system-agent')}
+            </Link>
+          ),
+        },
+        {
+          icon: <Icon icon={Puzzle} />,
+          key: SettingsTabs.Plugin,
+          label: (
+            <Link href={'/settings/plugin'} onClick={(e) => e.preventDefault()}>
+              {t('tab.plugin')}
             </Link>
           ),
         },

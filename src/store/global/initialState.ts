@@ -31,6 +31,7 @@ export enum SettingsTabs {
   Common = 'common',
   Hotkey = 'hotkey',
   LLM = 'llm',
+  Plugin = 'plugin',
   Provider = 'provider',
   Proxy = 'proxy',
   Storage = 'storage',

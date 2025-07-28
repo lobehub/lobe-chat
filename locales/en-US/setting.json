@@ -535,6 +535,7 @@
     "experiment": "Experiment",
     "hotkey": "Hotkeys",
     "llm": "Language Model",
+    "plugin": "Plugin Management",
     "provider": "AI Service Provider",
     "proxy": "Network Proxy",
     "storage": "Data Storage",

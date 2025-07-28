@@ -18,7 +18,7 @@ import { LayoutProps } from '../type';
 import Header from './Header';
 import SideBar from './SideBar';
 
-const SKIP_PATHS = ['/settings/provider', '/settings/agent'];
+const SKIP_PATHS = ['/settings/provider', '/settings/agent', '/settings/plugin'];
 
 const Layout = memo<LayoutProps>(({ children, category }) => {
   const ref = useRef<any>(null);
