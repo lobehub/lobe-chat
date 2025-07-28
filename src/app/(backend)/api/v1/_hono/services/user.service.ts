@@ -438,7 +438,11 @@ export class UserService extends BaseService {
         searchResults = await this.db.query.users.findMany({
           limit: pageSize,
           orderBy: (users, { asc }) => [asc(users.fullName), asc(users.email)],
-          where: or(ilike(users.fullName, searchTerm), ilike(users.email, searchTerm)),
+          where: or(
+            ilike(users.fullName, searchTerm),
+            ilike(users.email, searchTerm),
+            ilike(users.username, searchTerm),
+          ),
         });
       }
 
