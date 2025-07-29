@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.105.1](https://github.com/lobehub/lobe-chat/compare/v1.105.0...v1.105.1)
+
+<sup>Released on **2025-07-29**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support more Text2Image from Qwen.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support more Text2Image from Qwen, closes [#8574](https://github.com/lobehub/lobe-chat/issues/8574) ([b8c0e2d](https://github.com/lobehub/lobe-chat/commit/b8c0e2d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.105.0](https://github.com/lobehub/lobe-chat/compare/v1.104.5...v1.105.0)
 
 <sup>Released on **2025-07-28**</sup>
