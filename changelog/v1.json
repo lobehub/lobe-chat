@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Open new topic by tap Just Chat again."]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.6"
+  },
+  {
+    "children": {
       "fixes": ["Reorder AppTheme and Locale to fix modal i18n."]
     },
     "date": "2025-07-29",
