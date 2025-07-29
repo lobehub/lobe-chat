@@ -1,14 +1,14 @@
 import debug from 'debug';
 import { NextRequest } from 'next/server';
 
-import { JWTPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
+import { ClientSecretPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import { LobeChatDatabase } from '@/database/type';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 
 const log = debug('lobe-async:context');
 
 export interface AsyncAuthContext {
-  jwtPayload: JWTPayload;
+  jwtPayload: ClientSecretPayload;
   secret: string;
   serverDB?: LobeChatDatabase;
   userId?: string | null;
@@ -19,7 +19,7 @@ export interface AsyncAuthContext {
  * This is useful for testing when we don't want to mock Next.js' request/response
  */
 export const createAsyncContextInner = async (params?: {
-  jwtPayload?: JWTPayload;
+  jwtPayload?: ClientSecretPayload;
   secret?: string;
   userId?: string | null;
 }): Promise<AsyncAuthContext> => ({
