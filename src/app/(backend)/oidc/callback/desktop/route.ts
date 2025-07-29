@@ -9,6 +9,44 @@ const log = debug('lobe-oidc:callback:desktop');
 
 const errorPathname = '/oauth/callback/error';
 
+/**
+ * 安全地构建重定向URL
+ */
+const buildRedirectUrl = (req: NextRequest, pathname: string): URL => {
+  const forwardedHost = req.headers.get('x-forwarded-host');
+  const requestHost = req.headers.get('host');
+  const forwardedProto =
+    req.headers.get('x-forwarded-proto') || req.headers.get('x-forwarded-protocol');
+
+  // 确定实际的主机名，提供后备值
+  const actualHost = forwardedHost || requestHost;
+  const actualProto = forwardedProto || 'https';
+
+  log(
+    'Building redirect URL - host: %s, proto: %s, pathname: %s',
+    actualHost,
+    actualProto,
+    pathname,
+  );
+
+  // 如果主机名仍然无效，使用req.nextUrl作为后备
+  if (!actualHost) {
+    log('Warning: Invalid host detected, using req.nextUrl as fallback');
+    const fallbackUrl = req.nextUrl.clone();
+    fallbackUrl.pathname = pathname;
+    return fallbackUrl;
+  }
+
+  try {
+    return new URL(`${actualProto}://${actualHost}${pathname}`);
+  } catch (error) {
+    log('Error constructing URL, using req.nextUrl as fallback: %O', error);
+    const fallbackUrl = req.nextUrl.clone();
+    fallbackUrl.pathname = pathname;
+    return fallbackUrl;
+  }
+};
+
 export const GET = async (req: NextRequest) => {
   try {
     const searchParams = req.nextUrl.searchParams;
@@ -18,11 +56,7 @@ export const GET = async (req: NextRequest) => {
     if (!code || !state || typeof code !== 'string' || typeof state !== 'string') {
       log('Missing code or state in form data');
 
-      // 构建错误重定向 URL
-      const actualHost = req.headers.get('x-forwarded-host') || req.headers.get('host');
-      const actualProto =
-        req.headers.get('x-forwarded-proto') || req.headers.get('x-forwarded-protocol') || 'https';
-      const errorUrl = new URL(`${actualProto}://${actualHost}${errorPathname}`);
+      const errorUrl = buildRedirectUrl(req, errorPathname);
       errorUrl.searchParams.set('reason', 'invalid_request');
 
       log('Redirecting to error URL: %s', errorUrl.toString());
@@ -40,11 +74,7 @@ export const GET = async (req: NextRequest) => {
     await authHandoffModel.create({ client, id, payload });
     log('Handoff record created successfully for id: %s', id);
 
-    // 构建成功重定向 URL
-    const actualHost = req.headers.get('x-forwarded-host') || req.headers.get('host');
-    const actualProto =
-      req.headers.get('x-forwarded-proto') || req.headers.get('x-forwarded-protocol') || 'https';
-    const successUrl = new URL(`${actualProto}://${actualHost}/oauth/callback/success`);
+    const successUrl = buildRedirectUrl(req, '/oauth/callback/success');
 
     // 添加调试日志
     log('Request host header: %s', req.headers.get('host'));
@@ -66,11 +96,7 @@ export const GET = async (req: NextRequest) => {
   } catch (error) {
     log('Error in OIDC callback: %O', error);
 
-    // 构建错误重定向 URL
-    const actualHost = req.headers.get('x-forwarded-host') || req.headers.get('host');
-    const actualProto =
-      req.headers.get('x-forwarded-proto') || req.headers.get('x-forwarded-protocol') || 'https';
-    const errorUrl = new URL(`${actualProto}://${actualHost}${errorPathname}`);
+    const errorUrl = buildRedirectUrl(req, errorPathname);
     errorUrl.searchParams.set('reason', 'internal_error');
 
     if (error instanceof Error) {
