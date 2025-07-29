@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.105.3](https://github.com/lobehub/lobe-chat/compare/v1.105.2...v1.105.3)
+
+<sup>Released on **2025-07-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix subscription plan tag display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix subscription plan tag display, closes [#8599](https://github.com/lobehub/lobe-chat/issues/8599) ([2a3754a](https://github.com/lobehub/lobe-chat/commit/2a3754a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.105.2](https://github.com/lobehub/lobe-chat/compare/v1.105.1...v1.105.2)
 
 <sup>Released on **2025-07-29**</sup>
