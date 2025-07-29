@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Revert jose to ^5 to fix auth issue on desktop."]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.4"
+  },
+  {
+    "children": {
       "fixes": ["Fix subscription plan tag display."]
     },
     "date": "2025-07-29",
