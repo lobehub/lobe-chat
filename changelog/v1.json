@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Add support for Okta Authentication."]
+    },
+    "date": "2025-07-29",
+    "version": "1.106.0"
+  },
+  {
+    "children": {
       "improvements": ["Open new topic by tap Just Chat again."]
     },
     "date": "2025-07-29",
