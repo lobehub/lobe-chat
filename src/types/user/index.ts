@@ -1,6 +1,7 @@
 import type { PartialDeep } from 'type-fest';
 import { z } from 'zod';
 
+import { Plans } from '@/types/subscription';
 import { TopicDisplayMode } from '@/types/topic';
 import { UserSettings } from '@/types/user/settings';
 
@@ -56,6 +57,7 @@ export interface UserInitializationState {
   lastName?: string;
   preference: UserPreference;
   settings: PartialDeep<UserSettings>;
+  subscriptionPlan?: Plans;
   userId?: string;
   username?: string;
 }
