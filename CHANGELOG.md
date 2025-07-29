@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.106.0](https://github.com/lobehub/lobe-chat/compare/v1.105.6...v1.106.0)
+
+<sup>Released on **2025-07-29**</sup>
+
+#### ✨ Features
+
+- **misc**: Add support for Okta Authentication.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add support for Okta Authentication, closes [#8547](https://github.com/lobehub/lobe-chat/issues/8547) ([67abdfe](https://github.com/lobehub/lobe-chat/commit/67abdfe))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.105.6](https://github.com/lobehub/lobe-chat/compare/v1.105.5...v1.105.6)
 
 <sup>Released on **2025-07-29**</sup>
