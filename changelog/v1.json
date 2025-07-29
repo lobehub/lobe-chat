@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix desktop auth redirect url error."]
+    },
+    "date": "2025-07-29",
+    "version": "1.106.2"
+  },
+  {
+    "children": {
       "improvements": ["Support Minimax T2I models."]
     },
     "date": "2025-07-29",
