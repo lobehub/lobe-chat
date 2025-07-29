@@ -41,7 +41,7 @@ export async function createMiniMaxImage(
         n: 1,
         prompt: params.prompt,
         //prompt_optimizer: true, // 开启 prompt 自动优化
-        ...(params.seed !== undefined ? { seed: params.seed } : {}),
+        ...(typeof params.seed === 'number' ? { seed: params.seed } : {}),
       }),
       headers: {
         'Authorization': `Bearer ${apiKey}`,
