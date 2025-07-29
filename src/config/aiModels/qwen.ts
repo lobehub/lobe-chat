@@ -6,13 +6,95 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      '总参数 1T，激活参数 32B。 非思维模型中，在前沿知识、数学和编码方面达到了顶尖水平，更擅长通用 Agent 任务。 针对代理任务进行了精心优化，不仅能回答问题，还能采取行动。 最适用于即兴、通用聊天和代理体验，是一款无需长时间思考的反射级模型。',
+    displayName: 'Kimi K2 Instruct',
+    enabled: true,
+    id: 'Moonshot-Kimi-K2-Instruct',
+    maxOutput: 8192,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 4,
+      output: 16,
+    },
+    releasedAt: '2025-07-17',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    config: {
+      deploymentName: 'qwen3-coder-plus',
+    },
+    contextWindowTokens: 1_048_576,
+    description: '通义千问代码模型。最新的 Qwen3-Coder-Plus 系列模型是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程，代码能力卓越的同时兼具通用能力。',
+    displayName: 'Qwen3 Coder Plus',
+    id: 'qwen3-coder-plus',
+    maxOutput: 65_536,
+    organization: 'Qwen',
+    pricing: {
+      cachedInput: 2.4, // tokens 32K ~ 128K
+      currency: 'CNY',  
+      input: 6,
+      output: 24,
+    },
+    releasedAt: '2025-07-23',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      '基于Qwen3的思考模式开源模型，相较上一版本（通义千问3-235B-A22B）逻辑能力、通用能力、知识增强及创作能力均有大幅提升，适用于高难度强推理场景。',
+    displayName: 'Qwen3 235B A22B Thinking 2507',
+    enabled: true,
+    id: 'qwen3-235b-a22b-thinking-2507',
+    maxOutput: 32_768,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 20,
+    },
+    releasedAt: '2025-07-25',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      '基于Qwen3的非思考模式开源模型，相较上一版本（通义千问3-235B-A22B）主观创作能力与模型安全性均有小幅度提升。',
+    displayName: 'Qwen3 235B A22B Instruct 2507',
+    enabled: true,
+    id: 'qwen3-235b-a22b-instruct-2507',
+    maxOutput: 32_768,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 2,
+      output: 8,
+    },
+    releasedAt: '2025-07-22',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
     description:
       'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
     displayName: 'Qwen3 235B A22B',
-    enabled: true,
     id: 'qwen3-235b-a22b',
     maxOutput: 8192,
     organization: 'Qwen',
@@ -59,7 +141,6 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
     displayName: 'Qwen3 30B A3B',
-    enabled: true,
     id: 'qwen3-30b-a3b',
     maxOutput: 8192,
     organization: 'Qwen',
@@ -223,21 +304,22 @@ const qwenChatModels: AIChatModelCard[] = [
       search: true,
     },
     config: {
-      deploymentName: 'qwen-turbo-2025-04-28', // expired on 2025-10-26
+      deploymentName: 'qwen-turbo-2025-07-15',
     },
-    contextWindowTokens: 1_000_000,
+    contextWindowTokens: 1_000_000, // Non-thinking mode
     description: '通义千问超大规模语言模型，支持中文、英文等不同语言输入。',
     displayName: 'Qwen Turbo',
     enabled: true,
     id: 'qwen-turbo',
-    maxOutput: 8192,
+    maxOutput: 16_384,
     organization: 'Qwen',
     pricing: {
+      cachedInput: 0.12,
       currency: 'CNY',
       input: 0.3,
       output: 3, // Thinking mode pricing
     },
-    releasedAt: '2025-04-28',
+    releasedAt: '2025-07-15',
     settings: {
       extendParams: ['enableReasoning', 'reasoningBudgetToken'],
       searchImpl: 'params',
@@ -251,21 +333,22 @@ const qwenChatModels: AIChatModelCard[] = [
       search: true,
     },
     config: {
-      deploymentName: 'qwen-plus-2025-04-28', // expired on 2025-10-26
+      deploymentName: 'qwen-plus-2025-07-14',
     },
     contextWindowTokens: 131_072,
     description: '通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入。',
     displayName: 'Qwen Plus',
     enabled: true,
     id: 'qwen-plus',
-    maxOutput: 8192,
+    maxOutput: 16_384,
     organization: 'Qwen',
     pricing: {
+      cachedInput: 0.32,
       currency: 'CNY',
       input: 0.8,
       output: 8, // Thinking mode pricing
     },
-    releasedAt: '2025-04-28',
+    releasedAt: '2025-07-14',
     settings: {
       extendParams: ['enableReasoning', 'reasoningBudgetToken'],
       searchImpl: 'params',
@@ -289,6 +372,7 @@ const qwenChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
+      cachedInput: 0.96,
       currency: 'CNY',
       input: 2.4,
       output: 9.6,
@@ -330,7 +414,6 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       'Qwen-Omni 系列模型支持输入多种模态的数据，包括视频、音频、图片、文本，并输出音频与文本。',
     displayName: 'Qwen Omni Turbo',
-    enabled: true,
     id: 'qwen-omni-turbo',
     maxOutput: 2048,
     organization: 'Qwen',
@@ -374,6 +457,7 @@ const qwenChatModels: AIChatModelCard[] = [
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
+      cachedInput: 0.6,
       currency: 'CNY',
       input: 1.5,
       output: 4.5,
@@ -391,11 +475,11 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       '通义千问超大规模视觉语言模型。相比增强版，再次提升视觉推理能力和指令遵循能力，提供更高的视觉感知和认知水平。',
     displayName: 'Qwen VL Max',
-    enabled: true,
     id: 'qwen-vl-max',
     maxOutput: 8192,
     organization: 'Qwen',
     pricing: {
+      cachedInput: 1.2,
       currency: 'CNY',
       input: 3,
       output: 9,
@@ -709,6 +793,21 @@ const qwenChatModels: AIChatModelCard[] = [
       currency: 'CNY',
       input: 4,
       output: 12,
+    },
+    releasedAt: '2025-07-23',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 262_144,
+    description: '通义千问代码模型开源版。最新的 qwen3-coder-480b-a35b-instruct 是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程、代码能力卓越的同时兼具通用能力。',
+    displayName: 'Qwen3 Coder 480B A35B',
+    id: 'qwen3-coder-480b-a35b-instruct',
+    maxOutput: 65_536,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 9, // tokens 32K ~ 128K
+      output: 36,
     },
     type: 'chat',
   },
