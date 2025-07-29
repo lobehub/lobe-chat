@@ -90,14 +90,12 @@ export function LobeNextAuthDbAdapter(): Adapter {
         providerAccountId,
         provider,
       });
-      const result = await postProcessor(data);
-      return result;
+      return await postProcessor(data);
     },
 
     async getAuthenticator(credentialID): Promise<AdapterAuthenticator | null> {
       const result = await fetcher('getAuthenticator', credentialID);
-      const data = await postProcessor(result);
-      return data
+      return await postProcessor(result);
     },
 
     async getSessionAndUser(sessionToken): Promise<{
@@ -105,39 +103,33 @@ export function LobeNextAuthDbAdapter(): Adapter {
       user: AdapterUser;
     } | null> {
       const result = await fetcher('getSessionAndUser', sessionToken);
-      const data = await postProcessor(result);
-      return data
+      return await postProcessor(result);
     },
 
     async getUser(id): Promise<AdapterUser | null> {
       log('getUser called with id:', id);
       const result = await fetcher('getUser', id)
-      const data = await postProcessor(result);
-      return data;
+      return await postProcessor(result);
     },
 
     async getUserByAccount(account): Promise<AdapterUser | null> {
       const data = await fetcher('getUserByAccount', account)
-      const result = await postProcessor(data);
-      return result;
+      return await postProcessor(data);
     },
 
     async getUserByEmail(email): Promise<AdapterUser | null> {
       const data = await fetcher('getUserByEmail', email);
-      const result = await postProcessor(data);
-      return result;
+      return await postProcessor(data);
     },
 
     async linkAccount(data): Promise<AdapterAccount | null | undefined> {
       const result = await fetcher('linkAccount', data);
-      const account = await postProcessor(result);
-      return account;
+      return await postProcessor(result);
     },
 
     async listAuthenticatorsByUserId(userId): Promise<AdapterAuthenticator[]> {
       const result = await fetcher('listAuthenticatorsByUserId', userId);
-      const data = await postProcessor(result);
-      return data;
+      return await postProcessor(result);
     },
 
     // @ts-ignore: The return type is {Promise<void> | Awaitable<AdapterAccount | undefined>}
@@ -152,26 +144,22 @@ export function LobeNextAuthDbAdapter(): Adapter {
         credentialID,
         counter,
       });
-      const data = await postProcessor(result);
-      return data;
+      return await postProcessor(result);
     },
 
     async updateSession(data): Promise<AdapterSession | null | undefined> {
       const result = await fetcher('updateSession', data);
-      const session = await postProcessor(result);
-      return session;
+      return await postProcessor(result);
     },
 
     async updateUser(user): Promise<AdapterUser> {
       const result = await fetcher('updateUser', user);
-      const data = await postProcessor(result);
-      return data;
+      return await postProcessor(result);
     },
 
     async useVerificationToken(identifier_token): Promise<VerificationToken | null> {
       const result = await fetcher('useVerificationToken', identifier_token);
-      const data = await postProcessor(result);
-      return data;
+      return await postProcessor(result);
     },
   };
 }
