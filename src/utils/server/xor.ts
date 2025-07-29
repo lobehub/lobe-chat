@@ -1,4 +1,4 @@
-import { JWTPayload, SECRET_XOR_KEY } from '@/const/auth';
+import { ClientSecretPayload, SECRET_XOR_KEY } from '@/const/auth';
 
 /**
  * 将 Base64 字符串转换为 Uint8Array
@@ -26,7 +26,7 @@ const uint8ArrayToString = (arr: Uint8Array): string => {
   return new TextDecoder().decode(arr);
 };
 
-export const getXorPayload = (token: string): JWTPayload => {
+export const getXorPayload = (token: string): ClientSecretPayload => {
   const keyBytes = new TextEncoder().encode(SECRET_XOR_KEY);
 
   // 1. Base64 解码
@@ -38,5 +38,5 @@ export const getXorPayload = (token: string): JWTPayload => {
   // 3. 转换为字符串并解析 JSON
   const decodedJsonString = uint8ArrayToString(xorDecryptedBytes);
 
-  return JSON.parse(decodedJsonString) as JWTPayload;
+  return JSON.parse(decodedJsonString) as ClientSecretPayload;
 };

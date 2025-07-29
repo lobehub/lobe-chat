@@ -12,7 +12,7 @@ export const OAUTH_AUTHORIZED = 'X-oauth-authorized';
 export const SECRET_XOR_KEY = 'LobeHub · LobeHub';
 
 /* eslint-disable typescript-sort-keys/interface */
-export interface JWTPayload {
+export interface ClientSecretPayload {
   /**
    * password
    */
