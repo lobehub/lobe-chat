@@ -62,7 +62,7 @@ export const LobeZhipuAI = createOpenAICompatibleRuntime({
       const readableStream =
         stream instanceof ReadableStream ? stream : convertIterableToStream(stream);
 
-      // 智谱模型在 tool_calls 中返回的 index 为 -1，需要在进入 OpenAIStream 之前修正
+      // GLM-4.5 系列模型在 tool_calls 中返回的 index 为 -1，需要在进入 OpenAIStream 之前修正
       // 因为 OpenAIStream 内部会过滤掉 index < 0 的 tool_calls (openai.ts:58-60)
       const preprocessedStream = readableStream.pipeThrough(
         new TransformStream({
