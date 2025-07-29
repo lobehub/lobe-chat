@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Moonshot assistant messages must not be empty."],
+      "improvements": ["Add volcengine kimi-k2 model, Add Zhipu GLM-4.5 models."]
+    },
+    "date": "2025-07-29",
+    "version": "1.106.3"
+  },
+  {
+    "children": {
       "fixes": ["Fix desktop auth redirect url error."]
     },
     "date": "2025-07-29",
