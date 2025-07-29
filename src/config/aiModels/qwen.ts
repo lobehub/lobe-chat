@@ -26,12 +26,35 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+    },
+    config: {
+      deploymentName: 'qwen3-coder-plus',
+    },
+    contextWindowTokens: 1_048_576,
+    description: '通义千问代码模型。最新的 Qwen3-Coder-Plus 系列模型是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程，代码能力卓越的同时兼具通用能力。',
+    displayName: 'Qwen3 Coder Plus',
+    id: 'qwen3-coder-plus',
+    maxOutput: 65_536,
+    organization: 'Qwen',
+    pricing: {
+      cachedInput: 2.4, // tokens 32K ~ 128K
+      currency: 'CNY',  
+      input: 6,
+      output: 24,
+    },
+    releasedAt: '2025-07-23',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
     description:
       '基于Qwen3的思考模式开源模型，相较上一版本（通义千问3-235B-A22B）逻辑能力、通用能力、知识增强及创作能力均有大幅提升，适用于高难度强推理场景。',
     displayName: 'Qwen3 235B A22B Thinking 2507',
+    enabled: true,
     id: 'qwen3-235b-a22b-thinking-2507',
     maxOutput: 32_768,
     organization: 'Qwen',
@@ -51,6 +74,7 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       '基于Qwen3的非思考模式开源模型，相较上一版本（通义千问3-235B-A22B）主观创作能力与模型安全性均有小幅度提升。',
     displayName: 'Qwen3 235B A22B Instruct 2507',
+    enabled: true,
     id: 'qwen3-235b-a22b-instruct-2507',
     maxOutput: 32_768,
     organization: 'Qwen',
@@ -71,7 +95,6 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
     displayName: 'Qwen3 235B A22B',
-    enabled: true,
     id: 'qwen3-235b-a22b',
     maxOutput: 8192,
     organization: 'Qwen',
@@ -118,7 +141,6 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       'Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。',
     displayName: 'Qwen3 30B A3B',
-    enabled: true,
     id: 'qwen3-30b-a3b',
     maxOutput: 8192,
     organization: 'Qwen',
@@ -392,7 +414,6 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       'Qwen-Omni 系列模型支持输入多种模态的数据，包括视频、音频、图片、文本，并输出音频与文本。',
     displayName: 'Qwen Omni Turbo',
-    enabled: true,
     id: 'qwen-omni-turbo',
     maxOutput: 2048,
     organization: 'Qwen',
@@ -454,7 +475,6 @@ const qwenChatModels: AIChatModelCard[] = [
     description:
       '通义千问超大规模视觉语言模型。相比增强版，再次提升视觉推理能力和指令遵循能力，提供更高的视觉感知和认知水平。',
     displayName: 'Qwen VL Max',
-    enabled: true,
     id: 'qwen-vl-max',
     maxOutput: 8192,
     organization: 'Qwen',
@@ -519,28 +539,6 @@ const qwenChatModels: AIChatModelCard[] = [
       input: 4,
       output: 12,
     },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-    },
-    config: {
-      deploymentName: 'qwen3-coder-plus',
-    },
-    contextWindowTokens: 1_048_576,
-    description: '通义千问代码模型。最新的 Qwen3-Coder-Plus 系列模型是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程，代码能力卓越的同时兼具通用能力。',
-    displayName: 'Qwen3 Coder Plus',
-    id: 'qwen3-coder-plus',
-    maxOutput: 65_536,
-    organization: 'Qwen',
-    pricing: {
-      cachedInput: 2.4, // tokens 32K ~ 128K
-      currency: 'CNY',  
-      input: 6,
-      output: 24,
-    },
-    releasedAt: '2025-07-23',
     type: 'chat',
   },
   {
