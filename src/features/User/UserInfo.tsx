@@ -30,9 +30,10 @@ export interface UserInfoProps extends FlexboxProps {
 const UserInfo = memo<UserInfoProps>(({ avatarProps, onClick, ...rest }) => {
   const { styles, theme } = useStyles();
   const isSignedIn = useUserStore(authSelectors.isLogin);
-  const [nickname, username] = useUserStore((s) => [
+  const [nickname, username, subscriptionPlan] = useUserStore((s) => [
     userProfileSelectors.nickName(s),
     userProfileSelectors.username(s),
+    s.subscriptionPlan,
   ]);
 
   return (
@@ -52,7 +53,7 @@ const UserInfo = memo<UserInfoProps>(({ avatarProps, onClick, ...rest }) => {
           <div className={styles.username}>{username}</div>
         </Flexbox>
       </Flexbox>
-      {isSignedIn && <PlanTag />}
+      {isSignedIn && <PlanTag type={subscriptionPlan} />}
     </Flexbox>
   );
 });
