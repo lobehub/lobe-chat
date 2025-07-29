@@ -7,6 +7,8 @@ import { correctOIDCUrl } from '@/utils/server/correctOIDCUrl';
 
 const log = debug('lobe-oidc:callback:desktop');
 
+const errorPathname = '/oauth/callback/error';
+
 export const GET = async (req: NextRequest) => {
   try {
     const searchParams = req.nextUrl.searchParams;
@@ -15,10 +17,16 @@ export const GET = async (req: NextRequest) => {
 
     if (!code || !state || typeof code !== 'string' || typeof state !== 'string') {
       log('Missing code or state in form data');
-      const errorUrl = req.nextUrl.clone();
-      errorUrl.pathname = '/oauth/callback/error';
+
+      // 构建错误重定向 URL
+      const actualHost = req.headers.get('x-forwarded-host') || req.headers.get('host');
+      const actualProto =
+        req.headers.get('x-forwarded-proto') || req.headers.get('x-forwarded-protocol') || 'https';
+      const errorUrl = new URL(`${actualProto}://${actualHost}${errorPathname}`);
       errorUrl.searchParams.set('reason', 'invalid_request');
-      return NextResponse.redirect(correctOIDCUrl(req, errorUrl));
+
+      log('Redirecting to error URL: %s', errorUrl.toString());
+      return NextResponse.redirect(errorUrl);
     }
 
     log('Received OIDC callback. state(handoffId): %s', state);
@@ -32,9 +40,20 @@ export const GET = async (req: NextRequest) => {
     await authHandoffModel.create({ client, id, payload });
     log('Handoff record created successfully for id: %s', id);
 
-    // Redirect to a generic success page. The desktop app will poll for the result.
-    const successUrl = req.nextUrl.clone();
-    successUrl.pathname = '/oauth/callback/success';
+    // 构建成功重定向 URL
+    const actualHost = req.headers.get('x-forwarded-host') || req.headers.get('host');
+    const actualProto =
+      req.headers.get('x-forwarded-proto') || req.headers.get('x-forwarded-protocol') || 'https';
+    const successUrl = new URL(`${actualProto}://${actualHost}/oauth/callback/success`);
+
+    // 添加调试日志
+    log('Request host header: %s', req.headers.get('host'));
+    log('Request x-forwarded-host: %s', req.headers.get('x-forwarded-host'));
+    log('Request x-forwarded-proto: %s', req.headers.get('x-forwarded-proto'));
+    log('Constructed success URL: %s', successUrl.toString());
+
+    const correctedUrl = correctOIDCUrl(req, successUrl);
+    log('Final redirect URL: %s', correctedUrl.toString());
 
     // cleanup expired
     after(async () => {
@@ -43,16 +62,22 @@ export const GET = async (req: NextRequest) => {
       log('Cleaned up %d expired handoff records', cleanedCount);
     });
 
-    return NextResponse.redirect(correctOIDCUrl(req, successUrl));
+    return NextResponse.redirect(correctedUrl);
   } catch (error) {
     log('Error in OIDC callback: %O', error);
-    const errorUrl = req.nextUrl.clone();
-    errorUrl.pathname = '/oauth/callback/error';
+
+    // 构建错误重定向 URL
+    const actualHost = req.headers.get('x-forwarded-host') || req.headers.get('host');
+    const actualProto =
+      req.headers.get('x-forwarded-proto') || req.headers.get('x-forwarded-protocol') || 'https';
+    const errorUrl = new URL(`${actualProto}://${actualHost}${errorPathname}`);
     errorUrl.searchParams.set('reason', 'internal_error');
 
     if (error instanceof Error) {
       errorUrl.searchParams.set('errorMessage', error.message);
     }
-    return NextResponse.redirect(correctOIDCUrl(req, errorUrl));
+
+    log('Redirecting to error URL: %s', errorUrl.toString());
+    return NextResponse.redirect(errorUrl);
   }
 };

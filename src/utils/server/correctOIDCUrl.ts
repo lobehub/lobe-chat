@@ -1,4 +1,7 @@
+import debug from 'debug';
 import { NextRequest } from 'next/server';
+
+const log = debug('lobe-oidc:correctOIDCUrl');
 
 /**
  * 修复 OIDC 重定向 URL 在代理环境下的问题
@@ -8,23 +11,40 @@ import { NextRequest } from 'next/server';
  */
 export const correctOIDCUrl = (req: NextRequest, url: URL): URL => {
   const requestHost = req.headers.get('host');
+  const forwardedHost = req.headers.get('x-forwarded-host');
+  const forwardedProto =
+    req.headers.get('x-forwarded-proto') || req.headers.get('x-forwarded-protocol');
 
-  // 如果 URL 指向本地地址，但请求来自外部域名，则修正 URL
-  if (
-    (url.hostname === 'localhost' || url.hostname === '127.0.0.1' || url.hostname === '0.0.0.0') &&
-    requestHost &&
-    !requestHost.includes('localhost') &&
-    !requestHost.includes('127.0.0.1') &&
-    !requestHost.includes('0.0.0.0')
-  ) {
-    const forwardedProto =
-      req.headers.get('x-forwarded-proto') || req.headers.get('x-forwarded-protocol') || 'https'; // Default to 'https' when behind a proxy
+  log('Input URL: %s', url.toString());
+  log(
+    'Request headers - host: %s, x-forwarded-host: %s, x-forwarded-proto: %s',
+    requestHost,
+    forwardedHost,
+    forwardedProto,
+  );
+
+  // 确定实际的主机名和协议
+  const actualHost = forwardedHost || requestHost;
+  const actualProto = forwardedProto || (url.protocol === 'https:' ? 'https' : 'http');
+
+  // 如果 URL 指向本地地址，或者主机名与实际请求主机不匹配，则修正 URL
+  const needsCorrection =
+    url.hostname === 'localhost' ||
+    url.hostname === '127.0.0.1' ||
+    url.hostname === '0.0.0.0' ||
+    (actualHost && url.hostname !== actualHost);
+
+  if (needsCorrection && actualHost) {
+    log('URL needs correction. Original hostname: %s, correcting to: %s', url.hostname, actualHost);
 
     const correctedUrl = new URL(url.toString());
-    correctedUrl.protocol = forwardedProto;
-    correctedUrl.host = requestHost;
+    correctedUrl.protocol = actualProto + ':';
+    correctedUrl.host = actualHost;
+
+    log('Corrected URL: %s', correctedUrl.toString());
     return correctedUrl;
   }
 
+  log('URL does not need correction, returning original: %s', url.toString());
   return url;
 };
