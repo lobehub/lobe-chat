@@ -113,19 +113,32 @@ export async function POST(request: NextRequest) {
     const internalRedirectUrlString = await oidcService.getInteractionResult(uid, result);
     log('OIDC Provider internal redirect URL string: %s', internalRedirectUrlString);
 
-    // // Construct the handoff URL
-    // const handoffUrl = new URL('/oauth/handoff', request.nextUrl.origin);
-    // // Set the original redirect URL as the 'target' query parameter (URL encoded)
-    // handoffUrl.searchParams.set('target', internalRedirectUrlString);
-    //
-    // log('Redirecting to handoff page: %s', handoffUrl.toString());
-    // // Redirect to the handoff page
-    // return NextResponse.redirect(handoffUrl.toString(), {
-    //   headers: request.headers, // Keep original headers if necessary
-    //   status: 303,
-    // });
+    // 修复 Cloudflare Tunnel 等代理环境下的 redirect URL 问题
+    let finalRedirectUrl = internalRedirectUrlString;
+    try {
+      const redirectUrl = new URL(internalRedirectUrlString);
+      const requestHost = request.headers.get('host');
 
-    return NextResponse.redirect(internalRedirectUrlString, {
+      // 如果重定向到本地地址，但请求来自外部域名，则修正 URL
+      if (
+        (redirectUrl.hostname === 'localhost' || redirectUrl.hostname === '127.0.0.1') &&
+        requestHost &&
+        !requestHost.includes('localhost') &&
+        !requestHost.includes('127.0.0.1')
+      ) {
+        const forwardedProto =
+          request.headers.get('x-forwarded-proto') ||
+          request.headers.get('x-forwarded-protocol') ||
+          (requestHost.includes('localhost') ? 'http' : 'https');
+
+        finalRedirectUrl = `${forwardedProto}://${requestHost}${redirectUrl.pathname}${redirectUrl.search}`;
+        log('Corrected redirect URL from %s to %s', internalRedirectUrlString, finalRedirectUrl);
+      }
+    } catch {
+      log('Warning: Could not parse redirect URL, using as-is: %s', internalRedirectUrlString);
+    }
+
+    return NextResponse.redirect(finalRedirectUrl, {
       headers: request.headers,
       status: 303,
     });
