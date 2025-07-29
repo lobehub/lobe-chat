@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Support more Text2Image from Qwen."]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.1"
+  },
+  {
+    "children": {
       "features": ["Implement API Key management functionality."]
     },
     "date": "2025-07-28",
