@@ -10,7 +10,7 @@ import {
   CloudflareKeyVault,
   OpenAICompatibleKeyVault,
 } from '@/types/user/settings';
-import { createJWT } from '@/utils/jwt';
+import { obfuscatePayloadWithXOR } from '@/utils/client/xor-obfuscation';
 
 export const getProviderAuthPayload = (
   provider: string,
@@ -80,7 +80,7 @@ const createAuthTokenWithPayload = async (payload = {}) => {
   const accessCode = keyVaultsConfigSelectors.password(useUserStore.getState());
   const userId = userProfileSelectors.userId(useUserStore.getState());
 
-  return createJWT<JWTPayload>({ accessCode, userId, ...payload });
+  return obfuscatePayloadWithXOR<JWTPayload>({ accessCode, userId, ...payload });
 };
 
 interface AuthParams {

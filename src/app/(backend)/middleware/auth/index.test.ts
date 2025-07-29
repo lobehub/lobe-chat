@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AgentRuntimeError } from '@/libs/model-runtime';
 import { ChatErrorType } from '@/types/fetch';
 import { createErrorResponse } from '@/utils/errorResponse';
-import { getJWTPayload } from '@/utils/server/jwt';
+import { getXorPayload } from '@/utils/server/xor';
 
 import { RequestHandler, checkAuth } from './index';
 import { checkAuthMethod } from './utils';
@@ -50,7 +50,7 @@ describe('checkAuth', () => {
   it('should return error response on getJWTPayload error', async () => {
     const mockError = AgentRuntimeError.createError(ChatErrorType.Unauthorized);
     mockRequest.headers.set('Authorization', 'invalid');
-    vi.mocked(getJWTPayload).mockRejectedValueOnce(mockError);
+    vi.mocked(getXorPayload).mockRejectedValueOnce(mockError);
 
     await checkAuth(mockHandler)(mockRequest, mockOptions);
 
@@ -64,7 +64,7 @@ describe('checkAuth', () => {
   it('should return error response on checkAuthMethod error', async () => {
     const mockError = AgentRuntimeError.createError(ChatErrorType.Unauthorized);
     mockRequest.headers.set('Authorization', 'valid');
-    vi.mocked(getJWTPayload).mockResolvedValueOnce({});
+    vi.mocked(getXorPayload).mockResolvedValueOnce({});
     vi.mocked(checkAuthMethod).mockImplementationOnce(() => {
       throw mockError;
     });

@@ -13,7 +13,7 @@ import { AgentRuntime, AgentRuntimeError, ChatCompletionErrorPayload } from '@/l
 import { validateOIDCJWT } from '@/libs/oidc-provider/jwt';
 import { ChatErrorType } from '@/types/fetch';
 import { createErrorResponse } from '@/utils/errorResponse';
-import { getJWTPayload } from '@/utils/server/jwt';
+import { getXorPayload } from '@/utils/server/xor';
 
 import { checkAuthMethod } from './utils';
 
@@ -55,7 +55,7 @@ export const checkAuth =
         clerkAuth = data.clerkAuth;
       }
 
-      jwtPayload = await getJWTPayload(authorization);
+      jwtPayload = getXorPayload(authorization);
 
       const oidcAuthorization = req.headers.get(LOBE_CHAT_OIDC_AUTH_HEADER);
       let isUseOidcAuth = false;

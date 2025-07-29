@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createCallerFactory } from '@/libs/trpc/edge';
 import { AuthContext, createContextInner } from '@/libs/trpc/edge/context';
 import { edgeTrpc as trpc } from '@/libs/trpc/edge/init';
-import * as utils from '@/utils/server/jwt';
+import * as utils from '@/utils/server/xor';
 
 import { jwtPayloadChecker } from './jwtPayload';
 
@@ -40,7 +40,7 @@ describe('passwordChecker middleware', () => {
   it('should call next with jwtPayload in context if access code is correct', async () => {
     const jwtPayload = { accessCode: '123' };
 
-    vi.spyOn(utils, 'getJWTPayload').mockResolvedValue(jwtPayload);
+    vi.spyOn(utils, 'getXorPayload').mockResolvedValue(jwtPayload);
 
     ctx = await createContextInner({ authorizationHeader: 'Bearer token' });
     router = createCaller(ctx);
@@ -52,7 +52,7 @@ describe('passwordChecker middleware', () => {
 
   it('should call next with jwtPayload in context if no access codes are set', async () => {
     const jwtPayload = {};
-    vi.spyOn(utils, 'getJWTPayload').mockResolvedValue(jwtPayload);
+    vi.spyOn(utils, 'getXorPayload').mockResolvedValue(jwtPayload);
 
     ctx = await createContextInner({ authorizationHeader: 'Bearer token' });
     router = createCaller(ctx);
@@ -63,7 +63,7 @@ describe('passwordChecker middleware', () => {
   });
   it('should call next with jwtPayload in context if  access codes is undefined', async () => {
     const jwtPayload = {};
-    vi.spyOn(utils, 'getJWTPayload').mockResolvedValue(jwtPayload);
+    vi.spyOn(utils, 'getXorPayload').mockResolvedValue(jwtPayload);
 
     ctx = await createContextInner({ authorizationHeader: 'Bearer token' });
     router = createCaller(ctx);
