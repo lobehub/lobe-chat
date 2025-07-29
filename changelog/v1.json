@@ -1,6 +1,41 @@
 [
   {
     "children": {
+      "improvements": ["Open new topic by tap Just Chat again."]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.6"
+  },
+  {
+    "children": {
+      "fixes": ["Reorder AppTheme and Locale to fix modal i18n."]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.5"
+  },
+  {
+    "children": {
+      "fixes": ["Revert jose to ^5 to fix auth issue on desktop."]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix subscription plan tag display."]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.3"
+  },
+  {
+    "children": {
+      "improvements": ["Add more OpenAI SDK Text2Image providers, update i18n."]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.2"
+  },
+  {
+    "children": {
       "improvements": ["Support more Text2Image from Qwen."]
     },
     "date": "2025-07-29",

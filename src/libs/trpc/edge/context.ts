@@ -1,13 +1,18 @@
 import { User } from 'next-auth';
 import { NextRequest } from 'next/server';
 
-import { JWTPayload, LOBE_CHAT_AUTH_HEADER, enableClerk, enableNextAuth } from '@/const/auth';
+import {
+  ClientSecretPayload,
+  LOBE_CHAT_AUTH_HEADER,
+  enableClerk,
+  enableNextAuth,
+} from '@/const/auth';
 import { ClerkAuth, IClerkAuth } from '@/libs/clerk-auth';
 
 export interface AuthContext {
   authorizationHeader?: string | null;
   clerkAuth?: IClerkAuth;
-  jwtPayload?: JWTPayload | null;
+  jwtPayload?: ClientSecretPayload | null;
   nextAuth?: User;
   userId?: string | null;
 }

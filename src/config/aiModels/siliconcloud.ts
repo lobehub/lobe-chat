@@ -1,4 +1,4 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
 
 // https://siliconflow.cn/zh-cn/models
 const siliconcloudChatModels: AIChatModelCard[] = [
@@ -830,6 +830,28 @@ const siliconcloudChatModels: AIChatModelCard[] = [
   },
 ];
 
-export const allModels = [...siliconcloudChatModels];
+const siliconcloudImageModels: AIImageModelCard[] = [
+  {
+    description:
+      'Kolors 是由快手 Kolors 团队开发的基于潜在扩散的大规模文本到图像生成模型。该模型通过数十亿文本-图像对的训练，在视觉质量、复杂语义准确性以及中英文字符渲染方面展现出显著优势。它不仅支持中英文输入，在理解和生成中文特定内容方面也表现出色',
+    displayName: 'Kolors',
+    enabled: true,
+    id: 'Kwai-Kolors/Kolors',
+    parameters: {
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      size: {
+        default: '1024x1024',
+        enum: ['1024x1024', '960x1280', '768x1024', '720x1440', '720x1280'],
+      },
+    },
+    releasedAt: '2024-07-06',
+    type: 'image',
+  },
+];
+
+export const allModels = [...siliconcloudChatModels, ...siliconcloudImageModels];
 
 export default allModels;

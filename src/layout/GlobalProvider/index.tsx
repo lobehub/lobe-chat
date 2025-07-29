@@ -40,15 +40,15 @@ const GlobalLayout = async ({
   const serverConfig = await getServerGlobalConfig();
   return (
     <StyleRegistry>
-      <AppTheme
-        customFontFamily={appEnv.CUSTOM_FONT_FAMILY}
-        customFontURL={appEnv.CUSTOM_FONT_URL}
-        defaultAppearance={appearance}
-        defaultNeutralColor={neutralColor as any}
-        defaultPrimaryColor={primaryColor as any}
-        globalCDN={appEnv.CDN_USE_GLOBAL}
-      >
-        <Locale antdLocale={antdLocale} defaultLang={userLocale}>
+      <Locale antdLocale={antdLocale} defaultLang={userLocale}>
+        <AppTheme
+          customFontFamily={appEnv.CUSTOM_FONT_FAMILY}
+          customFontURL={appEnv.CUSTOM_FONT_URL}
+          defaultAppearance={appearance}
+          defaultNeutralColor={neutralColor as any}
+          defaultPrimaryColor={primaryColor as any}
+          globalCDN={appEnv.CDN_USE_GLOBAL}
+        >
           <ServerConfigStoreProvider
             featureFlags={serverFeatureFlags}
             isMobile={isMobile}
@@ -63,8 +63,8 @@ const GlobalLayout = async ({
               {process.env.NODE_ENV === 'development' && <DevPanel />}
             </Suspense>
           </ServerConfigStoreProvider>
-        </Locale>
-      </AppTheme>
+        </AppTheme>
+      </Locale>
       <AntdV5MonkeyPatch />
     </StyleRegistry>
   );
