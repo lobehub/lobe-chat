@@ -28,11 +28,11 @@ export async function createMiniMaxImage(
   payload: CreateImagePayload,
   options: CreateImageOptions,
 ): Promise<CreateImageResponse> {
-  const { apiKey, provider } = options;
+  const { apiKey, baseURL, provider } = options;
   const { model, params } = payload;
 
   try {
-    const endpoint = 'https://api.minimaxi.com/v1/image_generation';
+    const endpoint = `${baseURL}/image_generation`;
 
     const response = await fetch(endpoint, {
       body: JSON.stringify({
