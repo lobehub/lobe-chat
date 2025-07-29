@@ -196,7 +196,7 @@
     "i18next-resources-to-backend": "^1.2.1",
     "idb-keyval": "^6.2.2",
     "immer": "^10.1.1",
-    "jose": "^6.0.12",
+    "jose": "^5.10.0",
     "js-sha256": "^0.11.1",
     "jsonl-parse-stringify": "^1.0.3",
     "keyv": "^4.5.4",
