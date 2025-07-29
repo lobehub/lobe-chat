@@ -17,10 +17,9 @@ export async function generateSitemaps() {
   const staticSitemaps = sitemapModule.sitemapIndexs;
 
   // 获取需要分页的类型的页数
-  const [pluginPages, assistantPages, mcpPages, modelPages] = await Promise.all([
+  const [pluginPages, assistantPages, modelPages] = await Promise.all([
     sitemapModule.getPluginPageCount(),
     sitemapModule.getAssistantPageCount(),
-    sitemapModule.getMcpPageCount(),
     sitemapModule.getModelPageCount(),
   ]);
 
@@ -30,7 +29,6 @@ export async function generateSitemaps() {
     ...Array.from({ length: assistantPages }, (_, i) => ({
       id: `assistants-${i + 1}` as SitemapType,
     })),
-    ...Array.from({ length: mcpPages }, (_, i) => ({ id: `mcp-${i + 1}` as SitemapType })),
     ...Array.from({ length: modelPages }, (_, i) => ({ id: `models-${i + 1}` as SitemapType })),
   ];
 
@@ -60,9 +58,6 @@ export default async function sitemap({ id }: { id: string }): Promise<MetadataR
     case SitemapType.Assistants: {
       return sitemapModule.getAssistants(page);
     }
-    case SitemapType.Mcp: {
-      return sitemapModule.getMcp(page);
-    }
     case SitemapType.Plugins: {
       return sitemapModule.getPlugins(page);
     }
@@ -81,10 +76,6 @@ export default async function sitemap({ id }: { id: string }): Promise<MetadataR
       if (id.startsWith('assistants-')) {
         const pageNum = parseInt(id.split('-')[1], 10);
         return sitemapModule.getAssistants(pageNum);
-      }
-      if (id.startsWith('mcp-')) {
-        const pageNum = parseInt(id.split('-')[1], 10);
-        return sitemapModule.getMcp(pageNum);
       }
       if (id.startsWith('models-')) {
         const pageNum = parseInt(id.split('-')[1], 10);

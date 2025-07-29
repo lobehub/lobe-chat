@@ -1100,6 +1100,9 @@
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 FlashはGoogleのコストパフォーマンスに優れたモデルで、包括的な機能を提供します。"
   },
+  "gemini-2.5-flash-lite": {
+    "description": "Gemini 2.5 Flash-Lite は、Google の中で最も小さく、コストパフォーマンスに優れたモデルであり、大規模な利用を目的に設計されています。"
+  },
   "gemini-2.5-flash-lite-preview-06-17": {
     "description": "Gemini 2.5 Flash-Lite PreviewはGoogleの最小かつコストパフォーマンスに優れたモデルで、大規模利用を目的に設計されています。"
   },

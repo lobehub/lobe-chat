@@ -4,7 +4,7 @@ import { LangfuseGenerationClient, LangfuseTraceClient } from 'langfuse-core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import * as langfuseCfg from '@/config/langfuse';
-import { JWTPayload } from '@/const/auth';
+import { ClientSecretPayload } from '@/const/auth';
 import { TraceNameMap } from '@/const/trace';
 import { AgentRuntime, ChatStreamPayload, LobeOpenAI, ModelProvider } from '@/libs/model-runtime';
 import { providerRuntimeMap } from '@/libs/model-runtime/runtimeMap';
@@ -51,7 +51,7 @@ const specialProviders = [
 const testRuntime = (providerId: string, payload?: any) => {
   describe(`${providerId} provider runtime`, () => {
     it('should initialize correctly', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'user-key', ...payload };
+      const jwtPayload: ClientSecretPayload = { apiKey: 'user-key', ...payload };
       const runtime = await AgentRuntime.initializeWithProvider(providerId, jwtPayload);
 
       // @ts-ignore
@@ -66,7 +66,7 @@ const testRuntime = (providerId: string, payload?: any) => {
 
 let mockModelRuntime: AgentRuntime;
 beforeEach(async () => {
-  const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', baseURL: 'user-endpoint' };
+  const jwtPayload: ClientSecretPayload = { apiKey: 'user-openai-key', baseURL: 'user-endpoint' };
   mockModelRuntime = await AgentRuntime.initializeWithProvider(ModelProvider.OpenAI, jwtPayload);
 });
 

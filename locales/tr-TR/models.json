@@ -1100,6 +1100,9 @@
   "gemini-2.5-flash": {
     "description": "Gemini 2.5 Flash, Google'ın en yüksek maliyet-performans modelidir ve kapsamlı özellikler sunar."
   },
+  "gemini-2.5-flash-lite": {
+    "description": "Gemini 2.5 Flash-Lite, Google'ın en küçük ve en uygun maliyetli modeli olup, geniş çaplı kullanım için tasarlanmıştır."
+  },
   "gemini-2.5-flash-lite-preview-06-17": {
     "description": "Gemini 2.5 Flash-Lite Önizlemesi, Google'ın en küçük ve en yüksek maliyet-performans modelidir ve büyük ölçekli kullanım için tasarlanmıştır."
   },
