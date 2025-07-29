@@ -2,6 +2,62 @@
 
 # Changelog
 
+## [Version&nbsp;1.105.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.104.1...v1.105.0)
+<sup>Released on **2025-07-29**</sup>
+
+
+#### ✨ Features
+
+- **misc**: Add support for Okta Authentication.
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix subscription plan tag display, reorder AppTheme and Locale to fix modal i18n, revert jose to ^5 to fix auth issue on desktop.
+
+
+#### 💄 Styles
+
+- **misc**: Open new topic by tap Just Chat again, support Minimax T2I models.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's improved
+
+* **misc**: Add support for Okta Authentication, closes [#8547](https://github.com/jaworldwideorg/OneJA-Bot/issues/8547) ([67abdfe](https://github.com/jaworldwideorg/OneJA-Bot/commit/67abdfe))
+
+
+
+#### What's fixed
+
+* **misc**: Fix subscription plan tag display, closes [#8599](https://github.com/jaworldwideorg/OneJA-Bot/issues/8599) ([2a3754a](https://github.com/jaworldwideorg/OneJA-Bot/commit/2a3754a))
+* **misc**: Reorder AppTheme and Locale to fix modal i18n, closes [#8600](https://github.com/jaworldwideorg/OneJA-Bot/issues/8600) ([3264cf2](https://github.com/jaworldwideorg/OneJA-Bot/commit/3264cf2))
+* **misc**: Revert jose to ^5 to fix auth issue on desktop, closes [#8603](https://github.com/jaworldwideorg/OneJA-Bot/issues/8603) ([57118b0](https://github.com/jaworldwideorg/OneJA-Bot/commit/57118b0))
+
+
+
+#### Styles
+
+* **misc**: Open new topic by tap Just Chat again, closes [#8426](https://github.com/jaworldwideorg/OneJA-Bot/issues/8426) ([018ca75](https://github.com/jaworldwideorg/OneJA-Bot/commit/018ca75))
+* **misc**: Support Minimax T2I models, closes [#8583](https://github.com/jaworldwideorg/OneJA-Bot/issues/8583) ([f8a01aa](https://github.com/jaworldwideorg/OneJA-Bot/commit/f8a01aa))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.104.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.104.0...v1.104.1)
 <sup>Released on **2025-07-29**</sup>
 
