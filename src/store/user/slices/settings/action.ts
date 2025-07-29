@@ -1,5 +1,5 @@
 import isEqual from 'fast-deep-equal';
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
@@ -22,8 +22,8 @@ export interface UserSettingsAction {
   importUrlShareSettings: (settingsParams: string | null) => Promise<void>;
   internal_createSignal: () => AbortController;
   resetSettings: () => Promise<void>;
-  setSettings: (settings: DeepPartial<UserSettings>) => Promise<void>;
-  updateDefaultAgent: (agent: DeepPartial<LobeAgentSettings>) => Promise<void>;
+  setSettings: (settings: PartialDeep<UserSettings>) => Promise<void>;
+  updateDefaultAgent: (agent: PartialDeep<LobeAgentSettings>) => Promise<void>;
   updateGeneralConfig: (settings: Partial<UserGeneralConfig>) => Promise<void>;
   updateKeyVaults: (settings: Partial<UserKeyVaults>) => Promise<void>;
 

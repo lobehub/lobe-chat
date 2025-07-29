@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "服務請求失敗，請檢查配置或重試"
   },
+  "testConnectionFailed": "測試連線失敗：{{error}}",
   "tts": {
     "responseError": "服務請求失敗，請檢查配置或重試"
   },
@@ -130,6 +131,7 @@
     "addProxyUrl": "新增 OpenAI 代理網址（選填）",
     "apiKey": {
       "description": "輸入您的 {{name}} API 金鑰即可開始會話",
+      "imageGenerationDescription": "輸入你的 {{name}} API Key 即可開始生成",
       "title": "使用自定義 {{name}} API 金鑰"
     },
     "closeMessage": "關閉提示",

@@ -1,4 +1,4 @@
-import type { BrowserWindowOpts } from './core/Browser';
+import type { BrowserWindowOpts } from './core/browser/Browser';
 
 export const BrowsersIdentifiers = {
   chat: 'chat',

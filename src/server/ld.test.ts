@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
 
+import { BRANDING_NAME } from '@/const/branding';
 import { DEFAULT_LANG } from '@/const/locale';
 
 import { AUTHOR_LIST, Ld } from './ld';
@@ -57,7 +58,7 @@ describe('Ld', () => {
       });
 
       expect(webpage['@type']).toBe('WebPage');
-      expect(webpage.name).toBe('Test Page · LobeChat');
+      expect(webpage.name).toBe(`Test Page · ${BRANDING_NAME}`);
       expect(webpage.description).toBe('Test Description');
     });
   });
@@ -79,7 +80,7 @@ describe('Ld', () => {
       const website = ld.genWebSite();
 
       expect(website['@type']).toBe('WebSite');
-      expect(website.name).toBe('LobeChat');
+      expect(website.name).toBe(BRANDING_NAME);
     });
   });
 
@@ -95,7 +96,7 @@ describe('Ld', () => {
       });
 
       expect(article['@type']).toBe('Article');
-      expect(article.headline).toBe('Test Article · LobeChat');
+      expect(article.headline).toBe(`Test Article · ${BRANDING_NAME}`);
       expect(article.author['@type']).toBe('Person');
     });
   });

@@ -8,6 +8,14 @@ import { AgentService } from '@/server/services/agent';
 
 import { UserService } from './index';
 
+// Mock @/libs/analytics to avoid server-side environment variable access in client test environment
+vi.mock('@/libs/analytics', () => ({
+  initializeServerAnalytics: vi.fn().mockResolvedValue({
+    identify: vi.fn(),
+    track: vi.fn(),
+  }),
+}));
+
 // Mock dependencies
 vi.mock('@/database/models/user', () => {
   const MockUserModel = vi.fn();

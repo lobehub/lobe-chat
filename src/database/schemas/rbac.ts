@@ -1,5 +1,14 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
-import { boolean, index, integer, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  index,
+  integer,
+  jsonb,
+  pgTable,
+  primaryKey,
+  text,
+  timestamp,
+} from 'drizzle-orm/pg-core';
 
 import { timestamps } from './_helpers';
 import { users } from './user';
@@ -12,6 +21,7 @@ export const roles = pgTable('rbac_roles', {
   description: text('description'), // Role description
   isSystem: boolean('is_system').default(false).notNull(), // Whether it's a system role
   isActive: boolean('is_active').default(true).notNull(), // Whether it's active
+  metadata: jsonb('metadata').default({}), // Role metadata
 
   ...timestamps,
 });

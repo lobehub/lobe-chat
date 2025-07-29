@@ -45,14 +45,25 @@
   },
   "hotkey": {
     "conflicts": "Mevcut kısayol tuşlarıyla çakışıyor",
+    "errors": {
+      "CONFLICT": "Kısayol çakışması: Bu kısayol başka bir işlev tarafından kullanılıyor",
+      "INVALID_FORMAT": "Geçersiz kısayol formatı: Lütfen doğru formatı kullanın (örneğin CommandOrControl+E)",
+      "INVALID_ID": "Geçersiz kısayol kimliği",
+      "NO_MODIFIER": "Kısayol en az bir değiştirici tuş içermelidir (Ctrl, Alt, Shift vb.)",
+      "SYSTEM_OCCUPIED": "Kısayol sistem veya başka bir uygulama tarafından kullanılıyor",
+      "UNKNOWN": "Güncelleme başarısız: Bilinmeyen hata"
+    },
     "group": {
       "conversation": "Sohbet",
+      "desktop": "Masaüstü",
       "essential": "Temel"
     },
     "invalidCombination": "Kısayol tuşu en az bir modifiye tuşu (Ctrl, Alt, Shift) ve bir normal tuş içermelidir",
     "record": "Kısayol tuşunu kaydetmek için tuşa basın",
     "reset": "Varsayılan kısayol tuşlarına sıfırla",
-    "title": "Kısayollar"
+    "title": "Kısayollar",
+    "updateError": "Kısayol güncelleme başarısız: Ağ veya sistem hatası",
+    "updateSuccess": "Kısayol başarıyla güncellendi"
   },
   "llm": {
     "aesGcm": "Anahtarınız ve vekil adresiniz <1>AES-GCM</1> şifreleme algoritması kullanılarak şifrelenecektir",
@@ -129,6 +140,7 @@
     "waitingForMore": "Daha fazla model eklenmesi planlanıyor"
   },
   "plugin": {
+    "addMCPPlugin": "MCP Eklentisi Ekle",
     "addTooltip": "Eklenti Ekle",
     "clearDeprecated": "Kullanım Dışı Eklentileri Kaldır",
     "empty": "Henüz eklenti yok, <1>Eklenti Mağazası</1>'nı keşfetmekten çekinmeyin",
@@ -483,6 +495,11 @@
       "placeholder": "Lütfen özel ipucu kelimelerini girin",
       "title": "Özel İpucu"
     },
+    "generationTopic": {
+      "label": "Yapay Zeka Resim Konusu İsimlendirme Modeli",
+      "modelDesc": "Yapay zeka resimlerinin otomatik konu isimlendirmesi için belirlenen model",
+      "title": "Yapay Zeka Resim Otomatik Konu İsimlendirme"
+    },
     "helpInfo": "Yeni bir asistan oluşturduğunuzda, varsayılan asistan ayarları ön ayar olarak kullanılacaktır.",
     "historyCompress": {
       "label": "Oturum Geçmişi Modeli",
@@ -519,6 +536,7 @@
     "hotkey": "Kısayollar",
     "llm": "Modeller",
     "provider": "Yapay Zeka Hizmet Sağlayıcısı",
+    "proxy": "Ağ Proxy",
     "storage": "Veri Depolama",
     "sync": "Bulut Senkronizasyonu",
     "system-agent": "Sistem Asistanı",

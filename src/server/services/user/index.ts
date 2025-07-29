@@ -2,6 +2,7 @@ import { UserJSON } from '@clerk/backend';
 
 import { UserModel } from '@/database/models/user';
 import { serverDB } from '@/database/server';
+import { initializeServerAnalytics } from '@/libs/analytics';
 import { pino } from '@/libs/logger';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { S3 } from '@/server/modules/S3';
@@ -50,6 +51,23 @@ export class UserService {
     /* ↓ cloud slot ↓ */
 
     /* ↑ cloud slot ↑ */
+
+    //analytics
+    const analytics = await initializeServerAnalytics();
+    analytics?.identify(id, {
+      email: email?.email_address,
+      firstName: params.first_name,
+      lastName: params.last_name,
+      phone: phone?.phone_number,
+      username: params.username,
+    });
+    analytics?.track({
+      name: 'user_register_completed',
+      properties: {
+        spm: 'user_service.create_user.user_created',
+      },
+      userId: id,
+    });
 
     return { message: 'user created', success: true };
   };

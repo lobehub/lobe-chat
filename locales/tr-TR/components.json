@@ -68,6 +68,23 @@
   "GoBack": {
     "back": "Geri dön"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "Resmi değiştirmek için tıklayın",
+      "dropMultipleFiles": "Birden fazla dosya yükleme desteklenmiyor, sadece ilk dosya kullanılacak"
+    },
+    "placeholder": {
+      "primary": "Resim ekle",
+      "secondary": "Tıklayın veya sürükleyip bırakın yüklemek için"
+    }
+  },
+  "KeyValueEditor": {
+    "addButton": "Yeni bir satır ekle",
+    "deleteTooltip": "Sil",
+    "duplicateKeyError": "Anahtar adı benzersiz olmalıdır",
+    "keyPlaceholder": "Anahtar",
+    "valuePlaceholder": "Değer"
+  },
   "MaxTokenSlider": {
     "unlimited": "Sınırsız"
   },
@@ -90,6 +107,25 @@
     "goToSettings": "Ayrıntılara git",
     "provider": "Sağlayıcı",
     "title": "Model"
+  },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "Daha fazla yüklemek için tıklayın veya sürükleyin"
+    },
+    "modal": {
+      "complete": "Tamamla",
+      "newFileIndicator": "Yeni",
+      "selectImageToPreview": "Önizlemek için resim seçin",
+      "title": "Resimleri Yönet ({{count}})",
+      "upload": "Resim Yükle"
+    },
+    "placeholder": {
+      "primary": "Resim yüklemek için tıklayın veya sürükleyin",
+      "secondary": "Birden fazla resim seçimi desteklenir"
+    },
+    "progress": {
+      "uploadingWithCount": "{{completed}}/{{total}} yüklendi"
+    }
   },
   "OllamaSetupGuide": {
     "action": {

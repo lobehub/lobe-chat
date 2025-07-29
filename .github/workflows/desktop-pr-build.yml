@@ -155,9 +155,9 @@ jobs:
           KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
           NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_NIGHTLY_DESKTOP_PROJECT_ID }}
           NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_NIGHTLY_DESKTOP_BASE_URL }}
-          # 将 TEMP 和 TMP 目录设置到 D 盘
-          TEMP: D:\temp
-          TMP: D:\temp
+          # 将 TEMP 和 TMP 目录设置到 C 盘
+          TEMP: C:\temp
+          TMP: C:\temp
 
       # Linux 平台构建处理
       - name: Build artifact on Linux

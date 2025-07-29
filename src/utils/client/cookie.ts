@@ -5,7 +5,7 @@ import { COOKIE_CACHE_DAYS } from '@/const/settings';
 export const setCookie = (
   key: string,
   value: string | undefined,
-  expireDays = COOKIE_CACHE_DAYS,
+  expireDays: string | number = COOKIE_CACHE_DAYS,
 ) => {
   if (typeof value === 'undefined') {
     // Set the expiration time to yesterday (expire immediately)
@@ -14,7 +14,10 @@ export const setCookie = (
     // eslint-disable-next-line unicorn/no-document-cookie
     document.cookie = `${key}=; expires=${expiredDate}; path=/;`;
   } else {
-    const expires = dayjs().add(expireDays, 'day').toDate().toUTCString();
+    const expires =
+      typeof expireDays === 'string'
+        ? expireDays
+        : dayjs().add(expireDays, 'day').toDate().toUTCString();
 
     // eslint-disable-next-line unicorn/no-document-cookie
     document.cookie = `${key}=${value};expires=${expires};path=/;`;

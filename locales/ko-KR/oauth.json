@@ -28,10 +28,14 @@
     },
     "title": "권한 부여 {{clientName}}"
   },
-  "failed": {
+  "error": {
     "backToHome": "홈으로 돌아가기",
-    "subTitle": "귀하가 애플리케이션의 LobeChat 계정 접근을 거부했습니다",
-    "title": "허가가 거부되었습니다"
+    "desc": "OAuth 인증 실패, 실패 원인: {{reason}}",
+    "reason": {
+      "internal_error": "서버 오류",
+      "invalid_request": "잘못된 요청 매개변수"
+    },
+    "title": "인증 실패"
   },
   "handoff": {
     "desc": {
@@ -50,7 +54,7 @@
     "userWelcome": "다시 오신 것을 환영합니다, "
   },
   "success": {
-    "subTitle": "귀하가 애플리케이션의 LobeChat 계정 접근을 성공적으로 허가했습니다. 이 페이지를 닫아도 됩니다",
+    "subTitle": "애플리케이션이 귀하의 계정에 접근하는 것을 성공적으로 인증했습니다. 이 페이지를 닫으셔도 됩니다.",
     "title": "허가 성공"
   }
 }

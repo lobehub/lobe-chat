@@ -1,0 +1,100 @@
+{
+  "config": {
+    "aspectRatio": {
+      "label": "Proporción",
+      "lock": "Bloquear relación de aspecto",
+      "unlock": "Desbloquear relación de aspecto"
+    },
+    "header": {
+      "desc": "Descripción simple, crea al instante",
+      "title": "Pintura"
+    },
+    "height": {
+      "label": "Alto"
+    },
+    "imageNum": {
+      "label": "Cantidad de imágenes"
+    },
+    "imageUrl": {
+      "label": "Imagen de referencia"
+    },
+    "imageUrls": {
+      "label": "Imágenes de referencia"
+    },
+    "model": {
+      "label": "Modelo"
+    },
+    "prompt": {
+      "placeholder": "Describe el contenido que deseas generar"
+    },
+    "seed": {
+      "label": "Semilla",
+      "random": "Semilla aleatoria"
+    },
+    "size": {
+      "label": "Tamaño"
+    },
+    "steps": {
+      "label": "Pasos"
+    },
+    "title": "Pintura AI",
+    "width": {
+      "label": "Ancho"
+    }
+  },
+  "generation": {
+    "actions": {
+      "applySeed": "Aplicar semilla",
+      "copyError": "Copiar mensaje de error",
+      "copyPrompt": "Copiar indicación",
+      "copySeed": "Copiar semilla",
+      "delete": "Eliminar",
+      "deleteBatch": "Eliminar lote",
+      "download": "Descargar",
+      "downloadFailed": "Error al descargar la imagen",
+      "errorCopied": "Mensaje de error copiado al portapapeles",
+      "errorCopyFailed": "Error al copiar el mensaje de error",
+      "generate": "Generar",
+      "promptCopied": "Texto de indicación copiado al portapapeles",
+      "promptCopyFailed": "Error al copiar el texto de indicación",
+      "reuseSettings": "Reutilizar configuración",
+      "seedApplied": "Semilla aplicada a la configuración",
+      "seedApplyFailed": "Error al aplicar la semilla",
+      "seedCopied": "Semilla copiada al portapapeles",
+      "seedCopyFailed": "Error al copiar la semilla"
+    },
+    "metadata": {
+      "count": "{{count}} imágenes"
+    },
+    "status": {
+      "failed": "Generación fallida",
+      "generating": "Generando..."
+    }
+  },
+  "notSupportGuide": {
+    "desc": "La instancia desplegada actual está en modo base de datos cliente y no soporta la función de generación de imágenes AI. Por favor, cambia al <1>modo de despliegue con base de datos servidor</1> o utiliza directamente <3>LobeChat Cloud</3>",
+    "features": {
+      "fileIntegration": {
+        "desc": "Integración profunda con el sistema de gestión de archivos, las imágenes generadas se guardan automáticamente en el sistema de archivos para una gestión y organización unificada",
+        "title": "Interoperabilidad con sistema de archivos"
+      },
+      "llmAssisted": {
+        "desc": "Combinación con capacidades de modelos de lenguaje grandes para optimizar y expandir inteligentemente los textos de indicación, mejorando la calidad de generación de imágenes (Próximamente)",
+        "title": "Generación asistida por LLM"
+      },
+      "multiProviders": {
+        "desc": "Soporta múltiples proveedores de servicios de pintura AI, incluyendo OpenAI gpt-image-1, Google Imagen, FAL.ai, entre otros, ofreciendo una amplia selección de modelos",
+        "title": "Soporte para múltiples proveedores"
+      }
+    },
+    "title": "El modo de despliegue actual no soporta pintura AI"
+  },
+  "topic": {
+    "createNew": "Crear nuevo tema",
+    "deleteConfirm": "Eliminar tema generado",
+    "deleteConfirmDesc": "Estás a punto de eliminar este tema generado. Esta acción es irreversible, por favor procede con precaución.",
+    "empty": "No hay temas generados",
+    "title": "Tema de pintura",
+    "untitled": "Tema predeterminado"
+  }
+}

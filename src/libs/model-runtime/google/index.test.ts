@@ -4,6 +4,7 @@ import OpenAI from 'openai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { OpenAIChatMessage } from '@/libs/model-runtime';
+import { CreateImagePayload } from '@/libs/model-runtime/types/image';
 import { ChatStreamPayload } from '@/types/openai/chat';
 import * as imageToBase64Module from '@/utils/imageToBase64';
 
@@ -22,7 +23,7 @@ let instance: LobeGoogleAI;
 beforeEach(() => {
   instance = new LobeGoogleAI({ apiKey: 'test' });
 
-  // 使用 vi.spyOn 来模拟 chat.completions.create 方法
+  // Use vi.spyOn to mock the chat.completions.create method
   const mockStreamData = (async function* (): AsyncGenerator<GenerateContentResponse> {})();
   vi.spyOn(instance['client'].models, 'generateContentStream').mockResolvedValue(mockStreamData);
 });
@@ -53,7 +54,7 @@ describe('LobeGoogleAI', () => {
       expect(result).toBeInstanceOf(Response);
     });
     it('should handle text messages correctly', async () => {
-      // 模拟 Google AI SDK 的 generateContentStream 方法返回一个成功的响应流
+      // Mock Google AI SDK's generateContentStream method to return a successful response stream
       const mockStream = new ReadableStream({
         start(controller) {
           controller.enqueue('Hello, world!');
@@ -71,7 +72,7 @@ describe('LobeGoogleAI', () => {
       });
 
       expect(result).toBeInstanceOf(Response);
-      // 额外的断言可以加入，比如验证返回的流内容等
+      // Additional assertions can be added, such as verifying the returned stream content
     });
 
     it('should withGrounding', () => {
@@ -214,10 +215,10 @@ describe('LobeGoogleAI', () => {
     });
 
     it('should call debugStream in DEBUG mode', async () => {
-      // 设置环境变量以启用DEBUG模式
+      // Set environment variable to enable DEBUG mode
       process.env.DEBUG_GOOGLE_CHAT_COMPLETION = '1';
 
-      // 模拟 Google AI SDK 的 generateContentStream 方法返回一个成功的响应流
+      // Mock Google AI SDK's generateContentStream method to return a successful response stream
       const mockStream = new ReadableStream({
         start(controller) {
           controller.enqueue('Debug mode test');
@@ -239,13 +240,13 @@ describe('LobeGoogleAI', () => {
 
       expect(debugStreamSpy).toHaveBeenCalled();
 
-      // 清理环境变量
+      // Clean up environment variable
       delete process.env.DEBUG_GOOGLE_CHAT_COMPLETION;
     });
 
     describe('Error', () => {
       it('should throw InvalidGoogleAPIKey error on API_KEY_INVALID error', async () => {
-        // 模拟 Google AI SDK 抛出异常
+        // Mock Google AI SDK throwing an exception
         const message = `[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/gemini-pro:streamGenerateContent?alt=sse: [400 Bad Request] API key not valid. Please pass a valid API key. [{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"API_KEY_INVALID","domain":"googleapis.com","metadata":{"service":"generativelanguage.googleapis.com"}}]`;
 
         const apiError = new Error(message);
@@ -264,7 +265,7 @@ describe('LobeGoogleAI', () => {
       });
 
       it('should throw LocationNotSupportError error on location not support error', async () => {
-        // 模拟 Google AI SDK 抛出异常
+        // Mock Google AI SDK throwing an exception
         const message = `[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/gemini-pro:streamGenerateContent?alt=sse: [400 Bad Request] User location is not supported for the API use.`;
 
         const apiError = new Error(message);
@@ -283,7 +284,7 @@ describe('LobeGoogleAI', () => {
       });
 
       it('should throw BizError error', async () => {
-        // 模拟 Google AI SDK 抛出异常
+        // Mock Google AI SDK throwing an exception
         const message = `[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/gemini-pro:streamGenerateContent?alt=sse: [400 Bad Request] API key not valid. Please pass a valid API key. [{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"Error","domain":"googleapis.com","metadata":{"service":"generativelanguage.googleapis.com"}}]`;
 
         const apiError = new Error(message);
@@ -315,7 +316,7 @@ describe('LobeGoogleAI', () => {
       });
 
       it('should throw DefaultError error', async () => {
-        // 模拟 Google AI SDK 抛出异常
+        // Mock Google AI SDK throwing an exception
         const message = `[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/gemini-pro:streamGenerateContent?alt=sse: [400 Bad Request] API key not valid. Please pass a valid API key. [{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"Error","domain":"googleapis.com","metadata":{"service":"generativelanguage.googleapis.com}}]`;
 
         const apiError = new Error(message);
@@ -345,7 +346,7 @@ describe('LobeGoogleAI', () => {
         // Arrange
         const apiError = new Error('Error message');
 
-        // 使用 vi.spyOn 来模拟 chat.completions.create 方法
+        // Use vi.spyOn to mock the chat.completions.create method
         vi.spyOn(instance['client'].models, 'generateContentStream').mockRejectedValue(apiError);
 
         // Act
@@ -537,7 +538,7 @@ describe('LobeGoogleAI', () => {
           },
         ];
 
-        // 调用 buildGoogleMessages 方法
+        // Call the buildGoogleMessages method
         const contents = await instance['buildGoogleMessages'](messages);
 
         expect(contents).toHaveLength(1);
@@ -822,6 +823,333 @@ describe('LobeGoogleAI', () => {
         expect(converted).toEqual({
           role: 'user',
           parts: [{ text: '' }],
+        });
+      });
+    });
+  });
+
+  describe('createImage', () => {
+    it('should create image successfully with basic parameters', async () => {
+      // Arrange - Use real base64 image data (5x5 red pixel PNG)
+      const realBase64ImageData =
+        'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
+      const mockImageResponse = {
+        generatedImages: [
+          {
+            image: {
+              imageBytes: realBase64ImageData,
+            },
+          },
+        ],
+      };
+      vi.spyOn(instance['client'].models, 'generateImages').mockResolvedValue(
+        mockImageResponse as any,
+      );
+
+      const payload: CreateImagePayload = {
+        model: 'imagen-4.0-generate-preview-06-06',
+        params: {
+          prompt: 'A beautiful landscape with mountains and trees',
+          aspectRatio: '1:1',
+        },
+      };
+
+      // Act
+      const result = await instance.createImage(payload);
+
+      // Assert
+      expect(instance['client'].models.generateImages).toHaveBeenCalledWith({
+        model: 'imagen-4.0-generate-preview-06-06',
+        prompt: 'A beautiful landscape with mountains and trees',
+        config: {
+          aspectRatio: '1:1',
+          numberOfImages: 1,
+        },
+      });
+      expect(result).toEqual({
+        imageUrl: `data:image/png;base64,${realBase64ImageData}`,
+      });
+    });
+
+    it('should support different aspect ratios like 16:9 for widescreen images', async () => {
+      // Arrange - Use real base64 data
+      const realBase64Data =
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+      const mockImageResponse = {
+        generatedImages: [
+          {
+            image: {
+              imageBytes: realBase64Data,
+            },
+          },
+        ],
+      };
+      vi.spyOn(instance['client'].models, 'generateImages').mockResolvedValue(
+        mockImageResponse as any,
+      );
+
+      const payload: CreateImagePayload = {
+        model: 'imagen-4.0-ultra-generate-preview-06-06',
+        params: {
+          prompt: 'Cinematic landscape shot with dramatic lighting',
+          aspectRatio: '16:9',
+        },
+      };
+
+      // Act
+      await instance.createImage(payload);
+
+      // Assert
+      expect(instance['client'].models.generateImages).toHaveBeenCalledWith({
+        model: 'imagen-4.0-ultra-generate-preview-06-06',
+        prompt: 'Cinematic landscape shot with dramatic lighting',
+        config: {
+          aspectRatio: '16:9',
+          numberOfImages: 1,
+        },
+      });
+    });
+
+    it('should work with only prompt when aspect ratio is not specified', async () => {
+      // Arrange
+      const realBase64Data =
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+      const mockImageResponse = {
+        generatedImages: [
+          {
+            image: {
+              imageBytes: realBase64Data,
+            },
+          },
+        ],
+      };
+      vi.spyOn(instance['client'].models, 'generateImages').mockResolvedValue(
+        mockImageResponse as any,
+      );
+
+      const payload: CreateImagePayload = {
+        model: 'imagen-4.0-generate-preview-06-06',
+        params: {
+          prompt: 'A cute cat sitting in a garden',
+        },
+      };
+
+      // Act
+      await instance.createImage(payload);
+
+      // Assert
+      expect(instance['client'].models.generateImages).toHaveBeenCalledWith({
+        model: 'imagen-4.0-generate-preview-06-06',
+        prompt: 'A cute cat sitting in a garden',
+        config: {
+          aspectRatio: undefined,
+          numberOfImages: 1,
+        },
+      });
+    });
+
+    describe('Error handling', () => {
+      it('should throw InvalidProviderAPIKey error when API key is invalid', async () => {
+        // Arrange - Use real Google AI error format
+        const message = `[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1/models/imagen-4.0:generateImages: [400 Bad Request] API key not valid. Please pass a valid API key. [{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"API_KEY_INVALID","domain":"googleapis.com","metadata":{"service":"generativelanguage.googleapis.com"}}]`;
+        const apiError = new Error(message);
+        vi.spyOn(instance['client'].models, 'generateImages').mockRejectedValue(apiError);
+
+        const payload: CreateImagePayload = {
+          model: 'imagen-4.0-generate-preview-06-06',
+          params: {
+            prompt: 'A realistic landscape photo',
+          },
+        };
+
+        // Act & Assert - Test error type rather than specific text
+        await expect(instance.createImage(payload)).rejects.toEqual(
+          expect.objectContaining({
+            errorType: invalidErrorType,
+            provider,
+          }),
+        );
+      });
+
+      it('should throw ProviderBizError for network and API errors', async () => {
+        // Arrange
+        const apiError = new Error('Network connection failed');
+        vi.spyOn(instance['client'].models, 'generateImages').mockRejectedValue(apiError);
+
+        const payload: CreateImagePayload = {
+          model: 'imagen-4.0-generate-preview-06-06',
+          params: {
+            prompt: 'A digital art portrait',
+          },
+        };
+
+        // Act & Assert - Test error type and basic structure
+        await expect(instance.createImage(payload)).rejects.toEqual(
+          expect.objectContaining({
+            errorType: bizErrorType,
+            provider,
+            error: expect.objectContaining({
+              message: expect.any(String),
+            }),
+          }),
+        );
+      });
+
+      it('should throw error when API response is malformed - missing generatedImages', async () => {
+        // Arrange
+        const mockImageResponse = {};
+        vi.spyOn(instance['client'].models, 'generateImages').mockResolvedValue(
+          mockImageResponse as any,
+        );
+
+        const payload: CreateImagePayload = {
+          model: 'imagen-4.0-generate-preview-06-06',
+          params: {
+            prompt: 'Abstract geometric patterns',
+          },
+        };
+
+        // Act & Assert - Test error behavior rather than specific text
+        await expect(instance.createImage(payload)).rejects.toEqual(
+          expect.objectContaining({
+            errorType: bizErrorType,
+            provider,
+          }),
+        );
+      });
+
+      it('should throw error when API response contains empty image array', async () => {
+        // Arrange
+        const mockImageResponse = {
+          generatedImages: [],
+        };
+        vi.spyOn(instance['client'].models, 'generateImages').mockResolvedValue(
+          mockImageResponse as any,
+        );
+
+        const payload: CreateImagePayload = {
+          model: 'imagen-4.0-generate-preview-06-06',
+          params: {
+            prompt: 'Minimalist design poster',
+          },
+        };
+
+        // Act & Assert
+        await expect(instance.createImage(payload)).rejects.toEqual(
+          expect.objectContaining({
+            errorType: bizErrorType,
+            provider,
+          }),
+        );
+      });
+
+      it('should throw error when generated image lacks required data', async () => {
+        // Arrange
+        const mockImageResponse = {
+          generatedImages: [
+            {
+              image: {}, // Missing imageBytes
+            },
+          ],
+        };
+        vi.spyOn(instance['client'].models, 'generateImages').mockResolvedValue(
+          mockImageResponse as any,
+        );
+
+        const payload: CreateImagePayload = {
+          model: 'imagen-4.0-generate-preview-06-06',
+          params: {
+            prompt: 'Watercolor painting style',
+          },
+        };
+
+        // Act & Assert
+        await expect(instance.createImage(payload)).rejects.toEqual(
+          expect.objectContaining({
+            errorType: bizErrorType,
+            provider,
+          }),
+        );
+      });
+    });
+
+    describe('Edge cases', () => {
+      it('should return first image when API returns multiple generated images', async () => {
+        // Arrange - Use two different real base64 image data
+        const firstImageData =
+          'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
+        const secondImageData =
+          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+        const mockImageResponse = {
+          generatedImages: [
+            {
+              image: {
+                imageBytes: firstImageData,
+              },
+            },
+            {
+              image: {
+                imageBytes: secondImageData,
+              },
+            },
+          ],
+        };
+        vi.spyOn(instance['client'].models, 'generateImages').mockResolvedValue(
+          mockImageResponse as any,
+        );
+
+        const payload: CreateImagePayload = {
+          model: 'imagen-4.0-generate-preview-06-06',
+          params: {
+            prompt: 'Generate multiple variations of a sunset',
+          },
+        };
+
+        // Act
+        const result = await instance.createImage(payload);
+
+        // Assert - Should return the first image
+        expect(result).toEqual({
+          imageUrl: `data:image/png;base64,${firstImageData}`,
+        });
+      });
+
+      it('should work with custom future Imagen model versions', async () => {
+        // Arrange
+        const realBase64Data =
+          'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+        const mockImageResponse = {
+          generatedImages: [
+            {
+              image: {
+                imageBytes: realBase64Data,
+              },
+            },
+          ],
+        };
+        vi.spyOn(instance['client'].models, 'generateImages').mockResolvedValue(
+          mockImageResponse as any,
+        );
+
+        const payload: CreateImagePayload = {
+          model: 'imagen-5.0-future-model',
+          params: {
+            prompt: 'Photorealistic portrait with soft lighting',
+            aspectRatio: '4:3',
+          },
+        };
+
+        // Act
+        await instance.createImage(payload);
+
+        // Assert
+        expect(instance['client'].models.generateImages).toHaveBeenCalledWith({
+          model: 'imagen-5.0-future-model',
+          prompt: 'Photorealistic portrait with soft lighting',
+          config: {
+            aspectRatio: '4:3',
+            numberOfImages: 1,
+          },
         });
       });
     });

@@ -68,6 +68,23 @@
   "GoBack": {
     "back": "Quay lại"
   },
+  "ImageUpload": {
+    "actions": {
+      "changeImage": "Nhấn để thay đổi hình ảnh",
+      "dropMultipleFiles": "Không hỗ trợ tải lên nhiều tệp cùng lúc, chỉ sử dụng tệp đầu tiên"
+    },
+    "placeholder": {
+      "primary": "Thêm hình ảnh",
+      "secondary": "Nhấn hoặc kéo thả để tải lên"
+    }
+  },
+  "KeyValueEditor": {
+    "addButton": "Thêm một dòng",
+    "deleteTooltip": "Xóa",
+    "duplicateKeyError": "Tên khóa phải duy nhất",
+    "keyPlaceholder": "Khóa",
+    "valuePlaceholder": "Giá trị"
+  },
   "MaxTokenSlider": {
     "unlimited": "Không giới hạn"
   },
@@ -90,6 +107,25 @@
     "goToSettings": "Đi đến cài đặt",
     "provider": "Nhà cung cấp",
     "title": "Mô hình"
+  },
+  "MultiImagesUpload": {
+    "actions": {
+      "uploadMore": "Nhấn hoặc kéo thả để tải lên thêm"
+    },
+    "modal": {
+      "complete": "Hoàn thành",
+      "newFileIndicator": "Mới thêm",
+      "selectImageToPreview": "Vui lòng chọn hình ảnh để xem trước",
+      "title": "Quản lý hình ảnh ({{count}})",
+      "upload": "Tải lên hình ảnh"
+    },
+    "placeholder": {
+      "primary": "Nhấn hoặc kéo thả để tải lên hình ảnh",
+      "secondary": "Hỗ trợ chọn nhiều hình ảnh"
+    },
+    "progress": {
+      "uploadingWithCount": "Đã tải lên {{completed}}/{{total}}"
+    }
   },
   "OllamaSetupGuide": {
     "action": {

@@ -55,6 +55,10 @@ exports[`settingsSelectors > currentSystemAgent > should merge DEFAULT_SYSTEM_AG
     "provider": "openai",
   },
   "enableAutoReply": true,
+  "generationTopic": {
+    "model": "gpt-4.1-mini",
+    "provider": "openai",
+  },
   "historyCompress": {
     "model": "gpt-4.1-mini",
     "provider": "openai",

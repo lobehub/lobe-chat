@@ -1,4 +1,46 @@
 {
+  "notification": {
+    "finishChatGeneration": "Mensagem de IA gerada com sucesso"
+  },
+  "proxy": {
+    "auth": "Autenticação necessária",
+    "authDesc": "Se o servidor proxy requer nome de usuário e senha",
+    "authSettings": "Configurações de autenticação",
+    "basicSettings": "Configurações do proxy",
+    "basicSettingsDesc": "Configure os parâmetros de conexão do servidor proxy",
+    "bypass": "Endereços que não usam proxy",
+    "connectionTest": "Teste de conexão",
+    "enable": "Ativar proxy",
+    "enableDesc": "Quando ativado, o acesso à rede será feito através do servidor proxy",
+    "password": "Senha",
+    "password_placeholder": "Digite a senha",
+    "port": "Porta",
+    "resetButton": "Redefinir",
+    "saveButton": "Salvar",
+    "saveFailed": "Falha ao salvar: {{error}}",
+    "saveSuccess": "Configurações do proxy salvas com sucesso",
+    "server": "Endereço do servidor",
+    "testButton": "Testar conexão",
+    "testDescription": "Teste a conexão usando a configuração atual do proxy para verificar se está funcionando corretamente",
+    "testFailed": "Falha na conexão",
+    "testSuccessWithTime": "Conexão testada com sucesso, tempo gasto {{time}} ms",
+    "testUrl": "URL de teste",
+    "testUrlPlaceholder": "Digite a URL a ser testada",
+    "testing": "Testando conexão...",
+    "type": "Tipo de proxy",
+    "unsavedChanges": "Você tem alterações não salvas",
+    "username": "Nome de usuário",
+    "username_placeholder": "Digite o nome de usuário",
+    "validation": {
+      "passwordRequired": "Senha é obrigatória quando a autenticação está ativada",
+      "portInvalid": "A porta deve ser um número entre 1 e 65535",
+      "portRequired": "Porta é obrigatória quando o proxy está ativado",
+      "serverInvalid": "Por favor, insira um endereço de servidor válido (IP ou domínio)",
+      "serverRequired": "Endereço do servidor é obrigatório quando o proxy está ativado",
+      "typeRequired": "Tipo de proxy é obrigatório quando o proxy está ativado",
+      "usernameRequired": "Nome de usuário é obrigatório quando a autenticação está ativada"
+    }
+  },
   "remoteServer": {
     "authError": "Erro de autorização: {{error}}",
     "authPending": "Por favor, complete a autorização no navegador",
@@ -62,7 +104,10 @@
   "waitingOAuth": {
     "cancel": "Cancelar",
     "description": "A página de autorização foi aberta no navegador, por favor, complete a autorização no navegador",
+    "error": "Falha na autorização: {{error}}",
+    "errorTitle": "Falha na conexão de autorização",
     "helpText": "Se o navegador não abrir automaticamente, clique em cancelar e tente novamente",
+    "retry": "Tentar novamente",
     "title": "Aguardando conexão de autorização"
   }
 }

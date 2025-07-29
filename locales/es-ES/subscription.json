@@ -1,0 +1,24 @@
+{
+  "plans": {
+    "plan": {
+      "enterprise": {
+        "title": "Versión empresarial"
+      },
+      "free": {
+        "title": "Versión gratuita"
+      },
+      "hobby": {
+        "title": "Versión de autoservicio"
+      },
+      "premium": {
+        "title": "Premium"
+      },
+      "starter": {
+        "title": "Versión básica"
+      },
+      "ultimate": {
+        "title": "Ultimate"
+      }
+    }
+  }
+}

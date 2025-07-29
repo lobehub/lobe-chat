@@ -54,7 +54,7 @@ export const chatTranslate: StateCreator<
     // create translate extra
     await updateMessageTranslate(id, { content: '', from: '', to: targetLang });
 
-    internal_toggleChatLoading(true, id, n('translateMessage(start)', { id }) as string);
+    internal_toggleChatLoading(true, id, n('translateMessage(start)', { id }));
 
     let content = '';
     let from = '';

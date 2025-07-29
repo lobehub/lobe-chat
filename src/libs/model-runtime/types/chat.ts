@@ -1,4 +1,4 @@
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 
 import { ModelTokensUsage, ToolFunction } from '@/types/message';
 
@@ -19,7 +19,7 @@ export interface MessageToolCall {
   type: 'function' | string;
 }
 
-export type MessageToolCallChunk = DeepPartial<MessageToolCall> & { index: number };
+export type MessageToolCallChunk = PartialDeep<MessageToolCall> & { index: number };
 
 export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function' | 'tool';
 

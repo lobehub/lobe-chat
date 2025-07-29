@@ -183,6 +183,7 @@
   },
   "fullscreen": "전체 화면",
   "historyRange": "기록 범위",
+  "import": "가져오기",
   "importData": "데이터 가져오기",
   "importModal": {
     "error": {
@@ -324,6 +325,7 @@
     }
   },
   "tab": {
+    "aiImage": "AI 그림",
     "chat": "채팅",
     "discover": "발견하기",
     "files": "파일",

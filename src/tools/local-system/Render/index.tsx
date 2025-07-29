@@ -1,7 +1,7 @@
 import { LocalFileItem } from '@lobechat/electron-client-ipc';
 import { memo } from 'react';
-import { LocalSystemApiName } from 'src/tools/local-system';
 
+import { LocalSystemApiName } from '@/tools/local-system';
 import { BuiltinRenderProps } from '@/types/tool';
 
 import ListFiles from './ListFiles';

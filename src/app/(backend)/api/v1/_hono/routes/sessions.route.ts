@@ -16,7 +16,7 @@ import {
   SessionIdParamSchema,
   UpdateSessionGroupAssignmentRequestSchema,
   UpdateSessionRequestSchema,
-} from '../types/session.type';
+} from '../types';
 
 // Sessions 相关路由
 const SessionRoutes = new Hono();

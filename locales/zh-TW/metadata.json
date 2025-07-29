@@ -13,6 +13,10 @@
       "title": "AI助手"
     },
     "description": "內容創作、文案、問答、圖像生成、視頻生成、語音生成、智能代理、自定義 AI 應用，定制你專屬的 AI 應用工作台",
+    "mcp": {
+      "description": "搜尋、比較並連接數千個 MCP 伺服器，幫助 AI 系統輕鬆存取檔案系統、資料庫、API 等關鍵資源，全面擴展你的 AI 能力",
+      "title": "MCP 伺服器市場"
+    },
     "models": {
       "description": "探索主流 AI 模型 OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek",
       "title": "AI模型"
@@ -27,6 +31,10 @@
     },
     "search": "搜尋",
     "title": "發現"
+  },
+  "image": {
+    "description": "{{appName}} 帶給你最好的 GPT Image、Flux、Midjourney、Stable Diffusion 使用體驗",
+    "title": "AI 繪畫"
   },
   "plugins": {
     "description": "搜尋、圖表生成、學術、圖像生成、視頻生成、語音生成、自動化工作流，定制 ChatGPT / Claude 專屬的 ToolCall 插件能力",

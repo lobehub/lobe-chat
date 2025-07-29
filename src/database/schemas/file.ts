@@ -14,6 +14,7 @@ import {
 import { createInsertSchema } from 'drizzle-zod';
 
 import { idGenerator } from '@/database/utils/idGenerator';
+import { FileSource } from '@/types/files';
 
 import { accessedAt, createdAt, timestamps } from './_helpers';
 import { asyncTasks } from './asyncTask';
@@ -45,13 +46,20 @@ export const files = pgTable(
     userId: text('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
+    /**
+     * mime
+     */
     fileType: varchar('file_type', { length: 255 }).notNull(),
+    /**
+     * sha256
+     */
     fileHash: varchar('file_hash', { length: 64 }).references(() => globalFiles.hashId, {
       onDelete: 'no action',
     }),
     name: text('name').notNull(),
     size: integer('size').notNull(),
     url: text('url').notNull(),
+    source: text('source').$type<FileSource>(),
 
     clientId: text('client_id'),
     metadata: jsonb('metadata'),

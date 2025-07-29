@@ -7,6 +7,8 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { WIKI_PLUGIN_GUIDE } from '@/const/url';
+import { isDesktop } from '@/const/version';
+import { TITLE_BAR_HEIGHT } from '@/features/ElectronTitlebar';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
 import MCPManifestForm from './MCPManifestForm';
@@ -112,7 +114,7 @@ const DevModal = memo<DevModalProps>(
           containerMaxWidth={'auto'}
           destroyOnHidden
           footer={footer}
-          height={'100vh'}
+          height={isDesktop ? `calc(100vh - ${TITLE_BAR_HEIGHT}px)` : '100vh'}
           onClose={(e) => {
             e.stopPropagation();
             onOpenChange(false);

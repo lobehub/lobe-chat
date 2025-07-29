@@ -12,6 +12,15 @@
     "tool_call": "Yêu cầu công cụ"
   },
   "detailModal": {
+    "customPlugin": {
+      "description": "Vui lòng truy cập trang chỉnh sửa để xem chi tiết",
+      "editBtn": "Chỉnh sửa ngay",
+      "title": "Đây là một plugin tùy chỉnh"
+    },
+    "emptyState": {
+      "description": "Vui lòng cài đặt plugin này trước để xem các tính năng và tùy chọn cấu hình của plugin",
+      "title": "Xem chi tiết plugin sau khi cài đặt"
+    },
     "info": {
       "description": "Mô tả API",
       "name": "Tên API"
@@ -48,11 +57,27 @@
       }
     },
     "mcp": {
+      "advanced": {
+        "title": "Cài đặt nâng cao"
+      },
       "args": {
         "desc": "Danh sách các tham số được truyền cho lệnh thực thi, thường nhập tên máy chủ MCP hoặc đường dẫn đến tập lệnh khởi động",
         "label": "Tham số lệnh",
         "placeholder": "Ví dụ: mcp-hello-world",
         "required": "Vui lòng nhập tham số khởi động"
+      },
+      "auth": {
+        "bear": "API Key",
+        "desc": "Chọn phương thức xác thực cho máy chủ MCP",
+        "label": "Loại xác thực",
+        "none": "Không cần xác thực",
+        "placeholder": "Vui lòng chọn loại xác thực",
+        "token": {
+          "desc": "Nhập API Key hoặc Bearer Token của bạn",
+          "label": "API Key",
+          "placeholder": "sk-xxxxx",
+          "required": "Vui lòng nhập mã xác thực"
+        }
       },
       "avatar": {
         "label": "Biểu tượng tiện ích"
@@ -80,6 +105,11 @@
         "keyRequired": "Khóa trường không được để trống",
         "label": "Biến môi trường máy chủ MCP",
         "stringifyError": "Không thể tuần tự hóa tham số, vui lòng kiểm tra định dạng tham số"
+      },
+      "headers": {
+        "add": "Thêm dòng mới",
+        "desc": "Nhập tiêu đề yêu cầu",
+        "label": "HTTP Headers"
       },
       "identifier": {
         "desc": "Chỉ định một tên cho plugin MCP của bạn, cần sử dụng ký tự tiếng Anh",
@@ -230,6 +260,51 @@
     },
     "title": "Tệp cục bộ"
   },
+  "mcpInstall": {
+    "CHECKING_INSTALLATION": "Đang kiểm tra môi trường cài đặt...",
+    "COMPLETED": "Cài đặt hoàn tất",
+    "CONFIGURATION_REQUIRED": "Vui lòng hoàn thành cấu hình liên quan trước khi tiếp tục cài đặt",
+    "ERROR": "Lỗi cài đặt",
+    "FETCHING_MANIFEST": "Đang lấy tệp mô tả plugin...",
+    "GETTING_SERVER_MANIFEST": "Khởi tạo máy chủ MCP...",
+    "INSTALLING_PLUGIN": "Đang cài đặt plugin...",
+    "configurationDescription": "Plugin MCP này cần cấu hình các tham số để hoạt động bình thường, vui lòng điền thông tin cấu hình cần thiết",
+    "configurationRequired": "Cấu hình tham số plugin",
+    "continueInstall": "Tiếp tục cài đặt",
+    "dependenciesDescription": "Plugin này cần cài đặt các phụ thuộc hệ thống sau để hoạt động bình thường, vui lòng làm theo hướng dẫn để cài đặt các phụ thuộc còn thiếu, sau đó nhấn kiểm tra lại để tiếp tục cài đặt.",
+    "dependenciesRequired": "Vui lòng cài đặt các phụ thuộc hệ thống của plugin",
+    "dependencyStatus": {
+      "installed": "Đã cài đặt",
+      "notInstalled": "Chưa cài đặt",
+      "requiredVersion": "Yêu cầu phiên bản: {{version}}"
+    },
+    "errorDetails": {
+      "args": "Tham số",
+      "command": "Lệnh",
+      "connectionParams": "Tham số kết nối",
+      "env": "Biến môi trường",
+      "errorOutput": "Nhật ký lỗi",
+      "exitCode": "Mã thoát",
+      "hideDetails": "Thu gọn chi tiết",
+      "originalError": "Lỗi gốc",
+      "showDetails": "Xem chi tiết"
+    },
+    "errorTypes": {
+      "AUTHORIZATION_ERROR": "Lỗi xác thực ủy quyền",
+      "CONNECTION_FAILED": "Kết nối thất bại",
+      "INITIALIZATION_TIMEOUT": "Khởi tạo quá thời gian",
+      "PROCESS_SPAWN_ERROR": "Khởi tạo tiến trình thất bại",
+      "UNKNOWN_ERROR": "Lỗi không xác định",
+      "VALIDATION_ERROR": "Xác thực tham số thất bại"
+    },
+    "installError": "Cài đặt plugin MCP thất bại, nguyên nhân: {{detail}}",
+    "installMethods": {
+      "manual": "Cài đặt thủ công:",
+      "recommended": "Phương thức cài đặt được khuyến nghị:"
+    },
+    "recheckDependencies": "Kiểm tra lại",
+    "skipDependencies": "Bỏ qua kiểm tra"
+  },
   "pluginList": "Danh sách plugin",
   "search": {
     "apiName": {
@@ -266,16 +341,48 @@
   },
   "setting": "Cài đặt plugin",
   "settings": {
+    "capabilities": {
+      "prompts": "Lời nhắc",
+      "resources": "Tài nguyên",
+      "title": "Khả năng plugin",
+      "tools": "Công cụ"
+    },
+    "configuration": {
+      "title": "Cấu hình plugin"
+    },
+    "connection": {
+      "args": "Tham số khởi động",
+      "command": "Lệnh khởi động",
+      "title": "Thông tin kết nối",
+      "type": "Loại kết nối",
+      "url": "Địa chỉ dịch vụ"
+    },
+    "edit": "Chỉnh sửa",
+    "envConfigDescription": "Các cấu hình này sẽ được truyền dưới dạng biến môi trường khi máy chủ MCP khởi động",
+    "httpTypeNotice": "Plugin MCP loại HTTP hiện không có biến môi trường cần cấu hình",
     "indexUrl": {
       "title": "Chỉ mục thị trường",
       "tooltip": "Hiện không hỗ trợ chỉnh sửa trực tuyến, vui lòng thiết lập thông qua biến môi trường khi triển khai"
     },
+    "messages": {
+      "connectionUpdateFailed": "Cập nhật thông tin kết nối thất bại",
+      "connectionUpdateSuccess": "Cập nhật thông tin kết nối thành công",
+      "envUpdateFailed": "Lưu biến môi trường thất bại",
+      "envUpdateSuccess": "Lưu biến môi trường thành công"
+    },
     "modalDesc": "Sau khi cấu hình địa chỉ thị trường plugin, bạn có thể sử dụng thị trường plugin tùy chỉnh",
+    "rules": {
+      "argsRequired": "Vui lòng nhập tham số khởi động",
+      "commandRequired": "Vui lòng nhập lệnh khởi động",
+      "urlRequired": "Vui lòng nhập địa chỉ dịch vụ"
+    },
+    "saveSettings": "Lưu cài đặt",
     "title": "Cài đặt thị trường plugin"
   },
   "showInPortal": "Vui lòng xem chi tiết trong khu vực làm việc",
   "store": {
     "actions": {
+      "cancel": "Hủy cài đặt",
       "confirmUninstall": "Sắp gỡ bỏ plugin này, sau khi gỡ bỏ sẽ xóa cấu hình của plugin này, vui lòng xác nhận hành động của bạn",
       "detail": "Chi tiết",
       "install": "Cài đặt",
@@ -286,13 +393,15 @@
     "communityPlugin": "Cộng đồng bên thứ ba",
     "customPlugin": "Tùy chỉnh",
     "empty": "Hiện chưa có plugin được cài đặt",
+    "emptySelectHint": "Chọn plugin để xem trước thông tin chi tiết",
     "installAllPlugins": "Cài đặt tất cả",
     "networkError": "Lấy cửa hàng plugin thất bại, vui lòng kiểm tra kết nối mạng và thử lại",
     "placeholder": "Tìm kiếm tên hoặc mô tả plugin...",
     "releasedAt": "Đã phát hành vào {{createdAt}}",
     "tabs": {
-      "all": "Tất cả",
-      "installed": "Đã cài đặt"
+      "installed": "Đã cài đặt",
+      "mcp": "Tiện ích MCP",
+      "old": "Plugin LobeChat"
     },
     "title": "Cửa hàng plugin"
   },

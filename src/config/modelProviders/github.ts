@@ -256,7 +256,7 @@ const Github: ModelProviderCard = {
       maxOutput: 4096,
     },
   ],
-  checkModel: 'Phi-3-mini-4k-instruct',
+  checkModel: 'microsoft/Phi-3-mini-4k-instruct',
   // Ref: https://github.blog/news-insights/product-news/introducing-github-models/
   description: '通过GitHub模型，开发人员可以成为AI工程师，并使用行业领先的AI模型进行构建。',
   id: 'github',

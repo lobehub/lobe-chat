@@ -183,6 +183,7 @@
   },
   "fullscreen": "Цял екран",
   "historyRange": "Диапазон на историята",
+  "import": "Импортиране",
   "importData": "Импорт на данни",
   "importModal": {
     "error": {
@@ -324,6 +325,7 @@
     }
   },
   "tab": {
+    "aiImage": "AI рисуване",
     "chat": "Чат",
     "discover": "Открий",
     "files": "Файлове",

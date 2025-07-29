@@ -3,7 +3,7 @@
 import { Button, Text } from '@lobehub/ui';
 import { Card, Divider } from 'antd';
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -122,6 +122,8 @@ const ConsentClient = memo<ClientProps>(
     const { styles, theme } = useStyles();
     const { t } = useTranslation('oauth');
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const clientDisplayName = clientMetadata?.clientName || clientId;
     return (
       <Center className={styles.container} gap={16}>
@@ -165,7 +167,11 @@ const ConsentClient = memo<ClientProps>(
                     <Button
                       className={styles.authButton}
                       htmlType="submit"
+                      loading={isLoading}
                       name="consent"
+                      onClick={() => {
+                        setIsLoading(true);
+                      }}
                       type="primary"
                       value="accept"
                     >

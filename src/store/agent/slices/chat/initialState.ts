@@ -1,4 +1,4 @@
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { AgentSettingsInstance } from '@/features/AgentSetting';
@@ -8,7 +8,7 @@ export interface AgentState {
   activeAgentId?: string;
   activeId: string;
   agentConfigInitMap: Record<string, boolean>;
-  agentMap: Record<string, DeepPartial<LobeAgentConfig>>;
+  agentMap: Record<string, PartialDeep<LobeAgentConfig>>;
   agentSettingInstance?: AgentSettingsInstance | null;
   defaultAgentConfig: LobeAgentConfig;
   isInboxAgentConfigInit: boolean;

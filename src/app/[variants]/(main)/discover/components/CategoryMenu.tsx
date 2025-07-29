@@ -1,39 +1,37 @@
 'use client';
 
-import { ConfigProvider, Menu, MenuProps } from 'antd';
-import { useTheme } from 'antd-style';
+import { Menu, MenuProps } from '@lobehub/ui';
+import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
-export const ICON_SIZE = { size: '1.25em' };
+const useStyles = createStyles(({ css, prefixCls }) => {
+  return {
+    menu: css`
+      padding: 0 !important;
+      .${prefixCls}-menu-item {
+        display: flex;
+        gap: 4px;
+
+        width: 100%;
+        height: 44px;
+        margin-inline: 0;
+        padding-inline-start: 24px !important;
+
+        font-size: 16px;
+
+        .${prefixCls}-menu-title-content > a {
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    `,
+  };
+});
 
 const CategoryMenu = memo<MenuProps>(({ style, ...rest }) => {
-  const theme = useTheme();
+  const { styles } = useStyles();
 
-  return (
-    <ConfigProvider
-      theme={{
-        components: {
-          Menu: {
-            itemSelectedBg: theme.colorFillTertiary,
-          },
-        },
-      }}
-    >
-      <Menu
-        mode="inline"
-        style={{
-          background: 'transparent',
-          border: 'none',
-          fontSize: 16,
-          overflowX: 'hidden',
-          overflowY: 'auto',
-          width: '100%',
-          ...style,
-        }}
-        {...rest}
-      />
-    </ConfigProvider>
-  );
+  return <Menu className={styles.menu} mode="inline" style={style} {...rest} />;
 });
 
 export default CategoryMenu;

@@ -16,6 +16,7 @@ const stdioParamsSchema = z.object({
     .object({
       avatar: z.string().optional(),
       description: z.string().optional(),
+      name: z.string().optional(),
     })
     .optional(),
   name: z.string().min(1),
@@ -26,7 +27,9 @@ const mcpProcedure = isServerMode ? authedProcedure : passwordProcedure;
 
 export const mcpRouter = router({
   getStdioMcpServerManifest: mcpProcedure.input(stdioParamsSchema).query(async ({ input }) => {
-    log('getStdioMcpServerManifest input: %O', input);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { env: _, ...rest } = input;
+    log('getStdioMcpServerManifest input: %O', rest);
 
     return await mcpService.getStdioMcpServerManifest(input, input.metadata);
   }),
@@ -41,19 +44,50 @@ export const mcpRouter = router({
       return await mcpService.listTools(input);
     }),
 
+  // listResources now accepts MCPClientParams directly
+  listResources: mcpProcedure
+    .input(stdioParamsSchema) // Use the unified schema
+    .query(async ({ input }) => {
+      // Pass the validated MCPClientParams to the service
+      return await mcpService.listResources(input);
+    }),
+
+  // listPrompts now accepts MCPClientParams directly
+  listPrompts: mcpProcedure
+    .input(stdioParamsSchema) // Use the unified schema
+    .query(async ({ input }) => {
+      // Pass the validated MCPClientParams to the service
+      return await mcpService.listPrompts(input);
+    }),
+
   // callTool now accepts MCPClientParams, toolName, and args
   callTool: mcpProcedure
     .input(
       z.object({
         params: stdioParamsSchema, // Use the unified schema for client params
         args: z.any(), // Arguments for the tool call
+        env: z.any(), // Arguments for the tool call
         toolName: z.string(),
       }),
     )
     .mutation(async ({ input }) => {
       // Pass the validated params, toolName, and args to the service
-      const data = await mcpService.callTool(input.params, input.toolName, input.args);
+      const data = await mcpService.callTool(
+        { ...input.params, env: input.env },
+        input.toolName,
+        input.args,
+      );
 
       return JSON.stringify(data);
+    }),
+
+  validMcpServerInstallable: mcpProcedure
+    .input(
+      z.object({
+        deploymentOptions: z.array(z.object({}).passthrough()),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      return await mcpService.checkMcpInstall(input as any);
     }),
 });

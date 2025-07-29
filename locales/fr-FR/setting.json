@@ -45,14 +45,25 @@
   },
   "hotkey": {
     "conflicts": "Conflit avec les raccourcis existants",
+    "errors": {
+      "CONFLICT": "Conflit de raccourci : ce raccourci est déjà utilisé par une autre fonction",
+      "INVALID_FORMAT": "Format de raccourci invalide : veuillez utiliser le format correct (par exemple CommandOrControl+E)",
+      "INVALID_ID": "ID de raccourci invalide",
+      "NO_MODIFIER": "Le raccourci doit inclure une touche modificateur (Ctrl, Alt, Shift, etc.)",
+      "SYSTEM_OCCUPIED": "Le raccourci est déjà utilisé par le système ou une autre application",
+      "UNKNOWN": "Échec de la mise à jour : erreur inconnue"
+    },
     "group": {
       "conversation": "Conversation",
+      "desktop": "Bureau",
       "essential": "Essentiel"
     },
     "invalidCombination": "Le raccourci doit contenir au moins une touche de modification (Ctrl, Alt, Shift) et une touche normale",
     "record": "Appuyez sur une touche pour enregistrer le raccourci",
     "reset": "Réinitialiser aux raccourcis par défaut",
-    "title": "Raccourcis clavier"
+    "title": "Raccourcis clavier",
+    "updateError": "Échec de la mise à jour du raccourci : erreur réseau ou système",
+    "updateSuccess": "Mise à jour du raccourci réussie"
   },
   "llm": {
     "aesGcm": "Votre clé, votre adresse de proxy, etc. seront cryptées à l'aide de l'algorithme de chiffrement <1>AES-GCM</1>",
@@ -129,6 +140,7 @@
     "waitingForMore": "Plus de modèles sont en cours de <1>planification pour être ajoutés</1>, restez à l'écoute"
   },
   "plugin": {
+    "addMCPPlugin": "Ajouter un plugin MCP",
     "addTooltip": "Ajouter un plugin personnalisé",
     "clearDeprecated": "Effacer les plugins obsolètes",
     "empty": "Aucun plugin installé pour le moment, veuillez visiter <1>la boutique de plugins</1> pour explorer",
@@ -483,6 +495,11 @@
       "placeholder": "Veuillez entrer le mot-clé personnalisé",
       "title": "Mot-clé personnalisé"
     },
+    "generationTopic": {
+      "label": "Modèle de nomination de sujets pour peinture IA",
+      "modelDesc": "Modèle spécifiquement utilisé pour la nomination automatique des sujets de peinture IA",
+      "title": "Nomination automatique des sujets de peinture IA"
+    },
     "helpInfo": "Lors de la création d'un nouvel assistant, les paramètres par défaut de l'assistant seront utilisés comme valeurs par défaut.",
     "historyCompress": {
       "label": "Modèle d'historique de conversation",
@@ -519,6 +536,7 @@
     "hotkey": "Raccourcis clavier",
     "llm": "Modèle de langue",
     "provider": "Fournisseur de services d'IA",
+    "proxy": "Proxy réseau",
     "storage": "Stockage des données",
     "sync": "Synchronisation cloud",
     "system-agent": "Agent système",

@@ -9,6 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import Menu from '@/components/Menu';
+import { withSuspense } from '@/components/withSuspense';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { DiscoverTab } from '@/types/discover';
 
@@ -91,4 +92,4 @@ const Nav = memo(() => {
   );
 });
 
-export default Nav;
+export default withSuspense(Nav);

@@ -13,6 +13,10 @@
       "title": "KI-Assistenten"
     },
     "description": "Inhaltserstellung, Textverfassung, Fragen und Antworten, Bildgenerierung, Videoerstellung, Sprachsynthese, intelligente Agenten, automatisierte Workflows, benutzerdefinierte AI-Anwendungen, passe deine eigene AI-Anwendungsplattform an",
+    "mcp": {
+      "description": "Durchsuchen, vergleichen und verbinden Sie Tausende von MCP-Servern, um KI-Systemen den einfachen Zugriff auf Dateisysteme, Datenbanken, APIs und andere wichtige Ressourcen zu ermöglichen und Ihre KI-Fähigkeiten umfassend zu erweitern.",
+      "title": "MCP-Server-Marktplatz"
+    },
     "models": {
       "description": "Entdecke gängige AI-Modelle wie OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek",
       "title": "KI-Modelle"
@@ -27,6 +31,10 @@
     },
     "search": "Suche",
     "title": "Entdecken"
+  },
+  "image": {
+    "description": "{{appName}} bietet Ihnen das beste Nutzungserlebnis für GPT Image, Flux, Midjourney und Stable Diffusion",
+    "title": "KI-Grafik"
   },
   "plugins": {
     "description": "Suche, Diagrammerstellung, akademisch, Bilderzeugung, Videoerzeugung, Spracherzeugung, automatisierte Workflows, passe die ToolCall-Plugin-Funktionen von ChatGPT / Claude an",

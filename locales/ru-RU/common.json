@@ -183,6 +183,7 @@
   },
   "fullscreen": "Полноэкранный режим",
   "historyRange": "История",
+  "import": "Импорт",
   "importData": "Импорт данных",
   "importModal": {
     "error": {
@@ -324,6 +325,7 @@
     }
   },
   "tab": {
+    "aiImage": "ИИ Рисование",
     "chat": "Чат",
     "discover": "Открыть",
     "files": "Файлы",

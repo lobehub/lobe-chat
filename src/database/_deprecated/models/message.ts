@@ -1,4 +1,4 @@
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 
 import { BaseModel } from '@/database/_deprecated/core';
 import { DBModel } from '@/database/_deprecated/core/types/db';
@@ -189,7 +189,7 @@ class _MessageModel extends BaseModel {
 
   // **************** Update *************** //
 
-  async update(id: string, data: DeepPartial<DB_Message>) {
+  async update(id: string, data: PartialDeep<DB_Message>) {
     return super._updateWithSync(id, data);
   }
 

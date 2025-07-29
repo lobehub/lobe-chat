@@ -9,6 +9,11 @@ export type ProxyTRPCRequestParams = {
   urlPath: string;
 };
 
+export interface ProxyTRPCStreamRequestParams extends Omit<ProxyTRPCRequestParams, 'body'> {
+  body?: ArrayBuffer;
+  requestId: string;
+}
+
 export interface ProxyTRPCRequestResult {
   /** Response body (likely as ArrayBuffer or string) */
   body: ArrayBuffer | string;

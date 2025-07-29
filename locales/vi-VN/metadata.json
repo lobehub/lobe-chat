@@ -13,6 +13,10 @@
       "title": "Trợ lý AI"
     },
     "description": "Sáng tạo nội dung, viết quảng cáo, hỏi đáp, tạo hình ảnh, tạo video, tạo giọng nói, Agent thông minh, quy trình tự động hóa, ứng dụng AI tùy chỉnh, tùy chỉnh bảng điều khiển ứng dụng AI của riêng bạn",
+    "mcp": {
+      "description": "Tìm kiếm, so sánh và kết nối hàng nghìn MCP Servers, giúp hệ thống AI dễ dàng truy cập hệ thống tệp, cơ sở dữ liệu, API và các tài nguyên quan trọng khác, mở rộng toàn diện khả năng AI của bạn",
+      "title": "Thị trường MCP Servers"
+    },
     "models": {
       "description": "Khám phá các mô hình AI phổ biến như OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek",
       "title": "Mô hình AI"
@@ -27,6 +31,10 @@
     },
     "search": "Tìm kiếm",
     "title": "Khám Phá"
+  },
+  "image": {
+    "description": "{{appName}} mang đến cho bạn trải nghiệm sử dụng GPT Image, Flux, Midjourney, Stable Diffusion tốt nhất",
+    "title": "Vẽ AI"
   },
   "plugins": {
     "description": "Tìm kiếm, tạo biểu đồ, học thuật, tạo hình ảnh, tạo video, tạo giọng nói, quy trình tự động hóa, tùy chỉnh khả năng plugin ToolCall dành riêng cho ChatGPT / Claude",

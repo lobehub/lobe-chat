@@ -11,8 +11,9 @@ console.log(`[electron-vite.config.ts] Detected UPDATE_CHANNEL: ${updateChannel}
 export default defineConfig({
   main: {
     build: {
+      minify: !isDev,
       outDir: 'dist/main',
-      sourcemap: isDev,
+      sourcemap: isDev ? 'inline' : false,
     },
     // 这里是关键：在构建时进行文本替换
     define: {
@@ -30,8 +31,9 @@ export default defineConfig({
   },
   preload: {
     build: {
+      minify: !isDev,
       outDir: 'dist/preload',
-      sourcemap: isDev,
+      sourcemap: isDev ? 'inline' : false,
     },
     plugins: [externalizeDepsPlugin({})],
     resolve: {

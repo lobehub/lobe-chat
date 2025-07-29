@@ -6,8 +6,9 @@ import { createDevtools } from '../middleware/createDevtools';
 import { ToolStoreState, initialState } from './initialState';
 import { BuiltinToolAction, createBuiltinToolSlice } from './slices/builtin';
 import { CustomPluginAction, createCustomPluginSlice } from './slices/customPlugin';
+import { PluginMCPStoreAction, createMCPPluginStoreSlice } from './slices/mcpStore';
 import { PluginAction, createPluginSlice } from './slices/plugin';
-import { PluginStoreAction, createPluginStoreSlice } from './slices/store';
+import { PluginStoreAction, createPluginStoreSlice } from './slices/oldStore';
 
 //  ===============  聚合 createStoreFn ============ //
 
@@ -15,7 +16,8 @@ export type ToolStore = ToolStoreState &
   CustomPluginAction &
   PluginAction &
   PluginStoreAction &
-  BuiltinToolAction;
+  BuiltinToolAction &
+  PluginMCPStoreAction;
 
 const createStore: StateCreator<ToolStore, [['zustand/devtools', never]]> = (...parameters) => ({
   ...initialState,
@@ -23,6 +25,7 @@ const createStore: StateCreator<ToolStore, [['zustand/devtools', never]]> = (...
   ...createCustomPluginSlice(...parameters),
   ...createPluginStoreSlice(...parameters),
   ...createBuiltinToolSlice(...parameters),
+  ...createMCPPluginStoreSlice(...parameters),
 });
 
 //  ===============  实装 useStore ============ //

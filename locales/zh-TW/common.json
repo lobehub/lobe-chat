@@ -183,6 +183,7 @@
   },
   "fullscreen": "全螢幕模式",
   "historyRange": "歷史範圍",
+  "import": "匯入",
   "importData": "匯入資料",
   "importModal": {
     "error": {
@@ -324,6 +325,7 @@
     }
   },
   "tab": {
+    "aiImage": "AI 繪畫",
     "chat": "對話",
     "discover": "發現",
     "files": "檔案",

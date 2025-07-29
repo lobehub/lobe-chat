@@ -80,6 +80,12 @@ export default class RemoteServerConfigCtr extends ControllerModule {
   private encryptedRefreshToken?: string;
 
   /**
+   * Token expiration time (timestamp in milliseconds)
+   * Used for automatic token refresh
+   */
+  private tokenExpiresAt?: number;
+
+  /**
    * Promise representing the ongoing token refresh operation.
    * Used to prevent concurrent refreshes and allow callers to wait.
    */
@@ -89,9 +95,18 @@ export default class RemoteServerConfigCtr extends ControllerModule {
    * Encrypt and store tokens
    * @param accessToken Access token
    * @param refreshToken Refresh token
+   * @param expiresIn Token expiration time in seconds (optional)
    */
-  async saveTokens(accessToken: string, refreshToken: string) {
+  async saveTokens(accessToken: string, refreshToken: string, expiresIn?: number) {
     logger.info('Saving encrypted tokens');
+
+    // Calculate expiration time if provided
+    if (expiresIn) {
+      this.tokenExpiresAt = Date.now() + expiresIn * 1000;
+      logger.debug(`Token expires at: ${new Date(this.tokenExpiresAt).toISOString()}`);
+    } else {
+      this.tokenExpiresAt = undefined;
+    }
 
     // If platform doesn't support secure storage, store raw tokens
     if (!safeStorage.isEncryptionAvailable()) {
@@ -101,6 +116,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
       // Persist unencrypted tokens (consider security implications)
       this.app.storeManager.set(this.encryptedTokensKey, {
         accessToken: this.encryptedAccessToken,
+        expiresAt: this.tokenExpiresAt,
         refreshToken: this.encryptedRefreshToken,
       });
       return;
@@ -120,6 +136,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
     logger.debug(`Persisting encrypted tokens to store key: ${this.encryptedTokensKey}`);
     this.app.storeManager.set(this.encryptedTokensKey, {
       accessToken: this.encryptedAccessToken,
+      expiresAt: this.tokenExpiresAt,
       refreshToken: this.encryptedRefreshToken,
     });
   }
@@ -199,9 +216,33 @@ export default class RemoteServerConfigCtr extends ControllerModule {
     logger.info('Clearing access and refresh tokens');
     this.encryptedAccessToken = undefined;
     this.encryptedRefreshToken = undefined;
+    this.tokenExpiresAt = undefined;
     // Also clear from persistent storage
     logger.debug(`Deleting tokens from store key: ${this.encryptedTokensKey}`);
     this.app.storeManager.delete(this.encryptedTokensKey);
+  }
+
+  /**
+   * Get token expiration time
+   */
+  getTokenExpiresAt(): number | undefined {
+    return this.tokenExpiresAt;
+  }
+
+  /**
+   * Check if token is expired or will expire soon
+   * @param bufferTimeMs Buffer time in milliseconds (default 5 minutes)
+   * @returns true if token is expired or will expire soon
+   */
+  isTokenExpiringSoon(bufferTimeMs: number = 5 * 60 * 1000): boolean {
+    if (!this.tokenExpiresAt) {
+      return false; // No expiration time available
+    }
+
+    const currentTime = Date.now();
+    const bufferTime = this.tokenExpiresAt - bufferTimeMs;
+
+    return currentTime >= bufferTime;
   }
 
   /**
@@ -209,7 +250,6 @@ export default class RemoteServerConfigCtr extends ControllerModule {
    * 使用存储的刷新令牌获取新的访问令牌
    * Handles concurrent requests by returning the existing refresh promise if one is in progress.
    */
-  @ipcClientEvent('refreshAccessToken')
   async refreshAccessToken(): Promise<{ error?: string; success: boolean }> {
     // If a refresh is already in progress, return the existing promise
     if (this.refreshPromise) {
@@ -290,7 +330,7 @@ export default class RemoteServerConfigCtr extends ControllerModule {
 
       // 保存新令牌
       logger.info('Token refresh successful, saving new tokens.');
-      await this.saveTokens(data.access_token, data.refresh_token);
+      await this.saveTokens(data.access_token, data.refresh_token, data.expires_in);
 
       return { success: true };
     } catch (error) {
@@ -316,6 +356,13 @@ export default class RemoteServerConfigCtr extends ControllerModule {
       logger.info('Successfully loaded tokens from store into memory.');
       this.encryptedAccessToken = storedTokens.accessToken;
       this.encryptedRefreshToken = storedTokens.refreshToken;
+      this.tokenExpiresAt = storedTokens.expiresAt;
+
+      if (this.tokenExpiresAt) {
+        logger.debug(
+          `Loaded token expiration time: ${new Date(this.tokenExpiresAt).toISOString()}`,
+        );
+      }
     } else {
       logger.debug('No valid tokens found in store.');
     }

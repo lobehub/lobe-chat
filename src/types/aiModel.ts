@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { ModelParamsSchema } from '@/libs/standard-parameters';
+
 export type ModelPriceCurrency = 'CNY' | 'USD';
 
 export const AiModelSourceEnum = {
@@ -121,6 +123,7 @@ export interface AIBaseModelCard {
    * whether model is legacy (deprecated but not removed yet)
    */
   legacy?: boolean;
+  maxOutput?: number;
   /**
    * who create this model
    */
@@ -148,6 +151,7 @@ export type ExtendParamsType =
   | 'enableReasoning'
   | 'disableContextCaching'
   | 'reasoningEffort'
+  | 'thinking'
   | 'thinkingBudget';
 
 export interface AiModelSettings {
@@ -184,15 +188,16 @@ export interface AIEmbeddingModelCard extends AIBaseModelCard {
   type: 'embedding';
 }
 
-export interface AIText2ImageModelCard extends AIBaseModelCard {
+export interface AIImageModelCard extends AIBaseModelCard {
+  parameters?: ModelParamsSchema;
   pricing?: {
     /**
      * the currency of the pricing
      * @default USD
      */
     currency?: ModelPriceCurrency;
-  } & Record<string, number>; // [resolution: string]: number;
-  resolutions: string[];
+  } & Record<string, number>;
+  resolutions?: string[];
   type: 'image';
 }
 
@@ -207,6 +212,7 @@ export interface AITTSModelCard extends AIBaseModelCard {
      * the input pricing, e.g. $1 / 1M tokens
      */
     input?: number;
+    output?: number;
   };
   type: 'tts';
 }
@@ -222,6 +228,7 @@ export interface AISTTModelCard extends AIBaseModelCard {
      * the input pricing, e.g. $1 / 1M tokens
      */
     input?: number;
+    output?: number;
   };
   type: 'stt';
 }
@@ -261,6 +268,7 @@ export interface AiFullModelCard extends AIBaseModelCard {
   displayName?: string;
   id: string;
   maxDimension?: number;
+  parameters?: ModelParamsSchema;
   pricing?: ChatModelPricing;
   type: AiModelType;
 }
@@ -295,6 +303,7 @@ export interface AiProviderModelListItem {
   displayName?: string;
   enabled: boolean;
   id: string;
+  parameters?: Record<string, any>;
   pricing?: ChatModelPricing;
   releasedAt?: string;
   settings?: AiModelSettings;
@@ -346,6 +355,7 @@ export interface EnabledAiModel {
   displayName?: string;
   enabled?: boolean;
   id: string;
+  parameters?: Record<string, any>;
   providerId: string;
   settings?: AiModelSettings;
   sort?: number;

@@ -13,14 +13,15 @@ import { IpcClientEventSender } from '@/types/ipcClientEvent';
 import { createLogger } from '@/utils/logger';
 import { CustomRequestHandler, createHandler } from '@/utils/next-electron-rsc';
 
-import BrowserManager from './BrowserManager';
-import { I18nManager } from './I18nManager';
-import { IoCContainer } from './IoCContainer';
-import MenuManager from './MenuManager';
-import { ShortcutManager } from './ShortcutManager';
-import { StoreManager } from './StoreManager';
-import TrayManager from './TrayManager';
-import { UpdaterManager } from './UpdaterManager';
+import { BrowserManager } from './browser/BrowserManager';
+import { I18nManager } from './infrastructure/I18nManager';
+import { IoCContainer } from './infrastructure/IoCContainer';
+import { StaticFileServerManager } from './infrastructure/StaticFileServerManager';
+import { StoreManager } from './infrastructure/StoreManager';
+import { UpdaterManager } from './infrastructure/UpdaterManager';
+import { MenuManager } from './ui/MenuManager';
+import { ShortcutManager } from './ui/ShortcutManager';
+import { TrayManager } from './ui/TrayManager';
 
 const logger = createLogger('core:App');
 
@@ -41,6 +42,7 @@ export class App {
   updaterManager: UpdaterManager;
   shortcutManager: ShortcutManager;
   trayManager: TrayManager;
+  staticFileServerManager: StaticFileServerManager;
   chromeFlags: string[] = ['OverlayScrollbar', 'FluentOverlayScrollbar', 'FluentScrollbar'];
 
   /**
@@ -97,6 +99,7 @@ export class App {
     this.updaterManager = new UpdaterManager(this);
     this.shortcutManager = new ShortcutManager(this);
     this.trayManager = new TrayManager(this);
+    this.staticFileServerManager = new StaticFileServerManager(this);
 
     // register the schema to interceptor url
     // it should register before app ready
@@ -129,6 +132,9 @@ export class App {
     // Initialize i18n. Note: app.getLocale() must be called after app.whenReady() to get the correct value
     await this.i18n.init();
     this.menuManager.initialize();
+
+    // Initialize static file manager
+    await this.staticFileServerManager.initialize();
 
     // Initialize global shortcuts: globalShortcut must be called after app.whenReady()
     this.shortcutManager.initialize();
@@ -399,6 +405,7 @@ export class App {
     }
 
     // 执行清理操作
+    this.staticFileServerManager.destroy();
     this.unregisterAllRequestHandlers();
   };
 }

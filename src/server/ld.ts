@@ -1,3 +1,4 @@
+import { isString } from 'lodash-es';
 import qs from 'query-string';
 import urlJoin from 'url-join';
 
@@ -58,7 +59,7 @@ export class Ld {
     url: string;
     webpage?: {
       enable?: boolean;
-      search?: string;
+      search?: boolean | string;
     };
   }) {
     return {
@@ -141,7 +142,7 @@ export class Ld {
     description: string;
     image?: string;
     locale?: Locales;
-    search?: string;
+    search?: boolean | string;
     title: string;
     url: string;
   }) {
@@ -181,7 +182,7 @@ export class Ld {
         'query-input': 'required name=search_term_string',
         'target': qs.stringifyUrl({
           query: { q: '{search_term_string}' },
-          url: getCanonicalUrl(search),
+          url: isString(search) ? getCanonicalUrl(search) : fixedUrl,
         }),
       };
 

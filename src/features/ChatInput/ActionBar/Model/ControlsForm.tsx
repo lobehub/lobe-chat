@@ -14,6 +14,7 @@ import ContextCachingSwitch from './ContextCachingSwitch';
 import ReasoningEffortSlider from './ReasoningEffortSlider';
 import ReasoningTokenSlider from './ReasoningTokenSlider';
 import ThinkingBudgetSlider from './ThinkingBudgetSlider';
+import ThinkingSlider from './ThinkingSlider';
 
 const ControlsForm = memo(() => {
   const { t } = useTranslation('chat');
@@ -104,6 +105,16 @@ const ControlsForm = memo(() => {
         paddingBottom: 0,
       },
       tag: 'thinkingBudget',
+    },
+    {
+      children: <ThinkingSlider />,
+      label: t('extendParams.thinking.title'),
+      layout: 'horizontal',
+      minWidth: undefined,
+      name: 'thinking',
+      style: {
+        paddingBottom: 0,
+      },
     },
   ].filter(Boolean) as FormItemProps[];
 

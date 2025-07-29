@@ -23,6 +23,7 @@ import {
 const transformOpenAIStream = (
   chunk: OpenAI.ChatCompletionChunk,
   streamContext: StreamContext,
+  provider?: string,
 ): StreamProtocolChunk | StreamProtocolChunk[] => {
   // handle the first chunk error
   if (FIRST_CHUNK_ERROR_KEY in chunk) {
@@ -45,7 +46,7 @@ const transformOpenAIStream = (
     if (!item) {
       if (chunk.usage) {
         const usage = chunk.usage;
-        return { data: convertUsage(usage), id: chunk.id, type: 'usage' };
+        return { data: convertUsage(usage, provider), id: chunk.id, type: 'usage' };
       }
 
       return { data: chunk, id: chunk.id, type: 'data' };
@@ -155,7 +156,7 @@ const transformOpenAIStream = (
 
       if (chunk.usage) {
         const usage = chunk.usage;
-        return { data: convertUsage(usage), id: chunk.id, type: 'usage' };
+        return { data: convertUsage(usage, provider), id: chunk.id, type: 'usage' };
       }
 
       // xAI Live Search 功能返回引用源
@@ -274,7 +275,7 @@ const transformOpenAIStream = (
     // litellm 的返回结果中，存在 delta 为空，但是有 usage 的情况
     if (chunk.usage) {
       const usage = chunk.usage;
-      return { data: convertUsage(usage), id: chunk.id, type: 'usage' };
+      return { data: convertUsage(usage, provider), id: chunk.id, type: 'usage' };
     }
 
     // 其余情况下，返回 delta 和 index
@@ -321,6 +322,9 @@ export const OpenAIStream = (
 ) => {
   const streamStack: StreamContext = { id: '' };
 
+  const transformWithProvider = (chunk: OpenAI.ChatCompletionChunk, streamContext: StreamContext) =>
+    transformOpenAIStream(chunk, streamContext, provider);
+
   const readableStream =
     stream instanceof ReadableStream ? stream : convertIterableToStream(stream);
 
@@ -330,7 +334,7 @@ export const OpenAIStream = (
       // provider like huggingface or minimax will return error in the stream,
       // so in the first Transformer, we need to handle the error
       .pipeThrough(createFirstErrorHandleTransformer(bizErrorTypeTransformer, provider))
-      .pipeThrough(createTokenSpeedCalculator(transformOpenAIStream, { inputStartAt, streamStack }))
+      .pipeThrough(createTokenSpeedCalculator(transformWithProvider, { inputStartAt, streamStack }))
       .pipeThrough(createSSEProtocolTransformer((c) => c, streamStack))
       .pipeThrough(createCallbacksTransformer(callbacks))
   );

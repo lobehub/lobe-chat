@@ -28,10 +28,14 @@
     },
     "title": "Toestemming voor {{clientName}}"
   },
-  "failed": {
-    "backToHome": "Terug naar de startpagina",
-    "subTitle": "U heeft de autorisatie voor de applicatie om toegang te krijgen tot uw LobeChat-account geweigerd",
-    "title": "Autorisatie geweigerd"
+  "error": {
+    "backToHome": "Terug naar startpagina",
+    "desc": "OAuth-autorisatie mislukt, reden: {{reason}}",
+    "reason": {
+      "internal_error": "Serverfout",
+      "invalid_request": "Ongeldige aanvraagparameters"
+    },
+    "title": "Autorisatie mislukt"
   },
   "handoff": {
     "desc": {
@@ -50,7 +54,7 @@
     "userWelcome": "Welkom terug, "
   },
   "success": {
-    "subTitle": "U heeft de applicatie succesvol gemachtigd om toegang te krijgen tot uw LobeChat-account, u kunt deze pagina nu sluiten",
+    "subTitle": "U hebt de applicatie succesvol gemachtigd om toegang te krijgen tot uw account. U kunt deze pagina nu sluiten.",
     "title": "Autorisatie succesvol"
   }
 }

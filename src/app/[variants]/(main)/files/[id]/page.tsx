@@ -39,3 +39,5 @@ const FilePage = async (props: PagePropsWithId) => {
 };
 
 export default FilePage;
+
+export const dynamic = 'force-static';
