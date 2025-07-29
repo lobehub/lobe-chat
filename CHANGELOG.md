@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.106.1](https://github.com/lobehub/lobe-chat/compare/v1.106.0...v1.106.1)
+
+<sup>Released on **2025-07-29**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support Minimax T2I models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support Minimax T2I models, closes [#8583](https://github.com/lobehub/lobe-chat/issues/8583) ([f8a01aa](https://github.com/lobehub/lobe-chat/commit/f8a01aa))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.106.0](https://github.com/lobehub/lobe-chat/compare/v1.105.6...v1.106.0)
 
 <sup>Released on **2025-07-29**</sup>
