@@ -2,6 +2,51 @@
 
 # Changelog
 
+### [Version&nbsp;1.104.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.104.0...v1.104.1)
+<sup>Released on **2025-07-29**</sup>
+
+
+#### ♻ Code Refactoring
+
+- **misc**: Clean mcp sitemap, refactor jose-JWT to xor obfuscation.
+
+
+#### 💄 Styles
+
+- **misc**: Add more OpenAI SDK Text2Image providers, support more Text2Image from Qwen, update i18n.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### Code refactoring
+
+* **misc**: Clean mcp sitemap, closes [#8596](https://github.com/jaworldwideorg/OneJA-Bot/issues/8596) ([b9e3e66](https://github.com/jaworldwideorg/OneJA-Bot/commit/b9e3e66))
+* **misc**: Refactor jose-JWT to xor obfuscation, closes [#8595](https://github.com/jaworldwideorg/OneJA-Bot/issues/8595) ([be98d56](https://github.com/jaworldwideorg/OneJA-Bot/commit/be98d56))
+
+
+
+#### Styles
+
+* **misc**: Add more OpenAI SDK Text2Image providers, closes [#8573](https://github.com/jaworldwideorg/OneJA-Bot/issues/8573) ([403aebd](https://github.com/jaworldwideorg/OneJA-Bot/commit/403aebd))
+* **misc**: Support more Text2Image from Qwen, closes [#8574](https://github.com/jaworldwideorg/OneJA-Bot/issues/8574) ([b8c0e2d](https://github.com/jaworldwideorg/OneJA-Bot/commit/b8c0e2d))
+* **misc**: Update i18n, closes [#8593](https://github.com/jaworldwideorg/OneJA-Bot/issues/8593) ([356cf0c](https://github.com/jaworldwideorg/OneJA-Bot/commit/356cf0c))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version&nbsp;1.104.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.103.3...v1.104.0)
 <sup>Released on **2025-07-28**</sup>
 
