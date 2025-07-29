@@ -121,10 +121,13 @@ export async function POST(request: NextRequest) {
 
       // 如果重定向到本地地址，但请求来自外部域名，则修正 URL
       if (
-        (redirectUrl.hostname === 'localhost' || redirectUrl.hostname === '127.0.0.1') &&
+        (redirectUrl.hostname === 'localhost' ||
+          redirectUrl.hostname === '127.0.0.1' ||
+          redirectUrl.hostname === '0.0.0.0') &&
         requestHost &&
         !requestHost.includes('localhost') &&
-        !requestHost.includes('127.0.0.1')
+        !requestHost.includes('127.0.0.1') &&
+        !requestHost.includes('0.0.0.0')
       ) {
         const forwardedProto =
           request.headers.get('x-forwarded-proto') ||
