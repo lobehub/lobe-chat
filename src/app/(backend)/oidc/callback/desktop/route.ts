@@ -3,6 +3,7 @@ import { NextRequest, NextResponse, after } from 'next/server';
 
 import { OAuthHandoffModel } from '@/database/models/oauthHandoff';
 import { serverDB } from '@/database/server';
+import { correctOIDCUrl } from '@/utils/server/correctOIDCUrl';
 
 const log = debug('lobe-oidc:callback:desktop');
 
@@ -17,7 +18,7 @@ export const GET = async (req: NextRequest) => {
       const errorUrl = req.nextUrl.clone();
       errorUrl.pathname = '/oauth/callback/error';
       errorUrl.searchParams.set('reason', 'invalid_request');
-      return NextResponse.redirect(errorUrl);
+      return NextResponse.redirect(correctOIDCUrl(req, errorUrl));
     }
 
     log('Received OIDC callback. state(handoffId): %s', state);
@@ -42,7 +43,7 @@ export const GET = async (req: NextRequest) => {
       log('Cleaned up %d expired handoff records', cleanedCount);
     });
 
-    return NextResponse.redirect(successUrl);
+    return NextResponse.redirect(correctOIDCUrl(req, successUrl));
   } catch (error) {
     log('Error in OIDC callback: %O', error);
     const errorUrl = req.nextUrl.clone();
@@ -52,7 +53,6 @@ export const GET = async (req: NextRequest) => {
     if (error instanceof Error) {
       errorUrl.searchParams.set('errorMessage', error.message);
     }
-
-    return NextResponse.redirect(errorUrl);
+    return NextResponse.redirect(correctOIDCUrl(req, errorUrl));
   }
 };

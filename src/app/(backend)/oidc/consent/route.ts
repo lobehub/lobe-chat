@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { OIDCService } from '@/server/services/oidc';
 import { getUserAuth } from '@/utils/server/auth';
+import { correctOIDCUrl } from '@/utils/server/correctOIDCUrl';
 
 const log = debug('lobe-oidc:consent');
 
@@ -113,31 +114,11 @@ export async function POST(request: NextRequest) {
     const internalRedirectUrlString = await oidcService.getInteractionResult(uid, result);
     log('OIDC Provider internal redirect URL string: %s', internalRedirectUrlString);
 
-    // 修复 Cloudflare Tunnel 等代理环境下的 redirect URL 问题
-    let finalRedirectUrl = internalRedirectUrlString;
+    let finalRedirectUrl;
     try {
-      const redirectUrl = new URL(internalRedirectUrlString);
-      const requestHost = request.headers.get('host');
-
-      // 如果重定向到本地地址，但请求来自外部域名，则修正 URL
-      if (
-        (redirectUrl.hostname === 'localhost' ||
-          redirectUrl.hostname === '127.0.0.1' ||
-          redirectUrl.hostname === '0.0.0.0') &&
-        requestHost &&
-        !requestHost.includes('localhost') &&
-        !requestHost.includes('127.0.0.1') &&
-        !requestHost.includes('0.0.0.0')
-      ) {
-        const forwardedProto =
-          request.headers.get('x-forwarded-proto') ||
-          request.headers.get('x-forwarded-protocol') ||
-          (requestHost.includes('localhost') ? 'http' : 'https');
-
-        finalRedirectUrl = `${forwardedProto}://${requestHost}${redirectUrl.pathname}${redirectUrl.search}`;
-        log('Corrected redirect URL from %s to %s', internalRedirectUrlString, finalRedirectUrl);
-      }
+      finalRedirectUrl = correctOIDCUrl(request, new URL(internalRedirectUrlString));
     } catch {
+      finalRedirectUrl = new URL(internalRedirectUrlString);
       log('Warning: Could not parse redirect URL, using as-is: %s', internalRedirectUrlString);
     }
 
