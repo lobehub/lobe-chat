@@ -3,15 +3,138 @@ import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
 const zhipuChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      '智谱最新旗舰模型，支持思考模式切换，综合能力达到开源模型的 SOTA 水平，上下文长度可达128K。',
+    displayName: 'GLM-4.5',
+    enabled: true,
+    id: 'glm-4.5',
+    maxOutput: 32_768,
+    pricing: {
+      cachedInput: 0.8,
+      currency: 'CNY',
+      input: 4, // 输入长度 [32k, 128k]
+      output: 16,
+    },
+    settings: {
+      extendParams: ['enableReasoning'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'GLM-4.5 的极速版，在性能强劲的同时，生成速度可达 100 tokens/秒。',
+    displayName: 'GLM-4.5-X',
+    id: 'glm-4.5-x',
+    maxOutput: 32_768,
+    pricing: {
+      cachedInput: 3.2,
+      currency: 'CNY',
+      input: 16, // 输入长度 [32k, 128k]
+      output: 64,
+    },
+    settings: {
+      extendParams: ['enableReasoning'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'GLM-4.5 的轻量版，兼顾性能与性价比，可灵活切换混合思考模型。',
+    displayName: 'GLM-4.5-Air',
+    id: 'glm-4.5-air',
+    maxOutput: 32_768,
+    pricing: {
+      cachedInput: 0.24,
+      currency: 'CNY',
+      input: 1.2, // 输入长度 [32k, 128k]
+      output: 8,
+    },
+    settings: {
+      extendParams: ['enableReasoning'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'GLM-4.5-Air 的极速版，响应速度更快，专为大规模高速度需求打造。',
+    displayName: 'GLM-4.5-AirX',
+    id: 'glm-4.5-airx',
+    maxOutput: 32_768,
+    pricing: {
+      cachedInput: 1.6,
+      currency: 'CNY',
+      input: 8, // 输入长度 [32k, 128k]
+      output: 32,
+    },
+    settings: {
+      extendParams: ['enableReasoning'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+    },
+    contextWindowTokens: 128_000,
+    description:
+      'GLM-4.5 的免费版，推理、代码、智能体等任务表现出色。',
+    displayName: 'GLM-4.5-Flash',
+    enabled: true,
+    id: 'glm-4.5-flash',
+    maxOutput: 32_768,
+    pricing: {
+      cachedInput: 0,
+      currency: 'CNY',
+      input: 0,
+      output: 0,
+    },
+    settings: {
+      extendParams: ['enableReasoning'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
       reasoning: true,
       search: true,
       vision: true,
     },
-    contextWindowTokens: 64_000,
+    contextWindowTokens: 65_536,
     description:
       'GLM-4.1V-Thinking 系列模型是目前已知10B级别的VLM模型中性能最强的视觉模型，融合了同级别SOTA的各项视觉语言任务，包括视频理解、图片问答、学科解题、OCR文字识别、文档和图表解读、GUI Agent、前端网页Coding、Grounding等，多项任务能力甚至超过8倍参数量的Qwen2.5-VL-72B。通过领先的强化学习技术，模型掌握了通过思维链推理的方式提升回答的准确性和丰富度，从最终效果和可解释性等维度都显著超过传统的非thinking模型。',
     displayName: 'GLM-4.1V-Thinking-FlashX',
     id: 'glm-4.1v-thinking-flashx',
+    maxOutput: 16_384,
     pricing: {
       currency: 'CNY',
       input: 2,
@@ -28,12 +151,13 @@ const zhipuChatModels: AIChatModelCard[] = [
       search: true,
       vision: true,
     },
-    contextWindowTokens: 64_000,
+    contextWindowTokens: 65_536,
     description:
       'GLM-4.1V-Thinking 系列模型是目前已知10B级别的VLM模型中性能最强的视觉模型，融合了同级别SOTA的各项视觉语言任务，包括视频理解、图片问答、学科解题、OCR文字识别、文档和图表解读、GUI Agent、前端网页Coding、Grounding等，多项任务能力甚至超过8倍参数量的Qwen2.5-VL-72B。通过领先的强化学习技术，模型掌握了通过思维链推理的方式提升回答的准确性和丰富度，从最终效果和可解释性等维度都显著超过传统的非thinking模型。',
     displayName: 'GLM-4.1V-Thinking-Flash',
     enabled: true,
     id: 'glm-4.1v-thinking-flash',
+    maxOutput: 16_384,
     pricing: {
       currency: 'CNY',
       input: 0,
@@ -68,7 +192,7 @@ const zhipuChatModels: AIChatModelCard[] = [
     description: '推理模型: 具备强大推理能力，适用于需要深度推理的任务。',
     displayName: 'GLM-Z1-Air',
     id: 'glm-z1-air',
-    maxOutput: 32_000,
+    maxOutput: 32_768,
     pricing: {
       currency: 'CNY',
       input: 0.5,
@@ -84,7 +208,7 @@ const zhipuChatModels: AIChatModelCard[] = [
       reasoning: true,
       search: true,
     },
-    contextWindowTokens: 32_000,
+    contextWindowTokens: 32_768,
     description: '极速推理：具有超快的推理速度和强大的推理效果。',
     displayName: 'GLM-Z1-AirX',
     id: 'glm-z1-airx',
@@ -108,7 +232,7 @@ const zhipuChatModels: AIChatModelCard[] = [
     description: '高速低价：Flash增强版本，超快推理速度，更快并发保障。',
     displayName: 'GLM-Z1-FlashX',
     id: 'glm-z1-flashx',
-    maxOutput: 32_000,
+    maxOutput: 32_768,
     pricing: {
       currency: 'CNY',
       input: 0.1,
@@ -126,11 +250,10 @@ const zhipuChatModels: AIChatModelCard[] = [
     },
     contextWindowTokens: 128_000,
     description:
-      'GLM-Z1 系列具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。最大上下文长度为32K。',
+      'GLM-Z1 系列具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。',
     displayName: 'GLM-Z1-Flash',
-    enabled: true,
     id: 'glm-z1-flash',
-    maxOutput: 32_000,
+    maxOutput: 32_768,
     pricing: {
       currency: 'CNY',
       input: 0,
@@ -149,7 +272,6 @@ const zhipuChatModels: AIChatModelCard[] = [
     contextWindowTokens: 128_000,
     description: 'GLM-4-Flash 是处理简单任务的理想选择，速度最快且免费。',
     displayName: 'GLM-4-Flash-250414',
-    enabled: true,
     id: 'glm-4-flash-250414',
     maxOutput: 16_000,
     pricing: {
@@ -328,7 +450,6 @@ const zhipuChatModels: AIChatModelCard[] = [
     description:
       'GLM-4V-Flash 专注于高效的单一图像理解，适用于快速图像解析的场景，例如实时图像分析或批量图像处理。',
     displayName: 'GLM-4V-Flash',
-    enabled: true,
     id: 'glm-4v-flash',
     pricing: {
       currency: 'CNY',
@@ -374,7 +495,7 @@ const zhipuChatModels: AIChatModelCard[] = [
       'CodeGeeX-4 是强大的AI编程助手，支持多种编程语言的智能问答与代码补全，提升开发效率。',
     displayName: 'CodeGeeX-4',
     id: 'codegeex-4',
-    maxOutput: 32_000,
+    maxOutput: 32_768,
     pricing: {
       currency: 'CNY',
       input: 0.1,
