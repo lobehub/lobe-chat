@@ -158,103 +158,62 @@ export default {
   },
   search: {
     apiKey: {
-      desc: '请填写搜索服务提供商的 API Key',
-      placeholder: '请输入 API Key',
-      title: 'API Key',
+      desc: '服务所需的 API 密钥，点击右侧密钥库按钮可以从密钥库中快速选择',
+      placeholder: '请输入 API 密钥',
+      title: 'API 密钥',
     },
     config: {
-      autoRetry: {
-        desc: '搜索失败时自动重试',
-        title: '自动重试',
-      },
-      depth: {
-        advanced: '高级',
-        basic: '基础',
-        desc: '搜索深度级别',
-        title: '搜索深度',
-      },
-      enableCache: {
-        desc: '启用搜索结果缓存以提高性能',
-        title: '启用缓存',
-      },
       excludeDomains: {
-        desc: '排除特定域名的搜索结果，每行一个域名',
-        placeholder: 'example.com\n*.ads.example.com',
+        desc: '搜索时排除的域名列表，每行一个',
+        placeholder: 'example.com\nbad-site.com',
         title: '排除域名',
       },
-      group: '搜索配置',
-      language: {
-        auto: '自动检测',
-        desc: '搜索使用的语言',
-        title: '搜索语言',
-      },
       maxResults: {
-        desc: '单次搜索返回的最大结果数',
+        desc: '单次搜索返回的最大结果数量',
         title: '最大结果数',
       },
+      title: '搜索配置',
     },
     crawl: {
-      apiKey: {
-        desc: '请填写爬虫服务提供商的 API Key',
-        placeholder: '请输入 API Key',
-        title: 'API Key',
+      executeJS: {
+        desc: '是否执行网页中的 JavaScript 代码',
+        title: '执行 JavaScript',
       },
-      config: {
-        executeJS: {
-          desc: '抓取时执行页面 JavaScript',
-          title: '执行 JavaScript',
-        },
-        group: '爬虫配置',
-        includeImages: {
-          desc: '在抓取内容中包含图片',
-          title: '包含图片',
-        },
-        maxContentLength: {
-          desc: '单个页面抓取的最大内容长度',
-          title: '最大内容长度',
-        },
-        outputFormat: {
-          desc: '抓取内容的输出格式',
-          text: '纯文本',
-          title: '输出格式',
-        },
-        proxy: {
-          desc: '代理服务器地址，用于抓取被限制的网站',
-          placeholder: 'http://proxy.example.com:8080',
-          title: '代理设置',
-        },
-        timeout: {
-          desc: '单个页面抓取的超时时间（秒）',
-          title: '超时时间',
-        },
-        userAgent: {
-          desc: '自定义 User Agent，留空使用默认值',
-          placeholder: '自定义 User Agent',
-          title: 'User Agent',
-        },
+      includeImages: {
+        desc: '是否在抓取结果中包含图片内容',
+        title: '包含图片',
       },
-      endpoint: {
-        desc: '爬虫服务的 API 基础地址',
-        placeholder: 'https://api.example.com',
-        title: 'API 地址',
+      maxContentLength: {
+        desc: '单个网页抓取的最大字符数',
+        title: '最大内容长度',
       },
-      provider: {
-        desc: '选择您偏好的网页抓取服务提供商',
-        group: '爬虫服务',
-        placeholder: '选择爬虫服务提供商',
-        title: '爬虫服务提供商',
+      outputFormat: {
+        desc: '抓取内容的输出格式',
+        text: '纯文本',
+        title: '输出格式',
       },
+      timeout: {
+        desc: '网页抓取的超时时间',
+        title: '超时时间 (秒)',
+      },
+      title: '爬虫配置',
     },
     endpoint: {
-      desc: '搜索服务的 API 基础地址',
-      placeholder: 'https://api.example.com',
-      title: 'API 地址',
+      desc: '自定义服务的 API 端点地址，留空则使用默认地址',
+      placeholder: '请输入 API 端点地址',
+      title: 'API 端点',
     },
-    provider: {
-      desc: '选择您偏好的搜索引擎服务提供商',
-      group: '搜索服务',
-      placeholder: '选择搜索服务提供商',
-      title: '搜索服务提供商',
+    service: {
+      crawl: {
+        desc: '选择用于网页内容抓取的服务提供商',
+        title: '网页爬虫',
+      },
+      desc: '管理搜索引擎和网页爬虫的服务提供商配置',
+      search: {
+        desc: '选择用于网络搜索的服务提供商',
+        title: '搜索引擎',
+      },
+      title: '服务提供商',
     },
   },
 
@@ -286,7 +245,6 @@ export default {
     },
     title: '助手信息',
   },
-
   settingAppearance: {
     animationMode: {
       agile: '敏捷',
@@ -653,7 +611,7 @@ export default {
     'llm': '语言模型',
     'provider': 'AI 服务商',
     'proxy': '网络代理',
-    'search': '联网搜索',
+    'search': '网络搜索',
     'storage': '数据存储',
     'sync': '云端同步',
     'system-agent': '系统助手',

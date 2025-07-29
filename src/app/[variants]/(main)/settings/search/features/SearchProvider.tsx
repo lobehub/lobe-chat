@@ -29,24 +29,24 @@ const SearchProvider = memo(() => {
             label: provider.name,
             value: provider.id,
           }))}
-          placeholder={t('search.provider.placeholder')}
+          placeholder={t('search.service.search.desc')}
         />
       ),
-      desc: t('search.provider.desc'),
-      label: t('search.provider.title'),
-      name: 'searchProvider',
+      desc: t('search.service.search.desc'),
+      label: t('search.service.search.title'),
+      name: ['search', 'searchProvider'],
     },
     {
       children: <Input.Password placeholder={t('search.apiKey.placeholder')} />,
       desc: t('search.apiKey.desc'),
       label: t('search.apiKey.title'),
-      name: 'searchApiKey',
+      name: ['search', 'searchApiKey'],
     },
     {
       children: <Input placeholder={t('search.endpoint.placeholder')} />,
       desc: t('search.endpoint.desc'),
       label: t('search.endpoint.title'),
-      name: 'searchEndpoint',
+      name: ['search', 'searchEndpoint'],
     },
   ];
 
@@ -55,7 +55,7 @@ const SearchProvider = memo(() => {
       children: <Slider max={50} min={1} />,
       desc: t('search.config.maxResults.desc'),
       label: t('search.config.maxResults.title'),
-      name: ['searchConfig', 'maxResults'],
+      name: ['search', 'searchConfig', 'maxResults'],
     },
     {
       children: (
@@ -63,18 +63,18 @@ const SearchProvider = memo(() => {
       ),
       desc: t('search.config.excludeDomains.desc'),
       label: t('search.config.excludeDomains.title'),
-      name: ['searchConfig', 'excludeDomains'],
+      name: ['search', 'searchConfig', 'excludeDomains'],
     },
   ];
 
   const searchProviderGroup: FormGroupItemType = {
     children: searchProviderItems,
-    title: t('search.provider.group'),
+    title: t('search.service.title'),
   };
 
   const searchConfigGroup: FormGroupItemType = {
     children: searchConfigItems,
-    title: t('search.config.group'),
+    title: t('search.config.title'),
   };
 
   return (
