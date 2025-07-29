@@ -1,6 +1,21 @@
 [
   {
     "children": {
+      "features": [
+        "Add support for Okta Authentication."
+      ],
+      "fixes": [
+        "Fix subscription plan tag display, reorder AppTheme and Locale to fix modal i18n, revert jose to ^5 to fix auth issue on desktop."
+      ],
+      "improvements": [
+        "Open new topic by tap Just Chat again, support Minimax T2I models."
+      ]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.0"
+  },
+  {
+    "children": {
       "improvements": [
         "Add more OpenAI SDK Text2Image providers, support more Text2Image from Qwen, update i18n."
       ]
