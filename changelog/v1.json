@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Support Minimax T2I models."]
+    },
+    "date": "2025-07-29",
+    "version": "1.106.1"
+  },
+  {
+    "children": {
       "features": ["Add support for Okta Authentication."]
     },
     "date": "2025-07-29",
