@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix subscription plan tag display."]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.3"
+  },
+  {
+    "children": {
       "improvements": ["Add more OpenAI SDK Text2Image providers, update i18n."]
     },
     "date": "2025-07-29",
