@@ -958,9 +958,42 @@ const qwenChatModels: AIChatModelCard[] = [
 
 const qwenImageModels: AIImageModelCard[] = [
   {
-    description: '阿里云通义旗下的文生图模型',
-    displayName: 'Wanxiang T2I Turbo',
+    description: '万相2.2极速版，当前最新模型。在创意性、稳定性、写实质感上全面升级，生成速度快，性价比高。',
+    displayName: 'Wanxiang2.2 T2I Flash',
     enabled: true,
+    id: 'wan2.2-t2i-flash',
+    organization: 'Qwen',
+    parameters: {
+      height: { default: 1024, max: 1440, min: 512, step: 1 },
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      width: { default: 1024, max: 1440, min: 512, step: 1 },
+    },
+    releasedAt: '2025-07-28',
+    type: 'image',
+  },
+  {
+    description: '万相2.2专业版，当前最新模型。在创意性、稳定性、写实质感上全面升级，生成细节丰富。',
+    displayName: 'Wanxiang2.2 T2I Plus',
+    enabled: true,
+    id: 'wan2.2-t2i-plus',
+    organization: 'Qwen',
+    parameters: {
+      height: { default: 1024, max: 1440, min: 512, step: 1 },
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      width: { default: 1024, max: 1440, min: 512, step: 1 },
+    },
+    releasedAt: '2025-07-28',
+    type: 'image',
+  },
+  {
+    description: '全面升级版本。生成速度快、效果全面、综合性价比高。对应通义万相官网2.1极速模型。',
+    displayName: 'Wanxiang2.1 T2I Turbo',
     id: 'wanx2.1-t2i-turbo',
     organization: 'Qwen',
     parameters: {
@@ -972,6 +1005,178 @@ const qwenImageModels: AIImageModelCard[] = [
       width: { default: 1024, max: 1440, min: 512, step: 1 },
     },
     releasedAt: '2025-01-08',
+    type: 'image',
+  },
+  {
+    description: '全面升级版本。生成图像细节更丰富，速度稍慢。对应通义万相官网2.1专业模型。',
+    displayName: 'Wanxiang2.1 T2I Plus',
+    id: 'wanx2.1-t2i-plus',
+    organization: 'Qwen',
+    parameters: {
+      height: { default: 1024, max: 1440, min: 512, step: 1 },
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      width: { default: 1024, max: 1440, min: 512, step: 1 },
+    },
+    releasedAt: '2025-01-08',
+    type: 'image',
+  },
+  {
+    description: '擅长质感人像，速度中等、成本较低。对应通义万相官网2.0极速模型。',
+    displayName: 'Wanxiang2.0 T2I Turbo',
+    id: 'wanx2.0-t2i-turbo',
+    organization: 'Qwen',
+    parameters: {
+      height: { default: 1024, max: 1440, min: 512, step: 1 },
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      width: { default: 1024, max: 1440, min: 512, step: 1 },
+    },
+    releasedAt: '2025-01-17',
+    type: 'image',
+  },
+  {
+    description: '基础文生图模型。对应通义万相官网1.0通用模型。',
+    displayName: 'Wanxiang v1',
+    id: 'wanx-v1',
+    organization: 'Qwen',
+    parameters: {
+      height: { default: 1024, max: 1440, min: 512, step: 1 },
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      width: { default: 1024, max: 1440, min: 512, step: 1 },
+    },
+    releasedAt: '2024-05-22',
+    type: 'image',
+  },
+  {
+    description: 'FLUX.1 [schnell] 作为目前开源最先进的少步模型，不仅超越了同类竞争者，甚至还优于诸如 Midjourney v6.0 和 DALL·E 3 (HD) 等强大的非精馏模型。该模型经过专门微调，以保留预训练阶段的全部输出多样性，相较于当前市场上的最先进模型，FLUX.1 [schnell] 显著提升了在视觉质量、指令遵从、尺寸/比例变化、字体处理及输出多样性等方面的可能，为用户带来更为丰富多样的创意图像生成体验。',
+    displayName: 'FLUX.1 [schnell]',
+    enabled: true,
+    id: 'flux-schnell',
+    organization: 'Qwen',
+    parameters: {
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      size: {
+        default: '1024x1024',
+        enum: ['512x1024', '768x512', '768x1024', '1024x576', '576x1024', '1024x1024'],
+      },
+      steps: { default: 4, max: 12, min: 1 },
+    },
+    releasedAt: '2024-08-07',
+    type: 'image',
+  },
+  {
+    description: 'FLUX.1 [dev] 是一款面向非商业应用的开源权重、精炼模型。FLUX.1 [dev] 在保持了与FLUX专业版相近的图像质量和指令遵循能力的同时，具备更高的运行效率。相较于同尺寸的标准模型，它在资源利用上更为高效。',
+    displayName: 'FLUX.1 [dev]',
+    enabled: true,
+    id: 'flux-dev',
+    organization: 'Qwen',
+    parameters: {
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      size: {
+        default: '1024x1024',
+        enum: ['512x1024', '768x512', '768x1024', '1024x576', '576x1024', '1024x1024'],
+      },
+      steps: { default: 50, max: 50, min: 1 },
+    },
+    releasedAt: '2024-08-07',
+    type: 'image',
+  },
+  {
+    description: 'FLUX.1-merged 模型结合了 "DEV" 在开发阶段探索的深度特性和 "Schnell" 所代表的高速执行优势。通过这一举措，FLUX.1-merged 不仅提升了模型的性能界限，还拓宽了其应用范围。',
+    displayName: 'FLUX.1-merged',
+    enabled: true,
+    id: 'flux-merged',
+    organization: 'Qwen',
+    parameters: {
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      size: {
+        default: '1024x1024',
+        enum: ['512x1024', '768x512', '768x1024', '1024x576', '576x1024', '1024x1024'],
+      },
+      steps: { default: 30, max: 30, min: 1 },
+    },
+    releasedAt: '2024-08-22',
+    type: 'image',
+  },
+  {
+    description: 'stable-diffusion-3.5-large 是一个具有8亿参数的多模态扩散变压器（MMDiT）文本到图像生成模型，具备卓越的图像质量和提示词匹配度，支持生成 100 万像素的高分辨率图像，且能够在普通消费级硬件上高效运行。',
+    displayName: 'StableDiffusion 3.5 Large',
+    id: 'stable-diffusion-3.5-large',
+    organization: 'Qwen',
+    parameters: {
+      height: { default: 1024, max: 1024, min: 512, step: 128 },
+      prompt: {
+        default: '',
+      },
+      steps: { default: 40, max: 500, min: 1 },
+      width: { default: 1024, max: 1024, min: 512, step: 128 },
+    },
+    releasedAt: '2024-10-25',
+    type: 'image',
+  },
+  {
+    description: 'stable-diffusion-3.5-large-turbo 是在 stable-diffusion-3.5-large 的基础上采用对抗性扩散蒸馏（ADD）技术的模型，具备更快的速度。',
+    displayName: 'StableDiffusion 3.5 Large Turbo',
+    id: 'stable-diffusion-3.5-large-turbo',
+    organization: 'Qwen',
+    parameters: {
+      height: { default: 1024, max: 1024, min: 512, step: 128 },
+      prompt: {
+        default: '',
+      },
+      steps: { default: 40, max: 500, min: 1 },
+      width: { default: 1024, max: 1024, min: 512, step: 128 },
+    },
+    releasedAt: '2024-10-25',
+    type: 'image',
+  },
+  {
+    description: 'stable-diffusion-xl 相比于 v1.5 做了重大的改进，并且与当前开源的文生图 SOTA 模型 midjourney 效果相当。具体改进之处包括： 更大的 unet backbone，是之前的 3 倍； 增加了 refinement 模块用于改善生成图片的质量；更高效的训练技巧等。',
+    displayName: 'StableDiffusion xl',
+    id: 'stable-diffusion-xl',
+    organization: 'Qwen',
+    parameters: {
+      height: { default: 1024, max: 1024, min: 512, step: 128 },
+      prompt: {
+        default: '',
+      },
+      steps: { default: 50, max: 500, min: 1 },
+      width: { default: 1024, max: 1024, min: 512, step: 128 },
+    },
+    releasedAt: '2024-04-09',
+    type: 'image',
+  },
+  {
+    description: 'stable-diffusion-v1.5 是以 stable-diffusion-v1.2 检查点的权重进行初始化，并在 "laion-aesthetics v2 5+" 上以 512x512 的分辨率进行了595k步的微调，减少了 10% 的文本条件化，以提高无分类器的引导采样。',
+    displayName: 'StableDiffusion v1.5',
+    id: 'stable-diffusion-v1.5',
+    organization: 'Qwen',
+    parameters: {
+      height: { default: 512, max: 1024, min: 512, step: 128 },
+      prompt: {
+        default: '',
+      },
+      steps: { default: 50, max: 500, min: 1 },
+      width: { default: 512, max: 1024, min: 512, step: 128 },
+    },
+    releasedAt: '2024-04-09',
     type: 'image',
   },
 ];
