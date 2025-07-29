@@ -78,9 +78,41 @@ const handler = async (req: NextRequest) => {
     log('Final Response Status: %d', finalStatus);
     log('Final Response Headers: %O', finalHeaders);
 
+    // 修复 Cloudflare Tunnel 等代理环境下的 Location 头部 URL 问题
+    // @ts-ignore
+    const processedHeaders = finalHeaders ? { ...finalHeaders } : {};
+    if (processedHeaders['location'] && finalStatus >= 300 && finalStatus < 400) {
+      try {
+        const locationUrl = new URL(processedHeaders['location'] as string);
+        const requestHost = req.headers.get('host');
+
+        // 如果 Location 头部指向本地地址，但请求来自外部域名，则修正 URL
+        if (
+          (locationUrl.hostname === 'localhost' ||
+            locationUrl.hostname === '127.0.0.1' ||
+            locationUrl.hostname === '0.0.0.0') &&
+          requestHost &&
+          !requestHost.includes('localhost') &&
+          !requestHost.includes('127.0.0.1') &&
+          !requestHost.includes('0.0.0.0')
+        ) {
+          const forwardedProto =
+            req.headers.get('x-forwarded-proto') ||
+            req.headers.get('x-forwarded-protocol') ||
+            (requestHost.includes('localhost') ? 'http' : 'https');
+
+          const correctedUrl = `${forwardedProto}://${requestHost}${locationUrl.pathname}${locationUrl.search}${locationUrl.hash}`;
+          processedHeaders['location'] = correctedUrl;
+          log('Corrected Location header from %s to %s', finalHeaders['location'], correctedUrl);
+        }
+      } catch {
+        log('Warning: Could not parse Location header URL: %s', processedHeaders['location']);
+      }
+    }
+
     return new NextResponse(finalBody, {
       // eslint-disable-next-line no-undef
-      headers: finalHeaders as HeadersInit,
+      headers: processedHeaders as HeadersInit,
       status: finalStatus,
     });
   } catch (error) {
