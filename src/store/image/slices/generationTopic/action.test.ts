@@ -405,7 +405,7 @@ describe('GenerationTopicAction', () => {
         const { result } = renderHook(() => {
           const store = useImageStore();
           // Actually call the SWR hook to trigger the service call
-          const swrResult = store.useFetchGenerationTopics(true, true);
+          const swrResult = store.useFetchGenerationTopics(true);
 
           // Simulate the SWR onSuccess callback behavior
           React.useEffect(() => {
@@ -426,7 +426,7 @@ describe('GenerationTopicAction', () => {
     });
 
     it('should not fetch when disabled', async () => {
-      const { result } = renderHook(() => useImageStore().useFetchGenerationTopics(false, true));
+      const { result } = renderHook(() => useImageStore().useFetchGenerationTopics(false));
 
       expect(result.current.data).toBeUndefined();
       expect(generationTopicService.getAllGenerationTopics).not.toHaveBeenCalled();
@@ -455,7 +455,7 @@ describe('GenerationTopicAction', () => {
         await result.current.refreshGenerationTopics();
       });
 
-      expect(mutate).toHaveBeenCalledWith(['fetchGenerationTopics', true]);
+      expect(mutate).toHaveBeenCalledWith(['fetchGenerationTopics']);
     });
   });
 
