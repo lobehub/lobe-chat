@@ -18,8 +18,8 @@ vi.mock('@/app/(backend)/middleware/auth/utils', () => ({
   checkAuthMethod: vi.fn(),
 }));
 
-vi.mock('@/utils/server/jwt', () => ({
-  getJWTPayload: vi.fn(),
+vi.mock('@/utils/server/xor', () => ({
+  getXorPayload: vi.fn(),
 }));
 
 // 定义一个变量来存储 enableAuth 的值
@@ -61,7 +61,7 @@ describe('POST handler', () => {
       const mockParams = Promise.resolve({ provider: 'test-provider' });
 
       // 设置 getJWTPayload 和 initAgentRuntimeWithUserPayload 的模拟返回值
-      vi.mocked(getXorPayload).mockResolvedValueOnce({
+      vi.mocked(getXorPayload).mockReturnValueOnce({
         accessCode: 'test-access-code',
         apiKey: 'test-api-key',
         azureApiVersion: 'v1',
@@ -104,7 +104,7 @@ describe('POST handler', () => {
     it('should have pass clerk Auth when enable clerk', async () => {
       enableClerk = true;
 
-      vi.mocked(getXorPayload).mockResolvedValueOnce({
+      vi.mocked(getXorPayload).mockReturnValueOnce({
         accessCode: 'test-access-code',
         apiKey: 'test-api-key',
         azureApiVersion: 'v1',
@@ -142,7 +142,9 @@ describe('POST handler', () => {
 
     it('should return InternalServerError error when throw a unknown error', async () => {
       const mockParams = Promise.resolve({ provider: 'test-provider' });
-      vi.mocked(getXorPayload).mockRejectedValueOnce(new Error('unknown error'));
+      vi.mocked(getXorPayload).mockImplementationOnce(() => {
+        throw new Error('unknown error');
+      });
 
       const response = await POST(request, { params: mockParams });
 
@@ -159,7 +161,7 @@ describe('POST handler', () => {
 
   describe('chat', () => {
     it('should correctly handle chat completion with valid payload', async () => {
-      vi.mocked(getXorPayload).mockResolvedValueOnce({
+      vi.mocked(getXorPayload).mockReturnValueOnce({
         accessCode: 'test-access-code',
         apiKey: 'test-api-key',
         azureApiVersion: 'v1',
@@ -189,7 +191,7 @@ describe('POST handler', () => {
 
     it('should return an error response when chat completion fails', async () => {
       // 设置 getJWTPayload 和 initAgentRuntimeWithUserPayload 的模拟返回值
-      vi.mocked(getXorPayload).mockResolvedValueOnce({
+      vi.mocked(getXorPayload).mockReturnValueOnce({
         accessCode: 'test-access-code',
         apiKey: 'test-api-key',
         azureApiVersion: 'v1',

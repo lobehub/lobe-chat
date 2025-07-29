@@ -20,8 +20,8 @@ vi.mock('./utils', () => ({
   checkAuthMethod: vi.fn(),
 }));
 
-vi.mock('@/utils/server/jwt', () => ({
-  getJWTPayload: vi.fn(),
+vi.mock('@/utils/server/xor', () => ({
+  getXorPayload: vi.fn(),
 }));
 
 describe('checkAuth', () => {
