@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Reorder AppTheme and Locale to fix modal i18n."]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.5"
+  },
+  {
+    "children": {
       "fixes": ["Revert jose to ^5 to fix auth issue on desktop."]
     },
     "date": "2025-07-29",
