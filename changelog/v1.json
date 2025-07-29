@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Add more OpenAI SDK Text2Image providers, update i18n."]
+    },
+    "date": "2025-07-29",
+    "version": "1.105.2"
+  },
+  {
+    "children": {
       "improvements": ["Support more Text2Image from Qwen."]
     },
     "date": "2025-07-29",
