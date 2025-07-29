@@ -522,6 +522,9 @@ const qwenChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
+    abilities: {
+      functionCall: true,
+    },
     config: {
       deploymentName: 'qwen3-coder-plus',
     },
