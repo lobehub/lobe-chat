@@ -52,12 +52,6 @@ export class Sitemap {
     return Math.ceil(list.length / ITEMS_PER_PAGE);
   }
 
-  // 获取MCP总页数
-  async getMcpPageCount(): Promise<number> {
-    const list = await this.discoverService.getMcpIdentifiers();
-    return Math.ceil(list.length / ITEMS_PER_PAGE);
-  }
-
   // 获取模型总页数
   async getModelPageCount(): Promise<number> {
     const list = await this.discoverService.getModelIdentifiers();
@@ -171,10 +165,9 @@ export class Sitemap {
     );
 
     // 获取需要分页的类型的页数
-    const [pluginPages, assistantPages, mcpPages, modelPages] = await Promise.all([
+    const [pluginPages, assistantPages, modelPages] = await Promise.all([
       this.getPluginPageCount(),
       this.getAssistantPageCount(),
-      this.getMcpPageCount(),
       this.getModelPageCount(),
     ]);
 
@@ -191,11 +184,6 @@ export class Sitemap {
             SITEMAP_BASE_URL,
             isDev ? `assistants-${i + 1}` : `assistants-${i + 1}.xml`,
           ),
-        ),
-      ),
-      ...Array.from({ length: mcpPages }, (_, i) =>
-        this._generateSitemapLink(
-          getCanonicalUrl(SITEMAP_BASE_URL, isDev ? `mcp-${i + 1}` : `mcp-${i + 1}.xml`),
         ),
       ),
       ...Array.from({ length: modelPages }, (_, i) =>
@@ -233,31 +221,6 @@ export class Sitemap {
     // 如果没有指定页数，返回所有（向后兼容）
     const sitmap = list.map((item) =>
       this._genSitemap(urlJoin('/discover/assistant', item.identifier), {
-        lastModified: item?.lastModified || LAST_MODIFIED,
-      }),
-    );
-    return flatten(sitmap);
-  }
-
-  async getMcp(page?: number): Promise<MetadataRoute.Sitemap> {
-    const list = await this.discoverService.getMcpIdentifiers();
-
-    if (page !== undefined) {
-      const startIndex = (page - 1) * ITEMS_PER_PAGE;
-      const endIndex = startIndex + ITEMS_PER_PAGE;
-      const pageMcps = list.slice(startIndex, endIndex);
-
-      const sitmap = pageMcps.map((item) =>
-        this._genSitemap(urlJoin('/discover/mcp', item.identifier), {
-          lastModified: item?.lastModified || LAST_MODIFIED,
-        }),
-      );
-      return flatten(sitmap);
-    }
-
-    // 如果没有指定页数，返回所有（向后兼容）
-    const sitmap = list.map((item) =>
-      this._genSitemap(urlJoin('/discover/mcp', item.identifier), {
         lastModified: item?.lastModified || LAST_MODIFIED,
       }),
     );

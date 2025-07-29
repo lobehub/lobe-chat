@@ -13,7 +13,6 @@ describe('Sitemap', () => {
       // Mock the page count methods to return specific values for testing
       vi.spyOn(sitemap, 'getPluginPageCount').mockResolvedValue(2);
       vi.spyOn(sitemap, 'getAssistantPageCount').mockResolvedValue(3);
-      vi.spyOn(sitemap, 'getMcpPageCount').mockResolvedValue(1);
       vi.spyOn(sitemap, 'getModelPageCount').mockResolvedValue(2);
 
       const index = await sitemap.getIndex();
@@ -31,7 +30,6 @@ describe('Sitemap', () => {
       expect(index).toContain(`<loc>${getCanonicalUrl('/sitemap/assistants-1.xml')}</loc>`);
       expect(index).toContain(`<loc>${getCanonicalUrl('/sitemap/assistants-2.xml')}</loc>`);
       expect(index).toContain(`<loc>${getCanonicalUrl('/sitemap/assistants-3.xml')}</loc>`);
-      expect(index).toContain(`<loc>${getCanonicalUrl('/sitemap/mcp-1.xml')}</loc>`);
       expect(index).toContain(`<loc>${getCanonicalUrl('/sitemap/models-1.xml')}</loc>`);
       expect(index).toContain(`<loc>${getCanonicalUrl('/sitemap/models-2.xml')}</loc>`);
 
@@ -218,46 +216,6 @@ describe('Sitemap', () => {
     });
   });
 
-  describe('getMcp', () => {
-    it('should return a valid mcp sitemap without pagination', async () => {
-      vi.spyOn(sitemap['discoverService'], 'getMcpIdentifiers').mockResolvedValue([
-        // @ts-ignore
-        { identifier: 'test-mcp', lastModified: '2023-01-01' },
-      ]);
-
-      const mcpSitemap = await sitemap.getMcp();
-      expect(mcpSitemap.length).toBe(15);
-      expect(mcpSitemap).toContainEqual(
-        expect.objectContaining({
-          url: getCanonicalUrl('/discover/mcp/test-mcp'),
-          lastModified: '2023-01-01T00:00:00.000Z',
-        }),
-      );
-      expect(mcpSitemap).toContainEqual(
-        expect.objectContaining({
-          url: getCanonicalUrl('/discover/mcp/test-mcp?hl=zh-CN'),
-          lastModified: '2023-01-01T00:00:00.000Z',
-        }),
-      );
-    });
-
-    it('should return a valid mcp sitemap with pagination', async () => {
-      const mockMcps = Array.from({ length: 80 }, (_, i) => ({
-        identifier: `test-mcp-${i}`,
-        lastModified: '2023-01-01',
-      }));
-
-      vi.spyOn(sitemap['discoverService'], 'getMcpIdentifiers').mockResolvedValue(
-        // @ts-ignore
-        mockMcps,
-      );
-
-      // Test first page (should have 80 items, all on first page)
-      const firstPageSitemap = await sitemap.getMcp(1);
-      expect(firstPageSitemap.length).toBe(80 * 15); // 80 items * 15 locales
-    });
-  });
-
   describe('getProviders', () => {
     it('should return a valid providers sitemap', async () => {
       vi.spyOn(sitemap['discoverService'], 'getProviderIdentifiers').mockResolvedValue([
@@ -301,16 +259,6 @@ describe('Sitemap', () => {
 
       const pageCount = await sitemap.getAssistantPageCount();
       expect(pageCount).toBe(3); // 250 items / 100 per page = ceil(2.5) = 3 pages
-    });
-
-    it('should return correct mcp page count', async () => {
-      vi.spyOn(sitemap['discoverService'], 'getMcpIdentifiers').mockResolvedValue(
-        // @ts-ignore
-        Array.from({ length: 50 }, (_, i) => ({ identifier: `mcp-${i}` })),
-      );
-
-      const pageCount = await sitemap.getMcpPageCount();
-      expect(pageCount).toBe(1); // 50 items / 100 per page = 1 page
     });
 
     it('should return correct model page count', async () => {

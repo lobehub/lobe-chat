@@ -462,19 +462,6 @@ export class DiscoverService {
     return result;
   };
 
-  getMcpIdentifiers = async (): Promise<IdentifiersResponse> => {
-    log('getMcpIdentifiers: fetching identifiers');
-    const result = await this.market.plugins.getPublishedIdentifiers({
-      cache: 'force-cache',
-      next: {
-        revalidate: CacheRevalidate.List,
-        tags: [CacheTag.Discover, CacheTag.MCP],
-      },
-    });
-    log('getMcpIdentifiers: returning %d identifiers', result.length);
-    return result;
-  };
-
   getMcpList = async (params: McpQueryParams = {}): Promise<McpListResponse> => {
     log('getMcpList: params=%O', params);
     const { locale } = params;
