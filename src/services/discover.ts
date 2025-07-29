@@ -83,10 +83,6 @@ class DiscoverService {
     });
   };
 
-  getMcpIdentifiers = async (): Promise<IdentifiersResponse> => {
-    return lambdaClient.market.getMcpIdentifiers.query();
-  };
-
   getMcpList = async (params: McpQueryParams = {}): Promise<McpListResponse> => {
     const locale = globalHelpers.getCurrentLanguage();
     return lambdaClient.market.getMcpList.query({

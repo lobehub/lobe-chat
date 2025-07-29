@@ -2,6 +2,91 @@
 
 # Changelog
 
+### [Version 1.105.3](https://github.com/lobehub/lobe-chat/compare/v1.105.2...v1.105.3)
+
+<sup>Released on **2025-07-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix subscription plan tag display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix subscription plan tag display, closes [#8599](https://github.com/lobehub/lobe-chat/issues/8599) ([2a3754a](https://github.com/lobehub/lobe-chat/commit/2a3754a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.105.2](https://github.com/lobehub/lobe-chat/compare/v1.105.1...v1.105.2)
+
+<sup>Released on **2025-07-29**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Clean mcp sitemap, refactor jose-JWT to xor obfuscation.
+
+#### 💄 Styles
+
+- **misc**: Add more OpenAI SDK Text2Image providers, update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Clean mcp sitemap, closes [#8596](https://github.com/lobehub/lobe-chat/issues/8596) ([b9e3e66](https://github.com/lobehub/lobe-chat/commit/b9e3e66))
+- **misc**: Refactor jose-JWT to xor obfuscation, closes [#8595](https://github.com/lobehub/lobe-chat/issues/8595) ([be98d56](https://github.com/lobehub/lobe-chat/commit/be98d56))
+
+#### Styles
+
+- **misc**: Add more OpenAI SDK Text2Image providers, closes [#8573](https://github.com/lobehub/lobe-chat/issues/8573) ([403aebd](https://github.com/lobehub/lobe-chat/commit/403aebd))
+- **misc**: Update i18n, closes [#8593](https://github.com/lobehub/lobe-chat/issues/8593) ([356cf0c](https://github.com/lobehub/lobe-chat/commit/356cf0c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.105.1](https://github.com/lobehub/lobe-chat/compare/v1.105.0...v1.105.1)
+
+<sup>Released on **2025-07-29**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support more Text2Image from Qwen.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support more Text2Image from Qwen, closes [#8574](https://github.com/lobehub/lobe-chat/issues/8574) ([b8c0e2d](https://github.com/lobehub/lobe-chat/commit/b8c0e2d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.105.0](https://github.com/lobehub/lobe-chat/compare/v1.104.5...v1.105.0)
 
 <sup>Released on **2025-07-28**</sup>
