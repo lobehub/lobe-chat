@@ -1,6 +1,15 @@
 [
   {
     "children": {
+      "improvements": [
+        "Add more OpenAI SDK Text2Image providers, support more Text2Image from Qwen, update i18n."
+      ]
+    },
+    "date": "2025-07-29",
+    "version": "1.104.1"
+  },
+  {
+    "children": {
       "features": [
         "Implement API Key management functionality, support custom hotkey on desktop."
       ],
