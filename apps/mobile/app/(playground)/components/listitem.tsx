@@ -1,12 +1,7 @@
 import React from 'react';
 
-import {
-  AdvancedDemo,
-  AvatarsDemo,
-  BasicDemo,
-  NavigationDemo,
-} from '@/mobile/components/ListItem/demos';
-import ComponentPlayground, { DemoItem } from '@/mobile/app/(playground)/Playground';
+import { AdvancedDemo, AvatarsDemo, BasicDemo, NavigationDemo } from '@/components/ListItem/demos';
+import ComponentPlayground, { DemoItem } from '../Playground';
 
 // 读取README内容
 const readmeContent = `# ListItem组件

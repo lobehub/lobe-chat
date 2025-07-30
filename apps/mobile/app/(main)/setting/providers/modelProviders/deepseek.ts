@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/mobile/types/llm';
+import { ModelProviderCard } from '@/types/llm';
 
 // ref: https://platform.deepseek.com/api-docs/pricing
 const DeepSeek: ModelProviderCard = {

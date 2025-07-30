@@ -1,4 +1,4 @@
-import { ChatModelCard, ModelProviderCard } from '@/mobile/types/llm';
+import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 
 import Ai21Provider from './ai21';
 import Ai360Provider from './ai360';

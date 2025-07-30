@@ -1,7 +1,7 @@
 import React from 'react';
 
-import ComponentPlayground, { DemoItem } from '@/mobile/app/(playground)/Playground';
-import { BasicDemo, SizesDemo, BordersDemo, ErrorDemo } from '@/mobile/components/Avatar/demos';
+import ComponentPlayground, { DemoItem } from '../Playground';
+import { BasicDemo, SizesDemo, BordersDemo, ErrorDemo } from '@/components/Avatar/demos';
 
 const AVATAR_README = `# Avatar 头像组件
 
@@ -19,7 +19,7 @@ const AVATAR_README = `# Avatar 头像组件
 ## 基础使用
 
 \`\`\`tsx
-import Avatar from '@/mobile/components/Avatar';
+import Avatar from '@/components/Avatar';
 
 // 基础用法
 <Avatar 

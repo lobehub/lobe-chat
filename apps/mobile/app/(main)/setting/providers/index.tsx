@@ -1,7 +1,7 @@
 import { FlatList, View } from 'react-native';
 
-import { DEFAULT_MODEL_PROVIDER_LIST } from '@/mobile/app/(main)/setting/providers/modelProviders';
-import { ModelProviderCard } from '@/mobile/types/llm';
+import { DEFAULT_MODEL_PROVIDER_LIST } from '../providers/modelProviders';
+import { ModelProviderCard } from '@/types/llm';
 import { useStyles } from './styles';
 
 import ProviderCard from './components/ProviderCard';

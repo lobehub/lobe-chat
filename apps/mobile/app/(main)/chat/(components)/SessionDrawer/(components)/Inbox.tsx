@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
 
-import { ListItem } from '@/mobile/components';
-import { DEFAULT_INBOX_AVATAR } from '@/mobile/const/meta';
-import { INBOX_SESSION_ID } from '@/mobile/const/session';
-import { useSessionStore } from '@/mobile/store/session';
+import { ListItem } from '@/components';
+import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
+import { INBOX_SESSION_ID } from '@/const/session';
+import { useSessionStore } from '@/store/session';
 
 const Inbox = () => {
   const { t } = useTranslation(['chat']);

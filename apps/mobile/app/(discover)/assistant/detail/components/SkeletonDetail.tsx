@@ -1,8 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Skeleton } from '@/mobile/components';
-import { useThemeToken } from '@/mobile/theme';
-import { ICON_SIZE } from '@/mobile/const/common';
+import { Skeleton } from '@/components';
+import { useThemeToken } from '@/theme';
+import { ICON_SIZE } from '@/const/common';
 
 // Assistant Detail Page Skeleton Components
 const AssistantDetailSkeleton = () => {

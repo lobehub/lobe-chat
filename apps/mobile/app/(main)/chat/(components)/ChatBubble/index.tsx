@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { View } from 'react-native';
 
-import { Markdown } from '@/mobile/components';
-import { ChatMessage } from '@/mobile/types/message';
+import { Markdown } from '@/components';
+import { ChatMessage } from '@/types/message';
 
 import LoadingDots from '../LoadingDots';
 import MessageActions from '../MessageActions';
