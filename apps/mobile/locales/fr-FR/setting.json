@@ -1,0 +1,53 @@
+{
+  "about": "À propos de LobeHub",
+  "account": {
+    "profile": {
+      "email": "E-mail",
+      "name": "Nom d'utilisateur",
+      "status": "Statut du compte",
+      "unverified": "Non vérifié",
+      "verified": "Vérifié"
+    },
+    "signOut": {
+      "confirm": "Êtes-vous sûr de vouloir vous déconnecter ?",
+      "label": "Se déconnecter"
+    },
+    "title": "Paramètres du compte"
+  },
+  "changelog": "Journal des mises à jour",
+  "feedback": "Retour d'information",
+  "help": "Aide à l'utilisation",
+  "locale": {
+    "auto": {
+      "description": "Suivre la langue du système",
+      "title": "Suivre le système"
+    },
+    "title": "Paramètres de langue"
+  },
+  "openai": "Paramètres OpenAI",
+  "openaiSettings": {
+    "apiKey": "Clé API",
+    "apiKeyPlaceholder": "Veuillez saisir votre clé API OpenAI",
+    "checkApiKey": "Veuillez vérifier si la clé API est correcte",
+    "checkProxyAddress": "Impossible de se connecter au serveur, veuillez vérifier si l'adresse du proxy est correcte",
+    "connectionSuccess": "Connexion réussie, la clé API et l'adresse du proxy sont correctement configurées",
+    "connectivityHint": "Après avoir testé la connectivité, la clé API et l'adresse du proxy seront vérifiées",
+    "pleaseEnterApiKey": "Veuillez saisir la clé API",
+    "proxyAddress": "Adresse du proxy API",
+    "proxyPlaceholder": "Doit inclure http(s)://",
+    "testConnectivity": "Tester la connectivité",
+    "validationFailed": "Échec de la validation",
+    "validationSuccess": "Validation réussie"
+  },
+  "providers": "Fournisseurs de services IA",
+  "support": "Support par e-mail",
+  "theme": {
+    "auto": "Suivre le système",
+    "dark": "Mode sombre",
+    "light": "Mode clair",
+    "sectionDescription": "Choisissez le style de thème que vous préférez, cliquez pour changer votre sélection",
+    "sectionTitle": "Thème",
+    "title": "Paramètres du thème"
+  },
+  "title": "Paramètres"
+}

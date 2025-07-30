@@ -1,0 +1,34 @@
+{
+  "actions": {
+    "add": "Add",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "continue": "Continue",
+    "copy": "Copy",
+    "delete": "Delete",
+    "edit": "Edit",
+    "retry": "Retry",
+    "save": "Save"
+  },
+  "and": "and",
+  "assistant": {
+    "fetchError": "Failed to retrieve assistant list, please try again later",
+    "noData": "No assistant data available",
+    "noMatch": "No matching assistant found",
+    "search": "Search assistants..."
+  },
+  "navigation": {
+    "goToHomeScreen": "Go to Home"
+  },
+  "or": "or",
+  "search": {
+    "placeholder": "Search"
+  },
+  "status": {
+    "error": "Error",
+    "info": "Info",
+    "loading": "Loading...",
+    "success": "Success",
+    "warning": "Warning"
+  }
+}

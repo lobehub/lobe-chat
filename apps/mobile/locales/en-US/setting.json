@@ -1,0 +1,53 @@
+{
+  "about": "About LobeHub",
+  "account": {
+    "profile": {
+      "email": "Email",
+      "name": "Username",
+      "status": "Account Status",
+      "unverified": "Unverified",
+      "verified": "Verified"
+    },
+    "signOut": {
+      "confirm": "Are you sure you want to sign out?",
+      "label": "Sign Out"
+    },
+    "title": "Account Settings"
+  },
+  "changelog": "Changelog",
+  "feedback": "Feedback",
+  "help": "Help",
+  "locale": {
+    "auto": {
+      "description": "Follow system language settings",
+      "title": "Follow System"
+    },
+    "title": "Language Settings"
+  },
+  "openai": "OpenAI Settings",
+  "openaiSettings": {
+    "apiKey": "API Key",
+    "apiKeyPlaceholder": "Please enter your OpenAI API Key",
+    "checkApiKey": "Please check if the API Key is correct",
+    "checkProxyAddress": "Unable to connect to the server, please check if the proxy address is correct",
+    "connectionSuccess": "Connection successful, API Key and proxy address are configured correctly",
+    "connectivityHint": "After testing connectivity, the API Key and proxy address will be verified for correctness",
+    "pleaseEnterApiKey": "Please enter the API Key",
+    "proxyAddress": "API Proxy Address",
+    "proxyPlaceholder": "Must include http(s)://",
+    "testConnectivity": "Test Connectivity",
+    "validationFailed": "Validation Failed",
+    "validationSuccess": "Validation Successful"
+  },
+  "providers": "AI Providers",
+  "support": "Email Support",
+  "theme": {
+    "auto": "Follow System",
+    "dark": "Dark Mode",
+    "light": "Light Mode",
+    "sectionDescription": "Choose your preferred theme style and click to switch your selection",
+    "sectionTitle": "Theme",
+    "title": "Theme Settings"
+  },
+  "title": "Settings"
+}

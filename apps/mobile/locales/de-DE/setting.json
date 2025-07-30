@@ -1,0 +1,53 @@
+{
+  "about": "Über LobeHub",
+  "account": {
+    "profile": {
+      "email": "E-Mail",
+      "name": "Benutzername",
+      "status": "Kontostatus",
+      "unverified": "Nicht verifiziert",
+      "verified": "Verifiziert"
+    },
+    "signOut": {
+      "confirm": "Möchten Sie sich wirklich abmelden?",
+      "label": "Abmelden"
+    },
+    "title": "Kontoeinstellungen"
+  },
+  "changelog": "Änderungsprotokoll",
+  "feedback": "Feedback",
+  "help": "Hilfe",
+  "locale": {
+    "auto": {
+      "description": "Folgt den Systemeinstellungen",
+      "title": "Systemsprache verwenden"
+    },
+    "title": "Spracheinstellungen"
+  },
+  "openai": "OpenAI Einstellungen",
+  "openaiSettings": {
+    "apiKey": "API-Schlüssel",
+    "apiKeyPlaceholder": "Bitte geben Sie Ihren OpenAI API-Schlüssel ein",
+    "checkApiKey": "Bitte überprüfen Sie, ob der API-Schlüssel korrekt ist",
+    "checkProxyAddress": "Verbindung zum Server fehlgeschlagen, bitte überprüfen Sie die Proxy-Adresse",
+    "connectionSuccess": "Verbindung erfolgreich, API-Schlüssel und Proxy-Adresse sind korrekt konfiguriert",
+    "connectivityHint": "Nach dem Verbindungstest wird überprüft, ob API-Schlüssel und Proxy-Adresse korrekt eingegeben wurden",
+    "pleaseEnterApiKey": "Bitte geben Sie den API-Schlüssel ein",
+    "proxyAddress": "API-Proxy-Adresse",
+    "proxyPlaceholder": "Muss http(s):// enthalten",
+    "testConnectivity": "Verbindung testen",
+    "validationFailed": "Validierung fehlgeschlagen",
+    "validationSuccess": "Validierung erfolgreich"
+  },
+  "providers": "KI-Dienstanbieter",
+  "support": "E-Mail-Support",
+  "theme": {
+    "auto": "Systemeinstellung folgen",
+    "dark": "Dunkelmodus",
+    "light": "Hellmodus",
+    "sectionDescription": "Wählen Sie Ihren bevorzugten Stil und klicken Sie, um Ihre Auswahl zu ändern",
+    "sectionTitle": "Thema",
+    "title": "Theme-Einstellungen"
+  },
+  "title": "Einstellungen"
+}

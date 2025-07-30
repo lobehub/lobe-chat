@@ -1,0 +1,17 @@
+{
+  "error": {
+    "title": "Đã xảy ra lỗi"
+  },
+  "http": {
+    "forbidden": "Truy cập bị cấm",
+    "networkError": "Lỗi mạng",
+    "notFound": "Không tìm thấy",
+    "serverError": "Lỗi máy chủ",
+    "timeout": "Yêu cầu hết thời gian chờ",
+    "unauthorized": "Chưa được ủy quyền"
+  },
+  "page": {
+    "notFoundMessage": "Trang này không tồn tại.",
+    "notFoundTitle": "Ôi không!"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "error": {
+    "title": "Произошла ошибка"
+  },
+  "http": {
+    "forbidden": "Доступ запрещён",
+    "networkError": "Ошибка сети",
+    "notFound": "Не найдено",
+    "serverError": "Ошибка сервера",
+    "timeout": "Время запроса истекло",
+    "unauthorized": "Неавторизован"
+  },
+  "page": {
+    "notFoundMessage": "Эта страница не существует.",
+    "notFoundTitle": "Упс!"
+  }
+}
