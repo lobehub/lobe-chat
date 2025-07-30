@@ -61,6 +61,7 @@ export const useStyles = createStyles(({ css, token, cx }) => ({
 interface InspectorProps {
   apiName: string;
   arguments?: string;
+  hidePluginUI?: boolean;
   id: string;
   identifier: string;
   index: number;
@@ -87,6 +88,7 @@ const Inspectors = memo<InspectorProps>(
     setShowRender,
     showPluginRender,
     setShowPluginRender,
+    hidePluginUI = false,
   }) => {
     const { t } = useTranslation('plugin');
     const { styles } = useStyles();
@@ -115,7 +117,7 @@ const Inspectors = memo<InspectorProps>(
             />
           </Flexbox>
           <Flexbox className={styles.actions} horizontal>
-            {showRender && (
+            {showRender && !hidePluginUI && (
               <ActionIcon
                 icon={showPluginRender ? LogsIcon : LayoutPanelTop}
                 onClick={() => {
