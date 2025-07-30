@@ -1,9 +1,9 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
 
-import { ListGroup } from '@/mobile/components';
-import { useLocale } from '@/mobile/hooks/useLocale';
-import { LANGUAGE_OPTIONS, LocaleMode } from '@/mobile/i18n/resource';
+import { ListGroup } from '@/components';
+import { useLocale } from '@/hooks/useLocale';
+import { LANGUAGE_OPTIONS, LocaleMode } from '@/i18n/resource';
 import { useTranslation } from 'react-i18next';
 
 import { SettingItem } from '../(components)';

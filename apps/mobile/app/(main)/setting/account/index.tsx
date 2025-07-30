@@ -2,9 +2,9 @@ import React from 'react';
 import { ScrollView, View, Text, TouchableOpacity, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Stack } from 'expo-router';
-import { ListGroup } from '@/mobile/components';
-import { useAuth, useAuthActions } from '@/mobile/store/user';
-import Avatar from '@/mobile/components/Avatar';
+import { ListGroup } from '@/components';
+import { useAuth, useAuthActions } from '@/store/user';
+import Avatar from '@/components/Avatar';
 import { SettingItem } from '../(components)/SettingItem';
 import { useStyles } from './style';
 
