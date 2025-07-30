@@ -1,0 +1,22 @@
+{
+  "confirmDelete": "Xác nhận xóa",
+  "copyFailed": "Sao chép thất bại",
+  "deleteMessageConfirm": "Bạn có chắc chắn muốn xóa tin nhắn này không?",
+  "history": "Lịch sử trò chuyện",
+  "messageCopied": "Đã sao chép tin nhắn",
+  "newChat": "Cuộc trò chuyện mới",
+  "placeholder": "Nhập tin nhắn của bạn...",
+  "regenerateFailed": "Tạo lại thất bại, vui lòng thử lại sau",
+  "send": "Gửi",
+  "session": {
+    "createFirst": "Tạo cuộc trò chuyện đầu tiên của bạn",
+    "empty": "Chưa có cuộc trò chuyện nào",
+    "search": {
+      "placeholder": "Tìm kiếm cuộc trò chuyện"
+    },
+    "title": "Trò chuyện thoải mái"
+  },
+  "share": "Chia sẻ",
+  "stop": "Dừng",
+  "thinking": "Đang suy nghĩ..."
+}

@@ -1,0 +1,17 @@
+{
+  "error": {
+    "title": "خطا رخ داد"
+  },
+  "http": {
+    "forbidden": "دسترسی ممنوع",
+    "networkError": "خطای شبکه",
+    "notFound": "یافت نشد",
+    "serverError": "خطای سرور",
+    "timeout": "درخواست منقضی شد",
+    "unauthorized": "غیرمجاز"
+  },
+  "page": {
+    "notFoundMessage": "این صفحه وجود ندارد.",
+    "notFoundTitle": "اوه نه!"
+  }
+}

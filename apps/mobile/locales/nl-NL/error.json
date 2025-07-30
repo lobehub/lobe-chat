@@ -1,0 +1,17 @@
+{
+  "error": {
+    "title": "Er is een fout opgetreden"
+  },
+  "http": {
+    "forbidden": "Toegang geweigerd",
+    "networkError": "Netwerkfout",
+    "notFound": "Niet gevonden",
+    "serverError": "Serverfout",
+    "timeout": "Verzoek verlopen",
+    "unauthorized": "Niet geautoriseerd"
+  },
+  "page": {
+    "notFoundMessage": "Deze pagina bestaat niet.",
+    "notFoundTitle": "Oeps!"
+  }
+}

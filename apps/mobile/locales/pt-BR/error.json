@@ -1,0 +1,17 @@
+{
+  "error": {
+    "title": "Ocorreu um erro"
+  },
+  "http": {
+    "forbidden": "Acesso proibido",
+    "networkError": "Erro de rede",
+    "notFound": "Não encontrado",
+    "serverError": "Erro do servidor",
+    "timeout": "Tempo de requisição esgotado",
+    "unauthorized": "Não autorizado"
+  },
+  "page": {
+    "notFoundMessage": "Esta página não existe.",
+    "notFoundTitle": "Ops!"
+  }
+}

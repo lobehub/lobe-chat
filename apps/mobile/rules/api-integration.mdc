@@ -1,0 +1,110 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# API Integration and Services
+
+## Service Architecture
+
+The app integrates with various APIs and services for chat functionality and data management.
+
+### Core Services
+
+#### Session Service
+- [services/session.ts](mdc:services/session.ts) - Session management API
+- [services/type.ts](mdc:services/type.ts) - Service type definitions
+- [services/mock/](mdc:services/mock) - Mock data for development
+  - [services/mock/getGroupedSessions.json](mdc:services/mock/getGroupedSessions.json) - Mock session data
+
+#### OpenAI Integration
+- [store/openai.ts](mdc:store/openai.ts) - OpenAI configuration store
+- Manages API keys and proxy settings
+- Persists configuration in AsyncStorage
+
+### API Utilities
+
+#### HTTP Utilities
+- [utils/fetchSSE.ts](mdc:utils/fetchSSE.ts) - Server-Sent Events implementation
+- [utils/trpc.ts](mdc:utils/trpc.ts) - tRPC client configuration
+- [utils/jwt.ts](mdc:utils/jwt.ts) - JWT token handling
+
+#### Data Processing
+- [utils/merge.ts](mdc:utils/merge.ts) - Deep merge utility
+- [utils/componentScanner.ts](mdc:utils/componentScanner.ts) - Component scanning utilities
+
+
+## Chat Integration
+
+### OpenAI API
+- Uses Server-Sent Events for streaming responses
+- Supports multiple models and configurations
+- Handles API key management and proxy settings
+
+### Message Handling
+- Real-time message streaming
+- Error handling and retry logic
+- Message persistence in local storage
+
+## Data Flow Patterns
+
+### State Management Integration
+```typescript
+// Store updates trigger API calls
+const sendMessage = async (message: string) => {
+  setLoading(true);
+  try {
+    const response = await api.sendMessage(message);
+    updateChatState(response);
+  } catch (error) {
+    handleError(error);
+  } finally {
+    setLoading(false);
+  }
+};
+```
+
+### Error Handling
+- Implement proper error boundaries
+- Show user-friendly error messages
+- Retry failed requests with exponential backoff
+- Log errors for debugging
+
+### Loading States
+- Show loading indicators during API calls
+- Implement skeleton screens for better UX
+- Handle partial loading states
+
+## Development Patterns
+
+### Mock Data
+- Use mock services during development
+- [services/mock/](mdc:services/mock) - Mock data files
+- Switch between mock and real APIs easily
+
+### Environment Configuration
+- Use environment variables for API keys
+- Support different environments (dev, staging, prod)
+- Secure sensitive configuration
+
+### API Versioning
+- Support multiple API versions
+- Implement graceful deprecation
+- Maintain backward compatibility
+
+## Security Considerations
+
+### API Key Management
+- Never commit API keys to version control
+- Use secure storage for sensitive data
+- Implement proper key rotation
+
+### Data Validation
+- Validate all API responses
+- Use TypeScript for type safety
+- Implement input sanitization
+
+### Network Security
+- Use HTTPS for all API calls
+- Implement certificate pinning if needed
+- Handle network errors gracefully

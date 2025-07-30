@@ -1,0 +1,34 @@
+{
+  "assistant": {
+    "detail": {
+      "addAndChat": "Thêm trợ lý và trò chuyện",
+      "addFailed": "Thêm trợ lý thất bại",
+      "addFailedMessage": "Thêm trợ lý thất bại, vui lòng thử lại sau",
+      "assistantSettings": "Cài đặt trợ lý",
+      "loadFailed": "Lấy chi tiết trợ lý thất bại, vui lòng thử lại sau",
+      "notFoundIdentifier": "Không tìm thấy định danh trợ lý",
+      "share": "Chia sẻ",
+      "shareFailed": "Chia sẻ thất bại"
+    }
+  },
+  "category": {
+    "assistant": {
+      "academic": "Học thuật",
+      "all": "Tất cả",
+      "career": "Nghề nghiệp",
+      "copywriting": "Viết quảng cáo",
+      "design": "Thiết kế",
+      "education": "Giáo dục",
+      "emotions": "Cảm xúc",
+      "entertainment": "Giải trí",
+      "games": "Trò chơi",
+      "general": "Chung",
+      "life": "Cuộc sống",
+      "marketing": "Kinh doanh",
+      "office": "Văn phòng",
+      "programming": "Lập trình",
+      "translation": "Dịch thuật"
+    }
+  },
+  "title": "Khám phá"
+}

@@ -1,0 +1,34 @@
+{
+  "assistant": {
+    "detail": {
+      "addAndChat": "Add Assistant and Chat",
+      "addFailed": "Failed to Add Assistant",
+      "addFailedMessage": "Failed to add assistant, please try again later",
+      "assistantSettings": "Assistant Settings",
+      "loadFailed": "Failed to Retrieve Assistant Details, Please Try Again Later",
+      "notFoundIdentifier": "Assistant Identifier Not Found",
+      "share": "Share",
+      "shareFailed": "Share Failed"
+    }
+  },
+  "category": {
+    "assistant": {
+      "academic": "Academic",
+      "all": "All",
+      "career": "Career",
+      "copywriting": "Copywriting",
+      "design": "Design",
+      "education": "Education",
+      "emotions": "Emotions",
+      "entertainment": "Entertainment",
+      "games": "Games",
+      "general": "General",
+      "life": "Life",
+      "marketing": "Business",
+      "office": "Office",
+      "programming": "Programming",
+      "translation": "Translation"
+    }
+  },
+  "title": "Discover"
+}

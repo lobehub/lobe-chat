@@ -1,0 +1,34 @@
+{
+  "assistant": {
+    "detail": {
+      "addAndChat": "Adicionar assistente e conversar",
+      "addFailed": "Falha ao adicionar assistente",
+      "addFailedMessage": "Falha ao adicionar assistente, por favor tente novamente mais tarde",
+      "assistantSettings": "Configurações do assistente",
+      "loadFailed": "Falha ao obter detalhes do assistente, por favor tente novamente mais tarde",
+      "notFoundIdentifier": "Identificador do assistente não encontrado",
+      "share": "Compartilhar",
+      "shareFailed": "Falha ao compartilhar"
+    }
+  },
+  "category": {
+    "assistant": {
+      "academic": "Acadêmico",
+      "all": "Todos",
+      "career": "Carreira",
+      "copywriting": "Redação",
+      "design": "Design",
+      "education": "Educação",
+      "emotions": "Emoções",
+      "entertainment": "Entretenimento",
+      "games": "Jogos",
+      "general": "Geral",
+      "life": "Vida",
+      "marketing": "Negócios",
+      "office": "Escritório",
+      "programming": "Programação",
+      "translation": "Tradução"
+    }
+  },
+  "title": "Descobrir"
+}
