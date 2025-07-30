@@ -4,9 +4,6 @@ import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
 
 const qwenChatModels: AIChatModelCard[] = [
   {
-    abilities: {
-      functionCall: true,
-    },
     contextWindowTokens: 131_072,
     description:
       '总参数 1T，激活参数 32B。 非思维模型中，在前沿知识、数学和编码方面达到了顶尖水平，更擅长通用 Agent 任务。 针对代理任务进行了精心优化，不仅能回答问题，还能采取行动。 最适用于即兴、通用聊天和代理体验，是一款无需长时间思考的反射级模型。',
@@ -48,6 +45,23 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+    },
+    contextWindowTokens: 262_144,
+    description: '通义千问代码模型开源版。最新的 qwen3-coder-480b-a35b-instruct 是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程、代码能力卓越的同时兼具通用能力。',
+    displayName: 'Qwen3 Coder 480B A35B',
+    id: 'qwen3-coder-480b-a35b-instruct',
+    maxOutput: 65_536,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 9, // tokens 32K ~ 128K
+      output: 36,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
@@ -84,6 +98,25 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 8,
     },
     releasedAt: '2025-07-22',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      '相较上一版本（Qwen3-30B-A3B）中英文和多语言整体通用能力有大幅提升。主观开放类任务专项优化，显著更加符合用户偏好，能够提供更有帮助性的回复。',
+    displayName: 'Qwen3 30B A3B Instruct 2507',
+    id: 'qwen3-30b-a3b-instruct-2507',
+    maxOutput: 32_768,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.75,
+      output: 3,
+    },
+    releasedAt: '2025-07-30',
     type: 'chat',
   },
   {
@@ -795,20 +828,6 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 12,
     },
     releasedAt: '2025-07-23',
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 262_144,
-    description: '通义千问代码模型开源版。最新的 qwen3-coder-480b-a35b-instruct 是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程、代码能力卓越的同时兼具通用能力。',
-    displayName: 'Qwen3 Coder 480B A35B',
-    id: 'qwen3-coder-480b-a35b-instruct',
-    maxOutput: 65_536,
-    organization: 'Qwen',
-    pricing: {
-      currency: 'CNY',
-      input: 9, // tokens 32K ~ 128K
-      output: 36,
-    },
     type: 'chat',
   },
   {
