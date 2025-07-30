@@ -1,7 +1,9 @@
-import { CSSProperties, memo, useState } from 'react';
+import { CSSProperties, memo, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import AnimatedCollapsed from '@/components/AnimatedCollapsed';
+import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
 
 import Inspectors from './Inspector';
 import Render from './Render';
@@ -15,12 +17,20 @@ export interface InspectorProps {
   messageId: string;
   payload: object;
   style?: CSSProperties;
+  type?: string;
 }
 
 const Tool = memo<InspectorProps>(
-  ({ arguments: requestArgs, apiName, messageId, id, index, identifier, style, payload }) => {
-    const [showRender, setShowRender] = useState(true);
+  ({ arguments: requestArgs, apiName, messageId, id, index, identifier, style, payload, type }) => {
+    const [showDetail, setShowDetail] = useState(type !== 'mcp');
     const [showPluginRender, setShowPluginRender] = useState(false);
+    const isLoading = useChatStore(chatSelectors.isInToolsCalling(messageId, index));
+
+    useEffect(() => {
+      if (type !== 'mcp') return;
+
+      setShowDetail(isLoading);
+    }, [isLoading]);
 
     return (
       <Flexbox gap={8} style={style}>
@@ -33,11 +43,11 @@ const Tool = memo<InspectorProps>(
           messageId={messageId}
           payload={payload}
           setShowPluginRender={setShowPluginRender}
-          setShowRender={setShowRender}
+          setShowRender={setShowDetail}
           showPluginRender={showPluginRender}
-          showRender={showRender}
+          showRender={showDetail}
         />
-        <AnimatedCollapsed open={showRender}>
+        <AnimatedCollapsed open={showDetail}>
           <Render
             messageId={messageId}
             requestArgs={requestArgs}
