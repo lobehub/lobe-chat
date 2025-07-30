@@ -1,0 +1,22 @@
+{
+  "confirmDelete": "削除を確認",
+  "copyFailed": "コピーに失敗しました",
+  "deleteMessageConfirm": "このメッセージを削除してもよろしいですか？",
+  "history": "会話履歴",
+  "messageCopied": "メッセージがコピーされました",
+  "newChat": "新しいチャット",
+  "placeholder": "メッセージを入力してください...",
+  "regenerateFailed": "再生成に失敗しました。後でもう一度お試しください",
+  "send": "送信",
+  "session": {
+    "createFirst": "最初のチャットセッションを作成してください",
+    "empty": "セッションがありません",
+    "search": {
+      "placeholder": "セッションを検索"
+    },
+    "title": "気軽におしゃべり"
+  },
+  "share": "共有",
+  "stop": "停止",
+  "thinking": "考え中..."
+}

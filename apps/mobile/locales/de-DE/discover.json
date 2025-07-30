@@ -1,0 +1,34 @@
+{
+  "assistant": {
+    "detail": {
+      "addAndChat": "Assistent hinzufügen und chatten",
+      "addFailed": "Assistent hinzufügen fehlgeschlagen",
+      "addFailedMessage": "Das Hinzufügen des Assistenten ist fehlgeschlagen, bitte versuchen Sie es später erneut",
+      "assistantSettings": "Assistenteneinstellungen",
+      "loadFailed": "Fehler beim Laden der Assistentendetails, bitte versuchen Sie es später erneut",
+      "notFoundIdentifier": "Assistentenkennung nicht gefunden",
+      "share": "Teilen",
+      "shareFailed": "Teilen fehlgeschlagen"
+    }
+  },
+  "category": {
+    "assistant": {
+      "academic": "Akademisch",
+      "all": "Alle",
+      "career": "Beruf",
+      "copywriting": "Textgestaltung",
+      "design": "Design",
+      "education": "Bildung",
+      "emotions": "Emotionen",
+      "entertainment": "Unterhaltung",
+      "games": "Spiele",
+      "general": "Allgemein",
+      "life": "Leben",
+      "marketing": "Marketing",
+      "office": "Büro",
+      "programming": "Programmierung",
+      "translation": "Übersetzung"
+    }
+  },
+  "title": "Entdecken"
+}

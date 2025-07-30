@@ -1,0 +1,53 @@
+{
+  "about": "Về LobeHub",
+  "account": {
+    "profile": {
+      "email": "Email",
+      "name": "Tên người dùng",
+      "status": "Trạng thái tài khoản",
+      "unverified": "Chưa xác minh",
+      "verified": "Đã xác minh"
+    },
+    "signOut": {
+      "confirm": "Bạn có chắc chắn muốn đăng xuất không?",
+      "label": "Đăng xuất"
+    },
+    "title": "Cài đặt tài khoản"
+  },
+  "changelog": "Nhật ký cập nhật",
+  "feedback": "Phản hồi ý kiến",
+  "help": "Trợ giúp sử dụng",
+  "locale": {
+    "auto": {
+      "description": "Theo cài đặt ngôn ngữ hệ thống",
+      "title": "Theo hệ thống"
+    },
+    "title": "Cài đặt ngôn ngữ"
+  },
+  "openai": "Cài đặt OpenAI",
+  "openaiSettings": {
+    "apiKey": "API Key",
+    "apiKeyPlaceholder": "Vui lòng nhập API Key OpenAI của bạn",
+    "checkApiKey": "Vui lòng kiểm tra API Key có chính xác không",
+    "checkProxyAddress": "Không thể kết nối đến máy chủ, vui lòng kiểm tra địa chỉ proxy có chính xác không",
+    "connectionSuccess": "Kết nối thành công, API Key và địa chỉ proxy đã được cấu hình chính xác",
+    "connectivityHint": "Sau khi kiểm tra kết nối, sẽ xác minh API Key và địa chỉ proxy đã nhập có chính xác hay không",
+    "pleaseEnterApiKey": "Vui lòng nhập API Key",
+    "proxyAddress": "Địa chỉ proxy API",
+    "proxyPlaceholder": "Phải bao gồm http(s)://",
+    "testConnectivity": "Kiểm tra kết nối",
+    "validationFailed": "Xác thực thất bại",
+    "validationSuccess": "Xác thực thành công"
+  },
+  "providers": "Nhà cung cấp AI",
+  "support": "Hỗ trợ qua email",
+  "theme": {
+    "auto": "Theo hệ thống",
+    "dark": "Chế độ tối",
+    "light": "Chế độ sáng",
+    "sectionDescription": "Chọn phong cách chủ đề bạn yêu thích, nhấp để chuyển đổi lựa chọn của bạn",
+    "sectionTitle": "Chủ đề",
+    "title": "Cài đặt chủ đề"
+  },
+  "title": "Cài đặt"
+}

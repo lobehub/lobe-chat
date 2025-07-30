@@ -1,0 +1,34 @@
+{
+  "assistant": {
+    "detail": {
+      "addAndChat": "アシスタントを追加してチャットする",
+      "addFailed": "アシスタントの追加に失敗しました",
+      "addFailedMessage": "アシスタントの追加に失敗しました。後でもう一度お試しください",
+      "assistantSettings": "アシスタント設定",
+      "loadFailed": "アシスタントの詳細取得に失敗しました。後でもう一度お試しください",
+      "notFoundIdentifier": "アシスタント識別子が見つかりません",
+      "share": "共有",
+      "shareFailed": "共有に失敗しました"
+    }
+  },
+  "category": {
+    "assistant": {
+      "academic": "学術",
+      "all": "すべて",
+      "career": "キャリア",
+      "copywriting": "コピーライティング",
+      "design": "デザイン",
+      "education": "教育",
+      "emotions": "感情",
+      "entertainment": "エンターテインメント",
+      "games": "ゲーム",
+      "general": "一般",
+      "life": "生活",
+      "marketing": "ビジネス",
+      "office": "オフィス",
+      "programming": "プログラミング",
+      "translation": "翻訳"
+    }
+  },
+  "title": "発見"
+}
