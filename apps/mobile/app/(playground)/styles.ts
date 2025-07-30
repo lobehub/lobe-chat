@@ -1,4 +1,4 @@
-import { createStyles } from '@/mobile/theme';
+import { createStyles } from '@/theme';
 
 export const useStyles = createStyles(() => ({
   backButton: {

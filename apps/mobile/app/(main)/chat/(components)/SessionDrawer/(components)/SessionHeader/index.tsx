@@ -3,7 +3,7 @@ import { Sparkles, CompassIcon } from 'lucide-react-native';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import { ICON_SIZE } from '@/mobile/const/common';
+import { ICON_SIZE } from '@/const/common';
 import { useStyles } from './style';
 
 const SessionHeader: React.FC = () => {

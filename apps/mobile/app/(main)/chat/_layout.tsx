@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 
-import { useThemedScreenOptions } from '@/mobile/const/navigation';
-import { NavigateBack } from '@/mobile/components';
+import { useThemedScreenOptions } from '@/const/navigation';
+import { NavigateBack } from '@/components';
 
 export default function ChatRoutesLayout() {
   const themedScreenOptions = useThemedScreenOptions();

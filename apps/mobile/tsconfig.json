@@ -6,7 +6,7 @@
     "module": "esnext",
     "paths": {
       // incase mixed with parent app
-      "@/mobile/*": ["./*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "global.d.ts"],

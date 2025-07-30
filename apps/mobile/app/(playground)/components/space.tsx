@@ -1,13 +1,13 @@
 import React from 'react';
 
-import ComponentPlayground, { DemoItem } from '@/mobile/app/(playground)/Playground';
+import ComponentPlayground, { DemoItem } from '../Playground';
 import {
   BasicDemo,
   DirectionsDemo,
   SizesDemo,
   AlignmentDemo,
   AdvancedDemo,
-} from '@/mobile/components/Space/demos';
+} from '@/components/Space/demos';
 
 const SPACE_README = `# Space 间距组件
 
@@ -27,7 +27,7 @@ const SPACE_README = `# Space 间距组件
 ## 基础使用
 
 \`\`\`tsx
-import Space from '@/mobile/components/Space';
+import Space from '@/components/Space';
 
 // 基础用法
 <Space>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ComponentPlayground, { DemoItem } from '@/mobile/app/(playground)/Playground';
+import ComponentPlayground, { DemoItem } from '../Playground';
 import {
   BasicDemo,
   AvatarDemo,
@@ -8,7 +8,7 @@ import {
   ComplexDemo,
   AnimatedDemo,
   CompoundDemo,
-} from '@/mobile/components/Skeleton/demos';
+} from '@/components/Skeleton/demos';
 
 const SKELETON_README = `# Skeleton 骨架屏组件
 
@@ -28,7 +28,7 @@ React Native版本的骨架屏组件，参考Ant Design设计，用于页面加�
 ## 基础使用
 
 \`\`\`tsx
-import Skeleton from '@/mobile/components/Skeleton';
+import Skeleton from '@/components/Skeleton';
 
 // 基础用法
 <Skeleton />

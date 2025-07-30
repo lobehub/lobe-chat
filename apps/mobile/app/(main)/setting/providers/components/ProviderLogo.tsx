@@ -11,7 +11,7 @@ import {
 import { memo } from 'react';
 import { View } from 'react-native';
 
-import { ModelProvider } from '@/mobile/types/agent';
+import { ModelProvider } from '@/types/agent';
 
 const ProviderLogo = memo<{ provider: string }>(({ provider }) => {
   switch (provider) {

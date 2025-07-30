@@ -4,12 +4,12 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, TouchableOpacity, View } from 'react-native';
 
-import { useToast } from '@/mobile/components';
-import { ICON_SIZE_TINY } from '@/mobile/const/common';
-import { useChatStore } from '@/mobile/store/chat';
-import { useSessionStore } from '@/mobile/store/session';
-import { useThemeToken } from '@/mobile/theme';
-import { ChatMessage } from '@/mobile/types/message';
+import { useToast } from '@/components';
+import { ICON_SIZE_TINY } from '@/const/common';
+import { useChatStore } from '@/store/chat';
+import { useSessionStore } from '@/store/session';
+import { useThemeToken } from '@/theme';
+import { ChatMessage } from '@/types/message';
 
 import { useStyles } from './style';
 

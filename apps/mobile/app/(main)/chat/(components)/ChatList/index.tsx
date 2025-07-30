@@ -7,11 +7,11 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { useChat } from '@/mobile/hooks/useChat';
+import { useChat } from '@/hooks/useChat';
 import ChatBubble from '../ChatBubble';
 import ScrollToBottom from '../ScrollToBottom';
 import { useStyles } from './style';
-import { ChatMessage } from '@/mobile/types/message';
+import { ChatMessage } from '@/types/message';
 
 interface ChatListProps {
   onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;

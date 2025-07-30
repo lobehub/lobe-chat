@@ -1,8 +1,8 @@
 import { Stack } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
-import NavigateBack from '@/mobile/components/NavigateBack';
-import { useThemedScreenOptions } from '@/mobile/const/navigation';
+import NavigateBack from '@/components/NavigateBack';
+import { useThemedScreenOptions } from '@/const/navigation';
 
 export default function SettingRoutesLayout() {
   const { t } = useTranslation(['setting']);

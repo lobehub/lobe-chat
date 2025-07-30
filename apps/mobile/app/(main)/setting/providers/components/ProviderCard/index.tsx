@@ -2,8 +2,8 @@ import { useRouter } from 'expo-router';
 import { memo } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import { ListGroup } from '@/mobile/components';
-import { ModelProviderCard } from '@/mobile/types/llm';
+import { ListGroup } from '@/components';
+import { ModelProviderCard } from '@/types/llm';
 
 import ProviderLogo from '../ProviderLogo';
 import { useStyles } from './style';
