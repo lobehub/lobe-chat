@@ -1,0 +1,53 @@
+{
+  "about": "Informazioni su LobeHub",
+  "account": {
+    "profile": {
+      "email": "Email",
+      "name": "Nome utente",
+      "status": "Stato account",
+      "unverified": "Non verificato",
+      "verified": "Verificato"
+    },
+    "signOut": {
+      "confirm": "Sei sicuro di voler uscire?",
+      "label": "Disconnetti"
+    },
+    "title": "Impostazioni account"
+  },
+  "changelog": "Registro delle modifiche",
+  "feedback": "Feedback",
+  "help": "Guida all'uso",
+  "locale": {
+    "auto": {
+      "description": "Segui le impostazioni della lingua di sistema",
+      "title": "Segui sistema"
+    },
+    "title": "Impostazioni lingua"
+  },
+  "openai": "Impostazioni OpenAI",
+  "openaiSettings": {
+    "apiKey": "Chiave API",
+    "apiKeyPlaceholder": "Inserisci la tua chiave API OpenAI",
+    "checkApiKey": "Controlla che la chiave API sia corretta",
+    "checkProxyAddress": "Impossibile connettersi al server, verifica che l'indirizzo del proxy sia corretto",
+    "connectionSuccess": "Connessione riuscita, chiave API e indirizzo proxy configurati correttamente",
+    "connectivityHint": "Dopo il test di connettività, verrà verificata la correttezza della chiave API e dell'indirizzo proxy",
+    "pleaseEnterApiKey": "Inserisci la chiave API",
+    "proxyAddress": "Indirizzo proxy API",
+    "proxyPlaceholder": "Deve includere http(s)://",
+    "testConnectivity": "Testa connettività",
+    "validationFailed": "Validazione fallita",
+    "validationSuccess": "Validazione riuscita"
+  },
+  "providers": "Fornitori AI",
+  "support": "Supporto via email",
+  "theme": {
+    "auto": "Segui sistema",
+    "dark": "Tema scuro",
+    "light": "Tema chiaro",
+    "sectionDescription": "Scegli lo stile del tema che preferisci, clicca per cambiare la tua selezione",
+    "sectionTitle": "Tema",
+    "title": "Impostazioni tema"
+  },
+  "title": "Impostazioni"
+}

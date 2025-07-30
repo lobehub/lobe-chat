@@ -1,0 +1,34 @@
+{
+  "actions": {
+    "add": "추가",
+    "cancel": "취소",
+    "confirm": "확인",
+    "continue": "계속",
+    "copy": "복사",
+    "delete": "삭제",
+    "edit": "편집",
+    "retry": "재시도",
+    "save": "저장"
+  },
+  "and": "그리고",
+  "assistant": {
+    "fetchError": "도우미 목록을 가져오지 못했습니다. 나중에 다시 시도해주세요.",
+    "noData": "도우미 데이터가 없습니다.",
+    "noMatch": "일치하는 도우미를 찾을 수 없습니다.",
+    "search": "도우미 검색..."
+  },
+  "navigation": {
+    "goToHomeScreen": "홈 화면으로 이동"
+  },
+  "or": "또는",
+  "search": {
+    "placeholder": "검색"
+  },
+  "status": {
+    "error": "오류",
+    "info": "정보",
+    "loading": "로딩 중...",
+    "success": "성공",
+    "warning": "경고"
+  }
+}

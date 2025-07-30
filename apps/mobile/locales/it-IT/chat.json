@@ -1,0 +1,22 @@
+{
+  "confirmDelete": "Conferma eliminazione",
+  "copyFailed": "Copia non riuscita",
+  "deleteMessageConfirm": "Sei sicuro di voler eliminare questo messaggio?",
+  "history": "Cronologia conversazioni",
+  "messageCopied": "Messaggio copiato",
+  "newChat": "Nuova conversazione",
+  "placeholder": "Inserisci il tuo messaggio...",
+  "regenerateFailed": "Rigenerazione fallita, riprova più tardi",
+  "send": "Invia",
+  "session": {
+    "createFirst": "Crea la tua prima sessione di chat",
+    "empty": "Nessuna sessione disponibile",
+    "search": {
+      "placeholder": "Cerca sessioni"
+    },
+    "title": "Chat casuale"
+  },
+  "share": "Condividi",
+  "stop": "Interrompi",
+  "thinking": "Sto pensando..."
+}

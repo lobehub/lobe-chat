@@ -1,0 +1,34 @@
+{
+  "actions": {
+    "add": "Agregar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "continue": "Continuar",
+    "copy": "Copiar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "retry": "Reintentar",
+    "save": "Guardar"
+  },
+  "and": "y",
+  "assistant": {
+    "fetchError": "Error al obtener la lista de asistentes, por favor intente más tarde",
+    "noData": "No hay datos de asistentes disponibles",
+    "noMatch": "No se encontró ningún asistente que coincida",
+    "search": "Buscar asistente..."
+  },
+  "navigation": {
+    "goToHomeScreen": "Volver a la pantalla principal"
+  },
+  "or": "o",
+  "search": {
+    "placeholder": "Buscar"
+  },
+  "status": {
+    "error": "Error",
+    "info": "Información",
+    "loading": "Cargando...",
+    "success": "Éxito",
+    "warning": "Advertencia"
+  }
+}
