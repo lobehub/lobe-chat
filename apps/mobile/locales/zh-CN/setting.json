@@ -1,8 +1,6 @@
 {
   "about": "关于 LobeHub",
-  "title": "设置",
   "account": {
-    "title": "账号设置",
     "profile": {
       "email": "邮箱",
       "name": "用户名",
@@ -11,9 +9,10 @@
       "verified": "已验证"
     },
     "signOut": {
-      "label": "退出登录",
-      "confirm": "您确定要退出登录吗？"
-    }
+      "confirm": "您确定要退出登录吗？",
+      "label": "退出登录"
+    },
+    "title": "账号设置"
   },
   "changelog": "更新日志",
   "feedback": "意见反馈",
@@ -49,5 +48,6 @@
     "sectionDescription": "选择您喜欢的主题风格，点击切换您的选择",
     "sectionTitle": "主题",
     "title": "主题设置"
-  }
+  },
+  "title": "设置"
 }
