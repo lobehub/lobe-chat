@@ -10,13 +10,6 @@ const ai302ChatModels: AIChatModelCard[] = [
   },
   {
     contextWindowTokens: 128_000,
-    displayName: 'gpt-4o',
-    enabled: true,
-    id: 'gpt-4o',
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 128_000,
     displayName: 'chatgpt-4o-latest',
     enabled: true,
     id: 'chatgpt-4o-latest',
