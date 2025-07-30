@@ -3,8 +3,8 @@ import { Check } from 'lucide-react-native';
 import React from 'react';
 import { Switch, Text, TouchableOpacity, View } from 'react-native';
 
-import { ICON_SIZE_SMALL } from '@/mobile/const/common';
-import { useThemeToken } from '@/mobile/theme';
+import { ICON_SIZE_SMALL } from '@/const/common';
+import { useThemeToken } from '@/theme';
 
 interface SettingItemProps {
   description?: string;

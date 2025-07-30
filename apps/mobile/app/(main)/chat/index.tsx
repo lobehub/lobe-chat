@@ -3,8 +3,8 @@ import { FlatList, KeyboardAvoidingView, Platform, View } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useGlobalStore } from '@/mobile/store/global';
-import { ChatMessage } from '@/mobile/types/message';
+import { useGlobalStore } from '@/store/global';
+import { ChatMessage } from '@/types/message';
 import ChatHeader from './(components)/ChatHeader';
 import ChatInput from './(components)/ChatInput';
 import ChatList from './(components)/ChatList';

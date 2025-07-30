@@ -68,7 +68,7 @@ See [internationalization.mdc](mdc:.cursor/rules/internationalization.mdc) for d
 - Constants: UPPER_SNAKE_CASE (e.g., `DEFAULT_AGENT_META`)
 
 ### Import Patterns
-- Use absolute imports with `@/mobile/` prefix
+- Use absolute imports with `@/` prefix
 - Group imports: React, third-party, internal
 - Use named exports for components
 - Use default exports for main components

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { AdvancedDemo, BasicDemo, MathDemo, StylingDemo } from '@/mobile/components/Markdown/demos';
-import ComponentPlayground, { DemoItem } from '@/mobile/app/(playground)/Playground';
+import { AdvancedDemo, BasicDemo, MathDemo, StylingDemo } from '@/components/Markdown/demos';
+import ComponentPlayground, { DemoItem } from '../Playground';
 
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
@@ -30,7 +30,7 @@ const readmeContent = `# Markdown组件
 ## 基本用法
 
 \`\`\`jsx
-import MarkdownRender from '@/mobile/components/Markdown';
+import MarkdownRender from '@/components/Markdown';
 
 export default function App() {
   const markdownContent = \`
