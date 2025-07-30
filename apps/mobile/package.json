@@ -42,7 +42,6 @@
     "@expo/react-native-action-sheet": "^4.1.1",
     "@expo/vector-icons": "~14.0.4",
     "@gorhom/portal": "^1.0.14",
-    "@lobehub/lint": "^1.26.2",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/elements": "^2.3.8",
