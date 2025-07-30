@@ -79,6 +79,7 @@ export const AssistantMessage = memo<
               key={toolCall.id}
               messageId={id}
               payload={toolCall}
+              type={toolCall.type}
             />
           ))}
         </Flexbox>
