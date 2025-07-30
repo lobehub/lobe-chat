@@ -29,7 +29,12 @@ const Tool = memo<InspectorProps>(
     useEffect(() => {
       if (type !== 'mcp') return;
 
-      setShowDetail(isLoading);
+      setTimeout(
+        () => {
+          setShowDetail(isLoading);
+        },
+        isLoading ? 1 : 1500,
+      );
     }, [isLoading]);
 
     return (
