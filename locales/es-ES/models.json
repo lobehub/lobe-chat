@@ -32,6 +32,9 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultra es la versión más poderosa de la serie de modelos grandes de Xinghuo, mejorando la comprensión y capacidad de resumen de contenido textual al actualizar la conexión de búsqueda en línea. Es una solución integral para mejorar la productividad en la oficina y responder con precisión a las necesidades, siendo un producto inteligente líder en la industria."
   },
+  "AnimeSharp": {
+    "description": "AnimeSharp (también conocido como “4x‑AnimeSharp”) es un modelo de superresolución de código abierto desarrollado por Kim2091 basado en la arquitectura ESRGAN, enfocado en la ampliación y el afilado de imágenes con estilo anime. Fue renombrado en febrero de 2022 desde “4x-TextSharpV1”, originalmente también aplicable a imágenes de texto, pero con un rendimiento significativamente optimizado para contenido anime."
+  },
   "Baichuan2-Turbo": {
     "description": "Utiliza tecnología de búsqueda mejorada para lograr un enlace completo entre el gran modelo y el conocimiento del dominio, así como el conocimiento de toda la red. Soporta la carga de documentos en PDF, Word y otros formatos, así como la entrada de URL, proporcionando información oportuna y completa, con resultados precisos y profesionales."
   },
@@ -89,6 +92,9 @@
   "Doubao-pro-4k": {
     "description": "El modelo principal con mejor rendimiento, adecuado para tareas complejas, con excelentes resultados en preguntas de referencia, resúmenes, creación, clasificación de texto, juegos de rol y otros escenarios. Soporta inferencia y ajuste fino con una ventana de contexto de 4k."
   },
+  "DreamO": {
+    "description": "DreamO es un modelo de generación de imágenes personalizado de código abierto desarrollado conjuntamente por ByteDance y la Universidad de Pekín, diseñado para soportar generación de imágenes multitarea mediante una arquitectura unificada. Utiliza un método eficiente de modelado combinado para generar imágenes altamente coherentes y personalizadas según múltiples condiciones especificadas por el usuario, como identidad, sujeto, estilo y fondo."
+  },
   "ERNIE-3.5-128K": {
     "description": "Modelo de lenguaje a gran escala de primera línea desarrollado por Baidu, que abarca una vasta cantidad de corpus en chino y en inglés, con potentes capacidades generales que pueden satisfacer la mayoría de los requisitos de preguntas y respuestas en diálogos, generación de contenido y aplicaciones de plugins; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información en las respuestas."
   },
@@ -122,14 +128,38 @@
   "ERNIE-Speed-Pro-128K": {
     "description": "Modelo de lenguaje de alto rendimiento desarrollado por Baidu, lanzado en 2024, con capacidades generales excepcionales, superando a ERNIE Speed, adecuado como modelo base para ajustes finos, manejando mejor problemas en escenarios específicos, y con un rendimiento de inferencia excelente."
   },
+  "FLUX.1-Kontext-dev": {
+    "description": "FLUX.1-Kontext-dev es un modelo multimodal de generación y edición de imágenes desarrollado por Black Forest Labs, basado en la arquitectura Rectified Flow Transformer, con una escala de 12 mil millones de parámetros. Se especializa en generar, reconstruir, mejorar o editar imágenes bajo condiciones contextuales dadas. Combina las ventajas de generación controlada de modelos de difusión con la capacidad de modelado contextual de Transformers, soportando salidas de alta calidad y aplicándose ampliamente en tareas como restauración de imágenes, completado y reconstrucción de escenas visuales."
+  },
+  "FLUX.1-dev": {
+    "description": "FLUX.1-dev es un modelo multimodal de lenguaje (MLLM) de código abierto desarrollado por Black Forest Labs, optimizado para tareas de texto e imagen, integrando capacidades de comprensión y generación tanto visual como textual. Está basado en avanzados modelos de lenguaje grande (como Mistral-7B) y mediante un codificador visual cuidadosamente diseñado y un ajuste fino por etapas con instrucciones, logra procesamiento colaborativo de texto e imagen y razonamiento para tareas complejas."
+  },
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) es un modelo innovador, adecuado para aplicaciones en múltiples campos y tareas complejas."
+  },
+  "HelloMeme": {
+    "description": "HelloMeme es una herramienta de IA que puede generar automáticamente memes, GIFs o videos cortos basados en las imágenes o acciones que proporciones. No requiere conocimientos de dibujo o programación; solo necesitas preparar una imagen de referencia y la herramienta te ayudará a crear contenido atractivo, divertido y con estilo coherente."
+  },
+  "HiDream-I1-Full": {
+    "description": "HiDream-E1-Full es un modelo de edición de imágenes multimodal de código abierto lanzado por HiDream.ai, basado en la avanzada arquitectura Diffusion Transformer y potenciado con una fuerte capacidad de comprensión del lenguaje (incorporando LLaMA 3.1-8B-Instruct). Soporta generación de imágenes, transferencia de estilo, edición local y redibujo de contenido mediante instrucciones en lenguaje natural, con excelentes habilidades de comprensión y ejecución texto-imagen."
+  },
+  "HunyuanDiT-v1.2-Diffusers-Distilled": {
+    "description": "hunyuandit-v1.2-distilled es un modelo ligero de generación de imágenes a partir de texto, optimizado mediante destilación para generar imágenes de alta calidad rápidamente, especialmente adecuado para entornos con recursos limitados y tareas de generación en tiempo real."
+  },
+  "InstantCharacter": {
+    "description": "InstantCharacter es un modelo de generación de personajes personalizados sin necesidad de ajuste fino, lanzado por el equipo de IA de Tencent en 2025, diseñado para lograr generación consistente y de alta fidelidad en múltiples escenarios. El modelo permite modelar un personaje basándose únicamente en una imagen de referencia y transferirlo de forma flexible a diversos estilos, acciones y fondos."
   },
   "InternVL2-8B": {
     "description": "InternVL2-8B es un potente modelo de lenguaje visual, que admite el procesamiento multimodal de imágenes y texto, capaz de identificar con precisión el contenido de las imágenes y generar descripciones o respuestas relacionadas."
   },
   "InternVL2.5-26B": {
     "description": "InternVL2.5-26B es un potente modelo de lenguaje visual, que admite el procesamiento multimodal de imágenes y texto, capaz de identificar con precisión el contenido de las imágenes y generar descripciones o respuestas relacionadas."
+  },
+  "Kolors": {
+    "description": "Kolors es un modelo de generación de imágenes a partir de texto desarrollado por el equipo Kolors de Kuaishou. Entrenado con miles de millones de parámetros, destaca en calidad visual, comprensión semántica del chino y renderizado de texto."
+  },
+  "Kwai-Kolors/Kolors": {
+    "description": "Kolors es un modelo de generación de imágenes a partir de texto a gran escala basado en difusión latente, desarrollado por el equipo Kolors de Kuaishou. Entrenado con miles de millones de pares texto-imagen, muestra ventajas significativas en calidad visual, precisión semántica compleja y renderizado de caracteres en chino e inglés. Soporta entradas en ambos idiomas y sobresale en la comprensión y generación de contenido específico en chino."
   },
   "Llama-3.2-11B-Vision-Instruct": {
     "description": "Capacidad de razonamiento de imágenes excepcional en imágenes de alta resolución, adecuada para aplicaciones de comprensión visual."
@@ -164,8 +194,14 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1 es un modelo de inferencia de atención mixta a gran escala con pesos de código abierto, que cuenta con 456 mil millones de parámetros, activando aproximadamente 45.9 mil millones de parámetros por token. El modelo soporta de forma nativa contextos ultra largos de hasta 1 millón de tokens y, gracias a su mecanismo de atención relámpago, reduce en un 75 % las operaciones de punto flotante en tareas de generación de 100 mil tokens en comparación con DeepSeek R1. Además, MiniMax-M1 utiliza una arquitectura MoE (Mezcla de Expertos), combinando el algoritmo CISPO y un diseño de atención mixta para un entrenamiento eficiente mediante aprendizaje reforzado, logrando un rendimiento líder en la industria en inferencia con entradas largas y escenarios reales de ingeniería de software."
   },
+  "Moonshot-Kimi-K2-Instruct": {
+    "description": "Con un total de 1 billón de parámetros y 32 mil millones de parámetros activados, este modelo no reflexivo alcanza niveles de vanguardia en conocimiento avanzado, matemáticas y codificación, destacando en tareas generales de agentes. Optimizado para tareas de agentes, no solo responde preguntas sino que también puede actuar. Ideal para conversaciones improvisadas, chat general y experiencias de agentes, es un modelo de nivel reflexivo que no requiere largos tiempos de pensamiento."
+  },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) es un modelo de instrucciones de alta precisión, adecuado para cálculos complejos."
+  },
+  "OmniConsistency": {
+    "description": "OmniConsistency mejora la consistencia de estilo y la capacidad de generalización en tareas de imagen a imagen mediante la introducción de grandes Diffusion Transformers (DiTs) y datos estilizados emparejados, evitando la degradación del estilo."
   },
   "Phi-3-medium-128k-instruct": {
     "description": "El mismo modelo Phi-3-medium, pero con un tamaño de contexto más grande para RAG o indicaciones de pocos disparos."
@@ -217,6 +253,9 @@
   },
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 es un modelo de lenguaje de expertos mixtos (MoE) con 671 mil millones de parámetros, que utiliza atención potencial de múltiples cabezas (MLA) y la arquitectura DeepSeekMoE, combinando estrategias de balanceo de carga sin pérdidas auxiliares para optimizar la eficiencia de inferencia y entrenamiento. Preentrenado en 14.8 billones de tokens de alta calidad, y ajustado mediante supervisión y aprendizaje por refuerzo, DeepSeek-V3 supera a otros modelos de código abierto y se acerca a los modelos cerrados líderes."
+  },
+  "Pro/moonshotai/Kimi-K2-Instruct": {
+    "description": "Kimi K2 es un modelo base con arquitectura MoE que posee capacidades avanzadas de codificación y agentes, con un total de 1 billón de parámetros y 32 mil millones de parámetros activados. En pruebas de referencia en categorías principales como razonamiento general, programación, matemáticas y agentes, el rendimiento del modelo K2 supera a otros modelos de código abierto populares."
   },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview es un modelo de procesamiento de lenguaje natural innovador, capaz de manejar de manera eficiente tareas complejas de generación de diálogos y comprensión del contexto."
@@ -277,6 +316,12 @@
   },
   "Qwen/Qwen3-235B-A22B": {
     "description": "Qwen3 es un nuevo modelo de Tongyi Qianwen de próxima generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, general, agente y múltiples idiomas, y admite el cambio de modo de pensamiento."
+  },
+  "Qwen/Qwen3-235B-A22B-Instruct-2507": {
+    "description": "Qwen3-235B-A22B-Instruct-2507 es un modelo de lenguaje grande híbrido experto (MoE) de nivel insignia desarrollado por el equipo Tongyi Qianwen de Alibaba Cloud. Cuenta con 235 mil millones de parámetros totales y activa 22 mil millones por inferencia. Es una versión actualizada del modo no reflexivo Qwen3-235B-A22B, enfocada en mejorar significativamente el cumplimiento de instrucciones, razonamiento lógico, comprensión textual, matemáticas, ciencias, programación y uso de herramientas. Además, amplía la cobertura de conocimientos multilingües y mejora la alineación con las preferencias del usuario en tareas subjetivas y abiertas para generar textos más útiles y de alta calidad."
+  },
+  "Qwen/Qwen3-235B-A22B-Thinking-2507": {
+    "description": "Qwen3-235B-A22B-Thinking-2507 es un modelo de lenguaje grande de la serie Qwen3 desarrollado por el equipo Tongyi Qianwen de Alibaba, especializado en tareas complejas de razonamiento avanzado. Basado en arquitectura MoE, cuenta con 235 mil millones de parámetros totales y activa aproximadamente 22 mil millones por token, mejorando la eficiencia computacional sin sacrificar rendimiento. Como modelo dedicado al “pensamiento”, destaca en razonamiento lógico, matemáticas, ciencias, programación y pruebas académicas que requieren conocimiento experto, alcanzando niveles líderes en modelos reflexivos de código abierto. También mejora capacidades generales como cumplimiento de instrucciones, uso de herramientas y generación de texto, y soporta nativamente comprensión de contexto largo de hasta 256K tokens, ideal para escenarios que requieren razonamiento profundo y manejo de documentos extensos."
   },
   "Qwen/Qwen3-30B-A3B": {
     "description": "Qwen3 es un nuevo modelo de Tongyi Qianwen de próxima generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, general, agente y múltiples idiomas, y admite el cambio de modo de pensamiento."
@@ -944,6 +989,9 @@
   "doubao-seed-1.6-thinking": {
     "description": "El modelo Doubao-Seed-1.6-thinking tiene una capacidad de pensamiento significativamente mejorada. En comparación con Doubao-1.5-thinking-pro, mejora aún más en habilidades básicas como programación, matemáticas y razonamiento lógico, y soporta comprensión visual. Soporta una ventana de contexto de 256k y una longitud máxima de salida de 16k tokens."
   },
+  "doubao-seedream-3-0-t2i-250415": {
+    "description": "El modelo de generación de imágenes Doubao fue desarrollado por el equipo Seed de ByteDance, soporta entrada de texto e imagen, y ofrece una experiencia de generación de imágenes altamente controlable y de alta calidad. Genera imágenes basadas en indicaciones textuales."
+  },
   "doubao-vision-lite-32k": {
     "description": "El modelo Doubao-vision es un modelo multimodal desarrollado por Doubao, con potentes capacidades de comprensión e inferencia de imágenes, así como una precisa comprensión de instrucciones. El modelo muestra un rendimiento destacado en extracción de información texto-imagen y tareas de inferencia basadas en imágenes, aplicable a tareas de preguntas visuales más complejas y amplias."
   },
@@ -995,6 +1043,9 @@
   "ernie-char-fiction-8k": {
     "description": "Modelo de lenguaje grande de escenario vertical desarrollado internamente por Baidu, adecuado para aplicaciones como NPC de juegos, diálogos de servicio al cliente y juegos de rol de diálogos, con un estilo de personaje más distintivo y consistente, y una mayor capacidad de seguimiento de instrucciones y rendimiento de inferencia."
   },
+  "ernie-irag-edit": {
+    "description": "El modelo de edición de imágenes ERNIE iRAG desarrollado por Baidu soporta operaciones como borrar objetos, repintar objetos y generar variaciones basadas en imágenes."
+  },
   "ernie-lite-8k": {
     "description": "ERNIE Lite es un modelo de lenguaje grande ligero desarrollado internamente por Baidu, que combina un excelente rendimiento del modelo con una buena capacidad de inferencia, adecuado para su uso en tarjetas de aceleración de IA de bajo consumo."
   },
@@ -1022,11 +1073,26 @@
   "ernie-x1-turbo-32k": {
     "description": "Mejora en comparación con ERNIE-X1-32K, con mejores resultados y rendimiento."
   },
+  "flux-1-schnell": {
+    "description": "Modelo de generación de imágenes a partir de texto con 12 mil millones de parámetros desarrollado por Black Forest Labs, que utiliza tecnología de destilación de difusión adversarial latente, capaz de generar imágenes de alta calidad en 1 a 4 pasos. Su rendimiento es comparable a alternativas propietarias y se publica bajo licencia Apache-2.0, apto para uso personal, investigación y comercial."
+  },
+  "flux-dev": {
+    "description": "FLUX.1 [dev] es un modelo refinado y de pesos abiertos para aplicaciones no comerciales. Mantiene una calidad de imagen y capacidad de seguimiento de instrucciones similar a la versión profesional de FLUX, pero con mayor eficiencia operativa. En comparación con modelos estándar de tamaño similar, es más eficiente en el uso de recursos."
+  },
   "flux-kontext/dev": {
     "description": "Modelo de edición de imágenes Frontier."
   },
+  "flux-merged": {
+    "description": "El modelo FLUX.1-merged combina las características profundas exploradas durante la fase de desarrollo de “DEV” con las ventajas de ejecución rápida representadas por “Schnell”. Esta combinación no solo amplía los límites de rendimiento del modelo, sino que también amplía su rango de aplicaciones."
+  },
   "flux-pro/kontext": {
     "description": "FLUX.1 Kontext [pro] puede procesar texto e imágenes de referencia como entrada, logrando sin problemas ediciones locales específicas y transformaciones complejas de escenas completas."
+  },
+  "flux-schnell": {
+    "description": "FLUX.1 [schnell], como el modelo de pocos pasos más avanzado de código abierto actualmente, supera no solo a competidores similares sino también a potentes modelos no refinados como Midjourney v6.0 y DALL·E 3 (HD). Este modelo ha sido ajustado específicamente para conservar toda la diversidad de salida de la etapa de preentrenamiento. En comparación con los modelos más avanzados del mercado, FLUX.1 [schnell] mejora significativamente la calidad visual, el cumplimiento de instrucciones, la variación de tamaño/proporción, el manejo de fuentes y la diversidad de salida, ofreciendo a los usuarios una experiencia de generación de imágenes creativas más rica y variada."
+  },
+  "flux.1-schnell": {
+    "description": "Transformador de flujo rectificado con 12 mil millones de parámetros, capaz de generar imágenes basadas en descripciones textuales."
   },
   "flux/schnell": {
     "description": "FLUX.1 [schnell] es un modelo transformador de flujo con 12 mil millones de parámetros, capaz de generar imágenes de alta calidad a partir de texto en 1 a 4 pasos, adecuado para uso personal y comercial."
@@ -1109,9 +1175,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview es el modelo más rentable de Google, que ofrece una funcionalidad completa."
   },
-  "gemini-2.5-flash-preview-04-17-thinking": {
-    "description": "Gemini 2.5 Flash Preview es el modelo de mejor relación calidad-precio de Google, que ofrece funcionalidades completas."
-  },
   "gemini-2.5-flash-preview-05-20": {
     "description": "Gemini 2.5 Flash Preview es el modelo de mejor relación calidad-precio de Google, que ofrece funcionalidades completas."
   },
@@ -1190,6 +1253,21 @@
   "glm-4.1v-thinking-flashx": {
     "description": "La serie GLM-4.1V-Thinking es el modelo visual más potente conocido en la categoría de VLMs de 10 mil millones de parámetros, integrando tareas de lenguaje visual de última generación (SOTA) en su nivel, incluyendo comprensión de video, preguntas sobre imágenes, resolución de problemas académicos, reconocimiento OCR, interpretación de documentos y gráficos, agentes GUI, codificación web frontend, grounding, entre otros. En muchas tareas, supera incluso a modelos con 8 veces más parámetros como Qwen2.5-VL-72B. Gracias a técnicas avanzadas de aprendizaje reforzado, el modelo domina el razonamiento mediante cadenas de pensamiento para mejorar la precisión y riqueza de las respuestas, superando significativamente a los modelos tradicionales sin pensamiento en términos de resultados y explicabilidad."
   },
+  "glm-4.5": {
+    "description": "El último modelo insignia de Zhipu, soporta modo de pensamiento, con capacidades integrales que alcanzan el nivel SOTA de modelos de código abierto y una longitud de contexto de hasta 128K."
+  },
+  "glm-4.5-air": {
+    "description": "Versión ligera de GLM-4.5 que equilibra rendimiento y costo, con capacidad flexible para cambiar entre modelos de pensamiento híbrido."
+  },
+  "glm-4.5-airx": {
+    "description": "Versión ultra rápida de GLM-4.5-Air, con respuesta más rápida, diseñada para demandas de gran escala y alta velocidad."
+  },
+  "glm-4.5-flash": {
+    "description": "Versión gratuita de GLM-4.5, con un desempeño destacado en tareas de inferencia, codificación y agentes inteligentes."
+  },
+  "glm-4.5-x": {
+    "description": "Versión ultra rápida de GLM-4.5, que combina un rendimiento potente con una velocidad de generación de hasta 100 tokens por segundo."
+  },
   "glm-4v": {
     "description": "GLM-4V proporciona una poderosa capacidad de comprensión e inferencia de imágenes, soportando diversas tareas visuales."
   },
@@ -1209,7 +1287,7 @@
     "description": "Inferencia ultrarrápida: con una velocidad de inferencia extremadamente rápida y un potente efecto de razonamiento."
   },
   "glm-z1-flash": {
-    "description": "La serie GLM-Z1 posee una poderosa capacidad de razonamiento complejo, destacando en áreas como razonamiento lógico, matemáticas y programación. La longitud máxima del contexto es de 32K."
+    "description": "La serie GLM-Z1 posee una fuerte capacidad de razonamiento complejo, destacando en lógica, matemáticas y programación."
   },
   "glm-z1-flashx": {
     "description": "Alta velocidad y bajo costo: versión mejorada Flash, con velocidad de inferencia ultrarrápida y mejor garantía de concurrencia."
@@ -1385,6 +1463,9 @@
   "grok-2-1212": {
     "description": "Este modelo ha mejorado en precisión, cumplimiento de instrucciones y capacidades multilingües."
   },
+  "grok-2-image-1212": {
+    "description": "Nuestro último modelo de generación de imágenes puede crear imágenes vívidas y realistas a partir de indicaciones textuales. Destaca en generación de imágenes para marketing, redes sociales y entretenimiento."
+  },
   "grok-2-vision-1212": {
     "description": "Este modelo ha mejorado en precisión, cumplimiento de instrucciones y capacidades multilingües."
   },
@@ -1454,6 +1535,9 @@
   "hunyuan-t1-20250529": {
     "description": "Optimiza la creación de textos, redacción de ensayos, mejora habilidades en programación frontend, matemáticas y razonamiento lógico, y aumenta la capacidad de seguir instrucciones."
   },
+  "hunyuan-t1-20250711": {
+    "description": "Mejora significativa en habilidades avanzadas de matemáticas, lógica y codificación, optimización de la estabilidad de salida del modelo y aumento de la capacidad para textos largos."
+  },
   "hunyuan-t1-latest": {
     "description": "El primer modelo de inferencia híbrido de gran escala Hybrid-Transformer-Mamba de la industria, que amplía la capacidad de inferencia, ofrece una velocidad de decodificación excepcional y alinea aún más con las preferencias humanas."
   },
@@ -1502,6 +1586,12 @@
   "hunyuan-vision": {
     "description": "El último modelo multimodal de Hunyuan, que admite la entrada de imágenes y texto para generar contenido textual."
   },
+  "image-01": {
+    "description": "Nuevo modelo de generación de imágenes con detalles finos, soporta generación de imágenes a partir de texto e imagen."
+  },
+  "image-01-live": {
+    "description": "Modelo de generación de imágenes con detalles finos, soporta generación a partir de texto y configuración de estilo artístico."
+  },
   "imagen-4.0-generate-preview-06-06": {
     "description": "Serie de modelos de texto a imagen de cuarta generación de Imagen"
   },
@@ -1526,6 +1616,9 @@
   "internvl3-latest": {
     "description": "Nuestro modelo multimodal más reciente, que posee una mayor capacidad de comprensión de texto e imagen, así como una comprensión de imágenes a largo plazo, con un rendimiento comparable a los mejores modelos cerrados. Por defecto, apunta a nuestra serie de modelos InternVL más reciente, actualmente apuntando a internvl3-78b."
   },
+  "irag-1.0": {
+    "description": "iRAG (image based RAG) desarrollado por Baidu es una tecnología de generación de imágenes mejorada con recuperación, que combina los recursos de miles de millones de imágenes de búsqueda de Baidu con potentes capacidades de modelos base para generar imágenes ultra realistas. Su efecto supera ampliamente los sistemas nativos de generación de imágenes, eliminando el aspecto artificial de la IA y con costos muy bajos. iRAG se caracteriza por no generar alucinaciones, ultra realismo y resultados inmediatos."
+  },
   "jamba-large": {
     "description": "Nuestro modelo más potente y avanzado, diseñado para manejar tareas complejas a nivel empresarial, con un rendimiento excepcional."
   },
@@ -1534,6 +1627,9 @@
   },
   "jina-deepsearch-v1": {
     "description": "La búsqueda profunda combina la búsqueda en la web, la lectura y el razonamiento para realizar investigaciones exhaustivas. Puedes considerarlo como un agente que acepta tus tareas de investigación: realiza una búsqueda amplia y pasa por múltiples iteraciones antes de proporcionar una respuesta. Este proceso implica una investigación continua, razonamiento y resolución de problemas desde diferentes ángulos. Esto es fundamentalmente diferente de los grandes modelos estándar que generan respuestas directamente a partir de datos preentrenados y de los sistemas RAG tradicionales que dependen de búsquedas superficiales únicas."
+  },
+  "kimi-k2": {
+    "description": "Kimi-K2 es un modelo base con arquitectura MoE lanzado por Moonshot AI, con capacidades avanzadas de codificación y agentes, totalizando 1 billón de parámetros y 32 mil millones de parámetros activados. En pruebas de referencia en categorías principales como razonamiento general, programación, matemáticas y agentes, el rendimiento del modelo K2 supera a otros modelos de código abierto populares."
   },
   "kimi-k2-0711-preview": {
     "description": "kimi-k2 es un modelo base con arquitectura MoE que posee capacidades excepcionales en código y agentes, con un total de 1T parámetros y 32B parámetros activados. En pruebas de rendimiento en categorías principales como razonamiento general, programación, matemáticas y agentes, el modelo K2 supera a otros modelos de código abierto populares."
@@ -1928,6 +2024,9 @@
   "moonshotai/Kimi-Dev-72B": {
     "description": "Kimi-Dev-72B es un modelo de código abierto de gran escala, optimizado mediante aprendizaje reforzado a gran escala, capaz de generar parches robustos y listos para producción. Este modelo alcanzó un nuevo récord del 60.4 % en SWE-bench Verified, estableciendo un nuevo estándar para modelos de código abierto en tareas automatizadas de ingeniería de software como la corrección de errores y la revisión de código."
   },
+  "moonshotai/Kimi-K2-Instruct": {
+    "description": "Kimi K2 es un modelo base con arquitectura MoE que posee capacidades avanzadas de codificación y agentes, con un total de 1 billón de parámetros y 32 mil millones de parámetros activados. En pruebas de referencia en categorías principales como razonamiento general, programación, matemáticas y agentes, el rendimiento del modelo K2 supera a otros modelos de código abierto populares."
+  },
   "moonshotai/kimi-k2-instruct": {
     "description": "kimi-k2 es un modelo base con arquitectura MoE que cuenta con capacidades avanzadas de código y agentes, con un total de 1T parámetros y 32B parámetros activados. En pruebas de referencia en categorías principales como razonamiento de conocimiento general, programación, matemáticas y agentes, el modelo K2 supera el rendimiento de otros modelos de código abierto populares."
   },
@@ -2264,6 +2363,12 @@
   "qwen3-235b-a22b": {
     "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
   },
+  "qwen3-235b-a22b-instruct-2507": {
+    "description": "Modelo de código abierto basado en Qwen3 en modo no reflexivo, con mejoras leves en capacidad creativa subjetiva y seguridad del modelo respecto a la versión anterior (Tongyi Qianwen 3-235B-A22B)."
+  },
+  "qwen3-235b-a22b-thinking-2507": {
+    "description": "Modelo de código abierto basado en Qwen3 en modo reflexivo, con mejoras significativas en capacidad lógica, general, enriquecimiento de conocimiento y creatividad respecto a la versión anterior (Tongyi Qianwen 3-235B-A22B), adecuado para escenarios de razonamiento complejo y avanzado."
+  },
   "qwen3-30b-a3b": {
     "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
   },
@@ -2275,6 +2380,12 @@
   },
   "qwen3-8b": {
     "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
+  },
+  "qwen3-coder-480b-a35b-instruct": {
+    "description": "Versión de código abierto del modelo de código Tongyi Qianwen. El más reciente qwen3-coder-480b-a35b-instruct está basado en Qwen3, con fuertes capacidades de agente de codificación, experto en llamadas a herramientas e interacción con entornos, capaz de programación autónoma y con habilidades sobresalientes de código y capacidades generales."
+  },
+  "qwen3-coder-plus": {
+    "description": "Modelo de código Tongyi Qianwen. La serie más reciente Qwen3-Coder-Plus está basada en Qwen3, con fuertes capacidades de agente de codificación, experto en llamadas a herramientas e interacción con entornos, capaz de programación autónoma y con habilidades sobresalientes de código y capacidades generales."
   },
   "qwq": {
     "description": "QwQ es un modelo de investigación experimental que se centra en mejorar la capacidad de razonamiento de la IA."
@@ -2318,6 +2429,24 @@
   "sonar-reasoning-pro": {
     "description": "Un nuevo producto API respaldado por el modelo de razonamiento DeepSeek."
   },
+  "stable-diffusion-3-medium": {
+    "description": "El último gran modelo de generación de imágenes a partir de texto lanzado por Stability AI. Esta versión mejora significativamente la calidad de imagen, comprensión textual y diversidad de estilos, heredando las ventajas de generaciones anteriores. Puede interpretar con mayor precisión indicaciones complejas en lenguaje natural y generar imágenes más precisas y variadas."
+  },
+  "stable-diffusion-3.5-large": {
+    "description": "stable-diffusion-3.5-large es un modelo generativo multimodal de difusión transformadora (MMDiT) con 800 millones de parámetros, que ofrece calidad de imagen sobresaliente y alta correspondencia con las indicaciones. Soporta generación de imágenes de alta resolución de hasta 1 millón de píxeles y funciona eficientemente en hardware de consumo común."
+  },
+  "stable-diffusion-3.5-large-turbo": {
+    "description": "stable-diffusion-3.5-large-turbo es un modelo basado en stable-diffusion-3.5-large que utiliza tecnología de destilación de difusión adversarial (ADD) para lograr mayor velocidad."
+  },
+  "stable-diffusion-v1.5": {
+    "description": "stable-diffusion-v1.5 se inicializa con pesos del punto de control stable-diffusion-v1.2 y se ajusta finamente durante 595k pasos a resolución 512x512 sobre \"laion-aesthetics v2 5+\", reduciendo en un 10% la condicionamiento textual para mejorar el muestreo guiado sin clasificador."
+  },
+  "stable-diffusion-xl": {
+    "description": "stable-diffusion-xl presenta mejoras significativas respecto a la versión v1.5 y ofrece resultados comparables al modelo SOTA de código abierto midjourney. Las mejoras incluyen un backbone unet tres veces mayor, un módulo de refinamiento para mejorar la calidad de las imágenes generadas y técnicas de entrenamiento más eficientes."
+  },
+  "stable-diffusion-xl-base-1.0": {
+    "description": "Modelo generativo de imágenes a partir de texto desarrollado y liberado por Stability AI, con capacidades creativas líderes en la industria. Posee excelente comprensión de instrucciones y soporta definiciones de contenido mediante prompts inversos para generación precisa."
+  },
   "step-1-128k": {
     "description": "Equilibrio entre rendimiento y costo, adecuado para escenarios generales."
   },
@@ -2348,6 +2477,12 @@
   "step-1v-8k": {
     "description": "Modelo visual pequeño, adecuado para tareas básicas de texto e imagen."
   },
+  "step-1x-edit": {
+    "description": "Modelo especializado en tareas de edición de imágenes, capaz de modificar y mejorar imágenes según descripciones textuales e imágenes de ejemplo proporcionadas por el usuario. Entiende la intención del usuario y genera resultados de edición de imagen que cumplen con los requisitos."
+  },
+  "step-1x-medium": {
+    "description": "Modelo con fuerte capacidad de generación de imágenes, que soporta entrada mediante descripciones textuales. Posee soporte nativo para chino, comprendiendo y procesando mejor descripciones en este idioma, capturando con mayor precisión la semántica para convertirla en características visuales y lograr generación de imágenes más precisa. Puede generar imágenes de alta resolución y calidad, con cierta capacidad de transferencia de estilo."
+  },
   "step-2-16k": {
     "description": "Soporta interacciones de contexto a gran escala, adecuado para escenarios de diálogo complejos."
   },
@@ -2356,6 +2491,9 @@
   },
   "step-2-mini": {
     "description": "Un modelo de gran velocidad basado en la nueva arquitectura de atención autogestionada MFA, que logra efectos similares a los de step1 a un costo muy bajo, manteniendo al mismo tiempo un mayor rendimiento y tiempos de respuesta más rápidos. Capaz de manejar tareas generales, con habilidades destacadas en programación."
+  },
+  "step-2x-large": {
+    "description": "Nueva generación del modelo Step Star para generación de imágenes, enfocado en tareas de generación basadas en texto, capaz de crear imágenes de alta calidad según descripciones proporcionadas por el usuario. El nuevo modelo produce imágenes con texturas más realistas y mejor capacidad para generar texto en chino e inglés."
   },
   "step-r1-v-mini": {
     "description": "Este modelo es un gran modelo de inferencia con una poderosa capacidad de comprensión de imágenes, capaz de procesar información de imágenes y texto, generando contenido textual tras un profundo razonamiento. Este modelo destaca en el campo del razonamiento visual, además de poseer capacidades de razonamiento matemático, de código y textual de primer nivel. La longitud del contexto es de 100k."
@@ -2432,8 +2570,23 @@
   "v0-1.5-md": {
     "description": "El modelo v0-1.5-md es adecuado para tareas cotidianas y generación de interfaces de usuario (UI)"
   },
+  "wan2.2-t2i-flash": {
+    "description": "Versión ultra rápida Wanxiang 2.2, el modelo más reciente. Mejora integral en creatividad, estabilidad y realismo, con velocidad de generación rápida y alta relación calidad-precio."
+  },
+  "wan2.2-t2i-plus": {
+    "description": "Versión profesional Wanxiang 2.2, el modelo más reciente. Mejora integral en creatividad, estabilidad y realismo, con generación de detalles ricos."
+  },
+  "wanx-v1": {
+    "description": "Modelo base de generación de imágenes a partir de texto, correspondiente al modelo general 1.0 del sitio oficial Tongyi Wanxiang."
+  },
+  "wanx2.0-t2i-turbo": {
+    "description": "Especializado en retratos con textura, velocidad media y bajo costo. Corresponde al modelo ultra rápido 2.0 del sitio oficial Tongyi Wanxiang."
+  },
+  "wanx2.1-t2i-plus": {
+    "description": "Versión completamente mejorada. Genera imágenes con detalles más ricos, velocidad ligeramente más lenta. Corresponde al modelo profesional 2.1 del sitio oficial Tongyi Wanxiang."
+  },
   "wanx2.1-t2i-turbo": {
-    "description": "Modelo de generación de imágenes de texto a imagen de Tongyi de Alibaba Cloud"
+    "description": "Versión completamente mejorada. Generación rápida, resultados completos y alta relación calidad-precio. Corresponde al modelo ultra rápido 2.1 del sitio oficial Tongyi Wanxiang."
   },
   "whisper-1": {
     "description": "Modelo universal de reconocimiento de voz que soporta reconocimiento de voz multilingüe, traducción de voz y detección de idioma."
@@ -2485,5 +2638,11 @@
   },
   "yi-vision-v2": {
     "description": "Modelo para tareas visuales complejas, que ofrece capacidades de comprensión y análisis de alto rendimiento basadas en múltiples imágenes."
+  },
+  "zai-org/GLM-4.5": {
+    "description": "GLM-4.5 es un modelo base diseñado para aplicaciones de agentes inteligentes, utilizando arquitectura Mixture-of-Experts (MoE). Está profundamente optimizado para llamadas a herramientas, navegación web, ingeniería de software y programación frontend, soportando integración fluida con agentes de código como Claude Code y Roo Code. GLM-4.5 emplea un modo de inferencia híbrido que se adapta a escenarios de razonamiento complejo y uso cotidiano."
+  },
+  "zai-org/GLM-4.5-Air": {
+    "description": "GLM-4.5-Air es un modelo base diseñado para aplicaciones de agentes inteligentes, utilizando arquitectura Mixture-of-Experts (MoE). Está profundamente optimizado para llamadas a herramientas, navegación web, ingeniería de software y programación frontend, soportando integración fluida con agentes de código como Claude Code y Roo Code. GLM-4.5 emplea un modo de inferencia híbrido que se adapta a escenarios de razonamiento complejo y uso cotidiano."
   }
 }

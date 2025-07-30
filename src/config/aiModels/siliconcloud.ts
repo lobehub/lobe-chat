@@ -4,6 +4,42 @@ import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
 const siliconcloudChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'GLM-4.5 是一款专为智能体应用打造的基础模型，使用了混合专家（Mixture-of-Experts）架构。在工具调用、网页浏览、软件工程、前端编程领域进行了深度优化，支持无缝接入 Claude Code、Roo Code 等代码智能体中使用。GLM-4.5 采用混合推理模式，可以适应复杂推理和日常使用等多种应用场景。',
+    displayName: 'GLM-4.5',
+    id: 'zai-org/GLM-4.5',
+    pricing: {
+      currency: 'CNY',
+      input: 3.5,
+      output: 14,
+    },
+    releasedAt: '2025-07-28',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'GLM-4.5-Air 是一款专为智能体应用打造的基础模型，使用了混合专家（Mixture-of-Experts）架构。在工具调用、网页浏览、软件工程、前端编程领域进行了深度优化，支持无缝接入 Claude Code、Roo Code 等代码智能体中使用。GLM-4.5 采用混合推理模式，可以适应复杂推理和日常使用等多种应用场景。',
+    displayName: 'GLM-4.5-Air',
+    id: 'zai-org/GLM-4.5-Air',
+    pricing: {
+      currency: 'CNY',
+      input: 1,
+      output: 6,
+    },
+    releasedAt: '2025-07-28',
+    type: 'chat',
+  },
+  {
+    abilities: {
       reasoning: true,
     },
     contextWindowTokens: 131_072,
@@ -31,6 +67,34 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       output: 8,
     },
     releasedAt: '2025-06-30',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 131_072,
+    description:
+      'Kimi K2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。',
+    displayName: 'Kimi K2 Instruct',
+    id: 'moonshotai/Kimi-K2-Instruct',
+    pricing: {
+      currency: 'CNY',
+      input: 4,
+      output: 16,
+    },
+    releasedAt: '2025-07-11',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 131_072,
+    description:
+      'Kimi K2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。',
+    displayName: 'Kimi K2 Instruct (Pro)',
+    id: 'Pro/moonshotai/Kimi-K2-Instruct',
+    pricing: {
+      currency: 'CNY',
+      input: 4,
+      output: 16,
+    },
+    releasedAt: '2025-07-11',
     type: 'chat',
   },
   {
@@ -99,6 +163,43 @@ const siliconcloudChatModels: AIChatModelCard[] = [
       output: 4,
     },
     releasedAt: '2025-05-26',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'Qwen3-235B-A22B-Thinking-2507 是由阿里巴巴通义千问团队开发的 Qwen3 系列大型语言模型中的一员，专注于高难度的复杂推理任务。该模型基于混合专家（MoE）架构，总参数量达 2350 亿，而在处理每个 token 时仅激活约 220 亿参数，从而在保持强大性能的同时提高了计算效率。作为一个专门的“思考”模型，它在逻辑推理、数学、科学、编程和学术基准测试等需要人类专业知识的任务上表现显著提升，达到了开源思考模型中的顶尖水平。此外，模型还增强了通用能力，如指令遵循、工具使用和文本生成，并原生支持 256K 的长上下文理解能力，非常适合用于需要深度推理和处理长文档的场景。',
+    displayName: 'Qwen3 235B A22B Thinking 2507',
+    id: 'Qwen/Qwen3-235B-A22B-Thinking-2507',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 2.5,
+      output: 10,
+    },
+    releasedAt: '2025-07-25',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 262_144,
+    description:
+      'Qwen3-235B-A22B-Instruct-2507 是由阿里云通义千问团队开发的 Qwen3 系列中的一款旗舰级混合专家（MoE）大语言模型。该模型拥有 2350 亿总参数，每次推理激活 220 亿参数。它是作为 Qwen3-235B-A22B 非思考模式的更新版本发布的，专注于在指令遵循、逻辑推理、文本理解、数学、科学、编程及工具使用等通用能力上实现显著提升。此外，模型增强了对多语言长尾知识的覆盖，并能更好地对齐用户在主观和开放性任务上的偏好，以生成更有帮助和更高质量的文本。',
+    displayName: 'Qwen3 235B A22B Instruct 2507',
+    id: 'Qwen/Qwen3-235B-A22B-Instruct-2507',
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 2.5,
+      output: 10,
+    },
+    releasedAt: '2025-07-21',
     type: 'chat',
   },
   {
