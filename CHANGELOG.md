@@ -2,6 +2,52 @@
 
 # Changelog
 
+### [Version&nbsp;1.105.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.105.0...v1.105.1)
+<sup>Released on **2025-07-30**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix desktop auth redirect url error, fix mcp calling missing array content, moonshot assistant messages must not be empty.
+
+
+#### 💄 Styles
+
+- **misc**: Add volcengine kimi-k2 model, Add Zhipu GLM-4.5 models, update i18n.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **misc**: Fix desktop auth redirect url error, closes [#8597](https://github.com/jaworldwideorg/OneJA-Bot/issues/8597) ([0ed7368](https://github.com/jaworldwideorg/OneJA-Bot/commit/0ed7368))
+* **misc**: Fix mcp calling missing array content, closes [#8615](https://github.com/jaworldwideorg/OneJA-Bot/issues/8615) ([b7f8e6e](https://github.com/jaworldwideorg/OneJA-Bot/commit/b7f8e6e))
+* **misc**: Moonshot assistant messages must not be empty, closes [#8419](https://github.com/jaworldwideorg/OneJA-Bot/issues/8419) ([a796495](https://github.com/jaworldwideorg/OneJA-Bot/commit/a796495))
+
+
+
+#### Styles
+
+* **misc**: Add volcengine kimi-k2 model, closes [#8591](https://github.com/jaworldwideorg/OneJA-Bot/issues/8591) ([9630167](https://github.com/jaworldwideorg/OneJA-Bot/commit/9630167))
+* **misc**: Add Zhipu GLM-4.5 models, closes [#8590](https://github.com/jaworldwideorg/OneJA-Bot/issues/8590) ([4f4620c](https://github.com/jaworldwideorg/OneJA-Bot/commit/4f4620c))
+* **misc**: Update i18n, closes [#8609](https://github.com/jaworldwideorg/OneJA-Bot/issues/8609) ([21cac39](https://github.com/jaworldwideorg/OneJA-Bot/commit/21cac39))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version&nbsp;1.105.0](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.104.1...v1.105.0)
 <sup>Released on **2025-07-29**</sup>
 
