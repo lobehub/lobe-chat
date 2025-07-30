@@ -25,13 +25,23 @@ interface ClientProps {
 const useStyles = createStyles(({ css, token }) => ({
   authButton: css`
     width: 100%;
-    height: 40px;
+    height: 44px;
     border-radius: ${token.borderRadius}px;
     font-weight: 500;
+
+    @media (max-width: 768px) {
+      height: 48px;
+      font-size: 16px;
+    }
+  `,
+  buttonContainer: css`
+    @media (max-width: 480px) {
+      flex-direction: column;
+    }
   `,
   cancelButton: css`
     width: 100%;
-    height: 40px;
+    height: 44px;
     border-color: ${token.colorBorderSecondary};
     border-radius: ${token.borderRadius}px;
 
@@ -39,14 +49,27 @@ const useStyles = createStyles(({ css, token }) => ({
     color: ${token.colorTextBase};
 
     background-color: transparent;
+
+    @media (max-width: 768px) {
+      height: 48px;
+      font-size: 16px;
+    }
   `,
   card: css`
     width: 100%;
     max-width: 500px;
+    margin-block: 0;
+    margin-inline: 16px;
     border-color: ${token.colorBorderSecondary};
     border-radius: 12px;
 
     background-color: ${token.colorBgContainer};
+
+    @media (max-width: 768px) {
+      margin-block: 0;
+      margin-inline: 12px;
+      border-radius: 8px;
+    }
   `,
   connector: css`
     width: 40px;
@@ -60,8 +83,19 @@ const useStyles = createStyles(({ css, token }) => ({
   container: css`
     width: 100%;
     min-height: 100vh;
+    padding-block: 16px;
+    padding-inline: 0;
+
     color: ${token.colorTextBase};
+
     background-color: ${token.colorBgLayout};
+
+    @media (max-width: 768px) {
+      min-height: 100dvh;
+      margin-block-start: 48px;
+      padding-block: 12px;
+      padding-inline: 0;
+    }
   `,
   icon: css`
     overflow: hidden;
@@ -93,20 +127,37 @@ const useStyles = createStyles(({ css, token }) => ({
 
     background-color: ${token.colorBgElevated};
   `,
+  logoSection: css`
+    @media (max-width: 768px) {
+      gap: 24px;
+    }
+  `,
   scope: css`
     margin-block: 8px;
     padding: 12px;
     border-radius: 6px;
     background: ${token.colorFillQuaternary};
+
+    @media (max-width: 768px) {
+      margin-block: 6px;
+      padding: 10px;
+    }
   `,
+
   scopes: css`
     width: 100%;
   `,
+
   title: css`
     margin-block-end: ${token.marginLG}px;
     font-size: 24px;
     color: ${token.colorTextBase};
     text-align: center;
+
+    @media (max-width: 768px) {
+      margin-block-end: ${token.marginMD}px;
+      font-size: 20px;
+    }
   `,
 }));
 
@@ -127,7 +178,7 @@ const ConsentClient = memo<ClientProps>(
     const clientDisplayName = clientMetadata?.clientName || clientId;
     return (
       <Center className={styles.container} gap={16}>
-        <Flexbox gap={40}>
+        <Flexbox className={styles.logoSection} gap={40}>
           <OAuthApplicationLogo
             clientDisplayName={clientDisplayName}
             isFirstParty={clientMetadata.isFirstParty}
@@ -155,7 +206,7 @@ const ConsentClient = memo<ClientProps>(
               <Flexbox gap={16}>
                 <form action="/oidc/consent" method="post" style={{ width: '100%' }}>
                   <input name="uid" type="hidden" value={uid} />
-                  <Flexbox gap={12} horizontal>
+                  <Flexbox className={styles.buttonContainer} gap={12} horizontal>
                     <Button
                       className={styles.cancelButton}
                       htmlType="submit"
