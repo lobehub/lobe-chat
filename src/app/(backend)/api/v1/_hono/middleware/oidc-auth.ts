@@ -4,7 +4,7 @@ import { HTTPException } from 'hono/http-exception';
 
 import { LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import { oidcEnv } from '@/envs/oidc';
-import { OIDCService } from '@/server/services/oidc';
+import { validateOIDCJWT } from '@/libs/oidc-provider/jwt';
 import { extractBearerToken } from '@/utils/server/auth';
 
 // Create context logger namespace
@@ -46,8 +46,8 @@ export const userAuthMiddleware = async (c: Context, next: Next) => {
     log('Attempting OIDC authentication with Bearer token');
 
     try {
-      const oidcService = await OIDCService.initialize();
-      const tokenInfo = await oidcService.validateToken(bearerToken);
+      // Use direct JWT validation instead of OIDCService
+      const tokenInfo = await validateOIDCJWT(bearerToken);
 
       userId = tokenInfo.userId;
       authType = 'oidc';
