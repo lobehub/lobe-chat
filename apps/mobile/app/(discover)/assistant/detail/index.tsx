@@ -6,15 +6,15 @@ import { BotMessageSquare } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useSWR from 'swr';
 
-import { AssistantService } from '@/mobile/services/assistant';
-import { useSessionStore } from '@/mobile/store/session';
-import { LobeAgentSession, LobeSessionType } from '@/mobile/types/session';
+import { AssistantService } from '@/services/assistant';
+import { useSessionStore } from '@/store/session';
+import { LobeAgentSession, LobeSessionType } from '@/types/session';
 import DetailHeader from './components/Header';
 import SkeletonDetail from './components/SkeletonDetail';
-import { Tag, Button, Markdown } from '@/mobile/components';
+import { Tag, Button, Markdown } from '@/components';
 import { useStyles } from './styles';
-import { ICON_SIZE } from '@/mobile/const/common';
-import { DEFAULT_MODEL } from '@/mobile/const/settings';
+import { ICON_SIZE } from '@/const/common';
+import { DEFAULT_MODEL } from '@/const/settings';
 
 const ASSISTANT_DETAIL_KEY = 'discover-assistant-detail';
 
@@ -66,7 +66,7 @@ const AssistantDetail = () => {
       // 导航到会话页面
       router.replace({
         params: { id: newSession.id },
-        pathname: '/(chat)/chat',
+        pathname: '/chat',
       });
     } catch (err) {
       console.error(t('assistant.detail.addFailed', { ns: 'discover' }), err);

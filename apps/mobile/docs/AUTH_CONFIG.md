@@ -15,7 +15,7 @@
 认证配置通过 `getAuthConfig()` 函数获取，该函数会根据当前环境返回相应的配置：
 
 ```typescript
-import { getAuthConfig } from '@/mobile/config/auth';
+import { getAuthConfig } from '@/config/auth';
 
 // 获取当前环境的认证配置
 const config = getAuthConfig();
@@ -88,7 +88,7 @@ export const getAuthConfig = (): AuthConfig => {
 #### 在服务中使用：
 
 ```typescript
-import { authenticatedFetch } from '@/mobile/services/auth/interceptor';
+import { authenticatedFetch } from '@/services/auth/interceptor';
 
 const fetchUserData = async () => {
   // 自动使用配置的认证信息
@@ -100,8 +100,8 @@ const fetchUserData = async () => {
 #### 手动创建认证服务：
 
 ```typescript
-import { OAuthService } from '@/mobile/services/auth/authService';
-import { getAuthConfig } from '@/mobile/config/auth';
+import { OAuthService } from '@/services/auth/authService';
+import { getAuthConfig } from '@/config/auth';
 
 const authService = new OAuthService(getAuthConfig());
 

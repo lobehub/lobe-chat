@@ -134,9 +134,9 @@ const backgroundColor = dark ? colors.background : '#fff';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-// Internal imports (use @/mobile/ prefix)
-import { Component } from '@/mobile/components/Component';
-import { useStore } from '@/mobile/store/store';
+// Internal imports (use @/ prefix)
+import { Component } from '@/components/Component';
+import { useStore } from '@/store/store';
 ```
 
 ## Troubleshooting

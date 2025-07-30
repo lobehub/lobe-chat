@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 
-import { ListItem } from '@/mobile/components';
-import { useSessionStore } from '@/mobile/store/session';
-import { sessionMetaSelectors, sessionSelectors } from '@/mobile/store/session/selectors';
-import { useGlobalStore } from '@/mobile/store/global';
+import { ListItem } from '@/components';
+import { useSessionStore } from '@/store/session';
+import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { useGlobalStore } from '@/store/global';
 
 interface SessionItemProps {
   id: string;

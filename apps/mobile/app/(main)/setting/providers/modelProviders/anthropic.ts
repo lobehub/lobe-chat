@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/mobile/types/llm';
+import { ModelProviderCard } from '@/types/llm';
 
 // ref: https://docs.anthropic.com/en/docs/about-claude/models#model-names
 const Anthropic: ModelProviderCard = {

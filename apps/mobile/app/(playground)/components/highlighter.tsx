@@ -5,8 +5,8 @@ import {
   CompactHighlighterDemo,
   FullFeaturedHighlighterDemo,
   LanguagesHighlighterDemo,
-} from '@/mobile/components/Highlighter/demos';
-import ComponentPlayground, { DemoItem } from '@/mobile/app/(playground)/Playground';
+} from '@/components/Highlighter/demos';
+import ComponentPlayground, { DemoItem } from '../Playground';
 
 const HIGHLIGHTER_README = `# Highlighter 组件
 
@@ -28,7 +28,7 @@ const HIGHLIGHTER_README = `# Highlighter 组件
 ## 快速开始
 
 \`\`\`tsx
-import Highlighter from '@/mobile/components/Highlighter';
+import Highlighter from '@/components/Highlighter';
 
 // 基础用法
 <Highlighter 

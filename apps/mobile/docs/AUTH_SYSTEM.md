@@ -61,7 +61,7 @@ EXPO_PUBLIC_OAUTH_REDIRECT_URI=lobe-chat-mobile://auth/callback
 #### 保护需要认证的路由
 
 ```typescript
-import AuthGuard from '@/mobile/components/auth/AuthGuard';
+import AuthGuard from '@/components/auth/AuthGuard';
 
 const ProtectedScreen = () => {
   return (
@@ -75,7 +75,7 @@ const ProtectedScreen = () => {
 #### 使用认证的 API 请求
 
 ```typescript
-import { authenticatedFetch } from '@/mobile/services/auth/interceptor';
+import { authenticatedFetch } from '@/services/auth/interceptor';
 
 const fetchUserData = async () => {
   const response = await authenticatedFetch('/api/user');
@@ -88,7 +88,7 @@ const fetchUserData = async () => {
 #### 登录页面
 
 ```typescript
-import LoginScreen from '@/mobile/components/auth/LoginScreen';
+import LoginScreen from '@/components/auth/LoginScreen';
 
 const LoginPage = () => {
   return <LoginScreen />;
@@ -98,7 +98,7 @@ const LoginPage = () => {
 #### 用户信息展示
 
 ```typescript
-import UserProfile from '@/mobile/components/auth/UserProfile';
+import UserProfile from '@/components/auth/UserProfile';
 
 const ProfilePage = () => {
   return <UserProfile />;
@@ -110,7 +110,7 @@ const ProfilePage = () => {
 #### 手动刷新令牌
 
 ```typescript
-import { tokenRefreshManager } from '@/mobile/services/auth/tokenRefresh';
+import { tokenRefreshManager } from '@/services/auth/tokenRefresh';
 
 const refreshToken = async () => {
   await tokenRefreshManager.refreshTokenManually();
@@ -120,7 +120,7 @@ const refreshToken = async () => {
 #### 检查令牌状态
 
 ```typescript
-import { TokenStorage } from '@/mobile/services/auth/tokenStorage';
+import { TokenStorage } from '@/services/auth/tokenStorage';
 
 const checkTokenStatus = async () => {
   const hasValidToken = await TokenStorage.hasValidToken();
@@ -132,7 +132,7 @@ const checkTokenStatus = async () => {
 #### 带认证的函数装饰器
 
 ```typescript
-import { withAuth } from '@/mobile/services/auth/interceptor';
+import { withAuth } from '@/services/auth/interceptor';
 
 const protectedFunction = withAuth(async (param: string) => {
   // 这个函数会自动检查认证状态
@@ -219,7 +219,7 @@ const protectedFunction = withAuth(async (param: string) => {
 可以通过继承 `OAuthService` 类来实现自定义认证流程：
 
 ```typescript
-import { OAuthService } from '@/mobile/services/auth/authService';
+import { OAuthService } from '@/services/auth/authService';
 
 class CustomAuthService extends OAuthService {
   async customLogin() {

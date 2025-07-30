@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, Alert, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { useAuth, useAuthActions } from '@/mobile/store/user';
-import Button from '@/mobile/components/Button';
+import { useAuth, useAuthActions } from '@/store/user';
+import Button from '@/components/Button';
 import { Link, useRouter } from 'expo-router';
 import { useStyles } from './styles';
 
@@ -32,7 +32,12 @@ const LoginPage = () => {
       <View style={styles.content}>
         {/* Logo 和标题 */}
         <View style={styles.welcome}>
-          <Image source={require('@/mobile/assets/images/logo.png')} style={styles.logo} />
+          <Image
+            source={{
+              uri: 'https://hub-apac-1.lobeobjects.space/docs/73f69adfa1b802a0e250f6ff9d62f70b.png',
+            }}
+            style={styles.logo}
+          />
           <Text style={styles.title}>LobeChat</Text>
           <Text style={styles.subtitle}>{t('login.subtitle', { ns: 'auth' })}</Text>
         </View>

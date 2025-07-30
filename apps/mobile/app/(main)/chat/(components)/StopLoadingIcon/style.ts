@@ -1,4 +1,4 @@
-import { createStyles } from '@/mobile/theme/createStyles';
+import { createStyles } from '@/theme/createStyles';
 
 export const useStyles = createStyles((_, size: number) => ({
   rotatingContainer: {

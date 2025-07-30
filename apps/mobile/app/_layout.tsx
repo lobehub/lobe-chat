@@ -4,15 +4,15 @@ import { Slot, Stack, useRouter } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect, useRef, useState, PropsWithChildren } from 'react';
 
-import { ToastProvider } from '@/mobile/components';
-import '@/mobile/i18n';
-import { useAuth, useUserStore } from '@/mobile/store/user';
-import { ThemeProvider } from '@/mobile/theme';
-import { authLogger } from '@/mobile/utils/logger';
-import { tokenRefreshManager } from '@/mobile/services/_auth/tokenRefresh';
+import { ToastProvider } from '@/components';
+import '@/i18n';
+import { useAuth, useUserStore } from '@/store/user';
+import { ThemeProvider } from '@/theme';
+import { authLogger } from '@/utils/logger';
+import { tokenRefreshManager } from '@/services/_auth/tokenRefresh';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { lambdaQuery, lambdaQueryClient } from '@/mobile/services/_auth/trpc';
+import { lambdaQuery, lambdaQueryClient } from '@/services/_auth/trpc';
 
 import '../polyfills';
 

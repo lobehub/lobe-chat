@@ -1,7 +1,7 @@
 import React from 'react';
 
-import ComponentPlayground, { DemoItem } from '@/mobile/app/(playground)/Playground';
-import { BasicDemo, SizesDemo, StatesDemo, BlockDemo } from '@/mobile/components/Button/demos';
+import ComponentPlayground, { DemoItem } from '../Playground';
+import { BasicDemo, SizesDemo, StatesDemo, BlockDemo } from '@/components/Button/demos';
 
 const BUTTON_README = `# Button 按钮组件
 
@@ -20,7 +20,7 @@ React Native版本的按钮组件，参考Ant Design设计，支持多种类型�
 ## 基础使用
 
 \`\`\`tsx
-import Button from '@/mobile/components/Button';
+import Button from '@/components/Button';
 
 // 基础用法
 <Button onPress={() => console.log('clicked')}>
