@@ -4,7 +4,6 @@
   "version": "1.0.0",
   "scripts": {
     "prebuild": "expo prebuild",
-    "reset-project": "node ./scripts/reset-project.js",
     "test": "jest --watchAll",
     "lint": "expo lint",
     "lint:fix": "eslint . --fix",
