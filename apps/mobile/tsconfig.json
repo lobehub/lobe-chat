@@ -1,0 +1,14 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "strict": true,
+    "module": "esnext",
+    "paths": {
+      // incase mixed with parent app
+      "@/mobile/*": ["./*"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "global.d.ts"],
+  "exclude": ["node_modules", "babel.config.ts", "metro.config.ts", "app.config.ts", "scripts/**"]
+}

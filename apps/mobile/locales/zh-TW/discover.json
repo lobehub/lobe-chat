@@ -1,0 +1,34 @@
+{
+  "assistant": {
+    "detail": {
+      "addAndChat": "新增助理並對話",
+      "addFailed": "新增助理失敗",
+      "addFailedMessage": "新增助理失敗，請稍後再試",
+      "assistantSettings": "助理設定",
+      "loadFailed": "取得助理詳情失敗，請稍後再試",
+      "notFoundIdentifier": "未找到助理識別碼",
+      "share": "分享",
+      "shareFailed": "分享失敗"
+    }
+  },
+  "category": {
+    "assistant": {
+      "academic": "學術",
+      "all": "全部",
+      "career": "職業",
+      "copywriting": "文案",
+      "design": "設計",
+      "education": "教育",
+      "emotions": "情感",
+      "entertainment": "娛樂",
+      "games": "遊戲",
+      "general": "通用",
+      "life": "生活",
+      "marketing": "商業",
+      "office": "辦公",
+      "programming": "程式設計",
+      "translation": "翻譯"
+    }
+  },
+  "title": "發現"
+}

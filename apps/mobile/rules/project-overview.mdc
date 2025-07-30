@@ -1,0 +1,45 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Lobe Chat React Native - Project Overview
+
+This is a React Native chat application built with Expo Router, featuring AI-powered conversations and modern UI components.
+
+## Core Architecture
+
+### Entry Points
+- Main app entry: [app/_layout.tsx](mdc:app/_layout.tsx) - Root layout with providers
+- App router: [app/index.tsx](mdc:app/index.tsx) - Main routing logic
+- Package config: [package.json](mdc:package.json) - Dependencies and scripts
+
+### Key Technologies
+- **Expo Router**: File-based routing system
+- **Zustand**: State management with persistence
+- **React Native Markdown**: Rich text rendering
+- **Shiki**: Syntax highlighting for code blocks
+- **MathJax**: Mathematical formula rendering
+
+### State Management
+- OpenAI config: [store/openai.ts](mdc:store/openai.ts) - API key and proxy settings
+- Session management: [store/session/](mdc:store/session) - Chat sessions and groups
+- Chat state: [store/chat/](mdc:store/chat) - Active chat functionality
+
+### Type Definitions
+- Session types: [types/session.ts](mdc:types/session.ts) - Chat session interfaces
+- Agent types: [types/agent.ts](mdc:types/agent.ts) - AI agent configurations
+- Message types: [types/message.ts](mdc:types/message.ts) - Chat message structures
+- Component types: [types/component.ts](mdc:types/component.ts) - UI component interfaces
+
+### Constants and Configuration
+- Session constants: [const/session.ts](mdc:const/session.ts) - Default session configurations
+- Settings: [const/settings/](mdc:const/settings) - App configuration options
+- Branding: [const/branding.ts](mdc:const/branding.ts) - App branding constants
+
+## Development Guidelines
+- Use pnpm as the package manager
+- Follow existing code patterns and component styles
+- Maintain TypeScript strict typing
+- Use Expo Router for navigation
+- Implement proper error handling and loading states

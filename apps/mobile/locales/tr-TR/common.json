@@ -1,0 +1,34 @@
+{
+  "actions": {
+    "add": "Ekle",
+    "cancel": "İptal",
+    "confirm": "Onayla",
+    "continue": "Devam Et",
+    "copy": "Kopyala",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "retry": "Tekrar Dene",
+    "save": "Kaydet"
+  },
+  "and": "ve",
+  "assistant": {
+    "fetchError": "Asistan listesi alınamadı, lütfen daha sonra tekrar deneyin",
+    "noData": "Henüz asistan verisi yok",
+    "noMatch": "Eşleşen asistan bulunamadı",
+    "search": "Asistan ara..."
+  },
+  "navigation": {
+    "goToHomeScreen": "Ana sayfaya dön"
+  },
+  "or": "veya",
+  "search": {
+    "placeholder": "Ara"
+  },
+  "status": {
+    "error": "Hata",
+    "info": "Bilgi",
+    "loading": "Yükleniyor...",
+    "success": "Başarılı",
+    "warning": "Uyarı"
+  }
+}
