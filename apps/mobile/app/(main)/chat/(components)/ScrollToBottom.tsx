@@ -1,8 +1,8 @@
 import { ArrowDown } from 'lucide-react-native';
 import { TouchableOpacity, View } from 'react-native';
 
-import { ICON_SIZE } from '@/mobile/const/common';
-import { createStyles } from '@/mobile/theme';
+import { ICON_SIZE } from '@/const/common';
+import { createStyles } from '@/theme';
 
 interface ScrollToBottomProps {
   onPress: () => void;

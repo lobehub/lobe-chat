@@ -1,12 +1,7 @@
 import React from 'react';
 
-import ComponentPlayground, { DemoItem } from '@/mobile/app/(playground)/Playground';
-import {
-  AdvancedDemo,
-  BasicDemo,
-  PositionDemo,
-  TriggerDemo,
-} from '@/mobile/components/Tooltip/demos';
+import ComponentPlayground, { DemoItem } from '../Playground';
+import { AdvancedDemo, BasicDemo, PositionDemo, TriggerDemo } from '@/components/Tooltip/demos';
 
 const TOOLTIP_README = `# Tooltip 组件
 
@@ -26,7 +21,7 @@ const TOOLTIP_README = `# Tooltip 组件
 ## 基础使用
 
 \`\`\`tsx
-import { Tooltip } from '@/mobile/components/Tooltip';
+import { Tooltip } from '@/components/Tooltip';
 
 // 基础用法
 <Tooltip title="这是一个提示信息">

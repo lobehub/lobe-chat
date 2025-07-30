@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/mobile/types/llm';
+import { ModelProviderCard } from '@/types/llm';
 
 // ref: https://novita.ai/model-api/product/llm-api
 const Novita: ModelProviderCard = {
