@@ -1,0 +1,34 @@
+{
+  "assistant": {
+    "detail": {
+      "addAndChat": "Добавяне на асистент и чат",
+      "addFailed": "Неуспешно добавяне на асистент",
+      "addFailedMessage": "Неуспешно добавяне на асистент, моля опитайте по-късно",
+      "assistantSettings": "Настройки на асистента",
+      "loadFailed": "Неуспешно зареждане на детайли за асистента, моля опитайте по-късно",
+      "notFoundIdentifier": "Идентификаторът на асистента не е намерен",
+      "share": "Споделяне",
+      "shareFailed": "Неуспешно споделяне"
+    }
+  },
+  "category": {
+    "assistant": {
+      "academic": "Академичен",
+      "all": "Всички",
+      "career": "Кариера",
+      "copywriting": "Копирайтинг",
+      "design": "Дизайн",
+      "education": "Образование",
+      "emotions": "Емоции",
+      "entertainment": "Развлечение",
+      "games": "Игри",
+      "general": "Общо",
+      "life": "Живот",
+      "marketing": "Бизнес",
+      "office": "Офис",
+      "programming": "Програмиране",
+      "translation": "Превод"
+    }
+  },
+  "title": "Открийте"
+}

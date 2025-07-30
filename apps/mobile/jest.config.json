@@ -1,0 +1,26 @@
+{
+  "testEnvironment": "jsdom",
+  "moduleFileExtensions": ["ts", "tsx", "js", "jsx"],
+  "transform": {
+    "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
+  },
+  "testMatch": ["**/__tests__/**/*.(ts|tsx|js)", "**/*.(test|spec).(ts|tsx|js)"],
+  "moduleNameMapper": {
+    "^@/mobile/(.*)$": "<rootDir>/$1",
+    "^react-native$": "react-native-web"
+  },
+  "transformIgnorePatterns": [
+    "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg)"
+  ],
+  "setupFiles": ["<rootDir>/test/jest.setup.js"],
+  "setupFilesAfterEnv": ["<rootDir>/test/jest.setupAfterEnv.js"],
+  "collectCoverage": true,
+  "collectCoverageFrom": [
+    "**/*.{ts,tsx,js,jsx}",
+    "!**/coverage/**",
+    "!**/node_modules/**",
+    "!**/babel.config.js",
+    "!**/expo-env.d.ts",
+    "!**/.expo/**"
+  ]
+}

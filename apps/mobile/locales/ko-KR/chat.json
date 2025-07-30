@@ -1,0 +1,22 @@
+{
+  "confirmDelete": "삭제 확인",
+  "copyFailed": "복사 실패",
+  "deleteMessageConfirm": "이 메시지를 삭제하시겠습니까?",
+  "history": "대화 기록",
+  "messageCopied": "메시지가 복사되었습니다",
+  "newChat": "새 대화",
+  "placeholder": "메시지를 입력하세요...",
+  "regenerateFailed": "재생성 실패, 나중에 다시 시도하세요",
+  "send": "전송",
+  "session": {
+    "createFirst": "첫 번째 채팅 세션을 생성하세요",
+    "empty": "세션이 없습니다",
+    "search": {
+      "placeholder": "세션 검색"
+    },
+    "title": "편하게 대화하기"
+  },
+  "share": "공유",
+  "stop": "중지",
+  "thinking": "생각 중..."
+}

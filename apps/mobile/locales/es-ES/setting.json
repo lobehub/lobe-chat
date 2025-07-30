@@ -1,0 +1,53 @@
+{
+  "about": "Acerca de LobeHub",
+  "account": {
+    "profile": {
+      "email": "Correo electrónico",
+      "name": "Nombre de usuario",
+      "status": "Estado de la cuenta",
+      "unverified": "No verificado",
+      "verified": "Verificado"
+    },
+    "signOut": {
+      "confirm": "¿Está seguro de que desea cerrar sesión?",
+      "label": "Cerrar sesión"
+    },
+    "title": "Configuración de la cuenta"
+  },
+  "changelog": "Registro de cambios",
+  "feedback": "Comentarios",
+  "help": "Ayuda",
+  "locale": {
+    "auto": {
+      "description": "Seguir la configuración de idioma del sistema",
+      "title": "Seguir sistema"
+    },
+    "title": "Configuración de idioma"
+  },
+  "openai": "Configuración de OpenAI",
+  "openaiSettings": {
+    "apiKey": "Clave API",
+    "apiKeyPlaceholder": "Por favor, introduzca su clave API de OpenAI",
+    "checkApiKey": "Por favor, verifique que la clave API es correcta",
+    "checkProxyAddress": "No se puede conectar al servidor, por favor verifique que la dirección del proxy es correcta",
+    "connectionSuccess": "Conexión exitosa, la clave API y la dirección del proxy están configuradas correctamente",
+    "connectivityHint": "Después de probar la conectividad, se verificará si la clave API y la dirección del proxy están correctamente configuradas",
+    "pleaseEnterApiKey": "Por favor, introduzca la clave API",
+    "proxyAddress": "Dirección del proxy API",
+    "proxyPlaceholder": "Debe incluir http(s)://",
+    "testConnectivity": "Probar conectividad",
+    "validationFailed": "Validación fallida",
+    "validationSuccess": "Validación exitosa"
+  },
+  "providers": "Proveedores de IA",
+  "support": "Soporte por correo electrónico",
+  "theme": {
+    "auto": "Seguir sistema",
+    "dark": "Modo oscuro",
+    "light": "Modo claro",
+    "sectionDescription": "Elija el estilo de tema que prefiera y haga clic para cambiar su selección",
+    "sectionTitle": "Tema",
+    "title": "Configuración de tema"
+  },
+  "title": "Configuración"
+}

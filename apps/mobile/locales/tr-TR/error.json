@@ -1,0 +1,17 @@
+{
+  "error": {
+    "title": "Hata Oluştu"
+  },
+  "http": {
+    "forbidden": "Erişim Engellendi",
+    "networkError": "Ağ Hatası",
+    "notFound": "Bulunamadı",
+    "serverError": "Sunucu Hatası",
+    "timeout": "İstek Zaman Aşımına Uğradı",
+    "unauthorized": "Yetkisiz"
+  },
+  "page": {
+    "notFoundMessage": "Bu sayfa mevcut değil.",
+    "notFoundTitle": "Ayy!"
+  }
+}

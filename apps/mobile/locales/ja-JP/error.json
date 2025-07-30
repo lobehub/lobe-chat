@@ -1,0 +1,17 @@
+{
+  "error": {
+    "title": "エラーが発生しました"
+  },
+  "http": {
+    "forbidden": "アクセス禁止",
+    "networkError": "ネットワークエラー",
+    "notFound": "見つかりません",
+    "serverError": "サーバーエラー",
+    "timeout": "リクエストタイムアウト",
+    "unauthorized": "認証されていません"
+  },
+  "page": {
+    "notFoundMessage": "このページは存在しません。",
+    "notFoundTitle": "おっと！"
+  }
+}

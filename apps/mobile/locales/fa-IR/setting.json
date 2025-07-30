@@ -1,0 +1,53 @@
+{
+  "about": "درباره LobeHub",
+  "account": {
+    "profile": {
+      "email": "ایمیل",
+      "name": "نام کاربری",
+      "status": "وضعیت حساب",
+      "unverified": "تأیید نشده",
+      "verified": "تأیید شده"
+    },
+    "signOut": {
+      "confirm": "آیا مطمئن هستید که می‌خواهید خارج شوید؟",
+      "label": "خروج از حساب"
+    },
+    "title": "تنظیمات حساب کاربری"
+  },
+  "changelog": "لیست تغییرات",
+  "feedback": "بازخورد",
+  "help": "راهنما",
+  "locale": {
+    "auto": {
+      "description": "پیروی از تنظیمات زبان سیستم",
+      "title": "پیروی از سیستم"
+    },
+    "title": "تنظیمات زبان"
+  },
+  "openai": "تنظیمات OpenAI",
+  "openaiSettings": {
+    "apiKey": "کلید API",
+    "apiKeyPlaceholder": "کلید API OpenAI خود را وارد کنید",
+    "checkApiKey": "لطفاً کلید API را بررسی کنید",
+    "checkProxyAddress": "امکان اتصال به سرور وجود ندارد، لطفاً آدرس پراکسی را بررسی کنید",
+    "connectionSuccess": "اتصال موفق، کلید API و آدرس پراکسی به درستی تنظیم شده‌اند",
+    "connectivityHint": "پس از آزمایش اتصال، کلید API و آدرس پراکسی بررسی خواهند شد",
+    "pleaseEnterApiKey": "لطفاً کلید API را وارد کنید",
+    "proxyAddress": "آدرس پراکسی API",
+    "proxyPlaceholder": "باید شامل http(s):// باشد",
+    "testConnectivity": "آزمایش اتصال",
+    "validationFailed": "اعتبارسنجی ناموفق بود",
+    "validationSuccess": "اعتبارسنجی موفق بود"
+  },
+  "providers": "ارائه‌دهندگان خدمات هوش مصنوعی",
+  "support": "پشتیبانی ایمیلی",
+  "theme": {
+    "auto": "پیروی از سیستم",
+    "dark": "حالت تاریک",
+    "light": "حالت روشن",
+    "sectionDescription": "سبک تم مورد علاقه خود را انتخاب کنید و برای تغییر روی آن کلیک کنید",
+    "sectionTitle": "تم",
+    "title": "تنظیمات تم"
+  },
+  "title": "تنظیمات"
+}

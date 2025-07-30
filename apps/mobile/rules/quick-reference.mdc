@@ -1,0 +1,160 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Quick Reference Guide
+
+## Essential Commands
+```bash
+pnpm start          # Start development server
+pnpm ios            # Run on iOS
+pnpm android        # Run on Android
+pnpm web            # Run in browser
+pnpm test           # Run tests
+pnpm lint           # Lint code
+pnpm i18n           # Generate translations
+```
+
+## Internationalization (i18n)
+
+### Quick Setup
+```typescript
+import { useTranslation } from 'react-i18next';
+const { t } = useTranslation();
+
+// Usage
+<Text>{t('chat.history')}</Text>
+<Text>{t('settings.theme.title')}</Text>
+```
+
+### Key Files
+- `i18n/default/common.ts` - Add new translations here
+- `locales/*/common.json` - Generated translations
+- `pnpm run i18n` - Generate all languages
+
+### Common Keys
+```typescript
+// Chat
+t('chat.history')           // 对话历史
+t('chat.copy')              // 复制
+t('chat.delete')            // 删除
+
+// Settings
+t('settings.theme.title')   // 主题设置
+t('settings.locale.title')  // 语言设置
+
+// Common
+t('common.cancel')          // 取消
+t('common.confirm')         // 确认
+t('common.save')            // 保存
+```
+
+See [internationalization.mdc](mdc:.cursor/rules/internationalization.mdc) for full guidelines.
+
+## Key Files to Know
+
+### Entry Points
+- [app/_layout.tsx](mdc:app/_layout.tsx) - Root layout with providers
+- [app/index.tsx](mdc:app/index.tsx) - Main routing logic
+- [package.json](mdc:package.json) - Dependencies and scripts
+
+### State Management
+- [store/openai.ts](mdc:store/openai.ts) - OpenAI configuration
+- [store/session/index.ts](mdc:store/session/index.ts) - Session management
+- [store/chat/index.ts](mdc:store/chat/index.ts) - Chat state
+
+### Type Definitions
+- [types/session.ts](mdc:types/session.ts) - Session interfaces
+- [types/agent.ts](mdc:types/agent.ts) - Agent configurations
+- [types/message.ts](mdc:types/message.ts) - Message structures
+
+### Core Components
+- [components/Markdown/index.tsx](mdc:components/Markdown/index.tsx) - Markdown renderer
+- [components/Highlighter/index.tsx](mdc:components/Highlighter/index.tsx) - Code highlighting
+- [components/Toast/index.ts](mdc:components/Toast/index.ts) - Toast system
+
+## Common Patterns
+
+### Component Structure
+```typescript
+interface ComponentProps {
+  // Props definition
+}
+
+const Component: React.FC<ComponentProps> = ({ prop1, prop2 }) => {
+  const { t } = useTranslation();
+  const { colors, dark } = useTheme();
+  
+  const styles = StyleSheet.create({
+    // Styles
+  });
+  
+  return (
+    <View style={styles.container}>
+      <Text>{t('component.title')}</Text>
+    </View>
+  );
+};
+```
+
+### Store Usage
+```typescript
+const { data, setData } = useStore();
+const derivedData = useStore(selector);
+```
+
+### Theme Integration
+```typescript
+const { colors, dark } = useTheme();
+const backgroundColor = dark ? colors.background : '#fff';
+```
+
+## Development Rules
+
+### Code Style
+- Use pnpm for package management
+- Follow existing component patterns
+- Don't change styles without reason
+- Use TypeScript strict mode
+- Implement proper error handling
+- **Always use translation keys for user-facing text**
+
+### File Organization
+- Components in `components/` directory
+- Types in `types/` directory
+- Constants in `const/` directory
+- Utilities in `utils/` directory
+- Store logic in `store/` directory
+- Translations in `i18n/default/common.ts`
+
+### Import Patterns
+```typescript
+// React imports
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+
+// Internal imports (use @/mobile/ prefix)
+import { Component } from '@/mobile/components/Component';
+import { useStore } from '@/mobile/store/store';
+```
+
+## Troubleshooting
+
+### Common Issues
+1. **Metro bundler issues**: Clear cache with `pnpm start --clear`
+2. **TypeScript errors**: Check [tsconfig.json](mdc:tsconfig.json) configuration
+3. **Theme issues**: Verify [constants/Colors.ts](mdc:constants/Colors.ts) setup
+4. **API errors**: Check [store/openai.ts](mdc:store/openai.ts) configuration
+5. **Translation issues**: Run `pnpm run i18n` to regenerate translations
+
+### Debug Tools
+- [app/(playground)/](mdc:app/(playground)/) - Component testing playground
+- React Native Debugger for debugging
+- Expo DevTools for development
+
+## Performance Tips
+- Use `useMemo` and `useCallback` for expensive operations
+- Implement proper list virtualization for large lists
+- Use selectors to prevent unnecessary re-renders
+- Optimize images and assets

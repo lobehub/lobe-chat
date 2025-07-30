@@ -1,0 +1,34 @@
+{
+  "actions": {
+    "add": "新增",
+    "cancel": "取消",
+    "confirm": "確認",
+    "continue": "繼續",
+    "copy": "複製",
+    "delete": "刪除",
+    "edit": "編輯",
+    "retry": "重試",
+    "save": "儲存"
+  },
+  "and": "和",
+  "assistant": {
+    "fetchError": "取得助理列表失敗，請稍後再試",
+    "noData": "暫無助理資料",
+    "noMatch": "未找到符合條件的助理",
+    "search": "搜尋助理..."
+  },
+  "navigation": {
+    "goToHomeScreen": "返回首頁"
+  },
+  "or": "或是",
+  "search": {
+    "placeholder": "搜尋"
+  },
+  "status": {
+    "error": "錯誤",
+    "info": "資訊",
+    "loading": "載入中...",
+    "success": "成功",
+    "warning": "警告"
+  }
+}

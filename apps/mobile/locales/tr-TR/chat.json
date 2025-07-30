@@ -1,0 +1,22 @@
+{
+  "confirmDelete": "Silme işlemini onayla",
+  "copyFailed": "Kopyalama başarısız oldu",
+  "deleteMessageConfirm": "Bu mesajı silmek istediğinizden emin misiniz?",
+  "history": "Sohbet geçmişi",
+  "messageCopied": "Mesaj kopyalandı",
+  "newChat": "Yeni sohbet",
+  "placeholder": "Mesajınızı yazın...",
+  "regenerateFailed": "Yeniden oluşturma başarısız oldu, lütfen daha sonra tekrar deneyin",
+  "send": "Gönder",
+  "session": {
+    "createFirst": "İlk sohbet oturumunuzu oluşturun",
+    "empty": "Henüz oturum yok",
+    "search": {
+      "placeholder": "Oturumları ara"
+    },
+    "title": "Rastgele sohbet"
+  },
+  "share": "Paylaş",
+  "stop": "Durdur",
+  "thinking": "Düşünüyor..."
+}

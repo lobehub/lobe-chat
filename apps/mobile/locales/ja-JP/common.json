@@ -1,0 +1,34 @@
+{
+  "actions": {
+    "add": "追加",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "continue": "続行",
+    "copy": "コピー",
+    "delete": "削除",
+    "edit": "編集",
+    "retry": "再試行",
+    "save": "保存"
+  },
+  "and": "と",
+  "assistant": {
+    "fetchError": "アシスタントリストの取得に失敗しました。後でもう一度お試しください。",
+    "noData": "アシスタントデータがありません。",
+    "noMatch": "一致するアシスタントが見つかりません。",
+    "search": "アシスタントを検索..."
+  },
+  "navigation": {
+    "goToHomeScreen": "ホーム画面に戻る"
+  },
+  "or": "または",
+  "search": {
+    "placeholder": "検索"
+  },
+  "status": {
+    "error": "エラー",
+    "info": "情報",
+    "loading": "読み込み中...",
+    "success": "成功",
+    "warning": "警告"
+  }
+}

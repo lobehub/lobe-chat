@@ -1,0 +1,34 @@
+{
+  "assistant": {
+    "detail": {
+      "addAndChat": "إضافة المساعد والدردشة",
+      "addFailed": "فشل في إضافة المساعد",
+      "addFailedMessage": "فشل في إضافة المساعد، يرجى المحاولة مرة أخرى لاحقًا",
+      "assistantSettings": "إعدادات المساعد",
+      "loadFailed": "فشل في جلب تفاصيل المساعد، يرجى المحاولة مرة أخرى لاحقًا",
+      "notFoundIdentifier": "لم يتم العثور على معرف المساعد",
+      "share": "مشاركة",
+      "shareFailed": "فشل في المشاركة"
+    }
+  },
+  "category": {
+    "assistant": {
+      "academic": "أكاديمي",
+      "all": "الكل",
+      "career": "المهنة",
+      "copywriting": "كتابة الإعلانات",
+      "design": "تصميم",
+      "education": "تعليم",
+      "emotions": "العواطف",
+      "entertainment": "ترفيه",
+      "games": "ألعاب",
+      "general": "عام",
+      "life": "الحياة",
+      "marketing": "تسويق",
+      "office": "مكتب",
+      "programming": "برمجة",
+      "translation": "ترجمة"
+    }
+  },
+  "title": "اكتشف"
+}
