@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { ScrollView } from 'react-native';
 
-import { ListGroup } from '@/mobile/components';
-import { useLocale } from '@/mobile/hooks/useLocale';
-import { version } from '@/mobile/package.json';
-import { useTheme as useAppTheme } from '@/mobile/theme';
+import { ListGroup } from '@/components';
+import { useLocale } from '@/hooks/useLocale';
+import { version } from '../../../package.json';
+import { useTheme as useAppTheme } from '@/theme';
 import { useStyles } from './styles';
 
 import { SettingItem } from './(components)';

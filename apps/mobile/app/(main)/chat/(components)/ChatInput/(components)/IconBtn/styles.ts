@@ -1,6 +1,6 @@
 import { ViewStyle } from 'react-native';
 
-import { createStyles } from '@/mobile/theme';
+import { createStyles } from '@/theme';
 
 const PADDING_SIZE = 16;
 

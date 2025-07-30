@@ -2,10 +2,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, ScrollView, Text, View } from 'react-native';
 
-import { ListItem } from '@/mobile/components';
-import { useSessionStore } from '@/mobile/store/session';
-import { sessionMetaSelectors } from '@/mobile/store/session/selectors';
-import { isEmoji } from '@/mobile/utils/common';
+import { ListItem } from '@/components';
+import { useSessionStore } from '@/store/session';
+import { sessionMetaSelectors } from '@/store/session/selectors';
+import { isEmoji } from '@/utils/common';
 import { useStyles } from './styles';
 
 export default function AgentDetail() {

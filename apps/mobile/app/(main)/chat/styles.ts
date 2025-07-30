@@ -1,4 +1,4 @@
-import { createStyles, getAlphaColor } from '@/mobile/theme';
+import { createStyles, getAlphaColor } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
   chatContainer: {

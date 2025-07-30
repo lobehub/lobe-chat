@@ -1,12 +1,7 @@
 import React from 'react';
 
-import ComponentPlayground, { DemoItem } from '@/mobile/app/(playground)/Playground';
-import {
-  AdvancedDemo,
-  BasicDemo,
-  IntegrationDemo,
-  TypesDemo,
-} from '@/mobile/components/Toast/demos';
+import ComponentPlayground, { DemoItem } from '../Playground';
+import { AdvancedDemo, BasicDemo, IntegrationDemo, TypesDemo } from '@/components/Toast/demos';
 
 const demos: DemoItem[] = [
   { component: <BasicDemo />, key: 'basic', title: '基础用法' },
@@ -37,7 +32,7 @@ const readmeContent = `# Toast组件
 ### 1. 设置ToastProvider
 
 \`\`\`jsx
-import { ToastProvider } from '@/mobile/components/Toast/ToastProvider';
+import { ToastProvider } from '@/components/Toast/ToastProvider';
 
 export default function App() {
   return (
@@ -52,7 +47,7 @@ export default function App() {
 ### 2. 使用useToast Hook
 
 \`\`\`jsx
-import { useToast } from '@/mobile/components/Toast/ToastProvider';
+import { useToast } from '@/components/Toast/ToastProvider';
 
 export default function MyComponent() {
   const toast = useToast();

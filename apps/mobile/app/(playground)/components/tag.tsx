@@ -1,7 +1,7 @@
 import React from 'react';
 
-import ComponentPlayground, { DemoItem } from '@/mobile/app/(playground)/Playground';
-import { BasicDemo, ColorsDemo, UseCaseDemo } from '@/mobile/components/Tag/demos';
+import ComponentPlayground, { DemoItem } from '../Playground';
+import { BasicDemo, ColorsDemo, UseCaseDemo } from '@/components/Tag/demos';
 
 const TAG_README = `# Tag 标签组件
 
@@ -19,7 +19,7 @@ const TAG_README = `# Tag 标签组件
 ## 基础使用
 
 \`\`\`tsx
-import Tag from '@/mobile/components/Tag';
+import Tag from '@/components/Tag';
 
 // 基础用法
 <Tag>React</Tag>
