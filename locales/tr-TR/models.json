@@ -32,6 +32,9 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultra, Xinghuo büyük model serisinin en güçlü versiyonudur, çevrimiçi arama bağlantısını yükseltirken, metin içeriğini anlama ve özetleme yeteneğini artırır. Ofis verimliliğini artırmak ve taleplere doğru yanıt vermek için kapsamlı bir çözüm sunar, sektördeki akıllı ürünlerin öncüsüdür."
   },
+  "AnimeSharp": {
+    "description": "AnimeSharp (diğer adıyla “4x‑AnimeSharp”), Kim2091 tarafından ESRGAN mimarisi temel alınarak geliştirilen açık kaynaklı bir süper çözünürlük modelidir ve anime tarzı görüntülerin büyütülmesi ve keskinleştirilmesine odaklanır. Şubat 2022'de “4x-TextSharpV1” olarak yeniden adlandırılmıştır; başlangıçta metin görüntüleri için de uygundu ancak performansı anime içeriği için önemli ölçüde optimize edilmiştir."
+  },
   "Baichuan2-Turbo": {
     "description": "Arama artırma teknolojisi kullanarak büyük model ile alan bilgisi ve tüm ağ bilgisi arasında kapsamlı bir bağlantı sağlar. PDF, Word gibi çeşitli belge yüklemelerini ve URL girişini destekler, bilgi edinimi zamanında ve kapsamlıdır, çıktı sonuçları doğru ve profesyoneldir."
   },
@@ -89,6 +92,9 @@
   "Doubao-pro-4k": {
     "description": "En etkili ana model olup, karmaşık görevlerin işlenmesi için uygundur. Referans soru-cevap, özet çıkarma, yaratıcı yazım, metin sınıflandırma, rol yapma gibi senaryolarda mükemmel performans gösterir. 4k bağlam penceresi ile çıkarım ve ince ayar desteği sağlar."
   },
+  "DreamO": {
+    "description": "DreamO, ByteDance ve Pekin Üniversitesi iş birliğiyle geliştirilen açık kaynaklı, çok görevli görüntü üretim modelidir. Birleşik mimari sayesinde kullanıcı tarafından belirtilen kimlik, konu, stil, arka plan gibi çoklu koşullara göre yüksek tutarlılıkta ve özelleştirilmiş görüntüler oluşturabilir."
+  },
   "ERNIE-3.5-128K": {
     "description": "Baidu'nun kendi geliştirdiği, büyük ölçekli bir dil modeli olan ERNIE-3.5, geniş bir Çin ve İngilizce veri kümesini kapsar. Güçlü genel yeteneklere sahip olup, çoğu diyalog, soru-cevap, yaratıcı içerik üretimi ve eklenti uygulama senaryolarını karşılayabilir; ayrıca, Baidu arama eklentisi ile otomatik entegrasyonu destekleyerek, soru-cevap bilgilerinin güncelliğini sağlar."
   },
@@ -122,14 +128,38 @@
   "ERNIE-Speed-Pro-128K": {
     "description": "Baidu'nun 2024 yılında piyasaya sürdüğü kendi geliştirdiği yüksek performanslı büyük dil modeli, genel yetenekleri mükemmel olup, ERNIE Speed'den daha iyi sonuçlar verir, belirli senaryo sorunlarını daha iyi işlemek için temel model olarak ince ayar yapmak için uygundur ve mükemmel çıkarım performansına sahiptir."
   },
+  "FLUX.1-Kontext-dev": {
+    "description": "FLUX.1-Kontext-dev, Black Forest Labs tarafından geliştirilen, Rectified Flow Transformer mimarisine dayanan çok modlu görüntü oluşturma ve düzenleme modelidir. 12 milyar parametreye sahip olup, verilen bağlam koşullarında görüntü oluşturma, yeniden yapılandırma, iyileştirme ve düzenleme işlemlerine odaklanır. Model, difüzyon modellerinin kontrollü üretim avantajlarını ve Transformer'ın bağlam modelleme yeteneklerini birleştirerek yüksek kaliteli görüntü çıktısı sağlar ve görüntü onarımı, tamamlama, görsel sahne yeniden yapılandırma gibi görevlerde geniş uygulama alanına sahiptir."
+  },
+  "FLUX.1-dev": {
+    "description": "FLUX.1-dev, Black Forest Labs tarafından geliştirilen açık kaynaklı çok modlu dil modelidir (Multimodal Language Model, MLLM). Görüntü ve metin anlama ile üretim yeteneklerini birleştirerek görsel ve metin görevleri için optimize edilmiştir. Mistral-7B gibi gelişmiş büyük dil modelleri temel alınarak, özenle tasarlanmış görsel kodlayıcı ve çok aşamalı talimat ince ayarı ile görsel-metinsel işbirliği ve karmaşık görev çıkarımı sağlar."
+  },
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B), çok alanlı uygulamalar ve karmaşık görevler için uygun yenilikçi bir modeldir."
+  },
+  "HelloMeme": {
+    "description": "HelloMeme, sağladığınız resim veya hareketlere dayanarak otomatik olarak meme, GIF veya kısa video oluşturabilen bir yapay zeka aracıdır. Hiçbir çizim veya programlama bilgisi gerektirmez; sadece referans resim hazırlamanız yeterlidir, böylece size güzel, eğlenceli ve tutarlı tarzda içerikler oluşturur."
+  },
+  "HiDream-I1-Full": {
+    "description": "HiDream-E1-Full, ZhiXiang Future (HiDream.ai) tarafından geliştirilen açık kaynaklı çok modlu görüntü düzenleme büyük modelidir. Gelişmiş Diffusion Transformer mimarisi ve güçlü dil anlama yeteneği (gömülü LLaMA 3.1-8B-Instruct) ile doğal dil komutlarıyla görüntü oluşturma, stil transferi, yerel düzenleme ve içerik yeniden çizim desteği sunar; üstün görsel-metinsel anlama ve yürütme kabiliyetine sahiptir."
+  },
+  "HunyuanDiT-v1.2-Diffusers-Distilled": {
+    "description": "hunyuandit-v1.2-distilled, damıtma optimizasyonu ile hafifletilmiş, hızlı yüksek kaliteli görüntü üretebilen bir metinden görüntüye modeldir. Özellikle düşük kaynaklı ortamlar ve gerçek zamanlı üretim görevleri için uygundur."
+  },
+  "InstantCharacter": {
+    "description": "InstantCharacter, Tencent AI ekibi tarafından 2025 yılında yayınlanan, ince ayar gerektirmeyen (tuning-free) kişiselleştirilmiş karakter oluşturma modelidir. Yüksek doğrulukta ve sahneler arası tutarlı karakter üretmeyi hedefler. Sadece bir referans görüntüye dayanarak karakter modellemesi yapabilir ve bu karakteri farklı stiller, hareketler ve arka planlara esnek şekilde taşıyabilir."
   },
   "InternVL2-8B": {
     "description": "InternVL2-8B, güçlü bir görsel dil modelidir. Görüntü ve metinlerin çok modlu işlenmesini destekler, görüntü içeriğini hassas bir şekilde tanıyabilir ve ilgili açıklamalar veya yanıtlar üretebilir."
   },
   "InternVL2.5-26B": {
     "description": "InternVL2.5-26B, güçlü bir görsel dil modelidir. Görüntü ve metinlerin çok modlu işlenmesini destekler, görüntü içeriğini hassas bir şekilde tanıyabilir ve ilgili açıklamalar veya yanıtlar üretebilir."
+  },
+  "Kolors": {
+    "description": "Kolors, Kuaishou Kolors ekibi tarafından geliştirilen metinden görüntüye modeldir. Milyarlarca parametre ile eğitilmiş olup, görsel kalite, Çince anlamsal anlama ve metin işleme konularında belirgin avantajlara sahiptir."
+  },
+  "Kwai-Kolors/Kolors": {
+    "description": "Kolors, Kuaishou Kolors ekibi tarafından geliştirilen, latent difüzyon tabanlı büyük ölçekli metinden görüntüye üretim modelidir. Milyarlarca metin-görüntü çiftinden eğitilerek görsel kalite, karmaşık anlamsal doğruluk ve Çince-İngilizce karakter işleme alanlarında üstün performans gösterir. Hem Çince hem İngilizce girişleri destekler ve özellikle Çince içerik anlama ve üretiminde başarılıdır."
   },
   "Llama-3.2-11B-Vision-Instruct": {
     "description": "Yüksek çözünürlüklü görüntülerde mükemmel görüntü akıl yürütme yeteneği, görsel anlama uygulamaları için uygundur."
@@ -164,8 +194,14 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1, açık kaynak ağırlıklı büyük ölçekli karma dikkat çıkarım modeli olup, 456 milyar parametreye sahiptir ve her Token yaklaşık 45.9 milyar parametreyi aktive eder. Model, doğal olarak 1 milyon Token uzunluğunda bağlamı destekler ve şimşek dikkat mekanizması sayesinde 100 bin Token üretim görevlerinde DeepSeek R1'e kıyasla %75 daha az kayan nokta işlemi kullanır. Ayrıca, MiniMax-M1 MoE (karışık uzman) mimarisini, CISPO algoritması ve karma dikkat tasarımı ile verimli pekiştirmeli öğrenme eğitimiyle birleştirerek uzun giriş çıkarımı ve gerçek yazılım mühendisliği senaryolarında sektör lideri performans sunar."
   },
+  "Moonshot-Kimi-K2-Instruct": {
+    "description": "Toplam 1 trilyon parametre, 32 milyar aktif parametreye sahip. Düşünme modeli olmayanlar arasında, güncel bilgi, matematik ve kodlama alanlarında en üst düzeyde performans gösterir ve genel ajan görevlerinde daha yetkindir. Ajan görevleri için optimize edilmiştir; sadece soruları yanıtlamakla kalmaz, aynı zamanda eylem de gerçekleştirebilir. Doğaçlama, genel sohbet ve ajan deneyimleri için en uygunudur; uzun düşünme gerektirmeyen refleks seviyesinde bir modeldir."
+  },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B), karmaşık hesaplamalar için yüksek hassasiyetli bir talimat modelidir."
+  },
+  "OmniConsistency": {
+    "description": "OmniConsistency, büyük ölçekli Difüzyon Transformerlar (DiTs) ve eşleştirilmiş stilize veri kullanarak görüntüden görüntüye (Image-to-Image) görevlerinde stil tutarlılığı ve genelleme yeteneğini artırır, stil bozulmasını önler."
   },
   "Phi-3-medium-128k-instruct": {
     "description": "Aynı Phi-3-medium modeli, ancak RAG veya az sayıda örnek isteme için daha büyük bir bağlam boyutuna sahiptir."
@@ -217,6 +253,9 @@
   },
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3, 6710 milyar parametreye sahip bir karma uzman (MoE) dil modelidir ve çok başlı potansiyel dikkat (MLA) ve DeepSeekMoE mimarisini kullanarak, yardımcı kayıplar olmadan yük dengeleme stratejileri ile çıkarım ve eğitim verimliliğini optimize etmektedir. 14.8 trilyon yüksek kaliteli token üzerinde önceden eğitilmiş ve denetimli ince ayar ve güçlendirilmiş öğrenme ile, DeepSeek-V3 performans açısından diğer açık kaynak modelleri geride bırakmakta ve lider kapalı kaynak modellere yaklaşmaktadır."
+  },
+  "Pro/moonshotai/Kimi-K2-Instruct": {
+    "description": "Kimi K2, güçlü kodlama ve ajan yeteneklerine sahip MoE mimarili temel modeldir; toplam 1 trilyon parametre, 32 milyar aktif parametreye sahiptir. Genel bilgi çıkarımı, programlama, matematik ve ajan gibi ana kategorilerdeki kıyaslama testlerinde K2 modeli diğer önde gelen açık kaynak modelleri geride bırakır."
   },
   "QwQ-32B-Preview": {
     "description": "QwQ-32B-Preview, karmaşık diyalog oluşturma ve bağlam anlama görevlerini etkili bir şekilde işleyebilen yenilikçi bir doğal dil işleme modelidir."
@@ -277,6 +316,12 @@
   },
   "Qwen/Qwen3-235B-A22B": {
     "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte önemli ölçüde geliştirilmiş yeni nesil Tongyi Qianwen büyük modelidir ve düşünme modu geçişini destekler."
+  },
+  "Qwen/Qwen3-235B-A22B-Instruct-2507": {
+    "description": "Qwen3 serisinden, Alibaba Cloud Tongyi Qianwen ekibi tarafından geliştirilen amiral gemisi hibrit uzman (MoE) büyük dil modelidir. Toplam 235 milyar parametreye, her çıkarımda 22 milyar aktif parametreye sahiptir. Qwen3-235B-A22B'nin düşünme modu olmayan güncellenmiş versiyonudur; talimat uyumu, mantıksal çıkarım, metin anlama, matematik, bilim, programlama ve araç kullanımı gibi genel yeteneklerde önemli iyileştirmeler sunar. Ayrıca çok dilli uzun kuyruk bilgisi kapsamını artırır ve kullanıcıların öznel ve açık uçlu görev tercihlerine daha iyi uyum sağlayarak daha faydalı ve kaliteli metinler üretir."
+  },
+  "Qwen/Qwen3-235B-A22B-Thinking-2507": {
+    "description": "Alibaba Tongyi Qianwen ekibi tarafından geliştirilen Qwen3 serisinden büyük dil modelidir ve karmaşık yüksek zorlukta çıkarım görevlerine odaklanır. MoE mimarisi temel alınmış olup toplam 235 milyar parametreye sahiptir; her token işlenirken yaklaşık 22 milyar parametre aktif olur, böylece güçlü performansla birlikte hesaplama verimliliği sağlanır. Özel bir \"düşünme\" modeli olarak, mantıksal çıkarım, matematik, bilim, programlama ve akademik kıyaslama testlerinde insan uzmanlığı gerektiren görevlerde üstün performans gösterir ve açık kaynak düşünme modelleri arasında en üst seviyededir. Ayrıca talimat uyumu, araç kullanımı ve metin üretimi gibi genel yetenekleri geliştirir ve 256K uzun bağlam anlama desteği ile derin çıkarım ve uzun belge işleme senaryoları için idealdir."
   },
   "Qwen/Qwen3-30B-A3B": {
     "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte önemli ölçüde geliştirilmiş yeni nesil Tongyi Qianwen büyük modelidir ve düşünme modu geçişini destekler."
@@ -944,6 +989,9 @@
   "doubao-seed-1.6-thinking": {
     "description": "Doubao-Seed-1.6-thinking modeli düşünme yeteneğinde büyük gelişme göstermiştir, Doubao-1.5-thinking-pro ile karşılaştırıldığında Kodlama, Matematik ve mantıksal akıl yürütme gibi temel yeteneklerde daha da iyileşmiştir, görsel anlayışı destekler. 256k bağlam penceresini destekler ve çıktı uzunluğu maksimum 16k token olabilir."
   },
+  "doubao-seedream-3-0-t2i-250415": {
+    "description": "Doubao görüntü oluşturma modeli, ByteDance Seed ekibi tarafından geliştirilmiştir; metin ve görüntü girişlerini destekler ve yüksek kontrol edilebilirlik ile yüksek kaliteli görüntü üretimi sunar. Metin istemlerine dayalı görüntü oluşturur."
+  },
   "doubao-vision-lite-32k": {
     "description": "Doubao-vision modeli, Doubao tarafından geliştirilen çok modlu büyük bir modeldir. Güçlü görüntü anlama ve çıkarım yeteneklerine ve hassas komut anlama becerisine sahiptir. Model, görüntü metin bilgisi çıkarımı ve görüntü tabanlı çıkarım görevlerinde güçlü performans sergiler ve daha karmaşık, geniş kapsamlı görsel soru-cevap görevlerinde kullanılabilir."
   },
@@ -995,6 +1043,9 @@
   "ernie-char-fiction-8k": {
     "description": "Baidu tarafından geliştirilen dikey senaryo büyük dil modeli, oyun NPC'leri, müşteri hizmetleri diyalogları, diyalog karakter rolü gibi uygulama senaryolarına uygundur, karakter tarzı daha belirgin ve tutarlıdır, talimat takibi yeteneği daha güçlü, çıkarım performansı daha iyidir."
   },
+  "ernie-irag-edit": {
+    "description": "Baidu tarafından geliştirilen ERNIE iRAG Edit görüntü düzenleme modeli, görüntü tabanlı silme (erase), yeniden boyama (repaint) ve varyasyon (variation) gibi işlemleri destekler."
+  },
   "ernie-lite-8k": {
     "description": "ERNIE Lite, Baidu tarafından geliştirilen hafif büyük dil modelidir, mükemmel model performansı ve çıkarım yeteneği ile düşük hesaplama gücüne sahip AI hızlandırıcı kartları için uygundur."
   },
@@ -1022,11 +1073,26 @@
   "ernie-x1-turbo-32k": {
     "description": "ERNIE-X1-32K ile karşılaştırıldığında, modelin etkisi ve performansı daha iyidir."
   },
+  "flux-1-schnell": {
+    "description": "Black Forest Labs tarafından geliştirilen 12 milyar parametreli metinden görüntüye modeldir. Latent adversarial diffusion distillation teknolojisi kullanır ve 1 ila 4 adımda yüksek kaliteli görüntüler oluşturabilir. Performansı kapalı kaynak alternatiflerle karşılaştırılabilir ve Apache-2.0 lisansı altında kişisel, akademik ve ticari kullanıma uygundur."
+  },
+  "flux-dev": {
+    "description": "FLUX.1 [dev], ticari olmayan uygulamalar için açık kaynaklı ağırlık ve rafine modeldir. FLUX.1 [dev], FLUX profesyonel sürümüne yakın görüntü kalitesi ve talimat uyumu sağlarken daha yüksek çalışma verimliliğine sahiptir. Aynı boyuttaki standart modellere kıyasla kaynak kullanımı açısından daha etkilidir."
+  },
   "flux-kontext/dev": {
     "description": "Frontier görüntü düzenleme modeli."
   },
+  "flux-merged": {
+    "description": "FLUX.1-merged modeli, geliştirme aşamasında \"DEV\" tarafından keşfedilen derin özellikler ile \"Schnell\" in yüksek hızlı yürütme avantajlarını birleştirir. Bu sayede model performans sınırlarını artırır ve uygulama alanlarını genişletir."
+  },
   "flux-pro/kontext": {
     "description": "FLUX.1 Kontext [pro], metin ve referans görüntüleri girdi olarak işleyebilir, hedefe yönelik yerel düzenlemeler ve karmaşık genel sahne dönüşümlerini sorunsuz bir şekilde gerçekleştirebilir."
+  },
+  "flux-schnell": {
+    "description": "FLUX.1 [schnell], şu anda açık kaynaklı en gelişmiş az adımlı modeldir; benzer rakiplerini aşmakla kalmaz, Midjourney v6.0 ve DALL·E 3 (HD) gibi güçlü damıtılmamış modellerden bile üstündür. Model, ön eğitim aşamasındaki tüm çıktı çeşitliliğini koruyacak şekilde özel olarak ince ayar yapılmıştır. Piyasadaki en gelişmiş modellere kıyasla görsel kalite, talimat uyumu, boyut/oran değişiklikleri, yazı tipi işleme ve çıktı çeşitliliği gibi alanlarda belirgin iyileştirmeler sunar ve kullanıcılara daha zengin ve çeşitli yaratıcı görüntü üretim deneyimi sağlar."
+  },
+  "flux.1-schnell": {
+    "description": "120 milyar parametreli düzeltilmiş akış dönüştürücüsüdür ve metin açıklamalarına göre görüntü oluşturabilir."
   },
   "flux/schnell": {
     "description": "FLUX.1 [schnell], 12 milyar parametreye sahip bir akış dönüştürücü modelidir ve metinden 1 ila 4 adımda yüksek kaliteli görüntüler üretebilir; kişisel ve ticari kullanım için uygundur."
@@ -1109,9 +1175,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Önizleme, Google'ın en iyi fiyat-performans oranına sahip modelidir ve kapsamlı özellikler sunar."
   },
-  "gemini-2.5-flash-preview-04-17-thinking": {
-    "description": "Gemini 2.5 Flash Önizleme, Google'ın en yüksek maliyet-performans modelidir ve kapsamlı özellikler sunar."
-  },
   "gemini-2.5-flash-preview-05-20": {
     "description": "Gemini 2.5 Flash Önizleme, Google'ın en yüksek maliyet-performans modelidir ve kapsamlı özellikler sunar."
   },
@@ -1190,6 +1253,21 @@
   "glm-4.1v-thinking-flashx": {
     "description": "GLM-4.1V-Thinking serisi modeller, bilinen 10 milyar parametre seviyesindeki VLM modelleri arasında en güçlü görsel modellerdir. Aynı seviyedeki SOTA görsel dil görevlerini birleştirir; video anlama, görsel soru-cevap, akademik problem çözme, OCR metin tanıma, belge ve grafik yorumlama, GUI ajanı, ön uç web kodlama, grounding gibi birçok görevde 8 kat daha büyük parametreli Qwen2.5-VL-72B modelini bile aşan performans gösterir. Önde gelen pekiştirmeli öğrenme teknikleri sayesinde, düşünce zinciri akıl yürütme yoluyla cevapların doğruluğu ve zenginliği artırılmıştır; nihai sonuçlar ve açıklanabilirlik açısından geleneksel düşünce zinciri olmayan modellerin çok ötesindedir."
   },
+  "glm-4.5": {
+    "description": "Zhipu'nun en yeni amiral gemisi modeli, düşünme modu geçişini destekler ve genel yetenekleri açık kaynak modeller arasında SOTA seviyesine ulaşmıştır; bağlam uzunluğu 128K'ya kadar çıkabilir."
+  },
+  "glm-4.5-air": {
+    "description": "GLM-4.5'in hafif versiyonu olup performans ve maliyet etkinliğini dengeler; hibrit düşünme modeli olarak esnek geçiş sağlar."
+  },
+  "glm-4.5-airx": {
+    "description": "GLM-4.5-Air'in ultra hızlı versiyonu olup daha hızlı yanıt süresi sunar ve büyük ölçekli yüksek hız gereksinimleri için tasarlanmıştır."
+  },
+  "glm-4.5-flash": {
+    "description": "GLM-4.5'in ücretsiz versiyonu olup çıkarım, kodlama ve ajan görevlerinde üstün performans gösterir."
+  },
+  "glm-4.5-x": {
+    "description": "GLM-4.5'in ultra hızlı versiyonu olup güçlü performansla birlikte saniyede 100 token üretim hızına ulaşır."
+  },
   "glm-4v": {
     "description": "GLM-4V, güçlü görüntü anlama ve akıl yürütme yetenekleri sunar, çeşitli görsel görevleri destekler."
   },
@@ -1209,7 +1287,7 @@
     "description": "Hızlı çıkarım: Süper hızlı çıkarım hızı ve güçlü çıkarım etkisi sunar."
   },
   "glm-z1-flash": {
-    "description": "GLM-Z1 serisi, karmaşık çıkarım yeteneklerine sahiptir, mantıksal çıkarım, matematik, programlama gibi alanlarda mükemmel performans gösterir. Maksimum bağlam uzunluğu 32K'dır."
+    "description": "GLM-Z1 serisi, karmaşık çıkarım yeteneklerine sahiptir ve mantıksal çıkarım, matematik, programlama gibi alanlarda üstün performans gösterir."
   },
   "glm-z1-flashx": {
     "description": "Yüksek hız ve düşük maliyet: Flash geliştirilmiş versiyon, ultra hızlı çıkarım hızı ve daha hızlı eşzamanlılık garantisi sunar."
@@ -1385,6 +1463,9 @@
   "grok-2-1212": {
     "description": "Bu model, doğruluk, talimat takibi ve çok dilli yetenekler açısından geliştirilmiştir."
   },
+  "grok-2-image-1212": {
+    "description": "En yeni görüntü oluşturma modelimiz, metin istemlerine dayanarak canlı ve gerçekçi görüntüler oluşturabilir. Pazarlama, sosyal medya ve eğlence gibi alanlarda görüntü üretiminde mükemmel performans sergiler."
+  },
   "grok-2-vision-1212": {
     "description": "Bu model, doğruluk, talimat takibi ve çok dilli yetenekler açısından geliştirilmiştir."
   },
@@ -1454,6 +1535,9 @@
   "hunyuan-t1-20250529": {
     "description": "Metin oluşturma ve kompozisyon yazımını optimize eder; kod ön yüzü, matematik, mantıksal çıkarım gibi fen bilimleri yeteneklerini geliştirir ve talimatlara uyum yeteneğini artırır."
   },
+  "hunyuan-t1-20250711": {
+    "description": "Zorlu matematik, mantık ve kodlama yeteneklerinde büyük iyileştirmeler sağlar, model çıktı kararlılığını optimize eder ve uzun metin işleme kapasitesini artırır."
+  },
   "hunyuan-t1-latest": {
     "description": "Sektördeki ilk ultra büyük ölçekli Hybrid-Transformer-Mamba çıkarım modeli, çıkarım yeteneklerini genişletir, yüksek çözümleme hızı sunar ve insan tercihleri ile daha iyi hizalanır."
   },
@@ -1502,6 +1586,12 @@
   "hunyuan-vision": {
     "description": "Hunyuan'ın en son çok modlu modeli, resim + metin girişi ile metin içeriği oluşturmayı destekler."
   },
+  "image-01": {
+    "description": "Yepyeni görüntü oluşturma modeli, ince detaylı görseller sunar; metinden görüntü ve görüntüden görüntü desteği vardır."
+  },
+  "image-01-live": {
+    "description": "Görüntü oluşturma modeli, ince detaylı görseller sunar; metinden görüntü oluşturmayı ve stil ayarlarını destekler."
+  },
   "imagen-4.0-generate-preview-06-06": {
     "description": "Imagen 4. nesil metinden görüntüye model serisi"
   },
@@ -1526,6 +1616,9 @@
   "internvl3-latest": {
     "description": "En son yayımladığımız çok modlu büyük model, daha güçlü metin-görüntü anlama yeteneği ve uzun süreli görüntü anlama yeteneğine sahiptir; performansı en iyi kapalı kaynak modellerle karşılaştırılabilir. Varsayılan olarak en son yayımladığımız InternVL serisi modele işaret eder, şu anda internvl3-78b'ye işaret ediyor."
   },
+  "irag-1.0": {
+    "description": "Baidu tarafından geliştirilen iRAG (image based RAG), arama destekli metinden görüntü oluşturma teknolojisidir. Baidu'nun milyarlarca görsel kaynağı ile güçlü temel model yeteneklerini birleştirerek çok gerçekçi görüntüler oluşturur. Genel performansı metinden görüntü oluşturma sistemlerinin çok ötesindedir, yapay zeka izini ortadan kaldırır ve maliyeti düşürür. iRAG, halüsinasyon yapmama, ultra gerçekçilik ve anında erişim özelliklerine sahiptir."
+  },
   "jamba-large": {
     "description": "En güçlü ve en gelişmiş modelimiz, kurumsal düzeyde karmaşık görevleri işlemek için tasarlanmıştır ve olağanüstü performans sunar."
   },
@@ -1534,6 +1627,9 @@
   },
   "jina-deepsearch-v1": {
     "description": "Derin arama, web araması, okuma ve akıl yürütmeyi birleştirerek kapsamlı bir araştırma yapar. Bunu, araştırma görevlerinizi kabul eden bir ajan olarak düşünebilirsiniz - geniş bir arama yapar ve birden fazla yineleme ile cevap verir. Bu süreç, sürekli araştırma, akıl yürütme ve sorunları çeşitli açılardan çözmeyi içerir. Bu, doğrudan önceden eğitilmiş verilerden cevaplar üreten standart büyük modellerle ve tek seferlik yüzey aramasına dayanan geleneksel RAG sistemleriyle temelde farklıdır."
+  },
+  "kimi-k2": {
+    "description": "Kimi-K2, Moonshot AI tarafından geliştirilen, güçlü kodlama ve ajan yeteneklerine sahip MoE mimarili temel modeldir; toplam 1 trilyon parametre, 32 milyar aktif parametreye sahiptir. Genel bilgi çıkarımı, programlama, matematik ve ajan gibi ana kategorilerdeki kıyaslama testlerinde K2 modeli diğer önde gelen açık kaynak modelleri geride bırakır."
   },
   "kimi-k2-0711-preview": {
     "description": "kimi-k2, son derece güçlü kodlama ve Agent yeteneklerine sahip MoE mimarili temel bir modeldir. Toplam parametre sayısı 1T, aktif parametre sayısı 32B'dir. Genel bilgi çıkarımı, programlama, matematik, Agent gibi ana kategorilerde yapılan kıyaslama testlerinde K2 modeli, diğer önde gelen açık kaynak modelleri geride bırakmıştır."
@@ -1928,6 +2024,9 @@
   "moonshotai/Kimi-Dev-72B": {
     "description": "Kimi-Dev-72B, büyük ölçekli pekiştirmeli öğrenme ile optimize edilmiş açık kaynaklı bir kod modeli olup, sağlam ve doğrudan üretime uygun yamalar üretebilir. Bu model, SWE-bench Verified üzerinde %60,4 ile yeni bir rekor kırarak, açık kaynak modeller arasında hata düzeltme, kod incelemesi gibi otomatik yazılım mühendisliği görevlerinde en yüksek puanı elde etmiştir."
   },
+  "moonshotai/Kimi-K2-Instruct": {
+    "description": "Kimi K2, güçlü kodlama ve ajan yeteneklerine sahip MoE mimarili temel modeldir; toplam 1 trilyon parametre, 32 milyar aktif parametreye sahiptir. Genel bilgi çıkarımı, programlama, matematik ve ajan gibi ana kategorilerdeki kıyaslama testlerinde K2 modeli diğer önde gelen açık kaynak modelleri geride bırakır."
+  },
   "moonshotai/kimi-k2-instruct": {
     "description": "kimi-k2, güçlü kodlama ve Ajan yeteneklerine sahip MoE mimarili temel bir modeldir, toplam parametre sayısı 1T, aktif parametre sayısı 32B'dir. Genel bilgi çıkarımı, programlama, matematik ve Ajan gibi ana kategorilerde yapılan kıyaslama testlerinde, K2 modeli diğer önde gelen açık kaynak modellerini geride bırakmaktadır."
   },
@@ -2264,6 +2363,12 @@
   "qwen3-235b-a22b": {
     "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
   },
+  "qwen3-235b-a22b-instruct-2507": {
+    "description": "Qwen3 tabanlı düşünme modu olmayan açık kaynak modelidir; önceki sürüme (Tongyi Qianwen 3-235B-A22B) kıyasla öznel yaratıcı yetenekler ve model güvenliği açısından hafif iyileştirmeler içerir."
+  },
+  "qwen3-235b-a22b-thinking-2507": {
+    "description": "Qwen3 tabanlı düşünme modu açık kaynak modelidir; önceki sürüme (Tongyi Qianwen 3-235B-A22B) kıyasla mantıksal yetenekler, genel yetenekler, bilgi artırımı ve yaratıcı yeteneklerde büyük gelişmeler sağlar ve yüksek zorlukta güçlü çıkarım senaryoları için uygundur."
+  },
   "qwen3-30b-a3b": {
     "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
   },
@@ -2275,6 +2380,12 @@
   },
   "qwen3-8b": {
     "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
+  },
+  "qwen3-coder-480b-a35b-instruct": {
+    "description": "Tongyi Qianwen kod modeli açık kaynak versiyonudur. En yeni qwen3-coder-480b-a35b-instruct, Qwen3 tabanlı kod oluşturma modelidir; güçlü Kodlama Ajanı yeteneklerine sahiptir, araç çağrısı ve ortam etkileşiminde uzmandır, otonom programlama yapabilir ve üstün kodlama yetenekleri ile genel yetenekleri bir arada sunar."
+  },
+  "qwen3-coder-plus": {
+    "description": "Tongyi Qianwen kod modelidir. En yeni Qwen3-Coder-Plus serisi modeller, Qwen3 tabanlı kod oluşturma modelleridir; güçlü Kodlama Ajanı yeteneklerine sahiptir, araç çağrısı ve ortam etkileşiminde uzmandır, otonom programlama yapabilir ve üstün kodlama yetenekleri ile genel yetenekleri bir arada sunar."
   },
   "qwq": {
     "description": "QwQ, AI akıl yürütme yeteneklerini artırmaya odaklanan deneysel bir araştırma modelidir."
@@ -2318,6 +2429,24 @@
   "sonar-reasoning-pro": {
     "description": "DeepSeek'in akıl yürütme modeli tarafından desteklenen yeni API ürünü."
   },
+  "stable-diffusion-3-medium": {
+    "description": "Stability AI tarafından geliştirilen en yeni metinden görüntü oluşturma büyük modelidir. Önceki sürümlerin avantajlarını koruyarak, görüntü kalitesi, metin anlama ve stil çeşitliliği alanlarında önemli iyileştirmeler sunar. Karmaşık doğal dil istemlerini daha doğru yorumlayabilir ve daha kesin, çeşitli görüntüler oluşturabilir."
+  },
+  "stable-diffusion-3.5-large": {
+    "description": "stable-diffusion-3.5-large, 800 milyon parametreli çok modlu difüzyon dönüştürücü (MMDiT) metinden görüntü oluşturma modelidir. Üstün görüntü kalitesi ve istem uyumu sağlar, 1 milyon piksel yüksek çözünürlüklü görüntüler oluşturabilir ve sıradan tüketici donanımında verimli çalışabilir."
+  },
+  "stable-diffusion-3.5-large-turbo": {
+    "description": "stable-diffusion-3.5-large-turbo, stable-diffusion-3.5-large temel alınarak adversarial diffusion distillation (ADD) teknolojisi ile hızlandırılmış modeldir."
+  },
+  "stable-diffusion-v1.5": {
+    "description": "stable-diffusion-v1.5, stable-diffusion-v1.2 kontrol noktası ağırlıkları ile başlatılmış ve \"laion-aesthetics v2 5+\" üzerinde 512x512 çözünürlükte 595k adım ince ayar yapılmıştır. %10 daha az metin koşullandırması ile sınıflandırıcı olmayan rehberli örnekleme geliştirilmiştir."
+  },
+  "stable-diffusion-xl": {
+    "description": "stable-diffusion-xl, v1.5'e kıyasla önemli geliştirmeler içerir ve mevcut açık kaynak metinden görüntü oluşturma SOTA modeli midjourney ile benzer performans gösterir. Gelişmeler şunlardır: daha büyük unet omurgası (öncekinden 3 kat büyük); görüntü kalitesini artırmak için iyileştirme modülü eklenmesi; daha verimli eğitim teknikleri."
+  },
+  "stable-diffusion-xl-base-1.0": {
+    "description": "Stability AI tarafından geliştirilen ve açık kaynaklı metinden görüntü oluşturma büyük modelidir. Yaratıcı görüntü oluşturma yetenekleri sektörde öncüdür. Üstün talimat anlama yeteneğine sahiptir ve ters prompt tanımlamayı destekleyerek içeriği hassas şekilde oluşturabilir."
+  },
   "step-1-128k": {
     "description": "Performans ve maliyet arasında denge sağlar, genel senaryolar için uygundur."
   },
@@ -2348,6 +2477,12 @@
   "step-1v-8k": {
     "description": "Küçük görsel model, temel metin ve görsel görevler için uygundur."
   },
+  "step-1x-edit": {
+    "description": "Bu model, görüntü düzenleme görevlerine odaklanır ve kullanıcı tarafından sağlanan görüntü ve metin açıklamalarına göre görüntüyü değiştirip iyileştirebilir. Metin açıklamaları ve örnek görüntüler dahil olmak üzere çeşitli giriş formatlarını destekler. Model, kullanıcı niyetini anlayarak istenen düzenleme sonuçlarını üretir."
+  },
+  "step-1x-medium": {
+    "description": "Bu model güçlü görüntü oluşturma yeteneklerine sahiptir ve metin açıklamalarını giriş olarak destekler. Yerel Çince desteği ile Çince metin açıklamalarını daha iyi anlar ve işler, metin anlamını daha doğru yakalayarak görüntü özelliklerine dönüştürür ve böylece daha hassas görüntü oluşturma sağlar. Model, yüksek çözünürlüklü ve kaliteli görüntüler oluşturabilir ve belirli ölçüde stil transferi yeteneğine sahiptir."
+  },
   "step-2-16k": {
     "description": "Büyük ölçekli bağlam etkileşimlerini destekler, karmaşık diyalog senaryoları için uygundur."
   },
@@ -2356,6 +2491,9 @@
   },
   "step-2-mini": {
     "description": "Yeni nesil kendi geliştirdiğimiz MFA Attention mimarisine dayanan hızlı büyük model, çok düşük maliyetle step1 ile benzer sonuçlar elde ederken, daha yüksek bir throughput ve daha hızlı yanıt süresi sağlıyor. Genel görevleri işleyebilme yeteneğine sahip olup, kodlama yeteneklerinde uzmanlık gösteriyor."
+  },
+  "step-2x-large": {
+    "description": "Jieyue Xingchen'in yeni nesil görüntü oluşturma modelidir. Model, kullanıcı tarafından sağlanan metin açıklamalarına göre yüksek kaliteli görüntüler oluşturur. Yeni model, daha gerçekçi doku ve hem Çince hem İngilizce metin oluşturma yeteneklerinde gelişmiş performans sunar."
   },
   "step-r1-v-mini": {
     "description": "Bu model, güçlü görüntü anlama yeteneğine sahip bir çıkarım büyük modelidir, görüntü ve metin bilgilerini işleyebilir, derin düşünme sonrası metin oluşturma çıktısı verebilir. Bu model, görsel çıkarım alanında öne çıkarken, birinci sınıf matematik, kod ve metin çıkarım yeteneklerine de sahiptir. Bağlam uzunluğu 100k'dır."
@@ -2432,8 +2570,23 @@
   "v0-1.5-md": {
     "description": "v0-1.5-md modeli, günlük görevler ve kullanıcı arayüzü (UI) oluşturma için uygundur"
   },
+  "wan2.2-t2i-flash": {
+    "description": "Wanxiang 2.2 hızlı sürüm, mevcut en yeni modeldir. Yaratıcılık, kararlılık ve gerçekçilikte kapsamlı yükseltmeler sunar; hızlı üretim hızı ve yüksek maliyet performansı sağlar."
+  },
+  "wan2.2-t2i-plus": {
+    "description": "Wanxiang 2.2 profesyonel sürüm, mevcut en yeni modeldir. Yaratıcılık, kararlılık ve gerçekçilikte kapsamlı yükseltmeler sunar; detaylı ve zengin görüntüler üretir."
+  },
+  "wanx-v1": {
+    "description": "Temel metinden görüntü oluşturma modelidir. Tongyi Wanxiang resmi web sitesindeki 1.0 genel modeline karşılık gelir."
+  },
+  "wanx2.0-t2i-turbo": {
+    "description": "Doku ve portrelerde uzmandır; orta hızda ve düşük maliyetlidir. Tongyi Wanxiang resmi web sitesindeki 2.0 hızlı modele karşılık gelir."
+  },
+  "wanx2.1-t2i-plus": {
+    "description": "Kapsamlı yükseltilmiş versiyondur. Üretilen görüntü detayları daha zengindir, hız biraz daha yavaştır. Tongyi Wanxiang resmi web sitesindeki 2.1 profesyonel modele karşılık gelir."
+  },
   "wanx2.1-t2i-turbo": {
-    "description": "Alibaba Cloud Tongyi tarafından geliştirilen metinden görsele model"
+    "description": "Kapsamlı yükseltilmiş versiyondur. Üretim hızı hızlı, etkisi kapsamlı ve genel maliyet performansı yüksektir. Tongyi Wanxiang resmi web sitesindeki 2.1 hızlı modele karşılık gelir."
   },
   "whisper-1": {
     "description": "Genel amaçlı konuşma tanıma modeli olup, çok dilli konuşma tanıma, konuşma çevirisi ve dil tanıma destekler."
@@ -2485,5 +2638,11 @@
   },
   "yi-vision-v2": {
     "description": "Karmaşık görsel görevler için model, birden fazla resme dayalı yüksek performanslı anlama ve analiz yetenekleri sunar."
+  },
+  "zai-org/GLM-4.5": {
+    "description": "GLM-4.5, akıllı ajan uygulamaları için tasarlanmış temel modeldir ve Mixture-of-Experts (MoE) mimarisi kullanır. Araç çağrısı, web tarama, yazılım mühendisliği ve ön uç programlama alanlarında derin optimizasyonlar içerir. Claude Code, Roo Code gibi kod ajanlarına sorunsuz entegrasyon destekler. GLM-4.5, karmaşık çıkarım ve günlük kullanım gibi çeşitli senaryolara uyum sağlayan hibrit çıkarım moduna sahiptir."
+  },
+  "zai-org/GLM-4.5-Air": {
+    "description": "GLM-4.5-Air, akıllı ajan uygulamaları için tasarlanmış temel modeldir ve Mixture-of-Experts (MoE) mimarisi kullanır. Araç çağrısı, web tarama, yazılım mühendisliği ve ön uç programlama alanlarında derin optimizasyonlar içerir. Claude Code, Roo Code gibi kod ajanlarına sorunsuz entegrasyon destekler. GLM-4.5, karmaşık çıkarım ve günlük kullanım gibi çeşitli senaryolara uyum sağlayan hibrit çıkarım moduna sahiptir."
   }
 }
