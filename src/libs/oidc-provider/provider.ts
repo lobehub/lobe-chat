@@ -96,6 +96,7 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
       resourceIndicators: {
         defaultResource: () => API_AUDIENCE,
         enabled: true,
+        
         getResourceServerInfo: (ctx, resourceIndicator) => {
           logProvider('getResourceServerInfo called with indicator: %s', resourceIndicator); // <-- 添加这行日志
           if (resourceIndicator === API_AUDIENCE) {
@@ -110,6 +111,8 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
           logProvider('Indicator does not match API_AUDIENCE, throwing InvalidTarget.'); // <-- 添加这行日志
           throw new errors.InvalidTarget();
         },
+        // 当客户端使用刷新令牌请求新的访问令牌但没有指定资源时，授权服务器会检查原始授权中包含的所有资源，并将这些资源用于新的访问令牌。这提供了一种便捷的方式来维持授权一致性，而不需要客户端在每次刷新时重新指定所有资源
+useGrantedResource: () => true,
       },
       revocation: { enabled: true },
       rpInitiatedLogout: { enabled: true },
