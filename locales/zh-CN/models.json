@@ -32,6 +32,9 @@
   "4.0Ultra": {
     "description": "Spark Ultra 是星火大模型系列中最为强大的版本，在升级联网搜索链路同时，提升对文本内容的理解和总结能力。它是用于提升办公生产力和准确响应需求的全方位解决方案，是引领行业的智能产品。"
   },
+  "AnimeSharp": {
+    "description": "AnimeSharp（又名 “4x‑AnimeSharp”） 是 Kim2091 基于 ESRGAN 架构开发的开源超分辨率模型，专注于动漫风格图像的放大与锐化。它于 2022 年 2 月重命名自 “4x-TextSharpV1”，原本也适用于文字图像但性能针对动漫内容进行了大幅优化"
+  },
   "Baichuan2-Turbo": {
     "description": "采用搜索增强技术实现大模型与领域知识、全网知识的全面链接。支持PDF、Word等多种文档上传及网址输入，信息获取及时、全面，输出结果准确、专业。"
   },
@@ -89,6 +92,9 @@
   "Doubao-pro-4k": {
     "description": "效果最好的主力模型，适合处理复杂任务，在参考问答、总结摘要、创作、文本分类、角色扮演等场景都有很好的效果。支持4k上下文窗口的推理和精调。"
   },
+  "DreamO": {
+    "description": "DreamO 是由字节跳动与北京大学联合研发的开源图像定制生成模型，旨在通过统一架构支持多任务图像生成。它采用高效的组合建模方法，可根据用户指定的身份、主体、风格、背景等多个条件生成高度一致且定制化的图像。"
+  },
   "ERNIE-3.5-128K": {
     "description": "百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。"
   },
@@ -122,14 +128,38 @@
   "ERNIE-Speed-Pro-128K": {
     "description": "百度2024年最新发布的自研高性能大语言模型，通用能力优异，效果比ERNIE Speed更优，适合作为基座模型进行精调，更好地处理特定场景问题，同时具备极佳的推理性能。"
   },
+  "FLUX.1-Kontext-dev": {
+    "description": "FLUX.1-Kontext-dev 是由 Black Forest Labs 开发的一款基于 Rectified Flow Transformer 架构 的多模态图像生成与编辑模型，拥有 12B（120 亿）参数规模，专注于在给定上下文条件下生成、重构、增强或编辑图像。该模型结合了扩散模型的可控生成优势与 Transformer 的上下文建模能力，支持高质量图像输出，广泛适用于图像修复、图像补全、视觉场景重构等任务。"
+  },
+  "FLUX.1-dev": {
+    "description": "FLUX.1-dev 是由 Black Forest Labs 开发的一款开源 多模态语言模型（Multimodal Language Model, MLLM），专为图文任务优化，融合了图像和文本的理解与生成能力。它建立在先进的大语言模型（如 Mistral-7B）基础上，通过精心设计的视觉编码器与多阶段指令微调，实现了图文协同处理与复杂任务推理的能力。"
+  },
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) 是一种创新模型，适合多领域应用和复杂任务。"
+  },
+  "HelloMeme": {
+    "description": "HelloMeme 是一个可以根据你提供的图片或动作，自动生成表情包、动图或短视频的 AI 工具。它不需要你有任何绘画或编程基础，只需要准备好参考图片，它就能帮你做出好看、有趣、风格一致的内容。"
+  },
+  "HiDream-I1-Full": {
+    "description": "HiDream-E1-Full 是由智象未来（HiDream.ai）推出的一款 开源多模态图像编辑大模型，基于先进的 Diffusion Transformer 架构，并结合强大的语言理解能力（内嵌 LLaMA 3.1-8B-Instruct），支持通过自然语言指令进行图像生成、风格迁移、局部编辑和内容重绘，具备出色的图文理解与执行能力。"
+  },
+  "HunyuanDiT-v1.2-Diffusers-Distilled": {
+    "description": "hunyuandit-v1.2-distilled 是一款轻量级的文生图模型，经过蒸馏优化，能够快速生成高质量的图像，特别适用于低资源环境和实时生成任务。"
+  },
+  "InstantCharacter": {
+    "description": "InstantCharacter 是由腾讯 AI 团队在 2025 年发布的一款 无需微调（tuning-free） 的个性化角色生成模型，旨在实现高保真、跨场景的一致角色生成。该模型支持仅基于 一张参考图像 对角色进行建模，并能够将该角色灵活迁移到各种风格、动作和背景中。"
   },
   "InternVL2-8B": {
     "description": "InternVL2-8B 是一款强大的视觉语言模型，支持图像与文本的多模态处理，能够精确识别图像内容并生成相关描述或回答。"
   },
   "InternVL2.5-26B": {
     "description": "InternVL2.5-26B 是一款强大的视觉语言模型，支持图像与文本的多模态处理，能够精确识别图像内容并生成相关描述或回答。"
+  },
+  "Kolors": {
+    "description": "Kolors 是由快手 Kolors 团队开发的文生图模型。由数十亿的参数训练，在视觉质量、中文语义理解和文本渲染方面有显著优势。"
+  },
+  "Kwai-Kolors/Kolors": {
+    "description": "Kolors 是由快手 Kolors 团队开发的基于潜在扩散的大规模文本到图像生成模型。该模型通过数十亿文本-图像对的训练，在视觉质量、复杂语义准确性以及中英文字符渲染方面展现出显著优势。它不仅支持中英文输入，在理解和生成中文特定内容方面也表现出色"
   },
   "Llama-3.2-11B-Vision-Instruct": {
     "description": "在高分辨率图像上表现出色的图像推理能力，适用于视觉理解应用。"
@@ -164,8 +194,14 @@
   "MiniMaxAI/MiniMax-M1-80k": {
     "description": "MiniMax-M1 是开源权重的大规模混合注意力推理模型，拥有 4560 亿参数，每个 Token 可激活约 459 亿参数。模型原生支持 100 万 Token 的超长上下文，并通过闪电注意力机制，在 10 万 Token 的生成任务中相比 DeepSeek R1 节省 75% 的浮点运算量。同时，MiniMax-M1 采用 MoE（混合专家）架构，结合 CISPO 算法与混合注意力设计的高效强化学习训练，在长输入推理与真实软件工程场景中实现了业界领先的性能。"
   },
+  "Moonshot-Kimi-K2-Instruct": {
+    "description": "总参数 1T，激活参数 32B。 非思维模型中，在前沿知识、数学和编码方面达到了顶尖水平，更擅长通用 Agent 任务。 针对代理任务进行了精心优化，不仅能回答问题，还能采取行动。 最适用于即兴、通用聊天和代理体验，是一款无需长时间思考的反射级模型。"
+  },
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) 是高精度的指令模型，适用于复杂计算。"
+  },
+  "OmniConsistency": {
+    "description": "OmniConsistency 通过引入大规模 Diffusion Transformers（DiTs）和配对风格化数据，提升图像到图像（Image-to-Image）任务中的风格一致性和泛化能力，避免风格退化。"
   },
   "Phi-3-medium-128k-instruct": {
     "description": "相同的Phi-3-medium模型，但具有更大的上下文大小，适用于RAG或少量提示。"
@@ -217,6 +253,9 @@
   },
   "Pro/deepseek-ai/DeepSeek-V3": {
     "description": "DeepSeek-V3 是一款拥有 6710 亿参数的混合专家（MoE）语言模型，采用多头潜在注意力（MLA）和 DeepSeekMoE 架构，结合无辅助损失的负载平衡策略，优化推理和训练效率。通过在 14.8 万亿高质量tokens上预训练，并进行监督微调和强化学习，DeepSeek-V3 在性能上超越其他开源模型，接近领先闭源模型。"
+  },
+  "Pro/moonshotai/Kimi-K2-Instruct": {
+    "description": "Kimi K2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。"
   },
   "QwQ-32B-Preview": {
     "description": "Qwen QwQ 是由 Qwen 团队开发的实验研究模型，专注于提升AI推理能力。"
@@ -277,6 +316,12 @@
   },
   "Qwen/Qwen3-235B-A22B": {
     "description": "Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。"
+  },
+  "Qwen/Qwen3-235B-A22B-Instruct-2507": {
+    "description": "Qwen3-235B-A22B-Instruct-2507 是由阿里云通义千问团队开发的 Qwen3 系列中的一款旗舰级混合专家（MoE）大语言模型。该模型拥有 2350 亿总参数，每次推理激活 220 亿参数。它是作为 Qwen3-235B-A22B 非思考模式的更新版本发布的，专注于在指令遵循、逻辑推理、文本理解、数学、科学、编程及工具使用等通用能力上实现显著提升。此外，模型增强了对多语言长尾知识的覆盖，并能更好地对齐用户在主观和开放性任务上的偏好，以生成更有帮助和更高质量的文本。"
+  },
+  "Qwen/Qwen3-235B-A22B-Thinking-2507": {
+    "description": "Qwen3-235B-A22B-Thinking-2507 是由阿里巴巴通义千问团队开发的 Qwen3 系列大型语言模型中的一员，专注于高难度的复杂推理任务。该模型基于混合专家（MoE）架构，总参数量达 2350 亿，而在处理每个 token 时仅激活约 220 亿参数，从而在保持强大性能的同时提高了计算效率。作为一个专门的“思考”模型，它在逻辑推理、数学、科学、编程和学术基准测试等需要人类专业知识的任务上表现显著提升，达到了开源思考模型中的顶尖水平。此外，模型还增强了通用能力，如指令遵循、工具使用和文本生成，并原生支持 256K 的长上下文理解能力，非常适合用于需要深度推理和处理长文档的场景。"
   },
   "Qwen/Qwen3-30B-A3B": {
     "description": "Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。"
@@ -944,6 +989,9 @@
   "doubao-seed-1.6-thinking": {
     "description": "Doubao-Seed-1.6-thinking模型思考能力大幅强化， 对比Doubao-1.5-thinking-pro，在Coding、Math、 逻辑推理等基础能力上进一步提升， 支持视觉理解。 支持 256k 上下文窗口，输出长度支持最大 16k tokens。"
   },
+  "doubao-seedream-3-0-t2i-250415": {
+    "description": "Doubao图片生成模型由字节跳动 Seed 团队研发，支持文字与图片输入，提供高可控、高质量的图片生成体验。基于文本提示词生成图片。"
+  },
   "doubao-vision-lite-32k": {
     "description": "Doubao-vision 模型是豆包推出的多模态大模型，具备强大的图片理解与推理能力，以及精准的指令理解能力。模型在图像文本信息抽取、基于图像的推理任务上有展现出了强大的性能，能够应用于更复杂、更广泛的视觉问答任务。"
   },
@@ -995,6 +1043,9 @@
   "ernie-char-fiction-8k": {
     "description": "百度自研的垂直场景大语言模型，适合游戏NPC、客服对话、对话角色扮演等应用场景，人设风格更为鲜明、一致，指令遵循能力更强，推理性能更优。"
   },
+  "ernie-irag-edit": {
+    "description": "百度自研的ERNIE iRAG Edit图像编辑模型支持基于图片进行erase（消除对象）、repaint（重绘对象）、variation（生成变体）等操作。"
+  },
   "ernie-lite-8k": {
     "description": "ERNIE Lite是百度自研的轻量级大语言模型，兼顾优异的模型效果与推理性能，适合低算力AI加速卡推理使用。"
   },
@@ -1022,11 +1073,26 @@
   "ernie-x1-turbo-32k": {
     "description": "与ERNIE-X1-32K相比，模型效果和性能更好。"
   },
+  "flux-1-schnell": {
+    "description": "由 Black Forest Labs 开发的 120 亿参数文生图模型，采用潜在对抗扩散蒸馏技术，能够在 1 到 4 步内生成高质量图像。该模型性能媲美闭源替代品，并在 Apache-2.0 许可证下发布，适用于个人、科研和商业用途。"
+  },
+  "flux-dev": {
+    "description": "FLUX.1 [dev] 是一款面向非商业应用的开源权重、精炼模型。FLUX.1 [dev] 在保持了与FLUX专业版相近的图像质量和指令遵循能力的同时，具备更高的运行效率。相较于同尺寸的标准模型，它在资源利用上更为高效。"
+  },
   "flux-kontext/dev": {
     "description": "Frontier image editing model."
   },
+  "flux-merged": {
+    "description": "FLUX.1-merged 模型结合了 \"DEV\" 在开发阶段探索的深度特性和 \"Schnell\" 所代表的高速执行优势。通过这一举措，FLUX.1-merged 不仅提升了模型的性能界限，还拓宽了其应用范围。"
+  },
   "flux-pro/kontext": {
     "description": "FLUX.1 Kontext [pro] 能够处理文本和参考图像作为输入，无缝实现目标性的局部编辑和复杂的整体场景变换。"
+  },
+  "flux-schnell": {
+    "description": "FLUX.1 [schnell] 作为目前开源最先进的少步模型，不仅超越了同类竞争者，甚至还优于诸如 Midjourney v6.0 和 DALL·E 3 (HD) 等强大的非精馏模型。该模型经过专门微调，以保留预训练阶段的全部输出多样性，相较于当前市场上的最先进模型，FLUX.1 [schnell] 显著提升了在视觉质量、指令遵从、尺寸/比例变化、字体处理及输出多样性等方面的可能，为用户带来更为丰富多样的创意图像生成体验。"
+  },
+  "flux.1-schnell": {
+    "description": "具有120亿参数的修正流变换器，能够根据文本描述生成图像。"
   },
   "flux/schnell": {
     "description": "FLUX.1 [schnell] 是一个拥有120亿参数的流式转换器模型，能够在1到4步内从文本生成高质量图像，适合个人和商业用途。"
@@ -1109,9 +1175,6 @@
   "gemini-2.5-flash-preview-04-17": {
     "description": "Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。"
   },
-  "gemini-2.5-flash-preview-04-17-thinking": {
-    "description": "Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。"
-  },
   "gemini-2.5-flash-preview-05-20": {
     "description": "Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。"
   },
@@ -1190,6 +1253,21 @@
   "glm-4.1v-thinking-flashx": {
     "description": "GLM-4.1V-Thinking 系列模型是目前已知10B级别的VLM模型中性能最强的视觉模型，融合了同级别SOTA的各项视觉语言任务，包括视频理解、图片问答、学科解题、OCR文字识别、文档和图表解读、GUI Agent、前端网页Coding、Grounding等，多项任务能力甚至超过8倍参数量的Qwen2.5-VL-72B。通过领先的强化学习技术，模型掌握了通过思维链推理的方式提升回答的准确性和丰富度，从最终效果和可解释性等维度都显著超过传统的非thinking模型。"
   },
+  "glm-4.5": {
+    "description": "智谱最新旗舰模型，支持思考模式切换，综合能力达到开源模型的 SOTA 水平，上下文长度可达128K。"
+  },
+  "glm-4.5-air": {
+    "description": "GLM-4.5 的轻量版，兼顾性能与性价比，可灵活切换混合思考模型。"
+  },
+  "glm-4.5-airx": {
+    "description": "GLM-4.5-Air 的极速版，响应速度更快，专为大规模高速度需求打造。"
+  },
+  "glm-4.5-flash": {
+    "description": "GLM-4.5 的免费版，推理、代码、智能体等任务表现出色。"
+  },
+  "glm-4.5-x": {
+    "description": "GLM-4.5 的极速版，在性能强劲的同时，生成速度可达 100 tokens/秒。"
+  },
   "glm-4v": {
     "description": "GLM-4V 提供强大的图像理解与推理能力，支持多种视觉任务。"
   },
@@ -1209,7 +1287,7 @@
     "description": "极速推理：具有超快的推理速度和强大的推理效果。"
   },
   "glm-z1-flash": {
-    "description": "GLM-Z1 系列具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。最大上下文长度为32K。"
+    "description": "GLM-Z1 系列具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。"
   },
   "glm-z1-flashx": {
     "description": "高速低价：Flash增强版本，超快推理速度，更快并发保障。"
@@ -1385,6 +1463,9 @@
   "grok-2-1212": {
     "description": "该模型在准确性、指令遵循和多语言能力方面有所改进。"
   },
+  "grok-2-image-1212": {
+    "description": "我们最新的图像生成模型可以根据文本提示生成生动逼真的图像。它在营销、社交媒体和娱乐等领域的图像生成方面表现出色。"
+  },
   "grok-2-vision-1212": {
     "description": "该模型在准确性、指令遵循和多语言能力方面有所改进。"
   },
@@ -1454,6 +1535,9 @@
   "hunyuan-t1-20250529": {
     "description": "优化文本创作、作文写作，优化代码前端、数学、逻辑推理等理科能力，提升指令遵循能力。"
   },
+  "hunyuan-t1-20250711": {
+    "description": "大幅提升高难度数学、逻辑和代码能力，优化模型输出稳定性，提升模型长文能力。"
+  },
   "hunyuan-t1-latest": {
     "description": "业内首个超大规模 Hybrid-Transformer-Mamba 推理模型，扩展推理能力，超强解码速度，进一步对齐人类偏好。"
   },
@@ -1502,6 +1586,12 @@
   "hunyuan-vision": {
     "description": "混元最新多模态模型，支持图片+文本输入生成文本内容。"
   },
+  "image-01": {
+    "description": "全新图像生成模型，画面表现细腻，支持文生图、图生图"
+  },
+  "image-01-live": {
+    "description": "图像生成模型，画面表现细腻，支持文生图并进行画风设置"
+  },
   "imagen-4.0-generate-preview-06-06": {
     "description": "Imagen 4th generation text-to-image model series"
   },
@@ -1526,6 +1616,9 @@
   "internvl3-latest": {
     "description": "我们最新发布多模态大模型，具备更强的图文理解能力、长时序图片理解能力，性能比肩顶尖闭源模型。默认指向我们最新发布的 InternVL 系列模型，当前指向 internvl3-78b。"
   },
+  "irag-1.0": {
+    "description": "百度自研的iRAG（image based RAG），检索增强的文生图技术，将百度搜索的亿级图片资源跟强大的基础模型能力相结合，就可以生成各种超真实的图片，整体效果远远超过文生图原生系统，去掉了AI味儿，而且成本很低。iRAG具备无幻觉、超真实、立等可取等特点。"
+  },
   "jamba-large": {
     "description": "我们最强大、最先进的模型，专为处理企业级复杂任务而设计，具备卓越的性能。"
   },
@@ -1534,6 +1627,9 @@
   },
   "jina-deepsearch-v1": {
     "description": "深度搜索结合了网络搜索、阅读和推理，可进行全面调查。您可以将其视为一个代理，接受您的研究任务 - 它会进行广泛搜索并经过多次迭代，然后才能给出答案。这个过程涉及持续的研究、推理和从各个角度解决问题。这与直接从预训练数据生成答案的标准大模型以及依赖一次性表面搜索的传统 RAG 系统有着根本的不同。"
+  },
+  "kimi-k2": {
+    "description": "Kimi-K2 是一款Moonshot AI推出的具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。"
   },
   "kimi-k2-0711-preview": {
     "description": "kimi-k2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。"
@@ -1928,6 +2024,9 @@
   "moonshotai/Kimi-Dev-72B": {
     "description": "Kimi-Dev-72B 是一款开源代码大模型，经过大规模强化学习优化，能输出稳健、可直接投产的补丁。该模型在 SWE-bench Verified 上取得 60.4 % 的新高分，刷新了开源模型在缺陷修复、代码评审等自动化软件工程任务上的纪录。"
   },
+  "moonshotai/Kimi-K2-Instruct": {
+    "description": "Kimi K2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。"
+  },
   "moonshotai/kimi-k2-instruct": {
     "description": "kimi-k2 是一款具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。"
   },
@@ -2264,6 +2363,12 @@
   "qwen3-235b-a22b": {
     "description": "Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。"
   },
+  "qwen3-235b-a22b-instruct-2507": {
+    "description": "基于Qwen3的非思考模式开源模型，相较上一版本（通义千问3-235B-A22B）主观创作能力与模型安全性均有小幅度提升。"
+  },
+  "qwen3-235b-a22b-thinking-2507": {
+    "description": "基于Qwen3的思考模式开源模型，相较上一版本（通义千问3-235B-A22B）逻辑能力、通用能力、知识增强及创作能力均有大幅提升，适用于高难度强推理场景。"
+  },
   "qwen3-30b-a3b": {
     "description": "Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。"
   },
@@ -2275,6 +2380,12 @@
   },
   "qwen3-8b": {
     "description": "Qwen3是一款能力大幅提升的新一代通义千问大模型，在推理、通用、Agent和多语言等多个核心能力上均达到业界领先水平，并支持思考模式切换。"
+  },
+  "qwen3-coder-480b-a35b-instruct": {
+    "description": "通义千问代码模型开源版。最新的 qwen3-coder-480b-a35b-instruct 是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程、代码能力卓越的同时兼具通用能力。"
+  },
+  "qwen3-coder-plus": {
+    "description": "通义千问代码模型。最新的 Qwen3-Coder-Plus 系列模型是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程，代码能力卓越的同时兼具通用能力。"
   },
   "qwq": {
     "description": "QwQ 是 Qwen 系列的推理模型。与传统的指令调优模型相比，QwQ 具备思考和推理的能力，能够在下游任务中，尤其是困难问题上，显著提升性能。QwQ-32B 是中型推理模型，能够在与最先进的推理模型（如 DeepSeek-R1、o1-mini）竞争时取得可观的表现。"
@@ -2318,6 +2429,24 @@
   "sonar-reasoning-pro": {
     "description": "支持搜索上下文的高级搜索产品，支持高级查询和跟进。"
   },
+  "stable-diffusion-3-medium": {
+    "description": "由 Stability AI 推出的最新文生图大模型。这一版本在继承了前代的优点上，对图像质量、文本理解和风格多样性等方面进行了显著改进，能够更准确地解读复杂的自然语言提示，并生成更为精确和多样化的图像。"
+  },
+  "stable-diffusion-3.5-large": {
+    "description": "stable-diffusion-3.5-large 是一个具有8亿参数的多模态扩散变压器（MMDiT）文本到图像生成模型，具备卓越的图像质量和提示词匹配度，支持生成 100 万像素的高分辨率图像，且能够在普通消费级硬件上高效运行。"
+  },
+  "stable-diffusion-3.5-large-turbo": {
+    "description": "stable-diffusion-3.5-large-turbo 是在 stable-diffusion-3.5-large 的基础上采用对抗性扩散蒸馏（ADD）技术的模型，具备更快的速度。"
+  },
+  "stable-diffusion-v1.5": {
+    "description": "stable-diffusion-v1.5 是以 stable-diffusion-v1.2 检查点的权重进行初始化，并在 \"laion-aesthetics v2 5+\" 上以 512x512 的分辨率进行了595k步的微调，减少了 10% 的文本条件化，以提高无分类器的引导采样。"
+  },
+  "stable-diffusion-xl": {
+    "description": "stable-diffusion-xl 相比于 v1.5 做了重大的改进，并且与当前开源的文生图 SOTA 模型 midjourney 效果相当。具体改进之处包括： 更大的 unet backbone，是之前的 3 倍； 增加了 refinement 模块用于改善生成图片的质量；更高效的训练技巧等。"
+  },
+  "stable-diffusion-xl-base-1.0": {
+    "description": "由 Stability AI 开发并开源的文生图大模型，其创意图像生成能力位居行业前列。具备出色的指令理解能力，能够支持反向 Prompt 定义来精确生成内容。"
+  },
   "step-1-128k": {
     "description": "平衡性能与成本，适合一般场景。"
   },
@@ -2348,6 +2477,12 @@
   "step-1v-8k": {
     "description": "小型视觉模型，适合基本的图文任务。"
   },
+  "step-1x-edit": {
+    "description": "该模型专注于图像编辑任务，能够根据用户提供的图片和文本描述，对图片进行修改和增强。支持多种输入格式，包括文本描述和示例图像。模型能够理解用户的意图，并生成符合要求的图像编辑结果。"
+  },
+  "step-1x-medium": {
+    "description": "该模型拥有强大的图像生成能力，支持文本描述作为输入方式。具备原生的中文支持，能够更好的理解和处理中文文本描述，并且能够更准确地捕捉文本描述中的语义信息，并将其转化为图像特征，从而实现更精准的图像生成。模型能够根据输入生成高分辨率、高质量的图像，并具备一定的风格迁移能力。"
+  },
   "step-2-16k": {
     "description": "支持大规模上下文交互，适合复杂对话场景。"
   },
@@ -2356,6 +2491,9 @@
   },
   "step-2-mini": {
     "description": "基于新一代自研Attention架构MFA的极速大模型，用极低成本达到和step1类似的效果，同时保持了更高的吞吐和更快响应时延。能够处理通用任务，在代码能力上具备特长。"
+  },
+  "step-2x-large": {
+    "description": "阶跃星辰新一代生图模型,该模型专注于图像生成任务,能够根据用户提供的文本描述,生成高质量的图像。新模型生成图片质感更真实，中英文文字生成能力更强。"
   },
   "step-r1-v-mini": {
     "description": "该模型是拥有强大的图像理解能力的推理大模型，能够处理图像和文字信息，经过深度思考后输出文本生成文本内容。该模型在视觉推理领域表现突出，同时拥有第一梯队的数学、代码、文本推理能力。上下文长度为100k。"
@@ -2432,8 +2570,23 @@
   "v0-1.5-md": {
     "description": "v0-1.5-md 模型适用于日常任务和用户界面（UI）生成"
   },
+  "wan2.2-t2i-flash": {
+    "description": "万相2.2极速版，当前最新模型。在创意性、稳定性、写实质感上全面升级，生成速度快，性价比高。"
+  },
+  "wan2.2-t2i-plus": {
+    "description": "万相2.2专业版，当前最新模型。在创意性、稳定性、写实质感上全面升级，生成细节丰富。"
+  },
+  "wanx-v1": {
+    "description": "基础文生图模型。对应通义万相官网1.0通用模型。"
+  },
+  "wanx2.0-t2i-turbo": {
+    "description": "擅长质感人像，速度中等、成本较低。对应通义万相官网2.0极速模型。"
+  },
+  "wanx2.1-t2i-plus": {
+    "description": "全面升级版本。生成图像细节更丰富，速度稍慢。对应通义万相官网2.1专业模型。"
+  },
   "wanx2.1-t2i-turbo": {
-    "description": "阿里云通义旗下的文生图模型"
+    "description": "全面升级版本。生成速度快、效果全面、综合性价比高。对应通义万相官网2.1极速模型。"
   },
   "whisper-1": {
     "description": "通用语音识别模型，支持多语言语音识别、语音翻译和语言识别。"
@@ -2485,5 +2638,11 @@
   },
   "yi-vision-v2": {
     "description": "复杂视觉任务模型，提供基于多张图片的高性能理解、分析能力。"
+  },
+  "zai-org/GLM-4.5": {
+    "description": "GLM-4.5 是一款专为智能体应用打造的基础模型，使用了混合专家（Mixture-of-Experts）架构。在工具调用、网页浏览、软件工程、前端编程领域进行了深度优化，支持无缝接入 Claude Code、Roo Code 等代码智能体中使用。GLM-4.5 采用混合推理模式，可以适应复杂推理和日常使用等多种应用场景。"
+  },
+  "zai-org/GLM-4.5-Air": {
+    "description": "GLM-4.5-Air 是一款专为智能体应用打造的基础模型，使用了混合专家（Mixture-of-Experts）架构。在工具调用、网页浏览、软件工程、前端编程领域进行了深度优化，支持无缝接入 Claude Code、Roo Code 等代码智能体中使用。GLM-4.5 采用混合推理模式，可以适应复杂推理和日常使用等多种应用场景。"
   }
 }

@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Fix mcp calling missing array content."],
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-07-30",
+    "version": "1.106.4"
+  },
+  {
+    "children": {
       "fixes": ["Moonshot assistant messages must not be empty."],
       "improvements": ["Add volcengine kimi-k2 model, Add Zhipu GLM-4.5 models."]
     },
