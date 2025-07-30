@@ -2,14 +2,14 @@ import { useRouter } from 'expo-router';
 import { AlignJustify, MoreHorizontal } from 'lucide-react-native';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-import { ICON_SIZE } from '@/mobile/const/common';
-import { DEFAULT_INBOX_TITLE } from '@/mobile/const/meta';
-import { useSessionStore } from '@/mobile/store/session';
-import { sessionMetaSelectors, sessionSelectors } from '@/mobile/store/session/selectors';
-import { useThemeToken } from '@/mobile/theme';
+import { ICON_SIZE } from '@/const/common';
+import { DEFAULT_INBOX_TITLE } from '@/const/meta';
+import { useSessionStore } from '@/store/session';
+import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { useThemeToken } from '@/theme';
 
 import { useStyles } from './style';
-import { Avatar } from '@/mobile/components';
+import { Avatar } from '@/components';
 
 interface ChatHeaderProps {
   onDrawerToggle?: () => void;
