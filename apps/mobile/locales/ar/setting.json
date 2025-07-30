@@ -1,0 +1,53 @@
+{
+  "about": "حول LobeHub",
+  "account": {
+    "profile": {
+      "email": "البريد الإلكتروني",
+      "name": "اسم المستخدم",
+      "status": "حالة الحساب",
+      "unverified": "غير مُحقق",
+      "verified": "تم التحقق"
+    },
+    "signOut": {
+      "confirm": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+      "label": "تسجيل الخروج"
+    },
+    "title": "إعدادات الحساب"
+  },
+  "changelog": "سجل التحديثات",
+  "feedback": "ملاحظات",
+  "help": "مساعدة الاستخدام",
+  "locale": {
+    "auto": {
+      "description": "اتباع إعدادات لغة النظام",
+      "title": "اتباع النظام"
+    },
+    "title": "إعدادات اللغة"
+  },
+  "openai": "إعدادات OpenAI",
+  "openaiSettings": {
+    "apiKey": "مفتاح API",
+    "apiKeyPlaceholder": "يرجى إدخال مفتاح API الخاص بـ OpenAI",
+    "checkApiKey": "يرجى التحقق من صحة مفتاح API",
+    "checkProxyAddress": "تعذر الاتصال بالخادم، يرجى التحقق من صحة عنوان الوكيل",
+    "connectionSuccess": "تم الاتصال بنجاح، تم تكوين مفتاح API وعنوان الوكيل بشكل صحيح",
+    "connectivityHint": "بعد اختبار الاتصال، سيتم التحقق من صحة مفتاح API وعنوان الوكيل",
+    "pleaseEnterApiKey": "يرجى إدخال مفتاح API",
+    "proxyAddress": "عنوان وكيل API",
+    "proxyPlaceholder": "يجب أن يحتوي على http(s)://",
+    "testConnectivity": "اختبار الاتصال",
+    "validationFailed": "فشل التحقق",
+    "validationSuccess": "تم التحقق بنجاح"
+  },
+  "providers": "مزودو خدمات الذكاء الاصطناعي",
+  "support": "دعم البريد الإلكتروني",
+  "theme": {
+    "auto": "اتباع النظام",
+    "dark": "الوضع الداكن",
+    "light": "الوضع الفاتح",
+    "sectionDescription": "اختر نمط السمة المفضل لديك، وانقر لتبديل اختيارك",
+    "sectionTitle": "السمة",
+    "title": "إعدادات السمة"
+  },
+  "title": "الإعدادات"
+}

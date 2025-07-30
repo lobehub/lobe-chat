@@ -1,0 +1,204 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Internationalization (i18n) Guidelines
+
+## Overview
+This project uses i18next for internationalization with a custom workflow that generates translations from a single source file.
+
+## Architecture
+- **Source**: `i18n/default/common.ts` - Contains all Chinese translations as the source
+- **Generated**: `locales/*/common.json` - Auto-generated translations for 18 languages
+- **Script**: `scripts/i18nWorkflow/` - Handles translation generation
+
+## Supported Languages
+18 languages: ar, bg-BG, de-DE, en-US, es-ES, fa-IR, fr-FR, it-IT, ja-JP, ko-KR, nl-NL, pl-PL, pt-BR, ru-RU, tr-TR, vi-VN, zh-CN, zh-TW
+
+## Adding New Translations
+
+### Step 1: Add to Source File
+Add new translation keys to `i18n/default/common.ts`:
+
+```typescript
+export default {
+  // ... existing translations
+  newSection: {
+    title: '新标题',
+    description: '新描述',
+    actions: {
+      save: '保存',
+      cancel: '取消'
+    }
+  }
+};
+```
+
+### Step 2: Use in Components
+Use the `useTranslation` hook in React components:
+
+```typescript
+import { useTranslation } from 'react-i18next';
+
+const { t } = useTranslation();
+
+// Usage
+<Text>{t('newSection.title')}</Text>
+<Text>{t('newSection.actions.save')}</Text>
+```
+
+### Step 3: Generate Translations
+Run the i18n script to generate all language translations:
+
+```bash
+pnpm run i18n
+```
+
+## Translation Key Naming Convention
+
+### Structure
+- Use nested objects for related translations
+- Use camelCase for keys
+- Group by feature/section
+
+### Examples
+```typescript
+// Good
+settings: {
+  theme: {
+    title: '主题设置',
+    light: '浅色模式',
+    dark: '深色模式'
+  }
+}
+
+// Good
+chat: {
+  actions: {
+    copy: '复制',
+    delete: '删除',
+    retry: '重试'
+  },
+  messages: {
+    copied: '已复制',
+    failed: '失败'
+  }
+}
+
+// Avoid
+settingsThemeTitle: '主题设置',
+settingsThemeLight: '浅色模式'
+```
+
+## Common Translation Keys
+
+### Chat Features
+```typescript
+chat: {
+  history: '对话历史',
+  messageCopied: '消息已复制',
+  copyFailed: '复制失败',
+  regenerateFailed: '重新生成失败，请稍后重试',
+  confirmDelete: '确认删除',
+  deleteMessageConfirm: '确定要删除这条消息吗？',
+  copy: '复制',
+  retry: '重试',
+  delete: '删除',
+  send: '发送',
+  stop: '停止',
+  thinking: '思考中...',
+  placeholder: '输入您的消息...'
+}
+```
+
+### Settings Features
+```typescript
+settings: {
+  title: '设置',
+  theme: {
+    title: '主题设置',
+    light: '浅色模式',
+    dark: '深色模式',
+    auto: '跟随系统',
+    sectionTitle: '主题',
+    sectionDescription: '选择您喜欢的主题风格，点击切换您的选择'
+  },
+  locale: {
+    title: '语言设置',
+    auto: {
+      title: '跟随系统',
+      description: '跟随系统语言设置'
+    }
+  },
+  openai: 'OpenAI 设置',
+  openaiSettings: {
+    apiKey: 'API Key',
+    apiKeyPlaceholder: '请输入你的 OpenAI API Key',
+    proxyAddress: 'API 代理地址',
+    proxyPlaceholder: '必须包含 http(s)://',
+    testConnectivity: '测试连通性',
+    connectivityHint: '测试连通性后，将会验证 API Key 与代理地址是否正确填写'
+  }
+}
+```
+
+### Common Actions
+```typescript
+common: {
+  cancel: '取消',
+  confirm: '确认',
+  save: '保存',
+  delete: '删除',
+  edit: '编辑',
+  add: '添加',
+  search: '搜索',
+  loading: '加载中...',
+  error: '错误',
+  success: '成功',
+  warning: '警告',
+  info: '信息'
+}
+```
+
+## Important Notes
+
+### App Name
+- **Do NOT translate** the app name "LobeChat"
+- Keep it hardcoded in components: `<Text>LobeChat</Text>`
+- Do not add `app.name` to translation keys
+
+### Code Comments
+- Chinese comments in code (like `{/* 状态栏 */}`) do not need translation
+- Only user-facing text needs internationalization
+
+### Error Messages
+- Always use translation keys for error messages
+- Provide fallback messages in English
+
+### Placeholders
+- Translate placeholder text in input fields
+- Use `placeholderTextColor` for styling
+
+## Workflow Checklist
+
+When adding new UI text:
+
+1. ✅ Add translation key to `i18n/default/common.ts`
+2. ✅ Use `useTranslation` hook in component
+3. ✅ Replace hardcoded text with `t('key.path')`
+4. ✅ Run `pnpm run i18n` to generate translations
+5. ✅ Test with different languages
+6. ✅ Verify all 18 languages are generated correctly
+
+## Testing
+- Switch languages in settings to verify translations
+- Check that all user-facing text is translated
+- Ensure app name remains "LobeChat" in all languages
+- Verify error messages and placeholders are translated
+
+## Troubleshooting
+- If translations don't appear, run `pnpm run i18n` again
+- Check that translation keys match exactly between source and usage
+- Verify `useTranslation` hook is imported and used correctly
+- Ensure translation keys follow the nested object structure

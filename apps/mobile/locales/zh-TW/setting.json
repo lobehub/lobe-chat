@@ -1,0 +1,53 @@
+{
+  "about": "關於 LobeHub",
+  "account": {
+    "profile": {
+      "email": "電子郵件",
+      "name": "使用者名稱",
+      "status": "帳號狀態",
+      "unverified": "未驗證",
+      "verified": "已驗證"
+    },
+    "signOut": {
+      "confirm": "您確定要登出嗎？",
+      "label": "登出"
+    },
+    "title": "帳號設定"
+  },
+  "changelog": "更新日誌",
+  "feedback": "意見回饋",
+  "help": "使用說明",
+  "locale": {
+    "auto": {
+      "description": "跟隨系統語言設定",
+      "title": "跟隨系統"
+    },
+    "title": "語言設定"
+  },
+  "openai": "OpenAI 設定",
+  "openaiSettings": {
+    "apiKey": "API Key",
+    "apiKeyPlaceholder": "請輸入您的 OpenAI API Key",
+    "checkApiKey": "請檢查 API Key 是否正確",
+    "checkProxyAddress": "無法連接到伺服器，請檢查代理地址是否正確",
+    "connectionSuccess": "連線成功，API Key 與代理地址配置正確",
+    "connectivityHint": "測試連通性後，將會驗證 API Key 與代理地址是否正確填寫",
+    "pleaseEnterApiKey": "請輸入 API Key",
+    "proxyAddress": "API 代理地址",
+    "proxyPlaceholder": "必須包含 http(s)://",
+    "testConnectivity": "測試連通性",
+    "validationFailed": "驗證失敗",
+    "validationSuccess": "驗證成功"
+  },
+  "providers": "AI 服務商",
+  "support": "郵件支援",
+  "theme": {
+    "auto": "跟隨系統",
+    "dark": "深色模式",
+    "light": "淺色模式",
+    "sectionDescription": "選擇您喜歡的主題風格，點擊切換您的選擇",
+    "sectionTitle": "主題",
+    "title": "主題設定"
+  },
+  "title": "設定"
+}
