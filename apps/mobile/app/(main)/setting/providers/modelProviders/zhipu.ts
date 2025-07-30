@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/mobile/types/llm';
+import { ModelProviderCard } from '@/types/llm';
 
 // ref :https://open.bigmodel.cn/dev/howuse/model
 // api https://open.bigmodel.cn/dev/api#language

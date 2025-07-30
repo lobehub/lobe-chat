@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, View } from 'react-native';
 
-import { useThemeToken } from '@/mobile/theme';
+import { useThemeToken } from '@/theme';
 
 import { useStyles } from './style';
 

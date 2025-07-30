@@ -65,7 +65,7 @@
 
 ```typescript
 // 使用现有的颜色系统
-import { blue, gray, primary, green, red } from '@/mobile/color/colors';
+import { blue, gray, primary, green, red } from '@/color/colors';
 
 // 生成主题 token
 const token = generateThemeToken(isDark);
@@ -102,7 +102,7 @@ const utils = useThemeUtils();
 ### 1. 在组件中使用主题
 
 ```typescript
-import { useTheme } from '@/mobile/theme';
+import { useTheme } from '@/theme';
 
 function MyComponent() {
   const { theme, setThemeMode } = useTheme();
@@ -120,7 +120,7 @@ function MyComponent() {
 ### 2. 使用主题化组件
 
 ```typescript
-import { ThemedView, ThemedText, ThemedButton } from '@/mobile/components/theme';
+import { ThemedView, ThemedText, ThemedButton } from '@/components/theme';
 
 function MyComponent() {
   return (
@@ -137,7 +137,7 @@ function MyComponent() {
 ### 3. 使用主题工具函数
 
 ```typescript
-import { useThemeUtils } from '@/mobile/theme';
+import { useThemeUtils } from '@/theme';
 
 function MyComponent() {
   const utils = useThemeUtils();

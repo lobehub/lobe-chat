@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/mobile/types/llm';
+import { ModelProviderCard } from '@/types/llm';
 
 // ref: https://siliconflow.cn/zh-cn/pricing
 const SiliconCloud: ModelProviderCard = {
