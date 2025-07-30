@@ -16,9 +16,15 @@ const useStyles = createStyles(({ css, token, cx }) => ({
       color: ${token.colorText};
     }
   `,
+  codeContainer: css`
+    border-radius: ${token.borderRadiusLG}px;
+  `,
   container: css`
     position: relative;
 
+    overflow: auto;
+
+    max-height: 200px;
     padding-block: 4px;
     padding-inline: 12px 64px;
     border-radius: ${token.borderRadiusLG}px;
@@ -87,6 +93,14 @@ const Arguments = memo<ArgumentsProps>(({ arguments: args = '', shine, actions }
           </Highlighter>
         </div>
       )
+    );
+  }
+
+  if (args.length > 100) {
+    return (
+      <Highlighter language={'json'} showLanguage={false} variant={'filled'}>
+        {JSON.stringify(displayArgs, null, 2)}
+      </Highlighter>
     );
   }
 
