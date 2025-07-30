@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { AssistantCategory } from '@/mobile/types/discover';
+import { AssistantCategory } from '@/types/discover';
 
 const useCategory = () => {
   const { t } = useTranslation('discover');

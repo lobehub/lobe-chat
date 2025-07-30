@@ -2,8 +2,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 
-import { useTheme } from '@/mobile/theme';
-import type { ThemeMode } from '@/mobile/types/theme';
+import { useTheme } from '@/theme';
+import type { ThemeMode } from '@/types/theme';
 import { useStyles } from './styles';
 
 interface ThemePreviewProps {

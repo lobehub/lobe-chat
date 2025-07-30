@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-import Button from '@/mobile/components/Button';
-import { useOpenAIStore } from '@/mobile/store/openai';
-import { DEFAULT_MODEL } from '@/mobile/const/settings';
+import Button from '@/components/Button';
+import { useOpenAIStore } from '@/store/openai';
+import { DEFAULT_MODEL } from '@/const/settings';
 
 import { useStyles } from './styles';
 

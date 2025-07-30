@@ -1,10 +1,10 @@
 import { MessageSquarePlus } from 'lucide-react-native';
-import { useThemeToken } from '@/mobile/theme';
+import { useThemeToken } from '@/theme';
 import { useCallback } from 'react';
-import { ICON_SIZE } from '@/mobile/const/common';
+import { ICON_SIZE } from '@/const/common';
 import IconBtn from '../IconBtn';
-import { useChat } from '@/mobile/hooks/useChat';
-import { useSessionStore } from '@/mobile/store/session';
+import { useChat } from '@/hooks/useChat';
+import { useSessionStore } from '@/store/session';
 
 const NewChatBtn = () => {
   const token = useThemeToken();

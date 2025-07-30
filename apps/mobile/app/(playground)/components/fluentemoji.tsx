@@ -1,12 +1,7 @@
 import React from 'react';
 
-import ComponentPlayground, { DemoItem } from '@/mobile/app/(playground)/Playground';
-import {
-  BasicDemo,
-  SizesDemo,
-  ComparisonDemo,
-  TypeDemo,
-} from '@/mobile/components/FluentEmoji/demos';
+import ComponentPlayground, { DemoItem } from '../Playground';
+import { BasicDemo, SizesDemo, ComparisonDemo, TypeDemo } from '@/components/FluentEmoji/demos';
 
 const FLUENTEMOJI_README = `# FluentEmoji 表情符号组件
 
@@ -24,7 +19,7 @@ const FLUENTEMOJI_README = `# FluentEmoji 表情符号组件
 ## 基础使用
 
 \`\`\`tsx
-import FluentEmoji from '@/mobile/components/FluentEmoji';
+import FluentEmoji from '@/components/FluentEmoji';
 
 // 基础用法
 <FluentEmoji emoji="😊" size={40} />

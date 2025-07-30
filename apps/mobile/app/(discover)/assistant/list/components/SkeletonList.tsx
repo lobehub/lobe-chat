@@ -2,8 +2,8 @@ import React from 'react';
 import { View } from 'react-native';
 import { Search } from 'lucide-react-native';
 
-import { Skeleton, Space } from '@/mobile/components';
-import { useThemeToken } from '@/mobile/theme';
+import { Skeleton, Space } from '@/components';
+import { useThemeToken } from '@/theme';
 
 // Agent Card Skeleton Component
 const AgentCardSkeleton = () => {
