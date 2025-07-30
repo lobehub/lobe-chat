@@ -1,4 +1,4 @@
-import { JWTPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
+import { ClientSecretPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import { isDeprecatedEdition } from '@/const/version';
 import { ModelProvider } from '@/libs/model-runtime';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
@@ -10,7 +10,7 @@ import {
   CloudflareKeyVault,
   OpenAICompatibleKeyVault,
 } from '@/types/user/settings';
-import { createJWT } from '@/utils/jwt';
+import { obfuscatePayloadWithXOR } from '@/utils/client/xor-obfuscation';
 
 export const getProviderAuthPayload = (
   provider: string,
@@ -80,7 +80,7 @@ const createAuthTokenWithPayload = async (payload = {}) => {
   const accessCode = keyVaultsConfigSelectors.password(useUserStore.getState());
   const userId = userProfileSelectors.userId(useUserStore.getState());
 
-  return createJWT<JWTPayload>({ accessCode, userId, ...payload });
+  return obfuscatePayloadWithXOR<ClientSecretPayload>({ accessCode, userId, ...payload });
 };
 
 interface AuthParams {

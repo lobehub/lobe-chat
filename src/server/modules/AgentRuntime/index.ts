@@ -1,5 +1,5 @@
 import { getLLMConfig } from '@/config/llm';
-import { JWTPayload } from '@/const/auth';
+import { ClientSecretPayload } from '@/const/auth';
 import { AgentRuntime, ModelProvider } from '@/libs/model-runtime';
 
 import apiKeyManager from './apiKeyManager';
@@ -14,7 +14,7 @@ export * from './trace';
  * @param payload - The JWT payload.
  * @returns The options object.
  */
-const getParamsFromPayload = (provider: string, payload: JWTPayload) => {
+const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) => {
   const llmConfig = getLLMConfig() as Record<string, any>;
 
   switch (provider) {
@@ -115,7 +115,7 @@ const getParamsFromPayload = (provider: string, payload: JWTPayload) => {
  */
 export const initAgentRuntimeWithUserPayload = (
   provider: string,
-  payload: JWTPayload,
+  payload: ClientSecretPayload,
   params: any = {},
 ) => {
   return AgentRuntime.initializeWithProvider(provider, {

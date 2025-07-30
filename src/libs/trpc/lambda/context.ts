@@ -4,7 +4,7 @@ import { User } from 'next-auth';
 import { NextRequest } from 'next/server';
 
 import {
-  JWTPayload,
+  ClientSecretPayload,
   LOBE_CHAT_AUTH_HEADER,
   LOBE_CHAT_OIDC_AUTH_HEADER,
   enableClerk,
@@ -29,7 +29,7 @@ export interface OIDCAuth {
 export interface AuthContext {
   authorizationHeader?: string | null;
   clerkAuth?: IClerkAuth;
-  jwtPayload?: JWTPayload | null;
+  jwtPayload?: ClientSecretPayload | null;
   marketAccessToken?: string;
   nextAuth?: User;
   // Add OIDC authentication information
