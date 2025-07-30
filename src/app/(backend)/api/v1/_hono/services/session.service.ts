@@ -627,14 +627,28 @@ export class SessionService extends BaseService {
     this.log('info', '搜索会话', { keyword });
 
     try {
+      // 权限校验
+      const permissionResult = await this.resolveQueryPermission('SESSION_READ','ALL');
+
+      if (!permissionResult.isPermitted) {
+        throw this.createAuthorizationError(permissionResult.message || '无权搜索会话');
+      }
+
+      // 构建查询条件
+      let whereConditions = [
+        or(
+          like(sql`lower(${sessions.title})` as unknown as Column, `%${keyword.toLowerCase()}%`),
+        ),
+      ];
+
+      // 添加权限相关的查询条件
+      if (permissionResult?.condition?.userId) {
+        whereConditions.push(eq(sessions.userId, permissionResult.condition.userId));
+      }
+
       // 直接从 sessions 表里查询
       const sessionsList = await this.db.query.sessions.findMany({
-        where: and(
-          eq(sessions.userId, this.userId!),
-          or(
-            like(sql`lower(${sessions.title})` as unknown as Column, `%${keyword.toLowerCase()}%`),
-          ),
-        ),
+        where: and(...whereConditions),
       });
 
       this.log('info', `搜索到 ${sessionsList.length} 个会话`, { keyword: request.keyword });
