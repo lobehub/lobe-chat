@@ -20,7 +20,6 @@ alwaysApply: false
 - `pnpm web` - Run in web browser
 - `pnpm test` - Run Jest tests in watch mode
 - `pnpm lint` - Run ESLint
-- `pnpm reset-project` - Reset project state (uses [scripts/reset-project.js](mdc:scripts/reset-project.js))
 - `pnpm i18n` - Generate translations for all languages
 
 ## Internationalization (i18n)
