@@ -1,0 +1,17 @@
+{
+  "error": {
+    "title": "Възникна грешка"
+  },
+  "http": {
+    "forbidden": "Достъпът е забранен",
+    "networkError": "Грешка в мрежата",
+    "notFound": "Не е намерено",
+    "serverError": "Грешка на сървъра",
+    "timeout": "Времето за заявката изтече",
+    "unauthorized": "Неоторизиран достъп"
+  },
+  "page": {
+    "notFoundMessage": "Тази страница не съществува.",
+    "notFoundTitle": "Опа!"
+  }
+}

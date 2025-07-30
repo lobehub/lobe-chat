@@ -1,0 +1,34 @@
+{
+  "actions": {
+    "add": "Ajouter",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "continue": "Continuer",
+    "copy": "Copier",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "retry": "Réessayer",
+    "save": "Enregistrer"
+  },
+  "and": "et",
+  "assistant": {
+    "fetchError": "Échec de la récupération de la liste des assistants, veuillez réessayer plus tard",
+    "noData": "Aucune donnée d'assistant disponible",
+    "noMatch": "Aucun assistant correspondant trouvé",
+    "search": "Rechercher un assistant..."
+  },
+  "navigation": {
+    "goToHomeScreen": "Retour à l'écran d'accueil"
+  },
+  "or": "ou",
+  "search": {
+    "placeholder": "Rechercher"
+  },
+  "status": {
+    "error": "Erreur",
+    "info": "Information",
+    "loading": "Chargement...",
+    "success": "Succès",
+    "warning": "Avertissement"
+  }
+}

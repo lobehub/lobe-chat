@@ -1,0 +1,34 @@
+{
+  "assistant": {
+    "detail": {
+      "addAndChat": "افزودن دستیار و گفتگو",
+      "addFailed": "افزودن دستیار ناموفق بود",
+      "addFailedMessage": "افزودن دستیار ناموفق بود، لطفاً بعداً دوباره تلاش کنید",
+      "assistantSettings": "تنظیمات دستیار",
+      "loadFailed": "دریافت جزئیات دستیار ناموفق بود، لطفاً بعداً دوباره تلاش کنید",
+      "notFoundIdentifier": "شناسه دستیار یافت نشد",
+      "share": "اشتراک‌گذاری",
+      "shareFailed": "اشتراک‌گذاری ناموفق بود"
+    }
+  },
+  "category": {
+    "assistant": {
+      "academic": "آکادمیک",
+      "all": "همه",
+      "career": "حرفه‌ای",
+      "copywriting": "کپی‌رایتینگ",
+      "design": "طراحی",
+      "education": "آموزش",
+      "emotions": "احساسات",
+      "entertainment": "سرگرمی",
+      "games": "بازی‌ها",
+      "general": "عمومی",
+      "life": "زندگی",
+      "marketing": "بازاریابی",
+      "office": "اداری",
+      "programming": "برنامه‌نویسی",
+      "translation": "ترجمه"
+    }
+  },
+  "title": "کشف"
+}

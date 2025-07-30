@@ -1,0 +1,22 @@
+{
+  "confirmDelete": "確認刪除",
+  "copyFailed": "複製失敗",
+  "deleteMessageConfirm": "確定要刪除這則訊息嗎？",
+  "history": "對話歷史",
+  "messageCopied": "訊息已複製",
+  "newChat": "新對話",
+  "placeholder": "輸入您的訊息...",
+  "regenerateFailed": "重新生成失敗，請稍後重試",
+  "send": "發送",
+  "session": {
+    "createFirst": "建立您的第一個聊天會話",
+    "empty": "暫無會話",
+    "search": {
+      "placeholder": "搜尋會話"
+    },
+    "title": "隨便聊聊"
+  },
+  "share": "分享",
+  "stop": "停止",
+  "thinking": "思考中..."
+}

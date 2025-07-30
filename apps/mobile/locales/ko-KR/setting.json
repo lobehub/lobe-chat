@@ -1,0 +1,53 @@
+{
+  "about": "LobeHub 소개",
+  "account": {
+    "profile": {
+      "email": "이메일",
+      "name": "사용자 이름",
+      "status": "계정 상태",
+      "unverified": "미인증",
+      "verified": "인증됨"
+    },
+    "signOut": {
+      "confirm": "로그아웃 하시겠습니까?",
+      "label": "로그아웃"
+    },
+    "title": "계정 설정"
+  },
+  "changelog": "업데이트 로그",
+  "feedback": "의견 보내기",
+  "help": "도움말",
+  "locale": {
+    "auto": {
+      "description": "시스템 언어 설정을 따름",
+      "title": "시스템 언어 따름"
+    },
+    "title": "언어 설정"
+  },
+  "openai": "OpenAI 설정",
+  "openaiSettings": {
+    "apiKey": "API 키",
+    "apiKeyPlaceholder": "OpenAI API 키를 입력하세요",
+    "checkApiKey": "API 키가 올바른지 확인하세요",
+    "checkProxyAddress": "서버에 연결할 수 없습니다. 프록시 주소가 올바른지 확인하세요",
+    "connectionSuccess": "연결 성공, API 키와 프록시 주소가 올바르게 설정되었습니다",
+    "connectivityHint": "연결 테스트 후 API 키와 프록시 주소가 올바르게 입력되었는지 검증합니다",
+    "pleaseEnterApiKey": "API 키를 입력하세요",
+    "proxyAddress": "API 프록시 주소",
+    "proxyPlaceholder": "http(s)://를 포함해야 합니다",
+    "testConnectivity": "연결 테스트",
+    "validationFailed": "검증 실패",
+    "validationSuccess": "검증 성공"
+  },
+  "providers": "AI 서비스 제공자",
+  "support": "이메일 지원",
+  "theme": {
+    "auto": "시스템 설정 따름",
+    "dark": "다크 모드",
+    "light": "라이트 모드",
+    "sectionDescription": "선호하는 테마 스타일을 선택하고 클릭하여 변경하세요",
+    "sectionTitle": "테마",
+    "title": "테마 설정"
+  },
+  "title": "설정"
+}

@@ -1,0 +1,17 @@
+{
+  "error": {
+    "title": "出錯了"
+  },
+  "http": {
+    "forbidden": "禁止訪問",
+    "networkError": "網路錯誤",
+    "notFound": "未找到",
+    "serverError": "伺服器錯誤",
+    "timeout": "請求逾時",
+    "unauthorized": "未經授權"
+  },
+  "page": {
+    "notFoundMessage": "該頁面不存在。",
+    "notFoundTitle": "哎呀！"
+  }
+}

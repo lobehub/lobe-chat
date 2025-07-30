@@ -1,0 +1,34 @@
+{
+  "assistant": {
+    "detail": {
+      "addAndChat": "Assistent toevoegen en chatten",
+      "addFailed": "Toevoegen van assistent mislukt",
+      "addFailedMessage": "Toevoegen van assistent mislukt, probeer het later opnieuw",
+      "assistantSettings": "Assistentinstellingen",
+      "loadFailed": "Het ophalen van assistentdetails is mislukt, probeer het later opnieuw",
+      "notFoundIdentifier": "Assistentidentificatie niet gevonden",
+      "share": "Delen",
+      "shareFailed": "Delen mislukt"
+    }
+  },
+  "category": {
+    "assistant": {
+      "academic": "Academisch",
+      "all": "Alles",
+      "career": "Carrière",
+      "copywriting": "Copywriting",
+      "design": "Ontwerp",
+      "education": "Onderwijs",
+      "emotions": "Emoties",
+      "entertainment": "Entertainment",
+      "games": "Spellen",
+      "general": "Algemeen",
+      "life": "Leven",
+      "marketing": "Marketing",
+      "office": "Kantoor",
+      "programming": "Programmeren",
+      "translation": "Vertaling"
+    }
+  },
+  "title": "Ontdekken"
+}

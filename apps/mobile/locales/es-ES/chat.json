@@ -1,0 +1,22 @@
+{
+  "confirmDelete": "Confirmar eliminación",
+  "copyFailed": "Error al copiar",
+  "deleteMessageConfirm": "¿Está seguro de que desea eliminar este mensaje?",
+  "history": "Historial de conversaciones",
+  "messageCopied": "Mensaje copiado",
+  "newChat": "Nueva conversación",
+  "placeholder": "Escriba su mensaje...",
+  "regenerateFailed": "Error al regenerar, por favor intente más tarde",
+  "send": "Enviar",
+  "session": {
+    "createFirst": "Cree su primera sesión de chat",
+    "empty": "No hay sesiones",
+    "search": {
+      "placeholder": "Buscar sesiones"
+    },
+    "title": "Charlar libremente"
+  },
+  "share": "Compartir",
+  "stop": "Detener",
+  "thinking": "Pensando..."
+}

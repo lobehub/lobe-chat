@@ -1,0 +1,53 @@
+{
+  "about": "LobeHubについて",
+  "account": {
+    "profile": {
+      "email": "メールアドレス",
+      "name": "ユーザー名",
+      "status": "アカウントステータス",
+      "unverified": "未確認",
+      "verified": "確認済み"
+    },
+    "signOut": {
+      "confirm": "ログアウトしてもよろしいですか？",
+      "label": "ログアウト"
+    },
+    "title": "アカウント設定"
+  },
+  "changelog": "更新履歴",
+  "feedback": "フィードバック",
+  "help": "ヘルプ",
+  "locale": {
+    "auto": {
+      "description": "システムの言語設定に従う",
+      "title": "システムに従う"
+    },
+    "title": "言語設定"
+  },
+  "openai": "OpenAI 設定",
+  "openaiSettings": {
+    "apiKey": "APIキー",
+    "apiKeyPlaceholder": "OpenAIのAPIキーを入力してください",
+    "checkApiKey": "APIキーが正しいか確認してください",
+    "checkProxyAddress": "サーバーに接続できません。プロキシアドレスが正しいか確認してください",
+    "connectionSuccess": "接続成功。APIキーとプロキシアドレスの設定が正しいです",
+    "connectivityHint": "接続テスト後、APIキーとプロキシアドレスの正確さを検証します",
+    "pleaseEnterApiKey": "APIキーを入力してください",
+    "proxyAddress": "APIプロキシアドレス",
+    "proxyPlaceholder": "http(s):// を含める必要があります",
+    "testConnectivity": "接続テスト",
+    "validationFailed": "検証失敗",
+    "validationSuccess": "検証成功"
+  },
+  "providers": "AIサービスプロバイダー",
+  "support": "メールサポート",
+  "theme": {
+    "auto": "システムに従う",
+    "dark": "ダークモード",
+    "light": "ライトモード",
+    "sectionDescription": "お好みのテーマスタイルを選択し、クリックして切り替えてください",
+    "sectionTitle": "テーマ",
+    "title": "テーマ設定"
+  },
+  "title": "設定"
+}

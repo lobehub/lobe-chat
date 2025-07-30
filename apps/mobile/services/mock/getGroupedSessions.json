@@ -1,0 +1,125 @@
+{
+  "sessionGroups": [],
+  "sessions": [
+    {
+      "id": "ssn_uwvlSLF8WqVy",
+      "slug": "main-hundred",
+      "type": "agent",
+      "userId": "user_2u5M4FUHxCm85xy78jaBg3FtEMr",
+      "clientId": null,
+      "pinned": false,
+      "accessedAt": "2025-03-15T02:40:53.236Z",
+      "createdAt": "2025-03-15T02:40:53.268Z",
+      "updatedAt": "2025-03-15T02:40:53.268Z",
+      "group": null,
+      "meta": {
+        "avatar": null,
+        "backgroundColor": null,
+        "description": null,
+        "tags": [],
+        "title": null
+      },
+      "model": "gpt-4o-mini"
+    },
+    {
+      "id": "ssn_LYaVnNG9NStA",
+      "slug": "cake-stick",
+      "type": "agent",
+      "userId": "user_2u5M4FUHxCm85xy78jaBg3FtEMr",
+      "clientId": null,
+      "pinned": false,
+      "accessedAt": "2025-03-09T15:23:38.009Z",
+      "createdAt": "2025-03-09T15:23:38.036Z",
+      "updatedAt": "2025-03-09T15:23:38.036Z",
+      "group": null,
+      "meta": {
+        "avatar": "🎭",
+        "backgroundColor": null,
+        "description": "与您最喜爱的电影、电视剧、书籍等角色互动！",
+        "tags": ["对话", "角色扮演", "有趣"],
+        "title": "角色扮演"
+      },
+      "model": "gpt-4o-mini"
+    },
+    {
+      "id": "ssn_NoS8rwwsrZtC",
+      "slug": "supply-been",
+      "type": "agent",
+      "userId": "user_2u5M4FUHxCm85xy78jaBg3FtEMr",
+      "clientId": null,
+      "pinned": false,
+      "accessedAt": "2025-03-09T15:23:37.998Z",
+      "createdAt": "2025-03-09T15:23:38.023Z",
+      "updatedAt": "2025-03-09T15:23:38.023Z",
+      "group": null,
+      "meta": {
+        "avatar": "📝",
+        "backgroundColor": null,
+        "description": "精确描述 API 的使用方法，提供示例代码，注意事项和返回值类型定义。",
+        "tags": ["代码", "软件开发", "程序员", "文档", "写作"],
+        "title": "API 文档优化专家"
+      },
+      "model": "gpt-3.5-turbo-16k"
+    },
+    {
+      "id": "ssn_ZIu35a3Aj6Ro",
+      "slug": "exactly-star",
+      "type": "agent",
+      "userId": "user_2u5M4FUHxCm85xy78jaBg3FtEMr",
+      "clientId": null,
+      "pinned": false,
+      "accessedAt": "2025-03-09T15:23:37.994Z",
+      "createdAt": "2025-03-09T15:23:38.018Z",
+      "updatedAt": "2025-03-09T15:23:38.018Z",
+      "group": null,
+      "meta": {
+        "avatar": "🧑‍🏫",
+        "backgroundColor": null,
+        "description": "作为人工智能个人成长教练，您的主要目标是协助用户在自我提升和个人发展的旅程中。",
+        "tags": ["个人成长", "辅导", "自我提升", "目标设定", "动力"],
+        "title": "个人成长教练"
+      },
+      "model": "gpt-4o-mini"
+    },
+    {
+      "id": "ssn_4YZ5vD3Tg7ba",
+      "slug": "alike-gray",
+      "type": "agent",
+      "userId": "user_2u5M4FUHxCm85xy78jaBg3FtEMr",
+      "clientId": null,
+      "pinned": false,
+      "accessedAt": "2025-03-09T15:23:37.988Z",
+      "createdAt": "2025-03-09T15:23:38.012Z",
+      "updatedAt": "2025-03-09T15:23:38.012Z",
+      "group": null,
+      "meta": {
+        "avatar": "🙅‍♀️",
+        "backgroundColor": null,
+        "description": "解读女生话背后的「潜台词」，尖酸刻薄，强势回复！🔥",
+        "tags": ["女朋友", "女生", "潜台词", "彪悍", "强势", "解读"],
+        "title": "女朋友潜台词专家"
+      },
+      "model": "gpt-4o-mini"
+    },
+    {
+      "id": "ssn_DtlomGrRHN7E",
+      "slug": "maybe-expression",
+      "type": "agent",
+      "userId": "user_2u5M4FUHxCm85xy78jaBg3FtEMr",
+      "clientId": null,
+      "pinned": false,
+      "accessedAt": "2025-03-09T15:23:37.989Z",
+      "createdAt": "2025-03-09T15:23:38.011Z",
+      "updatedAt": "2025-03-09T15:23:38.011Z",
+      "group": null,
+      "meta": {
+        "avatar": "🦄",
+        "backgroundColor": null,
+        "description": "精准的聊天夸赞专家，适宜的赞美和吹捧",
+        "tags": ["夸赞", "情商", "聊天"],
+        "title": "高情商马屁助手"
+      },
+      "model": "gpt-4o-mini"
+    }
+  ]
+}

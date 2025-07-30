@@ -1,0 +1,53 @@
+{
+  "about": "O LobeHub",
+  "account": {
+    "profile": {
+      "email": "E-mail",
+      "name": "Nazwa użytkownika",
+      "status": "Status konta",
+      "unverified": "Niezweryfikowany",
+      "verified": "Zweryfikowany"
+    },
+    "signOut": {
+      "confirm": "Czy na pewno chcesz się wylogować?",
+      "label": "Wyloguj się"
+    },
+    "title": "Ustawienia konta"
+  },
+  "changelog": "Dziennik zmian",
+  "feedback": "Opinie",
+  "help": "Pomoc",
+  "locale": {
+    "auto": {
+      "description": "Podążaj za ustawieniami języka systemu",
+      "title": "Automatycznie"
+    },
+    "title": "Ustawienia języka"
+  },
+  "openai": "Ustawienia OpenAI",
+  "openaiSettings": {
+    "apiKey": "Klucz API",
+    "apiKeyPlaceholder": "Wprowadź swój klucz API OpenAI",
+    "checkApiKey": "Proszę sprawdzić, czy klucz API jest poprawny",
+    "checkProxyAddress": "Nie można połączyć się z serwerem, sprawdź, czy adres proxy jest poprawny",
+    "connectionSuccess": "Połączenie udane, klucz API i adres proxy są poprawnie skonfigurowane",
+    "connectivityHint": "Po przetestowaniu łączności zostanie zweryfikowane, czy klucz API i adres proxy są poprawnie wprowadzone",
+    "pleaseEnterApiKey": "Proszę wprowadzić klucz API",
+    "proxyAddress": "Adres proxy API",
+    "proxyPlaceholder": "Musi zawierać http(s)://",
+    "testConnectivity": "Testuj łączność",
+    "validationFailed": "Weryfikacja nie powiodła się",
+    "validationSuccess": "Weryfikacja powiodła się"
+  },
+  "providers": "Dostawcy AI",
+  "support": "Wsparcie mailowe",
+  "theme": {
+    "auto": "Automatycznie",
+    "dark": "Tryb ciemny",
+    "light": "Tryb jasny",
+    "sectionDescription": "Wybierz preferowany styl motywu i kliknij, aby zmienić swój wybór",
+    "sectionTitle": "Motyw",
+    "title": "Ustawienia motywu"
+  },
+  "title": "Ustawienia"
+}
