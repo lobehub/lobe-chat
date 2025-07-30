@@ -1,0 +1,22 @@
+{
+  "confirmDelete": "Bevestig verwijderen",
+  "copyFailed": "Kopiëren mislukt",
+  "deleteMessageConfirm": "Weet u zeker dat u dit bericht wilt verwijderen?",
+  "history": "Gespreksgeschiedenis",
+  "messageCopied": "Bericht gekopieerd",
+  "newChat": "Nieuw gesprek",
+  "placeholder": "Typ uw bericht...",
+  "regenerateFailed": "Hertellen mislukt, probeer het later opnieuw",
+  "send": "Verzenden",
+  "session": {
+    "createFirst": "Maak uw eerste chatsessie aan",
+    "empty": "Geen sessies beschikbaar",
+    "search": {
+      "placeholder": "Zoek sessies"
+    },
+    "title": "Gewoon een praatje"
+  },
+  "share": "Delen",
+  "stop": "Stoppen",
+  "thinking": "Bezig met nadenken..."
+}

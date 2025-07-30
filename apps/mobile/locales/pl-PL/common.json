@@ -1,0 +1,34 @@
+{
+  "actions": {
+    "add": "Dodaj",
+    "cancel": "Anuluj",
+    "confirm": "Potwierdź",
+    "continue": "Kontynuuj",
+    "copy": "Kopiuj",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "retry": "Spróbuj ponownie",
+    "save": "Zapisz"
+  },
+  "and": "i",
+  "assistant": {
+    "fetchError": "Nie udało się pobrać listy asystentów, spróbuj ponownie później",
+    "noData": "Brak danych asystenta",
+    "noMatch": "Nie znaleziono pasującego asystenta",
+    "search": "Szukaj asystenta..."
+  },
+  "navigation": {
+    "goToHomeScreen": "Powrót do ekranu głównego"
+  },
+  "or": "lub",
+  "search": {
+    "placeholder": "Szukaj"
+  },
+  "status": {
+    "error": "Błąd",
+    "info": "Informacja",
+    "loading": "Ładowanie...",
+    "success": "Sukces",
+    "warning": "Ostrzeżenie"
+  }
+}

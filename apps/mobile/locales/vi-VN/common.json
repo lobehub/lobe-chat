@@ -1,0 +1,34 @@
+{
+  "actions": {
+    "add": "Thêm",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "continue": "Tiếp tục",
+    "copy": "Sao chép",
+    "delete": "Xóa",
+    "edit": "Chỉnh sửa",
+    "retry": "Thử lại",
+    "save": "Lưu"
+  },
+  "and": "và",
+  "assistant": {
+    "fetchError": "Lấy danh sách trợ lý thất bại, vui lòng thử lại sau",
+    "noData": "Chưa có dữ liệu trợ lý",
+    "noMatch": "Không tìm thấy trợ lý phù hợp",
+    "search": "Tìm kiếm trợ lý..."
+  },
+  "navigation": {
+    "goToHomeScreen": "Quay về trang chủ"
+  },
+  "or": "hoặc",
+  "search": {
+    "placeholder": "Tìm kiếm"
+  },
+  "status": {
+    "error": "Lỗi",
+    "info": "Thông tin",
+    "loading": "Đang tải...",
+    "success": "Thành công",
+    "warning": "Cảnh báo"
+  }
+}

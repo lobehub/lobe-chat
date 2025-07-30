@@ -1,0 +1,88 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# State Management with Zustand
+
+## Store Architecture
+
+The app uses Zustand for state management with persistence through AsyncStorage.
+
+### Core Stores
+
+#### OpenAI Configuration
+- [store/openai.ts](mdc:store/openai.ts) - OpenAI API configuration
+- Manages: API key, proxy settings
+- Persistence: AsyncStorage with JSON serialization
+- Actions: `setApiKey`, `setProxy`
+
+#### Session Management
+- [store/session/index.ts](mdc:store/session/index.ts) - Main session store
+- [store/session/helpers.ts](mdc:store/session/helpers.ts) - Session utility functions
+- [store/session/selectors/](mdc:store/session/selectors/) - Session selectors
+  - [store/session/selectors/index.ts](mdc:store/session/selectors/index.ts) - Selector exports
+  - [store/session/selectors/list.ts](mdc:store/session/selectors/list.ts) - List-related selectors
+  - [store/session/selectors/meta.ts](mdc:store/session/selectors/meta.ts) - Metadata selectors
+
+#### Chat State
+- [store/chat/index.ts](mdc:store/chat/index.ts) - Active chat functionality
+- Manages: Current chat state, messages, loading states
+
+## State Patterns
+
+### Store Structure
+```typescript
+interface StoreState {
+  // State properties
+  data: DataType;
+  
+  // Actions
+  setData: (data: DataType) => void;
+  updateData: (updater: (data: DataType) => DataType) => void;
+  resetData: () => void;
+}
+```
+
+### Persistence Pattern
+```typescript
+export const useStore = create<StoreState>()(
+  persist(
+    (set, get) => ({
+      // State and actions
+    }),
+    {
+      name: 'store-name',
+      storage: createJSONStorage(() => AsyncStorage),
+    },
+  ),
+);
+```
+
+### Selector Pattern
+- Use selectors for derived state
+- Implement memoization for performance
+- Keep selectors in separate files for organization
+
+### Type Safety
+- Define interfaces for all store states
+- Use TypeScript for compile-time type checking
+- Export types for use in components
+
+## Usage Guidelines
+
+### In Components
+```typescript
+const { data, setData } = useStore();
+const derivedData = useStore(selector);
+```
+
+### Store Updates
+- Use immutable updates
+- Implement proper error handling
+- Add loading states for async operations
+
+### Performance
+- Use selectors to prevent unnecessary re-renders
+- Implement proper memoization
+- Avoid storing computed values in state
