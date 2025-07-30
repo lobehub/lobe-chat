@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Improve mcp plugin calling and display."]
+    },
+    "date": "2025-07-30",
+    "version": "1.106.5"
+  },
+  {
+    "children": {
       "fixes": ["Fix mcp calling missing array content."],
       "improvements": ["Update i18n."]
     },

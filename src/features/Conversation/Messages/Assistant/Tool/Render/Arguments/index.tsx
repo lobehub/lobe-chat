@@ -16,9 +16,15 @@ const useStyles = createStyles(({ css, token, cx }) => ({
       color: ${token.colorText};
     }
   `,
+  codeContainer: css`
+    border-radius: ${token.borderRadiusLG}px;
+  `,
   container: css`
     position: relative;
 
+    overflow: auto;
+
+    max-height: 200px;
     padding-block: 4px;
     padding-inline: 12px 64px;
     border-radius: ${token.borderRadiusLG}px;
@@ -90,6 +96,14 @@ const Arguments = memo<ArgumentsProps>(({ arguments: args = '', shine, actions }
     );
   }
 
+  // if (args.length > 100) {
+  //   return (
+  //     <Highlighter language={'json'} showLanguage={false} variant={'filled'}>
+  //       {JSON.stringify(displayArgs, null, 2)}
+  //     </Highlighter>
+  //   );
+  // }
+
   const hasMinWidth = Object.keys(displayArgs).length > 1;
 
   if (Object.keys(displayArgs).length === 0) return null;
@@ -101,18 +115,29 @@ const Arguments = memo<ArgumentsProps>(({ arguments: args = '', shine, actions }
           {actions}
         </Flexbox>
       )}
-      {Object.entries(displayArgs).map(([key, value]) => {
-        return (
-          <ObjectEntity
-            editable={false}
-            hasMinWidth={hasMinWidth}
-            key={key}
-            objectKey={key}
-            shine={shine}
-            value={value}
-          />
-        );
-      })}
+      {args.length > 100 ? (
+        <Highlighter
+          language={'json'}
+          showLanguage={false}
+          style={{ padding: 8 }}
+          variant={'borderless'}
+        >
+          {JSON.stringify(displayArgs, null, 2)}
+        </Highlighter>
+      ) : (
+        Object.entries(displayArgs).map(([key, value]) => {
+          return (
+            <ObjectEntity
+              editable={false}
+              hasMinWidth={hasMinWidth}
+              key={key}
+              objectKey={key}
+              shine={shine}
+              value={value}
+            />
+          );
+        })
+      )}
     </div>
   );
 });
