@@ -1,0 +1,22 @@
+{
+  "confirmDelete": "Confirmer la suppression",
+  "copyFailed": "Échec de la copie",
+  "deleteMessageConfirm": "Voulez-vous vraiment supprimer ce message ?",
+  "history": "Historique des conversations",
+  "messageCopied": "Message copié",
+  "newChat": "Nouvelle conversation",
+  "placeholder": "Entrez votre message...",
+  "regenerateFailed": "Échec de la régénération, veuillez réessayer plus tard",
+  "send": "Envoyer",
+  "session": {
+    "createFirst": "Créez votre première session de chat",
+    "empty": "Aucune session pour le moment",
+    "search": {
+      "placeholder": "Rechercher une session"
+    },
+    "title": "Discuter librement"
+  },
+  "share": "Partager",
+  "stop": "Arrêter",
+  "thinking": "Réflexion en cours..."
+}

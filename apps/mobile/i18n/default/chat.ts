@@ -1,0 +1,22 @@
+export default {
+  confirmDelete: '确认删除',
+  copyFailed: '复制失败',
+  deleteMessageConfirm: '确定要删除这条消息吗？',
+  history: '对话历史',
+  messageCopied: '消息已复制',
+  newChat: '新对话',
+  placeholder: '输入您的消息...',
+  regenerateFailed: '重新生成失败，请稍后重试',
+  send: '发送',
+  session: {
+    createFirst: '创建您的第一个聊天会话',
+    empty: '暂无会话',
+    search: {
+      placeholder: '搜索会话',
+    },
+    title: '随便聊聊',
+  },
+  share: '分享',
+  stop: '停止',
+  thinking: '思考中...',
+};

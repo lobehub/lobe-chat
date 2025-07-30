@@ -1,0 +1,17 @@
+{
+  "error": {
+    "title": "Wystąpił błąd"
+  },
+  "http": {
+    "forbidden": "Dostęp zabroniony",
+    "networkError": "Błąd sieci",
+    "notFound": "Nie znaleziono",
+    "serverError": "Błąd serwera",
+    "timeout": "Przekroczono limit czasu żądania",
+    "unauthorized": "Brak autoryzacji"
+  },
+  "page": {
+    "notFoundMessage": "Ta strona nie istnieje.",
+    "notFoundTitle": "Ups!"
+  }
+}

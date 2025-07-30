@@ -1,0 +1,53 @@
+{
+  "about": "Over LobeHub",
+  "account": {
+    "profile": {
+      "email": "E-mail",
+      "name": "Gebruikersnaam",
+      "status": "Accountstatus",
+      "unverified": "Niet geverifieerd",
+      "verified": "Geverifieerd"
+    },
+    "signOut": {
+      "confirm": "Weet u zeker dat u wilt uitloggen?",
+      "label": "Uitloggen"
+    },
+    "title": "Accountinstellingen"
+  },
+  "changelog": "Wijzigingslogboek",
+  "feedback": "Feedback",
+  "help": "Hulp",
+  "locale": {
+    "auto": {
+      "description": "Volg de systeemtaalinstellingen",
+      "title": "Systeem volgen"
+    },
+    "title": "Taalinstellingen"
+  },
+  "openai": "OpenAI-instellingen",
+  "openaiSettings": {
+    "apiKey": "API-sleutel",
+    "apiKeyPlaceholder": "Voer uw OpenAI API-sleutel in",
+    "checkApiKey": "Controleer of de API-sleutel correct is",
+    "checkProxyAddress": "Kan geen verbinding maken met de server, controleer of het proxyadres correct is",
+    "connectionSuccess": "Verbinding geslaagd, API-sleutel en proxyadres correct geconfigureerd",
+    "connectivityHint": "Na het testen van de connectiviteit wordt gecontroleerd of de API-sleutel en het proxyadres correct zijn ingevuld",
+    "pleaseEnterApiKey": "Voer de API-sleutel in",
+    "proxyAddress": "API-proxyadres",
+    "proxyPlaceholder": "Moet http(s):// bevatten",
+    "testConnectivity": "Test connectiviteit",
+    "validationFailed": "Validatie mislukt",
+    "validationSuccess": "Validatie geslaagd"
+  },
+  "providers": "AI-dienstverleners",
+  "support": "E-mailondersteuning",
+  "theme": {
+    "auto": "Systeem volgen",
+    "dark": "Donkere modus",
+    "light": "Lichte modus",
+    "sectionDescription": "Kies uw favoriete thema en klik om uw keuze te wijzigen",
+    "sectionTitle": "Thema",
+    "title": "Thema-instellingen"
+  },
+  "title": "Instellingen"
+}

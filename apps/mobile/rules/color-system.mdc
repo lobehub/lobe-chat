@@ -1,0 +1,99 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Color System and Theming
+
+## Color Architecture
+
+The app uses a comprehensive color system with support for multiple themes and color palettes.
+
+### Color Organization
+- [color/index.ts](mdc:color/index.ts) - Main color system exports
+- [color/types.ts](mdc:color/types.ts) - Color type definitions
+- [color/colors/](mdc:color/colors) - Color palette definitions
+- [color/neutrals/](mdc:color/neutrals) - Neutral color schemes
+
+### Color Palettes
+
+#### Primary Colors
+- [color/colors/primary.ts](mdc:color/colors/primary.ts) - Primary brand colors
+- [color/colors/blue.ts](mdc:color/colors/blue.ts) - Blue color variants
+- [color/colors/cyan.ts](mdc:color/colors/cyan.ts) - Cyan color variants
+- [color/colors/green.ts](mdc:color/colors/green.ts) - Green color variants
+- [color/colors/orange.ts](mdc:color/colors/orange.ts) - Orange color variants
+- [color/colors/purple.ts](mdc:color/colors/purple.ts) - Purple color variants
+- [color/colors/red.ts](mdc:color/colors/red.ts) - Red color variants
+- [color/colors/yellow.ts](mdc:color/colors/yellow.ts) - Yellow color variants
+
+#### Extended Palettes
+- [color/colors/geekblue.ts](mdc:color/colors/geekblue.ts) - Geek blue variants
+- [color/colors/gold.ts](mdc:color/colors/gold.ts) - Gold color variants
+- [color/colors/gray.ts](mdc:color/colors/gray.ts) - Gray color variants
+- [color/colors/lime.ts](mdc:color/colors/lime.ts) - Lime color variants
+- [color/colors/magenta.ts](mdc:color/colors/magenta.ts) - Magenta color variants
+- [color/colors/volcano.ts](mdc:color/colors/volcano.ts) - Volcano color variants
+
+#### Neutral Colors
+- [color/neutrals/index.ts](mdc:color/neutrals/index.ts) - Neutral color exports
+- [color/neutrals/mauve.ts](mdc:color/neutrals/mauve.ts) - Mauve neutral palette
+- [color/neutrals/olive.ts](mdc:color/neutrals/olive.ts) - Olive neutral palette
+- [color/neutrals/sage.ts](mdc:color/neutrals/sage.ts) - Sage neutral palette
+- [color/neutrals/sand.ts](mdc:color/neutrals/sand.ts) - Sand neutral palette
+- [color/neutrals/slate.ts](mdc:color/neutrals/slate.ts) - Slate neutral palette
+
+### Theme Integration
+
+#### React Navigation Theme
+- [constants/Colors.ts](mdc:constants/Colors.ts) - React Navigation color constants
+- Uses `useTheme()` hook for theme-aware components
+- Supports light and dark mode
+
+#### Theme Hooks
+- [hooks/useColorScheme.ts](mdc:hooks/useColorScheme.ts) - Color scheme detection
+- [hooks/useColorScheme.web.ts](mdc:hooks/useColorScheme.web.ts) - Web-specific color scheme
+- [hooks/useThemeColor.ts](mdc:hooks/useThemeColor.ts) - Theme color utilities
+
+## Color Usage Patterns
+
+### Component Theming
+```typescript
+const { colors, dark } = useTheme();
+const backgroundColor = dark ? colors.background : '#fff';
+```
+
+### Color Selection
+- Use semantic color names (e.g., `colors.primary`, `colors.error`)
+- Implement proper contrast ratios for accessibility
+- Support both light and dark themes
+
+### Color Constants
+- Define color constants in [constants/Colors.ts](mdc:constants/Colors.ts)
+- Use consistent color naming conventions
+- Group related colors together
+
+## Accessibility
+
+### Contrast Requirements
+- Minimum 4.5:1 contrast ratio for normal text
+- Minimum 3:1 contrast ratio for large text
+- Test colors in both light and dark modes
+
+### Color Blindness Support
+- Don't rely solely on color for information
+- Use patterns, icons, and text labels
+- Test with color blindness simulators
+
+## Best Practices
+
+### Color Application
+- Use primary colors sparingly for emphasis
+- Use neutral colors for backgrounds and text
+- Maintain consistent color usage across components
+- Consider cultural color associations
+
+### Theme Switching
+- Implement smooth transitions between themes
+- Preserve user theme preferences
+- Test all components in both themes
