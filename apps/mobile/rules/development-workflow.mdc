@@ -1,0 +1,119 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Development Workflow
+
+## Package Management
+
+### Using pnpm
+- **Install dependencies**: `pnpm install`
+- **Add new package**: `pnpm add <package-name>`
+- **Add dev dependency**: `pnpm add -D <package-name>`
+- **Run scripts**: `pnpm <script-name>`
+
+### Available Scripts
+- `pnpm start` - Start Expo development server
+- `pnpm android` - Run on Android device/emulator
+- `pnpm ios` - Run on iOS device/simulator
+- `pnpm web` - Run in web browser
+- `pnpm test` - Run Jest tests in watch mode
+- `pnpm lint` - Run ESLint
+- `pnpm reset-project` - Reset project state (uses [scripts/reset-project.js](mdc:scripts/reset-project.js))
+- `pnpm i18n` - Generate translations for all languages
+
+## Internationalization (i18n)
+
+### Workflow
+1. **Add translations** to `i18n/default/common.ts` (Chinese source)
+2. **Use in components** with `useTranslation` hook
+3. **Generate translations** with `pnpm run i18n`
+4. **Test** with different languages
+
+### Key Files
+- `i18n/default/common.ts` - Source translations (Chinese)
+- `locales/*/common.json` - Generated translations (18 languages)
+- `scripts/i18nWorkflow/` - Translation generation scripts
+
+### Quick Reference
+```typescript
+import { useTranslation } from 'react-i18next';
+const { t } = useTranslation();
+<Text>{t('chat.history')}</Text>
+```
+
+See [internationalization.mdc](mdc:.cursor/rules/internationalization.mdc) for detailed guidelines.
+
+## Development Environment
+
+### Configuration Files
+- [package.json](mdc:package.json) - Dependencies and scripts
+- [tsconfig.json](mdc:tsconfig.json) - TypeScript configuration
+- [metro.config.js](mdc:metro.config.js) - Metro bundler configuration
+- [app.json](mdc:app.json) - Expo app configuration
+- [eas.json](mdc:eas.json) - EAS Build configuration
+
+### Environment Setup
+- [polyfills.ts](mdc:polyfills.ts) - Polyfills for React Native
+- [global.d.ts](mdc:global.d.ts) - Global TypeScript declarations
+
+## Code Organization
+
+### File Naming Conventions
+- Components: PascalCase (e.g., `ChatBubble.tsx`)
+- Hooks: camelCase with `use` prefix (e.g., `useChat.ts`)
+- Utilities: camelCase (e.g., `fetchSSE.ts`)
+- Types: camelCase (e.g., `session.ts`)
+- Constants: UPPER_SNAKE_CASE (e.g., `DEFAULT_AGENT_META`)
+
+### Import Patterns
+- Use absolute imports with `@/mobile/` prefix
+- Group imports: React, third-party, internal
+- Use named exports for components
+- Use default exports for main components
+
+### TypeScript Guidelines
+- Enable strict mode in [tsconfig.json](mdc:tsconfig.json)
+- Define interfaces for all props and state
+- Use proper type annotations
+- Avoid `any` type - use `unknown` or proper types
+
+## Testing
+
+### Test Structure
+- [components/__tests__/](mdc:components/__tests__/) - Component tests
+- [components/__tests__/__snapshots__/](mdc:components/__tests__/__snapshots__/) - Jest snapshots
+- Use Jest with React Native Testing Library
+
+### Testing Patterns
+- Test component rendering
+- Test user interactions
+- Test error states
+- Use snapshots for UI regression testing
+
+## Code Quality
+
+### Linting
+- ESLint configuration for React Native
+- Prettier for code formatting
+- TypeScript strict checking
+
+### Best Practices
+- Follow existing code patterns
+- Don't change component styles without reason
+- Implement proper error boundaries
+- Use proper loading states
+- Handle edge cases gracefully
+
+## Build and Deployment
+
+### EAS Build
+- [eas.json](mdc:eas.json) - Build configuration
+- Support for Android and iOS builds
+- Environment-specific configurations
+
+### Assets
+- [assets/](mdc:assets/) - App icons, fonts, and images
+- [assets/fonts/](mdc:assets/fonts/) - Custom fonts
+- [assets/images/](mdc:assets/images/) - App images and icons

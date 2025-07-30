@@ -31,15 +31,22 @@
       }
     ]
   },
-  "exclude": ["node_modules", "public/sw.js", "apps/desktop"],
+  "exclude": ["node_modules", "public/sw.js", "apps/desktop", "apps/mobile"],
   "include": [
-    "**/*.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
+    // 保留类型定义文件
     "next-env.d.ts",
-    "src",
-    "tests",
+    ".next/types/**/*.ts",
+
+    // 核心：明确指定源码目录
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.d.ts",
+
+    // 明确指定测试目录
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+
+    // 明确指定根目录下的配置文件
     "vitest.config.ts"
   ]
 }

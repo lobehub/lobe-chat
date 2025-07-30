@@ -1,0 +1,34 @@
+{
+  "assistant": {
+    "detail": {
+      "addAndChat": "Добавить помощника и начать диалог",
+      "addFailed": "Не удалось добавить помощника",
+      "addFailedMessage": "Не удалось добавить помощника, попробуйте позже",
+      "assistantSettings": "Настройки помощника",
+      "loadFailed": "Не удалось получить детали помощника, попробуйте позже",
+      "notFoundIdentifier": "Идентификатор помощника не найден",
+      "share": "Поделиться",
+      "shareFailed": "Не удалось поделиться"
+    }
+  },
+  "category": {
+    "assistant": {
+      "academic": "Академический",
+      "all": "Все",
+      "career": "Карьера",
+      "copywriting": "Копирайтинг",
+      "design": "Дизайн",
+      "education": "Образование",
+      "emotions": "Эмоции",
+      "entertainment": "Развлечения",
+      "games": "Игры",
+      "general": "Общее",
+      "life": "Жизнь",
+      "marketing": "Маркетинг",
+      "office": "Офис",
+      "programming": "Программирование",
+      "translation": "Перевод"
+    }
+  },
+  "title": "Обнаружить"
+}

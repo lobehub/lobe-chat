@@ -1,0 +1,34 @@
+{
+  "actions": {
+    "add": "Toevoegen",
+    "cancel": "Annuleren",
+    "confirm": "Bevestigen",
+    "continue": "Doorgaan",
+    "copy": "Kopiëren",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "retry": "Opnieuw proberen",
+    "save": "Opslaan"
+  },
+  "and": "en",
+  "assistant": {
+    "fetchError": "Fout bij het ophalen van de assistentenlijst, probeer het later opnieuw",
+    "noData": "Geen assistentgegevens beschikbaar",
+    "noMatch": "Geen overeenkomende assistent gevonden",
+    "search": "Zoek assistent..."
+  },
+  "navigation": {
+    "goToHomeScreen": "Ga naar startscherm"
+  },
+  "or": "of",
+  "search": {
+    "placeholder": "Zoeken"
+  },
+  "status": {
+    "error": "Fout",
+    "info": "Informatie",
+    "loading": "Bezig met laden...",
+    "success": "Succes",
+    "warning": "Waarschuwing"
+  }
+}

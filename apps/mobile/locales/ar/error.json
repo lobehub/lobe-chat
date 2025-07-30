@@ -1,0 +1,17 @@
+{
+  "error": {
+    "title": "حدث خطأ"
+  },
+  "http": {
+    "forbidden": "ممنوع الوصول",
+    "networkError": "خطأ في الشبكة",
+    "notFound": "غير موجود",
+    "serverError": "خطأ في الخادم",
+    "timeout": "انتهت مهلة الطلب",
+    "unauthorized": "غير مصرح"
+  },
+  "page": {
+    "notFoundMessage": "هذه الصفحة غير موجودة.",
+    "notFoundTitle": "آسف!"
+  }
+}

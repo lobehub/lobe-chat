@@ -1,0 +1,46 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# App Structure and Routing
+
+## Expo Router File Structure
+
+The app uses Expo Router with file-based routing. Each directory represents a route group or screen.
+
+### Main Routes
+- [app/index.tsx](mdc:app/index.tsx) - Root redirect logic (signed in → session, signed out → sign-in)
+- [app/_layout.tsx](mdc:app/_layout.tsx) - Root layout with providers ( Toast, Portal, ActionSheet)
+
+### Chat Routes
+- [app/(chat)/_layout.tsx](mdc:app/(chat)/_layout.tsx) - Chat layout with bottom tabs
+- [app/(chat)/session/index.tsx](mdc:app/(chat)/session/index.tsx) - Session list screen
+- [app/(chat)/session/_layout.tsx](mdc:app/(chat)/session/_layout.tsx) - Session layout
+- [app/(chat)/chat/index.tsx](mdc:app/(chat)/chat/index.tsx) - Main chat interface
+- [app/(chat)/chat/_layout.tsx](mdc:app/(chat)/chat/_layout.tsx) - Chat layout
+- [app/(chat)/detail/index.tsx](mdc:app/(chat)/detail/index.tsx) - Chat detail view
+- [app/(chat)/detail/_layout.tsx](mdc:app/(chat)/detail/_layout.tsx) - Detail layout
+
+### Settings Routes
+- [app/(setting)/_layout.tsx](mdc:app/(setting)/_layout.tsx) - Settings layout
+- [app/(setting)/setting/index.tsx](mdc:app/(setting)/setting/index.tsx) - Settings screen
+- [app/(setting)/setting/_layout.tsx](mdc:app/(setting)/setting/_layout.tsx) - Settings layout
+- [app/(setting)/setting/provider.tsx](mdc:app/(setting)/setting/provider.tsx) - Settings provider
+
+### Playground Routes
+- [app/(playground)/_layout.tsx](mdc:app/(playground)/_layout.tsx) - Playground layout
+- [app/(playground)/index.tsx](mdc:app/(playground)/index.tsx) - Component playground
+- [app/(playground)/highlighter.tsx](mdc:app/(playground)/highlighter.tsx) - Code highlighting demo
+- [app/(playground)/markdown.tsx](mdc:app/(playground)/markdown.tsx) - Markdown rendering demo
+- [app/(playground)/toast.tsx](mdc:app/(playground)/toast.tsx) - Toast notifications demo
+- [app/(playground)/tooltip.tsx](mdc:app/(playground)/tooltip.tsx) - Tooltip component demo
+
+## Route Groups
+- `(chat)` - Main chat functionality
+- `(setting)` - App settings and configuration
+- `(playground)` - Component development and testing
+
+## Navigation Patterns
+- Use `Redirect` component for programmatic navigation
+- Use bottom tabs for main navigation in chat section

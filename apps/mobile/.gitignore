@@ -1,0 +1,54 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+package-lock.json
+pnpm-lock.yaml
+
+
+# typescript
+*.tsbuildinfo
+
+app-example
+android
+ios
+yarn.lock
+repomix-output.xml
+lobe-ui-repomix-output.xml
+lobe-chat-repomix-output.xml
+repomix-output-ant-design-theme.xml
+credentials.json
+
+build-*.aab
+build-*.apk
+
+coverage

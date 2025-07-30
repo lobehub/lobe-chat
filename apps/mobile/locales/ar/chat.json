@@ -1,0 +1,22 @@
+{
+  "confirmDelete": "تأكيد الحذف",
+  "copyFailed": "فشل النسخ",
+  "deleteMessageConfirm": "هل أنت متأكد من حذف هذه الرسالة؟",
+  "history": "تاريخ المحادثة",
+  "messageCopied": "تم نسخ الرسالة",
+  "newChat": "محادثة جديدة",
+  "placeholder": "أدخل رسالتك...",
+  "regenerateFailed": "فشل في إعادة التوليد، يرجى المحاولة لاحقًا",
+  "send": "إرسال",
+  "session": {
+    "createFirst": "أنشئ أول جلسة دردشة لك",
+    "empty": "لا توجد جلسات",
+    "search": {
+      "placeholder": "ابحث في الجلسات"
+    },
+    "title": "دردشة عشوائية"
+  },
+  "share": "مشاركة",
+  "stop": "إيقاف",
+  "thinking": "جارٍ التفكير..."
+}

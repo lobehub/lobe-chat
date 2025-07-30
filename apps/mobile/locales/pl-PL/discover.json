@@ -1,0 +1,34 @@
+{
+  "assistant": {
+    "detail": {
+      "addAndChat": "Dodaj asystenta i rozpocznij rozmowę",
+      "addFailed": "Nie udało się dodać asystenta",
+      "addFailedMessage": "Nie udało się dodać asystenta, spróbuj ponownie później",
+      "assistantSettings": "Ustawienia asystenta",
+      "loadFailed": "Nie udało się pobrać szczegółów asystenta, spróbuj ponownie później",
+      "notFoundIdentifier": "Nie znaleziono identyfikatora asystenta",
+      "share": "Udostępnij",
+      "shareFailed": "Udostępnianie nie powiodło się"
+    }
+  },
+  "category": {
+    "assistant": {
+      "academic": "Naukowy",
+      "all": "Wszystkie",
+      "career": "Kariera",
+      "copywriting": "Copywriting",
+      "design": "Projektowanie",
+      "education": "Edukacja",
+      "emotions": "Emocje",
+      "entertainment": "Rozrywka",
+      "games": "Gry",
+      "general": "Ogólne",
+      "life": "Życie",
+      "marketing": "Biznes",
+      "office": "Biuro",
+      "programming": "Programowanie",
+      "translation": "Tłumaczenie"
+    }
+  },
+  "title": "Odkryj"
+}
