@@ -547,9 +547,34 @@ export class SessionService extends BaseService {
         throw this.createAuthorizationError(permissionResult.message || '无权删除此会话');
       }
 
-      await this.sessionModel.delete(sessionId);
+      await this.db.transaction(async (trx) => {
+        // 1. 删除会话与 agent 的关联
+        const deletedLinks = await trx
+          .delete(agentsToSessions)
+          .where(eq(agentsToSessions.sessionId, sessionId));
+        
+        this.log('info', '删除会话与 agent 的关联', { deletedLinks });
 
-      this.log('info', '会话删除成功', { sessionId });
+        // 2. 删除会话相关的消息
+        const deletedMessages = await trx
+          .delete(messages)
+          .where(eq(messages.sessionId, sessionId));
+        
+        this.log('info', '删除会话相关的消息', { deletedMessages });
+
+        // 3. 删除会话本身
+        const deletedSession = await trx
+          .delete(sessions)
+          .where(eq(sessions.id, sessionId));
+
+        if (deletedSession.rowCount === 0) {
+          throw this.createNotFoundError('会话不存在或已被删除');
+        }
+
+        this.log('info', '删除会话成功', { 
+          sessionId,
+        });
+      });
     } catch (error) {
       this.handleServiceError(error, '删除会话');
     }
