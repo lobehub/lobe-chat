@@ -9,10 +9,11 @@ import { Center } from 'react-layout-kit';
 import { ActionButtons } from './ActionButtons';
 import { useStyles } from './styles';
 import { ErrorStateProps } from './types';
+import { getThumbnailMaxWidth } from './utils';
 
 // 错误状态组件
 export const ErrorState = memo<ErrorStateProps>(
-  ({ generation, aspectRatio, onDelete, onCopyError }) => {
+  ({ generation, generationBatch, aspectRatio, onDelete, onCopyError }) => {
     const { styles, theme } = useStyles();
     const { t } = useTranslation('image');
 
@@ -32,7 +33,7 @@ export const ErrorState = memo<ErrorStateProps>(
         style={{
           aspectRatio,
           cursor: 'pointer',
-          maxWidth: generation.asset?.width ? generation.asset.width / 2 : 'unset',
+          maxWidth: getThumbnailMaxWidth(generation, generationBatch),
         }}
         variant={'filled'}
       >

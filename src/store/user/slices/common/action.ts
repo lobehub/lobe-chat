@@ -113,6 +113,7 @@ export const createCommonSlice: StateCreator<
                 preference,
                 serverLanguageModel: serverConfig.languageModel,
                 settings: data.settings || {},
+                subscriptionPlan: data.subscriptionPlan,
                 user,
               },
               false,

@@ -2,7 +2,7 @@ import { AuthObject } from '@clerk/backend';
 import { NextRequest } from 'next/server';
 
 import {
-  JWTPayload,
+  ClientSecretPayload,
   LOBE_CHAT_AUTH_HEADER,
   LOBE_CHAT_OIDC_AUTH_HEADER,
   OAUTH_AUTHORIZED,
@@ -13,18 +13,18 @@ import { AgentRuntime, AgentRuntimeError, ChatCompletionErrorPayload } from '@/l
 import { validateOIDCJWT } from '@/libs/oidc-provider/jwt';
 import { ChatErrorType } from '@/types/fetch';
 import { createErrorResponse } from '@/utils/errorResponse';
-import { getJWTPayload } from '@/utils/server/jwt';
+import { getXorPayload } from '@/utils/server/xor';
 
 import { checkAuthMethod } from './utils';
 
-type CreateRuntime = (jwtPayload: JWTPayload) => AgentRuntime;
+type CreateRuntime = (jwtPayload: ClientSecretPayload) => AgentRuntime;
 type RequestOptions = { createRuntime?: CreateRuntime; params: Promise<{ provider: string }> };
 
 export type RequestHandler = (
   req: Request,
   options: RequestOptions & {
     createRuntime?: CreateRuntime;
-    jwtPayload: JWTPayload;
+    jwtPayload: ClientSecretPayload;
   },
 ) => Promise<Response>;
 
@@ -36,7 +36,7 @@ export const checkAuth =
       return handler(req, { ...options, jwtPayload: { userId: 'DEV_USER' } });
     }
 
-    let jwtPayload: JWTPayload;
+    let jwtPayload: ClientSecretPayload;
 
     try {
       // get Authorization from header
@@ -55,7 +55,7 @@ export const checkAuth =
         clerkAuth = data.clerkAuth;
       }
 
-      jwtPayload = await getJWTPayload(authorization);
+      jwtPayload = getXorPayload(authorization);
 
       const oidcAuthorization = req.headers.get(LOBE_CHAT_OIDC_AUTH_HEADER);
       let isUseOidcAuth = false;

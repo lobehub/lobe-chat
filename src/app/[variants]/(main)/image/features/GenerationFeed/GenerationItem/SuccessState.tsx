@@ -8,10 +8,20 @@ import ImageItem from '@/components/ImageItem';
 import { ActionButtons } from './ActionButtons';
 import { useStyles } from './styles';
 import { SuccessStateProps } from './types';
+import { getThumbnailMaxWidth } from './utils';
 
 // 成功状态组件
 export const SuccessState = memo<SuccessStateProps>(
-  ({ generation, prompt, aspectRatio, onDelete, onDownload, onCopySeed, seedTooltip }) => {
+  ({
+    generation,
+    generationBatch,
+    prompt,
+    aspectRatio,
+    onDelete,
+    onDownload,
+    onCopySeed,
+    seedTooltip,
+  }) => {
     const { styles } = useStyles();
 
     return (
@@ -21,7 +31,7 @@ export const SuccessState = memo<SuccessStateProps>(
         justify={'center'}
         style={{
           aspectRatio,
-          maxWidth: generation.asset?.width ? generation.asset.width / 2 : 'unset',
+          maxWidth: getThumbnailMaxWidth(generation, generationBatch),
         }}
         variant={'filled'}
       >
@@ -31,7 +41,8 @@ export const SuccessState = memo<SuccessStateProps>(
             src: generation.asset!.url,
           }}
           style={{ height: '100%', width: '100%' }}
-          url={generation.asset!.thumbnailUrl}
+          // Thumbnail quality is too bad
+          url={generation.asset!.url}
         />
         <ActionButtons
           onCopySeed={onCopySeed}
