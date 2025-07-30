@@ -1,0 +1,22 @@
+{
+  "confirmDelete": "Confirm Delete",
+  "copyFailed": "Copy Failed",
+  "deleteMessageConfirm": "Are you sure you want to delete this message?",
+  "history": "Chat History",
+  "messageCopied": "Message Copied",
+  "newChat": "New Chat",
+  "placeholder": "Type your message...",
+  "regenerateFailed": "Regeneration failed, please try again later",
+  "send": "Send",
+  "session": {
+    "createFirst": "Create your first chat session",
+    "empty": "No sessions yet",
+    "search": {
+      "placeholder": "Search sessions"
+    },
+    "title": "Casual Chat"
+  },
+  "share": "Share",
+  "stop": "Stop",
+  "thinking": "Thinking..."
+}

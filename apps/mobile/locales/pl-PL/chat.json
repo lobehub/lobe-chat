@@ -1,0 +1,22 @@
+{
+  "confirmDelete": "Potwierdź usunięcie",
+  "copyFailed": "Kopiowanie nie powiodło się",
+  "deleteMessageConfirm": "Czy na pewno chcesz usunąć tę wiadomość?",
+  "history": "Historia rozmów",
+  "messageCopied": "Wiadomość skopiowana",
+  "newChat": "Nowa rozmowa",
+  "placeholder": "Wpisz swoją wiadomość...",
+  "regenerateFailed": "Nie udało się wygenerować ponownie, spróbuj później",
+  "send": "Wyślij",
+  "session": {
+    "createFirst": "Utwórz swoją pierwszą sesję czatu",
+    "empty": "Brak sesji",
+    "search": {
+      "placeholder": "Szukaj sesji"
+    },
+    "title": "Rozmowy na luzie"
+  },
+  "share": "Udostępnij",
+  "stop": "Zatrzymaj",
+  "thinking": "Myślenie..."
+}

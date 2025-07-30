@@ -1,0 +1,53 @@
+{
+  "about": "LobeHub Hakkında",
+  "account": {
+    "profile": {
+      "email": "E-posta",
+      "name": "Kullanıcı Adı",
+      "status": "Hesap Durumu",
+      "unverified": "Doğrulanmamış",
+      "verified": "Doğrulanmış"
+    },
+    "signOut": {
+      "confirm": "Oturumu kapatmak istediğinizden emin misiniz?",
+      "label": "Oturumu Kapat"
+    },
+    "title": "Hesap Ayarları"
+  },
+  "changelog": "Güncelleme Günlüğü",
+  "feedback": "Geri Bildirim",
+  "help": "Yardım",
+  "locale": {
+    "auto": {
+      "description": "Sistem dil ayarlarını takip et",
+      "title": "Sistemi Takip Et"
+    },
+    "title": "Dil Ayarları"
+  },
+  "openai": "OpenAI Ayarları",
+  "openaiSettings": {
+    "apiKey": "API Anahtarı",
+    "apiKeyPlaceholder": "Lütfen OpenAI API Anahtarınızı girin",
+    "checkApiKey": "Lütfen API Anahtarının doğru olduğundan emin olun",
+    "checkProxyAddress": "Sunucuya bağlanılamıyor, lütfen proxy adresinin doğru olduğundan emin olun",
+    "connectionSuccess": "Bağlantı başarılı, API Anahtarı ve proxy adresi doğru yapılandırıldı",
+    "connectivityHint": "Bağlantı testi yapıldıktan sonra API Anahtarı ve proxy adresinin doğru girilip girilmediği doğrulanacaktır",
+    "pleaseEnterApiKey": "Lütfen API Anahtarını girin",
+    "proxyAddress": "API Proxy Adresi",
+    "proxyPlaceholder": "http(s):// içermelidir",
+    "testConnectivity": "Bağlantıyı Test Et",
+    "validationFailed": "Doğrulama Başarısız",
+    "validationSuccess": "Doğrulama Başarılı"
+  },
+  "providers": "Yapay Zeka Sağlayıcıları",
+  "support": "E-posta Desteği",
+  "theme": {
+    "auto": "Sistemi Takip Et",
+    "dark": "Karanlık Mod",
+    "light": "Açık Mod",
+    "sectionDescription": "Tercih ettiğiniz tema stilini seçin, seçiminizi değiştirmek için tıklayın",
+    "sectionTitle": "Tema",
+    "title": "Tema Ayarları"
+  },
+  "title": "Ayarlar"
+}

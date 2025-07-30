@@ -1,0 +1,22 @@
+{
+  "confirmDelete": "Löschen bestätigen",
+  "copyFailed": "Kopieren fehlgeschlagen",
+  "deleteMessageConfirm": "Möchten Sie diese Nachricht wirklich löschen?",
+  "history": "Chatverlauf",
+  "messageCopied": "Nachricht kopiert",
+  "newChat": "Neuer Chat",
+  "placeholder": "Geben Sie Ihre Nachricht ein...",
+  "regenerateFailed": "Erneutes Generieren fehlgeschlagen, bitte versuchen Sie es später erneut",
+  "send": "Senden",
+  "session": {
+    "createFirst": "Erstellen Sie Ihre erste Chat-Sitzung",
+    "empty": "Keine Sitzungen vorhanden",
+    "search": {
+      "placeholder": "Sitzungen durchsuchen"
+    },
+    "title": "Einfach plaudern"
+  },
+  "share": "Teilen",
+  "stop": "Stopp",
+  "thinking": "Denke nach..."
+}

@@ -1,0 +1,34 @@
+{
+  "assistant": {
+    "detail": {
+      "addAndChat": "Asistan ekle ve sohbet et",
+      "addFailed": "Asistan eklenemedi",
+      "addFailedMessage": "Asistan eklenemedi, lütfen daha sonra tekrar deneyin",
+      "assistantSettings": "Asistan ayarları",
+      "loadFailed": "Asistan detayları alınamadı, lütfen daha sonra tekrar deneyin",
+      "notFoundIdentifier": "Asistan tanımlayıcısı bulunamadı",
+      "share": "Paylaş",
+      "shareFailed": "Paylaşım başarısız"
+    }
+  },
+  "category": {
+    "assistant": {
+      "academic": "Akademik",
+      "all": "Tümü",
+      "career": "Kariyer",
+      "copywriting": "Metin Yazarlığı",
+      "design": "Tasarım",
+      "education": "Eğitim",
+      "emotions": "Duygular",
+      "entertainment": "Eğlence",
+      "games": "Oyunlar",
+      "general": "Genel",
+      "life": "Yaşam",
+      "marketing": "Pazarlama",
+      "office": "Ofis",
+      "programming": "Programlama",
+      "translation": "Çeviri"
+    }
+  },
+  "title": "Keşfet"
+}
