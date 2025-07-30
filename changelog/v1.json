@@ -1,6 +1,18 @@
 [
   {
     "children": {
+      "fixes": [
+        "Fix desktop auth redirect url error, fix mcp calling missing array content, moonshot assistant messages must not be empty."
+      ],
+      "improvements": [
+        "Add volcengine kimi-k2 model, Add Zhipu GLM-4.5 models, update i18n."
+      ]
+    },
+    "date": "2025-07-30",
+    "version": "1.105.1"
+  },
+  {
+    "children": {
       "features": [
         "Add support for Okta Authentication."
       ],
