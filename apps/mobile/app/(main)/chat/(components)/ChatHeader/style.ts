@@ -1,5 +1,5 @@
-import { HEADER_HEIGHT } from '@/mobile/const/common';
-import { createStyles } from '@/mobile/theme/createStyles';
+import { HEADER_HEIGHT } from '@/const/common';
+import { createStyles } from '@/theme/createStyles';
 
 export const useStyles = createStyles((token) => ({
   actionButton: {

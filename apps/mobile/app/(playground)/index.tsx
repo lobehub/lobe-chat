@@ -3,12 +3,8 @@ import { ChevronRight, Search } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-import { ComponentItem } from '@/mobile/app/(playground)/type';
-import {
-  COMPONENT_CONFIGS,
-  getAllCategories,
-  searchComponentsByName,
-} from '@/mobile/app/(playground)/utils';
+import { ComponentItem } from './type';
+import { COMPONENT_CONFIGS, getAllCategories, searchComponentsByName } from './utils';
 import { useStyles } from './styles';
 
 export default function ComponentPlaygroundIndex() {

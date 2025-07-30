@@ -3,7 +3,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { PropsWithChildren, useState } from 'react';
 
-import { lambdaQuery, lambdaQueryClient } from '@/mobile/services/_auth/trpc';
+import { lambdaQuery, lambdaQueryClient } from '@/services/_auth/trpc';
 
 const QueryProvider = ({ children }: PropsWithChildren) => {
   const [queryClient] = useState(() => new QueryClient());

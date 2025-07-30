@@ -1,7 +1,7 @@
 import React from 'react';
 
-import ComponentPlayground, { DemoItem } from '@/mobile/app/(playground)/Playground';
-import { BasicDemo, ScrollingDemo, CategoriesDemo } from '@/mobile/components/CapsuleTabs/demos';
+import ComponentPlayground, { DemoItem } from '../Playground';
+import { BasicDemo, ScrollingDemo, CategoriesDemo } from '@/components/CapsuleTabs/demos';
 
 const CAPSULETABS_README = `# CapsuleTabs 组件
 
@@ -19,7 +19,7 @@ const CAPSULETABS_README = `# CapsuleTabs 组件
 ## 基础使用
 
 \`\`\`tsx
-import { CapsuleTabs, CapsuleTabItem } from '@/mobile/components/CapsuleTabs';
+import { CapsuleTabs, CapsuleTabItem } from '@/components/CapsuleTabs';
 
 const items: CapsuleTabItem[] = [
   { key: 'all', label: 'All' },

@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/mobile/types/llm';
+import { ModelProviderCard } from '@/types/llm';
 
 // ref: https://help.aliyun.com/zh/model-studio/getting-started/models
 const Qwen: ModelProviderCard = {
