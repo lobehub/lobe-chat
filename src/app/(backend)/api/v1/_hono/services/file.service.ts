@@ -1,4 +1,4 @@
-import { and, count, desc, ilike, eq } from 'drizzle-orm';
+import { and, count, desc, eq, ilike } from 'drizzle-orm';
 import { sha256 } from 'js-sha256';
 
 import { DocumentModel } from '@/database/models/document';
@@ -108,7 +108,6 @@ export class FileUploadService extends BaseService {
       if (!permissionCreate.isPermitted) {
         throw this.createAuthorizationError(permissionCreate.message || '无权上传文件');
       }
-
 
       this.log('info', 'Starting file upload', {
         filename: file.name,
@@ -319,6 +318,7 @@ export class FileUploadService extends BaseService {
           metadata: files.metadata,
           name: files.name,
           size: files.size,
+          source: files.source,
           updatedAt: files.updatedAt,
           url: files.url,
           userId: files.userId,
@@ -374,7 +374,9 @@ export class FileUploadService extends BaseService {
         where: and(
           eq(files.id, fileId),
           // 添加权限相关的查询条件
-          permissionResult.condition?.userId ? eq(files.userId, permissionResult.condition.userId) : undefined,
+          permissionResult.condition?.userId
+            ? eq(files.userId, permissionResult.condition.userId)
+            : undefined,
         ),
       });
 
@@ -965,7 +967,6 @@ export class FileUploadService extends BaseService {
    */
   async batchGetFiles(request: BatchGetFilesRequest): Promise<BatchGetFilesResponse> {
     try {
-
       this.log('info', 'Starting batch file retrieval', {
         count: request.fileIds.length,
         fileIds: request.fileIds,
