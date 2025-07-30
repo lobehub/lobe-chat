@@ -2,8 +2,8 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import dayjs from 'dayjs';
 
-import { Avatar } from '@/mobile/components';
-import GitHubAvatar from '../../../../../../components/GithubAvatar';
+import { Avatar } from '@/components';
+import GitHubAvatar from '@/components/GithubAvatar';
 import { useStyles } from './styles';
 
 interface DetailHeaderProps {

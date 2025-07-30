@@ -1,9 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { ThemeProvider } from '@/mobile/theme/context';
+import { ThemeProvider } from '@/theme/context';
 
 // Mock the setting store
-jest.mock('@/mobile/store/setting', () => ({
+jest.mock('@/store/setting', () => ({
   useSettingStore: jest.fn(() => ({
     setThemeMode: jest.fn(),
     themeMode: 'light',
@@ -68,7 +68,7 @@ const mockToken = {
   sizeXS: 24,
 };
 
-jest.mock('@/mobile/theme', () => ({
+jest.mock('@/theme', () => ({
   ThemeProvider: ({ children }: { children: React.ReactNode }) => children,
   createStyles: jest.fn((fn) => (params = {}) => ({
     styles: fn(mockToken, {

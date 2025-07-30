@@ -3,10 +3,10 @@ import { Link } from 'expo-router';
 import { Settings2 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import Avatar from '@/mobile/components/Avatar';
-import { ICON_SIZE } from '@/mobile/const/common';
-import { DEFAULT_USER_AVATAR } from '@/mobile/const/meta';
-import { useAuth } from '@/mobile/store/user';
+import Avatar from '@/components/Avatar';
+import { ICON_SIZE } from '@/const/common';
+import { DEFAULT_USER_AVATAR } from '@/const/meta';
+import { useAuth } from '@/store/user';
 
 import { useStyles } from './styles';
 

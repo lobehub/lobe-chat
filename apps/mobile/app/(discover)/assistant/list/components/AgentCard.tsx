@@ -3,11 +3,11 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import dayjs from 'dayjs';
 
-import { DiscoverAssistantItem } from '@/mobile/types/discover';
-import GitHubAvatar from '@/mobile/components/GithubAvatar';
-import Avatar from '@/mobile/components/Avatar';
-import Space from '@/mobile/components/Space';
-import Tag from '@/mobile/components/Tag';
+import { DiscoverAssistantItem } from '@/types/discover';
+import GitHubAvatar from '@/components/GithubAvatar';
+import Avatar from '@/components/Avatar';
+import Space from '@/components/Space';
+import Tag from '@/components/Tag';
 
 import { useStyles } from './style';
 

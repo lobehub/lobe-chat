@@ -5,9 +5,9 @@ import { TextInput, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import IconBtn from './(components)/IconBtn';
-import { ICON_SIZE } from '@/mobile/const/common';
-import { useChat } from '@/mobile/hooks/useChat';
-import { useThemeToken } from '@/mobile/theme';
+import { ICON_SIZE } from '@/const/common';
+import { useChat } from '@/hooks/useChat';
+import { useThemeToken } from '@/theme';
 
 import StopLoadingIcon from '../StopLoadingIcon';
 import { useStyles } from './style';

@@ -1,4 +1,4 @@
-import { ModelProviderCard } from '@/mobile/types/llm';
+import { ModelProviderCard } from '@/types/llm';
 
 // ref: https://platform.stepfun.com/docs/llm/text
 // 根据文档，阶级星辰大模型的上下文长度，其 k 的含义均为 1000
