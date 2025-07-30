@@ -4,7 +4,7 @@ import { join } from 'node:path';
 // 自动生成语言包配置的脚本
 const generateLocaleConfig = () => {
   const localesPath = join(__dirname, '../../locales');
-  const outputPath = join(__dirname, '../../i18n/generatedConfig.ts');
+  const outputPath = join(__dirname, '../../src/i18n/generatedConfig.ts');
 
   try {
     // 读取所有语言目录
@@ -28,7 +28,7 @@ export const localeImports: Record<string, Record<string, () => Promise<any>>> =
         configContent += `  '${locale}': {\n`;
 
         for (const file of files) {
-          configContent += `    ${file}: () => import('../locales/${locale}/${file}.json'),\n`;
+          configContent += `    ${file}: () => import('../../locales/${locale}/${file}.json'),\n`;
         }
 
         configContent += `  },\n`;
