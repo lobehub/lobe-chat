@@ -27,6 +27,8 @@ export const FeatureFlagsSchema = z.object({
   welcome_suggest: z.boolean().optional(),
   changelog: z.boolean().optional(),
 
+  pwa_app_banner: z.boolean().optional(),
+
   clerk_sign_up: z.boolean().optional(),
 
   market: z.boolean().optional(),
@@ -79,6 +81,8 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   speech_to_text: true,
   changelog: true,
 
+  pwa_app_banner: true,
+
   // the flags below can only be used with commercial license
   // if you want to use it in the commercial usage
   // please contact us for more information: hello@lobehub.com
@@ -104,6 +108,8 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
     showDalle: config.dalle,
     showAiImage: config.ai_image,
     showChangelog: config.changelog,
+
+    enablePwaAppBanner: config.pwa_app_banner,
 
     enableCheckUpdates: config.check_updates,
     showWelcomeSuggest: config.welcome_suggest,
