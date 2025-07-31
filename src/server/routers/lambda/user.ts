@@ -2,6 +2,7 @@ import { UserJSON } from '@clerk/backend';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 
+import { serverFeatureFlags } from '@/config/featureFlags';
 import { enableClerk } from '@/const/auth';
 import { isDesktop } from '@/const/version';
 import { MessageModel } from '@/database/models/message';
@@ -45,7 +46,10 @@ export const userRouter = router({
   }),
 
   getUserState: userProcedure.query(async ({ ctx }): Promise<UserInitializationState> => {
+    // Access server config directly instead of using a React hook
     let state: Awaited<ReturnType<UserModel['getUserState']>> | undefined;
+
+    const { enablePwaAppBanner } = serverFeatureFlags();
 
     // get or create first-time user
     while (!state) {
@@ -105,7 +109,7 @@ export const userRouter = router({
 
     return {
       avatar: state.avatar,
-      canEnablePWAGuide: hasMoreThan4Messages,
+      canEnablePWAGuide: enablePwaAppBanner && hasMoreThan4Messages,
       canEnableTrace: hasMoreThan4Messages,
       email: state.email,
       firstName: state.firstName,

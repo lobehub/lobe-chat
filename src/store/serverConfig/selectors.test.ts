@@ -25,6 +25,7 @@ describe('featureFlagsSelectors', () => {
       enableRAGEval: false,
       showDalle: true,
       showAiImage: true,
+
       enableKnowledgeBase: true,
       showLLM: false,
       showCloudPromotion: false,
@@ -35,6 +36,7 @@ describe('featureFlagsSelectors', () => {
       enableCheckUpdates: true,
       showWelcomeSuggest: true,
       enableClerkSignUp: true,
+      canEnablePWAGuide: true,
       showProvider: true,
       showMarket: true,
       showPinList: false,
