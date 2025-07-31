@@ -1,12 +1,12 @@
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
-import { createTRPCReact } from '@trpc/react-query';
+import { createTRPCContext } from '@trpc/tanstack-react-query';
 import superjson from 'superjson';
 
 import { createHeaderWithAuth } from './header';
 import { OFFICIAL_URL } from '@/const/url';
 
 // src/server/routers/lambda
-import type { LambdaRouter } from '../../../../src/server';
+import type { LambdaRouter } from '../../../../../src/server/routers/lambda';
 
 const remoteUrl = process.env.EXPO_PUBLIC_OFFICIAL_CLOUD_SERVER || OFFICIAL_URL;
 
@@ -18,10 +18,8 @@ const links = [
   }),
 ];
 
-export const lambdaClient = createTRPCClient<LambdaRouter>({
+export const trpcClient = createTRPCClient<LambdaRouter>({
   links,
 });
 
-export const lambdaQuery = createTRPCReact<LambdaRouter>();
-
-export const lambdaQueryClient = lambdaQuery.createClient({ links });
+export const { TRPCProvider, useTRPC, useTRPCClient } = createTRPCContext<LambdaRouter>();
