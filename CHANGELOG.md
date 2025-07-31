@@ -2,6 +2,50 @@
 
 # Changelog
 
+### [Version&nbsp;1.105.2](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.105.1...v1.105.2)
+<sup>Released on **2025-07-31**</sup>
+
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix oidc oauth callback pages 404.
+
+
+#### 💄 Styles
+
+- **misc**: Improve mcp plugin calling and display, Support SenseNova V6.5 models, update Aliyun Bailian models.
+
+
+<br/>
+
+
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+
+
+#### What's fixed
+
+* **misc**: Fix oidc oauth callback pages 404, closes [#8620](https://github.com/jaworldwideorg/OneJA-Bot/issues/8620) ([d136b6e](https://github.com/jaworldwideorg/OneJA-Bot/commit/d136b6e))
+
+
+
+#### Styles
+
+* **misc**: Improve mcp plugin calling and display, closes [#8619](https://github.com/jaworldwideorg/OneJA-Bot/issues/8619) ([14c41c4](https://github.com/jaworldwideorg/OneJA-Bot/commit/14c41c4))
+* **misc**: Support SenseNova V6.5 models, closes [#8569](https://github.com/jaworldwideorg/OneJA-Bot/issues/8569) ([411ed7e](https://github.com/jaworldwideorg/OneJA-Bot/commit/411ed7e))
+* **misc**: Update Aliyun Bailian models, closes [#8612](https://github.com/jaworldwideorg/OneJA-Bot/issues/8612) ([433e679](https://github.com/jaworldwideorg/OneJA-Bot/commit/433e679))
+
+</details>
+
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version&nbsp;1.105.1](https://github.com/jaworldwideorg/OneJA-Bot/compare/v1.105.0...v1.105.1)
 <sup>Released on **2025-07-30**</sup>
 
