@@ -2,6 +2,18 @@
   {
     "children": {
       "fixes": [
+        "Fix oidc oauth callback pages 404."
+      ],
+      "improvements": [
+        "Improve mcp plugin calling and display, Support SenseNova V6.5 models, update Aliyun Bailian models."
+      ]
+    },
+    "date": "2025-07-31",
+    "version": "1.105.2"
+  },
+  {
+    "children": {
+      "fixes": [
         "Fix desktop auth redirect url error, fix mcp calling missing array content, moonshot assistant messages must not be empty."
       ],
       "improvements": [
