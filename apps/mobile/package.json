@@ -51,6 +51,8 @@
     "@tanstack/react-query": "^5.83.0",
     "@trpc/client": "next",
     "@trpc/react-query": "next",
+    "@trpc/server": "^11.4.3",
+    "@trpc/tanstack-react-query": "^11.4.3",
     "@types/base-64": "^1.0.2",
     "base-64": "^1.0.0",
     "buffer": "^6.0.3",
