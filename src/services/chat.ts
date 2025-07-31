@@ -263,6 +263,12 @@ class ChatService {
             type: 'disabled',
           };
         }
+      } else if (modelExtendParams!.includes('reasoningBudgetToken')) {
+        // For models that only have reasoningBudgetToken without enableReasoning
+        extendParams.thinking = {
+          budget_tokens: chatConfig.reasoningBudgetToken || 1024,
+          type: 'enabled',
+        };
       }
 
       if (

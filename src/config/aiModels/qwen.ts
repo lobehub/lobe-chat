@@ -5,7 +5,7 @@ import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
 const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
-      functionCall: true,
+      search: true,
     },
     contextWindowTokens: 131_072,
     description:
@@ -21,6 +21,9 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 16,
     },
     releasedAt: '2025-07-17',
+    settings: {
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
@@ -48,6 +51,23 @@ const qwenChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+    },
+    contextWindowTokens: 262_144,
+    description: '通义千问代码模型开源版。最新的 qwen3-coder-480b-a35b-instruct 是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程、代码能力卓越的同时兼具通用能力。',
+    displayName: 'Qwen3 Coder 480B A35B',
+    id: 'qwen3-coder-480b-a35b-instruct',
+    maxOutput: 65_536,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 9, // tokens 32K ~ 128K
+      output: 36,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
     },
     contextWindowTokens: 131_072,
@@ -64,6 +84,9 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 20,
     },
     releasedAt: '2025-07-25',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
@@ -84,6 +107,50 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 8,
     },
     releasedAt: '2025-07-22',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      '基于Qwen3的思考模式开源模型，相较上一版本（通义千问3-30B-A3B）逻辑能力、通用能力、知识增强及创作能力均有大幅提升，适用于高难度强推理场景。',
+    displayName: 'Qwen3 30B A3B Thinking 2507',
+    enabled: true,
+    id: 'qwen3-30b-a3b-thinking-2507',
+    maxOutput: 32_768,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.75,
+      output: 7.5,
+    },
+    releasedAt: '2025-07-30',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      '相较上一版本（Qwen3-30B-A3B）中英文和多语言整体通用能力有大幅提升。主观开放类任务专项优化，显著更加符合用户偏好，能够提供更有帮助性的回复。',
+    displayName: 'Qwen3 30B A3B Instruct 2507',
+    enabled: true,
+    id: 'qwen3-30b-a3b-instruct-2507',
+    maxOutput: 32_768,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.75,
+      output: 3,
+    },
+    releasedAt: '2025-07-29',
     type: 'chat',
   },
   {
@@ -795,20 +862,6 @@ const qwenChatModels: AIChatModelCard[] = [
       output: 12,
     },
     releasedAt: '2025-07-23',
-    type: 'chat',
-  },
-  {
-    contextWindowTokens: 262_144,
-    description: '通义千问代码模型开源版。最新的 qwen3-coder-480b-a35b-instruct 是基于 Qwen3 的代码生成模型，具有强大的Coding Agent能力，擅长工具调用和环境交互，能够实现自主编程、代码能力卓越的同时兼具通用能力。',
-    displayName: 'Qwen3 Coder 480B A35B',
-    id: 'qwen3-coder-480b-a35b-instruct',
-    maxOutput: 65_536,
-    organization: 'Qwen',
-    pricing: {
-      currency: 'CNY',
-      input: 9, // tokens 32K ~ 128K
-      output: 36,
-    },
     type: 'chat',
   },
   {
