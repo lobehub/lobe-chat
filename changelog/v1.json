@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Support SenseNova V6.5 models."]
+    },
+    "date": "2025-07-31",
+    "version": "1.106.8"
+  },
+  {
+    "children": {
       "improvements": ["Update Aliyun Bailian models."]
     },
     "date": "2025-07-31",
