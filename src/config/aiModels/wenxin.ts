@@ -1,4 +1,4 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
 
 const wenxinChatModels: AIChatModelCard[] = [
   {
@@ -564,6 +564,66 @@ const wenxinChatModels: AIChatModelCard[] = [
   },
 ];
 
-export const allModels = [...wenxinChatModels];
+const wenxinImageModels: AIImageModelCard[] = [
+  {
+    description:
+      '百度自研的iRAG（image based RAG），检索增强的文生图技术，将百度搜索的亿级图片资源跟强大的基础模型能力相结合，就可以生成各种超真实的图片，整体效果远远超过文生图原生系统，去掉了AI味儿，而且成本很低。iRAG具备无幻觉、超真实、立等可取等特点。',
+    displayName: 'ERNIE iRAG',
+    enabled: true,
+    id: 'irag-1.0',
+    parameters: {
+      prompt: {
+        default: '',
+      },
+      size: {
+        default: '1024x1024',
+        enum: ['768x768', '1024x1024', '1536x1536', '2048x2048', '1024x768', '2048x1536', '768x1024', '1536x2048', '1024x576', '2048x1152', '576x1024', '1152x2048'],
+      },
+    },
+    releasedAt: '2025-02-05',
+    type: 'image',
+  },
+  {
+    description:
+      '百度自研的ERNIE iRAG Edit图像编辑模型支持基于图片进行erase（消除对象）、repaint（重绘对象）、variation（生成变体）等操作。',
+    displayName: 'ERNIE iRAG Edit',
+    enabled: true,
+    id: 'ernie-irag-edit',
+    parameters: {
+      imageUrl: { default: null },
+      prompt: {
+        default: '',
+      },
+      size: {
+        default: '1024x1024',
+        enum: ['768x768', '1024x1024', '1536x1536', '2048x2048', '1024x768', '2048x1536', '768x1024', '1536x2048', '1024x576', '2048x1152', '576x1024', '1152x2048'],
+      },
+    },
+    releasedAt: '2025-04-17',
+    type: 'image',
+  },
+  {
+    description:
+      '具有120亿参数的修正流变换器，能够根据文本描述生成图像。',
+    displayName: 'FLUX.1-schnell',
+    enabled: true,
+    id: 'flux.1-schnell',
+    parameters: {
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+      size: {
+        default: '1024x1024',
+        enum: ['768x768', '1024x1024', '1536x1536', '2048x2048', '1024x768', '2048x1536', '768x1024', '1536x2048', '1024x576', '2048x1152', '576x1024', '1152x2048'],
+      },
+      steps: { default: 25, max: 50, min: 1 },
+    },
+    releasedAt: '2025-03-27',
+    type: 'image',
+  },
+];
+
+export const allModels = [...wenxinChatModels, ...wenxinImageModels];
 
 export default allModels;

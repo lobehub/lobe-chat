@@ -1,3 +1,6 @@
+/**
+ * @see https://github.com/lobehub/lobe-chat/discussions/6563
+ */
 import { LobeRuntimeAI } from '../BaseAI';
 import { LobeOpenAI } from '../openai';
 import { providerRuntimeMap } from '../runtimeMap';
@@ -74,7 +77,7 @@ class UniformRuntime {
     try {
       const runtime = this.getRuntimeByModel(payload.model);
 
-      return await runtime.chat(payload, options);
+      return await runtime.chat!(payload, options);
     } catch (e) {
       if (this._options.chat?.handleError) {
         const error = this._options.chat.handleError(e);

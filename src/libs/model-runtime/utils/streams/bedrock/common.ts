@@ -2,7 +2,8 @@ import {
   InvokeModelWithResponseStreamResponse,
   ResponseStream,
 } from '@aws-sdk/client-bedrock-runtime';
-import { readableFromAsyncIterable } from 'ai';
+
+import { readableFromAsyncIterable } from '../protocol';
 
 const chatStreamable = async function* (stream: AsyncIterable<ResponseStream>) {
   for await (const response of stream) {

@@ -28,13 +28,6 @@ class RemoteServerService {
   requestAuthorization = async (config: DataSyncConfig) => {
     return dispatch('requestAuthorization', config);
   };
-
-  /**
-   * 刷新访问令牌
-   */
-  refreshAccessToken = async () => {
-    return dispatch('refreshAccessToken');
-  };
 }
 
 export const remoteServerService = new RemoteServerService();

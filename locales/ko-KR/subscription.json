@@ -1,0 +1,24 @@
+{
+  "plans": {
+    "plan": {
+      "enterprise": {
+        "title": "기업용"
+      },
+      "free": {
+        "title": "무료 버전"
+      },
+      "hobby": {
+        "title": "셀프 서비스 버전"
+      },
+      "premium": {
+        "title": "프리미엄"
+      },
+      "starter": {
+        "title": "스타터 버전"
+      },
+      "ultimate": {
+        "title": "얼티메이트"
+      }
+    }
+  }
+}

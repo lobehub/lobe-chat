@@ -4,10 +4,11 @@ import { LangfuseGenerationClient, LangfuseTraceClient } from 'langfuse-core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import * as langfuseCfg from '@/config/langfuse';
-import { JWTPayload } from '@/const/auth';
+import { ClientSecretPayload } from '@/const/auth';
 import { TraceNameMap } from '@/const/trace';
 import { AgentRuntime, ChatStreamPayload, LobeOpenAI, ModelProvider } from '@/libs/model-runtime';
 import { providerRuntimeMap } from '@/libs/model-runtime/runtimeMap';
+import { CreateImagePayload } from '@/libs/model-runtime/types/image';
 import { createTraceOptions } from '@/server/modules/AgentRuntime';
 
 import { AgentChatOptions } from './ModelRuntime';
@@ -50,7 +51,7 @@ const specialProviders = [
 const testRuntime = (providerId: string, payload?: any) => {
   describe(`${providerId} provider runtime`, () => {
     it('should initialize correctly', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'user-key', ...payload };
+      const jwtPayload: ClientSecretPayload = { apiKey: 'user-key', ...payload };
       const runtime = await AgentRuntime.initializeWithProvider(providerId, jwtPayload);
 
       // @ts-ignore
@@ -65,13 +66,13 @@ const testRuntime = (providerId: string, payload?: any) => {
 
 let mockModelRuntime: AgentRuntime;
 beforeEach(async () => {
-  const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', baseURL: 'user-endpoint' };
+  const jwtPayload: ClientSecretPayload = { apiKey: 'user-openai-key', baseURL: 'user-endpoint' };
   mockModelRuntime = await AgentRuntime.initializeWithProvider(ModelProvider.OpenAI, jwtPayload);
 });
 
 describe('AgentRuntime', () => {
   describe('should initialize with various providers', () => {
-    const providers = Object.values(ModelProvider);
+    const providers = Object.values(ModelProvider).filter((i) => i !== 'lobehub');
 
     const specialProviderIds = [ModelProvider.VertexAI, ...specialProviders.map((p) => p.id)];
 
@@ -239,6 +240,85 @@ describe('AgentRuntime', () => {
         // Verify onCompletion was called with expected output
         expect(shutdownAsyncMock).toHaveBeenCalled();
       });
+    });
+  });
+
+  describe('AgentRuntime createImage method', () => {
+    it('should run correctly', async () => {
+      const payload: CreateImagePayload = {
+        model: 'dall-e-3',
+        params: {
+          prompt: 'A beautiful sunset over mountains',
+          width: 1024,
+          height: 1024,
+        },
+      };
+
+      const mockResponse = {
+        imageUrl: 'https://example.com/image.jpg',
+        width: 1024,
+        height: 1024,
+      };
+
+      vi.spyOn(LobeOpenAI.prototype, 'createImage').mockResolvedValue(mockResponse);
+
+      const result = await mockModelRuntime.createImage(payload);
+
+      expect(LobeOpenAI.prototype.createImage).toHaveBeenCalledWith(payload);
+      expect(result).toBe(mockResponse);
+    });
+
+    it('should handle undefined createImage method gracefully', async () => {
+      const payload: CreateImagePayload = {
+        model: 'dall-e-3',
+        params: {
+          prompt: 'A beautiful sunset over mountains',
+          width: 1024,
+          height: 1024,
+        },
+      };
+
+      // Mock runtime without createImage method
+      const runtimeWithoutCreateImage = {
+        createImage: undefined,
+      };
+
+      // @ts-ignore - testing edge case
+      mockModelRuntime['_runtime'] = runtimeWithoutCreateImage;
+
+      const result = await mockModelRuntime.createImage(payload);
+
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('AgentRuntime models method', () => {
+    it('should run correctly', async () => {
+      const mockModels = [
+        { id: 'gpt-4', name: 'GPT-4' },
+        { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo' },
+      ];
+
+      vi.spyOn(LobeOpenAI.prototype, 'models').mockResolvedValue(mockModels);
+
+      const result = await mockModelRuntime.models();
+
+      expect(LobeOpenAI.prototype.models).toHaveBeenCalled();
+      expect(result).toBe(mockModels);
+    });
+
+    it('should handle undefined models method gracefully', async () => {
+      // Mock runtime without models method
+      const runtimeWithoutModels = {
+        models: undefined,
+      };
+
+      // @ts-ignore - testing edge case
+      mockModelRuntime['_runtime'] = runtimeWithoutModels;
+
+      const result = await mockModelRuntime.models();
+
+      expect(result).toBeUndefined();
     });
   });
 });

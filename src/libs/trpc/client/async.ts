@@ -3,8 +3,7 @@ import superjson from 'superjson';
 
 import { isDesktop } from '@/const/version';
 import { AsyncRouter } from '@/server/routers/async';
-
-import { fetchWithDesktopRemoteRPC } from './helpers/desktopRemoteRPCFetch';
+import { fetchWithDesktopRemoteRPC } from '@/utils/electron/desktopRemoteRPCFetch';
 
 export const asyncClient = createTRPCClient<AsyncRouter>({
   links: [

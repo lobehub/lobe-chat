@@ -1,8 +1,12 @@
+import { useAnalytics } from '@lobehub/analytics/react';
 import { useCallback, useMemo } from 'react';
 
+import { getAgentStoreState } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
 import { fileChatSelectors, useFileStore } from '@/store/file';
+import { getUserStoreState } from '@/store/user';
 import { SendMessageParams } from '@/types/message';
 
 export type UseSendMessageParams = Pick<
@@ -15,6 +19,7 @@ export const useSendMessage = () => {
     s.sendMessage,
     s.updateInputMessage,
   ]);
+  const { analytics } = useAnalytics();
 
   const clearChatUploadFileList = useFileStore((s) => s.clearChatUploadFileList);
 
@@ -49,6 +54,29 @@ export const useSendMessage = () => {
     updateInputMessage('');
     clearChatUploadFileList();
 
+    // 获取分析数据
+    const userStore = getUserStoreState();
+    const agentStore = getAgentStoreState();
+
+    // 直接使用现有数据结构判断消息类型
+    const hasImages = fileList.some((file) => file.file?.type?.startsWith('image'));
+    const messageType = fileList.length === 0 ? 'text' : hasImages ? 'image' : 'file';
+
+    analytics?.track({
+      name: 'send_message',
+      properties: {
+        chat_id: store.activeId || 'unknown',
+        current_topic: topicSelectors.currentActiveTopic(store)?.title || null,
+        has_attachments: fileList.length > 0,
+        history_message_count: chatSelectors.activeBaseChats(store).length,
+        message: store.inputMessage,
+        message_length: store.inputMessage.length,
+        message_type: messageType,
+        selected_model: agentSelectors.currentAgentModel(agentStore),
+        session_id: store.activeId || 'inbox', // 当前活跃的会话ID
+        user_id: userStore.user?.id || 'anonymous',
+      },
+    });
     // const hasSystemRole = agentSelectors.hasSystemRole(useAgentStore.getState());
     // const agentSetting = useAgentStore.getState().agentSettingInstance;
 

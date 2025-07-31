@@ -188,6 +188,7 @@ export class RbacModel {
         id: roles.id,
         isActive: roles.isActive,
         isSystem: roles.isSystem,
+        metadata: roles.metadata,
         name: roles.name,
         updatedAt: roles.updatedAt,
       })

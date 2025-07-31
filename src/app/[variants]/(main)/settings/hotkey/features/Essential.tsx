@@ -9,18 +9,10 @@ import { useTranslation } from 'react-i18next';
 
 import { HOTKEYS_REGISTRATION } from '@/const/hotkeys';
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { isDesktop } from '@/const/version';
 import hotkeyMeta from '@/locales/default/hotkey';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 import { HotkeyGroupEnum, HotkeyItem } from '@/types/hotkey';
-
-const filterByDesktop = (item: HotkeyItem) => {
-  if (isDesktop) return true;
-
-  // is not desktop, filter out desktop only items
-  if (!isDesktop) return !item.isDesktop;
-};
 
 const HotkeySetting = memo(() => {
   const { t } = useTranslation(['setting', 'hotkey']);
@@ -61,9 +53,9 @@ const HotkeySetting = memo(() => {
   };
 
   const essential: FormGroupItemType = {
-    children: HOTKEYS_REGISTRATION.filter((item) => item.group === HotkeyGroupEnum.Essential)
-      .filter((item) => filterByDesktop(item))
-      .map((item) => mapHotkeyItem(item)),
+    children: HOTKEYS_REGISTRATION.filter((item) => item.group === HotkeyGroupEnum.Essential).map(
+      (item) => mapHotkeyItem(item),
+    ),
     extra: loading && <Icon icon={Loader2Icon} size={16} spin style={{ opacity: 0.5 }} />,
     title: t('hotkey.group.essential'),
   };

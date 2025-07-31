@@ -1,5 +1,5 @@
 import type { AdapterAccount } from 'next-auth/adapters';
-import { DeepPartial } from 'utility-types';
+import type { PartialDeep } from 'type-fest';
 
 import { UserGuide, UserInitializationState, UserPreference } from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
@@ -17,5 +17,5 @@ export interface IUserService {
   updateAvatar: (avatar: string) => Promise<any>;
   updateGuide: (guide: Partial<UserGuide>) => Promise<any>;
   updatePreference: (preference: Partial<UserPreference>) => Promise<any>;
-  updateUserSettings: (value: DeepPartial<UserSettings>, signal?: AbortSignal) => Promise<any>;
+  updateUserSettings: (value: PartialDeep<UserSettings>, signal?: AbortSignal) => Promise<any>;
 }

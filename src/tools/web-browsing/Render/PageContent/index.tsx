@@ -17,7 +17,7 @@ const PagesContent = memo<PagesContentProps>(({ results, messageId, urls }) => {
   if (!results || results.length === 0) {
     return (
       <Flexbox gap={12} horizontal>
-        {urls.map((url, index) => (
+        {urls && urls.length > 0 && urls.map((url, index) => (
           <Loading key={`${url}_${index}`} url={url} />
         ))}
       </Flexbox>

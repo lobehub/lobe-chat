@@ -1,4 +1,46 @@
 {
+  "notification": {
+    "finishChatGeneration": "Yapay Zeka mesajı oluşturuldu"
+  },
+  "proxy": {
+    "auth": "Kimlik doğrulama gerekli",
+    "authDesc": "Eğer proxy sunucusu kullanıcı adı ve şifre gerektiriyorsa",
+    "authSettings": "Kimlik Doğrulama Ayarları",
+    "basicSettings": "Proxy Ayarları",
+    "basicSettingsDesc": "Proxy sunucusunun bağlantı parametrelerini yapılandırın",
+    "bypass": "Proxy kullanılmayacak adresler",
+    "connectionTest": "Bağlantı Testi",
+    "enable": "Proxy'yi etkinleştir",
+    "enableDesc": "Etkinleştirildiğinde, ağ erişimi proxy sunucusu üzerinden yapılacaktır",
+    "password": "Şifre",
+    "password_placeholder": "Şifrenizi girin",
+    "port": "Port",
+    "resetButton": "Sıfırla",
+    "saveButton": "Kaydet",
+    "saveFailed": "Kaydetme başarısız: {{error}}",
+    "saveSuccess": "Proxy ayarları başarıyla kaydedildi",
+    "server": "Sunucu adresi",
+    "testButton": "Bağlantıyı test et",
+    "testDescription": "Mevcut proxy yapılandırmasını kullanarak bağlantıyı test edin, yapılandırmanın düzgün çalıştığını doğrulayın",
+    "testFailed": "Bağlantı başarısız",
+    "testSuccessWithTime": "Bağlantı testi başarılı, geçen süre {{time}} ms",
+    "testUrl": "Test adresi",
+    "testUrlPlaceholder": "Test etmek için URL girin",
+    "testing": "Bağlantı test ediliyor...",
+    "type": "Proxy türü",
+    "unsavedChanges": "Kaydedilmemiş değişiklikleriniz var",
+    "username": "Kullanıcı adı",
+    "username_placeholder": "Kullanıcı adınızı girin",
+    "validation": {
+      "passwordRequired": "Kimlik doğrulama etkinleştirildiğinde şifre zorunludur",
+      "portInvalid": "Port numarası 1 ile 65535 arasında olmalıdır",
+      "portRequired": "Proxy etkinleştirildiğinde port zorunludur",
+      "serverInvalid": "Geçerli bir sunucu adresi (IP veya alan adı) giriniz",
+      "serverRequired": "Proxy etkinleştirildiğinde sunucu adresi zorunludur",
+      "typeRequired": "Proxy etkinleştirildiğinde proxy türü zorunludur",
+      "usernameRequired": "Kimlik doğrulama etkinleştirildiğinde kullanıcı adı zorunludur"
+    }
+  },
   "remoteServer": {
     "authError": "Yetkilendirme hatası: {{error}}",
     "authPending": "Yetkilendirmeyi tarayıcıda tamamlayın",
@@ -62,7 +104,10 @@
   "waitingOAuth": {
     "cancel": "İptal",
     "description": "Tarayıcıda yetkilendirme sayfası açıldı, lütfen tarayıcıda yetkilendirmeyi tamamlayın",
+    "error": "Yetkilendirme başarısız: {{error}}",
+    "errorTitle": "Yetkilendirme bağlantısı başarısız",
     "helpText": "Tarayıcı otomatik olarak açılmadıysa, lütfen iptal'e tıklayıp yeniden deneyin",
+    "retry": "Tekrar dene",
     "title": "Yetkilendirme bağlantısını bekliyor"
   }
 }

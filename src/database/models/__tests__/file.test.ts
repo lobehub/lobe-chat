@@ -733,4 +733,291 @@ describe('FileModel', () => {
       expect(remainingFiles[0].hashId).toBe('hash2');
     });
   });
+
+  describe('Transaction Support', () => {
+    describe('create with transaction', () => {
+      it('should create file within provided transaction', async () => {
+        const params = {
+          name: 'test-file-txn.txt',
+          url: 'https://example.com/test-file-txn.txt',
+          size: 100,
+          fileType: 'text/plain',
+          fileHash: 'test-hash-txn',
+        };
+
+        // 在事务中创建文件
+        const result = await serverDB.transaction(async (trx) => {
+          const { id } = await fileModel.create(params, true, trx);
+
+          // 在事务内验证文件已创建
+          const file = await trx.query.files.findFirst({ where: eq(files.id, id) });
+          expect(file).toMatchObject({ ...params, userId });
+
+          return { id };
+        });
+
+        // 事务提交后，验证文件仍然存在
+        const file = await serverDB.query.files.findFirst({ where: eq(files.id, result.id) });
+        expect(file).toMatchObject({ ...params, userId });
+
+        // 验证全局文件也被创建
+        const globalFile = await serverDB.query.globalFiles.findFirst({
+          where: eq(globalFiles.hashId, params.fileHash),
+        });
+        expect(globalFile).toBeDefined();
+      });
+
+      it('should rollback file creation when transaction fails', async () => {
+        const params = {
+          name: 'test-file-rollback.txt',
+          url: 'https://example.com/test-file-rollback.txt',
+          size: 100,
+          fileType: 'text/plain',
+          fileHash: 'test-hash-rollback',
+        };
+
+        let createdFileId: string | undefined;
+
+        // 故意让事务失败
+        await expect(
+          serverDB.transaction(async (trx) => {
+            const { id } = await fileModel.create(params, true, trx);
+            createdFileId = id;
+
+            // 在事务内验证文件已创建
+            const file = await trx.query.files.findFirst({ where: eq(files.id, id) });
+            expect(file).toMatchObject({ ...params, userId });
+
+            // 抛出错误导致事务回滚
+            throw new Error('Intentional rollback');
+          }),
+        ).rejects.toThrow('Intentional rollback');
+
+        // 验证文件创建被回滚
+        if (createdFileId) {
+          const file = await serverDB.query.files.findFirst({
+            where: eq(files.id, createdFileId),
+          });
+          expect(file).toBeUndefined();
+        }
+
+        // 验证全局文件创建也被回滚
+        const globalFile = await serverDB.query.globalFiles.findFirst({
+          where: eq(globalFiles.hashId, params.fileHash),
+        });
+        expect(globalFile).toBeUndefined();
+      });
+
+      it('should create file with knowledgeBase within transaction', async () => {
+        const params = {
+          name: 'test-kb-file.txt',
+          url: 'https://example.com/test-kb-file.txt',
+          size: 100,
+          fileType: 'text/plain',
+          knowledgeBaseId: 'kb1',
+        };
+
+        const result = await serverDB.transaction(async (trx) => {
+          const { id } = await fileModel.create(params, false, trx);
+
+          // 验证知识库文件关联已创建
+          const kbFile = await trx.query.knowledgeBaseFiles.findFirst({
+            where: eq(knowledgeBaseFiles.fileId, id),
+          });
+          expect(kbFile).toMatchObject({ fileId: id, knowledgeBaseId: 'kb1', userId });
+
+          return { id };
+        });
+
+        // 事务提交后验证
+        const kbFile = await serverDB.query.knowledgeBaseFiles.findFirst({
+          where: eq(knowledgeBaseFiles.fileId, result.id),
+        });
+        expect(kbFile).toMatchObject({
+          fileId: result.id,
+          knowledgeBaseId: 'kb1',
+          userId,
+        });
+      });
+    });
+
+    describe('delete with transaction', () => {
+      it('should delete file within provided transaction', async () => {
+        // 先创建文件和全局文件
+        await fileModel.createGlobalFile({
+          hashId: 'delete-txn-hash',
+          url: 'https://example.com/delete-txn.txt',
+          size: 100,
+          fileType: 'text/plain',
+          creator: userId,
+        });
+
+        const { id } = await fileModel.create({
+          name: 'delete-txn-file.txt',
+          url: 'https://example.com/delete-txn.txt',
+          size: 100,
+          fileType: 'text/plain',
+          fileHash: 'delete-txn-hash',
+        });
+
+        // 在事务中删除文件
+        await serverDB.transaction(async (trx) => {
+          await fileModel.delete(id, true, trx);
+
+          // 在事务内验证文件已删除
+          const file = await trx.query.files.findFirst({ where: eq(files.id, id) });
+          expect(file).toBeUndefined();
+        });
+
+        // 事务提交后验证文件仍然被删除
+        const file = await serverDB.query.files.findFirst({ where: eq(files.id, id) });
+        expect(file).toBeUndefined();
+
+        // 验证全局文件也被删除（因为没有其他引用）
+        const globalFile = await serverDB.query.globalFiles.findFirst({
+          where: eq(globalFiles.hashId, 'delete-txn-hash'),
+        });
+        expect(globalFile).toBeUndefined();
+      });
+
+      it('should rollback file deletion when transaction fails', async () => {
+        // 先创建文件和全局文件
+        await fileModel.createGlobalFile({
+          hashId: 'rollback-delete-hash',
+          url: 'https://example.com/rollback-delete.txt',
+          size: 100,
+          fileType: 'text/plain',
+          creator: userId,
+        });
+
+        const { id } = await fileModel.create({
+          name: 'rollback-delete-file.txt',
+          url: 'https://example.com/rollback-delete.txt',
+          size: 100,
+          fileType: 'text/plain',
+          fileHash: 'rollback-delete-hash',
+        });
+
+        // 故意让事务失败
+        await expect(
+          serverDB.transaction(async (trx) => {
+            await fileModel.delete(id, true, trx);
+
+            // 在事务内验证文件已删除
+            const file = await trx.query.files.findFirst({ where: eq(files.id, id) });
+            expect(file).toBeUndefined();
+
+            // 抛出错误导致事务回滚
+            throw new Error('Intentional rollback for delete');
+          }),
+        ).rejects.toThrow('Intentional rollback for delete');
+
+        // 验证文件删除被回滚，文件仍然存在
+        const file = await serverDB.query.files.findFirst({ where: eq(files.id, id) });
+        expect(file).toBeDefined();
+        expect(file?.name).toBe('rollback-delete-file.txt');
+
+        // 验证全局文件也被回滚，仍然存在
+        const globalFile = await serverDB.query.globalFiles.findFirst({
+          where: eq(globalFiles.hashId, 'rollback-delete-hash'),
+        });
+        expect(globalFile).toBeDefined();
+      });
+
+      it('should delete file but preserve global file when removeGlobalFile=false in transaction', async () => {
+        // 先创建文件和全局文件
+        await fileModel.createGlobalFile({
+          hashId: 'preserve-global-hash',
+          url: 'https://example.com/preserve-global.txt',
+          size: 100,
+          fileType: 'text/plain',
+          creator: userId,
+        });
+
+        const { id } = await fileModel.create({
+          name: 'preserve-global-file.txt',
+          url: 'https://example.com/preserve-global.txt',
+          size: 100,
+          fileType: 'text/plain',
+          fileHash: 'preserve-global-hash',
+        });
+
+        // 在事务中删除文件，但不删除全局文件
+        await serverDB.transaction(async (trx) => {
+          await fileModel.delete(id, false, trx);
+        });
+
+        // 验证文件被删除
+        const file = await serverDB.query.files.findFirst({ where: eq(files.id, id) });
+        expect(file).toBeUndefined();
+
+        // 验证全局文件被保留
+        const globalFile = await serverDB.query.globalFiles.findFirst({
+          where: eq(globalFiles.hashId, 'preserve-global-hash'),
+        });
+        expect(globalFile).toBeDefined();
+      });
+    });
+
+    describe('mixed operations in transaction', () => {
+      it('should support create and delete operations in same transaction', async () => {
+        // 先创建一个要删除的文件
+        await fileModel.createGlobalFile({
+          hashId: 'mixed-delete-hash',
+          url: 'https://example.com/mixed-delete.txt',
+          size: 100,
+          fileType: 'text/plain',
+          creator: userId,
+        });
+
+        const { id: deleteFileId } = await fileModel.create({
+          name: 'mixed-delete-file.txt',
+          url: 'https://example.com/mixed-delete.txt',
+          size: 100,
+          fileType: 'text/plain',
+          fileHash: 'mixed-delete-hash',
+        });
+
+        // 在同一个事务中删除旧文件并创建新文件
+        const result = await serverDB.transaction(async (trx) => {
+          // 删除旧文件
+          await fileModel.delete(deleteFileId, true, trx);
+
+          // 创建新文件
+          const { id: newFileId } = await fileModel.create(
+            {
+              name: 'mixed-create-file.txt',
+              url: 'https://example.com/mixed-create.txt',
+              size: 200,
+              fileType: 'text/plain',
+              fileHash: 'mixed-create-hash',
+            },
+            true,
+            trx,
+          );
+
+          return { newFileId };
+        });
+
+        // 验证旧文件被删除
+        const deletedFile = await serverDB.query.files.findFirst({
+          where: eq(files.id, deleteFileId),
+        });
+        expect(deletedFile).toBeUndefined();
+
+        // 验证新文件被创建
+        const newFile = await serverDB.query.files.findFirst({
+          where: eq(files.id, result.newFileId),
+        });
+        expect(newFile).toBeDefined();
+        expect(newFile?.name).toBe('mixed-create-file.txt');
+
+        // 验证新的全局文件被创建
+        const newGlobalFile = await serverDB.query.globalFiles.findFirst({
+          where: eq(globalFiles.hashId, 'mixed-create-hash'),
+        });
+        expect(newGlobalFile).toBeDefined();
+      });
+    });
+  });
 });

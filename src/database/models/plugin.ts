@@ -1,6 +1,7 @@
 import { and, desc, eq } from 'drizzle-orm/expressions';
 
 import { LobeChatDatabase } from '@/database/type';
+import { LobeTool } from '@/types/tool';
 
 import { InstalledPluginItem, NewInstalledPlugin, userInstalledPlugins } from '../schemas';
 
@@ -14,11 +15,14 @@ export class PluginModel {
   }
 
   create = async (
-    params: Pick<NewInstalledPlugin, 'type' | 'identifier' | 'manifest' | 'customParams'>,
+    params: Pick<
+      NewInstalledPlugin,
+      'type' | 'identifier' | 'manifest' | 'customParams' | 'settings'
+    >,
   ) => {
     const [result] = await this.db
       .insert(userInstalledPlugins)
-      .values({ ...params, createdAt: new Date(), updatedAt: new Date(), userId: this.userId })
+      .values({ ...params, userId: this.userId })
       .onConflictDoUpdate({
         set: { ...params, updatedAt: new Date() },
         target: [userInstalledPlugins.identifier, userInstalledPlugins.userId],
@@ -41,19 +45,25 @@ export class PluginModel {
   };
 
   query = async () => {
-    return this.db
+    const data = await this.db
       .select({
         createdAt: userInstalledPlugins.createdAt,
         customParams: userInstalledPlugins.customParams,
         identifier: userInstalledPlugins.identifier,
         manifest: userInstalledPlugins.manifest,
         settings: userInstalledPlugins.settings,
+        source: userInstalledPlugins.type,
         type: userInstalledPlugins.type,
         updatedAt: userInstalledPlugins.updatedAt,
       })
       .from(userInstalledPlugins)
       .where(eq(userInstalledPlugins.userId, this.userId))
       .orderBy(desc(userInstalledPlugins.createdAt));
+
+    return data.map<LobeTool>((item) => ({
+      ...item,
+      runtimeType: item.manifest?.type || 'default',
+    }));
   };
 
   findById = async (id: string) => {

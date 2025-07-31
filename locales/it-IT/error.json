@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "Errore nella richiesta del servizio. Verifica la configurazione o riprova"
   },
+  "testConnectionFailed": "Connessione di prova fallita: {{error}}",
   "tts": {
     "responseError": "Errore nella richiesta del servizio. Verifica la configurazione o riprova"
   },
@@ -130,6 +131,7 @@
     "addProxyUrl": "Aggiungi URL del proxy OpenAI (opzionale)",
     "apiKey": {
       "description": "Inserisci la tua Chiave API {{name}} per iniziare la sessione",
+      "imageGenerationDescription": "Inserisci la tua chiave API {{name}} per iniziare a generare",
       "title": "Usa la tua Chiave API personalizzata {{name}}"
     },
     "closeMessage": "Chiudi messaggio",

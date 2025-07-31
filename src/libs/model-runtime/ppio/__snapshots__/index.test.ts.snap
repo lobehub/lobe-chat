@@ -10,6 +10,7 @@ exports[`PPIO > models > should get models 1`] = `
     "functionCall": false,
     "id": "deepseek/deepseek-r1/community",
     "reasoning": true,
+    "type": "chat",
     "vision": false,
   },
   {
@@ -20,6 +21,7 @@ exports[`PPIO > models > should get models 1`] = `
     "functionCall": false,
     "id": "deepseek/deepseek-v3/community",
     "reasoning": false,
+    "type": "chat",
     "vision": false,
   },
 ]

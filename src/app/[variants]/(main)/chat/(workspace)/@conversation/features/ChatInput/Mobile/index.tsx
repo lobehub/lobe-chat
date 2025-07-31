@@ -5,9 +5,9 @@ import { useTheme } from 'antd-style';
 import { TextAreaRef } from 'antd/es/input/TextArea';
 import { memo, useRef, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import STT from 'src/features/ChatInput/ActionBar/STT';
 
 import ActionBar from '@/features/ChatInput/ActionBar';
+import STT from '@/features/ChatInput/ActionBar/STT';
 import { ActionKeys } from '@/features/ChatInput/ActionBar/config';
 import SaveTopic from '@/features/ChatInput/Topic';
 import { useSendMessage } from '@/features/ChatInput/useSend';

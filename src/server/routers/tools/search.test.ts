@@ -9,8 +9,8 @@ import { SEARCH_SEARXNG_NOT_CONFIG } from '@/types/tool/search';
 import { searchRouter } from './search';
 
 // Mock JWT verification
-vi.mock('@/utils/server/jwt', () => ({
-  getJWTPayload: vi.fn().mockResolvedValue({ userId: '1' }),
+vi.mock('@/utils/server/xor', () => ({
+  getXorPayload: vi.fn().mockReturnValue({ userId: '1' }),
 }));
 
 vi.mock('@lobechat/web-crawler', () => ({

@@ -183,6 +183,7 @@
   },
   "fullscreen": "Tryb pełnoekranowy",
   "historyRange": "Zakres historii",
+  "import": "Importuj",
   "importData": "Importuj dane",
   "importModal": {
     "error": {
@@ -324,6 +325,7 @@
     }
   },
   "tab": {
+    "aiImage": "AI Rysowanie",
     "chat": "Czat",
     "discover": "Odkryj",
     "files": "Pliki",

@@ -1,6 +1,7 @@
 import { GenerateContentResponse } from '@google/genai';
 
 import { ModelTokensUsage } from '@/types/message';
+import { GroundingSearch } from '@/types/search';
 import { nanoid } from '@/utils/uuid';
 
 import { type GoogleAIStreamOptions } from './google-ai';
@@ -30,13 +31,11 @@ const transformVertexAIStream = (
       { data: candidate.finishReason, id: context?.id, type: 'stop' },
       {
         data: {
-          // TODO: Google SDK 0.24.0 don't have promptTokensDetails types
-          inputImageTokens: (usage as any).promptTokensDetails?.find(
-            (i: any) => i.modality === 'IMAGE',
-          )?.tokenCount,
-          inputTextTokens: (usage as any).promptTokensDetails?.find(
-            (i: any) => i.modality === 'TEXT',
-          )?.tokenCount,
+          inputCachedTokens: usage.cachedContentTokenCount,
+          inputImageTokens: usage.promptTokensDetails?.find((i) => i.modality === 'IMAGE')
+            ?.tokenCount,
+          inputTextTokens: usage.promptTokensDetails?.find((i) => i.modality === 'TEXT')
+            ?.tokenCount,
           outputReasoningTokens,
           outputTextTokens,
           totalInputTokens: usage.promptTokenCount,
@@ -55,7 +54,7 @@ const transformVertexAIStream = (
     candidate.content.parts.length > 0
   ) {
     for (const part of candidate.content.parts) {
-      if (part && part.text && (part as any).thought === true) {
+      if (part && part.text && part.thought === true) {
         return { data: part.text, id: context.id, type: 'reasoning' };
       }
     }
@@ -93,6 +92,29 @@ const transformVertexAIStream = (
         },
         ...usageChunks,
       ];
+    }
+
+    // return the grounding
+    const { groundingChunks, webSearchQueries } = candidate.groundingMetadata ?? {};
+    if (groundingChunks) {
+      return [
+        !!part?.text ? { data: part.text, id: context?.id, type: 'text' } : undefined,
+        {
+          data: {
+            citations: groundingChunks?.map((chunk) => ({
+              // google 返回的 uri 是经过 google 自己处理过的 url，因此无法展现真实的 favicon
+              // 需要使用 title 作为替换
+              favicon: chunk.web?.title,
+              title: chunk.web?.title,
+              url: chunk.web?.uri,
+            })),
+            searchQueries: webSearchQueries,
+          } as GroundingSearch,
+          id: context.id,
+          type: 'grounding',
+        },
+        ...usageChunks,
+      ].filter(Boolean) as StreamProtocolChunk[];
     }
 
     if (candidate.finishReason) {

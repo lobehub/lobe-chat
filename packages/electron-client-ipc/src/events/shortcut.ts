@@ -1,4 +1,6 @@
+import { ShortcutUpdateResult } from '../types';
+
 export interface ShortcutDispatchEvents {
   getShortcutsConfig: () => Record<string, string>;
-  updateShortcutConfig: (id: string, accelerator: string) => boolean;
+  updateShortcutConfig: (params: { accelerator: string; id: string }) => ShortcutUpdateResult;
 }

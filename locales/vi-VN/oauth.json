@@ -28,10 +28,14 @@
     },
     "title": "Ủy quyền cho {{clientName}}"
   },
-  "failed": {
-    "backToHome": "Quay lại trang chính",
-    "subTitle": "Bạn đã từ chối cho phép ứng dụng truy cập vào tài khoản LobeChat của bạn",
-    "title": "Ủy quyền bị từ chối"
+  "error": {
+    "backToHome": "Quay lại trang chủ",
+    "desc": "Ủy quyền OAuth thất bại, lý do thất bại: {{reason}}",
+    "reason": {
+      "internal_error": "Lỗi máy chủ",
+      "invalid_request": "Tham số yêu cầu không hợp lệ"
+    },
+    "title": "Ủy quyền thất bại"
   },
   "handoff": {
     "desc": {
@@ -50,7 +54,7 @@
     "userWelcome": "Chào mừng bạn trở lại, "
   },
   "success": {
-    "subTitle": "Bạn đã thành công trong việc cho phép ứng dụng truy cập vào tài khoản LobeChat của bạn, bạn có thể đóng trang này.",
+    "subTitle": "Bạn đã cấp quyền thành công cho ứng dụng truy cập tài khoản của mình, có thể đóng trang này.",
     "title": "Ủy quyền thành công"
   }
 }

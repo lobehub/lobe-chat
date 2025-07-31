@@ -23,7 +23,7 @@ export class ClientService implements IPluginService {
     return PluginModel.create({ ...customPlugin, type: 'customPlugin' });
   }
 
-  async updatePlugin(id: string, value: LobeToolCustomPlugin) {
+  async updatePlugin(id: string, value: Partial<LobeToolCustomPlugin>) {
     await PluginModel.update(id, value);
     return;
   }

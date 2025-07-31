@@ -1,0 +1,24 @@
+{
+  "plans": {
+    "plan": {
+      "enterprise": {
+        "title": "نسخه سازمانی"
+      },
+      "free": {
+        "title": "نسخه رایگان"
+      },
+      "hobby": {
+        "title": "نسخه خودکار"
+      },
+      "premium": {
+        "title": "نسخه پیشرفته"
+      },
+      "starter": {
+        "title": "نسخه پایه"
+      },
+      "ultimate": {
+        "title": "نسخه حرفه‌ای"
+      }
+    }
+  }
+}

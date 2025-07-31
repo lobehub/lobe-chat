@@ -62,7 +62,6 @@ export const HotkeyEnum = {
   EditMessage: 'editMessage',
   OpenChatSettings: 'openChatSettings',
   OpenHotkeyHelper: 'openHotkeyHelper',
-  OpenSettings: 'openSettings',
   RegenerateMessage: 'regenerateMessage',
   SaveTopic: 'saveTopic',
   Search: 'search',
@@ -84,6 +83,8 @@ export const HotkeyScopeEnum = {
   // 默认全局注册的快捷键 scope
   // https://react-hotkeys-hook.vercel.app/docs/documentation/hotkeys-provider
   Global: 'global',
+
+  Image: 'image',
 } as const;
 
 export type HotkeyId = (typeof HotkeyEnum)[keyof typeof HotkeyEnum];
@@ -94,8 +95,6 @@ export interface HotkeyItem {
   // 快捷键分组用于展示
   group: HotkeyGroupId;
   id: HotkeyId;
-  isDesktop?: boolean;
-  // 是否是桌面端专用的快捷键
   keys: string;
   // 是否为不可编辑的快捷键
   nonEditable?: boolean;
@@ -103,7 +102,24 @@ export interface HotkeyItem {
   scopes?: HotkeyScopeId[];
 }
 
-export type HotkeyRegistration = HotkeyItem[];
+// ================== Desktop ================== //
+
+export const DesktopHotkeyEnum = {
+  OpenSettings: 'openSettings',
+  ShowApp: 'showApp',
+};
+
+export type DesktopHotkeyId = (typeof DesktopHotkeyEnum)[keyof typeof DesktopHotkeyEnum];
+
+export interface DesktopHotkeyItem {
+  id: DesktopHotkeyId;
+
+  keys: string;
+  // 是否为不可编辑的快捷键
+  nonEditable?: boolean;
+}
+
+export type DesktopHotkeyConfig = Record<DesktopHotkeyId, string>;
 
 export type HotkeyI18nTranslations = Record<
   HotkeyId,

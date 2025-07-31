@@ -183,6 +183,7 @@
   },
   "fullscreen": "Volledig scherm",
   "historyRange": "Geschiedenisbereik",
+  "import": "Importeren",
   "importData": "Gegevens importeren",
   "importModal": {
     "error": {
@@ -324,6 +325,7 @@
     }
   },
   "tab": {
+    "aiImage": "AI-afbeelding",
     "chat": "Chat",
     "discover": "Ontdekken",
     "files": "Bestanden",

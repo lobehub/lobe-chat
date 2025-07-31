@@ -13,6 +13,10 @@
       "title": "Asystenci AI"
     },
     "description": "Tworzenie treści, copywriting, pytania i odpowiedzi, generowanie obrazów, generowanie wideo, generowanie głosu, inteligentny agent, automatyzacja przepływów pracy, dostosowane aplikacje AI, stwórz swoje osobiste stanowisko pracy AI",
+    "mcp": {
+      "description": "Wyszukuj, porównuj i łącz się z tysiącami serwerów MCP, pomagając systemom AI łatwo uzyskać dostęp do systemów plików, baz danych, API i innych kluczowych zasobów, znacznie rozszerzając możliwości Twojej sztucznej inteligencji",
+      "title": "Rynek serwerów MCP"
+    },
     "models": {
       "description": "Odkryj popularne modele AI OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek",
       "title": "Modele AI"
@@ -27,6 +31,10 @@
     },
     "search": "Szukaj",
     "title": "Odkryj"
+  },
+  "image": {
+    "description": "{{appName}} zapewnia najlepsze doświadczenia w korzystaniu z GPT Image, Flux, Midjourney, Stable Diffusion",
+    "title": "AI Malarstwo"
   },
   "plugins": {
     "description": "Wyszukiwanie, generowanie wykresów, akademickie, generowanie obrazów, generowanie wideo, generowanie głosu, automatyzacja przepływów pracy, dostosuj możliwości wtyczek ToolCall dla ChatGPT / Claude",

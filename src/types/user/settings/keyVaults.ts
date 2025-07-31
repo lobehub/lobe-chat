@@ -3,6 +3,10 @@ export interface OpenAICompatibleKeyVault {
   baseURL?: string;
 }
 
+export interface FalKeyVault {
+  apiKey?: string;
+}
+
 export interface AzureOpenAIKeyVault {
   apiKey?: string;
   apiVersion?: string;
@@ -43,6 +47,7 @@ export interface UserKeyVaults extends SearchEngineKeyVaults {
   cloudflare?: CloudflareKeyVault;
   cohere?: OpenAICompatibleKeyVault;
   deepseek?: OpenAICompatibleKeyVault;
+  fal?: FalKeyVault;
   fireworksai?: OpenAICompatibleKeyVault;
   giteeai?: OpenAICompatibleKeyVault;
   github?: OpenAICompatibleKeyVault;

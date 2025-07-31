@@ -12,7 +12,7 @@ import {
   CreateAgentRequestSchema,
   SessionIdParamSchema,
   UpdateAgentRequestSchema,
-} from '../types/agent.type';
+} from '../types';
 
 // Agent 相关路由
 const AgentRoutes = new Hono();

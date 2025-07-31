@@ -1,0 +1,24 @@
+{
+  "plans": {
+    "plan": {
+      "enterprise": {
+        "title": "Phiên bản doanh nghiệp"
+      },
+      "free": {
+        "title": "Phiên bản miễn phí"
+      },
+      "hobby": {
+        "title": "Phiên bản tự phục vụ"
+      },
+      "premium": {
+        "title": "Phiên bản Nâng cao"
+      },
+      "starter": {
+        "title": "Phiên bản cơ bản"
+      },
+      "ultimate": {
+        "title": "Phiên bản Chuyên nghiệp"
+      }
+    }
+  }
+}

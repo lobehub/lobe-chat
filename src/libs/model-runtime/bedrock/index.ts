@@ -3,7 +3,6 @@ import {
   InvokeModelCommand,
   InvokeModelWithResponseStreamCommand,
 } from '@aws-sdk/client-bedrock-runtime';
-import { experimental_buildLlama2Prompt } from 'ai/prompts';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
@@ -24,6 +23,38 @@ import {
   AWSBedrockLlamaStream,
   createBedrockStream,
 } from '../utils/streams';
+
+/**
+ * A prompt constructor for HuggingFace LLama 2 chat models.
+ * Does not support `function` messages.
+ * @see https://huggingface.co/meta-llama/Llama-2-70b-chat-hf and https://huggingface.co/blog/llama2#how-to-prompt-llama-2
+ */
+export function experimental_buildLlama2Prompt(messages: { content: string; role: string }[]) {
+  const startPrompt = `<s>[INST] `;
+  const endPrompt = ` [/INST]`;
+  const conversation = messages.map(({ content, role }, index) => {
+    switch (role) {
+      case 'user': {
+        return content.trim();
+      }
+      case 'assistant': {
+        return ` [/INST] ${content}</s><s>[INST] `;
+      }
+      case 'function': {
+        throw new Error('Llama 2 does not support function calls.');
+      }
+      default: {
+        if (role === 'system' && index === 0) {
+          return `<<SYS>>\n${content}\n<</SYS>>\n\n`;
+        } else {
+          throw new Error(`Invalid message role: ${role}`);
+        }
+      }
+    }
+  });
+
+  return startPrompt + conversation.join('') + endPrompt;
+}
 
 export interface LobeBedrockAIParams {
   accessKeyId?: string;

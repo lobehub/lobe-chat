@@ -2,11 +2,11 @@ import { count, sum } from 'drizzle-orm';
 import { and, asc, desc, eq, ilike, inArray, like, notExists, or } from 'drizzle-orm/expressions';
 import type { PgTransaction } from 'drizzle-orm/pg-core';
 
-import { LobeChatDatabase } from '@/database/type';
 import {
   generateSecureFileHash,
   inferAccessType,
 } from '@/database/utils/secureFileHash';
+import { LobeChatDatabase, Transaction } from '@/database/type';
 import { FilesTabs, QueryFileListParams, SortType } from '@/types/files';
 
 import {
@@ -33,15 +33,16 @@ export class FileModel {
   create = async (
     params: Omit<NewFile, 'id' | 'userId'> & { knowledgeBaseId?: string; originalHash?: string },
     insertToGlobalFiles?: boolean,
+    trx?: Transaction,
   ) => {
-    const result = await this.db.transaction(async (trx) => {
+    const executeInTransaction = async (tx: Transaction) => {
       if (insertToGlobalFiles) {
         // 如果提供了原始哈希，使用安全哈希；否则使用原有的 fileHash
         const hashToUse = params.originalHash
           ? this.generateSecureHash(params.originalHash, params.url, params.metadata)
           : params.fileHash!;
 
-        await trx
+        await tx
           .insert(globalFiles)
           .values({
             creator: this.userId,
@@ -59,7 +60,7 @@ export class FileModel {
         ? this.generateSecureHash(params.originalHash, params.url, params.metadata)
         : params.fileHash;
 
-      const result = await trx
+      const result = await tx
         .insert(files)
         .values({ ...params, fileHash: secureFileHash, userId: this.userId })
         .returning();
@@ -67,7 +68,7 @@ export class FileModel {
       const item = result[0];
 
       if (params.knowledgeBaseId) {
-        await trx.insert(knowledgeBaseFiles).values({
+        await tx.insert(knowledgeBaseFiles).values({
           fileId: item.id,
           knowledgeBaseId: params.knowledgeBaseId,
           userId: this.userId,
@@ -75,8 +76,11 @@ export class FileModel {
       }
 
       return item;
-    });
+    };
 
+    const result = await (trx
+      ? executeInTransaction(trx)
+      : this.db.transaction(executeInTransaction));
     return { id: result.id };
   };
 
@@ -123,20 +127,21 @@ export class FileModel {
     return this.checkHash(secureHash);
   };
 
-  delete = async (id: string, removeGlobalFile: boolean = true) => {
-    const file = await this.findById(id);
-    if (!file) return;
+  delete = async (id: string, removeGlobalFile: boolean = true, trx?: Transaction) => {
+    const executeInTransaction = async (tx: Transaction) => {
+      // pglite 环境下不能再 transaction 中使用非事务操作，会阻塞住
+      const file = await this.findById(id, tx);
+      if (!file) return;
 
-    const fileHash = file.fileHash!;
+      const fileHash = file.fileHash!;
 
-    return await this.db.transaction(async (trx) => {
-      // 1. 删除相关的 chunks
-      await this.deleteFileChunks(trx as any, [id]);
+      // 2. Delete related chunks
+      await this.deleteFileChunks(tx as any, [id]);
 
-      // 2. 删除文件记录
-      await trx.delete(files).where(and(eq(files.id, id), eq(files.userId, this.userId)));
+      // 3. Delete file record
+      await tx.delete(files).where(and(eq(files.id, id), eq(files.userId, this.userId)));
 
-      const result = await trx
+      const result = await tx
         .select({ count: count() })
         .from(files)
         .where(and(eq(files.fileHash, fileHash)));
@@ -146,11 +151,13 @@ export class FileModel {
       // delete the file from global file if it is not used by other files
       // if `DISABLE_REMOVE_GLOBAL_FILE` is true, we will not remove the global file
       if (fileCount === 0 && removeGlobalFile) {
-        await trx.delete(globalFiles).where(eq(globalFiles.hashId, fileHash));
+        await tx.delete(globalFiles).where(eq(globalFiles.hashId, fileHash));
 
         return file;
       }
-    });
+    };
+
+    return await (trx ? executeInTransaction(trx) : this.db.transaction(executeInTransaction));
   };
 
   deleteGlobalFile = async (hashId: string) => {
@@ -302,8 +309,9 @@ export class FileModel {
     });
   };
 
-  findById = async (id: string) => {
-    return this.db.query.files.findFirst({
+  findById = async (id: string, trx?: Transaction) => {
+    const database = trx || this.db;
+    return database.query.files.findFirst({
       where: and(eq(files.id, id), eq(files.userId, this.userId)),
     });
   };

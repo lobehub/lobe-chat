@@ -69,13 +69,15 @@ const ModelSelect = memo<ModelSelectProps>(({ value, onChange, showAbility = tru
   return (
     <Select
       className={styles.select}
+      classNames={{
+        popup: { root: styles.popup },
+      }}
       defaultValue={`${value?.provider}/${value?.model}`}
       onChange={(value, option) => {
         const model = value.split('/').slice(1).join('/');
         onChange?.({ model, provider: (option as unknown as ModelOption).provider });
       }}
       options={options}
-      popupClassName={styles.popup}
       popupMatchSelectWidth={false}
       value={`${value?.provider}/${value?.model}`}
     />

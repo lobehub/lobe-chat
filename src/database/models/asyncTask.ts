@@ -82,7 +82,7 @@ export class AsyncTaskModel {
         .set({
           error: new AsyncTaskError(
             AsyncTaskErrorType.Timeout,
-            'chunking task is timeout, please try again',
+            'task is timeout, please try again',
           ),
           status: AsyncTaskStatus.Error,
         })

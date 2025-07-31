@@ -123,6 +123,7 @@
   "stt": {
     "responseError": "Hizmet isteği başarısız oldu, lütfen yapılandırmayı kontrol edin veya tekrar deneyin"
   },
+  "testConnectionFailed": "Bağlantı testi başarısız: {{error}}",
   "tts": {
     "responseError": "Hizmet isteği başarısız oldu, lütfen yapılandırmayı kontrol edin veya tekrar deneyin"
   },
@@ -130,6 +131,7 @@
     "addProxyUrl": "OpenAI vekil adresi ekle (isteğe bağlı)",
     "apiKey": {
       "description": "{{name}} API Anahtarınızı girerek oturumu başlatabilirsiniz",
+      "imageGenerationDescription": "{{name}} API Anahtarınızı girerek oluşturma işlemine başlayabilirsiniz",
       "title": "Özel {{name}} API Anahtarını kullan"
     },
     "closeMessage": "Mesajı kapat",

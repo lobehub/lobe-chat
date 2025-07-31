@@ -1,3 +1,5 @@
+import { ThemeAppearance } from 'antd-style';
+
 import { ElectronAppState, ThemeMode } from '../types';
 
 export interface SystemDispatchEvents {
@@ -16,5 +18,6 @@ export interface SystemDispatchEvents {
 }
 
 export interface SystemBroadcastEvents {
+  systemThemeChanged: (data: { themeMode: ThemeAppearance }) => void;
   themeChanged: (data: { themeMode: ThemeMode }) => void;
 }

@@ -2,6 +2,7 @@ import minimaxChatModels from '@/config/aiModels/minimax';
 
 import { ModelProvider } from '../types';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
+import { createMiniMaxImage } from './createImage';
 
 export const getMinimaxMaxOutputs = (modelId: string): number | undefined => {
   const model = minimaxChatModels.find((model) => model.id === modelId);
@@ -34,6 +35,7 @@ export const LobeMinimaxAI = createOpenAICompatibleRuntime({
       } as any;
     },
   },
+  createImage: createMiniMaxImage,
   debug: {
     chatCompletion: () => process.env.DEBUG_MINIMAX_CHAT_COMPLETION === '1',
   },

@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
-import PluginSettingRender from './PluginSettingRender';
+import ItemRender from '../../components/JSONSchemaConfig/ItemRender';
 
 export const transformPluginSettings = (pluginSettings: PluginSchema) => {
   if (!pluginSettings?.properties) return [];
@@ -68,7 +68,7 @@ const PluginSettingsConfig = memo<PluginSettingsConfigProps>(({ schema, id }) =>
       initialValues={pluginSetting}
       items={items.map((item) => ({
         children: (
-          <PluginSettingRender
+          <ItemRender
             enum={item.enum}
             format={item.format}
             maximum={item.maximum}

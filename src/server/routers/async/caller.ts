@@ -1,9 +1,9 @@
-import { createTRPCClient, httpBatchLink } from '@trpc/client';
+import { createTRPCClient, httpLink } from '@trpc/client';
 import superjson from 'superjson';
 import urlJoin from 'url-join';
 
 import { serverDBEnv } from '@/config/db';
-import { JWTPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
+import { ClientSecretPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import { isDesktop } from '@/const/version';
 import { appEnv } from '@/envs/app';
 import { createAsyncCallerFactory } from '@/libs/trpc/async';
@@ -13,7 +13,7 @@ import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { asyncRouter } from './index';
 import type { AsyncRouter } from './index';
 
-export const createAsyncServerClient = async (userId: string, payload: JWTPayload) => {
+export const createAsyncServerClient = async (userId: string, payload: ClientSecretPayload) => {
   const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
   const headers: Record<string, string> = {
     Authorization: `Bearer ${serverDBEnv.KEY_VAULTS_SECRET}`,
@@ -24,15 +24,17 @@ export const createAsyncServerClient = async (userId: string, payload: JWTPayloa
     headers['x-vercel-protection-bypass'] = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
   }
 
-  return createTRPCClient<AsyncRouter>({
+  const client = createTRPCClient<AsyncRouter>({
     links: [
-      httpBatchLink({
+      httpLink({
         headers,
         transformer: superjson,
         url: urlJoin(appEnv.APP_URL!, '/trpc/async'),
       }),
     ],
   });
+
+  return client;
 };
 
 /**

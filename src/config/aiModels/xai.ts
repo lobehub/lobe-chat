@@ -1,7 +1,33 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
 
 // https://docs.x.ai/docs/models
 const xaiChatModels: AIChatModelCard[] = [
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+      search: true,
+      vision: true,
+    },
+    contextWindowTokens: 256_000,
+    description:
+      '我们最新最强大的旗舰模型，在自然语言处理、数学计算和推理方面表现卓越 —— 是一款完美的全能型选手。',
+    displayName: 'Grok 4 0709',
+    enabled: true,
+    id: 'grok-4',
+    pricing: {
+      cachedInput: 0.75,
+      input: 3,
+      output: 15,
+    },
+    releasedAt: '2025-07-09',
+    settings: {
+      // reasoning_effort is not supported by grok-4. Specifying reasoning_effort parameter will get an error response.
+      // extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
+    type: 'chat',
+  },
   {
     abilities: {
       functionCall: true,
@@ -11,7 +37,6 @@ const xaiChatModels: AIChatModelCard[] = [
     description:
       '旗舰级模型，擅长数据提取、编程和文本摘要等企业级应用，拥有金融、医疗、法律和科学等领域的深厚知识。',
     displayName: 'Grok 3',
-    enabled: true,
     id: 'grok-3',
     pricing: {
       cachedInput: 0.75,
@@ -120,7 +145,6 @@ const xaiChatModels: AIChatModelCard[] = [
     contextWindowTokens: 32_768,
     description: '该模型在准确性、指令遵循和多语言能力方面有所改进。',
     displayName: 'Grok 2 Vision 1212',
-    enabled: true,
     id: 'grok-2-vision-1212',
     pricing: {
       input: 2,
@@ -134,6 +158,23 @@ const xaiChatModels: AIChatModelCard[] = [
   },
 ];
 
-export const allModels = [...xaiChatModels];
+const xaiImageModels: AIImageModelCard[] = [
+  {
+    description:
+      '我们最新的图像生成模型可以根据文本提示生成生动逼真的图像。它在营销、社交媒体和娱乐等领域的图像生成方面表现出色。',
+    displayName: 'Grok 2 Image 1212',
+    enabled: true,
+    id: 'grok-2-image-1212',
+    parameters: {
+      prompt: {
+        default: '',
+      },
+    },
+    releasedAt: '2024-12-12',
+    type: 'image',
+  },
+];
+
+export const allModels = [...xaiChatModels, ...xaiImageModels];
 
 export default allModels;

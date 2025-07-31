@@ -11,6 +11,13 @@ vi.mock('next/navigation', () => ({
   })),
 }));
 
+vi.mock('nextjs-toploader/app', () => ({
+  useRouter: vi.fn(() => ({
+    push: vi.fn((href) => href),
+    replace: vi.fn((href) => href),
+  })),
+}));
+
 vi.mock('@/utils/env', () => ({
   isOnServerSide: false,
 }));

@@ -1,22 +1,34 @@
 'use client';
 
-import { memo } from 'react';
+import { useRouter } from 'next/navigation';
+import { memo, useEffect } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import useSWR from 'swr';
 
+import Loading from '@/components/Loading/BrandTextLoading';
+import { useClientDataSWR } from '@/libs/swr';
 import { aiProviderService } from '@/services/aiProvider';
 
 import ModelList from '../../features/ModelList';
 import ProviderConfig from '../../features/ProviderConfig';
 
 const ClientMode = memo<{ id: string }>(({ id }) => {
-  const { data, isLoading } = useSWR('get-client-provider', () =>
+  const { data, isLoading } = useClientDataSWR('get-client-provider', () =>
     aiProviderService.getAiProviderById(id),
   );
 
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && !data?.id) {
+      router.push('/settings/provider');
+    }
+  }, [isLoading, data]);
+
+  if (isLoading || !data || !data.id) return <Loading />;
+
   return (
     <Flexbox gap={24} paddingBlock={8}>
-      {!isLoading && data && <ProviderConfig {...data} />}
+      <ProviderConfig {...data} id={id} name={data.name || ''} />
       <ModelList id={id} />
     </Flexbox>
   );

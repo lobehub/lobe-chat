@@ -88,7 +88,14 @@ const NotSupportClient = () => {
   ];
 
   return (
-    <Center gap={40} height={'100%'} width={'100%'}>
+    <Center
+      gap={40}
+      height={'100%'}
+      style={{
+        overflow: 'scroll',
+      }}
+      width={'100%'}
+    >
       <Flexbox className={styles.iconGroup} gap={12} horizontal>
         <Center
           className={styles.icon}

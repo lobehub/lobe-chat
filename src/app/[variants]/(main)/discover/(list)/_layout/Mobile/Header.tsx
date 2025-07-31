@@ -10,7 +10,7 @@ import { Flexbox } from 'react-layout-kit';
 import { MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
 
-import StoreSearchBar from '../../../features/StoreSearchBar';
+import StoreSearchBar from '../../../features/Search';
 import Nav from './Nav';
 
 const useStyles = createStyles(({ css, token }) => ({

@@ -36,6 +36,16 @@ config.overrides = [
       'mdx/code-blocks': false,
     },
   },
+
+  {
+    files: ['src/store/image/**/*', 'src/types/generation/**/*'],
+    rules: {
+      '@typescript-eslint/no-empty-interface': 0,
+      'sort-keys-fix/sort-keys-fix': 0,
+      'typescript-sort-keys/interface': 0,
+      'typescript-sort-keys/string-enum': 0,
+    },
+  },
 ];
 
 module.exports = config;

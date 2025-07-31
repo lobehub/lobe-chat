@@ -57,4 +57,44 @@ export class S3StaticFileImpl implements FileServiceImpl {
 
     return urlJoin(fileEnv.S3_PUBLIC_DOMAIN!, url);
   }
+
+  getKeyFromFullUrl(url: string): string {
+    try {
+      const urlObject = new URL(url);
+      const { pathname } = urlObject;
+
+      let key: string;
+
+      if (fileEnv.S3_ENABLE_PATH_STYLE) {
+        if (!fileEnv.S3_BUCKET) {
+          // In path-style, we need bucket name to extract key
+          // but if not provided, we can only guess the key is the pathname
+          return pathname.startsWith('/') ? pathname.slice(1) : pathname;
+        }
+        // For path-style URLs, the path is /<bucket>/<key>
+        // We need to remove the leading slash and the bucket name.
+        const bucketPrefix = `/${fileEnv.S3_BUCKET}/`;
+        if (pathname.startsWith(bucketPrefix)) {
+          key = pathname.slice(bucketPrefix.length);
+        } else {
+          // Fallback for unexpected path format
+          key = pathname.startsWith('/') ? pathname.slice(1) : pathname;
+        }
+      } else {
+        // For virtual-hosted-style URLs, the path is /<key>
+        // We just need to remove the leading slash.
+        key = pathname.slice(1);
+      }
+
+      return key;
+    } catch {
+      // if url is not a valid URL, it may be a key itself
+      return url;
+    }
+  }
+
+  async uploadMedia(key: string, buffer: Buffer): Promise<{ key: string }> {
+    await this.s3.uploadMedia(key, buffer);
+    return { key };
+  }
 }

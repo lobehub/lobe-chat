@@ -7,7 +7,7 @@ import { isDeprecatedEdition, isDesktop, isUsePgliteDB } from '@/const/version';
 import { useClientDataSWR } from '@/libs/swr';
 import { aiProviderService } from '@/services/aiProvider';
 import { AiInfraStore } from '@/store/aiInfra/store';
-import { ModelAbilities } from '@/types/aiModel';
+import { AIImageModelCard, ModelAbilities } from '@/types/aiModel';
 import {
   AiProviderDetailItem,
   AiProviderListItem,
@@ -15,9 +15,11 @@ import {
   AiProviderSortMap,
   AiProviderSourceEnum,
   CreateAiProviderParams,
+  EnabledProvider,
   UpdateAiProviderConfigParams,
   UpdateAiProviderParams,
 } from '@/types/aiProvider';
+import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
 
 enum AiProviderSwrKey {
   fetchAiProviderItem = 'FETCH_AI_PROVIDER_ITEM',
@@ -175,11 +177,25 @@ export const createAiProviderSlice: StateCreator<
         if (isLogin) return aiProviderService.getAiProviderRuntimeState();
 
         const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+        const enabledAiProviders: EnabledProvider[] = DEFAULT_MODEL_PROVIDER_LIST.filter(
+          (provider) => provider.enabled,
+        ).map((item) => ({ id: item.id, name: item.name, source: 'builtin' }));
+        const allModels = LOBE_DEFAULT_MODEL_LIST;
         return {
-          enabledAiModels: LOBE_DEFAULT_MODEL_LIST.filter((m) => m.enabled),
-          enabledAiProviders: DEFAULT_MODEL_PROVIDER_LIST.filter(
-            (provider) => provider.enabled,
-          ).map((item) => ({ id: item.id, name: item.name, source: 'builtin' })),
+          enabledAiModels: allModels.filter((m) => m.enabled),
+          enabledAiProviders: enabledAiProviders,
+          enabledChatAiProviders: enabledAiProviders.filter((provider) => {
+            return allModels.some(
+              (model) => model.providerId === provider.id && model.type === 'chat',
+            );
+          }),
+          enabledImageAiProviders: enabledAiProviders
+            .filter((provider) => {
+              return allModels.some(
+                (model) => model.providerId === provider.id && model.type === 'image',
+              );
+            })
+            .map((item) => ({ id: item.id, name: item.name, source: 'builtin' })),
           runtimeConfig: {},
         };
       },
@@ -187,6 +203,8 @@ export const createAiProviderSlice: StateCreator<
         focusThrottleInterval: isDesktop || isUsePgliteDB ? 100 : undefined,
         onSuccess: async (data) => {
           if (!data) return;
+
+          const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
           const getModelListByType = (providerId: string, type: string) => {
             const models = data.enabledAiModels
@@ -196,18 +214,28 @@ export const createAiProviderSlice: StateCreator<
                 contextWindowTokens: model.contextWindowTokens,
                 displayName: model.displayName ?? '',
                 id: model.id,
+                ...(model.type === 'image' && {
+                  parameters:
+                    (model as AIImageModelCard).parameters ||
+                    getModelPropertyWithFallback(model.id, 'parameters'),
+                }),
               }));
 
             return uniqBy(models, 'id');
           };
 
           // 3. 组装最终数据结构
-          const enabledChatModelList = data.enabledAiProviders.map((provider) => ({
+          const enabledChatModelList = data.enabledChatAiProviders.map((provider) => ({
             ...provider,
             children: getModelListByType(provider.id, 'chat'),
             name: provider.name || provider.id,
           }));
-          const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
+          const enabledImageModelList = data.enabledImageAiProviders.map((provider) => ({
+            ...provider,
+            children: getModelListByType(provider.id, 'image'),
+            name: provider.name || provider.id,
+          }));
 
           set(
             {
@@ -216,6 +244,7 @@ export const createAiProviderSlice: StateCreator<
               enabledAiModels: data.enabledAiModels,
               enabledAiProviders: data.enabledAiProviders,
               enabledChatModelList,
+              enabledImageModelList,
             },
             false,
             'useFetchAiProviderRuntimeState',

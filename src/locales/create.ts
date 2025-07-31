@@ -31,8 +31,10 @@ export const createI18nNext = (lang?: string) => {
     }
   });
   return {
-    init: () =>
-      instance.init({
+    init: (params: { initAsync?: boolean } = {}) => {
+      const { initAsync = true } = params;
+
+      return instance.init({
         debug: debugMode,
         defaultNS: ['error', 'common', 'chat'],
         // detection: {
@@ -50,11 +52,14 @@ export const createI18nNext = (lang?: string) => {
         //   lookupCookie: LOBE_LOCALE_COOKIE,
         // },
         fallbackLng: DEFAULT_LANG,
+
+        initAsync,
         interpolation: {
           escapeValue: false,
         },
         lng: lang,
-      }),
+      });
+    },
     instance,
   };
 };

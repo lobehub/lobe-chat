@@ -13,6 +13,10 @@
       "title": "AI-assistenten"
     },
     "description": "Inhoud creatie, copywriting, vraag-en-antwoord, beeldgeneratie, video-generatie, spraakgeneratie, slimme agenten, geautomatiseerde workflows, aangepaste AI-toepassingen, pas je eigen AI-toepassingswerkplek aan",
+    "mcp": {
+      "description": "Zoek, vergelijk en verbind met duizenden MCP-servers om AI-systemen eenvoudig toegang te geven tot bestandssystemen, databases, API's en andere essentiële bronnen, en zo je AI-mogelijkheden aanzienlijk uit te breiden",
+      "title": "MCP Servers Markt"
+    },
     "models": {
       "description": "Verken populaire AI-modellen zoals OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek",
       "title": "AI-modellen"
@@ -27,6 +31,10 @@
     },
     "search": "Zoeken",
     "title": "Ontdekken"
+  },
+  "image": {
+    "description": "{{appName}} biedt je de beste ervaring met GPT Image, Flux, Midjourney en Stable Diffusion",
+    "title": "AI Schilderen"
   },
   "plugins": {
     "description": "Zoeken, grafiekgeneratie, academisch, beeldgeneratie, video-generatie, spraakgeneratie, geautomatiseerde workflows, pas de ToolCall-pluginmogelijkheden van ChatGPT / Claude aan",
