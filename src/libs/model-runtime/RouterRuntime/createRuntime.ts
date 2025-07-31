@@ -141,11 +141,11 @@ export const createRouterRuntime = ({
       this._options = _options;
     }
 
-    // 检查下是否能匹配到特定模型，否则默认使用第一个 runtime
+    // 检查下是否能匹配到特定模型，否则默认使用最后一个 runtime
     getRuntimeByModel(model: string) {
       const runtimeItem =
         this._runtimes.find((runtime) => runtime.models && runtime.models.includes(model)) ||
-        this._runtimes[0];
+        this._runtimes.at(-1)!;
 
       return runtimeItem.runtime;
     }

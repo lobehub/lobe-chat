@@ -17,7 +17,7 @@ import { getXorPayload } from '@/utils/server/xor';
 
 import { checkAuthMethod } from './utils';
 
-type CreateRuntime = (jwtPayload: JWTPayload) => ModelRuntime;
+type CreateRuntime = (jwtPayload: ClientSecretPayload) => ModelRuntime;
 type RequestOptions = { createRuntime?: CreateRuntime; params: Promise<{ provider: string }> };
 
 export type RequestHandler = (
