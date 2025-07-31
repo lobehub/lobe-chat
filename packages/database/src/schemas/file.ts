@@ -13,9 +13,9 @@ import {
 } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
-import { idGenerator } from '@/database/utils/idGenerator';
 import { FileSource } from '@/types/files';
 
+import { idGenerator } from '../utils/idGenerator';
 import { accessedAt, createdAt, timestamps } from './_helpers';
 import { asyncTasks } from './asyncTask';
 import { users } from './user';

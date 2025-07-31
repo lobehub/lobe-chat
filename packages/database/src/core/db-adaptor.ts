@@ -1,8 +1,6 @@
-import { isDesktop } from '@/const/version';
-import { getDBInstance } from '@/database/core/web-server';
-import { LobeChatDatabase } from '@/database/type';
-
+import { LobeChatDatabase, isDesktop } from '../type';
 import { getPgliteInstance } from './electron';
+import { getDBInstance } from './web-server';
 
 /**
  * 懒加载数据库实例

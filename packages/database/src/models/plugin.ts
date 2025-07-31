@@ -1,6 +1,6 @@
 import { and, desc, eq } from 'drizzle-orm';
 
-import { LobeChatDatabase } from '@/database/type';
+import { LobeChatDatabase } from '../type';
 import { LobeTool } from '@/types/tool';
 
 import { InstalledPluginItem, NewInstalledPlugin, userInstalledPlugins } from '../schemas';

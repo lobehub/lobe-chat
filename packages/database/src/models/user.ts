@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm';
 import type { AdapterAccount } from 'next-auth/adapters';
 import type { PartialDeep } from 'type-fest';
 
-import { LobeChatDatabase } from '@/database/type';
+import { LobeChatDatabase } from '../type';
 import { UserGuide, UserPreference } from '@/types/user';
 import { UserKeyVaults, UserSettings } from '@/types/user/settings';
 import { merge } from '@/utils/merge';

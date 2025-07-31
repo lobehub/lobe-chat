@@ -1,7 +1,7 @@
 import { and, asc, desc, eq } from 'drizzle-orm';
 
-import { LobeChatDatabase } from '@/database/type';
-import { idGenerator } from '@/database/utils/idGenerator';
+import { LobeChatDatabase } from '../type';
+import { idGenerator } from '../utils/idGenerator';
 
 import { SessionGroupItem, sessionGroups } from '../schemas';
 

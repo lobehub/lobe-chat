@@ -2,8 +2,6 @@ import { and, eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { LobeChatDatabase } from '@/database/type';
-import { idGenerator } from '@/database/utils/idGenerator';
 
 import {
   NewSession,
@@ -16,6 +14,8 @@ import {
   topics,
   users,
 } from '../../schemas';
+import { LobeChatDatabase } from '../../type';
+import { idGenerator } from '../../utils/idGenerator';
 import { SessionModel } from '../session';
 import { getTestDB } from './_util';
 

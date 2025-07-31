@@ -2,9 +2,8 @@
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LobeChatDatabase } from '@/database/type';
-
 import { sessionGroups, users } from '../../schemas';
+import { LobeChatDatabase } from '../../type';
 import { SessionGroupModel } from '../sessionGroup';
 import { getTestDB } from './_util';
 

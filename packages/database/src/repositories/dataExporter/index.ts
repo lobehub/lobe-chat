@@ -1,8 +1,8 @@
 import { and, eq, inArray } from 'drizzle-orm';
 import pMap from 'p-map';
 
-import * as EXPORT_TABLES from '@/database/schemas';
-import { LobeChatDatabase } from '@/database/type';
+import * as EXPORT_TABLES from '../../schemas';
+import { LobeChatDatabase } from '../../type';
 
 interface BaseTableConfig {
   table: keyof typeof EXPORT_TABLES;

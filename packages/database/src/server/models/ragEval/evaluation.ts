@@ -5,8 +5,8 @@ import {
   evalDatasets,
   evalEvaluation,
   evaluationRecords,
-} from '@/database/schemas';
-import { LobeChatDatabase } from '@/database/type';
+} from '../../../schemas';
+import { LobeChatDatabase } from '../../../type';
 import { EvalEvaluationStatus, RAGEvalEvaluationItem } from '@/types/eval';
 
 export class EvalEvaluationModel {

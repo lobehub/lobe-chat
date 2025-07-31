@@ -1,7 +1,7 @@
 import debug from 'debug';
 import { and, eq } from 'drizzle-orm';
 
-import { LobeChatDatabase } from '@/database/type';
+import { LobeChatDatabase } from '../type';
 import { FileService } from '@/server/services/file';
 import { Generation, GenerationAsset, GenerationBatch, GenerationConfig } from '@/types/generation';
 

@@ -1,7 +1,7 @@
 import debug from 'debug';
 import { and, eq } from 'drizzle-orm';
 
-import { LobeChatDatabase, Transaction } from '@/database/type';
+import { LobeChatDatabase, Transaction } from '../type';
 import { FileService } from '@/server/services/file';
 import { AsyncTaskError, AsyncTaskStatus } from '@/types/asyncTask';
 import { FileSource } from '@/types/files';

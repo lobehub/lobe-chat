@@ -2,9 +2,8 @@ import dayjs from 'dayjs';
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getTestDB } from '@/database/models/__tests__/_util';
-import { LobeChatDatabase } from '@/database/type';
-import { MessageItem } from '@/types/message';
+import { getTestDB } from '../models/__tests__/_util';
+import { LobeChatDatabase } from '../../type';import { MessageItem } from '@/types/message';
 import { uuid } from '@/utils/uuid';
 
 import {

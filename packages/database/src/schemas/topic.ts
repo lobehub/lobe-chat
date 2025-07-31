@@ -2,11 +2,11 @@
 import { boolean, jsonb, pgTable, primaryKey, text, uniqueIndex } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
-import { documents } from '@/database/schemas/document';
-import { idGenerator } from '@/database/utils/idGenerator';
 import { ChatTopicMetadata } from '@/types/topic';
 
+import { idGenerator } from '../utils/idGenerator';
 import { createdAt, timestamps, timestamptz } from './_helpers';
+import { documents } from './document';
 import { sessions } from './session';
 import { users } from './user';
 

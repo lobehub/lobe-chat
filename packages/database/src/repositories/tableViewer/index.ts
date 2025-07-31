@@ -1,13 +1,14 @@
 import { sql } from 'drizzle-orm';
 import pMap from 'p-map';
 
-import { LobeChatDatabase } from '@/database/type';
 import {
   FilterCondition,
   PaginationParams,
   TableBasicInfo,
   TableColumnInfo,
 } from '@/types/tableViewer';
+
+import { LobeChatDatabase } from '../../type';
 
 export class TableViewerRepo {
   private userId: string;

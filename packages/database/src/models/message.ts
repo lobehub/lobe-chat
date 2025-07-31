@@ -2,14 +2,14 @@ import type { HeatmapsProps } from '@lobehub/charts';
 import dayjs from 'dayjs';
 import { and, asc, count, desc, eq, gt, inArray, isNotNull, isNull, like, sql } from 'drizzle-orm';
 
-import { LobeChatDatabase } from '@/database/type';
+import { LobeChatDatabase } from '../type';
 import {
   genEndDateWhere,
   genRangeWhere,
   genStartDateWhere,
   genWhere,
-} from '@/database/utils/genWhere';
-import { idGenerator } from '@/database/utils/idGenerator';
+} from '../utils/genWhere';
+import { idGenerator } from '../utils/idGenerator';
 import {
   ChatFileItem,
   ChatImageItem,

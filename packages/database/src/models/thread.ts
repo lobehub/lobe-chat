@@ -1,6 +1,6 @@
 import { and, desc, eq } from 'drizzle-orm';
 
-import { LobeChatDatabase } from '@/database/type';
+import { LobeChatDatabase } from '../type';
 import { CreateThreadParams, ThreadStatus } from '@/types/topic';
 
 import { ThreadItem, threads } from '../schemas';

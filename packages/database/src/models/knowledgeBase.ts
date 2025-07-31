@@ -1,6 +1,6 @@
 import { and, desc, eq, inArray } from 'drizzle-orm';
 
-import { LobeChatDatabase } from '@/database/type';
+import { LobeChatDatabase } from '../type';
 import { KnowledgeBaseItem } from '@/types/knowledgeBase';
 
 import { NewKnowledgeBase, knowledgeBaseFiles, knowledgeBases } from '../schemas';

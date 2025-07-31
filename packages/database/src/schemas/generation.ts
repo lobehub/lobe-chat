@@ -2,9 +2,9 @@
 import { integer, jsonb, pgTable, text, uuid, varchar } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
-import { idGenerator } from '@/database/utils/idGenerator';
 import { ImageGenerationAsset } from '@/types/generation';
 
+import { idGenerator } from '../utils/idGenerator';
 import { timestamps } from './_helpers';
 import { AsyncTaskSelectItem, asyncTasks } from './asyncTask';
 import { files } from './file';

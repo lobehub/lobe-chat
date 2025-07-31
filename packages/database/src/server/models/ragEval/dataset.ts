@@ -1,8 +1,9 @@
 import { and, desc, eq } from 'drizzle-orm';
 
-import { NewEvalDatasetsItem, evalDatasets } from '@/database/schemas';
-import { LobeChatDatabase } from '@/database/type';
 import { RAGEvalDataSetItem } from '@/types/eval';
+
+import { LobeChatDatabase } from '../../../type';
+import { NewEvalDatasetsItem, evalDatasets } from '../../../schemas';
 
 export class EvalDatasetModel {
   private userId: string;

@@ -1,6 +1,9 @@
+// generate('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 16); //=> "4f90d13a42"
+import { customAlphabet } from 'nanoid/non-secure';
 import { generate } from 'random-words';
 
-import { createNanoId } from '@/utils/uuid';
+export const createNanoId = (size = 8) =>
+  customAlphabet('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', size);
 
 const prefixes = {
   agents: 'agt',

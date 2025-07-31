@@ -1,6 +1,6 @@
 import { and, eq, lt, sql } from 'drizzle-orm';
 
-import { LobeChatDatabase } from '@/database/type';
+import { LobeChatDatabase } from '../type';
 
 import { NewOAuthHandoff, OAuthHandoffItem, oauthHandoffs } from '../schemas';
 

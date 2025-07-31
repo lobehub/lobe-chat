@@ -1,8 +1,7 @@
 import { eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LobeChatDatabase } from '@/database/type';
-
+import { LobeChatDatabase } from '../../type';
 import { messages, sessions, topics, users } from '../../schemas';
 import { CreateTopicParams, TopicModel } from '../topic';
 import { getTestDB } from './_util';

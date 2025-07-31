@@ -2,8 +2,7 @@
 import { relations } from 'drizzle-orm';
 import { pgTable, primaryKey, text, uuid, varchar } from 'drizzle-orm/pg-core';
 
-import { createdAt } from '@/database/schemas/_helpers';
-
+import { createdAt } from './_helpers';
 import { agents, agentsFiles, agentsKnowledgeBases } from './agent';
 import { asyncTasks } from './asyncTask';
 import { documentChunks, documents } from './document';

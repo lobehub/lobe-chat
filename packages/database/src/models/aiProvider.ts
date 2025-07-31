@@ -3,7 +3,7 @@ import { and, asc, desc, eq } from 'drizzle-orm';
 import { isEmpty } from 'lodash-es';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
-import { LobeChatDatabase } from '@/database/type';
+import { LobeChatDatabase } from '../type';
 import {
   AiProviderDetailItem,
   AiProviderListItem,

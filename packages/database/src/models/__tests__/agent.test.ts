@@ -2,8 +2,7 @@
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { LobeChatDatabase } from '@/database/type';
-
+import { LobeChatDatabase } from '../../type';
 import {
   agents,
   agentsFiles,

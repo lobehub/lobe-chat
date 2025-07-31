@@ -1,6 +1,6 @@
 import { and, desc, eq } from 'drizzle-orm';
 
-import { LobeChatDatabase } from '@/database/type';
+import { LobeChatDatabase } from '../type';
 import { FileService } from '@/server/services/file';
 import { GenerationAsset, ImageGenerationTopic } from '@/types/generation';
 

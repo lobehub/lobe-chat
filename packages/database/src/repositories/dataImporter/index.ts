@@ -1,11 +1,11 @@
 import { and, eq, inArray } from 'drizzle-orm';
 
-import * as EXPORT_TABLES from '@/database/schemas';
-import { LobeChatDatabase } from '@/database/type';
 import { ImportPgDataStructure } from '@/types/export';
 import { ImportResultData, ImporterEntryData } from '@/types/importer';
 import { uuid } from '@/utils/uuid';
 
+import * as EXPORT_TABLES from '../../schemas';
+import { LobeChatDatabase } from '../../type';
 import { DeprecatedDataImporterRepos } from './deprecated';
 
 interface ImportResult {

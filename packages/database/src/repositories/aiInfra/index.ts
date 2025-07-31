@@ -2,9 +2,6 @@ import { isEmpty } from 'lodash-es';
 import pMap from 'p-map';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
-import { AiModelModel } from '@/database/models/aiModel';
-import { AiProviderModel } from '@/database/models/aiProvider';
-import { LobeChatDatabase } from '@/database/type';
 import {
   AIChatModelCard,
   AiModelSourceEnum,
@@ -19,6 +16,10 @@ import {
 } from '@/types/aiProvider';
 import { ProviderConfig } from '@/types/user/settings';
 import { merge, mergeArrayById } from '@/utils/merge';
+
+import { AiModelModel } from '../../models/aiModel';
+import { AiProviderModel } from '../../models/aiProvider';
+import { LobeChatDatabase } from '../../type';
 
 type DecryptUserKeyVaults = (encryptKeyVaultsStr: string | null) => Promise<any>;
 

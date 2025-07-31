@@ -2,8 +2,7 @@
 import { eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LobeChatDatabase } from '@/database/type';
-import { FilesTabs, SortType } from '@/types/files';
+import { LobeChatDatabase } from '../../type';import { FilesTabs, SortType } from '@/types/files';
 
 import { files, globalFiles, knowledgeBaseFiles, knowledgeBases, users } from '../../schemas';
 import { FileModel } from '../file';

@@ -1,8 +1,10 @@
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { getTestDBInstance } from '@/database/core/dbForTest';
-import { users } from '@/database/schemas';
+import { DrizzleAdapter } from '@/libs/oidc-provider/adapter';
+
+import { getTestDBInstance } from '../../../core/dbForTest';
+import { users } from '../../../schemas';
 import {
   oidcAccessTokens,
   oidcClients,
@@ -10,8 +12,7 @@ import {
   oidcInteractions,
   oidcRefreshTokens,
   oidcSessions,
-} from '@/database/schemas/oidc';
-import { DrizzleAdapter } from '@/libs/oidc-provider/adapter';
+} from '../../../schemas/oidc';
 
 let serverDB = await getTestDBInstance();
 

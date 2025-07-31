@@ -1,6 +1,6 @@
 import { and, eq, inArray, lt } from 'drizzle-orm';
 
-import { LobeChatDatabase } from '@/database/type';
+import { LobeChatDatabase } from '../type';
 import {
   AsyncTaskError,
   AsyncTaskErrorType,

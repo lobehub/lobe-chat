@@ -2,8 +2,7 @@
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LobeChatDatabase } from '@/database/type';
-import { FileService } from '@/server/services/file';
+import { LobeChatDatabase } from '../../type';import { FileService } from '@/server/services/file';
 import { ImageGenerationTopic } from '@/types/generation';
 
 import { generationBatches, generationTopics, generations, users } from '../../schemas';

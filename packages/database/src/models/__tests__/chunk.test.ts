@@ -2,8 +2,7 @@
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { LobeChatDatabase } from '@/database/type';
-import { uuid } from '@/utils/uuid';
+import { LobeChatDatabase } from '../../type';import { uuid } from '@/utils/uuid';
 
 import { chunks, embeddings, fileChunks, files, unstructuredChunks, users } from '../../schemas';
 import { ChunkModel } from '../chunk';

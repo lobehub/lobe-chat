@@ -8,16 +8,16 @@ import type {
 import { eq } from 'drizzle-orm';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getTestDBInstance } from '@/database/core/dbForTest';
+import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
+
+import { getTestDBInstance } from '../../../core/dbForTest';
 import {
   nextauthAccounts,
   nextauthAuthenticators,
   nextauthSessions,
   nextauthVerificationTokens,
   users,
-} from '@/database/schemas';
-import { LobeChatDatabase } from '@/database/type';
-import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
+} from '../../../schemas';
 
 let serverDB = await getTestDBInstance();
 

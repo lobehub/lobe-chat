@@ -5,13 +5,12 @@ import { Pool as NodePool } from 'pg';
 import ws from 'ws';
 
 import { serverDBEnv } from '@/config/db';
-import { isServerMode } from '@/const/version';
-import * as schema from '@/database/schemas';
 
+import * as schema from '../schemas';
 import { LobeChatDatabase } from '../type';
 
 export const getDBInstance = (): LobeChatDatabase => {
-  if (!isServerMode) return {} as any;
+  if (!(process.env.NEXT_PUBLIC_SERVICE_MODE === 'server')) return {} as any;
 
   if (!serverDBEnv.KEY_VAULTS_SECRET) {
     throw new Error(

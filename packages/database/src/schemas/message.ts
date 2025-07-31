@@ -12,10 +12,10 @@ import {
 } from 'drizzle-orm/pg-core';
 import { createSelectSchema } from 'drizzle-zod';
 
-import { idGenerator } from '@/database/utils/idGenerator';
 import { ModelReasoning } from '@/types/message';
 import { GroundingSearch } from '@/types/search';
 
+import { idGenerator } from '../utils/idGenerator';
 import { timestamps } from './_helpers';
 import { agents } from './agent';
 import { files } from './file';

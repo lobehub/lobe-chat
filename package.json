@@ -147,6 +147,7 @@
     "@lobechat/model-runtime": "workspace:*",
     "@lobechat/prompts": "workspace:*",
     "@lobechat/web-crawler": "workspace:*",
+    "@lobechat/database": "workspace:*",
     "@lobehub/analytics": "^1.6.0",
     "@lobehub/charts": "^2.0.0",
     "@lobehub/chat-plugin-sdk": "^1.32.4",

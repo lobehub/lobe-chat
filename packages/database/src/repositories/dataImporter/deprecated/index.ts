@@ -1,5 +1,9 @@
 import { and, eq, inArray, sql } from 'drizzle-orm';
 
+import { ImportResult } from '@/services/import/_deprecated';
+import { ImporterEntryData } from '@/types/importer';
+import { sanitizeUTF8 } from '@/utils/sanitizeUTF8';
+
 import {
   agents,
   agentsToSessions,
@@ -9,11 +13,8 @@ import {
   sessionGroups,
   sessions,
   topics,
-} from '@/database/schemas';
-import { LobeChatDatabase } from '@/database/type';
-import { ImportResult } from '@/services/import/_deprecated';
-import { ImporterEntryData } from '@/types/importer';
-import { sanitizeUTF8 } from '@/utils/sanitizeUTF8';
+} from '../../../schemas';
+import { LobeChatDatabase } from '../../../type';
 
 export class DeprecatedDataImporterRepos {
   private userId: string;

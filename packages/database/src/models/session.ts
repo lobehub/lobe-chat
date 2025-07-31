@@ -18,14 +18,14 @@ import type { PartialDeep } from 'type-fest';
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { LobeChatDatabase } from '@/database/type';
+import { LobeChatDatabase } from '../type';
 import {
   genEndDateWhere,
   genRangeWhere,
   genStartDateWhere,
   genWhere,
-} from '@/database/utils/genWhere';
-import { idGenerator } from '@/database/utils/idGenerator';
+} from '../utils/genWhere';
+import { idGenerator } from '../utils/idGenerator';
 import { LobeAgentConfig } from '@/types/agent';
 import { ChatSessionList, LobeAgentSession, SessionRankItem } from '@/types/session';
 import { merge } from '@/utils/merge';

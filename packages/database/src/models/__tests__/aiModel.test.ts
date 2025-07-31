@@ -2,8 +2,7 @@
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { LobeChatDatabase } from '@/database/type';
-import { AiProviderModelListItem } from '@/types/aiModel';
+import { LobeChatDatabase } from '../../type';import { AiProviderModelListItem } from '@/types/aiModel';
 
 import { AiModelSelectItem, NewAiModelItem, aiModels, users } from '../../schemas';
 import { AiModelModel } from '../aiModel';

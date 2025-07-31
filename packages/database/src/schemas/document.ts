@@ -12,12 +12,12 @@ import {
 } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
-import { chunks } from '@/database/schemas/rag';
-import { idGenerator } from '@/database/utils/idGenerator';
 import { LobeDocumentPage } from '@/types/document';
 
+import { idGenerator } from '../utils/idGenerator';
 import { createdAt, timestamps } from './_helpers';
 import { files } from './file';
+import { chunks } from './rag';
 import { users } from './user';
 
 /**

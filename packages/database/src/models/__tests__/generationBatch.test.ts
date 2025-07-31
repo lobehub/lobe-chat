@@ -2,8 +2,7 @@
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LobeChatDatabase } from '@/database/type';
-import { AsyncTaskStatus } from '@/types/asyncTask';
+import { LobeChatDatabase } from '../../type';import { AsyncTaskStatus } from '@/types/asyncTask';
 import { GenerationConfig } from '@/types/generation';
 
 import {

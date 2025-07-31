@@ -2,8 +2,7 @@
 import { boolean, integer, pgTable, text, uniqueIndex, varchar } from 'drizzle-orm/pg-core';
 import { createInsertSchema } from 'drizzle-zod';
 
-import { idGenerator, randomSlug } from '@/database/utils/idGenerator';
-
+import { idGenerator, randomSlug } from '../utils/idGenerator';
 import { timestamps } from './_helpers';
 import { users } from './user';
 

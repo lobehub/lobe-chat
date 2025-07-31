@@ -1,8 +1,7 @@
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LobeChatDatabase } from '@/database/type';
-
+import { LobeChatDatabase } from '../../type';
 import { NewInstalledPlugin, userInstalledPlugins, users } from '../../schemas';
 import { PluginModel } from '../plugin';
 import { getTestDB } from './_util';

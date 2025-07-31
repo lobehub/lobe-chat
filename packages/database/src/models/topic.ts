@@ -1,13 +1,13 @@
 import { and, count, desc, eq, gt, ilike, inArray, isNull, sql } from 'drizzle-orm';
 
-import { LobeChatDatabase } from '@/database/type';
+import { LobeChatDatabase } from '../type';
 import {
   genEndDateWhere,
   genRangeWhere,
   genStartDateWhere,
   genWhere,
-} from '@/database/utils/genWhere';
-import { idGenerator } from '@/database/utils/idGenerator';
+} from '../utils/genWhere';
+import { idGenerator } from '../utils/idGenerator';
 import { MessageItem } from '@/types/message';
 import { TopicRankItem } from '@/types/topic';
 

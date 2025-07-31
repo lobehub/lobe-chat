@@ -7,8 +7,8 @@ import {
   agentsToSessions,
   files,
   knowledgeBases,
-} from '@/database/schemas';
-import { LobeChatDatabase } from '@/database/type';
+} from '../schemas';
+import { LobeChatDatabase } from '../type';
 
 export class AgentModel {
   private userId: string;

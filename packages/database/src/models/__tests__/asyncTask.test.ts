@@ -2,10 +2,10 @@
 import { eq } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { LobeChatDatabase } from '@/database/type';
 import { AsyncTaskStatus, AsyncTaskType } from '@/types/asyncTask';
 
 import { asyncTasks, users } from '../../schemas';
+import { LobeChatDatabase } from '../../type';
 import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '../asyncTask';
 import { getTestDB } from './_util';
 
