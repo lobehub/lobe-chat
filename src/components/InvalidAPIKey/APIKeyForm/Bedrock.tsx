@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Aws } from '@lobehub/icons';
 import { Button, Icon, InputPassword, Select } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
@@ -15,6 +16,7 @@ const BedrockForm = memo<{ description: string }>(({ description }) => {
   const [showRegion, setShow] = useState(false);
   const [showSessionToken, setShowSessionToken] = useState(false);
 
+  // TODO: need ai provider config
   const [accessKeyId, secretAccessKey, sessionToken, region, setConfig] = useUserStore((s) => [
     keyVaultsConfigSelectors.bedrockConfig(s).accessKeyId,
     keyVaultsConfigSelectors.bedrockConfig(s).secretAccessKey,

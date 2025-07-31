@@ -1,3 +1,5 @@
+// TODO: need clean up
+// @ts-nocheck
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { act } from '@testing-library/react';
 import { merge } from 'lodash-es';

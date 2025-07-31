@@ -7,7 +7,6 @@ import { createStoreUpdater } from 'zustand-utils';
 
 import { enableNextAuth } from '@/const/auth';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useEnabledDataSync } from '@/hooks/useSyncData';
 import { useAgentStore } from '@/store/agent';
 import { useAiInfraStore } from '@/store/aiInfra';
 import { useGlobalStore } from '@/store/global';
@@ -69,8 +68,6 @@ const StoreInitialization = memo(() => {
       }
     },
   });
-
-  useEnabledDataSync();
 
   const useStoreUpdater = createStoreUpdater(useGlobalStore);
 

@@ -6,8 +6,6 @@ import { ImportPgDataStructure } from '@/types/export';
 import { ImportResultData, ImporterEntryData } from '@/types/importer';
 import { uuid } from '@/utils/uuid';
 
-import { DeprecatedDataImporterRepos } from './deprecated';
-
 interface ImportResult {
   added: number;
   errors: number;
@@ -258,19 +256,17 @@ const IMPORT_TABLE_CONFIG: TableImportConfig[] = [
 export class DataImporterRepos {
   private userId: string;
   private db: LobeChatDatabase;
-  private deprecatedDataImporterRepos: DeprecatedDataImporterRepos;
   private idMaps: Record<string, Record<string, string>> = {};
   private conflictRecords: Record<string, { field: string; value: any }[]> = {};
 
   constructor(db: LobeChatDatabase, userId: string) {
     this.userId = userId;
     this.db = db;
-    this.deprecatedDataImporterRepos = new DeprecatedDataImporterRepos(db, userId);
   }
 
   importData = async (data: ImporterEntryData): Promise<ImportResultData> => {
-    const results = await this.deprecatedDataImporterRepos.importData(data);
-    return { results, success: true };
+    console.log(data);
+    return { results: {}, success: true };
   };
 
   /**

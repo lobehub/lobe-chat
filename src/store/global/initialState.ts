@@ -113,6 +113,7 @@ export const INITIAL_STATUS = {
   imagePanelWidth: 320,
   imageTopicPanelWidth: 80,
   inputHeight: 200,
+  isEnablePglite: true,
   mobileShowTopic: false,
   portalWidth: 400,
   sessionsWidth: 320,
