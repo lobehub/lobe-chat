@@ -39,18 +39,19 @@ export const defaultClients: ClientMetadata[] = [
     application_type: 'web',
     client_id: 'zephyr',
     client_name: 'Zephyr',
+    client_secret: 'zephyr-secret',
     // 仅支持授权码流程
     grant_types: ['authorization_code', 'refresh_token'],
 
     logo_uri: 'https://hub-apac-1.lobeobjects.space/lobehub-desktop-icon.png',
 
-    redirect_uris: ['http://localhost:3000/auth/callback'],
+    redirect_uris: ['http://localhost:3000/api/auth/callback/oidc'],
 
     // 支持授权码获取令牌和刷新令牌
     response_types: ['code'],
 
-    // 标记为公共客户端客户端，无密钥
-    token_endpoint_auth_method: 'none',
+    // 秘钥传递方式
+    token_endpoint_auth_method: 'client_secret_post',
   },
 ];
 
