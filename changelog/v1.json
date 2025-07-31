@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix oidc oauth callback pages 404."]
+    },
+    "date": "2025-07-31",
+    "version": "1.106.6"
+  },
+  {
+    "children": {
       "improvements": ["Improve mcp plugin calling and display."]
     },
     "date": "2025-07-30",
