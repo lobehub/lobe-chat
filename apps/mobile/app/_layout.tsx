@@ -12,7 +12,7 @@ import { authLogger } from '@/utils/logger';
 import { tokenRefreshManager } from '@/services/_auth/tokenRefresh';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { lambdaQuery, lambdaQueryClient } from '@/services/_auth/trpc';
+import { trpcClient, TRPCProvider } from '@/services/_auth/trpc';
 
 import '../polyfills';
 
@@ -98,9 +98,11 @@ const QueryProvider = ({ children }: PropsWithChildren) => {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <lambdaQuery.Provider client={lambdaQueryClient} queryClient={queryClient}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </lambdaQuery.Provider>
+    <QueryClientProvider client={queryClient}>
+      <TRPCProvider queryClient={queryClient} trpcClient={trpcClient}>
+        {children}
+      </TRPCProvider>
+    </QueryClientProvider>
   );
 };
 
