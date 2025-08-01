@@ -4,7 +4,10 @@ import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     alias: {
+      /* eslint-disable sort-keys-fix/sort-keys-fix */
+      '@/types': resolve(__dirname, './packages/types/src'),
       '@': resolve(__dirname, './src'),
+      /* eslint-enable */
     },
     coverage: {
       all: false,
@@ -18,6 +21,9 @@ export default defineConfig({
       reporter: ['text', 'json', 'lcov', 'text-summary'],
       reportsDirectory: './coverage/server',
     },
+    env: {
+      TEST_SERVER_DB: '1',
+    },
     environment: 'node',
     include: ['src/database/models/**/**/*.test.ts', 'src/database/server/**/**/*.test.ts'],
     poolOptions: {
@@ -26,8 +32,5 @@ export default defineConfig({
       },
     },
     setupFiles: './tests/setup-db.ts',
-    env: {
-      TEST_SERVER_DB: '1',
-    },
   },
 });
