@@ -326,6 +326,9 @@
   "Qwen/Qwen3-30B-A3B": {
     "description": "Qwen3 ist ein neues, leistungsstark verbessertes Modell von Tongyi Qianwen, das in den Bereichen Denken, Allgemeinwissen, Agenten und Mehrsprachigkeit in mehreren Kernfähigkeiten branchenführende Standards erreicht und den Wechsel zwischen Denkmodi unterstützt."
   },
+  "Qwen/Qwen3-30B-A3B-Instruct-2507": {
+    "description": "Qwen3-30B-A3B-Instruct-2507 ist eine aktualisierte Version des Qwen3-30B-A3B im Nicht-Denkmodus. Es handelt sich um ein Mixture-of-Experts (MoE)-Modell mit insgesamt 30,5 Milliarden Parametern und 3,3 Milliarden Aktivierungsparametern. Das Modell wurde in mehreren Bereichen entscheidend verbessert, darunter eine signifikante Steigerung der Befolgung von Anweisungen, logisches Denken, Textverständnis, Mathematik, Wissenschaft, Programmierung und Werkzeugnutzung. Gleichzeitig wurden substanzielle Fortschritte bei der Abdeckung von Langschwanzwissen in mehreren Sprachen erzielt, und es kann besser auf die Präferenzen der Nutzer bei subjektiven und offenen Aufgaben abgestimmt werden, um hilfreichere Antworten und qualitativ hochwertigere Texte zu generieren. Darüber hinaus wurde die Fähigkeit zum Verständnis langer Texte auf 256K erweitert. Dieses Modell unterstützt ausschließlich den Nicht-Denkmodus und generiert keine `<think></think>`-Tags in der Ausgabe."
+  },
   "Qwen/Qwen3-32B": {
     "description": "Qwen3 ist ein neues, leistungsstark verbessertes Modell von Tongyi Qianwen, das in den Bereichen Denken, Allgemeinwissen, Agenten und Mehrsprachigkeit in mehreren Kernfähigkeiten branchenführende Standards erreicht und den Wechsel zwischen Denkmodi unterstützt."
   },
@@ -358,6 +361,12 @@
   },
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct ist ein großes Sprachmodell, das speziell für die Codegenerierung, das Verständnis von Code und effiziente Entwicklungsszenarien entwickelt wurde. Es verwendet eine branchenführende Parametergröße von 32B und kann vielfältige Programmieranforderungen erfüllen."
+  },
+  "Qwen3-235B": {
+    "description": "Qwen3-235B-A22B ist ein MoE (Mixture-of-Experts)-Modell, das den „Hybrid-Reasoning-Modus“ einführt und Nutzern nahtloses Umschalten zwischen „Denkmodus“ und „Nicht-Denkmodus“ ermöglicht. Es unterstützt das Verständnis und die Argumentation in 119 Sprachen und Dialekten und verfügt über leistungsstarke Werkzeugaufruffähigkeiten. In umfassenden Benchmark-Tests zu allgemeinen Fähigkeiten, Programmierung und Mathematik, Mehrsprachigkeit, Wissen und Argumentation konkurriert es mit führenden aktuellen Großmodellen auf dem Markt wie DeepSeek R1, OpenAI o1, o3-mini, Grok 3 und Google Gemini 2.5 Pro."
+  },
+  "Qwen3-32B": {
+    "description": "Qwen3-32B ist ein dichtes Modell (Dense Model), das den „Hybrid-Reasoning-Modus“ einführt und Nutzern nahtloses Umschalten zwischen „Denkmodus“ und „Nicht-Denkmodus“ ermöglicht. Aufgrund von Verbesserungen in der Modellarchitektur, einer Erweiterung der Trainingsdaten und effizienteren Trainingsmethoden entspricht die Gesamtleistung der von Qwen2.5-72B."
   },
   "SenseChat": {
     "description": "Basisversion des Modells (V4) mit 4K Kontextlänge, die über starke allgemeine Fähigkeiten verfügt."
@@ -394,6 +403,12 @@
   },
   "SenseChat-Vision": {
     "description": "Das neueste Modell (V5.5) unterstützt die Eingabe mehrerer Bilder und optimiert umfassend die grundlegenden Fähigkeiten des Modells. Es hat signifikante Verbesserungen in der Erkennung von Objektattributen, räumlichen Beziehungen, Aktionsereignissen, Szenenverständnis, Emotionserkennung, logischem Wissen und Textverständnis und -generierung erreicht."
+  },
+  "SenseNova-V6-5-Pro": {
+    "description": "Durch umfassende Aktualisierungen multimodaler, sprachlicher und argumentativer Daten sowie Optimierungen der Trainingsstrategie erzielt das neue Modell erhebliche Verbesserungen bei multimodalem Schließen und generalisierter Befolgung von Anweisungen. Es unterstützt Kontextfenster von bis zu 128k und zeigt herausragende Leistungen bei spezialisierten Aufgaben wie OCR und der Erkennung von Tourismus-IP."
+  },
+  "SenseNova-V6-5-Turbo": {
+    "description": "Durch umfassende Aktualisierungen multimodaler, sprachlicher und argumentativer Daten sowie Optimierungen der Trainingsstrategie erzielt das neue Modell erhebliche Verbesserungen bei multimodalem Schließen und generalisierter Befolgung von Anweisungen. Es unterstützt Kontextfenster von bis zu 128k und zeigt herausragende Leistungen bei spezialisierten Aufgaben wie OCR und der Erkennung von Tourismus-IP."
   },
   "SenseNova-V6-Pro": {
     "description": "Erreicht eine native Einheit von Bild-, Text- und Video-Fähigkeiten, überwindet die traditionellen Grenzen der multimodalen Trennung und hat in den Bewertungen von OpenCompass und SuperCLUE zwei Meistertitel gewonnen."
@@ -2371,6 +2386,12 @@
   },
   "qwen3-30b-a3b": {
     "description": "Qwen3 ist ein neues, leistungsstarkes Modell der nächsten Generation, das in den Bereichen Inferenz, Allgemeinwissen, Agenten und Mehrsprachigkeit erhebliche Fortschritte erzielt hat und den Wechsel zwischen Denkmodi unterstützt."
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "Im Vergleich zur vorherigen Version (Qwen3-30B-A3B) wurde die allgemeine Leistungsfähigkeit in Chinesisch, Englisch und mehreren Sprachen deutlich verbessert. Spezielle Optimierungen für subjektive und offene Aufgaben führen zu einer deutlich besseren Übereinstimmung mit den Nutzerpräferenzen und ermöglichen hilfreichere Antworten."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Basierend auf dem Denkmodus-Open-Source-Modell von Qwen3 wurden im Vergleich zur vorherigen Version (Tongyi Qianwen 3-30B-A3B) die logischen Fähigkeiten, die allgemeine Leistungsfähigkeit, das Wissen und die Kreativität erheblich verbessert. Es eignet sich für anspruchsvolle Szenarien mit starker Argumentation."
   },
   "qwen3-32b": {
     "description": "Qwen3 ist ein neues, leistungsstarkes Modell der nächsten Generation, das in den Bereichen Inferenz, Allgemeinwissen, Agenten und Mehrsprachigkeit erhebliche Fortschritte erzielt hat und den Wechsel zwischen Denkmodi unterstützt."

@@ -326,6 +326,9 @@
   "Qwen/Qwen3-30B-A3B": {
     "description": "Qwen3 is a next-generation model with significantly enhanced capabilities, achieving industry-leading levels in reasoning, general tasks, agent functions, and multilingual support, with a switchable thinking mode."
   },
+  "Qwen/Qwen3-30B-A3B-Instruct-2507": {
+    "description": "Qwen3-30B-A3B-Instruct-2507 is an updated version of the Qwen3-30B-A3B non-thinking mode. It is a Mixture of Experts (MoE) model with a total of 30.5 billion parameters and 3.3 billion active parameters. The model features key enhancements across multiple areas, including significant improvements in instruction following, logical reasoning, text comprehension, mathematics, science, coding, and tool usage. Additionally, it has made substantial progress in covering long-tail multilingual knowledge and better aligns with user preferences in subjective and open-ended tasks, enabling it to generate more helpful responses and higher-quality text. Furthermore, its long-text comprehension capability has been extended to 256K tokens. This model supports only the non-thinking mode and does not generate `<think></think>` tags in its output."
+  },
   "Qwen/Qwen3-32B": {
     "description": "Qwen3 is a next-generation model with significantly enhanced capabilities, achieving industry-leading levels in reasoning, general tasks, agent functions, and multilingual support, with a switchable thinking mode."
   },
@@ -358,6 +361,12 @@
   },
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct is a large language model specifically designed for code generation, code understanding, and efficient development scenarios, featuring an industry-leading 32 billion parameters to meet diverse programming needs."
+  },
+  "Qwen3-235B": {
+    "description": "Qwen3-235B-A22B is a Mixture of Experts (MoE) model that introduces a \"Hybrid Reasoning Mode,\" allowing users to seamlessly switch between \"Thinking Mode\" and \"Non-Thinking Mode.\" It supports understanding and reasoning in 119 languages and dialects and possesses powerful tool invocation capabilities. In comprehensive benchmarks covering overall ability, coding and mathematics, multilingual proficiency, knowledge, and reasoning, it competes with leading large models on the market such as DeepSeek R1, OpenAI o1, o3-mini, Grok 3, and Google Gemini 2.5 Pro."
+  },
+  "Qwen3-32B": {
+    "description": "Qwen3-32B is a dense model that introduces a \"Hybrid Reasoning Mode,\" enabling users to seamlessly switch between \"Thinking Mode\" and \"Non-Thinking Mode.\" Thanks to architectural improvements, increased training data, and more efficient training methods, its overall performance is comparable to that of Qwen2.5-72B."
   },
   "SenseChat": {
     "description": "Basic version model (V4) with a context length of 4K, featuring strong general capabilities."
@@ -394,6 +403,12 @@
   },
   "SenseChat-Vision": {
     "description": "The latest version model (V5.5) supports multi-image input and fully optimizes the model's basic capabilities, achieving significant improvements in object attribute recognition, spatial relationships, action event recognition, scene understanding, emotion recognition, logical reasoning, and text understanding and generation."
+  },
+  "SenseNova-V6-5-Pro": {
+    "description": "With comprehensive updates to multimodal, language, and reasoning data, along with optimized training strategies, the new model achieves significant improvements in multimodal reasoning and generalized instruction-following capabilities. It supports a context window of up to 128K tokens and excels in specialized tasks such as OCR and cultural tourism IP recognition."
+  },
+  "SenseNova-V6-5-Turbo": {
+    "description": "With comprehensive updates to multimodal, language, and reasoning data, along with optimized training strategies, the new model achieves significant improvements in multimodal reasoning and generalized instruction-following capabilities. It supports a context window of up to 128K tokens and excels in specialized tasks such as OCR and cultural tourism IP recognition."
   },
   "SenseNova-V6-Pro": {
     "description": "Achieves a native unification of image, text, and video capabilities, breaking through the limitations of traditional discrete multimodality, winning dual championships in the OpenCompass and SuperCLUE evaluations."
@@ -2371,6 +2386,12 @@
   },
   "qwen3-30b-a3b": {
     "description": "Qwen3 is a next-generation model with significantly enhanced capabilities, achieving industry-leading levels in reasoning, general tasks, agent functionality, and multilingual support, while also supporting mode switching."
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "Compared to the previous version (Qwen3-30B-A3B), this version shows substantial improvements in overall general capabilities in both Chinese and multilingual contexts. It features specialized optimizations for subjective and open-ended tasks, aligning significantly better with user preferences and providing more helpful responses."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "An open-source thinking mode model based on Qwen3, this version shows significant enhancements over the previous release (Tongyi Qianwen 3-30B-A3B) in logical ability, general capability, knowledge augmentation, and creative capacity. It is suitable for challenging scenarios requiring strong reasoning."
   },
   "qwen3-32b": {
     "description": "Qwen3 is a next-generation model with significantly enhanced capabilities, achieving industry-leading levels in reasoning, general tasks, agent functionality, and multilingual support, while also supporting mode switching."
