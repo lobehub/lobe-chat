@@ -26,41 +26,23 @@ const fileProcedure = authedProcedure.use(serverDatabase).use(async (opts) => {
 
 export const fileRouter = router({
   checkFileHash: fileProcedure
-    .input(
-      z.object({
-        hash: z.string(),
-        metadata: z.any().optional(),
-        url: z.string().optional(),
-      }),
-    )
+    .input(z.object({ hash: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      // 如果提供了 URL，使用安全哈希检查；否则使用传统检查
-      if (input.url) {
-        return ctx.fileModel.checkSecureHash(input.hash, input.url, input.metadata);
-      }
       return ctx.fileModel.checkHash(input.hash);
     }),
 
   createFile: fileProcedure
     .input(UploadFileSchema.omit({ url: true }).extend({ url: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      // 使用安全哈希检查，考虑访问权限隔离
-      const { isExist } = await ctx.fileModel.checkSecureHash(
-        input.hash!,
-        input.url,
-        input.metadata,
-      );
+      const { isExist } = await ctx.fileModel.checkHash(input.hash!);
 
       const { id } = await ctx.fileModel.create(
         {
-          // 传递原始哈希
           fileHash: input.hash,
-          // 这将在 create 方法中被安全哈希替换
           fileType: input.fileType,
           knowledgeBaseId: input.knowledgeBaseId,
           metadata: input.metadata,
           name: input.name,
-          originalHash: input.hash,
           size: input.size,
           url: input.url,
         },
