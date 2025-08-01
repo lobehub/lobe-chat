@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update i18n."]
+    },
+    "date": "2025-08-01",
+    "version": "1.107.1"
+  },
+  {
+    "children": {
       "features": ["Support aihubmix provider."]
     },
     "date": "2025-08-01",
