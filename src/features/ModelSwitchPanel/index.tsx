@@ -108,32 +108,34 @@ const ModelSwitchPanel = memo<IProps>(({ children, onOpenChange, open }) => {
       ];
 
     // otherwise show with provider group
-    return enabledList.map((provider) => ({
-      children: getModelItems(provider),
-      key: provider.id,
-      label: (
-        <Flexbox horizontal justify="space-between">
-          <ProviderItemRender
-            logo={provider.logo}
-            name={provider.name}
-            provider={provider.id}
-            source={provider.source}
-          />
-          {showLLM && (
-            <Link
-              href={isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${provider.id}`}
-            >
-              <ActionIcon
-                icon={LucideBolt}
-                size={'small'}
-                title={t('ModelSwitchPanel.goToSettings')}
-              />
-            </Link>
-          )}
-        </Flexbox>
-      ),
-      type: 'group',
-    }));
+    return enabledList
+      .filter((provider) => provider.children.length > 0)
+      .map((provider) => ({
+        children: getModelItems(provider),
+        key: provider.id,
+        label: (
+          <Flexbox horizontal justify="space-between">
+            <ProviderItemRender
+              logo={provider.logo}
+              name={provider.name}
+              provider={provider.id}
+              source={provider.source}
+            />
+            {showLLM && (
+              <Link
+                href={isDeprecatedEdition ? '/settings/llm' : `/settings/provider/${provider.id}`}
+              >
+                <ActionIcon
+                  icon={LucideBolt}
+                  size={'small'}
+                  title={t('ModelSwitchPanel.goToSettings')}
+                />
+              </Link>
+            )}
+          </Flexbox>
+        ),
+        type: 'group',
+      }));
   }, [enabledList]);
 
   const icon = <div className={styles.tag}>{children}</div>;
