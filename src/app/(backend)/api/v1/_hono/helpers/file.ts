@@ -1,3 +1,5 @@
+import urlJoin from 'url-join';
+
 import { fileEnv } from '@/config/file';
 
 /**
@@ -20,7 +22,7 @@ export function addFileUrlPrefix<T extends { url?: string }>(file: T): T {
 
   return {
     ...file,
-    url: `${publicDomain}/${file.url}`,
+    url: urlJoin(publicDomain, file.url || ''),
   };
 }
 

@@ -138,8 +138,6 @@ export class SessionController extends BaseController {
       const { id: sessionId } = this.getParams<{ id: string }>(c);
       const body = await this.getBody<Omit<UpdateSessionRequest, 'id'>>(c);
 
-      console.log('body', body);
-
       const request: UpdateSessionRequest = {
         id: sessionId,
         ...body,
