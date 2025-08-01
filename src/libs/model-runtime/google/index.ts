@@ -13,7 +13,7 @@ import { imageUrlToBase64 } from '@/utils/imageToBase64';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { LobeRuntimeAI } from '../BaseAI';
-import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../error';
+import { AgentRuntimeErrorType } from '../error';
 import {
   ChatCompletionTool,
   ChatMethodOptions,
@@ -24,6 +24,7 @@ import {
 import { CreateImagePayload, CreateImageResponse } from '../types/image';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
+import { parseGoogleErrorMessage } from '../utils/googleErrorParser';
 import { StreamingResponse } from '../utils/response';
 import { GoogleGenerativeAIStream, VertexAIStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
@@ -238,7 +239,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       }
 
       console.log(err);
-      const { errorType, error } = this.parseErrorMessage(err.message);
+      const { errorType, error } = parseGoogleErrorMessage(err.message);
 
       throw AgentRuntimeError.chat({ error, errorType, provider: this.provider });
     }
@@ -281,7 +282,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       const err = error as Error;
       console.error('Google AI image generation error:', err);
 
-      const { errorType, error: parsedError } = this.parseErrorMessage(err.message);
+      const { errorType, error: parsedError } = parseGoogleErrorMessage(err.message);
       throw AgentRuntimeError.createImage({
         error: parsedError,
         errorType,
@@ -498,58 +499,11 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       .filter((message) => message.role !== 'function')
       .map(async (msg) => await this.convertOAIMessagesToGoogleMessage(msg, toolCallNameMap));
 
-    return Promise.all(pools);
+    const contents = await Promise.all(pools);
+    
+    // 筛除空消息: contents.parts must not be empty.
+    return contents.filter((content: Content) => content.parts && content.parts.length > 0);
   };
-
-  private parseErrorMessage(message: string): {
-    error: any;
-    errorType: ILobeAgentRuntimeErrorType;
-  } {
-    const defaultError = {
-      error: { message },
-      errorType: AgentRuntimeErrorType.ProviderBizError,
-    };
-
-    if (message.includes('location is not supported'))
-      return { error: { message }, errorType: AgentRuntimeErrorType.LocationNotSupportError };
-
-    const startIndex = message.lastIndexOf('[');
-    if (startIndex === -1) {
-      return defaultError;
-    }
-
-    try {
-      // 从开始位置截取字符串到最后
-      const jsonString = message.slice(startIndex);
-
-      // 尝试解析 JSON 字符串
-      const json: GoogleChatErrors = JSON.parse(jsonString);
-
-      const bizError = json[0];
-
-      switch (bizError.reason) {
-        case 'API_KEY_INVALID': {
-          return { ...defaultError, errorType: AgentRuntimeErrorType.InvalidProviderAPIKey };
-        }
-
-        default: {
-          return { error: json, errorType: AgentRuntimeErrorType.ProviderBizError };
-        }
-      }
-    } catch {
-      //
-    }
-
-    const errorObj = this.extractErrorObjectFromError(message);
-
-    const { errorDetails } = errorObj;
-
-    if (errorDetails) {
-      return { error: errorDetails, errorType: AgentRuntimeErrorType.ProviderBizError };
-    }
-
-    return defaultError;
-  }
 
   private buildGoogleTools(
     tools: ChatCompletionTool[] | undefined,
@@ -599,50 +553,6 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     };
   };
 
-  private extractErrorObjectFromError(message: string) {
-    // 使用正则表达式匹配状态码部分 [数字 描述文本]
-    const regex = /^(.*?)(\[\d+ [^\]]+])(.*)$/;
-    const match = message.match(regex);
-
-    if (match) {
-      const prefix = match[1].trim();
-      const statusCodeWithBrackets = match[2].trim();
-      const message = match[3].trim();
-
-      // 提取状态码数字
-      const statusCodeMatch = statusCodeWithBrackets.match(/\[(\d+)/);
-      const statusCode = statusCodeMatch ? parseInt(statusCodeMatch[1]) : null;
-
-      // 创建包含状态码和消息的JSON
-      const resultJson = {
-        message: message,
-        statusCode: statusCode,
-        statusCodeText: statusCodeWithBrackets,
-      };
-
-      return {
-        errorDetails: resultJson,
-        prefix: prefix,
-      };
-    }
-
-    // 如果无法匹配，返回原始消息
-    return {
-      errorDetails: null,
-      prefix: message,
-    };
-  }
 }
 
 export default LobeGoogleAI;
-
-type GoogleChatErrors = GoogleChatError[];
-
-interface GoogleChatError {
-  '@type': string;
-  'domain': string;
-  'metadata': {
-    service: string;
-  };
-  'reason': string;
-}
