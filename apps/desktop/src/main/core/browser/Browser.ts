@@ -413,7 +413,20 @@ export default class Browser {
         //   logger.error(`[${this.identifier}] Failed to save window state on hide:`, error);
         // }
         e.preventDefault();
-        browserWindow.hide();
+
+        // Fix for macOS fullscreen black screen issue
+        // See: https://github.com/electron/electron/issues/20263 and https://github.com/electron/electron/issues/39572
+        if (browserWindow.isFullScreen()) {
+          logger.debug(
+            `[${this.identifier}] Window is in fullscreen mode, exiting fullscreen first.`,
+          );
+          browserWindow.once('leave-full-screen', () => {
+            browserWindow.hide();
+          });
+          browserWindow.setFullScreen(false);
+        } else {
+          browserWindow.hide();
+        }
       } else {
         // Window is actually closing (not keepAlive)
         logger.debug(
