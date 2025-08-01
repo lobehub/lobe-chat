@@ -82,7 +82,7 @@ export class ChatService extends BaseService {
    */
   private buildSearchParams(chatConfig: LobeAgentChatConfig) {
     const enabledSearch = chatConfig.searchMode !== 'off';
-    const useModelBuiltinSearch = chatConfig.useModelBuiltinSearch;
+    const { useModelBuiltinSearch } = chatConfig;
 
     return {
       enabledSearch: enabledSearch && useModelBuiltinSearch,
