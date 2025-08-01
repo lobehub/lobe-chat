@@ -326,6 +326,9 @@
   "Qwen/Qwen3-30B-A3B": {
     "description": "Qwen3 is een nieuwe generatie Qwen-model met aanzienlijk verbeterde capaciteiten, die op het gebied van redenering, algemeen gebruik, agent en meertaligheid op een leidende positie in de industrie staat, en ondersteunt de schakel tussen denkmodi."
   },
+  "Qwen/Qwen3-30B-A3B-Instruct-2507": {
+    "description": "Qwen3-30B-A3B-Instruct-2507 is een bijgewerkte versie van Qwen3-30B-A3B zonder denkmodus. Dit is een hybride expert (MoE) model met in totaal 30,5 miljard parameters en 3,3 miljard actieve parameters. Het model heeft belangrijke verbeteringen ondergaan op meerdere gebieden, waaronder een aanzienlijke verbetering van het volgen van instructies, logisch redeneren, tekstbegrip, wiskunde, wetenschap, codering en het gebruik van tools. Tegelijkertijd heeft het substantiële vooruitgang geboekt in de dekking van meertalige long-tail kennis en kan het beter afstemmen op de voorkeuren van gebruikers bij subjectieve en open taken, waardoor het nuttigere antwoorden en tekst van hogere kwaliteit kan genereren. Bovendien is het vermogen van het model om lange teksten te begrijpen uitgebreid tot 256K. Dit model ondersteunt alleen de niet-denkmodus en genereert geen `<think></think>` tags in de output."
+  },
   "Qwen/Qwen3-32B": {
     "description": "Qwen3 is een nieuwe generatie Qwen-model met aanzienlijk verbeterde capaciteiten, die op het gebied van redenering, algemeen gebruik, agent en meertaligheid op een leidende positie in de industrie staat, en ondersteunt de schakel tussen denkmodi."
   },
@@ -358,6 +361,12 @@
   },
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct is een groot taalmodel dat speciaal is ontworpen voor codegeneratie, codebegrip en efficiënte ontwikkelingsscenario's, met een toonaangevende parameteromvang van 32B, dat kan voldoen aan diverse programmeerbehoeften."
+  },
+  "Qwen3-235B": {
+    "description": "Qwen3-235B-A22B is een MoE (hybride expertmodel) dat de \"hybride redeneermodus\" introduceert, waarmee gebruikers naadloos kunnen schakelen tussen \"denkmodus\" en \"niet-denkmodus\". Het ondersteunt begrip en redenering in 119 talen en dialecten en beschikt over krachtige tool-aanroepmogelijkheden. Op het gebied van algemene vaardigheden, codering en wiskunde, meertalige capaciteiten, kennis en redenering kan het concurreren met toonaangevende grote modellen op de markt zoals DeepSeek R1, OpenAI o1, o3-mini, Grok 3 en Google Gemini 2.5 Pro."
+  },
+  "Qwen3-32B": {
+    "description": "Qwen3-32B is een dense model dat de \"hybride redeneermodus\" introduceert, waarmee gebruikers naadloos kunnen schakelen tussen \"denkmodus\" en \"niet-denkmodus\". Dankzij verbeteringen in de modelarchitectuur, toegenomen trainingsdata en effectievere trainingsmethoden presteert het model in het algemeen vergelijkbaar met Qwen2.5-72B."
   },
   "SenseChat": {
     "description": "Basisversie van het model (V4), met een contextlengte van 4K, heeft sterke algemene capaciteiten."
@@ -394,6 +403,12 @@
   },
   "SenseChat-Vision": {
     "description": "De nieuwste versie van het model (V5.5) ondersteunt meerdere afbeeldingen als invoer en heeft aanzienlijke optimalisaties doorgevoerd in de basiscapaciteiten van het model, met verbeteringen in objecteigenschappenherkenning, ruimtelijke relaties, actie-evenementherkenning, scènebegrip, emotieherkenning, logische kennisredenering en tekstbegrip en -generatie."
+  },
+  "SenseNova-V6-5-Pro": {
+    "description": "Door een uitgebreide update van multimodale, taal- en redeneergegevens en optimalisatie van trainingsstrategieën, heeft het nieuwe model aanzienlijke verbeteringen gerealiseerd in multimodale redenering en generalisatie van instructievolging. Het ondersteunt een contextvenster tot 128k en presteert uitstekend in gespecialiseerde taken zoals OCR en herkenning van toeristische IP."
+  },
+  "SenseNova-V6-5-Turbo": {
+    "description": "Door een uitgebreide update van multimodale, taal- en redeneergegevens en optimalisatie van trainingsstrategieën, heeft het nieuwe model aanzienlijke verbeteringen gerealiseerd in multimodale redenering en generalisatie van instructievolging. Het ondersteunt een contextvenster tot 128k en presteert uitstekend in gespecialiseerde taken zoals OCR en herkenning van toeristische IP."
   },
   "SenseNova-V6-Pro": {
     "description": "Realiseert de native integratie van afbeeldingen, tekst en video, doorbreekt de traditionele beperkingen van gescheiden multimodaliteit, en heeft in de OpenCompass en SuperCLUE evaluaties dubbele kampioenstitels behaald."
@@ -2371,6 +2386,12 @@
   },
   "qwen3-30b-a3b": {
     "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "In vergelijking met de vorige versie (Qwen3-30B-A3B) is de algemene meertalige en Chinese en Engelse vaardigheid aanzienlijk verbeterd. Er is speciale optimalisatie voor subjectieve en open taken, waardoor het veel beter aansluit bij gebruikersvoorkeuren en nuttigere antwoorden kan bieden."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Gebaseerd op het open source denkmodusmodel van Qwen3, heeft deze versie ten opzichte van de vorige (Tongyi Qianwen 3-30B-A3B) aanzienlijke verbeteringen in logisch vermogen, algemene vaardigheden, kennisverrijking en creativiteit. Het is geschikt voor complexe scenario's met sterke redeneervaardigheden."
   },
   "qwen3-32b": {
     "description": "Qwen3 is een nieuwe generatie van het Qwen grote model met aanzienlijk verbeterde capaciteiten, die de industrie leidende niveaus bereikt in redeneren, algemeen gebruik, agent en meertalige ondersteuning, en ondersteunt de schakeling tussen denkmodi."

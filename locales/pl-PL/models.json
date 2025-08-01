@@ -326,6 +326,9 @@
   "Qwen/Qwen3-30B-A3B": {
     "description": "Qwen3 to nowa generacja modelu Qwen, która znacznie zwiększa zdolności w zakresie wnioskowania, ogólnych zadań, agentów i wielojęzyczności, osiągając wiodące w branży wyniki oraz wspierając przełączanie trybu myślenia."
   },
+  "Qwen/Qwen3-30B-A3B-Instruct-2507": {
+    "description": "Qwen3-30B-A3B-Instruct-2507 to zaktualizowana wersja modelu Qwen3-30B-A3B w trybie bez myślenia. Jest to model ekspertowy mieszany (MoE) z 30,5 miliardami parametrów ogółem i 3,3 miliardami parametrów aktywacyjnych. Model został znacząco ulepszony pod wieloma względami, w tym w zakresie przestrzegania instrukcji, rozumowania logicznego, rozumienia tekstu, matematyki, nauki, kodowania oraz korzystania z narzędzi. Ponadto osiągnął istotny postęp w pokryciu wiedzy wielojęzycznej oraz lepsze dopasowanie do preferencji użytkowników w zadaniach subiektywnych i otwartych, co pozwala generować bardziej pomocne odpowiedzi i teksty wyższej jakości. Dodatkowo zdolność rozumienia długich tekstów została zwiększona do 256K. Model ten obsługuje wyłącznie tryb bez myślenia i nie generuje tagów `<think></think>` w swoich odpowiedziach."
+  },
   "Qwen/Qwen3-32B": {
     "description": "Qwen3 to nowa generacja modelu Qwen, która znacznie zwiększa zdolności w zakresie wnioskowania, ogólnych zadań, agentów i wielojęzyczności, osiągając wiodące w branży wyniki oraz wspierając przełączanie trybu myślenia."
   },
@@ -358,6 +361,12 @@
   },
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct to duży model językowy zaprojektowany specjalnie do generowania kodu, rozumienia kodu i efektywnych scenariuszy rozwoju, wykorzystujący wiodącą w branży skalę 32B parametrów, zdolny do zaspokojenia różnorodnych potrzeb programistycznych."
+  },
+  "Qwen3-235B": {
+    "description": "Qwen3-235B-A22B to model MoE (ekspert mieszany), który wprowadza „hybrydowy tryb rozumowania”, umożliwiający użytkownikom płynne przełączanie się między trybem myślenia a trybem bez myślenia. Obsługuje rozumienie i rozumowanie w 119 językach i dialektach oraz posiada zaawansowane możliwości wywoływania narzędzi. W testach porównawczych obejmujących zdolności ogólne, kodowanie, matematykę, wielojęzyczność, wiedzę i rozumowanie konkuruje z czołowymi modelami rynkowymi, takimi jak DeepSeek R1, OpenAI o1, o3-mini, Grok 3 oraz Google Gemini 2.5 Pro."
+  },
+  "Qwen3-32B": {
+    "description": "Qwen3-32B to model gęsty (Dense Model), który wprowadza „hybrydowy tryb rozumowania”, umożliwiający użytkownikom płynne przełączanie się między trybem myślenia a trybem bez myślenia. Dzięki ulepszonej architekturze modelu, zwiększonej ilości danych treningowych oraz bardziej efektywnym metodom treningu, jego ogólna wydajność jest porównywalna z Qwen2.5-72B."
   },
   "SenseChat": {
     "description": "Podstawowa wersja modelu (V4), długość kontekstu 4K, silne zdolności ogólne."
@@ -394,6 +403,12 @@
   },
   "SenseChat-Vision": {
     "description": "Najnowsza wersja modelu (V5.5), obsługująca wiele obrazów jako wejście, w pełni optymalizuje podstawowe możliwości modelu, osiągając znaczną poprawę w rozpoznawaniu atrybutów obiektów, relacji przestrzennych, rozpoznawaniu zdarzeń, zrozumieniu scen, rozpoznawaniu emocji, wnioskowaniu logicznym oraz generowaniu i rozumieniu tekstu."
+  },
+  "SenseNova-V6-5-Pro": {
+    "description": "Dzięki kompleksowej aktualizacji danych multimodalnych, językowych i rozumowania oraz optymalizacji strategii treningowej, nowy model osiągnął znaczące ulepszenia w zakresie rozumowania multimodalnego i uniwersalnego przestrzegania instrukcji. Obsługuje kontekst o długości do 128k i wykazuje doskonałe wyniki w specjalistycznych zadaniach, takich jak OCR oraz rozpoznawanie IP w turystyce i kulturze."
+  },
+  "SenseNova-V6-5-Turbo": {
+    "description": "Dzięki kompleksowej aktualizacji danych multimodalnych, językowych i rozumowania oraz optymalizacji strategii treningowej, nowy model osiągnął znaczące ulepszenia w zakresie rozumowania multimodalnego i uniwersalnego przestrzegania instrukcji. Obsługuje kontekst o długości do 128k i wykazuje doskonałe wyniki w specjalistycznych zadaniach, takich jak OCR oraz rozpoznawanie IP w turystyce i kulturze."
   },
   "SenseNova-V6-Pro": {
     "description": "Osiąga natywną jedność zdolności do przetwarzania obrazów, tekstów i wideo, przełamując tradycyjne ograniczenia rozdzielnych modalności, zdobywając podwójne mistrzostwo w ocenach OpenCompass i SuperCLUE."
@@ -2371,6 +2386,12 @@
   },
   "qwen3-30b-a3b": {
     "description": "Qwen3 to nowa generacja modelu Qwen, który znacznie zwiększa możliwości w zakresie wnioskowania, ogólności, agenta i wielojęzyczności, osiągając wiodące w branży wyniki w wielu kluczowych obszarach i wspierając przełączanie trybów myślenia."
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "W porównaniu z poprzednią wersją (Qwen3-30B-A3B) ogólne zdolności w języku chińskim, angielskim i wielojęzyczne zostały znacznie poprawione. Specjalna optymalizacja dla zadań subiektywnych i otwartych sprawia, że model lepiej odpowiada preferencjom użytkowników i potrafi dostarczać bardziej pomocne odpowiedzi."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Model open source w trybie myślenia oparty na Qwen3, który w porównaniu z poprzednią wersją (Tongyi Qianwen 3-30B-A3B) wykazuje znaczne ulepszenia w zakresie zdolności logicznych, ogólnych, wzbogacenia wiedzy oraz kreatywności. Nadaje się do trudnych scenariuszy wymagających zaawansowanego rozumowania."
   },
   "qwen3-32b": {
     "description": "Qwen3 to nowa generacja modelu Qwen, który znacznie zwiększa możliwości w zakresie wnioskowania, ogólności, agenta i wielojęzyczności, osiągając wiodące w branży wyniki w wielu kluczowych obszarach i wspierając przełączanie trybów myślenia."
