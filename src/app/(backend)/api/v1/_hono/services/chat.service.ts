@@ -1,8 +1,8 @@
 import { DEFAULT_AGENT_CHAT_CONFIG } from '@/const/settings';
 import { LobeChatDatabase } from '@/database/type';
 import { ChatStreamPayload } from '@/libs/model-runtime/types/chat';
-import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
+import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { LobeAgentConfig } from '@/types/agent';
 import { LobeAgentChatConfig } from '@/types/agent/chatConfig';
 
@@ -252,7 +252,7 @@ export class ChatService extends BaseService {
       const { apiKey } = JSON.parse(await this.getApiKey(provider));
 
       // 创建 AgentRuntime 实例
-      const agentRuntime = await initAgentRuntimeWithUserPayload(provider, {
+      const modelRuntime = await initModelRuntimeWithUserPayload(provider, {
         apiKey,
         userId: this.userId!,
       });
@@ -271,7 +271,7 @@ export class ChatService extends BaseService {
       };
 
       // 调用聊天 API
-      const response = await agentRuntime.chat(chatPayload, {
+      const response = await modelRuntime.chat(chatPayload, {
         user: this.userId!,
       });
 

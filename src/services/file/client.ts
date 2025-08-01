@@ -11,28 +11,25 @@ export class ClientService extends BaseClientService implements IFileService {
   }
 
   createFile: IFileService['createFile'] = async (file) => {
-    // 使用安全哈希检查，考虑访问权限隔离
-    const { isExist } = await this.fileModel.checkSecureHash(file.hash!, file.url!, file.metadata);
+    const { isExist } = await this.fileModel.checkHash(file.hash!);
 
     // save to local storage
     // we may want to save to a remote server later
     const res = await this.fileModel.create(
       {
-        fileHash: file.hash, // 这将在 create 方法中被安全哈希替换
+        fileHash: file.hash,
         fileType: file.fileType,
         knowledgeBaseId: file.knowledgeBaseId,
         metadata: file.metadata,
         name: file.name,
-        originalHash: file.hash, // 传递原始哈希
         size: file.size,
         url: file.url!,
       },
       !isExist,
     );
 
-    // get file to base64 url - 使用安全哈希
-    const secureHash = this.fileModel.generateSecureHash(file.hash!, file.url!, file.metadata);
-    const base64 = await this.getBase64ByFileHash(secureHash);
+    // get file to base64 url
+    const base64 = await this.getBase64ByFileHash(file.hash!);
 
     return {
       id: res.id,
