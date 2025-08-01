@@ -5,12 +5,12 @@ import { ScrollView, TextInput, View } from 'react-native';
 import { useSessionStore } from '@/store/session';
 import { useStyles } from './styles';
 
-import Inbox from './(components)/Inbox';
-import SessionHeader from './(components)/SessionHeader';
-import SessionItem from './(components)/SessionItem';
-import SessionFooter from './(components)/SessionFooter';
+import Inbox from './components/Inbox';
+import Header from './components/Header';
+import SessionItem from './components/SessionItem';
+import Footer from './components/Footer';
 
-export default function SessionDrawer() {
+export default function SideBar() {
   const { t } = useTranslation(['chat']);
   const [searchText, setSearchText] = useState('');
   const { sessions, fetchSessions } = useSessionStore();
@@ -29,7 +29,7 @@ export default function SessionDrawer() {
 
   return (
     <View style={styles.container}>
-      <SessionHeader />
+      <Header />
 
       {/* 搜索栏 */}
       <TextInput
@@ -49,7 +49,7 @@ export default function SessionDrawer() {
         ))}
       </ScrollView>
 
-      <SessionFooter />
+      <Footer />
     </View>
   );
 }
