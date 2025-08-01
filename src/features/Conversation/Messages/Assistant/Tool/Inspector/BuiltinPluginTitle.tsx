@@ -33,17 +33,10 @@ interface BuiltinPluginTitleProps {
 }
 
 const BuiltinPluginTitle = memo<BuiltinPluginTitleProps>(
-  ({ messageId, index, apiName, toolCallId, icon, title }) => {
+  ({ messageId, index, apiName, icon, title }) => {
     const { styles } = useStyles();
 
-    const isLoading = useChatStore((s) => {
-      const toolMessageId = chatSelectors.getMessageByToolCallId(toolCallId)(s)?.id;
-      const isToolCallStreaming = chatSelectors.isToolCallStreaming(messageId, index)(s);
-      const isPluginApiInvoking = !toolMessageId
-        ? true
-        : chatSelectors.isPluginApiInvoking(toolMessageId)(s);
-      return isToolCallStreaming || isPluginApiInvoking;
-    });
+    const isLoading = useChatStore(chatSelectors.isInToolsCalling(messageId, index));
 
     return (
       <Flexbox align={'center'} className={isLoading ? styles.shinyText : ''} gap={4} horizontal>

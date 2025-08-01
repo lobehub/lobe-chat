@@ -5,6 +5,9 @@
   "ai360": {
     "description": "360 AI é a plataforma de modelos e serviços de IA lançada pela empresa 360, oferecendo uma variedade de modelos avançados de processamento de linguagem natural, incluindo 360GPT2 Pro, 360GPT Pro, 360GPT Turbo e 360GPT Turbo Responsibility 8K. Esses modelos combinam grandes parâmetros e capacidades multimodais, sendo amplamente aplicados em geração de texto, compreensão semântica, sistemas de diálogo e geração de código. Com uma estratégia de preços flexível, a 360 AI atende a diversas necessidades dos usuários, apoiando a integração de desenvolvedores e promovendo a inovação e o desenvolvimento de aplicações inteligentes."
   },
+  "aihubmix": {
+    "description": "AiHubMix oferece acesso a diversos modelos de IA por meio de uma API unificada."
+  },
   "anthropic": {
     "description": "A Anthropic é uma empresa focada em pesquisa e desenvolvimento de inteligência artificial, oferecendo uma gama de modelos de linguagem avançados, como Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus e Claude 3 Haiku. Esses modelos alcançam um equilíbrio ideal entre inteligência, velocidade e custo, adequando-se a uma variedade de cenários de aplicação, desde cargas de trabalho empresariais até respostas rápidas. O Claude 3.5 Sonnet, como seu modelo mais recente, se destacou em várias avaliações, mantendo uma alta relação custo-benefício."
   },

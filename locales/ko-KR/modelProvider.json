@@ -189,6 +189,7 @@
       "aesGcm": "귀하의 비밀 키와 프록시 주소 등은 <1>AES-GCM</1> 암호화 알고리즘을 사용하여 암호화됩니다",
       "apiKey": {
         "desc": "{{name}} API 키를 입력하세요",
+        "descWithUrl": "{{name}} API 키를 입력하세요. <3>여기를 클릭하여 받기</3>",
         "placeholder": "{{name}} API 키",
         "title": "API 키"
       },

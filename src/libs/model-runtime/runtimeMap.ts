@@ -1,6 +1,7 @@
 import { LobeAi21AI } from './ai21';
 import { Lobe302AI } from './ai302';
 import { LobeAi360AI } from './ai360';
+import { LobeAiHubMixAI } from './aihubmix';
 import { LobeAnthropicAI } from './anthropic';
 import { LobeAzureOpenAI } from './azureOpenai';
 import { LobeAzureAI } from './azureai';
@@ -58,6 +59,7 @@ export const providerRuntimeMap = {
   ai21: LobeAi21AI,
   ai302: Lobe302AI,
   ai360: LobeAi360AI,
+  aihubmix: LobeAiHubMixAI,
   anthropic: LobeAnthropicAI,
   azure: LobeAzureOpenAI,
   azureai: LobeAzureAI,
