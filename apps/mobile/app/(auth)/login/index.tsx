@@ -8,7 +8,7 @@ import { useStyles } from './styles';
 
 const LoginPage = () => {
   const { t } = useTranslation(['auth', 'error', 'common']);
-  const { isLoading, error } = useAuth();
+  const { isLoading } = useAuth();
   const { login } = useAuthActions();
   const router = useRouter();
 
@@ -41,13 +41,6 @@ const LoginPage = () => {
           <Text style={styles.title}>LobeChat</Text>
           <Text style={styles.subtitle}>{t('login.subtitle', { ns: 'auth' })}</Text>
         </View>
-
-        {/* 错误提示 */}
-        {error && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{error}</Text>
-          </View>
-        )}
 
         {/* 登录按钮 */}
         <Button
