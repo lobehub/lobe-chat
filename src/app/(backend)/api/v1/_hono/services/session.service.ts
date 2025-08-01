@@ -1,4 +1,4 @@
-import { Column, SQL, and, desc, eq, inArray, like, not, or, sql } from 'drizzle-orm';
+import { SQL, and, desc, eq, ilike, inArray, like, not, or, sql } from 'drizzle-orm';
 import { groupBy } from 'lodash';
 
 import { INBOX_SESSION_ID } from '@/const/session';
@@ -315,7 +315,9 @@ export class SessionService extends BaseService {
         where: and(
           eq(sessions.id, sessionId),
           // 添加权限相关的查询条件
-          permissionResult.condition?.userId ? eq(sessions.userId, permissionResult.condition.userId) : undefined,
+          permissionResult.condition?.userId
+            ? eq(sessions.userId, permissionResult.condition.userId)
+            : undefined,
         ),
         with: {
           agentsToSessions: {
@@ -387,7 +389,10 @@ export class SessionService extends BaseService {
       }
 
       // 验证用户权限
-      if (permissionResult.condition?.userId && session.userId !== permissionResult.condition.userId) {
+      if (
+        permissionResult.condition?.userId &&
+        session.userId !== permissionResult.condition.userId
+      ) {
         throw this.createAuthorizationError('无权访问此会话配置');
       }
 
@@ -552,26 +557,22 @@ export class SessionService extends BaseService {
         const deletedLinks = await trx
           .delete(agentsToSessions)
           .where(eq(agentsToSessions.sessionId, sessionId));
-        
+
         this.log('info', '删除会话与 agent 的关联', { deletedLinks });
 
         // 2. 删除会话相关的消息
-        const deletedMessages = await trx
-          .delete(messages)
-          .where(eq(messages.sessionId, sessionId));
-        
+        const deletedMessages = await trx.delete(messages).where(eq(messages.sessionId, sessionId));
+
         this.log('info', '删除会话相关的消息', { deletedMessages });
 
         // 3. 删除会话本身
-        const deletedSession = await trx
-          .delete(sessions)
-          .where(eq(sessions.id, sessionId));
+        const deletedSession = await trx.delete(sessions).where(eq(sessions.id, sessionId));
 
         if (deletedSession.rowCount === 0) {
           throw this.createNotFoundError('会话不存在或已被删除');
         }
 
-        this.log('info', '删除会话成功', { 
+        this.log('info', '删除会话成功', {
           sessionId,
         });
       });
@@ -628,18 +629,14 @@ export class SessionService extends BaseService {
 
     try {
       // 权限校验
-      const permissionResult = await this.resolveQueryPermission('SESSION_READ','ALL');
+      const permissionResult = await this.resolveQueryPermission('SESSION_READ', 'ALL');
 
       if (!permissionResult.isPermitted) {
         throw this.createAuthorizationError(permissionResult.message || '无权搜索会话');
       }
 
       // 构建查询条件
-      let whereConditions = [
-        or(
-          like(sql`lower(${sessions.title})` as unknown as Column, `%${keyword.toLowerCase()}%`),
-        ),
-      ];
+      let whereConditions = [or(ilike(sessions.title, `%${keyword}%`))];
 
       // 添加权限相关的查询条件
       if (permissionResult?.condition?.userId) {
