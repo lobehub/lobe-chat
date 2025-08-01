@@ -1,14 +1,14 @@
 import { ActionIcon, ActionIconProps } from '@lobehub/ui';
-import { Compass, FolderClosed, MessageSquare, Palette } from 'lucide-react';
-import Link from 'next/link';
+import { Compass, FolderClosed, Palette } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useGlobalStore } from '@/store/global';
+import InnerLink from '@/components/InnerLink';
 import { SidebarTabKey } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
-import { useSessionStore } from '@/store/session';
+
+import ChatAction from './ChatAction';
 
 const ICON_SIZE: ActionIconProps['size'] = {
   blockSize: 40,
@@ -23,40 +23,17 @@ export interface TopActionProps {
 
 const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
   const { t } = useTranslation('common');
-  const switchBackToChat = useGlobalStore((s) => s.switchBackToChat);
   const { showMarket, enableKnowledgeBase } = useServerConfigStore(featureFlagsSelectors);
 
-  const isChatActive = tab === SidebarTabKey.Chat && !isPinned;
   const isFilesActive = tab === SidebarTabKey.Files;
   const isDiscoverActive = tab === SidebarTabKey.Discover;
   const isImageActive = tab === SidebarTabKey.Image;
 
   return (
     <Flexbox gap={8}>
-      <Link
-        aria-label={t('tab.chat')}
-        href={'/chat'}
-        onClick={(e) => {
-          // If Cmd key is pressed, let the default link behavior happen (open in new tab)
-          if (e.metaKey || e.ctrlKey) {
-            return;
-          }
-
-          // Otherwise, prevent default and switch session within the current tab
-          e.preventDefault();
-          switchBackToChat(useSessionStore.getState().activeId);
-        }}
-      >
-        <ActionIcon
-          active={isChatActive}
-          icon={MessageSquare}
-          size={ICON_SIZE}
-          title={t('tab.chat')}
-          tooltipProps={{ placement: 'right' }}
-        />
-      </Link>
+      <ChatAction isPinned={isPinned} tab={tab} />
       {enableKnowledgeBase && (
-        <Link aria-label={t('tab.files')} href={'/files'}>
+        <InnerLink aria-label={t('tab.files')} href={'/files'}>
           <ActionIcon
             active={isFilesActive}
             icon={FolderClosed}
@@ -64,9 +41,9 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
             title={t('tab.files')}
             tooltipProps={{ placement: 'right' }}
           />
-        </Link>
+        </InnerLink>
       )}
-      <Link aria-label={t('tab.aiImage')} href={'/image'}>
+      <InnerLink aria-label={t('tab.aiImage')} href={'/image'}>
         <ActionIcon
           active={isImageActive}
           icon={Palette}
@@ -74,9 +51,9 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
           title={t('tab.aiImage')}
           tooltipProps={{ placement: 'right' }}
         />
-      </Link>
+      </InnerLink>
       {showMarket && (
-        <Link aria-label={t('tab.discover')} href={'/discover'}>
+        <InnerLink aria-label={t('tab.discover')} href={'/discover'}>
           <ActionIcon
             active={isDiscoverActive}
             icon={Compass}
@@ -84,7 +61,7 @@ const TopActions = memo<TopActionProps>(({ tab, isPinned }) => {
             title={t('tab.discover')}
             tooltipProps={{ placement: 'right' }}
           />
-        </Link>
+        </InnerLink>
       )}
     </Flexbox>
   );

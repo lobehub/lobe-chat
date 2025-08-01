@@ -1,10 +1,10 @@
-import ServerLayout from '@/components/server/ServerLayout';
+import ServerLayout from '@/components/server/NewServerLayout';
 
 import Desktop from './_layout/Desktop';
 import Mobile from './_layout/Mobile';
 
-const MainLayout = ServerLayout({ Desktop, Mobile });
+const Layout = async (props: any) => <ServerLayout Desktop={Desktop} Mobile={Mobile} {...props} />;
 
-MainLayout.displayName = 'MainLayout';
+Layout.displayName = 'Layout';
 
-export default MainLayout;
+export default Layout;

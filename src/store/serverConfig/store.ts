@@ -15,11 +15,13 @@ import { ServerConfigAction, createServerConfigSlice } from './action';
 interface ServerConfigState {
   featureFlags: IFeatureFlags;
   isMobile?: boolean;
+  segmentVariants?: string;
   serverConfig: GlobalServerConfig;
 }
 
 const initialState: ServerConfigState = {
   featureFlags: DEFAULT_FEATURE_FLAGS,
+  segmentVariants: '',
   serverConfig: { aiProvider: {}, telemetry: {} },
 };
 
