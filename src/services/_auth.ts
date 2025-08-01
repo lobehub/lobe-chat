@@ -34,20 +34,15 @@ export const getProviderAuthPayload = (
         accessKeySecret: awsSecretAccessKey,
         apiKey,
         /** @deprecated */
-awsAccessKeyId,
-        
+        awsAccessKeyId,
         /** @deprecated */
-awsProfile,
-        
+        awsProfile,
         /** @deprecated */
-awsRegion: region,
-        
+        awsRegion: region,
         /** @deprecated */
-awsSecretAccessKey,
-        
+        awsSecretAccessKey,
         /** @deprecated */
-awsSessionToken: sessionToken,
-        
+        awsSessionToken: sessionToken,
         profile,
         region,
         sessionToken,
