@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { checkAuthMethod } from '@/app/(backend)/middleware/auth/utils';
 import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED } from '@/const/auth';
-import { AgentRuntime, LobeRuntimeAI } from '@/libs/model-runtime';
+import { LobeRuntimeAI, ModelRuntime } from '@/libs/model-runtime';
 import { ChatErrorType } from '@/types/fetch';
 import { getXorPayload } from '@/utils/server/xor';
 
@@ -57,10 +57,10 @@ afterEach(() => {
 
 describe('POST handler', () => {
   describe('init chat model', () => {
-    it('should initialize AgentRuntime correctly with valid authorization', async () => {
+    it('should initialize ModelRuntime correctly with valid authorization', async () => {
       const mockParams = Promise.resolve({ provider: 'test-provider' });
 
-      // 设置 getJWTPayload 和 initAgentRuntimeWithUserPayload 的模拟返回值
+      // 设置 getJWTPayload 和 initModelRuntimeWithUserPayload 的模拟返回值
       vi.mocked(getXorPayload).mockReturnValueOnce({
         accessCode: 'test-access-code',
         apiKey: 'test-api-key',
@@ -69,10 +69,10 @@ describe('POST handler', () => {
 
       const mockRuntime: LobeRuntimeAI = { baseURL: 'abc', chat: vi.fn() };
 
-      // migrate to new AgentRuntime init api
+      // migrate to new ModelRuntime init api
       const spy = vi
-        .spyOn(AgentRuntime, 'initializeWithProvider')
-        .mockResolvedValue(new AgentRuntime(mockRuntime));
+        .spyOn(ModelRuntime, 'initializeWithProvider')
+        .mockResolvedValue(new ModelRuntime(mockRuntime));
 
       // 调用 POST 函数
       await POST(request as unknown as Request, { params: mockParams });
@@ -111,14 +111,14 @@ describe('POST handler', () => {
       });
 
       const mockParams = Promise.resolve({ provider: 'test-provider' });
-      // 设置 initAgentRuntimeWithUserPayload 的模拟返回值
+      // 设置 initModelRuntimeWithUserPayload 的模拟返回值
       vi.mocked(getAuth).mockReturnValue({} as any);
       vi.mocked(checkAuthMethod).mockReset();
 
       const mockRuntime: LobeRuntimeAI = { baseURL: 'abc', chat: vi.fn() };
 
-      vi.spyOn(AgentRuntime, 'initializeWithProvider').mockResolvedValue(
-        new AgentRuntime(mockRuntime),
+      vi.spyOn(ModelRuntime, 'initializeWithProvider').mockResolvedValue(
+        new ModelRuntime(mockRuntime),
       );
 
       const request = new Request(new URL('https://test.com'), {
@@ -178,12 +178,12 @@ describe('POST handler', () => {
 
       const mockChatResponse: any = { success: true, message: 'Reply from agent' };
 
-      vi.spyOn(AgentRuntime.prototype, 'chat').mockResolvedValue(mockChatResponse);
+      vi.spyOn(ModelRuntime.prototype, 'chat').mockResolvedValue(mockChatResponse);
 
       const response = await POST(request as unknown as Request, { params: mockParams });
 
       expect(response).toEqual(mockChatResponse);
-      expect(AgentRuntime.prototype.chat).toHaveBeenCalledWith(mockChatPayload, {
+      expect(ModelRuntime.prototype.chat).toHaveBeenCalledWith(mockChatPayload, {
         user: 'abc',
         signal: expect.anything(),
       });
@@ -210,7 +210,7 @@ describe('POST handler', () => {
         errorMessage: 'Something went wrong',
       };
 
-      vi.spyOn(AgentRuntime.prototype, 'chat').mockRejectedValue(mockErrorResponse);
+      vi.spyOn(ModelRuntime.prototype, 'chat').mockRejectedValue(mockErrorResponse);
 
       const response = await POST(request, { params: mockParams });
 
