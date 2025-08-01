@@ -2,7 +2,7 @@ import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 
 import { FileController } from '../controllers/file.controller';
-import { requireAuth } from '../middleware/oidc-auth';
+import { requireAuth } from '../middleware/auth';
 import {
   BatchGetFilesRequestSchema,
   FileIdParamSchema,
