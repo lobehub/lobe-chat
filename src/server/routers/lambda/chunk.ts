@@ -12,7 +12,7 @@ import { knowledgeBaseFiles } from '@/database/schemas';
 import { authedProcedure, router } from '@/libs/trpc/lambda';
 import { keyVaults, serverDatabase } from '@/libs/trpc/lambda/middleware';
 import { getServerDefaultFilesConfig } from '@/server/globalConfig';
-import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
+import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ChunkService } from '@/server/services/chunk';
 import { SemanticSearchSchema } from '@/types/rag';
 
@@ -110,7 +110,7 @@ export const chunkRouter = router({
     .mutation(async ({ ctx, input }) => {
       const { model, provider } =
         getServerDefaultFilesConfig().embeddingModel || DEFAULT_FILE_EMBEDDING_MODEL_ITEM;
-      const agentRuntime = await initAgentRuntimeWithUserPayload(provider, ctx.jwtPayload);
+      const agentRuntime = await initModelRuntimeWithUserPayload(provider, ctx.jwtPayload);
 
       const embeddings = await agentRuntime.embeddings({
         dimensions: 1024,
@@ -139,7 +139,7 @@ export const chunkRouter = router({
         // if there is no message rag or it's embeddings, then we need to create one
         if (!item || !item.embeddings) {
           // TODO: need to support customize
-          const agentRuntime = await initAgentRuntimeWithUserPayload(provider, ctx.jwtPayload);
+          const agentRuntime = await initModelRuntimeWithUserPayload(provider, ctx.jwtPayload);
 
           // slice content to make sure in the context window limit
           const query =
