@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support aihubmix provider."]
+    },
+    "date": "2025-08-01",
+    "version": "1.107.0"
+  },
+  {
+    "children": {
       "improvements": ["Support SenseNova V6.5 models."]
     },
     "date": "2025-07-31",
