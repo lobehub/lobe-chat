@@ -11,6 +11,7 @@ import {
   SystemAgentItem,
   UserGeneralConfig,
   UserKeyVaults,
+  UserSearchConfig,
   UserSettings,
   UserSystemAgentConfigKey,
 } from '@/types/user/settings';
@@ -26,6 +27,7 @@ export interface UserSettingsAction {
   updateDefaultAgent: (agent: PartialDeep<LobeAgentSettings>) => Promise<void>;
   updateGeneralConfig: (settings: Partial<UserGeneralConfig>) => Promise<void>;
   updateKeyVaults: (settings: Partial<UserKeyVaults>) => Promise<void>;
+  updateSearchConfig: (settings: Partial<UserSearchConfig>) => Promise<void>;
 
   updateSystemAgent: (
     key: UserSystemAgentConfigKey,
@@ -98,6 +100,9 @@ export const createSettingsSlice: StateCreator<
   },
   updateKeyVaults: async (keyVaults) => {
     await get().setSettings({ keyVaults });
+  },
+  updateSearchConfig: async (search) => {
+    await get().setSettings({ search });
   },
   updateSystemAgent: async (key, value) => {
     await get().setSettings({

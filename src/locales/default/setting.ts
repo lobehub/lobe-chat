@@ -156,6 +156,67 @@ export default {
     },
     store: '插件商店',
   },
+  search: {
+    apiKey: {
+      desc: '服务所需的 API 密钥，点击右侧密钥库按钮可以从密钥库中快速选择',
+      placeholder: '请输入 API 密钥',
+      title: 'API 密钥',
+    },
+    config: {
+      excludeDomains: {
+        desc: '搜索时排除的域名列表，每行一个',
+        placeholder: 'example.com\nbad-site.com',
+        title: '排除域名',
+      },
+      maxResults: {
+        desc: '单次搜索返回的最大结果数量',
+        title: '最大结果数',
+      },
+      title: '搜索配置',
+    },
+    crawl: {
+      executeJS: {
+        desc: '是否执行网页中的 JavaScript 代码',
+        title: '执行 JavaScript',
+      },
+      includeImages: {
+        desc: '是否在抓取结果中包含图片内容',
+        title: '包含图片',
+      },
+      maxContentLength: {
+        desc: '单个网页抓取的最大字符数',
+        title: '最大内容长度',
+      },
+      outputFormat: {
+        desc: '抓取内容的输出格式',
+        text: '纯文本',
+        title: '输出格式',
+      },
+      timeout: {
+        desc: '网页抓取的超时时间',
+        title: '超时时间 (秒)',
+      },
+      title: '爬虫配置',
+    },
+    endpoint: {
+      desc: '自定义服务的 API 端点地址，留空则使用默认地址',
+      placeholder: '请输入 API 端点地址',
+      title: 'API 端点',
+    },
+    service: {
+      crawl: {
+        desc: '选择用于网页内容抓取的服务提供商',
+        title: '网页爬虫',
+      },
+      desc: '管理搜索引擎和网页爬虫的服务提供商配置',
+      search: {
+        desc: '选择用于网络搜索的服务提供商',
+        title: '搜索引擎',
+      },
+      title: '服务提供商',
+    },
+  },
+
   settingAgent: {
     avatar: {
       title: '助手头像',
@@ -184,7 +245,6 @@ export default {
     },
     title: '助手信息',
   },
-
   settingAppearance: {
     neutralColor: {
       desc: '不同色彩倾向的灰阶自定义',
@@ -199,7 +259,6 @@ export default {
     },
     title: '应用外观',
   },
-
   settingChat: {
     autoCreateTopicThreshold: {
       desc: '当前消息数超过设定该值后，将自动创建话题',
@@ -541,6 +600,7 @@ export default {
     'llm': '语言模型',
     'provider': 'AI 服务商',
     'proxy': '网络代理',
+    'search': '网络搜索',
     'storage': '数据存储',
     'sync': '云端同步',
     'system-agent': '系统助手',

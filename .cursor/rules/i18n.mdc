@@ -1,6 +1,5 @@
 ---
-description: i18n workflow and troubleshooting
-globs: 
+globs: *.tsx
 alwaysApply: false
 ---
 # LobeChat 国际化指南
