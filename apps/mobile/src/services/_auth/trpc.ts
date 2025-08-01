@@ -14,7 +14,7 @@ const links = [
   httpBatchLink({
     headers: async () => await createHeaderWithAuth(),
     transformer: superjson,
-    url: `${remoteUrl}/trpc/lambda`,
+    url: `${remoteUrl}/trpc/mobile`,
   }),
 ];
 
