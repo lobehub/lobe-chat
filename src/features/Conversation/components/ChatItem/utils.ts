@@ -22,7 +22,8 @@ export const processWithArtifact = (input: string = '') => {
   }
 
   // Add empty line between lobeThinking and lobeArtifact if they are adjacent
-  output = output.replace(/(<\/lobeThinking>)\r?\n(<lobeArtifact)/, '$1\n\n$2');
+  // Support both cases: with line break (e.g. from other models) and without (e.g. from Gemini)
+  output = output.replace(/(<\/lobeThinking>)(?:\r?\n)?(<lobeArtifact)/, '$1\n\n$2');
 
   // Remove fenced code block between lobeArtifact and HTML content
   output = output.replace(
