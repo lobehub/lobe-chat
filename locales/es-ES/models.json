@@ -326,6 +326,9 @@
   "Qwen/Qwen3-30B-A3B": {
     "description": "Qwen3 es un nuevo modelo de Tongyi Qianwen de próxima generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, general, agente y múltiples idiomas, y admite el cambio de modo de pensamiento."
   },
+  "Qwen/Qwen3-30B-A3B-Instruct-2507": {
+    "description": "Qwen3-30B-A3B-Instruct-2507 es una versión actualizada del modelo Qwen3-30B-A3B en modo no reflexivo. Es un modelo de expertos mixtos (MoE) con un total de 30.5 mil millones de parámetros y 3.3 mil millones de parámetros activados. El modelo ha mejorado significativamente en varios aspectos, incluyendo el seguimiento de instrucciones, razonamiento lógico, comprensión de texto, matemáticas, ciencias, codificación y uso de herramientas. Además, ha logrado avances sustanciales en la cobertura de conocimientos multilingües de cola larga y se alinea mejor con las preferencias del usuario en tareas subjetivas y abiertas, generando respuestas más útiles y textos de mayor calidad. También se ha mejorado la capacidad de comprensión de textos largos hasta 256K. Este modelo solo soporta el modo no reflexivo y no genera etiquetas `<think></think>` en su salida."
+  },
   "Qwen/Qwen3-32B": {
     "description": "Qwen3 es un nuevo modelo de Tongyi Qianwen de próxima generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, general, agente y múltiples idiomas, y admite el cambio de modo de pensamiento."
   },
@@ -358,6 +361,12 @@
   },
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct es un modelo de lenguaje grande diseñado específicamente para la generación de código, comprensión de código y escenarios de desarrollo eficiente, con una escala de 32B parámetros, líder en la industria, capaz de satisfacer diversas necesidades de programación."
+  },
+  "Qwen3-235B": {
+    "description": "Qwen3-235B-A22B es un modelo MoE (modelo de expertos mixtos) que introduce el “modo de razonamiento mixto”, permitiendo a los usuarios cambiar sin problemas entre el “modo reflexivo” y el “modo no reflexivo”. Soporta la comprensión y el razonamiento en 119 idiomas y dialectos, y cuenta con una potente capacidad de invocación de herramientas. En pruebas de referencia que evalúan capacidades generales, código y matemáticas, multilingüismo, conocimiento y razonamiento, compite con los principales modelos del mercado como DeepSeek R1, OpenAI o1, o3-mini, Grok 3 y Google Gemini 2.5 Pro."
+  },
+  "Qwen3-32B": {
+    "description": "Qwen3-32B es un modelo denso (Dense Model) que introduce el “modo de razonamiento mixto”, permitiendo a los usuarios cambiar sin problemas entre el “modo reflexivo” y el “modo no reflexivo”. Gracias a mejoras en la arquitectura del modelo, aumento de datos de entrenamiento y métodos de entrenamiento más eficientes, su rendimiento general es comparable al de Qwen2.5-72B."
   },
   "SenseChat": {
     "description": "Modelo de versión básica (V4), longitud de contexto de 4K, con potentes capacidades generales."
@@ -394,6 +403,12 @@
   },
   "SenseChat-Vision": {
     "description": "La última versión del modelo (V5.5) admite la entrada de múltiples imágenes, logrando una optimización completa de las capacidades básicas del modelo, con mejoras significativas en el reconocimiento de atributos de objetos, relaciones espaciales, reconocimiento de eventos de acción, comprensión de escenas, reconocimiento de emociones, razonamiento lógico y comprensión y generación de texto."
+  },
+  "SenseNova-V6-5-Pro": {
+    "description": "Mediante una actualización integral de datos multimodales, lingüísticos y de razonamiento, junto con la optimización de estrategias de entrenamiento, el nuevo modelo ha logrado mejoras significativas en el razonamiento multimodal y la capacidad de seguimiento de instrucciones generalizadas. Soporta una ventana de contexto de hasta 128k y destaca en tareas especializadas como OCR y reconocimiento de IP en turismo y cultura."
+  },
+  "SenseNova-V6-5-Turbo": {
+    "description": "Mediante una actualización integral de datos multimodales, lingüísticos y de razonamiento, junto con la optimización de estrategias de entrenamiento, el nuevo modelo ha logrado mejoras significativas en el razonamiento multimodal y la capacidad de seguimiento de instrucciones generalizadas. Soporta una ventana de contexto de hasta 128k y destaca en tareas especializadas como OCR y reconocimiento de IP en turismo y cultura."
   },
   "SenseNova-V6-Pro": {
     "description": "Logra una unificación nativa de capacidades de imagen, texto y video, superando las limitaciones tradicionales de la multimodalidad discreta, y ha ganado el doble campeonato en las evaluaciones de OpenCompass y SuperCLUE."
@@ -2371,6 +2386,12 @@
   },
   "qwen3-30b-a3b": {
     "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "En comparación con la versión anterior (Qwen3-30B-A3B), se ha mejorado considerablemente la capacidad general en chino, inglés y otros idiomas. Se ha optimizado especialmente para tareas subjetivas y abiertas, alineándose mucho mejor con las preferencias del usuario y proporcionando respuestas más útiles."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Basado en el modelo de código abierto en modo reflexivo de Qwen3, esta versión mejora significativamente la capacidad lógica, la capacidad general, el conocimiento y la creatividad en comparación con la versión anterior (Tongyi Qianwen 3-30B-A3B). Es adecuado para escenarios complejos que requieren un razonamiento avanzado."
   },
   "qwen3-32b": {
     "description": "Qwen3 es un modelo de nueva generación con capacidades significativamente mejoradas, alcanzando niveles líderes en la industria en razonamiento, generalidad, agentes y multilingüismo, y soporta el cambio de modo de pensamiento."
