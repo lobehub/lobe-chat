@@ -140,14 +140,13 @@ export abstract class BaseService implements IBaseService {
   protected async hasGlobalPermission(
     permissionKey: keyof typeof PERMISSION_ACTIONS,
   ): Promise<boolean> {
-    const result = await this.rbacModel.hasAnyPermission(
+    return await this.rbacModel.hasAnyPermission(
       [
         PERMISSION_ACTIONS[permissionKey] + ':all',
         PERMISSION_ACTIONS[permissionKey] + ':workspace',
       ],
       this.userId,
     );
-    return result;
   }
 
   /**
@@ -158,11 +157,10 @@ export abstract class BaseService implements IBaseService {
   protected async hasOwnerPermission(
     permissionKey: keyof typeof PERMISSION_ACTIONS,
   ): Promise<boolean> {
-    const result = await this.rbacModel.hasAnyPermission(
+    return await this.rbacModel.hasAnyPermission(
       [PERMISSION_ACTIONS[permissionKey] + ':owner'],
       this.userId,
     );
-    return result;
   }
 
   protected async getTargetUserId(target?: string | TTarget): Promise<string> {

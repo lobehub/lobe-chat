@@ -299,6 +299,7 @@ export const aiModelsRelations = relations(aiModels, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
 // Generation 相关关系定义
 export const generationTopicsRelations = relations(generationTopics, ({ one, many }) => ({
   user: one(users, {
