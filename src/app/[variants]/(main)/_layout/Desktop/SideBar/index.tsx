@@ -2,11 +2,11 @@
 
 import { SideNav } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { parseAsBoolean, useQueryState } from 'nuqs';
 import { Suspense, memo } from 'react';
 
 import { isDesktop } from '@/const/version';
 import { useActiveTabKey } from '@/hooks/useActiveTabKey';
+import { usePinnedAgentState } from '@/hooks/usePinnedAgentState';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
@@ -18,7 +18,7 @@ import PinList from './PinList';
 import TopActions from './TopActions';
 
 const Top = () => {
-  const [isPinned] = useQueryState('pinned', parseAsBoolean);
+  const [isPinned] = usePinnedAgentState();
   const sidebarKey = useActiveTabKey();
 
   return <TopActions isPinned={isPinned} tab={sidebarKey} />;

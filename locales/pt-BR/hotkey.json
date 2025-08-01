@@ -21,6 +21,14 @@
     "desc": "Entre no modo de edição pressionando Alt e clicando duas vezes na mensagem",
     "title": "Editar mensagem"
   },
+  "navigateToChat": {
+    "desc": "Alternar para a aba de conversas",
+    "title": "Aba de conversas"
+  },
+  "navigateToInbox": {
+    "desc": "Alternar para a aba de conversas e entrar no bate-papo casual",
+    "title": "Bate-papo casual"
+  },
   "openChatSettings": {
     "desc": "Ver e modificar as configurações da conversa atual",
     "title": "Abrir configurações de conversa"

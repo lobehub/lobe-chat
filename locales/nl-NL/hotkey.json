@@ -21,6 +21,14 @@
     "desc": "Ga naar de bewerkingsmodus door Alt ingedrukt te houden en op het bericht te dubbelklikken",
     "title": "Bewerk bericht"
   },
+  "navigateToChat": {
+    "desc": "Schakel over naar het gesprekstabblad",
+    "title": "Gesprekstabblad"
+  },
+  "navigateToInbox": {
+    "desc": "Schakel over naar het gesprekstabblad en ga naar 'Gewoon kletsen'",
+    "title": "Gewoon kletsen"
+  },
   "openChatSettings": {
     "desc": "Bekijk en wijzig de instellingen van de huidige sessie",
     "title": "Open gespreksinstellingen"
