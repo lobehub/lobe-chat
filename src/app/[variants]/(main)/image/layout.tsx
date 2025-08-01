@@ -11,7 +11,7 @@ const AiImageLayout = ServerLayout({ Desktop, Mobile });
 AiImageLayout.displayName = 'AiImageLayout';
 
 const Layout = (props: LayoutProps) => {
-  if (!isServerMode) return <NotSupportClient />;
+  // if (!isServerMode) return <NotSupportClient />;
 
   return <AiImageLayout {...props} />;
 };
