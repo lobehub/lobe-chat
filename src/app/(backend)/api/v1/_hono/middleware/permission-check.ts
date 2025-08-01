@@ -5,8 +5,6 @@ import { HTTPException } from 'hono/http-exception';
 import { getServerDB } from '@/database/core/db-adaptor';
 import { RbacModel } from '@/database/models/rbac';
 
-import { getUserId } from '../utils';
-
 // Create context logger namespace
 const log = debug('lobe-hono:permission-middleware');
 
@@ -51,7 +49,7 @@ const requirePermission = (options: PermissionCheckOptions) => {
     }
 
     // Get user ID from context (set by authentication middleware)
-    const userId = getUserId(c);
+    const userId = c.get('userId');
 
     if (!userId) {
       log('Permission check failed: user not authenticated');
