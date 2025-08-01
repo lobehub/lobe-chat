@@ -375,3 +375,43 @@ export const aiModelsRelations = relations(aiModels, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
+// Generation 相关关系定义
+export const generationTopicsRelations = relations(generationTopics, ({ one, many }) => ({
+  user: one(users, {
+    fields: [generationTopics.userId],
+    references: [users.id],
+  }),
+  batches: many(generationBatches),
+}));
+
+export const generationBatchesRelations = relations(generationBatches, ({ one, many }) => ({
+  user: one(users, {
+    fields: [generationBatches.userId],
+    references: [users.id],
+  }),
+  topic: one(generationTopics, {
+    fields: [generationBatches.generationTopicId],
+    references: [generationTopics.id],
+  }),
+  generations: many(generations),
+}));
+
+export const generationsRelations = relations(generations, ({ one }) => ({
+  user: one(users, {
+    fields: [generations.userId],
+    references: [users.id],
+  }),
+  batch: one(generationBatches, {
+    fields: [generations.generationBatchId],
+    references: [generationBatches.id],
+  }),
+  asyncTask: one(asyncTasks, {
+    fields: [generations.asyncTaskId],
+    references: [asyncTasks.id],
+  }),
+  file: one(files, {
+    fields: [generations.fileId],
+    references: [files.id],
+  }),
+}));
