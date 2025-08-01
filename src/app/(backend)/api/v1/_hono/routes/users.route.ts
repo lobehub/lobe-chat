@@ -4,7 +4,7 @@ import { Hono } from 'hono';
 import { getScopePermissions } from '@/utils/rbac';
 
 import { UserController } from '../controllers';
-import { requireAuth } from '../middleware/oidc-auth';
+import { requireAuth } from '../middleware/auth';
 import { requireAnyPermission } from '../middleware/permission-check';
 import {
   CreateUserRequestSchema,
