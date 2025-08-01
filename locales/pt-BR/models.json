@@ -326,6 +326,9 @@
   "Qwen/Qwen3-30B-A3B": {
     "description": "O Qwen3 é um novo modelo de grande escala da Tongyi Qianwen com capacidades significativamente aprimoradas, alcançando níveis líderes da indústria em raciocínio, tarefas gerais, agentes e multilinguismo, e suporta a alternância de modos de pensamento."
   },
+  "Qwen/Qwen3-30B-A3B-Instruct-2507": {
+    "description": "Qwen3-30B-A3B-Instruct-2507 é uma versão atualizada do Qwen3-30B-A3B no modo não reflexivo. Este é um modelo de especialista misto (MoE) com um total de 30,5 bilhões de parâmetros e 3,3 bilhões de parâmetros ativados. O modelo apresenta melhorias significativas em vários aspectos, incluindo um aumento notável na capacidade de seguir instruções, raciocínio lógico, compreensão de texto, matemática, ciências, codificação e uso de ferramentas. Além disso, alcança avanços substanciais na cobertura de conhecimento em múltiplos idiomas e melhor alinhamento com as preferências dos usuários em tarefas subjetivas e abertas, permitindo gerar respostas mais úteis e textos de maior qualidade. A capacidade de compreensão de textos longos também foi ampliada para 256K. Este modelo suporta apenas o modo não reflexivo e não gera tags `<think></think>` em sua saída."
+  },
   "Qwen/Qwen3-32B": {
     "description": "O Qwen3 é um novo modelo de grande escala da Tongyi Qianwen com capacidades significativamente aprimoradas, alcançando níveis líderes da indústria em raciocínio, tarefas gerais, agentes e multilinguismo, e suporta a alternância de modos de pensamento."
   },
@@ -358,6 +361,12 @@
   },
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct é um grande modelo de linguagem projetado para geração de código, compreensão de código e cenários de desenvolvimento eficiente, com uma escala de 32 bilhões de parâmetros, atendendo a diversas necessidades de programação."
+  },
+  "Qwen3-235B": {
+    "description": "Qwen3-235B-A22B, modelo MoE (especialista misto), introduz o “modo de raciocínio híbrido”, permitindo aos usuários alternar perfeitamente entre os modos “reflexivo” e “não reflexivo”. Suporta compreensão e raciocínio em 119 idiomas e dialetos, além de possuir forte capacidade de chamada de ferramentas. Em testes de benchmark abrangentes, incluindo habilidades gerais, código, matemática, multilinguismo, conhecimento e raciocínio, compete com os principais grandes modelos do mercado, como DeepSeek R1, OpenAI o1, o3-mini, Grok 3 e Google Gemini 2.5 Pro."
+  },
+  "Qwen3-32B": {
+    "description": "Qwen3-32B, modelo denso (Dense Model), introduz o “modo de raciocínio híbrido”, permitindo aos usuários alternar perfeitamente entre os modos “reflexivo” e “não reflexivo”. Graças a melhorias na arquitetura do modelo, aumento dos dados de treinamento e métodos de treinamento mais eficazes, seu desempenho geral é comparável ao do Qwen2.5-72B."
   },
   "SenseChat": {
     "description": "Modelo da versão básica (V4), com comprimento de contexto de 4K, com capacidades gerais poderosas."
@@ -394,6 +403,12 @@
   },
   "SenseChat-Vision": {
     "description": "Modelo da versão mais recente (V5.5), suporta entrada de múltiplas imagens, otimizando completamente as capacidades básicas do modelo, com grandes melhorias em reconhecimento de atributos de objetos, relações espaciais, reconhecimento de eventos, compreensão de cenários, reconhecimento de emoções, raciocínio lógico e compreensão e geração de texto."
+  },
+  "SenseNova-V6-5-Pro": {
+    "description": "Com atualizações abrangentes em dados multimodais, linguísticos e de raciocínio, além da otimização das estratégias de treinamento, o novo modelo alcança melhorias significativas em raciocínio multimodal e capacidade de seguir instruções generalizadas. Suporta janelas de contexto de até 128k e apresenta desempenho excepcional em tarefas especializadas como OCR e reconhecimento de IPs culturais e turísticos."
+  },
+  "SenseNova-V6-5-Turbo": {
+    "description": "Com atualizações abrangentes em dados multimodais, linguísticos e de raciocínio, além da otimização das estratégias de treinamento, o novo modelo alcança melhorias significativas em raciocínio multimodal e capacidade de seguir instruções generalizadas. Suporta janelas de contexto de até 128k e apresenta desempenho excepcional em tarefas especializadas como OCR e reconhecimento de IPs culturais e turísticos."
   },
   "SenseNova-V6-Pro": {
     "description": "Realizar a unificação nativa de capacidades de imagem, texto e vídeo, superando as limitações tradicionais da multimodalidade discreta, conquistando o título duplo nas avaliações OpenCompass e SuperCLUE."
@@ -2371,6 +2386,12 @@
   },
   "qwen3-30b-a3b": {
     "description": "Qwen3 é um novo modelo de linguagem de próxima geração com capacidades significativamente aprimoradas, alcançando níveis líderes da indústria em raciocínio, generalidade, agentes e multilíngue, e suporta a alternância de modos de pensamento."
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "Em comparação com a versão anterior (Qwen3-30B-A3B), houve um aumento significativo na capacidade geral em chinês, inglês e múltiplos idiomas. Otimizado especialmente para tarefas subjetivas e abertas, alinhando-se muito melhor às preferências dos usuários e fornecendo respostas mais úteis."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Baseado no modelo open source do modo reflexivo Qwen3, esta versão apresenta melhorias substanciais em lógica, capacidade geral, conhecimento e criatividade em relação à versão anterior (Tongyi Qianwen 3-30B-A3B), sendo adequada para cenários complexos que exigem raciocínio avançado."
   },
   "qwen3-32b": {
     "description": "Qwen3 é um novo modelo de linguagem de próxima geração com capacidades significativamente aprimoradas, alcançando níveis líderes da indústria em raciocínio, generalidade, agentes e multilíngue, e suporta a alternância de modos de pensamento."
