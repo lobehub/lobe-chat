@@ -189,6 +189,7 @@
       "aesGcm": "Anahtarınız ve proxy adresi gibi bilgiler <1>AES-GCM</1> şifreleme algoritması ile şifrelenecektir",
       "apiKey": {
         "desc": "{{name}} API Anahtarınızı girin",
+        "descWithUrl": "Lütfen {{name}} API Anahtarınızı girin, <3>buraya tıklayarak alın</3>",
         "placeholder": "{{name}} API Anahtarı",
         "title": "API Anahtarı"
       },

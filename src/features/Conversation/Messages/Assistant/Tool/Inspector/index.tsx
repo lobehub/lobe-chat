@@ -1,13 +1,6 @@
-import { ActionIcon, Icon } from '@lobehub/ui';
+import { ActionIcon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import {
-  ChevronDown,
-  ChevronRight,
-  LayoutPanelTop,
-  LogsIcon,
-  LucideBug,
-  LucideBugOff,
-} from 'lucide-react';
+import { LayoutPanelTop, LogsIcon, LucideBug, LucideBugOff } from 'lucide-react';
 import { CSSProperties, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -68,6 +61,7 @@ export const useStyles = createStyles(({ css, token, cx }) => ({
 interface InspectorProps {
   apiName: string;
   arguments?: string;
+  hidePluginUI?: boolean;
   id: string;
   identifier: string;
   index: number;
@@ -94,6 +88,7 @@ const Inspectors = memo<InspectorProps>(
     setShowRender,
     showPluginRender,
     setShowPluginRender,
+    hidePluginUI = false,
   }) => {
     const { t } = useTranslation('plugin');
     const { styles } = useStyles();
@@ -120,10 +115,9 @@ const Inspectors = memo<InspectorProps>(
               messageId={messageId}
               toolCallId={id}
             />
-            <Icon icon={showRender ? ChevronDown : ChevronRight} />
           </Flexbox>
           <Flexbox className={styles.actions} horizontal>
-            {showRender && (
+            {showRender && !hidePluginUI && (
               <ActionIcon
                 icon={showPluginRender ? LogsIcon : LayoutPanelTop}
                 onClick={() => {

@@ -91,8 +91,8 @@ const ToolTitle = memo<ToolTitleProps>(({ identifier, messageId, index, apiName,
   const pluginTitle = pluginHelpers.getPluginTitle(pluginMeta) ?? t('unknownPlugin');
 
   return (
-    <Flexbox align={'center'} className={isLoading ? styles.shinyText : ''} gap={4} horizontal>
-      {isLoading ? <Loader /> : <PluginAvatar identifier={identifier} size={20} />}
+    <Flexbox align={'center'} className={isLoading ? styles.shinyText : ''} gap={6} horizontal>
+      {isLoading ? <Loader /> : <PluginAvatar identifier={identifier} size={18} />}
       <div>{pluginTitle}</div>/<span className={styles.apiName}>{apiName}</span>
     </Flexbox>
   );

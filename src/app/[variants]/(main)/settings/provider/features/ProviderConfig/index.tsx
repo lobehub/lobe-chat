@@ -97,6 +97,7 @@ const useStyles = createStyles(({ css, prefixCls, responsive, token }) => ({
 
 export interface ProviderConfigProps extends Omit<AiProviderDetailItem, 'enabled' | 'source'> {
   apiKeyItems?: FormItemProps[];
+  apiKeyUrl?: string;
   canDeactivate?: boolean;
   checkErrorRender?: CheckErrorRender;
   className?: string;
@@ -127,6 +128,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
     showAceGcm = true,
     extra,
     source = AiProviderSourceEnum.Builtin,
+    apiKeyUrl,
   }) => {
     const {
       proxyUrl,
@@ -184,7 +186,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
             ) : (
               <FormPassword
                 autoComplete={'new-password'}
-                placeholder={t(`providerModels.config.apiKey.placeholder`, { name })}
+                placeholder={t('providerModels.config.apiKey.placeholder', { name })}
                 suffix={
                   configUpdating && (
                     <Icon icon={Loader2Icon} spin style={{ color: theme.colorTextTertiary }} />
@@ -192,7 +194,20 @@ const ProviderConfig = memo<ProviderConfigProps>(
                 }
               />
             ),
-            desc: t(`providerModels.config.apiKey.desc`, { name }),
+            desc: apiKeyUrl ? (
+              <Trans
+                i18nKey="providerModels.config.apiKey.descWithUrl"
+                ns={'modelProvider'}
+                value={{ name }}
+              >
+                请填写你的 {{ name }} API Key,
+                <Link href={apiKeyUrl} target={'_blank'}>
+                  点此获取
+                </Link>
+              </Trans>
+            ) : (
+              t(`providerModels.config.apiKey.desc`, { name })
+            ),
             label: t(`providerModels.config.apiKey.title`),
             name: [KeyVaultsConfigKey, LLMProviderApiTokenKey],
           },

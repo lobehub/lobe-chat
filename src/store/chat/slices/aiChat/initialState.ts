@@ -6,6 +6,7 @@ export interface ChatAIChatState {
   chatLoadingIdsAbortController?: AbortController;
   inputFiles: File[];
   inputMessage: string;
+  messageInToolsCallingIds: string[];
   /**
    * is the message is in RAG flow
    */
@@ -26,6 +27,7 @@ export const initialAiChatState: ChatAIChatState = {
   chatLoadingIds: [],
   inputFiles: [],
   inputMessage: '',
+  messageInToolsCallingIds: [],
   messageRAGLoadingIds: [],
   pluginApiLoadingIds: [],
   reasoningLoadingIds: [],

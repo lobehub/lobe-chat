@@ -77,7 +77,6 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile, dataSource, itemCo
           initialTopMostItemIndex={dataSource?.length - 1}
           isScrolling={setIsScrolling}
           itemContent={itemContent}
-          overscan={overscan}
           ref={virtuosoRef}
         />
         <AutoScroll

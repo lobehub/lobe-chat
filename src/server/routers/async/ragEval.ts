@@ -14,7 +14,7 @@ import {
 } from '@/database/server/models/ragEval';
 import { ModelProvider } from '@/libs/model-runtime';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
-import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
+import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ChunkService } from '@/server/services/chunk';
 import { AsyncTaskError } from '@/types/asyncTask';
 import { EvalEvaluationStatus } from '@/types/eval';
@@ -51,7 +51,7 @@ export const ragEvalRouter = router({
 
       const now = Date.now();
       try {
-        const agentRuntime = await initAgentRuntimeWithUserPayload(
+        const agentRuntime = await initModelRuntimeWithUserPayload(
           ModelProvider.OpenAI,
           ctx.jwtPayload,
         );

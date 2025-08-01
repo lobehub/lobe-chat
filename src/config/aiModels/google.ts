@@ -139,56 +139,8 @@ const googleChatModels: AIChatModelCard[] = [
       vision: true,
     },
     contextWindowTokens: 1_048_576 + 65_536,
-    description: 'Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。',
-    displayName: 'Gemini 2.5 Flash Preview 04-17',
-    id: 'gemini-2.5-flash-preview-04-17',
-    maxOutput: 65_536,
-    pricing: {
-      cachedInput: 0.0375,
-      input: 0.15,
-      output: 3.5, // Thinking
-    },
-    releasedAt: '2025-04-17',
-    settings: {
-      extendParams: ['thinkingBudget'],
-      searchImpl: 'params',
-      searchProvider: 'google',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_048_576 + 65_536,
-    description: 'Gemini 2.5 Flash Preview 是 Google 性价比最高的模型，提供全面的功能。',
-    displayName: 'Gemini 2.5 Flash Preview 04-17 for cursor testing',
-    id: 'gemini-2.5-flash-preview-04-17-thinking',
-    maxOutput: 65_536,
-    pricing: {
-      input: 0.15,
-      output: 3.5,
-    },
-    settings: {
-      searchImpl: 'params',
-      searchProvider: 'google',
-    },
-    type: 'chat',
-  },
-  {
-    abilities: {
-      functionCall: true,
-      reasoning: true,
-      search: true,
-      vision: true,
-    },
-    contextWindowTokens: 1_048_576 + 65_536,
     description: 'Gemini 2.5 Flash-Lite 是 Google 最小、性价比最高的模型，专为大规模使用而设计。',
     displayName: 'Gemini 2.5 Flash-Lite',
-    enabled: true,
     id: 'gemini-2.5-flash-lite',
     maxOutput: 65_536,
     pricing: {

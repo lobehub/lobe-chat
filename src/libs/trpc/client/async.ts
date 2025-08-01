@@ -9,7 +9,8 @@ export const asyncClient = createTRPCClient<AsyncRouter>({
   links: [
     httpBatchLink({
       fetch: isDesktop
-        ? (input, init) => fetchWithDesktopRemoteRPC(input as string, init)
+        ? // eslint-disable-next-line no-undef
+          (input, init) => fetchWithDesktopRemoteRPC(input as string, init as RequestInit)
         : undefined,
       maxURLLength: 2083,
       transformer: superjson,

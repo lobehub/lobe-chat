@@ -177,6 +177,14 @@ const isToolCallStreaming = (id: string, index: number) => (s: ChatStoreState) =
   return isLoading[index];
 };
 
+const isInToolsCalling = (id: string, index: number) => (s: ChatStoreState) => {
+  const isStreamingToolsCalling = isToolCallStreaming(id, index)(s);
+
+  const isInvokingPluginApi = s.messageInToolsCallingIds.includes(id);
+
+  return isStreamingToolsCalling || isInvokingPluginApi;
+};
+
 const isAIGenerating = (s: ChatStoreState) =>
   s.chatLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
 
@@ -223,6 +231,7 @@ export const chatSelectors = {
   isCreatingMessage,
   isCurrentChatLoaded,
   isHasMessageLoading,
+  isInToolsCalling,
   isMessageEditing,
   isMessageGenerating,
   isMessageInChatReasoning,

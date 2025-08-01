@@ -1,6 +1,8 @@
 import { ModelProvider } from '../types';
 import { MODEL_LIST_CONFIGS, processModelList } from '../utils/modelParse';
 import { createOpenAICompatibleRuntime } from '../utils/openaiCompatibleFactory';
+import { OpenAIStream } from '../utils/streams/openai';
+import { convertIterableToStream } from '../utils/streams/protocol';
 
 export interface ZhipuModelCard {
   description: string;
@@ -12,7 +14,8 @@ export const LobeZhipuAI = createOpenAICompatibleRuntime({
   baseURL: 'https://open.bigmodel.cn/api/paas/v4',
   chatCompletion: {
     handlePayload: (payload) => {
-      const { enabledSearch, max_tokens, model, temperature, tools, top_p, ...rest } = payload;
+      const { enabledSearch, max_tokens, model, temperature, thinking, tools, top_p, ...rest } =
+        payload;
 
       const zhipuTools = enabledSearch
         ? [
@@ -39,6 +42,7 @@ export const LobeZhipuAI = createOpenAICompatibleRuntime({
               max_tokens,
         model,
         stream: true,
+        thinking: model.includes('-4.5') ? { type: thinking?.type } : undefined,
         tools: zhipuTools,
         ...(model === 'glm-4-alltools'
           ? {
@@ -53,6 +57,58 @@ export const LobeZhipuAI = createOpenAICompatibleRuntime({
               top_p,
             }),
       } as any;
+    },
+    handleStream: (stream, { callbacks, inputStartAt }) => {
+      const readableStream =
+        stream instanceof ReadableStream ? stream : convertIterableToStream(stream);
+
+      // GLM-4.5 系列模型在 tool_calls 中返回的 index 为 -1，需要在进入 OpenAIStream 之前修正
+      // 因为 OpenAIStream 内部会过滤掉 index < 0 的 tool_calls (openai.ts:58-60)
+      const preprocessedStream = readableStream.pipeThrough(
+        new TransformStream({
+          transform(chunk, controller) {
+            // 处理原始的 OpenAI ChatCompletionChunk 格式
+            if (chunk.choices && chunk.choices[0]) {
+              const choice = chunk.choices[0];
+              if (choice.delta?.tool_calls && Array.isArray(choice.delta.tool_calls)) {
+                // 修正负数 index，将 -1 转换为基于数组位置的正数 index
+                const fixedToolCalls = choice.delta.tool_calls.map(
+                  (toolCall: any, globalIndex: number) => ({
+                    ...toolCall,
+                    index: toolCall.index < 0 ? globalIndex : toolCall.index,
+                  }),
+                );
+
+                // 创建修正后的 chunk
+                const fixedChunk = {
+                  ...chunk,
+                  choices: [
+                    {
+                      ...choice,
+                      delta: {
+                        ...choice.delta,
+                        tool_calls: fixedToolCalls,
+                      },
+                    },
+                  ],
+                };
+
+                controller.enqueue(fixedChunk);
+              } else {
+                controller.enqueue(chunk);
+              }
+            } else {
+              controller.enqueue(chunk);
+            }
+          },
+        }),
+      );
+
+      return OpenAIStream(preprocessedStream, {
+        callbacks,
+        inputStartAt,
+        provider: 'zhipu',
+      });
     },
   },
   debug: {

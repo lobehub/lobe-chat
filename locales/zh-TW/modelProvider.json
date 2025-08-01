@@ -189,6 +189,7 @@
       "aesGcm": "您的秘鑰與代理地址等將使用 <1>AES-GCM</1> 加密算法進行加密",
       "apiKey": {
         "desc": "請填寫你的 {{name}} API Key",
+        "descWithUrl": "請填寫你的 {{name}} API Key，<3>點此獲取</3>",
         "placeholder": "{{name}} API Key",
         "title": "API Key"
       },

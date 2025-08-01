@@ -7,6 +7,27 @@ const doubaoChatModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+    },
+    config: {
+      deploymentName: 'kimi-k2-250711',
+    },
+    contextWindowTokens: 256_000,
+    description:
+      'Kimi-K2 是一款Moonshot AI推出的具备超强代码和 Agent 能力的 MoE 架构基础模型，总参数 1T，激活参数 32B。在通用知识推理、编程、数学、Agent 等主要类别的基准性能测试中，K2 模型的性能超过其他主流开源模型。',
+    displayName: 'Kimi K2',
+    enabled: true,
+    id: 'kimi-k2',
+    maxOutput: 16_384,
+    pricing: {
+      currency: 'CNY',
+      input: 4,
+      output: 16,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
       reasoning: true,
       vision: true,
     },

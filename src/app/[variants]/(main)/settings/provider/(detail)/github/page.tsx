@@ -48,10 +48,10 @@ const useProviderCard = (): ProviderItem => {
         ),
         desc: (
           <Markdown className={styles.markdown} fontSize={12} variant={'chat'}>
-            {t(`github.personalAccessToken.desc`)}
+            {t('github.personalAccessToken.desc')}
           </Markdown>
         ),
-        label: t(`github.personalAccessToken.title`),
+        label: t('github.personalAccessToken.title'),
         name: [KeyVaultsConfigKey, LLMProviderApiTokenKey],
       },
     ],

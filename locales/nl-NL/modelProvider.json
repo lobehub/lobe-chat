@@ -189,6 +189,7 @@
       "aesGcm": "Je sleutel en proxy-adres worden versleuteld met <1>AES-GCM</1> encryptie-algoritme",
       "apiKey": {
         "desc": "Vul je {{name}} API-sleutel in",
+        "descWithUrl": "Vul je {{name}} API-sleutel in, <3>klik hier om deze te verkrijgen</3>",
         "placeholder": "{{name}} API-sleutel",
         "title": "API-sleutel"
       },

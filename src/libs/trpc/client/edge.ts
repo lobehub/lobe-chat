@@ -10,7 +10,8 @@ export const edgeClient = createTRPCClient<EdgeRouter>({
   links: [
     httpBatchLink({
       fetch: isDesktop
-        ? (input, init) => fetchWithDesktopRemoteRPC(input as string, init)
+        ? // eslint-disable-next-line no-undef
+          (input, init) => fetchWithDesktopRemoteRPC(input as string, init as RequestInit)
         : undefined,
       headers: async () => {
         // dynamic import to avoid circular dependency

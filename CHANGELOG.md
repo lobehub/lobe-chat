@@ -2,6 +2,248 @@
 
 # Changelog
 
+### [Version 1.107.1](https://github.com/lobehub/lobe-chat/compare/v1.107.0...v1.107.1)
+
+<sup>Released on **2025-08-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update i18n, closes [#8629](https://github.com/lobehub/lobe-chat/issues/8629) ([3b87fe7](https://github.com/lobehub/lobe-chat/commit/3b87fe7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.107.0](https://github.com/lobehub/lobe-chat/compare/v1.106.8...v1.107.0)
+
+<sup>Released on **2025-08-01**</sup>
+
+#### ✨ Features
+
+- **misc**: Support aihubmix provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support aihubmix provider, closes [#8038](https://github.com/lobehub/lobe-chat/issues/8038) ([4db6485](https://github.com/lobehub/lobe-chat/commit/4db6485))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.106.8](https://github.com/lobehub/lobe-chat/compare/v1.106.7...v1.106.8)
+
+<sup>Released on **2025-07-31**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support SenseNova V6.5 models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support SenseNova V6.5 models, closes [#8569](https://github.com/lobehub/lobe-chat/issues/8569) ([411ed7e](https://github.com/lobehub/lobe-chat/commit/411ed7e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.106.7](https://github.com/lobehub/lobe-chat/compare/v1.106.6...v1.106.7)
+
+<sup>Released on **2025-07-31**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Aliyun Bailian models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Aliyun Bailian models, closes [#8612](https://github.com/lobehub/lobe-chat/issues/8612) ([433e679](https://github.com/lobehub/lobe-chat/commit/433e679))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.106.6](https://github.com/lobehub/lobe-chat/compare/v1.106.5...v1.106.6)
+
+<sup>Released on **2025-07-31**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix oidc oauth callback pages 404.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix oidc oauth callback pages 404, closes [#8620](https://github.com/lobehub/lobe-chat/issues/8620) ([d136b6e](https://github.com/lobehub/lobe-chat/commit/d136b6e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.106.5](https://github.com/lobehub/lobe-chat/compare/v1.106.4...v1.106.5)
+
+<sup>Released on **2025-07-30**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve mcp plugin calling and display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve mcp plugin calling and display, closes [#8619](https://github.com/lobehub/lobe-chat/issues/8619) ([14c41c4](https://github.com/lobehub/lobe-chat/commit/14c41c4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.106.4](https://github.com/lobehub/lobe-chat/compare/v1.106.3...v1.106.4)
+
+<sup>Released on **2025-07-30**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix mcp calling missing array content.
+
+#### 💄 Styles
+
+- **misc**: Update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix mcp calling missing array content, closes [#8615](https://github.com/lobehub/lobe-chat/issues/8615) ([b7f8e6e](https://github.com/lobehub/lobe-chat/commit/b7f8e6e))
+
+#### Styles
+
+- **misc**: Update i18n, closes [#8609](https://github.com/lobehub/lobe-chat/issues/8609) ([21cac39](https://github.com/lobehub/lobe-chat/commit/21cac39))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.106.3](https://github.com/lobehub/lobe-chat/compare/v1.106.2...v1.106.3)
+
+<sup>Released on **2025-07-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Moonshot assistant messages must not be empty.
+
+#### 💄 Styles
+
+- **misc**: Add volcengine kimi-k2 model, Add Zhipu GLM-4.5 models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Moonshot assistant messages must not be empty, closes [#8419](https://github.com/lobehub/lobe-chat/issues/8419) ([a796495](https://github.com/lobehub/lobe-chat/commit/a796495))
+
+#### Styles
+
+- **misc**: Add volcengine kimi-k2 model, closes [#8591](https://github.com/lobehub/lobe-chat/issues/8591) ([9630167](https://github.com/lobehub/lobe-chat/commit/9630167))
+- **misc**: Add Zhipu GLM-4.5 models, closes [#8590](https://github.com/lobehub/lobe-chat/issues/8590) ([4f4620c](https://github.com/lobehub/lobe-chat/commit/4f4620c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.106.2](https://github.com/lobehub/lobe-chat/compare/v1.106.1...v1.106.2)
+
+<sup>Released on **2025-07-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix desktop auth redirect url error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix desktop auth redirect url error, closes [#8597](https://github.com/lobehub/lobe-chat/issues/8597) ([0ed7368](https://github.com/lobehub/lobe-chat/commit/0ed7368))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.106.1](https://github.com/lobehub/lobe-chat/compare/v1.106.0...v1.106.1)
 
 <sup>Released on **2025-07-29**</sup>

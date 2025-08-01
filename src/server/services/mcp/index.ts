@@ -166,8 +166,11 @@ class MCPService {
 
       const data = content as { text: string; type: 'text' }[];
 
-      const text = data?.[0]?.text;
+      if (!data || data.length === 0) return data;
 
+      if (data.length > 1) return data;
+
+      const text = data[0]?.text;
       if (!text) return data;
 
       // try to get json object, which will be stringify in the client

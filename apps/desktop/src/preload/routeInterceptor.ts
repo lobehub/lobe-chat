@@ -25,6 +25,34 @@ export const setupRouteInterceptors = function () {
   // 存储被阻止的路径，避免pushState重复触发
   const preventedPaths = new Set<string>();
 
+  // 重写 window.open 方法来拦截 JavaScript 调用
+  const originalWindowOpen = window.open;
+  window.open = function (url?: string | URL, target?: string, features?: string) {
+    if (url) {
+      try {
+        const urlString = typeof url === 'string' ? url : url.toString();
+        const urlObj = new URL(urlString, window.location.href);
+
+        // 检查是否为外部链接
+        if (urlObj.origin !== window.location.origin) {
+          console.log(`[preload] Intercepted window.open for external URL:`, urlString);
+          // 调用主进程处理外部链接
+          invoke('openExternalLink', urlString);
+          return null; // 返回 null 表示没有打开新窗口
+        }
+      } catch (error) {
+        // 处理无效 URL 或特殊协议
+        console.error(`[preload] Intercepted window.open for special protocol:`, url);
+        console.error(error);
+        invoke('openExternalLink', typeof url === 'string' ? url : url.toString());
+        return null;
+      }
+    }
+
+    // 对于内部链接，调用原始的 window.open
+    return originalWindowOpen.call(window, url, target, features);
+  };
+
   // 拦截所有a标签的点击事件 - 针对Next.js的Link组件
   document.addEventListener(
     'click',

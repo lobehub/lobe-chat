@@ -24,6 +24,7 @@ export const AiProviderSDKEnum = {
   Ollama: 'ollama',
   Openai: 'openai',
   Qwen: 'qwen',
+  Router: 'router',
   Volcengine: 'volcengine',
 } as const;
 

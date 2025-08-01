@@ -283,6 +283,8 @@ export const chatPlugin: StateCreator<
 
     await Promise.all(messagePools);
 
+    await get().internal_toggleMessageInToolsCalling(false, assistantId);
+
     // only default type tool calls should trigger AI message
     if (!shouldCreateMessage) return;
 

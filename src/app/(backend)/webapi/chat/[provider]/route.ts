@@ -1,10 +1,10 @@
 import { checkAuth } from '@/app/(backend)/middleware/auth';
 import {
   AGENT_RUNTIME_ERROR_SET,
-  AgentRuntime,
   ChatCompletionErrorPayload,
+  ModelRuntime,
 } from '@/libs/model-runtime';
-import { createTraceOptions, initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
+import { createTraceOptions, initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
 import { createErrorResponse } from '@/utils/errorResponse';
@@ -17,11 +17,11 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload, createR
 
   try {
     // ============  1. init chat model   ============ //
-    let agentRuntime: AgentRuntime;
+    let modelRuntime: ModelRuntime;
     if (createRuntime) {
-      agentRuntime = createRuntime(jwtPayload);
+      modelRuntime = createRuntime(jwtPayload);
     } else {
-      agentRuntime = await initAgentRuntimeWithUserPayload(provider, jwtPayload);
+      modelRuntime = await initModelRuntimeWithUserPayload(provider, jwtPayload);
     }
 
     // ============  2. create chat completion   ============ //
@@ -36,7 +36,7 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload, createR
       traceOptions = createTraceOptions(data, { provider, trace: tracePayload });
     }
 
-    return await agentRuntime.chat(data, {
+    return await modelRuntime.chat(data, {
       user: jwtPayload.userId,
       ...traceOptions,
       signal: req.signal,

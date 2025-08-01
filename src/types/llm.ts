@@ -72,6 +72,10 @@ export type ResponseAnimation =
 
 export interface ModelProviderCard {
   /**
+   * url to get api key
+   */
+  apiKeyUrl?: string;
+  /**
    * @deprecated
    */
   chatModels: ChatModelCard[];

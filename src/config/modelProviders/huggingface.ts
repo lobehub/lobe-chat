@@ -1,6 +1,7 @@
 import { ModelProviderCard } from '@/types/llm';
 
 const HuggingFace: ModelProviderCard = {
+  apiKeyUrl: 'https://huggingface.co/settings/tokens',
   chatModels: [
     {
       contextWindowTokens: 32_768,
