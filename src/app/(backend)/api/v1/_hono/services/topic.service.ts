@@ -1,4 +1,4 @@
-import { and, asc, count, eq, sql } from 'drizzle-orm';
+import { and, asc, count, eq, ilike } from 'drizzle-orm';
 
 import { MessageItem, messages, topics, users } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
@@ -46,7 +46,7 @@ export class TopicService extends BaseService {
 
       // 如果有关键词，添加标题的模糊搜索条件
       if (keyword) {
-        whereConditions.push(sql`${topics.title} LIKE ${`%${keyword}%`}`);
+        whereConditions.push(ilike(topics.title, `%${keyword}%`));
       }
 
       // 使用联查和子查询来统计每个话题的消息数量，并获取用户信息

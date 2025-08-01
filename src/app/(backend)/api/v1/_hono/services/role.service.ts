@@ -67,7 +67,7 @@ export class RoleService extends BaseService {
    * @returns Promise<PermissionItem[]> - Array of permissions
    */
   async getRolePermissions(id: number): Promise<Partial<PermissionItem>[]> {
-    const result = await this.db
+    return await this.db
       .select({
         category: permissions.category,
         code: permissions.code,
@@ -79,8 +79,6 @@ export class RoleService extends BaseService {
       .from(permissions)
       .innerJoin(rolePermissions, eq(rolePermissions.permissionId, permissions.id))
       .where(eq(rolePermissions.roleId, id));
-
-    return result;
   }
 
   /**
