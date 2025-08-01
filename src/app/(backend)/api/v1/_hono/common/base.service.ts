@@ -6,8 +6,8 @@ import { RbacModel } from '@/database/models/rbac';
 import { agents, sessions, topics } from '@/database/schemas';
 import { LobeChatDatabase } from '@/database/type';
 
-import { IBaseService, TTarget, TBatchTarget } from '../types';
-import { getActionType, getResourceType } from '../utils/permission';
+import { getActionType, getResourceType } from '../helpers/permission';
+import { IBaseService, TBatchTarget, TTarget } from '../types';
 
 /**
  * Base service class
