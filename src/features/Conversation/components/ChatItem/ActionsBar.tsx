@@ -49,6 +49,7 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
     resendThreadMessage,
     delAndResendThreadMessage,
     toggleMessageEditing,
+    updateInputMessage,
   ] = useChatStore((s) => [
     s.deleteMessage,
     s.regenerateMessage,
@@ -60,6 +61,7 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
     s.resendThreadMessage,
     s.delAndResendThreadMessage,
     s.toggleMessageEditing,
+    s.updateInputMessage,
   ]);
   const { message } = App.useApp();
   const virtuosoRef = use(VirtuosoContext);
@@ -67,12 +69,22 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
   const [showShareModal, setShareModal] = useState(false);
 
   const handleActionClick = useCallback(
-    async (action: ActionIconGroupEvent) => {
+    async (action: ActionIconGroupEvent & { selectedText?: string }) => {
       switch (action.key) {
         case 'edit': {
           toggleMessageEditing(id, true);
 
           virtuosoRef?.current?.scrollIntoView({ align: 'start', behavior: 'auto', index });
+          break;
+        }
+        case 'quote': {
+          if (action.selectedText) {
+            const currentInput = useChatStore.getState().inputMessage;
+            const quotedText = `> ${action.selectedText.replaceAll('\n', '\n> ')}\n\n`;
+            updateInputMessage(currentInput + quotedText);
+            message.success(t('quoteSuccess', { defaultValue: 'Text quoted successfully' }));
+          }
+          break;
         }
       }
       if (!item) return;
@@ -136,7 +148,7 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread, index }) => {
         translateMessage(id, lang);
       }
     },
-    [item],
+    [item, updateInputMessage, t, message],
   );
 
   const RenderFunction = renderActions[(item?.role || '') as MessageRoleType] ?? ActionsBar;
