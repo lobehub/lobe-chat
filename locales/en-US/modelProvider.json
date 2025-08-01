@@ -46,6 +46,11 @@
     "checker": {
       "desc": "Test if AccessKeyId / SecretAccessKey are filled in correctly"
     },
+    "profile": {
+      "desc": "Enter AWS profile name from your ~/.aws/credentials file. If provided, access keys are not required. Make sure the AWS CLI is properly configured with this profile.",
+      "placeholder": "AWS Profile Name",
+      "title": "AWS Profile (optional)"
+    },
     "region": {
       "desc": "Enter AWS Region",
       "placeholder": "AWS Region",

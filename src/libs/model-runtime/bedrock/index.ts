@@ -59,6 +59,7 @@ export function experimental_buildLlama2Prompt(messages: { content: string; role
 export interface LobeBedrockAIParams {
   accessKeyId?: string;
   accessKeySecret?: string;
+  profile?: string;
   region?: string;
   sessionToken?: string;
 }
@@ -68,18 +69,49 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
   region: string;
 
-  constructor({ region, accessKeyId, accessKeySecret, sessionToken }: LobeBedrockAIParams = {}) {
-    if (!(accessKeyId && accessKeySecret))
-      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
+  constructor({
+    region,
+    accessKeyId,
+    accessKeySecret,
+    sessionToken,
+    profile,
+  }: LobeBedrockAIParams = {}) {
     this.region = region ?? 'us-east-1';
-    this.client = new BedrockRuntimeClient({
-      credentials: {
-        accessKeyId: accessKeyId,
-        secretAccessKey: accessKeySecret,
-        sessionToken: sessionToken,
-      },
-      region: this.region,
-    });
+
+    try {
+      if (profile) {
+        const clientOptions: any = {
+          profile: profile,
+          region: this.region,
+        };
+
+        this.client = new BedrockRuntimeClient(clientOptions);
+      } else if (accessKeyId && accessKeySecret) {
+        // Use explicit credentials
+        this.client = new BedrockRuntimeClient({
+          credentials: {
+            accessKeyId: accessKeyId,
+            secretAccessKey: accessKeySecret,
+            sessionToken: sessionToken,
+          },
+          region: this.region,
+        });
+      } else {
+        throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
+      }
+    } catch (error) {
+      console.error('Error initializing Bedrock client:', error);
+      throw AgentRuntimeError.chat({
+        error: {
+          body: error,
+          message: error instanceof Error ? error.message : 'Failed to initialize Bedrock client',
+          type: error instanceof Error ? error.name : 'Error',
+        },
+        errorType: AgentRuntimeErrorType.ProviderBizError,
+        provider: ModelProvider.Bedrock,
+        region: this.region,
+      });
+    }
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {

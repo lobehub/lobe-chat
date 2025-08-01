@@ -32,6 +32,7 @@ export interface ClientSecretPayload {
   azureApiVersion?: string;
 
   awsAccessKeyId?: string;
+  awsProfile?: string;
   awsRegion?: string;
   awsSecretAccessKey?: string;
   awsSessionToken?: string;

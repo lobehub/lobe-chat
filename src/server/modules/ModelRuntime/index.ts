@@ -53,19 +53,36 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
     }
 
     case ModelProvider.Bedrock: {
-      const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SESSION_TOKEN } = llmConfig;
+      const {
+        AWS_SECRET_ACCESS_KEY,
+        AWS_ACCESS_KEY_ID,
+        AWS_REGION,
+        AWS_SESSION_TOKEN,
+        AWS_PROFILE,
+      } = llmConfig;
       let accessKeyId: string | undefined = AWS_ACCESS_KEY_ID;
       let accessKeySecret: string | undefined = AWS_SECRET_ACCESS_KEY;
-      let region = AWS_REGION;
+      let region = AWS_REGION || 'us-east-1';
       let sessionToken: string | undefined = AWS_SESSION_TOKEN;
-      // if the payload has the api key, use user
+      // In Node.js Runtime, we can use profiles
+      let profile: string | undefined = AWS_PROFILE;
+
+      // if the payload has the api key, use user credentials
       if (payload.apiKey) {
-        accessKeyId = payload?.awsAccessKeyId;
-        accessKeySecret = payload?.awsSecretAccessKey;
-        sessionToken = payload?.awsSessionToken;
-        region = payload?.awsRegion;
+        profile = payload?.awsProfile || profile;
+        accessKeyId = payload?.awsAccessKeyId || accessKeyId;
+        accessKeySecret = payload?.awsSecretAccessKey || accessKeySecret;
+        sessionToken = payload?.awsSessionToken || sessionToken;
+        region = payload.awsRegion;
       }
-      return { accessKeyId, accessKeySecret, region, sessionToken };
+
+      return {
+        accessKeyId,
+        accessKeySecret,
+        profile,
+        region,
+        sessionToken,
+      };
     }
 
     case ModelProvider.Cloudflare: {

@@ -3,7 +3,7 @@
 import { Select } from '@lobehub/ui';
 import { useTranslation } from 'react-i18next';
 
-import { FormPassword } from '@/components/FormInput';
+import { FormInput, FormPassword } from '@/components/FormInput';
 import { BedrockProviderCard } from '@/config/modelProviders';
 import { aiProviderSelectors, useAiInfraStore } from '@/store/aiInfra';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
@@ -23,6 +23,16 @@ const useBedrockCard = (): ProviderItem => {
   return {
     ...BedrockProviderCard,
     apiKeyItems: [
+      {
+        children: isLoading ? (
+          <SkeletonInput />
+        ) : (
+          <FormInput placeholder={t(`${providerKey}.profile.placeholder`)} />
+        ),
+        desc: t(`${providerKey}.profile.desc`),
+        label: t(`${providerKey}.profile.title`),
+        name: [KeyVaultsConfigKey, 'profile'],
+      },
       {
         children: isLoading ? (
           <SkeletonInput />

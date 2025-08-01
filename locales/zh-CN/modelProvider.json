@@ -46,6 +46,11 @@
     "checker": {
       "desc": "测试 AccessKeyId / SecretAccessKey 是否填写正确"
     },
+    "profile": {
+      "desc": "输入您 ~/.aws/credentials 文件中的 AWS 配置文件名称。如果提供了配置文件，则无需输入访问密钥。请确保已使用此配置文件正确配置 AWS CLI。",
+      "placeholder": "AWS 配置文件名称",
+      "title": "AWS 配置文件（可选）"
+    },
     "region": {
       "desc": "填入 AWS Region",
       "placeholder": "AWS Region",

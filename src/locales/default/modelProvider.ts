@@ -47,6 +47,11 @@ export default {
     checker: {
       desc: '测试 AccessKeyId / SecretAccessKey 是否填写正确',
     },
+    profile: {
+      desc: '填入 AWS Profile 名称，例如 default。如果你不确定，请留空',
+      placeholder: 'AWS Profile 名称',
+      title: 'AWS Profile',
+    },
     region: {
       desc: '填入 AWS Region',
       placeholder: 'AWS Region',
