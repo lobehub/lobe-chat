@@ -3,9 +3,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FileModel } from '@/database/models/file';
 import { TempFileManager } from '@/server/utils/tempFileManager';
+import { TRPCErrorMessage } from '@/types/files';
 
 import { FileService } from '../index';
-import { TRPCErrorMessage } from '@/types/files';
 
 vi.mock('@/config/db', () => ({
   serverDBEnv: {
@@ -87,7 +87,7 @@ describe('FileService', () => {
       vi.mocked(service['impl'].getFileByteArray).mockResolvedValue(undefined as any);
 
       await expect(service.downloadFileToLocal('test-file-id')).rejects.toThrow(
-        new TRPCError({ code: 'BAD_REQUEST', message: TRPCErrorMessage.FileContentEmpty }),
+        new TRPCError({ code: 'BAD_REQUEST', message: TRPCErrorMessage.OrginFileNotFound }),
       );
     });
 
@@ -96,7 +96,7 @@ describe('FileService', () => {
       vi.mocked(service['impl'].getFileByteArray).mockRejectedValue({ Code: 'NoSuchKey' });
 
       await expect(service.downloadFileToLocal('test-file-id')).rejects.toThrow(
-        new TRPCError({ code: 'BAD_REQUEST', message: TRPCErrorMessage.FileNotFound }),
+        new TRPCError({ code: 'BAD_REQUEST', message: TRPCErrorMessage.OrginFileNotFound }),
       );
 
       expect(mockFileModel.delete).toHaveBeenCalledWith('test-file-id', false);
@@ -108,7 +108,7 @@ describe('FileService', () => {
       vi.mocked(service['impl'].getFileByteArray).mockRejectedValue(originalError);
 
       await expect(service.downloadFileToLocal('test-file-id')).rejects.toThrow(
-        new TRPCError({ code: 'BAD_REQUEST', message: 'File content is empty' }),
+        new TRPCError({ code: 'BAD_REQUEST', message: TRPCErrorMessage.OrginFileNotFound }),
       );
 
       // 验证错误被记录到控制台
@@ -122,7 +122,7 @@ describe('FileService', () => {
       vi.mocked(service['impl'].getFileByteArray).mockResolvedValue(null as any);
 
       await expect(service.downloadFileToLocal('test-file-id')).rejects.toThrow(
-        new TRPCError({ code: 'BAD_REQUEST', message: 'File content is empty' }),
+        new TRPCError({ code: 'BAD_REQUEST', message: TRPCErrorMessage.OrginFileNotFound }),
       );
     });
 
