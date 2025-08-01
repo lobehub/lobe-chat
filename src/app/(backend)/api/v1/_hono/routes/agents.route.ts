@@ -5,7 +5,7 @@ import { RBAC_PERMISSIONS } from '@/const/rbac';
 import { getScopePermissions } from '@/utils/rbac';
 
 import { AgentController } from '../controllers/agent.controller';
-import { requireAuth } from '../middleware/oidc-auth';
+import { requireAuth } from '../middleware/auth';
 import { requireAnyPermission } from '../middleware/permission-check';
 import {
   AgentIdParamSchema,

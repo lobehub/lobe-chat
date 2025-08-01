@@ -1,2 +1,2 @@
-export * from './oidc-auth';
+export * from './auth';
 export * from './permission-check';
