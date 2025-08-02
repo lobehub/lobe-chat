@@ -189,6 +189,7 @@
       "aesGcm": "Khóa của bạn và địa chỉ proxy sẽ được mã hóa bằng thuật toán <1>AES-GCM</1>",
       "apiKey": {
         "desc": "Vui lòng nhập {{name}} API Key của bạn",
+        "descWithUrl": "Vui lòng nhập {{name}} API Key của bạn, <3>nhấn vào đây để lấy</3>",
         "placeholder": "{{name}} API Key",
         "title": "API Key"
       },

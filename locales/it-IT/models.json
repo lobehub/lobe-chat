@@ -326,6 +326,9 @@
   "Qwen/Qwen3-30B-A3B": {
     "description": "Qwen3 è un nuovo modello di Tongyi Qianwen con capacità notevolmente migliorate, raggiungendo livelli leader del settore in ragionamento, generico, agenti e multilingue, e supporta il passaggio della modalità di pensiero."
   },
+  "Qwen/Qwen3-30B-A3B-Instruct-2507": {
+    "description": "Qwen3-30B-A3B-Instruct-2507 è una versione aggiornata della modalità non pensante di Qwen3-30B-A3B. Si tratta di un modello esperto misto (MoE) con un totale di 30,5 miliardi di parametri e 3,3 miliardi di parametri attivi. Il modello presenta miglioramenti chiave in diversi ambiti, tra cui un significativo potenziamento nella capacità di seguire istruzioni, ragionamento logico, comprensione del testo, matematica, scienze, programmazione e utilizzo di strumenti. Inoltre, ha fatto progressi sostanziali nella copertura della conoscenza multilingue a coda lunga e si allinea meglio alle preferenze degli utenti in compiti soggettivi e aperti, permettendo di generare risposte più utili e testi di qualità superiore. La capacità di comprensione di testi lunghi è stata estesa fino a 256K. Questo modello supporta esclusivamente la modalità non pensante e non genera tag `<think></think>` nell'output."
+  },
   "Qwen/Qwen3-32B": {
     "description": "Qwen3 è un nuovo modello di Tongyi Qianwen con capacità notevolmente migliorate, raggiungendo livelli leader del settore in ragionamento, generico, agenti e multilingue, e supporta il passaggio della modalità di pensiero."
   },
@@ -358,6 +361,12 @@
   },
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct è un grande modello linguistico progettato per la generazione di codice, la comprensione del codice e scenari di sviluppo efficienti, con una scala di 32 miliardi di parametri all'avanguardia nel settore, in grado di soddisfare esigenze di programmazione diversificate."
+  },
+  "Qwen3-235B": {
+    "description": "Qwen3-235B-A22B è un modello MoE (esperto misto) che introduce la “modalità di ragionamento ibrido”, consentendo agli utenti di passare senza soluzione di continuità tra la modalità “pensante” e quella “non pensante”. Supporta la comprensione e il ragionamento in 119 lingue e dialetti, dispone di potenti capacità di chiamata di strumenti e compete con i principali modelli di mercato come DeepSeek R1, OpenAI o1, o3-mini, Grok 3 e Google Gemini 2.5 Pro in vari benchmark relativi a capacità generali, codice e matematica, competenze multilingue, conoscenza e ragionamento."
+  },
+  "Qwen3-32B": {
+    "description": "Qwen3-32B è un modello denso (Dense Model) che introduce la “modalità di ragionamento ibrido”, permettendo agli utenti di passare senza soluzione di continuità tra la modalità “pensante” e quella “non pensante”. Grazie a miglioramenti nell'architettura del modello, all'aumento dei dati di addestramento e a metodi di training più efficaci, le prestazioni complessive sono comparabili a quelle di Qwen2.5-72B."
   },
   "SenseChat": {
     "description": "Modello di base (V4), lunghezza del contesto di 4K, con potenti capacità generali."
@@ -394,6 +403,12 @@
   },
   "SenseChat-Vision": {
     "description": "L'ultima versione del modello (V5.5) supporta l'input di più immagini, ottimizzando le capacità di base del modello, con notevoli miglioramenti nel riconoscimento delle proprietà degli oggetti, nelle relazioni spaziali, nel riconoscimento degli eventi, nella comprensione delle scene, nel riconoscimento delle emozioni, nel ragionamento logico e nella comprensione e generazione del testo."
+  },
+  "SenseNova-V6-5-Pro": {
+    "description": "Attraverso un aggiornamento completo dei dati multimodali, linguistici e di ragionamento e l'ottimizzazione delle strategie di addestramento, il nuovo modello ha ottenuto miglioramenti significativi nelle capacità di ragionamento multimodale e nel seguire istruzioni generalizzate. Supporta una finestra contestuale fino a 128k e si distingue in compiti specializzati come il riconoscimento OCR e l'identificazione di IP culturali e turistici."
+  },
+  "SenseNova-V6-5-Turbo": {
+    "description": "Attraverso un aggiornamento completo dei dati multimodali, linguistici e di ragionamento e l'ottimizzazione delle strategie di addestramento, il nuovo modello ha ottenuto miglioramenti significativi nelle capacità di ragionamento multimodale e nel seguire istruzioni generalizzate. Supporta una finestra contestuale fino a 128k e si distingue in compiti specializzati come il riconoscimento OCR e l'identificazione di IP culturali e turistici."
   },
   "SenseNova-V6-Pro": {
     "description": "Realizza un'unificazione nativa delle capacità di immagini, testi e video, superando i limiti tradizionali della multimodalità disgiunta, e ha conquistato il doppio campionato nelle valutazioni OpenCompass e SuperCLUE."
@@ -2371,6 +2386,12 @@
   },
   "qwen3-30b-a3b": {
     "description": "Qwen3 è un modello di nuova generazione con capacità notevolmente migliorate, raggiungendo livelli leader del settore in inferenza, generazione generale, agenti e multilinguismo, e supporta il passaggio tra modalità di pensiero."
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "Rispetto alla versione precedente (Qwen3-30B-A3B), le capacità generali in cinese, inglese e multilingue sono state notevolmente migliorate. Ottimizzazione specifica per compiti soggettivi e aperti, con un allineamento molto più marcato alle preferenze degli utenti, in grado di fornire risposte più utili."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Modello open source in modalità pensante basato su Qwen3, che rispetto alla versione precedente (Tongyi Qianwen 3-30B-A3B) presenta miglioramenti significativi nelle capacità logiche, generali, di conoscenza e creative, adatto a scenari complessi che richiedono un ragionamento avanzato."
   },
   "qwen3-32b": {
     "description": "Qwen3 è un modello di nuova generazione con capacità notevolmente migliorate, raggiungendo livelli leader del settore in inferenza, generazione generale, agenti e multilinguismo, e supporta il passaggio tra modalità di pensiero."

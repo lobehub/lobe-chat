@@ -326,6 +326,9 @@
   "Qwen/Qwen3-30B-A3B": {
     "description": "Qwen3 là một mô hình lớn thế hệ mới của Tongyi Qianwen với khả năng nâng cao đáng kể, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
   },
+  "Qwen/Qwen3-30B-A3B-Instruct-2507": {
+    "description": "Qwen3-30B-A3B-Instruct-2507 là phiên bản cập nhật của Qwen3-30B-A3B ở chế độ không suy nghĩ. Đây là một mô hình chuyên gia hỗn hợp (MoE) với tổng cộng 30,5 tỷ tham số và 3,3 tỷ tham số kích hoạt. Mô hình này đã được cải tiến quan trọng ở nhiều khía cạnh, bao gồm nâng cao đáng kể khả năng tuân thủ chỉ dẫn, suy luận logic, hiểu văn bản, toán học, khoa học, lập trình và sử dụng công cụ. Đồng thời, nó đạt được tiến bộ thực chất trong việc bao phủ kiến thức đa ngôn ngữ và có khả năng điều chỉnh tốt hơn với sở thích của người dùng trong các nhiệm vụ chủ quan và mở, từ đó tạo ra các phản hồi hữu ích hơn và văn bản chất lượng cao hơn. Ngoài ra, khả năng hiểu văn bản dài của mô hình cũng được nâng lên đến 256K. Mô hình này chỉ hỗ trợ chế độ không suy nghĩ và không tạo ra thẻ `<think></think>` trong đầu ra."
+  },
   "Qwen/Qwen3-32B": {
     "description": "Qwen3 là một mô hình lớn thế hệ mới của Tongyi Qianwen với khả năng nâng cao đáng kể, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
   },
@@ -358,6 +361,12 @@
   },
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct là một mô hình ngôn ngữ lớn được thiết kế đặc biệt cho việc tạo mã, hiểu mã và các tình huống phát triển hiệu quả, với quy mô 32B tham số hàng đầu trong ngành, có thể đáp ứng nhu cầu lập trình đa dạng."
+  },
+  "Qwen3-235B": {
+    "description": "Qwen3-235B-A22B là mô hình MoE (mô hình chuyên gia hỗn hợp), giới thiệu “chế độ suy luận hỗn hợp”, cho phép người dùng chuyển đổi liền mạch giữa “chế độ suy nghĩ” và “chế độ không suy nghĩ”. Mô hình hỗ trợ hiểu và suy luận bằng 119 ngôn ngữ và phương ngữ, đồng thời có khả năng gọi công cụ mạnh mẽ. Trong các bài kiểm tra chuẩn về năng lực tổng hợp, mã hóa và toán học, đa ngôn ngữ, kiến thức và suy luận, mô hình có thể cạnh tranh với các mô hình lớn hàng đầu trên thị trường hiện nay như DeepSeek R1, OpenAI o1, o3-mini, Grok 3 và Google Gemini 2.5 Pro."
+  },
+  "Qwen3-32B": {
+    "description": "Qwen3-32B là mô hình đặc (Dense Model), giới thiệu “chế độ suy luận hỗn hợp”, cho phép người dùng chuyển đổi liền mạch giữa “chế độ suy nghĩ” và “chế độ không suy nghĩ”. Nhờ cải tiến kiến trúc mô hình, tăng dữ liệu huấn luyện và phương pháp huấn luyện hiệu quả hơn, hiệu suất tổng thể tương đương với Qwen2.5-72B."
   },
   "SenseChat": {
     "description": "Mô hình phiên bản cơ bản (V4), độ dài ngữ cảnh 4K, khả năng tổng quát mạnh mẽ."
@@ -394,6 +403,12 @@
   },
   "SenseChat-Vision": {
     "description": "Mô hình phiên bản mới nhất (V5.5), hỗ trợ đầu vào nhiều hình ảnh, hoàn thiện khả năng cơ bản của mô hình, đạt được sự cải thiện lớn trong nhận diện thuộc tính đối tượng, mối quan hệ không gian, nhận diện sự kiện hành động, hiểu cảnh, nhận diện cảm xúc, suy luận kiến thức logic và hiểu sinh ra văn bản."
+  },
+  "SenseNova-V6-5-Pro": {
+    "description": "Thông qua việc cập nhật toàn diện dữ liệu đa phương thức, ngôn ngữ và suy luận cùng với tối ưu hóa chiến lược huấn luyện, mô hình mới đạt được sự cải thiện đáng kể trong suy luận đa phương thức và khả năng tuân theo chỉ dẫn tổng quát, hỗ trợ cửa sổ ngữ cảnh lên đến 128k và thể hiện xuất sắc trong các nhiệm vụ chuyên biệt như nhận dạng OCR và nhận diện IP du lịch văn hóa."
+  },
+  "SenseNova-V6-5-Turbo": {
+    "description": "Thông qua việc cập nhật toàn diện dữ liệu đa phương thức, ngôn ngữ và suy luận cùng với tối ưu hóa chiến lược huấn luyện, mô hình mới đạt được sự cải thiện đáng kể trong suy luận đa phương thức và khả năng tuân theo chỉ dẫn tổng quát, hỗ trợ cửa sổ ngữ cảnh lên đến 128k và thể hiện xuất sắc trong các nhiệm vụ chuyên biệt như nhận dạng OCR và nhận diện IP du lịch văn hóa."
   },
   "SenseNova-V6-Pro": {
     "description": "Thực hiện sự thống nhất nguyên bản giữa hình ảnh, văn bản và video, vượt qua giới hạn phân tách đa phương thức truyền thống, giành được hai giải vô địch trong các đánh giá OpenCompass và SuperCLUE."
@@ -2371,6 +2386,12 @@
   },
   "qwen3-30b-a3b": {
     "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "So với phiên bản trước (Qwen3-30B-A3B), khả năng tổng quát của mô hình trong tiếng Trung, tiếng Anh và đa ngôn ngữ đã được cải thiện đáng kể. Mô hình được tối ưu hóa đặc biệt cho các nhiệm vụ mở và chủ quan, phù hợp hơn với sở thích người dùng và có thể cung cấp các phản hồi hữu ích hơn."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Dựa trên mô hình mã nguồn mở chế độ suy nghĩ của Qwen3, so với phiên bản trước (通义千问3-30B-A3B), khả năng logic, năng lực tổng quát, kiến thức được tăng cường và khả năng sáng tạo đều được cải thiện đáng kể, phù hợp cho các kịch bản suy luận phức tạp và khó khăn."
   },
   "qwen3-32b": {
     "description": "Qwen3 là một mô hình lớn thế hệ mới với khả năng vượt trội, đạt được trình độ hàng đầu trong nhiều khả năng cốt lõi như suy luận, tổng quát, đại lý và đa ngôn ngữ, đồng thời hỗ trợ chuyển đổi chế độ suy nghĩ."
