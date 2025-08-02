@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { AiModelType, ChatModelPricing } from '@/types/aiModel';
+import { AiModelSettings, AiModelType, ChatModelPricing } from '@/types/aiModel';
 import { AiProviderSettings } from '@/types/aiProvider';
 
 export type ModelPriceCurrency = 'CNY' | 'USD';
@@ -52,6 +52,8 @@ export interface ChatModelCard {
    * the date when model is released
    */
   releasedAt?: string;
+
+  settings?: AiModelSettings;
 
   type?: AiModelType;
 

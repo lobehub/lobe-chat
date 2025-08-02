@@ -126,22 +126,22 @@ const processModelCard = (
     displayName: model.displayName ?? knownModel?.displayName ?? model.id,
     enabled: knownModel?.enabled || false,
     functionCall:
-      (functionCallKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) &&
+      knownModel?.abilities?.functionCall ??
+      ((functionCallKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) &&
         !isExcludedModel) ||
-      knownModel?.abilities?.functionCall ||
-      false,
+        false),
     id: model.id,
     maxOutput: model.maxOutput ?? knownModel?.maxOutput ?? undefined,
     reasoning:
-      reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
-      knownModel?.abilities?.reasoning ||
-      false,
+      knownModel?.abilities?.reasoning ??
+      (reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) || false),
+    settings: model.settings ?? knownModel?.settings ?? undefined,
     type: model.type || knownModel?.type || 'chat',
     vision:
-      (visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) &&
+      knownModel?.abilities?.vision ??
+      ((visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) &&
         !isExcludedModel) ||
-      knownModel?.abilities?.vision ||
-      false,
+        false),
   };
 };
 

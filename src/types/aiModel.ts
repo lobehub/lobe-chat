@@ -270,6 +270,7 @@ export interface AiFullModelCard extends AIBaseModelCard {
   maxDimension?: number;
   parameters?: ModelParamsSchema;
   pricing?: ChatModelPricing;
+  settings?: AiModelSettings;
   type: AiModelType;
 }
 
