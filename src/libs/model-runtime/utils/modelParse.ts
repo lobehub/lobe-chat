@@ -136,7 +136,6 @@ const processModelCard = (
       reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
       knownModel?.abilities?.reasoning ||
       false,
-    settings: model.settings ?? knownModel?.settings ?? undefined,
     type: model.type || knownModel?.type || 'chat',
     vision:
       (visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) &&

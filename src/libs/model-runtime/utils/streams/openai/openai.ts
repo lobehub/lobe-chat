@@ -188,6 +188,13 @@ const transformOpenAIStream = (
       let reasoning_content = (() => {
         if ('reasoning_content' in item.delta) return item.delta.reasoning_content;
         if ('reasoning' in item.delta) return item.delta.reasoning;
+        // Handle thinking_blocks format (e.g. mistral AI Magistral model)
+        if ('thinking_blocks' in item.delta && Array.isArray(item.delta.thinking_blocks)) {
+          return item.delta.thinking_blocks
+            .filter((block: any) => block.type === 'thinking' && block.thinking)
+            .map((block: any) => block.thinking)
+            .join('');
+        }
         return null;
       })();
 
