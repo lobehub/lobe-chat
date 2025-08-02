@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.107.2](https://github.com/lobehub/lobe-chat/compare/v1.107.1...v1.107.2)
+
+<sup>Released on **2025-08-02**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Move types to separate package.
+
+#### 🐛 Bug Fixes
+
+- **desktop**: Settings window can't exit when fullscreen.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Move types to separate package, closes [#8635](https://github.com/lobehub/lobe-chat/issues/8635) ([3cc4a54](https://github.com/lobehub/lobe-chat/commit/3cc4a54))
+
+#### What's fixed
+
+- **desktop**: Settings window can't exit when fullscreen, closes [#8633](https://github.com/lobehub/lobe-chat/issues/8633) ([954eb2c](https://github.com/lobehub/lobe-chat/commit/954eb2c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.107.1](https://github.com/lobehub/lobe-chat/compare/v1.107.0...v1.107.1)
 
 <sup>Released on **2025-08-01**</sup>

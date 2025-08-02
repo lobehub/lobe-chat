@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Move types to separate package."]
+    },
+    "date": "2025-08-02",
+    "version": "1.107.2"
+  },
+  {
+    "children": {
       "improvements": ["Update i18n."]
     },
     "date": "2025-08-01",

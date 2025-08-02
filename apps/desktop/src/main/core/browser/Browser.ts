@@ -9,7 +9,7 @@ import {
 import { join } from 'node:path';
 
 import { buildDir, preloadDir, resourcesDir } from '@/const/dir';
-import { isDev, isWindows } from '@/const/env';
+import { isDev, isMac, isWindows } from '@/const/env';
 import {
   BACKGROUND_DARK,
   BACKGROUND_LIGHT,
@@ -269,7 +269,20 @@ export default class Browser {
 
   hide() {
     logger.debug(`Hiding window: ${this.identifier}`);
-    this.browserWindow.hide();
+
+    // Fix for macOS fullscreen black screen issue
+    // See: https://github.com/electron/electron/issues/20263
+    if (isMac && this.browserWindow.isFullScreen()) {
+      logger.debug(
+        `[${this.identifier}] Window is in fullscreen mode, exiting fullscreen before hiding.`,
+      );
+      this.browserWindow.once('leave-full-screen', () => {
+        this.browserWindow.hide();
+      });
+      this.browserWindow.setFullScreen(false);
+    } else {
+      this.browserWindow.hide();
+    }
   }
 
   close() {
@@ -413,7 +426,7 @@ export default class Browser {
         //   logger.error(`[${this.identifier}] Failed to save window state on hide:`, error);
         // }
         e.preventDefault();
-        browserWindow.hide();
+        this.hide();
       } else {
         // Window is actually closing (not keepAlive)
         logger.debug(
@@ -465,7 +478,7 @@ export default class Browser {
   toggleVisible() {
     logger.debug(`Toggling visibility for window: ${this.identifier}`);
     if (this._browserWindow.isVisible() && this._browserWindow.isFocused()) {
-      this._browserWindow.hide();
+      this.hide(); // Use the hide() method which handles fullscreen
     } else {
       this._browserWindow.show();
       this._browserWindow.focus();
