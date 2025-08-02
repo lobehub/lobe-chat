@@ -9,6 +9,7 @@ export default defineConfig({
   test: {
     alias: {
       /* eslint-disable sort-keys-fix/sort-keys-fix */
+<<<<<<< HEAD
       '@/libs/model-runtime': resolve(__dirname, './packages/model-runtime/src'),
       '@/database/_deprecated': resolve(__dirname, './src/database/_deprecated'),
       '@/database': resolve(__dirname, './packages/database/src'),
@@ -19,6 +20,9 @@ export default defineConfig({
       '@/utils': resolve(__dirname, './packages/utils/src'),
       '@/types': resolve(__dirname, './packages/types/src'),
       '@/const': resolve(__dirname, './packages/const/src'),
+=======
+      '@/types': resolve(__dirname, './packages/types/src'),
+>>>>>>> 20d1edf4e (♻️ refactor: move types to separate package (#8635))
       '@': resolve(__dirname, './src'),
       '~test-utils': resolve(__dirname, './tests/utils.tsx'),
       /* eslint-enable */
