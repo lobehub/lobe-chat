@@ -2,6 +2,23 @@
   "name": "@lobechat/types",
   "version": "1.0.0",
   "private": true,
+  "exports": {
+    "./*": {
+      "types": [
+        "./src/*.ts",
+        "./src/*/index.ts"
+      ],
+      "default": [
+        "./src/*.ts",
+        "./src/*/index.ts"
+      ]
+    }
+  }
+}
+{
+  "name": "@lobechat/types",
+  "version": "1.0.0",
+  "private": true,
   "main": "./src/index.ts",
   "dependencies": {
     "@lobechat/web-crawler": "workspace:*",
