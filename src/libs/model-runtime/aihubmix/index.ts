@@ -1,7 +1,6 @@
 import urlJoin from 'url-join';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
-import type { ChatModelCard } from '@/types/llm';
 
 import { createRouterRuntime } from '../RouterRuntime';
 import { ModelProvider } from '../types';
