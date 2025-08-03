@@ -17,13 +17,11 @@ export interface AiHubMixModelCard {
 const baseURL = 'https://aihubmix.com';
 
 export const LobeAiHubMixAI = createRouterRuntime({
-  constructorOptions: {
-    defaultHeaders: {
-      'APP-Code': 'LobeHub',
-    },
-  },
   debug: {
     chatCompletion: () => process.env.DEBUG_AIHUBMIX_CHAT_COMPLETION === '1',
+  },
+  defaultHeaders: {
+    'APP-Code': 'LobeHub',
   },
   id: ModelProvider.AiHubMix,
   models: async ({ client }) => {
