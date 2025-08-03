@@ -203,7 +203,7 @@ const processModelCard = (
 
   return {
     contextWindowTokens: model.contextWindowTokens ?? knownModel?.contextWindowTokens ?? undefined,
-    displayName: model.displayName ?? knownModel?.displayName ?? '',
+    displayName: model.displayName ?? knownModel?.displayName ?? model.id,
     enabled: knownModel?.enabled || false,
     functionCall:
       (isKeywordListMatch(model.id.toLowerCase(), functionCallKeywords) && !isExcludedModel) ||
