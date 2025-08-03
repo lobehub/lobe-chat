@@ -23,11 +23,6 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['thinking', '-2.5-'],
     visionKeywords: ['gemini', 'learnlm'],
   },
-  grok: {
-    functionCallKeywords: ['grok'],
-    reasoningKeywords: ['mini', 'grok-4'],
-    visionKeywords: ['vision', 'grok-4'],
-  },
   llama: {
     functionCallKeywords: ['llama-3.2', 'llama-3.3', 'llama-4'],
     reasoningKeywords: [],
@@ -68,6 +63,11 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['thinking', 'seed', 'ui-tars'],
     visionKeywords: ['vision', '-m', 'seed', 'ui-tars'],
   },
+  xai: {
+    functionCallKeywords: ['grok'],
+    reasoningKeywords: ['mini', 'grok-4'],
+    visionKeywords: ['vision', 'grok-4'],
+  },
   zeroone: {
     functionCallKeywords: ['fc'],
     visionKeywords: ['vision'],
@@ -84,7 +84,7 @@ export const PROVIDER_DETECTION_CONFIG = {
   anthropic: ['claude'],
   deepseek: ['deepseek'],
   google: ['gemini'],
-  grok: ['grok'],
+  xai: ['grok'],
   llama: ['llama', 'llava'],
   moonshot: ['moonshot', 'kimi'],
   openai: ['o1', 'o3', 'o4', 'gpt-'],
@@ -134,6 +134,40 @@ const isKeywordListMatch = (modelId: string, keywords: readonly string[]): boole
 };
 
 /**
+ * 根据提供商类型查找对应的本地模型配置
+ * @param modelId 模型ID
+ * @param provider 提供商类型
+ * @returns 匹配的本地模型配置
+ */
+const findKnownModelByProvider = async (
+  modelId: string,
+  provider: keyof typeof MODEL_LIST_CONFIGS,
+): Promise<any> => {
+  const lowerModelId = modelId.toLowerCase();
+
+  try {
+    // 动态构建导入路径
+    const modulePath = `@/config/aiModels/${provider}`;
+    
+    // 尝试动态导入对应的配置文件
+    const moduleImport = await import(modulePath);
+    const providerModels = moduleImport.default;
+
+    // 如果导入成功且有数据，进行查找
+    if (Array.isArray(providerModels)) {
+      return providerModels.find(
+        (m) => m.id.toLowerCase() === lowerModelId,
+      );
+    }
+
+    return null;
+  } catch (error) {
+    // 如果导入失败（文件不存在或其他错误），返回 null
+    return null;
+  }
+};
+
+/**
  * 检测单个模型的提供商类型
  * @param modelId 模型ID
  * @returns 检测到的提供商配置键名，默认为 'openai'
@@ -171,7 +205,7 @@ const processModelCard = (
 
   return {
     contextWindowTokens: model.contextWindowTokens ?? knownModel?.contextWindowTokens ?? undefined,
-    displayName: model.displayName ?? knownModel?.displayName ?? model.id,
+    displayName: knownModel?.displayName ?? model.displayName ?? model.id,
     enabled: knownModel?.enabled || false,
     functionCall:
       (isKeywordListMatch(model.id.toLowerCase(), functionCallKeywords) &&
@@ -197,23 +231,35 @@ const processModelCard = (
  * 处理单一提供商的模型列表
  * @param modelList 模型列表
  * @param config 提供商配置
+ * @param provider 提供商类型（可选，用于优先匹配对应的本地配置）
  * @returns 处理后的模型卡片列表
  */
 export const processModelList = async (
   modelList: Array<{ id: string }>,
   config: ModelProcessorConfig,
+  provider?: keyof typeof MODEL_LIST_CONFIGS,
 ): Promise<ChatModelCard[]> => {
   const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-  return modelList
-    .map((model) => {
-      const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
-        (m) => model.id.toLowerCase() === m.id.toLowerCase(),
-      );
+  return Promise.all(
+    modelList.map(async (model) => {
+      let knownModel: any = null;
+
+      // 如果提供了provider，优先使用提供商特定的配置
+      if (provider) {
+        knownModel = await findKnownModelByProvider(model.id, provider);
+      }
+
+      // 如果未找到，回退到全局配置
+      if (!knownModel) {
+        knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+          (m) => model.id.toLowerCase() === m.id.toLowerCase(),
+        );
+      }
 
       return processModelCard(model, config, knownModel);
-    })
-    .filter(Boolean);
+    }),
+  ).then(results => results.filter(Boolean));
 };
 
 /**
@@ -226,16 +272,22 @@ export const processMultiProviderModelList = async (
 ): Promise<ChatModelCard[]> => {
   const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
-  return modelList
-    .map((model) => {
+  return Promise.all(
+    modelList.map(async (model) => {
       const detectedProvider = detectModelProvider(model.id);
       const config = MODEL_LIST_CONFIGS[detectedProvider];
 
-      const knownModel = LOBE_DEFAULT_MODEL_LIST.find(
-        (m) => model.id.toLowerCase() === m.id.toLowerCase(),
-      );
+      // 优先使用提供商特定的配置
+      let knownModel = await findKnownModelByProvider(model.id, detectedProvider);
+      
+      // 如果未找到，回退到全局配置
+      if (!knownModel) {
+        knownModel = LOBE_DEFAULT_MODEL_LIST.find(
+          (m) => model.id.toLowerCase() === m.id.toLowerCase(),
+        );
+      }
 
       return processModelCard(model, config, knownModel);
-    })
-    .filter(Boolean);
+    }),
+  ).then(results => results.filter(Boolean));
 };
