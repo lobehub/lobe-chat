@@ -84,13 +84,13 @@ export const PROVIDER_DETECTION_CONFIG = {
   anthropic: ['claude'],
   deepseek: ['deepseek'],
   google: ['gemini'],
-  xai: ['grok'],
   llama: ['llama', 'llava'],
   moonshot: ['moonshot', 'kimi'],
   openai: ['o1', 'o3', 'o4', 'gpt-'],
   qwen: ['qwen', 'qwq', 'qvq'],
   v0: ['v0'],
   volcengine: ['doubao'],
+  xai: ['grok'],
   zeroone: ['yi-'],
   zhipu: ['glm'],
 } as const;
@@ -161,7 +161,7 @@ const findKnownModelByProvider = async (
     }
 
     return null;
-  } catch (error) {
+  } catch {
     // 如果导入失败（文件不存在或其他错误），返回 null
     return null;
   }
