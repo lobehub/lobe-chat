@@ -407,10 +407,11 @@ export class UserService extends BaseService {
    * 搜索用户
    * @param keyword 搜索关键词，为空时返回用户列表
    * @param pageSize 页面大小，限制返回的用户数量
+   * @param page 页码，从1开始
    * @returns 匹配的用户列表（包含角色信息和消息数量）
    */
-  async searchUsers(keyword: string, pageSize: number = 10): ServiceResult<UserWithRoles[]> {
-    this.log('info', '搜索用户', { keyword, pageSize });
+  async searchUsers(keyword: string, pageSize: number = 10, page: number = 1): ServiceResult<UserWithRoles[]> {
+    this.log('info', '搜索用户', { keyword, page, pageSize });
 
     try {
       if (!this.userId) {
@@ -424,12 +425,16 @@ export class UserService extends BaseService {
         throw this.createAuthorizationError(permissionResult.message || '没有权限搜索用户');
       }
 
+      // 计算偏移量
+      const offset = (page - 1) * pageSize;
+
       let searchResults;
 
       if (!keyword || keyword.trim().length === 0) {
         // 当关键词为空时，返回按创建时间倒序排列的用户列表
         searchResults = await this.db.query.users.findMany({
           limit: pageSize,
+          offset,
           orderBy: (users, { desc }) => [desc(users.createdAt)],
         });
       } else {
@@ -437,6 +442,7 @@ export class UserService extends BaseService {
         const searchTerm = `%${keyword.trim()}%`;
         searchResults = await this.db.query.users.findMany({
           limit: pageSize,
+          offset,
           orderBy: (users, { asc }) => [asc(users.fullName), asc(users.email)],
           where: or(
             ilike(users.fullName, searchTerm),
