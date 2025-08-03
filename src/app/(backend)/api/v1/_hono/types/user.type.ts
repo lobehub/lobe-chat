@@ -88,6 +88,15 @@ export const UserSearchRequestSchema = z.object({
       return val.trim();
     })
     .refine((val) => val.length <= 100, '搜索关键词长度不能超过100个字符'),
+  page: z
+    .string()
+    .optional()
+    .transform((val) => {
+      if (!val) return 1; // 默认值
+      const num = parseInt(val, 10);
+      if (isNaN(num) || num <= 0) return 1;
+      return num;
+    }),
   pageSize: z
     .string()
     .optional()
