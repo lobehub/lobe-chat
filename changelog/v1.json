@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Aihubmix provider request headers."]
+    },
+    "date": "2025-08-03",
+    "version": "1.107.3"
+  },
+  {
+    "children": {
       "improvements": ["Move types to separate package."]
     },
     "date": "2025-08-02",
