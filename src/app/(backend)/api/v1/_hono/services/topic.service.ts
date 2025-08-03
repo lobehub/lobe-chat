@@ -39,6 +39,11 @@ export class TopicService extends BaseService {
       // 构建基础查询条件
       let whereConditions = [eq(topics.sessionId, sessionId)];
 
+      // 添加权限相关的查询条件
+      if (permissionResult?.condition?.userId) {
+        whereConditions.push(eq(topics.userId, permissionResult.condition.userId));
+      }
+
       // 如果有关键词，添加标题的模糊搜索条件
       if (keyword) {
         whereConditions.push(ilike(topics.title, `%${keyword}%`));
