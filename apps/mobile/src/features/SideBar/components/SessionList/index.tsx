@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, TextInput, View } from 'react-native';
+import { ScrollView, TextInput, View, Text } from 'react-native';
 
 import { useSessionStore } from '@/store/session';
 import { useStyles } from './style';
@@ -39,7 +39,9 @@ export default function SideBar() {
       {/* 会话列表 */}
       <ScrollView style={styles.sessionList}>
         <Inbox />
-
+        <View style={styles.header}>
+          <Text style={styles.headerText}>默认列表</Text>
+        </View>
         {filteredSessions.map((session) => (
           <SessionItem id={session.id} key={session.id} />
         ))}

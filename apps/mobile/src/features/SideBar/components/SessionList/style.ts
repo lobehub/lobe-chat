@@ -6,6 +6,14 @@ export const useStyles = createStyles((token) => ({
     flex: 1,
     paddingTop: token.paddingSM,
   },
+  header: {
+    paddingVertical: token.marginSM,
+  },
+  headerText: {
+    color: token.colorText,
+    fontSize: token.fontSizeLG,
+    fontWeight: 'bold',
+  },
   searchInput: {
     backgroundColor: token.colorBgContainer,
     borderRadius: token.borderRadius,
