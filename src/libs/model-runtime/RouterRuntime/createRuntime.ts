@@ -88,6 +88,7 @@ interface CreateRouterRuntimeOptions<T extends Record<string, any> = any> {
     chatCompletion: () => boolean;
     responses?: () => boolean;
   };
+  defaultHeaders?: Record<string, any>;
   errorType?: {
     bizError: ILobeAgentRuntimeErrorType;
     invalidAPIKey: ILobeAgentRuntimeErrorType;
