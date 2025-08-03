@@ -23,10 +23,20 @@ export const MODEL_LIST_CONFIGS = {
     reasoningKeywords: ['thinking', '-2.5-'],
     visionKeywords: ['gemini', 'learnlm'],
   },
+  grok: {
+    functionCallKeywords: ['grok'],
+    reasoningKeywords: ['mini', 'grok-4'],
+    visionKeywords: ['vision', 'grok-4'],
+  },
   llama: {
     functionCallKeywords: ['llama-3.2', 'llama-3.3', 'llama-4'],
     reasoningKeywords: [],
-    visionKeywords: [],
+    visionKeywords: ['llava'],
+  },
+  moonshot: {
+    functionCallKeywords: ['moonshot', 'kimi'],
+    reasoningKeywords: ['thinking'],
+    visionKeywords: ['vision', 'kimi-latest', 'kimi-thinking-preview'],
   },
   openai: {
     excludeKeywords: ['audio'],
@@ -45,7 +55,7 @@ export const MODEL_LIST_CONFIGS = {
       'qwen2.5',
       'qwen3',
     ],
-    reasoningKeywords: ['qvq', 'qwq', 'qwen3'],
+    reasoningKeywords: ['qvq', 'qwq', 'qwen3', '!-instruct-', '!-coder-'],
     visionKeywords: ['qvq', 'vl'],
   },
   v0: {
@@ -54,9 +64,9 @@ export const MODEL_LIST_CONFIGS = {
     visionKeywords: ['v0'],
   },
   volcengine: {
-    functionCallKeywords: ['doubao-1.5'],
-    reasoningKeywords: ['thinking', '-r1'],
-    visionKeywords: ['vision', '-m'],
+    functionCallKeywords: ['1.5', '1-5', '1.6', '1-6'],
+    reasoningKeywords: ['thinking', 'seed', 'ui-tars'],
+    visionKeywords: ['vision', '-m', 'seed', 'ui-tars'],
   },
   zeroone: {
     functionCallKeywords: ['fc'],
@@ -65,7 +75,7 @@ export const MODEL_LIST_CONFIGS = {
   zhipu: {
     functionCallKeywords: ['glm-4', 'glm-z1'],
     reasoningKeywords: ['glm-zero', 'glm-z1', 'glm-4.5'],
-    visionKeywords: ['glm-4v'],
+    visionKeywords: ['glm-4v', 'glm-4.1v'],
   },
 } as const;
 
@@ -74,7 +84,9 @@ export const PROVIDER_DETECTION_CONFIG = {
   anthropic: ['claude'],
   deepseek: ['deepseek'],
   google: ['gemini'],
-  llama: ['llama'],
+  grok: ['grok'],
+  llama: ['llama', 'llava'],
+  moonshot: ['moonshot', 'kimi'],
   openai: ['o1', 'o3', 'o4', 'gpt-'],
   qwen: ['qwen', 'qwq', 'qvq'],
   v0: ['v0'],
@@ -82,6 +94,44 @@ export const PROVIDER_DETECTION_CONFIG = {
   zeroone: ['yi-'],
   zhipu: ['glm'],
 } as const;
+
+/**
+ * 检测关键词列表是否匹配模型ID（支持多种匹配模式）
+ * @param modelId 模型ID（小写）
+ * @param keywords 关键词列表，支持以下前缀：
+ *   - ^ 开头：只在模型ID开头匹配
+ *   - ! 开头：排除匹配，优先级最高
+ *   - 无前缀：包含匹配（默认行为）
+ * @returns 是否匹配（排除逻辑优先）
+ */
+const isKeywordListMatch = (modelId: string, keywords: readonly string[]): boolean => {
+  // 先检查排除规则（感叹号开头）
+  const excludeKeywords = keywords.filter(keyword => keyword.startsWith('!'));
+  const includeKeywords = keywords.filter(keyword => !keyword.startsWith('!'));
+  
+  // 如果匹配任何排除规则，直接返回 false
+  for (const excludeKeyword of excludeKeywords) {
+    const keywordWithoutPrefix = excludeKeyword.slice(1);
+    const isMatch = keywordWithoutPrefix.startsWith('^')
+      ? modelId.startsWith(keywordWithoutPrefix.slice(1))
+      : modelId.includes(keywordWithoutPrefix);
+    
+    if (isMatch) {
+      return false;
+    }
+  }
+  
+  // 检查包含规则
+  return includeKeywords.some(keyword => {
+    if (keyword.startsWith('^')) {
+      // ^ 开头则只在开头匹配
+      const keywordWithoutPrefix = keyword.slice(1);
+      return modelId.startsWith(keywordWithoutPrefix);
+    }
+    // 默认行为：包含匹配
+    return modelId.includes(keyword);
+  });
+};
 
 /**
  * 检测单个模型的提供商类型
@@ -92,7 +142,7 @@ export const detectModelProvider = (modelId: string): keyof typeof MODEL_LIST_CO
   const lowerModelId = modelId.toLowerCase();
 
   for (const [provider, keywords] of Object.entries(PROVIDER_DETECTION_CONFIG)) {
-    const hasKeyword = keywords.some((keyword) => lowerModelId.includes(keyword));
+    const hasKeyword = isKeywordListMatch(lowerModelId, keywords);
 
     if (hasKeyword && provider in MODEL_LIST_CONFIGS) {
       return provider as keyof typeof MODEL_LIST_CONFIGS;
@@ -117,28 +167,26 @@ const processModelCard = (
     excludeKeywords = [],
   } = config;
 
-  const isExcludedModel = excludeKeywords.some((keyword) =>
-    model.id.toLowerCase().includes(keyword),
-  );
+  const isExcludedModel = isKeywordListMatch(model.id.toLowerCase(), excludeKeywords);
 
   return {
     contextWindowTokens: model.contextWindowTokens ?? knownModel?.contextWindowTokens ?? undefined,
     displayName: model.displayName ?? knownModel?.displayName ?? model.id,
     enabled: knownModel?.enabled || false,
     functionCall:
-      (functionCallKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) &&
+      (isKeywordListMatch(model.id.toLowerCase(), functionCallKeywords) &&
         !isExcludedModel) ||
       knownModel?.abilities?.functionCall ||
       false,
     id: model.id,
     maxOutput: model.maxOutput ?? knownModel?.maxOutput ?? undefined,
     reasoning:
-      reasoningKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) ||
+      isKeywordListMatch(model.id.toLowerCase(), reasoningKeywords) ||
       knownModel?.abilities?.reasoning ||
       false,
     type: model.type || knownModel?.type || 'chat',
     vision:
-      (visionKeywords.some((keyword) => model.id.toLowerCase().includes(keyword)) &&
+      (isKeywordListMatch(model.id.toLowerCase(), visionKeywords) &&
         !isExcludedModel) ||
       knownModel?.abilities?.vision ||
       false,
