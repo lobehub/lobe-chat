@@ -107,27 +107,6 @@ jobs:
       - name: Set package version
         run: npm run workflow:set-desktop-version ${{ needs.version.outputs.version }} beta
 
-      # macOS 构建处理
-      - name: Build artifact on macOS
-        if: runner.os == 'macOS'
-        run: npm run desktop:build
-        env:
-          APP_URL: http://localhost:3015
-          DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
-          # 默认添加一个加密 SECRET
-          KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
-          # macOS 签名和公证配置
-          CSC_LINK: ${{ secrets.APPLE_CERTIFICATE_BASE64 }}
-          CSC_KEY_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-          # allow provisionally
-          CSC_FOR_PULL_REQUEST: true
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-
-          NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_BETA_DESKTOP_PROJECT_ID }}
-          NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_BETA_DESKTOP_BASE_URL }}
-
       #  Windows 平台构建处理
       - name: Build artifact on Windows
         if: runner.os == 'Windows'
@@ -138,21 +117,12 @@ jobs:
           KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
           NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_BETA_DESKTOP_PROJECT_ID }}
           NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_BETA_DESKTOP_BASE_URL }}
+          SEARCH_PROVIDERS: searxng
+          SEARXNG_URL: http://127.0.0.1:6700
 
           # 将 TEMP 和 TMP 目录设置到 C 盘
           TEMP: C:\temp
           TMP: C:\temp
-
-      # Linux 平台构建处理
-      - name: Build artifact on Linux
-        if: runner.os == 'Linux'
-        run: npm run desktop:build
-        env:
-          APP_URL: http://localhost:3015
-          DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres'
-          KEY_VAULTS_SECRET: 'oLXWIiR/AKF+rWaqy9lHkrYgzpATbW3CtJp3UfkVgpE='
-          NEXT_PUBLIC_DESKTOP_PROJECT_ID: ${{ secrets.UMAMI_BETA_DESKTOP_PROJECT_ID }}
-          NEXT_PUBLIC_DESKTOP_UMAMI_BASE_URL: ${{ secrets.UMAMI_BETA_DESKTOP_BASE_URL }}
 
       # 上传构建产物，移除了 zip 相关部分
       - name: Upload artifact
