@@ -111,6 +111,7 @@ export const createRouterRuntime = ({
   id,
   routers,
   apiKey: DEFAULT_API_LEY,
+  models,
   ...params
 }: CreateRouterRuntimeOptions) => {
   return class UniformRuntime implements LobeRuntimeAI {
@@ -175,6 +176,13 @@ export const createRouterRuntime = ({
     }
 
     async models() {
+      if (models && typeof models === 'function') {
+          // 如果是函数式配置，使用第一个 runtime 的 client 调用函数
+          const firstRuntime = this._runtimes[0]?.runtime;
+          if (firstRuntime && 'client' in firstRuntime) {
+            return await models({ client: (firstRuntime as any).client });
+          }
+        }
       return this._runtimes[0].runtime.models?.();
     }
 

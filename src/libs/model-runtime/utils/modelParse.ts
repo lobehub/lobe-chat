@@ -106,23 +106,23 @@ export const PROVIDER_DETECTION_CONFIG = {
  */
 const isKeywordListMatch = (modelId: string, keywords: readonly string[]): boolean => {
   // 先检查排除规则（感叹号开头）
-  const excludeKeywords = keywords.filter(keyword => keyword.startsWith('!'));
-  const includeKeywords = keywords.filter(keyword => !keyword.startsWith('!'));
-  
+  const excludeKeywords = keywords.filter((keyword) => keyword.startsWith('!'));
+  const includeKeywords = keywords.filter((keyword) => !keyword.startsWith('!'));
+
   // 如果匹配任何排除规则，直接返回 false
   for (const excludeKeyword of excludeKeywords) {
     const keywordWithoutPrefix = excludeKeyword.slice(1);
     const isMatch = keywordWithoutPrefix.startsWith('^')
       ? modelId.startsWith(keywordWithoutPrefix.slice(1))
       : modelId.includes(keywordWithoutPrefix);
-    
+
     if (isMatch) {
       return false;
     }
   }
-  
+
   // 检查包含规则
-  return includeKeywords.some(keyword => {
+  return includeKeywords.some((keyword) => {
     if (keyword.startsWith('^')) {
       // ^ 开头则只在开头匹配
       const keywordWithoutPrefix = keyword.slice(1);
@@ -148,16 +148,14 @@ const findKnownModelByProvider = async (
   try {
     // 动态构建导入路径
     const modulePath = `@/config/aiModels/${provider}`;
-    
+
     // 尝试动态导入对应的配置文件
     const moduleImport = await import(modulePath);
     const providerModels = moduleImport.default;
 
     // 如果导入成功且有数据，进行查找
     if (Array.isArray(providerModels)) {
-      return providerModels.find(
-        (m) => m.id.toLowerCase() === lowerModelId,
-      );
+      return providerModels.find((m) => m.id.toLowerCase() === lowerModelId);
     }
 
     return null;
@@ -205,23 +203,22 @@ const processModelCard = (
 
   return {
     contextWindowTokens: model.contextWindowTokens ?? knownModel?.contextWindowTokens ?? undefined,
-    displayName: knownModel?.displayName ?? model.displayName ?? model.id,
+    displayName: model.displayName ?? knownModel?.displayName ?? '',
     enabled: knownModel?.enabled || false,
     functionCall:
-      (isKeywordListMatch(model.id.toLowerCase(), functionCallKeywords) &&
-        !isExcludedModel) ||
+      (isKeywordListMatch(model.id.toLowerCase(), functionCallKeywords) && !isExcludedModel) ||
       knownModel?.abilities?.functionCall ||
       false,
     id: model.id,
     maxOutput: model.maxOutput ?? knownModel?.maxOutput ?? undefined,
+    // pricing: knownModel?.pricing ?? undefined,
     reasoning:
       isKeywordListMatch(model.id.toLowerCase(), reasoningKeywords) ||
       knownModel?.abilities?.reasoning ||
       false,
     type: model.type || knownModel?.type || 'chat',
     vision:
-      (isKeywordListMatch(model.id.toLowerCase(), visionKeywords) &&
-        !isExcludedModel) ||
+      (isKeywordListMatch(model.id.toLowerCase(), visionKeywords) && !isExcludedModel) ||
       knownModel?.abilities?.vision ||
       false,
   };
@@ -259,7 +256,7 @@ export const processModelList = async (
 
       return processModelCard(model, config, knownModel);
     }),
-  ).then(results => results.filter(Boolean));
+  ).then((results) => results.filter(Boolean));
 };
 
 /**
@@ -279,7 +276,7 @@ export const processMultiProviderModelList = async (
 
       // 优先使用提供商特定的配置
       let knownModel = await findKnownModelByProvider(model.id, detectedProvider);
-      
+
       // 如果未找到，回退到全局配置
       if (!knownModel) {
         knownModel = LOBE_DEFAULT_MODEL_LIST.find(
@@ -289,5 +286,5 @@ export const processMultiProviderModelList = async (
 
       return processModelCard(model, config, knownModel);
     }),
-  ).then(results => results.filter(Boolean));
+  ).then((results) => results.filter(Boolean));
 };
