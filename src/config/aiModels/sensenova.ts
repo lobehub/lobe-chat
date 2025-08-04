@@ -15,10 +15,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'SenseNova-V6-5-Pro',
     pricing: {
-      currency: 'CNY',
-      input: 3,
-      output: 9,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     releasedAt: '2025-07-23',
     settings: {
       extendParams: ['enableReasoning'],
@@ -36,10 +38,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'SenseNova-V6-5-Turbo',
     pricing: {
-      currency: 'CNY',
-      input: 1.5,
-      output: 4.5,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     releasedAt: '2025-07-23',
     settings: {
       extendParams: ['enableReasoning'],
@@ -56,10 +60,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     id: 'Qwen3-235B',
     organization: 'Qwen',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     releasedAt: '2025-05-27',
     settings: {
       extendParams: ['enableReasoning'],
@@ -76,10 +82,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     id: 'Qwen3-32B',
     organization: 'Qwen',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     releasedAt: '2025-05-27',
     settings: {
       extendParams: ['enableReasoning'],
@@ -96,10 +104,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     displayName: 'SenseNova V6 Reasoner',
     id: 'SenseNova-V6-Reasoner',
     pricing: {
-      currency: 'CNY',
-      input: 4,
-      output: 16,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     releasedAt: '2025-04-14',
     type: 'chat',
   },
@@ -113,10 +123,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     displayName: 'SenseNova V6 Turbo',
     id: 'SenseNova-V6-Turbo',
     pricing: {
-      currency: 'CNY',
-      input: 1.5,
-      output: 4.5,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     releasedAt: '2025-04-14',
     type: 'chat',
   },
@@ -130,10 +142,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     displayName: 'SenseNova V6 Pro',
     id: 'SenseNova-V6-Pro',
     pricing: {
-      currency: 'CNY',
-      input: 3,
-      output: 9,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     releasedAt: '2025-04-14',
     type: 'chat',
   },
@@ -143,10 +157,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     displayName: 'SenseChat 5.5 Beta',
     id: 'SenseChat-5-beta',
     pricing: {
-      currency: 'CNY',
-      input: 8,
-      output: 20,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -159,10 +175,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     displayName: 'SenseChat 5.5 1202',
     id: 'SenseChat-5-1202',
     pricing: {
-      currency: 'CNY',
-      input: 8,
-      output: 20,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     releasedAt: '2024-12-30',
     type: 'chat',
   },
@@ -175,10 +193,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     displayName: 'SenseChat Turbo 1202',
     id: 'SenseChat-Turbo-1202',
     pricing: {
-      currency: 'CNY',
-      input: 0.3,
-      output: 0.6,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     releasedAt: '2024-12-30',
     type: 'chat',
   },
@@ -193,10 +213,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     id: 'SenseChat-5',
     maxOutput: 131_072,
     pricing: {
-      currency: 'CNY',
-      input: 8,
-      output: 20,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -210,10 +232,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     id: 'SenseChat-Vision',
     maxOutput: 16_384,
     pricing: {
-      currency: 'CNY',
-      input: 10, // 限时优惠
-      output: 60,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     releasedAt: '2024-09-12',
     type: 'chat',
   },
@@ -227,10 +251,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     id: 'SenseChat-Turbo',
     maxOutput: 32_768,
     pricing: {
-      currency: 'CNY',
-      input: 0.3,
-      output: 0.6,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -240,10 +266,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     id: 'SenseChat-128K',
     maxOutput: 131_072,
     pricing: {
-      currency: 'CNY',
-      input: 60,
-      output: 60,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -253,10 +281,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     id: 'SenseChat-32K',
     maxOutput: 32_768,
     pricing: {
-      currency: 'CNY',
-      input: 36,
-      output: 36,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 36, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 36, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -266,10 +296,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     id: 'SenseChat',
     maxOutput: 4096,
     pricing: {
-      currency: 'CNY',
-      input: 12,
-      output: 12,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -280,10 +312,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     id: 'SenseChat-5-Cantonese',
     maxOutput: 32_768,
     pricing: {
-      currency: 'CNY',
-      input: 27,
-      output: 27,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 27, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 27, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -293,10 +327,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     id: 'SenseChat-Character',
     maxOutput: 1024,
     pricing: {
-      currency: 'CNY',
-      input: 12,
-      output: 12,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -306,10 +342,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     id: 'SenseChat-Character-Pro',
     maxOutput: 4096,
     pricing: {
-      currency: 'CNY',
-      input: 15,
-      output: 15,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -319,10 +357,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek V3',
     id: 'DeepSeek-V3',
     pricing: {
-      currency: 'CNY',
-      input: 2,
-      output: 8,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -335,10 +375,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek R1',
     id: 'DeepSeek-R1',
     pricing: {
-      currency: 'CNY',
-      input: 4,
-      output: 16,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -351,10 +393,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek R1 Distill Qwen 14B',
     id: 'DeepSeek-R1-Distill-Qwen-14B',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -367,10 +411,12 @@ const sensenovaChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek R1 Distill Qwen 32B',
     id: 'DeepSeek-R1-Distill-Qwen-32B',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
 ];

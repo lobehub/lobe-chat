@@ -12,10 +12,12 @@ const ai360ChatModels: AIChatModelCard[] = [
     enabled: true,
     id: '360zhinao2-o1',
     pricing: {
-      currency: 'CNY',
-      input: 4,
-      output: 10,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -28,10 +30,12 @@ const ai360ChatModels: AIChatModelCard[] = [
     displayName: '360GPT2 o1',
     id: '360gpt2-o1',
     pricing: {
-      currency: 'CNY',
-      input: 4,
-      output: 10,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -45,10 +49,12 @@ const ai360ChatModels: AIChatModelCard[] = [
     enabled: true,
     id: '360gpt2-pro',
     pricing: {
-      currency: 'CNY',
-      input: 2,
-      output: 5,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     settings: {
       searchImpl: 'params',
     },
@@ -64,10 +70,12 @@ const ai360ChatModels: AIChatModelCard[] = [
     displayName: '360GPT Pro',
     id: '360gpt-pro',
     pricing: {
-      currency: 'CNY',
-      input: 2,
-      output: 5,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     settings: {
       searchImpl: 'params',
     },
@@ -79,10 +87,12 @@ const ai360ChatModels: AIChatModelCard[] = [
     displayName: '360GPT Pro Trans',
     id: '360gpt-pro-trans',
     pricing: {
-      currency: 'CNY',
-      input: 2,
-      output: 5,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -92,10 +102,12 @@ const ai360ChatModels: AIChatModelCard[] = [
     enabled: true,
     id: '360gpt-turbo',
     pricing: {
-      currency: 'CNY',
-      input: 1,
-      output: 2,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -108,10 +120,12 @@ const ai360ChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek R1',
     id: '360/deepseek-r1',
     pricing: {
-      currency: 'CNY',
-      input: 4,
-      output: 16,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
 ];

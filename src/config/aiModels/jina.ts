@@ -13,9 +13,11 @@ const jinaChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'jina-deepsearch-v1',
     pricing: {
-      input: 0.02,
-      output: 0.02,
-    },
+          units: [
+            { name: 'TextInput', rate: 0.02, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0.02, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     settings: {
       searchImpl: 'internal',
     },

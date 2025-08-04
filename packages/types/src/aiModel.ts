@@ -235,69 +235,31 @@ export interface AIChatModelCard extends AIBaseModelCard {
   abilities?: ModelAbilities;
   config?: AiModelConfig;
   maxOutput?: number;
-  pricing?: ChatModelPricing;
+  pricing?: Pricing;
   settings?: AiModelSettings;
   type: 'chat';
 }
 
 export interface AIEmbeddingModelCard extends AIBaseModelCard {
   maxDimension: number;
-  pricing?: {
-    /**
-     * the currency of the pricing
-     * @default USD
-     */
-    currency?: ModelPriceCurrency;
-    /**
-     * the input pricing, e.g. $1 / 1M tokens
-     */
-    input?: number;
-  };
+  pricing?: Pricing;
   type: 'embedding';
 }
 
 export interface AIImageModelCard extends AIBaseModelCard {
   parameters?: ModelParamsSchema;
-  pricing?: {
-    /**
-     * the currency of the pricing
-     * @default USD
-     */
-    currency?: ModelPriceCurrency;
-  } & Record<string, number>;
+  pricing?: Pricing;
   resolutions?: string[];
   type: 'image';
 }
 
 export interface AITTSModelCard extends AIBaseModelCard {
-  pricing?: {
-    /**
-     * the currency of the pricing
-     * @default USD
-     */
-    currency?: ModelPriceCurrency;
-    /**
-     * the input pricing, e.g. $1 / 1M tokens
-     */
-    input?: number;
-    output?: number;
-  };
+  pricing?: Pricing;
   type: 'tts';
 }
 
 export interface AISTTModelCard extends AIBaseModelCard {
-  pricing?: {
-    /**
-     * the currency of the pricing
-     * @default USD
-     */
-    currency?: ModelPriceCurrency;
-    /**
-     * the input pricing, e.g. $1 / 1M tokens
-     */
-    input?: number;
-    output?: number;
-  };
+  pricing?: Pricing;
   type: 'stt';
 }
 
@@ -325,7 +287,7 @@ export interface AIRealtimeModelCard extends AIBaseModelCard {
    */
   deploymentName?: string;
   maxOutput?: number;
-  pricing?: ChatModelPricing;
+  pricing?: Pricing;
   type: 'realtime';
 }
 
@@ -337,7 +299,7 @@ export interface AiFullModelCard extends AIBaseModelCard {
   id: string;
   maxDimension?: number;
   parameters?: ModelParamsSchema;
-  pricing?: ChatModelPricing;
+  pricing?: Pricing;
   type: AiModelType;
 }
 
@@ -372,7 +334,7 @@ export interface AiProviderModelListItem {
   enabled: boolean;
   id: string;
   parameters?: Record<string, any>;
-  pricing?: ChatModelPricing;
+  pricing?: Pricing;
   releasedAt?: string;
   settings?: AiModelSettings;
   source?: AiModelSourceType;
