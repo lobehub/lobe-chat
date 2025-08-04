@@ -1,8 +1,4 @@
-import {
-  BedrockRuntimeClient,
-  InvokeModelCommand,
-  InvokeModelWithResponseStreamCommand,
-} from '@aws-sdk/client-bedrock-runtime';
+import { BedrockRuntimeClient } from '@aws-sdk/client-bedrock-runtime';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
@@ -14,16 +10,10 @@ import {
   EmbeddingsPayload,
   ModelProvider,
 } from '../types';
-import { buildAnthropicMessages, buildAnthropicTools } from '../utils/anthropicHelpers';
+import { buildAnthropicTools } from '../utils/anthropicHelpers';
 import { AgentRuntimeError } from '../utils/createError';
-import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
-import {
-  AWSBedrockClaudeStream,
-  AWSBedrockLlamaStream,
-  createBedrockStream,
-  OpenAIStream,
-} from '../utils/streams';
+import { OpenAIStream } from '../utils/streams';
 
 /**
  * A prompt constructor for HuggingFace LLama 2 chat models.
@@ -58,10 +48,7 @@ export function experimental_buildLlama2Prompt(messages: { content: string; role
 }
 
 export interface LobeBedrockAIParams {
-  accessKeyId?: string;
-  accessKeySecret?: string;
   region?: string;
-  sessionToken?: string;
   token?: string;
 }
 
@@ -71,61 +58,25 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
   region: string;
 
-  constructor({ region, accessKeyId, accessKeySecret, sessionToken, token }: LobeBedrockAIParams = {}) {
+  constructor({ region, token }: LobeBedrockAIParams = {}) {
     this.region = region ?? 'us-east-1';
     this.bearerToken = token;
     
-    if (token) {
-      // For bearer token, we'll handle requests manually
-      // Initialize a dummy client to satisfy the interface
-if (token) {
-      // For bearer token, we'll handle requests manually
-      // Initialize a dummy client to satisfy the interface
-      try {
-        this.client = new BedrockRuntimeClient({ region: this.region });
-      } catch (error) {
-        throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockRegion);
-      }
-    } else {
-      if (!(accessKeyId && accessKeySecret))
-        throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
-      try {
-        this.client = new BedrockRuntimeClient({
-          credentials: {
-            accessKeyId: accessKeyId,
-            secretAccessKey: accessKeySecret,
-            sessionToken: sessionToken,
-          },
-          region: this.region,
-        });
-      } catch (error) {
-        throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockRegion);
-      }
+    if (!token) {
+      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
     }
-  }
-    } else {
-      if (!(accessKeyId && accessKeySecret))
-        throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
-      this.client = new BedrockRuntimeClient({
-        credentials: {
-          accessKeyId: accessKeyId,
-          secretAccessKey: accessKeySecret,
-          sessionToken: sessionToken,
-        },
-        region: this.region,
-      });
+    
+    // Initialize a dummy client to satisfy the interface
+    try {
+      this.client = new BedrockRuntimeClient({ region: this.region });
+    } catch (error) {
+      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockRegion);
     }
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {
-    if (this.bearerToken) {
-      // Use bearer token authentication with direct HTTP requests
-      return this.invokeBearerTokenModel(payload, options);
-    }
-    
-    // Use AWS SDK authentication
-    if (payload.model.startsWith('meta')) return this.invokeLlamaModel(payload, options);
-    return this.invokeClaudeModel(payload, options);
+    // Always use bearer token authentication with direct HTTP requests
+    return this.invokeBearerTokenModel(payload, options);
   }
   /**
    * Supports the Amazon Titan Text models series.
@@ -138,57 +89,42 @@ if (token) {
   async embeddings(payload: EmbeddingsPayload, options?: EmbeddingsOptions): Promise<Embeddings[]> {
     const input = Array.isArray(payload.input) ? payload.input : [payload.input];
     const promises = input.map((inputText: string) =>
-      this.bearerToken
-        ? this.invokeEmbeddingModelWithBearerToken(
-            {
-              dimensions: payload.dimensions,
-              input: inputText,
-              model: payload.model,
-            },
-            options,
-          )
-        : this.invokeEmbeddingModel(
-            {
-              dimensions: payload.dimensions,
-              input: inputText,
-              model: payload.model,
-            },
-            options,
-          ),
+      this.invokeEmbeddingModelWithBearerToken(
+        {
+          dimensions: payload.dimensions,
+          input: inputText,
+          model: payload.model,
+        },
+        options,
+      ),
     );
     return Promise.all(promises);
   }
 
   async models() {
-    if (this.bearerToken) {
-      // For bearer token, get models from environment config
-      const { getLLMConfig } = await import('@/config/llm');
-      const config = getLLMConfig();
-      const modelList = config.AWS_BEDROCK_MODEL_LIST;
-      
-      if (!modelList) {
-        const BedrockProvider = await import('@/config/modelProviders/bedrock');
-        return BedrockProvider.default.chatModels.filter(model => model.enabled !== false);
-      }
-      
-      // Parse model list: -all,+model1,+model2,model3
-      const items = modelList.split(',').map(m => m.trim()).filter(Boolean);
-      const enabledModels = [];
-      
-      for (const item of items) {
-        if (item.startsWith('+')) {
-          enabledModels.push(item.substring(1));
-        } else if (!item.startsWith('-') && item !== 'all') {
-          enabledModels.push(item);
-        }
-      }
-      
-      return enabledModels.map(id => ({ id }));
+    // Get models from environment config
+    const { getLLMConfig } = await import('@/config/llm');
+    const config = getLLMConfig();
+    const modelList = config.AWS_BEDROCK_MODEL_LIST;
+    
+    if (!modelList) {
+      const BedrockProvider = await import('@/config/modelProviders/bedrock');
+      return BedrockProvider.default.chatModels.filter(model => model.enabled !== false);
     }
     
-    // For AWS SDK, use default models
-    const BedrockProvider = await import('@/config/modelProviders/bedrock');
-    return BedrockProvider.default.chatModels.filter(model => model.enabled !== false);
+    // Parse model list: -all,+model1,+model2,model3
+    const items = modelList.split(',').map(m => m.trim()).filter(Boolean);
+    const enabledModels = [];
+    
+    for (const item of items) {
+      if (item.startsWith('+')) {
+        enabledModels.push(item.substring(1));
+      } else if (!item.startsWith('-') && item !== 'all') {
+        enabledModels.push(item);
+      }
+    }
+    
+    return enabledModels.map(id => ({ id }));
   }
 
   private async invokeBearerTokenModel(
@@ -196,17 +132,8 @@ if (token) {
     options?: ChatMethodOptions,
   ): Promise<Response> {
     const { max_tokens, messages, model, temperature, top_p, tools: _tools } = payload;
-options?: ChatMethodOptions,
-  ): Promise<Response> {
-    const { max_tokens, messages, model, temperature, top_p, tools: _tools } = payload;
     // Use a type-safe approach to find the system message
     const system_message = messages.find((m): m is { role: 'system', content: string } => m.role === 'system' && typeof m.content === 'string');
-    const user_messages = messages.filter((m) => m.role !== 'system');
-
-    // Rest of the code remains unchanged...
-    // ...
-
-  }
     const user_messages = messages.filter((m) => m.role !== 'system');
 
     // Use the Converse API format for bearer token requests
@@ -247,38 +174,7 @@ options?: ChatMethodOptions,
     const url = `https://bedrock-runtime.${this.region}.amazonaws.com/model/${model}/converse-stream`;
 
     try {
-payload: ChatStreamPayload,
-    options?: ChatMethodOptions,
-  ): Promise<Response> {
-    // ... (previous code remains unchanged)
-
-    const url = `https://bedrock-runtime.${this.region}.amazonaws.com/model/${model}/converse-stream`;
-
-    try {
-      // Import the csrf package
-      // @ts-ignore
-      import csrf from 'csrf';
-
-      // Generate a CSRF token
-      const csrfProtection = csrf();
-      const csrfToken = csrfProtection.create(this.bearerToken);
-
       const response = await fetch(url, {
-        body: JSON.stringify(requestBody),
-        headers: {
-          'Authorization': `Bearer ${this.bearerToken}`,
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken,
-        },
-        method: 'POST',
-        signal: options?.signal,
-      });
-
-      // ... (rest of the code remains unchanged)
-    } catch (e) {
-      // ... (error handling remains unchanged)
-    }
-  }
         body: JSON.stringify(requestBody),
         headers: {
           'Authorization': `Bearer ${this.bearerToken}`,
@@ -405,21 +301,7 @@ payload: ChatStreamPayload,
     const url = `https://bedrock-runtime.${this.region}.amazonaws.com/model/${payload.model}/invoke`;
 
     try {
-const url = `https://bedrock-runtime.${this.region}.amazonaws.com/model/${payload.model}/invoke`;
-
-    try {
-      // Import and use a CSRF token library (e.g., csurf for Express.js)
-      const csrfToken = await this.getCsrfToken(); // Assume this method exists to retrieve a CSRF token
-
       const response = await fetch(url, {
-        body: JSON.stringify(requestBody),
-        headers: {
-          'Authorization': `Bearer ${this.bearerToken}`,
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken, // Add CSRF token to the request headers
-        },
-        method: 'POST',
-        signal: options?.signal,
         body: JSON.stringify(requestBody),
         headers: {
           'Authorization': `Bearer ${this.bearerToken}`,
@@ -451,140 +333,11 @@ const url = `https://bedrock-runtime.${this.region}.amazonaws.com/model/${payloa
     }
   }
 
-  private invokeEmbeddingModel = async (
-    payload: EmbeddingsPayload,
-    options?: EmbeddingsOptions,
-  ): Promise<Embeddings> => {
-    const command = new InvokeModelCommand({
-      accept: 'application/json',
-      body: JSON.stringify({
-        dimensions: payload.dimensions,
-        inputText: payload.input,
-        normalize: true,
-      }),
-      contentType: 'application/json',
-      modelId: payload.model,
-    });
-    try {
-      const res = await this.client.send(command, { abortSignal: options?.signal });
-      const responseBody = JSON.parse(new TextDecoder().decode(res.body));
-      return responseBody.embedding;
-    } catch (e) {
-      const err = e as Error & { $metadata: any };
-      throw AgentRuntimeError.chat({
-        error: {
-          body: err.$metadata,
-          message: err.message,
-          type: err.name,
-        },
-        errorType: AgentRuntimeErrorType.ProviderBizError,
-        provider: ModelProvider.Bedrock,
-        region: this.region,
-      });
-    }
-  };
 
-  private invokeClaudeModel = async (
-    payload: ChatStreamPayload,
-    options?: ChatMethodOptions,
-  ): Promise<Response> => {
-    const { max_tokens, messages, model, temperature, top_p, tools } = payload;
-    const system_message = messages.find((m) => m.role === 'system');
-    const user_messages = messages.filter((m) => m.role !== 'system');
 
-    const command = new InvokeModelWithResponseStreamCommand({
-      accept: 'application/json',
-      body: JSON.stringify({
-        anthropic_version: 'bedrock-2023-05-31',
-        max_tokens: max_tokens || 4096,
-        messages: await buildAnthropicMessages(user_messages),
-        system: system_message?.content as string,
-        temperature: temperature / 2,
-        tools: buildAnthropicTools(tools),
-        top_p: top_p,
-      }),
-      contentType: 'application/json',
-      modelId: model,
-    });
 
-    try {
-      // Ask Claude for a streaming chat completion given the prompt
-      const res = await this.client.send(command, { abortSignal: options?.signal });
 
-      const claudeStream = createBedrockStream(res);
 
-      const [prod, debug] = claudeStream.tee();
-
-      if (process.env.DEBUG_BEDROCK_CHAT_COMPLETION === '1') {
-        debugStream(debug).catch(console.error);
-      }
-
-      // Respond with the stream
-      return StreamingResponse(AWSBedrockClaudeStream(prod, options?.callback), {
-        headers: options?.headers,
-      });
-    } catch (e) {
-      const err = e as Error & { $metadata: any };
-
-      throw AgentRuntimeError.chat({
-        error: {
-          body: err.$metadata,
-          message: err.message,
-          type: err.name,
-        },
-        errorType: AgentRuntimeErrorType.ProviderBizError,
-        provider: ModelProvider.Bedrock,
-        region: this.region,
-      });
-    }
-  };
-
-  private invokeLlamaModel = async (
-    payload: ChatStreamPayload,
-    options?: ChatMethodOptions,
-  ): Promise<Response> => {
-    const { max_tokens, messages, model } = payload;
-    const command = new InvokeModelWithResponseStreamCommand({
-      accept: 'application/json',
-      body: JSON.stringify({
-        max_gen_len: max_tokens || 400,
-        prompt: experimental_buildLlama2Prompt(messages as any),
-      }),
-      contentType: 'application/json',
-      modelId: model,
-    });
-
-    try {
-      // Ask Claude for a streaming chat completion given the prompt
-      const res = await this.client.send(command);
-
-      const stream = createBedrockStream(res);
-
-      const [prod, debug] = stream.tee();
-
-      if (process.env.DEBUG_BEDROCK_CHAT_COMPLETION === '1') {
-        debugStream(debug).catch(console.error);
-      }
-      // Respond with the stream
-      return StreamingResponse(AWSBedrockLlamaStream(prod, options?.callback), {
-        headers: options?.headers,
-      });
-    } catch (e) {
-      const err = e as Error & { $metadata: any };
-
-      throw AgentRuntimeError.chat({
-        error: {
-          body: err.$metadata,
-          message: err.message,
-          region: this.region,
-          type: err.name,
-        },
-        errorType: AgentRuntimeErrorType.ProviderBizError,
-        provider: ModelProvider.Bedrock,
-        region: this.region,
-      });
-    }
-  };
 }
 
 export default LobeBedrockAI;

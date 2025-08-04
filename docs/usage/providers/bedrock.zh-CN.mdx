@@ -35,71 +35,25 @@ Amazon Bedrock 是一个完全托管的基础模型 API 服务，允许用户通
 
   <Callout type={'info'}>某些模型可能需要你提供额外的信息</Callout>
 
-  ### 步骤二：选择认证方式
+  ### 步骤二：获取 Amazon Bedrock API 密钥
 
-  Amazon Bedrock 支持两种认证方式：
-
-  #### 方式 A：API 密钥认证（推荐）
-
-  AWS Bedrock 现在支持 API 密钥认证，设置和使用更加简单。
+  AWS Bedrock 使用 API 密钥认证，安全且简单。
 
   - 在 AWS 控制台中，导航到 Amazon Bedrock 服务
   - 在左侧菜单中选择 `API keys`
   - 点击 `Create API key`
   - 复制并妥善保存生成的 API 密钥（bearer token）
 
-  <Callout type={'info'}>
-    API 密钥认证对于大多数使用场景来说更简单、更安全。您可以设置 `AWS_BEARER_TOKEN_BEDROCK` 环境变量来使用此方法。
-  </Callout>
-
-  #### 方式 B：IAM 用户访问密钥（传统方式）
-
-  - 继续在 AWS console 中搜索 IAM，进入 IAM 服务
-
-  <Image alt={'进入 IAM 服务'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/f9a5a394-c8f8-4567-9d51-cf84811418ca'} />
-
-  - 在 `用户` 菜单中，创建一个新的 IAM 用户
-
-  <Image alt={'创建一个新的 IAM 用户'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/750b5cd1-f16a-4330-b899-c27b28b1e837'} />
-
-  - 在弹出的对话框中，输入用户名称
-
-  <Image alt={'输入用户名称'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/22ce5a72-bc46-41f3-b402-bda6dee90184'} />
-
-  - 为这个用户添加权限，或者加入一个已有的用户组，确保用户拥有 Amazon Bedrock 的访问权限
-
-  <Image alt={'为用户添加权限'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/94836b32-7fc5-45ca-8556-7a23f53b15f9'} />
-
-  - 为已添加的用户创建访问密钥
-
-  <Image alt={'创建访问密钥'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/ac2ed716-d270-43f6-856b-3ff81265f4e6'} />
-
-  - 复制并妥善保存访问密钥以及秘密访问密钥，后续将会用到
-
-  <Image alt={'进入 IAM 服务'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/3c64b747-f6f1-4ed2-84bc-bfa8e5d90966'} />
-
   <Callout type={'warning'}>
-    请安全地存储密钥，因为它只会出现一次。如果您意外丢失它，您将需要创建一个新访问密钥。
+    请安全地存储 API 密钥，因为它只会出现一次。如果您意外丢失它，您将需要创建一个新的 API 密钥。
   </Callout>
 
   ### 步骤三：在 LobeChat 中配置 Amazon Bedrock
 
-  #### API 密钥认证：
-
   - 访问 LobeChat 的`设置`界面
   - 在`AI 服务商`下找到`Amazon Bedrock`的设置项并打开
   - 在 Bearer Token 字段中输入您的 API 密钥（bearer token）
-  - 选择您的 AWS 区域
-  - 为你的助手选择一个 Amazon Bedrock 的模型即可开始对话
-
-  #### IAM 用户访问密钥：
-
-  - 访问 LobeChat 的`设置`界面
-  - 在`AI 服务商`下找到`Amazon Bedrock`的设置项并打开
-
-  <Image alt={'LobeChat 中填写 Amazon Bedrock 密钥'} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/7468594b-3355-4cb9-85bc-c9dace137653'} />
-
-  - 打开 Amazon Bedrock 并填入获得的访问密钥与秘密访问密钥
+  - 选择您的 AWS 区域（可选，默认为 us-east-1）
   - 为你的助手选择一个 Amazon Bedrock 的模型即可开始对话
 
   <Image alt={' 选择并使用 Amazon Bedrock 模型 '} inStep src={'https://github.com/lobehub/lobe-chat/assets/34400653/164b34b5-671e-418d-b34a-3b70f1156d06'} />
@@ -108,23 +62,10 @@ Amazon Bedrock 是一个完全托管的基础模型 API 服务，允许用户通
 
   对于服务器部署，您可以设置以下环境变量：
 
-  **API 密钥认证：**
   ```bash
   AWS_BEARER_TOKEN_BEDROCK=your_api_key_here
   AWS_REGION=us-east-1  # 可选，默认为 us-east-1
   ```
-
-  **IAM 用户认证：**
-  ```bash
-  AWS_ACCESS_KEY_ID=your_access_key_here
-  AWS_SECRET_ACCESS_KEY=your_secret_key_here
-  AWS_REGION=us-east-1  # 可选，默认为 us-east-1
-  AWS_SESSION_TOKEN=your_session_token_here  # 可选，用于临时凭证
-  ```
-
-  <Callout type={'info'}>
-    当设置了 `AWS_BEARER_TOKEN_BEDROCK` 时，它会优先于 IAM 用户凭证，您无需设置 `AWS_ACCESS_KEY_ID` 和 `AWS_SECRET_ACCESS_KEY`。
-  </Callout>
 
   <Callout type={'warning'}>
     在使用过程中你可能需要向 API 服务提供商付费，请参考 Amazon Bedrock 的费用政策。

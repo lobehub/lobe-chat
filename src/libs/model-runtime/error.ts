@@ -26,6 +26,7 @@ export const AgentRuntimeErrorType = {
   InvalidGithubToken: 'InvalidGithubToken',
 
   ConnectionCheckFailed: 'ConnectionCheckFailed',
+  ProviderNotEnabled: 'ProviderNotEnabled',
 
   /**
    * @deprecated

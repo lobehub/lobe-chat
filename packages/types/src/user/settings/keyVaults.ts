@@ -18,11 +18,8 @@ export interface AzureOpenAIKeyVault {
 }
 
 export interface AWSBedrockKeyVault {
-  accessKeyId?: string;
   bearerToken?: string;
   region?: string;
-  secretAccessKey?: string;
-  sessionToken?: string;
 }
 
 export interface CloudflareKeyVault {

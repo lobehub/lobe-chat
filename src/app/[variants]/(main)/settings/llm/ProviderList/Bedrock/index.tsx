@@ -30,39 +30,6 @@ export const useBedrockProvider = (): ProviderItem => {
       },
       {
         children: (
-          <InputPassword
-            autoComplete={'new-password'}
-            placeholder={t(`${providerKey}.accessKeyId.placeholder`)}
-          />
-        ),
-        desc: t(`${providerKey}.accessKeyId.desc`),
-        label: t(`${providerKey}.accessKeyId.title`),
-        name: [KeyVaultsConfigKey, providerKey, 'accessKeyId'],
-      },
-      {
-        children: (
-          <InputPassword
-            autoComplete={'new-password'}
-            placeholder={t(`${providerKey}.secretAccessKey.placeholder`)}
-          />
-        ),
-        desc: t(`${providerKey}.secretAccessKey.desc`),
-        label: t(`${providerKey}.secretAccessKey.title`),
-        name: [KeyVaultsConfigKey, providerKey, 'secretAccessKey'],
-      },
-      {
-        children: (
-          <InputPassword
-            autoComplete={'new-password'}
-            placeholder={t(`${providerKey}.sessionToken.placeholder`)}
-          />
-        ),
-        desc: t(`${providerKey}.sessionToken.desc`),
-        label: t(`${providerKey}.sessionToken.title`),
-        name: [KeyVaultsConfigKey, providerKey, 'sessionToken'],
-      },
-      {
-        children: (
           <Select
             allowClear
             options={['us-east-1', 'us-west-2', 'ap-southeast-1', 'eu-central-1'].map((i) => ({

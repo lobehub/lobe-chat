@@ -29,7 +29,7 @@ const isProviderEndpointNotEmpty = (provider: string) => (s: UserStore) => {
 
 const isProviderApiKeyNotEmpty = (provider: string) => (s: UserStore) => {
   const vault = getVaultByProvider(provider as GlobalLLMProviderKey)(s);
-  return !!vault?.apiKey || !!vault?.accessKeyId || !!vault?.secretAccessKey || !!vault?.bearerToken;
+  return !!vault?.apiKey || !!vault?.bearerToken;
 };
 
 const password = (s: UserStore) => keyVaultsSettings(s).password || '';

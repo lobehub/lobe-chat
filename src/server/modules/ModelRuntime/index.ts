@@ -1,6 +1,7 @@
 import { getLLMConfig } from '@/config/llm';
 import { ClientSecretPayload } from '@/const/auth';
-import { ModelProvider, ModelRuntime } from '@/libs/model-runtime';
+import { AgentRuntimeErrorType, ModelProvider, ModelRuntime } from '@/libs/model-runtime';
+import { AgentRuntimeError } from '@/libs/model-runtime/utils/createError';
 
 import apiKeyManager from './apiKeyManager';
 
@@ -18,8 +19,32 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
   const llmConfig = getLLMConfig() as Record<string, any>;
 
   switch (provider) {
+    case ModelProvider.OpenAI: {
+      // Check if OpenAI is enabled
+      if (!llmConfig.ENABLED_OPENAI) {
+        throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
+          provider,
+          message: `Provider ${provider} is disabled`,
+        });
+      }
+      
+      const apiKey = apiKeyManager.pick(payload?.apiKey || llmConfig.OPENAI_API_KEY);
+      const baseURL = payload?.baseURL || process.env.OPENAI_PROXY_URL;
+
+      return baseURL ? { apiKey, baseURL } : { apiKey };
+    }
+
     default: {
       let upperProvider = provider.toUpperCase();
+      
+      // Check if the provider is enabled
+      const enabledKey = `ENABLED_${upperProvider}`;
+      if (enabledKey in llmConfig && !llmConfig[enabledKey]) {
+        throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
+          provider,
+          message: `Provider ${provider} is disabled`,
+        });
+      }
 
       if (!(`${upperProvider}_API_KEY` in llmConfig)) {
         upperProvider = ModelProvider.OpenAI.toUpperCase(); // Use OpenAI options as default
@@ -32,12 +57,28 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
     }
 
     case ModelProvider.Ollama: {
+      // Check if Ollama is enabled
+      if (!llmConfig.ENABLED_OLLAMA) {
+        throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
+          provider,
+          message: `Provider ${provider} is disabled`,
+        });
+      }
+      
       const baseURL = payload?.baseURL || process.env.OLLAMA_PROXY_URL;
 
       return { baseURL };
     }
 
     case ModelProvider.Azure: {
+      // Check if Azure OpenAI is enabled
+      if (!llmConfig.ENABLED_AZURE_OPENAI) {
+        throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
+          provider,
+          message: `Provider ${provider} is disabled`,
+        });
+      }
+      
       const { AZURE_API_KEY, AZURE_API_VERSION, AZURE_ENDPOINT } = llmConfig;
       const apiKey = apiKeyManager.pick(payload?.apiKey || AZURE_API_KEY);
       const baseURL = payload?.baseURL || AZURE_ENDPOINT;
@@ -46,6 +87,14 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
     }
 
     case ModelProvider.AzureAI: {
+      // Check if AzureAI is enabled
+      if (!llmConfig.ENABLED_AZUREAI) {
+        throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
+          provider,
+          message: `Provider ${provider} is disabled`,
+        });
+      }
+      
       const { AZUREAI_ENDPOINT, AZUREAI_ENDPOINT_KEY } = llmConfig;
       const apiKey = payload?.apiKey || AZUREAI_ENDPOINT_KEY;
       const baseURL = payload?.baseURL || AZUREAI_ENDPOINT;
@@ -53,34 +102,36 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
     }
 
     case ModelProvider.Bedrock: {
-      const {
-        AWS_SECRET_ACCESS_KEY,
-        AWS_ACCESS_KEY_ID,
-        AWS_REGION,
-        AWS_SESSION_TOKEN,
-        AWS_BEARER_TOKEN_BEDROCK,
-      } = llmConfig;
+      // Check if AWS Bedrock is enabled
+      if (!llmConfig.ENABLED_AWS_BEDROCK) {
+        throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
+          provider,
+          message: `Provider ${provider} is disabled`,
+        });
+      }
+      
+      const { AWS_REGION, AWS_BEARER_TOKEN_BEDROCK } = llmConfig;
 
-      let accessKeyId: string | undefined = AWS_ACCESS_KEY_ID;
-      let accessKeySecret: string | undefined = AWS_SECRET_ACCESS_KEY;
-      let sessionToken: string | undefined = AWS_SESSION_TOKEN;
       let region = AWS_REGION || 'us-east-1';
       let bearerToken: string | undefined = AWS_BEARER_TOKEN_BEDROCK;
 
       if (payload.apiKey) {
-        bearerToken = payload.awsBearerToken || bearerToken;
-        accessKeyId = payload.awsAccessKeyId;
-        accessKeySecret = payload.awsSecretAccessKey;
-        sessionToken = payload.awsSessionToken;
+        bearerToken = payload.apiKey;
         region = payload.awsRegion || region;
       }
 
-      // Always prefer bearer token if available
-      if (bearerToken) return { region, token: bearerToken };
-      return { accessKeyId, accessKeySecret, region, sessionToken };
+      return { region, token: bearerToken };
     }
 
     case ModelProvider.Cloudflare: {
+      // Check if Cloudflare is enabled
+      if (!llmConfig.ENABLED_CLOUDFLARE) {
+        throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
+          provider,
+          message: `Provider ${provider} is disabled`,
+        });
+      }
+      
       const { CLOUDFLARE_API_KEY, CLOUDFLARE_BASE_URL_OR_ACCOUNT_ID } = llmConfig;
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || CLOUDFLARE_API_KEY);
@@ -93,6 +144,14 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
     }
 
     case ModelProvider.GiteeAI: {
+      // Check if GiteeAI is enabled
+      if (!llmConfig.ENABLED_GITEE_AI) {
+        throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
+          provider,
+          message: `Provider ${provider} is disabled`,
+        });
+      }
+      
       const { GITEE_AI_API_KEY } = llmConfig;
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || GITEE_AI_API_KEY);
@@ -101,6 +160,14 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
     }
 
     case ModelProvider.Github: {
+      // Check if Github is enabled
+      if (!llmConfig.ENABLED_GITHUB) {
+        throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
+          provider,
+          message: `Provider ${provider} is disabled`,
+        });
+      }
+      
       const { GITHUB_TOKEN } = llmConfig;
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || GITHUB_TOKEN);
@@ -109,6 +176,14 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
     }
 
     case ModelProvider.TencentCloud: {
+      // Check if TencentCloud is enabled
+      if (!llmConfig.ENABLED_TENCENT_CLOUD) {
+        throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
+          provider,
+          message: `Provider ${provider} is disabled`,
+        });
+      }
+      
       const { TENCENT_CLOUD_API_KEY } = llmConfig;
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || TENCENT_CLOUD_API_KEY);
