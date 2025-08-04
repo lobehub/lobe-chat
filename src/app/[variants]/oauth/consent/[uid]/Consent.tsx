@@ -92,9 +92,17 @@ const useStyles = createStyles(({ css, token }) => ({
 
     @media (max-width: 768px) {
       min-height: 100dvh;
-      margin-block-start: 48px;
-      padding-block: 12px;
+      margin-block-start: 4px;
+      padding-block: 8px;
       padding-inline: 12px;
+    }
+  `,
+
+  divider: css`
+    margin-block: 24px;
+
+    @media (max-width: 768px) {
+      margin-block: 8px;
     }
   `,
   icon: css`
@@ -129,7 +137,12 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   logoSection: css`
     @media (max-width: 768px) {
-      gap: 24px;
+      gap: 8px;
+    }
+  `,
+  mainContent: css`
+    @media (max-width: 768px) {
+      gap: 8px;
     }
   `,
   scope: css`
@@ -155,8 +168,8 @@ const useStyles = createStyles(({ css, token }) => ({
     text-align: center;
 
     @media (max-width: 768px) {
-      margin-block-end: ${token.marginMD}px;
-      font-size: 20px;
+      margin-block-end: 4px;
+      font-size: 18px;
     }
   `,
 }));
@@ -177,8 +190,8 @@ const ConsentClient = memo<ClientProps>(
 
     const clientDisplayName = clientMetadata?.clientName || clientId;
     return (
-      <Center className={styles.container} gap={16}>
-        <Flexbox className={styles.logoSection} gap={40}>
+      <Center className={`${styles.container} ${styles.mainContent}`} gap={16}>
+        <Flexbox className={styles.logoSection} gap={24}>
           <OAuthApplicationLogo
             clientDisplayName={clientDisplayName}
             isFirstParty={clientMetadata.isFirstParty}
@@ -202,7 +215,7 @@ const ConsentClient = memo<ClientProps>(
                 ))}
               </div>
 
-              <Divider dashed />
+              <Divider className={styles.divider} dashed />
               <Flexbox gap={16}>
                 <form action="/oidc/consent" method="post" style={{ width: '100%' }}>
                   <input name="uid" type="hidden" value={uid} />
