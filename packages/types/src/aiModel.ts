@@ -107,6 +107,74 @@ export interface ChatModelPricing extends BasicModelPricing {
   writeCacheInput?: number;
 }
 
+// New pricing system types
+export type PricingUnitName =
+  // Text-based pricing units
+  | 'TextInput' // corresponds to ChatModelPricing.input
+  | 'TextOutput' // corresponds to ChatModelPricing.output
+  | 'CachedTextInput' // corresponds to ChatModelPricing.cachedInput
+  | 'CachedTextOutput' // corresponds to ChatModelPricing.writeCacheInput
+
+  // Audio-based pricing units
+  | 'AudioInput' // corresponds to ChatModelPricing.audioInput
+  | 'AudioOutput' // corresponds to ChatModelPricing.audioOutput
+  | 'CachedAudioInput' // corresponds to ChatModelPricing.cachedAudioInput
+
+  // Image-based pricing units
+  | 'ImageGeneration' // for image generation models
+
+  // Speech-based pricing units
+  | 'SpeechInput' // for TTS/STT input
+  | 'SpeechOutput'; // for TTS/STT output
+
+export type PricingUnitType =
+  | 'MillionTokens' // per 1M tokens
+  | 'MillionCharacters' // per 1M characters
+  | 'Image' // per image
+  | 'Video' // per video
+  | 'Megapixel' // per megapixel
+  | 'Second' // per second
+  | 'Minute' // per minute
+  | 'Container' // per container
+  | 'GB' // per GB
+  | 'Call'; // per call
+
+export type PricingStrategy = 'fixed' | 'tiered' | 'lookup';
+
+export interface PricingUnitBase {
+  name: PricingUnitName;
+  strategy: PricingStrategy;
+  unit: PricingUnitType;
+}
+
+export interface FixedPricingUnit extends PricingUnitBase {
+  rate: number;
+  strategy: 'fixed';
+}
+
+export interface TieredPricingUnit extends PricingUnitBase {
+  strategy: 'tiered';
+  tiers: Array<{
+    rate: number;
+    upTo: number | 'infinity';
+  }>;
+}
+
+export interface LookupPricingUnit extends PricingUnitBase {
+  lookup: {
+    generateParams: string[];
+    prices: Record<string, number>;
+  };
+  strategy: 'lookup';
+}
+
+export type PricingUnit = FixedPricingUnit | TieredPricingUnit | LookupPricingUnit;
+
+export interface Pricing {
+  currency?: ModelPriceCurrency;
+  units: PricingUnit[];
+}
+
 export interface AIBaseModelCard {
   /**
    * the context window (or input + output tokens limit)
