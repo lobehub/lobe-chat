@@ -8,8 +8,11 @@ export default defineConfig({
   },
   test: {
     alias: {
+      /* eslint-disable sort-keys-fix/sort-keys-fix */
+      '@/types': resolve(__dirname, './packages/types/src'),
       '@': resolve(__dirname, './src'),
       '~test-utils': resolve(__dirname, './tests/utils.tsx'),
+      /* eslint-enable */
     },
     coverage: {
       all: false,
