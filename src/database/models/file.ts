@@ -120,42 +120,7 @@ export class FileModel {
   };
 
   deleteGlobalFile = async (hashId: string) => {
-    return await this.db.transaction(async (trx) => {
-      // check if there are other files referencing this hash within transaction
-      const result = await trx
-        .select({ count: count() })
-        .from(files)
-        .where(eq(files.fileHash, hashId));
-
-      const referenceCount = result[0].count;
-
-      if (referenceCount > 0) {
-        // get referencing files
-        const referencingFiles = await trx
-          .select({
-            createdAt: files.createdAt,
-            id: files.id,
-            name: files.name,
-            userId: files.userId,
-          })
-          .from(files)
-          .where(eq(files.fileHash, hashId));
-
-        // delete the file references first within the same transaction
-        const fileIds = referencingFiles.map((f) => f.id);
-
-        if (fileIds.length > 0) {
-          // delete related chunks first
-          await this.deleteFileChunks(trx as any, fileIds);
-
-          // delete file records
-          await trx.delete(files).where(inArray(files.id, fileIds));
-        }
-      }
-
-      // remove the global file
-      return await trx.delete(globalFiles).where(eq(globalFiles.hashId, hashId));
-    });
+    return this.db.delete(globalFiles).where(eq(globalFiles.hashId, hashId));
   };
 
   countUsage = async () => {

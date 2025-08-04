@@ -24,7 +24,7 @@ const QwenText2ImageModels = [
   'wanx2.0-t2i',
   'wanx-v1',
   'flux',
-  'stable-diffusion',
+  'stable-diffusion'
 ];
 
 const getModelType = (model: string): string => {
@@ -33,12 +33,12 @@ const getModelType = (model: string): string => {
   //   return 'image2image';
   // }
 
-  if (QwenText2ImageModels.some((prefix) => model.startsWith(prefix))) {
+  if (QwenText2ImageModels.some(prefix => model.startsWith(prefix))) {
     return 'text2image';
   }
 
   throw new Error(`Unsupported model: ${model}`);
-};
+}
 
 /**
  * Create an image generation task with Qwen API
@@ -47,7 +47,7 @@ async function createImageTask(payload: CreateImagePayload, apiKey: string): Pro
   const { model, params } = payload;
   // I can only say that the design of Alibaba Cloud's API is really bad; each model has a different endpoint path.
   const modelType = getModelType(model);
-  const endpoint = `https://dashscope.aliyuncs.com/api/v1/services/aigc/${modelType}/image-synthesis`;
+  const endpoint = `https://dashscope.aliyuncs.com/api/v1/services/aigc/${modelType}/image-synthesis`
   if (!endpoint) {
     throw new Error(`No endpoint configured for model type: ${modelType}`);
   }
@@ -66,7 +66,7 @@ async function createImageTask(payload: CreateImagePayload, apiKey: string): Pro
         ...(typeof params.seed === 'number' ? { seed: params.seed } : {}),
         ...(params.width && params.height
           ? { size: `${params.width}*${params.height}` }
-          : params.size
+          : params.size 
             ? { size: params.size.replaceAll('x', '*') }
             : { size: '1024*1024' }),
       },

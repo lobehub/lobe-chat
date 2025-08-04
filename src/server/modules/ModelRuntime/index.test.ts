@@ -67,10 +67,7 @@ vi.mock('@/config/llm', () => ({
 describe('initModelRuntimeWithUserPayload method', () => {
   describe('should initialize with options correctly', () => {
     it('OpenAI provider: with apikey and endpoint', async () => {
-      const jwtPayload: ClientSecretPayload = {
-        apiKey: 'user-openai-key',
-        baseURL: 'user-endpoint',
-      };
+      const jwtPayload: ClientSecretPayload = { apiKey: 'user-openai-key', baseURL: 'user-endpoint' };
       const runtime = await initModelRuntimeWithUserPayload(ModelProvider.OpenAI, jwtPayload);
       expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);

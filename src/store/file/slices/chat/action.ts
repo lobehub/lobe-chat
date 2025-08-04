@@ -1,4 +1,3 @@
-import { TRPCClientError } from '@trpc/client';
 import { t } from 'i18next';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -151,20 +150,8 @@ export const createFileSlice: StateCreator<
       // image don't need to be chunked and embedding
       if (isChunkingUnsupported(file.type)) return;
 
-      try {
-        const data = await ragService.parseFileContent(fileResult?.id, file);
-        console.log(data);
-      } catch (error) {
-        if (!(error instanceof TRPCClientError)) {
-          throw error;
-        }
-        if (error instanceof Error && error?.message === 'Origin File Not Found') {
-          await get().removeChatUploadFile(fileResult.id);
-          return;
-        } else {
-          throw error;
-        }
-      }
+      const data = await ragService.parseFileContent(fileResult.id);
+      console.log(data);
     });
 
     await Promise.all(pools);
