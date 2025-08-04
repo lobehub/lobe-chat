@@ -236,27 +236,29 @@ const processModelCard = (
 
   return {
     contextWindowTokens: model.contextWindowTokens ?? knownModel?.contextWindowTokens ?? undefined,
+    description: model.description ?? knownModel?.description ?? '',
     displayName: (model.displayName ?? knownModel?.displayName ?? model.id)
       .replaceAll(/\s*[(（][^)）]*[)）]\s*/g, '')
       .trim(), // 去除括号内容
     enabled: knownModel?.enabled || false,
     functionCall:
-      (isKeywordListMatch(model.id.toLowerCase(), functionCallKeywords) && !isExcludedModel) ||
-      knownModel?.abilities?.functionCall ||
-      false,
+      model.functionCall ??
+      knownModel?.abilities?.functionCall ??
+      ((isKeywordListMatch(model.id.toLowerCase(), functionCallKeywords) && !isExcludedModel) ||
+        false),
     id: model.id,
     maxOutput: model.maxOutput ?? knownModel?.maxOutput ?? undefined,
     // pricing: knownModel?.pricing ?? undefined,
     reasoning:
-      isKeywordListMatch(model.id.toLowerCase(), reasoningKeywords) ||
-      knownModel?.abilities?.reasoning ||
-      false,
+      model.reasoning ??
+      knownModel?.abilities?.reasoning ??
+      (isKeywordListMatch(model.id.toLowerCase(), reasoningKeywords) || false),
     releasedAt: processReleasedAt(model, knownModel),
     type: model.type || knownModel?.type || 'chat',
     vision:
-      (isKeywordListMatch(model.id.toLowerCase(), visionKeywords) && !isExcludedModel) ||
-      knownModel?.abilities?.vision ||
-      false,
+      model.vision ??
+      knownModel?.abilities?.vision ??
+      ((isKeywordListMatch(model.id.toLowerCase(), visionKeywords) && !isExcludedModel) || false),
   };
 };
 
