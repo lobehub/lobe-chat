@@ -12,17 +12,22 @@ export interface FunctionMessageProps {
 const PluginResult = memo<FunctionMessageProps>(({ toolCallId, variant }) => {
   const toolMessage = useChatStore(chatSelectors.getMessageByToolCallId(toolCallId));
 
-  const data = useMemo(() => {
+  const { data, language } = useMemo(() => {
     try {
-      return JSON.stringify(JSON.parse(toolMessage?.content || ''), null, 2);
+      const parsed = JSON.parse(toolMessage?.content || '');
+      // Special case: if the parsed result is a string, it means the original content was a stringified string
+      if (typeof parsed === 'string') {
+        return { data: parsed, language: 'plaintext' }; // Return the parsed string directly, do not re-serialize
+      }
+      return { data: JSON.stringify(parsed, null, 2), language: 'json' };
     } catch {
-      return toolMessage?.content || '';
+      return { data: toolMessage?.content || '', language: 'plaintext' };
     }
   }, [toolMessage?.content]);
 
   return (
     <Highlighter
-      language={'json'}
+      language={language}
       style={{ maxHeight: 200, overflow: 'scroll', width: '100%' }}
       variant={variant}
     >
