@@ -44,7 +44,13 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     return process.env.DEBUG_ANTHROPIC_CHAT_COMPLETION === '1';
   }
 
-  constructor({ apiKey, baseURL = DEFAULT_BASE_URL, id, ...res }: AnthropicAIParams = {}) {
+  constructor({
+    apiKey,
+    baseURL = DEFAULT_BASE_URL,
+    id,
+    defaultHeaders,
+    ...res
+  }: AnthropicAIParams = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     const betaHeaders = process.env.ANTHROPIC_BETA_HEADERS;
@@ -52,7 +58,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     this.client = new Anthropic({
       apiKey,
       baseURL,
-      ...(betaHeaders ? { defaultHeaders: { 'anthropic-beta': betaHeaders } } : {}),
+      defaultHeaders: { ...defaultHeaders, 'anthropic-beta': betaHeaders },
       ...res,
     });
     this.baseURL = this.client.baseURL;

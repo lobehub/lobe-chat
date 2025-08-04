@@ -26,7 +26,7 @@ import {
   LobeZhipuAI,
   ModelProvider,
 } from '@/libs/model-runtime';
-import { AgentRuntime } from '@/libs/model-runtime';
+import { ModelRuntime } from '@/libs/model-runtime';
 import { agentChatConfigSelectors } from '@/store/agent/selectors';
 import { aiModelSelectors } from '@/store/aiInfra';
 import { useToolStore } from '@/store/tool';
@@ -1694,8 +1694,8 @@ describe('ChatService', () => {
 });
 
 /**
- * Tests for AgentRuntime on client side, aim to test the
- * initialization of AgentRuntime with different providers
+ * Tests for ModelRuntime on client side, aim to test the
+ * initialization of ModelRuntime with different providers
  */
 vi.mock('../_auth', async (importOriginal) => {
   return importOriginal();
@@ -2074,7 +2074,7 @@ describe('ChatService private methods', () => {
   });
 });
 
-describe('AgentRuntimeOnClient', () => {
+describe('ModelRuntimeOnClient', () => {
   describe('initializeWithClientStore', () => {
     describe('should initialize with options correctly', () => {
       it('OpenAI provider: with apikey and endpoint', async () => {
@@ -2090,7 +2090,7 @@ describe('AgentRuntimeOnClient', () => {
           },
         } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.OpenAI, {});
-        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime).toBeInstanceOf(ModelRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
         expect(runtime['_runtime'].baseURL).toBe('user-openai-endpoint');
       });
@@ -2109,7 +2109,7 @@ describe('AgentRuntimeOnClient', () => {
         } as UserSettingsState) as unknown as UserStore;
 
         const runtime = await initializeWithClientStore(ModelProvider.Azure, {});
-        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime).toBeInstanceOf(ModelRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeAzureOpenAI);
       });
 
@@ -2124,7 +2124,7 @@ describe('AgentRuntimeOnClient', () => {
           },
         } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Google, {});
-        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime).toBeInstanceOf(ModelRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeGoogleAI);
       });
 
@@ -2139,7 +2139,7 @@ describe('AgentRuntimeOnClient', () => {
           },
         } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Moonshot, {});
-        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime).toBeInstanceOf(ModelRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeMoonshotAI);
       });
 
@@ -2156,7 +2156,7 @@ describe('AgentRuntimeOnClient', () => {
           },
         } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Bedrock, {});
-        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime).toBeInstanceOf(ModelRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeBedrockAI);
       });
 
@@ -2171,7 +2171,7 @@ describe('AgentRuntimeOnClient', () => {
           },
         } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Ollama, {});
-        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime).toBeInstanceOf(ModelRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeOllamaAI);
       });
 
@@ -2186,7 +2186,7 @@ describe('AgentRuntimeOnClient', () => {
           },
         } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Perplexity, {});
-        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime).toBeInstanceOf(ModelRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobePerplexityAI);
       });
 
@@ -2201,7 +2201,7 @@ describe('AgentRuntimeOnClient', () => {
           },
         } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Anthropic, {});
-        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime).toBeInstanceOf(ModelRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeAnthropicAI);
       });
 
@@ -2216,7 +2216,7 @@ describe('AgentRuntimeOnClient', () => {
           },
         } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Mistral, {});
-        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime).toBeInstanceOf(ModelRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeMistralAI);
       });
 
@@ -2231,7 +2231,7 @@ describe('AgentRuntimeOnClient', () => {
           },
         } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.OpenRouter, {});
-        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime).toBeInstanceOf(ModelRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeOpenRouterAI);
       });
 
@@ -2246,7 +2246,7 @@ describe('AgentRuntimeOnClient', () => {
           },
         } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.TogetherAI, {});
-        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime).toBeInstanceOf(ModelRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeTogetherAI);
       });
 
@@ -2261,7 +2261,7 @@ describe('AgentRuntimeOnClient', () => {
           },
         } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.ZeroOne, {});
-        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime).toBeInstanceOf(ModelRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeZeroOneAI);
       });
 
@@ -2277,7 +2277,7 @@ describe('AgentRuntimeOnClient', () => {
           },
         } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Groq, {});
-        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime).toBeInstanceOf(ModelRuntime);
         const lobeOpenAICompatibleInstance = runtime['_runtime'] as LobeOpenAICompatibleRuntime;
         expect(lobeOpenAICompatibleInstance).toBeInstanceOf(LobeGroq);
         expect(lobeOpenAICompatibleInstance.baseURL).toBe('user-groq-endpoint');
@@ -2296,7 +2296,7 @@ describe('AgentRuntimeOnClient', () => {
           },
         } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.DeepSeek, {});
-        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime).toBeInstanceOf(ModelRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeDeepSeekAI);
       });
 
@@ -2311,7 +2311,7 @@ describe('AgentRuntimeOnClient', () => {
           },
         } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Qwen, {});
-        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime).toBeInstanceOf(ModelRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeQwenAI);
       });
 
@@ -2331,7 +2331,7 @@ describe('AgentRuntimeOnClient', () => {
           },
         } as any as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore('unknown' as ModelProvider, {});
-        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime).toBeInstanceOf(ModelRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
       });
 
@@ -2358,7 +2358,7 @@ describe('AgentRuntimeOnClient', () => {
           },
         } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.ZhiPu, {});
-        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime).toBeInstanceOf(ModelRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeZhipuAI);
       });
     });

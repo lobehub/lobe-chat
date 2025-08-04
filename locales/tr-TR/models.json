@@ -326,6 +326,9 @@
   "Qwen/Qwen3-30B-A3B": {
     "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte önemli ölçüde geliştirilmiş yeni nesil Tongyi Qianwen büyük modelidir ve düşünme modu geçişini destekler."
   },
+  "Qwen/Qwen3-30B-A3B-Instruct-2507": {
+    "description": "Qwen3-30B-A3B-Instruct-2507, Qwen3-30B-A3B'nin düşünme modu olmayan güncellenmiş bir versiyonudur. Bu, toplam 30,5 milyar parametre ve 3,3 milyar aktif parametreye sahip bir Hibrit Uzman (MoE) modelidir. Model, talimat takibi, mantıksal akıl yürütme, metin anlama, matematik, bilim, kodlama ve araç kullanımı gibi genel yeteneklerde önemli geliştirmeler içermektedir. Ayrıca, çok dilli uzun kuyruk bilgi kapsamı açısından kayda değer ilerlemeler kaydetmiş ve kullanıcıların öznel ve açık uçlu görevlerdeki tercihlerine daha iyi uyum sağlayarak daha faydalı yanıtlar ve daha yüksek kaliteli metinler üretebilmektedir. Buna ek olarak, modelin uzun metin anlama kapasitesi 256K'ya kadar artırılmıştır. Bu model yalnızca düşünme modu dışındadır ve çıktılarında `<think></think>` etiketleri oluşturmaz."
+  },
   "Qwen/Qwen3-32B": {
     "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte önemli ölçüde geliştirilmiş yeni nesil Tongyi Qianwen büyük modelidir ve düşünme modu geçişini destekler."
   },
@@ -358,6 +361,12 @@
   },
   "Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder-32B-Instruct, kod üretimi, kod anlama ve verimli geliştirme senaryoları için tasarlanmış büyük bir dil modelidir. Sektördeki en ileri 32B parametre ölçeğini kullanarak çeşitli programlama ihtiyaçlarını karşılayabilir."
+  },
+  "Qwen3-235B": {
+    "description": "Qwen3-235B-A22B, MoE (Hibrit Uzman Modeli) modelidir ve \"Hibrit Akıl Yürütme Modu\"nu tanıtmaktadır. Kullanıcıların \"düşünme modu\" ile \"düşünme modu dışı\" arasında kesintisiz geçiş yapmasını destekler, 119 dil ve lehçede anlama ve akıl yürütme yeteneğine sahiptir ve güçlü araç çağırma kapasitesine sahiptir. Kapsamlı yetenekler, kodlama ve matematik, çok dilli yetenekler, bilgi ve akıl yürütme gibi çeşitli kıyaslama testlerinde, DeepSeek R1, OpenAI o1, o3-mini, Grok 3 ve Google Gemini 2.5 Pro gibi piyasadaki önde gelen büyük modellerle rekabet edebilmektedir."
+  },
+  "Qwen3-32B": {
+    "description": "Qwen3-32B, Yoğun Model (Dense Model) olup \"Hibrit Akıl Yürütme Modu\"nu tanıtmaktadır. Kullanıcıların \"düşünme modu\" ile \"düşünme modu dışı\" arasında kesintisiz geçiş yapmasını destekler. Model mimarisi iyileştirmeleri, artırılmış eğitim verisi ve daha etkili eğitim yöntemleri sayesinde genel performansı Qwen2.5-72B ile karşılaştırılabilir düzeydedir."
   },
   "SenseChat": {
     "description": "Temel sürüm model (V4), 4K bağlam uzunluğu ile genel yetenekleri güçlüdür."
@@ -394,6 +403,12 @@
   },
   "SenseChat-Vision": {
     "description": "En son versiyon modeli (V5.5), çoklu görsel girişi destekler, modelin temel yetenek optimizasyonunu tamamen gerçekleştirir; nesne özellik tanıma, mekansal ilişkiler, hareket olayları tanıma, sahne anlama, duygu tanıma, mantıksal bilgi çıkarımı ve metin anlama üretimi gibi alanlarda önemli gelişmeler sağlamıştır."
+  },
+  "SenseNova-V6-5-Pro": {
+    "description": "Çok modlu, dil ve akıl yürütme verilerinin kapsamlı güncellenmesi ve eğitim stratejilerinin optimize edilmesiyle, yeni model çok modlu akıl yürütme ve genel talimat takibi yeteneklerinde önemli gelişmeler sağlamıştır. 128k'ya kadar bağlam penceresini destekler ve OCR ile kültürel turizm IP tanıma gibi özel görevlerde üstün performans gösterir."
+  },
+  "SenseNova-V6-5-Turbo": {
+    "description": "Çok modlu, dil ve akıl yürütme verilerinin kapsamlı güncellenmesi ve eğitim stratejilerinin optimize edilmesiyle, yeni model çok modlu akıl yürütme ve genel talimat takibi yeteneklerinde önemli gelişmeler sağlamıştır. 128k'ya kadar bağlam penceresini destekler ve OCR ile kültürel turizm IP tanıma gibi özel görevlerde üstün performans gösterir."
   },
   "SenseNova-V6-Pro": {
     "description": "Görüntü, metin ve video yeteneklerinin yerel birliğini sağlar, geleneksel çok modlu ayrım sınırlamalarını aşar, OpenCompass ve SuperCLUE değerlendirmelerinde çift şampiyonluk kazanmıştır."
@@ -2371,6 +2386,12 @@
   },
   "qwen3-30b-a3b": {
     "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."
+  },
+  "qwen3-30b-a3b-instruct-2507": {
+    "description": "Önceki sürüme (Qwen3-30B-A3B) kıyasla, hem İngilizce hem de çok dilli genel yeteneklerde büyük gelişmeler sağlanmıştır. Öznel ve açık uçlu görevler için özel optimizasyon yapılmış olup, kullanıcı tercihleriyle belirgin şekilde daha uyumludur ve daha faydalı yanıtlar sunabilir."
+  },
+  "qwen3-30b-a3b-thinking-2507": {
+    "description": "Qwen3 tabanlı düşünme modu açık kaynak modeli olup, önceki sürüme (Tongyi Qianwen 3-30B-A3B) kıyasla mantık yeteneği, genel yetenekler, bilgi artırımı ve yaratıcı yeteneklerde önemli gelişmeler göstermektedir. Zorlu ve güçlü akıl yürütme gerektiren senaryolar için uygundur."
   },
   "qwen3-32b": {
     "description": "Qwen3, akıl yürütme, genel, Ajan ve çok dilli gibi birçok temel yetenekte endüstri lideri seviyesine ulaşan yeni nesil bir modeldir ve düşünme modu geçişini destekler."

@@ -25,7 +25,7 @@ export interface AgentChatOptions {
   trace?: TracePayload;
 }
 
-class ModelRuntime {
+export class ModelRuntime {
   private _runtime: LobeRuntimeAI;
 
   constructor(runtime: LobeRuntimeAI) {
@@ -113,10 +113,9 @@ class ModelRuntime {
   ) {
     // @ts-expect-error runtime map not include vertex so it will be undefined
     const providerAI = providerRuntimeMap[provider] ?? LobeOpenAI;
+
     const runtimeModel: LobeRuntimeAI = new providerAI(params);
 
     return new ModelRuntime(runtimeModel);
   }
 }
-
-export default ModelRuntime;

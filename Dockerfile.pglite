@@ -152,6 +152,8 @@ ENV \
     AI21_API_KEY="" AI21_MODEL_LIST="" \
     # Ai360
     AI360_API_KEY="" AI360_MODEL_LIST="" \
+    # AiHubMix
+    AIHUBMIX_API_KEY="" AIHUBMIX_MODEL_LIST="" \
     # Anthropic
     ANTHROPIC_API_KEY="" ANTHROPIC_MODEL_LIST="" ANTHROPIC_PROXY_URL="" \
     # Amazon Bedrock
