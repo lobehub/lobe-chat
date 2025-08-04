@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it, vi } from 'vitest';
 
-import { JWTPayload } from '@/const/auth';
+import { ClientSecretPayload } from '@/const/auth';
 import {
   LobeAnthropicAI,
   LobeAzureOpenAI,
@@ -23,10 +23,10 @@ import {
   LobeZhipuAI,
   ModelProvider,
 } from '@/libs/model-runtime';
-import { AgentRuntime } from '@/libs/model-runtime';
+import { ModelRuntime } from '@/libs/model-runtime';
 import { LobeStepfunAI } from '@/libs/model-runtime/stepfun';
 
-import { initAgentRuntimeWithUserPayload } from './index';
+import { initModelRuntimeWithUserPayload } from './index';
 
 // 模拟依赖项
 vi.mock('@/config/llm', () => ({
@@ -59,158 +59,158 @@ vi.mock('@/config/llm', () => ({
 }));
 
 /**
- * Test cases for function initAgentRuntimeWithUserPayload
- * this method will use AgentRuntime from `@/libs/model-runtime`
+ * Test cases for function initModelRuntimeWithUserPayload
+ * this method will use ModelRuntime from `@/libs/model-runtime`
  * and method `getLlmOptionsFromPayload` to initialize runtime
  * with user payload. Test case below will test both the methods
  */
-describe('initAgentRuntimeWithUserPayload method', () => {
+describe('initModelRuntimeWithUserPayload method', () => {
   describe('should initialize with options correctly', () => {
     it('OpenAI provider: with apikey and endpoint', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'user-openai-key', baseURL: 'user-endpoint' };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.OpenAI, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const jwtPayload: ClientSecretPayload = { apiKey: 'user-openai-key', baseURL: 'user-endpoint' };
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.OpenAI, jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
       expect(runtime['_runtime'].baseURL).toBe(jwtPayload.baseURL);
     });
 
     it('Azure AI provider: with apikey, endpoint and apiversion', async () => {
-      const jwtPayload: JWTPayload = {
+      const jwtPayload: ClientSecretPayload = {
         apiKey: 'user-azure-key',
         baseURL: 'user-azure-endpoint',
         azureApiVersion: '2024-06-01',
       };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Azure, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Azure, jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeAzureOpenAI);
       expect(runtime['_runtime'].baseURL).toBe(jwtPayload.baseURL);
     });
 
     it('ZhiPu AI provider: with apikey', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'zhipu.user-key' };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.ZhiPu, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const jwtPayload: ClientSecretPayload = { apiKey: 'zhipu.user-key' };
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.ZhiPu, jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeZhipuAI);
     });
 
     it('Google provider: with apikey', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'user-google-key' };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Google, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const jwtPayload: ClientSecretPayload = { apiKey: 'user-google-key' };
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Google, jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeGoogleAI);
     });
 
     it('Moonshot AI provider: with apikey', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'user-moonshot-key' };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Moonshot, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const jwtPayload: ClientSecretPayload = { apiKey: 'user-moonshot-key' };
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Moonshot, jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeMoonshotAI);
     });
 
     it('Qwen AI provider: with apikey', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'user-qwen-key' };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Qwen, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const jwtPayload: ClientSecretPayload = { apiKey: 'user-qwen-key' };
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Qwen, jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeQwenAI);
     });
 
     it('Bedrock AI provider: with apikey, awsAccessKeyId, awsSecretAccessKey, awsRegion', async () => {
-      const jwtPayload: JWTPayload = {
+      const jwtPayload: ClientSecretPayload = {
         apiKey: 'user-bedrock-key',
         awsAccessKeyId: 'user-aws-id',
         awsSecretAccessKey: 'user-aws-secret',
         awsRegion: 'user-aws-region',
       };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Bedrock, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Bedrock, jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeBedrockAI);
     });
 
     it('Ollama provider: with endpoint', async () => {
-      const jwtPayload: JWTPayload = { baseURL: 'http://user-ollama-url' };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Ollama, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const jwtPayload: ClientSecretPayload = { baseURL: 'http://user-ollama-url' };
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Ollama, jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeOllamaAI);
       expect(runtime['_runtime']['baseURL']).toEqual(jwtPayload.baseURL);
     });
 
     it('Perplexity AI provider: with apikey', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'user-perplexity-key' };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Perplexity, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const jwtPayload: ClientSecretPayload = { apiKey: 'user-perplexity-key' };
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Perplexity, jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobePerplexityAI);
     });
 
     it('Anthropic AI provider: with apikey', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'user-anthropic-key' };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Anthropic, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const jwtPayload: ClientSecretPayload = { apiKey: 'user-anthropic-key' };
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Anthropic, jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeAnthropicAI);
     });
 
     it('Minimax AI provider: with apikey', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'user-minimax-key' };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Minimax, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const jwtPayload: ClientSecretPayload = { apiKey: 'user-minimax-key' };
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Minimax, jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeMinimaxAI);
     });
 
     it('Mistral AI provider: with apikey', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'user-mistral-key' };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Mistral, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const jwtPayload: ClientSecretPayload = { apiKey: 'user-mistral-key' };
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Mistral, jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeMistralAI);
     });
 
     it('OpenRouter AI provider: with apikey', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'user-openrouter-key' };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.OpenRouter, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const jwtPayload: ClientSecretPayload = { apiKey: 'user-openrouter-key' };
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.OpenRouter, jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeOpenRouterAI);
     });
 
     it('DeepSeek AI provider: with apikey', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'user-deepseek-key' };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.DeepSeek, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const jwtPayload: ClientSecretPayload = { apiKey: 'user-deepseek-key' };
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.DeepSeek, jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeDeepSeekAI);
     });
 
     it('Together AI provider: with apikey', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'user-togetherai-key' };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.TogetherAI, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const jwtPayload: ClientSecretPayload = { apiKey: 'user-togetherai-key' };
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.TogetherAI, jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeTogetherAI);
     });
 
     it('ZeroOne AI provider: with apikey', async () => {
       const jwtPayload = { apiKey: 'user-zeroone-key' };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.ZeroOne, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.ZeroOne, jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeZeroOneAI);
     });
 
     it('Groq AI provider: with apikey', async () => {
       const jwtPayload = { apiKey: 'user-zeroone-key' };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Groq, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Groq, jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeGroq);
     });
 
     it('Stepfun AI provider: with apikey', async () => {
       const jwtPayload = { apiKey: 'user-stepfun-key' };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Stepfun, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Stepfun, jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeStepfunAI);
     });
 
     it('Unknown Provider: with apikey and endpoint, should initialize to OpenAi', async () => {
-      const jwtPayload: JWTPayload = {
+      const jwtPayload: ClientSecretPayload = {
         apiKey: 'user-unknown-key',
         baseURL: 'user-unknown-endpoint',
       };
-      const runtime = await initAgentRuntimeWithUserPayload('unknown', jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
+      const runtime = await initModelRuntimeWithUserPayload('unknown', jwtPayload);
+      expect(runtime).toBeInstanceOf(ModelRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
       expect(runtime['_runtime'].baseURL).toBe(jwtPayload.baseURL);
     });
@@ -218,54 +218,54 @@ describe('initAgentRuntimeWithUserPayload method', () => {
 
   describe('should initialize without some options', () => {
     it('OpenAI provider: without apikey', async () => {
-      const jwtPayload: JWTPayload = {};
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.OpenAI, jwtPayload);
+      const jwtPayload: ClientSecretPayload = {};
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.OpenAI, jwtPayload);
       expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
     });
 
     it('Azure AI Provider: without apikey', async () => {
-      const jwtPayload: JWTPayload = {
+      const jwtPayload: ClientSecretPayload = {
         azureApiVersion: 'test-azure-api-version',
       };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Azure, jwtPayload);
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Azure, jwtPayload);
 
       expect(runtime['_runtime']).toBeInstanceOf(LobeAzureOpenAI);
     });
 
     it('ZhiPu AI provider: without apikey', async () => {
-      const jwtPayload: JWTPayload = {};
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.ZhiPu, jwtPayload);
+      const jwtPayload: ClientSecretPayload = {};
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.ZhiPu, jwtPayload);
 
       // 假设 LobeZhipuAI 是 ZhiPu 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeZhipuAI);
     });
 
     it('Google provider: without apikey', async () => {
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Google, {});
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Google, {});
 
       // 假设 LobeGoogleAI 是 Google 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeGoogleAI);
     });
 
     it('Moonshot AI provider: without apikey', async () => {
-      const jwtPayload: JWTPayload = {};
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Moonshot, jwtPayload);
+      const jwtPayload: ClientSecretPayload = {};
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Moonshot, jwtPayload);
 
       // 假设 LobeMoonshotAI 是 Moonshot 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeMoonshotAI);
     });
 
     it('Qwen AI provider: without apikey', async () => {
-      const jwtPayload: JWTPayload = {};
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Qwen, jwtPayload);
+      const jwtPayload: ClientSecretPayload = {};
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Qwen, jwtPayload);
 
       // 假设 LobeQwenAI 是 Qwen 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeQwenAI);
     });
 
     it('Qwen AI provider: without endpoint', async () => {
-      const jwtPayload: JWTPayload = { apiKey: 'user-qwen-key' };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Qwen, jwtPayload);
+      const jwtPayload: ClientSecretPayload = { apiKey: 'user-qwen-key' };
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Qwen, jwtPayload);
 
       // 假设 LobeQwenAI 是 Qwen 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeQwenAI);
@@ -275,7 +275,7 @@ describe('initAgentRuntimeWithUserPayload method', () => {
 
     it('Bedrock AI provider: without apikey', async () => {
       const jwtPayload = {};
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Bedrock, jwtPayload);
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Bedrock, jwtPayload);
 
       // 假设 LobeBedrockAI 是 Bedrock 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeBedrockAI);
@@ -283,7 +283,7 @@ describe('initAgentRuntimeWithUserPayload method', () => {
 
     it('Ollama provider: without endpoint', async () => {
       const jwtPayload = {};
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Ollama, jwtPayload);
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Ollama, jwtPayload);
 
       // 假设 LobeOllamaAI 是 Ollama 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeOllamaAI);
@@ -291,7 +291,7 @@ describe('initAgentRuntimeWithUserPayload method', () => {
 
     it('Perplexity AI provider: without apikey', async () => {
       const jwtPayload = {};
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Perplexity, jwtPayload);
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Perplexity, jwtPayload);
 
       // 假设 LobePerplexityAI 是 Perplexity 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobePerplexityAI);
@@ -299,7 +299,7 @@ describe('initAgentRuntimeWithUserPayload method', () => {
 
     it('Anthropic AI provider: without apikey', async () => {
       const jwtPayload = {};
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Anthropic, jwtPayload);
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Anthropic, jwtPayload);
 
       // 假设 LobeAnthropicAI 是 Anthropic 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeAnthropicAI);
@@ -307,7 +307,7 @@ describe('initAgentRuntimeWithUserPayload method', () => {
 
     it('Minimax AI provider: without apikey', async () => {
       const jwtPayload = {};
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Minimax, jwtPayload);
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Minimax, jwtPayload);
 
       // 假设 LobeMistralAI 是 Mistral 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeMinimaxAI);
@@ -315,7 +315,7 @@ describe('initAgentRuntimeWithUserPayload method', () => {
 
     it('Mistral AI provider: without apikey', async () => {
       const jwtPayload = {};
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Mistral, jwtPayload);
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Mistral, jwtPayload);
 
       // 假设 LobeMistralAI 是 Mistral 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeMistralAI);
@@ -323,7 +323,7 @@ describe('initAgentRuntimeWithUserPayload method', () => {
 
     it('OpenRouter AI provider: without apikey', async () => {
       const jwtPayload = {};
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.OpenRouter, jwtPayload);
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.OpenRouter, jwtPayload);
 
       // 假设 LobeOpenRouterAI 是 OpenRouter 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeOpenRouterAI);
@@ -331,7 +331,7 @@ describe('initAgentRuntimeWithUserPayload method', () => {
 
     it('DeepSeek AI provider: without apikey', async () => {
       const jwtPayload = {};
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.DeepSeek, jwtPayload);
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.DeepSeek, jwtPayload);
 
       // 假设 LobeDeepSeekAI 是 DeepSeek 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeDeepSeekAI);
@@ -339,7 +339,7 @@ describe('initAgentRuntimeWithUserPayload method', () => {
 
     it('Stepfun AI provider: without apikey', async () => {
       const jwtPayload = {};
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Stepfun, jwtPayload);
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Stepfun, jwtPayload);
 
       // 假设 LobeDeepSeekAI 是 DeepSeek 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeStepfunAI);
@@ -347,7 +347,7 @@ describe('initAgentRuntimeWithUserPayload method', () => {
 
     it('Together AI provider: without apikey', async () => {
       const jwtPayload = {};
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.TogetherAI, jwtPayload);
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.TogetherAI, jwtPayload);
 
       // 假设 LobeTogetherAI 是 TogetherAI 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeTogetherAI);
@@ -356,8 +356,8 @@ describe('initAgentRuntimeWithUserPayload method', () => {
     it('OpenAI provider: without apikey with OPENAI_PROXY_URL', async () => {
       process.env.OPENAI_PROXY_URL = 'https://proxy.example.com/v1';
 
-      const jwtPayload: JWTPayload = {};
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.OpenAI, jwtPayload);
+      const jwtPayload: ClientSecretPayload = {};
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.OpenAI, jwtPayload);
       expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
       // 应返回 OPENAI_PROXY_URL
       expect(runtime['_runtime'].baseURL).toBe('https://proxy.example.com/v1');
@@ -366,8 +366,8 @@ describe('initAgentRuntimeWithUserPayload method', () => {
     it('Qwen AI provider: without apiKey and endpoint with OPENAI_PROXY_URL', async () => {
       process.env.OPENAI_PROXY_URL = 'https://proxy.example.com/v1';
 
-      const jwtPayload: JWTPayload = {};
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Qwen, jwtPayload);
+      const jwtPayload: ClientSecretPayload = {};
+      const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Qwen, jwtPayload);
 
       // 假设 LobeQwenAI 是 Qwen 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeQwenAI);
@@ -377,7 +377,7 @@ describe('initAgentRuntimeWithUserPayload method', () => {
 
     it('Unknown Provider', async () => {
       const jwtPayload = {};
-      const runtime = await initAgentRuntimeWithUserPayload('unknown', jwtPayload);
+      const runtime = await initModelRuntimeWithUserPayload('unknown', jwtPayload);
 
       // 根据实际实现，你可能需要检查是否返回了默认的 runtime 实例，或者是否抛出了异常
       // 例如，如果默认使用 OpenAI:

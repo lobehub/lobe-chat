@@ -25,10 +25,7 @@ const n = setNamespace('generationTopic');
 export interface GenerationTopicAction {
   createGenerationTopic: (prompts: string[]) => Promise<string>;
   removeGenerationTopic: (id: string) => Promise<void>;
-  useFetchGenerationTopics: (
-    enabled: boolean,
-    isLogin: boolean | undefined,
-  ) => SWRResponse<ImageGenerationTopic[]>;
+  useFetchGenerationTopics: (enabled: boolean) => SWRResponse<ImageGenerationTopic[]>;
   summaryGenerationTopicTitle: (topicId: string, prompts: string[]) => Promise<string>;
   refreshGenerationTopics: () => Promise<void>;
   switchGenerationTopic: (topicId: string) => void;
@@ -216,9 +213,9 @@ export const createGenerationTopicSlice: StateCreator<
     );
   },
 
-  useFetchGenerationTopics: (enabled, isLogin) =>
+  useFetchGenerationTopics: (enabled) =>
     useClientDataSWR<ImageGenerationTopic[]>(
-      enabled ? [FETCH_GENERATION_TOPICS_KEY, isLogin] : null,
+      enabled ? [FETCH_GENERATION_TOPICS_KEY] : null,
       () => generationTopicService.getAllGenerationTopics(),
       {
         suspense: true,
@@ -231,7 +228,7 @@ export const createGenerationTopicSlice: StateCreator<
     ),
 
   refreshGenerationTopics: async () => {
-    await mutate([FETCH_GENERATION_TOPICS_KEY, true]);
+    await mutate([FETCH_GENERATION_TOPICS_KEY]);
   },
 
   removeGenerationTopic: async (id: string) => {

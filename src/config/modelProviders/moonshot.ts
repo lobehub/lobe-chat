@@ -39,6 +39,7 @@ const Moonshot: ModelProviderCard = {
   modelsUrl: 'https://platform.moonshot.cn/docs/intro',
   name: 'Moonshot',
   settings: {
+    disableBrowserRequest: true, // CORS error
     proxyUrl: {
       placeholder: 'https://api.moonshot.cn/v1',
     },
