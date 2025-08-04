@@ -362,10 +362,61 @@ const aihubmixModels: AIChatModelCard[] = [
       reasoning: true,
     },
     contextWindowTokens: 65_536,
-    description: 'DeepSeek R1 推理模型，具有强大的推理能力',
+    description:
+      '已升级至最新版本250528；字节火山云开源部署的满血 R1，总参数量 671B，输入最高 64k。目前最稳定，推荐用这个。',
     displayName: 'DeepSeek R1',
     enabled: true,
     id: 'DeepSeek-R1',
+    pricing: {
+      input: 0.546,
+      output: 2.184,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      '由微软部署提供； DeepSeek R1型号已进行小版本升级，当前版本为DeepSeek-R1-0528。在最新的更新中，DeepSeek R1通过增加计算资源和引入后训练阶段的算法优化机制，大幅提升了推理深度和推断能力。该模型在数学、编程和通用逻辑等多个基准测试中表现出色，其整体性能已接近领先模型，如O3和Gemini 2.5 Pro 。',
+    displayName: 'DeepSeek R1 0528 (Azure)',
+    id: 'azure-DeepSeek-R1-0528',
+    pricing: {
+      input: 0.4,
+      output: 1.6,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 65_536,
+    description: '字节火山云开源部署目前最稳定，推荐用这个。已经自动升级为最新发布的版本 250324 。',
+    displayName: 'DeepSeek V3',
+    enabled: true,
+    id: 'DeepSeek-V3',
+    pricing: {
+      input: 0.272,
+      output: 1.088,
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 65_536,
+    description:
+      '模型供应商为：sophnet平台。DeepSeek V3 Fast 是 DeepSeek V3 0324 版本的高TPS极速版，满血非量化，代码与数学能力更强，响应更快！',
+    displayName: 'DeepSeek V3 (Fast)',
+    id: 'DeepSeek-V3-Fast',
+    pricing: {
+      input: 0.55,
+      output: 2.2,
+    },
     type: 'chat',
   },
   {

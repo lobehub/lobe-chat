@@ -185,6 +185,39 @@ export const detectModelProvider = (modelId: string): keyof typeof MODEL_LIST_CO
 };
 
 /**
+ * 将时间戳转换为日期字符串
+ * @param timestamp 时间戳（秒）
+ * @returns 格式化的日期字符串 (YYYY-MM-DD)
+ */
+const formatTimestampToDate = (timestamp: number): string => {
+  const date = new Date(timestamp * 1000); // 将秒转换为毫秒
+  return date.toISOString().split('T')[0]; // 返回 YYYY-MM-DD 格式
+};
+
+/**
+ * 处理 releasedAt 字段
+ * @param model 模型对象
+ * @param knownModel 已知模型配置
+ * @returns 处理后的 releasedAt 值
+ */
+const processReleasedAt = (model: any, knownModel?: any): string | undefined => {
+  // 优先检查 model.created
+  if (model.created !== undefined && model.created !== null) {
+    // 检查是否为时间戳格式
+    if (typeof model.created === 'number' && model.created > 1_500_000_000) {
+      return formatTimestampToDate(model.created);
+    }
+    // 如果 created 是字符串且已经是日期格式，直接返回
+    if (typeof model.created === 'string') {
+      return model.created;
+    }
+  }
+
+  // 回退到原有逻辑
+  return model.releasedAt ?? knownModel?.releasedAt ?? undefined;
+};
+
+/**
  * 处理模型卡片的通用逻辑
  */
 const processModelCard = (
@@ -218,7 +251,7 @@ const processModelCard = (
       isKeywordListMatch(model.id.toLowerCase(), reasoningKeywords) ||
       knownModel?.abilities?.reasoning ||
       false,
-    releasedAt: model.releasedAt ?? knownModel?.releasedAt ?? undefined,
+    releasedAt: processReleasedAt(model, knownModel),
     type: model.type || knownModel?.type || 'chat',
     vision:
       (isKeywordListMatch(model.id.toLowerCase(), visionKeywords) && !isExcludedModel) ||
