@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.107.4](https://github.com/lobehub/lobe-chat/compare/v1.107.3...v1.107.4)
+
+<sup>Released on **2025-08-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: When s3 files not exist , global files should delete.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: When s3 files not exist , global files should delete ([7c1ca41](https://github.com/lobehub/lobe-chat/commit/7c1ca41))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.107.3](https://github.com/lobehub/lobe-chat/compare/v1.107.2...v1.107.3)
 
 <sup>Released on **2025-08-03**</sup>
