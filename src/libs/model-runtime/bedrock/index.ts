@@ -213,7 +213,38 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     const url = `https://bedrock-runtime.${this.region}.amazonaws.com/model/${model}/converse-stream`;
 
     try {
+payload: ChatStreamPayload,
+    options?: ChatMethodOptions,
+  ): Promise<Response> {
+    // ... (previous code remains unchanged)
+
+    const url = `https://bedrock-runtime.${this.region}.amazonaws.com/model/${model}/converse-stream`;
+
+    try {
+      // Import the csrf package
+      // @ts-ignore
+      import csrf from 'csrf';
+
+      // Generate a CSRF token
+      const csrfProtection = csrf();
+      const csrfToken = csrfProtection.create(this.bearerToken);
+
       const response = await fetch(url, {
+        body: JSON.stringify(requestBody),
+        headers: {
+          'Authorization': `Bearer ${this.bearerToken}`,
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken,
+        },
+        method: 'POST',
+        signal: options?.signal,
+      });
+
+      // ... (rest of the code remains unchanged)
+    } catch (e) {
+      // ... (error handling remains unchanged)
+    }
+  }
         body: JSON.stringify(requestBody),
         headers: {
           'Authorization': `Bearer ${this.bearerToken}`,
