@@ -94,6 +94,11 @@ export default function ComponentPlaygroundIndex() {
 
         break;
       }
+      case 'instant-switch': {
+        router.push('/components/instant-switch');
+
+        break;
+      }
       default: {
         alert(`${component.name} 组件页面正在建设中`);
       }

@@ -31,9 +31,15 @@ export interface ModelAbilities {
    */
   functionCall?: boolean;
   /**
+   * whether model supports image output
+   */
+  imageOutput?: boolean;
+
+  /**
    * whether model supports reasoning
    */
   reasoning?: boolean;
+
   /**
    * whether model supports search web
    */
