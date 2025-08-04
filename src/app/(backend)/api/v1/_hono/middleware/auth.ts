@@ -2,7 +2,6 @@ import debug from 'debug';
 import { Context, Next } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 
-import { LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import { oidcEnv } from '@/envs/oidc';
 import { validateOIDCJWT } from '@/libs/oidc-provider/jwt';
 import { extractBearerToken } from '@/utils/server/auth';
@@ -29,13 +28,6 @@ export const userAuthMiddleware = async (c: Context, next: Next) => {
   // Get Authorization header (standard Bearer token)
   const authorizationHeader = c.req.header('Authorization');
   const bearerToken = extractBearerToken(authorizationHeader);
-
-  // Get LobeChat custom header (for backward compatibility)
-  const lobeChatAuth = c.req.header(LOBE_CHAT_AUTH_HEADER);
-
-  log('Authorization header: %s', authorizationHeader ? 'provided' : 'not provided');
-  log('Bearer token extracted: %s', bearerToken ? 'yes' : 'no');
-  log('LobeChat auth header: %s', lobeChatAuth ? 'provided' : 'not provided');
 
   let userId: string | null = null;
   let authType: string | null = null;
@@ -66,7 +58,6 @@ export const userAuthMiddleware = async (c: Context, next: Next) => {
     c.set('authType', authType);
     c.set('authData', authData);
     c.set('authorizationHeader', authorizationHeader);
-    c.set('lobeChatAuth', lobeChatAuth);
 
     log('Authentication successful - userId: %s, authType: %s', userId, authType);
   } else {
