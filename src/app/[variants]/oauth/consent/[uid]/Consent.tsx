@@ -67,7 +67,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
     @media (max-width: 768px) {
       margin-block: 0;
-      margin-inline: 12px;
+      margin-inline: 32px;
       border-radius: 8px;
     }
   `,
@@ -94,7 +94,7 @@ const useStyles = createStyles(({ css, token }) => ({
       min-height: 100dvh;
       margin-block-start: 48px;
       padding-block: 12px;
-      padding-inline: 0;
+      padding-inline: 12px;
     }
   `,
   icon: css`
