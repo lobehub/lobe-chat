@@ -3,7 +3,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { FileModel } from '@/database/models/file';
 import { TempFileManager } from '@/server/utils/tempFileManager';
-import { TRPCErrorMessage } from '@/types/files';
 
 import { FileService } from '../index';
 
@@ -78,7 +77,7 @@ describe('FileService', () => {
       mockFileModel.findById.mockResolvedValue(undefined);
 
       await expect(service.downloadFileToLocal('test-file-id')).rejects.toThrow(
-        new TRPCError({ code: 'BAD_REQUEST', message: TRPCErrorMessage.FileNotFound }),
+        new TRPCError({ code: 'BAD_REQUEST', message: 'File not found' }),
       );
     });
 
@@ -87,7 +86,7 @@ describe('FileService', () => {
       vi.mocked(service['impl'].getFileByteArray).mockResolvedValue(undefined as any);
 
       await expect(service.downloadFileToLocal('test-file-id')).rejects.toThrow(
-        new TRPCError({ code: 'BAD_REQUEST', message: TRPCErrorMessage.OrginFileNotFound }),
+        new TRPCError({ code: 'BAD_REQUEST', message: 'File content is empty' }),
       );
     });
 
@@ -96,7 +95,7 @@ describe('FileService', () => {
       vi.mocked(service['impl'].getFileByteArray).mockRejectedValue({ Code: 'NoSuchKey' });
 
       await expect(service.downloadFileToLocal('test-file-id')).rejects.toThrow(
-        new TRPCError({ code: 'BAD_REQUEST', message: TRPCErrorMessage.OrginFileNotFound }),
+        new TRPCError({ code: 'BAD_REQUEST', message: 'File not found' }),
       );
 
       expect(mockFileModel.delete).toHaveBeenCalledWith('test-file-id', false);
@@ -108,7 +107,7 @@ describe('FileService', () => {
       vi.mocked(service['impl'].getFileByteArray).mockRejectedValue(originalError);
 
       await expect(service.downloadFileToLocal('test-file-id')).rejects.toThrow(
-        new TRPCError({ code: 'BAD_REQUEST', message: TRPCErrorMessage.OrginFileNotFound }),
+        new TRPCError({ code: 'BAD_REQUEST', message: 'File content is empty' }),
       );
 
       // 验证错误被记录到控制台
@@ -122,7 +121,7 @@ describe('FileService', () => {
       vi.mocked(service['impl'].getFileByteArray).mockResolvedValue(null as any);
 
       await expect(service.downloadFileToLocal('test-file-id')).rejects.toThrow(
-        new TRPCError({ code: 'BAD_REQUEST', message: TRPCErrorMessage.OrginFileNotFound }),
+        new TRPCError({ code: 'BAD_REQUEST', message: 'File content is empty' }),
       );
     });
 
