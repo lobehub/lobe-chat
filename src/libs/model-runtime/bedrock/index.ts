@@ -340,7 +340,21 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     const url = `https://bedrock-runtime.${this.region}.amazonaws.com/model/${payload.model}/invoke`;
 
     try {
+const url = `https://bedrock-runtime.${this.region}.amazonaws.com/model/${payload.model}/invoke`;
+
+    try {
+      // Import and use a CSRF token library (e.g., csurf for Express.js)
+      const csrfToken = await this.getCsrfToken(); // Assume this method exists to retrieve a CSRF token
+
       const response = await fetch(url, {
+        body: JSON.stringify(requestBody),
+        headers: {
+          'Authorization': `Bearer ${this.bearerToken}`,
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken, // Add CSRF token to the request headers
+        },
+        method: 'POST',
+        signal: options?.signal,
         body: JSON.stringify(requestBody),
         headers: {
           'Authorization': `Bearer ${this.bearerToken}`,
