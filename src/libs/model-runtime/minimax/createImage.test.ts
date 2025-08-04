@@ -55,22 +55,19 @@ describe('createMiniMaxImage', () => {
 
       const result = await createMiniMaxImage(payload, mockOptions);
 
-      expect(fetch).toHaveBeenCalledWith(
-        'https://api.minimaxi.com/v1/image_generation',
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Bearer test-api-key',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            aspect_ratio: undefined,
-            model: 'image-01',
-            n: 1,
-            prompt: 'A beautiful sunset over the mountains',
-          }),
+      expect(fetch).toHaveBeenCalledWith('https://api.minimaxi.com/v1/image_generation', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer test-api-key',
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify({
+          aspect_ratio: undefined,
+          model: 'image-01',
+          n: 1,
+          prompt: 'A beautiful sunset over the mountains',
+        }),
+      });
 
       expect(result).toEqual({
         imageUrl: mockImageUrl,
