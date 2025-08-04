@@ -242,7 +242,6 @@ const aihubmixModels: AIChatModelCard[] = [
     enabled: true,
     id: 'grok-3-mini',
     pricing: {
-      cachedInput: 0.075,
       input: 0.3,
       output: 0.5,
     },
@@ -515,9 +514,6 @@ const aihubmixModels: AIChatModelCard[] = [
       output: 2.8,
     },
     releasedAt: '2025-07-25',
-    settings: {
-      extendParams: ['reasoningBudgetToken'],
-    },
     type: 'chat',
   },
   {
@@ -559,9 +555,6 @@ const aihubmixModels: AIChatModelCard[] = [
       output: 1.2,
     },
     releasedAt: '2025-07-30',
-    settings: {
-      extendParams: ['reasoningBudgetToken'],
-    },
     type: 'chat',
   },
   {

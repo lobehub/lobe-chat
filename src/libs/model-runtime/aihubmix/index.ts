@@ -6,7 +6,7 @@ import { responsesAPIModels } from '@/const/models';
 import { createRouterRuntime } from '../RouterRuntime';
 import { ModelProvider } from '../types';
 import { ChatStreamPayload } from '../types/chat';
-import { processMultiProviderModelList } from '../utils/modelParse';
+import { detectModelProvider, processMultiProviderModelList } from '../utils/modelParse';
 
 export interface AiHubMixModelCard {
   created: number;
@@ -29,11 +29,6 @@ const handlePayload = (payload: ChatStreamPayload) => {
 };
 
 export const LobeAiHubMixAI = createRouterRuntime({
-  constructorOptions: {
-    defaultHeaders: {
-      'APP-Code': 'LobeHub',
-    },
-  },
   debug: {
     chatCompletion: () => process.env.DEBUG_AIHUBMIX_CHAT_COMPLETION === '1',
   },
@@ -59,13 +54,15 @@ export const LobeAiHubMixAI = createRouterRuntime({
     {
       apiType: 'anthropic',
       models: LOBE_DEFAULT_MODEL_LIST.map((m) => m.id).filter(
-        (id) => id.startsWith('claude') || id.startsWith('kimi-k2'),
+        (id) => detectModelProvider(id) === 'anthropic',
       ),
       options: { baseURL },
     },
     {
       apiType: 'google',
-      models: LOBE_DEFAULT_MODEL_LIST.map((m) => m.id).filter((id) => id.startsWith('gemini')),
+      models: LOBE_DEFAULT_MODEL_LIST.map((m) => m.id).filter(
+        (id) => detectModelProvider(id) === 'google',
+      ),
       options: { baseURL: urlJoin(baseURL, '/gemini') },
     },
     {
