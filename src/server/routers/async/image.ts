@@ -7,7 +7,7 @@ import { GenerationModel } from '@/database/models/generation';
 import { AgentRuntimeErrorType } from '@/libs/model-runtime/error';
 import { RuntimeImageGenParams } from '@/libs/standard-parameters/index';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
-import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
+import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { GenerationService } from '@/server/services/generation';
 import { AsyncTaskError, AsyncTaskErrorType, AsyncTaskStatus } from '@/types/asyncTask';
 
@@ -129,7 +129,7 @@ export const imageRouter = router({
     try {
       const imageGenerationPromise = async (signal: AbortSignal) => {
         log('Initializing agent runtime for provider: %s', provider);
-        const agentRuntime = await initAgentRuntimeWithUserPayload(provider, ctx.jwtPayload);
+        const agentRuntime = await initModelRuntimeWithUserPayload(provider, ctx.jwtPayload);
 
         // Check if operation has been cancelled
         checkAbortSignal(signal);

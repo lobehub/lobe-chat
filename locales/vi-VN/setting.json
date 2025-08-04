@@ -45,14 +45,25 @@
   },
   "hotkey": {
     "conflicts": "Xung đột với phím tắt hiện có",
+    "errors": {
+      "CONFLICT": "Phím tắt bị trùng: Phím tắt này đã được chức năng khác sử dụng",
+      "INVALID_FORMAT": "Định dạng phím tắt không hợp lệ: Vui lòng sử dụng định dạng đúng (ví dụ CommandOrControl+E)",
+      "INVALID_ID": "ID phím tắt không hợp lệ",
+      "NO_MODIFIER": "Phím tắt phải bao gồm phím điều khiển (Ctrl, Alt, Shift, v.v.)",
+      "SYSTEM_OCCUPIED": "Phím tắt đã bị hệ thống hoặc ứng dụng khác chiếm dụng",
+      "UNKNOWN": "Cập nhật thất bại: Lỗi không xác định"
+    },
     "group": {
       "conversation": "Cuộc trò chuyện",
+      "desktop": "Phiên bản máy tính để bàn",
       "essential": "Cơ bản"
     },
     "invalidCombination": "Phím tắt cần ít nhất một phím sửa đổi (Ctrl, Alt, Shift) và một phím thông thường",
     "record": "Nhấn phím để ghi lại phím tắt",
     "reset": "Đặt lại thành phím tắt mặc định",
-    "title": "Phím tắt"
+    "title": "Phím tắt",
+    "updateError": "Cập nhật phím tắt thất bại: Lỗi mạng hoặc hệ thống",
+    "updateSuccess": "Cập nhật phím tắt thành công"
   },
   "llm": {
     "aesGcm": "Khóa và địa chỉ proxy của bạn sẽ được mã hóa bằng thuật toán mã hóa <1>AES-GCM</1>",

@@ -45,14 +45,25 @@
   },
   "hotkey": {
     "conflicts": "既存のショートカットキーと衝突しています",
+    "errors": {
+      "CONFLICT": "ホットキーの競合：このホットキーは他の機能で既に使用されています",
+      "INVALID_FORMAT": "ホットキーの形式が無効です：正しい形式を使用してください（例：CommandOrControl+E）",
+      "INVALID_ID": "無効なホットキーIDです",
+      "NO_MODIFIER": "ホットキーには修飾キー（Ctrl、Alt、Shiftなど）が含まれている必要があります",
+      "SYSTEM_OCCUPIED": "ホットキーはシステムまたは他のアプリケーションで使用されています",
+      "UNKNOWN": "更新に失敗しました：不明なエラー"
+    },
     "group": {
       "conversation": "会話",
+      "desktop": "デスクトップ",
       "essential": "基本"
     },
     "invalidCombination": "ショートカットキーには少なくとも1つの修飾キー（Ctrl、Alt、Shift）と1つの通常のキーが必要です",
     "record": "ショートカットキーを録音するにはキーを押してください",
     "reset": "デフォルトのショートカットキーにリセット",
-    "title": "ショートカットキー"
+    "title": "ショートカットキー",
+    "updateError": "ホットキーの更新に失敗しました：ネットワークまたはシステムエラー",
+    "updateSuccess": "ホットキーが正常に更新されました"
   },
   "llm": {
     "aesGcm": "キーとプロキシアドレスなどは <1>AES-GCM</1> 暗号化アルゴリズムを使用して暗号化されます",

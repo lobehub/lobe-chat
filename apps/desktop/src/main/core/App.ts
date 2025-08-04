@@ -9,20 +9,19 @@ import { buildDir, nextStandaloneDir } from '@/const/dir';
 import { isDev } from '@/const/env';
 import { IControlModule } from '@/controllers';
 import { IServiceModule } from '@/services';
-import FileService from '@/services/fileSrv';
 import { IpcClientEventSender } from '@/types/ipcClientEvent';
 import { createLogger } from '@/utils/logger';
 import { CustomRequestHandler, createHandler } from '@/utils/next-electron-rsc';
 
-import BrowserManager from './BrowserManager';
-import { I18nManager } from './I18nManager';
-import { IoCContainer } from './IoCContainer';
-import MenuManager from './MenuManager';
-import { ShortcutManager } from './ShortcutManager';
-import { StaticFileServerManager } from './StaticFileServerManager';
-import { StoreManager } from './StoreManager';
-import TrayManager from './TrayManager';
-import { UpdaterManager } from './UpdaterManager';
+import { BrowserManager } from './browser/BrowserManager';
+import { I18nManager } from './infrastructure/I18nManager';
+import { IoCContainer } from './infrastructure/IoCContainer';
+import { StaticFileServerManager } from './infrastructure/StaticFileServerManager';
+import { StoreManager } from './infrastructure/StoreManager';
+import { UpdaterManager } from './infrastructure/UpdaterManager';
+import { MenuManager } from './ui/MenuManager';
+import { ShortcutManager } from './ui/ShortcutManager';
+import { TrayManager } from './ui/TrayManager';
 
 const logger = createLogger('core:App');
 

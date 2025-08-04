@@ -6,12 +6,7 @@ import { useClientDataSWR } from '@/libs/swr';
 import { discoverService } from '@/services/discover';
 import { DiscoverStore } from '@/store/discover';
 import { globalHelpers } from '@/store/global/helpers';
-import {
-  DiscoverMcpDetail,
-  IdentifiersResponse,
-  McpListResponse,
-  McpQueryParams,
-} from '@/types/discover';
+import { DiscoverMcpDetail, McpListResponse, McpQueryParams } from '@/types/discover';
 
 export interface MCPAction {
   useFetchMcpDetail: (params: {
@@ -20,7 +15,6 @@ export interface MCPAction {
   }) => SWRResponse<DiscoverMcpDetail>;
   useFetchMcpList: (params: McpQueryParams) => SWRResponse<McpListResponse>;
   useMcpCategories: (params: CategoryListQuery) => SWRResponse<CategoryItem[]>;
-  useMcpIdentifiers: () => SWRResponse<IdentifiersResponse>;
 }
 
 export const createMCPSlice: StateCreator<
@@ -60,11 +54,5 @@ export const createMCPSlice: StateCreator<
         revalidateOnFocus: false,
       },
     );
-  },
-
-  useMcpIdentifiers: () => {
-    return useClientDataSWR('mcp-identifiers', async () => discoverService.getMcpIdentifiers(), {
-      revalidateOnFocus: false,
-    });
   },
 });

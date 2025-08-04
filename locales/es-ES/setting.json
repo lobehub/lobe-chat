@@ -45,14 +45,25 @@
   },
   "hotkey": {
     "conflicts": "Conflicto con las teclas de acceso rápido existentes",
+    "errors": {
+      "CONFLICT": "Conflicto de atajo: este atajo ya está asignado a otra función",
+      "INVALID_FORMAT": "Formato de atajo inválido: por favor use el formato correcto (por ejemplo, CommandOrControl+E)",
+      "INVALID_ID": "ID de atajo inválido",
+      "NO_MODIFIER": "El atajo debe incluir una tecla modificadora (Ctrl, Alt, Shift, etc.)",
+      "SYSTEM_OCCUPIED": "El atajo está ocupado por el sistema u otra aplicación",
+      "UNKNOWN": "Error al actualizar: error desconocido"
+    },
     "group": {
       "conversation": "Conversación",
+      "desktop": "Escritorio",
       "essential": "Esencial"
     },
     "invalidCombination": "La combinación de teclas de acceso rápido debe incluir al menos una tecla modificadora (Ctrl, Alt, Shift) y una tecla normal",
     "record": "Presiona una tecla para grabar la tecla de acceso rápido",
     "reset": "Restablecer a las teclas de acceso rápido predeterminadas",
-    "title": "Atajos de teclado"
+    "title": "Atajos de teclado",
+    "updateError": "Error al actualizar el atajo: problema de red o del sistema",
+    "updateSuccess": "Atajo actualizado con éxito"
   },
   "llm": {
     "aesGcm": "Su clave y dirección del agente se cifrarán utilizando el algoritmo de cifrado <1>AES-GCM</1>",

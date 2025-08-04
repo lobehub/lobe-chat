@@ -1,4 +1,4 @@
-import { AIChatModelCard } from '@/types/aiModel';
+import { AIChatModelCard, AIImageModelCard } from '@/types/aiModel';
 
 const minimaxChatModels: AIChatModelCard[] = [
   {
@@ -8,8 +8,7 @@ const minimaxChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 1_000_192,
-    description:
-      '全新自研推理模型。全球领先：80K思维链 x 1M输入，效果比肩海外顶尖模型。',
+    description: '全新自研推理模型。全球领先：80K思维链 x 1M输入，效果比肩海外顶尖模型。',
     displayName: 'MiniMax-M1',
     enabled: true,
     id: 'MiniMax-M1',
@@ -51,6 +50,45 @@ const minimaxChatModels: AIChatModelCard[] = [
   },
 ];
 
-export const allModels = [...minimaxChatModels];
+const minimaxImageModels: AIImageModelCard[] = [
+  {
+    description: '全新图像生成模型，画面表现细腻，支持文生图、图生图',
+    displayName: 'Image 01',
+    enabled: true,
+    id: 'image-01',
+    parameters: {
+      aspectRatio: {
+        default: '1:1',
+        enum: ['1:1', '16:9', '4:3', '3:2', '2:3', '3:4', '9:16', '21:9'],
+      },
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+    },
+    releasedAt: '2025-02-28',
+    type: 'image',
+  },
+  {
+    description: '图像生成模型，画面表现细腻，支持文生图并进行画风设置',
+    displayName: 'Image 01 Live',
+    enabled: true,
+    id: 'image-01-live',
+    parameters: {
+      aspectRatio: {
+        default: '1:1',
+        enum: ['1:1', '16:9', '4:3', '3:2', '2:3', '3:4', '9:16', '21:9'],
+      },
+      prompt: {
+        default: '',
+      },
+      seed: { default: null },
+    },
+    releasedAt: '2025-02-28',
+    type: 'image',
+  },
+];
+
+export const allModels = [...minimaxChatModels, ...minimaxImageModels];
 
 export default allModels;

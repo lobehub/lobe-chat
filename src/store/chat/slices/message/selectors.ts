@@ -177,6 +177,14 @@ const isToolCallStreaming = (id: string, index: number) => (s: ChatStoreState) =
   return isLoading[index];
 };
 
+const isInToolsCalling = (id: string, index: number) => (s: ChatStoreState) => {
+  const isStreamingToolsCalling = isToolCallStreaming(id, index)(s);
+
+  const isInvokingPluginApi = s.messageInToolsCallingIds.includes(id);
+
+  return isStreamingToolsCalling || isInvokingPluginApi;
+};
+
 const isAIGenerating = (s: ChatStoreState) =>
   s.chatLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
 
@@ -201,6 +209,11 @@ const isSendButtonDisabledByMessage = (s: ChatStoreState) =>
   // 4. when the message is in RAG flow
   isInRAGFlow(s);
 
+const inboxActiveTopicMessages = (state: ChatStoreState) => {
+  const activeTopicId = state.activeTopicId;
+  return state.messagesMap[messageMapKey(INBOX_SESSION_ID, activeTopicId)] || [];
+};
+
 export const chatSelectors = {
   activeBaseChats,
   activeBaseChatsWithoutTool,
@@ -213,10 +226,12 @@ export const chatSelectors = {
   getMessageById,
   getMessageByToolCallId,
   getTraceIdByMessageId,
+  inboxActiveTopicMessages,
   isAIGenerating,
   isCreatingMessage,
   isCurrentChatLoaded,
   isHasMessageLoading,
+  isInToolsCalling,
   isMessageEditing,
   isMessageGenerating,
   isMessageInChatReasoning,

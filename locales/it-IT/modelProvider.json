@@ -189,6 +189,7 @@
       "aesGcm": "La tua chiave e l'indirizzo proxy saranno crittografati utilizzando l'algoritmo di crittografia <1>AES-GCM</1>",
       "apiKey": {
         "desc": "Inserisci la tua {{name}} API Key",
+        "descWithUrl": "Per favore inserisci la tua API Key di {{name}}, <3>clicca qui per ottenerla</3>",
         "placeholder": "{{name}} API Key",
         "title": "API Key"
       },

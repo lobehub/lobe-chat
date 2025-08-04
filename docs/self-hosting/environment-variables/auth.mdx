@@ -249,6 +249,29 @@ LobeChat provides a complete authentication service capability when deployed. Th
 - Default: `-`
 - Example: `https://your-instance-abc123.zitadel.cloud`
 
+### Okta
+
+#### `AUTH_OKTA_ID`
+
+- Type: Required
+- Description: Client ID of the Okta application. This can be found under your application settings in the Okta console.
+- Default: `-`
+- Example: `ac12c950f3ce48c8a45a`
+
+#### `AUTH_OKTA_SECRET`
+
+- Type: Required
+- Description: Client Secret of the Okta application. This can be found under your application settings in the Okta console.
+- Default: `-`
+- Example: `ex1HqvSOOkC5INqo42grOSqNvHoD4p84em1yy5QU7v88IZlaWGywFjYkrkpkSopt`
+
+#### `AUTH_OKTA_ISSUER`
+
+- Type: Required
+- Description: Issuer of the Okta application. This is the URL of the Okta instance -- If branding is set up, it can be your custom domain.
+- Default: `-`
+- Example: `https://your-instance.okta.com`
+
 ### Generic OIDC
 
 #### `AUTH_GENERIC_OIDC_ID`
