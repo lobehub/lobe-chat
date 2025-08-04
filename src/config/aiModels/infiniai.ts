@@ -16,10 +16,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek-r1',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -30,10 +32,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek-v3',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -48,10 +52,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'qwen3-235b-a22b',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -66,10 +72,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'qwen3-30b-a3b',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -84,10 +92,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'qwen3-32b',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -102,10 +112,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     enabled: false,
     id: 'qwen3-14b',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -120,10 +132,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     enabled: false,
     id: 'qwen3-8b',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -137,10 +151,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'qwen2.5-vl-72b-instruct',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -154,10 +170,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'qwen2.5-vl-32b-instruct',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -170,10 +188,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     displayName: 'Qwen2.5 VL 7B Instruct',
     id: 'qwen2.5-vl-7b-instruct',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -187,10 +207,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'qwen2.5-72b-instruct',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -204,10 +226,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'qwen2.5-32b-instruct',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -217,10 +241,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     displayName: 'Qwen2.5 Coder 32B Instruct',
     id: 'qwen2.5-coder-32b-instruct',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -230,10 +256,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     displayName: 'Qwen2.5 14B Instruct',
     id: 'qwen2.5-14b-instruct',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -246,10 +274,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     displayName: 'Qwen2.5 7B Instruct',
     id: 'qwen2.5-7b-instruct',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -264,10 +294,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     enabled: false,
     id: 'qwq-32b',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -278,10 +310,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     enabled: false,
     id: 'deepseek-r1-distill-qwen-32b',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -292,10 +326,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     enabled: false,
     id: 'llama-3.3-70b-instruct',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -305,10 +341,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     displayName: 'Qwen 2 72B Instruct',
     id: 'qwen2-72b-instruct',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -318,10 +356,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     displayName: 'Qwen 2 7B Instruct',
     id: 'qwen2-7b-instruct',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -331,10 +371,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     displayName: 'Yi-1.5 34B Chat',
     id: 'yi-1.5-34b-chat',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -343,10 +385,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     displayName: 'GLM-4 9B Chat',
     id: 'glm-4-9b-chat',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -356,10 +400,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     displayName: 'ChatGLM3',
     id: 'chatglm3',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -369,10 +415,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     displayName: 'ChatGLM3 6B Base',
     id: 'chatglm3-6b-base',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -382,10 +430,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     displayName: 'Llama 2 7B Chat',
     id: 'llama-2-7b-chat',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -395,10 +445,12 @@ const infiniaiChatModels: AIChatModelCard[] = [
     displayName: 'Megrez 3B Instruct',
     id: 'megrez-3b-instruct',
     pricing: {
-      currency: 'CNY',
-      input: 0,
-      output: 0,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
 ];

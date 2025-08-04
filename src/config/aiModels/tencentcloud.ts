@@ -14,10 +14,12 @@ const tencentCloudChatModels: AIChatModelCard[] = [
     id: 'deepseek-r1',
     maxOutput: 16_000,
     pricing: {
-      currency: 'CNY',
-      input: 4,
-      output: 16,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -29,10 +31,12 @@ const tencentCloudChatModels: AIChatModelCard[] = [
     id: 'deepseek-v3-0324',
     maxOutput: 16_000,
     pricing: {
-      currency: 'CNY',
-      input: 2,
-      output: 8,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -42,10 +46,12 @@ const tencentCloudChatModels: AIChatModelCard[] = [
     id: 'deepseek-v3',
     maxOutput: 16_000,
     pricing: {
-      currency: 'CNY',
-      input: 2,
-      output: 8,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
 ];

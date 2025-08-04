@@ -17,10 +17,12 @@ const stepfunChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'step-r1-v-mini',
     pricing: {
-      currency: 'CNY',
-      input: 2.5,
-      output: 8,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     // settings: {
     //   searchImpl: 'params',
     // },
@@ -36,10 +38,12 @@ const stepfunChatModels: AIChatModelCard[] = [
     displayName: 'Step 1 8K',
     id: 'step-1-8k',
     pricing: {
-      currency: 'CNY',
-      input: 5,
-      output: 20,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     settings: {
       searchImpl: 'params',
     },
@@ -55,10 +59,12 @@ const stepfunChatModels: AIChatModelCard[] = [
     displayName: 'Step 1 32K',
     id: 'step-1-32k',
     pricing: {
-      currency: 'CNY',
-      input: 15,
-      output: 70,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 70, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     settings: {
       searchImpl: 'params',
     },
@@ -74,10 +80,12 @@ const stepfunChatModels: AIChatModelCard[] = [
     displayName: 'Step 1 256K',
     id: 'step-1-256k',
     pricing: {
-      currency: 'CNY',
-      input: 95,
-      output: 300,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 95, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 300, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     settings: {
       searchImpl: 'params',
     },
@@ -95,10 +103,12 @@ const stepfunChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'step-2-mini',
     pricing: {
-      currency: 'CNY',
-      input: 1,
-      output: 2,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     releasedAt: '2025-01-14',
     settings: {
       searchImpl: 'params',
@@ -115,10 +125,12 @@ const stepfunChatModels: AIChatModelCard[] = [
     displayName: 'Step 2 16K',
     id: 'step-2-16k',
     pricing: {
-      currency: 'CNY',
-      input: 38,
-      output: 120,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 38, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 120, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     settings: {
       searchImpl: 'params',
     },
@@ -135,10 +147,12 @@ const stepfunChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'step-2-16k-exp',
     pricing: {
-      currency: 'CNY',
-      input: 38,
-      output: 120,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 38, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 120, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     releasedAt: '2025-01-15',
     settings: {
       searchImpl: 'params',
@@ -156,10 +170,12 @@ const stepfunChatModels: AIChatModelCard[] = [
     displayName: 'Step 1V 8K',
     id: 'step-1v-8k',
     pricing: {
-      currency: 'CNY',
-      input: 5,
-      output: 20,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     settings: {
       searchImpl: 'params',
     },
@@ -176,10 +192,12 @@ const stepfunChatModels: AIChatModelCard[] = [
     displayName: 'Step 1V 32K',
     id: 'step-1v-32k',
     pricing: {
-      currency: 'CNY',
-      input: 15,
-      output: 70,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 70, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     settings: {
       searchImpl: 'params',
     },
@@ -195,10 +213,12 @@ const stepfunChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'step-1o-vision-32k',
     pricing: {
-      currency: 'CNY',
-      input: 15,
-      output: 70,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 70, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     releasedAt: '2025-01-22',
     type: 'chat',
   },
@@ -213,10 +233,12 @@ const stepfunChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'step-1o-turbo-vision',
     pricing: {
-      currency: 'CNY',
-      input: 8,
-      output: 35,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 35, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     releasedAt: '2025-02-14',
     type: 'chat',
   },

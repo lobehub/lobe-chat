@@ -13,9 +13,11 @@ const cohereChatModels: AIChatModelCard[] = [
     id: 'command-a-03-2025',
     maxOutput: 8000,
     pricing: {
-      input: 2.5,
-      output: 10,
-    },
+          units: [
+            { name: 'TextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -29,9 +31,11 @@ const cohereChatModels: AIChatModelCard[] = [
     id: 'command-r-plus-04-2024',
     maxOutput: 4000,
     pricing: {
-      input: 3,
-      output: 15,
-    },
+          units: [
+            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -46,9 +50,11 @@ const cohereChatModels: AIChatModelCard[] = [
     id: 'command-r-plus-08-2024',
     maxOutput: 4000,
     pricing: {
-      input: 2.5,
-      output: 10,
-    },
+          units: [
+            { name: 'TextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -62,9 +68,11 @@ const cohereChatModels: AIChatModelCard[] = [
     id: 'command-r-03-2024',
     maxOutput: 4000,
     pricing: {
-      input: 0.15,
-      output: 0.6,
-    },
+          units: [
+            { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -78,9 +86,11 @@ const cohereChatModels: AIChatModelCard[] = [
     id: 'command-r-08-2024',
     maxOutput: 4000,
     pricing: {
-      input: 0.15,
-      output: 0.6,
-    },
+          units: [
+            { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -94,9 +104,11 @@ const cohereChatModels: AIChatModelCard[] = [
     id: 'command-r-03-2024',
     maxOutput: 4000,
     pricing: {
-      input: 0.5,
-      output: 1.5,
-    },
+          units: [
+            { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -110,9 +122,11 @@ const cohereChatModels: AIChatModelCard[] = [
     id: 'command-r7b-12-2024',
     maxOutput: 4000,
     pricing: {
-      input: 0.0375,
-      output: 0.15,
-    },
+          units: [
+            { name: 'TextInput', rate: 0.0375, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -123,9 +137,11 @@ const cohereChatModels: AIChatModelCard[] = [
     id: 'command',
     maxOutput: 4000,
     pricing: {
-      input: 1,
-      output: 2,
-    },
+          units: [
+            { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -139,9 +155,11 @@ const cohereChatModels: AIChatModelCard[] = [
     id: 'command-nightly',
     maxOutput: 4000,
     pricing: {
-      input: 1,
-      output: 2,
-    },
+          units: [
+            { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -151,9 +169,11 @@ const cohereChatModels: AIChatModelCard[] = [
     id: 'command-light',
     maxOutput: 4000,
     pricing: {
-      input: 0.3,
-      output: 0.6,
-    },
+          units: [
+            { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -164,9 +184,11 @@ const cohereChatModels: AIChatModelCard[] = [
     id: 'command-light-nightly',
     maxOutput: 4000,
     pricing: {
-      input: 0.3,
-      output: 0.6,
-    },
+          units: [
+            { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -178,9 +200,11 @@ const cohereChatModels: AIChatModelCard[] = [
     id: 'c4ai-aya-expanse-32b',
     maxOutput: 4000,
     pricing: {
-      input: 0.5,
-      output: 1.5,
-    },
+          units: [
+            { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -192,9 +216,11 @@ const cohereChatModels: AIChatModelCard[] = [
     id: 'c4ai-aya-expanse-8b',
     maxOutput: 4000,
     pricing: {
-      input: 0.5,
-      output: 1.5,
-    },
+          units: [
+            { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -209,9 +235,11 @@ const cohereChatModels: AIChatModelCard[] = [
     id: 'c4ai-aya-vision-32b',
     maxOutput: 4000,
     pricing: {
-      input: 0.5,
-      output: 1.5,
-    },
+          units: [
+            { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -226,9 +254,11 @@ const cohereChatModels: AIChatModelCard[] = [
     id: 'c4ai-aya-vision-8b',
     maxOutput: 4000,
     pricing: {
-      input: 0.5,
-      output: 1.5,
-    },
+          units: [
+            { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
 ];

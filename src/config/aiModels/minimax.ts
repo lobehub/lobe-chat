@@ -15,10 +15,12 @@ const minimaxChatModels: AIChatModelCard[] = [
     id: 'MiniMax-M1',
     maxOutput: 40_000,
     pricing: {
-      currency: 'CNY',
-      input: 1.2, // 输入长度 32-128k
-      output: 16,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 1.2, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     releasedAt: '2025-06-16',
     settings: {
       searchImpl: 'params',
@@ -39,10 +41,12 @@ const minimaxChatModels: AIChatModelCard[] = [
     id: 'MiniMax-Text-01',
     maxOutput: 40_000,
     pricing: {
-      currency: 'CNY',
-      input: 1,
-      output: 8,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     releasedAt: '2025-01-15',
     settings: {
       searchImpl: 'params',

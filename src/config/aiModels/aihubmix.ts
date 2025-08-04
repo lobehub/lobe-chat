@@ -549,9 +549,11 @@ const aihubmixModels: AIChatModelCard[] = [
     id: 'gemini-2.5-pro',
     maxOutput: 65_536,
     pricing: {
-      input: 1.25, // prompts <= 200k tokens
-      output: 10, // prompts <= 200k tokens
-    },
+          units: [
+            { name: 'TextInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     releasedAt: '2025-06-17',
     settings: {
       extendParams: ['thinkingBudget'],

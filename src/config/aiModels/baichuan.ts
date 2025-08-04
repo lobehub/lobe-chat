@@ -14,10 +14,12 @@ const baichuanChatModels: AIChatModelCard[] = [
     id: 'Baichuan4',
     maxOutput: 4096,
     pricing: {
-      currency: 'CNY',
-      input: 100,
-      output: 100,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     settings: {
       searchImpl: 'params',
     },
@@ -36,10 +38,12 @@ const baichuanChatModels: AIChatModelCard[] = [
     id: 'Baichuan4-Turbo',
     maxOutput: 4096,
     pricing: {
-      currency: 'CNY',
-      input: 15,
-      output: 15,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     settings: {
       searchImpl: 'params',
     },
@@ -58,10 +62,12 @@ const baichuanChatModels: AIChatModelCard[] = [
     id: 'Baichuan4-Air',
     maxOutput: 4096,
     pricing: {
-      currency: 'CNY',
-      input: 0.98,
-      output: 0.98,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 0.98, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 0.98, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     settings: {
       searchImpl: 'params',
     },
@@ -79,10 +85,12 @@ const baichuanChatModels: AIChatModelCard[] = [
     id: 'Baichuan3-Turbo',
     maxOutput: 8192,
     pricing: {
-      currency: 'CNY',
-      input: 12,
-      output: 12,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     settings: {
       searchImpl: 'params',
     },
@@ -96,10 +104,12 @@ const baichuanChatModels: AIChatModelCard[] = [
     id: 'Baichuan3-Turbo-128k',
     maxOutput: 4096,
     pricing: {
-      currency: 'CNY',
-      input: 24,
-      output: 24,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
   {
@@ -110,10 +120,12 @@ const baichuanChatModels: AIChatModelCard[] = [
     id: 'Baichuan2-Turbo',
     maxOutput: 8192,
     pricing: {
-      currency: 'CNY',
-      input: 8,
-      output: 8,
-    },
+          currency: 'CNY',
+          units: [
+            { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+            { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' }
+          ]
+        },
     type: 'chat',
   },
 ];
