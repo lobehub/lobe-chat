@@ -122,7 +122,88 @@ export class FileUploadService extends BaseService {
       const fileArrayBuffer = await file.arrayBuffer();
       const hash = sha256(fileArrayBuffer);
 
-      // 3. 使用现有的上传服务上传文件
+      // 3. 检查文件是否已存在（去重逻辑）
+      if (!options.skipDeduplication) {
+        const existingFileCheck = await this.fileModel.checkHash(hash);
+        
+        if (existingFileCheck.isExist) {
+          this.log('info', 'File already exists, checking user file record', {
+            existingUrl: existingFileCheck.url,
+            filename: file.name,
+            hash,
+          });
+
+          // 检查当前用户是否已经有这个文件的记录
+          const existingUserFile = await this.findExistingUserFile(hash);
+          
+          if (existingUserFile) {
+            // 用户已有此文件记录，直接返回
+            this.log('info', 'User already has this file record', {
+              fileId: existingUserFile.id,
+              filename: existingUserFile.name,
+            });
+
+            // 如果提供了 sessionId，创建文件和会话的关联关系
+            if (options.sessionId) {
+              await this.createFileSessionRelation(existingUserFile.id, options.sessionId);
+              this.log('info', 'Existing file associated with session', {
+                fileId: existingUserFile.id,
+                sessionId: options.sessionId,
+              });
+            }
+
+            return this.convertToUploadResponse(existingUserFile);
+          } else {
+            // 文件在全局表中存在，但用户没有记录，创建用户文件记录
+            this.log('info', 'File exists globally, creating user file record', {
+              filename: file.name,
+              hash,
+            });
+
+            const fileRecord = {
+              chunkTaskId: null,
+              clientId: null,
+              embeddingTaskId: null,
+              fileHash: hash,
+              fileType: file.type,
+              knowledgeBaseId: options.knowledgeBaseId,
+              metadata: existingFileCheck.metadata as FileMetadata,
+              name: file.name,
+              size: file.size,
+              url: existingFileCheck.url || '',
+            };
+
+            const createResult = await this.fileModel.create(fileRecord, false); // 不插入全局表，因为已存在
+
+            // 如果提供了 sessionId，创建文件和会话的关联关系
+            if (options.sessionId) {
+              await this.createFileSessionRelation(createResult.id, options.sessionId);
+              this.log('info', 'Deduplicated file associated with session', {
+                fileId: createResult.id,
+                sessionId: options.sessionId,
+              });
+            }
+
+            // 获取完整的文件信息
+            const savedFile = await this.fileModel.findById(createResult.id);
+
+            if (!savedFile) {
+              throw this.createBusinessError('Failed to retrieve deduplicated file');
+            }
+
+            this.log('info', 'Deduplicated file created successfully', {
+              fileId: createResult.id,
+              path: existingFileCheck.url,
+              sessionId: options.sessionId,
+              size: file.size,
+            });
+
+            return this.convertToUploadResponse(savedFile);
+          }
+        }
+      }
+
+      // 4. 文件不存在，正常上传流程
       const uploadResult = await this.uploadToServerS3(file, {
         directory: options.directory,
         pathname: options.pathname,
@@ -134,7 +215,7 @@ export class FileUploadService extends BaseService {
 
       const metadata = uploadResult.data;
 
-      // 4. 保存文件记录到数据库
+      // 5. 保存文件记录到数据库
       const fileRecord = {
         chunkTaskId: null,
         clientId: null,
@@ -470,17 +551,116 @@ export class FileUploadService extends BaseService {
       const fileArrayBuffer = await file.arrayBuffer();
       const hash = sha256(fileArrayBuffer);
 
-      // 3. 生成文件元数据
+      // 3. 检查文件是否已存在（去重逻辑）
+      if (!options.skipDeduplication) {
+        const existingFileCheck = await this.fileModel.checkHash(hash);
+        
+        if (existingFileCheck.isExist) {
+          this.log('info', 'Public file already exists, checking user file record', {
+            existingUrl: existingFileCheck.url,
+            filename: file.name,
+            hash,
+          });
+
+          // 检查当前用户是否已经有这个文件的记录
+          const existingUserFile = await this.findExistingUserFile(hash);
+          
+          if (existingUserFile) {
+            // 用户已有此文件记录，直接返回
+            this.log('info', 'User already has this public file record', {
+              fileId: existingUserFile.id,
+              filename: existingUserFile.name,
+            });
+
+            // 如果提供了 sessionId，创建文件和会话的关联关系
+            if (options.sessionId) {
+              await this.createFileSessionRelation(existingUserFile.id, options.sessionId);
+              this.log('info', 'Existing public file associated with session', {
+                fileId: existingUserFile.id,
+                sessionId: options.sessionId,
+              });
+            }
+
+            // 生成公共访问URL
+            const publicUrl = this.s3Service.getPublicUrl(existingUserFile.url);
+
+            return {
+              fileType: existingUserFile.fileType,
+              filename: existingUserFile.name,
+              hash,
+              id: existingUserFile.id,
+              metadata: existingUserFile.metadata as FileMetadata,
+              size: existingUserFile.size,
+              uploadedAt: existingUserFile.createdAt.toISOString(),
+              url: publicUrl,
+            };
+          } else {
+            // 文件在全局表中存在，但用户没有记录，创建用户文件记录
+            this.log('info', 'Public file exists globally, creating user file record', {
+              filename: file.name,
+              hash,
+            });
+
+            const fileRecord = {
+              chunkTaskId: null,
+              clientId: null,
+              embeddingTaskId: null,
+              fileHash: hash,
+              fileType: file.type,
+              knowledgeBaseId: options.knowledgeBaseId,
+              metadata: existingFileCheck.metadata as FileMetadata,
+              name: file.name,
+              size: file.size,
+              url: existingFileCheck.url || '',
+            };
+
+            const createResult = await this.fileModel.create(fileRecord, false); // 不插入全局表，因为已存在
+
+            // 如果提供了 sessionId，创建文件和会话的关联关系
+            if (options.sessionId) {
+              await this.createFileSessionRelation(createResult.id, options.sessionId);
+              this.log('info', 'Deduplicated public file associated with session', {
+                fileId: createResult.id,
+                sessionId: options.sessionId,
+              });
+            }
+
+            // 生成公共访问URL
+            const publicUrl = this.s3Service.getPublicUrl(existingFileCheck.url || '');
+
+            this.log('info', 'Deduplicated public file created successfully', {
+              fileId: createResult.id,
+              path: existingFileCheck.url,
+              publicUrl,
+              sessionId: options.sessionId,
+              size: file.size,
+            });
+
+            return {
+              fileType: file.type,
+              filename: file.name,
+              hash,
+              id: createResult.id,
+              metadata: existingFileCheck.metadata as FileMetadata,
+              size: file.size,
+              uploadedAt: new Date().toISOString(),
+              url: publicUrl,
+            };
+          }
+        }
+      }
+
+      // 4. 文件不存在，正常上传流程
       const metadata = this.generateFileMetadata(file, options.directory);
 
-      // 4. 上传到S3（设置为公共可读）
+      // 5. 上传到S3（设置为公共可读）
       const fileBuffer = Buffer.from(fileArrayBuffer);
       await this.s3Service.uploadBuffer(metadata.path, fileBuffer, file.type);
 
-      // 5. 生成公共访问URL
+      // 6. 生成公共访问URL
       const publicUrl = this.s3Service.getPublicUrl(metadata.path);
 
-      // 6. 保存文件记录到数据库
+      // 7. 保存文件记录到数据库
       const fileRecord = {
         chunkTaskId: null,
         clientId: null,
@@ -1064,6 +1244,25 @@ export class FileUploadService extends BaseService {
     } catch (error) {
       this.log('error', 'Batch file retrieval failed', error);
       throw error;
+    }
+  }
+
+  /**
+   * 查找用户是否已有指定哈希的文件记录
+   */
+  private async findExistingUserFile(hash: string): Promise<FileItem | null> {
+    try {
+      const existingFile = await this.db.query.files.findFirst({
+        where: and(
+          eq(files.fileHash, hash),
+          eq(files.userId, this.userId),
+        ),
+      });
+
+      return existingFile || null;
+    } catch (error) {
+      this.log('error', 'Failed to find existing user file', { error, hash });
+      return null;
     }
   }
 
