@@ -74,7 +74,7 @@ const ControlsForm = memo(() => {
       minWidth: undefined,
       name: 'enableReasoning',
     },
-    enableReasoning && {
+    (enableReasoning || modelExtendParams?.includes('reasoningBudgetToken')) && {
       children: <ReasoningTokenSlider />,
       label: t('extendParams.reasoningBudgetToken.title'),
       layout: 'vertical',

@@ -172,6 +172,9 @@ export const getLLMConfig = () => {
 
       ENABLED_V0: z.boolean(),
       V0_API_KEY: z.string().optional(),
+
+      ENABLED_AIHUBMIX: z.boolean(),
+      AIHUBMIX_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -342,6 +345,9 @@ export const getLLMConfig = () => {
 
       ENABLED_V0: !!process.env.V0_API_KEY,
       V0_API_KEY: process.env.V0_API_KEY,
+
+      ENABLED_AIHUBMIX: !!process.env.AIHUBMIX_API_KEY,
+      AIHUBMIX_API_KEY: process.env.AIHUBMIX_API_KEY,
     },
   });
 };

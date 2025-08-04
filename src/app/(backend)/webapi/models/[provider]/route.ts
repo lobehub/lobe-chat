@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { checkAuth } from '@/app/(backend)/middleware/auth';
 import { ChatCompletionErrorPayload, ModelProvider } from '@/libs/model-runtime';
-import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
+import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
 import { ChatErrorType } from '@/types/fetch';
 import { createErrorResponse } from '@/utils/errorResponse';
 
@@ -18,14 +18,14 @@ export const GET = checkAuth(async (req, { params, jwtPayload }) => {
 
     // For Bedrock, use environment config directly
     if (provider === 'bedrock') {
-      const agentRuntime = await initAgentRuntimeWithUserPayload(provider, {
+      const agentRuntime = await initModelRuntimeWithUserPayload(provider, {
         apiKey: hasDefaultApiKey, // dummy value
       });
       const list = await agentRuntime.models();
       return NextResponse.json(list);
     }
 
-    const agentRuntime = await initAgentRuntimeWithUserPayload(provider, {
+    const agentRuntime = await initModelRuntimeWithUserPayload(provider, {
       ...jwtPayload,
       apiKey: noNeedAPIKey(provider) ? hasDefaultApiKey : jwtPayload.apiKey,
     });

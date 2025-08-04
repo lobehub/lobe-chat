@@ -10,7 +10,7 @@ export { LobeGroq } from './groq';
 export * from './helpers';
 export { LobeMinimaxAI } from './minimax';
 export { LobeMistralAI } from './mistral';
-export { default as AgentRuntime } from './ModelRuntime';
+export { ModelRuntime } from './ModelRuntime';
 export { LobeMoonshotAI } from './moonshot';
 export { LobeOllamaAI } from './ollama';
 export { LobeOpenAI } from './openai';

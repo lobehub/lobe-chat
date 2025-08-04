@@ -9,11 +9,10 @@ export const LOBE_CHAT_OIDC_AUTH_HEADER = 'Oidc-Auth';
 
 export const OAUTH_AUTHORIZED = 'X-oauth-authorized';
 
-export const JWT_SECRET_KEY = 'LobeHub · LobeChat';
-export const NON_HTTP_PREFIX = 'http_nosafe';
+export const SECRET_XOR_KEY = 'LobeHub · LobeHub';
 
 /* eslint-disable typescript-sort-keys/interface */
-export interface JWTPayload {
+export interface ClientSecretPayload {
   /**
    * password
    */
