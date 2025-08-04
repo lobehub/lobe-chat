@@ -16,6 +16,15 @@ export const GET = checkAuth(async (req, { params, jwtPayload }) => {
   try {
     const hasDefaultApiKey = jwtPayload.apiKey || 'dont-need-api-key-for-model-list';
 
+    // For Bedrock, use environment config directly
+    if (provider === 'bedrock') {
+      const agentRuntime = await initAgentRuntimeWithUserPayload(provider, {
+        apiKey: hasDefaultApiKey, // dummy value
+      });
+      const list = await agentRuntime.models();
+      return NextResponse.json(list);
+    }
+
     const agentRuntime = await initAgentRuntimeWithUserPayload(provider, {
       ...jwtPayload,
       apiKey: noNeedAPIKey(provider) ? hasDefaultApiKey : jwtPayload.apiKey,

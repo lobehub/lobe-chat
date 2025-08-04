@@ -64,7 +64,7 @@ const getParamsFromPayload = (provider: string, payload: JWTPayload) => {
       let accessKeyId: string | undefined = AWS_ACCESS_KEY_ID;
       let accessKeySecret: string | undefined = AWS_SECRET_ACCESS_KEY;
       let sessionToken: string | undefined = AWS_SESSION_TOKEN;
-      let region = AWS_REGION;
+      let region = AWS_REGION || 'us-east-1';
       let bearerToken: string | undefined = AWS_BEARER_TOKEN_BEDROCK;
 
       if (payload.apiKey) {
@@ -72,9 +72,10 @@ const getParamsFromPayload = (provider: string, payload: JWTPayload) => {
         accessKeyId = payload.awsAccessKeyId;
         accessKeySecret = payload.awsSecretAccessKey;
         sessionToken = payload.awsSessionToken;
-        region = payload.awsRegion;
+        region = payload.awsRegion || region;
       }
 
+      // Always prefer bearer token if available
       if (bearerToken) return { region, token: bearerToken };
       return { accessKeyId, accessKeySecret, region, sessionToken };
     }

@@ -135,6 +135,38 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     return Promise.all(promises);
   }
 
+  async models() {
+    if (this.bearerToken) {
+      // For bearer token, get models from environment config
+      const { getLLMConfig } = await import('@/config/llm');
+      const config = getLLMConfig();
+      const modelList = config.AWS_BEDROCK_MODEL_LIST;
+      
+      if (!modelList) {
+        const BedrockProvider = await import('@/config/modelProviders/bedrock');
+        return BedrockProvider.default.chatModels.filter(model => model.enabled !== false);
+      }
+      
+      // Parse model list: -all,+model1,+model2,model3
+      const items = modelList.split(',').map(m => m.trim()).filter(Boolean);
+      const enabledModels = [];
+      
+      for (const item of items) {
+        if (item.startsWith('+')) {
+          enabledModels.push(item.substring(1));
+        } else if (!item.startsWith('-') && item !== 'all') {
+          enabledModels.push(item);
+        }
+      }
+      
+      return enabledModels.map(id => ({ id }));
+    }
+    
+    // For AWS SDK, use default models
+    const BedrockProvider = await import('@/config/modelProviders/bedrock');
+    return BedrockProvider.default.chatModels.filter(model => model.enabled !== false);
+  }
+
   private async invokeBearerTokenModel(
     payload: ChatStreamPayload,
     options?: ChatMethodOptions,
