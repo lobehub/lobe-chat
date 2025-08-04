@@ -78,7 +78,31 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     if (token) {
       // For bearer token, we'll handle requests manually
       // Initialize a dummy client to satisfy the interface
-      this.client = new BedrockRuntimeClient({ region: this.region });
+if (token) {
+      // For bearer token, we'll handle requests manually
+      // Initialize a dummy client to satisfy the interface
+      try {
+        this.client = new BedrockRuntimeClient({ region: this.region });
+      } catch (error) {
+        throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockRegion);
+      }
+    } else {
+      if (!(accessKeyId && accessKeySecret))
+        throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
+      try {
+        this.client = new BedrockRuntimeClient({
+          credentials: {
+            accessKeyId: accessKeyId,
+            secretAccessKey: accessKeySecret,
+            sessionToken: sessionToken,
+          },
+          region: this.region,
+        });
+      } catch (error) {
+        throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockRegion);
+      }
+    }
+  }
     } else {
       if (!(accessKeyId && accessKeySecret))
         throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
