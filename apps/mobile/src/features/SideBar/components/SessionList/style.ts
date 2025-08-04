@@ -12,7 +12,6 @@ export const useStyles = createStyles((token) => ({
   headerText: {
     color: token.colorText,
     fontSize: token.fontSizeLG,
-    fontWeight: 'bold',
   },
   searchInput: {
     backgroundColor: token.colorBgContainer,
