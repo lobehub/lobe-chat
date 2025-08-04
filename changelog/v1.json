@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["When s3 files not exist , global files should delete."]
+    },
+    "date": "2025-08-04",
+    "version": "1.107.4"
+  },
+  {
+    "children": {
       "fixes": ["Aihubmix provider request headers."]
     },
     "date": "2025-08-03",
