@@ -85,8 +85,17 @@ export const createCreateImageSlice: StateCreator<
       if (!isNewTopic) {
         await get().refreshGenerationBatches();
       }
+
+      // 7. Clear the prompt input after successful image creation
+      set(
+        (state) => ({
+          parameters: { ...state.parameters, prompt: '' },
+        }),
+        false,
+        'createImage/clearPrompt',
+      );
     } finally {
-      // 7. Reset all creating states
+      // 8. Reset all creating states
       if (isNewTopic) {
         set(
           { isCreating: false, isCreatingWithNewTopic: false },
