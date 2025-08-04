@@ -52,6 +52,10 @@ const aihubmixModels: AIChatModelCard[] = [
     displayName: 'o3',
     enabled: true,
     id: 'o3',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
@@ -65,6 +69,10 @@ const aihubmixModels: AIChatModelCard[] = [
     displayName: 'o4-mini',
     enabled: true,
     id: 'o4-mini',
+    settings: {
+      extendParams: ['reasoningEffort'],
+      searchImpl: 'params',
+    },
     type: 'chat',
   },
   {
