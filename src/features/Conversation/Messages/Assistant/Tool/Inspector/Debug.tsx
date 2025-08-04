@@ -3,7 +3,7 @@ import { Tabs } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import PluginResult from './PluginResultJSON';
+import PluginResult from './PluginResult';
 import PluginState from './PluginState';
 
 interface DebugProps {
