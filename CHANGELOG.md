@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.107.5](https://github.com/lobehub/lobe-chat/compare/v1.107.4...v1.107.5)
+
+<sup>Released on **2025-08-04**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update models, closes [#8657](https://github.com/lobehub/lobe-chat/issues/8657) ([904ee13](https://github.com/lobehub/lobe-chat/commit/904ee13))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.107.4](https://github.com/lobehub/lobe-chat/compare/v1.107.3...v1.107.4)
 
 <sup>Released on **2025-08-04**</sup>
