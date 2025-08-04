@@ -33,7 +33,8 @@ const zhipuChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 128_000,
-    description: 'GLM-4.5 的极速版，在性能强劲的同时，生成速度可达 100 tokens/秒。',
+    description:
+      'GLM-4.5 的极速版，在性能强劲的同时，生成速度可达 100 tokens/秒。',
     displayName: 'GLM-4.5-X',
     id: 'glm-4.5-x',
     maxOutput: 32_768,
@@ -56,7 +57,8 @@ const zhipuChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 128_000,
-    description: 'GLM-4.5 的轻量版，兼顾性能与性价比，可灵活切换混合思考模型。',
+    description:
+      'GLM-4.5 的轻量版，兼顾性能与性价比，可灵活切换混合思考模型。',
     displayName: 'GLM-4.5-Air',
     id: 'glm-4.5-air',
     maxOutput: 32_768,
@@ -79,7 +81,8 @@ const zhipuChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 128_000,
-    description: 'GLM-4.5-Air 的极速版，响应速度更快，专为大规模高速度需求打造。',
+    description:
+      'GLM-4.5-Air 的极速版，响应速度更快，专为大规模高速度需求打造。',
     displayName: 'GLM-4.5-AirX',
     id: 'glm-4.5-airx',
     maxOutput: 32_768,
@@ -102,7 +105,8 @@ const zhipuChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 128_000,
-    description: 'GLM-4.5 的免费版，推理、代码、智能体等任务表现出色。',
+    description:
+      'GLM-4.5 的免费版，推理、代码、智能体等任务表现出色。',
     displayName: 'GLM-4.5-Flash',
     enabled: true,
     id: 'glm-4.5-flash',
@@ -245,7 +249,8 @@ const zhipuChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 128_000,
-    description: 'GLM-Z1 系列具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。',
+    description:
+      'GLM-Z1 系列具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。',
     displayName: 'GLM-Z1-Flash',
     id: 'glm-z1-flash',
     maxOutput: 32_768,

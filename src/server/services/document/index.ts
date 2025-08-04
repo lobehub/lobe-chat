@@ -27,50 +27,40 @@ export class DocumentService {
    * 解析文件内容
    *
    */
-  async parseFile(fileId: string, hash: string): Promise<LobeDocument> {
+  async parseFile(fileId: string): Promise<LobeDocument> {
+    const { filePath, file, cleanup } = await this.fileService.downloadFileToLocal(fileId);
+
+    const logPrefix = `[${file.name}]`;
+    log(`${logPrefix} 开始解析文件, 路径: ${filePath}`);
+
     try {
-      const { filePath, file, cleanup } = await this.fileService.downloadFileToLocal(fileId);
+      // 使用loadFile加载文件内容
+      const fileDocument = await loadFile(filePath);
 
-      const logPrefix = `[${file.name}]`;
-      log(`${logPrefix} 开始解析文件, 路径: ${filePath}`);
+      log(`${logPrefix} 文件解析成功 %O`, {
+        fileType: fileDocument.fileType,
+        size: fileDocument.content.length,
+      });
 
-      try {
-        // 使用loadFile加载文件内容
-        const fileDocument = await loadFile(filePath);
+      const document = await this.documentModel.create({
+        content: fileDocument.content,
+        fileId,
+        fileType: file.fileType,
+        metadata: fileDocument.metadata,
+        pages: fileDocument.pages,
+        source: file.url,
+        sourceType: 'file',
+        title: fileDocument.metadata?.title,
+        totalCharCount: fileDocument.totalCharCount,
+        totalLineCount: fileDocument.totalLineCount,
+      });
 
-        log(`${logPrefix} 文件解析成功 %O`, {
-          fileType: fileDocument.fileType,
-          size: fileDocument.content.length,
-        });
-
-        const document = await this.documentModel.create({
-          content: fileDocument.content,
-          fileId,
-          fileType: file.fileType,
-          metadata: fileDocument.metadata,
-          pages: fileDocument.pages,
-          source: file.url,
-          sourceType: 'file',
-          title: fileDocument.metadata?.title,
-          totalCharCount: fileDocument.totalCharCount,
-          totalLineCount: fileDocument.totalLineCount,
-        });
-
-        return document as LobeDocument;
-      } catch (error) {
-        console.error(`${logPrefix} 文件解析失败:`, error);
-        throw error;
-      } finally {
-        cleanup();
-      }
+      return document as LobeDocument;
     } catch (error) {
-      console.error(`文件解析失败-远端找不到文件:`, error);
-      if (error instanceof Error && error.message === 'Origin File Not Found') {
-        // cant find file use file id, use hash to delete global file
-        await this.fileModel.deleteGlobalFile(hash);
-        throw error;
-      }
+      console.error(`${logPrefix} 文件解析失败:`, error);
       throw error;
+    } finally {
+      cleanup();
     }
   }
 }

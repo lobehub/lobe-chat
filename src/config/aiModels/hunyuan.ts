@@ -50,7 +50,8 @@ const hunyuanChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 92_000,
-    description: '大幅提升高难度数学、逻辑和代码能力，优化模型输出稳定性，提升模型长文能力。',
+    description:
+      '大幅提升高难度数学、逻辑和代码能力，优化模型输出稳定性，提升模型长文能力。',
     displayName: 'Hunyuan T1 20250711',
     id: 'hunyuan-t1-20250711',
     maxOutput: 64_000,

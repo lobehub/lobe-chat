@@ -550,16 +550,7 @@ const volcengineImageModels: AIImageModelCard[] = [
       seed: { default: null },
       size: {
         default: '1024x1024',
-        enum: [
-          '1024x1024',
-          '864x1152',
-          '1152x864',
-          '1280x720',
-          '720x1280',
-          '832x1248',
-          '1248x832',
-          '1512x648',
-        ],
+        enum: ['1024x1024', '864x1152', '1152x864', '1280x720', '720x1280', '832x1248', '1248x832', '1512x648'],
       },
     },
     releasedAt: '2025-04-15',

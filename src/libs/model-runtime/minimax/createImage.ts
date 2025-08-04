@@ -59,7 +59,7 @@ export async function createMiniMaxImage(
       }
 
       throw new Error(
-        `MiniMax API error (${response.status}): ${errorData?.base_resp || response.statusText}`,
+        `MiniMax API error (${response.status}): ${errorData?.base_resp || response.statusText}`
       );
     }
 
@@ -92,6 +92,7 @@ export async function createMiniMaxImage(
     log('Image generated successfully: %s', imageUrl);
 
     return { imageUrl };
+
   } catch (error) {
     log('Error in createMiniMaxImage: %O', error);
 

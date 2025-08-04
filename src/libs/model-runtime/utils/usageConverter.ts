@@ -2,10 +2,7 @@ import OpenAI from 'openai';
 
 import { ModelTokensUsage } from '@/types/message';
 
-export const convertUsage = (
-  usage: OpenAI.Completions.CompletionUsage,
-  provider?: string,
-): ModelTokensUsage => {
+export const convertUsage = (usage: OpenAI.Completions.CompletionUsage, provider?: string): ModelTokensUsage => {
   // 目前只有 pplx 才有 citation_tokens
   const inputTextTokens = usage.prompt_tokens || 0;
   const inputCitationTokens = (usage as any).citation_tokens || 0;
@@ -20,12 +17,11 @@ export const convertUsage = (
   const totalOutputTokens = usage.completion_tokens;
   const outputReasoning = usage.completion_tokens_details?.reasoning_tokens || 0;
   const outputAudioTokens = usage.completion_tokens_details?.audio_tokens || 0;
-
+  
   // XAI 的 completion_tokens 不包含 reasoning_tokens，需要特殊处理
-  const outputTextTokens =
-    provider === 'xai'
-      ? totalOutputTokens - outputAudioTokens
-      : totalOutputTokens - outputReasoning - outputAudioTokens;
+  const outputTextTokens = provider === 'xai' 
+    ? totalOutputTokens - outputAudioTokens
+    : totalOutputTokens - outputReasoning - outputAudioTokens;
 
   const totalTokens = inputCitationTokens + usage.total_tokens;
 
