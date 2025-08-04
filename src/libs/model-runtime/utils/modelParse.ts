@@ -203,7 +203,9 @@ const processModelCard = (
 
   return {
     contextWindowTokens: model.contextWindowTokens ?? knownModel?.contextWindowTokens ?? undefined,
-    displayName: model.displayName ?? knownModel?.displayName ?? model.id,
+    displayName: (model.displayName ?? knownModel?.displayName ?? model.id)
+      .replaceAll(/\s*[(（][^)）]*[)）]\s*/g, '')
+      .trim(), // 去除括号内容
     enabled: knownModel?.enabled || false,
     functionCall:
       (isKeywordListMatch(model.id.toLowerCase(), functionCallKeywords) && !isExcludedModel) ||
@@ -216,6 +218,7 @@ const processModelCard = (
       isKeywordListMatch(model.id.toLowerCase(), reasoningKeywords) ||
       knownModel?.abilities?.reasoning ||
       false,
+    releasedAt: model.releasedAt ?? knownModel?.releasedAt ?? undefined,
     type: model.type || knownModel?.type || 'chat',
     vision:
       (isKeywordListMatch(model.id.toLowerCase(), visionKeywords) && !isExcludedModel) ||

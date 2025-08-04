@@ -1,9 +1,11 @@
 import urlJoin from 'url-join';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
+import { responsesAPIModels } from '@/const/models';
 
 import { createRouterRuntime } from '../RouterRuntime';
 import { ModelProvider } from '../types';
+import { ChatStreamPayload } from '../types/chat';
 import { processMultiProviderModelList } from '../utils/modelParse';
 
 export interface AiHubMixModelCard {
@@ -16,6 +18,18 @@ export interface AiHubMixModelCard {
 const baseURL = 'https://aihubmix.com';
 
 export const LobeAiHubMixAI = createRouterRuntime({
+  chatCompletion: {
+    handlePayload: (payload: ChatStreamPayload) => {
+      if (
+        responsesAPIModels.has(payload.model) ||
+        payload.model.includes('gpt-') ||
+        /^o\d/.test(payload.model)
+      ) {
+        return { ...payload, apiMode: 'responses' } as any;
+      }
+      return payload as any;
+    },
+  },
   constructorOptions: {
     defaultHeaders: {
       'APP-Code': 'LobeHub',
