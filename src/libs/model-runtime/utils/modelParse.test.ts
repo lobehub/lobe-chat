@@ -406,9 +406,9 @@ describe('modelParse', () => {
       expect(model.displayName).toBe('Test Claude Known Abilities');
       // 虽然 'claude' 是 anthropic 的 functionCall 和 vision 关键词，
       // 但是 knownModel.abilities.functionCall 和 knownModel.abilities.vision 是 false
-      // 关键词匹配优先，所以应该是 true
-      expect(model.functionCall).toBe(true); // 关键词 'claude' 匹配
-      expect(model.vision).toBe(true); // 关键词 'claude' 匹配
+      // 本地模型配置优先，所以应该是 false
+      expect(model.functionCall).toBe(false); // 从 knownModel.abilities.functionCall
+      expect(model.vision).toBe(false); // 从 knownModel.abilities.vision
       expect(model.reasoning).toBe(true); // 从 knownModel.abilities.reasoning
     });
 
