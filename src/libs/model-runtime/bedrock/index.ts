@@ -196,7 +196,17 @@ if (token) {
     options?: ChatMethodOptions,
   ): Promise<Response> {
     const { max_tokens, messages, model, temperature, top_p, tools: _tools } = payload;
-    const system_message = messages.find((m) => m.role === 'system');
+options?: ChatMethodOptions,
+  ): Promise<Response> {
+    const { max_tokens, messages, model, temperature, top_p, tools: _tools } = payload;
+    // Use a type-safe approach to find the system message
+    const system_message = messages.find((m): m is { role: 'system', content: string } => m.role === 'system' && typeof m.content === 'string');
+    const user_messages = messages.filter((m) => m.role !== 'system');
+
+    // Rest of the code remains unchanged...
+    // ...
+
+  }
     const user_messages = messages.filter((m) => m.role !== 'system');
 
     // Use the Converse API format for bearer token requests
