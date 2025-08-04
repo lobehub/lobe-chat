@@ -17,19 +17,18 @@ export interface AiHubMixModelCard {
 
 const baseURL = 'https://aihubmix.com';
 
+const handlePayload = (payload: ChatStreamPayload) => {
+  if (
+    responsesAPIModels.has(payload.model) ||
+    payload.model.includes('gpt-') ||
+    /^o\d/.test(payload.model)
+  ) {
+    return { ...payload, apiMode: 'responses' } as any;
+  }
+  return payload as any;
+};
+
 export const LobeAiHubMixAI = createRouterRuntime({
-  chatCompletion: {
-    handlePayload: (payload: ChatStreamPayload) => {
-      if (
-        responsesAPIModels.has(payload.model) ||
-        payload.model.includes('gpt-') ||
-        /^o\d/.test(payload.model)
-      ) {
-        return { ...payload, apiMode: 'responses' } as any;
-      }
-      return payload as any;
-    },
-  },
   constructorOptions: {
     defaultHeaders: {
       'APP-Code': 'LobeHub',
@@ -71,7 +70,12 @@ export const LobeAiHubMixAI = createRouterRuntime({
     },
     {
       apiType: 'openai',
-      options: { baseURL: urlJoin(baseURL, '/v1') },
+      options: {
+        baseURL: urlJoin(baseURL, '/v1'),
+        chatCompletion: {
+          handlePayload,
+        },
+      },
     },
   ],
 });

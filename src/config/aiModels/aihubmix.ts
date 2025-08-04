@@ -499,23 +499,88 @@ const aihubmixModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
+      reasoning: true,
     },
-    contextWindowTokens: 235_000,
-    description: 'Qwen3 235B 大型语言模型',
-    displayName: 'Qwen3 235B',
+    contextWindowTokens: 131_072,
+    description:
+      '基于Qwen3的思考模式开源模型，相较上一版本（通义千问3-235B-A22B）逻辑能力、通用能力、知识增强及创作能力均有大幅提升，适用于高难度强推理场景。',
+    displayName: 'Qwen3 235B A22B Thinking 2507',
     enabled: true,
-    id: 'Qwen/Qwen3-235B-A22B',
+    id: 'qwen3-235b-a22b-thinking-2507',
+    maxOutput: 32_768,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.28,
+      output: 2.8,
+    },
+    releasedAt: '2025-07-25',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 32_000,
-    description: 'Qwen3 32B 中型语言模型',
-    displayName: 'Qwen3 32B',
+    contextWindowTokens: 131_072,
+    description:
+      '基于Qwen3的非思考模式开源模型，相较上一版本（通义千问3-235B-A22B）主观创作能力与模型安全性均有小幅度提升。',
+    displayName: 'Qwen3 235B A22B Instruct 2507',
     enabled: true,
-    id: 'Qwen/Qwen3-32B',
+    id: 'qwen3-235b-a22b-instruct-2507',
+    maxOutput: 32_768,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.28,
+      output: 1.12,
+    },
+    releasedAt: '2025-07-22',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      '基于Qwen3的思考模式开源模型，相较上一版本（通义千问3-30B-A3B）逻辑能力、通用能力、知识增强及创作能力均有大幅提升，适用于高难度强推理场景。',
+    displayName: 'Qwen3 30B A3B Thinking 2507',
+    enabled: true,
+    id: 'qwen3-30b-a3b-thinking-2507',
+    maxOutput: 32_768,
+    organization: 'Qwen',
+    pricing: {
+      currency: 'CNY',
+      input: 0.12,
+      output: 1.2,
+    },
+    releasedAt: '2025-07-30',
+    settings: {
+      extendParams: ['reasoningBudgetToken'],
+    },
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      '相较上一版本（Qwen3-30B-A3B）中英文和多语言整体通用能力有大幅提升。主观开放类任务专项优化，显著更加符合用户偏好，能够提供更有帮助性的回复。',
+    displayName: 'Qwen3 30B A3B Instruct 2507',
+    enabled: true,
+    id: 'qwen3-30b-a3b-instruct-2507',
+    maxOutput: 32_768,
+    organization: 'Qwen',
+    pricing: {
+      input: 0.12,
+      output: 0.48,
+    },
+    releasedAt: '2025-07-29',
     type: 'chat',
   },
 ];

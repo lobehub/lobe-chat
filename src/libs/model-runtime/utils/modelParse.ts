@@ -95,6 +95,27 @@ export const PROVIDER_DETECTION_CONFIG = {
   zhipu: ['glm'],
 } as const;
 
+// 图像模型关键词配置
+export const IMAGE_MODEL_KEYWORDS = [
+  'dall-e',
+  'dalle',
+  'midjourney',
+  'stable-diffusion',
+  'sd',
+  'flux',
+  'imagen',
+  'firefly',
+  'cogview',
+  'wanxiang',
+  'drawing',
+  'paint',
+  'sketch',
+  'art',
+  'generate-image',
+  'text-to-image',
+  't2i',
+] as const;
+
 /**
  * 检测关键词列表是否匹配模型ID（支持多种匹配模式）
  * @param modelId 模型ID（小写）
@@ -204,7 +225,8 @@ const processReleasedAt = (model: any, knownModel?: any): string | undefined => 
   // 优先检查 model.created
   if (model.created !== undefined && model.created !== null) {
     // 检查是否为时间戳格式
-    if (typeof model.created === 'number' && model.created > 1_500_000_000) {
+    if (typeof model.created === 'number' && model.created > 1_630_000_000) {
+      // AiHubMix 错误时间戳为 1626777600
       return formatTimestampToDate(model.created);
     }
     // 如果 created 是字符串且已经是日期格式，直接返回
@@ -254,7 +276,10 @@ const processModelCard = (
       knownModel?.abilities?.reasoning ??
       (isKeywordListMatch(model.id.toLowerCase(), reasoningKeywords) || false),
     releasedAt: processReleasedAt(model, knownModel),
-    type: model.type || knownModel?.type || 'chat',
+    type:
+      model.type ||
+      knownModel?.type ||
+      (isKeywordListMatch(model.id.toLowerCase(), IMAGE_MODEL_KEYWORDS) ? 'image' : 'chat'),
     vision:
       model.vision ??
       knownModel?.abilities?.vision ??
