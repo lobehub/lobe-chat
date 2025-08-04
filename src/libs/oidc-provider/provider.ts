@@ -1,5 +1,5 @@
 import debug from 'debug';
-import Provider, { Configuration, KoaContextWithOIDC, errors } from 'oidc-provider';
+import Provider, { ClientMetadata, Configuration, KoaContextWithOIDC, errors } from 'oidc-provider';
 import urlJoin from 'url-join';
 
 import { serverDBEnv } from '@/config/db';
@@ -38,6 +38,8 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
 
   const cookieKeys = getCookieKeys();
 
+  const databaseClients = await db.query.oidcClients.findMany();
+
   const configuration: Configuration = {
     // 11. 数据库适配器
     adapter: DrizzleAdapter.createAdapterFactory(db),
@@ -74,7 +76,23 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
     },
 
     // 1. 客户端配置
-    clients: defaultClients,
+    clients: [
+      ...defaultClients,
+      ...(databaseClients?.map(
+        (client) =>
+          ({
+            application_type: client.applicationType,
+            client_id: client.id,
+            client_name: client.name,
+            grant_types: client.grants,
+            logo_uri: client.logoUri,
+            post_logout_redirect_uris: client.redirectUris,
+            redirect_uris: client.redirectUris,
+            response_types: client.responseTypes,
+            token_endpoint_auth_method: client.tokenEndpointAuthMethod,
+          }) as ClientMetadata,
+      ) ?? []),
+    ],
 
     // 7. Cookie 配置
     cookies: {
@@ -200,6 +218,17 @@ export const createOIDCProvider = async (db: LobeChatDatabase): Promise<Provider
         // ---> 添加日志结束 <---
         return interactionUrl;
       },
+    },
+
+    // 13. refresh token 返回逻辑
+    issueRefreshToken: async (ctx, client, code) => {
+      if (!client.grantTypeAllowed('refresh_token')) {
+        return false;
+      }
+      return (
+        code.scopes.has('offline_access') || // 显式声明需要 offline_access
+        (client.applicationType === 'web' && client.clientAuthMethod === 'none') // 公开的第三方 web 应用
+      );
     },
 
     // 6. 密钥配置 - 使用 RS256 JWKS
