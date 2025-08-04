@@ -18,6 +18,8 @@ export interface FileUploadRequest {
   sessionId?: string;
   /** 是否跳过文件类型检查 */
   skipCheckFileType?: boolean;
+  /** 是否跳过去重检查 */
+  skipDeduplication?: boolean;
 }
 
 /**
@@ -160,6 +162,8 @@ export interface PublicFileUploadRequest {
   sessionId?: string;
   /** 是否跳过文件类型检查 */
   skipCheckFileType?: boolean;
+  /** 是否跳过去重检查 */
+  skipDeduplication?: boolean;
 }
 
 /**
