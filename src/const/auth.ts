@@ -35,6 +35,7 @@ export interface ClientSecretPayload {
   awsRegion?: string;
   awsSecretAccessKey?: string;
   awsSessionToken?: string;
+  awsBearerToken?: string;
 
   cloudflareBaseURLOrAccountID?: string;
 

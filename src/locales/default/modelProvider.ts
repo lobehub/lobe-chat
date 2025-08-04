@@ -44,8 +44,13 @@ export default {
       placeholder: 'AWS Access Key Id',
       title: 'AWS Access Key Id',
     },
+    bearerToken: {
+      desc: '填入 AWS Bedrock API Key (Bearer Token)，推荐使用此方式',
+      placeholder: 'AWS Bedrock API Key',
+      title: 'AWS Bedrock API Key (推荐)',
+    },
     checker: {
-      desc: '测试 AccessKeyId / SecretAccessKey 是否填写正确',
+      desc: '测试 Bearer Token 或 AccessKeyId / SecretAccessKey 是否填写正确',
     },
     region: {
       desc: '填入 AWS Region',
@@ -67,9 +72,9 @@ export default {
       customRegion: '自定义服务区域',
       customSessionToken: '自定义 Session Token',
       description:
-        '输入你的 AWS AccessKeyId / SecretAccessKey 即可开始会话。应用不会记录你的鉴权配置',
+        '输入你的 AWS Bearer Token 或 AccessKeyId / SecretAccessKey 即可开始会话。应用不会记录你的鉴权配置',
       imageGenerationDescription:
-        '输入你的 AWS AccessKeyId / SecretAccessKey 即可开始生成。应用不会记录你的鉴权配置',
+        '输入你的 AWS Bearer Token 或 AccessKeyId / SecretAccessKey 即可开始生成。应用不会记录你的鉴权配置',
       title: '使用自定义 Bedrock 鉴权信息',
     },
   },

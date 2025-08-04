@@ -53,18 +53,30 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
     }
 
     case ModelProvider.Bedrock: {
-      const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SESSION_TOKEN } = llmConfig;
+      const {
+        AWS_SECRET_ACCESS_KEY,
+        AWS_ACCESS_KEY_ID,
+        AWS_REGION,
+        AWS_SESSION_TOKEN,
+        AWS_BEARER_TOKEN_BEDROCK,
+      } = llmConfig;
+
       let accessKeyId: string | undefined = AWS_ACCESS_KEY_ID;
       let accessKeySecret: string | undefined = AWS_SECRET_ACCESS_KEY;
-      let region = AWS_REGION;
       let sessionToken: string | undefined = AWS_SESSION_TOKEN;
-      // if the payload has the api key, use user
+      let region = AWS_REGION || 'us-east-1';
+      let bearerToken: string | undefined = AWS_BEARER_TOKEN_BEDROCK;
+
       if (payload.apiKey) {
-        accessKeyId = payload?.awsAccessKeyId;
-        accessKeySecret = payload?.awsSecretAccessKey;
-        sessionToken = payload?.awsSessionToken;
-        region = payload?.awsRegion;
+        bearerToken = payload.awsBearerToken || bearerToken;
+        accessKeyId = payload.awsAccessKeyId;
+        accessKeySecret = payload.awsSecretAccessKey;
+        sessionToken = payload.awsSessionToken;
+        region = payload.awsRegion || region;
       }
+
+      // Always prefer bearer token if available
+      if (bearerToken) return { region, token: bearerToken };
       return { accessKeyId, accessKeySecret, region, sessionToken };
     }
 

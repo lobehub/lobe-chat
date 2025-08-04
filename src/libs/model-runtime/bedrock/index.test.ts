@@ -46,6 +46,40 @@ describe('LobeBedrockAI', () => {
       });
       expect(instance).toBeInstanceOf(LobeBedrockAI);
     });
+
+    it('should correctly initialize with bearer token', async () => {
+      const instance = new LobeBedrockAI({
+        region: 'us-west-2',
+describe('init', () => {
+    it('should correctly initialize with AWS credentials', async () => {
+      const instance = new LobeBedrockAI({
+        region: 'us-west-2',
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID, // Use environment variable
+        accessKeySecret: process.env.AWS_SECRET_ACCESS_KEY, // Use environment variable
+      });
+      expect(instance).toBeInstanceOf(LobeBedrockAI);
+    });
+
+    it('should correctly initialize with bearer token', async () => {
+      const instance = new LobeBedrockAI({
+        region: 'us-west-2',
+        token: process.env.BEARER_TOKEN, // Use environment variable
+      });
+      expect(instance).toBeInstanceOf(LobeBedrockAI);
+      expect(instance.region).toBe('us-west-2');
+    });
+      });
+      expect(instance).toBeInstanceOf(LobeBedrockAI);
+      expect(instance.region).toBe('us-west-2');
+    });
+
+    it('should throw error when no credentials provided', async () => {
+      expect(() => {
+        new LobeBedrockAI({
+          region: 'us-west-2',
+        });
+      }).toThrow();
+    });
   });
 
   describe('chat', () => {
