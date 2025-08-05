@@ -44,11 +44,13 @@ interface ProviderIniOptions extends Record<string, any> {
   sessionToken?: string;
 }
 
+export type RuntimeClass = typeof LobeOpenAI;
+
 interface RouterInstance {
   apiType: keyof typeof baseRuntimeMap;
   models?: string[] | (() => Promise<string[]>);
   options: ProviderIniOptions;
-  runtime?: typeof LobeOpenAI;
+  runtime?: RuntimeClass;
 }
 
 type ConstructorOptions<T extends Record<string, any> = any> = ClientOptions & T;
