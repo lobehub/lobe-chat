@@ -15,8 +15,6 @@ export interface ProtocolBroadcastEvents {
     pluginId: string;
     /** MCP Schema 对象 */
     schema: McpInstallSchema;
-    /** 协议来源 */
-    source: string;
   }) => void;
 }
 

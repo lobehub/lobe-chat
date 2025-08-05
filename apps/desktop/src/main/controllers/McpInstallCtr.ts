@@ -1,7 +1,7 @@
 import { createLogger } from '@/utils/logger';
 
 import { ControllerModule, createProtocolHandler } from '.';
-import { McpSchema, ProtocolSource } from '../types/protocol';
+import { McpSchema } from '../types/protocol';
 
 const logger = createLogger('controllers:McpInstallCtr');
 
@@ -47,21 +47,6 @@ function validateMcpSchema(schema: any): schema is McpSchema {
   return true;
 }
 
-/**
- * 将 marketId 映射到 ProtocolSource
- */
-function mapMarketIdToSource(marketId?: string): ProtocolSource {
-  if (!marketId) return ProtocolSource.THIRD_PARTY;
-
-  const marketSourceMap: Record<string, ProtocolSource> = {
-    higress: ProtocolSource.THIRD_PARTY,
-    lobehub: ProtocolSource.OFFICIAL,
-    smithery: ProtocolSource.THIRD_PARTY,
-  };
-
-  return marketSourceMap[marketId.toLowerCase()] || ProtocolSource.THIRD_PARTY;
-}
-
 interface McpInstallParams {
   id: string;
   marketId?: string;
@@ -92,14 +77,13 @@ export default class McpInstallController extends ControllerModule {
       }
 
       // 映射协议来源
-      const source = mapMarketIdToSource(marketId);
-      const isOfficialMarket = source === ProtocolSource.OFFICIAL;
+
+      const isOfficialMarket = marketId === 'lobehub';
 
       // 对于官方市场，schema 是可选的；对于第三方市场，schema 是必需的
       if (!isOfficialMarket && !schemaParam) {
         logger.warn(`🔧 [McpInstall] Schema is required for third-party marketplace:`, {
           marketId,
-          source,
         });
         return false;
       }
@@ -136,7 +120,6 @@ export default class McpInstallController extends ControllerModule {
         pluginId: id,
         pluginName: mcpSchema?.name || 'Unknown',
         pluginVersion: mcpSchema?.version || 'Unknown',
-        source,
       });
 
       // 广播安装请求到前端
@@ -144,7 +127,6 @@ export default class McpInstallController extends ControllerModule {
         marketId,
         pluginId: id,
         schema: mcpSchema,
-        source,
       };
 
       logger.debug(`🔧 [McpInstall] Broadcasting install request:`, {
