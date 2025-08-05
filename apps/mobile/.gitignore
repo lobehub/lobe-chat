@@ -50,5 +50,6 @@ credentials.json
 
 build-*.aab
 build-*.apk
+build-*.ipa
 
 coverage
