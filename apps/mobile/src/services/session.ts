@@ -18,3 +18,7 @@ export class ServerService implements ISessionService {
   //   return lambdaClient.sessionGroup.getSessionGroup.query();
   // };
 }
+
+const sessionService = new ServerService();
+
+export default sessionService;
