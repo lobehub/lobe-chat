@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support gpt-oss in ollama provider."]
+    },
+    "date": "2025-08-05",
+    "version": "1.109.0"
+  },
+  {
+    "children": {
       "fixes": ["Provider config checker uses outdated API key."]
     },
     "date": "2025-08-05",
