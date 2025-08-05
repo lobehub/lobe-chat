@@ -22,6 +22,27 @@ import {
 } from '@/types/aiProvider';
 import { getModelPropertyWithFallback } from '@/utils/getFallbackModelProperty';
 
+/**
+ * Get models by provider ID and type, with proper formatting and deduplication
+ */
+export const getModelListByType = (enabledAiModels: any[], providerId: string, type: string) => {
+  const models = enabledAiModels
+    .filter((model) => model.providerId === providerId && model.type === type)
+    .map((model) => ({
+      abilities: (model.abilities || {}) as ModelAbilities,
+      contextWindowTokens: model.contextWindowTokens,
+      displayName: model.displayName ?? '',
+      id: model.id,
+      ...(model.type === 'image' && {
+        parameters:
+          (model as AIImageModelCard).parameters ||
+          getModelPropertyWithFallback(model.id, 'parameters'),
+      }),
+    }));
+
+  return uniqBy(models, 'id');
+};
+
 enum AiProviderSwrKey {
   fetchAiProviderItem = 'FETCH_AI_PROVIDER_ITEM',
   fetchAiProviderList = 'FETCH_AI_PROVIDER',
@@ -204,34 +225,15 @@ export const createAiProviderSlice: StateCreator<
         onSuccess: (data) => {
           if (!data) return;
 
-          const getModelListByType = (providerId: string, type: string) => {
-            const models = data.enabledAiModels
-              .filter((model) => model.providerId === providerId && model.type === type)
-              .map((model) => ({
-                abilities: (model.abilities || {}) as ModelAbilities,
-                contextWindowTokens: model.contextWindowTokens,
-                displayName: model.displayName ?? '',
-                id: model.id,
-                ...(model.type === 'image' && {
-                  parameters:
-                    (model as AIImageModelCard).parameters ||
-                    getModelPropertyWithFallback(model.id, 'parameters'),
-                }),
-              }));
-
-            return uniqBy(models, 'id');
-          };
-
-          // 3. 组装最终数据结构
           const enabledChatModelList = data.enabledChatAiProviders.map((provider) => ({
             ...provider,
-            children: getModelListByType(provider.id, 'chat'),
+            children: getModelListByType(data.enabledAiModels, provider.id, 'chat'),
             name: provider.name || provider.id,
           }));
 
           const enabledImageModelList = data.enabledImageAiProviders.map((provider) => ({
             ...provider,
-            children: getModelListByType(provider.id, 'image'),
+            children: getModelListByType(data.enabledAiModels, provider.id, 'image'),
             name: provider.name || provider.id,
           }));
 
