@@ -1,6 +1,6 @@
 import { createStyles } from '@/theme';
 
-export const useStyles = createStyles((token) => ({
+export const useStyles = createStyles((token, hasDescription: boolean = false) => ({
   avatar: {
     borderRadius: 20,
     height: 40,
@@ -24,6 +24,7 @@ export const useStyles = createStyles((token) => ({
   },
   info: {
     flex: 1,
+    justifyContent: hasDescription ? 'flex-start' : 'center',
   },
   sessionItem: {
     alignItems: 'center',
@@ -38,6 +39,6 @@ export const useStyles = createStyles((token) => ({
     color: token.colorText,
     fontSize: token.fontSizeLG,
     fontWeight: '600',
-    marginBottom: token.marginXS,
+    marginBottom: hasDescription ? token.marginXS : 0,
   },
 }));

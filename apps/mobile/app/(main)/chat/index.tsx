@@ -8,7 +8,7 @@ import { ChatMessage } from '@/types/message';
 import ChatHeader from './(components)/ChatHeader';
 import ChatInput from './(components)/ChatInput';
 import ChatList from './(components)/ChatList';
-import SessionDrawer from './(components)/SessionDrawer';
+import SessionList from '@/features/SideBar';
 import { useStyles } from './styles';
 
 export default function ChatWithDrawer() {
@@ -47,7 +47,7 @@ export default function ChatWithDrawer() {
         onOpen={() => setDrawerOpen(true)}
         open={drawerOpen}
         overlayStyle={styles.drawerOverlay}
-        renderDrawerContent={() => <SessionDrawer />}
+        renderDrawerContent={() => <SessionList />}
         swipeEdgeWidth={50}
         swipeEnabled={true}
       >

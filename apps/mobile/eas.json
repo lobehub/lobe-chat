@@ -13,18 +13,18 @@
       "android": {
         "gradleCommand": ":app:assembleDebug"
       },
+      "pnpm": "10.10.0",
       "channel": "development"
     },
     "preview": {
       "distribution": "internal",
       "channel": "preview",
-      "env": {
-        "EAS_BUILD_RUNNER": "eas-build-runner-override-pnpm"
-      }
+      "pnpm": "10.10.0"
     },
     "production": {
       "autoIncrement": true,
-      "channel": "production"
+      "channel": "production",
+      "pnpm": "10.10.0"
     }
   },
   "submit": {
