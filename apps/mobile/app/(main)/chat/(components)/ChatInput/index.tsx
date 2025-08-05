@@ -8,6 +8,7 @@ import IconBtn from './(components)/IconBtn';
 import { ICON_SIZE } from '@/const/common';
 import { useChat } from '@/hooks/useChat';
 import { useThemeToken } from '@/theme';
+import ModelSwitch from './(components)/ModelSwitch';
 
 import StopLoadingIcon from '../StopLoadingIcon';
 import { useStyles } from './style';
@@ -74,6 +75,7 @@ const ChatInput = memo(({ style }: ChatInputProps) => {
       <View style={styles.footer}>
         <View style={styles.leftActions}>
           <NewChatBtn />
+          <ModelSwitch />
         </View>
         <View style={styles.rightActions}>
           <SenderBtn />

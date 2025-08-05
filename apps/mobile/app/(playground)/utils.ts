@@ -114,6 +114,15 @@ export const COMPONENT_CONFIGS: ComponentItem[] = [
     path: 'skeleton',
     tags: ['skeleton', 'loading', 'placeholder', 'shimmer', 'animation'],
   },
+  {
+    category: 'form',
+    description: '支持异步操作的即时开关组件，具有乐观更新和错误回滚机制',
+    hasDemos: true,
+    hasReadme: true,
+    name: 'InstantSwitch',
+    path: 'instant-switch',
+    tags: ['switch', 'toggle', 'async', 'loading', 'form'],
+  },
 ];
 
 /**

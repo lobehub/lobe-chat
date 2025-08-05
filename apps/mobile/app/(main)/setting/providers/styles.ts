@@ -7,6 +7,7 @@ export const useStyles = createStyles((token) => ({
   container: {
     backgroundColor: token.colorBgBase,
     flex: 1,
+    paddingBottom: 16, // 底部留白
   },
   content: {
     padding: 16,
@@ -60,6 +61,27 @@ export const useStyles = createStyles((token) => ({
     color: token.colorText,
     fontSize: 14,
     marginBottom: 8,
+  },
+  // Section样式 - 对标web端
+  sectionHeader: {
+    backgroundColor: token.colorBgBase,
+    paddingBottom: 8,
+    paddingHorizontal: 16,
+    paddingTop: 24,
+  },
+  sectionSeparator: {
+    backgroundColor: token.colorBgBase,
+    height: 16, // 增加section间距
+  },
+  sectionTitle: {
+    color: token.colorText,
+    fontSize: 18, // 对标web端字体大小
+    fontWeight: '600',
+  },
+  // 卡片间分隔 - 对标web端Grid gap
+  separator: {
+    backgroundColor: 'transparent',
+    height: 16, // 对标web端16px gap
   },
   validateButton: {
     marginTop: 16,
