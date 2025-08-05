@@ -28,7 +28,7 @@ import { baseRuntimeMap } from './baseRuntimeMap';
 
 export interface RuntimeItem {
   id: string;
-  models?: string[];
+  models?: string[] | (() => Promise<string[]>);
   runtime: LobeRuntimeAI;
 }
 
@@ -46,7 +46,7 @@ interface ProviderIniOptions extends Record<string, any> {
 
 interface RouterInstance {
   apiType: keyof typeof baseRuntimeMap;
-  models?: string[];
+  models?: string[] | (() => Promise<string[]>);
   options: ProviderIniOptions;
   runtime?: typeof LobeOpenAI;
 }
@@ -142,18 +142,28 @@ export const createRouterRuntime = ({
       this._options = _options;
     }
 
-    // 检查下是否能匹配到特定模型，否则默认使用最后一个 runtime
-    getRuntimeByModel(model: string) {
-      const runtimeItem =
-        this._runtimes.find((runtime) => runtime.models && runtime.models.includes(model)) ||
-        this._runtimes.at(-1)!;
+    // 获取 runtime 的 models 列表，支持同步数组和异步函数
+    private async getModels(runtimeItem: RuntimeItem): Promise<string[]> {
+      if (typeof runtimeItem.models === 'function') {
+        return await runtimeItem.models();
+      }
+      return runtimeItem.models || [];
+    }
 
-      return runtimeItem.runtime;
+    // 检查下是否能匹配到特定模型，否则默认使用最后一个 runtime
+    async getRuntimeByModel(model: string) {
+      for (const runtimeItem of this._runtimes) {
+        const models = await this.getModels(runtimeItem);
+        if (models.includes(model)) {
+          return runtimeItem.runtime;
+        }
+      }
+      return this._runtimes.at(-1)!.runtime;
     }
 
     async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {
       try {
-        const runtime = this.getRuntimeByModel(payload.model);
+        const runtime = await this.getRuntimeByModel(payload.model);
 
         return await runtime.chat!(payload, options);
       } catch (e) {
@@ -170,7 +180,7 @@ export const createRouterRuntime = ({
     }
 
     async textToImage(payload: TextToImagePayload) {
-      const runtime = this.getRuntimeByModel(payload.model);
+      const runtime = await this.getRuntimeByModel(payload.model);
 
       return runtime.textToImage!(payload);
     }
@@ -180,13 +190,13 @@ export const createRouterRuntime = ({
     }
 
     async embeddings(payload: EmbeddingsPayload, options?: EmbeddingsOptions) {
-      const runtime = this.getRuntimeByModel(payload.model);
+      const runtime = await this.getRuntimeByModel(payload.model);
 
       return runtime.embeddings!(payload, options);
     }
 
     async textToSpeech(payload: TextToSpeechPayload, options?: EmbeddingsOptions) {
-      const runtime = this.getRuntimeByModel(payload.model);
+      const runtime = await this.getRuntimeByModel(payload.model);
 
       return runtime.textToSpeech!(payload, options);
     }
