@@ -18,13 +18,15 @@ interface ListItemProps {
 }
 
 const ListItem = ({ title, avatar, description, extra, onPress, href }: ListItemProps) => {
-  const { styles } = useStyles();
+  const { styles } = useStyles(!!description);
 
   const content = (
     <View style={styles.sessionItem}>
       {avatar && <Avatar avatar={avatar} size={48} />}
       <View style={styles.info}>
-        <Text style={styles.title}>{title}</Text>
+        <Text numberOfLines={1} style={styles.title}>
+          {title}
+        </Text>
         {description && (
           <Text numberOfLines={1} style={styles.description}>
             {description}
