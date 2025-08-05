@@ -1,4 +1,4 @@
-import { ChatModelPricing, LobeDefaultAiModelListItem } from '@/types/aiModel';
+import { LobeDefaultAiModelListItem } from '@/types/aiModel';
 import { ModelTokensUsage } from '@/types/message';
 import { getAudioInputUnitRate, getAudioOutputUnitRate } from '@/utils/pricing';
 
@@ -33,7 +33,7 @@ export const getDetailsToken = (
     : totalInputTokens - (inputCacheTokens || 0);
 
   // Pricing
-  const formatPrice = getPrice(modelCard?.pricing as ChatModelPricing);
+  const formatPrice = getPrice(modelCard?.pricing || { units: [] });
 
   const inputCacheMissCredit = (
     !!inputCacheMissTokens ? calcCredit(inputCacheMissTokens, formatPrice.input) : 0
