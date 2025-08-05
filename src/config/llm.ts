@@ -234,7 +234,9 @@ export const getLLMConfig = () => {
       ENABLED_ZEROONE: !!process.env.ZEROONE_API_KEY,
       ZEROONE_API_KEY: process.env.ZEROONE_API_KEY,
 
-      ENABLED_AWS_BEDROCK: process.env.ENABLED_AWS_BEDROCK === '1' || !!process.env.AWS_BEARER_TOKEN_BEDROCK,
+      // AWS Bedrock is enabled explicitly via ENABLED_AWS_BEDROCK=1 or implicitly when AWS_BEARER_TOKEN_BEDROCK is set
+      ENABLED_AWS_BEDROCK:
+        process.env.ENABLED_AWS_BEDROCK === '1' || !!process.env.AWS_BEARER_TOKEN_BEDROCK,
       AWS_REGION: process.env.AWS_REGION,
       AWS_BEARER_TOKEN_BEDROCK: process.env.AWS_BEARER_TOKEN_BEDROCK,
       AWS_BEDROCK_MODEL_LIST: process.env.AWS_BEDROCK_MODEL_LIST,

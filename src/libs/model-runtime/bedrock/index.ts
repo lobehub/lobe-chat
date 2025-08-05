@@ -1,5 +1,3 @@
-import { BedrockRuntimeClient } from '@aws-sdk/client-bedrock-runtime';
-
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import {
@@ -13,6 +11,7 @@ import {
 import { buildAnthropicTools } from '../utils/anthropicHelpers';
 import { AgentRuntimeError } from '../utils/createError';
 import { StreamingResponse } from '../utils/response';
+import { StreamingJsonParser } from '../utils/streamingJsonParser';
 import { OpenAIStream } from '../utils/streams';
 
 /**
@@ -53,7 +52,6 @@ export interface LobeBedrockAIParams {
 }
 
 export class LobeBedrockAI implements LobeRuntimeAI {
-  private client: BedrockRuntimeClient;
   private bearerToken?: string;
 
   region: string;
@@ -66,12 +64,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
     }
 
-    // Initialize a dummy client to satisfy the interface
-    try {
-      this.client = new BedrockRuntimeClient({ region: this.region });
-    } catch {
-      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockRegion);
-    }
+    // No BedrockRuntimeClient is instantiated here, as requests are made directly via HTTP.
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {
@@ -224,7 +217,16 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
+        throw AgentRuntimeError.chat({
+          error: {
+            body: errorText,
+            message: `HTTP ${response.status}: ${errorText}`,
+            type: 'HTTPError',
+          },
+          errorType: AgentRuntimeErrorType.ProviderBizError,
+          provider: ModelProvider.Bedrock,
+          region: this.region,
+        });
       }
 
       // Create OpenAI-compatible stream
@@ -237,7 +239,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
           const reader = response.body.getReader();
           const decoder = new TextDecoder();
-          let buffer = '';
+          const jsonParser = new StreamingJsonParser();
 
           const pump = (): Promise<void> => {
             return reader
@@ -249,58 +251,28 @@ export class LobeBedrockAI implements LobeRuntimeAI {
                 }
 
                 const chunk = decoder.decode(value, { stream: true });
-                buffer += chunk;
+                const jsonObjects = jsonParser.processChunk(chunk);
 
-                // Look for JSON objects in the stream
-                let jsonStart = buffer.indexOf('{');
-                while (jsonStart !== -1) {
-                  let braceCount = 0;
-                  let jsonEnd = jsonStart;
+                for (const data of jsonObjects) {
+                  // Only extract actual response text, not reasoning
+                  const text = data.delta?.text;
 
-                  // Find the end of the JSON object
-                  for (let i = jsonStart; i < buffer.length; i++) {
-                    if (buffer[i] === '{') braceCount++;
-                    if (buffer[i] === '}') braceCount--;
-                    if (braceCount === 0) {
-                      jsonEnd = i + 1;
-                      break;
-                    }
-                  }
-
-                  if (braceCount === 0) {
-                    const jsonStr = buffer.slice(jsonStart, jsonEnd);
-
-                    try {
-                      const data = JSON.parse(jsonStr);
-
-                      // Only extract actual response text, not reasoning
-                      const text = data.delta?.text;
-
-                      if (text && text.trim()) {
-                        // Create OpenAI-compatible chunk
-                        const openaiChunk = {
-                          choices: [
-                            {
-                              delta: { content: text },
-                              finish_reason: null,
-                              index: 0,
-                            },
-                          ],
-                          created: Math.floor(Date.now() / 1000),
-                          id: 'chatcmpl-bedrock',
-                          model: model,
-                          object: 'chat.completion.chunk',
-                        };
-                        controller.enqueue(openaiChunk);
-                      }
-                    } catch {
-                      // Skip invalid JSON
-                    }
-
-                    buffer = buffer.slice(jsonEnd);
-                    jsonStart = buffer.indexOf('{');
-                  } else {
-                    break; // Incomplete JSON, wait for more data
+                  if (text && text.trim()) {
+                    // Create OpenAI-compatible chunk
+                    const openaiChunk = {
+                      choices: [
+                        {
+                          delta: { content: text },
+                          finish_reason: null,
+                          index: 0,
+                        },
+                      ],
+                      created: Math.floor(Date.now() / 1000),
+                      id: 'chatcmpl-bedrock',
+                      model: model,
+                      object: 'chat.completion.chunk',
+                    };
+                    controller.enqueue(openaiChunk);
                   }
                 }
 
@@ -358,7 +330,16 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
+        throw AgentRuntimeError.chat({
+          error: {
+            body: errorText,
+            message: `HTTP ${response.status}: ${errorText}`,
+            type: 'HTTPError',
+          },
+          errorType: AgentRuntimeErrorType.ProviderBizError,
+          provider: ModelProvider.Bedrock,
+          region: this.region,
+        });
       }
 
       const responseBody = await response.json();

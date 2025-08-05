@@ -25,11 +25,7 @@ export const getProviderAuthPayload = (
 
       return {
         apiKey: bearerToken,
-        /** @deprecated */
-        awsBearerToken: bearerToken,
-        /** @deprecated */
         awsRegion: region,
-        region,
       };
     }
 

@@ -46,14 +46,14 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
 
   const [loading, setLoading] = useState(false);
   const [pass, setPass] = useState(false);
-  const [, setCheckModel] = useState(model);
+  // Remove unused setCheckModel state
 
   const theme = useTheme();
   const [error, setError] = useState<ChatMessageError | undefined>();
 
   const getFirstAvailableModel = async () => {
     if (model) return model;
-    
+
     try {
       const response = await fetch(`/webapi/models/${provider}`);
       if (response.ok) {
@@ -68,7 +68,9 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
 
   const checkConnection = async () => {
     let isError = false;
-    
+    setError(undefined);
+    setPass(false);
+
     const modelToCheck = await getFirstAvailableModel();
     if (!modelToCheck) {
       setError({
@@ -79,8 +81,8 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
       setPass(false);
       return;
     }
-    
-    setCheckModel(modelToCheck);
+
+    // modelToCheck is used directly in the API call below
 
     await chatService.fetchPresetTaskResult({
       onError: (_, rawError) => {
@@ -96,7 +98,9 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
           setPass(false);
           setError({
             body: value,
-            message: t('response.ConnectionCheckFailed', 'Connection check failed', { ns: 'error' }),
+            message: t('response.ConnectionCheckFailed', 'Connection check failed', {
+              ns: 'error',
+            }),
             type: 'ConnectionCheckFailed',
           });
         }
