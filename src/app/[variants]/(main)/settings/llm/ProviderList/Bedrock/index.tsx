@@ -32,11 +32,13 @@ export const useBedrockProvider = (): ProviderItem => {
         children: (
           <Select
             allowClear
-            options={['us-east-1', 'us-west-2', 'ap-southeast-1', 'eu-central-1'].map((i) => ({
-              label: i,
-              value: i,
-            }))}
-            placeholder={'us-east-1'}
+            options={[
+              { label: 'us-east-1', value: 'us-east-1' },
+              { label: 'us-west-2', value: 'us-west-2' },
+              { label: 'ap-southeast-1', value: 'ap-southeast-1' },
+              { label: 'eu-central-1', value: 'eu-central-1' },
+            ]}
+            placeholder="us-east-1"
           />
         ),
         desc: t(`${providerKey}.region.desc`),
