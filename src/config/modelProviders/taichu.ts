@@ -11,9 +11,20 @@ const Taichu: ModelProviderCard = {
       functionCall: true,
       id: 'taichu_llm',
       pricing: {
-        currency: 'CNY',
-        input: 2,
-        output: 2,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -23,9 +34,20 @@ const Taichu: ModelProviderCard = {
       enabled: true,
       id: 'taichu2_mm',
       pricing: {
-        currency: 'CNY',
-        input: 5,
-        output: 5,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },

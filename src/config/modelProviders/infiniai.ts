@@ -12,9 +12,20 @@ const InfiniAI: ModelProviderCard = {
       enabled: true,
       id: 'deepseek-r1',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -25,9 +36,20 @@ const InfiniAI: ModelProviderCard = {
       enabled: true,
       id: 'deepseek-v3',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -38,9 +60,20 @@ const InfiniAI: ModelProviderCard = {
       enabled: true,
       id: 'qwq-32b',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -51,9 +84,20 @@ const InfiniAI: ModelProviderCard = {
       enabled: true,
       id: 'deepseek-r1-distill-qwen-32b',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -64,9 +108,20 @@ const InfiniAI: ModelProviderCard = {
       enabled: true,
       id: 'qwen2.5-72b-instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -77,9 +132,20 @@ const InfiniAI: ModelProviderCard = {
       enabled: true,
       id: 'qwen2.5-32b-instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -90,9 +156,20 @@ const InfiniAI: ModelProviderCard = {
       enabled: true,
       id: 'qwen2.5-coder-32b-instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -103,9 +180,20 @@ const InfiniAI: ModelProviderCard = {
       enabled: true,
       id: 'qwen2.5-14b-instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -116,9 +204,20 @@ const InfiniAI: ModelProviderCard = {
       enabled: true,
       id: 'qwen2.5-7b-instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -129,9 +228,20 @@ const InfiniAI: ModelProviderCard = {
       enabled: true,
       id: 'qwen2-72b-instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -142,9 +252,20 @@ const InfiniAI: ModelProviderCard = {
       enabled: true,
       id: 'qwen2-7b-instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -155,9 +276,20 @@ const InfiniAI: ModelProviderCard = {
       enabled: true,
       id: 'yi-1.5-34b-chat',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
   ],

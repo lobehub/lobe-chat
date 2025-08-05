@@ -11,8 +11,20 @@ const XAI: ModelProviderCard = {
       functionCall: true,
       id: 'grok-beta',
       pricing: {
-        input: 5,
-        output: 15,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 15,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -23,8 +35,20 @@ const XAI: ModelProviderCard = {
       functionCall: true,
       id: 'grok-vision-beta',
       pricing: {
-        input: 5,
-        output: 15,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 15,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -36,8 +60,20 @@ const XAI: ModelProviderCard = {
       functionCall: true,
       id: 'grok-2-1212',
       pricing: {
-        input: 2,
-        output: 10,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 10,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       releasedAt: '2024-12-12',
     },
@@ -49,8 +85,20 @@ const XAI: ModelProviderCard = {
       functionCall: true,
       id: 'grok-2-vision-1212',
       pricing: {
-        input: 2,
-        output: 10,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 10,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       releasedAt: '2024-12-12',
       vision: true,

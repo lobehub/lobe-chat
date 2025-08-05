@@ -10,9 +10,20 @@ const ZeroOne: ModelProviderCard = {
       enabled: true,
       id: 'yi-lightning',
       pricing: {
-        currency: 'CNY',
-        input: 0.99,
-        output: 0.99,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.99,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.99,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -22,9 +33,20 @@ const ZeroOne: ModelProviderCard = {
       enabled: true,
       id: 'yi-vision-v2',
       pricing: {
-        currency: 'CNY',
-        input: 6,
-        output: 6,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 6,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 6,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -34,9 +56,20 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Spark',
       id: 'yi-spark',
       pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 1,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -45,9 +78,20 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Medium',
       id: 'yi-medium',
       pricing: {
-        currency: 'CNY',
-        input: 2.5,
-        output: 2.5,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 2.5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 2.5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -56,9 +100,20 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Medium 200K',
       id: 'yi-medium-200k',
       pricing: {
-        currency: 'CNY',
-        input: 12,
-        output: 12,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 12,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 12,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -67,9 +122,20 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Large Turbo',
       id: 'yi-large-turbo',
       pricing: {
-        currency: 'CNY',
-        input: 12,
-        output: 12,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 12,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 12,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -79,9 +145,20 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Large RAG',
       id: 'yi-large-rag',
       pricing: {
-        currency: 'CNY',
-        input: 25,
-        output: 25,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 25,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 25,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -92,9 +169,20 @@ const ZeroOne: ModelProviderCard = {
       functionCall: true,
       id: 'yi-large-fc',
       pricing: {
-        currency: 'CNY',
-        input: 20,
-        output: 20,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 20,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 20,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -103,9 +191,20 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Large',
       id: 'yi-large',
       pricing: {
-        currency: 'CNY',
-        input: 20,
-        output: 20,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 20,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 20,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -114,9 +213,20 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Vision',
       id: 'yi-vision',
       pricing: {
-        currency: 'CNY',
-        input: 6,
-        output: 6,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 6,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 6,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -126,9 +236,20 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Large Preview',
       id: 'yi-large-preview',
       pricing: {
-        currency: 'CNY',
-        input: 20,
-        output: 20,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 20,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 20,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -137,9 +258,20 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Lightning Lite',
       id: 'yi-lightning-lite',
       pricing: {
-        currency: 'CNY',
-        input: 0.99,
-        output: 0.99,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.99,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.99,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
   ],

@@ -12,11 +12,26 @@ const DeepSeek: ModelProviderCard = {
       functionCall: true,
       id: 'deepseek-chat',
       pricing: {
-        // 2025.2.9 之后涨价
-        cachedInput: 0.1,
-        currency: 'CNY',
-        input: 1,
-        output: 2,
+        units: [
+          {
+            name: 'CachedTextInput',
+            rate: 0.1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextInput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       releasedAt: '2024-12-26',
     },
@@ -28,10 +43,26 @@ const DeepSeek: ModelProviderCard = {
       enabled: true,
       id: 'deepseek-reasoner',
       pricing: {
-        cachedInput: 1,
-        currency: 'CNY',
-        input: 4,
-        output: 16,
+        units: [
+          {
+            name: 'CachedTextInput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextInput',
+            rate: 4,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 16,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       releasedAt: '2025-01-20',
     },

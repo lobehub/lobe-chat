@@ -11,9 +11,20 @@ const Qwen: ModelProviderCard = {
       functionCall: true,
       id: 'qwen-turbo-latest',
       pricing: {
-        currency: 'CNY',
-        input: 0.3,
-        output: 0.6,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.3,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.6,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -24,9 +35,20 @@ const Qwen: ModelProviderCard = {
       functionCall: true,
       id: 'qwen-plus-latest',
       pricing: {
-        currency: 'CNY',
-        input: 0.8,
-        output: 2,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.8,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -38,9 +60,20 @@ const Qwen: ModelProviderCard = {
       functionCall: true,
       id: 'qwen-max-latest',
       pricing: {
-        currency: 'CNY',
-        input: 20,
-        output: 60,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 20,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 60,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -50,9 +83,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen Long',
       id: 'qwen-long',
       pricing: {
-        currency: 'CNY',
-        input: 0.5,
-        output: 2,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -63,9 +107,20 @@ const Qwen: ModelProviderCard = {
       enabled: true,
       id: 'qwen-vl-plus-latest',
       pricing: {
-        currency: 'CNY',
-        input: 1.5,
-        output: 4.5,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1.5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 4.5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -77,9 +132,20 @@ const Qwen: ModelProviderCard = {
       enabled: true,
       id: 'qwen-vl-max-latest',
       pricing: {
-        currency: 'CNY',
-        input: 3,
-        output: 9,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 3,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 9,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -90,9 +156,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen VL OCR',
       id: 'qwen-vl-ocr-latest',
       pricing: {
-        currency: 'CNY',
-        input: 5,
-        output: 5,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -102,9 +179,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen Math Turbo',
       id: 'qwen-math-turbo-latest',
       pricing: {
-        currency: 'CNY',
-        input: 2,
-        output: 6,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 6,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -113,9 +201,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen Math Plus',
       id: 'qwen-math-plus-latest',
       pricing: {
-        currency: 'CNY',
-        input: 4,
-        output: 12,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 4,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 12,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -124,9 +223,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen Coder Turbo',
       id: 'qwen-coder-turbo-latest',
       pricing: {
-        currency: 'CNY',
-        input: 2,
-        output: 6,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 6,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -135,9 +245,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen Coder Plus',
       id: 'qwen-coder-plus-latest',
       pricing: {
-        currency: 'CNY',
-        input: 3.5,
-        output: 7,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 3.5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 7,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -146,9 +267,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'QwQ 32B Preview',
       id: 'qwq-32b-preview',
       pricing: {
-        currency: 'CNY',
-        input: 3.5,
-        output: 7,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 3.5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 7,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -158,9 +290,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'QVQ 72B Preview',
       id: 'qvq-72b-preview',
       pricing: {
-        currency: 'CNY',
-        input: 12,
-        output: 36,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 12,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 36,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       releasedAt: '2024-12-25',
       vision: true,
@@ -172,9 +315,20 @@ const Qwen: ModelProviderCard = {
       functionCall: true,
       id: 'qwen2.5-7b-instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0.5,
-        output: 1,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -184,9 +338,20 @@ const Qwen: ModelProviderCard = {
       functionCall: true,
       id: 'qwen2.5-14b-instruct',
       pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 3,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 3,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -196,9 +361,20 @@ const Qwen: ModelProviderCard = {
       functionCall: true,
       id: 'qwen2.5-32b-instruct',
       pricing: {
-        currency: 'CNY',
-        input: 3.5,
-        output: 7,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 3.5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 7,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -208,9 +384,20 @@ const Qwen: ModelProviderCard = {
       functionCall: true,
       id: 'qwen2.5-72b-instruct',
       pricing: {
-        currency: 'CNY',
-        input: 4,
-        output: 12,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 4,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 12,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -220,9 +407,20 @@ const Qwen: ModelProviderCard = {
       functionCall: true,
       id: 'qwen2.5-14b-instruct-1m',
       pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 3,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 3,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -231,9 +429,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen2.5 Math 7B',
       id: 'qwen2.5-math-7b-instruct',
       pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 2,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -242,9 +451,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen2.5 Math 72B',
       id: 'qwen2.5-math-72b-instruct',
       pricing: {
-        currency: 'CNY',
-        input: 4,
-        output: 12,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 4,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 12,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -253,9 +473,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen2.5 Coder 7B',
       id: 'qwen2.5-coder-7b-instruct',
       pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 2,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -264,9 +495,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen2.5 Coder 32B',
       id: 'qwen2.5-coder-32b-instruct',
       pricing: {
-        currency: 'CNY',
-        input: 3.5,
-        output: 7,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 3.5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 7,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -275,9 +517,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen VL',
       id: 'qwen-vl-v1',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -287,9 +540,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen VL Chat',
       id: 'qwen-vl-chat-v1',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -300,9 +564,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen2.5 VL 72B',
       id: 'qwen2.5-vl-72b-instruct',
       pricing: {
-        currency: 'CNY',
-        input: 16,
-        output: 48,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 16,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 48,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       releasedAt: '2025-01-26',
       vision: true,
@@ -314,9 +589,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'DeepSeek R1',
       id: 'deepseek-r1',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       releasedAt: '2025-01-27',
     },
@@ -327,9 +613,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'DeepSeek V3',
       id: 'deepseek-v3',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       releasedAt: '2025-01-27',
     },
@@ -340,9 +637,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'DeepSeek R1 Distill Qwen 1.5B',
       id: 'deepseek-r1-distill-qwen-1.5b',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       releasedAt: '2025-02-05',
     },
@@ -353,9 +661,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'DeepSeek R1 Distill Qwen 7B',
       id: 'deepseek-r1-distill-qwen-7b',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       releasedAt: '2025-02-05',
     },
@@ -366,9 +685,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'DeepSeek R1 Distill Qwen 14B',
       id: 'deepseek-r1-distill-qwen-14b',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       releasedAt: '2025-02-05',
     },
@@ -379,9 +709,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'DeepSeek R1 Distill Qwen 32B',
       id: 'deepseek-r1-distill-qwen-32b',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       releasedAt: '2025-02-05',
     },
@@ -392,9 +733,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'DeepSeek R1 Distill Llama 8B',
       id: 'deepseek-r1-distill-llama-8b',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       releasedAt: '2025-02-05',
     },
@@ -405,9 +757,20 @@ const Qwen: ModelProviderCard = {
       displayName: 'DeepSeek R1 Distill Llama 70B',
       id: 'deepseek-r1-distill-llama-70b',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       releasedAt: '2025-02-05',
     },
