@@ -12,7 +12,16 @@ import PluginTag from '@/components/Plugins/PluginTag';
 import ConfigDisplay from './ConfigDisplay';
 import { ModalConfig } from './types';
 
-const CustomPluginModal = memo<{ schema?: McpInstallSchema }>(({ schema }) => {
+interface CustomPluginModalProps {
+  onConfigUpdate?: (config: {
+    env?: Record<string, string>;
+    headers?: Record<string, string>;
+  }) => void;
+  schema?: McpInstallSchema;
+  testError?: string;
+}
+
+const CustomPluginModal = memo<CustomPluginModalProps>(({ schema, testError, onConfigUpdate }) => {
   const { t } = useTranslation('plugin');
 
   if (!schema) return null;
@@ -25,6 +34,7 @@ const CustomPluginModal = memo<{ schema?: McpInstallSchema }>(({ schema }) => {
         type="warning"
         variant={'borderless'}
       />
+
       <Block gap={16} horizontal justify={'space-between'} padding={16} variant={'outlined'}>
         <Flexbox gap={16} horizontal>
           <PluginAvatar avatar={schema.icon} size={40} />
@@ -40,7 +50,17 @@ const CustomPluginModal = memo<{ schema?: McpInstallSchema }>(({ schema }) => {
         </Flexbox>
       </Block>
 
-      <ConfigDisplay schema={schema} />
+      <ConfigDisplay onConfigUpdate={onConfigUpdate} schema={schema} />
+      {/* 显示测试连接错误 */}
+      {testError && (
+        <Alert
+          closable
+          description={testError}
+          message={t('protocolInstall.messages.connectionTestFailed')}
+          showIcon
+          type="error"
+        />
+      )}
     </Flexbox>
   );
 });

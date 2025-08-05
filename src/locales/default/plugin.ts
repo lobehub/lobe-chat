@@ -345,9 +345,11 @@ export default {
       verified: '已验证',
     },
     messages: {
+      connectionTestFailed: '连接测试失败',
       installError: '插件安装失败，请重试',
-      installSuccess: '插件 "{{name}}" 安装成功！',
+      installSuccess: '插件 {{name}} 安装成功！',
       manifestError: '获取插件详情失败，请检查网络连接后重试',
+      manifestNotFound: '未能获取插件描述文件',
     },
     meta: {
       author: '作者',

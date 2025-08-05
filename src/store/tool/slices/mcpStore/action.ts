@@ -18,24 +18,36 @@ import {
   CheckMcpInstallResult,
   MCPErrorInfo,
   MCPInstallProgress,
+  MCPInstallStep,
   MCPPluginListParams,
+  McpConnectionParams,
 } from '@/types/plugins';
 import { sleep } from '@/utils/sleep';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { ToolStore } from '../../store';
-import { MCPInstallStep, MCPStoreState } from './initialState';
+import { MCPStoreState } from './initialState';
 
 const n = setNamespace('mcpStore');
 
+// 测试连接结果类型
+export interface TestMcpConnectionResult {
+  error?: string;
+  manifest?: LobeChatPluginManifest;
+  success: boolean;
+}
+
 export interface PluginMCPStoreAction {
   cancelInstallMCPPlugin: (identifier: string) => Promise<void>;
+  cancelMcpConnectionTest: (identifier: string) => void;
   installMCPPlugin: (
     identifier: string,
     options?: { config?: Record<string, any>; resume?: boolean; skipDepsCheck?: boolean },
   ) => Promise<boolean | undefined>;
   loadMoreMCPPlugins: () => void;
   resetMCPPluginList: (keywords?: string) => void;
+  // 测试连接相关方法
+  testMcpConnection: (params: McpConnectionParams) => Promise<TestMcpConnectionResult>;
   uninstallMCPPlugin: (identifier: string) => Promise<void>;
   updateMCPInstallProgress: (identifier: string, progress: MCPInstallProgress | undefined) => void;
   useFetchMCPPluginList: (params: MCPPluginListParams) => SWRResponse<PluginListResponse>;
@@ -66,6 +78,25 @@ export const createMCPPluginStoreSlice: StateCreator<
     // 清理安装进度和加载状态
     get().updateMCPInstallProgress(identifier, undefined);
     get().updateInstallLoadingState(identifier, undefined);
+  },
+
+  // 取消 MCP 连接测试
+  cancelMcpConnectionTest: (identifier) => {
+    const abortController = get().mcpTestAbortControllers[identifier];
+    if (abortController) {
+      abortController.abort();
+
+      // 清理状态
+      set(
+        produce((draft: MCPStoreState) => {
+          draft.mcpTestLoading[identifier] = false;
+          delete draft.mcpTestAbortControllers[identifier];
+          delete draft.mcpTestErrors[identifier];
+        }),
+        false,
+        n('cancelMcpConnectionTest'),
+      );
+    }
   },
 
   installMCPPlugin: async (identifier, options = {}) => {
@@ -436,6 +467,101 @@ export const createMCPPluginStoreSlice: StateCreator<
       false,
       n('resetMCPPluginList'),
     );
+  },
+
+  // 测试 MCP 连接
+  testMcpConnection: async (params) => {
+    const { identifier, connection, metadata } = params;
+
+    // 创建 AbortController 用于取消测试
+    const abortController = new AbortController();
+
+    // 存储 AbortController 并设置加载状态
+    set(
+      produce((draft: MCPStoreState) => {
+        draft.mcpTestAbortControllers[identifier] = abortController;
+        draft.mcpTestLoading[identifier] = true;
+        draft.mcpTestErrors[identifier] = '';
+      }),
+      false,
+      n('testMcpConnection/start'),
+    );
+
+    try {
+      let manifest: LobeChatPluginManifest;
+
+      if (connection.type === 'http') {
+        if (!connection.url) {
+          throw new Error('URL is required for HTTP connection');
+        }
+
+        manifest = await mcpService.getStreamableMcpServerManifest(
+          {
+            auth: connection.auth,
+            headers: connection.headers,
+            identifier,
+            metadata,
+            url: connection.url,
+          },
+          abortController.signal,
+        );
+      } else if (connection.type === 'stdio') {
+        if (!connection.command) {
+          throw new Error('Command is required for STDIO connection');
+        }
+
+        manifest = await mcpService.getStdioMcpServerManifest(
+          {
+            args: connection.args,
+            command: connection.command,
+            env: connection.env,
+            name: identifier,
+          },
+          metadata,
+          abortController.signal,
+        );
+      } else {
+        throw new Error('Invalid MCP connection type');
+      }
+
+      // 检查是否已被取消
+      if (abortController.signal.aborted) {
+        return { error: 'Test cancelled', success: false };
+      }
+
+      // 清理状态
+      set(
+        produce((draft: MCPStoreState) => {
+          draft.mcpTestLoading[identifier] = false;
+          delete draft.mcpTestAbortControllers[identifier];
+          delete draft.mcpTestErrors[identifier];
+        }),
+        false,
+        n('testMcpConnection/success'),
+      );
+
+      return { manifest, success: true };
+    } catch (error) {
+      // 如果是因为取消导致的错误，静默处理
+      if (abortController.signal.aborted) {
+        return { error: 'Test cancelled', success: false };
+      }
+
+      const errorMessage = error instanceof Error ? error.message : String(error);
+
+      // 设置错误状态
+      set(
+        produce((draft: MCPStoreState) => {
+          draft.mcpTestLoading[identifier] = false;
+          draft.mcpTestErrors[identifier] = errorMessage;
+          delete draft.mcpTestAbortControllers[identifier];
+        }),
+        false,
+        n('testMcpConnection/error'),
+      );
+
+      return { error: errorMessage, success: false };
+    }
   },
 
   uninstallMCPPlugin: async (identifier) => {
