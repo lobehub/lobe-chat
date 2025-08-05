@@ -20,6 +20,7 @@ export interface BaseContentProps {
 export interface ModalConfig {
   okText: string;
   title: string;
+  width?: number;
 }
 
 // 可信的第三方市场列表
