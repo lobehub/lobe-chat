@@ -1,4 +1,4 @@
-import { and, asc, desc, eq } from 'drizzle-orm/expressions';
+import { and, asc, desc, eq } from 'drizzle-orm';
 import { isEmpty } from 'lodash-es';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';

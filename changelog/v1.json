@@ -1,6 +1,21 @@
 [
   {
     "children": {
+      "fixes": ["Fix remote avatar broken in desktop."],
+      "improvements": ["Update mask style."]
+    },
+    "date": "2025-08-05",
+    "version": "1.108.1"
+  },
+  {
+    "children": {
+      "features": ["Support 302ai provider."]
+    },
+    "date": "2025-08-05",
+    "version": "1.108.0"
+  },
+  {
+    "children": {
       "fixes": ["Break line for Gemini Artifacts."]
     },
     "date": "2025-08-05",
