@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.108.2](https://github.com/lobehub/lobe-chat/compare/v1.108.1...v1.108.2)
+
+<sup>Released on **2025-08-05**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Provider config checker uses outdated API key.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Provider config checker uses outdated API key, closes [#8666](https://github.com/lobehub/lobe-chat/issues/8666) ([3a3e73e](https://github.com/lobehub/lobe-chat/commit/3a3e73e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.108.1](https://github.com/lobehub/lobe-chat/compare/v1.108.0...v1.108.1)
 
 <sup>Released on **2025-08-05**</sup>
