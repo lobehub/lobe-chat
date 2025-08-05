@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, Easing } from 'react-native';
+import { Animated, Easing, View } from 'react-native';
 import Svg, { Circle, Rect } from 'react-native-svg';
 
 import { useStyles } from './style';
@@ -51,39 +51,45 @@ const StopLoadingIcon: React.FC<StopLoadingIconProps> = ({
   const gapLength = (gapAngle / 360) * circumference;
 
   return (
-    <Animated.View
-      pointerEvents="none"
-      style={[
-        styles.rotatingContainer,
-        {
-          transform: [{ rotate: spin }],
-        },
-      ]}
-    >
-      <Svg height={size} width={size}>
-        {/* 旋转的弧 */}
-        <Circle
-          cx={center}
-          cy={center}
-          fill="none"
-          r={radius}
-          stroke={color}
-          strokeDasharray={`${arcLength},${gapLength}`}
-          strokeDashoffset={0}
-          strokeLinecap="round"
-          strokeWidth={strokeWidth}
-        />
-        {/* 静止的方块 */}
-        <Rect
-          fill={color}
-          height={size * 0.3}
-          rx={2}
-          width={size * 0.3}
-          x={center - size * 0.15}
-          y={center - size * 0.15}
-        />
-      </Svg>
-    </Animated.View>
+    <View pointerEvents="none" style={styles.container}>
+      {/* 旋转的弧 */}
+      <Animated.View
+        style={[
+          styles.rotatingContainer,
+          {
+            transform: [{ rotate: spin }],
+          },
+        ]}
+      >
+        <Svg height={size} width={size}>
+          <Circle
+            cx={center}
+            cy={center}
+            fill="none"
+            r={radius}
+            stroke={color}
+            strokeDasharray={`${arcLength},${gapLength}`}
+            strokeDashoffset={0}
+            strokeLinecap="round"
+            strokeWidth={strokeWidth}
+          />
+        </Svg>
+      </Animated.View>
+
+      {/* 静止的方块 */}
+      <View style={styles.staticContainer}>
+        <Svg height={size} width={size}>
+          <Rect
+            fill={color}
+            height={size * 0.3}
+            rx={2}
+            width={size * 0.3}
+            x={center - size * 0.15}
+            y={center - size * 0.15}
+          />
+        </Svg>
+      </View>
+    </View>
   );
 };
 
