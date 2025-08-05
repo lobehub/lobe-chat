@@ -32,7 +32,7 @@ yarn-error.*
 # local env files
 .env*.local
 package-lock.json
-pnpm-lock.yaml
+# pnpm-lock.yaml
 
 
 # typescript
