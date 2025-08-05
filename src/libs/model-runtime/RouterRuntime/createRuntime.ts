@@ -117,6 +117,7 @@ export const createRouterRuntime = ({
   return class UniformRuntime implements LobeRuntimeAI {
     private _runtimes: RuntimeItem[];
     private _options: ClientOptions & Record<string, any>;
+    private _modelCache = new Map<string, string[]>();
 
     constructor(options: ClientOptions & Record<string, any> = {}) {
       const _options = {
@@ -142,12 +143,24 @@ export const createRouterRuntime = ({
       this._options = _options;
     }
 
-    // 获取 runtime 的 models 列表，支持同步数组和异步函数
+    // 获取 runtime 的 models 列表，支持同步数组和异步函数，带缓存机制
     private async getModels(runtimeItem: RuntimeItem): Promise<string[]> {
-      if (typeof runtimeItem.models === 'function') {
-        return await runtimeItem.models();
+      const cacheKey = runtimeItem.id;
+
+      // 如果是同步数组，直接返回不需要缓存
+      if (typeof runtimeItem.models !== 'function') {
+        return runtimeItem.models || [];
       }
-      return runtimeItem.models || [];
+
+      // 检查缓存
+      if (this._modelCache.has(cacheKey)) {
+        return this._modelCache.get(cacheKey)!;
+      }
+
+      // 获取模型列表并缓存结果
+      const models = await runtimeItem.models();
+      this._modelCache.set(cacheKey, models);
+      return models;
     }
 
     // 检查下是否能匹配到特定模型，否则默认使用最后一个 runtime
@@ -199,6 +212,18 @@ export const createRouterRuntime = ({
       const runtime = await this.getRuntimeByModel(payload.model);
 
       return runtime.textToSpeech!(payload, options);
+    }
+
+    /**
+     * 清除模型列表缓存，强制下次获取时重新加载
+     * @param runtimeId - 可选，指定清除特定 runtime 的缓存，不传则清除所有缓存
+     */
+    clearModelCache(runtimeId?: string) {
+      if (runtimeId) {
+        this._modelCache.delete(runtimeId);
+      } else {
+        this._modelCache.clear();
+      }
     }
   };
 };
