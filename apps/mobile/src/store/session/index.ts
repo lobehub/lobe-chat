@@ -3,7 +3,7 @@ import { createWithEqualityFn } from 'zustand/traditional';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 
-import { trpcClient } from '@/services/_auth/trpc';
+import sessionService from '@/services/session';
 import { LobeAgentSession } from '@/types/session';
 
 /**
@@ -72,7 +72,7 @@ export const useSessionStore = createWithEqualityFn<SessionStore>()(
 
       fetchSessions: async () => {
         try {
-          const result = await trpcClient.session.getGroupedSessions.query();
+          const result = await sessionService.getGroupedSessions();
           set({ sessions: result?.sessions || [] });
         } catch (error) {
           console.error('Failed to fetch sessions:', error);

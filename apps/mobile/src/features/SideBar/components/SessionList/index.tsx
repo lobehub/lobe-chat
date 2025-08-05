@@ -1,16 +1,14 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, TextInput, View } from 'react-native';
+import { ScrollView, TextInput, View, Text } from 'react-native';
 
 import { useSessionStore } from '@/store/session';
-import { useStyles } from './styles';
+import { useStyles } from './style';
 
-import Inbox from './(components)/Inbox';
-import SessionHeader from './(components)/SessionHeader';
-import SessionItem from './(components)/SessionItem';
-import SessionFooter from './(components)/SessionFooter';
+import Inbox from './Inbox';
+import SessionItem from './SessionItem';
 
-export default function SessionDrawer() {
+export default function SideBar() {
   const { t } = useTranslation(['chat']);
   const [searchText, setSearchText] = useState('');
   const { sessions, fetchSessions } = useSessionStore();
@@ -29,8 +27,6 @@ export default function SessionDrawer() {
 
   return (
     <View style={styles.container}>
-      <SessionHeader />
-
       {/* 搜索栏 */}
       <TextInput
         onChangeText={setSearchText}
@@ -43,13 +39,13 @@ export default function SessionDrawer() {
       {/* 会话列表 */}
       <ScrollView style={styles.sessionList}>
         <Inbox />
-
+        <View style={styles.header}>
+          <Text style={styles.headerText}>默认列表</Text>
+        </View>
         {filteredSessions.map((session) => (
           <SessionItem id={session.id} key={session.id} />
         ))}
       </ScrollView>
-
-      <SessionFooter />
     </View>
   );
 }
