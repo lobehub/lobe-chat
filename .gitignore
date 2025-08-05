@@ -103,6 +103,7 @@ docs/.prd/
 .claude/
 .mcp.json
 CLAUDE.md
+CLAUDE.*.md
 
 # Misc
 ./packages/lobe-ui
