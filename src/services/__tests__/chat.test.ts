@@ -2164,6 +2164,22 @@ describe('ModelRuntimeOnClient', () => {
         expect(runtime['_runtime']).toBeInstanceOf(LobeBedrockAI);
       });
 
+      it('Bedrock provider: missing bearer token should throw error', async () => {
+        merge(initialSettingsState, {
+          defaultSettings: {},
+          settings: {
+            keyVaults: {
+              bedrock: {
+                // bearerToken is intentionally omitted
+                region: 'us-west-2',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+
+        await expect(initializeWithClientStore(ModelProvider.Bedrock, {})).rejects.toThrow();
+      });
+
       it('Ollama provider: with endpoint', async () => {
         merge(initialSettingsState, {
           defaultSettings: {},

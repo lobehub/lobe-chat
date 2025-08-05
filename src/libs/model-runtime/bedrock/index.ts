@@ -112,22 +112,42 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       return BedrockProvider.default.chatModels.filter((model) => model.enabled !== false);
     }
 
-    // Parse model list: -all,+model1,+model2,model3
+    // Get all available models from the provider config
+    const BedrockProvider = await import('@/config/modelProviders/bedrock');
+    const ALL_AVAILABLE_MODELS = BedrockProvider.default.chatModels
+      .filter((model) => model.enabled !== false)
+      .map((model) => model.id);
+
+    // Parse modelList for inclusions, exclusions, and 'all'
     const items = modelList
       .split(',')
       .map((m) => m.trim())
       .filter(Boolean);
-    const enabledModels = [];
 
-    for (const item of items) {
-      if (item.startsWith('+')) {
-        enabledModels.push(item.slice(1));
-      } else if (!item.startsWith('-') && item !== 'all') {
-        enabledModels.push(item);
+    const inclusions: string[] = [];
+    const exclusions: string[] = [];
+    let includeAll = false;
+
+    for (const entry of items) {
+      if (entry === 'all') {
+        includeAll = true;
+      } else if (entry.startsWith('-')) {
+        exclusions.push(entry.slice(1));
+      } else if (entry.startsWith('+')) {
+        inclusions.push(entry.slice(1));
+      } else {
+        inclusions.push(entry);
       }
     }
 
-    return enabledModels.map((id) => ({ id }));
+    let finalModels: string[];
+    if (includeAll) {
+      finalModels = ALL_AVAILABLE_MODELS.filter((m) => !exclusions.includes(m));
+    } else {
+      finalModels = inclusions.filter((m) => !exclusions.includes(m));
+    }
+
+    return finalModels.map((id) => ({ id }));
   }
 
   private async invokeBearerTokenModel(
@@ -151,7 +171,8 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       }));
 
     // Ensure at least one valid message exists
-    if (converseMessages.length === 0) {
+    // Some models may support system-only prompts, but most require at least one user message
+    if (converseMessages.length === 0 && !system_message?.content) {
       throw new Error('No valid user messages found. At least one non-empty message is required.');
     }
 
@@ -169,7 +190,13 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
     // Add temperature and top_p if specified
     if (temperature !== undefined) {
-      requestBody.inferenceConfig.temperature = temperature / 2;
+      // Claude models on Bedrock expect temperature values in range 0-1, while OpenAI uses 0-2
+      // Apply scaling only for Claude models
+      if (model.includes('claude')) {
+        requestBody.inferenceConfig.temperature = temperature / 2;
+      } else {
+        requestBody.inferenceConfig.temperature = temperature;
+      }
     }
     if (top_p !== undefined) {
       requestBody.inferenceConfig.topP = top_p;
@@ -335,6 +362,16 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       }
 
       const responseBody = await response.json();
+
+      // Validate response structure to handle potential API changes
+      if (!responseBody || typeof responseBody !== 'object') {
+        throw new Error('Invalid response format from embedding API');
+      }
+
+      if (!responseBody.embedding || !Array.isArray(responseBody.embedding)) {
+        throw new Error('Missing or invalid embedding data in response');
+      }
+
       return responseBody.embedding;
     } catch (e) {
       const err = e as Error;
