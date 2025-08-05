@@ -430,6 +430,22 @@ expect(result!.status).toBe('success');
 // ✅ 使用 any 类型简化复杂的 Mock 设置
 const mockStream = new ReadableStream() as any;
 mockStream.toReadableStream = () => mockStream;
+
+// ✅ 使用中括号访问私有属性和方法（推荐）
+class MyClass {
+  private _cache = new Map();
+  private getFromCache(key: string) { /* ... */ }
+}
+
+const instance = new MyClass();
+
+// 推荐：使用中括号访问私有成员
+await instance['getFromCache']('test-key');
+expect(instance['_cache'].size).toBe(1);
+
+// 避免：使用 as any 访问私有成员
+await (instance as any).getFromCache('test-key');  // ❌ 不推荐
+expect((instance as any)._cache.size).toBe(1);     // ❌ 不推荐
 ```
 
 #### 🎯 适用场景
@@ -437,11 +453,13 @@ mockStream.toReadableStream = () => mockStream;
 - **Mock 对象**: 对于测试用的 Mock 数据，使用 `as any` 避免复杂的类型定义
 - **第三方库**: 处理复杂的第三方库类型时，适当使用 `any` 提高效率
 - **测试断言**: 在确定对象存在的测试场景中，使用 `!` 非空断言
+- **私有成员访问**: 优先使用中括号 `instance['privateMethod']()` 而不是 `(instance as any).privateMethod()`
 - **临时调试**: 快速编写测试时，先用 `any` 保证功能，后续可选择性地优化类型
 
 #### ⚠️ 注意事项
 
 - **适度使用**: 不要过度依赖 `any`，核心业务逻辑的类型仍应保持严格
+- **私有成员访问优先级**: 中括号访问 > `as any` 转换，保持更好的类型安全性
 - **文档说明**: 对于使用 `any` 的复杂场景，添加注释说明原因
 - **测试覆盖**: 确保即使使用了 `any`，测试仍能有效验证功能正确性
 
