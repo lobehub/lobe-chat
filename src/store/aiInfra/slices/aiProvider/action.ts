@@ -2,6 +2,7 @@ import { uniqBy } from 'lodash-es';
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { isDeprecatedEdition, isDesktop, isUsePgliteDB } from '@/const/version';
 import { useClientDataSWR } from '@/libs/swr';
@@ -176,7 +177,6 @@ export const createAiProviderSlice: StateCreator<
       async ([, isLogin]) => {
         if (isLogin) return aiProviderService.getAiProviderRuntimeState();
 
-        const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
         const enabledAiProviders: EnabledProvider[] = DEFAULT_MODEL_PROVIDER_LIST.filter(
           (provider) => provider.enabled,
         ).map((item) => ({ id: item.id, name: item.name, source: 'builtin' }));
@@ -201,10 +201,8 @@ export const createAiProviderSlice: StateCreator<
       },
       {
         focusThrottleInterval: isDesktop || isUsePgliteDB ? 100 : undefined,
-        onSuccess: async (data) => {
+        onSuccess: (data) => {
           if (!data) return;
-
-          const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
 
           const getModelListByType = (providerId: string, type: string) => {
             const models = data.enabledAiModels
