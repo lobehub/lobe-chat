@@ -28,7 +28,7 @@ import { baseRuntimeMap } from './baseRuntimeMap';
 
 export interface RuntimeItem {
   id: string;
-  models?: string[];
+  models?: string[] | (() => Promise<string[]>);
   runtime: LobeRuntimeAI;
 }
 
@@ -44,11 +44,13 @@ interface ProviderIniOptions extends Record<string, any> {
   sessionToken?: string;
 }
 
+export type RuntimeClass = typeof LobeOpenAI;
+
 interface RouterInstance {
   apiType: keyof typeof baseRuntimeMap;
-  models?: string[];
+  models?: string[] | (() => Promise<string[]>);
   options: ProviderIniOptions;
-  runtime?: typeof LobeOpenAI;
+  runtime?: RuntimeClass;
 }
 
 type ConstructorOptions<T extends Record<string, any> = any> = ClientOptions & T;
@@ -117,6 +119,7 @@ export const createRouterRuntime = ({
   return class UniformRuntime implements LobeRuntimeAI {
     private _runtimes: RuntimeItem[];
     private _options: ClientOptions & Record<string, any>;
+    private _modelCache = new Map<string, string[]>();
 
     constructor(options: ClientOptions & Record<string, any> = {}) {
       const _options = {
@@ -142,18 +145,40 @@ export const createRouterRuntime = ({
       this._options = _options;
     }
 
-    // 检查下是否能匹配到特定模型，否则默认使用最后一个 runtime
-    getRuntimeByModel(model: string) {
-      const runtimeItem =
-        this._runtimes.find((runtime) => runtime.models && runtime.models.includes(model)) ||
-        this._runtimes.at(-1)!;
+    // 获取 runtime 的 models 列表，支持同步数组和异步函数，带缓存机制
+    private async getModels(runtimeItem: RuntimeItem): Promise<string[]> {
+      const cacheKey = runtimeItem.id;
 
-      return runtimeItem.runtime;
+      // 如果是同步数组，直接返回不需要缓存
+      if (typeof runtimeItem.models !== 'function') {
+        return runtimeItem.models || [];
+      }
+
+      // 检查缓存
+      if (this._modelCache.has(cacheKey)) {
+        return this._modelCache.get(cacheKey)!;
+      }
+
+      // 获取模型列表并缓存结果
+      const models = await runtimeItem.models();
+      this._modelCache.set(cacheKey, models);
+      return models;
+    }
+
+    // 检查下是否能匹配到特定模型，否则默认使用最后一个 runtime
+    async getRuntimeByModel(model: string) {
+      for (const runtimeItem of this._runtimes) {
+        const models = await this.getModels(runtimeItem);
+        if (models.includes(model)) {
+          return runtimeItem.runtime;
+        }
+      }
+      return this._runtimes.at(-1)!.runtime;
     }
 
     async chat(payload: ChatStreamPayload, options?: ChatMethodOptions) {
       try {
-        const runtime = this.getRuntimeByModel(payload.model);
+        const runtime = await this.getRuntimeByModel(payload.model);
 
         return await runtime.chat!(payload, options);
       } catch (e) {
@@ -170,7 +195,7 @@ export const createRouterRuntime = ({
     }
 
     async textToImage(payload: TextToImagePayload) {
-      const runtime = this.getRuntimeByModel(payload.model);
+      const runtime = await this.getRuntimeByModel(payload.model);
 
       return runtime.textToImage!(payload);
     }
@@ -180,15 +205,27 @@ export const createRouterRuntime = ({
     }
 
     async embeddings(payload: EmbeddingsPayload, options?: EmbeddingsOptions) {
-      const runtime = this.getRuntimeByModel(payload.model);
+      const runtime = await this.getRuntimeByModel(payload.model);
 
       return runtime.embeddings!(payload, options);
     }
 
     async textToSpeech(payload: TextToSpeechPayload, options?: EmbeddingsOptions) {
-      const runtime = this.getRuntimeByModel(payload.model);
+      const runtime = await this.getRuntimeByModel(payload.model);
 
       return runtime.textToSpeech!(payload, options);
+    }
+
+    /**
+     * 清除模型列表缓存，强制下次获取时重新加载
+     * @param runtimeId - 可选，指定清除特定 runtime 的缓存，不传则清除所有缓存
+     */
+    clearModelCache(runtimeId?: string) {
+      if (runtimeId) {
+        this._modelCache.delete(runtimeId);
+      } else {
+        this._modelCache.clear();
+      }
     }
   };
 };
