@@ -69,7 +69,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     // Initialize a dummy client to satisfy the interface
     try {
       this.client = new BedrockRuntimeClient({ region: this.region });
-    } catch (error) {
+    } catch {
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockRegion);
     }
   }
@@ -118,7 +118,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     
     for (const item of items) {
       if (item.startsWith('+')) {
-        enabledModels.push(item.substring(1));
+        enabledModels.push(item.slice(1));
       } else if (!item.startsWith('-') && item !== 'all') {
         enabledModels.push(item);
       }
@@ -133,7 +133,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
   ): Promise<Response> {
     const { max_tokens, messages, model, temperature, top_p, tools: _tools } = payload;
     // Use a type-safe approach to find the system message
-    const system_message = messages.find((m): m is { role: 'system', content: string } => m.role === 'system' && typeof m.content === 'string');
+    const system_message = messages.find((m): m is { content: string; role: 'system' } => m.role === 'system' && typeof m.content === 'string');
     const user_messages = messages.filter((m) => m.role !== 'system');
 
     // Use the Converse API format for bearer token requests
@@ -228,7 +228,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
                 }
                 
                 if (braceCount === 0) {
-                  const jsonStr = buffer.substring(jsonStart, jsonEnd);
+                  const jsonStr = buffer.slice(jsonStart, jsonEnd);
                   
                   try {
                     const data = JSON.parse(jsonStr);
@@ -251,11 +251,11 @@ export class LobeBedrockAI implements LobeRuntimeAI {
                       };
                       controller.enqueue(openaiChunk);
                     }
-                  } catch (e) {
+                  } catch {
                     // Skip invalid JSON
                   }
                   
-                  buffer = buffer.substring(jsonEnd);
+                  buffer = buffer.slice(jsonEnd);
                   jsonStart = buffer.indexOf('{');
                 } else {
                   break; // Incomplete JSON, wait for more data

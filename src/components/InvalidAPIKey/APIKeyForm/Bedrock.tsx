@@ -1,7 +1,7 @@
 import { Aws } from '@lobehub/icons';
 import { Button, Icon, InputPassword, Select } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { Network, ShieldPlus } from 'lucide-react';
+import { Network } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -13,7 +13,6 @@ import { keyVaultsConfigSelectors } from '@/store/user/selectors';
 const BedrockForm = memo<{ description: string }>(({ description }) => {
   const { t } = useTranslation('modelProvider');
   const [showRegion, setShow] = useState(false);
-  const [showSessionToken, setShowSessionToken] = useState(false);
 
   const [bearerToken, region, setConfig] = useUserStore((s) => [
     keyVaultsConfigSelectors.bedrockConfig(s).bearerToken,

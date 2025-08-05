@@ -64,6 +64,7 @@ export const getLLMConfig = () => {
       ENABLED_AWS_BEDROCK: z.boolean(),
       AWS_REGION: z.string().optional(),
       AWS_BEARER_TOKEN_BEDROCK: z.string().optional(),
+      AWS_BEDROCK_MODEL_LIST: z.string().optional(),
 
       ENABLED_WENXIN: z.boolean(),
       WENXIN_API_KEY: z.string().optional(),
@@ -236,6 +237,7 @@ export const getLLMConfig = () => {
       ENABLED_AWS_BEDROCK: process.env.ENABLED_AWS_BEDROCK === '1' || !!process.env.AWS_BEARER_TOKEN_BEDROCK,
       AWS_REGION: process.env.AWS_REGION,
       AWS_BEARER_TOKEN_BEDROCK: process.env.AWS_BEARER_TOKEN_BEDROCK,
+      AWS_BEDROCK_MODEL_LIST: process.env.AWS_BEDROCK_MODEL_LIST,
 
       ENABLED_WENXIN: !!process.env.WENXIN_API_KEY,
       WENXIN_API_KEY: process.env.WENXIN_API_KEY,

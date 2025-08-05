@@ -20,6 +20,7 @@ export const AgentRuntimeErrorType = {
   OllamaServiceUnavailable: 'OllamaServiceUnavailable',
 
   InvalidBedrockCredentials: 'InvalidBedrockCredentials',
+  InvalidBedrockRegion: 'InvalidBedrockRegion',
   InvalidVertexCredentials: 'InvalidVertexCredentials',
   StreamChunkError: 'StreamChunkError',
 

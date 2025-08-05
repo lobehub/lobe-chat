@@ -12,6 +12,7 @@ export const ChatErrorType = {
 
   InvalidUserKey: 'InvalidUserKey', // is not valid User key
   CreateMessageError: 'CreateMessageError',
+  NoAvailableModels: 'NoAvailableModels',
   /**
    * @deprecated
    */

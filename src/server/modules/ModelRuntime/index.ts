@@ -23,8 +23,8 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
       // Check if OpenAI is enabled
       if (!llmConfig.ENABLED_OPENAI) {
         throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
-          provider,
           message: `Provider ${provider} is disabled`,
+          provider,
         });
       }
       
@@ -41,8 +41,8 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
       const enabledKey = `ENABLED_${upperProvider}`;
       if (enabledKey in llmConfig && !llmConfig[enabledKey]) {
         throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
-          provider,
           message: `Provider ${provider} is disabled`,
+          provider,
         });
       }
 
@@ -60,8 +60,8 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
       // Check if Ollama is enabled
       if (!llmConfig.ENABLED_OLLAMA) {
         throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
-          provider,
           message: `Provider ${provider} is disabled`,
+          provider,
         });
       }
       
@@ -74,8 +74,8 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
       // Check if Azure OpenAI is enabled
       if (!llmConfig.ENABLED_AZURE_OPENAI) {
         throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
-          provider,
           message: `Provider ${provider} is disabled`,
+          provider,
         });
       }
       
@@ -90,8 +90,8 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
       // Check if AzureAI is enabled
       if (!llmConfig.ENABLED_AZUREAI) {
         throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
-          provider,
           message: `Provider ${provider} is disabled`,
+          provider,
         });
       }
       
@@ -105,8 +105,8 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
       // Check if AWS Bedrock is enabled
       if (!llmConfig.ENABLED_AWS_BEDROCK) {
         throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
-          provider,
           message: `Provider ${provider} is disabled`,
+          provider,
         });
       }
       
@@ -127,8 +127,8 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
       // Check if Cloudflare is enabled
       if (!llmConfig.ENABLED_CLOUDFLARE) {
         throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
-          provider,
           message: `Provider ${provider} is disabled`,
+          provider,
         });
       }
       
@@ -147,8 +147,8 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
       // Check if GiteeAI is enabled
       if (!llmConfig.ENABLED_GITEE_AI) {
         throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
-          provider,
           message: `Provider ${provider} is disabled`,
+          provider,
         });
       }
       
@@ -163,8 +163,8 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
       // Check if Github is enabled
       if (!llmConfig.ENABLED_GITHUB) {
         throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
-          provider,
           message: `Provider ${provider} is disabled`,
+          provider,
         });
       }
       
@@ -179,8 +179,8 @@ const getParamsFromPayload = (provider: string, payload: ClientSecretPayload) =>
       // Check if TencentCloud is enabled
       if (!llmConfig.ENABLED_TENCENT_CLOUD) {
         throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderNotEnabled, {
-          provider,
           message: `Provider ${provider} is disabled`,
+          provider,
         });
       }
       

@@ -46,7 +46,7 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
 
   const [loading, setLoading] = useState(false);
   const [pass, setPass] = useState(false);
-  const [checkModel, setCheckModel] = useState(model);
+  const [, setCheckModel] = useState(model);
 
   const theme = useTheme();
   const [error, setError] = useState<ChatMessageError | undefined>();
@@ -73,7 +73,7 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
     if (!modelToCheck) {
       setError({
         body: null,
-        message: t('response.NoAvailableModels', { ns: 'error' }) || 'No available models found',
+        message: t('response.NoAvailableModels', 'No available models found', { ns: 'error' }),
         type: 'NoAvailableModels',
       });
       setPass(false);
@@ -96,7 +96,7 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
           setPass(false);
           setError({
             body: value,
-            message: t('response.ConnectionCheckFailed', { ns: 'error' }),
+            message: t('response.ConnectionCheckFailed', 'Connection check failed', { ns: 'error' }),
             type: 'ConnectionCheckFailed',
           });
         }
