@@ -61,11 +61,11 @@ export class LobeBedrockAI implements LobeRuntimeAI {
   constructor({ region, token }: LobeBedrockAIParams = {}) {
     this.region = region ?? 'us-east-1';
     this.bearerToken = token;
-    
+
     if (!token) {
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
     }
-    
+
     // Initialize a dummy client to satisfy the interface
     try {
       this.client = new BedrockRuntimeClient({ region: this.region });
@@ -106,16 +106,19 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     const { getLLMConfig } = await import('@/config/llm');
     const config = getLLMConfig();
     const modelList = config.AWS_BEDROCK_MODEL_LIST;
-    
+
     if (!modelList) {
       const BedrockProvider = await import('@/config/modelProviders/bedrock');
-      return BedrockProvider.default.chatModels.filter(model => model.enabled !== false);
+      return BedrockProvider.default.chatModels.filter((model) => model.enabled !== false);
     }
-    
+
     // Parse model list: -all,+model1,+model2,model3
-    const items = modelList.split(',').map(m => m.trim()).filter(Boolean);
+    const items = modelList
+      .split(',')
+      .map((m) => m.trim())
+      .filter(Boolean);
     const enabledModels = [];
-    
+
     for (const item of items) {
       if (item.startsWith('+')) {
         enabledModels.push(item.slice(1));
@@ -123,8 +126,8 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         enabledModels.push(item);
       }
     }
-    
-    return enabledModels.map(id => ({ id }));
+
+    return enabledModels.map((id) => ({ id }));
   }
 
   private async invokeBearerTokenModel(
@@ -133,16 +136,24 @@ export class LobeBedrockAI implements LobeRuntimeAI {
   ): Promise<Response> {
     const { max_tokens, messages, model, temperature, top_p, tools: _tools } = payload;
     // Use a type-safe approach to find the system message
-    const system_message = messages.find((m): m is { content: string; role: 'system' } => m.role === 'system' && typeof m.content === 'string');
+    const system_message = messages.find(
+      (m): m is { content: string; role: 'system' } =>
+        m.role === 'system' && typeof m.content === 'string',
+    );
     const user_messages = messages.filter((m) => m.role !== 'system');
 
     // Use the Converse API format for bearer token requests
     const converseMessages = user_messages
-      .filter(msg => msg.content && (msg.content as string).trim())
-      .map(msg => ({
+      .filter((msg) => msg.content && (msg.content as string).trim())
+      .map((msg) => ({
         content: [{ text: (msg.content as string).trim() }],
         role: msg.role === 'assistant' ? 'assistant' : 'user',
       }));
+
+    // Ensure at least one valid message exists
+    if (converseMessages.length === 0) {
+      throw new Error('No valid user messages found. At least one non-empty message is required.');
+    }
 
     const requestBody: any = {
       inferenceConfig: {
@@ -196,27 +207,27 @@ export class LobeBedrockAI implements LobeRuntimeAI {
             controller.close();
             return;
           }
-          
+
           const reader = response.body.getReader();
           const decoder = new TextDecoder();
           let buffer = '';
-          
-          function pump(): Promise<void> {
+
+          const pump = (): Promise<void> => {
             return reader.read().then(({ done, value }) => {
               if (done) {
                 controller.close();
                 return;
               }
-              
+
               const chunk = decoder.decode(value, { stream: true });
               buffer += chunk;
-              
+
               // Look for JSON objects in the stream
               let jsonStart = buffer.indexOf('{');
               while (jsonStart !== -1) {
                 let braceCount = 0;
                 let jsonEnd = jsonStart;
-                
+
                 // Find the end of the JSON object
                 for (let i = jsonStart; i < buffer.length; i++) {
                   if (buffer[i] === '{') braceCount++;
@@ -226,46 +237,49 @@ export class LobeBedrockAI implements LobeRuntimeAI {
                     break;
                   }
                 }
-                
+
                 if (braceCount === 0) {
                   const jsonStr = buffer.slice(jsonStart, jsonEnd);
-                  
+
                   try {
                     const data = JSON.parse(jsonStr);
-                    
+
                     // Only extract actual response text, not reasoning
                     const text = data.delta?.text;
-                    
+
                     if (text && text.trim()) {
                       // Create OpenAI-compatible chunk
                       const openaiChunk = {
-                        choices: [{
-                          delta: { content: text },
-                          finish_reason: null,
-                          index: 0
-                        }],
+                        choices: [
+                          {
+                            delta: { content: text },
+                            finish_reason: null,
+                            index: 0,
+                          },
+                        ],
                         created: Math.floor(Date.now() / 1000),
                         id: 'chatcmpl-bedrock',
                         model: model,
-                        object: 'chat.completion.chunk'
+                        object: 'chat.completion.chunk',
                       };
-                      controller.enqueue(openaiChunk);
+                      const chunkStr = `data: ${JSON.stringify(openaiChunk)}\n\n`;
+                      controller.enqueue(new TextEncoder().encode(chunkStr));
                     }
                   } catch {
                     // Skip invalid JSON
                   }
-                  
+
                   buffer = buffer.slice(jsonEnd);
                   jsonStart = buffer.indexOf('{');
                 } else {
                   break; // Incomplete JSON, wait for more data
                 }
               }
-              
+
               return pump();
             });
-          }
-          
+          };
+
           return pump();
         },
       });
@@ -332,12 +346,6 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       });
     }
   }
-
-
-
-
-
-
 }
 
 export default LobeBedrockAI;
