@@ -213,71 +213,75 @@ export class LobeBedrockAI implements LobeRuntimeAI {
           let buffer = '';
 
           const pump = (): Promise<void> => {
-            return reader.read().then(({ done, value }) => {
-              if (done) {
-                controller.close();
-                return;
-              }
-
-              const chunk = decoder.decode(value, { stream: true });
-              buffer += chunk;
-
-              // Look for JSON objects in the stream
-              let jsonStart = buffer.indexOf('{');
-              while (jsonStart !== -1) {
-                let braceCount = 0;
-                let jsonEnd = jsonStart;
-
-                // Find the end of the JSON object
-                for (let i = jsonStart; i < buffer.length; i++) {
-                  if (buffer[i] === '{') braceCount++;
-                  if (buffer[i] === '}') braceCount--;
-                  if (braceCount === 0) {
-                    jsonEnd = i + 1;
-                    break;
-                  }
+            return reader
+              .read()
+              .then(({ done, value }) => {
+                if (done) {
+                  controller.close();
+                  return;
                 }
 
-                if (braceCount === 0) {
-                  const jsonStr = buffer.slice(jsonStart, jsonEnd);
+                const chunk = decoder.decode(value, { stream: true });
+                buffer += chunk;
 
-                  try {
-                    const data = JSON.parse(jsonStr);
+                // Look for JSON objects in the stream
+                let jsonStart = buffer.indexOf('{');
+                while (jsonStart !== -1) {
+                  let braceCount = 0;
+                  let jsonEnd = jsonStart;
 
-                    // Only extract actual response text, not reasoning
-                    const text = data.delta?.text;
-
-                    if (text && text.trim()) {
-                      // Create OpenAI-compatible chunk
-                      const openaiChunk = {
-                        choices: [
-                          {
-                            delta: { content: text },
-                            finish_reason: null,
-                            index: 0,
-                          },
-                        ],
-                        created: Math.floor(Date.now() / 1000),
-                        id: 'chatcmpl-bedrock',
-                        model: model,
-                        object: 'chat.completion.chunk',
-                      };
-                      const chunkStr = `data: ${JSON.stringify(openaiChunk)}\n\n`;
-                      controller.enqueue(new TextEncoder().encode(chunkStr));
+                  // Find the end of the JSON object
+                  for (let i = jsonStart; i < buffer.length; i++) {
+                    if (buffer[i] === '{') braceCount++;
+                    if (buffer[i] === '}') braceCount--;
+                    if (braceCount === 0) {
+                      jsonEnd = i + 1;
+                      break;
                     }
-                  } catch {
-                    // Skip invalid JSON
                   }
 
-                  buffer = buffer.slice(jsonEnd);
-                  jsonStart = buffer.indexOf('{');
-                } else {
-                  break; // Incomplete JSON, wait for more data
-                }
-              }
+                  if (braceCount === 0) {
+                    const jsonStr = buffer.slice(jsonStart, jsonEnd);
 
-              return pump();
-            });
+                    try {
+                      const data = JSON.parse(jsonStr);
+
+                      // Only extract actual response text, not reasoning
+                      const text = data.delta?.text;
+
+                      if (text && text.trim()) {
+                        // Create OpenAI-compatible chunk
+                        const openaiChunk = {
+                          choices: [
+                            {
+                              delta: { content: text },
+                              finish_reason: null,
+                              index: 0,
+                            },
+                          ],
+                          created: Math.floor(Date.now() / 1000),
+                          id: 'chatcmpl-bedrock',
+                          model: model,
+                          object: 'chat.completion.chunk',
+                        };
+                        controller.enqueue(openaiChunk);
+                      }
+                    } catch {
+                      // Skip invalid JSON
+                    }
+
+                    buffer = buffer.slice(jsonEnd);
+                    jsonStart = buffer.indexOf('{');
+                  } else {
+                    break; // Incomplete JSON, wait for more data
+                  }
+                }
+
+                return pump();
+              })
+              .catch((error) => {
+                controller.error(error);
+              });
           };
 
           return pump();
