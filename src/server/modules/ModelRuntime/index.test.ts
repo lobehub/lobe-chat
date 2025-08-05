@@ -115,25 +115,13 @@ describe('initModelRuntimeWithUserPayload method', () => {
       expect(runtime['_runtime']).toBeInstanceOf(LobeQwenAI);
     });
 
-    it('Bedrock AI provider: with apikey, awsAccessKeyId, awsSecretAccessKey, awsRegion', async () => {
+    it('Bedrock AI provider: with bearer token', async () => {
       const jwtPayload: ClientSecretPayload = {
-        apiKey: 'user-bedrock-key',
-        awsAccessKeyId: 'user-aws-id',
-        awsSecretAccessKey: 'user-aws-secret',
+        apiKey: 'user-bearer-token',
         awsRegion: 'user-aws-region',
       };
       const runtime = await initModelRuntimeWithUserPayload(ModelProvider.Bedrock, jwtPayload);
       expect(runtime).toBeInstanceOf(ModelRuntime);
-      expect(runtime['_runtime']).toBeInstanceOf(LobeBedrockAI);
-    });
-
-    it('Bedrock AI provider: with bearer token', async () => {
-      const jwtPayload: JWTPayload = {
-        awsBearerToken: 'user-bearer-token',
-        awsRegion: 'user-aws-region',
-      };
-      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Bedrock, jwtPayload);
-      expect(runtime).toBeInstanceOf(AgentRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeBedrockAI);
     });
 
