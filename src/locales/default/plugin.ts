@@ -310,9 +310,9 @@ export default {
   pluginList: '插件列表',
   protocolInstall: {
     actions: {
-      cancel: '取消',
       install: '安装',
       installAnyway: '仍要安装',
+      installed: '已安装',
     },
     config: {
       args: '参数',

@@ -8,7 +8,7 @@ import { McpInstallRequest, PluginSource } from './types';
 
 interface PluginInstallConfirmModalProps {
   installRequest: McpInstallRequest | null;
-  onComplete?: () => void;
+  onComplete: () => void;
 }
 
 /**
@@ -31,10 +31,6 @@ const getPluginSource = (request: McpInstallRequest): PluginSource => {
   return PluginSource.CUSTOM;
 };
 
-/**
- * 插件安装确认Modal路由器
- * 根据插件来源类型，渲染对应的安装Modal组件
- */
 const PluginInstallConfirmModal = memo<PluginInstallConfirmModalProps>(
   ({ installRequest, onComplete }) => {
     if (!installRequest) return null;

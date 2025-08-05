@@ -3,8 +3,9 @@
 import { useWatchBroadcast } from '@lobechat/electron-client-ipc';
 import { useCallback, useState } from 'react';
 
-import PluginInstallConfirmModal from './PluginInstallConfirmModal';
-import { McpInstallRequest } from './PluginInstallConfirmModal/types';
+import { McpInstallRequest } from '@/features/ProtocolUrlHandler/InstallPlugin/types';
+
+import PluginInstallConfirmModal from './InstallPlugin';
 
 const ProtocolUrlHandler = () => {
   const [installRequest, setInstallRequest] = useState<McpInstallRequest | null>(null);
