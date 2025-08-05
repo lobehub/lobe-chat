@@ -12,7 +12,7 @@ const ollamaChatModels: AIChatModelCard[] = [
     displayName: 'GPT-OSS 20B',
     enabled: true,
     id: 'gpt-oss',
-    releasedAt: '2025-08-06',
+    releasedAt: '2025-08-05',
     type: 'chat',
   },
   {
@@ -25,7 +25,7 @@ const ollamaChatModels: AIChatModelCard[] = [
       'GPT-OSS 120B 是 OpenAI 发布的大型开源语言模型，采用 MXFP4 量化技术，为旗舰级模型。需要多GPU或高性能工作站环境运行，在复杂推理、代码生成和多语言处理方面具备卓越性能，支持高级函数调用和工具集成。',
     displayName: 'GPT-OSS 120B',
     id: 'gpt-oss:120b',
-    releasedAt: '2025-08-06',
+    releasedAt: '2025-08-05',
     type: 'chat',
   },
   {
