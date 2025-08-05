@@ -2,13 +2,11 @@ import { uniqBy } from 'lodash-es';
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { LOBE_DEFAULT_MODEL_LIST } from '@/config/aiModels';
-import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { isDeprecatedEdition, isDesktop, isUsePgliteDB } from '@/const/version';
 import { useClientDataSWR } from '@/libs/swr';
 import { aiProviderService } from '@/services/aiProvider';
 import { AiInfraStore } from '@/store/aiInfra/store';
-import { AIImageModelCard, ModelAbilities } from '@/types/aiModel';
+import { AIImageModelCard, LobeDefaultAiModelListItem, ModelAbilities } from '@/types/aiModel';
 import {
   AiProviderDetailItem,
   AiProviderListItem,
@@ -49,6 +47,10 @@ enum AiProviderSwrKey {
   fetchAiProviderRuntimeState = 'FETCH_AI_PROVIDER_RUNTIME_STATE',
 }
 
+type AiProviderRuntimeStateWithBuiltinModels = AiProviderRuntimeState & {
+  builtinAiModelList: LobeDefaultAiModelListItem[];
+};
+
 export interface AiProviderAction {
   createNewAiProvider: (params: CreateAiProviderParams) => Promise<void>;
   deleteAiProvider: (id: string) => Promise<void>;
@@ -71,7 +73,7 @@ export interface AiProviderAction {
    */
   useFetchAiProviderRuntimeState: (
     isLoginOnInit: boolean | undefined,
-  ) => SWRResponse<AiProviderRuntimeState | undefined>;
+  ) => SWRResponse<AiProviderRuntimeStateWithBuiltinModels | undefined>;
 }
 
 export const createAiProviderSlice: StateCreator<
@@ -193,26 +195,35 @@ export const createAiProviderSlice: StateCreator<
     ),
 
   useFetchAiProviderRuntimeState: (isLogin) =>
-    useClientDataSWR<AiProviderRuntimeState | undefined>(
+    useClientDataSWR<AiProviderRuntimeStateWithBuiltinModels | undefined>(
       !isDeprecatedEdition ? [AiProviderSwrKey.fetchAiProviderRuntimeState, isLogin] : null,
       async ([, isLogin]) => {
-        if (isLogin) return aiProviderService.getAiProviderRuntimeState();
+        const [{ LOBE_DEFAULT_MODEL_LIST: builtinAiModelList }, { DEFAULT_MODEL_PROVIDER_LIST }] =
+          await Promise.all([import('@/config/aiModels'), import('@/config/modelProviders')]);
+
+        if (isLogin) {
+          const data = await aiProviderService.getAiProviderRuntimeState();
+          return {
+            ...data,
+            builtinAiModelList,
+          };
+        }
 
         const enabledAiProviders: EnabledProvider[] = DEFAULT_MODEL_PROVIDER_LIST.filter(
           (provider) => provider.enabled,
         ).map((item) => ({ id: item.id, name: item.name, source: 'builtin' }));
-        const allModels = LOBE_DEFAULT_MODEL_LIST;
         return {
-          enabledAiModels: allModels.filter((m) => m.enabled),
+          builtinAiModelList,
+          enabledAiModels: builtinAiModelList.filter((m) => m.enabled),
           enabledAiProviders: enabledAiProviders,
           enabledChatAiProviders: enabledAiProviders.filter((provider) => {
-            return allModels.some(
+            return builtinAiModelList.some(
               (model) => model.providerId === provider.id && model.type === 'chat',
             );
           }),
           enabledImageAiProviders: enabledAiProviders
             .filter((provider) => {
-              return allModels.some(
+              return builtinAiModelList.some(
                 (model) => model.providerId === provider.id && model.type === 'image',
               );
             })
@@ -240,7 +251,7 @@ export const createAiProviderSlice: StateCreator<
           set(
             {
               aiProviderRuntimeConfig: data.runtimeConfig,
-              builtinAiModelList: LOBE_DEFAULT_MODEL_LIST,
+              builtinAiModelList: data.builtinAiModelList,
               enabledAiModels: data.enabledAiModels,
               enabledAiProviders: data.enabledAiProviders,
               enabledChatModelList,
