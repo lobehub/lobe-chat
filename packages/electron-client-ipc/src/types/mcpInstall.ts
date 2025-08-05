@@ -12,6 +12,7 @@ export interface McpInstallSchema {
   config: MCPInstallConfig;
   description: string;
   homepage?: string;
+  icon?: string;
   identifier: string;
   name: string;
   version: string;

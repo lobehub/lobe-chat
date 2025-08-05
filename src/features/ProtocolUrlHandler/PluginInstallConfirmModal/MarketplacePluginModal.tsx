@@ -1,26 +1,25 @@
 'use client';
 
-import { Alert, Text } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
+import { McpInstallSchema } from '@lobechat/electron-client-ipc';
+import { Alert, Block, Text } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import PluginAvatar from '@/components/Plugins/PluginAvatar';
+import PluginTag from '@/components/Plugins/PluginTag';
+
 import ConfigDisplay from './ConfigDisplay';
-import { BaseContentProps, ModalConfig, TRUSTED_MARKETPLACES, TrustedMarketplaceId } from './types';
+import { ModalConfig, TRUSTED_MARKETPLACES, TrustedMarketplaceId } from './types';
 
-const useStyles = createStyles(({ css, token }) => ({
-  metaInfo: css`
-    margin-block-end: ${token.marginXS}px;
-    color: ${token.colorTextDescription};
-  `,
-}));
+interface MarketplacePluginModalProps {
+  marketId?: string;
+  schema?: McpInstallSchema;
+}
 
-const MarketplacePluginModal = memo<BaseContentProps>(({ installRequest }) => {
+const MarketplacePluginModal = memo<MarketplacePluginModalProps>(({ schema, marketId }) => {
   const { t } = useTranslation('plugin');
-  const { styles } = useStyles();
 
-  const { schema, marketId } = installRequest;
   const marketplace = marketId ? TRUSTED_MARKETPLACES[marketId as TrustedMarketplaceId] : null;
 
   if (!schema) return null;
@@ -42,18 +41,20 @@ const MarketplacePluginModal = memo<BaseContentProps>(({ installRequest }) => {
           variant={'borderless'}
         />
       )}
-      <Flexbox gap={8}>
-        <Text as={'h5'} style={{ margin: 0 }}>
-          {schema.name}
-        </Text>
-
-        <Flexbox gap={12} horizontal>
-          <Text className={styles.metaInfo}>{schema.author}</Text>
-          <Text className={styles.metaInfo}>{schema.version}</Text>
+      <Block gap={16} horizontal justify={'space-between'} padding={16} variant={'outlined'}>
+        <Flexbox gap={16} horizontal>
+          <PluginAvatar avatar={schema.icon} size={40} />
+          <Flexbox gap={2}>
+            <Flexbox align={'center'} gap={8} horizontal>
+              {schema.name}
+              <PluginTag type={'customPlugin'} />
+            </Flexbox>
+            <Text style={{ fontSize: 12 }} type={'secondary'}>
+              {schema.description}
+            </Text>
+          </Flexbox>
         </Flexbox>
-
-        <Text style={{ margin: 0 }}>{schema.description}</Text>
-      </Flexbox>
+      </Block>
 
       <ConfigDisplay schema={schema} />
     </Flexbox>

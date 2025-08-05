@@ -57,6 +57,7 @@ function validateMcpSchema(schema: any): schema is McpSchema {
 
   // 可选字段验证
   if (schema.homepage !== undefined && typeof schema.homepage !== 'string') return false;
+  if (schema.icon !== undefined && typeof schema.icon !== 'string') return false;
 
   // config 字段验证
   if (!schema.config || typeof schema.config !== 'object') return false;

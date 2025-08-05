@@ -207,6 +207,7 @@
                         author: 'Higress AI',
                         description: 'Connect to E2B cloud development environments for code execution and testing',
                         version: '1.0.0',
+                        icon: 'https://avatars.githubusercontent.com/u/59853803?s=200&v=4',
                         config: {
                             type: 'http',
                             url: 'https://mcp.higress.ai/mcp-e2bdev/cm9lh5x6s000ua801xvm25bkg'
@@ -222,6 +223,7 @@
                         author: 'Smithery Community',
                         description: 'Get real-time weather data and forecasts for any location worldwide',
                         version: '3.2.1',
+                        icon: 'https://cdn-icons-png.flaticon.com/128/1163/1163661.png',
                         config: {
                             type: 'http',
                             url: 'https://api.smithery.ai/weather/v1/mcp',
@@ -241,6 +243,7 @@
                         author: 'McpRouter',
                         description: 'Access Amap (高德地图) services for location, navigation, and mapping through McpRouter',
                         version: '1.0.0',
+                        icon: 'https://cdn-icons-png.flaticon.com/128/684/684908.png',
                         config: {
                             type: 'http',
                             url: 'https://mcprouter.to/amap-maps',
@@ -262,6 +265,7 @@
                         description: 'Analyze GitHub repositories, pull requests, issues, and code metrics',
                         version: '1.5.2',
                         homepage: 'https://github.com/community/github-mcp',
+                        icon: 'https://cdn-icons-png.flaticon.com/128/25/25231.png',
                         config: {
                             type: 'stdio',
                             command: 'npx',
@@ -283,6 +287,7 @@
                         author: 'Test <test@example.com>',
                         description: 'Description with "quotes" and \'apostrophes\' (Test)',
                         version: '1.0.0',
+                        icon: 'https://cdn-icons-png.flaticon.com/128/2620/2620543.png',
                         config: {
                             type: 'stdio',
                             command: 'node',
@@ -295,11 +300,12 @@
                     marketId: null,
                     schema: {
                         identifier: 'my-custom-http-mcp',
-                        name: 'My Custom HTTP MCP Server',
+                        name: 'My Custom HTTP MCP Server',  
                         author: 'Custom Developer',
                         description: 'A custom HTTP-based MCP server for personal projects',
                         version: '1.0.0',
                         homepage: 'https://github.com/username/my-custom-mcp',
+                        icon: 'https://cdn-icons-png.flaticon.com/128/1055/1055687.png',
                         config: {
                             type: 'http',
                             url: 'https://my-server.example.com/mcp',
@@ -603,6 +609,17 @@
                                     type="text"
                                     value={config.schema.homepage}
                                     onChange={(e) => updateSchemaField('homepage', e.target.value)}
+                                />
+                            </div>
+                        )}
+                        {config.schema.icon && (
+                            <div className="form-group">
+                                <label>Icon:</label>
+                                <input
+                                    type="text"
+                                    value={config.schema.icon}
+                                    onChange={(e) => updateSchemaField('icon', e.target.value)}
+                                    placeholder="https://example.com/icon.png"
                                 />
                             </div>
                         )}

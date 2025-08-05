@@ -51,6 +51,8 @@ export interface McpSchema {
   description: string;
   /** 插件主页 */
   homepage?: string;
+  /** 插件图标 */
+  icon?: string;
   /** 插件唯一标识符，必须与URL中的id参数匹配 */
   identifier: string;
   /** 插件名称 */

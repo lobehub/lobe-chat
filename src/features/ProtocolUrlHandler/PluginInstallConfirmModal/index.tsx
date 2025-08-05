@@ -154,13 +154,16 @@ const PluginInstallConfirmModal = memo<PluginInstallConfirmModalProps>(
           return <OfficialPluginModal {...contentProps} />;
         }
         case PluginSource.MARKETPLACE: {
-          return <MarketplacePluginModal {...contentProps} />;
+          return (
+            <MarketplacePluginModal
+              marketId={installRequest.marketId}
+              schema={installRequest.schema}
+            />
+          );
         }
-        case PluginSource.CUSTOM: {
-          return <CustomPluginModal {...contentProps} />;
-        }
+
         default: {
-          return <CustomPluginModal {...contentProps} />;
+          return <CustomPluginModal schema={installRequest.schema} />;
         }
       }
     };
