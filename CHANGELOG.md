@@ -2,6 +2,64 @@
 
 # Changelog
 
+### [Version 1.108.1](https://github.com/lobehub/lobe-chat/compare/v1.108.0...v1.108.1)
+
+<sup>Released on **2025-08-05**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix remote avatar broken in desktop.
+
+#### 💄 Styles
+
+- **misc**: Update mask style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix remote avatar broken in desktop, closes [#8673](https://github.com/lobehub/lobe-chat/issues/8673) ([7eae430](https://github.com/lobehub/lobe-chat/commit/7eae430))
+
+#### Styles
+
+- **misc**: Update mask style, closes [#8555](https://github.com/lobehub/lobe-chat/issues/8555) ([b4ac89d](https://github.com/lobehub/lobe-chat/commit/b4ac89d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.108.0](https://github.com/lobehub/lobe-chat/compare/v1.107.6...v1.108.0)
+
+<sup>Released on **2025-08-05**</sup>
+
+#### ✨ Features
+
+- **misc**: Support 302ai provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support 302ai provider, closes [#8362](https://github.com/lobehub/lobe-chat/issues/8362) ([e172055](https://github.com/lobehub/lobe-chat/commit/e172055))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.107.6](https://github.com/lobehub/lobe-chat/compare/v1.107.5...v1.107.6)
 
 <sup>Released on **2025-08-05**</sup>

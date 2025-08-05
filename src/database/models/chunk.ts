@@ -1,5 +1,4 @@
-import { cosineDistance, count, sql } from 'drizzle-orm';
-import { and, asc, desc, eq, inArray, isNull } from 'drizzle-orm/expressions';
+import { and, asc, cosineDistance, count, desc, eq, inArray, isNull, sql } from 'drizzle-orm';
 import { chunk } from 'lodash-es';
 
 import { LobeChatDatabase } from '@/database/type';

@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 import {
   Ai21ProviderCard,
+  Ai302ProviderCard,
   Ai360ProviderCard,
   AnthropicProviderCard,
   BaichuanProviderCard,
@@ -112,6 +113,7 @@ export const useProviderList = (): ProviderItem[] => {
       GiteeAIProviderCard,
       PPIOProviderCard,
       InfiniAIProviderCard,
+      Ai302ProviderCard,
     ],
     [
       AzureProvider,

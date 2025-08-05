@@ -1,6 +1,5 @@
 import dayjs, { Dayjs } from 'dayjs';
-import { SQL } from 'drizzle-orm';
-import { and, gte, lte } from 'drizzle-orm/expressions';
+import { SQL, and, gte, lte } from 'drizzle-orm';
 
 export const genWhere = (sqls: (SQL<any> | undefined)[]): SQL<any> | undefined => {
   const where = sqls.filter(Boolean);
