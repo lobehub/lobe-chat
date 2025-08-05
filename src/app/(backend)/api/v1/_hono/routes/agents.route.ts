@@ -7,10 +7,10 @@ import { getScopePermissions } from '@/utils/rbac';
 import { AgentController } from '../controllers/agent.controller';
 import { requireAuth } from '../middleware/auth';
 import { requireAnyPermission } from '../middleware/permission-check';
+import { SessionIdParamSchema } from '../types';
 import {
   AgentIdParamSchema,
   CreateAgentRequestSchema,
-  SessionIdParamSchema,
   UpdateAgentRequestSchema,
 } from '../types/agent.type';
 
