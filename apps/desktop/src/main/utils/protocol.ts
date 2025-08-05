@@ -2,7 +2,7 @@ import { app } from 'electron';
 
 import { McpSchema, ProtocolUrlParsed } from '../types/protocol';
 
-export type AppChannel = 'stable' | 'beta' | 'nightly' | 'dev';
+export type AppChannel = 'stable' | 'beta' | 'nightly';
 
 export const getProtocolScheme = (): string => {
   // 在 Electron 环境中可以通过多种方式判断版本
@@ -30,8 +30,6 @@ export const getVersionInfo = (): { channel: AppChannel; protocolScheme: string 
     appChannel = 'nightly';
   } else if (protocolScheme.includes('beta')) {
     appChannel = 'beta';
-  } else if (protocolScheme.includes('dev')) {
-    appChannel = 'dev';
   }
 
   return {
