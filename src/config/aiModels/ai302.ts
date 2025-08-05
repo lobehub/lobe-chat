@@ -1,0 +1,148 @@
+import { AIChatModelCard } from '@/types/aiModel';
+
+const ai302ChatModels: AIChatModelCard[] = [
+  {
+    contextWindowTokens: 32_000,
+    displayName: 'deepseek-chat',
+    enabled: true,
+    id: 'deepseek-chat',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 128_000,
+    displayName: 'chatgpt-4o-latest',
+    enabled: true,
+    id: 'chatgpt-4o-latest',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 128_000,
+    displayName: 'llama3.3-70b',
+    enabled: true,
+    id: 'llama3.3-70b',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 64_000,
+    displayName: 'deepseek-reasoner',
+    enabled: true,
+    id: 'deepseek-reasoner',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 1_000_000,
+    displayName: 'gemini-2.0-flash',
+    enabled: true,
+    id: 'gemini-2.0-flash',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 200_000,
+    displayName: 'claude-3-7-sonnet-20250219',
+    enabled: true,
+    id: 'claude-3-7-sonnet-20250219',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 200_000,
+    displayName: 'claude-3-7-sonnet-latest',
+    enabled: true,
+    id: 'claude-3-7-sonnet-latest',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 131_072,
+    displayName: 'grok-3-beta',
+    enabled: true,
+    id: 'grok-3-beta',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 131_072,
+    displayName: 'grok-3-mini-beta',
+    enabled: true,
+    id: 'grok-3-mini-beta',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 1_000_000,
+    displayName: 'gpt-4.1',
+    enabled: true,
+    id: 'gpt-4.1',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 200_000,
+    displayName: 'o3',
+    enabled: true,
+    id: 'o3',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 200_000,
+    displayName: 'o4-mini',
+    enabled: true,
+    id: 'o4-mini',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 128_000,
+    displayName: 'qwen3-235b-a22b',
+    enabled: true,
+    id: 'qwen3-235b-a22b',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 128_000,
+    displayName: 'qwen3-32b',
+    enabled: true,
+    id: 'qwen3-32b',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 1_000_000,
+    displayName: 'gemini-2.5-pro-preview-05-06',
+    enabled: true,
+    id: 'gemini-2.5-pro-preview-05-06',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 128_000,
+    displayName: 'llama-4-maverick',
+    enabled: true,
+    id: 'llama-4-maverick',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 1_000_000,
+    displayName: 'gemini-2.5-flash',
+    enabled: true,
+    id: 'gemini-2.5-flash',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 200_000,
+    displayName: 'claude-sonnet-4-20250514',
+    enabled: true,
+    id: 'claude-sonnet-4-20250514',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 200_000,
+    displayName: 'claude-opus-4-20250514',
+    enabled: true,
+    id: 'claude-opus-4-20250514',
+    type: 'chat',
+  },
+  {
+    contextWindowTokens: 1_000_000,
+    displayName: 'gemini-2.5-pro',
+    enabled: true,
+    id: 'gemini-2.5-pro',
+    type: 'chat',
+  },
+];
+
+export const allModels = [...ai302ChatModels];
+
+export default allModels;
