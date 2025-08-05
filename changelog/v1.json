@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Provider config checker uses outdated API key."]
+    },
+    "date": "2025-08-05",
+    "version": "1.108.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix remote avatar broken in desktop."],
       "improvements": ["Update mask style."]
     },
