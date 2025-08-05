@@ -11,6 +11,9 @@ export * from './session.type';
 export * from './topic.type';
 export * from './user.type';
 
+// 重命名导出 session.type 中的 SessionIdParamSchema 为 SessionIdParamSchemaFromSession
+export { SessionIdParamSchema as SessionIdParamSchemaFromSession } from './session.type';
+
 /**
  * 标准API响应格式
  */
