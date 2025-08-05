@@ -2080,6 +2080,7 @@ describe('ModelRuntimeOnClient', () => {
       it('OpenAI provider: with apikey and endpoint', async () => {
         // Mock the global store to return the user's OpenAI API key and endpoint
         merge(initialSettingsState, {
+          defaultSettings: {},
           settings: {
             keyVaults: {
               openai: {
@@ -2097,6 +2098,7 @@ describe('ModelRuntimeOnClient', () => {
 
       it('Azure provider: with apiKey, apiVersion, endpoint', async () => {
         merge(initialSettingsState, {
+          defaultSettings: {},
           settings: {
             keyVaults: {
               azure: {
@@ -2115,6 +2117,7 @@ describe('ModelRuntimeOnClient', () => {
 
       it('Google provider: with apiKey', async () => {
         merge(initialSettingsState, {
+          defaultSettings: {},
           settings: {
             keyVaults: {
               google: {
@@ -2130,6 +2133,7 @@ describe('ModelRuntimeOnClient', () => {
 
       it('Moonshot AI provider: with apiKey', async () => {
         merge(initialSettingsState, {
+          defaultSettings: {},
           settings: {
             keyVaults: {
               moonshot: {
@@ -2143,14 +2147,14 @@ describe('ModelRuntimeOnClient', () => {
         expect(runtime['_runtime']).toBeInstanceOf(LobeMoonshotAI);
       });
 
-      it('Bedrock provider: with accessKeyId, region, secretAccessKey', async () => {
+      it('Bedrock provider: with bearer token and region', async () => {
         merge(initialSettingsState, {
+          defaultSettings: {},
           settings: {
             keyVaults: {
               bedrock: {
-                accessKeyId: 'user-bedrock-access-key',
+                bearerToken: 'user-bearer-token',
                 region: 'user-bedrock-region',
-                secretAccessKey: 'user-bedrock-secret',
               },
             },
           },
@@ -2162,6 +2166,7 @@ describe('ModelRuntimeOnClient', () => {
 
       it('Ollama provider: with endpoint', async () => {
         merge(initialSettingsState, {
+          defaultSettings: {},
           settings: {
             keyVaults: {
               ollama: {
@@ -2177,6 +2182,7 @@ describe('ModelRuntimeOnClient', () => {
 
       it('Perplexity provider: with apiKey', async () => {
         merge(initialSettingsState, {
+          defaultSettings: {},
           settings: {
             keyVaults: {
               perplexity: {
@@ -2192,6 +2198,7 @@ describe('ModelRuntimeOnClient', () => {
 
       it('Anthropic provider: with apiKey', async () => {
         merge(initialSettingsState, {
+          defaultSettings: {},
           settings: {
             keyVaults: {
               anthropic: {
@@ -2207,6 +2214,7 @@ describe('ModelRuntimeOnClient', () => {
 
       it('Mistral provider: with apiKey', async () => {
         merge(initialSettingsState, {
+          defaultSettings: {},
           settings: {
             keyVaults: {
               mistral: {
@@ -2222,6 +2230,7 @@ describe('ModelRuntimeOnClient', () => {
 
       it('OpenRouter provider: with apiKey', async () => {
         merge(initialSettingsState, {
+          defaultSettings: {},
           settings: {
             keyVaults: {
               openrouter: {
@@ -2237,6 +2246,7 @@ describe('ModelRuntimeOnClient', () => {
 
       it('TogetherAI provider: with apiKey', async () => {
         merge(initialSettingsState, {
+          defaultSettings: {},
           settings: {
             keyVaults: {
               togetherai: {
@@ -2252,6 +2262,7 @@ describe('ModelRuntimeOnClient', () => {
 
       it('ZeroOneAI provider: with apiKey', async () => {
         merge(initialSettingsState, {
+          defaultSettings: {},
           settings: {
             keyVaults: {
               zeroone: {
@@ -2267,6 +2278,7 @@ describe('ModelRuntimeOnClient', () => {
 
       it('Groq provider: with apiKey,endpoint', async () => {
         merge(initialSettingsState, {
+          defaultSettings: {},
           settings: {
             keyVaults: {
               groq: {
@@ -2287,6 +2299,7 @@ describe('ModelRuntimeOnClient', () => {
 
       it('DeepSeek provider: with apiKey', async () => {
         merge(initialSettingsState, {
+          defaultSettings: {},
           settings: {
             keyVaults: {
               deepseek: {
@@ -2302,6 +2315,7 @@ describe('ModelRuntimeOnClient', () => {
 
       it('Qwen provider: with apiKey', async () => {
         merge(initialSettingsState, {
+          defaultSettings: {},
           settings: {
             keyVaults: {
               qwen: {
@@ -2321,6 +2335,7 @@ describe('ModelRuntimeOnClient', () => {
        */
       it('Unknown provider: with apiKey', async () => {
         merge(initialSettingsState, {
+          defaultSettings: {},
           settings: {
             keyVaults: {
               unknown: {
@@ -2349,6 +2364,7 @@ describe('ModelRuntimeOnClient', () => {
             ),
         }));
         merge(initialSettingsState, {
+          defaultSettings: {},
           settings: {
             keyVaults: {
               zhipu: {
