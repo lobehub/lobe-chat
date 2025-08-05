@@ -39,7 +39,7 @@ const ModelCard = memo<ModelCardProps>(({ pricing, id, provider, displayName }) 
   const isShowCredit = useGlobalStore(systemStatusSelectors.isShowCredit) && !!pricing;
   const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
 
-  const formatPrice = getPrice(pricing || {});
+  const formatPrice = getPrice(pricing || { units: [] });
 
   return (
     <Flexbox gap={8}>
