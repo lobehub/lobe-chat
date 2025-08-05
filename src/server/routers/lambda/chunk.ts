@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { inArray } from 'drizzle-orm/expressions';
+import { inArray } from 'drizzle-orm';
 import { z } from 'zod';
 
 import { DEFAULT_FILE_EMBEDDING_MODEL_ITEM } from '@/const/settings/knowledge';
