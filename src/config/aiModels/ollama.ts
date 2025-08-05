@@ -11,7 +11,7 @@ const ollamaChatModels: AIChatModelCard[] = [
       'GPT-OSS 20B 是 OpenAI 发布的开源大语言模型，采用 MXFP4 量化技术，适合在高端消费级GPU或Apple Silicon Mac上运行。该模型在对话生成、代码编写和推理任务方面表现出色，支持函数调用和工具使用。',
     displayName: 'GPT-OSS 20B',
     enabled: true,
-    id: 'gpt-oss:20b',
+    id: 'gpt-oss',
     releasedAt: '2025-08-06',
     type: 'chat',
   },
