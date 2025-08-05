@@ -174,7 +174,6 @@ const OfficialPluginModal = memo<OfficialPluginModalProps>(({ installRequest }) 
 export const getOfficialModalConfig = (t: any): ModalConfig => ({
   okText: t('protocolInstall.actions.install'),
   title: t('protocolInstall.official.title'),
-  width: 520,
 });
 
 OfficialPluginModal.displayName = 'OfficialPluginModal';

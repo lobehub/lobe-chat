@@ -65,7 +65,6 @@ const MarketplacePluginModal = memo<MarketplacePluginModalProps>(({ schema, mark
 export const getMarketplaceModalConfig = (t: any): ModalConfig => ({
   okText: t('protocolInstall.actions.install'),
   title: t('protocolInstall.marketplace.title'),
-  width: 520,
 });
 
 MarketplacePluginModal.displayName = 'MarketplacePluginModal';

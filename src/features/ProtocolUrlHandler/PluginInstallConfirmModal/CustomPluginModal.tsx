@@ -49,7 +49,6 @@ const CustomPluginModal = memo<{ schema?: McpInstallSchema }>(({ schema }) => {
 export const getCustomModalConfig = (t: any): ModalConfig => ({
   okText: t('protocolInstall.actions.installAnyway'),
   title: t('protocolInstall.custom.title'),
-  width: 560,
 });
 
 CustomPluginModal.displayName = 'CustomPluginModal';

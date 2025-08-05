@@ -3,7 +3,7 @@ import { McpInstallSchema } from '@lobechat/electron-client-ipc';
 export enum PluginSource {
   CUSTOM = 'custom',
   MARKETPLACE = 'marketplace',
-  OFFICIAL = 'official'
+  OFFICIAL = 'official',
 }
 
 export interface McpInstallRequest {
@@ -20,7 +20,6 @@ export interface BaseContentProps {
 export interface ModalConfig {
   okText: string;
   title: string;
-  width?: number;
 }
 
 // 可信的第三方市场列表

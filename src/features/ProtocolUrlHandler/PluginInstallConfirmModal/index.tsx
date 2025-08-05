@@ -176,7 +176,7 @@ const PluginInstallConfirmModal = memo<PluginInstallConfirmModalProps>(
         onOk={handleConfirm}
         open
         title={modalConfig.title}
-        width={modalConfig.width}
+        width={600}
       >
         {renderContent()}
       </Modal>
