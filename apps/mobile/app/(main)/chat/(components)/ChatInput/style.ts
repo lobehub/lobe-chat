@@ -51,6 +51,11 @@ export const useStyles = createStyles((token) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  leftActions: {},
+  leftActions: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+
   rightActions: {},
 }));
