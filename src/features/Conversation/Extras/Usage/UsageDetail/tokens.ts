@@ -1,5 +1,6 @@
 import { ChatModelPricing, LobeDefaultAiModelListItem } from '@/types/aiModel';
 import { ModelTokensUsage } from '@/types/message';
+import { getAudioInputUnitRate, getAudioOutputUnitRate } from '@/utils/pricing';
 
 import { getPrice } from './pricing';
 
@@ -59,7 +60,7 @@ export const getDetailsToken = (
   return {
     inputAudio: !!usage.inputAudioTokens
       ? {
-          credit: calcCredit(usage.inputAudioTokens, modelCard?.pricing?.audioInput),
+          credit: calcCredit(usage.inputAudioTokens, getAudioInputUnitRate(modelCard?.pricing)),
           token: usage.inputAudioTokens,
         }
       : undefined,
@@ -87,7 +88,7 @@ export const getDetailsToken = (
 
     outputAudio: !!usage.outputAudioTokens
       ? {
-          credit: calcCredit(usage.outputAudioTokens, modelCard?.pricing?.audioOutput),
+          credit: calcCredit(usage.outputAudioTokens, getAudioOutputUnitRate(modelCard?.pricing)),
           id: 'outputAudio',
           token: usage.outputAudioTokens,
         }

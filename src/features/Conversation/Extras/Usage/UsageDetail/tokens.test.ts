@@ -9,11 +9,13 @@ describe('getDetailsToken', () => {
   // 基本测试数据
   const mockModelCard: LobeDefaultAiModelListItem = {
     pricing: {
-      input: 0.01,
-      output: 0.02,
-      cachedInput: 0.005,
-      audioInput: 0.03,
-      audioOutput: 0.04,
+      units: [
+        { name: 'TextInput', unit: 'MillionTokens', strategy: 'fixed', rate: 0.01 },
+        { name: 'TextOutput', unit: 'MillionTokens', strategy: 'fixed', rate: 0.02 },
+        { name: 'CachedTextInput', unit: 'MillionTokens', strategy: 'fixed', rate: 0.005 },
+        { name: 'AudioInput', unit: 'MillionTokens', strategy: 'fixed', rate: 0.03 },
+        { name: 'AudioOutput', unit: 'MillionTokens', strategy: 'fixed', rate: 0.04 },
+      ],
     },
   } as LobeDefaultAiModelListItem;
 
