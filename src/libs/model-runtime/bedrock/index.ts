@@ -287,9 +287,23 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         },
       });
 
-      return StreamingResponse(OpenAIStream(openaiStream, { callbacks: options?.callback }), {
-        headers: options?.headers,
-      });
+      try {
+        const stream = OpenAIStream(openaiStream, { callbacks: options?.callback });
+        return StreamingResponse(stream, {
+          headers: options?.headers,
+        });
+      } catch (streamError) {
+        throw AgentRuntimeError.chat({
+          error: {
+            body: undefined,
+            message: `OpenAIStream error: ${(streamError as Error).message}`,
+            type: 'StreamError',
+          },
+          errorType: AgentRuntimeErrorType.ProviderBizError,
+          provider: ModelProvider.Bedrock,
+          region: this.region,
+        });
+      }
     } catch (e) {
       const err = e as Error;
       throw AgentRuntimeError.chat({
