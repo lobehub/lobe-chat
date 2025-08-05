@@ -13,8 +13,20 @@ const Mistral: ModelProviderCard = {
       functionCall: true,
       id: 'open-mistral-nemo',
       pricing: {
-        input: 0.15,
-        output: 0.15,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.15,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.15,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -26,8 +38,20 @@ const Mistral: ModelProviderCard = {
       functionCall: true,
       id: 'mistral-small-latest',
       pricing: {
-        input: 0.2,
-        output: 0.6,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.6,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -39,8 +63,20 @@ const Mistral: ModelProviderCard = {
       functionCall: true,
       id: 'mistral-large-latest',
       pricing: {
-        input: 2,
-        output: 6,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 6,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -49,8 +85,20 @@ const Mistral: ModelProviderCard = {
       displayName: 'Codestral',
       id: 'codestral-latest',
       pricing: {
-        input: 0.2,
-        output: 0.6,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.6,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -62,8 +110,20 @@ const Mistral: ModelProviderCard = {
       functionCall: true,
       id: 'pixtral-large-latest',
       pricing: {
-        input: 2,
-        output: 6,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 6,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -75,8 +135,20 @@ const Mistral: ModelProviderCard = {
       enabled: true,
       id: 'pixtral-12b-2409',
       pricing: {
-        input: 0.15,
-        output: 0.15,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.15,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.15,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -86,8 +158,20 @@ const Mistral: ModelProviderCard = {
       displayName: 'Ministral 3B',
       id: 'ministral-3b-latest',
       pricing: {
-        input: 0.04,
-        output: 0.04,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.04,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.04,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -96,8 +180,20 @@ const Mistral: ModelProviderCard = {
       displayName: 'Ministral 8B',
       id: 'ministral-8b-latest',
       pricing: {
-        input: 0.1,
-        output: 0.1,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -107,8 +203,20 @@ const Mistral: ModelProviderCard = {
       displayName: 'Mistral 7B',
       id: 'open-mistral-7b',
       pricing: {
-        input: 0.25,
-        output: 0.25,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.25,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.25,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -118,8 +226,20 @@ const Mistral: ModelProviderCard = {
       displayName: 'Mixtral 8x7B',
       id: 'open-mixtral-8x7b',
       pricing: {
-        input: 0.7,
-        output: 0.7,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.7,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.7,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -130,8 +250,20 @@ const Mistral: ModelProviderCard = {
       functionCall: true,
       id: 'open-mixtral-8x22b',
       pricing: {
-        input: 2,
-        output: 6,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 6,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -141,8 +273,20 @@ const Mistral: ModelProviderCard = {
       displayName: 'Codestral Mamba',
       id: 'open-codestral-mamba',
       pricing: {
-        input: 0.15,
-        output: 0.15,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.15,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.15,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
   ],

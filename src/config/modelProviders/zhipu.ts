@@ -11,9 +11,20 @@ const ZhiPu: ModelProviderCard = {
       displayName: 'GLM-Zero-Preview',
       id: 'glm-zero-preview',
       pricing: {
-        currency: 'CNY',
-        input: 10,
-        output: 10,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 10,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 10,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -24,9 +35,20 @@ const ZhiPu: ModelProviderCard = {
       functionCall: true,
       id: 'glm-4-flash',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -37,9 +59,20 @@ const ZhiPu: ModelProviderCard = {
       functionCall: true,
       id: 'glm-4-flashx',
       pricing: {
-        currency: 'CNY',
-        input: 0.1,
-        output: 0.1,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -49,9 +82,20 @@ const ZhiPu: ModelProviderCard = {
       functionCall: true,
       id: 'glm-4-long',
       pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 1,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -62,9 +106,20 @@ const ZhiPu: ModelProviderCard = {
       functionCall: true,
       id: 'glm-4-air',
       pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 1,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -75,9 +130,20 @@ const ZhiPu: ModelProviderCard = {
       functionCall: true,
       id: 'glm-4-airx',
       pricing: {
-        currency: 'CNY',
-        input: 10,
-        output: 10,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 10,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 10,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -88,9 +154,20 @@ const ZhiPu: ModelProviderCard = {
       functionCall: true,
       id: 'glm-4-alltools',
       pricing: {
-        currency: 'CNY',
-        input: 100,
-        output: 100,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 100,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 100,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -102,9 +179,20 @@ const ZhiPu: ModelProviderCard = {
       functionCall: true,
       id: 'glm-4-plus',
       pricing: {
-        currency: 'CNY',
-        input: 50,
-        output: 50,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 50,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 50,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -114,9 +202,20 @@ const ZhiPu: ModelProviderCard = {
       functionCall: true,
       id: 'glm-4-0520',
       pricing: {
-        currency: 'CNY',
-        input: 100,
-        output: 100,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 100,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 100,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -126,9 +225,20 @@ const ZhiPu: ModelProviderCard = {
       functionCall: true,
       id: 'glm-4',
       pricing: {
-        currency: 'CNY',
-        input: 100,
-        output: 100,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 100,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 100,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -139,9 +249,20 @@ const ZhiPu: ModelProviderCard = {
       enabled: true,
       id: 'glm-4v-flash',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       releasedAt: '2024-12-09',
       vision: true,
@@ -153,9 +274,20 @@ const ZhiPu: ModelProviderCard = {
       enabled: true,
       id: 'glm-4v-plus',
       pricing: {
-        currency: 'CNY',
-        input: 10,
-        output: 10,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 10,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 10,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -165,9 +297,20 @@ const ZhiPu: ModelProviderCard = {
       displayName: 'GLM-4V',
       id: 'glm-4v',
       pricing: {
-        currency: 'CNY',
-        input: 50,
-        output: 50,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 50,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 50,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -178,9 +321,20 @@ const ZhiPu: ModelProviderCard = {
       displayName: 'CodeGeeX-4',
       id: 'codegeex-4',
       pricing: {
-        currency: 'CNY',
-        input: 0.1,
-        output: 0.1,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -189,9 +343,20 @@ const ZhiPu: ModelProviderCard = {
       displayName: 'CharGLM-3',
       id: 'charglm-3',
       pricing: {
-        currency: 'CNY',
-        input: 15,
-        output: 15,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 15,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 15,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -200,9 +365,20 @@ const ZhiPu: ModelProviderCard = {
       displayName: 'Emohaa',
       id: 'emohaa',
       pricing: {
-        currency: 'CNY',
-        input: 15,
-        output: 15,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 15,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 15,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
   ],

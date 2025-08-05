@@ -12,9 +12,20 @@ const BaiduWenxin: ModelProviderCard = {
       functionCall: true,
       id: 'ernie-3.5-8k',
       pricing: {
-        currency: 'CNY',
-        input: 0.8,
-        output: 2,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.8,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -25,9 +36,20 @@ const BaiduWenxin: ModelProviderCard = {
       functionCall: true,
       id: 'ernie-3.5-8k-preview',
       pricing: {
-        currency: 'CNY',
-        input: 0.8,
-        output: 2,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.8,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -39,9 +61,20 @@ const BaiduWenxin: ModelProviderCard = {
       functionCall: true,
       id: 'ernie-3.5-128k',
       pricing: {
-        currency: 'CNY',
-        input: 0.8,
-        output: 2,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.8,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -53,9 +86,20 @@ const BaiduWenxin: ModelProviderCard = {
       functionCall: true,
       id: 'ernie-4.0-8k-latest',
       pricing: {
-        currency: 'CNY',
-        input: 30,
-        output: 90,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 30,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 90,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -66,9 +110,20 @@ const BaiduWenxin: ModelProviderCard = {
       functionCall: true,
       id: 'ernie-4.0-8k-preview',
       pricing: {
-        currency: 'CNY',
-        input: 30,
-        output: 90,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 30,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 90,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -80,9 +135,20 @@ const BaiduWenxin: ModelProviderCard = {
       functionCall: true,
       id: 'ernie-4.0-turbo-8k-latest',
       pricing: {
-        currency: 'CNY',
-        input: 20,
-        output: 60,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 20,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 60,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -94,9 +160,20 @@ const BaiduWenxin: ModelProviderCard = {
       functionCall: true,
       id: 'ernie-4.0-turbo-128k',
       pricing: {
-        currency: 'CNY',
-        input: 20,
-        output: 60,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 20,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 60,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -107,9 +184,20 @@ const BaiduWenxin: ModelProviderCard = {
       functionCall: true,
       id: 'ernie-4.0-turbo-8k-preview',
       pricing: {
-        currency: 'CNY',
-        input: 20,
-        output: 60,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 20,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 60,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -119,9 +207,20 @@ const BaiduWenxin: ModelProviderCard = {
       displayName: 'ERNIE Lite 8K',
       id: 'ernie-lite-8k',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -132,9 +231,20 @@ const BaiduWenxin: ModelProviderCard = {
       functionCall: true,
       id: 'ernie-lite-pro-128k',
       pricing: {
-        currency: 'CNY',
-        input: 0.2,
-        output: 0.4,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.4,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -143,9 +253,20 @@ const BaiduWenxin: ModelProviderCard = {
       displayName: 'ERNIE Tiny 8K',
       id: 'ernie-tiny-8k',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -155,9 +276,20 @@ const BaiduWenxin: ModelProviderCard = {
       displayName: 'ERNIE Speed 128K',
       id: 'ernie-speed-128k',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -167,9 +299,20 @@ const BaiduWenxin: ModelProviderCard = {
       displayName: 'ERNIE Speed Pro 128K',
       id: 'ernie-speed-pro-128k',
       pricing: {
-        currency: 'CNY',
-        input: 0.3,
-        output: 0.6,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.3,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.6,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -179,9 +322,20 @@ const BaiduWenxin: ModelProviderCard = {
       displayName: 'ERNIE Character 8K',
       id: 'ernie-char-8k',
       pricing: {
-        currency: 'CNY',
-        input: 4,
-        output: 8,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 4,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 8,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -191,9 +345,20 @@ const BaiduWenxin: ModelProviderCard = {
       displayName: 'ERNIE Character Fiction 8K',
       id: 'ernie-char-fiction-8k',
       pricing: {
-        currency: 'CNY',
-        input: 4,
-        output: 8,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 4,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 8,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -202,9 +367,20 @@ const BaiduWenxin: ModelProviderCard = {
       displayName: 'ERNIE Novel 8K',
       id: 'ernie-novel-8k',
       pricing: {
-        currency: 'CNY',
-        input: 40,
-        output: 120,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 40,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 120,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -214,9 +390,20 @@ const BaiduWenxin: ModelProviderCard = {
       displayName: 'DeepSeek V3',
       id: 'deepseek-v3',
       pricing: {
-        currency: 'CNY',
-        input: 0.8,
-        output: 1.6,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.8,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 1.6,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -226,9 +413,20 @@ const BaiduWenxin: ModelProviderCard = {
       displayName: 'DeepSeek R1',
       id: 'deepseek-r1',
       pricing: {
-        currency: 'CNY',
-        input: 2,
-        output: 8,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 8,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
   ],

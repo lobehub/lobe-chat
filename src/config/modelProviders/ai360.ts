@@ -11,9 +11,20 @@ const Ai360: ModelProviderCard = {
       enabled: true,
       id: '360gpt2-o1',
       pricing: {
-        currency: 'CNY',
-        input: 20,
-        output: 50,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 20,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 50,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -23,9 +34,20 @@ const Ai360: ModelProviderCard = {
       enabled: true,
       id: '360gpt2-pro',
       pricing: {
-        currency: 'CNY',
-        input: 2,
-        output: 5,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -36,9 +58,20 @@ const Ai360: ModelProviderCard = {
       functionCall: true,
       id: '360gpt-pro',
       pricing: {
-        currency: 'CNY',
-        input: 2,
-        output: 5,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -48,9 +81,20 @@ const Ai360: ModelProviderCard = {
       enabled: true,
       id: '360gpt-turbo',
       pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 2,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
   ],

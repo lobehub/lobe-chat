@@ -12,9 +12,20 @@ const Stepfun: ModelProviderCard = {
       functionCall: true,
       id: 'step-1-flash',
       pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 4,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 4,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -25,9 +36,20 @@ const Stepfun: ModelProviderCard = {
       functionCall: true,
       id: 'step-1-8k',
       pricing: {
-        currency: 'CNY',
-        input: 5,
-        output: 20,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 20,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -38,9 +60,20 @@ const Stepfun: ModelProviderCard = {
       functionCall: true,
       id: 'step-1-32k',
       pricing: {
-        currency: 'CNY',
-        input: 15,
-        output: 70,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 15,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 70,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -51,9 +84,20 @@ const Stepfun: ModelProviderCard = {
       functionCall: true,
       id: 'step-1-128k',
       pricing: {
-        currency: 'CNY',
-        input: 40,
-        output: 200,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 40,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 200,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -63,9 +107,20 @@ const Stepfun: ModelProviderCard = {
       functionCall: true,
       id: 'step-1-256k',
       pricing: {
-        currency: 'CNY',
-        input: 95,
-        output: 300,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 95,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 300,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -76,9 +131,20 @@ const Stepfun: ModelProviderCard = {
       functionCall: true,
       id: 'step-2-16k',
       pricing: {
-        currency: 'CNY',
-        input: 38,
-        output: 120,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 38,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 120,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -90,9 +156,20 @@ const Stepfun: ModelProviderCard = {
       functionCall: true,
       id: 'step-2-mini',
       pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 2,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -102,9 +179,20 @@ const Stepfun: ModelProviderCard = {
       functionCall: true,
       id: 'step-2-16k-exp',
       pricing: {
-        currency: 'CNY',
-        input: 38,
-        output: 120,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 38,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 120,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -115,9 +203,20 @@ const Stepfun: ModelProviderCard = {
       functionCall: true,
       id: 'step-1v-8k',
       pricing: {
-        currency: 'CNY',
-        input: 5,
-        output: 20,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 20,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -128,9 +227,20 @@ const Stepfun: ModelProviderCard = {
       functionCall: true,
       id: 'step-1v-32k',
       pricing: {
-        currency: 'CNY',
-        input: 15,
-        output: 70,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 15,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 70,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -141,9 +251,20 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       id: 'step-1o-vision-32k',
       pricing: {
-        currency: 'CNY',
-        input: 15,
-        output: 70,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 15,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 70,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -154,9 +275,20 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       id: 'step-1.5v-mini',
       pricing: {
-        currency: 'CNY',
-        input: 8,
-        output: 35,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 8,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 35,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },

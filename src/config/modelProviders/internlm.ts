@@ -12,8 +12,20 @@ const InternLM: ModelProviderCard = {
       id: 'internlm2.5-latest',
       maxOutput: 4096,
       pricing: {
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -24,8 +36,20 @@ const InternLM: ModelProviderCard = {
       id: 'internlm2-pro-chat',
       maxOutput: 4096,
       pricing: {
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
   ],

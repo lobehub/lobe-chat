@@ -11,9 +11,20 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       id: 'deepseek-ai/DeepSeek-R1',
       pricing: {
-        currency: 'CNY',
-        input: 4,
-        output: 16,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 4,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 16,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -25,10 +36,20 @@ const SiliconCloud: ModelProviderCard = {
       functionCall: true,
       id: 'deepseek-ai/DeepSeek-V3',
       pricing: {
-        // 2.9 涨价
-        currency: 'CNY',
-        input: 1,
-        output: 2,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -38,9 +59,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'DeepSeek R1 (Pro)',
       id: 'Pro/deepseek-ai/DeepSeek-R1',
       pricing: {
-        currency: 'CNY',
-        input: 4,
-        output: 16,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 4,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 16,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -51,9 +83,20 @@ const SiliconCloud: ModelProviderCard = {
       functionCall: true,
       id: 'Pro/deepseek-ai/DeepSeek-V3',
       pricing: {
-        currency: 'CNY',
-        input: 2,
-        output: 8,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 8,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -64,9 +107,20 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
       pricing: {
-        currency: 'CNY',
-        input: 4.13,
-        output: 4.13,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 4.13,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 4.13,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -77,9 +131,20 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
       pricing: {
-        currency: 'CNY',
-        input: 1.26,
-        output: 1.26,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1.26,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 1.26,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -90,9 +155,20 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
       pricing: {
-        currency: 'CNY',
-        input: 0.7,
-        output: 0.7,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.7,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.7,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -103,9 +179,20 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -116,9 +203,20 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -128,9 +226,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'DeepSeek-R1-Distill-Qwen-1.5B (Free)',
       id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -142,9 +251,20 @@ const SiliconCloud: ModelProviderCard = {
       functionCall: true,
       id: 'deepseek-ai/DeepSeek-V2.5',
       pricing: {
-        currency: 'CNY',
-        input: 1.33,
-        output: 1.33,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1.33,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 1.33,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -154,9 +274,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'DeepSeek VL2',
       id: 'deepseek-ai/deepseek-vl2',
       pricing: {
-        currency: 'CNY',
-        input: 0.99,
-        output: 0.99,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.99,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.99,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -168,9 +299,20 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       id: 'Qwen/QVQ-72B-Preview',
       pricing: {
-        currency: 'CNY',
-        input: 9.9,
-        output: 9.9,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 9.9,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 9.9,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -182,9 +324,20 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       id: 'Qwen/QwQ-32B-Preview',
       pricing: {
-        currency: 'CNY',
-        input: 1.26,
-        output: 1.26,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1.26,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 1.26,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -196,9 +349,20 @@ const SiliconCloud: ModelProviderCard = {
       functionCall: true,
       id: 'Qwen/Qwen2.5-7B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -208,9 +372,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Qwen2.5 7B Instruct (LoRA)',
       id: 'LoRA/Qwen/Qwen2.5-7B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0.53,
-        output: 0.53,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.53,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.53,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -221,9 +396,20 @@ const SiliconCloud: ModelProviderCard = {
       functionCall: true,
       id: 'Pro/Qwen/Qwen2.5-7B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0.35,
-        output: 0.35,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.35,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.35,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -234,9 +420,20 @@ const SiliconCloud: ModelProviderCard = {
       functionCall: true,
       id: 'Qwen/Qwen2.5-14B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0.7,
-        output: 0.7,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.7,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.7,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -247,9 +444,20 @@ const SiliconCloud: ModelProviderCard = {
       functionCall: true,
       id: 'Qwen/Qwen2.5-32B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 1.26,
-        output: 1.26,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1.26,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 1.26,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -260,9 +468,20 @@ const SiliconCloud: ModelProviderCard = {
       functionCall: true,
       id: 'Qwen/Qwen2.5-72B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 4.13,
-        output: 4.13,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 4.13,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 4.13,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -272,9 +491,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Qwen2.5 72B Instruct (LoRA)',
       id: 'LoRA/Qwen/Qwen2.5-72B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 6.2,
-        output: 6.2,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 6.2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 6.2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -285,9 +515,20 @@ const SiliconCloud: ModelProviderCard = {
       functionCall: true,
       id: 'Vendor-A/Qwen/Qwen2.5-72B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 1,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -299,9 +540,20 @@ const SiliconCloud: ModelProviderCard = {
       functionCall: true,
       id: 'Qwen/Qwen2.5-72B-Instruct-128K',
       pricing: {
-        currency: 'CNY',
-        input: 4.13,
-        output: 4.13,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 4.13,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 4.13,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -311,9 +563,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Qwen2.5 Coder 7B Instruct (Free)',
       id: 'Qwen/Qwen2.5-Coder-7B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -323,9 +586,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Qwen2.5 Coder 7B Instruct (Pro)',
       id: 'Pro/Qwen/Qwen2.5-Coder-7B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0.35,
-        output: 0.35,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.35,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.35,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -335,9 +609,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Qwen2.5 Coder 32B Instruct',
       id: 'Qwen/Qwen2.5-Coder-32B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 1.26,
-        output: 1.26,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1.26,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 1.26,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -347,9 +632,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Qwen2 1.5B Instruct (Free)',
       id: 'Qwen/Qwen2-1.5B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -359,9 +655,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Qwen2 1.5B Instruct (Pro)',
       id: 'Pro/Qwen/Qwen2-1.5B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0.14,
-        output: 0.14,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.14,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.14,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -371,9 +678,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Qwen2 7B Instruct (Free)',
       id: 'Qwen/Qwen2-7B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -383,9 +701,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Qwen2 7B Instruct (Pro)',
       id: 'Pro/Qwen/Qwen2-7B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0.35,
-        output: 0.35,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.35,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.35,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -395,9 +724,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Qwen2 72B Instruct',
       id: 'Qwen/Qwen2-7B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 4.13,
-        output: 4.13,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 4.13,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 4.13,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -408,9 +748,20 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       id: 'Pro/Qwen/Qwen2-VL-7B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0.35,
-        output: 0.35,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.35,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.35,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -422,9 +773,20 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       id: 'Qwen/Qwen2-VL-72B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 4.13,
-        output: 4.13,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 4.13,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 4.13,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -436,9 +798,20 @@ const SiliconCloud: ModelProviderCard = {
       functionCall: true,
       id: 'internlm/internlm2_5-7b-chat',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -449,9 +822,20 @@ const SiliconCloud: ModelProviderCard = {
       functionCall: true,
       id: 'internlm/internlm2_5-20b-chat',
       pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 1,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -461,9 +845,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'InternVL2 8B (Pro)',
       id: 'Pro/OpenGVLab/InternVL2-8B',
       pricing: {
-        currency: 'CNY',
-        input: 0.35,
-        output: 0.35,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.35,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.35,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -474,9 +869,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'InternVL2 26B',
       id: 'OpenGVLab/InternVL2-26B',
       pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 1,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 1,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },
@@ -488,9 +894,20 @@ const SiliconCloud: ModelProviderCard = {
       functionCall: true,
       id: 'THUDM/glm-4-9b-chat',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -501,9 +918,20 @@ const SiliconCloud: ModelProviderCard = {
       functionCall: true,
       id: 'Pro/THUDM/glm-4-9b-chat',
       pricing: {
-        currency: 'CNY',
-        input: 0.6,
-        output: 0.6,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.6,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.6,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -513,9 +941,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'ChatGLM3 6B (Free)',
       id: 'THUDM/chatglm3-6b',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -525,9 +964,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Yi-1.5 6B Chat (Free)',
       id: '01-ai/Yi-1.5-6B-Chat',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -537,9 +987,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Yi-1.5 9B Chat 16K (Free)',
       id: '01-ai/Yi-1.5-9B-Chat-16K',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -549,9 +1010,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Yi-1.5 34B Chat 16K',
       id: '01-ai/Yi-1.5-34B-Chat-16K',
       pricing: {
-        currency: 'CNY',
-        input: 1.26,
-        output: 1.26,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1.26,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 1.26,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -562,9 +1034,20 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       id: 'google/gemma-2-9b-it',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -574,9 +1057,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Gemma 2 9B (Pro)',
       id: 'Pro/google/gemma-2-9b-it',
       pricing: {
-        currency: 'CNY',
-        input: 0.6,
-        output: 0.6,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.6,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.6,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -587,9 +1081,20 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       id: 'google/gemma-2-27b-it',
       pricing: {
-        currency: 'CNY',
-        input: 1.26,
-        output: 1.26,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1.26,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 1.26,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -601,9 +1106,20 @@ const SiliconCloud: ModelProviderCard = {
       functionCall: true,
       id: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -613,9 +1129,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Llama 3.1 8B Instruct (Pro)',
       id: 'Pro/meta-llama/Meta-Llama-3.1-8B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 0.42,
-        output: 0.42,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 0.42,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 0.42,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -627,9 +1154,20 @@ const SiliconCloud: ModelProviderCard = {
       functionCall: true,
       id: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 4.13,
-        output: 4.13,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 4.13,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 4.13,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -640,9 +1178,20 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       id: 'meta-llama/Meta-Llama-3.1-405B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 21,
-        output: 21,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 21,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 21,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -654,9 +1203,20 @@ const SiliconCloud: ModelProviderCard = {
       functionCall: true,
       id: 'meta-llama/Llama-3.3-70B-Instruct',
       pricing: {
-        currency: 'CNY',
-        input: 4.13,
-        output: 4.13,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 4.13,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 4.13,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -666,9 +1226,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'TeleChat2',
       id: 'TeleAI/TeleChat2',
       pricing: {
-        currency: 'CNY',
-        input: 1.33,
-        output: 1.33,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1.33,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 1.33,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -678,9 +1249,20 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'TeleMM',
       id: 'TeleAI/TeleMM',
       pricing: {
-        currency: 'CNY',
-        input: 1.33,
-        output: 1.33,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 1.33,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 1.33,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
       vision: true,
     },

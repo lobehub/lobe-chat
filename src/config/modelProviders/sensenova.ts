@@ -13,9 +13,20 @@ const SenseNova: ModelProviderCard = {
       functionCall: true,
       id: 'SenseChat-5',
       pricing: {
-        currency: 'CNY',
-        input: 40,
-        output: 100,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 40,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 100,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     /*
@@ -26,10 +37,21 @@ const SenseNova: ModelProviderCard = {
       enabled: true,
       id: 'SenseChat-Vision',
       pricing: {
-        currency: 'CNY',
-        input: 100,
-        output: 100,
-      },
+    units: [
+    {
+      name: 'TextInput',
+      rate: 100,
+      strategy: 'fixed',
+      unit: 'MillionTokens'
+    },
+    {
+      name: 'TextOutput',
+      rate: 100,
+      strategy: 'fixed',
+      unit: 'MillionTokens'
+    }
+    ]
+  },
       tokens: 16_384,
       vision: true,
     },
@@ -41,9 +63,20 @@ const SenseNova: ModelProviderCard = {
       enabled: true,
       id: 'SenseChat-Turbo',
       pricing: {
-        currency: 'CNY',
-        input: 2,
-        output: 5,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 2,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 5,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -53,9 +86,20 @@ const SenseNova: ModelProviderCard = {
       displayName: 'SenseChat 5.0 Cantonese',
       id: 'SenseChat-5-Cantonese',
       pricing: {
-        currency: 'CNY',
-        input: 27,
-        output: 27,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 27,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 27,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -65,9 +109,20 @@ const SenseNova: ModelProviderCard = {
       enabled: true,
       id: 'SenseChat-128K',
       pricing: {
-        currency: 'CNY',
-        input: 60,
-        output: 60,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 60,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 60,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -77,9 +132,20 @@ const SenseNova: ModelProviderCard = {
       enabled: true,
       id: 'SenseChat-32K',
       pricing: {
-        currency: 'CNY',
-        input: 36,
-        output: 36,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 36,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 36,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -89,9 +155,20 @@ const SenseNova: ModelProviderCard = {
       enabled: true,
       id: 'SenseChat',
       pricing: {
-        currency: 'CNY',
-        input: 12,
-        output: 12,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 12,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 12,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -100,9 +177,20 @@ const SenseNova: ModelProviderCard = {
       displayName: 'SenseChat Character',
       id: 'SenseChat-Character',
       pricing: {
-        currency: 'CNY',
-        input: 12,
-        output: 12,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 12,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 12,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
     {
@@ -111,9 +199,20 @@ const SenseNova: ModelProviderCard = {
       displayName: 'SenseChat Character Pro',
       id: 'SenseChat-Character-Pro',
       pricing: {
-        currency: 'CNY',
-        input: 15,
-        output: 15,
+        units: [
+          {
+            name: 'TextInput',
+            rate: 15,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+          {
+            name: 'TextOutput',
+            rate: 15,
+            strategy: 'fixed',
+            unit: 'MillionTokens',
+          },
+        ],
       },
     },
   ],
