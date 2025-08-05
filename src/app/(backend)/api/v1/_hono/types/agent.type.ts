@@ -207,7 +207,3 @@ export const AgentDeleteRequestSchema = z.object({
 export const AgentIdParamSchema = z.object({
   id: z.string().min(1, 'Agent ID 不能为空'),
 });
-
-export const SessionIdParamSchema = z.object({
-  sessionId: z.string().min(1, 'Session ID 不能为空'),
-});
