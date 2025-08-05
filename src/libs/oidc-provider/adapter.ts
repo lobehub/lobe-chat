@@ -1,6 +1,5 @@
 import debug from 'debug';
-import { sql } from 'drizzle-orm';
-import { eq } from 'drizzle-orm/expressions';
+import { eq, sql } from 'drizzle-orm';
 
 import {
   oidcAccessTokens,

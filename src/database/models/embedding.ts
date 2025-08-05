@@ -1,5 +1,4 @@
-import { count } from 'drizzle-orm';
-import { and, eq } from 'drizzle-orm/expressions';
+import { and, count, eq } from 'drizzle-orm';
 
 import { LobeChatDatabase } from '@/database/type';
 
