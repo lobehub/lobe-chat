@@ -61,23 +61,14 @@ const getMCPConnectionTestState = (id: string) => (s: ToolStoreState) => ({
 
 export const mcpStoreSelectors = {
   activeMCPPluginIdentifier,
-  // 测试连接相关选择器
-getMCPConnectionTestError,
-  
-getMCPConnectionTestState,
-  
-getMCPInstallProgress,
-  
-getMCPPluginRequiringConfig,
-  
-getPluginById,
-  
-isMCPConnectionTesting,
-  
-isMCPInstallInProgress,
-  
-isMCPInstalling,
-  
+  getMCPConnectionTestError,
+  getMCPConnectionTestState,
+  getMCPInstallProgress,
+  getMCPPluginRequiringConfig,
+  getPluginById,
+  isMCPConnectionTesting,
+  isMCPInstallInProgress,
+  isMCPInstalling,
   isMCPPluginRequiringConfig,
   isPluginInstallLoading,
   mcpPluginList,
