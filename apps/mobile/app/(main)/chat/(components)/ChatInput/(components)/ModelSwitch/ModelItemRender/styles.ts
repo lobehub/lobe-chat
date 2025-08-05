@@ -1,36 +1,32 @@
 import { createStyles } from '@/theme';
 
 export const useStyles = createStyles((token) => ({
-  body: {
-    flex: 1,
-  },
   container: {
-    paddingHorizontal: 16,
-  },
-  content: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 16,
+    minHeight: 40,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
-  desc: {
-    color: token.colorTextSecondary,
-    opacity: 0.5,
-  },
-  divider: {
-    backgroundColor: '#333',
-    height: 12,
-    width: 1,
-  },
-  header: {
+
+  leftSection: {
     alignItems: 'center',
+    flex: 1,
     flexDirection: 'row',
     gap: 8,
-    marginBottom: 8,
+    minWidth: 0, // 允许文字收缩
   },
-  title: {
+
+  modelName: {
     color: token.colorText,
+    flex: 1,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '400',
+  },
+
+  rightSection: {
+    flexShrink: 0,
+    marginLeft: 8,
   },
 }));

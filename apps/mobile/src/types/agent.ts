@@ -1,5 +1,49 @@
+/**
+ * 移动端 Agent 配置类型定义
+ * 与 web 端保持完全一致，某些功能在移动端暂不实现
+ */
+
+import { FewShots, LLMParams } from '@/types/llm';
+import { FileItem } from '@/types/files';
+import { KnowledgeBaseItem } from '@/types/knowledgeBase';
+import { SearchMode } from '@/types/search';
+
+/**
+ * 工作模型接口
+ */
+export interface WorkingModel {
+  model: string;
+  provider: string;
+}
+
+/**
+ * TTS 服务器类型
+ */
+export type TTSServer = 'openai' | 'edge' | 'microsoft';
+
+/**
+ * Agent TTS 配置
+ */
+export interface LobeAgentTTSConfig {
+  showAllLocaleVoice?: boolean;
+  sttLocale: 'auto' | string;
+  ttsService: TTSServer;
+  voice: {
+    edge?: string;
+    microsoft?: string;
+    openai: string;
+  };
+}
+
+/**
+ * Agent 聊天配置
+ */
 export interface LobeAgentChatConfig {
   autoCreateTopicThreshold: number;
+  /**
+   * 禁用上下文缓存
+   */
+  disableContextCaching?: boolean;
   displayMode?: 'chat' | 'docs';
   enableAutoCreateTopic?: boolean;
   /**
@@ -11,60 +55,55 @@ export interface LobeAgentChatConfig {
    */
   enableHistoryCount?: boolean;
   enableMaxTokens?: boolean;
-
+  /**
+   * 是否开启推理
+   */
+  enableReasoning?: boolean;
   /**
    * 自定义推理强度
    */
   enableReasoningEffort?: boolean;
-
   /**
    * 历史消息条数
    */
   historyCount?: number;
   inputTemplate?: string;
+  reasoningBudgetToken?: number;
+  reasoningEffort?: 'low' | 'medium' | 'high';
+  searchFCModel?: WorkingModel;
+  searchMode?: SearchMode;
+  thinking?: 'disabled' | 'auto' | 'enabled';
+  thinkingBudget?: number;
+  useModelBuiltinSearch?: boolean;
 }
 
-// 语言模型的设置参数
-export interface LLMParams {
-  /**
-   * 控制生成文本中的惩罚系数，用于减少重复性
-   * @default 0
-   */
-  frequency_penalty?: number;
-  /**
-   * 生成文本的最大长度
-   */
-  max_tokens?: number;
-  /**
-   * 控制生成文本中的惩罚系数，用于减少主题的变化
-   * @default 0
-   */
-  presence_penalty?: number;
-  /**
-   * 生成文本的随机度量，用于控制文本的创造性和多样性
-   * @default 1
-   */
-  reasoning_effort?: string;
-  /**
-   * 控制模型推理能力
-   * @default medium
-   */
-  temperature?: number;
-  /**
-   * 控制生成文本中最高概率的单个 token
-   * @default 1
-   */
-  top_p?: number;
-}
-
+/**
+ * Agent 配置接口 (与 web 端完全一致)
+ */
 export interface LobeAgentConfig {
   chatConfig: LobeAgentChatConfig;
+  fewShots?: FewShots;
+  files?: FileItem[];
   id?: string;
+  /**
+   * knowledge bases
+   */
+  knowledgeBases?: KnowledgeBaseItem[];
   /**
    * 角色所使用的语言模型
    * @default gpt-4o-mini
    */
   model: string;
+
+  /**
+   * 开场白
+   */
+  openingMessage?: string;
+  /**
+   * 开场问题
+   */
+  openingQuestions?: string[];
+
   /**
    * 语言模型参数
    */
@@ -73,41 +112,21 @@ export interface LobeAgentConfig {
    * 启用的插件
    */
   plugins?: string[];
+
   /**
    *  模型供应商
    */
   provider?: string;
+
   /**
    * 系统角色
    */
   systemRole: string;
-}
 
-export interface LobeAgentMeta {
-  avatar?: string;
-  description: string;
-  systemRole?: string;
-  tags?: string[];
-  title: string;
-}
-
-export interface LobeAgent {
-  author?: string;
-  config?: {
-    model?: {
-      name?: string;
-      provider?: string;
-    };
-    systemRole?: string;
-  };
-  createAt: string;
-  homepage?: string;
-  identifier: string;
-  meta: LobeAgentMeta;
-}
-
-export interface AgentIndexResponse {
-  agents: LobeAgent[];
+  /**
+   * 语音服务
+   */
+  tts: LobeAgentTTSConfig;
 }
 
 export enum ModelProvider {
@@ -162,3 +181,15 @@ export enum ModelProvider {
   ZeroOne = 'zeroone',
   ZhiPu = 'zhipu',
 }
+
+/**
+ * Agent 配置的可配置键类型
+ */
+export type LobeAgentConfigKeys =
+  | keyof LobeAgentConfig
+  | ['params', keyof LobeAgentConfig['params']];
+
+/**
+ * 导出聊天配置相关类型
+ */
+export { SearchMode } from '@/types/search';
