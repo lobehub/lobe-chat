@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.107.6](https://github.com/lobehub/lobe-chat/compare/v1.107.5...v1.107.6)
+
+<sup>Released on **2025-08-05**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Break line for Gemini Artifacts.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Break line for Gemini Artifacts, closes [#8627](https://github.com/lobehub/lobe-chat/issues/8627) ([65609dd](https://github.com/lobehub/lobe-chat/commit/65609dd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.107.5](https://github.com/lobehub/lobe-chat/compare/v1.107.4...v1.107.5)
 
 <sup>Released on **2025-08-04**</sup>
