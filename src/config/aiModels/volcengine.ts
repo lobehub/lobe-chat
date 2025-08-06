@@ -19,12 +19,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'kimi-k2',
     maxOutput: 16_384,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -44,12 +44,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-seed-1.6-thinking',
     maxOutput: 16_000,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 1.2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 1.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -69,12 +69,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-seed-1.6',
     maxOutput: 16_000,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 1.2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 1.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       extendParams: ['thinking'],
     },
@@ -97,12 +97,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-seed-1.6-flash',
     maxOutput: 16_000,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       extendParams: ['enableReasoning'],
     },
@@ -124,12 +124,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-1.5-ui-tars',
     maxOutput: 16_000,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       extendParams: ['thinking'],
     },
@@ -151,12 +151,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-1.5-thinking-vision-pro',
     maxOutput: 16_000,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       extendParams: ['thinking'],
     },
@@ -177,12 +177,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-1.5-thinking-pro',
     maxOutput: 16_000,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -201,12 +201,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-1.5-thinking-pro-m',
     maxOutput: 16_000,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       extendParams: ['enableReasoning'],
     },
@@ -227,12 +227,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'deepseek-r1',
     maxOutput: 16_384,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -250,12 +250,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'deepseek-r1-distill-qwen-32b',
     maxOutput: 8192,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -273,12 +273,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'deepseek-r1-distill-qwen-7b',
     maxOutput: 8192,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 2.4, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 2.4, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -295,12 +295,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'deepseek-v3',
     maxOutput: 16_384,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -317,12 +317,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-1.5-pro-32k',
     maxOutput: 16_384,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -336,12 +336,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-1.5-pro-256k',
     maxOutput: 12_288,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -357,12 +357,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-1.5-lite-32k',
     maxOutput: 12_288,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -380,12 +380,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-1.5-vision-pro-32k',
     maxOutput: 12_288,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-01-15',
     type: 'chat',
   },
@@ -404,12 +404,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-1.5-vision-pro',
     maxOutput: 16_384,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-03-28',
     type: 'chat',
   },
@@ -428,12 +428,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-1.5-vision-lite',
     maxOutput: 16_384,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-03-15',
     type: 'chat',
   },
@@ -451,12 +451,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-vision-pro-32k',
     maxOutput: 4096,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-10-28',
     type: 'chat',
   },
@@ -474,12 +474,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-vision-lite-32k',
     maxOutput: 4096,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-10-15',
     type: 'chat',
   },
@@ -494,12 +494,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-lite-4k',
     maxOutput: 4096,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -513,12 +513,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-lite-32k',
     maxOutput: 4096,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -532,12 +532,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-lite-128k',
     maxOutput: 4096,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -551,12 +551,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-pro-32k',
     maxOutput: 4096,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -570,12 +570,12 @@ const doubaoChatModels: AIChatModelCard[] = [
     id: 'doubao-pro-256k',
     maxOutput: 4096,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
 ];
@@ -600,7 +600,16 @@ const volcengineImageModels: AIImageModelCard[] = [
       seed: { default: null },
       size: {
         default: '1024x1024',
-        enum: ['1024x1024', '864x1152', '1152x864', '1280x720', '720x1280', '832x1248', '1248x832', '1512x648'],
+        enum: [
+          '1024x1024',
+          '864x1152',
+          '1152x864',
+          '1280x720',
+          '720x1280',
+          '832x1248',
+          '1248x832',
+          '1512x648',
+        ],
       },
     },
     releasedAt: '2025-04-15',

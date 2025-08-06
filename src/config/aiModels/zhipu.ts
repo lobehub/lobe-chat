@@ -15,13 +15,13 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-4.5',
     maxOutput: 32_768,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'CachedTextInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'CachedTextInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       extendParams: ['enableReasoning'],
       searchImpl: 'params',
@@ -35,19 +35,18 @@ const zhipuChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 128_000,
-    description:
-      'GLM-4.5 的极速版，在性能强劲的同时，生成速度可达 100 tokens/秒。',
+    description: 'GLM-4.5 的极速版，在性能强劲的同时，生成速度可达 100 tokens/秒。',
     displayName: 'GLM-4.5-X',
     id: 'glm-4.5-x',
     maxOutput: 32_768,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'CachedTextInput', rate: 3.2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 64, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'CachedTextInput', rate: 3.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 64, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       extendParams: ['enableReasoning'],
       searchImpl: 'params',
@@ -61,19 +60,18 @@ const zhipuChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 128_000,
-    description:
-      'GLM-4.5 的轻量版，兼顾性能与性价比，可灵活切换混合思考模型。',
+    description: 'GLM-4.5 的轻量版，兼顾性能与性价比，可灵活切换混合思考模型。',
     displayName: 'GLM-4.5-Air',
     id: 'glm-4.5-air',
     maxOutput: 32_768,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'CachedTextInput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 1.2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'CachedTextInput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 1.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       extendParams: ['enableReasoning'],
       searchImpl: 'params',
@@ -87,19 +85,18 @@ const zhipuChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 128_000,
-    description:
-      'GLM-4.5-Air 的极速版，响应速度更快，专为大规模高速度需求打造。',
+    description: 'GLM-4.5-Air 的极速版，响应速度更快，专为大规模高速度需求打造。',
     displayName: 'GLM-4.5-AirX',
     id: 'glm-4.5-airx',
     maxOutput: 32_768,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'CachedTextInput', rate: 1.6, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 32, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'CachedTextInput', rate: 1.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 32, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       extendParams: ['enableReasoning'],
       searchImpl: 'params',
@@ -113,20 +110,19 @@ const zhipuChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 128_000,
-    description:
-      'GLM-4.5 的免费版，推理、代码、智能体等任务表现出色。',
+    description: 'GLM-4.5 的免费版，推理、代码、智能体等任务表现出色。',
     displayName: 'GLM-4.5-Flash',
     enabled: true,
     id: 'glm-4.5-flash',
     maxOutput: 32_768,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'CachedTextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'CachedTextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       extendParams: ['enableReasoning'],
       searchImpl: 'params',
@@ -146,12 +142,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-4.1v-thinking-flashx',
     maxOutput: 16_384,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       searchImpl: 'params',
     },
@@ -171,12 +167,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-4.1v-thinking-flash',
     maxOutput: 16_384,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       searchImpl: 'params',
     },
@@ -191,12 +187,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     displayName: 'GLM-Zero-Preview',
     id: 'glm-zero-preview',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -210,12 +206,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-z1-air',
     maxOutput: 32_768,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       searchImpl: 'params',
     },
@@ -232,12 +228,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-z1-airx',
     maxOutput: 30_000,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       searchImpl: 'params',
     },
@@ -254,12 +250,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-z1-flashx',
     maxOutput: 32_768,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       searchImpl: 'params',
     },
@@ -271,18 +267,17 @@ const zhipuChatModels: AIChatModelCard[] = [
       search: true,
     },
     contextWindowTokens: 128_000,
-    description:
-      'GLM-Z1 系列具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。',
+    description: 'GLM-Z1 系列具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。',
     displayName: 'GLM-Z1-Flash',
     id: 'glm-z1-flash',
     maxOutput: 32_768,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       searchImpl: 'params',
     },
@@ -299,12 +294,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-4-flash-250414',
     maxOutput: 16_000,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       searchImpl: 'params',
     },
@@ -321,12 +316,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-4-flashx',
     maxOutput: 16_000,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       searchImpl: 'params',
     },
@@ -343,12 +338,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-4-long',
     maxOutput: 4000,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       searchImpl: 'params',
     },
@@ -365,12 +360,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-4-air-250414',
     maxOutput: 16_000,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       searchImpl: 'params',
     },
@@ -387,12 +382,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-4-airx',
     maxOutput: 4000,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       searchImpl: 'params',
     },
@@ -409,12 +404,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     displayName: 'GLM-4-AllTools',
     id: 'glm-4-alltools',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       searchImpl: 'params',
     },
@@ -431,12 +426,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'glm-4-plus',
     maxOutput: 4000,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       searchImpl: 'params',
     },
@@ -452,12 +447,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     displayName: 'GLM-4-0520',
     id: 'glm-4-0520', // 弃用时间 2025年12月30日
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       searchImpl: 'params',
     },
@@ -473,12 +468,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     displayName: 'GLM-4',
     id: 'glm-4', // 弃用时间 2025年6月30日
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     settings: {
       searchImpl: 'params',
     },
@@ -494,12 +489,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     displayName: 'GLM-4V-Flash',
     id: 'glm-4v-flash',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-12-09',
     type: 'chat',
   },
@@ -512,12 +507,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     displayName: 'GLM-4V-Plus-0111',
     id: 'glm-4v-plus-0111',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -529,12 +524,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     displayName: 'GLM-4V',
     id: 'glm-4v',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 50, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 50, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 50, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 50, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -545,12 +540,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'codegeex-4',
     maxOutput: 32_768,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -560,12 +555,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'charglm-4',
     maxOutput: 4000,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -575,12 +570,12 @@ const zhipuChatModels: AIChatModelCard[] = [
     id: 'emohaa',
     maxOutput: 4000,
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
 ];

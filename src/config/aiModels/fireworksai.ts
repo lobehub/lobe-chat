@@ -9,11 +9,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'accounts/fireworks/models/llama-v3p3-70b-instruct',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -24,11 +24,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'accounts/fireworks/models/llama-v3p2-3b-instruct',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -42,11 +42,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'accounts/fireworks/models/llama-v3p2-11b-vision-instruct',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -60,11 +60,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'accounts/fireworks/models/llama-v3p2-90b-vision-instruct',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -74,11 +74,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.1 8B Instruct',
     id: 'accounts/fireworks/models/llama-v3p1-8b-instruct',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -91,11 +91,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.1 70B Instruct',
     id: 'accounts/fireworks/models/llama-v3p1-70b-instruct',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -108,11 +108,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.1 405B Instruct',
     id: 'accounts/fireworks/models/llama-v3p1-405b-instruct',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -122,11 +122,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3 8B Instruct',
     id: 'accounts/fireworks/models/llama-v3-8b-instruct',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -136,11 +136,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3 70B Instruct',
     id: 'accounts/fireworks/models/llama-v3-70b-instruct',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -150,11 +150,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3 8B Instruct (HF version)',
     id: 'accounts/fireworks/models/llama-v3-8b-instruct-hf',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -164,11 +164,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'accounts/fireworks/models/mistral-small-24b-instruct-2501',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -178,11 +178,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     displayName: 'Mixtral MoE 8x7B Instruct',
     id: 'accounts/fireworks/models/mixtral-8x7b-instruct',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -195,11 +195,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     displayName: 'Mixtral MoE 8x22B Instruct',
     id: 'accounts/fireworks/models/mixtral-8x22b-instruct',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 1.2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 1.2, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 1.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 1.2, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -213,11 +213,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'accounts/fireworks/models/phi-3-vision-128k-instruct',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -227,11 +227,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     displayName: 'MythoMax L2 13b',
     id: 'accounts/fireworks/models/mythomax-l2-13b',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -242,11 +242,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'accounts/fireworks/models/deepseek-v3',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -260,11 +260,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'accounts/fireworks/models/deepseek-r1',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -278,11 +278,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'accounts/fireworks/models/qwen-qwq-32b-preview',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -293,11 +293,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'accounts/fireworks/models/qwen2p5-72b-instruct',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -310,11 +310,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'accounts/fireworks/models/qwen2-vl-72b-instruct',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -325,11 +325,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'accounts/fireworks/models/qwen2p5-coder-32b-instruct',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.9, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -340,11 +340,11 @@ const fireworksaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'accounts/yi-01-ai/models/yi-large',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
 ];

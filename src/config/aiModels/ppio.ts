@@ -12,12 +12,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek/deepseek-r1/community',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -28,12 +28,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek/deepseek-v3/community',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -47,12 +47,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek/deepseek-r1',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -63,12 +63,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek/deepseek-v3',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -82,12 +82,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek/deepseek-r1-distill-llama-70b',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 5.8, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 5.8, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 5.8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 5.8, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -101,12 +101,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek/deepseek-r1-distill-qwen-32b',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 2.18, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 2.18, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 2.18, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 2.18, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -120,12 +120,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek/deepseek-r1-distill-qwen-14b',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -139,12 +139,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek/deepseek-r1-distill-llama-8b',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -155,12 +155,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'qwen/qwen-2.5-72b-instruct',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 2.75, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 2.88, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 2.75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 2.88, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -174,12 +174,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'qwen/qwen-2-vl-72b-instruct',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -189,12 +189,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'meta-llama/llama-3.2-3b-instruct',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.216, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.36, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.216, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.36, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -205,12 +205,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'qwen/qwen2.5-32b-instruct',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 1.26, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -221,12 +221,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'baichuan/baichuan2-13b-chat',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 1.75, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 1.75, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 1.75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 1.75, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -237,12 +237,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'meta-llama/llama-3.1-70b-instruct',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 2.45, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 2.82, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 2.45, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 2.82, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -253,12 +253,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'meta-llama/llama-3.1-8b-instruct',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -269,12 +269,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: '01-ai/yi-1.5-34b-chat',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -285,12 +285,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: '01-ai/yi-1.5-9b-chat',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -300,12 +300,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'thudm/glm-4-9b-chat',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -316,12 +316,12 @@ const ppioChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'qwen/qwen-2-7b-instruct',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.32, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.32, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.32, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.32, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
 ];

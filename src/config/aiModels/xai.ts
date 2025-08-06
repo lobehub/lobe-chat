@@ -16,12 +16,12 @@ const xaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'grok-4',
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.75, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-07-09',
     settings: {
       // reasoning_effort is not supported by grok-4. Specifying reasoning_effort parameter will get an error response.
@@ -41,12 +41,12 @@ const xaiChatModels: AIChatModelCard[] = [
     displayName: 'Grok 3',
     id: 'grok-3',
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.75, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-04-03',
     settings: {
       searchImpl: 'params',
@@ -64,12 +64,12 @@ const xaiChatModels: AIChatModelCard[] = [
     displayName: 'Grok 3 (Fast mode)',
     id: 'grok-3-fast',
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 25, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 25, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-04-03',
     settings: {
       searchImpl: 'params',
@@ -89,12 +89,12 @@ const xaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'grok-3-mini',
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-04-03',
     settings: {
       extendParams: ['reasoningEffort'],
@@ -114,12 +114,12 @@ const xaiChatModels: AIChatModelCard[] = [
     displayName: 'Grok 3 Mini (Fast mode)',
     id: 'grok-3-mini-fast',
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-04-03',
     settings: {
       extendParams: ['reasoningEffort'],
@@ -137,11 +137,11 @@ const xaiChatModels: AIChatModelCard[] = [
     displayName: 'Grok 2 1212',
     id: 'grok-2-1212', // legacy
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-12-12',
     settings: {
       searchImpl: 'params',
@@ -159,11 +159,11 @@ const xaiChatModels: AIChatModelCard[] = [
     displayName: 'Grok 2 Vision 1212',
     id: 'grok-2-vision-1212',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-12-12',
     settings: {
       searchImpl: 'params',

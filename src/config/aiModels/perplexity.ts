@@ -13,11 +13,11 @@ const perplexityChatModels: AIChatModelCard[] = [
     id: 'sonar-deep-research',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-02-14',
     settings: {
       extendParams: ['reasoningEffort'],
@@ -38,11 +38,11 @@ const perplexityChatModels: AIChatModelCard[] = [
     id: 'sonar-reasoning-pro',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-01-21',
     settings: {
       searchImpl: 'internal',
@@ -62,11 +62,11 @@ const perplexityChatModels: AIChatModelCard[] = [
     id: 'sonar-reasoning',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-01-21',
     settings: {
       searchImpl: 'internal',
@@ -84,11 +84,11 @@ const perplexityChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'sonar-pro',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-01-21',
     settings: {
       searchImpl: 'internal',
@@ -106,11 +106,11 @@ const perplexityChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'sonar',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-01-21',
     settings: {
       searchImpl: 'internal',
@@ -128,11 +128,11 @@ const perplexityChatModels: AIChatModelCard[] = [
     displayName: 'R1 1776',
     id: 'r1-1776',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-02-18',
     type: 'chat',
   },
