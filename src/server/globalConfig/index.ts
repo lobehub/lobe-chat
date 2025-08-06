@@ -17,7 +17,7 @@ export const getServerGlobalConfig = async () => {
   const { ACCESS_CODES, DEFAULT_AGENT_CONFIG } = getAppConfig();
 
   const config: GlobalServerConfig = {
-    aiProvider: genServerAiProvidersConfig({
+    aiProvider: await genServerAiProvidersConfig({
       azure: {
         enabledKey: 'ENABLED_AZURE_OPENAI',
         withDeploymentName: true,

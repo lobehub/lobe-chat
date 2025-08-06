@@ -2,7 +2,7 @@ import type { ClientDispatchEvents } from '@lobechat/electron-client-ipc';
 import type { ServerDispatchEvents } from '@lobechat/electron-server-ipc';
 
 import type { App } from '@/core/App';
-import { IoCContainer } from '@/core/IoCContainer';
+import { IoCContainer } from '@/core/infrastructure/IoCContainer';
 import { ShortcutActionType } from '@/shortcuts';
 
 const ipcDecorator =
@@ -44,11 +44,30 @@ const shortcutDecorator = (name: string) => (target: any, methodName: string, de
  */
 export const shortcut = (method: ShortcutActionType) => shortcutDecorator(method);
 
+const protocolDecorator =
+  (urlType: string, action: string) => (target: any, methodName: string, descriptor?: any) => {
+    const handlers = IoCContainer.protocolHandlers.get(target.constructor) || [];
+    handlers.push({ action, methodName, urlType });
+
+    IoCContainer.protocolHandlers.set(target.constructor, handlers);
+
+    return descriptor;
+  };
+
+/**
+ * Protocol handler decorator
+ * @param urlType 协议URL类型 (如: 'plugin')
+ * @param action 操作类型 (如: 'install')
+ */
+export const createProtocolHandler = (urlType: string) => (action: string) =>
+  protocolDecorator(urlType, action);
+
 interface IControllerModule {
   afterAppReady?(): void;
   app: App;
   beforeAppReady?(): void;
 }
+
 export class ControllerModule implements IControllerModule {
   constructor(public app: App) {
     this.app = app;

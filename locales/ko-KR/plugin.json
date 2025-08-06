@@ -1,45 +1,45 @@
 {
   "confirm": "확인",
   "debug": {
-    "arguments": "함수 호출 인수",
+    "arguments": "호출 매개변수",
     "function_call": "함수 호출",
     "off": "디버그 끄기",
     "on": "플러그인 호출 정보 보기",
-    "payload": "페이로드",
+    "payload": "플러그인 페이로드",
     "pluginState": "플러그인 상태",
-    "response": "응답",
-    "title": "플러그인 세부정보",
-    "tool_call": "도구 호출"
+    "response": "응답 결과",
+    "title": "플러그인 상세 정보",
+    "tool_call": "도구 호출 요청"
   },
   "detailModal": {
     "customPlugin": {
       "description": "자세한 내용은 편집 페이지에서 확인하세요",
       "editBtn": "지금 편집",
-      "title": "이것은 사용자 정의 플러그인입니다"
+      "title": "사용자 정의 플러그인입니다"
     },
     "emptyState": {
-      "description": "이 플러그인을 설치한 후 플러그인 기능과 설정 옵션을 확인하세요",
-      "title": "설치 후 플러그인 세부 정보 보기"
+      "description": "플러그인 기능과 설정 옵션을 보려면 먼저 이 플러그인을 설치하세요",
+      "title": "설치 후 플러그인 상세 정보 보기"
     },
     "info": {
       "description": "API 설명",
       "name": "API 이름"
     },
     "tabs": {
-      "info": "플러그인 능력",
+      "info": "플러그인 기능",
       "manifest": "설치 파일",
       "settings": "설정"
     },
-    "title": "플러그인 상세정보"
+    "title": "플러그인 상세 정보"
   },
   "dev": {
-    "confirmDeleteDevPlugin": "로컬 플러그인을 삭제하시겠습니까? 삭제 후에는 복구할 수 없습니다.",
+    "confirmDeleteDevPlugin": "이 로컬 플러그인을 삭제하면 복구할 수 없습니다. 삭제하시겠습니까?",
     "customParams": {
       "useProxy": {
-        "label": "프록시 사용 (크로스 도메인 오류가 발생할 경우 이 옵션을 활성화한 후 다시 설치해 보세요)"
+        "label": "프록시를 통해 설치 (교차 출처 오류 발생 시 이 옵션을 켜고 다시 설치해 보세요)"
       }
     },
-    "deleteSuccess": "플러그인이 성공적으로 삭제되었습니다.",
+    "deleteSuccess": "플러그인 삭제 성공",
     "manifest": {
       "identifier": {
         "desc": "플러그인의 고유 식별자",
@@ -61,19 +61,19 @@
         "title": "고급 설정"
       },
       "args": {
-        "desc": "실행 명령에 전달할 매개변수 목록으로, 일반적으로 여기에서 MCP 서버 이름 또는 시작 스크립트 경로를 입력합니다.",
+        "desc": "명령 실행에 전달되는 매개변수 목록, 일반적으로 MCP 서버 이름 또는 시작 스크립트 경로를 입력",
         "label": "명령 매개변수",
         "placeholder": "예: mcp-hello-world",
         "required": "시작 매개변수를 입력하세요"
       },
       "auth": {
         "bear": "API 키",
-        "desc": "MCP 서버의 인증 방식을 선택하세요",
+        "desc": "MCP 서버 인증 방식 선택",
         "label": "인증 유형",
         "none": "인증 불필요",
         "placeholder": "인증 유형을 선택하세요",
         "token": {
-          "desc": "API 키 또는 Bearer 토큰을 입력하세요",
+          "desc": "API 키 또는 Bearer 토큰 입력",
           "label": "API 키",
           "placeholder": "sk-xxxxx",
           "required": "인증 토큰을 입력하세요"
@@ -86,34 +86,34 @@
         "desc": "MCP STDIO 서버를 시작하는 실행 파일 또는 스크립트",
         "label": "명령",
         "placeholder": "예: npx / uv / docker 등",
-        "required": "시작 명령어를 입력하세요"
+        "required": "시작 명령을 입력하세요"
       },
       "desc": {
-        "desc": "플러그인에 대한 설명 추가",
+        "desc": "플러그인 설명 추가",
         "label": "플러그인 설명",
-        "placeholder": "이 플러그인의 사용 설명 및 상황 등의 정보를 추가하세요"
+        "placeholder": "플러그인 사용법과 시나리오 등 정보 보충"
       },
       "endpoint": {
-        "desc": "당신의 MCP 스트리밍 HTTP 서버 주소를 입력하세요",
+        "desc": "MCP Streamable HTTP 서버 주소 입력",
         "label": "MCP 엔드포인트 URL"
       },
       "env": {
         "add": "행 추가",
-        "desc": "MCP 서버에 필요한 환경 변수를 입력하세요.",
-        "duplicateKeyError": "필드 키는 고유해야 합니다.",
-        "formValidationFailed": "양식 검증 실패, 매개변수 형식을 확인하세요.",
-        "keyRequired": "필드 키는 비워둘 수 없습니다.",
+        "desc": "MCP 서버에 필요한 환경 변수 입력",
+        "duplicateKeyError": "키는 고유해야 합니다",
+        "formValidationFailed": "폼 검증 실패, 매개변수 형식을 확인하세요",
+        "keyRequired": "키는 비워둘 수 없습니다",
         "label": "MCP 서버 환경 변수",
-        "stringifyError": "매개변수를 직렬화할 수 없습니다. 매개변수 형식을 확인하세요."
+        "stringifyError": "매개변수를 직렬화할 수 없습니다, 형식을 확인하세요"
       },
       "headers": {
         "add": "행 추가",
-        "desc": "요청 헤더를 입력하세요",
+        "desc": "요청 헤더 입력",
         "label": "HTTP 헤더"
       },
       "identifier": {
-        "desc": "당신의 MCP 플러그인에 이름을 지정하세요, 영어 문자 사용 필요",
-        "invalid": "영어 문자, 숫자, - 및 _ 기호만 입력할 수 있습니다",
+        "desc": "MCP 플러그인 이름 지정, 영문자 사용 필요",
+        "invalid": "식별자는 문자, 숫자, 하이픈, 밑줄만 포함할 수 있습니다",
         "label": "MCP 플러그인 이름",
         "placeholder": "예: my-mcp-plugin",
         "required": "MCP 서비스 식별자를 입력하세요"
@@ -121,63 +121,63 @@
       "previewManifest": "플러그인 설명 파일 미리보기",
       "quickImport": "JSON 구성 빠른 가져오기",
       "quickImportError": {
-        "empty": "입력 내용이 비어 있을 수 없습니다",
-        "invalidJson": "유효하지 않은 JSON 형식입니다",
+        "empty": "입력 내용이 비어 있습니다",
+        "invalidJson": "유효하지 않은 JSON 형식",
         "invalidStructure": "JSON 형식이 유효하지 않습니다"
       },
-      "stdioNotSupported": "현재 환경에서는 stdio 유형의 MCP 플러그인이 지원되지 않습니다",
+      "stdioNotSupported": "현재 환경은 stdio 유형 MCP 플러그인을 지원하지 않습니다",
       "testConnection": "연결 테스트",
-      "testConnectionTip": "연결 테스트가 성공해야 MCP 플러그인을 정상적으로 사용할 수 있습니다",
+      "testConnectionTip": "연결 테스트 성공 후 MCP 플러그인을 정상 사용할 수 있습니다",
       "type": {
-        "desc": "MCP 플러그인의 통신 방식을 선택하세요, 웹 버전은 스트리밍 HTTP만 지원합니다",
-        "httpFeature1": "웹 버전과 데스크톱 버전 호환",
-        "httpFeature2": "원격 MCP 서버에 연결, 추가 설치 및 구성 필요 없음",
+        "desc": "MCP 플러그인 통신 방식 선택, 웹 버전은 Streamable HTTP만 지원",
+        "httpFeature1": "웹 및 데스크톱 호환",
+        "httpFeature2": "원격 MCP 서버 연결, 추가 설치 불필요",
         "httpShortDesc": "스트리밍 HTTP 기반 통신 프로토콜",
         "label": "MCP 플러그인 유형",
         "stdioFeature1": "더 낮은 통신 지연, 로컬 실행에 적합",
-        "stdioFeature2": "로컬에 MCP 서버를 설치하고 실행해야 함",
+        "stdioFeature2": "로컬에 MCP 서버 설치 및 실행 필요",
         "stdioNotAvailable": "STDIO 모드는 데스크톱 버전에서만 사용 가능",
-        "stdioShortDesc": "표준 입력 및 출력을 기반으로 한 통신 프로토콜",
+        "stdioShortDesc": "표준 입출력 기반 통신 프로토콜",
         "title": "MCP 플러그인 유형"
       },
       "url": {
-        "desc": "MCP 서버의 스트리밍 HTTP 주소를 입력하세요. SSE 모드는 지원하지 않습니다.",
+        "desc": "MCP 서버 Streamable HTTP 주소 입력, SSE 모드 미지원",
         "invalid": "유효한 URL 주소를 입력하세요",
-        "label": "HTTP 엔드포인트 URL",
+        "label": "Streamable HTTP 엔드포인트 URL",
         "required": "MCP 서비스 URL을 입력하세요"
       }
     },
     "meta": {
       "author": {
-        "desc": "플러그인 작성자",
-        "label": "작성자"
+        "desc": "플러그인 제작자",
+        "label": "제작자"
       },
       "avatar": {
-        "desc": "플러그인 아이콘으로는 Emoji 또는 URL을 사용할 수 있습니다.",
+        "desc": "플러그인 아이콘, 이모지 또는 URL 사용 가능",
         "label": "아이콘"
       },
       "description": {
         "desc": "플러그인 설명",
         "label": "설명",
-        "placeholder": "검색 엔진에서 정보 가져오기"
+        "placeholder": "검색 엔진에서 정보 조회"
       },
-      "formFieldRequired": "이 필드는 필수 입력 사항입니다.",
+      "formFieldRequired": "이 필드는 필수입니다",
       "homepage": {
         "desc": "플러그인 홈페이지",
         "label": "홈페이지"
       },
       "identifier": {
-        "desc": "플러그인의 고유 식별자는 manifest에서 자동으로 인식됩니다.",
-        "errorDuplicate": "식별자가 이미 있는 플러그인과 중복되었습니다. 식별자를 수정해주세요.",
+        "desc": "플러그인 고유 식별자, manifest에서 자동 인식",
+        "errorDuplicate": "식별자가 기존 플러그인과 중복됩니다, 수정하세요",
         "label": "식별자",
-        "pattenErrorMessage": "영문자, 숫자, - 및 _만 입력할 수 있습니다."
+        "pattenErrorMessage": "영문자, 숫자, - 및 _ 만 입력할 수 있습니다"
       },
       "lobe": "{{appName}} 플러그인",
       "manifest": {
-        "desc": "{{appName}}는 이 링크를 통해 플러그인을 설치합니다.",
-        "label": "Manifest 파일 URL",
+        "desc": "{{appName}}가 이 링크를 통해 플러그인을 설치합니다",
+        "label": "플러그인 설명 파일 (Manifest) URL",
         "preview": "Manifest 미리보기",
-        "refresh": "새로 고침"
+        "refresh": "새로고침"
       },
       "openai": "OpenAI 플러그인",
       "title": {
@@ -187,28 +187,28 @@
       }
     },
     "metaConfig": "플러그인 메타 정보 구성",
-    "modalDesc": "사용자 정의 플러그인을 추가하면 플러그인 개발을 검증하거나 세션에서 직접 사용할 수 있습니다. 플러그인 개발은 <1>개발 문서↗</>를 참조하세요.",
+    "modalDesc": "사용자 정의 플러그인 추가 후 플러그인 개발 검증 및 대화에서 직접 사용 가능. 플러그인 개발은 <1>개발 문서↗</> 참고",
     "openai": {
       "importUrl": "URL 링크에서 가져오기",
       "schema": "스키마"
     },
     "preview": {
       "api": {
-        "noParams": "이 도구에는 매개변수가 없습니다",
+        "noParams": "이 도구는 매개변수가 없습니다",
         "noResults": "검색 조건에 맞는 API를 찾을 수 없습니다",
         "params": "매개변수:",
         "searchPlaceholder": "도구 검색..."
       },
-      "card": "플러그인 미리보기",
+      "card": "플러그인 미리보기 표시",
       "desc": "플러그인 설명 미리보기",
       "empty": {
-        "desc": "구성을 완료한 후, 이곳에서 플러그인이 지원하는 도구 기능을 미리 볼 수 있습니다",
+        "desc": "구성 완료 후 이곳에서 플러그인 지원 도구 기능을 미리볼 수 있습니다",
         "title": "플러그인 구성 후 미리보기 시작"
       },
       "title": "플러그인 이름 미리보기"
     },
     "save": "플러그인 설치",
-    "saveSuccess": "플러그인 설정이 성공적으로 저장되었습니다.",
+    "saveSuccess": "플러그인 설정 저장 성공",
     "tabs": {
       "manifest": "기능 설명 목록 (Manifest)",
       "meta": "플러그인 메타 정보"
@@ -218,21 +218,21 @@
       "edit": "사용자 정의 플러그인 편집"
     },
     "type": {
-      "lobe": "LobeChat 플러그인",
+      "lobe": "{{appName}} 플러그인",
       "openai": "OpenAI 플러그인"
     },
     "update": "업데이트",
-    "updateSuccess": "플러그인 설정이 성공적으로 업데이트되었습니다."
+    "updateSuccess": "플러그인 설정 업데이트 성공"
   },
   "error": {
-    "fetchError": "해당 manifest 링크를 요청하는 중 오류가 발생했습니다. 링크의 유효성을 확인하고, 링크가 크로스 도메인 액세스를 허용하는지 확인하세요.",
+    "fetchError": "manifest 링크 요청 실패, 링크 유효성 및 교차 출처 접근 허용 여부를 확인하세요",
     "installError": "플러그인 {{name}} 설치 실패",
-    "manifestInvalid": "manifest가 규격에 맞지 않습니다. 유효성 검사 결과: \n\n {{error}}",
-    "noManifest": "설명 파일이 없습니다",
-    "openAPIInvalid": "OpenAPI 파싱에 실패했습니다. 오류: \n\n {{error}}",
-    "reinstallError": "플러그인 {{name}} 다시 설치 중 오류가 발생했습니다.",
-    "testConnectionFailed": "매니페스트를 가져오는 데 실패했습니다: {{error}}",
-    "urlError": "이 링크는 JSON 형식의 내용을 반환하지 않습니다. 유효한 링크인지 확인하세요."
+    "manifestInvalid": "manifest 규격 불일치, 검증 결과: \n\n {{error}}",
+    "noManifest": "설명 파일이 존재하지 않습니다",
+    "openAPIInvalid": "OpenAPI 파싱 실패, 오류: \n\n {{error}}",
+    "reinstallError": "플러그인 {{name}} 새로고침 실패",
+    "testConnectionFailed": "Manifest 가져오기 실패: {{error}}",
+    "urlError": "링크가 JSON 형식 내용을 반환하지 않습니다, 유효한 링크인지 확인하세요"
   },
   "inspector": {
     "args": "매개변수 목록 보기",
@@ -241,7 +241,7 @@
   "list": {
     "item": {
       "deprecated.title": "삭제됨",
-      "local.config": "구성",
+      "local.config": "설정",
       "local.title": "사용자 정의"
     }
   },
@@ -254,7 +254,7 @@
       "listLocalFiles": "파일 목록 보기",
       "moveLocalFiles": "파일 이동",
       "readLocalFile": "파일 내용 읽기",
-      "renameLocalFile": "이름 바꾸기",
+      "renameLocalFile": "파일 이름 변경",
       "searchLocalFiles": "파일 검색",
       "writeLocalFile": "파일 쓰기"
     },
@@ -263,31 +263,31 @@
   "mcpInstall": {
     "CHECKING_INSTALLATION": "설치 환경 확인 중...",
     "COMPLETED": "설치 완료",
-    "CONFIGURATION_REQUIRED": "관련 구성을 완료한 후 설치를 계속 진행하세요",
+    "CONFIGURATION_REQUIRED": "관련 설정을 완료한 후 설치를 계속하세요",
     "ERROR": "설치 오류",
     "FETCHING_MANIFEST": "플러그인 설명 파일 가져오는 중...",
     "GETTING_SERVER_MANIFEST": "MCP 서버 초기화 중...",
     "INSTALLING_PLUGIN": "플러그인 설치 중...",
-    "configurationDescription": "이 MCP 플러그인은 정상 작동을 위해 구성 매개변수가 필요합니다. 필수 구성 정보를 입력하세요.",
-    "configurationRequired": "플러그인 매개변수 구성",
-    "continueInstall": "설치 계속하기",
-    "dependenciesDescription": "이 플러그인은 정상 작동을 위해 다음 시스템 종속 항목 설치가 필요합니다. 안내에 따라 누락된 종속 항목을 설치한 후 다시 확인하여 설치를 계속 진행하세요.",
-    "dependenciesRequired": "플러그인 시스템 종속 항목을 설치하세요",
+    "configurationDescription": "이 MCP 플러그인은 정상 작동을 위해 설정 매개변수가 필요합니다. 필수 정보를 입력하세요",
+    "configurationRequired": "플러그인 매개변수 설정",
+    "continueInstall": "설치 계속",
+    "dependenciesDescription": "이 플러그인은 정상 작동을 위해 다음 시스템 의존성이 필요합니다. 안내에 따라 누락된 의존성을 설치한 후 다시 확인하여 설치를 계속하세요.",
+    "dependenciesRequired": "플러그인 시스템 의존성 설치 필요",
     "dependencyStatus": {
       "installed": "설치됨",
-      "notInstalled": "설치되지 않음",
+      "notInstalled": "미설치",
       "requiredVersion": "필요 버전: {{version}}"
     },
     "errorDetails": {
       "args": "매개변수",
-      "command": "명령어",
+      "command": "명령",
       "connectionParams": "연결 매개변수",
       "env": "환경 변수",
       "errorOutput": "오류 로그",
       "exitCode": "종료 코드",
-      "hideDetails": "세부 정보 숨기기",
+      "hideDetails": "상세 정보 숨기기",
       "originalError": "원본 오류",
-      "showDetails": "세부 정보 보기"
+      "showDetails": "상세 정보 보기"
     },
     "errorTypes": {
       "AUTHORIZATION_ERROR": "권한 인증 오류",
@@ -297,15 +297,75 @@
       "UNKNOWN_ERROR": "알 수 없는 오류",
       "VALIDATION_ERROR": "매개변수 검증 실패"
     },
-    "installError": "MCP 플러그인 설치 실패, 실패 원인: {{detail}}",
+    "installError": "MCP 플러그인 설치 실패, 원인: {{detail}}",
     "installMethods": {
       "manual": "수동 설치:",
       "recommended": "권장 설치 방법:"
     },
-    "recheckDependencies": "다시 확인",
+    "recheckDependencies": "의존성 재확인",
     "skipDependencies": "확인 건너뛰기"
   },
   "pluginList": "플러그인 목록",
+  "protocolInstall": {
+    "actions": {
+      "install": "설치",
+      "installAnyway": "그래도 설치",
+      "installed": "설치됨"
+    },
+    "config": {
+      "args": "매개변수",
+      "command": "명령",
+      "env": "환경 변수",
+      "headers": "요청 헤더",
+      "title": "설정 정보",
+      "type": {
+        "http": "유형: HTTP",
+        "label": "유형",
+        "stdio": "유형: Stdio"
+      },
+      "url": "서비스 주소"
+    },
+    "custom": {
+      "badge": "사용자 정의 플러그인",
+      "security": {
+        "description": "이 플러그인은 공식 검증을 거치지 않았으며, 설치 시 보안 위험이 있을 수 있습니다! 플러그인 출처를 신뢰하는지 확인하세요.",
+        "title": "⚠️ 보안 위험 경고"
+      },
+      "title": "사용자 정의 플러그인 설치"
+    },
+    "marketplace": {
+      "title": "서드파티 플러그인 설치",
+      "trustedBy": "{{name}} 제공",
+      "unverified": {
+        "title": "검증되지 않은 서드파티 플러그인",
+        "warning": "이 플러그인은 검증되지 않은 서드파티 마켓에서 제공됩니다. 설치 전에 출처를 신뢰하는지 확인하세요."
+      },
+      "verified": "검증됨"
+    },
+    "messages": {
+      "connectionTestFailed": "연결 테스트 실패",
+      "installError": "플러그인 설치 실패, 다시 시도하세요",
+      "installSuccess": "플러그인 {{name}} 설치 성공!",
+      "manifestError": "플러그인 상세 정보 가져오기 실패, 네트워크 연결을 확인 후 다시 시도하세요",
+      "manifestNotFound": "플러그인 설명 파일을 가져오지 못했습니다"
+    },
+    "meta": {
+      "author": "제작자",
+      "homepage": "홈페이지",
+      "identifier": "식별자",
+      "source": "출처",
+      "version": "버전"
+    },
+    "official": {
+      "badge": "LobeHub 공식 플러그인",
+      "description": "이 플러그인은 LobeHub 공식에서 개발 및 유지 관리하며, 엄격한 보안 검토를 거쳐 안심하고 사용할 수 있습니다.",
+      "loadingMessage": "플러그인 상세 정보 가져오는 중...",
+      "loadingTitle": "로딩 중",
+      "title": "공식 플러그인 설치"
+    },
+    "title": "MCP 플러그인 설치",
+    "warning": "⚠️ 이 플러그인의 출처를 신뢰하는지 확인하세요. 악성 플러그인은 시스템 보안에 위협이 될 수 있습니다."
+  },
   "search": {
     "apiName": {
       "crawlMultiPages": "여러 페이지 내용 읽기",
@@ -315,14 +375,14 @@
     "config": {
       "addKey": "키 추가",
       "close": "삭제",
-      "confirm": "구성이 완료되었습니다. 다시 시도하십시오."
+      "confirm": "설정 완료 및 재시도"
     },
     "crawPages": {
       "crawling": "링크 인식 중",
       "detail": {
         "preview": "미리보기",
         "raw": "원본 텍스트",
-        "tooLong": "텍스트 내용이 너무 깁니다. 대화 맥락은 앞의 {{characters}}자만 유지되며, 초과 부분은 대화 맥락에 포함되지 않습니다."
+        "tooLong": "텍스트가 너무 깁니다. 대화 컨텍스트는 처음 {{characters}}자만 유지하며, 초과 부분은 대화에 포함되지 않습니다."
       },
       "meta": {
         "crawler": "크롤링 모드",
@@ -330,14 +390,14 @@
       }
     },
     "searchxng": {
-      "baseURL": "입력하십시오",
-      "description": "SearchXNG의 URL을 입력하면 인터넷 검색을 시작할 수 있습니다.",
-      "keyPlaceholder": "키를 입력하십시오",
-      "title": "SearchXNG 검색 엔진 구성",
-      "unconfiguredDesc": "관리자에게 연락하여 SearchXNG 검색 엔진 구성을 완료하십시오. 인터넷 검색을 시작할 수 있습니다.",
-      "unconfiguredTitle": "SearchXNG 검색 엔진이 아직 구성되지 않았습니다."
+      "baseURL": "입력하세요",
+      "description": "SearchXNG 웹사이트 주소를 입력하면 네트워크 검색을 시작할 수 있습니다",
+      "keyPlaceholder": "키를 입력하세요",
+      "title": "SearchXNG 검색 엔진 설정",
+      "unconfiguredDesc": "관리자에게 문의하여 SearchXNG 검색 엔진 설정을 완료한 후 네트워크 검색을 시작하세요",
+      "unconfiguredTitle": "SearchXNG 검색 엔진 미설정"
     },
-    "title": "인터넷 검색"
+    "title": "네트워크 검색"
   },
   "setting": "플러그인 설정",
   "settings": {
@@ -352,17 +412,17 @@
     },
     "connection": {
       "args": "시작 매개변수",
-      "command": "시작 명령어",
+      "command": "시작 명령",
       "title": "연결 정보",
       "type": "연결 유형",
       "url": "서비스 주소"
     },
     "edit": "편집",
-    "envConfigDescription": "이 구성은 MCP 서버 시작 시 환경 변수로 프로세스에 전달됩니다",
-    "httpTypeNotice": "HTTP 유형의 MCP 플러그인은 현재 구성할 환경 변수가 없습니다",
+    "envConfigDescription": "이 설정은 MCP 서버 시작 시 환경 변수로 프로세스에 전달됩니다",
+    "httpTypeNotice": "HTTP 유형 MCP 플러그인은 현재 설정할 환경 변수가 없습니다",
     "indexUrl": {
       "title": "마켓 인덱스",
-      "tooltip": "온라인 편집은 지원되지 않습니다. 배포 환경 변수를 통해 설정해주세요."
+      "tooltip": "온라인 편집은 지원하지 않으며, 배포 시 환경 변수로 설정하세요"
     },
     "messages": {
       "connectionUpdateFailed": "연결 정보 업데이트 실패",
@@ -370,34 +430,34 @@
       "envUpdateFailed": "환경 변수 저장 실패",
       "envUpdateSuccess": "환경 변수 저장 성공"
     },
-    "modalDesc": "플러그인 마켓의 주소를 구성하면 사용자 정의 플러그인 마켓을 사용할 수 있습니다.",
+    "modalDesc": "플러그인 마켓 주소를 설정하면 사용자 정의 플러그인 마켓을 사용할 수 있습니다",
     "rules": {
       "argsRequired": "시작 매개변수를 입력하세요",
-      "commandRequired": "시작 명령어를 입력하세요",
+      "commandRequired": "시작 명령을 입력하세요",
       "urlRequired": "서비스 주소를 입력하세요"
     },
     "saveSettings": "설정 저장",
     "title": "플러그인 마켓 설정"
   },
-  "showInPortal": "작업 영역에서 자세히 확인하세요",
+  "showInPortal": "작업 공간에서 상세 정보를 확인하세요",
   "store": {
     "actions": {
       "cancel": "설치 취소",
-      "confirmUninstall": "이 플러그인을 제거하려고 합니다. 제거하면 플러그인 구성이 지워지므로 작업을 확인하세요.",
-      "detail": "상세정보",
+      "confirmUninstall": "이 플러그인을 제거하면 설정도 삭제됩니다. 계속하시겠습니까?",
+      "detail": "상세 정보",
       "install": "설치",
       "manifest": "설치 파일 편집",
       "settings": "설정",
       "uninstall": "제거"
     },
-    "communityPlugin": "커뮤니티 플러그인",
-    "customPlugin": "사용자 정의 플러그인",
+    "communityPlugin": "서드파티 커뮤니티",
+    "customPlugin": "사용자 정의",
     "empty": "설치된 플러그인이 없습니다",
-    "emptySelectHint": "플러그인을 선택하여 자세한 정보를 미리보기 하세요",
+    "emptySelectHint": "플러그인을 선택하여 상세 정보를 미리보세요",
     "installAllPlugins": "모두 설치",
-    "networkError": "플러그인 스토어를 가져오는 데 실패했습니다. 네트워크 연결을 확인한 후 다시 시도하십시오",
-    "placeholder": "플러그인 이름 또는 키워드를 검색하세요...",
-    "releasedAt": "{{createdAt}}에 출시",
+    "networkError": "플러그인 스토어를 불러오지 못했습니다. 네트워크 연결을 확인 후 다시 시도하세요",
+    "placeholder": "플러그인 이름, 설명 또는 키워드 검색...",
+    "releasedAt": "{{createdAt}}에 출시됨",
     "tabs": {
       "installed": "설치됨",
       "mcp": "MCP 플러그인",

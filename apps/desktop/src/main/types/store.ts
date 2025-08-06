@@ -11,6 +11,7 @@ export interface ElectronMainStore {
   networkProxy: NetworkProxySettings;
   shortcuts: Record<string, string>;
   storagePath: string;
+  themeMode: 'dark' | 'light' | 'auto';
 }
 
 export type StoreKey = keyof ElectronMainStore;

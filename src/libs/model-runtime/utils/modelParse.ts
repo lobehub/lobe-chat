@@ -7,7 +7,7 @@ export interface ModelProcessorConfig {
   visionKeywords?: readonly string[];
 }
 
-// 模型标签关键词配置
+// 模型能力标签关键词配置
 export const MODEL_LIST_CONFIGS = {
   anthropic: {
     functionCallKeywords: ['claude'],
@@ -30,8 +30,8 @@ export const MODEL_LIST_CONFIGS = {
   },
   openai: {
     excludeKeywords: ['audio'],
-    functionCallKeywords: ['4o', '4.1', 'o3', 'o4'],
-    reasoningKeywords: ['o1', 'o3', 'o4'],
+    functionCallKeywords: ['4o', '4.1', 'o3', 'o4', 'oss'],
+    reasoningKeywords: ['o1', 'o3', 'o4', 'oss'],
     visionKeywords: ['4o', '4.1', 'o4'],
   },
   qwen: {
@@ -64,7 +64,7 @@ export const MODEL_LIST_CONFIGS = {
   },
   zhipu: {
     functionCallKeywords: ['glm-4', 'glm-z1'],
-    reasoningKeywords: ['glm-zero', 'glm-z1'],
+    reasoningKeywords: ['glm-zero', 'glm-z1', 'glm-4.5'],
     visionKeywords: ['glm-4v'],
   },
 } as const;

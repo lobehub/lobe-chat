@@ -22,6 +22,7 @@ const useStyles = createStyles(({ css }) => ({
 }));
 
 const ActionButton = memo(() => {
+  const { t } = useTranslation(['discover', 'plugin']);
   const { identifier } = useDetailContext();
   const { styles } = useStyles();
   const [isLoading, setIsLoading] = useState(false);
@@ -31,8 +32,6 @@ const ActionButton = memo(() => {
     s.installMCPPlugin,
     s.uninstallMCPPlugin,
   ]);
-
-  const { t } = useTranslation(['discover', 'plugin']);
 
   const installPlugin = async () => {
     if (!identifier) return;
