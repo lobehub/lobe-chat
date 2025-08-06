@@ -178,13 +178,13 @@ export const createRouterRuntime = ({
 
     async models() {
       if (models && typeof models === 'function') {
-          // 如果是函数式配置，使用第一个 runtime 的 client 调用函数
-          const firstRuntime = this._runtimes[0]?.runtime;
-          if (firstRuntime && 'client' in firstRuntime) {
-            return await models({ client: (firstRuntime as any).client });
+          // 如果是函数式配置，使用最后一个 runtime 的 client 调用函数
+          const lastRuntime = this._runtimes.at(-1)?.runtime;
+          if (lastRuntime && 'client' in lastRuntime) {
+            return await models({ client: (lastRuntime as any).client });
           }
         }
-      return this._runtimes[0].runtime.models?.();
+      return this._runtimes.at(-1)?.runtime.models?.();
     }
 
     async embeddings(payload: EmbeddingsPayload, options?: EmbeddingsOptions) {

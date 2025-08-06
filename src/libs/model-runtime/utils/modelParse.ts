@@ -262,7 +262,7 @@ const processModelCard = (
     displayName: (model.displayName ?? knownModel?.displayName ?? model.id)
       .replaceAll(/\s*[(（][^)）]*[)）]\s*/g, '')
       .trim(), // 去除括号内容
-    enabled: knownModel?.enabled || false,
+    enabled: model?.enabled || false,
     functionCall:
       model.functionCall ??
       knownModel?.abilities?.functionCall ??
