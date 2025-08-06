@@ -39,7 +39,6 @@ const anthropicChatModels: AIChatModelCard[] = [
     description:
       'Claude Opus 4 是 Anthropic 用于处理高度复杂任务的最强大模型。它在性能、智能、流畅性和理解力方面表现卓越。',
     displayName: 'Claude Opus 4',
-    enabled: true,
     id: 'claude-opus-4-20250514',
     maxOutput: 32_000,
     pricing: {
