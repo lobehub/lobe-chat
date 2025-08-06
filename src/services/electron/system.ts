@@ -26,7 +26,9 @@ class ElectronSystemService {
     return dispatch('minimizeWindow');
   }
 
-  // Add other system-related service methods here if needed in the future
+  showContextMenu = async (type: string, data?: any) => {
+    return dispatch('showContextMenu', { data, type });
+  };
 }
 
 // Export a singleton instance of the service
