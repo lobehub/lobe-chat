@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.110.1](https://github.com/lobehub/lobe-chat/compare/v1.110.0...v1.110.1)
+
+<sup>Released on **2025-08-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix remote avatar broken in desktop again.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix remote avatar broken in desktop again, closes [#8688](https://github.com/lobehub/lobe-chat/issues/8688) ([41b4363](https://github.com/lobehub/lobe-chat/commit/41b4363))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.110.0](https://github.com/lobehub/lobe-chat/compare/v1.109.1...v1.110.0)
 
 <sup>Released on **2025-08-06**</sup>
