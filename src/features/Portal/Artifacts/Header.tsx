@@ -1,4 +1,4 @@
-import { ArtifactType } from '@lobechat/types/artifact';
+import { ArtifactType } from '@lobechat/types';
 import { ActionIcon, Icon, Segmented, Text } from '@lobehub/ui';
 import { ConfigProvider } from 'antd';
 import { cx } from 'antd-style';

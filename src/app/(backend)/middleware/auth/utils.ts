@@ -1,5 +1,5 @@
 import { type AuthObject } from '@clerk/backend';
-import { ChatErrorType } from '@lobechat/types/fetch';
+import { ChatErrorType } from '@lobechat/types';
 
 import { enableClerk, enableNextAuth } from '@/const/auth';
 import { getAppConfig } from '@/envs/app';

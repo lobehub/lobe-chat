@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { getAuth } from '@clerk/nextjs/server';
-import { ChatErrorType } from '@lobechat/types/fetch';
+import { ChatErrorType } from '@lobechat/types';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { checkAuthMethod } from '@/app/(backend)/middleware/auth/utils';

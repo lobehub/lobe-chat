@@ -1,4 +1,4 @@
-import { ChatErrorType, ErrorType } from '@lobechat/types/fetch';
+import { ChatErrorType, ErrorType } from '@lobechat/types';
 import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
 import type { AlertProps } from '@lobehub/ui';
 import { Skeleton } from 'antd';

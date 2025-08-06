@@ -1,7 +1,7 @@
+import { TraceNameMap } from '@lobechat/types';
 import { StateCreator } from 'zustand/vanilla';
 
 import { chainSummaryHistory } from '@/chains/summaryHistory';
-import { TraceNameMap } from '@/const/trace';
 import { chatService } from '@/services/chat';
 import { topicService } from '@/services/topic';
 import { ChatStore } from '@/store/chat';

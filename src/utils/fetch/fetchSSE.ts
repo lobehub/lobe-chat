@@ -1,4 +1,4 @@
-import { ChatErrorType } from '@lobechat/types/fetch';
+import { ChatErrorType } from '@lobechat/types';
 
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/const/trace';
