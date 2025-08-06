@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.110.3](https://github.com/lobehub/lobe-chat/compare/v1.110.2...v1.110.3)
+
+<sup>Released on **2025-08-06**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix provider setting page hydration error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix provider setting page hydration error, closes [#8695](https://github.com/lobehub/lobe-chat/issues/8695) ([88e7d2a](https://github.com/lobehub/lobe-chat/commit/88e7d2a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.110.2](https://github.com/lobehub/lobe-chat/compare/v1.110.1...v1.110.2)
 
 <sup>Released on **2025-08-06**</sup>
