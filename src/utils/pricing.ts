@@ -184,11 +184,3 @@ export function getCachedAudioInputUnitRate(pricing?: Pricing): number | undefin
     }
   }
 }
-
-/**
- * Format price by currency
- */
-export function formatPriceByCurrency(rate: number, currency?: string): string {
-  const currencySymbol = currency === 'CNY' ? '¥' : '$';
-  return `${currencySymbol}${rate.toFixed(4)} / 1K tokens`;
-}
