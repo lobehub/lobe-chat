@@ -6,7 +6,6 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { chainSummaryTitle } from '@/chains/summaryTitle';
 import { LOADING_FLAT, THREAD_DRAFT_ID } from '@/const/message';
-import { isDeprecatedEdition } from '@/const/version';
 import { useClientDataSWR } from '@/libs/swr';
 import { chatService } from '@/services/chat';
 import { threadService } from '@/services/thread';
@@ -212,7 +211,7 @@ export const chatThreadMessage: StateCreator<
 
   useFetchThreads: (enable, topicId) =>
     useClientDataSWR<ThreadItem[]>(
-      enable && !!topicId && !isDeprecatedEdition ? [SWR_USE_FETCH_THREADS, topicId] : null,
+      enable && !!topicId ? [SWR_USE_FETCH_THREADS, topicId] : null,
       async ([, topicId]: [string, string]) => threadService.getThreads(topicId),
       {
         onSuccess: (threads) => {

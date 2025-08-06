@@ -9,7 +9,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import { ProductLogo } from '@/components/Branding';
 import { MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
-import SyncStatusInspector from '@/features/SyncStatusInspector';
 import UserAvatar from '@/features/User/UserAvatar';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
@@ -18,7 +17,7 @@ import { mobileHeaderSticky } from '@/styles/mobileHeader';
 const Header = memo(() => {
   const [createSession] = useSessionStore((s) => [s.createSession]);
   const router = useRouter();
-  const { enableWebrtc, showCreateSession } = useServerConfigStore(featureFlagsSelectors);
+  const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
 
   return (
     <ChatHeader
@@ -26,7 +25,6 @@ const Header = memo(() => {
         <Flexbox align={'center'} gap={8} horizontal style={{ marginLeft: 8 }}>
           <UserAvatar onClick={() => router.push('/me')} size={32} />
           <ProductLogo type={'text'} />
-          {enableWebrtc && <SyncStatusInspector placement={'bottom'} />}
         </Flexbox>
       }
       right={

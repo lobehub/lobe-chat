@@ -9,19 +9,16 @@ import { Center } from 'react-layout-kit';
 
 import DataStyleModal from '@/components/DataStyleModal';
 import { importService } from '@/services/import';
-import { ImportResult, ImportResults } from '@/services/import/_deprecated';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 import { ImportPgDataStructure } from '@/types/export';
-import { ConfigFile } from '@/types/exportConfig';
-import { ErrorShape, FileUploadState, ImportStage, OnImportCallbacks } from '@/types/importer';
+import { ErrorShape, FileUploadState, ImportStage } from '@/types/importer';
 
 import ImportError from './Error';
 import { FileUploading } from './FileUploading';
 import ImportPreviewModal from './ImportDetail';
 import DataLoading from './Loading';
 import SuccessResult from './SuccessResult';
-import { importConfigFile } from './_deprecated';
 import { parseConfigFile } from './config';
 
 const useStyles = createStyles(({ css }) => ({
@@ -55,7 +52,7 @@ const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
 
   const [fileUploadingState, setUploadingState] = useState<FileUploadState | undefined>();
   const [importError, setImportError] = useState<ErrorShape | undefined>();
-  const [importResults, setImportResults] = useState<ImportResults | undefined>();
+  const [importResults, setImportResults] = useState<any | undefined>();
   const [showImportModal, setShowImportModal] = useState(false);
   const [importPgData, setImportPgData] = useState<ImportPgDataStructure | undefined>(undefined);
 
@@ -68,7 +65,7 @@ const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
 
     return Object.entries(res)
       .filter(([, v]) => !!v)
-      .map(([item, value]: [string, ImportResult]) => ({
+      .map(([item, value]: [string, any]) => ({
         added: value.added,
         error: value.errors,
         skips: value.skips,
@@ -158,58 +155,6 @@ const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
           if (!config) return false;
 
           if (!('schemaHash' in config)) {
-            // TODO: remove in V2
-            await importConfigFile(file, async (config) => {
-              setImportState(ImportStage.Preparing);
-              console.log(config);
-
-              const importConfigState = async (
-                config: ConfigFile,
-                callbacks?: OnImportCallbacks,
-              ): Promise<void> => {
-                if (config.exportType === 'settings') {
-                  await importService.importSettings(config.state.settings);
-                  callbacks?.onStageChange?.(ImportStage.Success);
-                  return;
-                }
-
-                if (config.exportType === 'all') {
-                  await importService.importSettings(config.state.settings);
-                }
-
-                await importService.importData(
-                  {
-                    messages: (config.state as any).messages || [],
-                    sessionGroups: (config.state as any).sessionGroups || [],
-                    sessions: (config.state as any).sessions || [],
-                    topics: (config.state as any).topics || [],
-                    version: config.version,
-                  },
-                  callbacks,
-                );
-              };
-
-              await importConfigState(config, {
-                onError: (error) => {
-                  setImportError(error);
-                },
-                onFileUploading: (state) => {
-                  setUploadingState(state);
-                },
-                onStageChange: (stage) => {
-                  setImportState(stage);
-                },
-                onSuccess: (data, duration) => {
-                  if (data) setImportResults(data);
-                  setDuration(duration);
-                },
-              });
-
-              await refreshSessions();
-              await refreshMessages();
-              await refreshTopics();
-            });
-
             return false;
           }
 

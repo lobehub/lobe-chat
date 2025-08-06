@@ -1,13 +1,8 @@
 export { authSelectors, userProfileSelectors } from './slices/auth/selectors';
-export {
-  keyVaultsConfigSelectors,
-  modelConfigSelectors,
-  modelProviderSelectors,
-} from './slices/modelList/selectors';
 export { preferenceSelectors } from './slices/preference/selectors';
 export {
+  keyVaultsConfigSelectors,
   settingsSelectors,
   systemAgentSelectors,
   userGeneralSettingsSelectors,
 } from './slices/settings/selectors';
-export { syncSettingsSelectors } from './slices/sync/selectors';
