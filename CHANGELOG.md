@@ -2,6 +2,40 @@
 
 # Changelog
 
+### [Version 1.109.1](https://github.com/lobehub/lobe-chat/compare/v1.109.0...v1.109.1)
+
+<sup>Released on **2025-08-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix ollama model output without thinking.
+
+#### 💄 Styles
+
+- **misc**: Add Claude Opus 4.1 model, update i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix ollama model output without thinking, closes [#8686](https://github.com/lobehub/lobe-chat/issues/8686) ([d95c7f4](https://github.com/lobehub/lobe-chat/commit/d95c7f4))
+
+#### Styles
+
+- **misc**: Add Claude Opus 4.1 model, closes [#8683](https://github.com/lobehub/lobe-chat/issues/8683) ([ceb5289](https://github.com/lobehub/lobe-chat/commit/ceb5289))
+- **misc**: Update i18n, closes [#8684](https://github.com/lobehub/lobe-chat/issues/8684) ([926fa9a](https://github.com/lobehub/lobe-chat/commit/926fa9a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.109.0](https://github.com/lobehub/lobe-chat/compare/v1.108.2...v1.109.0)
 
 <sup>Released on **2025-08-05**</sup>
