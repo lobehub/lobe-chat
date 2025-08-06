@@ -1,9 +1,9 @@
+import { ChatErrorType } from '@lobechat/types/fetch';
 import { NextResponse } from 'next/server';
 
 import { checkAuth } from '@/app/(backend)/middleware/auth';
 import { ChatCompletionErrorPayload, ModelProvider } from '@/libs/model-runtime';
 import { initModelRuntimeWithUserPayload } from '@/server/modules/ModelRuntime';
-import { ChatErrorType } from '@/types/fetch';
 import { createErrorResponse } from '@/utils/errorResponse';
 
 export const runtime = 'edge';

@@ -13,5 +13,8 @@
         "./src/*/index.ts"
       ]
     }
+  },
+  "dependencies": {
+    "@lobehub/chat-plugin-sdk": "^1.32.4"
   }
 }

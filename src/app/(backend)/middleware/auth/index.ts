@@ -1,4 +1,5 @@
 import { AuthObject } from '@clerk/backend';
+import { ChatErrorType } from '@lobechat/types/fetch';
 import { NextRequest } from 'next/server';
 
 import {
@@ -11,7 +12,6 @@ import {
 import { ClerkAuth } from '@/libs/clerk-auth';
 import { AgentRuntimeError, ChatCompletionErrorPayload, ModelRuntime } from '@/libs/model-runtime';
 import { validateOIDCJWT } from '@/libs/oidc-provider/jwt';
-import { ChatErrorType } from '@/types/fetch';
 import { createErrorResponse } from '@/utils/errorResponse';
 import { getXorPayload } from '@/utils/server/xor';
 
