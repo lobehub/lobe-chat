@@ -35,7 +35,11 @@
     "========================= production:local =======================": "",
     "production:ios:local": "eas build --platform ios --profile production --local",
     "production:android:local": "eas build --platform android --profile production --local",
-    "production:local": "npm run build:android:local && npm run build:ios:local"
+    "production:local": "npm run build:android:local && npm run build:ios:local",
+    "========================= submit =======================": "",
+    "submit:ios": "eas submit --platform ios",
+    "submit:android": "eas submit --platform android",
+    "submit": "npm run submit:ios & npm run submit:android"
   },
   "dependencies": {
     "@csark0812/zustand-expo-devtools": "^2.0.2",
