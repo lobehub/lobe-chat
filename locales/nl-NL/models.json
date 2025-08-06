@@ -74,6 +74,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 is een MoE-model dat zelf is ontwikkeld door DeepSeek Company. De prestaties van DeepSeek-V3 overtreffen die van andere open-source modellen zoals Qwen2.5-72B en Llama-3.1-405B, en presteert op het gebied van prestaties gelijkwaardig aan de wereldtop gesloten modellen zoals GPT-4o en Claude-3.5-Sonnet."
   },
+  "DeepSeek-V3-Fast": {
+    "description": "Modelleverancier: sophnet-platform. DeepSeek V3 Fast is de high-TPS snelle versie van DeepSeek V3 0324, volledig niet-gequantiseerd, met sterkere codeer- en wiskundige capaciteiten en snellere respons!"
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite biedt een ultieme responssnelheid en een betere prijs-kwaliteitverhouding, waardoor het flexibele keuzes biedt voor verschillende klantenscenario's. Ondersteunt redeneren en fijn afstemmen met een contextvenster van 128k."
   },
@@ -608,6 +611,9 @@
   "aya:35b": {
     "description": "Aya 23 is een meertalig model van Cohere, ondersteunt 23 talen en biedt gemak voor diverse taaltoepassingen."
   },
+  "azure-DeepSeek-R1-0528": {
+    "description": "Gehost en geleverd door Microsoft; het DeepSeek R1-model heeft een kleine versie-upgrade ondergaan, de huidige versie is DeepSeek-R1-0528. In de nieuwste update heeft DeepSeek R1 door het toevoegen van rekenkracht en het introduceren van algoritmische optimalisaties in de natrainingsfase de inferentiediepte en -capaciteit aanzienlijk verbeterd. Dit model presteert uitstekend op meerdere benchmarks zoals wiskunde, programmeren en algemene logica, en de algehele prestaties benaderen toonaangevende modellen zoals O3 en Gemini 2.5 Pro."
+  },
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B is een open-source, commercieel bruikbaar groot taalmodel ontwikkeld door Baichuan Intelligent, met 13 miljard parameters, dat de beste prestaties in zijn klasse heeft behaald op gezaghebbende Chinese en Engelse benchmarks."
   },
@@ -667,6 +673,9 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet biedt een ideale balans tussen intelligentie en snelheid voor bedrijfswerkbelastingen. Het biedt maximale bruikbaarheid tegen een lagere prijs, betrouwbaar en geschikt voor grootschalige implementatie."
+  },
+  "claude-opus-4-1-20250805": {
+    "description": "Claude Opus 4.1 is het nieuwste en krachtigste model van Anthropic voor het verwerken van zeer complexe taken. Het blinkt uit in prestaties, intelligentie, vloeiendheid en begrip."
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 is het krachtigste model van Anthropic voor het verwerken van zeer complexe taken. Het presteert uitstekend op het gebied van prestaties, intelligentie, vloeiendheid en begrip."
@@ -2123,6 +2132,12 @@
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini is het nieuwste model van OpenAI, gelanceerd na GPT-4 Omni, dat tekst- en afbeeldingsinvoer ondersteunt en tekstuitvoer genereert. Als hun meest geavanceerde kleine model is het veel goedkoper dan andere recente toonaangevende modellen en meer dan 60% goedkoper dan GPT-3.5 Turbo. Het behoudt de meest geavanceerde intelligentie met een aanzienlijke prijs-kwaliteitverhouding. GPT-4o mini behaalde 82% op de MMLU-test en staat momenteel hoger in chatvoorkeuren dan GPT-4."
   },
+  "openai/gpt-oss-120b": {
+    "description": "OpenAI GPT-OSS 120B is een toonaangevend taalmodel met 120 miljard parameters, ingebouwde browserzoekfunctie en code-uitvoeringsmogelijkheden, en beschikt over redeneervermogen."
+  },
+  "openai/gpt-oss-20b": {
+    "description": "OpenAI GPT-OSS 20B is een toonaangevend taalmodel met 20 miljard parameters, ingebouwde browserzoekfunctie en code-uitvoeringsmogelijkheden, en beschikt over redeneervermogen."
+  },
   "openai/o1": {
     "description": "o1 is het nieuwe redeneermodel van OpenAI, ondersteunt tekst- en beeldinvoer en genereert tekstuitvoer, geschikt voor complexe taken die brede algemene kennis vereisen. Dit model heeft een context van 200K en een kennisafkapdatum van oktober 2023."
   },
@@ -2411,8 +2426,11 @@
   "qwen3-coder-480b-a35b-instruct": {
     "description": "Open-source codeermodel van Tongyi Qianwen. De nieuwste qwen3-coder-480b-a35b-instruct is gebaseerd op Qwen3, met krachtige Coding Agent-capaciteiten, bedreven in toolaanroepen en omgevingsinteractie, en kan zelfstandig programmeren met uitstekende codeervaardigheden en algemene capaciteiten."
   },
+  "qwen3-coder-flash": {
+    "description": "Tongyi Qianwen codeermodel. De nieuwste Qwen3-Coder-serie is gebaseerd op Qwen3 en is een codegeneratiemodel met krachtige Coding Agent-capaciteiten, bedreven in het aanroepen van tools en interactie met omgevingen, in staat tot autonoom programmeren, met uitstekende codeervaardigheden en tevens algemene capaciteiten."
+  },
   "qwen3-coder-plus": {
-    "description": "Codeermodel van Tongyi Qianwen. De nieuwste Qwen3-Coder-Plus serie is gebaseerd op Qwen3, met krachtige Coding Agent-capaciteiten, bedreven in toolaanroepen en omgevingsinteractie, en kan zelfstandig programmeren met uitstekende codeervaardigheden en algemene capaciteiten."
+    "description": "Tongyi Qianwen codeermodel. De nieuwste Qwen3-Coder-serie is gebaseerd op Qwen3 en is een codegeneratiemodel met krachtige Coding Agent-capaciteiten, bedreven in het aanroepen van tools en interactie met omgevingen, in staat tot autonoom programmeren, met uitstekende codeervaardigheden en tevens algemene capaciteiten."
   },
   "qwq": {
     "description": "QwQ is een experimenteel onderzoeksmodel dat zich richt op het verbeteren van de AI-redeneringscapaciteiten."

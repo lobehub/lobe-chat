@@ -1,3 +1,4 @@
+import { ChatErrorType } from '@lobechat/types/fetch';
 import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/chat-plugin-sdk';
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
@@ -34,7 +35,6 @@ import {
 } from '@/store/user/selectors';
 import { WebBrowsingManifest } from '@/tools/web-browsing';
 import { WorkingModel } from '@/types/agent';
-import { ChatErrorType } from '@/types/fetch';
 import { ChatImageItem, ChatMessage, MessageToolCall } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';

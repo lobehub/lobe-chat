@@ -74,6 +74,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 是一款由深度求索公司自研的MoE模型。DeepSeek-V3 多項評測成績超越了 Qwen2.5-72B 和 Llama-3.1-405B 等其他開源模型，並在性能上和世界頂尖的閉源模型 GPT-4o 以及 Claude-3.5-Sonnet 不分伯仲。"
   },
+  "DeepSeek-V3-Fast": {
+    "description": "模型供應商為：sophnet平台。DeepSeek V3 Fast 是 DeepSeek V3 0324 版本的高TPS極速版，滿血非量化，代碼與數學能力更強，響應更快！"
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite 擁有極致的響應速度，更好的性價比，為客戶不同場景提供更靈活的選擇。支持128k上下文視窗的推理和精調。"
   },
@@ -608,6 +611,9 @@
   "aya:35b": {
     "description": "Aya 23 是 Cohere 推出的多語言模型，支持 23 種語言，為多元化語言應用提供便利。"
   },
+  "azure-DeepSeek-R1-0528": {
+    "description": "由微軟部署提供； DeepSeek R1型號已進行小版本升級，當前版本為DeepSeek-R1-0528。在最新的更新中，DeepSeek R1透過增加計算資源和引入後訓練階段的演算法優化機制，大幅提升了推理深度和推斷能力。該模型在數學、程式設計和通用邏輯等多個基準測試中表現出色，其整體性能已接近領先模型，如O3和Gemini 2.5 Pro 。"
+  },
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B百川智能開發的包含130億參數的開源可商用的大規模語言模型，在權威的中文和英文benchmark上均取得同尺寸最好的效果。"
   },
@@ -667,6 +673,9 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet 在智能和速度方面為企業工作負載提供了理想的平衡。它以更低的價格提供最大效用，可靠且適合大規模部署。"
+  },
+  "claude-opus-4-1-20250805": {
+    "description": "Claude Opus 4.1 是 Anthropic 最新的用於處理高度複雜任務的最強大模型。它在性能、智慧、流暢性和理解力方面表現卓越。"
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 是 Anthropic 用於處理高度複雜任務的最強大模型。它在性能、智能、流暢性和理解力方面表現卓越。"
@@ -2123,6 +2132,12 @@
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini是OpenAI在GPT-4 Omni之後推出的最新模型，支持圖文輸入並輸出文本。作為他們最先進的小型模型，它比其他近期的前沿模型便宜很多，並且比GPT-3.5 Turbo便宜超過60%。它保持了最先進的智能，同時具有顯著的性價比。GPT-4o mini在MMLU測試中獲得了82%的得分，目前在聊天偏好上排名高於GPT-4。"
   },
+  "openai/gpt-oss-120b": {
+    "description": "OpenAI GPT-OSS 120B 是一款擁有 1200 億參數的頂尖語言模型，內建瀏覽器搜尋和程式碼執行功能，並具備推理能力。"
+  },
+  "openai/gpt-oss-20b": {
+    "description": "OpenAI GPT-OSS 20B 是一款擁有 200 億參數的頂尖語言模型，內建瀏覽器搜尋和程式碼執行功能，並具備推理能力。"
+  },
   "openai/o1": {
     "description": "o1 是 OpenAI 新的推理模型，支援圖文輸入並輸出文本，適用於需要廣泛通用知識的複雜任務。該模型具有 200K 上下文和 2023 年 10 月的知識截止日期。"
   },
@@ -2411,8 +2426,11 @@
   "qwen3-coder-480b-a35b-instruct": {
     "description": "通義千問程式碼模型開源版。最新的 qwen3-coder-480b-a35b-instruct 是基於 Qwen3 的程式碼生成模型，具有強大的 Coding Agent 能力，擅長工具調用和環境互動，能夠實現自主程式設計、程式碼能力卓越的同時兼具通用能力。"
   },
+  "qwen3-coder-flash": {
+    "description": "通義千問程式碼模型。最新的 Qwen3-Coder 系列模型是基於 Qwen3 的程式碼生成模型，具有強大的Coding Agent能力，擅長工具調用和環境互動，能夠實現自主程式設計，程式碼能力卓越的同時兼具通用能力。"
+  },
   "qwen3-coder-plus": {
-    "description": "通義千問程式碼模型。最新的 Qwen3-Coder-Plus 系列模型是基於 Qwen3 的程式碼生成模型，具有強大的 Coding Agent 能力，擅長工具調用和環境互動，能夠實現自主程式設計，程式碼能力卓越的同時兼具通用能力。"
+    "description": "通義千問程式碼模型。最新的 Qwen3-Coder 系列模型是基於 Qwen3 的程式碼生成模型，具有強大的Coding Agent能力，擅長工具調用和環境互動，能夠實現自主程式設計，程式碼能力卓越的同時兼具通用能力。"
   },
   "qwq": {
     "description": "QwQ 是一個實驗研究模型，專注於提高 AI 推理能力。"

@@ -74,6 +74,9 @@
   "DeepSeek-V3": {
     "description": "DeepSeek-V3 is a MoE model developed in-house by Deep Seek Company. Its performance surpasses that of other open-source models such as Qwen2.5-72B and Llama-3.1-405B in multiple assessments, and it stands on par with the world's top proprietary models like GPT-4o and Claude-3.5-Sonnet."
   },
+  "DeepSeek-V3-Fast": {
+    "description": "Model provider: sophnet platform. DeepSeek V3 Fast is the high-TPS ultra-fast version of DeepSeek V3 0324, fully powered without quantization, featuring enhanced coding and mathematical capabilities for faster response!"
+  },
   "Doubao-lite-128k": {
     "description": "Doubao-lite offers ultra-fast response times and better cost-effectiveness, providing customers with more flexible options for different scenarios. Supports inference and fine-tuning with a 128k context window."
   },
@@ -608,6 +611,9 @@
   "aya:35b": {
     "description": "Aya 23 is a multilingual model launched by Cohere, supporting 23 languages, facilitating diverse language applications."
   },
+  "azure-DeepSeek-R1-0528": {
+    "description": "Deployed and provided by Microsoft; the DeepSeek R1 model has undergone a minor version upgrade, currently at DeepSeek-R1-0528. In the latest update, DeepSeek R1 significantly improves inference depth and reasoning ability by increasing computational resources and introducing algorithmic optimizations in the post-training phase. This model excels in benchmarks including mathematics, programming, and general logic, with overall performance approaching leading models such as O3 and Gemini 2.5 Pro."
+  },
   "baichuan/baichuan2-13b-chat": {
     "description": "Baichuan-13B is an open-source, commercially usable large language model developed by Baichuan Intelligence, containing 13 billion parameters, achieving the best results in its size on authoritative Chinese and English benchmarks."
   },
@@ -667,6 +673,9 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet provides an ideal balance of intelligence and speed for enterprise workloads. It offers maximum utility at a lower price, reliable and suitable for large-scale deployment."
+  },
+  "claude-opus-4-1-20250805": {
+    "description": "Claude Opus 4.1 is Anthropic's latest and most powerful model designed for handling highly complex tasks. It demonstrates outstanding performance in intelligence, fluency, and comprehension."
   },
   "claude-opus-4-20250514": {
     "description": "Claude Opus 4 is Anthropic's most powerful model for handling highly complex tasks. It excels in performance, intelligence, fluency, and comprehension."
@@ -2123,6 +2132,12 @@
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini is the latest model released by OpenAI following GPT-4 Omni, supporting both text and image input while outputting text. As their most advanced small model, it is significantly cheaper than other recent cutting-edge models and over 60% cheaper than GPT-3.5 Turbo. It maintains state-of-the-art intelligence while offering remarkable cost-effectiveness. GPT-4o mini scored 82% on the MMLU test and currently ranks higher than GPT-4 in chat preferences."
   },
+  "openai/gpt-oss-120b": {
+    "description": "OpenAI GPT-OSS 120B is a top-tier language model with 120 billion parameters, featuring built-in browser search and code execution capabilities, along with strong reasoning skills."
+  },
+  "openai/gpt-oss-20b": {
+    "description": "OpenAI GPT-OSS 20B is a top-tier language model with 20 billion parameters, featuring built-in browser search and code execution capabilities, along with strong reasoning skills."
+  },
   "openai/o1": {
     "description": "o1 is OpenAI's new reasoning model that supports multimodal input and outputs text, suitable for complex tasks requiring broad general knowledge. This model features a 200K context window and a knowledge cutoff date of October 2023."
   },
@@ -2411,8 +2426,11 @@
   "qwen3-coder-480b-a35b-instruct": {
     "description": "Open-source version of Tongyi Qianwen's code model. The latest qwen3-coder-480b-a35b-instruct is a code generation model based on Qwen3, featuring powerful Coding Agent capabilities, proficient in tool invocation and environment interaction, enabling autonomous programming with excellent coding and general capabilities."
   },
+  "qwen3-coder-flash": {
+    "description": "Tongyi Qianwen code model. The latest Qwen3-Coder series models are code generation models based on Qwen3, equipped with powerful Coding Agent capabilities, proficient in tool invocation and environment interaction, enabling autonomous programming with excellent coding skills alongside general capabilities."
+  },
   "qwen3-coder-plus": {
-    "description": "Tongyi Qianwen's code model. The latest Qwen3-Coder-Plus series models are code generation models based on Qwen3, featuring powerful Coding Agent capabilities, proficient in tool invocation and environment interaction, enabling autonomous programming with excellent coding and general capabilities."
+    "description": "Tongyi Qianwen code model. The latest Qwen3-Coder series models are code generation models based on Qwen3, equipped with powerful Coding Agent capabilities, proficient in tool invocation and environment interaction, enabling autonomous programming with excellent coding skills alongside general capabilities."
   },
   "qwq": {
     "description": "QwQ is an experimental research model focused on improving AI reasoning capabilities."

@@ -107,3 +107,6 @@ CLAUDE.*.md
 
 # Misc
 ./packages/lobe-ui
+*.ppt*
+*.doc*
+*.xls*

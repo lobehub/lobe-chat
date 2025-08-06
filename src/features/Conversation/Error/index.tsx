@@ -1,3 +1,4 @@
+import { ChatErrorType, ErrorType } from '@lobechat/types/fetch';
 import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
 import type { AlertProps } from '@lobehub/ui';
 import { Skeleton } from 'antd';
@@ -7,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 
 import { useProviderName } from '@/hooks/useProviderName';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/model-runtime';
-import { ChatErrorType, ErrorType } from '@/types/fetch';
 import { ChatMessage, ChatMessageError } from '@/types/message';
 
 import ChatInvalidAPIKey from './ChatInvalidApiKey';

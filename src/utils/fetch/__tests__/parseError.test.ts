@@ -1,6 +1,5 @@
+import { ErrorResponse } from '@lobechat/types/fetch';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-
-import { ErrorResponse } from '@/types/fetch';
 
 import { getMessageError } from '../parseError';
 
