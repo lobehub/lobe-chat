@@ -17,12 +17,12 @@ const vertexaiChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-pro',
     maxOutput: 65_536,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.31, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.31, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-06-17',
     settings: {
       searchImpl: 'params',
@@ -44,11 +44,11 @@ const vertexaiChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-pro-preview-05-06',
     maxOutput: 65_536,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-05-06',
     type: 'chat',
   },
@@ -65,11 +65,11 @@ const vertexaiChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-pro-preview-03-25',
     maxOutput: 65_536,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-04-09',
     type: 'chat',
   },
@@ -87,12 +87,12 @@ const vertexaiChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-flash',
     maxOutput: 65_536,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-06-17',
     settings: {
       searchImpl: 'params',
@@ -113,11 +113,11 @@ const vertexaiChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-flash-preview-04-17',
     maxOutput: 65_536,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-04-17',
     type: 'chat',
   },
@@ -135,12 +135,12 @@ const vertexaiChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-flash-lite',
     maxOutput: 64_000,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.025, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.025, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-07-22',
     settings: {
       searchImpl: 'params',
@@ -162,11 +162,11 @@ const vertexaiChatModels: AIChatModelCard[] = [
     id: 'gemini-2.5-flash-lite-preview-06-17',
     maxOutput: 64_000,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-06-17',
     settings: {
       searchImpl: 'params',
@@ -186,12 +186,12 @@ const vertexaiChatModels: AIChatModelCard[] = [
     id: 'gemini-2.0-flash',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.0375, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.0375, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-02-05',
     type: 'chat',
   },
@@ -206,12 +206,12 @@ const vertexaiChatModels: AIChatModelCard[] = [
     id: 'gemini-2.0-flash-lite',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.018, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.018, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-02-05',
     type: 'chat',
   },
@@ -226,11 +226,11 @@ const vertexaiChatModels: AIChatModelCard[] = [
     id: 'gemini-1.5-flash-002',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-09-25',
     type: 'chat',
   },
@@ -246,11 +246,11 @@ const vertexaiChatModels: AIChatModelCard[] = [
     id: 'gemini-1.5-pro-002',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-09-24',
     type: 'chat',
   },

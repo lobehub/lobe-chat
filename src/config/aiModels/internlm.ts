@@ -14,11 +14,11 @@ const internlmChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'internlm3-latest',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -31,11 +31,11 @@ const internlmChatModels: AIChatModelCard[] = [
     displayName: 'InternLM2.5',
     id: 'internlm2.5-latest',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -49,11 +49,11 @@ const internlmChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'internvl3-latest',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -66,11 +66,11 @@ const internlmChatModels: AIChatModelCard[] = [
     displayName: 'InternVL2.5',
     id: 'internvl2.5-latest',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
 ];

@@ -36,11 +36,11 @@ const bedrockChatModels: AIChatModelCard[] = [
     id: 'us.anthropic.claude-3-7-sonnet-20250219-v1:0',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-02-24',
     type: 'chat',
   },
@@ -57,11 +57,11 @@ const bedrockChatModels: AIChatModelCard[] = [
     id: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-10-22',
     type: 'chat',
   },
@@ -78,11 +78,11 @@ const bedrockChatModels: AIChatModelCard[] = [
     id: 'us.anthropic.claude-3-5-sonnet-20241022-v2:0',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-10-22',
     type: 'chat',
   },
@@ -99,11 +99,11 @@ const bedrockChatModels: AIChatModelCard[] = [
     id: 'anthropic.claude-3-5-sonnet-20240620-v1:0',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-06-20',
     type: 'chat',
   },
@@ -120,11 +120,11 @@ const bedrockChatModels: AIChatModelCard[] = [
     id: 'anthropic.claude-3-haiku-20240307-v1:0',
     maxOutput: 4096,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.25, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-03-07',
     type: 'chat',
   },
@@ -140,11 +140,11 @@ const bedrockChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'anthropic.claude-3-sonnet-20240229-v1:0',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -159,11 +159,11 @@ const bedrockChatModels: AIChatModelCard[] = [
     id: 'anthropic.claude-3-opus-20240229-v1:0',
     maxOutput: 4096,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-02-29',
     type: 'chat',
   },
@@ -174,11 +174,11 @@ const bedrockChatModels: AIChatModelCard[] = [
     displayName: 'Claude 2.1',
     id: 'anthropic.claude-v2:1',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -188,11 +188,11 @@ const bedrockChatModels: AIChatModelCard[] = [
     displayName: 'Claude 2.0',
     id: 'anthropic.claude-v2',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -202,11 +202,11 @@ const bedrockChatModels: AIChatModelCard[] = [
     displayName: 'Claude Instant',
     id: 'anthropic.claude-instant-v1',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 2.4, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 2.4, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -220,11 +220,11 @@ const bedrockChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'meta.llama3-1-8b-instruct-v1:0',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.22, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.22, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.22, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.22, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -238,11 +238,11 @@ const bedrockChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'meta.llama3-1-70b-instruct-v1:0',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -256,11 +256,11 @@ const bedrockChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'meta.llama3-1-405b-instruct-v1:0',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 5.32, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 5.32, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -270,11 +270,11 @@ const bedrockChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3 8B Instruct',
     id: 'meta.llama3-8b-instruct-v1:0',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -284,11 +284,11 @@ const bedrockChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3 70B Instruct',
     id: 'meta.llama3-70b-instruct-v1:0',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 2.65, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 2.65, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
 ];

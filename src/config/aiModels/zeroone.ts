@@ -8,12 +8,12 @@ const zerooneChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'yi-lightning',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -26,12 +26,12 @@ const zerooneChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'yi-vision-v2',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -40,12 +40,12 @@ const zerooneChatModels: AIChatModelCard[] = [
     displayName: 'Yi Spark',
     id: 'yi-spark',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -54,12 +54,12 @@ const zerooneChatModels: AIChatModelCard[] = [
     displayName: 'Yi Medium',
     id: 'yi-medium',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -68,12 +68,12 @@ const zerooneChatModels: AIChatModelCard[] = [
     displayName: 'Yi Medium 200K',
     id: 'yi-medium-200k',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -82,12 +82,12 @@ const zerooneChatModels: AIChatModelCard[] = [
     displayName: 'Yi Large Turbo',
     id: 'yi-large-turbo',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -97,12 +97,12 @@ const zerooneChatModels: AIChatModelCard[] = [
     displayName: 'Yi Large RAG',
     id: 'yi-large-rag',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 25, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 25, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 25, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -115,12 +115,12 @@ const zerooneChatModels: AIChatModelCard[] = [
     displayName: 'Yi Large FC',
     id: 'yi-large-fc',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -129,12 +129,12 @@ const zerooneChatModels: AIChatModelCard[] = [
     displayName: 'Yi Large',
     id: 'yi-large',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -146,12 +146,12 @@ const zerooneChatModels: AIChatModelCard[] = [
     displayName: 'Yi Vision',
     id: 'yi-vision',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 6, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -160,12 +160,12 @@ const zerooneChatModels: AIChatModelCard[] = [
     displayName: 'Yi Large Preview',
     id: 'yi-large-preview',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -174,12 +174,12 @@ const zerooneChatModels: AIChatModelCard[] = [
     displayName: 'Yi Lightning Lite',
     id: 'yi-lightning-lite',
     pricing: {
-          currency: 'CNY',
-          units: [
-            { name: 'TextInput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      currency: 'CNY',
+      units: [
+        { name: 'TextInput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.99, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
 ];

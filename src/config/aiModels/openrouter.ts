@@ -33,11 +33,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'qwen/qwen3-30b-a3b',
     maxOutput: 40_960,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -74,11 +74,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'qwen/qwen3-14b',
     maxOutput: 40_960,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.08, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.08, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -102,11 +102,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     displayName: 'Qwen3 32B',
     id: 'qwen/qwen3-32b',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -131,11 +131,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'qwen/qwen3-235b-a22b',
     maxOutput: 40_960,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -159,11 +159,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     displayName: 'GLM Z1 Rumination 32B',
     id: 'thudm/glm-z1-rumination-32b',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -206,11 +206,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     displayName: 'GLM Z1 32B',
     id: 'thudm/glm-z1-32b',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -234,11 +234,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     displayName: 'GLM 4 32B',
     id: 'thudm/glm-4-32b',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -254,11 +254,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'google/gemini-2.5-pro',
     maxOutput: 65_536,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -274,11 +274,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'google/gemini-2.5-pro-preview',
     maxOutput: 65_536,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -294,11 +294,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'google/gemini-2.5-flash',
     maxOutput: 65_535,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -314,11 +314,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'google/gemini-2.5-flash-preview',
     maxOutput: 65_535,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -334,11 +334,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'google/gemini-2.5-flash-preview:thinking',
     maxOutput: 65_535,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -354,12 +354,12 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'openai/o3',
     maxOutput: 100_000,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 40, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 40, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-04-17',
     type: 'chat',
   },
@@ -376,12 +376,12 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'openai/o4-mini-high',
     maxOutput: 100_000,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.275, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 4.4, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.275, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 4.4, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-04-17',
     type: 'chat',
   },
@@ -397,12 +397,12 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'openai/o4-mini',
     maxOutput: 100_000,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.275, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 4.4, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.275, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 4.4, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-04-17',
     type: 'chat',
   },
@@ -417,12 +417,12 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'openai/gpt-4.1',
     maxOutput: 32_768,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-04-14',
     type: 'chat',
   },
@@ -438,12 +438,12 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'openai/gpt-4.1-mini',
     maxOutput: 32_768,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 1.6, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 1.6, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-04-14',
     type: 'chat',
   },
@@ -458,12 +458,12 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'openai/gpt-4.1-nano',
     maxOutput: 32_768,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.025, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.025, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-04-14',
     type: 'chat',
   },
@@ -478,12 +478,12 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'openai/o3-mini-high',
     maxOutput: 100_000,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.55, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 4.4, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.55, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 4.4, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-01-31',
     type: 'chat',
   },
@@ -498,12 +498,12 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'openai/o3-mini',
     maxOutput: 100_000,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.55, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 4.4, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.55, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 4.4, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-01-31',
     type: 'chat',
   },
@@ -518,11 +518,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'openai/o1-mini',
     maxOutput: 65_536,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-09-12',
     type: 'chat',
   },
@@ -537,11 +537,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'openai/o1-preview',
     maxOutput: 32_768,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-09-12',
     type: 'chat',
   },
@@ -557,11 +557,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'openai/gpt-4o-mini',
     maxOutput: 16_385,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -575,11 +575,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     displayName: 'GPT-4o',
     id: 'openai/gpt-4o',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 2.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -593,11 +593,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek R1 0528',
     id: 'deepseek/deepseek-r1-0528',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 2.18, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 2.18, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-05-28',
     type: 'chat',
   },
@@ -623,11 +623,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek R1',
     id: 'deepseek/deepseek-r1',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-01-20',
     type: 'chat',
   },
@@ -650,12 +650,12 @@ const openrouterChatModels: AIChatModelCard[] = [
     displayName: 'DeepSeek V3 0324',
     id: 'deepseek/deepseek-chat-v3-0324',
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.07, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 0.27, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.07, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 0.27, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 1.1, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -678,13 +678,13 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'anthropic/claude-3-haiku',
     maxOutput: 4096,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.025, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 0.25, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'CachedTextOutput', rate: 0.3125, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.025, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 0.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'CachedTextOutput', rate: 0.3125, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-03-07',
     type: 'chat',
   },
@@ -699,13 +699,13 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'anthropic/claude-3.5-haiku',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'CachedTextOutput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'CachedTextOutput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-11-05',
     type: 'chat',
   },
@@ -721,13 +721,13 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'anthropic/claude-3.5-sonnet',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'CachedTextOutput', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'CachedTextOutput', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-06-20',
     type: 'chat',
   },
@@ -744,13 +744,13 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'anthropic/claude-3.7-sonnet',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'CachedTextOutput', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'CachedTextOutput', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-02-24',
     settings: {
       extendParams: ['enableReasoning', 'reasoningBudgetToken'],
@@ -770,11 +770,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'anthropic/claude-sonnet-4',
     maxOutput: 64_000,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-05-23',
     settings: {
       extendParams: ['enableReasoning', 'reasoningBudgetToken'],
@@ -794,11 +794,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'anthropic/claude-opus-4',
     maxOutput: 32_000,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-05-23',
     settings: {
       extendParams: ['enableReasoning', 'reasoningBudgetToken'],
@@ -817,13 +817,13 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'anthropic/claude-3-opus',
     maxOutput: 4096,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'CachedTextOutput', rate: 18.75, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'CachedTextOutput', rate: 18.75, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-02-29',
     type: 'chat',
   },
@@ -838,11 +838,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'google/gemini-flash-1.5',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.075, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -857,12 +857,12 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'google/gemini-2.0-flash-001',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.025, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.025, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-02-05',
     type: 'chat',
   },
@@ -877,11 +877,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     id: 'google/gemini-pro-1.5',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 10.5, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 3.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 10.5, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -894,11 +894,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.2 11B Vision',
     id: 'meta-llama/llama-3.2-11b-vision-instruct',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.162, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.162, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.162, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.162, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -911,11 +911,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.2 90B Vision',
     id: 'meta-llama/llama-3.2-90b-vision-instruct',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.4, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
@@ -928,11 +928,11 @@ const openrouterChatModels: AIChatModelCard[] = [
     displayName: 'Llama 3.3 70B Instruct',
     id: 'meta-llama/llama-3.3-70b-instruct',
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.12, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     type: 'chat',
   },
   {
