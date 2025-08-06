@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Fix remote avatar broken in desktop again."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.1"
+  },
+  {
+    "children": {
       "features": ["Support mcp plugin install from web."]
     },
     "date": "2025-08-06",
