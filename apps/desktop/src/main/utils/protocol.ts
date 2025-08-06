@@ -10,13 +10,13 @@ export const getProtocolScheme = (): string => {
   const appPath = app.getPath('exe');
 
   // 通过 bundle identifier 判断
-  if (bundleId?.includes('nightly')) return 'lobehub-nightly';
-  if (bundleId?.includes('beta')) return 'lobehub-beta';
+  if (bundleId?.toLowerCase().includes('nightly')) return 'lobehub-nightly';
+  if (bundleId?.toLowerCase().includes('beta')) return 'lobehub-beta';
   if (bundleId?.includes('dev')) return 'lobehub-dev';
 
   // 通过可执行文件路径判断
-  if (appPath?.includes('nightly')) return 'lobehub-nightly';
-  if (appPath?.includes('beta')) return 'lobehub-beta';
+  if (appPath?.toLowerCase().includes('nightly')) return 'lobehub-nightly';
+  if (appPath?.toLowerCase().includes('beta')) return 'lobehub-beta';
   if (appPath?.includes('dev')) return 'lobehub-dev';
 
   return 'lobehub';
