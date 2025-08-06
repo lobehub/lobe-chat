@@ -1,4 +1,4 @@
-import { ChatErrorType } from '@lobechat/types/fetch';
+import { ChatErrorType } from '@lobechat/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import { AgentRuntimeErrorType } from '@/libs/model-runtime';

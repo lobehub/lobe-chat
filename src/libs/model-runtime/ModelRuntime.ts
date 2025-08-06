@@ -1,6 +1,5 @@
+import type { TracePayload } from '@lobechat/types';
 import { ClientOptions } from 'openai';
-
-import type { TracePayload } from '@/const/trace';
 
 import { LobeRuntimeAI } from './BaseAI';
 import { LobeBedrockAIParams } from './bedrock';

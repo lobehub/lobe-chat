@@ -1,5 +1,5 @@
 import { AuthObject } from '@clerk/backend';
-import { ChatErrorType } from '@lobechat/types/fetch';
+import { ChatErrorType } from '@lobechat/types';
 import { NextRequest } from 'next/server';
 
 import {

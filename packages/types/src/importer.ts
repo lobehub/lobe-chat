@@ -1,4 +1,4 @@
-import { LobeAgentConfig } from '@/types/agent';
+import { LobeAgentConfig } from './agent';
 import {
   ChatMessageError,
   ChatPluginPayload,
@@ -6,9 +6,9 @@ import {
   ChatToolPayload,
   ChatTranslate,
   MessageRoleType,
-} from '@/types/message';
-import { MetaData } from '@/types/meta';
-import { SessionGroupId } from '@/types/session';
+} from './message';
+import { MetaData } from './meta';
+import { SessionGroupId } from './session';
 
 export interface ImportSession {
   config: LobeAgentConfig;
