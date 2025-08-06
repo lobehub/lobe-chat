@@ -2,6 +2,9 @@
   "ai21": {
     "description": "AI21 Labs entwickelt Basis-Modelle und KI-Systeme für Unternehmen und beschleunigt die Anwendung generativer KI in der Produktion."
   },
+  "ai302": {
+    "description": "302.AI ist eine On-Demand-KI-Anwendungsplattform, die die umfassendsten KI-APIs und KI-Online-Anwendungen auf dem Markt bietet"
+  },
   "ai360": {
     "description": "360 AI ist die von der 360 Company eingeführte Plattform für KI-Modelle und -Dienste, die eine Vielzahl fortschrittlicher Modelle zur Verarbeitung natürlicher Sprache anbietet, darunter 360GPT2 Pro, 360GPT Pro, 360GPT Turbo und 360GPT Turbo Responsibility 8K. Diese Modelle kombinieren große Parameter mit multimodalen Fähigkeiten und finden breite Anwendung in den Bereichen Textgenerierung, semantisches Verständnis, Dialogsysteme und Codegenerierung. Durch flexible Preisstrategien erfüllt 360 AI die vielfältigen Bedürfnisse der Nutzer, unterstützt Entwickler bei der Integration und fördert die Innovation und Entwicklung intelligenter Anwendungen."
   },

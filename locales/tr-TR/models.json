@@ -1475,6 +1475,12 @@
   "gpt-image-1": {
     "description": "ChatGPT'nin yerel çok modlu görüntü oluşturma modeli"
   },
+  "gpt-oss": {
+    "description": "GPT-OSS 20B, OpenAI tarafından yayımlanan açık kaynaklı büyük dil modelidir ve MXFP4 kuantizasyon teknolojisini kullanır. Yüksek performanslı tüketici sınıfı GPU'lar veya Apple Silicon Mac üzerinde çalışmaya uygundur. Bu model, diyalog üretimi, kod yazımı ve çıkarım görevlerinde üstün performans sergiler ve fonksiyon çağrıları ile araç kullanımını destekler."
+  },
+  "gpt-oss:120b": {
+    "description": "GPT-OSS 120B, OpenAI tarafından yayımlanan büyük ölçekli açık kaynak dil modelidir ve MXFP4 kuantizasyon teknolojisini kullanır. Amiral gemisi model olarak çoklu GPU veya yüksek performanslı iş istasyonu ortamlarında çalıştırılması gerekmektedir. Karmaşık çıkarım, kod üretimi ve çok dilli işleme konularında üstün performans sunar ve gelişmiş fonksiyon çağrıları ile araç entegrasyonunu destekler."
+  },
   "grok-2-1212": {
     "description": "Bu model, doğruluk, talimat takibi ve çok dilli yetenekler açısından geliştirilmiştir."
   },
