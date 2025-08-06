@@ -306,6 +306,7 @@
         "latestTime": "마지막 업데이트 시간: {{time}}",
         "noLatestTime": "아직 목록을 가져오지 않았습니다."
       },
+      "noModelsInCategory": "이 카테고리에는 활성화된 모델이 없습니다",
       "resetAll": {
         "conform": "현재 모델의 모든 수정을 초기화하시겠습니까? 초기화 후 현재 모델 목록은 기본 상태로 돌아갑니다.",
         "success": "초기화 성공",
@@ -316,7 +317,15 @@
       "title": "모델 목록",
       "total": "사용 가능한 모델 총 {{count}} 개"
     },
-    "searchNotFound": "검색 결과를 찾을 수 없습니다"
+    "searchNotFound": "검색 결과를 찾을 수 없습니다",
+    "tabs": {
+      "all": "전체",
+      "chat": "대화",
+      "embedding": "임베딩",
+      "image": "이미지",
+      "stt": "음성 인식",
+      "tts": "음성 합성"
+    }
   },
   "sortModal": {
     "success": "정렬 업데이트 성공",
