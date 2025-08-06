@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Support mcp plugin install from web."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.0"
+  },
+  {
+    "children": {
       "fixes": ["Fix ollama model output without thinking."],
       "improvements": ["Add Claude Opus 4.1 model, update i18n."]
     },
