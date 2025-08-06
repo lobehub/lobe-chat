@@ -89,6 +89,7 @@ const ProviderModelListSelect = memo<CustomModelSelectProps>(
             </div>
             <Select
               allowClear
+              classNames={{ popup: { root: cx(styles.popup) } }}
               mode="tags"
               notFoundContent={notFoundContent}
               onChange={(value, options) => {
@@ -131,7 +132,6 @@ const ProviderModelListSelect = memo<CustomModelSelectProps>(
                 value: model.id,
               }))}
               placeholder={placeholder}
-              popupClassName={cx(styles.popup)}
               value={enabledModels ?? defaultEnableModel}
             />
           </div>

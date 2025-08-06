@@ -1,11 +1,12 @@
 ---
 title: 在 LobeChat 中使用 Amazon Bedrock API Key
-description: 学习如何在 LobeChat 中配置和使用 Amazon Bedrock，一个完全托管的基础模型API服务，以便开始对话。
+description: 学习如何在 LobeChat 中配置和使用 Amazon Bedrock，一个完全托管的基础模型API服务，支持跨区域推理配置文件，以便开始对话。
 tags:
   - Amazon Bedrock
   - Claude 3.5 sonnect
   - API keys
   - Claude 3 Opus
+  - 跨区域推理
   - Web UI
 ---
 
@@ -13,7 +14,7 @@ tags:
 
 <Image alt={'在 LobeChat 中使用 Amazon Bedrock'} cover src={'https://github.com/lobehub/lobe-chat/assets/34400653/74768b36-28ca-4ec3-a42d-b32abe2c7057'} />
 
-Amazon Bedrock 是一个完全托管的基础模型 API 服务，允许用户通过 API 访问来自领先 AI 公司 (如 AI21 Labs、Anthropic、Cohere、Meta、Stability AI) 和 Amazon 自家的基础模型。
+Amazon Bedrock 是一个完全托管的基础模型 API 服务，允许用户通过 API 访问来自领先 AI 公司 (如 AI21 Labs、Anthropic、Cohere、Meta、Stability AI) 和 Amazon 自家的基础模型。Bedrock 还支持跨区域推理配置文件，以提供更好的性能和可用性。
 
 本文档将指导你如何在 LobeChat 中使用 Amazon Bedrock:
 
@@ -65,6 +66,7 @@ Amazon Bedrock 是一个完全托管的基础模型 API 服务，允许用户通
   ```bash
   AWS_BEARER_TOKEN_BEDROCK=your_api_key_here
   AWS_REGION=us-east-1  # 可选，默认为 us-east-1
+  AWS_BEDROCK_MODEL_LIST=all  # 可选，参见下方模型配置
   ```
 
   <Callout type={'warning'}>
@@ -72,4 +74,141 @@ Amazon Bedrock 是一个完全托管的基础模型 API 服务，允许用户通
   </Callout>
 </Steps>
 
-至此你已经可以在 LobeChat 中使用 Amazone Bedrock 提供的模型进行对话了。
+## 跨区域推理配置文件
+
+Amazon Bedrock 支持跨区域推理配置文件，通过自动将请求路由到多个 AWS 区域，提供更好的性能、可用性和成本优化。
+
+### 系统预定义的跨区域推理配置文件
+
+LobeChat 支持所有 AWS Bedrock 系统预定义的跨区域推理配置文件 ID。这些配置文件会自动将您的请求分布到多个区域，以获得更好的性能和可靠性。
+
+#### 美国区域配置文件
+
+- **Amazon Nova 模型：**
+  - `us.amazon.nova-premier-v1:0` - 最先进的多模态模型
+  - `us.amazon.nova-pro-v1:0` - 性能和成本平衡
+  - `us.amazon.nova-lite-v1:0` - 快速且成本效益高
+  - `us.amazon.nova-micro-v1:0` - 仅文本，针对速度优化
+
+- **Claude 模型：**
+  - `us.anthropic.claude-3-7-sonnet-20250219-v1:0` - 最新的 Claude 3.7 Sonnet
+  - `us.anthropic.claude-3-5-sonnet-20241022-v2:0` - Claude 3.5 Sonnet v2
+  - `us.anthropic.claude-3-5-sonnet-20240620-v1:0` - Claude 3.5 Sonnet 0620
+  - `us.anthropic.claude-3-haiku-20240307-v1:0` - 快速紧凑
+  - `us.anthropic.claude-3-sonnet-20240229-v1:0` - 智能和速度平衡
+  - `us.anthropic.claude-3-opus-20240229-v1:0` - 最强大的模型
+  - `us.anthropic.claude-opus-4-20250514-v1:0` - 下一代旗舰
+  - `us.anthropic.claude-sonnet-4-20250514-v1:0` - 下一代平衡型
+
+- **Meta Llama 模型：**
+  - `us.meta.llama3-1-405b-instruct-v1:0` - 最大的 Llama 3.1 模型
+  - `us.meta.llama3-1-70b-instruct-v1:0` - 高性能 Llama 3.1
+  - `us.meta.llama3-1-8b-instruct-v1:0` - 高效的 Llama 3.1
+  - `us.meta.llama3-2-11b-instruct-v1:0` - 中等规模 Llama 3.2
+  - `us.meta.llama3-2-1b-instruct-v1:0` - 轻量级 Llama 3.2
+  - `us.meta.llama3-2-3b-instruct-v1:0` - 小而强大的 Llama 3.2
+  - `us.meta.llama3-2-90b-instruct-v1:0` - 大型高性能 Llama 3.2
+  - `us.meta.llama3-3-70b-instruct-v1:0` - 最新一代 Llama 3.3
+  - `us.meta.llama4-maverick-17b-instruct-v1:0` - 早期 Llama 4 变体
+  - `us.meta.llama4-scout-17b-instruct-v1:0` - 探索型 Llama 4 变体
+
+- **其他模型：**
+  - `us.deepseek.r1-v1:0` - 高级推理模型
+  - `us.mistral.pixtral-large-2502-v1:0` - 多模态 Mistral 模型
+
+#### 欧盟区域配置文件
+
+- **Amazon Nova 模型：**
+  - `eu.amazon.nova-pro-v1:0` - 性能和成本平衡
+  - `eu.amazon.nova-lite-v1:0` - 快速且成本效益高
+  - `eu.amazon.nova-micro-v1:0` - 仅文本，针对速度优化
+
+- **Claude 模型：**
+  - `eu.anthropic.claude-3-7-sonnet-20250219-v1:0` - 最新的 Claude 3.7 Sonnet
+  - `eu.anthropic.claude-3-haiku-20240307-v1:0` - 快速紧凑
+  - `eu.anthropic.claude-3-sonnet-20240229-v1:0` - 智能和速度平衡
+  - `eu.anthropic.claude-sonnet-4-20250514-v1:0` - 下一代平衡型
+
+- **Meta Llama 模型：**
+  - `eu.meta.llama3-2-1b-instruct-v1:0` - 轻量级 Llama 3.2
+  - `eu.meta.llama3-2-3b-instruct-v1:0` - 小而强大的 Llama 3.2
+
+- **Mistral 模型：**
+  - `eu.mistral.pixtral-large-2502-v1:0` - 多模态 Mistral 模型
+
+#### 亚太区域配置文件
+
+- **Amazon Nova 模型：**
+  - `apac.amazon.nova-pro-v1:0` - 性能和成本平衡
+  - `apac.amazon.nova-lite-v1:0` - 快速且成本效益高
+  - `apac.amazon.nova-micro-v1:0` - 仅文本，针对速度优化
+
+- **Claude 模型：**
+  - `apac.anthropic.claude-3-7-sonnet-20250219-v1:0` - 最新的 Claude 3.7 Sonnet
+  - `apac.anthropic.claude-3-5-sonnet-20241022-v2:0` - Claude 3.5 Sonnet v2
+  - `apac.anthropic.claude-3-5-sonnet-20240620-v1:0` - Claude 3.5 Sonnet 0620
+  - `apac.anthropic.claude-3-haiku-20240307-v1:0` - 快速紧凑
+  - `apac.anthropic.claude-3-sonnet-20240229-v1:0` - 智能和速度平衡
+  - `apac.anthropic.claude-sonnet-4-20250514-v1:0` - 下一代平衡型
+
+#### AWS 政府专区配置文件
+
+- **Claude 模型：**
+  - `us-gov.anthropic.claude-3-5-sonnet-20240620-v1:0` - 政府专用 Claude 3.5 Sonnet
+  - `us-gov.anthropic.claude-3-haiku-20240307-v1:0` - 政府专用 Claude 3 Haiku
+
+### 模型配置
+
+您可以使用 `AWS_BEDROCK_MODEL_LIST` 环境变量配置 LobeChat 中可用的模型。这支持灵活的包含 / 排除语法：
+
+#### 配置示例
+
+```bash
+# 使用所有可用模型（默认）
+AWS_BEDROCK_MODEL_LIST=all
+
+# 仅使用特定的跨区域模型
+AWS_BEDROCK_MODEL_LIST=us.amazon.nova-premier-v1:0,us.anthropic.claude-3-7-sonnet-20250219-v1:0,eu.anthropic.claude-3-haiku-20240307-v1:0
+
+# 使用所有模型，但排除特定模型
+AWS_BEDROCK_MODEL_LIST=all,-us.amazon.nova-micro-v1:0,-eu.meta.llama3-2-1b-instruct-v1:0
+
+# 使用带 + 前缀的特定模型（显式包含）
+AWS_BEDROCK_MODEL_LIST=+us.amazon.nova-pro-v1:0,+us.anthropic.claude-3-5-sonnet-20241022-v2:0,+apac.anthropic.claude-3-haiku-20240307-v1:0
+
+# 混合语法：包含所有，排除一些，添加特定的
+AWS_BEDROCK_MODEL_LIST=all,-us.amazon.nova-micro-v1:0,+us.deepseek.r1-v1:0
+```
+
+#### 语法规则
+
+- `all` - 包含所有可用模型
+- `model-id` - 包含特定模型
+- `+model-id` - 显式包含模型（与不带 + 相同）
+- `-model-id` - 排除特定模型
+- 支持逗号分隔列表
+- 忽略空白字符
+- 排除优先于包含
+
+### 跨区域推理配置文件的优势
+
+1. **提升性能**：自动路由到性能最佳的区域
+2. **更高可用性**：跨多个区域的故障转移
+3. **成本优化**：智能路由以实现成本效率
+4. **简化管理**：单个模型 ID 可跨区域工作
+5. **降低延迟**：请求路由到最近的可用区域
+
+### 使用示例
+
+```typescript
+// 在应用程序中使用跨区域推理配置文件
+const modelId = 'us.anthropic.claude-3-7-sonnet-20250219-v1:0';
+
+// 相同的模型 ID 将自动路由到最佳区域
+const response = await bedrockClient.chat({
+  model: modelId,
+  messages: [{ role: 'user', content: 'Hello!' }]
+});
+```
+
+至此你已经可以在 LobeChat 中使用 Amazon Bedrock 提供的模型进行对话了，并享受跨区域推理配置文件带来的更好性能和可靠性。
