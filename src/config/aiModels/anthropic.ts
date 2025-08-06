@@ -16,10 +16,12 @@ const anthropicChatModels: AIChatModelCard[] = [
     id: 'claude-opus-4-1-20250805',
     maxOutput: 32_000,
     pricing: {
-      cachedInput: 1.5,
-      input: 15,
-      output: 75,
-      writeCacheInput: 18.75,
+      units: [
+        { name: 'CachedTextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'CachedTextOutput', rate: 18.75, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
     },
     releasedAt: '2025-08-05',
     settings: {
@@ -42,13 +44,13 @@ const anthropicChatModels: AIChatModelCard[] = [
     id: 'claude-opus-4-20250514',
     maxOutput: 32_000,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'CachedTextOutput', rate: 18.75, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'CachedTextOutput', rate: 18.75, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-05-23',
     settings: {
       extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
@@ -71,13 +73,13 @@ const anthropicChatModels: AIChatModelCard[] = [
     id: 'claude-sonnet-4-20250514',
     maxOutput: 64_000,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'CachedTextOutput', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'CachedTextOutput', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-05-23',
     settings: {
       extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
@@ -100,13 +102,13 @@ const anthropicChatModels: AIChatModelCard[] = [
     id: 'claude-3-7-sonnet-20250219',
     maxOutput: 64_000,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'CachedTextOutput', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'CachedTextOutput', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2025-02-24',
     settings: {
       extendParams: ['disableContextCaching', 'enableReasoning', 'reasoningBudgetToken'],
@@ -127,13 +129,13 @@ const anthropicChatModels: AIChatModelCard[] = [
     id: 'claude-3-5-sonnet-20241022',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'CachedTextOutput', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'CachedTextOutput', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-10-22',
     settings: {
       extendParams: ['disableContextCaching'],
@@ -153,13 +155,13 @@ const anthropicChatModels: AIChatModelCard[] = [
     id: 'claude-3-5-sonnet-20240620',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'CachedTextOutput', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'CachedTextOutput', rate: 3.75, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-06-20',
     settings: {
       extendParams: ['disableContextCaching'],
@@ -180,13 +182,13 @@ const anthropicChatModels: AIChatModelCard[] = [
     id: 'claude-3-5-haiku-20241022',
     maxOutput: 8192,
     pricing: {
-          units: [
-            { name: 'CachedTextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'CachedTextOutput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'CachedTextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'CachedTextOutput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-11-05',
     settings: {
       extendParams: ['disableContextCaching'],
@@ -205,11 +207,11 @@ const anthropicChatModels: AIChatModelCard[] = [
     id: 'claude-3-haiku-20240307',
     maxOutput: 4096,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 0.25, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 0.25, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 1.25, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-03-07',
     settings: {
       extendParams: ['disableContextCaching'],
@@ -228,11 +230,11 @@ const anthropicChatModels: AIChatModelCard[] = [
     id: 'claude-3-sonnet-20240229', // 弃用日期 2025年7月21日
     maxOutput: 4096,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-02-29',
     type: 'chat',
   },
@@ -248,11 +250,11 @@ const anthropicChatModels: AIChatModelCard[] = [
     id: 'claude-3-opus-20240229',
     maxOutput: 4096,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 75, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2024-02-29',
     settings: {
       extendParams: ['disableContextCaching'],
@@ -267,11 +269,11 @@ const anthropicChatModels: AIChatModelCard[] = [
     id: 'claude-2.1', // 弃用日期 2025年7月21日
     maxOutput: 4096,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2023-11-21',
     type: 'chat',
   },
@@ -283,11 +285,11 @@ const anthropicChatModels: AIChatModelCard[] = [
     id: 'claude-2.0', // 弃用日期 2025年7月21日
     maxOutput: 4096,
     pricing: {
-          units: [
-            { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
-            { name: 'TextOutput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' }
-          ]
-        },
+      units: [
+        { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'TextOutput', rate: 24, strategy: 'fixed', unit: 'MillionTokens' },
+      ],
+    },
     releasedAt: '2023-07-11',
     type: 'chat',
   },
