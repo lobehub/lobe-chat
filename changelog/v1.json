@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Refactor trace type."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.4"
+  },
+  {
+    "children": {
       "improvements": ["Fix provider setting page hydration error."]
     },
     "date": "2025-08-06",
