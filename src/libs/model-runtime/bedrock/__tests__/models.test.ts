@@ -12,9 +12,9 @@ vi.mock('@/config/llm', () => ({
 vi.mock('@/config/modelProviders/bedrock', () => ({
   default: {
     chatModels: [
-      { id: 'claude-3-sonnet', enabled: true },
-      { id: 'claude-3-haiku', enabled: true },
-      { id: 'llama-2-70b', enabled: true },
+      { id: 'us.anthropic.claude-3-sonnet-20240229-v1:0', enabled: true },
+      { id: 'us.anthropic.claude-3-haiku-20240307-v1:0', enabled: true },
+      { id: 'us.meta.llama3-1-70b-instruct-v1:0', enabled: true },
       { id: 'disabled-model', enabled: false },
     ],
   },
@@ -31,40 +31,48 @@ describe('LobeBedrockAI models() method', () => {
 
     const models = await bedrock.models();
     expect(models).toEqual([
-      { id: 'claude-3-sonnet' },
-      { id: 'claude-3-haiku' },
-      { id: 'llama-2-70b' },
+      { id: 'us.anthropic.claude-3-sonnet-20240229-v1:0' },
+      { id: 'us.anthropic.claude-3-haiku-20240307-v1:0' },
+      { id: 'us.meta.llama3-1-70b-instruct-v1:0' },
     ]);
   });
 
   it('should handle "all" with exclusions', async () => {
     const { getLLMConfig } = await import('@/config/llm');
     vi.mocked(getLLMConfig).mockReturnValue({
-      AWS_BEDROCK_MODEL_LIST: 'all,-claude-3-haiku',
+      AWS_BEDROCK_MODEL_LIST: 'all,-us.anthropic.claude-3-haiku-20240307-v1:0',
     } as any);
 
     const models = await bedrock.models();
-    expect(models).toEqual([{ id: 'claude-3-sonnet' }, { id: 'llama-2-70b' }]);
+    expect(models).toEqual([
+      { id: 'us.anthropic.claude-3-sonnet-20240229-v1:0' },
+      { id: 'us.meta.llama3-1-70b-instruct-v1:0' },
+    ]);
   });
 
   it('should handle explicit inclusions with + prefix', async () => {
     const { getLLMConfig } = await import('@/config/llm');
     vi.mocked(getLLMConfig).mockReturnValue({
-      AWS_BEDROCK_MODEL_LIST: '+claude-3-sonnet,+llama-2-70b',
+      AWS_BEDROCK_MODEL_LIST:
+        '+us.anthropic.claude-3-sonnet-20240229-v1:0,+us.meta.llama3-1-70b-instruct-v1:0',
     } as any);
 
     const models = await bedrock.models();
-    expect(models).toEqual([{ id: 'claude-3-sonnet' }, { id: 'llama-2-70b' }]);
+    expect(models).toEqual([
+      { id: 'us.anthropic.claude-3-sonnet-20240229-v1:0' },
+      { id: 'us.meta.llama3-1-70b-instruct-v1:0' },
+    ]);
   });
 
   it('should handle mixed inclusions and exclusions', async () => {
     const { getLLMConfig } = await import('@/config/llm');
     vi.mocked(getLLMConfig).mockReturnValue({
-      AWS_BEDROCK_MODEL_LIST: 'claude-3-sonnet,claude-3-haiku,-claude-3-haiku',
+      AWS_BEDROCK_MODEL_LIST:
+        'us.anthropic.claude-3-sonnet-20240229-v1:0,us.anthropic.claude-3-haiku-20240307-v1:0,-us.anthropic.claude-3-haiku-20240307-v1:0',
     } as any);
 
     const models = await bedrock.models();
-    expect(models).toEqual([{ id: 'claude-3-sonnet' }]);
+    expect(models).toEqual([{ id: 'us.anthropic.claude-3-sonnet-20240229-v1:0' }]);
   });
 
   it('should handle empty model list', async () => {
@@ -75,29 +83,33 @@ describe('LobeBedrockAI models() method', () => {
 
     const models = await bedrock.models();
     expect(models).toEqual([
-      { id: 'claude-3-sonnet' },
-      { id: 'claude-3-haiku' },
-      { id: 'llama-2-70b' },
+      { id: 'us.anthropic.claude-3-sonnet-20240229-v1:0' },
+      { id: 'us.anthropic.claude-3-haiku-20240307-v1:0' },
+      { id: 'us.meta.llama3-1-70b-instruct-v1:0' },
     ]);
   });
 
   it('should handle whitespace and empty entries', async () => {
     const { getLLMConfig } = await import('@/config/llm');
     vi.mocked(getLLMConfig).mockReturnValue({
-      AWS_BEDROCK_MODEL_LIST: ' claude-3-sonnet , , +llama-2-70b , ',
+      AWS_BEDROCK_MODEL_LIST:
+        ' us.anthropic.claude-3-sonnet-20240229-v1:0 , , +us.meta.llama3-1-70b-instruct-v1:0 , ',
     } as any);
 
     const models = await bedrock.models();
-    expect(models).toEqual([{ id: 'claude-3-sonnet' }, { id: 'llama-2-70b' }]);
+    expect(models).toEqual([
+      { id: 'us.anthropic.claude-3-sonnet-20240229-v1:0' },
+      { id: 'us.meta.llama3-1-70b-instruct-v1:0' },
+    ]);
   });
 
   it('should handle non-existent model names gracefully', async () => {
     const { getLLMConfig } = await import('@/config/llm');
     vi.mocked(getLLMConfig).mockReturnValue({
-      AWS_BEDROCK_MODEL_LIST: 'claude-3-sonnet,non-existent-model',
+      AWS_BEDROCK_MODEL_LIST: 'us.anthropic.claude-3-sonnet-20240229-v1:0,non-existent-model',
     } as any);
 
     const models = await bedrock.models();
-    expect(models).toEqual([{ id: 'claude-3-sonnet' }]);
+    expect(models).toEqual([{ id: 'us.anthropic.claude-3-sonnet-20240229-v1:0' }]);
   });
 });
