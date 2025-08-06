@@ -16,7 +16,6 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 import { ChatMessage } from '@/types/message';
-import { showContextMenu } from '@/utils/electron/contextMenu';
 
 import ErrorMessageExtra, { useErrorContent } from '../../Error';
 import { renderMessagesExtra } from '../../Extras';
@@ -222,9 +221,11 @@ const Item = memo<ChatListItemProps>(
       toggleMessageEditing(id, edit);
     }, []);
 
-    const onContextMenu = useCallback(() => {
+    const onContextMenu = useCallback(async () => {
       if (isDesktop && item) {
-        showContextMenu('chat', {
+        const { electronSystemService } = await import('@/services/electron/system');
+
+        electronSystemService.showContextMenu('chat', {
           content: item.content,
           hasError: !!item.error,
           messageId: id,

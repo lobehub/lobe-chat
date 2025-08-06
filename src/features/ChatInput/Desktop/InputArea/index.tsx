@@ -9,7 +9,6 @@ import { isDesktop } from '@/const/version';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 import { HotkeyEnum } from '@/types/hotkey';
-import { showContextMenu } from '@/utils/electron/contextMenu';
 import { isCommandPressed } from '@/utils/keyboard';
 
 import { useAutoFocus } from '../useAutoFocus';
@@ -88,12 +87,14 @@ const InputArea = memo<InputAreaProps>(({ onSend, value, loading, onChange }) =>
         onCompositionStart={() => {
           isChineseInput.current = true;
         }}
-        onContextMenu={(e) => {
+        onContextMenu={async (e) => {
           if (isDesktop) {
             e.preventDefault();
             const textArea = ref.current?.resizableTextArea?.textArea;
             const hasSelection = textArea && textArea.selectionStart !== textArea.selectionEnd;
-            showContextMenu('editor', {
+            const { electronSystemService } = await import('@/services/electron/system');
+
+            electronSystemService.showContextMenu('editor', {
               hasSelection: !!hasSelection,
               value: value,
             });
