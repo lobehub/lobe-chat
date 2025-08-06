@@ -6,13 +6,10 @@ import Container from './Container';
 
 const Layout = ({ children }: PropsWithChildren) => {
   return (
-    <>
-      {/*<NProgress />*/}
-      <Flexbox horizontal width={'100%'}>
-        <ProviderMenu />
-        <Container>{children}</Container>
-      </Flexbox>
-    </>
+    <Flexbox horizontal width={'100%'}>
+      <ProviderMenu />
+      <Container>{children}</Container>
+    </Flexbox>
   );
 };
 export default Layout;

@@ -250,7 +250,7 @@ const nextConfig: NextConfig = {
 
   transpilePackages: ['pdfjs-dist', 'mermaid'],
 
-  webpack(config, options) {
+  webpack(config) {
     config.experiments = {
       asyncWebAssembly: true,
       layers: true,
@@ -282,15 +282,6 @@ const nextConfig: NextConfig = {
       ...config.resolve.fallback,
       zipfile: false,
     };
-
-    // 只在生产环境的浏览器构建中覆盖 React
-    if (isProd && !options.isServer) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        'react-dom$': 'react-dom/profiling', // 使用 profiling build
-        'scheduler/tracing': 'scheduler/tracing-profiling',
-      };
-    }
 
     return config;
   },
