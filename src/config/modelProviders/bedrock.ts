@@ -3,34 +3,168 @@ import { ModelProviderCard } from '@/types/llm';
 // ref :https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference.html
 // ref :https://us-east-1.console.aws.amazon.com/bedrock/home?region=us-east-1#/models
 // ref :https://us-west-2.console.aws.amazon.com/bedrock/home?region=us-west-2#/models
+// ref :https://docs.aws.amazon.com/bedrock/latest/userguide/inference-profiles-support.html
 const Bedrock: ModelProviderCard = {
   chatModels: [
-    /*
-    // TODO: Not support for now
+    // Amazon Nova Models (Cross-Region Inference Profiles)
     {
-      description: '亚马逊 Titan Text Lite 是一款轻量级高效模型，非常适合对英语任务进行微调，包括总结和文案编写等，客户希望有一个更小、更经济的模型，同时也非常可定制。',
-      displayName: 'Titan Text G1 - Lite',
-      id: 'amazon.titan-text-lite-v1',
-      tokens: 4000,
+      contextWindowTokens: 300_000,
+      description:
+        'Amazon Nova Premier 是 Amazon 最先进的多模态基础模型，具有最高的智能水平，能够处理复杂的推理、数学、编程和多语言任务。',
+      displayName: 'Nova Premier (US)',
+      enabled: true,
+      functionCall: true,
+      id: 'us.amazon.nova-premier-v1:0',
+      maxOutput: 5000,
+      pricing: {
+        input: 8,
+        output: 32,
+      },
+      releasedAt: '2024-12-03',
+      vision: true,
     },
     {
-      description: '亚马逊 Titan Text Express 的上下文长度可达 8,000 个标记，非常适合广泛的高级通用语言任务，如开放式文本生成和对话聊天，以及在检索增强生成 (RAG) 中的支持。在推出时，该模型针对英语进行了优化，预览版还支持其他 100 多种语言。',
-      displayName: 'Titan Text G1 - Express',
-      id: 'amazon.titan-text-express-v1',
-      tokens: 8000,
+      contextWindowTokens: 300_000,
+      description:
+        'Amazon Nova Pro 在性能和成本之间取得平衡，适合各种任务，包括内容生成、对话AI、文档处理和代码生成。',
+      displayName: 'Nova Pro (US)',
+      enabled: true,
+      functionCall: true,
+      id: 'us.amazon.nova-pro-v1:0',
+      maxOutput: 5000,
+      pricing: {
+        input: 0.8,
+        output: 3.2,
+      },
+      releasedAt: '2024-12-03',
+      vision: true,
     },
     {
-      description: 'Titan Text Premier 是 Titan Text 系列中一款强大的先进模型，旨在为广泛的企业应用提供卓越的性能。凭借其尖端能力，它提供了更高的准确性和卓越的结果，是寻求一流文本处理解决方案的组织的绝佳选择。',
-      displayName: 'Titan Text G1 - Premier',
-      id: 'amazon.titan-text-premier-v1:0',
-      tokens: 32_000,
+      contextWindowTokens: 300_000,
+      description:
+        'Amazon Nova Lite 是一个快速、成本效益高的多模态模型，适合简单的任务和高频使用场景。',
+      displayName: 'Nova Lite (US)',
+      enabled: true,
+      functionCall: true,
+      id: 'us.amazon.nova-lite-v1:0',
+      maxOutput: 5000,
+      pricing: {
+        input: 0.06,
+        output: 0.24,
+      },
+      releasedAt: '2024-12-03',
+      vision: true,
     },
-*/
+    {
+      contextWindowTokens: 128_000,
+      description:
+        'Amazon Nova Micro 是一个仅文本的模型，专为速度和成本效率而设计，适合简单的文本处理任务。',
+      displayName: 'Nova Micro (US)',
+      enabled: true,
+      functionCall: true,
+      id: 'us.amazon.nova-micro-v1:0',
+      maxOutput: 5000,
+      pricing: {
+        input: 0.035,
+        output: 0.14,
+      },
+      releasedAt: '2024-12-03',
+    },
+    // EU Region Nova Models
+    {
+      contextWindowTokens: 300_000,
+      description: 'Amazon Nova Pro 欧盟区域版本，在性能和成本之间取得平衡。',
+      displayName: 'Nova Pro (EU)',
+      enabled: true,
+      functionCall: true,
+      id: 'eu.amazon.nova-pro-v1:0',
+      maxOutput: 5000,
+      pricing: {
+        input: 0.8,
+        output: 3.2,
+      },
+      releasedAt: '2024-12-03',
+      vision: true,
+    },
+    {
+      contextWindowTokens: 300_000,
+      description: 'Amazon Nova Lite 欧盟区域版本，快速且成本效益高。',
+      displayName: 'Nova Lite (EU)',
+      enabled: true,
+      functionCall: true,
+      id: 'eu.amazon.nova-lite-v1:0',
+      maxOutput: 5000,
+      pricing: {
+        input: 0.06,
+        output: 0.24,
+      },
+      releasedAt: '2024-12-03',
+      vision: true,
+    },
+    {
+      contextWindowTokens: 128_000,
+      description: 'Amazon Nova Micro 欧盟区域版本，专为速度和成本效率而设计。',
+      displayName: 'Nova Micro (EU)',
+      enabled: true,
+      functionCall: true,
+      id: 'eu.amazon.nova-micro-v1:0',
+      maxOutput: 5000,
+      pricing: {
+        input: 0.035,
+        output: 0.14,
+      },
+      releasedAt: '2024-12-03',
+    },
+    // APAC Region Nova Models
+    {
+      contextWindowTokens: 300_000,
+      description: 'Amazon Nova Pro 亚太区域版本，在性能和成本之间取得平衡。',
+      displayName: 'Nova Pro (APAC)',
+      enabled: true,
+      functionCall: true,
+      id: 'apac.amazon.nova-pro-v1:0',
+      maxOutput: 5000,
+      pricing: {
+        input: 0.8,
+        output: 3.2,
+      },
+      releasedAt: '2024-12-03',
+      vision: true,
+    },
+    {
+      contextWindowTokens: 300_000,
+      description: 'Amazon Nova Lite 亚太区域版本，快速且成本效益高。',
+      displayName: 'Nova Lite (APAC)',
+      enabled: true,
+      functionCall: true,
+      id: 'apac.amazon.nova-lite-v1:0',
+      maxOutput: 5000,
+      pricing: {
+        input: 0.06,
+        output: 0.24,
+      },
+      releasedAt: '2024-12-03',
+      vision: true,
+    },
+    {
+      contextWindowTokens: 128_000,
+      description: 'Amazon Nova Micro 亚太区域版本，专为速度和成本效率而设计。',
+      displayName: 'Nova Micro (APAC)',
+      enabled: true,
+      functionCall: true,
+      id: 'apac.amazon.nova-micro-v1:0',
+      maxOutput: 5000,
+      pricing: {
+        input: 0.035,
+        output: 0.14,
+      },
+      releasedAt: '2024-12-03',
+    },
     {
       contextWindowTokens: 200_000,
       description:
         'Claude 3.7 sonnet 是 Anthropic 最快的下一代模型。与 Claude 3 Haiku 相比，Claude 3.7 Sonnet 在各项技能上都有所提升，并在许多智力基准测试中超越了上一代最大的模型 Claude 3 Opus。',
-      displayName: 'Claude 3.7 Sonnet',
+      displayName: 'Claude 3.7 Sonnet (US)',
       enabled: true,
       functionCall: true,
       id: 'us.anthropic.claude-3-7-sonnet-20250219-v1:0',
@@ -42,60 +176,48 @@ const Bedrock: ModelProviderCard = {
         writeCacheInput: 1.25,
       },
       releasedAt: '2025-02-24',
-    },
-    {
-      contextWindowTokens: 200_000,
-      description:
-        'Claude 3.7 sonnet Extended thinking 是 Anthropic 最快的下一代模型。与 Claude 3 Haiku 相比，Claude 3.7 Sonnet 在各项技能上都有所提升，并在许多智力基准测试中超越了上一代最大的模型 Claude 3 Opus。',
-      displayName: 'Claude 3.7 Sonnet Extended thinking',
-      enabled: true,
-      functionCall: true,
-      id: 'us.anthropic.claude-3-7-sonnet-20250219-v1:0',
-      maxOutput: 64_000,
-      pricing: {
-        cachedInput: 0.1,
-        input: 1,
-        output: 5,
-        writeCacheInput: 1.25,
-      },
-      releasedAt: '2025-02-24',
-    },
-    {
-      contextWindowTokens: 200_000,
-      description:
-        'Claude 3.5 Haiku 是 Anthropic 最快的下一代模型。与 Claude 3 Haiku 相比，Claude 3.5 Haiku 在各项技能上都有所提升，并在许多智力基准测试中超越了上一代最大的模型 Claude 3 Opus。',
-      displayName: 'Claude 3.5 Haiku',
-      enabled: true,
-      functionCall: true,
-      id: 'anthropic.claude-3-5-haiku-20241022-v1:0',
-      maxOutput: 8192,
-      pricing: {
-        cachedInput: 0.1,
-        input: 1,
-        output: 5,
-        writeCacheInput: 1.25,
-      },
-      releasedAt: '2024-11-05',
-    },
-    {
-      contextWindowTokens: 200_000,
-      description:
-        'Claude 3.5 Sonnet 提升了行业标准，性能超过竞争对手模型和 Claude 3 Opus，在广泛的评估中表现出色，同时具有我们中等层级模型的速度和成本。',
-      displayName: 'Claude 3.5 Sonnet',
-      enabled: true,
-      functionCall: true,
-      id: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
-      pricing: {
-        input: 3,
-        output: 15,
-      },
       vision: true,
     },
     {
       contextWindowTokens: 200_000,
+      description: 'Claude 3.7 Sonnet 欧盟区域版本，是 Anthropic 最快的下一代模型。',
+      displayName: 'Claude 3.7 Sonnet (EU)',
+      enabled: true,
+      functionCall: true,
+      id: 'eu.anthropic.claude-3-7-sonnet-20250219-v1:0',
+      maxOutput: 8192,
+      pricing: {
+        cachedInput: 0.1,
+        input: 1,
+        output: 5,
+        writeCacheInput: 1.25,
+      },
+      releasedAt: '2025-02-24',
+      vision: true,
+    },
+    {
+      contextWindowTokens: 200_000,
+      description: 'Claude 3.7 Sonnet 亚太区域版本，是 Anthropic 最快的下一代模型。',
+      displayName: 'Claude 3.7 Sonnet (APAC)',
+      enabled: true,
+      functionCall: true,
+      id: 'apac.anthropic.claude-3-7-sonnet-20250219-v1:0',
+      maxOutput: 8192,
+      pricing: {
+        cachedInput: 0.1,
+        input: 1,
+        output: 5,
+        writeCacheInput: 1.25,
+      },
+      releasedAt: '2025-02-24',
+      vision: true,
+    },
+
+    {
+      contextWindowTokens: 200_000,
       description:
         'Claude 3.5 Sonnet 提升了行业标准，性能超过竞争对手模型和 Claude 3 Opus，在广泛的评估中表现出色，同时具有我们中等层级模型的速度和成本。',
-      displayName: 'Claude 3.5 Sonnet v2 (Inference profile)',
+      displayName: 'Claude 3.5 Sonnet v2 (US)',
       enabled: true,
       functionCall: true,
       id: 'us.anthropic.claude-3-5-sonnet-20241022-v2:0',
@@ -107,12 +229,25 @@ const Bedrock: ModelProviderCard = {
     },
     {
       contextWindowTokens: 200_000,
-      description:
-        'Claude 3.5 Sonnet 提升了行业标准，性能超过竞争对手模型和 Claude 3 Opus，在广泛的评估中表现出色，同时具有我们中等层级模型的速度和成本。',
-      displayName: 'Claude 3.5 Sonnet 0620',
+      description: 'Claude 3.5 Sonnet 亚太区域版本，提升了行业标准。',
+      displayName: 'Claude 3.5 Sonnet v2 (APAC)',
       enabled: true,
       functionCall: true,
-      id: 'anthropic.claude-3-5-sonnet-20240620-v1:0',
+      id: 'apac.anthropic.claude-3-5-sonnet-20241022-v2:0',
+      pricing: {
+        input: 3,
+        output: 15,
+      },
+      vision: true,
+    },
+
+    {
+      contextWindowTokens: 200_000,
+      description: 'Claude 3.5 Sonnet 0620 美国区域版本，提升了行业标准。',
+      displayName: 'Claude 3.5 Sonnet 0620 (US)',
+      enabled: true,
+      functionCall: true,
+      id: 'us.anthropic.claude-3-5-sonnet-20240620-v1:0',
       pricing: {
         input: 3,
         output: 15,
@@ -121,12 +256,25 @@ const Bedrock: ModelProviderCard = {
     },
     {
       contextWindowTokens: 200_000,
-      description:
-        'Claude 3 Haiku 是 Anthropic 最快、最紧凑的模型，提供近乎即时的响应速度。它可以快速回答简单的查询和请求。客户将能够构建模仿人类互动的无缝 AI 体验。Claude 3 Haiku 可以处理图像并返回文本输出，具有 200K 的上下文窗口。',
-      displayName: 'Claude 3 Haiku',
+      description: 'Claude 3.5 Sonnet 0620 亚太区域版本，提升了行业标准。',
+      displayName: 'Claude 3.5 Sonnet 0620 (APAC)',
       enabled: true,
       functionCall: true,
-      id: 'anthropic.claude-3-haiku-20240307-v1:0',
+      id: 'apac.anthropic.claude-3-5-sonnet-20240620-v1:0',
+      pricing: {
+        input: 3,
+        output: 15,
+      },
+      vision: true,
+    },
+
+    {
+      contextWindowTokens: 200_000,
+      description: 'Claude 3 Haiku 美国区域版本，是 Anthropic 最快、最紧凑的模型。',
+      displayName: 'Claude 3 Haiku (US)',
+      enabled: true,
+      functionCall: true,
+      id: 'us.anthropic.claude-3-haiku-20240307-v1:0',
       pricing: {
         input: 0.25,
         output: 1.25,
@@ -135,12 +283,38 @@ const Bedrock: ModelProviderCard = {
     },
     {
       contextWindowTokens: 200_000,
-      description:
-        'Anthropic 的 Claude 3 Sonnet 在智能和速度之间达到了理想的平衡——特别适合企业工作负载。它以低于竞争对手的价格提供最大的效用，并被设计成为可靠的、高耐用的主力机，适用于规模化的 AI 部署。Claude 3 Sonnet 可以处理图像并返回文本输出，具有 200K 的上下文窗口。',
-      displayName: 'Claude 3 Sonnet',
+      description: 'Claude 3 Haiku 欧盟区域版本，是 Anthropic 最快、最紧凑的模型。',
+      displayName: 'Claude 3 Haiku (EU)',
       enabled: true,
       functionCall: true,
-      id: 'anthropic.claude-3-sonnet-20240229-v1:0',
+      id: 'eu.anthropic.claude-3-haiku-20240307-v1:0',
+      pricing: {
+        input: 0.25,
+        output: 1.25,
+      },
+      vision: true,
+    },
+    {
+      contextWindowTokens: 200_000,
+      description: 'Claude 3 Haiku 亚太区域版本，是 Anthropic 最快、最紧凑的模型。',
+      displayName: 'Claude 3 Haiku (APAC)',
+      enabled: true,
+      functionCall: true,
+      id: 'apac.anthropic.claude-3-haiku-20240307-v1:0',
+      pricing: {
+        input: 0.25,
+        output: 1.25,
+      },
+      vision: true,
+    },
+
+    {
+      contextWindowTokens: 200_000,
+      description: 'Claude 3 Sonnet 美国区域版本，在智能和速度之间达到了理想的平衡。',
+      displayName: 'Claude 3 Sonnet (US)',
+      enabled: true,
+      functionCall: true,
+      id: 'us.anthropic.claude-3-sonnet-20240229-v1:0',
       pricing: {
         input: 3,
         output: 15,
@@ -149,12 +323,67 @@ const Bedrock: ModelProviderCard = {
     },
     {
       contextWindowTokens: 200_000,
-      description:
-        'Claude 3 Opus 是 Anthropic 最强大的 AI 模型，具有在高度复杂任务上的最先进性能。它可以处理开放式提示和未见过的场景，具有出色的流畅性和类人的理解能力。Claude 3 Opus 展示了生成 AI 可能性的前沿。Claude 3 Opus 可以处理图像并返回文本输出，具有 200K 的上下文窗口。',
-      displayName: 'Claude 3 Opus',
+      description: 'Claude 3 Sonnet 欧盟区域版本，在智能和速度之间达到了理想的平衡。',
+      displayName: 'Claude 3 Sonnet (EU)',
       enabled: true,
       functionCall: true,
-      id: 'anthropic.claude-3-opus-20240229-v1:0',
+      id: 'eu.anthropic.claude-3-sonnet-20240229-v1:0',
+      pricing: {
+        input: 3,
+        output: 15,
+      },
+      vision: true,
+    },
+    {
+      contextWindowTokens: 200_000,
+      description: 'Claude 3 Sonnet 亚太区域版本，在智能和速度之间达到了理想的平衡。',
+      displayName: 'Claude 3 Sonnet (APAC)',
+      enabled: true,
+      functionCall: true,
+      id: 'apac.anthropic.claude-3-sonnet-20240229-v1:0',
+      pricing: {
+        input: 3,
+        output: 15,
+      },
+      vision: true,
+    },
+
+    {
+      contextWindowTokens: 200_000,
+      description: 'Claude 3 Opus 美国区域版本，是 Anthropic 最强大的 AI 模型。',
+      displayName: 'Claude 3 Opus (US)',
+      enabled: true,
+      functionCall: true,
+      id: 'us.anthropic.claude-3-opus-20240229-v1:0',
+      pricing: {
+        input: 15,
+        output: 75,
+      },
+      vision: true,
+    },
+    // Claude 4 Models (Cross-Region)
+    {
+      contextWindowTokens: 200_000,
+      description:
+        'Claude 4 Opus 是 Anthropic 最新一代的旗舰模型，具有前所未有的智能水平和推理能力。',
+      displayName: 'Claude 4 Opus (US)',
+      enabled: true,
+      functionCall: true,
+      id: 'us.anthropic.claude-opus-4-20250514-v1:0',
+      pricing: {
+        input: 60,
+        output: 180,
+      },
+      vision: true,
+    },
+    {
+      contextWindowTokens: 200_000,
+      description:
+        'Claude 4 Sonnet 是 Anthropic 新一代的平衡型模型，在智能和效率之间取得最佳平衡。',
+      displayName: 'Claude 4 Sonnet (US)',
+      enabled: true,
+      functionCall: true,
+      id: 'us.anthropic.claude-sonnet-4-20250514-v1:0',
       pricing: {
         input: 15,
         output: 75,
@@ -163,200 +392,258 @@ const Bedrock: ModelProviderCard = {
     },
     {
       contextWindowTokens: 200_000,
-      description:
-        'Claude 2 的更新版，具有双倍的上下文窗口，以及在长文档和 RAG 上下文中的可靠性、幻觉率和基于证据的准确性的改进。',
-      displayName: 'Claude 2.1',
-      id: 'anthropic.claude-v2:1',
-      pricing: {
-        input: 8,
-        output: 24,
-      },
-    },
-    {
-      contextWindowTokens: 100_000,
-      description:
-        'Anthropic 在从复杂对话和创意内容生成到详细指令跟随的广泛任务中都表现出高度能力的模型。',
-      displayName: 'Claude 2.0',
-      id: 'anthropic.claude-v2',
-      pricing: {
-        input: 8,
-        output: 24,
-      },
-    },
-    {
-      contextWindowTokens: 100_000,
-      description:
-        '一款快速、经济且仍然非常有能力的模型，可以处理包括日常对话、文本分析、总结和文档问答在内的一系列任务。',
-      displayName: 'Claude Instant',
-      id: 'anthropic.claude-instant-v1',
-      pricing: {
-        input: 0.8,
-        output: 2.4,
-      },
-    },
-    {
-      contextWindowTokens: 128_000,
-      description:
-        'Meta Llama 3.1 8B Instruct 的更新版，包括扩展的 128K 上下文长度、多语言性和改进的推理能力。Llama 3.1 提供的多语言大型语言模型 (LLMs) 是一组预训练的、指令调整的生成模型，包括 8B、70B 和 405B 大小 (文本输入/输出)。Llama 3.1 指令调整的文本模型 (8B、70B、405B) 专为多语言对话用例进行了优化，并在常见的行业基准测试中超过了许多可用的开源聊天模型。Llama 3.1 旨在用于多种语言的商业和研究用途。指令调整的文本模型适用于类似助手的聊天，而预训练模型可以适应各种自然语言生成任务。Llama 3.1 模型还支持利用其模型的输出来改进其他模型，包括合成数据生成和精炼。Llama 3.1 是使用优化的变压器架构的自回归语言模型。调整版本使用监督微调 (SFT) 和带有人类反馈的强化学习 (RLHF) 来符合人类对帮助性和安全性的偏好。',
-      displayName: 'Llama 3.1 8B Instruct',
+      description: 'Claude 4 Sonnet 欧盟区域版本，是 Anthropic 新一代的平衡型模型。',
+      displayName: 'Claude 4 Sonnet (EU)',
       enabled: true,
       functionCall: true,
-      id: 'meta.llama3-1-8b-instruct-v1:0',
+      id: 'eu.anthropic.claude-sonnet-4-20250514-v1:0',
+      pricing: {
+        input: 15,
+        output: 75,
+      },
+      vision: true,
+    },
+    {
+      contextWindowTokens: 200_000,
+      description: 'Claude 4 Sonnet 亚太区域版本，是 Anthropic 新一代的平衡型模型。',
+      displayName: 'Claude 4 Sonnet (APAC)',
+      enabled: true,
+      functionCall: true,
+      id: 'apac.anthropic.claude-sonnet-4-20250514-v1:0',
+      pricing: {
+        input: 15,
+        output: 75,
+      },
+      vision: true,
+    },
+
+    // DeepSeek Models (Cross-Region)
+    {
+      contextWindowTokens: 128_000,
+      description: 'DeepSeek R1 是一个具有强大推理能力的模型，专门针对复杂问题解决进行优化。',
+      displayName: 'DeepSeek R1 (US)',
+      enabled: true,
+      functionCall: true,
+      id: 'us.deepseek.r1-v1:0',
+      pricing: {
+        input: 0.14,
+        output: 2.19,
+      },
+    },
+    // Meta Llama Models (Cross-Region)
+
+    {
+      contextWindowTokens: 128_000,
+      description: 'Meta Llama 3.1 8B Instruct 美国区域版本。',
+      displayName: 'Llama 3.1 8B Instruct (US)',
+      enabled: true,
+      functionCall: true,
+      id: 'us.meta.llama3-1-8b-instruct-v1:0',
       pricing: {
         input: 0.22,
         output: 0.22,
       },
     },
+
     {
       contextWindowTokens: 128_000,
-      description:
-        'Meta Llama 3.1 70B Instruct 的更新版，包括扩展的 128K 上下文长度、多语言性和改进的推理能力。Llama 3.1 提供的多语言大型语言模型 (LLMs) 是一组预训练的、指令调整的生成模型，包括 8B、70B 和 405B 大小 (文本输入/输出)。Llama 3.1 指令调整的文本模型 (8B、70B、405B) 专为多语言对话用例进行了优化，并在常见的行业基准测试中超过了许多可用的开源聊天模型。Llama 3.1 旨在用于多种语言的商业和研究用途。指令调整的文本模型适用于类似助手的聊天，而预训练模型可以适应各种自然语言生成任务。Llama 3.1 模型还支持利用其模型的输出来改进其他模型，包括合成数据生成和精炼。Llama 3.1 是使用优化的变压器架构的自回归语言模型。调整版本使用监督微调 (SFT) 和带有人类反馈的强化学习 (RLHF) 来符合人类对帮助性和安全性的偏好。',
-      displayName: 'Llama 3.1 70B Instruct',
+      description: 'Meta Llama 3.1 70B Instruct 美国区域版本。',
+      displayName: 'Llama 3.1 70B Instruct (US)',
       enabled: true,
       functionCall: true,
-      id: 'meta.llama3-1-70b-instruct-v1:0',
+      id: 'us.meta.llama3-1-70b-instruct-v1:0',
       pricing: {
         input: 0.99,
         output: 0.99,
       },
     },
+
     {
       contextWindowTokens: 128_000,
-      description:
-        'Meta Llama 3.1 405B Instruct 是 Llama 3.1 Instruct 模型中最大、最强大的模型，是一款高度先进的对话推理和合成数据生成模型，也可以用作在特定领域进行专业持续预训练或微调的基础。Llama 3.1 提供的多语言大型语言模型 (LLMs) 是一组预训练的、指令调整的生成模型，包括 8B、70B 和 405B 大小 (文本输入/输出)。Llama 3.1 指令调整的文本模型 (8B、70B、405B) 专为多语言对话用例进行了优化，并在常见的行业基准测试中超过了许多可用的开源聊天模型。Llama 3.1 旨在用于多种语言的商业和研究用途。指令调整的文本模型适用于类似助手的聊天，而预训练模型可以适应各种自然语言生成任务。Llama 3.1 模型还支持利用其模型的输出来改进其他模型，包括合成数据生成和精炼。Llama 3.1 是使用优化的变压器架构的自回归语言模型。调整版本使用监督微调 (SFT) 和带有人类反馈的强化学习 (RLHF) 来符合人类对帮助性和安全性的偏好。',
-      displayName: 'Llama 3.1 405B Instruct',
+      description: 'Meta Llama 3.1 405B Instruct 美国区域版本，是最大、最强大的模型。',
+      displayName: 'Llama 3.1 405B Instruct (US)',
       enabled: true,
       functionCall: true,
-      id: 'meta.llama3-1-405b-instruct-v1:0',
+      id: 'us.meta.llama3-1-405b-instruct-v1:0',
       pricing: {
         input: 5.32,
         output: 16,
       },
     },
+    // Llama 3.2 Models (Cross-Region)
     {
-      contextWindowTokens: 8000,
-      description:
-        'Meta Llama 3 是一款面向开发者、研究人员和企业的开放大型语言模型 (LLM)，旨在帮助他们构建、实验并负责任地扩展他们的生成 AI 想法。作为全球社区创新的基础系统的一部分，它非常适合计算能力和资源有限、边缘设备和更快的训练时间。',
-      displayName: 'Llama 3 8B Instruct',
-      id: 'meta.llama3-8b-instruct-v1:0',
+      contextWindowTokens: 128_000,
+      description: 'Meta Llama 3.2 11B Instruct 是一个中等规模的高效模型，适合各种对话和推理任务。',
+      displayName: 'Llama 3.2 11B Instruct (US)',
+      enabled: true,
+      functionCall: true,
+      id: 'us.meta.llama3-2-11b-instruct-v1:0',
       pricing: {
-        input: 0.3,
-        output: 0.6,
+        input: 0.35,
+        output: 0.35,
       },
     },
     {
-      contextWindowTokens: 8000,
-      description:
-        'Meta Llama 3 是一款面向开发者、研究人员和企业的开放大型语言模型 (LLM)，旨在帮助他们构建、实验并负责任地扩展他们的生成 AI 想法。作为全球社区创新的基础系统的一部分，它非常适合内容创建、对话 AI、语言理解、研发和企业应用。',
-      displayName: 'Llama 3 70B Instruct',
-      id: 'meta.llama3-70b-instruct-v1:0',
+      contextWindowTokens: 128_000,
+      description: 'Meta Llama 3.2 1B Instruct 是一个轻量级模型，专为资源受限环境设计。',
+      displayName: 'Llama 3.2 1B Instruct (US)',
+      enabled: true,
+      functionCall: true,
+      id: 'us.meta.llama3-2-1b-instruct-v1:0',
       pricing: {
-        input: 2.65,
-        output: 3.5,
+        input: 0.055,
+        output: 0.055,
       },
     },
-    /*
-    // TODO: Not support for now
     {
-      description: 'A 7B dense Transformer, fast-deployed and easily customisable. Small, yet powerful for a variety of use cases. Supports English and code, and a 32k context window.',
-      displayName: 'Mistral 7B Instruct',
-      enabled: true,
-      id: 'mistral.mistral-7b-instruct-v0:2',
-      tokens: 32_000,
-    },
-    {
-      description: 'A 7B sparse Mixture-of-Experts model with stronger capabilities than Mistral 7B. Uses 12B active parameters out of 45B total. Supports multiple languages, code and 32k context window.',
-      displayName: 'Mixtral 8X7B Instruct',
-      enabled: true,
-      id: 'mistral.mixtral-8x7b-instruct-v0:1',
-      tokens: 32_000,
-    },
-    {
-      description: 'Mistral Small is perfectly suited for straightforward tasks that can be performed in bulk, such as classification, customer support, or text generation. It provides outstanding performance at a cost-effective price point.',
-      displayName: 'Mistral Small',
-      functionCall: true,
-      id: 'mistral.mistral-small-2402-v1:0',
-      tokens: 32_000,
-    },
-    {
-      description: 'Mistral Large 2407 is an advanced Large Language Model (LLM) that supports dozens of languages and is trained on 80+ coding languages. It has best-in-class agentic capabilities with native function calling JSON outputting and reasoning capabilities.',
-      displayName: 'Mistral Large 2 (24.07)',
+      contextWindowTokens: 128_000,
+      description: 'Meta Llama 3.2 1B Instruct 欧盟区域版本，是一个轻量级模型。',
+      displayName: 'Llama 3.2 1B Instruct (EU)',
       enabled: true,
       functionCall: true,
-      id: 'mistral.mistral-large-2407-v1:0',
-      tokens: 128_000,
+      id: 'eu.meta.llama3-2-1b-instruct-v1:0',
+      pricing: {
+        input: 0.055,
+        output: 0.055,
+      },
     },
     {
-      description: 'The most advanced Mistral AI Large Language model capable of handling any language task including complex multilingual reasoning, text understanding, transformation, and code generation.',
-      displayName: 'Mistral Large',
+      contextWindowTokens: 128_000,
+      description:
+        'Meta Llama 3.2 3B Instruct 是一个小型但功能强大的模型，在效率和性能之间取得平衡。',
+      displayName: 'Llama 3.2 3B Instruct (US)',
       enabled: true,
       functionCall: true,
-      id: 'mistral.mistral-large-2402-v1:0',
-      tokens: 32_000,
+      id: 'us.meta.llama3-2-3b-instruct-v1:0',
+      pricing: {
+        input: 0.075,
+        output: 0.075,
+      },
     },
-*/
-    /*
-    // TODO: Not support for now
     {
-      description: 'Command R+ is a highly performant generative language model optimized for large scale production workloads.',
-      displayName: 'Command R+',
+      contextWindowTokens: 128_000,
+      description: 'Meta Llama 3.2 3B Instruct 欧盟区域版本，在效率和性能之间取得平衡。',
+      displayName: 'Llama 3.2 3B Instruct (EU)',
       enabled: true,
       functionCall: true,
-      id: 'cohere.command-r-plus-v1:0',
-      tokens: 128_000,
+      id: 'eu.meta.llama3-2-3b-instruct-v1:0',
+      pricing: {
+        input: 0.075,
+        output: 0.075,
+      },
     },
     {
-      description: 'Command R is a generative language model optimized for long-context tasks and large scale production workloads.',
-      displayName: 'Command R',
+      contextWindowTokens: 128_000,
+      description: 'Meta Llama 3.2 90B Instruct 是一个大型高性能模型，适合复杂的推理和生成任务。',
+      displayName: 'Llama 3.2 90B Instruct (US)',
       enabled: true,
       functionCall: true,
-      id: 'cohere.command-r-v1:0',
-      tokens: 128_000,
+      id: 'us.meta.llama3-2-90b-instruct-v1:0',
+      pricing: {
+        input: 2,
+        output: 2,
+      },
     },
-*/
-    /*
-    // Cohere Command (Text) and AI21 Labs Jurassic-2 (Text) don't support chat with the Converse API
+    // Llama 3.3 Models (Cross-Region)
     {
-      description: 'Command is Cohere flagship text generation model. It is trained to follow user commands and to be instantly useful in practical business applications.',
-      displayName: 'Command',
-      id: 'cohere.command-text-v14',
-      tokens: 4000,
+      contextWindowTokens: 128_000,
+      description: 'Meta Llama 3.3 70B Instruct 是最新一代的高性能模型，具有改进的推理和对话能力。',
+      displayName: 'Llama 3.3 70B Instruct (US)',
+      enabled: true,
+      functionCall: true,
+      id: 'us.meta.llama3-3-70b-instruct-v1:0',
+      pricing: {
+        input: 0.99,
+        output: 0.99,
+      },
     },
+    // Llama 4 Models (Cross-Region)
     {
-      description: 'Cohere Command-Light is a generative model that responds well with instruction-like prompts. This model provides customers with an unbeatable balance of quality, cost-effectiveness, and low-latency inference.',
-      displayName: 'Command Light',
-      id: 'cohere.command-light-text-v14',
-      tokens: 4000,
-    },
-*/
-    /*
-    // TODO: Not support for now
-    {
-      description: 'The latest Foundation Model from AI21 Labs, Jamba-Instruct offers an impressive 256K context window and delivers the best value per price on core text generation, summarization, and question answering tasks for the enterprise.',
-      displayName: 'Jamba-Instruct',
-      id: 'ai21.jamba-instruct-v1:0',
-      tokens: 256_000,
-    },
-*/
-    /*
-    // Cohere Command (Text) and AI21 Labs Jurassic-2 (Text) don't support chat with the Converse API
-    {
-      description: 'Jurassic-2 Mid is less powerful than Ultra, yet carefully designed to strike the right balance between exceptional quality and affordability. Jurassic-2 Mid can be applied to any language comprehension or generation task including question answering, summarization, long-form copy generation, advanced information extraction and many others.',
-      displayName: 'Jurassic-2 Mid',
-      id: 'ai21.j2-mid-v1',
-      tokens: 8191,
+      contextWindowTokens: 128_000,
+      description:
+        'Meta Llama 4 Maverick 17B Instruct 是下一代模型的早期版本，具有创新的架构和能力。',
+      displayName: 'Llama 4 Maverick 17B Instruct (US)',
+      enabled: true,
+      functionCall: true,
+      id: 'us.meta.llama4-maverick-17b-instruct-v1:0',
+      pricing: {
+        input: 0.5,
+        output: 0.5,
+      },
     },
     {
-      description: 'Jurassic-2 Ultra is AI21’s most powerful model for complex tasks that require advanced text generation and comprehension. Popular use cases include question answering, summarization, long-form copy generation, advanced information extraction, and more.',
-      displayName: 'Jurassic-2 Ultra',
-      id: 'ai21.j2-ultra-v1',
-      tokens: 8191,
+      contextWindowTokens: 128_000,
+      description:
+        'Meta Llama 4 Scout 17B Instruct 是下一代模型的探索版本，专注于高效的推理和生成。',
+      displayName: 'Llama 4 Scout 17B Instruct (US)',
+      enabled: true,
+      functionCall: true,
+      id: 'us.meta.llama4-scout-17b-instruct-v1:0',
+      pricing: {
+        input: 0.5,
+        output: 0.5,
+      },
     },
-*/
+
+    // Mistral Models (Cross-Region)
+    {
+      contextWindowTokens: 128_000,
+      description:
+        'Mistral Pixtral Large 是一个多模态模型，能够处理文本和图像输入，具有强大的视觉理解能力。',
+      displayName: 'Pixtral Large 2502 (US)',
+      enabled: true,
+      functionCall: true,
+      id: 'us.mistral.pixtral-large-2502-v1:0',
+      pricing: {
+        input: 3,
+        output: 9,
+      },
+      vision: true,
+    },
+    {
+      contextWindowTokens: 128_000,
+      description: 'Mistral Pixtral Large 欧盟区域版本，是一个多模态模型。',
+      displayName: 'Pixtral Large 2502 (EU)',
+      enabled: true,
+      functionCall: true,
+      id: 'eu.mistral.pixtral-large-2502-v1:0',
+      pricing: {
+        input: 3,
+        output: 9,
+      },
+      vision: true,
+    },
+    // US GovCloud Models
+    {
+      contextWindowTokens: 200_000,
+      description: 'Claude 3.5 Sonnet 美国政府专区版本，提升了行业标准。',
+      displayName: 'Claude 3.5 Sonnet (US-Gov)',
+      enabled: true,
+      functionCall: true,
+      id: 'us-gov.anthropic.claude-3-5-sonnet-20240620-v1:0',
+      pricing: {
+        input: 3,
+        output: 15,
+      },
+      vision: true,
+    },
+    {
+      contextWindowTokens: 200_000,
+      description: 'Claude 3 Haiku 美国政府专区版本，是 Anthropic 最快、最紧凑的模型。',
+      displayName: 'Claude 3 Haiku (US-Gov)',
+      enabled: true,
+      functionCall: true,
+      id: 'us-gov.anthropic.claude-3-haiku-20240307-v1:0',
+      pricing: {
+        input: 0.25,
+        output: 1.25,
+      },
+      vision: true,
+    },
   ],
-  // checkModel will be dynamically determined from available models
+  checkModel: 'us.amazon.nova-lite-v1:0',
   description:
-    'Bedrock 是亚马逊 AWS 提供的一项服务，专注于为企业提供先进的 AI 语言模型和视觉模型。其模型家族包括 Anthropic 的 Claude 系列、Meta 的 Llama 3.1 系列等，涵盖从轻量级到高性能的多种选择，支持文本生成、对话、图像处理等多种任务，适用于不同规模和需求的企业应用。',
+    'Bedrock 是亚马逊 AWS 提供的一项服务，专注于为企业提供先进的 AI 语言模型和视觉模型。其模型家族包括 Anthropic 的 Claude 系列、Meta 的 Llama 3.1 系列等，涵盖从轻量级到高性能的多种选择，支持文本生成、对话、图像处理等多种任务，适用于不同规模和需求的企业应用。支持跨区域推理配置文件，提供更好的性能和可用性。',
   id: 'bedrock',
   modelsUrl: 'https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html',
   name: 'Bedrock',
