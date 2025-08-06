@@ -306,6 +306,7 @@
         "latestTime": "上次更新时间：{{time}}",
         "noLatestTime": "暂未获取列表"
       },
+      "noModelsInCategory": "该分类下暂无启用的模型",
       "resetAll": {
         "conform": "确认重置当前模型的所有修改？重置后当前模型列表将会回到默认状态",
         "success": "重置成功",
@@ -316,7 +317,15 @@
       "title": "模型列表",
       "total": "共 {{count}} 个模型可用"
     },
-    "searchNotFound": "未找到搜索结果"
+    "searchNotFound": "未找到搜索结果",
+    "tabs": {
+      "all": "全部",
+      "chat": "对话",
+      "embedding": "向量化",
+      "image": "图片",
+      "stt": "ASR",
+      "tts": "TTS"
+    }
   },
   "sortModal": {
     "success": "排序更新成功",

@@ -14,6 +14,7 @@
   "edit": {
     "copy": "复制",
     "cut": "剪切",
+    "delete": "删除",
     "paste": "粘贴",
     "redo": "重做",
     "selectAll": "全选",
