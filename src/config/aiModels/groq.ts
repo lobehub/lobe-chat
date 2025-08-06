@@ -5,7 +5,7 @@ import { AIChatModelCard } from '@/types/aiModel';
 
 const groqChatModels: AIChatModelCard[] = [
   {
-    contextWindowTokens: 131_072,
+    contextWindowTokens: 8192,
     description:
       'Compound-beta 是一个复合 AI 系统，由 GroqCloud 中已经支持的多个开放可用的模型提供支持，可以智能地、有选择地使用工具来回答用户查询。',
     displayName: 'Compound Beta',
@@ -15,12 +15,48 @@ const groqChatModels: AIChatModelCard[] = [
     type: 'chat',
   },
   {
-    contextWindowTokens: 131_072,
+    contextWindowTokens: 8192,
     description:
       'Compound-beta-mini 是一个复合 AI 系统，由 GroqCloud 中已经支持的公开可用模型提供支持，可以智能地、有选择地使用工具来回答用户查询。',
     displayName: 'Compound Beta Mini',
     id: 'compound-beta-mini',
     maxOutput: 8192,
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'OpenAI GPT-OSS 120B 是一款拥有 1200 亿参数的顶尖语言模型，内置浏览器搜索和代码执行功能，并具备推理能力。',
+    displayName: 'GPT OSS 120B',
+    id: 'openai/gpt-oss-120b',
+    maxOutput: 32_768,
+    pricing: {
+      input: 0.15,
+      output: 0.75,
+    },
+    releasedAt: '2025-08-06',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 131_072,
+    description:
+      'OpenAI GPT-OSS 20B 是一款拥有 200 亿参数的顶尖语言模型，内置浏览器搜索和代码执行功能，并具备推理能力。',
+    displayName: 'GPT OSS 20B',
+    id: 'openai/gpt-oss-20b',
+    maxOutput: 32_768,
+    pricing: {
+      input: 0.1,
+      output: 0.5,
+    },
+    releasedAt: '2025-08-06',
     type: 'chat',
   },
   {
@@ -75,7 +111,7 @@ const groqChatModels: AIChatModelCard[] = [
     contextWindowTokens: 131_072,
     displayName: 'Qwen3 32B',
     id: 'qwen/qwen3-32b',
-    maxOutput: 40_960,
+    maxOutput: 131_072,
     pricing: {
       input: 0.29,
       output: 0.59,
@@ -132,7 +168,7 @@ const groqChatModels: AIChatModelCard[] = [
     abilities: {
       functionCall: true,
     },
-    contextWindowTokens: 131_072,
+    contextWindowTokens: 32_768,
     description:
       'Meta Llama 3.3 多语言大语言模型 ( LLM ) 是 70B（文本输入/文本输出）中的预训练和指令调整生成模型。 Llama 3.3 指令调整的纯文本模型针对多语言对话用例进行了优化，并且在常见行业基准上优于许多可用的开源和封闭式聊天模型。',
     displayName: 'Llama 3.3 70B Versatile',
