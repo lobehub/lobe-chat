@@ -41,7 +41,7 @@ export const LobeAiHubMixAI = createRouterRuntime({
       const modelsPage = (await client.models.list()) as any;
       const modelList: AiHubMixModelCard[] = modelsPage.data || [];
 
-      return await processMultiProviderModelList(modelList);
+      return await processMultiProviderModelList(modelList, 'aihubmix');
     } catch (error) {
       console.warn(
         'Failed to fetch AiHubMix models. Please ensure your AiHubMix API key is valid:',

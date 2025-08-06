@@ -1,5 +1,7 @@
 import type { ChatModelCard } from '@/types/llm';
 
+import type { ModelProviderKey } from '../types';
+
 export interface ModelProcessorConfig {
   excludeKeywords?: readonly string[]; // 对符合的模型不添加标签
   functionCallKeywords?: readonly string[];
@@ -107,13 +109,12 @@ export const IMAGE_MODEL_KEYWORDS = [
   'firefly',
   'cogview',
   'wanxiang',
-  'drawing',
-  'paint',
-  'sketch',
-  'art',
-  'generate-image',
-  'text-to-image',
-  't2i',
+  'DESCRIBE',
+  'UPSCALE',
+  '-image',
+  '^V3',
+  '^V_2',
+  '^V_1',
 ] as const;
 
 /**
@@ -279,7 +280,12 @@ const processModelCard = (
     type:
       model.type ||
       knownModel?.type ||
-      (isKeywordListMatch(model.id.toLowerCase(), IMAGE_MODEL_KEYWORDS) ? 'image' : 'chat'),
+      (isKeywordListMatch(
+        model.id.toLowerCase(),
+        IMAGE_MODEL_KEYWORDS.map((k) => k.toLowerCase()),
+      )
+        ? 'image'
+        : 'chat'),
     vision:
       model.vision ??
       knownModel?.abilities?.vision ??
@@ -325,12 +331,27 @@ export const processModelList = async (
 /**
  * 处理混合提供商的模型列表
  * @param modelList 模型列表
+ * @param providerid 可选的提供商ID，用于获取其本地配置文件
  * @returns 处理后的模型卡片列表
  */
 export const processMultiProviderModelList = async (
   modelList: Array<{ id: string }>,
+  providerid?: ModelProviderKey,
 ): Promise<ChatModelCard[]> => {
   const { LOBE_DEFAULT_MODEL_LIST } = await import('@/config/aiModels');
+
+  // 如果提供了 providerid，尝试获取该提供商的本地配置
+  let providerLocalConfig: any[] | null = null;
+  if (providerid) {
+    try {
+      const modulePath = `@/config/aiModels/${providerid}`;
+      const moduleImport = await import(modulePath);
+      providerLocalConfig = moduleImport.default;
+    } catch {
+      // 如果配置文件不存在或导入失败，保持为 null
+      providerLocalConfig = null;
+    }
+  }
 
   return Promise.all(
     modelList.map(async (model) => {
@@ -347,7 +368,20 @@ export const processMultiProviderModelList = async (
         );
       }
 
-      return processModelCard(model, config, knownModel);
+      // 如果提供了 providerid 且有本地配置，尝试从中获取模型的 enabled 状态
+      let providerLocalModelConfig = null;
+      if (providerLocalConfig && Array.isArray(providerLocalConfig)) {
+        providerLocalModelConfig = providerLocalConfig.find((m) => m.id === model.id);
+      }
+
+      const processedModel = processModelCard(model, config, knownModel);
+
+      // 如果找到了本地配置中的模型，使用其 enabled 状态
+      if (providerLocalModelConfig && typeof providerLocalModelConfig.enabled === 'boolean') {
+        processedModel.enabled = providerLocalModelConfig.enabled;
+      }
+
+      return processedModel;
     }),
   ).then((results) => results.filter(Boolean));
 };

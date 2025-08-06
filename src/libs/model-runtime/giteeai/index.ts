@@ -15,7 +15,7 @@ export const LobeGiteeAI = createOpenAICompatibleRuntime({
     const modelsPage = (await client.models.list()) as any;
     const modelList: GiteeAIModelCard[] = modelsPage.data;
 
-    return await processMultiProviderModelList(modelList);
+    return await processMultiProviderModelList(modelList, 'giteeai');
   },
   provider: ModelProvider.GiteeAI,
 });

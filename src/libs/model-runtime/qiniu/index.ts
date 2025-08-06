@@ -17,7 +17,7 @@ export const LobeQiniuAI = createOpenAICompatibleRuntime({
     const modelList: QiniuModelCard[] = modelsPage.data;
 
     // 自动检测模型提供商并选择相应配置
-    return processMultiProviderModelList(modelList);
+    return processMultiProviderModelList(modelList, 'qiniu');
   },
   provider: ModelProvider.Qiniu,
 });

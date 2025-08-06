@@ -69,7 +69,7 @@ export const LobeGithubAI = createOpenAICompatibleRuntime({
         undefined,
     }));
 
-    return await processMultiProviderModelList(formattedModels);
+    return await processMultiProviderModelList(formattedModels, 'github');
   },
   provider: ModelProvider.Github,
 });
