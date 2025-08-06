@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Fix fail to fetch aihubmix model on client mode."],
+      "improvements": ["Add context menu for desktop, support different model tabs."]
+    },
+    "date": "2025-08-06",
+    "version": "1.110.2"
+  },
+  {
+    "children": {
       "fixes": ["Fix remote avatar broken in desktop again."]
     },
     "date": "2025-08-06",
