@@ -315,7 +315,7 @@ const hunyuanChatModels: AIChatModelCard[] = [
       input: 0.8,
       output: 2,
     },
-    releasedAt: '2025-05-20',
+    releasedAt: '2025-07-16',
     settings: {
       searchImpl: 'params',
     },
