@@ -1475,6 +1475,12 @@
   "gpt-image-1": {
     "description": "Modèle natif multimodal de génération d'images de ChatGPT."
   },
+  "gpt-oss": {
+    "description": "GPT-OSS 20B est un grand modèle de langage open source publié par OpenAI, utilisant la technologie de quantification MXFP4, adapté pour fonctionner sur des GPU grand public haut de gamme ou des Mac Apple Silicon. Ce modèle excelle dans la génération de dialogues, la rédaction de code et les tâches de raisonnement, avec prise en charge des appels de fonctions et de l'utilisation d'outils."
+  },
+  "gpt-oss:120b": {
+    "description": "GPT-OSS 120B est un grand modèle de langage open source publié par OpenAI, utilisant la technologie de quantification MXFP4, conçu comme un modèle phare. Il nécessite un environnement multi-GPU ou une station de travail haute performance, offrant des performances exceptionnelles en raisonnement complexe, génération de code et traitement multilingue, avec prise en charge avancée des appels de fonctions et de l'intégration d'outils."
+  },
   "grok-2-1212": {
     "description": "Ce modèle a été amélioré en termes de précision, de respect des instructions et de capacités multilingues."
   },

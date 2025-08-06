@@ -283,7 +283,7 @@ We have implemented support for the following model service providers:
 - **[Search1API](https://lobechat.com/discover/provider/search1api)**: Search1API provides access to the DeepSeek series of models that can connect to the internet as needed, including standard and fast versions, supporting a variety of model sizes.
 - **[InfiniAI](https://lobechat.com/discover/provider/infiniai)**: Provides high-performance, easy-to-use, and secure large model services for application developers, covering the entire process from large model development to service deployment.
 - **[Qiniu](https://lobechat.com/discover/provider/qiniu)**: Qiniu, as a long-established cloud service provider, delivers cost-effective and reliable AI inference services for both real-time and batch processing, with a simple and user-friendly experience.
-- **[302.AI](https://lobechat.com/discover/provider/ai302)**:
+- **[302.AI](https://lobechat.com/discover/provider/ai302)**: 302.AI is an on-demand AI application platform offering the most comprehensive AI APIs and online AI applications available on the market.
 
 </details>
 
