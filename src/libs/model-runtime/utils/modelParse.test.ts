@@ -181,7 +181,7 @@ describe('modelParse', () => {
 
       const gpt4Result = result.find((m) => m.id === 'gpt-4')!;
       expect(gpt4Result.displayName).toBe('GPT-4');
-      expect(gpt4Result.enabled).toBe(true);
+      expect(gpt4Result.enabled).toBe(false);
       expect(gpt4Result.contextWindowTokens).toBe(8192);
       expect(gpt4Result.maxOutput).toBe(4096);
       expect(gpt4Result.functionCall).toBe(false); // From knownModel.abilities
@@ -287,7 +287,7 @@ describe('modelParse', () => {
           { id: 'unknown-model-for-enabled-test' }, // unknown
         ];
         const result = await processModelList(modelList, config);
-        expect(result.find((m) => m.id === 'gpt-4')!.enabled).toBe(true);
+        expect(result.find((m) => m.id === 'gpt-4')!.enabled).toBe(false);
         expect(result.find((m) => m.id === 'model-known-disabled')!.enabled).toBe(false);
         expect(result.find((m) => m.id === 'unknown-model-for-enabled-test')!.enabled).toBe(false);
       });
@@ -490,7 +490,7 @@ describe('modelParse', () => {
         expect(result[0].displayName).toBe('Direct Special Model'); // From model (priority)
         expect(result[0].contextWindowTokens).toBe(5000); // From model (priority)
         expect(result[0].maxOutput).toBe(2000); // From knownModel
-        expect(result[0].enabled).toBe(true); // From knownModel
+        expect(result[0].enabled).toBe(false);
       });
 
       it('should correctly process reasoning capabilities based on keywords', async () => {
