@@ -732,9 +732,26 @@ describe('transformToChatModelCards', () => {
         id: 'gpt-4o',
         maxOutput: 4096,
         pricing: {
-          cachedInput: 1.25,
-          input: 2.5,
-          output: 10,
+          units: [
+            {
+              name: 'CachedTextInput',
+              rate: 1.25,
+              strategy: 'fixed',
+              unit: 'MillionTokens',
+            },
+            {
+              name: 'TextInput',
+              rate: 2.5,
+              strategy: 'fixed',
+              unit: 'MillionTokens',
+            },
+            {
+              name: 'TextOutput',
+              rate: 10,
+              strategy: 'fixed',
+              unit: 'MillionTokens',
+            },
+          ],
         },
         providerId: 'azure',
         releasedAt: '2024-05-13',
@@ -753,9 +770,26 @@ describe('transformToChatModelCards', () => {
         id: 'gpt-4o-mini',
         maxOutput: 4096,
         pricing: {
-          cachedInput: 0.075,
-          input: 0.15,
-          output: 0.6,
+          units: [
+            {
+              name: 'CachedTextInput',
+              rate: 0.075,
+              strategy: 'fixed',
+              unit: 'MillionTokens',
+            },
+            {
+              name: 'TextInput',
+              rate: 0.15,
+              strategy: 'fixed',
+              unit: 'MillionTokens',
+            },
+            {
+              name: 'TextOutput',
+              rate: 0.6,
+              strategy: 'fixed',
+              unit: 'MillionTokens',
+            },
+          ],
         },
         type: 'chat',
       },
@@ -772,9 +806,26 @@ describe('transformToChatModelCards', () => {
         id: 'o1-mini',
         maxOutput: 65536,
         pricing: {
-          cachedInput: 0.55,
-          input: 1.1,
-          output: 4.4,
+          units: [
+            {
+              name: 'CachedTextInput',
+              rate: 0.55,
+              strategy: 'fixed',
+              unit: 'MillionTokens',
+            },
+            {
+              name: 'TextInput',
+              rate: 1.1,
+              strategy: 'fixed',
+              unit: 'MillionTokens',
+            },
+            {
+              name: 'TextOutput',
+              rate: 4.4,
+              strategy: 'fixed',
+              unit: 'MillionTokens',
+            },
+          ],
         },
         releasedAt: '2024-09-12',
         type: 'chat',
