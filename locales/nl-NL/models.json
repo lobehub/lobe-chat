@@ -1475,6 +1475,12 @@
   "gpt-image-1": {
     "description": "ChatGPT native multimodaal afbeeldingsgeneratiemodel"
   },
+  "gpt-oss": {
+    "description": "GPT-OSS 20B is een open-source groot taalmodel uitgebracht door OpenAI, dat gebruikmaakt van MXFP4-kwantisatietechnologie en geschikt is voor gebruik op high-end consumentengpu's of Apple Silicon Macs. Dit model presteert uitstekend bij dialooggeneratie, code schrijven en redeneertaken, en ondersteunt functieverzoeken en het gebruik van tools."
+  },
+  "gpt-oss:120b": {
+    "description": "GPT-OSS 120B is een groot open-source taalmodel uitgebracht door OpenAI, dat gebruikmaakt van MXFP4-kwantisatietechnologie en als vlaggenschipmodel fungeert. Het vereist een multi-gpu- of high-performance workstation-omgeving en levert uitstekende prestaties bij complexe redenering, codegeneratie en meertalige verwerking, met ondersteuning voor geavanceerde functieverzoeken en toolintegratie."
+  },
   "grok-2-1212": {
     "description": "Dit model heeft verbeteringen aangebracht in nauwkeurigheid, instructievolging en meertalige capaciteiten."
   },

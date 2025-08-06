@@ -1,15 +1,14 @@
-import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { Alert, FormItem, Input, InputPassword } from '@lobehub/ui';
 import { Button, Divider, Form, FormInstance, Radio } from 'antd';
+import isEqual from 'fast-deep-equal';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import KeyValueEditor from '@/components/KeyValueEditor';
 import MCPStdioCommandInput from '@/components/MCPStdioCommandInput';
-import { mcpService } from '@/services/mcp';
 import { useToolStore } from '@/store/tool';
-import { pluginSelectors } from '@/store/tool/selectors';
+import { mcpStoreSelectors, pluginSelectors } from '@/store/tool/selectors';
 
 import ArgsInput from './ArgsInput';
 import CollapsibleSection from './CollapsibleSection';
@@ -40,6 +39,13 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
 
   const pluginIds = useToolStore(pluginSelectors.storeAndInstallPluginsIdList);
   const [isTesting, setIsTesting] = useState(false);
+  const testMcpConnection = useToolStore((s) => s.testMcpConnection);
+
+  // 使用 identifier 来跟踪测试状态（如果表单中有的话）
+  const formValues = form.getFieldsValue();
+  const identifier = formValues?.identifier || 'temp-test-id';
+  const testState = useToolStore(mcpStoreSelectors.getMCPConnectionTestState(identifier), isEqual);
+
   const [connectionError, setConnectionError] = useState<string | null>(null);
 
   const handleTestConnection = async () => {
@@ -80,43 +86,31 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
       const description = values.customParams?.description;
       const avatar = values.customParams?.avatar;
 
-      let data: LobeChatPluginManifest;
-
-      if (mcp.type === 'http') {
-        if (!mcp.url) throw new Error(t('dev.mcp.url.required'));
-        data = await mcpService.getStreamableMcpServerManifest({
-          auth: mcp.auth,
-          headers: mcp.headers,
-          identifier: id,
-          metadata: { avatar, description },
-          url: mcp.url,
-        });
-      } else if (mcp.type === 'stdio') {
-        if (!mcp.command) throw new Error(t('dev.mcp.command.required'));
-        if (!mcp.args) throw new Error(t('dev.mcp.args.required'));
-        data = await mcpService.getStdioMcpServerManifest(
-          { ...mcp, name: id },
-          { avatar, description },
-        );
-      } else {
-        throw new Error('Invalid MCP type'); // Internal error
-      }
-
-      // Optionally update form if manifest ID differs or to store the fetched manifest
-      // Be careful about overwriting user input if not desired
-      form.setFieldsValue({ manifest: data });
-    } catch (error) {
-      // Check if error is a validation error object (from validateFields)
-
-      // Handle API call errors or other errors
-      const err = error as Error; // Assuming PluginInstallError or similar structure
-      // Use the error message directly if it's a simple string error, otherwise try translation
-      // highlight-start
-      const errorMessage = t('error.testConnectionFailed', {
-        error: err.cause || err.message || t('unknownError'),
+      // 使用 mcpStore 的 testMcpConnection 方法
+      const result = await testMcpConnection({
+        connection: mcp,
+        identifier: id,
+        metadata: { avatar, description },
       });
-      // highlight-end
 
+      if (result.success && result.manifest) {
+        // Optionally update form if manifest ID differs or to store the fetched manifest
+        // Be careful about overwriting user input if not desired
+        form.setFieldsValue({ manifest: result.manifest });
+        setConnectionError(null); // 清除本地错误状态
+      } else if (result.error) {
+        // Store 已经处理了错误状态，这里可以选择显示额外的用户友好提示
+        const errorMessage = t('error.testConnectionFailed', {
+          error: result.error,
+        });
+        setConnectionError(errorMessage);
+      }
+    } catch (error) {
+      // Handle unexpected errors
+      const err = error as Error;
+      const errorMessage = t('error.testConnectionFailed', {
+        error: err.message || t('unknownError'),
+      });
       setConnectionError(errorMessage);
     } finally {
       setIsTesting(false);
@@ -274,10 +268,10 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
               </Button>
             </Flexbox>
           </FormItem>
-          {connectionError && (
+          {(connectionError || testState.error) && (
             <Alert
               closable
-              message={connectionError}
+              message={connectionError || testState.error}
               onClose={() => setConnectionError(null)}
               showIcon
               style={{ marginBottom: 16 }}

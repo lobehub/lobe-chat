@@ -1,42 +1,42 @@
 {
   "confirm": "Potwierdź",
   "debug": {
-    "arguments": "Argumenty",
+    "arguments": "Argumenty wywołania",
     "function_call": "Wywołanie funkcji",
     "off": "Wyłącz debugowanie",
-    "on": "Wyświetl informacje o wywołaniach wtyczki",
-    "payload": "dane wejściowe wtyczki",
+    "on": "Wyświetl informacje o wywołaniu wtyczki",
+    "payload": "Ładunek wtyczki",
     "pluginState": "Stan wtyczki",
-    "response": "Odpowiedź",
+    "response": "Wynik zwrotny",
     "title": "Szczegóły wtyczki",
-    "tool_call": "żądanie wywołania narzędzia"
+    "tool_call": "Żądanie wywołania narzędzia"
   },
   "detailModal": {
     "customPlugin": {
       "description": "Proszę przejść do strony edycji, aby zobaczyć szczegóły",
       "editBtn": "Edytuj teraz",
-      "title": "To jest niestandardowa wtyczka"
+      "title": "To jest wtyczka niestandardowa"
     },
     "emptyState": {
-      "description": "Zainstaluj najpierw tę wtyczkę, aby zobaczyć jej funkcje i opcje konfiguracji",
+      "description": "Proszę najpierw zainstalować tę wtyczkę, aby zobaczyć jej możliwości i opcje konfiguracji",
       "title": "Zobacz szczegóły wtyczki po instalacji"
     },
     "info": {
-      "description": "Opis interfejsu API",
-      "name": "Nazwa interfejsu API"
+      "description": "Opis API",
+      "name": "Nazwa API"
     },
     "tabs": {
-      "info": "Zdolności wtyczki",
+      "info": "Możliwości wtyczki",
       "manifest": "Plik instalacyjny",
       "settings": "Ustawienia"
     },
     "title": "Szczegóły wtyczki"
   },
   "dev": {
-    "confirmDeleteDevPlugin": "Czy na pewno chcesz usunąć tę lokalną wtyczkę? Po usunięciu nie będzie możliwe jej odzyskanie.",
+    "confirmDeleteDevPlugin": "Właśnie usuniesz tę lokalną wtyczkę. Po usunięciu nie będzie można jej odzyskać. Czy na pewno chcesz usunąć tę wtyczkę?",
     "customParams": {
       "useProxy": {
-        "label": "Zainstaluj za pośrednictwem serwera proxy (jeśli występują błędy dostępu z innej domeny, spróbuj włączyć tę opcję i ponownie zainstalować)"
+        "label": "Instaluj przez proxy (jeśli wystąpi błąd CORS, spróbuj włączyć tę opcję i ponownie zainstalować)"
       }
     },
     "deleteSuccess": "Wtyczka została pomyślnie usunięta",
@@ -47,7 +47,7 @@
       },
       "mode": {
         "mcp": "Wtyczka MCP",
-        "mcpExp": "Eksperymentalna",
+        "mcpExp": "Eksperymentalna MCP",
         "url": "Link online"
       },
       "name": {
@@ -61,14 +61,14 @@
         "title": "Ustawienia zaawansowane"
       },
       "args": {
-        "desc": "Lista argumentów przekazywanych do polecenia wykonawczego, zazwyczaj wpisz tutaj nazwę serwera MCP lub ścieżkę do skryptu uruchamiającego",
+        "desc": "Lista argumentów przekazywanych do polecenia wykonawczego, zwykle tutaj wpisz nazwę serwera MCP lub ścieżkę do skryptu startowego",
         "label": "Argumenty polecenia",
-        "placeholder": "Na przykład: mcp-hello-world",
-        "required": "Proszę wprowadzić parametry uruchomienia"
+        "placeholder": "np.: mcp-hello-world",
+        "required": "Proszę wprowadzić argumenty startowe"
       },
       "auth": {
         "bear": "Klucz API",
-        "desc": "Wybierz metodę uwierzytelniania serwera MCP",
+        "desc": "Wybierz sposób uwierzytelniania serwera MCP",
         "label": "Typ uwierzytelniania",
         "none": "Brak uwierzytelniania",
         "placeholder": "Wybierz typ uwierzytelniania",
@@ -83,68 +83,68 @@
         "label": "Ikona wtyczki"
       },
       "command": {
-        "desc": "Wykonywalny plik lub skrypt do uruchomienia serwera MCP STDIO",
+        "desc": "Wykonywalny plik lub skrypt do uruchomienia MCP STDIO Server",
         "label": "Polecenie",
-        "placeholder": "Na przykład: npx / uv / docker itp.",
-        "required": "Proszę wprowadzić polecenie uruchomienia"
+        "placeholder": "np.: npx / uv / docker itp.",
+        "required": "Proszę wprowadzić polecenie startowe"
       },
       "desc": {
-        "desc": "Opis dodawanej wtyczki",
+        "desc": "Dodaj opis wtyczki",
         "label": "Opis wtyczki",
-        "placeholder": "Uzupełnij informacje o użyciu i scenariuszach tej wtyczki"
+        "placeholder": "Dodaj informacje o zastosowaniu i scenariuszach użycia"
       },
       "endpoint": {
-        "desc": "Wprowadź adres swojego serwera MCP Streamable HTTP",
+        "desc": "Wprowadź adres swojego MCP Streamable HTTP Server",
         "label": "URL punktu końcowego MCP"
       },
       "env": {
         "add": "Dodaj nowy wiersz",
-        "desc": "Wprowadź zmienne środowiskowe wymagane przez Twój serwer MCP",
+        "desc": "Wprowadź zmienne środowiskowe wymagane przez serwer MCP",
         "duplicateKeyError": "Klucz pola musi być unikalny",
-        "formValidationFailed": "Walidacja formularza nie powiodła się, sprawdź format argumentów",
+        "formValidationFailed": "Weryfikacja formularza nie powiodła się, sprawdź format parametrów",
         "keyRequired": "Klucz pola nie może być pusty",
         "label": "Zmienne środowiskowe serwera MCP",
-        "stringifyError": "Nie można zserializować argumentów, sprawdź format argumentów"
+        "stringifyError": "Nie można zserializować parametrów, sprawdź format"
       },
       "headers": {
-        "add": "Dodaj wiersz",
+        "add": "Dodaj nowy wiersz",
         "desc": "Wprowadź nagłówki żądania",
         "label": "Nagłówki HTTP"
       },
       "identifier": {
-        "desc": "Nadaj nazwę swojej wtyczce MCP, używając znaków angielskich",
-        "invalid": "Można wprowadzać tylko znaki angielskie, cyfry, oraz symbole - i _",
+        "desc": "Nadaj nazwę swojej wtyczce MCP, musi zawierać znaki angielskie",
+        "invalid": "Identyfikator może zawierać tylko litery, cyfry, myślniki i podkreślenia",
         "label": "Nazwa wtyczki MCP",
-        "placeholder": "Na przykład: my-mcp-plugin",
+        "placeholder": "np.: my-mcp-plugin",
         "required": "Proszę wprowadzić identyfikator usługi MCP"
       },
-      "previewManifest": "Podgląd pliku opisu wtyczki",
+      "previewManifest": "Podgląd pliku manifestu wtyczki",
       "quickImport": "Szybki import konfiguracji JSON",
       "quickImportError": {
-        "empty": "Wprowadzenie nie może być puste",
+        "empty": "Wprowadzone dane nie mogą być puste",
         "invalidJson": "Nieprawidłowy format JSON",
-        "invalidStructure": "Format JSON jest nieprawidłowy"
+        "invalidStructure": "Nieprawidłowa struktura JSON"
       },
-      "stdioNotSupported": "Bieżące środowisko nie obsługuje wtyczek MCP typu stdio",
+      "stdioNotSupported": "Aktualne środowisko nie obsługuje wtyczek MCP typu stdio",
       "testConnection": "Testuj połączenie",
-      "testConnectionTip": "Wtyczka MCP może być używana prawidłowo po pomyślnym teście połączenia",
+      "testConnectionTip": "Wtyczka MCP może być używana tylko po pomyślnym teście połączenia",
       "type": {
-        "desc": "Wybierz sposób komunikacji wtyczki MCP, wersja przeglądarkowa obsługuje tylko Streamable HTTP",
-        "httpFeature1": "Kompatybilność z wersją przeglądarkową i desktopową",
-        "httpFeature2": "Połączenie zdalnego serwera MCP, bez potrzeby dodatkowej instalacji i konfiguracji",
-        "httpShortDesc": "Protokół komunikacyjny oparty na strumieniowym HTTP",
+        "desc": "Wybierz sposób komunikacji wtyczki MCP, wersja webowa obsługuje tylko Streamable HTTP",
+        "httpFeature1": "Kompatybilne z wersją webową i desktopową",
+        "httpFeature2": "Łączy się zdalnie z serwerem MCP, bez potrzeby dodatkowej instalacji",
+        "httpShortDesc": "Protokół komunikacji oparty na strumieniowym HTTP",
         "label": "Typ wtyczki MCP",
-        "stdioFeature1": "Niższe opóźnienie komunikacji, odpowiednie do lokalnego wykonania",
+        "stdioFeature1": "Niższe opóźnienia komunikacji, odpowiednie do lokalnego uruchomienia",
         "stdioFeature2": "Wymaga lokalnej instalacji i uruchomienia serwera MCP",
-        "stdioNotAvailable": "Tryb STDIO jest dostępny tylko w wersji desktopowej",
-        "stdioShortDesc": "Protokół komunikacyjny oparty na standardowym wejściu/wyjściu",
+        "stdioNotAvailable": "Tryb STDIO dostępny tylko w wersji desktopowej",
+        "stdioShortDesc": "Protokół komunikacji oparty na standardowym wejściu i wyjściu",
         "title": "Typ wtyczki MCP"
       },
       "url": {
-        "desc": "Wprowadź adres URL swojego serwera MCP Streamable HTTP, nie obsługuje trybu SSE",
-        "invalid": "Proszę wprowadzić prawidłowy adres URL",
-        "label": "URL punktu końcowego HTTP",
-        "required": "Proszę wprowadzić adres URL usługi MCP"
+        "desc": "Wprowadź adres Streamable HTTP swojego serwera MCP, tryb SSE nie jest obsługiwany",
+        "invalid": "Proszę wprowadzić poprawny adres URL",
+        "label": "URL punktu końcowego Streamable HTTP",
+        "required": "Proszę wprowadzić URL usługi MCP"
       }
     },
     "meta": {
@@ -153,13 +153,13 @@
         "label": "Autor"
       },
       "avatar": {
-        "desc": "Ikona wtyczki, może być emotikonem lub adresem URL",
+        "desc": "Ikona wtyczki, można użyć emoji lub URL",
         "label": "Ikona"
       },
       "description": {
         "desc": "Opis wtyczki",
         "label": "Opis",
-        "placeholder": "Pobierz informacje z wyszukiwarek"
+        "placeholder": "Wyszukaj informacje w wyszukiwarce"
       },
       "formFieldRequired": "To pole jest wymagane",
       "homepage": {
@@ -167,16 +167,16 @@
         "label": "Strona główna"
       },
       "identifier": {
-        "desc": "Unikalny identyfikator wtyczki, obsługuje tylko znaki alfanumeryczne, myślnik - i podkreślenie _",
-        "errorDuplicate": "Identyfikator jest już używany przez inną wtyczkę, proszę zmień identyfikator",
+        "desc": "Unikalny identyfikator wtyczki, automatycznie rozpoznawany z manifestu",
+        "errorDuplicate": "Identyfikator jest już używany przez inną wtyczkę, zmień go",
         "label": "Identyfikator",
-        "pattenErrorMessage": "Dozwolone są tylko znaki alfanumeryczne, myślnik - i podkreślenie _"
+        "pattenErrorMessage": "Dozwolone są tylko litery angielskie, cyfry, - i _"
       },
       "lobe": "Wtyczka {{appName}}",
       "manifest": {
-        "desc": "{{appName}} zainstaluje wtyczkę za pośrednictwem tego linku",
-        "label": "Opis wtyczki (Manifest) URL",
-        "preview": "Podgląd",
+        "desc": "{{appName}} zainstaluje wtyczkę za pomocą tego linku",
+        "label": "Plik manifestu wtyczki (Manifest) URL",
+        "preview": "Podgląd manifestu",
         "refresh": "Odśwież"
       },
       "openai": "Wtyczka OpenAI",
@@ -187,7 +187,7 @@
       }
     },
     "metaConfig": "Konfiguracja metadanych wtyczki",
-    "modalDesc": "Po dodaniu niestandardowej wtyczki można jej używać do weryfikacji rozwoju wtyczki lub bezpośrednio w sesji. Proszę odnieść się do <1>dokumentacji rozwojowej↗</> dotyczącej rozwoju wtyczki.",
+    "modalDesc": "Po dodaniu wtyczki niestandardowej można jej używać do testów i weryfikacji podczas tworzenia wtyczek, a także bezpośrednio w rozmowach. Dokumentacja dla twórców wtyczek: <1>Dokumentacja deweloperska↗</>",
     "openai": {
       "importUrl": "Importuj z linku URL",
       "schema": "Schemat"
@@ -197,57 +197,57 @@
         "noParams": "To narzędzie nie ma parametrów",
         "noResults": "Nie znaleziono API spełniającego kryteria wyszukiwania",
         "params": "Parametry:",
-        "searchPlaceholder": "Szukaj narzędzia..."
+        "searchPlaceholder": "Szukaj narzędzi..."
       },
-      "card": "Podgląd wyświetlania wtyczki",
+      "card": "Podgląd wyglądu wtyczki",
       "desc": "Podgląd opisu wtyczki",
       "empty": {
-        "desc": "Po zakończeniu konfiguracji będziesz mógł podglądać możliwości narzędzi wspieranych przez wtyczkę",
-        "title": "Rozpocznij podgląd po skonfigurowaniu wtyczki"
+        "desc": "Po skonfigurowaniu możesz tutaj zobaczyć obsługiwane funkcje wtyczki",
+        "title": "Rozpocznij podgląd po konfiguracji wtyczki"
       },
       "title": "Podgląd nazwy wtyczki"
     },
     "save": "Zainstaluj wtyczkę",
-    "saveSuccess": "Ustawienia wtyczki zostały pomyślnie zapisane",
+    "saveSuccess": "Ustawienia wtyczki zostały zapisane pomyślnie",
     "tabs": {
-      "manifest": "Opis funkcji manifestu (Manifest)",
+      "manifest": "Lista funkcji (Manifest)",
       "meta": "Metadane wtyczki"
     },
     "title": {
-      "create": "Dodaj niestandardową wtyczkę",
-      "edit": "Edytuj niestandardową wtyczkę"
+      "create": "Dodaj wtyczkę niestandardową",
+      "edit": "Edytuj wtyczkę niestandardową"
     },
     "type": {
-      "lobe": "Wtyczka LobeChat",
+      "lobe": "Wtyczka {{appName}}",
       "openai": "Wtyczka OpenAI"
     },
     "update": "Aktualizuj",
-    "updateSuccess": "Ustawienia wtyczki zostały pomyślnie zaktualizowane"
+    "updateSuccess": "Ustawienia wtyczki zostały zaktualizowane pomyślnie"
   },
   "error": {
-    "fetchError": "Nie udało się pobrać linku manifestu. Upewnij się, że link jest poprawny i zezwala na dostęp z innej domeny.",
+    "fetchError": "Nie udało się pobrać pliku manifestu, upewnij się, że link jest poprawny i pozwala na dostęp z innych domen",
     "installError": "Instalacja wtyczki {{name}} nie powiodła się",
-    "manifestInvalid": "Manifest nie spełnia specyfikacji. Wynik walidacji: \n\n {{error}}",
+    "manifestInvalid": "Manifest nie spełnia wymagań, wynik walidacji: \n\n {{error}}",
     "noManifest": "Plik manifestu nie istnieje",
-    "openAPIInvalid": "Analiza OpenAPI nie powiodła się. Błąd: \n\n {{error}}",
-    "reinstallError": "Nie udało się odświeżyć wtyczki {{name}}",
+    "openAPIInvalid": "Błąd parsowania OpenAPI: \n\n {{error}}",
+    "reinstallError": "Odświeżenie wtyczki {{name}} nie powiodło się",
     "testConnectionFailed": "Nie udało się pobrać manifestu: {{error}}",
-    "urlError": "Link nie zwrócił treści w formacie JSON. Upewnij się, że jest to poprawny link."
+    "urlError": "Link nie zwraca zawartości w formacie JSON, upewnij się, że jest to poprawny link"
   },
   "inspector": {
-    "args": "Zobacz listę parametrów",
+    "args": "Zobacz listę argumentów",
     "pluginRender": "Zobacz interfejs wtyczki"
   },
   "list": {
     "item": {
       "deprecated.title": "Usunięte",
       "local.config": "Konfiguracja",
-      "local.title": "Lokalne"
+      "local.title": "Niestandardowe"
     }
   },
   "loading": {
     "content": "Wywoływanie wtyczki...",
-    "plugin": "Wtyczka jest uruchomiona..."
+    "plugin": "Wtyczka działa..."
   },
   "localSystem": {
     "apiName": {
@@ -255,23 +255,23 @@
       "moveLocalFiles": "Przenieś pliki",
       "readLocalFile": "Odczytaj zawartość pliku",
       "renameLocalFile": "Zmień nazwę",
-      "searchLocalFiles": "Szukaj plików",
-      "writeLocalFile": "Zapisz plik"
+      "searchLocalFiles": "Wyszukaj pliki",
+      "writeLocalFile": "Zapisz do pliku"
     },
     "title": "Pliki lokalne"
   },
   "mcpInstall": {
     "CHECKING_INSTALLATION": "Sprawdzanie środowiska instalacji...",
     "COMPLETED": "Instalacja zakończona",
-    "CONFIGURATION_REQUIRED": "Proszę ukończyć odpowiednią konfigurację, aby kontynuować instalację",
+    "CONFIGURATION_REQUIRED": "Proszę ukończyć konfigurację, aby kontynuować instalację",
     "ERROR": "Błąd instalacji",
     "FETCHING_MANIFEST": "Pobieranie pliku manifestu wtyczki...",
     "GETTING_SERVER_MANIFEST": "Inicjalizacja serwera MCP...",
     "INSTALLING_PLUGIN": "Instalowanie wtyczki...",
-    "configurationDescription": "Ta wtyczka MCP wymaga skonfigurowania parametrów, aby działać poprawnie. Proszę wprowadzić niezbędne informacje konfiguracyjne",
+    "configurationDescription": "Ta wtyczka MCP wymaga konfiguracji parametrów, aby działać poprawnie. Proszę wypełnić wymagane informacje konfiguracyjne",
     "configurationRequired": "Konfiguracja parametrów wtyczki",
     "continueInstall": "Kontynuuj instalację",
-    "dependenciesDescription": "Ta wtyczka wymaga zainstalowania następujących zależności systemowych, aby działać poprawnie. Proszę zainstalować brakujące zależności zgodnie z instrukcjami, a następnie kliknąć, aby ponownie sprawdzić i kontynuować instalację.",
+    "dependenciesDescription": "Ta wtyczka wymaga instalacji następujących zależności systemowych, aby działać poprawnie. Proszę zainstalować brakujące zależności zgodnie z instrukcjami, a następnie kliknąć, aby ponownie sprawdzić i kontynuować instalację.",
     "dependenciesRequired": "Proszę zainstalować zależności systemowe wtyczki",
     "dependencyStatus": {
       "installed": "Zainstalowano",
@@ -283,7 +283,7 @@
       "command": "Polecenie",
       "connectionParams": "Parametry połączenia",
       "env": "Zmienne środowiskowe",
-      "errorOutput": "Dziennik błędów",
+      "errorOutput": "Log błędów",
       "exitCode": "Kod wyjścia",
       "hideDetails": "Ukryj szczegóły",
       "originalError": "Oryginalny błąd",
@@ -306,11 +306,71 @@
     "skipDependencies": "Pomiń sprawdzanie"
   },
   "pluginList": "Lista wtyczek",
+  "protocolInstall": {
+    "actions": {
+      "install": "Zainstaluj",
+      "installAnyway": "Zainstaluj mimo to",
+      "installed": "Zainstalowano"
+    },
+    "config": {
+      "args": "Argumenty",
+      "command": "Polecenie",
+      "env": "Zmienne środowiskowe",
+      "headers": "Nagłówki",
+      "title": "Informacje konfiguracyjne",
+      "type": {
+        "http": "Typ: HTTP",
+        "label": "Typ",
+        "stdio": "Typ: Stdio"
+      },
+      "url": "Adres usługi"
+    },
+    "custom": {
+      "badge": "Wtyczka niestandardowa",
+      "security": {
+        "description": "Ta wtyczka nie została oficjalnie zweryfikowana, instalacja może wiązać się z ryzykiem bezpieczeństwa! Upewnij się, że ufasz źródłu wtyczki.",
+        "title": "⚠️ Ostrzeżenie o ryzyku bezpieczeństwa"
+      },
+      "title": "Zainstaluj wtyczkę niestandardową"
+    },
+    "marketplace": {
+      "title": "Zainstaluj wtyczki zewnętrzne",
+      "trustedBy": "Dostarczone przez {{name}}",
+      "unverified": {
+        "title": "Nieweryfikowane wtyczki zewnętrzne",
+        "warning": "Ta wtyczka pochodzi z nieweryfikowanego rynku zewnętrznego, przed instalacją upewnij się, że ufasz temu źródłu."
+      },
+      "verified": "Zweryfikowane"
+    },
+    "messages": {
+      "connectionTestFailed": "Test połączenia nie powiódł się",
+      "installError": "Instalacja wtyczki nie powiodła się, spróbuj ponownie",
+      "installSuccess": "Wtyczka {{name}} została pomyślnie zainstalowana!",
+      "manifestError": "Nie udało się pobrać szczegółów wtyczki, sprawdź połączenie sieciowe i spróbuj ponownie",
+      "manifestNotFound": "Nie udało się pobrać pliku manifestu wtyczki"
+    },
+    "meta": {
+      "author": "Autor",
+      "homepage": "Strona główna",
+      "identifier": "Identyfikator",
+      "source": "Źródło",
+      "version": "Wersja"
+    },
+    "official": {
+      "badge": "Oficjalna wtyczka LobeHub",
+      "description": "Ta wtyczka jest rozwijana i utrzymywana przez LobeHub, przeszła rygorystyczne kontrole bezpieczeństwa i jest bezpieczna w użyciu.",
+      "loadingMessage": "Pobieranie szczegółów wtyczki...",
+      "loadingTitle": "Ładowanie",
+      "title": "Zainstaluj oficjalną wtyczkę"
+    },
+    "title": "Instaluj wtyczkę MCP",
+    "warning": "⚠️ Upewnij się, że ufasz źródłu tej wtyczki, złośliwe wtyczki mogą zagrozić bezpieczeństwu Twojego systemu."
+  },
   "search": {
     "apiName": {
       "crawlMultiPages": "Odczytaj zawartość wielu stron",
       "crawlSinglePage": "Odczytaj zawartość strony",
-      "search": "Szukaj strony"
+      "search": "Wyszukaj stronę"
     },
     "config": {
       "addKey": "Dodaj klucz",
@@ -322,22 +382,22 @@
       "detail": {
         "preview": "Podgląd",
         "raw": "Tekst źródłowy",
-        "tooLong": "Treść tekstu jest zbyt długa, kontekst rozmowy zachowuje tylko pierwsze {{characters}} znaków, a nadmiar nie jest uwzględniany w kontekście rozmowy"
+        "tooLong": "Zawartość tekstu jest zbyt długa, kontekst rozmowy zachowuje tylko pierwsze {{characters}} znaków, reszta nie jest uwzględniana"
       },
       "meta": {
-        "crawler": "Tryb przeszukiwania",
+        "crawler": "Tryb pobierania",
         "words": "Liczba znaków"
       }
     },
     "searchxng": {
-      "baseURL": "Wprowadź",
-      "description": "Wprowadź adres URL SearchXNG, aby rozpocząć wyszukiwanie w sieci",
+      "baseURL": "Wprowadź adres",
+      "description": "Wprowadź adres SearchXNG, aby rozpocząć wyszukiwanie online",
       "keyPlaceholder": "Wprowadź klucz",
-      "title": "Konfiguracja silnika wyszukiwania SearchXNG",
-      "unconfiguredDesc": "Skontaktuj się z administratorem, aby zakończyć konfigurację silnika wyszukiwania SearchXNG i rozpocząć wyszukiwanie w sieci",
-      "unconfiguredTitle": "Silnik wyszukiwania SearchXNG nie jest jeszcze skonfigurowany"
+      "title": "Konfiguracja wyszukiwarki SearchXNG",
+      "unconfiguredDesc": "Skontaktuj się z administratorem, aby skonfigurować wyszukiwarkę SearchXNG i rozpocząć wyszukiwanie online",
+      "unconfiguredTitle": "SearchXNG nie jest skonfigurowany"
     },
-    "title": "Wyszukiwanie w sieci"
+    "title": "Wyszukiwanie online"
   },
   "setting": "Ustawienia wtyczki",
   "settings": {
@@ -351,60 +411,60 @@
       "title": "Konfiguracja wtyczki"
     },
     "connection": {
-      "args": "Parametry uruchomienia",
-      "command": "Polecenie uruchomienia",
+      "args": "Argumenty startowe",
+      "command": "Polecenie startowe",
       "title": "Informacje o połączeniu",
       "type": "Typ połączenia",
       "url": "Adres usługi"
     },
     "edit": "Edytuj",
     "envConfigDescription": "Te ustawienia zostaną przekazane jako zmienne środowiskowe podczas uruchamiania serwera MCP",
-    "httpTypeNotice": "Wtyczki MCP typu HTTP nie wymagają obecnie konfiguracji zmiennych środowiskowych",
+    "httpTypeNotice": "Wtyczki MCP typu HTTP nie wymagają konfiguracji zmiennych środowiskowych",
     "indexUrl": {
-      "title": "Indeks sklepu",
-      "tooltip": "Edycja nie jest obecnie obsługiwana"
+      "title": "Indeks rynku",
+      "tooltip": "Edycja online nie jest obecnie obsługiwana, ustaw przez zmienne środowiskowe podczas wdrażania"
     },
     "messages": {
       "connectionUpdateFailed": "Aktualizacja informacji o połączeniu nie powiodła się",
-      "connectionUpdateSuccess": "Informacje o połączeniu zostały pomyślnie zaktualizowane",
+      "connectionUpdateSuccess": "Informacje o połączeniu zostały zaktualizowane",
       "envUpdateFailed": "Zapis zmiennych środowiskowych nie powiódł się",
-      "envUpdateSuccess": "Zmienna środowiskowa została pomyślnie zapisana"
+      "envUpdateSuccess": "Zmienna środowiskowa została zapisana pomyślnie"
     },
-    "modalDesc": "Po skonfigurowaniu adresu sklepu wtyczek możesz korzystać z niestandardowego sklepu wtyczek",
+    "modalDesc": "Po skonfigurowaniu adresu rynku wtyczek możesz korzystać z niestandardowego rynku wtyczek",
     "rules": {
-      "argsRequired": "Proszę wprowadzić parametry uruchamiania",
-      "commandRequired": "Proszę wprowadzić polecenie uruchamiania",
+      "argsRequired": "Proszę wprowadzić argumenty startowe",
+      "commandRequired": "Proszę wprowadzić polecenie startowe",
       "urlRequired": "Proszę wprowadzić adres usługi"
     },
     "saveSettings": "Zapisz ustawienia",
-    "title": "Skonfiguruj sklep wtyczek"
+    "title": "Ustawienia rynku wtyczek"
   },
-  "showInPortal": "Proszę sprawdzić szczegóły w obszarze roboczym",
+  "showInPortal": "Proszę zobaczyć szczegóły w obszarze roboczym",
   "store": {
     "actions": {
       "cancel": "Anuluj instalację",
-      "confirmUninstall": "Wtyczka zostanie odinstalowana. Po odinstalowaniu konfiguracja wtyczki zostanie wyczyszczona. Potwierdź swoje działanie.",
+      "confirmUninstall": "Wtyczka zostanie odinstalowana, a jej konfiguracja usunięta. Potwierdź operację",
       "detail": "Szczegóły",
-      "install": "Instaluj",
+      "install": "Zainstaluj",
       "manifest": "Edytuj plik instalacyjny",
       "settings": "Ustawienia",
       "uninstall": "Odinstaluj"
     },
-    "communityPlugin": "Wtyczka społecznościowa",
-    "customPlugin": "Niestandardowa wtyczka",
+    "communityPlugin": "Społeczność zewnętrzna",
+    "customPlugin": "Niestandardowa",
     "empty": "Brak zainstalowanych wtyczek",
-    "emptySelectHint": "Wybierz wtyczkę, aby wyświetlić szczegóły",
+    "emptySelectHint": "Wybierz wtyczkę, aby zobaczyć szczegóły",
     "installAllPlugins": "Zainstaluj wszystkie",
-    "networkError": "Nie udało się pobrać sklepu wtyczek. Sprawdź swoje połączenie sieciowe i spróbuj ponownie",
-    "placeholder": "Szukaj nazwy wtyczki, opisu lub słowa kluczowego...",
-    "releasedAt": "Wydane {{createdAt}}",
+    "networkError": "Nie udało się pobrać sklepu z wtyczkami, sprawdź połączenie sieciowe i spróbuj ponownie",
+    "placeholder": "Wyszukaj nazwę, opis lub słowa kluczowe wtyczki...",
+    "releasedAt": "Opublikowano {{createdAt}}",
     "tabs": {
       "installed": "Zainstalowane",
-      "mcp": "Wtyczka MCP",
+      "mcp": "Wtyczki MCP",
       "old": "Wtyczki LobeChat"
     },
-    "title": "Sklep wtyczek"
+    "title": "Sklep z wtyczkami"
   },
   "unknownError": "Nieznany błąd",
-  "unknownPlugin": "nieznana wtyczka"
+  "unknownPlugin": "Nieznana wtyczka"
 }

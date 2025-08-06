@@ -1475,6 +1475,12 @@
   "gpt-image-1": {
     "description": "Mô hình tạo hình ảnh đa phương thức nguyên bản của ChatGPT"
   },
+  "gpt-oss": {
+    "description": "GPT-OSS 20B là mô hình ngôn ngữ lớn mã nguồn mở do OpenAI phát hành, sử dụng công nghệ lượng tử hóa MXFP4, phù hợp để chạy trên GPU tiêu dùng cao cấp hoặc Mac Apple Silicon. Mô hình này thể hiện xuất sắc trong việc tạo đối thoại, viết mã và các nhiệm vụ suy luận, hỗ trợ gọi hàm và sử dụng công cụ."
+  },
+  "gpt-oss:120b": {
+    "description": "GPT-OSS 120B là mô hình ngôn ngữ lớn mã nguồn mở do OpenAI phát hành, sử dụng công nghệ lượng tử hóa MXFP4, thuộc dòng mô hình hàng đầu. Cần môi trường đa GPU hoặc máy trạm hiệu năng cao để vận hành, có hiệu suất vượt trội trong suy luận phức tạp, tạo mã và xử lý đa ngôn ngữ, hỗ trợ gọi hàm nâng cao và tích hợp bộ công cụ."
+  },
   "grok-2-1212": {
     "description": "Mô hình này đã được cải thiện về độ chính xác, khả năng tuân thủ hướng dẫn và khả năng đa ngôn ngữ."
   },
