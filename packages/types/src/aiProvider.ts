@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-import { AiModelForSelect, EnabledAiModel, ModelSearchImplementType } from '@/types/aiModel';
-import { ResponseAnimation } from '@/types/llm';
+import { AiModelForSelect, EnabledAiModel, ModelSearchImplementType } from './aiModel';
+import { ResponseAnimation } from './llm';
 
 export const AiProviderSourceEnum = {
   Builtin: 'builtin',
