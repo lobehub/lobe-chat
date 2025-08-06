@@ -1,6 +1,14 @@
 [
   {
     "children": {
+      "fixes": ["Fix ollama model output without thinking."],
+      "improvements": ["Add Claude Opus 4.1 model, update i18n."]
+    },
+    "date": "2025-08-06",
+    "version": "1.109.1"
+  },
+  {
+    "children": {
       "features": ["Support gpt-oss in ollama provider."]
     },
     "date": "2025-08-05",
