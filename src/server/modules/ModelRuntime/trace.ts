@@ -1,12 +1,8 @@
+import { TracePayload, TraceTagMap } from '@lobechat/types';
 import { after } from 'next/server';
 
 import { INBOX_SESSION_ID } from '@/const/session';
-import {
-  LOBE_CHAT_OBSERVATION_ID,
-  LOBE_CHAT_TRACE_ID,
-  TracePayload,
-  TraceTagMap,
-} from '@/const/trace';
+import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/const/trace';
 import { ChatStreamCallbacks, ChatStreamPayload } from '@/libs/model-runtime';
 import { TraceClient } from '@/libs/traces';
 

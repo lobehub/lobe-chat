@@ -1,4 +1,4 @@
-import { ErrorResponse, ErrorType } from '@lobechat/types/fetch';
+import { ErrorResponse, ErrorType } from '@lobechat/types';
 import { t } from 'i18next';
 
 import { ChatMessageError } from '@/types/message';
