@@ -12,22 +12,6 @@ const Mistral: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'open-mistral-nemo',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -37,22 +21,6 @@ const Mistral: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'mistral-small-latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -62,44 +30,12 @@ const Mistral: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'mistral-large-latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
       description: 'Codestral是专注于代码生成的尖端生成模型，优化了中间填充和代码补全任务。',
       displayName: 'Codestral',
       id: 'codestral-latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -109,22 +45,6 @@ const Mistral: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'pixtral-large-latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -134,22 +54,6 @@ const Mistral: ModelProviderCard = {
       displayName: 'Pixtral 12B',
       enabled: true,
       id: 'pixtral-12b-2409',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -157,44 +61,12 @@ const Mistral: ModelProviderCard = {
       description: 'Ministral 3B 是Mistral的世界顶级边缘模型。',
       displayName: 'Ministral 3B',
       id: 'ministral-3b-latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.04,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.04,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
       description: 'Ministral 8B 是Mistral的性价比极高的边缘模型。',
       displayName: 'Ministral 8B',
       id: 'ministral-8b-latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -202,22 +74,6 @@ const Mistral: ModelProviderCard = {
         'Mistral 7B是一款紧凑但高性能的模型，擅长批量处理和简单任务，如分类和文本生成，具有良好的推理能力。',
       displayName: 'Mistral 7B',
       id: 'open-mistral-7b',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -225,22 +81,6 @@ const Mistral: ModelProviderCard = {
         'Mixtral 8x7B是一个稀疏专家模型，利用多个参数提高推理速度，适合处理多语言和代码生成任务。',
       displayName: 'Mixtral 8x7B',
       id: 'open-mixtral-8x7b',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.7,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.7,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 65_536,
@@ -249,22 +89,6 @@ const Mistral: ModelProviderCard = {
       displayName: 'Mixtral 8x22B',
       functionCall: true,
       id: 'open-mixtral-8x22b',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 256_000,
@@ -272,22 +96,6 @@ const Mistral: ModelProviderCard = {
         'Codestral Mamba是专注于代码生成的Mamba 2语言模型，为先进的代码和推理任务提供强力支持。',
       displayName: 'Codestral Mamba',
       id: 'open-codestral-mamba',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
   ],
   checkModel: 'ministral-3b-latest',

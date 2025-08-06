@@ -12,34 +12,6 @@ const Anthropic: ModelProviderCard = {
       functionCall: true,
       id: 'claude-opus-4-20250514',
       maxOutput: 32_000,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 7.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 30,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 150,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'CachedTextOutput',
-            rate: 37.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2025-05-14',
       vision: true,
     },
@@ -52,34 +24,6 @@ const Anthropic: ModelProviderCard = {
       functionCall: true,
       id: 'claude-sonnet-4-20250514',
       maxOutput: 64_000,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 1.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 30,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'CachedTextOutput',
-            rate: 7.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2025-05-14',
       vision: true,
     },
@@ -92,34 +36,6 @@ const Anthropic: ModelProviderCard = {
       functionCall: true,
       id: 'claude-3-7-sonnet-20250219',
       maxOutput: 64_000,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'CachedTextOutput',
-            rate: 1.25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2025-02-24',
     },
     {
@@ -131,34 +47,6 @@ const Anthropic: ModelProviderCard = {
       functionCall: true,
       id: 'claude-3-5-haiku-20241022',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'CachedTextOutput',
-            rate: 1.25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-11-05',
     },
     {
@@ -170,34 +58,6 @@ const Anthropic: ModelProviderCard = {
       functionCall: true,
       id: 'claude-3-5-sonnet-20241022',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'CachedTextOutput',
-            rate: 3.75,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-10-22',
       vision: true,
     },
@@ -209,34 +69,6 @@ const Anthropic: ModelProviderCard = {
       functionCall: true,
       id: 'claude-3-5-sonnet-20240620',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'CachedTextOutput',
-            rate: 3.75,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-06-20',
       vision: true,
     },
@@ -248,22 +80,6 @@ const Anthropic: ModelProviderCard = {
       functionCall: true,
       id: 'claude-3-haiku-20240307',
       maxOutput: 4096,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-03-07',
       vision: true,
     },
@@ -275,22 +91,6 @@ const Anthropic: ModelProviderCard = {
       functionCall: true,
       id: 'claude-3-sonnet-20240229',
       maxOutput: 4096,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-02-29',
       vision: true,
     },
@@ -303,22 +103,6 @@ const Anthropic: ModelProviderCard = {
       functionCall: true,
       id: 'claude-3-opus-20240229',
       maxOutput: 4096,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 75,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-02-29',
       vision: true,
     },
@@ -329,22 +113,6 @@ const Anthropic: ModelProviderCard = {
       displayName: 'Claude 2.1',
       id: 'claude-2.1',
       maxOutput: 4096,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 24,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2023-11-21',
     },
     {
@@ -354,22 +122,6 @@ const Anthropic: ModelProviderCard = {
       displayName: 'Claude 2.0',
       id: 'claude-2.0',
       maxOutput: 4096,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 24,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2023-07-11',
     },
   ],

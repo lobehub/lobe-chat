@@ -9,22 +9,6 @@ const Ai21: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'jamba-1.5-mini',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 256_000,
@@ -32,22 +16,6 @@ const Ai21: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'jamba-1.5-large',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
   ],
   checkModel: 'jamba-mini',

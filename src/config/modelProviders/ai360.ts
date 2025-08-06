@@ -10,22 +10,6 @@ const Ai360: ModelProviderCard = {
       displayName: '360GPT2 o1',
       enabled: true,
       id: '360gpt2-o1',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 50,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -33,22 +17,6 @@ const Ai360: ModelProviderCard = {
       displayName: '360GPT2 Pro',
       enabled: true,
       id: '360gpt2-pro',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -57,22 +25,6 @@ const Ai360: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: '360gpt-pro',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 7000,
@@ -80,22 +32,6 @@ const Ai360: ModelProviderCard = {
       displayName: '360GPT Turbo',
       enabled: true,
       id: '360gpt-turbo',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
   ],
   checkModel: '360gpt-turbo',

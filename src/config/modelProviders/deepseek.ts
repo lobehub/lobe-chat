@@ -11,28 +11,6 @@ const DeepSeek: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'deepseek-chat',
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-12-26',
     },
     {
@@ -42,28 +20,6 @@ const DeepSeek: ModelProviderCard = {
       displayName: 'DeepSeek R1',
       enabled: true,
       id: 'deepseek-reasoner',
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 16,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2025-01-20',
     },
   ],

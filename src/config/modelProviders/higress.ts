@@ -10,22 +10,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'qwen-turbo',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 131_072,
@@ -34,22 +18,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'qwen-plus',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -59,22 +27,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'qwen-max',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 60,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 1_000_000,
@@ -82,22 +34,6 @@ const Higress: ModelProviderCard = {
         '通义千问超大规模语言模型，支持长文本上下文，以及基于长文档、多文档等多个场景的对话功能。',
       displayName: 'Qwen Long',
       id: 'qwen-long',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     //后面几个qwen未知支持
     {
@@ -107,22 +43,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Qwen VL Plus',
       enabled: true,
       id: 'qwen-vl-plus-latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -132,22 +52,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Qwen VL Max',
       enabled: true,
       id: 'qwen-vl-max-latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -155,66 +59,18 @@ const Higress: ModelProviderCard = {
       description: '通义千问数学模型是专门用于数学解题的语言模型。',
       displayName: 'Qwen Math Turbo',
       id: 'qwen-math-turbo-latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 4096,
       description: '通义千问数学模型是专门用于数学解题的语言模型。',
       displayName: 'Qwen Math Plus',
       id: 'qwen-math-plus-latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 131_072,
       description: '通义千问代码模型。',
       displayName: 'Qwen Coder Turbo',
       id: 'qwen-coder-turbo-latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 131_072,
@@ -222,22 +78,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Qwen2.5 7B',
       functionCall: true,
       id: 'qwen2.5-7b-instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 131_072,
@@ -245,22 +85,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Qwen2.5 14B',
       functionCall: true,
       id: 'qwen2.5-14b-instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 131_072,
@@ -268,22 +92,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Qwen2.5 32B',
       functionCall: true,
       id: 'qwen2.5-32b-instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 3.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 7,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 131_072,
@@ -291,154 +99,42 @@ const Higress: ModelProviderCard = {
       displayName: 'Qwen2.5 72B',
       functionCall: true,
       id: 'qwen2.5-72b-instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 4096,
       description: 'Qwen-Math 模型具有强大的数学解题能力。',
       displayName: 'Qwen2.5 Math 1.5B',
       id: 'qwen2.5-math-1.5b-instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 4096,
       description: 'Qwen-Math 模型具有强大的数学解题能力。',
       displayName: 'Qwen2.5 Math 7B',
       id: 'qwen2.5-math-7b-instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 4096,
       description: 'Qwen-Math 模型具有强大的数学解题能力。',
       displayName: 'Qwen2.5 Math 72B',
       id: 'qwen2.5-math-72b-instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 131_072,
       description: '通义千问代码模型开源版。',
       displayName: 'Qwen2.5 Coder 1.5B',
       id: 'qwen2.5-coder-1.5b-instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 131_072,
       description: '通义千问代码模型开源版。',
       displayName: 'Qwen2.5 Coder 7B',
       id: 'qwen2.5-coder-7b-instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8000,
       description: '以 Qwen-7B 语言模型初始化，添加图像模型，图像输入分辨率为448的预训练模型。',
       displayName: 'Qwen VL',
       id: 'qwen-vl-v1',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -446,22 +142,6 @@ const Higress: ModelProviderCard = {
       description: '通义千问VL支持灵活的交互方式，包括多图、多轮问答、创作等能力的模型。',
       displayName: 'Qwen VL Chat',
       id: 'qwen-vl-chat-v1',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
 
@@ -503,22 +183,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'Baichuan4',
       maxOutput: 4096,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       description: '',
@@ -527,52 +191,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'Baichuan4-Turbo',
       // maxOutput: 4096,
-      // pricing: {
-      //   currency: 'CNY',
-      //   input: 100,
-      //   output: 100,
-      // },
-      // tokens: 32_768,
-    },
-    {
-      description: '',
-      displayName: 'Baichuan 4 Air',
-      enabled: true,
-      functionCall: true,
-      id: 'Baichuan4-Air',
-      // maxOutput: 4096,
-      // pricing: {
-      //   currency: 'CNY',
-      //   input: 100,
-      //   output: 100,
-      // },
-      // tokens: 32_768,
-    },
-    {
-      contextWindowTokens: 32_768,
-      description:
-        '针对企业高频场景优化，效果大幅提升，高性价比。相对于Baichuan2模型，内容创作提升20%，知识问答提升17%， 角色扮演能力提升40%。整体效果比GPT3.5更优。',
-      displayName: 'Baichuan 3 Turbo',
-      enabled: true,
-      functionCall: true,
-      id: 'Baichuan3-Turbo',
-      maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -582,22 +200,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       id: 'Baichuan3-Turbo-128k',
       maxOutput: 4096,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 24,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 24,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -606,22 +208,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Baichuan 2 Turbo',
       id: 'Baichuan2-Turbo',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     //零一万物
     {
@@ -630,22 +216,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Yi Lightning',
       enabled: true,
       id: 'yi-lightning',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.99,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.99,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_384,
@@ -653,22 +223,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Yi Spark',
       enabled: true,
       id: 'yi-spark',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_384,
@@ -676,22 +230,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Yi Medium',
       enabled: true,
       id: 'yi-medium',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 200_000,
@@ -699,22 +237,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Yi Medium 200K',
       enabled: true,
       id: 'yi-medium-200k',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_384,
@@ -722,22 +244,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Yi Large Turbo',
       enabled: true,
       id: 'yi-large-turbo',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_384,
@@ -746,22 +252,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Yi Large RAG',
       enabled: true,
       id: 'yi-large-rag',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -771,44 +261,12 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'yi-large-fc',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
       description: '全新千亿参数模型，提供超强问答及文本生成能力。',
       displayName: 'Yi Large',
       id: 'yi-large',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_384,
@@ -816,22 +274,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Yi Vision',
       enabled: true,
       id: 'yi-vision',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -839,44 +281,12 @@ const Higress: ModelProviderCard = {
       description: '初期版本，推荐使用 yi-large（新版本）。',
       displayName: 'Yi Large Preview',
       id: 'yi-large-preview',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_384,
       description: '轻量化版本，推荐使用 yi-lightning。',
       displayName: 'Yi Lightning Lite',
       id: 'yi-lightning-lite',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.99,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.99,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     //智谱AI
     {
@@ -886,22 +296,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'glm-4-flash',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -910,22 +304,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'glm-4-flashx',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 1_024_000,
@@ -933,22 +311,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GLM-4-Long',
       functionCall: true,
       id: 'glm-4-long',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -957,22 +319,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'glm-4-air',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -981,22 +327,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'glm-4-airx',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 10,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 10,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -1005,22 +335,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GLM-4-AllTools',
       functionCall: true,
       id: 'glm-4-alltools',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -1030,22 +344,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'glm-4-plus',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 50,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 50,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -1053,22 +351,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GLM-4-0520',
       functionCall: true,
       id: 'glm-4-0520',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -1076,22 +358,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GLM-4',
       functionCall: true,
       id: 'glm-4',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -1099,22 +365,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GLM-4V-Plus',
       enabled: true,
       id: 'glm-4v-plus',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 10,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 10,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -1122,22 +372,6 @@ const Higress: ModelProviderCard = {
       description: 'GLM-4V 提供强大的图像理解与推理能力，支持多种视觉任务。',
       displayName: 'GLM-4V',
       id: 'glm-4v',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 50,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 50,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -1145,44 +379,12 @@ const Higress: ModelProviderCard = {
       description: 'CharGLM-3 专为角色扮演与情感陪伴设计，支持超长多轮记忆与个性化对话，应用广泛。',
       displayName: 'CharGLM-3',
       id: 'charglm-3',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
       description: 'Emohaa 是心理模型，具备专业咨询能力，帮助用户理解情感问题。',
       displayName: 'Emohaa',
       id: 'emohaa',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     //360智脑
     {
@@ -1193,22 +395,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       id: '360gpt2-pro',
       maxOutput: 7000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -1219,22 +405,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: '360gpt-pro',
       maxOutput: 7000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -1244,22 +414,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       id: '360gpt-turbo',
       maxOutput: 7000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -1269,22 +423,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       id: '360gpt-turbo-responsibility-8k',
       maxOutput: 2048,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     //文心一言
     {
@@ -1294,22 +432,6 @@ const Higress: ModelProviderCard = {
       displayName: 'ERNIE 3.5 8K',
       enabled: true,
       id: 'ERNIE-3.5-8K',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -1317,22 +439,6 @@ const Higress: ModelProviderCard = {
         '百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。',
       displayName: 'ERNIE 3.5 8K Preview',
       id: 'ERNIE-3.5-8K-Preview',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -1341,22 +447,6 @@ const Higress: ModelProviderCard = {
       displayName: 'ERNIE 3.5 128K',
       enabled: true,
       id: 'ERNIE-3.5-128K',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -1365,22 +455,6 @@ const Higress: ModelProviderCard = {
       displayName: 'ERNIE 4.0 8K',
       enabled: true,
       id: 'ERNIE-4.0-8K-Latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 30,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 90,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -1388,22 +462,6 @@ const Higress: ModelProviderCard = {
         '百度自研的旗舰级超大规模⼤语⾔模型，相较ERNIE 3.5实现了模型能力全面升级，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。',
       displayName: 'ERNIE 4.0 8K Preview',
       id: 'ERNIE-4.0-8K-Preview',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 30,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 90,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -1412,22 +470,6 @@ const Higress: ModelProviderCard = {
       displayName: 'ERNIE 4.0 Turbo 8K',
       enabled: true,
       id: 'ERNIE-4.0-Turbo-8K-Latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 60,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -1435,22 +477,6 @@ const Higress: ModelProviderCard = {
         '百度自研的旗舰级超大规模⼤语⾔模型，综合效果表现出色，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。相较于ERNIE 4.0在性能表现上更优秀',
       displayName: 'ERNIE 4.0 Turbo 8K Preview',
       id: 'ERNIE-4.0-Turbo-8K-Preview',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 60,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -1459,22 +485,6 @@ const Higress: ModelProviderCard = {
       displayName: 'ERNIE Lite Pro 128K',
       enabled: true,
       id: 'ERNIE-Lite-Pro-128K',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -1483,22 +493,6 @@ const Higress: ModelProviderCard = {
       displayName: 'ERNIE Speed Pro 128K',
       enabled: true,
       id: 'ERNIE-Speed-Pro-128K',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -1506,22 +500,6 @@ const Higress: ModelProviderCard = {
         '百度2024年最新发布的自研高性能大语言模型，通用能力优异，适合作为基座模型进行精调，更好地处理特定场景问题，同时具备极佳的推理性能。',
       displayName: 'ERNIE Speed 128K',
       id: 'ERNIE-Speed-128K',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -1529,22 +507,6 @@ const Higress: ModelProviderCard = {
         '百度自研的垂直场景大语言模型，适合游戏NPC、客服对话、对话角色扮演等应用场景，人设风格更为鲜明、一致，指令遵循能力更强，推理性能更优。',
       displayName: 'ERNIE Character 8K',
       id: 'ERNIE-Character-8K',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     //混元
     {
@@ -1555,22 +517,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       id: 'hunyuan-lite',
       maxOutput: 6000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -1580,22 +526,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       id: 'hunyuan-standard',
       maxOutput: 2000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 256_000,
@@ -1605,22 +535,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       id: 'hunyuan-standard-256K',
       maxOutput: 6000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 60,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -1631,22 +545,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'hunyuan-turbo',
       maxOutput: 4000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 50,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -1657,22 +555,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'hunyuan-pro',
       maxOutput: 4000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 30,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       description: '',
@@ -1681,36 +563,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'hunyuan-large',
       // maxOutput: 4000,
-      // pricing: {
-      //   currency: 'CNY',
-      //   input: 30,
-      //   output: 100,
-      // },
-      // tokens: 32_000,
-    },
-    {
-      contextWindowTokens: 8000,
-      description: '混元最新多模态模型，支持图片+文本输入生成文本内容。',
-      displayName: 'Hunyuan Vision',
-      enabled: true,
-      id: 'hunyuan-vision',
-      maxOutput: 4000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 18,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 18,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -1720,22 +572,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Hunyuan Code',
       id: 'hunyuan-code',
       maxOutput: 4000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -1745,22 +581,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'hunyuan-functioncall',
       maxOutput: 4000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -1769,22 +589,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Hunyuan Role',
       id: 'hunyuan-role',
       maxOutput: 4000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     //阶跃星辰
     {
@@ -1794,22 +598,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1-flash',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -1818,22 +606,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1-8k',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -1842,22 +614,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1-32k',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 70,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -1866,22 +622,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1-128k',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 40,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 200,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 256_000,
@@ -1889,22 +629,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Step 1 256K',
       functionCall: true,
       id: 'step-1-256k',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 95,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 300,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_000,
@@ -1913,22 +637,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-2-16k',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 38,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 120,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -1937,22 +645,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1v-8k',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -1962,22 +654,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1v-32k',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 70,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -1986,22 +662,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Step 1.5V Mini',
       enabled: true,
       id: 'step-1.5v-mini',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 35,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -2073,22 +733,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       id: 'o1-mini',
       maxOutput: 65_536,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-09-12',
     },
     {
@@ -2099,22 +743,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       id: 'o1-preview',
       maxOutput: 32_768,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 60,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-09-12',
     },
     {
@@ -2126,22 +754,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'gpt-4o-mini',
       maxOutput: 16_385,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -2152,22 +764,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'gpt-4o',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 10,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -2177,22 +773,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GPT-4o 0806',
       functionCall: true,
       id: 'gpt-4o-2024-08-06',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 10,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -2202,22 +782,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GPT-4o 0513',
       functionCall: true,
       id: 'gpt-4o-2024-05-13',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -2227,22 +791,6 @@ const Higress: ModelProviderCard = {
       displayName: 'ChatGPT-4o',
       enabled: true,
       id: 'chatgpt-4o-latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -2252,22 +800,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GPT-4 Turbo',
       functionCall: true,
       id: 'gpt-4-turbo',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 10,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 30,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -2277,22 +809,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GPT-4 Turbo Vision 0409',
       functionCall: true,
       id: 'gpt-4-turbo-2024-04-09',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 10,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 30,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -2302,22 +818,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GPT-4 Turbo Preview',
       functionCall: true,
       id: 'gpt-4-turbo-preview',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 10,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 30,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -2326,22 +826,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GPT-4 Turbo Preview 0125',
       functionCall: true,
       id: 'gpt-4-0125-preview',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 10,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 30,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -2350,22 +834,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GPT-4 Turbo Preview 1106',
       functionCall: true,
       id: 'gpt-4-1106-preview',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 10,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 30,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -2374,22 +842,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GPT-4',
       functionCall: true,
       id: 'gpt-4',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 30,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 60,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -2398,22 +850,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GPT-4 0613',
       functionCall: true,
       id: 'gpt-4-0613',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 30,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 60,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -2423,22 +859,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GPT-4 32K',
       functionCall: true,
       id: 'gpt-4-32k',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 60,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 120,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -2448,22 +868,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GPT-4 32K 0613',
       functionCall: true,
       id: 'gpt-4-32k-0613',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 60,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 120,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_385,
@@ -2472,22 +876,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GPT-3.5 Turbo',
       functionCall: true,
       id: 'gpt-3.5-turbo',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_385,
@@ -2496,22 +884,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GPT-3.5 Turbo 0125',
       functionCall: true,
       id: 'gpt-3.5-turbo-0125',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_385,
@@ -2520,22 +892,6 @@ const Higress: ModelProviderCard = {
       displayName: 'GPT-3.5 Turbo 1106',
       functionCall: true,
       id: 'gpt-3.5-turbo-1106',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 4096,
@@ -2543,22 +899,6 @@ const Higress: ModelProviderCard = {
         'GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125',
       displayName: 'GPT-3.5 Turbo Instruct',
       id: 'gpt-3.5-turbo-instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     //azure
     {
@@ -2837,22 +1177,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       id: 'llama-3.2-11b-vision-preview',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.05,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.08,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -2863,22 +1187,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       id: 'llama-3.2-90b-vision-preview',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.59,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.79,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -2890,22 +1198,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'llama-3.1-8b-instant',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.05,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.08,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 131_072,
@@ -2916,22 +1208,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'llama-3.1-70b-versatile',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.59,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.79,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     /*
         // Offline due to overwhelming demand! Stay tuned for updates.
@@ -2948,22 +1224,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Llama 3 Groq 8B Tool Use (Preview)',
       functionCall: true,
       id: 'llama3-groq-8b-8192-tool-use-preview',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.19,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.19,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -2971,22 +1231,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Llama 3 Groq 70B Tool Use (Preview)',
       functionCall: true,
       id: 'llama3-groq-70b-8192-tool-use-preview',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.89,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.89,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -2994,22 +1238,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Meta Llama 3 8B',
       functionCall: true,
       id: 'llama3-8b-8192',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.05,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.08,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -3017,22 +1245,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Meta Llama 3 70B',
       functionCall: true,
       id: 'llama3-70b-8192',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.59,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.79,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -3041,22 +1253,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'gemma2-9b-it',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -3064,22 +1260,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Gemma 7B',
       functionCall: true,
       id: 'gemma-7b-it',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.07,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.07,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -3087,22 +1267,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Mixtral 8x7B',
       functionCall: true,
       id: 'mixtral-8x7b-32768',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.24,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.24,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 4096,
@@ -3120,28 +1284,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'deepseek-chat',
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.014,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 0.14,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.28,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-09-05',
     },
     //claude
@@ -3154,34 +1296,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'claude-3-5-haiku-20241022',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'CachedTextOutput',
-            rate: 1.25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-11-05',
     },
     {
@@ -3193,34 +1307,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'claude-3-5-sonnet-20241022',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'CachedTextOutput',
-            rate: 3.75,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-10-22',
       vision: true,
     },
@@ -3232,34 +1318,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'claude-3-5-sonnet-20240620',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'CachedTextOutput',
-            rate: 3.75,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-06-20',
       vision: true,
     },
@@ -3271,22 +1329,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'claude-3-haiku-20240307',
       maxOutput: 4096,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-03-07',
       vision: true,
     },
@@ -3298,22 +1340,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'claude-3-sonnet-20240229',
       maxOutput: 4096,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-02-29',
       vision: true,
     },
@@ -3326,22 +1352,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'claude-3-opus-20240229',
       maxOutput: 4096,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 75,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-02-29',
       vision: true,
     },
@@ -3352,22 +1362,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Claude 2.1',
       id: 'claude-2.1',
       maxOutput: 4096,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 24,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2023-11-21',
     },
     {
@@ -3377,22 +1371,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Claude 2.0',
       id: 'claude-2.0',
       maxOutput: 4096,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 24,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2023-07-11',
     },
     //gemini
@@ -3405,28 +1383,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-flash-latest',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.018_75,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 0.075,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -3437,28 +1393,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-flash-002',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.018_75,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 0.075,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-09-25',
       vision: true,
     },
@@ -3469,28 +1403,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-flash-001',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.018_75,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 0.075,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -3500,28 +1412,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-flash-exp-0827',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.018_75,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 0.075,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-08-27',
       vision: true,
     },
@@ -3533,28 +1423,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-flash-8b',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.02,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 0.075,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-10-03',
       vision: true,
     },
@@ -3566,28 +1434,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-flash-8b-exp-0924',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.018_75,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 0.075,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-09-24',
       vision: true,
     },
@@ -3600,28 +1446,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-pro-latest',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.875,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 3.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 10.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-02-15',
       vision: true,
     },
@@ -3634,28 +1458,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-pro-002',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.315,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 1.25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-09-24',
       vision: true,
     },
@@ -3666,28 +1468,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-pro-001',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.875,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 3.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 10.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-02-15',
       vision: true,
     },
@@ -3698,28 +1478,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-pro-exp-0827',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.875,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 3.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 10.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-08-27',
       vision: true,
     },
@@ -3730,28 +1488,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-pro-exp-0801',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.875,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 3.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 10.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-08-01',
       vision: true,
     },
@@ -3761,22 +1497,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Gemini 1.0 Pro',
       id: 'gemini-1.0-pro-latest',
       maxOutput: 2048,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2023-12-06',
     },
     {
@@ -3787,22 +1507,6 @@ const Higress: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.0-pro-001',
       maxOutput: 2048,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2023-12-06',
     },
     {
@@ -3811,22 +1515,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Gemini 1.0 Pro 002 (Tuning)',
       id: 'gemini-1.0-pro-002',
       maxOutput: 2048,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2023-12-06',
     },
     //mistral
@@ -3839,22 +1527,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'open-mistral-nemo',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -3864,22 +1536,6 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'mistral-small-latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -3889,44 +1545,12 @@ const Higress: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'mistral-large-latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
       description: 'Codestral是专注于代码生成的尖端生成模型，优化了中间填充和代码补全任务。',
       displayName: 'Codestral',
       id: 'codestral-latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -3935,22 +1559,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Pixtral 12B',
       enabled: true,
       id: 'pixtral-12b-2409',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -3958,44 +1566,12 @@ const Higress: ModelProviderCard = {
       description: 'Ministral 3B 是Mistral的世界顶级边缘模型。',
       displayName: 'Ministral 3B',
       id: 'ministral-3b-latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.04,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.04,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
       description: 'Ministral 8B 是Mistral的性价比极高的边缘模型。',
       displayName: 'Ministral 8B',
       id: 'ministral-8b-latest',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -4003,22 +1579,6 @@ const Higress: ModelProviderCard = {
         'Mistral 7B是一款紧凑但高性能的模型，擅长批量处理和简单任务，如分类和文本生成，具有良好的推理能力。',
       displayName: 'Mistral 7B',
       id: 'open-mistral-7b',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -4026,22 +1586,6 @@ const Higress: ModelProviderCard = {
         'Mixtral 8x7B是一个稀疏专家模型，利用多个参数提高推理速度，适合处理多语言和代码生成任务。',
       displayName: 'Mixtral 8x7B',
       id: 'open-mixtral-8x7b',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.7,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.7,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 65_536,
@@ -4050,22 +1594,6 @@ const Higress: ModelProviderCard = {
       displayName: 'Mixtral 8x22B',
       functionCall: true,
       id: 'open-mixtral-8x22b',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 256_000,
@@ -4073,22 +1601,6 @@ const Higress: ModelProviderCard = {
         'Codestral Mamba是专注于代码生成的Mamba 2语言模型，为先进的代码和推理任务提供强力支持。',
       displayName: 'Codestral Mamba',
       id: 'open-codestral-mamba',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     //minimax
     {

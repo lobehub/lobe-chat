@@ -11,22 +11,6 @@ const InternLM: ModelProviderCard = {
       functionCall: true,
       id: 'internlm2.5-latest',
       maxOutput: 4096,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -35,22 +19,6 @@ const InternLM: ModelProviderCard = {
       functionCall: true,
       id: 'internlm2-pro-chat',
       maxOutput: 4096,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
   ],
   checkModel: 'internlm2.5-latest',

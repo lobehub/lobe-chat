@@ -12,22 +12,6 @@ const Google: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-2.5-pro-exp-03-25',
       maxOutput: 65_536,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2025-03-25',
       vision: true,
     },
@@ -40,28 +24,6 @@ const Google: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-2.0-pro-exp-02-05',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2025-02-05',
       vision: true,
     },
@@ -74,28 +36,6 @@ const Google: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-2.0-flash',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.025,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2025-02-05',
       vision: true,
     },
@@ -107,28 +47,6 @@ const Google: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-2.0-flash-001',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.025,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2025-02-05',
       vision: true,
     },
@@ -138,28 +56,6 @@ const Google: ModelProviderCard = {
       displayName: 'Gemini 2.0 Flash-Lite Preview 02-05',
       id: 'gemini-2.0-flash-lite-preview-02-05',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.018_75,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 0.075,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2025-02-05',
       vision: true,
     },
@@ -171,28 +67,6 @@ const Google: ModelProviderCard = {
       enabled: true,
       id: 'gemini-2.0-flash-thinking-exp-01-21',
       maxOutput: 65_536,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2025-01-21',
       vision: true,
     },
@@ -204,28 +78,6 @@ const Google: ModelProviderCard = {
       functionCall: true,
       id: 'learnlm-1.5-pro-experimental',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-11-19',
       vision: true,
     },
@@ -236,28 +88,6 @@ const Google: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-flash-002',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.018_75,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 0.075,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-09-25',
       vision: true,
     },
@@ -268,28 +98,6 @@ const Google: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-flash-001',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.018_75,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 0.075,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -300,28 +108,6 @@ const Google: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-pro-002',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.315,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 1.25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-09-24',
       vision: true,
     },
@@ -332,28 +118,6 @@ const Google: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-pro-001',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.875,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 3.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 10.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-02-15',
       vision: true,
     },
@@ -364,28 +128,6 @@ const Google: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-flash-8b',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.02,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 0.075,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-10-03',
       vision: true,
     },

@@ -12,22 +12,6 @@ const Baichuan: ModelProviderCard = {
       functionCall: true,
       id: 'Baichuan4',
       maxOutput: 4096,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -38,22 +22,6 @@ const Baichuan: ModelProviderCard = {
       functionCall: true,
       id: 'Baichuan4-Turbo',
       maxOutput: 4096,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -64,22 +32,6 @@ const Baichuan: ModelProviderCard = {
       functionCall: true,
       id: 'Baichuan4-Air',
       maxOutput: 4096,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.98,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.98,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -89,22 +41,6 @@ const Baichuan: ModelProviderCard = {
       functionCall: true,
       id: 'Baichuan3-Turbo',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -113,22 +49,6 @@ const Baichuan: ModelProviderCard = {
       displayName: 'Baichuan 3 Turbo 128k',
       id: 'Baichuan3-Turbo-128k',
       maxOutput: 4096,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 24,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 24,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -137,22 +57,6 @@ const Baichuan: ModelProviderCard = {
       displayName: 'Baichuan 2 Turbo',
       id: 'Baichuan2-Turbo',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
   ],
   checkModel: 'Baichuan3-Turbo',
