@@ -38,6 +38,7 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
   const authType = Form.useWatch(AUTH_TYPE, form);
 
   const pluginIds = useToolStore(pluginSelectors.storeAndInstallPluginsIdList);
+  const [isTesting, setIsTesting] = useState(false);
   const testMcpConnection = useToolStore((s) => s.testMcpConnection);
 
   // 使用 identifier 来跟踪测试状态（如果表单中有的话）
@@ -48,6 +49,7 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
   const [connectionError, setConnectionError] = useState<string | null>(null);
 
   const handleTestConnection = async () => {
+    setIsTesting(true);
     setConnectionError(null);
 
     // Manually trigger validation for fields needed for the test
@@ -73,6 +75,7 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
     }
 
     if (!isValid) {
+      setIsTesting(false);
       return;
     }
 
@@ -109,6 +112,8 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
         error: err.message || t('unknownError'),
       });
       setConnectionError(errorMessage);
+    } finally {
+      setIsTesting(false);
     }
   };
 
@@ -255,7 +260,7 @@ const MCPManifestForm = ({ form, isEditMode }: MCPManifestFormProps) => {
           <FormItem colon={false} label={t('dev.mcp.testConnectionTip')} layout={'horizontal'}>
             <Flexbox align={'center'} gap={8} horizontal justify={'flex-end'}>
               <Button
-                loading={testState.loading}
+                loading={isTesting}
                 onClick={handleTestConnection}
                 type={!!mcpType ? 'primary' : undefined}
               >
