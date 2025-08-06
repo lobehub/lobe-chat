@@ -13,6 +13,15 @@ import { AgentRuntimeError } from '../utils/createError';
 import { StreamingResponse } from '../utils/response';
 import { StreamingJsonParser } from '../utils/streamingJsonParser';
 import { OpenAIStream } from '../utils/streams';
+import { parseModelList } from './modelListParser';
+import {
+  VALID_BEDROCK_REGIONS,
+  buildConverseRequestBody,
+  createBedrockRequestOptions,
+  fetchWithRetry,
+  handleBedrockError,
+  processConverseMessages,
+} from './utils';
 
 /**
  * A prompt constructor for HuggingFace LLama 2 chat models.
@@ -64,6 +73,11 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
     }
 
+    // Validate region against official AWS Bedrock regions
+    if (!VALID_BEDROCK_REGIONS.has(this.region)) {
+      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockRegion);
+    }
+
     // No BedrockRuntimeClient is instantiated here, as requests are made directly via HTTP.
   }
 
@@ -111,35 +125,8 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       .filter((model) => model.enabled !== false)
       .map((model) => model.id);
 
-    // Parse modelList for inclusions, exclusions, and 'all'
-    const items = modelList
-      .split(',')
-      .map((m) => m.trim())
-      .filter(Boolean);
-
-    const inclusions: string[] = [];
-    const exclusions: string[] = [];
-    let includeAll = false;
-
-    for (const entry of items) {
-      if (entry === 'all') {
-        includeAll = true;
-      } else if (entry.startsWith('-')) {
-        exclusions.push(entry.slice(1));
-      } else if (entry.startsWith('+')) {
-        inclusions.push(entry.slice(1));
-      } else {
-        inclusions.push(entry);
-      }
-    }
-
-    let finalModels: string[];
-    if (includeAll) {
-      finalModels = ALL_AVAILABLE_MODELS.filter((m) => !exclusions.includes(m));
-    } else {
-      finalModels = inclusions.filter((m) => !exclusions.includes(m));
-    }
-
+    // Parse modelList using utility function
+    const finalModels = parseModelList(modelList, ALL_AVAILABLE_MODELS);
     return finalModels.map((id) => ({ id }));
   }
 
@@ -147,73 +134,31 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     payload: ChatStreamPayload,
     options?: ChatMethodOptions,
   ): Promise<Response> {
-    const { max_tokens, messages, model, temperature, top_p, tools: _tools } = payload;
-    // Use a type-safe approach to find the system message
-    const system_message = messages.find(
-      (m): m is { content: string; role: 'system' } =>
-        m.role === 'system' && typeof m.content === 'string',
-    );
-    const user_messages = messages.filter((m) => m.role !== 'system');
+    const { messages, model, tools: _tools } = payload;
 
-    // Use the Converse API format for bearer token requests
-    const converseMessages = user_messages
-      .filter((msg) => msg.content && (msg.content as string).trim())
-      .map((msg) => ({
-        content: [{ text: (msg.content as string).trim() }],
-        role: msg.role === 'assistant' ? 'assistant' : 'user',
-      }));
+    // Process messages using helper function
+    const { converseMessages, systemMessage } = processConverseMessages(messages);
 
     // Ensure at least one valid message exists
-    // Some models may support system-only prompts, but most require at least one user message
-    if (converseMessages.length === 0 && !system_message?.content) {
+    if (converseMessages.length === 0 && !systemMessage?.content) {
       throw new Error('No valid user messages found. At least one non-empty message is required.');
     }
 
-    const requestBody: any = {
-      inferenceConfig: {
-        maxTokens: max_tokens || 4096,
-      },
-      messages: converseMessages,
-    };
-
-    // Add system message if present
-    if (system_message?.content) {
-      requestBody.system = [{ text: system_message.content as string }];
-    }
-
-    // Add temperature and top_p if specified
-    if (temperature !== undefined) {
-      // Claude models on Bedrock expect temperature values in range 0-1, while OpenAI uses 0-2
-      // Apply scaling only for Claude models
-      if (model.includes('claude')) {
-        requestBody.inferenceConfig.temperature = temperature / 2;
-      } else {
-        requestBody.inferenceConfig.temperature = temperature;
-      }
-    }
-    if (top_p !== undefined) {
-      requestBody.inferenceConfig.topP = top_p;
-    }
-
-    // Add tools if present
-    if (_tools && _tools.length > 0) {
-      requestBody.toolConfig = {
-        tools: buildAnthropicTools(_tools),
-      };
-    }
+    // Build request body using helper function
+    const tools = _tools && _tools.length > 0 ? buildAnthropicTools(_tools) : undefined;
+    const requestBody = buildConverseRequestBody(payload, converseMessages, systemMessage, tools);
 
     const url = `https://bedrock-runtime.${this.region}.amazonaws.com/model/${model}/converse-stream`;
 
     try {
-      const response = await fetch(url, {
-        body: JSON.stringify(requestBody),
-        headers: {
-          'Authorization': `Bearer ${this.bearerToken}`,
-          'Content-Type': 'application/json',
-        },
-        method: 'POST',
-        signal: options?.signal,
-      });
+      const { options: fetchOptions, cleanup } = createBedrockRequestOptions(
+        requestBody,
+        this.bearerToken!,
+        options?.signal,
+      );
+
+      const response = await fetchWithRetry(url, fetchOptions);
+      cleanup();
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -229,88 +174,86 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         });
       }
 
-      // Create OpenAI-compatible stream
-      const openaiStream = new ReadableStream({
-        start(controller) {
-          if (!response.body) {
-            controller.close();
-            return;
-          }
-
-          const reader = response.body.getReader();
-          const decoder = new TextDecoder();
-          const jsonParser = new StreamingJsonParser();
-
-          const pump = (): Promise<void> => {
-            return reader
-              .read()
-              .then(({ done, value }) => {
-                if (done) {
-                  controller.close();
-                  return;
-                }
-
-                const chunk = decoder.decode(value, { stream: true });
-                const jsonObjects = jsonParser.processChunk(chunk);
-
-                for (const data of jsonObjects) {
-                  // Only extract actual response text, not reasoning
-                  const text = data.delta?.text;
-
-                  if (text && text.trim()) {
-                    // Create OpenAI-compatible chunk
-                    const openaiChunk = {
-                      choices: [
-                        {
-                          delta: { content: text },
-                          finish_reason: null,
-                          index: 0,
-                        },
-                      ],
-                      created: Math.floor(Date.now() / 1000),
-                      id: 'chatcmpl-bedrock',
-                      model: model,
-                      object: 'chat.completion.chunk',
-                    };
-                    controller.enqueue(openaiChunk);
-                  }
-                }
-
-                return pump();
-              })
-              .catch((error) => {
-                controller.error(error);
-              });
-          };
-
-          return pump();
-        },
-      });
-
-      try {
-        const stream = OpenAIStream(openaiStream, { callbacks: options?.callback });
-        return StreamingResponse(stream, {
-          headers: options?.headers,
-        });
-      } catch (streamError) {
-        throw AgentRuntimeError.chat({
-          error: {
-            body: undefined,
-            message: `OpenAIStream error: ${(streamError as Error).message}`,
-            type: 'StreamError',
-          },
-          errorType: AgentRuntimeErrorType.ProviderBizError,
-          provider: ModelProvider.Bedrock,
-          region: this.region,
-        });
-      }
+      return this.createStreamingResponse(response, model, options);
     } catch (e) {
-      const err = e as Error;
+      throw handleBedrockError(e, this.region);
+    }
+  }
+
+  private createStreamingResponse(
+    response: Response,
+    model: string,
+    options?: ChatMethodOptions,
+  ): Response {
+    // Create OpenAI-compatible stream
+    const openaiStream = new ReadableStream({
+      start(controller) {
+        if (!response.body) {
+          controller.close();
+          return;
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        const jsonParser = new StreamingJsonParser();
+
+        const pump = (): Promise<void> => {
+          return reader
+            .read()
+            .then(({ done, value }) => {
+              if (done) {
+                controller.close();
+                return;
+              }
+
+              const chunk = decoder.decode(value, { stream: true });
+              const jsonObjects = jsonParser.processChunk(chunk);
+
+              for (const data of jsonObjects) {
+                // Only extract actual response text, not reasoning
+                const text = data.delta?.text;
+
+                if (text && text.trim()) {
+                  // Create OpenAI-compatible chunk
+                  const openaiChunk = {
+                    choices: [
+                      {
+                        delta: { content: text },
+                        finish_reason: null,
+                        index: 0,
+                      },
+                    ],
+                    created: Math.floor(Date.now() / 1000),
+                    id: 'chatcmpl-bedrock',
+                    model: model,
+                    object: 'chat.completion.chunk',
+                  };
+                  controller.enqueue(openaiChunk);
+                }
+              }
+
+              return pump();
+            })
+            .catch((error) => {
+              controller.error(error);
+            });
+        };
+
+        return pump();
+      },
+    });
+
+    try {
+      const stream = OpenAIStream(openaiStream, { callbacks: options?.callback });
+      return StreamingResponse(stream, {
+        headers: options?.headers,
+      });
+    } catch (streamError) {
       throw AgentRuntimeError.chat({
         error: {
           body: undefined,
-          message: err.message,
-          type: err.name,
+          message: `OpenAIStream error: ${(streamError as Error).message}`,
+          type: 'StreamError',
         },
         errorType: AgentRuntimeErrorType.ProviderBizError,
         provider: ModelProvider.Bedrock,
@@ -332,15 +275,14 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     const url = `https://bedrock-runtime.${this.region}.amazonaws.com/model/${payload.model}/invoke`;
 
     try {
-      const response = await fetch(url, {
-        body: JSON.stringify(requestBody),
-        headers: {
-          'Authorization': `Bearer ${this.bearerToken}`,
-          'Content-Type': 'application/json',
-        },
-        method: 'POST',
-        signal: options?.signal,
-      });
+      const { options: fetchOptions, cleanup } = createBedrockRequestOptions(
+        requestBody,
+        this.bearerToken!,
+        options?.signal,
+      );
+
+      const response = await fetchWithRetry(url, fetchOptions);
+      cleanup();
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -369,17 +311,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
       return responseBody.embedding;
     } catch (e) {
-      const err = e as Error;
-      throw AgentRuntimeError.chat({
-        error: {
-          body: undefined,
-          message: err.message,
-          type: err.name,
-        },
-        errorType: AgentRuntimeErrorType.ProviderBizError,
-        provider: ModelProvider.Bedrock,
-        region: this.region,
-      });
+      throw handleBedrockError(e, this.region);
     }
   }
 }
