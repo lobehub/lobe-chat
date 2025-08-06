@@ -46,11 +46,13 @@ export type CheckErrorRender = (props: {
 interface ConnectionCheckerProps {
   checkErrorRender?: CheckErrorRender;
   model: string;
+  onAfterCheck: () => Promise<void>;
+  onBeforeCheck: () => Promise<void>;
   provider: string;
 }
 
 const Checker = memo<ConnectionCheckerProps>(
-  ({ model, provider, checkErrorRender: CheckErrorRender }) => {
+  ({ model, provider, checkErrorRender: CheckErrorRender, onBeforeCheck, onAfterCheck }) => {
     const { t } = useTranslation('setting');
 
     const isProviderConfigUpdating = useAiInfraStore(
@@ -152,7 +154,18 @@ const Checker = memo<ConnectionCheckerProps>(
             value={checkModel}
             virtual
           />
-          <Button disabled={isProviderConfigUpdating} loading={loading} onClick={checkConnection}>
+          <Button
+            disabled={isProviderConfigUpdating}
+            loading={loading}
+            onClick={async () => {
+              await onBeforeCheck();
+              try {
+                await checkConnection();
+              } finally {
+                await onAfterCheck();
+              }
+            }}
+          >
             {t('llm.checker.button')}
           </Button>
         </Flexbox>

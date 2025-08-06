@@ -1,4 +1,4 @@
-import { and, eq, inArray, lt } from 'drizzle-orm/expressions';
+import { and, eq, inArray, lt } from 'drizzle-orm';
 
 import { LobeChatDatabase } from '@/database/type';
 import {

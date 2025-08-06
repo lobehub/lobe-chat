@@ -1,4 +1,4 @@
-import { and, eq, inArray } from 'drizzle-orm/expressions';
+import { and, eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';

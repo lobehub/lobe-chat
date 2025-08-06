@@ -3,6 +3,33 @@ import { AIChatModelCard } from '@/types/aiModel';
 const ollamaChatModels: AIChatModelCard[] = [
   {
     abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'GPT-OSS 20B 是 OpenAI 发布的开源大语言模型，采用 MXFP4 量化技术，适合在高端消费级GPU或Apple Silicon Mac上运行。该模型在对话生成、代码编写和推理任务方面表现出色，支持函数调用和工具使用。',
+    displayName: 'GPT-OSS 20B',
+    enabled: true,
+    id: 'gpt-oss',
+    releasedAt: '2025-08-05',
+    type: 'chat',
+  },
+  {
+    abilities: {
+      functionCall: true,
+      reasoning: true,
+    },
+    contextWindowTokens: 32_768,
+    description:
+      'GPT-OSS 120B 是 OpenAI 发布的大型开源语言模型，采用 MXFP4 量化技术，为旗舰级模型。需要多GPU或高性能工作站环境运行，在复杂推理、代码生成和多语言处理方面具备卓越性能，支持高级函数调用和工具集成。',
+    displayName: 'GPT-OSS 120B',
+    id: 'gpt-oss:120b',
+    releasedAt: '2025-08-05',
+    type: 'chat',
+  },
+  {
+    abilities: {
       reasoning: true,
     },
     contextWindowTokens: 65_536,

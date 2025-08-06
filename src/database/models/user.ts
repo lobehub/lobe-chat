@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import dayjs from 'dayjs';
-import { eq } from 'drizzle-orm/expressions';
+import { eq } from 'drizzle-orm';
 import type { AdapterAccount } from 'next-auth/adapters';
 import type { PartialDeep } from 'type-fest';
 

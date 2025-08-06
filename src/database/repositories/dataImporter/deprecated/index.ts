@@ -1,5 +1,4 @@
-import { sql } from 'drizzle-orm';
-import { and, eq, inArray } from 'drizzle-orm/expressions';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 
 import {
   agents,
