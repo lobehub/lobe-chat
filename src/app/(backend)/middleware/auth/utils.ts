@@ -1,9 +1,9 @@
 import { type AuthObject } from '@clerk/backend';
+import { ChatErrorType } from '@lobechat/types/fetch';
 
 import { enableClerk, enableNextAuth } from '@/const/auth';
 import { getAppConfig } from '@/envs/app';
 import { AgentRuntimeError } from '@/libs/model-runtime';
-import { ChatErrorType } from '@/types/fetch';
 
 interface CheckAuthParams {
   accessCode?: string;

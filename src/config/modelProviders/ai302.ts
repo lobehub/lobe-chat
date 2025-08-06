@@ -2,6 +2,7 @@ import { ModelProviderCard } from '@/types/llm';
 
 // ref: https://302.ai/pricing/
 const Ai302: ModelProviderCard = {
+  apiKeyUrl: 'https://lobe.li/Oizw5sN',
   chatModels: [
     {
       contextWindowTokens: 32_000,
