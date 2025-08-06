@@ -1475,6 +1475,12 @@
   "gpt-image-1": {
     "description": "ChatGPT 原生多模態圖片生成模型"
   },
+  "gpt-oss": {
+    "description": "GPT-OSS 20B 是 OpenAI 發布的開源大型語言模型，採用 MXFP4 量化技術，適合在高端消費級 GPU 或 Apple Silicon Mac 上運行。該模型在對話生成、程式碼撰寫和推理任務方面表現出色，支援函數呼叫和工具使用。"
+  },
+  "gpt-oss:120b": {
+    "description": "GPT-OSS 120B 是 OpenAI 發布的大型開源語言模型，採用 MXFP4 量化技術，為旗艦級模型。需要多 GPU 或高效能工作站環境運行，在複雜推理、程式碼生成和多語言處理方面具備卓越性能，支援高級函數呼叫和工具整合。"
+  },
   "grok-2-1212": {
     "description": "該模型在準確性、指令遵循和多語言能力方面有所改進。"
   },
