@@ -1,5 +1,4 @@
-import { SQL, count } from 'drizzle-orm';
-import { and, desc, eq, inArray } from 'drizzle-orm/expressions';
+import { SQL, and, count, desc, eq, inArray } from 'drizzle-orm';
 
 import {
   NewEvalEvaluationItem,

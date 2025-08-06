@@ -163,6 +163,20 @@ describe('processWithArtifact', () => {
 <lobeArtifact identifier="test" type="image/svg+xml" title="测试"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">  <rect width="100" height="100" fill="blue"/></svg></lobeArtifact>`);
   });
 
+  it('should handle Gemini case with no line break between lobeThinking and lobeArtifact tags', () => {
+    const input = `<lobeThinking>这是一个思考过程。</lobeThinking><lobeArtifact identifier="test" type="image/svg+xml" title="测试">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="blue"/>
+</svg>
+</lobeArtifact>`;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(`<lobeThinking>这是一个思考过程。</lobeThinking>
+
+<lobeArtifact identifier="test" type="image/svg+xml" title="测试"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">  <rect width="100" height="100" fill="blue"/></svg></lobeArtifact>`);
+  });
+
   it('should remove fenced code block between lobeArtifact and HTML content', () => {
     const input = `<lobeArtifact identifier="web-calculator" type="text/html" title="简单的 Web 计算器">
 \`\`\`html
@@ -430,5 +444,57 @@ This HTML document includes the temperature converter with the requested feature
 <lobeArtifact identifier="temperature-converter" type="text/html" title="Temperature Converter"><!DOCTYPE html><html lang="en">...</html></lobeArtifact>
 
 This HTML document includes the temperature converter with the requested features: the logic is wrapped in an IIFE, and event listeners are attached in JavaScript.`);
+  });
+
+  describe('idempotency tests', () => {
+    it('should not add extra blank lines when running processWithArtifact multiple times', () => {
+      const input = `<lobeThinking>这是一个思考过程。</lobeThinking><lobeArtifact identifier="test" type="image/svg+xml" title="测试">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="blue"/>
+</svg>
+</lobeArtifact>`;
+
+      // First run
+      const firstRun = processWithArtifact(input);
+
+      // Second run - should produce the same result
+      const secondRun = processWithArtifact(firstRun);
+
+      // Third run - should still produce the same result
+      const thirdRun = processWithArtifact(secondRun);
+
+      // All runs should produce the same output
+      expect(firstRun).toEqual(secondRun);
+      expect(secondRun).toEqual(thirdRun);
+
+      // Verify the output has exactly two newlines between tags
+      expect(firstRun).toContain('</lobeThinking>\n\n<lobeArtifact');
+      expect(firstRun.match(/(<\/lobeThinking>)\n\n(<lobeArtifact)/)).toBeTruthy();
+    });
+
+    it('should handle already processed content with proper spacing', () => {
+      const alreadyProcessed = `<lobeThinking>这是一个思考过程。</lobeThinking>
+
+<lobeArtifact identifier="test" type="image/svg+xml" title="测试"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">  <rect width="100" height="100" fill="blue"/></svg></lobeArtifact>`;
+
+      const result = processWithArtifact(alreadyProcessed);
+
+      // Should remain unchanged
+      expect(result).toEqual(alreadyProcessed);
+    });
+
+    it('should not convert spaces between tags into extra blank lines', () => {
+      const inputWithSpaces = `<lobeThinking>这是一个思考过程。</lobeThinking> <lobeArtifact identifier="test" type="image/svg+xml" title="测试">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" fill="blue"/>
+</svg>
+</lobeArtifact>`;
+
+      const output = processWithArtifact(inputWithSpaces);
+
+      // Should still have the space and not convert it to newlines
+      expect(output).toContain('</lobeThinking> <lobeArtifact');
+      expect(output).not.toContain('</lobeThinking>\n\n<lobeArtifact');
+    });
   });
 });

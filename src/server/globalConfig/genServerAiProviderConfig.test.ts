@@ -1,8 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ModelProvider } from '@/libs/model-runtime';
-import { AiFullModelCard } from '@/types/aiModel';
-
 import { genServerAiProvidersConfig } from './genServerAiProviderConfig';
 
 // Mock dependencies using importOriginal to preserve real provider data
@@ -23,11 +20,11 @@ vi.mock('@/config/llm', () => ({
 }));
 
 vi.mock('@/utils/parseModels', () => ({
-  extractEnabledModels: vi.fn((providerId: string, modelString?: string) => {
+  extractEnabledModels: vi.fn(async (providerId: string, modelString?: string) => {
     if (!modelString) return undefined;
     return [`${providerId}-model-1`, `${providerId}-model-2`];
   }),
-  transformToAiModelList: vi.fn((params) => {
+  transformToAiModelList: vi.fn(async (params) => {
     return params.defaultModels;
   }),
 }));
@@ -43,8 +40,8 @@ describe('genServerAiProvidersConfig', () => {
     });
   });
 
-  it('should generate basic provider config with default settings', () => {
-    const result = genServerAiProvidersConfig({});
+  it('should generate basic provider config with default settings', async () => {
+    const result = await genServerAiProvidersConfig({});
 
     expect(result).toHaveProperty('openai');
     expect(result).toHaveProperty('anthropic');
@@ -62,7 +59,7 @@ describe('genServerAiProvidersConfig', () => {
     });
   });
 
-  it('should use custom enabled settings from specificConfig', () => {
+  it('should use custom enabled settings from specificConfig', async () => {
     const specificConfig = {
       openai: {
         enabled: false,
@@ -72,7 +69,7 @@ describe('genServerAiProvidersConfig', () => {
       },
     };
 
-    const result = genServerAiProvidersConfig(specificConfig);
+    const result = await genServerAiProvidersConfig(specificConfig);
 
     expect(result.openai.enabled).toBe(false);
     expect(result.anthropic.enabled).toBe(true);
@@ -93,7 +90,7 @@ describe('genServerAiProvidersConfig', () => {
       CUSTOM_OPENAI_ENABLED: true,
     } as any);
 
-    const result = genServerAiProvidersConfig(specificConfig);
+    const result = await genServerAiProvidersConfig(specificConfig);
 
     expect(result.openai.enabled).toBe(true);
   });
@@ -102,9 +99,9 @@ describe('genServerAiProvidersConfig', () => {
     process.env.OPENAI_MODEL_LIST = '+gpt-4,+gpt-3.5-turbo';
 
     const { extractEnabledModels } = vi.mocked(await import('@/utils/parseModels'));
-    extractEnabledModels.mockReturnValue(['gpt-4', 'gpt-3.5-turbo']);
+    extractEnabledModels.mockResolvedValue(['gpt-4', 'gpt-3.5-turbo']);
 
-    const result = genServerAiProvidersConfig({});
+    const result = await genServerAiProvidersConfig({});
 
     expect(extractEnabledModels).toHaveBeenCalledWith('openai', '+gpt-4,+gpt-3.5-turbo', false);
     expect(result.openai.enabledModels).toEqual(['gpt-4', 'gpt-3.5-turbo']);
@@ -121,7 +118,7 @@ describe('genServerAiProvidersConfig', () => {
 
     const { extractEnabledModels } = vi.mocked(await import('@/utils/parseModels'));
 
-    genServerAiProvidersConfig(specificConfig);
+    await genServerAiProvidersConfig(specificConfig);
 
     expect(extractEnabledModels).toHaveBeenCalledWith('openai', '+custom-model', false);
   });
@@ -139,7 +136,7 @@ describe('genServerAiProvidersConfig', () => {
       await import('@/utils/parseModels'),
     );
 
-    genServerAiProvidersConfig(specificConfig);
+    await genServerAiProvidersConfig(specificConfig);
 
     expect(extractEnabledModels).toHaveBeenCalledWith('openai', '+gpt-4->deployment1', true);
     expect(transformToAiModelList).toHaveBeenCalledWith({
@@ -150,26 +147,26 @@ describe('genServerAiProvidersConfig', () => {
     });
   });
 
-  it('should include fetchOnClient when specified in config', () => {
+  it('should include fetchOnClient when specified in config', async () => {
     const specificConfig = {
       openai: {
         fetchOnClient: true,
       },
     };
 
-    const result = genServerAiProvidersConfig(specificConfig);
+    const result = await genServerAiProvidersConfig(specificConfig);
 
     expect(result.openai).toHaveProperty('fetchOnClient', true);
   });
 
-  it('should not include fetchOnClient when not specified in config', () => {
-    const result = genServerAiProvidersConfig({});
+  it('should not include fetchOnClient when not specified in config', async () => {
+    const result = await genServerAiProvidersConfig({});
 
     expect(result.openai).not.toHaveProperty('fetchOnClient');
   });
 
-  it('should handle all available providers', () => {
-    const result = genServerAiProvidersConfig({});
+  it('should handle all available providers', async () => {
+    const result = await genServerAiProvidersConfig({});
 
     // Check that result includes some key providers
     expect(result).toHaveProperty('openai');
@@ -210,8 +207,8 @@ describe('genServerAiProvidersConfig Error Handling', () => {
     }));
 
     vi.doMock('@/utils/parseModels', () => ({
-      extractEnabledModels: vi.fn(() => undefined),
-      transformToAiModelList: vi.fn(() => []),
+      extractEnabledModels: vi.fn(async () => undefined),
+      transformToAiModelList: vi.fn(async () => []),
     }));
 
     // Mock ModelProvider to include the missing provider
@@ -228,8 +225,8 @@ describe('genServerAiProvidersConfig Error Handling', () => {
     );
 
     // This should throw because 'openai' is in ModelProvider but not in aiModels
-    expect(() => {
-      genServerAiProvidersConfig({});
-    }).toThrow();
+    await expect(async () => {
+      await genServerAiProvidersConfig({});
+    }).rejects.toThrow();
   });
 });

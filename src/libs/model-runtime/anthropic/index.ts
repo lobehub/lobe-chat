@@ -27,6 +27,9 @@ type anthropicTools = Anthropic.Tool | Anthropic.WebSearchTool20250305;
 
 const modelsWithSmallContextWindow = new Set(['claude-3-opus-20240229', 'claude-3-haiku-20240307']);
 
+// Opus 4.1 models that don't allow both temperature and top_p parameters
+const opus41Models = new Set(['claude-opus-4-1', 'claude-opus-4-1-20250805']);
+
 const DEFAULT_BASE_URL = 'https://api.anthropic.com';
 
 interface AnthropicAIParams extends ClientOptions {
@@ -189,6 +192,10 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       } satisfies Anthropic.MessageCreateParams;
     }
 
+    // For Opus 4.1 models, we can only set either temperature OR top_p, not both
+    const isOpus41Model = opus41Models.has(model);
+    const shouldSetTemperature = payload.temperature !== undefined;
+
     return {
       // claude 3 series model hax max output token of 4096, 3.x series has 8192
       // https://docs.anthropic.com/en/docs/about-claude/models/all-models#:~:text=200K-,Max%20output,-Normal%3A
@@ -196,9 +203,15 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       messages: postMessages,
       model,
       system: systemPrompts,
-      temperature: payload.temperature !== undefined ? temperature / 2 : undefined,
+      // For Opus 4.1 models: prefer temperature over top_p if both are provided
+      temperature: isOpus41Model 
+        ? (shouldSetTemperature ? temperature / 2 : undefined)
+        : (payload.temperature !== undefined ? temperature / 2 : undefined),
       tools: postTools,
-      top_p,
+      // For Opus 4.1 models: only set top_p if temperature is not set
+      top_p: isOpus41Model 
+        ? (shouldSetTemperature ? undefined : top_p)
+        : top_p,
     } satisfies Anthropic.MessageCreateParams;
   }
 

@@ -2,10 +2,13 @@
 
 import { Avatar, type AvatarProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { forwardRef } from 'react';
+import { forwardRef, useMemo } from 'react';
 
 import { BRANDING_NAME } from '@/const/branding';
 import { DEFAULT_USER_AVATAR_URL } from '@/const/meta';
+import { isDesktop } from '@/const/version';
+import { useElectronStore } from '@/store/electron';
+import { electronSyncSelectors } from '@/store/electron/selectors';
 import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
 
@@ -54,11 +57,24 @@ const UserAvatar = forwardRef<HTMLDivElement, UserAvatarProps>(
     ]);
 
     const isSignedIn = useUserStore(authSelectors.isLogin);
+    const remoteServerUrl = useElectronStore(electronSyncSelectors.remoteServerUrl);
+
+    // Process avatar URL for desktop environment
+    const avatarUrl = useMemo(() => {
+      if (!isSignedIn || !avatar) return DEFAULT_USER_AVATAR_URL;
+
+      // If in desktop environment and avatar starts with /, prepend the remote server URL
+      if (isDesktop && avatar.startsWith('/') && remoteServerUrl) {
+        return remoteServerUrl + avatar;
+      }
+
+      return avatar;
+    }, [isSignedIn, avatar, remoteServerUrl]);
 
     return (
       <Avatar
         alt={isSignedIn && !!username ? username : BRANDING_NAME}
-        avatar={isSignedIn && !!avatar ? avatar : DEFAULT_USER_AVATAR_URL}
+        avatar={avatarUrl}
         background={isSignedIn && avatar ? background : 'transparent'}
         className={cx(clickable && styles.clickable, className)}
         ref={ref}

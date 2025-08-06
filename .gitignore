@@ -99,10 +99,11 @@ robots.txt
 vertex-ai-key.json
 
 # AI coding tools
-docs/.prd/
+.local/
 .claude/
 .mcp.json
 CLAUDE.md
+CLAUDE.*.md
 
 # Misc
 ./packages/lobe-ui

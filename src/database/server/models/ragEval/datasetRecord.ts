@@ -1,4 +1,4 @@
-import { and, eq, inArray } from 'drizzle-orm/expressions';
+import { and, eq, inArray } from 'drizzle-orm';
 
 import { NewEvalDatasetRecordsItem, evalDatasetRecords, files } from '@/database/schemas';
 import { serverDB } from '@/database/server';

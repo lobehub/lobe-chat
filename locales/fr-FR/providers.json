@@ -2,6 +2,9 @@
   "ai21": {
     "description": "AI21 Labs construit des modèles de base et des systèmes d'intelligence artificielle pour les entreprises, accélérant l'application de l'intelligence artificielle générative en production."
   },
+  "ai302": {
+    "description": "302.AI est une plateforme d'applications d'IA à la demande, offrant l'API d'IA la plus complète du marché ainsi que des applications d'IA en ligne."
+  },
   "ai360": {
     "description": "360 AI est une plateforme de modèles et de services IA lancée par la société 360, offrant divers modèles avancés de traitement du langage naturel, y compris 360GPT2 Pro, 360GPT Pro, 360GPT Turbo et 360GPT Turbo Responsibility 8K. Ces modèles combinent de grands paramètres et des capacités multimodales, largement utilisés dans la génération de texte, la compréhension sémantique, les systèmes de dialogue et la génération de code. Grâce à une stratégie de tarification flexible, 360 AI répond à des besoins variés des utilisateurs, soutenant l'intégration des développeurs et favorisant l'innovation et le développement des applications intelligentes."
   },

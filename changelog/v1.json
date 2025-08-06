@@ -1,6 +1,50 @@
 [
   {
     "children": {
+      "fixes": ["Fix ollama model output without thinking."],
+      "improvements": ["Add Claude Opus 4.1 model, update i18n."]
+    },
+    "date": "2025-08-06",
+    "version": "1.109.1"
+  },
+  {
+    "children": {
+      "features": ["Support gpt-oss in ollama provider."]
+    },
+    "date": "2025-08-05",
+    "version": "1.109.0"
+  },
+  {
+    "children": {
+      "fixes": ["Provider config checker uses outdated API key."]
+    },
+    "date": "2025-08-05",
+    "version": "1.108.2"
+  },
+  {
+    "children": {
+      "fixes": ["Fix remote avatar broken in desktop."],
+      "improvements": ["Update mask style."]
+    },
+    "date": "2025-08-05",
+    "version": "1.108.1"
+  },
+  {
+    "children": {
+      "features": ["Support 302ai provider."]
+    },
+    "date": "2025-08-05",
+    "version": "1.108.0"
+  },
+  {
+    "children": {
+      "fixes": ["Break line for Gemini Artifacts."]
+    },
+    "date": "2025-08-05",
+    "version": "1.107.6"
+  },
+  {
+    "children": {
       "improvements": ["Update models."]
     },
     "date": "2025-08-04",
