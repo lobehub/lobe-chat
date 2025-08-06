@@ -1,4 +1,4 @@
-import { ChatErrorType } from '@lobechat/types/fetch';
+import { ChatErrorType } from '@lobechat/types';
 import OpenAI, { ClientOptions } from 'openai';
 import urlJoin from 'url-join';
 

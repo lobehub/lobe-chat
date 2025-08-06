@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { TraceNameMap } from '@lobechat/types/trace';
+import { TraceNameMap } from '@lobechat/types';
 import { Langfuse } from 'langfuse';
 import { LangfuseGenerationClient, LangfuseTraceClient } from 'langfuse-core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';

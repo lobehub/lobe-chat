@@ -1,4 +1,4 @@
-import { TraceNameMap, TracePayload, TraceTopicType } from '@lobechat/types/trace';
+import { TraceNameMap, TracePayload, TraceTopicType } from '@lobechat/types';
 import { getSingletonAnalyticsOptional } from '@lobehub/analytics';
 import type { PartialDeep } from 'type-fest';
 import { StateCreator } from 'zustand/vanilla';

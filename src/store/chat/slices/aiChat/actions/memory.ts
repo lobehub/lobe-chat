@@ -1,4 +1,4 @@
-import { TraceNameMap } from '@lobechat/types/trace';
+import { TraceNameMap } from '@lobechat/types';
 import { StateCreator } from 'zustand/vanilla';
 
 import { chainSummaryHistory } from '@/chains/summaryHistory';

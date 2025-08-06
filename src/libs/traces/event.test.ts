@@ -1,4 +1,4 @@
-import { TraceEventType } from '@lobechat/types/trace';
+import { TraceEventType } from '@lobechat/types';
 import { diffChars } from 'diff';
 import { LangfuseTraceClient } from 'langfuse-core';
 import { describe, expect, it } from 'vitest';

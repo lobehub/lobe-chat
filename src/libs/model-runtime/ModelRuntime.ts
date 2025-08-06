@@ -1,4 +1,4 @@
-import type { TracePayload } from '@lobechat/types/trace';
+import type { TracePayload } from '@lobechat/types';
 import { ClientOptions } from 'openai';
 
 import { LobeRuntimeAI } from './BaseAI';

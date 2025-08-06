@@ -1,5 +1,4 @@
-import { ChatErrorType, ErrorType } from '@lobechat/types/fetch';
-import { TraceNameMap } from '@lobechat/types/trace';
+import { ChatErrorType, ErrorType , TraceNameMap } from '@lobechat/types';
 import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { createGatewayOnEdgeRuntime } from '@lobehub/chat-plugins-gateway';
 

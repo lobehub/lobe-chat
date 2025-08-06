@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
-import { TraceEventType, TraceNameMap } from '@lobechat/types/trace';
+import { TraceEventType, TraceNameMap } from '@lobechat/types';
 import { t } from 'i18next';
 import { produce } from 'immer';
 import { template } from 'lodash-es';

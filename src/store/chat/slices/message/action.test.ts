@@ -1,4 +1,4 @@
-import { TraceEventType } from '@lobechat/types/trace';
+import { TraceEventType } from '@lobechat/types';
 import * as lobeUIModules from '@lobehub/ui';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { mutate } from 'swr';

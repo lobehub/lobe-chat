@@ -1,4 +1,4 @@
-import { TraceNameMap, TracePayload } from '@lobechat/types/trace';
+import { TraceNameMap, TracePayload } from '@lobechat/types';
 import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
