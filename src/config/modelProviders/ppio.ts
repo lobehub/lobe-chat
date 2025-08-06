@@ -9,22 +9,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'DeepSeek: DeepSeek R1 (community)',
       enabled: true,
       id: 'deepseek/deepseek-r1/community',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 16,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 64_000,
@@ -33,22 +17,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'DeepSeek: DeepSeek V3 (community)',
       enabled: true,
       id: 'deepseek/deepseek-v3/community',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 64_000,
@@ -57,22 +25,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'DeepSeek R1',
       enabled: true,
       id: 'deepseek/deepseek-r1',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 16,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 64_000,
@@ -81,22 +33,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'DeepSeek V3',
       enabled: true,
       id: 'deepseek/deepseek-v3',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -105,22 +41,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'DeepSeek R1 Distill Llama 70B',
       enabled: true,
       id: 'deepseek/deepseek-r1-distill-llama-70b',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 5.8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 5.8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 64_000,
@@ -129,22 +49,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'DeepSeek: DeepSeek R1 Distill Qwen 32B',
       enabled: true,
       id: 'deepseek/deepseek-r1-distill-qwen-32b',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2.18,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2.18,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 64_000,
@@ -153,22 +57,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'DeepSeek: DeepSeek R1 Distill Qwen 14B',
       enabled: true,
       id: 'deepseek/deepseek-r1-distill-qwen-14b',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -177,22 +65,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'DeepSeek: DeepSeek R1 Distill Llama 8B',
       enabled: true,
       id: 'deepseek/deepseek-r1-distill-llama-8b',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -201,22 +73,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'qwen/qwen-2.5-72b-instruct',
       enabled: true,
       id: 'qwen/qwen-2.5-72b-instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2.75,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2.88,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -225,22 +81,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'qwen/qwen-2-vl-72b-instruct',
       enabled: true,
       id: 'qwen/qwen-2-vl-72b-instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 4.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -248,22 +88,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'meta-llama/llama-3.2-3b-instruct',
       enabled: true,
       id: 'meta-llama/llama-3.2-3b-instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.216,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.36,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -272,22 +96,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'qwen/qwen2.5-32b-instruct',
       enabled: true,
       id: 'qwen/qwen2.5-32b-instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1.26,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.26,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 14_336,
@@ -296,22 +104,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'baichuan/baichuan2-13b-chat',
       enabled: true,
       id: 'baichuan/baichuan2-13b-chat',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1.75,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.75,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -320,22 +112,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'meta-llama/llama-3.1-70b-instruct',
       enabled: true,
       id: 'meta-llama/llama-3.1-70b-instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2.45,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2.82,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -344,22 +120,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'meta-llama/llama-3.1-8b-instruct',
       enabled: true,
       id: 'meta-llama/llama-3.1-8b-instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_384,
@@ -368,22 +128,6 @@ const PPIO: ModelProviderCard = {
       displayName: '01-ai/yi-1.5-34b-chat',
       enabled: true,
       id: '01-ai/yi-1.5-34b-chat',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_384,
@@ -392,22 +136,6 @@ const PPIO: ModelProviderCard = {
       displayName: '01-ai/yi-1.5-9b-chat',
       enabled: true,
       id: '01-ai/yi-1.5-9b-chat',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -415,22 +143,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'thudm/glm-4-9b-chat',
       enabled: true,
       id: 'thudm/glm-4-9b-chat',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -439,22 +151,6 @@ const PPIO: ModelProviderCard = {
       displayName: 'qwen/qwen-2-7b-instruct',
       enabled: true,
       id: 'qwen/qwen-2-7b-instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.32,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.32,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
   ], // Will be updated with model list
   checkModel: 'deepseek/deepseek-r1-distill-qwen-32b',

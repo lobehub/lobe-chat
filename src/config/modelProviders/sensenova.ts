@@ -12,22 +12,6 @@ const SenseNova: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'SenseChat-5',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 40,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     /*
     // Not compatible with local mode (Not support Base64 Image)
@@ -36,22 +20,6 @@ const SenseNova: ModelProviderCard = {
       displayName: 'SenseChat 5.5 Vision',
       enabled: true,
       id: 'SenseChat-Vision',
-      pricing: {
-    units: [
-    {
-      name: 'TextInput',
-      rate: 100,
-      strategy: 'fixed',
-      unit: 'MillionTokens'
-    },
-    {
-      name: 'TextOutput',
-      rate: 100,
-      strategy: 'fixed',
-      unit: 'MillionTokens'
-    }
-    ]
-  },
       tokens: 16_384,
       vision: true,
     },
@@ -62,22 +30,6 @@ const SenseNova: ModelProviderCard = {
       displayName: 'SenseChat 5.0 Turbo',
       enabled: true,
       id: 'SenseChat-Turbo',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -85,22 +37,6 @@ const SenseNova: ModelProviderCard = {
         '32K上下文长度，在粤语的对话理解上超越了GPT-4，在知识、推理、数学及代码编写等多个领域均能与GPT-4 Turbo相媲美',
       displayName: 'SenseChat 5.0 Cantonese',
       id: 'SenseChat-5-Cantonese',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 27,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 27,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 131_072,
@@ -108,22 +44,6 @@ const SenseNova: ModelProviderCard = {
       displayName: 'SenseChat 4.0 128K',
       enabled: true,
       id: 'SenseChat-128K',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 60,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 60,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -131,22 +51,6 @@ const SenseNova: ModelProviderCard = {
       displayName: 'SenseChat 4.0 32K',
       enabled: true,
       id: 'SenseChat-32K',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 36,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 36,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 4096,
@@ -154,66 +58,18 @@ const SenseNova: ModelProviderCard = {
       displayName: 'SenseChat 4.0 4K',
       enabled: true,
       id: 'SenseChat',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
       description: '标准版模型，8K上下文长度，高响应速度',
       displayName: 'SenseChat Character',
       id: 'SenseChat-Character',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
       description: '高级版模型，32K上下文长度，能力全面提升，支持中/英文对话',
       displayName: 'SenseChat Character Pro',
       id: 'SenseChat-Character-Pro',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
   ],
   checkModel: 'SenseChat-Turbo',

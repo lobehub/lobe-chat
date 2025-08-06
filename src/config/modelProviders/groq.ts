@@ -13,22 +13,6 @@ const Groq: ModelProviderCard = {
       functionCall: true,
       id: 'llama-3.3-70b-versatile',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.05,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.08,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -38,22 +22,6 @@ const Groq: ModelProviderCard = {
       enabled: true,
       id: 'llama-3.2-11b-vision-preview',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.05,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.08,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -64,22 +32,6 @@ const Groq: ModelProviderCard = {
       enabled: true,
       id: 'llama-3.2-90b-vision-preview',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.59,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.79,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -91,22 +43,6 @@ const Groq: ModelProviderCard = {
       functionCall: true,
       id: 'llama-3.1-8b-instant',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.05,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.08,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 131_072,
@@ -117,22 +53,6 @@ const Groq: ModelProviderCard = {
       functionCall: true,
       id: 'llama-3.1-70b-versatile',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.59,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.79,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     /*
     // Offline due to overwhelming demand! Stay tuned for updates.
@@ -149,22 +69,6 @@ const Groq: ModelProviderCard = {
       displayName: 'Llama 3 Groq 8B Tool Use (Preview)',
       functionCall: true,
       id: 'llama3-groq-8b-8192-tool-use-preview',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.19,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.19,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -172,22 +76,6 @@ const Groq: ModelProviderCard = {
       displayName: 'Llama 3 Groq 70B Tool Use (Preview)',
       functionCall: true,
       id: 'llama3-groq-70b-8192-tool-use-preview',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.89,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.89,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -195,22 +83,6 @@ const Groq: ModelProviderCard = {
       displayName: 'Meta Llama 3 8B',
       functionCall: true,
       id: 'llama3-8b-8192',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.05,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.08,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -218,22 +90,6 @@ const Groq: ModelProviderCard = {
       displayName: 'Meta Llama 3 70B',
       functionCall: true,
       id: 'llama3-70b-8192',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.59,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.79,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -242,22 +98,6 @@ const Groq: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'gemma2-9b-it',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -265,22 +105,6 @@ const Groq: ModelProviderCard = {
       displayName: 'Gemma 7B',
       functionCall: true,
       id: 'gemma-7b-it',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.07,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.07,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -288,22 +112,6 @@ const Groq: ModelProviderCard = {
       displayName: 'Mixtral 8x7B',
       functionCall: true,
       id: 'mixtral-8x7b-32768',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.24,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.24,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 4096,

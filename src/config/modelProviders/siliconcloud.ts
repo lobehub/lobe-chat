@@ -10,22 +10,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'DeepSeek R1',
       enabled: true,
       id: 'deepseek-ai/DeepSeek-R1',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 16,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 65_536,
@@ -35,22 +19,6 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'deepseek-ai/DeepSeek-V3',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 65_536,
@@ -58,22 +26,6 @@ const SiliconCloud: ModelProviderCard = {
         'DeepSeek-R1 是一款强化学习（RL）驱动的推理模型，解决了模型中的重复性和可读性问题。在 RL 之前，DeepSeek-R1 引入了冷启动数据，进一步优化了推理性能。它在数学、代码和推理任务中与 OpenAI-o1 表现相当，并且通过精心设计的训练方法，提升了整体效果。',
       displayName: 'DeepSeek R1 (Pro)',
       id: 'Pro/deepseek-ai/DeepSeek-R1',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 16,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 65_536,
@@ -82,22 +34,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'DeepSeek V3 (Pro)',
       functionCall: true,
       id: 'Pro/deepseek-ai/DeepSeek-V3',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -106,22 +42,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'DeepSeek R1 Distill Llama 70B',
       enabled: true,
       id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4.13,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 4.13,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -130,22 +50,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'DeepSeek R1 Distill Qwen 32B',
       enabled: true,
       id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1.26,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.26,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -154,22 +58,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'DeepSeek R1 Distill Qwen 14B',
       enabled: true,
       id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-14B',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.7,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.7,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -178,22 +66,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'DeepSeek R1 Distill Llama 8B (Free)',
       enabled: true,
       id: 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -202,22 +74,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'DeepSeek R1 Distill Qwen 7B (Free)',
       enabled: true,
       id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -225,22 +81,6 @@ const SiliconCloud: ModelProviderCard = {
         'DeepSeek-R1-Distill-Qwen-1.5B 是基于 Qwen2.5-Math-1.5B 通过知识蒸馏得到的模型。该模型使用 DeepSeek-R1 生成的 80 万个精选样本进行微调，在多个基准测试中展现出不错的性能。作为一个轻量级模型，在 MATH-500 上达到了 83.9% 的准确率，在 AIME 2024 上达到了 28.9% 的通过率，在 CodeForces 上获得了 954 的评分，显示出超出其参数规模的推理能力。',
       displayName: 'DeepSeek-R1-Distill-Qwen-1.5B (Free)',
       id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -250,22 +90,6 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'deepseek-ai/DeepSeek-V2.5',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1.33,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.33,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 4096,
@@ -273,22 +97,6 @@ const SiliconCloud: ModelProviderCard = {
         'DeepSeek-VL2 是一个基于 DeepSeekMoE-27B 开发的混合专家（MoE）视觉语言模型，采用稀疏激活的 MoE 架构，在仅激活 4.5B 参数的情况下实现了卓越性能。该模型在视觉问答、光学字符识别、文档/表格/图表理解和视觉定位等多个任务中表现优异。',
       displayName: 'DeepSeek VL2',
       id: 'deepseek-ai/deepseek-vl2',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.99,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.99,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -298,22 +106,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'QVQ 72B Preview',
       enabled: true,
       id: 'Qwen/QVQ-72B-Preview',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 9.9,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 9.9,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -323,22 +115,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'QwQ 32B Preview',
       enabled: true,
       id: 'Qwen/QwQ-32B-Preview',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1.26,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.26,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -348,22 +124,6 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'Qwen/Qwen2.5-7B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -371,22 +131,6 @@ const SiliconCloud: ModelProviderCard = {
         'Qwen2.5-7B-Instruct 是阿里云发布的最新大语言模型系列之一。该 7B 模型在编码和数学等领域具有显著改进的能力。该模型还提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升',
       displayName: 'Qwen2.5 7B Instruct (LoRA)',
       id: 'LoRA/Qwen/Qwen2.5-7B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.53,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.53,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -395,22 +139,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Qwen2.5 7B Instruct (Pro)',
       functionCall: true,
       id: 'Pro/Qwen/Qwen2.5-7B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.35,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.35,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -419,22 +147,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Qwen2.5 14B Instruct',
       functionCall: true,
       id: 'Qwen/Qwen2.5-14B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.7,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.7,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -443,22 +155,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Qwen2.5 32B Instruct',
       functionCall: true,
       id: 'Qwen/Qwen2.5-32B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1.26,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.26,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -467,22 +163,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Qwen2.5 72B Instruct',
       functionCall: true,
       id: 'Qwen/Qwen2.5-72B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4.13,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 4.13,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -490,22 +170,6 @@ const SiliconCloud: ModelProviderCard = {
         'Qwen2.5-72B-Instruct 是阿里云发布的最新大语言模型系列之一。该 72B 模型在编码和数学等领域具有显著改进的能力。该模型还提供了多语言支持，覆盖超过 29 种语言，包括中文、英文等。模型在指令跟随、理解结构化数据以及生成结构化输出（尤其是 JSON）方面都有显著提升',
       displayName: 'Qwen2.5 72B Instruct (LoRA)',
       id: 'LoRA/Qwen/Qwen2.5-72B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 6.2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 6.2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -514,22 +178,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Qwen2.5 72B Instruct (Vendor-A)',
       functionCall: true,
       id: 'Vendor-A/Qwen/Qwen2.5-72B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 131_072,
@@ -539,22 +187,6 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'Qwen/Qwen2.5-72B-Instruct-128K',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4.13,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 4.13,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -562,22 +194,6 @@ const SiliconCloud: ModelProviderCard = {
         'Qwen2.5-Coder-7B-Instruct 是阿里云发布的代码特定大语言模型系列的最新版本。该模型在 Qwen2.5 的基础上，通过 5.5 万亿个 tokens 的训练，显著提升了代码生成、推理和修复能力。它不仅增强了编码能力，还保持了数学和通用能力的优势。模型为代码智能体等实际应用提供了更全面的基础',
       displayName: 'Qwen2.5 Coder 7B Instruct (Free)',
       id: 'Qwen/Qwen2.5-Coder-7B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -585,22 +201,6 @@ const SiliconCloud: ModelProviderCard = {
         'Qwen2.5-Coder-7B-Instruct 是阿里云发布的代码特定大语言模型系列的最新版本。该模型在 Qwen2.5 的基础上，通过 5.5 万亿个 tokens 的训练，显著提升了代码生成、推理和修复能力。它不仅增强了编码能力，还保持了数学和通用能力的优势。模型为代码智能体等实际应用提供了更全面的基础',
       displayName: 'Qwen2.5 Coder 7B Instruct (Pro)',
       id: 'Pro/Qwen/Qwen2.5-Coder-7B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.35,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.35,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -608,22 +208,6 @@ const SiliconCloud: ModelProviderCard = {
         'Qwen2.5-Coder-32B-Instruct 是基于 Qwen2.5 开发的代码特定大语言模型。该模型通过 5.5 万亿 tokens 的训练，在代码生成、代码推理和代码修复方面都取得了显著提升。它是当前最先进的开源代码语言模型，编码能力可与 GPT-4 相媲美。模型不仅增强了编码能力，还保持了在数学和通用能力方面的优势，并支持长文本处理',
       displayName: 'Qwen2.5 Coder 32B Instruct',
       id: 'Qwen/Qwen2.5-Coder-32B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1.26,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.26,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -631,22 +215,6 @@ const SiliconCloud: ModelProviderCard = {
         'Qwen2-1.5B-Instruct 是 Qwen2 系列中的指令微调大语言模型，参数规模为 1.5B。该模型基于 Transformer 架构，采用了 SwiGLU 激活函数、注意力 QKV 偏置和组查询注意力等技术。它在语言理解、生成、多语言能力、编码、数学和推理等多个基准测试中表现出色，超越了大多数开源模型。与 Qwen1.5-1.8B-Chat 相比，Qwen2-1.5B-Instruct 在 MMLU、HumanEval、GSM8K、C-Eval 和 IFEval 等测试中均显示出显著的性能提升，尽管参数量略少',
       displayName: 'Qwen2 1.5B Instruct (Free)',
       id: 'Qwen/Qwen2-1.5B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -654,22 +222,6 @@ const SiliconCloud: ModelProviderCard = {
         'Qwen2-1.5B-Instruct 是 Qwen2 系列中的指令微调大语言模型，参数规模为 1.5B。该模型基于 Transformer 架构，采用了 SwiGLU 激活函数、注意力 QKV 偏置和组查询注意力等技术。它在语言理解、生成、多语言能力、编码、数学和推理等多个基准测试中表现出色，超越了大多数开源模型。与 Qwen1.5-1.8B-Chat 相比，Qwen2-1.5B-Instruct 在 MMLU、HumanEval、GSM8K、C-Eval 和 IFEval 等测试中均显示出显著的性能提升，尽管参数量略少',
       displayName: 'Qwen2 1.5B Instruct (Pro)',
       id: 'Pro/Qwen/Qwen2-1.5B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.14,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.14,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -677,22 +229,6 @@ const SiliconCloud: ModelProviderCard = {
         'Qwen2-7B-Instruct 是 Qwen2 系列中的指令微调大语言模型，参数规模为 7B。该模型基于 Transformer 架构，采用了 SwiGLU 激活函数、注意力 QKV 偏置和组查询注意力等技术。它能够处理大规模输入。该模型在语言理解、生成、多语言能力、编码、数学和推理等多个基准测试中表现出色，超越了大多数开源模型，并在某些任务上展现出与专有模型相当的竞争力。Qwen2-7B-Instruct 在多项评测中均优于 Qwen1.5-7B-Chat，显示出显著的性能提升',
       displayName: 'Qwen2 7B Instruct (Free)',
       id: 'Qwen/Qwen2-7B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -700,22 +236,6 @@ const SiliconCloud: ModelProviderCard = {
         'Qwen2-7B-Instruct 是 Qwen2 系列中的指令微调大语言模型，参数规模为 7B。该模型基于 Transformer 架构，采用了 SwiGLU 激活函数、注意力 QKV 偏置和组查询注意力等技术。它能够处理大规模输入。该模型在语言理解、生成、多语言能力、编码、数学和推理等多个基准测试中表现出色，超越了大多数开源模型，并在某些任务上展现出与专有模型相当的竞争力。Qwen2-7B-Instruct 在多项评测中均优于 Qwen1.5-7B-Chat，显示出显著的性能提升',
       displayName: 'Qwen2 7B Instruct (Pro)',
       id: 'Pro/Qwen/Qwen2-7B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.35,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.35,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -723,22 +243,6 @@ const SiliconCloud: ModelProviderCard = {
         'Qwen2-72B-Instruct 是 Qwen2 系列中的指令微调大语言模型，参数规模为 72B。该模型基于 Transformer 架构，采用了 SwiGLU 激活函数、注意力 QKV 偏置和组查询注意力等技术。它能够处理大规模输入。该模型在语言理解、生成、多语言能力、编码、数学和推理等多个基准测试中表现出色，超越了大多数开源模型，并在某些任务上展现出与专有模型相当的竞争力',
       displayName: 'Qwen2 72B Instruct',
       id: 'Qwen/Qwen2-7B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4.13,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 4.13,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -747,22 +251,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Qwen2 VL 7B Instruct (Pro)',
       enabled: true,
       id: 'Pro/Qwen/Qwen2-VL-7B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.35,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.35,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -772,22 +260,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Qwen2 VL 72B Instruct',
       enabled: true,
       id: 'Qwen/Qwen2-VL-72B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4.13,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 4.13,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -797,22 +269,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'InternLM2.5 7B Chat (Free)',
       functionCall: true,
       id: 'internlm/internlm2_5-7b-chat',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -821,22 +277,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'InternLM2.5 20B Chat',
       functionCall: true,
       id: 'internlm/internlm2_5-20b-chat',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -844,22 +284,6 @@ const SiliconCloud: ModelProviderCard = {
         'InternVL2-8B 是 InternVL 2.0 系列多模态大语言模型中的一员。该模型由 InternViT-300M-448px 视觉模型、MLP 投影层和 internlm2_5-7b-chat 语言模型组成。它在各种视觉语言任务上展现出了卓越的性能，包括文档和图表理解、场景文本理解、OCR、科学和数学问题解决等。InternVL2-8B 使用 8K 上下文窗口训练，能够处理长文本、多图像和视频输入，显著提升了模型在这些任务上的处理能力',
       displayName: 'InternVL2 8B (Pro)',
       id: 'Pro/OpenGVLab/InternVL2-8B',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.35,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.35,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -868,22 +292,6 @@ const SiliconCloud: ModelProviderCard = {
         'InternVL2-26B 是 InternVL 2.0 系列多模态大语言模型中的一员。该模型由 InternViT-6B-448px-V1-5 视觉模型、MLP 投影层和 internlm2-chat-20b 语言模型组成。它在各种视觉语言任务上展现出了卓越的性能，包括文档和图表理解、场景文本理解、OCR、科学和数学问题解决等。InternVL2-26B 使用 8K 上下文窗口训练，能够处理长文本、多图像和视频输入，显著提升了模型在这些任务上的处理能力',
       displayName: 'InternVL2 26B',
       id: 'OpenGVLab/InternVL2-26B',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -893,22 +301,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'GLM-4 9B Chat (Free)',
       functionCall: true,
       id: 'THUDM/glm-4-9b-chat',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 131_072,
@@ -917,22 +309,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'GLM-4 9B Chat (Pro)',
       functionCall: true,
       id: 'Pro/THUDM/glm-4-9b-chat',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -940,22 +316,6 @@ const SiliconCloud: ModelProviderCard = {
         'ChatGLM3-6B 是 ChatGLM 系列的开源模型，由智谱 AI 开发。该模型保留了前代模型的优秀特性，如对话流畅和部署门槛低，同时引入了新的特性。它采用了更多样的训练数据、更充分的训练步数和更合理的训练策略，在 10B 以下的预训练模型中表现出色。ChatGLM3-6B 支持多轮对话、工具调用、代码执行和 Agent 任务等复杂场景。除对话模型外，还开源了基础模型 ChatGLM-6B-Base 和长文本对话模型 ChatGLM3-6B-32K。该模型对学术研究完全开放，在登记后也允许免费商业使用',
       displayName: 'ChatGLM3 6B (Free)',
       id: 'THUDM/chatglm3-6b',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 4096,
@@ -963,22 +323,6 @@ const SiliconCloud: ModelProviderCard = {
         'Yi-1.5-6B-Chat 是 Yi-1.5 系列的一个变体，属于开源聊天模型。Yi-1.5 是 Yi 的升级版本，在 500B 个高质量语料上进行了持续预训练，并在 3M 多样化的微调样本上进行了微调。相比于 Yi，Yi-1.5 在编码、数学、推理和指令遵循能力方面表现更强，同时保持了出色的语言理解、常识推理和阅读理解能力。该模型具有 4K、16K 和 32K 的上下文长度版本，预训练总量达到 3.6T 个 token',
       displayName: 'Yi-1.5 6B Chat (Free)',
       id: '01-ai/Yi-1.5-6B-Chat',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_384,
@@ -986,22 +330,6 @@ const SiliconCloud: ModelProviderCard = {
         'Yi-1.5-9B-Chat-16K 是 Yi-1.5 系列的一个变体，属于开源聊天模型。Yi-1.5 是 Yi 的升级版本，在 500B 个高质量语料上进行了持续预训练，并在 3M 多样化的微调样本上进行了微调。相比于 Yi，Yi-1.5 在编码、数学、推理和指令遵循能力方面表现更强，同时保持了出色的语言理解、常识推理和阅读理解能力。该模型在同等规模的开源模型中表现最佳',
       displayName: 'Yi-1.5 9B Chat 16K (Free)',
       id: '01-ai/Yi-1.5-9B-Chat-16K',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_384,
@@ -1009,22 +337,6 @@ const SiliconCloud: ModelProviderCard = {
         'Yi-1.5-34B-Chat-16K 是 Yi-1.5 系列的一个变体，属于开源聊天模型。Yi-1.5 是 Yi 的升级版本，在 500B 个高质量语料上进行了持续预训练，并在 3M 多样化的微调样本上进行了微调。相比于 Yi，Yi-1.5 在编码、数学、推理和指令遵循能力方面表现更强，同时保持了出色的语言理解、常识推理和阅读理解能力。该模型在大多数基准测试中与更大的模型相当或表现更佳，具有 16K 的上下文长度',
       displayName: 'Yi-1.5 34B Chat 16K',
       id: '01-ai/Yi-1.5-34B-Chat-16K',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1.26,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.26,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -1033,22 +345,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Gemma 2 9B (Free)',
       enabled: true,
       id: 'google/gemma-2-9b-it',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -1056,22 +352,6 @@ const SiliconCloud: ModelProviderCard = {
         'Gemma 是 Google 开发的轻量级、最先进的开放模型系列之一。它是一个仅解码器的大型语言模型，支持英语，提供开放权重、预训练变体和指令微调变体。Gemma 模型适用于各种文本生成任务，包括问答、摘要和推理。该 9B 模型是通过 8 万亿个 tokens 训练而成。其相对较小的规模使其可以在资源有限的环境中部署，如笔记本电脑、台式机或您自己的云基础设施，从而使更多人能够访问最先进的 AI 模型并促进创新',
       displayName: 'Gemma 2 9B (Pro)',
       id: 'Pro/google/gemma-2-9b-it',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -1080,22 +360,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Gemma 2 27B',
       enabled: true,
       id: 'google/gemma-2-27b-it',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1.26,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.26,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -1105,22 +369,6 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -1128,22 +376,6 @@ const SiliconCloud: ModelProviderCard = {
         'Meta Llama 3.1 是由 Meta 开发的多语言大型语言模型家族，包括 8B、70B 和 405B 三种参数规模的预训练和指令微调变体。该 8B 指令微调模型针对多语言对话场景进行了优化，在多项行业基准测试中表现优异。模型训练使用了超过 15 万亿个 tokens 的公开数据，并采用了监督微调和人类反馈强化学习等技术来提升模型的有用性和安全性。Llama 3.1 支持文本生成和代码生成，知识截止日期为 2023 年 12 月',
       displayName: 'Llama 3.1 8B Instruct (Pro)',
       id: 'Pro/meta-llama/Meta-Llama-3.1-8B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.42,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.42,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -1153,22 +385,6 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4.13,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 4.13,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -1177,22 +393,6 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Llama 3.1 405B Instruct',
       enabled: true,
       id: 'meta-llama/Meta-Llama-3.1-405B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 21,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 21,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -1202,22 +402,6 @@ const SiliconCloud: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'meta-llama/Llama-3.3-70B-Instruct',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4.13,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 4.13,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -1225,22 +409,6 @@ const SiliconCloud: ModelProviderCard = {
         'TeleChat2大模型是由中国电信从0到1自主研发的生成式语义大模型，支持百科问答、代码生成、长文生成等功能，为用户提供对话咨询服务，能够与用户进行对话互动，回答问题，协助创作，高效便捷地帮助用户获取信息、知识和灵感。模型在幻觉问题、长文生成、逻辑理解等方面均有较出色表现。',
       displayName: 'TeleChat2',
       id: 'TeleAI/TeleChat2',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1.33,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.33,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -1248,22 +416,6 @@ const SiliconCloud: ModelProviderCard = {
         'TeleMM多模态大模型是由中国电信自主研发的多模态理解大模型，能够处理文本、图像等多种模态输入，支持图像理解、图表分析等功能，为用户提供跨模态的理解服务。模型能够与用户进行多模态交互，准确理解输入内容，回答问题、协助创作，并高效提供多模态信息和灵感支持。在细粒度感知，逻辑推理等多模态任务上有出色表现',
       displayName: 'TeleMM',
       id: 'TeleAI/TeleMM',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1.33,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.33,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
   ],

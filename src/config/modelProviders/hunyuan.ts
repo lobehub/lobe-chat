@@ -11,22 +11,6 @@ const Hunyuan: ModelProviderCard = {
       enabled: true,
       id: 'hunyuan-lite',
       maxOutput: 6000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -36,22 +20,6 @@ const Hunyuan: ModelProviderCard = {
       enabled: true,
       id: 'hunyuan-standard',
       maxOutput: 2000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 256_000,
@@ -61,22 +29,6 @@ const Hunyuan: ModelProviderCard = {
       enabled: true,
       id: 'hunyuan-standard-256K',
       maxOutput: 6000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 60,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -87,22 +39,6 @@ const Hunyuan: ModelProviderCard = {
       functionCall: true,
       id: 'hunyuan-turbo',
       maxOutput: 4000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 50,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -113,22 +49,6 @@ const Hunyuan: ModelProviderCard = {
       functionCall: true,
       id: 'hunyuan-pro',
       maxOutput: 4000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 30,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -137,22 +57,6 @@ const Hunyuan: ModelProviderCard = {
       enabled: true,
       id: 'hunyuan-vision',
       maxOutput: 4000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 18,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 18,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -162,22 +66,6 @@ const Hunyuan: ModelProviderCard = {
       displayName: 'Hunyuan Code',
       id: 'hunyuan-code',
       maxOutput: 4000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -187,22 +75,6 @@ const Hunyuan: ModelProviderCard = {
       functionCall: true,
       id: 'hunyuan-functioncall',
       maxOutput: 4000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -211,22 +83,6 @@ const Hunyuan: ModelProviderCard = {
       displayName: 'Hunyuan Role',
       id: 'hunyuan-role',
       maxOutput: 4000,
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
   ],
   checkModel: 'hunyuan-lite',

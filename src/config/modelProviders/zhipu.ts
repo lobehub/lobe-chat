@@ -10,22 +10,6 @@ const ZhiPu: ModelProviderCard = {
       description: 'GLM-Zero-Preview具备强大的复杂推理能力，在逻辑推理、数学、编程等领域表现优异。',
       displayName: 'GLM-Zero-Preview',
       id: 'glm-zero-preview',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 10,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 10,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -34,22 +18,6 @@ const ZhiPu: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'glm-4-flash',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -58,22 +26,6 @@ const ZhiPu: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'glm-4-flashx',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 1_024_000,
@@ -81,22 +33,6 @@ const ZhiPu: ModelProviderCard = {
       displayName: 'GLM-4-Long',
       functionCall: true,
       id: 'glm-4-long',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -105,22 +41,6 @@ const ZhiPu: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'glm-4-air',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -129,22 +49,6 @@ const ZhiPu: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'glm-4-airx',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 10,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 10,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -153,22 +57,6 @@ const ZhiPu: ModelProviderCard = {
       displayName: 'GLM-4-AllTools',
       functionCall: true,
       id: 'glm-4-alltools',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -178,22 +66,6 @@ const ZhiPu: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'glm-4-plus',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 50,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 50,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -201,22 +73,6 @@ const ZhiPu: ModelProviderCard = {
       displayName: 'GLM-4-0520',
       functionCall: true,
       id: 'glm-4-0520',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -224,22 +80,6 @@ const ZhiPu: ModelProviderCard = {
       displayName: 'GLM-4',
       functionCall: true,
       id: 'glm-4',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 100,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
@@ -248,22 +88,6 @@ const ZhiPu: ModelProviderCard = {
       displayName: 'GLM-4V-Flash',
       enabled: true,
       id: 'glm-4v-flash',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-12-09',
       vision: true,
     },
@@ -273,22 +97,6 @@ const ZhiPu: ModelProviderCard = {
       displayName: 'GLM-4V-Plus',
       enabled: true,
       id: 'glm-4v-plus',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 10,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 10,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -296,22 +104,6 @@ const ZhiPu: ModelProviderCard = {
       description: 'GLM-4V 提供强大的图像理解与推理能力，支持多种视觉任务。',
       displayName: 'GLM-4V',
       id: 'glm-4v',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 50,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 50,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -320,66 +112,18 @@ const ZhiPu: ModelProviderCard = {
         'CodeGeeX-4 是强大的AI编程助手，支持多种编程语言的智能问答与代码补全，提升开发效率。',
       displayName: 'CodeGeeX-4',
       id: 'codegeex-4',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 4096,
       description: 'CharGLM-3 专为角色扮演与情感陪伴设计，支持超长多轮记忆与个性化对话，应用广泛。',
       displayName: 'CharGLM-3',
       id: 'charglm-3',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8192,
       description: 'Emohaa 是心理模型，具备专业咨询能力，帮助用户理解情感问题。',
       displayName: 'Emohaa',
       id: 'emohaa',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
   ],
   checkModel: 'glm-4-flash-250414',

@@ -35,34 +35,6 @@ const Bedrock: ModelProviderCard = {
       functionCall: true,
       id: 'us.anthropic.claude-3-7-sonnet-20250219-v1:0',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'CachedTextOutput',
-            rate: 1.25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2025-02-24',
     },
     {
@@ -74,34 +46,6 @@ const Bedrock: ModelProviderCard = {
       functionCall: true,
       id: 'us.anthropic.claude-3-7-sonnet-20250219-v1:0',
       maxOutput: 64_000,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'CachedTextOutput',
-            rate: 1.25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2025-02-24',
     },
     {
@@ -113,34 +57,6 @@ const Bedrock: ModelProviderCard = {
       functionCall: true,
       id: 'anthropic.claude-3-5-haiku-20241022-v1:0',
       maxOutput: 8192,
-      pricing: {
-        units: [
-          {
-            name: 'CachedTextInput',
-            rate: 0.1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'CachedTextOutput',
-            rate: 1.25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       releasedAt: '2024-11-05',
     },
     {
@@ -151,22 +67,6 @@ const Bedrock: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'anthropic.claude-3-5-sonnet-20241022-v2:0',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -177,22 +77,6 @@ const Bedrock: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'us.anthropic.claude-3-5-sonnet-20241022-v2:0',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -203,22 +87,6 @@ const Bedrock: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'anthropic.claude-3-5-sonnet-20240620-v1:0',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -229,22 +97,6 @@ const Bedrock: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'anthropic.claude-3-haiku-20240307-v1:0',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1.25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -255,22 +107,6 @@ const Bedrock: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'anthropic.claude-3-sonnet-20240229-v1:0',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -281,22 +117,6 @@ const Bedrock: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'anthropic.claude-3-opus-20240229-v1:0',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 75,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -305,22 +125,6 @@ const Bedrock: ModelProviderCard = {
         'Claude 2 的更新版，具有双倍的上下文窗口，以及在长文档和 RAG 上下文中的可靠性、幻觉率和基于证据的准确性的改进。',
       displayName: 'Claude 2.1',
       id: 'anthropic.claude-v2:1',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 24,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 100_000,
@@ -328,22 +132,6 @@ const Bedrock: ModelProviderCard = {
         'Anthropic 在从复杂对话和创意内容生成到详细指令跟随的广泛任务中都表现出高度能力的模型。',
       displayName: 'Claude 2.0',
       id: 'anthropic.claude-v2',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 24,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 100_000,
@@ -351,22 +139,6 @@ const Bedrock: ModelProviderCard = {
         '一款快速、经济且仍然非常有能力的模型，可以处理包括日常对话、文本分析、总结和文档问答在内的一系列任务。',
       displayName: 'Claude Instant',
       id: 'anthropic.claude-instant-v1',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2.4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -376,22 +148,6 @@ const Bedrock: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'meta.llama3-1-8b-instruct-v1:0',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.22,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.22,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -401,22 +157,6 @@ const Bedrock: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'meta.llama3-1-70b-instruct-v1:0',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.99,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.99,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -426,22 +166,6 @@ const Bedrock: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'meta.llama3-1-405b-instruct-v1:0',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 5.32,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 16,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -449,22 +173,6 @@ const Bedrock: ModelProviderCard = {
         'Meta Llama 3 是一款面向开发者、研究人员和企业的开放大型语言模型 (LLM)，旨在帮助他们构建、实验并负责任地扩展他们的生成 AI 想法。作为全球社区创新的基础系统的一部分，它非常适合计算能力和资源有限、边缘设备和更快的训练时间。',
       displayName: 'Llama 3 8B Instruct',
       id: 'meta.llama3-8b-instruct-v1:0',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.3,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -472,22 +180,6 @@ const Bedrock: ModelProviderCard = {
         'Meta Llama 3 是一款面向开发者、研究人员和企业的开放大型语言模型 (LLM)，旨在帮助他们构建、实验并负责任地扩展他们的生成 AI 想法。作为全球社区创新的基础系统的一部分，它非常适合内容创建、对话 AI、语言理解、研发和企业应用。',
       displayName: 'Llama 3 70B Instruct',
       id: 'meta.llama3-70b-instruct-v1:0',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2.65,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 3.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     /*
     // TODO: Not support for now

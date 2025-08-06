@@ -9,22 +9,6 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Lightning',
       enabled: true,
       id: 'yi-lightning',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.99,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.99,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_384,
@@ -32,22 +16,6 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Vision V2',
       enabled: true,
       id: 'yi-vision-v2',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -55,88 +23,24 @@ const ZeroOne: ModelProviderCard = {
       description: '小而精悍，轻量极速模型。提供强化数学运算和代码编写能力。',
       displayName: 'Yi Spark',
       id: 'yi-spark',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_384,
       description: '中型尺寸模型升级微调，能力均衡，性价比高。深度优化指令遵循能力。',
       displayName: 'Yi Medium',
       id: 'yi-medium',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 2.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2.5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 200_000,
       description: '200K 超长上下文窗口，提供长文本深度理解和生成能力。',
       displayName: 'Yi Medium 200K',
       id: 'yi-medium-200k',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_384,
       description: '超高性价比、卓越性能。根据性能和推理速度、成本，进行平衡性高精度调优。',
       displayName: 'Yi Large Turbo',
       id: 'yi-large-turbo',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 12,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_384,
@@ -144,22 +48,6 @@ const ZeroOne: ModelProviderCard = {
         '基于 yi-large 超强模型的高阶服务，结合检索与生成技术提供精准答案，实时全网检索信息服务。',
       displayName: 'Yi Large RAG',
       id: 'yi-large-rag',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 25,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
@@ -168,66 +56,18 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Large FC',
       functionCall: true,
       id: 'yi-large-fc',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_768,
       description: '全新千亿参数模型，提供超强问答及文本生成能力。',
       displayName: 'Yi Large',
       id: 'yi-large',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_384,
       description: '复杂视觉任务模型，提供高性能图片理解、分析能力。',
       displayName: 'Yi Vision',
       id: 'yi-vision',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 6,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -235,44 +75,12 @@ const ZeroOne: ModelProviderCard = {
       description: '初期版本，推荐使用 yi-large（新版本）。',
       displayName: 'Yi Large Preview',
       id: 'yi-large-preview',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_384,
       description: '轻量化版本，推荐使用 yi-lightning。',
       displayName: 'Yi Lightning Lite',
       id: 'yi-lightning-lite',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 0.99,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 0.99,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
   ],
   checkModel: 'yi-lightning',

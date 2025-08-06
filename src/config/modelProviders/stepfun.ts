@@ -11,22 +11,6 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1-flash',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 4,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -35,22 +19,6 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1-8k',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 32_000,
@@ -59,22 +27,6 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1-32k',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 70,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 128_000,
@@ -83,22 +35,6 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1-128k',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 40,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 200,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 256_000,
@@ -106,22 +42,6 @@ const Stepfun: ModelProviderCard = {
       displayName: 'Step 1 256K',
       functionCall: true,
       id: 'step-1-256k',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 95,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 300,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_000,
@@ -130,22 +50,6 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-2-16k',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 38,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 120,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -155,22 +59,6 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-2-mini',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 1,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 2,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 16_000,
@@ -178,22 +66,6 @@ const Stepfun: ModelProviderCard = {
       displayName: 'Step 2 16K Exp',
       functionCall: true,
       id: 'step-2-16k-exp',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 38,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 120,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
     },
     {
       contextWindowTokens: 8000,
@@ -202,22 +74,6 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1v-8k',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 5,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 20,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -226,22 +82,6 @@ const Stepfun: ModelProviderCard = {
       displayName: 'Step 1V 32K',
       functionCall: true,
       id: 'step-1v-32k',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 70,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -250,22 +90,6 @@ const Stepfun: ModelProviderCard = {
       displayName: 'Step 1o Vision 32K',
       enabled: true,
       id: 'step-1o-vision-32k',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 15,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 70,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
     {
@@ -274,22 +98,6 @@ const Stepfun: ModelProviderCard = {
       displayName: 'Step 1.5V Mini',
       enabled: true,
       id: 'step-1.5v-mini',
-      pricing: {
-        units: [
-          {
-            name: 'TextInput',
-            rate: 8,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-          {
-            name: 'TextOutput',
-            rate: 35,
-            strategy: 'fixed',
-            unit: 'MillionTokens',
-          },
-        ],
-      },
       vision: true,
     },
   ],
