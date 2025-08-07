@@ -2,7 +2,10 @@ import { Context } from 'hono';
 
 import { BaseController } from '../common/base.controller';
 import { MessageTranslateService } from '../services/message-translate.service';
-import { MessageTranslateInfoUpdate, MessageTranslateTriggerRequest } from '../types/message-translate.type';
+import {
+  MessageTranslateInfoUpdate,
+  MessageTranslateTriggerRequest,
+} from '../types/message-translate.type';
 
 export class MessageTranslateController extends BaseController {
   /**

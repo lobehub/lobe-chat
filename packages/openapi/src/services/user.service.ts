@@ -410,7 +410,11 @@ export class UserService extends BaseService {
    * @param page 页码，从1开始
    * @returns 匹配的用户列表（包含角色信息和消息数量）
    */
-  async searchUsers(keyword: string, pageSize: number = 10, page: number = 1): ServiceResult<UserWithRoles[]> {
+  async searchUsers(
+    keyword: string,
+    pageSize: number = 10,
+    page: number = 1,
+  ): ServiceResult<UserWithRoles[]> {
     this.log('info', '搜索用户', { keyword, page, pageSize });
 
     try {

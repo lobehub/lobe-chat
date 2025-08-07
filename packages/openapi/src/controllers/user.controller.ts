@@ -133,7 +133,11 @@ export class UserController extends BaseController {
    */
   async searchUsers(c: Context): Promise<Response> {
     try {
-      const { keyword, page, pageSize } = this.getQuery<{ keyword?: string; page: number; pageSize: number }>(c);
+      const { keyword, page, pageSize } = this.getQuery<{
+        keyword?: string;
+        page: number;
+        pageSize: number;
+      }>(c);
 
       // 获取数据库连接并创建服务实例
       const db = await this.getDatabase();
