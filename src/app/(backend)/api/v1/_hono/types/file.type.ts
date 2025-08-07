@@ -308,24 +308,24 @@ export interface FileUploadAndParseResponse {
 export const PreSignedUrlRequestSchema = z.object({
   fileType: z.string().min(1, '文件类型不能为空'),
   filename: z.string().min(1, '文件名不能为空'),
-  pathname: z.string().optional(),
+  pathname: z.string().nullish(),
   size: z.number().positive('文件大小必须大于0'),
 });
 
 export const FileListQuerySchema = z.object({
-  fileType: z.string().optional(),
-  knowledgeBaseId: z.string().optional(),
+  fileType: z.string().nullish(),
+  knowledgeBaseId: z.string().nullish(),
   page: z
     .string()
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().min(1))
-    .optional(),
+    .nullish(),
   pageSize: z
     .string()
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().min(1).max(100))
-    .optional(),
-  search: z.string().optional(),
+    .nullish(),
+  search: z.string().nullish(),
 });
 
 export const FileIdParamSchema = z.object({
@@ -337,7 +337,7 @@ export const FileUrlRequestSchema = z.object({
     .string()
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().min(60).max(7200)) // 1分钟到2小时
-    .optional(),
+    .nullish(),
 });
 
 export const FileParseRequestSchema = z.object({
@@ -345,7 +345,7 @@ export const FileParseRequestSchema = z.object({
     .string()
     .transform((val) => val === 'true')
     .pipe(z.boolean())
-    .optional(),
+    .nullish(),
 });
 
 /**

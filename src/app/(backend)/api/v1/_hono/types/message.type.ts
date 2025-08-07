@@ -15,37 +15,37 @@ export const MessagesCreateRequestSchema = z.object({
   role: z.enum(['user', 'system', 'assistant', 'tool'], { required_error: '角色类型无效' }),
 
   // AI相关字段
-  model: z.string().optional(), // 使用的模型，改名为model与数据库一致
-  provider: z.string().optional(), // 提供商，改名为provider与数据库一致
+  model: z.string().nullish(), // 使用的模型，改名为model与数据库一致
+  provider: z.string().nullish(), // 提供商，改名为provider与数据库一致
 
   // 会话关联
-  sessionId: z.string().nullable().optional(),
-  topicId: z.string().nullable().optional(), // 改为topicId与数据库一致
-  threadId: z.string().nullable().optional(), // 线程ID
+  sessionId: z.string().nullable().nullish(),
+  topicId: z.string().nullable().nullish(), // 改为topicId与数据库一致
+  threadId: z.string().nullable().nullish(), // 线程ID
 
   // 消息关联
-  parentId: z.string().nullable().optional(), // 父消息ID
-  quotaId: z.string().nullable().optional(), // 引用消息ID
-  agentId: z.string().nullable().optional(), // 关联的Agent ID
+  parentId: z.string().nullable().nullish(), // 父消息ID
+  quotaId: z.string().nullable().nullish(), // 引用消息ID
+  agentId: z.string().nullable().nullish(), // 关联的Agent ID
 
   // 客户端标识
-  clientId: z.string().optional(), // 客户端ID，用于跨设备同步
+  clientId: z.string().nullish(), // 客户端ID，用于跨设备同步
 
   // 扩展数据
-  metadata: z.any().optional(), // 元数据
-  reasoning: z.any().optional(), // 推理过程
-  search: z.any().optional(), // 搜索结果
-  tools: z.any().optional(), // 工具调用
+  metadata: z.any().nullish(), // 元数据
+  reasoning: z.any().nullish(), // 推理过程
+  search: z.any().nullish(), // 搜索结果
+  tools: z.any().nullish(), // 工具调用
 
   // 追踪标识
-  traceId: z.string().nullable().optional(), // 追踪ID
-  observationId: z.string().nullable().optional(), // 观测ID
+  traceId: z.string().nullable().nullish(), // 追踪ID
+  observationId: z.string().nullable().nullish(), // 观测ID
 
   // 文件关联
-  files: z.array(z.string()).optional(), // 文件ID数组
+  files: z.array(z.string()).nullish(), // 文件ID数组
 
   // 状态
-  favorite: z.boolean().optional().default(false), // 是否收藏
+  favorite: z.boolean().nullish().default(false), // 是否收藏
 });
 
 // TypeScript types
@@ -117,13 +117,13 @@ export interface CountByUserRequest {
 
 // 更新消息请求Schema
 export const MessagesUpdateRequestSchema = z.object({
-  content: z.string().min(1, '消息内容不能为空').optional(),
-  favorite: z.boolean().optional(),
-  metadata: z.any().optional(),
-  reasoning: z.any().optional(),
-  search: z.any().optional(),
-  tools: z.any().optional(),
-  error: z.any().optional(),
+  content: z.string().min(1, '消息内容不能为空').nullish(),
+  favorite: z.boolean().nullish(),
+  metadata: z.any().nullish(),
+  reasoning: z.any().nullish(),
+  search: z.any().nullish(),
+  tools: z.any().nullish(),
+  error: z.any().nullish(),
 });
 
 // 删除消息路径参数Schema
@@ -158,8 +158,8 @@ export interface MessagesDeleteBatchRequest {
 // Search messages by keyword request schema
 export const SearchMessagesByKeywordRequestSchema = z.object({
   keyword: z.string().min(1, '搜索关键词不能为空'),
-  limit: z.number().min(1).max(100).optional().default(20),
-  offset: z.number().min(0).optional().default(0),
+  limit: z.number().min(1).max(100).nullish().default(20),
+  offset: z.number().min(0).nullish().default(0),
   sessionId: z.string().min(1, '会话ID不能为空'),
 });
 
