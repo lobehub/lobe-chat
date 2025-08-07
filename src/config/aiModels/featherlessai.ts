@@ -11,8 +11,20 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-32B',
     pricing: {
-      input: 0.7,
-      output: 1.4
+      input: 0,
+      output: 0
+    },
+    type: 'chat'
+  },
+  {
+    contextWindowTokens: 32_000,
+    description: 'OpenAI 的 120B 模型，基于 GPT-3.5 架构，具有强大的语言理解、推理和生成能力。',
+    displayName: 'openai/gpt-oss-120b',
+    enabled: true,
+    id: 'openai/gpt-oss-120b',
+    pricing: {
+      input: 0,
+      output: 0
     },
     type: 'chat'
   },
@@ -26,8 +38,8 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'Qwen/QwQ-32B',
     pricing: {
-      input: 1.5,
-      output: 3
+      input: 0,
+      output: 0
     },
     type: 'chat'
   },
@@ -38,8 +50,8 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'Qwen/Qwen2.5-72B-Instruct',
     pricing: {
-      input: 2,
-      output: 4
+      input: 0,
+      output: 0
     },
     type: 'chat'
   },
@@ -50,8 +62,8 @@ const featherlessaiChatModels: AIChatModelCard[] = [
     enabled: true,
     id: 'Qwen/Qwen2.5-Coder-32B-Instruct',
     pricing: {
-      input: 1.5,
-      output: 3
+      input: 0,
+      output: 0
     },
     type: 'chat'
   },
