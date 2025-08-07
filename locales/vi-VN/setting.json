@@ -183,9 +183,20 @@
     "title": "Thông tin trợ lý"
   },
   "settingAppearance": {
+    "animationMode": {
+      "agile": "Nhanh nhẹn",
+      "desc": "Chọn tốc độ hoạt ảnh phản hồi của ứng dụng",
+      "disabled": "Tắt",
+      "elegant": "Thanh lịch",
+      "title": "Hoạt ảnh phản hồi"
+    },
     "neutralColor": {
       "desc": "Tùy chỉnh thang độ xám với các xu hướng màu sắc khác nhau",
       "title": "Màu trung tính"
+    },
+    "noAnimation": {
+      "desc": "Vô hiệu hóa tất cả hiệu ứng hoạt ảnh trong ứng dụng",
+      "title": "Chế độ không hoạt ảnh"
     },
     "preview": {
       "title": "Bảng màu"

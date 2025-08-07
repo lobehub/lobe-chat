@@ -183,9 +183,20 @@
     "title": "Assistentinformatie"
   },
   "settingAppearance": {
+    "animationMode": {
+      "agile": "Behendig",
+      "desc": "Kies de animatiesnelheid voor de reactietijd van de applicatie",
+      "disabled": "Uitgeschakeld",
+      "elegant": "Elegant",
+      "title": "Reactie-animatie"
+    },
     "neutralColor": {
       "desc": "Aangepaste grijstinten met verschillende kleurvoorkeuren",
       "title": "Neutrale kleur"
+    },
+    "noAnimation": {
+      "desc": "Schakel alle animatie-effecten in de applicatie uit",
+      "title": "Animatie uit modus"
     },
     "preview": {
       "title": "Kleurpalet"
