@@ -26,10 +26,10 @@ const transformGoogleGenerativeAIStream = (
       data: {
         body: {
           context: {
-            blockReason,
             promptFeedback: (chunk as any).promptFeedback,
           },
           message: `Content blocked by Google AI: ${blockReason}`,
+          provider: 'google',
         },
         type: 'ProviderBizError',
       },
