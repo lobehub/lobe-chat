@@ -107,9 +107,10 @@ const AppTheme = memo<AppThemeProps>(
     // console.debug('server:neutralColor', defaultNeutralColor);
     const themeMode = useGlobalStore(systemStatusSelectors.themeMode);
     const { styles, cx, theme } = useStyles();
-    const [primaryColor, neutralColor] = useUserStore((s) => [
+    const [primaryColor, neutralColor, noAnimation] = useUserStore((s) => [
       userGeneralSettingsSelectors.primaryColor(s),
       userGeneralSettingsSelectors.neutralColor(s),
+      userGeneralSettingsSelectors.noAnimation(s),
     ]);
 
     useEffect(() => {
@@ -138,6 +139,7 @@ const AppTheme = memo<AppThemeProps>(
           cssVar: true,
           token: {
             fontFamily: customFontFamily ? `${customFontFamily},${theme.fontFamily}` : undefined,
+            motion: noAnimation === true ? false : undefined,
           },
         }}
         themeMode={themeMode}

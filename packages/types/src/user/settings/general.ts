@@ -7,6 +7,7 @@ export interface UserGeneralConfig {
   highlighterTheme?: HighlighterProps['theme'];
   mermaidTheme?: MermaidProps['theme'];
   neutralColor?: NeutralColors;
+  noAnimation?: boolean;
   primaryColor?: PrimaryColors;
   transitionMode?: ResponseAnimationStyle;
 }

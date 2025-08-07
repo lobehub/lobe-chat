@@ -9,6 +9,7 @@ const fontSize = (s: UserStore) => generalConfig(s).fontSize;
 const highlighterTheme = (s: UserStore) => generalConfig(s).highlighterTheme;
 const mermaidTheme = (s: UserStore) => generalConfig(s).mermaidTheme;
 const transitionMode = (s: UserStore) => generalConfig(s).transitionMode;
+const noAnimation = (s: UserStore) => generalConfig(s).noAnimation;
 
 export const userGeneralSettingsSelectors = {
   config: generalConfig,
@@ -16,6 +17,7 @@ export const userGeneralSettingsSelectors = {
   highlighterTheme,
   mermaidTheme,
   neutralColor,
+  noAnimation,
   primaryColor,
   transitionMode,
 };

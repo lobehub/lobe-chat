@@ -190,6 +190,10 @@ export default {
       desc: '不同色彩倾向的灰阶自定义',
       title: '中性色',
     },
+    noAnimation: {
+      desc: '禁用应用程序中的所有动画效果',
+      title: '无动画模式',
+    },
     preview: {
       title: '调色盘',
     },
