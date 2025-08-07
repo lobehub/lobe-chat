@@ -2,12 +2,14 @@ import type { HighlighterProps, MermaidProps, NeutralColors, PrimaryColors } fro
 
 import { ResponseAnimationStyle } from '@/types/llm';
 
+export type AnimationMode = 'disabled' | 'agile' | 'elegant';
+
 export interface UserGeneralConfig {
+  animationMode?: AnimationMode;
   fontSize: number;
   highlighterTheme?: HighlighterProps['theme'];
   mermaidTheme?: MermaidProps['theme'];
   neutralColor?: NeutralColors;
-  noAnimation?: boolean;
   primaryColor?: PrimaryColors;
   transitionMode?: ResponseAnimationStyle;
 }

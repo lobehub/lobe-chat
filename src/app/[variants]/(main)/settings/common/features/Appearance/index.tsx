@@ -1,7 +1,7 @@
 'use client';
 
 import { Form, type FormGroupItemType, Icon } from '@lobehub/ui';
-import { Skeleton, Switch } from 'antd';
+import { Skeleton } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { Loader2Icon } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -42,14 +42,6 @@ const Appearance = memo(() => {
         label: t('settingAppearance.neutralColor.title'),
         minWidth: undefined,
         name: 'neutralColor',
-      },
-      {
-        children: <Switch />,
-        desc: t('settingAppearance.noAnimation.desc'),
-        label: t('settingAppearance.noAnimation.title'),
-        minWidth: undefined,
-        name: 'noAnimation',
-        valuePropName: 'checked',
       },
     ],
     extra: loading && <Icon icon={Loader2Icon} size={16} spin style={{ opacity: 0.5 }} />,

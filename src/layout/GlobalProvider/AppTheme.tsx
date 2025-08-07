@@ -102,17 +102,16 @@ const AppTheme = memo<AppThemeProps>(
     customFontURL,
     customFontFamily,
   }) => {
-    // console.debug('server:appearance', defaultAppearance);
-    // console.debug('server:primaryColor', defaultPrimaryColor);
-    // console.debug('server:neutralColor', defaultNeutralColor);
     const themeMode = useGlobalStore(systemStatusSelectors.themeMode);
     const { styles, cx, theme } = useStyles();
-    const [primaryColor, neutralColor, noAnimation] = useUserStore((s) => [
+    const [primaryColor, neutralColor, animationMode] = useUserStore((s) => [
       userGeneralSettingsSelectors.primaryColor(s),
       userGeneralSettingsSelectors.neutralColor(s),
-      userGeneralSettingsSelectors.noAnimation(s),
+      userGeneralSettingsSelectors.animationMode(s),
     ]);
+    console.log('animationMode', animationMode);
 
+    console.log('rerender');
     useEffect(() => {
       setCookie(LOBE_THEME_PRIMARY_COLOR, primaryColor);
     }, [primaryColor]);
@@ -139,7 +138,8 @@ const AppTheme = memo<AppThemeProps>(
           cssVar: true,
           token: {
             fontFamily: customFontFamily ? `${customFontFamily},${theme.fontFamily}` : undefined,
-            motion: noAnimation === true ? false : undefined,
+            motion: animationMode !== 'disabled',
+            motionUnit: animationMode === 'agile' ? 0.05 : 0.1,
           },
         }}
         themeMode={themeMode}
