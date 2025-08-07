@@ -220,11 +220,11 @@ describe('pricing utilities', () => {
   });
 
   describe('getWriteCacheInputUnitRate', () => {
-    it('should return rate for CachedTextOutput unit with fixed strategy', () => {
+    it('should return rate for TextInputCacheWrite unit with fixed strategy', () => {
       const pricing: Pricing = {
         units: [
           {
-            name: 'CachedTextOutput',
+            name: 'TextInputCacheWrite',
             strategy: 'fixed',
             unit: 'MillionTokens',
             rate: 0.001,

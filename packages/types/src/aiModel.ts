@@ -113,7 +113,7 @@ export type PricingUnitName =
   | 'TextInput' // corresponds to ChatModelPricing.input
   | 'TextOutput' // corresponds to ChatModelPricing.output
   | 'CachedTextInput' // corresponds to ChatModelPricing.cachedInput
-  | 'CachedTextOutput' // corresponds to ChatModelPricing.writeCacheInput
+  | 'TextInputCacheWrite' // corresponds to ChatModelPricing.writeCacheInput
 
   // Audio-based pricing units
   | 'AudioInput' // corresponds to ChatModelPricing.audioInput
