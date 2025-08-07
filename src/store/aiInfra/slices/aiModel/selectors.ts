@@ -47,7 +47,7 @@ const getEnabledModelById = (id: string, provider: string) => (s: AIProviderStor
 const isModelSupportToolUse = (id: string, provider: string) => (s: AIProviderStoreState) => {
   const model = getEnabledModelById(id, provider)(s);
 
-  return model?.abilities?.functionCall;
+  return model?.abilities?.functionCall || false;
 };
 
 const isModelSupportFiles = (id: string, provider: string) => (s: AIProviderStoreState) => {
@@ -59,7 +59,7 @@ const isModelSupportFiles = (id: string, provider: string) => (s: AIProviderStor
 const isModelSupportVision = (id: string, provider: string) => (s: AIProviderStoreState) => {
   const model = getEnabledModelById(id, provider)(s);
 
-  return model?.abilities?.vision;
+  return model?.abilities?.vision || false;
 };
 
 const isModelSupportReasoning = (id: string, provider: string) => (s: AIProviderStoreState) => {
