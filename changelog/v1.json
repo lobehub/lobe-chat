@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "fixes": ["Optimize Gemini error message display & Filter empty messages."]
+    },
+    "date": "2025-08-07",
+    "version": "1.110.5"
+  },
+  {
+    "children": {
       "improvements": ["Refactor trace type."]
     },
     "date": "2025-08-06",
