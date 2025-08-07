@@ -15,9 +15,9 @@ const moonshotChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'CachedTextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-07-11',
@@ -37,9 +37,9 @@ const moonshotChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'CachedTextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-02-17',
@@ -59,8 +59,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 200, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 200, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 200, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 200, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-05-06',
@@ -77,8 +77,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -95,8 +95,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -113,8 +113,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -131,8 +131,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -150,8 +150,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-01-14',
@@ -170,8 +170,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-01-14',
@@ -190,8 +190,8 @@ const moonshotChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 30, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-01-14',

@@ -734,19 +734,19 @@ describe('transformToChatModelCards', () => {
         pricing: {
           units: [
             {
-              name: 'CachedTextInput',
+              name: 'textInput_cacheRead',
               rate: 1.25,
               strategy: 'fixed',
               unit: 'MillionTokens',
             },
             {
-              name: 'TextInput',
+              name: 'textInput',
               rate: 2.5,
               strategy: 'fixed',
               unit: 'MillionTokens',
             },
             {
-              name: 'TextOutput',
+              name: 'textOutput',
               rate: 10,
               strategy: 'fixed',
               unit: 'MillionTokens',
@@ -772,19 +772,19 @@ describe('transformToChatModelCards', () => {
         pricing: {
           units: [
             {
-              name: 'CachedTextInput',
+              name: 'textInput_cacheRead',
               rate: 0.075,
               strategy: 'fixed',
               unit: 'MillionTokens',
             },
             {
-              name: 'TextInput',
+              name: 'textInput',
               rate: 0.15,
               strategy: 'fixed',
               unit: 'MillionTokens',
             },
             {
-              name: 'TextOutput',
+              name: 'textOutput',
               rate: 0.6,
               strategy: 'fixed',
               unit: 'MillionTokens',
@@ -808,19 +808,19 @@ describe('transformToChatModelCards', () => {
         pricing: {
           units: [
             {
-              name: 'CachedTextInput',
+              name: 'textInput_cacheRead',
               rate: 0.55,
               strategy: 'fixed',
               unit: 'MillionTokens',
             },
             {
-              name: 'TextInput',
+              name: 'textInput',
               rate: 1.1,
               strategy: 'fixed',
               unit: 'MillionTokens',
             },
             {
-              name: 'TextOutput',
+              name: 'textOutput',
               rate: 4.4,
               strategy: 'fixed',
               unit: 'MillionTokens',

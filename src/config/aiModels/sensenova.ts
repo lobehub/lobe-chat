@@ -18,8 +18,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-07-23',
@@ -42,8 +42,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-07-23',
@@ -65,8 +65,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-05-27',
@@ -88,8 +88,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-05-27',
@@ -110,8 +110,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-04-14',
@@ -129,8 +129,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 4.5, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-04-14',
@@ -148,8 +148,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 9, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2025-04-14',
@@ -163,8 +163,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -181,8 +181,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-12-30',
@@ -199,8 +199,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-12-30',
@@ -219,8 +219,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 20, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -238,8 +238,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-09-12',
@@ -257,8 +257,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.3, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.6, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -272,8 +272,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 60, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -287,8 +287,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 36, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 36, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 36, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 36, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -302,8 +302,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -318,8 +318,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 27, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 27, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 27, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 27, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -333,8 +333,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 12, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -348,8 +348,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -363,8 +363,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -381,8 +381,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -399,8 +399,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -417,8 +417,8 @@ const sensenovaChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',

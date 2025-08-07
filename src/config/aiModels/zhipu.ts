@@ -17,9 +17,9 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'CachedTextInput', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -42,9 +42,9 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'CachedTextInput', rate: 3.2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 64, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 3.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 16, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 64, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -67,9 +67,9 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'CachedTextInput', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 1.2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0.24, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1.2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -92,9 +92,9 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'CachedTextInput', rate: 1.6, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 32, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 1.6, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 8, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 32, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -118,9 +118,9 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'CachedTextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput_cacheRead', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -144,8 +144,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 2, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -169,8 +169,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -189,8 +189,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -208,8 +208,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -230,8 +230,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -252,8 +252,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -274,8 +274,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -296,8 +296,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -318,8 +318,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -340,8 +340,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -362,8 +362,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.5, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -384,8 +384,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 10, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -406,8 +406,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -428,8 +428,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 5, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -449,8 +449,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -470,8 +470,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 100, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     settings: {
@@ -491,8 +491,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     releasedAt: '2024-12-09',
@@ -509,8 +509,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 4, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -526,8 +526,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 50, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 50, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 50, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 50, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -542,8 +542,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 0.1, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -557,8 +557,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 1, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
@@ -572,8 +572,8 @@ const zhipuChatModels: AIChatModelCard[] = [
     pricing: {
       currency: 'CNY',
       units: [
-        { name: 'TextInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
-        { name: 'TextOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textInput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
+        { name: 'textOutput', rate: 15, strategy: 'fixed', unit: 'MillionTokens' },
       ],
     },
     type: 'chat',
