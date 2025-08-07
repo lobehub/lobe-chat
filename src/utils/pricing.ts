@@ -134,12 +134,12 @@ export function getCachedTextInputUnitRate(pricing?: Pricing): number | undefine
 }
 
 /**
- * Get write cache input unit rate from pricing (CachedTextOutput)
+ * Get write cache input unit rate from pricing (TextInputCacheWrite)
  */
 export function getWriteCacheInputUnitRate(pricing?: Pricing): number | undefined {
   if (!pricing?.units) return undefined;
 
-  const writeCacheUnit = pricing.units.find((unit) => unit.name === 'CachedTextOutput');
+  const writeCacheUnit = pricing.units.find((unit) => unit.name === 'TextInputCacheWrite');
   if (!writeCacheUnit) return undefined;
 
   switch (writeCacheUnit.strategy) {
