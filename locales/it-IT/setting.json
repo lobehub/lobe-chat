@@ -183,9 +183,20 @@
     "title": "Informazioni sull'assistente"
   },
   "settingAppearance": {
+    "animationMode": {
+      "agile": "Agile",
+      "desc": "Seleziona la velocità dell'animazione per la risposta delle azioni dell'applicazione",
+      "disabled": "Disattivato",
+      "elegant": "Elegante",
+      "title": "Animazione di risposta"
+    },
     "neutralColor": {
       "desc": "Personalizzazione dei grigi con diverse inclinazioni di colore",
       "title": "Colore Neutro"
+    },
+    "noAnimation": {
+      "desc": "Disabilita tutte le animazioni nell'applicazione",
+      "title": "Modalità senza animazioni"
     },
     "preview": {
       "title": "Tavolozza"

@@ -1,5 +1,10 @@
 [
   {
+    "children": {},
+    "date": "2025-08-07",
+    "version": "1.110.6"
+  },
+  {
     "children": {
       "fixes": ["Optimize Gemini error message display & Filter empty messages."]
     },
