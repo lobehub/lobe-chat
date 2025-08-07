@@ -90,7 +90,7 @@ describe('pricing utilities', () => {
             strategy: 'lookup',
             unit: 'MillionTokens',
             lookup: {
-              generateParams: ['model'],
+              pricingParams: ['model'],
               prices: {
                 'gpt-3.5-turbo': 0.001,
                 'gpt-4': 0.03,
@@ -110,7 +110,7 @@ describe('pricing utilities', () => {
             strategy: 'lookup',
             unit: 'MillionTokens',
             lookup: {
-              generateParams: ['model'],
+              pricingParams: ['model'],
               prices: {},
             },
           },
