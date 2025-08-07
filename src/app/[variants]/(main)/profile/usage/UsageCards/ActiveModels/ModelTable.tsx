@@ -3,7 +3,7 @@ import { ModelIcon, ProviderIcon } from '@lobehub/icons';
 import { Collapse, CopyButton, Tag } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { useTheme } from 'antd-style';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -69,7 +69,12 @@ const ModelTable = memo<UsageChartProps>(({ data, isLoading, groupBy }) => {
 
     if (isLoading) return <Skeleton active paragraph={{ rows: 8 }} title={false} />;
 
-    const formattedData = formatData(data || [], groupBy || GroupBy.Model);
+    const formattedData = useMemo(
+        () => formatData(data || [], groupBy || GroupBy.Model),
+        [data, groupBy]
+    );
+
+    console.log('ModelTable', groupBy, formattedData)
 
     return (
         <Collapse
@@ -95,16 +100,16 @@ const ModelTable = memo<UsageChartProps>(({ data, isLoading, groupBy }) => {
                                         render: (value, record, index) => {
                                             return (
                                                 <Flexbox align={'center'} gap={12} horizontal key={value}>
-                                                    {groupBy === GroupBy.Model ?
+                                                    {groupBy === GroupBy.Provider ?
                                                         <ProviderIcon
-                                                            provider={item.id}
+                                                            provider={record.id}
                                                             style={{
                                                                 boxShadow: `0 0 0 2px ${theme.colorBgContainer}, 0 0 0 4px ${themeColorRange[index]}`,
                                                                 boxSizing: 'content-box',
                                                             }}
                                                         /> :
                                                         <ModelIcon
-                                                            model={item.id}
+                                                            model={record.id}
                                                             style={{
                                                                 boxShadow: `0 0 0 2px ${theme.colorBgContainer}, 0 0 0 4px ${themeColorRange[index]}`,
                                                                 boxSizing: 'content-box',
@@ -115,7 +120,7 @@ const ModelTable = memo<UsageChartProps>(({ data, isLoading, groupBy }) => {
                                                 </Flexbox>
                                             );
                                         },
-                                        title: 'Provider',
+                                        title: groupBy === GroupBy.Model ? 'Provider' : 'Model',
                                         width: 200,
                                     },
                                     {
