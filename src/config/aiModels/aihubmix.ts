@@ -210,7 +210,6 @@ const aihubmixModels: AIChatModelCard[] = [
   {
     abilities: {
       functionCall: true,
-      search: true,
     },
     contextWindowTokens: 131_072,
     description:
@@ -224,16 +223,12 @@ const aihubmixModels: AIChatModelCard[] = [
       output: 15,
     },
     releasedAt: '2025-04-03',
-    settings: {
-      searchImpl: 'params',
-    },
     type: 'chat',
   },
   {
     abilities: {
       functionCall: true,
       reasoning: true,
-      search: true,
     },
     contextWindowTokens: 131_072,
     description:
@@ -248,7 +243,6 @@ const aihubmixModels: AIChatModelCard[] = [
     releasedAt: '2025-04-03',
     settings: {
       extendParams: ['reasoningEffort'],
-      searchImpl: 'params',
     },
     type: 'chat',
   },
