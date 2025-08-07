@@ -167,31 +167,31 @@ export interface AgentDetailResponse extends AgentItem {
 
 // Zod Schemas for validation
 export const CreateAgentRequestSchema = z.object({
-  avatar: z.string().optional(),
+  avatar: z.string().nullish(),
   chatConfig: z
     .object({
       autoCreateTopicThreshold: z.number(),
-      disableContextCaching: z.boolean().optional(),
-      displayMode: z.enum(['chat', 'docs']).optional(),
-      enableAutoCreateTopic: z.boolean().optional(),
-      enableCompressHistory: z.boolean().optional(),
-      enableHistoryCount: z.boolean().optional(),
-      enableMaxTokens: z.boolean().optional(),
-      enableReasoning: z.boolean().optional(),
-      enableReasoningEffort: z.boolean().optional(),
-      historyCount: z.number().optional(),
-      reasoningBudgetToken: z.number().optional(),
-      reasoningEffort: z.enum(['low', 'medium', 'high']).optional(),
-      searchFCModel: z.string().optional(),
-      searchMode: z.enum(['disabled', 'enabled']).optional(),
-      useModelBuiltinSearch: z.boolean().optional(),
+      disableContextCaching: z.boolean().nullish(),
+      displayMode: z.enum(['chat', 'docs']).nullish(),
+      enableAutoCreateTopic: z.boolean().nullish(),
+      enableCompressHistory: z.boolean().nullish(),
+      enableHistoryCount: z.boolean().nullish(),
+      enableMaxTokens: z.boolean().nullish(),
+      enableReasoning: z.boolean().nullish(),
+      enableReasoningEffort: z.boolean().nullish(),
+      historyCount: z.number().nullish(),
+      reasoningBudgetToken: z.number().nullish(),
+      reasoningEffort: z.enum(['low', 'medium', 'high']).nullish(),
+      searchFCModel: z.string().nullish(),
+      searchMode: z.enum(['disabled', 'enabled']).nullish(),
+      useModelBuiltinSearch: z.boolean().nullish(),
     })
-    .optional(),
-  description: z.string().optional(),
-  model: z.string().optional(),
-  params: z.record(z.unknown()).optional(),
-  provider: z.string().optional(),
-  systemRole: z.string().optional(),
+    .nullish(),
+  description: z.string().nullish(),
+  model: z.string().nullish(),
+  params: z.record(z.unknown()).nullish(),
+  provider: z.string().nullish(),
+  systemRole: z.string().nullish(),
   title: z.string().min(1, '标题不能为空'),
 });
 
@@ -201,7 +201,7 @@ export const UpdateAgentRequestSchema = CreateAgentRequestSchema.extend({
 
 export const AgentDeleteRequestSchema = z.object({
   agentId: z.string().min(1, 'Agent ID 不能为空'),
-  migrateTo: z.string().optional(),
+  migrateTo: z.string().nullish(),
 });
 
 export const AgentIdParamSchema = z.object({

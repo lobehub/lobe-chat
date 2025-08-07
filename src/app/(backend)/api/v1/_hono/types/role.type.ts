@@ -56,17 +56,17 @@ export const RoleIdParamSchema = z.object({
 });
 
 export const RoleQueryParamsSchema = z.object({
-  active: z.boolean().optional(),
-  limit: z.number().min(1).max(100).optional(),
-  offset: z.number().min(0).optional(),
-  system: z.boolean().optional(),
+  active: z.boolean().nullish(),
+  limit: z.number().min(1).max(100).nullish(),
+  offset: z.number().min(0).nullish(),
+  system: z.boolean().nullish(),
 });
 
 export const CreateRoleRequestSchema = z.object({
-  description: z.string().optional(),
+  description: z.string().nullish(),
   displayName: z.string().min(1, '显示名称不能为空'),
-  isActive: z.boolean().optional().default(true),
-  isSystem: z.boolean().optional().default(false),
+  isActive: z.boolean().nullish().default(true),
+  isSystem: z.boolean().nullish().default(false),
   name: z.string().min(1, '角色名称不能为空'),
 });
 
