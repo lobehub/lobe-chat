@@ -69,6 +69,24 @@ const falImageModels: AIImageModelCard[] = [
     releasedAt: '2025-05-21',
     type: 'image',
   },
+  {
+    description: 'Qwen 系列 20B 图像生成模型，擅长复杂文本渲染和精确图像编辑，支持中英文文字渲染',
+    displayName: 'Qwen Image',
+    enabled: true,
+    id: 'qwen-image',
+    organization: 'qwen',
+    parameters: {
+      cfg: { default: 2.5, max: 20, min: 0, step: 0.1 },
+      // width/height 默认值和 min/max 取自 README 示例代码： https://github.com/QwenLM/Qwen-Image
+      height: { default: 928, max: 1664, min: 928 },
+      prompt: { default: '' },
+      seed: { default: null },
+      steps: { default: 30, max: 50, min: 2 },
+      width: { default: 1664, max: 1664, min: 928 },
+    },
+    releasedAt: '2025-08-04',
+    type: 'image',
+  },
 ];
 
 export const allModels = [...falImageModels];
